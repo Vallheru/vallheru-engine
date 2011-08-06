@@ -1,5 +1,7 @@
 2011-08-06  Bartek thindil Jasicki  <thindil@tuxfamily.org>
 
+	* UPDATE,addupdate.php: 
+	small code optimization
 	* UPDATE,templates/layout1/footer.tpl, templates/footer.tpl, templates/foot.tpl: 
 	updated copyright information
 	* BUG,tribeware.php, stats.php, tribearmor.php, class/player_class.php, sedzia.php:

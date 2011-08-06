@@ -4,10 +4,10 @@
  *   Add and modify game updates
  *
  *   @name                 : addupdate.php                            
- *   @copyright            : (C) 2004,2005,2006 Vallheru Team based on Gamers-Fusion ver 2.5
- *   @author               : thindil <thindil@users.sourceforge.net>
- *   @version              : 1.3
- *   @since                : 19.10.2006
+ *   @copyright            : (C) 2004,2005,2006,2011 Vallheru Team based on Gamers-Fusion ver 2.5
+ *   @author               : thindil <thindil@tuxfamily.org>
+ *   @version              : 1.4
+ *   @since                : 06.08.2011
  *
  */
 
@@ -92,10 +92,12 @@ if (isset ($_GET['action']) && $_GET['action'] == 'add')
 * Update modyfication
 */
 if (isset ($_GET['modify'])) 
-{
-    if (!ereg("^[1-9][0-9]*$", $_GET['modify'])) {
+  {
+    $_GET['modify'] = intval($_GET['modify']);
+    if ($_GET['modify'] < 1) 
+      {
         error (ERROR);
-    }
+      }
     $update = $db -> Execute("SELECT * FROM updates WHERE id=".$_GET['modify']);
     $update -> fields['updates'] = str_replace("<br />", "", $update -> fields['updates']);
     $smarty -> assign(array("Title1" => $update -> fields['title'], 
@@ -114,10 +116,11 @@ if (isset ($_GET['action']) && $_GET['action'] == 'modify')
     {
         error (EMPTY_FIELDS);
     }
-    if (!ereg("^[1-9][0-9]*$", $_GET['updid'])) 
-    {
+    $_GET['updid'] = intval($_GET['updid']);
+    if ($_GET['updid'] < 1) 
+      {
         error (ERROR);
-    }
+      }
     $uid = $db -> Execute("SELECT `id`, `lang` FROM `updates` WHERE `id`=".$_GET['updid']);
     if ($uid -> fields['id']) 
     {
