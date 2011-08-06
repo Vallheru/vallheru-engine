@@ -1,0 +1,122 @@
+{if $Mill == ""}
+    {$Millinfo}<br /><br />
+    <ul>
+    <li><a href="lumbermill.php?mill=plany">{$Aplans}</a></li>
+    <li><a href="lumbermill.php?mill=mill">{$Amill}</a></li>
+    {if $Llevel < "4"}
+        <li><a href="lumbermill.php?mill=licenses">{$Alicenses}</a></li>
+    {/if}
+    {if $Astral == "Y"}
+        <li><a href="lumbermill.php?mill=astral">{$Aastral}</a></li>
+    {/if}
+    </ul>
+{/if}
+
+{if $Mill == "licenses"}
+    {if $Step == ""}
+        - <a href="lumbermill.php?mill=licenses&amp;step=buy">{$Alicense}</a>
+    {/if}
+    {if $Step == "buy"}
+        {$Message}
+    {/if}
+{/if}
+
+{if $Mill == "plany"}
+    {$Plansinfo}<br />
+    {$Hereis}:
+    <table class="dark">
+    <tr>
+    <td width="100"><b><u>{$Iname}</u></b></td>
+    <td width="50"><b><u>{$Icost}</u></b></td>
+    <td><b><u>{$Ilevel}</u></b></td>
+    <td><b><u>{$Ioption}</u></b></td>
+    </tr>
+    {section name=mill loop=$Name}
+        <tr>
+        <td>{$Name[mill]}</td>
+        <td>{$Cost[mill]}</td>
+        <td>{$Level[mill]}</td>
+        <td>- <a href="lumbermill.php?mill=plany&amp;buy={$Planid[mill]}">{$Abuy}</a></td>
+        </tr>
+    {/section}
+    </table>
+    {if $Buy != ""}
+        {$Youpay} <b>{$Cost1}</b> {$Andbuy}: <b>{$Name1}</b>.
+    {/if}
+{/if}
+
+{if $Mill == "mill"}
+    {if $Make == "" && $Continue == ""}
+        {$Millinfo}
+        {if $Maked == ""}
+             {$Info}:
+             <table class="dark">
+             <tr>
+             <td width="100"><b><u>{$Iname}</u></b></td>
+             <td width="50"><b><u>{$Ilevel}</u></b></td>
+             <td><b><u>{$Ilumber}</u></b></td></tr>
+             {section name=mill1 loop=$Name}
+                 <tr>
+                 <td><a href="lumbermill.php?mill=mill&amp;dalej={$Planid[mill1]}">{$Name[mill1]}</a></td>
+                 <td>{$Level[mill1]}</td>
+                 <td>{$Lumber[mill1]}</td>
+                 </tr>
+             {/section}
+             </table>
+        {/if}
+        {if $Maked == "1"}
+            {$Info2}:
+            <table class="dark">
+            <tr>
+            <td width="100"><b><u>{$Iname}</u></b></td>
+            <td width="50"><b><u>{$Ipercent}</u></b></td>
+            <td width="50"><b><u>{$Ienergy}</u></b></td>
+            </tr>
+            <tr>
+            <td><a href="lumbermill.php?mill=mill&amp;ko={$Planid}">{$Name}</a></td>
+            <td>{$Percent}</td>
+            <td>{$Need}</td>
+            </tr>
+            </table>
+        {/if}
+        {if $Cont != ""}
+            <form method="post" action="lumbermill.php?mill=mill&amp;konty={$Id}">
+            {$Assignen} <b>{$Name}</b> <input type="text" name="razy" size="5" /> {$Menergy}
+            <input type="submit" value="{$Amake}" /></form>
+        {/if}
+        {if $Next != ""}
+            <form method="post" action="lumbermill.php?mill=mill&amp;rob={$Id}">
+                {$Assignen} <b>{$Name}</b> <input type="text" name="razy" size="5" /> {$Menergy}
+                <input type=submit value="{$Amake}" />{if $Type == "B"} <select name="lumber">
+                    <option value="H">{$Lhazel}</option>
+                    <option value="Y">{$Lyew}</option>
+                    <option value="E">{$Lelm}</option>
+                    <option value="A">{$Lharder}</option>
+                    <option value="C">{$Lcomposite}</option>
+                </form>{/if}
+            </form>
+        {/if}
+    {/if}
+    {if $Continue != "" || $Make != ""}
+        {$Message}
+    {/if}
+{/if}
+
+{if $Mill == "astral"}
+    {$Millinfo}<br /><br />
+    {$Message}<br /><br />
+    {section name=astral loop=$Aviablecom}
+        <b>{$Tname}:</b> {$Aviablecom[astral]}<br />
+        {section name=astral2 loop=$Mineralsname}
+            <b>{$Mineralsname[astral2]}:</b> {$Minamount[astral][astral2]}<br />
+        {/section}
+        <form method="post" action="lumbermill.php?mill=astral&amp;component={$Compnumber[astral]}">
+            <br /><input type="submit" value="{$Abuild}" />
+        </form>
+        <br />
+    {/section}
+{/if}
+
+{if $Mill != ""}
+    <br /><br /><a href="lumbermill.php">({$Aback})</a>
+{/if}

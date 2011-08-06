@@ -1,0 +1,13 @@
+Third parties licenses
+
+1. PHPMailer
+PHPMailer is distributed under GNU/LGPL license
+http://phpmailer.sourceforge.net/
+
+2. ADOdb
+ADOdb is distributed under GNU/LGPL license
+http://adodb.sourceforge.net/
+
+3. Smarty Template Engine
+Smarty Template Engine is distributed under GNU/LGPL license
+http://smarty.php.net/

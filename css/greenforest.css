@@ -1,0 +1,64 @@
+* {
+color: #99CC66;
+font-family: verdana;
+font-size: 10px;
+}
+.td {
+border-top: solid black 1px;
+border-bottom: solid black 1px;
+border-left: solid black 1px;
+border-right: solid black 1px;
+}
+input, textarea, select {
+background: #34421e; 
+border: 1px solid #4e6130; 
+margin: 1px;
+opacity: .7;
+color: #b9cf96;
+padding-left: 1px; 
+padding-right: 1px;
+padding-top: 1px; 
+padding-bottom: 1px;
+font-size: 9px;
+}
+input:hover, textarea:hover {
+background: #4e6130;
+color: white;
+opacity: 1;
+}
+input:focus, textarea:focus {
+background: #4e6130;
+color: white;
+opacity: 1;
+}
+a {
+text-decoration: none;
+text-transform: none;
+font-weight: bold;
+color: #b9cf96;
+text-decoration: none;
+border: none;
+font-size: 10px;
+}
+a:hover {
+text-decoration: none;
+text-transform: none;
+color: white;
+border-bottom: 1px ridge white;
+font-size: 10px;
+}
+body {
+background: #000000;
+}
+
+body, iframe, select, textarea {
+scrollbar-face-color: black;
+scrollbar-highlight-color: gray; 
+scrollbar-shadow-color: gray; 
+scrollbar-3dlight-color: black; 
+scrollbar-arrow-color: gray;
+scrollbar-track-color: black; 
+scrollbar-darkshadow-color: black; 
+scrollbar-base-color: black;
+}
+

@@ -1,0 +1,150 @@
+* {
+  color: #FFFC9F;
+  font-family: verdana;
+  font-size: 8pt;
+}
+
+input, textarea, select {
+  color: #FFE149;
+  font-size: 8pt;
+  background: black;
+  border: solid gray 1px;
+  margin-left: 10px;
+}
+
+a {
+  text-decoration: none;
+  text-transform: none;
+  color: #FFFFFF;
+  font-size: 8pt;
+}
+
+a:hover {
+  text-decoration: none;
+  text-transform: none;
+  color: red;
+  font-size: 11px;
+}
+
+body {
+  background: #000000;
+  background-image: url('tlo.jpg'); 
+  background-position: top; 
+  background-repeat: repeat-x;
+  border: 0px;
+}
+
+body, iframe, select, textarea {
+  margin-top: 0px;
+  margin-bottom: 0px;
+  margin-left: 0px;
+  margin-right: 0px;
+}
+
+div.info {
+  position: absolute; left: 580px; top: 100px;
+}
+
+div.login1 {
+  position: absolute; left: 580px; top: 160px;
+}
+
+div.lostpass {
+  position: absolute; left: 580px; top: 255px;
+}
+
+div.menu {
+  display: inline;
+  margin-left: 10%;
+}
+
+div.menu2 {
+  display: inline;
+  margin-left: 20%;
+}
+
+div.foot {
+  text-align: center;
+  margin-top: 15px;
+}
+
+div.pagename {
+  text-align: center;
+  font-weight: bold;
+  margin: 15px;
+}
+
+div.text {
+  text-align: justify;
+  margin-left: 10px;
+  margin-right: 10px;
+}
+
+div.mail {
+  margin-left: 25px;
+  margin-top: 15px;
+}
+
+div.news {
+  text-align: justify;
+  margin-left: 15px;
+  margin-right: 15px;
+}
+
+div.menu3 {
+  display: inline;
+  margin-left: 30%;
+}
+
+div.text2 {
+  text-align: justify;
+  margin-left: 10px;
+  margin-right: 10px;
+  margin-top: 10px;
+  margin-bottom: 20px;
+}
+
+div.forms {
+  text-align: center;
+  margin-bottom: 5px;
+}
+
+div.text3 {
+  font-style: italic;
+  margin-left: 10px;
+  margin-right: 10px;
+  margin-top: 10px;
+  margin-bottom: 15px;
+}
+
+div.forms2 {
+  text-align: right;
+  margin-bottom: 5px;
+  margin-left: 25%;
+  width: 30%;
+}
+
+input:hover, select:hover {
+  background: #7B1D1D;
+}
+
+input:focus, select:focus {
+  background: #7B1D1D;
+}
+
+span.info {
+  display: block;
+  margin-bottom: 3px;
+}
+
+span.login {
+  display: block;
+  margin-bottom: 5px;
+  text-align: right;
+}
+
+span.login2 {
+  display: block;
+  margin-bottom:5px;
+  text-align: center;
+}

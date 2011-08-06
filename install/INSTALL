@@ -1,0 +1,35 @@
+Wymagania:
+Aby gra poprawnie dzia³a³a musz± byæ spe³nione nastêpuj±ce wymagania:
+PHP - wersja co najmniej 5.0 (testowane na 5.1.6)
+MySQL - wersja co najmniej 4.0 (testowane na 5.0.26)
+PostgreSQL - wersja eksperymentalna (nie wszystko dzia³a poprawnie) - testowane na wersji 8.0
+
+
+Instalacja:
+1. Dowiedz siê jak± wersjê bazy danych posiadasz przed przyst±pieniem do instalacji.
+2. Dowiedz siê czy twój serwer ma mo¿liwo¶æ wysy³ania maili (poprzez funkcjê mail()). Je¿eli nie, podczas instalacji bêdziesz móg³ ustawiæ zewnêtrzny serwer pocztowy.
+3. Skopiuj pliki z gr± na serwer. Aby by³a mo¿liwo¶æ ³adowania avatarów oraz herbów klanów musisz ustawiæ odpowiednie atrybuty katalogom avatars, images/tribes oraz katalogowi templates_c. Atrybuty ustawia siê wpisuj±c w programie ftp komendê chmod 777 [nazwa katalogu] np chmod 777 avatars. 
+4. Nadaj odpowiednie uprawnienia plikom includes/config.php oraz mailer/mailerconfig.php
+5. Uruchom plik install/install.php (b±d¼ te¿ po prostu wejd¼ na adres swojej gry) - stworzy on bazê danych, odpowiednie pliki konfiguracyjne oraz admina w grze
+6. Dla bezpieczeñstwa wykasuj katalog install oraz przywróc stare uprawniena plikom includes/config.php oraz mailer/mailerconfig.php
+
+
+Upgrade z wcze¶niejszych wersji:
+UWAGA!! Przed wykonaniem upgradu wykonaj kopiê zapasow± bazy danych.
+1. Rêcznie przegraj nowe pliki (zobacz plik ChangeLog).
+2. Nadaj odpowiednie uprawnienia plikowi includes/config.php np chmod 666 includes/config.php
+3. Modyfikacjê bazy danych mo¿na wykonaæ poprzez skrypt install.php.
+
+
+Gar¶æ porad:
+- Niestety aby zarz±dzaæ tego typu gr± trzeba mieæ jakie takie pojêcie o php i mysql.
+- Automatyczne resety - aby wykonaæ automatyczny reset w grze musisz mieæ dostêp na serwerze do opcji CronJobs. Tam wpisujesz czas w jakim ma siê wykonywaæ skrypt resetu a w linii komend wpisujesz co¶ takiego:
+lynx -dump http://adres/katalog/reset.php
+- Je¿eli nie posiadasz opcji Cron Jobs na serwerze, mo¿esz wykonywaæ automatyczne resety w pliku city.php (domy¶lnie wy³±czone). W takim wypadku wykasuj plik reset.php z katalogu g³ównego.
+- Obecna wersja gry jest wersj± rozwojow± - st±d mog± siê w niej znajdowaæ jakie¶ b³êdy.
+- Pomoc dotycz±ca instalacji, prowadzenia oraz modyfikacji gry nie jest prowadzona przez komunikatory, a jedynie na forum, mailowo lub listach dyskusyjnych.
+- Pamiêtaj o prawach autorskich - nie zamieszczenie linku do strony zespo³u jest traktowane jako ³amanie prawa miêdzynarodowego (chodzi o zmianê stopki - wykasowanie informacji kto jest autorem skryptów). Jedyne dopuszczalne zmiany podane s± na stronie zespo³u, w odpowiednim artykule.
+- W katalogu install oprócz plików istalacyjnych znajduje siê skrypt do przygotowania nowej ery w grze.
+- Je¿eli nie dzia³aj± Ci resety przez Cron, przeczytaj dok³adnie komentarze zawarte w pliku reset.php
+
+2007-03-07 Bartek thindil Jasicki

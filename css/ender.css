@@ -1,0 +1,43 @@
+* {
+	color: #888888;
+	font-family: verdana;
+	font-size: 10px;
+}
+.td {
+	border-top: solid #888888 1px;
+	border-bottom: solid #888888 1px;
+	border-left: solid #888888 1px;
+	border-right: solid #888888 1px;
+}
+input, textarea, select {
+	color: #bbbbbb;
+	font-size: 10 px;
+	background: black;
+	border: solid #888888 1px;
+}
+a {
+	text-decoration: none;
+	text-transform: none;
+	color: #bbbbbb;
+	font-size: 10px;
+}
+a:hover {
+	text-decoration: none;
+	text-transform: none;
+	color: #fffc9f;
+	font-size: 10px;
+}
+body {
+	background: #000000;
+	margin: 0 0 0 0;
+}
+body, iframe, select, textarea {
+	overflow: auto;
+	scrollbar-face-color: #333333;
+	scrollbar-highlight-color: #111111;
+	scrollbar-3dlight-color: #333333;
+	scrollbar-darkshadow-color: #111111;
+	scrollbar-shadow-color: #000000;
+	scrollbar-arrow-color: #000000;
+	scrollbar-track-color: #333333;
+}

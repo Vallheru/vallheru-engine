@@ -1,0 +1,42 @@
+* {
+color: green;
+font-family: verdana;
+font-size: 10px;
+}
+.td {
+border-top: solid black 1px;
+border-bottom: solid black 1px;
+border-left: solid black 1px;
+border-right: solid black 1px;
+}
+input, textarea, select {
+color: green;
+font-size: 10 px;
+background: black;
+border: solid gray 1px;
+}
+a {
+text-decoration: none;
+text-transform: none;
+color: green;
+font-size: 10px;
+}
+a:hover {
+text-decoration: none;
+text-transform: none;
+color: red;
+font-size: 10px;
+}
+body {
+background: black;
+}
+body, iframe, select, textarea {
+scrollbar-face-color: black;
+scrollbar-highlight-color: gray; 
+scrollbar-shadow-color: gray; 
+scrollbar-3dlight-color: black; 
+scrollbar-arrow-color: gray;
+scrollbar-track-color: black; 
+scrollbar-darkshadow-color: black; 
+scrollbar-base-color: black;
+}

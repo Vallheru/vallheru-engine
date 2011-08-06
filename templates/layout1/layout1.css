@@ -1,0 +1,67 @@
+.light {
+  color: #FFD700;
+  font-family: Verdana, Arial, Helvetica, sans-serif;
+   font-size: 11px;
+}
+
+input, textarea, select {
+  color: #FFD700;
+  font-size: 11px;
+  background: #000000;
+  border: solid gray 1px;
+}
+
+a:link, a:active, a:visited {
+  color: #FFFFFF;
+  text-decoration: none;
+}
+a:hover {
+  text-decoration: none;
+  color: #00FF00;
+}
+
+body {
+  background: #000000;
+}
+
+.dark {
+  color : black;
+  font-family: Verdana, Arial, Helvetica, sans-serif;
+  font-size: 11px;
+}
+
+table.main {
+  background : url('images/main.jpg');
+  border-width : 0px;
+}
+
+td.head {
+  background : url('images/head.gif');
+  border-width : 0px;
+}
+
+table.panels {
+  background : url('images/panels.jpg');
+  border-width : 0px;
+  text-align : center;
+}
+
+td.center {
+  background : url('images/center.jpg');
+  border-width : 0px;
+  color : #000000;
+}
+
+td.foot {
+  background : url('images/foot.gif');
+  border-width : 0px;
+  text-align : center;
+}
+
+input:hover, textarea:hover, select:hover {
+  background: #7B1D1D;
+}
+
+input:focus, textarea:focus, select:focus {
+  background: #7B1D1D;
+}
