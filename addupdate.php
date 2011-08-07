@@ -84,7 +84,10 @@ if (isset ($_GET['action']) && $_GET['action'] == 'add')
     $strTitle = $db -> qstr($_POST['addtitle'], get_magic_quotes_gpc());
     $strUpdate = $db -> qstr($_POST['addupdate'], get_magic_quotes_gpc());
     $strDate = $db -> DBDate($data);
-    $strLang = (!in_array($_POST['addlang'], $arrLanguage) ? 'pl' : $_POST['addlang'];
+    if (!in_array($_POST['addlang'], $arrLanguage))
+      {
+	$strLang = $player -> lang;
+      }
     $db -> Execute("INSERT INTO `updates` (`starter`, `title`, `updates`, `time`, `lang`) VALUES('(".$player -> user.")', ".$strTitle.", ".$strUpdate.", ".$strDate.", '".$strLang."')") or error(E_DB);
     error (U_SUCCES);
 }

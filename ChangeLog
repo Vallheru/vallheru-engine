@@ -1,5 +1,7 @@
 2011-08-07  Bartek thindil Jasicki  <thindil@tuxfamily.org>
 
+	* BUG,addupdate.php:
+	fixed typo
 	* BUG,addupdate.php, battle.php, explore.php, includes/turnfight.php, templates/layout1/turnfight1.tpl,
 	templates/turnfight1.tpl, tribearmor.php:
 	fixed few security bugs
