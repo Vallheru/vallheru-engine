@@ -769,7 +769,7 @@ if (isset($_GET['view']) && $_GET['view'] == 'style')
     */
     if (isset($_GET['step']) && $_GET['step'] == 'graph')
     {
-        if (!isset($_POST['graphsserver']))
+        if (!isset($_POST['graphserver']))
         {
             error(ERROR);
         }
