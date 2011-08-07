@@ -1,5 +1,7 @@
 2011-08-07  Bartek thindil Jasicki  <thindil@tuxfamily.org>
 
+	* BUG,index.php, templates/index.tpl:
+	fixed some notices
 	* UPDATE,account.php, addnews.php, addupdate.php, admin.php, adodb/drivers/adodb-mysqli.inc.php,
 	aktywacja.php, court.php, index.php, library.php, logout.php, news.php, preset.php, register.php: 
 	small code optimization

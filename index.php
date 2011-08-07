@@ -27,7 +27,7 @@
 //   along with this program; if not, write to the Free Software
 //   Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 //
-// $Id: index.php 835 2006-11-22 17:40:22Z thindil $
+// $Id$
 
 require_once ('includes/config.php');
 if (!$gamename) 
@@ -181,7 +181,8 @@ if (!$gamename)
                                 "News" => NEWS,
                                 "Charset" => CHARSET,
                                 "Codexdate" => $objCodexdate -> fields['date'],
-                                "Pagetitle" => WELCOME));
+                                "Pagetitle" => WELCOME,
+				"Step" => ""));
         $smarty->display('index.tpl');
         $objCodexdate -> Close();
     }
