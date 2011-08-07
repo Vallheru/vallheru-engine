@@ -84,7 +84,8 @@ if (isset ($_GET['action']) && $_GET['action'] == 'add')
     $strTitle = $db -> qstr($_POST['addtitle'], get_magic_quotes_gpc());
     $strUpdate = $db -> qstr($_POST['addupdate'], get_magic_quotes_gpc());
     $strDate = $db -> DBDate($data);
-    if (!in_array($_POST['addlang'], $arrLanguage))
+    $strLang = $_POST['addlang'];
+    if (!in_array($strLang, $arrLanguage))
       {
 	$strLang = $player -> lang;
       }
