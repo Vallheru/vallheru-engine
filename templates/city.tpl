@@ -1,7 +1,7 @@
 {if $Item == "0" && $Location == 'Altara'}
     {$Cityinfo}<br /><br />
     
-    <table>
+    <table align="center">
         {section name=row1 loop=$Titles}
             {if $smarty.section.row1.index == 0 || $smarty.section.row1.index == 3 || $smarty.section.row1.index == 6}
                 <tr>

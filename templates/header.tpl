@@ -9,7 +9,7 @@
 
 <body onload="window.status='{$Gamename}'">
 
-<table width="700" class="td" cellpadding="0" cellspacing="0" align="center">
+<table width="85%" class="td" cellpadding="0" cellspacing="0" align="center">
     <tr>
         <td colspan="3" valign="top" align="center">
             <b>{$Gametime}:</b> {$Time} <b>{$Gamename}</b>
@@ -17,7 +17,7 @@
     </tr>
     <tr>
         {if $Stephead != "new"}
-        <td valign="top" width="20%">
+        <td valign="top" width="15%">
             <table cellpadding="0" cellspacing="0" class="td" width="100%">
                 <tr>
                     <td align="center">

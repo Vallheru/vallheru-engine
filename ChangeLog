@@ -1,5 +1,7 @@
 2011-08-07  Bartek thindil Jasicki  <thindil@tuxfamily.org>
 
+	* UPDATE,templates/layout1/header.tpl, templates/header.tpl, templates/city.tpl: 
+	small changes in layout
 	* BUG,account.php: 
 	fixed bug with selecting graphical layout
 	* UPDATE,account.php, addnews.php, addupdate.php, admin.php, adodb/drivers/adodb-mysqli.inc.php,
