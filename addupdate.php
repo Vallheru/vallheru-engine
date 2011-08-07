@@ -27,13 +27,13 @@
 //   along with this program; if not, write to the Free Software
 //   Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 //
-// $Id: addupdate.php 741 2006-10-19 12:14:28Z thindil $
+// $Id$
 
 $title = "Dodaj Wieść";
 require_once("includes/head.php");
 
 /**
-* Get the localization for game
+* Get the localization of game
 */
 require_once("languages/".$player -> lang."/addupdate.php");
 
@@ -43,24 +43,10 @@ if ($player -> rank != "Admin")
 }
 
 /**
-* Check avaible languages
+* Check available languages
 */    
-$path = 'languages/';
-$dir = opendir($path);
-$arrLanguage = array();
-$i = 0;
-while ($file = readdir($dir))
-{
-    if (!ereg(".htm*$", $file))
-    {
-        if (!ereg("\.$", $file))
-        {
-            $arrLanguage[$i] = $file;
-            $i = $i + 1;
-        }
-    }
-}
-closedir($dir);
+$arrLanguage = scandir('languages/', 1);
+$arrLanguage = array_diff($arrLanguage, array(".", "..", "index.htm"));
 
 $smarty -> assign ( array("Button" => U_ADD, 
                           "Link" => "addupdate.php?action=add", 

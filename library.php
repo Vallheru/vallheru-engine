@@ -4,10 +4,10 @@
  *   Library with players texts
  *
  *   @name                 : library.php                            
- *   @copyright            : (C) 2004,2005,2006 Vallheru Team based on Gamers-Fusion ver 2.5
- *   @author               : thindil <thindil@users.sourceforge.net>
- *   @version              : 1.0
- *   @since                : 15.02.2006
+ *   @copyright            : (C) 2004,2005,2006,2011 Vallheru Team based on Gamers-Fusion ver 2.5
+ *   @author               : thindil <thindil@tuxfamily.org>
+ *   @version              : 1.4
+ *   @since                : 07.08.2011
  *
  */
 
@@ -96,22 +96,8 @@ if (!isset($_GET['step']))
 */
 if (isset($_GET['step']) && $_GET['step'] == 'add')
 {
-    $path = 'languages/';
-    $dir = opendir($path);
-    $arrLanguage = array();
-    $i = 0;
-    while ($file = readdir($dir))
-    {
-        if (!ereg(".htm*$", $file))
-        {
-            if (!ereg("\.$", $file))
-            {
-                $arrLanguage[$i] = $file;
-                $i = $i + 1;
-            }
-        }
-    }
-    closedir($dir); 
+    $arrLanguage = scandir('languages/', 1);
+    $arrLanguage = array_diff($arrLanguage, array(".", "..", "index.htm"));
 
     $arrType = array(T_TYPE1, T_TYPE2);
     $smarty -> assign(array("Llang" => $arrLanguage,

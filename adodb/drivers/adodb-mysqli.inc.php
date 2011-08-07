@@ -969,7 +969,7 @@ class ADORecordSet_mysqli extends ADORecordSet{
         }
 
         //Because you can have one attached result, without tripping mysqli_more_results
-        @mysqli_next_result($this->connection->_connectionID);
+        //@mysqli_next_result($this->connection->_connectionID);
 
 
 		mysqli_free_result($this->_queryID); 

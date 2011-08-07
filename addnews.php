@@ -4,10 +4,10 @@
  *   Adding news in game
  *
  *   @name                 : addnews.php                            
- *   @copyright            : (C) 2004-2005 Vallheru Team based on Gamers-Fusion ver 2.5
- *   @author               : thindil <thindil@users.sourceforge.net>
- *   @version              : 1.0 rc1
- *   @since                : 06.12.2005
+ *   @copyright            : (C) 2004-2005,2011 Vallheru Team based on Gamers-Fusion ver 2.5
+ *   @author               : thindil <thindil@tuxfamily.org>
+ *   @version              : 1.4
+ *   @since                : 07.08.2011
  *
  */
 
@@ -29,7 +29,7 @@
 //
 // 
 
-$title = "Dodaj PlotkÄ"; 
+$title = "Dodaj Plotkę"; 
 require_once("includes/head.php");
 
 /**
@@ -44,23 +44,9 @@ if ($player -> rank != "Admin" && $player -> rank != 'Staff' && $player -> rank 
 
 /**
 * Check avaible languages
-*/    
-$path = 'languages/';
-$dir = opendir($path);
-$arrLanguage = array();
-$i = 0;
-while ($file = readdir($dir))
-{
-    if (!ereg(".htm*$", $file))
-    {
-        if (!ereg("\.$", $file))
-        {
-            $arrLanguage[$i] = $file;
-            $i = $i + 1;
-        }
-    }
-}
-closedir($dir);
+*/
+$arrLanguage = scandir('languages/', 1);
+$arrLanguage = array_diff($arrLanguage, array(".", "..", "index.htm"));
 
 /**
 * Assign variables and display page
@@ -73,14 +59,19 @@ $smarty -> assign(array("Ntitle" => N_TITLE,
 $smarty -> display('addnews.tpl');
 
 if (isset ($_GET['action']) && $_GET['action'] == 'add') 
-{
-	if (empty ($_POST['addtitle']) || empty ($_POST['addnews'])) 
-    {
-		error (EMPTY_FIELDS);
-	}
-	$_POST['addnews'] = nl2br($_POST['addnews']);	
-	$db -> Execute("INSERT INTO news (starter, title, news, lang, added) VALUES('".$player -> user." (".$player -> id.")','".$_POST['addtitle']."','".$_POST['addnews']."', '".$_POST['addlang']."', 'N')") or error(E_DB);
-	error (N_SUCCES);
+  {
+    if (empty ($_POST['addtitle']) || empty ($_POST['addnews'])) 
+      {
+	error (EMPTY_FIELDS);
+      }
+    $_POST['addnews'] = nl2br($_POST['addnews']);
+    $strLang = $_POST['addlang'];
+    if (!in_array($strLang, $arrLanguage))
+      {
+	$strLang = $player -> lang;
+      }
+    $db -> Execute("INSERT INTO news (starter, title, news, lang, added) VALUES('".$player -> user." (".$player -> id.")','".$_POST['addtitle']."','".$_POST['addnews']."', '".$strLang."', 'N')") or error(E_DB);
+    error (N_SUCCES);
 }
 
 require_once("includes/foot.php");
