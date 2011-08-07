@@ -4,10 +4,10 @@
  *   Explore forest and mountains
  *
  *   @name                 : explore.php                            
- *   @copyright            : (C) 2004,2005,2006 Vallheru Team based on Gamers-Fusion ver 2.5
+ *   @copyright            : (C) 2004,2005,2006,2011 Vallheru Team based on Gamers-Fusion ver 2.5
  *   @author               : thindil <thindil@users.sourceforge.net>
- *   @version              : 1.3
- *   @since                : 30.10.2006
+ *   @version              : 1.4
+ *   @since                : 07.08.2011
  *
  */
  
@@ -485,6 +485,7 @@ if (isset($_GET['action']) && $_GET['action'] == 'moutains' && $player -> locati
         {
             $_POST['number'] = 1;
         }
+	$_POST['number'] = intval($_POST['number']);
         $answer = $db -> Execute("SELECT `answer` FROM `bridge` WHERE `id`=".$_POST['number']);
         $test = $db -> Execute("SELECT `bridge` FROM `players` WHERE `id`=".$player -> id);
         if ($test -> fields['bridge'] == 'Y') 

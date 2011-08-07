@@ -8,7 +8,7 @@
  *   @author               : thindil <thindil@tuxfamily.org>
  *   @author               : eyescream <tduda@users.sourceforge.net>
  *   @version              : 1.4
- *   @since                : 06.08.2011
+ *   @since                : 07.08.2011
  *
  */
 
@@ -318,6 +318,14 @@ if (isset ($_GET['step']) && $_GET['step'] == 'daj')
         }
         $przed = $db -> Execute("SELECT * FROM equipment WHERE id=".$_POST['przedmiot']);
         if (!$przed -> fields['name']) 
+        {
+            error (ERROR);
+        }
+	if ($przed -> fields['status'] != 'U') 
+        {
+            error (ERROR);
+        }
+        if ($przed -> fields['owner'] != $player -> id) 
         {
             error (ERROR);
         }

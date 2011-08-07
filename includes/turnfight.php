@@ -4,10 +4,10 @@
  *   Turn fight players vs monsters
  *
  *   @name                 : turnfight.php                            
- *   @copyright            : (C) 2004,2005,2006,2007 Vallheru Team based on Gamers-Fusion ver 2.5
- *   @author               : thindil <thindil@users.sourceforge.net>
- *   @version              : 1.3
- *   @since                : 28.02.2007
+ *   @copyright            : (C) 2004,2005,2006,2007,2011 Vallheru Team based on Gamers-Fusion ver 2.5
+ *   @author               : thindil <thindil@tuxfamily.org>
+ *   @version              : 1.4
+ *   @since                : 07.08.2011
  *
  */
  
@@ -27,7 +27,7 @@
 //   along with this program; if not, write to the Free Software
 //   Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 //
-// $Id: turnfight.php 905 2007-02-28 21:33:05Z thindil $
+// $Id$
 
 /**
 * Get the localization for game
@@ -240,14 +240,14 @@ function turnfight($expgain,$goldgain,$action,$addres)
     {
         $zmeczenie = $_SESSION['exhaust'];
     }
-    if (isset($_POST['miss']) && $_POST['miss'] > $myunik) 
+    if (isset($_SESSION['miss']) && $_SESSION['miss'] > $myunik) 
     {
-        $myunik = $_POST['miss'];
+        $myunik = $_SESSION['miss'];
     }
     $amount = 1;
-    if (isset ($_POST['razy'])) 
+    if (isset ($_SESSION['razy'])) 
     {
-        $amount = $_POST['razy'];
+        $amount = $_SESSION['razy'];
     }
     if (isset($_SESSION['mon0'])) 
     {
@@ -688,7 +688,7 @@ function turnfight($expgain,$goldgain,$action,$addres)
     {
         $db -> Execute("INSERT INTO events (text) VALUES('Gracz ".$player -> user." ".DEFEAT." ".$enemy['name']."')");
         $db -> Execute("UPDATE players SET credits=credits+".$goldgain." WHERE id=".$player -> id);
-        $smarty -> assign ("Message", "<br /><li><b>".YOU_DEFEAT." <b>".$_POST['razy']." ".$enemy['name']."</b>.");
+        $smarty -> assign ("Message", "<br /><li><b>".YOU_DEFEAT." <b>".$_SESSION['razy']." ".$enemy['name']."</b>.");
         $smarty -> display ('error1.tpl');
         $smarty -> assign ("Message", "<li><b>".REWARD." <b>".$expgain."</b> ".EXP_PTS." ".AND_GAIN." <b>".$goldgain."</b> ".COINS);
         $smarty -> display ('error1.tpl');
@@ -1387,8 +1387,6 @@ function fightmenu ($points,$exhaust,$round,$addres)
     }
     $rest = ($player -> cond / 10);
     $smarty -> assign(array("Rest" => $rest, 
-                            "Myunik" => $myunik, 
-                            "Amount" => $amount,
                             "Aescape" => A_ESCAPE,
                             "Arest" => A_REST,
                             "Aexhaust" => EXHAUST,

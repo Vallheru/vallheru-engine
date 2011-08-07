@@ -7,7 +7,7 @@
  *   @copyright            : (C) 2004,2005,2006,2011 Vallheru Team based on Gamers-Fusion ver 2.5
  *   @author               : thindil <thindil@tuxfamily.org>
  *   @version              : 1.4
- *   @since                : 06.08.2011
+ *   @since                : 07.08.2011
  *
  */
 
@@ -84,7 +84,8 @@ if (isset ($_GET['action']) && $_GET['action'] == 'add')
     $strTitle = $db -> qstr($_POST['addtitle'], get_magic_quotes_gpc());
     $strUpdate = $db -> qstr($_POST['addupdate'], get_magic_quotes_gpc());
     $strDate = $db -> DBDate($data);
-    $db -> Execute("INSERT INTO `updates` (`starter`, `title`, `updates`, `time`, `lang`) VALUES('(".$player -> user.")', ".$strTitle.", ".$strUpdate.", ".$strDate.", '".$_POST['addlang']."')") or error(E_DB);
+    $strLang = (!in_array($_POST['addlang'], $arrLanguage) ? 'pl' : $_POST['addlang'];
+    $db -> Execute("INSERT INTO `updates` (`starter`, `title`, `updates`, `time`, `lang`) VALUES('(".$player -> user.")', ".$strTitle.", ".$strUpdate.", ".$strDate.", '".$strLang."')") or error(E_DB);
     error (U_SUCCES);
 }
 

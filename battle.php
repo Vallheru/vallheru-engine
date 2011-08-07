@@ -4,10 +4,10 @@
  *   Battle Arena - figth between players and player vs monsters
  *
  *   @name                 : battle.php                            
- *   @copyright            : (C) 2004,2005,2006 Vallheru Team based on Gamers-Fusion ver 2.5
- *   @author               : thindil <thindil@users.sourceforge.net>
- *   @version              : 1.3
- *   @since                : 16.10.2006
+ *   @copyright            : (C) 2004,2005,2006,2011 Vallheru Team based on Gamers-Fusion ver 2.5
+ *   @author               : thindil <thindil@tuxfamily.org>
+ *   @version              : 1.4
+ *   @since                : 07.08.2011
  *
  */
 
@@ -27,7 +27,7 @@
 //   along with this program; if not, write to the Free Software
 //   Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 //
-// $Id: battle.php 727 2006-10-16 15:48:33Z thindil $
+// $Id$
 
 $title = "Arena Walk";
 require_once("includes/head.php");
@@ -464,23 +464,27 @@ if (isset ($_GET['action']) && $_GET['action'] == 'monster')
     {
         global $arrehp;
         global $newdate;
-        if (!isset($_POST['razy'])) 
+	if (!isset($_POST['razy']) && !isset ($_POST['action']))
         {
             error(ERROR);
         }
-        if (!ereg("^[1-9][0-9]*$", $_GET['fight1']) || !ereg("^[1-9][0-9]*$", $_POST['razy'])) 
+        if (!ereg("^[1-9][0-9]*$", $_GET['fight1']) || !isset ($_POST['action']) && !ereg("^[1-9][0-9]*$", $_POST['razy']))
         {
             error (NO_ID);
-        }
+        } 
         if ($player -> hp <= 0) 
         {
             error (NO_HP);
         }
-        if ($_POST['razy'] > 20)
+	if (!isset ($_POST['action']) && $_POST['razy'] > 20)
         {
             error(TOO_MUCH_MONSTERS);
         }
-        if ($player -> energy < $_POST['razy'] && !isset($_POST['action'])) 
+        if (isset($_POST['razy']) && !isset ($_POST['action']))
+        {
+            $_SESSION['razy'] = $_POST['razy'];
+        }
+	if (!isset($_POST['action']) && $player -> energy < $_POST['razy'])
         {
             error (NO_ENERGY2);
         }
@@ -518,18 +522,19 @@ if (isset ($_GET['action']) && $_GET['action'] == 'monster')
         */
         $expgain1 = ceil(rand($enemy1 -> fields['exp1'],$enemy1 -> fields['exp2']) * $span);
         $expgain = $expgain1;
-        if ($_POST['razy'] > 1)
+	if ($_SESSION['razy'] > 1)
         {
-            for ($k = 2; $k <= $_POST['razy']; $k++)
+            for ($k = 2; $k <= $_SESSION['razy']; $k++)
             {
                 $expgain = $expgain + ceil($expgain1 / 5 * (sqrt($k) + 4.5));
             }
         }
-        $goldgain = ceil((rand($enemy1 -> fields['credits1'],$enemy1 -> fields['credits2']) * $_POST['razy']) * $span);
+        $goldgain = ceil((rand($enemy1 -> fields['credits1'],$enemy1 -> fields['credits2']) * $_SESSION['razy']) * $span); 
         $enemy = array("strength" => $enemy1 -> fields['strength'], "agility" => $enemy1 -> fields['agility'], "speed" => $enemy1 -> fields['speed'], "endurance" => $enemy1 -> fields['endurance'], "hp" => $enemy1 -> fields['hp'], "name" => $enemy1 -> fields['name'], "exp1" => $enemy1 -> fields['exp1'], "exp2" => $enemy1 -> fields['exp2'], "level" => $enemy1 -> fields['level']);
         $arrehp = array ();
         if (!isset ($_POST['action'])) 
-        {
+	  {
+	    unset($_SESSION['miss']);
             $player -> energy = $player -> energy - $_POST['razy'];
             if ($player -> energy < 0) 
             {
@@ -537,11 +542,11 @@ if (isset ($_GET['action']) && $_GET['action'] == 'monster')
             }
             $db -> Execute("UPDATE players SET energy=".$player -> energy." WHERE id=".$player -> id);
             turnfight ($expgain,$goldgain,'',"battle.php?action=monster&fight1=".$enemy1 -> fields['id']);
-        } 
-            else 
-        {
+	  } 
+	else 
+	  {
             turnfight ($expgain,$goldgain,$_POST['action'],"battle.php?action=monster&fight1=".$enemy1 -> fields['id']);
-        }
+	  }
         $enemy1 -> Close();
     }
     /**
