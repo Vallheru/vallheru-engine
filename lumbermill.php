@@ -4,10 +4,10 @@
  *   Lumbermill - making arrows and bows
  *
  *   @name                 : lumbermill.php                            
- *   @copyright            : (C) 2004,2005,2006,2007 Vallheru Team based on Gamers-Fusion ver 2.5
+ *   @copyright            : (C) 2004,2005,2006,2007,2011 Vallheru Team based on Gamers-Fusion ver 2.5
  *   @author               : thindil <thindil@users.sourceforge.net>
- *   @version              : 1.3
- *   @since                : 05.03.2007
+ *   @version              : 1.4
+ *   @since                : 08.08.2011
  *
  */
 
@@ -422,7 +422,6 @@ if (isset ($_GET['mill']) && $_GET['mill'] == 'mill')
                                 "Lcomposite" => L_COMPOSITE,
                                 "Assignen" => ASSIGN_EN,
                                 "Menergy" => M_ENERGY,
-                                "Selectarr" => SELECT_ARR,
                                 "Amake" => A_MAKE));
         $objLumber -> Close();
     }
