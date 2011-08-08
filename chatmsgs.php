@@ -59,7 +59,7 @@ if ($stat -> fields['graphic'])
     $strCss = $stat -> fields['style'];
 }
 
-$chat = $db -> SelectLimit("SELECT * FROM chat WHERE lang='".$stat -> fields['lang']."' OR lang='".$stat -> fields['seclang']."' AND ownerid=0 OR ownerid=".$stat -> fields['id']." OR senderid=".$stat -> fields['id']." ORDER BY id DESC", 15);
+$chat = $db -> SelectLimit("SELECT * FROM chat WHERE lang='".$stat -> fields['lang']."' OR lang='".$stat -> fields['seclang']."' AND ownerid=0 OR ownerid=".$stat -> fields['id']." OR senderid=".$stat -> fields['id']." ORDER BY id DESC", 25);
 $pl = $db -> Execute("SELECT rank, id, lpv, user FROM players WHERE page='Chat'");
 $arrtext = array();
 $arrauthor = array();
