@@ -7,7 +7,7 @@
 <meta http-equiv="content-type" content="text/html; charset={$Charset}" />
 </head>
 <body bgcolor="black" text="#FFFC9F" alink="red" link="#FFD700" vlink="#FFD700">
-{if $Text[0] != ""}
+{if $Text1 != 0}
     <font face="verdana" size="-2">
     {section name=player loop=$Text}
         <b>{$Author[player]} {if $Showid == "1"}{$Cid}:{$Senderid[player]}{/if}</b>: {$Text[player]}<br />

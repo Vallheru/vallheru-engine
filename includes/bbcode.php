@@ -40,16 +40,20 @@ function bbcodetohtml($text)
     * Replace bad words
     */
     $objBadwords = $db -> Execute("SELECT * FROM bad_words");
+    $arrText = explode(" ", $text);
     while (!$objBadwords -> EOF)
-    {
-        $text = ereg_replace("( )".$objBadwords -> fields['bword'], ' [kwiatek]', $text);
-        $text = ereg_replace($objBadwords -> fields['bword']."( )", '[kwiatek] ', $text);
-        $text = ereg_replace("^".$objBadwords -> fields['bword'], '[kwiatek]', $text);
-        $text = ereg_replace("[[:punct:]]".$objBadwords -> fields['bword'], ' [kwiatek]', $text);
-        $text = ereg_replace($objBadwords -> fields['bword']."[[:punct:]]", '[kwiatek] ', $text);
-        $objBadwords -> MoveNext();
-    }
+      {
+	foreach ($arrText as &$word)
+	  {
+	    if (stripos($word, $objBadwords->fields['bword']) === 0)
+	      {
+		$word = '[kwiatek]';
+	      }
+	  }
+	$objBadwords->MoveNext();
+      }
     $objBadwords -> Close();
+    $text = implode(" ", $arrText);
 
     /**
     * Delete HTML tags from text
@@ -63,27 +67,23 @@ function bbcodetohtml($text)
     $arrBBoff = array('[/b]', '[/i]', '[/u]', '[/center]', '[/quote]');
     $arrHtmlon = array("<b>", "<i>", "<u>", "<center>", "<br />Cytat:<br /><i>");
     $arrHtmloff = array("</b>", "</i>", "</u>", "</center>", "&nbsp;</i>");
-    $arrRegex = array("#\[b\](.*?)\[\/b\]#si", "#\[i\](.*?)\[\/i\]#si", "#\[u\](.*?)\[\/u\]#si", "#\[center\](.*?)\[\/center\]#si", "#\[quote\](.*?)\[\/quote\]#si");
-    for ($j = 0; $j < 5; $j++)
-    {
-        $intTest = preg_match_all($arrRegex[$j], $text, $arrText, PREG_PATTERN_ORDER);
-        if ($intTest)
-        {
-            $i = 0;
-            foreach($arrText[1] as $strText)
-            {
-                $text = str_replace($arrText[0][$i], $arrHtmlon[$j].$strText.$arrHtmloff[$j], $text);
-                $i ++;
-            }
-        }
-        $text = str_replace($arrBBon[$j], "", $text);
-        $text = str_replace($arrBBoff[$j], "", $text);
-    }
+    for ($i = 0; $i < 5; $i++)
+      {
+	$text = str_replace($arrBBon[$i], $arrHtmlon[$i], $text);
+	$text = str_replace($arrBBoff[$i], $arrHtmloff[$i], $text);
+	if (strrpos($text, $arrHtmloff[$i]) < strrpos($text, $arrHtmlon[$i]))
+	  {
+	    $text = substr_replace($text, ' ', strrpos($text, $arrHtmlon[$i]), strrpos($text, $arrHtmlon[$i]) + strlen($arrHtmlon[$i]));
+	  }
+      }
   
     /**
     * Change \n on <br />
     */
     $text = nl2br($text);
+
+    $text = addslashes($text);
+
     /**
     * Add smiles
     */
@@ -92,7 +92,7 @@ function bbcodetohtml($text)
     $text = str_replace(":(","<img src=\"images/frown.gif\" title=\":( - smutny\" />", $text);
     $text = str_replace(":o","<img src=\"images/suprised.gif\" title=\":o - zdziwiony\" />", $text);
     $text = str_replace(";(","<img src=\"images/cry.gif\" title=\";( - płacze\" />", $text);
-    
+   
     /**
     * Return converted text
     */

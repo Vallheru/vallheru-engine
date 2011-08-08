@@ -4,10 +4,10 @@
  *   Polish language for bot class
  *
  *   @name                 : bot_class.php                            
- *   @copyright            : (C) 2004,2005,2006 Vallheru Team based on Gamers-Fusion ver 2.5
- *   @author               : thindil <thindil@users.sourceforge.net>
- *   @version              : 1.0
- *   @since                : 28.01.2006
+ *   @copyright            : (C) 2004,2005,2006,2011 Vallheru Team based on Gamers-Fusion ver 2.5
+ *   @author               : thindil <thindil@tuxfamily.org>
+ *   @version              : 1.4
+ *   @since                : 08.08.2011
  *
  */
 
@@ -27,25 +27,25 @@
 //   along with this program; if not, write to the Free Software
 //   Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 //
-// $Id: bot_class.php 566 2006-09-13 09:31:08Z thindil $
+// $Id$
 
 $arrReflectionsorg = array('ciebie');
 $arrReflectionsans = array('mnie');
-$arrPatsreglang = array($strName." .+ dla [0-9]+$", 
-                        $strName." .+ dla wszystkich!$",
-                        $strName." jakieś wieści?",
-                        $strName." potrzebuję .*",
-                        $strName." jestem .*",
-                        $strName." witaj",
-                        $strName." czuję się .*",
-                        $strName." jesteś .*",
-                        $strName." nie mogę .*",
-                        $strName." dlaczego .*",
-                        $strName." dawaj .*",
-                        $strName." daj .*",
-                        $strName." o której.*reset?",
-                        $strName." co sądzisz o .*",
-                        $strName." tak");
+$arrPatsreglang = array(".+ dla [0-9]+$", 
+                        ".+ dla wszystkich!$",
+                        "jakieś wieści?",
+                        "potrzebuję .*",
+                        "jestem .*",
+                        "witaj",
+                        "czuję się .*",
+                        "jesteś .*",
+                        "nie mogę .*",
+                        "dlaczego .*",
+                        "dawaj .*",
+                        "daj .*",
+                        "o której.*reset?",
+                        "co sądzisz o .*",
+                        "tak");
 $arrPatsanslang = array(array('Proszę %3 oto%1od %2.'), 
                         array('Uwaga %2 stawia wszystkim%1!'),
                         array('Oczywiście! %1',

@@ -8,7 +8,7 @@
 <link type="text/css" rel="stylesheet" href="css/{$CSS}" />
 </head>
 <body>
-{if $Text[0] != ""}
+{if $Text1 != 0}
     <font face="verdana" size="-2">
     {section name=player loop=$Text}
         <b>{$Author[player]} {if $Showid == "1"}{$Cid}:{$Senderid[player]}{/if}</b>: {$Text[player]}<br />

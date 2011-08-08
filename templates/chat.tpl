@@ -7,7 +7,7 @@
 <tr><td width="400" valign="top">
 <u><b>{$Inn}</b></u><br /><br />
 
-<iframe src="chatmsgs.php" width="105%" height="306" name="ifr" frameborder="0"></iframe>
+<iframe src="chatmsgs.php" width="105%" height="500" name="ifr" frameborder="0"></iframe>
 
 </td><td width="100" valign="top">
 &nbsp;</td></tr>

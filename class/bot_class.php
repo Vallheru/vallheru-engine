@@ -4,10 +4,10 @@
  *   Bot class - based on ELIZA algorithm
  *
  *   @name                 : bot_class.php                            
- *   @copyright            : (C) 2004,2005,2006 Vallheru Team based on Gamers-Fusion ver 2.5
- *   @author               : thindil <thindil@users.sourceforge.net>
- *   @version              : 1.0
- *   @since                : 28.01.2006
+ *   @copyright            : (C) 2004,2005,2006,2011 Vallheru Team based on Gamers-Fusion ver 2.5
+ *   @author               : thindil <thindil@tuxfamily.org>
+ *   @version              : 1.4
+ *   @since                : 08.08.2011
  *
  */
 
@@ -27,44 +27,44 @@
 //   along with this program; if not, write to the Free Software
 //   Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 //
-// $Id: bot_class.php 566 2006-09-13 09:31:08Z thindil $
+// $Id$
 
 class Bot 
 {
     /**
-	 * Text which write player to bot
+     * Text which write player to bot
      * @var string
      */
     var $strPlayertext;
     /**
      * Name of bot
-	 * @var string
+     * @var string
      */
     var $strBotname;
     /**
-	 * Array of player texts on which bot create answer
-	 * @var array
+     * Array of player texts on which bot create answer
+     * @var array
      */
     var $arrPatsreg;
     /**
-	 * Array of arrays of possibly answers on player text
-	 * @var array
+     * Array of arrays of possibly answers on player text
+     * @var array
      */
     var $arrPatsansw;
     /**
-	 * Array of personal pronouns to convert
-	 * @var array
+     * Array of personal pronouns to convert
+     * @var array
      */
     var $arrReflorg;
     /**
-	 * Array of converted personal pronouns
-	 * @var array
+     * Array of converted personal pronouns
+     * @var array
      */
     var $arrReflans;
     /**
      * Class constructor - get text and bot name
-	 * @param string $strText Player text
-	 * @param string $strName Bot name
+     * @param string $strText Player text
+     * @param string $strName Bot name
      */
     function Bot($strText, $strName) 
     {
@@ -79,32 +79,31 @@ class Bot
     }
     /**
      * Check - text go to bot?
-	 * @return boolean <b>true</b> when text is direct to bot otherwise <b>false</b>
+     * @return boolean <b>true</b> when text is direct to bot otherwise <b>false</b>
      */
     function Checkbot()
     {
-        $strText = "^".$this -> strBotname;
-        if (eregi($strText, $this -> strPlayertext))
+	if (strpos($this->strPlayertext, $this->strBotname) === 0)
         {
             return true;
         }
-            else
+	else
         {
             return false;
         }
     }
     /**
      * Create answer from bot
-	 * @return string Answer of bot
+     * @return string Answer of bot
      */
     function Botanswer()
     {
         global $player;
         global $db;
         $intKey = 0;
-        foreach ($this -> arrPatsreg as $strPatsreg)
-        {
-            if (eregi($strPatsreg, $this -> strPlayertext))
+        foreach ($this->arrPatsreg as $strPatsreg)
+	  {
+	    if (preg_match("/".$strPatsreg."/", $this->strPlayertext) == 1)
             {
                 break;
             }
