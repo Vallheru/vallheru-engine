@@ -7,7 +7,7 @@
  *   @copyright            : (C) 2004,2005,2006,2007,2011 Vallheru Team based on Gamers-Fusion ver 2.5
  *   @author               : thindil <thindil@tuxfamily.org>
  *   @version              : 1.4
- *   @since                : 05.08.2011
+ *   @since                : 08.08.2011
  *
  */
 
@@ -32,55 +32,22 @@
 /**
 * GZIP compression
 */
-/*
-$do_gzip_compress = FALSE;
 $compress = FALSE;
-$phpver = phpversion();
-$useragent = (isset($_SERVER["HTTP_USER_AGENT"]) ) ? $_SERVER["HTTP_USER_AGENT"] : $HTTP_USER_AGENT;
-if ( $phpver >= '4.0.4pl1' && ( strstr($useragent,'compatible') || strstr($useragent,'Gecko') ) ) 
-{
-    if ( extension_loaded('zlib') ) 
-    {
-        $compress = TRUE;
-        ob_start('ob_gzhandler');
-    }
-} 
-    elseif ( $phpver > '4.0' ) 
-{
-    if ( strstr($HTTP_SERVER_VARS['HTTP_ACCEPT_ENCODING'], 'gzip') ) 
-    {
-        if ( extension_loaded('zlib') ) 
-        {
-            $do_gzip_compress = TRUE;
-            $compress = TRUE;
-            ob_start();
-            ob_implicit_flush(0);
-            header('Content-Encoding: gzip');
-        }
-    }
-}*/
+if ($compress)
+  {
+    if (!ob_start("ob_gzhandler"))
+      {
+	ob_start();
+      }
+  }
 
-$start_time = microtime();
+$start_time = microtime(true);
 
 /**
 * Check avaible languages
-*/    
-$path = 'languages/';
-$dir = opendir($path);
-$arrLanguage = array();
-$i = 0;
-while ($file = readdir($dir))
-{
-    if (!ereg(".htm*$", $file))
-    {
-        if (!ereg("\.$", $file))
-        {
-            $arrLanguage[$i] = $file;
-            $i = $i + 1;
-        }
-    }
-}
-closedir($dir);
+*/ 
+$arrLanguage = scandir('languages/', 1);
+$arrLanguage = array_diff($arrLanguage, array(".", "..", "index.htm"));
 
 /**
 * Get the localization for game
@@ -88,11 +55,10 @@ closedir($dir);
 $strLanguage = $_SERVER['HTTP_ACCEPT_LANGUAGE'];
 foreach ($arrLanguage as $strTrans)
 {
-    $strSearch = "^".$strTrans;
-    if (eregi($strSearch, $strLanguage))
+  if (strpos($strLanguage, $strTrans) === 0)
     {
-        $strTranslation = $strTrans;
-        break;
+      $strTranslation = $strTrans;
+      break;
     }
 }
 if (!isset($strTranslation))
@@ -110,12 +76,38 @@ $smarty = new Smarty;
 
 $smarty-> compile_check = true;
 
-$db -> LogSQL();
-
 /**
 * Errors reporting level
 */
 error_reporting(E_ALL);
+
+$numquery = 0;
+$sqltime = 0;
+
+function &CountExecs($db, $sql, $inputarray)
+{
+  global $numquery;
+  global $sqltime;
+  if (!is_array($inputarray)) 
+    {
+      $numquery++;
+    }
+  else if (is_array(reset($inputarray))) 
+    {
+      $numquery += sizeof($inputarray);
+    }
+  else 
+    {
+      $numquery++;
+    }
+  $db->fnExecute = false;
+  $stime = microtime(true);
+  $result = $db->Execute($sql, $inputarray);
+  $sqltime += microtime(true) - $stime;
+  $db->fnExecute = 'CountExecs';
+  return $result;
+}
+$db->fnExecute = 'CountExecs';
 
 /**
 * function to catch errors and write it to bugtrack
@@ -124,6 +116,7 @@ function catcherror($errortype, $errorinfo, $errorfile, $errorline)
 {
     global $db;
     global $smarty;
+    global $sqltime;
     $reported = 0;
     $file = explode("/", $errorfile);
     $elements = count($file);
@@ -135,46 +128,22 @@ function catcherror($errortype, $errorinfo, $errorfile, $errorline)
     $referer = explode("/", $_SERVER['HTTP_REFERER']);
     $elements1 = count($referer);
     $numrefer = $elements1 - 1;
-    $objtest = $db -> Execute("SELECT * FROM `bugtrack`");
-    if (!empty($objtest -> fields['id']))
-    {
-        while (!$objtest -> EOF) 
-        {
-            if ($objtest -> fields['file'] == $file[$numfile]) 
-            {
-                if ($objtest -> fields['line'] == $errorline) 
-                {
-                    if ($objtest -> fields['info'] == $errorinfo) 
-                    {
-                        if ($objtest -> fields['type'] == $errortype) 
-                        {
-                            if ($objtest -> fields['referer'] == $referer[$numrefer]) 
-                            {
-                                $db -> Execute("UPDATE `bugtrack` SET `amount`=`amount`+1 WHERE `id`=".$objtest -> fields['id']);
-                                $reported = 1;
-                                break;
-                            }
-                        }
-                    }
-                }
-            }
-            $objtest -> MoveNext();
-        }
-    }
-    if (!empty($objtest -> fields['id']))
-    {
-        $objtest -> Close();
-    }
-    if (!$reported) 
-    {
+    $objtest = $db -> Execute("SELECT `id` FROM `bugtrack` WHERE `file`='".$file[$numfile]."' AND `line`=".$errorline." AND `info`='".$errorinfo."' AND `type`=".$errortype." AND `referer`='".$referer[$numrefer]."'");
+    if ($objtest -> fields['id'] > 0)
+      {
+	$db -> Execute("UPDATE `bugtrack` SET `amount`=`amount`+1 WHERE `id`=".$objtest -> fields['id']);
+      }
+    else
+      {
         $db -> Execute("INSERT INTO `bugtrack` (`type`, `info`, `file`, `line`, `referer`) VALUES(".$errortype.", '".$errorinfo."', '".$file[$numfile]."', ".$errorline.", '".$referer[$numrefer]."')");
-    }
+      }
+    $objtest -> Close();
     if ($errortype == E_USER_ERROR || $errortype == E_ERROR) 
-    {
+      {
         $smarty -> assign("Message", E_ERRORS);
         $smarty -> display('error1.tpl');
         exit;
-    } 
+      } 
 }
 
 /**
@@ -239,8 +208,8 @@ if (isset ($_POST['pass']) && $title == 'Wieści')
         else 
     {
         $intCtime = time() - 180;
-        $objQuery = $db -> Execute("SELECT count(*) FROM `players` WHERE `rank`!='Admin' AND rank!='Staff' AND `lpv`>=".$intCtime);
-        $numo = $objQuery -> fields['count(*)'];
+        $objQuery = $db -> Execute("SELECT count(`id`) FROM `players` WHERE `rank`!='Admin' AND rank!='Staff' AND `lpv`>=".$intCtime);
+        $numo = $objQuery -> fields['count(`id`)'];
         $objQuery -> Close();
         if ($numo >= $pllimit && $query -> fields['rank'] != 'Admin' && $query -> fields['rank'] != 'Staff' && $query -> fields['rank'] != "Królewski Błazen") 
         {
@@ -357,12 +326,12 @@ foreach ($arrLevel as $intLevel)
 
 $pct = (($player -> exp / $expn) * 100);
 $pct = round($pct,"0");
-$query = $db -> Execute("SELECT count(*) FROM `players` WHERE `refs`=".$player -> id);
-$ref = $query -> fields['count(*)'];
+$query = $db -> Execute("SELECT count(`id`) FROM `players` WHERE `refs`=".$player -> id);
+$ref = $query -> fields['count(`id`)'];
 $query -> Close();
 
-$query = $db -> Execute("SELECT count(*) FROM `log` WHERE `unread`='F' AND `owner`=".$player -> id);
-$numlog = $query -> fields['count(*)'];
+$query = $db -> Execute("SELECT count(`id`) FROM `log` WHERE `unread`='F' AND `owner`=".$player -> id);
+$numlog = $query -> fields['count(`id`)'];
 $query -> Close();
 
 /**
@@ -470,7 +439,7 @@ if (isset($_GET['step']) && $strFilename == 'newspaper.php')
     $smarty -> assign(array("Stephead" => $_GET['step'],
                             "Linksfile" => $arrFile));
 }
-    else
+ else
 {
     $objLinks = $db -> Execute("SELECT `id`, `file`, `text` FROM `links` WHERE `owner`=".$player -> id." ORDER BY `id` ASC");
     $arrFile = array('');
@@ -497,94 +466,95 @@ if ($player -> clas != 'Barbarzyńca')
     $smarty -> assign ("Spells", "<li><a href=\"czary.php\">".SPELLS_BOOK."</a></li>");
 }
 
-if ($player -> location == 'Altara' || $player -> location == 'Ardulith') 
-{
+switch($player->location)
+  {
+  case 'Altara':
+  case 'Ardulith':
     if ($player -> hp > 0) 
-    {
+      {
         $objHospass = $db -> Execute("SELECT `hospass` FROM `tribes` WHERE `id`=".$player -> tribe);
         if ($objHospass -> fields['hospass'] == "Y") 
-        {
+	  {
             $healneed = ($player -> max_hp - $player -> hp);
-        }
+	  }
         else
-        {
+	  {
             $healneed = ($player -> max_hp - $player -> hp) * 3;
-        }
+	  }
         $objHospass -> Close();
-    } 
-        else 
-    {
+      } 
+    else 
+      {
         $healneed = (50 * $player -> level);
-    }
+      }
     if ($healneed < 0)
-    {
+      {
         $healneed = 0;
-    }
+      }
     $smarty -> assign(array("Location" => "<li><a href=\"city.php\">".CITY."</a></li>",
                             "Battle" => "<li><a href=\"battle.php\">".B_ARENA."</a></li>",
                             "Hospital" => "<li><a href=\"hospital.php\">".HOSPITAL."</a> [".$healneed." sz]</li>",
                             "Lbank" => "<li><a href=\"bank.php\">".BANK."</a><br /><br /></li>"));
     if ($player -> tribe) 
-    {
+      {
         $smarty -> assign ("Tribe", "<li><a href=\"tribes.php?view=my\">".MY_TRIBE."</a></li>");
-    }
-}
-if ($player -> location == 'Podróż') 
-{
+      }
+    break;
+  case 'Podróż':
     $test = $db -> Execute("SELECT quest FROM questaction WHERE player=".$player -> id." AND action!='end'");
     if ($test -> fields['quest'] != 0) 
-    {
+      {
         $qlocation = $db -> Execute("SELECT location FROM quests WHERE qid=".$test -> fields['quest']);
         $smarty -> assign("Location", "<li><a href=\"".$qlocation -> fields['location']."?step=quest\">".RETURN_TO."</a></li>");
         $qlocation -> Close();
-    }
-        else
-    {
+      }
+    else
+      {
         if (!isset($_GET['step']))
-        {
+	  {
             $_GET['step'] = 'caravan';
-        }
+	  }
         $smarty -> assign("Location", "<li><a href=\"travel.php?akcja=".$_GET['akcja']."&amp;step=".$_GET['step']."\">".RETURN_TO2."</a></li>");
-    }
+      }
     $test -> Close();
-}
-if ($player -> location == 'Góry') 
-{
-    if ($player -> fight == 0) {
+    break;
+  case 'Góry':
+    if ($player -> fight == 0) 
+      {
         $smarty -> assign ("Location", "<li><a href=\"gory.php\">".MOUNTAINS."</a></li>");
-    } 
-        else 
-    {
+      } 
+    else 
+      {
         $smarty -> assign ("Location", "<li><a href=\"explore.php?akcja=gory\">".MOUNTAINS."</a></li>");
-    }
-}
-if ($player -> location == 'Las') 
-{
+      }
+    break;
+  case 'Las':
     if  ($player -> fight == 0) 
-    {
+      {
         $smarty -> assign ("Location", "<li><a href=\"las.php\">".FOREST."</a></li>");
-    } 
-        else 
-    {
+      } 
+    else 
+      {
         $smarty -> assign ("Location", "<li><a href=\"explore.php?akcja=las\">".FOREST."</a></li>");
-    }
-}
-if ($player -> location == 'Lochy') 
-{
+      }
+    break;
+  case 'Lochy':
     $smarty -> assign ("Location", "<li><a href=\"jail.php\">".JAIL."</a></li>");
-}
-if ($player -> location == 'Portal') 
-{
+    break;
+  case 'Portal':
     $smarty -> assign ("Location", "<li><a href=\"portal.php\">".PORTAL."</a></li>");
-}
-if ($player -> location == 'Astralny plan') 
-{
+    break;
+  case 'Astralny plan':
     $objFight = $db -> Execute("SELECT `fight` FROM `players` WHERE `id`=".$player -> id);
     $smarty -> assign ("Location", "<li><a href=\"portals.php?step=".$objFight -> fields['fight']."\">".ASTRAL_PLAN."</a></li>");
     $objFight -> Close();
-}
-$unread = $db -> Execute("SELECT count(*) FROM `mail` WHERE `owner`=".$player -> id." AND `zapis`='N' AND `unread`='F' AND `send`=0");
-$intUnreadmails = $unread -> fields['count(*)'];
+    break;
+  default:
+    break;
+  }
+
+$unread = $db -> Execute("SELECT count(`id`) FROM `mail` WHERE `owner`=".$player -> id." AND `zapis`='N' AND `unread`='F' AND `send`=0");
+$intUnreadmails = $unread -> fields['count(`id`)'];
 $unread -> Close();
 if ($intUnreadmails)
 {
@@ -602,25 +572,25 @@ if ($player -> tribe)
 }
 
 $intCtime = time() - 180;
-$objQuery = $db -> Execute("SELECT count(*) FROM `players` WHERE `page`='Chat' AND `lpv`>=".$intCtime);
-$numoc = $objQuery -> fields['count(*)'];
+$objQuery = $db -> Execute("SELECT count(`id`) FROM `players` WHERE `page`='Chat' AND `lpv`>=".$intCtime);
+$numoc = $objQuery -> fields['count(`id`)'];
 $objQuery -> Close();
 $smarty -> assign ("Players", $numoc);
 
-if ($player -> rank == 'Admin') 
-{
+switch ($player->rank)
+  {
+  case 'Admin':
     $smarty -> assign ("Special", "<li><a href=\"admin.php\">".KING."</a></li>");
-}
-
-if ($player -> rank == 'Staff') 
-{
+    break;
+  case 'Staff':
     $smarty -> assign ("Special", "<li><a href=\"staff.php\">".PRINCE."</a></li>");
-}
-
-if ($player -> rank == 'Sędzia') 
-{
+    break;
+  case 'Sędzia':
     $smarty -> assign ("Special", "<li><a href=\"sedzia.php\">".JUDGE."</a></li>");
-}
+    break;
+  default:
+    break;
+  }
 
 $smarty -> display ('header.tpl');
 
@@ -638,7 +608,7 @@ function error($text)
     global $sqltime;
     global $phptime;
     global $gamename;
-    if (!ereg("<a href",$text)) 
+    if (strpos($text, "<a href") === FALSE)
     {
         $text = $text." (<a href=\"".$_SERVER['PHP_SELF']."\">".BACK."</a>)";
     }
@@ -679,19 +649,19 @@ if ($player -> fight != 0 && (!in_array($title, $arrTitle)) && (in_array($player
         $strIndex = "mon".$k;
         unset($_SESSION[$strIndex]);
     }
-    unset($_SESSION['exhaust'], $_SESSION['round'], $_SESSION['points'], $_SESSION['amount'], $_SESSION['dodge']);
+    unset($_SESSION['exhaust'], $_SESSION['round'], $_SESSION['points'], $_SESSION['amount'], $_SESSION['dodge'], $_SESSION['miss']);
     error (ESCAPE);
 }
 
 /**
 * Delete sessions variables when player exit forums
 */
-if (isset($_SESSION['forums']) && !ereg("forums.php", $_SERVER['PHP_SELF']))
+if (isset($_SESSION['forums']) && (strpos("forums.php", $_SERVER['PHP_SELF']) === FALSE))
 {
     unset($_SESSION['forums']);
 }
 
-if (isset($_SESSION['tforums']) && !ereg("tforums.php", $_SERVER['PHP_SELF']))
+if (isset($_SESSION['tforums']) && (strpos("tforums.php", $_SERVER['PHP_SELF']) === FALSE))
 {
     unset($_SESSION['tforums']);
 }
