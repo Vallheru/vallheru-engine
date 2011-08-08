@@ -1,7 +1,7 @@
 <table width="100%">
 <tr><td colspan="2" align="center">
 <form method="post" action="chat.php?action=chat">
-[<a href="chat.php">{$Arefresh}</a>] <input type="text" name="msg" size="55" /> <input type="submit" value="{$Asend}" />
+[<a href="chat.php">{$Arefresh}</a>] <textarea name="msg" rows="1" cols="55"></textarea> <input type="submit" value="{$Asend}" />
 </form>
 </td></tr>
 <tr><td width="400" valign="top">
