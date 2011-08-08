@@ -4,11 +4,11 @@
  *   Show main news in game
  *
  *   @name                 : updates.php                            
- *   @copyright            : (C) 2004,2005,2006 Vallheru Team based on Gamers-Fusion ver 2.5
- *   @author               : thindil <thindil@users.sourceforge.net>
+ *   @copyright            : (C) 2004,2005,2006,2011 Vallheru Team based on Gamers-Fusion ver 2.5
+ *   @author               : thindil <thindil@tuxfamily.org>
  *   @author               : mori <ziniquel@users.sourceforge.net>
- *   @version              : 1.0
- *   @since                : 15.02.2006
+ *   @version              : 1.4
+ *   @since                : 08.08.2011
  *
  */
 
@@ -143,10 +143,10 @@ if (isset($_GET['step']) && $_GET['step'] == 'comments')
     */
     if (!isset($_GET['action']))
     {
-        displaycomments($_GET['text'], 'updates', 'upd_comments', 'updateid');
+        $amount = displaycomments($_GET['text'], 'updates', 'upd_comments', 'updateid');
         $smarty -> assign(array("Tauthor" => $arrAuthor,
             "Tbody" => $arrBody,
-            "Amount" => $i,
+            "Amount" => $amount,
             "Cid" => $arrId,
             "Tdate" => $arrDate,
             "Nocomments" => NO_COMMENTS,

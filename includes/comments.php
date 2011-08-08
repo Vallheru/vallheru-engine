@@ -4,10 +4,10 @@
  *   Comments to news, updates and polls
  *
  *   @name                 : comments.php                            
- *   @copyright            : (C) 2006,2007 Vallheru Team based on Gamers-Fusion ver 2.5
- *   @author               : thindil <thindil@users.sourceforge.net>
- *   @version              : 1.3
- *   @since                : 28.02.2007
+ *   @copyright            : (C) 2006,2007,2011 Vallheru Team based on Gamers-Fusion ver 2.5
+ *   @author               : thindil <thindil@tuxfamily.org>
+ *   @version              : 1.4
+ *   @since                : 08.08.2011
  *
  */
 
@@ -66,6 +66,7 @@ function displaycomments($intItemid, $strItemtable, $strCommentstable, $strComme
         $objComments -> MoveNext();
     }
     $objComments -> Close();
+    return $i;
 }
 
 /**
