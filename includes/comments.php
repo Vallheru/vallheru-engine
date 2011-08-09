@@ -50,7 +50,7 @@ function displaycomments($intItemid, $strItemtable, $strCommentstable, $strComme
     }
     $objText -> Close();
     $objQuery = $db -> Execute("SELECT count(`id`) FROM `".$strCommentstable."` WHERE `".$strCommentsid."`=".$intItemid);
-    $intPages = $objQuery->fields['count(`id`)'] / 25;
+    $intPages = ceil($objQuery->fields['count(`id`)'] / 25);
     $objQuery -> Close();
     $intPage = intval($intPage);
     if ($intPage == 0)
@@ -59,11 +59,7 @@ function displaycomments($intItemid, $strItemtable, $strCommentstable, $strComme
       }
     else if ($intPage == -1)
       {
-	$intPage = floor($intPages);
-	if ($intPage == 1)
-	  {
-	    $intPage = 2;
-	  }
+	$intPage = $intPages;
       }
     $objComments = $db->SelectLimit("SELECT `id`, `body`, `author`, `time` FROM `".$strCommentstable."` WHERE `".$strCommentsid."`=".$intItemid." ORDER BY `id`", 25, 25 * ($intPage - 1)) or die($db -> ErrorMsg());
     $arrBody = array();

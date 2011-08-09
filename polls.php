@@ -154,18 +154,6 @@ if (!isset($_GET['action']))
 }
 
 /**
- * Function check if value is valid.
- */
-function checkvalue($value)
-{
-  $value = intval($value);
-  if ($value < 1)
-    {
-      error(ERROR);
-    }
-}
-
-/**
 * Vote in poll
 */
 if (isset($_GET['action']) && $_GET['action'] == 'vote')
