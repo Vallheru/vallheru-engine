@@ -1,3 +1,8 @@
+2011-08-09  Bartek thindil Jasicki  <thindil@tuxfamily.org>
+
+	* UPDATE,install/db/update.sql:
+	some tweaks in database
+
 2011-08-08  Bartek thindil Jasicki  <thindil@tuxfamily.org>
 
 	* UPDATE,chatmsgs.php: 
