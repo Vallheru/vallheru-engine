@@ -82,8 +82,6 @@ function bbcodetohtml($text)
     */
     $text = nl2br($text);
 
-    $text = addslashes($text);
-
     /**
     * Add smiles
     */
