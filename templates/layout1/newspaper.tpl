@@ -40,6 +40,16 @@
             {$Tbody[newspaper3]}<br /><br />
         {/section}
     {/if}
+    {if $Tpages > 1}
+    	<br />{$Fpage}
+    	{for $page = 1 to $Tpages}
+	    {if $page == $Tpage}
+	        {$page}
+	    {else}
+                <a href="newspaper.php?comments={$Comments}&page={$page}">{$page}</a>
+	    {/if}
+    	{/for}
+    {/if}
     <br /><br /><center>
     <form method="post" action="newspaper.php?comments={$Comments}&amp;action=add">
         {$Addcomment}:<textarea name="body" rows="20" cols="50"></textarea><br />

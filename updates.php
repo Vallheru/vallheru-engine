@@ -8,7 +8,7 @@
  *   @author               : thindil <thindil@tuxfamily.org>
  *   @author               : mori <ziniquel@users.sourceforge.net>
  *   @version              : 1.4
- *   @since                : 08.08.2011
+ *   @since                : 09.08.2011
  *
  */
 
@@ -52,7 +52,7 @@ if ($player -> logins < 5)
 
 if (!isset ($_GET['view'])) 
 {
-    $upd = $db -> SelectLimit("SELECT * FROM updates WHERE lang='".$player -> lang."' ORDER BY id DESC", 1);
+    $upd = $db -> SelectLimit("SELECT * FROM `updates` WHERE `lang`='".$player -> lang."' ORDER BY `id` DESC", 1);
     if ($player -> rank == 'Admin') 
     {
         $modtext = "(<a href=\"addupdate.php?modify=".$upd -> fields['id']."\">".A_CHANGE."</a>)";
@@ -63,8 +63,8 @@ if (!isset ($_GET['view']))
     }
     if (isset($upd -> fields['id']))
     {
-        $objQuery = $db -> Execute("SELECT id FROM upd_comments WHERE updateid=".$upd -> fields['id']);
-        $intComments = $objQuery -> RecordCount();
+        $objQuery = $db -> Execute("SELECT count(`id`) FROM `upd_comments` WHERE `updateid`=".$upd -> fields['id']);
+        $intComments = $objQuery -> fields['count(`id`)'];
         $objQuery -> Close();
     }
         else
@@ -83,7 +83,7 @@ if (!isset ($_GET['view']))
 
 if (isset($_GET['view']))
 {
-    $upd = $db -> SelectLimit("SELECT * FROM updates WHERE lang='".$player -> lang."' ORDER BY id DESC", 10);
+    $upd = $db -> SelectLimit("SELECT * FROM `updates` WHERE `lang`='".$player -> lang."' ORDER BY `id` DESC", 10);
     $arrtitle = array();
     $arrstarter = array();
     $arrnews = array();
@@ -102,8 +102,8 @@ if (isset($_GET['view']))
         {
             $arrmodtext[$i] = '';
         }
-        $objQuery = $db -> Execute("SELECT id FROM upd_comments WHERE updateid=".$upd -> fields['id']);
-        $arrComments[$i] = $objQuery -> RecordCount();
+        $objQuery = $db -> Execute("SELECT count(`id`) FROM `upd_comments` WHERE `updateid`=".$upd -> fields['id']);
+        $arrComments[$i] = $objQuery -> fields['count(`id`)'];
         $objQuery -> Close();
         $arrtitle[$i] = $upd -> fields['title'];
         $arrstarter[$i] = $upd -> fields['starter'];
@@ -142,7 +142,15 @@ if (isset($_GET['step']) && $_GET['step'] == 'comments')
     * Display comments
     */
     if (!isset($_GET['action']))
-    {
+      {
+	if (!isset($_GET['page']))
+	  {
+	    $intPage = -1;
+	  }
+	else
+	  {
+	    $intPage = $_GET['page'];
+	  }
         $amount = displaycomments($_GET['text'], 'updates', 'upd_comments', 'updateid');
         $smarty -> assign(array("Tauthor" => $arrAuthor,
             "Tbody" => $arrBody,
@@ -154,6 +162,9 @@ if (isset($_GET['step']) && $_GET['step'] == 'comments')
             "Adelete" => A_DELETE,
             "Aadd" => A_ADD,
             "Aback" => A_BACK,
+	    "Tpages" => $intPages,
+	    "Tpage" => $intPage,
+	    "Fpage" => "Idź do strony:",
             "Writed" => WRITED));
     }
 

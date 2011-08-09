@@ -24,6 +24,16 @@
             {$Tbody[update]}<br /><br />
         {/section}
     {/if}
+    {if $Tpages > 1}
+    	<br />{$Fpage}
+    	{for $page = 1 to $Tpages}
+	    {if $page == $Tpage}
+	        {$page}
+	    {else}
+                <a href="updates.php?step=comments&text={$Text}&page={$page}">{$page}</a>
+	    {/if}
+    	{/for}
+    {/if}
     <br /><br /><center>
     <form method="post" action="updates.php?step=comments&amp;action=add">
         {$Addcomment}:<textarea name="body" rows="20" cols="50"></textarea><br />

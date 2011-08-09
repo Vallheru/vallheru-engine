@@ -4,11 +4,11 @@
  *   Forums in game
  *
  *   @name                 : forums.php                            
- *   @copyright            : (C) 2004,2005,2006 Vallheru Team based on Gamers-Fusion ver 2.5
- *   @author               : thindil <thindil@users.sourceforge.net>
+ *   @copyright            : (C) 2004,2005,2006,2011 Vallheru Team based on Gamers-Fusion ver 2.5
+ *   @author               : thindil <thindil@tuxfamily.org>
  *   @author               : mori <ziniquel@users.sourceforge.net>
- *   @version              : 1.3
- *   @since                : 16.10.2006
+ *   @version              : 1.4
+ *   @since                : 09.08.2011
  *
  */
 
@@ -28,7 +28,7 @@
 //   along with this program; if not, write to the Free Software
 //   Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 //
-// $Id: forums.php 727 2006-10-16 15:48:33Z thindil $
+// $Id$
 
 $title = "Forum"; 
 require_once("includes/head.php");
@@ -46,7 +46,7 @@ if (isset ($_GET['view']) && $_GET['view'] == 'categories')
     /**
      * Display categories viewable for all
      */
-    $cat = $db -> Execute("SELECT `id`, `name`, `desc` FROM categories WHERE `perm_visit` LIKE 'All;' AND `lang`='".$player -> lang."' OR `lang`='".$player -> seclang."' ORDER BY `id` ASC");
+    $cat = $db -> Execute("SELECT `id`, `name`, `desc` FROM `categories` WHERE `perm_visit` LIKE 'All;' AND `lang`='".$player -> lang."' OR `lang`='".$player -> seclang."' ORDER BY `id` ASC");
     $arrid = array();
     $arrname = array();
     $arrtopics = array();
@@ -54,8 +54,8 @@ if (isset ($_GET['view']) && $_GET['view'] == 'categories')
     $i = 0;
     while (!$cat -> EOF) 
     {
-        $query = $db -> Execute("SELECT count(*) FROM topics WHERE cat_id=".$cat -> fields['id']);
-        $arrtopics[$i] = $query -> fields['count(*)'];
+        $query = $db -> Execute("SELECT count(`id`) FROM `topics` WHERE `cat_id`=".$cat -> fields['id']);
+        $arrtopics[$i] = $query -> fields['count(`id`)'];
         $query -> Close();
         $arrid[$i] = $cat -> fields['id'];
         $arrname[$i] = $cat -> fields['name'];
@@ -71,11 +71,11 @@ if (isset ($_GET['view']) && $_GET['view'] == 'categories')
     {
         $strPermission = '%';
     }
-        else
+    else
     {
         $strPermission = $player -> rank;
     }
-    $cat = $db -> Execute("SELECT `id`, `name`, `desc` FROM categories WHERE `perm_visit` LIKE '%".$strPermission."%' AND `lang`='".$player -> lang."' OR `lang`='".$player -> seclang."' ORDER BY `id` ASC");
+    $cat = $db -> Execute("SELECT `id`, `name`, `desc` FROM `categories` WHERE `perm_visit` LIKE '%".$strPermission."%' AND `lang`='".$player -> lang."' OR `lang`='".$player -> seclang."' ORDER BY `id` ASC");
     while (!$cat -> EOF) 
     {
         if (in_array($cat -> fields['id'], $arrid))
@@ -83,8 +83,8 @@ if (isset ($_GET['view']) && $_GET['view'] == 'categories')
             $cat -> MoveNext();
             continue;
         }
-        $query = $db -> Execute("SELECT count(*) FROM topics WHERE `cat_id`=".$cat -> fields['id']);
-        $arrtopics[$i] = $query -> fields['count(*)'];
+        $query = $db -> Execute("SELECT count(`id`) FROM `topics` WHERE `cat_id`=".$cat -> fields['id']);
+        $arrtopics[$i] = $query -> fields['count(`id`)'];
         $query -> Close();
         $arrid[$i] = $cat -> fields['id'];
         $arrname[$i] = $cat -> fields['name'];
@@ -105,17 +105,31 @@ if (isset ($_GET['view']) && $_GET['view'] == 'categories')
 * Topic list
 */
 if (isset($_GET['topics'])) 
-{
-    if (!ereg("^[1-9][0-9]*$", $_GET['topics']))
-    {
-        error(ERROR);
-    }
+ {
+   checkvalue($_GET['topics']);
+   //Count amount of pages
+    $objAmount = $db->Execute("SELECT count(`id`) FROM `topics` WHERE `cat_id`=".$_GET['topics']." AND `lang`='".$player -> lang."' OR `lang`='".$player -> seclang."'");
+    $pages = ceil($objAmount->fields['count(`id`)'] / 25);
+    $objAmount->close();
+    if (isset($_GET['page']))
+     {
+       $_GET['page'] = intval($_GET['page']);
+       if ($_GET['page'] == 0)
+	 {
+	   error(ERROR);
+	 }
+       $page = $_GET['page'];
+     }
+    else
+     {
+       $page = $pages;
+     }
     /**
      * Check for permissions
      */
     if ($player -> rank != 'Admin')
     {
-        $objPerm = $db -> Execute("SELECT perm_visit FROM categories WHERE id=".$_GET['topics']);
+        $objPerm = $db -> Execute("SELECT `perm_visit` FROM `categories` WHERE `id`=".$_GET['topics']);
         if ($objPerm -> fields['perm_visit'] != 'All;')
         {
             $intPerm = strpos($objPerm -> fields['perm_visit'], $player -> rank);
@@ -132,16 +146,16 @@ if (isset($_GET['topics']))
     */
     if (!isset($_SESSION['forums']))
     {
-        $objLasttime = $db -> Execute("SELECT forum_time FROM players WHERE id=".$player -> id);
+        $objLasttime = $db -> Execute("SELECT `forum_time` FROM `players` WHERE `id`=".$player -> id);
         $_SESSION['forums'] = $objLasttime -> fields['forum_time'];
         $objLasttime -> Close();
-        $db -> Execute("UPDATE players SET forum_time=".$ctime." WHERE id=".$player -> id);
+        $db -> Execute("UPDATE `players` SET `forum_time`=".$ctime." WHERE `id`=".$player -> id);
     }
 
     /**
      * Select sticky threads
      */
-    $topic = $db -> Execute("SELECT `w_time`, `id`, `topic`, `starter` FROM topics WHERE `sticky`='Y' AND `cat_id`=".$_GET['topics']." AND `lang`='".$player -> lang."' OR `lang`='".$player -> seclang."' ORDER BY `id` ASC");
+    $topic = $db -> SelectLimit("SELECT `w_time`, `id`, `topic`, `starter` FROM `topics` WHERE `sticky`='Y' AND `cat_id`=".$_GET['topics']." AND `lang`='".$player -> lang."' OR `lang`='".$player -> seclang."' ORDER BY `id` ASC", 25, 25 * ($page - 1));
     $arrid = array();
     $arrtopic = array();
     $arrstarter = array();
@@ -154,11 +168,11 @@ if (isset($_GET['topics']))
         {
             $arrNewtopic[$i] = 'Y';
         }
-            else
+	else
         {
             $arrNewtopic[$i] = 'N';
         }
-        $query = $db -> Execute("SELECT `w_time` FROM replies WHERE `topic_id`=".$topic -> fields['id']);
+        $query = $db -> Execute("SELECT `w_time` FROM `replies` WHERE `topic_id`=".$topic -> fields['id']);
         if ($arrNewtopic[$i] == 'N')
         {
             while (!$query -> EOF)
@@ -179,46 +193,58 @@ if (isset($_GET['topics']))
         $arrreplies[$i] = $replies;
         $topic -> MoveNext();
         $i = $i + 1;
+	if ($i > 24)
+	  {
+	    break;
+	  }
     }
     $topic -> Close();
 
     /**
      * Select normal threads
      */
-    $topic = $db -> Execute("SELECT `w_time`, `id`, `topic`, `starter` FROM topics WHERE `sticky`='N' AND `cat_id`=".$_GET['topics']." AND `lang`='".$player -> lang."' OR `lang`='".$player -> seclang."' ORDER BY `id` ASC");
-    while (!$topic -> EOF) 
-    {
-        if ($topic -> fields['w_time'] > $_SESSION['forums'])
-        {
-            $arrNewtopic[$i] = 'Y';
-        }
-            else
-        {
-            $arrNewtopic[$i] = 'N';
-        }
-        $query = $db -> Execute("SELECT `w_time` FROM replies WHERE `topic_id`=".$topic -> fields['id']);
-        if ($arrNewtopic[$i] == 'N')
-        {
-            while (!$query -> EOF)
-            {
-                if ($query -> fields['w_time'] > $_SESSION['forums'])
-                {
-                    $arrNewtopic[$i] = 'Y';
-                    break;
-                }
-                $query -> MoveNext();
-            }
-        }
-        $replies = $query -> RecordCount();
-        $query -> Close();
-        $arrid[$i] = $topic -> fields['id'];
-        $arrtopic[$i] = $topic -> fields['topic'];
-        $arrstarter[$i] = $topic -> fields['starter'];
-        $arrreplies[$i] = $replies;
-        $topic -> MoveNext();
-        $i = $i + 1;
-    }
-    $topic -> Close();
+    if ($i < 25)
+      {
+	$topic = $db -> SelectLimit("SELECT `w_time`, `id`, `topic`, `starter` FROM `topics` WHERE `sticky`='N' AND `cat_id`=".$_GET['topics']." AND `lang`='".$player -> lang."' OR `lang`='".$player -> seclang."' ORDER BY `id` ASC", 25, 25 * ($page - 1));
+	while (!$topic -> EOF) 
+	  {
+	    if ($topic -> fields['w_time'] > $_SESSION['forums'])
+	      {
+		$arrNewtopic[$i] = 'Y';
+	      }
+	    else
+	      {
+		$arrNewtopic[$i] = 'N';
+	      }
+	    $query = $db -> Execute("SELECT `w_time` FROM `replies` WHERE `topic_id`=".$topic -> fields['id']);
+	    if ($arrNewtopic[$i] == 'N')
+	      {
+		while (!$query -> EOF)
+		  {
+		    if ($query -> fields['w_time'] > $_SESSION['forums'])
+		      {
+			$arrNewtopic[$i] = 'Y';
+			break;
+		      }
+		    $query -> MoveNext();
+		  }
+	      }
+	    $replies = $query -> RecordCount();
+	    $query -> Close();
+	    $arrid[$i] = $topic -> fields['id'];
+	    $arrtopic[$i] = $topic -> fields['topic'];
+	    $arrstarter[$i] = $topic -> fields['starter'];
+	    $arrreplies[$i] = $replies;
+	    $topic -> MoveNext();
+	    $i = $i + 1;
+	    if ($i > 24)
+	      {
+		break;
+	      }
+	  }
+	$topic -> Close();
+      }
+
     $smarty -> assign(array("Category" => $_GET['topics'], 
         "Id" => $arrid, 
         "Topic1" => $arrtopic, 
@@ -234,6 +260,9 @@ if (isset($_GET['topics']))
         "Asearch" => A_SEARCH,
         "Tword" => T_WORD,
         "Tsticky" => T_STICKY,
+	"Tpages" => $pages,
+	"Tpage" => $page,
+	"Fpage" => "Idź do strony:",
         "Newtopic" => $arrNewtopic));
 }
 
@@ -241,29 +270,35 @@ if (isset($_GET['topics']))
 * View topic
 */
 if (isset($_GET['topic'])) 
-{
-    if (!ereg("^[1-9][0-9]*$", $_GET['topic']))
-    {
-        error(ERROR);
-    }
-    if (isset($_GET['quote']))
-    {
-        if (!ereg("^[1-9][0-9]*$", $_GET['quote']))
-        {
-            error(ERROR);
-        }
-    }
-    $topicinfo = $db -> Execute("SELECT * FROM topics WHERE id=".$_GET['topic']);
+  {
+    checkvalue($_GET['topic']);
+    $topicinfo = $db -> Execute("SELECT * FROM `topics` WHERE `id`=".$_GET['topic']);
     if (!$topicinfo -> fields['id']) 
     {
         error (NO_TOPIC);
     }
+    $objAmount = $db->Execute("SELECT count(`id`) FROM `replies` WHERE `topic_id`=".$topicinfo -> fields['id']);
+    $pages = ceil($objAmount->fields['count(`id`)'] / 25);
+    $objAmount->close();
+    if (isset($_GET['page']))
+     {
+       $_GET['page'] = intval($_GET['page']);
+       if ($_GET['page'] == 0)
+	 {
+	   error(ERROR);
+	 }
+       $page = $_GET['page'];
+     }
+   else
+     {
+       $page = $pages;
+     }
     /**
      * Check for permissions
      */
     if ($player -> rank != 'Admin')
     {
-        $objPerm = $db -> Execute("SELECT perm_visit FROM categories WHERE id=".$topicinfo -> fields['cat_id']);
+        $objPerm = $db -> Execute("SELECT `perm_visit` FROM `categories` WHERE `id`=".$topicinfo -> fields['cat_id']);
         if ($objPerm -> fields['perm_visit'] != 'All;')
         {
             $intPerm = strpos($objPerm -> fields['perm_visit'], $player -> rank);
@@ -278,7 +313,7 @@ if (isset($_GET['topic']))
     {
         $strStickyaction = " (<a href=\"forums.php?sticky=".$topicinfo -> fields['id']."&amp;action=Y\">".A_STICKY."</a>)";
     }
-        else
+    else
     {
         $strStickyaction = " (<a href=\"forums.php?sticky=".$topicinfo -> fields['id']."&amp;action=N\">".A_UNSTICKY."</a>)";
     }
@@ -286,20 +321,21 @@ if (isset($_GET['topic']))
     {
         $smarty -> assign ("Action", " (<a href=forums.php?kasuj1=".$topicinfo -> fields['id'].">".A_DELETE."</a>)".$strStickyaction);
     } 
-        else 
+    else 
     {
         $smarty -> assign("Action", '');
     }
     $text1 = wordwrap($topicinfo -> fields['body'],45,"\n",1);
-    if (isset($_GET['quotet']))
-    {
-        $strReplytext = "[quote]".$text1."[/quote]";
-    }
-        else
+    if (isset($_GET['quote']))
+      {
+	checkvalue($_GET['quote']);
+	$strReplytext = "[quote]".$text1."[/quote]";
+      }
+    else
     {
         $strReplytext = R_TEXT;
     }
-    $reply = $db -> Execute("SELECT * FROM replies WHERE topic_id=".$topicinfo -> fields['id']." ORDER BY id ASC");
+    $reply = $db->SelectLimit("SELECT * FROM `replies` WHERE `topic_id`=".$topicinfo -> fields['id']." ORDER BY `id` ASC", 25, 25 * ($page - 1));
     $arrstarter = array();
     $arrplayerid = array();
     $arrtext = array();
@@ -348,6 +384,9 @@ if (isset($_GET['topic']))
         "Rtext2" => $strReplytext,
         "Aback" => A_BACK,
         "Aquote" => A_QUOTE,
+	"Tpages" => $pages,
+	"Tpage" => $page,
+        "Fpage" => "Idź  do strony:",
         "Write" => WRITE));
     $topicinfo -> Close();
 }
@@ -364,6 +403,7 @@ if (isset ($_GET['action']) && $_GET['action'] == 'addtopic')
     /**
      * Check for permissions
      */
+    checkvalue($_POST['catid']);
     if ($player -> rank != 'Admin')
     {
         $objPerm = $db -> Execute("SELECT `perm_write` FROM `categories` WHERE `id`=".$_POST['catid']);
@@ -403,7 +443,8 @@ if (isset ($_GET['action']) && $_GET['action'] == 'addtopic')
 * Add reply
 */
 if (isset($_GET['reply'])) 
-{
+  {
+    checkvalue($_GET['reply']);
     $query = $db -> Execute("SELECT `cat_id` FROM `topics` WHERE `id`=".$_GET['reply']);
     /**
      * Check for permissions
@@ -448,10 +489,7 @@ if (isset($_GET['sticky']))
     {
         error(ERROR);
     }
-    if (!ereg("^[1-9][0-9]*$", $_GET['sticky']))
-    {
-        error(ERROR);
-    }
+    checkvalue($_GET['sticky']);
     if ($_GET['action'] != 'Y' && $_GET['action'] != 'N')
     {
         error(ERROR);
@@ -477,12 +515,9 @@ if (isset($_GET['kasuj']))
     {
         error(ERROR);
     }
-    if (!ereg("^[1-9][0-9]*$", $_GET['kasuj'])) 
-    {
-        error(ERROR);
-    }
-    $tid = $db -> Execute("SELECT topic_id FROM replies WHERE id=".$_GET['kasuj']);
-    $db -> Execute("DELETE FROM replies WHERE id=".$_GET['kasuj']);
+    checkvalue($_GET['kasuj']);
+    $tid = $db -> Execute("SELECT `topic_id` FROM `replies` WHERE `id`=".$_GET['kasuj']);
+    $db -> Execute("DELETE FROM `replies` WHERE `id`=".$_GET['kasuj']);
     error (POST_DEL." <a href=forums.php?topic=".$tid -> fields['topic_id'].">".A_BACK."</a>");
 }
 
@@ -495,13 +530,10 @@ if (isset($_GET['kasuj1']))
     {
         error(ERROR);
     }
-    if (!ereg("^[1-9][0-9]*$", $_GET['kasuj1'])) 
-    {
-        error(ERROR);
-    }
-    $cid = $db -> Execute("SELECT cat_id FROM topics WHERE id=".$_GET['kasuj1']);
-    $db -> Execute("DELETE FROM replies WHERE topic_id=".$_GET['kasuj1']);
-    $db -> Execute("DELETE FROM topics WHERE id=".$_GET['kasuj1']);
+    checkvalue($_GET['kasuj1']);
+    $cid = $db -> Execute("SELECT `cat_id` FROM `topics` WHERE `id`=".$_GET['kasuj1']);
+    $db -> Execute("DELETE FROM `replies` WHERE `topic_id`=".$_GET['kasuj1']);
+    $db -> Execute("DELETE FROM `topics` WHERE `id`=".$_GET['kasuj1']);
     error (TOPIC_DEL." <a href=forums.php?topics=".$cid -> fields['cat_id'].">".A_BACK."</a>");
 }
 
@@ -514,16 +546,13 @@ if (isset($_GET['action']) && $_GET['action'] == 'search')
     {
         error(EMPTY_FIELDS);
     }
-    if (!ereg("^[1-9][0-9]*$", $_POST['catid']))
-    {
-        error(ERROR);
-    }
+    checkvalue($_POST['catid']);
     $strSearch = strip_tags($_POST['search']);
     
     /**
     * Search string in topics
     */
-    $objResult = $db -> Execute("SELECT id FROM topics WHERE cat_id=".$_POST['catid']." AND topic LIKE '%".$strSearch."%' OR body LIKE '%".$strSearch."%'");
+    $objResult = $db -> Execute("SELECT `id` FROM `topics` WHERE `cat_id`=".$_POST['catid']." AND `topic` LIKE '%".$strSearch."%' OR `body` LIKE '%".$strSearch."%'");
     $arrResult = array();
     $i = 0;
     while (!$objResult -> EOF)
@@ -537,11 +566,11 @@ if (isset($_GET['action']) && $_GET['action'] == 'search')
     /**
     * Search string in replies
     */
-    $objTopics = $db -> Execute("SELECT id FROM topics WHERE cat_id=".$_POST['catid']);
+    $objTopics = $db -> Execute("SELECT `id` FROM `topics` WHERE `cat_id`=".$_POST['catid']);
     $intTest = 0;
     while (!$objTopics -> EOF)
     {
-        $objResult2 = $db -> Execute("SELECT topic_id FROM replies WHERE topic_id=".$objTopics -> fields['id']." AND body LIKE '%".$strSearch."%'");
+        $objResult2 = $db -> Execute("SELECT `topic_id` FROM `replies` WHERE `topic_id`=".$objTopics -> fields['id']." AND `body` LIKE '%".$strSearch."%'");
         foreach ($arrResult as $intResult)
         {
             if ($intResult == $objResult2 -> fields['topic_id'])

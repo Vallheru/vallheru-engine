@@ -109,6 +109,16 @@
             {$Tbody[library5]}<br /><br />
         {/section}
     {/if}
+    {if $Tpages > 1}
+    	<br />{$Fpage}
+    	{for $page = 1 to $Tpages}
+	    {if $page == $Tpage}
+	        {$page}
+	    {else}
+                <a href="library.php?step=comments&tid={$Text}&page={$page}">{$page}</a>
+	    {/if}
+    	{/for}
+    {/if}
     <br /><br /><center>
     <form method="post" action="library.php?step=comments&amp;action=add">
         {$Addcomment}:<textarea name="body" rows="20" cols="50"></textarea><br />

@@ -7,7 +7,7 @@
  *   @copyright            : (C) 2004,2005,2006,2011 Vallheru Team based on Gamers-Fusion ver 2.5
  *   @author               : thindil <thindil@tuxfamily.org>
  *   @version              : 1.4
- *   @since                : 07.08.2011
+ *   @since                : 09.08.2011
  *
  */
 
@@ -27,7 +27,7 @@
 //   along with this program; if not, write to the Free Software
 //   Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 //
-// $Id: news.php 705 2006-10-12 16:22:05Z thindil $
+// $Id$
 
 $title = "Miejskie Plotki";
 require_once("includes/head.php");
@@ -42,22 +42,22 @@ require_once("languages/".$player -> lang."/news.php");
 */
 if (!isset ($_GET['view'])) 
 {
-    $upd = $db -> SelectLimit("SELECT * FROM news WHERE `lang`='".$player -> lang."' AND `added`='Y' AND `show`='Y' ORDER BY `id` DESC", 1);
+    $upd = $db -> SelectLimit("SELECT * FROM `news` WHERE `lang`='".$player -> lang."' AND `added`='Y' AND `show`='Y' ORDER BY `id` DESC", 1);
     if (isset($upd -> fields['id']))
     {
-        $objQuery = $db -> Execute("SELECT id FROM news_comments WHERE newsid=".$upd -> fields['id']);
-        $intComments = $objQuery -> RecordCount();
+        $objQuery = $db -> Execute("SELECT count(`id`) FROM `news_comments` WHERE `newsid`=".$upd -> fields['id']);
+        $intComments = $objQuery -> fields['count(`id`)'];
         $objQuery -> Close();
     }
         else
     {
         $intComments = 0;
     }
-    $objQuery = $db -> Execute("SELECT count(*) FROM `news` WHERE `lang`='".$player -> lang."' AND `added`='N'");
-    $intWaiting = $objQuery -> fields['count(*)'];
+    $objQuery = $db -> Execute("SELECT count(`id`) FROM `news` WHERE `lang`='".$player -> lang."' AND `added`='N'");
+    $intWaiting = $objQuery -> fields['count(`id`)'];
     $objQuery -> Close();
-    $objAccepted = $db -> Execute("SELECT count(*) FROM `news` WHERE `lang`='".$player -> lang."' AND `show`='N'");
-    $intAccepted = $objAccepted -> fields['count(*)'];
+    $objAccepted = $db -> Execute("SELECT count(`id`) FROM `news` WHERE `lang`='".$player -> lang."' AND `show`='N'");
+    $intAccepted = $objAccepted -> fields['count(`id`)'];
     $objAccepted -> Close();
     $smarty -> assign(array("Title1" => $upd -> fields['title'], 
         "Starter" => $upd -> fields['starter'], 
@@ -85,8 +85,8 @@ if (isset($_GET['view']))
     $i = 0;
     while (!$upd -> EOF) 
     {
-        $objQuery = $db -> Execute("SELECT id FROM news_comments WHERE newsid=".$upd -> fields['id']);
-        $arrComments[$i] = $objQuery -> RecordCount();
+        $objQuery = $db -> Execute("SELECT count(`id`) FROM `news_comments` WHERE `newsid`=".$upd -> fields['id']);
+        $arrComments[$i] = $objQuery -> fields['count(`id`)'];
         $objQuery -> Close();
         $arrtitle[$i] = $upd -> fields['title'];
         $arrstarter[$i] = $upd -> fields['starter'];
@@ -116,6 +116,14 @@ if (isset($_GET['step']) && $_GET['step'] == 'comments')
     */
     if (!isset($_GET['action']))
     {
+        if (!isset($_GET['page']))
+	  {
+	    $intPage = -1;
+	  }
+	else
+	  {
+	    $intPage = $_GET['page'];
+	  }
         displaycomments($_GET['text'], 'news', 'news_comments', 'newsid');
         $smarty -> assign(array("Tauthor" => $arrAuthor,
             "Tbody" => $arrBody,
@@ -126,6 +134,9 @@ if (isset($_GET['step']) && $_GET['step'] == 'comments')
             "Addcomment" => ADD_COMMENT,
             "Adelete" => A_DELETE,
             "Aadd" => A_ADD,
+            "Tpages" => $intPages,
+	    "Tpage" => $intPage,
+	    "Fpage" => "Idź do strony:",
             "Writed" => WRITED));
     }
 
@@ -133,9 +144,10 @@ if (isset($_GET['step']) && $_GET['step'] == 'comments')
     * Add comment
     */
     if (isset($_GET['action']) && $_GET['action'] == 'add')
-    {
+      {
+	checkvalue($_POST['tid']);
         addcomments($_POST['tid'], 'news_comments', 'newsid');
-    }
+      }
 
     /**
     * Delete comment
@@ -167,6 +179,10 @@ if (isset($_GET['step']) && $_GET['step'] == 'add')
         {
             error(EMPTY_FIELDS);
         }
+	if (!in_array($_POST['lang'], $arrLanguage))
+	  {
+	    error(ERROR);
+	  }
         $_POST['body'] = nl2br($_POST['body']);
         require_once('includes/bbcode.php');
         $_POST['body'] = bbcodetohtml($_POST['body']);

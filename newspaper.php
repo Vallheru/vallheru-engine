@@ -4,10 +4,10 @@
  *   City newspaper
  *
  *   @name                 : newspaper.php                            
- *   @copyright            : (C) 2004,2005,2006 Vallheru Team based on Gamers-Fusion ver 2.5
- *   @author               : thindil <thindil@users.sourceforge.net>
- *   @version              : 1.3
- *   @since                : 12.10.2006
+ *   @copyright            : (C) 2004,2005,2006,2011 Vallheru Team based on Gamers-Fusion ver 2.5
+ *   @author               : thindil <thindil@tuxfamily.org>
+ *   @version              : 1.4
+ *   @since                : 09.08.2011
  *
  */
 
@@ -27,7 +27,7 @@
 //   along with this program; if not, write to the Free Software
 //   Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 //
-// $Id: newspaper.php 705 2006-10-12 16:22:05Z thindil $
+// $Id$
 
 $title = "Redakcja gazety";
 require_once("includes/head.php");
@@ -71,11 +71,11 @@ if (!isset($_GET['comments']) && !isset($_GET['step']) && !isset($_GET['read']))
 * Read and edit newspaper
 */
 if ((isset($_GET['step']) && $_GET['step'] == 'new') || (isset($_GET['read']) || (isset($_GET['step3']) && $_GET['step3'] == 'S')))
-{
-    if (isset($_GET['read']) && !ereg("^[1-9][0-9]*$", $_GET['read']))
-    {
-        error(ERROR);
-    }
+  {
+    if (isset($_GET['read']))
+      {
+	checkvalue($_GET['read']);
+      }
     if (isset($_GET['step3']))
     {
         if ($player -> rank != 'Admin' && $player -> rank != 'Redaktor')
@@ -83,7 +83,7 @@ if ((isset($_GET['step']) && $_GET['step'] == 'new') || (isset($_GET['read']) ||
             error(NO_PERM);
         }
     }
-        else
+    else
     {
         $_GET['step3'] = '';
     }
@@ -214,8 +214,16 @@ if (isset($_GET['comments']))
     * Display comments
     */
     if (!isset($_GET['action']))
-    {
-        displaycomments($_GET['comments'], 'newspaper', 'newspaper_comments', 'textid');
+      {
+	if (!isset($_GET['page']))
+	  {
+	    $intPage = -1;
+	  }
+	else
+	  {
+	    $intPage = $_GET['page'];
+	  }
+	displaycomments($_GET['comments'], 'newspaper', 'newspaper_comments', 'textid');
         $smarty -> assign(array("Tauthor" => $arrAuthor,
                                 "Tbody" => $arrBody,
                                 "Amount" => $i,
@@ -225,8 +233,11 @@ if (isset($_GET['comments']))
                                 "Addcomment" => ADD_COMMENT,
                                 "Adelete" => A_DELETE,
                                 "Aadd" => A_ADD,
+				"Tpages" => $intPages,
+				"Tpage" => $intPage,
+				"Fpage" => "Idź do strony:",
                                 "Wrote" => WROTE));
-    }
+      }
 
     /**
     * Add comment
@@ -264,9 +275,9 @@ if (isset($_GET['step']) && $_GET['step'] == 'redaction')
     if (isset($_GET['step3']) && ($_GET['step3'] == 'edit' || $_GET['step3'] == 'R'))
     {
         if (isset($_GET['edit']) && !ereg("^[1-9][0-9]*$", $_GET['edit']))
-        {
-            error(ERROR);
-        }
+	  {
+	    checkvalue($_GET['edit']);
+	  }
         if ($_GET['step3'] == 'R')
         {
             $_GET['edit'] = '';
@@ -441,10 +452,7 @@ if (isset($_GET['step']) && $_GET['step'] == 'mail')
  */
 if (isset($_GET['article']))
 {
-    if (!ereg("^[1-9][0-9]*$", $_GET['article']))
-    {
-        error(ERROR);
-    }
+  checkvalue($_GET['article']);
     $objArticle = $db -> Execute("SELECT `id`, `paper_id`, `title`, `body`, `author`, `added` FROM `newspaper` WHERE `id`=".$_GET['article']);
     if (!$objArticle -> fields['id'] || ($objArticle -> fields['added'] == 'N' && $player -> rank != 'Admin' && $player -> rank != 'Redaktor'))
     {

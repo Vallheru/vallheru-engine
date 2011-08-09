@@ -1,5 +1,5 @@
 {if $View == "categories"}
-    <table class="dark"><tr><td><b><u>{$Tcategory}</u></b></td><td><b><u>{$Ttopics}</u></b></td></tr>
+    <table class="dark"><tr><td width="75%"><b><u>{$Tcategory}</u></b></td><td><b><u>{$Ttopics}</u></b></td></tr>
     {section name=number loop=$Name}
         <tr>
         <td><a href="forums.php?topics={$Id[number]}"><u>{$Name[number]}</u></a></td>
@@ -21,7 +21,7 @@
         <input type="submit" value="{$Asearch}" /> {$Tword}: <input type="text" name="search" />
         <input type="hidden" name="catid" value="{$Category}" />
     </form>
-    <table class="dark"><tr><td width="150"><u><b>{$Ttopic}</b></u></td><td width="100"><u><b>{$Tauthor}</b></u></td><td width="50"><b><u>{$Treplies}</u></b></td></tr>
+    <table class="dark"><tr><td><u><b>{$Ttopic}</b></u></td><td width="20%"><u><b>{$Tauthor}</b></u></td><td width="10%"><b><u>{$Treplies}</u></b></td></tr>
     {section name=number1 loop=$Topic1}
         <tr>
         <td>{if $Newtopic[number1] == "Y"}<blink>N</blink> {/if}<a href="forums.php?topic={$Id[number1]}">{$Topic1[number1]}</a></td>
@@ -30,6 +30,17 @@
         </tr>
     {/section}
     </table>
+    {if $Tpages > 1}
+    	<br />{$Fpage}
+    	{for $page = 1 to $Tpages}
+	    {if $page == $Tpage}
+	        {$page}
+	    {else}
+                <a href="forums.php?topics={$Topics}&page={$page}">{$page}</a>
+	    {/if}
+    	{/for}
+	<br /><br />
+    {/if}
     <form method="post" action="forums.php?action=addtopic">
         {$Addtopic}:<br />
         <input type="text" name="title2" value="Temat" size="40" /><br />
@@ -66,6 +77,17 @@
         <td>{$Rtext[number2]}</td></tr></table><br />
     {/section}
     </center>
+    {if $Tpages > 1}
+    	<br />{$Fpage}
+    	{for $page = 1 to $Tpages}
+	    {if $page == $Tpage}
+	        {$page}
+	    {else}
+                <a href="forums.php?topic={$Topic}&page={$page}">{$page}</a>
+	    {/if}
+    	{/for}
+	<br /><br />
+    {/if}
     <form method="post" action="forums.php?reply={$Id}">
     {$Areply}:<br />
     <textarea name="rep" cols="40" rows="10">{$Rtext2}</textarea><br />

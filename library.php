@@ -7,7 +7,7 @@
  *   @copyright            : (C) 2004,2005,2006,2011 Vallheru Team based on Gamers-Fusion ver 2.5
  *   @author               : thindil <thindil@tuxfamily.org>
  *   @version              : 1.4
- *   @since                : 07.08.2011
+ *   @since                : 09.08.2011
  *
  */
 
@@ -27,7 +27,7 @@
 //   along with this program; if not, write to the Free Software
 //   Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 //
-// $Id: library.php 566 2006-09-13 09:31:08Z thindil $
+// $Id$
 
 $title = "Biblioteka";
 require_once("includes/head.php");
@@ -147,7 +147,7 @@ if (isset($_GET['step']) && $_GET['step'] == 'addtext')
     {
         error(NO_PERM);
     }
-    $objText = $db -> Execute("SELECT id, title, author FROM library WHERE added='N' AND ".$strQuery);
+    $objText = $db -> Execute("SELECT `id`, `title`, `author` FROM `library` WHERE `added`='N' AND ".$strQuery);
     $arrId = array();
     $arrTitle = array();
     $arrAuthor = array();
@@ -177,11 +177,8 @@ if (isset($_GET['step']) && $_GET['step'] == 'addtext')
     * Modify text
     */
     if (isset($_GET['action']) && $_GET['action'] == 'modify')
-    {
-        if (!ereg("^[1-9][0-9]*$", $_GET['text']))
-        {
-            error(ERROR);
-        }
+      {
+	checkvalue($_GET['text'));
         $objText = $db -> Execute("SELECT id, title, body, type FROM library WHERE id=".$_GET['text']);
         $smarty -> assign(array("Ttitle" => $objText -> fields['title'],
             "Tbody" => $objText -> fields['body'],
@@ -196,10 +193,7 @@ if (isset($_GET['step']) && $_GET['step'] == 'addtext')
         $objText -> Close();
         if (isset($_POST['tid']))
         {
-            if (!ereg("^[1-9][0-9]*$", $_POST['tid']))
-            {
-                error(ERROR);
-            }
+	    checkvalue($_POST['tid']);
             if (empty($_POST['ttitle']) || empty($_POST['body']))
             {
                 error(EMPTY_FIELDS);
@@ -217,7 +211,7 @@ if (isset($_GET['step']) && $_GET['step'] == 'addtext')
             $_POST['body'] = bbcodetohtml($_POST['body']);
             $strTitle = $db -> qstr($_POST['ttitle'], get_magic_quotes_gpc());
             $strBody = $db -> qstr($_POST['body'], get_magic_quotes_gpc());
-            $db -> Execute("UPDATE library SET title=".$strTitle.", body=".$strBody.", type='".$strType."' WHERE id=".$_POST['tid']);
+            $db -> Execute("UPDATE `library` SET `title`=".$strTitle.", `body`=".$strBody.", `type`='".$strType."' WHERE `id`=".$_POST['tid']);
             error (MODIFIED);
         }
     }
@@ -226,11 +220,8 @@ if (isset($_GET['step']) && $_GET['step'] == 'addtext')
     */
     if (isset($_GET['action']) && ($_GET['action'] == 'add' || $_GET['action'] == 'delete'))
     {
-        if (!ereg("^[1-9][0-9]*$", $_GET['text']))
-        {
-            error(ERROR);
-        }
-        $objText = $db -> Execute("SELECT id FROM library WHERE id=".$_GET['text']);
+	checkvalue($_GET['text']);
+        $objText = $db -> Execute("SELECT `id` FROM `library` WHERE `id`=".$_GET['text']);
         if (!$objText -> fields['id'])
         {
             error(NO_TEXT);
@@ -238,12 +229,12 @@ if (isset($_GET['step']) && $_GET['step'] == 'addtext')
         $objText -> Close();
         if ($_GET['action'] == 'add')
         {
-            $db -> Execute("UPDATE library SET added='Y' WHERE id=".$_GET['text']);
+            $db -> Execute("UPDATE `library` SET `added`='Y' WHERE `id`=".$_GET['text']);
             error(ADDED);
         }
             else
         {
-            $db -> Execute("DELETE FROM library WHERE id=".$_GET['text']);
+            $db -> Execute("DELETE FROM `library` WHERE `id`=".$_GET['text']);
             error(DELETED);
         }
     }
@@ -297,7 +288,7 @@ if (isset($_GET['step']) && ($_GET['step'] == 'tales' || $_GET['step'] == 'poetr
         $arrPid = array();
         $arrComments = array();
         $i = 0;
-        $objList = $db -> Execute("SELECT id, title, author FROM library WHERE added='Y' AND type='".$strType."' AND ".$strQuery." ORDER BY ".$_POST['sort']." DESC") or error($db -> ErrorMsg());
+        $objList = $db -> Execute("SELECT `id`, `title`, `author` FROM `library` WHERE `added`='Y' AND `type`='".$strType."' AND ".$strQuery." ORDER BY ".$_POST['sort']." DESC") or error($db -> ErrorMsg());
         while (!$objList -> EOF)
         {
             $arrTitle[$i] = $objList -> fields['title'];
@@ -305,8 +296,8 @@ if (isset($_GET['step']) && ($_GET['step'] == 'tales' || $_GET['step'] == 'poetr
             $arrAuthor[$i] = $objList -> fields['author'];
             $arrAuthorId = explode(": ", $objList -> fields['author']);
             $arrPid[$i] = $arrAuthorId[1];
-            $objQuery = $db -> Execute("SELECT id FROM lib_comments WHERE textid=".$objList -> fields['id']);
-            $arrComments[$i] = $objQuery -> RecordCount();
+            $objQuery = $db -> Execute("SELECT count(`id`) FROM `lib_comments` WHERE `textid`=".$objList -> fields['id']);
+            $arrComments[$i] = $objQuery -> fields['count(`id`)'];
             $objQuery -> Close();
             $i = $i + 1;
             $objList -> MoveNext();
@@ -324,7 +315,7 @@ if (isset($_GET['step']) && ($_GET['step'] == 'tales' || $_GET['step'] == 'poetr
     */
     if (!isset($_GET['author']) && (!isset($_POST['sort']) || (isset($_POST['sort']) && $_POST['sort'] == 'author')))
     {
-        $objAuthor = $db -> Execute("SELECT author FROM library WHERE added='Y' AND type='".$strType."' AND ".$strQuery." GROUP BY author");
+        $objAuthor = $db -> Execute("SELECT `author` FROM `library` WHERE `added`='Y' AND `type`='".$strType."' AND ".$strQuery." GROUP BY `author`");
         $arrAuthor = array();
         $arrTexts = array();
         $arrId = array();
@@ -344,8 +335,8 @@ if (isset($_GET['step']) && ($_GET['step'] == 'tales' || $_GET['step'] == 'poetr
             if (!$intTest)
             {
                 $arrAuthor[$i] = $objAuthor -> fields['author'];
-                $objQuery2 = $db -> Execute("SELECT id FROM library WHERE author LIKE '%ID: ".$arrAuthorId[1]."' AND added='Y' AND type='".$strType."' AND ".$strQuery) or error($db -> ErrorMsg());
-                $arrTexts[$i] = $objQuery2 -> RecordCount();
+                $objQuery2 = $db -> Execute("SELECT count(`id`) FROM `library` WHERE `author` LIKE '%ID: ".$arrAuthorId[1]."' AND `added`='Y' AND `type`='".$strType."' AND ".$strQuery) or error($db -> ErrorMsg());
+                $arrTexts[$i] = $objQuery2 -> fields['count(`id`)'];
                 $objQuery2 -> Close();
                 $arrId[$i] = $arrAuthorId[1];
                 $i = $i + 1;
@@ -362,11 +353,8 @@ if (isset($_GET['step']) && ($_GET['step'] == 'tales' || $_GET['step'] == 'poetr
     */
     if (isset($_GET['author']))
     {
-        if (!ereg("^[1-9][0-9]*$", $_GET['author']))
-        {
-            error(ERROR);
-        }
-        $objAuthor = $db -> Execute("SELECT author FROM library WHERE author LIKE '%ID: ".$_GET['author']."' GROUP BY author") or ($db -> ErrorMsg());
+	checkvalue($_GET['author']);
+        $objAuthor = $db -> Execute("SELECT `author` FROM `library` WHERE `author` LIKE '%ID: ".$_GET['author']."' GROUP BY `author`") or ($db -> ErrorMsg());
         $arrTitle = array();
         $arrAuthor = array();
         $arrId = array();
@@ -375,7 +363,7 @@ if (isset($_GET['step']) && ($_GET['step'] == 'tales' || $_GET['step'] == 'poetr
         $i = 0;
         while (!$objAuthor -> EOF)
         {
-            $objList = $db -> Execute("SELECT id, title, author FROM library WHERE added='Y' AND type='".$strType."' AND author='".$objAuthor -> fields['author']."' AND ".$strQuery." ORDER BY id DESC") or error($db -> ErrorMsg());
+            $objList = $db -> Execute("SELECT `id`, `title`, `author` FROM `library` WHERE `added`='Y' AND `type`='".$strType."' AND `author`='".$objAuthor -> fields['author']."' AND ".$strQuery." ORDER BY `id` DESC") or error($db -> ErrorMsg());
             while (!$objList -> EOF)
             {
                 $arrTitle[$i] = $objList -> fields['title'];
@@ -383,8 +371,8 @@ if (isset($_GET['step']) && ($_GET['step'] == 'tales' || $_GET['step'] == 'poetr
                 $arrAuthor[$i] = $objList -> fields['author'];
                 $arrAuthorId = explode(": ", $objList -> fields['author']);
                 $arrPid[$i] = $arrAuthorId[1];
-                $objQuery = $db -> Execute("SELECT id FROM lib_comments WHERE textid=".$objList -> fields['id']);
-                $arrComments[$i] = $objQuery -> RecordCount();
+                $objQuery = $db -> Execute("SELECT count(`id`) FROM `lib_comments` WHERE `textid`=".$objList -> fields['id']);
+                $arrComments[$i] = $objQuery -> fields['count(`id`)'];
                 $objQuery -> Close();
                 $i = $i + 1;
                 $objList -> MoveNext();
@@ -405,11 +393,8 @@ if (isset($_GET['step']) && ($_GET['step'] == 'tales' || $_GET['step'] == 'poetr
     */
     if (isset($_GET['text']))
     {
-        if (!ereg("^[1-9][0-9]*$", $_GET['text']))
-        {
-            error(ERROR);
-        }
-        $objText = $db -> Execute("SELECT id, title, author, body FROM library WHERE id=".$_GET['text']);
+	checkvalue($_GET['text']);
+        $objText = $db -> Execute("SELECT `id`, `title`, `author`, `body` FROM `library` WHERE `id`=".$_GET['text']);
         if (!$objText -> fields['id'])
         {
             error(NO_TEXT);
@@ -437,7 +422,15 @@ if (isset($_GET['step']) && $_GET['step'] == 'comments')
     * Display comments
     */
     if (!isset($_GET['action']))
-    {
+      {
+	if (!isset($_GET['page']))
+	  {
+	    $intPage = -1;
+	  }
+	else
+	  {
+	    $intPage = $_GET['page'];
+	  }
         displaycomments($_GET['text'], 'library', 'lib_comments', 'textid');
         $smarty -> assign(array("Tauthor" => $arrAuthor,
             "Tbody" => $arrBody,
@@ -448,16 +441,19 @@ if (isset($_GET['step']) && $_GET['step'] == 'comments')
             "Addcomment" => ADD_COMMENT,
             "Adelete" => A_DELETE,
             "Aadd" => A_ADD,
+            "Tpages" => $intPages,
+	    "Tpage" => $intPage,
+	    "Fpage" => "Idź do strony:",
             "Writed" => WRITED));
-    }
+      }
 
     /**
     * Add comment
     */
     if (isset($_GET['action']) && $_GET['action'] == 'add')
-    {
+      {
         addcomments($_POST['tid'], 'lib_comments', 'textid');
-    }
+      }
 
     /**
     * Delete comment

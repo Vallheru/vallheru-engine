@@ -633,6 +633,18 @@ function integercheck($strField)
 }
 
 /**
+ * Function check if value is valid.
+ */
+function checkvalue($value)
+{
+  $value = intval($value);
+  if ($value < 1)
+    {
+      error(ERROR);
+    }
+}
+
+/**
 * Delete session when player escape from fight
 */
 $arrTitle = array('Arena Walk', 'Labirynt', 'Portal', 'Astralny plan');

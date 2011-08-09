@@ -7,7 +7,7 @@
  *   @copyright            : (C) 2006,2007,2011 Vallheru Team based on Gamers-Fusion ver 2.5
  *   @author               : thindil <thindil@tuxfamily.org>
  *   @version              : 1.4
- *   @since                : 08.08.2011
+ *   @since                : 09.08.2011
  *
  */
 
@@ -27,7 +27,7 @@
 //   along with this program; if not, write to the Free Software
 //   Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 //
-// $Id: comments.php 903 2007-02-28 21:31:27Z thindil $
+// $Id$
 
 /**
  * Function to display comments
@@ -39,18 +39,33 @@ function displaycomments($intItemid, $strItemtable, $strCommentstable, $strComme
     global $arrId;
     global $arrDate;
     global $db;
+    global $intPages;
+    global $intPage;
 
-    if (!ereg("^[1-9][0-9]*$", $intItemid))
-    {
-        error(ERROR);
-    }
+    checkvalue($intItemid);
     $objText = $db -> Execute("SELECT `id` FROM `".$strItemtable."` WHERE `id`=".$intItemid);
     if (!$objText -> fields['id'])
     {
         error(NO_TEXT);
     }
     $objText -> Close();
-    $objComments = $db -> Execute("SELECT `id`, `body`, `author`, `time` FROM `".$strCommentstable."` WHERE `".$strCommentsid."`=".$intItemid." ORDER BY `id`") or die($db -> ErrorMsg());
+    $objQuery = $db -> Execute("SELECT count(`id`) FROM `".$strCommentstable."` WHERE `".$strCommentsid."`=".$intItemid);
+    $intPages = $objQuery->fields['count(`id`)'] / 25;
+    $objQuery -> Close();
+    $intPage = intval($intPage);
+    if ($intPage == 0)
+      {
+	error(ERROR);
+      }
+    else if ($intPage == -1)
+      {
+	$intPage = floor($intPages);
+	if ($intPage == 1)
+	  {
+	    $intPage = 2;
+	  }
+      }
+    $objComments = $db->SelectLimit("SELECT `id`, `body`, `author`, `time` FROM `".$strCommentstable."` WHERE `".$strCommentsid."`=".$intItemid." ORDER BY `id`", 25, 25 * ($intPage - 1)) or die($db -> ErrorMsg());
     $arrBody = array();
     $arrAuthor = array();
     $arrId = array();
@@ -82,10 +97,7 @@ function addcomments($intItemid, $strCommentstable, $strCommentsid)
     {
         error(EMPTY_FIELDS);
     }
-    if (!ereg("^[1-9][0-9]*$", $intItemid))
-    {
-        error(ERROR);
-    }
+    checkvalue($intItemid);
     require_once('includes/bbcode.php');
     $strAuthor = $player -> user." ID: ".$player -> id;
     $_POST['body'] = bbcodetohtml($_POST['body']);
@@ -107,10 +119,7 @@ function deletecomments($strCommentstable)
     {
         error(NO_PERM);
     }
-    if (!ereg("^[1-9][0-9]*$", $_GET['cid']))
-    {
-        error(ERROR);
-    }
+    checkvalue($_GET['cid']);
     $db -> Execute("DELETE FROM `".$strCommentstable."` WHERE `id`=".$_GET['cid']);
     error(C_DELETED);
 }

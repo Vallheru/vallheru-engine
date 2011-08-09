@@ -4,10 +4,10 @@
  *   Polls in game
  *
  *   @name                 : polls.php                            
- *   @copyright            : (C) 2004,2005,2006 Vallheru Team based on Gamers-Fusion ver 2.5
- *   @author               : thindil <thindil@users.sourceforge.net>
- *   @version              : 1.1
- *   @since                : 10.03.2006
+ *   @copyright            : (C) 2004,2005,2006,2011 Vallheru Team based on Gamers-Fusion ver 2.5
+ *   @author               : thindil <thindil@tuxfamily.org>
+ *   @version              : 1.4
+ *   @since                : 09.08.2011
  *
  */
 
@@ -27,7 +27,7 @@
 //   along with this program; if not, write to the Free Software
 //   Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 //
-// $Id: polls.php 54 2006-03-14 19:42:02Z thindil $
+// $Id$
 
 $title = "Hala zgromadzeń";
 require_once("includes/head.php");
@@ -103,8 +103,8 @@ if (!isset($_GET['action']))
         */
         if ($intDays)
         {
-            $objQuery = $db -> Execute("SELECT count(*) FROM `players`");
-            $intMembers = $objQuery -> fields['count(*)'];
+            $objQuery = $db -> Execute("SELECT count(`id`) FROM `players`");
+            $intMembers = $objQuery -> fields['count(`id`)'];
             $objQuery -> Close();
             $fltVoting = ($intVotes / $intMembers) * 100;
         }
@@ -136,8 +136,8 @@ if (!isset($_GET['action']))
         /**
          * Check amount of comments to poll
          */
-        $objComments = $db -> Execute("SELECT count(*) FROM `polls_comments` WHERE `pollid`=".$objPollid -> fields['id']);
-        $intComments = $objComments -> fields['count(*)'];
+        $objComments = $db -> Execute("SELECT count(`id`) FROM `polls_comments` WHERE `pollid`=".$objPollid -> fields['id']);
+        $intComments = $objComments -> fields['count(`id`)'];
         $objComments -> Close();
         $smarty -> assign(array("Pollid" => $objPollid -> fields['id'],
             "Question" => $strQuestion,
@@ -154,6 +154,18 @@ if (!isset($_GET['action']))
 }
 
 /**
+ * Function check if value is valid.
+ */
+function checkvalue($value)
+{
+  $value = intval($value);
+  if ($value < 1)
+    {
+      error(ERROR);
+    }
+}
+
+/**
 * Vote in poll
 */
 if (isset($_GET['action']) && $_GET['action'] == 'vote')
@@ -162,7 +174,8 @@ if (isset($_GET['action']) && $_GET['action'] == 'vote')
     {
         error(ERROR);
     }
-    if (!ereg("^[1-9][0-9]*$", $_GET['poll']) || $_GET['poll'] != $objPollid -> fields['id'])
+    checkvalue($_GET['poll']);
+    if ($_GET['poll'] != $objPollid -> fields['id'])
     {
         error(ERROR);
     }
@@ -210,8 +223,8 @@ if (isset($_GET['action']) && $_GET['action'] == 'last')
                 }
                     else
                 {
-                    $objQuery = $db -> Execute("SELECT count(*) FROM `players`");
-                    $intMembers = $objQuery -> fields['count(*)'];
+                    $objQuery = $db -> Execute("SELECT count(`id`) FROM `players`");
+                    $intMembers = $objQuery -> fields['count(`id`)'];
                     $objQuery -> Close();
                 }
             }
@@ -257,8 +270,8 @@ if (isset($_GET['action']) && $_GET['action'] == 'last')
         /**
          * Count comments to poll
          */
-        $objComments = $db -> Execute("SELECT count(*) FROM `polls_comments` WHERE `pollid`=".$objPollsid -> fields['id']);
-        $arrComments[$i] = $objComments -> fields['count(*)'];
+        $objComments = $db -> Execute("SELECT count(`id`) FROM `polls_comments` WHERE `pollid`=".$objPollsid -> fields['id']);
+        $arrComments[$i] = $objComments -> fields['count(`id`)'];
         $objComments -> Close();
         $arrPollid[$i] = $objPollsid -> fields['id'];
         $i++ ;
@@ -289,7 +302,15 @@ if (isset($_GET['action']) && $_GET['action'] == 'comments')
     * Display comments
     */
     if (!isset($_GET['step']))
-    {
+      {
+	if (!isset($_GET['page']))
+	  {
+	    $intPage = -1;
+	  }
+	else
+	  {
+	    $intPage = $_GET['page'];
+	  }
         displaycomments($_GET['poll'], 'polls', 'polls_comments', 'pollid');
         $smarty -> assign(array("Tauthor" => $arrAuthor,
             "Tbody" => $arrBody,
@@ -301,24 +322,27 @@ if (isset($_GET['action']) && $_GET['action'] == 'comments')
             "Addcomment" => ADD_COMMENT,
             "Adelete" => A_DELETE,
             "Aadd" => A_ADD,
+            "Tpages" => $intPages,
+	    "Tpage" => $intPage,
+	    "Fpage" => "Idź do strony:",
             "Writed" => WRITED));
-    }
+      }
 
     /**
     * Add comment
     */
     if (isset($_GET['step']) && $_GET['step'] == 'add')
-    {
+      {
         addcomments($_POST['pid'], 'polls_comments', 'pollid');
-    }
+      }
 
     /**
     * Delete comment
     */
     if (isset($_GET['step']) && $_GET['step'] == 'delete')
-    {
+      {
         deletecomments('polls_comments');
-    }
+      }
 }
 
 /**

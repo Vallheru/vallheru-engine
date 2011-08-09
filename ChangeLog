@@ -1,5 +1,15 @@
 2011-08-09  Bartek thindil Jasicki  <thindil@tuxfamily.org>
 
+	* FEATURE,update.php, templates/layout1/updates.tpl, templates/updates.tpl, includes/comments.php,
+	polls.php, templates/layout1/polls.tpl, templates/polls.tpl, forums.php, news.php, library.php,
+	newspaper.php, includes/head.php, templates/layout1/forums.tpl, templates/forums.tpl, templates/layout1/news.tpl,
+	templates/news.tpl, templates/layout1/library.tpl, templates/library.tpl, templates/layout1/newspaper.tpl,
+	templates/newspaper.tpl:
+	added pagination to comments
+	* UPDATE,forums.php: 
+	when enter on forum, move to last page of topic(s)
+	* FEATURE,forums.php, templates/forums.tpl, templates/layout1/forums.tpl: 
+	added pagination to forums
 	* BUG,chatmsgs.php: 
 	fixed few notices
 	* BUG,includes/head.php: 
