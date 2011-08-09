@@ -7,7 +7,7 @@
  *   @copyright            : (C) 2004,2005,2006,2007,2011 Vallheru Team based on Gamers-Fusion ver 2.5
  *   @author               : thindil <thindil@tuxfamily.org>
  *   @version              : 1.4
- *   @since                : 08.08.2011
+ *   @since                : 09.08.2011
  *
  */
 
@@ -656,12 +656,12 @@ if ($player -> fight != 0 && (!in_array($title, $arrTitle)) && (in_array($player
 /**
 * Delete sessions variables when player exit forums
 */
-if (isset($_SESSION['forums']) && (strpos("forums.php", $_SERVER['PHP_SELF']) === FALSE))
+if (isset($_SESSION['forums']) && (strpos($_SERVER['PHP_SELF'], "forums.php") === FALSE))
 {
     unset($_SESSION['forums']);
 }
 
-if (isset($_SESSION['tforums']) && (strpos("tforums.php", $_SERVER['PHP_SELF']) === FALSE))
+if (isset($_SESSION['tforums']) && (strpos($_SERVER['PHP_SELF'], "tforums.php") === FALSE))
 {
     unset($_SESSION['tforums']);
 }
