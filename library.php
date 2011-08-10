@@ -178,7 +178,7 @@ if (isset($_GET['step']) && $_GET['step'] == 'addtext')
     */
     if (isset($_GET['action']) && $_GET['action'] == 'modify')
       {
-	checkvalue($_GET['text'));
+	checkvalue($_GET['text']);
         $objText = $db -> Execute("SELECT id, title, body, type FROM library WHERE id=".$_GET['text']);
         $smarty -> assign(array("Ttitle" => $objText -> fields['title'],
             "Tbody" => $objText -> fields['body'],
