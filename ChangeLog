@@ -1,5 +1,7 @@
 2011-08-10  Bartek thindil Jasicki  <thindil@tuxfamily.org>
 
+	* FEATURE,mmarket.php:
+	added grouping potions on market
 	* BUG,templates/layout1/staff.tpl, templates/staff.tpl, languages/pl/staff.php:
 	fixed bug with mute player on chat
 	* UPDATE,templates/city.tpl: 

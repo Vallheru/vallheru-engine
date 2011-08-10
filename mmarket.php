@@ -8,7 +8,7 @@
  *   @author              : thindil <thindil@tuxfamily.org>
  *   @author              : eyescream <tduda@users.sourceforge.net>
  *   @version             : 1.4
- *   @since               : 06.08.2011
+ *   @since               : 10.08.2011
  *
  */
 
@@ -28,7 +28,7 @@
 //   along with this program; if not, write to the Free Software
 //   Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 //
-// $Id: mmarket.php 882 2007-02-07 19:16:13Z thindil $
+// $Id$
 
 $title = "Rynek z miksturami";
 require_once("includes/head.php");
@@ -79,17 +79,17 @@ if (isset ($_GET['view']) && $_GET['view'] == 'market')
 {
     if (empty($_POST['szukany'])) 
     {
-        $msel = $db -> Execute("SELECT id FROM potions WHERE status='R'");
+        $msel = $db -> Execute("SELECT count(`id`) FROM `potions` WHERE `status`='R'");
         $_POST['szukany'] = '';
     } 
-        else 
+    else 
     {
         $_POST['szukany'] = strip_tags($_POST['szukany']);
         $strSearch = $db -> qstr($_POST['szukany'], get_magic_quotes_gpc());
-        $msel = $db -> Execute("SELECT id FROM potions WHERE status='R' AND name=".$strSearch);
+        $msel = $db -> Execute("SELECT count(`id`) FROM `potions` WHERE `status`='R' AND `name`=".$strSearch);
     }
-    $przed = $msel -> RecordCount();
-    $msel -> Close();
+    $przed = $msel -> fields['count(`id`)'];
+    $msel->Close();
     if ($przed == 0) 
     {
         error (NO_OFERTS);
@@ -110,23 +110,23 @@ if (isset ($_GET['view']) && $_GET['view'] == 'market')
 	  }
         if (empty($_POST['szukany'])) 
         {
-            $pm = $db -> SelectLimit("SELECT * FROM potions WHERE status='R' ORDER BY ".$_GET['lista']." DESC", 30, $_GET['limit']);
+            $pm = $db -> SelectLimit("SELECT * FROM `potions` WHERE `status`='R' ORDER BY ".$_GET['lista']." DESC", 30, $_GET['limit']);
         } 
-            else 
+	else 
         {
-            $pm = $db -> SelectLimit("SELECT * FROM potions WHERE status='R' AND name=".$strSearch." ORDER BY ".$_GET['lista']." DESC", 30, $_GET['limit']);
+            $pm = $db -> SelectLimit("SELECT * FROM `potions` WHERE status='R' AND `name`=".$strSearch." ORDER BY ".$_GET['lista']." DESC", 30, $_GET['limit']);
         }
         $arritem = array();
         $arrlink = array();
         $i = 0;
         while (!$pm -> EOF) 
         {
-            $seller = $db -> Execute("SELECT user FROM players WHERE id=".$pm -> fields['owner']);
+            $seller = $db -> Execute("SELECT `user` FROM `players` WHERE `id`=".$pm -> fields['owner']);
             if ($pm -> fields['type'] != 'A') 
             {
                 $arritem[$i] = "<tr><td>".$pm -> fields['name']." (moc: ".$pm -> fields['power'].")</td><td align=center>".$pm -> fields['efect']."</td><td align=\"center\">".$pm -> fields['amount']."</td><td align=center>".$pm -> fields['cost']."</td><td><a href=view.php?view=".$pm -> fields['owner'].">".$seller -> fields['user']."</a></td>";
             } 
-                else 
+	    else 
             {
                 $arritem[$i] = "<tr><td>".$pm -> fields['name']."</td><td align=center>".$pm -> fields['efect']."</td><td align=\"center\">".$pm -> fields['amount']."</td><td align=center>".$pm -> fields['cost']."</td><td><a href=view.php?view=".$pm -> fields['owner'].">".$seller -> fields['user']."</a></td>";
             }
@@ -135,7 +135,7 @@ if (isset ($_GET['view']) && $_GET['view'] == 'market')
             {
                 $arrlink[$i] = "<td>- <a href=mmarket.php?wyc=".$pm -> fields['id'].">".A_DELETE."</a></td></tr>";
             } 
-                else 
+	    else 
             {
                 $arrlink[$i] = "<td>- <a href=mmarket.php?buy=".$pm -> fields['id'].">".A_BUY."</a></td></tr>";
             }
@@ -163,7 +163,7 @@ if (isset ($_GET['view']) && $_GET['view'] == 'market')
 */
 if (isset ($_GET['view']) && $_GET['view'] == 'add') 
 {
-    $rzecz = $db -> Execute("SELECT * FROM potions WHERE owner=".$player -> id." AND status='K'");
+    $rzecz = $db -> Execute("SELECT * FROM `potions` WHERE `owner`=".$player -> id." AND `status`='K'");
     $arrname = array();
     $arrid = array();
     $arramount = array();
@@ -188,40 +188,49 @@ if (isset ($_GET['view']) && $_GET['view'] == 'add')
         "Pcost" => P_COST));
     if (isset ($_GET['step']) && $_GET['step'] == 'add') 
     {
-        if (!$_POST['cost'] || !ereg("^[1-9][0-9]*$", $_POST['cost'])) 
+        if (!$_POST['cost']) 
         {
             error (ERROR);
         }
-        if (!ereg("^[1-9][0-9]*$", $_POST['przedmiot']) || !ereg("^[1-9][0-9]*$", $_POST['amount'])) 
-        {
-            error (ERROR);
-        }
-        $item = $db -> Execute("SELECT * FROM potions WHERE id=".$_POST['przedmiot']);
+	checkvalue($_POST['cost']);
+	checkvalue($_POST['przedmiot']);
+	checkvalue($_POST['amount']);
+        $item = $db -> Execute("SELECT * FROM `potions` WHERE `id`=".$_POST['przedmiot']);
         if ($_POST['amount'] > $item -> fields['amount']) 
         {
             error(NO_AMOUNT.$item -> fields['name'].". <a href=\"mmarket.php\">".A_BACK."</a>");
         }
-        $db -> Execute("INSERT INTO potions (owner, name, efect, power, status, cost, type, amount) VALUES(".$player -> id.",'".$item -> fields['name']."','".$item -> fields['efect']."',".$item -> fields['power'].",'R',".$_POST['cost'].",'".$item -> fields['type']."',".$_POST['amount'].")");
+	$test = $db -> Execute("SELECT `id` FROM `potions` WHERE `name`='".$item->fields['name']."' AND `owner`=".$player->id." AND `status`='R' AND `power`=".$item->fields['power']." AND `cost`=".$_POST['cost']);
+        if (!$test->fields['id']) 
+        {
+	    $db -> Execute("INSERT INTO potions (owner, name, efect, power, status, cost, type, amount) VALUES(".$player -> id.",'".$item -> fields['name']."','".$item -> fields['efect']."',".$item -> fields['power'].",'R',".$_POST['cost'].",'".$item -> fields['type']."',".$_POST['amount'].")");
+        } 
+	else 
+        {
+            $db -> Execute("UPDATE `potions` SET `amount`=`amount`+".$_POST['amount']." WHERE id=".$test -> fields['id']);
+        }
+	$test->Close();
         $amount = $item -> fields['amount'] - $_POST['amount'];
         if ($amount < 1) 
         {
-            $db -> Execute("DELETE FROM potions WHERE id=".$item -> fields['id']);
+            $db -> Execute("DELETE FROM `potions` WHERE `id`=".$item -> fields['id']);
         } 
-            else 
+	else 
         {
-            $db -> Execute("UPDATE potions SET amount=".$amount." WHERE id=".$item -> fields['id']);
+            $db -> Execute("UPDATE `potions` SET `amount`=".$amount." WHERE `id`=".$item -> fields['id']);
         }
         $smarty -> assign("Message", YOU_ADD.$_POST['amount'].AMOUNT.$item -> fields['name'].ON_MARKET.$_POST['cost'].FOR_GOLDS.". <A href=mmarket.php>".A_BACK."</a>");
+	$item->Close();
     }
 }
 
+/**
+ * Delete offer from market
+ */
 if (isset($_GET['wyc'])) 
 {
-    if (!ereg("^[1-9][0-9]*$", $_GET['wyc'])) 
-    {
-        error (ERROR);
-    }
-    $item = $db -> Execute("SELECT * FROM potions WHERE id=".$_GET['wyc']);
+    checkvalue($_GET['wyc']);
+    $item = $db -> Execute("SELECT * FROM `potions` WHERE `id`=".$_GET['wyc']);
     if ($item -> fields['owner'] != $player -> id) 
     {
         error (NOT_YOUR);
@@ -246,10 +255,7 @@ if (isset ($_GET['view']) && $_GET['view'] == 'del')
 */
 if (isset($_GET['buy'])) 
 {
-    if (!ereg("^[1-9][0-9]*$", $_GET['buy'])) 
-    {
-        error (ERROR);
-    }
+    checkvalue($_GET['buy']);
     $buy = $db -> Execute("SELECT * FROM `potions` WHERE `id`=".$_GET['buy']." AND `status`='R'");
     if (!$buy -> fields['id']) 
     {
@@ -259,7 +265,7 @@ if (isset($_GET['buy']))
     {
         error (IS_YOUR);
     }
-    $seller = $db -> Execute("SELECT user FROM players WHERE id=".$buy -> fields['owner']);
+    $seller = $db -> Execute("SELECT `user` FROM `players` WHERE `id`=".$buy -> fields['owner']);
     $smarty -> assign( array("Name" => $buy -> fields['name'], 
         "Power" => $buy -> fields['power'], 
         "Amount1" => $buy -> fields['amount'], 
@@ -276,15 +282,10 @@ if (isset($_GET['buy']))
         "Bamount" => B_AMOUNT,
         "Ppower" => P_POWER,
         "Abuy" => A_BUY));
-    $buy -> Close();
     $seller -> Close();
     if (isset($_GET['step']) && $_GET['step'] == 'buy') 
     {
-        if (!ereg("^[1-9][0-9]*$", $_POST['amount'])) 
-        {
-            error (ERROR);
-        }
-        $buy = $db -> Execute("SELECT * FROM potions WHERE id=".$_GET['buy']);
+	checkvalue($_POST['amount']);
         if ($_POST['amount'] > $buy -> fields['amount']) 
         {
             error(NO_AMOUNT.$buy -> fields['name'].ON_MARKET);
@@ -295,31 +296,31 @@ if (isset($_GET['buy']))
             error (NO_MONEY);
         }
         $ncost = ceil($buy -> fields['cost'] * .5);
-        $test = $db -> Execute("SELECT id FROM potions WHERE name='".$buy -> fields['name']."' AND owner=".$player -> id." AND status='K' AND power=".$buy -> fields['power']);
+        $test = $db -> Execute("SELECT `id` FROM `potions` WHERE `name`='".$buy -> fields['name']."' AND `owner`=".$player -> id." AND `status`='K' AND `power`=".$buy -> fields['power']);
         if (!$test -> fields['id']) 
         {
             $db -> Execute("INSERT INTO potions (name, owner, efect, type, power, status, amount) VALUES('".$buy -> fields['name']."',".$player -> id.",'".$buy -> fields['efect']."','".$buy -> fields['type']."',".$buy -> fields['power'].",'K',".$_POST['amount'].")");
         } 
-            else 
+	else 
         {
-            $db -> Execute("UPDATE potions SET amount=amount+".$_POST['amount']." WHERE id=".$test -> fields['id']);
+            $db -> Execute("UPDATE `potions` SET `amount`=`amount`+".$_POST['amount']." WHERE id=".$test -> fields['id']);
         }
         $test -> Close();
         if ($_POST['amount'] == $buy -> fields['amount']) 
         {
-            $db -> Execute("DELETE FROM potions WHERE id=".$buy -> fields['id']);
+            $db -> Execute("DELETE FROM `potions` WHERE `id`=".$buy -> fields['id']);
         } 
-            else 
+	else 
         {
-            $db -> Execute("UPDATE potions SET amount=amount-".$_POST['amount']." WHERE id=".$buy -> fields['id']);
+            $db -> Execute("UPDATE `potions` SET `amount`=`amount`-".$_POST['amount']." WHERE `id`=".$buy -> fields['id']);
         }
-        $db -> Execute("UPDATE players SET bank=bank+".$price." WHERE id=".$buy -> fields['owner']);
-        $db -> Execute("UPDATE players SET credits=credits-".$price." WHERE id=".$player -> id);
+        $db -> Execute("UPDATE `players` SET `bank`=`bank`+".$price." WHERE `id`=".$buy -> fields['owner']);
+        $db -> Execute("UPDATE `players` SET `credits`=`credits`-".$price." WHERE `id`=".$player -> id);
         $strDate = $db -> DBDate($newdate);
         $db -> Execute("INSERT INTO `log` (`owner`, `log`, `czas`) VALUES(".$buy -> fields['owner'].",'<b><a href=view.php?view=".$player -> id.">".$player -> user.L_ACCEPT.$player -> id.L_ACCEPT2.$_POST['amount'].L_AMOUNT.$buy -> fields['name'].YOU_GET.$price.TO_BANK."', ".$strDate.")");
         $smarty -> assign("Message", YOU_BUY.$_POST['amount'].L_AMOUNT.$buy -> fields['name'].FOR_A.$price.GOLD_COINS);
-        $buy -> Close();
     }
+    $buy->Close();
 }
 
 /**
@@ -327,7 +328,7 @@ if (isset($_GET['buy']))
 */
 if (isset($_GET['view']) && $_GET['view'] == 'all') 
 {
-    $oferts = $db -> Execute("SELECT name FROM potions WHERE status='R' GROUP BY name");
+    $oferts = $db -> Execute("SELECT `name` FROM `potions` WHERE `status`='R' GROUP BY `name`");
     $arrname = array();
     $arramount = array();
     $i = 0;
@@ -335,7 +336,7 @@ if (isset($_GET['view']) && $_GET['view'] == 'all')
     {
         $arrname[$i] = $oferts -> fields['name'];
         $arramount[$i] = 0;
-        $query = $db -> Execute("SELECT id FROM potions WHERE status='R' AND name='".$arrname[$i]."'");
+        $query = $db -> Execute("SELECT `id` FROM `potions` WHERE `status`='R' AND `name`='".$arrname[$i]."'");
         while (!$query -> EOF) 
         {
             $arramount[$i] = $arramount[$i] + 1;
