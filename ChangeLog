@@ -1,5 +1,7 @@
 2011-08-10  Bartek thindil Jasicki  <thindil@tuxfamily.org>
 
+	* BUG,languages/pl/temple.php: 
+	fixed book in temple
 	* BUG,library.php:
 	fixed typo
 	* BUG,library.php, polls.php, news.php, newspaper.php:
