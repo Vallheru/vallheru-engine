@@ -8,6 +8,7 @@
 {$Tlocation}: {$Location}<br />
 {$Immu}
 {$Tlastseen}: {$Page}<br />
+{$Seen}: {$Lastseen}<br />
 {$Tage}: {$Age}<br />
 {$Trace}: {$Race}<br />
 {$Tclass2}: {$Clas}<br />

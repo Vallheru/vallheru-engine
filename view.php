@@ -4,11 +4,11 @@
  *   View other players, steal money, astral components from other players
  *
  *   @name                 : view.php                            
- *   @copyright            : (C) 2004,2005,2006 Vallheru Team based on Gamers-Fusion ver 2.5
- *   @author               : thindil <thindil@users.sourceforge.net>
+ *   @copyright            : (C) 2004,2005,2006,2011 Vallheru Team based on Gamers-Fusion ver 2.5
+ *   @author               : thindil <thindil@tuxfamily.org>
  *   @author               : eyescream <tduda@users.sourceforge.net>
- *   @version              : 1.3
- *   @since                : 23.11.2006
+ *   @version              : 1.4
+ *   @since                : 10.08.2011
  *
  */
 
@@ -38,10 +38,7 @@ if (!isset($_GET['view']))
     error("<a href=\"\"></a>");
 }
 
-if (!ereg("^[1-9][0-9]*$", $_GET['view'])) 
-{
-    error("<a href=\"\"></a>");
-}
+checkvalue($_GET['view']);
 
 $view = new Player($_GET['view']);
 
@@ -250,15 +247,30 @@ if ($player -> rank == 'Admin' || $player -> rank == 'Staff')
     $smarty -> assign ("IP", PLAYER_IP.$view -> ip);
 }
 
+$objViewtime = $db->Execute("SELECT `lpv` FROM `players` WHERE `id`=".$view->id);
+$intLastseen = ($ctime - $objViewtime->fields['lpv']) / 86400;
+$objViewtime->Close();
+switch ($intLastseen)
+  {
+  case 0:
+    $strSeen = "Dzisiaj";
+    break;
+  case 1:
+    $strSeen = "Wczoraj";
+    break;
+  default:
+    $strSeen = $intLastseen." dni temu.";
+    break;
+  }
+$smarty->assign(array("Seen" => "Ostatnio aktywny",
+		      "Lastseen" => $strSeen));
+
 /**
 * Pickpocket
 */
 if (isset ($_GET['steal'])) 
 {
-    if (!ereg("^[1-9][0-9]*$", $_GET['steal'])) 
-    {
-        error (ERROR." (<a href=\"view.php?view=".$_GET['view']."\">".BACK."</a>)");
-    }
+    checkvalue($_GET['steal']);
     if ($player -> clas != 'Złodziej')
     {
         error(ERROR." (<a href=\"view.php?view=".$_GET['view']."\">".BACK."</a>)");
@@ -431,10 +443,7 @@ if (isset ($_GET['steal']))
  */
 if (isset($_GET['steal_astral']))
 {
-    if (!ereg("^[1-9][0-9]*$", $_GET['steal_astral'])) 
-    {
-        error (ERROR." (<a href=\"view.php?view=".$_GET['view']."\">".BACK."</a>)");
-    }
+    checkvalue($_GET['steal_astral']);
     if ($player -> clas != 'Złodziej' || $player -> location == 'Lochy')
     {
         error(ERROR." (<a href=\"view.php?view=".$_GET['view']."\">".BACK."</a>)");
