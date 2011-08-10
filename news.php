@@ -124,10 +124,10 @@ if (isset($_GET['step']) && $_GET['step'] == 'comments')
 	  {
 	    $intPage = $_GET['page'];
 	  }
-        displaycomments($_GET['text'], 'news', 'news_comments', 'newsid');
+        $intAmount = displaycomments($_GET['text'], 'news', 'news_comments', 'newsid');
         $smarty -> assign(array("Tauthor" => $arrAuthor,
             "Tbody" => $arrBody,
-            "Amount" => $i,
+            "Amount" => $intAmount,
             "Cid" => $arrId,
             "Tdate" => $arrDate,
             "Nocomments" => NO_COMMENTS,

@@ -223,10 +223,10 @@ if (isset($_GET['comments']))
 	  {
 	    $intPage = $_GET['page'];
 	  }
-	displaycomments($_GET['comments'], 'newspaper', 'newspaper_comments', 'textid');
+	$intAmount = displaycomments($_GET['comments'], 'newspaper', 'newspaper_comments', 'textid');
         $smarty -> assign(array("Tauthor" => $arrAuthor,
                                 "Tbody" => $arrBody,
-                                "Amount" => $i,
+                                "Amount" => $intAmount,
                                 "Cid" => $arrId,
                                 "Tdate" => $arrDate,
                                 "Nocomments" => NO_COMMENTS,

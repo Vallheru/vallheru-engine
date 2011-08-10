@@ -299,10 +299,10 @@ if (isset($_GET['action']) && $_GET['action'] == 'comments')
 	  {
 	    $intPage = $_GET['page'];
 	  }
-        displaycomments($_GET['poll'], 'polls', 'polls_comments', 'pollid');
+        $intAmount = displaycomments($_GET['poll'], 'polls', 'polls_comments', 'pollid');
         $smarty -> assign(array("Tauthor" => $arrAuthor,
             "Tbody" => $arrBody,
-            "Amount" => $i,
+            "Amount" => $intAmount,
             "Cid" => $arrId,
             "Tdate" => $arrDate,
             "Poll" => $_GET['poll'],
