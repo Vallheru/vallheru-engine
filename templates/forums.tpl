@@ -33,10 +33,10 @@
     {if $Tpages > 1}
     	<br />{$Fpage}
     	{for $page = 1 to $Tpages}
-	    {if $page - 1 == $Tpage}
+	    {if $page == $Tpage}
 	        {$page}
 	    {else}
-                <a href="forums.php?topics={$Topics}&page={$page - 1}">{$page}</a>
+                <a href="forums.php?topics={$Topics}&page={$page}">{$page}</a>
 	    {/if}
     	{/for}
 	<br /><br />
