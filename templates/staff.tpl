@@ -75,15 +75,15 @@
 {/if}
 
 {if $View == "czat"}
-    {$Tlist}<br />
+    {$Blocklist}<br />
     {section name=staff loop=$Chatid}
-        {$Tid}: {$Chatid[staff]}
+        {$Chatid}: {$Chatid[staff]}
     {/section}
     <form method="post" action="staff.php?view=czat&amp;step=czat">
     <select name="czat">
     <option value="blok">{$Ablock}</option>
     <option value="odblok">{$Aunblock}</option></select>
-    {$Tid} <input type="text" name="czat_id" size="5" /> {$Ona} <input type="text" size="5" name="duration" value="1" />{$Tdays}<br />
+    {$Chatid} <input type="text" name="czat_id" size="5" /> {$Ona} <input type="text" size="5" name="duration" value="1" />{$Tdays}<br />
     <textarea name="verdict"></textarea><br />
      <input type="submit" value="{$Amake}" />
     </form>

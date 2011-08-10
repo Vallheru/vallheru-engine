@@ -4,10 +4,10 @@
  *   Polish language for staff panel
  *
  *   @name                 : staff.php                            
- *   @copyright            : (C) 2004,2005,2006,2007 Vallheru Team based on Gamers-Fusion ver 2.5
+ *   @copyright            : (C) 2004,2005,2006,2007,2011 Vallheru Team based on Gamers-Fusion ver 2.5
  *   @author               : thindil <thindil@users.sourceforge.net>
- *   @version              : 1.3
- *   @since                : 05.03.2007
+ *   @version              : 1.4
+ *   @since                : 10.08.2011
  *
  */
 
@@ -27,7 +27,7 @@
 //   along with this program; if not, write to the Free Software
 //   Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 //
-// $Id: staff.php 942 2007-03-05 17:19:06Z thindil $
+// $Id$
 
 define("YOU_NOT", "Nie jesteś Księciem");
 define("ERROR", "Zapomnij o tym!");
@@ -112,8 +112,8 @@ if (isset ($_GET['view']) && $_GET['view'] == 'czat')
 {
     define("YOU_BLOCK", "Zablokowałeś wysyłanie wiadomości na czacie przez gracza ");
     define("YOU_UNBLOCK", "Odblokowałeś wysyłanie wiadomości na czacie przez gracza ");
-    define("C_LIST", "Lista zablokowanych");
-    define("T_ID", "ID");
+    define("BLOCK_LIST", "Lista zablokowanych");
+    define("CHAT_ID", "ID");
     define("A_BLOCK", "Zablokuj");
     define("A_UNBLOCK", "Odblokuj");
     define("T_DAYS", " dni z przyczyny: ");
