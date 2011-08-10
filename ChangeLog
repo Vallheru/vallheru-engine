@@ -1,5 +1,7 @@
 2011-08-10  Bartek thindil Jasicki  <thindil@tuxfamily.org>
 
+	* BUG,view.php:
+	fix round days for activity
 	* FEATURE,view.php, templates/layout1/view.tpl, templates/view.tpl:
 	added information about player activity
 	* FEATURE,mmarket.php:

@@ -248,7 +248,7 @@ if ($player -> rank == 'Admin' || $player -> rank == 'Staff')
 }
 
 $objViewtime = $db->Execute("SELECT `lpv` FROM `players` WHERE `id`=".$view->id);
-$intLastseen = ($ctime - $objViewtime->fields['lpv']) / 86400;
+$intLastseen = intval(($ctime - $objViewtime->fields['lpv']) / 86400);
 $objViewtime->Close();
 switch ($intLastseen)
   {
