@@ -1,5 +1,7 @@
 2011-08-11  Bartek thindil Jasicki  <thindil@tuxfamily.org>
 
+	* BUG,includes/battle.php: 
+	fixed some notices
 	* BUG,templates/grid.tpl,templates/layout1/grid.tpl: 
 	fixed typo
 	* FEATURE,templates/layout1/maze.tpl, templates/maze.tpl, maze.php, languages/pl/maze.php: 

@@ -4,11 +4,11 @@
  *   Function to fight PvP
  *
  *   @name                 : battle.php                            
- *   @copyright            : (C) 2006,2007 Vallheru Team based on Gamers-Fusion ver 2.5
- *   @author               : thindil <thindil@users.sourceforge.net>
+ *   @copyright            : (C) 2006,2007,2011 Vallheru Team based on Gamers-Fusion ver 2.5
+ *   @author               : thindil <thindil@tuxfamily.org>
  *   @author               : eyescream <tduda@users.sourceforge.net>
- *   @version              : 1.3
- *   @since                : 28.02.2007
+ *   @version              : 1.4
+ *   @since                : 11.08.2011
  *
  */
 
@@ -28,7 +28,7 @@
 //   along with this program; if not, write to the Free Software
 //   Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 //
-// $Id: battle.php 905 2007-02-28 21:33:05Z thindil $
+// $Id$
 
 /**
  * Function count critical hit
@@ -63,6 +63,9 @@ function attack1($attacker, $defender, $arrAtequip, $arrDeequip, $attack_bspell,
     global $db;
     global $player;
     global $enemy;
+    global $numquery;
+    global $sqltime;
+    global $compress;
     global $start_time;
 
     $krytyk = 0;
