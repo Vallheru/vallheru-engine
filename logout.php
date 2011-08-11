@@ -7,7 +7,7 @@
  *   @copyright            : (C) 2004,2005,2006,2011 Vallheru Team based on Gamers-Fusion ver 2.5
  *   @author               : thindil <thindil@tuxfamily.org>
  *   @version              : 1.4
- *   @since                : 07.08.2011
+ *   @since                : 11.08.2011
  *
  */
 
@@ -27,7 +27,7 @@
 //   along with this program; if not, write to the Free Software
 //   Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 //
-// $Id: logout.php 546 2006-07-29 10:42:45Z thindil $
+// $Id$
 
 require_once('includes/sessions.php'); 
 require_once('libs/Smarty.class.php');
@@ -62,15 +62,16 @@ if (!isset($strTranslation))
 }
 require_once("languages/".$strTranslation."/logout.php");
 
-if (!ereg("^[1-9][0-9]*$", $_GET['did'])) 
-{
+
+$_GET['did'] = intval($_GET['did']);
+if ($_GET['did'] < 1)
+  {
     $smarty -> assign ("Error", ERROR);
     $smarty -> display ('error.tpl');
-    exit;
-}
+    exit; 
+  }
 
-$pass = MD5($_SESSION['pass']);
-$stat = $db -> Execute("SELECT id FROM players WHERE email='".$_SESSION['email']."' AND pass='".$pass."'");
+$stat = $db -> Execute("SELECT `id` FROM `players` WHERE `email`='".$_SESSION['email']."' AND `pass`='".$_SESSION['pass']."'");
 if ($stat -> fields['id'] != $_GET['did']) 
 {
     $smarty -> assign ("Error", ERROR);
@@ -81,8 +82,8 @@ if ($stat -> fields['id'] != $_GET['did'])
 $stat -> Close();
 if (isset($_GET['rest']) && $_GET['rest'] == 'Y') 
 {
-    $test = $db -> Execute("SELECT id FROM houses WHERE owner=".$_GET['did']);
-    $test1 = $db -> Execute("SELECT id FROM houses WHERE locator=".$_GET['did']);
+    $test = $db -> Execute("SELECT `id` FROM `houses` WHERE `owner`=".$_GET['did']);
+    $test1 = $db -> Execute("SELECT `id` FROM `houses` WHERE `locator`=".$_GET['did']);
     if (!$test -> fields['id'] && !$test1 -> fields['id']) 
     {
         $smarty -> assign ("Error", NOT_SLEEP);
@@ -91,9 +92,9 @@ if (isset($_GET['rest']) && $_GET['rest'] == 'Y')
     }
     $test -> Close();
     $test1 -> Close();    
-    $db -> Execute("UPDATE players SET rest='Y' WHERE id=".$_GET['did']);
+    $db -> Execute("UPDATE `players` SET `rest`='Y' WHERE `id`=".$_GET['did']);
 }
-$db -> Execute("UPDATE players SET lpv=lpv-180 WHERE id=".$_GET['did']);
+$db -> Execute("UPDATE `players` SET `lpv`=`lpv`-180 WHERE `id`=".$_GET['did']);
 session_unset();
 session_destroy();
 $smarty -> assign(array("Gamename" => $gamename,

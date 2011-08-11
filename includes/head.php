@@ -7,7 +7,7 @@
  *   @copyright            : (C) 2004,2005,2006,2007,2011 Vallheru Team based on Gamers-Fusion ver 2.5
  *   @author               : thindil <thindil@tuxfamily.org>
  *   @version              : 1.4
- *   @since                : 09.08.2011
+ *   @since                : 11.08.2011
  *
  */
 
@@ -228,7 +228,7 @@ if (isset ($_POST['pass']) && $title == 'Wieści')
             exit;
         }
         $_SESSION['email'] = $_POST['email'];
-        $_SESSION['pass'] = $_POST['pass'];
+        $_SESSION['pass'] = MD5($_POST['pass']);
         $db -> Execute("UPDATE players SET logins=logins+1, rest='N' WHERE email=".$strEmail."");
         $objFight = $db -> Execute("SELECT `fight`, `strength`, `agility`, `inteli`, `wytrz`, `szyb`, `wisdom` FROM `players` WHERE `email`=".$strEmail);
         if ($objFight -> fields['fight'])
@@ -261,9 +261,8 @@ $time = date("H:i:s");
 $data = date("y-m-d");
 $arrtemp = array($data, $time);
 $newdate = implode(" ",$arrtemp);
-$pass = MD5($_SESSION['pass']);
 
-$stat = $db -> Execute("SELECT `id` FROM `players` WHERE `email`='".$_SESSION['email']."' AND `pass`='".$pass."'");
+$stat = $db -> Execute("SELECT `id` FROM `players` WHERE `email`='".$_SESSION['email']."' AND `pass`='".$_SESSION['pass']."'");
 
 if (!$stat -> fields['id']) 
 {

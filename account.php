@@ -7,7 +7,7 @@
  *   @copyright            : (C) 2004,2005,2006,2007,2011 Vallheru Team based on Gamers-Fusion ver 2.5
  *   @author               : thindil <thindil@tuxfamily.org>
  *   @version              : 1.4
- *   @since                : 07.08.2011
+ *   @since                : 11.08.2011
  *
  */
 
@@ -27,7 +27,7 @@
 //   along with this program; if not, write to the Free Software
 //   Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 //
-// $Id: account.php 943 2007-03-05 17:19:34Z thindil $
+// $Id$
 
 $title = 'Opcje konta';
 require_once("includes/head.php");
@@ -568,7 +568,7 @@ if (isset($_GET['view']) && $_GET['view'] == "pass")
         $_POST['np'] = str_replace("'","",strip_tags($_POST['np']));
         $_POST['cp'] = str_replace("'","",strip_tags($_POST['cp']));
         $db -> Execute("UPDATE players SET pass=MD5('".$_POST['np']."') WHERE pass=MD5('".$_POST['cp']."') AND id=".$player -> id);
-        $_SESSION['pass'] = $_POST['np'];       
+        $_SESSION['pass'] = MD5($_POST['np']);       
         error (YOU_CHANGE." ".$_POST['cp']." ".ON." ".$_POST['np']);
     }
 }
