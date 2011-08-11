@@ -8,7 +8,7 @@
  *   @author               : thindil <thindil@tuxfamily.org>
  *   @author               : eyescream <tduda@users.sourceforge.net>
  *   @version              : 1.4
- *   @since                : 06.08.2011
+ *   @since                : 11.08.2011
  *
  */
 
@@ -111,7 +111,7 @@ if (isset ($_GET['view']) && $_GET['view'] == 'market')
     if ($_GET['limit'] < $oferty) 
       {
 	$_GET['limit'] = intval($_GET['limit']);
-        if (!in_array($_GET['lista'], array('id', 'type', 'number', 'amount', 'cost', 'seller'))) 
+        if (!in_array($_GET['lista'], array('id', 'nazwa', 'ilosc', 'cost', 'seller'))) 
 	  {
 	    error(ERROR);
 	  }

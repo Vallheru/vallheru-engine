@@ -248,7 +248,7 @@ if ($player -> rank == 'Admin' || $player -> rank == 'Staff')
 }
 
 $objViewtime = $db->Execute("SELECT `lpv` FROM `players` WHERE `id`=".$view->id);
-if ($objViewTime->fields['lpv'] == 0)
+if ($objViewtime->fields['lpv'] == 0)
   {
     $intLastseen = -1;
   }

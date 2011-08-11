@@ -1,5 +1,7 @@
 2011-08-11  Bartek thindil Jasicki  <thindil@tuxfamily.org>
 
+	* BUG,hmarket.php: 
+	fixed typo
 	* BUG,view.php: 
 	fixed last activity for never logged players
 	* BUG,includes/battle.php: 
