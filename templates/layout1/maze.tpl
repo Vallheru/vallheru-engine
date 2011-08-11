@@ -1,14 +1,18 @@
 {if $Action == "" && $Step == ""}
-    {$Mazeinfo}<br />
-    <a href="maze.php?action=explore">{$Ayes}</a>
+    {$Mazeinfo}<br /><br />
+    <form method="post" action="maze.php?action=explore">
+        <input type="submit" value="{$Explore}" /> <input type="text" name="amount" value="1" size="5" /> {$Times}.
+    </form>
 {/if}
 
 {if $Action == "explore" && $Step == ""}
-    {if $Roll < "49" || $Roll > "63"}
-        {$Message}<br /><br />
-        {$Link}
+    {$Action2}
+    {if $Back != ""}
+        <a href="maze.php">{$Back}</a>
+    {else}
+        <br />
     {/if}
-    {if $Roll > "48" && $Roll < "64"}
+    {if $Encounter == TRUE}
         {$Youmeet} {$Name}{$Fight2}<br />
        <a href="maze.php?step=battle&amp;type=T">{$Yturnf}</a><br />
        <a href="maze.php?step=battle&amp;type=S">{$Ynormf}</a><br />

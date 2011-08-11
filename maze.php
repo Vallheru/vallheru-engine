@@ -4,10 +4,10 @@
  *   Labyrynth in forrest city
  *
  *   @name                 : maze.php                            
- *   @copyright            : (C) 2004,2005,2006 Vallheru Team based on Gamers-Fusion ver 2.5
- *   @author               : thindil <thindil@users.sourceforge.net>
- *   @version              : 1.3
- *   @since                : 31.10.2006
+ *   @copyright            : (C) 2004,2005,2006,2011 Vallheru Team based on Gamers-Fusion ver 2.5
+ *   @author               : thindil <thindil@tuxfamily.org>
+ *   @version              : 1.4
+ *   @since                : 11.08.2011
  *
  */
 
@@ -27,7 +27,7 @@
 //   along with this program; if not, write to the Free Software
 //   Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 //
-// $Id: maze.php 804 2006-10-31 14:12:31Z thindil $
+// $Id$
 
 $title = "Labirynt";
 require_once("includes/head.php");
@@ -58,7 +58,7 @@ function battle($type,$adress)
     {
         error (NO_LIFE);
     }
-    $enemy1 = $db -> Execute("SELECT * FROM monsters WHERE id=".$player -> fight);
+    $enemy1 = $db -> Execute("SELECT * FROM `monsters` WHERE `id`=".$player -> fight);
     $span = ($enemy1 -> fields['level'] / $player -> level);
     if ($span > 2) 
     {
@@ -82,16 +82,16 @@ function battle($type,$adress)
         {
             turnfight ($expgain,$goldgain,'',$adress);
         } 
-            else 
+	else 
         {
             turnfight ($expgain,$goldgain,$_POST['action'],$adress);
         }
     } 
-        else 
+    else 
     {
         fightmonster ($enemy,$expgain,$goldgain,1);
     }
-    $fight = $db -> Execute("SELECT fight FROM players WHERE id=".$player -> id);
+    $fight = $db -> Execute("SELECT `fight` FROM `players` WHERE `id`=".$player -> id);
     if ($fight -> fields['fight'] == 0) 
     {
         $player -> energy = $player -> energy - 1;
@@ -99,15 +99,39 @@ function battle($type,$adress)
         {
             $player -> energy = 0;
         }
-        $db -> Execute("UPDATE players SET energy=".$player -> energy." WHERE id=".$player -> id);
-        $smarty -> assign ("Link", "<br /><br /><a href=\"maze.php?action=explore\">".A_EXPLORE."</a><br />");
+        $db -> Execute("UPDATE `players` SET `energy`=".$player -> energy." WHERE `id`=".$player -> id);
+        $smarty -> assign ("Link", "<br /><br /><a href=\"maze.php\">".A_EXPLORE."</a><br />");
     }
-        else
+    else
     {
         $smarty -> assign("Link", '');
     }
     $fight -> Close();
     $enemy1 -> Close();
+}
+
+/** 
+ * Add item to player equipment.
+ */
+function add_item($intId, $type)
+{
+  global $db;
+  global $player;
+  if ($type == "M")
+    {
+      $objItem = $db->Execute("SELECT * FROM `mage_items` WHERE `id`=".$intId);
+      $intNewcost = $objItem -> fields['minlev'] * 100;
+      $db -> Execute("INSERT INTO `equipment` (`owner`, `name`, `cost`, `minlev`, `type`, `power`, `status`) VALUES(".$player -> id.",'".$objItem->fields['name']."',".$intNewcost.",".$objItem->fields['minlev'].",'".$objItem->fields['type']."',".$objItem->fields['power'].",'U')");
+    }
+  else
+    {
+      $objItem = $db->Execute("SELECT * FROM `equipment` WHERE `id`=".$intId);
+      $intNewcost = $objBow -> fields['minlev'] * 100;
+      $db -> Execute("INSERT INTO `equipment` (`owner`, `name`, `power`, `type`, `cost`, `zr`, `wt`, `minlev`, `maxwt`, `amount`, `szyb`, `twohand`) VALUES(".$player -> id.",'".$objItem->fields['name']."',".$objItem->fields['power'].",'B',".$intNewcost.",".$objItem->fields['zr'].",".$objItem->fields['maxwt'].",".$objItem->fields['minlev'].",".$objItem->fields['maxwt'].",1,".$objItem->fields['szyb'].",'Y')");
+    }
+  $strName = $objItem->fields['name'];
+  $objItem->Close();
+  return $strName;
 }
 
 /**
@@ -119,7 +143,7 @@ if (isset($_GET['step']) && $_GET['step'] == 'battle')
     {
         $type = 'T';
     } 
-        else 
+    else 
     {
         $type = $_GET['type'];
     }
@@ -131,7 +155,7 @@ if (isset($_GET['step']) && $_GET['step'] == 'battle')
 */
 if (isset($_GET['step']) && $_GET['step'] == 'run') 
 {
-    $enemy = $db -> Execute("SELECT speed, name, exp1, exp2, id FROM monsters WHERE id=".$player -> fight);
+    $enemy = $db -> Execute("SELECT `speed`, `name`, `exp1`, `exp2`, `id` FROM `monsters` WHERE `id`=".$player -> fight);
     /**
      * Add bonus from rings
      */
@@ -166,7 +190,7 @@ if (isset($_GET['step']) && $_GET['step'] == 'run')
                                 "Escapesucc2" => ESCAPE_SUCC2,
                                 "Escapesucc3" => ESCAPE_SUCC3));
         checkexp($player -> exp,$expgain,$player -> level,$player -> race,$player -> user,$player -> id,0,0,$player -> id,'',0);
-        $db -> Execute("UPDATE players SET fight=0 WHERE id=".$player -> id);
+        $db -> Execute("UPDATE `players` SET `fight`=0 WHERE `id`=".$player -> id);
     } 
         else 
     {
@@ -175,11 +199,11 @@ if (isset($_GET['step']) && $_GET['step'] == 'run')
         $smarty -> display ('error1.tpl');
         battle('T','maze.php?step=battle');
     }
-    $hp = $db -> Execute("SELECT hp FROM players WHERE id=".$player -> id);
+    $hp = $db -> Execute("SELECT `hp` FROM `players` WHERE `id`=".$player -> id);
     $smarty -> assign ("Health", $hp -> fields['hp']);
     if ($hp -> fields['hp'] > 0) 
     {
-        $smarty -> assign("Link", "<a href=\"maze.php?action=explore\">".A_EXPLORE."</a>");
+        $smarty -> assign("Link", "<a href=\"maze.php\">".A_EXPLORE."</a>");
     }
     $hp -> Close();
 }
@@ -187,15 +211,25 @@ if (isset($_GET['step']) && $_GET['step'] == 'run')
 if (!isset($_GET['action']))
 {
     $smarty -> assign(array("Mazeinfo" => MAZE_INFO,
-        "Ayes" => YES));
+			    "Explore" => A_EXPLORE,
+			    "Times" => "razy"));
     $_GET['action'] = '';
 }
 
+$strQuestName = "";
+
+/**
+ * Explore tower
+ */
 if (isset($_GET['action']) && $_GET['action'] == 'explore')
 {
-    if ($player -> energy < 0.3)
+    integercheck($_POST['amount']);
+    checkvalue($_POST['amount']);
+    $intAmount2 = intval($_POST['amount']);
+    $intNeeded = $intAmount2 * 0.3;
+    if ($player -> energy < $intNeeded) 
     {
-        error(NO_ENERGY);
+        error (NO_ENERGY);
     }
     if ($player -> hp <= 0)
     {
@@ -203,446 +237,454 @@ if (isset($_GET['action']) && $_GET['action'] == 'explore')
     }
     if (!empty($player -> fight)) 
     {
-        $enemy = $db -> Execute("SELECT name FROM monsters WHERE id=".$player -> fight);
+        $enemy = $db -> Execute("SELECT `name` FROM `monsters` WHERE `id`=".$player -> fight);
         error (FIGHT1.$enemy -> fields['name'].FIGHT2."<br />
                    <a href=maze.php?step=battle&type=T>".Y_TURN_F."</a><br />
                    <a href=maze.php?step=battle&type=N>".Y_NORM_F."</a><br />
                <a href=maze.php?step=run>".NO."</a><br />");
         $enemy -> Close();
     }
-    $db -> Execute("UPDATE players SET energy=energy-.3 WHERE id=".$player -> id);
-    $intRoll = rand(1, 100);
-    $smarty -> assign(array("Link" => "<a href=\"maze.php?action=explore\">".A_EXPLORE."</a>",
-        "Roll" => $intRoll));
-    if ($intRoll < 49)
-    {
-        $smarty -> assign("Message", EMPTY_1);
-    }
-    if ($intRoll > 48 && $intRoll < 64)
-    {
-        $arrmonsters = array(58, 59, 63, 69, 73, 76, 82, 84, 93, 95, 98, 101, 103);
-        $rzut2 = rand(0,12);
-        $enemy = $db -> Execute("SELECT name, id FROM monsters WHERE id=".$arrmonsters[$rzut2]);
-        $db -> Execute("UPDATE players SET fight=".$enemy -> fields['id']." WHERE id=".$player -> id);
-        $smarty -> assign (array("Name" => $enemy -> fields['name'],
-                                 "Youmeet" => YOU_MEET,
-                                 "Fight2" => FIGHT2,
-                                 "Yturnf" => Y_TURN_F,
-                                 "Ynormf" => Y_NORM_F,
-                                 "Ano" => NO));
-    }
-    if ($intRoll > 63 && $intRoll < 70)
-    {
-        $objHerb = $db -> Execute("SELECT gracz FROM herbs WHERE gracz=".$player -> id);
-        $arrHerbs = array('illani', 'illanias', 'nutari', 'dynallca');
-        $intRoll2 = rand(0, 3);
-        $intAmount = rand(1, 10);
-        if (!$objHerb -> fields['gracz']) 
-        {
-            $db -> Execute("INSERT INTO herbs (gracz, ".$arrHerbs[$intRoll2].") VALUES(".$player -> id.",".$intAmount.")");
-        } 
+    $finish = FALSE;
+    $arrHerbs = array('illani', 'illanias', 'nutari', 'dynallca');
+    foreach ($arrHerbs as $strHerb)
+      {
+	$arrHerbs2[$strHerb] = 0;
+      }
+    $arrLumber = array('pine', 'hazel', 'yew', 'elm');
+    foreach ($arrLumber as $strLumber)
+      {
+	$arrLumber2[$strLumber] = 0;
+      }
+    $arrType = array(T_PINE, T_HAZEL, T_YEW, T_ELM);
+    $intMithril = 0;
+    $intGold = 0;
+    $intEnergy = 0;
+    $arrSpells = array();
+    $arrPlans = array();
+    $arrAplans = array();
+    $arrMagic = array();
+    $arrBows = array();
+    $arrAstral = array();
+    $intTimes = 0;
+    $encounter = FALSE;
+    while (!$finish)
+      {
+	$intRoll = rand(1, 100);
+	$intRoll2 = rand(1, 10);
+	if ($intRoll > 48 && $intRoll < 64)
+	  {
+	    $arrmonsters = array(58, 59, 63, 69, 73, 76, 82, 84, 93, 95, 98, 101, 103);
+	    $rzut2 = rand(0,12);
+	    $enemy = $db -> Execute("SELECT `name` FROM `monsters` WHERE `id`=".$arrmonsters[$rzut2]);
+	    $db -> Execute("UPDATE `players` SET `fight`=".$arrmonsters[$rzut2]." WHERE `id`=".$player -> id);
+	    $finish = TRUE;
+	    $encounter = TRUE;
+	    $smarty->assign(array("Name" => $enemy->fields['name'],
+				  "Youmeet" => YOU_MEET,
+				  "Fight2" => FIGHT2,
+				  "Yturnf" => Y_TURN_F,
+				  "Ynormf" => Y_NORM_F,
+				  "Ano" => NO));
+	    $enemy->Close();
+	  }
+	if ($intRoll > 63 && $intRoll < 70)
+	  {
+	    $intRoll2 = rand(0, 3);
+	    $intAmount = rand(1, 10);
+	    $arrHerbs2[$arrHerbs[$intRoll2]] += $intAmount;
+	  }
+	if ($intRoll > 69 && $intRoll < 76)
+	  {
+	    $intAmount = rand(1, 10);
+	    $intRoll2 = rand(0, 3);
+	    $arrLumber2[$arrLumber[$intRoll2]] += $intAmount;
+	  }
+	if ($intRoll > 75 && $intRoll < 81)
+	  {
+	    $intMithril += rand(1, 5);
+	  }
+	if ($intRoll > 80 && $intRoll < 89)
+	  {
+	    $intEnergy++;
+	  }
+	if (($intRoll > 88) && ($intRoll < 92))
+	  {
+	    if ($intRoll2 < 6)
+	      {
+		$strSymbol = '<';
+	      }
+	    if ($intRoll2 > 5 && $intRoll2 < 9)
+	      {
+		$strSymbol = '=';
+	      }
+	  }
+	if (($intRoll > 91) && ($intRoll < 96))
+	  {
+	    if ($intRoll2 < 6)
+	      {
+		$strSymbol = '<';
+	      }
+	    if ($intRoll2 == 6 || $intRoll2 == 7)
+	      {
+		$strSymbol = '=';
+	      }
+	    if ($intRoll2 == 8)
+	      {
+		$strSymbol = '>';
+	      }
+	  }
+	if ($intRoll > 88 && $intRoll < 91)
+	  {
+	    $intRoll3 = rand(1,3);
+	    switch ($intRoll3)
+	      {
+	      case 1:
+		$strType = 'B';
+		break;
+	      case 2:
+		$strType = 'O';
+		break;
+	      case 3:
+		$strType = 'U';
+		break;
+	      default:
+		break;
+	      }
+	    if ($intRoll2 < 9)
+	      {
+		$objQuery = $db -> Execute("SELECT count(`id`) FROM `czary` WHERE `gracz`=0 AND `poziom`".$strSymbol."".$player -> level." AND `typ`='".$strType."' AND `lang`='".$player -> lang."'");
+		$intAmount = $objQuery->fields['count(`id`)'];
+		$objQuery -> Close();
+		if ($intAmount > 0)
+		  {
+		    $intRoll4 = rand(0, ($intAmount-1));
+		    $objSpell = $db -> SelectLimit("SELECT `id`, `nazwa`  FROM `czary` WHERE `gracz`=0 AND `poziom`".$strSymbol."".$player -> level." AND `typ`='".$strType."' AND `lang`='".$player -> lang."'", 1, $intRoll4);
+		    $objTest = $db->Execute("SELECT `id` FROM `czary` WHERE `gracz`=".$player->id." AND `nazwa`='".$objSpell->fields['nazwa']."'");
+		    if ((!in_array($objSpell->fields['id'], $arrSpells)) && (!$objTest->fields['id']))
+		      {
+			$arrSpells[] = $objSpell->fields['id'];
+		      }
+		    $objTest->Close();
+		    $objSpell -> Close();
+		  }           
+	      }
+	  }
+	if ($intRoll == 91)
+	  {
+	    if ($intRoll2 < 9)
+	      {
+		$objQuery = $db -> Execute("SELECT count(`id`) FROM `mill` WHERE `owner`=0 AND `level`".$strSymbol."".$player -> level." AND `type`='B' AND `lang`='".$player -> lang."'");
+		$intAmount = $objQuery->fields['count(`id`)'] ;
+		$objQuery -> Close();
+		if ($intAmount > 0)
+		  {
+		    $intRoll4 = rand(0, ($intAmount-1));
+		    $objPlan = $db -> SelectLimit("SELECT `id`, `name` FROM `mill` WHERE `owner`=0 AND `level`".$strSymbol."".$player -> level." AND `type`='B' AND `lang`='".$player -> lang."'", 1, $intRoll4);
+		    $objTest = $db->Execute("SELECT `id` FROM `mill` WHERE `owner`=".$player->id." AND `name`='".$objPlan->fields['name']."'");
+		    if ((!in_array($objPlan->fields['id'], $arrPlans)) && (!$objTest->fields['id']))
+		      {
+			$arrPlans[] = $objPlan->fields['id'];
+		      }
+		    $objTest->Close();
+		    $objPlan -> Close();
+		  }
+ 	      }
+	  }
+	if ($intRoll == 92)
+	  {
+	    if ($intRoll2 < 9)
+	      {
+		$objQuery = $db -> Execute("SELECT count(`id`) FROM `alchemy_mill` WHERE `owner`=0 AND `level`".$strSymbol."".$player -> level." AND `lang`='".$player -> lang."'");
+		$intAmount = $objQuery->fields['count(`id`)'];
+		$objQuery -> Close();
+		if ($intAmount > 0)
+		  {
+		    $intRoll4 = rand(0, ($intAmount-1));
+		    $objPlan = $db -> SelectLimit("SELECT `id`, `name` FROM `alchemy_mill` WHERE `owner`=0 AND `level`".$strSymbol."".$player -> level." AND `lang`='".$player -> lang."'",1,$intRoll4);
+		    $objTest = $db->Execute("SELECT `id` FROM `alchemy_mill` WHERE `owner`=".$player->id." AND `name`='".$objPlan->fields['name']."'");
+		    if ((!in_array($objPlan->fields['id'], $arrAplans)) && (!$objTest->fields['id']))
+		      {
+			$arrAplans[] = $objPlan->fields['id'];
+		      }
+		    $objTest->Close();
+		    $objPlan->Close();
+		  }
+	      }
+        }
+	if ($intRoll == 93)
+	  {
+	    if ($intRoll2 < 9)
+	      {
+		$objQuery = $db -> Execute("SELECT count(`id`) FROM `mage_items` WHERE `minlev`".$strSymbol."".$player -> level." AND `lang`='".$player -> lang."' AND `type`='T'");
+		$intAmount = $objQuery->fields['count(`id`)'];
+		$objQuery -> Close();
+		if ($intAmount > 0)
+		  {
+		    $intRoll4 = rand(0, ($intAmount-1));
+		    $objStaff = $db -> SelectLimit("SELECT `id`, `name` FROM `mage_items` WHERE `minlev`".$strSymbol."".$player -> level." AND `lang`='".$player -> lang."' AND `type`='T'", 1, $intRoll4);
+		    $objTest = $db->Execute("SELECT `id` FROM `equipment` WHERE `owner`=".$player->id." AND `name`='".$objStaff->fields['name']."'");
+		    if ((!in_array($objStaff->fields['id'], $arrStaffs)) && (!$objTest->fields['id']))
+		      {
+			$arrMagic[] = $objStaff->fields['id'];
+		      }
+		    $objTest->Close();
+		    $objStaff -> Close();
+		  }
+	      }
+	  }
+	if ($intRoll == 94)
+	  {
+	    if ($intRoll2 < 9)
+	      {
+		$objQuery = $db -> Execute("SELECT count(`id`) FROM `mage_items` WHERE `minlev`".$strSymbol."".$player -> level." AND `lang`='".$player -> lang."' AND `type`='C'");
+		$intAmount = $objQuery->fields['count(`id`)'];
+		$objQuery -> Close();
+		if ($intAmount > 0)
+		  {
+		    $intRoll4 = rand(0, ($intAmount-1));
+		    $objCape = $db -> SelectLimit("SELECT `id` FROM `mage_items` WHERE `minlev`".$strSymbol."".$player -> level." AND `lang`='".$player -> lang."' AND type='C'",1, $intRoll4);
+		    $objTest = $db->Execute("SELECT `id` FROM `equipment` WHERE `owner`=".$player->id." AND `name`='".$objCape->fields['name']."'");
+		    if ((!in_array($objCape->fields['id'], $arrCapes)) && (!$objTest->fields['id']))
+		      {
+			$arrMagic[] = $objCape->fields['id'];
+		      }
+		    $objTest->Close();
+		    $objCape -> Close();
+		  }
+	      }
+	  }   
+	if ($intRoll == 95)
+	  {
+	    if ($intRoll2 < 9)
+	      {
+		$objQuery = $db -> Execute("SELECT count(`id`) FROM `bows` WHERE `minlev`".$strSymbol."".$player -> level." AND `lang`='".$player -> lang."' AND `type`='B'");
+		$intAmount = $objQuery->fields['count(`id`)'];
+		$objQuery -> Close();
+		if ($intAmount > 0)
+		  {
+		    $intRoll4 = rand(0, ($intAmount-1));
+		    $objBow = $db -> SelectLimit("SELECT `id` FROM `bows` WHERE `minlev`".$strSymbol."".$player -> level." AND `lang`='".$player -> lang."' AND `type`='B'",1,$intRoll4);
+		    $objTest = $db->Execute("SELECT `id` FROM `equipment` WHERE `owner`=".$player->id." AND `name`='".$objBow->fields['name']."'");
+		    if ((!in_array($objBow->fields['id'], $arrBows)) && (!$objTest->fields['id']))
+		      {
+			$arrBows[] = $objBow->fields['id'];
+		      }
+		    $objTest->Close();
+		    $objBow -> Close();
+		  }
+	      }
+	  }
+	/**
+	 * Find astral components
+	 */
+	if ($intRoll == 96 || $intRoll == 97)
+	  {
+	    require_once('includes/findastral.php');
+	    $strResult = findastral(1);
+	    if ($strResult != false)
+	      {
+		$arrAstral[] = $strResult;
+	      }
+	  }
+	if ($intRoll > 97)
+	  {
+	    $available = $db -> Execute("SELECT `qid` FROM `quests` WHERE `location`='maze.php' AND `name`='start'");
+	    $number = $available -> RecordCount();
+	    if ($number > 0) 
+	      {
+		$arramount = array();
+		$i = 0;
+		while (!$available -> EOF) 
+		  {
+		    $query = $db -> Execute("SELECT `id` FROM `questaction` WHERE `quest`=".$available -> fields['qid']." AND `player`=".$player -> id);
+		    if (empty($query -> fields['id'])) 
+		      {
+			$arramount[$i] = $available -> fields['qid'];
+			$i = $i + 1;
+		      }
+		    $query -> Close();
+			$available -> MoveNext();
+		  }
+		$i = $i - 1;
+		if ($i >= 0) 
+		  {
+		    $roll = rand(0, $i);
+		    $strQuestName = "quest".$arramount[$roll].".php";
+		    $finish = TRUE;
+		  }  
+	      }
+	    $available -> Close();
+	  }
+	$intTimes ++;
+	if ($intTimes == $intAmount2)
+	  {
+	    $finish = TRUE;
+	  }
+      }
+    //Count what we found
+    if ($player->gender == 'F')
+      {
+	$strLast = "aś";
+      }
+    else
+      {
+	$strLast = "eś";
+      }
+    $arrTest = array(0, 0, $intMithril, $intGold, $intEnergy, count($arrSpells), count($arrPlans), count($arrAplans), count($arrMagic), count($arrBows), count($arrAstral));
+    foreach ($arrHerbs2 as $key => $value)
+      {
+	$arrTest[0] += $value;
+      }
+    foreach ($arrLumber2 as $key => $value)
+      {
+	$arrTest[1] += $value;
+      }
+    $found = FALSE;
+    foreach ($arrTest as $intTest)
+      {
+	if ($intTest > 0)
+	  {
+	    $found = TRUE;
+	    break;
+	  }
+      }
+    if ($found)
+      {
+	$strText = "Podczas swojej wędrówki znalazł".$strLast.":<br />";
+      }
+    else
+      {
+	$strText = "Wędrował".$strLast." jakiś czas ale nic ciekawego nie znalazł".$strLast.".<br />";
+      }
+    if ($intGold > 0)
+      {
+	$strText .= $intGold." sztuk złota<br />";
+      }
+    if ($intMithril > 0)
+      {
+	$strText .= $intMithril." sztuk mithrilu<br />";
+      }
+    if ($intEnergy > 0)
+      {
+	$strText .= $intEnergy." razy odwiedził".$strLast." pokój z posążkiem.<br />";
+      }
+    if ($arrTest[0] > 0)
+      {
+	$objHerb = $db->Execute("SELECT `gracz` FROM `herbs` WHERE `gracz`=".$player -> id);
+	if (!$objHerb -> fields['gracz']) 
+	  {
+	    $exists = FALSE;
+	  }
+	else
+	  {
+	    $exists = TRUE;
+	  }
+	$objHerb->Close();
+	foreach ($arrHerbs2 as $key => $value)
+	  {
+	    if ($value == 0)
+	      {
+		continue;
+	      }
+	    if (!$exists) 
+	      {
+		$db -> Execute("INSERT INTO `herbs` (`gracz`, `".$key."`) VALUES(".$player -> id.",".$value.")");
+		$exists = TRUE;
+	      } 
             else 
-        {
-            $db -> Execute("UPDATE herbs SET ".$arrHerbs[$intRoll2]."=".$arrHerbs[$intRoll2]."+".$intAmount." WHERE gracz=".$player -> id);
-        }
-        $objHerb -> Close();
-        $smarty -> assign("Message", F_HERBS.$intAmount.I_AMOUNT.$arrHerbs[$intRoll2]);
-    }
-    if ($intRoll > 69 && $intRoll < 76)
-    {
-        $objLumber = $db -> Execute("SELECT owner FROM minerals WHERE owner=".$player -> id);
-        $intAmount = rand(1, 10);
-        $arrLumber = array('pine', 'hazel', 'yew', 'elm');
-        $arrType = array(T_PINE, T_HAZEL, T_YEW, T_ELM);
-        $intRoll2 = rand(0, 3);
-        if (!$objLumber -> fields['owner']) 
-        {
-            $db -> Execute("INSERT INTO minerals (owner, ".$arrLumber[$intRoll2].") VALUES(".$player -> id.",".$intAmount.")");
-        } 
+	      {
+		$db -> Execute("UPDATE `herbs` SET `".$key."`=`".$key."`+".$value." WHERE `gracz`=".$player -> id);
+	      }
+	    $strText .= $value." sztuk ".$key."<br />";
+	  }
+      }
+    if ($arrTest[1] > 0)
+      {
+	$objLumber = $db -> Execute("SELECT `owner` FROM `minerals` WHERE `owner`=".$player -> id);
+	if (!$objLumber -> fields['owner']) 
+	  {
+	    $exists = FALSE;
+	  }
+	else
+	  {
+	    $exists = TRUE;
+	  }
+	$objLumber->close();
+	$i = -1;
+	foreach ($arrLumber2 as $key => $value)
+	  {
+	    $i ++;
+	    if ($value == 0)
+	      {
+		continue;
+	      }
+	    if (!$exists) 
+	      {
+		$db -> Execute("INSERT INTO `minerals` (`owner`, `".$key."`) VALUES(".$player -> id.",".$value.")");
+		$exists = TRUE;
+	      } 
             else 
-        {
-            $db -> Execute("UPDATE minerals SET ".$arrLumber[$intRoll2]."=".$arrLumber[$intRoll2]."+".$intAmount." WHERE owner=".$player -> id);
-        }
-        $objLumber -> Close();
-        $smarty -> assign("Message", F_LUMBER.$intAmount.I_AMOUNT.$arrType[$intRoll2]);
-    }
-    if ($intRoll > 75 && $intRoll < 81)
-    {
-        $intRoll2 = rand(1,5);
-        $db -> Execute("UPDATE players SET platinum=platinum+".$intRoll2." WHERE id=".$player -> id);
-        $smarty -> assign("Message", F_MITHRIL.$intRoll2.M_AMOUNT);
-    }
-    if ($intRoll > 80 && $intRoll < 86)
-    {
-        $smarty -> assign("Message", F_ENERGY);
-        $db -> Execute("UPDATE players SET energy=energy+1 WHERE id=".$player -> id);
-    }
-    if ($intRoll > 85 && $intRoll < 89)
-    {
-        $smarty -> assign("Message", F_ENERGY);
-        $db -> Execute("UPDATE players SET energy=energy+1 WHERE id=".$player -> id);
-    }
-    if ($intRoll > 88 && $intRoll < 91)
-    {
-        $intRoll2 = rand(1, 10);
-        if ($intRoll2 < 6)
-        {
-            $intRoll3 = rand(1,3);
-            $strSymbol = '<';
-            if ($intRoll3 == 1)
-            {
-                $strType = 'B';
-            }
-            if ($intRoll3 == 2)
-            {
-                $strType = 'O';
-            }
-            if ($intRoll3 == 3)
-            {
-                $strType = 'U';
-            }
-        }
-        if ($intRoll2 > 5 && $intRoll2 < 9)
-        {
-            $intRoll3 = rand(1,3);
-            $strSymbol = '=';
-            if ($intRoll3 == 1)
-            {
-                $strType = 'B';
-            }
-            if ($intRoll3 == 2)
-            {
-                $strType = 'O';
-            }
-            if ($intRoll3 == 3)
-            {
-                $strType = 'U';
-            }
-        }
-        if ($intRoll2 < 9)
-        {
-            $objQuery = $db -> Execute("SELECT id FROM czary WHERE gracz=0 AND poziom".$strSymbol."".$player -> level." AND typ='".$strType."' AND lang='".$player -> lang."'");
-            $intAmount = $objQuery -> RecordCount();
-            $objQuery -> Close();
-            if ($intAmount > 0)
-            {
-                $intRoll4 = rand(0, ($intAmount-1));
-                $objSpell = $db -> SelectLimit("SELECT * FROM czary WHERE gracz=0 AND poziom".$strSymbol."".$player -> level." AND typ='".$strType."' AND lang='".$player -> lang."'",1,$intRoll4);
-                $objTest = $db -> Execute("SELECT id FROM czary WHERE nazwa='".$objSpell -> fields['nazwa']."' AND gracz=".$player -> id);
-                if (!$objTest -> fields['id']) 
-                {
-                    $db -> Execute("INSERT INTO czary (gracz, nazwa, cena, poziom, typ, obr, status) VALUES(".$player -> id.", '".$objSpell -> fields['nazwa']."', ".$objSpell -> fields['cena'].", ".$objSpell -> fields['poziom'].", '".$objSpell -> fields['typ']."', ".$objSpell -> fields['obr'].", 'U')");
-                    $smarty -> assign("Message", F_SPELL.$objSpell -> fields['nazwa'].F_SPELL2);
-                }
-                    else
-                {
-                    $smarty -> assign("Message", EMPTY_2);
-                }
-                $objTest -> Close();
-                $objSpell -> Close();
-            }           
-                else
-            {
-                $smarty -> assign("Message", EMPTY_3);
-            }
-        }
-        if ($intRoll2 > 8)
-        {
-            $smarty -> assign("Message", EMPTY_4);
-        }
-    }
-    if ($intRoll == 91)
-    {
-        $intRoll2 = rand(1, 10);
-        if ($intRoll2 < 6)
-        {
-            $strSymbol = '<';
-        }
-        if ($intRoll2 > 5 || $intRoll2 < 9)
-        {
-            $strSymbol = '=';
-        }
-        if ($intRoll2 < 9)
-        {
-            $objQuery = $db -> Execute("SELECT id FROM mill WHERE owner=0 AND level".$strSymbol."".$player -> level." AND type='B' AND lang='".$player -> lang."'");
-            $intAmount = $objQuery -> RecordCount();
-            $objQuery -> Close();
-            if ($intAmount > 0)
-            {
-                $intRoll4 = rand(0, ($intAmount-1));
-                $objPlan = $db -> SelectLimit("SELECT * FROM mill WHERE owner=0 AND level".$strSymbol."".$player -> level." AND type='B' AND lang='".$player -> lang."'",1,$intRoll4);
-                $objTest = $db -> Execute("SELECT id FROM mill WHERE name='".$objPlan -> fields['name']."' AND owner=".$player -> id);
-                if (!$objTest -> fields['id']) 
-                {
-                    $db -> Execute("INSERT INTO mill (owner, name, type, cost, amount, level, twohand) VALUES(".$player -> id.",'".$objPlan -> fields['name']."', '".$objPlan -> fields['type']."' ,".$objPlan -> fields['cost'].", ".$objPlan -> fields['amount'].", ".$objPlan -> fields['level'].", '".$objPlan -> fields['twohand']."')");
-                    $smarty -> assign("Message", F_PLANBOW.$objPlan -> fields['name']);
-                }
-                    else
-                {
-                    $smarty -> assign("Message", EMPTY_5);
-                }
-                $objTest -> Close();
-                $objPlan -> Close();
-            }
-                else
-            {
-                $smarty -> assign("Message", EMPTY_6);
-            }
-        }
-        if ($intRoll2 > 8)
-        {
-            $smarty -> assign("Message", EMPTY_1);
-        }
-    }
-    if ($intRoll == 92)
-    {
-        $intRoll2 = rand(1, 10);
-        if ($intRoll2 < 6)
-        {
-            $strSymbol = '<';
-        }
-        if ($intRoll2 == 6 || $intRoll2 == 7)
-        {
-            $strSymbol = '=';
-        }
-        if ($intRoll2 == 8)
-        {
-            $strSymbol = '>';
-        }
-        if ($intRoll2 < 9)
-        {
-            $objQuery = $db -> Execute("SELECT id FROM alchemy_mill WHERE owner=0 AND level".$strSymbol."".$player -> level." AND lang='".$player -> lang."'");
-            $intAmount = $objQuery -> RecordCount();
-            $objQuery -> Close();
-            if ($intAmount > 0)
-            {
-                $intRoll4 = rand(0, ($intAmount-1));
-                $objPlan = $db -> SelectLimit("SELECT * FROM alchemy_mill WHERE owner=0 AND level".$strSymbol."".$player -> level." AND lang='".$player -> lang."'",1,$intRoll4);
-                $objTest = $db -> Execute("SELECT id FROM alchemy_mill WHERE name='".$objPlan -> fields['name']."' AND owner=".$player -> id);
-                if (!$objTest -> fields['id']) 
-                {
-                    $db -> Execute("INSERT INTO alchemy_mill (owner, name, cost, status, level, illani, illanias, nutari, dynallca) VALUES(".$player -> id.",'".$objPlan -> fields['name']."',".$objPlan -> fields['cost'].",'N',".$objPlan -> fields['level'].",".$objPlan -> fields['illani'].",".$objPlan -> fields['illanias'].",".$objPlan -> fields['nutari'].",".$objPlan -> fields['dynallca'].")");
-                    $smarty -> assign("Message", F_PLANPOTION.$objPlan -> fields['name']);
-                }
-                    else
-                {
-                    $smarty -> assign("Message", EMPTY_2);
-                }
-                $objTest -> Close();
-                $objPlan -> Close();
-            }
-                else
-            {
-                $smarty -> assign("Message", EMPTY_3);
-            }
-        }
-        if ($intRoll2 > 8)
-        {
-            $smarty -> assign("Message", EMPTY_4);
-        }
-    }
-    if ($intRoll == 93)
-    {
-        $intRoll2 = rand(1, 10);
-        if ($intRoll2 < 6)
-        {
-            $strSymbol = '<';
-        }
-        if ($intRoll2 == 6 || $intRoll2 == 7)
-        {
-            $strSymbol = '=';
-        }
-        if ($intRoll2 == 8)
-        {
-            $strSymbol = '>';
-        }
-        if ($intRoll2 < 9)
-        {
-            $objQuery = $db -> Execute("SELECT id FROM mage_items WHERE minlev".$strSymbol."".$player -> level." AND lang='".$player -> lang."' AND type='T'");
-            $intAmount = $objQuery -> RecordCount();
-            $objQuery -> Close();
-            if ($intAmount > 0)
-            {
-                $intRoll4 = rand(0, ($intAmount-1));
-                $objStaff = $db -> SelectLimit("SELECT * FROM mage_items WHERE minlev".$strSymbol."".$player -> level." AND lang='".$player -> lang."' AND type='T'",1,$intRoll4);
-                $objTest = $db -> Execute("SELECT id FROM equipment WHERE name='".$objStaff -> fields['name']."' AND owner=".$player -> id);
-                if (!$objTest -> fields['id']) 
-                {
-                    $intNewcost = $objStaff -> fields['minlev'] * 100;
-                    $db -> Execute("INSERT INTO equipment (owner, name, cost, minlev, type, power, status) VALUES(".$player -> id.",'".$objStaff -> fields['name']."',".$intNewcost.",".$objStaff -> fields['minlev'].",'".$objStaff -> fields['type']."',".$objStaff -> fields['power'].",'U')");
-                    $smarty -> assign("Message", F_STAFF.$objStaff -> fields['name'].F_STAFF2);
-                }
-                    else
-                {
-                    $smarty -> assign("Message", EMPTY_5);
-                }
-                $objTest -> Close();
-                $objStaff -> Close();
-            }
-                else
-            {
-                $smarty -> assign("Message", EMPTY_6);
-            }
-        }
-        if ($intRoll2 > 8)
-        {
-            $smarty -> assign("Message", EMPTY_1);
-        }
-    }
-    if ($intRoll == 94)
-    {
-        $intRoll2 = rand(1, 10);
-        if ($intRoll2 < 6)
-        {
-            $strSymbol = '<';
-        }
-        if ($intRoll2 == 6 || $intRoll2 == 7)
-        {
-            $strSymbol = '=';
-        }
-        if ($intRoll2 == 8)
-        {
-            $strSymbol = '>';
-        }
-        if ($intRoll2 < 9)
-        {
-            $objQuery = $db -> Execute("SELECT id FROM mage_items WHERE minlev".$strSymbol."".$player -> level." AND lang='".$player -> lang."' AND type='C'");
-            $intAmount = $objQuery -> RecordCount();
-            $objQuery -> Close();
-            if ($intAmount > 0)
-            {
-                $intRoll4 = rand(0, ($intAmount-1));
-                $objCape = $db -> SelectLimit("SELECT * FROM mage_items WHERE minlev".$strSymbol."".$player -> level." AND lang='".$player -> lang."' AND type='C'",1,$intRoll4);
-                $objTest = $db -> Execute("SELECT id FROM equipment WHERE name='".$objCape -> fields['name']."' AND owner=".$player -> id);
-                if (!$objTest -> fields['id']) 
-                {
-                    $intNewcost = $objCape -> fields['minlev'] * 100;
-                    $db -> Execute("INSERT INTO equipment (owner, name, cost, minlev, type, power, status) VALUES(".$player -> id.",'".$objCape -> fields['name']."',".$intNewcost.",".$objCape -> fields['minlev'].",'".$objCape -> fields['type']."',".$objCape -> fields['power'].",'U')");
-                    $smarty -> assign("Message", F_CAPE.$objCape -> fields['name'].F_CAPE2);
-                }
-                    else
-                {
-                    $smarty -> assign("Message", EMPTY_2);
-                }
-                $objTest -> Close();
-                $objCape -> Close();
-            }
-                else
-            {
-                $smarty -> assign("Message", EMPTY_3);
-            }
-        }
-        if ($intRoll2 > 8)
-        {
-            $smarty -> assign("Message", EMPTY_4);
-        }
-    }
-    if ($intRoll == 95)
-    {
-        $intRoll2 = rand(1, 10);
-        if ($intRoll2 < 6)
-        {
-            $strSymbol = '<';
-        }
-        if ($intRoll2 == 6 || $intRoll2 == 7)
-        {
-            $strSymbol = '=';
-        }
-        if ($intRoll2 == 8)
-        {
-            $strSymbol = '>';
-        }
-        if ($intRoll2 < 9)
-        {
-            $objQuery = $db -> Execute("SELECT id FROM bows WHERE minlev".$strSymbol."".$player -> level." AND lang='".$player -> lang."' AND type='B'");
-            $intAmount = $objQuery -> RecordCount();
-            $objQuery -> Close();
-            if ($intAmount > 0)
-            {
-                $intRoll4 = rand(0, ($intAmount-1));
-                $objBow = $db -> SelectLimit("SELECT * FROM bows WHERE minlev".$strSymbol."".$player -> level." AND lang='".$player -> lang."' AND type='B'",1,$intRoll4);
-                $objTest = $db -> Execute("SELECT id FROM equipment WHERE name='".$objBow -> fields['name']."' AND owner=".$player -> id);
-                if (!$objTest -> fields['id']) 
-                {
-                    $intNewcost = $objBow -> fields['minlev'] * 100;
-                    $db -> Execute("INSERT INTO equipment (owner, name, power, type, cost, zr, wt, minlev, maxwt, amount, szyb, twohand) VALUES(".$player -> id.",'".$objBow -> fields['name']."',".$objBow -> fields['power'].",'B',".$intNewcost.",".$objBow -> fields['zr'].",".$objBow -> fields['maxwt'].",".$objBow -> fields['minlev'].",".$objBow -> fields['maxwt'].",1,".$objBow -> fields['szyb'].",'Y')");
-                    $smarty -> assign("Message", F_BOW.$objBow -> fields['name']);
-                }
-                    else
-                {
-                    $smarty -> assign("Message", EMPTY_5);
-                }
-                $objTest -> Close();
-                $objBow -> Close();
-            }
-                else
-            {
-                $smarty -> assign("Message", EMPTY_6);
-            }
-        }
-        if ($intRoll2 > 8)
-        {
-            $smarty -> assign("Message", EMPTY_1);
-        }
-    }
-    /**
-     * Find astral components
-     */
-    if ($intRoll == 96 || $intRoll == 97)
-    {
-        require_once('includes/findastral.php');
-        $strResult = findastral(1);
-        if ($strResult != false)
-        {
-            $smarty -> assign("Message", F_ASTRAL.$strResult);
-        }
-            else
-        {
-            $smarty -> assign("Message", EMPTY_1);
-        }
-    }
-    if ($intRoll > 97)
-    {
-        $aviable = $db -> Execute("SELECT qid FROM quests WHERE location='maze.php' AND name='start'");
-        $number = $aviable -> RecordCount();
-        if ($number > 0) 
-        {
-            $arramount = array();
-            $i = 0;
-            while (!$aviable -> EOF) 
-            {
-                $query = $db -> Execute("SELECT id FROM questaction WHERE quest=".$aviable -> fields['qid']." AND player=".$player -> id);
-                if (empty($query -> fields['id'])) 
-                {
-                    $arramount[$i] = $aviable -> fields['qid'];
-                    $i = $i + 1;
-                }
-                $query -> Close();
-                $aviable -> MoveNext();
-            }
-            $i = $i - 1;
-            if ($i >= 0) 
-            {
-                $roll = rand(0,$i);
-                $name = "quest".$arramount[$roll].".php";
-                require_once("quests/".$name);
-            } 
-                else 
-            {
-                $smarty -> assign("Message", EMPTY_2);
-            }
-        }
-            else
-        {
-            $smarty -> assign("Message", EMPTY_3);
-        }
-        $aviable -> Close();
-    }
+	      {
+		$db -> Execute("UPDATE `minerals` SET `".$key."`=`".$key."`+".$value." WHERE `owner`=".$player -> id);
+	      }
+	    $strText .= $value." sztuk ".$arrType[$i]."<br />";
+	  }
+      }
+    foreach ($arrSpells as $intSpell)
+      {
+	$objSpell = $db->Execute("SELECT * FROM `czary` WHERE `id`=".$intSpell);
+	$db -> Execute("INSERT INTO `czary` (`gracz`, `nazwa`, `cena`, `poziom`, `typ`, `obr`, `status`) VALUES(".$player->id.", '".$objSpell->fields['nazwa']."', ".$objSpell->fields['cena'].", ".$objSpell->fields['poziom'].", '".$objSpell->fields['typ']."', ".$objSpell->fields['obr'].", 'U')");
+	$strText .= "Czar ".$objSpell->fields['nazwa']."<br />";
+	$objSpell->Close();
+      }
+    foreach ($arrPlans as $intPlan)
+      {
+	$objPlan = $db->Execute("SELECT * FROM `mill` WHERE `id`=".$intPlan);
+	$db -> Execute("INSERT INTO `mill` (`owner`, `name`, `type`, `cost`, `amount`, `level`, `twohand`) VALUES(".$player -> id.",'".$objPlan->fields['name']."', '".$objPlan->fields['type']."' ,".$objPlan->fields['cost'].", ".$objPlan->fields['amount'].", ".$objPlan->fields['level'].", '".$objPlan->fields['twohand']."')");
+	$strText .= "Plan ".$objPlan->fields['name']."<br />";
+	$objPlan->Close();
+      }
+    foreach ($arrAplans as $intAplan)
+      {
+	$objPlan = $db->Execute("SELECT * FROM `alchemy_mill` WHERE `id`=".$intAplan);
+	$db -> Execute("INSERT INTO `alchemy_mill` (`owner`, `name`, `cost`, `status`, `level`, `illani`, `illanias`, `nutari`, `dynallca`) VALUES(".$player -> id.",'".$objPlan->fields['name']."',".$objPlan->fields['cost'].",'N',".$objPlan->fields['level'].",".$objPlan->fields['illani'].",".$objPlan->fields['illanias'].",".$objPlan->fields['nutari'].",".$objPlan->fields['dynallca'].")");
+	$strText .= "Plan ".$objPlan->fields['name']."<br />";
+	$objPlan->Close();
+      }
+    foreach ($arrMagic as $intMagic)
+      {
+	$strName = add_item($intMagic, "M");
+	$strText .= $strName."<br />";
+      }
+    foreach ($arrBows as $intBow)
+      {
+	$strName = add_item($intBow, "B");
+	$strText .= $strName."<br />";
+      }
+    foreach ($arrAstral as $strAstral)
+      {
+	$strText .= $strAstral."<br />";
+      }
+    $intTimes = $intTimes * 0.3;
+    $strText .= "Zużył".$strLast." na to ".$intTimes." energii.<br />";
+    $intEnergy -= $intTimes;
+    $db->Execute("UPDATE `players` SET `credits`=`credits`+".$intGold.", `platinum`=`platinum`+".$intMithril.", `energy`=`energy`+".$intEnergy."  WHERE `id`=".$player->id);
+    if (($strQuestName == '') && ($encounter == FALSE))
+      {
+	$strBack = "Wróć";
+      }
+    else
+      {
+	$strBack = "";
+      }
+    $smarty->assign(array("Action2" => $strText,
+			  "Back" => $strBack,
+			  "Encounter" => $encounter));
 }
 
 if (isset($_GET['step']) && $_GET['step'] == 'quest') 
 {
-    $query = $db -> Execute("SELECT quest FROM questaction WHERE player=".$player -> id." AND action!='end'");
+    $query = $db -> Execute("SELECT `quest` FROM `questaction` WHERE `player`=".$player -> id." AND `action`!='end'");
     $name = "quest".$query -> fields['quest'].".php";
     if (!empty($query -> fields['quest'])) 
     {   
@@ -665,6 +707,11 @@ if (!isset($_GET['step']))
 $smarty -> assign(array("Action" => $_GET['action'],
                         "Step" => $_GET['step']));
 $smarty -> display ('maze.tpl');
+
+if ($strQuestName != "")
+  {
+    require_once("quests/".$strQuestName);
+  }
 
 require_once("includes/foot.php");
 ?>
