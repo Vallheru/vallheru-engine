@@ -155,7 +155,8 @@ if (isset($_GET['topics']))
     /**
      * Select sticky threads
      */
-    $topic = $db -> SelectLimit("SELECT `w_time`, `id`, `topic`, `starter` FROM `topics` WHERE `sticky`='Y' AND `cat_id`=".$_GET['topics']." AND `lang`='".$player -> lang."' OR `lang`='".$player -> seclang."' ORDER BY `id` ASC", 25, 25 * ($page - 1));
+    $intOffset = 25 * ($page - 1);
+    $topic = $db -> SelectLimit("SELECT `w_time`, `id`, `topic`, `starter` FROM `topics` WHERE `sticky`='Y' AND `cat_id`=".$_GET['topics']." AND `lang`='".$player -> lang."' OR `lang`='".$player -> seclang."' ORDER BY `id` ASC", 25, $intOffset);
     $arrid = array();
     $arrtopic = array();
     $arrstarter = array();
@@ -192,59 +193,68 @@ if (isset($_GET['topics']))
         $arrstarter[$i] = $topic -> fields['starter'];
         $arrreplies[$i] = $replies;
         $topic -> MoveNext();
-        $i = $i + 1;
-	if ($i > 24)
-	  {
-	    break;
-	  }
+	$i++;
     }
     $topic -> Close();
+
+    if ($i == 0)
+      {
+	$objTest = $db->Execute("SELECT count(`id`) FROM `topics` WHERE `sticky`='Y' AND `cat_id`=".$_GET['topics']." AND `lang`='".$player -> lang."' OR `lang`='".$player -> seclang."'");
+	$j = $objTest->fields['count(`id`)'];
+	$objTest->Close();
+      }
+    else
+      {
+	$j = $i;
+      }
+
+    if ($intOffset - $j < 0)
+      {
+	$intOffset += $j;
+      }
 
     /**
      * Select normal threads
      */
-    if ($i < 25)
+    $topic = $db -> SelectLimit("SELECT `w_time`, `id`, `topic`, `starter` FROM `topics` WHERE `sticky`='N' AND `cat_id`=".$_GET['topics']." AND `lang`='".$player -> lang."' OR `lang`='".$player -> seclang."' ORDER BY `id` ASC", 25, $intOffset - $j);
+    while (!$topic -> EOF) 
       {
-	$topic = $db -> SelectLimit("SELECT `w_time`, `id`, `topic`, `starter` FROM `topics` WHERE `sticky`='N' AND `cat_id`=".$_GET['topics']." AND `lang`='".$player -> lang."' OR `lang`='".$player -> seclang."' ORDER BY `id` ASC", 25, 25 * ($page - 1));
-	while (!$topic -> EOF) 
+	if ($topic -> fields['w_time'] > $_SESSION['forums'])
 	  {
-	    if ($topic -> fields['w_time'] > $_SESSION['forums'])
+	    $arrNewtopic[$i] = 'Y';
+	  }
+	else
+	  {
+	    $arrNewtopic[$i] = 'N';
+	  }
+	$query = $db -> Execute("SELECT `w_time` FROM `replies` WHERE `topic_id`=".$topic -> fields['id']);
+	if ($arrNewtopic[$i] == 'N')
+	  {
+	    while (!$query -> EOF)
 	      {
-		$arrNewtopic[$i] = 'Y';
-	      }
-	    else
-	      {
-		$arrNewtopic[$i] = 'N';
-	      }
-	    $query = $db -> Execute("SELECT `w_time` FROM `replies` WHERE `topic_id`=".$topic -> fields['id']);
-	    if ($arrNewtopic[$i] == 'N')
-	      {
-		while (!$query -> EOF)
+		if ($query -> fields['w_time'] > $_SESSION['forums'])
 		  {
-		    if ($query -> fields['w_time'] > $_SESSION['forums'])
-		      {
-			$arrNewtopic[$i] = 'Y';
-			break;
-		      }
-		    $query -> MoveNext();
+		    $arrNewtopic[$i] = 'Y';
+		    break;
 		  }
-	      }
-	    $replies = $query -> RecordCount();
-	    $query -> Close();
-	    $arrid[$i] = $topic -> fields['id'];
-	    $arrtopic[$i] = $topic -> fields['topic'];
-	    $arrstarter[$i] = $topic -> fields['starter'];
-	    $arrreplies[$i] = $replies;
-	    $topic -> MoveNext();
-	    $i = $i + 1;
-	    if ($i > 24)
-	      {
-		break;
+		$query -> MoveNext();
 	      }
 	  }
-	$topic -> Close();
+	$replies = $query -> RecordCount();
+	$query -> Close();
+	$arrid[$i] = $topic -> fields['id'];
+	$arrtopic[$i] = $topic -> fields['topic'];
+	$arrstarter[$i] = $topic -> fields['starter'];
+	$arrreplies[$i] = $replies;
+	$topic -> MoveNext();
+	$i++;
+	if ($i > 24)
+	  {
+	    break;
+	  }
       }
-
+    $topic -> Close();
+    
     $smarty -> assign(array("Category" => $_GET['topics'], 
         "Id" => $arrid, 
         "Topic1" => $arrtopic, 

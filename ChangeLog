@@ -1,5 +1,7 @@
 2011-08-11  Bartek thindil Jasicki  <thindil@tuxfamily.org>
 
+	* BUG,forums.php:
+	fixed pagination on forums
 	* UPDATE,includes/head.php, account.php, logout.php:
 	small code optimization
 

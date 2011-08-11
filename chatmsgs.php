@@ -35,8 +35,7 @@ require_once('libs/Smarty.class.php');
 $smarty = new Smarty;
 $smarty -> compile_check = true;
 
-$strPass = MD5($_SESSION['pass']);
-$stat = $db -> Execute("SELECT `id`, `rank`, `lang`, `seclang`, `style`, `graphic` FROM `players` WHERE `email`='".$_SESSION['email']."' AND `pass`='".$strPass."'");
+$stat = $db -> Execute("SELECT `id`, `rank`, `lang`, `seclang`, `style`, `graphic` FROM `players` WHERE `email`='".$_SESSION['email']."' AND `pass`='".$_SESSION['pass']."'");
 
 /**
 * Get the localization for game
