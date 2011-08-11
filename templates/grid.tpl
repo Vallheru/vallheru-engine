@@ -2,7 +2,7 @@
     {$Labinfo}<br /><br />
     <form method="post" action="grid.php?action=explore">
         <input type="submit" value="{$Explore}" /> <input type="text" name="amount" value="1" size="5" /> {$Times}.
-    </form
+    </form>
 {/if}
 
 {if $Action == "explore" && $Quest == 'N'}
