@@ -8,7 +8,7 @@
  *   @author               : thindil <thindil@tuxfamily.org>
  *   @author               : eyescream <tduda@users.sourceforge.net>
  *   @version              : 1.4
- *   @since                : 10.08.2011
+ *   @since                : 11.08.2011
  *
  */
 
@@ -248,10 +248,20 @@ if ($player -> rank == 'Admin' || $player -> rank == 'Staff')
 }
 
 $objViewtime = $db->Execute("SELECT `lpv` FROM `players` WHERE `id`=".$view->id);
-$intLastseen = intval(($ctime - $objViewtime->fields['lpv']) / 86400);
+if ($objViewTime->fields['lpv'] == 0)
+  {
+    $intLastseen = -1;
+  }
+else
+  {
+    $intLastseen = intval(($ctime - $objViewtime->fields['lpv']) / 86400);
+  }
 $objViewtime->Close();
 switch ($intLastseen)
   {
+  case -1:
+    $strSeen = "Nigdy";
+    break;
   case 0:
     $strSeen = "Dzisiaj";
     break;

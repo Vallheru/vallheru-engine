@@ -1,5 +1,7 @@
 2011-08-11  Bartek thindil Jasicki  <thindil@tuxfamily.org>
 
+	* BUG,view.php: 
+	fixed last activity for never logged players
 	* BUG,includes/battle.php: 
 	fixed some notices
 	* BUG,templates/grid.tpl,templates/layout1/grid.tpl: 
