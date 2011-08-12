@@ -548,7 +548,7 @@ if ($mik -> fields['id'])
         {
             $arrpower[$i] = '';
         }
-	$arraction[$i] .= " <a href=\"equip.php?sell=".$mik->fields['cost']."\">".A_SELL."</a> ".FOR_A." ".$mik->fields['cost']." ".GOLD_COINS." ]";
+	$arraction[$i] .= " <a href=\"equip.php?sellpotion=".$mik->fields['id']."\">".A_SELL."</a> ".FOR_A." ".$mik->fields['cost']." ".GOLD_COINS." ]";
         $mik -> MoveNext();
         $i = $i + 1;
     }
@@ -616,12 +616,50 @@ if (isset($_GET['sell']))
     $sell -> Close();
 }
 
+if (isset($_GET['sellpotion']))
+  {
+    checkvalue($_GET['sellpotion']);
+    $sell = $db -> Execute("SELECT * FROM `potions` WHERE `id`=".$_GET['sellpotion']);
+    if (!$sell->fields['id']) 
+      {
+        error(NO_ITEM);
+      }
+    if ($player->id != $sell->fields['owner']) 
+      {
+        error(NOT_YOUR);
+      }
+    $db -> Execute("UPDATE `players` SET `credits`=`credits`+".$sell->fields['cost']." WHERE `id`=".$player -> id);
+    $amount = $sell->fields['amount'] - 1;
+    if ($amount > 0) 
+    {
+        $db->Execute("UPDATE `potions` SET `amount`=`amount`-1 WHERE `id`=".$sell->fields['id']);
+    } 
+        else 
+    {
+        $db -> Execute("DELETE FROM `potions` WHERE `id`=".$sell->fields['id']);
+    }
+    if ($player->gender == 'F')
+      {
+	$strLast = "aś";
+      }
+    else
+      {
+	$strLast = "eś";
+      }
+    $smarty -> assign ("Action", "Sprzedał".$strLast." ".$sell->fields['name']." ".FOR_A." ".$sell->fields['cost']." ".GOLD_COINS.". (<A href=\"equip.php\">".REFRESH."</a>)");
+    $sell->Close();
+  }
+
 /**
  * Sell all potions
  */
 if (isset($_GET['sellpotions']))
   {
     $objPotion = $db->Execute("SELECT `id`, `cost`, `amount` FROM `potions` WHERE `owner`=".$player -> id." AND `status`='K'");
+    if (!isset($objPotion->fields['id']))
+      {
+        error(NO_ITEMS2);
+      }
     $zysk = 0;
     while (!$objPotion->EOF) 
     {

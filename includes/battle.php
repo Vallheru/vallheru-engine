@@ -705,8 +705,8 @@ function attack1($attacker, $defender, $arrAtequip, $arrDeequip, $attack_bspell,
         {
             lostitem($attack_durarm[3], $arrAtequip[5][6], YOU_SHIELD, $attacker['id'], $arrAtequip[5][0], $starter, HAS_BEEN1);
         }
-        $db -> Execute("UPDATE `players` SET `hp`=".$attacker['hp'].", `bless`='', `blessval`=0 WHERE `id`=".$attacker['id']);
-        $db -> Execute("UPDATE `players` SET `hp`=".$defender['hp'].", `bless`='', `blessval`=0 WHERE `id`=".$defender['id']);
+        $db -> Execute("UPDATE `players` SET `hp`=".ceil($attacker['hp']).", `bless`='', `blessval`=0 WHERE `id`=".$attacker['id']);
+        $db -> Execute("UPDATE `players` SET `hp`=".ceil($defender['hp']).", `bless`='', `blessval`=0 WHERE `id`=".$defender['id']);
         if ($attacker['id'] == $starter) 
         {
             $attacktext = YOU_ATTACK_BUT;
