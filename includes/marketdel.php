@@ -4,10 +4,10 @@
  *   Functions to delete one ofert from markets
  *
  *   @name                 : marketdel.php                            
- *   @copyright            : (C) 2006 Vallheru Team based on Gamers-Fusion ver 2.5
- *   @author               : thindil <thindil@users.sourceforge.net>
- *   @version              : 1.3
- *   @since                : 18.10.2006
+ *   @copyright            : (C) 2006,2011 Vallheru Team based on Gamers-Fusion ver 2.5
+ *   @author               : thindil <thindil@tuxfamily.org>
+ *   @version              : 1.4
+ *   @since                : 12.08.2011
  *
  */
 
@@ -101,7 +101,7 @@ function deletepotion($objItem, $intOwner)
     $test = $db -> Execute("SELECT `id` FROM `potions` WHERE `name`='".$objItem -> fields['name']."' AND `owner`=".$intOwner." AND `status`='K' AND `power`=".$objItem -> fields['power']);
     if (!$test -> fields['id']) 
     {
-        $db -> Execute("UPDATE `potions` SET `status`='K' WHERE `id`=".$objItem -> fields['id']);
+        $db -> Execute("UPDATE `potions` SET `status`='K', `cost`=1 WHERE `id`=".$objItem -> fields['id']);
     } 
         else 
     {

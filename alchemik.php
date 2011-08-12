@@ -4,10 +4,10 @@
  *   Alchemy mill - making potions
  *
  *   @name                 : alchemik.php                            
- *   @copyright            : (C) 2004,2005,2006,2007 Vallheru Team based on Gamers-Fusion ver 2.5
- *   @author               : thindil <thindil@users.sourceforge.net>
- *   @version              : 1.3
- *   @since                : 03.03.2007
+ *   @copyright            : (C) 2004,2005,2006,2007,2011 Vallheru Team based on Gamers-Fusion ver 2.5
+ *   @author               : thindil <thindil@tuxfamily.org>
+ *   @version              : 1.4
+ *   @since                : 12.08.2011
  *
  */
 
@@ -27,7 +27,7 @@
 //   along with this program; if not, write to the Free Software
 //   Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 //
-// $Id: alchemik.php 923 2007-03-03 18:30:06Z thindil $
+// $Id$
 
 $title = "Pracownia alchemiczna";
 require_once("includes/head.php");
@@ -74,7 +74,7 @@ if (!isset($_GET['alchemik']))
 */
 if (isset ($_GET['alchemik']) && $_GET['alchemik'] == 'przepisy') 
 {
-    $plany = $db -> Execute("SELECT * FROM alchemy_mill WHERE status='S' AND owner=0 AND lang='".$player -> lang."' ORDER BY cost ASC");
+    $plany = $db -> Execute("SELECT * FROM `alchemy_mill` WHERE `status`='S' AND `owner`=0 AND `lang`='".$player -> lang."' ORDER BY `cost` ASC");
     $arrname = array();
     $arrcost = array();
     $arrlevel = array();
@@ -102,12 +102,9 @@ if (isset ($_GET['alchemik']) && $_GET['alchemik'] == 'przepisy')
         "Id" => $arrid));
     if (isset($_GET['buy'])) 
     {
-        if (!ereg("^[1-9][0-9]*$", $_GET['buy'])) 
-        {
-            error (ERROR);
-        }
-        $plany = $db -> Execute("SELECT * FROM alchemy_mill WHERE id=".$_GET['buy']);
-        $test = $db -> Execute("SELECT id FROM alchemy_mill WHERE owner=".$player -> id." AND name='".$plany -> fields['name']."'");
+	checkvalue($_GET['buy']);
+        $plany = $db -> Execute("SELECT * FROM `alchemy_mill` WHERE `id`=".$_GET['buy']);
+        $test = $db -> Execute("SELECT `id` FROM `alchemy_mill` WHERE `owner`=".$player -> id." AND `name`='".$plany -> fields['name']."'");
         if ($test -> fields['id'] != 0) 
         {
             error (P_YOU_HAVE);
@@ -125,8 +122,8 @@ if (isset ($_GET['alchemik']) && $_GET['alchemik'] == 'przepisy')
         {
             error (NO_MONEY);
         }
-        $db -> Execute("INSERT INTO alchemy_mill (owner, name, cost, status, level, illani, illanias, nutari, dynallca) VALUES(".$player -> id.",'".$plany -> fields['name']."',".$plany -> fields['cost'].",'N',".$plany -> fields['level'].",".$plany -> fields['illani'].",".$plany -> fields['illanias'].",".$plany -> fields['nutari'].",".$plany -> fields['dynallca'].")") or error(E_DB);
-        $db -> Execute("UPDATE players SET credits=credits-".$plany -> fields['cost']." WHERE id=".$player -> id);
+        $db -> Execute("INSERT INTO `alchemy_mill` (`owner`, `name`, `cost`, `status`, `level`, `illani`, `illanias`, `nutari`, `dynallca`) VALUES(".$player -> id.",'".$plany -> fields['name']."',".$plany -> fields['cost'].",'N',".$plany -> fields['level'].",".$plany -> fields['illani'].",".$plany -> fields['illanias'].",".$plany -> fields['nutari'].",".$plany -> fields['dynallca'].")") or error(E_DB);
+        $db -> Execute("UPDATE `players` SET `credits`=`credits`-".$plany -> fields['cost']." WHERE `id`=".$player -> id);
         $smarty -> assign (array ("Cost1" => $plany -> fields['cost'],
             "Youpay" => YOU_PAY,
             "Andbuy" => AND_BUY,
@@ -185,10 +182,7 @@ if (isset ($_GET['alchemik']) && $_GET['alchemik'] == 'pracownia')
         {
             error (DEAD_PLAYER);
         }
-        if (!ereg("^[1-9][0-9]*$", $_GET['dalej'])) 
-        {
-            error (ERROR);
-        }
+	checkvalue($_GET['dalej']);
         $kuznia = $db -> Execute("SELECT `name` FROM `alchemy_mill` WHERE `id`=".$_GET['dalej']);
         $smarty -> assign (array ("Name1" => $kuznia -> fields['name'], 
                                   "Id1" => $_GET['dalej'],
@@ -199,10 +193,12 @@ if (isset ($_GET['alchemik']) && $_GET['alchemik'] == 'pracownia')
     }
     if (isset($_GET['rob'])) 
     {
-        if (!isset($_POST['razy']) || !ereg("^[1-9][0-9]*$", $_GET['rob']) || !ereg("^[1-9][0-9]*$", $_POST['razy'])) 
+        if (!isset($_POST['razy'])) 
         {
             error (ERROR);
         }
+	checkvalue($_GET['rob']);
+	checkvalue($_POST['razy']);
         $kuznia = $db -> Execute("SELECT * FROM `alchemy_mill` WHERE `id`=".$_GET['rob']);
         $rillani = ($_POST['razy'] * $kuznia -> fields['illani']);
         $rillanias = ($_POST['razy'] * $kuznia -> fields['illanias']);
@@ -330,7 +326,15 @@ if (isset ($_GET['alchemik']) && $_GET['alchemik'] == 'pracownia')
             $test = $db -> Execute("SELECT `id` FROM `potions` WHERE `name`='".$strName."' AND `owner`=".$player -> id." AND `status`='K' AND `power`=".$intPower) or die("błąd");
             if (!$test -> fields['id']) 
             {
-                $db -> Execute("INSERT INTO potions (`owner`, `name`, `efect`, `power`, `amount`, `status`, `type`) VALUES(".$player -> id.", '".$strName."', '".$objItem -> fields['efect']."', ".$intPower.", ".$intTmpamount.", 'K', '".$objItem -> fields['type']."')");
+	         if ($objItem -> fields['type'] == 'M')
+		   {
+		     $intCost = ($intPower * 3) / 20;
+		   }
+		 else
+		   {
+		     $intCost = ((2 * $intPower) * 3) / 20;
+		   }
+                $db -> Execute("INSERT INTO potions (`owner`, `name`, `efect`, `power`, `amount`, `status`, `type`, `cost`) VALUES(".$player -> id.", '".$strName."', '".$objItem -> fields['efect']."', ".$intPower.", ".$intTmpamount.", 'K', '".$objItem -> fields['type']."', ".$intCost.")");
             } 
                 else 
             {

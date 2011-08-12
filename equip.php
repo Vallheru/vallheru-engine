@@ -7,7 +7,7 @@
  *   @copyright            : (C) 2004,2005,2006,2007,2011 Vallheru Team based on Gamers-Fusion ver 2.5
  *   @author               : thindil <thindil@tuxfamily.org>
  *   @version              : 1.4
- *   @since                : 05.08.2011
+ *   @since                : 12.08.2011
  *
  */
 
@@ -27,7 +27,7 @@
 //   along with this program; if not, write to the Free Software
 //   Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 //
-// $Id: equip.php 890 2007-02-21 19:37:53Z thindil $
+// $Id$
 
 $title = "Ekwipunek";
 require_once("includes/head.php");
@@ -372,10 +372,7 @@ if ($arrEquip[10][0])
 
 if (isset($_GET['schowaj'])) 
 {
-    if (!ereg("^[1-9][0-9]*$", $_GET['schowaj'])) 
-    {
-        error (ERROR);
-    }
+    checkvalue($_GET['schowaj']);
     $bron = $db -> Execute("SELECT * FROM equipment WHERE id=".$_GET['schowaj']);
     if (!$bron -> fields['id']) 
     {
@@ -538,29 +535,39 @@ if ($mik -> fields['id'])
         $arrname[$i] = $mik -> fields['name'];
         $arramount[$i] = $mik -> fields['amount'];
         $arreffect[$i] = $mik -> fields['efect'];
-        $arraction[$i] = "[ <a href=\"equip.php?wypij=".$mik -> fields['id']."\">".A_DRINK."</a> ]";
+        $arraction[$i] = "[ <a href=\"equip.php?wypij=".$mik -> fields['id']."\">".A_DRINK."</a> |";
         if ($mik -> fields['type'] != 'A') 
         {
             $arrpower[$i] = "(".POWER.": ".$mik -> fields['power'].")";
             if ($mik -> fields['type'] == 'P')
             {
-                $arraction[$i] = "[ <a href=\"equip.php?poison=".$mik -> fields['id']."\">".A_POISON."</a> ]";
+                $arraction[$i] = "[ <a href=\"equip.php?poison=".$mik -> fields['id']."\">".A_POISON."</a> |";
             }
         } 
             else
         {
             $arrpower[$i] = '';
         }
+	$arraction[$i] .= " <a href=\"equip.php?sell=".$mik->fields['cost']."\">".A_SELL."</a> ".FOR_A." ".$mik->fields['cost']." ".GOLD_COINS." ]";
         $mik -> MoveNext();
         $i = $i + 1;
     }
+    if ($i > 0) 
+    {
+        $strSellAll = "(<a href=\"equip.php?sellpotions\">sprzedaj wszystkie mikstury</a>)<br />\n";
+    }
+    else
+      {
+	$strSellAll = '';
+      }
     $smarty -> assign ( array("Pname1" => $arrname, 
                               "Pamount1" => $arramount, 
                               "Peffect1" => $arreffect, 
                               "Potionid1" => $arrid, 
                               "Paction1" => $arraction, 
                               "Ppower1" => $arrpower, 
-                              "Potions1" => 1,
+                              "Potions1" => $i,
+			      "Sellall" => $strSellAll,
                               "Potions2" => POTIONS,
                               "Amount" => AMOUNT));
 }
@@ -575,10 +582,7 @@ $smarty -> assign(array("Arramount" => ARR_AMOUNT,
 */
 if (isset($_GET['sell'])) 
 {
-    if (!ereg("^[1-9][0-9]*$", $_GET['sell'])) 
-    {
-        error (ERROR);
-    }
+    checkvalue($_GET['sell']);
     $sell = $db -> Execute("SELECT * FROM equipment WHERE id=".$_GET['sell']);
     if (!$sell -> fields['id']) 
     {
@@ -612,15 +616,48 @@ if (isset($_GET['sell']))
     $sell -> Close();
 }
 
+/**
+ * Sell all potions
+ */
+if (isset($_GET['sellpotions']))
+  {
+    $objPotion = $db->Execute("SELECT `id`, `cost`, `amount` FROM `potions` WHERE `owner`=".$player -> id." AND `status`='K'");
+    $zysk = 0;
+    while (!$objPotion->EOF) 
+    {
+      $zysk += ($objPotion->fields['cost'] * $objPotion->fields['amount']);
+      $db->Execute("DELETE FROM `potions` WHERE `id`=".$objPotion->fields['id']);
+      $objPotion->MoveNext();
+    }
+    $db -> Execute("UPDATE `players` SET `credits`=`credits`+".$zysk." WHERE `id`=".$player -> id);
+    if ($player->gender == 'F')
+      {
+	$strLast = "aś";
+      }
+    else
+      {
+	$strLast = "eś";
+      }
+    $smarty -> assign ("Action", "<br />Sprzedał".$strLast." swoje mikstury ".FOR_A." ".$zysk." ".GOLD_COINS.".<br />\n(<a href=\"equip.php\">".REFRESH."</a>)<br />\n");
+  }
+
+/**
+ * Sell all items
+ */
 if (isset($_GET['sprzedaj'])) 
-{
+  {
+    $arrSell = array('A', 'W', 'H', 'L', 'R', 'C', 'T', 'S', 'I');
+    if (!in_array($_GET['sprzedaj'], $arrSell))
+      {
+	error(ERROR);
+      }
     if ($_GET['sprzedaj'] != 'W') 
     {
-        $zysk1 = $db -> Execute("SELECT * FROM equipment WHERE type='".$_GET['sprzedaj']."' AND status='U' AND owner=".$player -> id);
+        $zysk1 = $db -> Execute("SELECT * FROM `equipment` WHERE `type`='".$_GET['sprzedaj']."' AND `status`='U' AND `owner`=".$player -> id);
     } 
-        else 
+    else 
     {
-        $zysk1 = $db -> Execute("SELECT * FROM equipment WHERE type='W' AND status='U' AND owner=".$player -> id);
+        $zysk1 = $db -> Execute("SELECT * FROM `equipment` WHERE `type`='W' AND `status`='U' AND `owner`=".$player -> id);
         $zysk2 = $db -> Execute("SELECT * FROM equipment WHERE type='B' AND status='U' AND owner=".$player -> id);
     }
     if (!isset($zysk1 -> fields['id']) && !isset($zysk2 -> fields['id'])) 
@@ -701,10 +738,7 @@ if (isset($_GET['napraw_uzywane']))
  */
 if (isset($_GET['napraw'])) 
 {
-    if (!ereg("^[1-9][0-9]*$", $_GET['napraw'])) 
-    {
-        error (ERROR);
-    }
+    checkvalue($_GET['napraw']);
     $rzecz = $db -> Execute("SELECT * FROM `equipment` WHERE `id`=".$_GET['napraw']);
     if ($rzecz -> fields['wt'] == $rzecz -> fields['maxwt']) 
     {
@@ -754,10 +788,7 @@ if (isset($_GET['napraw']))
 */
 if (isset ($_GET['poison'])) 
 {
-    if (!ereg("^[1-9][0-9]*$", $_GET['poison']))
-    {
-        error (ERROR);
-    }
+    checkvalue($_GET['poison']);
     $poison = $db -> Execute("SELECT id, power, amount, name FROM potions WHERE id=".$_GET['poison']." AND type='P' AND owner=".$player -> id);
     if (!$poison -> fields['id']) 
     {
@@ -783,11 +814,12 @@ if (isset ($_GET['poison']))
         "Poisonit" => POISON_IT,
         "Tamount" => AMOUNT));
     if (isset($_GET['step']) && $_GET['step'] == 'poison') 
-    {
-        if (!isset($_POST['weapon']) || !ereg("^[1-9][0-9]*$", $_POST['weapon'])) 
+      {
+	if (!isset($_POST['weapon']))
         {
             error (ERROR);
         }
+	checkvalue($_POST['weapon']);
         $item = $db -> Execute("SELECT * FROM equipment WHERE id=".$_POST['weapon']);
         if (!$item -> fields['id']) 
         {
@@ -895,10 +927,7 @@ if (isset ($_GET['poison']))
 */
 if (isset($_GET['fill']))
 {
-    if (!ereg("^[1-9][0-9]*$", $_GET['fill'])) 
-    {
-        error (ERROR);
-    }
+    checkvalue($_GET['fill']);
     $objArrows = $db -> Execute("SELECT wt, name, power, id FROM equipment WHERE id=".$_GET['fill']);
     if (!$objArrows -> fields['id'])
     {

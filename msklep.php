@@ -4,10 +4,10 @@
  *   Potions shop in city
  *
  *   @name                 : msklep.php                            
- *   @copyright            : (C) 2004,2005,2006,2007 Vallheru Team based on Gamers-Fusion ver 2.5
- *   @author               : thindil <thindil@users.sourceforge.net>
- *   @version              : 1.3
- *   @since                : 24.02.2007
+ *   @copyright            : (C) 2004,2005,2006,2007,2011 Vallheru Team based on Gamers-Fusion ver 2.5
+ *   @author               : thindil <thindil@tuxfamily.org>
+ *   @version              : 1.4
+ *   @since                : 12.08.2011
  *
  */
 
@@ -27,7 +27,7 @@
 //   along with this program; if not, write to the Free Software
 //   Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 //
-// $Id: msklep.php 900 2007-02-24 21:25:14Z thindil $
+// $Id$
 
 $title = "Alchemik";
 require_once("includes/head.php");
@@ -90,12 +90,12 @@ if (!isset($_GET['buy']))
                              "Poption" => P_OPTION));
 }
 
+/**
+ * Buy potions
+ */
 if (isset($_GET['buy'])) 
 {
-    if (!ereg("^[1-9][0-9]*$", $_GET['buy'])) 
-    {
-        error(ERROR);
-    }
+    checkvalue($_GET['buy']);
     $objName = $db -> Execute("SELECT `name` FROM `potions` WHERE `id`=".$_GET['buy']);
     $smarty -> assign (array("Pid" => $_GET['buy'], 
                              "Name" => $objName -> fields['name'],
@@ -105,10 +105,11 @@ if (isset($_GET['buy']))
     if (isset ($_GET['step']) && $_GET['step'] == 'buy')
     {
         $objPotions = $db -> Execute("SELECT * FROM `potions` WHERE `id`=".$_GET['buy']);
-        if (!isset($_POST['amount']) || !ereg("^[1-9][0-9]*$", $_GET['buy']) || !ereg("^[1-9][0-9]*$", $_POST['amount'])) 
+        if (!isset($_POST['amount']))
         {
             error(ERROR);
         }
+	checkvalue($_POST['amount']);
         if ($_POST['amount'] > $objPotions -> fields['amount']) 
         {
             error(TOO_MUCH);
@@ -136,13 +137,14 @@ if (isset($_GET['buy']))
         }
         $objTest = $db -> Execute("SELECT `id` FROM `potions` WHERE `name`='".$objPotions -> fields['name']."' AND `owner`=".$player -> id." AND `status`='K'");
         if (!$objTest -> fields['id']) 
-        {
-            $db -> Execute("INSERT INTO `potions` (`name`, `owner`, `efect`, `type`, `power`, `status`, `amount`) VALUES('".$objPotions -> fields['name']."',".$player -> id.",'".$objPotions -> fields['efect']."','".$objPotions -> fields['type']."',".$objPotions -> fields['power'].",'K',".$_POST['amount'].")") or error(E_DB);
-        } 
-            else 
-        {
+	  {
+	    $intNewCost = $intCostone / 20;
+	    $db -> Execute("INSERT INTO `potions` (`name`, `owner`, `efect`, `type`, `power`, `status`, `amount`, `cost`) VALUES('".$objPotions -> fields['name']."',".$player -> id.",'".$objPotions -> fields['efect']."','".$objPotions -> fields['type']."',".$objPotions -> fields['power'].",'K',".$_POST['amount'].",".$intNewCost.")") or error(E_DB);
+	  } 
+	else 
+	  {
             $db -> Execute("UPDATE `potions` SET `amount`=`amount`+".$_POST['amount']." WHERE `id`=".$objTest -> fields['id']);
-        }
+	  }
         $objTest -> Close();
         $db -> Execute("UPDATE `players` SET `credits`=`credits`-".$intCost." WHERE `id`=".$player -> id);
         $db -> Execute("UPDATE `potions` SET `amount`=`amount`-".$_POST['amount']." WHERE `id`=".$objPotions -> fields['id']);

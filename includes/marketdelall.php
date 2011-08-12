@@ -4,10 +4,10 @@
  *   Functions to delete all oferts from markets
  *
  *   @name                 : marketdelall.php                            
- *   @copyright            : (C) 2006 Vallheru Team based on Gamers-Fusion ver 2.5
- *   @author               : thindil <thindil@users.sourceforge.net>
- *   @version              : 1.2
- *   @since                : 28.09.2006
+ *   @copyright            : (C) 2006,2011 Vallheru Team based on Gamers-Fusion ver 2.5
+ *   @author               : thindil <thindil@tuxfamily.org>
+ *   @version              : 1.4
+ *   @since                : 12.08.2011
  *
  */
 
@@ -27,7 +27,7 @@
 //   along with this program; if not, write to the Free Software
 //   Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 //
-// $Id: marketdelall.php 639 2006-09-28 13:40:08Z thindil $
+// $Id$
 
 
 /**
@@ -89,7 +89,7 @@ function deleteallpotion($intOwner)
         $objTest = $db -> Execute("SELECT `id` FROM `potions` WHERE `owner`=".$intOwner." AND `status`='K' AND `name`='".$objPotion -> fields['name']."' AND `power`=".$objPotion -> fields['power']);
         if (!$objTest -> fields['id'])
         {
-            $db -> Execute("UPDATE `potions` SET `status`='K' WHERE `id`=".$objPotion -> fields['id']);
+            $db -> Execute("UPDATE `potions` SET `status`='K', `cost`=1 WHERE `id`=".$objPotion -> fields['id']);
         }  
             else 
         {

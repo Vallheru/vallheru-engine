@@ -59,6 +59,7 @@
     {section name=item10 loop=$Pname1}
         <b>({$Amount}: {$Pamount1[item10]} )</b> {$Pname1[item10]} ({$Peffect1[item10]}) {$Ppower1[item10]} {$Paction1[item10]}<br />
     {/section}
+    {$Sellall}
 {/if}
 
 {$Action}
