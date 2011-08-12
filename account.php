@@ -83,7 +83,7 @@ if (isset($_GET['view']) && $_GET['view'] == 'links')
        $intLinkid = $_GET['lid'];
     }
     $smarty -> assign(array("Linksinfo" => LINKS_INFO,
-                            "Tfile" => T_FILE,
+                            "Tfile" => T_LINK,
                             "Tname" => T_NAME,
                             "Tactions" => T_ACTIONS,
                             "Adelete" => A_DELETE,

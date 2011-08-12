@@ -4,10 +4,10 @@
  *   Polish language for account.php
  *
  *   @name                 : account.php                            
- *   @copyright            : (C) 2004,2005,2006 Vallheru Team based on Gamers-Fusion ver 2.5
- *   @author               : thindil <thindil@users.sourceforge.net>
- *   @version              : 1.3
- *   @since                : 11.12.2006
+ *   @copyright            : (C) 2004,2005,2006,2011 Vallheru Team based on Gamers-Fusion ver 2.5
+ *   @author               : thindil <thindil@tuxfamily.org>
+ *   @version              : 1.4
+ *   @since                : 12.08.2011
  *
  */
 
@@ -27,7 +27,7 @@
 //   along with this program; if not, write to the Free Software
 //   Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 //
-// $Id: account.php 879 2007-01-23 17:19:03Z thindil $
+// $Id$
 
 define("ERROR", "Zapomnij o tym!");
 define("EMPTY_FIELDS", "Wypełnij wszystkie pola!");
@@ -52,7 +52,7 @@ define("A_LINKS", "Własne linki");
 if (isset($_GET['view']) && $_GET['view'] == 'links')
 {
     define("LINKS_INFO", "Poniżej możesz dodać bądź edytować dodatkowe linki jakie mają pojawiać się w menu Nawigacja. Linki możesz dodawać albo tylko jako nazwa pliku (np \"city.php\") albo cały adres (np \"".$gameadress."/city.php\").");
-    define("T_FILE", "Adres");
+    define("T_LINK", "Adres");
     define("T_NAME", "Nazwa");
     define("T_ACTIONS", "Akcje");
     define("A_DELETE", "Skasuj");
