@@ -587,7 +587,15 @@ function attack1($attacker, $defender, $arrAtequip, $arrDeequip, $attack_bspell,
     }
 
     if ((($attack_stam > $attacker['cond'] && $def_stam > $defender['cond']) || ($runda >= 25)) && ($attacker['hp'] > 0 && $defender['hp'] > 0)) 
-    {
+      {
+	if ($attacker['hp'] < 1)
+	  {
+	    $attacker['hp'] = 1;
+	  }
+	if ($defender['hp'] < 1)
+	  {
+	    $defender['hp'] = 1;
+	  }
         $strMessage = $strMessage."<br />".B_NO_WIN."<br />";
         $smarty -> assign ("Message", $strMessage);
         $smarty -> display ('error1.tpl');
@@ -705,8 +713,8 @@ function attack1($attacker, $defender, $arrAtequip, $arrDeequip, $attack_bspell,
         {
             lostitem($attack_durarm[3], $arrAtequip[5][6], YOU_SHIELD, $attacker['id'], $arrAtequip[5][0], $starter, HAS_BEEN1);
         }
-        $db -> Execute("UPDATE `players` SET `hp`=".ceil($attacker['hp']).", `bless`='', `blessval`=0 WHERE `id`=".$attacker['id']);
-        $db -> Execute("UPDATE `players` SET `hp`=".ceil($defender['hp']).", `bless`='', `blessval`=0 WHERE `id`=".$defender['id']);
+        $db -> Execute("UPDATE `players` SET `hp`=".$attacker['hp'].", `bless`='', `blessval`=0 WHERE `id`=".$attacker['id']);
+        $db -> Execute("UPDATE `players` SET `hp`=".$defender['hp'].", `bless`='', `blessval`=0 WHERE `id`=".$defender['id']);
         if ($attacker['id'] == $starter) 
         {
             $attacktext = YOU_ATTACK_BUT;
@@ -744,6 +752,10 @@ function attack1($attacker, $defender, $arrAtequip, $arrDeequip, $attack_bspell,
     if ($defender['hp'] <= 0) 
     {
         $defender['hp'] = 0;
+	if ($attacker['hp'] < 1)
+	  {
+	    $attacker['hp'] = 1;
+	  }
         $strMessage = $strMessage."<br /><b>".$attacker['user']."</b> ".B_WIN."!<br />";
         $roll = rand (1,20);
         if ($roll == 20 && $defender['maps'] > 0) 

@@ -1,5 +1,7 @@
 2011-08-12  Bartek thindil Jasicki  <thindil@tuxfamily.org>
 
+	* BUG,includes/battle.php: 
+	fixed bug with dying in winning fight
 	* BUG,includes/battle.php:
 	fixed bug with dying in unresolved fight
 	* FEATURE,includes/marketdelall.php, includes/marketdel.php, msklep.php, alchemik.php, equip.php,
