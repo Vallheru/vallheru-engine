@@ -336,9 +336,8 @@ if (isset($_GET['topic']))
         $smarty -> assign("Action", '');
     }
     $text1 = wordwrap($topicinfo -> fields['body'],45,"\n",1);
-    if (isset($_GET['quote']))
+    if (isset($_GET['quotet']))
       {
-	checkvalue($_GET['quote']);
 	$strReplytext = "[quote]".$text1."[/quote]";
       }
     else
