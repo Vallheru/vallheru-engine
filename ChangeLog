@@ -1,5 +1,7 @@
 2011-08-12  Bartek thindil Jasicki  <thindil@tuxfamily.org>
 
+	* BUG,ap.php: 
+	fixed link
 	* BUG,languages/pl/account.php, account.php: 
 	fixed bug with show own links menu
 	* BUG,forums.php:
