@@ -117,6 +117,10 @@ if (!in_array($_GET['lista'], array('id', 'user', 'rank', 'rasa', 'level')))
   {
     error(ERROR);
   }
+if (isset($_GET['ip']))
+  {
+    $_POST['ip'] = $_GET['ip'];
+  }
 if ($_GET['limit'] < $graczy) 
 {
     if (empty($_POST['szukany']) && $_POST['id'] == 0 && empty($_POST['ip'])) 
@@ -135,16 +139,12 @@ if ($_GET['limit'] < $graczy)
     {
         $mem = $db -> SelectLimit("SELECT `id`, `user`, `rank`, `rasa`, `level`, `gender` FROM `players` WHERE `id`=".$_POST['id']." ORDER BY `".$_GET['lista']."` ASC", 30, $_GET['limit']);
     }
-        elseif((!empty($_POST['ip'])) || (isset($_GET['ip'])))
+        elseif(!empty($_POST['ip']))
     {
         if ($player -> rank != 'Admin' && $player -> rank != 'Staff')
         {
             error(NO_PERM);
         }
-	if (isset($_GET['ip']))
-	  {
-	    $_POST['ip'] = $_GET['ip'];
-	  }
         $_POST['ip'] = str_replace("*","%", $_POST['ip']);
         $mem = $db -> SelectLimit("SELECT `id`, `user`, `rank`, `rasa`, `level`, `gender` FROM `players` WHERE `ip` LIKE '".$_POST['ip']."' ORDER BY `".$_GET['lista']."` ASC", 30, $_GET['limit']);
     }

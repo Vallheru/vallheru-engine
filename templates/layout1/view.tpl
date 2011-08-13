@@ -1,5 +1,6 @@
 <center><b><u>{$User}</u></b> ({$Id})</center><br />
 {$Avatar}
+{$IP}<br />
 {$GG}
 <b>{$Tfreezed}</b>
 {$Tlang}: {$Lang}<br />
@@ -32,4 +33,3 @@
     {$Crime2}
     </ul>
 {/if}
-{$IP}
