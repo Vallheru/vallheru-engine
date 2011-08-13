@@ -1,5 +1,7 @@
 2011-08-13  Bartek thindil Jasicki  <thindil@tuxfamily.org>
 
+	* BUG,maze.php: 
+	fixed bug with finding items in tower
 	* UPDATE,templates/layout1/view.tpl, templates/view.tpl: 
 	move IP info to top of profile
 	* FEATURE,memberlist.php, view.php: 

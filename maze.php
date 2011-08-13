@@ -7,7 +7,7 @@
  *   @copyright            : (C) 2004,2005,2006,2011 Vallheru Team based on Gamers-Fusion ver 2.5
  *   @author               : thindil <thindil@tuxfamily.org>
  *   @version              : 1.4
- *   @since                : 11.08.2011
+ *   @since                : 13.08.2011
  *
  */
 
@@ -126,7 +126,7 @@ function add_item($intId, $type)
   else
     {
       $objItem = $db->Execute("SELECT * FROM `equipment` WHERE `id`=".$intId);
-      $intNewcost = $objBow -> fields['minlev'] * 100;
+      $intNewcost = $objItem -> fields['minlev'] * 100;
       $db -> Execute("INSERT INTO `equipment` (`owner`, `name`, `power`, `type`, `cost`, `zr`, `wt`, `minlev`, `maxwt`, `amount`, `szyb`, `twohand`) VALUES(".$player -> id.",'".$objItem->fields['name']."',".$objItem->fields['power'].",'B',".$intNewcost.",".$objItem->fields['zr'].",".$objItem->fields['maxwt'].",".$objItem->fields['minlev'].",".$objItem->fields['maxwt'].",1,".$objItem->fields['szyb'].",'Y')");
     }
   $strName = $objItem->fields['name'];
@@ -442,7 +442,7 @@ if (isset($_GET['action']) && $_GET['action'] == 'explore')
 		if ($intAmount > 0)
 		  {
 		    $intRoll4 = rand(0, ($intAmount-1));
-		    $objCape = $db -> SelectLimit("SELECT `id` FROM `mage_items` WHERE `minlev`".$strSymbol."".$player -> level." AND `lang`='".$player -> lang."' AND type='C'",1, $intRoll4);
+		    $objCape = $db -> SelectLimit("SELECT `id`, `name` FROM `mage_items` WHERE `minlev`".$strSymbol."".$player -> level." AND `lang`='".$player -> lang."' AND type='C'",1, $intRoll4);
 		    $objTest = $db->Execute("SELECT `id` FROM `equipment` WHERE `owner`=".$player->id." AND `name`='".$objCape->fields['name']."'");
 		    if ((!in_array($objCape->fields['id'], $arrCapes)) && (!$objTest->fields['id']))
 		      {
@@ -463,7 +463,7 @@ if (isset($_GET['action']) && $_GET['action'] == 'explore')
 		if ($intAmount > 0)
 		  {
 		    $intRoll4 = rand(0, ($intAmount-1));
-		    $objBow = $db -> SelectLimit("SELECT `id` FROM `bows` WHERE `minlev`".$strSymbol."".$player -> level." AND `lang`='".$player -> lang."' AND `type`='B'",1,$intRoll4);
+		    $objBow = $db -> SelectLimit("SELECT `id`, `name` FROM `bows` WHERE `minlev`".$strSymbol."".$player -> level." AND `lang`='".$player -> lang."' AND `type`='B'",1,$intRoll4);
 		    $objTest = $db->Execute("SELECT `id` FROM `equipment` WHERE `owner`=".$player->id." AND `name`='".$objBow->fields['name']."'");
 		    if ((!in_array($objBow->fields['id'], $arrBows)) && (!$objTest->fields['id']))
 		      {
