@@ -1,5 +1,7 @@
 2011-08-13  Bartek thindil Jasicki  <thindil@tuxfamily.org>
 
+	* FEATURE,memberlist.php, view.php: 
+	added link to search player by IP
 	* FEATURE,templates/layout1/imarket.tpl, templates/imarket.tpl, imarket.php:
 	Added info about item during adding offer
 

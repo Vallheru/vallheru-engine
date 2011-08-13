@@ -8,7 +8,7 @@
  *   @author               : thindil <thindil@tuxfamily.org>
  *   @author               : eyescream <tduda@users.sourceforge.net>
  *   @version              : 1.4
- *   @since                : 11.08.2011
+ *   @since                : 13.08.2011
  *
  */
 
@@ -244,7 +244,7 @@ if ($player -> clas == 'Złodziej' && $player -> id != $view -> id)
 
 if ($player -> rank == 'Admin' || $player -> rank == 'Staff') 
 {
-    $smarty -> assign ("IP", PLAYER_IP.$view -> ip);
+    $smarty -> assign ("IP", "<a href=\"memberlist.php?limit=0&amp;lista=user&amp;ip=".$view->ip."\">".PLAYER_IP.$view -> ip."</a>");
 }
 
 $objViewtime = $db->Execute("SELECT `lpv` FROM `players` WHERE `id`=".$view->id);

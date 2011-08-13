@@ -7,7 +7,7 @@
  *   @copyright            : (C) 2004,2005,2006,2007,2011 Vallheru Team based on Gamers-Fusion ver 2.5
  *   @author               : thindil <thindil@tuxfamily.org>
  *   @version              : 1.4
- *   @since                : 05.08.2011
+ *   @since                : 13.08.2011
  *
  */
 
@@ -27,7 +27,7 @@
 //   along with this program; if not, write to the Free Software
 //   Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 //
-// $Id: memberlist.php 880 2007-02-07 19:14:14Z thindil $
+// $Id$
 
 $title = "Lista mieszkańców"; 
 require_once("includes/head.php");
@@ -70,28 +70,29 @@ if (isset($_POST['szukany']))
 }
 
 if (empty($strSearch) && $_POST['id'] == 0) 
-{
+  {
     $msel = $db -> Execute("SELECT count(*) FROM `players`");
-} 
-    else 
-{
-    if (!ereg("^[0-9]*$", $_POST['id'])) 
-    {
-        error (ERROR);
-    }
-    if (!empty($strSearch) && $_POST['id'] == 0) 
-    {
-        $msel = $db -> Execute("SELECT count(*) FROM `players` WHERE `user` LIKE ".$strSearch);
-    } 
-        elseif (!empty($strSearch) && $_POST['id'] > 0) 
-    {
-        $msel = $db -> Execute("SELECT count(*) FROM `players` WHERE `id`=".$_POST['id']." AND `user` LIKE ".$strSearch);
-    } 
-        elseif (empty($strSearch) && $_POST['id'] > 0) 
-    {
-        $msel = $db -> Execute("SELECT count(*) FROM `players` WHERE `id`=".$_POST['id']);
-    }
-}
+  } 
+ else 
+   {
+     $_POST['id'] = intval($_POST['id']);
+     if ($_POST['id'] < 0) 
+       {
+	 error (ERROR);
+       }
+     if (!empty($strSearch) && $_POST['id'] == 0) 
+       {
+	 $msel = $db -> Execute("SELECT count(*) FROM `players` WHERE `user` LIKE ".$strSearch);
+       } 
+     elseif (!empty($strSearch) && $_POST['id'] > 0) 
+       {
+	 $msel = $db -> Execute("SELECT count(*) FROM `players` WHERE `id`=".$_POST['id']." AND `user` LIKE ".$strSearch);
+       } 
+     elseif (empty($strSearch) && $_POST['id'] > 0) 
+       {
+	 $msel = $db -> Execute("SELECT count(*) FROM `players` WHERE `id`=".$_POST['id']);
+       }
+   }
 
 $graczy = $msel -> fields['count(*)'];
 $msel -> Close();
@@ -134,12 +135,16 @@ if ($_GET['limit'] < $graczy)
     {
         $mem = $db -> SelectLimit("SELECT `id`, `user`, `rank`, `rasa`, `level`, `gender` FROM `players` WHERE `id`=".$_POST['id']." ORDER BY `".$_GET['lista']."` ASC", 30, $_GET['limit']);
     }
-        elseif(!empty($_POST['ip']))
+        elseif((!empty($_POST['ip'])) || (isset($_GET['ip'])))
     {
         if ($player -> rank != 'Admin' && $player -> rank != 'Staff')
         {
             error(NO_PERM);
         }
+	if (isset($_GET['ip']))
+	  {
+	    $_POST['ip'] = $_GET['ip'];
+	  }
         $_POST['ip'] = str_replace("*","%", $_POST['ip']);
         $mem = $db -> SelectLimit("SELECT `id`, `user`, `rank`, `rasa`, `level`, `gender` FROM `players` WHERE `ip` LIKE '".$_POST['ip']."' ORDER BY `".$_GET['lista']."` ASC", 30, $_GET['limit']);
     }
