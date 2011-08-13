@@ -1,3 +1,8 @@
+2011-08-13  Bartek thindil Jasicki  <thindil@tuxfamily.org>
+
+	* FEATURE,templates/layout1/imarket.tpl, templates/imarket.tpl, imarket.php:
+	Added info about item during adding offer
+
 2011-08-12  Bartek thindil Jasicki  <thindil@tuxfamily.org>
 
 	* BUG,ap.php: 

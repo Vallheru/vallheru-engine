@@ -8,7 +8,7 @@
  *   @author               : thindil <thindil@tuxfamily.org>
  *   @author               : eyescream <tduda@users.sourceforge.net>
  *   @version              : 1.4
- *   @since                : 06.08.2011
+ *   @since                : 13.08.2011
  *
  */
 
@@ -226,16 +226,20 @@ if (isset ($_GET['view']) && $_GET['view'] == 'market')
 */
 if (isset ($_GET['view']) && $_GET['view'] == 'add') 
 {
-    $rzecz = $db -> Execute("SELECT `id`, `name`, `amount` FROM `equipment` WHERE `status`='U' AND `type`!='I' AND `owner`=".$player -> id);
+    $rzecz = $db -> Execute("SELECT `id`, `name`, `amount`, `power`, `szyb` FROM `equipment` WHERE `status`='U' AND `type`!='I' AND `owner`=".$player -> id);
     $arrname = array();
     $arrid = array(0);
     $arramount = array();
+    $arrPower = array();
+    $arrSpeed = array();
     $i = 0;
     while (!$rzecz -> EOF) 
     {
         $arrname[$i] = $rzecz -> fields['name'];
         $arrid[$i] = $rzecz -> fields['id'];
         $arramount[$i] = $rzecz -> fields['amount'];
+	$arrPower[$i] = $rzecz->fields['power'];
+	$arrSpeed[$i] = $rzecz->fields['szyb'];
         $rzecz -> MoveNext();
         $i = $i + 1;
     }
@@ -247,12 +251,15 @@ if (isset ($_GET['view']) && $_GET['view'] == 'add')
     $smarty -> assign (array("Name" => $arrname, 
                              "Itemid" => $arrid, 
                              "Amount" => $arramount,
+			     "Ipower" => $arrPower,
+			     "Ispeed" => $arrSpeed,
                              "Addinfo" => ADD_INFO,
                              "Item" => ITEM,
                              "Aadd" => A_ADD,
                              "Iamount" => I_AMOUNT,
                              "Iamount2" => I_AMOUNT2,
-                             "Icost" => I_COST));
+                             "Icost" => I_COST,
+			     "Ispd" => "szyb"));
     if (isset ($_GET['step']) && $_GET['step'] == 'add') 
     {
         if (!isset($_POST['cost'])) 
