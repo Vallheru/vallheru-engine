@@ -1,5 +1,7 @@
 2011-08-14  Bartek thindil Jasicki  <thindil@tuxfamily.org>
 
+	* BUG,kowal.php:
+	fixed some notices
 	* BUG,forums.php:
 	fixed bug with quoting posts
 

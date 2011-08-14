@@ -4,10 +4,10 @@
  *   Blacksmith - making items - weapons, armors, shields, helmets, plate legs, arrowsheads
  *
  *   @name                 : kowal.php                            
- *   @copyright            : (C) 2004,2005,2006 Vallheru Team based on Gamers-Fusion ver 2.5
- *   @author               : thindil <thindil@users.sourceforge.net>
- *   @version              : 1.3
- *   @since                : 19.10.2006
+ *   @copyright            : (C) 2004,2005,2006,2011 Vallheru Team based on Gamers-Fusion ver 2.5
+ *   @author               : thindil <thindil@tuxfamily.org>
+ *   @version              : 1.4
+ *   @since                : 14.08.2011
  *
  */
 
@@ -27,7 +27,7 @@
 //   along with this program; if not, write to the Free Software
 //   Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 //
-// $Id: kowal.php 740 2006-10-19 12:13:51Z thindil $
+// $Id$
 
 $title="Kuźnia";
 require_once("includes/head.php");
@@ -91,7 +91,7 @@ function createitem()
                         $strName = DRAGON2.$arrItem['name'];
                         $intItembonus = $intItembonus * 2;
                     }
-                        else
+		    else
                     {
                         $strName = DRAGON3.$arrItem['name'];
                     }
@@ -271,7 +271,7 @@ function createitem()
                 $intGainexp = $intGainexp + (($arrItem['level'] * (100 + $player -> smith / 10)) * $intExp);
             }
         }
-            elseif ($intRoll2 > 20 || !$blnSpecial)
+	elseif ($intRoll2 > 20 || !$blnSpecial)
         {
             $intGainexp = $intGainexp + ($arrItem['level'] * $intExp);
         }
@@ -319,7 +319,7 @@ if (isset ($_GET['kowal']) && $_GET['kowal'] == 'plany')
                             "Aplansl" => A_PLANS_L,
                             "Aplanss" => A_PLANS_S));
     /**
-     * Show aviable plans
+     * Show available plans
      */
     if (isset($_GET['dalej'])) 
     {
@@ -360,10 +360,7 @@ if (isset ($_GET['kowal']) && $_GET['kowal'] == 'plany')
      */
     if (isset($_GET['buy'])) 
     {
-        if (!ereg("^[1-9][0-9]*$", $_GET['buy'])) 
-        {
-            error (ERROR);
-        }
+	checkvalue($_GET['buy']);
         $objPlan = $db -> Execute("SELECT * FROM smith WHERE id=".$_GET['buy']);
         $objTest = $db -> Execute("SELECT id FROM smith WHERE owner=".$player -> id." AND name='".$objPlan -> fields['name']."'");
         if ($objTest -> fields['id']) 
@@ -494,10 +491,7 @@ if (isset ($_GET['kowal']) && $_GET['kowal'] == 'kuznia')
         {
             error (YOU_DEAD);
         }
-        if (!ereg("^[1-9][0-9]*$", $_GET['ko'])) 
-        {
-            error (ERROR);
-        }
+	checkvalue($_GET['ko']);
         $objMaked = $db -> Execute("SELECT name FROM smith_work WHERE id=".$_GET['ko']);
         $smarty -> assign(array("Link" => "kowal.php?kowal=kuznia&konty=".$_GET['ko'], 
                                 "Name" => $objMaked -> fields['name'],
@@ -512,10 +506,7 @@ if (isset ($_GET['kowal']) && $_GET['kowal'] == 'kuznia')
         {
             error (YOU_DEAD);
         }
-        if (!ereg("^[1-9][0-9]*$", $_GET['dalej'])) 
-        {
-            error (ERROR);
-        }
+	checkvalue($_GET['dalej']);
         $objSmith = $db -> Execute("SELECT name FROM smith WHERE id=".$_GET['dalej']);
         $smarty -> assign(array("Link" => "kowal.php?kowal=kuznia&rob=".$_GET['dalej'], 
                                 "Name" => $objSmith -> fields['name'],
@@ -534,10 +525,8 @@ if (isset ($_GET['kowal']) && $_GET['kowal'] == 'kuznia')
      */
     if (isset($_GET['konty'])) 
     {
-        if (!ereg("^[1-9][0-9]*$", $_GET['konty'])) 
-        {
-            error (ERROR);
-        }
+	checkvalue($_GET['konty']);
+	checkvalue($_POST['razy']);
         $objWork = $db -> Execute("SELECT * FROM smith_work WHERE id=".$_GET['konty']);
         $objSmith = $db -> Execute("SELECT name, type, cost, amount, level, twohand FROM smith WHERE owner=".$player -> id." AND name='".$objWork -> fields['name']."'");
         if ($player -> energy < $_POST['razy']) 
@@ -662,18 +651,12 @@ if (isset ($_GET['kowal']) && $_GET['kowal'] == 'kuznia')
      */
     if (isset($_GET['rob'])) 
     {
-        if (!ereg("^[1-9][0-9]*$", $_GET['rob'])) 
-        {
-            error(ERROR);
-        }
+	checkvalue($_GET['rob']);
         if (!isset($_POST['razy']))
         {
             error(HOW_MANY);
         }
-        if (!ereg("^[1-9][0-9]*$", $_POST['razy'])) 
-        {
-            error(ERROR);
-        }
+	checkvalue($_POST['razy']);
         $arrMineral = array('copper', 'bronze', 'brass', 'iron', 'steel');
         if (!in_array($_POST['mineral'], $arrMineral))
         {
@@ -854,10 +837,11 @@ if (isset($_GET['kowal']) && $_GET['kowal'] == 'astral')
      */
     if (isset($_GET['component']))
     {
-        if (!ereg("^[1-5]*$", $_GET['component']))
-        {
-            error(ERROR);
-        }
+	$_GET['component'] = intvalue($_GET['component']);
+	if (($_GET['component'] < 1) || ($_GET['component'] > 5))
+	  {
+	    error(ERROR);
+	  }
         $strName = "P".$_GET['component'];
         $objAstral = $db -> Execute("SELECT `amount` FROM `astral_plans` WHERE `owner`=".$player -> id." AND `name`='".$strName."' AND `location`='V'");
         if (!$objAstral -> fields['amount'])
