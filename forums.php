@@ -8,7 +8,7 @@
  *   @author               : thindil <thindil@tuxfamily.org>
  *   @author               : mori <ziniquel@users.sourceforge.net>
  *   @version              : 1.4
- *   @since                : 09.08.2011
+ *   @since                : 14.08.2011
  *
  */
 
@@ -364,12 +364,18 @@ if (isset($_GET['topic']))
             $arraction[$i] = '';
         }
         $text = wordwrap($reply -> fields['body'],45,"\n",1);
-        if (isset($_GET['quote']) && $_GET['quote'] == $reply -> fields['id'])
-        {
-            $strText = preg_replace("/[0-9][0-9]-[0-9][0-9]-[0-9][0-9]/", "", $reply -> fields['body']);
-            $strText = str_replace("<b></b><br />", "", $strText);
-            $strReplytext = "[quote]".$strText."[/quote]";
-        }
+        if (isset($_GET['quote']))
+	  {
+	    checkvalue($_GET['quote']);
+	    $objQuote = $db->Execute("SELECT `body` FROM `replies` WHERE `id`=".$_GET['quote']);
+	    if ($objQuote->fields['body'])
+	      {
+		$strText = preg_replace("/[0-9][0-9]-[0-9][0-9]-[0-9][0-9]/", "", $objQuote->fields['body']);
+		$strText = str_replace("<b></b><br />", "", $strText);
+		$strReplytext = "[quote]".$strText."[/quote]";
+	      }
+	    $objQuote->Close();
+	  }
         $arrtext[$i] = $text;
         $arrRid[$i] = $reply -> fields['id'];
         $reply -> MoveNext();
