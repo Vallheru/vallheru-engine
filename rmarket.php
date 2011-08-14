@@ -8,7 +8,7 @@
  *   @author               : thindil <thindil@tuxfamily.org>
  *   @author               : eyescream <tduda@users.sourceforge.net>
  *   @version              : 1.4
- *   @since                : 06.08.2011
+ *   @since                : 14.08.2011
  *
  */
 
@@ -227,14 +227,9 @@ if (isset ($_GET['view']) && $_GET['view'] == 'add')
         {
             error(ERROR);
         }
-        if (!ereg("^[1-9][0-9]*$", $_POST['cost'])) 
-        {
-            error(ERROR);
-        }
-        if (!ereg("^[1-9][0-9]*$", $_POST['przedmiot']) || !ereg("^[1-9][0-9]*$", $_POST['amount'])) 
-        {
-            error(ERROR);
-        }
+	checkvalue($_POST['cost']);
+	checkvalue($_POST['przedmiot']);
+	checkvalue($_POST['amount']);
         $item = $db -> Execute("SELECT * FROM equipment WHERE id=".$_POST['przedmiot']);
         if ($item -> fields['amount'] < $_POST['amount']) 
         {
@@ -273,10 +268,7 @@ if (isset ($_GET['view']) && $_GET['view'] == 'add')
 */
 if (isset($_GET['wyc'])) 
 {
-    if (!ereg("^[1-9][0-9]*$", $_GET['wyc'])) 
-    {
-        error (ERROR);
-    }
+    checkvalue($_GET['wyc']);
     $dwyc = $db -> Execute("SELECT * FROM `equipment` WHERE `id`=".$_GET['wyc']);
     if ($dwyc -> fields['owner'] != $player -> id) 
     {
@@ -316,10 +308,7 @@ if (isset ($_GET['view']) && $_GET['view'] == 'del')
 */
 if (isset($_GET['buy'])) 
 {
-    if (!ereg("^[1-9][0-9]*$", $_GET['buy'])) 
-    {
-        error (ERROR);
-    }
+    checkvalue($_GET['buy']);
     $buy = $db -> Execute("SELECT * FROM `equipment` WHERE `id`=".$_GET['buy']." AND `type`='I' AND `status`='R'");
     if (!$buy -> fields['id']) 
     {
@@ -341,8 +330,6 @@ if (isset($_GET['buy']))
                             "Item" => ITEM,
                             "Buyinfo" => BUY_INFO,
                             "Ipower" => I_POWER,
-                            "Aamount" => A_AMOUNT,
-                            "Hamount" => H_AMOUNT,
                             "Oamount" => O_AMOUNT,
                             "Icost" => I_COST,
                             "Iseller" => SELLER,
@@ -356,10 +343,7 @@ if (isset($_GET['buy']))
         {
             error(ERROR);
         }
-        if (!ereg("^[1-9][0-9]*$", $_POST['amount'])) 
-        {
-            error (ERROR);
-        }
+	checkvalue($_POST['amount']);
         $buy = $db -> Execute("SELECT * FROM `equipment` WHERE `id`=".$_GET['buy']." AND `type`='I'");
         if ($_POST['amount'] > $buy -> fields['amount']) 
         {
