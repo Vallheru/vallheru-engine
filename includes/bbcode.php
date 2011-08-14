@@ -4,10 +4,10 @@
  *   Convert HTML to BBcode or BBcode to HTML
  *
  *   @name                 : bbcode.php                            
- *   @copyright            : (C) 2004,2005,2006 Vallheru Team based on Gamers-Fusion ver 2.5
- *   @author               : thindil <thindil@users.sourceforge.net>
- *   @version              : 1.2
- *   @since                : 26.09.2006
+ *   @copyright            : (C) 2004,2005,2006,2011 Vallheru Team based on Gamers-Fusion ver 2.5
+ *   @author               : thindil <thindil@tuxfamily.org>
+ *   @version              : 1.4
+ *   @since                : 14.08.2011
  *
  */
 
@@ -32,7 +32,7 @@
 /**
 * Function convert bbcode tags [b] on HTML <b>, add smiles, new lines, quotes
 */
-function bbcodetohtml($text) 
+function bbcodetohtml($text, $isChat = FALSE) 
 {
     global $db;
 
@@ -66,9 +66,15 @@ function bbcodetohtml($text)
     $arrBBon = array('[b]', '[i]', '[u]', '[center]', '[quote]');
     $arrBBoff = array('[/b]', '[/i]', '[/u]', '[/center]', '[/quote]');
     $arrHtmlon = array("<b>", "<i>", "<u>", "<center>", "<br />Cytat:<br /><i>");
-    $arrHtmloff = array("</b>", "</i>", "</u>", "</center>", "&nbsp;</i>");
+    $arrHtmloff = array("</b>", "</i>", "</u>", "</center>", "&nbsp</i>");
     for ($i = 0; $i < 5; $i++)
       {
+	if (($isChat) && ($i > 2))
+	  {
+	    $text = str_replace($arrBBon[$i], "", $text);
+	    $text = str_replace($arrBBoff[$i], "", $text);
+	    continue;
+	  }
 	$text = str_replace($arrBBon[$i], $arrHtmlon[$i], $text);
 	$text = str_replace($arrBBoff[$i], $arrHtmloff[$i], $text);
 	if (strrpos($text, $arrHtmloff[$i]) < strrpos($text, $arrHtmlon[$i]))

@@ -66,7 +66,7 @@ if (isset ($_GET['action']) && $_GET['action'] == 'chat')
         }
         $czat -> Close();
         require_once('includes/bbcode.php');
-        $_POST['msg'] = bbcodetohtml($_POST['msg']);
+        $_POST['msg'] = bbcodetohtml($_POST['msg'], TRUE);
         if (preg_match("/\S+/", $_POST['msg']) == 0)
         {
 	  error(ERROR);
