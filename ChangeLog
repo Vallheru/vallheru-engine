@@ -1,5 +1,7 @@
 2011-08-14  Bartek thindil Jasicki  <thindil@tuxfamily.org>
 
+	* BUG,chat.php: 
+	fixed bug with saying something to other people
 	* BUG,kowal.php:
 	fixed some notices
 	* BUG,forums.php:
