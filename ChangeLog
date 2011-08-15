@@ -1,5 +1,7 @@
 2011-08-15  Bartek thindil Jasicki  <thindil@tuxfamily.org>
 
+	* UPDATE,includes/head.php: 
+	don't lose stats and experience when escape from fight via logout
 	* BUG,explore.php: 
 	fixed bug with exploring mountains
 	* BUG,sedzia.php: 

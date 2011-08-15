@@ -7,7 +7,7 @@
  *   @copyright            : (C) 2004,2005,2006,2007,2011 Vallheru Team based on Gamers-Fusion ver 2.5
  *   @author               : thindil <thindil@tuxfamily.org>
  *   @version              : 1.4
- *   @since                : 11.08.2011
+ *   @since                : 15.08.2011
  *
  */
 
@@ -136,7 +136,7 @@ function catcherror($errortype, $errorinfo, $errorfile, $errorline)
       {
         $db -> Execute("INSERT INTO `bugtrack` (`type`, `info`, `file`, `line`, `referer`) VALUES(".$errortype.", '".$errorinfo."', '".$file[$numfile]."', ".$errorline.", '".$referer[$numrefer]."')");
       }
-    $objtest -> Close();
+      $objtest -> Close();
     if ($errortype == E_USER_ERROR || $errortype == E_ERROR) 
       {
         $smarty -> assign("Message", E_ERRORS);
@@ -229,14 +229,10 @@ if (isset ($_POST['pass']) && $title == 'Wieści')
         $_SESSION['email'] = $_POST['email'];
         $_SESSION['pass'] = MD5($_POST['pass']);
         $db -> Execute("UPDATE players SET logins=logins+1, rest='N' WHERE email=".$strEmail."");
-        $objFight = $db -> Execute("SELECT `fight`, `strength`, `agility`, `inteli`, `wytrz`, `szyb`, `wisdom` FROM `players` WHERE `email`=".$strEmail);
+        $objFight = $db -> Execute("SELECT `fight` FROM `players` WHERE `email`=".$strEmail);
         if ($objFight -> fields['fight'])
         {
-            $intNumber = rand(0, 5);
-            $arrValues = array($objFight -> fields['strength'], $objFight -> fields['agility'], $objFight -> fields['inteli'], $objFight -> fields['wytrz'], $objFight -> fields['szyb'], $objFight -> fields['wisdom']);
-            $arrStats = array('strength', 'agility', 'inteli', 'wytrz', 'szyb', 'wisdom');
-            $intLost = ($arrValues[$intNumber] / 20);
-            $db -> Execute("UPDATE `players` SET `hp`=0, `exp`=`exp`-100, `fight`=0, ".$arrStats[$intNumber]."=".$arrStats[$intNumber]."-".$intLost." WHERE `email`=".$strEmail);
+            $db -> Execute("UPDATE `players` SET `hp`=0, `fight`=0, `energy`=`energy`-1 WHERE `email`=".$strEmail);
         }
         $objFight -> Close();
         $query -> Close();
