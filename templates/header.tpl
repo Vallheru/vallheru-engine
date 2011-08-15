@@ -81,7 +81,7 @@
                             {/if}
                             <li><a href="account.php">{$Noptions}</a></li>
                             <li><a href="logout.php?did={$Id}">{$Nlogout}</a></li>
-                            <li><a href="{$Gameadress}wiki/" target="_blank">{$Nhelp}</a></li>
+                            <li><a href="{$Gameadress}/wiki/" target="_blank">{$Nhelp}</a></li>
                             <li><a href="map.php">{$Nmap}</a><br /><br /></li>
                             {$Special}
                         </ul>

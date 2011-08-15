@@ -4,7 +4,7 @@
 <head>
 <title>{$Gamename} :: {$Pagetitle}</title>
 <link type="text/css" rel="Stylesheet" href="main.css" />
-<link rel="shortcut icon" href="{$Gameadress}favicon.png" type="image/png"/>
+<link rel="shortcut icon" href="{$Gameadress}/favicon.png" type="image/png"/>
 <meta http-equiv="Content-Type" content="text/html; charset={$Charset}" />
 <link rel="alternate" type="application/xml" title="RSS" href="{$Gameadress}/rss.php" />
 {$Meta}

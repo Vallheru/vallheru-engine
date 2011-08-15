@@ -1,5 +1,7 @@
 2011-08-15  Bartek thindil Jasicki  <thindil@tuxfamily.org>
 
+	* BUG,sedzia.php: 
+	fixed bug with rank assignment
 	* FEATURE,templates/layout1/header.tpl, templates/header.tpl, templates/head.tpl, favicon.png:
 	added favicon
 	* FEATURE,templates/layout1/chat.tpl, templates/chat.tpl:

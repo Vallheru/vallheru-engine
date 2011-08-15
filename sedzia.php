@@ -7,7 +7,7 @@
  *   @copyright            : (C) 2004,2005,2006,2011 Vallheru Team based on Gamers-Fusion ver 2.5
  *   @author               : thindil <thindil@tuxfamily.org>
  *   @version              : 1.4
- *   @since                : 06.08.2011
+ *   @since                : 15.08.2011
  *
  */
 
@@ -39,7 +39,7 @@ require_once("languages/".$player -> lang."/sedzia.php");
 
 if ($player -> rank != 'Sędzia') 
 {
-    error (YOU_NOT);
+  error (YOU_NOT);
 }
 
 /**
@@ -58,12 +58,13 @@ $smarty -> display ('sedzia.tpl');
  */
 if (isset ($_GET['step']) && $_GET['step'] == 'add') 
   {
+    checkvalue($_POST['aid']);
     $ranga = $db -> Execute("SELECT rank FROM players WHERE id=".$_POST['aid']);
     if ($ranga -> fields['rank'] == 'Member' || $ranga -> fields['rank'] == 'Ławnik' || $ranga -> fields['rank'] == 'Sędzia' || $ranga -> fields['rank'] == 'Prawnik') 
       {
 	$arrRank = array('Member', 'Ławnik', 'Prawnik');
         $strRank = $db -> qstr($_POST['rank'], get_magic_quotes_gpc());
-        if (!in_array($_GET['lista'], $arrRank)) 
+        if (!in_array($_POST['rank'], $arrRank)) 
 	  {
 	    error(ERROR);
 	  }
