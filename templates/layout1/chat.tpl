@@ -3,6 +3,9 @@
 <form method="post" action="chat.php?action=chat">
 [<a href="chat.php">{$Arefresh}</a>] <input type="text" name="msg" size="55" /> <input type="submit" value="{$Asend}" />
 </form>
+<script type="text/javascript" language="JavaScript">
+document.forms['chat'].elements['msg'].focus();
+</script>
 </td></tr>
 <tr><td width="400" valign="top">
 <u><b>{$Inn}</b></u><br /><br />
