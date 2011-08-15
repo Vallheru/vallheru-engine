@@ -4,6 +4,7 @@
 <head>
 <title>{$Gamename} :: {$Title}</title>
 <link type="text/css" rel="stylesheet" href="css/{$Style}" />
+<link rel="shortcut icon" href="{$Gameadress}favicon.png" type="image/png"/>
 <meta http-equiv="Content-Type" content="text/html; charset={$Charset}" />
 </head>
 
@@ -80,7 +81,7 @@
                             {/if}
                             <li><a href="account.php">{$Noptions}</a></li>
                             <li><a href="logout.php?did={$Id}">{$Nlogout}</a></li>
-                            <li><a href="http://www.vallheru.org/wiki/" target="_blank">{$Nhelp}</a></li>
+                            <li><a href="{$Gameadress}wiki/" target="_blank">{$Nhelp}</a></li>
                             <li><a href="map.php">{$Nmap}</a><br /><br /></li>
                             {$Special}
                         </ul>

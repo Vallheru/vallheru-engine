@@ -4,6 +4,7 @@
 <head>
 <title>{$Gamename} :: {$Pagetitle}</title>
 <link type="text/css" rel="Stylesheet" href="main.css" />
+<link rel="shortcut icon" href="{$Gameadress}favicon.png" type="image/png"/>
 <meta http-equiv="Content-Type" content="text/html; charset={$Charset}" />
 <link rel="alternate" type="application/xml" title="RSS" href="{$Gameadress}/rss.php" />
 {$Meta}
@@ -33,4 +34,4 @@
 <div class="menu">[<a href="index.php">{$Welcome}</a>]</div>
 <div class="menu2">[<a href="register.php">{$Register}</a>]</div>
 <div class="menu2">[<a href="index.php?step=rules">{$Rules}</a>]</div>
-<div class="menu2">[<a href="http://www.vallheru.livenet.pl/">{$Forums}</a>]</div>
+<!--<div class="menu2">[<a href="http://www.vallheru.livenet.pl/">{$Forums}</a>]</div>-->
