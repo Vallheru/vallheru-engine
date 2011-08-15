@@ -7,7 +7,7 @@
  *   @copyright            : (C) 2004,2005,2006,2011 Vallheru Team based on Gamers-Fusion ver 2.5
  *   @author               : thindil <thindil@users.sourceforge.net>
  *   @version              : 1.4
- *   @since                : 07.08.2011
+ *   @since                : 15.08.2011
  *
  */
  
@@ -67,7 +67,7 @@ function battle($type,$adress)
     {
         error (NO_LIFE);
     }
-    $enemy1 = $db -> Execute("SELECT * FROM monsters WHERE id=".$player -> fight);
+    $enemy1 = $db -> Execute("SELECT * FROM `monsters` WHERE `id`=".$player -> fight);
     $span = ($enemy1 -> fields['level'] / $player -> level);
     if ($span > 2) 
     {
@@ -108,7 +108,7 @@ function battle($type,$adress)
         {
             $player -> energy = 0;
         }
-        $db -> Execute("UPDATE players SET energy=".$player -> energy." WHERE id=".$player -> id);
+        $db -> Execute("UPDATE `players` SET `energy`=".$player -> energy." WHERE `id`=".$player -> id);
         if ($player -> location == 'Góry') 
         {
             if ($fight -> fields['hp'] > 0)
@@ -157,7 +157,7 @@ if (isset($_GET['step']) && $_GET['step'] == 'battle')
 */
 if (isset($_GET['step']) && $_GET['step'] == 'run') 
 {
-    $enemy = $db -> Execute("SELECT speed, name, exp1, exp2, id FROM monsters WHERE id=".$player -> fight);
+    $enemy = $db -> Execute("SELECT `speed`, `name`, `exp1`, `exp2`, `id` FROM monsters WHERE id=".$player -> fight);
     /**
      * Add bonus from rings
      */
@@ -192,7 +192,7 @@ if (isset($_GET['step']) && $_GET['step'] == 'run')
                                 "Escapesucc2" => ESCAPE_SUCC2,
                                 "Escapesucc3" => ESCAPE_SUCC3));
         checkexp($player -> exp, $expgain, $player -> level, $player -> race, $player -> user, $player -> id, 0, 0, $player -> id, '', 0);
-        $db -> Execute("UPDATE players SET fight=0 WHERE id=".$player -> id);
+        $db -> Execute("UPDATE `players` SET `fight`=0 WHERE `id`=".$player -> id);
     } 
         else 
     {
@@ -201,7 +201,7 @@ if (isset($_GET['step']) && $_GET['step'] == 'run')
         $smarty -> display ('error1.tpl');
         battle('T','explore.php?step=battle');
     }
-    $hp = $db -> Execute("SELECT hp FROM players WHERE id=".$player -> id);
+    $hp = $db -> Execute("SELECT `hp` FROM `players` WHERE `id`=".$player -> id);
     $smarty -> assign ("Health", $hp -> fields['hp']);
     if ($player -> location == 'Góry' && $hp -> fields['hp'] > 0) 
     {
@@ -224,7 +224,7 @@ if ($player -> hp > 0 && !isset ($_GET['action']) && $player -> location == 'Gó
     if (!empty($player -> fight)) 
     {
         $enemy = $db -> Execute("SELECT `name` FROM `monsters` WHERE `id`=".$player -> fight);
-        error (FIGHT1.$enemy -> fields['name'].FIGTH2."<br />
+        error (FIGHT1.$enemy -> fields['name'].FIGHT2."<br />
            <a href=\"explore.php?step=battle\">".YES."</a><br />
            <a href=\"explore.php?step=run\">".NO."</a><br />");
         $enemy -> Close();
@@ -243,10 +243,15 @@ if ($player -> hp > 0 && !isset ($_GET['action']) && $player -> location == 'Gó
 */
 if (isset($_GET['action']) && $_GET['action'] == 'moutains' && $player -> location == 'Góry' && !isset($_GET['step'])) 
 {
-    if (!isset($_POST['amount']) || !ereg("^[0-9][0-9\.]*$", $_POST['amount'])) 
+    if (!isset($_POST['amount'])) 
     {
         error(ERROR);
     }
+    $_POST['amount'] = floatval($_POST['amount']);
+    if ($_POST['amount'] < 0.5)
+      {
+	error(ERROR);
+      }
     if ($_POST['amount'] > $player -> energy)
     {
         error(TIRED2);
@@ -499,8 +504,8 @@ if (isset($_GET['action']) && $_GET['action'] == 'moutains' && $player -> locati
         $answer -> fields['answer'] = strtolower($answer -> fields['answer']);
         if ($panswer == $answer -> fields['answer']) 
         {
-            $query = $db -> Execute("SELECT count(*) FROM `equipment` WHERE `owner`=0 AND `minlev`<=".$player -> level);
-            $amount = $query -> fields['count(*)'];
+            $query = $db -> Execute("SELECT count(`id`) FROM `equipment` WHERE `owner`=0 AND `minlev`<=".$player -> level);
+            $amount = $query -> fields['count(`id`)'];
             $query -> Close();
             $roll = rand (0, ($amount-1));
             $arritem = $db -> SelectLimit("SELECT * FROM `equipment` WHERE `owner`=0", 1, $roll);
@@ -557,10 +562,15 @@ if ($player -> hp > 0 && !isset ($_GET['action']) && $player -> location == 'Las
 */
 if (isset($_GET['action']) && $_GET['action'] == 'forest' && $player -> location == 'Las')
 {
-    if (!isset($_POST['amount']) || !ereg("^[0-9][0-9\.]*$", $_POST['amount'])) 
+    if (!isset($_POST['amount'])) 
     {
         error(ERROR);
     }
+    $_POST['amount'] = floatval($_POST['amount']);
+    if ($_POST['amount'] < 0.5)
+      {
+	error(ERROR);
+      }
     if ($_POST['amount'] > $player -> energy)
     {
         error(TIRED2);
