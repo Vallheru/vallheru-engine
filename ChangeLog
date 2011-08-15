@@ -1,5 +1,7 @@
 2011-08-15  Bartek thindil Jasicki  <thindil@tuxfamily.org>
 
+	* BUG,chat.php: 
+	fixed bug with whispers
 	* UPDATE,templates/layout1/lumberjack.tpl, templates/layout1/kopalnia.tpl, templates/lumberjack.tpl, templates/kopalnia.tpl,
 	kopalnia.php, lumberjack.php: 
 	set as default value current player energy

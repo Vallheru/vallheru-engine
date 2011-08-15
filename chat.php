@@ -8,7 +8,7 @@
  *   @author               : thindil <thindil@tuxfamily.org>
  *   @author               : eyescream <tduda@users.sourceforge.net>
  *   @version              : 1.4
- *   @since                : 14.08.2011
+ *   @since                : 15.08.2011
  *
  */
 
@@ -104,20 +104,18 @@ if (isset ($_GET['action']) && $_GET['action'] == 'chat')
         {
             $message = $_POST['msg'];
         }
-        $test1 = explode("=", $_POST['msg']);	
-        if (is_numeric($test1[0])) 
+        $test1 = explode("=", $_POST['msg']);
+        if (is_numeric($test1[0]) && (count($test1) > 1)) 
         {
             $user = $db -> Execute("SELECT `user` FROM `players` WHERE `id`=".$test1[0]);
             $id = $user -> fields['user'];
+	    $owner = 0;
             if ($id) 
-            {
-                $message = "<b>".$id.">>></b> ".$test1[1];
-            } 
-	    elseif ($test1[1]) 
-            {
-                $message = $test1[1];
-            }
-            $owner = $test1[0];
+	      {
+		array_shift($test1);
+		$message = "<b>".$id.">>></b> ".join("=", $test1);
+		$onwer = $id;
+	      } 
         } 
 	else 
         {
