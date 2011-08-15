@@ -4,10 +4,10 @@
  *   Chop trees
  *
  *   @name                 : lumberjack.php                            
- *   @copyright            : (C) 2004,2005,2006 Vallheru Team based on Gamers-Fusion ver 2.5
- *   @author               : thindil <thindil@users.sourceforge.net>
- *   @version              : 1.3
- *   @since                : 25.10.2006
+ *   @copyright            : (C) 2004,2005,2006,2011 Vallheru Team based on Gamers-Fusion ver 2.5
+ *   @author               : thindil <thindil@tuxfamily.org>
+ *   @version              : 1.4
+ *   @since                : 15.08.2011
  *
  */
 
@@ -27,7 +27,7 @@
 //   along with this program; if not, write to the Free Software
 //   Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 //
-// $Id: lumberjack.php 774 2006-10-25 19:16:49Z thindil $
+// $Id$
 
 $title = "Wyrąb";
 require_once("includes/head.php");
@@ -47,10 +47,11 @@ if ($player -> location != 'Las')
  */
 if (isset ($_GET['action']) && $_GET['action'] == 'chop') 
 {
-    if (!isset($_POST['amount']) || (!ereg("^[1-9][0-9]*$", $_POST['amount'])))
+    if (!isset($_POST['amount']))
     {
         error(ERROR);
     }
+    checkvalue($_POST['amount']);
     if ($player-> energy < $_POST['amount']) 
     {
         error(NO_ENERGY);
@@ -176,6 +177,7 @@ if (!isset($_GET['action']))
     $smarty -> assign(array("Youwant" => YOU_WANT,
                             "Achop" => A_CHOP,
                             "Onchop" => ON_CHOP,
+			    "Curen" => $player->energy,
                             "Tenergy" => T_ENERGY));
 }
 

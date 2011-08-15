@@ -4,10 +4,10 @@
  *   Mines in moutains
  *
  *   @name                 : kopalnia.php                            
- *   @copyright            : (C) 2004,2005,2006 Vallheru Team based on Gamers-Fusion ver 2.5
- *   @author               : thindil <thindil@users.sourceforge.net>
- *   @version              : 1.3
- *   @since                : 20.10.2006
+ *   @copyright            : (C) 2004,2005,2006,2011 Vallheru Team based on Gamers-Fusion ver 2.5
+ *   @author               : thindil <thindil@tuxfamily.org>
+ *   @version              : 1.4
+ *   @since                : 15.08.2011
  *
  */
 
@@ -27,7 +27,7 @@
 //   along with this program; if not, write to the Free Software
 //   Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 //
-// $Id: kopalnia.php 760 2006-10-24 12:09:02Z thindil $
+// $Id$
 
 $title = "Kopalnia";
 require_once("includes/head.php");
@@ -47,10 +47,11 @@ if ($player -> location != 'Góry')
  */
 if (isset($_GET['action']) && $_GET['action'] == 'dig')
 {
-    if (!isset($_POST['amount']) || !ereg("^[1-9][0-9]*$", $_POST['amount'])) 
+    if (!isset($_POST['amount'])) 
     {
         error(ERROR);
     }
+    checkvalue($_POST['amount']);
     if ($player -> hp <= 0) 
     {
         error(YOU_DEAD." (<a href=\"gory.php\">".BACK."</a>)");
@@ -199,6 +200,7 @@ $smarty -> assign(array("Action" => $_GET['action'],
                         "Asearch" => A_SEARCH,
                         "Tminerals" => T_MINERALS,
                         "Tamount" => T_AMOUNT,
+			"Curen" => $player->energy,
                         "Health" => $player -> hp));
 $smarty -> display ('kopalnia.tpl');
 
