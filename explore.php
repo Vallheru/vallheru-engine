@@ -51,6 +51,7 @@ $smarty -> assign(array("Link" => '',
                         "Menu" => '',
                         "Youwant" => YOU_WANT,
                         "Ayes" => YES,
+			"Curen" => $player->energy,
                         "Ano" => NO));
 
 /**

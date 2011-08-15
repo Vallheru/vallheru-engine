@@ -13,7 +13,7 @@
 {if $Health > "0" && $Location == "Góry" && $Step == "" && $Fight == "0" && $Action == ""}
     {$Minfo}<br /><br />
     <form method="post" action="explore.php?action=moutains">
-        {$Howmuch} <input type="text" name="amount" value="0" size="5" /> {$Tenergy}<br />
+        {$Howmuch} <input type="text" name="amount" value="{$Curen}" size="5" /> {$Tenergy}<br />
         <input type="submit" value="{$Awalk}" />
     </form><br />
     <a href="gory.php">{$Ano}</a><br />
@@ -23,7 +23,7 @@
     {$Youfind}{$Enemy}{$Bridge}<br /><br />
     {if $Health > "0" && $Enemy == "" && $Bridge == ""}
         <form method="post" action="explore.php?action=moutains">
-            {$Howmuch} <input type="text" name="amount" value="0" size="5" /> {$Tenergy}<br />
+            {$Howmuch} <input type="text" name="amount" value="{$Curen}" size="5" /> {$Tenergy}<br />
             <input type="submit" value="{$Awalk}" />
         </form><br />
         <a href="gory.php">{$Ano}</a><br />
@@ -84,7 +84,7 @@
 {if $Health > "0" && $Location == "Las" && $Step == "" && $Fight == "0" && $Action == ""}
     {$Finfo}<br /><br />
     <form method="post" action="explore.php?action=forest">
-        {$Howmuch} <input type="text" name="amount" value="0" size="5" /> {$Tenergy}<br />
+        {$Howmuch} <input type="text" name="amount" value="{$Curen}" size="5" /> {$Tenergy}<br />
         <input type="submit" value="{$Awalk}" />
     </form><br />
     <a href="las.php">{$Ano}</a><br />
@@ -94,7 +94,7 @@
     {$Youfind}{$Enemy}<br /><br />
     {if $Health > "0" && $Enemy == ""}
         <form method="post" action="explore.php?action=forest">
-            {$Howmuch} <input type="text" name="amount" value="0" size="5" /> {$Tenergy}<br />
+            {$Howmuch} <input type="text" name="amount" value="{$Curen}" size="5" /> {$Tenergy}<br />
             <input type="submit" value="{$Awalk}" />
         </form><br />
         <a href="las.php">{$Ano}</a><br />
