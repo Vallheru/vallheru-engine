@@ -116,7 +116,6 @@ function catcherror($errortype, $errorinfo, $errorfile, $errorline)
 {
     global $db;
     global $smarty;
-    global $sqltime;
     $reported = 0;
     $file = explode("/", $errorfile);
     $elements = count($file);
@@ -396,6 +395,7 @@ $smarty -> assign (array ("Time" => $time,
                           "Style" => $player -> style,
                           "Graphbar" => $player -> graphbar,
                           "Gamename" => $gamename,
+			  "Gameadress" => $gameadress,
                           "Hospital" => '',
                           "Battle" => '',
                           "Tribe" => '',
