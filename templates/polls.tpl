@@ -1,10 +1,5 @@
 {if $Action == ""}
-    {if $Location == "Altara"}
-        {$Pollsinfo}<br /><br />
-    {/if}
-    {if $Location == "Ardulith"}
-        {$Pollsinfo}<br /><br />
-    {/if}
+    {$Pollsinfo}<br /><br />
 
     {if $Pollid == "0"}
         <div align="center">{$Nopolls}</div><br />

@@ -4,10 +4,10 @@
  *   Polish language for city polls
  *
  *   @name                 : polls.php                            
- *   @copyright            : (C) 2004,2005,2006 Vallheru Team based on Gamers-Fusion ver 2.5
- *   @author               : thindil <thindil@users.sourceforge.net>
- *   @version              : 1.1
- *   @since                : 10.03.2006
+ *   @copyright            : (C) 2004,2005,2006,2011 Vallheru Team based on Gamers-Fusion ver 2.5
+ *   @author               : thindil <thindil@tuxfamily.org>
+ *   @version              : 1.4
+ *   @since                : 16.08.2011
  *
  */
 
@@ -27,7 +27,7 @@
 //   along with this program; if not, write to the Free Software
 //   Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 //
-// $Id: polls.php 566 2006-09-13 09:31:08Z thindil $
+// $Id$
 
 define("ERROR", "Zapomnij o tym!");
 define("T_VOTES", "głosów");
@@ -45,7 +45,7 @@ if (!isset($_GET['action']))
     }
         else
     {
-        define("POLLS_INFO", "Stoisz właśnie przed niezbyt wysoką brzozą??? Na jej pniu widnieją magiczne symbole, który powoli układają się w pytanie:");
+        define("POLLS_INFO", "Stoisz właśnie przed niezbyt wysoką brzozą. Na jej pniu widnieją magiczne symbole, który powoli układają się w pytanie:");
     }
     define("NO_POLLS", "Nie ma jeszcze ankiet");
     define("LAST_POLL", "Oto ostatnia ankieta");

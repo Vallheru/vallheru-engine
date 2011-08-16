@@ -4,10 +4,10 @@
  *   Polish language for site header
  *
  *   @name                 : head1.php                            
- *   @copyright            : (C) 2004,2005,2006 Vallheru Team based on Gamers-Fusion ver 2.5
- *   @author               : thindil <thindil@users.sourceforge.net>
- *   @version              : 1.3
- *   @since                : 02.11.2006
+ *   @copyright            : (C) 2004,2005,2006,2011 Vallheru Team based on Gamers-Fusion ver 2.5
+ *   @author               : thindil <thindil@tuxfamily.org>
+ *   @version              : 1.4
+ *   @since                : 16.08.2011
  *
  */
 
@@ -27,7 +27,7 @@
 //   along with this program; if not, write to the Free Software
 //   Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 //
-// $Id: head1.php 807 2006-11-03 14:33:17Z thindil $
+// $Id$
 
 if (isset($title) && !isset($title1))
 {
@@ -51,8 +51,12 @@ if (isset($title) && !isset($title1))
             $arrTitle2[13] = $city1;
             $arrTitle2[67] = 'Las Avantiel';
             $arrTitle2[72] = 'Sala audiencyjna';
+	    if ($player->location != 'Altara')
+	      {
+		$arrTitle2[44] = 'Brzoza przeznaczenia';
+	      }
         }
-            else
+        else
         {
             $arrTitle2 = $arrTitle;
             $arrTitle2[11] = 'Łucznik';
