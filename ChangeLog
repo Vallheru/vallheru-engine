@@ -1,5 +1,7 @@
 2011-08-16  Bartek thindil Jasicki  <thindil@tuxfamily.org>
 
+	* FEATURE,outposts.php: 
+	allow dead players manage outposts (but not attack)
 	* FEATURE,languages/pl/polls.php, templates/layout1/polls.tpl, templates/polls.tpl, languages/pl/head1.php: 
 	added ability to vote in polls in any location (except jail)
 	* BUG,explore.php: 

@@ -4,11 +4,11 @@
  *   Players' outposts and all functions related with these (except taxes).
  *
  *   @name                 : outposts.php                            
- *   @copyright            : (C) 2004,2005,2006 Vallheru Team based on Gamers-Fusion ver 2.5
- *   @author               : thindil <thindil@users.sourceforge.net>
+ *   @copyright            : (C) 2004,2005,2006,2011 Vallheru Team based on Gamers-Fusion ver 2.5
+ *   @author               : thindil <thindil@tuxfamily.org>
  *   @author               : eyescream <tduda@users.sourceforge.net>
- *   @version              : 1.3
- *   @since                : 05.03.2007
+ *   @version              : 1.4
+ *   @since                : 16.08.2011
  *
  */
  
@@ -28,7 +28,7 @@
 //   along with this program; if not, write to the Free Software
 //   Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 //
-// $Id: outposts.php 943 2007-03-05 17:19:34Z thindil $
+// $Id$
 
 /**
 * Page title
@@ -53,13 +53,6 @@ if($player -> location != 'Altara' && $player -> location != 'Ardulith')
     error (NOT_IN_CITY);
 }
 
-/**
-* Dead players can't work in outpost.
-*/
-if ($player -> hp <= 0)
-{
-    error(YOU_DEAD." (<a href=\"city.php\">".BACK."</a>)");
-}
 /**
 * Assign variables to template
 */
@@ -631,10 +624,7 @@ if (isset ($_GET['view']) && $_GET['view'] == 'gold')
             error(HOW_MANY);
         }
         integercheck($_POST['zeton']);
-        if (!ereg("^[1-9][0-9]*$", $_POST['zeton'])) 
-        {
-            error(ERROR);
-        }
+	checkvalue($_POST['zeton']);
         if ($_POST['zeton'] > $out -> fields['gold']) 
         {
             error(NO_MONEY);
@@ -655,10 +645,7 @@ if (isset ($_GET['view']) && $_GET['view'] == 'gold')
             error(HOW_MANY);
         }
         integercheck($_POST['sztuki']);
-        if (!ereg("^[1-9][0-9]*$", $_POST['sztuki'])) 
-        {
-            error(ERROR);
-        }
+	checkvalue($_POST['sztuki']);
         if ($_POST['sztuki'] > $player -> credits) 
         {
             error(NO_MONEY);
@@ -966,10 +953,7 @@ if (isset ($_GET['view']) && $_GET['view'] == 'taxes')
         {
             error(HOW_MANY);
         }
-        if (!ereg("^[1-9][0-9]*$", $_POST['amount'])) 
-        {
-           error (ERROR);
-        }
+	checkvalue($_POST['amount']);
         if ($_POST['amount'] > $out -> fields['turns']) 
         {
             error (NO_AP);
@@ -1603,10 +1587,7 @@ if (isset ($_GET['view']) && $_GET['view'] == 'battle')
         {
             error(TOO_FAT);
         }
-        if (!ereg("^[1-9][0-9]*$", $_POST['amount'])) 
-        {
-            error (ERROR);
-        }
+	checkvalue($_POST['amount']);
         if ($out -> fields['turns'] < $_POST['amount']) 
         {
             error (NO_AP);
@@ -1623,14 +1604,15 @@ if (isset ($_GET['view']) && $_GET['view'] == 'battle')
         {
             $_POST['oid'] = $_GET['oid'];
         }
-        if (!ereg("^[1-9][0-9]*$", $_POST['oid'])) 
-        {
-            error (ERROR);
-        }
+	checkvalue($_POST['oid']);
         if (empty($_POST['oid'])) 
         {
             error (NO_ID);
         }
+	if ($player -> hp <= 0)
+	  {
+	    error(YOU_DEAD);
+	  }
         $enemy = $db -> Execute("SELECT * FROM outposts WHERE id=".$_POST['oid']);
         $myout = $db -> Execute("SELECT * FROM outposts WHERE id=".$out -> fields['id']);
         $mymonsters = $db -> Execute("SELECT id, name, power, defense FROM outpost_monsters WHERE outpost=".$out -> fields['id']);
