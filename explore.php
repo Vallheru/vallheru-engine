@@ -7,7 +7,7 @@
  *   @copyright            : (C) 2004,2005,2006,2011 Vallheru Team based on Gamers-Fusion ver 2.5
  *   @author               : thindil <thindil@users.sourceforge.net>
  *   @version              : 1.4
- *   @since                : 15.08.2011
+ *   @since                : 16.08.2011
  *
  */
  
@@ -269,7 +269,7 @@ if (isset($_GET['action']) && $_GET['action'] == 'moutains' && $player -> locati
                <a href=\"explore.php?step=run\">".NO."</a><br />");
     }
     $objMaps = $db -> Execute("SELECT `value` FROM `settings` WHERE `setting`='maps'");
-    $intAmount2 = $_POST['amount'] * 2;
+    $intAmount2 = floor($_POST['amount'] * 2);
     $arrGold = array(0, 0);
     $arrHerbs = array(0, 0, 0, 0);
     $intMeteor = 0;
@@ -588,7 +588,7 @@ if (isset($_GET['action']) && $_GET['action'] == 'forest' && $player -> location
                <a href=\"explore.php?step=run\">".NO."</a><br />");
     }
     $objMaps = $db -> Execute("SELECT `value` FROM `settings` WHERE `setting`='maps'");
-    $intAmount = $_POST['amount'] * 2;
+    $intAmount = floor($_POST['amount'] * 2);
     $arrGold = array(0, 0, 0);
     $arrHerbs = array(0, 0, 0, 0);
     $intAstral = 0;

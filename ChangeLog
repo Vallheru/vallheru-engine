@@ -1,5 +1,7 @@
 2011-08-16  Bartek thindil Jasicki  <thindil@tuxfamily.org>
 
+	* BUG,explore.php: 
+	fixed bug with count used energy
 	* UPDATE,install/db/update.sql:
 	change stats for few monsters
 
