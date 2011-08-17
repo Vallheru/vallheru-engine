@@ -40,11 +40,20 @@
         <td align="center">{$Durability[item]}/{$Maxdur[item]}</td>
         <td align="center">{$Speed[item]}</td>
         <td align="center">{$Agility[item]}</td>
-    <td align="center">{$Minlev[item]}</td>
+         <td align="center">{$Minlev[item]}</td>
         <td align="center">{$Amount[item]}</td>
         <td>{$Cost[item]}</td>
         <td><a href="view.php?view={$Owner[item]}">{$Seller[item]}</a></td>
-        {$Action[item]}
+        <td>
+	{if $Owner[item] == $Pid}
+	    <a href="market.php?view=myoferts&amp;type=imarket&amp;delete={$Iid[item]}">{$Adelete}</a><br />
+            <a href="market.php?view=myoferts&amp;type=imarket&amp;change={$Iid[item]}">{$Achange}</a><br />
+            <a href="market.php?view=myoferts&amp;type=imarket&amp;add={$Iid[item]}">{$Aadd}</a>
+	{else}
+	    <a href=imarket.php?buy={$Iid[item]}>{$Abuy}</a>
+	{/if}
+	</td>
+	</tr>
     {/section}
     </table>
     {$Previous}{$Next}
@@ -60,7 +69,12 @@
 	{if $Ispeed[item1] > 0}
 	    (+{$Ispeed[item1]} {$Ispd})
 	{/if}
-	({$Iamount}: {$Amount[item1]})</option>
+	{if $Iagi[item1] > 0}
+	    (-{$Iagi[item1]}% {$Iag})
+	{elseif $Iagi[item1] < 0}
+	    ({$Iagi[item1]}% {$Iag})
+	{/if}
+	({$Idur[item1]}/{$Imaxdur[item1]}) ({$Iamount}: {$Amount[item1]})</option>
     {/section}</select></td></tr>
     <tr><td>{$Iamount2}:</td><td><input type="text" name="amount" /></td></tr>
     <tr><td>{$Icost}:</td><td><input type="text" name="cost" /></td></tr>

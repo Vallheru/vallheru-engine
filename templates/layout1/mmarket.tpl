@@ -31,7 +31,16 @@
     </tr>
     {section name=mmarket loop=$Item}
         {$Item[mmarket]}
-    {$Link[mmarket]}
+    	<td>
+	{if $Owner[mmarket] == $Pid}
+	    <a href="market.php?view=myoferts&amp;type=mmarket&amp;delete={$Iid[mmarket]}">{$Adelete}</a><br />
+            <a href="market.php?view=myoferts&amp;type=mmarket&amp;change={$Iid[mmarket]}">{$Achange}</a><br />
+            <a href="market.php?view=myoferts&amp;type=mmarket&amp;add={$Iid[mmarket]}">{$Aadd}</a>
+	{else}
+	    <a href=mmarket.php?buy={$Iid[mmarket]}>{$Abuy}</a>
+	{/if}
+	</td>
+	</tr>
     {/section}
     </table>
     {$Previous}{$Next}

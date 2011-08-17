@@ -8,7 +8,7 @@
  *   @author              : thindil <thindil@tuxfamily.org>
  *   @author              : eyescream <tduda@users.sourceforge.net>
  *   @version             : 1.4
- *   @since               : 10.08.2011
+ *   @since               : 17.08.2011
  *
  */
 
@@ -117,7 +117,8 @@ if (isset ($_GET['view']) && $_GET['view'] == 'market')
             $pm = $db -> SelectLimit("SELECT * FROM `potions` WHERE status='R' AND `name`=".$strSearch." ORDER BY ".$_GET['lista']." DESC", 30, $_GET['limit']);
         }
         $arritem = array();
-        $arrlink = array();
+	$arrId = array();
+	$arrOwner = array();
         $i = 0;
         while (!$pm -> EOF) 
         {
@@ -131,20 +132,20 @@ if (isset ($_GET['view']) && $_GET['view'] == 'market')
                 $arritem[$i] = "<tr><td>".$pm -> fields['name']."</td><td align=center>".$pm -> fields['efect']."</td><td align=\"center\">".$pm -> fields['amount']."</td><td align=center>".$pm -> fields['cost']."</td><td><a href=view.php?view=".$pm -> fields['owner'].">".$seller -> fields['user']."</a></td>";
             }
             $seller -> Close();
-            if ($player -> id == $pm -> fields['owner']) 
-            {
-                $arrlink[$i] = "<td>- <a href=mmarket.php?wyc=".$pm -> fields['id'].">".A_DELETE."</a></td></tr>";
-            } 
-	    else 
-            {
-                $arrlink[$i] = "<td>- <a href=mmarket.php?buy=".$pm -> fields['id'].">".A_BUY."</a></td></tr>";
-            }
+            $arrId[$i] = $pm->fields['id'];
+	    $arrOwner[$i] = $pm->fields['owner'];
             $pm -> MoveNext();
             $i = $i + 1;
         }
         $pm -> Close();
         $smarty -> assign(array("Item" => $arritem, 
-            "Link" => $arrlink));
+				"Iid" => $arrId,
+				"Pid" => $player->id,
+				"Owner" => $arrOwner,
+				"Abuy" => A_BUY,
+				"Aadd" => A_ADD,
+				"Adelete" => A_DELETE,
+				"Achange" => A_CHANGE));
         if ($_GET['limit'] >= 30) 
         {
             $lim = $_GET['limit'] - 30;

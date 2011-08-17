@@ -4,11 +4,11 @@
  *   Polish language for potions market
  *
  *   @name                 : mmarket.php                            
- *   @copyright            : (C) 2004-2005 Vallheru Team based on Gamers-Fusion ver 2.5
- *   @author               : thindil <thindil@users.sourceforge.net>
+ *   @copyright            : (C) 2004,2005,2011 Vallheru Team based on Gamers-Fusion ver 2.5
+ *   @author               : thindil <thindil@tuxfamily.org>
  *   @author               : eyescream <tduda@users.sourceforge.net>
- *   @version              : 1.3
- *   @since                : 27.11.2005
+ *   @version              : 1.4
+ *   @since                : 17.08.2011
  *
  */
 
@@ -29,7 +29,7 @@
 //   Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 //
 // 
-// $Id: mmarket.php 856 2006-11-29 17:30:36Z thindil $
+// $Id$
 
 define("ERROR", "Zapomnij o tym!");
 define("A_BACK", "wróć");
@@ -67,6 +67,8 @@ if (isset ($_GET['view']) && $_GET['view'] == 'market')
     define("T_OPTIONS", "Opcje");
     define("T_NAME", "Nazwa");
     define("T_EFECT", "Efekt");
+    define("A_ADD", "Dodaj");
+    define("A_CHANGE", "Zmień cenę");
 }
 
 if (isset ($_GET['view']) && $_GET['view'] == 'add') 

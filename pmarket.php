@@ -8,7 +8,7 @@
  *   @author               : thindil <thindil@tuxfamily.org>
  *   @author               : eyescream <tduda@users.sourceforge.net>
  *   @version              : 1.4
- *   @since                : 08.08.2011
+ *   @since                : 17.08.2011
  *
  */
 
@@ -134,8 +134,8 @@ if (isset ($_GET['view']) && $_GET['view'] == 'market')
         $arramount = array();
         $arrcost = array();
         $arrseller = array();
-        $arrlink = array();
         $arruser = array();
+	$arrId = array();
         $i = 0;
         while (!$pm -> EOF) 
         {
@@ -145,25 +145,23 @@ if (isset ($_GET['view']) && $_GET['view'] == 'market')
             $arrseller[$i] = $pm -> fields['seller'];
             $seller = $db -> Execute("SELECT user FROM players WHERE id=".$pm -> fields['seller']);
             $arruser[$i] = $seller -> fields['user'];
+	    $arrId[$i] = $pm->fields['id'];
             $seller -> Close();
-            if ($player -> id == $pm -> fields['seller']) 
-            {
-                $arrlink[$i] = "<td>- <a href=pmarket.php?wyc=".$pm -> fields['id'].">".A_DELETE."</a></td></tr>";
-            } 
-                else 
-            {
-                $arrlink[$i] = "<td>- <a href=pmarket.php?buy=".$pm -> fields['id'].">".A_BUY."</a></td></tr>";
-            }
             $pm -> MoveNext();
             $i = $i + 1;
         }
         $pm -> Close();
         $smarty -> assign(array("Name" => $arrname, 
-            "Amount" => $arramount, 
-            "Cost" => $arrcost, 
-            "Seller" => $arrseller, 
-            "Link" => $arrlink, 
-            "User" => $arruser));
+				"Amount" => $arramount, 
+				"Cost" => $arrcost, 
+				"Seller" => $arrseller,
+				"Iid" => $arrId,
+				"Pid" => $player->id,
+				"Abuy" => A_BUY,
+				"Aadd" => A_ADD,
+				"Adelete" => A_DELETE,
+				"Achange" => A_CHANGE,
+				"User" => $arruser));
         if ($_GET['limit'] >= 30) 
         {
             $lim = $_GET['limit'] - 30;
@@ -212,10 +210,8 @@ if (isset ($_GET['view']) && $_GET['view'] == 'add')
         {
             error(NO_AMOUNT.$strName);
         }
-        if (!ereg("^[1-9][0-9]*$", $_POST['amount']) || !ereg("^[1-9][0-9]*$", $_POST['cost'])) 
-        {
-            error (ERROR);
-        }
+	checkvalue($_POST['amount']);
+	checkvalue($_POST['cost']);
         $objTest = $db -> Execute("SELECT `id` FROM `pmarket` WHERE `seller`=".$player -> id." AND `nazwa`='".$strSqlname."'");
         if (!$objTest -> fields['id'])
         {
@@ -240,10 +236,7 @@ if (isset ($_GET['view']) && $_GET['view'] == 'add')
                                     "Mineralcost" => $_POST['cost']));
             if (isset($_POST['ofert']))
             {
-                if (!ereg("^[1-9][0-9]*$", $_POST['ofert'])) 
-                {
-                    error(ERROR);
-                }
+		checkvalue($_POST['ofert']);
                 require_once('includes/marketaddto.php');
                 addtomin($_POST['ofert'], $strMineral, $_POST['mineral'], $player -> id);
                 $smarty -> assign("Message", YOU_ADD.$_POST['amount']."</b> ".$strName.ON_MARKET2." <a href=\"pmarket.php?view=add\">".A_REFRESH."</a>");
@@ -268,10 +261,7 @@ if (isset ($_GET['view']) && $_GET['view'] == 'del')
  */
 if (isset($_GET['buy'])) 
 {
-    if (!ereg("^[1-9][0-9]*$", $_GET['buy'])) 
-    {
-        error (ERROR);
-    }
+    checkvalue($_GET['buy']);
     $buy = $db -> Execute("SELECT * FROM pmarket WHERE id=".$_GET['buy']);
     if (!$buy -> fields['id']) 
     {
@@ -302,10 +292,7 @@ if (isset($_GET['buy']))
         {
             error(ERROR);
         }
-        if (!ereg("^[1-9][0-9]*$", $_POST['amount'])) 
-        {
-            error (ERROR);
-        }
+	checkvalue($_POST['amount']);
         $buy = $db -> Execute("SELECT * FROM pmarket WHERE id=".$_GET['buy']);
         $price = $_POST['amount'] * $buy -> fields['cost'];
         if ($price > $player -> credits) 
@@ -355,10 +342,7 @@ if (isset($_GET['buy']))
  */
 if (isset($_GET['wyc'])) 
 {
-    if (!ereg("^[1-9][0-9]*$", $_GET['wyc'])) 
-    {
-        error (ERROR);
-    }
+    checkvalue($_GET['wyc']);
     $dwyc = $db -> Execute("SELECT * FROM pmarket WHERE id=".$_GET['wyc']);
     if ($dwyc -> fields['seller'] != $player -> id) 
     {

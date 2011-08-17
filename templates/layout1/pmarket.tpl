@@ -34,7 +34,16 @@
         <td>{$Amount[pmarket]}</td>
         <td>{$Cost[pmarket]}</td>
         <td><a href="view.php?view={$Seller[pmarket]}">{$User[pmarket]}</a></td>
-        {$Link[pmarket]}
+        <td>
+	{if $Seller[pmarket] == $Pid}
+	    <a href="market.php?view=myoferts&amp;type=pmarket&amp;delete={$Iid[pmarket]}">{$Adelete}</a><br />
+            <a href="market.php?view=myoferts&amp;type=pmarket&amp;change={$Iid[pmarket]}">{$Achange}</a><br />
+            <a href="market.php?view=myoferts&amp;type=pmarket&amp;add={$Iid[pmarket]}">{$Aadd}</a>
+	{else}
+	    <a href=pmarket.php?buy={$Iid[pmarket]}>{$Abuy}</a>
+	{/if}
+	</td>
+	</tr>
     {/section}
     </table>
     {$Previous}{$Next}

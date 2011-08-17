@@ -8,7 +8,7 @@
  *   @author               : thindil <thindil@tuxfamily.org>
  *   @author               : eyescream <tduda@users.sourceforge.net>
  *   @version              : 1.4
- *   @since                : 13.08.2011
+ *   @since                : 17.08.2011
  *
  */
 
@@ -143,10 +143,10 @@ if (isset ($_GET['view']) && $_GET['view'] == 'market')
         $arragility = array();
         $arrcost = array();
         $arrowner = array();
-        $arraction = array();
         $arramount = array();
         $arrlevel = array();
         $arrseller = array();
+	$arrId = array();
         $i = 0;
         while (!$pm -> EOF) 
         {
@@ -179,15 +179,8 @@ if (isset ($_GET['view']) && $_GET['view'] == 'market')
             $arrlevel[$i] = $pm -> fields['minlev'];
             $seller = $db -> Execute("SELECT user FROM players WHERE id=".$pm -> fields['owner']);
             $arrseller[$i] = $seller -> fields['user'];
+	    $arrId[$i] = $pm->fields['id'];
             $seller -> Close();
-            if ($player -> id == $pm -> fields['owner']) 
-            {
-                $arraction[$i] = "<td><a href=imarket.php?wyc=".$pm -> fields['id'].">".A_DELETE."</a></td></tr>";
-            } 
-                else 
-            {
-                $arraction[$i] = "<td><a href=imarket.php?buy=".$pm -> fields['id'].">".A_BUY."</a></td></tr>";
-            }
             $pm -> MoveNext();
             $i = $i + 1;
         }
@@ -196,13 +189,18 @@ if (isset ($_GET['view']) && $_GET['view'] == 'market')
                                 "Power" => $arrpower, 
                                 "Cost" => $arrcost, 
                                 "Owner" => $arrowner, 
-                                "Action" => $arraction, 
                                 "Maxdur" => $arrmaxdur, 
                                 "Durability" => $arrdur, 
                                 "Speed" => $arrspeed, 
                                 "Agility" => $arragility, 
                                 "Amount" => $arramount, 
-                                "Minlev" => $arrlevel, 
+                                "Minlev" => $arrlevel,
+				"Iid" => $arrId,
+				"Pid" => $player->id,
+				"Abuy" => A_BUY,
+				"Aadd" => A_ADD,
+				"Adelete" => A_DELETE,
+				"Achange" => A_CHANGE,
                                 "Seller" => $arrseller));
         if (!isset($_POST['szukany'])) 
         {
@@ -226,7 +224,7 @@ if (isset ($_GET['view']) && $_GET['view'] == 'market')
 */
 if (isset ($_GET['view']) && $_GET['view'] == 'add') 
 {
-    $rzecz = $db -> Execute("SELECT `id`, `name`, `amount`, `power`, `szyb` FROM `equipment` WHERE `status`='U' AND `type`!='I' AND `owner`=".$player -> id);
+    $rzecz = $db -> Execute("SELECT `id`, `name`, `amount`, `power`, `szyb`, `wt`, `maxwt`, `zr` FROM `equipment` WHERE `status`='U' AND `type`!='I' AND `owner`=".$player -> id);
     $arrname = array();
     $arrid = array(0);
     $arramount = array();
@@ -240,6 +238,9 @@ if (isset ($_GET['view']) && $_GET['view'] == 'add')
         $arramount[$i] = $rzecz -> fields['amount'];
 	$arrPower[$i] = $rzecz->fields['power'];
 	$arrSpeed[$i] = $rzecz->fields['szyb'];
+	$arrDur[$i] = $rzecz->fields['wt'];
+	$arrMaxdur[$i] = $rzecz->fields['maxwt'];
+	$arrAgi[$i] = $rzecz->fields['zr'];
         $rzecz -> MoveNext();
         $i = $i + 1;
     }
@@ -253,12 +254,16 @@ if (isset ($_GET['view']) && $_GET['view'] == 'add')
                              "Amount" => $arramount,
 			     "Ipower" => $arrPower,
 			     "Ispeed" => $arrSpeed,
+			     "Idur" => $arrDur,
+			     "Imaxdur" => $arrMaxdur,
+			     "Iagi" => $arrAgi,
                              "Addinfo" => ADD_INFO,
                              "Item" => ITEM,
                              "Aadd" => A_ADD,
                              "Iamount" => I_AMOUNT,
                              "Iamount2" => I_AMOUNT2,
                              "Icost" => I_COST,
+			     "Iag" => "zr",
 			     "Ispd" => "szyb"));
     if (isset ($_GET['step']) && $_GET['step'] == 'add') 
     {
@@ -266,14 +271,9 @@ if (isset ($_GET['view']) && $_GET['view'] == 'add')
         {
             error(ERROR);
         }
-        if (!ereg("^[1-9][0-9]*$", $_POST['cost'])) 
-        {
-            error(ERROR);
-        }
-        if (!ereg("^[1-9][0-9]*$", $_POST['przedmiot']) || !ereg("^[1-9][0-9]*$", $_POST['amount'])) 
-        {
-            error(ERROR);
-        }
+	checkvalue($_POST['cost']);
+	checkvalue($_POST['przedmiot']);
+	checkvalue($_POST['amount']);
         $item = $db -> Execute("SELECT * FROM equipment WHERE id=".$_POST['przedmiot']);
         if ($item -> fields['amount'] < $_POST['amount']) 
         {
@@ -313,10 +313,7 @@ if (isset ($_GET['view']) && $_GET['view'] == 'add')
 */
 if (isset($_GET['wyc'])) 
 {
-    if (!ereg("^[1-9][0-9]*$", $_GET['wyc'])) 
-    {
-        error (ERROR);
-    }
+    checkvalue($_GET['wyc']);
     $dwyc = $db -> Execute("SELECT * FROM `equipment` WHERE `id`=".$_GET['wyc']." AND `status`='R'");
     if ($dwyc -> fields['owner'] != $player -> id) 
     {
@@ -363,10 +360,7 @@ if (isset ($_GET['view']) && $_GET['view'] == 'del')
 */
 if (isset($_GET['buy'])) 
 {
-    if (!ereg("^[1-9][0-9]*$", $_GET['buy'])) 
-    {
-        error (ERROR);
-    }
+    checkvalue($_GET['buy']);
     $buy = $db -> Execute("SELECT * FROM `equipment` WHERE `id`=".$_GET['buy']." AND `type`!='I' AND `status`='R'");
     if (!$buy -> fields['id']) 
     {
@@ -427,10 +421,7 @@ if (isset($_GET['buy']))
         {
             error(ERROR);
         }
-        if (!ereg("^[1-9][0-9]*$", $_POST['amount'])) 
-        {
-            error (ERROR);
-        }
+	checkvalue($_POST['amount']);
         $buy = $db -> Execute("SELECT * FROM `equipment` WHERE `id`=".$_GET['buy']." AND `type`!='I'");
         if ($_POST['amount'] > $buy -> fields['amount']) 
         {
