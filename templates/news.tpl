@@ -30,14 +30,13 @@
 	    {if $page == $Tpage}
 	        {$page}
 	    {else}
-                <a href="news.php?step=comments&tid={$Text}&page={$page}">{$page}</a>
+                <a href="news.php?step=comments&text={$Text}&page={$page}">{$page}</a>
 	    {/if}
     	{/for}
     {/if}
     <br /><br /><center>
-    <form method="post" action="news.php?step=comments&amp;action=add">
+    <form method="post" action="news.php?step=comments&amp;text={$Text}">
         {$Addcomment}:<textarea name="body" rows="20" cols="50"></textarea><br />
-        <input type="hidden" name="tid" value="{$Text}" />
         <input type="submit" value="{$Aadd}" />
     </form></center>
     <br /><br />

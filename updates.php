@@ -8,7 +8,7 @@
  *   @author               : thindil <thindil@tuxfamily.org>
  *   @author               : mori <ziniquel@users.sourceforge.net>
  *   @version              : 1.4
- *   @since                : 09.08.2011
+ *   @since                : 17.08.2011
  *
  */
 
@@ -171,9 +171,9 @@ if (isset($_GET['step']) && $_GET['step'] == 'comments')
     /**
     * Add comment
     */
-    if (isset($_GET['action']) && $_GET['action'] == 'add')
+    if (isset($_POST['body']))
     {
-        addcomments($_POST['tid'], 'upd_comments', 'updateid');
+        addcomments($_GET['text'], 'upd_comments', 'updateid');
     }
 
     /**

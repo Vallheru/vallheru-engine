@@ -101,9 +101,8 @@
     	{/for}
     {/if}
     <br /><br /><center>
-    <form method="post" action="polls.php?action=comments&amp;step=add">
+    <form method="post" action="polls.php?action=comments&amp;text={$Poll}">
         {$Addcomment}:<textarea name="body" rows="20" cols="50"></textarea><br />
-        <input type="hidden" name="pid" value="{$Poll}" />
         <input type="submit" value="{$Aadd}" />
     </form></center>
     <br /><br />
