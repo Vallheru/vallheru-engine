@@ -7,7 +7,7 @@
  *   @copyright            : (C) 2004,2005,2006,2011 Vallheru Team based on Gamers-Fusion ver 2.5
  *   @author               : thindil <thindil@tuxfamily.org>
  *   @version              : 1.4
- *   @since                : 08.08.2011
+ *   @since                : 17.08.2011
  *
  */
 
@@ -57,6 +57,9 @@ while (!$objQuery -> EOF)
       break;
     case 'Królewski Błazen':
       $arrplayers[$intNumo] = "<img src=\"images/joker.gif\" title=\"".JOKER."\" alt=\"".JOKER."\" /> <a href=\"view.php?view=".$objQuery -> fields['id']."\">".$objQuery -> fields['user']."</a> (".$objQuery -> fields['id'].")<br />";
+      break;
+    case 'Sędzia':
+      $arrplayers[$intNumo] = "<img src=\"images/judge.gif\" title=\"Sędzia\" alt=\"Sędzia\" /> <a href=\"view.php?view=".$objQuery -> fields['id']."\">".$objQuery -> fields['user']."</a> (".$objQuery -> fields['id'].")<br />";
       break;
     default:
       $arrplayers[$intNumo] = "<a href=\"view.php?view=".$objQuery -> fields['id']."\">".$objQuery -> fields['user']."</a> (".$objQuery -> fields['id'].")<br />";

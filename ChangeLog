@@ -1,5 +1,7 @@
 2011-08-17  Bartek thindil Jasicki  <thindil@tuxfamily.org>
 
+	* FEATURE,includes/foot.php, images/judge.gif: 
+	added icon for judge (author: Vorrim)
 	* FEATURE,templates/layout1/rmarket.tpl, templates/layout1/hmarket.tpl, templates/rmarket.tpl, templates/hmarket.tpl, 
 	languages/pl/rmarket.php, languages/pl/hmarket.php, languages/pl/amarket.php, rmarket.php, hmarket.php, amarket.php:
 	added more options for sellers
