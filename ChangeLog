@@ -1,6 +1,8 @@
 2011-08-17  Bartek thindil Jasicki  <thindil@tuxfamily.org>
 
-	* templates/layout1/pmarket.tpl, templates/layout1/mmarket.tpl, templates/layout1/imarket.tpl, templates/pmarket.tpl,
+	* BUG,templates/layout1/equip.tpl, templates/equip.tpl, equip.php: 
+	fixed link to sell arrows
+	* FEATURE,templates/layout1/pmarket.tpl, templates/layout1/mmarket.tpl, templates/layout1/imarket.tpl, templates/pmarket.tpl,
 	templates/mmarket.tpl, templates/imarket.tpl, languages/pl/pmarket.php, languages/pl/mmarket.php, languages/pl/imarket.php,
 	pmarket.php, imarket.php, mmarket.php:
 	added more options for sellers

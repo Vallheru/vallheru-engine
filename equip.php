@@ -567,7 +567,7 @@ if ($mik -> fields['id'])
                               "Paction1" => $arraction, 
                               "Ppower1" => $arrpower, 
                               "Potions1" => $i,
-			      "Sellall" => $strSellAll,
+			      "Sellallp" => $strSellAll,
                               "Potions2" => POTIONS,
                               "Amount" => AMOUNT));
 }
