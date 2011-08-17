@@ -8,7 +8,7 @@
  *   @author               : thindil <thindil@tuxfamily.org>
  *   @author               : eyescream <tduda@users.sourceforge.net>
  *   @version              : 1.4
- *   @since                : 06.08.2011
+ *   @since                : 17.08.2011
  *
  */
 
@@ -212,7 +212,9 @@ if (isset ($_GET['view']) && $_GET['view'] == 'market')
             $seller -> Close();
             if ($player -> id == $pm -> fields['seller']) 
             {
-                $arraction[$i] = "<td>- <a href=\"amarket.php?wyc=".$pm -> fields['id']."\">".A_DELETE."</a>";
+	      $arraction[$i] = "<td><a href=\"market.php?view=myoferts&amp;type=amarket&amp;delete=".$pm->fields['id']."\">".A_DELETE."</a><br />
+            <a href=\"market.php?view=myoferts&amp;type=amarket&amp;change=".$pm->fields['id']."\">".A_CHANGE."</a><br />
+            <a href=\"market.php?view=myoferts&amp;type=rmarket&amp;add=".$pm->fields['id']."\">".A_ADD."</a>";
             } 
                 else 
             {
@@ -276,10 +278,13 @@ if (isset ($_GET['view']) && $_GET['view'] == 'add')
                             "Addofert" => 0));
     if (isset ($_GET['step']) && ($_GET['step'] == 'piece' || $_GET['step'] == 'component')) 
     {
-        if (!ereg("^[1-9][0-9]*$", $_POST['amount']) || !ereg("^[0-9]*$", $_POST['name']) || !ereg("^[1-9][0-9]*$", $_POST['number']) || !ereg("^[1-9][0-9]*$", $_POST['cost']))
+        if (!ereg("^[0-9]*$", $_POST['name']))
         {
             error(ERROR);
         }
+	checkvalue($_POST['amount']);
+	checkvalue($_POST['number']);
+	checkvalue($_POST['cost']);
         if ($_GET['step'] == 'piece')
         {
             if ($_POST['name'] < 7)
@@ -350,10 +355,7 @@ if (isset ($_GET['view']) && $_GET['view'] == 'add')
                                     "Step" => $_GET['step']));
             if (isset($_POST['ofert']))
             {
-                if (!ereg("^[1-9][0-9]*$", $_POST['ofert'])) 
-                {
-                    error(ERROR);
-                }
+		checkvalue($_POST['ofert']);
                 require_once('includes/marketaddto.php');
                 addtoastral($objTest -> fields['id'], $objAmount -> fields['amount'], $player -> id, $strPiecename, $intNumber);
                 $smarty -> assign("Message", YOU_ADD." <a href=\"amarket.php?view=add\">".A_REFRESH."</a>");
@@ -379,10 +381,7 @@ if (isset ($_GET['view']) && $_GET['view'] == 'del')
 */
 if (isset($_GET['buy'])) 
 {
-    if (!ereg("^[1-9][0-9]*$", $_GET['buy'])) 
-    {
-        error (ERROR);
-    }
+    checkvalue($_GET['buy']);
     $buy = $db -> Execute("SELECT * FROM `amarket` WHERE `id`=".$_GET['buy']) ;
     if (!$buy -> fields['id']) 
     {
@@ -447,10 +446,7 @@ if (isset($_GET['buy']))
     $buy -> Close();
     if (isset($_GET['step']) && $_GET['step'] == 'buy') 
     {
-        if (!ereg("^[1-9][0-9]*$", $_POST['amount'])) 
-        {
-            error (ERROR);
-        }
+	checkvalue($_POST['amount']);
         $buy = $db -> Execute("SELECT * FROM `amarket` WHERE `id`=".$_GET['buy']);
         $price = $_POST['amount'] * $buy -> fields['cost'];
         if ($price > $player -> credits) 
@@ -492,10 +488,7 @@ if (isset($_GET['buy']))
  */
 if (isset($_GET['wyc'])) 
 {
-    if (!ereg("^[1-9][0-9]*$", $_GET['wyc'])) 
-    {
-        error (ERROR);
-    }
+    checkvalue($_GET['wyc']);
     $dwyc = $db -> Execute("SELECT * FROM `amarket` WHERE `id`=".$_GET['wyc']);
     if ($dwyc -> fields['seller'] != $player -> id) 
     {
@@ -576,10 +569,7 @@ if (isset($_GET['view']) && $_GET['view'] == 'all')
  */
 if (isset($_GET['steal']))
 {
-    if (!ereg("^[1-9][0-9]*$", $_GET['steal'])) 
-    {
-        error(ERROR);
-    }
+    checkvalue($_GET['steal']);
     $objOwner = $db -> Execute("SELECT `seller` FROM `amarket` WHERE `id`=".$_GET['steal']);
     if ($objOwner -> fields['seller'] == $player -> id || $player -> clas != 'Złodziej' || $player -> location == 'Lochy')
     {

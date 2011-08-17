@@ -100,6 +100,8 @@ if (isset ($_GET['view']) && $_GET['view'] == 'market')
     define("T_SELLER", "Sprzedający");
     define("T_OPTIONS", "Opcje");
     define("A_STEAL", "Kradzież");
+    define("A_ADD", "Dodaj");
+    define("A_CHANGE", "Zmień cenę");
 }
 
 if (isset ($_GET['view']) && $_GET['view'] == 'add') 

@@ -8,7 +8,7 @@
  *   @author               : thindil <thindil@tuxfamily.org>
  *   @author               : eyescream <tduda@users.sourceforge.net>
  *   @version              : 1.4
- *   @since                : 11.08.2011
+ *   @since                : 17.08.2011
  *
  */
 
@@ -129,6 +129,7 @@ if (isset ($_GET['view']) && $_GET['view'] == 'market')
         $arrseller = array();
         $arraction = array();
         $arruser = array();
+	$arrId = array();
         $i = 0;
         while (!$pm -> EOF) 
         {
@@ -139,14 +140,7 @@ if (isset ($_GET['view']) && $_GET['view'] == 'market')
             $seller = $db -> Execute("SELECT user FROM players WHERE id=".$pm -> fields['seller']);
             $arruser[$i] = $seller -> fields['user'];
             $seller -> Close();
-            if ($player -> id == $pm -> fields['seller']) 
-            {
-                $arraction[$i] = "<td>- <a href=hmarket.php?wyc=".$pm -> fields['id'].">".A_DELETE."</a></td></tr>";
-            } 
-                else 
-            {
-                $arraction[$i] = "<td>- <a href=hmarket.php?buy=".$pm -> fields['id'].">".A_BUY."</a></td></tr>";
-            }
+            $arrId[$i] = $pm->fields['id'];
             $pm -> MoveNext();
             $i = $i + 1;
         }
@@ -162,6 +156,12 @@ if (isset ($_GET['view']) && $_GET['view'] == 'market')
                                 "Tcost" => T_COST,
                                 "Tseller" => T_SELLER,
                                 "Toptions" => T_OPTIONS,
+				"Iid" => $arrId,
+				"Pid" => $player->id,
+				"Abuy" => A_BUY,
+				"Aadd" => A_ADD,
+				"Adelete" => A_DELETE,
+				"Achange" => A_CHANGE,
                                 "Viewinfo" => VIEW_INFO));
         if (!isset($_POST['szukany']))
         {
@@ -199,10 +199,12 @@ if (isset ($_GET['view']) && $_GET['view'] == 'add')
                             "Addofert" => 0));
     if (isset ($_GET['step']) && $_GET['step'] == 'add') 
     {
-        if (!isset($_POST['ilosc']) || !isset($_POST['cost']) || !ereg("^[1-9][0-9]*$", $_POST['ilosc']) || !ereg("^[1-9][0-9]*$", $_POST['cost'])) 
+        if (!isset($_POST['ilosc']) || !isset($_POST['cost'])) 
         {
             error (ERROR);
         }
+	checkvalue($_POST['ilosc']);
+	checkvalue($_POST['cost']);
         if (!in_array($_POST['mineral'], $arrSqlname))
         {
             error(ERROR);
@@ -229,10 +231,7 @@ if (isset ($_GET['view']) && $_GET['view'] == 'add')
                                     "Herbcost" => $_POST['cost']));
             if (isset($_POST['ofert']))
             {
-                if (!ereg("^[1-9][0-9]*$", $_POST['ofert'])) 
-                {
-                    error(ERROR);
-                }
+		checkvalue($_POST['ofert']);
                 require_once('includes/marketaddto.php');
                 addtoherb($_POST['ofert'], $_POST['mineral'], $player -> id, $_POST['ilosc']);
                 $smarty -> assign("Message", YOU_ADD.$_POST['ilosc']."</b> ".$arrName[$intKey].ON_MARKET2." <a href=\"hmarket.php?view=add\">".A_REFRESH."</a>");
@@ -257,10 +256,7 @@ if (isset ($_GET['view']) && $_GET['view'] == 'del')
 */
 if (isset($_GET['buy'])) 
 {
-    if (!ereg("^[1-9][0-9]*$", $_GET['buy'])) 
-    {
-        error (ERROR);
-    }
+    checkvalue($_GET['buy']);
     $buy = $db -> Execute("SELECT * FROM hmarket WHERE id=".$_GET['buy']) ;
     if (!$buy -> fields['id']) 
     {
@@ -287,10 +283,7 @@ if (isset($_GET['buy']))
     $buy -> Close();
     if (isset($_GET['step']) && $_GET['step'] == 'buy') 
     {
-        if (!ereg("^[1-9][0-9]*$", $_POST['amount'])) 
-        {
-            error (ERROR);
-        }
+	checkvalue($_POST['amount']);
         $buy = $db -> Execute("SELECT * FROM hmarket WHERE id=".$_GET['buy']);
         $price = $_POST['amount'] * $buy -> fields['cost'];
         if ($price > $player -> credits) 
@@ -329,10 +322,7 @@ if (isset($_GET['buy']))
 
 if (isset($_GET['wyc'])) 
 {
-    if (!ereg("^[1-9][0-9]*$", $_GET['wyc'])) 
-    {
-        error (ERROR);
-    }
+    checkvalue($_GET['wyc']);
     $dwyc = $db -> Execute("SELECT * FROM hmarket WHERE id=".$_GET['wyc']);
     if ($dwyc -> fields['seller'] != $player -> id) 
     {

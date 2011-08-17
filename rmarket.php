@@ -8,7 +8,7 @@
  *   @author               : thindil <thindil@tuxfamily.org>
  *   @author               : eyescream <tduda@users.sourceforge.net>
  *   @version              : 1.4
- *   @since                : 14.08.2011
+ *   @since                : 17.08.2011
  *
  */
 
@@ -140,6 +140,7 @@ if (isset ($_GET['view']) && $_GET['view'] == 'market')
         $arramount = array();
         $arrlevel = array();
         $arrseller = array();
+	$arrId = array();
         $i = 0;
         while (!$pm -> EOF) 
         {
@@ -152,14 +153,7 @@ if (isset ($_GET['view']) && $_GET['view'] == 'market')
             $seller = $db -> Execute("SELECT user FROM players WHERE id=".$pm -> fields['owner']);
             $arrseller[$i] = $seller -> fields['user'];
             $seller -> Close();
-            if ($player -> id == $pm -> fields['owner']) 
-            {
-                $arraction[$i] = "<td><a href=rmarket.php?wyc=".$pm -> fields['id'].">".A_DELETE."</a></td></tr>";
-            } 
-                else 
-            {
-                $arraction[$i] = "<td><a href=rmarket.php?buy=".$pm -> fields['id'].">".A_BUY."</a></td></tr>";
-            }
+            $arrId[$i] = $pm->fields['id'];
             $pm -> MoveNext();
             $i = $i + 1;
         }
@@ -170,7 +164,13 @@ if (isset ($_GET['view']) && $_GET['view'] == 'market')
                                 "Owner" => $arrowner, 
                                 "Action" => $arraction,  
                                 "Amount" => $arramount, 
-                                "Minlev" => $arrlevel, 
+                                "Minlev" => $arrlevel,
+				"Iid" => $arrId,
+				"Pid" => $player->id,
+				"Abuy" => A_BUY,
+				"Aadd" => A_ADD,
+				"Adelete" => A_DELETE,
+				"Achange" => A_CHANGE,
                                 "Seller" => $arrseller));
         if (!isset($_POST['szukany'])) 
         {
