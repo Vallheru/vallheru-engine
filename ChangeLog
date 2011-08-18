@@ -1,5 +1,7 @@
 2011-08-18  Bartek thindil Jasicki  <thindil@tuxfamily.org>
 
+	* FEATURE,farm.php: 
+	added ability to gain herbalism during drying herbs
 	* BUG,newspaper.php: 
 	fixed bug with empty newspaper
 	* BUG,templates/layout1/equip.tpl, templates/equip.tpl: 

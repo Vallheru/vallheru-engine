@@ -4,10 +4,10 @@
  *   Players farms - herbs
  *
  *   @name                 : farm.php                            
- *   @copyright            : (C) 2004,2005,2006 Vallheru Team based on Gamers-Fusion ver 2.5
- *   @author               : thindil <thindil@users.sourceforge.net>
- *   @version              : 1.2
- *   @since                : 23.08.2006
+ *   @copyright            : (C) 2004,2005,2006,2011 Vallheru Team based on Gamers-Fusion ver 2.5
+ *   @author               : thindil <thindil@tuxfamily.org>
+ *   @version              : 1.4
+ *   @since                : 18.08.2011
  *
  */
 
@@ -27,7 +27,7 @@
 //   along with this program; if not, write to the Free Software
 //   Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 //
-// $Id: farm.php 566 2006-09-13 09:31:08Z thindil $
+// $Id$
 
 $title = "Farma";
 require_once("includes/head.php");
@@ -103,10 +103,7 @@ if (isset($_GET['step']) && $_GET['step'] == 'house')
      */
     if (isset($_GET['action']) && $_GET['action'] == 'dry')
     {
-        if (!ereg("^[1-9][0-9]*$", $_POST['amount'])) 
-        {
-            error(ERROR);
-        }
+	checkvalue($_POST['amount']);
         if (!in_array($_POST['herb'], $arrHerbs))
         {
             error(ERROR);
@@ -135,10 +132,19 @@ if (isset($_GET['step']) && $_GET['step'] == 'house')
                 $intAmountseeds++;
             }
         }
+	$fltSkill = $intAmountseeds / 100;
         $arrSeeds = array('ilani_seeds', 'illanias_seeds', 'nutari_seeds', 'dynallca_seeds');
         $db -> Execute("UPDATE `herbs` SET `".$arrHerbs[$intKey]."`=`".$arrHerbs[$intKey]."`-".$intAmountherbs.", `".$arrSeeds[$intKey]."`=`".$arrSeeds[$intKey]."`+".$intAmountseeds." WHERE `gracz`=".$player -> id);
-        $db -> Execute("UPDATE `players` SET `energy`=`energy`-".$intAmountenergy." WHERE `id`=".$player -> id);
-        $smarty -> assign("Message", YOU_MAKE.$intAmountherbs.T_HERB.$intAmountseeds.T_PACKS);
+        $db -> Execute("UPDATE `players` SET `energy`=`energy`-".$intAmountenergy.", `herbalist`=`herbalist`+".$fltSkill." WHERE `id`=".$player -> id);
+	if ($player->gender == 'F')
+	  {
+	    $strLast = "aś";
+	  }
+	else
+	  {
+	    $strLast = "eś";
+	  }
+        $smarty -> assign("Message", YOU_MAKE.$intAmountherbs.T_HERB.$intAmountseeds.T_PACKS." Zdobył".$strLast." <b>".$fltSkill."</b> do umiejętności Zielarstwo.");
     }
     $smarty -> assign(array("Houseinfo" => HOUSE_INFO,
                             "Adry" => A_DRY,
@@ -324,10 +330,7 @@ if (isset($_GET['step']) && $_GET['step'] == 'plantation')
             {
                 error(ERROR);
             }
-            if (!ereg("^[1-9][0-9]*$", $_POST['amount'])) 
-            {
-                error(ERROR);
-            }
+ 	    checkvalue($_POST['amount']);
             if ($_POST['amount'] > $intFreelands)
             {
                 error(NO_FREE);
@@ -434,10 +437,7 @@ if (isset($_GET['step']) && $_GET['step'] == 'plantation')
          */
         if (isset($_GET['id']))
         {
-            if (!ereg("^[1-9][0-9]*$", $_GET['id'])) 
-            {
-                error(ERROR);
-            }
+	    checkvalue($_GET['id']);
             $objHerb = $db -> Execute("SELECT `owner`, `amount`, `name`, `age` FROM `farm` WHERE `id`=".$_GET['id']);
             if ($objHerb -> fields['owner'] != $player -> id)
             {
@@ -453,10 +453,7 @@ if (isset($_GET['step']) && $_GET['step'] == 'plantation')
              */
             if (isset($_GET['step2']) && $_GET['step2'] == 'next')
             {
-                if (!ereg("^[1-9][0-9]*$", $_POST['amount'])) 
-                {
-                    error(ERROR);
-                }
+		checkvalue($_POST['amount']);
                 if (!$objHerb -> fields['age'])
                 {
                     error(TOO_YOUNG);
