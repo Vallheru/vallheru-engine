@@ -41,7 +41,7 @@
 
 {if $Bhelmetsamount > 1}
     <form method="POST" action="equip.php?sellchecked=E">
-        {foreach $Bhelments as $helmet}
+        {foreach $Bhelmets as $helmet}
 	    {$helmet}
 	{/foreach}
   	<input type="submit" value="{$Bhelmetssell}" />
