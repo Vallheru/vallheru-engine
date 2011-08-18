@@ -365,6 +365,10 @@ if (isset($_GET['view']) && $_GET['view'] == 'options')
     {
         if (isset($_POST['battlelog']))
 	  {
+	    if (!isset($_POST['battle']))
+	      {
+		$_POST['battle'] = 'Y';
+	      }
 	    $arrOptions = array('A', 'D', 'Y');
 	    if (!in_array($_POST['battle'], $arrOptions))
 	      {

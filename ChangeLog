@@ -1,5 +1,7 @@
 2011-08-18  Bartek thindil Jasicki  <thindil@tuxfamily.org>
 
+	* UPDATE,account.php: 
+	added default value for settings battle logs
 	* UPDATE,chat.php: 
 	added nuts to innkeeper menu
 	* FEATURE,templates/layout1/equip.tpl, templates/equip.tpl, equip.php: 
