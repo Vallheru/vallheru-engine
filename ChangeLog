@@ -1,5 +1,7 @@
 2011-08-18  Bartek thindil Jasicki  <thindil@tuxfamily.org>
 
+	* BUG,includes/battle.php: 
+	fixed bug with sending battle logs
 	* UPDATE,memberlist.php: 
 	allow see list of players from any location
 	* FEATURE,farm.php: 

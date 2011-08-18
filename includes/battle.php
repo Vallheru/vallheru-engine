@@ -739,7 +739,7 @@ function attack1($attacker, $defender, $arrAtequip, $arrDeequip, $attack_bspell,
             $strSubject = T_SUBJECT.$defender['user'].T_SUB_ID.$defender['id'];
             $db -> Execute("INSERT INTO `mail` (`sender`, `senderid`, `owner`, `subject`, `body`, `date`) VALUES('".T_SENDER."','0',".$attacker['id'].",'".$strSubject."','".$strMessage."', ".$strDate.")");
         }
-        if (($defender['battlelog'] == 'Y')  || ($defender['id'] == $starter && $defender['battlelog'] == 'A') || ($defender['id'] != $starter && $defender['battlelog'] == 'D'))
+        if (($defender['battlelog'] == 'Y') || ($defender['id'] == $starter && $defender['battlelog'] == 'A') || ($defender['id'] != $starter && $defender['battlelog'] == 'D'))
         {
              $strSubject = T_SUBJECT.$attacker['user'].T_SUB_ID.$attacker['id'];
             $db -> Execute("INSERT INTO `mail` (`sender`, `senderid`, `owner`, `subject`, `body`, `date`) VALUES('".T_SENDER."','0',".$defender['id'].",'".$strSubject."','".$strMessage."', ".$strDate.")");
@@ -921,12 +921,12 @@ function attack1($attacker, $defender, $arrAtequip, $arrDeequip, $attack_bspell,
         loststat($defender['id'], $defender['strength'], $defender['agility'], $defender['inteli'], $defender['cond'], $defender['speed'], $defender['wisdom'], $attacker['id'], $attacker['user'], $starter);
         $db -> Execute("INSERT INTO `events` (`text`) VALUES('".L_PLAYER." ".$startuser." ".L_ATTACK." ".$secuser.". ".BATTLE_WIN." ".$attacker['user']."')");
         $strDate = $db -> DBDate($newdate);
-        if ($attacker['battlelog'] == 'Y')
+        if (($attacker['battlelog'] == 'Y')  || ($attacker['id'] == $starter && $attacker['battlelog'] == 'A') || ($attacker['id'] != $starter && $attacker['battlelog'] == 'D'))
         {
             $strSubject = T_SUBJECT.$defender['user'].T_SUB_ID.$defender['id'];
             $db -> Execute("INSERT INTO `mail` (`sender`, `senderid`, `owner`, `subject`, `body`, `date`) VALUES('".T_SENDER."','0',".$attacker['id'].",'".$strSubject."','".$strMessage."', ".$strDate.")");
         }
-        if ($defender['battlelog'] == 'Y')
+        if (($defender['battlelog'] == 'Y') || ($defender['id'] == $starter && $defender['battlelog'] == 'A') || ($defender['id'] != $starter && $defender['battlelog'] == 'D'))
         {
             $strSubject = T_SUBJECT.$attacker['user'].T_SUB_ID.$attacker['id'];
             $db -> Execute("INSERT INTO `mail` (`sender`, `senderid`, `owner`, `subject`, `body`, `date`) VALUES('".T_SENDER."','0',".$defender['id'].",'".$strSubject."','".$strMessage."', ".$strDate.")");
