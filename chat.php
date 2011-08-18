@@ -8,7 +8,7 @@
  *   @author               : thindil <thindil@tuxfamily.org>
  *   @author               : eyescream <tduda@users.sourceforge.net>
  *   @version              : 1.4
- *   @since                : 15.08.2011
+ *   @since                : 18.08.2011
  *
  */
 
@@ -226,8 +226,8 @@ if (isset ($_GET['step']) && $_GET['step'] == 'clearc')
 }
 
 if ($player -> rank == 'Admin' || $player -> rank == 'Karczmarka')
-{
-    $arritems = array(BEER, HONEY, WINE, MUSTAK, JUICE, CUCUMBERS, TEA, MEAT, MEAT2, MEAT3, MEAT4, FOOD, FOOD2, FOOD3, EGGS, EGG, EGG2, MILK, ICE, CHICKEN, FLAPJACK, COFFE);
+  {
+    $arritems = array(BEER, HONEY, WINE, MUSTAK, JUICE, CUCUMBERS, TEA, MEAT, MEAT2, MEAT3, MEAT4, FOOD, FOOD2, FOOD3, EGGS, EGG, EGG2, MILK, ICE, CHICKEN, FLAPJACK, COFFE, "orzeszki");
     $smarty -> assign(array("Aban" => A_BAN,
                             "Aunban" => A_UNBAN,
                             "Chatid" => CHAT_ID,
@@ -237,7 +237,7 @@ if ($player -> rank == 'Admin' || $player -> rank == 'Karczmarka')
                             "Aprune" => A_PRUNE,
                             "Ona" => ON_A,
                             "Tdays" => T_DAYS));
-}
+  }
 
 $query = $db -> Execute("SELECT count(`id`) FROM `chat`");
 $numchat = $query -> fields['count(`id`)'];
