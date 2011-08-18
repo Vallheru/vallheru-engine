@@ -102,15 +102,15 @@ function backpack($type,$playerid,$nameitems,$type2,$smartyname)
         }   
         if ($arm -> fields['type'] == 'C') 
         {
-            $arrshow[$j] = "<b>(".AMOUNT.": ".$arm -> fields['amount']." )</b> ".$arm -> fields['name']." (+".$arm -> fields['power']." % ".EQUIP_MANA.") [ <a href=\"equip.php?equip=".$arm -> fields['id']."\">".A_WEAR."</a> | <A href=\"equip.php?sell=".$arm -> fields['id']."\">".A_SELL."</a> ".FOR_A." ".$arm -> fields['cost']." ".GOLD_COINS." ]<br />";
+            $arrshow[$j] = "<input type=\"checkbox\" name=\"".$arm->fields['id']."\" /><b>(".AMOUNT.": ".$arm -> fields['amount']." )</b> ".$arm -> fields['name']." (+".$arm -> fields['power']." % ".EQUIP_MANA.") [ <a href=\"equip.php?equip=".$arm -> fields['id']."\">".A_WEAR."</a> | <A href=\"equip.php?sell=".$arm -> fields['id']."\">".A_SELL."</a> ".FOR_A." ".$arm -> fields['cost']." ".GOLD_COINS." ]<br />";
         } 
             elseif ($arm -> fields['type'] == 'T') 
         {
-            $arrshow[$j] = "<b>(".AMOUNT.": ".$arm -> fields['amount']." )</b> ".$arm -> fields['name']." (".SPELL_POWER.") [ <a href=\"equip.php?equip=".$arm -> fields['id']."\">".A_WEAR."</a> | <A href=\"equip.php?sell=".$arm -> fields['id']."\">".A_SELL."</a> ".FOR_A." ".$arm -> fields['cost']." ".GOLD_COINS." ]<br />";
+            $arrshow[$j] = "<input type=\"checkbox\" name=\"".$arm->fields['id']."\" /><b>(".AMOUNT.": ".$arm -> fields['amount']." )</b> ".$arm -> fields['name']." (".SPELL_POWER.") [ <a href=\"equip.php?equip=".$arm -> fields['id']."\">".A_WEAR."</a> | <A href=\"equip.php?sell=".$arm -> fields['id']."\">".A_SELL."</a> ".FOR_A." ".$arm -> fields['cost']." ".GOLD_COINS." ]<br />";
         } 
             else 
         {
-            $arrshow[$j] = "<b>(".AMOUNT.": ".$arm -> fields['amount']." )</b> ".$arm -> fields['name']." (+".$arm -> fields['power'].") ".$agility."".$speed." (".$arm -> fields['wt']."/".$arm -> fields['maxwt']." ".DURABILITY.") [ <a href=\"equip.php?equip=".$arm -> fields['id']."\">".A_WEAR."</a> | <A href=\"equip.php?sell=".$arm -> fields['id']."\">".A_SELL."</a> ".FOR_A." ".$arm -> fields['cost']." ".GOLD_COINS." | <a href=\"equip.php?napraw=".$arm -> fields['id']."\">".A_REPAIR."</a> ".FOR_A." ".$ckoszt." ".GOLD_COINS." ]<br />";
+            $arrshow[$j] = "<input type=\"checkbox\" name=\"".$arm->fields['id']."\" /><b>(".AMOUNT.": ".$arm -> fields['amount']." )</b> ".$arm -> fields['name']." (+".$arm -> fields['power'].") ".$agility."".$speed." (".$arm -> fields['wt']."/".$arm -> fields['maxwt']." ".DURABILITY.") [ <a href=\"equip.php?equip=".$arm -> fields['id']."\">".A_WEAR."</a> | <A href=\"equip.php?sell=".$arm -> fields['id']."\">".A_SELL."</a> ".FOR_A." ".$arm -> fields['cost']." ".GOLD_COINS." | <a href=\"equip.php?napraw=".$arm -> fields['id']."\">".A_REPAIR."</a> ".FOR_A." ".$ckoszt." ".GOLD_COINS." ]<br />";
         }
         $arm -> MoveNext();
         $j = $j + 1;
@@ -148,15 +148,15 @@ function backpack($type,$playerid,$nameitems,$type2,$smartyname)
             }  
             if ($arm1 -> fields['type'] == 'C') 
             {
-                $arrshow[$j] = "<b>(".AMOUNT.": ".$arm1 -> fields['amount']." )</b> ".$arm1 -> fields['name']." (+".$arm1 -> fields['power']." % ".EQUIP_MANA.") [ <a href=\"equip.php?equip=".$arm1 -> fields['id']."\">".A_WEAR."</a> | <A href=\"equip.php?sell=".$arm1 -> fields['id']."\">".A_SELL."</a> ".FOR_A." ".$arm1 -> fields['cost']." ".GOLD_COINS." ]<br />";
+                $arrshow[$j] = "<input type=\"checkbox\" name=\"".$arm1->fields['id']."\" /><b>(".AMOUNT.": ".$arm1 -> fields['amount']." )</b> ".$arm1 -> fields['name']." (+".$arm1 -> fields['power']." % ".EQUIP_MANA.") [ <a href=\"equip.php?equip=".$arm1 -> fields['id']."\">".A_WEAR."</a> | <A href=\"equip.php?sell=".$arm1 -> fields['id']."\">".A_SELL."</a> ".FOR_A." ".$arm1 -> fields['cost']." ".GOLD_COINS." ]<br />";
             } 
                 elseif ($arm -> fields['type'] == 'T') 
             {
-                $arrshow[$j] = "<b>(".AMOUNT.": ".$arm1 -> fields['amount']." )</b> ".$arm1 -> fields['name']." (".SPELL_POWER.") [ <a href=\"equip.php?equip=".$arm1 -> fields['id']."\">".A_WEAR."</a> | <A href=\"equip.php?sell=".$arm1 -> fields['id']."\">".A_SELL."</a> ".FOR_A." ".$arm1 -> fields['cost']." ".GOLD_COINS." ]<br />";
+                $arrshow[$j] = "<input type=\"checkbox\" name=\"".$arm1->fields['id']."\" /><b>(".AMOUNT.": ".$arm1 -> fields['amount']." )</b> ".$arm1 -> fields['name']." (".SPELL_POWER.") [ <a href=\"equip.php?equip=".$arm1 -> fields['id']."\">".A_WEAR."</a> | <A href=\"equip.php?sell=".$arm1 -> fields['id']."\">".A_SELL."</a> ".FOR_A." ".$arm1 -> fields['cost']." ".GOLD_COINS." ]<br />";
             } 
                 else 
             {
-                $arrshow[$j] = "<b>(".AMOUNT.": ".$arm1 -> fields['amount']." )</b> ".$arm1 -> fields['name']." (+".$arm1 -> fields['power'].") ".$agility."".$speed." (".$arm1 -> fields['wt']."/".$arm1 -> fields['maxwt']." ".DURABILITY.") [ <a href=\"equip.php?equip=".$arm1 -> fields['id']."\">".A_WEAR."</a> | <A href=\"equip.php?sell=".$arm1 -> fields['id']."\">".A_SELL."</a> ".FOR_A." ".$arm1 -> fields['cost']." ".GOLD_COINS." | <a href=\"equip.php?napraw=".$arm1 -> fields['id']."\">".A_REPAIR."</a> ".FOR_A." ".$ckoszt." ".GOLD_COINS." ]<br />";
+                $arrshow[$j] = "<input type=\"checkbox\" name=\"".$arm1->fields['id']."\" /><b>(".AMOUNT.": ".$arm1 -> fields['amount']." )</b> ".$arm1 -> fields['name']." (+".$arm1 -> fields['power'].") ".$agility."".$speed." (".$arm1 -> fields['wt']."/".$arm1 -> fields['maxwt']." ".DURABILITY.") [ <a href=\"equip.php?equip=".$arm1 -> fields['id']."\">".A_WEAR."</a> | <A href=\"equip.php?sell=".$arm1 -> fields['id']."\">".A_SELL."</a> ".FOR_A." ".$arm1 -> fields['cost']." ".GOLD_COINS." | <a href=\"equip.php?napraw=".$arm1 -> fields['id']."\">".A_REPAIR."</a> ".FOR_A." ".$ckoszt." ".GOLD_COINS." ]<br />";
             }
             $arm1 -> MoveNext();
             $j = $j + 1;
@@ -167,7 +167,10 @@ function backpack($type,$playerid,$nameitems,$type2,$smartyname)
     {
         $arrshow[$j] = "(<a href=\"equip.php?sprzedaj=".$type."\">".A_SELL_ALL." ".$nameitems."</a>)<br />\n";
     }
-    $smarty -> assign ($smartyname, $arrshow);
+    $smarty -> assign(array($smartyname => $arrshow,
+			    $smartyname."sell" => "Sprzedaj wybrane ".$nameitems,
+			    $smartyname."type" => $type,
+			    $smartyname."amount" => $j));
     $arm -> Close();
     if ($secarm) 
     {
@@ -475,7 +478,8 @@ $smarty -> assign(array("Barrows" => $arrname,
                         "Barrid" => $arrid, 
                         "Barrcost" => $arrcost,
                         "Potions1" => '',
-                        "Rings1" => ''));
+                        "Rings1" => '',
+			"Barrowssell" => "Sprzedaj wybrane strzały"));
 
 backpack('H',$player -> id,HELMETS,'','Bhelmets');
 backpack('A',$player -> id,ARMORS,'','Barmors');
@@ -519,7 +523,8 @@ $smarty -> assign(array("Brings" => $arrName,
                         "Bringpower" => $arrPower, 
                         "Bringid" => $arrId, 
                         "Bringcost" => $arrCost,
-                        "Bringamount" => $arrAmount));
+                        "Bringamount" => $arrAmount,
+			"Ringssell" => "Sprzedaj wybrane pierścienie"));
 
 $mik = $db -> Execute("SELECT * FROM potions WHERE owner=".$player -> id." AND status='K'");
 if ($mik -> fields['id']) 
@@ -529,6 +534,7 @@ if ($mik -> fields['id'])
     $arreffect = array();
     $arrpower = array();
     $arraction = array();
+    $arrid = array();
     $i = 0;
     while (!$mik -> EOF) 
     {
@@ -549,6 +555,7 @@ if ($mik -> fields['id'])
             $arrpower[$i] = '';
         }
 	$arraction[$i] .= " <a href=\"equip.php?sellpotion=".$mik->fields['id']."\">".A_SELL."</a> ".FOR_A." ".$mik->fields['cost']." ".GOLD_COINS." ]";
+	$arrid[$i] = $mik->fields['id'];
         $mik -> MoveNext();
         $i = $i + 1;
     }
@@ -568,6 +575,7 @@ if ($mik -> fields['id'])
                               "Ppower1" => $arrpower, 
                               "Potions1" => $i,
 			      "Sellallp" => $strSellAll,
+			      "Potionssell" => "Sprzedaj wybrane mikstury",
                               "Potions2" => POTIONS,
                               "Amount" => AMOUNT));
 }
@@ -616,6 +624,9 @@ if (isset($_GET['sell']))
     $sell -> Close();
 }
 
+/**
+ * Sell one potion
+ */
 if (isset($_GET['sellpotion']))
   {
     checkvalue($_GET['sellpotion']);
@@ -677,6 +688,71 @@ if (isset($_GET['sellpotions']))
 	$strLast = "eś";
       }
     $smarty -> assign ("Action", "<br />Sprzedał".$strLast." swoje mikstury ".FOR_A." ".$zysk." ".GOLD_COINS.".<br />\n(<a href=\"equip.php\">".REFRESH."</a>)<br />\n");
+  }
+
+/**
+ * Sell selected items
+ */
+if (isset($_GET['sellchecked']))
+  {
+    $arrTypes = array('E', 'A', 'P');
+    if (!in_array($_GET['sellchecked'], $arrTypes))
+      {
+	error(ERROR);
+      }
+    $intMoney = 0;
+    //Sell items
+    if (($_GET['sellchecked'] == 'E') || ($_GET['sellchecked'] == 'A'))
+      {
+	$objItems = $db->Execute("SELECT `id`, `type`, `cost`, `wt`, `maxwt`, `amount` FROM `equipment` WHERE `owner`=".$player->id." AND `status`='U'");
+	while (!$objItems->EOF)
+	  {
+	    if (isset($_POST[$objItems->fields['id']]))
+	      {
+		if ($objItems->fields['type'] == 'R')
+		  {
+		    $costone = ($objItems->fields['cost'] / 100);
+		    $objItems->fields['cost'] = ceil($costone * $objItems->fields['wt']);
+		    $intMoney += $objItems->fields['cost'];
+		    $db -> Execute("DELETE FROM `equipment` WHERE `id`=".$objItems->fields['id']);
+		  }
+		elseif ($objItems->fields['maxwt'] == $objItems->fields['wt']) 
+		  {
+		    $intMoney += ($objItems->fields['cost'] * $objItems->fields['amount']);
+		    $db -> Execute("DELETE FROM `equipment` WHERE `id`=".$objItems->fields['id']);
+		  }
+	      }
+	    $objItems->MoveNext();
+	  }
+	$objItems->Close();
+      }
+    //Sell potions
+    elseif ($_GET['sellchecked'] == 'P')
+      {
+	$objPotion = $db->Execute("SELECT `id`, `cost`, `amount` FROM `potions` WHERE `owner`=".$player -> id." AND `status`='K'");
+	while (!$objPotion->EOF)
+	  {
+	    if (isset($_POST[$objPotion->fields['id']]))
+	      {
+		$intMoney += ($objPotion->fields['cost'] * $objPotion->fields['amount']);
+		$db->Execute("DELETE FROM `potions` WHERE `id`=".$objPotion->fields['id']);
+	      }
+	    $objPotion->MoveNext();
+	  }
+      }
+    if ($intMoney > 0)
+      {
+	$db -> Execute("UPDATE `players` SET `credits`=`credits`+".$intMoney." WHERE `id`=".$player -> id);
+	if ($player->gender == 'F')
+	  {
+	    $strLast = "aś";
+	  }
+	else
+	  {
+	    $strLast = "eś";
+	  }
+	$smarty -> assign ("Action", "<br />Sprzedał".$strLast." wybrane przedmioty ".FOR_A." ".$intMoney." ".GOLD_COINS.".<br />\n(<a href=\"equip.php\">".REFRESH."</a>)<br />\n");
+      }
   }
 
 /**
