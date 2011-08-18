@@ -1,5 +1,7 @@
 2011-08-18  Bartek thindil Jasicki  <thindil@tuxfamily.org>
 
+	* BUG,newspaper.php: 
+	fixed bug with empty newspaper
 	* BUG,templates/layout1/equip.tpl, templates/equip.tpl: 
 	fixed typo
 	* UPDATE,account.php: 

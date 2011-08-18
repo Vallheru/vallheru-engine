@@ -7,7 +7,7 @@
  *   @copyright            : (C) 2004,2005,2006,2011 Vallheru Team based on Gamers-Fusion ver 2.5
  *   @author               : thindil <thindil@tuxfamily.org>
  *   @version              : 1.4
- *   @since                : 17.08.2011
+ *   @since                : 18.08.2011
  *
  */
 
@@ -123,20 +123,23 @@ if ((isset($_GET['step']) && $_GET['step'] == 'new') || (isset($_GET['read']) ||
                 $arrTitle[$j][0] = '';
                 $arrAuthor[$j][0] = '';
             }
-                elseif (!$blnPage)
+	    elseif (!$blnPage)
             {
                 $intPage = $objArticles -> fields['id'];
                 $blnPage = true;
             }
-            while (!$objArticles -> EOF)
-            {
-                $arrId[$j][$i] = $objArticles -> fields['id'];
-                $arrTitle[$j][$i] = $objArticles -> fields['title'];
-                $arrAuthor[$j][$i] = $objArticles -> fields['author'];
-                $i ++;
-                $objArticles -> MoveNext();
-            }
-            $objArticles -> Close();
+	    if (!empty($objArticles->fields['id']))
+	      {
+		while (!$objArticles -> EOF)
+		  {
+		    $arrId[$j][$i] = $objArticles -> fields['id'];
+		    $arrTitle[$j][$i] = $objArticles -> fields['title'];
+		    $arrAuthor[$j][$i] = $objArticles -> fields['author'];
+		    $i ++;
+		    $objArticles -> MoveNext();
+		  }
+		$objArticles -> Close();
+	      }
             $j ++;
         }
         $strNext = "<input type=\"submit\" name=\"next\" value=\"".A_NEXT."\" />";
@@ -274,7 +277,7 @@ if (isset($_GET['step']) && $_GET['step'] == 'redaction')
     */
     if (isset($_GET['step3']) && ($_GET['step3'] == 'edit' || $_GET['step3'] == 'R'))
     {
-        if (isset($_GET['edit']) && !ereg("^[1-9][0-9]*$", $_GET['edit']))
+        if (isset($_GET['edit']))
 	  {
 	    checkvalue($_GET['edit']);
 	  }
