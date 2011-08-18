@@ -83,6 +83,9 @@
     {$Toptions}<br /><br />
     <form method="post" action="account.php?view=options&amp;step=options">
         <input type="checkbox" name="battlelog" {$Checked} /> {$Tbattlelog}<br />
+	<input type="radio" name="battle" value="A" {$Checked4} /> {$Tonlyattack}<br />
+	<input type="radio" name="battle" value="D" {$Checked5} /> {$Tonlyattacked}<br />
+	<input type="radio" name="battle" value="Y" {$Checked3} /> {$Talways}<br />
         <input type="checkbox" name="graphbar" {$Checked2} /> {$Tgraphbar}<br /><br />
         <input type="submit" value="{$Anext}" />
     </form>

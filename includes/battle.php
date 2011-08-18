@@ -8,7 +8,7 @@
  *   @author               : thindil <thindil@tuxfamily.org>
  *   @author               : eyescream <tduda@users.sourceforge.net>
  *   @version              : 1.4
- *   @since                : 11.08.2011
+ *   @since                : 18.08.2011
  *
  */
 
@@ -734,12 +734,12 @@ function attack1($attacker, $defender, $arrAtequip, $arrDeequip, $attack_bspell,
         /**
          * Send battle logs
          */
-        if ($attacker['battlelog'] == 'Y')
+        if (($attacker['battlelog'] == 'Y') || ($attacker['id'] == $starter && $attacker['battlelog'] == 'A') || ($attacker['id'] != $starter && $attacker['battlelog'] == 'D'))
         {
             $strSubject = T_SUBJECT.$defender['user'].T_SUB_ID.$defender['id'];
             $db -> Execute("INSERT INTO `mail` (`sender`, `senderid`, `owner`, `subject`, `body`, `date`) VALUES('".T_SENDER."','0',".$attacker['id'].",'".$strSubject."','".$strMessage."', ".$strDate.")");
         }
-        if ($defender['battlelog'] == 'Y')
+        if (($defender['battlelog'] == 'Y')  || ($defender['id'] == $starter && $defender['battlelog'] == 'A') || ($defender['id'] != $starter && $defender['battlelog'] == 'D'))
         {
              $strSubject = T_SUBJECT.$attacker['user'].T_SUB_ID.$attacker['id'];
             $db -> Execute("INSERT INTO `mail` (`sender`, `senderid`, `owner`, `subject`, `body`, `date`) VALUES('".T_SENDER."','0',".$defender['id'].",'".$strSubject."','".$strMessage."', ".$strDate.")");

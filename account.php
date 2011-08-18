@@ -7,7 +7,7 @@
  *   @copyright            : (C) 2004,2005,2006,2007,2011 Vallheru Team based on Gamers-Fusion ver 2.5
  *   @author               : thindil <thindil@tuxfamily.org>
  *   @version              : 1.4
- *   @since                : 11.08.2011
+ *   @since                : 18.08.2011
  *
  */
 
@@ -68,10 +68,7 @@ if (isset($_GET['view']) && $_GET['view'] == 'links')
     }
         else
     {
-       if (!ereg("^[0-9]*$", $_GET['lid']))
-       {
-           error(ERROR);
-       }
+       $_GET['lid'] = intvalue($_GET['lid']);
        if ($_GET['lid'] == 0)
        {
            $strFormaction = A_ADD;
@@ -222,7 +219,7 @@ if (isset($_GET['view']) && $_GET['view'] == 'bugreport')
         {
             $strField = strip_tags($strField);
             $strField = bbcodetohtml($strField);
-            if (!ereg("[[:graph:]]", $strField))
+	    if (preg_match("/\S+/", $strField) == 0)
             {
                 error(EMPTY_FIELDS);
             }
@@ -320,17 +317,33 @@ if (isset($_GET['view']) && $_GET['view'] == 'changes')
 */
 if (isset($_GET['view']) && $_GET['view'] == 'options')
 {
-    if ($player -> battlelog == 'Y')
+    if ($player->battlelog == 'Y')
     {
-        $strChecked = 'checked';
+        $strChecked = 'checked="checked"';
+	$strChecked3 = 'checked="checked"';
+	$strChecked4 = '';
+	$strChecked5 = '';
     }
-        else
+    else
     {
         $strChecked = '';
+	$strChecked3 = '';
+	$strChecked4 = '';
+	$strChecked5 = '';
+	if ($player->battlelog == 'A')
+	  {
+	    $strChecked4 = 'checked="checked"';
+	    $strChecked = 'checked="checked"';
+	  }
+	elseif ($player->battlelog == 'D')
+	  {
+	    $strChecked5 = 'checked="checked"';
+	    $strChecked = 'checked="checked"';
+	  }
     }
     if ($player -> graphbar == 'Y')
     {
-        $strChecked2 = 'checked';
+        $strChecked2 = 'checked="checked"';
     }
         else
     {
@@ -340,18 +353,29 @@ if (isset($_GET['view']) && $_GET['view'] == 'options')
                             "Tbattlelog" => T_BATTLELOG,
                             "Tgraphbar" => T_GRAPHBAR,
                             "Anext" => A_NEXT,
+			    "Tonlyattack" => "Kiedy Ty atakowałeś(aś)",
+			    "Tonlyattacked" => "Kiedy zostałeś(aś) zaatakowany(a)",
+			    "Talways" => "Zawsze (po ataku i zaatakowaniu)",
                             "Checked" => $strChecked,
+			    "Checked3" => $strChecked3,
+			    "Checked4" => $strChecked4,
+			    "Checked5" => $strChecked5,
                             "Checked2" => $strChecked2));
     if (isset($_GET['step']) && $_GET['step'] == 'options')
     {
         if (isset($_POST['battlelog']))
-        {
-            $db -> Execute("UPDATE `players` SET `battlelog`='Y' WHERE `id`=".$player -> id);
-        }
-            else
-        {
+	  {
+	    $arrOptions = array('A', 'D', 'Y');
+	    if (!in_array($_POST['battle'], $arrOptions))
+	      {
+		error(ERROR);
+	      }
+            $db -> Execute("UPDATE `players` SET `battlelog`='".$_POST['battle']."' WHERE `id`=".$player -> id);
+	  }
+	else
+	  {
             $db -> Execute("UPDATE `players` SET `battlelog`='N' WHERE `id`=".$player -> id);
-        }
+	  }
         if (isset($_POST['graphbar']))
         {
             $db -> Execute("UPDATE `players` SET `graphbar`='Y' WHERE `id`=".$player -> id);
@@ -374,10 +398,7 @@ if (isset($_GET['view']) && $_GET['view'] == 'freeze')
                             "Afreeze2" => A_FREEZE2));
     if (isset($_GET['step']) && $_GET['step'] == 'freeze')
     {
-        if (!ereg("^[1-9][0-9]*$", $_POST['amount']))
-        {
-            error(ERROR);
-        }
+	checkvalue($_POST['amount']);
         if ($_POST['amount'] > 21)
         {
             error(TOO_MUCH);
@@ -532,10 +553,10 @@ if (isset($_GET['view']) && $_GET['view'] == "name")
             error (EMPTY_NAME);
         } 
         $_POST['name'] = str_replace("'","",strip_tags($_POST['name']));
-        if ($_POST['name'] == 'Admin' || $_POST['name'] == 'Staff' || empty($_POST['name']) || !ereg("[[:graph:]]", $_POST['name'])) 
+        if ($_POST['name'] == 'Admin' || $_POST['name'] == 'Staff' || empty($_POST['name']) || (preg_match("/\S+/", $_POST['name']) == 0)) 
         {
             error (ERROR);
-        } 
+        } 	
         $query = $db -> Execute("SELECT count(*) FROM `players` WHERE `user`='".$_POST['name']."'");
         $dupe = $query -> fields['count(*)'];
         $query -> Close();
@@ -623,10 +644,7 @@ if (isset($_GET['view']) && $_GET['view'] == 'eci')
         $intKey = array_search($_POST['communicator'], $arrComlink);
         if ($intKey === 0)
         {
-            if (!ereg("^[1-9][0-9]*$", $_POST['gg']))
-            {
-                error(ERROR);
-            }
+	    checkvalue($_POST['gg']);
         }
         if ($intKey < 3)
         {
@@ -710,13 +728,14 @@ if (isset($_GET['view']) && $_GET['view'] == 'style')
     $arrname = array();
     $i = 0;
     while ($file = readdir($dir)) 
-    {
-        if (ereg(".css*$", $file)) 
+      {
+	$strExt = pathinfo($file, PATHINFO_EXTENSION);
+	if ($strExt == "css")
         {
             $arrname[$i] = $file;
             $i = $i + 1;
         }
-    }
+      }
     closedir($dir);    
     /**
     * Check avaible layouts
@@ -726,14 +745,11 @@ if (isset($_GET['view']) && $_GET['view'] == 'style')
     $arrname1 = array();
     $i = 0;
     while ($file = readdir($dir))
-    {
-        if (!ereg(".htm*$", $file) && !ereg(".tpl*$", $file))
+      {
+        if (strrchr($file, '.') === FALSE)
         {
-            if (!ereg("\.$", $file))
-            {
-                $arrname1[$i] = $file;
-                $i = $i + 1;
-            }
+	  $arrname1[$i] = $file;
+	  $i = $i + 1;
         }
     }
     closedir($dir);
