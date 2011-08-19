@@ -4,10 +4,10 @@
  *   Travel to other locations and magic portal
  *
  *   @name                 : travel.php                            
- *   @copyright            : (C) 2004,2005,2006 Vallheru Team based on Gamers-Fusion ver 2.5
- *   @author               : thindil <thindil@users.sourceforge.net>
- *   @version              : 1.2
- *   @since                : 10.07.2006
+ *   @copyright            : (C) 2004,2005,2006,2011 Vallheru Team based on Gamers-Fusion ver 2.5
+ *   @author               : thindil <thindil@tuxfamily.org>
+ *   @version              : 1.4
+ *   @since                : 19.08.2011
  *
  */
  
@@ -27,7 +27,7 @@
 //   along with this program; if not, write to the Free Software
 //   Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 //
-// $Id: travel.php 451 2006-07-10 09:33:08Z thindil $
+// $Id$
 
 $title="Stajnie";
 require_once("includes/head.php");
@@ -128,7 +128,7 @@ $objItem = $db -> Execute("SELECT value FROM settings WHERE setting='item'");
 
 if (!isset ($_GET['akcja']) && $player -> location == 'Altara' && !isset($_GET['action'])) 
 {
-    if ($player -> maps >= 20  &&  !$objItem -> fields['value'] && $player -> rank != 'Bohater') 
+    if ($player->maps >= 20  &&  !$objItem->fields['value'] && $player->rank != 'Bohater' && $player->immunited == 'N') 
     {
         $smarty -> assign(array("Maps" => 1,
                                 "Portal1" => PORTAL1,
@@ -190,14 +190,14 @@ if (isset($_GET['action']))
                             "Aback" => A_BACK));
 }
 
-if (isset ($_GET['akcja']) && $_GET['akcja'] == 'tak' && $player -> location == 'Altara' && !$objItem -> fields['value'] && $player -> maps >= 20 && $player -> rank != 'Bohater') 
+if (isset ($_GET['akcja']) && $_GET['akcja'] == 'tak' && $player->location == 'Altara' && !$objItem->fields['value'] && $player->maps >= 20 && $player->rank != 'Bohater' && $player->immunited == 'N') 
 {
     $db -> Execute("UPDATE players SET miejsce='Portal' WHERE id=".$player -> id);
     $smarty -> assign(array("Portal" => "Y",
                             "Portal2" => PORTAL2));
 }
 
-if (isset ($_GET['akcja']) && $_GET['akcja'] == 'nie' && $player -> location == 'Altara' && !$objItem -> fields['value']  && $player -> maps >= 20 && $player -> rank != 'Bohater') 
+if (isset ($_GET['akcja']) && $_GET['akcja'] == 'nie' && $player->location == 'Altara' && !$objItem->fields['value']  && $player->maps >= 20 && $player->rank != 'Bohater' && $player->immunited == 'N') 
 {
     $smarty -> assign(array("Portal" => "N",
                             "Portal3" => PORTAL3));
