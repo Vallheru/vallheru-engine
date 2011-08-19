@@ -72,7 +72,6 @@ if (!isset($_GET['view']) && !isset($_GET['buy']) && !isset($_GET['wyc']))
 if (isset ($_GET['view']) && $_GET['view'] == 'szukaj') 
 {
     $smarty -> assign(array("Sinfo" => S_INFO,
-                            "Sinfo2" => S_INFO2,
                             "Herb" => HERB,
                             "Asearch" => A_SEARCH));
 }
