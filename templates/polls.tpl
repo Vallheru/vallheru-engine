@@ -12,6 +12,11 @@
                 <tr>
                     <td colspan="2"><b>{$Question}</b></td>
                 </tr>
+		{if $Desc != ""}
+		    <tr>
+		        <td>{$Tdesc}:</td><td>{$Desc}</td>
+		    </tr>
+		{/if}
                 {if $Voting == "Y"}
                     <form method="post" action="polls.php?action=vote&amp;poll={$Pollid}">
                         {section name=poll loop=$Answers}

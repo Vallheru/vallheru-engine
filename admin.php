@@ -8,7 +8,7 @@
  *   @author               : thindil <thindil@tuxfamily.org>
  *   @author               : eyescream <tduda@users.sourceforge.net>
  *   @version              : 1.4
- *   @since                : 07.08.2011
+ *   @since                : 19.08.2011
  *
  */
  
@@ -623,27 +623,14 @@ if (isset($_GET['view']) && $_GET['view'] == 'poll')
 {
     if (!isset($_GET['step']))
     {
-        $path = 'languages/';
-        $dir = opendir($path);
-        $arrLanguage = array();
-        $i = 0;
-        while ($file = readdir($dir))
-        {
-            if (!ereg(".htm*$", $file))
-            {
-                if (!ereg("\.$", $file))
-                {
-                    $arrLanguage[$i] = $file;
-                    $i = $i + 1;
-                }
-            }
-        }
-        closedir($dir);
+	$arrLanguage = scandir('languages/', 1);
+	$arrLanguage = array_diff($arrLanguage, array(".", "..", "index.htm"));
         $smarty -> assign(array("Tamount" => T_AMOUNT,
-            "Anext" => A_NEXT,
-            "Tlang" => T_LANG,
-            "Llang" => $arrLanguage,
-            "Tdays" => T_DAYS));
+				"Anext" => A_NEXT,
+				"Tlang" => T_LANG,
+				"Llang" => $arrLanguage,
+				"Tdays" => T_DAYS,
+				"Tdesc" => "Opcjonalny opis"));
     }
     $smarty -> assign("Tquestion", T_QUESTION);
     /**
@@ -655,10 +642,12 @@ if (isset($_GET['view']) && $_GET['view'] == 'poll')
         {
             error(EMPTY_FIELDS);
         }
-        if (!ereg("^[1-9][0-9]*$", $_POST['amount']) || !ereg("^[1-9][0-9]*$", $_POST['days']))
-        {
-            error(ERROR);
-        }
+	if (!isset($_POST['desc']))
+	  {
+	    $_POST['desc'] = '';
+	  }
+	checkvalue($_POST['amount']);
+	checkvalue($_POST['days']);
         $arrAnswers = array();
         for ($i = 0; $i < $_POST['amount']; $i++)
         {
@@ -682,15 +671,16 @@ if (isset($_GET['view']) && $_GET['view'] == 'poll')
         $db -> Execute("UPDATE polls SET members=".$intMembers." WHERE id=".$objPollid -> fields['id']." AND votes=-1");
         $objPollid -> Close();
         $strQuestion = $db -> qstr($_POST['question'], get_magic_quotes_gpc());
-        $db -> Execute("INSERT INTO polls (id, poll, votes, lang, days) VALUES(".$intId.", ".$strQuestion.", -1, '".$_POST['lang']."', ".$_POST['days'].")") or $db -> ErrorMsg();
+	$strDesc = $db->qstr($_POST['desc'], get_magic_quotes_gpc());
+        $db -> Execute("INSERT INTO `polls` (`id`, `poll`, `votes`, `lang`, `days`, `desc`) VALUES(".$intId.", ".$strQuestion.", -1, '".$_POST['lang']."', ".$_POST['days'].", ".$strDesc.")") or $db -> ErrorMsg();
         $smarty -> assign(array("Answers" => $arrAnswers,
-            "Question" => $_POST['question'],
-            "Amount" => $_POST['amount'],
-            "Aadd" => A_ADD,
-            "Tanswer" => T_ANSWER,
-            "Llang" => $_POST['lang'],
-            "Pollid" => $intId,
-            "Adays" => $_POST['days']));
+				"Question" => $_POST['question'],
+				"Amount" => $_POST['amount'],
+				"Aadd" => A_ADD,
+				"Tanswer" => T_ANSWER,
+				"Llang" => $_POST['lang'],
+				"Pollid" => $intId,
+				"Adays" => $_POST['days']));
     }
     /**
     * Add poll

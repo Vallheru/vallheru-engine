@@ -272,6 +272,7 @@
     {if $Step == ""}
         <form method="post" action="admin.php?view=poll&amp;step=second">
             {$Tquestion}: <input type="text" name="question" /><br />
+	    {$Tdesc}: <textarea name="desc"></textarea><br />
             {$Tlang}: <select name="lang">
             {section name=poll2 loop=$Llang}
                 <option value="{$Llang[poll2]}">{$Llang[poll2]}</option>

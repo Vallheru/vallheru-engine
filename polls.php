@@ -7,7 +7,7 @@
  *   @copyright            : (C) 2004,2005,2006,2011 Vallheru Team based on Gamers-Fusion ver 2.5
  *   @author               : thindil <thindil@tuxfamily.org>
  *   @version              : 1.4
- *   @since                : 17.08.2011
+ *   @since                : 19.08.2011
  *
  */
 
@@ -58,7 +58,7 @@ if (!isset($_GET['action']))
     }
         else
     {
-        $objPoll = $db -> Execute("SELECT `poll`, `votes`, `days`, `members` FROM `polls` WHERE `id`=".$objPollid -> fields['id']);
+        $objPoll = $db -> Execute("SELECT `poll`, `votes`, `days`, `members`, `desc` FROM `polls` WHERE `id`=".$objPollid -> fields['id']);
         $arrPoll = array();
         $arrVotes = array();
         $intVotes = 0;
@@ -70,6 +70,7 @@ if (!isset($_GET['action']))
                 $strQuestion = $objPoll -> fields['poll'];
                 $intDays = $objPoll -> fields['days'];
                 $intMembers = $objPoll -> fields['members'];
+		$strDesc = $objPoll->fields['desc'];
             }
                 else
             {
@@ -140,16 +141,18 @@ if (!isset($_GET['action']))
         $intComments = $objComments -> fields['count(`id`)'];
         $objComments -> Close();
         $smarty -> assign(array("Pollid" => $objPollid -> fields['id'],
-            "Question" => $strQuestion,
-            "Answers" => $arrPoll,
-            "Voting" => $strVoting,
-            "Votes" => $arrVotes,
-            "Summaryvotes" => $intVotes,
-            "Percentvotes" => $arrPercentvotes,
-            "Summaryvoting" => $fltVoting,
-            "Commentsamount" => $intComments,
-            "Acomments" => A_COMMENTS,
-            "Days" => $intDays));
+				"Question" => $strQuestion,
+				"Answers" => $arrPoll,
+				"Voting" => $strVoting,
+				"Votes" => $arrVotes,
+				"Summaryvotes" => $intVotes,
+				"Percentvotes" => $arrPercentvotes,
+				"Summaryvoting" => $fltVoting,
+				"Commentsamount" => $intComments,
+				"Acomments" => A_COMMENTS,
+				"Days" => $intDays,
+				"Tdesc" => "Dodatkowe informacje",
+				"Desc" => $strDesc));
     }
 }
 
