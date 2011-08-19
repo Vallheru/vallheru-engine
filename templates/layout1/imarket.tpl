@@ -11,7 +11,7 @@
 {/if}
 
 {if $View == "szukaj"}
-    {$Sinfo} <a href="imarket.php">{$Aback}</a>{$Sinfo2}<br /><br />
+    {$Sinfo} <a href="imarket.php">{$Aback}</a><br /><br />
     <form method="post" action="imarket.php?view=market&amp;limit=0&amp;lista=name"><table class="dark">
     <tr><td colspan="2" align="left">{$Item}: <input type="text" name="szukany" /></td></tr>
     <tr><td colspan="2" align="left"><input type="submit" value="{$Asearch}" /></td></tr>

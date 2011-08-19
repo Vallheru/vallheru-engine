@@ -4,10 +4,10 @@
  *   Polish language for mines in moutanins
  *
  *   @name                 : kopalnia.php                            
- *   @copyright            : (C) 2004,2005,2006 Vallheru Team based on Gamers-Fusion ver 2.5
- *   @author               : thindil <thindil@users.sourceforge.net>
- *   @version              : 1.3
- *   @since                : 19.10.2006
+ *   @copyright            : (C) 2004,2005,2006,2011 Vallheru Team based on Gamers-Fusion ver 2.5
+ *   @author               : thindil <thindil@tuxfamily.org>
+ *   @version              : 1.4
+ *   @since                : 19.08.2011
  *
  */
 
@@ -27,7 +27,7 @@
 //   along with this program; if not, write to the Free Software
 //   Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 //
-// $Id: kopalnia.php 742 2006-10-19 12:14:59Z thindil $
+// $Id$
 
 define("ERROR", "Zapomnij o tym!");
 define("A_SEARCH", "Szukaj");
@@ -56,5 +56,8 @@ if (isset($_GET['action']) && $_GET['action'] == 'dig')
     define("T_GOLD", "nieco diamentów wartych ");
     define("T_GOLD2", " sztuk złota<br />");
     define("T_NOTHING", "<br /><br />Niestety nic nie znalazłeś.");
+    define("YOU_DEAD2", "Jesteś martwy");
+    define("BACK_TO", "Powrót do ".$city1b."");
+    define("STAY_HERE", "Pozostań na miejscu");
 }
 ?>

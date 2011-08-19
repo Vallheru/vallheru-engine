@@ -11,7 +11,7 @@
 {/if}
 
 {if $View == "szukaj"}
-    {$Sinfo} <a href="pmarket.php">{$Aback}</a>. {$Sinfo2}<br /><br />
+    {$Sinfo} <a href="pmarket.php">{$Aback}</a>.<br /><br />
     <form method="post" action="pmarket.php?view=market&amp;limit=0&amp;lista=nazwa"><table>
     <tr><td colspan="2">{$Mineral}: <input type="text" name="szukany" /></td></tr>
     <tr><td colspan="2" align="center"><input type="submit" value="{$Asearch}" /></td></tr>

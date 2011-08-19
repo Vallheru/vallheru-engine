@@ -8,7 +8,7 @@
  *   @author              : thindil <thindil@tuxfamily.org>
  *   @author              : eyescream <tduda@users.sourceforge.net>
  *   @version             : 1.4
- *   @since               : 17.08.2011
+ *   @since               : 19.08.2011
  *
  */
 
@@ -70,7 +70,6 @@ if (!isset($_GET['view']) && !isset($_GET['buy']) && !isset($_GET['wyc']))
 if (isset ($_GET['view']) && $_GET['view'] == 'szukaj') 
 {
     $smarty -> assign(array("Sinfo" => S_INFO,
-        "Sinfo2" => S_INFO2,
         "Potion2" => POTION2,
         "Asearch" => A_SEARCH));
 }
@@ -85,8 +84,8 @@ if (isset ($_GET['view']) && $_GET['view'] == 'market')
     else 
     {
         $_POST['szukany'] = strip_tags($_POST['szukany']);
-        $strSearch = $db -> qstr($_POST['szukany'], get_magic_quotes_gpc());
-        $msel = $db -> Execute("SELECT count(`id`) FROM `potions` WHERE `status`='R' AND `name`=".$strSearch);
+        $strSearch = $db -> qstr("*".$_POST['szukany']."*", get_magic_quotes_gpc());
+        $msel = $db -> Execute("SELECT count(`id`) FROM `potions` WHERE `status`='R' AND MATCH(`name`) AGAINST (".$strSearch." IN BOOLEAN MODE)");
     }
     $przed = $msel -> fields['count(`id`)'];
     $msel->Close();
@@ -114,7 +113,7 @@ if (isset ($_GET['view']) && $_GET['view'] == 'market')
         } 
 	else 
         {
-            $pm = $db -> SelectLimit("SELECT * FROM `potions` WHERE status='R' AND `name`=".$strSearch." ORDER BY ".$_GET['lista']." DESC", 30, $_GET['limit']);
+            $pm = $db -> SelectLimit("SELECT * FROM `potions` WHERE status='R' AND MATCH(`name`) AGAINST (".$strSearch." IN BOOLEAN MODE) ORDER BY ".$_GET['lista']." DESC", 30, $_GET['limit']);
         }
         $arritem = array();
 	$arrId = array();

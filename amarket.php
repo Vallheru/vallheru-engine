@@ -8,7 +8,7 @@
  *   @author               : thindil <thindil@tuxfamily.org>
  *   @author               : eyescream <tduda@users.sourceforge.net>
  *   @version              : 1.4
- *   @since                : 17.08.2011
+ *   @since                : 19.08.2011
  *
  */
 
@@ -94,9 +94,20 @@ if (isset ($_GET['view']) && $_GET['view'] == 'market')
         $_POST['szukany'] = strip_tags($_POST['szukany']);
         $intKey = array_search($_POST['szukany'], $arrNames);
         if ($intKey == NULL)
-        {
-            $strSearch = 'A';
-        }
+	  {
+	    for ($i = 0; $i < count($arrNames); $i++)
+	      {
+		if (stripos($arrNames[$i], $_POST['szukany']) !== FALSE)
+		  {
+		    $intKey = $i;
+		    break;
+		  }
+	      }
+	    if ($intKey == NULL)
+	      {
+		$strSearch = 'A';
+	      }
+	  }
         if ($intKey < 7)
         {
             $strSearch = "M".$intKey;

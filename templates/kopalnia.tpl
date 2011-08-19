@@ -1,5 +1,10 @@
 {if $Action == "dig"}
     {$Youfind}<br /><br />
+    {if $Health <= 0}
+        {$Youdead}.<br />
+	- <a href="gory.php?action=back">{$Backto}</a><br />
+    	- <a href="gory.php?action=hermit">{$Stayhere}</a>
+    {/if}
 {/if}
 
 {if $Health > "0"}

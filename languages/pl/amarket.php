@@ -4,10 +4,10 @@
  *   Polish language for astral market
  *
  *   @name                 : amarket.php                            
- *   @copyright            : (C) 2006 Vallheru Team based on Gamers-Fusion ver 2.5
- *   @author               : thindil <thindil@users.sourceforge.net>
+ *   @copyright            : (C) 2006,2011 Vallheru Team based on Gamers-Fusion ver 2.5
+ *   @author               : thindil <thindil@tuxfamily.org>
  *   @author               : eyescream <tduda@users.sourceforge.net>
- *   @version              : 1.3
+ *   @version              : 1.4
  *   @since                : 02.12.2006
  *
  */
@@ -83,7 +83,6 @@ if (!isset($_GET['view']) && !isset($_GET['buy']) && !isset($_GET['wyc']))
 if (isset ($_GET['view']) && $_GET['view'] == 'szukaj') 
 {
     define("S_INFO", "Szukaj ofert na rynku lub");
-    define("S_INFO2", "Podaj dokładną nazwę komponentu");
     define("A_SEARCH", "Szukaj");
 }
 

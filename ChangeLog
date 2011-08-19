@@ -1,3 +1,14 @@
+2011-08-19  Bartek thindil Jasicki  <thindil@tuxfamily.org>
+
+	* FEATURE,templates/layout1/rmarket.tpl, templates/layout1/hmarket.tpl, templates/rmarket.tpl, templates/hmarket.tpl, 
+	languages/pl/rmarket.php, languages/pl/hmarket.php, languages/pl/amarket.php, rmarket.php, hmarket.php, amarket.php,
+	templates/layout1/pmarket.tpl, templates/layout1/mmarket.tpl, templates/layout1/imarket.tpl, templates/pmarket.tpl,
+	templates/mmarket.tpl, templates/imarket.tpl, languages/pl/pmarket.php, languages/pl/mmarket.php, languages/pl/imarket.php,
+	pmarket.php, imarket.php, mmarket.php, templates/layout1/amarket.tpl, templates/amarket.tpl, install/db/update.sql:
+	better search items on market
+	* FEATURE,templates/layout1/kopalnia.tpl,templates/kopalnia.tpl,languages/pl/kopalnia.php, kopalnia.php:
+	set energy to current value, added link to resurrect
+
 2011-08-18  Bartek thindil Jasicki  <thindil@tuxfamily.org>
 
 	* BUG,includes/battle.php: 

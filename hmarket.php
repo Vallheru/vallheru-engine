@@ -8,7 +8,7 @@
  *   @author               : thindil <thindil@tuxfamily.org>
  *   @author               : eyescream <tduda@users.sourceforge.net>
  *   @version              : 1.4
- *   @since                : 17.08.2011
+ *   @since                : 19.08.2011
  *
  */
 
@@ -84,7 +84,7 @@ if (isset ($_GET['view']) && $_GET['view'] == 'market')
 {
     if (empty($_POST['szukany'])) 
     {
-        $msel = $db -> Execute("SELECT id FROM hmarket");
+        $msel = $db -> Execute("SELECT id FROM `hmarket`");
         $strSearch = '';
     } 
         else 
@@ -92,9 +92,18 @@ if (isset ($_GET['view']) && $_GET['view'] == 'market')
         $_POST['szukany'] = strip_tags($_POST['szukany']);
         $_POST['szukany'] = str_replace("*","%", $_POST['szukany']);
         $strSearch = $db -> qstr($_POST['szukany'], get_magic_quotes_gpc());
-        $msel = $db -> Execute("SELECT id FROM hmarket WHERE nazwa LIKE ".$strSearch);
+	for ($i = 0; $i < count($arrName); $i++)
+	  {
+	    if (stripos($arrName[$i], $_POST['szukany']) !== FALSE)
+	      {
+		$strSearch = $arrName[$i];
+		$strSearch = $db -> qstr($strSearch, get_magic_quotes_gpc());
+		break;
+	      }
+	  }
+        $msel = $db->Execute("SELECT id FROM `hmarket` WHERE `nazwa` LIKE ".$strSearch) or die($db->ErrorMsg());
     }
-    $oferty = $msel -> RecordCount();
+    $oferty = $msel->RecordCount();
     $msel -> Close();
     if (!isset($_GET['limit'])) 
     {

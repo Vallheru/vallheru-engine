@@ -8,7 +8,7 @@
  *   @author               : thindil <thindil@tuxfamily.org>
  *   @author               : eyescream <tduda@users.sourceforge.net>
  *   @version              : 1.4
- *   @since                : 17.08.2011
+ *   @since                : 19.08.2011
  *
  */
 
@@ -56,7 +56,6 @@ if (!isset($_GET['view']) && !isset($_GET['buy']) && !isset($_GET['wyc']))
 if (isset ($_GET['view']) && $_GET['view'] == 'szukaj') 
 {
     define("S_INFO", "Szukaj ofert na rynku lub");
-    define("S_INFO2", "Jeżeli nie znasz dokładnej nazwy zioła, użyj znaku * zamiast liter");
     define("A_SEARCH", "Szukaj");
 }
 
