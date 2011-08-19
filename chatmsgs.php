@@ -7,7 +7,7 @@
  *   @copyright            : (C) 2004,2005,2006,2011 Vallheru Team based on Gamers-Fusion ver 2.5
  *   @author               : thindil <thindil@tuxfamily.org>
  *   @version              : 1.4
- *   @since                : 09.08.2011
+ *   @since                : 19.08.2011
  *
  */
 
@@ -28,12 +28,24 @@
 //   Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 //
 // $Id$
+/**
+* GZIP compression
+*/
+$compress = FALSE;
+if ($compress)
+  {
+    if (!ob_start("ob_gzhandler"))
+      {
+	ob_start();
+      }
+  }
+
 require_once('includes/config.php');
 require_once('includes/sessions.php');
 require_once('libs/Smarty.class.php');
 
 $smarty = new Smarty;
-$smarty -> compile_check = true;
+$smarty->compile_check = true;
 
 $stat = $db -> Execute("SELECT `id`, `rank`, `lang`, `seclang`, `style`, `graphic` FROM `players` WHERE `email`='".$_SESSION['email']."' AND `pass`='".$_SESSION['pass']."'");
 
@@ -111,5 +123,8 @@ $smarty -> assign ( array("Player" => $on,
     "Cid" => C_ID,
     "CSS" => $strCss));
 $smarty -> display ('chatmsgs.tpl');
-
+if ($compress)
+  {
+    ob_end_flush();
+  }
 ?>

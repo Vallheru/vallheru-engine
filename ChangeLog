@@ -1,5 +1,7 @@
 2011-08-19  Bartek thindil Jasicki  <thindil@tuxfamily.org>
 
+	* FEARURE,chatmsgs.php: 
+	added gzip compression to chat
 	* FEAURE,admin.php, polls.php, templates/layout1/admin.tpl, templates/admin.tpl, templates/layout1/polls.tpl, 
 	templates/polls.tpl, install/db/update.sql:
 	added optional description to polls
