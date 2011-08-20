@@ -32,7 +32,7 @@
                 {if $Voting == "N"}
                     {section name=poll2 loop=$Answers}
                         <tr>
-                            <td width="70%">{$Answers[poll2]}</td><td> - {$Tvotes}: {$Votes[poll2]} ({$Percentvotes[poll2]} %)</td>
+                            <td>{$Answers[poll2]}</td><td> - {$Tvotes}: {$Votes[poll2]} ({$Percentvotes[poll2]} %)</td>
                         </tr>
                     {/section}
                 {/if}
