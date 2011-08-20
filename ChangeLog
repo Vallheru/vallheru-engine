@@ -1,5 +1,7 @@
 2011-08-20  Bartek thindil Jasicki  <thindil@tuxfamily.org>
 
+	* BUG,account.php: 
+	fixed typo
 	* FEATURE,forums.php: 
 	show sticky topics on each page
 	* FEATURE,templates/layout1/rmarket.tpl, templates/layout1/hmarket.tpl, templates/rmarket.tpl, templates/hmarket.tpl, 
