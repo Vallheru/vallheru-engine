@@ -101,12 +101,12 @@
 	    {if $page == $Tpage}
 	        {$page}
 	    {else}
-                <a href="polls.php?action=comments&text={$Poll}&page={$page}">{$page}</a>
+                <a href="polls.php?action=comments&poll={$Poll}&page={$page}">{$page}</a>
 	    {/if}
     	{/for}
     {/if}
     <br /><br /><center>
-    <form method="post" action="polls.php?action=comments&amp;text={$Poll}">
+    <form method="post" action="polls.php?action=comments&amp;poll={$Poll}">
         {$Addcomment}:<textarea name="body" rows="20" cols="50"></textarea><br />
         <input type="submit" value="{$Aadd}" />
     </form></center>
