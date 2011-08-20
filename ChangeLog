@@ -1,5 +1,7 @@
 2011-08-20  Bartek thindil Jasicki  <thindil@tuxfamily.org>
 
+	* FEATURE,forums.php: 
+	show sticky topics on each page
 	* FEATURE,templates/layout1/rmarket.tpl, templates/layout1/hmarket.tpl, templates/rmarket.tpl, templates/hmarket.tpl, 
 	languages/pl/rmarket.php, languages/pl/hmarket.php, languages/pl/amarket.php, rmarket.php, hmarket.php, amarket.php,
 	templates/layout1/pmarket.tpl, templates/layout1/mmarket.tpl, templates/layout1/imarket.tpl, templates/pmarket.tpl,

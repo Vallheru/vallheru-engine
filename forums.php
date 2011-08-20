@@ -8,7 +8,7 @@
  *   @author               : thindil <thindil@tuxfamily.org>
  *   @author               : mori <ziniquel@users.sourceforge.net>
  *   @version              : 1.4
- *   @since                : 14.08.2011
+ *   @since                : 20.08.2011
  *
  */
 
@@ -106,18 +106,14 @@ if (isset ($_GET['view']) && $_GET['view'] == 'categories')
 */
 if (isset($_GET['topics'])) 
  {
-   checkvalue($_GET['topics']);
-   //Count amount of pages
-    $objAmount = $db->Execute("SELECT count(`id`) FROM `topics` WHERE `cat_id`=".$_GET['topics']." AND `lang`='".$player -> lang."' OR `lang`='".$player -> seclang."'");
+    checkvalue($_GET['topics']);
+    //Count amount of pages
+    $objAmount = $db->Execute("SELECT count(`id`) FROM `topics` WHERE `cat_id`=".$_GET['topics']." AND `sticky`='N' AND (`lang`='".$player -> lang."' OR `lang`='".$player -> seclang."')");
     $pages = ceil($objAmount->fields['count(`id`)'] / 25);
     $objAmount->close();
     if (isset($_GET['page']))
      {
-       $_GET['page'] = intval($_GET['page']);
-       if ($_GET['page'] == 0)
-	 {
-	   error(ERROR);
-	 }
+       checkvalue($_GET['page']);
        $page = $_GET['page'];
      }
     else
@@ -156,7 +152,7 @@ if (isset($_GET['topics']))
      * Select sticky threads
      */
     $intOffset = 25 * ($page - 1);
-    $topic = $db -> SelectLimit("SELECT `w_time`, `id`, `topic`, `starter` FROM `topics` WHERE `sticky`='Y' AND `cat_id`=".$_GET['topics']." AND `lang`='".$player -> lang."' OR `lang`='".$player -> seclang."' ORDER BY `id` ASC", 25, $intOffset);
+    $topic = $db->Execute("SELECT `w_time`, `id`, `topic`, `starter` FROM `topics` WHERE `sticky`='Y' AND `cat_id`=".$_GET['topics']." AND `lang`='".$player -> lang."' OR `lang`='".$player -> seclang."' ORDER BY `id` ASC");
     $arrid = array();
     $arrtopic = array();
     $arrstarter = array();
@@ -197,26 +193,10 @@ if (isset($_GET['topics']))
     }
     $topic -> Close();
 
-    if ($i == 0)
-      {
-	$objTest = $db->Execute("SELECT count(`id`) FROM `topics` WHERE `sticky`='Y' AND `cat_id`=".$_GET['topics']." AND `lang`='".$player -> lang."' OR `lang`='".$player -> seclang."'");
-	$j = $objTest->fields['count(`id`)'];
-	$objTest->Close();
-      }
-    else
-      {
-	$j = $i;
-      }
-
-    if ($intOffset - $j < 0)
-      {
-	$intOffset += $j;
-      }
-
     /**
      * Select normal threads
      */
-    $topic = $db -> SelectLimit("SELECT `w_time`, `id`, `topic`, `starter` FROM `topics` WHERE `sticky`='N' AND `cat_id`=".$_GET['topics']." AND `lang`='".$player -> lang."' OR `lang`='".$player -> seclang."' ORDER BY `id` ASC", 25, $intOffset - $j);
+    $topic = $db -> SelectLimit("SELECT `w_time`, `id`, `topic`, `starter` FROM `topics` WHERE `sticky`='N' AND `cat_id`=".$_GET['topics']." AND `lang`='".$player -> lang."' OR `lang`='".$player -> seclang."' ORDER BY `id` ASC", 25, $intOffset);
     while (!$topic -> EOF) 
       {
 	if ($topic -> fields['w_time'] > $_SESSION['forums'])
