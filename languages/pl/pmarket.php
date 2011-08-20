@@ -8,7 +8,7 @@
  *   @author               : thindil <thindil@tuxfamily.org>
  *   @author               : eyescream <tduda@users.sourceforge.net>
  *   @version              : 1.4
- *   @since                : 19.08.2011
+ *   @since                : 20.08.2011
  *
  */
 
@@ -63,12 +63,6 @@ if (!isset($_GET['view']) && !isset($_GET['buy']) && !isset($_GET['wyc']))
     define("M_INFO", "Tutaj jest rynek z minerałami. Masz parę opcji");
 }
 
-if (isset ($_GET['view']) && $_GET['view'] == 'szukaj') 
-{
-    define("S_INFO", "Szukaj ofert na rynku lub");
-    define("A_SEARCH", "Szukaj");
-}
-
 if (isset ($_GET['view']) && $_GET['view'] == 'market') 
 {
     define("NO_OFERTS", "Nie ma ofert na rynku.");
@@ -83,6 +77,7 @@ if (isset ($_GET['view']) && $_GET['view'] == 'market')
     define("T_OPTIONS", "Opcje");
     define("A_ADD", "Dodaj");
     define("A_CHANGE", "Zmień cenę");
+    define("A_SEARCH", "Szukaj");
 }
 
 if (isset ($_GET['view']) && $_GET['view'] == 'add') 

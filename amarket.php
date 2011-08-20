@@ -64,16 +64,6 @@ if (!isset($_GET['view']) && !isset($_GET['buy']) && !isset($_GET['wyc']))
         "Aback2" => A_BACK2));
 }
 
-/**
-* Search astral components on market
-*/
-if (isset ($_GET['view']) && $_GET['view'] == 'szukaj') 
-{
-    $smarty -> assign(array("Sinfo" => S_INFO,
-        "Astral" => ASTRAL,
-        "Asearch" => A_SEARCH));
-}
-
 $arrNames = array(MAP1, MAP2, MAP3, MAP4, MAP5, MAP6, MAP7, PLAN1, PLAN2, PLAN3, PLAN4, PLAN5, RECIPE1, RECIPE2, RECIPE3, RECIPE4, RECIPE5);
 $arrNames2 = array(COMP1, COMP2, COMP3, COMP4, COMP5, COMP6, COMP7, CONST1, CONST2, CONST3, CONST4, CONST5, POTION1, POTION2, POTION3, POTION4, POTION5);
 
@@ -252,6 +242,8 @@ if (isset ($_GET['view']) && $_GET['view'] == 'market')
                                 "Tseller" => T_SELLER,
                                 "Tnumber" => T_NUMBER,
                                 "Toptions" => T_OPTIONS,
+				"Astral" => ASTRAL,
+				"Asearch" => A_SEARCH,
                                 "Viewinfo" => VIEW_INFO));
         if (!isset($_POST['szukany']))
         {

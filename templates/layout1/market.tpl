@@ -9,7 +9,6 @@
         {$Markets[market]}<br />
         <ul>
             <li><a href="{$Filesname[market]}.php?view=market&amp;limit=0&amp;lista=id">{$Ashow}</a></li>
-            <li><a href="{$Filesname[market]}.php?view=szukaj">{$Asearch}</a></li>
             <li><a href="{$Filesname[market]}.php?view=add">{$Aadd}</a></li>
             <li><a href="{$Filesname[market]}.php?view=del">{$Adelete}</a></li>
             {if $smarty.section.market.index != "1"}

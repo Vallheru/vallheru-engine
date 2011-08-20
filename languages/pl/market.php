@@ -4,10 +4,10 @@
  *   Polish language for markets menu
  *
  *   @name                 : market.php                            
- *   @copyright            : (C) 2004,2005,2006 Vallheru Team based on Gamers-Fusion ver 2.5
- *   @author               : thindil <thindil@users.sourceforge.net>
- *   @version              : 1.2
- *   @since                : 28.09.2006
+ *   @copyright            : (C) 2004,2005,2006,2011 Vallheru Team based on Gamers-Fusion ver 2.5
+ *   @author               : thindil <thindil@tuxfamily.org>
+ *   @version              : 1.4
+ *   @since                : 20.08.2011
  *
  */
 
@@ -27,7 +27,7 @@
 //   along with this program; if not, write to the Free Software
 //   Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 //
-// $Id: market.php 640 2006-09-28 13:41:10Z thindil $
+// $Id$
 
 define("ERROR", "Zapomnij o tym!");
 if (!isset($_GET['view']))
@@ -41,7 +41,6 @@ if (!isset($_GET['view']))
     define("A_SHOW", "Zobacz oferty");
     define("A_ADD", "Dodaj ofertę");
     define("A_DELETE", "Skasuj wszystkie swoje oferty");
-    define("A_SEARCH", "Szukaj ofert");
     define("A_LIST", "Spis wszystkich ofert na rynku");
     define("MARKET_INFO", "Idziesz główną ulicą ".$city1b.". Rozglądasz się po mieście zadowolony z siebie i z życia podśpiewujesz sobie pod nosem.<br />\"Czas się potargować, zobaczymy czy nie wyszedłem z wprawy\" - mówisz sam do siebie kierując swoje kroki w kierunku Rynku.<br />Zbliżasz się do olbrzymiego placu, na którym panuje niesamowity gwar. Wszyscy krzyczą, jeden przez drugiego. Miejscami  wybuchają ostrzejsze kłótnie pomiędzy handlującymi, jednak pilnujący porządku wojownicy szybko uspokajają nadgorliwych mieszkańców. Patrzysz na to wszystko rozbawiony i zafascynowany.<br />\"Tak tego mi brakowało\" - wzdychasz cicho do siebie powoli zanurzając się w ciżbę handlujących. Gdzie skierujesz swoje kroki");
     define("MARKET_INFO2", "Wielki Plac Targowy rozciąga się przed Twoimi oczami i nawet jeszcze daleko przed bramą Rynku słyszysz:<br />- Tani mithrill, prosto z kopalni...<br />- Najlepszy ekwipunek, wszystkie poziomy...<br />- Zioła, kupujcie zioła; świeżutkie trucizny z dynallcy...<br />Idziesz spokojnym krokiem, mijając Bramę Wejściową, sprawdzasz czy aby sakiewka dobrze trzyma się pasa - nigdy nie wiadomo, co może Cię spotkać - pełno tu hobbitów...<br />Mijasz kolejne stoiska, przy których widzisz rozmaite produkty. Gwar z każdym Twoim krokiem narasta.  W pewnej chwili podchodzi do Ciebie starsza kobieta z koszykiem na ręku i rzecze:<br />- Jaśnie Panie, tu sysko jes, sysko. Tyko tsa zloto miec. Cego potseba?");

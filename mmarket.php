@@ -8,7 +8,7 @@
  *   @author              : thindil <thindil@tuxfamily.org>
  *   @author              : eyescream <tduda@users.sourceforge.net>
  *   @version             : 1.4
- *   @since               : 19.08.2011
+ *   @since               : 20.08.2011
  *
  */
 
@@ -64,16 +64,6 @@ if (!isset($_GET['view']) && !isset($_GET['buy']) && !isset($_GET['wyc']))
         "Aback2" => A_BACK2));
 }
 
-/**
-* Search potions on market
-*/
-if (isset ($_GET['view']) && $_GET['view'] == 'szukaj') 
-{
-    $smarty -> assign(array("Sinfo" => S_INFO,
-        "Potion2" => POTION2,
-        "Asearch" => A_SEARCH));
-}
-
 if (isset ($_GET['view']) && $_GET['view'] == 'market') 
 {
     if (empty($_POST['szukany'])) 
@@ -94,12 +84,13 @@ if (isset ($_GET['view']) && $_GET['view'] == 'market')
         error (NO_OFERTS);
     }
     $smarty -> assign(array("Tname" => T_NAME,
-        "Tefect" => T_EFECT,
-        "Tamount" => T_AMOUNT,
-        "Tcost" => T_COST,
-        "Tseller" => T_SELLER,
-        "Toptions" => T_OPTIONS,
-        "Viewinfo" => VIEW_INFO));
+			    "Tefect" => T_EFECT,
+			    "Tamount" => T_AMOUNT,
+			    "Tcost" => T_COST,
+			    "Tseller" => T_SELLER,
+			    "Toptions" => T_OPTIONS,
+			    "Asearch" => A_SEARCH,
+			    "Viewinfo" => VIEW_INFO));
     if ($_GET['limit'] < $przed) 
       {
 	$_GET['limit'] = intval($_GET['limit']);

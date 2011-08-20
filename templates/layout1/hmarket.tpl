@@ -2,7 +2,6 @@
     {$Minfo}.<br />
     <ul>
     <li><a href="{$SCRIPT_NAME}?view=market&amp;lista=id&amp;limit=0">{$Aview}</a>
-    <li><a href="{$SCRIPT_NAME}?view=szukaj">{$Asearch}</a></li>
     <li><a href="{$SCRIPT_NAME}?view=add">{$Aadd}</a>
     <li><a href="{$SCRIPT_NAME}?view=del">{$Adelete}</a>
     <li><a href="{$SCRIPT_NAME}?view=all">{$Alist}</a>
@@ -10,16 +9,12 @@
     (<a href="market.php">{$Aback2}</a>)
 {/if}
 
-{if $View == "szukaj"}
-    {$Sinfo} <a href="hmarket.php">{$Aback}</a>.<br /><br />
-    <form method="post" action="hmarket.php?view=market&amp;limit=0&amp;lista=nazwa"><table class="dark">
-    <tr><td colspan="2">{$Herb}: <input type="text" name="szukany" /></td></tr>
-    <tr><td colspan="2" align="center"><input type="submit" value="{$Asearch}" /></td></tr>
-    </table></form>
-{/if}
-
 {if $View == "market"}
     {$Viewinfo} <a href="hmarket.php">{$Aback}</a>.<br /><br />
+    <form method="post" action="hmarket.php?view=market&amp;limit=0&amp;lista=nazwa">
+        {$Therb}: <input type="text" name="szukany" /><br />
+        <input type="submit" value="{$Asearch}" />
+    </form><br />
     <table class="dark">
     <tr>
     <td width="100"><a href="hmarket.php?view=market&amp;lista=nazwa&amp;limit=0"><b><u>{$Therb}</u></b></a></td>

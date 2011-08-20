@@ -8,7 +8,7 @@
  *   @author               : thindil <thindil@tuxfamily.org>
  *   @author               : eyescream <tduda@users.sourceforge.net>
  *   @version              : 1.4
- *   @since                : 19.08.2011
+ *   @since                : 20.08.2011
  *
  */
 
@@ -65,16 +65,6 @@ if (!isset($_GET['view']) && !isset($_GET['buy']) && !isset($_GET['wyc']))
 }
 
 /**
-* Search items on market
-*/
-if (isset ($_GET['view']) && $_GET['view'] == 'szukaj') 
-{
-    $smarty -> assign(array("Sinfo" => S_INFO,
-                            "Item" => ITEM,
-                            "Asearch" => A_SEARCH));
-}
-
-/**
 * Show oferts in market
 */
 if (isset ($_GET['view']) && $_GET['view'] == 'market') 
@@ -106,6 +96,7 @@ if (isset ($_GET['view']) && $_GET['view'] == 'market')
                             "Tamount" => T_AMOUNT,
                             "Tlevel" => T_LEVEL,
                             "Viewinfo" => VIEW_INFO,
+			    "Asearch" => A_SEARCH,
                             "Toptions" => T_OPTIONS));
     if ($_GET['limit'] < $przed) 
       {

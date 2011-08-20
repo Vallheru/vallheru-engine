@@ -1,3 +1,13 @@
+2011-08-20  Bartek thindil Jasicki  <thindil@tuxfamily.org>
+
+	* FEATURE,templates/layout1/rmarket.tpl, templates/layout1/hmarket.tpl, templates/rmarket.tpl, templates/hmarket.tpl, 
+	languages/pl/rmarket.php, languages/pl/hmarket.php, languages/pl/amarket.php, rmarket.php, hmarket.php, amarket.php,
+	templates/layout1/pmarket.tpl, templates/layout1/mmarket.tpl, templates/layout1/imarket.tpl, templates/pmarket.tpl,
+	templates/mmarket.tpl, templates/imarket.tpl, languages/pl/pmarket.php, languages/pl/mmarket.php, languages/pl/imarket.php,
+	pmarket.php, imarket.php, mmarket.php, templates/layout1/amarket.tpl, templates/amarket.tpl, market.php, languages/pl/market.php,
+	templates/layout1/market.tpl, templates/market.tpl:
+	move search form to list of oferts.
+
 2011-08-19  Bartek thindil Jasicki  <thindil@tuxfamily.org>
 
 	* FEATURE,travel.php: 

@@ -2,7 +2,6 @@
     {$Minfo}.<br />
     <ul>
     <li><a href="{$SCRIPT_NAME}?view=market&amp;lista=id&amp;limit=0">{$Aview}</a></li>
-    <li><a href="{$SCRIPT_NAME}?view=szukaj">{$Asearch}</a></li>
     <li><a href="{$SCRIPT_NAME}?view=add">{$Aadd}</a></li>
     <li><a href="{$SCRIPT_NAME}?view=del">{$Adelete}</a></li>
     <li><a href="{$SCRIPT_NAME}?view=all&amp;limit=0">{$Alist}</a></li>
@@ -10,16 +9,12 @@
     (<a href="market.php">{$Aback2}</a>)
 {/if}
 
-{if $View == "szukaj"}
-    {$Sinfo} <a href="imarket.php">{$Aback}</a><br /><br />
-    <form method="post" action="imarket.php?view=market&amp;limit=0&amp;lista=name"><table class="dark">
-    <tr><td colspan="2" align="left">{$Item}: <input type="text" name="szukany" /></td></tr>
-    <tr><td colspan="2" align="left"><input type="submit" value="{$Asearch}" /></td></tr>
-    </table></form>
-{/if}
-
 {if $View == "market"}
     {$Viewinfo} <a href="imarket.php">{$Aback}</a>.<br /><br />
+    <form method="post" action="imarket.php?view=market&amp;limit=0&amp;lista=name">
+        {$Tname}: <input type="text" name="szukany" />
+        <input type="submit" value="{$Asearch}" />
+    </form><br />
     <table class="dark">
     <tr>
     <td width="100"><a href="imarket.php?view=market&amp;lista=name&amp;limit=0"><b><u>{$Tname}</u></b></a></td>
