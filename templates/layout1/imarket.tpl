@@ -1,7 +1,7 @@
 {if $View == "" && $Remowe == "" && $Buy == ""}
     {$Minfo}.<br />
     <ul>
-    <li><a href="{$SCRIPT_NAME}?view=market&amp;lista=id&amp;limit=0">{$Aview}</a></li>
+    <li><a href="{$SCRIPT_NAME}?view=market&amp;lista=id">{$Aview}</a></li>
     <li><a href="{$SCRIPT_NAME}?view=add">{$Aadd}</a></li>
     <li><a href="{$SCRIPT_NAME}?view=del">{$Adelete}</a></li>
     <li><a href="{$SCRIPT_NAME}?view=all&amp;limit=0">{$Alist}</a></li>
@@ -17,15 +17,15 @@
     </form><br />
     <table class="dark">
     <tr>
-    <td width="100"><a href="imarket.php?view=market&amp;lista=name&amp;limit=0"><b><u>{$Tname}</u></b></a></td>
-    <td width="100"><a href="imarket.php?view=market&amp;lista=power&amp;limit=0"><b><u>{$Tpower}</u></b></a></td>
-    <td width="100"><a href="imarket.php?view=market&amp;lista=wt&amp;limit=0"><b><u>{$Tdur}</u></b></a></td>
-    <td width="100"><a href="imarket.php?view=market&amp;lista=szyb&amp;limit=0"><b><u>{$Tspeed}</u></b></a></td>
-    <td width="100"><a href="imarket.php?view=market&amp;lista=zr&amp;limit=0"><b><u>{$Tagi}</u></b></a></td>
-    <td width="50"><a href="imarket.php?view=market&amp;lista=minlev&amp;limit=0"><b><u>{$Tlevel}</u></b></a></td>
-    <td width="50"><a href="imarket.php?view=market&amp;lista=amount&amp;limit=0"><b><u>{$Tamount}</u></b></a></td>
-    <td width="100"><a href="imarket.php?view=market&amp;lista=cost&amp;limit=0"><b><u>{$Tcost}</u></b></a></td>
-    <td width="50"><a href="imarket.php?view=market&amp;lista=owner&amp;limit=0"><b><u>{$Tseller}</u></b></a></td>
+    <td width="100"><a href="imarket.php?view=market&amp;lista=name"><b><u>{$Tname}</u></b></a></td>
+    <td width="100"><a href="imarket.php?view=market&amp;lista=power><b><u>{$Tpower}</u></b></a></td>
+    <td width="100"><a href="imarket.php?view=market&amp;lista=wt"><b><u>{$Tdur}</u></b></a></td>
+    <td width="100"><a href="imarket.php?view=market&amp;lista=szyb"><b><u>{$Tspeed}</u></b></a></td>
+    <td width="100"><a href="imarket.php?view=market&amp;lista=zr"><b><u>{$Tagi}</u></b></a></td>
+    <td width="50"><a href="imarket.php?view=market&amp;lista=minlev"><b><u>{$Tlevel}</u></b></a></td>
+    <td width="50"><a href="imarket.php?view=market&amp;lista=amount"><b><u>{$Tamount}</u></b></a></td>
+    <td width="100"><a href="imarket.php?view=market&amp;lista=cost"><b><u>{$Tcost}</u></b></a></td>
+    <td width="50"><a href="imarket.php?view=market&amp;lista=owner"><b><u>{$Tseller}</u></b></a></td>
     <td width="100"><b><u>{$Toptions}</u></b></td>
     </tr>
     {section name=item loop=$Name}
@@ -51,7 +51,16 @@
 	</tr>
     {/section}
     </table>
-    {$Previous}{$Next}
+    {if $Tpages > 1}
+    	<br />{$Fpage}
+    	{for $page = 1 to $Tpages}
+	    {if $page == $Tpage}
+	        {$page}
+	    {else}
+                <a href="imarket.php?view=market&page={$page}&amp;lista={$Mlist}">{$page}</a>
+	    {/if}
+    	{/for}
+    {/if}
 {/if}
 
 {if $View == "add"}

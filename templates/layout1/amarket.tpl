@@ -1,7 +1,7 @@
 {if $View == "" && $Remowe == "" && $Buy == ""}
     {$Minfo}.<br />
     <ul>
-    <li><a href="{$SCRIPT_NAME}?view=market&amp;lista=id&amp;limit=0">{$Aview}</a>
+    <li><a href="{$SCRIPT_NAME}?view=market&amp;lista=id">{$Aview}</a>
     <li><a href="{$SCRIPT_NAME}?view=add">{$Aadd}</a>
     <li><a href="{$SCRIPT_NAME}?view=del">{$Adelete}</a>
     <li><a href="{$SCRIPT_NAME}?view=all">{$Alist}</a>
@@ -17,11 +17,11 @@
     </form><br />
     <table>
     <tr>
-    <td width="100"><a href="amarket.php?view=market&amp;lista=type&amp;limit=0"><b><u>{$Tastral}</u></b></a></td>
-    <td width="100"><a href="amarket.php?view=market&amp;lista=number&amp;limit=0"><b><u>{$Tnumber}</u></b></a></td>
-    <td width="100"><a href="amarket.php?view=market&amp;lista=amount&amp;limit=0"><b><u>{$Tamount}</u></b></a></td>
-    <td width="100"><a href="amarket.php?view=market&amp;lista=cost&amp;limit=0"><b><u>{$Tcost}</u></b></a></td>
-    <td width="100"><a href="amarket.php?view=market&amp;lista=seller&amp;limit=0"><b><u>{$Tseller}</u></b></a></td>
+    <td width="100"><a href="amarket.php?view=market&amp;lista=type"><b><u>{$Tastral}</u></b></a></td>
+    <td width="100"><a href="amarket.php?view=market&amp;lista=number"><b><u>{$Tnumber}</u></b></a></td>
+    <td width="100"><a href="amarket.php?view=market&amp;lista=amount"><b><u>{$Tamount}</u></b></a></td>
+    <td width="100"><a href="amarket.php?view=market&amp;lista=cost"><b><u>{$Tcost}</u></b></a></td>
+    <td width="100"><a href="amarket.php?view=market&amp;lista=seller"><b><u>{$Tseller}</u></b></a></td>
     <td width="100"><b><u>{$Toptions}</u></b></td>
     </tr>
     {section name=herb loop=$Name}
@@ -34,7 +34,16 @@
         {$Action[herb]}
     {/section}
     </table>
-    {$Previous}{$Next}
+    {if $Tpages > 1}
+    	<br />{$Fpage}
+    	{for $page = 1 to $Tpages}
+	    {if $page == $Tpage}
+	        {$page}
+	    {else}
+                <a href="amarket.php?view=market&page={$page}&amp;lista={$Mlist}">{$page}</a>
+	    {/if}
+    	{/for}
+    {/if}
 {/if}
 
 {if $View == "add"}

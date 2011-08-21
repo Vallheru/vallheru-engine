@@ -8,7 +8,7 @@
  *   @author               : thindil <thindil@tuxfamily.org>
  *   @author               : eyescream <tduda@users.sourceforge.net>
  *   @version              : 1.4
- *   @since                : 19.08.2011
+ *   @since                : 21.08.2011
  *
  */
 
@@ -142,124 +142,126 @@ if (isset ($_GET['view']) && $_GET['view'] == 'market')
     {
         error(NO_OFERTS);
     }
-    if ($_GET['limit'] < $oferty) 
+    $pages = ceil($oferty / 30);
+    if (isset($_GET['page']))
       {
-	$_GET['limit'] = intval($_GET['limit']);
-        if (!in_array($_GET['lista'], array('id', 'type', 'number', 'amount', 'cost', 'seller'))) 
+	checkvalue($_GET['page']);
+	$page = $_GET['page'];
+      }
+    else
+      {
+	$page = 1;
+      }
+    if ($page > $pages)
+      {
+	$page = $pages;
+      }
+    if (!in_array($_GET['lista'], array('id', 'type', 'number', 'amount', 'cost', 'seller'))) 
+      {
+	error(ERROR);
+      }
+    if (empty($_POST['szukany'])) 
+      {
+	$pm = $db -> SelectLimit("SELECT * FROM `amarket` ORDER BY ".$_GET['lista']." DESC", 30, (30 * ($page - 1)));
+      } 
+    else 
+      {
+	$pm = $db -> SelectLimit("SELECT * FROM `amarket` WHERE `type`='".$strSearch."' ORDER BY ".$_GET['lista']." DESC", 30, (30 * ($page - 1)));
+      }
+    $arrname = array();
+    $arramount = array();
+    $arrcost = array();
+    $arrseller = array();
+    $arraction = array();
+    $arruser = array();
+    $arrNumber = array();
+    $i = 0;
+    while (!$pm -> EOF) 
+      {
+	switch ($pm->fields['type'][0])
 	  {
-	    error(ERROR);
+	  case 'M':
+	    $intKey = str_replace("M", "", $pm -> fields['type']);
+	    $intNumber = $intKey;
+	    $arrNumber[$i] = $pm -> fields['number'] + 1;
+	    break;
+	  case 'P':
+	    $intKey = str_replace("P", "", $pm -> fields['type']);
+	    $intNumber = $intKey + 7;
+	    $arrNumber[$i] = $pm -> fields['number'] + 1;
+	    break;
+	  case 'R':
+	    $intKey = str_replace("R", "", $pm -> fields['type']);
+	    $intNumber = $intKey + 12;
+	    $arrNumber[$i] = $pm -> fields['number'] + 1;
+	    break;
+	  case 'C':
+	    $intKey = str_replace("C", "", $pm -> fields['type']);
+	    $intNumber = $intKey + 17;
+	    $arrNumber[$i] = '-';
+	    break;
+	  case 'O':
+	    $intKey = str_replace("O", "", $pm -> fields['type']);
+	    $intNumber = $intKey + 24;
+	    $arrNumber[$i] = '-';
+	    break;
+	  case 'T':
+	    $intKey = str_replace("T", "", $pm -> fields['type']);
+	    $intNumber = $intKey + 29;
+	    $arrNumber[$i] = '-';
+	    break;
+	  default:
+	    break;
 	  }
-        if (empty($_POST['szukany'])) 
-        {
-            $pm = $db -> SelectLimit("SELECT * FROM `amarket` ORDER BY ".$_GET['lista']." DESC", 30, $_GET['limit']);
-        } 
-            else 
-        {
-            $pm = $db -> SelectLimit("SELECT * FROM `amarket` WHERE `type`='".$strSearch."' ORDER BY ".$_GET['lista']." DESC", 30, $_GET['limit']);
-        }
-        $arrname = array();
-        $arramount = array();
-        $arrcost = array();
-        $arrseller = array();
-        $arraction = array();
-        $arruser = array();
-        $arrNumber = array();
-        $i = 0;
-        while (!$pm -> EOF) 
-        {
-            if (ereg("^M[0-9]", $pm -> fields['type']))
-            {
-                $intKey = str_replace("M", "", $pm -> fields['type']);
-                $intNumber = $intKey;
-                $arrNumber[$i] = $pm -> fields['number'] + 1;
-            }
-            if (ereg("^P[0-9]", $pm -> fields['type']))
-            {
-                $intKey = str_replace("P", "", $pm -> fields['type']);
-                $intNumber = $intKey + 7;
-                $arrNumber[$i] = $pm -> fields['number'] + 1;
-            }
-            if (ereg("^R[0-9]", $pm -> fields['type']))
-            {
-                $intKey = str_replace("R", "", $pm -> fields['type']);
-                $intNumber = $intKey + 12;
-                $arrNumber[$i] = $pm -> fields['number'] + 1;
-            }
-            if (ereg("^C[0-9]", $pm -> fields['type']))
-            {
-                $intKey = str_replace("C", "", $pm -> fields['type']);
-                $intNumber = $intKey + 17;
-                $arrNumber[$i] = '-';
-            }
-            if (ereg("^O[0-9]", $pm -> fields['type']))
-            {
-                $intKey = str_replace("O", "", $pm -> fields['type']);
-                $intNumber = $intKey + 24;
-                $arrNumber[$i] = '-';
-            }
-            if (ereg("^T[0-9]", $pm -> fields['type']))
-            {
-                $intKey = str_replace("T", "", $pm -> fields['type']);
-                $intNumber = $intKey + 29;
-                $arrNumber[$i] = '-';
-            }
-            $arrname[$i] = $arrNames[$intNumber];
-            $arramount[$i] = $pm -> fields['amount'];
-            $arrcost[$i] = $pm -> fields['cost'];
-            $arrseller[$i] = $pm -> fields['seller'];
-            $seller = $db -> Execute("SELECT `user` FROM `players` WHERE `id`=".$pm -> fields['seller']);
-            $arruser[$i] = $seller -> fields['user'];
-            $seller -> Close();
-            if ($player -> id == $pm -> fields['seller']) 
-            {
-	      $arraction[$i] = "<td><a href=\"market.php?view=myoferts&amp;type=amarket&amp;delete=".$pm->fields['id']."\">".A_DELETE."</a><br />
+	$arrname[$i] = $arrNames[$intNumber];
+	$arramount[$i] = $pm -> fields['amount'];
+	$arrcost[$i] = $pm -> fields['cost'];
+	$arrseller[$i] = $pm -> fields['seller'];
+	$seller = $db -> Execute("SELECT `user` FROM `players` WHERE `id`=".$pm -> fields['seller']);
+	$arruser[$i] = $seller -> fields['user'];
+	$seller -> Close();
+	if ($player -> id == $pm -> fields['seller']) 
+	  {
+	    $arraction[$i] = "<td><a href=\"market.php?view=myoferts&amp;type=amarket&amp;delete=".$pm->fields['id']."\">".A_DELETE."</a><br />
             <a href=\"market.php?view=myoferts&amp;type=amarket&amp;change=".$pm->fields['id']."\">".A_CHANGE."</a><br />
             <a href=\"market.php?view=myoferts&amp;type=rmarket&amp;add=".$pm->fields['id']."\">".A_ADD."</a>";
-            } 
-                else 
-            {
-                $arraction[$i] = "<td>- <a href=\"amarket.php?buy=".$pm -> fields['id']."\">".A_BUY."</a>";
-                if ($player -> clas == 'Złodziej')
-                {
-                    $arraction[$i] = $arraction[$i]."<br />- <a href=\"amarket.php?steal=".$pm -> fields['id']."\">".A_STEAL."</a>";
-                }
-            }
-            $arraction[$i] = $arraction[$i]."</td></tr>";
-            $pm -> MoveNext();
-            $i = $i + 1;
-        }
-        $pm -> Close();
-        $smarty -> assign(array("Name" => $arrname, 
-                                "Amount" => $arramount, 
-                                "Cost" => $arrcost, 
-                                "Seller" => $arrseller, 
-                                "Action" => $arraction, 
-                                "User" => $arruser,
-                                "Number" => $arrNumber,
-                                "Tastral" => ASTRAL,
-                                "Tamount" => T_AMOUNT,
-                                "Tcost" => T_COST,
-                                "Tseller" => T_SELLER,
-                                "Tnumber" => T_NUMBER,
-                                "Toptions" => T_OPTIONS,
-				"Astral" => ASTRAL,
-				"Asearch" => A_SEARCH,
-                                "Viewinfo" => VIEW_INFO));
-        if (!isset($_POST['szukany']))
-        {
-            $_POST['szukany'] = '';
-        }
-        if ($_GET['limit'] >= 30) 
-        {
-            $lim = $_GET['limit'] - 30;
-            $smarty -> assign ("Previous", "<form method=\"post\" action=\"amarket.php?view=market&limit=".$lim."&lista=".$_GET['lista']."\"><input type=\"hidden\" name=\"szukany\" value=\"".$_POST['szukany']."\"><input type=\"submit\" value=\"".A_PREVIOUS."\"></form> ");
-        }
-        $_GET['limit'] = $_GET['limit'] + 30;
-        if ($oferty > 30 && $_GET['limit'] < $oferty) 
-        {
-            $smarty -> assign ("Next", " <form method=\"post\" action=\"amarket.php?view=market&limit=".$_GET['limit']."&lista=".$_GET['lista']."\"><input type=\"hidden\" name=\"szukany\" value=\"".$_POST['szukany']."\"><input type=\"submit\" value=\"".A_NEXT."\"></form>");
-        }
-    }
+	  } 
+	else 
+	  {
+	    $arraction[$i] = "<td>- <a href=\"amarket.php?buy=".$pm -> fields['id']."\">".A_BUY."</a>";
+	    if ($player -> clas == 'Złodziej')
+	      {
+		$arraction[$i] = $arraction[$i]."<br />- <a href=\"amarket.php?steal=".$pm -> fields['id']."\">".A_STEAL."</a>";
+	      }
+	  }
+	$arraction[$i] = $arraction[$i]."</td></tr>";
+	$pm -> MoveNext();
+	$i = $i + 1;
+      }
+    $pm -> Close();
+    $smarty -> assign(array("Name" => $arrname, 
+			    "Amount" => $arramount, 
+			    "Cost" => $arrcost, 
+			    "Seller" => $arrseller, 
+			    "Action" => $arraction, 
+			    "User" => $arruser,
+			    "Number" => $arrNumber,
+			    "Tpages" => $pages,
+			    "Tpage" => $page,
+			    "Fpage" => "Idź do strony:",
+			    "Tastral" => ASTRAL,
+			    "Tamount" => T_AMOUNT,
+			    "Tcost" => T_COST,
+			    "Tseller" => T_SELLER,
+			    "Tnumber" => T_NUMBER,
+			    "Toptions" => T_OPTIONS,
+			    "Astral" => ASTRAL,
+			    "Asearch" => A_SEARCH,
+			    "Viewinfo" => VIEW_INFO));
+    if (!isset($_POST['szukany']))
+      {
+	$_POST['szukany'] = '';
+      }
 }
 
 /**
@@ -394,39 +396,38 @@ if (isset($_GET['buy']))
         error (IS_YOUR);
     }
     $seller = $db -> Execute("SELECT `user` FROM `players` WHERE `id`=".$buy -> fields['seller']);
-    if (ereg("^M[0-9]", $buy -> fields['type']))
-    {
-        $intKey = str_replace("M", "", $buy -> fields['type']);
+    switch ($buy->fields['type'][0])
+      {
+      case 'M':
+	$intKey = str_replace("M", "", $buy -> fields['type']);
         $intNumber = $intKey;
-    }
-    if (ereg("^P[0-9]", $buy -> fields['type']))
-    {
-        $intKey = str_replace("P", "", $buy -> fields['type']);
+	break;
+      case 'P':
+	$intKey = str_replace("P", "", $buy -> fields['type']);
         $intNumber = $intKey + 7;
-    }
-    if (ereg("^R[0-9]", $buy -> fields['type']))
-    {
-        $intKey = str_replace("R", "", $buy -> fields['type']);
+	break;
+      case 'R':
+	$intKey = str_replace("R", "", $buy -> fields['type']);
         $intNumber = $intKey + 12;
-    }
-    if (ereg("^C[0-9]", $buy -> fields['type']))
-    {
-        $intKey = str_replace("C", "", $buy -> fields['type']);
+	break;
+      case 'C':
+	$intKey = str_replace("C", "", $buy -> fields['type']);
         $intNumber = $intKey + 17;
         $buy -> fields['number'] = '-';
-    }
-    if (ereg("^O[0-9]", $buy -> fields['type']))
-    {
-        $intKey = str_replace("O", "", $buy -> fields['type']);
+	break;
+      case 'O':
+	$intKey = str_replace("O", "", $buy -> fields['type']);
         $intNumber = $intKey + 24;
         $buy -> fields['number'] = '-';
-    }
-    if (ereg("^T[0-9]", $buy -> fields['type']))
-    {
-        $intKey = str_replace("T", "", $buy -> fields['type']);
+	break;
+      case 'T':
+	$intKey = str_replace("T", "", $buy -> fields['type']);
         $intNumber = $intKey + 29;
         $buy -> fields['number'] = '-';
-    }
+	break;
+      default:
+	break;
+      }
     $arrNames = array_merge($arrNames, $arrNames2);
     $strName = $arrNames[$intNumber];
     $intAstralnumber = $buy -> fields['number'] + 1;
@@ -513,36 +514,35 @@ if (isset($_GET['view']) && $_GET['view'] == 'all')
     $arrNames = array_merge($arrNames, $arrNames2);
     while (!$oferts -> EOF) 
     {
-        if (ereg("^M[0-9]", $oferts -> fields['type']))
-        {
-            $intKey = str_replace("M", "", $oferts -> fields['type']);
-            $intNumber = $intKey;
-        }
-        if (ereg("^P[0-9]", $oferts -> fields['type']))
-        {
-            $intKey = str_replace("P", "", $oferts -> fields['type']);
-            $intNumber = $intKey + 7;
-        }
-        if (ereg("^R[0-9]", $oferts -> fields['type']))
-        {
-            $intKey = str_replace("R", "", $oferts -> fields['type']);
-            $intNumber = $intKey + 12;
-        }
-        if (ereg("^C[0-9]", $oferts -> fields['type']))
-        {
-            $intKey = str_replace("C", "", $oferts -> fields['type']);
-            $intNumber = $intKey + 17;
-        }
-        if (ereg("^O[0-9]", $oferts -> fields['type']))
-        {
-            $intKey = str_replace("O", "", $oferts -> fields['type']);
-            $intNumber = $intKey + 24;
-        }
-        if (ereg("^T[0-9]", $oferts -> fields['type']))
-        {
-            $intKey = str_replace("T", "", $oferts -> fields['type']);
-            $intNumber = $intKey + 29;
-        }
+      switch ($oferts->fields['type'][0])
+	{
+	case 'M':
+	  $intKey = str_replace("M", "", $oferts -> fields['type']);
+	  $intNumber = $intKey;
+	  break;
+	case 'P':
+	  $intKey = str_replace("P", "", $oferts -> fields['type']);
+	  $intNumber = $intKey + 7;
+	  break;
+	case 'R':
+	  $intKey = str_replace("R", "", $oferts -> fields['type']);
+	  $intNumber = $intKey + 12;
+	  break;
+	case 'C':
+	  $intKey = str_replace("C", "", $oferts -> fields['type']);
+	  $intNumber = $intKey + 17;
+	  break;
+	case 'O':
+	  $intKey = str_replace("O", "", $oferts -> fields['type']);
+	  $intNumber = $intKey + 24;
+	  break;
+	case 'T':
+	  $intKey = str_replace("T", "", $oferts -> fields['type']);
+	  $intNumber = $intKey + 29;
+	  break;
+	default:
+	  break;
+	}
         $arrname[$i] = $arrNames[$intNumber];
         $arramount[$i] = 0;
         $query = $db -> Execute("SELECT `id` FROM `amarket` WHERE `type`='".$oferts -> fields['type']."'");
