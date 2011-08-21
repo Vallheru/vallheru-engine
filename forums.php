@@ -8,7 +8,7 @@
  *   @author               : thindil <thindil@tuxfamily.org>
  *   @author               : mori <ziniquel@users.sourceforge.net>
  *   @version              : 1.4
- *   @since                : 20.08.2011
+ *   @since                : 21.08.2011
  *
  */
 
@@ -228,10 +228,6 @@ if (isset($_GET['topics']))
 	$arrreplies[$i] = $replies;
 	$topic -> MoveNext();
 	$i++;
-	if ($i > 24)
-	  {
-	    break;
-	  }
       }
     $topic -> Close();
     
