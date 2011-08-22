@@ -117,7 +117,6 @@ if (!isset ($_GET['lista']))
 {
     $_GET['lista'] = 'id';
 }
-$_GET['limit'] = intval($_GET['limit']);
 if (!in_array($_GET['lista'], array('id', 'user', 'rank', 'rasa', 'level'))) 
   {
     error(ERROR);

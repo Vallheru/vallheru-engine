@@ -62,32 +62,36 @@
     {if !$Fight && !$Fight1}
         {$Monsterinfo}
         <br /><br />
-        {if $Dalej > 0}
-            <form method="post" action="battle.php?action=monster&amp;fight={$Id}">
-            <input type="submit" value="{$Abattle2}" /> {$Witha} <input type="text" size="5" name="razy" value="1" /> {$Name}{$Nend}
-            <input type="text" size="5" name="times" value="1" /> {$Mtimes}</form>
-        {/if}
-        {if $Next > 0}
-            <form method="post" action="battle.php?action=monster&amp;fight1={$Id}">
-            <input type="submit" value="{$Abattle2}" /> {$Witha} <input type="text" size="5" name="razy" value="1" /> {$Name}{$Nend}
-            <input type="hidden" name="write" value="Y" />
-            </form>
-        {/if}
         <table class="dark">
         <tr>
         <td width="100"><b><u>{$Mname}</u></b></td>
         <td width="50"><b><u>{$Mlevel}</u></b></td>
         <td width="50"><b><u>{$Mhealth}</u></b></td>
-        <td><b><u>{$Mturn}</u></b></td>
-        <td><b><u>{$Mfast}</u></b></td>
+        <td width="50"><b><u>{$Mturn}</u></b></td>
+        <td width="50"><b><u>{$Mfast}</u></b></td>
+	<td width="50"><b><u>{$Mamount}</u></b></td>
+	<td width="50"><b><u>{$Mtimes}</u></b></td>
         </tr>
         {section name=monster loop=$Enemyid}
             <tr>
             <td>{$Enemyname[monster]}</td>
             <td>{$Enemylevel[monster]}</td>
             <td>{$Enemyhp[monster]}</td>
-            <td><a href="battle.php?action=monster&amp;next={$Enemyid[monster]}">{$Abattle}</a></td>
-            <td><a href="battle.php?action=monster&amp;dalej={$Enemyid[monster]}">{$Abattle}</a></td>
+	    <form method="post" action="battle.php?action=monster">
+                <td><input type="submit" name="fight1" value="{$Mturn}" />
+		    <input type="hidden" value="{$Enemyid[monster]}" name="mid" />
+		    <input type="hidden" name="write" value="Y" />
+		</td>
+		<td><input type="submit" name="fight" value="{$Mfast}" />
+		    <input type="hidden" value="{$Enemyid[monster]}" name="mid" />
+		</td>
+		<td>
+		    <input type="text" size="5" name="razy" value="1" />
+		</td>
+		<td>
+		    <input type="text" size="5" name="times" value="1" />
+		</td>
+ 	    </form>
             </tr>
         {/section}
         </table><br />{$Orback2} <a href="battle.php">{$Bback2}</a>.

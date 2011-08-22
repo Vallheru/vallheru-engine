@@ -7,7 +7,7 @@
  *   @copyright            : (C) 2004,2005,2006,2011 Vallheru Team based on Gamers-Fusion ver 2.5
  *   @author               : thindil <thindil@tuxfamily.org>
  *   @version              : 1.4
- *   @since                : 07.08.2011
+ *   @since                : 22.08.2011
  *
  */
 
@@ -388,7 +388,7 @@ if (isset ($_GET['action']) && $_GET['action'] == 'monster')
     {
         error(ERROR);
     }
-    if (!isset($_GET['fight']) && !isset($_GET['fight1'])) 
+    if (!isset($_POST['fight']) && !isset($_POST['fight1']) && !isset($_GET['fight1'])) 
     {
         $monster = $db -> Execute("SELECT `id`, `name`, `level`, `hp` FROM `monsters` WHERE `location`='".$player -> location."' ORDER BY `level` ASC");
         $arrid = array();
@@ -418,57 +418,27 @@ if (isset ($_GET['action']) && $_GET['action'] == 'monster')
                                  "Mturn" => M_TURN,
                                  "Abattle" => A_BATTLE,
                                  "Orback2" => OR_BACK2,
+				 "Mtimes" => "Razy",
+				 "Mamount" => "Ilość",
                                  "Bback2" => B_BACK2));
-    }
-    if (isset($_GET['dalej']) || isset($_GET['next'])) 
-    {
-        $smarty -> assign(array("Abattle2" => A_BATTLE2,
-                                "Witha" => WITH_A,
-                                "Nend" => N_END));
-    }
-    if (isset($_GET['dalej'])) 
-    {
-        
-        if (!ereg("^[1-9][0-9]*$", $_GET['dalej'])) 
-        {
-            error (ERROR);
-        }
-        $en = $db -> Execute("SELECT id, name, location FROM monsters WHERE id=".$_GET['dalej']);
-        if ($en -> fields['location'] != $player -> location)
-        {
-            error(ERROR);
-        }
-        $smarty -> assign ( array("Id" => $en -> fields['id'], 
-                                  "Name" => $en -> fields['name'],
-                                  "Mtimes" => M_TIMES));
-        $en -> Close();
-    }
-    if (isset ($_GET['next'])) 
-    {
-        if (!ereg("^[1-9][0-9]*$", $_GET['next'])) 
-        { 
-            error (ERROR);
-        }
-        $en = $db -> Execute("SELECT id, name, location FROM monsters WHERE id=".$_GET['next']);
-        if ($en -> fields['location'] != $player -> location)
-        {
-            error(ERROR);
-        }
-        $smarty -> assign ( array("Id" => $en -> fields['id'], 
-                                  "Name" => $en -> fields['name']));
     }
     /**
     * Turn fight with monsters
     */
-    if (isset($_GET['fight1'])) 
+    if (isset($_POST['fight1']) || isset($_GET['fight1'])) 
     {
         global $arrehp;
         global $newdate;
+	if (!isset($_GET['fight1']))
+	  {
+	    checkvalue($_POST['mid']);
+	    $_GET['fight1'] = $_POST['mid'];
+	  }
 	if (!isset($_POST['razy']) && !isset ($_POST['action']))
         {
             error(ERROR);
         }
-        if (!ereg("^[1-9][0-9]*$", $_GET['fight1']) || !isset ($_POST['action']) && !ereg("^[1-9][0-9]*$", $_POST['razy']))
+        if (!intval($_GET['fight1']) || !isset ($_POST['action']) && !intval($_POST['razy']))
         {
             error (NO_ID);
         } 
@@ -552,30 +522,22 @@ if (isset ($_GET['action']) && $_GET['action'] == 'monster')
     /**
     * Fast fight with monsters
     */
-    if (isset($_GET['fight'])) 
+    if (isset($_POST['fight'])) 
     {
         global $newdate;
 
-        if (!ereg("^[1-9][0-9]*$", $_GET['fight'])) 
-        {
-            error (ERROR);
-        }
+	$_GET['fight'] = $_POST['mid'];
+	checkvalue($_GET['fight']);
         if (!isset($_POST['razy'])) 
         {
             $_POST['razy'] = 1;
         }
-        if (!ereg("^[1-9][0-9]*$", $_POST['razy'])) 
-        {
-            error (ERROR);
-        }
+	checkvalue($_POST['razy']);
         if (!isset($_POST['times']))
         {
             error(ERROR);
         }
-        if (!ereg("^[1-9][0-9]*$", $_POST['times'])) 
-        {
-            error (ERROR);
-        }
+	checkvalue($_POST['times']);
         if ($player -> hp <= 0) 
         {
             error (NO_HP);

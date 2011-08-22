@@ -1,5 +1,7 @@
 2011-08-22  Bartek thindil Jasicki  <thindil@tuxfamily.org>
 
+	* FEATURE,battle.php, templates/layout1/battle.tpl, templates/battle.tpl: 
+	simplify fighting monsters menu
 	* UPDATE,explore.php: 
 	better count player current energy
 	* UPDATE,templates/layout1/memberlist.tpl, templates/memberlist.tpl, memberlist.php: 
