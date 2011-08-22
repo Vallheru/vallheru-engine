@@ -8,7 +8,7 @@
  *   @author               : thindil <thindil@tuxfamily.org>
  *   @author               : eyescream <tduda@users.sourceforge.net>
  *   @version              : 1.4
- *   @since                : 20.08.2011
+ *   @since                : 22.08.2011
  *
  */
 
@@ -49,9 +49,7 @@ $arrMinerals = array(MIN1, MIN15, MIN16, MIN17, MIN18, MIN2, MIN9, MIN10, MIN3, 
 /**
 * Assign variables to template
 */
-$smarty -> assign(array("Message" => '', 
-                        "Previous" => '', 
-                        "Next" => ''));
+$smarty -> assign("Message", '');
 
 /**
  * Main menu
@@ -74,7 +72,7 @@ if (isset ($_GET['view']) && $_GET['view'] == 'market')
 {
     if (empty($_POST['szukany'])) 
     {
-        $msel = $db -> Execute("SELECT id FROM pmarket");
+        $msel = $db -> Execute("SELECT count(`id`) FROM pmarket");
         $_POST['szukany'] = '';
     } 
         else 
@@ -91,22 +89,32 @@ if (isset ($_GET['view']) && $_GET['view'] == 'market')
 		break;
 	      }
 	  }
-        $msel = $db -> Execute("SELECT id FROM pmarket WHERE nazwa LIKE ".$strSearch);
+        $msel = $db -> Execute("SELECT count(`id`) FROM pmarket WHERE nazwa LIKE ".$strSearch);
     }
-    $oferty = $msel -> RecordCount();
+    $oferty = $msel->fields['count(`id`)'];
     $msel -> Close();
     if ($oferty == 0) 
     {
         error (NO_OFERTS);
     }
-    if (!isset($_GET['limit'])) 
-    {
-        $_GET['limit'] = 0;
-    }
     if (!isset($_GET['lista'])) 
     {
         $_GET['lista'] = 'id';
     }
+    $pages = ceil($oferty / 30);
+    if (isset($_GET['page']))
+      {
+	checkvalue($_GET['page']);
+	$page = $_GET['page'];
+      }
+    else
+      {
+	$page = 1;
+      }
+    if ($page > $pages)
+      {
+	$page = $pages;
+      }
     $smarty -> assign(array("Mineral" => MINERAL,
                             "Viewinfo" => VIEW_INFO,
                             "Tamount" => T_AMOUNT,
@@ -114,64 +122,54 @@ if (isset ($_GET['view']) && $_GET['view'] == 'market')
                             "Tseller" => T_SELLER,
 			    "Asearch" => A_SEARCH,
                             "Toptions" => T_OPTIONS));
-    if ($_GET['limit'] < $oferty) 
+    if (!in_array($_GET['lista'], array('nazwa', 'ilosc', 'cost', 'seller', 'id'))) 
       {
-	$_GET['limit'] = intval($_GET['limit']);
-        if (!in_array($_GET['lista'], array('nazwa', 'ilosc', 'cost', 'seller', 'id'))) 
-	  {
-	    error(ERROR);  
-	  }
-        if (empty($_POST['szukany'])) 
-        {
-            $pm = $db -> SelectLimit("SELECT * FROM pmarket ORDER BY ".$_GET['lista']." DESC", 30, $_GET['limit']);
-        } 
-            else 
-        {
-            $pm = $db -> SelectLimit("SELECT * FROM pmarket WHERE nazwa LIKE ".$strSearch." ORDER BY ".$_GET['lista']." DESC", 30, $_GET['limit']);
-        }
-        $arrname = array();
-        $arramount = array();
-        $arrcost = array();
-        $arrseller = array();
-        $arruser = array();
-	$arrId = array();
-        $i = 0;
-        while (!$pm -> EOF) 
-        {
-            $arrname[$i] = $pm -> fields['nazwa'];
-            $arramount[$i] = $pm -> fields['ilosc'];
-            $arrcost[$i] = $pm -> fields['cost'];
-            $arrseller[$i] = $pm -> fields['seller'];
-            $seller = $db -> Execute("SELECT user FROM players WHERE id=".$pm -> fields['seller']);
-            $arruser[$i] = $seller -> fields['user'];
-	    $arrId[$i] = $pm->fields['id'];
-            $seller -> Close();
-            $pm -> MoveNext();
-            $i = $i + 1;
-        }
-        $pm -> Close();
-        $smarty -> assign(array("Name" => $arrname, 
-				"Amount" => $arramount, 
-				"Cost" => $arrcost, 
-				"Seller" => $arrseller,
-				"Iid" => $arrId,
-				"Pid" => $player->id,
-				"Abuy" => A_BUY,
-				"Aadd" => A_ADD,
-				"Adelete" => A_DELETE,
-				"Achange" => A_CHANGE,
-				"User" => $arruser));
-        if ($_GET['limit'] >= 30) 
-        {
-            $lim = $_GET['limit'] - 30;
-            $smarty -> assign ("Previous", "<form method=\"post\" action=\"pmarket.php?view=market&limit=".$lim."&lista=".$_GET['lista']."\"><input type=\"hidden\" name=\"szukany\" value=\"".$_POST['szukany']."\"><input type=\"submit\" value=\"".A_PREVIOUS."\"></form> ");
-        }
-        $_GET['limit'] = $_GET['limit'] + 30;
-        if ($oferty > 30 && $_GET['limit'] < $oferty) 
-        {
-            $smarty -> assign ("Next", " <form method=\"post\" action=\"pmarket.php?view=market&limit=".$_GET['limit']."&lista=".$_GET['lista']."\"><input type=\"hidden\" name=\"szukany\" value=\"".$_POST['szukany']."\"><input type=\"submit\" value=\"".A_NEXT."\"></form>");
-        }
-    }
+	error(ERROR);  
+      }
+    if (empty($_POST['szukany'])) 
+      {
+	$pm = $db -> SelectLimit("SELECT * FROM pmarket ORDER BY ".$_GET['lista']." DESC", 30, (30 * ($page - 1)));
+      } 
+    else 
+      {
+	$pm = $db -> SelectLimit("SELECT * FROM pmarket WHERE nazwa LIKE ".$strSearch." ORDER BY ".$_GET['lista']." DESC", 30, (30 * ($page - 1)));
+      }
+    $arrname = array();
+    $arramount = array();
+    $arrcost = array();
+    $arrseller = array();
+    $arruser = array();
+    $arrId = array();
+    $i = 0;
+    while (!$pm -> EOF) 
+      {
+	$arrname[$i] = $pm -> fields['nazwa'];
+	$arramount[$i] = $pm -> fields['ilosc'];
+	$arrcost[$i] = $pm -> fields['cost'];
+	$arrseller[$i] = $pm -> fields['seller'];
+	$seller = $db -> Execute("SELECT user FROM players WHERE id=".$pm -> fields['seller']);
+	$arruser[$i] = $seller -> fields['user'];
+	$arrId[$i] = $pm->fields['id'];
+	$seller -> Close();
+	$pm -> MoveNext();
+	$i = $i + 1;
+      }
+    $pm -> Close();
+    $smarty -> assign(array("Name" => $arrname, 
+			    "Amount" => $arramount, 
+			    "Cost" => $arrcost, 
+			    "Seller" => $arrseller,
+			    "Iid" => $arrId,
+			    "Pid" => $player->id,
+			    "Tpages" => $pages,
+			    "Tpage" => $page,
+			    "Fpage" => "Idź do strony:",
+			    "Mlist" => $_GET['lista'],
+			    "Abuy" => A_BUY,
+			    "Aadd" => A_ADD,
+			    "Adelete" => A_DELETE,
+			    "Achange" => A_CHANGE,
+			    "User" => $arruser));
 }
 
 /**

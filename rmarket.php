@@ -8,7 +8,7 @@
  *   @author               : thindil <thindil@tuxfamily.org>
  *   @author               : eyescream <tduda@users.sourceforge.net>
  *   @version              : 1.4
- *   @since                : 20.08.2011
+ *   @since                : 22.08.2011
  *
  */
 
@@ -46,9 +46,7 @@ if ($player -> location != 'Altara' && $player -> location != 'Ardulith')
 /**
 * Assign variables to template
 */
-$smarty -> assign(array("Message" => '', 
-                        "Previous" => '', 
-                        "Next" => ''));
+$smarty -> assign("Message", '');
 
 /**
 * Main menu
@@ -85,10 +83,20 @@ if (isset ($_GET['view']) && $_GET['view'] == 'market')
     {
         error (NO_OFERTS);
     }
-    if (!isset($_GET['limit']))
-    {
-        $_GET['limit'] = 0;
-    }
+    $pages = ceil($przed / 30);
+    if (isset($_GET['page']))
+      {
+	checkvalue($_GET['page']);
+	$page = $_GET['page'];
+      }
+    else
+      {
+	$page = 1;
+      }
+    if ($page > $pages)
+      {
+	$page = $pages;
+      }
     $smarty -> assign(array("Tname" => T_NAME,
                             "Tpower" => T_POWER,
                             "Tcost" => T_COST,
@@ -98,85 +106,75 @@ if (isset ($_GET['view']) && $_GET['view'] == 'market')
                             "Viewinfo" => VIEW_INFO,
 			    "Asearch" => A_SEARCH,
                             "Toptions" => T_OPTIONS));
-    if ($_GET['limit'] < $przed) 
+    if (!in_array($_GET['lista'], array('id', 'name', 'power', 'milev',  'amount', 'cost', 'owner'))) 
       {
-	$_GET['limit'] = intval($_GET['limit']);
-        if (!in_array($_GET['lista'], array('id', 'name', 'power', 'milev',  'amount', 'cost', 'owner'))) 
-	  {
-	    error(ERROR); 
-	  }
-        if ($_GET['lista'] == 'zr')
+	error(ERROR); 
+      }
+    if ($_GET['lista'] == 'zr')
+      {
+	$strOrder = ' ASC';
+      }
+    else
+      {
+	$strOrder = ' DESC';
+      }
+    if (empty($_POST['szukany'])) 
+      {
+	$pm = $db -> SelectLimit("SELECT * FROM `equipment` WHERE `status`='R' AND `type`='I' ORDER BY ".$_GET['lista'].$strOrder, 30, (30 * ($page - 1)));
+      } 
+    else 
+      {
+	$strSearch = $db -> qstr("*".$_POST['szukany']."*", get_magic_quotes_gpc());
+	$pm = $db -> SelectLimit("SELECT * FROM `equipment` WHERE `status`='R' AND `type`='I' AND MATCH(`name`) AGAINST (".$strSearch." IN BOOLEAN MODE) ORDER BY ".$_GET['lista'].$strOrder, 30, (30 * ($page - 1)));
+      }
+    $arrname = array();
+    $arrpower = array();
+    $arrcost = array();
+    $arrowner = array();
+    $arraction = array();
+    $arramount = array();
+    $arrlevel = array();
+    $arrseller = array();
+    $arrId = array();
+    $i = 0;
+    while (!$pm -> EOF) 
+      {
+	$arrname[$i] = $pm -> fields['name'];
+	$arrpower[$i] = $pm -> fields['power'];
+	$arrcost[$i] = $pm -> fields['cost'];
+	$arrowner[$i] = $pm -> fields['owner'];
+	$arramount[$i] = $pm -> fields['amount'];
+	$arrlevel[$i] = $pm -> fields['minlev'];
+	$seller = $db -> Execute("SELECT user FROM players WHERE id=".$pm -> fields['owner']);
+	$arrseller[$i] = $seller -> fields['user'];
+	$seller -> Close();
+	$arrId[$i] = $pm->fields['id'];
+	$pm -> MoveNext();
+	$i = $i + 1;
+      }
+    $pm -> Close();
+    $smarty -> assign(array("Name" => $arrname, 
+			    "Power" => $arrpower, 
+			    "Cost" => $arrcost, 
+			    "Owner" => $arrowner, 
+			    "Action" => $arraction,  
+			    "Amount" => $arramount, 
+			    "Minlev" => $arrlevel,
+			    "Iid" => $arrId,
+			    "Pid" => $player->id,
+			    "Tpages" => $pages,
+			    "Tpage" => $page,
+			    "Fpage" => "Idź do strony:",
+			    "Mlist" => $_GET['lista'],
+			    "Abuy" => A_BUY,
+			    "Aadd" => A_ADD,
+			    "Adelete" => A_DELETE,
+			    "Achange" => A_CHANGE,
+			    "Seller" => $arrseller));
+    if (!isset($_POST['szukany'])) 
         {
-            $strOrder = ' ASC';
+	  $_POST['szukany'] = '';
         }
-            else
-        {
-            $strOrder = ' DESC';
-        }
-        if (empty($_POST['szukany'])) 
-        {
-            $pm = $db -> SelectLimit("SELECT * FROM `equipment` WHERE `status`='R' AND `type`='I' ORDER BY ".$_GET['lista'].$strOrder, 30, $_GET['limit']);
-        } 
-            else 
-        {
-            $strSearch = $db -> qstr("*".$_POST['szukany']."*", get_magic_quotes_gpc());
-            $pm = $db -> SelectLimit("SELECT * FROM `equipment` WHERE `status`='R' AND `type`='I' AND MATCH(`name`) AGAINST (".$strSearch." IN BOOLEAN MODE) ORDER BY ".$_GET['lista'].$strOrder, 30, $_GET['limit']);
-        }
-        $arrname = array();
-        $arrpower = array();
-        $arrcost = array();
-        $arrowner = array();
-        $arraction = array();
-        $arramount = array();
-        $arrlevel = array();
-        $arrseller = array();
-	$arrId = array();
-        $i = 0;
-        while (!$pm -> EOF) 
-        {
-            $arrname[$i] = $pm -> fields['name'];
-            $arrpower[$i] = $pm -> fields['power'];
-            $arrcost[$i] = $pm -> fields['cost'];
-            $arrowner[$i] = $pm -> fields['owner'];
-            $arramount[$i] = $pm -> fields['amount'];
-            $arrlevel[$i] = $pm -> fields['minlev'];
-            $seller = $db -> Execute("SELECT user FROM players WHERE id=".$pm -> fields['owner']);
-            $arrseller[$i] = $seller -> fields['user'];
-            $seller -> Close();
-            $arrId[$i] = $pm->fields['id'];
-            $pm -> MoveNext();
-            $i = $i + 1;
-        }
-        $pm -> Close();
-        $smarty -> assign(array("Name" => $arrname, 
-                                "Power" => $arrpower, 
-                                "Cost" => $arrcost, 
-                                "Owner" => $arrowner, 
-                                "Action" => $arraction,  
-                                "Amount" => $arramount, 
-                                "Minlev" => $arrlevel,
-				"Iid" => $arrId,
-				"Pid" => $player->id,
-				"Abuy" => A_BUY,
-				"Aadd" => A_ADD,
-				"Adelete" => A_DELETE,
-				"Achange" => A_CHANGE,
-                                "Seller" => $arrseller));
-        if (!isset($_POST['szukany'])) 
-        {
-            $_POST['szukany'] = '';
-        }
-        if ($_GET['limit'] >= 30) 
-        {
-            $lim = $_GET['limit'] - 30;
-            $smarty -> assign ("Previous", "<form method=\"post\" action=\"rmarket.php?view=market&limit=".$lim."&lista=".$_GET['lista']."\"><input type=\"hidden\" name=\"szukany\" value=\"".$_POST['szukany']."\"><input type=\"submit\" value=\"".A_PREVIOUS."\"></form> ");
-        }
-        $_GET['limit'] = $_GET['limit'] + 30;
-        if ($przed > 30 && $_GET['limit'] < $przed) 
-        {
-            $smarty -> assign ("Next", " <form method=\"post\" action=\"rmarket.php?view=market&limit=".$_GET['limit']."&lista=".$_GET['lista']."\"><input type=\"hidden\" name=\"szukany\" value=\"".$_POST['szukany']."\"><input type=\"submit\" value=\"".A_NEXT."\"></form>");
-        }
-    }
 }
 
 /**

@@ -1,7 +1,7 @@
 {if $View == "" && $Remowe == "" && $Buy == ""}
     {$Minfo}.<br />
     <ul>
-    <li><a href="{$SCRIPT_NAME}?view=market&amp;lista=id&amp;limit=0">{$Aview}</a>
+    <li><a href="{$SCRIPT_NAME}?view=market&amp;lista=id">{$Aview}</a>
     <li><a href="{$SCRIPT_NAME}?view=add">{$Aadd}</a>
     <li><a href="{$SCRIPT_NAME}?view=del">{$Adelete}</a>
     <li><a href="{$SCRIPT_NAME}?view=all">{$Alist}</a>
@@ -11,16 +11,16 @@
 
 {if $View == "market"}
     {$Viewinfo} <a href="hmarket.php">{$Aback}</a>.<br /><br />
-    <form method="post" action="hmarket.php?view=market&amp;limit=0&amp;lista=nazwa">
+    <form method="post" action="hmarket.php?view=market&amp;lista=nazwa">
         {$Therb}: <input type="text" name="szukany" /><br />
         <input type="submit" value="{$Asearch}" />
     </form><br />
     <table>
     <tr>
-    <td width="100"><a href="hmarket.php?view=market&amp;lista=nazwa&amp;limit=0"><b><u>{$Therb}</u></b></a></td>
-    <td width="100"><a href="hmarket.php?view=market&amp;lista=ilosc&amp;limit=0"><b><u>{$Tamount}</u></b></a></td>
-    <td width="100"><a href="hmarket.php?view=market&amp;lista=cost&amp;limit=0"><b><u>{$Tcost}</u></b></a></td>
-    <td width="100"><a href="hmarket.php?view=market&amp;lista=seller&amp;limit=0"><b><u>{$Tseller}</u></b></a></td>
+    <td width="100"><a href="hmarket.php?view=market&amp;lista=nazwa"><b><u>{$Therb}</u></b></a></td>
+    <td width="100"><a href="hmarket.php?view=market&amp;lista=ilosc"><b><u>{$Tamount}</u></b></a></td>
+    <td width="100"><a href="hmarket.php?view=market&amp;lista=cost"><b><u>{$Tcost}</u></b></a></td>
+    <td width="100"><a href="hmarket.php?view=market&amp;lista=seller"><b><u>{$Tseller}</u></b></a></td>
     <td width="100"><b><u>{$Toptions}</u></b></td>
     </tr>
     {section name=herb loop=$Name}
@@ -41,7 +41,16 @@
 	</tr>
     {/section}
     </table>
-    {$Previous}{$Next}
+    {if $Tpages > 1}
+    	<br />{$Fpage}
+    	{for $page = 1 to $Tpages}
+	    {if $page == $Tpage}
+	        {$page}
+	    {else}
+                <a href="hmarket.php?view=market&page={$page}&amp;lista={$Mlist}">{$page}</a>
+	    {/if}
+    	{/for}
+    {/if}
 {/if}
 
 {if $View == "add"}

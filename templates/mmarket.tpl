@@ -1,7 +1,7 @@
 {if $View == "" && $Delete == "" && $Buy == ""}
     {$Minfo}<br />
     <ul>
-    <li><a href="{$SCRIPT_NAME}?view=market&amp;lista=id&amp;limit=0">{$Aview}</a>
+    <li><a href="{$SCRIPT_NAME}?view=market&amp;lista=id">{$Aview}</a>
     <li><a href="{$SCRIPT_NAME}?view=add">{$Aadd}</a>
     <li><a href="{$SCRIPT_NAME}?view=del">{$Adelete}</a>
     <li><a href="{$SCRIPT_NAME}?view=all">{$Alist}</a>
@@ -11,17 +11,17 @@
 
 {if $View == "market"}
     {$Viewinfo} <a href=mmarket.php>{$Aback}</a>.<br /><br />
-    <form method="post" action="mmarket.php?view=market&amp;limit=0&amp;lista=name">
+    <form method="post" action="mmarket.php?view=market&amp;lista=name">
         {$Tname} <input type="text" name="szukany" />
         <input type="submit" value="{$Asearch}" />
     </form><br />
     <table>
     <tr>
-    <td width="150"><a href="mmarket.php?view=market&amp;lista=name&amp;limit=0"><b><u>{$Tname}</u></b></a></td>
-    <td width="100" align="center"><a href="mmarket.php?view=market&amp;lista=efect&amp;limit=0"><b><u>{$Tefect}</u></b></a></td>
-    <td width="50"><a href="mmarket.php?view=market&amp;lista=amount&amp;limit=0"><b><u>{$Tamount}</u></b></a></td>
-    <td width="50"><a href="mmarket.php?view=market&amp;lista=cost&amp;limit=0"><b><u>{$Tcost}</u></b></a></td>
-    <td width="100"><a href="mmarket.php?view=market&amp;lista=owner&amp;limit=0"><b><u>{$Tseller}</u></b></a></td>
+    <td width="150"><a href="mmarket.php?view=market&amp;lista=name"><b><u>{$Tname}</u></b></a></td>
+    <td width="100" align="center"><a href="mmarket.php?view=market&amp;lista=efect"><b><u>{$Tefect}</u></b></a></td>
+    <td width="50"><a href="mmarket.php?view=market&amp;lista=amount"><b><u>{$Tamount}</u></b></a></td>
+    <td width="50"><a href="mmarket.php?view=market&amp;lista=cost"><b><u>{$Tcost}</u></b></a></td>
+    <td width="100"><a href="mmarket.php?view=market&amp;lista=owner"><b><u>{$Tseller}</u></b></a></td>
     <td width="100"><b><u>{$Toptions}</u></b></td>
     </tr>
     {section name=mmarket loop=$Item}
@@ -38,7 +38,16 @@
 	</tr>
     {/section}
     </table>
-    {$Previous}{$Next}
+    {if $Tpages > 1}
+    	<br />{$Fpage}
+    	{for $page = 1 to $Tpages}
+	    {if $page == $Tpage}
+	        {$page}
+	    {else}
+                <a href="mmarket.php?view=market&page={$page}&amp;lista={$Mlist}">{$page}</a>
+	    {/if}
+    	{/for}
+    {/if}
 {/if}
 
 {if $View == "add"}

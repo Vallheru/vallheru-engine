@@ -1,3 +1,10 @@
+2011-08-22  Bartek thindil Jasicki  <thindil@tuxfamily.org>
+
+	* UPDATE,templates/layout1/rmarket.tpl, templates/layout1/hmarket.tpl, templates/rmarket.tpl, templates/hmarket.tpl, 
+	languages/pl/rmarket.php, languages/pl/hmarket.php, rmarket.php, hmarket.php, templates/layout1/pmarket.tpl, templates/layout1/mmarket.tpl, 
+	templates/pmarket.tpl, templates/mmarket.tpl, pmarket.php, mmarket.php, templates/layout1/market.tpl, templates/market.tpl:
+	better pagination on markets
+
 2011-08-21  Bartek thindil Jasicki  <thindil@tuxfamily.org>
 
 	* UPDATE,templates/layout1/amarket.tpl, templates/layout1/imarket.tpl, templates/amarket.tpl, templates/imarket.tpl, amarket.php,
