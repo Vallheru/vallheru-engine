@@ -7,7 +7,7 @@
  *   @copyright            : (C) 2004,2005,2006,2011 Vallheru Team based on Gamers-Fusion ver 2.5
  *   @author               : thindil <thindil@users.sourceforge.net>
  *   @version              : 1.4
- *   @since                : 16.08.2011
+ *   @since                : 22.08.2011
  *
  */
  
@@ -51,7 +51,6 @@ $smarty -> assign(array("Link" => '',
                         "Menu" => '',
                         "Youwant" => YOU_WANT,
                         "Ayes" => YES,
-			"Curen" => $player->energy,
                         "Ano" => NO));
 
 /**
@@ -404,6 +403,7 @@ if (isset($_GET['action']) && $_GET['action'] == 'moutains' && $player -> locati
         $strFind = $strFind.FIND_NOTHING;
     }
     $db -> Execute("UPDATE `players` SET `credits`=`credits`+".$arrGold[0].", `energy`=`energy`-".$fltAmount.", `maps`=".$player -> maps." WHERE `id`=".$player -> id);
+    $player->energy -= $fltAmount;
     $db -> Execute("UPDATE `settings` SET `value`=".$objMaps -> fields['value']." WHERE `setting`='maps'");
     $objMaps -> Close();
     $smarty -> assign(array("Youfind" => $strFind,
@@ -699,6 +699,7 @@ if (isset($_GET['action']) && $_GET['action'] == 'forest' && $player -> location
     }
     $fltEnergy = $fltAmount - $arrGold[1];
     $db -> Execute("UPDATE `players` SET `credits`=`credits`+".$arrGold[0].", `energy`=`energy`-".$fltEnergy.", `maps`=".$player -> maps." WHERE `id`=".$player -> id);
+    $player->energy -= $fltEnergy;
     $db -> Execute("UPDATE `settings` SET `value`=".$objMaps -> fields['value']." WHERE `setting`='maps'");
     $objMaps -> Close();
     $smarty -> assign(array("Youfind" => $strFind,
@@ -729,6 +730,7 @@ $smarty -> assign(array("Step" => $_GET['step'],
                         "Action" => $_GET['action'],
                         "Location" => $player -> location, 
                         "Roll" => $rzut,
+			"Curen" => $player->energy,
                         "Health" => $player -> hp));
 $smarty -> display('explore.tpl');
 
