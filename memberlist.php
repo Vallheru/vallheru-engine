@@ -99,10 +99,20 @@ if ($graczy == 0 && isset($_POST['id']) && $_POST['id'] > 0)
 {
     $strMessage = NO_PLAYER2.$_POST['id'];
 }
-if (!isset($_GET['limit'])) 
-{
-    $_GET['limit'] = 0;
-}
+$pages = ceil($graczy / 30);
+if (isset($_GET['page']))
+  {
+    checkvalue($_GET['page']);
+    $page = $_GET['page'];
+  }
+ else
+   {
+     $page = 1;
+   }
+if ($page > $pages)
+  {
+    $page = $pages;
+  }
 if (!isset ($_GET['lista'])) 
 {
     $_GET['lista'] = 'id';
@@ -116,79 +126,62 @@ if (isset($_GET['ip']))
   {
     $_POST['ip'] = $_GET['ip'];
   }
-if ($_GET['limit'] < $graczy) 
+if (empty($_POST['szukany']) && $_POST['id'] == 0 && empty($_POST['ip'])) 
+  {
+    $mem = $db -> SelectLimit("SELECT `id`, `user`, `rank`, `rasa`, `level`, `gender` FROM `players` ORDER BY `".$_GET['lista']."` ASC", 30, (30 * ($page - 1)));
+  } 
+elseif  (!empty($_POST['szukany']) && $_POST['id'] == 0) 
 {
-    if (empty($_POST['szukany']) && $_POST['id'] == 0 && empty($_POST['ip'])) 
-    {
-        $mem = $db -> SelectLimit("SELECT `id`, `user`, `rank`, `rasa`, `level`, `gender` FROM `players` ORDER BY `".$_GET['lista']."` ASC", 30, $_GET['limit']);
-    } 
-        elseif  (!empty($_POST['szukany']) && $_POST['id'] == 0) 
-    {
-        $mem = $db -> SelectLimit("SELECT `id`, `user`, `rank`, `rasa`, `level`, `gender` FROM `players` WHERE `user` LIKE ".$strSearch." ORDER BY `".$_GET['lista']."` ASC", 30, $_GET['limit']);
-    } 
-        elseif (!empty($_POST['szukany']) && $_POST['id'] > 0) 
-    {
-        $mem = $db -> SelectLimit("SELECT `id`, `user`, `rank`, `rasa`, `level`, `gender` FROM `players` WHERE `id`=".$_POST['id']." AND `user` LIKE ".$strSearch." ORDER BY `".$_GET['lista']."` ASC", 30,  $_GET['limit']);
-    } 
-        elseif (empty($_POST['szukany']) && $_POST['id'] > 0) 
-    {
-        $mem = $db -> SelectLimit("SELECT `id`, `user`, `rank`, `rasa`, `level`, `gender` FROM `players` WHERE `id`=".$_POST['id']." ORDER BY `".$_GET['lista']."` ASC", 30, $_GET['limit']);
-    }
-        elseif(!empty($_POST['ip']))
-    {
-        if ($player -> rank != 'Admin' && $player -> rank != 'Staff')
-        {
-            error(NO_PERM);
-        }
-        $_POST['ip'] = str_replace("*","%", $_POST['ip']);
-        $mem = $db -> SelectLimit("SELECT `id`, `user`, `rank`, `rasa`, `level`, `gender` FROM `players` WHERE `ip` LIKE '".$_POST['ip']."' ORDER BY `".$_GET['lista']."` ASC", 30, $_GET['limit']);
-    }
-    $arrrank = array();
-    $arrid = array();
-    $arrname = array();
-    $arrrace = array();
-    $arrlevel = array();
-    $i = 0;
-    while (!$mem -> EOF) 
-    {
-        /**
-         * Select player rank
-         */
-        require_once('includes/ranks.php');
-        $arrrank[$i] = selectrank($mem -> fields['rank'], $mem -> fields['gender']);
-
-        $arrid[$i] = $mem -> fields['id'];
-        $arrname[$i] = $mem -> fields['user'];
-        $arrrace[$i] = $mem -> fields['rasa'];
-        $arrlevel[$i] = $mem -> fields['level'];
-        $mem -> MoveNext();
-        $i = $i + 1;
-    }
-    $mem -> Close();
-    $smarty -> assign(array("Memid" => $arrid, 
-        "Name" => $arrname, 
-        "Race" => $arrrace, 
-        "Rank" => $arrrank, 
-        "Level" => $arrlevel));
-    if (isset($_POST['szukany']))
-    {
-        $strSearchpl = "&amp;szukany=".$_POST['szukany'];
-    }
-        else
-    {
-        $strSearchpl = '';
-    }
-    if ($_GET['limit'] >= 30) 
-    {
-        $lim = $_GET['limit'] - 30;
-        $smarty -> assign ("Previous", "<a href=memberlist.php?limit=".$lim."&lista=".$_GET['lista'].$strSearchpl.">".PREVIOUS_PL."</a> ");
-    }
-    $_GET['limit'] = $_GET['limit'] + 30;
-    if ($graczy > 30 && $_GET['limit'] < $graczy) 
-    {
-        $smarty -> assign ("Next", "<a href=memberlist.php?limit=".$_GET['limit']."&lista=".$_GET['lista'].$strSearchpl.">".NEXT_PL."</a>");
-    } 
+  $mem = $db -> SelectLimit("SELECT `id`, `user`, `rank`, `rasa`, `level`, `gender` FROM `players` WHERE `user` LIKE ".$strSearch." ORDER BY `".$_GET['lista']."` ASC", 30, (30 * ($page - 1)));
+} 
+elseif (!empty($_POST['szukany']) && $_POST['id'] > 0) 
+{
+  $mem = $db -> SelectLimit("SELECT `id`, `user`, `rank`, `rasa`, `level`, `gender` FROM `players` WHERE `id`=".$_POST['id']." AND `user` LIKE ".$strSearch." ORDER BY `".$_GET['lista']."` ASC", 30,  (30 * ($page - 1)));
+} 
+elseif (empty($_POST['szukany']) && $_POST['id'] > 0) 
+{
+  $mem = $db -> SelectLimit("SELECT `id`, `user`, `rank`, `rasa`, `level`, `gender` FROM `players` WHERE `id`=".$_POST['id']." ORDER BY `".$_GET['lista']."` ASC", 30, (30 * ($page - 1)));
 }
+elseif(!empty($_POST['ip']))
+{
+  if ($player -> rank != 'Admin' && $player -> rank != 'Staff')
+    {
+      error(NO_PERM);
+    }
+  $_POST['ip'] = str_replace("*","%", $_POST['ip']);
+  $mem = $db -> SelectLimit("SELECT `id`, `user`, `rank`, `rasa`, `level`, `gender` FROM `players` WHERE `ip` LIKE '".$_POST['ip']."' ORDER BY `".$_GET['lista']."` ASC", 30, (30 * ($page - 1)));
+}
+$arrrank = array();
+$arrid = array();
+$arrname = array();
+$arrrace = array();
+$arrlevel = array();
+$i = 0;
+while (!$mem -> EOF) 
+  {
+    /**
+     * Select player rank
+     */
+    require_once('includes/ranks.php');
+    $arrrank[$i] = selectrank($mem -> fields['rank'], $mem -> fields['gender']);
+    
+    $arrid[$i] = $mem -> fields['id'];
+    $arrname[$i] = $mem -> fields['user'];
+    $arrrace[$i] = $mem -> fields['rasa'];
+    $arrlevel[$i] = $mem -> fields['level'];
+    $mem -> MoveNext();
+    $i = $i + 1;
+  }
+$mem -> Close();
+$smarty -> assign(array("Memid" => $arrid, 
+			"Name" => $arrname, 
+			"Race" => $arrrace, 
+			"Rank" => $arrrank,
+			"Tpages" => $pages,
+			"Tpage" => $page,
+			"Fpage" => "Idź do strony:",
+			"Mlist" => $_GET['lista'],
+			"Level" => $arrlevel));
 
 /**
 * Initialization of variable
