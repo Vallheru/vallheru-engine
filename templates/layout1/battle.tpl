@@ -69,8 +69,8 @@
         <td width="50"><b><u>{$Mhealth}</u></b></td>
         <td width="50"><b><u>{$Mturn}</u></b></td>
         <td width="50"><b><u>{$Mfast}</u></b></td>
-	<td width="50"><b><u>{$Mamount}</u></b></td>
-	<td width="50"><b><u>{$Mtimes}</u></b></td>
+	<td width="50"><b><u>{$Mamount}<br />{$Mmonsters}</u></b></td>
+	<td width="50"><b><u>{$Mamount}<br />{$Mtimes}</u></b></td>
         </tr>
         {section name=monster loop=$Enemyid}
             <tr>

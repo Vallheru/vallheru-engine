@@ -418,8 +418,9 @@ if (isset ($_GET['action']) && $_GET['action'] == 'monster')
                                  "Mturn" => M_TURN,
                                  "Abattle" => A_BATTLE,
                                  "Orback2" => OR_BACK2,
-				 "Mtimes" => "Razy",
+				 "Mtimes" => "walk (szybkich)",
 				 "Mamount" => "Ilość",
+				 "Mmonsters" => "potworów",
                                  "Bback2" => B_BACK2));
     }
     /**

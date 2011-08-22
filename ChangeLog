@@ -1,5 +1,7 @@
 2011-08-22  Bartek thindil Jasicki  <thindil@tuxfamily.org>
 
+	* UPDATE,battle.php, templates/layout1/battle.tpl, templates/battle.tpl:
+	small table redesign
 	* FEATURE,battle.php, templates/layout1/battle.tpl, templates/battle.tpl: 
 	simplify fighting monsters menu
 	* UPDATE,explore.php: 
