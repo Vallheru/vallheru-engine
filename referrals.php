@@ -4,10 +4,10 @@
  *   Show referrals link and amount of referrals
  *
  *   @name                 : referrals.php                            
- *   @copyright            : (C) 2004-2005 Vallheru Team based on Gamers-Fusion ver 2.5
- *   @author               : thindil <thindil@users.sourceforge.net>
- *   @version              : 0.8 beta
- *   @since                : 26.03.2005
+ *   @copyright            : (C) 2004,2005,2011 Vallheru Team based on Gamers-Fusion ver 2.5
+ *   @author               : thindil <thindil@tuxfamily.org>
+ *   @version              : 1.4
+ *   @since                : 23.08.2011
  *
  */
 
@@ -43,15 +43,12 @@ if ($player -> location != 'Altara')
 
 }
 
-$query = $db -> Execute("SELECT id FROM players WHERE refs=".$player -> id);
-$ref = $query -> RecordCount();
-$query -> Close();
 $smarty -> assign(array("Adress" => $gameadress, 
 	"Id" => $player -> id, 
-	"Refs" => $ref,
+	"Refs" => $player->vallars,
 	"Ref1" => REF1,
 	"Ref2" => REF2,
-	"Ref3" => REF3));
+	"Ref3" => REF3 ));
 $smarty -> display ('referrals.tpl');
 
 require_once("includes/foot.php");

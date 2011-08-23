@@ -4,11 +4,11 @@
  *   Monuments - the best players in various fields.
  *
  *   @name                 : monuments.php                            
- *   @copyright            : (C) 2004,2005,2006 Vallheru Team based on Gamers-Fusion ver 2.5
- *   @author               : thindil <thindil@users.sourceforge.net>
+ *   @copyright            : (C) 2004,2005,2006,2011 Vallheru Team based on Gamers-Fusion ver 2.5
+ *   @author               : thindil <thindil@tuxfamily.org>
  *   @author               : eyescream <tduda@users.sourceforge.net>
- *   @version              : 1.3
- *   @since                : 14.11.2006
+ *   @version              : 1.4
+ *   @since                : 23.08.2011
  *
  */
 
@@ -28,7 +28,7 @@
 //   along with this program; if not, write to the Free Software
 //   Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 //
-// $Id: monuments.php 822 2006-11-16 15:00:03Z thindil $
+// $Id$
 
 $title = 'Posągi';
 require_once('includes/head.php');
@@ -62,23 +62,22 @@ function topplayers($strDbfield)
     return $arrTop;
 }
 
-
 // Set monument groups.
 $arrayMonumentGroups = array(PLAYER_RANKING, STATS, COMBAT_SKILLS, ARTISAN_SKILLS );
 // For each group decide which monuments should go there...
-$arrayMonumentTitles = array(array(HIGHEST_LEVEL, HIGHEST_WINS, HIGHEST_GOLD_IN_MONEYBAG, HIGHEST_GOLD_ON_ACCOUNT),
+$arrayMonumentTitles = array(array(HIGHEST_LEVEL, HIGHEST_WINS, HIGHEST_GOLD_IN_MONEYBAG, HIGHEST_GOLD_ON_ACCOUNT, "Vallary"),
                              array(HIGHEST_STRENGTH, HIGHEST_ENDURANCE, HIGHEST_INTELLIGENCE, HIGHEST_WISDOM, HIGHEST_SPEED, HIGHEST_AGILITY),
                              array(HIGHEST_SIDEARMS_SKILL, HIGHEST_GAME_SHOOTING, HIGHEST_SPELL_CASTING, HIGHEST_DODGING, HIGHEST_LEADERSHIP),
                              array(HIGHEST_SMITHING, HIGHEST_CARPENTERING, HIGHEST_ALCHEMY, HIGHEST_HERBALISM, HIGHEST_JEWELLERS_CRAFT, HIGHEST_BREEDING, HIGHEST_MINING, HIGHEST_WOODCUTTING)
                              );
 // ...and add description of stat/skill/achievement.
-$arrayMonumentDescriptions = array(array(LEVEL, WINS, GOLD_IN_MONEYBAG, GOLD_ON_ACCOUNT),
+$arrayMonumentDescriptions = array(array(LEVEL, WINS, GOLD_IN_MONEYBAG, GOLD_ON_ACCOUNT, "Vallary"),
                                    array(STRENGTH, ENDURANCE, INTELLIGENCE, WISDOM, SPEED, AGILITY),
                                    array(SIDEARMS_SKILL, GAME_SHOOTING, SPELL_CASTING, DODGING, LEADERSHIP),
                                    array(SMITHING, CARPENTERING, ALCHEMY, HERBALISM, JEWELLERS_CRAFT, BREEDING, MINING, WOODCUTTING)
                                    );
         
-$arrayMonuments = array(array(topplayers('level'), topplayers('wins'), topplayers('credits'),topplayers('bank')),
+$arrayMonuments = array(array(topplayers('level'), topplayers('wins'), topplayers('credits'),topplayers('bank'), topplayers('vallars')),
                         array(topplayers('strength'), topplayers('wytrz'), topplayers('inteli'), topplayers('wisdom'), topplayers('szyb'), topplayers('agility')),
                         array(topplayers('atak'), topplayers('shoot'), topplayers('magia'), topplayers('unik'), topplayers('leadership')),
                         array(topplayers('ability'), topplayers('fletcher'), topplayers('alchemia'), topplayers('herbalist'), topplayers('jeweller'), topplayers('breeding'), topplayers('mining'), topplayers('lumberjack'))

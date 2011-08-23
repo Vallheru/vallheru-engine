@@ -168,6 +168,13 @@ function checkexp ($exp,$expgain,$level,$rasa,$user,$eid,$enemyid,$enemyuser,$pl
     $energy -> Close();    
     if ($poziom > 0) 
     {
+        $objValls = $db->Execute("SELECT `level`, `refs` FROM `players` WHERE `id`=".$eid);
+	if (($objValls->fields['level'] + $poziom >= 5) && ($objValls->fields['refs'] > 0))
+	  {
+	    $db->Execute("UPDATE `players` SET `vallars`=`vallars`+1 WHERE `id`=".$objValls->fields['refs']);
+	    $db->Execute("UPDATE `players` SET `refs`=0 WHERE `id`=".$eid);
+	  }
+	$objValls->Close();
         if ($player == $eid) 
         {
             $text = "<br /><b>".YOU_GAIN."</b> ".$user.".<br />". $poziom." ".LEVELS."<br />".$ap." ".AP."<br />".$pz." ".HIT_POINTS."<br />";

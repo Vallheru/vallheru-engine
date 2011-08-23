@@ -323,9 +323,6 @@ foreach ($arrLevel as $intLevel)
 
 $pct = (($player -> exp / $expn) * 100);
 $pct = round($pct,"0");
-$query = $db -> Execute("SELECT count(`id`) FROM `players` WHERE `refs`=".$player -> id);
-$ref = $query -> fields['count(`id`)'] + $player->vallars;
-$query -> Close();
 
 $query = $db -> Execute("SELECT count(`id`) FROM `log` WHERE `unread`='F' AND `owner`=".$player -> id);
 $numlog = $query -> fields['count(`id`)'];
@@ -389,7 +386,7 @@ $smarty -> assign (array ("Time" => $time,
                           "Gold" => $player -> credits,
                           "Bank" => $player -> bank,
                           "Mithril" => $player -> platinum,
-                          "Referals" => $ref,
+                          "Referals" => $player->vallars,
                           "Numlog" => $numlog,
                           "Style" => $player -> style,
                           "Graphbar" => $player -> graphbar,
