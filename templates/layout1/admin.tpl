@@ -70,6 +70,14 @@
     {/if}
 {/if}
 
+{if $View == "vallars"}
+    <form method="post" action="admin.php?view=vallars&amp;step=add">
+    {$Valid}: <input type="text" name="id" /> <br />
+    {$Vallars}: <input type="text" name="amount" /><br />
+    {$Vreason}: <textarea name="reason"></textarea><br />
+    <input type="submit" value="{$Aadd}" /></form>
+{/if}
+
 {if $View == "bugreport"}
     {if $Step != ""}
         <b>{$Bugname}:</b> {$Bugname2}<br />

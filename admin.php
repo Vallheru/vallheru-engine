@@ -8,7 +8,7 @@
  *   @author               : thindil <thindil@tuxfamily.org>
  *   @author               : eyescream <tduda@users.sourceforge.net>
  *   @version              : 1.4
- *   @since                : 19.08.2011
+ *   @since                : 23.08.2011
  *
  */
  
@@ -110,10 +110,7 @@ if (isset($_GET['view']) && $_GET['view'] == 'bugreport')
      */
         else
     {
-        if (!ereg("^[1-9][0-9]*$", $_GET['step']))
-        {
-            error(ERROR);
-        }
+	checkvalue($_GET['step']);
         $objBug = $db -> Execute("SELECT `id`, `sender`, `title`, `type`, `location`, `desc` FROM `bugreport` WHERE `id`=".$_GET['step']);
         if (!$objBug -> fields['id'])
         {
@@ -180,6 +177,7 @@ if (isset($_GET['view']) && $_GET['view'] == 'bugreport')
                 $strAuthor = '<b><a href="view.php?view='.$player -> id.'">'.$player -> user."</a></b>, ID <b>".$player -> id.'</b>';
                 $strDesc = T_BUG.$strType."): ".$objBug -> fields['title']. REPORTED_BY.$objBug -> fields['sender'];
                 $db -> Execute("INSERT INTO `changelog` (`author`, `location`, `text`, `date`, `lang`) VALUES('".$strAuthor."', '".$objBug -> fields['location']."', '".$strDesc."', ".$strDate.", '".$player -> lang."')");
+		$db->Execute("UPDATE `players` SET `vallars`=`vallars`+".$_POST['vallars']." WHERE `id`=".$objBug->fields['sender']);
             }
             $db -> Execute("DELETE FROM `bugreport` WHERE `id`=".$_GET['step']);
             if (isset($_POST['bugcomment']) && !empty($_POST['bugcomment']))
@@ -192,6 +190,33 @@ if (isset($_GET['view']) && $_GET['view'] == 'bugreport')
         $objBug -> Close();
     }
 }
+
+/**
+ * Add/remove player vallars
+ */
+if (isset($_GET['view']) && $_GET['view'] == 'vallars')
+  {
+    $smarty->assign(array("Valid" => "ID",
+			  "Aadd" => "Dodaj",
+			  "Vreason" => "Przyczyna"));
+    if (isset($_GET['step']) && $_GET['step'] == 'add')
+      {
+	$strDate = $db -> DBDate($newdate);
+	checkvalue($_POST['id']);
+	if ($_POST['amount'] > 0)
+	  {
+	    $strInfo = "Przyznano Tobie ";
+	  }
+	else
+	  {
+	    $strInfo = "Zabrano Tobie ";
+	  }
+	$strInfo .= abs($_POST['amount'])." Vallarów. Przyczyna: ".$_POST['reason'].".";
+	$db->Execute("UPDATE `players` SET `vallars`=`vallars`+".$_POST['amount']." WHERE `id`=".$_POST['id']);
+	$db -> Execute("INSERT INTO `log` (`owner`, `log`, `czas`) VALUES(".$_POST['id'].", '".$strInfo."', ".$strDate.")");
+	error($strInfo);
+      }
+  }
 
 /**
  * Add player to quest
@@ -1322,8 +1347,8 @@ if (!isset($_GET['view']))
     $_GET['view'] = '';
     $arrView1 = array('bridge', 'poll', 'addtext');
     $arrLinks1 = array(A_BRIDGE, A_POLL, A_ADD_NEWS);
-    $arrView2 = array('del', 'donate', 'takeaway', 'add', 'tags', 'czat', 'jail', 'jailbreak', 'delplayers', 'ban', 'donator', 'logs', 'playerquest', 'banmail');
-    $arrLinks2 = array(A_DELETE, A_DONATION, A_TAKE, A_RANK, A_IMMU, A_CHAT_BAN, A_JAIL, A_JAILBREAK, A_DEL_PLAYERS, A_BAN, A_DONATOR, A_LOGS, A_PLAYERQUEST, A_BAN_MAIL);
+    $arrView2 = array('del', 'donate', 'takeaway', 'add', 'tags', 'czat', 'jail', 'jailbreak', 'delplayers', 'ban', 'donator', 'logs', 'playerquest', 'banmail', 'vallars');
+    $arrLinks2 = array(A_DELETE, A_DONATION, A_TAKE, A_RANK, A_IMMU, A_CHAT_BAN, A_JAIL, A_JAILBREAK, A_DEL_PLAYERS, A_BAN, A_DONATOR, A_LOGS, A_PLAYERQUEST, A_BAN_MAIL, 'Daj/Zabierz Vallary graczowi');
     $arrView3 = array('clearf', 'clearc', 'forums', 'innarchive');
     $arrLinks3 = array(A_FORUM_P, A_CHAT_P, A_FORUMS, A_INNARCHIVE);
     $arrView4 = array('equipment', 'monster', 'monster2', 'kowal', 'czary', 'mill');

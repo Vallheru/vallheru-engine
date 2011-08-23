@@ -10,3 +10,4 @@ UPDATE `monsters` SET `exp1` = '1100', `exp2` = '1200' WHERE `monsters`.`id`=88;
 ALTER TABLE `equipment` ADD FULLTEXT ( `name` );
 ALTER TABLE `potions` ADD FULLTEXT ( `name` );
 ALTER TABLE `polls` ADD `desc` TEXT NOT NULL;
+ALTER TABLE `players` ADD `vallars` INT( 11 ) NOT NULL DEFAULT '0';

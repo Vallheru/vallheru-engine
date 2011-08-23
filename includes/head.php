@@ -7,7 +7,7 @@
  *   @copyright            : (C) 2004,2005,2006,2007,2011 Vallheru Team based on Gamers-Fusion ver 2.5
  *   @author               : thindil <thindil@tuxfamily.org>
  *   @version              : 1.4
- *   @since                : 15.08.2011
+ *   @since                : 23.08.2011
  *
  */
 
@@ -127,6 +127,9 @@ function catcherror($errortype, $errorinfo, $errorfile, $errorline)
     $referer = explode("/", $_SERVER['HTTP_REFERER']);
     $elements1 = count($referer);
     $numrefer = $elements1 - 1;
+    /*echo $errorline."<br />";
+    echo $errorfile."<br />";
+    echo $errorinfo."<br />";*/
     $objtest = $db -> Execute("SELECT `id` FROM `bugtrack` WHERE `file`='".$file[$numfile]."' AND `line`=".$errorline." AND `info`='".$errorinfo."' AND `type`=".$errortype." AND `referer`='".$referer[$numrefer]."'");
     if ($objtest -> fields['id'] > 0)
       {
@@ -136,7 +139,7 @@ function catcherror($errortype, $errorinfo, $errorfile, $errorline)
       {
         $db -> Execute("INSERT INTO `bugtrack` (`type`, `info`, `file`, `line`, `referer`) VALUES(".$errortype.", '".$errorinfo."', '".$file[$numfile]."', ".$errorline.", '".$referer[$numrefer]."')");
       }
-      $objtest -> Close();
+    $objtest -> Close();
     if ($errortype == E_USER_ERROR || $errortype == E_ERROR) 
       {
         $smarty -> assign("Message", E_ERRORS);
@@ -321,7 +324,7 @@ foreach ($arrLevel as $intLevel)
 $pct = (($player -> exp / $expn) * 100);
 $pct = round($pct,"0");
 $query = $db -> Execute("SELECT count(`id`) FROM `players` WHERE `refs`=".$player -> id);
-$ref = $query -> fields['count(`id`)'];
+$ref = $query -> fields['count(`id`)'] + $player->vallars;
 $query -> Close();
 
 $query = $db -> Execute("SELECT count(`id`) FROM `log` WHERE `unread`='F' AND `owner`=".$player -> id);

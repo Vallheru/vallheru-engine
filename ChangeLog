@@ -1,5 +1,7 @@
 2011-08-23  Bartek thindil Jasicki  <thindil@tuxfamily.org>
 
+	* FEATURE,install/db/update.sql, includes/head.php, class/player_class.php, admin.php, templates/admin.tpl, templates/layout1/admin.tpl: 
+	added option to grant vallars
 	* FEATURE,install/install.php:
 	added ADOdb cache directory to config file
 
