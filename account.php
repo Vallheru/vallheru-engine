@@ -7,7 +7,7 @@
  *   @copyright            : (C) 2004,2005,2006,2007,2011 Vallheru Team based on Gamers-Fusion ver 2.5
  *   @author               : thindil <thindil@tuxfamily.org>
  *   @version              : 1.4
- *   @since                : 20.08.2011
+ *   @since                : 23.08.2011
  *
  */
 
@@ -229,7 +229,7 @@ if (isset($_GET['view']) && $_GET['view'] == 'bugreport')
             error(ERROR);
         }
         $intDesc = strlen($arrFields[3]);
-        if ($intDesc < 100)
+        if ($intDesc < 50)
         {
             error(TOO_SHORT);
         }

@@ -1,5 +1,7 @@
 2011-08-23  Bartek thindil Jasicki  <thindil@tuxfamily.org>
 
+	* UPDATE,account.php: 
+	allow shorter bug reports
 	* BUG,templates/layout1/imarket.tpl: 
 	fixed typo
 	* BUG,view.php: 
