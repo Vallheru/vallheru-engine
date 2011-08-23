@@ -18,7 +18,7 @@
     <table class="dark">
     <tr>
     <td width="100"><a href="imarket.php?view=market&amp;lista=name"><b><u>{$Tname}</u></b></a></td>
-    <td width="100"><a href="imarket.php?view=market&amp;lista=power><b><u>{$Tpower}</u></b></a></td>
+    <td width="100"><a href="imarket.php?view=market&amp;lista=power"><b><u>{$Tpower}</u></b></a></td>
     <td width="100"><a href="imarket.php?view=market&amp;lista=wt"><b><u>{$Tdur}</u></b></a></td>
     <td width="100"><a href="imarket.php?view=market&amp;lista=szyb"><b><u>{$Tspeed}</u></b></a></td>
     <td width="100"><a href="imarket.php?view=market&amp;lista=zr"><b><u>{$Tagi}</u></b></a></td>
