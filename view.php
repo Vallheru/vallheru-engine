@@ -8,7 +8,7 @@
  *   @author               : thindil <thindil@tuxfamily.org>
  *   @author               : eyescream <tduda@users.sourceforge.net>
  *   @version              : 1.4
- *   @since                : 13.08.2011
+ *   @since                : 23.08.2011
  *
  */
 
@@ -134,6 +134,7 @@ $smarty -> assign(array("Page" => $strViewpage,
                         "Lastkilled" => $view -> lastkilled, 
                         "Lastkilledby" => $view -> lastkilledby, 
                         "Profile" => $view -> profile,
+			"Refs" => $view->vallars,
                         "Lang" => $view -> lang));
 
 if ($view -> wins || $view -> losses)
@@ -181,10 +182,6 @@ if ($tribe -> fields['name'])
 {
     $smarty -> assign ("Clan", T_CLAN.": ".NOTHING."<br />");
 }
-$query = $db -> Execute("SELECT id FROM players WHERE refs=".$view -> id);
-$ref = $query -> RecordCount();
-$query -> Close();
-$smarty -> assign ("Refs", $ref);
 
 $objFreeze = $db -> Execute("SELECT freeze FROM players WHERE id=".$_GET['view']);
 
