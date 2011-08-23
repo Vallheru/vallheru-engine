@@ -4,10 +4,10 @@
  *   Install or update game
  *
  *   @name                 : install.php                            
- *   @copyright            : (C) 2004,2005,2006,2007 Vallheru Team based on Gamers-Fusion ver 2.5
- *   @author               : thindil <thindil@users.sourceforge.net>
- *   @version              : 1.3
- *   @since                : 05.03.2007
+ *   @copyright            : (C) 2004,2005,2006,2007,2011 Vallheru Team based on Gamers-Fusion ver 2.5
+ *   @author               : thindil <thindil@tuxfamily.org>
+ *   @version              : 1.4
+ *   @since                : 23.08.2011
  *
  */
 
@@ -278,8 +278,7 @@ Wypełnij wszystkie pola!<br />
         <td>Rodzaj bazy danych:</td>
     <td>
         <select name="dbtype">
-            <option value="mysql40">MySQL 4.0</option>
-            <opiton value="mysql5">MySQL 5.0</option>
+            <option value="mysql5">MySQL 5.0</option>
             <option value="mysqli">MySQLi</option>
             <option value="postgres">PostgresSQL</option>
         </select>
@@ -401,6 +400,7 @@ if (isset($_GET['step']) && $_GET['step'] == 'install3')
     print "Tworzenie pliku config.php...";
     $configtext = "<?php
 require_once('adodb/adodb.inc.php');
+\$ADODB_CACHE_DIR = './cache/';
 \$db = NewADOConnection('".$strDBtype."');
 \$db -> Connect(\"".$_POST['dbhost']."\", \"".$_POST['dbuser']."\", \"".$_POST['dbpass']."\", \"".$_POST['dbname']."\");
 \$ADODB_FETCH_MODE = ADODB_FETCH_ASSOC;
@@ -530,7 +530,7 @@ require_once('class.phpmailer.php');
     fwrite($configfile, $strConfigtext);
     fclose($configfile);
     print "Zakończone<br />";
-    print "Instalacja gry została zakończona. Wykasuj plik install.php a najlepiej cały katalog install.<br />Dziękujemy za korzystanie z Vallheru Engine <br />&copy; 2004,2005,2006,2007 Vallheru Team";
+    print "Instalacja gry została zakończona. Wykasuj plik install.php a najlepiej cały katalog install.<br />Dziękujemy za korzystanie z Vallheru Engine <br />&copy; 2004,2005,2006,2007,2011 Vallheru Team";
 }
 if (isset($_GET['step']) && $_GET['step'] == 'update2') 
 {
@@ -549,6 +549,7 @@ if (isset($_GET['step']) && $_GET['step'] == 'update2')
     print "Modyfikacja pliku config.php...";
     $configtext = "<?php
 require_once('adodb/adodb.inc.php');
+\$ADODB_CACHE_DIR = './cache/';
 \$db = NewADOConnection('".$strDBtype."');
 \$db -> Connect(\"".$_POST['dbhost']."\", \"".$_POST['dbuser']."\", \"".$_POST['dbpass']."\", \"".$_POST['dbname']."\");
 \$ADODB_FETCH_MODE = ADODB_FETCH_ASSOC;
@@ -594,7 +595,7 @@ require_once('adodb/adodb.inc.php');
     {
         $db -> Execute($pieces[$i]['query']) or die("Błąd przy uaktualnianiu bazy danych! ".$db -> ErrorMsg());
     }
-    print "Zakończone<br />Aktualizacja przebiegła pomyślnie. Wykasuj plik install.php a następnie przegraj nowe pliki do obecnej wersji (jeżeli do tej pory jeszcze tego nie zrobiłeś)<br />Dziękujemy za korzystanie z Vallheru Engine<br />&copy; 2004,2005,2006,2007 Vallheru Team";
+    print "Zakończone<br />Aktualizacja przebiegła pomyślnie. Wykasuj plik install.php a następnie przegraj nowe pliki do obecnej wersji (jeżeli do tej pory jeszcze tego nie zrobiłeś)<br />Dziękujemy za korzystanie z Vallheru Engine<br />&copy; 2004,2005,2006,2007,2011 Vallheru Team";
 }
 ?> 
 </body>
