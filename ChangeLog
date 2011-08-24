@@ -1,5 +1,7 @@
 2011-08-24  Bartek thindil Jasicki  <thindil@tuxfamily.org>
 
+	* FEATURE,includes/bbcode.php, images/cheesy.png: 
+	added one emoticon
 	* BUG,zloto.php: 
 	fixed show vallars amount
 	* FEATURE,templates/layout1/landfill.tpl, templates/landfill.tpl, landfill.php: 

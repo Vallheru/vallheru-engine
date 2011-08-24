@@ -7,7 +7,7 @@
  *   @copyright            : (C) 2004,2005,2006,2011 Vallheru Team based on Gamers-Fusion ver 2.5
  *   @author               : thindil <thindil@tuxfamily.org>
  *   @version              : 1.4
- *   @since                : 14.08.2011
+ *   @since                : 24.08.2011
  *
  */
 
@@ -96,6 +96,7 @@ function bbcodetohtml($text, $isChat = FALSE)
     $text = str_replace(":(","<img src=\"images/frown.gif\" title=\":( - smutny\" />", $text);
     $text = str_replace(":o","<img src=\"images/suprised.gif\" title=\":o - zdziwiony\" />", $text);
     $text = str_replace(";(","<img src=\"images/cry.gif\" title=\";( - płacze\" />", $text);
+    $text = str_replace(":]", "<img src=\"images/cheesy.png\" title=\":] - wesoły\" />", $text);
    
     /**
     * Return converted text
