@@ -152,12 +152,13 @@ if (isset($_GET['topics']))
      * Select sticky threads
      */
     $intOffset = 25 * ($page - 1);
-    $topic = $db->Execute("SELECT `w_time`, `id`, `topic`, `starter` FROM `topics` WHERE `sticky`='Y' AND `cat_id`=".$_GET['topics']." AND `lang`='".$player -> lang."' OR `lang`='".$player -> seclang."' ORDER BY `id` ASC");
+    $topic = $db->Execute("SELECT `w_time`, `id`, `topic`, `starter`, `closed` FROM `topics` WHERE `sticky`='Y' AND `cat_id`=".$_GET['topics']." AND `lang`='".$player -> lang."' OR `lang`='".$player -> seclang."' ORDER BY `id` ASC");
     $arrid = array();
     $arrtopic = array();
     $arrstarter = array();
     $arrreplies = array();
     $arrNewtopic = array();
+    $arrClosed = array();
     $i = 0;
     while (!$topic -> EOF) 
     {
@@ -169,6 +170,14 @@ if (isset($_GET['topics']))
         {
             $arrNewtopic[$i] = 'N';
         }
+	if ($topic->fields['closed'] == 'N')
+	  {
+	    $arrClosed[$i] = '';
+	  }
+	else
+	  {
+	    $arrClosed[$i] = '[+]';
+	  }
         $query = $db -> Execute("SELECT `w_time` FROM `replies` WHERE `topic_id`=".$topic -> fields['id']);
         if ($arrNewtopic[$i] == 'N')
         {
@@ -196,7 +205,7 @@ if (isset($_GET['topics']))
     /**
      * Select normal threads
      */
-    $topic = $db -> SelectLimit("SELECT `w_time`, `id`, `topic`, `starter` FROM `topics` WHERE `sticky`='N' AND `cat_id`=".$_GET['topics']." AND `lang`='".$player -> lang."' OR `lang`='".$player -> seclang."' ORDER BY `id` ASC", 25, $intOffset);
+    $topic = $db -> SelectLimit("SELECT `w_time`, `id`, `topic`, `starter`, `closed` FROM `topics` WHERE `sticky`='N' AND `cat_id`=".$_GET['topics']." AND `lang`='".$player -> lang."' OR `lang`='".$player -> seclang."' ORDER BY `id` ASC", 25, $intOffset);
     while (!$topic -> EOF) 
       {
 	if ($topic -> fields['w_time'] > $_SESSION['forums'])
@@ -206,6 +215,14 @@ if (isset($_GET['topics']))
 	else
 	  {
 	    $arrNewtopic[$i] = 'N';
+	  }
+	if ($topic->fields['closed'] == 'N')
+	  {
+	    $arrClosed[$i] = '';
+	  }
+	else
+	  {
+	    $arrClosed[$i] = '[+]';
 	  }
 	$query = $db -> Execute("SELECT `w_time` FROM `replies` WHERE `topic_id`=".$topic -> fields['id']);
 	if ($arrNewtopic[$i] == 'N')
@@ -236,6 +253,7 @@ if (isset($_GET['topics']))
         "Topic1" => $arrtopic, 
         "Starter1" => $arrstarter, 
         "Replies1" => $arrreplies,
+	"Closed" => $arrClosed,
         "Ttopic" => T_TOPIC,
         "Tauthor" => T_AUTHOR,
         "Treplies" => T_REPLIES,
@@ -305,9 +323,19 @@ if (isset($_GET['topic']))
     {
         $strStickyaction = " (<a href=\"forums.php?sticky=".$topicinfo -> fields['id']."&amp;action=N\">".A_UNSTICKY."</a>)";
     }
+    if ($topicinfo->fields['closed'] == 'N')
+      {
+	$strClosed = '';
+	$strCloseaction = " (<a href=\"forums.php?close=".$topicinfo->fields['id']."&amp;action=Y\">Zamknij</a>)";
+      }
+    else
+      {
+	$strClosed = "[<b>Zamknięty</b>] ";
+	$strCloseaction = " (<a href=\"forums.php?close=".$topicinfo->fields['id']."&amp;action=N\">Otwórz</a>)";
+      }
     if ($player -> rank == 'Admin' || $player -> rank == 'Staff') 
     {
-        $smarty -> assign ("Action", " (<a href=forums.php?kasuj1=".$topicinfo -> fields['id'].">".A_DELETE."</a>)".$strStickyaction);
+        $smarty -> assign ("Action", " (<a href=forums.php?kasuj1=".$topicinfo -> fields['id'].">".A_DELETE."</a>)".$strStickyaction.$strCloseaction);
     } 
     else 
     {
@@ -360,10 +388,11 @@ if (isset($_GET['topic']))
         $i = $i + 1;
     }
     $reply -> Close();
-    $smarty -> assign(array("Topic2" => $topicinfo -> fields['topic'], 
+    $smarty -> assign(array("Topic2" => $strClosed.$topicinfo -> fields['topic'], 
         "Starter" => $topicinfo -> fields['starter'], 
         "Playerid" => $topicinfo -> fields['gracz'], 
         "Category" => $topicinfo -> fields['cat_id'], 
+	"Closed" => $topicinfo->fields['closed'],
         "Ttext" => $text1, 
         "Rstarter" => $arrstarter, 
         "Rplayerid" => $arrplayerid, 
@@ -438,7 +467,7 @@ if (isset ($_GET['action']) && $_GET['action'] == 'addtopic')
 if (isset($_GET['reply'])) 
   {
     checkvalue($_GET['reply']);
-    $query = $db -> Execute("SELECT `cat_id` FROM `topics` WHERE `id`=".$_GET['reply']);
+    $query = $db -> Execute("SELECT `cat_id`, `closed` FROM `topics` WHERE `id`=".$_GET['reply']);
     /**
      * Check for permissions
      */
@@ -455,6 +484,10 @@ if (isset($_GET['reply']))
         }
         $objPerm -> Close();
     }
+    if ($query->fields['closed'] == 'Y')
+      {
+	error("Ten temat jest zamknięty.");
+      }
     $exists = $query -> RecordCount();
     $query -> Close();
     if ($exists <= 0) 
@@ -472,6 +505,32 @@ if (isset($_GET['reply']))
     $db -> Execute("INSERT INTO `replies` (`starter`, `topic_id`, `body`, `gracz`, `w_time`) VALUES('".$player -> user."', ".$_GET['reply'].", ".$strBody.", ".$player -> id.", ".$ctime.")") or die("Could not add reply.");
     error (REPLY_ADD." <a href=forums.php?topic=".$_GET['reply'].">".A_HERE."</a>.");
 }
+
+/**
+ * Close/Open topics
+ */
+if (isset($_GET['close']))
+  {
+    if ($player -> rank != 'Admin' && $player -> rank != 'Staff')
+      {
+        error(ERROR);
+      }
+    checkvalue($_GET['close']);
+    if ($_GET['action'] != 'Y' && $_GET['action'] != 'N')
+      {
+        error(ERROR);
+      }
+    $db -> Execute("UPDATE `topics` SET `closed`='".$_GET['action']."' WHERE `id`=".$_GET['close']);
+    if ($_GET['action'] == 'Y')
+      {
+	$strInfo = "Zamknąłeś wybrany temat.";
+      }
+    else
+      {
+        $strInfo = "Otworzyłeś wybrany temat.";
+      }
+    error($strInfo." <a href=forums.php?topic=".$_GET['close'].">Wróć</a>");
+  }
 
 /**
  * Sticky/Unsticky topics

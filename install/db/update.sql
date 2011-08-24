@@ -11,3 +11,4 @@ ALTER TABLE `equipment` ADD FULLTEXT ( `name` );
 ALTER TABLE `potions` ADD FULLTEXT ( `name` );
 ALTER TABLE `polls` ADD `desc` TEXT NOT NULL;
 ALTER TABLE `players` ADD `vallars` INT( 11 ) NOT NULL DEFAULT '0';
+ALTER TABLE `topics` ADD `closed` CHAR( 1 ) NOT NULL DEFAULT 'N'

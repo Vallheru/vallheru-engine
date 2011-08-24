@@ -30,7 +30,7 @@
 	{if $Prank == "Admin" || $Prank == "Staff"}
 	    <td><input type="checkbox" name="{$Id[number1]}" /></td>
 	{/if}
-        <td>{if $Newtopic[number1] == "Y"}<blink>N</blink> {/if}<a href="forums.php?topic={$Id[number1]}">{$Topic1[number1]}</a></td>
+        <td>{if $Newtopic[number1] == "Y"}<blink>N</blink>{/if} {$Closed[number1]}<a href="forums.php?topic={$Id[number1]}">{$Topic1[number1]}</a></td>
         <td>{$Starter1[number1]}</td>
         <td>{$Replies1[number1]}</td>
         </tr>
@@ -69,7 +69,7 @@
     <br />
     <table class="td" width="98%" cellpadding="0" cellspacing="0">
     <tr>
-    <td><b>{$Topic2}</b> {$Writeby} {$Starter} {$Wid} {$Playerid} (<a href="forums.php?topics={$Category}">{$Aback}</a>) (<a href="forums.php?topic={$Topic}&amp;quotet=Y">{$Aquote}</a>) {$Action}
+    <td><b>{$Topic2}</b> {$Writeby} {$Starter} {$Wid} {$Playerid} (<a href="forums.php?topics={$Category}">{$Aback}</a>) {if $Closed == 'N'}(<a href="forums.php?topic={$Topic}&amp;quotet=Y">{$Aquote}</a>){/if} {$Action}
     </td>
     </tr>
     <tr>
@@ -99,11 +99,13 @@
     	{/for}
 	<br /><br />
     {/if}
-    <form method="post" action="forums.php?reply={$Id}">
-    {$Areply}:<br />
-    <textarea name="rep" cols="40" rows="10">{$Rtext2}</textarea><br />
-    <input type="submit" value="{$Areply}" />
-    </form>
+    {if $Closed == 'N'}
+        <form method="post" action="forums.php?reply={$Id}">
+    	{$Areply}:<br />
+    	<textarea name="rep" cols="40" rows="10">{$Rtext2}</textarea><br />
+    	<input type="submit" value="{$Areply}" />
+    	</form>
+    {/if}
 {/if}
 
 {if $Action3 == "search"}
