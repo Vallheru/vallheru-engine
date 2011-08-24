@@ -4,10 +4,10 @@
  *   Clean city and earn money
  *
  *   @name                 : landfill.php                            
- *   @copyright            : (C) 2004,2005,2007 Vallheru Team based on Gamers-Fusion ver 2.5
- *   @author               : thindil <thindil@users.sourceforge.net>
- *   @version              : 1.3
- *   @since                : 01.03.2007
+ *   @copyright            : (C) 2004,2005,2007,2011 Vallheru Team based on Gamers-Fusion ver 2.5
+ *   @author               : thindil <thindil@tuxfamily.org>
+ *   @version              : 1.4
+ *   @since                : 24.08.2011
  *
  */
 
@@ -27,7 +27,7 @@
 //   along with this program; if not, write to the Free Software
 //   Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 //
-// $Id: landfill.php 918 2007-03-03 17:55:42Z thindil $
+// $Id$
 
 $title = "Oczyszczanie miasta";
 require_once("includes/head.php");
@@ -54,6 +54,7 @@ if (!isset($_GET['action']))
     $smarty -> assign(array("Gold" => $gain,
                             "Landinfo" => LAND_INFO,
                             "Landinfo2" => GOLD_COINS,
+			    "Energy" => $player->energy,
                             "Awork" => A_WORK,
                             "Times" => TIMES));
 } 
@@ -63,11 +64,8 @@ if (!isset($_GET['action']))
     {
         error(NO_AMOUNT);
     }
-	integercheck($_POST['amount']);
-    if (!ereg("^[1-9][0-9]*$", $_POST['amount'])) 
-    {
-        error(ERROR);
-    }
+    integercheck($_POST['amount']);
+    checkvalue($_POST['amount']);
     if ($player -> energy < $_POST['amount']) 
     {
         error (NO_ENERGY);
