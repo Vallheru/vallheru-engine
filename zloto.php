@@ -4,10 +4,10 @@
  *   Show players minerals, herbs, gold and maps
  *
  *   @name                 : zloto.php                            
- *   @copyright            : (C) 2004,2005,2006 Vallheru Team based on Gamers-Fusion ver 2.5
- *   @author               : thindil <thindil@users.sourceforge.net>
- *   @version              : 1.0
- *   @since                : 24.01.2006
+ *   @copyright            : (C) 2004,2005,2006,2011 Vallheru Team based on Gamers-Fusion ver 2.5
+ *   @author               : thindil <thindil@tuxfamily.org>
+ *   @version              : 1.4
+ *   @since                : 24.08.2011
  *
  */
 
@@ -27,7 +27,7 @@
 //   along with this program; if not, write to the Free Software
 //   Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 //
-// $Id: zloto.php 566 2006-09-13 09:31:08Z thindil $
+// $Id$
 
 $title = "Bogactwa";
 require_once("includes/head.php");
@@ -38,10 +38,7 @@ require_once("includes/head.php");
 require_once("languages/".$player -> lang."/zloto.php");
 
 $gr1 = $db -> Execute("SELECT id, nutari, illani, illanias, dynallca, ilani_seeds, illanias_seeds, nutari_seeds, dynallca_seeds FROM herbs WHERE gracz=".$player -> id);
-$query = $db -> Execute("SELECT id FROM players WHERE refs=".$player -> id);
-$ref = $query -> RecordCount();
-$query -> Close();
-$smarty -> assign(array("Refs" => $ref, 
+$smarty -> assign(array("Refs" => $player->vallars, 
     "Maps" => $player -> maps, 
     "Gold" => $player -> credits, 
     "Bank" => $player -> bank, 

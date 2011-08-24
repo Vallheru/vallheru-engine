@@ -54,7 +54,7 @@ if (!isset($_GET['action']))
     $smarty -> assign(array("Gold" => $gain,
                             "Landinfo" => LAND_INFO,
                             "Landinfo2" => GOLD_COINS,
-			    "Energy" => $player->energy,
+			    "Energy" => floor($player->energy),
                             "Awork" => A_WORK,
                             "Times" => TIMES));
 } 
