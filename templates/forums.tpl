@@ -21,15 +21,26 @@
         <input type="submit" value="{$Asearch}" /> {$Tword}: <input type="text" name="search" />
         <input type="hidden" name="catid" value="{$Category}" />
     </form>
-    <table width="100%"><tr><td><u><b>{$Ttopic}</b></u></td><td width="20%"><u><b>{$Tauthor}</b></u></td><td width="10%"><b><u>{$Treplies}</u></b></td></tr>
+    {if $Prank == "Admin" || $Prank == "Staff"}
+        <form method="post" action="forums.php?action=deltopics">
+    {/if}
+    <table width="100%"><tr>{if $Prank == "Admin" || $Prank == "Staff"}<td width="20"></td>{/if}<td><u><b>{$Ttopic}</b></u></td><td width="20%"><u><b>{$Tauthor}</b></u></td><td width="10%"><b><u>{$Treplies}</u></b></td></tr>
     {section name=number1 loop=$Topic1}
         <tr>
+	{if $Prank == "Admin" || $Prank == "Staff"}
+	    <td><input type="checkbox" name="{$Id[number1]}" /></td>
+	{/if}
         <td>{if $Newtopic[number1] == "Y"}<blink>N</blink> {/if}<a href="forums.php?topic={$Id[number1]}">{$Topic1[number1]}</a></td>
         <td>{$Starter1[number1]}</td>
         <td>{$Replies1[number1]}</td>
         </tr>
     {/section}
     </table>
+    {if $Prank == "Admin" || $Prank == "Staff"}
+        <input type="hidden" name="catid" value="{$Category}" />
+        <input type="submit" value="{$Adelete}" />
+	</form>
+    {/if}
     {if $Tpages > 1}
     	<br />{$Fpage}
     	{for $page = 1 to $Tpages}
@@ -106,4 +117,8 @@
         {/section}
     {/if}
     <br /><br /><a href="forums.php?topics={$Category}">{$Aback}</a>
+{/if}
+
+{if $Action3 == "deltopics"}
+    {$Tdeleted} <a href="forums.php?topics={$Category}">{$Aback}</a>
 {/if}

@@ -8,7 +8,7 @@
  *   @author               : thindil <thindil@tuxfamily.org>
  *   @author               : mori <ziniquel@users.sourceforge.net>
  *   @version              : 1.4
- *   @since                : 21.08.2011
+ *   @since                : 24.08.2011
  *
  */
 
@@ -249,6 +249,8 @@ if (isset($_GET['topics']))
 	"Tpages" => $pages,
 	"Tpage" => $page,
 	"Fpage" => "Idź do strony:",
+	"Prank" => $player->rank,
+	"Adelete" => "Skasuj wybrane tematy",
         "Newtopic" => $arrNewtopic));
 }
 
@@ -527,6 +529,32 @@ if (isset($_GET['kasuj1']))
     $db -> Execute("DELETE FROM `topics` WHERE `id`=".$_GET['kasuj1']);
     error (TOPIC_DEL." <a href=forums.php?topics=".$cid -> fields['cat_id'].">".A_BACK."</a>");
 }
+
+/**
+ * Delete selected topics
+ */
+if (isset($_GET['action']) && $_GET['action'] == 'deltopics')
+  {
+    if ($player -> rank != 'Admin' && $player -> rank != 'Staff')
+    {
+        error(ERROR);
+    }
+    checkvalue($_POST['catid']);
+    $smarty->assign(array("Category" => $_POST['catid'],
+			  "Aback" => "Wróć",
+			  "Tdeleted" => "Wybrane tematy zostały skasowane."));
+    $objTopics = $db->Execute("SELECT `id` FROM `topics` WHERE `cat_id`=".$_POST['catid']);
+    while (!$objTopics->EOF)
+      {
+	if (isset($_POST[$objTopics->fields['id']]))
+	  {
+	    $db -> Execute("DELETE FROM `replies` WHERE `topic_id`=".$objTopics->fields['id']);
+	    $db -> Execute("DELETE FROM `topics` WHERE `id`=".$objTopics->fields['id']);
+	  }
+	$objTopics->MoveNext();
+      }
+    $objTopics->Close();
+  }
 
 /**
 * Search words
