@@ -124,8 +124,8 @@
         <tr>
         <td>{$Name[all]}</td>
         <td align="center">{$Amount[all]}</td>
-        <td><form method="post" action="imarket.php?view=market&amp;limit=0&amp;lista=id">
-            <input type="hidden" name="szukany" value="{$Name[all]}" />
+        <td><form method="post" action="imarket.php?view=market&amp;lista=id">
+            <input type="hidden" name="szukany1" value="{$Name[all]}" />
             <input type="submit" value="{$Ashow}" /></form>
         </td>
         </tr>

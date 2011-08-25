@@ -8,7 +8,7 @@
  *   @author               : thindil <thindil@tuxfamily.org>
  *   @author               : eyescream <tduda@users.sourceforge.net>
  *   @version              : 1.4
- *   @since                : 21.08.2011
+ *   @since                : 24.08.2011
  *
  */
 
@@ -67,10 +67,16 @@ if (!isset($_GET['view']) && !isset($_GET['buy']) && !isset($_GET['wyc']))
 */
 if (isset ($_GET['view']) && $_GET['view'] == 'market') 
 {
-    if (empty($_POST['szukany'])) 
+    if (empty($_POST['szukany']) && !isset($_POST['szukany1'])) 
       {
         $msel = $db -> Execute("SELECT count(`id`) FROM `equipment` WHERE `status`='R' AND `type`!='I'");
       } 
+    elseif (isset($_POST['szukany1']))
+      {
+	$_POST['szukany1'] = strip_tags($_POST['szukany1']);
+        $strSearch = $db -> qstr($_POST['szukany1'], get_magic_quotes_gpc());
+	$msel = $db -> Execute("SELECT count(`id`) FROM `equipment` WHERE `status`='R' AND `type`!='I' AND name=".$strSearch);
+      }
     else 
       {
 	$_POST['szukany'] = strip_tags($_POST['szukany']);
@@ -121,13 +127,16 @@ if (isset ($_GET['view']) && $_GET['view'] == 'market')
       {
 	$strOrder = ' DESC';
       }
-    if (empty($_POST['szukany'])) 
+    if (empty($_POST['szukany']) && !isset($_POST['szukany1'])) 
       {
 	$pm = $db -> SelectLimit("SELECT * FROM `equipment` WHERE `status`='R' AND `type`!='I' ORDER BY ".$_GET['lista'].$strOrder, 30, (30 * ($page - 1)));
       } 
+    elseif (isset($_POST['szukany1']))
+      {
+	$pm = $db -> Execute("SELECT * FROM `equipment` WHERE `status`='R' AND `type`!='I' AND name=".$strSearch);
+      }
     else 
       {
-	$strSearch = $db -> qstr("*".$_POST['szukany']."*", get_magic_quotes_gpc());
 	$pm = $db -> SelectLimit("SELECT * FROM `equipment` WHERE `status`='R' AND `type`!='I' AND MATCH(`name`) AGAINST (".$strSearch." IN BOOLEAN MODE) ORDER BY ".$_GET['lista'].$strOrder, 30,  (30 * ($page - 1)));
       }
     $arrname = array();
