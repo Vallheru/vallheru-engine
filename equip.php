@@ -7,7 +7,7 @@
  *   @copyright            : (C) 2004,2005,2006,2007,2011 Vallheru Team based on Gamers-Fusion ver 2.5
  *   @author               : thindil <thindil@tuxfamily.org>
  *   @version              : 1.4
- *   @since                : 12.08.2011
+ *   @since                : 25.08.2011
  *
  */
 
@@ -238,7 +238,8 @@ if ($arrEquip[1][0])
 {
     if ($arrEquip[6][0]) 
     {
-        $smarty -> assign ("Arrows", "<b>".QUIVER.":</b> ".$arrEquip[6][1]." (+".$arrEquip[6][2].") (".$arrEquip[6][6]." ".ARROWS.") [<a href=\"equip.php?schowaj=".$arrEquip[6][0]."\">".HIDE_ARR."</a>] [<a href=\"equip.php?fill=".$arrEquip[6][0]."\">".A_FILL."</a>]<br />\n");
+      $arrEquip[6][2] += $arrEquip[6][8];
+      $smarty -> assign ("Arrows", "<b>".QUIVER.":</b> ".$arrEquip[6][1]." (+".$arrEquip[6][2].") (".$arrEquip[6][6]." ".ARROWS.") [<a href=\"equip.php?schowaj=".$arrEquip[6][0]."\">".HIDE_ARR."</a>] [<a href=\"equip.php?fill=".$arrEquip[6][0]."\">".A_FILL."</a>]<br />\n");
     } 
         else 
     {
@@ -391,7 +392,7 @@ if (isset($_GET['schowaj']))
     }
     if (isset($arrEquip[6][0])) 
     {
-        $test = $db -> Execute("SELECT id FROM equipment WHERE name='".$arrEquip[6][1]."' AND status='U' AND owner=".$player -> id." AND power=".$arrEquip[6][2]);
+        $test = $db -> Execute("SELECT id FROM equipment WHERE name='".$arrEquip[6][1]."' AND status='U' AND owner=".$player -> id." AND power=".$arrEquip[6][2]." AND poison=".$arrEquip[6][8]." AND `ptype`=".$arrEquip[6][3]);
     }
     if ($bron -> fields['type'] == 'B') 
     {
@@ -464,7 +465,14 @@ while (!$arr -> EOF)
     $posiada = true;
     $costone = $arr -> fields['cost'] / 100;
     $arrname[$i] = $arr -> fields['name'];
-    $arrpower[$i] = $arr -> fields['power'];
+    if ($arr->fields['poison'] > 0)
+      {
+	$arrpower[$i] = $arr -> fields['power'] + $arr->fields['poison'];
+      }
+    else
+      {
+	$arrpower[$i] = $arr -> fields['power'];
+      }
     $arrdur[$i] = $arr -> fields['wt'] * $arr -> fields['amount'];
     $arrid[$i] = $arr -> fields['id'];
     $arrcost[$i] = ceil($costone * $arr -> fields['wt']);
@@ -908,7 +916,7 @@ if (isset ($_GET['poison']))
     {
         error (NO_POTION);
     }
-    $wep = $db -> Execute("SELECT id, name, amount FROM equipment WHERE owner=".$player -> id." AND type='W' AND status='U' AND poison=0");
+    $wep = $db -> Execute("SELECT `id`, `name`, `amount` FROM `equipment` WHERE `owner`=".$player -> id." AND (`type`='W' OR `type`='R') AND `status`='U' AND `poison`=0");
     $arrname = array();
     $arrid = array();
     $arramount = array();
@@ -939,7 +947,7 @@ if (isset ($_GET['poison']))
         {
             error (NO_ITEMS);
         }
-        if ($item -> fields['type'] != 'W') 
+        if (($item -> fields['type'] != 'W') && ($item->fields['type'] != 'R'))
         {
             error (NO_WEAPON);
         }
@@ -955,25 +963,40 @@ if (isset ($_GET['poison']))
         {
             $intRoll = rand(0,100);
             if ($intRoll == 1)
-            {
-                $amount = $item -> fields['amount'] - 1;
-                if ($amount < 1) 
-                {
-                    $db -> Execute("DELETE FROM equipment WHERE id=".$item -> fields['id']);
-                }
+	      {
+		if ($item->fields['type'] == 'W')
+		  {
+		    $amount = $item -> fields['amount'] - 1;
+		    if ($amount < 1) 
+		      {
+			$db -> Execute("DELETE FROM equipment WHERE id=".$item -> fields['id']);
+		      }
                     else 
-                {
-                    $db -> Execute("UPDATE equipment SET amount=".$amount." WHERE id=".$item -> fields['id']);
-                }
-                $amount = $poison -> fields['amount'] - 1;
-                if ($amount < 1) 
-                {
-                    $db -> Execute("DELETE FROM potions WHERE id=".$poison -> fields['id']);
-                }
+		      {
+			$db -> Execute("UPDATE equipment SET amount=".$amount." WHERE id=".$item -> fields['id']);
+		      }
+		  }
+		else
+		  {
+		    $amount = $item->fields['wt'] - 20;
+		    if ($amount < 1)
+		      {
+			$db -> Execute("DELETE FROM `equipment` WHERE `id`=".$item -> fields['id']);
+		      }
                     else 
-                {
-                    $db -> Execute("UPDATE potions SET amount=".$amount." WHERE id=".$poison -> fields['id']);
-                }
+		      {
+			$db -> Execute("UPDATE `equipment` SET `wt`=".$amount." WHERE `id`=".$item -> fields['id']);
+		      }
+		  }
+		$amount = $poison -> fields['amount'] - 1;
+		if ($amount < 1) 
+		  {
+		    $db -> Execute("DELETE FROM potions WHERE id=".$poison -> fields['id']);
+		  }
+		else 
+		  {
+		    $db -> Execute("UPDATE potions SET amount=".$amount." WHERE id=".$poison -> fields['id']);
+		  }
                 error(YOU_DESTROY);
             }
         }
@@ -983,39 +1006,78 @@ if (isset ($_GET['poison']))
         }
         if ($intRoll > 50)
         {
-            $name = POISONED." ".$item -> fields['name'];
             $intPower = $poison -> fields['power'];
             if (ereg("Dynallca",$poison -> fields['name']))
             {
                 $strPtype = 'D';
             }
-                elseif (ereg("Nutari",$poison -> fields['name']))
+	    elseif (ereg("Nutari",$poison -> fields['name']))
             {
                 $strPtype = 'N';
             }
-                elseif (ereg("Illani",$poison -> fields['name']))
+	    elseif (ereg("Illani",$poison -> fields['name']))
             {
-                $strPtype = 'I';
+	        $strPtype = 'I';
             }
-            $test = $db -> Execute("SELECT id FROM equipment WHERE name='".$name."' AND wt=".$item -> fields['wt']." AND type='W' AND status='U' AND owner=".$player -> id." AND power=".$item -> fields['power']." AND zr=".$item -> fields['zr']." AND szyb=".$item -> fields['szyb']." AND maxwt=".$item -> fields['maxwt']." AND poison=".$intPower." AND ptype='".$strPtype."'");
-            if (!$test -> fields['id']) 
-            {
-                $db -> Execute("INSERT INTO `equipment` (`owner`, `name`, `power`, `type`, `cost`, `zr`, `wt`, `minlev`, `maxwt`, `amount`, `magic`, `poison`, `szyb`, `ptype`, `repair`, `twohand`) VALUES(".$player -> id.",'".$name."',".$item -> fields['power'].",'W',".$item -> fields['cost'].",".$item -> fields['zr'].",".$item -> fields['wt'].",".$item -> fields['minlev'].",".$item -> fields['maxwt'].",1,'N',".$intPower.",".$item -> fields['szyb'].", '".$strPtype."', ".$item -> fields['repair'].", '".$item -> fields['repair']."')") or error($db -> ErrorMsg());
-            } 
-                else 
-            {
-                $db -> Execute("UPDATE equipment SET amount=amount+1 WHERE id=".$test -> fields['id']);
-            }
+	    if ($item->fields['type'] == 'W')
+	      {
+		$name = POISONED." ".$item -> fields['name'];
+		$test = $db -> Execute("SELECT id FROM equipment WHERE name='".$name."' AND wt=".$item -> fields['wt']." AND type='W' AND status='U' AND owner=".$player -> id." AND power=".$item -> fields['power']." AND zr=".$item -> fields['zr']." AND szyb=".$item -> fields['szyb']." AND maxwt=".$item -> fields['maxwt']." AND poison=".$intPower." AND ptype='".$strPtype."' AND `wt`=".$item->fields['wt']);
+		if (!$test -> fields['id']) 
+		  {
+		    $db -> Execute("INSERT INTO `equipment` (`owner`, `name`, `power`, `type`, `cost`, `zr`, `wt`, `minlev`, `maxwt`, `amount`, `magic`, `poison`, `szyb`, `ptype`, `repair`, `twohand`) VALUES(".$player -> id.",'".$name."',".$item -> fields['power'].",'".$item->fields['type']."',".$item -> fields['cost'].",".$item -> fields['zr'].",".$item -> fields['wt'].",".$item -> fields['minlev'].",".$item -> fields['maxwt'].",1,'N',".$intPower.",".$item -> fields['szyb'].", '".$strPtype."', ".$item -> fields['repair'].", '".$item -> fields['repair']."')") or error($db -> ErrorMsg());
+		      
+		  } 
+		else 
+		  {
+		    $db -> Execute("UPDATE equipment SET amount=amount+1 WHERE id=".$test -> fields['id']);
+		  }
+	      }
+	    else
+	      {
+		$name = "Zatrute"." ".$item -> fields['name'];
+		$test = $db -> Execute("SELECT id FROM equipment WHERE name='".$name."' AND type='R' AND status='U' AND owner=".$player -> id." AND power=".$item -> fields['power']." AND zr=".$item -> fields['zr']." AND szyb=".$item -> fields['szyb']." AND poison=".$intPower." AND ptype='".$strPtype."'");
+		if (!$test -> fields['id']) 
+		  {
+		    $db -> Execute("INSERT INTO `equipment` (`owner`, `name`, `power`, `type`, `cost`, `zr`, `wt`, `minlev`, `maxwt`, `amount`, `magic`, `poison`, `szyb`, `ptype`, `repair`, `twohand`) VALUES(".$player -> id.",'".$name."',".$item -> fields['power'].",'".$item->fields['type']."',".$item -> fields['cost'].",".$item -> fields['zr'].", 20,".$item -> fields['minlev'].", 20, 1, 'N',".$intPower.",".$item -> fields['szyb'].", '".$strPtype."', ".$item -> fields['repair'].", '".$item -> fields['repair']."')") or error($db -> ErrorMsg());
+		  }
+		else
+		  {
+		    if ($item->fields['wt'] <= 20)
+		      {
+			$db -> Execute("UPDATE `equipment` SET `wt`=`wt`+".$item->fields['wt']." WHERE `id`=".$test -> fields['id']);
+		      }
+		    else
+		      {
+			$db -> Execute("UPDATE `equipment` SET `wt`=`wt`+20 WHERE `id`=".$test -> fields['id']);
+		      }
+		  }
+	      }
             $test -> Close();
-            $iamount = $item -> fields['amount'] - 1;
-            if ($iamount > 0) 
-            {
-                $db -> Execute("UPDATE equipment SET amount=amount-1 WHERE id=".$item -> fields['id']);
-            }  
+	    if ($item->fields['type'] == 'W')
+	      {
+		$iamount = $item -> fields['amount'] - 1;
+		if ($iamount > 0) 
+		  {
+		    $db -> Execute("UPDATE equipment SET amount=amount-1 WHERE id=".$item -> fields['id']);
+		  }  
                 else 
-            {
-                $db -> Execute("DELETE FROM equipment WHERE id=".$item -> fields['id']);
-            }
+		  {
+		    $db -> Execute("DELETE FROM equipment WHERE id=".$item -> fields['id']);
+		  }
+	      }
+	    else
+	      {
+		$iamount = $item->fields['wt'] - 20;
+		if ($iamount > 0)
+		  {
+		    $db->Execute("UPDATE `equipment` SET `wt`=`wt`-20 WHERE `id`=".$item->fields['id']);
+		  }
+		else
+		  {
+		    $db -> Execute("DELETE FROM equipment WHERE id=".$item -> fields['id']);
+		  }
+	      }
             $smarty -> assign ("Item", YOU_POISON." ".$item -> fields['name'].". <a href=\"equip.php\">".REFRESH."</a>");
         }
             else
@@ -1042,7 +1104,7 @@ if (isset ($_GET['poison']))
 if (isset($_GET['fill']))
 {
     checkvalue($_GET['fill']);
-    $objArrows = $db -> Execute("SELECT wt, name, power, id FROM equipment WHERE id=".$_GET['fill']);
+    $objArrows = $db -> Execute("SELECT * FROM equipment WHERE id=".$_GET['fill']." AND `owner`=".$player->id);
     if (!$objArrows -> fields['id'])
     {
         error(NO_ITEMS);
@@ -1051,7 +1113,7 @@ if (isset($_GET['fill']))
     {
         error(NOT_NEED);
     }
-    $objArrows2 = $db -> Execute("SELECT wt, id FROM equipment WHERE name='".$objArrows -> fields['name']."' AND power=".$objArrows -> fields['power']." AND status='U' AND owner=".$player -> id);
+    $objArrows2 = $db -> Execute("SELECT `wt`, `id` FROM `equipment` WHERE name='".$objArrows -> fields['name']."' AND `power`=".$objArrows -> fields['power']." AND `status`='U' AND `owner`=".$player -> id." AND `ptype`='".$objArrows->fields['ptype']."' AND `poison`=".$objArrows->fields['poison']);
     if (!$objArrows2 -> fields['id'])
     {
         error(NO_ARROWS);

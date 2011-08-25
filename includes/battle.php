@@ -8,7 +8,7 @@
  *   @author               : thindil <thindil@tuxfamily.org>
  *   @author               : eyescream <tduda@users.sourceforge.net>
  *   @version              : 1.4
- *   @since                : 18.08.2011
+ *   @since                : 25.08.2011
  *
  */
 
@@ -341,10 +341,17 @@ function attack1($attacker, $defender, $arrAtequip, $arrDeequip, $attack_bspell,
                 if ($def_dspell -> fields['id']) 
                 {
                     $lost_mana = ceil($def_dspell -> fields['poziom'] / 2.5);
-                    if ($arrAtequip[0][3] == 'N' && $defender['antidote'] != 'N')
-                    {
-                        $lost_mana = $lost_mana + $arrAtequip[0][8];
-                    }
+		    if ($defender['antidote'] != 'N')
+		      {
+			if ($arrAtequip[0][3] == 'N')
+			  {
+			    $lost_mana = $lost_mana + $arrAtequip[0][8];
+			  }
+			if ($arrAtequip[6][3] == 'N')
+			  {
+			    $lost_mana = $lost_mana + $arrAtequip[6][8];
+			  }
+		      }
                     $lost_mana = $lost_mana - (int)($defender['magic'] / 25);
                     if ($lost_mana < 1)
                     {
@@ -419,12 +426,20 @@ function attack1($attacker, $defender, $arrAtequip, $arrDeequip, $attack_bspell,
                     }
                     $attack_durwep = ($attack_durwep + 1);
                     $defender['hp'] = ($defender['hp'] - $attackdmg);
-                    if ($arrAtequip[0][3] == 'I' && $defender['antidote'] != 'I')
-                    {
-                        $defender['hp'] = ($defender['hp'] - $arrAtequip[0][8]);
-                        $intAttackdmg = $attackdmg + $arrAtequip[0][8];
-                    }
-                        else
+		    if ($defender['antidote'] != 'I')
+		      {
+			if ($arrAtequip[0][3] == 'I')
+			  {
+			    $defender['hp'] = ($defender['hp'] - $arrAtequip[0][8]);
+			    $intAttackdmg = $attackdmg + $arrAtequip[0][8];
+			  }
+			if ($arrAtequip[6][3] == 'I')
+			  {
+			    $defender['hp'] = ($defender['hp'] - $arrAtequip[6][8]);
+			    $intAttackdmg = $attackdmg + $arrAtequip[6][8];
+			  }
+		      }
+		    else
                     {
                         $intAttackdmg = $attackdmg;
                     }
@@ -459,10 +474,17 @@ function attack1($attacker, $defender, $arrAtequip, $arrDeequip, $attack_bspell,
                     if ($def_dspell -> fields['id']) 
                     {
                         $lost_mana = ceil($def_dspell -> fields['poziom'] / 2.5);
-                        if ($arrAtequip[0][3] == 'N' && $defender['antidote'] != 'N')
-                        {
-                            $lost_mana = $lost_mana + $arrAtequip[0][8];
-                        }
+			if ($defender['antidote'] != 'N')
+			  {
+			    if ($arrAtequip[0][3] == 'N')
+			      {
+				$lost_mana = $lost_mana + $arrAtequip[0][8];
+			      }
+			    if ($arrAtequip[6][3] == 'N')
+			      {
+				$lost_mana = $lost_mana + $arrAtequip[6][8];
+			      }
+			  }
                         $lost_mana = $lost_mana - (int)($defender['magic'] / 25);
                         if ($lost_mana < 1)
                         {
@@ -497,10 +519,17 @@ function attack1($attacker, $defender, $arrAtequip, $arrDeequip, $attack_bspell,
                         if ($def_dspell -> fields['id']) 
                         {
                             $lost_mana = ceil($def_dspell -> fields['poziom'] / 2.5);
-                            if ($arrAtequip[0][3] == 'N' && $defender['antidote'] != 'N')
-                            {
-                                $lost_mana = $lost_mana + $arrAtequip[0][8];
-                            }
+			    if ($defender['antidote'] != 'N')
+			      {
+				if ($arrAtequip[0][3] == 'N')
+				  {
+				    $lost_mana = $lost_mana + $arrAtequip[0][8];
+				  }
+				if ($arrAtequip[6][3] == 'N')
+				  {
+				    $lost_mana = $lost_mana + $arrAtequip[6][8];
+				  }
+			      }
                             $lost_mana = $lost_mana - (int)($defender['magic'] / 25);
                             if ($lost_mana < 1)
                             {

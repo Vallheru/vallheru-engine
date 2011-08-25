@@ -6,8 +6,8 @@
  *   @name                 : funkcje.php                            
  *   @copyright            : (C) 2004,2005,2006,2007 Vallheru Team based on Gamers-Fusion ver 2.5
  *   @author               : thindil <thindil@users.sourceforge.net>
- *   @version              : 1.3
- *   @since                : 22.02.2007
+ *   @version              : 1.4
+ *   @since                : 25.02.2007
  *
  */
 
@@ -415,6 +415,10 @@ function fightmonster($enemy,$expgain,$goldgain,$times)
     if ($arrEquip[1][0]) 
     {
         $bonus = $arrEquip[1][2] + $arrEquip[6][2];
+	if ($arrEquip[6][3] == 'D') 
+        {
+	  $bonus += $arrEquip[6][8];
+	}
         $bonus2 = (($player  -> strength / 2) + ($myagility / 2));
         if ($player -> clas == 'Wojownik' || $player -> clas == 'Barbarzyńca') 
         {
