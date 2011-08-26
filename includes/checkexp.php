@@ -173,6 +173,7 @@ function checkexp ($exp,$expgain,$level,$rasa,$user,$eid,$enemyid,$enemyuser,$pl
 	  {
 	    $db->Execute("UPDATE `players` SET `vallars`=`vallars`+1 WHERE `id`=".$objValls->fields['refs']);
 	    $db->Execute("UPDATE `players` SET `refs`=0 WHERE `id`=".$eid);
+	    $db->Execute("INSERT INTO `vallars` (`owner`, `amount`, `reason`) VALUES(".$objValls->fields['refs'].", 1, 'Polecony gracz.')");
 	  }
 	$objValls->Close();
         if ($player == $eid) 

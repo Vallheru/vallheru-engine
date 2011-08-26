@@ -8,7 +8,7 @@
  *   @author               : thindil <thindil@tuxfamily.org>
  *   @author               : eyescream <tduda@users.sourceforge.net>
  *   @version              : 1.4
- *   @since                : 23.08.2011
+ *   @since                : 26.08.2011
  *
  */
  
@@ -178,6 +178,10 @@ if (isset($_GET['view']) && $_GET['view'] == 'bugreport')
                 $strDesc = T_BUG.$strType."): ".$objBug -> fields['title']. REPORTED_BY.$objBug -> fields['sender'];
                 $db -> Execute("INSERT INTO `changelog` (`author`, `location`, `text`, `date`, `lang`) VALUES('".$strAuthor."', '".$objBug -> fields['location']."', '".$strDesc."', ".$strDate.", '".$player -> lang."')");
 		$db->Execute("UPDATE `players` SET `vallars`=`vallars`+".$_POST['vallars']." WHERE `id`=".$objBug->fields['sender']);
+		if ($_POST['vallars'] != 0)
+		  {
+		    $db->Execute("INSERT INTO `vallars` (`owner`, `amount`, `reason`) VALUES(".$objBug->fields['sender'].", ".$_POST['vallars'].", 'Zgłoszenie błędu.')");
+		  }
             }
             $db -> Execute("DELETE FROM `bugreport` WHERE `id`=".$_GET['step']);
             if (isset($_POST['bugcomment']) && !empty($_POST['bugcomment']))
@@ -214,6 +218,10 @@ if (isset($_GET['view']) && $_GET['view'] == 'vallars')
 	$strInfo .= abs($_POST['amount'])." Vallarów. Przyczyna: ".$_POST['reason'].".";
 	$db->Execute("UPDATE `players` SET `vallars`=`vallars`+".$_POST['amount']." WHERE `id`=".$_POST['id']);
 	$db -> Execute("INSERT INTO `log` (`owner`, `log`, `czas`) VALUES(".$_POST['id'].", '".$strInfo."', ".$strDate.")");
+	if ($_POST['amount'] != 0)
+	  {
+	    $db->Execute("INSERT INTO `vallars` (`owner`, `amount`, `reason`) VALUES(".$_POST['id'].", ".$_POST['amount'].", '".$_POST['reason']."')");
+	  }
 	error($strInfo);
       }
   }

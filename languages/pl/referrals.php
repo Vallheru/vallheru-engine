@@ -4,10 +4,10 @@
  *   Polish language for referrals center
  *
  *   @name                 : admin.php                            
- *   @copyright            : (C) 2004-2005 Vallheru Team based on Gamers-Fusion ver 2.5
- *   @author               : thindil <thindil@users.sourceforge.net>
- *   @version              : 0.8 beta
- *   @since                : 19.03.2005
+ *   @copyright            : (C) 2004-2005,2011 Vallheru Team based on Gamers-Fusion ver 2.5
+ *   @author               : thindil <thindil@tuxfamily.org>
+ *   @version              : 1.4
+ *   @since                : 26.08.2011
  *
  */
 
@@ -29,8 +29,7 @@
 //
 // 
 
-define("ERROR", "Zapomnij o tym!");
-define("REF1", "Witaj w centrum poleconych. Za każdym razem, kiedy ktoś zapisze się przez ten link");
-define("REF2", "oraz będzie grał w Valheru, zdobywasz jednego Vallara. Potem możesz za te punkty kupić specjalne przedmioty (dostępne wkrótce). Tak więc, na razie masz");
+define("REF1", "Za każdym razem, kiedy ktoś zapisze się przez ten link");
+define("REF2", "oraz zdobędzie co najmniej 5 poziom, ");
 define("REF3", "Vallar(ów)");
 ?>

@@ -4,10 +4,10 @@
  *   City menu and resets without Cron
  *
  *   @name                 : city.php                            
- *   @copyright            : (C) 2004,2005,2006 Vallheru Team based on Gamers-Fusion ver 2.5
- *   @author               : thindil <thindil@users.sourceforge.net>
- *   @version              : 1.3
- *   @since                : 12.10.2006
+ *   @copyright            : (C) 2004,2005,2006,2011 Vallheru Team based on Gamers-Fusion ver 2.5
+ *   @author               : thindil <thindil@tuxfamily.org>
+ *   @version              : 1.4
+ *   @since                : 26.08.2011
  *
  */
  
@@ -27,7 +27,7 @@
 //   along with this program; if not, write to the Free Software
 //   Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 //
-// $Id: city.php 704 2006-10-12 16:21:03Z thindil $
+// $Id$
 
 $title = "Altara"; 
 require_once("includes/head.php");
@@ -111,7 +111,7 @@ if ($player -> location == 'Altara')
                           array('train.php', 'mines.php', 'farm.php', 'core.php'),
                           array('grid.php', 'wieza.php', 'temple.php', 'msklep.php', 'jewellershop.php'),
                           array('house.php', 'memberlist.php?limit=0&amp;lista=id', 'monuments.php', 'hof.php', 'library.php'),
-                          array('updates.php', 'tower.php', 'referrals.php', 'jail.php', 'court.php', 'polls.php', 'alley.php', 'stafflist.php'),
+                          array('updates.php', 'tower.php', 'jail.php', 'court.php', 'polls.php', 'alley.php', 'stafflist.php'),
                           array('landfill.php', 'smelter.php', 'kowal.php', 'alchemik.php'),
                           array('market.php', 'warehouse.php', 'travel.php'));
         $arrNames = array(array(BATTLE_ARENA, ARMOR_SHOP, WEAPON_SHOP, BOWS_SHOP, OUTPOSTS),
@@ -119,7 +119,7 @@ if ($player -> location == 'Altara')
                           array(SCHOOL, MINES, FARMS, CORES),
                           array(LABYRYNTH, MAGIC_TOWER, TEMPLE, ALCHEMY_SHOP, JEWELLER_SHOP),
                           array(HOUSES, PLAYERS_L, MONUMENTS, HERO_VALL, LIBRARY),
-                          array(UPDATES, TIMER, REFERR, JAIL2, COURT, $strInfo.POLLS, WELLEARNED, STAFF_LIST),
+                          array(UPDATES, TIMER, JAIL2, COURT, $strInfo.POLLS, WELLEARNED, STAFF_LIST),
                           array(CLEAN_CITY, SMELTER, BLACKSMITH, ALCHEMY_MILL),
                           array(MARKET, WAREHOUSE, TRAVEL));
         $smarty -> assign(array("Titles" => $arrTitles,

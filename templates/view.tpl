@@ -22,7 +22,7 @@
 {$Tfights}: {$Wins}/{$Losses} {$Fratio}<br />
 {$Tlastkill}: {$Lastkilled}<br />
 {$Tlastkilled}: {$Lastkilledby}<br />
-{$Trefs}: {$Refs}<br />
+{$Trefs}: <a href="referrals.php?id={$Id}">{$Refs}</a><br />
 {$Tprofile}:<br />{$Profile}<br /><br />
 {if $Attack != "" || $Mail != "" || $Crime != ""}
     {$Toptions}:<br />

@@ -7,7 +7,7 @@
  *   @copyright            : (C) 2004,2005,2011 Vallheru Team based on Gamers-Fusion ver 2.5
  *   @author               : thindil <thindil@tuxfamily.org>
  *   @version              : 1.4
- *   @since                : 23.08.2011
+ *   @since                : 26.08.2011
  *
  */
 
@@ -29,7 +29,7 @@
 //
 // 
 
-$title = "Centrum Poleconych";
+$title = "Vallary";
 require_once("includes/head.php");
 
 /**
@@ -37,18 +37,51 @@ require_once("includes/head.php");
 */
 require_once("languages/".$player -> lang."/referrals.php");
 
-if ($player -> location != 'Altara') 
-{
-	error (ERROR);
+checkvalue($_GET['id']);
+$objVals = $db->Execute("SELECT `id`, `user`, `vallars` FROM `players` WHERE `id`=".$_GET['id']);
+if (!$objVals->fields['id'])
+  {
+    error("Nie ma takiego gracza!");
+  }
 
-}
+$arrDate = array();
+$arrReason = array();
+$arrAmount = array();
+$objHist = $db->SelectLimit("SELECT * FROM `vallars` WHERE `owner`=".$_GET['id']." ORDER BY `vdate` DESC", 30);
+while (!$objHist->EOF)
+  {
+    $tmpArr = explode(" ", $objHist->fields['vdate']);
+    $arrDate[] = $tmpArr[0];
+    $arrReason[] = $objHist->fields['reason'];
+    $arrAmount[] = $objHist->fields['amount'];
+    $objHist->MoveNext();
+  }
+if ($_GET['id'] == $player->id)
+  {
+    $strOwner = "posiadasz";
+    $strLink = "zdobywasz";
+  }
+else
+  {
+    $strOwner = $objVals->fields['user'];
+    $strLink = $strOwner." zdobywa";
+  }
 
 $smarty -> assign(array("Adress" => $gameadress, 
-	"Id" => $player -> id, 
-	"Refs" => $player->vallars,
-	"Ref1" => REF1,
-	"Ref2" => REF2,
-	"Ref3" => REF3 ));
+			"Id" => $_GET['id'], 
+			"Refs" => $objVals->fields['vallars'],
+			"Date" => $arrDate,
+			"Reason" => $arrReason,
+			"Amount" => $arrAmount,
+			"Owner" => $strOwner,
+			"Linkinfo" => $strLink,
+			"Tdate" => "Data",
+			"Tamount" => "Ilość",
+			"Treason" => "Uzasadnienie",
+			"Ref4" => "jednego Vallara. Obecnie",
+			"Ref1" => REF1,
+			"Ref2" => REF2,
+			"Ref3" => REF3 ));
 $smarty -> display ('referrals.tpl');
 
 require_once("includes/foot.php");

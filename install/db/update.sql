@@ -11,4 +11,12 @@ ALTER TABLE `equipment` ADD FULLTEXT ( `name` );
 ALTER TABLE `potions` ADD FULLTEXT ( `name` );
 ALTER TABLE `polls` ADD `desc` TEXT NOT NULL;
 ALTER TABLE `players` ADD `vallars` INT( 11 ) NOT NULL DEFAULT '0';
-ALTER TABLE `topics` ADD `closed` CHAR( 1 ) NOT NULL DEFAULT 'N'
+ALTER TABLE `topics` ADD `closed` CHAR( 1 ) NOT NULL DEFAULT 'N';
+CREATE TABLE IF NOT EXISTS `vallars` (
+  `owner` int(11) NOT NULL,
+  `reason` varchar(255) NOT NULL,
+  `amount` int(11) NOT NULL,
+  `vdate` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  KEY `owner` (`owner`),
+  KEY `vdate` (`vdate`)
+) ENGINE=MyISAM DEFAULT CHARSET=utf8;
