@@ -7,7 +7,7 @@
  *   @copyright            : (C) 2004,2005,2006,2011 Vallheru Team based on Gamers-Fusion ver 2.5
  *   @author               : thindil <thindil@tuxfamily.org>
  *   @version              : 1.4
- *   @since                : 13.08.2011
+ *   @since                : 26.08.2011
  *
  */
 
@@ -212,6 +212,7 @@ if (!isset($_GET['action']))
 {
     $smarty -> assign(array("Mazeinfo" => MAZE_INFO,
 			    "Explore" => A_EXPLORE,
+			    "Amount" => floor($player->energy * 3),
 			    "Times" => "razy"));
     $_GET['action'] = '';
 }

@@ -1,7 +1,7 @@
 {if $Action == "" && $Step == ""}
     {$Mazeinfo}<br /><br />
     <form method="post" action="maze.php?action=explore">
-        <input type="submit" value="{$Explore}" /> <input type="text" name="amount" value="1" size="5" /> {$Times}.
+        <input type="submit" value="{$Explore}" /> <input type="text" name="amount" value="{$Amount}" size="5" /> {$Times}.
     </form>
 {/if}
 

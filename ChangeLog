@@ -1,3 +1,8 @@
+2011-08-26  Bartek thindil Jasicki  <thindil@tuxfamily.org>
+
+	* FEATURE,templates/layout1/maze.tpl, templates/layout1/grid.tpl, templates/maze.tpl, templates/grid.tpl, maze.php, grid.php:
+	added default player energy value
+
 2011-08-25  Bartek thindil Jasicki  <thindil@tuxfamily.org>
 
 	* FEATURE,includes/turnfight.php, includes/functions.php, includes/funkcje.php, includes/battle.php, equip.php:
