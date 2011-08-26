@@ -63,8 +63,8 @@ if ($_GET['id'] == $player->id)
   }
 else
   {
-    $strOwner = $objVals->fields['user'];
-    $strLink = $strOwner." zdobywa";
+    $strOwner = $objVals->fields['user']." posiada";
+    $strLink = $objVals->fields['user']." zdobywa";
   }
 
 $smarty -> assign(array("Adress" => $gameadress, 

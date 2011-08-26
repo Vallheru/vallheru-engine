@@ -1,5 +1,7 @@
 2011-08-26  Bartek thindil Jasicki  <thindil@tuxfamily.org>
 
+	* BUG,maze.php, grid.php, referrals.php: 
+	fixed few bugs
 	* FEATURE,install/db/update.sql, city.php, admin.php, referrals.php, languages/pl/head1.php, languages/pl/referrals.php,
 	includes/checkexp.php, templates/layout1/referrals.tpl, templates/layout1/view.tpl, templates/referrals.tpl, templates/view.tpl:
 	added info about gained vallars

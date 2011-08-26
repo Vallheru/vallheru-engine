@@ -212,7 +212,7 @@ if (!isset($_GET['action']))
 {
     $smarty -> assign(array("Mazeinfo" => MAZE_INFO,
 			    "Explore" => A_EXPLORE,
-			    "Amount" => floor($player->energy * 3),
+			    "Amount" => floor($player->energy / 0.3),
 			    "Times" => "razy"));
     $_GET['action'] = '';
 }

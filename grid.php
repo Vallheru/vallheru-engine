@@ -51,7 +51,7 @@ if (!isset($_GET['action']) && !isset($_GET['step']) && empty($query -> fields['
   {
     $smarty -> assign(array("Labinfo" => LAB_INFO,
 			    "Explore" => A_EXP,
-			    "Amount" => floor($player->energy * 3),
+			    "Amount" => floor($player->energy / 0.3),
 			    "Times" => "razy"));
   }
 
