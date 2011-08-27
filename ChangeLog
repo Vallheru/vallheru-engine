@@ -1,5 +1,7 @@
 2011-08-27  Bartek thindil Jasicki  <thindil@tuxfamily.org>
 
+	* UPDATE,outposts.php, templates/layout1/outposts.tpl, templates/outposts.tpl:
+	added default value for collecting taxes
 	* FEATURE,templates/layout1/footer.tpl, templates/footer.tpl, includes/foot.php:
 	added info about memory usage by script
 	* FEATURE,jeweller.php:

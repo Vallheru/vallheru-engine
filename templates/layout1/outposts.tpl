@@ -98,7 +98,7 @@
 {if $View == "taxes"}
     {$Taxinfo}<br /><br />
     <form method="post" action="outposts.php?view=taxes&amp;step=gain">
-    <input type="submit" value="{$Asend}" /> {$Soldiers} <input type="text" name="amount" value="0" /> {$Times}</form>
+    <input type="submit" value="{$Asend}" /> {$Soldiers} <input type="text" name="amount" value="{$Amount}" size="5" /> {$Times}</form>
     {$Message}
 {/if}
 

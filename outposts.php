@@ -8,7 +8,7 @@
  *   @author               : thindil <thindil@tuxfamily.org>
  *   @author               : eyescream <tduda@users.sourceforge.net>
  *   @version              : 1.4
- *   @since                : 16.08.2011
+ *   @since                : 27.08.2011
  *
  */
  
@@ -672,10 +672,11 @@ if (isset($_GET['view']) && $_GET['view'] == 'veterans')
     {
         error(NO_VETERAN);
     }
-    if (isset($_GET['id']) && !ereg("^[1-9][0-9]*$", $_GET['id'])) 
+    if (isset($_GET['id'])) 
     {
         error(ERROR);
     }
+    checkvalue($_GET['id']);
     $veteran = $db -> Execute("SELECT * FROM outpost_veterans WHERE id=".$_GET['id']);
     if ($veteran -> fields['outpost'] != $out -> fields['id']) 
     {
@@ -943,10 +944,19 @@ if (isset ($_GET['view']) && $_GET['view'] == 'taxes')
     {
         error(NO_SOLDIERS);
     }
+    if (isset($_POST['amount']))
+      {
+	$intAmount = $_POST['amount'];
+      }
+    else
+      {
+	$intAmount = 0;
+      }
     $smarty -> assign(array("Taxinfo" => TAX_INFO,
-        "Asend" => A_SEND,
-        "Soldiers" => SOLDIERS,
-        "Times" => TIMES));
+			    "Asend" => A_SEND,
+			    "Soldiers" => SOLDIERS,
+			    "Amount" => $intAmount,
+			    "Times" => TIMES));
     if (isset($_GET['step']) && $_GET['step'] == 'gain') 
     {
         if (!isset($_POST['amount'])) 
