@@ -71,6 +71,7 @@ while (!$objQuery -> EOF)
 $objQuery -> Close();
 $duration = round(microtime(true) - $start_time, 3);
 $sqltime = round($sqltime, 3);
+$fltMemusage = memory_get_usage(true) / 1048576.0;
 if ($player -> rank == 'Admin') 
 {
     $phptime = round($duration - $sqltime, 3);
@@ -100,24 +101,27 @@ $strFilename = $arrFilename[$intFile];
 * Assign variables and show page
 */
 $smarty -> assign (array ("Players" => $intPlayers, 
-    "Online" => $intNumo, 
-    "List" => $arrplayers, 
-    "Duration" => $duration, 
-    "Show" => $show, 
-    "Compress" => $comp, 
-    "Sqltime" => $sqltime, 
-    "PHPtime" => $phptime,
-    "Statistics" => STATISTICS,
-    "Playerslist" => PLAYERS_LIST,
-    "Registeredplayers" => REGISTERED_PLAYERS,
-    "Playersonline" => PLAYERS_ONLINE,
-    "Loadingtime" => LOADING_TIME,
-    "Gzipcomp" => GZIP_COMP,
-    "Pmtime" => PM_TIME,
-    "Queries" => QUERIES,
-    "Numquery" => $numquery,
-    "Filename" => $strFilename,
-    "Asource" => SOURCE));
+			  "Online" => $intNumo, 
+			  "List" => $arrplayers, 
+			  "Duration" => $duration, 
+			  "Show" => $show, 
+			  "Compress" => $comp, 
+			  "Sqltime" => $sqltime, 
+			  "PHPtime" => $phptime,
+			  "Statistics" => STATISTICS,
+			  "Playerslist" => PLAYERS_LIST,
+			  "Registeredplayers" => REGISTERED_PLAYERS,
+			  "Playersonline" => PLAYERS_ONLINE,
+			  "Loadingtime" => LOADING_TIME,
+			  "Gzipcomp" => GZIP_COMP,
+			  "Pmtime" => PM_TIME,
+			  "Queries" => QUERIES,
+			  "Numquery" => $numquery,
+			  "Filename" => $strFilename,
+			  "Memory" => "Użycie pamięci",
+			  "Memusage" => $fltMemusage,
+			  "MB" => "MB",
+			  "Asource" => SOURCE));
 $smarty -> display ('footer.tpl');
 if ($compress)
   {

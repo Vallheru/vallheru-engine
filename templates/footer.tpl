@@ -27,7 +27,7 @@
     </table>
     <center>
     {if $Show == "1"}
-        {$Loadingtime}: {$Duration} |{$Gzipcomp}: {$Compress} | {$Pmtime} PHP/MySQL: {$PHPtime}/{$Sqltime} | {$Queries}: {$Numquery}
+        {$Loadingtime}: {$Duration} |{$Gzipcomp}: {$Compress} | {$Pmtime} PHP/MySQL: {$PHPtime}/{$Sqltime} | {$Queries}: {$Numquery} | {$Memory}: {$Memusage} {$MB}
         <a href="source.php?file={$Filename}" target="_blank">{$Asource}</a><br />
     {/if}
     &copy; 2004-2011 <a href="https://launchpad.net/vallheru">Vallheru Team</a> based on <a href="http://sourceforge.net/projects/gamers-fusion">Gamers-Fusion 2.5</a>

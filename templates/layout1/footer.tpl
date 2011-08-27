@@ -30,7 +30,7 @@
             <tr>
                 <td colspan="3" align="center">
                     <span class="light">
-                    {$Loadingtime}: {$Duration} | {$Gzipcomp}: {$Compress} | {$Pmtime} PHP/MySQL: {$PHPtime}/{$Sqltime} | {$Queries}: {$Numquery} <a href="source.php?file={$Filename}" target="_blank">{$Asource}</a></span>
+                    {$Loadingtime}: {$Duration} | {$Gzipcomp}: {$Compress} | {$Pmtime} PHP/MySQL: {$PHPtime}/{$Sqltime} | {$Queries}: {$Numquery} | {$Memory}: {$Memusage} {$MB} <a href="source.php?file={$Filename}" target="_blank">{$Asource}</a></span>
                 </td>
             </tr>
 {/if}
