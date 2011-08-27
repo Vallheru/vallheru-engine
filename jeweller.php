@@ -4,10 +4,10 @@
  *   Jeweller - make rings
  *
  *   @name                 : jeweller.php                            
- *   @copyright            : (C) 2006 Vallheru Team based on Gamers-Fusion ver 2.5
- *   @author               : thindil <thindil@users.sourceforge.net>
- *   @version              : 1.3
- *   @since                : 16.11.2006
+ *   @copyright            : (C) 2006,2011 Vallheru Team based on Gamers-Fusion ver 2.5
+ *   @author               : thindil <thindil@tuxfamily.org>
+ *   @version              : 1.4
+ *   @since                : 27.08.2011
  *
  */
 
@@ -103,10 +103,7 @@ if (isset($_GET['step']) && $_GET['step'] == 'plans')
     
     if (isset($_GET['buy']))
     {
-        if (!ereg("^[1-9][0-9]*$", $_GET['buy'])) 
-        {
-            error(ERROR);
-        }
+	checkvalue($_GET['buy']);
         if ($_GET['buy'] > 1 && $player -> clas != 'Rzemieślnik')
         {
             error(WRONG_CLASS);
@@ -149,10 +146,7 @@ if (isset($_GET['step']) && $_GET['step'] == 'make')
                             "Ramount" => R_AMOUNT));
     if (isset($_GET['make']) && $_GET['make'] == 'Y')
     {
-        if (!ereg("^[1-9][0-9]*$", $_POST['amount'])) 
-        {
-            error(ERROR);
-        }
+	checkvalue($_POST['amount']);
         if ($player -> hp == 0) 
         {
             error(YOU_DEAD);
@@ -298,10 +292,7 @@ if (isset($_GET['step']) && $_GET['step'] == 'make2')
              */
             if (isset($_GET['make']))
             {
-                if (!ereg("^[1-9][0-9]*$", $_GET['make'])) 
-                {
-                    error(ERROR);
-                }
+		checkvalue($_GET['make']);
                 if ($player -> hp == 0) 
                 {
                   error(YOU_DEAD);
@@ -355,10 +346,8 @@ if (isset($_GET['step']) && $_GET['step'] == 'make2')
      */
     if (isset($_GET['action']) && $_GET['action'] == 'continue')
     {
-        if (!ereg("^[1-9][0-9]*$", $_POST['make']) || !ereg("^[1-9][0-9]*$", $_POST['amount'])) 
-        {
-            error(ERROR);
-        }
+	checkvalue($_POST['make']);
+	checkvalue($_POST['amount']);
         if ($player -> hp == 0) 
         {
             error(YOU_DEAD);
@@ -418,7 +407,7 @@ if (isset($_GET['step']) && $_GET['step'] == 'make2')
                     $intBonus = $objRing2 -> fields['bonus'];
                 }
                 $strName = $objRing -> fields['name']." ".$objRing -> fields['bonus'];
-                $intCost = ceil($objRing2 -> fields['cost'] / 200);
+                $intCost = ceil($objRing2 -> fields['cost'] / 20);
                 $objTest = $db -> Execute("SELECT `id` FROM `equipment` WHERE `owner`=".$player -> id." AND status='U' AND `name`='".$strName."' AND `power`=".$intBonus." AND `cost`=".$intCost);
                 if (!$objTest -> fields['id'])
                 {
@@ -458,10 +447,8 @@ if (isset($_GET['step']) && $_GET['step'] == 'make2')
      */
     if (isset($_GET['action']) && $_GET['action'] == 'create')
     {
-        if (!ereg("^[1-9][0-9]*$", $_POST['make']) || !ereg("^[1-9][0-9]*$", $_POST['amount'])) 
-        {
-            error(ERROR);
-        }
+	checkvalue($_POST['make']);
+	checkvalue($_POST['amount']);
         $objRing = $db -> Execute("SELECT `owner`, `name`, `level`, `bonus`, `cost`, `type` FROM `jeweller` WHERE `id`=".$_POST['make']);
         if (!$objRing -> fields['owner'] || $objRing -> fields['owner'] != $player -> id)
         {
@@ -569,7 +556,7 @@ if (isset($_GET['step']) && $_GET['step'] == 'make2')
         {
             $i = 0;
             $strName = $objRing -> fields['name']." ".$strStat;
-            $intCost = ceil($objRing -> fields['cost'] / 200);
+            $intCost = ceil($objRing -> fields['cost'] / 20);
             foreach ($arrAmount as $intAmount)
             {
                 $objTest = $db -> Execute("SELECT `id` FROM `equipment` WHERE `owner`=".$player -> id." AND status='U' AND `name`='".$strName."' AND `power`=".$arrBonus[$i]." AND `cost`=".$intCost);
@@ -718,10 +705,11 @@ if (isset($_GET['step']) && $_GET['step'] == 'make3')
      */
     if (isset($_GET['action']) && $_GET['action'] == 'continue')
     {
-        if (!ereg("^[1-9][0-9]*$", $_POST['make']) || !ereg("^[0-9][0-9\.]*$", $_POST['amount'])) 
+        if (floatval($_POST['amount']) <= 0) 
         {
             error(ERROR);
         }
+	checkvalue($_POST['make']);
         if ($player -> hp == 0) 
         {
             error(YOU_DEAD);
@@ -870,10 +858,11 @@ if (isset($_GET['step']) && $_GET['step'] == 'make3')
      */
     if (isset($_GET['action']) && $_GET['action'] == 'create')
     {
-        if (!isset($_POST['rings']) || !ereg("^[1-9][0-9]*$", $_POST['rings']) || !ereg("^[0-9][0-9\.]*$", $_POST['amount'])) 
+        if (!isset($_POST['rings']) || floatval($_POST['amount']) <= 0) 
         {
             error(ERROR);
         }
+	checkvalue($_POST['rings']);
         if ($objMaked -> fields['id'])
         {
             error(ERROR);
