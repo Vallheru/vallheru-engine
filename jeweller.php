@@ -420,11 +420,15 @@ if (isset($_GET['step']) && $_GET['step'] == 'make2')
                 $objTest -> Close();
                 $intGainexp = $objRing2 -> fields['level'] * 200;
                 $intAbility = ($objRing -> fields['n_energy'] * 0.02);
+		if ($intAbility == 0)
+		  {
+		    $intAbility = 0.02;
+		  }
                 $smarty -> assign("Message", YOU_MAKE.$strName.YOU_GAIN3.$intGainexp.AND_EXP2.$intAbility.IN_JEWELLER);
             }
                 else
             {
-                $intAbility = 0;
+                $intAbility = 0.02;
                 $intGainexp = 0;
                 $smarty -> assign("Message", YOU_TRY.$objRing -> fields['name'].BUT_FAIL.$intAbility.IN_JEWELLER);
             }
@@ -574,6 +578,10 @@ if (isset($_GET['step']) && $_GET['step'] == 'make2')
             $intGainexp = $objRing -> fields['level'] * 200;
             $intGainexp = floor($intGainexp * $intAmount2);
             $intAbility = ($intAmount2 * 0.02) * ($objRing -> fields['level'] * 2);
+	    if ($intAbility == 0)
+	      {
+		$intAbility = 0.02;
+	      }
             $smarty -> assign("Message", YOU_MAKE.$intAmount2."</b> ".R_AMOUNT.$strName.YOU_GAIN3.$intGainexp.AND_EXP2.$intAbility.IN_JEWELLER);
         }
             else
