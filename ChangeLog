@@ -1,3 +1,8 @@
+2011-08-28  Bartek thindil Jasicki  <thindil@tuxfamily.org>
+
+	* templates/layout1/account.tpl, templates/account.tpl, account.php:
+	added information about last 30 grants of Vallars
+
 2011-08-27  Bartek thindil Jasicki  <thindil@tuxfamily.org>
 
 	* UPDATE,outposts.php, templates/layout1/outposts.tpl, templates/outposts.tpl:

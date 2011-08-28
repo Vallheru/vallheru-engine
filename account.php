@@ -799,6 +799,42 @@ if (isset($_GET['view']) && $_GET['view'] == 'style')
 }
 
 /**
+ * Show last gained Vallars
+ */
+if (isset($_GET['view']) && $_GET['view'] == 'vallars')
+  {
+    $objHist = $db->SelectLimit("SELECT * FROM `vallars` ORDER BY `vdate` DESC", 30);
+    $arrDate = array();
+    $arrReason = array();
+    $arrAmount = array();
+    $arrOwner = array();
+    $arrOwnerID = array();
+    while (!$objHist->EOF)
+      {
+	$tmpArr = explode(" ", $objHist->fields['vdate']);
+	$arrDate[] = $tmpArr[0];
+	$arrReason[] = $objHist->fields['reason'];
+	$arrAmount[] = $objHist->fields['amount'];
+	$arrOwnerid[] = $objHist->fields['owner'];
+	$objOwner = $db->Execute("SELECT `user` FROM `players` WHERE `id`=".$objHist->fields['owner']);
+	$arrOwner[] = $objOwner->fields['user'];
+	$objOwner->Close();
+	$objHist->MoveNext();
+      }
+    $objHist->Close();
+    $smarty->assign(array("Info" => "Poniżej znajduje się lista ostatnich 30 akcji przyznania Vallarów za wkład w rozwój gry.",
+			  "Tamount" => "Ilość przyznanych Vallarów",
+			  "Treason" => "Uzasadnienie",
+			  "Id" => "ID",
+			  "Tgranted" => "Nagrodzony(a)",
+			  "Date" => $arrDate,
+			  "Owner" => $arrOwner,
+			  "Ownerid" => $arrOwnerid,
+			  "Amount" => $arrAmount,
+			  "Reason" => $arrReason));
+  }
+
+/**
 * Initialization of variables
 */
 if (!isset($_GET['view'])) 
@@ -813,8 +849,8 @@ if (!isset($_GET['step']))
 /**
 * Assign variables and display page
 */
-$arrStep = array('name', 'pass', 'profile', 'eci', 'avatar', 'reset', 'immu', 'style', 'lang', 'freeze', 'options', 'changes', 'bugreport', 'bugtrack', 'links');
-$arrLinks = array(A_NAME, A_PASS, A_PROFILE, A_EMAIL, A_AVATAR, A_RESET, A_IMMU, A_STYLE, A_LANG, A_FREEZE, A_OPTIONS, A_CHANGES, A_BUGREPORT, A_BUGTRACK, A_LINKS);
+$arrStep = array('name', 'pass', 'profile', 'eci', 'avatar', 'reset', 'immu', 'style', 'lang', 'freeze', 'options', 'changes', 'vallars', 'bugreport', 'bugtrack', 'links');
+$arrLinks = array(A_NAME, A_PASS, A_PROFILE, A_EMAIL, A_AVATAR, A_RESET, A_IMMU, A_STYLE, A_LANG, A_FREEZE, A_OPTIONS, A_CHANGES, "Ostatnio nagrodzeni Vallarami", A_BUGREPORT, A_BUGTRACK, A_LINKS);
 $smarty -> assign (array ("View" => $_GET['view'], 
                           "Step" => $_GET['step'],
                           "Welcome" => WELCOME,

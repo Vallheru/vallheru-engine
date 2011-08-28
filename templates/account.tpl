@@ -243,3 +243,16 @@
        {$Youchange}. (<a href="account.php">{$Refresh}</a>)
     {/if}
 {/if}
+
+{if $View == "vallars"}
+    {$Info}<br />
+    <ul>
+        {section name=vallars loop=$Date}
+        <li>{$Date[vallars]} <br />
+	    {$Tgranted}: <b><a href="view.php?view={$Ownerid[vallars]}">{$Owner[vallars]}</a></b> {$Id}:{$Ownerid[vallars]}<br />
+            {$Tamount}: {$Amount[vallars]}<br />
+            {$Treason}: {$Reason[vallars]}<br /><br />
+        </li>
+        {/section}
+    </ul>
+{/if}
