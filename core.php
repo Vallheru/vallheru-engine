@@ -8,7 +8,7 @@
  *   @author               : thindil <thindil@tuxfamily.org>
  *   @author               : eyescream <tduda@users.sourceforge.net>
  *   @version              : 1.4
- *   @since                : 06.08.2011
+ *   @since                : 28.08.2011
  *
  */
 
@@ -259,10 +259,8 @@ if (isset($_GET['view']) && $_GET['view'] == 'breed')
         {
             error(ERROR);
         }
-        if (!ereg("^[1-9][0-9]*$", $_POST['coremale']) || !ereg("^[1-9][0-9]*$", $_POST['corefemale']))
-        {
-            error(ERROR);
-        }
+	checkvalue($_POST['coremale']);
+	checkvalue($_POST['corefemale']);
         $objCoremale = $db -> Execute("SELECT `power`, `defense`, `name`, `owner`, `type` FROM `core` WHERE `id`=".$_POST['coremale']);
         $objCorefemale = $db -> Execute("SELECT `power`, `defense`, `name`, `owner` FROM `core` WHERE `id`=".$_POST['corefemale']);
         if ($objCoremale -> fields['owner'] != $player -> id || $objCorefemale -> fields['owner'] != $player -> id)
@@ -433,10 +431,7 @@ if (isset ($_GET['view']) && $_GET['view'] == 'mycores')
     } 
         else 
     {
-        if (!ereg("^[1-9][0-9]*$", $_GET['id']))
-        {
-            error(ERROR);
-        }
+	checkvalue($_GET['id']);
         $smarty -> assign(array("Showcore" => SHOW_CORE,
                                 "Mainstats" => MAIN_STATS,
                                 "Cid" => C_ID,
@@ -539,10 +534,7 @@ if (isset ($_GET['view']) && $_GET['view'] == 'mycores')
     }
     if (isset($_GET['activate'])) 
     {
-        if (!ereg("^[1-9][0-9]*$", $_GET['activate']))
-        {
-            error(ERROR);
-        }
+	checkvalue($_GET['activate']);
         $active = $db -> Execute("SELECT `id`, `owner`, `name`, `corename` FROM `core` WHERE `id`=".$_GET['activate']);
         if ($active -> fields['owner'] != $player -> id) 
         {
@@ -565,10 +557,7 @@ if (isset ($_GET['view']) && $_GET['view'] == 'mycores')
     }
     if (isset($_GET['dezaktywuj'])) 
     {
-        if (!ereg("^[1-9][0-9]*$", $_GET['dezaktywuj']))
-        {
-            error(ERROR);
-        }
+	checkvalue($_GET['dezaktywuj']);
         $dez = $db -> Execute("SELECT `id`, `owner`, `name`, `corename` FROM `core` WHERE `id`=".$_GET['dezaktywuj']);
         if ($dez -> fields['owner'] != $player -> id) 
         {
@@ -594,10 +583,7 @@ if (isset ($_GET['view']) && $_GET['view'] == 'mycores')
     */
     if (isset($_GET['release'])) 
     {
-        if (!ereg("^[1-9][0-9]*$", $_GET['release'])) 
-        {
-            error (ERROR);
-        }
+	checkvalue($_GET['release']);
         $rel = $db -> Execute("SELECT id, owner, name, corename FROM core WHERE id=".$_GET['release']);
         if ($rel -> fields['owner'] != $player -> id) 
         {
@@ -687,10 +673,7 @@ if (isset ($_GET['view']) && $_GET['view'] == 'mycores')
             }
             if ($_GET['step'] == 'give') 
             {
-                if (!ereg("^[1-9][0-9]*$", $_POST['gid'])) 
-                {
-                    error (ERROR);
-                }
+		checkvalue($_POST['gid']);
                 if ($_POST['gid'] == $player -> id) 
                 {
                     error (BAD_PLAYER);
@@ -848,10 +831,7 @@ if (isset ($_GET['view']) && $_GET['view'] == 'library')
     } 
         else 
     {
-        if (!ereg("^[1-9][0-9]*$", $_GET['id'])) 
-        {
-            error (ERROR);
-        }
+	checkvalue($_GET['id']);
         $coreinfo = $db -> Execute("SELECT * FROM cores WHERE id=".$_GET['id']);
         if ($coreinfo -> fields['type'] == 'Plant') 
         {
@@ -1021,10 +1001,7 @@ if (isset ($_GET['view']) && $_GET['view'] == 'arena')
     }
     if (isset($_GET['attack'])) 
     {
-        if (!ereg("^[1-9][0-9]*$", $_GET['attack'])) 
-        {
-            error (ERROR);
-        }
+	checkvalue($_GET['attack']);
         if ($player -> energy < 0.2) 
         {
             error ("Nie masz tyle energii!");
@@ -1249,14 +1226,8 @@ if (isset ($_GET['view']) && $_GET['view'] == 'train')
         {
             error(ERROR);
         }
-        if (!ereg("^[1-9][0-9]*$", $_POST['train_core'])) 
-        {
-            error (ERROR);
-        }
-        if (!ereg("^[1-9][0-9]*$", $_POST["reps"])) 
-        {
-            error (ERROR);
-        }
+	checkvalue($_POST['train_core']);
+	checkvalue($_POST['reps']);
         if ($_POST['reps'] <= 0) 
         {
             error (HOW_MANY);
@@ -1351,10 +1322,7 @@ if (isset ($_GET['view']) && $_GET['view'] == 'market')
         }
         if (isset($_GET['buy'])) 
         {
-            if (!ereg("^[1-9][0-9]*$", $_GET['buy'])) 
-            {
-                error (ERROR);
-            }
+	    checkvalue($_GET['buy']);
             $buy = $db -> Execute("SELECT * FROM core_market WHERE id=".$_GET['buy']);
             if ($buy -> fields['seller'] == $player -> id) 
             {
@@ -1413,7 +1381,7 @@ if (isset ($_GET['view']) && $_GET['view'] == 'market')
             "Asell" => A_SELL));
         if (isset ($_GET['action']) && $_GET['action'] == 'add') 
         {
-            if (!ereg("^[1-9][0-9]*$", $_POST['cost'])) 
+            if (intval($_POST['cost']) < 1) 
             {
                 error (ERROR);
             }
@@ -1428,10 +1396,7 @@ if (isset ($_GET['view']) && $_GET['view'] == 'market')
                 } 
                     else 
                 {
-                    if (!ereg("^[1-9][0-9]*$", $_POST['add_core']))
-                    {
-                        error(ERROR);
-                    }
+		    checkvalue($_POST['add_core']);
                     $sc = $db -> Execute("SELECT * FROM core WHERE id=".$_POST['add_core']);
                     if ($sc -> fields['owner'] != $player -> id) 
                     {
@@ -1467,10 +1432,7 @@ if (isset ($_GET['view']) && $_GET['view'] == 'explore')
         "Region6" => REGION6));
     if (isset ($_GET['next']) && $_GET['next'] == 'yes') 
     {
-        if (!ereg("^[1-9][0-9]*$", $_POST['repeat'])) 
-        {
-            error (ERROR);
-        }
+	checkvalue($_POST['repeat']);
         $rep = ($_POST['repeat'] * 0.1);
         if ($player -> energy < $rep) 
         {

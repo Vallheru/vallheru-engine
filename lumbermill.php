@@ -7,7 +7,7 @@
  *   @copyright            : (C) 2004,2005,2006,2007,2011 Vallheru Team based on Gamers-Fusion ver 2.5
  *   @author               : thindil <thindil@users.sourceforge.net>
  *   @version              : 1.4
- *   @since                : 08.08.2011
+ *   @since                : 28.08.2011
  *
  */
 
@@ -269,10 +269,7 @@ if (isset ($_GET['mill']) && $_GET['mill'] == 'plany')
                             "Abuy" => A_BUY));
     if (isset($_GET['buy'])) 
     {
-        if (!ereg("^[1-9][0-9]*$", $_GET['buy'])) 
-        {
-            error (ERROR);
-        }
+	checkvalue($_GET['buy']);
         $objPlan = $db -> Execute("SELECT * FROM mill WHERE id=".$_GET['buy']);
         $objTest = $db -> Execute("SELECT id FROM mill WHERE owner=".$player -> id." AND name='".$objPlan -> fields['name']."'");
         if ($objTest -> fields['id']) 
@@ -389,10 +386,7 @@ if (isset ($_GET['mill']) && $_GET['mill'] == 'mill')
         {
             error (YOU_DEAD);
         }
-        if (!ereg("^[1-9][0-9]*$", $_GET['ko'])) 
-        {
-            error (ERROR);
-        }
+	checkvalue($_GET['ko']);
         $objMaked = $db -> Execute("SELECT name FROM mill_work WHERE id=".$_GET['ko']);
         $smarty -> assign(array("Id" => $_GET['ko'], 
                                 "Name" => $objMaked -> fields['name'],
@@ -407,10 +401,7 @@ if (isset ($_GET['mill']) && $_GET['mill'] == 'mill')
         {
             error (YOU_DEAD);
         }
-        if (!ereg("^[1-9][0-9]*$", $_GET['dalej'])) 
-        {
-            error (ERROR);
-        }
+	checkvalue($_GET['dalej']);
         $objLumber = $db -> Execute("SELECT name, type FROM mill WHERE id=".$_GET['dalej']);
         $smarty -> assign(array("Id" => $_GET['dalej'], 
                                 "Name" => $objLumber -> fields['name'],
@@ -430,16 +421,10 @@ if (isset ($_GET['mill']) && $_GET['mill'] == 'mill')
     */
     if (isset($_GET['konty'])) 
     {
-        if (!ereg("^[1-9][0-9]*$", $_GET['konty'])) 
-        {
-            error (ERROR);
-        }
+	checkvalue($_GET['konty']);
         $objWork = $db -> Execute("SELECT * FROM mill_work WHERE id=".$_GET['konty']);
         $objLumber = $db -> Execute("SELECT name, type, cost, amount, level, twohand FROM mill WHERE owner=".$player -> id." AND name='".$objWork -> fields['name']."'");
-        if (!ereg("^[1-9][0-9]*$", $_POST['razy'])) 
-        {
-            error(ERROR);
-        }
+	checkvalue($_POST['razy']);
         if ($player -> energy < $_POST['razy']) 
         {
             error(NO_ENERGY);
@@ -547,18 +532,12 @@ if (isset ($_GET['mill']) && $_GET['mill'] == 'mill')
     */
     if (isset($_GET['rob'])) 
     {
-        if (!ereg("^[1-9][0-9]*$", $_GET['rob'])) 
-        {
-            error(ERROR);
-        }
+	checkvalue($_GET['rob']);
         if (!isset($_POST['razy']))
         {
             error(HOW_MANY);
         }
-        if (!ereg("^[1-9][0-9]*$", $_POST['razy'])) 
-        {
-            error(ERROR);
-        }
+	checkvalue($_POST['razy']);
         $objTest = $db -> Execute("SELECT `id` FROM `mill_work` WHERE `owner`=".$player -> id);
         if ($objTest -> fields['id'])
         {

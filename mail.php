@@ -198,10 +198,7 @@ if (isset ($_GET['view']) && $_GET['view'] == 'write')
     $body = '';
     if (!empty ($_GET['id'])) 
     {
-        if (!ereg("^[1-9][0-9]*$", $_GET['id'])) 
-        {
-            error (ERROR);
-        }
+	checkvalue($_GET['id']);
         $mail = $db -> Execute("SELECT `body`, `owner`, `sender` FROM `mail` WHERE `id`=".$_GET['id']);
         if ($mail -> fields['owner'] != $player -> id) 
         {
@@ -229,10 +226,7 @@ if (isset ($_GET['view']) && $_GET['view'] == 'write')
         {
             $_POST['subject'] = "Brak";
         }
-        if (!ereg("^[1-9][0-9]*$", $_POST['to'])) 
-        {
-            error (ERROR."1");
-        }
+	checkvalue($_POST['to']);
         $rec = $db -> Execute("SELECT `id`, `user` FROM `players` WHERE `id`=".$_POST['to']);
         if (!$rec -> fields['id']) 
         {
@@ -262,10 +256,7 @@ if (isset ($_GET['view']) && $_GET['view'] == 'write')
 
 if (isset ($_GET['read'])) 
 {
-    if (!ereg("^[1-9][0-9]*$", $_GET['read'])) 
-    {
-        error (ERROR);
-    }
+    checkvalue($_GET['read']);
     $mail = $db -> Execute("SELECT * FROM mail WHERE id=".$_GET['read']);
     if (!$mail -> fields['id']) 
     {
@@ -301,10 +292,7 @@ if (isset ($_GET['read']))
 
 if (isset ($_GET['zapisz'])) 
 {
-    if (!ereg("^[1-9][0-9]*$", $_GET['zapisz'])) 
-    {
-        error (ERROR);
-    }
+    checkvalue($_GET['zapisz']);
     $mail = $db -> Execute("SELECT id, owner FROM mail WHERE id=".$_GET['zapisz']);
     if (!$mail -> fields['id']) 
     {
@@ -320,10 +308,7 @@ if (isset ($_GET['zapisz']))
 
 if (isset ($_GET['kasuj'])) 
 {
-    if (!ereg("^[1-9][0-9]*$", $_GET['kasuj'])) 
-    {
-        error (ERROR);
-    }
+    checkvalue($_GET['kasuj']);
     $mail = $db -> Execute("SELECT id, owner FROM mail WHERE id=".$_GET['kasuj']);
     if (!$mail -> fields['id']) 
     {
@@ -361,14 +346,8 @@ if (isset ($_GET['send']))
                             "Asend" => A_SEND));
     if (isset ($_GET['step']) && $_GET['step'] == 'send') 
     {
-        if (!ereg("^[1-9][0-9]*$", $_POST['staff'])) 
-        {
-            error (ERROR);
-        }
-        if (!ereg("^[1-9][0-9]*$", $_POST['mid'])) 
-        {
-            error (ERROR);
-        }
+	checkvalue($_POST['staff']);
+	checkvalue($_POST['mid']);
         $arrtest = $db -> Execute("SELECT `id`, `user`, `rank` FROM `players` WHERE `id`=".$_POST['staff']);
         if (!$arrtest -> fields['id']) 
         {
@@ -525,10 +504,7 @@ if (isset($_GET['step']) && $_GET['step'] == 'deleteold')
  */
 if (isset($_GET['block']))
 {
-    if (!ereg("^[1-9][0-9]*$", $_GET['block'])) 
-    {
-        error(ERROR);
-    }
+    checkvalue($_GET['block']);
     $objPlayer = $db -> Execute("SELECT `id` FROM `players` WHERE `id`=".$_GET['block']);
     if (!$objPlayer -> fields['id'])
     {

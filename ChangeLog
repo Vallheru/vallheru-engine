@@ -1,5 +1,7 @@
 2011-08-28  Bartek thindil Jasicki  <thindil@tuxfamily.org>
 
+	* BUG,bows.php, core.php, court.php, czary.php, house.php, jail.php, log.php, lumbermill.php, mail.php: 
+	fixed some notices
 	* BUG,includes/resets.php, includes/functions.php, includes/turnfight.php, includes/tribefight.php, admin.php, aktywacja.php,
 	armor.php, bank.php, battle.php: 
 	fixed some notices

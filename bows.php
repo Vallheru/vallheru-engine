@@ -7,7 +7,7 @@
  *   @copyright            : (C) 2004,2005,2006,2011 Vallheru Team based on Gamers-Fusion ver 2.5
  *   @author               : thindil <thindil@tuxfamily.org>
  *   @version              : 1.4
- *   @since                : 09.08.2011
+ *   @since                : 28.08.2011
  *
  */
 
@@ -122,10 +122,7 @@ if (!isset ($_GET['buy']) && !isset($_GET['step']))
 */
 if (isset ($_GET['buy'])) 
 {
-    if (!ereg("^[1-9][0-9]*$", $_GET['buy'])) 
-    {
-        error (ERROR);
-    }
+    checkvalue($_GET['buy']);
     $arm = $db -> Execute("SELECT * FROM bows WHERE id=".$_GET['buy']);
     if (!$arm -> fields['id']) 
     {
@@ -163,10 +160,7 @@ if (isset ($_GET['buy']))
 */
 if (isset($_GET['arrows']))
 {
-    if (!ereg("^[1-9][0-9]*$", $_GET['arrows'])) 
-    {
-        error (ERROR);
-    }
+    checkvalue($_GET['arrows']);
     $objArm = $db -> Execute("SELECT * FROM bows WHERE id=".$_GET['arrows']);
     if (!$objArm -> fields['id']) 
     {
@@ -191,10 +185,7 @@ if (isset($_GET['arrows']))
         }
         if (isset($_POST['arrows1']) && $_POST['arrows1'] > 0)
         {
-            if (!ereg("^[1-9][0-9]*$", $_POST['arrows1'])) 
-            {
-                error (ERROR);
-            }
+	    checkvalue($_POST['arrows1']);
             $intCost = $intAllcost * $_POST['arrows1'];
             if ($intCost > $player -> credits) 
             {
@@ -204,10 +195,7 @@ if (isset($_GET['arrows']))
         }
         if (isset($_POST['arrows2']) && $_POST['arrows2'] > 0)
         {
-            if (!ereg("^[1-9][0-9]*$", $_POST['arrows2'])) 
-            {
-                error (ERROR);
-            }
+	    checkvalue($_POST['arrows2']);
             $intCost = ceil($intOnecost * $_POST['arrows2']);
             if ($intCost > $player -> credits) 
             {

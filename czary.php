@@ -4,10 +4,10 @@
  *   Spell book - activation and deactivafion of spells and echance items
  *
  *   @name                 : czary.php                            
- *   @copyright            : (C) 2004,2005,2006 Vallheru Team based on Gamers-Fusion ver 2.5
- *   @author               : thindil <thindil@users.sourceforge.net>
- *   @version              : 1.3
- *   @since                : 30.10.2006
+ *   @copyright            : (C) 2004,2005,2006,2011 Vallheru Team based on Gamers-Fusion ver 2.5
+ *   @author               : thindil <thindil@tuxfamily.org>
+ *   @version              : 1.4
+ *   @since                : 28.08.2011
  *
  */
 
@@ -67,10 +67,7 @@ $czaro -> Close();
 
 if (isset($_GET['deakt'])) 
 {
-    if (!ereg("^[1-9][0-9]*$", $_GET['deakt'])) 
-    {
-        error (ERROR);
-    }
+    checkvalue($_GET['deakt']);
     $czary1 = $db -> Execute("SELECT * FROM czary WHERE id=".$_GET['deakt']);
     if (!$czary1 -> fields['id']) 
     {
@@ -147,10 +144,7 @@ $czaryu -> Close();
 */
 if (isset($_GET['cast'])) 
 {
-    if (!ereg("^[1-9][0-9]*$", $_GET['cast'])) 
-    {
-        error (ERROR);
-    }
+    checkvalue($_GET['cast']);
     $czary = $db -> Execute("SELECT * FROM czary WHERE id=".$_GET['cast']);
     if (!$czary -> fields['id']) 
     {
@@ -189,10 +183,11 @@ if (isset($_GET['cast']))
     $arritem -> Close();
     if (isset($_GET['step']) && $_GET['step'] == 'items') 
     {
-        if (!isset($_POST['item']) || !ereg("^[1-9][0-9]*$", $_POST['item'])) 
+        if (!isset($_POST['item'])) 
         {
             error (ERROR);
         }
+	checkvalue($_POST['item']);
         $arritem = $db -> Execute("SELECT * FROM `equipment` WHERE id=".$_POST['item']);
         $arrPrefixname = array(I_DRAGON, I_DRAGON2, I_DRAGON3, I_ELVES, I_ELVES2, I_ELVES3, I_DWARVES, I_DWARVES2, I_DWARVES3);
         $arrSurfixname = array(I_COPPER, I_BRONZE, I_BRASS, I_IRON, I_STEEL, I_HAZEL, I_YEW, I_ELM, I_HARDER, I_COMPOSITE);
@@ -438,10 +433,7 @@ if (isset($_GET['cast']))
 */
 if (isset($_GET['naucz'])) 
 {
-    if (!ereg("^[1-9][0-9]*$", $_GET['naucz'])) 
-    {
-        error (ERROR);
-    }
+    checkvalue($_GET['naucz']);
     $czary = $db -> Execute("SELECT * FROM czary WHERE id=".$_GET['naucz']);
     if (!$czary -> fields['id']) 
     {

@@ -4,10 +4,10 @@
  *   Player log - events
  *
  *   @name                 : log.php                            
- *   @copyright            : (C) 2004,2005,2006 Vallheru Team based on Gamers-Fusion ver 2.5
- *   @author               : thindil <thindil@users.sourceforge.net>
- *   @version              : 1.3
- *   @since                : 16.10.2006
+ *   @copyright            : (C) 2004,2005,2006,2011 Vallheru Team based on Gamers-Fusion ver 2.5
+ *   @author               : thindil <thindil@tuxfamily.org>
+ *   @version              : 1.4
+ *   @since                : 28.08.2011
  *
  */
 
@@ -27,7 +27,7 @@
 //   along with this program; if not, write to the Free Software
 //   Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 //
-// $Id: log.php 725 2006-10-16 15:47:57Z thindil $
+// $Id$
 
 $title = "Dziennik";
 require_once("includes/head.php");
@@ -111,14 +111,8 @@ if (isset($_GET['send']))
                             "Asend" => A_SEND));
     if (isset ($_GET['step']) && $_GET['step'] == 'send') 
     {
-        if (!ereg("^[1-9][0-9]*$", $_POST['staff'])) 
-        {
-            error (ERROR);
-        }
-        if (!ereg("^[1-9][0-9]*$", $_POST['lid'])) 
-        {
-            error (ERROR);
-        }
+	checkvalue($_POST['staff']);
+	checkvalue($_POST['lid']);
         $arrtest = $db -> Execute("SELECT id, user, rank FROM players WHERE id=".$_POST['staff']);
         if (!$arrtest -> fields['id']) 
         {

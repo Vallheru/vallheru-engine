@@ -7,7 +7,7 @@
  *   @copyright            : (C) 2004,2005,2006,2011 Vallheru Team based on Gamers-Fusion ver 2.5
  *   @author               : thindil <thindil@tuxfamily.org>
  *   @version              : 1.4
- *   @since                : 07.08.2011
+ *   @since                : 28.08.2011
  *
  */
 
@@ -184,10 +184,7 @@ if (isset($_GET['step']) && ($_GET['step'] == 'rules' || $_GET['step'] == 'cases
     }
     if (isset($_GET['step2']))
     {
-        if (!ereg("^[1-9][0-9]*$", $_GET['step2']))
-        {
-            error(ERROR);
-        }
+	checkvalue($_GET['step2']);
         $objRule = $db -> Execute("SELECT id, title, body, date FROM court WHERE id=".$_GET['step2']);
         if (!$objRule -> fields['id'])
         {
@@ -270,10 +267,7 @@ if (isset($_GET['modify']))
     {
         error(ERROR);
     }
-    if (!ereg("^[1-9][0-9]*$", $_GET['modify']))
-    {
-        error(ERROR);
-    }
+    checkvalue($_GET['modify']);
     $objText = $db -> Execute("SELECT `id`, `title`, `body` FROM `court` WHERE `id`=".$_GET['modify']);
     if (!$objText -> fields['id'])
     {
@@ -291,10 +285,7 @@ if (isset($_GET['modify']))
         {
             error(EMPTY_FIELDS);
         }
-        if (!ereg("^[1-9][0-9]*$", $_POST['tid']))
-        {
-            error(ERROR);
-        }
+	checkvalue($_POST['tid']);
         $_POST['body'] = nl2br($_POST['body']);
         require_once('includes/bbcode.php');
         $_POST['body'] = bbcodetohtml($_POST['body']);
@@ -322,10 +313,7 @@ if (isset($_GET['step2']) && $_GET['step2'] == 'comments')
     */
     if (!isset($_GET['action']))
     {
-        if (!ereg("^[1-9][0-9]*$", $_GET['text']))
-        {
-            error(ERROR);
-        }
+	checkvalue($_GET['text']);
         $objText = $db -> Execute("SELECT id FROM court WHERE id=".$_GET['text']." AND type='case'");
         if (!$objText -> fields['id'])
         {
@@ -371,10 +359,7 @@ if (isset($_GET['step2']) && $_GET['step2'] == 'comments')
         {
             error(EMPTY_FIELDS);
         }
-        if (!ereg("^[1-9][0-9]*$", $_POST['tid']))
-        {
-            error(ERROR);
-        }
+	checkvalue($_POST['tid']);
         $strAuthor = $player -> user." ID: ".$player -> id;
         $strBody = $db -> qstr($_POST['body'], get_magic_quotes_gpc());
         $db -> Execute("INSERT INTO court_cases (textid, author, body) VALUES(".$_POST['tid'].", '".$strAuthor."', ".$strBody.")");
@@ -390,10 +375,7 @@ if (isset($_GET['step2']) && $_GET['step2'] == 'comments')
         {
             error(NO_PERM);
         }
-        if (!ereg("^[1-9][0-9]*$", $_GET['cid']))
-        {
-            error(ERROR);
-        }
+	checkvalue($_GET['cid']);
         $db -> Execute("DELETE FROM court_cases WHERE id=".$_GET['cid']);
         error(C_DELETED);
     }

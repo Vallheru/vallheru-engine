@@ -8,7 +8,7 @@
  *   @author               : thindil <thindil@tuxfamily.org>
  *   @author               : eyescream <tduda@users.sourceforge.net>
  *   @version              : 1.4
- *   @since                : 05.08.2011
+ *   @since                : 28.08.2011
  *
  */
 
@@ -292,10 +292,7 @@ if(isset ($_GET['action']) && $_GET['action'] == 'build')
             "Awork" => A_WORK));
         if (isset ($_GET['step2']) && $_GET['step2'] == 'make') 
         {
-            if (!ereg("^[1-9][0-9]*$", $_POST['points'])) 
-            {
-                error (ERROR);
-            }
+	    checkvalue($_POST['points']);
             if ($_POST['points'] > $house -> fields['points']) 
             {
                 error (NO_POINTS);
@@ -413,10 +410,7 @@ if (isset ($_GET['action']) && $_GET['action'] == 'rent')
         "Aback" => A_BACK));
     if (isset($_GET['buy'])) 
     {
-        if (!ereg("^[1-9][0-9]*$", $_GET['buy'])) 
-        {
-            error (ERROR);
-        }
+	checkvalue($_GET['buy']);
         if ($house -> fields['id']) 
         {
             error(YOU_HAVE);
@@ -444,10 +438,7 @@ if (isset ($_GET['action']) && $_GET['action'] == 'rent')
     }
     if (isset($_GET['back']))
     {
-        if (!ereg("^[1-9][0-9]*$", $_GET['back'])) 
-        {
-            error (ERROR);
-        }
+	checkvalue($_GET['back']);
         if ($house -> fields['id']) 
         {
             error(YOU_HAVE);
@@ -587,10 +578,7 @@ if (isset ($_GET['action']) && $_GET['action'] == 'my')
         }
         if (isset($_GET['step2']) && $_GET['step2'] == 'sell') 
         {
-            if (!ereg("^[1-9][0-9]*$", $_POST['cost'])) 
-            {
-                error (ERROR);
-            }
+	    checkvalue($_POST['cost']);
             $db -> Execute("UPDATE houses SET cost=".$_POST['cost'].", seller=".$player -> id.", owner=0, locator=0 WHERE id=".$house -> fields['id']);
             $smarty -> assign("Message", YOU_SELL.$_POST['cost'].GOLD_COINS.".");
         }
@@ -612,10 +600,7 @@ if (isset ($_GET['action']) && $_GET['action'] == 'my')
             "Amake" => A_MAKE));
         if (isset($_GET['step2']) && $_GET['step2'] == 'change') 
         {
-            if (!ereg("^[1-9][0-9]*$", $_POST['lid'])) 
-            {
-                error (ERROR);
-            }
+	    checkvalue($_POST['lid']);
             if ($_POST['loc'] == 'add') 
             {
                 if ($house -> fields['locator']) 
@@ -863,10 +848,11 @@ if (isset ($_GET['action']) && $_GET['action'] == 'my')
             if (isset($_GET['step3']) && $_GET['step3'] == 'add') 
             {
                 integercheck($_POST['amount']);
-                if (!isset($_POST['amount']) || !ereg("^[1-9][0-9]*$", $_POST['amount'])) 
+                if (!isset($_POST['amount'])) 
                 {
                     error (ERROR);
                 }
+		checkvalue($_POST['amount']);
                 $zbroj = $db -> Execute("SELECT * FROM equipment WHERE id=".$_GET['take']);
                 if ($zbroj -> fields['amount'] < $_POST['amount']) 
                 {
@@ -933,10 +919,8 @@ if (isset ($_GET['action']) && $_GET['action'] == 'my')
                     error(NO_ITEM);
                 }
                 integercheck($_POST['amount']);
-                if (!ereg("^[1-9][0-9]*$", $_POST['przedmiot']) || !ereg("^[1-9][0-9]*$", $_POST['amount'])) 
-                {
-                    error (ERROR);
-                }
+		checkvalue($_POST['przedmiot']);
+		checkvalue($_POST['amount']);
                 $przed = $db -> Execute("SELECT * FROM equipment WHERE id=".$_POST['przedmiot']);
                 if (!$przed -> fields['id']) 
                 {
