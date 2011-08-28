@@ -459,7 +459,7 @@ function turnfight($expgain,$goldgain,$action,$addres)
      */
     if ($_POST['action'] == 'bspell' && $_SESSION['points'] > 0) 
     {
-        if (!ereg("^[1-9][0-9]*$", $_POST['power'])) 
+        if (intval($_POST['power']) < 1) 
         {
             $smarty -> assign ("Message", ERROR);
             $smarty -> display ('error1.tpl');
@@ -500,7 +500,7 @@ function turnfight($expgain,$goldgain,$action,$addres)
      */
     if ($_POST['action'] == 'dspell') 
     {
-        if (!ereg("^[1-9][0-9]*$", $_POST['power1'])) 
+        if (intval($_POST['power1']) < 1) 
         {
             $smarty -> assign ("Message", ERROR);
             $smarty -> display ('error1.tpl');

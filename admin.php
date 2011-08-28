@@ -8,7 +8,7 @@
  *   @author               : thindil <thindil@tuxfamily.org>
  *   @author               : eyescream <tduda@users.sourceforge.net>
  *   @version              : 1.4
- *   @since                : 26.08.2011
+ *   @since                : 28.08.2011
  *
  */
  
@@ -574,10 +574,7 @@ if (isset($_GET['view']) && $_GET['view'] == 'monster2')
     }
     if (isset($_GET['step']) && $_GET['step'] == 'next')
     {
-        if (!ereg("^[1-9][0-9]*$", $_POST['mid']))
-        {
-            error(ERROR);
-        }
+	checkvalue($_POST['mid']);
         $objMonster = $db -> Execute("SELECT * FROM monsters WHERE id=".$_POST['mid']);
         $smarty -> assign(array("Mname" => $objMonster -> fields['name'],
             "Mlvl" => $objMonster -> fields['level'],
@@ -632,10 +629,7 @@ if (isset($_GET['view']) && $_GET['view'] == 'jailbreak')
     }
     if (isset($_GET['step']) && $_GET['step'] == 'next')
     {
-        if (!ereg("^[1-9][0-9]*$", $_POST['jid']))
-        {
-            error(ERROR);
-        }
+	checkvalue($_POST['jid']);
         $objPrisoner = $db -> Execute("SELECT prisoner FROM jail WHERE prisoner=".$_POST['jid']);
         if (!$objPrisoner -> fields['prisoner'])
         {
@@ -1190,10 +1184,7 @@ if (isset ($_GET['view']) && $_GET['view'] == 'donate')
         "Adonate" => A_DONATE));
     if (isset ($_GET['step']) && $_GET['step'] == 'donated') 
     {
-        if (!ereg("^[1-9][0-9]*$", $_POST['amount'])) 
-        {
-            error (ERROR);
-        }
+	checkvalue($_POST['amount']);
         $db -> Execute("UPDATE players SET credits=credits+".$_POST['amount']." WHERE id=".$_POST['id']);
         error (YOU_SEND_M);
     }

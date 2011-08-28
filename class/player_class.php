@@ -7,7 +7,7 @@
  *   @copyright            : (C) 2004,2005,2006,2007,2011 Vallheru Team based on Gamers-Fusion ver 2.5
  *   @author               : thindil <thindil@tuxfamily.org>
  *   @version              : 1.4
- *   @since                : 06.08.2011
+ *   @since                : 23.08.2011
  *
  */
 
@@ -98,6 +98,7 @@ class Player
     var $herbalist;
     var $jeweller;
     var $graphbar;
+    var $vallars;
 /**
 * Class constructor - get data from database and write it to variables
 */
@@ -184,6 +185,7 @@ class Player
         $this -> herbalist = $stats -> fields['herbalist'];
         $this -> jeweller = $stats -> fields['jeweller'];
         $this -> graphbar = $stats -> fields['graphbar'];
+	$this->vallars = $stats->fields['vallars'];
         $stats -> Close();
     }
     /**

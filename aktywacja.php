@@ -7,7 +7,7 @@
  *   @copyright            : (C) 2004,2005,2006,2011 Vallheru Team based on Gamers-Fusion ver 2.5
  *   @author               : thindil <thindil@users.sourceforge.net>
  *   @version              : 1.4
- *   @since                : 07.08.2011
+ *   @since                : 28.08.2011
  *
  */
 
@@ -67,7 +67,7 @@ $smarty -> assign(array("Gamename" => $gamename,
 
 if (isset ($_GET['kod'])) 
   {
-    if (!ereg("^[1-9][0-9]*$", $_GET['kod'])) 
+    if (intval($_GET['kod']) < 1) 
     {
         $smarty -> assign ("Error", ERROR);
         $smarty -> display ('error.tpl');

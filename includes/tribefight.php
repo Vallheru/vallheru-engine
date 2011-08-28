@@ -4,11 +4,11 @@
  *   Tribes fight
  *
  *   @name                 : tribefight.php                            
- *   @copyright            : (C) 2006 Vallheru Team based on Gamers-Fusion ver 2.5
- *   @author               : thindil <thindil@users.sourceforge.net>
+ *   @copyright            : (C) 2006,2011 Vallheru Team based on Gamers-Fusion ver 2.5
+ *   @author               : thindil <thindil@tuxfamily.org>
  *   @author               : eyescream <tduda@users.sourceforge.net>
- *   @version              : 1.3
- *   @since                : 23.11.2006
+ *   @version              : 1.4
+ *   @since                : 28.08.2011
  *
  */
 
@@ -28,7 +28,7 @@
 //   along with this program; if not, write to the Free Software
 //   Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 //
-// $Id: tribefight.php 840 2006-11-24 16:41:26Z thindil $
+// $Id$
 
 if ($player -> id != $mytribe -> fields['owner'] && !$perm -> fields['attack']) 
 {
@@ -56,10 +56,7 @@ $smarty -> assign(array("Link" => $arrlink,
  */
 if (!isset($_GET['step3']) && isset($_GET['atak']))
 {
-    if (!ereg("^[1-9][0-9]*$", $_GET['atak'])) 
-    {
-        error(ERROR);
-    }
+    checkvalue($_GET['atak']);
     $objEntribe = $db -> Execute("SELECT `id`, `name` FROM `tribes` WHERE `id`=".$_GET['atak']);
     if (!$objEntribe -> fields['id'])
     {
@@ -73,10 +70,7 @@ if (!isset($_GET['step3']) && isset($_GET['atak']))
 }
 if (isset($_GET['atak']) && (isset($_GET['step3']) && $_GET['step3'] == 'confirm')) 
 {
-    if (!ereg("^[1-9][0-9]*$", $_GET['atak'])) 
-    {
-        error(ERROR);
-    }
+    checkvalue($_GET['atak']);
     $objTest = $db -> Execute("SELECT `id` FROM `tribes` WHERE `id`=".$_GET['atak']);
     if (!$objTest -> fields['id'])
     {

@@ -4,10 +4,10 @@
  *   Resets in game - (mainreset) main reset and (smallreset) other resets
  *
  *   @name                 : resets.php                            
- *   @copyright            : (C) 2004,2005,2006,2007 Vallheru Team based on Gamers-Fusion ver 2.5
- *   @author               : thindil <thindil@users.sourceforge.net>
- *   @version              : 1.3
- *   @since                : 28.02.2007
+ *   @copyright            : (C) 2004,2005,2006,2007,2011 Vallheru Team based on Gamers-Fusion ver 2.5
+ *   @author               : thindil <thindil@tuxfamily.org>
+ *   @version              : 1.4
+ *   @since                : 28.08.2011
  *
  */
 
@@ -27,27 +27,13 @@
 //   along with this program; if not, write to the Free Software
 //   Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 //
-// $Id: resets.php 905 2007-02-28 21:33:05Z thindil $
+// $Id$
 
 /**
  * Check avaible languages
  */    
-$path = 'languages/';
-$dir = opendir($path);
-$arrLanguage = array();
-$i = 0;
-while ($file = readdir($dir))
-{
-    if (!ereg(".htm*$", $file))
-    {
-        if (!ereg("\.$", $file))
-        {
-            $arrLanguage[$i] = $file;
-            $i++;
-        }
-    }
-}
-closedir($dir);
+$arrLanguage = scandir('languages/', 1);
+$arrLanguage = array_diff($arrLanguage, array(".", "..", "index.htm"));
  
 /**
 * Main reset of game

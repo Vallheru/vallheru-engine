@@ -9,7 +9,7 @@
  *   @author               : yeskov <yeskov@users.sourceforge.net>
  *   @author               : eyescream <tduda@users.sourceforge.net>
  *   @version              : 1.4
- *   @since                : 06.08.2011
+ *   @since                : 28.08.2011
  *
  */
 
@@ -55,10 +55,7 @@ if (isset ($_GET['action']) && $_GET['action'] == 'withdraw')
         error(EMPTY_FIELD);
     }
     integercheck($_POST['with']);
-    if (!ereg("^[1-9][0-9]*$", $_POST['with'])) 
-    {
-        error (ERROR);
-    }
+    checkvalue($_POST['with']);
     if ($_POST['with'] > $player -> bank) 
     {
         error (NO_MONEY);
@@ -77,10 +74,7 @@ if (isset ($_GET['action']) && $_GET['action'] == 'deposit')
         error (EMPTY_FIELD);
     }
     integercheck($_POST['dep']);
-    if (!ereg("^[1-9][0-9]*$", $_POST['dep'])) 
-    {
-        error (ERROR);
-    }
+    checkvalue($_POST['dep']);
     if ($_POST['dep'] > $player -> credits || $_POST['dep'] <= 0) 
     {
         error (NO_MONEY);
@@ -94,10 +88,8 @@ if (isset ($_GET['action']) && $_GET['action'] == 'deposit')
 */
 if (isset ($_GET['action']) && $_GET['action'] == 'donation') 
 {
-    if (!ereg("^[1-9][0-9]*$", $_POST['pid']) || !ereg("^[1-9][0-9]*$", $_POST['with'])) 
-    {
-        error(ERROR);
-    }
+    checkvalue($_POST['pid']);
+    checkvalue($_POST['with']);
     integercheck($_POST['with']);
     $objGold = $db -> Execute("SELECT `bank` FROM `players` WHERE `id`=".$player -> id);
     if ($objGold -> fields['bank'] < $_POST['with'])
@@ -135,10 +127,8 @@ if (isset ($_GET['action']) && $_GET['action'] == 'donation')
 if (isset ($_GET['action']) && $_GET['action'] == 'mithril') 
 {
     integercheck($_POST['mithril']);
-    if (!ereg("^[1-9][0-9]*$", $_POST['pid']) || !ereg("^[1-9][0-9]*$", $_POST['mithril'])) 
-    {
-        error (ERROR);
-    }
+    checkvalue($_POST['pid']);
+    checkvalue($_POST['mithril']);
     if ($_POST['pid'] == $player -> id) 
     {
         error (BAD_PLAYER);
@@ -171,10 +161,8 @@ if (isset ($_GET['action']) && $_GET['action'] == 'mithril')
 if (isset ($_GET['action']) && $_GET['action'] == 'minerals') 
 {
     integercheck($_POST['amount']);
-    if (!ereg("^[1-9][0-9]*$", $_POST['pid']) || !ereg("^[1-9][0-9]*$", $_POST['amount'])) 
-    {
-        error(ERROR);
-    }
+    checkvalue($_POST['pid']);
+    checkvalue($_POST['amount']);
     $arrSqlname = array('copperore', 'zincore', 'tinore', 'ironore', 'copper', 'bronze', 'brass', 'iron', 'steel', 'coal', 'adamantium', 'meteor', 'crystal', 'pine', 'hazel', 'yew', 'elm');
     if (!in_array($_POST['item'], $arrSqlname)) 
     {
@@ -228,10 +216,8 @@ if (isset ($_GET['action']) && $_GET['action'] == 'minerals')
 if (isset ($_GET['action']) && $_GET['action'] == 'herbs') 
 {
     integercheck($_POST['amount']);
-    if (!ereg("^[1-9][0-9]*$", $_POST['pid']) || !ereg("^[1-9][0-9]*$", $_POST['amount'])) 
-    {
-        error (ERROR);
-    }
+    checkvalue($_POST['pid']);
+    checkvalue($_POST['amount']);
     $arrHerbs = array('illani', 'illanias', 'nutari', 'dynallca', 'ilani_seeds', 'illanias_seeds', 'nutari_seeds', 'dynallca_seeds');
     if (!in_array($_POST['item'], $arrHerbs))
     {
@@ -284,10 +270,9 @@ if (isset ($_GET['action']) && $_GET['action'] == 'herbs')
 if (isset ($_GET['action']) && $_GET['action'] == 'potions') 
 {
     integercheck($_POST['amount']);
-    if (!ereg("^[1-9][0-9]*$", $_POST['pid']) || !ereg("^[1-9][0-9]*$", $_POST['amount']) || !ereg("^[1-9][0-9]*$", $_POST['item'])) 
-    {
-        error (ERROR);
-    }
+    checkvalue($_POST['pid']);
+    checkvalue($_POST['amount']);
+    checkvalue($_POST['item']);
     $item = $db -> Execute("SELECT * FROM `potions` WHERE `id`=".$_POST['item']);
     if ($player -> id != $item -> fields['owner']) 
     {
@@ -343,10 +328,9 @@ if (isset ($_GET['action']) && $_GET['action'] == 'potions')
 if (isset ($_GET['action']) && $_GET['action'] == 'items') 
 {
     integercheck($_POST['amount']);
-    if (!ereg("^[1-9][0-9]*$", $_POST['pid']) || !ereg("^[1-9][0-9]*$", $_POST['amount']) || !ereg("^[1-9][0-9]*$", $_POST['item'])) 
-    {
-        error (ERROR);
-    }
+    checkvalue($_POST['pid']);
+    checkvalue($_POST['amount']);
+    checkvalue($_POST['item']);
     $item = $db -> Execute("SELECT * FROM `equipment` WHERE `id`=".$_POST['item']);
     if ($item -> fields['status'] == 'R')
     {
@@ -828,10 +812,12 @@ if (isset($_GET['action']) && $_GET['action'] == 'astral')
     if (isset($_GET['step']) && ($_GET['step'] == 'piece' || $_GET['step'] == 'component'))
     {
         integercheck($_POST['amount']);
-        if (!ereg("^[1-9][0-9]*$", $_POST['amount']) || !ereg("^[0-9]*$", $_POST['name']) || !ereg("^[0-9]*$", $_POST['pid']) || !ereg("^[1-9][0-9]*$", $_POST['number']))
+        if (!ereg("^[0-9]*$", $_POST['name']) || !ereg("^[0-9]*$", $_POST['pid']))
         {
             error(ERROR);
         }
+	checkvalue($_POST['amount']);
+	checkvalue($_POST['number']);
         $objDonated = $db -> Execute("SELECT `id` FROM `players` WHERE `id`=".$_POST['pid']);
         if (empty($objDonated -> fields['id'])) 
         {
