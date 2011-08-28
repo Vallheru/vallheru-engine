@@ -8,7 +8,7 @@
  *   @author               : thindil <thindil@tuxfamily.org>
  *   @author               : eyescream <tduda@users.sourceforge.net>
  *   @version              : 1.4
- *   @since                : 27.08.2011
+ *   @since                : 28.08.2011
  *
  */
  
@@ -783,17 +783,17 @@ if (isset($_GET['view']) && $_GET['view'] == 'veterans')
     */
     if (isset($_GET['step']) && $_GET['step'] == 'modify') 
     {
-        if (isset($_POST['armor']) && ereg("^[1-9][0-9]*$", $_POST['armor'])) 
+        if (isset($_POST['armor']) && intval($_POST['armor']) > 0) 
         {
             $text1 = wear($_POST['armor'], $_GET['id'],'armor','apower');
             $text = YOU_ADD.$text1;
         }
-        if (isset($_POST['helm']) && ereg("^[1-9][0-9]*$", $_POST['helm'])) 
+        if (isset($_POST['helm']) && intval($_POST['helm']) > 0) 
         {
             $text1 = wear($_POST['helm'], $_GET['id'],'helm','hpower');
             $text = YOU_ADD.$text1;
         }
-        if (isset($_POST['legs']) && ereg("^[1-9][0-9]*$", $_POST['legs'])) 
+        if (isset($_POST['legs']) && intval($_POST['legs']) > 0) 
         {
             $text1 = wear($_POST['legs'], $_GET['id'],'legs','lpower');
             $text = YOU_ADD.$text1;
@@ -1260,22 +1260,22 @@ if (isset ($_GET['view']) && $_GET['view'] == 'shop')
         $db -> Execute("INSERT INTO outpost_veterans (outpost, name) VALUES(".$out -> fields['id'].", ".$strName.")");
         $vetid = $db -> Execute("SELECT id FROM outpost_veterans WHERE outpost=".$out -> fields['id']." AND name=".$strName);
         $text = '';
-        if (ereg("^[1-9][0-9]*$", $_POST['weapon'])) 
+        if (intval($_POST['weapon']) > 0) 
         {
             $text1 = wear($_POST['weapon'], $vetid -> fields['id'],'weapon','wpower');
             $text = $text.$text1;
         }
-        if (isset($_POST['armor']) && ereg("^[1-9][0-9]*$", $_POST['armor'])) 
+        if (isset($_POST['armor']) && intval($_POST['armor']) > 0) 
         {
             $text1 = wear($_POST['armor'], $vetid -> fields['id'],'armor','apower');
             $text = $text.$text1;
         }
-        if (isset($_POST['helm']) && ereg("^[1-9][0-9]*$", $_POST['helm'])) 
+        if (isset($_POST['helm']) && intval($_POST['helm']) > 0) 
         {
             $text1 = wear($_POST['helm'], $vetid -> fields['id'],'helm','hpower');
             $text = $text.$text1;
         }
-        if (isset($_POST['legs']) && ereg("^[1-9][0-9]*$", $_POST['legs'])) 
+        if (isset($_POST['legs']) && intval($_POST['legs']) > 0) 
         {
             $text1 = wear($_POST['legs'], $vetid -> fields['id'],'legs','lpower');
             $text = $text.$text1;
@@ -1412,10 +1412,7 @@ if (isset ($_GET['view']) && $_GET['view'] == 'shop')
         {
             error(HOW_MANY);
         }
-        if (!ereg("^[1-9][0-9]*$", $_POST[$strArmy])) 
-        {
-            error (ERROR);
-        }
+	checkvalue($_POST[$strArmy]);
         $arrCost = array(25, 25, 35, 35);
         $cost = ($_POST[$strArmy] * $arrCost[$intKey]);
         if ($cost > $out -> fields['gold']) 
@@ -1535,7 +1532,9 @@ if (isset ($_GET['view']) && $_GET['view'] == 'listing')
         {
             error(NO_SLEVEL);
         }
-        if (!ereg("^[1-9][0-9]*$", $_POST['slevel']) || !ereg("^[1-9][0-9]*$", $_POST['elevel']) || ($_POST['slevel'] > $_POST['elevel'])) 
+	checkvalue($_POST['slevel']);
+	checkvalue($_POST['elevel']);
+        if ($_POST['slevel'] > $_POST['elevel']) 
         {
             error (ERROR);
         }

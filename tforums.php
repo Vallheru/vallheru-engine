@@ -4,10 +4,10 @@
  *   Clans forums
  *
  *   @name                 : tforums.php                            
- *   @copyright            : (C) 2004,2005,2006 Vallheru Team based on Gamers-Fusion ver 2.5
- *   @author               : thindil <thindil@users.sourceforge.net>
- *   @version              : 1.3
- *   @since                : 16.10.2006
+ *   @copyright            : (C) 2004,2005,2006,2011 Vallheru Team based on Gamers-Fusion ver 2.5
+ *   @author               : thindil <thindil@tuxfamily.org>
+ *   @version              : 1.4
+ *   @since                : 28.08.2011
  *
  */
 
@@ -27,7 +27,7 @@
 //   along with this program; if not, write to the Free Software
 //   Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 //
-// $Id: tforums.php 727 2006-10-16 15:48:33Z thindil $
+// $Id$
 
 $title = "Forum klanu";
 require_once("includes/head.php");
@@ -166,10 +166,7 @@ if (isset ($_GET['view']) && $_GET['view'] == 'topics')
 */
 if (isset($_GET['topic'])) 
 {
-    if (!ereg("^[1-9][0-9]*$", $_GET['topic'])) 
-    {
-        error (ERROR);
-    }
+    checkvalue($_GET['topis']);
     $klan = $db -> Execute("SELECT id, owner FROM tribes WHERE id=".$player -> tribe);
     $topicinfo = $db -> Execute("SELECT * FROM tribe_topics WHERE id=".$_GET['topic']." AND tribe=".$player -> tribe);
     $perm = $db -> Execute("SELECT forum FROM tribe_perm WHERE tribe=".$klan -> fields['id']." AND player=".$player -> id);
@@ -306,10 +303,7 @@ if (isset ($_GET['action']) && $_GET['action'] == 'addtopic')
 */
 if (isset($_GET['reply'])) 
 {
-    if (!ereg("^[1-9][0-9]*$", $_GET['reply'])) 
-    {
-        error (ERROR);
-    }
+    checkvalue($_GET['reply']);
     $test = $db -> Execute("SELECT `tribe` FROM `tribe_topics` WHERE `id`=".$_GET['reply']." AND `tribe`=".$player -> tribe);
     if (!$test -> fields['tribe']) 
     {

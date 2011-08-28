@@ -4,10 +4,10 @@
  *   Player notes
  *
  *   @name                 : notatnik.php                            
- *   @copyright            : (C) 2004,2005,2006 Vallheru Team based on Gamers-Fusion ver 2.5
- *   @author               : thindil <thindil@users.sourceforge.net>
- *   @version              : 1.2
- *   @since                : 11.09.2006
+ *   @copyright            : (C) 2004,2005,2006,2011 Vallheru Team based on Gamers-Fusion ver 2.5
+ *   @author               : thindil <thindil@tuxfamily.org>
+ *   @version              : 1.4
+ *   @since                : 28.08.2011
  *
  */
 
@@ -27,7 +27,7 @@
 //   along with this program; if not, write to the Free Software
 //   Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 //
-// $Id: notatnik.php 566 2006-09-13 09:31:08Z thindil $
+// $Id$
 
 $title = "Notatnik";
 require_once("includes/head.php");
@@ -64,10 +64,7 @@ $smarty -> assign(array("Notetime" => $arrtime,
  */
 if (isset ($_GET['akcja']) && $_GET['akcja'] == 'skasuj') 
 {
-    if (!ereg("^[1-9][0-9]*$", $_GET['nid'])) 
-    {
-        error (ERROR);
-    }
+    checkvalue($_GET['nid']);
     $did = $db -> Execute("SELECT `id`, `gracz` FROM `notatnik` WHERE `id`=".$_GET['nid']);
     if (!$did -> fields['id']) 
     {
@@ -110,10 +107,7 @@ if (isset ($_GET['akcja']) && $_GET['akcja'] == 'dodaj')
  */
 if (isset($_GET['akcja']) && $_GET['akcja'] == 'edit')
 {
-    if (!ereg("^[1-9][0-9]*$", $_GET['nid'])) 
-    {
-        error(ERROR);
-    }
+    checkvalue($_GET['nid']);
     $objText = $db -> Execute("SELECT `id`, `gracz`, `tekst` FROM `notatnik` WHERE `id`=".$_GET['nid']);
     if (!$objText -> fields['id']) 
     {

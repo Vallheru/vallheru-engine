@@ -4,10 +4,10 @@
  *   Rest - regenerate mana for a energy
  *
  *   @name                 : rest.php                            
- *   @copyright            : (C) 2004,2005,2006 Vallheru Team based on Gamers-Fusion ver 2.5
- *   @author               : thindil <thindil@users.sourceforge.net>
- *   @version              : 1.2
- *   @since                : 11.08.2006
+ *   @copyright            : (C) 2004,2005,2006,2011 Vallheru Team based on Gamers-Fusion ver 2.5
+ *   @author               : thindil <thindil@tuxfamily.org>
+ *   @version              : 1.4
+ *   @since                : 28.08.2011
  *
  */
 
@@ -27,7 +27,7 @@
 //   along with this program; if not, write to the Free Software
 //   Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 //
-// $Id: rest.php 566 2006-09-13 09:31:08Z thindil $
+// $Id$
 
 $title = "Odpoczynek"; 
 require_once("includes/head.php");
@@ -84,10 +84,7 @@ if (isset($_GET['akcja']) && $_GET['akcja'] == 'all')
     {
         error(HOW_MANY);
     }
-    if (!ereg("^[1-9][0-9]*$", $_POST['pm'])) 
-    {
-        error (ERROR);
-    }
+    checkvalue($_POST['pm']);
     $energia = $_POST['pm'] / 10;
     $energia = round($energia,"2");
     if ($player -> energy < $energia) 

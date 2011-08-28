@@ -4,10 +4,10 @@
  *   Temple
  *
  *   @name                 : temple.php                            
- *   @copyright            : (C) 2004,2005,2006 Vallheru Team based on Gamers-Fusion ver 2.5
- *   @author               : thindil <thindil@users.sourceforge.net>
- *   @version              : 1.3
- *   @since                : 16.11.2006
+ *   @copyright            : (C) 2004,2005,2006,2011 Vallheru Team based on Gamers-Fusion ver 2.5
+ *   @author               : thindil <thindil@tuxfamily.org>
+ *   @version              : 1.4
+ *   @since                : 28.08.2011
  *
  */
 
@@ -64,10 +64,11 @@ if (isset ($_GET['temp']) && $_GET['temp'] == 'sluzba')
                             "Aback" => BACK));
     if (isset($_GET['dalej'])) 
     {
-        if (!isset($_POST['rep']) || !ereg("^[1-9][0-9]*$", $_POST['rep'])) 
+        if (!isset($_POST['rep'])) 
         {
             error (ERROR);
         }
+	checkvalue($_POST['rep']);
         if ($player -> hp == 0) 
         {
             error (YOU_DEAD);

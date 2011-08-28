@@ -7,7 +7,7 @@
  *   @copyright            : (C) 2004,2005,2006,2007,2011 Vallheru Team based on Gamers-Fusion ver 2.5
  *   @author               : thindil <thindil@tuxfamily.org>
  *   @version              : 1.4
- *   @since                : 07.08.2011
+ *   @since                : 28.08.2011
  *
  */
 
@@ -27,7 +27,7 @@
 //   along with this program; if not, write to the Free Software
 //   Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 //
-// $Id: preset.php 888 2007-02-21 01:29:44Z thindil $
+// $Id$
 
 require 'libs/Smarty.class.php';
 require_once ('includes/config.php');
@@ -63,7 +63,7 @@ require_once("languages/".$strTranslation."/preset.php");
 
 if (isset ($_GET['id'])) 
 {
-    if (!ereg("^[1-9][0-9]*$", $_GET['id'])) 
+    if (intval($_GET['id']) < 1) 
     {
         $smarty -> assign ("Error", ERROR);
         $smarty -> display ('error.tpl');
@@ -77,7 +77,7 @@ if (isset ($_GET['id']))
     } 
         else 
     {
-        if (!ereg("^[1-9][0-9]*$", $_GET['code'])) 
+        if (intval($_GET['code']) < 1) 
         {
             $smarty -> assign ("Error", ERROR);
             $smarty -> display ('error.tpl');

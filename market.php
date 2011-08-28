@@ -7,7 +7,7 @@
  *   @copyright            : (C) 2004,2005,2006,2011 Vallheru Team based on Gamers-Fusion ver 2.5
  *   @author               : thindil <thindil@tuxfamily.org>
  *   @version              : 1.4
- *   @since                : 20.08.2011
+ *   @since                : 28.08.2011
  *
  */
 
@@ -357,10 +357,7 @@ if (isset($_GET['view']) && $_GET['view'] == 'myoferts')
             {
                 $_GET['add'] = '';
             }
-            if (!ereg("^[1-9][0-9]*$", $intId))
-            {
-                error(ERROR);
-            }
+	    checkvalue($intId);
             $strMessage = '';
             $arrQueries = array("SELECT `id`, `ilosc`, `cost`, `nazwa` FROM `pmarket` WHERE `id`=".$intId." AND `seller`=".$player -> id, 
                                 "SELECT * FROM `equipment` WHERE `id`=".$intId." AND `status`='R' AND `type`!='I' AND `owner`=".$player -> id,
@@ -479,10 +476,11 @@ if (isset($_GET['view']) && $_GET['view'] == 'myoferts')
                                         "Oname" => $strName));
                 if (isset($_GET['confirm']) && $_GET['confirm'] == 'yes')
                 {
-                    if (!isset($_POST['amount']) || !ereg("^[1-9][0-9]*$", $_POST['amount']))
+                    if (!isset($_POST['amount']))
                     {
                         error(ERROR);
                     }
+		    checkvalue($_POST['amount']);
                     if ($intKey == 0)
                     {
                         $arrSqlname = array('', 'copperore', 'zincore', 'tinore', 'ironore', 'copper', 'bronze', 'brass', 'iron', 'steel', 'coal', 'adamantium', 'meteor', 'crystal', 'pine', 'hazel', 'yew', 'elm');
@@ -584,10 +582,11 @@ if (isset($_GET['view']) && $_GET['view'] == 'myoferts')
                                         "Oname" => $strName));
                 if (isset($_GET['confirm']) && $_GET['confirm'] == 'yes')
                 {
-                    if (!isset($_POST['amount']) || !ereg("^[1-9][0-9]*$", $_POST['amount']))
+                    if (!isset($_POST['amount']))
                     {
                         error(ERROR);
                     }
+		    checkvalue($_POST['amount']);
                     $arrTables = array('pmarket', 'equipment', 'potions', 'hmarket', 'amarket', 'equipment');
                     $db -> Execute("UPDATE `".$arrTables[$intKey]."` SET `cost`=".$_POST['amount']." WHERE `id`=".$_GET['change']);
                     $strMessage = YOU_CHANGE;
