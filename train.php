@@ -4,10 +4,10 @@
  *   School - train stats
  *
  *   @name                 : train.php                            
- *   @copyright            : (C) 2004,2005,2006,2007 Vallheru Team based on Gamers-Fusion ver 2.5
- *   @author               : thindil <thindil@users.sourceforge.net>
- *   @version              : 1.3
- *   @since                : 04.03.2007
+ *   @copyright            : (C) 2004,2005,2006,2007,2011 Vallheru Team based on Gamers-Fusion ver 2.5
+ *   @author               : thindil <thindil@tuxfamily.org>
+ *   @version              : 1.4
+ *   @since                : 29.08.2011
  *
  */
 
@@ -27,7 +27,7 @@
 //   along with this program; if not, write to the Free Software
 //   Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 //
-// $Id: train.php 931 2007-03-04 12:08:56Z thindil $
+// $Id$
 
 $title = "Szkolenie";
 require_once("includes/head.php");
@@ -131,10 +131,7 @@ if (isset ($_GET['action']) && $_GET['action'] == 'train')
     {
         error(HOW_MANY);
     }
-    if (!ereg("^[1-9][0-9]*$", $_POST["rep"])) 
-    {
-        error (ERROR);
-    }
+    checkvalue($_POST['rep']);
     $arrStats = array('strength', 'agility', 'inteli', 'szyb', 'wytrz', 'wisdom');
     if (!in_array($_POST['train'], $arrStats)) 
     {

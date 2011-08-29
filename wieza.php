@@ -4,10 +4,10 @@
  *   Magic tower - buy spells, staffs and capes
  *
  *   @name                 : wieza.php                            
- *   @copyright            : (C) 2004,2005,2006,2007 Vallheru Team based on Gamers-Fusion ver 2.5
- *   @author               : thindil <thindil@users.sourceforge.net>
- *   @version              : 1.3
- *   @since                : 21.02.2007
+ *   @copyright            : (C) 2004,2005,2006,2007,2011 Vallheru Team based on Gamers-Fusion ver 2.5
+ *   @author               : thindil <thindil@tuxfamily.org>
+ *   @version              : 1.4
+ *   @since                : 29.08.2011
  *
  */
 
@@ -27,7 +27,7 @@
 //   along with this program; if not, write to the Free Software
 //   Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 //
-// $Id: wieza.php 890 2007-02-21 19:37:53Z thindil $
+// $Id$
 
 $title = "Magiczna wieża";
 require_once("includes/head.php");
@@ -143,10 +143,7 @@ if (!isset($_GET['buy']))
 
 if (isset($_GET['buy'])) 
 {
-    if (!ereg("^[1-9][0-9]*$", $_GET['buy'])) 
-    {
-        error (ERROR);
-    }
+    checkvalue($_GET['buy']);
     if ($_GET['type'] == 'S') 
     {
         $czary = $db -> Execute("SELECT * FROM czary WHERE id=".$_GET['buy']);

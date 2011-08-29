@@ -1,5 +1,7 @@
 2011-08-29  Bartek thindil Jasicki  <thindil@tuxfamily.org>
 
+	* BUG,train.php, tribearmor.php, tribeastral.php, tribes.php, tribeware.php, warehouse.php, weapons.php, wieza.php: 
+	fixed some notices
 	* FEATURE,imarket.php: 
 	changed oferts of arrows on market
 	* FEATURE,install/db/update.sql: 

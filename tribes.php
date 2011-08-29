@@ -9,7 +9,7 @@
  *   @author               : mori <ziniquel@users.sourceforge.net>
  *   @author               : eyescream <tduda@users.sourceforge.net>
  *   @version              : 1.4
- *   @since                : 05.08.2011
+ *   @since                : 29.08.2011
  *
  */
 
@@ -154,10 +154,7 @@ if (isset ($_GET['view']) && $_GET['view'] == 'view')
 {
     if (!isset ($_GET['step'])) 
     {
-        if (!ereg("^[1-9][0-9]*$", $_GET['id'])) 
-        {
-            error (ERROR);
-        }
+	checkvalue($_GET['id']);
         $tribe = $db -> Execute("SELECT `id`, `name`, `owner`, `wygr`, `przeg`, `public_msg`, `www`, `logo` FROM `tribes` WHERE `id`=".$_GET['id']);
         if (!$tribe -> fields['id']) 
         {
@@ -249,10 +246,7 @@ if (isset ($_GET['view']) && $_GET['view'] == 'view')
      */
     if (isset($_GET['step']) && $_GET['step'] == 'steal')
     {
-        if (!ereg("^[1-9][0-9]*$", $_GET['id'])) 
-        {
-            error(ERROR);
-        }
+	checkvalue($_GET['id']);
         $objTribe = $db -> Execute("SELECT `id`, `owner` FROM `tribes` WHERE `id`=".$_GET['id']);
         if (!$objTribe -> fields['id']) 
         {
@@ -288,10 +282,7 @@ if (isset ($_GET['view']) && $_GET['view'] == 'view')
 
     if (isset ($_GET['step']) && $_GET['step'] == 'members') 
     {
-        if (!ereg("^[1-9][0-9]*$", $_GET['tid'])) 
-        {
-            error (ERROR);
-        }
+	checkvalue($_GET['tid']);
         $tribename = $db -> Execute("SELECT `name`, `owner` FROM `tribes` WHERE `id`=".$_GET['tid']);
         $mem = $db -> Execute("SELECT `id`, `user`, `tribe_rank` FROM `players` WHERE `tribe`=".$_GET['tid']);
         $arrlink = array();
@@ -321,10 +312,7 @@ if (isset ($_GET['view']) && $_GET['view'] == 'view')
 */
 if (isset($_GET['join'])) 
 {
-    if (!ereg("^[1-9][0-9]*$", $_GET['join'])) 
-    {
-        error (ERROR);
-    }
+    checkvalue($_GET['join']);
     $tribe = $db -> Execute("SELECT * FROM tribes WHERE id=".$_GET['join']);
     $test = $db -> Execute("SELECT gracz FROM tribe_oczek WHERE gracz=".$player -> id);
     if (!isset ($_GET['change'])) 
@@ -526,10 +514,7 @@ if (isset ($_GET['view']) && $_GET['view'] == 'my')
          */
         if (isset($_GET['step2']) && $_GET['step2'] == 'add')
         {
-            if (!ereg("^[1-9][0-9]*$", $_POST['amount']))
-            {
-                error(ERROR);
-            }
+	    checkvalue($_POST['amount']);
             if ($_POST['amount'] > $player -> energy)
             {
                 error(NO_ENERGY);
@@ -573,10 +558,7 @@ if (isset ($_GET['view']) && $_GET['view'] == 'my')
                 $dot = MITH_COINS;
             }
             integercheck($_POST['amount']);
-            if (!ereg("^[1-9][0-9]*$", $_POST['amount']))
-            {
-                error(ERROR);
-            } 
+	    checkvalue($_POST['amount']);
             if ($_POST['type'] != 'credits' && $_POST['type'] != 'platinum') 
             {
                 error(ERROR);
@@ -664,14 +646,8 @@ if (isset ($_GET['view']) && $_GET['view'] == 'my')
                                     "Itemid" => $_GET['daj']));
             if (isset ($_GET['step4']) && $_GET['step4'] == 'add') 
             {
-                if (!ereg("^[1-9][0-9]*$", $_POST['ilosc'])) 
-                {
-                    error (ERROR);
-                }
-                if (!ereg("^[1-9][0-9]*$", $_POST['did'])) 
-                {
-                    error (ERROR);
-                }
+		checkvalue($_POST['ilosc']);
+		checkvalue($_POST['did']);
                 $dtrib = $db -> Execute("SELECT `tribe` FROM `players` WHERE `id`=".$_POST['did']);
                 if ($dtrib -> fields['tribe'] != $mytribe -> fields['id']) 
                 {
@@ -739,7 +715,8 @@ if (isset ($_GET['view']) && $_GET['view'] == 'my')
                 {
                     error(NO_AMOUNT2.$nazwa.".");
                 }
-                if ($_POST['ilosc'] <= 0 || !ereg("^[1-9][0-9]*$", $_POST['ilosc'])) 
+		checkvalue($_POST['ilosc']);
+                if ($_POST['ilosc'] <= 0) 
                 {
                     error (ERROR);
                 }
@@ -827,15 +804,9 @@ if (isset ($_GET['view']) && $_GET['view'] == 'my')
                                     "Tamount2" => $arrAmount[$intKey]));
             if (isset ($_GET['step4']) && $_GET['step4'] == 'add') 
             {
-                if (!ereg("^[1-9][0-9]*$", $_POST['ilosc'])) 
-                {
-                    error (ERROR);
-                }
+		checkvalue($_POST['ilosc']);
                 $daj = $_GET['daj'];
-                if (!ereg("^[1-9][0-9]*$", $_POST['did'])) 
-                {
-                    error (ERROR);
-                }
+		checkvalue($_POST['did']);
                 $dtrib = $db -> Execute("SELECT `tribe` FROM `players` WHERE `id`=".$_POST['did']);
                 if ($dtrib -> fields['tribe'] != $mytribe -> fields['id']) 
                 {
@@ -900,8 +871,9 @@ if (isset ($_GET['view']) && $_GET['view'] == 'my')
                 if ($_POST['ilosc'] > $gr -> fields[$arrSqlname[$intKey]])
                 {
                     error(NO_AMOUNT2.$arrName[$intKey].".");
-                }          
-                if ($_POST['ilosc'] <= 0 || !ereg("^[1-9][0-9]*$", $_POST['ilosc'])) 
+                }  
+		checkvalue($_POST['ilosc']);
+                if ($_POST['ilosc'] <= 0) 
                 {
                     error (ERROR);
                 }
@@ -1123,10 +1095,7 @@ if (isset ($_GET['view']) && $_GET['view'] == 'my')
                     if (isset ($_GET['step4']) && $_GET['step4'] == 'add') 
                     {
                         $_POST['rank'] = strip_tags($_POST['rank']);
-                        if (!ereg("^[1-9][0-9]*$", $_POST['rid'])) 
-                        {
-                            error (ERROR);
-                        }
+			checkvalue($_POST['rid']);
                         $test = $db -> Execute("SELECT tribe FROM players WHERE id=".$_POST['rid']);
                         if ($test -> fields['tribe'] != $mytribe -> fields['id']) 
                         {
@@ -1192,10 +1161,7 @@ if (isset ($_GET['view']) && $_GET['view'] == 'my')
                                             "No" => NO));
                     if (isset($_GET['next']) && $_GET['next'] == 'add')
                     {
-                        if (!ereg("^[1-9][0-9]*$", $_POST['memid']))
-                        {
-                            error(ERROR);
-                        }
+			checkvalue($_POST['memid']);
                         $objTest = $db -> Execute("SELECT * FROM tribe_perm WHERE player=".$_POST['memid']);
                         $arrTest = array($objTest -> fields['messages'],
                                          $objTest -> fields['wait'],
@@ -1258,10 +1224,7 @@ if (isset ($_GET['view']) && $_GET['view'] == 'my')
                         {
                             error (ERROR);
                         }
-                        if (!ereg("^[1-9][0-9]*$", $_POST['memid']))
-                        {
-                            error(ERROR);
-                        }
+			checkvalue($_POST['memid']);
                         $ttribe = $db -> Execute("SELECT tribe FROM players WHERE id=".$_POST['memid']);
                         if ($ttribe -> fields['tribe'] != $mytribe -> fields['id']) 
                         {
@@ -1606,10 +1569,7 @@ if (isset ($_GET['view']) && $_GET['view'] == 'my')
                     {
                         error(NO_ID);
                     }
-                    if (!ereg("^[1-9][0-9]*$", $_POST['id'])) 
-                    {
-                        error (ERROR);
-                    }
+		    checkvalue($_POST['id']);
                     $objTribe = $db -> Execute("SELECT `tribe` FROM `players` WHERE `id`=".$_POST['id']);
                     if ($objTribe -> fields['tribe'] != $mytribe -> fields['id'])
                     {
@@ -1663,10 +1623,7 @@ if (isset ($_GET['view']) && $_GET['view'] == 'my')
                 if (isset($_GET['action']) && $_GET['action'] == 'loan') 
                 {
                     integercheck($_POST['amount']);
-                    if (!ereg("^[1-9][0-9]*$", $_POST['amount']))
-                    {
-                        error(ERROR);
-                    } 
+		    checkvalue($_POST['amount']);
                     if ($_POST['currency'] != 'credits' && $_POST['currency'] != 'platinum') 
                     {
                         error (ERROR);
@@ -1692,7 +1649,8 @@ if (isset ($_GET['view']) && $_GET['view'] == 'my')
                         } 
                             else 
                         {
-                            if ($_POST['amount'] > $mytribe -> fields[$_POST['currency']] || !ereg("^[1-9][0-9]*$", $_POST['amount'])) 
+			    checkvalue($_POST['amount']);
+                            if ($_POST['amount'] > $mytribe -> fields[$_POST['currency']]) 
                             {
                                 $smarty -> assign ("Message", NO_AMOUNT.$poz.".");
                             } 

@@ -4,10 +4,10 @@
  *   Warehouse - sell minerals and herbs
  *
  *   @name                 : warehouse.php                            
- *   @copyright            : (C) 2004,2005,2006 Vallheru Team based on Gamers-Fusion ver 2.5
- *   @author               : thindil <thindil@users.sourceforge.net>
- *   @version              : 1.1
- *   @since                : 04.03.2006
+ *   @copyright            : (C) 2004,2005,2006,2011 Vallheru Team based on Gamers-Fusion ver 2.5
+ *   @author               : thindil <thindil@tuxfamily.org>
+ *   @version              : 1.4
+ *   @since                : 29.08.2011
  *
  */
 
@@ -27,7 +27,7 @@
 //   along with this program; if not, write to the Free Software
 //   Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 //
-// $Id: warehouse.php 566 2006-09-13 09:31:08Z thindil $
+// $Id$
 
 $title = "Magazyn Królewski";
 require_once("includes/head.php");
@@ -185,10 +185,11 @@ if (isset($_GET['action']) && ($_GET['action'] == 'sell' || $_GET['action'] == '
         "Iamount" => $intAmount));
     if (isset($_GET['action2']) && ($_GET['action2'] == 'sell' || $_GET['action2'] == 'buy'))
     {
-        if (!isset($_POST['amount']) || !ereg("^[1-9][0-9]*$", $_POST['amount']))
+        if (!isset($_POST['amount']))
         {
             error(ERROR);
         }
+	checkvalue($_POST['amount']);
         if ($_POST['amount'] > $intAmount)
         {
             error(NO_AMOUNT.$arrItemname[$intItem]);

@@ -8,7 +8,7 @@
  *   @author               : thindil <thindil@tuxfamily.org>
  *   @author               : eyescream <tduda@users.sourceforge.net>
  *   @version              : 1.4
- *   @since                : 06.08.2011
+ *   @since                : 29.08.2011
  *
  */
 
@@ -161,10 +161,8 @@ if (isset ($_GET['daj']))
     if (isset ($_GET['step3']) && $_GET['step3'] == 'add') 
     {
         integercheck($_POST['amount']);
-        if (!ereg("^[1-9][0-9]*$", $_POST['did']) || !ereg("^[1-9][0-9]*$", $_POST['amount'])) 
-        {
-            error (ERROR);
-        }
+	checkvalue($_POST['did']);
+	checkvalue($_POST['amount']);
         $dtrib = $db -> Execute("SELECT tribe FROM players WHERE id=".$_POST['did']);
         if ($dtrib -> fields['tribe'] != $player -> tribe) 
         {
@@ -245,10 +243,8 @@ if (isset ($_GET['step']) && $_GET['step'] == 'daj')
     if (isset ($_GET['step2']) && $_GET['step2'] == 'add') 
     {
         integercheck($_POST['amount']);
-        if (!ereg("^[1-9][0-9]*$", $_POST['przedmiot']) || !ereg("^[1-9][0-9]*$", $_POST['amount'])) 
-        {
-            error (ERROR);
-        }
+	checkvalue($_POST['przedmiot']);
+	checkvalue($_POST['amount']);
         $przed = $db -> Execute("SELECT * FROM potions WHERE id=".$_POST['przedmiot']);
         if (!$przed -> fields['name']) 
         {

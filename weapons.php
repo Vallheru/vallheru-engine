@@ -4,10 +4,10 @@
  *   Weapons shop
  *
  *   @name                 : weapons.php                            
- *   @copyright            : (C) 2004,2005,2006 Vallheru Team based on Gamers-Fusion ver 2.5
- *   @author               : thindil <thindil@users.sourceforge.net>
- *   @version              : 1.1
- *   @since                : 08.03.2006
+ *   @copyright            : (C) 2004,2005,2006,2011 Vallheru Team based on Gamers-Fusion ver 2.5
+ *   @author               : thindil <thindil@tuxfamily.org>
+ *   @version              : 1.4
+ *   @since                : 29.08.2011
  *
  */
 
@@ -27,7 +27,7 @@
 //   along with this program; if not, write to the Free Software
 //   Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 //
-// $Id: weapons.php 566 2006-09-13 09:31:08Z thindil $
+// $Id$
 
 $title = "Zbrojmistrz";
 require_once("includes/head.php");
@@ -87,10 +87,7 @@ if (!isset ($_GET['buy']))
 
 if (isset ($_GET['buy'])) 
 {
-    if (!ereg("^[1-9][0-9]*$", $_GET['buy'])) 
-    {
-        error (ERROR);
-    }
+    checkvalue($_GET['buy']);
     $arm = $db -> Execute("SELECT * FROM equipment WHERE id=".$_GET['buy']);
     if (!$arm -> fields['id']) 
     {

@@ -4,11 +4,11 @@
  *   Tribe astral vault - plans, maps, recipes
  *
  *   @name                 : tribeastral.php                            
- *   @copyright            : (C) 2006,2007 Vallheru Team based on Gamers-Fusion ver 2.5
- *   @author               : thindil <thindil@users.sourceforge.net>
+ *   @copyright            : (C) 2006,2007,2011 Vallheru Team based on Gamers-Fusion ver 2.5
+ *   @author               : thindil <thindil@tuxfamily.org>
  *   @author               : eyescream <tduda@users.sourceforge.net>
- *   @version              : 1.3
- *   @since                : 03.03.2007
+ *   @version              : 1.4
+ *   @since                : 29.08.2011
  *
  */
 
@@ -219,10 +219,12 @@ if (isset($_GET['action']) && $_GET['action'] == 'add')
     if (isset($_GET['step']) && ($_GET['step'] == 'piece' || $_GET['step'] == 'component'))
     {
         integercheck($_POST['amount']);
-        if (!ereg("^[1-9][0-9]*$", $_POST['amount']) || !ereg("^[0-9]*$", $_POST['name']) || !ereg("^[1-9][0-9]*$", $_POST['number']))
+        if (!ereg("^[0-9]*$", $_POST['name']))
         {
             error(ERROR);
         }
+	checkvalue($_POST['amount']);
+	checkvalue($_POST['number']);
         $intCompname = $_POST['name'];
         if ($_GET['step'] == 'piece')
         {
@@ -332,10 +334,12 @@ if (isset($_GET['action']) && $_GET['action'] == 'give')
     if (isset($_GET['step']) && ($_GET['step'] == 'piece' || $_GET['step'] == 'component'))
     {
         integercheck($_POST['amount']);
-        if (!ereg("^[1-9][0-9]*$", $_POST['amount']) || !ereg("^[0-9]*$", $_POST['name']) || !ereg("^[0-9]*$", $_POST['pid']) || !ereg("^[1-9][0-9]*$", $_POST['number']))
+        if (!ereg("^[0-9]*$", $_POST['name']) || !ereg("^[0-9]*$", $_POST['pid']))
         {
             error(ERROR);
         }
+	checkvalue($_POST['amount']);
+	checkvalue($_POST['number']);
         $objDonated = $db -> Execute("SELECT `id` FROM `players` WHERE `id`=".$_POST['pid']);
         if (empty ($objDonated -> fields['id'])) 
         {
@@ -436,10 +440,11 @@ if (isset($_GET['action']) && $_GET['action'] == 'give')
     if (isset($_GET['step']) && $_GET['step'] == 'all')
     {
         integercheck($_POST['amount']);
-        if (!ereg("^[1-9][0-9]*$", $_POST['amount']) || !ereg("^[0-9]*$", $_POST['name']) || !ereg("^[0-9]*$", $_POST['pid']))
+        if (!ereg("^[0-9]*$", $_POST['name']) || !ereg("^[0-9]*$", $_POST['pid']))
         {
             error(ERROR);
         }
+	checkvalue($_POST['amount']);
         $objDonated = $db -> Execute("SELECT `id` FROM `players` WHERE `id`=".$_POST['pid']);
         if (empty ($objDonated -> fields['id'])) 
         {

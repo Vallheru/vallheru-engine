@@ -8,7 +8,7 @@
  *   @author               : thindil <thindil@tuxfamily.org>
  *   @author               : eyescream <tduda@users.sourceforge.net>
  *   @version              : 1.4
- *   @since                : 07.08.2011
+ *   @since                : 29.08.2011
  *
  */
 
@@ -125,10 +125,8 @@ if (isset($_GET['step']) && $_GET['step'] == 'zobacz')
     }
     if (isset($_GET['levels']) && $_GET['levels'] == 'yes')
     {
-        if (!ereg("^[1-9][0-9]*$", $_POST['min']) || !ereg("^[1-9][0-9]*$", $_POST['max']))
-        {
-            error(ERROR);
-        }
+	checkvalue($_POST['min']);
+	checkvalue($_POST['max']);
         if ($_POST['max'] < $_POST['min'])
         {
             error(ERROR);
@@ -219,6 +217,7 @@ if (isset($_GET['step']) && $_GET['step'] == 'zobacz')
 */
 if (isset ($_GET['daj'])) 
 {
+    checkvalue($_GET['daj']);
     if (!isset ($_GET['step3'])) 
     {
         $name = $db -> Execute("SELECT * FROM tribe_zbroj WHERE id=".$_GET['daj']);
@@ -237,10 +236,8 @@ if (isset ($_GET['daj']))
     if (isset ($_GET['step3']) && $_GET['step3'] == 'add') 
     {
         integercheck($_POST['amount']);
-        if (!ereg("^[1-9][0-9]*$", $_POST['did']) || !ereg("^[1-9][0-9]*$", $_POST['amount'])) 
-        {
-            error (ERROR);
-        }
+	checkvalue($_POST['did']);
+	checkvalue($_POST['amount']);
         $zbroj = $db -> Execute("SELECT * FROM tribe_zbroj WHERE id=".$_GET['daj']);
 	if ($zbroj -> fields['klan'] != $player -> tribe) 
 	  {
@@ -312,10 +309,8 @@ if (isset ($_GET['step']) && $_GET['step'] == 'daj')
             error(SELECT_ITEM);
         }
         integercheck($_POST['amount']);
-        if (!ereg("^[1-9][0-9]*$", $_POST['przedmiot']) || !ereg("^[1-9][0-9]*$", $_POST['amount'])) 
-        {
-            error (ERROR);
-        }
+	checkvalue($_POST['przedmiot']);
+	checkvalue($_POST['amount']);
         $przed = $db -> Execute("SELECT * FROM equipment WHERE id=".$_POST['przedmiot']);
         if (!$przed -> fields['name']) 
         {
