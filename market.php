@@ -7,7 +7,7 @@
  *   @copyright            : (C) 2004,2005,2006,2011 Vallheru Team based on Gamers-Fusion ver 2.5
  *   @author               : thindil <thindil@tuxfamily.org>
  *   @version              : 1.4
- *   @since                : 28.08.2011
+ *   @since                : 29.08.2011
  *
  */
 
@@ -499,8 +499,16 @@ if (isset($_GET['view']) && $_GET['view'] == 'myoferts')
                     }
                     if ($intKey == 1 || $intKey == 5)
                     {
-                         $objAmount = $db -> Execute("SELECT `id`, `wt`, `amount` FROM `equipment` WHERE `name`='".$objOfert -> fields['name']."' AND `wt`=".$objOfert -> fields['wt']." AND `type`='".$objOfert -> fields['type']."' AND `status`='U' AND `owner`=".$player -> id." AND `power`=".$objOfert -> fields['power']." AND `zr`=".$objOfert -> fields['zr']." AND `szyb`=".$objOfert -> fields['szyb']." AND `maxwt`=".$objOfert -> fields['maxwt']." AND `poison`=".$objOfert -> fields['poison']." AND `ptype`='".$objOfert -> fields['ptype']."' AND `twohand`='".$objOfert -> fields['twohand']."'");
-                         $intAmount = $objAmount -> fields['amount'];
+			 if ($objOfert->fields['type'] != 'R')
+			   {
+			     $objAmount = $db -> Execute("SELECT `id`, `wt`, `amount`, `type` FROM `equipment` WHERE `name`='".$objOfert -> fields['name']."' AND `wt`=".$objOfert -> fields['wt']." AND `type`='".$objOfert -> fields['type']."' AND `status`='U' AND `owner`=".$player -> id." AND `power`=".$objOfert -> fields['power']." AND `zr`=".$objOfert -> fields['zr']." AND `szyb`=".$objOfert -> fields['szyb']." AND `maxwt`=".$objOfert -> fields['maxwt']." AND `poison`=".$objOfert -> fields['poison']." AND `ptype`='".$objOfert -> fields['ptype']."' AND `twohand`='".$objOfert -> fields['twohand']."'");
+			     $intAmount = $objAmount -> fields['amount'];
+			   }
+			 else
+			   {
+			     $objAmount = $db -> Execute("SELECT `id`, `wt`, `amount`, `type` FROM `equipment` WHERE `name`='".$objOfert -> fields['name']."' AND `type`='R' AND `status`='U' AND `owner`=".$player -> id." AND `power`=".$objOfert -> fields['power']." AND `zr`=".$objOfert -> fields['zr']." AND `szyb`=".$objOfert -> fields['szyb']." AND `poison`=".$objOfert -> fields['poison']." AND `ptype`='".$objOfert -> fields['ptype']."' AND `twohand`='".$objOfert -> fields['twohand']."'");
+			     $intAmount = $objAmount -> fields['wt'];
+			   }
                     }
                     if ($intKey == 2)
                     {
@@ -532,16 +540,31 @@ if (isset($_GET['view']) && $_GET['view'] == 'myoferts')
                         addtomin($_GET['add'], $strSqlname, $intSqlkey, $player -> id);
                     }
                     if ($intKey == 1 || $intKey == 5)
-                    {
-                        $intAmount = $objAmount -> fields['amount'] - $_POST['amount'];
-                        if ($intAmount > 0) 
-                        {
-                            $db -> Execute("UPDATE `equipment` SET `amount`=".$intAmount." WHERE `id`=".$objAmount -> fields['id']);
-                        } 
+		      {
+			if ($objAmount->fields['type'] != 'R')
+			  {
+			    $intAmount = $objAmount -> fields['amount'] - $_POST['amount'];
+			    if ($intAmount > 0) 
+			      {
+				$db -> Execute("UPDATE `equipment` SET `amount`=".$intAmount." WHERE `id`=".$objAmount -> fields['id']);
+			      } 
                             else 
-                        {
-                            $db -> Execute("DELETE FROM `equipment` WHERE `id`=".$objAmount -> fields['id']);
-                        }
+			      {
+				$db -> Execute("DELETE FROM `equipment` WHERE `id`=".$objAmount -> fields['id']);
+			      }
+			  }
+			else
+			  {
+			    $intAmount = $objAmount -> fields['wt'] - $_POST['amount'];
+			    if ($intAmount > 0) 
+			      {
+				$db -> Execute("UPDATE `equipment` SET `wt`=".$intAmount." WHERE `id`=".$objAmount -> fields['id']);
+			      } 
+                            else 
+			      {
+				$db -> Execute("DELETE FROM `equipment` WHERE `id`=".$objAmount -> fields['id']);
+			      }
+			  }
                         addtoitem($objOfert -> fields['type'], $_GET['add'], $objAmount -> fields['wt']);
                         $objAmount -> Close();
                     }
