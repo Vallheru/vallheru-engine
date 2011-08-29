@@ -1,5 +1,7 @@
 2011-08-29  Bartek thindil Jasicki  <thindil@tuxfamily.org>
 
+	* FEATURE,bank.php: 
+	added ability to send arrows one by one
 	* BUG,imarket.php: 
 	fixed typo
 	* UPDATE,templates/layout1/imarket.tpl, templates/imarket.tpl: 
