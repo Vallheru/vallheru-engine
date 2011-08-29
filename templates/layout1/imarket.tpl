@@ -99,9 +99,6 @@
     {if $Type != "R" && $Type != "S" && $Type != "Z" && $Type != "G"}
         <b>{$Idur}:</b> {$Dur}/{$MaxDur} <br />
     {/if}
-    {if $Type == "R"}
-        <b>{$Aamount}:</b> {$Dur} <br />
-    {/if}
     {if $Type == "G"}
         <b>{$Hamount}:</b> {$Dur} <br />
     {/if}
