@@ -1,3 +1,8 @@
+2011-08-29  Bartek thindil Jasicki  <thindil@tuxfamily.org>
+
+	* FEAUTRE,includes/head.php, hospital.php:
+	changed cost of healing in hospital
+
 2011-08-28  Bartek thindil Jasicki  <thindil@tuxfamily.org>
 
 	* BUG,market.php, mines.php, notatnik.php, outposts.php, preset.php, rest.php, smelter.php, temple.php, tforums.php:

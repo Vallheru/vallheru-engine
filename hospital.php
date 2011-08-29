@@ -4,10 +4,10 @@
  *   Hospital - heal and resurrect players
  *
  *   @name                 : hospital.php                            
- *   @copyright            : (C) 2004,2005,2006,2007 Vallheru Team based on Gamers-Fusion ver 2.5
- *   @author               : thindil <thindil@users.sourceforge.net>
- *   @version              : 1.3
- *   @since                : 24.02.2007
+ *   @copyright            : (C) 2004,2005,2006,2007,2011 Vallheru Team based on Gamers-Fusion ver 2.5
+ *   @author               : thindil <thindil@tuxfamily.org>
+ *   @version              : 1.4
+ *   @since                : 29.08.2011
  *
  */
 
@@ -27,7 +27,7 @@
 //   along with this program; if not, write to the Free Software
 //   Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 //
-// $Id: hospital.php 898 2007-02-24 21:24:28Z thindil $
+// $Id$
 
 $title = "Szpital";
 require_once("includes/head.php");
@@ -52,14 +52,14 @@ if (!isset ($_GET['action']))
     if ($player -> tribe > 0) 
     {
         if ($mytribe -> fields['hospass'] == "Y" && $player -> hp > 0) 
-        {
-		    $crneed = ($player -> max_hp - $player -> hp);
-            error(COULD_YOU." <a href=hospital.php?action=heal>".A_HEAL."</a>?<br />".SURE_IT.$crneed.GOLD_COINS);
-        }
+	  {
+	    $crneed = ($player -> max_hp - $player -> hp);
+	    error(COULD_YOU." <a href=hospital.php?action=heal>".A_HEAL."</a>?<br />".SURE_IT.$crneed.GOLD_COINS);
+	  }
     }
     if ($player -> hp > 0) 
     {
-        $crneed = ($player -> max_hp - $player -> hp) * 3;
+        $crneed = ($player -> max_hp - $player -> hp) * $player->level;
         if ($crneed < 0)
         {
             $crneed = 0;
@@ -91,10 +91,10 @@ if (isset ($_GET['action']) && $_GET['action'] == 'heal')
     {
 	    $crneed = $player -> max_hp - $player -> hp;
     }
-	    else
-	{
-	    $crneed = ($player -> max_hp - $player -> hp) * 3;
-	}
+    else
+      {
+	$crneed = ($player -> max_hp - $player -> hp) * $player->level;
+      }
     if ($crneed < 0)
     {
         $crneed = 0;
