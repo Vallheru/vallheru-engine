@@ -8,7 +8,7 @@
  *   @author               : thindil <thindil@tuxfamily.org>
  *   @author               : eyescream <tduda@users.sourceforge.net>
  *   @version              : 1.4
- *   @since                : 24.08.2011
+ *   @since                : 29.08.2011
  *
  */
 
@@ -173,13 +173,22 @@ if (isset ($_GET['view']) && $_GET['view'] == 'market')
 	  }
 	$arrname[$i] = $pm -> fields['name'];
 	$arrpower[$i] = $pm -> fields['power'];
-	$arrdur[$i] =  $pm -> fields['wt'];
-	$arrmaxdur[$i] = $pm -> fields['maxwt'];
+	if ($pm->fields['type'] != 'R')
+	  {
+	    $arrdur[$i] =  $pm -> fields['wt'];
+	    $arrmaxdur[$i] = $pm -> fields['maxwt'];
+	    $arramount[$i] = $pm -> fields['amount'];
+	  }
+	else
+	  {
+	    $arrdur[$i] = 1;
+	    $arrmaxdur[$i] = 1;
+	    $arramount[$i] = $pm->fields['wt'];
+	  }
 	$arrspeed[$i] = $speed;
 	$arragility[$i] = $agility;
 	$arrcost[$i] = $pm -> fields['cost'];
 	$arrowner[$i] = $pm -> fields['owner'];
-	$arramount[$i] = $pm -> fields['amount'];
 	$arrlevel[$i] = $pm -> fields['minlev'];
 	$seller = $db -> Execute("SELECT user FROM players WHERE id=".$pm -> fields['owner']);
 	$arrseller[$i] = $seller -> fields['user'];
@@ -272,35 +281,66 @@ if (isset ($_GET['view']) && $_GET['view'] == 'add')
 	checkvalue($_POST['przedmiot']);
 	checkvalue($_POST['amount']);
         $item = $db -> Execute("SELECT * FROM equipment WHERE id=".$_POST['przedmiot']);
-        if ($item -> fields['amount'] < $_POST['amount']) 
-        {
-            error (NO_AMOUNT.$item -> fields['name']);
-        }
         if ($item -> fields['type'] == 'I')
         {
             error(ERROR);
         }
-        $amount = $item -> fields['amount'] - $_POST['amount'];
-        if ($amount > 0) 
-        {
-            $db -> Execute("UPDATE equipment SET amount=".$amount." where id=".$item -> fields['id']);
-        } 
+	if ($item->fields['type'] != 'R')
+	  {
+	    if ($item -> fields['amount'] < $_POST['amount']) 
+	      {
+		error (NO_AMOUNT.$item -> fields['name']);
+	      }
+	    $amount = $item -> fields['amount'] - $_POST['amount'];
+	    if ($amount > 0) 
+	      {
+		$db -> Execute("UPDATE equipment SET amount=".$amount." where id=".$item -> fields['id']);
+	      } 
             else 
-        {
-            $db -> Execute("DELETE FROM equipment WHERE id=".$item -> fields['id']);
-        }
-        $test = $db -> Execute("SELECT id FROM equipment WHERE name='".$item -> fields['name']."' AND wt=".$item -> fields['wt']." AND type='".$item -> fields['type']."' AND status='R' AND owner=".$player -> id." AND power=".$item -> fields['power']." AND zr=".$item -> fields['zr']." AND szyb=".$item -> fields['szyb']." AND maxwt=".$item -> fields['maxwt']." AND poison=".$item -> fields['poison']." AND ptype='".$item -> fields['ptype']."' AND `twohand`='".$item -> fields['twohand']."'");
-        if (!$test -> fields['id']) 
-        {
-            $db -> Execute("INSERT INTO equipment (owner, name, power, type, cost, zr, wt, minlev, maxwt, amount, magic, poison, status, szyb, twohand, ptype, repair) VALUES(".$player -> id.",'".$item -> fields['name']."',".$item -> fields['power'].",'".$item -> fields['type']."',".$_POST['cost'].",".$item -> fields['zr'].",".$item -> fields['wt'].",".$item -> fields['minlev'].",".$item -> fields['maxwt'].",".$_POST['amount'].",'".$item -> fields['magic']."',".$item -> fields['poison'].",'R',".$item -> fields['szyb'].",'".$item -> fields['twohand']."','".$item -> fields['ptype']."', ".$item -> fields['repair'].")");
-            $smarty -> assign("Message", YOU_ADD.$_POST['amount'].I_AMOUNT3.$item -> fields['name'].ON_MARKET.$_POST['cost'].FOR_GOLDS.". <a href=\"imarket.php?view=add\">".A_REFRESH."</a>");
-        } 
+	      {
+		$db -> Execute("DELETE FROM equipment WHERE id=".$item -> fields['id']);
+	      }
+	    $test = $db -> Execute("SELECT id FROM equipment WHERE name='".$item -> fields['name']."' AND wt=".$item -> fields['wt']." AND type='".$item -> fields['type']."' AND status='R' AND owner=".$player -> id." AND power=".$item -> fields['power']." AND zr=".$item -> fields['zr']." AND szyb=".$item -> fields['szyb']." AND maxwt=".$item -> fields['maxwt']." AND poison=".$item -> fields['poison']." AND ptype='".$item -> fields['ptype']."' AND `twohand`='".$item -> fields['twohand']."'");
+	    if (!$test -> fields['id']) 
+	      {
+		$db -> Execute("INSERT INTO equipment (owner, name, power, type, cost, zr, wt, minlev, maxwt, amount, magic, poison, status, szyb, twohand, ptype, repair) VALUES(".$player -> id.",'".$item -> fields['name']."',".$item -> fields['power'].",'".$item -> fields['type']."',".$_POST['cost'].",".$item -> fields['zr'].",".$item -> fields['wt'].",".$item -> fields['minlev'].",".$item -> fields['maxwt'].",".$_POST['amount'].",'".$item -> fields['magic']."',".$item -> fields['poison'].",'R',".$item -> fields['szyb'].",'".$item -> fields['twohand']."','".$item -> fields['ptype']."', ".$item -> fields['repair'].")");
+		$smarty -> assign("Message", YOU_ADD.$_POST['amount'].I_AMOUNT3.$item -> fields['name'].ON_MARKET.$_POST['cost'].FOR_GOLDS.". <a href=\"imarket.php?view=add\">".A_REFRESH."</a>");
+	      } 
             else 
-        {
-            require_once('includes/marketaddto.php');
-            addtoitem($item -> fields['type'], $test -> fields['id'], $item -> fields['wt']);
-            $smarty -> assign("Message", YOU_ADD.$_POST['amount'].I_AMOUNT3.$item -> fields['name']."</b>. <a href=\"imarket.php?view=add\">".A_REFRESH."</a>");
-        }
+	      {
+		require_once('includes/marketaddto.php');
+		addtoitem($item -> fields['type'], $test -> fields['id'], $item -> fields['wt']);
+		$smarty -> assign("Message", YOU_ADD.$_POST['amount'].I_AMOUNT3.$item -> fields['name']."</b>. <a href=\"imarket.php?view=add\">".A_REFRESH."</a>");
+	      }
+	  }
+	else
+	  {
+	    if ($item->fields['wt'] < $_POST['amount']) 
+	      {
+		error (NO_AMOUNT.$item->fields['name']);
+	      }
+	    $amount = $item->fields['wt'] - $_POST['amount'];
+	    if ($amount > 0) 
+	      {
+		$db -> Execute("UPDATE `equipment` SET `wt`=".$amount." where `id`=".$item -> fields['id']);
+	      } 
+            else 
+	      {
+		$db -> Execute("DELETE FROM `equipment` WHERE `id`=".$item -> fields['id']);
+	      }
+	    $test = $db -> Execute("SELECT `id` FROM `equipment` WHERE `name`='".$item -> fields['name']."' AND `type`='R' AND `status`='R' AND `owner`=".$player -> id." AND `power`=".$item -> fields['power']." AND `zr`=".$item -> fields['zr']." AND `szyb`=".$item -> fields['szyb']." AND `poison`=".$item -> fields['poison']." AND `ptype`='".$item -> fields['ptype']."' AND `twohand`='".$item -> fields['twohand']."'");
+	    if (!$test -> fields['id']) 
+	      {
+		$db -> Execute("INSERT INTO equipment (owner, name, power, type, cost, zr, wt, minlev, maxwt, amount, magic, poison, status, szyb, twohand, ptype, repair) VALUES(".$player -> id.",'".$item -> fields['name']."',".$item -> fields['power'].",'".$item -> fields['type']."',".$_POST['cost'].",".$item -> fields['zr'].",".$_POST['amount'].",".$item -> fields['minlev'].",".$_POST['amount'].",1,'".$item -> fields['magic']."',".$item -> fields['poison'].",'R',".$item -> fields['szyb'].",'".$item -> fields['twohand']."','".$item -> fields['ptype']."', ".$item -> fields['repair'].")");
+		$smarty -> assign("Message", YOU_ADD.$_POST['amount'].I_AMOUNT3.$item -> fields['name'].ON_MARKET.$_POST['cost'].FOR_GOLDS.". <a href=\"imarket.php?view=add\">".A_REFRESH."</a>");
+	      } 
+            else 
+	      {
+		require_once('includes/marketaddto.php');
+		addtoitem($item -> fields['type'], $test -> fields['id'], $item -> fields['wt']);
+		$smarty -> assign("Message", YOU_ADD.$_POST['amount'].I_AMOUNT3.$item -> fields['name']."</b>. <a href=\"imarket.php?view=add\">".A_REFRESH."</a>");
+	      }
+	  }
         $test -> Close();
     }
 }
@@ -384,16 +424,28 @@ if (isset($_GET['buy']))
     {
         $speed = 0;
     }
+    if ($buy->fields['type'] != 'R')
+      {
+	$intAmount = $buy->fields['amount'];
+	$intDur = $buy->fields['wt'];
+	$intMaxdur = $buy->fields['maxdur'];
+      }
+    else
+      {
+	$intAmount = $buy->fields['wt'];
+	$intDur = $buy->fields['wt'];
+	$intMaxdur = $buy->fields['wt'];
+      }
     $seller = $db -> Execute("SELECT user FROM players WHERE id=".$buy -> fields['owner']);    
     $smarty -> assign(array("Name" => $buy -> fields['name'], 
                             "Itemid" => $buy -> fields['id'], 
-                            "Amount1" => $buy -> fields['amount'], 
+                            "Amount1" => $intAmount,
                             "Cost" => $buy -> fields['cost'], 
                             "Seller" => $seller -> fields['user'], 
                             "Sid" => $buy -> fields['owner'], 
                             "Power" => $buy -> fields['power'], 
-                            "Dur" => $buy -> fields['wt'], 
-                            "MaxDur" => $buy -> fields['maxwt'], 
+                            "Dur" => $intDur, 
+                            "MaxDur" => $intMaxdur, 
                             "Type" => $buy -> fields['type'], 
                             "Agi" => $agility, 
                             "Speed" => $speed,
@@ -420,40 +472,60 @@ if (isset($_GET['buy']))
         }
 	checkvalue($_POST['amount']);
         $buy = $db -> Execute("SELECT * FROM `equipment` WHERE `id`=".$_GET['buy']." AND `type`!='I'");
-        if ($_POST['amount'] > $buy -> fields['amount']) 
-        {
-            error(NO_AMOUNT.$buy -> fields['name'].ON_MARKET);
-        }
-        $price = $_POST['amount'] * $buy -> fields['cost'];
+	$price = $_POST['amount'] * $buy -> fields['cost'];
         if ($price > $player -> credits) 
         {
             error (NO_MONEY);
         }
-        $test = $db -> Execute("SELECT id FROM equipment WHERE name='".$buy -> fields['name']."' AND wt=".$buy -> fields['wt']." AND type='".$buy -> fields['type']."' AND status='U' AND owner=".$player -> id." AND power=".$buy -> fields['power']." AND zr=".$buy -> fields['zr']." AND szyb=".$buy -> fields['szyb']." AND maxwt=".$buy -> fields['maxwt']." AND poison=".$buy -> fields['poison']." AND cost=1 AND ptype='".$buy -> fields['ptype']."' AND `twohand`='".$buy -> fields['twohand']."'");
-        if (!$test -> fields['id']) 
-        {
-            $db -> Execute("INSERT INTO equipment (owner, name, power, type, cost, zr, wt, minlev, maxwt, amount, magic, poison, szyb, twohand, ptype, repair) VALUES(".$player -> id.",'".$buy -> fields['name']."',".$buy -> fields['power'].",'".$buy -> fields['type']."',1,".$buy -> fields['zr'].",".$buy -> fields['wt'].",".$buy -> fields['minlev'].",".$buy -> fields['maxwt'].",".$_POST['amount'].",'".$buy -> fields['magic']."',".$buy -> fields['poison'].",".$buy -> fields['szyb'].",'".$buy -> fields['twohand']."','".$buy -> fields['ptype']."', ".$buy -> fields['repair'].")");
-        } 
+	if ($buy->fields['type'] != 'R')
+	  {
+	    if ($_POST['amount'] > $buy -> fields['amount']) 
+	      {
+		error(NO_AMOUNT.$buy -> fields['name'].ON_MARKET);
+	      }
+	    $test = $db -> Execute("SELECT id FROM equipment WHERE name='".$buy -> fields['name']."' AND wt=".$buy -> fields['wt']." AND type='".$buy -> fields['type']."' AND status='U' AND owner=".$player -> id." AND power=".$buy -> fields['power']." AND zr=".$buy -> fields['zr']." AND szyb=".$buy -> fields['szyb']." AND maxwt=".$buy -> fields['maxwt']." AND poison=".$buy -> fields['poison']." AND cost=1 AND ptype='".$buy -> fields['ptype']."' AND `twohand`='".$buy -> fields['twohand']."'");
+	    if (!$test -> fields['id']) 
+	      {
+		$db -> Execute("INSERT INTO equipment (owner, name, power, type, cost, zr, wt, minlev, maxwt, amount, magic, poison, szyb, twohand, ptype, repair) VALUES(".$player -> id.",'".$buy -> fields['name']."',".$buy -> fields['power'].",'".$buy -> fields['type']."',1,".$buy -> fields['zr'].",".$buy -> fields['wt'].",".$buy -> fields['minlev'].",".$buy -> fields['maxwt'].",".$_POST['amount'].",'".$buy -> fields['magic']."',".$buy -> fields['poison'].",".$buy -> fields['szyb'].",'".$buy -> fields['twohand']."','".$buy -> fields['ptype']."', ".$buy -> fields['repair'].")");
+	      } 
             else 
-        {
-            if ($buy -> fields['type'] != 'R')
-            {
-                $db -> Execute("UPDATE equipment SET amount=amount+".$_POST['amount']." WHERE id=".$test -> fields['id']);
-            }
-                else
-            {
-                $db -> Execute("UPDATE `equipment` SET `wt`=`wt`+".$buy -> fields['wt']." WHERE `id`=".$test -> fields['id']);
-            }
-        }
+	      {
+		$db -> Execute("UPDATE equipment SET amount=amount+".$_POST['amount']." WHERE id=".$test -> fields['id']);
+	      }
+	    if ($_POST['amount'] == $buy -> fields['amount']) 
+	      {
+		$db -> Execute("DELETE FROM equipment WHERE id=".$buy -> fields['id']);
+	      } 
+            else 
+	      {
+		$db -> Execute("UPDATE equipment SET amount=amount-".$_POST['amount']." WHERE id=".$buy -> fields['id']);
+	      }
+	  }
+	else
+	  {
+	    if ($_POST['amount'] > $buy->fields['wt']) 
+	      {
+		error(NO_AMOUNT.$buy->fields['name'].ON_MARKET);
+	      }
+	    $test = $db -> Execute("SELECT `id` FROM `equipment` WHERE `name`='".$buy -> fields['name']."' AND `type`='R' AND `status`='U' AND `owner`=".$player -> id." AND `power`=".$buy -> fields['power']." AND `zr`=".$buy -> fields['zr']." AND `szyb`=".$buy -> fields['szyb']." AND `poison`=".$buy -> fields['poison']." AND `cost`=1 AND `ptype`='".$buy -> fields['ptype']."' AND `twohand`='".$buy -> fields['twohand']."'");
+	    if (!$test -> fields['id']) 
+	      {
+		$db -> Execute("INSERT INTO equipment (owner, name, power, type, cost, zr, wt, minlev, maxwt, amount, magic, poison, szyb, twohand, ptype, repair) VALUES(".$player -> id.",'".$buy -> fields['name']."',".$buy -> fields['power'].",'".$buy -> fields['type']."',1,".$buy -> fields['zr'].",".$_POST['amount'].",".$buy -> fields['minlev'].",".$_POST['amount'].",1,'".$buy -> fields['magic']."',".$buy -> fields['poison'].",".$buy -> fields['szyb'].",'".$buy -> fields['twohand']."','".$buy -> fields['ptype']."', ".$buy -> fields['repair'].")");
+	      } 
+            else 
+	      {
+		$db -> Execute("UPDATE `equipment` SET `wt`=`wt`+".$buy -> fields['wt']." WHERE `id`=".$test -> fields['id']);
+	      }
+	    if ($_POST['amount'] == $buy->fields['wt']) 
+	      {
+		$db -> Execute("DELETE FROM `equipment` WHERE `id`=".$buy -> fields['id']);
+	      } 
+            else 
+	      {
+		$db -> Execute("UPDATE `equipment` SET `wt`=`wt`-".$_POST['amount']." WHERE `id`=".$buy -> fields['id']);
+	      }
+	  }
         $test -> Close();
-        if ($_POST['amount'] == $buy -> fields['amount']) 
-        {
-            $db -> Execute("DELETE FROM equipment WHERE id=".$buy -> fields['id']);
-        } 
-            else 
-        {
-            $db -> Execute("UPDATE equipment SET amount=amount-".$_POST['amount']." WHERE id=".$buy -> fields['id']);
-        }
         $db -> Execute("UPDATE players SET bank=bank+".$price." WHERE id=".$buy -> fields['owner']);
         $db -> Execute("UPDATE players SET credits=credits-".$price." WHERE id=".$player -> id);
         $strDate = $db -> DBDate($newdate);

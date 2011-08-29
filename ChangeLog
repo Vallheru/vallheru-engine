@@ -1,8 +1,10 @@
 2011-08-29  Bartek thindil Jasicki  <thindil@tuxfamily.org>
 
+	* FEATURE,imarket.php: 
+	changed oferts of arrows on market
 	* FEATURE,install/db/update.sql: 
 	remove most of potions from shop
-	* FEAUTRE,includes/head.php, hospital.php:
+	* FEATURE,includes/head.php, hospital.php:
 	changed cost of healing in hospital
 
 2011-08-28  Bartek thindil Jasicki  <thindil@tuxfamily.org>
