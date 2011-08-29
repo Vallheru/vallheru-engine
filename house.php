@@ -8,7 +8,7 @@
  *   @author               : thindil <thindil@tuxfamily.org>
  *   @author               : eyescream <tduda@users.sourceforge.net>
  *   @version              : 1.4
- *   @since                : 28.08.2011
+ *   @since                : 29.08.2011
  *
  */
 
@@ -28,7 +28,7 @@
 //   along with this program; if not, write to the Free Software
 //   Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 //
-// $Id: house.php 918 2007-03-03 17:55:42Z thindil $
+// $Id$
 
 $title = "Domy graczy";
 require_once("includes/head.php");
@@ -790,10 +790,19 @@ if (isset ($_GET['action']) && $_GET['action'] == 'my')
             while (!$arritem -> EOF) 
             {
                 $arrname[$i] = $arritem -> fields['name'];
-                $arrdur[$i] = $arritem -> fields['wt'];
-                $arrmaxdur[$i] = $arritem -> fields['maxwt'];
-                $arrspeed[$i] = $arritem -> fields['szyb'];
-                $arramount[$i] = $arritem -> fields['amount'];
+		if ($arritem->fields['type'] != 'R')
+		  {
+		    $arrdur[$i] = $arritem -> fields['wt'];
+		    $arrmaxdur[$i] = $arritem -> fields['maxwt'];
+		    $arramount[$i] = $arritem -> fields['amount'];
+		  }
+		else
+		  {
+		    $arrdur[$i] = 1;
+		    $arrmaxdur[$i] = 1;
+		    $arramount[$i] = $arritem->fields['wt'];
+		  }
+		$arrspeed[$i] = $arritem -> fields['szyb'];
                 $arrid[$i] = $arritem -> fields['id'];
                 $arrpower[$i] = $arritem -> fields['power'];
                 if ($arritem -> fields['zr'] < 1) 
@@ -854,35 +863,55 @@ if (isset ($_GET['action']) && $_GET['action'] == 'my')
                 }
 		checkvalue($_POST['amount']);
                 $zbroj = $db -> Execute("SELECT * FROM equipment WHERE id=".$_GET['take']);
-                if ($zbroj -> fields['amount'] < $_POST['amount']) 
-                {
-                    error (NO_AMOUNT);
-                }
-                $test = $db -> Execute("SELECT id FROM equipment WHERE name='".$zbroj -> fields['name']."' AND owner=".$player -> id." AND wt=".$zbroj -> fields['wt']." AND type='".$zbroj -> fields['type']."' AND power=".$zbroj -> fields['power']." AND szyb=".$zbroj -> fields['szyb']." AND zr=".$zbroj -> fields['zr']." AND maxwt=".$zbroj -> fields['maxwt']." AND poison=".$zbroj -> fields['poison']." AND status='U' AND ptype='".$zbroj -> fields['ptype']."' AND cost=".$zbroj -> fields['cost']);
-                if (!$test -> fields['id']) 
-                {
-                    $db -> Execute("INSERT INTO equipment (owner, name, power, type, cost, zr, wt, minlev, maxwt, amount, magic, poison, szyb, twohand, ptype, repair) VALUES(".$player -> id.",'".$zbroj -> fields['name']."',".$zbroj -> fields['power'].",'".$zbroj -> fields['type']."',".$zbroj -> fields['cost'].",".$zbroj -> fields['zr'].",".$zbroj -> fields['wt'].",".$zbroj -> fields['minlev'].",".$zbroj -> fields['maxwt'].",".$_POST['amount'].",'".$zbroj -> fields['magic']."',".$zbroj -> fields['poison'].",".$zbroj -> fields['szyb'].",'".$zbroj -> fields['twohand']."','".$zbroj -> fields['ptype']."', ".$zbroj -> fields['repair'].")");
-                } 
+		if ($zbroj->fields['type'] != 'R')
+		  {
+		    if ($zbroj -> fields['amount'] < $_POST['amount']) 
+		      {
+			error (NO_AMOUNT);
+		      }
+		    $test = $db -> Execute("SELECT id FROM equipment WHERE name='".$zbroj -> fields['name']."' AND owner=".$player -> id." AND wt=".$zbroj -> fields['wt']." AND type='".$zbroj -> fields['type']."' AND power=".$zbroj -> fields['power']." AND szyb=".$zbroj -> fields['szyb']." AND zr=".$zbroj -> fields['zr']." AND maxwt=".$zbroj -> fields['maxwt']." AND poison=".$zbroj -> fields['poison']." AND status='U' AND ptype='".$zbroj -> fields['ptype']."' AND cost=".$zbroj -> fields['cost']);
+		    if (!$test -> fields['id']) 
+		      {
+			$db -> Execute("INSERT INTO equipment (owner, name, power, type, cost, zr, wt, minlev, maxwt, amount, magic, poison, szyb, twohand, ptype, repair) VALUES(".$player -> id.",'".$zbroj -> fields['name']."',".$zbroj -> fields['power'].",'".$zbroj -> fields['type']."',".$zbroj -> fields['cost'].",".$zbroj -> fields['zr'].",".$zbroj -> fields['wt'].",".$zbroj -> fields['minlev'].",".$zbroj -> fields['maxwt'].",".$_POST['amount'].",'".$zbroj -> fields['magic']."',".$zbroj -> fields['poison'].",".$zbroj -> fields['szyb'].",'".$zbroj -> fields['twohand']."','".$zbroj -> fields['ptype']."', ".$zbroj -> fields['repair'].")");
+		      } 
                     else 
-                {
-                    if ($zbroj -> fields['type'] != 'R')
-                    {
-                        $db -> Execute("UPDATE `equipment` SET `amount`=`amount`+".$_POST['amount']." WHERE `id`=".$test -> fields['id']);
-                    }
-                        else
-                    {
-                        $db -> Execute("UPDATE `equipment` SET `wt`=`wt`+".$zbroj -> fields['wt']." WHERE `id`=".$test -> fields['id']);
-                    }
-                }
-                $test -> Close();
-                if ($_POST['amount'] < $zbroj -> fields['amount']) 
-                {
-                    $db -> Execute("UPDATE equipment SET amount=amount-".$_POST['amount']." WHERE id=".$zbroj -> fields['id']);
-                } 
+		      {
+			$db -> Execute("UPDATE `equipment` SET `amount`=`amount`+".$_POST['amount']." WHERE `id`=".$test -> fields['id']);
+		      }
+		    if ($_POST['amount'] < $zbroj -> fields['amount']) 
+		      {
+			$db -> Execute("UPDATE equipment SET amount=amount-".$_POST['amount']." WHERE id=".$zbroj -> fields['id']);
+		      } 
                     else 
-                {
-                    $db -> Execute("DELETE FROM equipment WHERE id=".$zbroj -> fields['id']);
-                }
+		      {
+			$db -> Execute("DELETE FROM equipment WHERE id=".$zbroj -> fields['id']);
+		      }
+		  }
+		else
+		  {
+		    if ($zbroj -> fields['wt'] < $_POST['amount']) 
+		      {
+			error (NO_AMOUNT);
+		      }
+		    $test = $db -> Execute("SELECT `id` FROM `equipment` WHERE `name`='".$zbroj -> fields['name']."' AND `owner`=".$player -> id." AND `type`='R' AND `power`=".$zbroj -> fields['power']." AND `szyb`=".$zbroj -> fields['szyb']." AND `zr`=".$zbroj -> fields['zr']." AND `poison`=".$zbroj -> fields['poison']." AND `status`='U' AND `ptype`='".$zbroj -> fields['ptype']."' AND `cost`=".$zbroj -> fields['cost']);
+		    if (!$test -> fields['id']) 
+		      {
+			$db -> Execute("INSERT INTO equipment (owner, name, power, type, cost, zr, wt, minlev, maxwt, amount, magic, poison, szyb, twohand, ptype, repair) VALUES(".$player -> id.",'".$zbroj -> fields['name']."',".$zbroj -> fields['power'].",'R',".$zbroj -> fields['cost'].",".$zbroj -> fields['zr'].",".$_POST['amount'].",".$zbroj -> fields['minlev'].",".$_POST['amount'].",1,'".$zbroj -> fields['magic']."',".$zbroj -> fields['poison'].",".$zbroj -> fields['szyb'].",'".$zbroj -> fields['twohand']."','".$zbroj -> fields['ptype']."', ".$zbroj -> fields['repair'].")");
+		      } 
+                    else 
+		      {
+			$db -> Execute("UPDATE `equipment` SET `wt`=`wt`+".$_POST['amount']." WHERE `id`=".$test -> fields['id']);
+		      }
+		    if ($_POST['amount'] < $zbroj -> fields['wt']) 
+		      {
+			$db -> Execute("UPDATE `equipment` SET `wt`=`wt`-".$_POST['amount']." WHERE `id`=".$zbroj -> fields['id']);
+		      } 
+                    else 
+		      {
+			$db -> Execute("DELETE FROM `equipment` WHERE `id`=".$zbroj -> fields['id']);
+		      }
+		  }
+		$test -> Close();
                 error (YOU_GET.$_POST['amount'].I_AMOUNT.$zbroj -> fields['name']);
             }
 	  }
@@ -899,7 +928,14 @@ if (isset ($_GET['action']) && $_GET['action'] == 'my')
             while (!$arritem -> EOF) 
             {
                 $arrname[$i] = $arritem -> fields['name'];
-                $arramount[$i] = $arritem -> fields['amount'];
+		if ($arritem->fields['type'] != 'R')
+		  {
+		    $arramount[$i] = $arritem -> fields['amount'];
+		  }
+		else
+		  {
+		    $arramount[$i] = $arritem -> fields['wt'];
+		  }
                 $arrid[$i] = $arritem -> fields['id'];
                 $arritem -> MoveNext();
                 $i = $i + 1;
@@ -926,40 +962,64 @@ if (isset ($_GET['action']) && $_GET['action'] == 'my')
                 {
                     error (ERROR);
                 }
-                if ($przed -> fields['amount'] < $_POST['amount']) 
-                {
-                    error (NOT_ENOUGH);
-                }
                 $amount = ($house -> fields['wardrobe'] * 100) - $items;
-                if ($amount < $_POST['amount']) 
-                {
-                    error (NOT_ENOUGH2);
-                }
-                $test = $db -> Execute("SELECT id FROM equipment WHERE name='".$przed -> fields['name']."' AND owner=".$player -> id." AND wt=".$przed -> fields['wt']." AND type='".$przed -> fields['type']."' AND power=".$przed -> fields['power']." AND szyb=".$przed -> fields['szyb']." AND zr=".$przed -> fields['zr']." AND maxwt=".$przed -> fields['maxwt']." AND poison=".$przed -> fields['poison']." AND status='H' AND ptype='".$przed -> fields['ptype']."' AND cost=".$przed -> fields['cost']." AND location='".$player -> location."'");
-                if (!$test -> fields['id']) 
-                {
-                    $db -> Execute("INSERT INTO equipment (owner, name, power, type, cost, zr, wt, minlev, maxwt, amount, magic, poison, szyb, twohand, status, ptype, repair, location) VALUES(".$player -> id.",'".$przed -> fields['name']."',".$przed -> fields['power'].",'".$przed -> fields['type']."',".$przed -> fields['cost'].",".$przed -> fields['zr'].",".$przed -> fields['wt'].",".$przed -> fields['minlev'].",".$przed -> fields['maxwt'].",".$_POST['amount'].",'".$przed -> fields['magic']."',".$przed -> fields['poison'].",".$przed -> fields['szyb'].",'".$przed -> fields['twohand']."','H','".$przed -> fields['ptype']."', ".$przed -> fields['repair'].", '".$player -> location."')") or die($db -> ErrorMsg());
-                } 
+		if ($przed->fields['type'] != 'R')
+		  {
+		    if ($przed -> fields['amount'] < $_POST['amount']) 
+		      {
+			error (NOT_ENOUGH);
+		      }
+		    if ($amount < $_POST['amount']) 
+		      {
+			error (NOT_ENOUGH2);
+		      }
+		    $test = $db -> Execute("SELECT id FROM equipment WHERE name='".$przed -> fields['name']."' AND owner=".$player -> id." AND wt=".$przed -> fields['wt']." AND type='".$przed -> fields['type']."' AND power=".$przed -> fields['power']." AND szyb=".$przed -> fields['szyb']." AND zr=".$przed -> fields['zr']." AND maxwt=".$przed -> fields['maxwt']." AND poison=".$przed -> fields['poison']." AND status='H' AND ptype='".$przed -> fields['ptype']."' AND cost=".$przed -> fields['cost']." AND location='".$player -> location."'");
+		    if (!$test -> fields['id']) 
+		      {
+			$db -> Execute("INSERT INTO equipment (owner, name, power, type, cost, zr, wt, minlev, maxwt, amount, magic, poison, szyb, twohand, status, ptype, repair, location) VALUES(".$player -> id.",'".$przed -> fields['name']."',".$przed -> fields['power'].",'".$przed -> fields['type']."',".$przed -> fields['cost'].",".$przed -> fields['zr'].",".$przed -> fields['wt'].",".$przed -> fields['minlev'].",".$przed -> fields['maxwt'].",".$_POST['amount'].",'".$przed -> fields['magic']."',".$przed -> fields['poison'].",".$przed -> fields['szyb'].",'".$przed -> fields['twohand']."','H','".$przed -> fields['ptype']."', ".$przed -> fields['repair'].", '".$player -> location."')") or die($db -> ErrorMsg());
+		      } 
                     else 
-                {
-                    if ($przed -> fields['type'] != 'R')
-                    {
-                        $db -> Execute("UPDATE `equipment` SET `amount`=`amount`+".$_POST['amount']." WHERE `id`=".$test -> fields['id']);
-                    }
-                        else
-                    {
-                        $db -> Execute("UPDATE `equipment` SET `wt`=`wt`+".$przed -> fields['wt']." WHERE `id`=".$test -> fields['id']);
-                    }
-                }
+		      {
+			$db -> Execute("UPDATE `equipment` SET `amount`=`amount`+".$_POST['amount']." WHERE `id`=".$test -> fields['id']);
+		      }
+		    if ($_POST['amount'] < $przed -> fields['amount']) 
+		      {
+			$db -> Execute("UPDATE equipment SET amount=amount-".$_POST['amount']." WHERE id=".$przed -> fields['id']);
+		      } 
+                    else 
+		      {
+			$db -> Execute("DELETE FROM equipment WHERE id=".$przed -> fields['id']);
+		      }
+		  }
+		else
+		  {
+		    if ($przed -> fields['wt'] < $_POST['amount']) 
+		      {
+			error (NOT_ENOUGH);
+		      }
+		    if ($amount - 1 < 0)
+		      {
+			error (NOT_ENOUGH2);
+		      }
+		    $test = $db -> Execute("SELECT `id` FROM `equipment` WHERE `name`='".$przed -> fields['name']."' AND `owner`=".$player -> id." AND `type`='R' AND `power`=".$przed -> fields['power']." AND `szyb`=".$przed -> fields['szyb']." AND `zr`=".$przed -> fields['zr']." AND `poison`=".$przed -> fields['poison']." AND `status`='H' AND `ptype`='".$przed -> fields['ptype']."' AND `cost`=".$przed -> fields['cost']." AND `location`='".$player -> location."'");
+		    if (!$test -> fields['id']) 
+		      {
+			$db -> Execute("INSERT INTO equipment (owner, name, power, type, cost, zr, wt, minlev, maxwt, amount, magic, poison, szyb, twohand, status, ptype, repair, location) VALUES(".$player -> id.",'".$przed -> fields['name']."',".$przed -> fields['power'].",'R',".$przed -> fields['cost'].",".$przed -> fields['zr'].",".$_POST['amount'].",".$przed -> fields['minlev'].",".$_POST['amount'].",1,'".$przed -> fields['magic']."',".$przed -> fields['poison'].",".$przed -> fields['szyb'].",'".$przed -> fields['twohand']."','H','".$przed -> fields['ptype']."', ".$przed -> fields['repair'].", '".$player -> location."')") or die($db -> ErrorMsg());
+		      } 
+                    else 
+		      {
+			$db -> Execute("UPDATE `equipment` SET `wt`=`wt`+".$_POST['amount']." WHERE `id`=".$test -> fields['id']);
+		      }
+		    if ($_POST['amount'] < $przed -> fields['wt']) 
+		      {
+			$db -> Execute("UPDATE `equipment` SET `wt`=`wt`-".$_POST['amount']." WHERE `id`=".$przed -> fields['id']);
+		      } 
+                    else 
+		      {
+			$db -> Execute("DELETE FROM `equipment` WHERE `id`=".$przed -> fields['id']);
+		      }
+		  }
                 $test -> Close();
-                if ($_POST['amount'] < $przed -> fields['amount']) 
-                {
-                    $db -> Execute("UPDATE equipment SET amount=amount-".$_POST['amount']." WHERE id=".$przed -> fields['id']);
-                } 
-                    else 
-                {
-                    $db -> Execute("DELETE FROM equipment WHERE id=".$przed -> fields['id']);
-                }
                 error (YOU_HIDE.$_POST['amount'].I_AMOUNT.$przed -> fields['name'].IN_HOUSE);
             }
         }
