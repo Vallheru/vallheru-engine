@@ -428,7 +428,7 @@ if (isset($_GET['buy']))
       {
 	$intAmount = $buy->fields['amount'];
 	$intDur = $buy->fields['wt'];
-	$intMaxdur = $buy->fields['maxdur'];
+	$intMaxdur = $buy->fields['maxwt'];
       }
     else
       {

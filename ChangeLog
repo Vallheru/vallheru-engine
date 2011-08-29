@@ -1,5 +1,7 @@
 2011-08-29  Bartek thindil Jasicki  <thindil@tuxfamily.org>
 
+	* BUG,imarket.php: 
+	fixed typo
 	* UPDATE,templates/layout1/imarket.tpl, templates/imarket.tpl: 
 	remove unnecessary data
 	* BUG,market.php: 
