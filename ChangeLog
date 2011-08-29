@@ -1,5 +1,7 @@
 2011-08-29  Bartek thindil Jasicki  <thindil@tuxfamily.org>
 
+	* FEATURE,install/db/update.sql: 
+	remove most of potions from shop
 	* FEAUTRE,includes/head.php, hospital.php:
 	changed cost of healing in hospital
 

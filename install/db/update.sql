@@ -20,3 +20,11 @@ CREATE TABLE IF NOT EXISTS `vallars` (
   KEY `owner` (`owner`),
   KEY `vdate` (`vdate`)
 ) ENGINE=MyISAM DEFAULT CHARSET=utf8;
+UPDATE `potions` SET `status` = 'A' WHERE `potions`.`id` =1;
+UPDATE `potions` SET `status` = 'A' WHERE `potions`.`id` =2;
+UPDATE `potions` SET `status` = 'A' WHERE `potions`.`id` =3;
+UPDATE `potions` SET `status` = 'A' WHERE `potions`.`id` =5;
+UPDATE `potions` SET `status` = 'A' WHERE `potions`.`id` =7;
+UPDATE `potions` SET `status` = 'A' WHERE `potions`.`id` =8;
+UPDATE `potions` SET `status` = 'A' WHERE `potions`.`id` =9;
+UPDATE `potions` SET `status` = 'A' WHERE `potions`.`id` =10;
