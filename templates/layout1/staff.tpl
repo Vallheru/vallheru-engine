@@ -10,6 +10,7 @@
     <li><a href="staff.php?view=addtext">{$Aaddnews}</a></li>
     <li><a href="staff.php?view=innarchive">{$Ainnarchive}</a></li>
     <li><a href="staff.php?view=banmail">{$Abanmail}</a></li>
+    <li><a href="staff.php?view=logs">{$Alogs}</a></li>
     </ul>
 {/if}
 
@@ -114,4 +115,24 @@
     <input type="hidden" name="tid" value="{$Tid}" />
     <input type="submit" value="{$Achange}" />
 </form>
+{/if}
+
+{if $View == "logs"}
+    {$Logsinfo}<br /><br />
+    <table align="center" width="75%">
+        <tr>
+            <td align="center">{$Lowner}</td>
+            <td align="center">{$Ltext}</td>
+        </tr>
+        {section name=logs loop=$Aowner}
+            <tr>
+                <td align="center">{$Aowner[logs]}</td>
+                <td align="center">{$Alog[logs]}</td>
+            </tr>
+        {/section}
+    </table><br />
+    {$Aprevious} {$Anext}<br /><br />
+    <form method="post" action="admin.php?view=logs&amp;step=clear">
+        <input type="submit" value="{$Lclear}" />
+    </form>
 {/if}

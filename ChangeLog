@@ -1,5 +1,7 @@
 2011-08-30  Bartek thindil Jasicki  <thindil@tuxfamily.org>
 
+	* FEATURE,templates/layout1/staff.tpl, templates/staff.tpl, includes/admin/logs.php, admin.php: 
+	allow staffs see players logs
 	* FEATURE,install/db/update.sql, templates/layout1/stats.tpl, templates/stats.tpl, class/player_class.php, includes/resets.php,
 	battle.php, stats.php, view.php:
 	added ability to disable new player protection

@@ -8,7 +8,7 @@
  *   @author               : thindil <thindil@tuxfamily.org>
  *   @author               : eyescream <tduda@users.sourceforge.net>
  *   @version              : 1.4
- *   @since                : 28.08.2011
+ *   @since                : 30.08.2011
  *
  */
  
@@ -50,7 +50,7 @@ $smarty -> assign("Message", '');
  */
 if (isset($_GET['view']))
 {
-    $arrView = array('takeaway', 'clearc', 'czat', 'tags', 'jail', 'innarchive', 'banmail', 'addtext');
+  $arrView = array('takeaway', 'clearc', 'czat', 'tags', 'jail', 'innarchive', 'banmail', 'addtext', 'logs');
     $intKey = array_search($_GET['view'], $arrView);
     if ($intKey !== false)
     {
@@ -272,70 +272,6 @@ if (isset($_GET['view']) && $_GET['view'] == 'changelog')
         $strText = bbcodetohtml($_POST['changetext']); 
         $db -> Execute("INSERT INTO `changelog` (`author`, `location`, `text`, `date`, `lang`) VALUES('".$strAuthor."', '".$_POST['location']."', '".$strText."', ".$strDate.", '".$player -> lang."')");
         $smarty -> assign("Message", CHANGE_ADDED);
-    }
-}
-
-/**
- * Display players logs
- */
-if (isset($_GET['view']) && $_GET['view'] == 'logs')
-{
-    if (!isset($_GET['limit']))
-    {
-        $_GET['limit'] = 0;
-    }
-    $objAmount = $db -> Execute("SELECT count(*) FROM `logs`");
-    $intAmount = $objAmount -> fields['count(*)'];
-    $objAmount -> Close();
-    if (!$intAmount || $_GET['limit'] > $intAmount)
-    {
-        error(NO_LOGS);
-    }
-    $objLogs = $db -> SelectLimit("SELECT `owner`, `log` FROM `logs`", 50, $_GET['limit']);
-    $arrOwner = array();
-    $arrLog = array();
-    $i = 0;
-    while (!$objLogs -> EOF)
-    {
-        $arrOwner[$i] = $objLogs -> fields['owner'];
-        $arrLog[$i] = $objLogs -> fields['log'];
-        $i++;
-        $objLogs -> MoveNext();
-    }
-    $objLogs -> Close();
-    if ($_GET['limit'] >= 50) 
-    {
-        $intLimit = $_GET['limit'] - 50;
-        $strPrevious = "<a href=\"admin.php?view=logs&amp;limit=".$intLimit."\">".A_PREVIOUS."</a>";
-    }
-        else
-    {
-        $strPrevious = '';
-    }
-    $intLimit = $_GET['limit'] + 50;
-    if ($intLimit < $intAmount && $intAmount > 50)
-    {
-        $strNext = "<a href=\"admin.php?view=logs&amp;limit=".$intLimit."\">".A_NEXT."</a>";
-    }
-        else
-    {
-        $strNext = '';
-    }
-    $smarty -> assign(array("Logsinfo" => LOGS_INFO,
-                            "Lowner" => L_OWNER,
-                            "Ltext" => L_TEXT,
-                            "Lclear" => L_CLEAR,
-                            "Aowner" => $arrOwner,
-                            "Alog" => $arrLog,
-                            "Aprevious" => $strPrevious,
-                            "Anext" => $strNext));
-    /**
-     * Clear logs
-     */
-    if (isset($_GET['step']) && $_GET['step'] == 'clear')
-    {
-        $db -> Execute("TRUNCATE TABLE `logs`") or die($db -> ErrorMsg());
-        $smarty -> assign("Message", LOGS_CLEARED);
     }
 }
 

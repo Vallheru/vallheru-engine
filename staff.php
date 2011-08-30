@@ -4,10 +4,10 @@
  *   Staff panel - give immunited, send players to jailetc
  *
  *   @name                 : staff.php                            
- *   @copyright            : (C) 2004,2005,2006 Vallheru Team based on Gamers-Fusion ver 2.5
- *   @author               : thindil <thindil@users.sourceforge.net>
- *   @version              : 1.3
- *   @since                : 23.10.2006
+ *   @copyright            : (C) 2004,2005,2006,2011 Vallheru Team based on Gamers-Fusion ver 2.5
+ *   @author               : thindil <thindil@tuxfamily.org>
+ *   @version              : 1.4
+ *   @since                : 30.08.2011
  *
  */
 
@@ -27,7 +27,7 @@
 //   along with this program; if not, write to the Free Software
 //   Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 //
-// $Id: staff.php 755 2006-10-23 11:10:19Z thindil $
+// $Id$
 
 $title = "Panel Administracyjny";
 require_once("includes/head.php");
@@ -44,7 +44,7 @@ if ($player -> rank != 'Staff' && $player -> rank != 'Admin')
 
 if (isset($_GET['view']))
 {
-    $arrView = array('takeaway', 'clearc', 'czat', 'tags', 'jail', 'innarchive', 'banmail', 'addtext');
+  $arrView = array('takeaway', 'clearc', 'czat', 'tags', 'jail', 'innarchive', 'banmail', 'addtext', 'logs');
     $intKey = array_search($_GET['view'], $arrView);
     if ($intKey !== false)
     {
@@ -67,6 +67,7 @@ if (!isset($_GET['view']))
                             "Ajail" => A_JAIL,
                             "Aaddnews" => A_ADD_NEWS,
                             "Ainnarchive" => A_INNARCHIVE,
+			    "Alogs" => "Logi graczy",
                             "Abanmail" => A_BAN_MAIL));
 }
 
