@@ -7,7 +7,7 @@
  *   @copyright            : (C) 2004,2005,2006,2007,2011 Vallheru Team based on Gamers-Fusion ver 2.5
  *   @author               : thindil <thindil@tuxfamily.org>
  *   @version              : 1.4
- *   @since                : 28.08.2011
+ *   @since                : 30.08.2011
  *
  */
 
@@ -49,6 +49,7 @@ function mainreset()
     $db -> Execute("UPDATE `farm` SET `age`=`age`+1");
     $db -> Execute("DELETE FROM `farm` WHERE `age`>26");
     $db -> Execute("UPDATE `players` SET `age`=`age`+1, `hp`=`max_hp`, `bridge`='N', `houserest`='N'");
+    $db->Execute("UPDATE `players` SET `newbie`=`newbie`-1 WHERE `newbie`>0");
     /**
      * Add bonus to mana from items and check for duration of antidote
      */

@@ -8,7 +8,7 @@
  *   @author               : thindil <thindil@tuxfamily.org>
  *   @author               : mori <ziniquel@users.sourceforge.net>
  *   @version              : 1.4
- *   @since                : 06.08.2011
+ *   @since                : 30.08.2011
  *
  */
 
@@ -198,6 +198,11 @@ $smarty -> assign(array("Stats" => $arrStats,
                         "Lumberjack" => $player -> lumberjack."<br />",
                         "Herbalist" => $player -> herbalist."<br />",
                         "Jeweller" => $player -> jeweller."<br />",
+			"Tnewbie" => "Ochrona młodego gracza",
+			"Tdays" => "dni",
+			"Tday" => "dzień",
+			"Newbie" => $player->newbie,
+			"Adisable" => "Wyłącz ochronę",
                         "Statsinfo" => STATS_INFO,
                         "Tstats" => T_STATS,
                         "Tinfo" => T_INFO,
@@ -292,6 +297,25 @@ if (isset ($_GET['action']) && $_GET['action'] == 'gender')
         error (YOU_SELECT);
       }
 }
+
+/**
+ * Disable newbie protection
+ */
+if (isset($_GET['action']) && $_GET['action'] == 'newbie')
+  {
+    if ($player->newbie == 0)
+      {
+	error("Nie masz na sobie ochrony dla nowych graczy!");
+      }
+    $smarty->assign(array("Newbieinfo" => "Naprawdę chcesz wyłączyć ochronę? Możesz wtedy zostać zaatakowany przez innych graczy.",
+			  "Ayes" => YES,
+			  "Ano" => NO));
+    if (isset($_GET['disable']))
+      {
+	$db->Execute("UPDATE `players` SET `newbie`=0 WHERE `id`=".$player->id);
+	error("Wyłączyłeś(aś) ochronę nowych graczy.");
+      }
+  }
 
 /**
 * Initialization of variable

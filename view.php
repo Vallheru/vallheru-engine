@@ -8,7 +8,7 @@
  *   @author               : thindil <thindil@tuxfamily.org>
  *   @author               : eyescream <tduda@users.sourceforge.net>
  *   @version              : 1.4
- *   @since                : 23.08.2011
+ *   @since                : 30.08.2011
  *
  */
 
@@ -318,7 +318,7 @@ if (isset ($_GET['steal']))
     {
         error(SAME_CLAN." (<a href=\"view.php?view=".$_GET['view']."\">".BACK."</a>)");
     }
-    if ($view -> age < 4)
+    if ($view->newbie > 0)
     {
         error(TOO_YOUNG." (<a href=\"view.php?view=".$_GET['view']."\">".BACK."</a>)");
     }

@@ -1,5 +1,8 @@
 2011-08-30  Bartek thindil Jasicki  <thindil@tuxfamily.org>
 
+	* FEATURE,install/db/update.sql, templates/layout1/stats.tpl, templates/stats.tpl, class/player_class.php, includes/resets.php,
+	battle.php, stats.php, view.php:
+	added ability to disable new player protection
 	* FEATURE,templates/layout1/updates.tpl, templates/updates.tpl, updates.php: 
 	added information about last changes in game and last Vallars granted
 	* FEATURE,library.php:

@@ -99,6 +99,7 @@ class Player
     var $jeweller;
     var $graphbar;
     var $vallars;
+    var $newbie;
 /**
 * Class constructor - get data from database and write it to variables
 */
@@ -186,6 +187,7 @@ class Player
         $this -> jeweller = $stats -> fields['jeweller'];
         $this -> graphbar = $stats -> fields['graphbar'];
 	$this->vallars = $stats->fields['vallars'];
+	$this->newbie = $stats->fields['newbie'];
         $stats -> Close();
     }
     /**

@@ -7,7 +7,7 @@
  *   @copyright            : (C) 2004,2005,2006,2011 Vallheru Team based on Gamers-Fusion ver 2.5
  *   @author               : thindil <thindil@tuxfamily.org>
  *   @version              : 1.4
- *   @since                : 28.08.2011
+ *   @since                : 30.08.2011
  *
  */
 
@@ -177,10 +177,10 @@ if (isset($_GET['battle']))
     global $smarty;
     global $db;
 
-    $arrmenu = array('age','inteli','clas','immunited','strength','agility','attack','miss','magic','speed','cond','race','wisdom','shoot','id','user','level','exp','hp','credits','mana','maps', 'antidote', 'battlelog');
+    $arrmenu = array('age','inteli','clas','immunited','strength','agility','attack','miss','magic','speed','cond','race','wisdom','shoot','id','user','level','exp','hp','credits','mana','maps', 'antidote', 'battlelog', 'newbie');
     $arrattacker = $player -> stats($arrmenu);
     $enemy = new Player($_GET['battle']);
-    $arrplayer = array('id','user','level','tribe','credits','location','hp','mana','exp','age','inteli','clas','immunited','strength','agility','attack','miss','magic','speed','cond','race','wisdom','shoot','maps','rest','fight', 'antidote', 'battlelog');
+    $arrplayer = array('id','user','level','tribe','credits','location','hp','mana','exp','age','inteli','clas','immunited','strength','agility','attack','miss','magic','speed','cond','race','wisdom','shoot','maps','rest','fight', 'antidote', 'battlelog', 'newbie');
     $arrdefender = $enemy -> stats($arrplayer);
     $arrMyequip = $player -> equipment();
     $arrEnequip = $enemy -> equipment();
@@ -301,11 +301,11 @@ if (isset($_GET['battle']))
     {
         error (YOUR_CLAN);
     }
-    if ($arrattacker['age'] < 3) 
+    if ($arrattacker['newbie'] > 0)
     {
         error (TOO_YOUNG);
     }
-    if ($arrdefender['age'] < 3) 
+    if ($arrdefender['newbie'] > 0)
     {
         error (TOO_YOUNG2);
     }

@@ -26,7 +26,10 @@
         <b>{$Tlogins}:</b> {$Logins}
         <b>{$Tip}:</b> {$Ip}
         <b>{$Temail}:</b> {$Email}
-        {$GG}
+	{$GG}
+	{if $Newbie > 0}
+	<b>{$Tnewbie}:</b> {$Newbie} {if $Newbie > 1}{$Tdays}{else}{$Tday}{/if} (<a href="stats.php?action=newbie">{$Adisable}</a>)<br />
+	{/if}
         <b>{$Tclan}:</b> {$Tribe}
         {$Triberank}
 </td></tr><tr>
@@ -56,4 +59,9 @@
     <select name="gender"><option value="M">{$Genderm}</option>
     <option value="F">{$Genderf}</option></select><br />
     <input type="submit" value="{$Aselect}" /></form>
+{/if}
+{if $Action == "newbie"}
+    {$Newbieinfo}<br />
+    <a href="stats.php?action=newbie&amp;disable">{$Ayes}</a><br />
+    <a href="stats.php">{$Ano}</a><br />
 {/if}
