@@ -7,7 +7,7 @@
  *   @copyright            : (C) 2004,2005,2006,2011 Vallheru Team based on Gamers-Fusion ver 2.5
  *   @author               : thindil <thindil@tuxfamily.org>
  *   @version              : 1.4
- *   @since                : 17.08.2011
+ *   @since                : 30.08.2011
  *
  */
 
@@ -221,22 +221,25 @@ if (isset($_GET['step']) && $_GET['step'] == 'addtext')
     if (isset($_GET['action']) && ($_GET['action'] == 'add' || $_GET['action'] == 'delete'))
     {
 	checkvalue($_GET['text']);
-        $objText = $db -> Execute("SELECT `id` FROM `library` WHERE `id`=".$_GET['text']);
+        $objText = $db -> Execute("SELECT `id`, `author`, `title` FROM `library` WHERE `id`=".$_GET['text']);
         if (!$objText -> fields['id'])
-        {
+	  {
             error(NO_TEXT);
-        }
-        $objText -> Close();
+	  }
+	$strDate = $db -> DBDate($newdate);
+	$arrAuthor = explode(": ", $objText->fields['author']);
         if ($_GET['action'] == 'add')
-        {
+	  {
             $db -> Execute("UPDATE `library` SET `added`='Y' WHERE `id`=".$_GET['text']);
+	    $db -> Execute("INSERT INTO `log` (`owner`, `log`, `czas`) VALUES(".$arrAuthor[1].", 'Twój tekst \"".$objText->fields['title']."\" został dodany do biblioteki.', ".$strDate.")") or die($db->ErrorMsg());
             error(ADDED);
-        }
-            else
-        {
+	  }
+	else
+	  {
+	    $db -> Execute("INSERT INTO `log` (`owner`, `log`, `czas`) VALUES(".$arrAuthor[1].", 'Twój tekst \"".$objText->fields['title']."\" został odrzucony z biblioteki.', ".$strDate.")") or die($db->ErrorMsg());
             $db -> Execute("DELETE FROM `library` WHERE `id`=".$_GET['text']);
             error(DELETED);
-        }
+	  }
     }
 }
 
