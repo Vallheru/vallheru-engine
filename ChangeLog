@@ -1,5 +1,7 @@
 2011-08-30  Bartek thindil Jasicki  <thindil@tuxfamily.org>
 
+	* FEATURE,includes/resets.php: 
+	don't remove poison from arrows
 	* FEATURE,templates/layout1/equip.tpl, templates/equip.tpl, equip.php: 
 	added option to drink few potions simultaneously
 	* FEATURE,templates/layout1/staff.tpl, templates/staff.tpl, includes/admin/logs.php, admin.php: 

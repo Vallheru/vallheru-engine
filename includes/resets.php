@@ -111,15 +111,14 @@ function mainreset()
     $intCtime = (time() - 200);
     $db -> Execute("UPDATE players SET freeze=freeze-1, lpv=".$intCtime." WHERE freeze>0");
     $db -> Execute("UPDATE outposts SET turns=turns+2, fatigue=100, attacks=0");
-    $objItemname = $db -> Execute("SELECT name, id FROM equipment WHERE poison>0");
+    $objItemname = $db -> Execute("SELECT `name`, `id` FROM `equipment` WHERE `poison`>0 AND `type`!='R'");
     while (!$objItemname -> EOF)
     {
         $strName = str_replace("Zatruty ", "", $objItemname -> fields['name']);
-        $db -> Execute("UPDATE equipment SET name='".$strName."' WHERE id=".$objItemname -> fields['id']);
+        $db -> Execute("UPDATE `equipment` SET `name`='".$strName."', `poison`=0, `ptype`='' WHERE `id`=".$objItemname -> fields['id']);
         $objItemname -> MoveNext();
     }
     $objItemname -> Close();
-    $db -> Execute("UPDATE equipment SET poison=0, ptype='' WHERE poison>0");
     /**
      * Outposts taxes
      */
@@ -713,15 +712,14 @@ function smallreset()
     $db -> Execute("UPDATE outposts SET turns=turns+2, fatigue=100, attacks=0");
     $db -> Execute("UPDATE tribes SET atak='N'");
     $db -> Execute("UPDATE houses SET points=points+2");
-    $objItemname = $db -> Execute("SELECT name, id FROM equipment WHERE poison>0");
+    $objItemname = $db -> Execute("SELECT `name`, `id` FROM `equipment` WHERE `poison`>0 AND `type`!='R'");
     while (!$objItemname -> EOF)
     {
         $strName = str_replace("Zatruty ", "", $objItemname -> fields['name']);
-        $db -> Execute("UPDATE equipment SET name='".$strName."' WHERE id=".$objItemname -> fields['id']);
+        $db -> Execute("UPDATE `equipment` SET `name`='".$strName."', `poison`=0, `ptype`='' WHERE `id`=".$objItemname -> fields['id']);
         $objItemname -> MoveNext();
     }
     $objItemname -> Close();
-    $db -> Execute("UPDATE equipment SET poison=0, ptype='' WHERE poison>0");
     /**
      * Jail - count duration and free prisoners
      */
