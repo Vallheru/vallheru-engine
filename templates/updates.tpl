@@ -3,7 +3,31 @@
     <b>{$Title1}</b> {$Writeby} <b>{$Starter}</b>{$Date}... {$Modtext}<br /><br />
     "{$Update}".<br />
     <a href="updates.php?step=comments&amp;text={$Updid}">{$Acomments}</a>: {$Comments}<br /><br />
-    (<a href="updates.php?view=all">{$Alast10}</a>)
+    (<a href="updates.php?view=all">{$Alast10}</a>)<br /><br />
+    <table width="100%">
+        <tr>
+            <th width="50%">{$Tchanges}</th>
+	    <th width="50%">{$Tvallars}</th>
+	</tr>
+	{section name=utable loop=$Locations}
+	    <tr>
+	        {if $Cdate[utable] != ""}
+	            <td>{$Tdate}: <b>{$Cdate[utable]}</b><br /> {$Tloc}: <b>{$Locations[utable]}</b><br /> {$Changes[utable]}<br /><br /></td>
+		{else}
+		    <td></td>
+		{/if}
+		{if $Ownerid[utable] != ""}
+		    <td>{$Tdate}: <b>{$Vdate[utable]}</b><br /> {$Tgrant}: <b><a href="view.php?view={$Ownerid[utable]}">{$Owner[utable]}</a></b><br />{$Reason[utable]}<br /><br /></td>
+		{else}
+		    <td></td>
+		{/if}
+	    </tr>
+	{/section}
+	<tr>
+	    <td><a href="account.php?view=changes">{$Achanges}</a></td>
+	    <td><a href="account.php?view=vallars">{$Avallars}</a></td>
+	</tr>
+    </table>
 {/if}
 
 {if $View == "all" && $Step == ""}

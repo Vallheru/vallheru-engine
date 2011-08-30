@@ -8,7 +8,7 @@
  *   @author               : thindil <thindil@tuxfamily.org>
  *   @author               : mori <ziniquel@users.sourceforge.net>
  *   @version              : 1.4
- *   @since                : 17.08.2011
+ *   @since                : 30.08.2011
  *
  */
 
@@ -51,35 +51,79 @@ if ($player -> logins < 5)
 }
 
 if (!isset ($_GET['view'])) 
-{
+  {
     $upd = $db -> SelectLimit("SELECT * FROM `updates` WHERE `lang`='".$player -> lang."' ORDER BY `id` DESC", 1);
     if ($player -> rank == 'Admin') 
-    {
+      {
         $modtext = "(<a href=\"addupdate.php?modify=".$upd -> fields['id']."\">".A_CHANGE."</a>)";
-    } 
-        else 
-    {
+      } 
+    else 
+      {
         $modtext = '';
-    }
+      }
     if (isset($upd -> fields['id']))
-    {
+      {
         $objQuery = $db -> Execute("SELECT count(`id`) FROM `upd_comments` WHERE `updateid`=".$upd -> fields['id']);
         $intComments = $objQuery -> fields['count(`id`)'];
         $objQuery -> Close();
-    }
-        else
-    {
+      }
+    else
+      {
         $intComments = 0;
-    }
+      }
+    //Get last 5 changes in game
+    $objChanges = $db->SelectLimit("SELECT `location`, `text`, `date` FROM `changelog` WHERE `lang`='".$player->lang."' ORDER BY `id` DESC", 5);
+    $arrLocation = array();
+    $arrText = array();
+    $arrDate = array();
+    while (!$objChanges->EOF)
+      {
+	$arrLocation[] = $objChanges->fields['location'];
+	$arrText[] = $objChanges->fields['text'];
+	$arrDate[] = $objChanges->fields['date'];
+	$objChanges->MoveNext();
+      }
+    $objChanges->Close();
+    //Get last 5 grants of Vallars
+    $objVallars = $db->SelectLimit("SELECT * FROM `vallars` ORDER BY `vdate` DESC", 5);
+    $arrVdate = array();
+    $arrReason = array();
+    $arrOwner = array();
+    $arrOwnerid = array();
+    while (!$objVallars->EOF)
+      {
+	$arrVdate[] = $objVallars->fields['vdate'];
+	$arrOwnerid[] = $objVallars->fields['owner'];
+	$objOwner = $db->Execute("SELECT `user` FROM `players` WHERE `id`=".$objVallars->fields['owner']);
+	$arrOwner[] = $objOwner->fields['user'];
+	$arrReason[] = "Przyznano ".$objVallars->fields['amount']." Vallar(y) za ".$objVallars->fields['reason'];
+	$objOwner->Close();
+	$objVallars->MoveNext();
+      }
+    $objVallars->Close();
     $smarty -> assign(array("Title1" => $upd -> fields['title'], 
-        "Starter" => $upd -> fields['starter'], 
-        "Update" => $upd -> fields['updates'], 
-        "Modtext" => $modtext, 
-        "Date" => T_DAY.$upd -> fields['time'],
-        "Alast10" => A_LAST10,
-        "Comments" => $intComments,
-        "Updid" => $upd -> fields['id']));    
-} 
+			    "Starter" => $upd -> fields['starter'], 
+			    "Update" => $upd -> fields['updates'], 
+			    "Modtext" => $modtext, 
+			    "Date" => T_DAY.$upd -> fields['time'],
+			    "Alast10" => A_LAST10,
+			    "Comments" => $intComments,
+			    "Tchanges" => "Ostanie zmiany w grze",
+			    "Tvallars" => "Ostatnio nagrodzeni Vallarami",
+			    "Locations" => $arrLocation,
+			    "Changes" => $arrText,
+			    "Cdate" => $arrDate,
+			    "Tloc" => "Lokacja",
+			    "Tdate" => "Data",
+			    "Tgrant" => "Nagrodzony(a)",
+			    "Vdate" => $arrVdate,
+			    "Owner" => $arrOwner,
+			    "Reason" => $arrReason,
+			    "Ownerid" => $arrOwnerid,
+			    "Achanges" => "Zobacz więcej zmian",
+			    "Avallars" => "Zobacz więcej nagrodzonych",
+			    "Updid" => $upd -> fields['id']));    
+ } 
 
 if (isset($_GET['view']))
 {
