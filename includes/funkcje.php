@@ -43,7 +43,6 @@ function autofill($intPlayerid, $intArrowId, $intPlayer2)
 {
   global $db;
 
-
   $objArrows = $db->Execute("SELECT * FROM `equipment` WHERE `id`=".$intArrowId);
   if ($objArrows->fields['wt'] == 20)
     {
@@ -213,7 +212,7 @@ function lostitem($lostdur,$itemdur,$type,$player,$itemid,$player2,$lost)
         $db -> Execute("DELETE FROM `equipment` WHERE `id`=".$itemid);
         if ($type == YOU_QUIVER)
 	  {
-	    autofill($player2, $itemid, $player);
+	    autofill($player, $itemid, $player2);
 	  }
         if (($player == $player2) && ($type != YOU_QUIVER))
         {
@@ -229,7 +228,7 @@ function lostitem($lostdur,$itemdur,$type,$player,$itemid,$player2,$lost)
       $db -> Execute("UPDATE `equipment` SET `wt`=".$itemdur." WHERE `id`=".$itemid);
       if ($type == YOU_QUIVER)
 	{
-	  autofill($player2, $itemid, $player);
+	  autofill($player, $itemid, $player2);
 	}
     }
 }
