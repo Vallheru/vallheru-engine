@@ -1,5 +1,7 @@
 2011-08-31  Bartek thindil Jasicki  <thindil@tuxfamily.org>
 
+	* UPDATE,bows.php: 
+	show price for one arrow too
 	* BUG,includes/funkcje.php (autofill): 
 	fixed autofill quiver
 	* FEATURE,imarket.php: 
