@@ -1,5 +1,7 @@
 2011-08-31  Bartek thindil Jasicki  <thindil@tuxfamily.org>
 
+	* FEATURE,includes/funkcje.php: 
+	added autofill quiver
 	* BUG,includes/resets.php:
 	fixed bug with count max mana
 

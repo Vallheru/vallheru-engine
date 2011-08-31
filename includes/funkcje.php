@@ -4,10 +4,10 @@
  *   Functions to fight in PvP and fast fight PvM
  *
  *   @name                 : funkcje.php                            
- *   @copyright            : (C) 2004,2005,2006,2007 Vallheru Team based on Gamers-Fusion ver 2.5
- *   @author               : thindil <thindil@users.sourceforge.net>
+ *   @copyright            : (C) 2004,2005,2006,2007,2011 Vallheru Team based on Gamers-Fusion ver 2.5
+ *   @author               : thindil <thindil@tuxfamily.org>
  *   @version              : 1.4
- *   @since                : 25.02.2007
+ *   @since                : 31.08.2011
  *
  */
 
@@ -27,7 +27,7 @@
 //   along with this program; if not, write to the Free Software
 //   Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 //
-// $Id: funkcje.php 905 2007-02-28 21:33:05Z thindil $
+// $Id$
 
 require_once ('includes/checkexp.php');
 
@@ -35,6 +35,78 @@ require_once ('includes/checkexp.php');
 * Get the localization for game
 */
 require_once("languages/".$player -> lang."/funkcje.php");
+
+/**
+ * Function auto reload quivers
+ */
+function autofill($intPlayerid, $intArrowId, $intPlayer2)
+{
+  global $db;
+
+
+  $objArrows = $db->Execute("SELECT * FROM `equipment` WHERE `id`=".$intArrowId);
+  if ($objArrows->fields['wt'] == 20)
+    {
+      return;
+    }
+  if ($objArrows->fields['id'])
+    {
+      $objNewArrows = $db->Execute("SELECT `wt`, `id` FROM `equipment` WHERE name='".$objArrows -> fields['name']."' AND `power`=".$objArrows -> fields['power']." AND `status`='U' AND `owner`=".$intPlayerid." AND `ptype`='".$objArrows->fields['ptype']."' AND `poison`=".$objArrows->fields['poison']);
+      if (!$objNewArrows->fields['id'])
+	{
+	  if ($intPlayerid == $intPlayer2)
+	    {
+	      print "<br />Nie masz strzał aby uzupełnić kołczan!<br />";
+	    }
+	  return;
+	}
+      $intAmount = 20 - $objArrows -> fields['wt'];
+      if ($intAmount > $objNewArrows->fields['wt'])
+	{
+	  $intAmount = $objNewArrows->fields['wt'];
+	}
+      $db->Execute("UPDATE `equipment` SET `wt`=`wt`+".$intAmount." WHERE `id`=".$objArrows -> fields['id']);
+      $objArrows->Close();
+      if ($intPlayerid == $intPlayer2)
+	{
+	  print "<br />Uzupełniłeś(aś) kołczan ".$intAmount." strzałami.<br />";
+	}
+    }
+  else
+    {
+      $objNewArrows = $db->SelectLimit("SELECT * FROM `equipment` WHERE `owner`=".$player->id." AND `type`='R' AND status='U'", 1);
+      if (!$objNewArrows->fields['id'])
+	{
+	  if ($intPlayerid == $intPlayer2)
+	    {
+	      print "<br />Twój kołczan jest pusty a Ty nie masz strzał aby go uzupełnić!<br />";
+	    }
+	  return;
+	}
+      if ($objNewArrows->fields['wt'] > 20)
+	{
+	  $intAmount = 20;
+	}
+      else
+	{
+	  $intAmount = $objNewArrows->fields['wt'];
+	}
+      $db -> Execute("INSERT INTO `equipment` (`name`, `wt`, `power`, `status`, `type`, `owner`, `ptype`, `poison`) VALUES('".$objNewArrows->fields['name']."',".$intAmount.",".$objNewArrows->fields['power'].",'E','R',".$intPlayerid.", '".$objNewArrows->fields['ptype']."', ".$objNewArrows->fields['poison'].")");
+      if ($intPlayerid == $intPlayer2)
+	{
+	  print "<br />Włożyłeś(aś) ".$objNewArrows->fields['name']." do kołczanu.<br />";
+	}
+    }
+  if ($objNewArrows->fields['wt'] == $intAmount)
+    {
+      $db -> Execute("DELETE FROM `equipment` WHERE `id`=".$objNewArrows->fields['id']);
+    }
+  else
+    {
+      $db -> Execute("UPDATE `equipment` SET `wt`=`wt`-".$intAmount." WHERE `id`=".$objNewArrows->fields['id']);
+    }
+  $objNewArrows->Close();
+}
 
 /**
 * Function count lost stats in battle
@@ -138,33 +210,27 @@ function lostitem($lostdur,$itemdur,$type,$player,$itemid,$player2,$lost)
     $itemdur = ($itemdur - $lostdur);
     if ($itemdur < 1) 
     {
-        if ($player == $player2) 
+        $db -> Execute("DELETE FROM `equipment` WHERE `id`=".$itemid);
+        if ($type == YOU_QUIVER)
+	  {
+	    autofill($player2, $itemid, $player);
+	  }
+        if (($player == $player2) && ($type != YOU_QUIVER))
         {
-            if ($type == YOU_QUIVER) 
-            {
-                print "<br />".$type." ".IS_EMPTY."<br />";
-            } 
-                else 
-            {
-                print "<br />".$type." ".$lost." ".IS_BROKEN."!<br />";
-            }
+	  print "<br />".$type." ".$lost." ".IS_BROKEN."!<br />";
         }
-        $db -> Execute("DELETE FROM equipment WHERE id=".$itemid);
     } 
         else 
     {
-        if ($player == $player2) 
+      if (($player == $player2) && ($type != YOU_QUIVER))
         {
-            if ($type == YOU_QUIVER) 
-            {
-                print "<br />".LOST." ".$lostdur." ".ARROWS."<br />";
-            } 
-                else 
-            {
-                print "<br />".$type." ".LOST1." ".$lostdur." ".DURABILITY.".<br />";
-            }
+	  print "<br />".$type." ".LOST1." ".$lostdur." ".DURABILITY.".<br />";
         }
-        $db -> Execute("UPDATE equipment SET wt=".$itemdur." WHERE id=".$itemid);
+      $db -> Execute("UPDATE `equipment` SET `wt`=".$itemdur." WHERE `id`=".$itemid);
+      if ($type == YOU_QUIVER)
+	{
+	  autofill($player2, $itemid, $player);
+	}
     }
 }
 
