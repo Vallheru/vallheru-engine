@@ -1,5 +1,7 @@
 2011-08-31  Bartek thindil Jasicki  <thindil@tuxfamily.org>
 
+	* FEATURE,imarket.php: 
+	added purchased item stats to log
 	* FEATURE,includes/funkcje.php: 
 	added autofill quiver
 	* BUG,includes/resets.php:

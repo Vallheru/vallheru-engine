@@ -8,7 +8,7 @@
  *   @author               : thindil <thindil@tuxfamily.org>
  *   @author               : eyescream <tduda@users.sourceforge.net>
  *   @version              : 1.4
- *   @since                : 29.08.2011
+ *   @since                : 31.08.2011
  *
  */
 
@@ -412,7 +412,7 @@ if (isset($_GET['buy']))
         $buy -> fields['zr'] = str_replace("-","",$buy -> fields['zr']);
         $agility = "+".$buy -> fields['zr'];
     } 
-        elseif ($buy -> fields['zr'] > 0) 
+    elseif ($buy -> fields['zr'] > 0) 
     {
         $agility = "-".$buy -> fields['zr'];
     }
@@ -529,7 +529,9 @@ if (isset($_GET['buy']))
         $db -> Execute("UPDATE players SET bank=bank+".$price." WHERE id=".$buy -> fields['owner']);
         $db -> Execute("UPDATE players SET credits=credits-".$price." WHERE id=".$player -> id);
         $strDate = $db -> DBDate($newdate);
-        $db -> Execute("INSERT INTO `log` (`owner`, `log`, `czas`) VALUES(".$buy -> fields['owner'].",'<b><a href=view.php?view=".$player -> id.">".$player -> user.L_ACCEPT.$player -> id.L_ACCEPT2.$_POST['amount'].L_AMOUNT.$buy -> fields['name'].YOU_GET.$price.TO_BANK."', ".$strDate.")");
+	$agility .= ' zr';
+	$speed = "(".$speed." szyb)";
+        $db -> Execute("INSERT INTO `log` (`owner`, `log`, `czas`) VALUES(".$buy -> fields['owner'].",'<b><a href=view.php?view=".$player -> id.">".$player -> user.L_ACCEPT.$player -> id.L_ACCEPT2.$_POST['amount'].L_AMOUNT.$buy -> fields['name']." (+".$buy->fields['power'].") ".$speed." (".$agility.")".YOU_GET.$price.TO_BANK."', ".$strDate.")");
         $smarty -> assign("Message", YOU_BUY.$_POST['amount'].I_AMOUNT.$buy -> fields['name'].FOR_A.$price.GOLD_COINS);
     }
 }
