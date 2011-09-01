@@ -61,6 +61,11 @@ function bbcodetohtml($text, $isChat = FALSE)
     $text = strip_tags($text);
 
     /**
+     * Make links clickable
+     */
+    $text = preg_replace('#(www\.|https?:\/\/){1}[a-zA-Z0-9]{2,}\.[a-zA-Z0-9]{2,}(\S*)#i', "<a href=\"$0\">$0</a>", $text);
+
+    /**
      * Replace bbcode tags
      */
     $arrBBon = array('[b]', '[i]', '[u]', '[center]', '[quote]');
@@ -77,9 +82,14 @@ function bbcodetohtml($text, $isChat = FALSE)
 	  }
 	$text = str_replace($arrBBon[$i], $arrHtmlon[$i], $text);
 	$text = str_replace($arrBBoff[$i], $arrHtmloff[$i], $text);
-	if (strrpos($text, $arrHtmloff[$i]) < strrpos($text, $arrHtmlon[$i]))
+	$intStart = substr_count($text, $arrHtmlon[$i]);
+	$intEnd = substr_count($text, $arrHtmloff[$i]);
+	if ($intStart > $intEnd)
 	  {
-	    $text = substr_replace($text, ' ', strrpos($text, $arrHtmlon[$i]), strrpos($text, $arrHtmlon[$i]) + strlen($arrHtmlon[$i]));
+	    for ($j = 0; $j < ($intStart - $intEnd); $j++)
+	      {
+		$text .= $arrHtmloff[$i];
+	      }
 	  }
       }
   
@@ -87,29 +97,6 @@ function bbcodetohtml($text, $isChat = FALSE)
     * Change \n on <br />
     */
     $text = nl2br($text);
-
-    /**
-     * Made links clickable (not in quotes)
-     */
-    if (strpos($text, '<br />Cytat:<br /><i>') === FALSE)
-      {
-	$arrText = explode(" ", $text);
-	foreach ($arrText as &$strText)
-	  {
-	    $intStart = strpos($strText, "http://");
-	    if ($intStart !== FALSE)
-	      {
-		$intEnd = strpos($strText, "<", $intStart);
-		if ($intEnd === FALSE)
-		  {
-		    $intEnd = strlen($strText);
-		  }
-		$strLink = substr($strText, $intStart, $intEnd);
-		$strText = substr_replace($strText, '<a href="'.$strLink.'" target="_blank">'.$strLink.'</a>', $intStart, $intEnd);
-	      }
-	  }
-	$text = implode(" ", $arrText);
-      }
 
     /**
     * Add smiles
