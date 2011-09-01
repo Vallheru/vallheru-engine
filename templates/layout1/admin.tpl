@@ -167,7 +167,15 @@
             </tr>
         {/section}
     </table><br />
-    {$Aprevious} {$Anext}<br /><br />
+    {if $Pages > 1}
+    	{for $page = 1 to $Pages}
+	    {if $page == $Page}
+	        {$page}
+	    {else}
+                <a href="admin.php?view=logs&amp;page={$page}">{$page}</a>
+	    {/if}
+    	{/for}
+    {/if}<br /><br />
     <form method="post" action="admin.php?view=logs&amp;step=clear">
         <input type="submit" value="{$Lclear}" />
     </form>

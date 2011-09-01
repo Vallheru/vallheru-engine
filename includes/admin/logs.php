@@ -7,7 +7,7 @@
  *   @copyright            : (C) 2011 Vallheru Team based on Gamers-Fusion ver 2.5
  *   @author               : thindil <thindil@tuxfamily.org>
  *   @version              : 1.4
- *   @since                : 30.08.2011
+ *   @since                : 01.09.2011
  *
  */
 
@@ -28,55 +28,40 @@
 //   Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 //
 
-if (!isset($_GET['limit']))
-  {
-    $_GET['limit'] = 0;
-  }
 $objAmount = $db -> Execute("SELECT count(*) FROM `logs`");
-$intAmount = $objAmount -> fields['count(*)'];
+$intPages = ceil($objAmount -> fields['count(*)'] / 50);
 $objAmount -> Close();
-if (!$intAmount || $_GET['limit'] > $intAmount)
+if (isset($_GET['page']))
   {
-    error("Brak logów");
+    $_GET['page'] = intval($_GET['page']);
+       if ($_GET['page'] == 0)
+	 {
+	   error(ERROR);
+	 }
+       $page = $_GET['page'];
   }
-$objLogs = $db -> SelectLimit("SELECT `owner`, `log` FROM `logs`", 50, $_GET['limit']);
+else
+  {
+    $page = 1;
+  }
+$objLogs = $db -> SelectLimit("SELECT `owner`, `log` FROM `logs`", 50, 50 * ($page - 1));
 $arrOwner = array();
 $arrLog = array();
-$i = 0;
 while (!$objLogs -> EOF)
   {
-    $arrOwner[$i] = $objLogs -> fields['owner'];
-    $arrLog[$i] = $objLogs -> fields['log'];
-    $i++;
+    $arrOwner[] = $objLogs -> fields['owner'];
+    $arrLog[] = $objLogs -> fields['log'];
     $objLogs -> MoveNext();
   }
 $objLogs -> Close();
-if ($_GET['limit'] >= 50) 
-  {
-    $intLimit = $_GET['limit'] - 50;
-    $strPrevious = "<a href=\"admin.php?view=logs&amp;limit=".$intLimit."\">Poprzednie wpisy</a>";
-    }
- else
-   {
-     $strPrevious = '';
-   }
-$intLimit = $_GET['limit'] + 50;
-if ($intLimit < $intAmount && $intAmount > 50)
-  {
-    $strNext = "<a href=\"admin.php?view=logs&amp;limit=".$intLimit."\">Następne wpisy</a>";
-  }
- else
-   {
-     $strNext = '';
-   }
 $smarty -> assign(array("Logsinfo" => "Tutaj możesz przeglądać logi z niektórych akcji graczy.",
 			"Lowner" => "Właściciel (ID)",
 			"Ltext" => "Treść",
 			"Lclear" => "Wyczyść",
 			"Aowner" => $arrOwner,
 			"Alog" => $arrLog,
-			"Aprevious" => $strPrevious,
-			"Anext" => $strNext));
+			"Page" => $page,
+			"Pages" => $intPages));
 /**
  * Clear logs
  */
