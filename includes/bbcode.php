@@ -63,7 +63,7 @@ function bbcodetohtml($text, $isChat = FALSE)
     /**
      * Make links clickable
      */
-    $text = preg_replace('#(www\.|https?:\/\/){1}[a-zA-Z0-9]{2,}\.[a-zA-Z0-9]{2,}(\S*)#i', "<a href=\"$0\">$0</a>", $text);
+    $text = preg_replace('#(www\.|https?:\/\/){1}[a-zA-Z0-9]{2,}\.[a-zA-Z0-9]{2,}(\S*)#i', "<a href=\"$0\" target=\"_blank\">$0</a>", $text);
 
     /**
      * Replace bbcode tags
