@@ -178,7 +178,7 @@
     <form method="post" action="account.php?view=profile&amp;step=profile">
     <table>
     <tr><td>{$Profileinfo}</td></tr>
-    <tr><td align="center">{$Newprofile}:<br /> <textarea name="profile" id="profile" rows="15" cols="40">{$Profile}</textarea></td></tr>
+    <tr><td align="center">{$Newprofile}:<br /> <textarea name="profile" id="profile" rows="15" cols="40">{$Profile2}</textarea></td></tr>
     <tr><td colspan="2" align="center"><input type="submit" value="{$Change}" /></td></tr>
     </table>
     </form>

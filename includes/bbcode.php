@@ -7,7 +7,7 @@
  *   @copyright            : (C) 2004,2005,2006,2011 Vallheru Team based on Gamers-Fusion ver 2.5
  *   @author               : thindil <thindil@tuxfamily.org>
  *   @version              : 1.4
- *   @since                : 24.08.2011
+ *   @since                : 01.09.2011
  *
  */
 
@@ -66,7 +66,7 @@ function bbcodetohtml($text, $isChat = FALSE)
     $arrBBon = array('[b]', '[i]', '[u]', '[center]', '[quote]');
     $arrBBoff = array('[/b]', '[/i]', '[/u]', '[/center]', '[/quote]');
     $arrHtmlon = array("<b>", "<i>", "<u>", "<center>", "<br />Cytat:<br /><i>");
-    $arrHtmloff = array("</b>", "</i>", "</u>", "</center>", "&nbsp</i>");
+    $arrHtmloff = array("</b>", "</i>", "</u>", "</center>", "</i>");
     for ($i = 0; $i < 5; $i++)
       {
 	if (($isChat) && ($i > 2))
@@ -87,6 +87,29 @@ function bbcodetohtml($text, $isChat = FALSE)
     * Change \n on <br />
     */
     $text = nl2br($text);
+
+    /**
+     * Made links clickable (not in quotes)
+     */
+    if (strpos($text, '<br />Cytat:<br /><i>') === FALSE)
+      {
+	$arrText = explode(" ", $text);
+	foreach ($arrText as &$strText)
+	  {
+	    $intStart = strpos($strText, "http://");
+	    if ($intStart !== FALSE)
+	      {
+		$intEnd = strpos($strText, "<", $intStart);
+		if ($intEnd === FALSE)
+		  {
+		    $intEnd = strlen($strText);
+		  }
+		$strLink = substr($strText, $intStart, $intEnd);
+		$strText = substr_replace($strText, '<a href="'.$strLink.'" target="_blank">'.$strLink.'</a>', $intStart, $intEnd);
+	      }
+	  }
+	$text = implode(" ", $arrText);
+      }
 
     /**
     * Add smiles
@@ -124,6 +147,11 @@ function htmltobbcode($text)
     */
     $text = str_replace("<u>","[u]",$text);
     $text = str_replace("</u>","[/u]",$text);
+    /**
+     * Replace links
+     */
+    $text = preg_replace('/<a href=.>/', '', $text);
+    $text = str_replace("</a>", "", $text);
     /**
     * Replace smiles
     */

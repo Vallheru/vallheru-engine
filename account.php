@@ -7,7 +7,7 @@
  *   @copyright            : (C) 2004,2005,2006,2007,2011 Vallheru Team based on Gamers-Fusion ver 2.5
  *   @author               : thindil <thindil@tuxfamily.org>
  *   @version              : 1.4
- *   @since                : 23.08.2011
+ *   @since                : 01.09.2011
  *
  */
 
@@ -607,7 +607,7 @@ if (isset($_GET['view']) && $_GET['view'] == "profile")
     $profile = htmltobbcode($player -> profile);
     $smarty -> assign(array("Profileinfo" => PROFILE_INFO,
                             "Newprofile" => NEW_PROFILE,
-                            "Profile" => $profile,
+                            "Profile2" => $profile,
                             "Change" => CHANGE));
     if (isset($_GET['step']) && $_GET['step'] == "profile") 
     {
@@ -615,7 +615,6 @@ if (isset($_GET['view']) && $_GET['view'] == "profile")
         {
             error (EMPTY_FIELDS);
         }
-        require_once('includes/bbcode.php');
         $_POST['profile'] = bbcodetohtml($_POST['profile']);
         $strProfile = $db -> qstr($_POST['profile'], get_magic_quotes_gpc());
         $db -> Execute("UPDATE players SET profile = ".$strProfile." WHERE id = '".$player -> id."'");
