@@ -1,5 +1,7 @@
 2011-09-02  Bartek thindil Jasicki  <thindil@tuxfamily.org>
 
+	* BUG,chatmsgs.php: 
+	fixed bug with very long links
 	* includes/bbcode.php (htmltobbcode): 
 	added closing tag for colors
 	* templates/layout1/tforums.tpl, templates/tforums.tpl, tforums.php: 
