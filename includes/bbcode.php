@@ -203,6 +203,12 @@ function htmltobbcode($text)
 	  }
 	$strColor = substr($text, $intScolor, $intEnd - $intScolor);
 	$text = substr_replace($text, '[color '.$strColor.']', $intStart, $intEnd - $intStart + 3);
+	//Remove </span>
+	$intStart = strpos($text, "</span>", $intStart);
+	if ($intStart !== FALSE)
+	  {
+	    $text = substr_replace($text, "[/color]", $intStart, 7);
+	  }
 	$intStart = 0;
       }
     /**
