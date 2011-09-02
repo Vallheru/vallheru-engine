@@ -1,5 +1,7 @@
 2011-09-02  Bartek thindil Jasicki  <thindil@tuxfamily.org>
 
+	* FEATURE,includes/bbcode.php: 
+	added color tag to BBCode
 	* BUG,templates/armor.tpl:
 	fixed typo
 	* UPDATE: merge with branch lp:~gwidonw/vallheru/design

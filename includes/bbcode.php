@@ -7,7 +7,7 @@
  *   @copyright            : (C) 2004,2005,2006,2011 Vallheru Team based on Gamers-Fusion ver 2.5
  *   @author               : thindil <thindil@tuxfamily.org>
  *   @version              : 1.4
- *   @since                : 01.09.2011
+ *   @since                : 02.09.2011
  *
  */
 
@@ -92,6 +92,46 @@ function bbcodetohtml($text, $isChat = FALSE)
 	      }
 	  }
       }
+
+    /**
+     * Replace colors
+     */
+    if (!$isChat)
+      {
+	$intStart = 0;
+	while (TRUE)
+	  {
+	    $intStart = strpos($text, "[color", $intStart);
+	    if ($intStart === FALSE)
+	      {
+		break;
+	      }
+	    $intScolor = strpos($text, " ", $intStart) + 1;
+	    if ($intScolor === FALSE)
+	      {
+		$intStart += 3;
+		continue;
+	      }
+	    $intEnd = strpos($text, "]", $intScolor);
+	    if ($intEnd === FALSE)
+	      {
+		break;
+	      }
+	    $strColor = substr($text, $intScolor, $intEnd - $intScolor);
+	    $text = substr_replace($text, '<span style="color: '.$strColor.';">', $intStart, $intEnd - $intStart + 1);
+	    $intStart = 0;
+	  }
+	$text = str_replace("[/color]", "</span>", $text);
+	$intStart = substr_count($text, '<span');
+	$intEnd = substr_count($text, "</span>");
+	if ($intStart > $intEnd)
+	  {
+	    for ($j = 0; $j < ($intStart - $intEnd); $j++)
+	      {
+	    $text .= "</span>";
+	      }
+	  }
+      }
   
     /**
     * Change \n on <br />
@@ -139,6 +179,32 @@ function htmltobbcode($text)
      */
     $text = preg_replace('/<a href=.>/', '', $text);
     $text = str_replace("</a>", "", $text);
+    /**
+     * Colors
+     */
+    $intStart = 0;
+    while (TRUE)
+      {
+	$intStart = strpos($text, '<span style="color: ', $intStart);
+	if ($intStart === FALSE)
+	  {
+	    break;
+	  }
+	$intScolor = strpos($text, " ", $intStart + 8) + 1;
+	if ($intScolor === FALSE)
+	  {
+	    $intStart += 3;
+	    continue;
+	  }
+	$intEnd = strpos($text, ";", $intScolor);
+	if ($intEnd === FALSE)
+	  {
+	    break;
+	  }
+	$strColor = substr($text, $intScolor, $intEnd - $intScolor);
+	$text = substr_replace($text, '[color '.$strColor.']', $intStart, $intEnd - $intStart + 3);
+	$intStart = 0;
+      }
     /**
     * Replace smiles
     */
