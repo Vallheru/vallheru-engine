@@ -7,7 +7,7 @@
  *   @copyright            : (C) 2004,2005,2006,2011 Vallheru Team based on Gamers-Fusion ver 2.5
  *   @author               : thindil <thindil@tuxfamily.org>
  *   @version              : 1.4
- *   @since                : 28.08.2011
+ *   @since                : 02.09.2011
  *
  */
 
@@ -113,8 +113,22 @@ if (isset ($_GET['view']) && $_GET['view'] == 'topics')
         $i = $i + 1;
     }
     $topic -> Close();
+
+    //Count amount of pages
+    $objAmount = $db->Execute("SELECT count(`id`) FROM `tribe_topics` WHERE `tribe`=".$player->tribe." AND `sticky`='N'");
+    $intPages = ceil($objAmount->fields['count(`id`)'] / 25);
+    $objAmount->Close();
+    if (isset($_GET['page']))
+      {
+	checkvalue($_GET['page']);
+	$intPage = $_GET['page'];
+      }
+    else
+      {
+	$intPage = $intPages;
+      }
     
-    $topic = $db -> Execute("SELECT * FROM tribe_topics WHERE tribe=".$player -> tribe." AND sticky='N' ORDER BY id ASC");
+    $topic = $db->SelectLimit("SELECT * FROM `tribe_topics` WHERE `tribe`=".$player->tribe." AND `sticky`='N' ORDER BY `id` ASC", 25, 25 * ($intPage - 1));
     while (!$topic -> EOF) 
     {
         $arrid[$i] = $topic -> fields['id'];
@@ -148,17 +162,20 @@ if (isset ($_GET['view']) && $_GET['view'] == 'topics')
     }
     $topic -> Close();
     $smarty -> assign(array("Topicid" => $arrid, 
-        "Topic" => $arrtopic, 
-        "Replies" => $arrrep, 
-        "Starter" => $arrstarter,
-        "Ttopic" => T_TOPIC,
-        "Tauthor" => T_AUTHOR,
-        "Treplies" => T_REPLIES,
-        "Addtopic" => ADD_TOPIC,
-        "Ttext" => T_TEXT,
-        "Asearch" => A_SEARCH,
-        "Tword" => T_WORD,
-        "Newtopic" => $arrNewtopic));
+			    "Topic" => $arrtopic, 
+			    "Replies" => $arrrep, 
+			    "Starter" => $arrstarter,
+			    "Fpage" => "Idź do strony:",
+			    "Tpage" => $intPage,
+			    "Tpages" => $intPages,
+			    "Ttopic" => T_TOPIC,
+			    "Tauthor" => T_AUTHOR,
+			    "Treplies" => T_REPLIES,
+			    "Addtopic" => ADD_TOPIC,
+			    "Ttext" => T_TEXT,
+			    "Asearch" => A_SEARCH,
+			    "Tword" => T_WORD,
+			    "Newtopic" => $arrNewtopic));
 }
 
 /**
@@ -166,7 +183,7 @@ if (isset ($_GET['view']) && $_GET['view'] == 'topics')
 */
 if (isset($_GET['topic'])) 
 {
-    checkvalue($_GET['topis']);
+    checkvalue($_GET['topic']);
     $klan = $db -> Execute("SELECT id, owner FROM tribes WHERE id=".$player -> tribe);
     $topicinfo = $db -> Execute("SELECT * FROM tribe_topics WHERE id=".$_GET['topic']." AND tribe=".$player -> tribe);
     $perm = $db -> Execute("SELECT forum FROM tribe_perm WHERE tribe=".$klan -> fields['id']." AND player=".$player -> id);
@@ -216,7 +233,19 @@ if (isset($_GET['topic']))
         $strReplytext = R_TEXT;
     }
     $smarty -> assign ("Topictext", $text);
-    $reply = $db -> Execute("SELECT * FROM tribe_replies WHERE topic_id=".$topicinfo -> fields['id']." ORDER BY id ASC");
+    $objAmount = $db->Execute("SELECT count(`id`) FROM `tribe_replies` WHERE `topic_id`=".$topicinfo -> fields['id']);
+    $intPages = ceil($objAmount->fields['count(`id`)'] / 25);
+    $objAmount->close();
+    if (isset($_GET['page']))
+     {
+       checkvalue($_GET['page']);
+       $intPage = $_GET['page'];
+     }
+   else
+     {
+       $intPage = $intPages;
+     }
+    $reply = $db->SelectLimit("SELECT * FROM `tribe_replies` WHERE `topic_id`=".$topicinfo -> fields['id']." ORDER BY `id` ASC", 25, 25 * ($intPage - 1));
     $arrstarter = array();
     $arraction = array();
     $arrtext = array();
@@ -239,6 +268,8 @@ if (isset($_GET['topic']))
         {
             $strText = preg_replace("/[0-9][0-9]-[0-9][0-9]-[0-9][0-9]/", "", $reply -> fields['body']);
             $strText = str_replace("<b></b><br />", "", $strText);
+	    require_once('includes/bbcode.php');
+	    $strText = htmltobbcode($strText);
             $strReplytext = "[quote]".$strText."[/quote]";
         }
         $arrtext[$i] = wordwrap($reply -> fields['body'],45,"\n",1);
@@ -259,6 +290,9 @@ if (isset($_GET['topic']))
                             "Rid" => $arrRid,
                             "Aquote" => A_QUOTE,
                             "Rtext" => $strReplytext,
+			    "Fpage" => "Idź do strony:",
+			    "Tpages" => $intPages,
+			    "Tpage" => $intPage,
                             "Aback" => A_BACK));
     $topicinfo -> Close();
 }

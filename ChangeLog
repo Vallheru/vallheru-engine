@@ -1,5 +1,7 @@
 2011-09-02  Bartek thindil Jasicki  <thindil@tuxfamily.org>
 
+	* templates/layout1/tforums.tpl, templates/tforums.tpl, tforums.php: 
+	added pagination to tribe forums
 	* FEATURE,includes/bbcode.php: 
 	added color tag to BBCode
 	* BUG,templates/armor.tpl:

@@ -16,6 +16,17 @@
         </tr>
     {/section}
     </table>
+    {if $Tpages > 1}
+    	<br />{$Fpage}
+    	{for $page = 1 to $Tpages}
+	    {if $page == $Tpage}
+	        {$page}
+	    {else}
+                <a href="tforums.php?view=topics&page={$page}">{$page}</a>
+	    {/if}
+    	{/for}
+	<br /><br />
+    {/if}
     <form method="post" action="tforums.php?action=addtopic">
     {$Addtopic}:<br /><input type="text" name="title2" value="" size="40" /><br />
     <textarea name="body" cols="40" rows="10">{$Ttext}</textarea><br />
@@ -43,6 +54,17 @@
         </tr>
         </table><br />
     {/section}
+    {if $Tpages > 1}
+    	<br />{$Fpage}
+    	{for $page = 1 to $Tpages}
+	    {if $page == $Tpage}
+	        {$page}
+	    {else}
+                <a href="tforums.php?topic={$Topics}&amp;page={$page}">{$page}</a>
+	    {/if}
+    	{/for}
+	<br /><br />
+    {/if}
     <form method="post" action="tforums.php?reply={$Id}">
     {$Areply}:<br />
     <textarea name="rep" cols="40" rows="10">{$Rtext}</textarea><br />
