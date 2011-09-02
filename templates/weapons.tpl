@@ -1,29 +1,46 @@
-{if $Buy == ""}
-    {$Weaponinfo}<br /><br />
-    <table>
-    <tr>
-    <td width="100"><b><u>{$Iname}</u></b></td>
-    <td width="100"><b><u>{$Iefect}</u></b></td>
-    <td width="50"><b><u>{$Ispeed}</u></b></td>
-    <td width="50"><b><u>{$Idur}</u></b></td>
-    <td width="50"><b><u>{$Icost}</u></b></td>
-    <td><b><u>{$Ilevel}</u></b></td>
-    <td><b><u>{$Ioption}</u></b></td>
-    </tr>
-    {section name=item loop=$Level}
-        <tr>
-        <td>{$Name[item]}</td>
-        <td>+{$Power[item]} Atak</td>
-        <td>+{$Speed[item]}%</td>
-        <td>{$Durability[item]}</td>
-        <td>{$Cost[item]}</td>
-        <td>{$Level[item]}</td>
-        <td>- <a href="weapons.php?buy={$Itemid[item]}">{$Abuy}</a>{if $Crime > "0"}<br /><a href="weapons.php?steal={$Itemid[item]}">{$Asteal}</a>{/if}</td>
-        </tr>
-    {/section}
-    </table>
-{/if}
+<article class="nine weapons">
+	<header>
+		<h1>{$Title}</h1>
+		<p>{$Weaponinfo}</p>
+	</header>
+	
+	{if $Buy == ""}
+		<table>
+			<thead>
+				<tr>
+					<th>{$Iname}</th>
+					<th>{$Iefect}</th>
+					<th>{$Ispeed}</th>
+					<th>{$Idur}</th>
+					<th>{$Icost}</th>
+					<th>{$Ilevel}</th>
+					<th>{$Ioption}</th>
+				</tr>
+			</thead>
+			<tbody>
+				{section name=item loop=$Level}
+					<tr>
+						<td>{$Name[item]}</td>
+						<td>+{$Power[item]} Atak</td>
+						<td>+{$Speed[item]}%</td>
+						<td>{$Durability[item]}</td>
+						<td>{$Cost[item]}</td>
+						<td>{$Level[item]}</td>
+						<td>
+							<ul>
+								<li><a href="weapons.php?buy={$Itemid[item]}">{$Abuy}</a></li>{if $Crime > "0"}
+								<li><a href="weapons.php?steal={$Itemid[item]}">{$Asteal}</a></li>{/if}
+							</ul>
+						</td>
+					</tr>
+				{/section}
+			</tbody>
+		</table>
+	{/if}
+	
+	{if $Buy > 0}
+		{$Youpay} <b>{$Cost}</b> {$Andbuy} <b>{$Name} {$Withp} +{$Power}</b> {$Topower}
+	{/if}
+	
+</article>
 
-{if $Buy > 0}
-    {$Youpay} <b>{$Cost}</b> {$Andbuy} <b>{$Name} {$Withp} +{$Power}</b> {$Topower}
-{/if}        
