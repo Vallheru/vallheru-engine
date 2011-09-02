@@ -29,7 +29,12 @@
 						<td>{$Cost[number]}</td>
 						<td>{$Level[number]}</td>
 						<td>{$Agility[number]} %</td>
-						<td>- <a href="armor.php?buy={$Id[number]}">{$Abuy}</a>{if $Crime > "0"}<br /><a href="armor.php?steal={$Id[number]}">{$Asteal}</a>{/if}</td>
+						<td>
+							<ul>
+								<li><a href="armor.php?buy={$Id[number]}">{$Abuy}</a></li>
+								{if $Crime > "0"}<li><a href="armor.php?steal={$Id[number]}">{$Asteal}</a></li>{/if}
+							</ul>
+						</td>
 					</tr>
 				{/section}
 			</tbody>

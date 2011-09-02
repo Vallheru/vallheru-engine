@@ -1,0 +1,14 @@
+/*
+ *   File functions: 
+ *   Helper styles while Vallheru markup is being reviewed
+ *
+ *   @name                 : temporary.css                            
+ *   @copyright            : (C) 2004-2009 Vallheru Team based on Gamers-Fusion ver 2.5
+ *   @author               : Gwidon Walinski <gwidonw@gmail.com>
+ *   @version              : 0.1
+ *   @since                : 02.09.2011
+ *
+*/
+
+/* Tables */
+table ul { margin: 0; padding: 0; } /* There is no reset.css */
