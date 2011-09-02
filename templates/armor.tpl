@@ -40,7 +40,8 @@
 			</tbody>
 		</table>
 	{/if}
+{/if}
 	
-	{if $Buy != 0}
-			<p>{$Youpay} <b>{$Cost}</b> {$Andbuy} <b>{$Name} {$Ipower} + {$Power}</b>.</p>
-	{/if}
+{if $Buy != 0}
+    <p>{$Youpay} <b>{$Cost}</b> {$Andbuy} <b>{$Name} {$Ipower} + {$Power}</b>.</p>
+{/if}
