@@ -15,7 +15,7 @@
 	        <option value="{$Sendersid[sort1]}">{$Senders[sort1]}</option>
 	    {/section}
 	</select> {$Ttime}: <select name="sort2">
-	    <option value="-1">{$Sall}</option>
+	    <option value="-1">{$Sall2}</option>
 	    <option value="7">{$Tlastweek}</option>
 	    <option value="30">{$Tlastmonth}</option>
 	    <option value="31">{$Toldest}</option>
@@ -62,7 +62,7 @@
 	        <option value="{$Sendersid[sort1]}">{$Senders[sort1]}</option>
 	    {/section}
 	</select> {$Ttime}: <select name="sort2">
-	    <option value="-1">{$Sall}</option>
+	    <option value="-1">{$Sall2}</option>
 	    <option value="7">{$Tlastweek}</option>
 	    <option value="30">{$Tlastmonth}</option>
 	    <option value="31">{$Toldest}</option>
@@ -109,7 +109,7 @@
 	        <option value="{$Sendersid[sort1]}">{$Senders[sort1]}</option>
 	    {/section}
 	</select> {$Ttime}: <select name="sort2">
-	    <option value="-1">{$Sall}</option>
+	    <option value="-1">{$Sall2}</option>
 	    <option value="7">{$Tlastweek}</option>
 	    <option value="30">{$Tlastmonth}</option>
 	    <option value="31">{$Toldest}</option>
