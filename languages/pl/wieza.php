@@ -33,11 +33,11 @@ define("ERROR", "Zapomnij o tym!");
 
 if (!isset($_GET['buy'])) 
 {
-    define("S_POWER", " x Int obrażeń</td>");
-    define("S_POWER2", " x SW obrony</td>");
-    define("S_POWER3", "<td>Zwiększa siłę przedmiotu</td>");
-    define("S_POWER4", "<td>Zwiększa wytrzymałość przedmiotu</td>");
-    define("S_POWER5", "<td>Zwiększa premię szybkości lub zręczności przedmiotu</td>");
+    define("S_POWER", " x Int obrażeń");
+    define("S_POWER2", " x SW obrony");
+    define("S_POWER3", "Zwiększa siłę przedmiotu");
+    define("S_POWER4", "Zwiększa wytrzymałość przedmiotu");
+    define("S_POWER5", "Zwiększa premię szybkości lub zręczności przedmiotu");
     define("ST_POWER", "Zwiększa siłę czarów");
     define("C_POWER", " % many");
     if ($player -> location != 'Ardulith')

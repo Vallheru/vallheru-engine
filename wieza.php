@@ -74,11 +74,11 @@ if (!isset($_GET['buy']))
                 $arrname[$i] = $czary -> fields['nazwa'];
                 if ($czary -> fields['typ'] == 'B') 
                 {
-                    $arrefect[$i] = "<td>+".$czary -> fields['obr'].S_POWER;
+                    $arrefect[$i] = $czary -> fields['obr'].S_POWER;
                 }
                 if ($czary -> fields['typ'] == 'O') 
                 {
-                    $arrefect[$i] = "<td>+".$czary -> fields['obr'].S_POWER2;
+                    $arrefect[$i] = $czary -> fields['obr'].S_POWER2;
                 }
                 if ($czary -> fields['nazwa'] == 'Ulepszenie przedmiotu') 
                 {
