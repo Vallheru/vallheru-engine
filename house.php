@@ -8,7 +8,7 @@
  *   @author               : thindil <thindil@tuxfamily.org>
  *   @author               : eyescream <tduda@users.sourceforge.net>
  *   @version              : 1.4
- *   @since                : 29.08.2011
+ *   @since                : 03.09.2011
  *
  */
 
@@ -30,7 +30,7 @@
 //
 // $Id$
 
-$title = "Domy graczy";
+$title = "Domy";
 require_once("includes/head.php");
 
 /**

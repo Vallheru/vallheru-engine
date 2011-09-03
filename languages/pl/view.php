@@ -4,11 +4,11 @@
  *   Polish language for view other players
  *
  *   @name                 : view.php                            
- *   @copyright            : (C) 2004,2005,2006 Vallheru Team based on Gamers-Fusion ver 2.5
- *   @author               : thindil <thindil@users.sourceforge.net>
+ *   @copyright            : (C) 2004,2005,2006,2011 Vallheru Team based on Gamers-Fusion ver 2.5
+ *   @author               : thindil <thindil@tuxfamily.org>
  *   @author               : eyescream <tduda@users.sourceforge.net>
- *   @version              : 1.3
- *   @since                : 23.11.2006
+ *   @version              : 1.4
+ *   @since                : 03.09.2011
  *
  */
 
@@ -28,7 +28,7 @@
 //   along with this program; if not, write to the Free Software
 //   Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 //
-// $Id: view.php 840 2006-11-24 16:41:26Z thindil $
+// $Id$
 
 define("ERROR", "Zapomnij o tym!");
 define("NO_PLAYER", "Nie ma takiego gracza");
@@ -70,7 +70,7 @@ $arrTitle = array('Opcje konta', 'Dodaj Plotkę', 'Dodaj Wieść', 'Alchemik', '
                   'Ekwipunek', 'Panel Administracyjny', 'Dystrybucja AP', 'Płatnerz', 'Bank', 'Arena Walk', 'Fleczer',
                   'Chat', 'Altara', 'Polana Chowańców', 'Księga czarów', 'Wybierz wyznanie', 'Poszukiwania', 'Farma',
                   'Forum',  'Labirynt', 'Pomoc', 'Rynek ziół', 'Galeria Bohaterów', 'Szpital', 
-                  'Domy graczy', 'Rynek z przedmiotami', 'Lochy', 'Wybierz klasę', 'Kuźnia', 
+                  'Domy', 'Rynek z przedmiotami', 'Lochy', 'Wybierz klasę', 'Kuźnia', 
                   'Oczyszczanie miasta', 'Dziennik', 'Tartak', 'Poczta', 'Rynek', 
                   'Lista mieszkańców', 'Rynek z miksturami', 'Posągi', 'Miejskie Plotki', 'Notatnik',
                   'Strażnica', 'Rynek minerałów', 'Portal', 'Wybierz rasę', 'Hala zgromadzeń', 'Odpoczynek', 

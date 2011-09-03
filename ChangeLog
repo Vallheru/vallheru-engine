@@ -1,5 +1,7 @@
 2011-09-03  Bartek thindil Jasicki  <thindil@tuxfamily.org>
 
+	* BUG,languages/pl/head1.php, languages/pl/view.php, house.php: 
+	fixed name of location (houses)
 	* BUG,templates/layout1/mail.tpl, templates/main.tpl, mail.php: 
 	fixed typo
 	* BUG,includes/funkcje.php (autofill): 

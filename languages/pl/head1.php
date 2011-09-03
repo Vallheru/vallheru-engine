@@ -7,7 +7,7 @@
  *   @copyright            : (C) 2004,2005,2006,2011 Vallheru Team based on Gamers-Fusion ver 2.5
  *   @author               : thindil <thindil@tuxfamily.org>
  *   @version              : 1.4
- *   @since                : 26.08.2011
+ *   @since                : 03.09.2011
  *
  */
 
@@ -35,7 +35,7 @@ if (isset($title) && !isset($title1))
                       'Ekwipunek', 'Panel Administracyjny', 'Dystrybucja AP', 'Płatnerz', 'Bank', 'Arena Walk', 'Fleczer',
                       'Karczma', 'Altara', 'Polana Chowańców', 'Księga czarów', 'Wybierz wyznanie', 'Poszukiwania', 'Farma',
                       'Forum',  'Labirynt', 'Pomoc', 'Rynek ziół', 'Galeria Bohaterów', 'Szpital', 
-                      'Domy graczy', 'Rynek z przedmiotami', 'Lochy', 'Wybierz klasę', 'Kuźnia', 
+                      'Domy', 'Rynek z przedmiotami', 'Lochy', 'Wybierz klasę', 'Kuźnia', 
                       'Oczyszczanie miasta', 'Dziennik', 'Tartak', 'Poczta', 'Rynek', 
                       'Lista mieszkańców', 'Rynek z miksturami', 'Posągi', 'Miejskie Plotki', 'Notatnik',
                       'Strażnica', 'Rynek minerałów', 'Portal', 'Wybierz rasę', 'Hala zgromadzeń', 'Odpoczynek', 
