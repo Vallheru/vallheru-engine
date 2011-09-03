@@ -1,10 +1,15 @@
+2011-09-03  Bartek thindil Jasicki  <thindil@tuxfamily.org>
+
+	* FEATURE,templates/layout1/bank.tpl, templates/bank.tpl, bank.php:
+	added more options to send astrals to other players
+
 2011-09-02  Bartek thindil Jasicki  <thindil@tuxfamily.org>
 
 	* BUG,chatmsgs.php: 
 	fixed bug with very long links
-	* includes/bbcode.php (htmltobbcode): 
+	* UPDATE,includes/bbcode.php (htmltobbcode): 
 	added closing tag for colors
-	* templates/layout1/tforums.tpl, templates/tforums.tpl, tforums.php: 
+	* FEATURE,templates/layout1/tforums.tpl, templates/tforums.tpl, tforums.php: 
 	added pagination to tribe forums
 	* FEATURE,includes/bbcode.php: 
 	added color tag to BBCode
