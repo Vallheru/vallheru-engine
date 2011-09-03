@@ -7,7 +7,7 @@
  *   @copyright            : (C) 2004,2005,2006,2011 Vallheru Team based on Gamers-Fusion ver 2.5
  *   @author               : thindil <thindil@tuxfamily.org>
  *   @version              : 1.4
- *   @since                : 19.08.2011
+ *   @since                : 02.09.2011
  *
  */
 
@@ -47,7 +47,7 @@ require_once('libs/Smarty.class.php');
 $smarty = new Smarty;
 $smarty->compile_check = true;
 
-$stat = $db -> Execute("SELECT `id`, `rank`, `lang`, `seclang`, `style`, `graphic` FROM `players` WHERE `email`='".$_SESSION['email']."' AND `pass`='".$_SESSION['pass']."'");
+$stat = $db -> Execute("SELECT `id`, `rank`, `lang`, `seclang`, `style`, `graphic` FROM `players` WHERE `email`='".$_SESSION['email']."'");
 
 /**
 * Get the localization for game
@@ -82,7 +82,7 @@ if ($stat -> fields['rank'] == 'Admin' || $stat -> fields['rank'] == 'Staff' || 
 }
 while (!$chat -> EOF) 
 {
-    $text = wordwrap($chat -> fields['chat'],30,"\n",1);
+    $text = wordwrap($chat -> fields['chat'], 60, " ", 1);
     $arrtext[$i] = $text;
     $arrauthor[$i] = $chat -> fields['user'];
     $arrsenderid[$i] = $chat -> fields['senderid'];

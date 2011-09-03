@@ -8,6 +8,19 @@
 {/if}
 
 {if $View == "inbox"}
+    <form method="post" action="mail.php?view=inbox&amp;sort">
+        <input type="submit" value="{$Asort}" /> {$Tsender}: <select name="sort1">
+	    <option value="-1">{$Sall}</option>
+	    {section name=sort1 loop=$Sendersid}
+	        <option value="{$Sendersid[sort1]}">{$Senders[sort1]}</option>
+	    {/section}
+	</select> {$Ttime}: <select name="sort2">
+	    <option value="-1">{$Sall2}</option>
+	    <option value="7">{$Tlastweek}</option>
+	    <option value="30">{$Tlastmonth}</option>
+	    <option value="31">{$Toldest}</option>
+	</select>
+    </form>
     <form method="post" action="mail.php?step=mail&amp;box=I">
     <table>
     <tr>
@@ -42,6 +55,19 @@
 {/if}
 
 {if $View == "zapis"}
+    <form method="post" action="mail.php?view=zapis&amp;sort">
+        <input type="submit" value="{$Asort}" /> {$Tsender}: <select name="sort1">
+	    <option value="-1">{$Sall}</option>
+	    {section name=sort1 loop=$Sendersid}
+	        <option value="{$Sendersid[sort1]}">{$Senders[sort1]}</option>
+	    {/section}
+	</select> {$Ttime}: <select name="sort2">
+	    <option value="-1">{$Sall2}</option>
+	    <option value="7">{$Tlastweek}</option>
+	    <option value="30">{$Tlastmonth}</option>
+	    <option value="31">{$Toldest}</option>
+	</select>
+    </form>
     <form method="post" action="mail.php?step=mail&amp;box=W">
     <table>
     <tr>
@@ -76,6 +102,19 @@
 {/if}
 
 {if $View == "send"}
+    <form method="post" action="mail.php?view=send&amp;sort">
+        <input type="submit" value="{$Asort}" /> {$Tsender}: <select name="sort1">
+	    <option value="-1">{$Sall}</option>
+	    {section name=sort1 loop=$Sendersid}
+	        <option value="{$Sendersid[sort1]}">{$Senders[sort1]}</option>
+	    {/section}
+	</select> {$Ttime}: <select name="sort2">
+	    <option value="-1">{$Sall2}</option>
+	    <option value="7">{$Tlastweek}</option>
+	    <option value="30">{$Tlastmonth}</option>
+	    <option value="31">{$Toldest}</option>
+	</select>
+    </form>
     <form method="post" action="mail.php?step=mail&amp;box=S">
     <table>
     <tr>

@@ -4,10 +4,10 @@
  *   Messages to other players
  *
  *   @name                 : mail.php                            
- *   @copyright            : (C) 2004,2005,2006,2007 Vallheru Team based on Gamers-Fusion ver 2.5
- *   @author               : thindil <thindil@users.sourceforge.net>
- *   @version              : 1.3
- *   @since                : 03.03.2007
+ *   @copyright            : (C) 2004,2005,2006,2007,2011 Vallheru Team based on Gamers-Fusion ver 2.5
+ *   @author               : thindil <thindil@tuxfamily.org>
+ *   @version              : 1.4
+ *   @since                : 03.09.2011
  *
  */
 
@@ -27,7 +27,7 @@
 //   along with this program; if not, write to the Free Software
 //   Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 //
-// $Id: mail.php 919 2007-03-03 17:56:10Z thindil $
+// $Id$
 
 $title = "Poczta"; 
 require_once("includes/head.php");
@@ -46,34 +46,98 @@ if (!isset($_GET['view']) && !isset($_GET['read']) && !isset($_GET['zapisz']) &&
                             "Ablocklist" => A_BLOCK_LIST));
 }
 
+$strQuery = '';
+
+/**
+ * Sorting of mails.
+ */
+if (isset($_GET['view']) && in_array($_GET['view'], array('inbox', 'zapis', 'send')))
+  {
+    if (isset($_POST['sort1']))
+      {
+	$_POST['sort1'] = intval($_POST['sort1']);
+	if ($_POST['sort1'] != -1)
+	  {
+	    if ($_GET['view'] != 'send')
+	      {
+		$strQuery = " AND `senderid`=".$_POST['sort1'];
+	      }
+	    else
+	      {
+		$strQuery = " AND `send`=".$_POST['sort1'];
+	      }
+	  }
+	$_POST['sort2'] = intval($_POST['sort2']);
+	if ($_POST['sort2'] != -1)
+	  {
+	    $arrDate = explode("-", $data);
+	    $arrDate[0] = date("Y");
+	    $arrDate[2] = $arrDate[2] - $_POST['sort2'];
+	    if ($arrDate[2] < 1)
+	      {
+		$arrDays = array(31, 28, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31);
+		$arrDate[1] = $arrDate[1] - 1;
+		if ($arrDate[1] == 0)
+		  {
+		    $arrDate[1] = 12;
+		  }
+		$intKey = $arrDate[1] - 1;
+		$arrDate[2] = $arrDays[$intKey] + $arrDate[2];
+	      }
+	    $strDate = implode("-", $arrDate);
+	    $strDate = $db -> DBDate($strDate);
+	    if ($_POST['sort2'] != 31)
+	      {
+		$strQuery .= " AND `date`>".$strDate;
+	      }
+	    else
+	      {
+		$strQuery .= " AND `date`<".$strDate;
+	      }
+	  }
+      }
+  }
+
 /**
  * Mail inbox
  */
 if (isset ($_GET['view']) && $_GET['view'] == 'inbox') 
-{
-    $mail = $db -> Execute("SELECT * FROM mail WHERE owner=".$player -> id." AND zapis='N' AND send=0 ORDER BY id DESC");
+  {
+    $objSort = $db->Execute("SELECT `sender`, `senderid` FROM `mail`  WHERE `owner`=".$player -> id." AND `zapis`='N' AND `send`=0");
+    $arrSendersid = array();
+    $arrSenders = array();
+    while (!$objSort->EOF) 
+      {
+	if (!in_array($objSort->fields['senderid'], $arrSendersid))
+	  {
+	    $arrSenders[] = $objSort->fields['sender'];
+	    $arrSendersid[] = $objSort->fields['senderid'];
+	  }
+	$objSort->MoveNext();
+      }
+    $objSort->Close();
+
+    $mail = $db -> Execute("SELECT * FROM `mail` WHERE `owner`=".$player -> id." AND `zapis`='N' AND `send`=0".$strQuery." ORDER BY `id` DESC");
     $arrsender = array();
     $arrsenderid = array();
     $arrsubject = array();
     $arrid = array();
     $arrRead = array();
-    $i = 0;
     while (!$mail -> EOF) 
-    {
-        $arrsender[$i] = $mail -> fields['sender'];
-        $arrsenderid[$i] = $mail -> fields['senderid'];
-        $arrsubject[$i] = $mail -> fields['subject'];
-        $arrid[$i] = $mail -> fields['id'];
+      {
+        $arrsender[] = $mail -> fields['sender'];
+        $arrsenderid[] = $mail -> fields['senderid'];
+        $arrsubject[] = $mail -> fields['subject'];
+        $arrid[] = $mail -> fields['id'];
         if ($mail -> fields['unread'] == 'F')
         {
-            $arrRead[$i] = 'Y';
+            $arrRead[] = 'Y';
         }
             else
         {
-            $arrRead[$i] = 'N';
+            $arrRead[] = 'N';
         }
         $mail -> MoveNext();
-        $i = $i + 1;
     }
     $mail -> Close();
     $smarty -> assign(array("Sender" => $arrsender, 
@@ -93,6 +157,16 @@ if (isset ($_GET['view']) && $_GET['view'] == 'inbox')
                             "Amonth" => A_MONTH,
                             "Aread2" => A_READ2,
                             "Aunread" => A_UNREAD,
+			    "Asort" => "Sortuj",
+			    "Sall" => "Wszyscy",
+			    "Sall2" => "Bez ograniczeń",
+			    "Senders" => $arrSenders,
+			    "Sendersid" => $arrSendersid,
+			    "Tsender" => "Nadawca",
+			    "Ttime" => "Okres",
+			    "Tlastweek" => "Ostatni tydzień",
+			    "Tlastmonth" => "Ostatni miesiąc",
+			    "Toldest" => "Starsze niż miesiąc",
                             "Mread" => $arrRead));
     if (isset ($_GET['step']) && $_GET['step'] == 'clear') 
     {
@@ -103,7 +177,21 @@ if (isset ($_GET['view']) && $_GET['view'] == 'inbox')
 
 if (isset ($_GET['view']) && $_GET['view'] == 'zapis') 
 {
-    $mail = $db -> Execute("SELECT * FROM mail WHERE owner=".$player -> id." AND zapis='Y' ORDER BY id DESC");
+    $objSort = $db->Execute("SELECT `sender`, `senderid` FROM `mail`  WHERE `owner`=".$player->id." AND `zapis`='Y'");
+    $arrSendersid = array();
+    $arrSenders = array();
+    while (!$objSort->EOF) 
+      {
+	if (!in_array($objSort->fields['senderid'], $arrSendersid))
+	  {
+	    $arrSenders[] = $objSort->fields['sender'];
+	    $arrSendersid[] = $objSort->fields['senderid'];
+	  }
+	$objSort->MoveNext();
+      }
+    $objSort->Close();
+
+    $mail = $db -> Execute("SELECT * FROM mail WHERE owner=".$player -> id." AND zapis='Y'".$strQuery." ORDER BY id DESC");
     $arrsender = array();
     $arrsenderid = array();
     $arrsubject = array();
@@ -132,6 +220,16 @@ if (isset ($_GET['view']) && $_GET['view'] == 'zapis')
                             "Aweek" => A_WEEK,
                             "A2week" => A_2WEEK,
                             "Amonth" => A_MONTH,
+			    "Asort" => "Sortuj",
+			    "Sall" => "Wszyscy",
+			    "Sall2" => "Bez ograniczeń",
+			    "Senders" => $arrSenders,
+			    "Sendersid" => $arrSendersid,
+			    "Tsender" => "Nadawca",
+			    "Ttime" => "Okres",
+			    "Tlastweek" => "Ostatni tydzień",
+			    "Tlastmonth" => "Ostatni miesiąc",
+			    "Toldest" => "Starsze niż miesiąc",
                             "Moption" => M_OPTION));
     if (isset ($_GET['step']) && $_GET['step'] == 'clear') 
     {
@@ -142,7 +240,23 @@ if (isset ($_GET['view']) && $_GET['view'] == 'zapis')
 
 if (isset ($_GET['view']) && $_GET['view'] == 'send') 
 {
-    $mail = $db -> Execute("SELECT * FROM mail WHERE send!=0 AND owner=".$player -> id." ORDER BY id DESC");
+    $objSort = $db->Execute("SELECT `send` FROM `mail`  WHERE `owner`=".$player->id." AND `send`!=0");
+    $arrSendersid = array();
+    $arrSenders = array();
+    while (!$objSort->EOF) 
+      {
+	if (!in_array($objSort->fields['send'], $arrSendersid))
+	  {
+	    $arrSendersid[] = $objSort->fields['send'];
+	    $objName = $db->Execute("SELECT `user` FROM `players` WHERE `id`=".$objSort->fields['send']);
+	    $arrSenders[] = $objName->fields['user'];
+	    $objName->Close();
+	  }
+	$objSort->MoveNext();
+      }
+    $objSort->Close();
+
+    $mail = $db -> Execute("SELECT * FROM mail WHERE send!=0 AND owner=".$player->id.$strQuery." ORDER BY id DESC");
     $arrsend = array();
     $arrsubject = array();
     $arrid = array();
@@ -168,6 +282,16 @@ if (isset ($_GET['view']) && $_GET['view'] == 'send')
                             "Aweek" => A_WEEK,
                             "A2week" => A_2WEEK,
                             "Amonth" => A_MONTH,
+			    "Asort" => "Sortuj",
+			    "Sall" => "Wszyscy",
+			    "Sall2" => "Bez ograniczeń",
+			    "Senders" => $arrSenders,
+			    "Sendersid" => $arrSendersid,
+			    "Tsender" => "Odbiorca",
+			    "Ttime" => "Okres",
+			    "Tlastweek" => "Ostatni tydzień",
+			    "Tlastmonth" => "Ostatni miesiąc",
+			    "Toldest" => "Starsze niż miesiąc",
                             "Moption" => M_OPTION));
     if (isset ($_GET['step']) && $_GET['step'] == 'clear') 
     {

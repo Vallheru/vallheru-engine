@@ -88,6 +88,18 @@
             <input type="submit" value="{$Agive}" />
         </form><br />
 
+	<form method="post" action="bank.php?action=astral&amp;type=p&amp;step=plan">
+	    <input type="submit" value={$Asend} /> {$Taplan} <select name="name">
+                {section name=giveastral2 loop=$Tcomponents}
+                    <option value="{$smarty.section.giveastral2.index}">{$Tcomponents[giveastral2]}</option>
+                {/section}
+            </select> {$Taplayer} <input type="text" name="pid" size="5" />
+	</form><br />
+
+	<form method="post" action="bank.php?action=astral&amp;type=p&amp;step=all">
+	    <input type="submit" value="{$Asend}" /> {$Tall} {$Taplayer} <input type="text" name="pid" size="5" />
+	</form><br />
+
         <table align="center" class="dark">
             <tr>
                 <td><b><u>{$Tname}</u></b></td>

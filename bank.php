@@ -9,7 +9,7 @@
  *   @author               : yeskov <yeskov@users.sourceforge.net>
  *   @author               : eyescream <tduda@users.sourceforge.net>
  *   @version              : 1.4
- *   @since                : 29.08.2011
+ *   @since                : 03.09.2011
  *
  */
 
@@ -793,6 +793,10 @@ if (isset($_GET['action']) && $_GET['action'] == 'astral')
                                 "Tnumber" => T_NUMBER,
                                 "Tamount" => T_AMOUNT2,
                                 "Agive" => A_GIVE2,
+				"Asend" => "Wyślij",
+				"Tall" => "wszystko",
+				"Taplayer" => "graczowi o ID",
+				"Taplan" => "wszystkie kawałki",
                                 "Message" => ''));
     }
 
@@ -827,55 +831,51 @@ if (isset($_GET['action']) && $_GET['action'] == 'astral')
     /**
      * Merge plans, maps, recipes
      */
-    if (isset($_GET['step']) && ($_GET['step'] != 'piece' && $_GET['step'] != 'component'))
+    if (isset($_GET['step']) && (!in_array($_GET['step'], array('piece', 'component', 'plan', 'all'))))
     {
         mergeplans('V', $player -> id);
         $smarty -> assign("Message", YOU_MERGE);
     }
 
-    /**
-     * Give item to player
-     */
-    if (isset($_GET['step']) && ($_GET['step'] == 'piece' || $_GET['step'] == 'component'))
-    {
-        integercheck($_POST['amount']);
-        if (!ereg("^[0-9]*$", $_POST['name']) || !ereg("^[0-9]*$", $_POST['pid']))
-        {
+    if (isset($_GET['step']) && (in_array($_GET['step'], array('piece', 'component', 'plan'))))
+      {
+	$_POST['name'] = intval($_POST['name']);
+        if ($_POST['name'] < 0)
+	  {
             error(ERROR);
-        }
-	checkvalue($_POST['amount']);
-	checkvalue($_POST['number']);
-        $objDonated = $db -> Execute("SELECT `id` FROM `players` WHERE `id`=".$_POST['pid']);
+	  }
+	checkvalue($_POST['pid']);
+	$objDonated = $db -> Execute("SELECT `id` FROM `players` WHERE `id`=".$_POST['pid']);
         if (empty($objDonated -> fields['id'])) 
-        {
+	  {
             error(NO_PLAYER);
-        }
+	  }
         $objDonated -> Close();
         if ($_POST['pid'] == $player -> id)
-        {
+	  {
             error(BAD_PLAYER);
-        }
+	  }
         $intCompname = $_POST['name'];
-        if ($_GET['step'] == 'piece')
-        {
+	if ($_GET['step'] != 'component')
+	  {
             if ($_POST['name'] < 7)
-            {
+	      {
                 $strName = 'M';
-            }
+	      }
             if ($_POST['name'] > 6 && $_POST['name'] < 12)
-            {
+	      {
                 $strName = 'P';
-            }
+	      }
             if ($_POST['name'] > 11)
-            {
+	      {
                 $strName = 'R';
-            }
-            $strType = PIECE;
+	      }
+	    $strType = PIECE;
             $strCompname = $arrNames[$intCompname];
-        }
-            else
-        {
-            if ($_POST['name'] < 7)
+	  }
+	else
+	  {
+	    if ($_POST['name'] < 7)
             {
                 $strName = 'C';
             }
@@ -889,20 +889,105 @@ if (isset($_GET['action']) && $_GET['action'] == 'astral')
             }
             $strType = COMPONENT;
             $strCompname = $arrNames2[$intCompname];
-        }
-        $arrNumber = array(0, 1, 2, 3, 4, 5, 6, 0, 1, 2, 3, 4, 0, 1, 2, 3, 4);
+	  }
+	$arrNumber = array(0, 1, 2, 3, 4, 5, 6, 0, 1, 2, 3, 4, 0, 1, 2, 3, 4);
         $strPiecename = $strName.$arrNumber[$_POST['name']];
-        $intNumber = $_POST['number'] - 1;
-        $objAmount = $db -> Execute("SELECT `amount` FROM `astral` WHERE `owner`=".$player -> id." AND `type`='".$strPiecename."' AND `number`=".$intNumber." AND `location`='V'") or die($db -> ErrorMsg());
+      }
+
+    /**
+     * Give all selected plan parts to selected player
+     */
+    if (isset($_GET['step']) && ($_GET['step'] == 'plan'))
+      {
+	$objAmount = $db -> Execute("SELECT `amount`, `number` FROM `astral` WHERE `owner`=".$player -> id." AND `type`='".$strPiecename."' AND `location`='V'") or die($db -> ErrorMsg());
         if (!$objAmount -> fields['amount'])
-        {
+	  {
             error(NO_AMOUNT);
-        }
+	  }
+	while(!$objAmount->EOF)
+	  {
+	    $objTest = $db -> Execute("SELECT `amount` FROM `astral` WHERE `owner`=".$_POST['pid']." AND `type`='".$strPiecename."' AND `number`=".$objAmount->fields['number']." AND `location`='V'");
+	    if (!$objTest -> fields['amount'])
+	      {
+		$db -> Execute("INSERT INTO `astral` (`owner`, `type`, `number`, `amount`, `location`) VALUES(".$_POST['pid'].", '".$strPiecename."', ".$objAmount->fields['number'].", ".$objAmount->fields['amount'].", 'V')");
+	      }
+            else
+	      {
+		$db -> Execute("UPDATE `astral` SET `amount`=`amount`+".$objAmount->fields['amount']." WHERE `owner`=".$_POST['pid']." AND `type`='".$strPiecename."' AND `number`=".$objAmount->fields['number']." AND `location`='V'");
+	      }
+	    $objTest -> Close();
+	    $db -> Execute("DELETE FROM `astral` WHERE `owner`=".$player -> id." AND `type`='".$strPiecename."' AND `number`=".$objAmount->fields['number']." AND `location`='V'");
+	    $objAmount->MoveNext();
+	  }
+	$objAmount->Close();
+	$strMessage = YOU_GIVE." wszystkie części ".$strCompname." ".D_PLAYER.": ".$_POST['pid'].".";
+        $strMessage2 = YOU_GET." wszystkie części ".$strCompname." ".D_PLAYER2.$player -> id.".";
+        $db -> Execute("INSERT INTO `log` (`owner`, `log`, `czas`) VALUES(".$_POST['pid'].", '".$strMessage2."','".$newdate."')");
+        $db -> Execute("INSERT INTO `log` (`owner`, `log`, `czas`) VALUES(".$player -> id.", '".$strMessage."','".$newdate."')");
+	$db -> Execute("INSERT INTO `logs` (`owner`, `log`, `czas`) VALUES(".$player -> id.", '".$strMessage."','".$newdate."')");
+	$smarty -> assign("Message", $strMessage);
+      }
+
+    /**
+     * Give everything to selected player
+     */
+    if (isset($_GET['step']) && ($_GET['step'] == 'all'))
+      {
+	checkvalue($_POST['pid']);
+	$objDonated = $db -> Execute("SELECT `id` FROM `players` WHERE `id`=".$_POST['pid']);
+        if (empty($objDonated -> fields['id'])) 
+	  {
+            error(NO_PLAYER);
+	  }
+        $objDonated -> Close();
+        if ($_POST['pid'] == $player -> id)
+	  {
+            error(BAD_PLAYER);
+	  }
+	$objAmount = $db -> Execute("SELECT `amount`, `number`, `type` FROM `astral` WHERE `owner`=".$player -> id." AND (`type` LIKE 'M%' OR `type` LIKE 'P%' OR `type` LIKE 'R%') AND `location`='V'") or die($db -> ErrorMsg());
+	while (!$objAmount->EOF)
+	  {
+	    $objTest = $db -> Execute("SELECT `amount` FROM `astral` WHERE `owner`=".$_POST['pid']." AND `type`='".$objAmount->fields['type']."' AND `number`=".$objAmount->fields['number']." AND `location`='V'");
+	    if (!$objTest -> fields['amount'])
+	      {
+		$db -> Execute("INSERT INTO `astral` (`owner`, `type`, `number`, `amount`, `location`) VALUES(".$_POST['pid'].", '".$objAmount->fields['type']."', ".$objAmount->fields['number'].", ".$objAmount->fields['amount'].", 'V')");
+	      }
+            else
+	      {
+		$db -> Execute("UPDATE `astral` SET `amount`=`amount`+".$objAmount->fields['amount']." WHERE `owner`=".$_POST['pid']." AND `type`='".$objAmount->fields['type']."' AND `number`=".$objAmount->fields['number']." AND `location`='V'");
+	      }
+	    $objTest -> Close();
+	    $db -> Execute("DELETE FROM `astral` WHERE `owner`=".$player -> id." AND `type`='".$objAmount->fields['type']."' AND `number`=".$objAmount->fields['number']." AND `location`='V'");
+	    $objAmount->MoveNext();
+	  }
+	$objAmount->Close();
+	$strMessage = YOU_GIVE." wszystkie części astralne ".D_PLAYER.": ".$_POST['pid'].".";
+        $strMessage2 = YOU_GET." wszystkie części astralne ".D_PLAYER2.$player -> id.".";
+        $db -> Execute("INSERT INTO `log` (`owner`, `log`, `czas`) VALUES(".$_POST['pid'].", '".$strMessage2."','".$newdate."')");
+        $db -> Execute("INSERT INTO `log` (`owner`, `log`, `czas`) VALUES(".$player -> id.", '".$strMessage."','".$newdate."')");
+	$db -> Execute("INSERT INTO `logs` (`owner`, `log`, `czas`) VALUES(".$player -> id.", '".$strMessage."','".$newdate."')");
+	$smarty -> assign("Message", $strMessage);
+      }
+
+    /**
+     * Give item to player
+     */
+    if (isset($_GET['step']) && ($_GET['step'] == 'piece' || $_GET['step'] == 'component'))
+    {
+        integercheck($_POST['amount']);
+	checkvalue($_POST['amount']);
+	checkvalue($_POST['number']);
+        $intNumber = $_POST['number'] - 1;
+	$objAmount = $db -> Execute("SELECT `amount` FROM `astral` WHERE `owner`=".$player -> id." AND `type`='".$strPiecename."' AND `number`=".$intNumber." AND `location`='V'") or die($db -> ErrorMsg());
+        if (!$objAmount -> fields['amount'])
+	  {
+            error(NO_AMOUNT);
+	  }
         if ($objAmount -> fields['amount'] < $_POST['amount'])
         {
             error(NO_AMOUNT);
         }
-        $objTest = $db -> Execute("SELECT `amount` FROM `astral` WHERE `owner`=".$_POST['pid']." AND `type`='".$strPiecename."' AND `number`=".$intNumber." AND `location`='V'");
+	$objTest = $db -> Execute("SELECT `amount` FROM `astral` WHERE `owner`=".$_POST['pid']." AND `type`='".$strPiecename."' AND `number`=".$intNumber." AND `location`='V'");
         if (!$objTest -> fields['amount'])
         {
             $db -> Execute("INSERT INTO `astral` (`owner`, `type`, `number`, `amount`, `location`) VALUES(".$_POST['pid'].", '".$strPiecename."', ".$intNumber.", ".$_POST['amount'].", 'V')");
@@ -925,6 +1010,7 @@ if (isset($_GET['action']) && $_GET['action'] == 'astral')
         $strMessage2 = YOU_GET.$strType.$strCompname.M_AMOUNT2.$_POST['amount'].D_PLAYER2.$player -> id.".";
         $db -> Execute("INSERT INTO `log` (`owner`, `log`, `czas`) VALUES(".$_POST['pid'].", '".$strMessage2."','".$newdate."')");
         $db -> Execute("INSERT INTO `log` (`owner`, `log`, `czas`) VALUES(".$player -> id.", '".$strMessage."','".$newdate."')");
+	$db -> Execute("INSERT INTO `logs` (`owner`, `log`, `czas`) VALUES(".$player -> id.", '".$strMessage."','".$newdate."')");
         $smarty -> assign("Message", $strMessage);
     }
 }
