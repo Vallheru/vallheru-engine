@@ -1,24 +1,42 @@
-{if $Buy == ""}
-    {$Pwelcome}<br /><br />
-    <table>
-    <tr><td width="100"><b><u>{$Nname}</u></b></td>
-    <td width="100"><b><u>{$Nefect}</u></b></td>
-    <td width="50"><b><u>{$Ncost}</u></b></td>
-    <td width="50"><b><u>{$Namount}</u></b></td>
-    <td><b><u>{$Poption}</u></b></td></tr>
-    {section name=msklep loop=$Pid}
-        <tr>
-		    <td>{$Pname[msklep]}({$Npower}:{$Ppower[msklep]})</td>
-            <td>{$Pefect[msklep]}</td>
-            <td>{$Pcost[msklep]}</td>
-            <td>{$Pamount[msklep]}</td>
-            <td>- <a href="msklep.php?buy={$Pid[msklep]}">{$Abuy}</a></td>
-        </tr>
-    {/section}
-    </table>
-{/if}
+<article class="nine msklep">
+	<header>
+		<h1>{$Title}</h1>
+		<p>{$Pwelcome}</p>
+	</header>
+	
+	{if $Buy == ""}
+		<table>
+			<thead>
+				<tr>
+					<th>{$Nname}</th>
+					<th>{$Nefect}</th>
+					<th>{$Ncost}</th>
+					<th>{$Namount}</th>
+					<th>{$Poption}</th>
+				</tr>
+			</thead>
+			<tbody>
+				{section name=msklep loop=$Pid}
+					<tr>
+						<td>{$Pname[msklep]}({$Npower}:{$Ppower[msklep]})</td>
+						<td>{$Pefect[msklep]}</td>
+						<td>{$Pcost[msklep]}</td>
+						<td>{$Pamount[msklep]}</td>
+						<td>
+							<ul>
+								<li><a href="msklep.php?buy={$Pid[msklep]}">{$Abuy}</a></li>
+							</ul>
+						</td>
+					</tr>
+				{/section}
+			</tbody>
+		</table>
+	{/if}
+	
+	{if $Buy != ""}
+		<form method="post" action="msklep.php?buy={$Pid}&amp;step=buy">
+			<input type="submit" value="{$Abuy}" /> <input type="text" name="amount" value="1" /> {$Pamount} {$Name}
+		</form>
+	{/if}
 
-{if $Buy != ""}
-    <form method="post" action="msklep.php?buy={$Pid}&amp;step=buy">
-    <input type="submit" value="{$Abuy}" /> <input type="text" name="amount" value="1" size="5" /> {$Pamount} {$Name}</form>
-{/if}
+</article>

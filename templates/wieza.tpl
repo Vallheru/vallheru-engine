@@ -1,52 +1,80 @@
-{if $Buy == ""}
-    {$Towerinfo}<br /><br />
-    <ul>
-    <li><a href="wieza.php?dalej=T">{$Abuyst}</a></li>
-    <li><a href="wieza.php?dalej=C">{$Abuyc}</a></li>
-    <li><a href="wieza.php?dalej=P">{$Abuys}</a></li>
-    </ul>
-    {if $Next != ""}
-        <table>
-        {if $Next == "P"}
-            <tr>
-            <td width="100"><b><u>{$Tname}</u></b></td>
-            <td width="100"><b><u>{$Tpower}</u></b></td>
-            <td width="50"><b><u>{$Tcost}</u></b></td>
-            <td><b><u>{$Tlevel}</u></b></td>
-            <td><b><u>{$Toptions}</u></b></td>
-            </tr>
-            {section name=tower loop=$Name}
-                <tr>
-                <td>{$Name[tower]}</td>
-                {$Efect[tower]}
-                <td>{$Cost[tower]}</td>
-                <td>{$Itemlevel[tower]}</td>
-                <td>- <A href="wieza.php?buy={$Itemid[tower]}&type=S">{$Abuy}</a></td>
-                </tr>
-            {/section}
-        {/if}
-        {if $Next != "P"}
-            <tr>
-           <td width="100"><b><u>{$Tname}</u></b></td>
-            <td width="100"><b><u>{$Tpower}</u></b></td>
-            <td width="50"><b><u>{$Tcost}</u></b></td>
-            <td><b><u>{$Tlevel}</u></b></td>
-            <td><b><u>{$Toptions}</u></b></td>
-            </tr>
-            {section name=tower1 loop=$Name}
-                <tr>
-                <td>{$Name[tower1]}</td>
-                <td>{$Power[tower1]}</td>
-                <td>{$Cost[tower1]}</td>
-                <td>{$Itemlevel[tower1]}</td>
-                <td>- <A href="wieza.php?buy={$Itemid[tower1]}&amp;type=I">{$Abuy}</a></td>
-                </tr>
-            {/section}
-        {/if}
-        </table>
-    {/if}
-{/if}
-
-{if $Buy != ""}
-    {$Message}
-{/if}
+<article class="nine wieza">
+	<header>
+		<h1>{$Title}</h1>
+		<p>{$Towerinfo}</p>
+	</header>
+	
+	{if $Buy == ""}
+		<ul>
+			<li><a href="wieza.php?dalej=T">{$Abuyst}</a></li>
+			<li><a href="wieza.php?dalej=C">{$Abuyc}</a></li>
+			<li><a href="wieza.php?dalej=P">{$Abuys}</a></li>
+		</ul>
+		
+		{if $Next != ""}
+			{if $Next == "P"}
+				<table>
+					<thead>
+						<tr>
+							<th>{$Tname}</th>
+							<th>{$Tpower}</th>
+							<th>{$Tcost}</th>
+							<th>{$Tlevel}</th>
+							<th>{$Toptions}</th>
+						</tr>
+					</thead>
+					<tbody>
+						{section name=tower loop=$Name}
+							<tr>
+								<td>{$Name[tower]}</td>
+								<td>{$Efect[tower]}</td>
+								<td>{$Cost[tower]}</td>
+								<td>{$Itemlevel[tower]}</td>
+								<td>
+									<ul>
+										<li><a href="wieza.php?buy={$Itemid[tower]}&amp;type=S">{$Abuy}</a></li>
+									</ul>
+								</td>
+							</tr>
+						{/section}
+					</tbody>
+				</table>
+			{/if}
+			
+			{if $Next != "P"}
+				<table>
+					<thead>
+						<tr>
+							<th>{$Tname}</td>
+							<th>{$Tpower}</td>
+							<th>{$Tcost}</td>
+							<th>{$Tlevel}</td>
+							<th>{$Toptions}</td>
+						</tr>
+					</thead>
+					<tbody>
+						{section name=tower1 loop=$Name}
+							<tr>
+								<td>{$Name[tower1]}</td>
+								<td>{$Power[tower1]}</td>
+								<td>{$Cost[tower1]}</td>
+								<td>{$Itemlevel[tower1]}</td>
+								<td>
+									<ul>
+										<li><a href="wieza.php?buy={$Itemid[tower1]}&amp;type=I">{$Abuy}</a></li>
+									</ul>
+								</td>
+							</tr>
+						{/section}
+					</tbody>
+				</table>
+			{/if}
+			
+		{/if}
+	{/if}
+	
+	{if $Buy != ""}
+		{$Message}
+	{/if}
+	
+</article>

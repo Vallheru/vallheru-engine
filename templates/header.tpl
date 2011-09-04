@@ -4,6 +4,7 @@
 <head>
 <title>{$Gamename} :: {$Title}</title>
 <link type="text/css" rel="stylesheet" href="css/{$Style}" />
+<link type="text/css" rel="stylesheet" href="temporary.css" />
 <link rel="shortcut icon" href="{$Gameadress}/favicon.png" type="image/png"/>
 <meta http-equiv="Content-Type" content="text/html; charset={$Charset}" />
 </head>
