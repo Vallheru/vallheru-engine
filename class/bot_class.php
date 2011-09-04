@@ -7,7 +7,7 @@
  *   @copyright            : (C) 2004,2005,2006,2011 Vallheru Team based on Gamers-Fusion ver 2.5
  *   @author               : thindil <thindil@tuxfamily.org>
  *   @version              : 1.4
- *   @since                : 08.08.2011
+ *   @since                : 04.09.2011
  *
  */
 
@@ -167,6 +167,7 @@ class Bot
             $strReg = str_replace('.', '', $strReg);
             $strReg = str_replace('*', '', $strReg);
             $strReg = strtolower($strReg);
+	    $this->strPlayertext = str_replace($this->strBotname, '', $this->strPlayertext);
             $this -> strPlayertext = strtolower($this -> strPlayertext);
             $strItem = str_replace($strReg, '', $this -> strPlayertext);
             if (in_array($strItem, $this -> arrReflorg))
