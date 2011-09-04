@@ -8,7 +8,7 @@
  *   @author               : thindil <thindil@tuxfamily.org>
  *   @author               : eyescream <tduda@users.sourceforge.net>
  *   @version              : 1.4
- *   @since                : 31.08.2011
+ *   @since                : 04.09.2011
  *
  */
 
@@ -514,7 +514,7 @@ if (isset($_GET['buy']))
 	      } 
             else 
 	      {
-		$db -> Execute("UPDATE `equipment` SET `wt`=`wt`+".$buy -> fields['wt']." WHERE `id`=".$test -> fields['id']);
+		$db -> Execute("UPDATE `equipment` SET `wt`=`wt`+".$_POST['amount']." WHERE `id`=".$test -> fields['id']);
 	      }
 	    if ($_POST['amount'] == $buy->fields['wt']) 
 	      {

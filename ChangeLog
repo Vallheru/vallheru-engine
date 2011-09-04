@@ -1,5 +1,7 @@
 2011-09-04  Bartek thindil Jasicki  <thindil@tuxfamily.org>
 
+	* BUG,imarket.php: 
+	fixed bug with buy arrows
 	* BUG,class/bot_class.php: 
 	fixed bot answers
 	* BUG,languages/pl/admin.php, admin.php, grid.php: 
