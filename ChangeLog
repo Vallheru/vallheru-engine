@@ -1,5 +1,7 @@
 2011-09-04  Bartek thindil Jasicki  <thindil@tuxfamily.org>
 
+	* BUG,languages/pl/admin.php, admin.php, grid.php: 
+	fixed few notices
 	* FEATURE,templates/layout1/tribeastral.tpl, templates/tribeastral.tpl, tribeastral.php:
 	added more options to send astrals to tribe
 	* UPDATE: merge with branch lp:~gwidonw/vallheru/design

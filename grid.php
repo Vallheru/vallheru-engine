@@ -76,6 +76,10 @@ if (isset ($_GET['action']) && $_GET['action'] == 'explore' && empty($query -> f
       return 0;
     }
 
+    if (!isset($_POST['amount']))
+      {
+	error("Podaj ile razy chcesz zwiedzać labirynt.");
+      }
     integercheck($_POST['amount']);
     checkvalue($_POST['amount']);
     $intAmount = intval($_POST['amount']);

@@ -8,7 +8,7 @@
  *   @author               : thindil <thindil@tuxfamily.org>
  *   @author               : eyescream <tduda@users.sourceforge.net>
  *   @version              : 1.4
- *   @since                : 30.08.2011
+ *   @since                : 04.09.2011
  *
  */
  
@@ -133,7 +133,7 @@ if (isset($_GET['view']) && $_GET['view'] == 'bugreport')
                                 "Bugoptions" => $arrOptions,
                                 "Bugactions2" => $arrActions,
                                 "Amake" => A_MAKE,
-                                "Tcomment" => T_COMMENT,
+                                "Tcomment" => T_COMMENT2,
                                 "Bugname2" => $objBug -> fields['title'],
                                 "Bugtype2" => $strType,
                                 "Bugloc2" => $objBug -> fields['location'],
@@ -186,7 +186,7 @@ if (isset($_GET['view']) && $_GET['view'] == 'bugreport')
             $db -> Execute("DELETE FROM `bugreport` WHERE `id`=".$_GET['step']);
             if (isset($_POST['bugcomment']) && !empty($_POST['bugcomment']))
             {
-                $strInfo = $strInfo." <b>".T_COMMENT.":</b> ".$_POST['bugcomment'];
+                $strInfo = $strInfo." <b>".T_COMMENT2.":</b> ".$_POST['bugcomment'];
             }
             $db -> Execute("INSERT INTO `log` (`owner`, `log`, `czas`) VALUES(".$objBug -> fields['sender'].", '".$strInfo."', ".$strDate.")");
             error($strMessage);
