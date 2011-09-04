@@ -138,7 +138,20 @@
         {$Piecenumber} <input type="text" name="number" size="5" /><br />
         {$Astralamount} <input type="text" name="amount" size="5" /><br />
         <input type="submit" value="{$Aadd}" />
+    </form><br />
+
+    <form method="post" action="tribeastral.php?action=add&amp;step=plan">
+	<input type="submit" value="{$Asend}" /> {$Taplan} <select name="name">
+            {section name=giveastral2 loop=$Inames}
+                <option value="{$smarty.section.giveastral2.index}">{$Inames[giveastral2]}</option>
+            {/section}
+        </select>
+    </form><br />
+
+    <form method="post" action="tribeastral.php?action=add&amp;step=all">
+        <input type="submit" value="{$Tall}" />
     </form><br /><br />
+
     <form method="post" action="tribeastral.php?action=add&amp;step=component">
         {$Addto2} <select name="name">
             {section name=addastral2 loop=$Inames2}

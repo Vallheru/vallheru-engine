@@ -8,7 +8,7 @@
  *   @author               : thindil <thindil@tuxfamily.org>
  *   @author               : eyescream <tduda@users.sourceforge.net>
  *   @version              : 1.4
- *   @since                : 29.08.2011
+ *   @since                : 04.09.2011
  *
  */
 
@@ -212,40 +212,41 @@ if (isset($_GET['action']) && $_GET['action'] == 'add')
                             "Addto2" => ADD_TO2,
                             "Inames" => $arrNames,
                             "Inames2" => $arrNames2,
+			    "Asend" => "Wyślij",
+			    "Tall" => "Wyślij wszystkie",
+			    "Taplan" => "wszystkie kawałki",
                             "Message" => ''));
     /**
      * Add component to clan
      */
-    if (isset($_GET['step']) && ($_GET['step'] == 'piece' || $_GET['step'] == 'component'))
-    {
-        integercheck($_POST['amount']);
-        if (!ereg("^[0-9]*$", $_POST['name']))
-        {
+    if (isset($_GET['step']) && (in_array($_GET['step'], array('piece', 'component', 'plan'))))
+      {
+	$_POST['name'] = intval($_POST['name']);
+        if ($_POST['name'] < 0)
+	  {
             error(ERROR);
-        }
-	checkvalue($_POST['amount']);
-	checkvalue($_POST['number']);
+	  }
         $intCompname = $_POST['name'];
-        if ($_GET['step'] == 'piece')
-        {
+	if ($_GET['step'] != 'component')
+	  {
             if ($_POST['name'] < 7)
-            {
+	      {
                 $strName = 'M';
-            }
+	      }
             if ($_POST['name'] > 6 && $_POST['name'] < 12)
-            {
+	      {
                 $strName = 'P';
-            }
+	      }
             if ($_POST['name'] > 11)
-            {
+	      {
                 $strName = 'R';
-            }
-            $strType = PIECE;
-            $strCompname = $arrNames[$intCompname];
-        }
-            else
-        {
-            if ($_POST['name'] < 7)
+	      }
+	    $strType = PIECE;
+	    $strCompname = $arrNames[$intCompname];
+	  }
+	else
+	  {
+	    if ($_POST['name'] < 7)
             {
                 $strName = 'C';
             }
@@ -259,9 +260,99 @@ if (isset($_GET['action']) && $_GET['action'] == 'add')
             }
             $strType = COMPONENT;
             $strCompname = $arrNames2[$intCompname];
+	  }
+	$arrNumber = array(0, 1, 2, 3, 4, 5, 6, 0, 1, 2, 3, 4, 0, 1, 2, 3, 4);
+	$strPiecename = $strName.$arrNumber[$_POST['name']];
+      }
+
+    /**
+     * Give all selected plan parts to tribe
+     */
+    if (isset($_GET['step']) && ($_GET['step'] == 'plan'))
+      {
+	$objAmount = $db -> Execute("SELECT `amount`, `number` FROM `astral` WHERE `owner`=".$player -> id." AND `type`='".$strPiecename."' AND `location`='V'") or die($db -> ErrorMsg());
+        if (!$objAmount -> fields['amount'])
+	  {
+            error(NO_AMOUNT);
+	  }
+	while(!$objAmount->EOF)
+	  {
+	    $objTest = $db -> Execute("SELECT `amount` FROM `astral` WHERE `owner`=".$player->tribe." AND `type`='".$strPiecename."' AND `number`=".$objAmount->fields['number']." AND `location`='C'");
+	    if (!$objTest -> fields['amount'])
+	      {
+		$db -> Execute("INSERT INTO `astral` (`owner`, `type`, `number`, `amount`, `location`) VALUES(".$player->tribe.", '".$strPiecename."', ".$objAmount->fields['number'].", ".$objAmount->fields['amount'].", 'C')");
+	      }
+            else
+	      {
+		$db -> Execute("UPDATE `astral` SET `amount`=`amount`+".$objAmount->fields['amount']." WHERE `owner`=".$player->tribe." AND `type`='".$strPiecename."' AND `number`=".$objAmount->fields['number']." AND `location`='C'");
+	      }
+	    $objTest -> Close();
+	    $db -> Execute("DELETE FROM `astral` WHERE `owner`=".$player -> id." AND `type`='".$strPiecename."' AND `number`=".$objAmount->fields['number']." AND `location`='V'");
+	    $objAmount->MoveNext();
+	  }
+	$objAmount->Close();
+
+	$strMessage = HE_ADD."</b> wszystkie posiadane części ".$strCompname.".";
+        $db -> Execute("INSERT INTO `log` (`owner`, `log`, `czas`) VALUES(".$objOwner -> fields['owner'].", '".T_PLAYER1.'<b><a href="view.php?view="'.$player -> id.'>'.$player -> user.'</a></b>'.T_PLAYER2.'<b>'.$player -> id."</b> ".$strMessage."','".$newdate."')");
+        $objPerm = $db -> Execute("SELECT `player` FROM `tribe_perm` WHERE `tribe`=".$player -> tribe." AND `astralvault`=1");
+        while (!$objPerm -> EOF)
+        {
+            $db -> Execute("INSERT INTO log (`owner`, `log`, `czas`) VALUES(".$objPerm -> fields['player'].", '".T_PLAYER1.'<a href="view.php?view="'.$player -> id.'>'.$player -> user.'</a>'.T_PLAYER2.'<b>'.$player -> id."</b> ".$strMessage."','".$newdate."')");
+            $objPerm -> MoveNext();
         }
-        $arrNumber = array(0, 1, 2, 3, 4, 5, 6, 0, 1, 2, 3, 4, 0, 1, 2, 3, 4);
-        $strPiecename = $strName.$arrNumber[$_POST['name']];
+        $objPerm -> Close();
+        $strMessage2 = YOU_ADD."</b> wszystkie posiadane częsci ".$strCompname.".";
+        $smarty -> assign("Message", $strMessage2);
+        require_once('includes/checkastral.php');
+        checkastral($player -> tribe);
+      }
+
+    /**
+     * Give everything to tribe
+     */
+    if (isset($_GET['step']) && ($_GET['step'] == 'all'))
+      {
+	$objAmount = $db -> Execute("SELECT `amount`, `number`, `type` FROM `astral` WHERE `owner`=".$player -> id." AND (`type` LIKE 'M%' OR `type` LIKE 'P%' OR `type` LIKE 'R%') AND `location`='V'") or die($db -> ErrorMsg());
+	while (!$objAmount->EOF)
+	  {
+	    $objTest = $db -> Execute("SELECT `amount` FROM `astral` WHERE `owner`=".$player->tribe." AND `type`='".$objAmount->fields['type']."' AND `number`=".$objAmount->fields['number']." AND `location`='C'");
+	    if (!$objTest -> fields['amount'])
+	      {
+		$db -> Execute("INSERT INTO `astral` (`owner`, `type`, `number`, `amount`, `location`) VALUES(".$player->tribe.", '".$objAmount->fields['type']."', ".$objAmount->fields['number'].", ".$objAmount->fields['amount'].", 'C')");
+	      }
+            else
+	      {
+		$db -> Execute("UPDATE `astral` SET `amount`=`amount`+".$objAmount->fields['amount']." WHERE `owner`=".$player->tribe." AND `type`='".$objAmount->fields['type']."' AND `number`=".$objAmount->fields['number']." AND `location`='C'");
+	      }
+	    $objTest -> Close();
+	    $db -> Execute("DELETE FROM `astral` WHERE `owner`=".$player -> id." AND `type`='".$objAmount->fields['type']."' AND `number`=".$objAmount->fields['number']." AND `location`='V'");
+	    $objAmount->MoveNext();
+	  }
+	$objAmount->Close();
+
+	$strMessage = HE_ADD."</b> wszystkie posiadane części astralne.";
+        $db -> Execute("INSERT INTO `log` (`owner`, `log`, `czas`) VALUES(".$objOwner -> fields['owner'].", '".T_PLAYER1.'<b><a href="view.php?view="'.$player -> id.'>'.$player -> user.'</a></b>'.T_PLAYER2.'<b>'.$player -> id."</b> ".$strMessage."','".$newdate."')");
+        $objPerm = $db -> Execute("SELECT `player` FROM `tribe_perm` WHERE `tribe`=".$player -> tribe." AND `astralvault`=1");
+        while (!$objPerm -> EOF)
+        {
+            $db -> Execute("INSERT INTO log (`owner`, `log`, `czas`) VALUES(".$objPerm -> fields['player'].", '".T_PLAYER1.'<a href="view.php?view="'.$player -> id.'>'.$player -> user.'</a>'.T_PLAYER2.'<b>'.$player -> id."</b> ".$strMessage."','".$newdate."')");
+            $objPerm -> MoveNext();
+        }
+        $objPerm -> Close();
+        $strMessage2 = YOU_ADD." wszystkie posiadane części astralne.";
+        $smarty -> assign("Message", $strMessage2);
+        require_once('includes/checkastral.php');
+        checkastral($player -> tribe);
+      }
+    
+    /**
+     * Give component to clan
+     */
+    if (isset($_GET['step']) && ($_GET['step'] == 'piece' || $_GET['step'] == 'component'))
+    {
+        integercheck($_POST['amount']);
+	checkvalue($_POST['amount']);
+	checkvalue($_POST['number']);
         $intNumber = $_POST['number'] - 1;
         $objAmount = $db -> Execute("SELECT `amount` FROM `astral` WHERE `owner`=".$player -> id." AND `type`='".$strPiecename."' AND `number`=".$intNumber." AND `location`='V'") or die($db -> ErrorMsg());
         if (!$objAmount -> fields['amount'])
