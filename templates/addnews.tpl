@@ -1,23 +1,34 @@
-<form method="post" action="addnews.php?action=add">
-<table>
-<tr>
-    <td>{$Nlangsel}:</td>
-    <td><select name="addlang">
-    {section name=addnews loop=$Nlang}
-        <option value="{$Nlang[addnews]}">{$Nlang[addnews]}</option>
-    {/section}
-    </select></td>
-</tr>
-<tr>
-    <td>{$Ntitle}:</td>
-    <td><input type="text" name="addtitle" /></td>
-</tr>
-<tr>
-    <td valign="top">{$Ntext}:</td>
-    <td><textarea name="addnews" rows="15" cols="40"></textarea></td>
-</tr>
-<tr>
-    <td colspan="2" align="center"><input type="submit" value="{$Nadd}" /></td>
-</tr>
-</table>
-</form>
+<article class="nine addnews">
+	<header>
+		<h1>{$Title}</h1>
+		<p>{$Welcome}</p>
+	</header>
+	
+	<section>
+		<form method="post" action="addnews.php?action=add">
+			<label>
+				<span>{$Nlangsel}:</span>
+				<select id="addlang" name="addlang">
+					{section name=addnews loop=$Nlang}
+						<option value="{$Nlang[addnews]}">{$Nlang[addnews]}</option>
+					{/section}
+				</select>
+			</label>
+			
+			<label>
+				<span>{$Ntitle}:</span>
+				<input type="text" name="addtitle" value="" />
+			</label>
+			
+			<label>
+				<span>{$Ntext}:</span>
+				<textarea id="addnews" name="addnews"></textarea>
+			</label>
+			
+			<div class="buttons">
+				<input class="normal-button" type="submit" value="{$Nadd}" />
+			</div>
+		</form>
+	</section>
+
+</article>
