@@ -4,10 +4,10 @@
  *   Polish language for chop trees
  *
  *   @name                 : lumberjack.php                            
- *   @copyright            : (C) 2004,2005,2006 Vallheru Team based on Gamers-Fusion ver 2.5
- *   @author               : thindil <thindil@users.sourceforge.net>
- *   @version              : 1.3
- *   @since                : 04.10.2006
+ *   @copyright            : (C) 2004,2005,2006,2011 Vallheru Team based on Gamers-Fusion ver 2.5
+ *   @author               : thindil <thindil@tuxfamily.org>
+ *   @version              : 1.4
+ *   @since                : 05.09.2011
  *
  */
 
@@ -27,10 +27,13 @@
 //   along with this program; if not, write to the Free Software
 //   Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 //
-// $Id: lumberjack.php 665 2006-10-04 11:51:45Z thindil $
+// $Id$
 
 define("ERROR", "Zapomnij o tym!");
 define("A_BACK", "Wróć");
+define("A_CHOP", "Przeznacz");
+define("ON_CHOP", "na wyrąb drewna");
+define("T_ENERGY", "energii.");
 
 if (isset ($_GET['action']) && $_GET['action'] == 'chop') 
 {
@@ -55,8 +58,5 @@ if (isset ($_GET['action']) && $_GET['action'] == 'chop')
     else
 {
     define("YOU_WANT", "Czy chcesz wyruszyć na poszukiwanie drewna?");
-    define("A_CHOP", "Przeznacz");
-    define("ON_CHOP", "na wyrąb drewna");
-    define("T_ENERGY", "energii.");
 }
 ?>

@@ -7,7 +7,7 @@
  *   @copyright            : (C) 2004,2005,2006,2011 Vallheru Team based on Gamers-Fusion ver 2.5
  *   @author               : thindil <thindil@tuxfamily.org>
  *   @version              : 1.4
- *   @since                : 15.08.2011
+ *   @since                : 05.09.2011
  *
  */
 
@@ -166,6 +166,7 @@ if (isset ($_GET['action']) && $_GET['action'] == 'chop')
       $db -> Execute("UPDATE `minerals` SET `pine`=`pine`+".$arrAmount[0].", `hazel`=`hazel`+".$arrAmount[1].", `yew`=`yew`+".$arrAmount[2].", `elm`=`elm`+".$arrAmount[3]." WHERE `owner`=".$player -> id);
     }
     $objLumber -> Close();
+    $player->energy -= $i;
 }
 
 /**
@@ -174,11 +175,7 @@ if (isset ($_GET['action']) && $_GET['action'] == 'chop')
 if (!isset($_GET['action'])) 
 {
     $_GET['action'] = '';
-    $smarty -> assign(array("Youwant" => YOU_WANT,
-                            "Achop" => A_CHOP,
-                            "Onchop" => ON_CHOP,
-			    "Curen" => $player->energy,
-                            "Tenergy" => T_ENERGY));
+    $smarty -> assign("Youwant", YOU_WANT);
 }
 
 /**
@@ -186,7 +183,11 @@ if (!isset($_GET['action']))
 */
 $smarty -> assign (array("Action" => $_GET['action'],
                          "Aback" => A_BACK,
-                         "Health" => $player -> hp));
+                         "Health" => $player -> hp,
+			 "Achop" => A_CHOP,
+			 "Onchop" => ON_CHOP,
+			 "Curen" => $player->energy,
+			 "Tenergy" => T_ENERGY));
 $smarty -> display ('lumberjack.tpl');
 
 require_once("includes/foot.php"); 
