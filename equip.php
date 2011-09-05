@@ -7,7 +7,7 @@
  *   @copyright            : (C) 2004,2005,2006,2007,2011 Vallheru Team based on Gamers-Fusion ver 2.5
  *   @author               : thindil <thindil@tuxfamily.org>
  *   @version              : 1.4
- *   @since                : 30.08.2011
+ *   @since                : 05.09.2011
  *
  */
 
@@ -1145,7 +1145,7 @@ if (isset($_GET['fill']))
 if (isset($_GET['drinkfew']))
   {
     checkvalue($_GET['drinkfew']);
-    $objPotion = $db->Execute("SELECT * FROM `potions` WHERE `id`=".$_GET['drinkfew']." AND `owner`=".$player->id." AND `status`='K'");
+    $objPotion = $db->Execute("SELECT `id`, `name`, `type`, `amount` FROM `potions` WHERE `id`=".$_GET['drinkfew']." AND `owner`=".$player->id." AND `status`='K'");
     if (!$objPotion->fields['id'])
       {
 	error(ERROR);
@@ -1165,100 +1165,7 @@ if (isset($_GET['drinkfew']))
 	  {
 	    error("Nie masz tylu mikstur.");
 	  }
-	$intUsed = 0;
-	$intOldhp = $player->hp;
-	$intOldmana = $player->mana;
-	if ($objPotion->fields['type'] == 'M')
-	  {
-	    $cape = $db -> Execute("SELECT power FROM equipment WHERE owner=".$player -> id." AND type='C' AND status='E'");        
-	    $maxmana = ($player -> inteli + $player -> wisdom);
-	    $maxmana = $maxmana + (($cape -> fields['power'] / 100) * $maxmana);
-	    $cape -> Close();
-	    if ($player->mana == round($maxmana, 0)) 
-	      {
-		error("Nie musisz regenerować punktów magii!");
-	      }
-	  }
-	else
-	  {
-	    if ($player->hp <= 0)
-	      {
-		error("Potrzebujesz wskrzeszenia.");
-	      }
-	    elseif ($player->hp == $player->max_hp)
-	      {
-		error("Nie potrzebujesz leczenia.");
-	      }
-	  }
-	for ($i = 1; $i <= $_POST['amount']; $i++)
-	  {
-	    if (strpos($objPotion->fields['name'], "(K)") !== FALSE)
-	      {
-		$intRoll = rand(0, 100);
-		if ($intRoll == 1)
-		  {
-		    $intUsed = $i;
-		    $player->hp = 0;
-		    $strEffect = "Kiedy wypiłeś miksturę, świat zawirował ci przed oczami. Napój okazał się trucizną. Przez krótką chwilę próbowałeś walczyć z ogarniającą ciebie ciemnością, lecz niestety twój organizm nie wytrzymał takiej walki. Martwy, padasz na ziemię.";
-		    break;
-		  }
-		elseif ($intRoll < 51)
-		  {
-		    continue;
-		  }
-	      }
-	    if ($objPotion->fields['type'] == 'M')
-	      {
-		$player->mana += $objPotion->fields['power'];
-		if ($player->mana >= $maxmana)
-		  {
-		    $player->mana = $maxmana;
-		    $intUsed = $i;
-		    $strEffect = "Wypiłeś ".$intUsed." razy ".$objPotion->fields['name']." i zregenerowałeś wszystkie punkty magii.";
-		    break;
-		  }
-	      }
-	    else
-	      {
-		$player->hp += $objPotion->fields['power'];
-		if ($player->hp >= $player->max_hp)
-		  {
-		    $player->hp = $player->max_hp;
-		    $intUsed = $i;
-		    $strEffect = "Wypiłeś ".$intUsed." razy ".$objPotion->fields['name']." i odzyskałeś wszystkie punkty życia.";
-		    break;
-		  }
-	      }
-	  }
-	if ($intUsed == 0)
-	  {
-	    $intUsed = $_POST['amount'];
-	    if ($objPotion->fields['type'] == 'M')
-	      {
-		$intGained = $player->mana - $intOldmana;
-		$strEffect = "Wypiłeś ".$intUsed." razy ".$objPotion->fields['name']." i zregenerowałeś ".$intGained." punktów magii.";
-	      }
-	    else
-	      {
-		$intGained = $player->hp - $intOldhp;
-		$strEffect = "Wypiłeś ".$intUsed." razy ".$objPotion->fields['name']." i odzyskałeś ".$intGained." punktów życia.";
-	      }
-	  }
-	elseif (($objPotion->fields['type'] == 'M') && ($player->mana != $maxmana))
-	  {
-	    $intGained = $player->mana - $intOldmana;
-	    $strEffect = "Wypiłeś ".$intUsed." razy ".$objPotion->fields['name']." i zregenerowałeś ".$intGained." punktów magii. ".$strEffect;
-	  }
-	$db->Execute("UPDATE `players` SET `hp`=".$player->hp.", `pm`=".$player->mana." WHERE `id`=".$player->id);
-	if ($intUsed == $objPotion->fields['amount'])
-	  {
-	    $db->Execute("DELETE FROM `potions` WHERE `id`=".$_GET['drinkfew']);
-	  }
-	else
-	  {
-	    $db->Execute("UPDATE `potions` SET `amount`=`amount`-".$intUsed." WHERE `id`=".$_GET['drinkfew']);
-	  }
-	$smarty->assign("Effect", $strEffect);
+	drinkfew($objPotion->fields['id'], $_POST['amount']);
       }
     $objPotion->Close();
   }

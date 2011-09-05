@@ -86,6 +86,10 @@
 	<input type="radio" name="battle" value="A" {$Checked4} /> {$Tonlyattack}<br />
 	<input type="radio" name="battle" value="D" {$Checked5} /> {$Tonlyattacked}<br />
 	<input type="radio" name="battle" value="Y" {$Checked3} /> {$Talways}<br /><br />
+	<input type="checkbox" name="autodrink" {$Checked6} /> {$Tautodrink}<br />
+	<input type="radio" name="drink" value="H" {$Checked7} /> {$Tautoheal}<br />
+	<input type="radio" name="drink" value="M" {$Checked8} /> {$Tautomana}<br />
+	<input type="radio" name="drink" value="A" {$Checked9} /> {$Tautoall}<br />
         <input type="submit" value="{$Anext}" />
     </form>
     {if $Step == "options"}

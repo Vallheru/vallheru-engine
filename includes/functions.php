@@ -7,7 +7,7 @@
  *   @copyright            : (C) 2004,2005,2006,2011 Vallheru Team based on Gamers-Fusion ver 2.5
  *   @author               : thindil <thindil@tuxfamily.org>
  *   @version              : 1.4
- *   @since                : 28.08.2011
+ *   @since                : 05.09.2011
  *
  */
 
@@ -37,7 +37,7 @@ require_once("languages/".$player -> lang."/functions.php");
 /**
 * Function to drink potions - argument $id is id drinked potion
 */
- function drink($id) 
+function drink($id) 
  {
     global $player;
     global $smarty;
@@ -393,4 +393,142 @@ function equip ($id)
     $smarty -> assign ("Message", WEAR." ".$equip -> fields['name'].".");
     $smarty -> display ('error1.tpl');
     $equip -> Close();
+}
+
+/**
+ * Function allow drink few potions simultaneously
+ */
+function drinkfew($intId, $intAmount, $strType = '')
+{
+  global $player;
+  global $smarty;
+  global $db;
+  
+  if ($intId != 0)
+    {
+      $objPotion = $db->Execute("SELECT * FROM `potions` WHERE `id`=".$intId);
+    }
+  else
+    {
+      $objPotion = $db->SelectLimit("SELECT * FROM `potions` WHERE `owner`=".$player->id." AND `type`='".$strType."' AND `status`='K'", 1);
+      if (!$objPotion->fields['id'])
+	{
+	  return;
+	}
+      $intAmount = $objPotion->fields['amount'];
+    }
+  $intUsed = 0;
+  $intOldhp = $player->hp;
+  $intOldmana = $player->mana;
+  if ($objPotion->fields['type'] == 'M')
+    {
+      $cape = $db -> Execute("SELECT power FROM equipment WHERE owner=".$player -> id." AND type='C' AND status='E'");        
+      $maxmana = ($player -> inteli + $player -> wisdom);
+      $maxmana = $maxmana + (($cape -> fields['power'] / 100) * $maxmana);
+      $cape -> Close();
+      if ($player->mana == round($maxmana, 0)) 
+	{
+	  if ($intId != 0)
+	    {
+	      error("Nie musisz regenerować punktów magii!");
+	    }
+	  return;
+	}
+    }
+  else
+    {
+      if ($player->hp <= 0)
+	{
+	  if ($intId != 0)
+	    {
+	      error("Potrzebujesz wskrzeszenia.");
+	    }
+	  return;
+	}
+      elseif ($player->hp == $player->max_hp)
+	{
+	  if ($intId != 0)
+	    {
+	      error("Nie potrzebujesz leczenia.");
+	    }
+	  return;
+	}
+    }
+  for ($i = 1; $i <= $intAmount; $i++)
+    {
+      if (strpos($objPotion->fields['name'], "(K)") !== FALSE)
+	{
+	  $intRoll = rand(0, 100);
+	  if ($intRoll == 1)
+	    {
+	      $intUsed = $i;
+	      $player->hp = 0;
+	      $strEffect = "Kiedy wypiłeś miksturę, świat zawirował ci przed oczami. Napój okazał się trucizną. Przez krótką chwilę próbowałeś walczyć z ogarniającą ciebie ciemnością, lecz niestety twój organizm nie wytrzymał takiej walki. Martwy, padasz na ziemię.";
+	      break;
+	    }
+	  elseif ($intRoll < 51)
+	    {
+	      continue;
+	    }
+	}
+      if ($objPotion->fields['type'] == 'M')
+	{
+	  $player->mana += $objPotion->fields['power'];
+	  if ($player->mana >= $maxmana)
+	    {
+	      $player->mana = $maxmana;
+	      $intUsed = $i;
+	      $strEffect = "Wypiłeś ".$intUsed." razy ".$objPotion->fields['name']." i zregenerowałeś wszystkie punkty magii.";
+	      break;
+	    }
+	}
+      else
+	{
+	  $player->hp += $objPotion->fields['power'];
+	  if ($player->hp >= $player->max_hp)
+	    {
+	      $player->hp = $player->max_hp;
+	      $intUsed = $i;
+	      $strEffect = "Wypiłeś ".$intUsed." razy ".$objPotion->fields['name']." i odzyskałeś wszystkie punkty życia.";
+	      break;
+	    }
+	}
+    }
+  if ($intUsed == 0)
+    {
+      $intUsed = $intAmount;
+      if ($objPotion->fields['type'] == 'M')
+	{
+	  $intGained = $player->mana - $intOldmana;
+	  $strEffect = "Wypiłeś ".$intUsed." razy ".$objPotion->fields['name']." i zregenerowałeś ".$intGained." punktów magii.";
+	}
+      else
+	{
+	  $intGained = $player->hp - $intOldhp;
+	  $strEffect = "Wypiłeś ".$intUsed." razy ".$objPotion->fields['name']." i odzyskałeś ".$intGained." punktów życia.";
+	}
+    }
+  elseif (($objPotion->fields['type'] == 'M') && ($player->mana != $maxmana))
+    {
+      $intGained = $player->mana - $intOldmana;
+      $strEffect = "Wypiłeś ".$intUsed." razy ".$objPotion->fields['name']." i zregenerowałeś ".$intGained." punktów magii. ".$strEffect;
+    }
+  $db->Execute("UPDATE `players` SET `hp`=".$player->hp.", `pm`=".$player->mana." WHERE `id`=".$player->id);
+  if ($intUsed == $objPotion->fields['amount'])
+    {
+      $db->Execute("DELETE FROM `potions` WHERE `id`=".$objPotion->fields['id']);
+    }
+  else
+    {
+      $db->Execute("UPDATE `potions` SET `amount`=`amount`-".$intUsed." WHERE `id`=".$objPotion->fields['id']);
+    }
+  if ($intId != 0)
+    {
+      $smarty->assign("Effect", $strEffect);
+    }
+  else
+    {
+      print "<br />".$strEffect."<br />";
+    }
+  $objPotion->Close();
 }

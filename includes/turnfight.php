@@ -7,7 +7,7 @@
  *   @copyright            : (C) 2004,2005,2006,2007,2011 Vallheru Team based on Gamers-Fusion ver 2.5
  *   @author               : thindil <thindil@tuxfamily.org>
  *   @version              : 1.4
- *   @since                : 25.08.2011
+ *   @since                : 05.09.2011
  *
  */
  
@@ -697,6 +697,18 @@ function turnfight($expgain,$goldgain,$action,$addres)
         {
             $player -> hp = 0;
         }
+	if (($player->hp > 0) && ($player->autodrink != 'N'))
+	  {
+	    if ($player->autodrink == 'A')
+	      {
+		drinkfew(0, 0, 'M');
+		drinkfew(0, 0, 'H');
+	      }
+	    else
+	      {
+		drinkfew(0, 0, $player->autodrink);
+	      }
+	  }
         if ($title == 'Arena Walk') 
         {
             $smarty -> assign ("Message", "</ul><ul><li><b>".B_OPTIONS."</a><br /></li></ul>");

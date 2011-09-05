@@ -7,7 +7,7 @@
  *   @copyright            : (C) 2004,2005,2006,2007,2011 Vallheru Team based on Gamers-Fusion ver 2.5
  *   @author               : thindil <thindil@tuxfamily.org>
  *   @version              : 1.4
- *   @since                : 03.09.2011
+ *   @since                : 05.09.2011
  *
  */
 
@@ -1208,6 +1208,19 @@ function fightmonster($enemy,$expgain,$goldgain,$times)
     {
         $player -> hp = 0;
     }
+    if (($player->hp > 0) && ($player->autodrink != 'N'))
+      {
+	require_once("includes/functions.php");
+	if ($player->autodrink == 'A')
+	  {
+	    drinkfew(0, 0, 'M');
+	    drinkfew(0, 0, 'H');
+	  }
+	else
+	  {
+	    drinkfew(0, 0, $player->autodrink);
+	  }
+      }
     $mczar -> Close();
     $mczaro -> Close();
     $smarty -> assign ("Message", "</ul>");

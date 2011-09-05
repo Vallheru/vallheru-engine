@@ -7,7 +7,7 @@
  *   @copyright            : (C) 2004,2005,2006,2007,2011 Vallheru Team based on Gamers-Fusion ver 2.5
  *   @author               : thindil <thindil@tuxfamily.org>
  *   @version              : 1.4
- *   @since                : 01.09.2011
+ *   @since                : 05.09.2011
  *
  */
 
@@ -317,6 +317,7 @@ if (isset($_GET['view']) && $_GET['view'] == 'changes')
 */
 if (isset($_GET['view']) && $_GET['view'] == 'options')
 {
+    //Battlelogs
     if ($player->battlelog == 'Y')
     {
         $strChecked = 'checked="checked"';
@@ -341,6 +342,7 @@ if (isset($_GET['view']) && $_GET['view'] == 'options')
 	    $strChecked = 'checked="checked"';
 	  }
     }
+    //Graph bars in text mode
     if ($player -> graphbar == 'Y')
     {
         $strChecked2 = 'checked="checked"';
@@ -349,6 +351,29 @@ if (isset($_GET['view']) && $_GET['view'] == 'options')
     {
         $strChecked2 = '';
     }
+    //Autodrink potions
+    $strChecked7 = '';
+    $strChecked8 = '';
+    $strChecked9 = '';
+    $strChecked6 = '';
+    if ($player->autodrink != 'N')
+      {
+	$strChecked6 = 'checked="checked"';
+	switch ($player->autodrink)
+	  {
+	  case 'H':
+	    $strChecked7 = 'checked="checked"';
+	    break;
+	  case 'M':
+	    $strChecked8 = 'checked="checked"';
+	    break;
+	  case 'A':
+	    $strChecked9 = 'checked="checked"';
+	    break;
+	  default:
+	    break;
+	  }
+      }
     $smarty -> assign(array("Toptions" => T_OPTIONS,
                             "Tbattlelog" => T_BATTLELOG,
                             "Tgraphbar" => T_GRAPHBAR,
@@ -356,10 +381,18 @@ if (isset($_GET['view']) && $_GET['view'] == 'options')
 			    "Tonlyattack" => "Kiedy Ty atakowałeś(aś)",
 			    "Tonlyattacked" => "Kiedy zostałeś(aś) zaatakowany(a)",
 			    "Talways" => "Zawsze (po ataku i zaatakowaniu)",
+			    "Tautodrink" => "Automatycznie używaj mikstur po każdej walce",
+			    "Tautoheal" => "Do leczenia obrażeń",
+			    "Tautomana" => "Do regeneracji punktów magii",
+			    "Tautoall" => "Do regeneracji punktów życia oraz magii",
                             "Checked" => $strChecked,
 			    "Checked3" => $strChecked3,
 			    "Checked4" => $strChecked4,
 			    "Checked5" => $strChecked5,
+			    "Checked6" => $strChecked6,
+			    "Checked7" => $strChecked7,
+			    "Checked8" => $strChecked8,
+			    "Checked9" => $strChecked9,
                             "Checked2" => $strChecked2));
     if (isset($_GET['step']) && $_GET['step'] == 'options')
     {
@@ -381,13 +414,26 @@ if (isset($_GET['view']) && $_GET['view'] == 'options')
             $db -> Execute("UPDATE `players` SET `battlelog`='N' WHERE `id`=".$player -> id);
 	  }
         if (isset($_POST['graphbar']))
-        {
+	  {
             $db -> Execute("UPDATE `players` SET `graphbar`='Y' WHERE `id`=".$player -> id);
-        }
-            else
-        {
+	  }
+	else
+	  {
             $db -> Execute("UPDATE `players` SET `graphbar`='N' WHERE `id`=".$player -> id);
-        }
+	  }
+	if (isset($_POST['autodrink']))
+	  {
+	    $arrOptions = array('H', 'M', 'A');
+	    if (!in_array($_POST['drink'], $arrOptions))
+	      {
+		error(ERROR);
+	      }
+	    $db -> Execute("UPDATE `players` SET `autodrink`='".$_POST['drink']."' WHERE `id`=".$player -> id);
+	  }
+	else
+	  {
+	    $db -> Execute("UPDATE `players` SET `autodrink`='N' WHERE `id`=".$player -> id);
+	  }
         $smarty -> assign("Message", A_SAVED);
     }
 }
