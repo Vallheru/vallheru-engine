@@ -963,7 +963,7 @@ if (isset ($_GET['poison']))
         {
             error (NOT_IN);
         }
-        if (ereg("(K)", $poison -> fields['name']))
+        if (strpos($poison -> fields['name'], '(K)') !== FALSE)
         {
             $intRoll = rand(0,100);
             if ($intRoll == 1)
@@ -1011,15 +1011,15 @@ if (isset ($_GET['poison']))
         if ($intRoll > 50)
         {
             $intPower = $poison -> fields['power'];
-            if (ereg("Dynallca",$poison -> fields['name']))
+	    if (strpos($poison->fields['name'], "Dynallca") !== FALSE)
             {
                 $strPtype = 'D';
             }
-	    elseif (ereg("Nutari",$poison -> fields['name']))
+	    elseif (strpos($poison->fields['name'], "Nutari") !== FALSE)
             {
                 $strPtype = 'N';
             }
-	    elseif (ereg("Illani",$poison -> fields['name']))
+	    elseif (strpos($poison->fields['name'], "Illani") !== FALSE)
             {
 	        $strPtype = 'I';
             }

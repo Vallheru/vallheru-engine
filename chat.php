@@ -8,7 +8,7 @@
  *   @author               : thindil <thindil@tuxfamily.org>
  *   @author               : eyescream <tduda@users.sourceforge.net>
  *   @version              : 1.4
- *   @since                : 18.08.2011
+ *   @since                : 05.09.2011
  *
  */
 
@@ -158,7 +158,8 @@ if (isset($_GET['step']) && $_GET['step'] == 'give')
     {
         error(ERROR);
     }
-    if (!ereg("^[0-9]*$", $_POST['giveid'])) 
+    $_POST['giveid'] = intval($_POST['giveid']);
+    if ($_POST['giveid'] < 0)
     {
         error(ERROR);
     }

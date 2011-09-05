@@ -411,7 +411,8 @@ if (isset($_GET['alchemik']) && $_GET['alchemik'] == 'astral')
      */
     if (isset($_GET['potion']))
     {
-        if (!ereg("^[1-5]*$", $_GET['potion']))
+        $_GET['potion'] = intval($_GET['potion']);
+	if ($_GET['potion'] < 1 || $_GET['potion'] > 5)
         {
             error(ERROR);
         }

@@ -8,7 +8,7 @@
  *   @author               : thindil <thindil@tuxfamily.org>
  *   @author               : eyescream <tduda@users.sourceforge.net>
  *   @version              : 1.4
- *   @since                : 21.08.2011
+ *   @since                : 05.09.2011
  *
  */
 
@@ -282,10 +282,11 @@ if (isset ($_GET['view']) && $_GET['view'] == 'add')
                             "Addofert" => 0));
     if (isset ($_GET['step']) && ($_GET['step'] == 'piece' || $_GET['step'] == 'component')) 
     {
-        if (!ereg("^[0-9]*$", $_POST['name']))
-        {
-            error(ERROR);
-        }
+	$_POST['name'] = intval($_POST['name']);
+	if ($_POST['name'] < 0 || $_POST['name'] > 9)
+	  {
+	    error(ERROR);
+	  }
 	checkvalue($_POST['amount']);
 	checkvalue($_POST['number']);
 	checkvalue($_POST['cost']);

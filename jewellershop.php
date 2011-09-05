@@ -4,10 +4,10 @@
  *   Jeweller shop
  *
  *   @name                 : jewellershop.php                            
- *   @copyright            : (C) 2006 Vallheru Team based on Gamers-Fusion ver 2.5
+ *   @copyright            : (C) 2006,2011 Vallheru Team based on Gamers-Fusion ver 2.5
  *   @author               : thindil <thindil@users.sourceforge.net>
- *   @version              : 1.2
- *   @since                : 19.07.2006
+ *   @version              : 1.4
+ *   @since                : 05.09.2011
  *
  */
 
@@ -27,7 +27,7 @@
 //   along with this program; if not, write to the Free Software
 //   Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 //
-// $Id: jewellershop.php 499 2006-07-19 19:35:14Z thindil $
+// $Id$
 
 $title = "Jubiler";
 require_once("includes/head.php");
@@ -64,10 +64,11 @@ $objRings -> Close();
  */
 if (isset($_GET['buy']))
 {
-    if (!ereg("^[1-6]*$", $_GET['buy'])) 
-    {
-        error(ERROR);
-    }
+    $_GET['buy'] = intval($_GET['buy']);
+    if ($_GET['buy'] < 0 || $_GET['buy'] > 6)
+      {
+	error(ERROR);
+      }
     if ($player -> credits < 500)
     {
         error(NO_MONEY);

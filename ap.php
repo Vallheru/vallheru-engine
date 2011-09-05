@@ -7,7 +7,7 @@
  *   @copyright            : (C) 2004,2005,2006,2011 Vallheru Team based on Gamers-Fusion ver 2.5
  *   @author               : thindil <thindil@tuxfamily.org>
  *   @version              : 1.4
- *   @since                : 12.08.2011
+ *   @since                : 05.09.2011
  *
  */
 
@@ -154,10 +154,11 @@ if (isset ($_GET['step']) && $_GET['step'] == 'add')
     $sum = 0;
     foreach ($arrchar as $stat) 
     {
-        if (!ereg("^[0-9]*$", $stat)) 
-        {
-            error (ERROR);
-        }
+	$stat = intval($stat);
+	if ($stat < 0 || $stat > 9)
+	  {
+	    error(ERROR);
+	  }
         $sum = ($sum + $stat);
     }
     if ($sum > $player -> ap) 

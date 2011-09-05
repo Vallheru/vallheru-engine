@@ -8,7 +8,7 @@
  *   @author               : thindil <thindil@tuxfamily.org>
  *   @author               : eyescream <tduda@users.sourceforge.net>
  *   @version              : 1.4
- *   @since                : 04.09.2011
+ *   @since                : 05.09.2011
  *
  */
 
@@ -541,10 +541,11 @@ if (isset($_GET['buy']))
 */
 if (isset($_GET['view']) && $_GET['view'] == 'all') 
 {
-    if (!ereg("^[0-9]*$", $_GET['limit'])) 
-    {
-        error(ERROR);
-    }
+    $_GET['limit'] = intval($_GET['limit']);
+    if ($_GET['limit'] < 0)
+      {
+	error(ERROR);
+      }
     $objAmount = $db -> Execute("SELECT `id` FROM `equipment` WHERE `status`='R' AND `type`!='I' GROUP BY `name`");
     $intAmount = $objAmount -> RecordCount();
     $objAmount -> Close();

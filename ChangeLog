@@ -1,5 +1,7 @@
 2011-09-05  Bartek thindil Jasicki  <thindil@tuxfamily.org>
 
+	* BUG,aktywacja.php, alchemik.php, amarket.php, ap.php, chat.php, equip.php, index.php, imarket.php, jewellershop.php: 
+	fixed few notices
 	* FEATURE,install/db/update.sql, templates/layout1/account.tpl, templates/account.tpl, account.php, class/player_class.php,
 	equip.php, includes/funkcje.php, includes/functions.php, includes/turnfight.php:
 	added option to auto drink potions after fight
