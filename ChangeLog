@@ -1,5 +1,7 @@
 2011-09-06  Bartek thindil Jasicki  <thindil@tuxfamily.org>
 
+	* BUG,outposts.php: 
+	fixed formulas info
 	* FEATURE,languages/pl/outposts.php, outposts.php: 
 	added info about resources needed for update outposts
 	* FEATURE,includes/resets.php: 
