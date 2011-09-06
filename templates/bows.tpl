@@ -1,14 +1,16 @@
 <article class="nine bows">
 	<header>
 		<h1>{$Title}</h1>
-		<p>{$Armorinfo}
+		{if $Buy == 0 && $Step == ""}
+		    <p>
 			{if $Location == "Altara"}
 				{$Shopinfo} {$Archername} {$Shopinfo2}
 			{/if}
 			{if $Location == "Ardulith"}
 				{$Shopinfo}
 			{/if}
-		</p>
+		    </p>
+		{/if}
 	</header>
 	
 	{if $Buy == 0 && $Step == ""}

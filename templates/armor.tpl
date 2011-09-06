@@ -1,7 +1,9 @@
 <article class="nine armor">
 	<header>
 		<h1>{$Title}</h1>
-		<p>{$Armorinfo}</p>
+		{if $Buy == 0}
+		    <p>{$Armorinfo}</p>
+		{/if}
 	</header>
 	
 	{if $Buy == 0}

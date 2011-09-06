@@ -1,7 +1,9 @@
 <article class="nine msklep">
 	<header>
 		<h1>{$Title}</h1>
-		<p>{$Pwelcome}</p>
+		{if $Buy == ""}
+		    <p>{$Pwelcome}</p>
+		{/if}
 	</header>
 	
 	{if $Buy == ""}
