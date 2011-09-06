@@ -17,10 +17,19 @@
 /* Hide */
 article header h1 { display:none; } /* Hide dubble header */
 
+
 /* Tables */
 article table { display: table; width: 100%; }
 article table ul { margin: 0; padding: 0; } /* There is no reset.css */
 article table li { list-style: disc inside none; }
+
+/* Forms */
+article form label { display:block; margin: 10px 0; }
+article form label span { display:block; }
+
+/* Lists */
+article dl dt { clear: left; float:left; width: 300px; }
+article dl dt { float:left; }
 
 /***
  * PROPERT 
