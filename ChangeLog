@@ -1,5 +1,9 @@
 2011-09-06  Bartek thindil Jasicki  <thindil@tuxfamily.org>
 
+	* FEATURE,includes/resets.php: 
+	added limit for accumulate energy
+	* BUG,templates/armor.tpl, templates/bows.tpl, templates/msklep.tpl, templates/weapons.tpl: 
+	fixed some bugs with texts
 	* UPDATE: partialy merge with branch lp:~gwidonw/vallheru/design
 
 2011-09-05  Bartek thindil Jasicki  <thindil@tuxfamily.org>

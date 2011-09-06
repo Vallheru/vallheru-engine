@@ -7,7 +7,7 @@
  *   @copyright            : (C) 2004,2005,2006,2007,2011 Vallheru Team based on Gamers-Fusion ver 2.5
  *   @author               : thindil <thindil@tuxfamily.org>
  *   @version              : 1.4
- *   @since                : 31.08.2011
+ *   @since                : 06.09.2011
  *
  */
 
@@ -106,7 +106,7 @@ function mainreset()
         
     }
     $objStats -> Close();
-    $db -> Execute("UPDATE players SET energy=energy+max_energy WHERE miejsce!='Lochy' AND freeze=0 AND rasa!='' AND klasa!=''");
+    $db -> Execute("UPDATE `players` SET `energy`=`energy`+`max_energy` WHERE `miejsce`!='Lochy' AND `freeze`=0 AND `rasa`!='' AND `klasa`!='' AND `energy`<(150 * `max_energy`)");
     $db -> Execute("UPDATE `players` SET `crime`=`crime`+1, `astralcrime`='Y' WHERE `klasa`='Złodziej' AND `freeze`=0");
     $intCtime = (time() - 200);
     $db -> Execute("UPDATE players SET freeze=freeze-1, lpv=".$intCtime." WHERE freeze>0");
@@ -708,7 +708,7 @@ function smallreset()
     }
     $objStats -> Close();
     $db -> Execute("UPDATE `players` SET `crime`=`crime`+1, `astralcrime`='Y' WHERE `klasa`='Złodziej' AND `freeze`=0");  
-    $db -> Execute("UPDATE players SET energy=energy+max_energy WHERE miejsce!='Lochy' AND freeze=0 AND rasa!='' AND klasa!=''");
+    $db -> Execute("UPDATE `players` SET `energy`=`energy`+`max_energy` WHERE `miejsce`!='Lochy' AND `freeze`=0 AND `rasa`!='' AND `klasa`!='' AND `energy`<(150 * `max_energy`)");
     $db -> Execute("UPDATE outposts SET turns=turns+2, fatigue=100, attacks=0");
     $db -> Execute("UPDATE tribes SET atak='N'");
     $db -> Execute("UPDATE houses SET points=points+2");
