@@ -1,5 +1,7 @@
 2011-09-06  Bartek thindil Jasicki  <thindil@tuxfamily.org>
 
+	* FEATURE,includes/bbcode.php: 
+	added new emoticon
 	* BUG,outposts.php: 
 	fixed formulas info
 	* FEATURE,languages/pl/outposts.php, outposts.php: 
