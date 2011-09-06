@@ -4,11 +4,11 @@
  *   Polish language for outposts
  *
  *   @name                 : outposts.php                            
- *   @copyright            : (C) 2004,2005,2006 Vallheru Team based on Gamers-Fusion ver 2.5
- *   @author               : thindil <thindil@users.sourceforge.net>
+ *   @copyright            : (C) 2004,2005,2006,2011 Vallheru Team based on Gamers-Fusion ver 2.5
+ *   @author               : thindil <thindil@tuxfamily.org>
  *   @author               : eyescream <tduda@users.sourceforge.net>
- *   @version              : 1.3
- *   @since                : 01.03.2007
+ *   @version              : 1.4
+ *   @since                : 06.09.2011
  *
  */
 
@@ -28,7 +28,7 @@
 //   along with this program; if not, write to the Free Software
 //   Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 //
-// $Id: outposts.php 914 2007-03-01 21:20:43Z thindil $
+// $Id$
 
 define("NOT_IN_CITY", "Nie masz prawa tutaj przebywać");
 define("NOTHING", "brak");
@@ -167,10 +167,10 @@ if (isset ($_GET['view']) && $_GET['view'] == 'shop')
     define("SHOP_INFO3", "machin lub fortyfikacji.<br/>Posiadasz: ");
     define("OUTPOST_DEVELOPMENT", "Rozbudowa Strażnicy");
     define("LEVEL_INFO", "Powiększ rozmiar Strażnicy");
-    define("NO_LEVEL_INFO", "Nie stać Cię na powiększenie rozmiaru Strażnicy (złoto, mithril, sosna).");
+    define("NO_LEVEL_INFO", "Nie stać Cię na powiększenie rozmiaru Strażnicy. Potrzebujesz ");
     define("LAIR", "Legowiska");
     define("LAIR_INFO", "Dokup Legowiska Bestii");
-    define("NO_LAIR_INFO", "Nie stać Cię na dokupienie Legowisk Bestii (złoto, meteoryt, kryształ) lub nie ma na nie miejsca.");
+    define("NO_LAIR_INFO", "Nie stać Cię na dokupienie Legowisk Bestii lub nie ma na nie miejsca. Do budowy potrzebujesz ");
     define("BARRACK", "Kwatery");
     define("BARRACK_INFO", "Dokup Kwatery Weteranów");
     define("NO_BARRACK_INFO", "Nie stać Cię na dokupienie Kwater Weteranów (złoto, meteoryt, adamantium) lub nie ma na nie miejsca.");

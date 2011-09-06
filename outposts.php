@@ -8,7 +8,7 @@
  *   @author               : thindil <thindil@tuxfamily.org>
  *   @author               : eyescream <tduda@users.sourceforge.net>
  *   @version              : 1.4
- *   @since                : 28.08.2011
+ *   @since                : 06.09.2011
  *
  */
  
@@ -1048,21 +1048,24 @@ if (isset ($_GET['view']) && $_GET['view'] == 'shop')
             $arrBarrackLevels[ $i ] = ($i + $out -> fields['barracks']).': '.(50 * $intMeteorSum).GOLD_COINS.', '.$intMeteorSum.METEOR_PIECES.', '.(5 * $intMeteorSum).ADAMANTIUM_PIECES;
         }
     }
+    $strNolevelinfo = NO_LEVEL_INFO." ".(($out->fields['size'] + 2) * 250)." złota, ".($out->fields['size'] * 10)." mithrilu, ".$out->fields['size']." sosny.";
+    $strNolairinfo = NO_LAIR_INFO." ".(($out->fields['size'] + 2) * 50)." złota, ".(($out->fields['size'] + 1) * 5)." kryształów, ".($out->fields['size'] + 1)." meteorytu.";
+    $strNobarrackinfo = NO_BARRACK_INFO." ".(($out->fields['size'] + 2) * 50)." złota, ".(($out->fields['size'] + 1) * 5)." adamantium, ".($out->fields['size'] + 1)." meteorytu.";
     $smarty -> assign (array("OutpostDevelopment" => OUTPOST_DEVELOPMENT,
                              "MaxPossibleLevel" => $intMaxLevel,
                              "Level" => LEVEL,
                              "LevelInfo" => LEVEL_INFO,
-                             "NoLevelInfo" => NO_LEVEL_INFO,
+                             "NoLevelInfo" => $strNolevelinfo,
                              "OutpostLevels" => $arrOutpostLevels,
                              "MaxPossibleLair" => $intMaxLair,
                              "Lair" => LAIR,
                              "LairInfo" => LAIR_INFO,
-                             "NoLairInfo" => NO_LAIR_INFO,
+                             "NoLairInfo" => $strNolairinfo,
                              "LairLevels" => $arrLairLevels,
                              "MaxPossibleBarrack" => $intMaxLair,
                              "Barrack" => BARRACK,
                              "BarrackInfo" => BARRACK_INFO,
-                             "NoBarrackInfo" => NO_BARRACK_INFO,
+                             "NoBarrackInfo" => $strNobarrackinfo,
                              "BarrackLevels" => $arrBarrackLevels));
     $dbMinerals -> Close();
     $query = $db -> Execute("SELECT id FROM core WHERE owner=".$player -> id);
