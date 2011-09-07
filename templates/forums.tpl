@@ -31,7 +31,7 @@
 	    <td><input type="checkbox" name="{$Id[number1]}" /></td>
 	{/if}
         <td>{if $Newtopic[number1] == "Y"}<blink>N</blink>{/if} {$Closed[number1]}<a href="forums.php?topic={$Id[number1]}">{$Topic1[number1]}</a></td>
-        <td>{$Starter1[number1]}</td>
+        <td><a href="view.php?view={$Playersid[number1]}">{$Starter1[number1]}</a></td>
         <td>{$Replies1[number1]}</td>
         </tr>
     {/section}
@@ -69,7 +69,7 @@
     <br />
     <table class="td" width="98%" cellpadding="0" cellspacing="0">
     <tr>
-    <td><b>{$Topic2}</b> {$Writeby} {$Starter} {$Wid} {$Playerid} (<a href="forums.php?topics={$Category}">{$Aback}</a>) {if $Closed == 'N'}(<a href="forums.php?topic={$Topic}&amp;quotet=Y">{$Aquote}</a>){/if} {$Action}
+    <td><b>{$Topic2}</b> {$Writeby} <a href="view.php?view={$Playerid}">{$Starter}</a> {$Wid} {$Playerid} (<a href="forums.php?topics={$Category}">{$Aback}</a>) {if $Closed == 'N'}(<a href="forums.php?topic={$Topic}&amp;quotet=Y">{$Aquote}</a>){/if} {$Action}
     </td>
     </tr>
     <tr>
@@ -80,7 +80,7 @@
     {section name=number2 loop=$Rtext}
         <table class="td" width="98%" cellpadding="0" cellspacing="0">
         <tr>
-        <td><b>{$Rstarter[number2]}</b> {$Wid} {$Rplayerid[number2]} {$Write}... (<a href="forums.php?topics={$Category}">{$Aback}</a>) (<a href="forums.php?topic={$Topic}&amp;quote={$Rid[number2]}">{$Aquote}</a>)
+        <td><b><a href="view.php?view={$Rplayerid[number2]}">{$Rstarter[number2]}</a></b> {$Wid} {$Rplayerid[number2]} {$Write}... (<a href="forums.php?topics={$Category}">{$Aback}</a>) (<a href="forums.php?topic={$Topic}&amp;quote={$Rid[number2]}">{$Aquote}</a>)
          {$Action2[number2]}
         </td>
         </tr>

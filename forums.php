@@ -8,7 +8,7 @@
  *   @author               : thindil <thindil@tuxfamily.org>
  *   @author               : mori <ziniquel@users.sourceforge.net>
  *   @version              : 1.4
- *   @since                : 01.09.2011
+ *   @since                : 07.09.2011
  *
  */
 
@@ -152,13 +152,14 @@ if (isset($_GET['topics']))
      * Select sticky threads
      */
     $intOffset = 25 * ($page - 1);
-    $topic = $db->Execute("SELECT `w_time`, `id`, `topic`, `starter`, `closed` FROM `topics` WHERE `sticky`='Y' AND `cat_id`=".$_GET['topics']." AND `lang`='".$player -> lang."' OR `lang`='".$player -> seclang."' ORDER BY `id` ASC");
+    $topic = $db->Execute("SELECT `w_time`, `id`, `topic`, `starter`, `closed`, `gracz` FROM `topics` WHERE `sticky`='Y' AND `cat_id`=".$_GET['topics']." AND `lang`='".$player -> lang."' OR `lang`='".$player -> seclang."' ORDER BY `id` ASC");
     $arrid = array();
     $arrtopic = array();
     $arrstarter = array();
     $arrreplies = array();
     $arrNewtopic = array();
     $arrClosed = array();
+    $arrPlayerid = array();
     $i = 0;
     while (!$topic -> EOF) 
     {
@@ -197,6 +198,7 @@ if (isset($_GET['topics']))
         $arrtopic[$i] = "<b>".$topic -> fields['topic']."</b>";
         $arrstarter[$i] = $topic -> fields['starter'];
         $arrreplies[$i] = $replies;
+	$arrPlayerid[$i] = $topic->fields['gracz'];
         $topic -> MoveNext();
 	$i++;
     }
@@ -205,7 +207,7 @@ if (isset($_GET['topics']))
     /**
      * Select normal threads
      */
-    $topic = $db -> SelectLimit("SELECT `w_time`, `id`, `topic`, `starter`, `closed` FROM `topics` WHERE `sticky`='N' AND `cat_id`=".$_GET['topics']." AND `lang`='".$player -> lang."' OR `lang`='".$player -> seclang."' ORDER BY `id` ASC", 25, $intOffset);
+    $topic = $db -> SelectLimit("SELECT `w_time`, `id`, `topic`, `starter`, `closed`, `gracz` FROM `topics` WHERE `sticky`='N' AND `cat_id`=".$_GET['topics']." AND `lang`='".$player -> lang."' OR `lang`='".$player -> seclang."' ORDER BY `id` ASC", 25, $intOffset);
     while (!$topic -> EOF) 
       {
 	if ($topic -> fields['w_time'] > $_SESSION['forums'])
@@ -243,12 +245,14 @@ if (isset($_GET['topics']))
 	$arrtopic[$i] = $topic -> fields['topic'];
 	$arrstarter[$i] = $topic -> fields['starter'];
 	$arrreplies[$i] = $replies;
+	$arrPlayerid[$i] = $topic->fields['gracz'];
 	$topic -> MoveNext();
 	$i++;
       }
     $topic -> Close();
     
     $smarty -> assign(array("Category" => $_GET['topics'], 
+			    "Playersid" => $arrPlayerid,
         "Id" => $arrid, 
         "Topic1" => $arrtopic, 
         "Starter1" => $arrstarter, 
@@ -456,7 +460,7 @@ if (isset ($_GET['action']) && $_GET['action'] == 'addtopic')
     $_POST['title2'] = strip_tags($_POST['title2']);
     require_once('includes/bbcode.php');
     $_POST['body'] = bbcodetohtml($_POST['body']);    
-    $_POST['title2'] = "<b>".$data."</b> ".$_POST['title2'];
+    $_POST['title2'] = "<b>".$data." ".$time."</b> ".$_POST['title2'];
     $strBody = $db -> qstr($_POST['body'], get_magic_quotes_gpc());
     $strTitle = $db -> qstr($_POST['title2'], get_magic_quotes_gpc());
     $db -> Execute("INSERT INTO `topics` (`topic`, `body`, `starter`, `gracz`, `cat_id`, `w_time`, `sticky`) VALUES(".$strTitle.", ".$strBody.", '".$player -> user."', ".$player -> id.", ".$_POST['catid'].", ".$ctime.", '".$strSticky."')") or die("Could not add topic.");
@@ -502,7 +506,7 @@ if (isset($_GET['reply']))
     }
     require_once('includes/bbcode.php');
     $_POST['rep'] = bbcodetohtml($_POST['rep']);
-    $_POST['rep'] = "<b>".$data."</b><br />".$_POST['rep'];
+    $_POST['rep'] = "<b>".$data." ".$time."</b><br />".$_POST['rep'];
     $strBody = $db -> qstr($_POST['rep'], get_magic_quotes_gpc());
     $db -> Execute("INSERT INTO `replies` (`starter`, `topic_id`, `body`, `gracz`, `w_time`) VALUES('".$player -> user."', ".$_GET['reply'].", ".$strBody.", ".$player -> id.", ".$ctime.")") or die("Could not add reply.");
     error (REPLY_ADD." <a href=forums.php?topic=".$_GET['reply'].">".A_HERE."</a>.");
