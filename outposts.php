@@ -8,7 +8,7 @@
  *   @author               : thindil <thindil@tuxfamily.org>
  *   @author               : eyescream <tduda@users.sourceforge.net>
  *   @version              : 1.4
- *   @since                : 06.09.2011
+ *   @since                : 07.09.2011
  *
  */
  
@@ -1372,21 +1372,20 @@ if (isset ($_GET['view']) && $_GET['view'] == 'shop')
     */
     if (isset ($_GET['buy']) && $_GET['buy'] == 's') 
     {
-        if (!isset ($_POST['amount']) || !is_numeric($_POST['amount']) || $_POST['amount'] < 1)
+        if (!isset ($_POST['amount']))
         {
             error(ERROR);
         }
+	checkvalue($_POST['amount']);
         $intNeededGold = 125 * $_POST['amount'] * (2 * $out -> fields['size'] + $_POST['amount'] + 3);
         $intNeededPine = $_POST['amount'] * ($out -> fields['size'] + ($_POST['amount'] - 1) / 2);
-        if (($intNeededGold > $out -> fields['gold']) || ($intNeededPine > $dbMinerals -> fields['pine']) ||
-            ($_POST['amount'] * 10 > $player -> platinum))
-        {
-            error (NO_MONEY.' '.YOU_NEED.': '.$intNeededGold.' '.GOLD_COINS.', '.($intNeededPine * 10).' '.PLATINUM_PIECES.', '.$intNeededPine.' '.PINE_PIECES);
-        }
-        $db -> Execute('UPDATE outposts SET gold=gold-'.$intNeededGold.' WHERE id='.$out -> fields['id']);
-        $db -> Execute('UPDATE players SET platinum=platinum-'.($_POST['amount'] * 10).' WHERE id='.$out -> fields['owner']);
-        $db -> Execute('UPDATE minerals SET pine=pine-'.$intNeededPine.' WHERE owner='.$out -> fields['owner']);
-        $db -> Execute('UPDATE outposts SET size=size+'.$_POST['amount'].' WHERE id='.$out -> fields['id']);
+        if (($intNeededGold > $out -> fields['gold']) || ($intNeededPine > $dbMinerals -> fields['pine']) || ($_POST['amount'] * 10 > $player -> platinum))
+	  {
+            error (NO_MONEY.' '.YOU_NEED.': '.$intNeededGold.' '.GOLD_COINS.', '.($_POST['amount'] * 10).' '.PLATINUM_PIECES.', '.$intNeededPine.' '.PINE_PIECES);
+	  }
+        $db -> Execute('UPDATE `outposts` SET `gold`=`gold`-'.$intNeededGold.', `size`=`size`+'.$_POST['amount'].' WHERE `id`='.$out -> fields['id']);
+        $db -> Execute('UPDATE `players` SET `platinum`=`platinum`-'.($_POST['amount'] * 10).' WHERE `id`='.$out -> fields['owner']);
+        $db -> Execute('UPDATE `minerals` SET `pine`=`pine`-'.$intNeededPine.' WHERE `owner`='.$out -> fields['owner']);
         $smarty -> assign ("Message", YOU_ADD.' <b>'.($_POST['amount'] + $out -> fields['size']).'</b> (+'.$_POST['amount'].'). '.YOU_PAID.': '.$intNeededGold.' '.GOLD_COINS.', '.($_POST['amount'] * 10).                           ' '.PLATINUM_PIECES.', '.$intNeededPine.' '.PINE_PIECES.'. <a href=outposts.php?view=shop>'.A_REFRESH.'</a>');
     }
     /**
