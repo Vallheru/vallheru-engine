@@ -1048,7 +1048,7 @@ if (isset ($_GET['view']) && $_GET['view'] == 'shop')
             $arrBarrackLevels[ $i ] = ($i + $out -> fields['barracks']).': '.(50 * $intMeteorSum).GOLD_COINS.', '.$intMeteorSum.METEOR_PIECES.', '.(5 * $intMeteorSum).ADAMANTIUM_PIECES;
         }
     }
-    $strNolevelinfo = NO_LEVEL_INFO." ".(($out->fields['size'] + 2) * 250)." złota, ".($out->fields['size'] * 10)." mithrilu, ".$out->fields['size']." sosny.";
+    $strNolevelinfo = NO_LEVEL_INFO." ".(($out->fields['size'] + 2) * 250)." złota, 10 mithrilu, ".$out->fields['size']." sosny.";
     $strNolairinfo = NO_LAIR_INFO." ".(($out->fields['fence'] + 2) * 50)." złota, ".(($out->fields['fence'] + 1) * 5)." kryształów, ".($out->fields['fence'] + 1)." meteorytu.";
     $strNobarrackinfo = NO_BARRACK_INFO." ".(($out->fields['barracks'] + 2) * 50)." złota, ".(($out->fields['barracks'] + 1) * 5)." adamantium, ".($out->fields['barracks'] + 1)." meteorytu.";
     $smarty -> assign (array("OutpostDevelopment" => OUTPOST_DEVELOPMENT,
