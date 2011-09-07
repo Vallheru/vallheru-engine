@@ -20,7 +20,7 @@
     <div align="center"><a href="#arrows">{$Barrowsmenu[0]}</a></div>
 {/if}
 {if $Bhelmetsamount > 1}
-    <div align="center"><a href="#helmets">{$Bhelmetssmenu[0]}</a></div>
+    <div align="center"><a href="#helmets">{$Bhelmetsmenu[0]}</a></div>
 {/if}
 {if $Barmorsamount > 1}
     <div align="center"><a href="#armors">{$Barmorsmenu[0]}</a></div>

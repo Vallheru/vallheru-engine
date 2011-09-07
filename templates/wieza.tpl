@@ -1,7 +1,9 @@
 <article class="nine wieza">
 	<header>
 		<h1>{$Title}</h1>
-		<p>{$Towerinfo}</p>
+		{if $Buy == ""}
+		    <p>{$Towerinfo}</p>
+		{/if}
 	</header>
 	
 	{if $Buy == ""}

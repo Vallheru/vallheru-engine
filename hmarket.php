@@ -280,6 +280,10 @@ if (isset($_GET['buy']))
     $buy -> Close();
     if (isset($_GET['step']) && $_GET['step'] == 'buy') 
     {
+        if (!isset($_POST['amount']))
+	  {
+	    error(ERROR);
+	  }
 	checkvalue($_POST['amount']);
         $buy = $db -> Execute("SELECT * FROM hmarket WHERE id=".$_GET['buy']);
         $price = $_POST['amount'] * $buy -> fields['cost'];

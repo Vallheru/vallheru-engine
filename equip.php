@@ -202,7 +202,7 @@ function backpack($type,$playerid,$nameitems,$type2,$smartyname)
 */
 $smarty -> assign(array("Arrowhead" => '', 
                         "Action" => '', 
-                        "Potions" => '', 
+                        "Potions1" => 0, 
                         "Hide" => '', 
                         "Repairequip" => '', 
                         "Arrows1" => '',
