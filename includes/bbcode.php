@@ -148,7 +148,7 @@ function bbcodetohtml($text, $isChat = FALSE)
     $text = str_replace(";(","<img src=\"images/cry.gif\" title=\";( - płacze\" />", $text);
     $text = str_replace(":]", "<img src=\"images/cheesy.png\" title=\":] - wesoły\" />", $text);
     $text = str_replace(":P", "<img src=\"images/tongue.gif\" title=\":P - pokazuje język\" />", $text);
-    $text = str_replace(":p", "<img src=\"images/sliniak-1.gif\" title=\":p - pokazuje język\" />", $text);
+    $text = str_replace(":~", "<img src=\"images/sliniak-1.gif\" title=\":~ - ślini się\" />", $text);
    
     /**
     * Return converted text
@@ -223,7 +223,7 @@ function htmltobbcode($text)
     $text = str_replace("<img src=\"images/cry.gif\" title=\";( - płacze\" />",";(", $text);
     $text = str_replace("<img src=\"images/cheesy.png\" title=\":] - wesoły\" />",":]", $text);
     $text = str_replace("<img src=\"images/tongue.gif\" title=\":P - pokazuje język\" />",":P", $text);
-    $text = str_replace("<img src=\"images/sliniak-1.gif\" title=\":p - pokazuje język\" />",":p", $text);
+    $text = str_replace("<img src=\"images/sliniak-1.gif\" title=\":~ - ślini się\" />",":~", $text);
     /**
      * Center text
      */
