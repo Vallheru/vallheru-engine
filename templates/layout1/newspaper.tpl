@@ -36,7 +36,7 @@
     {/if}
     {if $Amount > "0"}
         {section name=newspaper3 loop=$Tauthor}
-            <b>{$Tauthor[newspaper3]}</b> {if $Tdate[newspaper3] != ""} ({$Tdate[newspaper3]}) {/if}{$Wrote}: {if $Rank == "Admin" || $Rank == "Redaktor"} (<a href="newspaper.php?comments={$Comments}&amp;action=delete&amp;cid={$Cid[newspaper3]}">{$Adelete}</a>) {/if}<br />
+            <b><a href="view.php?view={$Taid[newspaper3]}">{$Tauthor[newspaper3]}</a></b> {if $Tdate[newspaper3] != ""} ({$Tdate[newspaper3]}) {/if}{$Wrote}: {if $Rank == "Admin" || $Rank == "Redaktor"} (<a href="newspaper.php?comments={$Comments}&amp;action=delete&amp;cid={$Cid[newspaper3]}">{$Adelete}</a>) {/if}<br />
             {$Tbody[newspaper3]}<br /><br />
         {/section}
     {/if}

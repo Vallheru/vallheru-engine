@@ -8,7 +8,7 @@
  *   @author               : thindil <thindil@tuxfamily.org>
  *   @author               : mori <ziniquel@users.sourceforge.net>
  *   @version              : 1.4
- *   @since                : 30.08.2011
+ *   @since                : 08.09.2011
  *
  */
 
@@ -197,6 +197,7 @@ if (isset($_GET['step']) && $_GET['step'] == 'comments')
 	  }
         $amount = displaycomments($_GET['text'], 'updates', 'upd_comments', 'updateid');
         $smarty -> assign(array("Tauthor" => $arrAuthor,
+				"Taid" => $arrAuthorid,
             "Tbody" => $arrBody,
             "Amount" => $amount,
             "Cid" => $arrId,

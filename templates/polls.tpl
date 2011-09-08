@@ -91,7 +91,7 @@
     {/if}
     {if $Amount > "0"}
         {section name=update loop=$Tauthor}
-            <b>{$Tauthor[update]}</b> {if $Tdate[update] != ""} ({$Tdate[update]}) {/if}{$Writed}: {if $Rank == "Admin" || $Rank == "Staff"} (<a href="polls.php?action=comments&amp;step=delete&amp;cid={$Cid[update]}">{$Adelete}</a>) {/if}<br />
+            <b><a href="view.php?view={$Taid[update]}">{$Tauthor[update]}</a></b> {if $Tdate[update] != ""} ({$Tdate[update]}) {/if}{$Writed}: {if $Rank == "Admin" || $Rank == "Staff"} (<a href="polls.php?action=comments&amp;step=delete&amp;cid={$Cid[update]}">{$Adelete}</a>) {/if}<br />
             {$Tbody[update]}<br /><br />
         {/section}
     {/if}

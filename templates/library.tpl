@@ -105,7 +105,7 @@
     {/if}
     {if $Amount > "0"}
         {section name=library5 loop=$Tauthor}
-            <b>{$Tauthor[library5]}</b> {if $Tdate[library5] != ""} ({$Tdate[library5]}) {/if}{$Writed}: {if $Rank == "Admin" || $Rank == "Bibliotekarz"} (<a href="library.php?step=comments&amp;action=delete&amp;cid={$Cid[library5]}">{$Adelete}</a>) {/if}<br />
+            <b><a href="view.php?view={$Taid[library5]}">{$Tauthor[library5]}</a></b> {if $Tdate[library5] != ""} ({$Tdate[library5]}) {/if}{$Writed}: {if $Rank == "Admin" || $Rank == "Bibliotekarz"} (<a href="library.php?step=comments&amp;action=delete&amp;cid={$Cid[library5]}">{$Adelete}</a>) {/if}<br />
             {$Tbody[library5]}<br /><br />
         {/section}
     {/if}

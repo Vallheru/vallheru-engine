@@ -7,7 +7,7 @@
  *   @copyright            : (C) 2006,2007,2011 Vallheru Team based on Gamers-Fusion ver 2.5
  *   @author               : thindil <thindil@tuxfamily.org>
  *   @version              : 1.4
- *   @since                : 09.08.2011
+ *   @since                : 08.09.2011
  *
  */
 
@@ -41,6 +41,7 @@ function displaycomments($intItemid, $strItemtable, $strCommentstable, $strComme
     global $db;
     global $intPages;
     global $intPage;
+    global $arrAuthorid;
 
     checkvalue($intItemid);
     $objText = $db -> Execute("SELECT `id` FROM `".$strItemtable."` WHERE `id`=".$intItemid);
@@ -66,11 +67,14 @@ function displaycomments($intItemid, $strItemtable, $strCommentstable, $strComme
     $arrAuthor = array();
     $arrId = array();
     $arrDate = array();
+    $arrAuthorid = array();
     $i = 0;
     while (!$objComments -> EOF)
     {
         $arrBody[$i] = $objComments -> fields['body'];
         $arrAuthor[$i] = $objComments -> fields['author'];
+	$tmpArray = explode(" ", $objComments->fields['author']);
+	$arrAuthorid[$i] = $tmpArray[count($tmpArray) - 1];
         $arrId[$i] = $objComments -> fields['id'];
         $arrDate[$i] = $objComments -> fields['time'];
         $i = $i + 1;

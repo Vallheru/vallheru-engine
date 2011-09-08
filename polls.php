@@ -7,7 +7,7 @@
  *   @copyright            : (C) 2004,2005,2006,2011 Vallheru Team based on Gamers-Fusion ver 2.5
  *   @author               : thindil <thindil@tuxfamily.org>
  *   @version              : 1.4
- *   @since                : 19.08.2011
+ *   @since                : 08.09.2011
  *
  */
 
@@ -304,6 +304,7 @@ if (isset($_GET['action']) && $_GET['action'] == 'comments')
 	  }
         $intAmount = displaycomments($_GET['poll'], 'polls', 'polls_comments', 'pollid');
         $smarty -> assign(array("Tauthor" => $arrAuthor,
+				"Taid" => $arrAuthorid,
             "Tbody" => $arrBody,
             "Amount" => $intAmount,
             "Cid" => $arrId,
