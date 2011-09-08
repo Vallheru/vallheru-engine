@@ -120,3 +120,13 @@
     {/if}
     <br /><br /><a href="forums.php?topics={$Category}">{$Aback}</a>
 {/if}
+
+{if $Action3 == "move"}
+    <form method="post" action="forums.php?action=move&amp;tid={$Tid}">
+    	  <input type="submit" value="{$Amove}" /> {$Tto} <select name="category">
+	      {section name=move loop=$Categories}
+	          <option value="{$Catid[move]}">{$Categories[move]}</option>
+	      {/section}
+	      </select>
+    </form>
+{/if}

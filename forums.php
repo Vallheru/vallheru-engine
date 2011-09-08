@@ -8,7 +8,7 @@
  *   @author               : thindil <thindil@tuxfamily.org>
  *   @author               : mori <ziniquel@users.sourceforge.net>
  *   @version              : 1.4
- *   @since                : 07.09.2011
+ *   @since                : 08.09.2011
  *
  */
 
@@ -339,7 +339,7 @@ if (isset($_GET['topic']))
       }
     if ($player -> rank == 'Admin' || $player -> rank == 'Staff') 
     {
-        $smarty -> assign ("Action", " (<a href=forums.php?kasuj1=".$topicinfo -> fields['id'].">".A_DELETE."</a>)".$strStickyaction.$strCloseaction);
+        $smarty -> assign ("Action", " (<a href=forums.php?kasuj1=".$topicinfo -> fields['id'].">".A_DELETE."</a>)".$strStickyaction.$strCloseaction." (<a href=\"forums.php?action=move&amp;tid=".$topicinfo->fields['id']."\">Przenieś</a>)");
     } 
     else 
     {
@@ -511,6 +511,39 @@ if (isset($_GET['reply']))
     $db -> Execute("INSERT INTO `replies` (`starter`, `topic_id`, `body`, `gracz`, `w_time`) VALUES('".$player -> user."', ".$_GET['reply'].", ".$strBody.", ".$player -> id.", ".$ctime.")") or die("Could not add reply.");
     error (REPLY_ADD." <a href=forums.php?topic=".$_GET['reply'].">".A_HERE."</a>.");
 }
+
+/**
+ * Move topic to other category
+ */
+if (isset($_GET['action']) && $_GET['action'] == 'move')
+  {
+    if ($player->rank != 'Admin' && $player->rank != 'Staff')
+      {
+        error(ERROR);
+      }
+    checkvalue($_GET['tid']);
+    $objCat = $db->Execute("SELECT `id`, `name` FROM `categories` ORDER BY `id` ASC");
+    $arrCats = array();
+    $arrCatid = array();
+    while (!$objCat->EOF)
+      {
+	$arrCatid[] = $objCat->fields['id'];
+	$arrCats[] = $objCat->fields['name'];
+	$objCat->MoveNext();
+      }
+    $objCat->Close();
+    $smarty->assign(array("Categories" => $arrCats,
+			  "Catid" => $arrCatid,
+			  "Amove" => "Przenieś",
+			  "Tto" => "temat do",
+			  "Tid" => $_GET['tid']));
+    if (isset($_POST['category']))
+      {
+	checkvalue($_POST['category']);
+	$db->Execute("UPDATE `topics` SET `cat_id`=".$_POST['category']." WHERE `id`=".$_GET['tid']);
+	error("Temat przeniesiony.");
+      }
+  }
 
 /**
  * Close/Open topics
