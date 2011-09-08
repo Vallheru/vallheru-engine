@@ -8,7 +8,7 @@
  *   @author              : thindil <thindil@tuxfamily.org>
  *   @author              : eyescream <tduda@users.sourceforge.net>
  *   @version             : 1.4
- *   @since               : 24.08.2011
+ *   @since               : 08.09.2011
  *
  */
 
@@ -169,19 +169,21 @@ if (isset ($_GET['view']) && $_GET['view'] == 'add')
     $arrname = array();
     $arrid = array();
     $arramount = array();
-    $i = 0;
+    $arrPower = array();
     while (!$rzecz -> EOF) 
     {
-        $arrname[$i] = $rzecz -> fields['name'];
-        $arrid[$i] = $rzecz -> fields['id'];
-        $arramount[$i] = $rzecz -> fields['amount'];
+        $arrname[] = $rzecz -> fields['name'];
+        $arrid[] = $rzecz -> fields['id'];
+        $arramount[] = $rzecz -> fields['amount'];
+	$arrPower[] = $rzecz->fields['power'];
         $rzecz -> MoveNext();
-        $i = $i + 1;
     }
     $rzecz -> Close();
     $smarty -> assign(array("Name" => $arrname, 
-        "Itemid" => $arrid, 
-        "Amount" => $arramount,
+			    "Itemid" => $arrid, 
+			    "Amount" => $arramount,
+			    "Power" => $arrPower,
+			    "Ppower" => "Moc",
         "Addinfo" => ADD_INFO,
         "Aadd" => A_ADD,
         "Potion" => POTION,

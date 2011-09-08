@@ -55,7 +55,7 @@
     <form method="post" action="mmarket.php?view=add&amp;step=add"><table class="dark">
     <tr><td colspan="2">{$Potion}: <select name="przedmiot">
     {section name=mmarket1 loop=$Name}
-        <option value="{$Itemid[mmarket1]}">{$Name[mmarket1]} ({$Pamount2}: {$Amount[mmarket1]})</option>
+        <option value="{$Itemid[mmarket1]}">{$Name[mmarket1]} ({$Ppower}: {$Power[mmarket1]}) ({$Pamount2}: {$Amount[mmarket1]})</option>
     {/section}</select></td></tr>
     <tr><td>{$Pamount}:</td><td><input type="text" name="amount" /></td></tr>
     <tr><td>{$Pcost}:</td><td><input type="text" name="cost" /></td></tr>
