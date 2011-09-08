@@ -4,10 +4,10 @@
  *   Function to scale avatars
  *
  *   @name                 : avatars.php                            
- *   @copyright            : (C) 2006 Vallheru Team based on Gamers-Fusion ver 2.5
- *   @author               : thindil <thindil@users.sourceforge.net>
- *   @version              : 1.1
- *   @since                : 26.06.2006
+ *   @copyright            : (C) 2006,2011 Vallheru Team based on Gamers-Fusion ver 2.5
+ *   @author               : thindil <thindil@tuxfamily.org>
+ *   @version              : 1.4
+ *   @since                : 08.09.2011
  *
  */
 
@@ -27,7 +27,7 @@
 //   along with this program; if not, write to the Free Software
 //   Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 //
-// $Id: avatars.php 386 2006-06-26 11:25:40Z thindil $
+// $Id$
 
 
 /**
@@ -38,19 +38,28 @@ function scaleavatar($strFilename)
     $arrImageparams = getimagesize($strFilename);
     $intWidth = $arrImageparams[0];
     $intHeight = $arrImageparams[1];
-    if ($arrImageparams[0] > 200)
-    {
-        $intWidth = 200;
-        $fltPercent = $arrImageparams[0] / 100;
-        $fltPercent2 = ($arrImageparams[0] - $intWidth) / $fltPercent;
-        $intHeight = ceil($intHeight - ($intHeight * ($fltPercent2 / 100)));
-    }
-    if ($arrImageparams[1] > 100)
-    {
-        $intHeight = 100;
-        $fltPercent = $arrImageparams[1] / 100;
-        $fltPercent2 = ($arrImageparams[1] - $intHeight) / $fltPercent;
-        $intWidth = ceil($intWidth - ($intWidth * ($fltPercent2 / 100)));
+    if ($intWidth > 200 || $intHeight > 100)
+      {
+	if ($intWidth - 200 > $intHeight - 100)
+	  {
+	    $fltPercent = $intWidth / 100;
+	  }
+	else
+	  {
+	    $fltPercent = $intHeight / 100;
+	  }
+	if ($arrImageparams[0] > 200)
+	  {
+	    $intWidth = 200;
+	    $fltPercent2 = ($arrImageparams[0] - $intWidth) / $fltPercent;
+	    $intHeight = ceil($intHeight - ($intHeight * ($fltPercent2 / 100)));
+	  }
+	if ($arrImageparams[1] > 100)
+	  {
+	    $intHeight = 100;
+	    $fltPercent2 = ($arrImageparams[1] - $intHeight) / $fltPercent;
+	    $intWidth = ceil($intWidth - ($intWidth * ($fltPercent2 / 100)));
+	  }
     }
     $arrParams = array($intWidth, $intHeight);
     return $arrParams;

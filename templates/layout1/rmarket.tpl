@@ -63,7 +63,7 @@
     <tr><td colspan="2">
     {$Item}: <select name="przedmiot">
     {section name=item1 loop=$Name}
-        <option value="{$Itemid[item1]}">{$Name[item1]} ({$Iamount}: {$Amount[item1]})</option>
+        <option value="{$Itemid[item1]}">{$Name[item1]} (+{$Rpower[item1]}) ({$Iamount}: {$Amount[item1]})</option>
     {/section}</select></td></tr>
     <tr><td>{$Iamount2}:</td><td><input type="text" name="amount" /></td></tr>
     <tr><td>{$Icost}:</td><td><input type="text" name="cost" /></td></tr>

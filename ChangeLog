@@ -1,5 +1,9 @@
 2011-09-08  Bartek thindil Jasicki  <thindil@tuxfamily.org>
 
+	* templates/layout1/rmarket.tpl, templates/rmarket.tpl, rmarket.php: 
+	added info about ring power during adding offert
+	* BUG,includes/avatars.php (scaleavatar): 
+	fixed bug with scale avatars
 	* BUG,account.php: 
 	fixed bug with send too big avatars
 	* FEATURE,templates/layout1/updates.tpl, templates/layout1/polls.tpl, templates/layout1/newspaper.tpl, templates/layou1/news.tpl, 
