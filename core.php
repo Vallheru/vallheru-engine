@@ -8,7 +8,7 @@
  *   @author               : thindil <thindil@tuxfamily.org>
  *   @author               : eyescream <tduda@users.sourceforge.net>
  *   @version              : 1.4
- *   @since                : 28.08.2011
+ *   @since                : 08.09.2011
  *
  */
 
@@ -1434,11 +1434,11 @@ if (isset ($_GET['view']) && $_GET['view'] == 'explore')
     {
 	checkvalue($_POST['repeat']);
         $rep = ($_POST['repeat'] * 0.1);
-        if ($player -> energy < $rep) 
+        if (round($player->energy, 1) < round($rep, 1)) 
         {
             error (NO_ENERGY2);
         }
-        if ($player -> hp == 0) 
+        if ($player->hp == 0) 
         {
             error (YOU_DEAD2);
         }
