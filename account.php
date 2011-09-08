@@ -7,7 +7,7 @@
  *   @copyright            : (C) 2004,2005,2006,2007,2011 Vallheru Team based on Gamers-Fusion ver 2.5
  *   @author               : thindil <thindil@tuxfamily.org>
  *   @version              : 1.4
- *   @since                : 05.09.2011
+ *   @since                : 08.09.2011
  *
  */
 
@@ -542,6 +542,7 @@ if (isset($_GET['view']) && $_GET['view'] == "avatar")
             error (NO_FILE);
         }
     }
+    //Add avatar
     if (isset($_GET['step']) && $_GET['step'] == 'dodaj') 
     {
         if (!isset($_FILES['plik']['name'])) 
@@ -551,6 +552,11 @@ if (isset($_GET['view']) && $_GET['view'] == "avatar")
         $plik = $_FILES['plik']['tmp_name'];
         $nazwa = $_FILES['plik']['name'];
         $typ = $_FILES['plik']['type'];
+	$intSize = $_FILES['plik']['size'];
+	if ($intSize > 10240)
+	  {
+	    error("Ten avatar zajmuje za dużo miejsca (maksymalnie 10kB)!");
+	  }
         if ($typ != 'image/pjpeg' && $typ != 'image/jpeg' && $typ != 'image/gif' && $typ != 'image/png') 
         {
             error (BAD_TYPE);
@@ -584,7 +590,7 @@ if (isset($_GET['view']) && $_GET['view'] == "avatar")
         {
             error (ERROR);
         }
-        $db -> Execute("UPDATE players SET avatar='".$newname."' WHERE id=".$player -> id) or error("nie mogÄ dodaÄ!");
+        $db -> Execute("UPDATE players SET avatar='".$newname."' WHERE id=".$player -> id) or error($db->ErrorMsg());
         error (LOADED."! <a href=\"account.php?view=avatar\">".REFRESH."</a><br />");
     }
 }

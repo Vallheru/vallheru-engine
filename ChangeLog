@@ -1,6 +1,8 @@
 2011-09-08  Bartek thindil Jasicki  <thindil@tuxfamily.org>
 
-	* templates/layout1/updates.tpl, templates/layout1/polls.tpl, templates/layout1/newspaper.tpl, templates/layou1/news.tpl, 
+	* BUG,account.php: 
+	fixed bug with send too big avatars
+	* FEATURE,templates/layout1/updates.tpl, templates/layout1/polls.tpl, templates/layout1/newspaper.tpl, templates/layou1/news.tpl, 
 	templates/layout1/library.tpl, templates/updates.tpl, templates/polls.tpl, templates/newspaper.tpl, templates/news.tpl,
 	templates/library.tpl, includes/comments.php, updates.php, polls.php, newspaper.php, news.php, library.php: 
 	added link to author profile
