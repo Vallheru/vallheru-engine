@@ -8,7 +8,7 @@
  *   @author               : thindil <thindil@tuxfamily.org>
  *   @author               : eyescream <tduda@users.sourceforge.net>
  *   @version              : 1.4
- *   @since                : 07.09.2011
+ *   @since                : 08.09.2011
  *
  */
  
@@ -1361,11 +1361,9 @@ if (isset ($_GET['view']) && $_GET['view'] == 'shop')
         {
             error (NO_MONEY.' '.YOU_NEED.': '.($intNeededMeteor * 50).' '.GOLD_COINS.', '.$intNeededMeteor.' '.METEOR_PIECES.', '.($intNeededMeteor * 5).' '.CRYSTAL_PIECES);
         }
-        $db -> Execute('UPDATE outposts SET gold=gold-'.($intNeededMeteor * 50).' WHERE id='.$out -> fields['id']);
-        $db -> Execute('UPDATE minerals SET meteor=meteor-'.$intNeededMeteor.' WHERE owner='.$out -> fields['owner']);
-        $db -> Execute('UPDATE minerals SET crystal=crystal-'.($intNeededMeteor * 5).' WHERE owner='.$out -> fields['owner']);
-        $db -> Execute('UPDATE outposts SET fence=fence+'.$_POST['amount'].' WHERE id='.$out -> fields['id']);
-        $smarty -> assign ("Message", YOU_ADD.' <b>'.($_POST['amount'] + $out -> fields['barrack']).'</b> (+'.$_POST['amount'].') '.YOU_PAID.': '.($intNeededMeteor * 50).' '.GOLD_COINS.', '.$intNeededMeteor.                           ' '.METEOR_PIECES.', '.($intNeededMeteor * 5).' '.CRYSTAL_PIECES.'. <a href=outposts.php?view=shop>'.A_REFRESH.'</a>');
+        $db -> Execute('UPDATE `outposts` SET `gold`=`gold`-'.($intNeededMeteor * 50).', `fence`=`fence`+'.$_POST['amount'].' WHERE `id`='.$out -> fields['id']);
+        $db -> Execute('UPDATE `minerals` SET `meteor`=`meteor`-'.$intNeededMeteor.', `crystal`=`crystal`-'.($intNeededMeteor * 5).' WHERE `owner`='.$out -> fields['owner']);
+        $smarty -> assign ("Message", YOU_ADD.' <b>'.($_POST['amount'] + $out -> fields['fence']).'</b> (+'.$_POST['amount'].') '.YOU_PAID.': '.($intNeededMeteor * 50).' '.GOLD_COINS.', '.$intNeededMeteor.' '.METEOR_PIECES.', '.($intNeededMeteor * 5).' '.CRYSTAL_PIECES.'. <a href=outposts.php?view=shop>'.A_REFRESH.'</a>');
     }
     /**
     * Buy land for outpost

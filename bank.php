@@ -9,7 +9,7 @@
  *   @author               : yeskov <yeskov@users.sourceforge.net>
  *   @author               : eyescream <tduda@users.sourceforge.net>
  *   @version              : 1.4
- *   @since                : 03.09.2011
+ *   @since                : 08.09.2011
  *
  */
 
@@ -160,6 +160,10 @@ if (isset ($_GET['action']) && $_GET['action'] == 'mithril')
 */
 if (isset ($_GET['action']) && $_GET['action'] == 'minerals') 
 {
+    if (!isset($_POST['amount']) || !isset($_POST['pid']))
+      {
+	error(ERROR);
+      }
     integercheck($_POST['amount']);
     checkvalue($_POST['pid']);
     checkvalue($_POST['amount']);

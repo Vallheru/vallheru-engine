@@ -8,7 +8,7 @@
  *   @author               : thindil <thindil@tuxfamily.org>
  *   @author               : eyescream <tduda@users.sourceforge.net>
  *   @version              : 1.4
- *   @since                : 03.09.2011
+ *   @since                : 08.09.2011
  *
  */
 
@@ -189,10 +189,14 @@ if(isset ($_GET['action']) && $_GET['action'] == 'build')
             "Abuild" => A_BUILD));
         if (isset ($_GET['step2']) && $_GET['step2'] == 'make') 
         {
+	    if (!isset($_POST['name']))
+	      {
+		$_POST['name'] = '';
+	      }
             $_POST['name'] = strip_tags($_POST['name']);
             $strName = $db -> qstr($_POST['name'], get_magic_quotes_gpc());
-            $db -> Execute("UPDATE houses SET name=".$strName.", build=build+1, points=points-10 WHERE id=".$house -> fields['id']);
-            $db -> Execute("UPDATE players SET credits=credits-1000 WHERE id=".$player -> id);
+            $db -> Execute("UPDATE `houses` SET `name`=".$strName.", `build`=`build`+1, `points`=`points`-10 WHERE `id`=".$house -> fields['id']);
+            $db -> Execute("UPDATE `players` SET `credits`=`credits`-1000 WHERE `id`=".$player -> id);
             error (YOU_BUILD);
         }
     }
