@@ -8,7 +8,7 @@
  *   @author               : thindil <thindil@tuxfamily.org>
  *   @author               : mori <ziniquel@users.sourceforge.net>
  *   @version              : 1.4
- *   @since                : 08.09.2011
+ *   @since                : 09.09.2011
  *
  */
 
@@ -380,7 +380,7 @@ if (isset($_GET['topic']))
 	    $objQuote = $db->Execute("SELECT `body` FROM `replies` WHERE `id`=".$_GET['quote']);
 	    if ($objQuote->fields['body'])
 	      {
-		$strText = preg_replace("/[0-9][0-9]-[0-9][0-9]-[0-9][0-9]/", "", $objQuote->fields['body']);
+		$strText = preg_replace("/[0-9][0-9]-[0-9][0-9]-[0-9][0-9] [0-9][0-9]:[0-9][0-9]:[0-9][0-9]/", "", $objQuote->fields['body']);
 		$strText = str_replace("<b></b><br />", "", $strText);
 		require_once('includes/bbcode.php');
 		$strText = htmltobbcode($strText);

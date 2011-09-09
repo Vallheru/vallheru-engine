@@ -1,3 +1,8 @@
+2011-09-09  Bartek thindil Jasicki  <thindil@tuxfamily.org>
+
+	* BUG,forums.php:
+	fixed bug with quoting posts
+
 2011-09-08  Bartek thindil Jasicki  <thindil@tuxfamily.org>
 
 	* FEATURE,templates/layout1/mmarket.tpl, templates/mmarket.tpl, mmarket.php: 
