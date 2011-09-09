@@ -7,7 +7,7 @@
  *   @copyright            : (C) 2004,2005,2006,2007,2011 Vallheru Team based on Gamers-Fusion ver 2.5
  *   @author               : thindil <thindil@tuxfamily.org>
  *   @version              : 1.4
- *   @since                : 08.09.2011
+ *   @since                : 09.09.2011
  *
  */
 
@@ -234,6 +234,14 @@ if (isset($_GET['view']) && $_GET['view'] == 'bugreport')
             error(TOO_SHORT);
         }
         $db -> Execute("INSERT INTO `bugreport` (`sender`, `title`, `type`, `location`, `desc`) VALUES(".$player -> id.", '".$arrFields[0]."', '".$arrFields[1]."', '".$arrFields[2]."', '".$arrFields[3]."')");
+	$objStaff = $db -> Execute("SELECT `id` FROM `players` WHERE `rank`='Admin'");
+	$strDate = $db -> DBDate($newdate);
+	while (!$objStaff->EOF) 
+	  {
+	    $db->Execute("INSERT INTO `log` (`owner`, `log`, `czas`) VALUES(".$objStaff->fields['id'].", 'Zgłoszono nowy błąd.', ".$strDate.")") or die($db->ErrorMsg());
+	    $objStaff->MoveNext();
+	  }
+	$objStaff->Close();
         error(B_REPORTED);
     }
 }
