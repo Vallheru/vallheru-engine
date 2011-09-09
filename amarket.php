@@ -8,7 +8,7 @@
  *   @author               : thindil <thindil@tuxfamily.org>
  *   @author               : eyescream <tduda@users.sourceforge.net>
  *   @version              : 1.4
- *   @since                : 05.09.2011
+ *   @since                : 09.09.2011
  *
  */
 
@@ -175,6 +175,7 @@ if (isset ($_GET['view']) && $_GET['view'] == 'market')
     $arraction = array();
     $arruser = array();
     $arrNumber = array();
+    $arrFcost = array();
     $i = 0;
     while (!$pm -> EOF) 
       {
@@ -216,6 +217,7 @@ if (isset ($_GET['view']) && $_GET['view'] == 'market')
 	$arrname[$i] = $arrNames[$intNumber];
 	$arramount[$i] = $pm -> fields['amount'];
 	$arrcost[$i] = $pm -> fields['cost'];
+	$arrFcost[$i] = $pm->fields['cost'] * $pm->fields['amount'];
 	$arrseller[$i] = $pm -> fields['seller'];
 	$seller = $db -> Execute("SELECT `user` FROM `players` WHERE `id`=".$pm -> fields['seller']);
 	$arruser[$i] = $seller -> fields['user'];
@@ -248,10 +250,11 @@ if (isset ($_GET['view']) && $_GET['view'] == 'market')
 			    "Number" => $arrNumber,
 			    "Tpages" => $pages,
 			    "Tpage" => $page,
+			    "Fcost" => $arrFcost,
 			    "Fpage" => "Idź do strony:",
 			    "Tastral" => ASTRAL,
 			    "Tamount" => T_AMOUNT,
-			    "Tcost" => T_COST,
+			    "Tcost" => "Cena szt / wszystko",
 			    "Tseller" => T_SELLER,
 			    "Tnumber" => T_NUMBER,
 			    "Toptions" => T_OPTIONS,

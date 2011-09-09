@@ -133,19 +133,19 @@ if (isset ($_GET['view']) && $_GET['view'] == 'market')
     $arraction = array();
     $arruser = array();
     $arrId = array();
-    $i = 0;
+    $arrFcost = array();
     while (!$pm -> EOF) 
       {
-	$arrname[$i] = $pm -> fields['nazwa'];
-	$arramount[$i] = $pm -> fields['ilosc'];
-	$arrcost[$i] = $pm -> fields['cost'];
-	$arrseller[$i] = $pm -> fields['seller'];
+	$arrname[] = $pm -> fields['nazwa'];
+	$arramount[] = $pm -> fields['ilosc'];
+	$arrcost[] = $pm -> fields['cost'];
+	$arrFcost[] = $pm->fields['cost'] * $pm->fields['ilosc'];
+	$arrseller[] = $pm -> fields['seller'];
 	$seller = $db -> Execute("SELECT user FROM players WHERE id=".$pm -> fields['seller']);
-	$arruser[$i] = $seller -> fields['user'];
+	$arruser[] = $seller -> fields['user'];
 	$seller -> Close();
-	$arrId[$i] = $pm->fields['id'];
+	$arrId[] = $pm->fields['id'];
 	$pm -> MoveNext();
-	$i = $i + 1;
       }
     $pm -> Close();
     $smarty -> assign(array("Name" => $arrname, 
@@ -154,9 +154,10 @@ if (isset ($_GET['view']) && $_GET['view'] == 'market')
 			    "Seller" => $arrseller, 
 			    "Action" => $arraction, 
 			    "User" => $arruser,
+			    "Fcost" => $arrFcost,
 			    "Therb" => HERB,
 			    "Tamount" => T_AMOUNT,
-			    "Tcost" => T_COST,
+			    "Tcost" => "Cena szt / wszystko",
 			    "Tseller" => T_SELLER,
 			    "Toptions" => T_OPTIONS,
 			    "Iid" => $arrId,

@@ -27,7 +27,7 @@
         <tr>
         <td>{$Name[pmarket]}</td>
         <td>{$Amount[pmarket]}</td>
-        <td>{$Cost[pmarket]}</td>
+        <td>{$Cost[pmarket]} / {$Fcost[pmarket]}</td>
         <td><a href="view.php?view={$Seller[pmarket]}">{$User[pmarket]}</a></td>
         <td>
 	{if $Seller[pmarket] == $Pid}

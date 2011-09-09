@@ -8,7 +8,7 @@
  *   @author               : thindil <thindil@tuxfamily.org>
  *   @author               : eyescream <tduda@users.sourceforge.net>
  *   @version              : 1.4
- *   @since                : 22.08.2011
+ *   @since                : 09.09.2011
  *
  */
 
@@ -118,7 +118,7 @@ if (isset ($_GET['view']) && $_GET['view'] == 'market')
     $smarty -> assign(array("Mineral" => MINERAL,
                             "Viewinfo" => VIEW_INFO,
                             "Tamount" => T_AMOUNT,
-                            "Tcost" => T_COST,
+                            "Tcost" => "Cena szt / wszystko",
                             "Tseller" => T_SELLER,
 			    "Asearch" => A_SEARCH,
                             "Toptions" => T_OPTIONS));
@@ -140,24 +140,25 @@ if (isset ($_GET['view']) && $_GET['view'] == 'market')
     $arrseller = array();
     $arruser = array();
     $arrId = array();
-    $i = 0;
+    $arrFcost = array();
     while (!$pm -> EOF) 
       {
-	$arrname[$i] = $pm -> fields['nazwa'];
-	$arramount[$i] = $pm -> fields['ilosc'];
-	$arrcost[$i] = $pm -> fields['cost'];
-	$arrseller[$i] = $pm -> fields['seller'];
+	$arrname[] = $pm -> fields['nazwa'];
+	$arramount[] = $pm -> fields['ilosc'];
+	$arrcost[] = $pm -> fields['cost'];
+	$arrFcost[] = $pm->fields['cost'] * $pm->fields['ilosc'];
+	$arrseller[] = $pm -> fields['seller'];
 	$seller = $db -> Execute("SELECT user FROM players WHERE id=".$pm -> fields['seller']);
-	$arruser[$i] = $seller -> fields['user'];
-	$arrId[$i] = $pm->fields['id'];
+	$arruser[] = $seller -> fields['user'];
+	$arrId[] = $pm->fields['id'];
 	$seller -> Close();
 	$pm -> MoveNext();
-	$i = $i + 1;
       }
     $pm -> Close();
     $smarty -> assign(array("Name" => $arrname, 
 			    "Amount" => $arramount, 
-			    "Cost" => $arrcost, 
+			    "Cost" => $arrcost,
+			    "Fcost" => $arrFcost,
 			    "Seller" => $arrseller,
 			    "Iid" => $arrId,
 			    "Pid" => $player->id,

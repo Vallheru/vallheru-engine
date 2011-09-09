@@ -8,7 +8,7 @@
  *   @author               : thindil <thindil@tuxfamily.org>
  *   @author               : eyescream <tduda@users.sourceforge.net>
  *   @version              : 1.4
- *   @since                : 05.09.2011
+ *   @since                : 09.09.2011
  *
  */
 
@@ -105,7 +105,7 @@ if (isset ($_GET['view']) && $_GET['view'] == 'market')
       }
     $smarty -> assign(array("Tname" => T_NAME,
                             "Tpower" => T_POWER,
-                            "Tcost" => T_COST,
+                            "Tcost" => "Cena szt / wszystko",
                             "Tseller" => T_SELLER,
                             "Tdur" => T_DUR,
                             "Tspeed" => T_SPEED,
@@ -150,6 +150,7 @@ if (isset ($_GET['view']) && $_GET['view'] == 'market')
     $arramount = array();
     $arrlevel = array();
     $arrseller = array();
+    $arrFcost = array();
     $arrId = array();
     $i = 0;
     while (!$pm -> EOF) 
@@ -188,6 +189,7 @@ if (isset ($_GET['view']) && $_GET['view'] == 'market')
 	$arrspeed[$i] = $speed;
 	$arragility[$i] = $agility;
 	$arrcost[$i] = $pm -> fields['cost'];
+	$arrFcost[$i] = $pm->fields['cost'] * $arramount[$i];
 	$arrowner[$i] = $pm -> fields['owner'];
 	$arrlevel[$i] = $pm -> fields['minlev'];
 	$seller = $db -> Execute("SELECT user FROM players WHERE id=".$pm -> fields['owner']);
@@ -212,6 +214,7 @@ if (isset ($_GET['view']) && $_GET['view'] == 'market')
 			    "Pid" => $player->id,
 			    "Tpages" => $pages,
 			    "Tpage" => $page,
+			    "Fcost" => $arrFcost,
 			    "Fpage" => "Idź do strony:",
 			    "Abuy" => A_BUY,
 			    "Aadd" => A_ADD,

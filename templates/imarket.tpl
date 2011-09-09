@@ -37,7 +37,7 @@
         <td align="center">{$Agility[item]}</td>
          <td align="center">{$Minlev[item]}</td>
         <td align="center">{$Amount[item]}</td>
-        <td>{$Cost[item]}</td>
+        <td>{$Cost[item]} / {$Fcost[item]}</td>
         <td><a href="view.php?view={$Owner[item]}">{$Seller[item]}</a></td>
         <td>
 	{if $Owner[item] == $Pid}

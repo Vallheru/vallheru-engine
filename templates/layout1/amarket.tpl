@@ -29,7 +29,7 @@
         <td>{$Name[herb]}</td>
         <td>{$Number[herb]}</td>
         <td>{$Amount[herb]}</td>
-        <td>{$Cost[herb]}</td>
+        <td>{$Cost[herb]} / {$Fcost[herb]}</td>
         <td><a href="view.php?view={$Seller[herb]}">{$User[herb]}</a></td>
         {$Action[herb]}
     {/section}

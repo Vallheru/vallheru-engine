@@ -8,7 +8,7 @@
  *   @author              : thindil <thindil@tuxfamily.org>
  *   @author              : eyescream <tduda@users.sourceforge.net>
  *   @version             : 1.4
- *   @since               : 08.09.2011
+ *   @since               : 09.09.2011
  *
  */
 
@@ -104,7 +104,7 @@ if (isset ($_GET['view']) && $_GET['view'] == 'market')
     $smarty -> assign(array("Tname" => T_NAME,
 			    "Tefect" => T_EFECT,
 			    "Tamount" => T_AMOUNT,
-			    "Tcost" => T_COST,
+			    "Tcost" => "Cena szt / wszystko",
 			    "Tseller" => T_SELLER,
 			    "Toptions" => T_OPTIONS,
 			    "Asearch" => A_SEARCH,
@@ -134,11 +134,11 @@ if (isset ($_GET['view']) && $_GET['view'] == 'market')
 	$seller = $db -> Execute("SELECT `user` FROM `players` WHERE `id`=".$pm -> fields['owner']);
 	if ($pm -> fields['type'] != 'A') 
 	  {
-	    $arritem[$i] = "<tr><td>".$pm -> fields['name']." (moc: ".$pm -> fields['power'].")</td><td align=center>".$pm -> fields['efect']."</td><td align=\"center\">".$pm -> fields['amount']."</td><td align=center>".$pm -> fields['cost']."</td><td><a href=view.php?view=".$pm -> fields['owner'].">".$seller -> fields['user']."</a></td>";
+	    $arritem[$i] = "<tr><td>".$pm -> fields['name']." (moc: ".$pm -> fields['power'].")</td><td align=center>".$pm -> fields['efect']."</td><td align=\"center\">".$pm -> fields['amount']."</td><td align=center>".$pm -> fields['cost']." / ".($pm->fields['cost'] * $pm->fields['amount'])."</td><td><a href=view.php?view=".$pm -> fields['owner'].">".$seller -> fields['user']."</a></td>";
 	  } 
 	else 
 	  {
-	    $arritem[$i] = "<tr><td>".$pm -> fields['name']."</td><td align=center>".$pm -> fields['efect']."</td><td align=\"center\">".$pm -> fields['amount']."</td><td align=center>".$pm -> fields['cost']."</td><td><a href=view.php?view=".$pm -> fields['owner'].">".$seller -> fields['user']."</a></td>";
+	    $arritem[$i] = "<tr><td>".$pm -> fields['name']."</td><td align=center>".$pm -> fields['efect']."</td><td align=\"center\">".$pm -> fields['amount']."</td><td align=center>".$pm -> fields['cost']." / ".($pm->fields['cost'] * $pm->fields['amount'])."</td><td><a href=view.php?view=".$pm -> fields['owner'].">".$seller -> fields['user']."</a></td>";
 	  }
 	$seller -> Close();
 	$arrId[$i] = $pm->fields['id'];

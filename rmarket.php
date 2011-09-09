@@ -8,7 +8,7 @@
  *   @author               : thindil <thindil@tuxfamily.org>
  *   @author               : eyescream <tduda@users.sourceforge.net>
  *   @version              : 1.4
- *   @since                : 28.08.2011
+ *   @since                : 09.09.2011
  *
  */
 
@@ -105,7 +105,7 @@ if (isset ($_GET['view']) && $_GET['view'] == 'market')
       }
     $smarty -> assign(array("Tname" => T_NAME,
                             "Tpower" => T_POWER,
-                            "Tcost" => T_COST,
+                            "Tcost" => "Cena szt / wszystko",
                             "Tseller" => T_SELLER,
                             "Tamount" => T_AMOUNT,
                             "Tlevel" => T_LEVEL,
@@ -145,21 +145,21 @@ if (isset ($_GET['view']) && $_GET['view'] == 'market')
     $arrlevel = array();
     $arrseller = array();
     $arrId = array();
-    $i = 0;
+    $arrFcost = array();
     while (!$pm -> EOF) 
       {
-	$arrname[$i] = $pm -> fields['name'];
-	$arrpower[$i] = $pm -> fields['power'];
-	$arrcost[$i] = $pm -> fields['cost'];
-	$arrowner[$i] = $pm -> fields['owner'];
-	$arramount[$i] = $pm -> fields['amount'];
-	$arrlevel[$i] = $pm -> fields['minlev'];
+	$arrname[] = $pm -> fields['name'];
+	$arrpower[] = $pm -> fields['power'];
+	$arrcost[] = $pm -> fields['cost'];
+	$arrFcost[] = $pm->fields['cost'] * $pm->fields['amount'];
+	$arrowner[] = $pm -> fields['owner'];
+	$arramount[] = $pm -> fields['amount'];
+	$arrlevel[] = $pm -> fields['minlev'];
 	$seller = $db -> Execute("SELECT user FROM players WHERE id=".$pm -> fields['owner']);
-	$arrseller[$i] = $seller -> fields['user'];
+	$arrseller[] = $seller -> fields['user'];
 	$seller -> Close();
-	$arrId[$i] = $pm->fields['id'];
+	$arrId[] = $pm->fields['id'];
 	$pm -> MoveNext();
-	$i = $i + 1;
       }
     $pm -> Close();
     $smarty -> assign(array("Name" => $arrname, 
@@ -173,6 +173,7 @@ if (isset ($_GET['view']) && $_GET['view'] == 'market')
 			    "Pid" => $player->id,
 			    "Tpages" => $pages,
 			    "Tpage" => $page,
+			    "Fcost" => $arrFcost,
 			    "Fpage" => "Idź do strony:",
 			    "Mlist" => $_GET['lista'],
 			    "Abuy" => A_BUY,

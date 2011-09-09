@@ -2,7 +2,7 @@
     {if $Title1 == ""}
         {$Nonews}
     {else}
-        <b>{$Title1}</b> {$Writeby} <b>{$Starter}</b> ({$Pdate})...<br /><br />
+        <b>{$Title1}</b> {$Writeby} <b>{$Starter}</b> {if $Pdate != "0000-00-00"}({$Pdate}){/if}...<br /><br />
     	"{$News}"<br />
     	<a href="news.php?step=comments&amp;text={$Newsid}">{$Acomments}</a>: {$Comments}<br /><br />
     	(<a href="news.php?view=all">{$Last10}</a>)
@@ -13,7 +13,7 @@
 
 {if $View == "all" && $Step == ""}
     {section name=news loop=$Title1}
-        <b>{$Title1[news]}</b> {$Writeby} <b>{$Starter[news]}</b> ({$Newsdate[news]})...<br /><br />
+        <b>{$Title1[news]}</b> {$Writeby} <b>{$Starter[news]}</b> {if $Newsdate[news] != "0000-00-00"}({$Newsdate[news]}){/if}...<br /><br />
         "{$News[news]}"<br />
         <a href="news.php?step=comments&amp;text={$Newsid[news]}">{$Acomments}</a>: {$Comments[news]}<br /><br />
     {/section}
