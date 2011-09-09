@@ -1,5 +1,7 @@
 2011-09-09  Bartek thindil Jasicki  <thindil@tuxfamily.org>
 
+	* UPDATE,equip.php: 
+	better show amount of arrows
 	* BUG,forums.php:
 	fixed bug with quoting posts
 

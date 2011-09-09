@@ -7,7 +7,7 @@
  *   @copyright            : (C) 2004,2005,2006,2007,2011 Vallheru Team based on Gamers-Fusion ver 2.5
  *   @author               : thindil <thindil@tuxfamily.org>
  *   @version              : 1.4
- *   @since                : 07.09.2011
+ *   @since                : 09.09.2011
  *
  */
 
@@ -118,13 +118,17 @@ function backpack($type,$playerid,$nameitems,$type2,$smartyname)
 	    $costone = $arm->fields['cost'] / 100;
 	    $intCost = ceil($costone * $arm->fields['wt']);
 	  }
-	if ($arm->fields['type'] != 'I')
+	switch ($arm->fields['type'])
 	  {
-	    $strDur = " (".$arm -> fields['wt']."/".$arm -> fields['maxwt']." ".DURABILITY.")";
-	  }
-	else
-	  {
+	  case 'I':
 	    $strDur = '';
+	    break;
+	  case 'R':
+	    $strDur = " (".$arm -> fields['wt']." strzał)";
+	    break;
+	  default:
+	    $strDur = " (".$arm -> fields['wt']."/".$arm -> fields['maxwt']." ".DURABILITY.")";
+	    break;
 	  }
         if ($arm -> fields['type'] == 'C') 
         {
