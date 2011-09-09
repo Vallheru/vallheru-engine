@@ -1,5 +1,7 @@
 2011-09-09  Bartek thindil Jasicki  <thindil@tuxfamily.org>
 
+	* BUG,ap.php: 
+	fixed bug with distribute astral points
 	* FEATURE,account.php: 
 	added admin notification on bug report
 	* BUG,imarket.php, templates/layout1/imarket.tpl, templates/imarket.tpl: 
