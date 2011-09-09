@@ -4,11 +4,11 @@
  *   Add awaiting news
  *
  *   @name                 : addtext.php                            
- *   @copyright            : (C) 2006 Vallheru Team based on Gamers-Fusion ver 2.5
- *   @author               : thindil <thindil@users.sourceforge.net>
+ *   @copyright            : (C) 2006,2011 Vallheru Team based on Gamers-Fusion ver 2.5
+ *   @author               : thindil <thindil@tuxfamily.org>
  *   @author               : eyescream <tduda@users.sourceforge.net>
- *   @version              : 1.3
- *   @since                : 22.12.2006
+ *   @version              : 1.4
+ *   @since                : 09.09.2011
  *
  */
 
@@ -28,7 +28,7 @@
 //   along with this program; if not, write to the Free Software
 //   Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 //
-// $Id: addtext.php 879 2007-01-23 17:19:03Z thindil $
+// $Id$
 
 $objText = $db -> Execute("SELECT `id`, `title`, `starter` FROM `news` WHERE `added`='N' AND `lang`='".$player -> lang."' OR `lang`='".$player -> seclang."'");
 $arrId = array();
@@ -61,10 +61,7 @@ $smarty -> assign(array("Ttitle" => $arrTitle,
  */
 if (isset($_GET['action']) && $_GET['action'] == 'modify')
 {
-    if (!ereg("^[1-9][0-9]*$", $_GET['text']))
-    {
-        error(ERROR);
-    }
+    checkvalue($_GET['text']);
     $objText = $db -> Execute("SELECT `id`, `title`, `news` FROM `news` WHERE `id`=".$_GET['text']);
     $smarty -> assign(array("Ttitle" => $objText -> fields['title'],
                             "Tbody" => $objText -> fields['news'],
@@ -75,10 +72,7 @@ if (isset($_GET['action']) && $_GET['action'] == 'modify')
     $objText -> Close();
     if (isset($_POST['tid']))
     {
-        if (!ereg("^[1-9][0-9]*$", $_POST['tid']))
-        {
-            error(ERROR);
-        }
+	checkvalue($_POST['tid']);
         if (empty($_POST['ttitle']) || empty($_POST['body']))
         {
             error(EMPTY_FIELDS);
@@ -97,10 +91,7 @@ if (isset($_GET['action']) && $_GET['action'] == 'modify')
  */
 if (isset($_GET['action']) && ($_GET['action'] == 'add' || $_GET['action'] == 'delete'))
 {
-    if (!ereg("^[1-9][0-9]*$", $_GET['text']))
-    {
-        error(ERROR);
-    }
+    checkvalue($_GET['text']);
     $objText = $db -> Execute("SELECT `id`, `starter`, `title` FROM `news` WHERE `id`=".$_GET['text']);
     if (!$objText -> fields['id'])
     {
@@ -117,14 +108,23 @@ if (isset($_GET['action']) && ($_GET['action'] == 'add' || $_GET['action'] == 'd
         $intId = $objQuery -> fields['id'] + 1;
         $objQuery -> Close();
         $db -> Execute("UPDATE `news` SET `added`='Y', `id`=".$intId.", `show`='N' WHERE `id`=".$_GET['text']);
-        $db -> Execute("INSERT INTO `log` (`owner`, `log`, `czas`) VALUES(".$intStarter.",'".YOUR_NEWS.$strTitle.HAS_ADDED.'<b><a href="view.php?view='.$player -> id .'">'.$player -> user.'</a></b>'.L_ID.'<b>'.$player -> id."</b>.', ".$strDate.")");
-        error(ADDED);
+	$strAction = HAS_ADDED.'<b><a href="view.php?view='.$player -> id .'">'.$player -> user.'</a></b>'.L_ID.'<b>'.$player -> id."</b>";
+        $strInfo = ADDED;
     }
         else
     {
-        $db -> Execute("INSERT INTO `log` (`owner`, `log`, `czas`) VALUES(".$intStarter.",'".YOUR_NEWS.$strTitle.HAS_DELETED.'<b><a href="view.php?view='.$player -> id .'">'.$player -> user.'</a></b>'.L_ID.'<b>'.$player -> id."</b>.', ".$strDate.")");
         $db -> Execute("DELETE FROM `news` WHERE `id`=".$_GET['text']);
-        error(DELETED);
+	$strAction = HAS_DELETED.'<b><a href="view.php?view='.$player -> id .'">'.$player -> user.'</a></b>'.L_ID.'<b>'.$player -> id."</b>";
+        $strInfo = DELETED;
     }
+    $db -> Execute("INSERT INTO `log` (`owner`, `log`, `czas`) VALUES(".$intStarter.",'".YOUR_NEWS.$strTitle.$strAction.".', ".$strDate.")");
+    $objStaff = $db -> Execute("SELECT `id` FROM `players` WHERE `rank`='Admin'");
+    while (!$objStaff->EOF) 
+      {
+	$db->Execute("INSERT INTO `log` (`owner`, `log`, `czas`) VALUES(".$objStaff->fields['id'].", 'Plotka \"".$strTitle."\" (autor ID: ".$intStarter.")".$strAction."', ".$strDate.")") or die($db->ErrorMsg());
+	$objStaff->MoveNext();
+      }
+    $objStaff->Close();
+    error($strInfo);
 }
 ?>

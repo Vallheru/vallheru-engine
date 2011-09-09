@@ -489,7 +489,9 @@ function mainreset()
     /**
      * Show new news
      */
-    $db -> Execute("UPDATE news SET `show`='Y' WHERE `show`='N' AND `added`='Y' ORDER BY `id` ASC LIMIT 1");
+    $data = date("y-m-d");
+    $strDate = $db -> DBDate($data);
+    $db -> Execute("UPDATE news SET `show`='Y', `pdate`=".$strDate." WHERE `show`='N' AND `added`='Y' ORDER BY `id` ASC LIMIT 1");
     /**
      * Astral machine
      */
@@ -504,7 +506,6 @@ function mainreset()
             {
                 $objName = $db -> Execute("SELECT `name` FROM `tribes` WHERE `id`=".$objAstral -> fields['owner']);
                 $time = date("H:i:s");
-                $data = date("y-m-d");
                 $hour = explode(":", $time);
                 $day = explode("-",$data);
                 $newhour = $hour[0];
@@ -522,8 +523,6 @@ function mainreset()
                 foreach ($arrLanguage as $strLanguage)
                 {
                     require_once("languages/".$strLanguage."/resets.php");
-                    $data = date("y-m-d");
-                    $strDate = $db -> DBDate($data);
                     $db -> Execute("INSERT INTO `updates` (`starter`, `title`, `updates`, `lang`, `time`) VALUES('(Herold)','".U_TITLE."','".U_TEXT.$gamename.U_TEXT2.$gamename.U_TEXT3.$newdate.U_TEXT4.$objName -> fields['name'].U_TEXT5."','".$strLanguage."', ".$strDate.")");
                 }
                 $db -> Execute("UPDATE `settings` SET `value`='".$objAstral -> fields['owner']."' WHERE `setting`='tribe'");

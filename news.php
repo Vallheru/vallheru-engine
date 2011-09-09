@@ -7,7 +7,7 @@
  *   @copyright            : (C) 2004,2005,2006,2011 Vallheru Team based on Gamers-Fusion ver 2.5
  *   @author               : thindil <thindil@tuxfamily.org>
  *   @version              : 1.4
- *   @since                : 08.09.2011
+ *   @since                : 09.09.2011
  *
  */
 
@@ -60,15 +60,17 @@ if (!isset ($_GET['view']))
     $intAccepted = $objAccepted -> fields['count(`id`)'];
     $objAccepted -> Close();
     $smarty -> assign(array("Title1" => $upd -> fields['title'], 
-        "Starter" => $upd -> fields['starter'], 
-        "News" => $upd -> fields['news'],
-        "Comments" => $intComments,
-        "Newsid" => $upd -> fields['id'],
-        "Aaddnews" => A_ADD_NEWS,
-        "Twaiting" => T_WAITING,
-        "Taccepted" => T_ACCEPTED,
-        "Accepted" => $intAccepted,
-        "Waiting" => $intWaiting));
+			    "Starter" => $upd -> fields['starter'],
+			    "Pdate" => $upd->fields['pdate'],
+			    "News" => $upd -> fields['news'],
+			    "Comments" => $intComments,
+			    "Newsid" => $upd -> fields['id'],
+			    "Aaddnews" => A_ADD_NEWS,
+			    "Twaiting" => T_WAITING,
+			    "Taccepted" => T_ACCEPTED,
+			    "Accepted" => $intAccepted,
+			    "Nonews" => "Nie ma jeszcze opublikowanych plotek",
+			    "Waiting" => $intWaiting));
 } 
 
 /**
@@ -82,25 +84,26 @@ if (isset($_GET['view']))
     $arrnews = array();
     $arrId = array();
     $arrComments = array();
-    $i = 0;
+    $arrDate = array();
     while (!$upd -> EOF) 
     {
         $objQuery = $db -> Execute("SELECT count(`id`) FROM `news_comments` WHERE `newsid`=".$upd -> fields['id']);
-        $arrComments[$i] = $objQuery -> fields['count(`id`)'];
+        $arrComments[] = $objQuery -> fields['count(`id`)'];
         $objQuery -> Close();
-        $arrtitle[$i] = $upd -> fields['title'];
-        $arrstarter[$i] = $upd -> fields['starter'];
-        $arrnews[$i] = $upd -> fields['news'];
-        $arrId[$i] = $upd -> fields['id'];
+        $arrtitle[] = $upd -> fields['title'];
+        $arrstarter[] = $upd -> fields['starter'];
+        $arrnews[] = $upd -> fields['news'];
+        $arrId[] = $upd -> fields['id'];
+	$arrDate[] = $upd->fields['pdate'];
         $upd -> MoveNext();
-        $i = $i + 1;
     }
     $upd -> Close();
     $smarty -> assign(array("Title1" => $arrtitle, 
-        "Starter" => $arrstarter, 
-        "News" => $arrnews,
-        "Newsid" => $arrId,
-        "Comments" => $arrComments));
+			    "Starter" => $arrstarter, 
+			    "News" => $arrnews,
+			    "Newsid" => $arrId,
+			    "Newsdate" => $arrDate,
+			    "Comments" => $arrComments));
 }
 
 /**
@@ -190,6 +193,15 @@ if (isset($_GET['step']) && $_GET['step'] == 'add')
         $strBody = $db -> qstr($_POST['body'], get_magic_quotes_gpc());
         $strTitle = $db -> qstr($_POST['ttitle'], get_magic_quotes_gpc());
         $db -> Execute("INSERT INTO news (title, news, added, lang, starter) VALUES(".$strTitle.", ".$strBody.", 'N', '".$_POST['lang']."', '".$strAuthor."')");
+	$objStaff = $db -> Execute("SELECT `id` FROM `players` WHERE `rank`='Admin' OR `rank`='Staff'");
+	$strDate = $db -> DBDate($newdate);
+	$_POST['ttitle'] = str_replace("'", "", strip_tags($_POST['ttitle']));
+	while (!$objStaff->EOF) 
+	  {
+	    $db->Execute("INSERT INTO `log` (`owner`, `log`, `czas`) VALUES(".$objStaff->fields['id'].", 'Nowa plotka \"".$_POST['ttitle']."\" (autor: <a href=\"view.php?view=".$player->id."\">".$player->user."</a>) oczekuje na akceptację.', ".$strDate.")") or die($db->ErrorMsg());
+	    $objStaff->MoveNext();
+	  }
+	$objStaff->Close();
         error(YOU_ADD);
     }
 }

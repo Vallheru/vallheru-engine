@@ -1,5 +1,7 @@
 2011-09-09  Bartek thindil Jasicki  <thindil@tuxfamily.org>
 
+	* FEATURE,install/db/update.sql, includes/resets.php, news.php, templates/layout1/news.tpl, templates/news.tpl, includes/admin/addtext.php: 
+	added publication date to news, added notifications for staff
 	* UPDATE,equip.php: 
 	better show amount of arrows
 	* BUG,forums.php:

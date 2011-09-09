@@ -1,14 +1,19 @@
 {if $View == "" && $Step == ""}
-    <b>{$Title1}</b> {$Writeby} <b>{$Starter}</b>...<br /><br />
-    "{$News}"<br />
-    <a href="news.php?step=comments&amp;text={$Newsid}">{$Acomments}</a>: {$Comments}<br /><br />
-    (<a href="news.php?view=all">{$Last10}</a>)<br /><br />
+    {if $Title1 == ""}
+        {$Nonews}
+    {else}
+        <b>{$Title1}</b> {$Writeby} <b>{$Starter}</b> ({$Pdate})...<br /><br />
+    	"{$News}"<br />
+    	<a href="news.php?step=comments&amp;text={$Newsid}">{$Acomments}</a>: {$Comments}<br /><br />
+    	(<a href="news.php?view=all">{$Last10}</a>)
+    {/if}
+    <br /><br />
     <a href="news.php?step=add">{$Aaddnews}</a> ({$Twaiting}: {$Waiting} | {$Taccepted}: {$Accepted})
 {/if}
 
 {if $View == "all" && $Step == ""}
     {section name=news loop=$Title1}
-        <b>{$Title1[news]}</b> {$Writeby} <b>{$Starter[news]}</b>...<br /><br />
+        <b>{$Title1[news]}</b> {$Writeby} <b>{$Starter[news]}</b> ({$Newsdate[news]})...<br /><br />
         "{$News[news]}"<br />
         <a href="news.php?step=comments&amp;text={$Newsid[news]}">{$Acomments}</a>: {$Comments[news]}<br /><br />
     {/section}

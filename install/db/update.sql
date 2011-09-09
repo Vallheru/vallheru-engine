@@ -30,3 +30,5 @@ UPDATE `potions` SET `status` = 'A' WHERE `potions`.`id` =9;
 UPDATE `potions` SET `status` = 'A' WHERE `potions`.`id` =10;
 ALTER TABLE `players` ADD `newbie` TINYINT( 1 ) NOT NULL DEFAULT '3';
 ALTER TABLE `players` ADD `autodrink` CHAR NOT NULL DEFAULT 'N';
+ALTER TABLE `equipment` ADD INDEX ( `minlev` );
+ALTER TABLE `news` ADD `pdate` DATE NOT NULL;
