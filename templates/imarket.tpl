@@ -78,7 +78,10 @@
 	{elseif $Iagi[item1] < 0}
 	    ({$Iagi[item1]}% {$Iag})
 	{/if}
-	({$Idur[item1]}/{$Imaxdur[item1]}) ({$Iamount}: {$Amount[item1]})</option>
+	{if $Imaxdur[item1] > 1}
+	    ({$Idur[item1]}/{$Imaxdur[item1]})
+	{/if}
+	({$Iamount}: {$Amount[item1]})</option>
     {/section}</select></td></tr>
     <tr><td>{$Iamount2}:</td><td><input type="text" name="amount" /></td></tr>
     <tr><td>{$Icost}:</td><td><input type="text" name="cost" /></td></tr>

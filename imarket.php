@@ -233,22 +233,33 @@ if (isset ($_GET['view']) && $_GET['view'] == 'market')
 */
 if (isset ($_GET['view']) && $_GET['view'] == 'add') 
 {
-    $rzecz = $db -> Execute("SELECT `id`, `name`, `amount`, `power`, `szyb`, `wt`, `maxwt`, `zr` FROM `equipment` WHERE `status`='U' AND `type`!='I' AND `owner`=".$player -> id);
+    $rzecz = $db -> Execute("SELECT `id`, `name`, `amount`, `power`, `szyb`, `wt`, `maxwt`, `zr`, `type` FROM `equipment` WHERE `status`='U' AND `type`!='I' AND `owner`=".$player -> id);
     $arrname = array();
     $arrid = array(0);
     $arramount = array();
     $arrPower = array();
     $arrSpeed = array();
+    $arrDur = array();
+    $arrMaxduf = array();
     $i = 0;
     while (!$rzecz -> EOF) 
     {
         $arrname[$i] = $rzecz -> fields['name'];
         $arrid[$i] = $rzecz -> fields['id'];
-        $arramount[$i] = $rzecz -> fields['amount'];
+	if ($rzecz->fields['type'] != 'R')
+	  {
+	    $arrDur[$i] =  $rzecz->fields['wt'];
+	    $arrMaxdur[$i] = $rzecz->fields['maxwt'];
+	    $arramount[$i] = $rzecz->fields['amount'];
+	  }
+	else
+	  {
+	    $arrDur[$i] = 1;
+	    $arrMaxdur[$i] = 1;
+	    $arramount[$i] = $rzecz->fields['wt'];
+	  }
 	$arrPower[$i] = $rzecz->fields['power'];
 	$arrSpeed[$i] = $rzecz->fields['szyb'];
-	$arrDur[$i] = $rzecz->fields['wt'];
-	$arrMaxdur[$i] = $rzecz->fields['maxwt'];
 	$arrAgi[$i] = $rzecz->fields['zr'];
         $rzecz -> MoveNext();
         $i = $i + 1;
