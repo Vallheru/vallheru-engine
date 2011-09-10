@@ -4,10 +4,10 @@
  *   Game staff list
  *
  *   @name                 : stafflist.php                            
- *   @copyright            : (C) 2006 Vallheru Team based on Gamers-Fusion ver 2.5
- *   @author               : thindil <thindil@users.sourceforge.net>
- *   @version              : 1.2
- *   @since                : 15.07.2006
+ *   @copyright            : (C) 2006,2011 Vallheru Team based on Gamers-Fusion ver 2.5
+ *   @author               : thindil <thindil@tuxfamily.org>
+ *   @version              : 1.4
+ *   @since                : 10.09.2011
  *
  */
 
@@ -27,7 +27,7 @@
 //   along with this program; if not, write to the Free Software
 //   Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 //
-// $Id: stafflist.php 483 2006-07-15 08:30:20Z thindil $
+// $Id$
 
 $title = "Spis książąt";
 require_once("includes/head.php");
@@ -36,11 +36,6 @@ require_once("includes/head.php");
 * Get the localization for game
 */
 require_once("languages/".$player -> lang."/stafflist.php");
-
-if ($player -> location != 'Altara' && $player -> location != 'Ardulith') 
-{
-    error (ERROR);
-}
 
 $arrStafflist = array(array(array(),
                             array()),

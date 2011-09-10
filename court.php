@@ -7,7 +7,7 @@
  *   @copyright            : (C) 2004,2005,2006,2011 Vallheru Team based on Gamers-Fusion ver 2.5
  *   @author               : thindil <thindil@tuxfamily.org>
  *   @version              : 1.4
- *   @since                : 28.08.2011
+ *   @since                : 10.09.2011
  *
  */
 
@@ -27,7 +27,7 @@
 //   along with this program; if not, write to the Free Software
 //   Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 //
-// $Id: court.php 836 2006-11-22 17:40:40Z thindil $
+// $Id$
 
 $title = "Gmach sądu";
 require_once("includes/head.php");
@@ -47,11 +47,6 @@ if ($player -> location == 'Altara')
 * Get the localization for game
 */
 require_once("languages/".$player -> lang."/court.php");
-
-if ($player -> location != 'Altara' && $player -> location != 'Ardulith') 
-{
-    error (ERROR);
-}
 
 /**
 * Main menu

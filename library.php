@@ -7,7 +7,7 @@
  *   @copyright            : (C) 2004,2005,2006,2011 Vallheru Team based on Gamers-Fusion ver 2.5
  *   @author               : thindil <thindil@tuxfamily.org>
  *   @version              : 1.4
- *   @since                : 08.09.2011
+ *   @since                : 10.09.2011
  *
  */
 
@@ -36,11 +36,6 @@ require_once("includes/head.php");
 * Get the localization for game
 */
 require_once("languages/".$player -> lang."/library.php");
-
-if ($player -> location != 'Altara' && $player -> location != 'Ardulith') 
-{
-    error (ERROR);
-}
 
 if ($player -> lang != $player -> seclang)
 {

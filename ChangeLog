@@ -1,5 +1,7 @@
 2011-09-10  Bartek thindil Jasicki  <thindil@tuxfamily.org>
 
+	* FEATURE,monuments.php, alley.php, stafflist.php, tower.php, court.php, library.php: 
+	allow enter to this locations from any place
 	* BUG,market.php: 
 	fixed bug with adding potions to offert
 	* UPDATE,amarket.php, hmartek.php, imarket.php, mmarket.php, pmarket.php, rmarket.php: 

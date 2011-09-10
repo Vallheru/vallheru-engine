@@ -8,7 +8,7 @@
  *   @author               : thindil <thindil@tuxfamily.org>
  *   @author               : eyescream <tduda@users.sourceforge.net>
  *   @version              : 1.4
- *   @since                : 23.08.2011
+ *   @since                : 10.09.2011
  *
  */
 
@@ -37,11 +37,6 @@ require_once('includes/head.php');
 * Get the localization for game
 */
 require_once('languages/'.$player -> lang.'/monuments.php');
-
-if ($player -> location != 'Altara' && $player -> location != 'Ardulith')
-{
-    error (ERROR);
-}
 
 /**
  * Function to get data from database and return array of top 5 players' names, ID's and skill values. 
