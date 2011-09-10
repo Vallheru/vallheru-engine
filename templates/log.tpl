@@ -12,16 +12,17 @@
 {/if}
 
 {if $LogId[0] != "0"}
-	<table align="center" width="50%">
-		<tr>
-			{if $Previous != ""}
-			<td align="left">{$Previous}</td>
-			{/if}
-			{if $Next != ""}
-			<td align="right">{$Next}</td>
-			{/if}
-		</tr>
-	</table>
+    {if $Tpages > 1}
+    	<br />{$Fpage}
+    	{for $page = 1 to $Tpages}
+	    {if $page == $Tpage}
+	        {$page}
+	    {else}
+                <a href="log.php?page={$page}">{$page}</a>
+	    {/if}
+    	{/for}
+	<br /><br />
+    {/if}
     <form method="post" action="log.php?action=delete">
         <table>
             {section name=log loop=$Date}

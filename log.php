@@ -7,7 +7,7 @@
  *   @copyright            : (C) 2004,2005,2006,2011 Vallheru Team based on Gamers-Fusion ver 2.5
  *   @author               : thindil <thindil@tuxfamily.org>
  *   @version              : 1.4
- *   @since                : 28.08.2011
+ *   @since                : 10.09.2011
  *
  */
 
@@ -39,28 +39,21 @@ require_once("languages/".$player -> lang."/log.php");
 
 $db -> Execute("UPDATE log SET unread='T' WHERE unread='F' AND owner=".$player -> id);
 
-if (!isset($_GET['limit']))
-{
-    $_GET['limit'] = 0;
-}
-
-if (!ereg("^[0-9]*$", $_GET['limit']))
-{
-    error(ERROR);
-}
-
 $objTest = $db -> Execute("SELECT count(*) FROM `log` WHERE `owner`=".$player -> id." ORDER BY `id` DESC");
-$intAmount = $objTest -> fields['count(*)'];
+$intPages = ceil($objTest -> fields['count(*)'] / 30);
 $objTest -> Close();
-if ($intAmount < $_GET['limit'])
-{
-    error(ERROR);
-}
+if (isset($_GET['page']))
+  {
+    checkvalue($_GET['page']);
+    $intPage = $_GET['page'];
+  }
+ else
+   {
+     $intPage = $intPages;
+   }
 
-$smarty -> assign(array("Previous" => '',
-                        "Next" => ''));
 
-$log = $db -> SelectLimit("SELECT `id`, `log`, `czas` FROM `log` WHERE `owner`=".$player -> id." ORDER BY `id` DESC", 30, $_GET['limit']);
+$log = $db -> SelectLimit("SELECT `id`, `log`, `czas` FROM `log` WHERE `owner`=".$player -> id." ORDER BY `id` DESC", 30, 30 * ($intPage - 1));
 $arrdate = array();
 $arrtext = array();
 $arrid1 = array(0);
@@ -74,17 +67,6 @@ while (!$log -> EOF)
     $i = $i + 1;
 }
 $log -> Close();
-
-if ($_GET['limit'] >= 30) 
-{
-    $intLimit = $_GET['limit'] - 30;
-    $smarty -> assign("Previous", "<form method=\"post\" action=\"log.php?limit=".$intLimit."\"><input type=\"submit\" value=\"".A_PREVIOUS."\" /></form> ");
-}
-$_GET['limit'] = $_GET['limit'] + 30;
-if ($intAmount > 30 && $_GET['limit'] < $intAmount) 
-{
-    $smarty -> assign("Next", "<form method=\"post\" action=\"log.php?limit=".$_GET['limit']."\"><input type=\"submit\" value=\"".A_NEXT."\" /></form>");
-}
 
 if (isset($_GET['akcja']) && $_GET['akcja'] == 'wyczysc') 
 {
@@ -208,6 +190,9 @@ $smarty -> assign(array("Date" => $arrdate,
                         "Text" => $arrtext, 
                         "LogId" => $arrid1, 
                         "Send" => $_GET['send'],
+			"Tpages" => $intPages,
+			"Tpage" => $intPage,
+			"Fpage" => "Idź do strony:",
                         "Loginfo" => LOG_INFO2,
                         "Event" => EVENT,
                         "Edate" => E_DATE,
