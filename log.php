@@ -39,7 +39,7 @@ require_once("languages/".$player -> lang."/log.php");
 
 $db -> Execute("UPDATE log SET unread='T' WHERE unread='F' AND owner=".$player -> id);
 
-$objTest = $db -> Execute("SELECT count(*) FROM `log` WHERE `owner`=".$player -> id." ORDER BY `id` ASC");
+$objTest = $db -> Execute("SELECT count(*) FROM `log` WHERE `owner`=".$player -> id." ORDER BY `id` DESC");
 $intPages = ceil($objTest -> fields['count(*)'] / 30);
 $objTest -> Close();
 if (isset($_GET['page']))
@@ -49,7 +49,7 @@ if (isset($_GET['page']))
   }
  else
    {
-     $intPage = $intPages;
+     $intPage = 1;
    }
 
 

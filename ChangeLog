@@ -1,5 +1,7 @@
 2011-09-10  Bartek thindil Jasicki  <thindil@tuxfamily.org>
 
+	* BUG,market.php: 
+	fixed bug with adding potions to offert
 	* UPDATE,amarket.php, hmartek.php, imarket.php, mmarket.php, pmarket.php, rmarket.php: 
 	small code optimization
 	* FEATURE,templates/layout1/log.tpl, templates/log.tpl, log.php: 

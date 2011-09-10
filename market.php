@@ -512,7 +512,7 @@ if (isset($_GET['view']) && $_GET['view'] == 'myoferts')
                     }
                     if ($intKey == 2)
                     {
-                        $objAmount = $db -> Execute("SELECT `id`, `amount` FROM `potions` WHERE `owner`=".$player -> id." AND `name`='".$objOfert -> fields['name']."' AND `efect`='".$objOfert -> fields['efect']."' AND `type`='".$objOfert -> fields['type']."' AND `power`=".$objOfert->fields['power']);
+                        $objAmount = $db -> Execute("SELECT `id`, `amount` FROM `potions` WHERE `owner`=".$player -> id." AND `name`='".$objOfert -> fields['name']."' AND `efect`='".$objOfert -> fields['efect']."' AND `type`='".$objOfert -> fields['type']."' AND `power`=".$objOfert->fields['power']." AND `status`='K'");
                         $intAmount = $objAmount -> fields['amount'];
                     }
                     if ($intKey == 3)
