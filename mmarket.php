@@ -8,7 +8,7 @@
  *   @author              : thindil <thindil@tuxfamily.org>
  *   @author              : eyescream <tduda@users.sourceforge.net>
  *   @version             : 1.4
- *   @since               : 09.09.2011
+ *   @since               : 10.09.2011
  *
  */
 
@@ -199,7 +199,7 @@ if (isset ($_GET['view']) && $_GET['view'] == 'add')
 	checkvalue($_POST['cost']);
 	checkvalue($_POST['przedmiot']);
 	checkvalue($_POST['amount']);
-        $item = $db -> Execute("SELECT * FROM `potions` WHERE `id`=".$_POST['przedmiot']);
+        $item = $db -> Execute("SELECT * FROM `potions` WHERE `id`=".$_POST['przedmiot']." AND `owner`=".$player -> id." AND `status`='K'");
         if ($_POST['amount'] > $item -> fields['amount']) 
         {
             error(NO_AMOUNT.$item -> fields['name'].". <a href=\"mmarket.php\">".A_BACK."</a>");

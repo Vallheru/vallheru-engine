@@ -8,7 +8,7 @@
  *   @author               : thindil <thindil@tuxfamily.org>
  *   @author               : eyescream <tduda@users.sourceforge.net>
  *   @version              : 1.4
- *   @since                : 22.08.2011
+ *   @since                : 10.09.2011
  *
  */
 
@@ -278,7 +278,6 @@ if (isset($_GET['buy']))
                             "Hseller" => SELLER,
                             "Bamount" => B_AMOUNT,
                             "Abuy" => A_BUY));
-    $buy -> Close();
     if (isset($_GET['step']) && $_GET['step'] == 'buy') 
     {
         if (!isset($_POST['amount']))
@@ -286,7 +285,6 @@ if (isset($_GET['buy']))
 	    error(ERROR);
 	  }
 	checkvalue($_POST['amount']);
-        $buy = $db -> Execute("SELECT * FROM hmarket WHERE id=".$_GET['buy']);
         $price = $_POST['amount'] * $buy -> fields['cost'];
         if ($price > $player -> credits) 
         {
@@ -320,6 +318,7 @@ if (isset($_GET['buy']))
         $db -> Execute("INSERT INTO `log` (`owner`, `log`, `czas`) VALUES(".$buy -> fields['seller'].",'<b><a href=view.php?view=".$player -> id.">".$player -> user.L_ACCEPT.$player -> id.L_ACCEPT2.$_POST['amount'].L_AMOUNT.$buy -> fields['nazwa'].YOU_GET.$price.TO_BANK."', ".$strDate.")");
         $smarty -> assign("Message", YOU_BUY.$_POST['amount'].I_AMOUNT.$buy -> fields['nazwa'].FOR_A.$price.GOLD_COINS);
     }
+    $buy->Close();
 }
 
 if (isset($_GET['wyc'])) 

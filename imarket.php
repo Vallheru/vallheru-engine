@@ -8,7 +8,7 @@
  *   @author               : thindil <thindil@tuxfamily.org>
  *   @author               : eyescream <tduda@users.sourceforge.net>
  *   @version              : 1.4
- *   @since                : 09.09.2011
+ *   @since                : 10.09.2011
  *
  */
 
@@ -294,7 +294,11 @@ if (isset ($_GET['view']) && $_GET['view'] == 'add')
 	checkvalue($_POST['cost']);
 	checkvalue($_POST['przedmiot']);
 	checkvalue($_POST['amount']);
-        $item = $db -> Execute("SELECT * FROM equipment WHERE id=".$_POST['przedmiot']);
+        $item = $db -> Execute("SELECT * FROM equipment WHERE id=".$_POST['przedmiot']." AND `status`='U' AND `type`!='I' AND `owner`=".$player -> id);
+	if (!$item->fields['id'])
+	  {
+	    error(ERROR);
+	  }
         if ($item -> fields['type'] == 'I')
         {
             error(ERROR);
@@ -476,7 +480,6 @@ if (isset($_GET['buy']))
                             "Iseller" => SELLER,
                             "Bamount" => B_AMOUNT,
                             "Abuy" => A_BUY));
-    $buy -> Close();
     $seller -> Close();
     if (isset($_GET['step']) && $_GET['step'] == 'buy') 
     {
@@ -485,7 +488,6 @@ if (isset($_GET['buy']))
             error(ERROR);
         }
 	checkvalue($_POST['amount']);
-        $buy = $db -> Execute("SELECT * FROM `equipment` WHERE `id`=".$_GET['buy']." AND `type`!='I'");
 	$price = $_POST['amount'] * $buy -> fields['cost'];
         if ($price > $player -> credits) 
         {
@@ -548,6 +550,7 @@ if (isset($_GET['buy']))
         $db -> Execute("INSERT INTO `log` (`owner`, `log`, `czas`) VALUES(".$buy -> fields['owner'].",'<b><a href=view.php?view=".$player -> id.">".$player -> user.L_ACCEPT.$player -> id.L_ACCEPT2.$_POST['amount'].L_AMOUNT.$buy -> fields['name']." (+".$buy->fields['power'].") ".$speed." (".$agility.")".YOU_GET.$price.TO_BANK."', ".$strDate.")");
         $smarty -> assign("Message", YOU_BUY.$_POST['amount'].I_AMOUNT.$buy -> fields['name'].FOR_A.$price.GOLD_COINS);
     }
+    $buy->Close();
 }
 
 /**
