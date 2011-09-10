@@ -7,7 +7,7 @@
  *   @copyright            : (C) 2004,2005,2006,2007,2011 Vallheru Team based on Gamers-Fusion ver 2.5
  *   @author               : thindil <thindil@tuxfamily.org>
  *   @version              : 1.4
- *   @since                : 29.08.2011
+ *   @since                : 10.09.2011
  *
  */
 
@@ -436,7 +436,7 @@ if (isset($_GET['step']) && $strFilename == 'newspaper.php')
 }
  else
 {
-    $objLinks = $db -> Execute("SELECT `id`, `file`, `text` FROM `links` WHERE `owner`=".$player -> id." ORDER BY `id` ASC");
+    $objLinks = $db -> Execute("SELECT `id`, `file`, `text` FROM `links` WHERE `owner`=".$player -> id." ORDER BY `number` ASC");
     $arrFile = array('');
     $arrText = array('');
     $intLinks = 0;

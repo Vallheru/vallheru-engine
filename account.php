@@ -7,7 +7,7 @@
  *   @copyright            : (C) 2004,2005,2006,2007,2011 Vallheru Team based on Gamers-Fusion ver 2.5
  *   @author               : thindil <thindil@tuxfamily.org>
  *   @version              : 1.4
- *   @since                : 09.09.2011
+ *   @since                : 10.09.2011
  *
  */
 
@@ -47,18 +47,20 @@ $smarty -> assign("Avatar", '');
  */
 if (isset($_GET['view']) && $_GET['view'] == 'links')
 {
-    $objLinks = $db -> Execute("SELECT `id`, `file`, `text` FROM `links` WHERE `owner`=".$player -> id." ORDER BY `id` ASC");
+    $objLinks = $db -> Execute("SELECT `id`, `file`, `text`, `number` FROM `links` WHERE `owner`=".$player -> id." ORDER BY `number` ASC");
     $arrId = array(0);
     $arrFile = array();
     $arrText = array();
+    $arrNumber = array();
     $i = 0;
     while (!$objLinks -> EOF)
     {
         $arrId[$i] = $objLinks -> fields['id'];
         $arrFile[$i] = $objLinks -> fields['file'];
         $arrText[$i] = $objLinks -> fields['text'];
-        $i ++;
+	$arrNumber[$i] = $objLinks->fields['number'];
         $objLinks -> MoveNext();
+	$i++;
     }
     $objLinks -> Close();
     if (!isset($_GET['lid']))
@@ -82,6 +84,7 @@ if (isset($_GET['view']) && $_GET['view'] == 'links')
     $smarty -> assign(array("Linksinfo" => LINKS_INFO,
                             "Tfile" => T_LINK,
                             "Tname" => T_NAME,
+			    "Tnumber" => "Numer",
                             "Tactions" => T_ACTIONS,
                             "Adelete" => A_DELETE,
                             "Aedit" => A_EDIT,
@@ -90,8 +93,10 @@ if (isset($_GET['view']) && $_GET['view'] == 'links')
                             "Linksfile" => $arrFile,
                             "Linkstext" => $arrText,
                             "Linkid" => $intLinkid,
+			    "Linksnumber" => $arrNumber,
                             "Linkfile" => '',
-                            "Linkname" => ''));
+                            "Linkname" => '',
+			    "Linknumber" => ''));
 
     /**
      * Add/edit links
@@ -100,23 +105,25 @@ if (isset($_GET['view']) && $_GET['view'] == 'links')
     {
         if (!isset($_GET['action']) && $_GET['lid'] > 0)
         {
-            $objLink = $db -> Execute("SELECT `id`, `file`, `text` FROM `links` WHERE `id`=".$_GET['lid']." AND `owner`=".$player -> id);
+            $objLink = $db -> Execute("SELECT `id`, `file`, `text`, `number` FROM `links` WHERE `id`=".$_GET['lid']." AND `owner`=".$player -> id);
             if (!$objLink -> fields['id'])
             {
                 error(NOT_YOUR);
             }
             $smarty -> assign(array("Linkfile" => $objLink -> fields['file'],
-                                    "Linkname" => $objLink -> fields['text']));
+                                    "Linkname" => $objLink -> fields['text'],
+				    "Linknumber" => $objLink->fields['number']));
             $objLink -> Close();
         }
         if (isset($_GET['action']) && $_GET['action'] == 'change')
         {
             $strFile = strip_tags($_POST['linkadress']);
             $strText = strip_tags($_POST['linkname']);
-            if (empty($strFile) || empty($strText))
+            if (empty($strFile) || empty($strText) || !isset($_POST['linknumber']))
             {
                 error(EMPTY_FIELDS);
             }
+	    $_POST['linknumber'] = intval($_POST['linknumber']);
             $arrForbidden = array('config.php', 'session.php', 'reset.php', 'resets.php', 'quest', 'portal');
             foreach ($arrForbidden as $strForbidden)
             {
@@ -128,12 +135,12 @@ if (isset($_GET['view']) && $_GET['view'] == 'links')
             }
             if ($_GET['lid'] > 0)
             {
-                $db -> Execute("UPDATE `links` SET `file`='".$strFile."', `text`='".$strText."' WHERE `id`=".$_GET['lid']." AND `owner`=".$player -> id);
+                $db -> Execute("UPDATE `links` SET `file`='".$strFile."', `text`='".$strText."', `number`=".$_POST['linknumber']." WHERE `id`=".$_GET['lid']." AND `owner`=".$player -> id);
                 $strMessage = YOU_CHANGE;
             }
                 else
             {
-                $db -> Execute("INSERT INTO `links` (`owner`, `file`, `text`) VALUES(".$player -> id.", '".$strFile."', '".$strText."')");
+                $db -> Execute("INSERT INTO `links` (`owner`, `file`, `text`, `number`) VALUES(".$player -> id.", '".$strFile."', '".$strText."', ".$_POST['linknumber'].")");
                 $strMessage = YOU_ADD;
             }
             error($strMessage);

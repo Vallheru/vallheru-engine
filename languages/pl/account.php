@@ -7,7 +7,7 @@
  *   @copyright            : (C) 2004,2005,2006,2011 Vallheru Team based on Gamers-Fusion ver 2.5
  *   @author               : thindil <thindil@tuxfamily.org>
  *   @version              : 1.4
- *   @since                : 12.08.2011
+ *   @since                : 10.09.2011
  *
  */
 
@@ -51,7 +51,7 @@ define("A_LINKS", "Własne linki");
 
 if (isset($_GET['view']) && $_GET['view'] == 'links')
 {
-    define("LINKS_INFO", "Poniżej możesz dodać bądź edytować dodatkowe linki jakie mają pojawiać się w menu Nawigacja. Linki możesz dodawać albo tylko jako nazwa pliku (np \"city.php\") albo cały adres (np \"".$gameadress."/city.php\").");
+    define("LINKS_INFO", "Poniżej możesz dodać bądź edytować dodatkowe linki jakie mają pojawiać się w menu Nawigacja. Linki możesz dodawać albo tylko jako nazwa pliku (np \"city.php\") albo cały adres (np \"".$gameadress."/city.php\"). Możesz również ustawić kolejność wyświetlania linku poprzez nadanie mu odpowiedniego numeru. Linki z niższym numerem będą wyswietlane jako pierwsze.");
     define("T_LINK", "Adres");
     define("T_NAME", "Nazwa");
     define("T_ACTIONS", "Akcje");

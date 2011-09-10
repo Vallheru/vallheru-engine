@@ -12,12 +12,14 @@
             <tr>
                 <td align="center"><b>{$Tfile}</b></td>
                 <td align="center"><b>{$Tname}</b></td>
+		<td align="center"><b>{$Tnumber}</b></td>
                 <td><b>{$Tactions}</b><td>
             </tr>
             {section name=links loop=$Linksid}
                 <tr>
                     <td>{$Linksfile[links]}</td>
                     <td>{$Linkstext[links]}</td>
+		    <td>{$Linksnumber[links]}</td>
                     <td>
                         <a href="account.php?view=links&amp;step=edit&amp;lid={$Linksid[links]}">{$Aedit}</a><br />
                         <a href="account.php?view=links&amp;step=delete&amp;lid={$Linksid[links]}">{$Adelete}</a>
@@ -29,6 +31,7 @@
     <form method="post" action="account.php?view=links&amp;step=edit&amp;lid={$Linkid}&amp;action=change">
         {$Tfile}: <input type="text" name="linkadress" size="20" value="{$Linkfile}" /><br />
         {$Tname}: <input type="text" name="linkname" size="20" value="{$Linkname}" /><br />
+	{$Tnumber}: <input type="text" name="linknumber" size="20" value="{$Linknumber}" /><br />
         <input type="submit" value="{$Aform}" />
     </form>
 {/if}
