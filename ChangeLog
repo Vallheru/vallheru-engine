@@ -1,5 +1,7 @@
 2011-09-10  Bartek thindil Jasicki  <thindil@tuxfamily.org>
 
+	* BUG,templates/layout1/mmarket.tpl, templates/mmarket.tpl: 
+	fixed typo
 	* FEATURE,monuments.php, alley.php, stafflist.php, tower.php, court.php, library.php: 
 	allow enter to this locations from any place
 	* BUG,market.php: 

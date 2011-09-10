@@ -86,7 +86,7 @@
     {$Buyinfo} <a href="mmarket.php">{$Aback}</a>.<br /><br />
     <b>{$Potion}:</b> {$Name} <br />
     {if $Type == "M" || $Type == "P"}
-        <b>{$Ppower}:</b> {$Power} %<br />
+        <b>{$Ppower}:</b> {$Power}<br />
     {/if}
     <b>{$Oamount}:</b> {$Amount1} <br />
     <b>{$Pcost}:</b> {$Cost} <br />
