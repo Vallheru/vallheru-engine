@@ -485,12 +485,12 @@ if ((isset ($_GET['action']) && $_GET['action'] == 'steal') && $player -> clas =
     {
         $db -> Execute("UPDATE players SET bless='', blessval=0 WHERE id=".$player -> id);
     }
-    $chance = ($player -> agility + $player -> inteli) - $roll;
+    $chance = ($player->agility + $player->inteli + $player->thievery) - $roll;
     if ($chance < 1) 
     {
         $cost = 1000 * $player -> level;
         $expgain = ceil($player -> level / 10);
-        checkexp($player -> exp,$expgain,$player -> level,$player -> race,$player -> user,$player -> id,0,0,$player -> id,'',0);
+        checkexp($player -> exp, $expgain, $player -> level, $player -> race, $player -> user, $player -> id, 0, 0, $player -> id, 'thievery', 0.01);
         $db -> Execute("UPDATE players SET miejsce='Lochy', crime=crime-1 WHERE id=".$player -> id);
         $strDate = $db -> DBDate($newdate);
         $db -> Execute("INSERT INTO `jail` (`prisoner`, `verdict`, `duration`, `cost`, `data`) VALUES(".$player -> id.", '".VERDICT."', 7, ".$cost.", ".$strDate.")") or error (E_DB4);
@@ -501,8 +501,9 @@ if ((isset ($_GET['action']) && $_GET['action'] == 'steal') && $player -> clas =
     {
         $gain = $player -> level * 1000;
         $expgain = ($player -> level * 10);
-        $db -> Execute("UPDATE players SET crime=crime-1, credits=credits+".$gain." WHERE id=".$player -> id);
-        checkexp($player -> exp,$expgain,$player -> level,$player -> race,$player -> user,$player -> id,0,0,$player -> id,'',0);
+	$fltThief = ($player->level / 100);
+        $db -> Execute("UPDATE `players` SET `crime`=`crime`-1, `credits`=`credits`+".$gain." WHERE `id`=".$player -> id);
+        checkexp($player -> exp, $expgain, $player -> level, $player -> race, $player -> user, $player -> id, 0, 0, $player -> id, 'thievery', $fltThief);
         error (C_SUCCES.$gain.C_SUCCES2);
     }
 }

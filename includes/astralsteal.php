@@ -4,11 +4,11 @@
  *   Functions to steal astral components
  *
  *   @name                 : astralsteal.php                            
- *   @copyright            : (C) 2006 Vallheru Team based on Gamers-Fusion ver 2.5
- *   @author               : thindil <thindil@users.sourceforge.net>
+ *   @copyright            : (C) 2006,2011 Vallheru Team based on Gamers-Fusion ver 2.5
+ *   @author               : thindil <thindil@tuxfamily.org>
  *   @author               : eyescream <tduda@users.sourceforge.net>
- *   @version              : 1.3
- *   @since                : 23.11.2006
+ *   @version              : 1.4
+ *   @since                : 11.09.2011
  *
  */
 
@@ -28,7 +28,7 @@
 //   along with this program; if not, write to the Free Software
 //   Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 //
-// $Id: astralsteal.php 840 2006-11-24 16:41:26Z thindil $
+// $Id:$
 
 /**
 * Get the localization for game
@@ -161,7 +161,7 @@ function astralsteal($intVictim, $strLocation, $intOwner = 0, $intId = 0)
             $intDays = 14;
         }
         $intExpgain = ceil($player -> level / 10);
-        checkexp($player -> exp, $intExpgain, $player -> level, $player -> race, $player -> user, $player -> id, 0, 0, $player -> id, '', 0);
+        checkexp($player -> exp, $intExpgain, $player -> level, $player -> race, $player -> user, $player -> id, 0, 0, $player -> id, 'thievery', 0.01);
         $db -> Execute("UPDATE `players` SET `miejsce`='Lochy', `astralcrime`='N' WHERE `id`=".$player -> id);
         $db -> Execute("INSERT INTO `jail` (`prisoner`, `verdict`, `duration`, `cost`, `data`) VALUES(".$player -> id.", '".VERDICT."', ".$intDays.", ".$intBail.", ".$strDate.")");
         $db -> Execute("INSERT INTO `log` (`owner`, `log`, `czas`) VALUES(".$player -> id.",'".L_REASON.": ".$intBail.".', ".$strDate.")");
@@ -181,7 +181,8 @@ function astralsteal($intVictim, $strLocation, $intOwner = 0, $intId = 0)
         {
             $intExpgain = $player -> level * 50;
         }
-        checkexp($player -> exp, $intExpgain, $player -> level, $player -> race, $player -> user, $player -> id, 0, 0, $player -> id, '', 0);
+	$fltThief = ($player->level / 100);
+        checkexp($player -> exp, $intExpgain, $player -> level, $player -> race, $player -> user, $player -> id, 0, 0, $player -> id, 'thievery', $fltThief);
         $db -> Execute("UPDATE `players` SET `astralcrime`='N' WHERE `id`=".$player -> id);
         if ($strLocation != 'R')
         {

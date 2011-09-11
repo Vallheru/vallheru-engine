@@ -39,7 +39,11 @@
                 {section name=k loop=$Monuments[i][j]}
                     <tr>
                         <td align="left">
-                            <a href="view.php?view={$Monuments[i][j][k].id}">{$Monuments[i][j][k].user}</a>&nbsp;({$Monuments[i][j][k].id})
+			    {if $Monuments[i][j][k].id != 'X'}
+                                <a href="view.php?view={$Monuments[i][j][k].id}">{$Monuments[i][j][k].user}</a>&nbsp;({$Monuments[i][j][k].id})
+			    {else}
+			        {$Monuments[i][j][k].user}&nbsp;({$Monuments[i][j][k].id})
+			    {/if}
                         </td>
                         <td align="right">{$Monuments[i][j][k].value}</td>
                     </tr>

@@ -5,9 +5,9 @@
  *
  *   @name                 : explore.php                            
  *   @copyright            : (C) 2004,2005,2006,2011 Vallheru Team based on Gamers-Fusion ver 2.5
- *   @author               : thindil <thindil@users.sourceforge.net>
+ *   @author               : thindil <thindil@tuxfamily.org>
  *   @version              : 1.4
- *   @since                : 22.08.2011
+ *   @since                : 11.09.2011
  *
  */
  
@@ -157,7 +157,7 @@ if (isset($_GET['step']) && $_GET['step'] == 'battle')
 */
 if (isset($_GET['step']) && $_GET['step'] == 'run') 
 {
-    $enemy = $db -> Execute("SELECT `speed`, `name`, `exp1`, `exp2`, `id` FROM monsters WHERE id=".$player -> fight);
+    $enemy = $db -> Execute("SELECT `level`, `speed`, `name`, `exp1`, `exp2`, `id` FROM monsters WHERE id=".$player -> fight);
     /**
      * Add bonus from rings
      */
@@ -180,23 +180,25 @@ if (isset($_GET['step']) && $_GET['step'] == 'run')
             $player -> speed = $player -> speed + $arrEquip[10][2];
         }
     } 
-    $chance = (rand(1, $player -> level * 100) + $player -> speed - $enemy -> fields['speed']);
+    $chance = (rand(1, $player -> level * 100) + ($player->speed + $player->perception) - $enemy -> fields['speed']);
     $smarty -> assign ("Chance", $chance);
     if ($chance > 0) 
     {
         $expgain = rand($enemy -> fields['exp1'],$enemy -> fields['exp2']);
         $expgain = ceil($expgain / 100);
+	$fltPerception = ($enemy->fields['level'] / 100);
         $smarty -> assign(array("Ename" => $enemy -> fields['name'], 
                                 "Expgain" => $expgain,
                                 "Escapesucc" => ESCAPE_SUCC,
                                 "Escapesucc2" => ESCAPE_SUCC2,
                                 "Escapesucc3" => ESCAPE_SUCC3));
-        checkexp($player -> exp, $expgain, $player -> level, $player -> race, $player -> user, $player -> id, 0, 0, $player -> id, '', 0);
+        checkexp($player -> exp, $expgain, $player -> level, $player -> race, $player -> user, $player -> id, 0, 0, $player -> id, 'perception', $fltPerception);
         $db -> Execute("UPDATE `players` SET `fight`=0 WHERE `id`=".$player -> id);
     } 
         else 
     {
         $strMessage = ESCAPE_FAIL." ".$enemy -> fields['name']." ".ESCAPE_FAIL2.".<br />";
+	$db->Execute("UPDATE `players` SET `perception`=`perception`+0.01 WHERE `id`=".$player->id);
         $smarty -> assign ("Message", $strMessage);
         $smarty -> display ('error1.tpl');
         battle('T','explore.php?step=battle');

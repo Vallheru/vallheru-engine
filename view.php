@@ -8,7 +8,7 @@
  *   @author               : thindil <thindil@tuxfamily.org>
  *   @author               : eyescream <tduda@users.sourceforge.net>
  *   @version              : 1.4
- *   @since                : 30.08.2011
+ *   @since                : 11.09.2011
  *
  */
 
@@ -27,7 +27,7 @@
 //   You should have received a copy of the GNU General Public License
 //   along with this program; if not, write to the Free Software
 //   Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
-// $Id: view.php 840 2006-11-24 16:41:26Z thindil $
+// $Id$
 
 $title = "Zobacz"; 
 require_once("includes/head.php");
@@ -322,7 +322,6 @@ if (isset ($_GET['steal']))
     {
         error(TOO_YOUNG." (<a href=\"view.php?view=".$_GET['view']."\">".BACK."</a>)");
     }
-    $roll = rand (1, $view -> level);
     /**
      * Add bonus from bless
      */
@@ -383,13 +382,15 @@ if (isset ($_GET['steal']))
         }
     }
 
-    $chance = ($player -> agility + $player -> inteli) - ($view -> agility + $view -> inteli + $roll);
+    $chance = ($player->agility + $player->inteli + $player->thievery) - ($view->agility + $view->inteli + $view->perception);
     $strDate = $db -> DBDate($newdate);
     if ($chance < 1) 
     {
         $cost = 1000 * $player -> level;
         $expgain = ceil($view -> level / 10);
-        checkexp($player -> exp,$expgain,$player -> level,$player -> race,$player -> user,$player -> id,0,0,$player -> id,'',0);
+        checkexp($player -> exp, $expgain, $player -> level, $player -> race, $player -> user, $player -> id, 0, 0, $player -> id, 'thievery', 0.01);
+	$fltPerception = ($player->level / 100);
+	$db->Execute("UPDATE `players` SET `perception`=`perception`+".$fltPerception." WHERE `id`=".$view->id);
         if ($player -> location != 'Lochy') 
         {
             $db -> Execute("UPDATE `players` SET `miejsce`='Lochy', `crime`=`crime`-1 WHERE `id`=".$player -> id);
@@ -408,18 +409,22 @@ if (isset ($_GET['steal']))
     if ($chance > 0 && $chance < 50) 
     {
         $db -> Execute("UPDATE `players` SET `crime`=`crime`-1 WHERE `id`=".$player -> id);
+	$fltPerception = ($player->level / 200.0);
+	$fltThief = ($view->level / 200.0);
         if ( $view -> credits > 0) 
         {
             $lost = ceil($view -> credits / 10);
             $expgain = $view -> level;
-            checkexp($player -> exp,$expgain,$player -> level,$player -> race,$player -> user,$player -> id,0,0,$player -> id,'',0);
-            $db -> Execute("UPDATE `players` SET `credits`=`credits`-".$lost." WHERE `id`=".$view -> id);
+            checkexp($player -> exp, $expgain, $player -> level, $player -> race, $player -> user, $player -> id, 0, 0, $player -> id, 'thievery', $fltThief);
+            $db -> Execute("UPDATE `players` SET `credits`=`credits`-".$lost.", `perception`=`perception`+".$fltPerception." WHERE `id`=".$view->id);
             $db -> Execute("UPDATE `players` SET `credits`=`credits`+".$lost." WHERE `id`=".$player -> id);
             $db -> Execute("INSERT INTO `log` (`owner`, `log`, `czas`) VALUES(".$view -> id.",'".YOU_CATCH."<b><a href=view.php?view=".$player -> id.">".$player -> user.L_ID.$player -> id.NOT_CATCH.$lost.GOLD_COINS."', ".$strDate.")");
             error ("<br />".WHEN_YOU2.$lost.WHEN_YOU21." (<a href=\"view.php?view=".$_GET['view']."\">".BACK."</a>)");
         } 
-            else 
+	else 
         {
+	    $db->Execute("UPDATE `players` SET `perception`=`perception`+".$fltPerception." WHERE `id`=".$view->id);
+	    $db->Execute("UPDATE `players` SET `thievery`=`thievery`+".$fltThief." WHERE `id`=".$player->id);
             $db -> Execute("INSERT INTO `log` (`owner`, `log`, `czas`) VALUES(".$view -> id.",'".YOU_CATCH."<b><a href=view.php?view=".$player -> id.">".$player -> user.L_ID.$player -> id.EMPTY_BAG."', ".$strDate.")");
             error ("<br />".EMPTY_BAG2." (<a href=\"view.php?view=".$_GET['view']."\">".BACK."</a>)");
         }
@@ -427,18 +432,20 @@ if (isset ($_GET['steal']))
     if ($chance > 49) 
     {
         $db -> Execute("UPDATE `players` SET `crime`=`crime`-1 WHERE `id`=".$player -> id);
+	$fltThief = ($view->level / 100.0);
         if ( $view -> credits > 0) 
         {
             $lost = ceil($view -> credits / 10);
             $expgain = ceil($view -> level * 10);
-            $db -> Execute("UPDATE `players` SET `credits`=`credits`-".$lost." WHERE `id`=".$view -> id);
+            $db -> Execute("UPDATE `players` SET `credits`=`credits`-".$lost.", `perception`=`perception`+0.01 WHERE `id`=".$view -> id);
             $db -> Execute("UPDATE `players` SET `credits`=`credits`+".$lost." WHERE `id`=".$player -> id);
-            checkexp($player -> exp,$expgain,$player -> level,$player -> race,$player -> user,$player -> id,0,0,$player -> id,'',0);
+            checkexp($player -> exp, $expgain, $player -> level, $player -> race, $player -> user, $player -> id, 0, 0, $player -> id, 'thievery', $fltThief);
             $db -> Execute("INSERT INTO `log` (`owner`, `log`, `czas`) VALUES(".$view -> id.",'".YOU_CRIME.$lost.YOU_CRIME2."', ".$strDate.")");
             error ("<br />".SUCCESS.$lost.GOLD_COINS2." (<a href=\"view.php?view=".$_GET['view']."\">".BACK."</a>)");
         } 
-            else 
+	else 
         {
+	    $db->Execute("UPDATE `players` SET `thievery`=`thievery`+".$fltThief." WHERE `id`=".$player->id);
             $db -> Execute("INSERT INTO `log` (`owner`, `log`, `czas`) VALUES(".$view -> id.",'".EMPTY_BAG3."', ".$strDate.")");
             error ("<br />".EMPTY_BAG4." (<a href=\"view.php?view=".$_GET['view']."\">".BACK."</a>)");
         }

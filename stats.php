@@ -8,7 +8,7 @@
  *   @author               : thindil <thindil@tuxfamily.org>
  *   @author               : mori <ziniquel@users.sourceforge.net>
  *   @version              : 1.4
- *   @since                : 30.08.2011
+ *   @since                : 11.09.2011
  *
  */
 
@@ -42,7 +42,8 @@ require_once("languages/".$player -> lang."/stats.php");
 * Assign variables to template
 */
 $smarty -> assign(array("Avatar" => '', 
-                        "Crime" => ''));
+                        "Crime" => '',
+			"Thievery" => ''));
 
 $plik = 'avatars/'.$player -> avatar;
 if (is_file($plik)) 
@@ -198,6 +199,7 @@ $smarty -> assign(array("Stats" => $arrStats,
                         "Lumberjack" => $player -> lumberjack."<br />",
                         "Herbalist" => $player -> herbalist."<br />",
                         "Jeweller" => $player -> jeweller."<br />",
+			"Perception" => $player->perception."<br />",
 			"Tnewbie" => "Ochrona młodego gracza",
 			"Tdays" => "dni",
 			"Tday" => "dzień",
@@ -236,7 +238,8 @@ $smarty -> assign(array("Stats" => $arrStats,
                         "Tmining" => T_MINING,
                         "Tlumberjack" => T_LUMBERJACK,
                         "Therbalist" => T_HERBALIST,
-                        "Tjeweller" => T_JEWELLER));
+                        "Tjeweller" => T_JEWELLER,
+			"Tperception" => "Spostrzegawczość"));
 $cape = $db -> Execute("SELECT `power` FROM `equipment` WHERE `owner`=".$player -> id." AND `type`='C' AND `status`='E'");
 $maxmana = ($player -> inteli + $player -> wisdom);
 $maxmana = $maxmana + (($cape -> fields['power'] / 100) * $maxmana);
@@ -249,10 +252,11 @@ if ($player -> mana < $maxmana)
 {
     $smarty -> assign ("Rest", "<br />");
 }
-if ($player -> clas == "Złodziej") 
-{
-    $smarty -> assign ("Crime", "<b>".CRIME_T."</b> ".$player -> crime."<br />");
-}
+if ($player->clas == "Złodziej") 
+  {
+    $smarty->assign(array("Crime" => "<b>".CRIME_T."</b> ".$player->crime."<br />",
+			  "Thievery" => "<b>Złodziejstwo:</b>".$player->thievery."<br />"));
+  }
 
 if (!empty($player-> gg)) 
 {

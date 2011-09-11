@@ -43,13 +43,15 @@
         <b>{$Tfight}:</b> {$Attack}
         <b>{$Tbreeding}:</b> {$Breeding}
         <b>{$Tlumberjack}:</b> {$Lumberjack}
-        <b>{$Tjeweller}:</b> {$Jeweller}</td>
+        <b>{$Tjeweller}:</b> {$Jeweller}
+	{$Thievery}</td>
         <td valign="top"><b>{$Tshoot}:</b> {$Shoot}
         <b>{$Tdodge}:</b> {$Miss}
         <b>{$Tcast}:</b> {$Magic}
         <b>{$Tleader}:</b> {$Leadership}
         <b>{$Tmining}:</b> {$Mining}
-        <b>{$Therbalist}:</b> {$Herbalist}</td>
+        <b>{$Therbalist}:</b> {$Herbalist}
+	<b>{$Tperception}:</b> {$Perception}</td>
         </tr>
         </table>
 </td></tr>

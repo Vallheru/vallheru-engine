@@ -33,3 +33,5 @@ ALTER TABLE `players` ADD `autodrink` CHAR NOT NULL DEFAULT 'N';
 ALTER TABLE `equipment` ADD INDEX ( `minlev` );
 ALTER TABLE `news` ADD `pdate` DATE NOT NULL;
 ALTER TABLE `links` ADD `number` INT( 11 ) NOT NULL;
+ALTER TABLE `players` ADD `thievery` DOUBLE( 11, 2 ) NOT NULL DEFAULT '0.01',
+ADD `perception` DOUBLE( 11, 2 ) NOT NULL DEFAULT '0.01';

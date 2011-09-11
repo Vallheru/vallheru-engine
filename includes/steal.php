@@ -4,10 +4,10 @@
  *   Steal items from shops
  *
  *   @name                 : steal.php                            
- *   @copyright            : (C) 2004,2005,2006 Vallheru Team based on Gamers-Fusion ver 2.5
- *   @author               : thindil <thindil@users.sourceforge.net>
- *   @version              : 1.3
- *   @since                : 19.10.2006
+ *   @copyright            : (C) 2004,2005,2006,2011 Vallheru Team based on Gamers-Fusion ver 2.5
+ *   @author               : thindil <thindil@tuxfamily.org>
+ *   @version              : 1.4
+ *   @since                : 11.09.2011
  *
  */
 
@@ -27,7 +27,7 @@
 //   along with this program; if not, write to the Free Software
 //   Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 //
-// $Id: steal.php 741 2006-10-19 12:14:28Z thindil $
+// $Id:$
 
 /**
 * Get the localization for game
@@ -118,7 +118,7 @@ function steal ($itemid)
     {
         $cost = 1000 * $player -> level;
         $expgain = ceil ($player -> level / 10);
-        checkexp($player -> exp,$expgain,$player -> level,$player -> race,$player -> user,$player -> id,0,0,$player -> id,'',0);
+        checkexp($player -> exp, $expgain, $player -> level, $player -> race, $player -> user, $player -> id, 0, 0, $player -> id, 'thievery', 0.01);
         $db -> Execute("UPDATE `players` SET `miejsce`='Lochy', `crime`=`crime`-1 WHERE `id`=".$player -> id);
         $db -> Execute("INSERT INTO `jail` (`prisoner`, `verdict`, `duration`, `cost`, `data`) VALUES(".$player -> id.", '".VERDICT."', 7, ".$cost.", ".$strDate.")") or die("Błąd!");
         $db -> Execute("INSERT INTO log (`owner`, `log`, `czas`) VALUES(".$player -> id.",'".S_LOG_INFO." ".$cost.".', ".$strDate.")");
@@ -136,7 +136,8 @@ function steal ($itemid)
         }       
         $db -> Execute("UPDATE players SET crime=crime-1 WHERE id=".$player -> id);
         $expgain = ($player -> level * 10); 
-        checkexp($player -> exp,$expgain,$player -> level,$player -> race,$player -> user,$player -> id,0,0,$player -> id,'',0);
+	$fltThief = ($player->level / 100);
+        checkexp($player -> exp, $expgain, $player -> level, $player -> race, $player -> user, $player -> id, 0, 0, $player -> id, 'thievery', $fltThief);
         if ($arritem -> fields['type'] == 'R') 
         {
             $test = $db -> Execute("SELECT id FROM equipment WHERE name='".$arritem -> fields['name']."' AND owner=".$player -> id." AND status='U' AND cost=1");
