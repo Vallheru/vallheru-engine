@@ -7,7 +7,7 @@
  *   @copyright            : (C) 2004,2005,2006,2007,2011 Vallheru Team based on Gamers-Fusion ver 2.5
  *   @author               : thindil <thindil@tuxfamily.org>
  *   @version              : 1.4
- *   @since                : 05.09.2011
+ *   @since                : 11.09.2011
  *
  */
 
@@ -101,6 +101,8 @@ class Player
     var $vallars;
     var $newbie;
     var $autodrink;
+    var $thievery;
+    var $perception;
 /**
 * Class constructor - get data from database and write it to variables
 */
@@ -190,6 +192,8 @@ class Player
 	$this->vallars = $stats->fields['vallars'];
 	$this->newbie = $stats->fields['newbie'];
 	$this->autodrink = $stats->fields['autodrink'];
+	$this->thievery = $stats->fields['thievery'];
+	$this->perception = $stats->fields['perception'];
         $stats -> Close();
     }
     /**

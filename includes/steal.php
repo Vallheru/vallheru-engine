@@ -49,10 +49,7 @@ function steal ($itemid)
     {
         error(ERROR);
     }
-    if (!ereg("^[1-9][0-9]*$", $itemid)) 
-    {
-        error (ERROR);
-    }
+    checkvalue($itemid);
     if ($player -> hp <= 0) 
     {
         error (E_DEAD);
@@ -112,7 +109,7 @@ function steal ($itemid)
         }
     }
 
-    $chance = ($player -> agility + $player -> inteli) - $roll;
+    $chance = ($player->agility + $player->inteli + $player->thievery) - $roll;
     $strDate = $db -> DBDate(date("y-m-d"));
     if ($chance < 1) 
     {
@@ -136,7 +133,7 @@ function steal ($itemid)
         }       
         $db -> Execute("UPDATE players SET crime=crime-1 WHERE id=".$player -> id);
         $expgain = ($player -> level * 10); 
-	$fltThief = ($player->level / 100);
+	$fltThief = ($arritem->fields['level'] / 100);
         checkexp($player -> exp, $expgain, $player -> level, $player -> race, $player -> user, $player -> id, 0, 0, $player -> id, 'thievery', $fltThief);
         if ($arritem -> fields['type'] == 'R') 
         {

@@ -1,5 +1,7 @@
 2011-09-11  Bartek thindil Jasicki  <thindil@tuxfamily.org>
 
+	* BUG,includes/astralsteal.php, includes/steal.php: 
+	fixed count chance for steal
 	* templates/layout1/admin.tpl, templates/admin.tpl, admin.php, includes/ranks.php: 
 	added option to add players unique rank
 	* FEATURE,install/db/update.sql, class/player_class.php, view.php, templates/layout1/stats.tpl, templates/stats.tpl, stats.php,

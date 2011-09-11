@@ -98,10 +98,10 @@ function astralsteal($intVictim, $strLocation, $intOwner = 0, $intId = 0)
      * Check for succesful steal
      */
     $intRoll = rand(1, ($player -> level * 100));
-    $intChance = ($player -> agility + $player -> inteli) - $intRoll;
+    $intChance = ($player->agility + $player->inteli + $player->thievery) - $intRoll;
     if ($strLocation == 'R')
     {
-        $intChars = $player -> agility + $player -> inteli;
+        $intChars = $player->agility + $player->inteli + $player->thievery;
         $intChance =  $intChars - ($intChars * 0.9) - $intRoll;
     }
     if ($intChance < 1)
