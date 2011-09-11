@@ -1036,6 +1036,26 @@ if (isset ($_GET['view']) && $_GET['view'] == 'add')
 }
 
 /**
+ * Give player unique rank
+ */
+if (isset($_GET['view']) && $_GET['view'] == 'srank')
+  {
+    $smarty->assign(array("Aadd" => "Nadaj",
+			  "Newrank" => "rangę",
+			  "Plid" => "graczowi o ID"));
+    if (isset($_GET['step']) && $_GET['step'] == 'add')
+      {
+	checkvalue($_POST['aid']);
+	if ($_POST['aid'] != 1)
+	  {
+	    $strRank = $db -> qstr($_POST['rank'], get_magic_quotes_gpc());
+            $db -> Execute("UPDATE `players` SET `rank`=".$strRank." WHERE `id`=".$_POST['aid']);
+	    error("Nadałeś graczowi o ID: ".$_POST['aid']." rangę: ".$_POST['rank'].".");
+	  }
+      }
+  }
+
+/**
 * Prune forums
 */
 if (isset ($_GET['view']) && $_GET['view'] == 'clearf')
@@ -1282,8 +1302,8 @@ if (!isset($_GET['view']))
     $_GET['view'] = '';
     $arrView1 = array('bridge', 'poll', 'addtext');
     $arrLinks1 = array(A_BRIDGE, A_POLL, A_ADD_NEWS);
-    $arrView2 = array('del', 'donate', 'takeaway', 'add', 'tags', 'czat', 'jail', 'jailbreak', 'delplayers', 'ban', 'donator', 'logs', 'playerquest', 'banmail', 'vallars');
-    $arrLinks2 = array(A_DELETE, A_DONATION, A_TAKE, A_RANK, A_IMMU, A_CHAT_BAN, A_JAIL, A_JAILBREAK, A_DEL_PLAYERS, A_BAN, A_DONATOR, A_LOGS, A_PLAYERQUEST, A_BAN_MAIL, 'Daj/Zabierz Vallary graczowi');
+    $arrView2 = array('del', 'donate', 'takeaway', 'add', 'tags', 'czat', 'jail', 'jailbreak', 'delplayers', 'ban', 'donator', 'logs', 'playerquest', 'banmail', 'vallars', 'srank');
+    $arrLinks2 = array(A_DELETE, A_DONATION, A_TAKE, A_RANK, A_IMMU, A_CHAT_BAN, A_JAIL, A_JAILBREAK, A_DEL_PLAYERS, A_BAN, A_DONATOR, A_LOGS, A_PLAYERQUEST, A_BAN_MAIL, 'Daj/Zabierz Vallary graczowi', 'Nadaj unikalną rangę graczowi');
     $arrView3 = array('clearf', 'clearc', 'forums', 'innarchive');
     $arrLinks3 = array(A_FORUM_P, A_CHAT_P, A_FORUMS, A_INNARCHIVE);
     $arrView4 = array('equipment', 'monster', 'monster2', 'kowal', 'czary', 'mill');

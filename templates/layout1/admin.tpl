@@ -412,6 +412,12 @@
     </form>
 {/if}
 
+{if $View == "srank"}
+    <form method="post" action="admin.php?view=srank&amp;step=add">
+    <input type="submit" value="{$Aadd}" /> {$Newrank} <input type="text" name="rank" size="20" /> {$Plid} <input type="text" name="aid" size="5" />
+    </form>
+{/if}
+
 {if $View == "tags"}
     <form method="post" action="admin.php?view=tags&amp;step=tag">
     {$Giveimmu} <input type="text" name="tag_id" size="5" />. <input type="submit" value="{$Agive}" />

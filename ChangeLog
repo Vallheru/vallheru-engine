@@ -1,5 +1,7 @@
 2011-09-11  Bartek thindil Jasicki  <thindil@tuxfamily.org>
 
+	* templates/layout1/admin.tpl, templates/admin.tpl, admin.php, includes/ranks.php: 
+	added option to add players unique rank
 	* FEATURE,install/db/update.sql, class/player_class.php, view.php, templates/layout1/stats.tpl, templates/stats.tpl, stats.php,
 	templates/layout1/monumnets.tpl, templates/monuments.tpl, monuments.php, bank.php, includes/astralsteal.php, includes/steal.php,
 	explore.php, maze.php:

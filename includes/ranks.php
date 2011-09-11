@@ -4,10 +4,10 @@
  *   Function to select ranks
  *
  *   @name                 : ranks.php                            
- *   @copyright            : (C) 2006 Vallheru Team based on Gamers-Fusion ver 2.5
- *   @author               : thindil <thindil@users.sourceforge.net>
- *   @version              : 1.1
- *   @since                : 23.06.2006
+ *   @copyright            : (C) 2006,2011 Vallheru Team based on Gamers-Fusion ver 2.5
+ *   @author               : thindil <thindil@tuxfamily.org>
+ *   @version              : 1.4
+ *   @since                : 11.09.2011
  *
  */
 
@@ -49,6 +49,13 @@ function selectrank($strRank, $strGender)
         $arrRank2 = array(R_MEMBER2, R_KING2, R_STAFF2, R_JUDGE21, R_JUDGE2, R_LAWYER, R_BEGGAR, R_BARBARIAN, R_SCRIBE, R_KNIGHT, R_LADY, R_COUNT, R_COUNT21, R_JUDGE3, R_JOKER, R_REDACTOR, R_INNKEEPER, R_HERO2, R_PROCURATOR);
     }
     $intKey = array_search($strRank, $arrRank);
-    return $arrRank2[$intKey];
+    if ($intKey !== FALSE)
+      {
+	return $arrRank2[$intKey];
+      }
+    else
+      {
+	return $strRank;
+      }
 }
 ?>
