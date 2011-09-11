@@ -7,7 +7,7 @@
  *   @copyright            : (C) 2004,2005,2006,2007,2011 Vallheru Team based on Gamers-Fusion ver 2.5
  *   @author               : thindil <thindil@tuxfamily.org>
  *   @version              : 1.4
- *   @since                : 28.08.2011
+ *   @since                : 11.09.2011
  *
  */
 
@@ -107,7 +107,7 @@ if (isset ($_GET['id']))
         $db -> Execute("DELETE FROM `tribe_oczek` WHERE `gracz`=".$_GET['id']);
         $db -> Execute("DELETE FROM `mill` WHERE `owner`=".$_GET['id']);
         $db -> Execute("DELETE FROM `mill_work` WHERE `gracz`=".$_GET['id']);
-        $db -> Execute("UPDATE `players` SET `level`=1, `exp`=0, `credits`=0, `energy`=0, `max_energy`=10, `strength`=3, `agility`=3, `ap`=5, `platinum`=0, `hp`=15, `max_hp`=15, `bank`=0, `ability`=0.01, `corepass`='N', `trains`=5, `inteli`=3, `pw`=0, `atak`=0.01, `unik`=0.01, `magia`=0.01, `immu`='N', `pm`=6, `szyb`=3, `wytrz`=3, `alchemia`=0.01, `wisdom`=3, `shoot`=0.01, `fletcher`=0.01, `rasa`='', `klasa`='', `deity`='', `gender`='', `leadership`=0.01, `wins`=0, `losses`=0, `lastkilled`='...', `lastkilledby`='...', `breeding`=0.01, `mining`=0.01, `lumberjack`=0.01, `herbalist`=0.01, `crime`=1, `maps`=0, `jeweller`=0.01 WHERE `id`=".$_GET['id']);
+        $db -> Execute("UPDATE `players` SET `level`=1, `exp`=0, `credits`=0, `energy`=0, `max_energy`=10, `strength`=3, `agility`=3, `ap`=5, `platinum`=0, `hp`=15, `max_hp`=15, `bank`=0, `ability`=0.01, `corepass`='N', `trains`=5, `inteli`=3, `pw`=0, `atak`=0.01, `unik`=0.01, `magia`=0.01, `immu`='N', `pm`=6, `szyb`=3, `wytrz`=3, `alchemia`=0.01, `wisdom`=3, `shoot`=0.01, `fletcher`=0.01, `rasa`='', `klasa`='', `deity`='', `gender`='', `leadership`=0.01, `wins`=0, `losses`=0, `lastkilled`='...', `lastkilledby`='...', `breeding`=0.01, `mining`=0.01, `lumberjack`=0.01, `herbalist`=0.01, `crime`=1, `maps`=0, `jeweller`=0.01, `thievery`=0.01, `perception`=0.01 WHERE `id`=".$_GET['id']);
         $db -> Execute("UPDATE `players` SET `miejsce`='Altara' WHERE `miejsce`!='Lochy' AND `id`=".$_GET['id']);
         $db -> Execute("DELETE FROM `farms` WHERE `owner`=".$_GET['id']);
         $db -> Execute("DELETE FROM `farm` WHERE `owner`=".$_GET['id']);
