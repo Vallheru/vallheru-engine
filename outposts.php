@@ -952,7 +952,7 @@ if (isset ($_GET['view']) && $_GET['view'] == 'taxes')
       {
 	$intAmount = 0;
       }
-    $smarty -> assign(array("Taxinfo" => TAX_INFO." Obecnie posiadasz ".$out->fields['turns']." Punktów Ataku.",
+    $smarty -> assign(array("Taxinfo" => TAX_INFO." Obecnie posiadasz <b>".$out->fields['turns']."</b> Punktów Ataku.",
 			    "Asend" => A_SEND,
 			    "Soldiers" => SOLDIERS,
 			    "Amount" => $intAmount,
