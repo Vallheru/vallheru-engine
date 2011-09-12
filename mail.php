@@ -7,7 +7,7 @@
  *   @copyright            : (C) 2004,2005,2006,2007,2011 Vallheru Team based on Gamers-Fusion ver 2.5
  *   @author               : thindil <thindil@tuxfamily.org>
  *   @version              : 1.4
- *   @since                : 03.09.2011
+ *   @since                : 12.09.2011
  *
  */
 
@@ -491,7 +491,7 @@ if (isset ($_GET['send']))
             error (NOT_YOUR);
         }
         $strDate = $db -> DBDate($newdate);
-        $db -> Execute("INSERT INTO `log` (`owner`, `log`, `czas`) VALUES(".$arrtest -> fields['id'].",'".L_PLAYER."<a href=view.php?view=".$player -> id.">".$player -> user."</a>".L_ID.$player -> id.SEND_YOU.$arrmessage -> fields['sender'].L_ID.$arrmessage -> fields['senderid'].".', ".$strDate.")");
+        $db -> Execute("INSERT INTO `log` (`owner`, `log`, `czas`, `type`) VALUES(".$arrtest -> fields['id'].",'".L_PLAYER."<a href=view.php?view=".$player -> id.">".$player -> user."</a>".L_ID.$player -> id.SEND_YOU.$arrmessage -> fields['sender'].L_ID.$arrmessage -> fields['senderid'].".', ".$strDate.", 'A')");
         $db -> Execute("INSERT INTO `mail` (`sender`, `senderid`, `owner`, `subject`, `body`, `date`) VALUES('".$player -> user."','".$player -> id."',".$arrtest -> fields['id'].",'".M_TITTLE.$arrmessage -> fields['sender'].L_ID.$arrmessage -> fields['senderid']."','".M_TITLE2.$arrmessage -> fields['subject'].M_DATE.$arrmessage -> fields['date'].M_BODY.$arrmessage -> fields['body']."', ".$strDate.")");
         error (YOU_SEND.$arrtest -> fields['user'].". <a href=mail.php>".A_REFRESH."</a>");
     }

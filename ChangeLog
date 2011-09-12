@@ -1,6 +1,8 @@
 2011-09-12  Bartek thindil Jasicki  <thindil@tuxfamily.org>
 
-	* forums.php, templates/layout1/forums.tpl, templates/forums.tpl: 
+	* FEATURE,jail.php, library.php, log.php, mail.php, mmarket.php, news.php, pmarket.php, rmarket.php, tribearmor.php: 
+	added type of log message
+	* FEATURE,forums.php, templates/layout1/forums.tpl, templates/forums.tpl: 
 	added info about category in which are new posts
 	* FEATURE,account.php, admin.php, amarket.php, bank.php, chat.php, core.php, hmarket.php, house.php, imarket.php: 
 	added type of message

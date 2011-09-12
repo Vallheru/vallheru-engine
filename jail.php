@@ -8,7 +8,7 @@
  *   @author               : thindil <thindil@tuxfamily.org>
  *   @author               : eyescream <tduda@users.sourceforge.net>
  *   @version              : 1.4
- *   @since                : 28.08.2011
+ *   @since                : 12.09.2011
  *
  */
 
@@ -174,7 +174,7 @@ if (isset($_GET['prisoner']))
         $db -> Execute("DELETE FROM `jail` WHERE `id`=".$prisoner -> fields['id']);
         $db -> Execute("UPDATE `players` SET `credits`=`credits`-".$prisoner -> fields['cost']." WHERE `id`=".$player -> id);
         $strDate = $db -> DBDate($newdate);
-        $db -> Execute("INSERT INTO `log` (`owner`, `log`, `czas`) VALUES(".$prisoner -> fields['prisoner'].",'".L_PLAYER.'<a href="view.php?view='.$player -> id.'">'.$player -> user.'</a>'.L_ID.'<b>'.$player -> id.'</b>'.PAY_FOR."', ".$strDate.")");
+        $db -> Execute("INSERT INTO `log` (`owner`, `log`, `czas`, `type`) VALUES(".$prisoner -> fields['prisoner'].",'".L_PLAYER.'<a href="view.php?view='.$player -> id.'">'.$player -> user.'</a>'.L_ID.'<b>'.$player -> id.'</b>'.PAY_FOR."', ".$strDate.", 'J')");
         error (YOU_PAY.$prisoner -> fields['cost'].GOLD_FOR.$pname -> fields['user'].L_ID.$prisoner -> fields['prisoner']);
     }
     $smarty -> assign("Step", $_GET['step']);

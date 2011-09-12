@@ -8,7 +8,7 @@
  *   @author              : thindil <thindil@tuxfamily.org>
  *   @author              : eyescream <tduda@users.sourceforge.net>
  *   @version             : 1.4
- *   @since               : 10.09.2011
+ *   @since               : 12.09.2011
  *
  */
 
@@ -321,7 +321,7 @@ if (isset($_GET['buy']))
         $db -> Execute("UPDATE `players` SET `bank`=`bank`+".$price." WHERE `id`=".$buy -> fields['owner']);
         $db -> Execute("UPDATE `players` SET `credits`=`credits`-".$price." WHERE `id`=".$player -> id);
         $strDate = $db -> DBDate($newdate);
-        $db -> Execute("INSERT INTO `log` (`owner`, `log`, `czas`) VALUES(".$buy -> fields['owner'].",'<b><a href=view.php?view=".$player -> id.">".$player -> user.L_ACCEPT.$player -> id.L_ACCEPT2.$_POST['amount'].L_AMOUNT.$buy -> fields['name'].YOU_GET.$price.TO_BANK."', ".$strDate.")");
+        $db -> Execute("INSERT INTO `log` (`owner`, `log`, `czas`, `type`) VALUES(".$buy -> fields['owner'].",'<b><a href=view.php?view=".$player -> id.">".$player -> user.L_ACCEPT.$player -> id.L_ACCEPT2.$_POST['amount'].L_AMOUNT.$buy -> fields['name'].YOU_GET.$price.TO_BANK."', ".$strDate.", 'M')");
         $smarty -> assign("Message", YOU_BUY.$_POST['amount'].L_AMOUNT.$buy -> fields['name'].FOR_A.$price.GOLD_COINS);
     }
     $buy->Close();

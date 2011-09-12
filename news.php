@@ -7,7 +7,7 @@
  *   @copyright            : (C) 2004,2005,2006,2011 Vallheru Team based on Gamers-Fusion ver 2.5
  *   @author               : thindil <thindil@tuxfamily.org>
  *   @version              : 1.4
- *   @since                : 09.09.2011
+ *   @since                : 12.09.2011
  *
  */
 
@@ -198,7 +198,7 @@ if (isset($_GET['step']) && $_GET['step'] == 'add')
 	$_POST['ttitle'] = str_replace("'", "", strip_tags($_POST['ttitle']));
 	while (!$objStaff->EOF) 
 	  {
-	    $db->Execute("INSERT INTO `log` (`owner`, `log`, `czas`) VALUES(".$objStaff->fields['id'].", 'Nowa plotka \"".$_POST['ttitle']."\" (autor: <a href=\"view.php?view=".$player->id."\">".$player->user."</a>) oczekuje na akceptację.', ".$strDate.")") or die($db->ErrorMsg());
+	    $db->Execute("INSERT INTO `log` (`owner`, `log`, `czas`, `type`) VALUES(".$objStaff->fields['id'].", 'Nowa plotka \"".$_POST['ttitle']."\" (autor: <a href=\"view.php?view=".$player->id."\">".$player->user."</a>) oczekuje na akceptację.', ".$strDate.", 'A')") or die($db->ErrorMsg());
 	    $objStaff->MoveNext();
 	  }
 	$objStaff->Close();
