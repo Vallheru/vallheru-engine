@@ -8,7 +8,7 @@
  *   @author               : thindil <thindil@tuxfamily.org>
  *   @author               : eyescream <tduda@users.sourceforge.net>
  *   @version              : 1.4
- *   @since                : 08.09.2011
+ *   @since                : 12.09.2011
  *
  */
  
@@ -952,7 +952,7 @@ if (isset ($_GET['view']) && $_GET['view'] == 'taxes')
       {
 	$intAmount = 0;
       }
-    $smarty -> assign(array("Taxinfo" => TAX_INFO,
+    $smarty -> assign(array("Taxinfo" => TAX_INFO." Obecnie posiadasz ".$out->fields['turns']." Punktów Ataku.",
 			    "Asend" => A_SEND,
 			    "Soldiers" => SOLDIERS,
 			    "Amount" => $intAmount,
@@ -1739,13 +1739,13 @@ if (isset ($_GET['view']) && $_GET['view'] == 'battle')
                 /**
                 * Modify morale of attacker and defender
                 */
-                $db -> Execute("UPDATE outposts SET morale=morale+7.5 WHERE id=".$myout -> fields['id']);
-                $db -> Execute("UPDATE outposts SET morale=morale-10 WHERE id=".$enemy -> fields['id']);
+                $db -> Execute("UPDATE `outposts` SET `morale`=`morale`+7.5 WHERE `id`=".$myout -> fields['id']);
+                $db -> Execute("UPDATE `outposts` SET `morale`=`morale`-10 WHERE `id`=".$enemy -> fields['id']);
                 /**
                 * Add event in log defender player
                 */
                 $strDate = $db -> DBDate($newdate);
-                $db -> Execute("INSERT INTO log (`owner`, `log`, `czas`) VALUES(".$enemy -> fields['owner'].",'".L_PLAYER." <b><a href=\"view.php?view=".$player -> id."\">".$player -> user.'</a></b>'.L_ID.'<b>'.$player -> id.'</b>'.HE_ATTACK.$lostgold.L_GOLD.$arrlog[0]." ".SOLDIERS.", ".$arrlog[1]." ".ARCHERS.", ".$arrlog[2]." ".MACHINES.L_AND.$arrlog[3]." ".FORTS.".', ".$strDate.")");
+                $db -> Execute("INSERT INTO `log` (`owner`, `log`, `czas`, `type`) VALUES(".$enemy -> fields['owner'].",'".L_PLAYER." <b><a href=\"view.php?view=".$player -> id."\">".$player -> user.'</a></b>'.L_ID.'<b>'.$player -> id.'</b>'.HE_ATTACK.$lostgold.L_GOLD.$arrlog[0]." ".SOLDIERS.", ".$arrlog[1]." ".ARCHERS.", ".$arrlog[2]." ".MACHINES.L_AND.$arrlog[3]." ".FORTS.". Zdobywasz ".$gainexp." w umiejętności Dowodzenie.', ".$strDate.", 'O')");
             } 
                 else 
             {
@@ -1794,13 +1794,13 @@ if (isset ($_GET['view']) && $_GET['view'] == 'battle')
                 /**
                 * Modify morale attacker and defender army
                 */
-                $db -> Execute("UPDATE outposts SET morale=morale-10 WHERE id=".$myout -> fields['id']);
-                $db -> Execute("UPDATE outposts SET morale=morale+7.5 WHERE id=".$enemy -> fields['id']);
+                $db -> Execute("UPDATE `outposts` SET `morale`=`morale`-10 WHERE `id`=".$myout -> fields['id']);
+                $db -> Execute("UPDATE `outposts` SET `morale`=`morale`+7.5 WHERE `id`=".$enemy -> fields['id']);
                 /**
                 * Add event to defender log
                 */
                 $strDate = $db -> DBDate($newdate);
-                $db -> Execute("INSERT INTO log (owner, log, czas) VALUES(".$enemy -> fields['owner'].",'".L_PLAYER." <b><a href=\"view.php?view=".$player -> id."\">".$player -> user.'</a></b>'.L_ID.'<b>'.$player -> id.'</b>'.HE_ATTACK2.$arrlog[0]." ".SOLDIERS.", ".$arrlog[1]." ".ARCHERS.", ".$arrlog[2]." ".MACHINES.L_AND.$arrlog[3]." ".FORTS.".', ".$strDate.")");
+                $db -> Execute("INSERT INTO `log` (`owner`, `log`, `czas`, `type`) VALUES(".$enemy -> fields['owner'].",'".L_PLAYER." <b><a href=\"view.php?view=".$player -> id."\">".$player -> user.'</a></b>'.L_ID.'<b>'.$player -> id.'</b>'.HE_ATTACK2.$arrlog[0]." ".SOLDIERS.", ".$arrlog[1]." ".ARCHERS.", ".$arrlog[2]." ".MACHINES.L_AND.$arrlog[3]." ".FORTS.". Zdobywasz ".$gainexp1." w umiejętności Dowodzenie.', ".$strDate.", 'O')");
             }
             /**
             * Count losses in monsters of attacker

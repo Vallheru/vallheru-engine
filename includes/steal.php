@@ -133,7 +133,7 @@ function steal ($itemid)
         }       
         $db -> Execute("UPDATE players SET crime=crime-1 WHERE id=".$player -> id);
         $expgain = ($player -> level * 10); 
-	$fltThief = ($arritem->fields['level'] / 100);
+	$fltThief = ($arritem->fields['minlev'] / 100);
         checkexp($player -> exp, $expgain, $player -> level, $player -> race, $player -> user, $player -> id, 0, 0, $player -> id, 'thievery', $fltThief);
         if ($arritem -> fields['type'] == 'R') 
         {
