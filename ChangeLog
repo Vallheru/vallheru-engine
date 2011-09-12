@@ -1,5 +1,7 @@
 2011-09-12  Bartek thindil Jasicki  <thindil@tuxfamily.org>
 
+	* UPDATE,equip.php: 
+	better sorting of potions
 	* UPDATE,outposts.php: 
 	more visible attacks points
 	* FEATURE,class/player_class.php, install/db/update.sql, includes/head.php, forums.php, templates/header.tpl, templates/layout1/header.tpl,

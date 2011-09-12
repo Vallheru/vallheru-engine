@@ -7,7 +7,7 @@
  *   @copyright            : (C) 2004,2005,2006,2007,2011 Vallheru Team based on Gamers-Fusion ver 2.5
  *   @author               : thindil <thindil@tuxfamily.org>
  *   @version              : 1.4
- *   @since                : 09.09.2011
+ *   @since                : 12.09.2011
  *
  */
 
@@ -487,7 +487,7 @@ backpack('I', $player->id, 'pierścienie', '', 'Brings');
 /**
  * Show potions
  */
-$mik = $db -> Execute("SELECT * FROM potions WHERE owner=".$player -> id." AND status='K' ORDER BY `name` ASC");
+$mik = $db -> Execute("SELECT * FROM potions WHERE owner=".$player -> id." AND status='K' ORDER BY `power` ASC, `name` ASC");
 if ($mik -> fields['id']) 
 {
     $arrname = array();
