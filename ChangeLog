@@ -1,5 +1,7 @@
 2011-09-12  Bartek thindil Jasicki  <thindil@tuxfamily.org>
 
+	* FEATURE,explore.php, maze.php: 
+	added info about gained perception
 	* FEATURE,install/db/update.sql, outposts.php:
 	added info about gaining leadership, added amount of attack points to collect taxes
 
@@ -12,7 +14,7 @@
 	* templates/layout1/admin.tpl, templates/admin.tpl, admin.php, includes/ranks.php: 
 	added option to add players unique rank
 	* FEATURE,install/db/update.sql, class/player_class.php, view.php, templates/layout1/stats.tpl, templates/stats.tpl, stats.php,
-	templates/layout1/monumnets.tpl, templates/monuments.tpl, monuments.php, bank.php, includes/astralsteal.php, includes/steal.php,
+	templates/layout1/monuments.tpl, templates/monuments.tpl, monuments.php, bank.php, includes/astralsteal.php, includes/steal.php,
 	explore.php, maze.php:
 	added skills Thievery and Perception
 
