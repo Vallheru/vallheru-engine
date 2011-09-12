@@ -18,7 +18,7 @@
 {if $View == "newposts"}
     <ul>
         {section name=numbers loop=$Titles}
-	    <li><a href="forums.php?topic={$Tid[numbers]}">{$Titles[numbers]}</a></li>
+	    <li><b>{$Tcats[numbers]}:</b> <a href="forums.php?topic={$Tid[numbers]}">{$Titles[numbers]}</a></li>
 	{/section}
     </ul>
     {if $Tpages > 1}

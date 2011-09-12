@@ -125,18 +125,23 @@ if (isset($_GET['view']) && ($_GET['view'] == 'newposts'))
      {
        $page = $pages;
      }
-    $objTopics = $db->SelectLimit("SELECT `id`, `topic` FROM `topics` WHERE `w_time`>".$intForums." AND `cat_id` IN(".implode(",", $arrForums).")", 25, 25 * ($page - 1)) or die($db->ErrorMsg());
+    $objTopics = $db->SelectLimit("SELECT `id`, `topic`, `cat_id` FROM `topics` WHERE `w_time`>".$intForums." AND `cat_id` IN(".implode(",", $arrForums).")", 25, 25 * ($page - 1)) or die($db->ErrorMsg());
     $arrTitles = array();
     $arrIds = array();
+    $arrCats = array();
     while (!$objTopics->EOF)
       {
 	$arrTitles[] = $objTopics->fields['topic'];
 	$arrIds[] = $objTopics->fields['id'];
+	$objCat = $db->Execute("SELECT `name` FROM `categories` WHERE `id`=".$objTopics->fields['cat_id']);
+	$arrCats[] = $objCat->fields['name'];
+	$objCat->Close();
 	$objTopics->MoveNext();
       }
     $objTopics->Close();
     $smarty->assign(array("Titles" => $arrTitles,
 			  "Tid" => $arrIds,
+			  "Tcats" => $arrCats,
 			  "Tpages" => $pages,
 			  "Tpage" => $page,
 			  "Fpage" => "Idź do strony:",));
