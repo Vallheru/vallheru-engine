@@ -8,7 +8,7 @@
  *   @author               : thindil <thindil@tuxfamily.org>
  *   @author               : eyescream <tduda@users.sourceforge.net>
  *   @version              : 1.4
- *   @since                : 08.09.2011
+ *   @since                : 12.09.2011
  *
  */
 
@@ -688,8 +688,8 @@ if (isset ($_GET['view']) && $_GET['view'] == 'mycores')
                 
                 $db -> Execute("UPDATE `core` SET `owner`=".$_POST['gid']." WHERE `id`=".$rel -> fields['id']) or error ("blad przy zapisie!");
                 $strDate = $db -> DBDate($newdate);
-                $db -> Execute("INSERT INTO `log` (`owner`, `log`, `czas`) VALUES('".$_POST['gid']."','".L_PLAYER." <b><a href=view.php?view=".$player -> id.">".$player -> user."</a></b>".L_ID.'<b>'.$player -> id."</b>, ".SEND_YOU." ".$strCorename.".', ".$strDate.")");
-                $db -> Execute("INSERT INTO `log` (`owner`, `log`, `czas`) VALUES('".$player -> id."', '".YOU_SEND." <b>".$strCorename." ".SEND2." <b><a href=\"view.php?view=".$_POST['gid']."\">".$strReceiversName."</a></b>".L_ID.'<b>'.$_POST['gid']."</b>', ".$strDate.")") or die("Blad!");
+                $db -> Execute("INSERT INTO `log` (`owner`, `log`, `czas`, `type`) VALUES('".$_POST['gid']."','".L_PLAYER." <b><a href=view.php?view=".$player -> id.">".$player -> user."</a></b>".L_ID.'<b>'.$player -> id."</b>, ".SEND_YOU." ".$strCorename.".', ".$strDate.", 'R')");
+                $db -> Execute("INSERT INTO `log` (`owner`, `log`, `czas`, `type`) VALUES('".$player -> id."', '".YOU_SEND." <b>".$strCorename." ".SEND2." <b><a href=\"view.php?view=".$_POST['gid']."\">".$strReceiversName."</a></b>".L_ID.'<b>'.$_POST['gid']."</b>', ".$strDate.", 'R')") or die("Blad!");
                 error (YOU_SEND." <b>".$strCorename." ".SEND2." <b><a href=\"view.php?view=".$_POST['gid']."\">".$strReceiversName."</a></b>".L_ID.'<b>'.$_POST['gid']."</b>. (<a href=core.php?view=mycores>".A_REFRESH."</a>).");
             }
         }
@@ -1140,7 +1140,7 @@ if (isset ($_GET['view']) && $_GET['view'] == 'arena')
                                 $loser -> Close();
                             }
                             $strDate = $db -> DBDate($newdate);
-                            $db -> Execute("INSERT INTO `log` (`owner`, `log`, `czas`) VALUES('".$intLogid."','".LOG_ENTRY.$intLogenemyid."\">".$strLogenemyname.'</a></b>'.L_ID.'<b>'.$intLogenemyid.'</b>'.$strLogentry."', ".$strDate.")");
+                            $db -> Execute("INSERT INTO `log` (`owner`, `log`, `czas`, `type`) VALUES('".$intLogid."','".LOG_ENTRY.$intLogenemyid."\">".$strLogenemyname.'</a></b>'.L_ID.'<b>'.$intLogenemyid.'</b>'.$strLogentry."', ".$strDate.", 'R')");
                         }
                     }
                     $enemy -> Close();
@@ -1341,7 +1341,7 @@ if (isset ($_GET['view']) && $_GET['view'] == 'market')
                     $db -> Execute("UPDATE players SET bank=bank+".$buy -> fields['cost']." WHERE id=".$buy -> fields['seller']);
                     $db -> Execute("DELETE FROM core_market WHERE id=".$buy -> fields['id']);
                     $strDate = $db -> DBDate($newdate);
-                    $db -> Execute("INSERT INTO `log` (`owner`, `log`, `czas`) VALUES(".$buy -> fields['seller'].",'<b><a href=view.php?view=".$player -> id.">".$player -> user.'</a></b>, ID <b>'.$player -> id.BUY_YOU.$buy -> fields['name'].L_INFO2.$buy -> fields['cost'].GOLD_COINS2."', ".$strDate.")");
+                    $db -> Execute("INSERT INTO `log` (`owner`, `log`, `czas`, `type`) VALUES(".$buy -> fields['seller'].",'<b><a href=view.php?view=".$player -> id.">".$player -> user.'</a></b>, ID <b>'.$player -> id.BUY_YOU.$buy -> fields['name'].L_INFO2.$buy -> fields['cost'].GOLD_COINS2."', ".$strDate.", 'R')");
                     error (YOU_BUY.$buy -> fields['name'].FOR_A.$buy -> fields['cost'].GC);
                 }
             }

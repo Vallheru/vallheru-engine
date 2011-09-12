@@ -8,7 +8,7 @@
  *   @author               : thindil <thindil@tuxfamily.org>
  *   @author               : eyescream <tduda@users.sourceforge.net>
  *   @version              : 1.4
- *   @since                : 04.09.2011
+ *   @since                : 12.09.2011
  *
  */
  
@@ -188,7 +188,7 @@ if (isset($_GET['view']) && $_GET['view'] == 'bugreport')
             {
                 $strInfo = $strInfo." <b>".T_COMMENT2.":</b> ".$_POST['bugcomment'];
             }
-            $db -> Execute("INSERT INTO `log` (`owner`, `log`, `czas`) VALUES(".$objBug -> fields['sender'].", '".$strInfo."', ".$strDate.")");
+            $db -> Execute("INSERT INTO `log` (`owner`, `log`, `czas`, `type`) VALUES(".$objBug -> fields['sender'].", '".$strInfo."', ".$strDate.", 'A')");
             error($strMessage);
         }
         $objBug -> Close();
@@ -217,7 +217,7 @@ if (isset($_GET['view']) && $_GET['view'] == 'vallars')
 	  }
 	$strInfo .= abs($_POST['amount'])." Vallarów. Przyczyna: ".$_POST['reason'].".";
 	$db->Execute("UPDATE `players` SET `vallars`=`vallars`+".$_POST['amount']." WHERE `id`=".$_POST['id']);
-	$db -> Execute("INSERT INTO `log` (`owner`, `log`, `czas`) VALUES(".$_POST['id'].", '".$strInfo."', ".$strDate.")");
+	$db -> Execute("INSERT INTO `log` (`owner`, `log`, `czas`, `type`) VALUES(".$_POST['id'].", '".$strInfo."', ".$strDate.", 'V')");
 	if ($_POST['amount'] != 0)
 	  {
 	    $db->Execute("INSERT INTO `vallars` (`owner`, `amount`, `reason`) VALUES(".$_POST['id'].", ".$_POST['amount'].", '".$_POST['reason']."')");

@@ -8,7 +8,7 @@
  *   @author               : thindil <thindil@tuxfamily.org>
  *   @author               : eyescream <tduda@users.sourceforge.net>
  *   @version              : 1.4
- *   @since                : 08.09.2011
+ *   @since                : 12.09.2011
  *
  */
 
@@ -436,7 +436,7 @@ if (isset ($_GET['action']) && $_GET['action'] == 'rent')
         $db -> Execute("UPDATE players SET bank=bank+".$buy -> fields['cost']." WHERE id=".$buy -> fields['seller']);
         $db -> Execute("UPDATE houses SET cost=0, seller=0, owner=".$player -> id." WHERE id=".$buy -> fields['id']);
         $strDate = $db -> DBDate($newdate);
-        $db -> Execute("INSERT INTO `log` (`owner`, `log`, `czas`) VALUES(".$buy -> fields['seller'].",'<b><a href=view.php?view=".$player -> id.">".$player -> user.L_ACCEPT.$buy -> fields['cost'].L_BANK."', ".$strDate.")");
+        $db -> Execute("INSERT INTO `log` (`owner`, `log`, `czas`, `type`) VALUES(".$buy -> fields['seller'].",'<b><a href=view.php?view=".$player -> id.">".$player -> user.L_ACCEPT.$buy -> fields['cost'].L_BANK."', ".$strDate.", 'H')");
         $smarty -> assign("Message", YOU_BUY);
         $buy -> Close();
     }
@@ -646,7 +646,7 @@ if (isset ($_GET['action']) && $_GET['action'] == 'my')
                 $strLog = YOU_FIRED;
             }
             $strDate = $db -> DBDate($newdate);
-            $db -> Execute("INSERT INTO `log` (`owner`, `log`, `czas`) VALUES(".$_POST['lid'].",'".$strLog."<b><a href=\"view.php?view=".$player -> id."\">".$player -> user."</a></b>.', ".$strDate.")");
+            $db -> Execute("INSERT INTO `log` (`owner`, `log`, `czas`, `type`) VALUES(".$_POST['lid'].",'".$strLog."<b><a href=\"view.php?view=".$player -> id."\">".$player -> user."</a></b>.', ".$strDate.", 'H')");
         }
     }
     /**
