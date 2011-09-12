@@ -36,3 +36,4 @@ ALTER TABLE `links` ADD `number` INT( 11 ) NOT NULL;
 ALTER TABLE `players` ADD `thievery` DOUBLE( 11, 2 ) NOT NULL DEFAULT '0.01',
 ADD `perception` DOUBLE( 11, 2 ) NOT NULL DEFAULT '0.01';
 ALTER TABLE `log` ADD `type` CHAR( 1 ) NOT NULL DEFAULT 'U', ADD INDEX ( `type` );
+ALTER TABLE `replies` DROP `w_time`;

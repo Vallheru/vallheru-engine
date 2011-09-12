@@ -69,7 +69,7 @@
                             {$Tribe}
                             <li><a href="mail.php">{$Npost} [{$Unread}]</a></li>
                             {$Lbank}
-                            <li><a href="forums.php?view=categories">{$Nforums}</a></li>
+                            <li><a href="forums.php?view=categories">{$Nforums}</a> {$Funread}</li>
                             {$Tforum}
                             <li><a href="chat.php">{$Ninn} [{$Players}]</a><br /><br /></li>
                             {if $Linksfile[0] != ""}

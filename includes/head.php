@@ -7,7 +7,7 @@
  *   @copyright            : (C) 2004,2005,2006,2007,2011 Vallheru Team based on Gamers-Fusion ver 2.5
  *   @author               : thindil <thindil@tuxfamily.org>
  *   @version              : 1.4
- *   @since                : 10.09.2011
+ *   @since                : 12.09.2011
  *
  */
 
@@ -559,7 +559,51 @@ if ($intUnreadmails)
 {
     $strUnread = $intUnreadmails;
 }
-$smarty -> assign ("Unread", $strUnread);
+
+/**
+* Delete sessions variables when player exit forums
+*/
+if (isset($_SESSION['forums']) && (strpos($_SERVER['PHP_SELF'], "forums.php") === FALSE))
+  {
+    $db -> Execute("UPDATE `players` SET `forum_time`=".$ctime." WHERE `id`=".$player -> id);
+    unset($_SESSION['forums']);
+  }
+
+if (isset($_SESSION['tforums']) && (strpos($_SERVER['PHP_SELF'], "tforums.php") === FALSE))
+{
+    unset($_SESSION['tforums']);
+}
+
+/**
+ * Unread posts on forum
+ */
+if (!isset($_SESSION['forums']))
+  {
+    $intForums = $player->forumtime;
+  }
+else
+  {
+    $intForums = $_SESSION['forums'];
+  }
+$arrForums = array();
+$objFcat = $db->Execute("SELECT `id` FROM `categories` WHERE `perm_visit` LIKE 'All;' AND `lang`='".$player -> lang."' OR `lang`='".$player -> seclang."'");
+while (!$objFcat -> EOF) 
+  {
+    $arrForums[] = $objFcat->fields['id'];
+    $objFcat->MoveNext();
+  }
+$objFcat->Close();
+$objFunread = $db->Execute("SELECT count(`id`) FROM `topics` WHERE `w_time`>".$intForums." AND `cat_id` IN(".implode(",", $arrForums).")") or die($db->ErrorMsg());
+$intFunread = $objFunread->fields['count(`id`)'];
+$objFunread->Close();
+if ($intFunread == 0)
+  {
+    $strFunread = '[0]';
+  }
+else
+  {
+    $strFunread = '[<a href="forums.php?view=newposts">'.$intFunread.'</a>]';
+  }
 
 if ($player -> tribe) 
 {
@@ -570,7 +614,9 @@ $intCtime = time() - 180;
 $objQuery = $db -> Execute("SELECT count(`id`) FROM `players` WHERE `page`='Chat' AND `lpv`>=".$intCtime);
 $numoc = $objQuery -> fields['count(`id`)'];
 $objQuery -> Close();
-$smarty -> assign ("Players", $numoc);
+$smarty -> assign(array("Players" => $numoc,
+			"Unread" => $strUnread,
+			"Funread" => $strFunread));
 
 switch ($player->rank)
   {
@@ -658,19 +704,6 @@ if ($player -> fight != 0 && (!in_array($title, $arrTitle)) && (in_array($player
     }
     unset($_SESSION['exhaust'], $_SESSION['round'], $_SESSION['points'], $_SESSION['amount'], $_SESSION['dodge'], $_SESSION['miss']);
     error (ESCAPE);
-}
-
-/**
-* Delete sessions variables when player exit forums
-*/
-if (isset($_SESSION['forums']) && (strpos($_SERVER['PHP_SELF'], "forums.php") === FALSE))
-{
-    unset($_SESSION['forums']);
-}
-
-if (isset($_SESSION['tforums']) && (strpos($_SERVER['PHP_SELF'], "tforums.php") === FALSE))
-{
-    unset($_SESSION['tforums']);
 }
 
 ?>

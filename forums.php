@@ -102,6 +102,47 @@ if (isset ($_GET['view']) && $_GET['view'] == 'categories')
 }
 
 /**
+ * Show unread posts
+ */
+if (isset($_GET['view']) && ($_GET['view'] == 'newposts'))
+  {
+    if (!isset($_SESSION['forums']))
+    {
+        $_SESSION['forums'] = $player->forumtime;
+        $db -> Execute("UPDATE `players` SET `forum_time`=".$ctime." WHERE `id`=".$player -> id);
+    }
+    if ($intFunread == 0)
+      {
+	error("Nie ma nowych wpisów na forum.");
+      }
+    $pages = ceil($intFunread / 25);
+    if (isset($_GET['page']))
+     {
+       checkvalue($_GET['page']);
+       $page = $_GET['page'];
+     }
+    else
+     {
+       $page = $pages;
+     }
+    $objTopics = $db->SelectLimit("SELECT `id`, `topic` FROM `topics` WHERE `w_time`>".$intForums." AND `cat_id` IN(".implode(",", $arrForums).")", 25, 25 * ($page - 1)) or die($db->ErrorMsg());
+    $arrTitles = array();
+    $arrIds = array();
+    while (!$objTopics->EOF)
+      {
+	$arrTitles[] = $objTopics->fields['topic'];
+	$arrIds[] = $objTopics->fields['id'];
+	$objTopics->MoveNext();
+      }
+    $objTopics->Close();
+    $smarty->assign(array("Titles" => $arrTitles,
+			  "Tid" => $arrIds,
+			  "Tpages" => $pages,
+			  "Tpage" => $page,
+			  "Fpage" => "Idź do strony:",));
+  }
+
+/**
 * Topic list
 */
 if (isset($_GET['topics'])) 
@@ -142,9 +183,7 @@ if (isset($_GET['topics']))
     */
     if (!isset($_SESSION['forums']))
     {
-        $objLasttime = $db -> Execute("SELECT `forum_time` FROM `players` WHERE `id`=".$player -> id);
-        $_SESSION['forums'] = $objLasttime -> fields['forum_time'];
-        $objLasttime -> Close();
+        $_SESSION['forums'] = $player->forumtime;
         $db -> Execute("UPDATE `players` SET `forum_time`=".$ctime." WHERE `id`=".$player -> id);
     }
 
@@ -179,25 +218,12 @@ if (isset($_GET['topics']))
 	  {
 	    $arrClosed[$i] = '[+]';
 	  }
-        $query = $db -> Execute("SELECT `w_time` FROM `replies` WHERE `topic_id`=".$topic -> fields['id']);
-        if ($arrNewtopic[$i] == 'N')
-        {
-            while (!$query -> EOF)
-            {
-                if ($query -> fields['w_time'] > $_SESSION['forums'])
-                {
-                    $arrNewtopic[$i] = 'Y';
-                    break;
-                }
-                $query -> MoveNext();
-            }
-        }
-        $replies = $query -> RecordCount();
+        $query = $db -> Execute("SELECT count(`id`) FROM `replies` WHERE `topic_id`=".$topic -> fields['id']);
+        $arrreplies[$i] = $query->fields['count(`id`)'];
         $query -> Close();
         $arrid[$i] = $topic -> fields['id'];
         $arrtopic[$i] = "<b>".$topic -> fields['topic']."</b>";
         $arrstarter[$i] = $topic -> fields['starter'];
-        $arrreplies[$i] = $replies;
 	$arrPlayerid[$i] = $topic->fields['gracz'];
         $topic -> MoveNext();
 	$i++;
@@ -226,25 +252,12 @@ if (isset($_GET['topics']))
 	  {
 	    $arrClosed[$i] = '[+]';
 	  }
-	$query = $db -> Execute("SELECT `w_time` FROM `replies` WHERE `topic_id`=".$topic -> fields['id']);
-	if ($arrNewtopic[$i] == 'N')
-	  {
-	    while (!$query -> EOF)
-	      {
-		if ($query -> fields['w_time'] > $_SESSION['forums'])
-		  {
-		    $arrNewtopic[$i] = 'Y';
-		    break;
-		  }
-		$query -> MoveNext();
-	      }
-	  }
-	$replies = $query -> RecordCount();
+	$query = $db -> Execute("SELECT count(`id`) FROM `replies` WHERE `topic_id`=".$topic -> fields['id']);
+	$arrreplies[$i] = $query->fields['count(`id`)'];
 	$query -> Close();
 	$arrid[$i] = $topic -> fields['id'];
 	$arrtopic[$i] = $topic -> fields['topic'];
 	$arrstarter[$i] = $topic -> fields['starter'];
-	$arrreplies[$i] = $replies;
 	$arrPlayerid[$i] = $topic->fields['gracz'];
 	$topic -> MoveNext();
 	$i++;
@@ -508,7 +521,8 @@ if (isset($_GET['reply']))
     $_POST['rep'] = bbcodetohtml($_POST['rep']);
     $_POST['rep'] = "<b>".$data." ".$time."</b><br />".$_POST['rep'];
     $strBody = $db -> qstr($_POST['rep'], get_magic_quotes_gpc());
-    $db -> Execute("INSERT INTO `replies` (`starter`, `topic_id`, `body`, `gracz`, `w_time`) VALUES('".$player -> user."', ".$_GET['reply'].", ".$strBody.", ".$player -> id.", ".$ctime.")") or die("Could not add reply.");
+    $db -> Execute("INSERT INTO `replies` (`starter`, `topic_id`, `body`, `gracz`) VALUES('".$player -> user."', ".$_GET['reply'].", ".$strBody.", ".$player -> id.")") or die("Could not add reply.");
+    $db->Execute("UPDATE `topics` SET `w_time`=".$ctime." WHERE `id`=".$_GET['reply']);
     error (REPLY_ADD." <a href=forums.php?topic=".$_GET['reply'].">".A_HERE."</a>.");
 }
 

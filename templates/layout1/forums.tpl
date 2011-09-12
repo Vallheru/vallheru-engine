@@ -15,6 +15,24 @@
     </table>
 {/if}
 
+{if $View == "newposts"}
+    <ul>
+        {section name=numbers loop=$Titles}
+	    <li><a href="forums.php?topic={$Tid[numbers]}">{$Titles[numbers]}</a></li>
+	{/section}
+    </ul>
+    {if $Tpages > 1}
+    	<br />{$Fpage}
+    	{for $page = 1 to $Tpages}
+	    {if $page == $Tpage}
+	        {$page}
+	    {else}
+                <a href="forums.php?topics={$Topics}&page={$page}">{$page}</a>
+	    {/if}
+    	{/for}
+    {/if}
+{/if}
+
 {if $Topics != ""}
     <a href="forums.php?view=categories">{$Aback}</a> {$Tocategories}.<br /><br />
     <form method="post" action="forums.php?action=search">
