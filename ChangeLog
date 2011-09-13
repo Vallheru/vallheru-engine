@@ -1,5 +1,7 @@
 2011-09-13  Bartek thindil Jasicki  <thindil@tuxfamily.org>
 
+	* BUG,includes/funkcje.php: 
+	fixed bug with function name
 	* UPDATE,includes/funkcje.php, battle.php: 
 	code optimization
 	* FEATURE,templates/layout1/log.tpl, templates/log.tpl, log.php: 

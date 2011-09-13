@@ -320,7 +320,7 @@ function checkspeed($speed, $weapon, $bow)
 /**
  * Function made monster attack
  */
-function monsterattack($intMydodge, &$zmeczenie, &$gunik, $arrEquip, &$enemy, $times, $armor, $mczaro, &$gwt)
+function monsterattack2($intMydodge, &$zmeczenie, &$gunik, $arrEquip, &$enemy, $times, $armor, $mczaro, &$gwt)
 {
   global $player;
   global $smarty;
@@ -957,7 +957,7 @@ function fightmonster($enemy, $expgain, $goldgain, $times)
             {
                 if ($player -> hp > 0 && $enemy['hp'] > 0) 
 		  {
-		    monsterattack($intMydodge, $zmeczenie, $gunik, $arrEquip, $enemy, $times, $armor, $mczaro, $gwt);
+		    monsterattack2($intMydodge, $zmeczenie, $gunik, $arrEquip, $enemy, $times, $armor, $mczaro, $gwt);
 		  }
             }
         } 
@@ -985,7 +985,7 @@ function fightmonster($enemy, $expgain, $goldgain, $times)
             {
                 if ($player -> hp > 0 && $enemy['hp'] > 0) 
 		  {
-		    monsterattack($intMydodge, $zmeczenie, $gunik, $arrEquip, $enemy, $times, $armor, $mczaro, $gwt);
+		    monsterattack2($intMydodge, $zmeczenie, $gunik, $arrEquip, $enemy, $times, $armor, $mczaro, $gwt);
 		  }
             }
             for ($i = 1;$i <= $stat['attackstr']; $i++) 
