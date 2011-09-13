@@ -8,7 +8,7 @@
  *   @author               : thindil <thindil@tuxfamily.org>
  *   @author               : eyescream <tduda@users.sourceforge.net>
  *   @version              : 1.4
- *   @since                : 28.08.2011
+ *   @since                : 13.09.2011
  *
  */
 
@@ -209,11 +209,11 @@ if (isset($_GET['atak']) && (isset($_GET['step3']) && $_GET['step3'] == 'confirm
         $db -> Execute("UPDATE `tribes` SET `credits`=`credits`+".$gzloto.", `platinum`=`platinum`+".$gmith.", `wygr`=`wygr`+1 WHERE `id`=".$mytribe -> fields['id']);
         $db -> Execute("UPDATE `tribes` SET `credits`=`credits`-".$gzloto.", `platinum`=`platinum`-".$gmith.", `przeg`=`przeg`+1 WHERE `id`=".$klan -> fields['id']);
         $strDate = $db -> DBDate($newdate);
-        $db -> Execute("INSERT INTO `log` (`owner`, `log`, `czas`) VALUES(".$klan -> fields['owner'].", '".L_TRIBE.'<b><a href="tribes.php?view=view&amp;id='.$mytribe -> fields['id'].'">'.$mytribe -> fields['name'].'</a></b>'.ATTACK_YOU.$gzloto.GOLD_COINS.$gmith.MITHRIL_COINS.$strComponent2."', ".$strDate.")");
+        $db -> Execute("INSERT INTO `log` (`owner`, `log`, `czas`, `type`) VALUES(".$klan -> fields['owner'].", '".L_TRIBE.'<b><a href="tribes.php?view=view&amp;id='.$mytribe -> fields['id'].'">'.$mytribe -> fields['name'].'</a></b>'.ATTACK_YOU.$gzloto.GOLD_COINS.$gmith.MITHRIL_COINS.$strComponent2."', ".$strDate.", 'C')");
         $objPerm = $db -> Execute("SELECT `player` FROM `tribe_perm` WHERE `tribe`=".$klan -> fields['id']." AND `attack`=1");
         while (!$objPerm -> EOF)
         {
-            $db -> Execute("INSERT INTO `log` (`owner`, `log`, `czas`) VALUES(".$objPerm -> fields['player'].", '".L_TRIBE.'<a href="tribes.php?view=view&amp;id='.$mytribe -> fields['id'].'">'.$mytribe -> fields['name'].'</a>'.ATTACK_YOU.$gzloto.GOLD_COINS.$gmith.MITHRIL_COINS.$strComponent2."', ".$strDate.")");
+            $db -> Execute("INSERT INTO `log` (`owner`, `log`, `czas`, `type`) VALUES(".$objPerm -> fields['player'].", '".L_TRIBE.'<a href="tribes.php?view=view&amp;id='.$mytribe -> fields['id'].'">'.$mytribe -> fields['name'].'</a>'.ATTACK_YOU.$gzloto.GOLD_COINS.$gmith.MITHRIL_COINS.$strComponent2."', ".$strDate.", 'C')");
             $objPerm -> MoveNext();
         }
         $objPerm -> Close();
@@ -312,11 +312,11 @@ if (isset($_GET['atak']) && (isset($_GET['step3']) && $_GET['step3'] == 'confirm
                                 "Mithrilcoins" => MITHRIL_COINS,
                                 "Astral" => $strComponent2));
         $strDate = $db -> DBDate($newdate);
-        $db -> Execute("INSERT INTO `log` (`owner`, `log`, `czas`) VALUES(".$klan -> fields['owner'].", '".L_TRIBE.'<b><a href="tribes.php?view=view&amp;id='.$mytribe -> fields['id'].'">'.$mytribe -> fields['name'].'</a></b>'.ATTACK_YOU2.$gzloto.GOLD_COINS.$gmith.MITHRIL_COINS.$strComponent."', ".$strDate.")");
+        $db -> Execute("INSERT INTO `log` (`owner`, `log`, `czas`, `type`) VALUES(".$klan -> fields['owner'].", '".L_TRIBE.'<b><a href="tribes.php?view=view&amp;id='.$mytribe -> fields['id'].'">'.$mytribe -> fields['name'].'</a></b>'.ATTACK_YOU2.$gzloto.GOLD_COINS.$gmith.MITHRIL_COINS.$strComponent."', ".$strDate.", 'C')");
         $objPerm = $db -> Execute("SELECT `player` FROM `tribe_perm` WHERE `tribe`=".$klan -> fields['id']." AND `attack`=1");
         while (!$objPerm -> EOF)
         {
-            $db -> Execute("INSERT INTO `log` (`owner`, `log`, `czas`) VALUES(".$objPerm -> fields['player'].", '".L_TRIBE.'<b><a href="tribes.php?view=view&amp;id='.$mytribe -> fields['id'].'">'.$mytribe -> fields['name'].'</a></b>'.ATTACK_YOU2.$gzloto.GOLD_COINS.$gmith.MITHRIL_COINS.$strComponent."', ".$strDate.")");
+            $db -> Execute("INSERT INTO `log` (`owner`, `log`, `czas`, `type`) VALUES(".$objPerm -> fields['player'].", '".L_TRIBE.'<b><a href="tribes.php?view=view&amp;id='.$mytribe -> fields['id'].'">'.$mytribe -> fields['name'].'</a></b>'.ATTACK_YOU2.$gzloto.GOLD_COINS.$gmith.MITHRIL_COINS.$strComponent."', ".$strDate.", 'C')");
             $objPerm -> MoveNext();
         }
         $objPerm -> Close();

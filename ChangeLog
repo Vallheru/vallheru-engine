@@ -1,5 +1,7 @@
 2011-09-13  Bartek thindil Jasicki  <thindil@tuxfamily.org>
 
+	* includes/tribefight.php: 
+	added type of log message
 	* BUG,includes/checkexp.php: 
 	fixed typo
 	* FEATURE,tribeastral.php, tribes.php, tribeware.php, view.php, includes/astralsteal.php, includes/battle.php, includes/checkexp.php,
