@@ -12,13 +12,20 @@
 {/if}
 
 {if $LogId[0] != "0"}
+    <form method="post" action="log.php">
+        <input type="submit" value="{$Asort}" /> {$Tlogs} <select name="type">
+	    {section name=sort loop=$Otypes}
+	        <option value="{$Otypes[sort]}">{$Atypes[sort]}</option>
+	    {/section}
+	</select>
+    </form>
     {if $Tpages > 1}
     	<br />{$Fpage}
     	{for $page = 1 to $Tpages}
 	    {if $page == $Tpage}
 	        {$page}
 	    {else}
-                <a href="log.php?page={$page}">{$page}</a>
+                <a href="log.php?page={$page}{$Gsort}">{$page}</a>
 	    {/if}
     	{/for}
 	<br /><br />

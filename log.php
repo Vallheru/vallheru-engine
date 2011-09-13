@@ -7,7 +7,7 @@
  *   @copyright            : (C) 2004,2005,2006,2011 Vallheru Team based on Gamers-Fusion ver 2.5
  *   @author               : thindil <thindil@tuxfamily.org>
  *   @version              : 1.4
- *   @since                : 12.09.2011
+ *   @since                : 13.09.2011
  *
  */
 
@@ -52,8 +52,40 @@ if (isset($_GET['page']))
      $intPage = 1;
    }
 
+$arrTypes = array('O' => 'Strażnica', 'V' => 'Vallary', 'B' => 'Walka', 'T' => 'Złodziejstwo', 'M' => 'Rynek', 'C' => 'Klan', 'A' => 'Administracja', 'N' => 'Bank', 'R' => 'Chowańce', 'H' => 'Dom', 'J' => 'Więzienie', 'L' => 'Biblioteka', 'U' => 'Brak typu');
 
-$log = $db -> SelectLimit("SELECT `id`, `log`, `czas` FROM `log` WHERE `owner`=".$player -> id." ORDER BY `id` DESC", 30, 30 * ($intPage - 1));
+/**
+ * Get all available log types
+ */
+$objTypes = $db->Execute("SELECT `type` FROM `log` WHERE `owner`=".$player->id." GROUP BY `type`");
+$arrOtypes = array();
+$arrAtypes = array();
+while (!$objTypes->EOF)
+  {
+    $arrOtypes[] = $objTypes->fields['type'];
+    $arrAtypes[] = $arrTypes[$objTypes->fields['type']];
+    $objTypes->MoveNext();
+  }
+$objTypes->Close();
+
+if (!isset($_POST['type']) && !isset($_GET['type']))
+  {
+    $log = $db -> SelectLimit("SELECT `id`, `log`, `czas` FROM `log` WHERE `owner`=".$player -> id." ORDER BY `id` DESC", 30, 30 * ($intPage - 1));
+    $strSort = '';
+  }
+else
+  {
+    if (isset($_GET['type']))
+      {
+	$_POST['type'] = $_GET['type'];
+      }
+    if (!in_array($_POST['type'], array_keys($arrTypes)))
+      {
+	error(ERROR);
+      }
+    $log = $db -> SelectLimit("SELECT `id`, `log`, `czas` FROM `log` WHERE `owner`=".$player -> id." AND `type`='".$_POST['type']."' ORDER BY `id` DESC", 30, 30 * ($intPage - 1));
+    $strSort = '&amp;type='.$_POST['type'];
+  }
 $arrdate = array();
 $arrtext = array();
 $arrid1 = array(0);
@@ -70,13 +102,13 @@ $log -> Close();
 
 if (isset($_GET['akcja']) && $_GET['akcja'] == 'wyczysc') 
 {
-    $db -> Execute("DELETE FROM log WHERE owner=".$player -> id);
+    $db -> Execute("DELETE FROM `log` WHERE `owner`=".$player -> id);
     error ("<br />".YOU_CLEAR." (<a href=\"log.php\">".A_REFRESH."</a>)");
 }
 
 if (isset($_GET['send'])) 
 {
-    $sid = $db -> Execute("SELECT id, user FROM players WHERE rank='Admin' OR rank='Staff'");
+    $sid = $db -> Execute("SELECT `id`, `user` FROM `players` WHERE `rank`='Admin' OR `rank`='Staff'");
     $arrname = array();
     $arrid = array();
     $i = 0;
@@ -95,7 +127,7 @@ if (isset($_GET['send']))
     {
 	checkvalue($_POST['staff']);
 	checkvalue($_POST['lid']);
-        $arrtest = $db -> Execute("SELECT id, user, rank FROM players WHERE id=".$_POST['staff']);
+        $arrtest = $db -> Execute("SELECT `id`, `user`, `rank` FROM `players` WHERE `id`=".$_POST['staff']);
         if (!$arrtest -> fields['id']) 
         {
             error (NO_PLAYER);
@@ -104,7 +136,7 @@ if (isset($_GET['send']))
         {
             error (NOT_STAFF);
         }
-        $arrmessage = $db -> Execute("SELECT * FROM log WHERE id=".$_POST['lid']);
+        $arrmessage = $db -> Execute("SELECT * FROM `log` WHERE id=".$_POST['lid']);
         if (!$arrmessage -> fields['id']) 
         {
             error (NO_EVENT);
@@ -115,7 +147,7 @@ if (isset($_GET['send']))
         }
         $strDate = $db -> DBDate($newdate);
         $db -> Execute("INSERT INTO `log` (`owner`, `log`, `czas`, `type`) VALUES(".$arrtest -> fields['id'].",'".L_PLAYER."<a href=view.php?view=".$player -> id.">".$player -> user."</a>".L_ID.$player -> id.SEND_YOU."', ".$strDate.", 'A')");
-        $db -> Execute("INSERT INTO mail (sender,senderid,owner,subject,body) values('".$player -> user."','".$player -> id."',".$arrtest -> fields['id'].",'".L_TITLE."','".$arrmessage -> fields['czas']."<br />".$arrmessage -> fields['log']."')");
+        $db -> Execute("INSERT INTO `mail` (`sender`, `senderid`, `owner`, `subject`, `body`) values('".$player -> user."','".$player -> id."',".$arrtest -> fields['id'].",'".L_TITLE."','".$arrmessage -> fields['czas']."<br />".$arrmessage -> fields['log']."')");
         error (YOU_SEND.$arrtest -> fields['user'].". <a href=log.php>".A_REFRESH."</a>");
     }
 }
@@ -125,7 +157,7 @@ if (isset($_GET['send']))
 */
 if (isset($_GET['action']) && $_GET['action'] == 'delete')
 {
-    $objLid = $db -> Execute("SELECT id FROM log WHERE owner=".$player -> id);
+    $objLid = $db -> Execute("SELECT `id` FROM `log` WHERE `owner`=".$player -> id);
     $arrId = array();
     $i = 0;
     while (!$objLid -> EOF)
@@ -139,7 +171,7 @@ if (isset($_GET['action']) && $_GET['action'] == 'delete')
     {
         if (isset($_POST[$bid])) 
         {
-            $db -> Execute("DELETE FROM log WHERE id=".$bid);
+            $db -> Execute("DELETE FROM `log` WHERE `id`=".$bid);
         }
     }
     error(DELETED);
@@ -192,6 +224,11 @@ $smarty -> assign(array("Date" => $arrdate,
                         "Send" => $_GET['send'],
 			"Tpages" => $intPages,
 			"Tpage" => $intPage,
+			"Otypes" => $arrOtypes,
+			"Atypes" => $arrAtypes,
+			"Gsort" => $strSort,
+			"Asort" => "Pokaż",
+			"Tlogs" => "wpisy typu:",
 			"Fpage" => "Idź do strony:",
                         "Loginfo" => LOG_INFO2,
                         "Event" => EVENT,
