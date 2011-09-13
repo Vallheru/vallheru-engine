@@ -185,7 +185,7 @@ function checkexp ($exp,$expgain,$level,$rasa,$user,$eid,$enemyid,$enemyuser,$pl
             }
             print $text;
         }
-        $db -> Execute("UPDATE `players` SET `max_hp`=`max_hp`+".$pz.", `ap`=`ap`+".$ap", `level`=`level`+".$poziom.", `exp`=".$texp." WHERE `id`=".$eid);
+        $db -> Execute("UPDATE `players` SET `max_hp`=`max_hp`+".$pz.", `ap`=`ap`+".$ap.", `level`=`level`+".$poziom.", `exp`=".$texp." WHERE `id`=".$eid);
         if ($energia > 0) 
         {
             $db -> Execute("UPDATE players SET max_energy=".$maxenergy." WHERE id=".$eid);
@@ -193,7 +193,7 @@ function checkexp ($exp,$expgain,$level,$rasa,$user,$eid,$enemyid,$enemyuser,$pl
         if ($enemyid != 0) 
         {
             $strDate = $db -> DBDate($newdate);
-            $db -> Execute("INSERT INTO `log` (`owner`, `log`, `czas`, `log`) VALUES(".$eid.",'".IN_FIGHT." <b>".$enemyuser." ID:".$enemyid."</b>, ".YOU_GAIN2.".', ".$strDate.", 'B')");
+            $db -> Execute("INSERT INTO `log` (`owner`, `log`, `czas`, `type`) VALUES(".$eid.",'".IN_FIGHT." <b>".$enemyuser." ID:".$enemyid."</b>, ".YOU_GAIN2.".', ".$strDate.", 'B')");
         }
     } 
         else 
