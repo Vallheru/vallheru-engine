@@ -8,7 +8,7 @@
  *   @author               : thindil <thindil@tuxfamily.org>
  *   @author               : eyescream <tduda@users.sourceforge.net>
  *   @version              : 1.4
- *   @since                : 12.09.2011
+ *   @since                : 13.09.2011
  *
  */
  
@@ -919,7 +919,8 @@ if (isset ($_GET['view']) && $_GET['view'] == 'bridge')
     {
         $strQuestion = $db -> qstr($_POST['question'], get_magic_quotes_gpc());
         $strAnswer = $db -> qstr($_POST['answer'], get_magic_quotes_gpc());
-        $db -> Execute("INSERT INTO bridge (question, answer) VALUES(".$strQuestion.", ".$strAnswer.")") or error (E_DB);
+	$strAnswer = md5(strtolower($strAnswer));
+        $db -> Execute("INSERT INTO `bridge` (`question`, `answer`) VALUES(".$strQuestion.", ".$strAnswer.")") or error (E_DB);
         error (YOU_ADD_Q." <b>".$_POST['question']."</b> ".WITH_A." <b>".$_POST['answer']);
     }
 }

@@ -457,10 +457,10 @@ if (isset($_GET['action']) && $_GET['action'] == 'moutains' && $player -> locati
         $gamename = strtolower($gamename);
         if ($answer == $gamename) 
         {
-            $query = $db -> Execute("SELECT `id` FROM `bridge`");
-            $amount = $query -> RecordCount();
+            $query = $db -> Execute("SELECT count(`id`) FROM `bridge`");
+            $amount = $query->fields['count(`id`)'];
             $query -> Close();
-            $number = rand(1,$amount);
+            $number = rand(1, $amount);
             $test = $db -> Execute("SELECT `temp` FROM `players` WHERE `id`=".$player -> id);
             if ($test -> fields['temp'] != 0) 
             {
@@ -470,7 +470,6 @@ if (isset($_GET['action']) && $_GET['action'] == 'moutains' && $player -> locati
             $question = $db -> Execute("SELECT `question` FROM `bridge` WHERE `id`=".$number);
             $db -> Execute("UPDATE `players` SET `temp`=".$number." WHERE `id`=".$player -> id);
             $smarty -> assign(array("Question" => $question -> fields['question'], 
-                                    "Number" => $number, 
                                     "Answer" => "true",
                                     "Tquestion" => T_QUESTION,
                                     "Anext" => A_NEXT));
@@ -489,13 +488,12 @@ if (isset($_GET['action']) && $_GET['action'] == 'moutains' && $player -> locati
         {
             $_POST['tanswer'] = '';
         }
-        if (!isset($_POST['number'])) 
-        {
-            $_POST['number'] = 1;
-        }
-	$_POST['number'] = intval($_POST['number']);
-        $answer = $db -> Execute("SELECT `answer` FROM `bridge` WHERE `id`=".$_POST['number']);
-        $test = $db -> Execute("SELECT `bridge` FROM `players` WHERE `id`=".$player -> id);
+        $test = $db -> Execute("SELECT `bridge`, `temp` FROM `players` WHERE `id`=".$player -> id);
+	if ($test->fields['temp'] == 0)
+	  {
+	    error(ERROR);
+	  }
+	$answer = $db -> Execute("SELECT `answer` FROM `bridge` WHERE `id`=".$test->fields['temp']);
         if ($test -> fields['bridge'] == 'Y') 
         {
             error(ONLY_ONCE);
@@ -503,8 +501,7 @@ if (isset($_GET['action']) && $_GET['action'] == 'moutains' && $player -> locati
         $test -> Close();
         $db -> Execute("UPDATE `players` SET `temp`=0 WHERE `id`=".$player -> id);
         $panswer = strip_tags($_POST['tanswer']);
-        $panswer = strtolower($panswer);
-        $answer -> fields['answer'] = strtolower($answer -> fields['answer']);
+        $panswer = md5(strtolower($panswer));
         if ($panswer == $answer -> fields['answer']) 
         {
             $query = $db -> Execute("SELECT count(`id`) FROM `equipment` WHERE `owner`=0 AND `minlev`<=".$player -> level);

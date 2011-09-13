@@ -61,7 +61,6 @@
         {if $Answer == "true"}
             {$Tquestion}: <b>{$Question}?</b><br />
             <form method="post" action="explore.php?action=moutains&amp;step=forth">
-                <input type="hidden" name="number" value="{$Number}" />
                 <input type="text" name="tanswer" /><br />
                 <input type="submit" value="{$Anext}" />
             </form>
