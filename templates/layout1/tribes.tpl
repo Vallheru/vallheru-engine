@@ -59,19 +59,9 @@
 {/if}
 
 {if $View == "my"}
-    <br /><br /><center>
-    (<a href="tribes.php?view=my">{$Menu1}</a>)
-    (<a href="tribes.php?view=my&amp;step=donate">{$Menu2}</a>)
-    (<a href="tribes.php?view=my&amp;step=members">{$Menu3}</a>)
-    (<a href="tribearmor.php">{$Menu4}</a>)
-    (<a href="tribeware.php">{$Menu5}</a>)
-    (<a href="tribes.php?view=my&amp;step=skarbiec">{$Menu6}</a>)
-    (<a href="tribes.php?view=my&amp;step=zielnik">{$Menu7}</a>)
-    (<a href="tribes.php?view=my&amp;step=quit">{$Menu8}</a>)
-    (<a href="tribes.php?view=my&amp;step=owner">{$Menu9}</a>)
-    (<a href="tforums.php?view=topics">{$Menu10}</a>)
-    (<a href="tribeastral.php">{$Menu11}</a>)</center>
-    <br /><center><table width="98%" class="dark" cellpadding="0" cellspacing="0">
+    {include file="tribemenu.tpl"}
+	
+	<table width="98%" class="dark" cellpadding="0" cellspacing="0">
     <tr><td align="center"><b>{$Myclan}: {$Name}</b></td></tr>
     <tr><td width="100%" valign="top">
     {if $Step == ""}
