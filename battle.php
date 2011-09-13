@@ -7,7 +7,7 @@
  *   @copyright            : (C) 2004,2005,2006,2011 Vallheru Team based on Gamers-Fusion ver 2.5
  *   @author               : thindil <thindil@tuxfamily.org>
  *   @version              : 1.4
- *   @since                : 30.08.2011
+ *   @since                : 13.09.2011
  *
  */
 
@@ -537,7 +537,7 @@ if (isset ($_GET['action']) && $_GET['action'] == 'monster')
             error(ERROR);
         }
 	checkvalue($_POST['times']);
-        if ($player -> hp <= 0) 
+        if ($player->hp <= 0) 
         {
             error (NO_HP);
         }
@@ -546,26 +546,36 @@ if (isset ($_GET['action']) && $_GET['action'] == 'monster')
             error(TOO_MUCH_MONSTERS);
         }
         $lostenergy = $_POST['razy'] * $_POST['times'];
-        if ($player -> energy < $lostenergy) 
+        if ($player->energy < $lostenergy) 
         {
             error (NO_ENERGY2);
         }
-        $myhp = $player -> hp;
+	if ($player -> clas == '') 
+	  {
+	    error (NO_CLASS3);
+	  }
+        $myhp = $player->hp;
+	$enemy1 = $db -> Execute("SELECT * FROM `monsters` WHERE `id`=".$_GET['fight']);
+	if (!$enemy1 -> fields['id']) 
+	  {
+	    error (NO_MONSTER);
+	  }
+	$enemy1 -> fields['hp'] = ($enemy1 -> fields['hp'] * $_POST['razy']);
+	$enemy = array("strength" => $enemy1 -> fields['strength'], 
+		       "agility" => $enemy1 -> fields['agility'], 
+		       "speed" => $enemy1 -> fields['speed'], 
+		       "endurance" => $enemy1 -> fields['endurance'], 
+		       "hp" => $enemy1 -> fields['hp'], 
+		       "name" => $enemy1 -> fields['name'], 
+		       "exp1" => $enemy1 -> fields['exp1'], 
+		       "exp2" => $enemy1 -> fields['exp2'], 
+		       "level" => $enemy1 -> fields['level']);
+	$intAmount = 0;
         for ($j=1; $j<=$_POST['times']; $j++) 
         {
-            $enemy1 = $db -> Execute("SELECT * FROM monsters WHERE id=".$_GET['fight']);
-            $myexp = $db  -> Execute("SELECT exp, level FROM players WHERE id=".$player -> id);
-            $enemy1 -> fields['hp'] = ($enemy1 -> fields['hp'] * $_POST['razy']);
+	    $myexp = $db  -> Execute("SELECT `exp`, `level` FROM `players` WHERE `id`=".$player -> id);
             $player -> exp = $myexp -> fields['exp'];
             $player -> level = $myexp -> fields['level'];
-            if (!$enemy1 -> fields['id']) 
-            {
-                error (NO_MONSTER);
-            }
-            if ($player -> clas == '') 
-            {
-                error (NO_CLASS3);
-            }
             $span = ($enemy1 -> fields['level'] / $player -> level);
             if ($span > 2) 
             {
@@ -584,23 +594,15 @@ if (isset ($_GET['action']) && $_GET['action'] == 'monster')
                 }
             }
             $goldgain = ceil((rand($enemy1 -> fields['credits1'],$enemy1 -> fields['credits2']) * $_POST['razy']) * $span);
-            $enemy = array("strength" => $enemy1 -> fields['strength'], 
-                           "agility" => $enemy1 -> fields['agility'], 
-                           "speed" => $enemy1 -> fields['speed'], 
-                           "endurance" => $enemy1 -> fields['endurance'], 
-                           "hp" => $enemy1 -> fields['hp'], 
-                           "name" => $enemy1 -> fields['name'], 
-                           "exp1" => $enemy1 -> fields['exp1'], 
-                           "exp2" => $enemy1 -> fields['exp2'], 
-                           "level" => $enemy1 -> fields['level']);
-            $enemy1 -> Close();
             fightmonster ($enemy, $expgain, $goldgain, $_POST['times']);
-            $db -> Execute("UPDATE players SET energy=energy-".$_POST['razy']." WHERE id=".$player -> id);
+	    $intAmount++;
             if ($player -> hp <= 0) 
             {
                 break;
             }
         }
+	$db -> Execute("UPDATE `players` SET `energy`=`energy`-".($_POST['razy'] * $intAmount)." WHERE `id`=".$player -> id);
+	$enemy1->Close();
     }
 }
 
