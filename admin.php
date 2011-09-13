@@ -918,10 +918,10 @@ if (isset ($_GET['view']) && $_GET['view'] == 'bridge')
     if (isset ($_GET['step']) && $_GET['step'] == 'add') 
     {
         $strQuestion = $db -> qstr($_POST['question'], get_magic_quotes_gpc());
-        $strAnswer = $db -> qstr($_POST['answer'], get_magic_quotes_gpc());
-	$strAnswer = md5(strtolower($strAnswer));
+	$strAnswer = md5(strtolower($_POST['answer']));
+        $strAnswer = $db -> qstr($strAnswer, get_magic_quotes_gpc());
         $db -> Execute("INSERT INTO `bridge` (`question`, `answer`) VALUES(".$strQuestion.", ".$strAnswer.")") or error (E_DB);
-        error (YOU_ADD_Q." <b>".$_POST['question']."</b> ".WITH_A." <b>".$_POST['answer']);
+        error (YOU_ADD_Q." <b>".$_POST['question']."</b> z odpowiedzią <b>".$_POST['answer']."</b>.");
     }
 }
 

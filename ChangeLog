@@ -1,5 +1,7 @@
 2011-09-13  Bartek thindil Jasicki  <thindil@tuxfamily.org>
 
+	* BUG,admin.php: 
+	fixed adding questions to bridge
 	* UPDATE,install/db/update.sql, templates/layout1/explore.tpl, templates/explore.tpl, explore.php, admin.php:
 	redesign bridge of death encounter
 
