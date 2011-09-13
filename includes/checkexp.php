@@ -4,10 +4,10 @@
  *   Check for gaining level by player when he gain experience
  *
  *   @name                 : checkexp.php                            
- *   @copyright            : (C) 2004,2005,2006 Vallheru Team based on Gamers-Fusion ver 2.5
- *   @author               : thindil <thindil@users.sourceforge.net>
- *   @version              : 1.1
- *   @since                : 04.04.2006
+ *   @copyright            : (C) 2004,2005,2006,2011 Vallheru Team based on Gamers-Fusion ver 2.5
+ *   @author               : thindil <thindil@tuxfamily.org>
+ *   @version              : 1.4
+ *   @since                : 13.09.2011
  *
  */
 
@@ -27,7 +27,7 @@
 //   along with this program; if not, write to the Free Software
 //   Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 //
-// $Id: checkexp.php 131 2006-04-12 18:36:19Z thindil $
+// $Id$
 
 /**
 * Get the localization for game
@@ -185,10 +185,7 @@ function checkexp ($exp,$expgain,$level,$rasa,$user,$eid,$enemyid,$enemyuser,$pl
             }
             print $text;
         }
-        $db -> Execute("UPDATE players SET exp=".$texp." WHERE id=".$eid);
-        $db -> Execute("UPDATE players SET level=level+".$poziom." WHERE id=".$eid);
-        $db -> Execute("UPDATE players SET ap=ap+".$ap." WHERE id=".$eid);
-        $db -> Execute("UPDATE players SET max_hp=max_hp+".$pz." WHERE id=".$eid);
+        $db -> Execute("UPDATE `players` SET `max_hp`=`max_hp`+".$pz.", `ap`=`ap`+".$ap", `level`=`level`+".$poziom.", `exp`=".$texp." WHERE `id`=".$eid);
         if ($energia > 0) 
         {
             $db -> Execute("UPDATE players SET max_energy=".$maxenergy." WHERE id=".$eid);
@@ -196,7 +193,7 @@ function checkexp ($exp,$expgain,$level,$rasa,$user,$eid,$enemyid,$enemyuser,$pl
         if ($enemyid != 0) 
         {
             $strDate = $db -> DBDate($newdate);
-            $db -> Execute("INSERT INTO log (owner, log, czas) VALUES(".$eid.",'".IN_FIGHT." <b>".$enemyuser." ID:".$enemyid."</b>, ".YOU_GAIN2.".', ".$strDate.")");
+            $db -> Execute("INSERT INTO `log` (`owner`, `log`, `czas`, `log`) VALUES(".$eid.",'".IN_FIGHT." <b>".$enemyuser." ID:".$enemyid."</b>, ".YOU_GAIN2.".', ".$strDate.", 'B')");
         }
     } 
         else 

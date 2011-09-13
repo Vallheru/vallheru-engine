@@ -8,7 +8,7 @@
  *   @author               : thindil <thindil@tuxfamily.org>
  *   @author               : eyescream <tduda@users.sourceforge.net>
  *   @version              : 1.4
- *   @since                : 11.09.2011
+ *   @since                : 13.09.2011
  *
  */
 
@@ -164,8 +164,8 @@ function astralsteal($intVictim, $strLocation, $intOwner = 0, $intId = 0)
         checkexp($player -> exp, $intExpgain, $player -> level, $player -> race, $player -> user, $player -> id, 0, 0, $player -> id, 'thievery', 0.01);
         $db -> Execute("UPDATE `players` SET `miejsce`='Lochy', `astralcrime`='N' WHERE `id`=".$player -> id);
         $db -> Execute("INSERT INTO `jail` (`prisoner`, `verdict`, `duration`, `cost`, `data`) VALUES(".$player -> id.", '".VERDICT."', ".$intDays.", ".$intBail.", ".$strDate.")");
-        $db -> Execute("INSERT INTO `log` (`owner`, `log`, `czas`) VALUES(".$player -> id.",'".L_REASON.": ".$intBail.".', ".$strDate.")");
-        $db -> Execute("INSERT INTO `log` (`owner`, `log`, `czas`) VALUES(".$intVictim.",'".L_CACHED."<b><a href=\"view.php?view=".$player -> id."\">".$player -> user."</a></b>".L_CACHED2.'<b>'.$player -> id.'</b>'.L_CACHED3."',".$strDate.")");
+        $db -> Execute("INSERT INTO `log` (`owner`, `log`, `czas`, `type`) VALUES(".$player -> id.",'".L_REASON.": ".$intBail.".', ".$strDate.", 'T')");
+        $db -> Execute("INSERT INTO `log` (`owner`, `log`, `czas`, `type`) VALUES(".$intVictim.",'".L_CACHED."<b><a href=\"view.php?view=".$player -> id."\">".$player -> user."</a></b>".L_CACHED2.'<b>'.$player -> id.'</b>'.L_CACHED3."',".$strDate.", 'T')");
         error (C_CACHED);
     }
     /**
@@ -253,11 +253,11 @@ function astralsteal($intVictim, $strLocation, $intOwner = 0, $intId = 0)
         $objAmount -> Close();
         if ($strLocation == 'V' || $strLocation == 'R')
         {
-            $db -> Execute("INSERT INTO `log` (`owner`, `log`, `czas`) VALUES(".$intVictim.",'".ASTRAL_GONE.$strType.$strCompname."</b>."."',".$strDate.")");
+            $db -> Execute("INSERT INTO `log` (`owner`, `log`, `czas`, `type`) VALUES(".$intVictim.",'".ASTRAL_GONE.$strType.$strCompname."</b>."."',".$strDate.", 'T')");
         }
             else
         {
-            $db -> Execute("INSERT INTO `log` (`owner`, `log`, `czas`) VALUES(".$intOwner.",'".ASTRAL_GONE.$strType.$strCompname."</b>."."',".$strDate.")");
+            $db -> Execute("INSERT INTO `log` (`owner`, `log`, `czas`, `type`) VALUES(".$intOwner.",'".ASTRAL_GONE.$strType.$strCompname."</b>."."',".$strDate.", 'T')");
         }
         error(SUCCESFULL.$strType.$strCompname."</b>.");
     }

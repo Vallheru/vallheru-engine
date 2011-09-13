@@ -1,5 +1,8 @@
 2011-09-13  Bartek thindil Jasicki  <thindil@tuxfamily.org>
 
+	* FEATURE,tribeastral.php, tribes.php, tribeware.php, view.php, includes/astralsteal.php, includes/battle.php, includes/checkexp.php,
+	includes/funkcje.php, includes/steal.php: 
+	added type of log message
 	* BUG,admin.php: 
 	fixed adding questions to bridge
 	* UPDATE,install/db/update.sql, templates/layout1/explore.tpl, templates/explore.tpl, explore.php, admin.php:

@@ -8,7 +8,7 @@
  *   @author               : thindil <thindil@tuxfamily.org>
  *   @author               : eyescream <tduda@users.sourceforge.net>
  *   @version              : 1.4
- *   @since                : 25.08.2011
+ *   @since                : 13.09.2011
  *
  */
 
@@ -773,8 +773,8 @@ function attack1($attacker, $defender, $arrAtequip, $arrDeequip, $attack_bspell,
              $strSubject = T_SUBJECT.$attacker['user'].T_SUB_ID.$attacker['id'];
             $db -> Execute("INSERT INTO `mail` (`sender`, `senderid`, `owner`, `subject`, `body`, `date`) VALUES('".T_SENDER."','0',".$defender['id'].",'".$strSubject."','".$strMessage."', ".$strDate.")");
         }
-        $db -> Execute("INSERT INTO `log` (`owner`, `log`, `czas`) VALUES(".$attacker['id'].",'".$attacktext." ".L_BATTLE2."  <b><a href=view.php?view=".$defender['id'].">".$defender['user']."</a></b> ".L_ID.'<b>'.$defender['id']."</b>.', ".$strDate.")");
-        $db -> Execute("INSERT INTO `log` (`owner`, `log`, `czas`) VALUES(".$defender['id'].",'".$defendtext." ".L_BATTLE2." <b><a href=view.php?view=".$attacker['id'].">".$attacker['user']."</a></b> ".L_ID.'<b>'.$attacker['id']."</b>.', ".$strDate.")");
+        $db -> Execute("INSERT INTO `log` (`owner`, `log`, `czas`, `type`) VALUES(".$attacker['id'].",'".$attacktext." ".L_BATTLE2."  <b><a href=view.php?view=".$defender['id'].">".$defender['user']."</a></b> ".L_ID.'<b>'.$defender['id']."</b>.', ".$strDate.", 'B')");
+        $db -> Execute("INSERT INTO `log` (`owner`, `log`, `czas`, `type`) VALUES(".$defender['id'].",'".$defendtext." ".L_BATTLE2." <b><a href=view.php?view=".$attacker['id'].">".$attacker['user']."</a></b> ".L_ID.'<b>'.$attacker['id']."</b>.', ".$strDate.", 'B')");
         require_once("includes/foot.php");
         exit;
     }
@@ -960,7 +960,7 @@ function attack1($attacker, $defender, $arrAtequip, $arrDeequip, $attack_bspell,
             $strSubject = T_SUBJECT.$attacker['user'].T_SUB_ID.$attacker['id'];
             $db -> Execute("INSERT INTO `mail` (`sender`, `senderid`, `owner`, `subject`, `body`, `date`) VALUES('".T_SENDER."','0',".$defender['id'].",'".$strSubject."','".$strMessage."', ".$strDate.")");
         }
-        $db -> Execute("INSERT INTO `log` (`owner`, `log`, `czas`) VALUES(".$attacker['id'].",'".$attacktext." ".YOU_DEFEAT." <b><a href=view.php?view=".$defender['id'].">".$defender['user']."</a></b>".L_ID.'<b>'.$defender['id']."</b>. ".YOU_REWARD." <b>$expgain</b> ".EXPERIENCE." <b>$creditgain</b> ".GOLD_COINS.".', ".$strDate.")");
+        $db -> Execute("INSERT INTO `log` (`owner`, `log`, `czas`, `type`) VALUES(".$attacker['id'].",'".$attacktext." ".YOU_DEFEAT." <b><a href=view.php?view=".$defender['id'].">".$defender['user']."</a></b>".L_ID.'<b>'.$defender['id']."</b>. ".YOU_REWARD." <b>$expgain</b> ".EXPERIENCE." <b>$creditgain</b> ".GOLD_COINS.".', ".$strDate.", 'B')");
         require_once("includes/foot.php");
         exit;
     }

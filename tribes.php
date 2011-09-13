@@ -9,7 +9,7 @@
  *   @author               : mori <ziniquel@users.sourceforge.net>
  *   @author               : eyescream <tduda@users.sourceforge.net>
  *   @version              : 1.4
- *   @since                : 29.08.2011
+ *   @since                : 13.09.2011
  *
  */
 
@@ -334,7 +334,7 @@ if (isset($_GET['join']))
         {
             $strDate = $db -> DBDate($newdate);
             $db -> Execute("INSERT INTO `tribe_oczek` (`gracz`, `klan`) VALUES(".$player -> id.",".$tribe -> fields['id'].")");
-            $db -> Execute("INSERT INTO `log` (`owner`,`log`, `czas`) VALUES(".$tribe -> fields['owner'].",'".L_PLAYER."<b><a href=\"view.php?view=".$player -> id."\">".$player -> user.L_ID.'<b>'.$player -> id.'</b>'.HE_WANT."', ".$strDate.")");
+            $db -> Execute("INSERT INTO `log` (`owner`,`log`, `czas`, `type`) VALUES(".$tribe -> fields['owner'].",'".L_PLAYER."<b><a href=\"view.php?view=".$player -> id."\">".$player -> user.L_ID.'<b>'.$player -> id.'</b>'.HE_WANT."', ".$strDate.", 'C')");
             error (YOU_SEND.$tribe -> fields['name'].".");
         }
     } 
@@ -345,11 +345,11 @@ if (isset($_GET['join']))
             error (YOU_IN_CLAN);
         }
         $strDate = $db -> DBDate($newdate);
-        $db -> Execute("INSERT INTO `log` (`owner`,`log`, `czas`) VALUES(".$tribe -> fields['owner'].",'".L_PLAYER." <b><a href=view.php?view=".$player -> id.">".$player -> user.L_ID.'<b>'.$player -> id.'</b>'.HE_WANT."', ".$strDate.")");
+        $db -> Execute("INSERT INTO `log` (`owner`,`log`, `czas`, `type`) VALUES(".$tribe -> fields['owner'].",'".L_PLAYER." <b><a href=view.php?view=".$player -> id.">".$player -> user.L_ID.'<b>'.$player -> id.'</b>'.HE_WANT."', ".$strDate.", 'C')");
         $objPerm = $db -> Execute("SELECT `player` FROM `tribe_perm` WHERE `tribe`=".$tribe -> fields['id']." AND `wait`=1");
         while (!$objPerm -> EOF)
         {
-            $db -> Execute("INSERT INTO `log` (`owner`,`log`, `czas`) VALUES(".$objPerm -> fields['player'].",'".L_PLAYER." <b><a href=view.php?view=".$player -> id.">".$player -> user.L_ID.'<b>'.$player -> id.'</b>'.HE_WANT."', ".$strDate.")");
+            $db -> Execute("INSERT INTO `log` (`owner`,`log`, `czas`, `type`) VALUES(".$objPerm -> fields['player'].",'".L_PLAYER." <b><a href=view.php?view=".$player -> id.">".$player -> user.L_ID.'<b>'.$player -> id.'</b>'.HE_WANT."', ".$strDate.", 'C')");
             $objPerm -> MoveNext();
         }
         $objPerm -> Close();
@@ -573,11 +573,11 @@ if (isset ($_GET['view']) && $_GET['view'] == 'my')
                 $db -> Execute("UPDATE tribes set ".$_POST['type']."=".$_POST['type']."+".$_POST['amount']." WHERE id=".$mytribe -> fields['id']);
                 $smarty -> assign ("Message", YOU_GIVE.$_POST['amount']." ".$dot."</b>.");
                 $strDate = $db -> DBDate($newdate);
-                $db -> Execute("INSERT INTO `log` (`owner`,`log`, `czas`) VALUES(".$mytribe -> fields['owner'].", '".L_PLAYER." <b><a href=view.php?view=".$player -> id.">".$player -> user.L_ID.'<b>'.$player -> id.'</b>'.HE_ADD.$_POST['amount']." ".$dot.".', ".$strDate.")");
+                $db -> Execute("INSERT INTO `log` (`owner`,`log`, `czas`, `type`) VALUES(".$mytribe -> fields['owner'].", '".L_PLAYER." <b><a href=view.php?view=".$player -> id.">".$player -> user.L_ID.'<b>'.$player -> id.'</b>'.HE_ADD.$_POST['amount']." ".$dot.".', ".$strDate.", 'C')");
                 $objPerm = $db -> Execute("SELECT player FROM tribe_perm WHERE tribe=".$mytribe -> fields['id']." AND loan=1");
                 while (!$objPerm -> EOF)
                 {
-                    $db -> Execute("INSERT INTO `log` (`owner`,`log`, `czas`) VALUES(".$objPerm -> fields['player'].", '".L_PLAYER." <b><a href=view.php?view=".$player -> id.">".$player -> user.L_ID.'<b>'.$player -> id.'</b>'.HE_ADD.$_POST['amount']." ".$dot.".', ".$strDate.")");
+                    $db -> Execute("INSERT INTO `log` (`owner`,`log`, `czas`, `type`) VALUES(".$objPerm -> fields['player'].", '".L_PLAYER." <b><a href=view.php?view=".$player -> id.">".$player -> user.L_ID.'<b>'.$player -> id.'</b>'.HE_ADD.$_POST['amount']." ".$dot.".', ".$strDate.", 'C')");
                     $objPerm -> MoveNext();
                 }
                 $objPerm -> Close();
@@ -682,15 +682,15 @@ if (isset ($_GET['view']) && $_GET['view'] == 'my')
                  */
                 $strDate = $db -> DBDate($newdate);
                                                 
-                $db -> Execute("INSERT INTO `log` (`owner`, `log`, `czas`) VALUES(".$mytribe -> fields['owner'].", '".YOU_SEND1.'<b><a href="view.php?view='.$_POST['did'].'">'.$strReceiversName.'</a></b>'.YOU_SEND2.'<b>'.$_POST['did']."</b> ".$_POST['ilosc']." ".$min1.".', ".$strDate.")");
+                $db -> Execute("INSERT INTO `log` (`owner`, `log`, `czas`, `type`) VALUES(".$mytribe -> fields['owner'].", '".YOU_SEND1.'<b><a href="view.php?view='.$_POST['did'].'">'.$strReceiversName.'</a></b>'.YOU_SEND2.'<b>'.$_POST['did']."</b> ".$_POST['ilosc']." ".$min1.".', ".$strDate.", 'C')");
                 $objPerm = $db -> Execute("SELECT `player` FROM `tribe_perm` WHERE `tribe`=".$mytribe -> fields['id']." AND `herbs`=1");
                 while (!$objPerm -> EOF)
                 {
-                    $db -> Execute("INSERT INTO `log` (`owner`, `log`, `czas`) VALUES(".$objPerm -> fields['player'].", '".YOU_SEND1.'<b><a href="view.php?view='.$_POST['did'].'">'.$strReceiversName.'</a></b>'.YOU_SEND2.'<b>'.$_POST['did']."</b> ".$_POST['ilosc']." ".$min1.".', ".$strDate.")");
+                    $db -> Execute("INSERT INTO `log` (`owner`, `log`, `czas`, `type`) VALUES(".$objPerm -> fields['player'].", '".YOU_SEND1.'<b><a href="view.php?view='.$_POST['did'].'">'.$strReceiversName.'</a></b>'.YOU_SEND2.'<b>'.$_POST['did']."</b> ".$_POST['ilosc']." ".$min1.".', ".$strDate.", 'C')");
                     $objPerm -> MoveNext();
                 }
                 $objPerm -> Close();
-                $db -> Execute("INSERT INTO `log` (`owner`, `log`, `czas`) VALUES(".$_POST['did'].", '".YOU_GET.$_POST['ilosc']." ".$min1.".', ".$strDate.")");
+                $db -> Execute("INSERT INTO `log` (`owner`, `log`, `czas`, `type`) VALUES(".$_POST['did'].", '".YOU_GET.$_POST['ilosc']." ".$min1.".', ".$strDate.", 'C')");
             }
         }
         if (isset ($_GET['step2']) && $_GET['step2'] == 'daj') 
@@ -727,11 +727,11 @@ if (isset ($_GET['view']) && $_GET['view'] == 'my')
                  * Send information about give herbs to tribe
                  */
                 $strDate = $db -> DBDate($newdate);
-                $db -> Execute("INSERT INTO `log` (`owner`, `log`, `czas`) VALUES(".$mytribe -> fields['owner'].", '".L_PLAYER." <b><a href=view.php?view=".$player -> id.">".$player -> user.L_ID.'<b>'.$player -> id.'</b>'.HE_ADD.$_POST['ilosc']." ".$nazwa.".', ".$strDate.")");
+                $db -> Execute("INSERT INTO `log` (`owner`, `log`, `czas`, `type`) VALUES(".$mytribe -> fields['owner'].", '".L_PLAYER." <b><a href=view.php?view=".$player -> id.">".$player -> user.L_ID.'<b>'.$player -> id.'</b>'.HE_ADD.$_POST['ilosc']." ".$nazwa.".', ".$strDate.", 'C')");
                 $objPerm = $db -> Execute("SELECT `player` FROM `tribe_perm` WHERE `tribe`=".$mytribe -> fields['id']." AND `herbs`=1");
                 while (!$objPerm -> EOF)
                 {
-                    $db -> Execute("INSERT INTO `log` (`owner`, `log`, `czas`) VALUES(".$objPerm -> fields['player'].", '".L_PLAYER." <b><a href=view.php?view=".$player -> id.">".$player -> user.L_ID.'<b>'.$player -> id.'</b>'.HE_ADD.$_POST['ilosc']." ".$nazwa.".', ".$strDate.")");
+                    $db -> Execute("INSERT INTO `log` (`owner`, `log`, `czas`, `type`) VALUES(".$objPerm -> fields['player'].", '".L_PLAYER." <b><a href=view.php?view=".$player -> id.">".$player -> user.L_ID.'<b>'.$player -> id.'</b>'.HE_ADD.$_POST['ilosc']." ".$nazwa.".', ".$strDate.", 'C')");
                     $objPerm -> MoveNext();
                 }
                 $objPerm -> Close();
@@ -841,15 +841,15 @@ if (isset ($_GET['view']) && $_GET['view'] == 'my')
                  * Send information about give minerals to player
                  */
                 $strDate = $db -> DBDate($newdate);
-                $db -> Execute("INSERT INTO `log` (`owner`, `log`, `czas`) VALUES(".$mytribe -> fields['owner'].", '".CLAN_SEND1.'<b><a href="view.php?view='.$_POST['did'].'">'.$strReceiversName.'</a></b>'.CLAN_SEND2.'<b>'.$_POST['did']."</b> ".$_POST['ilosc']." ".$_POST['min'].".', ".$strDate.")");
+                $db -> Execute("INSERT INTO `log` (`owner`, `log`, `czas`, `type`) VALUES(".$mytribe -> fields['owner'].", '".CLAN_SEND1.'<b><a href="view.php?view='.$_POST['did'].'">'.$strReceiversName.'</a></b>'.CLAN_SEND2.'<b>'.$_POST['did']."</b> ".$_POST['ilosc']." ".$_POST['min'].".', ".$strDate.", 'C')");
                 $objPerm = $db -> Execute("SELECT `player` FROM `tribe_perm` WHERE `tribe`=".$mytribe -> fields['id']." AND `bank`=1");
                 while (!$objPerm -> EOF)
                 {
-                    $db -> Execute("INSERT INTO `log` (`owner`, `log`, `czas`) VALUES(".$objPerm -> fields['player'].", '".CLAN_SEND1.'<b><a href="view.php?view='.$_POST['did'].'">'.$strReceiversName.'</a></b>'.CLAN_SEND2.'<b>'.$_POST['did']."</b> ".$_POST['ilosc']." ".$_POST['min'].".', ".$strDate.")");
+                    $db -> Execute("INSERT INTO `log` (`owner`, `log`, `czas`, `type`) VALUES(".$objPerm -> fields['player'].", '".CLAN_SEND1.'<b><a href="view.php?view='.$_POST['did'].'">'.$strReceiversName.'</a></b>'.CLAN_SEND2.'<b>'.$_POST['did']."</b> ".$_POST['ilosc']." ".$_POST['min'].".', ".$strDate.", 'C')");
                     $objPerm -> MoveNext();
                 }
                 $objPerm -> Close();
-                $db -> Execute("INSERT INTO `log` (`owner`, `log`, `czas`) VALUES(".$_POST['did'].", '".YOU_GET.$_POST['ilosc']." ".$_POST['min'].".', ".$strDate.")");
+                $db -> Execute("INSERT INTO `log` (`owner`, `log`, `czas`, `type`) VALUES(".$_POST['did'].", '".YOU_GET.$_POST['ilosc']." ".$_POST['min'].".', ".$strDate.", 'C')");
             }
         }
         if (isset ($_GET['step2']) && $_GET['step2'] == 'daj') 
@@ -884,11 +884,11 @@ if (isset ($_GET['view']) && $_GET['view'] == 'my')
                  * Send information about give minerals to tribe
                  */
                 $strDate = $db -> DBDate($newdate);
-                $db -> Execute("INSERT INTO `log` (`owner`, `log`, `czas`) VALUES(".$mytribe -> fields['owner'].", '".L_PLAYER." <b><a href=\"view.php?view=".$player -> id."\">".$player -> user.L_ID.'<b>'.$player -> id.'</b>'.HE_ADD.$_POST['ilosc'].PIECES.$arrName[$intKey].".', ".$strDate.")");
+                $db -> Execute("INSERT INTO `log` (`owner`, `log`, `czas`, `type`) VALUES(".$mytribe -> fields['owner'].", '".L_PLAYER." <b><a href=\"view.php?view=".$player -> id."\">".$player -> user.L_ID.'<b>'.$player -> id.'</b>'.HE_ADD.$_POST['ilosc'].PIECES.$arrName[$intKey].".', ".$strDate.", 'C')");
                 $objPerm = $db -> Execute("SELECT `player` FROM `tribe_perm` WHERE `tribe`=".$mytribe -> fields['id']." AND `bank`=1");
                 while (!$objPerm -> EOF)
                 {
-                    $db -> Execute("INSERT INTO `log` (`owner`, `log`, `czas`) VALUES(".$objPerm -> fields['player'].", '".L_PLAYER." <b><a href=\"view.php?view=".$player -> id."\">".$player -> user.L_ID.'<b>'.$player -> id.'</b>'.HE_ADD.$_POST['ilosc'].PIECES.$arrName[$intKey].".', ".$strDate.")");
+                    $db -> Execute("INSERT INTO `log` (`owner`, `log`, `czas`, `type`) VALUES(".$objPerm -> fields['player'].", '".L_PLAYER." <b><a href=\"view.php?view=".$player -> id."\">".$player -> user.L_ID.'<b>'.$player -> id.'</b>'.HE_ADD.$_POST['ilosc'].PIECES.$arrName[$intKey].".', ".$strDate.", 'C')");
                     $objPerm -> MoveNext();
                 }
                 $objPerm -> Close();
@@ -953,7 +953,7 @@ if (isset ($_GET['view']) && $_GET['view'] == 'my')
                 $db -> Execute("UPDATE players SET tribe=0, tribe_rank='' WHERE id=".$player -> id);
                 $db -> Execute("DELETE FROM tribe_perm WHERE tribe=".$mytribe -> fields['id']." AND player=".$player -> id);
                 $strDate = $db -> DBDate($newdate);
-                $db -> Execute("INSERT INTO `log` (`owner`,`log`, `czas`) VALUES(".$mytribe -> fields['owner'].", '".L_PLAYER." <b><a href=\"view.php?view=".$player -> id."\">".$player -> user.L_ID.'<b>'.$player -> id.'</b>'.M_LEAVE."', ".$strDate.")");
+                $db -> Execute("INSERT INTO `log` (`owner`,`log`, `czas`, `type`) VALUES(".$mytribe -> fields['owner'].", '".L_PLAYER." <b><a href=\"view.php?view=".$player -> id."\">".$player -> user.L_ID.'<b>'.$player -> id.'</b>'.M_LEAVE."', ".$strDate.", 'C')");
                 error (L_MEMBER);
             }
         }
@@ -1343,11 +1343,11 @@ if (isset ($_GET['view']) && $_GET['view'] == 'my')
                      * Send informations about buy army
                      */
                     $strDate = $db -> DBDate($newdate);
-                    $db -> Execute("INSERT INTO `log` (`owner`,`log`, `czas`) VALUES(".$mytribe -> fields['owner'].", '".$strLog."', ".$strDate.")");
+                    $db -> Execute("INSERT INTO `log` (`owner`,`log`, `czas`, `type`) VALUES(".$mytribe -> fields['owner'].", '".$strLog."', ".$strDate.", 'C')");
                     $objPerm = $db -> Execute("SELECT `player` FROM `tribe_perm` WHERE `tribe`=".$mytribe -> fields['id']." AND `army`=1");
                     while (!$objPerm -> EOF)
                     {
-                        $db -> Execute("INSERT INTO `log` (`owner`,`log`, `czas`) VALUES(".$objPerm -> fields['player'].", '".$strLog."', ".$strDate.")");
+                        $db -> Execute("INSERT INTO `log` (`owner`,`log`, `czas`, `type`) VALUES(".$objPerm -> fields['player'].", '".$strLog."', ".$strDate.", 'C')");
                         $objPerm -> MoveNext();
                     }
                     $objPerm -> Close();
@@ -1392,13 +1392,13 @@ if (isset ($_GET['view']) && $_GET['view'] == 'my')
                     }
                     $smarty -> assign ("Message", YOU_DROP.$del -> fields['gracz'].".");
                     $strDate = $db -> DBDate($newdate);
-                    $db -> Execute("INSERT INTO `log` (`owner`, `log`, `czas`) VALUES(".$del -> fields['gracz'].",'".L_TRIBE.'<b><a href="tribes.php?view=view&amp;id='.$mytribe -> fields['id'].'">'.$mytribe -> fields['name'].'</a></b>'.L_DROP."', ".$strDate.")");
+                    $db -> Execute("INSERT INTO `log` (`owner`, `log`, `czas`, `type`) VALUES(".$del -> fields['gracz'].",'".L_TRIBE.'<b><a href="tribes.php?view=view&amp;id='.$mytribe -> fields['id'].'">'.$mytribe -> fields['name'].'</a></b>'.L_DROP."', ".$strDate.", 'C')");
                     $db -> Execute("DELETE FROM tribe_oczek WHERE id=".$del -> fields['id']);
                     $del -> Close();
                     $objPerm = $db -> Execute("SELECT player FROM tribe_perm WHERE tribe=".$mytribe -> fields['id']." AND wait=1");
                     while (!$objPerm -> EOF)
                     {
-                        $db -> Execute("INSERT INTO `log` (`owner`,`log`, `czas`) VALUES(".$objPerm -> fields['player'].", '".YOU_DROP.'<b>'.$del -> fields['gracz']."</b>', ".$strDate.")");
+                        $db -> Execute("INSERT INTO `log` (`owner`,`log`, `czas`, `type`) VALUES(".$objPerm -> fields['player'].", '".YOU_DROP.'<b>'.$del -> fields['gracz']."</b>', ".$strDate.", 'C')");
                         $objPerm -> MoveNext();
                     }
                     $objPerm -> Close();
@@ -1408,14 +1408,14 @@ if (isset ($_GET['view']) && $_GET['view'] == 'my')
                     $dod = $db -> Execute("SELECT * FROM tribe_oczek WHERE id=".$_GET['dodaj']);
                     $smarty -> assign ("Message", YOU_ACCEPT.$dod -> fields['gracz'].".");
                     $strDate = $db -> DBDate($newdate);
-                    $db -> Execute("INSERT INTO log (owner, log, czas) VALUES(".$dod -> fields['gracz'].",'".L_TRIBE.'<b><a href="tribes.php?view=my">'.$mytribe -> fields['name'].'</a></b>'.L_ACCEPT."', ".$strDate.")");
+                    $db -> Execute("INSERT INTO `log` (`owner`, `log`, `czas`, `type`) VALUES(".$dod -> fields['gracz'].",'".L_TRIBE.'<b><a href="tribes.php?view=my">'.$mytribe -> fields['name'].'</a></b>'.L_ACCEPT."', ".$strDate.", 'C')");
                     $db -> Execute("UPDATE players SET tribe=".$dod -> fields['klan']." WHERE id=".$dod -> fields['gracz']);
                     $db -> Execute("DELETE FROM tribe_oczek WHERE id=".$dod -> fields['id']);
                     $dod -> Close();
                     $objPerm = $db -> Execute("SELECT player FROM tribe_perm WHERE tribe=".$mytribe -> fields['id']." AND wait=1");
                     while (!$objPerm -> EOF)
                     {
-                        $db -> Execute("INSERT INTO log (owner,log, czas) VALUES(".$objPerm -> fields['player'].", '".YOU_ACCEPT.'<b>'.$dod -> fields['gracz']."</b>', ".$strDate.")");
+                        $db -> Execute("INSERT INTO `log` (`owner`, `log`, `czas`) VALUES(".$objPerm -> fields['player'].", '".YOU_ACCEPT.'<b>'.$dod -> fields['gracz']."</b>', ".$strDate.", 'C')");
                         $objPerm -> MoveNext();
                     }
                     $objPerm -> Close();
@@ -1589,12 +1589,12 @@ if (isset ($_GET['view']) && $_GET['view'] == 'my')
                         $strReceiversName = $objGetName -> fields['user'];
                         $objGetName -> Close();
                
-                        $db -> Execute("INSERT INTO `log` (`owner`, `log`, `czas`) VALUES(".$_POST['id'].",'".YOU_DROP.'<b><a href="tribes.php?view=view&amp;id='.$mytribe -> fields['id'].'">'.$mytribe -> fields['name']."</a></b>.', ".$strDate.")");
-                        $db -> Execute("INSERT INTO `log` (`owner`, `log`, `czas`) VALUES(".$mytribe -> fields['owner'].", '".CLAN_KICK1.'<b><a href="view.php?view='.$_POST['id'].'">'.$strReceiversName.'</a></b>'. CLAN_KICK2.'<b>'.$_POST['id'].'</b>'.HAS_BEEN.$mytribe -> fields['name'].".', ".$strDate.")");
+                        $db -> Execute("INSERT INTO `log` (`owner`, `log`, `czas`, `type`) VALUES(".$_POST['id'].",'".YOU_DROP.'<b><a href="tribes.php?view=view&amp;id='.$mytribe -> fields['id'].'">'.$mytribe -> fields['name']."</a></b>.', ".$strDate.", 'C')");
+                        $db -> Execute("INSERT INTO `log` (`owner`, `log`, `czas`, `type`) VALUES(".$mytribe -> fields['owner'].", '".CLAN_KICK1.'<b><a href="view.php?view='.$_POST['id'].'">'.$strReceiversName.'</a></b>'. CLAN_KICK2.'<b>'.$_POST['id'].'</b>'.HAS_BEEN.$mytribe -> fields['name'].".', ".$strDate.", 'C')");
                         $objPerm = $db -> Execute("SELECT `player` FROM `tribe_perm` WHERE `tribe`=".$mytribe -> fields['id']." AND `kick`=1");
                         while (!$objPerm -> EOF)
                         {
-                            $db -> Execute("INSERT INTO `log` (`owner`, `log`, `czas`) VALUES(".$objPerm -> fields['player'].", '".CLAN_KICK1.'<b><a href="view.php?view='.$_POST['did'].'">'.$strReceiversName.'</a></b>'. CLAN_KICK2.'<b>'.$_POST['id'].'</b>'.HAS_BEEN.$mytribe -> fields['name'].".', ".$strDate.")");
+                            $db -> Execute("INSERT INTO `log` (`owner`, `log`, `czas`, `type`) VALUES(".$objPerm -> fields['player'].", '".CLAN_KICK1.'<b><a href="view.php?view='.$_POST['did'].'">'.$strReceiversName.'</a></b>'. CLAN_KICK2.'<b>'.$_POST['id'].'</b>'.HAS_BEEN.$mytribe -> fields['name'].".', ".$strDate.", 'C')");
                             $objPerm -> MoveNext();
                         }
                         $objPerm -> Close();
@@ -1663,15 +1663,15 @@ if (isset ($_GET['view']) && $_GET['view'] == 'my')
                                 $objGetName = $db -> Execute("SELECT `user` FROM `players` WHERE `id`=".$_POST['id'].';');
                                 $strReceiversName = $objGetName -> fields['user'];
                                 $objGetName -> Close();
-                                $db -> Execute("INSERT INTO `log` (`owner`,`log`, `czas`) VALUES(".$_POST['id'].",'".SEND_YOU.$_POST['amount']." ".$poz.".', ".$strDate.")");
+                                $db -> Execute("INSERT INTO `log` (`owner`,`log`, `czas`, `type`) VALUES(".$_POST['id'].",'".SEND_YOU.$_POST['amount']." ".$poz.".', ".$strDate.", 'C')");
                                 /**
                                  * Send informations about donation to player
                                  */
-                                $db -> Execute("INSERT INTO `log` (`owner`,`log`, `czas`) VALUES(".$mytribe -> fields['owner'].", '".CLAN_GIVE1.'<b><a href="view.php?view='.$_POST['id'].'">'.$strReceiversName.'</a></b>'.CLAN_GIVE2.'<b>'.$_POST['id']."</b> ".$_POST['amount']." ".$poz.".', ".$strDate.")");
+                                $db -> Execute("INSERT INTO `log` (`owner`,`log`, `czas`, `type`) VALUES(".$mytribe -> fields['owner'].", '".CLAN_GIVE1.'<b><a href="view.php?view='.$_POST['id'].'">'.$strReceiversName.'</a></b>'.CLAN_GIVE2.'<b>'.$_POST['id']."</b> ".$_POST['amount']." ".$poz.".', ".$strDate.", 'C')");
                                 $objPerm = $db -> Execute("SELECT `player` FROM `tribe_perm` WHERE `tribe`=".$mytribe -> fields['id']." AND `loan`=1");
                                 while (!$objPerm -> EOF)
                                 {
-                                    $db -> Execute("INSERT INTO `log` (`owner`,`log`, `czas`) VALUES(".$objPerm -> fields['player'].", '".CLAN_GIVE1.'<b><a href="view.php?view='.$_POST['id'].'">'.$strReceiversName.'</a></b>'.CLAN_GIVE2.'<b>'.$_POST['id']."</b> ".$_POST['amount']." ".$poz.".', ".$strDate.")");
+                                    $db -> Execute("INSERT INTO `log` (`owner`,`log`, `czas`, `type`) VALUES(".$objPerm -> fields['player'].", '".CLAN_GIVE1.'<b><a href="view.php?view='.$_POST['id'].'">'.$strReceiversName.'</a></b>'.CLAN_GIVE2.'<b>'.$_POST['id']."</b> ".$_POST['amount']." ".$poz.".', ".$strDate.", 'C')");
                                     $objPerm -> MoveNext();
                                 }
                                 $objPerm -> Close();

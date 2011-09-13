@@ -7,7 +7,7 @@
  *   @copyright            : (C) 2004,2005,2006,2011 Vallheru Team based on Gamers-Fusion ver 2.5
  *   @author               : thindil <thindil@tuxfamily.org>
  *   @version              : 1.4
- *   @since                : 11.09.2011
+ *   @since                : 13.09.2011
  *
  */
 
@@ -118,7 +118,7 @@ function steal ($itemid)
         checkexp($player -> exp, $expgain, $player -> level, $player -> race, $player -> user, $player -> id, 0, 0, $player -> id, 'thievery', 0.01);
         $db -> Execute("UPDATE `players` SET `miejsce`='Lochy', `crime`=`crime`-1 WHERE `id`=".$player -> id);
         $db -> Execute("INSERT INTO `jail` (`prisoner`, `verdict`, `duration`, `cost`, `data`) VALUES(".$player -> id.", '".VERDICT."', 7, ".$cost.", ".$strDate.")") or die("Błąd!");
-        $db -> Execute("INSERT INTO log (`owner`, `log`, `czas`) VALUES(".$player -> id.",'".S_LOG_INFO." ".$cost.".', ".$strDate.")");
+        $db -> Execute("INSERT INTO log (`owner`, `log`, `czas`, `type`) VALUES(".$player -> id.",'".S_LOG_INFO." ".$cost.".', ".$strDate.", 'T')");
         error (CRIME_RESULT1);
     } 
         else 
