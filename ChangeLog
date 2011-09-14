@@ -1,5 +1,9 @@
 2011-09-14  Bartek thindil Jasicki  <thindil@tuxfamily.org>
 
+	* FEATURE,includes/turnfight.php: 
+	raised change for dodge
+	* UPDATE: 
+	merge with branch lp:~gwidonw/vallheru/design-new
 	* BUG,includes/funkcje.php:
 	fixed few bugs
 

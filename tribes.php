@@ -405,17 +405,17 @@ if (isset ($_GET['view']) && $_GET['view'] == 'my')
     $perm = $db -> Execute("SELECT * FROM tribe_perm WHERE tribe=".$mytribe -> fields['id']." AND player=".$player -> id);
     $smarty -> assign (array("Name" => $mytribe -> fields['name'],
                              "Myclan" => MY_CLAN,
-                             "Menu1" => MENU1,
-                             "Menu2" => MENU2,
-                             "Menu3" => MENU3,
-                             "Menu4" => MENU4,
-                             "Menu5" => MENU5,
-                             "Menu6" => MENU6,
-                             "Menu7" => MENU7,
-                             "Menu8" => MENU8,
-                             "Menu9" => MENU9,
-                             "Menu10" => MENU10,
-                             "Menu11" => MENU11));
+                             "Amain" => MENU1,
+                             "Adonate" => MENU2,
+                             "Amembers" => MENU3,
+                             "Aarmor" => MENU4,
+                             "Apotions" => MENU5,
+                             "Aminerals" => MENU6,
+                             "Aherbs" => MENU7,
+                             "Aleft" => MENU8,
+                             "Aleader" => MENU9,
+                             "Aforums" => MENU10,
+                             "Aastral" => MENU11));
     if (!isset ($_GET['step'])) 
     {
         $plik = 'images/tribes/'.$mytribe -> fields['logo'];
