@@ -7,7 +7,7 @@
  *   @copyright            : (C) 2004,2005,2006,2007,2011 Vallheru Team based on Gamers-Fusion ver 2.5
  *   @author               : thindil <thindil@tuxfamily.org>
  *   @version              : 1.4
- *   @since                : 05.09.2011
+ *   @since                : 14.09.2011
  *
  */
  
@@ -881,7 +881,7 @@ function attack($eunik,$bdamage)
             $zmeczenie = $zmeczenie + $arrEquip[1][4];
         }
         $szansa = rand(1, 100);
-        if ($eunik >= $szansa && $szansa < 90) 
+        if ($eunik >= $szansa && $szansa < 97) 
         {
             $smarty -> assign ("Message", "<b>".$enemy['name']."</b> ".ENEMY_DODGE."!<br />");
             $smarty -> display ('error1.tpl');
@@ -1009,7 +1009,7 @@ function castspell ($id,$boost,$eunik)
     if ($ehp > 0) 
     {
         $szansa = rand(1, 100);
-        if ($eunik >= $szansa && $szansa < 90) 
+        if ($eunik >= $szansa && $szansa < 97) 
         {
             $smarty -> assign ("Message", "<b>".$enemy['name']."</b> ".ENEMY_DODGE."<br />");
             $smarty -> display ('error1.tpl');
@@ -1128,7 +1128,7 @@ function monsterattack($attacks,$enemy,$myunik,$amount)
             if ($player -> hp > 0) 
             {
                 $szansa = rand(1, 100);
-                if ($myunik >= $szansa && $zmeczenie < $player -> cond && $szansa < 90) 
+                if ($myunik >= $szansa && $zmeczenie < $player -> cond && $szansa < 97) 
                 {
                     $smarty -> assign ("Message", "<br>".YOU_DODGE." <b>".$ename."</b>!");
                     $smarty -> display ('error1.tpl');
