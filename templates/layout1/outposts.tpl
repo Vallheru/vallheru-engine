@@ -18,7 +18,7 @@
 {/if}
 
 {if $View == "gold"}
-    {$Goldinfo} <b>{$Gold}</b> {$Goldcoins}.<br /><br />
+    {$Goldinfo} <b>{$Treasury}</b> {$Goldcoins}.<br /><br />
     <form method="post" action="outposts.php?view=gold&amp;step=player">
     <input type="submit" value="{$Atake}" /> <input type="text" name="zeton" value="{$Treasury}" /> {$Fromout}.</form>
     <form method="post" action="outposts.php?view=gold&amp;step=outpost">
