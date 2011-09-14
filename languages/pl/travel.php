@@ -4,10 +4,10 @@
  *   Polish language for travel
  *
  *   @name                 : travel.php                            
- *   @copyright            : (C) 2004,2005,2006,2007 Vallheru Team based on Gamers-Fusion ver 2.5
- *   @author               : thindil <thindil@users.sourceforge.net>
- *   @version              : 1.3
- *   @since                : 06.02.2007
+ *   @copyright            : (C) 2004,2005,2006,2007,2011 Vallheru Team based on Gamers-Fusion ver 2.5
+ *   @author               : thindil <thindil@tuxfamily.org>
+ *   @version              : 1.4
+ *   @since                : 14.09.2011
  *
  */
 
@@ -27,10 +27,9 @@
 //   along with this program; if not, write to the Free Software
 //   Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 //
-// $Id: travel.php 880 2007-02-07 19:14:14Z thindil $
+// $Id$
 
 define("MESSAGE1", "Podróż przebiegała spokojnie, po pewnym czasie widzisz przed sobą cel swej podróży.");
-define("MESSAGE2", "Podróżując do celu wraz z karawaną, nagle zobaczyłeś jak z pobocza drogi wyskakują na was bandyci. Po chwili rozpoczyna się walka. Jeden z bandytów biegnie wprost na ciebie. Szybko przygotowujesz się do walki<br />");
 define("MESSAGE3", "Niestety tym razem przeznaczenie okazało się silniejsze od ciebie. Ostatnim obrazem jaki pamiętasz, to spadająca na twoją głowę szabla bandyty. Budzisz się w szpitalu w ".$city1a.". Kliknij <a href=hospital.php>tutaj</a>");
 define("MESSAGE4", "Po pokonaniu przeciwników karawana ponownie wyrusza w drogę. Tym razem przebiega ona bez niespodzianek.");
 define("NO_MONEY", "Nie masz tyle pieniędzy!");

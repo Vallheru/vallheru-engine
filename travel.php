@@ -7,7 +7,7 @@
  *   @copyright            : (C) 2004,2005,2006,2011 Vallheru Team based on Gamers-Fusion ver 2.5
  *   @author               : thindil <thindil@tuxfamily.org>
  *   @version              : 1.4
- *   @since                : 19.08.2011
+ *   @since                : 14.09.2011
  *
  */
  
@@ -49,80 +49,6 @@ if ($player -> location == 'Lochy')
 */
 $smarty -> assign(array("Portal" => '', 
     "Maps" => ''));
-
-/**
-* Random encounters in travel
-*/
-function travel ($address) 
-{
-    global $player;
-    global $smarty;
-    global $enemy;
-    global $arrehp;
-    global $db;
-    global $energy;
-    $roll = rand (1,100);
-    $fight = $db -> Execute("SELECT fight FROM players WHERE id=".$player -> id);
-    if (($roll < 80 && $fight -> fields['fight'] == 0) || ($player -> energy < 1)) 
-    {
-        $smarty -> assign ("Message", MESSAGE1);
-        $smarty -> display ('error1.tpl');
-    } 
-        else 
-    {
-        $smarty -> assign ("Message", MESSAGE2);
-        $smarty -> display ('error1.tpl');
-        $arrbandit = array ();
-        for ($i=0;$i<8;$i++) 
-        {
-            $roll2 = rand (1,500);
-            $arrbandit[$i] = $roll2;
-        }
-        $enemy = array('name' => 'Bandyta', 
-                       'strength' => $arrbandit[0], 
-                       'agility' => $arrbandit[1], 
-                       'hp' => $arrbandit[2], 
-                       'level' => $arrbandit[3], 
-                       'endurance' => $arrbandit[6], 
-                       'speed' => $arrbandit[7], 
-                       'exp1' => $arrbandit[4], 
-                       'exp2' => $arrbandit[4]);
-        $db -> Execute("UPDATE players SET fight=99999 WHERE id=".$player -> id);
-        $arrehp = array ();
-        if (!isset ($_POST['action'])) 
-        {
-            turnfight ($arrbandit[4],$arrbandit[5],'',$address);
-        } 
-            else 
-        {
-            turnfight ($arrbandit[4],$arrbandit[5],$_POST['action'],$address);
-        }
-        $myhp = $db -> Execute("SELECT hp, fight FROM players WHERE id=".$player -> id);
-        if ($myhp -> fields['hp'] == 0 && $myhp -> fields['fight'] == 0) 
-        {
-            $intEnergy = $player -> energy - 1;
-            if ($intEnergy < 0)
-            {
-                $intEnergy = 0;
-            }
-            $db -> Execute("UPDATE players SET energy=".$intEnergy.", miejsce='Altara' WHERE id=".$player -> id);
-            error (MESSAGE3);
-        }
-        if ($myhp -> fields['fight'] == 0 && $myhp -> fields['hp'] > 0) 
-        {
-            $intEnergy = $player -> energy - 1;
-            if ($intEnergy < 0)
-            {
-                $intEnergy = 0;
-            }
-            $db -> Execute("UPDATE players SET energy=".$intEnergy." WHERE id=".$player -> id);
-            $smarty -> assign ("Message", MESSAGE4);
-            $smarty -> display ('error1.tpl');
-        }
-        $myhp -> Close();
-    }
-    $fight -> Close();
-}
 
 $objItem = $db -> Execute("SELECT value FROM settings WHERE setting='item'");
 
@@ -206,207 +132,325 @@ if (isset ($_GET['akcja']) && $_GET['akcja'] == 'nie' && $player->location == 'A
 $objItem -> Close();
 
 /**
-* Travel to moutains
-*/
-if (isset ($_GET['akcja']) && $_GET['akcja'] == 'gory') 
+ * Fight with bandits
+ */
+function battle($strAddress)
 {
-    $arrLocation = array('Altara', 'Ardulith', 'Podróż');
-    if (!in_array($player -> location, $arrLocation))
+  global $db;
+  global $player;
+  global $enemy;
+  global $smarty;
+
+  if (!isset($_SESSION['enemy']))
     {
-        error(ERROR);
+      $arrbandit = array ();
+      for ($i=0; $i<8; $i++) 
+	{
+	  $roll2 = rand (1, 500);
+	  $arrbandit[$i] = $roll2;
+	}
+      $enemy = array('name' => 'Bandyta', 
+		     'strength' => $arrbandit[0], 
+		     'agility' => $arrbandit[1], 
+		     'hp' => $arrbandit[2], 
+		     'level' => $arrbandit[3], 
+		     'endurance' => $arrbandit[6], 
+		     'speed' => $arrbandit[7], 
+		     'exp1' => $arrbandit[4], 
+		     'exp2' => $arrbandit[4],
+		     "gold" => $arrbandit[5]);
+      $_SESSION['enemy'] = $enemy;
     }
-    if ($_GET['step'] != 'caravan' && $_GET['step'] != 'walk')
+  else
     {
-        error(ERROR);
+      $enemy = $_SESSION['enemy'];
     }
-    if ($player -> location != 'Ardulith' && $_GET['step'] == 'caravan')
+
+  $db -> Execute("UPDATE `players` SET `fight`=99999 WHERE `id`=".$player->id);
+  $arrehp = array ();
+  if (!isset ($_POST['action'])) 
     {
-        $intGoldneed = 1000;
-        $strCost = 'credits';
-    }
-        elseif ($player -> location == 'Ardulith' && $_GET['step'] == 'caravan')
+      turnfight ($enemy['exp1'], $enemy['gold'], '', $strAddress);
+    } 
+  else 
     {
-        $intGoldneed = 1200;
-        $strCost = 'credits';
+      turnfight ($enemy['exp1'], $enemy['gold'], $_POST['action'], $strAddress);
     }
-    if ($player -> location != 'Ardulith' && $_GET['step'] == 'walk')
+  $myhp = $db -> Execute("SELECT `hp`, `fight` FROM `players` WHERE `id`=".$player -> id);
+  if ($myhp -> fields['hp'] == 0 && $myhp -> fields['fight'] == 0) 
     {
-        $intGoldneed = 5;
-        $strCost = 'energy';
+      unset($_SESSION['enemy']);
+      $player->energy--;
+      if ($player->energy < 0)
+	{
+	  $player->energy = 0;
+	}
+      $db -> Execute("UPDATE `players` SET `energy`=".$player->energy.", `miejsce`='Altara' WHERE `id`=".$player -> id);
+      error (MESSAGE3);
     }
-        elseif ($player -> location == 'Ardulith' && $_GET['step'] == 'walk')
+  if ($myhp -> fields['fight'] == 0 && $myhp -> fields['hp'] > 0) 
     {
-        $intGoldneed = 6;
-        $strCost = 'energy';
+      unset($_SESSION['enemy']);
+      $player->energy--;
+      if ($player->energy < 0)
+	{
+	  $player->energy = 0;
+	}
+      $db -> Execute("UPDATE `players` SET `energy`=".$player->energy." WHERE `id`=".$player -> id);
+      $smarty -> assign ("Message", MESSAGE4);
+      $smarty -> display ('error1.tpl');
     }
-    if ($player -> credits < $intGoldneed && $_GET['step'] == 'caravan') 
-    {
-        error (NO_MONEY);
-    }
-    if ($player -> energy < $intGoldneed && $_GET['step'] == 'walk')
-    {
-        error(NO_ENERGY3);
-    }
-    if ($player -> hp == 0)
-    {
-        error(YOU_DEAD);
-    }
-    $db -> Execute("UPDATE players SET miejsce='Podróż' WHERE id=".$player -> id);
-    travel("travel.php?akcja=gory&amp;step=".$_GET['step']);
-    $fight = $db -> Execute("SELECT fight FROM players WHERE id=".$player -> id);
-    if (!$fight -> fields['fight']) 
-    {
-        $db -> Execute("UPDATE players SET miejsce='Góry', ".$strCost."=".$strCost."-".$intGoldneed." WHERE id=".$player -> id);
-        error (YOU_REACH);
-    }
+  $myhp -> Close();
 }
 
 /**
-* Travel to forest
-*/
-if (isset ($_GET['akcja']) && $_GET['akcja'] == 'las') 
-{
-    $arrLocation = array('Altara', 'Góry', 'Podróż');
-    if (!in_array($player -> location, $arrLocation))
-    {
-        error(ERROR);
-    }
+ * Travel
+ */
+if (isset($_GET['akcja']) && in_array($_GET['akcja'], array('gory', 'las', 'city2', 'powrot')))
+  {
     if ($_GET['step'] != 'caravan' && $_GET['step'] != 'walk')
-    {
+      {
         error(ERROR);
-    }
-    if ($player -> location != 'Góry' && $_GET['step'] == 'caravan')
-    {
-        $intGoldneed = 1000;
-        $strCost = 'credits';
-    }
-        elseif ($player -> location == 'Góry' && $_GET['step'] == 'caravan')
-    {
-        $intGoldneed = 1200;
-        $strCost = 'credits';
-    }
-    if ($player -> location != 'Góry' && $_GET['step'] == 'walk')
-    {
-        $intGoldneed = 5;
-        $strCost = 'energy';
-    }
-        elseif ($player -> location == 'Góry' && $_GET['step'] == 'walk')
-    {
-        $intGoldneed = 6;
-        $strCost = 'energy';
-    }
-    if ($player -> credits < $intGoldneed && $_GET['step'] == 'caravan') 
-    {
-        error (NO_MONEY);
-    }
-    if ($player -> energy < $intGoldneed && $_GET['step'] == 'walk')
-    {
-        error(NO_ENERGY3);
-    }
-    if ($player -> hp == 0)
-    {
+      }
+    //We fighting in travel
+    $objFight = $db->Execute("SELECT `fight` FROM `players` WHERE `id`=".$player->id);
+    if ($objFight->fields['fight'])
+      {
+	if ($objFight->fields['fight'] != 99999)
+	  {
+	    error(ERROR);
+	  }
+	if (!isset($_GET['step2']) || isset($_SESSION['enemy']))
+	  {
+	    battle("travel.php?akcja=".$_GET['akcja']."&amp;step=".$_GET['step']);
+	  }
+	else
+	  {
+	    switch ($_GET['step2'])
+	      {
+	      case 'fight':
+		battle("travel.php?akcja=".$_GET['akcja']."&amp;step=".$_GET['step']);
+		break;
+	      case 'pay':
+		$intRoll = rand(1, 100);
+		if ($intRoll < 6)
+		  {
+		    $intCost = 5 * $player->level;
+		  }
+		elseif ($intRoll > 5 && $intRoll < 26)
+		  {
+		    $intCost = 15 * $player->level;
+		  }
+		elseif ($intRoll > 25 && $intRoll < 76)
+		  {
+		    $intCost = 25 * $player->level;
+		  }
+		elseif ($intRoll > 75 && $intRoll < 96)
+		  {
+		    $intCost = 50 * $player->level;
+		  }
+		else
+		  {
+		    $intCost = 0;
+		  }
+		if ($intCost > $player->credits || $intCost == 0)
+		  {
+		    $smarty -> assign ("Message", "Nie udało Ci się przekonać bandytów złotem. Rozpoczyna się walka!<br />");
+		    $smarty -> display ('error1.tpl');
+		    battle("travel.php?akcja=".$_GET['akcja']."&amp;step=".$_GET['step']);
+		  }
+		else
+		  {
+		    $db->Execute("UPDATE `players` SET `credits`=`credits`-".$intCost.", `fight`=0 WHERE `id`=".$player->id);
+		    $smarty -> assign ("Message", "Płacisz bandytom ".$intCost." sztuk złota i puszczają Ciebie wolno. Dalsza droga przebiega bez niespodzianek<br />");
+		    $smarty -> display ('error1.tpl');
+		  }
+		break;
+	      case 'escape':
+		/**
+		 * Add bonus from rings
+		 */
+		$arrEquip = $player -> equipment();
+		if ($arrEquip[9][2])
+		  {
+		    $arrRingtype = explode(" ", $arrEquip[9][1]);
+		    $intAmount = count($arrRingtype) - 1;
+		    if ($arrRingtype[$intAmount] == 'szybkości')
+		      {
+			$player->speed = $player->speed + $arrEquip[9][2];
+		      }
+		  } 
+		if ($arrEquip[10][2])
+		  {
+		    $arrRingtype = explode(" ", $arrEquip[10][1]);
+		    $intAmount = count($arrRingtype) - 1;
+		    if ($arrRingtype[$intAmount] == 'szybkości')
+		      {
+			$player->speed = $player->speed + $arrEquip[10][2];
+		      }
+		  }
+		$arrbandit = array ();
+		for ($i = 0; $i < 4; $i++) 
+		  {
+		    $roll2 = rand (1,500);
+		    $arrbandit[$i] = $roll2;
+		  }
+		$chance = (rand(1, $player->level) + ($player->speed + $player->perception) - $arrbandit[0]);
+		if ($chance > 0) 
+		  {
+		    $expgain = rand($arrbandit[1], $arrbandit[2]);
+		    $expgain = ceil($expgain / 100);
+		    $smarty -> assign ("Message", "Udało Ci się uciec przed bandytami. Zdobywasz ".$expgain." doświadczenia oraz 0.1 do umiejętności Spostrzegawczość. Dalsza droga przebiega bez niespodzaniek.<br />");
+		    $smarty -> display ('error1.tpl');
+		    checkexp($player -> exp, $expgain, $player -> level, $player -> race, $player -> user, $player -> id, 0, 0, $player -> id, 'perception', 0.1);
+		    $db -> Execute("UPDATE `players` SET `fight`=0 WHERE `id`=".$player -> id);
+		  } 
+		else 
+		  {
+		    $db->Execute("UPDATE `players` SET `perception`=`perception`+0.01 WHERE `id`=".$player->id);
+		    $smarty -> assign ("Message", "Nie udało Ci się uciec przed bandytami. Rozpoczyna się walka!<br />");
+		    $smarty -> display ('error1.tpl');
+		    battle("travel.php?akcja=".$_GET['akcja']."&amp;step=".$_GET['step']);
+	      }
+		break;
+	      default:
+		battle("travel.php?akcja=".$_GET['akcja']."&amp;step=".$_GET['step']);
+		break;
+	      }
+	  }
+      }
+    $objFight->Close();
+    if ($player->hp == 0)
+      {
         error(YOU_DEAD);
-    }
-    $db -> Execute("UPDATE `players` SET `miejsce`='Podróż' WHERE id=".$player -> id);
-    travel("travel.php?akcja=las&amp;step=".$_GET['step']);
-    $fight = $db -> Execute("SELECT `fight` FROM `players` WHERE `id`=".$player -> id);
-    if (!$fight -> fields['fight']) 
-    {
-        $db -> Execute("UPDATE `players` SET `miejsce`='Las', `".$strCost."`=`".$strCost."`-".$intGoldneed." WHERE `id`=".$player -> id);
-        error (YOU_REACH);
-    }
-}
-
-/**
-* Travel to Ardulith
-*/
-if (isset ($_GET['akcja']) && $_GET['akcja'] == 'city2') 
-{
-    if ($player -> location != 'Altara' && $player -> location != 'Podróż')
-    {
-        error(ERROR);
-    }
-    if (!isset($_GET['step']))
-    {
-        error(ERROR);
-    }
-    if ($_GET['step'] != 'caravan' && $_GET['step'] != 'walk')
-    {
-        error(ERROR);
-    }
+      }
+    switch ($_GET['akcja'])
+      {
+      case 'gory':
+	$arrLocation = array('Altara', 'Ardulith', 'Podróż');
+	if ($_GET['step'] == 'caravan')
+	  {
+	    if ($player->location != 'Ardulith')
+	      {
+		$intGoldneed = 1000;
+	      }
+	    else
+	      {
+		$intGoldneed = 1200;
+	      }
+	  }
+	else
+	  {
+	    if ($player->location != 'Ardulith')
+	      {
+		$intGoldneed = 5;
+	      }
+	    else
+	      {
+		$intGoldneed = 6;
+	      }
+	  }
+	$strLocation = 'Góry';
+	break;
+      case 'las':
+	$arrLocation = array('Altara', 'Góry', 'Podróż');
+	if ($_GET['step'] == 'caravan')
+	  {
+	    if ($player->location != 'Góry')
+	      {
+		$intGoldneed = 1000;
+	      }
+	    else
+	      {
+		$intGoldneed = 1200;
+	      }
+	  }
+	else
+	  {
+	    if ($player->location != 'Góry')
+	      {
+		$intGoldneed = 5;
+	      }
+	    else
+	      {
+		$intGoldneed = 6;
+	      }
+	  }
+	$strLocation = 'Las';
+	break;
+      case 'city2':
+	$arrLocation = array('Altara', 'Podróż');
+	if ($_GET['step'] == 'caravan')
+	  {
+	    $intGoldneed = 1000;
+	  }
+	else
+	  {
+	    $intGoldneed = 5;
+	  }
+	$strLocation = 'Ardulith';
+	break;
+      case 'powrot':
+	$arrLocation = array('Ardulith', 'Góry', 'Las', 'Podróż');
+	if ($_GET['step'] == 'caravan')
+	  {
+	    $intGoldneed = 1000;
+	  }
+	else
+	  {
+	    $intGoldneed = 5;
+	  }
+	$strLocation = 'Altara';
+	break;
+      default:
+	error(ERROR);
+	break;
+      }
+    if (!in_array($player->location, $arrLocation))
+      {
+	error(ERROR);
+      }
     if ($_GET['step'] == 'caravan')
-    {
-        $intGoldneed = 1000;
-        $strCost = 'credits';
-    }
-    if ($_GET['step'] == 'walk')
-    {
-        $intGoldneed = 5;
-        $strCost = 'energy';
-    }
-    if ($player -> credits < $intGoldneed && $_GET['step'] == 'caravan') 
-    {
-        error (NO_MONEY);
-    }
-    if ($player -> energy < $intGoldneed && $_GET['step'] == 'walk')
-    {
-        error(NO_ENERGY3);
-    }
-    if ($player -> hp == 0)
-    {
-        error(YOU_DEAD);
-    }
-    $db -> Execute("UPDATE players SET `miejsce`='Podróż' WHERE `id`=".$player -> id);
-    travel("travel.php?akcja=city2&amp;step=".$_GET['step']);
-    $fight = $db -> Execute("SELECT `fight` FROM `players` WHERE `id`=".$player -> id);
-    if (!$fight -> fields['fight']) 
-    {
-        $db -> Execute("UPDATE `players` SET `miejsce`='Ardulith', `".$strCost."`=`".$strCost."`-".$intGoldneed." WHERE `id`=".$player -> id);
-        error (YOU_REACH);
-    }
-}
-
-if (isset ($_GET['akcja']) && $_GET['akcja'] == 'powrot') 
-{
-    if (!isset($_GET['step']))
-    {
-        error(ERROR);
-    }
-    if ($_GET['step'] != 'caravan' && $_GET['step'] != 'walk')
-    {
-        error(ERROR);
-    }
-    if ($_GET['step'] == 'caravan')
-    {
-        $intGoldneed = 1000;
-        $strCost = 'credits';
-    }
-    if ($_GET['step'] == 'walk')
-    {
-        $intGoldneed = 5;
-        $strCost = 'energy';
-    }
-    if ($player -> credits < $intGoldneed && $_GET['step'] == 'caravan') 
-    {
-        error (NO_MONEY);
-    }
-    if ($player -> energy < $intGoldneed && $_GET['step'] == 'walk')
-    {
-        error(NO_ENERGY3);
-    }
-    if ($player -> hp == 0)
-    {
-        error(YOU_DEAD);
-    }
-    $db -> Execute("UPDATE players SET miejsce='Podróż' WHERE id=".$player -> id);
-    travel("travel.php?akcja=powrot&amp;step=".$_GET['step']);
-    $fight = $db -> Execute("SELECT fight FROM players WHERE id=".$player -> id);
-    if (!$fight -> fields['fight']) 
-    {
-        $db -> Execute("UPDATE players SET miejsce='Altara', ".$strCost."=".$strCost."-".$intGoldneed." WHERE id=".$player -> id);
-        error (YOU_REACH);
-    }
-}
+      {
+	if ($player->credits < $intGoldneed)
+	  {
+	    error(NO_MONEY);
+	  }
+	$strCost = 'credits';
+      }
+    else
+      {
+	if ($player->energy < $intGoldneed)
+	  {
+	    error(NO_ENERGY3);
+	  }
+	$strCost = 'energy';
+      }
+    if ($player->location != 'Podróż')
+      {
+	$db -> Execute("UPDATE `players` SET `miejsce`='Podróż' WHERE `id`=".$player -> id);
+	$roll = rand(1, 100);
+	if ($roll < 80) 
+	  {
+	    $smarty -> assign ("Message", MESSAGE1);
+	    $smarty -> display ('error1.tpl');
+	  }
+	else 
+	  {
+	    $smarty -> assign("Message", "Podróżując do celu wraz z karawaną, nagle zobaczyłeś jak z pobocza drogi wyskakują na Was bandyci. Masz do wyboru:<br /><a href=travel.php?akcja=".$_GET['akcja']."&amp;step=".$_GET['step']."&amp;step2=fight>Walczyć</a><br /><a href=travel.php?akcja=".$_GET['akcja']."&amp;step=".$_GET['step']."&amp;step2=pay>Zapłacić okup</a><br /><a href=travel.php?akcja=".$_GET['akcja']."&amp;step=".$_GET['step']."&amp;step2=escape>Uciekać</a>");
+	    $smarty -> display('error1.tpl');
+	    $db -> Execute("UPDATE `players` SET `fight`=99999 WHERE `id`=".$player->id);
+	    return;
+	  }
+      }
+    $objFight = $db->Execute("SELECT `fight` FROM `players` WHERE `id`=".$player->id);
+    if (!$objFight->fields['fight'])
+      {
+	$db -> Execute("UPDATE `players` SET `miejsce`='".$strLocation."', ".$strCost."=".$strCost."-".$intGoldneed." WHERE `id`=".$player -> id);
+	error (YOU_REACH);
+      }
+    $objFight->Close();
+  }
 
 /**
 * Initialization of variable

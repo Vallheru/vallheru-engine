@@ -1,5 +1,7 @@
 2011-09-14  Bartek thindil Jasicki  <thindil@tuxfamily.org>
 
+	* FEATURE,languages/pl/travel.php, travel.php: 
+	added more options to random encounter
 	* FEATURE,includes/astralsteal.php, includes/stealphp, view.php, bank.php: 
 	added info about gained thievery, added experience for steal empty pocket
 	* FEATURE,includes/steal.php: 
