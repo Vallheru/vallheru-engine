@@ -386,7 +386,7 @@ function monsterattack2($intMydodge, &$zmeczenie, &$gunik, $arrEquip, &$enemy, $
 /**
  * Function made player attack
  */
-function playerattack($eunik, &$gwtbr, $arrEquip, $mczar, &$zmeczenie, &$gatak, $stat, &$enemy, &$gmagia, $times)
+function playerattack($eunik, &$gwtbr, $arrEquip, $mczar, &$zmeczenie, &$gatak, $stat, &$enemy, &$gmagia, $times, $intPldamage)
 {
   global $player;
   global $smarty;
@@ -513,7 +513,7 @@ function playerattack($eunik, &$gwtbr, $arrEquip, $mczar, &$zmeczenie, &$gatak, 
 	    }
 	}
     }
-  if ($times == 1)
+  if (($times == 1) && (isset($strMessage)))
     {
       $smarty->assign("Message", $strMessage);
       $smarty->display('error1.tpl');
@@ -918,7 +918,7 @@ function fightmonster($enemy, $expgain, $goldgain, $times)
             {
                 if ($enemy['hp'] > 0 && $player -> hp > 0) 
 		  {
-		    if (!playerattack($eunik, $gwtbr, $arrEquip, $mczar, $zmeczenie, $gatak, $stat, $enemy, $gmagia, $times))
+		    if (!playerattack($eunik, $gwtbr, $arrEquip, $mczar, $zmeczenie, $gatak, $stat, $enemy, $gmagia, $times, $intPldamage))
 		      {
 			break;
 		      }
@@ -992,7 +992,7 @@ function fightmonster($enemy, $expgain, $goldgain, $times)
             {
                 if ($enemy['hp'] > 0 && $player -> hp > 0) 
 		  {
-                    if (!playerattack($eunik, $gwtbr, $arrEquip, $mczar, $zmeczenie, $gatak, $stat, $enemy, $gmagia, $times))
+                    if (!playerattack($eunik, $gwtbr, $arrEquip, $mczar, $zmeczenie, $gatak, $stat, $enemy, $gmagia, $times, $intPldamage))
 		      {
 			break;
 		      }
