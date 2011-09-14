@@ -8,7 +8,7 @@
  *   @author               : thindil <thindil@tuxfamily.org>
  *   @author               : eyescream <tduda@users.sourceforge.net>
  *   @version              : 1.4
- *   @since                : 13.09.2011
+ *   @since                : 14.09.2011
  *
  */
 
@@ -419,14 +419,15 @@ if (isset ($_GET['steal']))
             $db -> Execute("UPDATE `players` SET `credits`=`credits`-".$lost.", `perception`=`perception`+".$fltPerception." WHERE `id`=".$view->id);
             $db -> Execute("UPDATE `players` SET `credits`=`credits`+".$lost." WHERE `id`=".$player -> id);
             $db -> Execute("INSERT INTO `log` (`owner`, `log`, `czas`, `type`) VALUES(".$view -> id.",'".YOU_CATCH."<b><a href=view.php?view=".$player -> id.">".$player -> user.L_ID.$player -> id.NOT_CATCH.$lost.GOLD_COINS."', ".$strDate.", 'T')");
-            error ("<br />".WHEN_YOU2.$lost.WHEN_YOU21." (<a href=\"view.php?view=".$_GET['view']."\">".BACK."</a>)");
+            error ("<br />".WHEN_YOU2.$lost.WHEN_YOU21." Zdobyłeś ".$fltThief." w umiejętności Złodziejstwo. (<a href=\"view.php?view=".$_GET['view']."\">".BACK."</a>)");
         } 
 	else 
         {
 	    $db->Execute("UPDATE `players` SET `perception`=`perception`+".$fltPerception." WHERE `id`=".$view->id);
-	    $db->Execute("UPDATE `players` SET `thievery`=`thievery`+".$fltThief." WHERE `id`=".$player->id);
+	    $expgain = ceil($view->level / 5);
+	    checkexp($player -> exp, $expgain, $player -> level, $player -> race, $player -> user, $player -> id, 0, 0, $player -> id, 'thievery', $fltThief);
             $db -> Execute("INSERT INTO `log` (`owner`, `log`, `czas`, `type`) VALUES(".$view -> id.",'".YOU_CATCH."<b><a href=view.php?view=".$player -> id.">".$player -> user.L_ID.$player -> id.EMPTY_BAG."', ".$strDate.", 'T')");
-            error ("<br />".EMPTY_BAG2." (<a href=\"view.php?view=".$_GET['view']."\">".BACK."</a>)");
+            error ("<br />".EMPTY_BAG2." Zdobyłeś ".$fltThief." w umiejętności Złodziejstwo. (<a href=\"view.php?view=".$_GET['view']."\">".BACK."</a>)");
         }
     }
     if ($chance > 49) 
@@ -441,13 +442,14 @@ if (isset ($_GET['steal']))
             $db -> Execute("UPDATE `players` SET `credits`=`credits`+".$lost." WHERE `id`=".$player -> id);
             checkexp($player -> exp, $expgain, $player -> level, $player -> race, $player -> user, $player -> id, 0, 0, $player -> id, 'thievery', $fltThief);
             $db -> Execute("INSERT INTO `log` (`owner`, `log`, `czas`, `type`) VALUES(".$view -> id.",'".YOU_CRIME.$lost.YOU_CRIME2."', ".$strDate.", 'T')");
-            error ("<br />".SUCCESS.$lost.GOLD_COINS2." (<a href=\"view.php?view=".$_GET['view']."\">".BACK."</a>)");
+            error ("<br />".SUCCESS.$lost.GOLD_COINS2." Zdobyłeś ".$fltThief." w umiejętności Złodziejstwo. (<a href=\"view.php?view=".$_GET['view']."\">".BACK."</a>)");
         } 
 	else 
         {
-	    $db->Execute("UPDATE `players` SET `thievery`=`thievery`+".$fltThief." WHERE `id`=".$player->id);
+	    $expgain = ceil($view->level / 5);
+	    checkexp($player -> exp, $expgain, $player -> level, $player -> race, $player -> user, $player -> id, 0, 0, $player -> id, 'thievery', $fltThief);
             $db -> Execute("INSERT INTO `log` (`owner`, `log`, `czas`, `type`) VALUES(".$view -> id.",'".EMPTY_BAG3."', ".$strDate.", 'T')");
-            error ("<br />".EMPTY_BAG4." (<a href=\"view.php?view=".$_GET['view']."\">".BACK."</a>)");
+            error ("<br />".EMPTY_BAG4." Zdobyłeś ".$fltThief." w umiejętności Złodziejstwo. (<a href=\"view.php?view=".$_GET['view']."\">".BACK."</a>)");
         }
     }
 }

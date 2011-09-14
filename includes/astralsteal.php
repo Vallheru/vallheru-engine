@@ -8,7 +8,7 @@
  *   @author               : thindil <thindil@tuxfamily.org>
  *   @author               : eyescream <tduda@users.sourceforge.net>
  *   @version              : 1.4
- *   @since                : 13.09.2011
+ *   @since                : 14.09.2011
  *
  */
 
@@ -259,7 +259,7 @@ function astralsteal($intVictim, $strLocation, $intOwner = 0, $intId = 0)
         {
             $db -> Execute("INSERT INTO `log` (`owner`, `log`, `czas`, `type`) VALUES(".$intOwner.",'".ASTRAL_GONE.$strType.$strCompname."</b>."."',".$strDate.", 'T')");
         }
-        error(SUCCESFULL.$strType.$strCompname."</b>.");
+        error(SUCCESFULL.$strType.$strCompname."</b>. Zdobyłeś ".$fltThief." w umiejętności Złodziejstwo.");
     }
 }
 ?>

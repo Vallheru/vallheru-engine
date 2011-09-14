@@ -9,7 +9,7 @@
  *   @author               : yeskov <yeskov@users.sourceforge.net>
  *   @author               : eyescream <tduda@users.sourceforge.net>
  *   @version              : 1.4
- *   @since                : 12.09.2011
+ *   @since                : 14.09.2011
  *
  */
 
@@ -485,6 +485,36 @@ if ((isset ($_GET['action']) && $_GET['action'] == 'steal') && $player -> clas =
     {
         $db -> Execute("UPDATE players SET bless='', blessval=0 WHERE id=".$player -> id);
     }
+
+    /**
+     * Add bonus from rings
+     */
+    $arrEquip = $player -> equipment();
+    $arrRings = array('zręczności', 'inteligencji');
+    $arrStat = array('agility', 'inteli');
+    if ($arrEquip[9][0])
+    {
+        $arrRingtype = explode(" ", $arrEquip[9][1]);
+        $intAmount = count($arrRingtype) - 1;
+        $intKey = array_search($arrRingtype[$intAmount], $arrRings);
+        if ($intKey != NULL)
+        {
+            $strStat = $arrStat[$intKey];
+            $player -> $strStat = $player -> $strStat + $arrEquip[9][2];
+        }
+    }
+    if ($arrEquip[10][0])
+    {
+        $arrRingtype = explode(" ", $arrEquip[10][1]);
+        $intAmount = count($arrRingtype) - 1;
+        $intKey = array_search($arrRingtype[$intAmount], $arrRings);
+        if ($intKey != NULL)
+        {
+            $strStat = $arrStat[$intKey];
+            $player -> $strStat = $player -> $strStat + $arrEquip[10][2];
+        }
+    }
+
     $chance = ($player->agility + $player->inteli + $player->thievery) - $roll;
     if ($chance < 1) 
     {
@@ -504,7 +534,7 @@ if ((isset ($_GET['action']) && $_GET['action'] == 'steal') && $player -> clas =
 	$fltThief = ($player->level / 100);
         $db -> Execute("UPDATE `players` SET `crime`=`crime`-1, `credits`=`credits`+".$gain." WHERE `id`=".$player -> id);
         checkexp($player -> exp, $expgain, $player -> level, $player -> race, $player -> user, $player -> id, 0, 0, $player -> id, 'thievery', $fltThief);
-        error (C_SUCCES.$gain.C_SUCCES2);
+        error (C_SUCCES.$gain.C_SUCCES2." Zdobyłeś ".$fltThief." w umiejętności Złodziejstwo.");
     }
 }
 

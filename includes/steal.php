@@ -166,7 +166,7 @@ function steal ($itemid)
             }
             $test -> Close();
         }
-        error (CRIME_RESULT2." ".$arritem -> fields['name'].CRIME_RESULT3);
+        error (CRIME_RESULT2." ".$arritem -> fields['name'].CRIME_RESULT3." Zdobyłeś ".$fltThief." w umiejętności Złodziejstwo.");
     }
 }
 ?>
