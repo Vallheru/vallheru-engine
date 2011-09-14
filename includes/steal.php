@@ -7,7 +7,7 @@
  *   @copyright            : (C) 2004,2005,2006,2011 Vallheru Team based on Gamers-Fusion ver 2.5
  *   @author               : thindil <thindil@tuxfamily.org>
  *   @version              : 1.4
- *   @since                : 13.09.2011
+ *   @since                : 14.09.2011
  *
  */
 
@@ -58,12 +58,20 @@ function steal ($itemid)
     {
         error (E_CRIME);
     }
-    $roll = rand (1, ($player -> level * 100));
+    if ($title != 'Fleczer') 
+      {
+	$arritem = $db -> Execute("SELECT * FROM `equipment` WHERE `id`=".$itemid);
+      } 
+    else 
+      {
+	$arritem = $db -> Execute("SELECT * FROM `bows` WHERE `id`=".$itemid);
+      }
+    $roll = rand (1, ($arritem->fields['minlev'] * 100));
     /**
      * Add bonus from bless
      */
     $strBless = FALSE;
-    $objBless = $db -> Execute("SELECT bless, blessval FROM players WHERE id=".$player -> id);
+    $objBless = $db -> Execute("SELECT `bless`, `blessval` FROM `players` WHERE `id`=".$player -> id);
     if ($objBless -> fields['bless'] == 'inteli')
     {
         $player -> inteli = $player -> inteli + $objBless -> fields['blessval'];
@@ -77,7 +85,7 @@ function steal ($itemid)
     $objBless -> Close();
     if ($strBless)
     {
-        $db -> Execute("UPDATE players SET bless='', blessval=0 WHERE id=".$player -> id);
+        $db -> Execute("UPDATE `players` SET `bless`='', `blessval`=0 WHERE `id`=".$player -> id);
     }
 
     /**
@@ -114,7 +122,7 @@ function steal ($itemid)
     if ($chance < 1) 
     {
         $cost = 1000 * $player -> level;
-        $expgain = ceil ($player -> level / 10);
+        $expgain = ceil ($arritem->fields['minlev'] / 10);
         checkexp($player -> exp, $expgain, $player -> level, $player -> race, $player -> user, $player -> id, 0, 0, $player -> id, 'thievery', 0.01);
         $db -> Execute("UPDATE `players` SET `miejsce`='Lochy', `crime`=`crime`-1 WHERE `id`=".$player -> id);
         $db -> Execute("INSERT INTO `jail` (`prisoner`, `verdict`, `duration`, `cost`, `data`) VALUES(".$player -> id.", '".VERDICT."', 7, ".$cost.", ".$strDate.")") or die("Błąd!");
@@ -122,17 +130,9 @@ function steal ($itemid)
         error (CRIME_RESULT1);
     } 
         else 
-    {
-        if ($title != 'Fleczer') 
-        {
-            $arritem = $db -> Execute("SELECT * FROM equipment WHERE id=".$itemid);
-        } 
-            else 
-        {
-            $arritem = $db -> Execute("SELECT * FROM bows WHERE id=".$itemid);
-        }       
-        $db -> Execute("UPDATE players SET crime=crime-1 WHERE id=".$player -> id);
-        $expgain = ($player -> level * 10); 
+    {       
+        $db -> Execute("UPDATE `players` SET `crime`=`crime`-1 WHERE `id`=".$player -> id);
+        $expgain = ($arritem->fields['minlev'] * 5); 
 	$fltThief = ($arritem->fields['minlev'] / 100);
         checkexp($player -> exp, $expgain, $player -> level, $player -> race, $player -> user, $player -> id, 0, 0, $player -> id, 'thievery', $fltThief);
         if ($arritem -> fields['type'] == 'R') 

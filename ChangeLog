@@ -1,5 +1,7 @@
 2011-09-14  Bartek thindil Jasicki  <thindil@tuxfamily.org>
 
+	* FEATURE,includes/steal.php: 
+	changed formula for steal items from shops
 	* FEATURE,includes/turnfight.php: 
 	raised change for dodge
 	* UPDATE: 
