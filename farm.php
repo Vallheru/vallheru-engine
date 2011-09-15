@@ -133,6 +133,10 @@ if (isset($_GET['step']) && $_GET['step'] == 'house')
             }
         }
 	$fltSkill = $intAmountseeds / 100;
+	if ($player->clas == 'Rzemieślnik') 
+	  {
+	    $fltSkill = $fltSkill * 2;
+	  }
         $arrSeeds = array('ilani_seeds', 'illanias_seeds', 'nutari_seeds', 'dynallca_seeds');
         $db -> Execute("UPDATE `herbs` SET `".$arrHerbs[$intKey]."`=`".$arrHerbs[$intKey]."`-".$intAmountherbs.", `".$arrSeeds[$intKey]."`=`".$arrSeeds[$intKey]."`+".$intAmountseeds." WHERE `gracz`=".$player -> id);
         $db -> Execute("UPDATE `players` SET `energy`=`energy`-".$intAmountenergy.", `herbalist`=`herbalist`+".$fltSkill." WHERE `id`=".$player -> id);
@@ -385,11 +389,15 @@ if (isset($_GET['step']) && $_GET['step'] == 'plantation')
                     }
                 }
             }
-            $intAbility = $_POST['amount'] * 0.01;
+            $fltAbility = $_POST['amount'] * 0.01;
+	    if ($player->clas == 'Rzemieślnik') 
+	      {
+		$fltAbility = $fltAbility * 2;
+	      }
             $db -> Execute("UPDATE herbs SET ".$arrSeeds[$intKey]."=".$arrSeeds[$intKey]."-".$_POST['amount']." WHERE gracz=".$player -> id);
             $db -> Execute("INSERT INTO farm (owner, amount, name, age) VALUES(".$player -> id.", ".$_POST['amount'].", '".$arrHerbsname[$intKey]."', 0)");
-            $db -> Execute("UPDATE players SET energy=energy-".$intEnergy.", herbalist=herbalist+".$intAbility." WHERE id=".$player -> id);
-            $smarty -> assign("Message", YOU_SAW.$_POST['amount'].T_LANDS2.$arrHerbsname[$intKey].YOU_GAIN.$intAbility.T_ABILITY);
+            $db -> Execute("UPDATE players SET energy=energy-".$intEnergy.", herbalist=herbalist+".$fltAbility." WHERE id=".$player -> id);
+            $smarty -> assign("Message", YOU_SAW.$_POST['amount'].T_LANDS2.$arrHerbsname[$intKey].YOU_GAIN.$fltAbility.T_ABILITY);
         }
     }
 
@@ -481,14 +489,6 @@ if (isset($_GET['step']) && $_GET['step'] == 'plantation')
                 $intKey = array_search($objHerb -> fields['name'], $arrHerbname);
                 $intRoll = rand(-15, 15) / 100;
                 $intKey2 = $objHerb -> fields['age'] - 1;
-				if ($objHerb -> fields['age'] > 3)
-				{
-				    $intAbility = $_POST['amount'] * 0.01;
-				}
-				    else
-				{
-				   $intAbility = 0;
-				}
 
                 /**
                  * Add bonuses to ability
@@ -502,6 +502,18 @@ if (isset($_GET['step']) && $_GET['step'] == 'plantation')
                 {
                     $intAmount = 0;
                 }
+		if ($objHerb -> fields['age'] > 3)
+		  {
+		    $fltAbility = $intAmount * 0.01;
+		  }
+		else
+		  {
+		    $fltAbility = 0.01;
+		  }
+		if ($player->clas == 'Rzemieślnik') 
+		  {
+		    $fltAbility = $fltAbility * 2;
+		  }
                 if ($_POST['amount'] < $objHerb -> fields['amount'])
                 {
                     $db -> Execute("UPDATE `farm` SET `amount`=`amount`-".$_POST['amount']." WHERE `id`=".$_GET['id']);
@@ -511,8 +523,8 @@ if (isset($_GET['step']) && $_GET['step'] == 'plantation')
                     $db -> Execute("DELETE FROM `farm` WHERE `id`=".$_GET['id']);
                 }
                 $db -> Execute("UPDATE `herbs` SET `".$arrHerbname[$intKey]."`=`".$arrHerbname[$intKey]."`+".$intAmount." WHERE `gracz`=".$player -> id);
-                $db -> Execute("UPDATE `players` SET `energy`=`energy`-".$intEnergy.", `herbalist`=`herbalist`+".$intAbility." WHERE `id`=".$player -> id);
-                $smarty -> assign("Message", YOU_GATHER.$intAmount.T_AMOUNT2.$arrHerbname[$intKey].T_FARM.$intAbility.T_ABILITY);
+                $db -> Execute("UPDATE `players` SET `energy`=`energy`-".$intEnergy.", `herbalist`=`herbalist`+".$fltAbility." WHERE `id`=".$player -> id);
+                $smarty -> assign("Message", YOU_GATHER.$intAmount.T_AMOUNT2.$arrHerbname[$intKey].T_FARM.$fltAbility.T_ABILITY);
             }
             $objHerb -> Close();
         }
