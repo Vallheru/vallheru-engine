@@ -8,7 +8,7 @@
  *   @author               : thindil <thindil@tuxfamily.org>
  *   @author               : mori <ziniquel@users.sourceforge.net>
  *   @version              : 1.4
- *   @since                : 11.09.2011
+ *   @since                : 15.09.2011
  *
  */
 
@@ -171,11 +171,23 @@ if ($player -> location == 'Ardulith')
     $strLocation = $city2;
 }
 
+$cape = $db -> Execute("SELECT `power` FROM `equipment` WHERE `owner`=".$player -> id." AND `type`='C' AND `status`='E'");
+$maxmana = ($player->inteli + $player->wisdom);
+$maxmana = (int)($maxmana + (($cape -> fields['power'] / 100) * $maxmana));
+$cape -> Close();
+if ($player->mana < $maxmana) 
+{
+    $smarty -> assign ("Rest", "[<a href=\"rest.php\">".A_REST."</a>]<br />");
+} 
+    else 
+{
+    $smarty -> assign ("Rest", "<br />");
+}
    
 $smarty -> assign(array("Stats" => $arrStats,
                         "Curstats" => $arrCurstats2,
                         "Tstats2" => $arrStatstext,
-                        "Mana" =>  $player -> mana, 
+                        "Mana" =>  $player -> mana."/".$maxmana, 
                         "Location" => $strLocation."<br />", 
                         "Age" => $player -> age."<br />", 
                         "Logins" => $player -> logins."<br />", 
@@ -189,6 +201,7 @@ $smarty -> assign(array("Stats" => $arrStats,
                         "Miss" => $player -> miss."<br />", 
                         "Magic" => $player -> magic."<br />",
                         "PW" => $player -> pw."<br />",
+			"Energy" => $player->energy."/".$player->max_energy."/".($player->max_energy * 150)."<br />",
                         "Total" => $player -> wins."/".$player -> losses."/".$rt."<br />", 
                         "Lastkilled" => $player -> lastkilled."<br />", 
                         "Lastkilledby" => $player -> lastkilledby,
@@ -239,19 +252,9 @@ $smarty -> assign(array("Stats" => $arrStats,
                         "Tlumberjack" => T_LUMBERJACK,
                         "Therbalist" => T_HERBALIST,
                         "Tjeweller" => T_JEWELLER,
+			"Tenergy" => "Energia",
 			"Tperception" => "Spostrzegawczość"));
-$cape = $db -> Execute("SELECT `power` FROM `equipment` WHERE `owner`=".$player -> id." AND `type`='C' AND `status`='E'");
-$maxmana = ($player -> inteli + $player -> wisdom);
-$maxmana = $maxmana + (($cape -> fields['power'] / 100) * $maxmana);
-$cape -> Close();
-if ($player -> mana < $maxmana) 
-{
-    $smarty -> assign ("Rest", "[<a href=\"rest.php\">".A_REST."</a>]<br />");
-} 
-    else 
-{
-    $smarty -> assign ("Rest", "<br />");
-}
+
 if ($player->clas == "Złodziej") 
   {
     $smarty->assign(array("Crime" => "<b>".CRIME_T."</b> ".$player->crime."<br />",

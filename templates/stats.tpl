@@ -13,6 +13,7 @@
     {/section}
     <b>{$Tmana}:</b> {$Mana} {$Rest}
     <b>{$Tpw}:</b> {$PW}
+    <b>{$Tenergy}:</b> {$Energy}
     <b>{$Blessfor}</b>{$Pray} <b>{$Blessval}</b>
     {$Crime}<br />
     <b>{$Tfights}:</b> {$Total}
