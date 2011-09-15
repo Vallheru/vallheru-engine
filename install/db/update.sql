@@ -37,3 +37,7 @@ ALTER TABLE `players` ADD `thievery` DOUBLE( 11, 2 ) NOT NULL DEFAULT '0.01',
 ADD `perception` DOUBLE( 11, 2 ) NOT NULL DEFAULT '0.01';
 ALTER TABLE `log` ADD `type` CHAR( 1 ) NOT NULL DEFAULT 'U', ADD INDEX ( `type` );
 ALTER TABLE `replies` DROP `w_time`;
+UPDATE `bridge` SET `answer`=MD5(`answer`);
+ALTER TABLE `bridge` CHANGE `answer` `answer` VARCHAR( 32 ) CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL;
+ALTER TABLE `bridge` DROP `lang` ;
+ALTER TABLE `tribe_replies` DROP `w_time`;

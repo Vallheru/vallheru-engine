@@ -1,5 +1,7 @@
 2011-09-15  Bartek thindil Jasicki  <thindil@tuxfamily.org>
 
+	* FEATURE,includes/head.php, templates/layout/tforums.tpl, templates/tforums.tpl, tforums.php, install/db/update.sql: 
+	added unread post counter for tribes forums
 	* FEATURE,templates/layout1/stats.tpl, templates/stats.tpl, stats.php: 
 	added info about energy and max mana to stats
 	* FEATURE,farm.php: 

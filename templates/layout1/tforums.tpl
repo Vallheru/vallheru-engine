@@ -34,6 +34,24 @@
     <input type="submit" value="{$Addtopic}" /></form>
 {/if}
 
+{if $View == "newposts"}
+    <ul>
+        {section name=numbers loop=$Titles}
+	    <li><a href="tforums.php?topic={$Tid[numbers]}">{$Titles[numbers]}</a></li>
+	{/section}
+    </ul>
+    {if $Tpages > 1}
+    	<br />{$Fpage}
+    	{for $page = 1 to $Tpages}
+	    {if $page == $Tpage}
+	        {$page}
+	    {else}
+                <a href="tforums.php?view=newposts&amp;page={$page}">{$page}</a>
+	    {/if}
+    	{/for}
+    {/if}
+{/if}
+
 {if $Topics != ""}
     <br />
     <table class=td width="98%" cellpadding="0" cellspacing="0">

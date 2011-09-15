@@ -7,7 +7,7 @@
  *   @copyright            : (C) 2004,2005,2006,2011 Vallheru Team based on Gamers-Fusion ver 2.5
  *   @author               : thindil <thindil@tuxfamily.org>
  *   @version              : 1.4
- *   @since                : 02.09.2011
+ *   @since                : 15.09.2011
  *
  */
 
@@ -43,6 +43,48 @@ if ($player -> tribe == 0)
 }
 
 /**
+ * Show unread posts
+ */
+if (isset($_GET['view']) && ($_GET['view'] == 'newposts'))
+  {
+    if (!isset($_SESSION['tforums']))
+    {
+        $_SESSION['tforums'] = $player->tforumtime;
+        $db -> Execute("UPDATE `players` SET `tforum_time`=".$ctime." WHERE `id`=".$player -> id);
+    }
+    if ($intFunread2 == 0)
+      {
+	error("Nie ma nowych wpisów na forum.");
+      }
+    $pages = ceil($intFunread2 / 25);
+    if (isset($_GET['page']))
+     {
+       checkvalue($_GET['page']);
+       $page = $_GET['page'];
+     }
+    else
+     {
+       $page = $pages;
+     }
+    $objTopics = $db->SelectLimit("SELECT `id`, `topic` FROM `tribe_topics` WHERE `tribe`=".$player->tribe." AND `w_time`>".$intForums2, 25, 25 * ($page - 1)) or die($db->ErrorMsg());
+    $arrTitles = array();
+    $arrIds = array();
+    $arrCats = array();
+    while (!$objTopics->EOF)
+      {
+	$arrTitles[] = $objTopics->fields['topic'];
+	$arrIds[] = $objTopics->fields['id'];
+	$objTopics->MoveNext();
+      }
+    $objTopics->Close();
+    $smarty->assign(array("Titles" => $arrTitles,
+			  "Tid" => $arrIds,
+			  "Tpages" => $pages,
+			  "Tpage" => $page,
+			  "Fpage" => "Idź do strony:",));
+  }
+
+/**
 * The topics list
 */
 if (isset ($_GET['view']) && $_GET['view'] == 'topics') 
@@ -64,17 +106,15 @@ if (isset ($_GET['view']) && $_GET['view'] == 'topics')
     * Show new topic and replies on forums
     */
     if (!isset($_SESSION['tforums']))
-    {
-        $objLasttime = $db -> Execute("SELECT tforum_time FROM players WHERE id=".$player -> id);
-        $_SESSION['tforums'] = $objLasttime -> fields['tforum_time'];
-        $objLasttime -> Close();
-        $db -> Execute("UPDATE players SET tforum_time=".$ctime." WHERE id=".$player -> id);
+      {
+	$_SESSION['tforums'] = $player->tforumtime;
+        $db -> Execute("UPDATE `players` SET `tforum_time`=".$ctime." WHERE `id`=".$player -> id);
     }
     
     /**
      * Show sticky threads
      */
-    $topic = $db -> Execute("SELECT * FROM tribe_topics WHERE tribe=".$player -> tribe." AND sticky='Y' ORDER BY id ASC");
+    $topic = $db -> Execute("SELECT * FROM `tribe_topics` WHERE `tribe`=".$player -> tribe." AND `sticky`='Y' ORDER BY `id` ASC");
     $arrid = array();
     $arrrep = array();
     $arrtopic = array();
@@ -92,20 +132,8 @@ if (isset ($_GET['view']) && $_GET['view'] == 'topics')
         {
             $arrNewtopic[$i] = 'N';
         }
-        $query = $db -> Execute("SELECT w_time FROM tribe_replies WHERE topic_id=".$topic -> fields['id']);
-        if ($arrNewtopic[$i] == 'N')
-        {
-            while (!$query -> EOF)
-            {
-                if ($query -> fields['w_time'] > $_SESSION['tforums'])
-                {
-                    $arrNewtopic[$i] = 'Y';
-                    break;
-                }
-                $query -> MoveNext();
-            }
-        }
-        $arrrep[$i] = $query -> RecordCount();
+        $query = $db -> Execute("SELECT count(`id`) FROM `tribe_replies` WHERE `topic_id`=".$topic -> fields['id']);
+        $arrrep[$i] = $query->fields['count(`id`)'];
         $query -> Close();
         $arrtopic[$i] = "<b>".$topic -> fields['topic']."</b>";
         $arrstarter[$i] = $topic -> fields['starter'];
@@ -140,20 +168,8 @@ if (isset ($_GET['view']) && $_GET['view'] == 'topics')
         {
             $arrNewtopic[$i] = 'N';
         }
-        $query = $db -> Execute("SELECT w_time FROM tribe_replies WHERE topic_id=".$topic -> fields['id']);
-        if ($arrNewtopic[$i] == 'N')
-        {
-            while (!$query -> EOF)
-            {
-                if ($query -> fields['w_time'] > $_SESSION['tforums'])
-                {
-                    $arrNewtopic[$i] = 'Y';
-                    break;
-                }
-                $query -> MoveNext();
-            }
-        }
-        $arrrep[$i] = $query -> RecordCount();
+        $query = $db -> Execute("SELECT count(`id`) FROM `tribe_replies` WHERE `topic_id`=".$topic -> fields['id']);
+        $arrrep[$i] = $query->fields['count(`id`)'];
         $query -> Close();
         $arrtopic[$i] = $topic -> fields['topic'];
         $arrstarter[$i] = $topic -> fields['starter'];
@@ -359,7 +375,8 @@ if (isset($_GET['reply']))
     $_POST['rep'] = bbcodetohtml($_POST['rep']);
     $_POST['rep'] = "<b>".$data."</b><br />".$_POST['rep'];
     $strRep = $db -> qstr($_POST['rep'], get_magic_quotes_gpc());
-    $db -> Execute("INSERT INTO `tribe_replies` (`starter`, `topic_id`, `body`, `w_time`, `pid`) VALUES('".$player -> user."', ".$_GET['reply'].", ".$strRep." ,".$ctime.", ".$player -> id.")") or error("Could not add reply.");
+    $db -> Execute("INSERT INTO `tribe_replies` (`starter`, `topic_id`, `body`, `pid`) VALUES('".$player -> user."', ".$_GET['reply'].", ".$strRep." , ".$player -> id.")") or error("Could not add reply.");
+    $db->Execute("UPDATE `tribe_topics` SET `w_time`=".$ctime." WHERE `id`=".$_GET['reply']);
     error (REPLY_ADD." <a href=tforums.php?topic=".$_GET['reply'].">".A_HERE."</a>.");
 }
 

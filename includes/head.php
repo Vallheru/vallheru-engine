@@ -7,7 +7,7 @@
  *   @copyright            : (C) 2004,2005,2006,2007,2011 Vallheru Team based on Gamers-Fusion ver 2.5
  *   @author               : thindil <thindil@tuxfamily.org>
  *   @version              : 1.4
- *   @since                : 12.09.2011
+ *   @since                : 15.09.2011
  *
  */
 
@@ -127,10 +127,10 @@ function catcherror($errortype, $errorinfo, $errorfile, $errorline)
     $referer = explode("/", $_SERVER['HTTP_REFERER']);
     $elements1 = count($referer);
     $numrefer = $elements1 - 1;
-    /*echo $errorline."<br />";
+    echo $errorline."<br />";
     echo $errorfile."<br />";
-    echo $errorinfo."<br />";*/
-    $objtest = $db -> Execute("SELECT `id` FROM `bugtrack` WHERE `file`='".$file[$numfile]."' AND `line`=".$errorline." AND `info`='".$errorinfo."' AND `type`=".$errortype." AND `referer`='".$referer[$numrefer]."'");
+    echo $errorinfo."<br />";
+    /*$objtest = $db -> Execute("SELECT `id` FROM `bugtrack` WHERE `file`='".$file[$numfile]."' AND `line`=".$errorline." AND `info`='".$errorinfo."' AND `type`=".$errortype." AND `referer`='".$referer[$numrefer]."'");
     if ($objtest -> fields['id'] > 0)
       {
 	$db -> Execute("UPDATE `bugtrack` SET `amount`=`amount`+1 WHERE `id`=".$objtest -> fields['id']);
@@ -139,7 +139,7 @@ function catcherror($errortype, $errorinfo, $errorfile, $errorline)
       {
         $db -> Execute("INSERT INTO `bugtrack` (`type`, `info`, `file`, `line`, `referer`) VALUES(".$errortype.", '".$errorinfo."', '".$file[$numfile]."', ".$errorline.", '".$referer[$numrefer]."')");
       }
-    $objtest -> Close();
+      $objtest -> Close();*/
     if ($errortype == E_USER_ERROR || $errortype == E_ERROR) 
       {
         $smarty -> assign("Message", E_ERRORS);
@@ -605,10 +605,31 @@ else
     $strFunread = '[<a href="forums.php?view=newposts">'.$intFunread.'</a>]';
   }
 
-if ($player -> tribe) 
-{
-    $smarty -> assign ("Tforum", "<li><a href=\"tforums.php?view=topics\">".T_FORUM."</a></li>");
-}
+if ($player->tribe) 
+  {
+    $strTforum = "<li><a href=\"tforums.php?view=topics\">".T_FORUM."</a></li>";
+    if (!isset($_SESSION['tforums']))
+      {
+	$intForums2 = $player->tforumtime;
+      }
+    else
+      {
+	$intForums2 = $_SESSION['tforums'];
+      }
+    $arrForums2 = array();
+    $objFunread2 = $db->Execute("SELECT count(`id`) FROM `tribe_topics` WHERE `tribe`=".$player->tribe." AND `w_time`>".$intForums2) or die($db->ErrorMsg());
+    $intFunread2 = $objFunread2->fields['count(`id`)'];
+    $objFunread2->Close();
+    if ($intFunread2 == 0)
+      {
+	$strTforum .= ' [0]';
+      }
+    else
+      {
+	$strTforum .= '[<a href="tforums.php?view=newposts">'.$intFunread2.'</a>]';
+      }
+    $smarty->assign("Tforum", $strTforum);
+  }
 
 $intCtime = time() - 180;
 $objQuery = $db -> Execute("SELECT count(`id`) FROM `players` WHERE `page`='Chat' AND `lpv`>=".$intCtime);
