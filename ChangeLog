@@ -1,3 +1,8 @@
+2011-09-15  Bartek thindil Jasicki  <thindil@tuxfamily.org>
+
+	* BUG,travel.php, farm.php:
+	fixed few notices
+
 2011-09-14  Bartek thindil Jasicki  <thindil@tuxfamily.org>
 
 	* BUG,templates/layout1/outposts.tpl: 

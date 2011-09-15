@@ -7,7 +7,7 @@
  *   @copyright            : (C) 2004,2005,2006,2011 Vallheru Team based on Gamers-Fusion ver 2.5
  *   @author               : thindil <thindil@tuxfamily.org>
  *   @version              : 1.4
- *   @since                : 14.09.2011
+ *   @since                : 15.09.2011
  *
  */
  
@@ -208,6 +208,10 @@ function battle($strAddress)
  */
 if (isset($_GET['akcja']) && in_array($_GET['akcja'], array('gory', 'las', 'city2', 'powrot')))
   {
+    if (!isset($_GET['step']))
+      {
+	error(ERROR);
+      }
     if ($_GET['step'] != 'caravan' && $_GET['step'] != 'walk')
       {
         error(ERROR);
