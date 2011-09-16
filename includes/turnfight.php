@@ -7,7 +7,7 @@
  *   @copyright            : (C) 2004,2005,2006,2007,2011 Vallheru Team based on Gamers-Fusion ver 2.5
  *   @author               : thindil <thindil@tuxfamily.org>
  *   @version              : 1.4
- *   @since                : 14.09.2011
+ *   @since                : 16.09.2011
  *
  */
  
@@ -890,19 +890,30 @@ function attack($eunik,$bdamage)
                 $gwtbr = ($gwtbr + 1);
             }
         } 
-            elseif ($zmeczenie <= $player -> cond) 
+	elseif ($zmeczenie <= $player -> cond) 
         {
             if ($arrEquip[0][0] || $arrEquip[1][0]) 
-            {
-                $ehp = ($ehp - $stat['damage']);
-                $smarty -> assign ("Message", YOU_ATTACK1." ".$name." <b>".$enemy['name']."</b> ".INFLICT." <b>".$stat['damage']."</b> ".DAMAGE."! (".$ehp." ".LEFT.")</font><br />");
-                $smarty -> display ('error1.tpl');
-                $gwtbr = ($gwtbr + 1);
-                if ($stat['damage'] > 0) 
-                {
-                    $gatak = ($gatak + 1);
-                }
-            }
+	      {
+		$gwtbr++;
+		$rzut = rand(1, 1000) / 10;
+		$intRoll = rand(1, 100);
+		if ($krytyk >= $rzut && $intRoll <= $krytyk) 
+		  {
+		    $gatak++;
+		    $ehp = 0;
+		    $smarty->assign("Message", "Jednym niezwykle celnym trafieniem powalasz ".$enemy['name']." na ziemię!<br />");
+		  }
+		else
+		  {
+		    $ehp -= $stat['damage'];
+		    $smarty -> assign ("Message", YOU_ATTACK1." ".$name." <b>".$enemy['name']."</b> ".INFLICT." <b>".$stat['damage']."</b> ".DAMAGE."! (".$ehp." ".LEFT.")</font><br />");
+		    if ($stat['damage'] > 0) 
+		      {
+			$gatak = ($gatak + 1);
+		      }
+		  }
+		$smarty -> display ('error1.tpl');
+	      }
         }
     }
     $_SESSION[$number] = $ehp;
@@ -1014,7 +1025,7 @@ function castspell ($id,$boost,$eunik)
             $smarty -> assign ("Message", "<b>".$enemy['name']."</b> ".ENEMY_DODGE."<br />");
             $smarty -> display ('error1.tpl');
         } 
-            else 
+	else 
         {
             if ($mczar -> fields['id'] && $player -> mana > $mczar -> fields['poziom']) 
             {
@@ -1033,13 +1044,24 @@ function castspell ($id,$boost,$eunik)
                         $lost_mana = 1;
                     }
                     $player -> mana = ($player -> mana - $lost_mana);
-                    $ehp = ($ehp - $stat['damage']);
-                    $smarty -> assign ("Message", YOU_HIT." <b>".$enemy['name']."</b> ".BY_SPELL." ".$mczar -> fields['nazwa']." ".INFLICT." <b>".$stat['damage']."</b> ".DAMAGE."! (".$ehp." ".LEFT.")</font><br />");
-                    $smarty -> display ('error1.tpl');
-                    if ($stat['damage'] > 0) 
-                    {
-                        $gmagia = ($gmagia + 1);
-                    }
+		    $rzut = rand(1, 1000) / 10;
+		    $intRoll = rand(1, 100);
+		    if ($krytyk >= $rzut && $intRoll <= $krytyk) 
+		      {
+			$gmagia++;
+			$ehp = 0;
+			$smarty->assign("Message", "Jednym niezwykle celnym trafieniem powalasz ".$enemy['name']." na ziemię!<br />");
+		      }
+		    else
+		      {
+			$ehp -= $stat['damage'];
+			$smarty -> assign ("Message", YOU_HIT." <b>".$enemy['name']."</b> ".BY_SPELL." ".$mczar -> fields['nazwa']." ".INFLICT." <b>".$stat['damage']."</b> ".DAMAGE."! (".$ehp." ".LEFT.")</font><br />");
+			if ($stat['damage'] > 0) 
+			  {
+			    $gmagia++;
+			  }
+		      }
+		    $smarty->display('error1.tpl');
                 } 
                     else 
                 {

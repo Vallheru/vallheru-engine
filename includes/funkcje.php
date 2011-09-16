@@ -7,7 +7,7 @@
  *   @copyright            : (C) 2004,2005,2006,2007,2011 Vallheru Team based on Gamers-Fusion ver 2.5
  *   @author               : thindil <thindil@tuxfamily.org>
  *   @version              : 1.4
- *   @since                : 13.09.2011
+ *   @since                : 16.09.2011
  *
  */
 
@@ -386,7 +386,7 @@ function monsterattack2($intMydodge, &$zmeczenie, &$gunik, $arrEquip, &$enemy, $
 /**
  * Function made player attack
  */
-function playerattack($eunik, &$gwtbr, $arrEquip, $mczar, &$zmeczenie, &$gatak, $stat, &$enemy, &$gmagia, $times, $intPldamage)
+function playerattack($eunik, &$gwtbr, $arrEquip, $mczar, &$zmeczenie, &$gatak, $stat, &$enemy, &$gmagia, $times, $intPldamage, $krytyk)
 {
   global $player;
   global $smarty;
@@ -425,6 +425,37 @@ function playerattack($eunik, &$gwtbr, $arrEquip, $mczar, &$zmeczenie, &$gatak, 
       //Player hit
       else
 	{
+	  //Critical hit
+	  $rzut = rand(1, 1000) / 10;
+	  $intRoll = rand(1, 100);
+	  if ($krytyk >= $rzut && $intRoll <= $krytyk)
+            {
+	      $enemy['hp'] = 0;
+	      //Hit with weapon
+	      if (($arrEquip[0][6] > $gwtbr || ($arrEquip[1][6] > $gwtbr && $arrEquip[6][6] > $gwtbr)) && ($arrEquip[0][0] || $arrEquip[1][0])) 
+		{
+		  $gwtbr++;
+		  $gatak++;
+		}
+	      //Hit with spell
+	      if ($mczar -> fields['id'] && $player -> mana > $mczar -> fields['poziom']) 
+		{
+		  $lost_mana = ceil($mczar -> fields['poziom'] / 2.5);
+		  $lost_mana = $lost_mana - (int)($player -> magic / 25);
+		  if ($lost_mana < 1)
+		    {
+		      $lost_mana = 1;
+		    }
+		  $player -> mana = ($player -> mana - $lost_mana);
+		  $gmagia++;
+		}
+	      if ($times == 1)
+		{
+		  $smarty->assign("Message", "Jednym niezwykle celnym trafieniem powalasz ".$enemy['name']." na ziemię!<br />");
+		  $smarty->display('error1.tpl');
+		}
+	      return FALSE;
+	    }
 	  //Hit with weapon
 	  if (($arrEquip[0][6] > $gwtbr || ($arrEquip[1][6] > $gwtbr && $arrEquip[6][6] > $gwtbr)) && ($arrEquip[0][0] || $arrEquip[1][0])) 
 	    {
@@ -918,7 +949,7 @@ function fightmonster($enemy, $expgain, $goldgain, $times)
             {
                 if ($enemy['hp'] > 0 && $player -> hp > 0) 
 		  {
-		    if (!playerattack($eunik, $gwtbr, $arrEquip, $mczar, $zmeczenie, $gatak, $stat, $enemy, $gmagia, $times, $intPldamage))
+		    if (!playerattack($eunik, $gwtbr, $arrEquip, $mczar, $zmeczenie, $gatak, $stat, $enemy, $gmagia, $times, $intPldamage, $krytyk))
 		      {
 			break;
 		      }
@@ -992,7 +1023,7 @@ function fightmonster($enemy, $expgain, $goldgain, $times)
             {
                 if ($enemy['hp'] > 0 && $player -> hp > 0) 
 		  {
-                    if (!playerattack($eunik, $gwtbr, $arrEquip, $mczar, $zmeczenie, $gatak, $stat, $enemy, $gmagia, $times, $intPldamage))
+                    if (!playerattack($eunik, $gwtbr, $arrEquip, $mczar, $zmeczenie, $gatak, $stat, $enemy, $gmagia, $times, $intPldamage, $krytyk))
 		      {
 			break;
 		      }
