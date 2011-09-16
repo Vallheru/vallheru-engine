@@ -8,7 +8,7 @@
  *   @author               : thindil <thindil@tuxfamily.org>
  *   @author               : eyescream <tduda@users.sourceforge.net>
  *   @version              : 1.4
- *   @since                : 12.09.2011
+ *   @since                : 16.09.2011
  *
  */
  
@@ -104,8 +104,7 @@ function wear($eid,$vid,$type,$powertype)
         $db -> Execute("UPDATE equipment SET amount=amount-1 WHERE id=".$eid." AND owner=".$player -> id);
     }
     $item1 -> Close();
-    $db -> Execute("UPDATE outpost_veterans SET ".$type."='".$item[0]."' WHERE id=".$vid);
-    $db -> Execute("UPDATE outpost_veterans SET ".$powertype."=".$item[1]." WHERE id=".$vid);
+    $db -> Execute("UPDATE `outpost_veterans` SET `".$type."`='".$item[0]."', `".$powertype."`=".$item[1]." WHERE `id`=".$vid);
     return $info;
 }
 
@@ -977,14 +976,12 @@ if (isset ($_GET['view']) && $_GET['view'] == 'taxes')
         $fltBonus = ($intGaingold * ($out -> fields['btax'] / 100));
         $intBonus = round($fltBonus, "0");
         $intGaingold = (int)($intGaingold + $intBonus);
-        $intFatigue = $out -> fields['fatigue'] + (10 * $_POST['amount']);
-        if ($intFatigue > 100)
+        $intFatigue = $out -> fields['fatigue'] - (10 * $_POST['amount']);
+        if ($intFatigue < 0)
         {
-            $intFatigue = 100;
+            $intFatigue = 0;
         }
-        $db -> Execute("UPDATE outposts SET fatigue=".$intFatigue." WHERE id=".$out -> fields['id']);
-        $db -> Execute("UPDATE outposts SET gold=gold+".$intGaingold." WHERE id=".$out -> fields['id']);
-        $db -> Execute("UPDATE outposts SET turns=turns-".$_POST['amount']." WHERE id=".$out -> fields['id']);
+        $db -> Execute("UPDATE `outposts` SET `fatigue`=".$intFatigue.", `gold`=`gold`+".$intGaingold.", `turns`=`turns`-".$_POST['amount']." WHERE `id`=".$out -> fields['id']);
         $smarty -> assign ("Message", YOU_ARMY.$_POST['amount'].TIMES_FOR.$intGaingold.GOLD_COINS);
     }
 }
@@ -1306,10 +1303,8 @@ if (isset ($_GET['view']) && $_GET['view'] == 'shop')
         {
             error (NO_MONEY.' '.YOU_NEED.': '.($intNeededMeteor * 50).' '.GOLD_COINS.', '.$intNeededMeteor.' '.METEOR_PIECES. ', '.($intNeededMeteor * 5).' '.ADAMANTIUM_PIECES);
         }
-        $db -> Execute('UPDATE outposts SET gold=gold-'.($intNeededMeteor * 50).' WHERE id='.$out -> fields['id']);
-        $db -> Execute('UPDATE minerals SET meteor=meteor-'.$intNeededMeteor.' WHERE owner='.$out -> fields['owner']);
-        $db -> Execute('UPDATE minerals SET adamantium=adamantium-'.($intNeededMeteor * 5).' WHERE owner='.$out -> fields['owner']);
-        $db -> Execute('UPDATE outposts SET barracks=barracks+'.$_POST['amount'].' WHERE id='.$out -> fields['id']);
+        $db -> Execute('UPDATE `outposts` SET `gold`=`gold`-'.($intNeededMeteor * 50).', `barracks`=`barracks`+'.$_POST['amount'].' WHERE `id`='.$out -> fields['id']);
+        $db -> Execute('UPDATE `minerals` SET `meteor`=`meteor`-'.$intNeededMeteor.', `adamantium`=`adamantium`-'.($intNeededMeteor * 5).' WHERE `owner`='.$out -> fields['owner']);
         $smarty -> assign ("Message", YOU_ADD.' <b>'.($_POST['amount'] + $out -> fields['barracks']).'</b> (+'.$_POST['amount'].') '.YOU_PAID.': '.($intNeededMeteor * 50).' '.GOLD_COINS.', '.$intNeededMeteor.                 ' '.METEOR_PIECES.', '.($intNeededMeteor * 5).' '.ADAMANTIUM_PIECES.'. <a href=outposts.php?view=shop>'.A_REFRESH.'</a>');
     }
 
@@ -1322,8 +1317,9 @@ if (isset ($_GET['view']) && $_GET['view'] == 'shop')
         {
             error(NO_MONEY);
         }
-        $query = $db -> Execute("SELECT id FROM outpost_monsters WHERE outpost=".$out -> fields['id']);
-        $nummonsters = $query -> RecordCount();
+	checkvalue($_POST['army']);
+        $query = $db -> Execute("SELECT count(`id`) FROM `outpost_monsters` WHERE `outpost`=".$out -> fields['id']);
+        $nummonsters = $query->fields['count(`id`)'];
         $query -> Close();
         if ($nummonsters >= $out -> fields['fence']) 
         {
@@ -1592,7 +1588,7 @@ if (isset ($_GET['view']) && $_GET['view'] == 'battle')
         {
             $_POST['amount'] = 1;
         }
-        if ($out -> fields['fatigue'] == 25)
+        if ($out -> fields['fatigue'] <= 25)
         {
             error(TOO_FAT);
         }
@@ -1641,7 +1637,7 @@ if (isset ($_GET['view']) && $_GET['view'] == 'battle')
         {
             error(TOO_MUCH_A);
         }
-        if ($out -> fields['fatigue'] == 25)
+        if ($out -> fields['fatigue'] <= 25)
         {
             error(TOO_FAT2);
         }
@@ -1835,7 +1831,7 @@ if (isset ($_GET['view']) && $_GET['view'] == 'battle')
             /**
             * Chceck fatigue of attacker army - if more than 75% - army cannot attack
             */
-            if ($myout -> fields['fatigue'] == 25)
+            if ($myout -> fields['fatigue'] <= 25)
             {
                 $arrmessage[$k] = $arrmessage[$k]."<br />".TOO_FAT2."<br />";
                 break;
