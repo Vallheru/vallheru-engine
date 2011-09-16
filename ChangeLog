@@ -1,5 +1,7 @@
 2011-09-16  Bartek thindil Jasicki  <thindil@tuxfamily.org>
 
+	* languages/pl/gory.php, languages/pl/las.php: 
+	fixed typo
 	* FEATURE,install/db/update.sql, class/player_class.php, includes/head.php, account.php, templates/layout1/account.tpl, templates/account.tpl: 
 	added option to set which forum categories player want to observe
 	* BUG,outposts.php: 
