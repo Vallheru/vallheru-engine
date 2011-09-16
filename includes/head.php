@@ -7,7 +7,7 @@
  *   @copyright            : (C) 2004,2005,2006,2007,2011 Vallheru Team based on Gamers-Fusion ver 2.5
  *   @author               : thindil <thindil@tuxfamily.org>
  *   @version              : 1.4
- *   @since                : 15.09.2011
+ *   @since                : 16.09.2011
  *
  */
 
@@ -369,6 +369,10 @@ if ($player -> graphic != '' || $player -> graphbar == 'Y')
                             "Vial3" => $intVial3));
 }
 
+$arrFilename = explode("/", $_SERVER['PHP_SELF']);
+$intKey = count($arrFilename) - 1;
+$strFilename = $arrFilename[$intKey];
+$strFname = substr($strFilename, 0, -4);
 $smarty -> assign (array ("Time" => $time,
                           "Date" => $newdate,
                           "Title" => $title1,
@@ -423,11 +427,9 @@ $smarty -> assign (array ("Time" => $time,
                           "Nlogout" => N_LOGOUT,
                           "Nhelp" => N_HELP,
                           "Nmap" => N_MAP,
-                          "Stephead" => ''));
+                          "Stephead" => '',
+			  "Filename" => $strFname));
 
-$arrFilename = explode("/", $_SERVER['PHP_SELF']);
-$intKey = count($arrFilename) - 1;
-$strFilename = $arrFilename[$intKey];
 if (isset($_GET['step']) && $strFilename == 'newspaper.php')
 {
     $arrFile = array('');
@@ -563,13 +565,13 @@ if ($intUnreadmails)
 /**
 * Delete sessions variables when player exit forums
 */
-if (isset($_SESSION['forums']) && (strpos($_SERVER['PHP_SELF'], "forums.php") === FALSE))
+if (isset($_SESSION['forums']) && ($strFilename != "forums.php"))
   {
     $db -> Execute("UPDATE `players` SET `forum_time`=".$ctime." WHERE `id`=".$player -> id);
     unset($_SESSION['forums']);
   }
 
-if (isset($_SESSION['tforums']) && (strpos($_SERVER['PHP_SELF'], "tforums.php") === FALSE))
+if (isset($_SESSION['tforums']) && ($strFilename != "tforums.php"))
 {
     unset($_SESSION['tforums']);
 }
@@ -585,15 +587,23 @@ else
   {
     $intForums = $_SESSION['forums'];
   }
-$arrForums = array();
-$objFcat = $db->Execute("SELECT `id` FROM `categories` WHERE `perm_visit` LIKE 'All;' AND `lang`='".$player -> lang."' OR `lang`='".$player -> seclang."'");
-while (!$objFcat -> EOF) 
+if ($player->forumcats == 'All')
   {
-    $arrForums[] = $objFcat->fields['id'];
-    $objFcat->MoveNext();
+    $objFcat = $db->Execute("SELECT `id` FROM `categories` WHERE `perm_visit` LIKE 'All;' AND `lang`='".$player -> lang."' OR `lang`='".$player -> seclang."'");
+    $arrForums = array();
+    while (!$objFcat -> EOF) 
+      {
+	$arrForums[] = $objFcat->fields['id'];
+	$objFcat->MoveNext();
+      }
+    $objFcat->Close();
+    $objFunread = $db->Execute("SELECT count(`id`) FROM `topics` WHERE `w_time`>".$intForums." AND `cat_id` IN(".implode(",", $arrForums).")") or die($db->ErrorMsg());
   }
-$objFcat->Close();
-$objFunread = $db->Execute("SELECT count(`id`) FROM `topics` WHERE `w_time`>".$intForums." AND `cat_id` IN(".implode(",", $arrForums).")") or die($db->ErrorMsg());
+else
+  {
+    $arrForums = explode(",", $player->forumcats);
+    $objFunread = $db->Execute("SELECT count(`id`) FROM `topics` WHERE `w_time`>".$intForums." AND `cat_id` IN(".$player->forumcats.")") or die($db->ErrorMsg());
+  }
 $intFunread = $objFunread->fields['count(`id`)'];
 $objFunread->Close();
 if ($intFunread == 0)

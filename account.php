@@ -7,7 +7,7 @@
  *   @copyright            : (C) 2004,2005,2006,2007,2011 Vallheru Team based on Gamers-Fusion ver 2.5
  *   @author               : thindil <thindil@tuxfamily.org>
  *   @version              : 1.4
- *   @since                : 12.09.2011
+ *   @since                : 16.09.2011
  *
  */
 
@@ -901,6 +901,114 @@ if (isset($_GET['view']) && $_GET['view'] == 'vallars')
   }
 
 /**
+ * Set observed forums
+ */
+if (isset($_GET['view']) && $_GET['view'] == 'forums')
+  {
+    /**
+     * Display categories viewable for all
+     */
+    $cat = $db -> Execute("SELECT `id`, `name` FROM `categories` WHERE `perm_visit` LIKE 'All;' ORDER BY `id` ASC");
+    $arrid = array();
+    $arrname = array();
+    $arrChecked = array();
+    $arrPlchecked = explode(",", $player->forumcats);
+    $i = 0;
+    while (!$cat -> EOF) 
+    {
+        $arrid[$i] = $cat -> fields['id'];
+        $arrname[$i] = $cat -> fields['name'];
+	if (in_array($cat->fields['id'], $arrPlchecked))
+	  {
+	    $arrChecked[$i] = 'checked="checked"';
+	  }
+	else
+	  {
+	    $arrChecked[$i] = '';
+	  }
+        $cat -> MoveNext();
+        $i ++;
+    }
+    $cat -> Close();
+    /**
+     * Display categories with permission to view
+     */
+    if ($player -> rank == 'Admin')
+    {
+        $strPermission = '%';
+    }
+    else
+    {
+        $strPermission = $player -> rank;
+    }
+    $cat = $db -> Execute("SELECT `id`, `name` FROM `categories` WHERE `perm_visit` LIKE '%".$strPermission."%' ORDER BY `id` ASC");
+    while (!$cat -> EOF) 
+    {
+        if (in_array($cat -> fields['id'], $arrid))
+        {
+            $cat -> MoveNext();
+            continue;
+        }
+        $arrid[$i] = $cat -> fields['id'];
+        $arrname[$i] = $cat -> fields['name'];
+	if (in_array($cat->fields['id'], $arrPlchecked))
+	  {
+	    $arrChecked[$i] = 'checked="checked"';
+	  }
+	else
+	  {
+	    $arrChecked[$i] = '';
+	  }
+        $cat -> MoveNext();
+        $i ++;
+    }
+    $cat -> Close();
+    if ($player->forumcats == 'All')
+      {
+	$strAllchecked = 'checked="checked"';
+	$strSchecked = '';
+      }
+    else
+      {
+	$strAllchecked = '';
+	$strSchecked = 'checked="checked"';
+      }
+    $smarty -> assign(array("Id" => $arrid, 
+			    "Name" => $arrname,
+			    "Achecked" => $strAllchecked,
+			    "Schecked" => $strSchecked,
+			    "Checked" => $arrChecked,
+			    "Aset" => "Ustaw",
+			    "Oall" => "Wszystkie",
+			    "Oselected" => "Wybrane poniżej",
+			    "Info" => "Poniżej możesz wybrać, które kategorie na forum chcesz obserwować. Jeżeli w wybranej kategorii znajdą się nowe wpisy, ich liczba zostanie podana przy odnośniku do forum."));
+    if (isset($_GET['step']) && $_GET['step'] == 'set')
+      {
+	$arrSet = array();
+	foreach ($arrid as $intFid)
+	  {
+	    if (isset($_POST[$intFid]))
+	      {
+		$arrSet[] = $intFid;
+	      }
+	  }
+	if (count($arrSet) == 0 && $_POST['forums'] == 'Selected')
+	  {
+	    error("Wybierz które katgorie chcesz subskrybować");
+	  }
+	if ($_POST['forums'] == 'All')
+	  {
+	    $strCats = 'All';
+	  }
+	else
+	  {
+	    $strCats = implode(",", $arrSet);
+	  }
+	$db->Execute("UPDATE `players` SET `forumcats`='".$strCats."' WHERE `id`=".$player->id);
+      }
+}
+
+/**
 * Initialization of variables
 */
 if (!isset($_GET['view'])) 
@@ -915,8 +1023,8 @@ if (!isset($_GET['step']))
 /**
 * Assign variables and display page
 */
-$arrStep = array('name', 'pass', 'profile', 'eci', 'avatar', 'reset', 'immu', 'style', 'lang', 'freeze', 'options', 'changes', 'vallars', 'bugreport', 'bugtrack', 'links');
-$arrLinks = array(A_NAME, A_PASS, A_PROFILE, A_EMAIL, A_AVATAR, A_RESET, A_IMMU, A_STYLE, A_LANG, A_FREEZE, A_OPTIONS, A_CHANGES, "Ostatnio nagrodzeni Vallarami", A_BUGREPORT, A_BUGTRACK, A_LINKS);
+$arrStep = array('name', 'pass', 'profile', 'eci', 'avatar', 'reset', 'immu', 'style', 'lang', 'freeze', 'options', 'changes', 'vallars', 'bugreport', 'bugtrack', 'links', 'forums');
+$arrLinks = array(A_NAME, A_PASS, A_PROFILE, A_EMAIL, A_AVATAR, A_RESET, A_IMMU, A_STYLE, A_LANG, A_FREEZE, A_OPTIONS, A_CHANGES, "Ostatnio nagrodzeni Vallarami", A_BUGREPORT, A_BUGTRACK, A_LINKS, 'Obserwowane fora');
 $smarty -> assign (array ("View" => $_GET['view'], 
                           "Step" => $_GET['step'],
                           "Welcome" => WELCOME,

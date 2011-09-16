@@ -41,3 +41,4 @@ UPDATE `bridge` SET `answer`=MD5(`answer`);
 ALTER TABLE `bridge` CHANGE `answer` `answer` VARCHAR( 32 ) CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL;
 ALTER TABLE `bridge` DROP `lang` ;
 ALTER TABLE `tribe_replies` DROP `w_time`;
+ALTER TABLE `players` ADD `forumcats` VARCHAR( 255 ) NOT NULL DEFAULT 'All';

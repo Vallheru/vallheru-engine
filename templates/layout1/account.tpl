@@ -262,3 +262,15 @@
         {/section}
     </ul>
 {/if}
+
+{if $View == "forums"}
+    {$Info}<br />
+    <form method="post" action="account.php?view=forums&amp;step=set">
+    <input type="radio" name="forums" value="All" {$Achecked} /> {$Oall}<br />
+    <input type="radio" name="forums" value="Selected" {$Schecked} /> {$Oselected}<br />
+    {section name=forums loop=$Name}
+        <input type="checkbox" name="{$Id[forums]}" {$Checked[forums]} /> {$Name[forums]}<br />
+    {/section}
+    <input type="submit" value="{$Aset}" />
+    </form>
+{/if}
