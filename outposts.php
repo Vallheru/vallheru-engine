@@ -976,10 +976,10 @@ if (isset ($_GET['view']) && $_GET['view'] == 'taxes')
         $fltBonus = ($intGaingold * ($out -> fields['btax'] / 100));
         $intBonus = round($fltBonus, "0");
         $intGaingold = (int)($intGaingold + $intBonus);
-        $intFatigue = $out -> fields['fatigue'] - (10 * $_POST['amount']);
-        if ($intFatigue < 0)
+        $intFatigue = $out -> fields['fatigue'] + (10 * $_POST['amount']);
+        if ($intFatigue > 100)
         {
-            $intFatigue = 0;
+            $intFatigue = 100;
         }
         $db -> Execute("UPDATE `outposts` SET `fatigue`=".$intFatigue.", `gold`=`gold`+".$intGaingold.", `turns`=`turns`-".$_POST['amount']." WHERE `id`=".$out -> fields['id']);
         $smarty -> assign ("Message", YOU_ARMY.$_POST['amount'].TIMES_FOR.$intGaingold.GOLD_COINS);

@@ -8,7 +8,7 @@
  *   @author               : thindil <thindil@tuxfamily.org>
  *   @author               : eyescream <tduda@users.sourceforge.net>
  *   @version              : 1.4
- *   @since                : 12.09.2011
+ *   @since                : 16.09.2011
  *
  */
 
@@ -103,6 +103,14 @@ if (isset ($_GET['action']) && $_GET['action'] == 'chat')
 	else
         {
             $message = $_POST['msg'];
+	    if ($message == strtolower("*rzuca kuflem w karczmarza*"))
+	      {
+		$strAnswer = "Ała, za co?";
+	      }
+	    elseif ($message == strtolower("*strzela do karczmarza*"))
+	      {
+		$strAnswer = "Ała, za co?";
+	      }
         }
         $test1 = explode("=", $_POST['msg']);
         if (is_numeric($test1[0]) && (count($test1) > 1)) 
