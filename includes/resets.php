@@ -7,7 +7,7 @@
  *   @copyright            : (C) 2004,2005,2006,2007,2011 Vallheru Team based on Gamers-Fusion ver 2.5
  *   @author               : thindil <thindil@tuxfamily.org>
  *   @version              : 1.4
- *   @since                : 06.09.2011
+ *   @since                : 17.09.2011
  *
  */
 
@@ -122,9 +122,11 @@ function mainreset()
     /**
      * Outposts taxes
      */
+    $data = date("y-m-d");
+    $strDate = $db -> DBDate($data);
     $intOutSize = 1;
-    $outcost = $db -> Execute("SELECT `id`, `warriors`, `archers`, `catapults`, `gold`, `bcost`, `size` FROM `outposts`");
-    while (!$outcost -> EOF) 
+    $outcost = $db -> Execute("SELECT `id`, `warriors`, `archers`, `catapults`, `gold`, `bcost`, `size`, `owner` FROM `outposts`");
+    while (!$outcost->EOF) 
     {
         $cost = ($outcost -> fields['warriors'] * 7) + ($outcost -> fields['archers'] * 7) + ($outcost -> fields['catapults'] * 14);
         $query = $db -> Execute("SELECT count(*) FROM `outpost_monsters` WHERE `outpost`=".$outcost -> fields['id']);
@@ -138,6 +140,11 @@ function mainreset()
         $bonus = ($cost * ($outcost -> fields['bcost'] / 100));
         $bonus = round($bonus, "0");
         $cost = $cost - $bonus;
+	if ($outcost->fields['gold'] < ($cost * 2))
+	  {
+	    $time = date("Y-m-d H:i:s");
+	    $db->Execute("INSERT INTO `log` (`owner`, `log`, `czas`, `type`) VALUES(".$outcost->fields['owner'].", 'Żołnierze w strażnicy niepokoją się. Może zabraknąć pieniędzy na kolejną wypłatę.', '".$time."', 'O')") or die ($db->ErrorMsg());
+	  }
         if ($outcost -> fields['gold'] >= $cost) 
         {
             $tax = $outcost -> fields['gold'] - $cost;
@@ -489,8 +496,6 @@ function mainreset()
     /**
      * Show new news
      */
-    $data = date("y-m-d");
-    $strDate = $db -> DBDate($data);
     $db -> Execute("UPDATE news SET `show`='Y', `pdate`=".$strDate." WHERE `show`='N' AND `added`='Y' ORDER BY `id` ASC LIMIT 1");
     /**
      * Astral machine
