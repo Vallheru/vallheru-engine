@@ -3,8 +3,6 @@
 {$IP}<br />
 {$GG}
 <b>{$Tfreezed}</b>
-{$Tlang}: {$Lang}<br />
-{$Tseclang}
 {$Trank}: {$Rank}<br />
 {$Tlocation}: {$Location}<br />
 {$Immu}

@@ -1,5 +1,8 @@
 2011-09-17  Bartek thindil Jasicki  <thindil@tuxfamily.org>
 
+	* FEATURE,templates/layout1/account.tpl, templates/layout1/view.tpl, templates/account.tpl, templates/view.tpl, templates/register.tpl,
+	account.php, view.php, register.php: 
+	removed player language
 	* FEATURE,includes/resets.php:
 	added log info if here no enough gold for outpost taxes
 

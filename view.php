@@ -63,7 +63,6 @@ $smarty -> assign (array("User" => $view -> user,
                          "Gender" => '', 
                          "Deity" => '', 
                          "IP" => '',
-                         "Tseclang" => '',
                          "Trank" => T_RANK,
                          "Tlocation" => T_LOCATION,
                          "Tlastseen" => T_LAST_SEEN,
@@ -78,8 +77,7 @@ $smarty -> assign (array("User" => $view -> user,
                          "Tlastkilled" => T_LAST_KILLED,
                          "Trefs" => T_REFS,
                          "Tprofile" => T_PROFILE,
-                         "Toptions" => T_OPTIONS,
-                         "Tlang" => T_LANG));
+                         "Toptions" => T_OPTIONS));
 $plik = 'avatars/'.$view -> avatar;
 if (is_file($plik)) 
 {
@@ -97,11 +95,6 @@ if (!empty($view -> gg))
  */
 require_once('includes/ranks.php');
 $strRank = selectrank($view -> rank, $view -> gender);
-
-if($view -> seclang)
-{
-    $smarty -> assign("Tseclang", T_SEC_LANG.$view -> seclang."<br />");
-}
 
 if ($view -> immunited == 'Y') 
 {
@@ -134,8 +127,7 @@ $smarty -> assign(array("Page" => $strViewpage,
                         "Lastkilled" => $view -> lastkilled, 
                         "Lastkilledby" => $view -> lastkilledby, 
                         "Profile" => $view -> profile,
-			"Refs" => $view->vallars,
-                        "Lang" => $view -> lang));
+			"Refs" => $view->vallars));
 
 if ($view -> wins || $view -> losses)
 {

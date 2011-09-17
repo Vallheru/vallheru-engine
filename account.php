@@ -254,51 +254,6 @@ if (isset($_GET['view']) && $_GET['view'] == 'bugreport')
 }
 
 /**
-* Select game localization
-*/
-if (isset ($_GET['view']) && $_GET['view'] == "lang") 
-  {
-    /**
-     * Check avaible languages
-     */
-    $arrLanguage = scandir('languages/', 1);
-    $arrLanguage = array_diff($arrLanguage, array(".", "..", "index.htm"));
-    
-    /**
-    * Show select menu
-    */
-    $smarty -> assign(array("Langinfo" => LANG_INFO,
-                            "Flang" => F_LANG,
-                            "Slang" => S_LANG,
-                            "Aselect" => A_SELECT,
-                            "Lang" => $arrLanguage));
-
-    /**
-    * Write selected information to database
-    */
-    if (isset ($_GET['step']) && $_GET['step'] == 'lang') 
-    {
-        if (!isset($_POST['mainlang']) || !isset($_POST['seclang']))
-        {
-            error(EMPTY_FIELDS);
-        }
-        if (!in_array($_POST['mainlang'], $arrLanguage) || !in_array($_POST['seclang'], $arrLanguage))
-        {
-            error(ERROR);
-        }
-        $db -> Execute("UPDATE players SET lang='".$_POST['mainlang']."' WHERE id=".$player -> id);
-        $strMessage = YOU_SELECT.$_POST['mainlang'];
-        if ($_POST['seclang'] != $_POST['mainlang'] || isset($player -> seclang))
-        {
-            $db -> Execute("UPDATE players SET seclang='".$_POST['seclang']."' WHERE id=".$player -> id);
-            $strMessage = $strMessage.AND_SECOND.$_POST['seclang'];
-        }
-        $strMessage = $strMessage." <a href=\"account.php\">".A_REFRESH."</a>";
-        $smarty -> assign("Message", $strMessage);
-    }
-  }
-
-/**
  * Display info about changes in game
  */
 if (isset($_GET['view']) && $_GET['view'] == 'changes')
@@ -1023,8 +978,8 @@ if (!isset($_GET['step']))
 /**
 * Assign variables and display page
 */
-$arrStep = array('name', 'pass', 'profile', 'eci', 'avatar', 'reset', 'immu', 'style', 'lang', 'freeze', 'options', 'changes', 'vallars', 'bugreport', 'bugtrack', 'links', 'forums');
-$arrLinks = array(A_NAME, A_PASS, A_PROFILE, A_EMAIL, A_AVATAR, A_RESET, A_IMMU, A_STYLE, A_LANG, A_FREEZE, A_OPTIONS, A_CHANGES, "Ostatnio nagrodzeni Vallarami", A_BUGREPORT, A_BUGTRACK, A_LINKS, 'Obserwowane fora');
+$arrStep = array('name', 'pass', 'profile', 'eci', 'avatar', 'reset', 'immu', 'style', 'freeze', 'options', 'changes', 'vallars', 'bugreport', 'bugtrack', 'links', 'forums');
+$arrLinks = array(A_NAME, A_PASS, A_PROFILE, A_EMAIL, A_AVATAR, A_RESET, A_IMMU, A_STYLE, A_FREEZE, A_OPTIONS, A_CHANGES, "Ostatnio nagrodzeni Vallarami", A_BUGREPORT, A_BUGTRACK, A_LINKS, 'Obserwowane fora');
 $smarty -> assign (array ("View" => $_GET['view'], 
                           "Step" => $_GET['step'],
                           "Welcome" => WELCOME,

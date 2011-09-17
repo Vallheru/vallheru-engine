@@ -112,26 +112,6 @@
     {/if}
 {/if}
 
-{if $View == "lang"}
-    {$Langinfo}
-    <form method="post" action="account.php?view=lang&amp;step=lang">
-    {$Flang} <select name="mainlang">
-    {section name=account2 loop=$Lang}
-        <option value="{$Lang[account2]}">{$Lang[account2]}</option>
-    {/section}
-    </select><br />
-    {$Slang} <select name="seclang">
-    {section name=account3 loop=$Lang}
-        <option value="{$Lang[account3]}">{$Lang[account3]}</option>
-    {/section}
-    </select><br />
-    <input type="submit" value="{$Aselect}" />
-    </form>
-    {if $Step == "lang"}
-        {$Message}
-    {/if}
-{/if}
-
 {if $View == "immu"}
     {$Immuinfo}?<br />
     - <a href="account.php?view=immu&amp;step=yes">{$Yes}</a><br />

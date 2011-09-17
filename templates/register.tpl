@@ -12,13 +12,8 @@
     <div class="forms2">{$Email}: <input type="text" name="email" /></div>
     <div class="forms2">{$Confemail} <input type="text" name="vemail" /></div>
     <div class="forms2">{$Password}: <input type="password" name="pass" /></div>
-    <div class="forms3">{$Referralid} <input type="text" name="ref" readonly="readonly" value="{$Referal}" /></div>
-	<div class="forms4"><em>{$Ifnoid}</em></div>
-    <div class="forms5">{$Tlang} <select name="lang">
-    {section name=register loop=$Lang}
-        <option value="{$Lang[register]}">{$Lang[register]}</option>
-    {/section}
-    </select></div>
+    <div class="forms2">{$Referralid} <input type="text" name="ref" readonly="readonly" value="{$Referal}" /></div>
+    <div class="forms2"><em>{$Ifnoid}</em></div>
     <div class="forms2"><input type="submit" value="{$Register}" /></div>
     </form>
 
