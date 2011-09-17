@@ -9,7 +9,7 @@
  *   @author               : yeskov <yeskov@users.sourceforge.net>
  *   @author               : eyescream <tduda@users.sourceforge.net>
  *   @version              : 1.4
- *   @since                : 14.09.2011
+ *   @since                : 16.09.2011
  *
  */
 
@@ -457,85 +457,113 @@ if (isset ($_GET['action']) && $_GET['action'] == 'items')
 /**
 * Bank robbery
 */
-if ((isset ($_GET['action']) && $_GET['action'] == 'steal') && $player -> clas == 'Złodziej') 
+if ((isset ($_GET['action']) && $_GET['action'] == 'steal') && $player->clas == 'Złodziej') 
 {
+    checkvalue($_POST['tp']);
+    if ($_POST['tp'] > 12)
+      {
+	error("Nie możesz przeznaczyć aż tylu punktów kradzieży (maksymalnie 12).");
+      }
+    if ($_POST['tp'] > $player->crime)
+      {
+	error("Nie masz tylu punktów kradzieży!");
+      }
     require_once("includes/checkexp.php");
-    if ($player -> crime <= 0) 
-    {
-        error (NO_CRIME);
-    }
-    $roll = rand (1, ($player -> level * 100));
-    /**
-     * Add bonus from bless
-     */
-    $strBless = FALSE;
-    $objBless = $db -> Execute("SELECT bless, blessval FROM players WHERE id=".$player -> id);
-    if ($objBless -> fields['bless'] == 'inteli')
-    {
-        $player -> inteli = $player -> inteli + $objBless -> fields['blessval'];
-        $strBless = 'inteli';
-    }
-    if ($objBless -> fields['bless'] == 'agility')
-    {
-        $player -> agility = $player -> agility + $objBless -> fields['blessval'];
-        $strBless = 'agility';
-    }
-    $objBless -> Close();
-    if ($strBless)
-    {
-        $db -> Execute("UPDATE players SET bless='', blessval=0 WHERE id=".$player -> id);
-    }
+    $intMax = (50 - ($_POST['tp'] * 2)) * $player->level;
+    $roll = rand (1, $intMax);
+    if ($roll == 1)
+      {
+	$chance = 0;
+      }
+    elseif ($roll == $intMax)
+      {
+	$chance = 1000000;
+      }
+    else
+      {
+	/**
+	 * Add bonus from bless
+	 */
+	$strBless = FALSE;
+	$objBless = $db -> Execute("SELECT bless, blessval FROM players WHERE id=".$player -> id);
+	if ($objBless -> fields['bless'] == 'inteli')
+	  {
+	    $player -> inteli = $player -> inteli + $objBless -> fields['blessval'];
+	    $strBless = 'inteli';
+	  }
+	elseif ($objBless -> fields['bless'] == 'agility')
+	  {
+	    $player -> agility = $player -> agility + $objBless -> fields['blessval'];
+	    $strBless = 'agility';
+	  }
+	elseif ($objBless -> fields['bless'] == 'speed')
+	  {
+	    $player->speed = $player->speed + $objBless -> fields['blessval'];
+	    $strBless = 'speed';
+	  }
+	$objBless -> Close();
+	if ($strBless)
+	  {
+	    $db -> Execute("UPDATE players SET bless='', blessval=0 WHERE id=".$player -> id);
+	  }
+	
+	/**
+	 * Add bonus from rings
+	 */
+	$arrEquip = $player -> equipment();
+	$arrRings = array('zręczności', 'inteligencji', 'szybkości');
+	$arrStat = array('agility', 'inteli', 'speed');
+	if ($arrEquip[9][0])
+	  {
+	    $arrRingtype = explode(" ", $arrEquip[9][1]);
+	    $intAmount = count($arrRingtype) - 1;
+	    $intKey = array_search($arrRingtype[$intAmount], $arrRings);
+	    if ($intKey != NULL)
+	      {
+		$strStat = $arrStat[$intKey];
+		$player -> $strStat = $player -> $strStat + $arrEquip[9][2];
+	      }
+	  }
+	if ($arrEquip[10][0])
+	  {
+	    $arrRingtype = explode(" ", $arrEquip[10][1]);
+	    $intAmount = count($arrRingtype) - 1;
+	    $intKey = array_search($arrRingtype[$intAmount], $arrRings);
+	    if ($intKey != NULL)
+	      {
+		$strStat = $arrStat[$intKey];
+		$player -> $strStat = $player -> $strStat + $arrEquip[10][2];
+	      }
+	  }
 
-    /**
-     * Add bonus from rings
-     */
-    $arrEquip = $player -> equipment();
-    $arrRings = array('zręczności', 'inteligencji');
-    $arrStat = array('agility', 'inteli');
-    if ($arrEquip[9][0])
-    {
-        $arrRingtype = explode(" ", $arrEquip[9][1]);
-        $intAmount = count($arrRingtype) - 1;
-        $intKey = array_search($arrRingtype[$intAmount], $arrRings);
-        if ($intKey != NULL)
-        {
-            $strStat = $arrStat[$intKey];
-            $player -> $strStat = $player -> $strStat + $arrEquip[9][2];
-        }
-    }
-    if ($arrEquip[10][0])
-    {
-        $arrRingtype = explode(" ", $arrEquip[10][1]);
-        $intAmount = count($arrRingtype) - 1;
-        $intKey = array_search($arrRingtype[$intAmount], $arrRings);
-        if ($intKey != NULL)
-        {
-            $strStat = $arrStat[$intKey];
-            $player -> $strStat = $player -> $strStat + $arrEquip[10][2];
-        }
-    }
-
-    $chance = ($player->agility + $player->inteli + $player->thievery) - $roll;
+	$chance = ($player->agility + $player->inteli + $player->thievery + $player->speed) - $roll;
+      }
     if ($chance < 1) 
-    {
+      {
         $cost = 1000 * $player -> level;
         $expgain = ceil($player -> level / 10);
         checkexp($player -> exp, $expgain, $player -> level, $player -> race, $player -> user, $player -> id, 0, 0, $player -> id, 'thievery', 0.01);
-        $db -> Execute("UPDATE players SET miejsce='Lochy', crime=crime-1 WHERE id=".$player -> id);
+        $db -> Execute("UPDATE players SET miejsce='Lochy', crime=crime-".$_POST['tp']." WHERE id=".$player -> id);
         $strDate = $db -> DBDate($newdate);
         $db -> Execute("INSERT INTO `jail` (`prisoner`, `verdict`, `duration`, `cost`, `data`) VALUES(".$player -> id.", '".VERDICT."', 7, ".$cost.", ".$strDate.")") or error (E_DB4);
         $db -> Execute("INSERT INTO `log` (`owner`, `log`, `czas`, `type`) VALUES(".$player -> id.",'".L_REASON.": ".$cost.".','".$newdate."', 'T')");
         error (C_CACHED);
-    }
-    if ($chance > 0) 
-    {
+      }
+    else 
+      { 
         $gain = $player -> level * 1000;
         $expgain = ($player -> level * 10);
 	$fltThief = ($player->level / 100);
-        $db -> Execute("UPDATE `players` SET `crime`=`crime`-1, `credits`=`credits`+".$gain." WHERE `id`=".$player -> id);
+	if ($chance == 1000000)
+	  {
+	    $gain = 2 * $gain;
+	    $expgain = 2 * $expgain;
+	    $fltThief = 2 * $fltThief;
+	  }
+        $db -> Execute("UPDATE `players` SET `crime`=`crime`-".$_POST['tp'].", `credits`=`credits`+".$gain." WHERE `id`=".$player -> id);
         checkexp($player -> exp, $expgain, $player -> level, $player -> race, $player -> user, $player -> id, 0, 0, $player -> id, 'thievery', $fltThief);
         error (C_SUCCES.$gain.C_SUCCES2." Zdobyłeś ".$fltThief." w umiejętności Złodziejstwo.");
-    }
+      }
 }
 
 /**
@@ -768,10 +796,13 @@ if (!isset($_GET['action']) || (isset($_GET['action']) && $_GET['action'] != 'as
     /**
      * Steal action (only for thief)
      */
-    if ($player -> clas == 'Złodziej' && $player -> crime > 0) 
-    {
-        $smarty -> assign ("Crime", "<br><br><br><br><a href=\"bank.php?action=steal\">".A_CRIME."</a>");
-    }
+    if ($player->clas == 'Złodziej' && $player->crime > 0) 
+      {
+	$smarty->assign(array("Crime" => "Y",
+			      "Asteal" => "Okradnij",
+			      "Tcrime" => "bank przeznaczając na to",
+			      "Ttp" => "punktów kradzieży (maksymalnie 12 punktów)."));
+      }
 }
 
 /**

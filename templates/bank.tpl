@@ -69,7 +69,11 @@
         </form>
     {/if}
 
-    {$Crime}
+    {if $Crime == 'Y'}
+        <form method="post" action="bank.php?action=steal">
+	    <br /><br /><input type="submit" value="{$Asteal}" /> {$Tcrime} <input type="text" size="5" name="tp" value="1" /> {$Ttp}
+	</form>
+    {/if}
 
 {/if}
 
