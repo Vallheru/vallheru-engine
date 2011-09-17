@@ -8,7 +8,7 @@
  *   @author               : thindil <thindil@tuxfamily.org>
  *   @author               : eyescream <tduda@users.sourceforge.net>
  *   @version              : 1.4
- *   @since                : 16.09.2011
+ *   @since                : 17.09.2011
  *
  */
 
@@ -101,17 +101,35 @@ if (isset ($_GET['action']) && $_GET['action'] == 'chat')
             }
         }
 	else
-        {
+	  {
             $message = $_POST['msg'];
-	    if ($message == strtolower("*rzuca kuflem w karczmarza*"))
+	    //Throwing/shooting in inn
+	    if (stripos($message, "*rzuca") === 0 || stripos($message, "*strzela do") === 0)
 	      {
-		$strAnswer = "Ała, za co?";
+		$arrEnd = array("karczmarza*", "barnab", "barda*");
+		$arrTarget = array("Karczmarz", "Barnaba", "Bard");
+		$intIndex = -1;
+		for ($i = 0; $i < count($arrEnd); $i++)
+		  {
+		    if (stripos($message, $arrEnd[$i]) !== FALSE)
+		      {
+			$intIndex = $i;
+			break;
+		      }
+		  }
+		if ($intIndex > -1)
+		  {
+		    $arrAnswers = array("Ała, za co?",
+					$player->user." jednym niezwykle celnym trafieniem powala cel na ziemię. ".$player->user." dostaje gazylion PD i jeszcze więcej do umiejętności Powalanie.",
+					"*".$player->user." nie trafia celu.* Buahahahahaha",
+					"*".$arrTarget[$intIndex]." zgrabnym ruchem unika trafienia.*",
+					"*".$arrTarget[$intIndex]." odpowiada ogniem ciągłym.*");
+		    $intIndex2 = rand(0, count($arrAnswers) - 1);
+		    $strTarget = "<i>".$arrTarget[$intIndex]."</i>";
+		    $strMessage = $arrAnswers[$intIndex2];
+		  }
 	      }
-	    elseif ($message == strtolower("*strzela do karczmarza*"))
-	      {
-		$strAnswer = "Ała, za co?";
-	      }
-        }
+	  }
         $test1 = explode("=", $_POST['msg']);
         if (is_numeric($test1[0]) && (count($test1) > 1)) 
         {
@@ -137,6 +155,10 @@ if (isset ($_GET['action']) && $_GET['action'] == 'chat')
         {
             $db -> Execute("INSERT INTO `chat` (`user`, `chat`, `senderid`, `ownerid`) VALUES('".$starter."', '".$message."',".$player -> id.",".$owner.")");
         }
+	if (isset($strTarget))
+	  {
+	    $db -> Execute("INSERT INTO `chat` (`user`, `chat`) VALUES('".$strTarget."', '".$strMessage."')");
+	  }
         $intLpv = (time() - 180);
         $objInnkeeper = $db -> Execute("SELECT `user` FROM `players` WHERE `rank`='Karczmarka' AND `page`='Chat' AND `lpv`>=".$intLpv);
         if (!$objInnkeeper -> fields['user'])
