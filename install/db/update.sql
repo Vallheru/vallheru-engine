@@ -42,3 +42,7 @@ ALTER TABLE `bridge` CHANGE `answer` `answer` VARCHAR( 32 ) CHARACTER SET utf8 C
 ALTER TABLE `bridge` DROP `lang` ;
 ALTER TABLE `tribe_replies` DROP `w_time`;
 ALTER TABLE `players` ADD `forumcats` VARCHAR( 255 ) NOT NULL DEFAULT 'All';
+ALTER TABLE `mail` ADD FULLTEXT (
+`subject` ,
+`body`
+);

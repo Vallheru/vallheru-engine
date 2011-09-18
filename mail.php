@@ -43,10 +43,65 @@ if (!isset($_GET['view']) && !isset($_GET['read']) && !isset($_GET['zapisz']) &&
                             "Aoutbox" => A_OUTBOX,
                             "Asaved" => A_SAVED,
                             "Awrite" => A_WRITE,
-                            "Ablocklist" => A_BLOCK_LIST));
+                            "Ablocklist" => A_BLOCK_LIST,
+			    "Asearch" => "Szukaj wiadomości"));
 }
 
 $strQuery = '';
+if (isset($_GET['page']))
+  {
+    checkvalue($_GET['page']);
+    $intPage = $_GET['page'];
+  }
+
+/**
+ * Search mails.
+ */
+if (isset($_GET['view']) && $_GET['view'] == 'search')
+  {
+    $smarty->assign(array("Asearch" => "Szukaj",
+			  "Amount" => 0));
+    if (isset($_GET['step']))
+      {
+	if (!isset($_POST['search']))
+	  {
+	    error(ERROR);
+	  }
+	$_POST['search'] = strip_tags($_POST['search']);
+        $strSearch = $db -> qstr("*".$_POST['search']."*", get_magic_quotes_gpc());
+	$objAmount = $db->Execute("SELECT count(`id`) FROM `mail` WHERE `owner`=".$player->id." AND MATCH(`subject`, `body`) AGAINST (".$strSearch." IN BOOLEAN MODE)") or die($db -> ErrorMsg());
+	if ($objAmount->fields['count(`id`)'] == 0)
+	  {
+	    error("Nie znaleziono jakiejkolwiek wiadomości.");
+	  }
+	$intPages = ceil($objAmount->fields['count(`id`)'] / 30);
+	$objAmount->Close();
+	if (!isset($intPage))
+	  {
+	    $intPage = 1;
+	  }
+
+	$objMails = $db->SelectLimit("SELECT `id`, `sender`, `subject` FROM `mail` WHERE `owner`=".$player->id." AND MATCH(`subject`, `body`) AGAINST (".$strSearch." IN BOOLEAN MODE)", 30, 30 * ($intPage - 1)) or die($db -> ErrorMsg());
+	$arrsender = array();
+	$arrsubject = array();
+	$arrid = array();
+	while (!$objMails->EOF)
+	  {
+	    $arrsender[] = $objMails->fields['sender'];
+	    $arrsubject[] = $objMails->fields['subject'];
+	    $arrid[] = $objMails->fields['id'];
+	    $objMails->MoveNext();
+	  }
+	$objMails->Close();
+	$smarty->assign(array("Amount" => 1,
+			      "Senders" => $arrsender,
+			      "Subjects" => $arrsubject,
+			      "Mailid" => $arrid,
+			      "Tpages" => $intPages,
+			      "Tpage" => $intPage,
+			      "Fpage" => "Idź do strony:"));
+      }
+  }
 
 /**
  * Sorting of mails.
@@ -95,12 +150,6 @@ if (isset($_GET['view']) && in_array($_GET['view'], array('inbox', 'zapis', 'sen
 		$strQuery .= " AND `date`<".$strDate;
 	      }
 	  }
-      }
-
-    if (isset($_GET['page']))
-      {
-	checkvalue($_GET['page']);
-	$intPage = $_GET['page'];
       }
   }
 
@@ -286,7 +335,7 @@ if (isset ($_GET['view']) && $_GET['view'] == 'send')
 	$intPage = 1;
       }
 
-    $mail = $db -> Execute("SELECT * FROM mail WHERE send!=0 AND owner=".$player->id.$strQuery." ORDER BY id DESC");
+    $mail = $db->SelectLimit("SELECT * FROM mail WHERE send!=0 AND owner=".$player->id.$strQuery." ORDER BY id DESC", 30, 30 * ($intPage - 1));
     $arrsend = array();
     $arrsubject = array();
     $arrid = array();

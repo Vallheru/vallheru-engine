@@ -1,5 +1,7 @@
 2011-09-18  Bartek thindil Jasicki  <thindil@tuxfamily.org>
 
+	* FEATURE,install/db/update.sql, templates/layout1/mail.tpl, templates/mail.tpl, mail.php: 
+	added option to search mails by they text
 	* FEATURE,templates/layout1/header.tpl, templates/header.tpl, templates/layout1/mail.tpl, templates/mail.tpl, includes/head.php, mail.php:
 	added pagination and link to inbox
 

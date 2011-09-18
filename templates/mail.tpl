@@ -4,7 +4,31 @@
     - <a href="mail.php?view=zapis">{$Asaved}</a><br />
     - <a href="mail.php?view=send">{$Aoutbox}</a><br />
     - <a href="mail.php?view=write">{$Awrite}</a><br />
-    - <a href="mail.php?view=blocks">{$Ablocklist}</a>
+    - <a href="mail.php?view=blocks">{$Ablocklist}</a><br />
+    - <a href="mail.php?view=search">{$Asearch}</a>
+{/if}
+
+{if $View == "search"}
+    <form method="post" action="mail.php?view=search&amp;step">
+        <input type="submit" value="{$Asearch}" /> <input type="text" name="search" />
+    </form>
+    {if $Amount > 0}
+        <ul>
+        {section name=search loop=$Senders}
+	    <li>{$Senders[search]} <a href="mail.php?read={$Mailid[search]}">{$Subjects[search]}</a></li>
+	{/section}
+	</ul>
+	{if $Tpages > 1}
+    	    <br />{$Fpage}
+    	    {for $page = 1 to $Tpages}
+	        {if $page == $Tpage}
+	            {$page}
+	        {else}
+                    <a href="mail.php?view=search&page={$page}">{$page}</a>
+	        {/if}
+    	    {/for}
+    	{/if}
+    {/if}
 {/if}
 
 {if $View == "inbox"}
