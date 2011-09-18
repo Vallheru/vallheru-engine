@@ -108,6 +108,11 @@ if (isset($_GET['view']) && $_GET['view'] == 'search')
  */
 if (isset($_GET['view']) && in_array($_GET['view'], array('inbox', 'zapis', 'send')))
   {
+    if (isset($_GET['sort1']))
+      {
+	$_POST['sort1'] = $_GET['sort1'];
+	$_POST['sort2'] = $_GET['sort2'];
+      }
     if (isset($_POST['sort1']))
       {
 	$_POST['sort1'] = intval($_POST['sort1']);
@@ -150,6 +155,11 @@ if (isset($_GET['view']) && in_array($_GET['view'], array('inbox', 'zapis', 'sen
 		$strQuery .= " AND `date`<".$strDate;
 	      }
 	  }
+	$strPage = '&amp;sort1='.$_POST['sort1']."&amp;sort2=".$_POST['sort2'];
+      }
+    else
+      {
+	$strPage = '';
       }
   }
 
@@ -231,6 +241,7 @@ if (isset ($_GET['view']) && $_GET['view'] == 'inbox')
 			    "Tpages" => $intPages,
 			    "Tpage" => $intPage,
 			    "Fpage" => "Idź do strony:",
+			    "Lpage" => $strPage,
                             "Mread" => $arrRead));
     if (isset ($_GET['step']) && $_GET['step'] == 'clear') 
     {
@@ -303,6 +314,7 @@ if (isset ($_GET['view']) && $_GET['view'] == 'zapis')
 			    "Tpages" => $intPages,
 			    "Tpage" => $intPage,
 			    "Fpage" => "Idź do strony:",
+			    "Lpage" => $strPage,
                             "Moption" => M_OPTION));
     if (isset ($_GET['step']) && $_GET['step'] == 'clear') 
     {
@@ -374,6 +386,7 @@ if (isset ($_GET['view']) && $_GET['view'] == 'send')
 			    "Tpages" => $intPages,
 			    "Tpage" => $intPage,
 			    "Fpage" => "Idź do strony:",
+			    "Lpage" => $strPage,
                             "Moption" => M_OPTION));
     if (isset ($_GET['step']) && $_GET['step'] == 'clear') 
     {

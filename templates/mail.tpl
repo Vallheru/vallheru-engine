@@ -70,7 +70,7 @@
 	    {if $page == $Tpage}
 	        {$page}
 	    {else}
-                <a href="mail.php?view=inbox&page={$page}">{$page}</a>
+                <a href="mail.php?view=inbox&page={$page}{$Lpage}">{$page}</a>
 	    {/if}
     	{/for}
     {/if}<br /><br />
@@ -127,7 +127,7 @@
 	    {if $page == $Tpage}
 	        {$page}
 	    {else}
-                <a href="mail.php?view=zapis&page={$page}">{$page}</a>
+                <a href="mail.php?view=zapis&page={$page}{$Lpage}">{$page}</a>
 	    {/if}
     	{/for}
     {/if}<br /><br />
@@ -182,7 +182,7 @@
 	    {if $page == $Tpage}
 	        {$page}
 	    {else}
-                <a href="mail.php?view=send&page={$page}">{$page}</a>
+                <a href="mail.php?view=send&page={$page}{$Lpage}">{$page}</a>
 	    {/if}
     	{/for}
     {/if}<br /><br />

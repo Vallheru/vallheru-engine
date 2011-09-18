@@ -7,7 +7,7 @@
  *   @copyright            : (C) 2004,2005,2006,2011 Vallheru Team based on Gamers-Fusion ver 2.5
  *   @author               : thindil <thindil@tuxfamily.org>
  *   @version              : 1.4
- *   @since                : 10.09.2011
+ *   @since                : 18.09.2011
  *
  */
 
@@ -154,7 +154,7 @@ if (isset ($_GET['view']) && $_GET['view'] == "reset")
 if (isset($_GET['view']) && $_GET['view'] == "avatar") 
 {
     define("REFRESH", "Odśwież");
-    define("AVATAR_INFO", "Tutaj możesz zmienić swojego avatara. <b>Uwaga!</b> Jeżeli już posiadasz avatara, stary zostanie skasowany. Maksymalny rozmiar avatara to 10 kB. Avatara możesz załadować tylko z własnego komputera. Musi on mieć rozszerzenie *.jpg, *.jpeg, *.gif lub *.png");
+    define("AVATAR_INFO", "Tutaj możesz zmienić swojego avatara. <b>Uwaga!</b> Jeżeli już posiadasz avatara, stary zostanie skasowany. Maksymalny rozmiar avatara to 30 kB. Avatara możesz załadować tylko z własnego komputera. Musi on mieć rozszerzenie *.jpg, *.jpeg, *.gif lub *.png");
     define("A_DELETE", "Skasuj");
     define("FILE_NAME", "Nazwa pliku graficznego");
     define("A_SELECT", "Wyślij");
