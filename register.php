@@ -7,7 +7,7 @@
  *   @copyright            : (C) 2005,2006,2011 Vallheru Team based on Gamers-Fusion ver 2.5
  *   @author               : thindil <thindil@tuxfamily.org>
  *   @version              : 1.4
- *   @since                : 17.09.2011
+ *   @since                : 18.09.2011
  *
  */
 
@@ -218,11 +218,6 @@ if (isset ($_GET['action']) && $_GET['action'] == 'register')
         $_POST['ref'] = 0;
     }
     
-    $_POST['lang'] = strip_tags($_POST['lang']);
-    if (!in_array($_POST['lang'], $arrLanguage))
-    {
-        exit;
-    }
     $ref = intval($_POST['ref']);
     $_POST['user'] = strip_tags($_POST['user']);
     $strUser = $db -> qstr($_POST['user'], get_magic_quotes_gpc());
@@ -244,7 +239,7 @@ if (isset ($_GET['action']) && $_GET['action'] == 'register')
         exit;
     }
     $strPass = MD5($_POST['pass']);
-    $db -> Execute("INSERT INTO aktywacja (user, email, pass, refs, aktyw, data, ip, lang) VALUES(".$strUser.", ".$strEmail.", '".$strPass."', ".$ref.", ".$aktw.", ".$strDate." , '".$ip."' ,'".$_POST['lang']."')") or die($db -> ErrorMsg());
+    $db -> Execute("INSERT INTO `aktywacja` (`user`, `email`, `pass`, `refs`, `aktyw`, `data`, `ip`) VALUES(".$strUser.", ".$strEmail.", '".$strPass."', ".$ref.", ".$aktw.", ".$strDate." , '".$ip."')") or die($db -> ErrorMsg());
     $smarty -> assign("Registersuccess", REGISTER_SUCCESS);
 }
 

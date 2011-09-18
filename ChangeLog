@@ -1,5 +1,7 @@
 2011-09-18  Bartek thindil Jasicki  <thindil@tuxfamily.org>
 
+	* BUG,register.php: 
+	fixed registration
 	* BUG,templates/layout1/mail.tpl, templates/mail.tpl, mail.php: 
 	fixed mails pagination
 	* UPDATE,templates/layout1/account.tpl, templates/account.tpl, account.php, includes/avatar.php: 
