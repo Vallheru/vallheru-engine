@@ -70,7 +70,7 @@
                             {$Battle}
                             {$Hospital}
                             {$Tribe}
-                            <li><a href="mail.php">{$Npost} [{$Unread}]</a></li>
+                            <li><a href="mail.php">{$Npost}</a> [{$Unread}]</li>
                             {$Lbank}
                             <li><a href="forums.php?view=categories">{$Nforums}</a> {$Funread}</li>
                             {$Tforum}

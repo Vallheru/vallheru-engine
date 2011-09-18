@@ -1,3 +1,8 @@
+2011-09-18  Bartek thindil Jasicki  <thindil@tuxfamily.org>
+
+	* FEATURE,templates/layout1/header.tpl, templates/header.tpl, templates/layout1/mail.tpl, templates/mail.tpl, includes/head.php, mail.php:
+	added pagination and link to inbox
+
 2011-09-17  Bartek thindil Jasicki  <thindil@tuxfamily.org>
 
 	* FEATURE,chat.php: 

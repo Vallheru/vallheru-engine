@@ -7,7 +7,7 @@
  *   @copyright            : (C) 2004,2005,2006,2007,2011 Vallheru Team based on Gamers-Fusion ver 2.5
  *   @author               : thindil <thindil@tuxfamily.org>
  *   @version              : 1.4
- *   @since                : 12.09.2011
+ *   @since                : 18.09.2011
  *
  */
 
@@ -96,6 +96,12 @@ if (isset($_GET['view']) && in_array($_GET['view'], array('inbox', 'zapis', 'sen
 	      }
 	  }
       }
+
+    if (isset($_GET['page']))
+      {
+	checkvalue($_GET['page']);
+	$intPage = $_GET['page'];
+      }
   }
 
 /**
@@ -103,21 +109,27 @@ if (isset($_GET['view']) && in_array($_GET['view'], array('inbox', 'zapis', 'sen
  */
 if (isset ($_GET['view']) && $_GET['view'] == 'inbox') 
   {
-    $objSort = $db->Execute("SELECT `sender`, `senderid` FROM `mail`  WHERE `owner`=".$player -> id." AND `zapis`='N' AND `send`=0");
+    $objSort = $db->Execute("SELECT `sender`, `senderid` FROM `mail`  WHERE `owner`=".$player -> id." AND `zapis`='N' AND `send`=0 GROUP BY `senderid` ASC");
     $arrSendersid = array();
     $arrSenders = array();
     while (!$objSort->EOF) 
       {
-	if (!in_array($objSort->fields['senderid'], $arrSendersid))
-	  {
-	    $arrSenders[] = $objSort->fields['sender'];
-	    $arrSendersid[] = $objSort->fields['senderid'];
-	  }
+	$arrSenders[] = $objSort->fields['sender'];
+	$arrSendersid[] = $objSort->fields['senderid'];
 	$objSort->MoveNext();
       }
     $objSort->Close();
 
-    $mail = $db -> Execute("SELECT * FROM `mail` WHERE `owner`=".$player -> id." AND `zapis`='N' AND `send`=0".$strQuery." ORDER BY `id` DESC");
+    //Pagination
+    $objAmount = $db->Execute("SELECT count(`id`) FROM `mail` WHERE `owner`=".$player -> id." AND `zapis`='N' AND `send`=0".$strQuery);
+    $intPages = ceil($objAmount->fields['count(`id`)'] / 30);
+    $objAmount->Close();
+    if (!isset($intPage))
+      {
+	$intPage = 1;
+      }
+
+    $mail = $db->SelectLimit("SELECT * FROM `mail` WHERE `owner`=".$player -> id." AND `zapis`='N' AND `send`=0".$strQuery." ORDER BY `id` DESC", 30, 30 * ($intPage - 1));
     $arrsender = array();
     $arrsenderid = array();
     $arrsubject = array();
@@ -167,6 +179,9 @@ if (isset ($_GET['view']) && $_GET['view'] == 'inbox')
 			    "Tlastweek" => "Ostatni tydzień",
 			    "Tlastmonth" => "Ostatni miesiąc",
 			    "Toldest" => "Starsze niż miesiąc",
+			    "Tpages" => $intPages,
+			    "Tpage" => $intPage,
+			    "Fpage" => "Idź do strony:",
                             "Mread" => $arrRead));
     if (isset ($_GET['step']) && $_GET['step'] == 'clear') 
     {
@@ -177,21 +192,27 @@ if (isset ($_GET['view']) && $_GET['view'] == 'inbox')
 
 if (isset ($_GET['view']) && $_GET['view'] == 'zapis') 
 {
-    $objSort = $db->Execute("SELECT `sender`, `senderid` FROM `mail`  WHERE `owner`=".$player->id." AND `zapis`='Y'");
+    $objSort = $db->Execute("SELECT `sender`, `senderid` FROM `mail`  WHERE `owner`=".$player->id." AND `zapis`='Y' GROUP BY `senderid` ASC");
     $arrSendersid = array();
     $arrSenders = array();
     while (!$objSort->EOF) 
       {
-	if (!in_array($objSort->fields['senderid'], $arrSendersid))
-	  {
-	    $arrSenders[] = $objSort->fields['sender'];
-	    $arrSendersid[] = $objSort->fields['senderid'];
-	  }
+	$arrSenders[] = $objSort->fields['sender'];
+	$arrSendersid[] = $objSort->fields['senderid'];
 	$objSort->MoveNext();
       }
     $objSort->Close();
 
-    $mail = $db -> Execute("SELECT * FROM mail WHERE owner=".$player -> id." AND zapis='Y'".$strQuery." ORDER BY id DESC");
+    //Pagination
+    $objAmount = $db->Execute("SELECT count(`id`) FROM `mail` WHERE `owner`=".$player -> id." AND `zapis`='Y' AND `send`=0".$strQuery);
+    $intPages = ceil($objAmount->fields['count(`id`)'] / 30);
+    $objAmount->Close();
+    if (!isset($intPage))
+      {
+	$intPage = 1;
+      }
+
+    $mail = $db->SelectLimit("SELECT * FROM `mail` WHERE `owner`=".$player -> id." AND `zapis`='Y'".$strQuery." ORDER BY id DESC", 30, 30 * ($intPage - 1));
     $arrsender = array();
     $arrsenderid = array();
     $arrsubject = array();
@@ -230,6 +251,9 @@ if (isset ($_GET['view']) && $_GET['view'] == 'zapis')
 			    "Tlastweek" => "Ostatni tydzień",
 			    "Tlastmonth" => "Ostatni miesiąc",
 			    "Toldest" => "Starsze niż miesiąc",
+			    "Tpages" => $intPages,
+			    "Tpage" => $intPage,
+			    "Fpage" => "Idź do strony:",
                             "Moption" => M_OPTION));
     if (isset ($_GET['step']) && $_GET['step'] == 'clear') 
     {
@@ -240,21 +264,27 @@ if (isset ($_GET['view']) && $_GET['view'] == 'zapis')
 
 if (isset ($_GET['view']) && $_GET['view'] == 'send') 
 {
-    $objSort = $db->Execute("SELECT `send` FROM `mail`  WHERE `owner`=".$player->id." AND `send`!=0");
+    $objSort = $db->Execute("SELECT `send` FROM `mail`  WHERE `owner`=".$player->id." AND `send`!=0 GROUP BY `send` ASC");
     $arrSendersid = array();
     $arrSenders = array();
     while (!$objSort->EOF) 
       {
-	if (!in_array($objSort->fields['send'], $arrSendersid))
-	  {
-	    $arrSendersid[] = $objSort->fields['send'];
-	    $objName = $db->Execute("SELECT `user` FROM `players` WHERE `id`=".$objSort->fields['send']);
-	    $arrSenders[] = $objName->fields['user'];
-	    $objName->Close();
-	  }
+	$arrSendersid[] = $objSort->fields['send'];
+	$objName = $db->Execute("SELECT `user` FROM `players` WHERE `id`=".$objSort->fields['send']);
+	$arrSenders[] = $objName->fields['user'];
+	$objName->Close();
 	$objSort->MoveNext();
       }
     $objSort->Close();
+
+    //Pagination
+    $objAmount = $db->Execute("SELECT count(`id`) FROM `mail` WHERE `send`!=0 AND `owner`=".$player->id.$strQuery);
+    $intPages = ceil($objAmount->fields['count(`id`)'] / 30);
+    $objAmount->Close();
+    if (!isset($intPage))
+      {
+	$intPage = 1;
+      }
 
     $mail = $db -> Execute("SELECT * FROM mail WHERE send!=0 AND owner=".$player->id.$strQuery." ORDER BY id DESC");
     $arrsend = array();
@@ -292,6 +322,9 @@ if (isset ($_GET['view']) && $_GET['view'] == 'send')
 			    "Tlastweek" => "Ostatni tydzień",
 			    "Tlastmonth" => "Ostatni miesiąc",
 			    "Toldest" => "Starsze niż miesiąc",
+			    "Tpages" => $intPages,
+			    "Tpage" => $intPage,
+			    "Fpage" => "Idź do strony:",
                             "Moption" => M_OPTION));
     if (isset ($_GET['step']) && $_GET['step'] == 'clear') 
     {

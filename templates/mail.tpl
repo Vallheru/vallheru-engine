@@ -28,7 +28,7 @@
     <td width="75"><b><u>{$From}</u></b></td>
     <td width="75"><b><u>{$Sid}</u></b></td>
     <td width="100"><b><u>{$Mtitle}</u></b></td>
-    <td width="50"><b><u>{$Moption}</u></b></td>
+    <td width="100"><b><u>{$Moption}</u></b></td>
     </tr>
     {section name=mail loop=$Sender}
         <tr>
@@ -40,6 +40,16 @@
         </tr>
     {/section}
     </table><br />
+    {if $Tpages > 1}
+    	<br />{$Fpage}
+    	{for $page = 1 to $Tpages}
+	    {if $page == $Tpage}
+	        {$page}
+	    {else}
+                <a href="mail.php?view=inbox&page={$page}">{$page}</a>
+	    {/if}
+    	{/for}
+    {/if}<br /><br />
     <input type="submit" value="{$Adeletes}" name="delete" /> <input type="submit" name="write" value="{$Asaves}" /> <input type="submit" name="read2" value="{$Aread2}" /> <input type="submit" name="unread" value="{$Aunread}" /><br />
     </form>
     <form method="post" action="mail.php?step=deleteold&amp;box=I">
@@ -75,7 +85,7 @@
     <td width="75"><b><u>{$From}</u></b></td>
     <td width="75"><b><u>{$Sid}</u></b></td>
     <td width="100"><b><u>{$Mtitle}</u></b></td>
-    <td width="50"><b><u>{$Moption}</u></b></td>
+    <td width="100"><b><u>{$Moption}</u></b></td>
     </tr>
     {section name=mail1 loop=$Sender}
         <tr>
@@ -87,6 +97,16 @@
         </tr>
     {/section}
     </table><br />
+    {if $Tpages > 1}
+    	<br />{$Fpage}
+    	{for $page = 1 to $Tpages}
+	    {if $page == $Tpage}
+	        {$page}
+	    {else}
+                <a href="mail.php?view=zapis&page={$page}">{$page}</a>
+	    {/if}
+    	{/for}
+    {/if}<br /><br />
     <input type="submit" value="{$Adeletes}" name="delete" /><br />
     </form>
     <form method="post" action="mail.php?step=deleteold&amp;box=W">
@@ -121,7 +141,7 @@
     <td width="20"><b><u>{$Tselect}</u></b></td>
     <td width="75"><b><u>{$Sto}</u></b></td></td>
     <td width="100"><b><u>{$Mtitle}</u></b></td>
-    <td width="50"><b><u>{$Moption}</u></b></td>
+    <td width="100"><b><u>{$Moption}</u></b></td>
     </tr>
     {section name=mail2 loop=$Send1}
         <tr>
@@ -132,6 +152,16 @@
         </tr>
     {/section}
     </table><br />
+    {if $Tpages > 1}
+    	<br />{$Fpage}
+    	{for $page = 1 to $Tpages}
+	    {if $page == $Tpage}
+	        {$page}
+	    {else}
+                <a href="mail.php?view=send&page={$page}">{$page}</a>
+	    {/if}
+    	{/for}
+    {/if}<br /><br />
     <input type="submit" value="{$Adeletes}" name="delete" /> <input type="submit" name="write" value="{$Asaves}" /><br />
     </form>
     <form method="post" action="mail.php?step=deleteold&amp;box=S">
