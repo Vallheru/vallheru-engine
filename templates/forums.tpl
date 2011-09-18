@@ -27,7 +27,7 @@
 	    {if $page == $Tpage}
 	        {$page}
 	    {else}
-                <a href="forums.php?topics={$Topics}&page={$page}">{$page}</a>
+                <a href="forums.php?view=newposts&amp;page={$page}">{$page}</a>
 	    {/if}
     	{/for}
     {/if}
