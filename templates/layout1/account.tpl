@@ -132,13 +132,13 @@
 {if $View == "avatar"}
     {$Avatarinfo}<br />
     {if $Avatar != ""}
-    <center><br /><br /><img src="{$Avatar}" width="100" heigth="100">
+    <center><br /><br /><img src="{$Avatar}" width="200" heigth="200">
       <form action="account.php?view=avatar&amp;step=usun" method="post">
     <input type="hidden" name="av" value="{$Value}" />
     <input type="submit" value="{$Delete}" /></form></center>
     {/if}
     <form enctype="multipart/form-data" action="account.php?view=avatar&amp;step=dodaj" method="post">
-    <input type="hidden" name="MAX_FILE_SIZE" value="10240" />
+    <input type="hidden" name="MAX_FILE_SIZE" value="30720" />
     {$Afilename}: <input name="plik" type="file" /><br />
     <input type="submit" value="{$Aselect}" /></form>
 {/if}

@@ -7,7 +7,7 @@
  *   @copyright            : (C) 2006,2011 Vallheru Team based on Gamers-Fusion ver 2.5
  *   @author               : thindil <thindil@tuxfamily.org>
  *   @version              : 1.4
- *   @since                : 08.09.2011
+ *   @since                : 14.09.2011
  *
  */
 
@@ -38,9 +38,9 @@ function scaleavatar($strFilename)
     $arrImageparams = getimagesize($strFilename);
     $intWidth = $arrImageparams[0];
     $intHeight = $arrImageparams[1];
-    if ($intWidth > 200 || $intHeight > 100)
+    if ($intWidth > 400 || $intHeight > 200)
       {
-	if ($intWidth - 200 > $intHeight - 100)
+	if ($intWidth - 400 > $intHeight - 200)
 	  {
 	    $fltPercent = $intWidth / 100;
 	  }
@@ -48,15 +48,15 @@ function scaleavatar($strFilename)
 	  {
 	    $fltPercent = $intHeight / 100;
 	  }
-	if ($arrImageparams[0] > 200)
+	if ($arrImageparams[0] > 400)
 	  {
-	    $intWidth = 200;
+	    $intWidth = 400;
 	    $fltPercent2 = ($arrImageparams[0] - $intWidth) / $fltPercent;
 	    $intHeight = ceil($intHeight - ($intHeight * ($fltPercent2 / 100)));
 	  }
-	if ($arrImageparams[1] > 100)
+	if ($arrImageparams[1] > 200)
 	  {
-	    $intHeight = 100;
+	    $intHeight = 200;
 	    $fltPercent2 = ($arrImageparams[1] - $intHeight) / $fltPercent;
 	    $intWidth = ceil($intWidth - ($intWidth * ($fltPercent2 / 100)));
 	  }

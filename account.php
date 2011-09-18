@@ -7,7 +7,7 @@
  *   @copyright            : (C) 2004,2005,2006,2007,2011 Vallheru Team based on Gamers-Fusion ver 2.5
  *   @author               : thindil <thindil@tuxfamily.org>
  *   @version              : 1.4
- *   @since                : 16.09.2011
+ *   @since                : 18.09.2011
  *
  */
 
@@ -523,7 +523,7 @@ if (isset($_GET['view']) && $_GET['view'] == "avatar")
         $nazwa = $_FILES['plik']['name'];
         $typ = $_FILES['plik']['type'];
 	$intSize = $_FILES['plik']['size'];
-	if ($intSize > 10240)
+	if ($intSize > 30720)
 	  {
 	    error("Ten avatar zajmuje za dużo miejsca (maksymalnie 10kB)!");
 	  }
