@@ -8,7 +8,7 @@
  *   @author               : thindil <thindil@tuxfamily.org>
  *   @author               : eyescream <tduda@users.sourceforge.net>
  *   @version              : 1.4
- *   @since                : 16.09.2011
+ *   @since                : 19.09.2011
  *
  */
  
@@ -1039,7 +1039,7 @@ if (isset ($_GET['view']) && $_GET['view'] == 'shop')
     if ($intMaxBarracks = checkresources ('barracks', $dbMinerals -> fields['meteor'], $dbMinerals -> fields['adamantium']))
     {
         $intMeteorSum = 0;
-        for ($i = 1; $i <= $intMaxLair; $i++)
+        for ($i = 1; $i <= $intMaxBarracks; $i++)
         {
             $intMeteorSum += $i + $out -> fields['barracks'];
             $arrBarrackLevels[ $i ] = ($i + $out -> fields['barracks']).': '.(50 * $intMeteorSum).GOLD_COINS.', '.$intMeteorSum.METEOR_PIECES.', '.(5 * $intMeteorSum).ADAMANTIUM_PIECES;
@@ -1059,7 +1059,7 @@ if (isset ($_GET['view']) && $_GET['view'] == 'shop')
                              "LairInfo" => LAIR_INFO,
                              "NoLairInfo" => $strNolairinfo,
                              "LairLevels" => $arrLairLevels,
-                             "MaxPossibleBarrack" => $intMaxLair,
+                             "MaxPossibleBarrack" => $intMaxBarracks,
                              "Barrack" => BARRACK,
                              "BarrackInfo" => BARRACK_INFO,
                              "NoBarrackInfo" => $strNobarrackinfo,
