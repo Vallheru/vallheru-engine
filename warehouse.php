@@ -127,7 +127,7 @@ if (!isset($_GET['action']))
 */
 if (isset($_GET['action']) && ($_GET['action'] == 'sell' || $_GET['action'] == 'buy'))
   {
-    $_GET['item'] = intvalue($_GET['item']);
+    $_GET['item'] = intval($_GET['item']);
     if ($_GET['item'] < 0 || $_GET['item'] > 25)
     {
         error(ERROR);
