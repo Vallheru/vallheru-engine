@@ -7,7 +7,7 @@
  *   @copyright            : (C) 2004,2005,2006,2011 Vallheru Team based on Gamers-Fusion ver 2.5
  *   @author               : thindil <thindil@tuxfamily.org>
  *   @version              : 1.4
- *   @since                : 05.09.2011
+ *   @since                : 19.09.2011
  *
  */
 
@@ -47,7 +47,7 @@ function drink($id)
     checkvalue($id);
     $miks = $db -> Execute("SELECT * FROM potions WHERE status='K' AND id=".$id);
     $strType = $miks -> fields['type'];
-    if (ereg("(K)", $miks -> fields['name']))
+    if (strpos($miks -> fields['name'], "(K)") !== FALSE)
     {
         $intRoll = rand(0,100);
         if ($intRoll == 1)
@@ -121,17 +121,17 @@ function drink($id)
     }
     if ($strType == 'A' && $intRoll > 50 && !isset($message)) 
     {
-        if (ereg("Dynallca",$miks -> fields['name']))
+      if (strpos($miks -> fields['name'], "Dynallca") !== FALSE)
         {
             $strAtype = 'D';
             $strType2 = 'Dynallca';
         }
-            elseif (ereg("Nutari",$miks -> fields['name']))
+      elseif (strpos($miks -> fields['name'], "Nutari") !== FALSE)
         {
             $strAtype = 'N';
             $strType2 = 'Nutari';
         }
-            elseif (ereg("Illani",$miks -> fields['name']))
+      elseif (strpos($miks -> fields['name'], "Illani") !== FALSE)
         {
             $strType2 = 'Illani';
             $strAtype = 'I';
@@ -140,26 +140,37 @@ function drink($id)
         $efekt = GAIN_ANTI." ".$strType2;
     }
     if ($strType == 'H' && $intRoll > 50 && !isset($message)) 
-    {
-        if ($player -> hp > 0) 
-        {
+      {
+	if ($player->hp == $player->max_hp)
+	  {
+	    if ($title == 'Ekwipunek')
+	      {
+                error("Jesteś kompletnie zdrowy. Nie musisz regenerować życia.<a href");
+	      }
+	    else
+	      {
+                $message = "Jesteś kompletnie zdrowy. Nie musisz regenerować życia.";
+	      }
+	  }
+        elseif ($player -> hp > 0) 
+	  {
             $intRhp = $player -> hp + $miks -> fields['power'];
             if ($intRhp > $player -> max_hp)
-            {
+	      {
                 $intRhp = $player -> max_hp;
                 $efekt = RESTORE_ALL_HP;
-            }
+	      }
             $db -> Execute("UPDATE players SET hp=".$intRhp." WHERE id=".$player -> id);
             if (!isset($efekt))
-            {
+	      {
                 $efekt = RESTORE." ".$miks -> fields['power']." ".SOME_HP;
-            }
+	      }
             $player -> hp = $intRhp;
-        } 
-            else 
-        {
+	  } 
+	else 
+	  {
             error (YOU_NEED_H);
-        }
+	  }
     }
     if (!isset($message))
     {
