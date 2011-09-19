@@ -4,12 +4,12 @@
  *   Polish language for bank
  *
  *   @name                 : bank.php                            
- *   @copyright            : (C) 2004,2005,2006 Vallheru Team based on Gamers-Fusion ver 2.5
- *   @author               : thindil <thindil@users.sourceforge.net>
+ *   @copyright            : (C) 2004,2005,2006,2011 Vallheru Team based on Gamers-Fusion ver 2.5
+ *   @author               : thindil <thindil@tuxfamily.org>
  *   @author               : yeskov <yeskov@users.sourceforge.net>
  *   @author               : eyescream <tduda@users.sourceforge.net>
- *   @version              : 1.3
- *   @since                : 29.11.2006
+ *   @version              : 1.4
+ *   @since                : 19.09.2011
  *
  */
 
@@ -29,7 +29,7 @@
 //   along with this program; if not, write to the Free Software
 //   Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 //
-// $Id: bank.php 856 2006-11-29 17:30:36Z thindil $
+// $Id$
 
 define("ERROR", "Zapomnij o tym!");
 define("MIN5", "Sztabki miedzi");
@@ -165,7 +165,7 @@ if (isset ($_GET['action']) && $_GET['action'] == 'steal')
     define("VERDICT", "Próba kradzieży złota z banku w ".$city1a."");
     define("L_REASON", "Zostałeś wtrącony do więzienia na 1 dzień za próbę okradzenia banku. Możesz wyjść z więzienia za kaucją");
     define("C_CACHED", "Kiedy próbowałeś okraść bank, nagle z jakiegoś pokoju wyskoczył strażnik. Szybko złapał ciebie za nadgarstek i zakuł w kajdany. Obrót spraw tak ciebie zaskoczył iż zapomniałeś nawet zareagować w jakiś sposób. I tak oto znalazłeś się w lochach!");
-    define("C_SUCCES", "Udało ci się dyskretnie dostać do skarbca banku. Wyniosłeś z tamtąd ");
+    define("C_SUCCES", "Udało ci się dyskretnie dostać do skarbca banku. Wyniosłeś stamtąd ");
     define("C_SUCCES2", " sztuk złota. Nie niepokojony przez nikogo odszedłeś sobie spokojnie w swoją stronę. To był jednak udany dzień");
 }
 
