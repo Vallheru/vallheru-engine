@@ -7,7 +7,7 @@
  *   @copyright            : (C) 2004,2005,2006,2011 Vallheru Team based on Gamers-Fusion ver 2.5
  *   @author               : thindil <thindil@tuxfamily.org>
  *   @version              : 1.4
- *   @since                : 29.08.2011
+ *   @since                : 19.09.2011
  *
  */
 
@@ -56,44 +56,41 @@ if (!isset($_GET['action']))
     $arrCostherb = array();
     $arrSellmin = array();
     $arrSellherb = array();
-    $arrAmountmin = array();
-    $arrAmountherb = array();
-    for($i = 0; $i < 18; $i++)
-    {
-        $objValue = $db -> Execute("SELECT value FROM settings WHERE setting='".$arrItems[$i]."'");
-        $arrCostmin[$i] = $objValue -> fields['value'];
-        $objValue -> Close();
-        $arrSellmin[$i] = ceil($arrCostmin[$i] * 2);
-        $objAmount = $db -> Execute("SELECT amount FROM warehouse WHERE reset=1 AND mineral='".$arrItems[$i]."'");
-        if ($objAmount -> fields['amount'])
-        {
-            $arrAmountmin[$i] = $objAmount -> fields['amount'];
-        }
-            else
-        {
-            $arrAmountmin[$i] = 0;
-        }
-        $objAmount -> Close();
-    }
-    for($i = 18; $i < 26; $i++)
-    {
-        $objValue = $db -> Execute("SELECT value FROM settings WHERE setting='".$arrItems[$i]."'");
-        $j = $i - 18;
-        $arrCostherb[$j] = $objValue -> fields['value'];
-        $objValue -> Close();
-        $arrSellherb[$j] = ceil($arrCostherb[$j] * 2);
-        $objAmount = $db -> Execute("SELECT amount FROM warehouse WHERE reset=1 AND mineral='".$arrItems[$i]."'");
-        if ($objAmount -> fields['amount'])
-        {
-            $arrAmountherb[$j] = $objAmount -> fields['amount'];
-        }
-            else
-        {
-            $arrAmountherb[$j] = 0;
-        }
-        $objAmount -> Close();
-    }
-    $objValue -> Close();
+    $arrAmountmin = array(0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0);
+    $arrAmountherb = array(0, 0, 0, 0, 0, 0, 0, 0);
+    $arrItems2 = array("'copperore'", "'zincore'", "'tinore'", "'ironore'", "'copper'", "'bronze'", "'brass'", "'iron'", "'steel'", "'coal'", "'adamantium'", "'meteor'", "'crystal'", "'pine'", "'hazel'", "'yew'", "'elm'", "'mithril'", "'illani'", "'illanias'", "'nutari'", "'dynallca'", "'illani_seeds'", "'illanias_seeds'", "'nutari_seeds'", "'dynallca_seeds'");
+    $objValue = $db->Execute("SELECT `value`, `setting` FROM `settings` WHERE `setting` IN (".implode(',', $arrItems2).")") or die($db->ErrorMsg());
+    while(!$objValue->EOF)
+      {
+	$intKey = array_search($objValue->fields['setting'], $arrItems);
+	if ($intKey < 18)
+	  {
+	    $arrCostmin[$intKey] = $objValue->fields['value'];
+	    $arrSellmin[$intKey] = ceil($arrCostmin[$intKey] * 2);
+	  }
+	else
+	  {
+	    $arrCostherb[$intKey - 18] = $objValue->fields['value'];
+	    $arrSellherb[$intKey - 18] = ceil($arrCostherb[$intKey - 18] * 2);
+	  }
+	$objValue->MoveNext();
+      }
+    $objValue->Close();
+    $objAmount = $db->Execute("SELECT `amount`, `mineral` FROM `warehouse` WHERE `reset`=1 AND `mineral` IN (".implode(',', $arrItems2).")");
+    while (!$objAmount->EOF)
+      {
+	$intKey = array_search($objAmount->fields['mineral'], $arrItems);
+	if ($intKey < 18)
+	  {
+	    $arrAmountmin[$intKey] = $objAmount -> fields['amount'];
+	  }
+	else
+	  {
+	    $arrAmountherb[$intKey - 18] = $objAmount -> fields['amount'];
+	  }
+	$objAmount->MoveNext();
+      }
+    $objAmount->Close();
     /**
      * Info about caravan
      */
@@ -129,8 +126,9 @@ if (!isset($_GET['action']))
 * Sell or buy herbs and minerals
 */
 if (isset($_GET['action']) && ($_GET['action'] == 'sell' || $_GET['action'] == 'buy'))
-{
-    if (!ereg("^[0-9]*$", $_GET['item']) || $_GET['item'] > 25)
+  {
+    $_GET['item'] = intvalue($_GET['item']);
+    if ($_GET['item'] < 0 || $_GET['item'] > 25)
     {
         error(ERROR);
     }
