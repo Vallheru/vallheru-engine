@@ -11,9 +11,15 @@
 
 {if $View == "market"}
     {$Viewinfo} <a href="imarket.php">{$Aback}</a>.<br /><br />
-    <form method="post" action="imarket.php?view=market&amp;limit=0&amp;lista=name">
+    <form method="post" action="imarket.php?view=market&amp;lista=name">
         {$Tname}: <input type="text" name="szukany" />
         <input type="submit" value="{$Asearch}" />
+    </form><br />
+    <form method="post" action="imarket.php?view=market&amp;lista=name">
+        <input type="submit" value="{$Ashow}" /> {$Tofferts} <select name="type">
+	{section name=itype loop=$Onames}
+	    <option value="{$Otypes[itype]}">{$Onames[itype]}</option>
+	{/section}
     </form><br />
     <table>
     <tr>
@@ -57,7 +63,7 @@
 	    {if $page == $Tpage}
 	        {$page}
 	    {else}
-                <a href="imarket.php?view=market&page={$page}&amp;lista={$Mlist}">{$page}</a>
+                <a href="imarket.php?view=market&page={$page}{$Atype}&amp;lista={$Mlist}">{$page}</a>
 	    {/if}
     	{/for}
     {/if}

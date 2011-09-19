@@ -8,7 +8,7 @@
  *   @author               : thindil <thindil@tuxfamily.org>
  *   @author               : eyescream <tduda@users.sourceforge.net>
  *   @version              : 1.4
- *   @since                : 12.09.2011
+ *   @since                : 19.09.2011
  *
  */
 
@@ -66,11 +66,26 @@ if (!isset($_GET['view']) && !isset($_GET['buy']) && !isset($_GET['wyc']))
 * Show oferts in market
 */
 if (isset ($_GET['view']) && $_GET['view'] == 'market') 
-{
-    if (empty($_POST['szukany']) && !isset($_POST['szukany1'])) 
+  {
+    $arrTypes = array('W', 'B', 'T', 'R', 'H', 'A', 'S', 'C', 'L');
+    $strType = '';
+    if (isset($_GET['type']))
+      {
+	$_POST['type'] = $_GET['type'];
+      }
+    if (empty($_POST['szukany']) && !isset($_POST['szukany1']) && !isset($_POST['type'])) 
       {
         $msel = $db -> Execute("SELECT count(`id`) FROM `equipment` WHERE `status`='R' AND `type`!='I'");
-      } 
+      }
+    elseif (isset($_POST['type']))
+      {
+	if (!in_array($_POST['type'], $arrTypes))
+	  {
+	    error(ERROR);
+	  }
+	$strType = '&amp;type='.$_POST['type'];
+	$msel = $db -> Execute("SELECT count(`id`) FROM `equipment` WHERE `status`='R' AND `type`='".$_POST['type']."'");
+      }
     elseif (isset($_POST['szukany1']))
       {
 	$_POST['szukany1'] = strip_tags($_POST['szukany1']);
@@ -103,6 +118,7 @@ if (isset ($_GET['view']) && $_GET['view'] == 'market')
       {
 	$page = $pages;
       }
+    $arrNames = array('broni', 'łuków', 'różdżek', 'strzał', 'hełmów', 'zbrój', 'tarcz', 'szat', 'nagolenników');
     $smarty -> assign(array("Tname" => T_NAME,
                             "Tpower" => T_POWER,
                             "Tcost" => "Cena szt / wszystko",
@@ -114,7 +130,11 @@ if (isset ($_GET['view']) && $_GET['view'] == 'market')
                             "Tlevel" => T_LEVEL,
                             "Viewinfo" => VIEW_INFO,
 			    "Asearch" => A_SEARCH,
-                            "Toptions" => T_OPTIONS));
+                            "Toptions" => T_OPTIONS,
+			    "Ashow" => "Pokaż",
+			    "Tofferts" => "oferty",
+			    "Otypes" => $arrTypes,
+			    "Onames" => $arrNames));
     if (!in_array($_GET['lista'], array('id', 'name', 'power', 'wt', 'szyb', 'zr', 'minlev', 'amount', 'cost', 'owner'))) 
       {
 	error(ERROR);
@@ -127,10 +147,14 @@ if (isset ($_GET['view']) && $_GET['view'] == 'market')
       {
 	$strOrder = ' DESC';
       }
-    if (empty($_POST['szukany']) && !isset($_POST['szukany1'])) 
+    if (empty($_POST['szukany']) && !isset($_POST['szukany1']) && !isset($_POST['type'])) 
       {
 	$pm = $db -> SelectLimit("SELECT * FROM `equipment` WHERE `status`='R' AND `type`!='I' ORDER BY ".$_GET['lista'].$strOrder, 30, (30 * ($page - 1)));
       } 
+    elseif (isset($_POST['type']))
+      {
+	$pm = $db -> SelectLimit("SELECT * FROM `equipment` WHERE `status`='R' AND `type`='".$_POST['type']."' ORDER BY ".$_GET['lista'].$strOrder, 30, (30 * ($page - 1)));
+      }
     elseif (isset($_POST['szukany1']))
       {
 	$pm = $db -> Execute("SELECT * FROM `equipment` WHERE `status`='R' AND `type`!='I' AND name=".$strSearch);
@@ -221,6 +245,7 @@ if (isset ($_GET['view']) && $_GET['view'] == 'market')
 			    "Adelete" => A_DELETE,
 			    "Achange" => A_CHANGE,
 			    "Mlist" => $_GET['lista'],
+			    "Atype" => $strType,
 			    "Seller" => $arrseller));
     if (!isset($_POST['szukany'])) 
       {
