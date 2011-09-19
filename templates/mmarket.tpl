@@ -57,7 +57,8 @@
     {section name=mmarket1 loop=$Name}
         <option value="{$Itemid[mmarket1]}">{$Name[mmarket1]} ({$Ppower}: {$Power[mmarket1]}) ({$Pamount2}: {$Amount[mmarket1]})</option>
     {/section}</select></td></tr>
-    <tr><td>{$Pamount}:</td><td><input type="text" name="amount" /></td></tr>
+    <tr><td>{$Pamount}:</td><td><input type="text" name="amount" /><br />
+    				 <input type="checkbox" name="addall" value="Y" />{$Addall}</td></tr>
     <tr><td>{$Pcost}:</td><td><input type="text" name="cost" /></td></tr>
     <tr><td colspan="2" align="center"><input type="submit" value="{$Aadd}" /></td></tr>
     </table></form>

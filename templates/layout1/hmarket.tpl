@@ -62,7 +62,8 @@
                 <option value="{$Sqlname[addherb]}">{$Herbname[addherb]} ({$Tamount}: {if $Herbamount[addherb] != ""}{$Herbamount[addherb]}{else}0{/if})</option>
             {/section}
         </select></td></tr>
-        <tr><td>{$Hamount}:</td><td><input type="text" name="ilosc" /></td></tr>
+        <tr><td>{$Hamount}:</td><td><input type="text" name="ilosc" /><br />
+    				 <input type="checkbox" name="addall" value="Y" />{$Addall}</td></tr>
         <tr><td>{$Hcost}:</td><td><input type="text" name="cost" /></td></tr>
         <tr><td colspan="2" align="center"><input type="submit" value="{$Aadd}" /></td></tr>
         </table></form>

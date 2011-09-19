@@ -8,7 +8,7 @@
  *   @author               : thindil <thindil@tuxfamily.org>
  *   @author               : eyescream <tduda@users.sourceforge.net>
  *   @version              : 1.4
- *   @since                : 12.09.2011
+ *   @since                : 19.09.2011
  *
  */
 
@@ -187,6 +187,7 @@ if (isset ($_GET['view']) && $_GET['view'] == 'add')
                             "Mineralsamount" => $arrAmount,
                             "Mineral" => MINERAL,
                             "Tamount" => T_AMOUNT,
+			    "Addall" => "wszystkie posiadane",
                             "Addofert" => 0));
     if (isset ($_GET['step']) && $_GET['step'] == 'add') 
     {
@@ -200,15 +201,22 @@ if (isset ($_GET['view']) && $_GET['view'] == 'add')
         $strName = $arrName[$_POST['mineral']];
         $intAmount = $arrAmount[$_POST['mineral']];
         $strSqlname = $arrMinerals[$_POST['mineral']];
-        if (!isset($_POST['amount']))
-        {
-            error(ERROR);
-        }
-        if ($_POST['amount'] > $intAmount)
-        {
-            error(NO_AMOUNT.$strName);
-        }
-	checkvalue($_POST['amount']);
+	if (isset($_POST['addall']))
+	  {
+	    $_POST['amount'] = $intAmount;
+	  }
+	else
+	  {
+	    if (!isset($_POST['amount']))
+	      {
+		error(ERROR);
+	      }
+	    checkvalue($_POST['amount']);
+	    if ($_POST['amount'] > $intAmount)
+	      {
+		error(NO_AMOUNT.$strName);
+	      }
+	  }
 	checkvalue($_POST['cost']);
         $objTest = $db -> Execute("SELECT `id` FROM `pmarket` WHERE `seller`=".$player -> id." AND `nazwa`='".$strSqlname."'");
         if (!$objTest -> fields['id'])

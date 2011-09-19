@@ -8,7 +8,7 @@
  *   @author               : thindil <thindil@tuxfamily.org>
  *   @author               : eyescream <tduda@users.sourceforge.net>
  *   @version              : 1.4
- *   @since                : 12.09.2011
+ *   @since                : 19.09.2011
  *
  */
 
@@ -194,24 +194,36 @@ if (isset ($_GET['view']) && $_GET['view'] == 'add')
                             "Aadd" => A_ADD,
                             "Herbamount" => $arrAmount,
                             "Tamount" => T_AMOUNT,
+			    "Addall" => "wszystkie posiadane",
                             "Addofert" => 0));
     if (isset ($_GET['step']) && $_GET['step'] == 'add') 
     {
-        if (!isset($_POST['ilosc']) || !isset($_POST['cost'])) 
+        if (!isset($_POST['cost'])) 
         {
             error (ERROR);
         }
-	checkvalue($_POST['ilosc']);
 	checkvalue($_POST['cost']);
         if (!in_array($_POST['mineral'], $arrSqlname))
         {
             error(ERROR);
         }
         $intKey = array_search($_POST['mineral'], $arrSqlname);
-        if ($_POST['ilosc'] > $gr -> fields[$arrSqlname[$intKey]])
-        {
-            error(NO_AMOUNT.$arrName[$intKey]);
-        }
+	if (!isset($_POST['addall']))
+	  {
+	    if (!isset($_POST['ilosc']))
+	      {
+		error(ERROR);
+	      }
+	    checkvalue($_POST['ilosc']);
+	    if ($_POST['ilosc'] > $gr -> fields[$arrSqlname[$intKey]])
+	      {
+		error(NO_AMOUNT.$arrName[$intKey]);
+	      }
+	  }
+	else
+	  {
+	    $_POST['ilosc'] = $gr -> fields[$arrSqlname[$intKey]];
+	  }
         $objTest = $db -> Execute("SELECT `id` FROM `hmarket` WHERE `seller`=".$player -> id." AND `nazwa`='".$arrName[$intKey]."'");
         if (!$objTest -> fields['id'])
         {

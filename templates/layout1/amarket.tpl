@@ -57,7 +57,8 @@
             {/section}
         </select></td></tr>
         <tr><td>{$Anumber}:</td><td><input type="text" name="number" /></td></tr>
-        <tr><td>{$Hamount}:</td><td><input type="text" name="amount" /></td></tr>
+        <tr><td>{$Hamount}:</td><td><input type="text" name="amount" /><br />
+    				 <input type="checkbox" name="addall" value="Y" />{$Addall}</td></tr>
         <tr><td>{$Hcost}:</td><td><input type="text" name="cost" /></td></tr>
         <tr><td colspan="2" align="center"><input type="submit" value="{$Aadd}" /></td></tr>
         </table></form><br />
@@ -69,7 +70,8 @@
             {/section}
         </select></td></tr>
         <tr><td><input type="hidden" name="number" value="1" /></td></tr>
-        <tr><td>{$Hamount}:</td><td><input type="text" name="amount" /></td></tr>
+        <tr><td>{$Hamount}:</td><td><input type="text" name="amount" /><br />
+    				 <input type="checkbox" name="addall" value="Y" />{$Addall}</td></tr>
         <tr><td>{$Hcost}:</td><td><input type="text" name="cost" /></td></tr>
         <tr><td colspan="2" align="center"><input type="submit" value="{$Aadd}" /></td></tr>
         </table></form>

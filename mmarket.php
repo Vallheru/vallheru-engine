@@ -8,7 +8,7 @@
  *   @author              : thindil <thindil@tuxfamily.org>
  *   @author              : eyescream <tduda@users.sourceforge.net>
  *   @version             : 1.4
- *   @since               : 12.09.2011
+ *   @since               : 19.09.2011
  *
  */
 
@@ -184,12 +184,13 @@ if (isset ($_GET['view']) && $_GET['view'] == 'add')
 			    "Amount" => $arramount,
 			    "Power" => $arrPower,
 			    "Ppower" => "Moc",
-        "Addinfo" => ADD_INFO,
-        "Aadd" => A_ADD,
-        "Potion" => POTION,
-        "Pamount" => P_AMOUNT,
-        "Pamount2" => P_AMOUNT2,
-        "Pcost" => P_COST));
+			    "Addinfo" => ADD_INFO,
+			    "Aadd" => A_ADD,
+			    "Potion" => POTION,
+			    "Pamount" => P_AMOUNT,
+			    "Pamount2" => P_AMOUNT2,
+			    "Addall" => "wszystkie posiadane",
+			    "Pcost" => P_COST));
     if (isset ($_GET['step']) && $_GET['step'] == 'add') 
     {
         if (!$_POST['cost']) 
@@ -198,8 +199,15 @@ if (isset ($_GET['view']) && $_GET['view'] == 'add')
         }
 	checkvalue($_POST['cost']);
 	checkvalue($_POST['przedmiot']);
-	checkvalue($_POST['amount']);
         $item = $db -> Execute("SELECT * FROM `potions` WHERE `id`=".$_POST['przedmiot']." AND `owner`=".$player -> id." AND `status`='K'");
+	if (!isset($_POST['addall']))
+	  {
+	    checkvalue($_POST['amount']);
+	  }
+	else
+	  {
+	    $_POST['amount'] = $item->fields['amount'];
+	  }
         if ($_POST['amount'] > $item -> fields['amount']) 
         {
             error(NO_AMOUNT.$item -> fields['name'].". <a href=\"mmarket.php\">".A_BACK."</a>");

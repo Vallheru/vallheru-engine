@@ -1,5 +1,10 @@
 2011-09-19  Bartek thindil Jasicki  <thindil@tuxfamily.org>
 
+	* FEATURE,templates/layout1/amarket.tpl, templates/layout1/hmarket.tpl, templates/layout1/imarket.tpl, templates/layout1/mmarket.tpl,
+	templates/layout1/pmarket.tpl, templates/layout1/rmarket.tpl, templates/amarket.tpl, templates/hmarket.tpl, templates/imarket.tpl,
+	templates/mmarket.tpl, templates/pmarket.tpl, templates/rmarket.tpl, amarket.php, hmarket.php, imarket.php, mmarket.php, pmarket.php,
+	rmarket.php: 
+	added option to sell all of selected item
 	* FEATURE,templates/layout1/imarket.tpl, templates/imarket.tpl, imarket.php: 
 	added option to show offerts for selected type of items
 	* FEATURE,templates/layout1/tribearmor.tpl, templates/tribearmor.tpl, tribearmor.php:

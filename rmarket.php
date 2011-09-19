@@ -8,7 +8,7 @@
  *   @author               : thindil <thindil@tuxfamily.org>
  *   @author               : eyescream <tduda@users.sourceforge.net>
  *   @version              : 1.4
- *   @since                : 10.09.2011
+ *   @since                : 19.09.2011
  *
  */
 
@@ -219,6 +219,7 @@ if (isset ($_GET['view']) && $_GET['view'] == 'add')
                              "Aadd" => A_ADD,
                              "Iamount" => I_AMOUNT,
                              "Iamount2" => I_AMOUNT2,
+			     "Addall" => "wszystkie posiadane",
                              "Icost" => I_COST));
     if (isset ($_GET['step']) && $_GET['step'] == 'add') 
     {
@@ -228,11 +229,18 @@ if (isset ($_GET['view']) && $_GET['view'] == 'add')
         }
 	checkvalue($_POST['cost']);
 	checkvalue($_POST['przedmiot']);
-	checkvalue($_POST['amount']);
         $item = $db -> Execute("SELECT * FROM `equipment` WHERE `id`=".$_POST['przedmiot']." AND `status`='U' AND `type`='I' AND `owner`=".$player -> id);
 	if (!$item->fields['id'])
 	  {
 	    error(ERROR);
+	  }
+	if (!isset($_POST['addall']))
+	  {
+	    checkvalue($_POST['amount']);
+	  }
+	else
+	  {
+	    $_POST['amount'] = $item->fields['amount'];
 	  }
         if ($item -> fields['amount'] < $_POST['amount']) 
         {

@@ -309,7 +309,8 @@ if (isset ($_GET['view']) && $_GET['view'] == 'add')
                              "Iamount2" => I_AMOUNT2,
                              "Icost" => I_COST,
 			     "Iag" => "zr",
-			     "Ispd" => "szyb"));
+			     "Ispd" => "szyb",
+			     "Addall" => "wszystkie posiadane"));
     if (isset ($_GET['step']) && $_GET['step'] == 'add') 
     {
         if (!isset($_POST['cost'])) 
@@ -318,11 +319,18 @@ if (isset ($_GET['view']) && $_GET['view'] == 'add')
         }
 	checkvalue($_POST['cost']);
 	checkvalue($_POST['przedmiot']);
-	checkvalue($_POST['amount']);
         $item = $db -> Execute("SELECT * FROM equipment WHERE id=".$_POST['przedmiot']." AND `status`='U' AND `type`!='I' AND `owner`=".$player -> id);
 	if (!$item->fields['id'])
 	  {
 	    error(ERROR);
+	  }
+	if (!isset($_POST['addall']))
+	  {
+	    checkvalue($_POST['amount']);
+	  }
+	else
+	  {
+	    $_POST['amount'] = $item->fields['amount'];
 	  }
         if ($item -> fields['type'] == 'I')
         {

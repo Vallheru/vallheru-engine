@@ -8,7 +8,7 @@
  *   @author               : thindil <thindil@tuxfamily.org>
  *   @author               : eyescream <tduda@users.sourceforge.net>
  *   @version              : 1.4
- *   @since                : 12.09.2011
+ *   @since                : 19.09.2011
  *
  */
 
@@ -282,6 +282,7 @@ if (isset ($_GET['view']) && $_GET['view'] == 'add')
                             "Tadd" => T_ADD,
                             "Tadd2" => T_ADD2,
                             "Anumber" => A_NUMBER,
+			    "Addall" => "wszystkie posiadane",
                             "Addofert" => 0));
     if (isset ($_GET['step']) && ($_GET['step'] == 'piece' || $_GET['step'] == 'component')) 
     {
@@ -290,7 +291,6 @@ if (isset ($_GET['view']) && $_GET['view'] == 'add')
 	  {
 	    error(ERROR);
 	  }
-	checkvalue($_POST['amount']);
 	checkvalue($_POST['number']);
 	checkvalue($_POST['cost']);
         if ($_GET['step'] == 'piece')
@@ -329,6 +329,14 @@ if (isset ($_GET['view']) && $_GET['view'] == 'add')
         $strPiecename = $strName.$arrNumber[$_POST['name']];
         $intNumber = $_POST['number'] - 1;
         $objAmount = $db -> Execute("SELECT `amount` FROM `astral` WHERE `owner`=".$player -> id." AND `type`='".$strPiecename."' AND `number`=".$intNumber." AND `location`='V'") or die($db -> ErrorMsg());
+	if (!isset($_POST['addall']))
+	  {
+	    checkvalue($_POST['amount']);
+	  }
+	else
+	  {
+	    $_POST['amount'] = $item->fields['amount'];
+	  }
         if (!$objAmount -> fields['amount'])
         {
             error(NO_AMOUNT.$strName2);
