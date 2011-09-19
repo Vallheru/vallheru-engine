@@ -432,6 +432,11 @@ if (isset ($_GET['step']) && $_GET['step'] == 'daj')
     $arrname = array();
     $arrid = array();
     $arramount = array();
+    $arrPower = array();
+    $arrSpeed = array();
+    $arrDur = array();
+    $arrMaxdur = array();
+    $arrAgi = array();
     $i = 0;
     while (!$arritem -> EOF) 
     {
@@ -439,12 +444,19 @@ if (isset ($_GET['step']) && $_GET['step'] == 'daj')
         $arrid[$i] = $arritem -> fields['id'];
 	if ($arritem->fields['type'] != 'R')
 	  {
+	    $arrDur[$i] =  $arritem->fields['wt'];
+	    $arrMaxdur[$i] = $arritem->fields['maxwt'];
 	    $arramount[$i] = $arritem -> fields['amount'];
 	  }
 	else
 	  {
+	    $arrDur[$i] = 1;
+	    $arrMaxdur[$i] = 1;
 	    $arramount[$i] = $arritem -> fields['wt'];
 	  }
+	$arrPower[$i] = $arritem->fields['power'];
+	$arrSpeed[$i] = $arritem->fields['szyb'];
+	$arrAgi[$i] = $arritem->fields['zr'];
         $arritem -> MoveNext();
         $i = $i + 1;
     }
@@ -452,6 +464,13 @@ if (isset ($_GET['step']) && $_GET['step'] == 'daj')
     $smarty -> assign(array("Name" => $arrname, 
                             "Itemid" => $arrid, 
                             "Amount" => $arramount,
+			    "Ipower" => $arrPower,
+			    "Ispeed" => $arrSpeed,
+			    "Idur" => $arrDur,
+			    "Imaxdur" => $arrMaxdur,
+			    "Iagi" => $arrAgi,
+			    "Iag" => "zr",
+			    "Ispd" => "szyb",
                             "Additem" => ADD_ITEM,
                             "Item" => ITEM,
                             "Amount2" => AMOUNT2,

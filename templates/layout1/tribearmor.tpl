@@ -55,7 +55,19 @@
     <table class="dark"><tr><td>
     {$Item}: <select name="przedmiot">
     {section name=tribearmor1 loop=$Name}
-        <option value="{$Itemid[tribearmor1]}">({$Amount2}: {$Amount[tribearmor1]}) {$Name[tribearmor1]}</option>
+        <option value="{$Itemid[tribearmor1]}">{$Name[tribearmor1]} (+{$Ipower[tribearmor1]})
+	{if $Ispeed[tribearmor1] > 0}
+	    (+{$Ispeed[tribearmor1]} {$Ispd})
+	{/if}
+	{if $Iagi[tribearmor1] > 0}
+	    (-{$Iagi[tribearmor1]}% {$Iag})
+	{elseif $Iagi[tribearmor1] < 0}
+	    ({$Iagi[tribearmor1]}% {$Iag})
+	{/if}
+	{if $Imaxdur[tribearmor1] > 1}
+	    ({$Idur[tribearmor1]}/{$Imaxdur[tribearmor1]})
+	{/if}
+	({$Amount2}: {$Amount[tribearmor1]})</option>
     {/section}
     </select> sztuk <input type="text" name="amount" size="5" /></td></tr>
     <tr><td colspan="2" align="center"><input type="submit" value="{$Aadd}" /></td></tr>
