@@ -660,8 +660,8 @@ if (isset ($_GET['view']) && $_GET['view'] == 'gold')
 */
 if (isset($_GET['view']) && $_GET['view'] == 'veterans') 
 {
-    $query = $db -> Execute("SELECT id FROM outpost_veterans WHERE outpost=".$out -> fields['id']);
-    $numveterans = $query -> RecordCount();
+    $query = $db -> Execute("SELECT count(`id`) FROM `outpost_veterans` WHERE `outpost`=".$out -> fields['id']);
+    $numveterans = $query->fields['count(`id`)'];
     $query -> Close();
     if (!$numveterans) 
     {
@@ -671,12 +671,8 @@ if (isset($_GET['view']) && $_GET['view'] == 'veterans')
     {
         error(NO_VETERAN);
     }
-    if (isset($_GET['id'])) 
-    {
-        error(ERROR);
-    }
     checkvalue($_GET['id']);
-    $veteran = $db -> Execute("SELECT * FROM outpost_veterans WHERE id=".$_GET['id']);
+    $veteran = $db -> Execute("SELECT * FROM `outpost_veterans` WHERE `id`=".$_GET['id']);
     if ($veteran -> fields['outpost'] != $out -> fields['id']) 
     {
         error(NOT_YOUR);
