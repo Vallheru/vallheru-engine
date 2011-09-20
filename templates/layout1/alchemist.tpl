@@ -63,6 +63,10 @@
     {/if}
     {if $Make != 0}
         {$Youmake} <b>{$Name}</b> <b>{$Amount}</b> {$Pgain} <b>{$Exp}</b> {$Exp_and} <b>{$Ability}</b> {$Alchemylevel}<br />
+	<p>{$Youmade}</p>
+	<p>{foreach $Imaked as $value}
+	    {$value@key} ({$Ipower}: {$value[0]}) {$Iamount}: {$value[1]}<br />
+	{/foreach}</p>
     {/if}
 {/if}
 

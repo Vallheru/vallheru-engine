@@ -82,12 +82,16 @@
 		{/if}
 		{if $Next != 0}
 			<form method="post" action="alchemik.php?alchemik=pracownia&amp;rob={$Id1}">
-				{$Pstart} <b>{$Name1}</b> <input type="text" name="razy" /> {$Pamount}.
+				{$Pstart} <b>{$Name1}</b> <input type="text" name="razy" size="5" /> {$Pamount}.
 				<input type="submit" value="{$Amake}" />
 			</form>
 		{/if}
 		{if $Make != 0}
 			<p>{$Youmake} <b>{$Name}</b> <b>{$Amount}</b> {$Pgain} <b>{$Exp}</b> {$Exp_and} <b>{$Ability}</b> {$Alchemylevel}</p>
+			<p>{$Youmade}</p>
+			<p>{foreach $Imaked as $value}
+			    {$value@key} ({$Ipower}: {$value[0]}) {$Iamount}: {$value[1]}<br />
+			{/foreach}</p>
 		{/if}
 	{/if}
 	

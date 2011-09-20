@@ -7,7 +7,7 @@
  *   @copyright            : (C) 2004,2005,2006,2007,2011 Vallheru Team based on Gamers-Fusion ver 2.5
  *   @author               : thindil <thindil@tuxfamily.org>
  *   @version              : 1.4
- *   @since                : 12.08.2011
+ *   @since                : 20.09.2011
  *
  */
 
@@ -232,6 +232,7 @@ if (isset ($_GET['alchemik']) && $_GET['alchemik'] == 'pracownia')
         $rpd = 0;
         $rum = 0;
         $objItem = $db -> Execute("SELECT `efect`, `type`, `power` FROM `potions` WHERE `name`='".$kuznia -> fields['name']."' AND `owner`=0");
+	$arrMaked = array();
 
         /**
          * Start making potions
@@ -323,26 +324,37 @@ if (isset ($_GET['alchemik']) && $_GET['alchemik'] == 'pracownia')
             {
                 $intPower = $intMaxpower;
             }
-            $test = $db -> Execute("SELECT `id` FROM `potions` WHERE `name`='".$strName."' AND `owner`=".$player -> id." AND `status`='K' AND `power`=".$intPower) or die("błąd");
-            if (!$test -> fields['id']) 
-            {
-	         if ($objItem -> fields['type'] == 'M')
-		   {
-		     $intCost = ($intPower * 3) / 20;
-		   }
-		 else
-		   {
-		     $intCost = ((2 * $intPower) * 3) / 20;
-		   }
-                $db -> Execute("INSERT INTO potions (`owner`, `name`, `efect`, `power`, `amount`, `status`, `type`, `cost`) VALUES(".$player -> id.", '".$strName."', '".$objItem -> fields['efect']."', ".$intPower.", ".$intTmpamount.", 'K', '".$objItem -> fields['type']."', ".$intCost.")");
-            } 
-                else 
-            {
-                $db -> Execute("UPDATE `potions` SET `amount`=`amount`+".$intTmpamount." WHERE `id`=".$test -> fields['id']);
-            }
-            $test -> Close();
+	    if (!array_key_exists($strName, $arrMaked))
+	      {
+		$arrMaked[$strName] = array($intPower, $intTmpamount);
+	      }
+	    else
+	      {
+		$arrMaked[$strName][1] += $intTmpamount;
+	      }
             $intTmpamount = 0;
         }
+	foreach ($arrMaked as $key => $value)
+	  {
+	    $test = $db -> Execute("SELECT `id` FROM `potions` WHERE `name`='".$key."' AND `owner`=".$player -> id." AND `status`='K' AND `power`=".$value[0]);
+	    if (!$test -> fields['id']) 
+	      {
+		if ($objItem -> fields['type'] == 'M')
+		  {
+		    $intCost = ($value[0] * 3) / 20;
+		  }
+		else
+		  {
+		    $intCost = ((2 * $value[0]) * 3) / 20;
+		  }
+		$db -> Execute("INSERT INTO potions (`owner`, `name`, `efect`, `power`, `amount`, `status`, `type`, `cost`) VALUES(".$player -> id.", '".$key."', '".$objItem -> fields['efect']."', ".$value[0].", ".$value[1].", 'K', '".$objItem -> fields['type']."', ".$intCost.")");
+	      } 
+	    else 
+	      {
+                $db -> Execute("UPDATE `potions` SET `amount`=`amount`+".$value[1]." WHERE `id`=".$test -> fields['id']);
+	      }
+            $test -> Close();
+	  }
         $rum = ($fltEnergy * 0.01);
         if ($player -> clas == 'Rzemieślnik') 
         {
@@ -356,6 +368,10 @@ if (isset ($_GET['alchemik']) && $_GET['alchemik'] == 'pracownia')
                                  "Youmake" => YOU_MAKE,
                                  "Pgain" => P_GAIN,
                                  "Exp_and" => EXP_AND,
+				 "Imaked" => $arrMaked,
+				 "Youmade" => "Wykonane mikstury:",
+				 "Ipower" => "moc",
+				 "Iamount" => "ilość",
                                  "Alchemylevel" => ALCHEMY_LEVEL));
         $kuznia -> Close();
         checkexp($player -> exp, $rpd, $player -> level, $player -> race, $player -> user, $player -> id, 0, 0, $player -> id, 'alchemia', $rum);

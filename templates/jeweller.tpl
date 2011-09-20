@@ -149,5 +149,18 @@
 
 {if $Step != ""}
     {$Message}
+    {if $Tmaked != ''}
+        <br />{$Tmaked}:<br />
+	{section name=making loop=$Iamount}
+	    {$Iname} (+ {$Ibonus[making]}) {$Tamount}: {$Iamount[making]}<br />
+	{/section}
+    {/if}
+    {if $Tmaked2 == 1}
+	{section name=making2 loop=$Iamount}
+	    {if $Iamount[making2] > 0} 
+	        {$Iname[making2]} (+ {$Ibonus[making2]}) {$Tamount}: {$Iamount[making2]}<br />
+	    {/if}
+	{/section}
+    {/if}
     <br /><br /><a href="jeweller.php">{$Aback}</a>
 {/if}

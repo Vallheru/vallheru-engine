@@ -7,7 +7,7 @@
  *   @copyright            : (C) 2006,2011 Vallheru Team based on Gamers-Fusion ver 2.5
  *   @author               : thindil <thindil@tuxfamily.org>
  *   @version              : 1.4
- *   @since                : 27.08.2011
+ *   @since                : 20.09.2011
  *
  */
 
@@ -59,7 +59,9 @@ if (!isset($_GET['step']))
     else
 {
     $smarty -> assign(array("Aback" => A_BACK,
-                            "Message" => ''));
+                            "Message" => '',
+			    "Tmaked" => '',
+			    "Tmaked2" => 0));
 }
 
 /**
@@ -424,7 +426,7 @@ if (isset($_GET['step']) && $_GET['step'] == 'make2')
 		  {
 		    $intAbility = 0.02;
 		  }
-                $smarty -> assign("Message", YOU_MAKE.$strName.YOU_GAIN3.$intGainexp.AND_EXP2.$intAbility.IN_JEWELLER);
+                $smarty -> assign("Message", YOU_MAKE.$strName." (+".$intBonus.")".YOU_GAIN3.$intGainexp.AND_EXP2.$intAbility.IN_JEWELLER);
             }
                 else
             {
@@ -582,7 +584,12 @@ if (isset($_GET['step']) && $_GET['step'] == 'make2')
 	      {
 		$intAbility = 0.02;
 	      }
-            $smarty -> assign("Message", YOU_MAKE.$intAmount2."</b> ".R_AMOUNT.$strName.YOU_GAIN3.$intGainexp.AND_EXP2.$intAbility.IN_JEWELLER);
+            $smarty -> assign(array("Message" => YOU_MAKE.$intAmount2."</b> ".R_AMOUNT.$strName.YOU_GAIN3.$intGainexp.AND_EXP2.$intAbility.IN_JEWELLER,
+				    "Tmaked" => "Wykonane pierścienie",
+				    "Tamount" => "ilość",
+				    "Iamount" => $arrAmount,
+				    "Ibonus" => $arrBonus,
+				    "Iname" => $strName));
         }
             else
         {
@@ -841,7 +848,7 @@ if (isset($_GET['step']) && $_GET['step'] == 'make3')
                     }
                     $objTest -> Close();
                 }
-                $smarty -> assign("Message", YOU_MAKE.$strName.YOU_GAIN3.$intGainexp.AND_EXP2.$intAbility.IN_JEWELLER);
+                $smarty -> assign("Message", YOU_MAKE.$strName2." (+ ".$intPower.")".YOU_GAIN3.$intGainexp.AND_EXP2.$intAbility.IN_JEWELLER);
             }
                 else
             {
@@ -965,6 +972,7 @@ if (isset($_GET['step']) && $_GET['step'] == 'make3')
         /**
          * Write to database and show info
          */
+	$arrBonus = array(0, 0);
         if ($intMake)
         {
             $intCost = ceil($arrRcost[$intKey] / 10);
@@ -973,6 +981,7 @@ if (isset($_GET['step']) && $_GET['step'] == 'make3')
             {
                 $strName2 = R_GOD.$strName;
                 $intPower = $intPower * 4;
+		$arrBonus[0] = $intPower;
                 $objTest = $db -> Execute("SELECT `id` FROM `equipment` WHERE `owner`=".$player -> id." AND `name`='".$strName2."' AND `status`='U' AND `cost`=".$intCost." AND `power`=".$intPower);
                 if (!$objTest -> fields['id'])
                 {
@@ -989,6 +998,7 @@ if (isset($_GET['step']) && $_GET['step'] == 'make3')
             {
                 $strName2 = $strPrefix.$strName;
                 $intPower = $intPower * 2;
+		$arrBonus[1] = $intPower;
                 $objTest = $db -> Execute("SELECT `id` FROM `equipment` WHERE `owner`=".$player -> id." AND `name`='".$strName2."' AND `status`='U' AND `cost`=".$intCost." AND `power`=".$intPower);
                 if (!$objTest -> fields['id'])
                 {
@@ -996,12 +1006,17 @@ if (isset($_GET['step']) && $_GET['step'] == 'make3')
                 }
                     else
                 {
-                  $db -> Execute("UPDATE `equipment` SET `amount`=`amount`+".$intSpecial." WHERE `id`=".$player -> id);
+                  $db -> Execute("UPDATE `equipment` SET `amount`=`amount`+".$intSpecial." WHERE `id`=".$objTest->fields['id']);
                 }
                 $objTest -> Close();
             }
             $intRings = $intGod + $intSpecial;
-            $smarty -> assign("Message", "<br /><br />".YOU_MAKE.$intRings."</b> ".R_AMOUNT3.$strName.YOU_GAIN3.$intGainexp.AND_EXP2.$intAbility.IN_JEWELLER);
+            $smarty -> assign(array("Message" => "<br /><br />".YOU_MAKE.$intRings."</b> ".R_AMOUNT3.$strName.YOU_GAIN3.$intGainexp.AND_EXP2.$intAbility.IN_JEWELLER,
+				    "Tmaked2" => 1,
+				    "Tamount" => "ilość",
+				    "Iamount" => array($intGod, $intSpecial),
+				    "Ibonus" => $arrBonus,
+				    "Iname" => array(R_GOD.$strName, $strPrefix.$strName)));
         }
            else
         {
