@@ -7,7 +7,7 @@
  *   @copyright            : (C) 2004,2005,2006,2007,2011 Vallheru Team based on Gamers-Fusion ver 2.5
  *   @author               : thindil <thindil@users.sourceforge.net>
  *   @version              : 1.4
- *   @since                : 28.08.2011
+ *   @since                : 20.09.2011
  *
  */
 
@@ -27,7 +27,7 @@
 //   along with this program; if not, write to the Free Software
 //   Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 //
-// $Id: lumbermill.php 945 2007-03-05 17:30:59Z thindil $
+// $Id$
 
 $title="Tartak";
 require_once("includes/head.php");
@@ -55,11 +55,11 @@ function createitem()
     global $intItems;
     global $intGainexp;
     global $intChance;
-    global $intCost;
     global $arrMaxbonus;
     global $intKey;
 
     $intRoll = rand(1,100);
+    $arrResult = array();
     if ($intRoll <= $intChance) 
     {
         $strName = $arrItem['name'];
@@ -143,35 +143,22 @@ function createitem()
         {
             $arrRepair = array(1, 4, 16, 64, 256);
             $intRepaircost = $arrItem['level'] * $arrRepair[$intKey] * 2;
-            $test = $db -> Execute("SELECT id FROM equipment WHERE name='".$strName."' AND wt=".$intDur." AND type='B' AND status='U' AND owner=".$player -> id." AND power=".$intPower." AND zr=0 AND szyb=".$intSpeed." AND maxwt=".$intDur." AND poison=0 AND cost=".$intCost);
-            if (!$test -> fields['id']) 
-            {
-                $db -> Execute("INSERT INTO equipment (owner, name, power, type, cost, zr, wt, minlev, maxwt, amount, magic, poison, szyb, twohand, repair) VALUES(".$player -> id.", '".$strName."', ".$intPower.", 'B', ".$intCost.", 0, ".$intDur.", ".$arrItem['level'].", ".$intDur.", 1, 'N', 0, ".$intSpeed.",'Y', ".$intRepaircost.")");
-            } 
-                else 
-            {
-                $db -> Execute("UPDATE equipment SET amount=amount+1 WHERE id=".$test -> fields['id']);
-            }
-            $test -> Close();
         } 
             else 
         {
-            $test = $db -> Execute("SELECT id FROM equipment WHERE owner=".$player -> id." AND name='".$strName."' AND power=".$intPower." AND status='U' AND cost=".$intCost);
-            if (!$test -> fields['id']) 
-            {
-                $db -> Execute("INSERT INTO equipment (owner, name, power, type, cost, status, minlev, wt) VALUES(".$player -> id.", '".$strName."', ".$intPower.", 'R', ".$intCost.", 'U', ".$arrItem['level'].", ".$intDur.")");
-            } 
-                 else 
-            {
-                $db -> Execute("UPDATE equipment SET wt=wt+".$intDur." WHERE id=".$test -> fields['id']);
-            }
-            $test -> Close();
+	  $intRepaircost = 0;
         }
+	$arrResult = array("name" => $strName,
+			   "wt" => (int)$intDur,
+			   "power" => (int)$intPower,
+			   "speed" => (int)$intSpeed,
+			   "repaircost" => $intRepaircost);
     }
         else
     {
         $intAbility = $intAbility + 0.01;
     }
+    return $arrResult;
 }
 
 $objLumberjack = $db -> Execute("SELECT level FROM lumberjack WHERE owner=".$player -> id);
@@ -484,7 +471,6 @@ if (isset ($_GET['mill']) && $_GET['mill'] == 'mill')
                          'level' => $objLumber -> fields['level'],
                          'szyb' => $intSpeed,
                          'zr' => 0,
-                         'cost' => $intCost,
                          'twohand' => $objLumber -> fields['twohand']);
         $intItems = 0;
         $intGainexp = 0;
@@ -496,7 +482,7 @@ if (isset ($_GET['mill']) && $_GET['mill'] == 'mill')
         }
         if ($_POST['razy'] == $need) 
         {
-            createitem();
+            $arrMaked = createitem();
             if ($intItems)
             {
                 if ($player -> clas == 'Rzemieślnik') 
@@ -505,7 +491,33 @@ if (isset ($_GET['mill']) && $_GET['mill'] == 'mill')
                     $intAbility = $intAbility * 2;
                 }
                 $intGainexp = ceil($intGainexp);
-                $smarty -> assign ("Message", YOU_MAKE.$arrItem['name'].AND_GAIN2.$intGainexp.AND_EXP2.$intAbility.IN_MILL);
+		if ($arrItem['type'] == 'B')
+		  {
+		    $test = $db -> Execute("SELECT `id` FROM `equipment` WHERE `name`='".$arrMaked['name']."' AND `wt`=".$arrMaked['wt']." AND `type`='B' AND `status`='U' AND `owner`=".$player->id." AND `power`=".$arrMaked['power']." AND `zr`=0 AND `szyb`=".$arrMaked['speed']." AND `maxwt`=".$arrMaked['wt']." AND `poison`=0 AND `cost`=".$intCost);
+		    if (!$test -> fields['id']) 
+		      {
+			$db -> Execute("INSERT INTO `equipment` (`owner`, `name`, `power`, `type`, `cost`, `zr`, `wt`, `minlev`, `maxwt`, `amount`, `magic`, `poison`, `szyb`, `twohand`, `repair`) VALUES(".$player->id.", '".$arrMaked['name']."', ".$arrMaked['power'].", 'B', ".$intCost.", 0, ".$arrMaked['wt'].", ".$arrItem['level'].", ".$arrMaked['wt'].", 1, 'N', 0, ".$arrMaked['speed'].",'Y', ".$arrMaked['repaircost'].")");
+		      } 
+		    else 
+		      {
+			$db -> Execute("UPDATE `equipment` SET `amount`=`amount`+1 WHERE `id`=".$test -> fields['id']);
+		      }
+		    $test -> Close();
+		  }
+		else
+		  {
+		    $test = $db -> Execute("SELECT `id` FROM `equipment` WHERE `owner`=".$player->id." AND `name`='".$arrMaked['name']."' AND `power`=".$arrMaked['power']." AND `status`='U' AND `cost`=".$intCost." AND `poison`=0");
+		    if (!$test -> fields['id']) 
+		      {
+			$db -> Execute("INSERT INTO `equipment` (`owner`, `name`, `power`, `type`, `cost`, `status`, `minlev`, `wt`) VALUES(".$player->id.", '".$arrMaked['name']."', ".$arrMaked['power'].", 'R', ".$intCost.", 'U', ".$arrItem['level'].", ".$arrMaked['wt'].")");
+		      } 
+		    else 
+		      {
+			$db -> Execute("UPDATE `equipment` SET `wt`=`wt`+".$arrMaked['wt']." WHERE `id`=".$test -> fields['id']);
+		      }
+		    $test -> Close();
+		  }
+                $smarty -> assign ("Message", YOU_MAKE.$arrMaked['name']."(+ ".$arrMaked['power'].") (".$arrMaked['speed']."% szyb) (".$arrMaked['wt']."/".$arrMaked['wt'].")".AND_GAIN2.$intGainexp.AND_EXP2.$intAbility.IN_MILL);
             } 
                 else 
             {
@@ -649,18 +661,68 @@ if (isset ($_GET['mill']) && $_GET['mill'] == 'mill')
             $intChance = 95;
         }
         if ($intAmount > 0) 
-        {
+	  {
+	    $arrMaked = array();
+	    $arrAmount = array();
             for ($i = 1; $i <= $intAmount; $i++) 
             {
-                createitem();
+                $arrTmp = createitem();
+		if (count($arrTmp) > 0)
+		  {
+		    $intIndex = array_search($arrTmp, $arrMaked);
+		    if ($intIndex === FALSE)
+		      {
+			$arrMaked[] = $arrTmp;
+			$arrAmount[] = 1;
+		      }
+		    else
+		      {
+			$arrAmount[$intIndex]++;
+		      }
+		  }
             }
+	    for ($i = 0; $i < count($arrMaked); $i++)
+	      {
+		if ($arrItem['type'] == 'B')
+		  {
+		    $test = $db -> Execute("SELECT `id` FROM `equipment` WHERE `name`='".$arrMaked[$i]['name']."' AND `wt`=".$arrMaked[$i]['wt']." AND `type`='B' AND `status`='U' AND `owner`=".$player->id." AND `power`=".$arrMaked[$i]['power']." AND `zr`=0 AND `szyb`=".$arrMaked[$i]['speed']." AND `maxwt`=".$arrMaked[$i]['wt']." AND `poison`=0 AND `cost`=".$intCost);
+		    if (!$test -> fields['id']) 
+		      {
+			$db -> Execute("INSERT INTO `equipment` (`owner`, `name`, `power`, `type`, `cost`, `zr`, `wt`, `minlev`, `maxwt`, `amount`, `magic`, `poison`, `szyb`, `twohand`, `repair`) VALUES(".$player->id.", '".$arrMaked[$i]['name']."', ".$arrMaked[$i]['power'].", 'B', ".$intCost.", 0, ".$arrMaked[$i]['wt'].", ".$arrItem['level'].", ".$arrMaked[$i]['wt'].", ".$arrAmount[$i].", 'N', 0, ".$arrMaked[$i]['speed'].",'Y', ".$arrMaked[$i]['repaircost'].")");
+		      } 
+		    else 
+		      {
+			$db -> Execute("UPDATE `equipment` SET `amount`=`amount`+".$arrAmount[$i]." WHERE `id`=".$test -> fields['id']);
+		      }
+		    $test -> Close();
+		  }
+		else
+		  {
+		    $test = $db -> Execute("SELECT `id` FROM `equipment` WHERE `owner`=".$player->id." AND `name`='".$arrMaked[$i]['name']."' AND `power`=".$arrMaked[$i]['power']." AND `status`='U' AND `cost`=".$intCost." AND `poison`=0");
+		    if (!$test -> fields['id']) 
+		      {
+			$db -> Execute("INSERT INTO `equipment` (`owner`, `name`, `power`, `type`, `cost`, `status`, `minlev`, `wt`) VALUES(".$player->id.", '".$arrMaked[$i]['name']."', ".$arrMaked[$i]['power'].", 'R', ".$intCost.", 'U', ".$arrItem['level'].", ".($arrMaked[$i]['wt'] * $arrAmount[$i]).")");
+		      } 
+		    else 
+		      {
+			$db -> Execute("UPDATE `equipment` SET `wt`=`wt`+".($arrAmount[$i] * $arrMaked[$i]['wt'])." WHERE `id`=".$test -> fields['id']);
+		      }
+		    $test -> Close();
+		  }
+	      }
             if ($player -> clas == 'Rzemieślnik') 
             {
                 $intGainexp = $intGainexp * 2;
                 $intAbility = $intAbility * 2;
             }
             $intGainexp = ceil($intGainexp);
-            $smarty -> assign ("Message", YOU_MAKE.$arrItem['name']."</b> <b>".$intItems.AND_GAIN2.$intGainexp.AND_EXP2.$intAbility.IN_MILL);
+            $smarty->assign(array("Message" => YOU_MAKE.$arrItem['name']."</b> <b>".$intItems.AND_GAIN2.$intGainexp.AND_EXP2.$intAbility.IN_MILL,
+				  "Youmade" => "Wykonane przedmioty:",
+				  "Ispeed" => "szyb",
+				  "Iamount" => "ilość",
+				  "Items" => $arrMaked,
+				  "Amount" => $arrAmount,
+				  "Amt" => $intItems));
             checkexp($player -> exp, $intGainexp, $player -> level, $player -> race, $player -> user, $player -> id, 0, 0, $player -> id,'fletcher',$intAbility);
         } 
             else 

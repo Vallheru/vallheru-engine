@@ -97,8 +97,17 @@
             </form>
         {/if}
     {/if}
-    {if $Continue != "" || $Make != ""}
+    {if $Continue != ""}
         {$Message}
+    {/if}
+    {if $Make != ""}
+	<p>{$Message}</p>
+	{if $Amt > 0}
+	    <p>{$Youmade}</p>
+	    {section name=maked loop=$Items}
+	        {$Items[maked].name} (+ {$Items[maked].power}) ({$Items[maked].speed}% {$Ispeed}) ({$Items[maked].wt}/{$Items[maked].wt}) {$Iamount}: {$Amount[maked]}<br />
+	    {/section}
+	{/if}
     {/if}
 {/if}
 

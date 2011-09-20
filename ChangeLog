@@ -1,5 +1,8 @@
 2011-09-20  Bartek thindil Jasicki  <thindil@tuxfamily.org>
 
+	* FEATURE,templates/layout1/kowal.tpl, templates/kowal.tpl, kowal.php, templates/layout1/lumbermill.tpl, templates/lumbermill.tpl,
+	lumbermill.tpl: 
+	added info about maked items
 	* FEATURE,templates/layout1/jeweller.tpl, templates/jeweller.tpl, templates/layout1/alchemist.tpl, templates/alchemist.tpl, jeweller.php,
 	alchemik.php: 
 	added info about maked items
