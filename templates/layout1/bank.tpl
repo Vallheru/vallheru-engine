@@ -8,29 +8,29 @@
 {if $Action != "astral"}
 
     <form method="post" action="bank.php?action=withdraw">
-    {$Iwant} <input type="submit" value="{$Awithdraw}" /> <input type="text" value="{$Bank}" name="with" /> {$Goldcoins}
+    {$Iwant} <input type="submit" value="{$Awithdraw}" /> <input type="text" value="{$Bank}" name="with" size="10" /> {$Goldcoins}
     </form>
 
     <form method="post" action="bank.php?action=deposit">
-    {$Iwant} <input type="submit" value="{$Adeposit}" /> <input type="text" value="{$Gold}" name="dep" /> {$Goldcoins}
+    {$Iwant} <input type="submit" value="{$Adeposit}" /> <input type="text" value="{$Gold}" name="dep" size="10" /> {$Goldcoins}
     </form>
 
     <form method="post" action="bank.php?action=donation">
     {$Iwant} <input type="submit" value="{$Agive}" /> {$Dplayer} <input type="text" name="pid" size="3" />
-    <input type="text" value="{$Bank}" name="with" /> {$Goldcoins}
+    <input type="text" value="{$Bank}" name="with" size="10" /> {$Goldcoins}
     </form>
 
     {if $Mithril > 0}
         <form method="post" action="bank.php?action=mithril">
         {$Iwant} <input type="submit" value="{$Agive}" /> {$Dplayer} <input type="text" name="pid" size="3" />
-        <input type="text" name="mithril" /> {$Mamount}.
+        <input type="text" name="mithril" size="10" value="{$Mithril}" /> {$Mamount}.
         </form>
     {/if}
 
     {if $Items == 1}
         <form method="post" action="bank.php?action=items">
         {$Iwant} <input type="submit" value="{$Agive}" /> {$Dplayer} <input type="text" name="pid" size="3" />
-        <input type="text" name="amount" size="3" /> {$Iamount} <select name="item">
+        <input type="text" name="amount" size="3" /> (<input type="checkbox" name="addall" value="Y" />{$Tall}) {$Iamount} <select name="item">
         {section name=items loop=$Itemid}
             <option value="{$Itemid[items]}">({$Iamount2}: {$Itemamount[items]}) {$Itemname[items]} (+{$Itempower[items]}{if $Itemagi[items] != 0} {$Iagi} {$Itemagi[items]}{/if}{if $Itemspeed[items] != 0} {$Ispe} +{$Itemspeed[items]}{/if})</option>
         {/section}
@@ -41,7 +41,7 @@
     {if $Potions == 1}
         <form method="post" action="bank.php?action=potions">
         {$Iwant} <input type="submit" value="{$Agive}" /> {$Dplayer} <input type="text" name="pid" size="3" />
-        <input type="text" name="amount" size="3" /> {$Iamount} <select name="item">
+        <input type="text" name="amount" size="3" /> (<input type="checkbox" name="addall" value="Y" />{$Tall}) {$Iamount} <select name="item">
         {section name=potion loop=$Potionid}
             <option value="{$Potionid[potion]}">({$Iamount2}: {$Potionamount[potion]}) {$Potionname[potion]} (+{$Potionpower[potion]})</option>
         {/section}
@@ -55,7 +55,7 @@
         {section name=herb loop=$Herbname}
             <option value="{$Herbname[herb]}">{$Herbname2[herb]}</option>
         {/section}
-        </select> {$Hamount} <input type="text" name="amount" size="5" />.
+        </select> {$Hamount} <input type="text" name="amount" size="5" /> (<input type="checkbox" name="addall" value="Y" />{$Tall}).
         </form>
     {/if}
 
@@ -65,7 +65,7 @@
         {section name=mineral loop=$Minname}
             <option value="{$Minoption[mineral]}">{$Minname[mineral]}</option>
         {/section}
-        </select> {$Hamount} <input type="text" name="amount" size="5" />.
+        </select> {$Hamount} <input type="text" name="amount" size="5" /> (<input type="checkbox" name="addall" value="Y" />{$Tall}).
         </form>
     {/if}
 

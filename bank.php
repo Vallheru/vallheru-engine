@@ -9,7 +9,7 @@
  *   @author               : yeskov <yeskov@users.sourceforge.net>
  *   @author               : eyescream <tduda@users.sourceforge.net>
  *   @version              : 1.4
- *   @since                : 16.09.2011
+ *   @since                : 19.09.2011
  *
  */
 
@@ -91,12 +91,11 @@ if (isset ($_GET['action']) && $_GET['action'] == 'donation')
     checkvalue($_POST['pid']);
     checkvalue($_POST['with']);
     integercheck($_POST['with']);
-    $objGold = $db -> Execute("SELECT `bank` FROM `players` WHERE `id`=".$player -> id);
-    if ($objGold -> fields['bank'] < $_POST['with'])
+
+    if ($player->bank < $_POST['with'])
     {
         error(NO_GOLD);
     }
-    $objGold -> Close();
     if ($player -> credits < 0)
     {
         error(MINUS_GOLD);
@@ -126,19 +125,18 @@ if (isset ($_GET['action']) && $_GET['action'] == 'donation')
 */
 if (isset ($_GET['action']) && $_GET['action'] == 'mithril') 
 {
-    integercheck($_POST['mithril']);
     checkvalue($_POST['pid']);
+    integercheck($_POST['mithril']);
     checkvalue($_POST['mithril']);
+
     if ($_POST['pid'] == $player -> id) 
     {
         error (BAD_PLAYER);
     }
-    $objMithril = $db -> Execute("SELECT `platinum` FROM `players` WHERE `id`=".$player -> id);
-    if ($objMithril -> fields['platinum'] < $_POST['mithril'])
+    if ($player->platinum < $_POST['mithril'])
     {
         error(NO_MITHRIL);
     }
-    $objMithril -> Close();
     $objDonated = $db -> Execute("SELECT `id`, `user` FROM `players` WHERE `id`=".$_POST['pid']);
     if (!$objDonated -> fields['id'])
     {
@@ -160,13 +158,11 @@ if (isset ($_GET['action']) && $_GET['action'] == 'mithril')
 */
 if (isset ($_GET['action']) && $_GET['action'] == 'minerals') 
 {
-    if (!isset($_POST['amount']) || !isset($_POST['pid']))
+    if (!isset($_POST['pid']))
       {
 	error(ERROR);
       }
-    integercheck($_POST['amount']);
     checkvalue($_POST['pid']);
-    checkvalue($_POST['amount']);
     $arrSqlname = array('copperore', 'zincore', 'tinore', 'ironore', 'copper', 'bronze', 'brass', 'iron', 'steel', 'coal', 'adamantium', 'meteor', 'crystal', 'pine', 'hazel', 'yew', 'elm');
     if (!in_array($_POST['item'], $arrSqlname)) 
     {
@@ -178,6 +174,15 @@ if (isset ($_GET['action']) && $_GET['action'] == 'minerals')
     {
         error(NO_MINERALS);
     }
+    if (!isset($_POST['addall']))
+      {
+	integercheck($_POST['amount']);
+	checkvalue($_POST['amount']);
+      }
+    else
+      {
+	$_POST['amount'] = $objMinerals -> fields[$_POST['item']];
+      }
     $arrName = array(COPPERORE, ZINCORE, TINORE, IRONORE, COPPER, BRONZE, BRASS, IRON, STEEL, COAL, ADAMANTIUM, METEOR, CRYSTAL, PINE, HAZEL, YEW, ELM);
     $strMineralname = $arrName[$intKey];
     if ($objMinerals -> fields[$_POST['item']] < $_POST['amount']) 
@@ -219,9 +224,7 @@ if (isset ($_GET['action']) && $_GET['action'] == 'minerals')
 */
 if (isset ($_GET['action']) && $_GET['action'] == 'herbs') 
 {
-    integercheck($_POST['amount']);
     checkvalue($_POST['pid']);
-    checkvalue($_POST['amount']);
     $arrHerbs = array('illani', 'illanias', 'nutari', 'dynallca', 'ilani_seeds', 'illanias_seeds', 'nutari_seeds', 'dynallca_seeds');
     if (!in_array($_POST['item'], $arrHerbs))
     {
@@ -235,6 +238,15 @@ if (isset ($_GET['action']) && $_GET['action'] == 'herbs')
     $herb = "$_POST[item]";
     $arrName = array(HERB1, HERB2, HERB3, HERB4, HERB5, HERB6, HERB7, HERB8);
     $intKey = array_search($_POST['item'], $arrHerbs);
+    if (!isset($_POST['addall']))
+      {
+	integercheck($_POST['amount']);
+	checkvalue($_POST['amount']);
+      }
+    else
+      {
+	$_POST['amount'] = $herbs -> fields[$herb];
+      }
     if ($herbs -> fields[$herb] < $_POST['amount']) 
     {
         error (NO_MINERAL." ".$arrName[$intKey]);
@@ -273,9 +285,7 @@ if (isset ($_GET['action']) && $_GET['action'] == 'herbs')
 */
 if (isset ($_GET['action']) && $_GET['action'] == 'potions') 
 {
-    integercheck($_POST['amount']);
     checkvalue($_POST['pid']);
-    checkvalue($_POST['amount']);
     checkvalue($_POST['item']);
     $item = $db -> Execute("SELECT * FROM `potions` WHERE `id`=".$_POST['item']);
     if ($player -> id != $item -> fields['owner']) 
@@ -297,6 +307,15 @@ if (isset ($_GET['action']) && $_GET['action'] == 'potions')
     }
     $strPlayerName = $objDonated -> fields['user'];
     $objDonated -> Close();
+    if (!isset($_POST['addall']))
+      {
+	integercheck($_POST['amount']);
+	checkvalue($_POST['amount']);
+      }
+    else
+      {
+	$_POST['amount'] = $item -> fields['amount'];
+      }
     if ($item -> fields['amount'] < $_POST['amount']) 
     {
         error (NO_MINERAL." ".$item -> fields['name']);
@@ -331,10 +350,13 @@ if (isset ($_GET['action']) && $_GET['action'] == 'potions')
 */
 if (isset ($_GET['action']) && $_GET['action'] == 'items') 
 {
-    integercheck($_POST['amount']);
     checkvalue($_POST['pid']);
-    checkvalue($_POST['amount']);
     checkvalue($_POST['item']);
+    if (!isset($_POST['addall']))
+      {
+	integercheck($_POST['amount']);
+	checkvalue($_POST['amount']);
+      }
     $item = $db -> Execute("SELECT * FROM `equipment` WHERE `id`=".$_POST['item']);
     if ($item -> fields['status'] == 'R')
     {
@@ -361,6 +383,10 @@ if (isset ($_GET['action']) && $_GET['action'] == 'items')
     $objDonated -> Close();
     if ($item->fields['type'] != 'R')
       {
+	if (isset($_POST['addall']))
+	  {
+	    $_POST['amount'] = $item -> fields['amount'];
+	  }
 	if ($item -> fields['amount'] < $_POST['amount']) 
 	  {
 	    error (NO_MINERAL." ".$item -> fields['name']);
@@ -385,6 +411,10 @@ if (isset ($_GET['action']) && $_GET['action'] == 'items')
       }
     else
       {
+	if (isset($_POST['addall']))
+	  {
+	    $_POST['amount'] = $item -> fields['wt'];
+	  }
 	if ($item -> fields['wt'] < $_POST['amount']) 
 	  {
 	    error (NO_MINERAL." ".$item -> fields['name']);
@@ -639,7 +669,8 @@ $smarty -> assign(array("Potions" => '',
                         "Iamount2" => I_AMOUNT2,
                         "Aastral" => A_ASTRAL,
                         "Aastral2" => A_ASTRAL2,
-                        "Hamount" => H_AMOUNT));
+                        "Hamount" => H_AMOUNT,
+			"Tall" => "wszystkie posiadane"));
 
 /**
  * Main menu
