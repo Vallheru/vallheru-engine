@@ -1,4 +1,5 @@
 <a name="top"><u>{$Equipped}</u>:<br /></a>
+<form method="post" action="equip.php?repair">
 {$Weapon}
 {$Arrows}
 {$Helmet}
@@ -8,6 +9,7 @@
 {$Ring1}
 {$Ring2}
 {$Repairequip}
+</form>
 {$Hide}
 
 {if $Bweaponsamount > 1}

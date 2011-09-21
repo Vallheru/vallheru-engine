@@ -7,7 +7,7 @@
  *   @copyright            : (C) 2004,2005,2006,2007,2011 Vallheru Team based on Gamers-Fusion ver 2.5
  *   @author               : thindil <thindil@tuxfamily.org>
  *   @version              : 1.4
- *   @since                : 12.09.2011
+ *   @since                : 21.09.2011
  *
  */
 
@@ -225,47 +225,27 @@ $smarty -> assign(array("Arrowhead" => '',
 			"Aback" => "Wróć na górę"));
 
 $arrEquip = $player -> equipment();
-if ($player -> clas != 'Mag') 
+if (!$arrEquip[0][0]) 
+  {
+    $arrEquip[0] = $arrEquip[1];
+  }
+if ($arrEquip[0][0]) 
+  {
+    if ($arrEquip[0][8] > 0) 
+      {
+	$arrEquip[0][2] = $arrEquip[0][2] + $arrEquip[0][8];
+      }
+    $smarty -> assign ("Weapon", "<input type=\"checkbox\" name=\"".$arrEquip[0][0]."\" /><b>".WEAPON.":</b> ".$arrEquip[0][1]." (+".$arrEquip[0][2].") (+".$arrEquip[0][7]." ".EQUIP_SPEED.") (".$arrEquip[0][6]."/".$arrEquip[0][9]." ".DURABILITY.") [<a href=\"equip.php?schowaj=".$arrEquip[0][0]."\">".HIDE_WEP."</a>]<br />\n");
+  }
+elseif ($arrEquip[7][0])
 {
-    if (!$arrEquip[0][0]) 
-    {
-        $arrEquip[0] = $arrEquip[1];
-    }
-    if ($arrEquip[0][0]) 
-    {
-        if ($arrEquip[0][8] > 0) 
-        {
-            $arrEquip[0][2] = $arrEquip[0][2] + $arrEquip[0][8];
-        }
-        $smarty -> assign ("Weapon", "<b>".WEAPON.":</b> ".$arrEquip[0][1]." (+".$arrEquip[0][2].") (+".$arrEquip[0][7]." ".EQUIP_SPEED.") (".$arrEquip[0][6]."/".$arrEquip[0][9]." ".DURABILITY.") [<a href=\"equip.php?schowaj=".$arrEquip[0][0]."\">".HIDE_WEP."</a>]<br />\n");
-    } 
-        else 
-    {
-        $smarty -> assign ("Weapon", "<b>".WEAPON.":</b> ".EMPTY_SLOT."<br />\n");
-    }
-} 
-    else 
-{
-    if (!$arrEquip[0][0]) 
-    {
-        $arrEquip[0] = $arrEquip[1];
-    }
-    if ($arrEquip[0][0]) 
-    {
-        $smarty -> assign ("Weapon", "<b>".WEAPON.":</b> ".$arrEquip[0][1]." (+".$arrEquip[0][2].") (+".$arrEquip[0][7]." ".EQUIP_SPEED.") (".$arrEquip[0][6]."/".$arrEquip[0][9]." ".DURABILITY.") [<a href=\"equip.php?schowaj=".$arrEquip[0][0]."\">".HIDE_WEP."</a>]<br />\n");
-    } 
-        else 
-    {
-        if ($arrEquip[7][0]) 
-        {
-            $smarty -> assign ("Weapon", "<b>".STAFF.":</b> ".$arrEquip[7][1]." (".SPELL_POWER.") [<a href=\"equip.php?schowaj=".$arrEquip[7][0]."\">".HIDE."</a>]<br />\n");
-        } 
-            else 
-        {
-            $smarty -> assign ("Weapon", "<b>".WEAPON.":</b> ".EMPTY_SLOT."<br />\n");
-        }
-    }
+  $smarty -> assign ("Weapon", "<b>".STAFF.":</b> ".$arrEquip[7][1]." (".SPELL_POWER.") [<a href=\"equip.php?schowaj=".$arrEquip[7][0]."\">".HIDE."</a>]<br />\n");
 }
+ else 
+   {
+     $smarty -> assign ("Weapon", "<b>".WEAPON.":</b> ".EMPTY_SLOT."<br />\n");
+   }
+ 
 
 if ($arrEquip[1][0]) 
 {
@@ -286,62 +266,35 @@ if ($arrEquip[1][0])
 
 if ($arrEquip[2][0]) 
 {
-    $smarty -> assign ("Helmet", "<b>".HELMET.":</b> ".$arrEquip[2][1]." (+".$arrEquip[2][2].") (".$arrEquip[2][6]."/".$arrEquip[2][9]." ".DURABILITY.") [<a href=\"equip.php?schowaj=".$arrEquip[2][0]."\">".WEAR_OFF."</a>]<br />\n");
+    $smarty -> assign ("Helmet", "<input type=\"checkbox\" name=\"".$arrEquip[2][0]."\" /><b>".HELMET.":</b> ".$arrEquip[2][1]." (+".$arrEquip[2][2].") (".$arrEquip[2][6]."/".$arrEquip[2][9]." ".DURABILITY.") [<a href=\"equip.php?schowaj=".$arrEquip[2][0]."\">".WEAR_OFF."</a>]<br />\n");
 } 
     else 
 {
     $smarty -> assign ("Helmet", "<b>".HELMET.":</b> ".EMPTY_SLOT."<br />\n");
 }
 
-if ($player -> clas != 'Mag') 
+if ($arrEquip[3][0]) 
+  {
+    $agility = '';
+    if ($arrEquip[3][5] < 0) 
+      {
+	$arrEquip[3][5] = str_replace("-","",$arrEquip[3][5]);
+	$agility = "(+".$arrEquip[3][5]." ".EQUIP_AGI.")";
+      } 
+    elseif ($arrEquip[3][5] > 0) 
+      {
+	$agility = "(-".$arrEquip[3][5]." ".EQUIP_AGI.")";
+      }    
+    $smarty -> assign ("Armor", "<input type=\"checkbox\" name=\"".$arrEquip[3][0]."\" /><b>".ARMOR.":</b> ".$arrEquip[3][1]." (+".$arrEquip[3][2].") ".$agility." (".$arrEquip[3][6]."/".$arrEquip[3][9]." ".DURABILITY.") [<a href=\"equip.php?schowaj=".$arrEquip[3][0]."\">".WEAR_OFF."</a>]<br />\n");
+  }
+elseif ($arrEquip[8][0])
 {
-    if ($arrEquip[3][0]) 
-    {
-        $agility = '';
-        if ($arrEquip[3][5] < 0) 
-        {
-            $arrEquip[3][5] = str_replace("-","",$arrEquip[3][5]);
-            $agility = "(+".$arrEquip[3][5]." ".EQUIP_AGI.")";
-        } 
-            elseif ($arrEquip[3][5] > 0) 
-        {
-            $agility = "(-".$arrEquip[3][5]." ".EQUIP_AGI.")";
-        }    
-        $smarty -> assign ("Armor", "<b>".ARMOR.":</b> ".$arrEquip[3][1]." (+".$arrEquip[3][2].") ".$agility." (".$arrEquip[3][6]."/".$arrEquip[3][9]." ".DURABILITY.") [<a href=\"equip.php?schowaj=".$arrEquip[3][0]."\">".WEAR_OFF."</a>]<br />\n");
-    } 
-        else 
-    {
-        $smarty -> assign ("Armor", "<b>".ARMOR.":</b> ".EMPTY_SLOT."<br />\n");
-    }
-} 
-    else 
-{
-    if ($arrEquip[3][0]) 
-    {
-        $agility = '';
-        if ($arrEquip[3][5] < 0) 
-        {
-            $arrEquip[3][5] = str_replace("-","",$arrEquip[3][5]);
-            $agility = "(+".$arrEquip[3][5]." ".EQUIP_AGI.")";
-        } 
-            elseif ($arrEquip[3][5] > 0) 
-        {
-            $agility = "(-".$arrEquip[3][5]." ".EQUIP_AGI.")";
-        }        
-        $smarty -> assign ("Armor", "<b>".ARMOR.":</b> ".$arrEquip[3][1]." (+".$arrEquip[3][2].") ".$agility." (".$arrEquip[3][6]."/".$arrEquip[3][9]." ".DURABILITY.") [<a href=\"equip.php?schowaj=".$arrEquip[3][0]."\">".WEAR_OFF."</a>]<br />\n");
-    } 
-        else 
-    {
-        if ($arrEquip[8][0]) 
-        {
-            $smarty -> assign ("Armor", "<b>".CAPE.":</b> ".$arrEquip[8][1]." (+".$arrEquip[8][2]." % ".EQUIP_MANA.") [<a href=\"equip.php?schowaj=".$arrEquip[8][0]."\">".WEAR_OFF."</a>]<br />\n");
-        } 
-            else 
-        {
-            $smarty -> assign ("Armor", "<b>".ARMOR.":</b> ".EMPTY_SLOT."<br />\n");
-        }
-    }
+  $smarty -> assign ("Armor", "<b>".CAPE.":</b> ".$arrEquip[8][1]." (+".$arrEquip[8][2]." % ".EQUIP_MANA.") [<a href=\"equip.php?schowaj=".$arrEquip[8][0]."\">".WEAR_OFF."</a>]<br />\n");
 }
+ else 
+   {
+     $smarty -> assign ("Armor", "<b>".ARMOR.":</b> ".EMPTY_SLOT."<br />\n");
+   }
 
 if ($arrEquip[5][0]) 
 {
@@ -358,7 +311,7 @@ if ($arrEquip[5][0])
     {
         $agility1 = '';
     } 
-    $smarty -> assign ("Shield", "<b>".SHIELD.":</b> ".$arrEquip[5][1]." (+".$arrEquip[5][2].") ".$agility1." (".$arrEquip[5][6]."/".$arrEquip[5][9]." ".DURABILITY.") [<a href=\"equip.php?schowaj=".$arrEquip[5][0]."\">".WEAR_OFF."</a>]<br />\n");
+    $smarty -> assign ("Shield", "<input type=\"checkbox\" name=\"".$arrEquip[5][0]."\" /><b>".SHIELD.":</b> ".$arrEquip[5][1]." (+".$arrEquip[5][2].") ".$agility1." (".$arrEquip[5][6]."/".$arrEquip[5][9]." ".DURABILITY.") [<a href=\"equip.php?schowaj=".$arrEquip[5][0]."\">".WEAR_OFF."</a>]<br />\n");
 } 
     else 
 {
@@ -380,7 +333,7 @@ if ($arrEquip[4][0])
     {
         $agility2 = '';
     }
-    $smarty -> assign ("Legs", "<b>".LEGS.":</b> ".$arrEquip[4][1]." (+".$arrEquip[4][2].") ".$agility2." (".$arrEquip[4][6]."/".$arrEquip[4][9]." ".DURABILITY.") [<a href=\"equip.php?schowaj=".$arrEquip[4][0]."\">".WEAR_OFF."</a>]<br />\n");
+    $smarty -> assign ("Legs", "<input type=\"checkbox\" name=\"".$arrEquip[4][0]."\" /><b>".LEGS.":</b> ".$arrEquip[4][1]." (+".$arrEquip[4][2].") ".$agility2." (".$arrEquip[4][6]."/".$arrEquip[4][9]." ".DURABILITY.") [<a href=\"equip.php?schowaj=".$arrEquip[4][0]."\">".WEAR_OFF."</a>]<br />\n");
 } 
     else 
 {
@@ -471,7 +424,7 @@ if (isset($_GET['schowaj']))
 
 if ($arrEquip[3][0] || $arrEquip[0][0] || $arrEquip[4][0] || $arrEquip[2][0] || $arrEquip[5][0]) 
 {
-    $smarty -> assign ("Repairequip", "[<a href=\"equip.php?napraw_uzywane\">".A_REPAIR2."</a>]<br />\n");
+    $smarty -> assign ("Repairequip", "[<a href=\"equip.php?napraw_uzywane\">".A_REPAIR2."</a>] <br /><input type=\"submit\" value=\"Napraw wybrane\" /><br />\n");
 }
 
 backpack('W',$player -> id,WEAPONS,'B','Bweapons');
@@ -811,6 +764,35 @@ if (isset($_GET['napraw_uzywane']))
     $rzecz_wiersz -> Close();
     $smarty -> assign ("Action", $text);
 }
+
+/**
+ * Repair selected equipment
+ */
+if (isset($_GET['repair']))
+  {
+    $rzecz_wiersz = $db->Execute("SELECT * FROM `equipment` WHERE `owner`=".$player->id." AND `status`='E' AND `type`!='R' AND `type`!='T' AND `type`!='C' AND `type`!='I'");
+    $text = '';
+    while(!$rzecz_wiersz->EOF) 
+      {
+	if (isset($_POST[$rzecz_wiersz->fields['id']]))
+	  {
+	    if ($rzecz_wiersz->fields['maxwt'] != $rzecz_wiersz->fields['wt']) 
+	      {
+		if ($rzecz_wiersz->fields['repair'] > $player->credits) 
+		  {
+		    error(NO_MONEY);
+		  }
+		$player->credits = $player->credits - $rzecz_wiersz->fields['repair'];
+		$db->Execute("UPDATE `equipment` SET `wt`=".$rzecz_wiersz->fields['maxwt']." WHERE `id`=".$rzecz_wiersz->fields['id']);
+		$db->Execute("UPDATE `players` SET `credits`=`credits`-".$rzecz_wiersz->fields['repair']." WHERE `id`=".$player -> id);
+		$text = $text."<br />Naprawiłeś ".$rzecz_wiersz->fields['name'].", kosztowało Ciebie to ".$rzecz_wiersz->fields['repair']." ".GOLD_COINS.".<br />";
+	      }
+	  }
+        $rzecz_wiersz -> MoveNext();
+      }
+    $rzecz_wiersz -> Close();
+    $smarty -> assign ("Action", $text);
+  }
 
 /**
  * Repair items in backpack

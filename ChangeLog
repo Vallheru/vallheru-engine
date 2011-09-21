@@ -1,5 +1,7 @@
 2011-09-21  Bartek thindil Jasicki  <thindil@tuxfamily.org>
 
+	* FEATURE,templates/layout1/equip.tpl, templates/equip.tpl, equip.php: 
+	added option to repair selected equipment
 	* FEATURE,alchemik.php, kowal.php, jeweller.php, lumbermill.php: 
 	don't show owned by player recipes on list
 
