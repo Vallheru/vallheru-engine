@@ -7,7 +7,7 @@
  *   @copyright            : (C) 2006,2011 Vallheru Team based on Gamers-Fusion ver 2.5
  *   @author               : thindil <thindil@tuxfamily.org>
  *   @version              : 1.4
- *   @since                : 20.09.2011
+ *   @since                : 21.09.2011
  *
  */
 
@@ -69,6 +69,14 @@ if (!isset($_GET['step']))
  */
 if (isset($_GET['step']) && $_GET['step'] == 'plans')
 {
+    $arrOwned = array();
+    $objOwned = $db->Execute("SELECT `name` FROM `jeweller` WHERE `owner`=".$player->id);
+    while (!$objOwned->EOF)
+      {
+	$arrOwned[] = $objOwned->fields['name'];
+	$objOwned->MoveNext();
+      }
+    $objOwned->Close();
     if ($player -> clas != 'Rzemieślnik')
     {
         $objPlans = $db -> Execute("SELECT `id`, `name`, `cost`, `level` FROM `jeweller` WHERE `id`=1");
@@ -81,14 +89,15 @@ if (isset($_GET['step']) && $_GET['step'] == 'plans')
     $arrName = array();
     $arrCost = array();
     $arrLevel = array();
-    $i = 0;
     while (!$objPlans -> EOF)
-    {
-        $arrId[$i] = $objPlans -> fields['id'];
-        $arrName[$i] = $objPlans -> fields['name'];
-        $arrCost[$i] = $objPlans -> fields['cost'];
-        $arrLevel[$i] = $objPlans -> fields['level'];
-        $i++;
+      {
+	if (!in_array($objPlans->fields['name'], $arrOwned))
+	  {
+	    $arrId[] = $objPlans -> fields['id'];
+	    $arrName[] = $objPlans -> fields['name'];
+	    $arrCost[] = $objPlans -> fields['cost'];
+	    $arrLevel[] = $objPlans -> fields['level'];
+	  }
         $objPlans -> MoveNext();
     }
     $objPlans -> Close();
@@ -119,8 +128,7 @@ if (isset($_GET['step']) && $_GET['step'] == 'plans')
         {
             error(NO_MONEY);
         }
-        $objTest = $db -> Execute("SELECT `id` FROM `jeweller` WHERE `name`='".$objBuy -> fields['name']."' AND `owner`=".$player -> id);
-        if ($objTest -> fields['id'])
+        if (in_array($objBuy->fields['name'], $arrOwned))
         {
             error(YOU_HAVE);
         }

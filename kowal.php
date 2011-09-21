@@ -7,7 +7,7 @@
  *   @copyright            : (C) 2004,2005,2006,2011 Vallheru Team based on Gamers-Fusion ver 2.5
  *   @author               : thindil <thindil@tuxfamily.org>
  *   @version              : 1.4
- *   @since                : 20.09.2011
+ *   @since                : 21.09.2011
  *
  */
 
@@ -324,21 +324,30 @@ if (isset ($_GET['kowal']) && $_GET['kowal'] == 'plany')
         {
             error (ERROR);
         }
-        $objPlans = $db -> Execute("SELECT id, name, cost, level FROM smith WHERE owner=0 AND lang='".$player -> lang."' AND type='".$_GET['dalej']."' ORDER BY level ASC");
+	$objOwned = $db->Execute("SELECT `name` FROM `smith` WHERE `owner`=".$player->id." AND `type`='".$_GET['dalej']."'");
+	$arrOwned = array();
+	while (!$objOwned->EOF)
+	  {
+	    $arrOwned[] = $objOwned->fields['name'];
+	    $objOwned->MoveNext();
+	  }
+	$objOwned->Close();
+        $objPlans = $db -> Execute("SELECT `id`, `name`, `cost`, `level` FROM `smith` WHERE `owner`=0 AND `type`='".$_GET['dalej']."' ORDER BY `level` ASC");
         $arrname = array();
         $arrcost = array();
         $arrlevel = array();
         $arrid = array();
-        $i = 0;
         while (!$objPlans -> EOF) 
-        {
-            $arrname[$i] = $objPlans -> fields['name'];
-            $arrcost[$i] = $objPlans -> fields['cost'];
-            $arrlevel[$i] = $objPlans -> fields['level'];
-            $arrid[$i] = $objPlans -> fields['id'];
+	  {
+	    if (!in_array($objPlans->fields['name'], $arrOwned))
+	      {
+		$arrname[] = $objPlans -> fields['name'];
+		$arrcost[] = $objPlans -> fields['cost'];
+		$arrlevel[] = $objPlans -> fields['level'];
+		$arrid[] = $objPlans -> fields['id'];
+	      }
             $objPlans -> MoveNext();
-            $i ++;
-        }
+	  }
         $objPlans -> Close();
         $smarty -> assign(array("Name" => $arrname, 
                                 "Cost" => $arrcost, 

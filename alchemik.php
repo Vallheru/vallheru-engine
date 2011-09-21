@@ -7,7 +7,7 @@
  *   @copyright            : (C) 2004,2005,2006,2007,2011 Vallheru Team based on Gamers-Fusion ver 2.5
  *   @author               : thindil <thindil@tuxfamily.org>
  *   @version              : 1.4
- *   @since                : 20.09.2011
+ *   @since                : 21.09.2011
  *
  */
 
@@ -74,21 +74,30 @@ if (!isset($_GET['alchemik']))
 */
 if (isset ($_GET['alchemik']) && $_GET['alchemik'] == 'przepisy') 
 {
-    $plany = $db -> Execute("SELECT * FROM `alchemy_mill` WHERE `status`='S' AND `owner`=0 AND `lang`='".$player -> lang."' ORDER BY `cost` ASC");
+    $objOwned = $db->Execute("SELECT `name` FROM `alchemy_mill` WHERE `owner`=".$player->id);
+    $arrOwned = array();
+    while (!$objOwned->EOF)
+      {
+	$arrOwned[] = $objOwned->fields['name'];
+	$objOwned->MoveNext();
+      }
+    $objOwned->Close();
+    $plany = $db -> Execute("SELECT `id`, `name`, `level`, `cost` FROM `alchemy_mill` WHERE `status`='S' AND `owner`=0 ORDER BY `cost` ASC");
     $arrname = array();
     $arrcost = array();
     $arrlevel = array();
     $arrid = array();
-    $i = 0;
     while (!$plany -> EOF) 
-    {
-        $arrname[$i] = $plany -> fields['name'];
-        $arrcost[$i] = $plany -> fields['cost'];
-        $arrlevel[$i] = $plany -> fields['level'];
-        $arrid[$i] = $plany -> fields['id'];
-        $i = $i + 1;
+      {
+	if (!in_array($plany->fields['name'], $arrOwned))
+	  {
+	    $arrname[] = $plany -> fields['name'];
+	    $arrcost[] = $plany -> fields['cost'];
+	    $arrlevel[] = $plany -> fields['level'];
+	    $arrid[] = $plany -> fields['id'];
+	  }
         $plany -> MoveNext();
-    }
+      }
     $plany -> Close();
     $smarty -> assign (array("Name" => $arrname,
         "Recipesinfo" => RECIPES_INFO,
@@ -104,12 +113,10 @@ if (isset ($_GET['alchemik']) && $_GET['alchemik'] == 'przepisy')
     {
 	checkvalue($_GET['buy']);
         $plany = $db -> Execute("SELECT * FROM `alchemy_mill` WHERE `id`=".$_GET['buy']);
-        $test = $db -> Execute("SELECT `id` FROM `alchemy_mill` WHERE `owner`=".$player -> id." AND `name`='".$plany -> fields['name']."'");
-        if ($test -> fields['id'] != 0) 
+        if (in_array($plany->fields['name'], $arrOwned)) 
         {
             error (P_YOU_HAVE);
         }
-        $test -> Close();
         if ($plany -> fields['id'] == 0) 
         {
             error (NO_RECIPE);
