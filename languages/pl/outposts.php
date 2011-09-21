@@ -8,7 +8,7 @@
  *   @author               : thindil <thindil@tuxfamily.org>
  *   @author               : eyescream <tduda@users.sourceforge.net>
  *   @version              : 1.4
- *   @since                : 06.09.2011
+ *   @since                : 21.09.2011
  *
  */
 
@@ -211,7 +211,6 @@ if (isset ($_GET['view']) && $_GET['view'] == 'shop')
     }
     if (isset($_GET['buy']) && $_GET['buy'] == 'v') 
     {
-        define("NO_BARRACKS", "Nie masz kwater na kolejnych weteranów!");
         define("NO_NAME", "Podaj imię weterana");
         define("NAME_TAKEN", "Któryś z twoich weteranów posiada już takie imię!");
         define("YOU_ADD", "Dodałeś weterana: <b>");
@@ -226,7 +225,6 @@ if (isset ($_GET['view']) && $_GET['view'] == 'shop')
     }
     if (isset($_GET['buy']) && $_GET['buy'] == 'm') 
     {
-        define("NO_LAIR", "Nie masz legowisk na kolejne bestie!");
         define("NOT_YOUR", "To nie twój chowaniec!");
         define("YOU_ADD", "Dodałeś bestię: <b>");
         define("WITH_P", "</b> o sile ");
