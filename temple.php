@@ -7,7 +7,7 @@
  *   @copyright            : (C) 2004,2005,2006,2011 Vallheru Team based on Gamers-Fusion ver 2.5
  *   @author               : thindil <thindil@tuxfamily.org>
  *   @version              : 1.4
- *   @since                : 28.08.2011
+ *   @since                : 21.09.2011
  *
  */
 
@@ -94,76 +94,71 @@ if (isset ($_GET['temp']) && $_GET['temp'] == 'modlitwa')
         error(YOU_HAVE);
     }
     $objBless -> Close();
-    if ($player -> race == 'Człowiek')
-    {
-        $arrPraysCost = array('10', '10', '10', '10', '10', '10', '10', '10', '10', '10', '10', '10', '10', '10', '10', '10', '10', '10');
-    }
-        elseif ($player -> race == 'Elf')
-    {
-        $arrPraysCost = array('7', '15', '10', '10', '7', '15', '15', '7', '7', '15', '7', '10', '7', '7', '15', '7', '7', '10');
-    }
-        elseif ($player -> race == 'Krasnolud')
-    {
-        $arrPraysCost = array('15', '7', '10', '10', '15', '7', '7', '15', '10', '7', '15', '10', '15', '15', '7', '15', '15', '7');
-    }
-        elseif ($player -> race == 'Hobbit')
-    {
-        $arrPraysCost = array('7', '15', '10', '10', '7', '10', '10', '15', '10', '10', '10', '10', '7', '7', '10', '10', '7', '10');
-    }
-        elseif ($player -> race == 'Jaszczuroczłek')
-    {
-        $arrPraysCost = array('7', '7', '15', '15', '7', '7', '10', '10', '10', '10', '10', '10', '15', '15', '15', '15', '15', '15');
-    }
-        elseif ($player -> race == 'Gnom')
-    {
-        $arrPraysCost = array('10', '15', '10', '15', '15', '10', '7', '7', '7', '15', '15', '15', '15', '7', '7', '15', '7', '7');
-    }
-        else
-    {
+    switch ($player->race)
+      {
+      case "Człowiek":
+	$arrPraysCost = array('10', '10', '10', '10', '10', '10', '10', '10', '10', '10', '10', '10', '10', '10', '10', '10', '10', '10', '10', '10');
+	break;
+      case 'Elf':
+	$arrPraysCost = array('7', '15', '10', '10', '7', '15', '15', '7', '7', '15', '7', '10', '7', '7', '15', '7', '7', '10', '7', '10');
+	break;
+      case 'Krasnolud':
+        $arrPraysCost = array('15', '7', '10', '10', '15', '7', '7', '15', '10', '7', '15', '10', '15', '15', '7', '15', '15', '7', '10', '15');
+	break;
+      case 'Hobbit':
+        $arrPraysCost = array('7', '15', '10', '10', '7', '10', '10', '15', '10', '10', '10', '10', '7', '7', '10', '10', '7', '10', '7', '7');
+	break;
+      case 'Jaszczuroczłek':
+        $arrPraysCost = array('7', '7', '15', '15', '7', '7', '10', '10', '10', '10', '10', '10', '15', '15', '15', '15', '15', '15', '15', '15');
+	break;
+      case 'Gnom':
+        $arrPraysCost = array('10', '15', '10', '15', '15', '10', '7', '7', '7', '15', '15', '15', '15', '7', '7', '15', '7', '7', '10', '7');
+	break;
+      default:
         error(NO_RACE);
+	break;
     }
-    if ($player -> deity == 'Illuminati')
-    {
-        $arrPrays = array(AGI, STR, INTELI, WIS, SPE, CON, SMI, ALC, FLE, WEA, SHO, DOD, CAS, BRE, MINI, LUMBER, HERBS, JEWEL);
-        $arrPraysVal = array(0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17);
-        for ($i = 0; $i < 17; $i ++)
+    switch ($player->deity)
+      {
+      case 'Illuminati':
+	$arrPrays = array(AGI, STR, INTELI, WIS, SPE, CON, SMI, ALC, FLE, WEA, SHO, DOD, CAS, BRE, MINI, LUMBER, HERBS, JEWEL, "Spostrzegawczości", "Złodziejstwa");
+        $arrPraysVal = array(0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19);
+        for ($i = 0; $i < 20; $i ++)
         {
             $arrPraysCost[$i] = $arrPraysCost[$i] * 2;
         }
-    }
-        elseif ($player -> deity == 'Karserth')
-    {
+	break;
+      case 'Karserth':
         $arrPrays = array(AGI, STR, INTELI, WIS, SPE, CON, WEA, SHO, DOD);
         $arrPraysVal = array(0, 1, 2, 3, 4, 5, 9, 10, 11);
-    }
-        elseif ($player -> deity == 'Anariel')
-    {
+	break;
+      case 'Anariel':
         $arrPrays = array(AGI, STR, INTELI, WIS, SPE, CON, ALC, DOD, CAS);
         $arrPraysVal = array(0, 1, 2, 3, 4, 5, 7, 11, 12);
-    }
-        elseif ($player -> deity == 'Heluvald' || $player -> deity == 'Daeraell')
-    {
-        $arrPrays = array(AGI, STR, INTELI, WIS, SPE, CON, SMI, ALC, FLE, BRE, MINI, LUMBER, HERBS, JEWEL);
-        $arrPraysVal = array(0, 1, 2, 3, 4, 5, 6, 7, 8, 13, 14, 15, 16, 17);
-    }
-        elseif($player -> deity == 'Tartus')
-    {
-        $arrPrays = array(AGI, STR, INTELI, WIS, SPE, CON, WEA, CAS);
+	break;
+      case 'Heluvald':
+	$arrPrays = array(AGI, STR, INTELI, WIS, SPE, CON, SMI, ALC, FLE, BRE, MINI, LUMBER, HERBS, JEWEL, "Spostrzegawczości");
+        $arrPraysVal = array(0, 1, 2, 3, 4, 5, 6, 7, 8, 13, 14, 15, 16, 17, 18);
+	break;
+      case 'Daeraell':
+	$arrPrays = array(AGI, STR, INTELI, WIS, SPE, CON, SMI, ALC, FLE, BRE, MINI, LUMBER, HERBS, JEWEL, "Spostrzegawczości", "Złodziejstwa");
+        $arrPraysVal = array(0, 1, 2, 3, 4, 5, 6, 7, 8, 13, 14, 15, 16, 17, 18, 19);
+	break;
+      case 'Tartus':
+	$arrPrays = array(AGI, STR, INTELI, WIS, SPE, CON, WEA, CAS);
         $arrPraysVal = array(0, 1, 2, 3, 4, 5, 9, 12);
-    }
-        elseif($player -> deity == 'Oregarl')
-    {
-        $arrPrays = array(AGI, STR, INTELI, WIS, SPE, CON, SMI, WEA, MINI, JEWEL);
-        $arrPraysVal = array(0, 1, 2, 3, 4, 5, 6, 9, 14, 17);
-    }
-        elseif($player -> deity == 'Teathe-di')
-    {
-        $arrPrays = array(AGI, STR, INTELI, WIS, SPE, CON, SHO, DOD);
-        $arrPraysVal = array(0, 1, 2, 3, 4, 5, 10, 11);
-    }
-        else
-    {
+	break;
+      case 'Oregarl':
+        $arrPrays = array(AGI, STR, INTELI, WIS, SPE, CON, SMI, WEA, MINI, JEWEL, "Spostrzegawczości");
+        $arrPraysVal = array(0, 1, 2, 3, 4, 5, 6, 9, 14, 17, 18);
+	break;
+      case 'Teathe-di':
+        $arrPrays = array(AGI, STR, INTELI, WIS, SPE, CON, SHO, DOD, "Spostrzegawczości", "Złodziejstwa");
+        $arrPraysVal = array(0, 1, 2, 3, 4, 5, 10, 11, 18, 19);
+	break;
+      default:
         error(NO_DEITY);
+	break;
     }
     $i = 0;
     foreach ($arrPraysVal as $intPraysVal)
@@ -189,10 +184,12 @@ if (isset ($_GET['temp']) && $_GET['temp'] == 'modlitwa')
         error (YOU_DEAD);
     }
     if (isset($_GET['modl'])) 
-    {
-        if (!ereg("^[1-6]*$", $_POST['praytype']) || !ereg("^[0-9]*$", $_POST['pray']))
+      {
+	$_POST['praytype'] = intval($_POST['praytype']);
+	$_POST['pray'] = intval($_POST['pray']);
+	if ($_POST['pray'] < 0 || $_POST['praytype'] < 0 || $_POST['praytype'] > 6 || $_POST['pray'] > (count($arrPraysCost) - 1))
         {
-            error(ERROR.$_POST['pray']);
+            error(ERROR);
         }
         if ($player -> energy < $_POST['praytype'])
         {
