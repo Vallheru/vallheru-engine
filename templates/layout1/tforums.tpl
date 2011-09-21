@@ -11,7 +11,7 @@
     {section name=tforums loop=$Topic}
         <tr>
         <td>{if $Newtopic[tforums] == "Y"}<blink>N</blink> {/if}<a href="tforums.php?topic={$Topicid[tforums]}">{$Topic[tforums]}</a></td>
-        <td>{$Starter[tforums]}</td>
+        <td><a href="view.php?view={$Starterid[tforums]}">{$Starter[tforums]}</a></td>
         <td>{$Replies[tforums]}</td>
         </tr>
     {/section}
@@ -56,7 +56,7 @@
     <br />
     <table class=td width="98%" cellpadding="0" cellspacing="0">
     <tr>
-    <td><b>{$Topic}</b> {$Writeby} {$Starter}{if $Starterid > "0"} ID: {$Starterid}{/if} (<a href="tforums.php?view=topics">{$Aback}</a>) (<a href="tforums.php?topic={$Topics}&amp;quotet=Y">{$Aquote}</a>) {$Delete}</td>
+    <td><b>{$Topic}</b> {$Writeby} <a href="view.php?view={$Starterid}">{$Starter}</a>{if $Starterid > "0"} ID: {$Starterid}{/if} (<a href="tforums.php?view=topics">{$Aback}</a>) (<a href="tforums.php?topic={$Topics}&amp;quotet=Y">{$Aquote}</a>) {$Delete}</td>
     </tr>
     <tr>
     <td>{$Topictext}</td>
@@ -65,7 +65,7 @@
     {section name=tforums1 loop=$Reptext}
         <table class=td width="98%" cellpadding="0" cellspacing="0">
         <tr>
-        <td><b>{$Repstarter[tforums1]}</b>{if $Repstarterid[tforums1] > "0"} ID: {$Repstarterid[tforums1]}{/if} {$Write}... (<a href="tforums.php?view=topics">{$Aback}</a>) (<a href="tforums.php?topic={$Topics}&amp;quote={$Rid[tforums1]}">{$Aquote}</a>) {$Action[tforums1]}</td>
+        <td><b><a href="view.php?view={$Repstarterid[tforums1]}">{$Repstarter[tforums1]}</a></b>{if $Repstarterid[tforums1] > "0"} ID: {$Repstarterid[tforums1]}{/if} {$Write}... (<a href="tforums.php?view=topics">{$Aback}</a>) (<a href="tforums.php?topic={$Topics}&amp;quote={$Rid[tforums1]}">{$Aquote}</a>) {$Action[tforums1]}</td>
         </tr>
         <tr>
         <td>{$Reptext[tforums1]}</td>

@@ -120,6 +120,7 @@ if (isset ($_GET['view']) && $_GET['view'] == 'topics')
     $arrtopic = array();
     $arrstarter = array();
     $arrNewtopic = array();
+    $arrStarterid = array();
     $i = 0;
     while (!$topic -> EOF) 
     {
@@ -137,6 +138,7 @@ if (isset ($_GET['view']) && $_GET['view'] == 'topics')
         $query -> Close();
         $arrtopic[$i] = "<b>".$topic -> fields['topic']."</b>";
         $arrstarter[$i] = $topic -> fields['starter'];
+	$arrStarterid[$i] = $topic->fields['pid'];
         $topic -> MoveNext();
         $i = $i + 1;
     }
@@ -173,6 +175,7 @@ if (isset ($_GET['view']) && $_GET['view'] == 'topics')
         $query -> Close();
         $arrtopic[$i] = $topic -> fields['topic'];
         $arrstarter[$i] = $topic -> fields['starter'];
+	$arrStarterid[$i] = $topic->fields['pid'];
         $topic -> MoveNext();
         $i = $i + 1;
     }
@@ -181,6 +184,7 @@ if (isset ($_GET['view']) && $_GET['view'] == 'topics')
 			    "Topic" => $arrtopic, 
 			    "Replies" => $arrrep, 
 			    "Starter" => $arrstarter,
+			    "Starterid" => $arrStarterid,
 			    "Fpage" => "Idź do strony:",
 			    "Tpage" => $intPage,
 			    "Tpages" => $intPages,
@@ -282,7 +286,7 @@ if (isset($_GET['topic']))
         }
         if (isset($_GET['quote']) && $_GET['quote'] == $reply -> fields['id'])
         {
-            $strText = preg_replace("/[0-9][0-9]-[0-9][0-9]-[0-9][0-9]/", "", $reply -> fields['body']);
+            $strText = preg_replace("/[0-9][0-9]-[0-9][0-9]-[0-9][0-9] [0-9][0-9]:[0-9][0-9]:[0-9][0-9]/", "", $reply -> fields['body']);
             $strText = str_replace("<b></b><br />", "", $strText);
 	    require_once('includes/bbcode.php');
 	    $strText = htmltobbcode($strText);
@@ -342,7 +346,7 @@ if (isset ($_GET['action']) && $_GET['action'] == 'addtopic')
     require_once('includes/bbcode.php');
     $_POST['body'] = bbcodetohtml($_POST['body']);
     $strBody = $db -> qstr($_POST['body'], get_magic_quotes_gpc());
-    $_POST['title2'] = "<b>".$data."</b> ".$_POST['title2'];
+    $_POST['title2'] = "<b>".$data." ".$time."</b> ".$_POST['title2'];
     $strTitle = $db -> qstr($_POST['title2'], get_magic_quotes_gpc());
     $db -> Execute("INSERT INTO `tribe_topics` (`topic`, `body`, `starter`, `tribe`, `w_time`, `sticky`, `pid`) VALUES(".$strTitle.", ".$strBody.", '".$player -> user."', '".$player -> tribe."', ".$ctime.", '".$strSticky."', ".$player -> id.")") or $db -> ErrorMsg();
     error (TOPIC_ADD." <a href=tforums.php?view=topics>".TO_BACK);
@@ -360,8 +364,8 @@ if (isset($_GET['reply']))
         error (ERROR);
     }
     $test -> Close();
-    $query = $db -> Execute("SELECT count(*) FROM `tribe_topics` WHERE `id`=".$_GET['reply']);
-    $exists = $query -> fields['count(*)'];
+    $query = $db -> Execute("SELECT count(`id`) FROM `tribe_topics` WHERE `id`=".$_GET['reply']);
+    $exists = $query -> fields['count(`id`)'];
     $query -> Close();
     if ($exists <= 0) 
     {
@@ -373,7 +377,7 @@ if (isset($_GET['reply']))
     }
     require_once('includes/bbcode.php');
     $_POST['rep'] = bbcodetohtml($_POST['rep']);
-    $_POST['rep'] = "<b>".$data."</b><br />".$_POST['rep'];
+    $_POST['rep'] = "<b>".$data." ".$time."</b><br />".$_POST['rep'];
     $strRep = $db -> qstr($_POST['rep'], get_magic_quotes_gpc());
     $db -> Execute("INSERT INTO `tribe_replies` (`starter`, `topic_id`, `body`, `pid`) VALUES('".$player -> user."', ".$_GET['reply'].", ".$strRep." , ".$player -> id.")") or error("Could not add reply.");
     $db->Execute("UPDATE `tribe_topics` SET `w_time`=".$ctime." WHERE `id`=".$_GET['reply']);

@@ -1,5 +1,7 @@
 2011-09-21  Bartek thindil Jasicki  <thindil@tuxfamily.org>
 
+	* FEATURE,templates/layout1/tforums.tpl, templates/tforums.tpl, tforums.php: 
+	added link to author profile, added hour to post date
 	* FEATURE,temple.php: 
 	added blessings to perception and thievery
 	* BUG,languages/pl/outposts.php: 
