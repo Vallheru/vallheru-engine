@@ -4,12 +4,12 @@
  *   Polish language for clans
  *
  *   @name                 : tribes.php                            
- *   @copyright            : (C) 2004,2005,2006,2007 Vallheru Team based on Gamers-Fusion ver 2.5
- *   @author               : thindil <thindil@users.sourceforge.net>
+ *   @copyright            : (C) 2004,2005,2006,2007,2011 Vallheru Team based on Gamers-Fusion ver 2.5
+ *   @author               : thindil <thindil@tuxfamily.org>
  *   @author               : mori <ziniquel@users.sourceforge.net>
  *   @author               : eyescream <tduda@users.sourceforge.net>
- *   @version              : 1.3
- *   @since                : 24.02.2007
+ *   @version              : 1.4
+ *   @since                : 21.09.2011
  *
  */
 
@@ -29,7 +29,7 @@
 //   along with this program; if not, write to the Free Software
 //   Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 //
-// $Id: tribes.php 898 2007-02-24 21:24:28Z thindil $
+// $Id$
 
 define("ERROR", "Zapomnij o tym!");
 
@@ -351,7 +351,7 @@ if (isset ($_GET['view']) && $_GET['view'] == 'my')
             define("T_PERM1", "Może edytować opisy klanu");
             define("T_PERM2", "Może dołączać nowych członków");
             define("T_PERM3", "Może wyrzucać członków z klanu");
-            define("T_PERM4", "Może kupować żołnieży oraz fortyfikacje");
+            define("T_PERM4", "Może kupować żołnierzy oraz fortyfikacje");
             define("T_PERM5", "Może wykonywać ataki na inny klan");
             define("T_PERM6", "Może pożyczać pieniądze członkom klanu");
             define("T_PERM7", "Może dawać przedmioty ze zbrojowni");
@@ -386,7 +386,7 @@ if (isset ($_GET['view']) && $_GET['view'] == 'my')
             define("BARRICADES", " fortyfikacji za ");
             define("FOR_A", " sztuk(i) złota<br />");
             define("ALL_COST", "W sumie wydałeś na wszystko ");
-            define("ARMY_INFO", "Tutaj możesz dokupić żołnierzy oraz fortyfikacje dla klanu. Żołnieże dodają do siły ataku twojego klanu, natomiast fortyfikacje dodają do jego obrony. Koszt pojedynczego żołnieża lub fortyfikacji wynosi: ilość żołnieży(bądź fortyfikacji) kupowanych * 1000 sztuk złota.");
+            define("ARMY_INFO", "Tutaj możesz dokupić żołnierzy oraz fortyfikacje dla klanu. Żołnierze dodają do siły ataku twojego klanu, natomiast fortyfikacje dodają do jego obrony. Koszt pojedynczego żołnierza lub fortyfikacji wynosi: ilość żołnierzy(bądź fortyfikacji) kupowanych * 1000 sztuk złota.");
             define("HOW_MANY_S", "Ilu żołnierzy chcesz kupić?");
             define("HOW_MANY_F", "Ile fortyfikacji chcesz kupić?");
             define("A_BUY", "Kupuj");
