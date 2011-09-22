@@ -193,7 +193,7 @@ if (isset($_GET['step']) && $_GET['step'] == 'give')
     {
         error(ERROR);
     }
-    if (isset($_POST['item2']))
+    if (isset($_POST['item2']) && strlen($_POST['item2']) > 0)
       {
 	$_POST['item'] = strip_tags($_POST['item2']);
       }
