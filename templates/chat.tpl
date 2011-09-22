@@ -21,12 +21,12 @@ document.forms['chat'].elements['msg'].focus();
 {if $Rank == "Admin" || $Rank == "Karczmarka"}
     <br />
     <form method="post" action="chat.php?step=give">
-        <input type="submit" value="{$Agive}" /> {$Chatid} <input type="text" size="5" name="giveid" />
+        <input type="submit" value="{$Agive}" /> {$Chatid2} <input type="text" size="5" name="giveid" />
         <select name="item">
             {section name=chat loop=$Items}
                 <option value="{$Items[chat]}">{$Items[chat]}</option>
             {/section}
-        </select><br />
+        </select> {$Tor} <input type="text" name="item2" size="10" /><br />
         {$Withcomm}:<br />
         <input type="text" name="innkeeper" size="55" />
     </form><br />

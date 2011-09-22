@@ -1,5 +1,7 @@
 2011-09-22  Bartek thindil Jasicki  <thindil@tuxfamily.org>
 
+	* FEATURE,templates/layout1/chat.tpl, templates/chat.tpl, chat.php, chatmsg.php: 
+	added more options for innkeeper, fixed whispers
 	* FEATURE,install/db/update.sql, languages/pl/account.php, templates/layout1/account.tpl, templates/account.tpl, account.php, preset.php: 
 	added soft reset of player
 	* BUG,install/db/update.sql, admin.php, explore.php:

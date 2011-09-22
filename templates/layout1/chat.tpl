@@ -26,7 +26,7 @@ document.forms['chat'].elements['msg'].focus();
             {section name=chat loop=$Items}
                 <option value="{$Items[chat]}">{$Items[chat]}</option>
             {/section}
-        </select><br />
+        </select> {$Tor} <input type="text" name="item2" size="10" /><br />
         {$Withcomm}:<br />
         <input type="text" name="innkeeper" size="55" />
     </form>

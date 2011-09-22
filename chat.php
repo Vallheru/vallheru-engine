@@ -8,7 +8,7 @@
  *   @author               : thindil <thindil@tuxfamily.org>
  *   @author               : eyescream <tduda@users.sourceforge.net>
  *   @version              : 1.4
- *   @since                : 17.09.2011
+ *   @since                : 22.09.2011
  *
  */
 
@@ -138,9 +138,9 @@ if (isset ($_GET['action']) && $_GET['action'] == 'chat')
 	    $owner = 0;
             if ($id) 
 	      {
+		$owner = $test1[0];
 		array_shift($test1);
 		$message = "<b>".$id.">>></b> ".join("=", $test1);
-		$onwer = $id;
 	      } 
         } 
 	else 
@@ -153,7 +153,7 @@ if (isset ($_GET['action']) && $_GET['action'] == 'chat')
         }
         if (!isset($evade)) 
         {
-            $db -> Execute("INSERT INTO `chat` (`user`, `chat`, `senderid`, `ownerid`) VALUES('".$starter."', '".$message."',".$player -> id.",".$owner.")");
+	  $db -> Execute("INSERT INTO `chat` (`user`, `chat`, `senderid`, `ownerid`) VALUES('".$starter."', '".$message."', ".$player -> id.", ".$owner.")") or die($db->ErrorMsg());
         }
 	if (isset($strTarget))
 	  {
@@ -193,6 +193,10 @@ if (isset($_GET['step']) && $_GET['step'] == 'give')
     {
         error(ERROR);
     }
+    if (isset($_POST['item2']))
+      {
+	$_POST['item'] = strip_tags($_POST['item2']);
+      }
     if ($_POST['giveid'] > 0)
     {
         $objUser = $db -> Execute("SELECT `user` FROM `players` WHERE `id`=".$_POST['giveid']);
@@ -262,6 +266,8 @@ if ($player -> rank == 'Admin' || $player -> rank == 'Karczmarka')
     $smarty -> assign(array("Aban" => A_BAN,
                             "Aunban" => A_UNBAN,
                             "Chatid" => CHAT_ID,
+			    "Chatid2" => "graczowi o ID",
+			    "Tor" => "lub rzecz",
                             "Agive" => A_GIVE,
                             "Items" => $arritems,
                             "Withcomm" => WITH_COMM,

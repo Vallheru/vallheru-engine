@@ -7,7 +7,7 @@
  *   @copyright            : (C) 2004,2005,2006,2011 Vallheru Team based on Gamers-Fusion ver 2.5
  *   @author               : thindil <thindil@tuxfamily.org>
  *   @version              : 1.4
- *   @since                : 02.09.2011
+ *   @since                : 22.09.2011
  *
  */
 
@@ -47,12 +47,12 @@ require_once('libs/Smarty.class.php');
 $smarty = new Smarty;
 $smarty->compile_check = true;
 
-$stat = $db -> Execute("SELECT `id`, `rank`, `lang`, `seclang`, `style`, `graphic` FROM `players` WHERE `email`='".$_SESSION['email']."'");
+$stat = $db -> Execute("SELECT `id`, `rank`, `style`, `graphic` FROM `players` WHERE `email`='".$_SESSION['email']."'");
 
 /**
 * Get the localization for game
 */
-require_once("languages/".$stat -> fields['lang']."/chatmsg.php");
+require_once("languages/pl/chatmsg.php");
 
 /**
 * Select style for chat
@@ -70,25 +70,34 @@ if ($stat -> fields['graphic'])
     $strCss = $stat -> fields['style'];
 }
 
-$chat = $db -> SelectLimit("SELECT * FROM `chat` WHERE `lang`='".$stat -> fields['lang']."' OR `lang`='".$stat -> fields['seclang']."' AND `ownerid`=0 OR `ownerid`=".$stat -> fields['id']." OR `senderid`=".$stat -> fields['id']." ORDER BY `id` DESC", 25);
+$chat = $db -> SelectLimit("SELECT * FROM `chat` WHERE `ownerid`=0 OR `ownerid`=".$stat -> fields['id']." OR `senderid`=".$stat -> fields['id']." ORDER BY `id` DESC", 25);
 $pl = $db -> Execute("SELECT `rank`, `id`, `lpv`, `user` FROM `players` WHERE `page`='Chat'");
 $arrtext = array();
 $arrauthor = array();
 $arrsenderid = array();
-$i = 0;
 if ($stat -> fields['rank'] == 'Admin' || $stat -> fields['rank'] == 'Staff' || $stat -> fields['rank'] == 'Karczmarka') 
 {
     $smarty -> assign ("Showid", 1);
 }
+else
+  {
+    $smarty->assign("Showid", '');
+  }
 while (!$chat -> EOF) 
-{
-    $text = wordwrap($chat -> fields['chat'], 60, " ", 1);
-    $arrtext[$i] = $text;
-    $arrauthor[$i] = $chat -> fields['user'];
-    $arrsenderid[$i] = $chat -> fields['senderid'];
+  {
+    if (strpos($chat->fields['chat'], "<a href=") === FALSE)
+      {
+	$text = wordwrap($chat -> fields['chat'], 60, " ", 1);
+      }
+    else
+      {
+	$text = $chat->fields['chat'];
+      }
+    $arrtext[] = $text;
+    $arrauthor[] = $chat -> fields['user'];
+    $arrsenderid[] = $chat -> fields['senderid'];
     $chat -> MoveNext();
-    $i = $i + 1;
-}
+  }
 $chat -> Close();
 
 
