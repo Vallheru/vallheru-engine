@@ -7,7 +7,7 @@
  *   @copyright            : (C) 2006,2011 Vallheru Team based on Gamers-Fusion ver 2.5
  *   @author               : thindil <thindil@tuxfamily.org>
  *   @version              : 1.4
- *   @since                : 21.09.2011
+ *   @since                : 22.09.2011
  *
  */
 
@@ -132,7 +132,6 @@ if (isset($_GET['step']) && $_GET['step'] == 'plans')
         {
             error(YOU_HAVE);
         }
-        $objTest -> Close();
         $db -> Execute("UPDATE `players` SET `credits`=`credits`-".$objBuy -> fields['cost']." WHERE `id`=".$player -> id);
         $db -> Execute("INSERT INTO `jeweller` (`owner`, `name`, `type`, `cost`, `level`, `bonus`) VALUES(".$player -> id.", '".$objBuy -> fields['name']."', '".$objBuy -> fields['type']."', ".$objBuy -> fields['cost'].", ".$objBuy -> fields['level'].", ".$objBuy -> fields['bonus'].")");
         $smarty -> assign("Message", YOU_SPEND.$objBuy -> fields['cost'].AND_BUY.$objBuy -> fields['name']."</b>.");
