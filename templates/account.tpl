@@ -122,9 +122,12 @@
 {/if}
 
 {if $View == "reset"}
-    {$Resetinfo}?<br />
-    <a href="account.php?view=reset&amp;step=make">- {$Yes}</a><br />
-    <a href="account.php">- {$No}</a><br />
+    {$Resetinfo}<br />
+    <form method="post" action="account.php?view=reset&amp;step=make">
+        <input type="radio" name="reset" value="A" checked />{$Allreset}<br />
+	<input type="radio" name="reset" value="P" />{$Partreset}<br />
+        <input type="submit" value="{$Areset}" />
+    </form>
     {if $Step == "make"}
         {$Resetselect}<br />
     {/if}

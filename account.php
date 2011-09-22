@@ -7,7 +7,7 @@
  *   @copyright            : (C) 2004,2005,2006,2007,2011 Vallheru Team based on Gamers-Fusion ver 2.5
  *   @author               : thindil <thindil@tuxfamily.org>
  *   @version              : 1.4
- *   @since                : 18.09.2011
+ *   @since                : 22.09.2011
  *
  */
 
@@ -461,10 +461,15 @@ if (isset ($_GET['view']) && $_GET['view'] == "immu")
 if (isset ($_GET['view']) && $_GET['view'] == "reset") 
 {
     $smarty -> assign(array("Resetinfo" => RESET_INFO,
-                            "Yes" => YES,
-                            "No" => NO));
+                            "Allreset" => "Całkowity reset",
+                            "Partreset" => "Częściowy reset",
+			    "Areset" => "Resetuj postać"));
     if (isset ($_GET['step']) && $_GET['step'] == 'make') 
     {
+        if ($_POST['reset'] != 'A' && $_POST['reset'] != 'P')
+	  {
+	    error(ERROR);
+	  }
         $code = rand(1,1000000);
         $message = MESSAGE1." ".$gamename." (".$player -> user." ".ID.": ".$player -> id.") ".MESSAGE2." ".$gameadress."/preset.php?id=".$player -> id."&code=".$code." ".MESSAGE4." ".$gameadress."/preset.php?id=".$player -> id." ".MESSAGE4." ".$adminname;
         $adress = $_SESSION['email'];
@@ -474,7 +479,7 @@ if (isset ($_GET['view']) && $_GET['view'] == "reset")
         {
            error(E_MAIL.":<br /> ".$mail -> ErrorInfo);
         }
-        $db -> Execute("INSERT INTO reset (player, code) VALUES(".$player -> id.",".$code.")") or error(E_DB);
+        $db -> Execute("INSERT INTO `reset` (`player`, `code`, `type`) VALUES(".$player -> id.",".$code.", '".$_POST['reset']."')") or error(E_DB);
         $smarty -> assign("Resetselect", RESET_SELECT);
     }
 }

@@ -7,7 +7,7 @@
  *   @copyright            : (C) 2004,2005,2006,2011 Vallheru Team based on Gamers-Fusion ver 2.5
  *   @author               : thindil <thindil@tuxfamily.org>
  *   @version              : 1.4
- *   @since                : 18.09.2011
+ *   @since                : 22.09.2011
  *
  */
 
@@ -113,17 +113,6 @@ if (isset ($_GET['view']) && $_GET['view'] == "freeze")
     define("NOW_EXIT", " dni. Ponieważ twoje konto jest już zablokowane, zostałeś wylogowany z gry");
 }
 
-if (isset ($_GET['view']) && $_GET['view'] == "lang") 
-{
-    define("YOU_SELECT", "Wybrałeś jako główny język ");
-    define("AND_SECOND", " a jako dodatkowy, język ");
-    define("LANG_INFO", "Tutaj możesz wybrać język w jakim będzie wyświetlane Vallheru. Główny język sprawi iż cała gra będzie w tym języku. Język dodatkowy wpływa tylko na rozmowy w karczmie oraz na forum. Jeżeli nie chcesz ustawiać języka dodatkowego, po prostu wybierz tę samą opcję co w przypadku języka głownego.");
-    define("F_LANG", "Główny język:");
-    define("S_LANG", "Język dodatkowy:");
-    define("A_SELECT", "Wybierz");
-    define("A_REFRESH", "Odśwież");
-}
-
 if (isset($_GET['view']) && $_GET['view'] == 'immu')
 {
     define("IMMU_INFO", "Tutaj możesz samodzielnie dodać sobie immunitet. Immunitet chroni ciebie przed atakami oraz kradzieżami dokonywanymi przez innych graczy, ale sam też nie będziesz mógł atakować ani okradać (dotyczy tylko złodzieja) ich. Na dodatek immunitet jest na stałe, można go zdjąć jedynie resetując postać. Immunitet możesz wybrać dopiero w momencie wyboru klasy postaci. Czy na pewno chcesz immunitet");
@@ -136,7 +125,7 @@ if (isset($_GET['view']) && $_GET['view'] == 'immu')
 
 if (isset ($_GET['view']) && $_GET['view'] == "reset") 
 {
-    define("RESET_INFO", "Tutaj możesz zresetować swoją postać. Na twój mail zostanie wysłany specjalny link aktywacyjny. Dopiero po kliknięciu na niego twoja postać zostanie zresetowana. Zostanie jej jedynie id, nick, hasło, mail, profil, poleceni oraz wiek. Czy chcesz zresetować postać");
+    define("RESET_INFO", "Tutaj możesz zresetować swoją postać. Na twój mail zostanie wysłany specjalny link aktywacyjny. Dopiero po kliknięciu na niego twoja postać zostanie zresetowana. W przypadku, kiedy wybierzesz całkowity reset, zostanie jej jedynie id, nick, hasło, mail, profil, poleceni oraz wiek. W przypadku małego resetu zachowasz również ekwipunek, pieniądze oraz dom.");
     if (isset ($_GET['step']) && $_GET['step'] == 'make') 
     {
         define("MESSAGE1", "Dostałeś ten list ponieważ chciałeś zresetować postać. Jeżeli nadal pragniesz zresetować swoją postać na");
