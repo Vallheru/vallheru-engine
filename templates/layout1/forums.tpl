@@ -12,7 +12,10 @@
         <td colspan="2"><hr /></td>
         </tr>
     {/section}
-    </table>
+    </table><br /><br />
+    {if $Funread > 0}
+        <a href="forums.php?view=newposts">{$Anew}</a>
+    {/if}
 {/if}
 
 {if $View == "newposts"}

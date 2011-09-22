@@ -1,5 +1,7 @@
 2011-09-22  Bartek thindil Jasicki  <thindil@tuxfamily.org>
 
+	* FEATURE,templates/layout1/forums.tpl, templates/forums.tpl, forums.php: 
+	added link to new posts on categories page
 	* BUG,chat.php: 
 	fixed last changes, heh
 	* FEATURE,templates/layout1/chat.tpl, templates/chat.tpl, chat.php, chatmsg.php: 

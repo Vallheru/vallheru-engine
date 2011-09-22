@@ -8,7 +8,7 @@
  *   @author               : thindil <thindil@tuxfamily.org>
  *   @author               : mori <ziniquel@users.sourceforge.net>
  *   @version              : 1.4
- *   @since                : 09.09.2011
+ *   @since                : 22.09.2011
  *
  */
 
@@ -94,11 +94,13 @@ if (isset ($_GET['view']) && $_GET['view'] == 'categories')
     }
     $cat -> Close();
     $smarty -> assign(array("Id" => $arrid, 
-        "Name" => $arrname, 
-        "Topics1" => $arrtopics, 
-        "Description" => $arrdesc,
-        "Tcategory" => T_CATEGORY,
-        "Ttopics" => T_TOPICS));
+			    "Name" => $arrname, 
+			    "Topics1" => $arrtopics, 
+			    "Description" => $arrdesc,
+			    "Tcategory" => T_CATEGORY,
+			    "Ttopics" => T_TOPICS,
+			    "Funread" => $intFunread,
+			    "Anew" => "Lista nowych wiadomości"));
 }
 
 /**
