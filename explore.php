@@ -7,7 +7,7 @@
  *   @copyright            : (C) 2004,2005,2006,2011 Vallheru Team based on Gamers-Fusion ver 2.5
  *   @author               : thindil <thindil@tuxfamily.org>
  *   @version              : 1.4
- *   @since                : 12.09.2011
+ *   @since                : 22.09.2011
  *
  */
  
@@ -501,7 +501,6 @@ if (isset($_GET['action']) && $_GET['action'] == 'moutains' && $player -> locati
         $test -> Close();
         $db -> Execute("UPDATE `players` SET `temp`=0 WHERE `id`=".$player -> id);
         $panswer = strip_tags($_POST['tanswer']);
-        $panswer = md5(strtolower($panswer));
         if ($panswer == $answer -> fields['answer']) 
         {
             $query = $db -> Execute("SELECT count(`id`) FROM `equipment` WHERE `owner`=0 AND `minlev`<=".$player -> level);

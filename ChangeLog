@@ -1,3 +1,8 @@
+2011-09-22  Bartek thindil Jasicki  <thindil@tuxfamily.org>
+
+	* BUG,install/db/update.sql, admin.php, explore.php:
+	revert changes in bridge of death
+
 2011-09-21  Bartek thindil Jasicki  <thindil@tuxfamily.org>
 
 	* BUG,languages/pl/tribes.php: 
