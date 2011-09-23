@@ -9,7 +9,7 @@
 {if $Action == "edit" || $Action == "dodaj"}
     <form method="post" action="notatnik.php?akcja={$Nlink}">
     <table>
-    <tr><td valign="top">{$Note}:</td><td><textarea name="body" rows="5" cols="19">{$Ntext}</textarea></td></tr>
+    <tr><td valign="top">{$Note}:</td><td><textarea name="body" rows="20" cols="40">{$Ntext}</textarea></td></tr>
     <tr><td colspan="2" align="center"><input type="submit" value="{$Asave}" /></td></tr>
     </table>
     </form>
