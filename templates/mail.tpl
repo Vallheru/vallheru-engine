@@ -51,16 +51,14 @@
     <td width="20"><b><u>{$Tselect}</u></b></td>
     <td width="75"><b><u>{$From}</u></b></td>
     <td width="75"><b><u>{$Sid}</u></b></td>
-    <td width="100"><b><u>{$Mtitle}</u></b></td>
-    <td width="100"><b><u>{$Moption}</u></b></td>
+    <td><b><u>{$Mtitle}</u></b></td>
     </tr>
     {section name=mail loop=$Sender}
         <tr>
         <td><input type="checkbox" name="{$Mailid[mail]}" /></td>
         <td><a href="view.php?view={$Senderid[mail]}">{$Sender[mail]}</a></td>
         <td>{$Senderid[mail]}</td>
-        <td>{$Subject[mail]}</td>
-        <td>- <a href="mail.php?read={$Mailid[mail]}">{$Aread}</a>{if $Mread[mail] == "Y"} <blink>!!</blink> {/if}</td>
+        <td><a href="mail.php?read={$Mailid[mail]}">{$Subject[mail]}</a>{if $Mread[mail] == "Y"} <blink>!!</blink> {/if}</td>
         </tr>
     {/section}
     </table><br />
@@ -108,16 +106,14 @@
     <td width="20"><b><u>{$Tselect}</u></b></td>
     <td width="75"><b><u>{$From}</u></b></td>
     <td width="75"><b><u>{$Sid}</u></b></td>
-    <td width="100"><b><u>{$Mtitle}</u></b></td>
-    <td width="100"><b><u>{$Moption}</u></b></td>
+    <td><b><u>{$Mtitle}</u></b></td>
     </tr>
     {section name=mail1 loop=$Sender}
         <tr>
         <td><input type="checkbox" name="{$Mailid[mail1]}" /></td>
         <td><a href="view.php?view={$Senderid[mail1]}">{$Sender[mail1]}</a></td>
         <td>{$Senderid[mail1]}</td>
-        <td>{$Subject[mail1]}</td>
-        <td>- <a href="mail.php?read={$Mailid[mail1]}">{$Aread}</a></td>
+        <td><a href="mail.php?read={$Mailid[mail1]}">{$Subject[mail1]}</a></td>
         </tr>
     {/section}
     </table><br />
@@ -163,16 +159,14 @@
     <table>
     <tr>
     <td width="20"><b><u>{$Tselect}</u></b></td>
-    <td width="75"><b><u>{$Sto}</u></b></td></td>
-    <td width="100"><b><u>{$Mtitle}</u></b></td>
-    <td width="100"><b><u>{$Moption}</u></b></td>
+    <td><b><u>{$Sto}</u></b></td></td>
+    <td><b><u>{$Mtitle}</u></b></td>
     </tr>
     {section name=mail2 loop=$Send1}
         <tr>
         <td><input type="checkbox" name="{$Mailid[mail2]}" /></td>
         <td><a href="view.php?view={$Send1[mail2]}">{$Send1[mail2]}</a></td>
-        <td>{$Subject[mail2]}</td>
-        <td>- <a href="mail.php?read={$Mailid[mail2]}">{$Aread}</a></td>
+        <td><a href="mail.php?read={$Mailid[mail2]}">{$Subject[mail2]}</a></td>
         </tr>
     {/section}
     </table><br />
