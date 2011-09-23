@@ -8,7 +8,7 @@
  *   @author               : thindil <thindil@tuxfamily.org>
  *   @author               : eyescream <tduda@users.sourceforge.net>
  *   @version              : 1.4
- *   @since                : 19.09.2011
+ *   @since                : 23.09.2011
  *
  */
 
@@ -460,8 +460,7 @@ if (isset($_GET['buy']))
     }
     if ($buy -> fields['zr'] <= 0) 
     {
-        $buy -> fields['zr'] = str_replace("-","",$buy -> fields['zr']);
-        $agility = "+".$buy -> fields['zr'];
+        $agility = str_replace("-", "+", $buy->fields['zr']);
     } 
     elseif ($buy -> fields['zr'] > 0) 
     {
