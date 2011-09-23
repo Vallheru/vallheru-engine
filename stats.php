@@ -8,7 +8,7 @@
  *   @author               : thindil <thindil@tuxfamily.org>
  *   @author               : mori <ziniquel@users.sourceforge.net>
  *   @version              : 1.4
- *   @since                : 15.09.2011
+ *   @since                : 23.09.2011
  *
  */
 
@@ -258,7 +258,7 @@ $smarty -> assign(array("Stats" => $arrStats,
 if ($player->clas == "Złodziej") 
   {
     $smarty->assign(array("Crime" => "<b>".CRIME_T."</b> ".$player->crime."<br />",
-			  "Thievery" => "<b>Złodziejstwo:</b>".$player->thievery."<br />"));
+			  "Thievery" => "<b>Złodziejstwo:</b> ".$player->thievery."<br />"));
   }
 
 if (!empty($player-> gg)) 
