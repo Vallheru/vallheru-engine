@@ -7,7 +7,7 @@
  *   @copyright            : (C) 2004,2005,2006,2011 Vallheru Team based on Gamers-Fusion ver 2.5
  *   @author               : thindil <thindil@tuxfamily.org>
  *   @version              : 1.4
- *   @since                : 13.09.2011
+ *   @since                : 23.09.2011
  *
  */
 
@@ -467,6 +467,10 @@ if (isset ($_GET['action']) && $_GET['action'] == 'monster')
         {
             error (NO_CLASS3);
         }
+	if ($player->fight > 0 && $player->fight != $_GET['fight1'])
+	  {
+	    error("Już z kimś walczysz!");
+	  }
         $span = ($enemy1 -> fields['level'] / $player -> level);
         if ($span > 2) 
         {
@@ -545,6 +549,10 @@ if (isset ($_GET['action']) && $_GET['action'] == 'monster')
         {
             error(TOO_MUCH_MONSTERS);
         }
+	if ($_POST['times'] > 10)
+	  {
+	    error("Zbyt wiele walk na raz!");
+	  }
         $lostenergy = $_POST['razy'] * $_POST['times'];
         if ($player->energy < $lostenergy) 
         {
@@ -559,6 +567,10 @@ if (isset ($_GET['action']) && $_GET['action'] == 'monster')
 	if (!$enemy1 -> fields['id']) 
 	  {
 	    error (NO_MONSTER);
+	  }
+	if ($player->fight > 0 && $player->fight != $_GET['fight'])
+	  {
+	    error("Już z kimś walczysz!");
 	  }
 	$enemy1 -> fields['hp'] = ($enemy1 -> fields['hp'] * $_POST['razy']);
 	$enemy = array("strength" => $enemy1 -> fields['strength'], 
