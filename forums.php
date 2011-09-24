@@ -8,7 +8,7 @@
  *   @author               : thindil <thindil@tuxfamily.org>
  *   @author               : mori <ziniquel@users.sourceforge.net>
  *   @version              : 1.4
- *   @since                : 22.09.2011
+ *   @since                : 24.09.2011
  *
  */
 
@@ -46,7 +46,7 @@ if (isset ($_GET['view']) && $_GET['view'] == 'categories')
     /**
      * Display categories viewable for all
      */
-    $cat = $db -> Execute("SELECT `id`, `name`, `desc` FROM `categories` WHERE `perm_visit` LIKE 'All;' AND `lang`='".$player -> lang."' OR `lang`='".$player -> seclang."' ORDER BY `id` ASC");
+    $cat = $db -> Execute("SELECT `id`, `name`, `desc` FROM `categories` WHERE `perm_visit` LIKE 'All;' ORDER BY `id` ASC");
     $arrid = array();
     $arrname = array();
     $arrtopics = array();
@@ -75,7 +75,7 @@ if (isset ($_GET['view']) && $_GET['view'] == 'categories')
     {
         $strPermission = $player -> rank;
     }
-    $cat = $db -> Execute("SELECT `id`, `name`, `desc` FROM `categories` WHERE `perm_visit` LIKE '%".$strPermission."%' AND `lang`='".$player -> lang."' OR `lang`='".$player -> seclang."' ORDER BY `id` ASC");
+    $cat = $db -> Execute("SELECT `id`, `name`, `desc` FROM `categories` WHERE `perm_visit` LIKE '%".$strPermission."%' ORDER BY `id` ASC");
     while (!$cat -> EOF) 
     {
         if (in_array($cat -> fields['id'], $arrid))
@@ -156,7 +156,7 @@ if (isset($_GET['topics']))
  {
     checkvalue($_GET['topics']);
     //Count amount of pages
-    $objAmount = $db->Execute("SELECT count(`id`) FROM `topics` WHERE `cat_id`=".$_GET['topics']." AND `sticky`='N' AND (`lang`='".$player -> lang."' OR `lang`='".$player -> seclang."')");
+    $objAmount = $db->Execute("SELECT count(`id`) FROM `topics` WHERE `cat_id`=".$_GET['topics']." AND `sticky`='N'");
     $pages = ceil($objAmount->fields['count(`id`)'] / 25);
     $objAmount->close();
     if (isset($_GET['page']))
@@ -166,7 +166,7 @@ if (isset($_GET['topics']))
      }
     else
      {
-       $page = $pages;
+       $page = 1;
      }
     /**
      * Check for permissions
@@ -198,7 +198,7 @@ if (isset($_GET['topics']))
      * Select sticky threads
      */
     $intOffset = 25 * ($page - 1);
-    $topic = $db->Execute("SELECT `w_time`, `id`, `topic`, `starter`, `closed`, `gracz` FROM `topics` WHERE `sticky`='Y' AND `cat_id`=".$_GET['topics']." AND `lang`='".$player -> lang."' OR `lang`='".$player -> seclang."' ORDER BY `id` ASC");
+    $topic = $db->Execute("SELECT `w_time`, `id`, `topic`, `starter`, `closed`, `gracz`, `replies` FROM `topics` WHERE `sticky`='Y' AND `cat_id`=".$_GET['topics']." ORDER BY `id` ASC");
     $arrid = array();
     $arrtopic = array();
     $arrstarter = array();
@@ -225,9 +225,7 @@ if (isset($_GET['topics']))
 	  {
 	    $arrClosed[$i] = '[+]';
 	  }
-        $query = $db -> Execute("SELECT count(`id`) FROM `replies` WHERE `topic_id`=".$topic -> fields['id']);
-        $arrreplies[$i] = $query->fields['count(`id`)'];
-        $query -> Close();
+        $arrreplies[$i] = $topic->fields['replies'];
         $arrid[$i] = $topic -> fields['id'];
         $arrtopic[$i] = "<b>".$topic -> fields['topic']."</b>";
         $arrstarter[$i] = $topic -> fields['starter'];
@@ -240,7 +238,46 @@ if (isset($_GET['topics']))
     /**
      * Select normal threads
      */
-    $topic = $db -> SelectLimit("SELECT `w_time`, `id`, `topic`, `starter`, `closed`, `gracz` FROM `topics` WHERE `sticky`='N' AND `cat_id`=".$_GET['topics']." AND `lang`='".$player -> lang."' OR `lang`='".$player -> seclang."' ORDER BY `id` ASC", 25, $intOffset);
+    if (isset($_SESSION['fsort']) && !isset($_POST['sort']))
+      {
+	$_POST['sort'] = $_SESSION['fsort'];
+      }
+    if (isset($_POST['sort']))
+      {
+	$_POST['sort'] = intval($_POST['sort']);
+	$_SESSION['fsort'] = $_POST['sort'];
+	switch($_POST['sort'])
+	{
+	case 0:
+	  $strOrder = '`w_time` DESC';
+	  break;
+	case 1:
+	  $strOrder = '`w_time` ASC';
+	  break;
+	case 2:
+	  $strOrder = '`id` DESC';
+	  break;
+	case 3:
+	  $strOrder = '`id` ASC';
+	  break;
+	case 4:
+	  $strOrder = '`replies` DESC';
+	  break;
+	case 5:
+	  $strOrder = '`replies` ASC';
+	  break;
+	default:
+	  $strOrder = '`id` ASC';
+	  $_SESSION['fsort'] = 3;
+	  break;
+	}
+      }
+    else
+      {
+	$strOrder = '`id` ASC';
+	$_SESSION['fsort'] = 3;
+      }
+    $topic = $db -> SelectLimit("SELECT `w_time`, `id`, `topic`, `starter`, `closed`, `gracz`, `replies` FROM `topics` WHERE `sticky`='N' AND `cat_id`=".$_GET['topics']." ORDER BY ".$strOrder, 25, $intOffset);
     while (!$topic -> EOF) 
       {
 	if ($topic -> fields['w_time'] > $_SESSION['forums'])
@@ -259,9 +296,7 @@ if (isset($_GET['topics']))
 	  {
 	    $arrClosed[$i] = '[+]';
 	  }
-	$query = $db -> Execute("SELECT count(`id`) FROM `replies` WHERE `topic_id`=".$topic -> fields['id']);
-	$arrreplies[$i] = $query->fields['count(`id`)'];
-	$query -> Close();
+	$arrreplies[$i] = $topic->fields['replies'];
 	$arrid[$i] = $topic -> fields['id'];
 	$arrtopic[$i] = $topic -> fields['topic'];
 	$arrstarter[$i] = $topic -> fields['starter'];
@@ -270,30 +305,36 @@ if (isset($_GET['topics']))
 	$i++;
       }
     $topic -> Close();
+
+    $arrOptions = array('najnowsze odpowiedzi', 'najstarsze odpowiedzi', 'najnowsze tematy', 'najstarsze tematy', 'najwięcej odpowiedzi', 'najmniej odpowiedzi');
     
     $smarty -> assign(array("Category" => $_GET['topics'], 
 			    "Playersid" => $arrPlayerid,
-        "Id" => $arrid, 
-        "Topic1" => $arrtopic, 
-        "Starter1" => $arrstarter, 
-        "Replies1" => $arrreplies,
-	"Closed" => $arrClosed,
-        "Ttopic" => T_TOPIC,
-        "Tauthor" => T_AUTHOR,
-        "Treplies" => T_REPLIES,
-        "Addtopic" => ADD_TOPIC,
-        "Ttext" => T_TEXT,
-        "Aback" => A_BACK,
-        "Tocategories" => TO_CATEGORIES,
-        "Asearch" => A_SEARCH,
-        "Tword" => T_WORD,
-        "Tsticky" => T_STICKY,
-	"Tpages" => $pages,
-	"Tpage" => $page,
-	"Fpage" => "Idź do strony:",
-	"Prank" => $player->rank,
-	"Adelete" => "Skasuj wybrane tematy",
-        "Newtopic" => $arrNewtopic));
+			    "Id" => $arrid, 
+			    "Topic1" => $arrtopic, 
+			    "Starter1" => $arrstarter, 
+			    "Replies1" => $arrreplies,
+			    "Closed" => $arrClosed,
+			    "Ttopic" => T_TOPIC,
+			    "Tauthor" => T_AUTHOR,
+			    "Treplies" => T_REPLIES,
+			    "Addtopic" => ADD_TOPIC,
+			    "Ttext" => T_TEXT,
+			    "Aback" => A_BACK,
+			    "Tocategories" => TO_CATEGORIES,
+			    "Asearch" => A_SEARCH,
+			    "Tword" => T_WORD,
+			    "Tsticky" => T_STICKY,
+			    "Tpages" => $pages,
+			    "Tpage" => $page,
+			    "Fpage" => "Idź do strony:",
+			    "Prank" => $player->rank,
+			    "Adelete" => "Skasuj wybrane tematy",
+			    "Newtopic" => $arrNewtopic,
+			    "Asort" => "Sortuj",
+			    "Tsort" => "według",
+			    "Onames" => $arrOptions,
+			    "Selected" => $_SESSION['fsort']));
 }
 
 /**
@@ -529,7 +570,7 @@ if (isset($_GET['reply']))
     $_POST['rep'] = "<b>".$data." ".$time."</b><br />".$_POST['rep'];
     $strBody = $db -> qstr($_POST['rep'], get_magic_quotes_gpc());
     $db -> Execute("INSERT INTO `replies` (`starter`, `topic_id`, `body`, `gracz`) VALUES('".$player -> user."', ".$_GET['reply'].", ".$strBody.", ".$player -> id.")") or die("Could not add reply.");
-    $db->Execute("UPDATE `topics` SET `w_time`=".$ctime." WHERE `id`=".$_GET['reply']);
+    $db->Execute("UPDATE `topics` SET `w_time`=".$ctime.", `replies`=`replies`+1 WHERE `id`=".$_GET['reply']);
     error (REPLY_ADD." <a href=forums.php?topic=".$_GET['reply'].">".A_HERE."</a>.");
 }
 
@@ -630,6 +671,7 @@ if (isset($_GET['kasuj']))
     checkvalue($_GET['kasuj']);
     $tid = $db -> Execute("SELECT `topic_id` FROM `replies` WHERE `id`=".$_GET['kasuj']);
     $db -> Execute("DELETE FROM `replies` WHERE `id`=".$_GET['kasuj']);
+    $db0->Execute("UPDATE `topics` SET `replies`=`replies`-1 WHERE `id`=".$tid->fields['topic_id']);
     error (POST_DEL." <a href=forums.php?topic=".$tid -> fields['topic_id'].">".A_BACK."</a>");
 }
 

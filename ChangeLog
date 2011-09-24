@@ -1,5 +1,7 @@
 2011-09-24  Bartek thindil Jasicki  <thindil@tuxfamily.org>
 
+	* FEATURE,install/db/update.sql, templates/layout1/forums.tpl, templates/forums.tpl, forums.php: 
+	added option to sort topics
 	* FEATURE,templates/layout1/market.tpl, templates/market.tpl, market.php:
 	added option add all to changing offert
 

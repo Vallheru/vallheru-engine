@@ -41,6 +41,9 @@
     <form method="post" action="forums.php?action=search">
         <input type="submit" value="{$Asearch}" /> {$Tword}: <input type="text" name="search" />
         <input type="hidden" name="catid" value="{$Category}" />
+    </form><br />
+    <form method="post" action="forums.php?topics={$Topics}" />
+        <input type="submit" value="{$Asort}" /> {$Tsort} {html_options name=sort options=$Onames selected=$Selected}
     </form>
     {if $Prank == "Admin" || $Prank == "Staff"}
         <form method="post" action="forums.php?action=deltopics">
