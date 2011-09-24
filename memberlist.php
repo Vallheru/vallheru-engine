@@ -7,7 +7,7 @@
  *   @copyright            : (C) 2004,2005,2006,2007,2011 Vallheru Team based on Gamers-Fusion ver 2.5
  *   @author               : thindil <thindil@tuxfamily.org>
  *   @version              : 1.4
- *   @since                : 18.08.2011
+ *   @since                : 24.09.2011
  *
  */
 
@@ -127,19 +127,19 @@ if (isset($_GET['ip']))
   }
 if (empty($_POST['szukany']) && $_POST['id'] == 0 && empty($_POST['ip'])) 
   {
-    $mem = $db -> SelectLimit("SELECT `id`, `user`, `rank`, `rasa`, `level`, `gender` FROM `players` ORDER BY `".$_GET['lista']."` ASC", 30, (30 * ($page - 1)));
+    $mem = $db -> SelectLimit("SELECT `id`, `user`, `rank`, `rasa`, `level`, `gender`, `shortrpg` FROM `players` ORDER BY `".$_GET['lista']."` ASC", 30, (30 * ($page - 1)));
   } 
 elseif  (!empty($_POST['szukany']) && $_POST['id'] == 0) 
 {
-  $mem = $db -> SelectLimit("SELECT `id`, `user`, `rank`, `rasa`, `level`, `gender` FROM `players` WHERE `user` LIKE ".$strSearch." ORDER BY `".$_GET['lista']."` ASC", 30, (30 * ($page - 1)));
+  $mem = $db -> SelectLimit("SELECT `id`, `user`, `rank`, `rasa`, `level`, `gender`, `shortrpg` FROM `players` WHERE `user` LIKE ".$strSearch." ORDER BY `".$_GET['lista']."` ASC", 30, (30 * ($page - 1)));
 } 
 elseif (!empty($_POST['szukany']) && $_POST['id'] > 0) 
 {
-  $mem = $db -> SelectLimit("SELECT `id`, `user`, `rank`, `rasa`, `level`, `gender` FROM `players` WHERE `id`=".$_POST['id']." AND `user` LIKE ".$strSearch." ORDER BY `".$_GET['lista']."` ASC", 30,  (30 * ($page - 1)));
+  $mem = $db -> SelectLimit("SELECT `id`, `user`, `rank`, `rasa`, `level`, `gender`, `shortrpg` FROM `players` WHERE `id`=".$_POST['id']." AND `user` LIKE ".$strSearch." ORDER BY `".$_GET['lista']."` ASC", 30,  (30 * ($page - 1)));
 } 
 elseif (empty($_POST['szukany']) && $_POST['id'] > 0) 
 {
-  $mem = $db -> SelectLimit("SELECT `id`, `user`, `rank`, `rasa`, `level`, `gender` FROM `players` WHERE `id`=".$_POST['id']." ORDER BY `".$_GET['lista']."` ASC", 30, (30 * ($page - 1)));
+  $mem = $db -> SelectLimit("SELECT `id`, `user`, `rank`, `rasa`, `level`, `gender`, `shortrpg` FROM `players` WHERE `id`=".$_POST['id']." ORDER BY `".$_GET['lista']."` ASC", 30, (30 * ($page - 1)));
 }
 elseif(!empty($_POST['ip']))
 {
@@ -148,34 +148,42 @@ elseif(!empty($_POST['ip']))
       error(NO_PERM);
     }
   $_POST['ip'] = str_replace("*","%", $_POST['ip']);
-  $mem = $db -> SelectLimit("SELECT `id`, `user`, `rank`, `rasa`, `level`, `gender` FROM `players` WHERE `ip` LIKE '".$_POST['ip']."' ORDER BY `".$_GET['lista']."` ASC", 30, (30 * ($page - 1)));
+  $mem = $db -> SelectLimit("SELECT `id`, `user`, `rank`, `rasa`, `level`, `gender`, `shortrpg` FROM `players` WHERE `ip` LIKE '".$_POST['ip']."' ORDER BY `".$_GET['lista']."` ASC", 30, (30 * ($page - 1)));
 }
 $arrrank = array();
 $arrid = array();
 $arrname = array();
 $arrrace = array();
 $arrlevel = array();
-$i = 0;
+$arrShort = array();
 while (!$mem -> EOF) 
   {
     /**
      * Select player rank
      */
     require_once('includes/ranks.php');
-    $arrrank[$i] = selectrank($mem -> fields['rank'], $mem -> fields['gender']);
+    $arrrank[] = selectrank($mem -> fields['rank'], $mem -> fields['gender']);
     
-    $arrid[$i] = $mem -> fields['id'];
-    $arrname[$i] = $mem -> fields['user'];
-    $arrrace[$i] = $mem -> fields['rasa'];
-    $arrlevel[$i] = $mem -> fields['level'];
+    $arrid[] = $mem -> fields['id'];
+    $arrname[] = $mem -> fields['user'];
+    $arrrace[] = $mem -> fields['rasa'];
+    $arrlevel[] = $mem -> fields['level'];
+    if (strlen($mem->fields['shortrpg']) > 0)
+      {
+	$arrShort[] = '<a href="roleplay.php?view='.$mem->fields['id'].'">'.$mem->fields['shortrpg'].'</a>';
+      }
+    else
+      {
+	$arrShort[] = '';
+      }
     $mem -> MoveNext();
-    $i = $i + 1;
   }
 $mem -> Close();
 $smarty -> assign(array("Memid" => $arrid, 
 			"Name" => $arrname, 
 			"Race" => $arrrace, 
 			"Rank" => $arrrank,
+			"Roleplay" => $arrShort,
 			"Tpages" => $pages,
 			"Tpage" => $page,
 			"Fpage" => "Idź do strony:",
@@ -194,18 +202,19 @@ if (!isset($strMessage))
 * Assign variables to template and display page
 */
 $smarty -> assign(array("Message" => $strMessage,
-    "Plid" => PL_ID,
-    "Plname" => PL_NAME,
-    "Plrank" => PL_RANK,
-    "Plrace" => PL_RACE,
-    "Pllevel" => PL_LEVEL,
-    "Search" => SEARCH,
-    "Search2" => SEARCH2,
-    "Splayer" => S_PLAYER,
-    "Asearch" => A_SEARCH,
-    "Searchip" => SEARCH_IP,
-    "Searchinfo" => SEARCH_INFO,
-    "Rank2" => $player -> rank));
+			"Plid" => PL_ID,
+			"Plname" => PL_NAME,
+			"Plrank" => PL_RANK,
+			"Plrace" => PL_RACE,
+			"Pllevel" => PL_LEVEL,
+			"Plroleplay" => "Profil fabularny",
+			"Search" => SEARCH,
+			"Search2" => SEARCH2,
+			"Splayer" => S_PLAYER,
+			"Asearch" => A_SEARCH,
+			"Searchip" => SEARCH_IP,
+			"Searchinfo" => SEARCH_INFO,
+			"Rank2" => $player -> rank));
 $smarty -> display ('memberlist.tpl');
 
 require_once("includes/foot.php");

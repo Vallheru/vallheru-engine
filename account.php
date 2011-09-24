@@ -7,7 +7,7 @@
  *   @copyright            : (C) 2004,2005,2006,2007,2011 Vallheru Team based on Gamers-Fusion ver 2.5
  *   @author               : thindil <thindil@tuxfamily.org>
  *   @version              : 1.4
- *   @since                : 22.09.2011
+ *   @since                : 24.09.2011
  *
  */
 
@@ -969,6 +969,34 @@ if (isset($_GET['view']) && $_GET['view'] == 'forums')
 }
 
 /**
+ * Set roleplay profile.
+ */
+if (isset($_GET['view']) && $_GET['view'] == 'roleplay')
+  {
+    $objProfile = $db->Execute("SELECT `roleplay`, `ooc`, `shortrpg` FROM `players` WHERE `id`=".$player->id);
+    require_once('includes/bbcode.php');
+    $smarty->assign(array("Info" => "Tutaj możesz ustawić swój profil fabularny. Używany jest on jedynie do sesji z innymi graczami, jest czymś w rodzaju twojej wizytówki.",
+			  "Rprofile" => htmltobbcode($objProfile->fields['roleplay']),
+			  "Ooc" => htmltobbcode($objProfile->fields['ooc']),
+			  "Shortrp" => $objProfile->fields['shortrpg'],
+			  'Rprofileinfo' => 'Tutaj wpisz informacje związane z twoją postacią dla <b>postaci</b> innych graczy, czyli na przykład wygląd itp sprawy.',
+			  'Oocinfo' => 'Tutaj wpisz informacje dla innych graczy. Na przykład ogólne zasady na jakich chciałbyś(chciałabyś) tworzyć sesję itd.',
+			  'Shortrpinfo' => 'Bardzo krótki (najlepiej dwa, trzy słowa) opis twojej postaci. Zostanie on umieszczony na liście mieszkańców i będzie odnośnikiem do twojego profilu fabularnego. Jeżeli wykasujesz tekst z tego pola, odnośnik na liście mieszkańców do twojego profilu fabularnego również zniknie.',
+			  "Aset" => "Ustaw"));
+    if (isset($_GET['step']) && $_GET['step'] == 'set')
+      {
+	if (!isset($_POST['shortrp']))
+	  {
+	    $_POST['shortrp'] = '';
+	  }
+	$strProfile = bbcodetohtml($_POST['roleplay']);
+	$strOOC = bbcodetohtml($_POST['ooc']);
+	$strShort = str_replace("'","",strip_tags($_POST['shortrp']));
+	$db->Execute("UPDATE `players` SET `roleplay`='".$strProfile."', `ooc`='".$strOOC."', `shortrpg`='".$strShort."' WHERE `id`=".$player->id);
+      }
+  }
+
+/**
 * Initialization of variables
 */
 if (!isset($_GET['view'])) 
@@ -983,8 +1011,8 @@ if (!isset($_GET['step']))
 /**
 * Assign variables and display page
 */
-$arrStep = array('name', 'pass', 'profile', 'eci', 'avatar', 'reset', 'immu', 'style', 'freeze', 'options', 'changes', 'vallars', 'bugreport', 'bugtrack', 'links', 'forums');
-$arrLinks = array(A_NAME, A_PASS, A_PROFILE, A_EMAIL, A_AVATAR, A_RESET, A_IMMU, A_STYLE, A_FREEZE, A_OPTIONS, A_CHANGES, "Ostatnio nagrodzeni Vallarami", A_BUGREPORT, A_BUGTRACK, A_LINKS, 'Obserwowane fora');
+$arrStep = array('name', 'pass', 'profile', 'roleplay', 'eci', 'avatar', 'reset', 'immu', 'style', 'freeze', 'options', 'changes', 'vallars', 'bugreport', 'bugtrack', 'links', 'forums');
+$arrLinks = array(A_NAME, A_PASS, A_PROFILE, 'Edytuj profil fabularny', A_EMAIL, A_AVATAR, A_RESET, A_IMMU, A_STYLE, A_FREEZE, A_OPTIONS, A_CHANGES, "Ostatnio nagrodzeni Vallarami", A_BUGREPORT, A_BUGTRACK, A_LINKS, 'Obserwowane fora');
 $smarty -> assign (array ("View" => $_GET['view'], 
                           "Step" => $_GET['step'],
                           "Welcome" => WELCOME,

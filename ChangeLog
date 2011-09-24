@@ -1,5 +1,9 @@
 2011-09-24  Bartek thindil Jasicki  <thindil@tuxfamily.org>
 
+	* FEATURE,install/db/update.sql, templates/layout1/account.tpl, templates/account.tpl, account.php, templates/layout1/memberlist.tpl,
+	templates/memberlist.tpl, memberlist.php, templates/layout1/view.tpl, templates/view.tpl, view.php, templates/layout1/roleplay.tpl,
+	templates/roleplay.tpl, roleplay.php: 
+	added roleplay profiles
 	* FEATURE,install/db/update.sql, templates/layout1/forums.tpl, templates/forums.tpl, forums.php: 
 	added option to sort topics
 	* FEATURE,templates/layout1/market.tpl, templates/market.tpl, market.php:

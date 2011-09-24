@@ -6,6 +6,7 @@
 <td width="100"><a href="memberlist.php?lista=rank"><b><u>{$Plrank}</u></b></a></td>
 <td width="50"><a href="memberlist.php?lista=rasa"><b><u>{$Plrace}</u></b></a></td>
 <td width="50"><a href="memberlist.php?lista=level"><b><u>{$Pllevel}</u></b></a></td>
+<td><b><u>{$Plroleplay}</u></b></td>
 </tr>
 {section name=list1 loop=$Name}
     <tr>
@@ -14,6 +15,7 @@
     <td>{$Rank[list1]}</td>
     <td>{$Race[list1]}</td>
     <td>{$Level[list1]}</td>
+    <td>{$Roleplay[list1]}</td>
     </tr>
 {/section}
 </table>

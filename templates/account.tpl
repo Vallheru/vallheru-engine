@@ -258,3 +258,16 @@
     <input type="submit" value="{$Aset}" />
     </form>
 {/if}
+
+{if $View == "roleplay"}
+    {$Info}<br /><br />
+    <form method="post" action="account.php?view=roleplay&amp;step=set">
+    {$Rprofileinfo}<br />
+    <textarea name="roleplay" id="roleplay" rows="15" cols="40">{$Rprofile}</textarea><br /><br />
+    {$Oocinfo}<br />
+    <textarea name="ooc" id="ooc" rows="15" cols="40">{$Ooc}</textarea><br /><br />
+    {$Shortrpinfo}<br />
+    <input type="text" name="shortrp" size="40" value="{$Shortrp}" /><br /><br />
+    <input type="submit" value="{$Aset}" />
+    </form>
+{/if}

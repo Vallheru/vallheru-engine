@@ -175,7 +175,7 @@ if ($tribe -> fields['name'])
     $smarty -> assign ("Clan", T_CLAN.": ".NOTHING."<br />");
 }
 
-$objFreeze = $db -> Execute("SELECT freeze FROM players WHERE id=".$_GET['view']);
+$objFreeze = $db -> Execute("SELECT `freeze`, `shortrpg` FROM `players` WHERE `id`=".$_GET['view']);
 
 if ($player -> location == $view -> location && $view -> immunited == 'N' && $player -> immunited == 'N' && $player -> id != $view -> id) 
 {
@@ -202,6 +202,15 @@ if ($objFreeze -> fields['freeze'])
 {
     $smarty -> assign("Tfreezed", '');
 }
+
+if ($objFreeze->fields['shortrpg'] != '')
+  {
+    $smarty->assign("Rprofile", '<a href="roleplay.php?view='.$view->id.'">Profil fabularny</a>');
+  }
+else
+  {
+    $smarty->assign("Rprofile", '');
+  }
 
 if ($player -> clas == 'Złodziej' && $player -> crime > 0 && $player -> location == $view -> location && $player -> id != $view -> id) 
 {
