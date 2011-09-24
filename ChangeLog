@@ -1,3 +1,8 @@
+2011-09-24  Bartek thindil Jasicki  <thindil@tuxfamily.org>
+
+	* FEATURE,templates/layout1/market.tpl, templates/market.tpl, market.php:
+	added option add all to changing offert
+
 2011-09-23  Bartek thindil Jasicki  <thindil@tuxfamily.org>
 
 	* BUG,languages/pl/house.php: 

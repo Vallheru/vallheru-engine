@@ -7,7 +7,7 @@
  *   @copyright            : (C) 2004,2005,2006,2011 Vallheru Team based on Gamers-Fusion ver 2.5
  *   @author               : thindil <thindil@tuxfamily.org>
  *   @version              : 1.4
- *   @since                : 09.09.2011
+ *   @since                : 24.09.2011
  *
  */
 
@@ -254,42 +254,41 @@ if (isset($_GET['view']) && $_GET['view'] == 'myoferts')
                 $arrNames = array(MAP1, MAP2, MAP3, MAP4, MAP5, MAP6, MAP7, PLAN1, PLAN2, PLAN3, PLAN4, PLAN5, RECIPE1, RECIPE2, RECIPE3, RECIPE4, RECIPE5, COMP1, COMP2, COMP3, COMP4, COMP5, COMP6, COMP7, CONST1, CONST2, CONST3, CONST4, CONST5, POTION1, POTION2, POTION3, POTION4, POTION5);
                 $arrTable = array(T_NAME, T_NUMBER, T_AMOUNT, T_COST);
                 while (!$objOferts -> EOF)
-                {
-                    if (ereg("^M[0-9]", $objOferts -> fields['type']))
-                    {
+		  {
+		    switch ($objOferts->fields['type'][0])
+		      {
+		      case 'M':
                         $intKey2 = str_replace("M", "", $objOferts -> fields['type']);
                         $intNumber = $intKey2;
                         $arrValues[$i][1] = $objOferts -> fields['number'] + 1;
-                    }
-                    if (ereg("^P[0-9]", $objOferts -> fields['type']))
-                    {
+			break;
+		      case 'P':
                         $intKey2 = str_replace("P", "", $objOferts -> fields['type']);
                         $intNumber = $intKey2 + 7;
                         $arrValues[$i][1] = $objOferts -> fields['number'] + 1;
-                    }
-                    if (ereg("^R[0-9]", $objOferts -> fields['type']))
-                    {
+			break;
+		      case 'R':
                         $intKey2 = str_replace("R", "", $objOferts -> fields['type']);
                         $intNumber = $intKey2 + 12;
                         $arrValues[$i][1] = $objOferts -> fields['number'] + 1;
-                    }
-                    if (ereg("^C[0-9]", $objOferts -> fields['type']))
-                    {
+			break;
+		      case 'C':
                         $intKey2 = str_replace("C", "", $objOferts -> fields['type']);
                         $intNumber = $intKey2 + 17;
                         $arrValues[$i][1] = '-';
-                    }
-                    if (ereg("^O[0-9]", $objOferts -> fields['type']))
-                    {
+			break;
+		      case 'O':
                         $intKey2 = str_replace("O", "", $objOferts -> fields['type']);
                         $intNumber = $intKey2 + 24;
                         $arrValues[$i][1] = '-';
-                    }
-                    if (ereg("^T[0-9]", $objOferts -> fields['type']))
-                    {
+			break;
+		      case 'T':
                         $intKey2 = str_replace("T", "", $objOferts -> fields['type']);
                         $intNumber = $intKey2 + 29;
                         $arrValues[$i][1] = '-';
+			break;
+		      default:
+			break;
                     }
                     $arrValues[$i][0] = $arrNames[$intNumber];
                     $arrValues[$i][2] = $objOferts -> fields['amount'];
@@ -393,41 +392,40 @@ if (isset($_GET['view']) && $_GET['view'] == 'myoferts')
             if ($intKey == 4)
             {
                 $arrNames = array(MAP1, MAP2, MAP3, MAP4, MAP5, MAP6, MAP7, PLAN1, PLAN2, PLAN3, PLAN4, PLAN5, RECIPE1, RECIPE2, RECIPE3, RECIPE4, RECIPE5, COMP1, COMP2, COMP3, COMP4, COMP5, COMP6, COMP7, CONST1, CONST2, CONST3, CONST4, CONST5, POTION1, POTION2, POTION3, POTION4, POTION5);
-                if (ereg("^M[0-9]", $objOfert -> fields['type']))
-                {
-                    $intKey2 = str_replace("M", "", $objOfert -> fields['type']);
+		switch ($objOfert->fields['type'][0])
+		  {
+		  case 'M':
+		    $intKey2 = str_replace("M", "", $objOfert -> fields['type']);
                     $intNumber = $intKey2;
                     $strName2 = $objOfert -> fields['number'] + 1;
-                }
-                if (ereg("^P[0-9]", $objOfert -> fields['type']))
-                {
+		    break;
+		  case 'P':
                     $intKey2 = str_replace("P", "", $objOfert -> fields['type']);
                     $intNumber = $intKey2 + 7;
                     $strName2 = $objOfert -> fields['number'] + 1;
-                }
-                if (ereg("^R[0-9]", $objOfert -> fields['type']))
-                {
+		    break;
+		  case 'R':
                     $intKey2 = str_replace("R", "", $objOfert -> fields['type']);
                     $intNumber = $intKey2 + 12;
                     $strName2 = $objOfert -> fields['number'] + 1;
-                }
-                if (ereg("^C[0-9]", $objOfert -> fields['type']))
-                {
+		    break;
+		  case 'C':
                     $intKey2 = str_replace("C", "", $objOfert -> fields['type']);
                     $intNumber = $intKey2 + 17;
                     $strName2 = '-';
-                }
-                if (ereg("^O[0-9]", $objOfert -> fields['type']))
-                {
+		    break;
+		  case 'O':
                     $intKey2 = str_replace("O", "", $objOfert -> fields['type']);
                     $intNumber = $intKey2 + 24;
                     $strName2 = '-';
-                }
-                if (ereg("^T[0-9]", $objOfert -> fields['type']))
-                {
+		    break;
+		  case 'T':
                     $intKey2 = str_replace("T", "", $objOfert -> fields['type']);
                     $intNumber = $intKey2 + 29;
                     $strName2 = '-';
+		    break;
+		  default:
+		    break;
                 }
                 $strName = $arrNames[$intNumber].O_NUMBER.$strName2;
             }
@@ -472,15 +470,19 @@ if (isset($_GET['view']) && $_GET['view'] == 'myoferts')
             {
                 $smarty -> assign(array("Toofert" => TO_OFERT,
                                         "Aadd" => A_ADD,
-                                        "Tamount2" => T_AMOUNT2,
-                                        "Oname" => $strName));
+                                        "Tamount2" => T_AMOUNT2." lub",
+                                        "Oname" => $strName,
+					"Taddall" => "wszystkie posiadane"));
                 if (isset($_GET['confirm']) && $_GET['confirm'] == 'yes')
                 {
-                    if (!isset($_POST['amount']))
+		    if (!isset($_POST['amount']) && !isset($_POST['addall']))
                     {
                         error(ERROR);
                     }
-		    checkvalue($_POST['amount']);
+		    if (!isset($_POST['addall']))
+		      {
+			checkvalue($_POST['amount']);
+		      }
                     if ($intKey == 0)
                     {
                         $arrSqlname = array('', 'copperore', 'zincore', 'tinore', 'ironore', 'copper', 'bronze', 'brass', 'iron', 'steel', 'coal', 'adamantium', 'meteor', 'crystal', 'pine', 'hazel', 'yew', 'elm');
@@ -530,6 +532,10 @@ if (isset($_GET['view']) && $_GET['view'] == 'myoferts')
                         $intAmount = $objAmount -> fields['amount'];
                         $objAmount -> Close();
                     }
+		    if (isset($_POST['addall']))
+		      {
+			$_POST['amount'] = $intAmount;
+		      }
                     if ($_POST['amount'] > $intAmount)
                     {
                         error(NO_AMOUNT.$strName);
