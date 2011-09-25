@@ -7,7 +7,7 @@
  *   @copyright            : (C) 2011 Vallheru Team based on Gamers-Fusion ver 2.5
  *   @author               : thindil <thindil@tuxfamily.org>
  *   @version              : 1.4
- *   @since                : 24.09.2011
+ *   @since                : 25.09.2011
  *
  */
 
@@ -33,19 +33,19 @@ require_once("includes/head.php");
 
 if (!isset($_GET['view']))
   {
-    error("Zapomij o tym!");
+    error("Zapomij o tym!<a href");
   }
 
 checkvalue($_GET['view']);
 $objProfile = $db->Execute("SELECT `id`, `roleplay`, `ooc` FROM `players` WHERE `id`=".$_GET['view']);
 if (!$objProfile->fields['id'])
   {
-    error("Nie ma takiego gracza!");
+    error("Nie ma takiego gracza!<a href");
   }
 
 if (strlen($objProfile->fields['roleplay']) == 0)
   {
-    error("Ten gracz nie posiada profilu fabularnego.");
+    error("Ten gracz nie posiada profilu fabularnego.<a href");
   }
 
 $smarty->assign(array("Roleplay" => $objProfile->fields['roleplay'],

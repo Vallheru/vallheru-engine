@@ -1,5 +1,7 @@
 2011-09-25  Bartek thindil Jasicki  <thindil@tuxfamily.org>
 
+	* BUG,account.php, roleplay.php: 
+	fixed few bugs
 	* FEATURE,install/db/update.sql, class/player_class.php, smelter.php, monuments.php, templates/layout1/stats.tpl, templates/stats.tpl,
 	stats.php:
 	added metallurgy skill

@@ -7,7 +7,7 @@
  *   @copyright            : (C) 2004,2005,2006,2007,2011 Vallheru Team based on Gamers-Fusion ver 2.5
  *   @author               : thindil <thindil@tuxfamily.org>
  *   @version              : 1.4
- *   @since                : 24.09.2011
+ *   @since                : 25.09.2011
  *
  */
 
@@ -992,6 +992,10 @@ if (isset($_GET['view']) && $_GET['view'] == 'roleplay')
 	$strProfile = bbcodetohtml($_POST['roleplay']);
 	$strOOC = bbcodetohtml($_POST['ooc']);
 	$strShort = str_replace("'","",strip_tags($_POST['shortrp']));
+	if ($strShort != '' && (strlen($strProfile) == 0 && strlen($strOOC == 0)))
+	  {
+	    error("Wypełnij wszystkie pola!");
+	  }
 	$db->Execute("UPDATE `players` SET `roleplay`='".$strProfile."', `ooc`='".$strOOC."', `shortrpg`='".$strShort."' WHERE `id`=".$player->id);
       }
   }
