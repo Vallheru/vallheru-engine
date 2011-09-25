@@ -7,7 +7,7 @@
  *   @copyright            : (C) 2004,2005,2006,2007,2011 Vallheru Team based on Gamers-Fusion ver 2.5
  *   @author               : thindil <thindil@tuxfamily.org>
  *   @version              : 1.4
- *   @since                : 16.09.2011
+ *   @since                : 25.09.2011
  *
  */
 
@@ -106,6 +106,7 @@ class Player
     var $forumtime;
     var $tforumtime;
     var $forumcats;
+    var $metallurgy;
 /**
 * Class constructor - get data from database and write it to variables
 */
@@ -200,6 +201,7 @@ class Player
 	$this->forumtime = $stats->fields['forum_time'];
 	$this->tforumtime = $stats->fields['tforum_time'];
 	$this->forumcats = $stats->fields['forumcats'];
+	$this->metallurgy = $stats->fields['metallurgy'];
         $stats -> Close();
     }
     /**

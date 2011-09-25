@@ -8,7 +8,7 @@
  *   @author               : thindil <thindil@tuxfamily.org>
  *   @author               : mori <ziniquel@users.sourceforge.net>
  *   @version              : 1.4
- *   @since                : 23.09.2011
+ *   @since                : 25.09.2011
  *
  */
 
@@ -213,6 +213,7 @@ $smarty -> assign(array("Stats" => $arrStats,
                         "Herbalist" => $player -> herbalist."<br />",
                         "Jeweller" => $player -> jeweller."<br />",
 			"Perception" => $player->perception."<br />",
+			"Metallurgy" => $player->metallurgy."<br />",
 			"Tnewbie" => "Ochrona młodego gracza",
 			"Tdays" => "dni",
 			"Tday" => "dzień",
@@ -253,7 +254,8 @@ $smarty -> assign(array("Stats" => $arrStats,
                         "Therbalist" => T_HERBALIST,
                         "Tjeweller" => T_JEWELLER,
 			"Tenergy" => "Energia",
-			"Tperception" => "Spostrzegawczość"));
+			"Tperception" => "Spostrzegawczość",
+			"Tmetallurgy" => "Hutnictwo"));
 
 if ($player->clas == "Złodziej") 
   {

@@ -8,7 +8,7 @@
  *   @author               : thindil <thindil@tuxfamily.org>
  *   @author               : eyescream <tduda@users.sourceforge.net>
  *   @version              : 1.4
- *   @since                : 11.09.2011
+ *   @since                : 25.09.2011
  *
  */
 
@@ -44,7 +44,9 @@ require_once('languages/'.$player -> lang.'/monuments.php');
 function topplayers($strDbfield, $blnHidden = FALSE)
 {
     global $db;
+    
     $objTop = $db -> SelectLimit('SELECT `id`, `user`, `'.$strDbfield.'` FROM `players` ORDER BY `'.$strDbfield.'` DESC', 5);
+
     while (!$objTop -> EOF) 
       {
 	if ($blnHidden)
@@ -67,21 +69,21 @@ $arrayMonumentGroups = array(PLAYER_RANKING, STATS, COMBAT_SKILLS, ARTISAN_SKILL
 $arrayMonumentTitles = array(array(HIGHEST_LEVEL, HIGHEST_WINS, HIGHEST_GOLD_IN_MONEYBAG, HIGHEST_GOLD_ON_ACCOUNT, "Najwięcej Vallarów"),
                              array(HIGHEST_STRENGTH, HIGHEST_ENDURANCE, HIGHEST_INTELLIGENCE, HIGHEST_WISDOM, HIGHEST_SPEED, HIGHEST_AGILITY),
                              array(HIGHEST_SIDEARMS_SKILL, HIGHEST_GAME_SHOOTING, HIGHEST_SPELL_CASTING, HIGHEST_DODGING, HIGHEST_LEADERSHIP),
-                             array(HIGHEST_SMITHING, HIGHEST_CARPENTERING, HIGHEST_ALCHEMY, HIGHEST_HERBALISM, HIGHEST_JEWELLERS_CRAFT, HIGHEST_BREEDING, HIGHEST_MINING, HIGHEST_WOODCUTTING),
+                             array(HIGHEST_SMITHING, HIGHEST_CARPENTERING, HIGHEST_ALCHEMY, HIGHEST_HERBALISM, HIGHEST_JEWELLERS_CRAFT, HIGHEST_BREEDING, HIGHEST_MINING, HIGHEST_WOODCUTTING, 'Najwyższe Hutnictwo'),
 			     array("Najwyższa Spostrzegawczość", "Najwyższe Złodziejstwo")
                              );
 // ...and add description of stat/skill/achievement.
 $arrayMonumentDescriptions = array(array(LEVEL, WINS, GOLD_IN_MONEYBAG, GOLD_ON_ACCOUNT, "Vallary"),
                                    array(STRENGTH, ENDURANCE, INTELLIGENCE, WISDOM, SPEED, AGILITY),
                                    array(SIDEARMS_SKILL, GAME_SHOOTING, SPELL_CASTING, DODGING, LEADERSHIP),
-                                   array(SMITHING, CARPENTERING, ALCHEMY, HERBALISM, JEWELLERS_CRAFT, BREEDING, MINING, WOODCUTTING),
+                                   array(SMITHING, CARPENTERING, ALCHEMY, HERBALISM, JEWELLERS_CRAFT, BREEDING, MINING, WOODCUTTING, 'Hutnictwo'),
 				   array("Spostrzegawczość", "Złodziejstwo")
                                    );
         
 $arrayMonuments = array(array(topplayers('level'), topplayers('wins'), topplayers('credits'),topplayers('bank'), topplayers('vallars')),
                         array(topplayers('strength'), topplayers('wytrz'), topplayers('inteli'), topplayers('wisdom'), topplayers('szyb'), topplayers('agility')),
                         array(topplayers('atak'), topplayers('shoot'), topplayers('magia'), topplayers('unik'), topplayers('leadership')),
-                        array(topplayers('ability'), topplayers('fletcher'), topplayers('alchemia'), topplayers('herbalist'), topplayers('jeweller'), topplayers('breeding'), topplayers('mining'), topplayers('lumberjack')),
+                        array(topplayers('ability'), topplayers('fletcher'), topplayers('alchemia'), topplayers('herbalist'), topplayers('jeweller'), topplayers('breeding'), topplayers('mining'), topplayers('lumberjack'), topplayers('metallurgy')),
 			array(topplayers('perception'), topplayers('thievery', TRUE))
                         );
     

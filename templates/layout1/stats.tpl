@@ -52,6 +52,7 @@
         <b>{$Tleader}:</b> {$Leadership}
         <b>{$Tmining}:</b> {$Mining}
         <b>{$Therbalist}:</b> {$Herbalist}
+	<b>{$Tmetallurgy}:</b> {$Metallurgy}
 	<b>{$Tperception}:</b> {$Perception}</td>
         </tr>
         </table>
