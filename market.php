@@ -7,7 +7,7 @@
  *   @copyright            : (C) 2004,2005,2006,2011 Vallheru Team based on Gamers-Fusion ver 2.5
  *   @author               : thindil <thindil@tuxfamily.org>
  *   @version              : 1.4
- *   @since                : 24.09.2011
+ *   @since                : 26.09.2011
  *
  */
 
@@ -161,7 +161,7 @@ if (isset($_GET['view']) && $_GET['view'] == 'myoferts')
         if (!isset($_GET['delete']) && !isset($_GET['add']) && !isset($_GET['change']))
         {
             $arrQueries = array("SELECT `id`, `ilosc`, `cost`, `nazwa` FROM `pmarket` WHERE `seller`=".$player -> id, 
-                                "SELECT `id`, `name`, `power`, `cost`, `minlev`, `zr`, `wt`, `szyb`, `maxwt`, `amount` FROM `equipment` WHERE `status`='R' AND `type`!='I' AND `owner`=".$player -> id,
+                                "SELECT `id`, `name`, `power`, `cost`, `minlev`, `zr`, `wt`, `szyb`, `maxwt`, `amount` FROM `equipment` WHERE `status`='R' AND `type` NOT IN ('I', 'O') AND `owner`=".$player -> id,
                                 "SELECT `id`, `name`, `efect`, `power`, `amount`, `cost` FROM `potions` WHERE `status`='R' AND `owner`=".$player -> id,
                                 "SELECT `id`, `ilosc`, `cost`, `nazwa` FROM `hmarket` WHERE `seller`=".$player -> id,
                                 "SELECT `id`, `type`, `number`, `amount`, `cost` FROM `amarket` WHERE `seller`=".$player -> id,
@@ -359,7 +359,7 @@ if (isset($_GET['view']) && $_GET['view'] == 'myoferts')
 	    checkvalue($intId);
             $strMessage = '';
             $arrQueries = array("SELECT `id`, `ilosc`, `cost`, `nazwa` FROM `pmarket` WHERE `id`=".$intId." AND `seller`=".$player -> id, 
-                                "SELECT * FROM `equipment` WHERE `id`=".$intId." AND `status`='R' AND `type`!='I' AND `owner`=".$player -> id,
+                                "SELECT * FROM `equipment` WHERE `id`=".$intId." AND `status`='R' AND `type` NOT IN ('I', 'O') AND `owner`=".$player -> id,
                                 "SELECT * FROM `potions` WHERE `id`=".$intId." AND `status`='R' AND `owner`=".$player -> id,
                                 "SELECT `id`, `ilosc`, `cost`, `nazwa` FROM `hmarket` WHERE `id`=".$intId." AND `seller`=".$player -> id,
                                 "SELECT `id`, `type`, `number`, `amount`, `cost` FROM `amarket` WHERE `id`=".$intId." AND `seller`=".$player -> id,

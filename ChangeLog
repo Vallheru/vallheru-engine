@@ -1,5 +1,7 @@
 2011-09-26  Bartek thindil Jasicki  <thindil@tuxfamily.org>
 
+	* UPDATE,imarket.php, market.php: 
+	don't allow loots on items market
 	* FEATURE,templates/layout1/equip.tpl, templates/equip.tpl, equip.php, travel.php, maze.php, explore.php, portals.php, portal.php,
 	battle.php, includes/funkcje.php, includes/turnfight.php, templates/layout1/admin.tpl, templates/admin.tpl, admin.php, 
 	install/db/update.sql: 
