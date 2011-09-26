@@ -62,7 +62,6 @@ function monsterloot($arrNames, $arrChances, $intLevel)
   //Check which component player found
   $intKey = -1;
   $intRoll = rand(1, 100);
-  echo $intRoll."<br />";
   foreach ($arrChances as $intChance)
     {
       $intKey++;

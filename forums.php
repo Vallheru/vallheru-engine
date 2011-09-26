@@ -8,7 +8,7 @@
  *   @author               : thindil <thindil@tuxfamily.org>
  *   @author               : mori <ziniquel@users.sourceforge.net>
  *   @version              : 1.4
- *   @since                : 24.09.2011
+ *   @since                : 26.09.2011
  *
  */
 
@@ -671,7 +671,7 @@ if (isset($_GET['kasuj']))
     checkvalue($_GET['kasuj']);
     $tid = $db -> Execute("SELECT `topic_id` FROM `replies` WHERE `id`=".$_GET['kasuj']);
     $db -> Execute("DELETE FROM `replies` WHERE `id`=".$_GET['kasuj']);
-    $db0->Execute("UPDATE `topics` SET `replies`=`replies`-1 WHERE `id`=".$tid->fields['topic_id']);
+    $db->Execute("UPDATE `topics` SET `replies`=`replies`-1 WHERE `id`=".$tid->fields['topic_id']);
     error (POST_DEL." <a href=forums.php?topic=".$tid -> fields['topic_id'].">".A_BACK."</a>");
 }
 
