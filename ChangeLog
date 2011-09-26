@@ -1,3 +1,8 @@
+2011-09-26  Bartek thindil Jasicki  <thindil@tuxfamily.org>
+
+	* BUG,includes/functions.php:
+	fixed bug with equip arrows
+
 2011-09-25  Bartek thindil Jasicki  <thindil@tuxfamily.org>
 
 	* BUG,lumbermill.php: 

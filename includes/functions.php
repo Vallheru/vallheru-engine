@@ -7,7 +7,7 @@
  *   @copyright            : (C) 2004,2005,2006,2011 Vallheru Team based on Gamers-Fusion ver 2.5
  *   @author               : thindil <thindil@tuxfamily.org>
  *   @version              : 1.4
- *   @since                : 19.09.2011
+ *   @since                : 26.09.2011
  *
  */
 
@@ -278,7 +278,7 @@ function equip ($id)
         $arrows = $db -> Execute("SELECT id, name, wt FROM equipment WHERE type='R' AND owner=".$player -> id." AND status='E'");
         if (empty($arrows -> fields['id'])) 
         {
-	    $db -> Execute("INSERT INTO equipment (name, wt, power, status, type, owner, ptype, poison) VALUES('".$equip -> fields['name']."',".$wt.",".$equip -> fields['power'].",'E','R',".$player -> id.", '".$equip->fields['ptype']."', ".$equip->fields['poison'].")") or error($db->ErrorMsg());
+	    $db -> Execute("INSERT INTO `equipment` (`name`, `wt`, `power`, `status`, `type`, `owner`, `ptype`, `poison`, `minlev`) VALUES('".$equip -> fields['name']."',".$wt.",".$equip -> fields['power'].",'E','R',".$player -> id.", '".$equip->fields['ptype']."', ".$equip->fields['poison'].", ".$equip->fields['minlev'].")") or error($db->ErrorMsg());
             $testwt = ($equip -> fields['wt'] - $wt);
             if ($testwt < 1) 
             {
