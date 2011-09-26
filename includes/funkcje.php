@@ -7,7 +7,7 @@
  *   @copyright            : (C) 2004,2005,2006,2007,2011 Vallheru Team based on Gamers-Fusion ver 2.5
  *   @author               : thindil <thindil@tuxfamily.org>
  *   @version              : 1.4
- *   @since                : 16.09.2011
+ *   @since                : 26.09.2011
  *
  */
 
@@ -35,6 +35,57 @@ require_once ('includes/checkexp.php');
 * Get the localization for game
 */
 require_once("languages/".$player -> lang."/funkcje.php");
+
+/**
+ * Function check for monsters loot
+ */
+function monsterloot($arrNames, $arrChances, $intLevel)
+{
+  global $db;
+  global $player;
+
+  //No loot, exit
+  if (count($arrNames) < 3)
+    {
+      return;
+    }
+
+  $fltChance = (float)100 / $intLevel;
+  $fltRandom = (float)rand(0, 10000) / 100;
+  
+  //Bad luck, exit
+  if ($fltRandom > $fltChance)
+    {
+      return;
+    }
+  
+  //Check which component player found
+  $intKey = -1;
+  $intRoll = rand(1, 100);
+  echo $intRoll."<br />";
+  foreach ($arrChances as $intChance)
+    {
+      $intKey++;
+      if ($intRoll <= $intChance)
+	{
+	  break;
+	}
+    }
+
+  //Add component to player equipment
+  $intPrice = ceil(($intLevel * 10) / $arrChances[$intKey]);
+  $objTest = $db->Execute("SELECT `id` FROM `equipment` WHERE `name`='".$arrNames[$intKey]."' AND `owner`=".$player->id." AND `status`='U' AND `type`='O' AND `minlev`=".$intLevel." AND `cost`=".$intPrice);
+  if (!$objTest->fields['id'])
+    {
+      $db->Execute("INSERT INTO `equipment` (`owner`, `name`, `type`, `cost`, `minlev`, `amount`, `status`) VALUES(".$player->id.", '".$arrNames[$intKey]."', 'O', ".$intPrice.", ".$intLevel.", 1, 'U')");
+    }
+  else
+    {
+      $db->Execute("UPDATE `equipment` SET `amount`=`amount`+1 WHERE `id`=".$objTest->fields['id']);
+    }
+  $objTest->Close();
+  print "<br />Ze zwłok potwora wyciągasz ".$arrNames[$intKey].".<br />";
+}
 
 /**
  * Function auto reload quivers
@@ -1118,6 +1169,7 @@ function fightmonster($enemy, $expgain, $goldgain, $times)
     {
         lostitem($gwt[3], $arrEquip[5][6], YOU_SHIELD, $player -> id, $arrEquip[5][0], $player -> id, HAS_BEEN2);
     }
+    monsterloot($enemy['lootnames'], $enemy['lootchances'], $enemy['level']);
     if ($player -> hp < 0) 
     {
         $player -> hp = 0;

@@ -7,7 +7,7 @@
  *   @copyright            : (C) 2004,2005,2006,2011 Vallheru Team based on Gamers-Fusion ver 2.5
  *   @author               : thindil <thindil@tuxfamily.org>
  *   @version              : 1.4
- *   @since                : 23.09.2011
+ *   @since                : 26.09.2011
  *
  */
 
@@ -503,7 +503,17 @@ if (isset ($_GET['action']) && $_GET['action'] == 'monster')
             }
         }
         $goldgain = ceil((rand($enemy1 -> fields['credits1'],$enemy1 -> fields['credits2']) * $_SESSION['razy']) * $span); 
-        $enemy = array("strength" => $enemy1 -> fields['strength'], "agility" => $enemy1 -> fields['agility'], "speed" => $enemy1 -> fields['speed'], "endurance" => $enemy1 -> fields['endurance'], "hp" => $enemy1 -> fields['hp'], "name" => $enemy1 -> fields['name'], "exp1" => $enemy1 -> fields['exp1'], "exp2" => $enemy1 -> fields['exp2'], "level" => $enemy1 -> fields['level']);
+        $enemy = array("strength" => $enemy1 -> fields['strength'], 
+		       "agility" => $enemy1 -> fields['agility'], 
+		       "speed" => $enemy1 -> fields['speed'], 
+		       "endurance" => $enemy1 -> fields['endurance'], 
+		       "hp" => $enemy1 -> fields['hp'], 
+		       "name" => $enemy1 -> fields['name'], 
+		       "exp1" => $enemy1 -> fields['exp1'], 
+		       "exp2" => $enemy1 -> fields['exp2'], 
+		       "level" => $enemy1 -> fields['level'],
+		       "lootnames" => explode(";", $enemy1->fields['lootnames']),
+		       "lootchances" => explode(";", $enemy1->fields['lootchances']));
         $arrehp = array ();
         if (!isset ($_POST['action'])) 
 	  {
@@ -581,7 +591,9 @@ if (isset ($_GET['action']) && $_GET['action'] == 'monster')
 		       "name" => $enemy1 -> fields['name'], 
 		       "exp1" => $enemy1 -> fields['exp1'], 
 		       "exp2" => $enemy1 -> fields['exp2'], 
-		       "level" => $enemy1 -> fields['level']);
+		       "level" => $enemy1 -> fields['level'],
+		       "lootnames" => explode(";", $enemy1->fields['lootnames']),
+		       "lootchances" => explode(";", $enemy1->fields['lootchances']));
 	$intAmount = 0;
         for ($j=1; $j<=$_POST['times']; $j++) 
         {

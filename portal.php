@@ -4,10 +4,10 @@
  *   Magic portal - special location
  *
  *   @name                 : portal.php                            
- *   @copyright            : (C) 2004,2005,2006 Vallheru Team based on Gamers-Fusion ver 2.5
- *   @author               : thindil <thindil@users.sourceforge.net>
- *   @version              : 1.2
- *   @since                : 29.07.2006
+ *   @copyright            : (C) 2004,2005,2006,2011 Vallheru Team based on Gamers-Fusion ver 2.5
+ *   @author               : thindil <thindil@tuxfamily.org>
+ *   @version              : 1.4
+ *   @since                : 26.09.2011
  *
  */
  
@@ -27,7 +27,7 @@
 //   along with this program; if not, write to the Free Software
 //   Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 //
-// $Id: portal.php 544 2006-07-29 08:35:11Z thindil $
+// $Id$
 
 $title = "Portal";
 require_once("includes/head.php");
@@ -58,8 +58,8 @@ if ($player -> hp <= 0 && !isset($_GET['action1']))
 if (!isset ($_GET['action1'])) 
 {
     $smarty -> assign(array("Portaltext" => PORTAL_TEXT,
-							"Afight2" => A_FIGHT2,
-							"Aretreat" => A_RETREAT));
+			    "Afight2" => A_FIGHT2,
+			    "Aretreat" => A_RETREAT));
 }
 
 if (isset ($_GET['action1']) && $_GET['action1'] == 'retreat' && $player -> hp > 0) 
@@ -67,7 +67,7 @@ if (isset ($_GET['action1']) && $_GET['action1'] == 'retreat' && $player -> hp >
     $db -> Execute("UPDATE players SET miejsce='Altara' WHERE id=".$player -> id);
     $db -> Execute("UPDATE players SET energy=0 WHERE id=".$player -> id);
     $smarty -> assign(array("Portaltext" => PORTAL_TEXT,
-							"Ahere" => A_HERE));
+			    "Ahere" => A_HERE));
 }
 
 if (isset ($_GET['action1']) && $_GET['action1'] == 'fight' && $player -> hp > 0) 
@@ -83,7 +83,9 @@ if (isset ($_GET['action1']) && $_GET['action1'] == 'fight' && $player -> hp > 0
                         'hp' => 50000, 
                         'level' => 1, 
                         'endurance' => 15000, 
-                        'speed' => 15000);
+                        'speed' => 15000,
+			'lootnames' => array(),
+			'lootchance' => array());
         if ($player -> hp <= 0) 
         {
             error (NO_HP);

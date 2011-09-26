@@ -271,6 +271,8 @@
             {$Tmminexp}: <input type="text" name="exp1" value="{$Mexp1}" /> <br />
             {$Tmmaxexp}: <input type="text" name="exp2" value="{$Mexp2}" /> <br />
             {$Tmlocation}: <input type="text" name="location" value="{$Mlocation}" /><br />
+	    {$Tmlootnames}: <input type="text" name="lootnames" value="{$Mlootname}" /><br />
+	    {$Tmlootchances}: <input type="text" name="lootchances" value="{$Mlootchance}" /><br />
             <input type="hidden" name="mid" value="{$Mid}" />
             <input type="submit" value="{$Aedit}" />
         </form>
@@ -500,6 +502,8 @@
         <option value="Ardulith">{$Mcity2}</option>
         <option value="Cytadela">{$Mcity3}</option>
     </select><br />
+    {$Mlootnames}: <input type="text" name="lootnames" /><br />
+    {$Mlootchances}: <input type="text" name="lootchances" /><br />
     <input type="submit" value="{$Aadd}" /></form>
 {/if}
 

@@ -7,7 +7,7 @@
  *   @copyright            : (C) 2004,2005,2006,2007,2011 Vallheru Team based on Gamers-Fusion ver 2.5
  *   @author               : thindil <thindil@tuxfamily.org>
  *   @version              : 1.4
- *   @since                : 21.09.2011
+ *   @since                : 26.09.2011
  *
  */
 
@@ -65,9 +65,16 @@ function backpack($type,$playerid,$nameitems,$type2,$smartyname)
         $secarm = 1;
     }
     if ($arm -> fields['id'] || $secarm) 
-    {
-        $arrMenu[0] = IN_BACKPACK." ".$nameitems;
-    }
+      {
+	if ($type != 'O')
+	  {
+	    $arrMenu[0] = IN_BACKPACK." ".$nameitems;
+	  }
+	else
+	  {
+	    $arrMenu[0] = $nameitems;
+	  }
+      }
     $j = 1;
     while (!$arm -> EOF) 
     {
@@ -120,6 +127,7 @@ function backpack($type,$playerid,$nameitems,$type2,$smartyname)
 	  }
 	switch ($arm->fields['type'])
 	  {
+	  case 'O':
 	  case 'I':
 	    $strDur = '';
 	    break;
@@ -130,17 +138,20 @@ function backpack($type,$playerid,$nameitems,$type2,$smartyname)
 	    $strDur = " (".$arm -> fields['wt']."/".$arm -> fields['maxwt']." ".DURABILITY.")";
 	    break;
 	  }
-        if ($arm -> fields['type'] == 'C') 
-        {
+	switch ($arm->fields['type'])
+	  {
+	  case 'C':
             $arrshow[$arm->fields['minlev']][$j] = "<input type=\"checkbox\" name=\"".$arm->fields['id']."\" /><b>(".AMOUNT.": ".$arm -> fields['amount']." )</b> ".$arm -> fields['name']." (+".$arm -> fields['power']." % ".EQUIP_MANA.") [ <a href=\"equip.php?equip=".$arm -> fields['id']."\">".A_WEAR."</a> | <A href=\"equip.php?sell=".$arm -> fields['id']."\">".A_SELL."</a> ".FOR_A." ".$arm -> fields['cost']." ".GOLD_COINS." ]<br />";
-        } 
-            elseif ($arm -> fields['type'] == 'T') 
-        {
+	    break;
+	  case 'T':
             $arrshow[$arm->fields['minlev']][$j] = "<input type=\"checkbox\" name=\"".$arm->fields['id']."\" /><b>(".AMOUNT.": ".$arm -> fields['amount']." )</b> ".$arm -> fields['name']." (".SPELL_POWER.") [ <a href=\"equip.php?equip=".$arm -> fields['id']."\">".A_WEAR."</a> | <A href=\"equip.php?sell=".$arm -> fields['id']."\">".A_SELL."</a> ".FOR_A." ".$arm -> fields['cost']." ".GOLD_COINS." ]<br />";
-        } 
-            else 
-        {
+	    break;
+	  case 'O':
+	    $arrshow[$arm->fields['minlev']][$j] = "<input type=\"checkbox\" name=\"".$arm->fields['id']."\" /><b>(".AMOUNT.": ".$arm -> fields['amount']." )</b> ".$arm -> fields['name']." [ <a href=\"equip.php?sell=".$arm -> fields['id']."\">".A_SELL."</a> ".FOR_A." ".$arm->fields['cost']." ".GOLD_COINS." ]<br />";
+	    break;
+	  default:
 	  $arrshow[$arm->fields['minlev']][$j] = "<input type=\"checkbox\" name=\"".$arm->fields['id']."\" /><b>(".AMOUNT.": ".$arm -> fields['amount']." )</b> ".$arm -> fields['name']." (+".$arm -> fields['power'].") ".$agility."".$speed.$strDur." [ <a href=\"equip.php?equip=".$arm -> fields['id']."\">".A_WEAR."</a> | <A href=\"equip.php?sell=".$arm -> fields['id']."\">".A_SELL."</a> ".FOR_A." ".$intCost." ".GOLD_COINS." ".$strRepair."]<br />";
+	  break;
         }
         $arm -> MoveNext();
         $j = $j + 1;
@@ -194,9 +205,16 @@ function backpack($type,$playerid,$nameitems,$type2,$smartyname)
         }
     }
     if (isset($menu) && $menu == 'Y') 
-    {
-        $arrMenu[1] = "(<a href=\"equip.php?sprzedaj=".$type."\">".A_SELL_ALL." ".$nameitems."</a>)<br />\n";
-    }
+      {
+	if ($type != 'O')
+	  {
+	    $arrMenu[1] = "(<a href=\"equip.php?sprzedaj=".$type."\">".A_SELL_ALL." ".$nameitems."</a>)<br />\n";
+	  }
+	else
+	  {
+	    $arrMenu[1] = "(<a href=\"equip.php?sprzedaj=".$type."\">Sprzedaj wszystkie ".$nameitems."</a>)<br />\n";
+	  }
+      }
     $smarty -> assign(array($smartyname => $arrshow,
 			    $smartyname."sell" => "Sprzedaj wybrane ".$nameitems,
 			    $smartyname."type" => $type,
@@ -436,6 +454,7 @@ backpack('S',$player -> id,SHIELDS,'','Bshields');
 backpack('C',$player -> id,CAPES,'','Bcapes');
 backpack('L',$player -> id,LEGS2,'','Blegs');
 backpack('I', $player->id, 'pierścienie', '', 'Brings');
+backpack('O', $player->id, 'Łupy', '', 'Bloots');
 
 /**
  * Show potions
@@ -678,7 +697,7 @@ if (isset($_GET['sellchecked']))
  */
 if (isset($_GET['sprzedaj'])) 
   {
-    $arrSell = array('A', 'W', 'H', 'L', 'R', 'C', 'T', 'S', 'I');
+    $arrSell = array('A', 'W', 'H', 'L', 'R', 'C', 'T', 'S', 'I', 'O');
     if (!in_array($_GET['sprzedaj'], $arrSell))
       {
 	error(ERROR);
@@ -696,8 +715,7 @@ if (isset($_GET['sprzedaj']))
     {
         error (NO_ITEMS2);
     }
-    $arrSell = array('A', 'W', 'H', 'L', 'R', 'C', 'T', 'S', 'I');
-    $arrType = array(ARMORS, WEAPONS, HELMETS, LEGS2, ARROWS2, CAPES, STAFFS, SHIELDS, RINGS);
+    $arrType = array(ARMORS, WEAPONS, HELMETS, LEGS2, ARROWS2, CAPES, STAFFS, SHIELDS, RINGS, 'łupy');
     $intKey = array_search($_GET['sprzedaj'], $arrSell);
     $typ = $arrType[$intKey];
     $zysk = 0;
@@ -744,7 +762,7 @@ if (isset($_GET['sprzedaj']))
  */
 if (isset($_GET['napraw_uzywane'])) 
 {
-    $rzecz_wiersz = $db -> Execute("SELECT * FROM equipment WHERE owner = ".$player -> id." AND status = 'E' AND type != 'R' AND type != 'T' AND type != 'C' AND `type`!='I'");
+    $rzecz_wiersz = $db -> Execute("SELECT * FROM equipment WHERE owner = ".$player -> id." AND status = 'E' AND type != 'R' AND type != 'T' AND type != 'C' AND `type`!='I' AND `type`!='O'");
     $text = '';
     while(!$rzecz_wiersz -> EOF) 
     {
@@ -770,7 +788,7 @@ if (isset($_GET['napraw_uzywane']))
  */
 if (isset($_GET['repair']))
   {
-    $rzecz_wiersz = $db->Execute("SELECT * FROM `equipment` WHERE `owner`=".$player->id." AND `status`='E' AND `type`!='R' AND `type`!='T' AND `type`!='C' AND `type`!='I'");
+    $rzecz_wiersz = $db->Execute("SELECT * FROM `equipment` WHERE `owner`=".$player->id." AND `status`='E' AND `type`!='R' AND `type`!='T' AND `type`!='C' AND `type`!='I' AND `type` != 'O'");
     $text = '';
     while(!$rzecz_wiersz->EOF) 
       {
@@ -817,7 +835,7 @@ if (isset($_GET['napraw']))
     {
         error (NOT_YOUR);
     }
-    if ($rzecz -> fields['type'] == 'R' || $rzecz -> fields['type'] == 'I') 
+    if ($rzecz -> fields['type'] == 'R' || $rzecz -> fields['type'] == 'I' || $rzecz -> fields['type'] == 'O') 
     {
         error(E_REPAIR);
     }

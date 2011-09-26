@@ -39,6 +39,9 @@
 {if $Bringsamount > 1}
     <div align="center"><a href="#rings">{$Bringsmenu[0]}</a></div>
 {/if}
+{if $Blootsamount > 1}
+    <div align="center"><a href="#loots">{$Blootsmenu[0]}</a></div>
+{/if}
 {if $Potions1 > "0"}
     <div align="center"><a href="#potions">{$Potions2}</a></div>
 {/if}
@@ -201,6 +204,24 @@
 	{/foreach}
 	{$Bringsmenu[1]}
     	<input type="submit" value="{$Bringssell}" />
+    </form>
+    <a href="#top">{$Aback}</a><br />
+{/if}
+
+{if $Blootsamount > 1}
+    <form method="POST" action="equip.php?sellchecked=E">
+        <br /><a name="loots"><u>{$Blootsmenu[0]}:</u></a><br />
+        {foreach $Bloots as $key => $value}
+	    {if $key > 0}
+	        {$Ilevel} {$key}:<br />
+	        {foreach $value as $weapon}
+	            {$weapon}
+	        {/foreach}
+		<br />
+	    {/if}
+	{/foreach}
+	{$Blootsmenu[1]}
+    	<input type="submit" value="{$Blootssell}" />
     </form>
     <a href="#top">{$Aback}</a><br />
 {/if}

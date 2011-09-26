@@ -7,7 +7,7 @@
  *   @copyright            : (C) 2004,2005,2006,2011 Vallheru Team based on Gamers-Fusion ver 2.5
  *   @author               : thindil <thindil@tuxfamily.org>
  *   @version              : 1.4
- *   @since                : 12.09.2011
+ *   @since                : 26.09.2011
  *
  */
 
@@ -75,7 +75,9 @@ function battle($type,$adress)
                    "id" => $enemy1 -> fields['id'], 
                    "exp1" => $enemy1 -> fields['exp1'], 
                    "exp2" => $enemy1 -> fields['exp2'],  
-                   "level" => $enemy1 -> fields['level']);
+                   "level" => $enemy1 -> fields['level'],
+		   "lootnames" => explode(";", $enemy1->fields['lootnames']),
+		   "lootchances" => explode(";", $enemy1->fields['lootchances']));
     if ($type == 'T') 
     {
         if (!isset ($_POST['action'])) 

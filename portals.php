@@ -4,10 +4,10 @@
  *   Astral plans
  *
  *   @name                 : portals.php                            
- *   @copyright            : (C) 2006 Vallheru Team based on Gamers-Fusion ver 2.5
- *   @author               : thindil <thindil@users.sourceforge.net>
- *   @version              : 1.2
- *   @since                : 28.06.2006
+ *   @copyright            : (C) 2006,2011 Vallheru Team based on Gamers-Fusion ver 2.5
+ *   @author               : thindil <thindil@tuxfamily.org>
+ *   @version              : 1.4
+ *   @since                : 26.09.2011
  *
  */
 
@@ -27,7 +27,7 @@
 //   along with this program; if not, write to the Free Software
 //   Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 //
-// $Id: portals.php 398 2006-06-28 15:56:19Z thindil $
+// $Id$
 
 $title = "Astralny plan";
 require_once("includes/head.php");
@@ -144,7 +144,9 @@ if (isset($_GET['go']) && $_GET['go'] == 'fight')
                        'endurance' => $arrConstitution[$intNumber], 
                        'speed' => $arrSpeed[$intNumber], 
                        'exp1' => $arrExp1[$intNumber], 
-                       'exp2' => $arrExp2[$intNumber]);
+                       'exp2' => $arrExp2[$intNumber]
+		       'lootnames' = array(),
+		       'lootchances' = array());
         $arrehp = array();
         $strAdress = "portals.php?step=".$intNumber."&amp;go=fight";
         $span = ($enemy['level'] / $player -> level);

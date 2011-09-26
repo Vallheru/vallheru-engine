@@ -8,7 +8,7 @@
  *   @author               : thindil <thindil@tuxfamily.org>
  *   @author               : eyescream <tduda@users.sourceforge.net>
  *   @version              : 1.4
- *   @since                : 22.09.2011
+ *   @since                : 26.09.2011
  *
  */
  
@@ -511,33 +511,37 @@ if (isset($_GET['view']) && $_GET['view'] == 'monster2')
     if (isset($_GET['step']) && $_GET['step'] == 'next')
     {
 	checkvalue($_POST['mid']);
-        $objMonster = $db -> Execute("SELECT * FROM monsters WHERE id=".$_POST['mid']);
+        $objMonster = $db -> Execute("SELECT * FROM `monsters` WHERE `id`=".$_POST['mid']);
         $smarty -> assign(array("Mname" => $objMonster -> fields['name'],
-            "Mlvl" => $objMonster -> fields['level'],
-            "Mhp" => $objMonster -> fields['hp'],
-            "Magility" => $objMonster -> fields['agility'],
-            "Mstrength" => $objMonster -> fields['strength'],
-            "Mspeed" => $objMonster -> fields['speed'],
-            "Mendurance" => $objMonster -> fields['endurance'],
-            "Mcredits1" => $objMonster -> fields['credits1'],
-            "Mcredits2" => $objMonster -> fields['credits2'],
-            "Mexp1" => $objMonster -> fields['exp1'],
-            "Mexp2" => $objMonster -> fields['exp2'],
-            "Mlocation" => $objMonster -> fields['location'],
-            "Tmname" => M_NAME,
-            "Tmlevel" => M_LEVEL,
-            "Tmhp" => M_HP,
-            "Tmagi" => M_AGI,
-            "Tmpower" => M_POWER,
-            "Tmspeed" => M_SPEED,
-            "Tmcond" => M_COND,
-            "Tmmingold" => M_MIN_GOLD,
-            "Tmmaxgold" => M_MAX_GOLD,
-            "Tmminexp" => M_MIN_EXP,
-            "Tmmaxexp" => M_MAX_EXP,
-            "Tmlocation" => M_LOCATION,
-            "Aedit" => A_EDIT,
-            "Mid" => $_POST['mid']));
+				"Mlvl" => $objMonster -> fields['level'],
+				"Mhp" => $objMonster -> fields['hp'],
+				"Magility" => $objMonster -> fields['agility'],
+				"Mstrength" => $objMonster -> fields['strength'],
+				"Mspeed" => $objMonster -> fields['speed'],
+				"Mendurance" => $objMonster -> fields['endurance'],
+				"Mcredits1" => $objMonster -> fields['credits1'],
+				"Mcredits2" => $objMonster -> fields['credits2'],
+				"Mexp1" => $objMonster -> fields['exp1'],
+				"Mexp2" => $objMonster -> fields['exp2'],
+				"Mlocation" => $objMonster -> fields['location'],
+				"Mlootname" => $objMonster->fields['lootnames'],
+				"Mlootchance" => $objMonster->fields['lootchances'],
+				"Tmname" => M_NAME,
+				"Tmlevel" => M_LEVEL,
+				"Tmhp" => M_HP,
+				"Tmagi" => M_AGI,
+				"Tmpower" => M_POWER,
+				"Tmspeed" => M_SPEED,
+				"Tmcond" => M_COND,
+				"Tmmingold" => M_MIN_GOLD,
+				"Tmmaxgold" => M_MAX_GOLD,
+				"Tmminexp" => M_MIN_EXP,
+				"Tmmaxexp" => M_MAX_EXP,
+				"Tmlocation" => M_LOCATION,
+				"Aedit" => A_EDIT,
+				"Tmlootnames" => "Nazwy komponentów",
+				"Tmlootchances" => "Szansa na komponenty",
+				"Mid" => $_POST['mid']));
         $objMonster -> Close();
     }
     if (isset($_GET['step']) && $_GET['step'] == 'monster')
@@ -548,7 +552,9 @@ if (isset($_GET['view']) && $_GET['view'] == 'monster2')
         }
         $strName = $db -> qstr($_POST['name'], get_magic_quotes_gpc());
         $strLocation = $db -> qstr($_POST['location'], get_magic_quotes_gpc());
-        $db -> Execute("UPDATE monsters SET name=".$strName.", level=".$_POST['level'].", hp=".$_POST['hp'].", agility=".$_POST['agility'].", strength=".$_POST['strength'].", credits1=".$_POST['credits1'].", credits2=".$_POST['credits2'].", exp1=".$_POST['exp1'].", exp2=".$_POST['exp2'].", speed=".$_POST['speed'].", endurance=".$_POST['endurance'].", location=".$strLocation." WHERE id=".$_POST['mid']);
+	$strLoot1 = $db-> qstr($_POST['lootnames'], get_magic_quotes_gpc());
+	$strLoot2 = $db-> qstr($_POST['lootchances'], get_magic_quotes_gpc());
+        $db -> Execute("UPDATE `monsters` SET `name`=".$strName.", `level`=".$_POST['level'].", `hp`=".$_POST['hp'].", `agility`=".$_POST['agility'].", `strength`=".$_POST['strength'].", `credits1`=".$_POST['credits1'].", `credits2`=".$_POST['credits2'].", `exp1`=".$_POST['exp1'].", `exp2`=".$_POST['exp2'].", `speed`=".$_POST['speed'].", `endurance`=".$_POST['endurance'].", `location`=".$strLocation.", `lootnames`=".$strLoot1.", `lootchances`=".$strLoot2." WHERE `id`=".$_POST['mid']);
         $smarty -> assign("Message", YOU_EDIT.$_POST['name']);
     }
 }
@@ -1152,21 +1158,23 @@ if (isset ($_GET['view']) && $_GET['view'] == 'donate')
 if (isset ($_GET['view']) && $_GET['view'] == 'monster') 
 {
     $smarty -> assign(array("Mname" => M_NAME,
-        "Mlevel" => M_LEVEL,
-        "Mhp" => M_HP,
-        "Magi" => M_AGI,
-        "Mpower" => M_POWER,
-        "Mspeed" => M_SPEED,
-        "Mcond" => M_COND,
-        "Mmingold" => M_MIN_GOLD,
-        "Mmaxgold" => M_MAX_GOLD,
-        "Mminexp" => M_MIN_EXP,
-        "Mmaxexp" => M_MAX_EXP,
-        "Aadd" => A_ADD,
-        "Mlocation" => M_LOCATION,
-        "Mcity1" => M_CITY1,
-        "Mcity2" => M_CITY2,
-        "Mcity3" => M_CITY3));
+			    "Mlevel" => M_LEVEL,
+			    "Mhp" => M_HP,
+			    "Magi" => M_AGI,
+			    "Mpower" => M_POWER,
+			    "Mspeed" => M_SPEED,
+			    "Mcond" => M_COND,
+			    "Mmingold" => M_MIN_GOLD,
+			    "Mmaxgold" => M_MAX_GOLD,
+			    "Mminexp" => M_MIN_EXP,
+			    "Mmaxexp" => M_MAX_EXP,
+			    "Aadd" => A_ADD,
+			    "Mlocation" => M_LOCATION,
+			    "Mcity1" => M_CITY1,
+			    "Mcity2" => M_CITY2,
+			    "Mcity3" => M_CITY3,
+			    "Mlootnames" => "Nazwy komponentów",
+			    "Mlootchances" => "Szanse na komponenty",));
     if (isset ($_GET['step']) && $_GET['step'] == 'monster') 
     {
         if (!$_POST['nazwa'] || !$_POST['poziom'] || !$_POST['pz'] || !$_POST['zr'] || !$_POST['sila'] || !$_POST['minzl'] || !$_POST['maxzl'] || !$_POST['minpd'] || !$_POST['maxpd'] || !$_POST['speed'] || !$_POST['endurance']) 
@@ -1174,7 +1182,9 @@ if (isset ($_GET['view']) && $_GET['view'] == 'monster')
             error (EMPTY_FIELDS);
         }
         $strName = $db -> qstr($_POST['nazwa'], get_magic_quotes_gpc());
-        $db -> Execute("INSERT INTO monsters (name, level, hp, agility, strength, credits1, credits2, exp1, exp2, speed, endurance, location) VALUES(".$strName.", ".$_POST['poziom'].", ".$_POST['pz'].", ".$_POST['zr'].", ".$_POST['sila'].", ".$_POST['minzl'].", ".$_POST['maxzl'].", ".$_POST['minpd'].", ".$_POST['maxpd'].", ".$_POST['speed'].", ".$_POST['endurance'].", '".$_POST['location']."')");
+	$strLoot = $db -> qstr($_POST['lootnames'], get_magic_quotes_gpc());
+	$strLoot2 = $db -> qstr($_POST['lootchances'], get_magic_quotes_gpc());
+        $db -> Execute("INSERT INTO `monsters` (`name`, `level`, `hp`, `agility`, `strength`, `credits1`, `credits2`, `exp1`, `exp2`, `speed`, `endurance`, `location`, `lootnames`, `lootchances`) VALUES(".$strName.", ".$_POST['poziom'].", ".$_POST['pz'].", ".$_POST['zr'].", ".$_POST['sila'].", ".$_POST['minzl'].", ".$_POST['maxzl'].", ".$_POST['minpd'].", ".$_POST['maxpd'].", ".$_POST['speed'].", ".$_POST['endurance'].", '".$_POST['location']."', ".$strLoot.", ".$strLoot2.")");
     }
 }
 
