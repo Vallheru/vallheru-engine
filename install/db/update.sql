@@ -48,3 +48,6 @@ ALTER TABLE `reset` ADD `type` CHAR( 1 ) NOT NULL DEFAULT 'A';
 ALTER TABLE `topics` ADD `replies` INT( 11 ) NOT NULL DEFAULT '0';
 ALTER TABLE `players` ADD `roleplay` TEXT NOT NULL, ADD `ooc` TEXT NOT NULL, ADD `shortrpg` VARCHAR( 40 ) NOT NULL;
 ALTER TABLE `players` ADD `metallurgy` DOUBLE( 11, 2 ) NOT NULL DEFAULT '0.01';
+ALTER TABLE `monsters` ADD `lootnames` TEXT NOT NULL , ADD `lootchances` VARCHAR( 255 ) NOT NULL;
+ALTER TABLE `mill_work` ADD `elite` INT( 11 ) NOT NULL DEFAULT '0';
+ALTER TABLE `mill` ADD `elite` INT( 11 ) NOT NULL DEFAULT '0';

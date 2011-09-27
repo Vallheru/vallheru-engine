@@ -8,7 +8,7 @@
  *   @author               : thindil <thindil@tuxfamily.org>
  *   @author               : eyescream <tduda@users.sourceforge.net>
  *   @version              : 1.4
- *   @since                : 26.09.2011
+ *   @since                : 27.09.2011
  *
  */
  
@@ -435,13 +435,14 @@ if (isset($_GET['view']) && $_GET['view'] == 'forums')
 if (isset ($_GET['view']) && $_GET['view'] == 'mill') 
 {
     $smarty -> assign(array("Sname" => S_NAME,
-        "Scost" => S_COST,
-        "Samount" => S_AMOUNT,
-        "Slevel" => S_LEVEL,
-        "Stype" => S_TYPE,
-        "Sbow" => S_BOW,
-        "Sarrow" => S_ARROWS,
-        "Aadd" => A_ADD));
+			    "Scost" => S_COST,
+			    "Samount" => S_AMOUNT,
+			    "Slevel" => S_LEVEL,
+			    "Stype" => S_TYPE,
+			    "Sbow" => S_BOW,
+			    "Sarrow" => S_ARROWS,
+			    "Aadd" => A_ADD,
+			    "Selite" => "Elitarny"));
     if (isset ($_GET['step']) && $_GET['step'] == 'mill') 
     {
         if (!$_POST['nazwa'] || !$_POST['cena'] || !$_POST['poziom']) 
@@ -456,8 +457,9 @@ if (isset ($_GET['view']) && $_GET['view'] == 'mill')
         {
             $strTwohand = 'N';
         }
+	$_POST['elite'] = intval($_POST['elite']);
         $strName = $db -> qstr($_POST['nazwa'], get_magic_quotes_gpc());
-        $db -> Execute("INSERT INTO mill (name, cost, level, amount, type, twohand) VALUES(".$strName.", ".$_POST['cena'].", ".$_POST['poziom'].", ".$_POST['amount'].", '".$_POST['type']."', '".$strTwohand."')");
+        $db -> Execute("INSERT INTO `mill` (`name`, `cost`, `level`, `amount`, `type`, `twohand`, `elite`) VALUES(".$strName.", ".$_POST['cena'].", ".$_POST['poziom'].", ".$_POST['amount'].", '".$_POST['type']."', '".$strTwohand."', ".$_POST['elite'].")");
     }
 }
 

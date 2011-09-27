@@ -3,6 +3,9 @@
     <ul>
     <li><a href="lumbermill.php?mill=plany">{$Aplans}</a></li>
     <li><a href="lumbermill.php?mill=mill">{$Amill}</a></li>
+    {if $Aelite != ''}
+        <li><a href="lumbermill.php?mill=elite">{$Aelite}</a></li>
+    {/if}
     {if $Llevel < "4"}
         <li><a href="lumbermill.php?mill=licenses">{$Alicenses}</a></li>
     {/if}
@@ -45,7 +48,7 @@
     {/if}
 {/if}
 
-{if $Mill == "mill"}
+{if $Mill == "mill" || $Mill == "elite"}
     {if $Make == "" && $Continue == ""}
         {$Millinfo}
         {if $Maked == ""}
@@ -57,7 +60,7 @@
              <td><b><u>{$Ilumber}</u></b></td></tr>
              {section name=mill1 loop=$Name}
                  <tr>
-                 <td><a href="lumbermill.php?mill=mill&amp;dalej={$Planid[mill1]}">{$Name[mill1]}</a></td>
+                 <td><a href="lumbermill.php?mill={$Mill}&amp;dalej={$Planid[mill1]}">{$Name[mill1]}</a></td>
                  <td>{$Level[mill1]}</td>
                  <td>{$Lumber[mill1]}</td>
                  </tr>
@@ -73,19 +76,19 @@
             <td width="50"><b><u>{$Ienergy}</u></b></td>
             </tr>
             <tr>
-            <td><a href="lumbermill.php?mill=mill&amp;ko={$Planid}">{$Name}</a></td>
+            <td><a href="lumbermill.php?mill={$Mill}&amp;ko={$Planid}">{$Name}</a></td>
             <td>{$Percent}</td>
             <td>{$Need}</td>
             </tr>
             </table>
         {/if}
         {if $Cont != ""}
-            <form method="post" action="lumbermill.php?mill=mill&amp;konty={$Id}">
+            <form method="post" action="lumbermill.php?mill={$Mill}&amp;konty={$Id}">
             {$Assignen} <b>{$Name}</b> <input type="text" name="razy" size="5" /> {$Menergy}
             <input type="submit" value="{$Amake}" /></form>
         {/if}
         {if $Next != ""}
-            <form method="post" action="lumbermill.php?mill=mill&amp;rob={$Id}">
+            <form method="post" action="lumbermill.php?mill={$Mill}&amp;rob={$Id}">
                 {$Assignen} <b>{$Name}</b> <input type="text" name="razy" size="5" /> {$Menergy}
                 <input type=submit value="{$Amake}" />{if $Type == "B"} <select name="lumber">
                     <option value="H">{$Lhazel}</option>

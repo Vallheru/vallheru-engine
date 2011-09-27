@@ -4,10 +4,10 @@
  *   Polish language for lumbermill
  *
  *   @name                 : lumbermill.php                            
- *   @copyright            : (C) 2004, 2005, 2006 Vallheru Team based on Gamers-Fusion ver 2.5
- *   @author               : thindil <thindil@users.sourceforge.net>
- *   @version              : 1.2
- *   @since                : 22.09.2006
+ *   @copyright            : (C) 2004, 2005, 2006,2011 Vallheru Team based on Gamers-Fusion ver 2.5
+ *   @author               : thindil <thindil@tuxfamily.org>
+ *   @version              : 1.4
+ *   @since                : 27.09.2011
  *
  */
 
@@ -27,7 +27,7 @@
 //   along with this program; if not, write to the Free Software
 //   Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 //
-// $Id: lumbermill.php 604 2006-09-22 13:44:10Z thindil $
+// $Id$
 
 define("ERROR", "Zapomnij o tym!");
 define("NO_MONEY", "Nie masz tyle sztuk złota przy sobie!");
@@ -85,7 +85,7 @@ if (isset ($_GET['mill']) && $_GET['mill'] == 'plany')
     }
 }
 
-if (isset ($_GET['mill']) && $_GET['mill'] == 'mill') 
+if (isset ($_GET['mill']) && ($_GET['mill'] == 'mill' || $_GET['mill'] == 'elite')) 
 {
     if (!isset($_GET['konty']) && !isset($_GET['rob'])) 
     {

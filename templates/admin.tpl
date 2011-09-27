@@ -226,6 +226,7 @@
     <option value="B">{$Sbow}</option>
     <option value="R">{$Sarrow}</option>
     </select><br />
+    {$Selite}: <input type="text" value="0" name="elite" size="5"/><br />
     <br /><input type="submit" value="{$Aadd}" /></form>
 {/if}
 
