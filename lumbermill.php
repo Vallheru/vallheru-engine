@@ -327,7 +327,7 @@ function additem($strType, $strName, $intWt, $intPower, $intSpeed, $intCost, $in
       $test = $db -> Execute("SELECT `id` FROM `equipment` WHERE `owner`=".$intPid." AND `name`='".$strName."' AND `power`=".$intPower." AND `status`='U' AND `cost`=".$intCost." AND `poison`=0");
       if (!$test -> fields['id']) 
 	{
-	  $db -> Execute("INSERT INTO `equipment` (`owner`, `name`, `power`, `type`, `cost`, `status`, `minlev`, `wt`) VALUES(".$intPid.", '".$strName."', ".$strPower.", 'R', ".$intCost.", 'U', ".$intLevel.", ".$intWt.")");
+	  $db -> Execute("INSERT INTO `equipment` (`owner`, `name`, `power`, `type`, `cost`, `status`, `minlev`, `wt`) VALUES(".$intPid.", '".$strName."', ".$intPower.", 'R', ".$intCost.", 'U', ".$intLevel.", ".$intWt.")");
 	} 
       else 
 	{
