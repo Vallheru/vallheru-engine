@@ -303,40 +303,6 @@ if (isset ($_GET['mill']) && $_GET['mill'] == 'plany')
 }
 
 /**
- * Add bonus to stats from rings
- */
-function ringbonus()
-{
-  global $player;
-
-  $arrEquip = $player -> equipment();
-  $arrRings = array('zręczności', 'siły', 'inteligencji');
-  $arrStat = array('agility', 'strength', 'inteli');
-  if ($arrEquip[9][2])
-    {
-      $arrRingtype = explode(" ", $arrEquip[9][1]);
-      $intAmount = count($arrRingtype) - 1;
-      $intKey = array_search($arrRingtype[$intAmount], $arrRings);
-      if ($intKey != NULL)
-	{
-	  $strStat = $arrStat[$intKey];
-	  $player -> $strStat = $player -> $strStat + $arrEquip[9][2];
-	}
-    }
-  if ($arrEquip[10][2])
-    {
-      $arrRingtype = explode(" ", $arrEquip[10][1]);
-      $intAmount = count($arrRingtype) - 1;
-      $intKey = array_search($arrRingtype[$intAmount], $arrRings);
-      if ($intKey != NULL)
-	{
-	  $strStat = $arrStat[$intKey];
-	  $player -> $strStat = $player -> $strStat + $arrEquip[10][2];
-	}
-    }
-}
-
-/**
  * Function add item to player equipment
  */
 function additem($strType, $strName, $intWt, $intPower, $intSpeed, $intCost, $intPid, $intLevel, $intRepair, $intAmount = 1)
@@ -372,6 +338,140 @@ function additem($strType, $strName, $intWt, $intPower, $intSpeed, $intCost, $in
 }
 
 /**
+ * Make normal and elite items (shared code)
+ */
+if (isset($_GET['mill']) && ($_GET['mill'] == 'mill' || $_GET['mill'] == 'elite'))
+  {
+    if (!isset($_GET['rob']) && !isset($_GET['konty'])) 
+      {
+        $smarty -> assign(array("Iname" => I_NAME,
+                                "Ilevel" => I_LEVEL,
+                                "Ilumber" => I_LUMBER));
+      }
+    else
+      {
+	$arrEquip = $player -> equipment();
+	$arrRings = array('zręczności', 'siły', 'inteligencji');
+	$arrStat = array('agility', 'strength', 'inteli');
+	if ($arrEquip[9][2])
+	  {
+	    $arrRingtype = explode(" ", $arrEquip[9][1]);
+	    $intAmount = count($arrRingtype) - 1;
+	    $intKey = array_search($arrRingtype[$intAmount], $arrRings);
+	    if ($intKey != NULL)
+	      {
+		$strStat = $arrStat[$intKey];
+		$player -> $strStat = $player -> $strStat + $arrEquip[9][2];
+	      }
+	  }
+	if ($arrEquip[10][2])
+	  {
+	    $arrRingtype = explode(" ", $arrEquip[10][1]);
+	    $intAmount = count($arrRingtype) - 1;
+	    $intKey = array_search($arrRingtype[$intAmount], $arrRings);
+	    if ($intKey != NULL)
+	      {
+		$strStat = $arrStat[$intKey];
+		$player -> $strStat = $player -> $strStat + $arrEquip[10][2];
+	      }
+	  }
+	/**
+         * Add bonuses to ability
+         */
+        require_once('includes/abilitybonus.php');
+        $player -> fletcher = abilitybonus('fletcher');
+      }
+    if (isset($_GET['ko'])) 
+      {
+        if ($player -> hp == 0) 
+	  {
+            error (YOU_DEAD);
+	  }
+	checkvalue($_GET['ko']);
+        $objMaked = $db -> Execute("SELECT `name` FROM `mill_work` WHERE `id`=".$_GET['ko']);
+        $smarty -> assign(array("Id" => $_GET['ko'], 
+                                "Name" => $objMaked -> fields['name'],
+                                "Assignen" => ASSIGN_EN,
+                                "Menergy" => M_ENERGY,
+                                "Amake" => A_MAKE));
+        $objMaked -> Close();
+    }
+    if (isset($_GET['dalej'])) 
+      {
+        if ($player -> hp == 0) 
+	  {
+            error (YOU_DEAD);
+	  }
+	checkvalue($_GET['dalej']);
+        $objLumber = $db -> Execute("SELECT `name`, `type` FROM `mill` WHERE `id`=".$_GET['dalej']);
+        $smarty -> assign(array("Id" => $_GET['dalej'], 
+                                "Name" => $objLumber -> fields['name'],
+                                "Type" => $objLumber -> fields['type'],
+                                "Lhazel" => L_HAZEL,
+                                "Lyew" => L_YEW,
+                                "Lelm" => L_ELM,
+                                "Lharder" => L_HARDER,
+                                "Lcomposite" => L_COMPOSITE,
+                                "Assignen" => ASSIGN_EN,
+                                "Menergy" => M_ENERGY,
+                                "Amake" => A_MAKE));
+        $objLumber -> Close();
+      }
+    if (isset($_GET['konty'])) 
+      {
+	checkvalue($_GET['konty']);
+        $objWork = $db -> Execute("SELECT * FROM `mill_work` WHERE `id`=".$_GET['konty']);
+        $objLumber = $db -> Execute("SELECT `name`, `type`, `cost`, `amount`, `level`, `twohand` FROM `mill` WHERE `owner`=".$player -> id." AND `name`='".$objWork -> fields['name']."'");
+	checkvalue($_POST['razy']);
+        if ($player -> energy < $_POST['razy']) 
+	  {
+            error(NO_ENERGY);
+	  }
+        $need = ($objWork -> fields['n_energy'] - $objWork -> fields['u_energy']);
+        if ($_POST['razy'] > $need) 
+	  {
+            error (TOO_MUCH);
+	  }
+        if ($objWork -> fields['owner'] != $player -> id) 
+	  {
+            error (NO_ITEM);
+	  }
+      }
+    if (isset($_GET['rob'])) 
+      {
+	checkvalue($_GET['rob']);
+        if (!isset($_POST['razy']))
+	  {
+            error(HOW_MANY);
+	  }
+	checkvalue($_POST['razy']);
+        $objTest = $db -> Execute("SELECT `id` FROM `mill_work` WHERE `owner`=".$player -> id);
+        if ($objTest -> fields['id'])
+	  {
+            error(YOU_MAKE2);
+	  }
+        $objTest -> Close();
+        $objLumber = $db -> Execute("SELECT * FROM `mill` WHERE `id`=".$_GET['rob']);
+        if ($objLumber -> fields['type'] == 'B')
+	  {
+            $arrMineral = array('H', 'Y', 'E', 'A', 'C');
+            if (!in_array($_POST['lumber'], $arrMineral))
+	      {
+                error(ERROR);
+	      }
+	  }
+	if ($player -> energy < $_POST['razy']) 
+	  {
+            error(NO_ENERGY);
+	  }
+        if ($objLumber -> fields['owner'] != $player -> id) 
+	  {
+            error(NO_PLANS);
+	  }
+      }
+  }
+
+/**
 * Make items
 */
 if (isset ($_GET['mill']) && $_GET['mill'] == 'mill') 
@@ -379,10 +479,7 @@ if (isset ($_GET['mill']) && $_GET['mill'] == 'mill')
     if (!isset($_GET['rob']) && !isset($_GET['konty'])) 
     {
         $smarty -> assign(array("Millinfo" => MILL_INFO,
-                                "Info" => INFO,
-                                "Iname" => I_NAME,
-                                "Ilevel" => I_LEVEL,
-                                "Ilumber" => I_LUMBER));
+                                "Info" => INFO));
         $objMaked = $db -> Execute("SELECT * FROM `mill_work` WHERE `owner`=".$player->id." AND `elite`=0");
         if (!$objMaked -> fields['id']) 
         {
@@ -400,7 +497,7 @@ if (isset ($_GET['mill']) && $_GET['mill'] == 'mill')
                 $objLumber -> MoveNext();
             }
             $objLumber -> Close();
-            $smarty -> assign(array("Name" => $arrname, 
+            $smarty -> assign(array("Names" => $arrname, 
                                     "Planid" => $arrid, 
                                     "Level" => $arrlevel, 
                                     "Lumber" => $arrlumber));
@@ -422,78 +519,15 @@ if (isset ($_GET['mill']) && $_GET['mill'] == 'mill')
         }
         $objMaked -> Close();
     }
-    else
-      {
-	ringbonus();
-      }
-    if (isset($_GET['ko'])) 
-    {
-        if ($player -> hp == 0) 
-        {
-            error (YOU_DEAD);
-        }
-	checkvalue($_GET['ko']);
-        $objMaked = $db -> Execute("SELECT `name` FROM `mill_work` WHERE `id`=".$_GET['ko']);
-        $smarty -> assign(array("Id" => $_GET['ko'], 
-                                "Name" => $objMaked -> fields['name'],
-                                "Assignen" => ASSIGN_EN,
-                                "Menergy" => M_ENERGY,
-                                "Amake" => A_MAKE));
-        $objMaked -> Close();
-    }
-    if (isset($_GET['dalej'])) 
-    {
-        if ($player -> hp == 0) 
-        {
-            error (YOU_DEAD);
-        }
-	checkvalue($_GET['dalej']);
-        $objLumber = $db -> Execute("SELECT `name`, `type` FROM `mill` WHERE `id`=".$_GET['dalej']);
-        $smarty -> assign(array("Id" => $_GET['dalej'], 
-                                "Name" => $objLumber -> fields['name'],
-                                "Type" => $objLumber -> fields['type'],
-                                "Lhazel" => L_HAZEL,
-                                "Lyew" => L_YEW,
-                                "Lelm" => L_ELM,
-                                "Lharder" => L_HARDER,
-                                "Lcomposite" => L_COMPOSITE,
-                                "Assignen" => ASSIGN_EN,
-                                "Menergy" => M_ENERGY,
-                                "Amake" => A_MAKE));
-        $objLumber -> Close();
-    }
     /**
     * Continue making items
     */
     if (isset($_GET['konty'])) 
     {
-	checkvalue($_GET['konty']);
-        $objWork = $db -> Execute("SELECT * FROM `mill_work` WHERE `id`=".$_GET['konty']);
-        $objLumber = $db -> Execute("SELECT `name`, `type`, `cost`, `amount`, `level`, `twohand` FROM `mill` WHERE `owner`=".$player -> id." AND `name`='".$objWork -> fields['name']."'");
-	checkvalue($_POST['razy']);
-        if ($player -> energy < $_POST['razy']) 
-        {
-            error(NO_ENERGY);
-        }
-        $need = ($objWork -> fields['n_energy'] - $objWork -> fields['u_energy']);
-        if ($_POST['razy'] > $need) 
-        {
-            error (TOO_MUCH);
-        }
-        if ($objWork -> fields['owner'] != $player -> id) 
-        {
-            error (NO_ITEM);
-        }
 	if ($objWork->fields['elite'] > 0)
 	  {
 	    error("Nie możesz wykonywać tutaj elitarnego ekwipunku.");
 	  }
-
-        /**
-         * Add bonuses to ability
-         */
-        require_once('includes/abilitybonus.php');
-        $player -> fletcher = abilitybonus('fletcher');
 
         /**
          * Count item attributes
@@ -582,27 +616,6 @@ if (isset ($_GET['mill']) && $_GET['mill'] == 'mill')
     */
     if (isset($_GET['rob'])) 
     {
-	checkvalue($_GET['rob']);
-        if (!isset($_POST['razy']))
-        {
-            error(HOW_MANY);
-        }
-	checkvalue($_POST['razy']);
-        $objTest = $db -> Execute("SELECT `id` FROM `mill_work` WHERE `owner`=".$player -> id);
-        if ($objTest -> fields['id'])
-        {
-            error(YOU_MAKE2);
-        }
-        $objTest -> Close();
-        $objLumber = $db -> Execute("SELECT * FROM `mill` WHERE `id`=".$_GET['rob']);
-        if ($objLumber -> fields['type'] == 'B')
-        {
-            $arrMineral = array('H', 'Y', 'E', 'A', 'C');
-            if (!in_array($_POST['lumber'], $arrMineral))
-            {
-                error(ERROR);
-            }
-        }
         $intAmount = floor($_POST['razy'] / $objLumber -> fields['level']);
         if ($intAmount > 1) 
         {
@@ -642,24 +655,10 @@ if (isset ($_GET['mill']) && $_GET['mill'] == 'mill')
             }
             $objMineral -> Close();
         }
-        if ($player -> energy < $_POST['razy']) 
-        {
-            error(NO_ENERGY);
-        }
-        if ($objLumber -> fields['owner'] != $player -> id) 
-        {
-            error(NO_PLANS);
-        }
 	if ($objLumber->fields['elite'] > 0)
 	  {
 	    error("Nie możesz tutaj wykonywać elitarnego ekwipunku.");
 	  }
-
-        /**
-         * Add bonuses to ability
-         */
-        require_once('includes/abilitybonus.php');
-        $player -> fletcher = abilitybonus('fletcher');
 
         /**
          * Count item attributes
@@ -776,10 +775,7 @@ if (isset ($_GET['mill']) && $_GET['mill'] == 'elite')
     if (!isset($_GET['rob']) && !isset($_GET['konty'])) 
     {
         $smarty -> assign(array("Millinfo" => "Tutaj możesz wykonywać elitarne łuki. Jednak do tego oprócz drewna, potrzebujesz również łupów z potworów. Aby wykonać łuk, potrzebujesz 10 razy więcej energii niż wynosi jego poziom.",
-                                "Info" => "Oto lista przedmiotów, które możesz wykonywać. Jeżeli nie masz tyle energii aby wykonać ów przedmiot, możesz po prostu wykonywać go po kawałku",
-                                "Iname" => "Nazwa",
-                                "Ilevel" => "Poziom",
-                                "Ilumber" => "Drewna"));
+                                "Info" => "Oto lista przedmiotów, które możesz wykonywać. Jeżeli nie masz tyle energii aby wykonać ów przedmiot, możesz po prostu wykonywać go po kawałku"));
         $objMaked = $db -> Execute("SELECT * FROM `mill_work` WHERE `owner`=".$player->id." AND `elite`>0");
         if (!$objMaked -> fields['id']) 
         {
@@ -788,19 +784,26 @@ if (isset ($_GET['mill']) && $_GET['mill'] == 'elite')
             $arrname = array();
             $arrlevel = array();
             $arrlumber = array();
+	    $arrLoot = array();
             while (!$objLumber -> EOF) 
 	      {
 		$arrid[] = $objLumber -> fields['id'];
 		$arrname[] = $objLumber -> fields['name'];
 		$arrlevel[] = $objLumber -> fields['level'];
 		$arrlumber[] = $objLumber -> fields['amount'];
+		$objLoot = $db->Execute("SELECT `lootnames` FROM `monsters` WHERE `id`=".$objLumber->fields['elite']);
+		$arrTmp = explode(";", $objLoot->fields['lootnames']);
+		$arrLoot[] = $arrTmp[0].":8 ".$arrTmp[1].":4 ".$arrTmp[2].":2 ".$arrTmp[3].":1";
+		$objLoot->Close();
                 $objLumber -> MoveNext();
 	      }
             $objLumber -> Close();
-            $smarty -> assign(array("Name" => $arrname, 
+            $smarty -> assign(array("Names" => $arrname, 
                                     "Planid" => $arrid, 
                                     "Level" => $arrlevel, 
-                                    "Lumber" => $arrlumber));
+                                    "Lumber" => $arrlumber,
+				    "Tloot" => "Części potwora",
+				    "Loot" => $arrLoot));
         } 
 	else 
         {
@@ -819,78 +822,15 @@ if (isset ($_GET['mill']) && $_GET['mill'] == 'elite')
         }
         $objMaked -> Close();
     }
-    else
-      {
-	ringbonus();
-      }
-    if (isset($_GET['ko'])) 
-    {
-        if ($player -> hp == 0) 
-        {
-            error (YOU_DEAD);
-        }
-	checkvalue($_GET['ko']);
-        $objMaked = $db -> Execute("SELECT `name` FROM `mill_work` WHERE `id`=".$_GET['ko']);
-        $smarty -> assign(array("Id" => $_GET['ko'], 
-                                "Name" => $objMaked -> fields['name'],
-                                "Assignen" => ASSIGN_EN,
-                                "Menergy" => M_ENERGY,
-                                "Amake" => A_MAKE));
-        $objMaked -> Close();
-    }
-    if (isset($_GET['dalej'])) 
-    {
-        if ($player -> hp == 0) 
-        {
-            error (YOU_DEAD);
-        }
-	checkvalue($_GET['dalej']);
-        $objLumber = $db -> Execute("SELECT `name`, `type` FROM `mill` WHERE `id`=".$_GET['dalej']);
-        $smarty -> assign(array("Id" => $_GET['dalej'], 
-                                "Name" => $objLumber -> fields['name'],
-                                "Type" => $objLumber -> fields['type'],
-                                "Lhazel" => L_HAZEL,
-                                "Lyew" => L_YEW,
-                                "Lelm" => L_ELM,
-                                "Lharder" => L_HARDER,
-                                "Lcomposite" => L_COMPOSITE,
-                                "Assignen" => ASSIGN_EN,
-                                "Menergy" => M_ENERGY,
-                                "Amake" => A_MAKE));
-        $objLumber -> Close();
-    }
     /**
     * Continue making items
     */
     if (isset($_GET['konty'])) 
     {
-	checkvalue($_GET['konty']);
-        $objWork = $db -> Execute("SELECT * FROM `mill_work` WHERE `id`=".$_GET['konty']);
-        $objLumber = $db -> Execute("SELECT `name`, `type`, `cost`, `amount`, `level`, `twohand` FROM `mill` WHERE `owner`=".$player -> id." AND `name`='".$objWork -> fields['name']."'");
-	checkvalue($_POST['razy']);
-        if ($player->energy < $_POST['razy']) 
-        {
-            error("Nie masz tyle energii.");
-        }
-        $need = ($objWork -> fields['n_energy'] - $objWork -> fields['u_energy']);
-        if ($_POST['razy'] > $need) 
-        {
-            error ("Chcesz poświęcić na wykonanie łuku zbyt wiele energii.");
-        }
-        if ($objWork -> fields['owner'] != $player -> id) 
-        {
-            error ("Nie wykonujesz takiego przemiotu.");
-        }
-	if ($objWork->fields['elite'] == 'N')
+	if ($objWork->fields['elite'] == 0)
 	  {
 	    error("Możesz tutaj wykonywać tylko elitarny ekwipunek.");
 	  }
-
-        /**
-         * Add bonuses to ability
-         */
-        require_once('includes/abilitybonus.php');
-        $player -> fletcher = abilitybonus('fletcher');
 
         /**
          * Count item attributes
@@ -899,32 +839,35 @@ if (isset ($_GET['mill']) && $_GET['mill'] == 'elite')
 	$intSpeed = $objLumber -> fields['level'];
 	$arrMineral = array('H', 'Y', 'E', 'A', 'C');
 	$intKey = array_search($objWork -> fields['mineral'], $arrMineral);
-	$arrMaxdur = array(40, 80, 160, 320, 640);
+	$arrMaxdur = array(50, 90, 170, 330, 650);
 	$intMaxdur = $arrMaxdur[$intKey];
 	$arrBowname = array(L_HAZEL, L_YEW, L_ELM, L_HARDER, L_COMPOSITE);
 	$strName = $objLumber -> fields['name']." ".$arrBowname[$intKey];
-	$arrMaxbonus = array(6, 10, 14, 17, 20);
-	$intModif = $arrMaxbonus[$intKey];
-	$intCost = ceil($objLumber -> fields['cost'] / 20);
-        $arrItem = array('power' => $intPower,
-                         'wt' => $intMaxdur,
-                         'name' => $strName,
-                         'type' => $objLumber -> fields['type'],
-                         'level' => $objLumber -> fields['level'],
-                         'szyb' => $intSpeed,
-                         'zr' => 0,
-                         'twohand' => $objLumber -> fields['twohand']);
+	$arrMaxbonus = array(11, 15, 20, 25, 30);
+	$intCost = ceil($objLumber -> fields['cost'] / 200);
+	$intMaxbonus = $arrMaxbonus[$intKey] * $objLumber->fields['level'];
         $intItems = 0;
         $intGainexp = 0;
         $intAbility = 0;
-        $intChance = (50 - $intModif) * $player -> fletcher / $objLumber -> fields['level'];
-        if ($intChance > 95)
+	$intChance = $player->fletcher / $objLumber -> fields['level'];
+        if ($intChance > 90)
         {
-            $intChance = 95;
+            $intChance = 90;
         }
         if ($_POST['razy'] == $need) 
         {
-            $arrMaked = createitem();
+	    $intRoll = rand(1, 100);
+	    if ($intRoll < $intChance)
+	      {
+		$intPower = floor(rand(1, $player->fletcher) + ($player->strength / 100));
+		if ($intPower > $intMaxbonus)
+		  {
+		    $intPower = $intMaxbonus;
+		  }
+		$intGainexp = ($objLumber->fields['level'] * (100 + $player->fletcher / 5));
+		$intAbility = ($objLumber->fields['level'] / 50);
+		$intItems++;
+	      }
             if ($intItems)
             {
                 if ($player -> clas == 'Rzemieślnik') 
@@ -933,16 +876,18 @@ if (isset ($_GET['mill']) && $_GET['mill'] == 'elite')
                     $intAbility = $intAbility * 2;
                 }
                 $intGainexp = ceil($intGainexp);
-		additem($arrItem['type'], $arrMaked['name'], $arrMaked['wt'], $arrMaked['power'], $arrMaked['speed'], $intCost, $player->id, $arrItem['level'], $arrMaked['repaircost']);
-                $smarty -> assign ("Message", YOU_MAKE.$arrMaked['name']."(+ ".$arrMaked['power'].") (".$arrMaked['speed']."% szyb) (".$arrMaked['wt']."/".$arrMaked['wt'].")".AND_GAIN2.$intGainexp.AND_EXP2.$intAbility.IN_MILL);
+		$arrRepair = array(1, 4, 16, 64, 256);
+		$intRepaircost = $objLumber->fields['level'] * $arrRepair[$intKey] * 2;
+		additem($objLumber->fields['type'], $strName, $intMaxdur, $intPower, $objLumber->fields['level'], $intCost, $player->id, $objLumber->fields['level'], $intRepaircost);
+                $smarty -> assign ("Message", YOU_MAKE.$strName."(+ ".$intPower.") (".$objLumber->fields['level']."% szyb) (".$intMaxdur."/".$intMaxdur.")".AND_GAIN2.$intGainexp.AND_EXP2.$intAbility.IN_MILL);
             } 
                 else 
             {
                 $intAbility = 0.01;
                 $intGainexp = 0;
-                $smarty -> assign ("Message", YOU_TRY.$arrItem['name'].BUT_FAIL.$intAbility.IN_MILL);
+                $smarty -> assign ("Message", YOU_TRY.$strName.BUT_FAIL.$intAbility.IN_MILL);
             }
-            $db -> Execute("DELETE FROM `mill_work` WHERE `owner`=".$player -> id);
+            $db -> Execute("DELETE FROM `mill_work` WHERE `id`=".$objWork->fields['id']);
             checkexp($player -> exp, $intGainexp, $player -> level, $player -> race, $player -> user, $player -> id, 0, 0, $player -> id, 'fletcher', $intAbility);
         } 
             else 
@@ -951,8 +896,8 @@ if (isset ($_GET['mill']) && $_GET['mill'] == 'elite')
             $procent = (($uenergia / $objWork -> fields['n_energy']) * 100);
             $procent = round($procent,"0");
             $need = $objWork -> fields['n_energy'] - $uenergia;
-            $smarty -> assign ("Message", YOU_WORK.$arrItem['name'].NEXT_EN.$_POST['razy'].NOW_IS.$procent.YOU_NEED2.$need.M_ENERGY);
-            $db -> Execute("UPDATE `mill_work` SET `u_energy`=`u_energy`+".$_POST['razy']." WHERE `owner`=".$player -> id);
+            $smarty -> assign ("Message", YOU_WORK.$strName.NEXT_EN.$_POST['razy'].NOW_IS.$procent.YOU_NEED2.$need.M_ENERGY);
+            $db -> Execute("UPDATE `mill_work` SET `u_energy`=`u_energy`+".$_POST['razy']." WHERE `id`=".$objWork->fields['id']);
         }
         $db -> Execute("UPDATE `players` SET `energy`=`energy`-".$_POST['razy'].", `bless`='', `blessval`=0 WHERE `id`=".$player -> id);
     }
@@ -961,29 +906,11 @@ if (isset ($_GET['mill']) && $_GET['mill'] == 'elite')
     */
     if (isset($_GET['rob'])) 
     {
-	checkvalue($_GET['rob']);
-        if (!isset($_POST['razy']))
-        {
-            error(HOW_MANY);
-        }
-	checkvalue($_POST['razy']);
-        $objTest = $db -> Execute("SELECT `id` FROM `mill_work` WHERE `owner`=".$player -> id);
-        if ($objTest -> fields['id'])
-        {
-            error(YOU_MAKE2);
-        }
-        $objTest -> Close();
-        $objLumber = $db -> Execute("SELECT * FROM `mill` WHERE `id`=".$_GET['rob']);
-	if ($objLumber->fields['elite'] != 'N')
+        if ($objLumber->fields['elite'] == 0)
 	  {
-	    error("Możesz tutaj wykonywać tylko elitarne łuki.");
+	    error("Możesz tutaj wykonywać tylko elitarny ekwipunek.");
 	  }
-	$arrMineral = array('H', 'Y', 'E', 'A', 'C');
-	if (!in_array($_POST['lumber'], $arrMineral))
-	  {
-	    error(ERROR);
-	  }
-        $intAmount = floor($_POST['razy'] / $objLumber -> fields['level']);
+        $intAmount = floor($_POST['razy'] / ($objLumber -> fields['level'] * 10));
         if ($intAmount > 1) 
         {
             $intNeedmineral = ($intAmount * $objLumber -> fields['amount']);
@@ -1018,101 +945,119 @@ if (isset ($_GET['mill']) && $_GET['mill'] == 'elite')
             }
             $objMineral -> Close();
         }
-	//Check if we have enough loots (TODO)
-        if ($player -> energy < $_POST['razy']) 
-        {
-            error(NO_ENERGY);
-        }
-        if ($objLumber -> fields['owner'] != $player -> id) 
-        {
-            error(NO_PLANS);
-        }
-
-        /**
-         * Add bonuses to ability
-         */
-        require_once('includes/abilitybonus.php');
-        $player -> fletcher = abilitybonus('fletcher');
+	//Check if we have enough loots
+	$objLoot = $db->Execute("SELECT `lootnames` FROM `monsters` WHERE `id`=".$objLumber->fields['elite']);
+	$arrLootsname = explode(";", $objLoot->fields['lootnames']);
+	for ($i = 0; $i < 4; $i++)
+	  {
+	    $objAmount = $db->Execute("SELECT `amount` FROM `equipment` WHERE `owner`=".$player->id." AND `name`='".$arrLootsname[$i]."' AND status='U'");
+	    if (!$objAmount->fields['amount'] || $objAmount->fields['amount'] < $arrLoots[$i])
+	      {
+		error("Nie masz wystarczającej ilości ".$arrLootsname[$i].".");
+	      }
+	    $objAmount->Close();
+	  }
 
         /**
          * Count item attributes
          */
-	$intPower = 0;
-	$intSpeed = $objLumber -> fields['level'];
-	$arrMaxdur = array(40, 80, 160, 320, 640);
+	$arrMaxdur = array(50, 90, 170, 330, 650);
 	$intMaxdur = $arrMaxdur[$intKey];
 	$arrBowname = array(L_HAZEL, L_YEW, L_ELM, L_HARDER, L_COMPOSITE);
 	$strName = $objLumber -> fields['name']." ".$arrBowname[$intKey];
-	$arrMaxbonus = array(6, 10, 14, 17, 20);
-	$intCost = ceil($objLumber -> fields['cost'] / 20);
-        $arrItem = array('power' => $intPower,
-                         'wt' => $intMaxdur,
-                         'name' => $strName,
-                         'type' => $objLumber -> fields['type'],
-                         'level' => $objLumber -> fields['level'],
-                         'szyb' => $intSpeed,
-                         'zr' => 0,
-                         'twohand' => $objLumber -> fields['twohand']);
+	$arrMaxbonus = array(11, 15, 20, 25, 30);
+	$intCost = ceil($objLumber -> fields['cost'] / 200);
+	$intMaxbonus = $arrMaxbonus[$intKey] * $objLumber->fields['level'];
         $intItems = 0;
         $intGainexp = 0;
         $intAbility = 0;
-        $intChance = (50 - $intModif) * $player -> fletcher / $objLumber -> fields['level'];
+        $intChance = $player->fletcher / $objLumber -> fields['level'];
         if ($intChance > 90)
         {
             $intChance = 90;
         }
         if ($intAmount > 0) 
 	  {
-	    $arrMaked = array();
+	    $arrPower = array();
 	    $arrAmount = array();
             for ($i = 1; $i <= $intAmount; $i++) 
-            {
-                $arrTmp = createitem();
-		if (count($arrTmp) > 0)
+	      {
+		$intRoll = rand(1, 100);
+		if ($intRoll < $intChance)
 		  {
-		    $intIndex = array_search($arrTmp, $arrMaked);
+		    $intPower = floor(rand(1, $player->fletcher) + ($player->strength / 100));
+		    if ($intPower > $intMaxbonus)
+		      {
+			$intPower = $intMaxbonus;
+		      }
+		    $intIndex = array_search($intPower, $arrPower);
 		    if ($intIndex === FALSE)
 		      {
-			$arrMaked[] = $arrTmp;
+			$arrPower[] = $intPower;
 			$arrAmount[] = 1;
 		      }
 		    else
 		      {
 			$arrAmount[$intIndex]++;
 		      }
+		    $intGainexp += ($objLumber->fields['level'] * (100 + $player->fletcher / 5));
+		    $intAbility += ($objLumber->fields['level'] / 50);
+		    $intItems++;
 		  }
-            }
-	    for ($i = 0; $i < count($arrMaked); $i++)
-	      {
-		additem($arrItem['type'], $arrMaked[$i]['name'], $arrMaked[$i]['wt'], $arrMaked[$i]['power'], $arrMaked[$i]['speed'], $intCost, $player->id, $arrItem['level'], $arrMaked[$i]['repaircost'], $arrAmount[$i]);
+		else
+		  {
+		    $intGainexp += 0.01;
+		  }
 	      }
-            if ($player -> clas == 'Rzemieślnik') 
+	    $arrMaked = array();
+	    $arrRepair = array(1, 4, 16, 64, 256);
+            $intRepaircost = $objLumber->fields['level'] * $arrRepair[$intKey] * 2;
+	    for ($i = 0; $i < count($arrPower); $i++)
+	      {
+		additem($objLumber->fields['type'], $strName, $intMaxdur, $arrPower[$i], $objLumber->fields['level'], $intCost, $player->id, $objLumber->fields['level'], $intRepaircost, $arrAmount[$i]);
+		$arrMaked[] = array("name" => $strName, "power" => $arrPower[$i], "speed" => $objLumber->fields['level'], "wt" => $intMaxdur);
+	      }
+            if ($player->clas == 'Rzemieślnik') 
             {
                 $intGainexp = $intGainexp * 2;
                 $intAbility = $intAbility * 2;
             }
             $intGainexp = ceil($intGainexp);
-            $smarty->assign(array("Message" => YOU_MAKE.$arrItem['name']."</b> <b>".$intItems.AND_GAIN2.$intGainexp.AND_EXP2.$intAbility.IN_MILL,
+            $smarty->assign(array("Message" => YOU_MAKE.$strName."</b> <b>".$intItems.AND_GAIN2.$intGainexp.AND_EXP2.$intAbility.IN_MILL,
 				  "Youmade" => "Wykonane przedmioty:",
 				  "Ispeed" => "szyb",
 				  "Iamount" => "ilość",
 				  "Items" => $arrMaked,
 				  "Amount" => $arrAmount,
 				  "Amt" => $intItems));
-            checkexp($player -> exp, $intGainexp, $player -> level, $player -> race, $player -> user, $player -> id, 0, 0, $player -> id,'fletcher',$intAbility);
+            checkexp($player->exp, $intGainexp, $player->level, $player->race, $player->user, $player->id, 0, 0, $player -> id, 'fletcher', $intAbility);
         } 
             else 
         {
-            $procent = (($_POST['razy'] / $arrItem['level']) * 100);
+	    $procent = (($_POST['razy'] / ($objLumber->fields['level'] * 10)) * 100);
             $procent = round($procent,"0");
-            $need = ($objLumber -> fields['level'] - $_POST['razy']);
-            $smarty -> assign ("Message", YOU_WORK.$arrItem['name'].YOU_USE.$_POST['razy'].AND_MAKE.$procent.TO_END.$need.M_ENERGY);
-	    $db -> Execute("INSERT INTO `mill_work` (`owner`, `name`, `u_energy`, `n_energy`, `mineral`, `elite`) VALUES(".$player -> id.", '".$objLumber -> fields['name']."', ".$_POST['razy'].", ".$arrItem['level'].", '".$_POST['lumber']."', 'Y')");
+            $need = ($objLumber->fields['level'] * 10) - $_POST['razy'];
+            $smarty -> assign(array("Message" => YOU_WORK.$strName.YOU_USE.$_POST['razy'].AND_MAKE.$procent.TO_END.$need.M_ENERGY,
+				    "Amt" => 0));
+	    $db -> Execute("INSERT INTO `mill_work` (`owner`, `name`, `u_energy`, `n_energy`, `mineral`, `elite`) VALUES(".$player->id.", '".$objLumber->fields['name']."', ".$_POST['razy'].", ".($objLumber->fields['level'] * 10).", '".$_POST['lumber']."', '".$objLumber->fields['elite']."')");
         }
         foreach ($arrNeedmineral as $strNeedmineral)
         {
             $objMineral = $db -> Execute("UPDATE `minerals` SET `".$strNeedmineral."`=`".$strNeedmineral."`-".$intNeedmineral." WHERE `owner`=".$player -> id);
         }
+	for ($i = 0; $i < 4; $i++)
+	  {
+	    $objAmount = $db->Execute("SELECT `id`, `amount` FROM `equipment` WHERE `owner`=".$player->id." AND `name`='".$arrLootsname[$i]."' AND status='U'");
+	    if ($objAmount->fields['amount'] == $arrLoots[$i])
+	      {
+		$db->Execute("DELETE FROM `equipment` WHERE `id`=".$objAmount->fields['id']);
+	      }
+	    else
+	      {
+		$db->Execute("UPDATE `equipment` SET `amount`=`amount`-".$arrLoots[$i]." WHERE `id`=".$objAmount->fields['id']);
+	      }
+	    $objAmount->Close();
+	  }
         $db -> Execute("UPDATE `players` SET `energy`=`energy`-".$_POST['razy'].", `bless`='', `blessval`=0 WHERE `id`=".$player -> id);
     }
 }
