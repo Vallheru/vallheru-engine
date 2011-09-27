@@ -7,7 +7,7 @@
  *   @copyright            : (C) 2004,2005,2006,2011 Vallheru Team based on Gamers-Fusion ver 2.5
  *   @author               : thindil <thindil@tuxfamily.org>
  *   @version              : 1.4
- *   @since                : 26.09.2011
+ *   @since                : 27.09.2011
  *
  */
 
@@ -42,8 +42,8 @@ if ($player -> location != 'Altara' && $player -> location != 'Ardulith')
     error (ERROR);
 }
 
-$arrMarkets = array(MARKET1, MARKET2, MARKET3, MARKET4, MARKET5, MARKET6);
-$arrFiles = array('pmarket', 'imarket', 'mmarket', 'hmarket', 'amarket', 'rmarket');
+$arrMarkets = array(MARKET1, MARKET2, MARKET3, MARKET4, MARKET5, MARKET6, MARKET7);
+$arrFiles = array('pmarket', 'imarket', 'mmarket', 'hmarket', 'amarket', 'rmarket', 'lmarket');
 
 /**
  * Main menu
@@ -127,17 +127,18 @@ if (isset($_GET['view']) && $_GET['view'] == 'myoferts')
             $_GET['deleteall'] = '';
         }
 
-        $arrAmount = array(0, 0, 0, 0, 0, 0);
-        $arrQueries = array("SELECT count(*) FROM `pmarket` WHERE `seller`=".$player -> id, 
-                            "SELECT count(*) FROM `equipment` WHERE `status`='R' AND `type`!='I' AND `owner`=".$player -> id,
-                            "SELECT count(*) FROM `potions` WHERE `status`='R' AND `owner`=".$player -> id,
-                            "SELECT count(*) FROM `hmarket` WHERE `seller`=".$player -> id,
-                            "SELECT count(*) FROM `amarket` WHERE `seller`=".$player -> id,
-                            "SELECT count(*) FROM `equipment` WHERE `status`='R' AND `type`='I' AND `owner`=".$player -> id);
-        for ($i = 0; $i < 6; $i ++)
+        $arrAmount = array(0, 0, 0, 0, 0, 0, 0);
+        $arrQueries = array("SELECT count(`id`) FROM `pmarket` WHERE `seller`=".$player -> id, 
+                            "SELECT count(`id`) FROM `equipment` WHERE `status`='R' AND `type` NOT IN ('I', 'O') AND `owner`=".$player -> id,
+                            "SELECT count(`id`) FROM `potions` WHERE `status`='R' AND `owner`=".$player -> id,
+                            "SELECT count(`id`) FROM `hmarket` WHERE `seller`=".$player -> id,
+                            "SELECT count(`id`) FROM `amarket` WHERE `seller`=".$player -> id,
+                            "SELECT count(`id`) FROM `equipment` WHERE `status`='R' AND `type`='I' AND `owner`=".$player -> id,
+			    "SELECT count(`id`) FROM `equipment` WHERE `status`='R' AND `type`='O' AND `owner`=".$player -> id);
+        for ($i = 0; $i < 7; $i ++)
         {
             $objAmount = $db -> Execute($arrQueries[$i]);
-            $arrAmount[$i] = $objAmount -> fields['count(*)'];
+            $arrAmount[$i] = $objAmount -> fields['count(`id`)'];
             $objAmount -> Close();
         }
         $_GET['type'] = '';
@@ -165,7 +166,8 @@ if (isset($_GET['view']) && $_GET['view'] == 'myoferts')
                                 "SELECT `id`, `name`, `efect`, `power`, `amount`, `cost` FROM `potions` WHERE `status`='R' AND `owner`=".$player -> id,
                                 "SELECT `id`, `ilosc`, `cost`, `nazwa` FROM `hmarket` WHERE `seller`=".$player -> id,
                                 "SELECT `id`, `type`, `number`, `amount`, `cost` FROM `amarket` WHERE `seller`=".$player -> id,
-                                "SELECT `id`, `name`, `power`, `cost`, `amount` FROM `equipment` WHERE `status`='R' AND `type`='I' AND `owner`=".$player -> id);
+                                "SELECT `id`, `name`, `power`, `cost`, `amount` FROM `equipment` WHERE `status`='R' AND `type`='I' AND `owner`=".$player -> id,
+				"SELECT `id`, `name`, `cost`, `amount`, `minlev` FROM `equipment` WHERE `status`='R' AND `type`='O' AND `owner`=".$player -> id);
             $objOferts = $db -> Execute($arrQueries[$intKey]);
             $intAmount = $objOferts -> RecordCount();
             if (!$intAmount)
@@ -315,6 +317,23 @@ if (isset($_GET['view']) && $_GET['view'] == 'myoferts')
                     $objOferts -> MoveNext();
                 }
             }
+	    /**
+             * Loots market
+             */
+            if ($intKey == 6)
+            {
+                $arrTable = array(T_NAME, 'Poziom', T_AMOUNT, T_COST);
+                while (!$objOferts -> EOF)
+                {
+                    $arrValues[$i][0] = $objOferts -> fields['name'];
+                    $arrValues[$i][1] = $objOferts -> fields['minlev'];
+                    $arrValues[$i][2] = $objOferts -> fields['amount'];
+                    $arrValues[$i][3] = $objOferts -> fields['cost'];
+                    $arrId[$i] = $objOferts -> fields['id'];
+                    $i ++;
+                    $objOferts -> MoveNext();
+                }
+            }
             $objOferts -> Close();
             $arrTable[] = T_OPTIONS;
             $smarty -> assign(array("Ttable" => $arrTable,
@@ -363,7 +382,8 @@ if (isset($_GET['view']) && $_GET['view'] == 'myoferts')
                                 "SELECT * FROM `potions` WHERE `id`=".$intId." AND `status`='R' AND `owner`=".$player -> id,
                                 "SELECT `id`, `ilosc`, `cost`, `nazwa` FROM `hmarket` WHERE `id`=".$intId." AND `seller`=".$player -> id,
                                 "SELECT `id`, `type`, `number`, `amount`, `cost` FROM `amarket` WHERE `id`=".$intId." AND `seller`=".$player -> id,
-                                "SELECT * FROM `equipment` WHERE `id`=".$intId." AND `status`='R' AND `type`='I' AND `owner`=".$player -> id);
+                                "SELECT * FROM `equipment` WHERE `id`=".$intId." AND `status`='R' AND `type`='I' AND `owner`=".$player -> id,
+				"SELECT * FROM `equipment` WHERE `id`=".$intId." AND `status`='R' AND `type`='O' AND `owner`=".$player -> id);
             $objOfert = $db -> Execute($arrQueries[$intKey]);
             $intTest = $objOfert -> RecordCount();
             if (!$intTest)
@@ -385,7 +405,7 @@ if (isset($_GET['view']) && $_GET['view'] == 'myoferts')
                 }
                 $strName = $objOfert -> fields['nazwa'];
             }
-            if ($intKey == 1 || $intKey == 2 || $intKey == 5)
+            if ($intKey == 1 || $intKey == 2 || $intKey == 5 || $intKey == 6)
             {
                 $strName = $objOfert -> fields['name'];
             }
@@ -444,7 +464,7 @@ if (isset($_GET['view']) && $_GET['view'] == 'myoferts')
                     {
                         deletemin($_GET['delete'], $objOfert -> fields['nazwa'], $objOfert -> fields['ilosc'], $player -> id, $arrNames);
                     }
-                    if ($intKey == 1 || $intKey == 5)
+                    if ($intKey == 1 || $intKey == 5 || $intKey == 6)
                     {
                         deleteitem($objOfert, $player -> id);
                     }
@@ -499,7 +519,7 @@ if (isset($_GET['view']) && $_GET['view'] == 'myoferts')
                             $objAmount -> Close();
                         }
                     }
-                    if ($intKey == 1 || $intKey == 5)
+                    if ($intKey == 1 || $intKey == 5 || $intKey == 6)
                     {
 			 if ($objOfert->fields['type'] != 'R')
 			   {
@@ -545,7 +565,7 @@ if (isset($_GET['view']) && $_GET['view'] == 'myoferts')
                     {
                         addtomin($_GET['add'], $strSqlname, $intSqlkey, $player -> id);
                     }
-                    if ($intKey == 1 || $intKey == 5)
+                    if ($intKey == 1 || $intKey == 5 || $intKey == 6)
 		      {
 			if ($objAmount->fields['type'] != 'R')
 			  {
@@ -616,7 +636,7 @@ if (isset($_GET['view']) && $_GET['view'] == 'myoferts')
                         error(ERROR);
                     }
 		    checkvalue($_POST['amount']);
-                    $arrTables = array('pmarket', 'equipment', 'potions', 'hmarket', 'amarket', 'equipment');
+                    $arrTables = array('pmarket', 'equipment', 'potions', 'hmarket', 'amarket', 'equipment', 'equipment');
                     $db -> Execute("UPDATE `".$arrTables[$intKey]."` SET `cost`=".$_POST['amount']." WHERE `id`=".$_GET['change']);
                     $strMessage = YOU_CHANGE;
                 }

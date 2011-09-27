@@ -7,7 +7,7 @@
  *   @copyright            : (C) 2004,2005,2006,2011 Vallheru Team based on Gamers-Fusion ver 2.5
  *   @author               : thindil <thindil@tuxfamily.org>
  *   @version              : 1.4
- *   @since                : 20.08.2011
+ *   @since                : 27.09.2011
  *
  */
 
@@ -38,6 +38,7 @@ if (!isset($_GET['view']))
     define("MARKET4", "Tutaj jest rynek z ziołami. Masz parę opcji.");
     define("MARKET5", "Tutaj jest rynek z komponentami astralnymi. Masz parę opcji.");
     define("MARKET6", "Tutaj jest rynek z wyrobami jubilerskimi. Masz parę opcji.");
+    define("MARKET7", "Tutaj jest rynek z łupami z potworów. Masz parę opcji.");
     define("A_SHOW", "Zobacz oferty");
     define("A_ADD", "Dodaj ofertę");
     define("A_DELETE", "Skasuj wszystkie swoje oferty");
@@ -56,6 +57,7 @@ if (isset($_GET['view']) && $_GET['view'] == 'myoferts')
     define("MARKET4", "Rynek ziół. Moich ofert:");
     define("MARKET5", "Rynek komponentów astralnych. Moich ofert:");
     define("MARKET6", "Rynek wyrobów jubilerskich. Moich ofert:");
+    define("MARKET7", "Rynek łupów z potworów. Moich ofert:");
     define("DELETE_ALL", "Wycofaj wszystkie oferty z wszystkich rynków");
     define("YOU_WANT2", "Na pewno chcesz wycofać wszystkie oferty?");
     define("A_BACK", "Wróć");

@@ -1,3 +1,8 @@
+2011-09-27  Bartek thindil Jasicki  <thindil@tuxfamily.org>
+
+	* FEATURE,templates/layout1/lmarket.tpl, templates/lmarket.tpl, lmarket.php, languages/pl/market.php, market.php, tribearmor.php:
+	added market with monsters loots
+
 2011-09-26  Bartek thindil Jasicki  <thindil@tuxfamily.org>
 
 	* BUG,forums.php: 
