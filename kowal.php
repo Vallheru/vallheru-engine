@@ -332,7 +332,7 @@ if (isset ($_GET['kowal']) && $_GET['kowal'] == 'plany')
 	    $objOwned->MoveNext();
 	  }
 	$objOwned->Close();
-        $objPlans = $db -> Execute("SELECT `id`, `name`, `cost`, `level` FROM `smith` WHERE `owner`=0 AND `type`='".$_GET['dalej']."' ORDER BY `level` ASC");
+        $objPlans = $db -> Execute("SELECT * FROM `smith` WHERE `owner`=0 AND `type`='".$_GET['dalej']."' ORDER BY `level` ASC");
         $arrname = array();
         $arrcost = array();
         $arrlevel = array();
