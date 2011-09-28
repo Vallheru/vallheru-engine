@@ -7,7 +7,7 @@
  *   @copyright            : (C) 2004,2005,2006,2011 Vallheru Team based on Gamers-Fusion ver 2.5
  *   @author               : thindil <thindil@tuxfamily.org>
  *   @version              : 1.4
- *   @since                : 26.09.2011
+ *   @since                : 28.09.2011
  *
  */
 
@@ -428,7 +428,7 @@ if (isset($_GET['action']) && $_GET['action'] == 'explore')
 		    $intRoll4 = rand(0, ($intAmount-1));
 		    $objStaff = $db -> SelectLimit("SELECT `id`, `name` FROM `mage_items` WHERE `minlev`".$strSymbol."".$player -> level." AND `lang`='".$player -> lang."' AND `type`='T'", 1, $intRoll4);
 		    $objTest = $db->Execute("SELECT `id` FROM `equipment` WHERE `owner`=".$player->id." AND `name`='".$objStaff->fields['name']."'");
-		    if ((!in_array($objStaff->fields['id'], $arrStaffs)) && (!$objTest->fields['id']))
+		    if ((!in_array($objStaff->fields['id'], $arrMagic)) && (!$objTest->fields['id']))
 		      {
 			$arrMagic[] = $objStaff->fields['id'];
 		      }
