@@ -524,8 +524,9 @@
     {$Stwohand}: <select name="twohand">
         <option value="N">{$Ano}</option>
         <option value="Y">{$Ayes}</option>
-    </select>
-    <br /><input type="submit" value="{$Aadd}" /></form>
+    </select><br />
+    {$Selite}: <input type="text" value="0" name="elite" size="5"/><br />
+    <input type="submit" value="{$Aadd}" /></form>
 {/if}
 
 {if $View == "poczta"}

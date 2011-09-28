@@ -7,7 +7,7 @@
  *   @copyright            : (C) 2004,2005,2006,2011 Vallheru Team based on Gamers-Fusion ver 2.5
  *   @author               : thindil <thindil@tuxfamily.org>
  *   @version              : 1.4
- *   @since                : 21.09.2011
+ *   @since                : 28.09.2011
  *
  */
 
@@ -339,6 +339,11 @@ if (isset ($_GET['kowal']) && $_GET['kowal'] == 'plany')
         $arrid = array();
         while (!$objPlans -> EOF) 
 	  {
+	    if ($player->clas != 'Rzemieślnik' && $objPlans->fields['elite'] > 0)
+	      {
+		$objPlans->MoveNext();
+		continue;
+	      }
 	    if (!in_array($objPlans->fields['name'], $arrOwned))
 	      {
 		$arrname[] = $objPlans -> fields['name'];
@@ -366,8 +371,8 @@ if (isset ($_GET['kowal']) && $_GET['kowal'] == 'plany')
     if (isset($_GET['buy'])) 
     {
 	checkvalue($_GET['buy']);
-        $objPlan = $db -> Execute("SELECT * FROM smith WHERE id=".$_GET['buy']);
-        $objTest = $db -> Execute("SELECT id FROM smith WHERE owner=".$player -> id." AND name='".$objPlan -> fields['name']."'");
+        $objPlan = $db -> Execute("SELECT * FROM `smith` WHERE `id`=".$_GET['buy']);
+	$objTest = $db -> Execute("SELECT `id` FROM `smith` WHERE `owner`=".$player -> id." AND `name`='".$objPlan -> fields['name']."'");
         if ($objTest -> fields['id']) 
         {
             error (YOU_HAVE);
@@ -385,8 +390,12 @@ if (isset ($_GET['kowal']) && $_GET['kowal'] == 'plany')
         {
             error (NO_MONEY);
         }
-        $db -> Execute("INSERT INTO smith (owner, name, type, cost, amount, level, lang) VALUES(".$player -> id.", '".$objPlan -> fields['name']."', '".$objPlan -> fields['type']."', ".$objPlan -> fields['cost'].", ".$objPlan -> fields['amount'].", ".$objPlan -> fields['level'].", '".$objPlan -> fields['lang']."')");
-        $db -> Execute("UPDATE players SET credits=credits-".$objPlan -> fields['cost']." WHERE id=".$player -> id);
+	if ($objPlan->fields['elite'] > 0 && $player->clas != 'Rzemieślnik')
+	  {
+	    error("Tylko Rzemieślnik może kupować plany elitarnych przedmiotów.");
+	  }
+        $db -> Execute("INSERT INTO `smith` (`owner`, `name`, `type`, `cost`, `amount`, `level`, `twohand`, `elite`) VALUES(".$player -> id.", '".$objPlan -> fields['name']."', '".$objPlan -> fields['type']."', ".$objPlan -> fields['cost'].", ".$objPlan -> fields['amount'].", ".$objPlan -> fields['level'].", '".$objPlan -> fields['twohand']."', ".$objPlan->fields['elite'].")");
+        $db -> Execute("UPDATE `players` SET `credits`=`credits`-".$objPlan -> fields['cost']." WHERE `id`=".$player -> id);
         $smarty -> assign(array("Cost" => $objPlan -> fields['cost'], 
                                 "Plan" => $objPlan -> fields['name'],
                                 "Youpay" => YOU_PAY,
@@ -396,16 +405,13 @@ if (isset ($_GET['kowal']) && $_GET['kowal'] == 'plany')
 }
 
 /**
-* Making items
-*/
-if (isset ($_GET['kowal']) && $_GET['kowal'] == 'kuznia') 
-{
+ * Make normal and elite items (shared code)
+ */
+if (isset($_GET['kowal']) && ($_GET['kowal'] == 'kuznia' || $_GET['kowal'] == 'elite'))
+  {
     if (!isset($_GET['rob']) && !isset($_GET['konty'])) 
-    {
-        $objMaked = $db -> Execute("SELECT * FROM smith_work WHERE owner=".$player -> id);
-        $smarty -> assign(array("Maked" => $objMaked -> fields['id'],
-                                "Smithinfo" => SMITH_INFO,
-                                "Amakew" => A_MAKE_W,
+      {
+	$smarty -> assign(array("Amakew" => A_MAKE_W,
                                 "Amakea" => A_MAKE_A,
                                 "Amakeh" => A_MAKE_H,
                                 "Amakel" => A_MAKE_L,
@@ -415,16 +421,170 @@ if (isset ($_GET['kowal']) && $_GET['kowal'] == 'kuznia')
                                 "Iname" => I_NAME,
                                 "Ilevel" => I_LEVEL,
                                 "Iamount" => I_AMOUNT));
+	if (isset($_GET['type'])) 
+            {
+                $arrType = array('W', 'A', 'H', 'L', 'S');
+                if (!in_array($_GET['type'], $arrType)) 
+		  {
+                    error (ERROR);
+		  }
+            }
+      }
+    else
+      {
+        $arrEquip = $player -> equipment();
+        $arrRings = array('zręczności', 'siły', 'inteligencji');
+        $arrStat = array('agility', 'strength', 'inteli');
+        if ($arrEquip[9][2])
+	  {
+            $arrRingtype = explode(" ", $arrEquip[9][1]);
+            $intAmount = count($arrRingtype) - 1;
+            $intKey = array_search($arrRingtype[$intAmount], $arrRings);
+            if ($intKey != NULL)
+	      {
+                $strStat = $arrStat[$intKey];
+                $player -> $strStat = $player -> $strStat + $arrEquip[9][2];
+	      }
+	  }
+        if ($arrEquip[10][2])
+	  {
+            $arrRingtype = explode(" ", $arrEquip[10][1]);
+            $intAmount = count($arrRingtype) - 1;
+            $intKey = array_search($arrRingtype[$intAmount], $arrRings);
+            if ($intKey != NULL)
+	      {
+                $strStat = $arrStat[$intKey];
+                $player -> $strStat = $player -> $strStat + $arrEquip[10][2];
+	      }
+	  }
+	/**
+         * Add bonuses to ability
+         */
+        require_once('includes/abilitybonus.php');
+        $intSmith = abilitybonus('smith');
+      }
+    if (isset($_GET['ko'])) 
+    {
+        if ($player -> hp == 0) 
+	  {
+            error (YOU_DEAD);
+	  }
+	checkvalue($_GET['ko']);
+        $objMaked = $db -> Execute("SELECT `name` FROM `smith_work` WHERE `id`=".$_GET['ko']);
+        $smarty -> assign(array("Link" => "kowal.php?kowal=".$_GET['kowal']."&konty=".$_GET['ko'], 
+                                "Name" => $objMaked -> fields['name'],
+                                "Assignen" => ASSIGN_EN,
+                                "Senergy" => S_ENERGY,
+                                "Amake" => A_MAKE));
+        $objMaked -> Close();
+    }
+    if (isset($_GET['dalej'])) 
+      {
+        if ($player -> hp == 0) 
+	  {
+            error (YOU_DEAD);
+	  }
+	checkvalue($_GET['dalej']);
+        $objSmith = $db -> Execute("SELECT `name` FROM `smith` WHERE `id`=".$_GET['dalej']);
+        $smarty -> assign(array("Link" => "kowal.php?kowal=".$_GET['kowal']."&rob=".$_GET['dalej'], 
+                                "Name" => $objSmith -> fields['name'],
+                                "Assignen" => ASSIGN_EN,
+                                "Senergy" => S_ENERGY,
+                                "Amake" => A_MAKE,
+                                "Mcopper" => M_COPPER,
+                                "Mbronze" => M_BRONZE,
+                                "Mbrass" => M_BRASS,
+                                "Miron" => M_IRON,
+                                "Msteel" => M_STEEL));
+        $objSmith -> Close();
+      }
+    if (isset($_GET['konty'])) 
+      {
+	checkvalue($_GET['konty']);
+	checkvalue($_POST['razy']);
+        $objWork = $db -> Execute("SELECT * FROM `smith_work` WHERE `id`=".$_GET['konty']);
+        $objSmith = $db -> Execute("SELECT `name`, `type`, `cost`, `amount`, `level`, `twohand` FROM `smith` WHERE `owner`=".$player -> id." AND `name`='".$objWork -> fields['name']."'");
+        if ($player -> energy < $_POST['razy']) 
+	  {
+            error (NO_ENERGY);
+	  }
+        $intNeed = ($objWork -> fields['n_energy'] - $objWork -> fields['u_energy']);
+        if ($_POST['razy'] > $intNeed) 
+	  {
+            error (TOO_MUCH);
+	  }
+        if ($objWork -> fields['owner'] != $player -> id) 
+	  {
+            error (NO_ITEM);
+	  }
+      }
+    if (isset($_GET['rob'])) 
+      {
+	checkvalue($_GET['rob']);
+        if (!isset($_POST['razy']))
+	  {
+            error(HOW_MANY);
+	  }
+	checkvalue($_POST['razy']);
+        $arrMineral = array('copper', 'bronze', 'brass', 'iron', 'steel');
+        if (!in_array($_POST['mineral'], $arrMineral))
+	  {
+            error(ERROR);
+	  }
+        $objTest = $db -> Execute("SELECT `id` FROM `smith_work` WHERE `owner`=".$player -> id);
+        if ($objTest -> fields['id'])
+	  {
+            error(YOU_MAKE2);
+	  }
+        $objTest -> Close();
+	$objSmith = $db -> Execute("SELECT * FROM `smith` WHERE `id`=".$_GET['rob']);
+        $objMineral = $db -> Execute("SELECT ".$_POST['mineral']." FROM `minerals` WHERE `owner`=".$player -> id);
+        $strMineral = $_POST['mineral'];
+	if ($player -> energy < $_POST['razy']) 
+	  {
+            error (NO_ENERGY);
+	  }
+        if ($objSmith -> fields['owner'] != $player -> id) 
+	  {
+            error (NO_PLANS);
+	  }
+      }
+  }
+
+/**
+ * Function add item to player equipment
+ */
+function additem($strType, $strName, $intWt, $intPower, $intAgi, $intCost, $intPid, $intLevel, $intRepair, $strTwohand, $intAmount = 1)
+{
+  global $db;
+
+  $test = $db -> Execute("SELECT `id` FROM `equipment` WHERE `name`='".$strName."' AND `wt`=".$intWt." AND `type`='".$strType."' AND `status`='U' AND `owner`=".$intPid." AND `power`=".$intPower." AND `zr`=".$intAgi." AND `szyb`=0 AND `maxwt`=".$intWt." AND `poison`=0 AND `cost`=".$intCost);
+  if (!$test -> fields['id']) 
+    {
+      $db -> Execute("INSERT INTO `equipment` (`owner`, `name`, `power`, `type`, `cost`, `zr`, `wt`, `minlev`, `maxwt`, `amount`, `magic`, `poison`, `szyb`, `twohand`, `repair`) VALUES(".$intPid.", '".$strName."', ".$intPower.", '".$strType."', ".$intCost.", ".$intAgi.", ".$intWt.", ".$intLevel.", ".$intWt.", ".$intAmount.", 'N', 0, 0, '".$strTwohand."', ".$intRepair.")");
+    } 
+  else 
+    {
+      $db -> Execute("UPDATE `equipment` SET `amount`=`amount`+".$intAmount." WHERE `id`=".$test -> fields['id']);
+    }
+  $test -> Close();
+}
+
+/**
+* Making items
+*/
+if (isset ($_GET['kowal']) && $_GET['kowal'] == 'kuznia') 
+{
+    if (!isset($_GET['rob']) && !isset($_GET['konty'])) 
+    {
+        $objMaked = $db -> Execute("SELECT * FROM `smith_work` WHERE `owner`=".$player->id." AND `elite`=0");
+        $smarty -> assign(array("Maked" => $objMaked -> fields['id'],
+				"Smithinfo" => SMITH_INFO));
         if (!$objMaked -> fields['id']) 
         {
             if (isset($_GET['type'])) 
             {
-                $arrType = array('W', 'A', 'H', 'L', 'S');
-                if (!in_array($_GET['type'], $arrType)) 
-                {
-                    error (ERROR);
-                }
-                $objSmith = $db -> Execute("SELECT id, name, amount, level FROM smith WHERE owner=".$player-> id." AND type='".$_GET['type']."' ORDER BY level ASC");
+                $objSmith = $db -> Execute("SELECT `id`, `name`, `amount`, `level` FROM `smith` WHERE `owner`=".$player-> id." AND `type`='".$_GET['type']."' AND `elite`=0 ORDER BY `level` ASC");
                 $arrname = array();
                 $arrid = array();
                 $arrlevel = array();
@@ -462,97 +622,15 @@ if (isset ($_GET['kowal']) && $_GET['kowal'] == 'kuznia')
         }
         $objMaked -> Close();
     }
-        else
-    {
-        $arrEquip = $player -> equipment();
-        $arrRings = array(R_AGI, R_STR, R_INT);
-        $arrStat = array('agility', 'strength', 'inteli');
-        if ($arrEquip[9][2])
-        {
-            $arrRingtype = explode(" ", $arrEquip[9][1]);
-            $intAmount = count($arrRingtype) - 1;
-            $intKey = array_search($arrRingtype[$intAmount], $arrRings);
-            if ($intKey != NULL)
-            {
-                $strStat = $arrStat[$intKey];
-                $player -> $strStat = $player -> $strStat + $arrEquip[9][2];
-            }
-        }
-        if ($arrEquip[10][2])
-        {
-            $arrRingtype = explode(" ", $arrEquip[10][1]);
-            $intAmount = count($arrRingtype) - 1;
-            $intKey = array_search($arrRingtype[$intAmount], $arrRings);
-            if ($intKey != NULL)
-            {
-                $strStat = $arrStat[$intKey];
-                $player -> $strStat = $player -> $strStat + $arrEquip[10][2];
-            }
-        }
-    }
-    if (isset($_GET['ko'])) 
-    {
-        if ($player -> hp == 0) 
-        {
-            error (YOU_DEAD);
-        }
-	checkvalue($_GET['ko']);
-        $objMaked = $db -> Execute("SELECT name FROM smith_work WHERE id=".$_GET['ko']);
-        $smarty -> assign(array("Link" => "kowal.php?kowal=kuznia&konty=".$_GET['ko'], 
-                                "Name" => $objMaked -> fields['name'],
-                                "Assignen" => ASSIGN_EN,
-                                "Senergy" => S_ENERGY,
-                                "Amake" => A_MAKE));
-        $objMaked -> Close();
-    }
-    if (isset($_GET['dalej'])) 
-    {
-        if ($player -> hp == 0) 
-        {
-            error (YOU_DEAD);
-        }
-	checkvalue($_GET['dalej']);
-        $objSmith = $db -> Execute("SELECT name FROM smith WHERE id=".$_GET['dalej']);
-        $smarty -> assign(array("Link" => "kowal.php?kowal=kuznia&rob=".$_GET['dalej'], 
-                                "Name" => $objSmith -> fields['name'],
-                                "Assignen" => ASSIGN_EN,
-                                "Senergy" => S_ENERGY,
-                                "Amake" => A_MAKE,
-                                "Mcopper" => M_COPPER,
-                                "Mbronze" => M_BRONZE,
-                                "Mbrass" => M_BRASS,
-                                "Miron" => M_IRON,
-                                "Msteel" => M_STEEL));
-        $objSmith -> Close();
-    }
     /**
      * Continue making items
      */
     if (isset($_GET['konty'])) 
-    {
-	checkvalue($_GET['konty']);
-	checkvalue($_POST['razy']);
-        $objWork = $db -> Execute("SELECT * FROM smith_work WHERE id=".$_GET['konty']);
-        $objSmith = $db -> Execute("SELECT name, type, cost, amount, level, twohand FROM smith WHERE owner=".$player -> id." AND name='".$objWork -> fields['name']."'");
-        if ($player -> energy < $_POST['razy']) 
-        {
-            error (NO_ENERGY);
-        }
-        $intNeed = ($objWork -> fields['n_energy'] - $objWork -> fields['u_energy']);
-        if ($_POST['razy'] > $intNeed) 
-        {
-            error (TOO_MUCH);
-        }
-        if ($objWork -> fields['owner'] != $player -> id) 
-        {
-            error (NO_ITEM);
-        }
-
-        /**
-         * Add bonuses to ability
-         */
-        require_once('includes/abilitybonus.php');
-        $intSmith = abilitybonus('smith');
+      {
+	if ($objWork->fields['elite'] > 0)
+	  {
+	    error("Nie możesz wykonywać tutaj elitarnego ekwipunku.");
+	  }
 
         $intItems = 0;
         $intGainexp = 0;
@@ -616,16 +694,7 @@ if (isset ($_GET['kowal']) && $_GET['kowal'] == 'kuznia')
             $intGainexp = ceil($intGainexp);
             if ($intItems) 
 	      {
-		$test = $db -> Execute("SELECT `id` FROM `equipment` WHERE `name`='".$arrMaked['name']."' AND `wt`=".$arrMaked['wt']." AND `type`='".$arrItem['type']."' AND `status`='U' AND `owner`=".$player->id." AND `power`=".$arrMaked['power']." AND `zr`=".$arrMaked['zr']." AND `szyb`=".$arrItem['szyb']." AND `maxwt`=".$arrMaked['wt']." AND `poison`=0 AND `cost`=".$intCost) or die($db -> ErrorMsg());
-		if (!$test->fields['id']) 
-		  {
-		    $db -> Execute("INSERT INTO `equipment` (`owner`, `name`, `power`, `type`, `cost`, `zr`, `wt`, `minlev`, `maxwt`, `amount`, `magic`, `poison`, `szyb`, `twohand`, `repair`) VALUES(".$player->id.", '".$arrMaked['name']."', ".$arrMaked['power'].", '".$arrItem['type']."', ".$intCost.", ".$arrMaked['zr'].", ".$arrMaked['wt'].", ".$arrItem['level'].", ".$arrMaked['wt'].", 1, 'N', 0,".$arrItem['szyb'].", '".$arrItem['twohand']."', ".$arrMaked['repaircost'].")");
-		  } 
-		else 
-		  {
-		    $db->Execute("UPDATE `equipment` SET `amount`=`amount`+1 WHERE `id`=".$test -> fields['id']);
-		  }
-		$test -> Close();
+		additem($arrItem['type'], $arrMaked['name'], $arrMaked['wt'], $arrMaked['power'], $arrMaked['zr'], $intCost, $player->id, $arrItem['level'], $arrMaked['repaircost'], $arrItem['twohand']);
 		if ($arrMaked['zr'] < 0)
 		  {
 		    $arrMaked['zr'] = abs($arrMaked['zr']);
@@ -674,37 +743,31 @@ if (isset ($_GET['kowal']) && $_GET['kowal'] == 'kuznia')
      */
     if (isset($_GET['rob'])) 
     {
-	checkvalue($_GET['rob']);
-        if (!isset($_POST['razy']))
-        {
-            error(HOW_MANY);
-        }
-	checkvalue($_POST['razy']);
-        $arrMineral = array('copper', 'bronze', 'brass', 'iron', 'steel');
-        if (!in_array($_POST['mineral'], $arrMineral))
-        {
-            error(ERROR);
-        }
-        $objTest = $db -> Execute("SELECT `id` FROM `smith_work` WHERE `owner`=".$player -> id);
-        if ($objTest -> fields['id'])
-        {
-            error(YOU_MAKE2);
-        }
-        $objTest -> Close();
-        $objSmith = $db -> Execute("SELECT owner, name, type, cost, amount, level, twohand FROM smith WHERE id=".$_GET['rob']);
-        $objMineral = $db -> Execute("SELECT ".$_POST['mineral']." FROM minerals WHERE owner=".$player -> id);
-        $strMineral = $_POST['mineral'];
         if ($objSmith -> fields['type'] == 'A')
         {
             $intAmount = floor($_POST['razy'] / ($objSmith -> fields['level'] * 2));
             $intEnergy = $objSmith -> fields['level'] * 2;
-            $intEnergy2 = $intAmount * ($objSmith -> fields['level'] * 2);
+	    if ($intAmount)
+	      {
+		$intEnergy2 = $intAmount * ($objSmith -> fields['level'] * 2);
+	      }
+	    else
+	      {
+		$intEnergy2 = $intEnergy;
+	      }
         }
             else
         {
             $intAmount = floor($_POST['razy'] / $objSmith -> fields['level']);
             $intEnergy = $objSmith -> fields['level'];
-            $intEnergy2 = $intAmount * $objSmith -> fields['level'];
+	    if ($intAmount)
+	      {
+		$intEnergy2 = $intAmount * $objSmith -> fields['level'];
+	      }
+	    else
+	      {
+		$intEnergy2 = $intEnergy;
+	      }
         }
         if ($intAmount)
         {
@@ -718,20 +781,10 @@ if (isset ($_GET['kowal']) && $_GET['kowal'] == 'kuznia')
         {
             error (NO_MAT);
         }
-        if ($player -> energy < $_POST['razy']) 
-        {
-            error (NO_ENERGY);
-        }
-        if ($objSmith -> fields['owner'] != $player -> id) 
-        {
-            error (NO_PLANS);
-        }
-
-        /**
-         * Add bonuses to ability
-         */
-        require_once('includes/abilitybonus.php');
-        $intSmith = abilitybonus('smith');
+	if ($objSmith->fields['elite'] > 0)
+	  {
+	    error("Nie możesz wykonywać tutaj elitarnego ekwipunku.");
+	  }
 
         $intItems = 0;
         $intGainexp = 0;
@@ -807,16 +860,7 @@ if (isset ($_GET['kowal']) && $_GET['kowal'] == 'kuznia')
             }
 	    for ($i = 0; $i < count($arrMaked); $i++)
 	      {
-		$test = $db -> Execute("SELECT `id` FROM `equipment` WHERE `name`='".$arrMaked[$i]['name']."' AND `wt`=".$arrMaked[$i]['wt']." AND `type`='".$arrItem['type']."' AND `status`='U' AND `owner`=".$player->id." AND `power`=".$arrMaked[$i]['power']." AND `zr`=".$arrMaked[$i]['zr']." AND `szyb`=".$arrItem['szyb']." AND `maxwt`=".$arrMaked[$i]['wt']." AND `poison`=0 AND `cost`=".$intCost) or die($db -> ErrorMsg());
-		if (!$test->fields['id']) 
-		  {
-		    $db -> Execute("INSERT INTO `equipment` (`owner`, `name`, `power`, `type`, `cost`, `zr`, `wt`, `minlev`, `maxwt`, `amount`, `magic`, `poison`, `szyb`, `twohand`, `repair`) VALUES(".$player->id.", '".$arrMaked[$i]['name']."', ".$arrMaked[$i]['power'].", '".$arrItem['type']."', ".$intCost.", ".$arrMaked[$i]['zr'].", ".$arrMaked[$i]['wt'].", ".$arrItem['level'].", ".$arrMaked[$i]['wt'].", ".$arrAmount[$i].", 'N', 0,".$arrItem['szyb'].", '".$arrItem['twohand']."', ".$arrMaked[$i]['repaircost'].")");
-		  } 
-		else 
-		  {
-		    $db->Execute("UPDATE `equipment` SET `amount`=`amount`+".$arrAmount[$i]." WHERE `id`=".$test -> fields['id']);
-		  }
-		$test -> Close();
+		additem($arrItem['type'], $arrMaked[$i]['name'], $arrMaked[$i]['wt'], $arrMaked[$i]['power'], $arrMaked[$i]['zr'], $intCost, $player->id, $arrItem['level'], $arrMaked[$i]['repaircost'], $arrItem['twohand'], $arrAmount[$i]);
 		if ($arrMaked[$i]['zr'] > 0)
 		  {
 		    $arrMaked[$i]['zr'] = 0 - $arrMaked[$i]['zr'];
@@ -850,6 +894,369 @@ if (isset ($_GET['kowal']) && $_GET['kowal'] == 'kuznia')
             $smarty -> assign ("Message", YOU_WORK.$objSmith -> fields['name'].YOU_USE.$_POST['razy'].AND_MAKE.$procent.TO_END.$need.S_ENERGY);
 	  }
         $db -> Execute("UPDATE `minerals` SET `".$_POST['mineral']."`=`".$_POST['mineral']."`-".$intAmineral." WHERE `owner`=".$player -> id);
+        $db -> Execute("UPDATE `players` SET `energy`=`energy`-".$intEnergy2." WHERE `id`=".$player -> id);
+    }
+}
+
+/**
+* Making elite items
+*/
+if (isset ($_GET['kowal']) && $_GET['kowal'] == 'elite') 
+{
+    if ($player->clas != 'Rzemieślnik')
+      {
+	error('Tylko rzemieślnik może wykonywać elitarny ekwipunek.');
+      }
+    if (!isset($_GET['rob']) && !isset($_GET['konty'])) 
+    {
+        $objMaked = $db -> Execute("SELECT * FROM `smith_work` WHERE `owner`=".$player->id." AND `elite`>0");
+        $smarty -> assign(array("Maked" => $objMaked -> fields['id'],
+				"Smithinfo" => "Tutaj możesz wykonywać przedmioty co do których masz plany. Aby wykonać przedmiot, musisz posiadać również odpowiednią ilość surowców. Każda próba kosztuje ciebie 10 energii na poziom przedmiotu. Nawet za nieudaną próbę dostajesz 0,01 do umiejętności."));
+        if (!$objMaked -> fields['id']) 
+        {
+            if (isset($_GET['type'])) 
+            {
+                $objSmith = $db -> Execute("SELECT * FROM `smith` WHERE `owner`=".$player-> id." AND `type`='".$_GET['type']."' AND `elite`>0 ORDER BY `level` ASC");
+                $arrname = array();
+                $arrid = array();
+                $arrlevel = array();
+                $arrAmount = array();
+		$arrLoot = array();
+                while (!$objSmith -> EOF) 
+                {
+                    $arrname[] = $objSmith -> fields['name'];
+                    $arrid[] = $objSmith -> fields['id'];
+                    $arrlevel[] = $objSmith -> fields['level'];
+                    $arrAmount[] = $objSmith -> fields['amount'];
+		    $objLoot = $db->Execute("SELECT `lootnames` FROM `monsters` WHERE `id`=".$objSmith->fields['elite']);
+		    $arrTmp = explode(";", $objLoot->fields['lootnames']);
+		    if ($_GET['type'] == 'A' || $_GET['type'] == 'W')
+		      {
+			$arrLoot[] = $arrTmp[0].":8 ".$arrTmp[1].":4 ".$arrTmp[2].":2 ".$arrTmp[3].":1";
+		      }
+		    else
+		      {
+			$arrLoot[] = $arrTmp[0].":4 ".$arrTmp[1].":3 ".$arrTmp[2].":2 ".$arrTmp[3].":1";
+		      }
+		    $objLoot->Close();
+                    $objSmith -> MoveNext();
+                }
+                $objSmith -> Close();
+                $smarty -> assign(array("Name" => $arrname, 
+                                        "Id" => $arrid, 
+                                        "Level" => $arrlevel, 
+                                        "Amount" => $arrAmount,
+					"Tloot" => "Części potwora",
+					"Loot" => $arrLoot));
+            }
+        } 
+            else 
+        {
+            $procent = (($objMaked -> fields['u_energy'] / $objMaked -> fields['n_energy']) * 100);
+            $procent = round($procent,"0");
+            $need = ($objMaked -> fields['n_energy'] - $objMaked -> fields['u_energy']);
+            $smarty -> assign(array("Id" => $objMaked -> fields['id'], 
+                                    "Name" => $objMaked -> fields['name'], 
+                                    "Percent" => $procent, 
+                                    "Need" => $need,
+                                    "Info3" => INFO3,
+                                    "Ipercent" => I_PERCENT,
+                                    "Ienergy" => I_ENERGY,
+                                    "Iname" => I_NAME));
+        }
+        $objMaked -> Close();
+    }
+    /**
+     * Continue making items
+     */
+    if (isset($_GET['konty'])) 
+      {
+	if ($objWork->fields['elite'] == 0)
+	  {
+	    error("Nie możesz wykonywać tutaj zwykłego ekwipunku.");
+	  }
+
+        $intItems = 0;
+        $intGainexp = 0;
+        $intAbility = 0;
+        $intCost = ceil($objSmith -> fields['cost'] / 200);
+        $arrName = array(M_COPPER, M_BRONZE, M_BRASS, M_IRON, M_STEEL);
+        $arrMaxbonus = array(21, 25, 30, 35, 40);
+        if ($objSmith -> fields['type'] == 'W' || $objSmith -> fields['type'] == 'A')
+        {
+            $arrDur = array(50, 90, 170, 330, 650);
+        }
+            else
+        {
+            $arrDur = array(30, 50, 90, 170, 330);
+        }
+	if ($objSmith -> fields['type'] == 'A')
+        {
+            $intAgility = floor($objSmith -> fields['level'] / 2);
+            $intExp = 4;
+        }
+	elseif ($objSmith -> fields['type'] == 'L')
+        {
+            $intAgility = floor($objSmith -> fields['level'] / 5);
+            $intExp = 2;
+        }
+	else
+        {
+            $intAgility = 0;
+            $intExp = 2;
+        }
+        $arrMineral = array('copper', 'bronze', 'brass', 'iron', 'steel');
+        $intKey = array_search($objWork -> fields['mineral'], $arrMineral);
+	$intMaxdur = $arrMaxdur[$intKey];
+	$intMaxbonus = $arrMaxbonus[$intKey] * $objSmith->fields['level'];
+        $strName = $objSmith -> fields['name']." ".$arrName[$intKey];
+        $intChance = $player->smith / $objSmith -> fields['level'];
+        if ($intChance > 90)
+        {
+            $intChance = 90;
+        }
+        if ($_POST['razy'] == $intNeed) 
+        {
+	    $intRoll = rand(1, 100);
+	    if ($intRoll < $intChance)
+	      {
+		$intPower = floor(rand(1, $player->smith) + ($player->strength / 100));
+		if ($intPower > $intMaxbonus)
+		  {
+		    $intPower = $intMaxbonus;
+		  }
+		$intGainexp = ($objSmith->fields['level'] * (100 + $player->smith / 5));
+		$intAbility = ($objSmith->fields['level'] / 50);
+		$intItems++;
+	      }
+            if ($intItems) 
+	      {
+		$intGainexp = $intGainexp * $intExp;
+		$intAbility = $intAbility * $intExp;
+		$arrRepair = array(1, 4, 16, 64, 256);
+		if ($objSmith->fields['type'] == 'W' || $objSmith->fields['type'] == 'A')
+		  {
+		    $intRepaircost = $arrItem['level'] * $arrRepair[$intKey] * 2;
+		  }
+		else
+		  {
+		    $intRepaircost = $arrItem['level'] * $arrRepair[$intKey] * 1;
+		  }
+		additem($objSmith->fields['type'], $strName, $intMaxdur, $intPower, $intAgility, $intCost, $player->id, $objSmith->fields['level'], $intRepaircost, $objSmith->fields['twohand']);
+                $smarty -> assign ("Message", YOU_MAKE.$arrMaked['name']."(+ ".$arrMaked['power'].") (".$intAgility."% zr) (".$arrMaked['wt']."/".$arrMaked['wt'].")".AND_GAIN2.$intGainexp.AND_EXP2.$intAbility.IN_SMITH);
+	      } 
+	    else 
+	      {
+		$intAbility = 0.02;
+                $intGainexp = 0;
+                $smarty -> assign ("Message", YOU_TRY.$strName.BUT_FAIL.$intAbility.IN_SMITH);
+	      }
+            $db -> Execute("DELETE FROM `smith_work` WHERE `id`=".$objWork->fields['id']);
+            checkexp($player->exp, $intGainexp, $player->level, $player->race, $player->user, $player->id, 0, 0, $player->id, 'ability', $intAbility);
+        } 
+            else 
+        {
+            $uenergia = ($_POST['razy'] + $objWork -> fields['u_energy']);
+            if ($objSmith -> fields['type'] == 'A')
+            {
+                $intEnergy = $objSmith -> fields['level'] * 2;
+            }
+                else
+            {
+                $intEnergy = $objSmith -> fields['level'];
+            }
+            $procent = (($uenergia / $intEnergy) * 100);
+            $procent = round($procent, "0");
+            $need = $objWork -> fields['n_energy'] - $uenergia;
+            $db -> Execute("UPDATE `smith_work` SET `u_energy`=`u_energy`+".$_POST['razy']." WHERE `id`=".$objWork->fields['id']);
+            $smarty -> assign ("Message", YOU_WORK.$strName.NEXT_EN.$_POST['razy'].NOW_IS.$procent.YOU_NEED2.$need.S_ENERGY);
+        }
+        $db -> Execute("UPDATE `players` SET `energy`=`energy`-".$_POST['razy']." WHERE `id`=".$player -> id);
+    }
+    /**
+     * Start making items
+     */
+    if (isset($_GET['rob'])) 
+    {
+        if ($objSmith -> fields['type'] == 'A')
+        {
+            $intAmount = floor($_POST['razy'] / ($objSmith -> fields['level'] * 10));
+            $intEnergy = $objSmith -> fields['level'] * 10;
+        }
+            else
+        {
+	    if ($objSmith->fields['type'] == 'W')
+	      {
+		$intAmount = floor($_POST['razy'] / ($objSmith -> fields['level'] * 10));
+		$intEnergy = $objSmith -> fields['level'] * 10;
+	      }
+	    else
+	      {
+		$intAmount = floor($_POST['razy'] / ($objSmith -> fields['level'] * 5));
+		$intEnergy = $objSmith -> fields['level'] * 5;
+	      }
+        }
+        if ($intAmount)
+        {
+            $intAmineral = $intAmount * $objSmith -> fields['amount'];
+	    $intEnergy2 = $intAmount * $intEnergy;
+	    if ($objSmith->fields['type'] == 'A' || $objSmith->fields['type'] == 'W')
+	      {
+		$arrLoots = array(8 * $intAmount, 4 * $intAmount, 3 * $intAmount, $intAmount);
+	      }
+	    else
+	      {
+		$arrLoots = array(4 * $intAmount, 3 * $intAmount, 2 * $intAmount, $intAmount);		
+	      }
+        }
+	else
+        {
+            $intAmineral = $objSmith -> fields['amount'];
+	    $intEnergy2 = $intEnergy;
+	    if ($objSmith->fields['type'] == 'A' || $objSmith->fields['type'] == 'W')
+	      {
+		$arrLoots = array(8, 4, 3, 1);
+	      }
+	    else
+	      {
+		$arrLoots = array(4, 3, 2, 1);
+	      }
+        }
+        if ($intAmineral > $objMineral -> fields[$strMineral])
+        {
+            error (NO_MAT);
+        }
+	//Check if we have enough loots
+	$objLoot = $db->Execute("SELECT `lootnames` FROM `monsters` WHERE `id`=".$objSmith->fields['elite']);
+	$arrLootsname = explode(";", $objLoot->fields['lootnames']);
+	for ($i = 0; $i < 4; $i++)
+	  {
+	    $objAmount = $db->Execute("SELECT `amount` FROM `equipment` WHERE `owner`=".$player->id." AND `name`='".$arrLootsname[$i]."' AND status='U'");
+	    if (!$objAmount->fields['amount'] || $objAmount->fields['amount'] < $arrLoots[$i])
+	      {
+		error("Nie masz wystarczającej ilości ".$arrLootsname[$i].".");
+	      }
+	    $objAmount->Close();
+	  }
+	if ($objSmith->fields['elite'] == 0)
+	  {
+	    error("Nie możesz wykonywać tutaj zwykłego ekwipunku.");
+	  }
+
+        $intItems = 0;
+        $intGainexp = 0;
+        $intAbility = 0;
+        $intCost = ceil($objSmith -> fields['cost'] / 200);
+        $arrName = array(M_COPPER, M_BRONZE, M_BRASS, M_IRON, M_STEEL);
+        $arrMaxbonus = array(21, 25, 30, 35, 40);
+	$intMaxbonus = $arrMaxbonus[$intKey] * $objSmith->fields['level'];
+        if ($objSmith -> fields['type'] == 'W' || $objSmith -> fields['type'] == 'A')
+        {
+            $arrDur = array(50, 90, 170, 330, 650);
+        }
+            else
+        {
+            $arrDur = array(30, 50, 90, 170, 330);
+        }
+        if ($objSmith -> fields['type'] == 'A')
+        {
+            $intAgility = floor($objSmith -> fields['level'] / 2);
+            $intExp = 4;
+        }
+            elseif ($objSmith -> fields['type'] == 'L')
+        {
+            $intAgility = floor($objSmith -> fields['level'] / 5);
+            $intExp = 2;
+        }
+            else
+        {
+            $intAgility = 0;
+            $intExp = 1;
+        }
+        $intKey = array_search($_POST['mineral'], $arrMineral);
+	$intMaxdur = $arrDur[$intKey];
+	$intMaxbonus = $arrMaxbonus[$intKey] * $objSmith->fields['level'];
+        $strName = $objSmith -> fields['name']." ".$arrName[$intKey];
+        $intChance = $player->smith / $objSmith -> fields['level'];
+        if ($intChance > 90)
+        {
+            $intChance = 90;
+        }
+        if ($intAmount > 0) 
+	  {
+	    $arrPower = array();
+	    $arrAmount = array();
+            for ($i = 1; $i <= $intAmount; $i++) 
+	      {
+		$intRoll = rand(1, 100);
+		if ($intRoll < $intChance)
+		  {
+		    $intPower = floor(rand(1, $player->smith) + ($player->strength / 100));
+		    if ($intPower > $intMaxbonus)
+		      {
+			$intPower = $intMaxbonus;
+		      }
+		    $intIndex = array_search($intPower, $arrPower);
+		    if ($intIndex === FALSE)
+		      {
+			$arrPower[] = $intPower;
+			$arrAmount[] = 1;
+		      }
+		    else
+		      {
+			$arrAmount[$intIndex]++;
+		      }
+		    $intGainexp += ($objSmith->fields['level'] * (100 + $player->smith / 5));
+		    $intAbility += ($objSmith->fields['level'] / 50);
+		    $intItems++;
+		  }
+		else
+		  {
+		    $intGainexp += 0.01;
+		  }
+	      }
+	    $arrMaked = array();
+	    $arrRepair = array(1, 4, 16, 64, 256);
+            $intRepaircost = $objSmith->fields['level'] * $arrRepair[$intKey] * 2;
+	    for ($i = 0; $i < count($arrPower); $i++)
+	      {
+		additem($objSmith->fields['type'], $strName, $intMaxdur, $arrPower[$i], $intAgility, $intCost, $player->id, $objSmith->fields['level'], $intRepaircost, $objSmith->fields['twohand'], $arrAmount[$i]);
+		$arrMaked[] = array("name" => $strName, "power" => $arrPower[$i], "zr" => (0 - $intAgility), "wt" => $intMaxdur);
+	      }
+            $intGainexp = ceil($intGainexp);
+	    $intAbility = $intAbility * $intExp;
+	    $intGainexp = $intGainexp * $intExp;
+            $smarty->assign(array("Message" => YOU_MAKE.$objSmith -> fields['name']."</b> <b>".$intItems.AND_GAIN2.$intGainexp.AND_EXP2.$intAbility.IN_SMITH,
+				  "Youmade" => "Wykonane przedmioty:",
+				  "Iagi" => "zr",
+				  "Iamount" => "ilość",
+				  "Items" => $arrMaked,
+				  "Amount" => $arrAmount,
+				  "Amt" => $intItems));
+            checkexp($player -> exp, $intGainexp, $player -> level, $player -> race, $player -> user, $player -> id, 0, 0, $player -> id, 'ability', $intAbility); 
+	  } 
+	else 
+	  {
+            $procent = (($_POST['razy'] / $intEnergy) * 100);
+            $procent = round($procent,"0");
+            $need = ($intEnergy - $_POST['razy']);
+            $db -> Execute("INSERT INTO `smith_work` (`owner`, `name`, `u_energy`, `n_energy`, `mineral`, `elite`) VALUES(".$player -> id.", '".$objSmith -> fields['name']."', ".$_POST['razy'].", ".$intEnergy.", '".$_POST['mineral']."', ".$objSmith->fields['elite'].")");
+            $smarty -> assign ("Message", YOU_WORK.$objSmith -> fields['name'].YOU_USE.$_POST['razy'].AND_MAKE.$procent.TO_END.$need.S_ENERGY);
+	  }
+        $db -> Execute("UPDATE `minerals` SET `".$_POST['mineral']."`=`".$_POST['mineral']."`-".$intAmineral." WHERE `owner`=".$player -> id);
+	for ($i = 0; $i < 4; $i++)
+	  {
+	    $objAmount = $db->Execute("SELECT `id`, `amount` FROM `equipment` WHERE `owner`=".$player->id." AND `name`='".$arrLootsname[$i]."' AND status='U'");
+	    if ($objAmount->fields['amount'] == $arrLoots[$i])
+	      {
+		$db->Execute("DELETE FROM `equipment` WHERE `id`=".$objAmount->fields['id']);
+	      }
+	    else
+	      {
+		$db->Execute("UPDATE `equipment` SET `amount`=`amount`-".$arrLoots[$i]." WHERE `id`=".$objAmount->fields['id']);
+	      }
+	    $objAmount->Close();
+	  }
         $db -> Execute("UPDATE `players` SET `energy`=`energy`-".$intEnergy2." WHERE `id`=".$player -> id);
     }
 }
@@ -1022,10 +1429,19 @@ if (isset($_GET['kowal']) && $_GET['kowal'] == 'astral')
 if (!isset($_GET['kowal'])) 
 {
     $_GET['kowal'] = '';
+    if ($player->clas == 'Rzemieślnik')
+      {
+	$strElite = "Wykonaj elitarny ekwipunek";
+      }
+    else
+      {
+	$strElite = '';
+      }
     $smarty -> assign(array("Smithinfo" => SMITH_INFO,
                             "Aplans" => A_PLANS,
                             "Asmith" => A_SMITH,
-                            "Aastral" => A_ASTRAL));
+                            "Aastral" => A_ASTRAL,
+			    "Aelite" => $strElite));
     $objAstral = $db -> SelectLimit("SELECT `amount` FROM `astral_plans` WHERE `owner`=".$player -> id." AND `name` LIKE 'P%' AND `location`='V'", 1);
     if ($objAstral -> fields['amount'])
     {

@@ -1196,20 +1196,21 @@ if (isset ($_GET['view']) && $_GET['view'] == 'monster')
 if (isset ($_GET['view']) && $_GET['view'] == 'kowal') 
 {
     $smarty -> assign(array("Sname" => S_NAME,
-        "Scost" => S_COST,
-        "Samount" => S_AMOUNT,
-        "Stwohand" => S_TWOHAND,
-        "Ayes" => YES,
-        "Ano" => NO,
-        "Slevel" => S_LEVEL,
-        "Stype" => S_TYPE,
-        "Sweapon" => S_WEAPON,
-        "Sarmor" => S_ARMOR,
-        "Shelmet" => S_HELMET,
-        "Sshield" => S_SHIELD,
-        "Slegs" => S_LEGS,
-        "Stwohand" => S_TWOHAND,
-        "Aadd" => A_ADD));
+			    "Scost" => S_COST,
+			    "Samount" => S_AMOUNT,
+			    "Stwohand" => S_TWOHAND,
+			    "Ayes" => YES,
+			    "Ano" => NO,
+			    "Slevel" => S_LEVEL,
+			    "Stype" => S_TYPE,
+			    "Sweapon" => S_WEAPON,
+			    "Sarmor" => S_ARMOR,
+			    "Shelmet" => S_HELMET,
+			    "Sshield" => S_SHIELD,
+			    "Slegs" => S_LEGS,
+			    "Stwohand" => S_TWOHAND,
+			    "Aadd" => A_ADD,
+			    "Selite" => "Elitarny"));
     if (isset ($_GET['step']) && $_GET['step'] == 'kowal') 
     {
         if (!$_POST['nazwa'] || !$_POST['cena'] || !$_POST['poziom']) 
@@ -1217,7 +1218,8 @@ if (isset ($_GET['view']) && $_GET['view'] == 'kowal')
             error (EMPTY_FIELDS);
         }
         $strName = $db -> qstr($_POST['nazwa'], get_magic_quotes_gpc());
-        $db -> Execute("INSERT INTO smith (name, cost, level, amount, type, twohand) VALUES(".$strName.", ".$_POST['cena'].", ".$_POST['poziom'].", ".$_POST['amount'].", '".$_POST['type']."', '".$_POST['twohand']."')");
+	$_POST['elite'] = intval($_POST['elite']);
+        $db -> Execute("INSERT INTO `smith` (`name`, `cost`, `level`, `amount`, `type`, `twohand`, `elite`) VALUES(".$strName.", ".$_POST['cena'].", ".$_POST['poziom'].", ".$_POST['amount'].", '".$_POST['type']."', '".$_POST['twohand']."', ".$_POST['elite'].")");
     }
 }
 

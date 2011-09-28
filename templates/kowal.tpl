@@ -8,6 +8,9 @@
 		<ul class="submenu">
 			<li><a href="kowal.php?kowal=plany">{$Aplans}</a></li>
 			<li><a href="kowal.php?kowal=kuznia">{$Asmith}</a></li>
+			{if $Aelite != ''}
+        		    <li><a href="kowal.php?kowal=elite">{$Aelite}</a></li>
+    			{/if}
 			{if $Astral == "Y"}<li><a href="kowal.php?kowal=astral">{$Aastral}</a></li>{/if}
 		</ul>
 	{/if}
@@ -57,7 +60,7 @@
 		{/if}
 	{/if}
 	
-	{if $Smith == "kuznia"}
+	{if $Smith == "kuznia" || $Smith == "elite"}
 		{if $Make == "" && $Continue == ""}
 			<header>
 				<h1>{$Title}</h1>
@@ -65,11 +68,11 @@
 			</header>
 			{if $Maked == ""}
 				<ul>
-					<li><a href="kowal.php?kowal=kuznia&amp;type=W">{$Amakew}</a></li>
-					<li><a href="kowal.php?kowal=kuznia&amp;type=A">{$Amakea}</a></li>
-					<li><a href="kowal.php?kowal=kuznia&amp;type=S">{$Amakes}</a></li>
-					<li><a href="kowal.php?kowal=kuznia&amp;type=H">{$Amakeh}</a></li>
-					<li><a href="kowal.php?kowal=kuznia&amp;type=L">{$Amakel}</a></li>
+					<li><a href="kowal.php?kowal={$Smith}&amp;type=W">{$Amakew}</a></li>
+					<li><a href="kowal.php?kowal={$Smith}&amp;type=A">{$Amakea}</a></li>
+					<li><a href="kowal.php?kowal={$Smith}&amp;type=S">{$Amakes}</a></li>
+					<li><a href="kowal.php?kowal={$Smith}&amp;type=H">{$Amakeh}</a></li>
+					<li><a href="kowal.php?kowal={$Smith}&amp;type=L">{$Amakel}</a></li>
 				</ul>
 				{if $Type != ""}
 					{$Info}:
@@ -79,14 +82,20 @@
 								<th>{$Iname}</th>
 								<th>{$Ilevel}</th>
 								<th>{$Iamount}</th>
+								{if $Smith == "elite"}
+	         				    		    <th>{$Tloot}</th>
+             							{/if}
 							</tr>
 						</thead>
 						<tbody>
 							{section name=smith2 loop=$Name}
 								<tr>
-									<td><a href="kowal.php?kowal=kuznia&amp;dalej={$Id[smith2]}">{$Name[smith2]}</a></td>
+									<td><a href="kowal.php?kowal={$Smith}&amp;dalej={$Id[smith2]}">{$Name[smith2]}</a></td>
 									<td>{$Level[smith2]}</td>
 									<td>{$Amount[smith2]}</td>
+									{if $Smith == "elite"}
+		     							    <td>{$Loot[smith2]}</td>
+		 							{/if}
 								</tr>
 							{/section}
 						</tbody>
@@ -105,7 +114,7 @@
 					</thead>
 					<tbody>
 						<tr>
-							<td><a href="kowal.php?kowal=kuznia&amp;ko={$Id}">{$Name}</a></td>
+							<td><a href="kowal.php?kowal={$Smith}&amp;ko={$Id}">{$Name}</a></td>
 							<td>{$Percent}</td>
 							<td>{$Need}</td>
 						</tr>

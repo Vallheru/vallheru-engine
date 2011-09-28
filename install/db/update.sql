@@ -51,3 +51,5 @@ ALTER TABLE `players` ADD `metallurgy` DOUBLE( 11, 2 ) NOT NULL DEFAULT '0.01';
 ALTER TABLE `monsters` ADD `lootnames` TEXT NOT NULL , ADD `lootchances` VARCHAR( 255 ) NOT NULL;
 ALTER TABLE `mill_work` ADD `elite` INT( 11 ) NOT NULL DEFAULT '0';
 ALTER TABLE `mill` ADD `elite` INT( 11 ) NOT NULL DEFAULT '0';
+ALTER TABLE `smith_work` ADD `elite` INT( 11 ) NOT NULL DEFAULT '0';
+ALTER TABLE `smith` ADD `elite` INT( 11 ) NOT NULL DEFAULT '0';

@@ -4,10 +4,10 @@
  *   Polish language for blacksmith
  *
  *   @name                 : kowal.php                            
- *   @copyright            : (C) 2004,2005,2006 Vallheru Team based on Gamers-Fusion ver 2.5
- *   @author               : thindil <thindil@users.sourceforge.net>
- *   @version              : 1.2
- *   @since                : 20.07.2006
+ *   @copyright            : (C) 2004,2005,2006,2011 Vallheru Team based on Gamers-Fusion ver 2.5
+ *   @author               : thindil <thindil@tuxfamily.org>
+ *   @version              : 1.4
+ *   @since                : 28.09.2011
  *
  */
 
@@ -68,7 +68,7 @@ if (isset ($_GET['kowal']) && $_GET['kowal'] == 'plany')
     }
 }
 
-if (isset ($_GET['kowal']) && $_GET['kowal'] == 'kuznia') 
+if (isset ($_GET['kowal']) && ($_GET['kowal'] == 'kuznia' || $_GET['kowal'] == 'elite')) 
 {
     if (!isset($_GET['konty']) && !isset($_GET['rob'])) 
     {
