@@ -1,5 +1,7 @@
 2011-09-29  Bartek thindil Jasicki  <thindil@tuxfamily.org>
 
+	* BUG,languages/pl/head1.php, lmarket.php: 
+	fixed name of market
 	* UPDATE,tribes.php: 
 	added info if astral machine was not yet started
 	* BUG,imarket.php: 
