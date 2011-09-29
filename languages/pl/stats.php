@@ -39,7 +39,7 @@ define("CRIME_T", "Ilość kradzieży:");
 define("GG_NUM", "Komunikator ");
 define("TRIBE_RANK", "Ranga w klanie:");
 define("NOTHING", "brak");
-define("STATS_INFO", "Witaj w swoich statystykach. Możesz tutaj zobaczyć informacje na temat twojej postaci w grze.");
+define("STATS_INFO", "Witaj w swoich statystykach. Możesz tutaj zobaczyć informacje na temat swojej postaci w grze.");
 define("T_STATS", "Statystyki w grze");
 define("T_AP", "AP");
 define("T_RACE", "Rasa");

@@ -77,7 +77,7 @@ if ($player -> location == 'Altara')
 }
     else
 {
-    define("TRAIN_INFO", "Uniwersytet imienia ".$city2."a ... Stoisz przed wierzbą, na konarach której mieści się uniwersytet założony przez ".$city2."a, a po jego śmierci nazwany tym imieniem. Możesz u poświęcić swój czas w celu zdobycia większych umiejętności.");
+    define("TRAIN_INFO", "Uniwersytet imienia ".$city2."a ... Stoisz przed wierzbą, na konarach której mieści się uniwersytet założony przez ".$city2."a, a po jego śmierci nazwany tym imieniem. Możesz tu poświęcić swój czas w celu zdobycia większych umiejętności.");
 }
 define("GOLD_COINS", " sztuk złota.");
 define("I_WANT", "Chcę trenować moją");
