@@ -9,7 +9,7 @@
  *   @author               : yeskov <yeskov@users.sourceforge.net>
  *   @author               : eyescream <tduda@users.sourceforge.net>
  *   @version              : 1.4
- *   @since                : 19.09.2011
+ *   @since                : 29.09.2011
  *
  */
 
@@ -444,6 +444,7 @@ if (isset ($_GET['action']) && $_GET['action'] == 'items')
     switch($item -> fields['type'])
     {
         case 'A':   // Pieces of armor: defense, agility and durability.
+        case 'L':
             $intAgi = $item -> fields['zr'] * -1;
             $strAttributes.= I_DEF.' +'.$item -> fields['power'].', '.I_AGI.' '.$intAgi.'%, '.I_DUR.' '.$item -> fields['wt'].'/'.$item -> fields['maxwt'];
             break;

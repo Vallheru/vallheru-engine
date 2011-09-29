@@ -1,5 +1,7 @@
 2011-09-29  Bartek thindil Jasicki  <thindil@tuxfamily.org>
 
+	* UPDATE,bank.php: 
+	added info about legs bonuses to log message
 	* BUG,languages/pl/bows.php, languages/pl/weapons.php, languages/pl/train.php, languages/pl/tower.php, languages/pl/stats.php:
 	fixed typo
 
