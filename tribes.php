@@ -9,7 +9,7 @@
  *   @author               : mori <ziniquel@users.sourceforge.net>
  *   @author               : eyescream <tduda@users.sourceforge.net>
  *   @version              : 1.4
- *   @since                : 13.09.2011
+ *   @since                : 29.09.2011
  *
  */
 
@@ -195,7 +195,7 @@ if (isset ($_GET['view']) && $_GET['view'] == 'view')
         }
             else
         {
-            $strAstral = '';
+            $strAstral = ASTRAL."Nie rozpoczęto jeszcze prac.<br />";
         }
         $objAstral -> Close();
 

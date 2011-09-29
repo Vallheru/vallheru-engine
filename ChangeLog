@@ -1,5 +1,7 @@
 2011-09-29  Bartek thindil Jasicki  <thindil@tuxfamily.org>
 
+	* UPDATE,tribes.php: 
+	added info if astral machine was not yet started
 	* BUG,imarket.php: 
 	fixed search items on market
 	* BUG,class/quests_class.php, forums.php, lmarket.php, farm.php: 
