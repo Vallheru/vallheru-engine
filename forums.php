@@ -535,6 +535,10 @@ if (isset($_GET['reply']))
   {
     checkvalue($_GET['reply']);
     $query = $db -> Execute("SELECT `cat_id`, `closed` FROM `topics` WHERE `id`=".$_GET['reply']);
+    if (!$query->fields['cat_id']) 
+    {
+        error (NO_TOPIC.'. (<a href="forums.php?view=categories">Wróć</a>)');
+    }
     /**
      * Check for permissions
      */
@@ -555,12 +559,7 @@ if (isset($_GET['reply']))
       {
 	error("Ten temat jest zamknięty.");
       }
-    $exists = $query -> RecordCount();
     $query -> Close();
-    if ($exists <= 0) 
-    {
-        error (NO_TOPIC);
-    }
     if (empty ($_POST['rep'])) 
     {
         error (EMPTY_FIELDS);

@@ -1,5 +1,7 @@
 2011-09-29  Bartek thindil Jasicki  <thindil@tuxfamily.org>
 
+	* BUG,class/quests_class.php, forums.php, lmarket.php, farm.php: 
+	fixed some bugs
 	* UPDATE,bank.php: 
 	added info about legs bonuses to log message
 	* BUG,languages/pl/bows.php, languages/pl/weapons.php, languages/pl/train.php, languages/pl/tower.php, languages/pl/stats.php:

@@ -4,10 +4,10 @@
  *   Quest class - actions in quest
  *
  *   @name                 : quests_class.php                            
- *   @copyright            : (C) 2004,2005,2006 Vallheru Team based on Gamers-Fusion ver 2.5
- *   @author               : thindil <thindil@users.sourceforge.net>
- *   @version              : 1.3
- *   @since                : 07.11.2006
+ *   @copyright            : (C) 2004,2005,2006,2011 Vallheru Team based on Gamers-Fusion ver 2.5
+ *   @author               : thindil <thindil@tuxfamily.org>
+ *   @version              : 1.4
+ *   @since                : 29.09.2011
  *
  */
 
@@ -27,7 +27,7 @@
 //   along with this program; if not, write to the Free Software
 //   Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 //
-// $Id: quests_class.php 811 2006-11-07 17:23:03Z thindil $
+// $Id$
 
 /**
 * Get the localization for game
@@ -170,17 +170,19 @@ class Quests
         require_once('includes/turnfight.php');
         require_once('includes/funkcje.php');
 
-        $fight = $db -> Execute("SELECT fight FROM players WHERE id=".$player -> id);
-        $enemy1 = $db -> Execute("SELECT * FROM monsters WHERE id=".$fight -> fields['fight']);
+        $fight = $db -> Execute("SELECT `fight` FROM `players` WHERE `id`=".$player -> id);
+        $enemy1 = $db -> Execute("SELECT * FROM `monsters` WHERE `id`=".$fight -> fields['fight']);
         $enemy = array("strength" => $enemy1 -> fields['strength'], 
-            "agility" => $enemy1 -> fields['agility'], 
-            "speed" => $enemy1 -> fields['speed'], 
-            "endurance" => $enemy1 -> fields['endurance'], 
-            "hp" => $enemy1 -> fields['hp'], 
-            "name" => $enemy1 -> fields['name'], 
-            "exp1" => $enemy1 -> fields['exp1'], 
-            "exp2" => $enemy1 -> fields['exp2'], 
-            "level" => $enemy1 -> fields['level']);
+		       "agility" => $enemy1 -> fields['agility'], 
+		       "speed" => $enemy1 -> fields['speed'], 
+		       "endurance" => $enemy1 -> fields['endurance'], 
+		       "hp" => $enemy1 -> fields['hp'], 
+		       "name" => $enemy1 -> fields['name'], 
+		       "exp1" => $enemy1 -> fields['exp1'], 
+		       "exp2" => $enemy1 -> fields['exp2'], 
+		       "level" => $enemy1 -> fields['level'],
+		       "lootnames" => $enemy1->fields['lootnames'],
+		       "lootchances" => $enemy1->fields['lootchances']);
         $span = ($enemy1 -> fields['level'] / $player -> level);
         if ($span > 2) 
         {
