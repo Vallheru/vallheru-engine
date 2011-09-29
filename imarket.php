@@ -75,7 +75,7 @@ if (isset ($_GET['view']) && $_GET['view'] == 'market')
       }
     if (empty($_POST['szukany']) && !isset($_POST['szukany1']) && !isset($_POST['type'])) 
       {
-        $msel = $db -> Execute("SELECT count(`id`) FROM `equipment` WHERE `status`='R' AND `type`!='I'");
+        $msel = $db -> Execute("SELECT count(`id`) FROM `equipment` WHERE `status`='R' AND `type` NOT IN ('I', 'O')");
       }
     elseif (isset($_POST['type']))
       {
@@ -90,7 +90,7 @@ if (isset ($_GET['view']) && $_GET['view'] == 'market')
       {
 	$_POST['szukany1'] = strip_tags($_POST['szukany1']);
         $strSearch = $db -> qstr($_POST['szukany1'], get_magic_quotes_gpc());
-	$msel = $db -> Execute("SELECT count(`id`) FROM `equipment` WHERE `status`='R' AND `type`!='I' AND name=".$strSearch);
+	$msel = $db -> Execute("SELECT count(`id`) FROM `equipment` WHERE `status`='R' AND `type` NOT IN ('I', 'O') AND name=".$strSearch);
       }
     else 
       {
@@ -319,7 +319,7 @@ if (isset ($_GET['view']) && $_GET['view'] == 'add')
         }
 	checkvalue($_POST['cost']);
 	checkvalue($_POST['przedmiot']);
-        $item = $db -> Execute("SELECT * FROM equipment WHERE id=".$_POST['przedmiot']." AND `status`='U' AND `type`!='I' AND `owner`=".$player -> id);
+        $item = $db -> Execute("SELECT * FROM equipment WHERE id=".$_POST['przedmiot']." AND `status`='U' AND `type` NOT IN ('I', 'O') AND `owner`=".$player -> id);
 	if (!$item->fields['id'])
 	  {
 	    error(ERROR);
@@ -417,7 +417,7 @@ if (isset($_GET['wyc']))
 */
 if (isset ($_GET['view']) && $_GET['view'] == 'del') 
 {
-    $objArm = $db -> Execute("SELECT * FROM `equipment` WHERE `owner`=".$player -> id." AND `status`='R' AND `type`!='I'");
+    $objArm = $db -> Execute("SELECT * FROM `equipment` WHERE `owner`=".$player -> id." AND `status`='R' AND `type` NOT IN ('I', 'O')");
     while (!$objArm -> EOF)
     {
         $intTest = $db -> Execute("SELECT id FROM equipment WHERE name='".$objArm -> fields['name']."' AND wt=".$objArm -> fields['wt']." AND type='".$objArm -> fields['type']."' AND status='U' AND owner=".$player -> id." AND power=".$objArm -> fields['power']." AND zr=".$objArm -> fields['zr']." AND szyb=".$objArm -> fields['szyb']." AND maxwt=".$objArm -> fields['maxwt']." AND poison=".$objArm -> fields['poison']." AND cost=1 AND ptype='".$objArm -> fields['ptype']."' AND `twohand`='".$objArm -> fields['twohand']."'");
@@ -439,7 +439,7 @@ if (isset ($_GET['view']) && $_GET['view'] == 'del')
         $intTest -> Close();
         $objArm -> MoveNext();
     } 
-    $db -> Execute("DELETE FROM `equipment` WHERE `status`='R' AND `type`!='I' AND `owner`=".$player -> id);
+    $db -> Execute("DELETE FROM `equipment` WHERE `status`='R' AND `type` NOT IN ('I', 'O') AND `owner`=".$player -> id);
     $smarty -> assign("Message",YOU_DELETE." (<a href=\"imarket.php\">".A_BACK."</a>)");
 }
 
@@ -595,7 +595,7 @@ if (isset($_GET['view']) && $_GET['view'] == 'all')
       {
 	error(ERROR);
       }
-    $objAmount = $db -> Execute("SELECT `id` FROM `equipment` WHERE `status`='R' AND `type`!='I' GROUP BY `name`");
+    $objAmount = $db -> Execute("SELECT `id` FROM `equipment` WHERE `status`='R' AND `type` NOT IN ('I', 'O') GROUP BY `name`");
     $intAmount = $objAmount -> RecordCount();
     $objAmount -> Close();
     if (isset($_POST['previous']))
@@ -612,7 +612,7 @@ if (isset($_GET['view']) && $_GET['view'] == 'all')
     }
     $strNext = '';
     $strPrevious = '';
-    $oferts = $db -> SelectLimit("SELECT `name` FROM `equipment` WHERE `status`='R' AND `type`!='I' GROUP BY `name`", 30, $_GET['limit']);
+    $oferts = $db -> SelectLimit("SELECT `name` FROM `equipment` WHERE `status`='R' AND `type` NOT IN ('I', 'O') GROUP BY `name`", 30, $_GET['limit']);
     $arrname = array();
     $arramount = array();
     $i = 0;
@@ -620,8 +620,8 @@ if (isset($_GET['view']) && $_GET['view'] == 'all')
     {
         $arrname[$i] = $oferts -> fields['name'];
         $arramount[$i] = 0;
-        $query = $db -> Execute("SELECT count(*) FROM `equipment` WHERE `status`='R' AND `name`='".$arrname[$i]."'");
-        $arramount[$i] = $query -> fields['count(*)'];
+        $query = $db -> Execute("SELECT count(`id`) FROM `equipment` WHERE `status`='R' AND `name`='".$arrname[$i]."'");
+        $arramount[$i] = $query -> fields['count(`id`)'];
         $query -> Close();
         $oferts -> MoveNext();
         $i = $i + 1;

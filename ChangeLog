@@ -1,5 +1,7 @@
 2011-09-29  Bartek thindil Jasicki  <thindil@tuxfamily.org>
 
+	* BUG,imarket.php: 
+	don't show loot on items market
 	* BUG,preset.php: 
 	fixed bug with player reset
 	* BUG,languages/pl/polls.php, languages/pl/stats.php, languages/pl/train.php: 
