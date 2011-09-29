@@ -4,10 +4,10 @@
  *   Polish language for school
  *
  *   @name                 : train.php                            
- *   @copyright            : (C) 2004,2005,2006 Vallheru Team based on Gamers-Fusion ver 2.5
- *   @author               : thindil <thindil@users.sourceforge.net>
- *   @version              : 1.1
- *   @since                : 18.03.2006
+ *   @copyright            : (C) 2004,2005,2006,2011 Vallheru Team based on Gamers-Fusion ver 2.5
+ *   @author               : thindil <thindil@tuxfamily.org>
+ *   @version              : 1.4
+ *   @since                : 29.09.2011
  *
  */
 
@@ -27,7 +27,7 @@
 //   along with this program; if not, write to the Free Software
 //   Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 //
-// $Id: train.php 566 2006-09-13 09:31:08Z thindil $
+// $Id$
 
 define("ERROR", "Zapomnij o tym!");
 define("YOU_DEAD", "Nie możesz szkolić się, ponieważ jesteś martwy!");
@@ -73,7 +73,7 @@ define("T_TRAIN9_2", " sztuk złota)<br />lub 0,3 energii za 0,06 Inteligencji (
 define("T_TRAIN9_3", " sztuk złota)");
 if ($player -> location == 'Altara')
 {
-    define("TRAIN_INFO", "Ogromne filary podtrzymujące sklepienie budynku pamiętają wszystko, co działo się w Szkołe Vallheryjskiej. Świadczą o tym ich odrapane wykończenia. Podchodzisz bliżej i widzisz pomieszczenie do złudzenia przypominające Arenę Walk. Na środku sali dwóch krasnoludów walczy ze sobą na ogromne topory obosieczne, które zdają się być większe od nich samych. Nieco dalej elficka para uczy się strzelać do ruchomego celu, którym jest maleńki gnom biegający po podwyższeniu stojącym w odległości 20 metrów od pary. W pewnym momencie słyszysz ruch za swoimi plecami, odwracasz się szybko a w ręku Twym już widać broń. Stoi przed Tobą starzec, który chrypliwym głosem mówi:<br /><br />- Witaj w Szkole Umięjętności w ".$city1a.". Jeżeli chciałbyś trenować swoją krzepę, szybkość czy nawet zgłębiać tajniki magii możesz to zrobić u nas. Za odpowiednią opłatą oczywiście. Starzec podniósł dłoń pokazując tablicę z Twoim imieniem. Zdziwiony skąd oni wiedzą jak się nazywasz podchodzisz blizej i czytasz ceny odpowiednie do Twojej postaci.<br /> ");
+    define("TRAIN_INFO", "Ogromne filary podtrzymujące sklepienie budynku pamiętają wszystko, co działo się w Szkole Vallheryjskiej. Świadczą o tym ich odrapane wykończenia. Podchodzisz bliżej i widzisz pomieszczenie do złudzenia przypominające Arenę Walk. Na środku sali dwóch krasnoludów walczy ze sobą na ogromne topory obosieczne, które zdają się być większe od nich samych. Nieco dalej elficka para uczy się strzelać do ruchomego celu, którym jest maleńki gnom biegający po podwyższeniu stojącym w odległości 20 metrów od pary. W pewnym momencie słyszysz ruch za swoimi plecami, odwracasz się szybko a w ręku Twym już widać broń. Stoi przed Tobą starzec, który chrypliwym głosem mówi:<br /><br />- Witaj w Szkole Umięjętności w ".$city1a.". Jeżeli chciałbyś trenować swoją krzepę, szybkość czy nawet zgłębiać tajniki magii możesz to zrobić u nas. Za odpowiednią opłatą oczywiście. Starzec podniósł dłoń pokazując tablicę z Twoim imieniem. Zdziwiony skąd oni wiedzą jak się nazywasz podchodzisz blizej i czytasz ceny odpowiednie do Twojej postaci.<br /> ");
 }
     else
 {

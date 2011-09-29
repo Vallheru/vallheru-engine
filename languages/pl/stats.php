@@ -4,10 +4,10 @@
  *   Polish language for player stats
  *
  *   @name                 : stats.php                            
- *   @copyright            : (C) 2004,2005,2006 Vallheru Team based on Gamers-Fusion ver 2.5
- *   @author               : thindil <thindil@users.sourceforge.net>
- *   @version              : 1.2
- *   @since                : 21.09.2006
+ *   @copyright            : (C) 2004,2005,2006,2011 Vallheru Team based on Gamers-Fusion ver 2.5
+ *   @author               : thindil <thindil@tuxfamily.org>
+ *   @version              : 1.4
+ *   @since                : 29.09.2011
  *
  */
 
@@ -27,7 +27,7 @@
 //   along with this program; if not, write to the Free Software
 //   Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 //
-// $Id: stats.php 598 2006-09-21 20:42:42Z thindil $
+// $Id$
 
 define("A_USE", "Użyj");
 define("A_SELECT", "Wybierz");
@@ -39,7 +39,7 @@ define("CRIME_T", "Ilość kradzieży:");
 define("GG_NUM", "Komunikator ");
 define("TRIBE_RANK", "Ranga w klanie:");
 define("NOTHING", "brak");
-define("STATS_INFO", "Witaj w twoich statystykach. Możesz tutaj zobaczyć informacje na temat twojej postaci w grze.");
+define("STATS_INFO", "Witaj w swoich statystykach. Możesz tutaj zobaczyć informacje na temat twojej postaci w grze.");
 define("T_STATS", "Statystyki w grze");
 define("T_AP", "AP");
 define("T_RACE", "Rasa");

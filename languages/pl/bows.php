@@ -4,10 +4,10 @@
  *   Polish language for fletcher shop
  *
  *   @name                 : bows.php                            
- *   @copyright            : (C) 2004,2005,2006 Vallheru Team based on Gamers-Fusion ver 2.5
- *   @author               : thindil <thindil@users.sourceforge.net>
- *   @version              : 1.1
- *   @since                : 28.03.2006
+ *   @copyright            : (C) 2004,2005,2006,2011 Vallheru Team based on Gamers-Fusion ver 2.5
+ *   @author               : thindil <thindil@tuxfamily.org>
+ *   @version              : 1.4
+ *   @since                : 29.09.2011
  *
  */
 
@@ -45,7 +45,7 @@ if (isset ($_GET['buy']) || isset($_GET['step']))
     if ($player -> location != 'Ardulith')
     {
         define("SHOP_INFO", "Podchodzisz do wielkich drewnianych drzwi z metalowymi pięknymi zawiasami w kształcie lian, wyglądają one jakby żywe, okalające drzwi winorośle. Uchylasz drzwi i dostrzegasz, że w środku kilka Elfów i Człowiek strzelają do celu, nieźle się przy tym bawiąc. Podchodzisz do nich bliżej, zauważasz dopiero teraz, że dalej przed nimi są porozstawiane ogromne tarcze, do których strzelają. Zauważasz, że jeden z nich strzela ciągle ani razu nie chybiając, a przy tym prawie w ogóle nie patrząc na cel. Zachwyca Cię ogromnie, ale w pewnej chwili przypominasz sobie, że to przecież");
-        define("SHOP_INFO2", ", najlepszy strzelec w całym królestwie. Chcesz do niego podejść i porozmawiać, ale nie starcza ci odwagi, żeby porozmawiać z kimś kto jest tak wielki, jak on.<br />W tej samej prawie chwili drzwi obok wychodzi Hobbit, którego najpierw nie zauważasz go, ale kiedy odzywa się do Ciebie:<br />\"Panie, prosżę dalej Łucznik czeka.\" - orientujesz się, że mały Hobbit do Ciebie mówi. Bez słowa idziesz do pomieszczenia wskazanego przez śmiesznego małego ludka.<br />Kiedy wchodzisz do pokoju widzisz, że sprawny Krasnolud oczyszcza piękną kusze bojową - jest ona wykonana niezwykle starannie i dokładnie, a jej cięciwa wygląda jakby ze złota.<br />- \"Witaj, wędrowcze. \" -mówi Krasnolud. - \"Co Ciebie do nas sprowadza, może chcesz kupić jeden z moich łuków lub kuszy? A może chodzi Ci o strzały? Jestem najlepszym kowalem w całym królestwie, ale nie jestem tani .Wiec co chcesz? \"<br />- \"Chcę coś kupić odpowiedniego dla siebie \"- odpowiadasz niepewnie, jakby zamurowany charyzmą rzemieślnika.<br />- \"Wybierz sobie coś z moich towarów. Ten hobbit zaprowadzi Cię do magazynu. \"<br /><br />Idziesz z Hobbitem do magazynu. Ten otwiera wielkie żelazne drzwi, za nimi znajduje się wielka sala z wywieszonymi ścianach łukami, kuszami i strzałami. A wokół ścian na podłodze w koszach znajdują się groty różnych kształtów. Obok nich stoją kołczany na strzały, zrobione z wielką dokładnością tak, jakby ktoś poświecił na to całe swoje serce. Jesteś zachwycony tym wystrojem. W końcu Hobbit mówi:<br />- \"Wybierz coś dla siebie Panie\" - i oddala się za wielkie drzwi. ");
+        define("SHOP_INFO2", ", najlepszy strzelec w całym królestwie. Chcesz do niego podejść i porozmawiać, ale nie starcza ci odwagi, żeby porozmawiać z kimś kto jest tak wielki, jak on.<br />W tej samej prawie chwili drzwi obok wychodzi Hobbit, którego najpierw nie zauważasz go, ale kiedy odzywa się do Ciebie:<br />\"Panie, proszę dalej Łucznik czeka.\" - orientujesz się, że mały Hobbit do Ciebie mówi. Bez słowa idziesz do pomieszczenia wskazanego przez śmiesznego małego ludka.<br />Kiedy wchodzisz do pokoju widzisz, że sprawny Krasnolud oczyszcza piękną kusze bojową - jest ona wykonana niezwykle starannie i dokładnie, a jej cięciwa wygląda jakby ze złota.<br />- \"Witaj, wędrowcze. \" -mówi Krasnolud. - \"Co Ciebie do nas sprowadza, może chcesz kupić jeden z moich łuków lub kuszy? A może chodzi Ci o strzały? Jestem najlepszym kowalem w całym królestwie, ale nie jestem tani .Wiec co chcesz? \"<br />- \"Chcę coś kupić odpowiedniego dla siebie \"- odpowiadasz niepewnie, jakby zamurowany charyzmą rzemieślnika.<br />- \"Wybierz sobie coś z moich towarów. Ten hobbit zaprowadzi Cię do magazynu. \"<br /><br />Idziesz z Hobbitem do magazynu. Ten otwiera wielkie żelazne drzwi, za nimi znajduje się wielka sala z wywieszonymi na ścianach łukami, kuszami i strzałami. A wokół ścian na podłodze w koszach znajdują się groty różnych kształtów. Obok nich stoją kołczany na strzały, zrobione z wielką dokładnością tak, jakby ktoś poświecił na to całe swoje serce. Jesteś zachwycony tym wystrojem. W końcu Hobbit mówi:<br />- \"Wybierz coś dla siebie Panie\" - i oddala się za wielkie drzwi. ");
     }
         else
     {
