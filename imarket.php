@@ -8,7 +8,7 @@
  *   @author               : thindil <thindil@tuxfamily.org>
  *   @author               : eyescream <tduda@users.sourceforge.net>
  *   @version              : 1.4
- *   @since                : 26.09.2011
+ *   @since                : 29.09.2011
  *
  */
 
@@ -161,7 +161,7 @@ if (isset ($_GET['view']) && $_GET['view'] == 'market')
       }
     else 
       {
-	$pm = $db -> SelectLimit("SELECT * FROM `equipment` WHERE `status`='R' AND `type NOT IN ('I', 'O') AND MATCH(`name`) AGAINST (".$strSearch." IN BOOLEAN MODE) ORDER BY ".$_GET['lista'].$strOrder, 30,  (30 * ($page - 1)));
+	$pm = $db -> SelectLimit("SELECT * FROM `equipment` WHERE `status`='R' AND `type` NOT IN ('I', 'O') AND MATCH(`name`) AGAINST (".$strSearch." IN BOOLEAN MODE) ORDER BY ".$_GET['lista'].$strOrder, 30,  (30 * ($page - 1)));
       }
     $arrname = array();
     $arrpower = array();
