@@ -1,5 +1,8 @@
 2011-09-30  Bartek thindil Jasicki  <thindil@tuxfamily.org>
 
+	* FEATURE,languages/pl/lumberjack.php, languages/pl/kopalnia.php, languages/pl/mines.php, languages/pl/farm.php, lumberjack.php, kopalnia.php,
+	mines.php, farm.php, smelter.php:
+	added experience gaining to skills
 	* BUG,languages/pl/account.php: 
 	fixed typo
 	* BUG,equip.php:

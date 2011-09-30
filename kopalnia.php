@@ -7,7 +7,7 @@
  *   @copyright            : (C) 2004,2005,2006,2011 Vallheru Team based on Gamers-Fusion ver 2.5
  *   @author               : thindil <thindil@tuxfamily.org>
  *   @version              : 1.4
- *   @since                : 19.08.2011
+ *   @since                : 30.09.2011
  *
  */
 
@@ -71,6 +71,7 @@ if (isset($_GET['action']) && $_GET['action'] == 'dig')
     $arrMinerals = array(0, 0);
     $arrGold = array(0, 0);
     $strInfo = '';
+    $intExp = 0;
 
     for ($i = 1; $i <= $_POST['amount']; $i++)
     {
@@ -87,6 +88,7 @@ if (isset($_GET['action']) && $_GET['action'] == 'dig')
                 $intAmount = 1;
             }
             $arrMinerals[0] = $arrMinerals[0] + $intAmount;
+	    $intExp += (5 * $intAmount);
         }
         if ($intRoll == 6 || $intRoll == 7)
         {
@@ -96,6 +98,7 @@ if (isset($_GET['action']) && $_GET['action'] == 'dig')
                 $intAmount = 1;
             }
             $arrMinerals[1] = $arrMinerals[1] + $intAmount;
+	    $intExp += (6 * $intAmount);
         }
         if ($intRoll == 8)
         {
@@ -172,14 +175,20 @@ if (isset($_GET['action']) && $_GET['action'] == 'dig')
         {
             $strFind = $strFind.T_GOLD.$arrGold[0].T_GOLD2;
         }
-        $strFind = $strFind.$fltGainability.T_ABILITY;
+	if ($player->clas = 'Rzemieślnik')
+	  {
+	    $intExp = $intExp * 2;
+	  }
+        $strFind = $strFind.$fltGainability.T_ABILITY." oraz ".$intExp." PD.<br />";
     }
     if (!$intGoldsum && !$intMinsum && $strInfo == '')
     {
         $strFind = $strFind.T_NOTHING;
     }
     $strFind = $strFind.$strInfo;
-    $db -> Execute("UPDATE `players` SET `credits`=`credits`+".$arrGold[0].", `platinum`=`platinum`+".$arrGold[1].", `hp`=".$player -> hp.", `energy`=`energy`-".$i.", `mining`=`mining`+".$fltGainability." WHERE `id`=".$player -> id);
+    require_once('includes/checkexp.php');
+    checkexp($player->exp, $intExp, $player->level, $player->race, $player->user, $player->id, 0, 0, $player->id, 'mining', $fltGainability);
+    $db -> Execute("UPDATE `players` SET `credits`=`credits`+".$arrGold[0].", `platinum`=`platinum`+".$arrGold[1].", `hp`=".$player -> hp.", `energy`=`energy`-".$i."  WHERE `id`=".$player -> id);
     $smarty -> assign("Youfind", $strFind);
     $player->energy -= $i;
     if ($player->hp <= 0)

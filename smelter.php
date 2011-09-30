@@ -7,7 +7,7 @@
  *   @copyright            : (C) 2004,2005,2006,2011 Vallheru Team based on Gamers-Fusion ver 2.5
  *   @author               : thindil <thindil@tuxfamily.org>
  *   @version              : 1.4
- *   @since                : 25.09.2011
+ *   @since                : 30.09.2011
  *
  */
 
@@ -270,13 +270,17 @@ if (isset($_GET['step']) && $_GET['step'] == 'smelt')
                 $strSql = $strSql.", ".$arrOres[$i]."=".$arrOres[$i]."-".$arrAmount[$i];
             }
 	    $fltAbility = ($intAmount / 50) * $arrBillets[$intKey] + (($_POST['amount'] - $intAmount) * 0.01);
+	    $intExp = $intAmount * $arrBillets[$intKey];
 	    if ($player->clas == 'Rzemieślnik')
 	      {
 		$fltAbility = $fltAbility * 2;
+		$intExp = $intExp * 2;
 	      }
             $db -> Execute("UPDATE minerals SET ".$_GET['smelt']."=".$_GET['smelt']."+".$intAmount.$strSql." WHERE owner=".$player -> id);
-            $db -> Execute("UPDATE `players` SET `energy`=`energy`-".$intEnergy.", `metallurgy`=`metallurgy`+".$fltAbility." WHERE `id`=".$player -> id);
-            $smarty -> assign("Message", YOU_SMELT." ".$intAmount." ".$arrSmeltmineral[$intKey].". Zdobywasz ".$fltAbility." w umiejętności Hutnictwo.");
+	    require_once('includes/checkexp.php');
+	    checkexp($player->exp, $intExp, $player->level, $player->race, $player->user, $player->id, 0, 0, $player->id, 'metallurgy', $fltAbility);
+            $db -> Execute("UPDATE `players` SET `energy`=`energy`-".$intEnergy." WHERE `id`=".$player -> id);
+            $smarty -> assign("Message", YOU_SMELT." ".$intAmount." ".$arrSmeltmineral[$intKey].". Zdobywasz ".$fltAbility." w umiejętności Hutnictwo oraz ".$intExp." PD.");
         }
     }
 }

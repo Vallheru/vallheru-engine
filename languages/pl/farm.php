@@ -4,10 +4,10 @@
  *   Polish language for farms
  *
  *   @name                 : farm.php                            
- *   @copyright            : (C) 2004,2005,2006 Vallheru Team based on Gamers-Fusion ver 2.5
- *   @author               : thindil <thindil@users.sourceforge.net>
- *   @version              : 1.2
- *   @since                : 23.08.2006
+ *   @copyright            : (C) 2004,2005,2006,2011 Vallheru Team based on Gamers-Fusion ver 2.5
+ *   @author               : thindil <thindil@tuxfamily.org>
+ *   @version              : 1.4
+ *   @since                : 30.09.2011
  *
  */
 
@@ -27,7 +27,7 @@
 //   along with this program; if not, write to the Free Software
 //   Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 //
-// $Id: farm.php 566 2006-09-13 09:31:08Z thindil $
+// $Id$
 
 define("ERROR", "Zapomnij o tym!");
 define("A_BACK", "Wróć");
@@ -125,7 +125,7 @@ if (isset($_GET['step']) && $_GET['step'] == 'plantation')
             define("YOU_SAW", "Zasiałeś <b>");
             define("T_LANDS2", "</b> obszarów farmy ziołem ");
             define("YOU_GAIN", ". Zdobyłeś <b> ");
-            define("T_ABILITY", "</b> poziomów w umiejętności Zielarstwo.");
+            define("T_ABILITY", "</b> poziomów w umiejętności Zielarstwo");
             define("NO_ITEMS", "Nie masz odpowiedniego wyposażenia na farmie aby hodować ten typ ziół!");
         }
     }

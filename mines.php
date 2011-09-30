@@ -7,7 +7,7 @@
  *   @copyright            : (C) 2004,2005,2006,2011 Vallheru Team based on Gamers-Fusion ver 2.5
  *   @author               : thindil <thindil@tuxfamily.org>
  *   @version              : 1.4
- *   @since                : 28.08.2011
+ *   @since                : 30.09.2011
  *
  */
 
@@ -269,8 +269,15 @@ if (isset($_GET['step']) && $_GET['step'] == 'dig')
         {
             $intAmount = $objMines -> fields[$_GET['mine']];
         }
+	$intExp = ($intAmount * $arrMinerals2[$intKey]) / 4;
+	if ($player->clas == 'Rzemieślnik')
+	  {
+	    $intExp = $intExp * 2;
+	  }
         $db -> Execute("UPDATE mines SET ".$_GET['mine']."=".$_GET['mine']."-".$intAmount." WHERE owner=".$player -> id);
-        $db -> Execute("UPDATE players SET energy=energy-".$_POST['amount'].", mining=mining+".$intAbility.", bless='', blessval=0 WHERE id=".$player -> id);
+	require_once('includes/checkexp.php');
+	checkexp($player->exp, $intExp, $player->level, $player->race, $player->user, $player->id, 0, 0, $player->id, 'mining', $intAbility);
+        $db -> Execute("UPDATE players SET energy=energy-".$_POST['amount'].", bless='', blessval=0 WHERE id=".$player -> id);
         $objTest = $db -> Execute("SELECT owner FROM minerals WHERE owner=".$player -> id);
         $arrOre = array('copperore', 'zincore', 'tinore', 'ironore', 'coal');
         if (!$objTest -> fields['owner'])
@@ -282,7 +289,7 @@ if (isset($_GET['step']) && $_GET['step'] == 'dig')
             $db -> Execute("UPDATE minerals SET ".$arrOre[$intKey]."=".$arrOre[$intKey]."+".$intAmount." WHERE owner=".$player -> id);
         }
         $objTest -> Close();
-        $smarty -> assign("Message", YOU_DIG.$_POST['amount'].M_ENERGY.YOU_GET.$intAmount.T_AMOUNT.$arrMinerals[$intKey].T_ABILITY.$intAbility.T_ABILITY2);
+        $smarty -> assign("Message", YOU_DIG.$_POST['amount'].M_ENERGY.YOU_GET.$intAmount.T_AMOUNT.$arrMinerals[$intKey].T_ABILITY.$intAbility.T_ABILITY2." oraz ".$intExp." PD.");
     }
 }
 

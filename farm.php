@@ -7,7 +7,7 @@
  *   @copyright            : (C) 2004,2005,2006,2011 Vallheru Team based on Gamers-Fusion ver 2.5
  *   @author               : thindil <thindil@tuxfamily.org>
  *   @version              : 1.4
- *   @since                : 29.09.2011
+ *   @since                : 30.09.2011
  *
  */
 
@@ -65,6 +65,8 @@ if (isset($_GET['step']) && $_GET['step'] == 'herbsinfo')
                             "Nutariinfo" => NUTARI_INFO,
                             "Dynallcainfo" => DYNALLCA_INFO));
 }
+
+require_once('includes/checkexp.php');
 
 /**
  * House of gardener
@@ -137,13 +139,16 @@ if (isset($_GET['step']) && $_GET['step'] == 'house')
             }
         }
 	$fltSkill = $intAmountseeds / 100;
+	$intExp = $intAmountseeds * 10;
 	if ($player->clas == 'Rzemieślnik') 
 	  {
 	    $fltSkill = $fltSkill * 2;
+	    $intExp = $intExp * 2;
 	  }
         $arrSeeds = array('ilani_seeds', 'illanias_seeds', 'nutari_seeds', 'dynallca_seeds');
         $db -> Execute("UPDATE `herbs` SET `".$arrHerbs[$intKey]."`=`".$arrHerbs[$intKey]."`-".$intAmountherbs.", `".$arrSeeds[$intKey]."`=`".$arrSeeds[$intKey]."`+".$intAmountseeds." WHERE `gracz`=".$player -> id);
-        $db -> Execute("UPDATE `players` SET `energy`=`energy`-".$intAmountenergy.", `herbalist`=`herbalist`+".$fltSkill." WHERE `id`=".$player -> id);
+	checkexp($player->exp, $intExp, $player->level, $player->race, $player->user, $player->id, 0, 0, $player->id, 'herbalist', $fltSkill);
+        $db -> Execute("UPDATE `players` SET `energy`=`energy`-".$intAmountenergy." WHERE `id`=".$player -> id);
 	if ($player->gender == 'F')
 	  {
 	    $strLast = "aś";
@@ -152,7 +157,7 @@ if (isset($_GET['step']) && $_GET['step'] == 'house')
 	  {
 	    $strLast = "eś";
 	  }
-        $smarty -> assign("Message", YOU_MAKE.$intAmountherbs.T_HERB.$intAmountseeds.T_PACKS." Zdobył".$strLast." <b>".$fltSkill."</b> do umiejętności Zielarstwo.");
+        $smarty -> assign("Message", YOU_MAKE.$intAmountherbs.T_HERB.$intAmountseeds.T_PACKS." Zdobył".$strLast." <b>".$fltSkill."</b> do umiejętności Zielarstwo oraz ".$intExp." PD.");
     }
     $smarty -> assign(array("Houseinfo" => HOUSE_INFO,
                             "Adry" => A_DRY,
@@ -394,14 +399,17 @@ if (isset($_GET['step']) && $_GET['step'] == 'plantation')
                 }
             }
             $fltAbility = $_POST['amount'] * 0.01;
+	    $intExp = $_POST['amount'] * 50;
 	    if ($player->clas == 'Rzemieślnik') 
 	      {
 		$fltAbility = $fltAbility * 2;
+		$intExp = $intExp * 2;
 	      }
             $db -> Execute("UPDATE herbs SET ".$arrSeeds[$intKey]."=".$arrSeeds[$intKey]."-".$_POST['amount']." WHERE gracz=".$player -> id);
             $db -> Execute("INSERT INTO farm (owner, amount, name, age) VALUES(".$player -> id.", ".$_POST['amount'].", '".$arrHerbsname[$intKey]."', 0)");
-            $db -> Execute("UPDATE players SET energy=energy-".$intEnergy.", herbalist=herbalist+".$fltAbility." WHERE id=".$player -> id);
-            $smarty -> assign("Message", YOU_SAW.$_POST['amount'].T_LANDS2.$arrHerbsname[$intKey].YOU_GAIN.$fltAbility.T_ABILITY);
+	    checkexp($player->exp, $intExp, $player->level, $player->race, $player->user, $player->id, 0, 0, $player->id, 'herbalist', $fltAbility);
+            $db -> Execute("UPDATE `players` SET `energy`=`energy`-".$intEnergy." WHERE `id`=".$player -> id);
+            $smarty -> assign("Message", YOU_SAW.$_POST['amount'].T_LANDS2.$arrHerbsname[$intKey].YOU_GAIN.$fltAbility.T_ABILITY." oraz ".$intExp." PD.");
         }
     }
 
@@ -509,14 +517,17 @@ if (isset($_GET['step']) && $_GET['step'] == 'plantation')
 		if ($objHerb -> fields['age'] > 3)
 		  {
 		    $fltAbility = $intAmount * 0.01;
+		    $intExp = $intAmount * 5;
 		  }
 		else
 		  {
 		    $fltAbility = 0.01;
+		    $intExp = 0;
 		  }
 		if ($player->clas == 'Rzemieślnik') 
 		  {
 		    $fltAbility = $fltAbility * 2;
+		    $intExp = $intExp * 2;
 		  }
                 if ($_POST['amount'] < $objHerb -> fields['amount'])
                 {
@@ -527,8 +538,9 @@ if (isset($_GET['step']) && $_GET['step'] == 'plantation')
                     $db -> Execute("DELETE FROM `farm` WHERE `id`=".$_GET['id']);
                 }
                 $db -> Execute("UPDATE `herbs` SET `".$arrHerbname[$intKey]."`=`".$arrHerbname[$intKey]."`+".$intAmount." WHERE `gracz`=".$player -> id);
-                $db -> Execute("UPDATE `players` SET `energy`=`energy`-".$intEnergy.", `herbalist`=`herbalist`+".$fltAbility." WHERE `id`=".$player -> id);
-                $smarty -> assign("Message", YOU_GATHER.$intAmount.T_AMOUNT2.$arrHerbname[$intKey].T_FARM.$fltAbility.T_ABILITY);
+		checkexp($player->exp, $intExp, $player->level, $player->race, $player->user, $player->id, 0, 0, $player->id, 'herbalist', $fltAbility);
+                $db -> Execute("UPDATE `players` SET `energy`=`energy`-".$intEnergy." WHERE `id`=".$player -> id);
+                $smarty -> assign("Message", YOU_GATHER.$intAmount.T_AMOUNT2.$arrHerbname[$intKey].T_FARM.$fltAbility.T_ABILITY." oraz ".$intExp." PD");
             }
             $objHerb -> Close();
         }

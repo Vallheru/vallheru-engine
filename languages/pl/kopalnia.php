@@ -49,7 +49,7 @@ if (isset($_GET['action']) && $_GET['action'] == 'dig')
     define("YOU_GO", "Wybrałeś się na poszukiwanie minerałów ");
     define("T_AMOUNT2", " razy.");
     define("YOU_FIND", "<br /><br />Zdobyłeś:<br /><br />");
-    define("T_ABILITY", " punktów do umiejętności górnictwo.<br />");
+    define("T_ABILITY", " punktów do umiejętności górnictwo");
     define("T_CRYSTALS", " kryształów<br />");
     define("T_ADAMANTIUM", " brył adamantium<br />");
     define("T_MITHRIL", " sztuk mithrilu<br />");

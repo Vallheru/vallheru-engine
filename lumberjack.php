@@ -7,7 +7,7 @@
  *   @copyright            : (C) 2004,2005,2006,2011 Vallheru Team based on Gamers-Fusion ver 2.5
  *   @author               : thindil <thindil@tuxfamily.org>
  *   @version              : 1.4
- *   @since                : 05.09.2011
+ *   @since                : 30.09.2011
  *
  */
 
@@ -78,6 +78,7 @@ if (isset ($_GET['action']) && $_GET['action'] == 'chop')
     $strMessage = '';
     $intAmountability = 0;
     $strInfo = '';
+    $intExp = 0;
     for ($i = 1; $i <= $_POST['amount']; $i++)
     {
         $intRoll = rand(1,8);
@@ -91,6 +92,7 @@ if (isset ($_GET['action']) && $_GET['action'] == 'chop')
             }
             $arrAmount[$intKey] = $arrAmount[$intKey] + $intAmount;
             $intAmountability = $intAmountability + 0.1;
+	    $intExp += ($arrKey[$intKey] * 2) * $intAmount;
         }
         if ($intRoll == 7) 
         {
@@ -150,12 +152,18 @@ if (isset ($_GET['action']) && $_GET['action'] == 'chop')
         $strMessage = $strMessage.$intAmountgold.T_GOLD;
     }
     if ($intAmountability)
-    {
-        $strMessage = $strMessage.$intAmountability.T_ABILITY;
-    }
+      {
+	if ($player->clas == 'Rzemieślnik')
+	  {
+	    $intExp = $intExp * 2;
+	  }
+        $strMessage = $strMessage.$intAmountability.T_ABILITY." oraz ".$intExp." PD.<br />";
+      }
     $strMessage = $strMessage.$strInfo;
     $smarty -> assign("Message", $strMessage);
-    $db -> Execute("UPDATE `players` SET `energy`=`energy`-".$i.", `credits`=`credits`+".$intAmountgold.", `hp`=`hp`-".$intLosthp.", `lumberjack`=`lumberjack`+".$intAmountability." WHERE `id`=".$player -> id);
+    require_once('includes/checkexp.php');
+    checkexp($player->exp, $intExp, $player->level, $player->race, $player->user, $player->id, 0, 0, $player->id, 'lumberjack', $intAmountability);
+    $db -> Execute("UPDATE `players` SET `energy`=`energy`-".$i.", `credits`=`credits`+".$intAmountgold.", `hp`=`hp`-".$intLosthp." WHERE `id`=".$player -> id);
     $objLumber = $db -> Execute("SELECT `owner` FROM `minerals` WHERE `owner`=".$player -> id);
     if (!$objLumber -> fields['owner'])
     {

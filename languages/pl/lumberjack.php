@@ -7,7 +7,7 @@
  *   @copyright            : (C) 2004,2005,2006,2011 Vallheru Team based on Gamers-Fusion ver 2.5
  *   @author               : thindil <thindil@tuxfamily.org>
  *   @version              : 1.4
- *   @since                : 05.09.2011
+ *   @since                : 30.09.2011
  *
  */
 
@@ -47,7 +47,7 @@ if (isset ($_GET['action']) && $_GET['action'] == 'chop')
     define("T_YEW", " sztuk drewna cisowego<br />");
     define("T_ELM", " sztuk drewna z wiązu<br />");
     define("T_GOLD", " sztuk złota<br />");
-    define("T_ABILITY", " poziomu w umiejętności Drwalnictwo<br />");
+    define("T_ABILITY", " poziomu w umiejętności Drwalnictwo");
     define("TREE_STOMP", "Podczas wyrębu przewróciło się na ciebie drzewo. ");
     define("YOU_LUCK", "Na szczęście zdążyłeś uniknąć przygniecenia, jednak przerwało to na moment twoją pracę.");
     define("YOU_UNLUCK", "Niestety nie udało ci się go uniknąć. Spadając na ciebie zadało tobie ");
