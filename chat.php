@@ -147,9 +147,10 @@ if (isset ($_GET['action']) && $_GET['action'] == 'chat')
                 $evade = true;
             }
         }
+	$message = $db -> qstr($message, get_magic_quotes_gpc());
         if (!isset($evade)) 
         {
-	  $db -> Execute("INSERT INTO `chat` (`user`, `chat`, `senderid`, `ownerid`) VALUES('".$starter."', '".$message."', ".$player -> id.", ".$owner.")") or die($db->ErrorMsg());
+	  $db -> Execute("INSERT INTO `chat` (`user`, `chat`, `senderid`, `ownerid`) VALUES('".$starter."', ".$message.", ".$player -> id.", ".$owner.")") or die($db->ErrorMsg());
         }
 	if (isset($strTarget))
 	  {

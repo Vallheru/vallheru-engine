@@ -58,7 +58,7 @@ function bbcodetohtml($text, $isChat = FALSE)
     /**
     * Delete HTML tags from text
     */
-    $text = htmlspecialchars($text, ENT_COMPAT, 'UTF-8');
+    $text = str_replace("<", "&lt;", $text);
     $text = strip_tags($text);
 
     /**

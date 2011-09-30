@@ -1,5 +1,7 @@
 2011-09-30  Bartek thindil Jasicki  <thindil@tuxfamily.org>
 
+	* BUG,includes/bbcode.php, chat.php: 
+	fixed special chars
 	* BUG,includes/foot.php: 
 	fixed typo
 	* UPDATE,includes/bbcode.php, chat.php: 
