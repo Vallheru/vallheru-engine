@@ -8,7 +8,7 @@
  *   @author               : thindil <thindil@tuxfamily.org>
  *   @author               : eyescream <tduda@users.sourceforge.net>
  *   @version              : 1.4
- *   @since                : 22.09.2011
+ *   @since                : 30.09.2011
  *
  */
 
@@ -41,10 +41,6 @@ require_once("languages/".$player -> lang."/chat.php");
 $db -> Execute("UPDATE `players` SET `page`='Chat' WHERE `id`=".$player -> id);
 if (isset ($_GET['action']) && $_GET['action'] == 'chat') 
 {
-    if (isset($_POST['msg']))
-    {
-        $_POST['msg'] = strip_tags($_POST['msg']);
-    }
     if (isset($_POST['msg']) && $_POST['msg'] != '') 
       {
 	switch ($player->rank)

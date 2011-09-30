@@ -1,5 +1,7 @@
 2011-09-30  Bartek thindil Jasicki  <thindil@tuxfamily.org>
 
+	* UPDATE,includes/bbcode.php, chat.php: 
+	better strip HTML tags
 	* FEATURE,languages/pl/lumberjack.php, languages/pl/kopalnia.php, languages/pl/mines.php, languages/pl/farm.php, lumberjack.php, kopalnia.php,
 	mines.php, farm.php, smelter.php:
 	added experience gaining to skills
