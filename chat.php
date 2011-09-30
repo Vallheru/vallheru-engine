@@ -161,9 +161,10 @@ if (isset ($_GET['action']) && $_GET['action'] == 'chat')
         if (!$objInnkeeper -> fields['user'])
         {
             if (isset($strAnswer))
-            {
+	      {
+		$strAnswer = $db -> qstr($strAnswer, get_magic_quotes_gpc());
                 $db -> Execute("INSERT INTO `chat` (`user`, `chat`) VALUES('<i>".INNKEEPER2."</i>', '".$strAnswer."')");
-            }
+	      }
         }
 	else
         {

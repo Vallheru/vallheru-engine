@@ -8,7 +8,7 @@
  *   @author               : thindil <thindil@tuxfamily.org>
  *   @author               : eyescream <tduda@users.sourceforge.net>
  *   @version              : 1.4
- *   @since                : 19.09.2011
+ *   @since                : 30.09.2011
  *
  */
 
@@ -335,7 +335,7 @@ if (isset ($_GET['view']) && $_GET['view'] == 'add')
 	  }
 	else
 	  {
-	    $_POST['amount'] = $item->fields['amount'];
+	    $_POST['amount'] = $objAmount->fields['amount'];
 	  }
         if (!$objAmount -> fields['amount'])
         {
