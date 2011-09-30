@@ -1,5 +1,7 @@
 2011-09-30  Bartek thindil Jasicki  <thindil@tuxfamily.org>
 
+	* UPDATE,farm.php: 
+	changed amount of experience for sow herbs
 	* BUG,amarket.php: 
 	fixed bug with add components to market
 	* BUG,includes/bbcode.php, chat.php: 

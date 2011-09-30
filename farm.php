@@ -399,7 +399,7 @@ if (isset($_GET['step']) && $_GET['step'] == 'plantation')
                 }
             }
             $fltAbility = $_POST['amount'] * 0.01;
-	    $intExp = $_POST['amount'] * 50;
+	    $intExp = $_POST['amount'] * 5;
 	    if ($player->clas == 'Rzemieślnik') 
 	      {
 		$fltAbility = $fltAbility * 2;
