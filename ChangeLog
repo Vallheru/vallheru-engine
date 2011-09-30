@@ -1,5 +1,7 @@
 2011-09-30  Bartek thindil Jasicki  <thindil@tuxfamily.org>
 
+	* BUG,languages/pl/account.php: 
+	fixed typo
 	* BUG,equip.php:
 	fixed bug with repair used equipment
 
