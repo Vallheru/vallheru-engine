@@ -9,7 +9,7 @@
  *   @author               : yeskov <yeskov@users.sourceforge.net>
  *   @author               : eyescream <tduda@users.sourceforge.net>
  *   @version              : 1.4
- *   @since                : 29.09.2011
+ *   @since                : 01.10.2011
  *
  */
 
@@ -473,6 +473,7 @@ if (isset ($_GET['action']) && $_GET['action'] == 'items')
         case 'I':   // Rings: bonus type is in ring's description, so here we only display value.
         default:    // same for items that may be added in future, only 'power' field in database with no description.
             $strAttributes.= '+'.$item -> fields['power'];
+	    break;
     }
     $strAttributes.= ').';
 
@@ -690,23 +691,21 @@ if (!isset($_GET['action']) || (isset($_GET['action']) && $_GET['action'] != 'as
         $arrPower = array();
         $arrAgi = array();
         $arrSpeed = array();
-        $i = 0;
         while (!$item -> EOF) 
         {
-            $arrid[$i] = $item -> fields['id'];
-            $arrname[$i] = $item -> fields['name'];
+            $arrid[] = $item -> fields['id'];
+            $arrname[] = $item -> fields['name'];
 	    if ($item->fields['type'] != 'R')
 	      {
-		$arramount[$i] = $item -> fields['amount'];
+		$arramount[] = $item -> fields['amount'];
 	      }
 	    else
 	      {
-		$arramount[$i] = $item->fields['wt'];
+		$arramount[] = $item->fields['wt'];
 	      }
-            $arrPower[$i] = $item -> fields['power'];
-            $arrAgi[$i] = $item -> fields['zr'] * -1;
-            $arrSpeed[$i] = $item -> fields['szyb'];
-            $i = $i + 1;
+            $arrPower[] = $item -> fields['power'];
+            $arrAgi[] = $item -> fields['zr'] * -1;
+            $arrSpeed[] = $item -> fields['szyb'];
             $item -> MoveNext();
         }
         $smarty -> assign (array("Itemid" => $arrid, 

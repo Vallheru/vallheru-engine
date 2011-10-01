@@ -1,3 +1,8 @@
+2011-10-01  Bartek thindil Jasicki  <thindil@tuxfamily.org>
+
+	* BUG,languages/pl/temple.php, bank.php:
+	fixed typo
+
 2011-09-30  Bartek thindil Jasicki  <thindil@tuxfamily.org>
 
 	* UPDATE,farm.php: 
