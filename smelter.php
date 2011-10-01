@@ -7,7 +7,7 @@
  *   @copyright            : (C) 2004,2005,2006,2011 Vallheru Team based on Gamers-Fusion ver 2.5
  *   @author               : thindil <thindil@tuxfamily.org>
  *   @version              : 1.4
- *   @since                : 30.09.2011
+ *   @since                : 01.10.2011
  *
  */
 
@@ -269,8 +269,8 @@ if (isset($_GET['step']) && $_GET['step'] == 'smelt')
             {
                 $strSql = $strSql.", ".$arrOres[$i]."=".$arrOres[$i]."-".$arrAmount[$i];
             }
-	    $fltAbility = ($intAmount / 50) * $arrBillets[$intKey] + (($_POST['amount'] - $intAmount) * 0.01);
-	    $intExp = $intAmount * $arrBillets[$intKey];
+	    $fltAbility = ($intAmount / 50)  + (($_POST['amount'] - $intAmount) * 0.01);
+	    $intExp = $intAmount * ($arrBillets[$intKey] / 4);
 	    if ($player->clas == 'Rzemieślnik')
 	      {
 		$fltAbility = $fltAbility * 2;
