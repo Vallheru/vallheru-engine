@@ -1,5 +1,7 @@
 2011-10-01  Bartek thindil Jasicki  <thindil@tuxfamily.org>
 
+	* BUG,preset.php: 
+	delete spells during player reset too
 	* UPDATE,smelter.php: 
 	reduced gaining metallurgy and experience
 	* BUG,templates/layout1/imarket.tpl, templates/imarket.tpl, imarket.php: 
