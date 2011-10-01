@@ -266,31 +266,36 @@ if (isset ($_GET['view']) && $_GET['view'] == 'add')
     $arrSpeed = array();
     $arrDur = array();
     $arrMaxduf = array();
-    $i = 0;
     while (!$rzecz -> EOF) 
     {
-        $arrname[$i] = $rzecz -> fields['name'];
-        $arrid[$i] = $rzecz -> fields['id'];
+        $arrname[] = $rzecz -> fields['name'];
+        $arrid[] = $rzecz -> fields['id'];
 	if ($rzecz->fields['type'] != 'R')
 	  {
-	    $arrDur[$i] =  $rzecz->fields['wt'];
-	    $arrMaxdur[$i] = $rzecz->fields['maxwt'];
-	    $arramount[$i] = $rzecz->fields['amount'];
+	    $arrDur[] =  $rzecz->fields['wt'];
+	    $arrMaxdur[] = $rzecz->fields['maxwt'];
+	    $arramount[] = $rzecz->fields['amount'];
 	  }
 	else
 	  {
-	    $arrDur[$i] = 1;
-	    $arrMaxdur[$i] = 1;
-	    $arramount[$i] = $rzecz->fields['wt'];
+	    $arrDur[] = 1;
+	    $arrMaxdur[] = 1;
+	    $arramount[] = $rzecz->fields['wt'];
 	  }
-	$arrPower[$i] = $rzecz->fields['power'];
-	$arrSpeed[$i] = $rzecz->fields['szyb'];
-	$arrAgi[$i] = $rzecz->fields['zr'];
+	$arrPower[] = $rzecz->fields['power'];
+	$arrSpeed[] = $rzecz->fields['szyb'];
+	if ($rzecz->fields['zr'] >= 0)
+	  {
+	    $arrAgi[] = $rzecz->fields['zr'] * -1;
+	  }
+	else
+	  {
+	    $arrAgi[] = '+'.$rzecz->fields['zr'] * -1;
+	  }
         $rzecz -> MoveNext();
-        $i = $i + 1;
     }
     $rzecz -> Close();
-    if (!$arrid[0])
+    if (count($arrid) == 0)
     {
         error(NO_ITEMS);
     }

@@ -1,5 +1,7 @@
 2011-10-01  Bartek thindil Jasicki  <thindil@tuxfamily.org>
 
+	* BUG,templates/layout1/imarket.tpl, templates/imarket.tpl, imarket.php: 
+	fixed bug with show agility bonus
 	* FETURE,templates/layout1/header.tpl, templates/header.tpl, includes/head.php: 
 	changed link to mail
 	* BUG,languages/pl/temple.php, bank.php:

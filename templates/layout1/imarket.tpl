@@ -79,9 +79,7 @@
 	{if $Ispeed[item1] > 0}
 	    (+{$Ispeed[item1]} {$Ispd})
 	{/if}
-	{if $Iagi[item1] > 0}
-	    (-{$Iagi[item1]}% {$Iag})
-	{elseif $Iagi[item1] < 0}
+	{if $Iagi[item1] != 0}
 	    ({$Iagi[item1]}% {$Iag})
 	{/if}
 	{if $Imaxdur[item1] > 1}
