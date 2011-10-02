@@ -127,13 +127,7 @@
 				{$Assignen} <b>{$Name}</b> <input type="text" name="razy" size="5" />{$Senergy}
 				<input type="submit" value="{$Amake}" />
 				{if $Next != ""} <b>{$Name}</b> 
-				<select name="mineral">
-					<option value="copper">{$Mcopper}</option>
-					<option value="bronze">{$Mbronze}</option>
-					<option value="brass">{$Mbrass}</option>
-					<option value="iron">{$Miron}</option>
-					<option value="steel">{$Msteel}</option>
-				</select>
+				{html_options name=mineral options=$Moptions}
 				{/if}
 			</form>
 		{/if}

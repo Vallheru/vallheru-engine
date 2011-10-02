@@ -7,7 +7,7 @@
  *   @copyright            : (C) 2004,2005,2006,2011 Vallheru Team based on Gamers-Fusion ver 2.5
  *   @author               : thindil <thindil@tuxfamily.org>
  *   @version              : 1.4
- *   @since                : 28.09.2011
+ *   @since                : 02.10.2011
  *
  */
 
@@ -485,17 +485,32 @@ if (isset($_GET['kowal']) && ($_GET['kowal'] == 'kuznia' || $_GET['kowal'] == 'e
             error (YOU_DEAD);
 	  }
 	checkvalue($_GET['dalej']);
+	$objMinerals = $db->Execute("SELECT `owner`, `copper`, `bronze`, `brass`, `iron`, `steel` FROM `minerals` WHERE `owner`=".$player->id);
+	if (!$objMinerals->fields['owner'])
+	  {
+	    error("Nie posiadasz sztabek aby wykonać jakikolwiek przedmiot.");
+	  }
+	$arrKeys = array('copper', 'bronze', 'brass', 'iron', 'steel');
+	$arrNames = array('z miedzi (', 'z brązu (', 'z mosiądzu (', 'z żelaza (', 'ze stali (');
+	$arrOptions = array();
+	for ($i = 0; $i < count($arrKeys); $i++)
+	  {
+	    if ($objMinerals->fields[$arrKeys[$i]] > 0)
+	      {
+		$arrOptions[$arrKeys[$i]] = $arrNames[$i].$objMinerals->fields[$arrKeys[$i]]." sztabek)";
+	      }
+	  }
+	if (count($arrOptions) == 0)
+	  {
+	    error("Nie posiadasz sztabek aby wykonać jakikolwiek przedmiot.");
+	  }
         $objSmith = $db -> Execute("SELECT `name` FROM `smith` WHERE `id`=".$_GET['dalej']);
         $smarty -> assign(array("Link" => "kowal.php?kowal=".$_GET['kowal']."&rob=".$_GET['dalej'], 
                                 "Name" => $objSmith -> fields['name'],
                                 "Assignen" => ASSIGN_EN,
                                 "Senergy" => S_ENERGY,
                                 "Amake" => A_MAKE,
-                                "Mcopper" => M_COPPER,
-                                "Mbronze" => M_BRONZE,
-                                "Mbrass" => M_BRASS,
-                                "Miron" => M_IRON,
-                                "Msteel" => M_STEEL));
+                                "Moptions" => $arrOptions));
         $objSmith -> Close();
       }
     if (isset($_GET['konty'])) 

@@ -1,5 +1,7 @@
 2011-10-02  Bartek thindil Jasicki  <thindil@tuxfamily.org>
 
+	* FEATURE,templates/layout1/kowal.tpl, templates/kowal.tpl, kowal.php: 
+	added info about owned materials
 	* BUG,explore.php: 
 	fixed bug with no monster for escape
 	* UPDATE,templates/layout1/outposts.tpl, templates/outposts.tpl, languages/pl/outposts.php, outposts.php:
