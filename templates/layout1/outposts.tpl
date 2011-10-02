@@ -104,7 +104,7 @@
 
 {if $View == "shop"}
 {* Part 1: Display shop info and player's resources. *}
-    {$Shopinfo} <b>{$Maxtroops}</b> {$Shopinfo2} <b>{$Maxequips}</b> {$Shopinfo3}
+    {$Shopinfo} <b>{$Maxtroops}</b> {$Ttroops} {$Shopinfo2} <b>{$Maxequips}</b> {$Tequips}{$Shopinfo3}
     <ul>
         <li>{$Gold}{$Goldcoins}</li>
         <li>{$Platinum}{$Platinumpcs}</li>

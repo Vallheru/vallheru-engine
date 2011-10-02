@@ -1191,36 +1191,57 @@ if (isset ($_GET['view']) && $_GET['view'] == 'shop')
     {
         $freebarracks = '';
     }
-    $objWarriors = $db -> Execute("SELECT value FROM settings WHERE setting='warriors'");
-    $objArchers = $db -> Execute("SELECT value FROM settings WHERE setting='archers'");
-    $objCatapults = $db -> Execute("SELECT value FROM settings WHERE setting='catapults'");
-    $objBarricades = $db -> Execute("SELECT value FROM settings WHERE setting='barricades'");
+    $arrTypes = array("'warriors'", "'archers'", "'catapults'", "'barricades'");
+    $arrTypes2 = array("warriors", "archers", "catapults", "barricades");
+    $objReserves = $db->Execute("SELECT `setting`, `value` FROM `settings` WHERE `setting` IN (".implode(',', $arrTypes).")");
+    $arrReserves = array(0, 0, 0, 0);
+    while(!$objReserves->EOF)
+      {
+	$intKey = array_search($objReserves->fields['setting'], $arrTypes2);
+	$arrReserves[$intKey] = $objReserves->fields['value'];
+	$objReserves->MoveNext();
+      }
+    $objReserves->Close();
     $maxtroops = ($out -> fields['size'] * 20) - $out -> fields['warriors'] - $out -> fields['archers'];
     $maxtroops = floor (($maxtroops > $out -> fields['gold'] / 25)? $out -> fields['gold'] / 25 : $maxtroops);
+    if ($maxtroops == 1)
+      {
+	$strMaxtroops = "żołnierza";
+      }
+    else
+      {
+	$strMaxtroops = "żołnierzy";
+      }
     $maxequips = ($out -> fields['size'] * 10) - $out -> fields['catapults'] - $out -> fields['barricades'];
     $maxequips = floor (($maxequips > $out -> fields['gold'] / 35)? $out -> fields['gold'] / 35 : $maxequips);
+    if ($maxequips == 1)
+      {
+	$strMaxequips = "machinę lub fortyfikację";
+      }
+    else
+      {
+	$strMaxequips = "machin lub fortyfikacji";
+      }
     $smarty -> assign (array("ArmyDevelopment" => ARMY_DEVELOPMENT,
                              "Maxtroops" => $maxtroops,
                              "Maxequips" => $maxequips,
+			     "Ttroops"=> $strMaxtroops,
+			     "Tequips" => $strMaxequips,
                              "Abuy" => A_BUY,
                              "Bsoldiers" => B_SOLDIERS,
                              "Barchers" => B_ARCHERS,
                              "Bmachines" => B_MACHINES,
                              "Bforts" => B_FORTS,
-                             "Awarriors" => $objWarriors -> fields['value'],
-                             "Aarchers" => $objArchers -> fields['value'],
-                             "Acatapults" => $objCatapults -> fields['value'],
-                             "Abarricades" => $objBarricades -> fields['value'],
+                             "Awarriors" => $arrReserves[0],
+                             "Aarchers" => $arrReserves[1],
+                             "Acatapults" => $arrReserves[2],
+                             "Abarricades" => $arrReserves[3],
                              "Buyall" => BUY_ALL,
                              "Management" => MANAGEMENT,
                              "Fence" => $freefence,
                              "Barracks" => $freebarracks,
                              "NoLair" => NO_LAIR,
                              "NoBarracks" => NO_BARRACKS));
-    $objWarriors -> Close();
-    $objArchers -> Close();
-    $objCatapults -> Close();
-    $objBarricades -> Close();
     /**
     * Add veterans to outpost
     */

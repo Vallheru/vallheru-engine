@@ -8,7 +8,7 @@
  *   @author               : thindil <thindil@tuxfamily.org>
  *   @author               : eyescream <tduda@users.sourceforge.net>
  *   @version              : 1.4
- *   @since                : 21.09.2011
+ *   @since                : 02.10.2011
  *
  */
 
@@ -163,8 +163,8 @@ if (isset ($_GET['view']) && $_GET['view'] == 'taxes')
 if (isset ($_GET['view']) && $_GET['view'] == 'shop') 
 {
     define("SHOP_INFO", "Witaj w sklepie w Strażnicy! Kupisz tutaj żołnierzy, fortyfikacje oraz machiny oblężnicze, możesz również zwiększyć rozmiar swojej Strażnicy. Obecnie możesz jeszcze dokupić");
-    define("SHOP_INFO2", "żołnierzy oraz");
-    define("SHOP_INFO3", "machin lub fortyfikacji.<br/>Posiadasz: ");
+    define("SHOP_INFO2", "oraz");
+    define("SHOP_INFO3", ".<br/>Posiadasz: ");
     define("OUTPOST_DEVELOPMENT", "Rozbudowa Strażnicy");
     define("LEVEL_INFO", "Powiększ rozmiar Strażnicy");
     define("NO_LEVEL_INFO", "Nie stać Cię na powiększenie rozmiaru Strażnicy. Potrzebujesz ");
