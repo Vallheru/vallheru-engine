@@ -1,5 +1,7 @@
 2011-10-02  Bartek thindil Jasicki  <thindil@tuxfamily.org>
 
+	* BUG,chat.php: 
+	fixed bot answer
 	* FEATURE,templates/layout1/kowal.tpl, templates/kowal.tpl, kowal.php: 
 	added info about owned materials
 	* BUG,explore.php: 

@@ -8,7 +8,7 @@
  *   @author               : thindil <thindil@tuxfamily.org>
  *   @author               : eyescream <tduda@users.sourceforge.net>
  *   @version              : 1.4
- *   @since                : 30.09.2011
+ *   @since                : 02.10.2011
  *
  */
 
@@ -163,7 +163,7 @@ if (isset ($_GET['action']) && $_GET['action'] == 'chat')
             if (isset($strAnswer))
 	      {
 		$strAnswer = $db -> qstr($strAnswer, get_magic_quotes_gpc());
-                $db -> Execute("INSERT INTO `chat` (`user`, `chat`) VALUES('<i>".INNKEEPER2."</i>', '".$strAnswer."')");
+                $db -> Execute("INSERT INTO `chat` (`user`, `chat`) VALUES('<i>".INNKEEPER2."</i>', ".$strAnswer.")");
 	      }
         }
 	else
