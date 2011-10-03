@@ -243,7 +243,7 @@
 {if $Poison > "0"}
     <form method="post" action="equip.php?poison={$Poison}&amp;step=poison"><input type="submit" value="{$Poisonit}" /> <select name="weapon">
     {section name=item loop=$Poisonitem}
-        <option value="{$Poisonid[item]}">{$Poisonitem[item]} ({$Tamount}: {$Poisonamount[item]})</option>
+        <option value="{$Poisonid[item]}">{$Poisonitem[item]} (+{$Poisonpower[item]}) ({$Tamount}: {$Poisonamount[item]})</option>
     {/section}
     </select>
     <input type="hidden" value="{$Poison}" name="poison" />

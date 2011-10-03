@@ -873,25 +873,26 @@ if (isset ($_GET['poison']))
     {
         error (NO_POTION);
     }
-    $wep = $db -> Execute("SELECT `id`, `name`, `amount` FROM `equipment` WHERE `owner`=".$player -> id." AND (`type`='W' OR `type`='R') AND `status`='U' AND `poison`=0");
+    $wep = $db -> Execute("SELECT `id`, `name`, `amount`, `power` FROM `equipment` WHERE `owner`=".$player -> id." AND `type` IN ('W', 'R') AND `status`='U' AND `poison`=0");
     $arrname = array();
     $arrid = array();
     $arramount = array();
-    $i = 0;
+    $arrPower = array();
     while (!$wep -> EOF) 
     {
-        $arrname[$i] = $wep -> fields['name'];
-        $arrid[$i] = $wep -> fields['id'];
-        $arramount[$i] = $wep -> fields['amount'];
-        $i = $i + 1;
+        $arrname[] = $wep -> fields['name'];
+        $arrid[] = $wep -> fields['id'];
+        $arramount[] = $wep -> fields['amount'];
+	$arrPower[] = $wep->fields['power'];
         $wep -> MoveNext();
     }
     $wep -> Close();
     $smarty -> assign ( array("Poisonitem" => $arrname, 
-        "Poisonid" => $arrid, 
-        "Poisonamount" => $arramount,
-        "Poisonit" => POISON_IT,
-        "Tamount" => AMOUNT));
+			      "Poisonid" => $arrid, 
+			      "Poisonamount" => $arramount,
+			      "Poisonpower" => $arrPower,
+			      "Poisonit" => POISON_IT,
+			      "Tamount" => AMOUNT));
     if (isset($_GET['step']) && $_GET['step'] == 'poison') 
       {
 	if (!isset($_POST['weapon']))
