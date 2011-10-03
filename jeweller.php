@@ -7,7 +7,7 @@
  *   @copyright            : (C) 2006,2011 Vallheru Team based on Gamers-Fusion ver 2.5
  *   @author               : thindil <thindil@tuxfamily.org>
  *   @version              : 1.4
- *   @since                : 22.09.2011
+ *   @since                : 03.10.2011
  *
  */
 
@@ -311,6 +311,23 @@ if (isset($_GET['step']) && $_GET['step'] == 'make2')
                     error(ERROR);
                 }
                 $intKey = array_search($_GET['make'], $arrId);
+		if ($intKey === FALSE)
+		  {
+		    error(ERROR);
+		  }
+		$objMinerals = $db -> Execute("SELECT `owner`, `adamantium`, `crystal`, `meteor` FROM `minerals` WHERE `owner`=".$player -> id);
+		if (!$objMinerals->fields['owner'])
+		  {
+		    error('Nie posiadasz minerałów potrzebnych do tworzenia pierścieni.');
+		  }
+		$objRings = $db -> Execute("SELECT `id`, `amount` FROM `equipment` WHERE `owner`=".$player -> id." AND `name`='".RING."' AND `status`='U'");
+		if (!$objRings -> fields['id'])
+		  {
+		    error("Nie posiadasz zwykłych pierścieni.");
+		  }
+		$strYouhave = 'Posiadasz <b>'.$objMinerals->fields['adamantium'].'</b> sztuk <b>adamantium</b>, <b>'.$objMinerals->fields['crystal'].' krzystałów</b>, <b>'.$objMinerals->fields['meteor'].'</b> sztuk <b>meteorytu</b> oraz <b>'.$objRings->fields['amount'].' pierścieni</b>.';
+		$objRings->Close();
+		$objMinerals->Close();
                 $arrBonus = array(R_AGI, R_STR, R_INT, R_WIS, R_SPE, R_CON);
                 if ($arrChange[$intKey] == YES)
                 {
@@ -328,7 +345,8 @@ if (isset($_GET['step']) && $_GET['step'] == 'make2')
                                         "Youmake" => YOU_MAKE,
                                         "Ramount" => R_AMOUNT2,
                                         "Withbon" => WITH_BON,
-                                        "Tenergy3" => R_ENERGY));
+                                        "Tenergy3" => R_ENERGY,
+					"Youhave" => $strYouhave));
             }
         }
             else
@@ -670,19 +688,26 @@ if (isset($_GET['step']) && $_GET['step'] == 'make3')
         $arrRpower = array();
         $arrRlevel = array();
         $arrRcost = array();
-        $i = 0;
         while (!$objRings -> EOF)
         {
-            $arrRid[$i] = $objRings -> fields['id'];
-            $arrRname[$i] = $objRings -> fields['name'];
-            $arrRamount[$i] = $objRings -> fields['amount'];
-            $arrRpower[$i] = $objRings -> fields['power'];
-            $arrRlevel[$i] = $objRings -> fields['minlev'];
-            $arrRcost[$i] = $objRings -> fields['cost'];
-            $i++;
+            $arrRid[] = $objRings -> fields['id'];
+            $arrRname[] = $objRings -> fields['name'];
+            $arrRamount[] = $objRings -> fields['amount'];
+            $arrRpower[] = $objRings -> fields['power'];
+            $arrRlevel[] = $objRings -> fields['minlev'];
+            $arrRcost[] = $objRings -> fields['cost'];
             $objRings -> MoveNext();
         }
         $objRings -> Close();
+	$objMinerals = $db -> Execute("SELECT `meteor` FROM `minerals` WHERE `owner`=".$player->id);
+	if (!$objMinerals->fields['meteor'])
+	  {
+	    $strMeteor = 'Nie posiadasz meteoru.';
+	  }
+	else
+	  {
+	    $strMeteor = 'Posiadasz <b>'.$objMinerals->fields['meteor'].'</b> sztuk <b>meteorytu</b>.';
+	  }
 
         $smarty -> assign(array("Ringinfo" => RING_INFO,
                                 "Tname" => T_NAME,
@@ -703,7 +728,8 @@ if (isset($_GET['step']) && $_GET['step'] == 'make3')
                                 "Rid2" => $arrRid,
                                 "Rname2" => $arrRname,
                                 "Ramount2" => $arrRamount,
-                                "Rpower" => $arrRpower));
+                                "Rpower" => $arrRpower,
+				"Ameteor" => $strMeteor));
     }
         else
     {

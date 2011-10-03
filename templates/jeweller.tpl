@@ -73,7 +73,7 @@
                     {section name=make loop=$Rbonus2}
                         <option value="{$Rbonus2[make]}">{$Rbonus2[make]}</option>
                     {/section}
-                    </select>{/if} {$Ramount} <input type="text" name="amount" size="5" value="0"/> {$Tenergy3}
+                    </select>{/if} {$Ramount} <input type="text" name="amount" size="5" value="0"/> {$Tenergy3} {$Youhave}
                     <input type="hidden" value="{$Make}" name="make" />
                 </form>
             {/if}
@@ -124,7 +124,7 @@
             {section name=rings3 loop=$Rid2}
                 <option value="{$Rid2[rings3]}">{$Rname2[rings3]} +{$Rpower[rings3]} {$Ramount3} {$Ramount2[rings3]}</option>
             {/section}
-            </select> {$Onspecial} {$Ramount4} <input type="text" name="amount" value="0" size="5" /> {$Renergy2}
+            </select> {$Onspecial} {$Ramount4} <input type="text" name="amount" value="0" size="5" /> {$Renergy2} {$Ameteor}
         </form>
     {else}
         <table>
