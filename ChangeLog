@@ -1,5 +1,7 @@
 2011-10-03  Bartek thindil Jasicki  <thindil@tuxfamily.org>
 
+	* BUG,includes/head.php: 
+	fixed bug with crash when no forum categories are available
 	* FEATURE,templates/layout1/jeweller.tpl, templates/jeweller.tpl, jeweller.php: 
 	added info about owned minerals
 	* BUG,house.php, stats.php, rest.php: 

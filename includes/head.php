@@ -7,7 +7,7 @@
  *   @copyright            : (C) 2004,2005,2006,2007,2011 Vallheru Team based on Gamers-Fusion ver 2.5
  *   @author               : thindil <thindil@tuxfamily.org>
  *   @version              : 1.4
- *   @since                : 01.10.2011
+ *   @since                : 03.10.2011
  *
  */
 
@@ -599,15 +599,24 @@ if ($player->forumcats == 'All')
 	$objFcat->MoveNext();
       }
     $objFcat->Close();
-    $objFunread = $db->Execute("SELECT count(`id`) FROM `topics` WHERE `w_time`>".$intForums." AND `cat_id` IN(".implode(",", $arrForums).")") or die($db->ErrorMsg());
+    if (count($arrForums) > 0)
+      {
+	$objFunread = $db->Execute("SELECT count(`id`) FROM `topics` WHERE `w_time`>".$intForums." AND `cat_id` IN(".implode(",", $arrForums).")") or die($db->ErrorMsg());
+	$intFunread = $objFunread->fields['count(`id`)'];
+	$objFunread->Close();
+      }
   }
 else
   {
     $arrForums = explode(",", $player->forumcats);
     $objFunread = $db->Execute("SELECT count(`id`) FROM `topics` WHERE `w_time`>".$intForums." AND `cat_id` IN(".$player->forumcats.")") or die($db->ErrorMsg());
+    $intFunread = $objFunread->fields['count(`id`)'];
+    $objFunread->Close();
   }
-$intFunread = $objFunread->fields['count(`id`)'];
-$objFunread->Close();
+if (!isset($intFunread))
+  {
+    $intFunread = 0;
+  }
 if ($intFunread == 0)
   {
     $strFunread = '[0]';
