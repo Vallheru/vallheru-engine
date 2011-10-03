@@ -8,7 +8,7 @@
  *   @author               : thindil <thindil@tuxfamily.org>
  *   @author               : mori <ziniquel@users.sourceforge.net>
  *   @version              : 1.4
- *   @since                : 25.09.2011
+ *   @since                : 03.10.2011
  *
  */
 
@@ -172,7 +172,7 @@ if ($player -> location == 'Ardulith')
 }
 
 $cape = $db -> Execute("SELECT `power` FROM `equipment` WHERE `owner`=".$player -> id." AND `type`='C' AND `status`='E'");
-$maxmana = ($player->inteli + $player->wisdom);
+$maxmana = ($arrCurstats[2] + $arrCurstats[3]);
 $maxmana = (int)($maxmana + (($cape -> fields['power'] / 100) * $maxmana));
 $cape -> Close();
 if ($player->mana < $maxmana) 

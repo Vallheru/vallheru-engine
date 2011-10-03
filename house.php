@@ -8,7 +8,7 @@
  *   @author               : thindil <thindil@tuxfamily.org>
  *   @author               : eyescream <tduda@users.sourceforge.net>
  *   @version              : 1.4
- *   @since                : 12.09.2011
+ *   @since                : 03.10.2011
  *
  */
 
@@ -708,10 +708,33 @@ if (isset ($_GET['action']) && $_GET['action'] == 'my')
             {
                 $gainenergy =  ceil(($player -> max_energy / 100) * $house -> fields['value']);
                 $gainhp = ceil(($player -> max_hp / 100) * $house -> fields['value']);
-                $cape = $db -> Execute("SELECT `power` FROM `equipment` WHERE `owner`=".$player -> id." AND `type`='C' AND `status`='E'");
-                $maxmana = ($player -> inteli + $player -> wisdom);
-                $maxmana = $maxmana + (($cape -> fields['power'] / 100) * $maxmana);
-                $cape -> Close();
+		$arrEquip = $player -> equipment();
+		$arrRings = array('inteligencji', 'woli');
+		$arrStat = array('inteli', 'wisdom');
+		if ($arrEquip[9][0])
+		  {
+		    $arrRingtype = explode(" ", $arrEquip[9][1]);
+		    $intAmount = count($arrRingtype) - 1;
+		    $intKey = array_search($arrRingtype[$intAmount], $arrRings);
+		    if ($intKey != NULL)
+		      {
+			$strStat = $arrStat[$intKey];
+			$player -> $strStat = $player -> $strStat + $arrEquip[9][2];
+		      }
+		  }
+		if ($arrEquip[10][0])
+		  {
+		    $arrRingtype = explode(" ", $arrEquip[10][1]);
+		    $intAmount = count($arrRingtype) - 1;
+		    $intKey = array_search($arrRingtype[$intAmount], $arrRings);
+		    if ($intKey != NULL)
+		      {
+			$strStat = $arrStat[$intKey];
+			$player -> $strStat = $player -> $strStat + $arrEquip[10][2];
+		      }
+		  }
+		$maxmana = ($player -> inteli + $player -> wisdom);
+		$maxmana = $maxmana + (($arrEquip[8][2] / 100) * $maxmana);
                 $gainmana = ceil(($maxmana / 100) * $house -> fields['value']);
                 $gainlife = $gainhp + $player -> hp;
                 if ($gainlife > $player -> max_hp) 
