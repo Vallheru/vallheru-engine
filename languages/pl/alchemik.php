@@ -4,10 +4,10 @@
  *   Polish language for alchemik.php
  *
  *   @name                 : alchemik.php                            
- *   @copyright            : (C) 2004,2005,2006 Vallheru Team based on Gamers-Fusion ver 2.5
- *   @author               : thindil <thindil@users.sourceforge.net>
- *   @version              : 1.2
- *   @since                : 04.07.2006
+ *   @copyright            : (C) 2004,2005,2006,2011 Vallheru Team based on Gamers-Fusion ver 2.5
+ *   @author               : thindil <thindil@tuxfamily.org>
+ *   @version              : 1.4
+ *   @since                : 03.10.2011
  *
  */
 
@@ -74,9 +74,9 @@ if (isset ($_GET['alchemik']) && $_GET['alchemik'] == 'pracownia')
     if (isset($_GET['dalej'])) 
     {
         define("DEAD_PLAYER", "Nie możesz wykonywać mikstur ponieważ jesteś martwy!");
-        define("P_START", "Spróbuj wykonać");
+        define("P_START", "Spróbuj");
         define("P_AMOUNT", "razy");
-        define("A_MAKE", "Wykonaj");
+        define("A_MAKE", "wykonać");
     }
     if (isset($_GET['rob'])) 
     {

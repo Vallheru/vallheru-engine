@@ -82,8 +82,7 @@
 		{/if}
 		{if $Next != 0}
 			<form method="post" action="alchemik.php?alchemik=pracownia&amp;rob={$Id1}">
-				{$Pstart} <b>{$Name1}</b> <input type="text" name="razy" size="5" /> {$Pamount}.
-				<input type="submit" value="{$Amake}" />
+				{$Pstart} <input type="submit" value="{$Amake}" /> <b>{$Name1}</b> <input type="text" name="razy" size="5" /> {$Pamount}. {$Therb}
 			</form>
 		{/if}
 		{if $Make != 0}

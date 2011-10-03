@@ -7,7 +7,7 @@
  *   @copyright            : (C) 2004,2005,2006,2007,2011 Vallheru Team based on Gamers-Fusion ver 2.5
  *   @author               : thindil <thindil@tuxfamily.org>
  *   @version              : 1.4
- *   @since                : 21.09.2011
+ *   @since                : 03.10.2011
  *
  */
 
@@ -190,12 +190,27 @@ if (isset ($_GET['alchemik']) && $_GET['alchemik'] == 'pracownia')
             error (DEAD_PLAYER);
         }
 	checkvalue($_GET['dalej']);
-        $kuznia = $db -> Execute("SELECT `name` FROM `alchemy_mill` WHERE `id`=".$_GET['dalej']);
+        $kuznia = $db -> Execute("SELECT `name`, `illani`, `illanias`, `nutari`, `dynallca` FROM `alchemy_mill` WHERE `id`=".$_GET['dalej']);
+	$arrHerbs = array('illani', 'illanias', 'nutari', 'dynallca');
+	$strHerb = 'Posiadasz ';
+	foreach ($arrHerbs as $strHerbname)
+	  {
+	    if ($kuznia->fields[$strHerbname] > 0)
+	      {
+		if ($strHerb != 'Posiadasz ')
+		  {
+		    $strHerb = $strHerb.', ';
+		  }
+		$strHerb = $strHerb.'<b>'.$herb->fields[$strHerbname]."</b> sztuk ".ucfirst($strHerbname);
+	      }
+	  }
+	$strHerb = $strHerb.'.';
         $smarty -> assign (array ("Name1" => $kuznia -> fields['name'], 
                                   "Id1" => $_GET['dalej'],
                                   "Pstart" => P_START,
                                   "Pamount" => P_AMOUNT,
-                                  "Amake" => A_MAKE));
+                                  "Amake" => A_MAKE,
+				  "Therb" => $strHerb));
         $kuznia -> Close();
     }
     if (isset($_GET['rob'])) 
