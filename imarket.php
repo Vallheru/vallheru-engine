@@ -8,7 +8,7 @@
  *   @author               : thindil <thindil@tuxfamily.org>
  *   @author               : eyescream <tduda@users.sourceforge.net>
  *   @version              : 1.4
- *   @since                : 29.09.2011
+ *   @since                : 03.10.2011
  *
  */
 
@@ -260,7 +260,7 @@ if (isset ($_GET['view']) && $_GET['view'] == 'add')
 {
     $rzecz = $db -> Execute("SELECT `id`, `name`, `amount`, `power`, `szyb`, `wt`, `maxwt`, `zr`, `type` FROM `equipment` WHERE `status`='U' AND `type` NOT IN ('I', 'O') AND `owner`=".$player -> id);
     $arrname = array();
-    $arrid = array(0);
+    $arrid = array();
     $arramount = array();
     $arrPower = array();
     $arrSpeed = array();
@@ -320,14 +320,14 @@ if (isset ($_GET['view']) && $_GET['view'] == 'add')
     {
         if (!isset($_POST['cost'])) 
         {
-            error(ERROR);
+            error("Podaj cenę przedmiotu.");
         }
 	checkvalue($_POST['cost']);
 	checkvalue($_POST['przedmiot']);
-        $item = $db -> Execute("SELECT * FROM equipment WHERE id=".$_POST['przedmiot']." AND `status`='U' AND `type` NOT IN ('I', 'O') AND `owner`=".$player -> id);
+        $item = $db -> Execute("SELECT * FROM `equipment` WHERE `id`=".$_POST['przedmiot']." AND `status`='U' AND `type` NOT IN ('I', 'O') AND `owner`=".$player -> id);
 	if (!$item->fields['id'])
 	  {
-	    error(ERROR);
+	    error("Nie posiadasz takiego przedmiotu.");
 	  }
 	if (!isset($_POST['addall']))
 	  {
@@ -335,12 +335,15 @@ if (isset ($_GET['view']) && $_GET['view'] == 'add')
 	  }
 	else
 	  {
-	    $_POST['amount'] = $item->fields['amount'];
+	    if ($item->fields['type'] != 'R')
+	      {
+		$_POST['amount'] = $item->fields['amount'];
+	      }
+	    else
+	      {
+		$_POST['amount'] = $item->fields['wt'];
+	      }
 	  }
-        if ($item -> fields['type'] == 'I')
-        {
-            error(ERROR);
-        }
 	if ($item->fields['type'] != 'R')
 	  {
 	    if ($item -> fields['amount'] < $_POST['amount']) 
