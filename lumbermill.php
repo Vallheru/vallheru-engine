@@ -7,7 +7,7 @@
  *   @copyright            : (C) 2004,2005,2006,2007,2011 Vallheru Team based on Gamers-Fusion ver 2.5
  *   @author               : thindil <thindil@users.sourceforge.net>
  *   @version              : 1.4
- *   @since                : 27.09.2011
+ *   @since                : 04.10.2011
  *
  */
 
@@ -404,14 +404,43 @@ if (isset($_GET['mill']) && ($_GET['mill'] == 'mill' || $_GET['mill'] == 'elite'
 	  }
 	checkvalue($_GET['dalej']);
         $objLumber = $db -> Execute("SELECT `name`, `type` FROM `mill` WHERE `id`=".$_GET['dalej']);
+	if ($objLumber->fields['type'] == 'B')
+	  {
+	    $objMinerals = $db->Execute("SELECT `owner`, `pine`, `hazel`, `yew`, `elm` FROM `minerals` WHERE `owner`=".$player->id);
+	    if (!$objMinerals->fields['owner'])
+	      {
+		error("Nie posiadasz drewna aby móc robić łuki.");
+	      }
+	    $arrOptions = array();
+	    if ($objMinerals->fields['hazel'] > 0)
+	      {
+		$arrOptions[] = 'z leszczyny ('.$objMinerals->fields['hazel'].' sztuk)';
+	      }
+	    if ($objMinerals->fields['yew'] > 0)
+	      {
+		$arrOptions[] = 'z cisu ('.$objMinerals->fields['yew'].' sztuk)';
+	      }
+	    if ($objMinerals->fields['elm'] > 0)
+	      {
+		$arrOptions[] = 'z wiązu ('.$objMinerals->fields['elm'].' sztuk)';
+	      }
+	    if ($objMinerals->fields['hazel'] > 0 && $objMinerals->fields['elm'] > 0)
+	      {
+		$arrOptions[] = 'wzmocniony ('.$objMinerals->fields['hazel'].' sztuk leszczyny, '.$objMinerals->fields['elm'].' sztuk wiązu)';
+	      }
+	    if ($objMinerals->fields['hazel'] > 0 && $objMinerals->fields['elm'] > 0 && $objMinerals->fields['pine'] > 0 && $objMinerals->fields['yew'] > 0)
+	      {
+		$arrOptions[] = 'kompozytowy ('.$objMinerals->fields['pine'].' sztuk sosny, '.$objMinerals->fields['hazel'].' sztuk leszczyny, '.$objMinerals->fields['yew'].' sztuk cisu, '.$objMinerals->fields['elm'].' sztuk wiązu)';
+	      }
+	    if (count($arrOptions) == 0)
+	      {
+		error("Nie posiadasz drewna aby móc robić łuki.");
+	      }
+	  }
         $smarty -> assign(array("Id" => $_GET['dalej'], 
                                 "Name" => $objLumber -> fields['name'],
                                 "Type" => $objLumber -> fields['type'],
-                                "Lhazel" => L_HAZEL,
-                                "Lyew" => L_YEW,
-                                "Lelm" => L_ELM,
-                                "Lharder" => L_HARDER,
-                                "Lcomposite" => L_COMPOSITE,
+                                "Loptions" => $arrOptions,
                                 "Assignen" => ASSIGN_EN,
                                 "Menergy" => M_ENERGY,
                                 "Amake" => A_MAKE));
