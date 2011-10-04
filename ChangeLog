@@ -1,5 +1,7 @@
 2011-10-04  Bartek thindil Jasicki  <thindil@tuxfamily.org>
 
+	* BUG,languages/pl/account.php: 
+	fixed bugtrack
 	* UPDATE,account.php, languages/pl/account.php: 
 	some code cleanup
 	* FEATURE,languages/pl/log.php, templates/layout1/log.tpl, templates/log.tpl, log.php: 

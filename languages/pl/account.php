@@ -66,7 +66,7 @@ if (isset($_GET['view']))
 	define("LINK_DELETED", "Usunąłeś link z menu Nawigacja.");
       }
 
-    elseif ($_GET['view'] == 'bugtrack' || $_GET['view'] == 'bugreport')
+    if ($_GET['view'] == 'bugtrack' || $_GET['view'] == 'bugreport')
       {
 	define("BUG_TYPE", "Rodzaj błędu");
 	define("BUG_TEXT", "Literówka");
@@ -75,13 +75,13 @@ if (isset($_GET['view']))
 	define("BUG_NAME", "Tytuł zgłoszenia");
       }
 
-    elseif ($_GET['view'] == 'bugtrack')
+    if ($_GET['view'] == 'bugtrack')
       {
 	define("BUGTRACK_INFO", "Poniżej znajduje się lista zgłoszonych ale jeszcze nie naprawionych błędów.");
 	define("BUG_ID", "Numer");
       }
 
-    elseif ($_GET['view'] == 'bugreport')
+    if ($_GET['view'] == 'bugreport')
       {
 	define("BUG_DESC", "Opis błędu (minimum 50 znaków)");
 	define("A_REPORT", "Zgłoś");
