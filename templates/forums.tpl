@@ -104,7 +104,7 @@
     {section name=number2 loop=$Rtext}
         <table class="td" width="98%" cellpadding="0" cellspacing="0">
         <tr>
-        <td><b><a href="view.php?view={$Rplayerid[number2]}">{$Rstarter[number2]}</a></b> {$Wid} {$Rplayerid[number2]} {$Write}... (<a href="forums.php?topics={$Category}">{$Aback}</a>) (<a href="forums.php?topic={$Topic}&amp;quote={$Rid[number2]}">{$Aquote}</a>)
+        <td><b><a href="view.php?view={$Rplayerid[number2]}">{$Rstarter[number2]}</a></b> {$Wid} {$Rplayerid[number2]} {$Write}... (<a href="forums.php?topics={$Category}">{$Aback}</a>) {if $Closed == 'N'}(<a href="forums.php?topic={$Topic}&amp;quote={$Rid[number2]}">{$Aquote}</a>){/if}
          {$Action2[number2]}
         </td>
         </tr>
