@@ -414,29 +414,30 @@ if (isset($_GET['mill']) && ($_GET['mill'] == 'mill' || $_GET['mill'] == 'elite'
 	    $arrOptions = array();
 	    if ($objMinerals->fields['hazel'] > 0)
 	      {
-		$arrOptions[] = 'z leszczyny ('.$objMinerals->fields['hazel'].' sztuk)';
+		$arrOptions['H'] = 'z leszczyny ('.$objMinerals->fields['hazel'].' sztuk)';
 	      }
 	    if ($objMinerals->fields['yew'] > 0)
 	      {
-		$arrOptions[] = 'z cisu ('.$objMinerals->fields['yew'].' sztuk)';
+		$arrOptions['Y'] = 'z cisu ('.$objMinerals->fields['yew'].' sztuk)';
 	      }
 	    if ($objMinerals->fields['elm'] > 0)
 	      {
-		$arrOptions[] = 'z wiązu ('.$objMinerals->fields['elm'].' sztuk)';
+		$arrOptions['E'] = 'z wiązu ('.$objMinerals->fields['elm'].' sztuk)';
 	      }
 	    if ($objMinerals->fields['hazel'] > 0 && $objMinerals->fields['elm'] > 0)
 	      {
-		$arrOptions[] = 'wzmocniony ('.$objMinerals->fields['hazel'].' sztuk leszczyny, '.$objMinerals->fields['elm'].' sztuk wiązu)';
+		$arrOptions['A'] = 'wzmocniony ('.$objMinerals->fields['hazel'].' sztuk leszczyny, '.$objMinerals->fields['elm'].' sztuk wiązu)';
 	      }
 	    if ($objMinerals->fields['hazel'] > 0 && $objMinerals->fields['elm'] > 0 && $objMinerals->fields['pine'] > 0 && $objMinerals->fields['yew'] > 0)
 	      {
-		$arrOptions[] = 'kompozytowy ('.$objMinerals->fields['pine'].' sztuk sosny, '.$objMinerals->fields['hazel'].' sztuk leszczyny, '.$objMinerals->fields['yew'].' sztuk cisu, '.$objMinerals->fields['elm'].' sztuk wiązu)';
+		$arrOptions['C'] = 'kompozytowy ('.$objMinerals->fields['pine'].' sztuk sosny, '.$objMinerals->fields['hazel'].' sztuk leszczyny, '.$objMinerals->fields['yew'].' sztuk cisu, '.$objMinerals->fields['elm'].' sztuk wiązu)';
 	      }
 	    if (count($arrOptions) == 0)
 	      {
 		error("Nie posiadasz drewna aby móc robić łuki.");
 	      }
 	    $objMinerals->Close();
+	    $strLumber = '';
 	  }
 	else
 	  {
