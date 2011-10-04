@@ -4,10 +4,10 @@
  *   Polish language for players log
  *
  *   @name                 : log.php                            
- *   @copyright            : (C) 2004,2005,2006 Vallheru Team based on Gamers-Fusion ver 2.5
- *   @author               : thindil <thindil@users.sourceforge.net>
- *   @version              : 1.2
- *   @since                : 08.07.2006
+ *   @copyright            : (C) 2004,2005,2006,2011 Vallheru Team based on Gamers-Fusion ver 2.5
+ *   @author               : thindil <thindil@tuxfamily.org>
+ *   @version              : 1.4
+ *   @since                : 04.10.2011
  *
  */
 
@@ -45,24 +45,20 @@ define("A_MONTH", "30 dni");
 define("DELETED2", "Wykasowałeś stare wpisy.");
 define("A_PREVIOUS", "Późniejsze wydarzenia");
 define("A_NEXT", "Wcześniejsze wydarzenia");
+define("NO_PLAYER", "Nie ma takiego gracza!");
+define("NOT_STAFF", "Ten gracz nie jest ani władcą ani księciem!");
+define("NO_EVENT", "Nie ma takiego wpisu!");
+define("NOT_YOUR", "To nie twój wpis!");
+define("L_PLAYER", "Gracz ");
+define("L_ID", " o ID:");
+define("SEND_YOU", " wysłał ci fragment swojego dziennika na pocztę.");
+define("L_TITLE", "Fragment dziennika");
+define("YOU_SEND", "Wysłałeś(aś) wpis do ");
+define("SEND_THIS", "Wyślij ten wpis z dziennika do");
+define("A_SEND", "Wyślij");
 
 if (isset ($_GET['akcja']) && $_GET['akcja'] == 'wyczysc') 
 {
     define("YOU_CLEAR", "Dziennik wyczyszczony.");
-}
-
-if (isset ($_GET['send'])) 
-{
-    define("NO_PLAYER", "Nie ma takiego gracza!");
-    define("NOT_STAFF", "Ten gracz nie jest ani władcą ani księciem!");
-    define("NO_EVENT", "Nie ma takiego wpisu!");
-    define("NOT_YOUR", "To nie twój wpis!");
-    define("L_PLAYER", "Gracz ");
-    define("L_ID", " o ID:");
-    define("SEND_YOU", " wysłał ci fragment swojego dziennika na pocztę.");
-    define("L_TITLE", "Fragment dziennika");
-    define("YOU_SEND", "Wysłałeś(aś) wpis do ");
-    define("SEND_THIS", "Wyślij ten wpis z dziennika do");
-    define("A_SEND", "Wyślij");
 }
 ?>

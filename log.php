@@ -39,6 +39,15 @@ require_once("languages/".$player -> lang."/log.php");
 
 $db -> Execute("UPDATE log SET unread='T' WHERE unread='F' AND owner=".$player -> id);
 
+$sid = $db -> Execute("SELECT `id`, `user` FROM `players` WHERE `rank`='Admin' OR `rank`='Staff'");
+$arrStaff = array();
+while (!$sid->EOF) 
+  {
+    $arrStaff[$sid->fields['id']] = $sid -> fields['user'];
+    $sid -> MoveNext();
+  }
+$sid -> Close();
+
 $objTest = $db -> Execute("SELECT count(*) FROM `log` WHERE `owner`=".$player -> id." ORDER BY `id` DESC");
 $intPages = ceil($objTest -> fields['count(*)'] / 30);
 $objTest -> Close();
@@ -96,7 +105,7 @@ while (!$log -> EOF)
     $arrtext[$i] = $log -> fields['log'];
     $arrid1[$i] = $log -> fields['id'];
     $log -> MoveNext();
-    $i = $i + 1;
+    $i++;
 }
 $log -> Close();
 
@@ -108,20 +117,7 @@ if (isset($_GET['akcja']) && $_GET['akcja'] == 'wyczysc')
 
 if (isset($_GET['send'])) 
 {
-    $sid = $db -> Execute("SELECT `id`, `user` FROM `players` WHERE `rank`='Admin' OR `rank`='Staff'");
-    $arrname = array();
-    $arrid = array();
-    $i = 0;
-    while (!$sid -> EOF) {
-        $arrname[$i] = $sid -> fields['user'];
-        $arrid[$i] = $sid -> fields['id'];
-        $sid -> MoveNext();
-        $i = $i + 1;
-    }
-    $sid -> Close();
-    $smarty -> assign(array("Name" => $arrname, 
-                            "StaffId" => $arrid,
-                            "Sendthis" => SEND_THIS,
+    $smarty -> assign(array("Sendthis" => SEND_THIS,
                             "Asend" => A_SEND));
     if (isset ($_GET['step']) && $_GET['step'] == 'send') 
     {
@@ -153,29 +149,58 @@ if (isset($_GET['send']))
 }
 
 /**
-* Delete selected logs
+* Delete or send to staff selected logs
 */
-if (isset($_GET['action']) && $_GET['action'] == 'delete')
-{
-    $objLid = $db -> Execute("SELECT `id` FROM `log` WHERE `owner`=".$player -> id);
-    $arrId = array();
-    $i = 0;
-    while (!$objLid -> EOF)
-    {
-        $arrId[$i] = $objLid -> fields['id'];
-        $i = $i + 1;
-        $objLid -> MoveNext();
-    }
-    $objLid -> Close();
-    foreach ($arrId as $bid) 
-    {
-        if (isset($_POST[$bid])) 
-        {
-            $db -> Execute("DELETE FROM `log` WHERE `id`=".$bid);
-        }
-    }
-    error(DELETED);
-}
+if (isset($_GET['action']) && $_GET['action'] == 'selected')
+  {
+    if (isset($_POST['selected']))
+      {
+	if ($_POST['selected'] == A_DELETE)
+	  {
+	    $objLid = $db -> Execute("SELECT `id` FROM `log` WHERE `owner`=".$player -> id);
+	    while (!$objLid->EOF)
+	      {
+		if (isset($_POST[$objLid->fields['id']]))
+		  {
+		    $db->Execute("DELETE FROM `log` WHERE `id`=".$_POST[$objLid->fields['id']]);
+		  }
+		$objLid->MoveNext();
+	      }
+	    $objLid->Close();
+	    error(DELETED);
+	  }
+	else
+	  {
+	    $arrtest = $db -> Execute("SELECT `id`, `user`, `rank` FROM `players` WHERE `id`=".$_POST['staff']);
+	    if (!$arrtest -> fields['id']) 
+	      {
+		error (NO_PLAYER);
+	      }
+	    if ($arrtest -> fields['rank'] != 'Admin' && $arrtest -> fields['rank'] != 'Staff') 
+	      {
+		error (NOT_STAFF);
+	      }
+	    $strDate = $db -> DBDate($newdate);
+	    $objMessages = $db -> Execute("SELECT * FROM `log` WHERE `owner`=".$player->id);
+	    $blnSent = FALSE;
+	    while (!$objMessages->EOF)
+	      {
+		if (isset($_POST[$objMessages->fields['id']]))
+		  {
+		    $db->Execute("INSERT INTO `mail` (`sender`, `senderid`, `owner`, `subject`, `body`) values('".$player->user."','".$player->id."',".$arrtest->fields['id'].",'".L_TITLE."','".$objMessages->fields['czas']."<br />".$objMessages->fields['log']."')");
+		    $blnSent = TRUE;
+		  }
+		$objMessages->MoveNext();
+	      }
+	    if ($blnSent)
+	      {
+		$db->Execute("INSERT INTO `log` (`owner`, `log`, `czas`, `type`) VALUES(".$arrtest->fields['id'].",'".L_PLAYER."<a href=view.php?view=".$player->id.">".$player->user."</a>".L_ID.$player -> id." wysłał tobie fragmenty swojego dziennika na pocztę.', ".$strDate.", 'A')");
+	      }
+	    $objMessages->Close();
+	    error("Wysłałeś wybrane wpisy do ".$arrtest->fields['user'].".");
+	  }
+      }
+  }
 
 /**
  * Delete old logs
@@ -239,7 +264,9 @@ $smarty -> assign(array("Date" => $arrdate,
                         "Aweek" => A_WEEK,
                         "A2week" => A_2WEEK,
                         "Amonth" => A_MONTH,
-                        "Adelete" => A_DELETE));
+                        "Adelete" => A_DELETE,
+			"Asend2" => "Wyślij zaznaczone do",
+			"Ostaff" => $arrStaff));
 $smarty -> display ('log.tpl');
 
 require_once("includes/foot.php");

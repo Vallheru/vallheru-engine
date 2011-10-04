@@ -2,13 +2,9 @@
 
 {if $Send != ""}
     <form method="post" action="log.php?send&amp;step=send">
-    {$Sendthis}: <select name="staff">
-    {section name=log1 loop=$Name}
-        <option value="{$StaffId[log1]}">{$Name[log1]}</option>
-    {/section}
-    </select><br />
+    {$Sendthis}: {html_options name=staff options=$Ostaff}<br />
     <input type="hidden" name="lid" value="{$Send}" />
-    <input type="submit" value="{$Asend}" /></form>
+    <input type="submit" value="{$Asend}" /></form><br />
 {/if}
 
 {if $LogId[0] != "0"}
@@ -30,7 +26,7 @@
     	{/for}
 	<br /><br />
     {/if}
-    <form method="post" action="log.php?action=delete">
+    <form method="post" action="log.php?action=selected">
         <table>
             {section name=log loop=$Date}
                 <tr>
@@ -43,7 +39,7 @@
                 </tr>
             {/section}
         </table><br />
-        <input type="submit" value="{$Adelete}" />
+        <input type="submit" value="{$Adelete}" name="selected" /> <input type="submit" value="{$Asend2}" name="selected" /> {html_options name=staff options=$Ostaff}
     </form>
     <form method="post" action="log.php?step=deleteold">
         <input type="submit" value="{$Adeleteold}" /> <select name="oldtime">
