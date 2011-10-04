@@ -1,5 +1,7 @@
 2011-10-04  Bartek thindil Jasicki  <thindil@tuxfamily.org>
 
+	* UPDATE,account.php, languages/pl/account.php: 
+	some code cleanup
 	* FEATURE,languages/pl/log.php, templates/layout1/log.tpl, templates/log.tpl, log.php: 
 	added option to send selected log messages to staffs
 	* BUG,templates/layout1/forums.tpl, templates/forums.tpl: 
