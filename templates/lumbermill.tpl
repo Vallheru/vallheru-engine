@@ -97,7 +97,7 @@
         {if $Next != ""}
             <form method="post" action="lumbermill.php?mill={$Mill}&amp;rob={$Id}">
                 {$Assignen} <b>{$Name}</b> <input type="text" name="razy" size="5" /> {$Menergy}
-                <input type=submit value="{$Amake}" />{if $Type == "B"} {html_options name=lumber options=$Loptions}{/if}
+                <input type=submit value="{$Amake}" />{if $Type == "B"} {html_options name=lumber options=$Loptions}{else} {$Tlumber}{/if}
             </form>
         {/if}
     {/if}

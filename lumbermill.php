@@ -436,11 +436,24 @@ if (isset($_GET['mill']) && ($_GET['mill'] == 'mill' || $_GET['mill'] == 'elite'
 	      {
 		error("Nie posiadasz drewna aby móc robić łuki.");
 	      }
+	    $objMinerals->Close();
+	  }
+	else
+	  {
+	    $objMinerals = $db->Execute("SELECT `owner`, `pine` FROM `minerals` WHERE `owner`=".$player->id);
+	    if (!$objMinerals->fields['owner'] || $objMinerals->fields['pine'] == 0)
+	      {
+		error("Nie posiadasz drewna sosnowego aby móc robić strzały.");
+	      }
+	    $strLumber = 'Posiadasz '.$objMinerals->fields['pine'].' sztuk drewna sosnowego.';
+	    $objMinerals->Close();
+	    $arrOptions = array();
 	  }
         $smarty -> assign(array("Id" => $_GET['dalej'], 
                                 "Name" => $objLumber -> fields['name'],
                                 "Type" => $objLumber -> fields['type'],
                                 "Loptions" => $arrOptions,
+				"Tlumber" => $strLumber,
                                 "Assignen" => ASSIGN_EN,
                                 "Menergy" => M_ENERGY,
                                 "Amake" => A_MAKE));
