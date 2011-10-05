@@ -8,7 +8,7 @@
  *   @author               : thindil <thindil@tuxfamily.org>
  *   @author               : eyescream <tduda@users.sourceforge.net>
  *   @version              : 1.4
- *   @since                : 03.10.2011
+ *   @since                : 05.10.2011
  *
  */
 
@@ -72,6 +72,14 @@ if (isset ($_GET['view']) && $_GET['view'] == 'market')
     if (isset($_GET['type']))
       {
 	$_POST['type'] = $_GET['type'];
+	if (isset($_GET['mlevel']))
+	  {
+	    $_POST['mlevel'] = $_GET['mlevel'];
+	  }
+	if (isset($_GET['maxlev']))
+	  {
+	    $_POST['maxlev'] = $_GET['maxlev'];
+	  }
       }
     if (empty($_POST['szukany']) && !isset($_POST['szukany1']) && !isset($_POST['type'])) 
       {
@@ -84,7 +92,24 @@ if (isset ($_GET['view']) && $_GET['view'] == 'market')
 	    error(ERROR);
 	  }
 	$strType = '&amp;type='.$_POST['type'];
-	$msel = $db -> Execute("SELECT count(`id`) FROM `equipment` WHERE `status`='R' AND `type`='".$_POST['type']."'");
+	$strSql = '';
+	if (isset($_POST['mlevel']) && $_POST['mlevel'] != '')
+	  {
+	    checkvalue($_POST['mlevel']);
+	    $strSql = " AND minlev>=".$_POST['mlevel'];
+	    $strType .= '&amp;mlevel='.$_POST['mlevel'];
+	  }
+	if (isset($_POST['maxlev']) && $_POST['maxlev'] != '')
+	  {
+	    checkvalue($_POST['maxlev']);
+	    if (isset($_POST['mlevel']) && $_POST['mlevel'] != '' && $_POST['mlevel'] > $_POST['maxlev'])
+	      {
+		error(ERROR);
+	      }
+	    $strSql .= " AND minlev<=".$_POST['maxlev'];
+	    $strType .= '&amp;maxlev='.$_POST['maxlev'];
+	  }
+	$msel = $db -> Execute("SELECT count(`id`) FROM `equipment` WHERE `status`='R' AND `type`='".$_POST['type']."'".$strSql);
       }
     elseif (isset($_POST['szukany1']))
       {
@@ -133,6 +158,8 @@ if (isset ($_GET['view']) && $_GET['view'] == 'market')
                             "Toptions" => T_OPTIONS,
 			    "Ashow" => "Pokaż",
 			    "Tofferts" => "oferty",
+			    "Tlevels" => "na poziomach od",
+			    "Tto" => "do",
 			    "Otypes" => $arrTypes,
 			    "Onames" => $arrNames));
     if (!in_array($_GET['lista'], array('id', 'name', 'power', 'wt', 'szyb', 'zr', 'minlev', 'amount', 'cost', 'owner'))) 
@@ -153,7 +180,7 @@ if (isset ($_GET['view']) && $_GET['view'] == 'market')
       } 
     elseif (isset($_POST['type']))
       {
-	$pm = $db -> SelectLimit("SELECT * FROM `equipment` WHERE `status`='R' AND `type`='".$_POST['type']."' ORDER BY ".$_GET['lista'].$strOrder, 30, (30 * ($page - 1)));
+	$pm = $db -> SelectLimit("SELECT * FROM `equipment` WHERE `status`='R' AND `type`='".$_POST['type']."'".$strSql." ORDER BY ".$_GET['lista'].$strOrder, 30, (30 * ($page - 1)));
       }
     elseif (isset($_POST['szukany1']))
       {

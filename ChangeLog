@@ -1,5 +1,7 @@
 2011-10-05  Bartek thindil Jasicki  <thindil@tuxfamily.org>
 
+	* FEATURE,templates/layout1/imarket.tpl, templates/imarket.tpl, imartek.php: 
+	added option to show items from selected levels
 	* FEATURE,equip.php:
 	droped cost of repair equipment
 

@@ -19,7 +19,7 @@
         <input type="submit" value="{$Ashow}" /> {$Tofferts} <select name="type">
 	{section name=itype loop=$Onames}
 	    <option value="{$Otypes[itype]}">{$Onames[itype]}</option>
-	{/section}
+	{/section} </select> {$Tlevels} <input type="text" name="mlevel" size="5" /> {$Tto} <input type="text" name="maxlev" size="5" />
     </form><br />
     <table>
     <tr>
