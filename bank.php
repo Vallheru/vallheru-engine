@@ -9,7 +9,7 @@
  *   @author               : yeskov <yeskov@users.sourceforge.net>
  *   @author               : eyescream <tduda@users.sourceforge.net>
  *   @version              : 1.4
- *   @since                : 01.10.2011
+ *   @since                : 05.10.2011
  *
  */
 
@@ -752,56 +752,52 @@ if (!isset($_GET['action']) || (isset($_GET['action']) && $_GET['action'] != 'as
      * List of herbs
      */
     $test = $db -> Execute("SELECT illani, illanias, nutari, dynallca, ilani_seeds, illanias_seeds, nutari_seeds, dynallca_seeds FROM herbs WHERE gracz=".$player -> id);
-    if (!empty ($test -> fields['illani']) || !empty ($test -> fields['illanias']) || !empty ($test -> fields['nutari']) || !empty ($test -> fields['dynallca']) || !empty($test -> fields['ilani_seeds']) || !empty($test -> fields['illanias_seeds']) || !empty($test -> fields['nutari_seeds']) || !empty($test -> fields['dynallca_seeds'])) 
-    {
-        $arrname = array ('illani','illanias','nutari','dynallca', 'ilani_seeds', 'illanias_seeds', 'nutari_seeds', 'dynallca_seeds');
-        $arrName = array(HERB1, HERB2, HERB3, HERB4, HERB5, HERB6, HERB7, HERB8);
-        $arritem = array();
-        $arrName2 = array();
-        $j = 0;
-        for ($i = 0; $i < 8; $i++) 
-        {
-            $name = $arrname[$i];
-            if ($test -> fields[$name] > 0) 
-            {
-                $arritem[$j] = $name;
-                $arrName2[$j] = $arrName[$i];
-                $j++;
-            }
-        }
-        $smarty -> assign (array("Herbs" => 1, 
-                                 "Herbname" => $arritem,
-                                 "Herbname2" => $arrName2));
-    }
+    $arrname = array ('illani','illanias','nutari','dynallca', 'ilani_seeds', 'illanias_seeds', 'nutari_seeds', 'dynallca_seeds');
+    $arrName = array(HERB1, HERB2, HERB3, HERB4, HERB5, HERB6, HERB7, HERB8);
+    $arrItem = array();
+    for ($i = 0; $i < count($arrname); $i++)
+      {
+	if ($test->fields[$arrname[$i]] > 0)
+	  {
+	    $arrItem[$arrname[$i]] = "(".I_AMOUNT2." ".$test->fields[$arrname[$i]].") ".$arrName[$i];
+	  }
+      }
+    if (count($arrItem) > 0)
+      {
+	$intHerbs = 1;
+      }
+    else
+      {
+	$intHerbs = 0;
+      }
+    $smarty -> assign (array("Herbs" => $intHerbs, 
+			     "Hoptions" => $arrItem));
     $test -> Close();
 
     /**
      * List of minerals
      */
     $objMinerals = $db -> Execute("SELECT `copperore`, `zincore`, `tinore`, `ironore`, `coal`, `copper`, `bronze`, `brass`, `iron`, `steel`, `pine`, `hazel`, `yew`, `elm`, `crystal`, `adamantium`, `meteor` FROM `minerals` WHERE `owner`=".$player -> id);
-    $arrAmount = array($objMinerals -> fields['copperore'], $objMinerals -> fields['zincore'], $objMinerals -> fields['tinore'], $objMinerals -> fields['ironore'], $objMinerals -> fields['copper'], $objMinerals -> fields['bronze'], $objMinerals -> fields['brass'], $objMinerals -> fields['iron'], $objMinerals -> fields['steel'], $objMinerals -> fields['coal'], $objMinerals -> fields['adamantium'], $objMinerals -> fields['meteor'], $objMinerals -> fields['crystal'], $objMinerals -> fields['pine'], $objMinerals -> fields['hazel'], $objMinerals -> fields['yew'], $objMinerals -> fields['elm']);
-    $strAvailable = 'N';
     $arrSqlname = array('copperore', 'zincore', 'tinore', 'ironore', 'copper', 'bronze', 'brass', 'iron', 'steel', 'coal', 'adamantium', 'meteor', 'crystal', 'pine', 'hazel', 'yew', 'elm');
     $arrMinerals = array(MIN1, MIN2, MIN3, MIN4, MIN5, MIN6, MIN7, MIN8, MIN9, MIN10, MIN11, MIN12, MIN13, MIN14, MIN15, MIN16, MIN17);
     $arrOptions = array();
-    $arrMineralsname = array();
-    $j = 0;
-    for ($i = 0; $i < 17; $i++)
-    {
-        if ($arrAmount[$i])
-        {
-            $strAvailable = 'Y';
-            $arrOptions[$j] = $arrSqlname[$i];
-            $arrMineralsname[$j] = $arrMinerals[$i];
-            $j++;
-        }
-    }
-    if ($strAvailable == 'Y')
-    {
-        $smarty -> assign (array("Minerals" => 1, 
-                                 "Minoption" => $arrOptions, 
-                                 "Minname" => $arrMineralsname));
-    }
+    for ($i = 0; $i < count($arrSqlname); $i++)
+      {
+	if ($objMinerals->fields[$arrSqlname[$i]] > 0)
+	  {
+	    $arrOptions[$arrSqlname[$i]] = "(".I_AMOUNT2." ".$objMinerals->fields[$arrSqlname[$i]].") ".$arrMinerals[$i];
+	  }
+      }
+    if (count($arrOptions) > 0)
+      {
+	$intMinerals = 1;
+      }
+    else
+      {
+	$intMinerals = 0;
+      }
+    $smarty -> assign (array("Minerals" => $intMinerals, 
+			     "Moptions" => $arrOptions));
     $objMinerals -> Close();
 
     /**

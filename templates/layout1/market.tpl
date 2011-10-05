@@ -69,7 +69,7 @@
         {/if}
         {if $Add != "" && $Message == ""}
             <form method="post" action="market.php?view=myoferts&amp;type={$Type}&amp;add={$Add}&amp;confirm=yes">
-                <input type="submit" value="{$Aadd}" /> {$Toofert}{$Oname} <input type="text" name="amount" value="0" size="5" />{$Tamount2} <input type="checkbox" value="Y" name="addall" />{$Taddall}.<br />
+                <input type="submit" value="{$Aadd}" /> {$Toofert}{$Oname} <input type="text" name="amount" value="0" size="5" />{$Tamount2} <input type="checkbox" value="Y" name="addall" />{$Taddall}. {$Tyouhave}.<br />
             </form>
         {/if}
         {if $Change != "" && $Message == ""}

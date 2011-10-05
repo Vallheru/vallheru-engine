@@ -7,7 +7,7 @@
  *   @copyright            : (C) 2004,2005,2006,2011 Vallheru Team based on Gamers-Fusion ver 2.5
  *   @author               : thindil <thindil@tuxfamily.org>
  *   @version              : 1.4
- *   @since                : 27.09.2011
+ *   @since                : 05.10.2011
  *
  */
 
@@ -487,12 +487,70 @@ if (isset($_GET['view']) && $_GET['view'] == 'myoferts')
              * Add to ofert
              */
             if (isset($_GET['add']) && !empty($_GET['add']))
-            {
+	      {
+		$intAmount = 0;
+		switch ($intKey)
+		  {
+		  case 0:
+		    $arrSqlname = array('', 'copperore', 'zincore', 'tinore', 'ironore', 'copper', 'bronze', 'brass', 'iron', 'steel', 'coal', 'adamantium', 'meteor', 'crystal', 'pine', 'hazel', 'yew', 'elm');
+		    $intSqlkey = array_search($strName, $arrNames);
+		    $strSqlname = $arrSqlname[$intSqlkey];
+		    if (!$intSqlkey)
+		      {
+			$intAmount = $player->platinum;
+		      }
+		    else
+		      {
+			$objAmount = $db -> Execute("SELECT `".$strSqlname."` FROM `minerals` WHERE `owner`=".$player -> id);
+			$intAmount = $objAmount -> fields[$strSqlname];
+			$objAmount -> Close();
+		      }
+		    break;
+		  case 1:
+		  case 5:
+		  case 6:
+		    if ($objOfert->fields['type'] != 'R')
+		      {
+			$objAmount = $db -> Execute("SELECT `id`, `wt`, `amount`, `type` FROM `equipment` WHERE `name`='".$objOfert -> fields['name']."' AND `wt`=".$objOfert -> fields['wt']." AND `type`='".$objOfert -> fields['type']."' AND `status`='U' AND `owner`=".$player -> id." AND `power`=".$objOfert -> fields['power']." AND `zr`=".$objOfert -> fields['zr']." AND `szyb`=".$objOfert -> fields['szyb']." AND `maxwt`=".$objOfert -> fields['maxwt']." AND `poison`=".$objOfert -> fields['poison']." AND `ptype`='".$objOfert -> fields['ptype']."' AND `twohand`='".$objOfert -> fields['twohand']."'");
+			$intAmount = $objAmount -> fields['amount'];
+		      }
+		    else
+		      {
+			$objAmount = $db -> Execute("SELECT `id`, `wt`, `amount`, `type` FROM `equipment` WHERE `name`='".$objOfert -> fields['name']."' AND `type`='R' AND `status`='U' AND `owner`=".$player -> id." AND `power`=".$objOfert -> fields['power']." AND `zr`=".$objOfert -> fields['zr']." AND `szyb`=".$objOfert -> fields['szyb']." AND `poison`=".$objOfert -> fields['poison']." AND `ptype`='".$objOfert -> fields['ptype']."' AND `twohand`='".$objOfert -> fields['twohand']."'");
+			$intAmount = $objAmount -> fields['wt'];
+		      }
+		    break;
+		  case 2:
+		    $objAmount = $db -> Execute("SELECT `id`, `amount` FROM `potions` WHERE `owner`=".$player -> id." AND `name`='".$objOfert -> fields['name']."' AND `efect`='".$objOfert -> fields['efect']."' AND `type`='".$objOfert -> fields['type']."' AND `power`=".$objOfert->fields['power']." AND `status`='K'");
+		    $intAmount = $objAmount -> fields['amount'];
+		    break;
+		  case 3:
+		    $arrSqlname = array('illani', 'illanias', 'nutari', 'dynallca', 'ilani_seeds', 'illanias_seeds', 'nutari_seeds', 'dynallca_seeds');
+		    $intSqlkey = array_search($strName, $arrNames);
+		    $strSqlname = $arrSqlname[$intSqlkey];
+		    $objAmount = $db -> Execute("SELECT `".$strSqlname."` FROM `herbs` WHERE `gracz`=".$player -> id);
+		    $intAmount = $objAmount -> fields[$strSqlname];
+		    $objAmount -> Close();
+		    break;
+		  case 4:
+		    $objAmount = $db -> Execute("SELECT `amount` FROM `astral` WHERE `owner`=".$player -> id." AND `type`='".$objOfert -> fields['type']."' AND `number`=".$objOfert -> fields['number']);
+		    $intAmount = $objAmount -> fields['amount'];
+		    $objAmount -> Close();
+		    break;
+		  default:
+		    error(ERROR);
+		    break;
+		  }
+		if ($intAmount == 0)
+		  {
+		    error("Nie masz czego dodać do oferty.");
+		  }
                 $smarty -> assign(array("Toofert" => TO_OFERT,
                                         "Aadd" => A_ADD,
                                         "Tamount2" => T_AMOUNT2." lub",
                                         "Oname" => $strName,
-					"Taddall" => "wszystkie posiadane"));
+					"Taddall" => "wszystkie posiadane",
+					"Tyouhave" => "Możesz dodać jeszcze <b>".$intAmount."</b> sztuk <b>".$strName."</b>"));
                 if (isset($_GET['confirm']) && $_GET['confirm'] == 'yes')
                 {
 		    if (!isset($_POST['amount']) && !isset($_POST['addall']))
@@ -503,55 +561,6 @@ if (isset($_GET['view']) && $_GET['view'] == 'myoferts')
 		      {
 			checkvalue($_POST['amount']);
 		      }
-                    if ($intKey == 0)
-                    {
-                        $arrSqlname = array('', 'copperore', 'zincore', 'tinore', 'ironore', 'copper', 'bronze', 'brass', 'iron', 'steel', 'coal', 'adamantium', 'meteor', 'crystal', 'pine', 'hazel', 'yew', 'elm');
-                        $intSqlkey = array_search($strName, $arrNames);
-                        $strSqlname = $arrSqlname[$intSqlkey];
-                        if (!$intSqlkey)
-                        {
-                            $intAmount = $player -> platinum;
-                        }
-                            else
-                        {
-                            $objAmount = $db -> Execute("SELECT `".$strSqlname."` FROM `minerals` WHERE `owner`=".$player -> id);
-                            $intAmount = $objAmount -> fields[$strSqlname];
-                            $objAmount -> Close();
-                        }
-                    }
-                    if ($intKey == 1 || $intKey == 5 || $intKey == 6)
-                    {
-			 if ($objOfert->fields['type'] != 'R')
-			   {
-			     $objAmount = $db -> Execute("SELECT `id`, `wt`, `amount`, `type` FROM `equipment` WHERE `name`='".$objOfert -> fields['name']."' AND `wt`=".$objOfert -> fields['wt']." AND `type`='".$objOfert -> fields['type']."' AND `status`='U' AND `owner`=".$player -> id." AND `power`=".$objOfert -> fields['power']." AND `zr`=".$objOfert -> fields['zr']." AND `szyb`=".$objOfert -> fields['szyb']." AND `maxwt`=".$objOfert -> fields['maxwt']." AND `poison`=".$objOfert -> fields['poison']." AND `ptype`='".$objOfert -> fields['ptype']."' AND `twohand`='".$objOfert -> fields['twohand']."'");
-			     $intAmount = $objAmount -> fields['amount'];
-			   }
-			 else
-			   {
-			     $objAmount = $db -> Execute("SELECT `id`, `wt`, `amount`, `type` FROM `equipment` WHERE `name`='".$objOfert -> fields['name']."' AND `type`='R' AND `status`='U' AND `owner`=".$player -> id." AND `power`=".$objOfert -> fields['power']." AND `zr`=".$objOfert -> fields['zr']." AND `szyb`=".$objOfert -> fields['szyb']." AND `poison`=".$objOfert -> fields['poison']." AND `ptype`='".$objOfert -> fields['ptype']."' AND `twohand`='".$objOfert -> fields['twohand']."'");
-			     $intAmount = $objAmount -> fields['wt'];
-			   }
-                    }
-                    if ($intKey == 2)
-                    {
-                        $objAmount = $db -> Execute("SELECT `id`, `amount` FROM `potions` WHERE `owner`=".$player -> id." AND `name`='".$objOfert -> fields['name']."' AND `efect`='".$objOfert -> fields['efect']."' AND `type`='".$objOfert -> fields['type']."' AND `power`=".$objOfert->fields['power']." AND `status`='K'");
-                        $intAmount = $objAmount -> fields['amount'];
-                    }
-                    if ($intKey == 3)
-                    {
-                        $arrSqlname = array('illani', 'illanias', 'nutari', 'dynallca', 'ilani_seeds', 'illanias_seeds', 'nutari_seeds', 'dynallca_seeds');
-                        $intSqlkey = array_search($strName, $arrNames);
-                        $strSqlname = $arrSqlname[$intSqlkey];
-                        $objAmount = $db -> Execute("SELECT `".$strSqlname."` FROM `herbs` WHERE `gracz`=".$player -> id);
-                        $intAmount = $objAmount -> fields[$strSqlname];
-                        $objAmount -> Close();
-                    }
-                    if ($intKey == 4)
-                    {
-                        $objAmount = $db -> Execute("SELECT `amount` FROM `astral` WHERE `owner`=".$player -> id." AND `type`='".$objOfert -> fields['type']."' AND `number`=".$objOfert -> fields['number']);
-                        $intAmount = $objAmount -> fields['amount'];
-                        $objAmount -> Close();
-                    }
 		    if (isset($_POST['addall']))
 		      {
 			$_POST['amount'] = $intAmount;

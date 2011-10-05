@@ -51,21 +51,17 @@
 
     {if $Herbs == 1}
         <form method="post" action="bank.php?action=herbs">
-        {$Iwant} <input type="submit" value="{$Agive}" /> {$Dplayer} <input type="tekst" name="pid" size="3" /> <select name="item">
-        {section name=herb loop=$Herbname}
-            <option value="{$Herbname[herb]}">{$Herbname2[herb]}</option>
-        {/section}
-        </select> {$Hamount} <input type="text" name="amount" size="5" /> (<input type="checkbox" name="addall" value="Y" />{$Tall}).
+        {$Iwant} <input type="submit" value="{$Agive}" /> {$Dplayer} <input type="tekst" name="pid" size="3" />
+	{html_options name=item options=$Hoptions} 
+	{$Hamount} <input type="text" name="amount" size="5" /> (<input type="checkbox" name="addall" value="Y" />{$Tall}).
         </form><br />
     {/if}
 
     {if $Minerals == 1}
         <form method="post" action="bank.php?action=minerals">
-        {$Iwant} <input type="submit" value="{$Agive}" /> {$Dplayer} <input type="tekst" name="pid" size="3" /> <select name="item">
-        {section name=mineral loop=$Minname}
-            <option value="{$Minoption[mineral]}">{$Minname[mineral]}</option>
-        {/section}
-        </select> {$Hamount} <input type="text" name="amount" size="5" /> (<input type="checkbox" name="addall" value="Y" />{$Tall}).
+        {$Iwant} <input type="submit" value="{$Agive}" /> {$Dplayer} <input type="tekst" name="pid" size="3" /> 
+	{html_options name=item options=$Moptions} 
+	{$Hamount} <input type="text" name="amount" size="5" /> (<input type="checkbox" name="addall" value="Y" />{$Tall}).
         </form><br />
     {/if}
 
