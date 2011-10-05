@@ -7,7 +7,7 @@
  *   @copyright            : (C) 2011 Vallheru Team based on Gamers-Fusion ver 2.5
  *   @author               : thindil <thindil@tuxfamily.org>
  *   @version              : 1.4
- *   @since                : 29.09.2011
+ *   @since                : 05.10.2011
  *
  */
 
@@ -103,7 +103,8 @@ if (isset ($_GET['view']) && $_GET['view'] == 'market')
                             "Tamount" => "Ilość",
                             "Viewinfo" => "Zobacz oferty lub",
 			    "Asearch" => "Szukaj",
-                            "Toptions" => "Opcje"));
+                            "Toptions" => "Opcje",
+			    "Aadd2" => "Dodaj ofertę"));
     if (!in_array($_GET['lista'], array('id', 'name', 'minlev',  'amount', 'cost', 'owner'))) 
       {
 	error("Zapomnij o tym!"); 

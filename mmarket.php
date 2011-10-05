@@ -8,7 +8,7 @@
  *   @author              : thindil <thindil@tuxfamily.org>
  *   @author              : eyescream <tduda@users.sourceforge.net>
  *   @version             : 1.4
- *   @since               : 19.09.2011
+ *   @since               : 05.10.2011
  *
  */
 
@@ -108,7 +108,8 @@ if (isset ($_GET['view']) && $_GET['view'] == 'market')
 			    "Tseller" => T_SELLER,
 			    "Toptions" => T_OPTIONS,
 			    "Asearch" => A_SEARCH,
-			    "Viewinfo" => VIEW_INFO));
+			    "Viewinfo" => VIEW_INFO,
+			    "Aadd2" => "Dodaj ofertę"));
     if (!in_array($_GET['lista'], array('id', 'name', 'efect', 'amount', 'cost', 'owner'))) 
       {
 	error(ERROR);

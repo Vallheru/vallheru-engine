@@ -160,6 +160,7 @@ if (isset ($_GET['view']) && $_GET['view'] == 'market')
 			    "Tofferts" => "oferty",
 			    "Tlevels" => "na poziomach od",
 			    "Tto" => "do",
+			    "Aadd2" => "Dodaj ofertę",
 			    "Otypes" => $arrTypes,
 			    "Onames" => $arrNames));
     if (!in_array($_GET['lista'], array('id', 'name', 'power', 'wt', 'szyb', 'zr', 'minlev', 'amount', 'cost', 'owner'))) 

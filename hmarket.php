@@ -8,7 +8,7 @@
  *   @author               : thindil <thindil@tuxfamily.org>
  *   @author               : eyescream <tduda@users.sourceforge.net>
  *   @version              : 1.4
- *   @since                : 19.09.2011
+ *   @since                : 05.10.2011
  *
  */
 
@@ -171,6 +171,7 @@ if (isset ($_GET['view']) && $_GET['view'] == 'market')
 			    "Adelete" => A_DELETE,
 			    "Achange" => A_CHANGE,
 			    "Asearch" => A_SEARCH,
+			    "Aadd2" => "Dodaj ofertę",
 			    "Viewinfo" => VIEW_INFO));
     if (!isset($_POST['szukany']))
       {

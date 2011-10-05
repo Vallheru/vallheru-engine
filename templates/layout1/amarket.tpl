@@ -10,7 +10,8 @@
 {/if}
 
 {if $View == "market"}
-    {$Viewinfo} <a href="amarket.php">{$Aback}</a>.<br /><br />
+    {$Viewinfo} <a href="amarket.php">{$Aback}</a>.<br />
+    <a href="{$SCRIPT_NAME}?view=add">{$Aadd}</a><br /><br />
     <form method="post" action="amarket.php?view=market&amp;limit=0&amp;lista=type">
         {$Astral}: <input type="text" name="szukany" /><br />
         <input type="submit" value="{$Asearch}" />

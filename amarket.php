@@ -8,7 +8,7 @@
  *   @author               : thindil <thindil@tuxfamily.org>
  *   @author               : eyescream <tduda@users.sourceforge.net>
  *   @version              : 1.4
- *   @since                : 30.09.2011
+ *   @since                : 05.10.2011
  *
  */
 
@@ -47,8 +47,8 @@ if ($player -> location != 'Altara' && $player -> location != 'Ardulith')
 * Assign variables to template
 */
 $smarty -> assign(array("Message" => '', 
-    "Previous" => '', 
-    "Next" => ''));
+			"Previous" => '', 
+			"Next" => ''));
 
 /**
 * Main menu
@@ -56,12 +56,12 @@ $smarty -> assign(array("Message" => '',
 if (!isset($_GET['view']) && !isset($_GET['buy']) && !isset($_GET['wyc']))
 {
     $smarty -> assign(array("Minfo" => M_INFO,
-        "Aview" => A_VIEW,
-        "Asearch" => A_SEARCH,
-        "Aadd" => A_ADD,
-        "Adelete" => A_DELETE,
-        "Alist" => A_LIST,
-        "Aback2" => A_BACK2));
+			    "Aview" => A_VIEW,
+			    "Asearch" => A_SEARCH,
+			    "Adelete" => A_DELETE,
+			    "Alist" => A_LIST,
+			    "Aadd" => A_ADD,
+			    "Aback2" => A_BACK2));
 }
 
 $arrNames = array(MAP1, MAP2, MAP3, MAP4, MAP5, MAP6, MAP7, PLAN1, PLAN2, PLAN3, PLAN4, PLAN5, RECIPE1, RECIPE2, RECIPE3, RECIPE4, RECIPE5);
@@ -260,6 +260,7 @@ if (isset ($_GET['view']) && $_GET['view'] == 'market')
 			    "Toptions" => T_OPTIONS,
 			    "Astral" => ASTRAL,
 			    "Asearch" => A_SEARCH,
+			    "Aadd" => "Dodaj ofertę",
 			    "Viewinfo" => VIEW_INFO));
     if (!isset($_POST['szukany']))
       {
