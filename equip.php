@@ -7,7 +7,7 @@
  *   @copyright            : (C) 2004,2005,2006,2007,2011 Vallheru Team based on Gamers-Fusion ver 2.5
  *   @author               : thindil <thindil@tuxfamily.org>
  *   @version              : 1.4
- *   @since                : 30.09.2011
+ *   @since                : 05.10.2011
  *
  */
 
@@ -103,7 +103,14 @@ function backpack($type,$playerid,$nameitems,$type2,$smartyname)
         {
             $arm -> fields['power'] = $arm -> fields['power'] + $arm -> fields['poison'];
         }
-        $ckoszt = $arm -> fields['repair'];
+	if ($arm->fields['wt'] < $arm->fields['maxwt'])
+	  {
+	    $ckoszt = ceil($arm->fields['repair'] * (1 - $arm->fields['wt'] / $arm->fields['maxwt']));
+	  }
+	else
+	  {
+	    $ckoszt = 0;
+	  }
         if ($arm -> fields['maxwt'] == $arm -> fields['wt']) 
         {
             $ckoszt = 0;
@@ -182,7 +189,14 @@ function backpack($type,$playerid,$nameitems,$type2,$smartyname)
             {
                 $speed = '';
             }
-            $ckoszt = $arm1 -> fields['repair'];  
+	    if ($arm1->fields['wt'] < $arm1->fields['maxwt'])
+	      {
+		$ckoszt = ceil($arm1->fields['repair'] * (1 - $arm1->fields['wt'] / $arm1->fields['maxwt']));
+	      }
+	    else
+	      {
+		$ckoszt = 0;
+	      }
             if ($arm1 -> fields['maxwt'] == $arm1 -> fields['wt']) 
             {
                 $ckoszt = 0;
@@ -761,24 +775,25 @@ if (isset($_GET['sprzedaj']))
  * Repair used items
  */
 if (isset($_GET['napraw_uzywane'])) 
-{
-    $rzecz_wiersz = $db -> Execute("SELECT * FROM equipment WHERE owner = ".$player -> id." AND status = 'E' AND type != 'R' AND type != 'T' AND type != 'C' AND `type`!='I' AND `type`!='O'");
+  {
+    $rzecz_wiersz = $db -> Execute("SELECT * FROM `equipment` WHERE `owner`=".$player -> id." AND `status`='E' AND type NOT IN ('R', 'T', 'C', 'I', 'O')");
     $text = '';
     while(!$rzecz_wiersz -> EOF) 
-    {
+      {
         if ($rzecz_wiersz -> fields['maxwt'] != $rzecz_wiersz -> fields['wt']) 
-        {
-            if ($rzecz_wiersz -> fields['repair'] > $player -> credits) 
-            {
+	  {
+	    $intCost = ceil($rzecz_wiersz->fields['repair'] * (1 - $rzecz_wiersz->fields['wt'] / $rzecz_wiersz->fields['maxwt']));
+            if ($intCost > $player->credits) 
+	      {
                 error ("Nie stać Ciebie na naprawę ekwipunku.");
-            }
-            $player -> credits = $player -> credits - $rzecz_wiersz -> fields['repair'];
-            $db -> Execute("UPDATE equipment SET wt=".$rzecz_wiersz -> fields['maxwt']." WHERE id=".$rzecz_wiersz -> fields['id']);
-            $db -> Execute("UPDATE players SET credits=credits-".$rzecz_wiersz -> fields['repair']." WHERE id=".$player -> id);
-            $text = $text."<br />".YOU_REPAIR." ".$rzecz_wiersz -> fields['name']." ".AND_COST." ".$rzecz_wiersz -> fields['repair']." ".GOLD_COINS.".<br />";
-        }
+	      }
+            $player->credits = $player->credits - $intCost;
+            $db -> Execute("UPDATE `equipment` SET `wt`=".$rzecz_wiersz -> fields['maxwt']." WHERE `id`=".$rzecz_wiersz -> fields['id']);
+            $db -> Execute("UPDATE `players` SET `credits`=`credits`-".$intCost." WHERE `id`=".$player -> id);
+            $text = $text."<br />".YOU_REPAIR." ".$rzecz_wiersz -> fields['name']." ".AND_COST." ".$intCost." ".GOLD_COINS.".<br />";
+	  }
         $rzecz_wiersz -> MoveNext();
-    }
+      }
     $rzecz_wiersz -> Close();
     $smarty -> assign ("Action", $text);
 }
@@ -796,14 +811,15 @@ if (isset($_GET['repair']))
 	  {
 	    if ($rzecz_wiersz->fields['maxwt'] != $rzecz_wiersz->fields['wt']) 
 	      {
-		if ($rzecz_wiersz->fields['repair'] > $player->credits) 
+		$intCost = ceil($rzecz_wiersz->fields['repair'] * (1 - $rzecz_wiersz->fields['wt'] / $rzecz_wiersz->fields['maxwt']));
+		if ($intCost > $player->credits) 
 		  {
 		    error("Nie stać Ciebie na naprawę ekwipunku.");
 		  }
-		$player->credits = $player->credits - $rzecz_wiersz->fields['repair'];
+		$player->credits = $player->credits - $intCost;
 		$db->Execute("UPDATE `equipment` SET `wt`=".$rzecz_wiersz->fields['maxwt']." WHERE `id`=".$rzecz_wiersz->fields['id']);
-		$db->Execute("UPDATE `players` SET `credits`=`credits`-".$rzecz_wiersz->fields['repair']." WHERE `id`=".$player -> id);
-		$text = $text."<br />Naprawiłeś ".$rzecz_wiersz->fields['name'].", kosztowało Ciebie to ".$rzecz_wiersz->fields['repair']." ".GOLD_COINS.".<br />";
+		$db->Execute("UPDATE `players` SET `credits`=`credits`-".$intCost." WHERE `id`=".$player -> id);
+		$text = $text."<br />Naprawiłeś ".$rzecz_wiersz->fields['name'].", kosztowało Ciebie to ".$intCost." ".GOLD_COINS.".<br />";
 	      }
 	  }
         $rzecz_wiersz -> MoveNext();
@@ -818,26 +834,23 @@ if (isset($_GET['repair']))
 if (isset($_GET['napraw'])) 
 {
     checkvalue($_GET['napraw']);
-    $rzecz = $db -> Execute("SELECT * FROM `equipment` WHERE `id`=".$_GET['napraw']);
-    if ($rzecz -> fields['wt'] == $rzecz -> fields['maxwt']) 
-    {
-        error (NO_REPAIR);
-    }
+    $rzecz = $db -> Execute("SELECT * FROM `equipment` WHERE `id`=".$_GET['napraw']." AND `type` NOT IN ('R', 'T', 'C', 'I', 'O')");
     if (!$rzecz -> fields['id']) 
     {
         error (NO_ITEM);
     }
-    if ($player -> credits < $rzecz -> fields['repair']) 
+    if ($rzecz -> fields['wt'] == $rzecz -> fields['maxwt']) 
+    {
+        error (NO_REPAIR);
+    }
+    $intCost = ceil($rzecz->fields['repair'] * (1 - $rzecz->fields['wt'] / $rzecz->fields['maxwt']));
+    if ($player->credits < $intCost) 
     {
         error (NO_MONEY);
     }
-    if ($player -> id != $rzecz -> fields['owner']) 
+    if ($player->id != $rzecz->fields['owner']) 
     {
         error (NOT_YOUR);
-    }
-    if ($rzecz -> fields['type'] == 'R' || $rzecz -> fields['type'] == 'I' || $rzecz -> fields['type'] == 'O') 
-    {
-        error(E_REPAIR);
     }
     $test = $db -> Execute("SELECT `id` FROM `equipment` WHERE `name`='".$rzecz -> fields['name']."' AND `wt`=".$rzecz -> fields['maxwt']." AND `type`='".$rzecz -> fields['type']."' AND `status`='U' AND `owner`=".$player -> id." AND `power`=".$rzecz -> fields['power']." AND `zr`=".$rzecz -> fields['zr']." AND `szyb`=".$rzecz -> fields['szyb']." AND `maxwt`=".$rzecz -> fields['maxwt']." AND `poison`=".$rzecz -> fields['poison']." AND `ptype`='".$rzecz -> fields['ptype']."' AND `cost`=".$rzecz -> fields['cost']." AND `repair`=".$rzecz -> fields['repair']) or die($db -> ErrorMsg());
     if (!$test -> fields['id']) 
@@ -857,8 +870,8 @@ if (isset($_GET['napraw']))
     {
       $db -> Execute("DELETE FROM `equipment` WHERE `id`=".$_GET['napraw']);
     }
-    $db -> Execute("UPDATE `players` SET `credits`=`credits`-".$rzecz -> fields['repair']." WHERE `id`=".$player -> id);
-    $smarty -> assign ("Action", "<br />".YOU_REPAIR." <b>".$rzecz -> fields['name']."</b> ".FOR_A." <b>".$rzecz -> fields['repair']."</b> ".GOLD_COINS.".<br />\n(<a href=\"equip.php\">".REFRESH."</a>)<br />\n");
+    $db -> Execute("UPDATE `players` SET `credits`=`credits`-".$intCost." WHERE `id`=".$player -> id);
+    $smarty -> assign ("Action", "<br />".YOU_REPAIR." <b>".$rzecz -> fields['name']."</b> ".FOR_A." <b>".$intCost."</b> ".GOLD_COINS.".<br />\n(<a href=\"equip.php\">".REFRESH."</a>)<br />\n");
     $rzecz -> Close();
 }
 
