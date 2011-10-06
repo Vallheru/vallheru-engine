@@ -8,7 +8,7 @@
  *   @author               : thindil <thindil@tuxfamily.org>
  *   @author               : eyescream <tduda@users.sourceforge.net>
  *   @version              : 1.4
- *   @since                : 20.08.2011
+ *   @since                : 06.10.2011
  *
  */
 
@@ -41,7 +41,7 @@ define("MIN5", "Bryły adamantium");
 define("MIN6", "Kawałki meteorytu");
 define("MIN7", "Kryształów");
 define("MIN8", "Drewno sosnowe");
-define("MIN9", "Sztabek brązu");
+define("MIN9", "Sztabki brązu");
 define("MIN10", "Sztabki mosiądzu");
 define("MIN11", "Sztabki stali");
 define("MIN12", "Drewno z leszczyny");

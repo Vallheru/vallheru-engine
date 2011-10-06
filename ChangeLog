@@ -1,5 +1,7 @@
 2011-10-06  Bartek thindil Jasicki  <thindil@tuxfamily.org>
 
+	* BUG,languages/pl/pmarket.php: 
+	fixed typo
 	* UPDATE,bank.php, templates/layout1/bank.tpl, templates/bank.tpl:
 	small code optimization
 
