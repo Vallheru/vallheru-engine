@@ -9,7 +9,7 @@
  *   @author               : yeskov <yeskov@users.sourceforge.net>
  *   @author               : eyescream <tduda@users.sourceforge.net>
  *   @version              : 1.4
- *   @since                : 05.10.2011
+ *   @since                : 06.10.2011
  *
  */
 
@@ -685,37 +685,31 @@ if (!isset($_GET['action']) || (isset($_GET['action']) && $_GET['action'] != 'as
     $item = $db -> Execute("SELECT `id`, `name`, `amount`, `power`, `zr`, `szyb`, `wt`, `type` FROM `equipment` WHERE `owner`=".$player -> id." AND `status`='U'");
     if ($item -> fields['id']) 
     {
-        $arrid = array();
-        $arrname = array();
-        $arramount = array();
-        $arrPower = array();
-        $arrAgi = array();
-        $arrSpeed = array();
+	$arrItems = array();
         while (!$item -> EOF) 
         {
-            $arrid[] = $item -> fields['id'];
-            $arrname[] = $item -> fields['name'];
 	    if ($item->fields['type'] != 'R')
 	      {
-		$arramount[] = $item -> fields['amount'];
+		$strAmount = $item->fields['amount'];
 	      }
 	    else
 	      {
-		$arramount[] = $item->fields['wt'];
+		$strAmount = $item->fields['wt'];
 	      }
-            $arrPower[] = $item -> fields['power'];
-            $arrAgi[] = $item -> fields['zr'] * -1;
-            $arrSpeed[] = $item -> fields['szyb'];
+	    $strAgi = '';
+	    $strSpeed = '';
+	    if ($item->fields['zr'] != 0)
+	      {
+		$strAgi = " (".($item->fields['zr'] * -1)." ".I_AGI.")";
+	      }
+	    if ($item->fields['szyb'] != 0)
+	      {
+		$strSpeed = " (".$item->fields['szyb']." ".I_SPE.")";
+	      }
+	    $arrItems[$item->fields['id']] = $item->fields['name']." (+".$item->fields['power'].")".$strAgi.$strSpeed." (".I_AMOUNT2.": ".$strAmount.")";
             $item -> MoveNext();
         }
-        $smarty -> assign (array("Itemid" => $arrid, 
-                                 "Itemname" => $arrname, 
-                                 "Itemamount" => $arramount, 
-                                 "Itempower" => $arrPower,
-                                 "Itemagi" => $arrAgi,
-                                 "Itemspeed" => $arrSpeed,
-                                 "Iagi" => I_AGI,
-                                 "Ispe" => I_SPE,
+        $smarty -> assign (array("Ioptions" => $arrItems,
                                  "Items" => 1));
     }
     $item -> Close();
@@ -726,24 +720,13 @@ if (!isset($_GET['action']) || (isset($_GET['action']) && $_GET['action'] != 'as
     $miks = $db -> Execute("SELECT `id`, `name`, `amount`, `power` FROM `potions` WHERE `owner`=".$player -> id." AND `status`='K'");
     if ($miks -> fields['id']) 
     {
-        $arrid = array();
-        $arrname = array();
-        $arramount = array();
-        $arrPower = array();
-        $i = 0;
+	$arrPotions = array();
         while (!$miks -> EOF) 
         {
-            $arrid[$i] = $miks -> fields['id'];
-            $arrname[$i] = $miks -> fields['name'];
-            $arramount[$i] = $miks -> fields['amount'];
-            $arrPower[$i] = $miks -> fields['power'];
-            $i = $i + 1;
+	    $arrPotions[$miks->fields['id']] = $miks->fields['name']." (+".$miks->fields['power'].") (".I_AMOUNT2.": ".$miks->fields['amount'].")";
             $miks -> MoveNext();
         }
-        $smarty -> assign (array("Potionid" => $arrid, 
-                                 "Potionname" => $arrname, 
-                                 "Potionamount" => $arramount, 
-                                 "Potionpower" => $arrPower,
+        $smarty -> assign (array("Poptions" => $arrPotions,
                                  "Potions" => 1));
     }
     $miks -> Close();
@@ -751,7 +734,7 @@ if (!isset($_GET['action']) || (isset($_GET['action']) && $_GET['action'] != 'as
     /**
      * List of herbs
      */
-    $test = $db -> Execute("SELECT illani, illanias, nutari, dynallca, ilani_seeds, illanias_seeds, nutari_seeds, dynallca_seeds FROM herbs WHERE gracz=".$player -> id);
+    $test = $db -> Execute("SELECT `illani`, `illanias`, `nutari`, `dynallca`, `ilani_seeds`, `illanias_seeds`, `nutari_seeds`, `dynallca_seeds` FROM `herbs` WHERE `gracz`=".$player -> id);
     $arrname = array ('illani','illanias','nutari','dynallca', 'ilani_seeds', 'illanias_seeds', 'nutari_seeds', 'dynallca_seeds');
     $arrName = array(HERB1, HERB2, HERB3, HERB4, HERB5, HERB6, HERB7, HERB8);
     $arrItem = array();
@@ -759,7 +742,7 @@ if (!isset($_GET['action']) || (isset($_GET['action']) && $_GET['action'] != 'as
       {
 	if ($test->fields[$arrname[$i]] > 0)
 	  {
-	    $arrItem[$arrname[$i]] = "(".I_AMOUNT2." ".$test->fields[$arrname[$i]].") ".$arrName[$i];
+	    $arrItem[$arrname[$i]] = $arrName[$i]." (".I_AMOUNT2.": ".$test->fields[$arrname[$i]].")";
 	  }
       }
     if (count($arrItem) > 0)
@@ -785,7 +768,7 @@ if (!isset($_GET['action']) || (isset($_GET['action']) && $_GET['action'] != 'as
       {
 	if ($objMinerals->fields[$arrSqlname[$i]] > 0)
 	  {
-	    $arrOptions[$arrSqlname[$i]] = "(".I_AMOUNT2." ".$objMinerals->fields[$arrSqlname[$i]].") ".$arrMinerals[$i];
+	    $arrOptions[$arrSqlname[$i]] = $arrMinerals[$i]." (".I_AMOUNT2.": ".$objMinerals->fields[$arrSqlname[$i]].")";
 	  }
       }
     if (count($arrOptions) > 0)

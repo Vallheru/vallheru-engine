@@ -30,22 +30,16 @@
     {if $Items == 1}
         <form method="post" action="bank.php?action=items">
         {$Iwant} <input type="submit" value="{$Agive}" /> {$Dplayer} <input type="tekst" name="pid" size="3" />
-        <input type="text" name="amount" size="3" /> (<input type="checkbox" name="addall" value="Y" />{$Tall}) {$Iamount} <select name="item">
-        {section name=items loop=$Itemid}
-            <option value="{$Itemid[items]}">({$Iamount2}: {$Itemamount[items]}) {$Itemname[items]} (+{$Itempower[items]}{if $Itemagi[items] != 0} {$Iagi} {$Itemagi[items]}{/if}{if $Itemspeed[items] != 0} {$Ispe} +{$Itemspeed[items]}{/if})</option>
-        {/section}
-        </select>.
+        <input type="text" name="amount" size="3" /> (<input type="checkbox" name="addall" value="Y" />{$Tall}) {$Iamount}
+	{html_options name=item options=$Ioptions}.
         </form><br />
     {/if}
 
     {if $Potions == 1}
         <form method="post" action="bank.php?action=potions">
         {$Iwant} <input type="submit" value="{$Agive}" /> {$Dplayer} <input type="tekst" name="pid" size="3" />
-        <input type="text" name="amount" size="3" /> (<input type="checkbox" name="addall" value="Y" />{$Tall}) {$Iamount} <select name="item">
-        {section name=potion loop=$Potionid}
-            <option value="{$Potionid[potion]}">({$Iamount2}: {$Potionamount[potion]}) {$Potionname[potion]} (+{$Potionpower[potion]})</option>
-        {/section}
-        </select>.
+        <input type="text" name="amount" size="3" /> (<input type="checkbox" name="addall" value="Y" />{$Tall}) {$Iamount}
+	{html_options name=item options=$Poptions}.
         </form><br />
     {/if}
 
