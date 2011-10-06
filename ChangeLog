@@ -1,5 +1,7 @@
 2011-10-06  Bartek thindil Jasicki  <thindil@tuxfamily.org>
 
+	* FEATURE,templates/layout1/tribeastral.tpl, templates/tribeastral.tpl, tribeastral.php: 
+	added option to send all owned pieces to player
 	* BUG,languages/pl/pmarket.php: 
 	fixed typo
 	* UPDATE,bank.php, templates/layout1/bank.tpl, templates/bank.tpl:
