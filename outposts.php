@@ -8,7 +8,7 @@
  *   @author               : thindil <thindil@tuxfamily.org>
  *   @author               : eyescream <tduda@users.sourceforge.net>
  *   @version              : 1.4
- *   @since                : 19.09.2011
+ *   @since                : 07.10.2011
  *
  */
  
@@ -1582,9 +1582,11 @@ if (isset ($_GET['view']) && $_GET['view'] == 'listing')
 if (isset ($_GET['view']) && $_GET['view'] == 'battle') 
 {
     $smarty -> assign(array("Battleinfo" => BATTLE_INFO,
-        "Outid" => OUT_ID,
-        "Amounta" => AMOUNT_A,
-        "Aattack" => A_ATTACK));
+			    "Outid" => OUT_ID,
+			    "Pid" => "ID właściciela",
+			    "Amounta" => AMOUNT_A,
+			    "Tor" => "lub",
+			    "Aattack" => A_ATTACK));
     /**
     * Assign id attacked outpost
     */
@@ -1596,6 +1598,14 @@ if (isset ($_GET['view']) && $_GET['view'] == 'battle')
     {
         $smarty -> assign("Id", 0);
     }
+    if (isset($_GET['pid']))
+      {
+	$smarty->assign("Pid2", $_GET['pid']);
+      }
+    else
+      {
+	$smarty->assign("Pid2", 0);
+      }
     /**
     * Attack outpost
     */
@@ -1626,30 +1636,46 @@ if (isset ($_GET['view']) && $_GET['view'] == 'battle')
         {
             $_POST['oid'] = $_GET['oid'];
         }
-	checkvalue($_POST['oid']);
-        if (empty($_POST['oid'])) 
+	$_POST['oid'] = intval($_POST['oid']);
+	if (isset($_GET['pid'])) 
         {
-            error (NO_ID);
+            $_POST['pid'] = $_GET['pid'];
         }
+	$_POST['pid'] = intval($_POST['pid']);
+	if ($_POST['pid'] <= 0 && $_POST['oid'] <= 0)
+	  {
+	    error("Nie wybrałeś celu ataku!");
+	  }
 	if ($player -> hp <= 0)
 	  {
 	    error(YOU_DEAD);
 	  }
-        $enemy = $db -> Execute("SELECT * FROM outposts WHERE id=".$_POST['oid']);
+	if ($_POST['oid'] > 0)
+	  {
+	    if ($_POST['oid'] == $out->fields['id']) 
+	      {
+		error (ITS_YOUR);
+	      }
+	    $enemy = $db -> Execute("SELECT * FROM `outposts` WHERE `id`=".$_POST['oid']);
+	  }
+	elseif ($_POST['pid'] > 0)
+	  {
+	    if ($_POST['pid'] == $player->id)
+	      {
+		error("Nie możesz atakować sam siebie.");
+	      }
+	    $enemy = $db -> Execute("SELECT * FROM `outposts` WHERE `owner`=".$_POST['pid']);
+	  }
+	if (!$enemy -> fields['id']) 
+	  {
+	    error (NO_OUT);
+	  }
         $myout = $db -> Execute("SELECT * FROM outposts WHERE id=".$out -> fields['id']);
         $mymonsters = $db -> Execute("SELECT id, name, power, defense FROM outpost_monsters WHERE outpost=".$out -> fields['id']);
         $emonsters = $db -> Execute("SELECT id, name, power, defense FROM outpost_monsters WHERE outpost=".$_POST['oid']);
         $myveterans = $db -> Execute("SELECT * FROM outpost_veterans WHERE outpost=".$out -> fields['id']);
         $eveterans = $db -> Execute("SELECT * FROM outpost_veterans WHERE outpost=".$_POST['oid']);
         $defenduser = $db -> Execute("SELECT user, leadership FROM players WHERE id=".$enemy -> fields['owner']);
-        if (!$enemy -> fields['id']) 
-        {
-            error (NO_OUT);
-        }
-        if ($_POST['oid'] == $out -> fields['id']) 
-        {
-            error (ITS_YOUR);
-        }
         if ($_POST['amount'] > 3 || $enemy -> fields['attacks'] > 2)
         {
             error(TOO_MUCH_A);
@@ -1838,7 +1864,14 @@ if (isset ($_GET['view']) && $_GET['view'] == 'battle')
             /**
             * Check again info about army all players
             */
-            $enemy = $db -> Execute("SELECT * FROM outposts WHERE id=".$_POST['oid']);
+	    if ($_POST['oid'] > 0)
+	      {
+		$enemy = $db -> Execute("SELECT * FROM `outposts` WHERE `id`=".$_POST['oid']);
+	      }
+	    elseif ($_POST['pid'] > 0)
+	      {
+		$enemy = $db -> Execute("SELECT * FROM `outposts` WHERE `owner`=".$_POST['pid']);
+	      }
             $myout = $db -> Execute("SELECT * FROM outposts WHERE id=".$out -> fields['id']);
             $mymonsters = $db -> Execute("SELECT id, name, power, defense FROM outpost_monsters WHERE outpost=".$out -> fields['id']);
             $emonsters = $db -> Execute("SELECT id, name, power, defense FROM outpost_monsters WHERE outpost=".$_POST['oid']);

@@ -8,7 +8,7 @@
  *   @author               : thindil <thindil@tuxfamily.org>
  *   @author               : eyescream <tduda@users.sourceforge.net>
  *   @version              : 1.4
- *   @since                : 02.10.2011
+ *   @since                : 07.10.2011
  *
  */
 
@@ -282,7 +282,7 @@ if (isset ($_GET['view']) && $_GET['view'] == 'battle')
     define("NO_AP", "Nie masz wystarczającej ilości punktów ataku.");
     define("NO_ARMY", "Nie masz wojsk aby atakować innego gracza!");
     define("NO_ID", "Podaj id strażnicy do ataku");
-    define("NO_OUT", "Nie ta Strażnica.");
+    define("NO_OUT", "Nie ma takiej strażnicy.");
     define("ITS_YOUR", "Nie możesz zaatakować własnej Strażnicy.");
     define("TOO_MUCH_A", "Jedna strażnica może być zaatakowana tylko 3 razy na reset!");
     define("TOO_FAT2", "Twoja armia jest zbyt zmęczona aby mogła atakować dalej!");

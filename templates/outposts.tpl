@@ -245,8 +245,9 @@
 {if $View == "battle"}
     {$Battleinfo}
     <form method="post" action="outposts.php?view=battle&amp;action=battle"><table>
-    <tr><td>{$Outid}:</td><td><input type="text" name="oid" size="6" value="{$Id}" /></td></tr>
-    <tr><td>{$Amounta}:</td><td><input type="text" name="amount" size="6" /></td></tr>
+    <tr><td>{$Outid}:</td><td><input type="text" name="oid" size="6" value="{$Id}" /> {$Tor}</td></tr>
+    <tr><td>{$Pid}:</td><td><input type="text" name="pid" size="6" value="{$Pid2}" /></td></tr>
+    <tr><td>{$Amounta}:</td><td><input type="text" name="amount" size="6"/></td></tr>
     <tr><td colspan="2" align="center"><input type="submit" value="{$Aattack}" /></td></tr>
     </table></form>
     {section name=outposts loop=$Result}
