@@ -1,5 +1,7 @@
 2011-10-07  Bartek thindil Jasicki  <thindil@tuxfamily.org>
 
+	* BUG,lumbermill.php: 
+	fixed making arrows
 	* BUG,languages/pl/outposts.php: 
 	fixed typo
 	* FEATURE,templates/layout1/outposts.tpl, templates/outposts.tpl, outposts.php, languages/pl/outposts.php: 

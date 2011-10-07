@@ -7,7 +7,7 @@
  *   @copyright            : (C) 2004,2005,2006,2007,2011 Vallheru Team based on Gamers-Fusion ver 2.5
  *   @author               : thindil <thindil@users.sourceforge.net>
  *   @version              : 1.4
- *   @since                : 04.10.2011
+ *   @since                : 07.10.2011
  *
  */
 
@@ -324,6 +324,7 @@ function additem($strType, $strName, $intWt, $intPower, $intSpeed, $intCost, $in
     }
   else
     {
+      $intWt = $intWt * $intAmount;
       $test = $db -> Execute("SELECT `id` FROM `equipment` WHERE `owner`=".$intPid." AND `name`='".$strName."' AND `power`=".$intPower." AND `status`='U' AND `cost`=".$intCost." AND `poison`=0");
       if (!$test -> fields['id']) 
 	{
@@ -767,6 +768,7 @@ if (isset ($_GET['mill']) && $_GET['mill'] == 'mill')
 	    for ($i = 0; $i < count($arrMaked); $i++)
 	      {
 		additem($arrItem['type'], $arrMaked[$i]['name'], $arrMaked[$i]['wt'], $arrMaked[$i]['power'], $arrMaked[$i]['speed'], $intCost, $player->id, $arrItem['level'], $arrMaked[$i]['repaircost'], $arrAmount[$i]);
+		echo $arrAmount[$i]."<br />";
 	      }
             if ($player -> clas == 'Rzemieślnik') 
             {
