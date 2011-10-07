@@ -274,7 +274,7 @@ if (isset ($_GET['view']) && $_GET['view'] == 'listing')
 
 if (isset ($_GET['view']) && $_GET['view'] == 'battle') 
 {
-    define("BATTLE_INFO", "Witaj w pokoju narad. Wpisz po prostu ID Strażnicy oraz ile razy ma nastąpić atak.");
+    define("BATTLE_INFO", "Witaj w pokoju narad. Wpisz ID Strażnicy bądź ID jej właściciela oraz ile razy ma nastąpić atak.");
     define("OUT_ID", "ID Strażnicy");
     define("AMOUNT_A", "Ilość ataków");
     define("A_ATTACK", "Atak");
