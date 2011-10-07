@@ -7,7 +7,7 @@
  *   @copyright            : (C) 2004,2005,2006,2011 Vallheru Team based on Gamers-Fusion ver 2.5
  *   @author               : thindil <thindil@tuxfamily.org>
  *   @version              : 1.4
- *   @since                : 01.10.2011
+ *   @since                : 07.10.2011
  *
  */
 
@@ -220,7 +220,7 @@ if (isset($_GET['step']) && $_GET['step'] == 'smelt')
         }
         $arrSmeltmineral = array(SMELTM1, SMELTM2, SMELTM3, SMELTM4, SMELTM5);
         $smarty -> assign(array("Asmelt2" => A_SMELT,
-                                "Smeltm" => $arrSmeltmineral[$intKey],
+                                "Smeltm" => "energii na wytop ".$arrSmeltmineral[$intKey],
                                 "Youhave" => $strOreshave,
                                 "Youmay" => YOU_MAY,
                                 "Maxamount" => $intMaxamount));

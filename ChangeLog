@@ -1,3 +1,8 @@
+2011-10-07  Bartek thindil Jasicki  <thindil@tuxfamily.org>
+
+	* UPDATE,languages/pl/smelter.php, smelter.php:
+	changed text during smelting
+
 2011-10-06  Bartek thindil Jasicki  <thindil@tuxfamily.org>
 
 	* FEATURE,templates/layout1/tribeastral.tpl, templates/tribeastral.tpl, tribeastral.php: 
