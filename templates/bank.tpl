@@ -23,7 +23,7 @@
     {if $Mithril > 0}
         <form method="post" action="bank.php?action=mithril">
         {$Iwant} <input type="submit" value="{$Agive}" /> {$Dplayer} <input type="tekst" name="pid" size="3" />
-        <input type="text" name="mithril" size="10" value="{$Mithril}" /> {$Mamount}.
+        <input type="text" name="mithril" size="10" value="{$Mithril}" /> {$Mamount} {$Ttitle} <input type="text" name="title" size="50" />
         </form><br />
     {/if}
 
@@ -31,7 +31,7 @@
         <form method="post" action="bank.php?action=items">
         {$Iwant} <input type="submit" value="{$Agive}" /> {$Dplayer} <input type="tekst" name="pid" size="3" />
         <input type="text" name="amount" size="3" /> (<input type="checkbox" name="addall" value="Y" />{$Tall}) {$Iamount}
-	{html_options name=item options=$Ioptions}.
+	{html_options name=item options=$Ioptions} {$Ttitle} <input type="text" name="title" size="50" />
         </form><br />
     {/if}
 
@@ -39,7 +39,7 @@
         <form method="post" action="bank.php?action=potions">
         {$Iwant} <input type="submit" value="{$Agive}" /> {$Dplayer} <input type="tekst" name="pid" size="3" />
         <input type="text" name="amount" size="3" /> (<input type="checkbox" name="addall" value="Y" />{$Tall}) {$Iamount}
-	{html_options name=item options=$Poptions}.
+	{html_options name=item options=$Poptions} {$Ttitle} <input type="text" name="title" size="50" />
         </form><br />
     {/if}
 
@@ -47,7 +47,7 @@
         <form method="post" action="bank.php?action=herbs">
         {$Iwant} <input type="submit" value="{$Agive}" /> {$Dplayer} <input type="tekst" name="pid" size="3" />
 	{html_options name=item options=$Hoptions} 
-	{$Hamount} <input type="text" name="amount" size="5" /> (<input type="checkbox" name="addall" value="Y" />{$Tall}).
+	{$Hamount} <input type="text" name="amount" size="5" /> (<input type="checkbox" name="addall" value="Y" />{$Tall}) {$Ttitle} <input type="text" name="title" size="50" />
         </form><br />
     {/if}
 
@@ -55,7 +55,7 @@
         <form method="post" action="bank.php?action=minerals">
         {$Iwant} <input type="submit" value="{$Agive}" /> {$Dplayer} <input type="tekst" name="pid" size="3" /> 
 	{html_options name=item options=$Moptions} 
-	{$Hamount} <input type="text" name="amount" size="5" /> (<input type="checkbox" name="addall" value="Y" />{$Tall}).
+	{$Hamount} <input type="text" name="amount" size="5" /> (<input type="checkbox" name="addall" value="Y" />{$Tall}) {$Ttitle} <input type="text" name="title" size="50" />
         </form><br />
     {/if}
 

@@ -138,6 +138,15 @@ if (isset ($_GET['action']) && $_GET['action'] == 'mithril')
     integercheck($_POST['mithril']);
     checkvalue($_POST['mithril']);
 
+    if (strlen($_POST['title']) > 0)
+      {
+	$strTitle = strip_tags($_POST['title']);
+	$strTitle = ", tytułem: <b>".substr($strTitle, 0, 50)."</b>";
+      }
+    else
+      {
+	$strTitle = '';
+      }
     if ($_POST['pid'] == $player -> id) 
     {
         error (BAD_PLAYER);
@@ -156,9 +165,9 @@ if (isset ($_GET['action']) && $_GET['action'] == 'mithril')
     $db -> Execute("UPDATE `players` SET `platinum`=`platinum`+".$_POST['mithril']." WHERE `id`=".$_POST['pid']);
     $db -> Execute("UPDATE `players` SET `platinum`=`platinum`-".$_POST['mithril']." WHERE `id`=".$player -> id);
     $strDate = $db -> DBDate($newdate);
-    $db -> Execute("INSERT INTO `log` (`owner`, `log`, `czas`, `type`) VALUES(".$_POST['pid'].",'".T_PLAYER."<b><a href=view.php?view=".$player -> id.">".$player ->user."</a></b> ".T_ID."<b>".$player -> id."</b>, ".T_GIVE." ".$_POST['mithril']." ".M_AMOUNT."', ".$strDate.", 'N')");
-    $db -> Execute("INSERT INTO `log` (`owner`, `log`, `czas`, `type`) VALUES(".$player -> id.",'".YOU_SEND." <b><a href=view.php?view=".$_POST['pid'].">".$strPlayerName."</a></b> ID<b> ".$_POST['pid']."</b>, ".$_POST['mithril']." ".M_AMOUNT."', ".$strDate.", 'N')");
-    $db -> Execute("INSERT INTO `logs` (`owner`, `log`, `czas`) VALUES(".$player -> id.",'".YOU_SEND." <b><a href=view.php?view=".$_POST['pid'].">".$strPlayerName."</a></b> ID<b> ".$_POST['pid']."</b>, ".$_POST['mithril']." ".M_AMOUNT."', ".$strDate.")");
+    $db -> Execute("INSERT INTO `log` (`owner`, `log`, `czas`, `type`) VALUES(".$_POST['pid'].",'".T_PLAYER."<b><a href=view.php?view=".$player -> id.">".$player ->user."</a></b> ".T_ID."<b>".$player -> id."</b>, ".T_GIVE." ".$_POST['mithril']." sztuk mithrilu".$strTitle.".', ".$strDate.", 'N')");
+    $db -> Execute("INSERT INTO `log` (`owner`, `log`, `czas`, `type`) VALUES(".$player -> id.",'".YOU_SEND." <b><a href=view.php?view=".$_POST['pid'].">".$strPlayerName."</a></b> ID<b> ".$_POST['pid']."</b>, ".$_POST['mithril']." sztuk mithrilu".$strTitle.".', ".$strDate.", 'N')");
+    $db -> Execute("INSERT INTO `logs` (`owner`, `log`, `czas`) VALUES(".$player -> id.",'".YOU_SEND." <b><a href=view.php?view=".$_POST['pid'].">".$strPlayerName."</a></b> ID<b> ".$_POST['pid']."</b>, ".$_POST['mithril']." sztuk mithrilu ".$strTitle.".', ".$strDate.")");
     error ("<br />".YOU_SEND." <b><a href=view.php?view=".$_POST['pid'].">".$strPlayerName."</a></b> ID<b> ".$_POST['pid']."</b>, ".$_POST['mithril']." ".M_AMOUNT."");
 }
 
@@ -172,6 +181,15 @@ if (isset ($_GET['action']) && $_GET['action'] == 'minerals')
 	error(ERROR);
       }
     checkvalue($_POST['pid']);
+    if (strlen($_POST['title']) > 0)
+      {
+	$strTitle = strip_tags($_POST['title']);
+	$strTitle = ", tytułem: <b>".substr($strTitle, 0, 50)."</b>";
+      }
+    else
+      {
+	$strTitle = '';
+      }
     $arrSqlname = array('copperore', 'zincore', 'tinore', 'ironore', 'copper', 'bronze', 'brass', 'iron', 'steel', 'coal', 'adamantium', 'meteor', 'crystal', 'pine', 'hazel', 'yew', 'elm');
     if (!in_array($_POST['item'], $arrSqlname)) 
     {
@@ -222,9 +240,9 @@ if (isset ($_GET['action']) && $_GET['action'] == 'minerals')
     $objHave  -> Close();
     $db -> Execute("UPDATE `minerals` SET `".$_POST['item']."`=`".$_POST['item']."`-".$_POST['amount']." WHERE `owner`=".$player -> id);
     $strDate = $db -> DBDate($newdate);
-    $db -> Execute("INSERT INTO `log` (`owner`, `log`, `czas`, `type`) VALUES(".$_POST['pid'].",'".T_PLAYER."<b><a href=view.php?view=".$player -> id.">".$player ->user."</a></b> ".T_ID."<b>".$player -> id."</b>, ".T_GIVE." ".$_POST['amount']." ".$strMineralname.".', ".$strDate.", 'N')");
-    $db -> Execute("INSERT INTO `log` (`owner`, `log`, `czas`, `type`) VALUES(".$player -> id.", '".YOU_SEND." <b><a href=view.php?view=".$_POST['pid'].">".$strPlayerName."</a></b> ID<b> ".$_POST['pid'].", ".$_POST['amount']." ".T_AMOUNT." ".$strMineralname.".', ".$strDate.", 'N')");
-    $db -> Execute("INSERT INTO `logs` (`owner`, `log`, `czas`) VALUES(".$player -> id.", '".YOU_SEND." <b><a href=view.php?view=".$_POST['pid'].">".$strPlayerName."</a></b> ID<b> ".$_POST['pid'].", ".$_POST['amount']." ".T_AMOUNT." ".$strMineralname.".', ".$strDate.")");
+    $db -> Execute("INSERT INTO `log` (`owner`, `log`, `czas`, `type`) VALUES(".$_POST['pid'].",'".T_PLAYER."<b><a href=view.php?view=".$player -> id.">".$player ->user."</a></b> ".T_ID."<b>".$player -> id."</b>, ".T_GIVE." ".$_POST['amount']." ".$strMineralname.$strTitle.".', ".$strDate.", 'N')");
+    $db -> Execute("INSERT INTO `log` (`owner`, `log`, `czas`, `type`) VALUES(".$player -> id.", '".YOU_SEND." <b><a href=view.php?view=".$_POST['pid'].">".$strPlayerName."</a></b> ID<b> ".$_POST['pid'].", ".$_POST['amount']." ".T_AMOUNT." ".$strMineralname.$strTitle.".', ".$strDate.", 'N')");
+    $db -> Execute("INSERT INTO `logs` (`owner`, `log`, `czas`) VALUES(".$player -> id.", '".YOU_SEND." <b><a href=view.php?view=".$_POST['pid'].">".$strPlayerName."</a></b> ID<b> ".$_POST['pid'].", ".$_POST['amount']." ".T_AMOUNT." ".$strMineralname.$strTitle.".', ".$strDate.")");
     error ("<br />".YOU_SEND." <b><a href=view.php?view=".$_POST['pid'].">".$strPlayerName."</a></b> ID<b> ".$_POST['pid']."</b>, <b>".$_POST['amount']."</b> ".T_AMOUNT." <b>".$strMineralname."</b>.");
 }
 
@@ -234,6 +252,15 @@ if (isset ($_GET['action']) && $_GET['action'] == 'minerals')
 if (isset ($_GET['action']) && $_GET['action'] == 'herbs') 
 {
     checkvalue($_POST['pid']);
+    if (strlen($_POST['title']) > 0)
+      {
+	$strTitle = strip_tags($_POST['title']);
+	$strTitle = ", tytułem: <b>".substr($strTitle, 0, 50)."</b>";
+      }
+    else
+      {
+	$strTitle = '';
+      }
     $arrHerbs = array('illani', 'illanias', 'nutari', 'dynallca', 'ilani_seeds', 'illanias_seeds', 'nutari_seeds', 'dynallca_seeds');
     if (!in_array($_POST['item'], $arrHerbs))
     {
@@ -284,8 +311,9 @@ if (isset ($_GET['action']) && $_GET['action'] == 'herbs')
     $have -> Close();
     $db -> Execute("UPDATE `herbs` SET `".$_POST['item']."`=`".$_POST['item']."`-".$_POST['amount']." WHERE `gracz`=".$player -> id);
     $strDate = $db -> DBDate($newdate);
-    $db -> Execute("INSERT INTO `log` (`owner`, `log`, `czas`, `type`) VALUES(".$_POST['pid'].",'".T_PLAYER."<b><a href=view.php?view=".$player -> id.">".$player ->user."</a></b> ".T_ID."<b>".$player -> id."</b>, ".T_GIVE." ".$_POST['amount']." ".$arrName[$intKey].".', ".$strDate.", 'N')");
-    $db -> Execute("INSERT INTO `log` (`owner`, `log`, `czas`, `type`) VALUES(".$player -> id.",'".YOU_SEND." <b><a href=view.php?view=".$_POST['pid'].">".$strPlayerName."</a></b> ID<b> ".$_POST['pid'].", ".$_POST['amount']." ".$arrName[$intKey].".', ".$strDate.", 'N')");
+    $db -> Execute("INSERT INTO `log` (`owner`, `log`, `czas`, `type`) VALUES(".$_POST['pid'].",'".T_PLAYER."<b><a href=view.php?view=".$player -> id.">".$player ->user."</a></b> ".T_ID."<b>".$player -> id."</b>, ".T_GIVE." ".$_POST['amount']." ".$arrName[$intKey].$strTitle.".', ".$strDate.", 'N')");
+    $db -> Execute("INSERT INTO `log` (`owner`, `log`, `czas`, `type`) VALUES(".$player -> id.",'".YOU_SEND." <b><a href=view.php?view=".$_POST['pid'].">".$strPlayerName."</a></b> ID<b> ".$_POST['pid'].", ".$_POST['amount']." ".$arrName[$intKey].$strTitle.".', ".$strDate.", 'N')");
+    $db -> Execute("INSERT INTO `logs` (`owner`, `log`, `czas`) VALUES(".$_POST['pid'].",'".T_PLAYER."<b><a href=view.php?view=".$player -> id.">".$player ->user."</a></b> ".T_ID."<b>".$player -> id."</b>, ".T_GIVE." ".$_POST['amount']." ".$arrName[$intKey].$strTitle.".', ".$strDate.")");
     error ("<br />".YOU_SEND." <b><a href=view.php?view=".$_POST['pid'].">".$strPlayerName."</a></b> ID<b> ".$_POST['pid']."</b>, <b>".$_POST['amount']."</b> ".$arrName[$intKey]);
 }
 
@@ -296,6 +324,15 @@ if (isset ($_GET['action']) && $_GET['action'] == 'potions')
 {
     checkvalue($_POST['pid']);
     checkvalue($_POST['item']);
+    if (strlen($_POST['title']) > 0)
+      {
+	$strTitle = strip_tags($_POST['title']);
+	$strTitle = ", tytułem: <b>".substr($strTitle, 0, 50)."</b>";
+      }
+    else
+      {
+	$strTitle = '';
+      }
     $item = $db -> Execute("SELECT * FROM `potions` WHERE `id`=".$_POST['item']);
     if ($player -> id != $item -> fields['owner']) 
     {
@@ -348,8 +385,9 @@ if (isset ($_GET['action']) && $_GET['action'] == 'potions')
         $db -> Execute("DELETE FROM `potions` WHERE `id`=".$item -> fields['id']);
     }
     $strDate = $db -> DBDate($newdate);
-    $db -> Execute("INSERT INTO log (`owner`, `log`, `czas`, `type`) VALUES(".$_POST['pid'].",'".T_PLAYER."<b><a href=view.php?view=".$player -> id.">".$player ->user."</a></b> ".T_ID."<b>".$player -> id."</b>, ".T_GIVE." ".$_POST['amount']." ".$item ->  fields['name']." (+".$item -> fields['power'].").', ".$strDate.", 'N')") or error (E_DB3);
-    $db -> Execute("INSERT INTO log (`owner`, `log`, `czas`, `type`) VALUES(".$player -> id.",'".YOU_SEND." <b><a href=view.php?view=".$_POST['pid'].">".$strPlayerName."</a></b> ID<b> ".$_POST['pid'].", ".$_POST['amount']." ".T_AMOUNT." ".$item -> fields['name']." (+".$item -> fields['power'].").', ".$strDate.", 'N')");
+    $db -> Execute("INSERT INTO log (`owner`, `log`, `czas`, `type`) VALUES(".$_POST['pid'].",'".T_PLAYER."<b><a href=view.php?view=".$player -> id.">".$player ->user."</a></b> ".T_ID."<b>".$player -> id."</b>, ".T_GIVE." ".$_POST['amount']." ".$item ->  fields['name']." (+".$item -> fields['power'].")".$strTitle.".', ".$strDate.", 'N')") or error (E_DB3);
+    $db -> Execute("INSERT INTO log (`owner`, `log`, `czas`, `type`) VALUES(".$player -> id.",'".YOU_SEND." <b><a href=view.php?view=".$_POST['pid'].">".$strPlayerName."</a></b> ID<b> ".$_POST['pid'].", ".$_POST['amount']." ".T_AMOUNT." ".$item -> fields['name']." (+".$item -> fields['power'].")".$strTitle.".', ".$strDate.", 'N')");
+    $db -> Execute("INSERT INTO log (`owner`, `log`, `czas`) VALUES(".$_POST['pid'].",'".T_PLAYER."<b><a href=view.php?view=".$player -> id.">".$player ->user."</a></b> ".T_ID."<b>".$player -> id."</b>, ".T_GIVE." ".$_POST['amount']." ".$item ->  fields['name']." (+".$item -> fields['power'].")".$strTitle.".', ".$strDate.")");
     error ("<br />".YOU_SEND." <b><a href=view.php?view=".$_POST['pid'].">".$strPlayerName."</a></b>, ID<b> ".$_POST['pid']."</b>, <b>".$_POST['amount']."</b> ".T_AMOUNT." <b>".$item -> fields['name']."</b> (+".$item -> fields['power'].").");
     $item -> Close();
 }
@@ -365,6 +403,15 @@ if (isset ($_GET['action']) && $_GET['action'] == 'items')
       {
 	integercheck($_POST['amount']);
 	checkvalue($_POST['amount']);
+      }
+    if (strlen($_POST['title']) > 0)
+      {
+	$strTitle = strip_tags($_POST['title']);
+	$strTitle = ", tytułem: <b>".substr($strTitle, 0, 50)."</b>";
+      }
+    else
+      {
+	$strTitle = '';
       }
     $item = $db -> Execute("SELECT * FROM `equipment` WHERE `id`=".$_POST['item']);
     if ($item -> fields['status'] == 'R')
@@ -484,7 +531,7 @@ if (isset ($_GET['action']) && $_GET['action'] == 'items')
             $strAttributes.= '+'.$item -> fields['power'];
 	    break;
     }
-    $strAttributes.= ').';
+    $strAttributes.= ')'.$strTitle.'.';
 
     $strDate = $db -> DBDate($newdate);
     $db -> Execute("INSERT INTO `log` (`owner`, `log`, `czas`, `type`) VALUES(".$_POST['pid'].",'".T_PLAYER." <b><a href=view.php?view=".$player -> id.">".$player ->user."</a></b>".T_ID."<b>".$player -> id."</b>, ".T_GIVE." ".$_POST['amount']." ".I_AMOUNT." ".$item -> fields['name']." ".$strAttributes."', ".$strDate.", 'N')") or die($db->ErrorMsg());   
@@ -682,6 +729,7 @@ $smarty -> assign(array("Potions" => '',
                         "Aastral2" => A_ASTRAL2,
                         "Hamount" => H_AMOUNT,
 			"Goldcoins2" => "sztuk złota tytułem (opcjonalne maks 50 znaków)",
+			"Ttitle" => "tytułem (opcjonalne maks 50 znaków)",
 			"Tall" => "wszystkie posiadane"));
 
 /**
