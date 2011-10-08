@@ -9,7 +9,7 @@
  *   @author               : yeskov <yeskov@users.sourceforge.net>
  *   @author               : eyescream <tduda@users.sourceforge.net>
  *   @version              : 1.4
- *   @since                : 06.10.2011
+ *   @since                : 08.10.2011
  *
  */
 
@@ -92,6 +92,15 @@ if (isset ($_GET['action']) && $_GET['action'] == 'donation')
     checkvalue($_POST['with']);
     integercheck($_POST['with']);
 
+    if (isset($_POST['title']))
+      {
+	$strTitle = strip_tags($_POST['title']);
+	$strTitle = ", tytułem: <b>".substr($strTitle, 0, 50)."</b>";
+      }
+    else
+      {
+	$strTitle = '';
+      }
     if ($player->bank < $_POST['with'])
     {
         error(NO_GOLD);
@@ -114,9 +123,9 @@ if (isset ($_GET['action']) && $_GET['action'] == 'donation')
     $db -> Execute("UPDATE `players` SET `bank`=`bank`+".$_POST['with']." WHERE `id`=".$_POST['pid']);
     $db -> Execute("UPDATE `players` SET `bank`=`bank`-".$_POST['with']." WHERE `id`=".$player -> id);
     $strDate = $db -> DBDate($newdate);
-    $db -> Execute("INSERT INTO `log` (`owner`, `log`, `czas`, `type`) VALUES(".$_POST['pid'].",'".T_PLAYER." <b><a href=view.php?view=".$player -> id.">".$player -> user."</a></b>".T_ID."<b>".$player -> id."</b>, ".T_GIVE." ".$_POST['with']." ".GOLD_COINS."', ".$strDate.", 'N')");    
-    $db -> Execute("INSERT INTO `log` (`owner`, `log`, `czas`, `type`) VALUES(".$player -> id.",'".YOU_SEND." <b><a href=view.php?view=".$_POST['pid'].">".$strPlayerName."</a></b>, ID<b> ".$_POST['pid']."</b> ".G_AMOUNT." ".$_POST['with']." ".GOLD_COINS."', ".$strDate.", 'N')");    
-    $db -> Execute("INSERT INTO `logs` (`owner`, `log`, `czas`) VALUES(".$player -> id.",'".YOU_SEND." <b><a href=view.php?view=".$_POST['pid'].">".$strPlayerName."</a></b>, ID<b> ".$_POST['pid']."</b> ".G_AMOUNT." ".$_POST['with']." ".GOLD_COINS."', ".$strDate.")");
+    $db -> Execute("INSERT INTO `log` (`owner`, `log`, `czas`, `type`) VALUES(".$_POST['pid'].",'".T_PLAYER." <b><a href=view.php?view=".$player -> id.">".$player -> user."</a></b>".T_ID."<b>".$player -> id."</b>, ".T_GIVE." ".$_POST['with']." sztuk złota".$strTitle.".', ".$strDate.", 'N')");    
+    $db -> Execute("INSERT INTO `log` (`owner`, `log`, `czas`, `type`) VALUES(".$player -> id.",'".YOU_SEND." <b><a href=view.php?view=".$_POST['pid'].">".$strPlayerName."</a></b>, ID<b> ".$_POST['pid']."</b> ".G_AMOUNT." ".$_POST['with']." sztuk złota".$strTitle.".', ".$strDate.", 'N')");    
+    $db -> Execute("INSERT INTO `logs` (`owner`, `log`, `czas`) VALUES(".$player -> id.",'".YOU_SEND." <b><a href=view.php?view=".$_POST['pid'].">".$strPlayerName."</a></b>, ID<b> ".$_POST['pid']."</b> ".G_AMOUNT." ".$_POST['with']." sztuk złota".$strTitle.".', ".$strDate.")");
     error("<br />".YOU_SEND." <b><a href=view.php?view=".$_POST['pid'].">".$strPlayerName."</a></b>, ID<b> ".$_POST['pid']."</b> ".G_AMOUNT." ".$_POST['with']." ".GOLD_COINS);
 }
 
@@ -672,6 +681,7 @@ $smarty -> assign(array("Potions" => '',
                         "Aastral" => A_ASTRAL,
                         "Aastral2" => A_ASTRAL2,
                         "Hamount" => H_AMOUNT,
+			"Goldcoins2" => "sztuk złota tytułem (opcjonalne maks 50 znaków)",
 			"Tall" => "wszystkie posiadane"));
 
 /**

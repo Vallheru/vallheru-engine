@@ -17,7 +17,7 @@
 
     <form method="post" action="bank.php?action=donation">
     {$Iwant} <input type="submit" value="{$Agive}" /> {$Dplayer} <input type="text" name="pid" size="3" />
-    <input type="text" value="{$Bank}" name="with" size="10" /> {$Goldcoins}
+    <input type="text" value="{$Bank}" name="with" size="10" /> {$Goldcoins2} <input type="text" name="title" size="50" />
     </form>
 
     {if $Mithril > 0}
