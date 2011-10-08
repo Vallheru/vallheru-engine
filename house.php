@@ -8,7 +8,7 @@
  *   @author               : thindil <thindil@tuxfamily.org>
  *   @author               : eyescream <tduda@users.sourceforge.net>
  *   @version              : 1.4
- *   @since                : 03.10.2011
+ *   @since                : 08.10.2011
  *
  */
 
@@ -703,7 +703,7 @@ if (isset ($_GET['action']) && $_GET['action'] == 'my')
             }
             $objTest -> Close();
             $db -> Execute("UPDATE `players` SET `houserest`='Y' WHERE id=".$player -> id);
-            $roll = rand(1,10);
+            $roll = rand(1, 100);
             if ($roll > 5) 
             {
                 $gainenergy =  ceil(($player -> max_energy / 100) * $house -> fields['value']);
@@ -736,12 +736,12 @@ if (isset ($_GET['action']) && $_GET['action'] == 'my')
 		$maxmana = ($player -> inteli + $player -> wisdom);
 		$maxmana = $maxmana + (($arrEquip[8][2] / 100) * $maxmana);
                 $gainmana = ceil(($maxmana / 100) * $house -> fields['value']);
-                $gainlife = $gainhp + $player -> hp;
+                $gainlife = (4 * $gainhp) + $player -> hp;
                 if ($gainlife > $player -> max_hp) 
                 {
                     $gainlife = $player -> max_hp;
                 }
-                $gainmagic = $gainmana + $player -> mana;
+                $gainmagic = (4 * $gainmana) + $player -> mana;
                 if ($gainmagic > $maxmana) 
                 {
                     $gainmagic = $maxmana;
@@ -750,6 +750,7 @@ if (isset ($_GET['action']) && $_GET['action'] == 'my')
                 {
                     $gainenergy = $player -> max_energy;
                 }
+		$gainenergy = 4 * $gainenergy;
                 $db -> Execute("UPDATE `players` SET `hp`=".$gainlife.", `energy`=`energy`+".$gainenergy.", `pm`=".$gainmagic." WHERE `id`=".$player -> id);
                 $intGainlife = $gainlife - $player -> hp;
                 $intGainmagic = $gainmagic - $player -> mana;

@@ -8,7 +8,7 @@
  *   @author               : thindil <thindil@tuxfamily.org>
  *   @author               : eyescream <tduda@users.sourceforge.net>
  *   @version              : 1.4
- *   @since                : 23.09.2011
+ *   @since                : 08.10.2011
  *
  */
 
@@ -231,7 +231,7 @@ if (isset($_GET['action']) && $_GET['action'] == 'my')
         define("NO_BEDROOM", "Nie możesz odpoczywać ponieważ nie masz sypialni!");
         define("YOU_DEAD", "Nie możesz odpoczywać ponieważ jesteś martwy!");
         define("NO_RACE", "Nie możesz odpoczywać ponieważ nie masz wybranej rasy lub klasy!");
-        define("ONLY_ONCE", "Możesz odpoczywać tylko raz na reset!");
+        define("ONLY_ONCE", "Możesz odpoczywać tylko raz na dzień!");
         define("YOU_REST", "Odpoczywałeś jakiś czas i odzyskałeś ");
         define("G_LIFE", " punktów życia oraz ");
         define("G_ENERGY", " energii, ");

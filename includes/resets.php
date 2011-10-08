@@ -7,7 +7,7 @@
  *   @copyright            : (C) 2004,2005,2006,2007,2011 Vallheru Team based on Gamers-Fusion ver 2.5
  *   @author               : thindil <thindil@tuxfamily.org>
  *   @version              : 1.4
- *   @since                : 17.09.2011
+ *   @since                : 08.10.2011
  *
  */
 
@@ -654,7 +654,7 @@ function smallreset()
     $db -> Execute("UPDATE settings SET value='".$intArchers."' WHERE setting='archers'");
     $db -> Execute("UPDATE settings SET value='".$intCatapults."' WHERE setting='catapults'");
     $db -> Execute("UPDATE settings SET value='".$intBarricades."' WHERE setting='barricades'");
-    $db -> Execute("UPDATE `players` SET `hp`=`max_hp`, `bridge`='N', `houserest`='N'");
+    $db -> Execute("UPDATE `players` SET `hp`=`max_hp`, `bridge`='N'");
     /**
      * Add bonus to mana from items and check duration of antidote
      */
