@@ -417,15 +417,7 @@ if (isset ($_GET['action']) && $_GET['action'] == 'items')
       {
 	$strTitle = '';
       }
-    $item = $db -> Execute("SELECT * FROM `equipment` WHERE `id`=".$_POST['item']);
-    if ($item -> fields['status'] != 'U')
-    {
-        error(ERROR);
-    }
-    if ($player -> id != $item -> fields['owner']) 
-    {
-        error (NOT_YOUR);
-    }
+    $item = $db -> Execute("SELECT * FROM `equipment` WHERE `id`=".$_POST['item']." AND `status`='U' AND `owner`=".$player->id);
     if (empty ($item -> fields['id'])) 
     {
         error (NO_ITEM);
