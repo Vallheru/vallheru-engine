@@ -346,6 +346,10 @@ if (isset ($_GET['action']) && $_GET['action'] == 'potions')
     {
         error (BAD_PLAYER);
     }
+    if ($item->fields['status'] != 'K')
+      {
+	error(ERROR);
+      }
     $objDonated = $db -> Execute("SELECT `id`, `user` FROM `players` WHERE `id`=".$_POST['pid']);
     if (empty ($objDonated -> fields['id'])) 
     {
@@ -414,7 +418,7 @@ if (isset ($_GET['action']) && $_GET['action'] == 'items')
 	$strTitle = '';
       }
     $item = $db -> Execute("SELECT * FROM `equipment` WHERE `id`=".$_POST['item']);
-    if ($item -> fields['status'] == 'R')
+    if ($item -> fields['status'] != 'U')
     {
         error(ERROR);
     }
@@ -729,7 +733,7 @@ $smarty -> assign(array("Potions" => '',
                         "Aastral2" => A_ASTRAL2,
                         "Hamount" => H_AMOUNT,
 			"Goldcoins2" => "sztuk złota tytułem (opcjonalne, maks 50 znaków)",
-			"Ttitle" => "tytułem (opcjonalne maks 50 znaków)",
+			"Ttitle" => "tytułem (opcjonalne, maks 50 znaków)",
 			"Tall" => "wszystkie posiadane"));
 
 /**

@@ -1,6 +1,8 @@
 2011-10-08  Bartek thindil Jasicki  <thindil@tuxfamily.org>
 
 	* BUG,bank.php: 
+	fixed bug with giving ite
+	* BUG,bank.php: 
 	fixed typo
 	* FEATURE,languages/pl/house.php, house.php, includes/resets.php: 
 	allow sleep in house only once on reset
