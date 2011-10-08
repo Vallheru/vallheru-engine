@@ -728,7 +728,7 @@ $smarty -> assign(array("Potions" => '',
                         "Aastral" => A_ASTRAL,
                         "Aastral2" => A_ASTRAL2,
                         "Hamount" => H_AMOUNT,
-			"Goldcoins2" => "sztuk złota tytułem (opcjonalne maks 50 znaków)",
+			"Goldcoins2" => "sztuk złota tytułem (opcjonalne, maks 50 znaków)",
 			"Ttitle" => "tytułem (opcjonalne maks 50 znaków)",
 			"Tall" => "wszystkie posiadane"));
 
