@@ -1,5 +1,7 @@
 2011-10-08  Bartek thindil Jasicki  <thindil@tuxfamily.org>
 
+	* BUG,includes/funkcje.php: 
+	fixed bug with get loot after fight
 	* FEATURE,templates/layout1/bank.tpl, templates/bank.tpl, bank.php:
 	added option to set reason of gold donation
 

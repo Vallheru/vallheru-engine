@@ -7,7 +7,7 @@
  *   @copyright            : (C) 2004,2005,2006,2007,2011 Vallheru Team based on Gamers-Fusion ver 2.5
  *   @author               : thindil <thindil@tuxfamily.org>
  *   @version              : 1.4
- *   @since                : 26.09.2011
+ *   @since                : 08.10.2011
  *
  */
 
@@ -1104,8 +1104,9 @@ function fightmonster($enemy, $expgain, $goldgain, $times)
     } 
         else 
     {
-        $db -> Execute("UPDATE players SET credits=credits+".$goldgain." WHERE id=".$player -> id);
-        $db -> Execute("INSERT INTO events (text) VALUES('Gracz ".$player -> user." ".EVENT." ".$_POST['razy']." ".$enemy['name']."')");
+        monsterloot($enemy['lootnames'], $enemy['lootchances'], $enemy['level']);
+        $db -> Execute("UPDATE `players` SET `credits`=`credits`+".$goldgain." WHERE `id`=".$player -> id);
+        $db -> Execute("INSERT INTO `events` (`text`) VALUES('Gracz ".$player -> user." ".EVENT." ".$_POST['razy']." ".$enemy['name']."')");
         $smarty -> assign ("Message", "<br /><li><b".B_RESULT2." <b>".$_POST['razy']." ".$enemy['name']."</b>.");
         $smarty -> display ('error1.tpl');
         print "<li><b>".REWARD." <b>".$expgain."</b> ".EXPERIENCE." <b>".$goldgain."</b> ".GOLD." ";
@@ -1168,7 +1169,6 @@ function fightmonster($enemy, $expgain, $goldgain, $times)
     {
         lostitem($gwt[3], $arrEquip[5][6], YOU_SHIELD, $player -> id, $arrEquip[5][0], $player -> id, HAS_BEEN2);
     }
-    monsterloot($enemy['lootnames'], $enemy['lootchances'], $enemy['level']);
     if ($player -> hp < 0) 
     {
         $player -> hp = 0;

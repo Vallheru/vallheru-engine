@@ -92,7 +92,7 @@ if (isset ($_GET['action']) && $_GET['action'] == 'donation')
     checkvalue($_POST['with']);
     integercheck($_POST['with']);
 
-    if (isset($_POST['title']))
+    if (strlen($_POST['title']) > 0)
       {
 	$strTitle = strip_tags($_POST['title']);
 	$strTitle = ", tytułem: <b>".substr($strTitle, 0, 50)."</b>";
