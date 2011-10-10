@@ -7,7 +7,7 @@
  *   @copyright            : (C) 2004,2005,2006,2007,2011 Vallheru Team based on Gamers-Fusion ver 2.5
  *   @author               : thindil <thindil@tuxfamily.org>
  *   @version              : 1.4
- *   @since                : 08.10.2011
+ *   @since                : 10.10.2011
  *
  */
 
@@ -39,7 +39,7 @@ require_once("languages/".$player -> lang."/funkcje.php");
 /**
  * Function check for monsters loot
  */
-function monsterloot($arrNames, $arrChances, $intLevel)
+function monsterloot($arrNames, $arrChances, $intLevel, $intMonsters = 1)
 {
   global $db;
   global $player;
@@ -50,40 +50,64 @@ function monsterloot($arrNames, $arrChances, $intLevel)
       return;
     }
 
-  $fltChance = (float)100 / $intLevel;
-  $fltRandom = (float)rand(0, 10000) / 100;
-  
-  //Bad luck, exit
-  if ($fltRandom > $fltChance)
+  $arrFound = array();
+
+  for ($i = 0; $i < $intMonsters; $i++)
     {
-      return;
-    }
-  
-  //Check which component player found
-  $intKey = -1;
-  $intRoll = rand(1, 100);
-  foreach ($arrChances as $intChance)
-    {
-      $intKey++;
-      if ($intRoll <= $intChance)
+      $fltChance = (float)100 / $intLevel;
+      $fltRandom = (float)rand(0, 10000) / 100;
+      
+      //Bad luck, exit
+      if ($fltRandom > $fltChance)
 	{
-	  break;
+	  continue;
+	}
+  
+      //Check which component player found
+      $intKey = -1;
+      $intRoll = rand(1, 100);
+      foreach ($arrChances as $intChance)
+	{
+	  $intKey++;
+	  if ($intRoll <= $intChance)
+	    {
+	      break;
+	    }
+	}
+      
+      if (array_key_exists($intKey, $arrFound))
+	{
+	  $arrFound[$intKey]++;
+	}
+      else
+	{
+	  $arrFound[$intKey] = 1;
 	}
     }
 
+  if (count($arrFound) == 0)
+    {
+      return;
+    }
+
   //Add component to player equipment
-  $intPrice = ceil(($intLevel * 10) / $arrChances[$intKey]);
-  $objTest = $db->Execute("SELECT `id` FROM `equipment` WHERE `name`='".$arrNames[$intKey]."' AND `owner`=".$player->id." AND `status`='U' AND `type`='O' AND `minlev`=".$intLevel." AND `cost`=".$intPrice);
-  if (!$objTest->fields['id'])
+  $strMessage = "<br />Ze zwłok potwora wyciągasz:<br />";
+  foreach ($arrFound as $intKey => $intAmount)
     {
-      $db->Execute("INSERT INTO `equipment` (`owner`, `name`, `type`, `cost`, `minlev`, `amount`, `status`) VALUES(".$player->id.", '".$arrNames[$intKey]."', 'O', ".$intPrice.", ".$intLevel.", 1, 'U')");
+      $intPrice = ceil(($intLevel * 10) / $arrChances[$intKey]);
+      $objTest = $db->Execute("SELECT `id` FROM `equipment` WHERE `name`='".$arrNames[$intKey]."' AND `owner`=".$player->id." AND `status`='U' AND `type`='O' AND `minlev`=".$intLevel." AND `cost`=".$intPrice);
+      if (!$objTest->fields['id'])
+	{
+	  $db->Execute("INSERT INTO `equipment` (`owner`, `name`, `type`, `cost`, `minlev`, `amount`, `status`) VALUES(".$player->id.", '".$arrNames[$intKey]."', 'O', ".$intPrice.", ".$intLevel.", ".$intAmount.", 'U')");
+	}
+      else
+	{
+	  $db->Execute("UPDATE `equipment` SET `amount`=`amount`+1 WHERE `id`=".$objTest->fields['id']);
+	}
+      $objTest->Close();
+      $strMessage .= $intAmount." ".$arrNames[$intKey]."<br />";
     }
-  else
-    {
-      $db->Execute("UPDATE `equipment` SET `amount`=`amount`+1 WHERE `id`=".$objTest->fields['id']);
-    }
-  $objTest->Close();
-  print "<br />Ze zwłok potwora wyciągasz ".$arrNames[$intKey].".<br />";
+  print $strMessage;
 }
 
 /**
@@ -1083,35 +1107,35 @@ function fightmonster($enemy, $expgain, $goldgain, $times)
         $runda = ($runda + 1);
     }
     if ($player -> hp <= 0) 
-    {
-	    $db -> Execute("UPDATE `players` SET `antidote`='' WHERE `id`=".$player -> id);
+      {
+	$db -> Execute("UPDATE `players` SET `antidote`='' WHERE `id`=".$player -> id);
         if ($title != 'Arena Walk') 
-        {
+	  {
             loststat($player -> id,$player -> strength,$player -> agility,$player -> inteli,$player -> cond,$player -> speed,$player -> wisdom,0,$enemy['name'],0);
-        } 
-            else 
-        {
+	  } 
+	else 
+	  {
             $smarty -> assign ("Message", "</ul>".LOST_FIGHT."...<br />");
             $smarty -> display ('error1.tpl');
-        }
+	  }
         $db -> Execute("INSERT INTO events (text) VALUES('Gracz ".$player -> user." ".EVENT3." ".$_POST['razy']." ".$enemy['name']."')");
-    } 
-        elseif ($runda > 24 && ($player -> hp > 0 && $enemy['hp'] > 0)) 
-    {
+      } 
+    elseif ($runda > 24 && ($player -> hp > 0 && $enemy['hp'] > 0)) 
+      {
         $db -> Execute("INSERT INTO events (text) VALUES('Gracz ".$player -> user." ".EVENT1." ".$_POST['razy']." ".$enemy['name']." ".EVENT2."')");
         $smarty -> assign ("Message", "<br /><li><b>".B_RESULT1.": ");
         $smarty -> display ('error1.tpl');
-    } 
-        else 
-    {
-        monsterloot($enemy['lootnames'], $enemy['lootchances'], $enemy['level']);
+      } 
+    else 
+      {
+        monsterloot($enemy['lootnames'], $enemy['lootchances'], $enemy['level'], $_POST['razy']);
         $db -> Execute("UPDATE `players` SET `credits`=`credits`+".$goldgain." WHERE `id`=".$player -> id);
         $db -> Execute("INSERT INTO `events` (`text`) VALUES('Gracz ".$player -> user." ".EVENT." ".$_POST['razy']." ".$enemy['name']."')");
         $smarty -> assign ("Message", "<br /><li><b".B_RESULT2." <b>".$_POST['razy']." ".$enemy['name']."</b>.");
         $smarty -> display ('error1.tpl');
         print "<li><b>".REWARD." <b>".$expgain."</b> ".EXPERIENCE." <b>".$goldgain."</b> ".GOLD." ";
         checkexp($player -> exp,$expgain,$player -> level,$player -> race,$player -> user,$player -> id,0,0,$player -> id,'',0);
-    }
+      }
     /**
      * Count gained dodge skill
      */

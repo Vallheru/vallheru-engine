@@ -1,5 +1,7 @@
 2011-10-10  Bartek thindil Jasicki  <thindil@tuxfamily.org>
 
+	* UPDATE,includes/funkcje.php, includes/turnfight.php: 
+	raised chance to find loot when fight with few monsters
 	* FEATURE,languages/pl/market.php, templates/layout1/market.tpl, templates/market.tpl, market.php, includes/marketdel.php: 
 	added option to withdraw only part of offert
 	* FEATURE,install/db/update.sql, templates/layout1/hof2.tpl, templates/hof2.tpl, hof2.php, city.php, includes/resets.php, 

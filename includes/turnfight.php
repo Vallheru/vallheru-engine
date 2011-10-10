@@ -7,7 +7,7 @@
  *   @copyright            : (C) 2004,2005,2006,2007,2011 Vallheru Team based on Gamers-Fusion ver 2.5
  *   @author               : thindil <thindil@tuxfamily.org>
  *   @version              : 1.4
- *   @since                : 26.09.2011
+ *   @since                : 10.10.2011
  *
  */
  
@@ -686,13 +686,13 @@ function turnfight($expgain,$goldgain,$action,$addres)
     }
     if ($temp == 0 && $player -> fight > 0 && (isset($_SESSION['round']) && $_SESSION['round'] < 25)) 
     {
-        $db -> Execute("INSERT INTO events (text) VALUES('Gracz ".$player -> user." ".DEFEAT." ".$enemy['name']."')");
-        $db -> Execute("UPDATE players SET credits=credits+".$goldgain." WHERE id=".$player -> id);
+        $db -> Execute("INSERT INTO `events` (`text`) VALUES('Gracz ".$player -> user." ".DEFEAT." ".$enemy['name']."')");
+        $db -> Execute("UPDATE `players` SET `credits`=`credits`+".$goldgain." WHERE `id`=".$player -> id);
         $smarty -> assign ("Message", "<br /><li><b>".YOU_DEFEAT." <b>".$amount." ".$enemy['name']."</b>.");
         $smarty -> display ('error1.tpl');
         $smarty -> assign ("Message", "<li><b>".REWARD." <b>".$expgain."</b> ".EXP_PTS." ".AND_GAIN." <b>".$goldgain."</b> ".COINS);
         $smarty -> display ('error1.tpl');
-	monsterloot($enemy['lootnames'], $enemy['lootchances'], $enemy['level']);
+	monsterloot($enemy['lootnames'], $enemy['lootchances'], $enemy['level'], $amount);
         checkexp($player -> exp,$expgain,$player -> level,$player -> race,$player -> user,$player -> id,0,0,$player -> id,'',0);
         if ($player -> hp < 0) 
         {
