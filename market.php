@@ -7,7 +7,7 @@
  *   @copyright            : (C) 2004,2005,2006,2011 Vallheru Team based on Gamers-Fusion ver 2.5
  *   @author               : thindil <thindil@tuxfamily.org>
  *   @version              : 1.4
- *   @since                : 05.10.2011
+ *   @since                : 10.10.2011
  *
  */
 
@@ -453,36 +453,78 @@ if (isset($_GET['view']) && $_GET['view'] == 'myoferts')
              * Delete ofert
              */
             if (isset($_GET['delete']) && !empty($_GET['delete']))
-            {
-                $smarty -> assign(array("Youwant" => YOU_WANT,
-                                        "Ayes" => YES,
-                                        "Oname" => $strName));
+	      {
+		checkvalue($_GET['delete']);
+		switch ($intKey)
+		  {
+		  case 1:
+		    if ($objOfert->fields['type'] != 'R')
+		      {
+			$intAmount = $objOfert->fields['amount'];
+		      }
+		    else
+		      {
+			$intAmount = $objOfert->fields['wt'];
+		      }
+		    break;
+		  case 0:
+		  case 3:
+		    $intAmount = $objOfert->fields['ilosc'];
+		    break;
+		  default:
+		    $intAmount = $objOfert->fields['amount'];
+		    break;
+		  }
+		$smarty -> assign(array("Aremove" => "Wycofaj",
+                                        "Oname" => $strName,
+					"Oamount" => $intAmount,
+					"Tamount" => "sztuk(i)",
+					"Tmarket" => "z rynku."));
                 if (isset($_GET['confirm']) && $_GET['confirm'] == 'yes')
-                {
+		  {
+		    checkvalue($_POST['amount']);
+		    if ($_POST['amount'] > $intAmount)
+		      {
+			error("Nie masz tyle ".$strName." w ofercie.");
+		      }
+		    if ($_POST['amount'] == $intAmount)
+		      {
+			$_POST['amount'] = 0;
+		      }
                     require_once('includes/marketdel.php');
-                    if ($intKey == 0)
-                    {
-                        deletemin($_GET['delete'], $objOfert -> fields['nazwa'], $objOfert -> fields['ilosc'], $player -> id, $arrNames);
+		    switch ($intKey)
+		      {
+		      case 0:
+			deletemin($_GET['delete'], $objOfert->fields['nazwa'], $objOfert->fields['ilosc'], $player->id, $arrNames, $_POST['amount']);
+			break;
+		      case 1:
+		      case 5:
+		      case 6:
+                        deleteitem($objOfert, $player->id, $_POST['amount']);
+			break;
+		      case 2:
+                        deletepotion($objOfert, $player->id, $_POST['amount']);
+			break;
+		      case 3:
+                        deleteherb($_GET['delete'], $objOfert->fields['nazwa'], $objOfert->fields['ilosc'], $player->id, $arrNames, $_POST['amount']);
+			break;
+		      case 4:
+                        deleteastral($objOfert, $player->id, $_POST['amount']);
+			break;
+		      default:
+			error(ERROR);
+			break;
                     }
-                    if ($intKey == 1 || $intKey == 5 || $intKey == 6)
-                    {
-                        deleteitem($objOfert, $player -> id);
-                    }
-                    if ($intKey == 2)
-                    {
-                        deletepotion($objOfert, $player -> id);
-                    }
-                    if ($intKey == 3)
-                    {
-                        deleteherb($_GET['delete'], $objOfert -> fields['nazwa'], $objOfert -> fields['ilosc'], $player -> id, $arrNames);
-                    }
-                    if ($intKey == 4)
-                    {
-                        deleteastral($objOfert, $player -> id);
-                    }
-                    $strMessage = YOU_DELETE;
-                }
-            }
+                    if ($_POST['amount'] == 0)
+		      {
+			$strMessage = "Usunąłeś ofertę na ".$strName." z rynku.";
+		      }
+		    else
+		      {
+			$strMessage = "Usunąłeś ".$_POST['amount']." sztuk ".$strName." z rynku.";
+		      }
+		  }
+	      }
             /**
              * Add to ofert
              */

@@ -62,9 +62,8 @@
             {$Message}<br /><br />
         {/if}
         {if $Delete != "" && $Message == ""}
-            {$Youwant}{$Oname}?
-            <form method="post" action="market.php?view=myoferts&amp;type={$Type}&amp;delete={$Delete}&amp;confirm=yes">
-                <input type="submit" value="{$Ayes}" />
+	    <form method="post" action="market.php?view=myoferts&amp;type={$Type}&amp;delete={$Delete}&amp;confirm=yes">
+                <input type="submit" value="{$Aremove}" /> <input type="text" name="amount" value="{$Oamount}" size="5" /> {$Tamount} <b>{$Oname}</b> {$Tmarket}
             </form>
         {/if}
         {if $Add != "" && $Message == ""}

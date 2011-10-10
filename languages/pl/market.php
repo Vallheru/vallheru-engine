@@ -7,7 +7,7 @@
  *   @copyright            : (C) 2004,2005,2006,2011 Vallheru Team based on Gamers-Fusion ver 2.5
  *   @author               : thindil <thindil@tuxfamily.org>
  *   @version              : 1.4
- *   @since                : 27.09.2011
+ *   @since                : 10.10.2011
  *
  */
 
@@ -142,11 +142,6 @@ if (isset($_GET['view']) && $_GET['view'] == 'myoferts')
         define("A_ADD", "Dodaj");
         define("NO_OFERT", "Nie ma takiej oferty!");      
         define("O_NUMBER", " Numer: ");
-        if (isset($_GET['delete']))
-        {
-            define("YOU_WANT", "Czy chcesz wycofać ofertę: ");
-            define("YOU_DELETE", "Wycofałeś wybraną ofertę.");
-        }
         if (isset($_GET['add']))
         {
             define("TO_OFERT", "do oferty: ");

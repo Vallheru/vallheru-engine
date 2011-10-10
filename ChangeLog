@@ -1,5 +1,7 @@
 2011-10-10  Bartek thindil Jasicki  <thindil@tuxfamily.org>
 
+	* FEATURE,languages/pl/market.php, templates/layout1/market.tpl, templates/market.tpl, market.php, includes/marketdel.php: 
+	added option to withdraw only part of offert
 	* FEATURE,install/db/update.sql, templates/layout1/hof2.tpl, templates/hof2.tpl, hof2.php, city.php, includes/resets.php, 
 	languages/pl/head1.php:
 	added hall of fame for clans
