@@ -22,6 +22,7 @@
     <ul>
     <li><a href="travel.php?akcja={$Action2}&amp;step=caravan">{$Acaravan}</a></li>
     <li><a href="travel.php?akcja={$Action2}&amp;step=walk">{$Awalk}</a></li>
+    <li><a href="travel.php?akcja={$Action2}&amp;step=magic">{$Aportal}</a></li>
     <li><a href="travel.php">{$Aback}</a></li>
     </ul>
 {/if}

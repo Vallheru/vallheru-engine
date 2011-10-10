@@ -7,7 +7,7 @@
  *   @copyright            : (C) 2004,2005,2006,2011 Vallheru Team based on Gamers-Fusion ver 2.5
  *   @author               : thindil <thindil@tuxfamily.org>
  *   @version              : 1.4
- *   @since                : 26.09.2011
+ *   @since                : 10.10.2011
  *
  */
  
@@ -113,6 +113,7 @@ if (isset($_GET['action']))
 {
     $smarty -> assign(array("Acaravan" => A_CARAVAN,
                             "Awalk" => A_WALK,
+			    "Aportal" => "Użyj magicznego portalu (4000 sztuk złota)",
                             "Aback" => A_BACK));
 }
 
@@ -214,7 +215,7 @@ if (isset($_GET['akcja']) && in_array($_GET['akcja'], array('gory', 'las', 'city
       {
 	error(ERROR);
       }
-    if ($_GET['step'] != 'caravan' && $_GET['step'] != 'walk')
+    if (!in_array($_GET['step'], array('caravan', 'walk', 'magic')))
       {
         error(ERROR);
       }
@@ -334,8 +335,9 @@ if (isset($_GET['akcja']) && in_array($_GET['akcja'], array('gory', 'las', 'city
       {
       case 'gory':
 	$arrLocation = array('Altara', 'Ardulith', 'Podróż');
-	if ($_GET['step'] == 'caravan')
+	switch ($_GET['step'])
 	  {
+	  case 'caravan':
 	    if ($player->location != 'Ardulith')
 	      {
 		$intGoldneed = 1000;
@@ -344,9 +346,8 @@ if (isset($_GET['akcja']) && in_array($_GET['akcja'], array('gory', 'las', 'city
 	      {
 		$intGoldneed = 1200;
 	      }
-	  }
-	else
-	  {
+	    break;
+	  case 'walk':
 	    if ($player->location != 'Ardulith')
 	      {
 		$intGoldneed = 5;
@@ -355,13 +356,21 @@ if (isset($_GET['akcja']) && in_array($_GET['akcja'], array('gory', 'las', 'city
 	      {
 		$intGoldneed = 6;
 	      }
+	    break;
+	  case 'magic':
+	    $intGoldneed = 4000;
+	    break;
+	  default:
+	    error(ERROR);
+	    break;
 	  }
 	$strLocation = 'Góry';
 	break;
       case 'las':
 	$arrLocation = array('Altara', 'Góry', 'Podróż');
-	if ($_GET['step'] == 'caravan')
+	switch ($_GET['step'])
 	  {
+	  case 'caravan':
 	    if ($player->location != 'Góry')
 	      {
 		$intGoldneed = 1000;
@@ -370,9 +379,8 @@ if (isset($_GET['akcja']) && in_array($_GET['akcja'], array('gory', 'las', 'city
 	      {
 		$intGoldneed = 1200;
 	      }
-	  }
-	else
-	  {
+	    break;
+	  case 'walk':
 	    if ($player->location != 'Góry')
 	      {
 		$intGoldneed = 5;
@@ -381,30 +389,50 @@ if (isset($_GET['akcja']) && in_array($_GET['akcja'], array('gory', 'las', 'city
 	      {
 		$intGoldneed = 6;
 	      }
+	    break;
+	  case 'magic':
+	    $intGoldneedd = 4000;
+	    break;
+	  default:
+	    error(ERROR);
+	    break;
 	  }
 	$strLocation = 'Las';
 	break;
       case 'city2':
 	$arrLocation = array('Altara', 'Podróż');
-	if ($_GET['step'] == 'caravan')
+	switch ($_GET['step'])
 	  {
+	  case 'caravan':
 	    $intGoldneed = 1000;
-	  }
-	else
-	  {
+	    break;
+	  case 'walk':
 	    $intGoldneed = 5;
+	    break;
+	  case 'magic':
+	    $intGoldneed  = 4000;
+	    break;
+	  default:
+	    error(ERROR);
+	    break;
 	  }
 	$strLocation = 'Ardulith';
 	break;
       case 'powrot':
 	$arrLocation = array('Ardulith', 'Góry', 'Las', 'Podróż');
-	if ($_GET['step'] == 'caravan')
+	switch ($_GET['step'])
 	  {
+	  case 'caravan':
 	    $intGoldneed = 1000;
-	  }
-	else
-	  {
+	    break;
+	  case 'walk':
 	    $intGoldneed = 5;
+	    break;
+	  case 'magic':
+	    $intGoldneed = 4000;
+	    break;
+	  default:
+	    break;
 	  }
 	$strLocation = 'Altara';
 	break;
@@ -416,7 +444,7 @@ if (isset($_GET['akcja']) && in_array($_GET['akcja'], array('gory', 'las', 'city
       {
 	error(ERROR);
       }
-    if ($_GET['step'] == 'caravan')
+    if ($_GET['step'] == 'caravan' || $_GET['step'] == 'magic')
       {
 	if ($player->credits < $intGoldneed)
 	  {
@@ -432,11 +460,23 @@ if (isset($_GET['akcja']) && in_array($_GET['akcja'], array('gory', 'las', 'city
 	  }
 	$strCost = 'energy';
       }
-    if ($player->location != 'Podróż')
+    if ($player->location != 'Podróż' && $_GET['step'] != 'magic')
       {
 	$db -> Execute("UPDATE `players` SET `miejsce`='Podróż' WHERE `id`=".$player -> id);
 	$roll = rand(1, 100);
-	if ($roll < 80) 
+	switch ($_GET['step'])
+	  {
+	  case 'caravan':
+	    $intChance = 20;
+	    break;
+	  case 'walk':
+	    $intChance = 30;
+	    break;
+	  default:
+	    error(ERROR);
+	    break;
+	  }
+	if ($roll < $intChance) 
 	  {
 	    $smarty -> assign ("Message", MESSAGE1);
 	    $smarty -> display ('error1.tpl');
@@ -446,6 +486,7 @@ if (isset($_GET['akcja']) && in_array($_GET['akcja'], array('gory', 'las', 'city
 	    $smarty -> assign("Message", "Podróżując do celu wraz z karawaną, nagle zobaczyłeś jak z pobocza drogi wyskakują na Was bandyci. Masz do wyboru:<br /><a href=travel.php?akcja=".$_GET['akcja']."&amp;step=".$_GET['step']."&amp;step2=fight>Walczyć</a><br /><a href=travel.php?akcja=".$_GET['akcja']."&amp;step=".$_GET['step']."&amp;step2=pay>Zapłacić okup</a><br /><a href=travel.php?akcja=".$_GET['akcja']."&amp;step=".$_GET['step']."&amp;step2=escape>Uciekać</a>");
 	    $smarty -> display('error1.tpl');
 	    $db -> Execute("UPDATE `players` SET `fight`=99999 WHERE `id`=".$player->id);
+	    require_once("includes/foot.php");
 	    return;
 	  }
       }
