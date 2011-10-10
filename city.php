@@ -7,7 +7,7 @@
  *   @copyright            : (C) 2004,2005,2006,2011 Vallheru Team based on Gamers-Fusion ver 2.5
  *   @author               : thindil <thindil@tuxfamily.org>
  *   @version              : 1.4
- *   @since                : 26.08.2011
+ *   @since                : 10.10.2011
  *
  */
  
@@ -110,7 +110,7 @@ if ($player -> location == 'Altara')
                           array('news.php', 'forums.php?view=categories', 'chat.php', 'mail.php', 'tribes.php', 'newspaper.php'),
                           array('train.php', 'mines.php', 'farm.php', 'core.php'),
                           array('grid.php', 'wieza.php', 'temple.php', 'msklep.php', 'jewellershop.php'),
-                          array('house.php', 'memberlist.php?limit=0&amp;lista=id', 'monuments.php', 'hof.php', 'library.php'),
+                          array('house.php', 'memberlist.php?limit=0&amp;lista=id', 'monuments.php', 'hof.php', 'hof2.php', 'library.php'),
                           array('updates.php', 'tower.php', 'jail.php', 'court.php', 'polls.php', 'alley.php', 'stafflist.php'),
                           array('landfill.php', 'smelter.php', 'kowal.php', 'alchemik.php'),
                           array('market.php', 'warehouse.php', 'travel.php'));
@@ -118,7 +118,7 @@ if ($player -> location == 'Altara')
                           array(NEWS, FORUMS, INN, PRIV_M, CLANS, PAPER),
                           array(SCHOOL, MINES, FARMS, CORES),
                           array(LABYRYNTH, MAGIC_TOWER, TEMPLE, ALCHEMY_SHOP, JEWELLER_SHOP),
-                          array(HOUSES, PLAYERS_L, MONUMENTS, HERO_VALL, LIBRARY),
+                          array(HOUSES, PLAYERS_L, MONUMENTS, HERO_VALL, 'Galeria Machin', LIBRARY),
                           array(UPDATES, TIMER, JAIL2, COURT, $strInfo.POLLS, WELLEARNED, STAFF_LIST),
                           array(CLEAN_CITY, SMELTER, BLACKSMITH, ALCHEMY_MILL),
                           array(MARKET, WAREHOUSE, TRAVEL));

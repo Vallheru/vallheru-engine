@@ -1,5 +1,8 @@
 2011-10-10  Bartek thindil Jasicki  <thindil@tuxfamily.org>
 
+	* FEATURE,install/db/update.sql, templates/layout1/hof2.tpl, templates/hof2.tpl, hof2.php, city.php, includes/resets.php, 
+	languages/pl/head1.php:
+	added hall of fame for clans
 	* FEATURES,templates/layout1/travel.tpl, templates/travel.tpl, travel.php:
 	added traveling via magic
 

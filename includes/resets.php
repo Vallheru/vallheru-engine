@@ -7,7 +7,7 @@
  *   @copyright            : (C) 2004,2005,2006,2007,2011 Vallheru Team based on Gamers-Fusion ver 2.5
  *   @author               : thindil <thindil@tuxfamily.org>
  *   @version              : 1.4
- *   @since                : 08.10.2011
+ *   @since                : 10.10.2011
  *
  */
 
@@ -509,7 +509,8 @@ function mainreset()
             $intAstralenergy = $objAstral -> fields['used'] + $objAstral -> fields['directed'];
             if ($intAstralenergy >= 10000)
             {
-                $objName = $db -> Execute("SELECT `name` FROM `tribes` WHERE `id`=".$objAstral -> fields['owner']);
+                $objName = $db -> Execute("SELECT `id`, `name`, `owner` FROM `tribes` WHERE `id`=".$objAstral -> fields['owner']);
+		$objOwner = $db->Execute("SELECT `user` FROM `players` WHERE `id`=".$objName->fields['owner']);
                 $time = date("H:i:s");
                 $hour = explode(":", $time);
                 $day = explode("-",$data);
@@ -530,6 +531,9 @@ function mainreset()
                     require_once("languages/".$strLanguage."/resets.php");
                     $db -> Execute("INSERT INTO `updates` (`starter`, `title`, `updates`, `lang`, `time`) VALUES('(Herold)','".U_TITLE."','".U_TEXT.$gamename.U_TEXT2.$gamename.U_TEXT3.$newdate.U_TEXT4.$objName -> fields['name'].U_TEXT5."','".$strLanguage."', ".$strDate.")");
                 }
+		$objEra = $db->Execute("SELECT `value` FROM `settings` WHERE `setting`='age'");
+		$db->Execute("INSERT INTO `halloffame2` (`tribe`, `owner`, `bdate`) VALUES('".$objName->fields['name']." ID:".$objName->fields['id']."', '".$objOwner->fields['user']." ID:".$objName->fields['owner']."', '".$intDay.", ".$objEra->fields['value']."')");
+		$objEra->Close();
                 $db -> Execute("UPDATE `settings` SET `value`='".$objAstral -> fields['owner']."' WHERE `setting`='tribe'");
                 $arrComponents = array('C', 'O', 'T');
                 $arrAmount = array(array(8, 8, 6, 6, 4, 4, 2),
