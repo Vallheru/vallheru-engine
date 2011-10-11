@@ -7,7 +7,7 @@
  *   @copyright            : (C) 2011 Vallheru Team based on Gamers-Fusion ver 2.5
  *   @author               : thindil <thindil@tuxfamily.org>
  *   @version              : 1.4
- *   @since                : 10.10.2011
+ *   @since                : 11.10.2011
  *
  */
 
@@ -38,7 +38,7 @@ if ($player->location != 'Altara')
     error("Nie znajdujesz się w Altarze.");
 }
 
-$objMachines = $db->Execute("SELECT * FROM `halloffame2`");
+$objMachines = $db->Execute("SELECT * FROM `halloffame2` ORDER BY `id` ASC");
 $arrTribes = array();
 $arrLeaders = array();
 $arrDates = array();

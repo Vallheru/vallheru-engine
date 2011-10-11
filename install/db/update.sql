@@ -53,3 +53,10 @@ ALTER TABLE `mill_work` ADD `elite` INT( 11 ) NOT NULL DEFAULT '0';
 ALTER TABLE `mill` ADD `elite` INT( 11 ) NOT NULL DEFAULT '0';
 ALTER TABLE `smith_work` ADD `elite` INT( 11 ) NOT NULL DEFAULT '0';
 ALTER TABLE `smith` ADD `elite` INT( 11 ) NOT NULL DEFAULT '0';
+CREATE TABLE IF NOT EXISTS `halloffame2` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `tribe` varchar(255) NOT NULL,
+  `leader` varchar(255) NOT NULL,
+  `bdate` varchar(255) NOT NULL,
+  PRIMARY KEY (`id`)
+) ENGINE=MyISAM DEFAULT CHARSET=utf8 AUTO_INCREMENT=1;

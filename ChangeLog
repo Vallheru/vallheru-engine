@@ -1,5 +1,7 @@
 2011-10-11  Bartek thindil Jasicki  <thindil@tuxfamily.org>
 
+	* UPDATE,install/db/update.sql, hof2.php: 
+	added index to database table
 	* BUG,templates/layout1/lumberjack.tpl, templates/lumberjack.tpl:
 	don't show form when player don't have energy
 
