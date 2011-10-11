@@ -8,7 +8,7 @@
  *   @author               : thindil <thindil@tuxfamily.org>
  *   @author               : eyescream <tduda@users.sourceforge.net>
  *   @version              : 1.4
- *   @since                : 07.10.2011
+ *   @since                : 11.10.2011
  *
  */
  
@@ -57,7 +57,7 @@ if($player -> location != 'Altara' && $player -> location != 'Ardulith')
 * Assign variables to template
 */
 $smarty -> assign(array("Message" => '', 
-    "Result" => ''));
+			"Result" => ''));
 
 /**
 * Function show equipment which may be added to veterans
@@ -69,40 +69,42 @@ function equip($type)
     global $arrid;
     global $arrname;
     global $arrpower;
-    $armor = $db -> Execute("SELECT id, name, power FROM equipment WHERE owner=".$player -> id." AND type='".$type."' AND status='U'");
+    $armor = $db->Execute("SELECT `id`, `name`, `power` FROM `equipment` WHERE `owner`=".$player->id." AND `type`='".$type."' AND `status`='U'");
     $arrid = array(0);
     $arrname = array(NOTHING);
     $arrpower = array(0);
-    $i = 1;
-    while (!$armor -> EOF) 
+    while (!$armor->EOF) 
     {
-        $arrid[$i] = $armor -> fields['id'];
-        $arrname[$i] = $armor -> fields['name'];
-        $arrpower[$i] = ceil($armor -> fields['power'] / 10);
-        $armor -> MoveNext();
-        $i = $i + 1;
+        $arrid[] = $armor->fields['id'];
+        $arrname[] = $armor->fields['name'];
+        $arrpower[] = ceil($armor->fields['power'] / 10);
+        $armor->MoveNext();
     }
-    $armor -> Close();
+    $armor->Close();
 }
 
 /**
 * Function to equip veterans
 */
-function wear($eid,$vid,$type,$powertype) 
+function wear($eid, $vid, $type, $powertype) 
 {
     global $player;
     global $db;
-    $item1 = $db -> Execute("SELECT name, power, amount FROM equipment WHERE id=".$eid." AND owner=".$player -> id);
-    $item = array($item1 -> fields['name'], $item1 -> fields['power'] / 10);
+    $item1 = $db -> Execute("SELECT `id`, `name`, `power`, `amount` FROM `equipment` WHERE `id`=".$eid." AND `owner`=".$player->id." AND `status`='U'");
+    if (!$item1->fields['id'])
+      {
+	error(ERROR);
+      }
+    $item = array($item1 -> fields['name'], ceil($item1 -> fields['power'] / 10));
     $info = $item[0].I_POWER.$item[1].") ";
     if ($item1 -> fields['amount']  == 1) 
-    {
-        $db -> Execute("DELETE FROM equipment WHERE id=".$eid." AND owner=".$player -> id);
-    } 
-        else 
-    {
-        $db -> Execute("UPDATE equipment SET amount=amount-1 WHERE id=".$eid." AND owner=".$player -> id);
-    }
+      {
+        $db -> Execute("DELETE FROM `equipment` WHERE `id`=".$eid." AND `owner`=".$player -> id);
+      } 
+    else 
+      {
+        $db -> Execute("UPDATE `equipment` SET `amount`=`amount`-1 WHERE `id`=".$eid." AND `owner`=".$player -> id);
+      }
     $item1 -> Close();
     $db -> Execute("UPDATE `outpost_veterans` SET `".$type."`='".$item[0]."', `".$powertype."`=".$item[1]." WHERE `id`=".$vid);
     return $info;
@@ -679,72 +681,52 @@ if (isset($_GET['view']) && $_GET['view'] == 'veterans')
     }
     $power = $veteran -> fields['wpower'] + 1;
     $defense = $veteran -> fields['apower'] + $veteran -> fields['hpower'] + $veteran -> fields['lpower'] + 1;
+    equip('W');
+    $arrwid = $arrid;
+    $arrwname = $arrname;
+    $arrwpower = $arrpower;
     if ($veteran -> fields['armor']) 
-    {
+      {
         $armor = $veteran -> fields['armor'];
-        $arraid[1] = 0;
-        $arraname[1] = 0;
-        $arrapower[1] = 0;
-    } 
-        else 
-    {
-        equip('A');
-        $arraid = $arrid;
-        $arraname = $arrname;
-        $arrapower = $arrpower;
-        if (!isset($arrid[1])) 
-        {
-            $arraid[1] = 0;
-            $arraname[1] = 0;
-            $arrapower[1] = 0;
-        }
-        $armor = NOTHING;
-    }
+      }
+    else
+      {
+	$armor = NOTHING;
+      }
+    equip('A');
+    $arraid = $arrid;
+    $arraname = $arrname;
+    $arrapower = $arrpower;
     if ($veteran -> fields['helm']) 
-    {
-        $helm = $veteran -> fields['helm'];
-        $arrhid[1] = 0;
-        $arrhname[1] = 0;
-        $arrhpower[1] = 0;
-    } 
-        else 
-    {
-        equip('H');
-        $arrhid = $arrid;
-        $arrhname = $arrname;
-        $arrhpower = $arrpower;
-        if (!isset($arrid[1])) 
-        {
-            $arrhid[1] = 0;
-            $arrhname[1] = 0;
-            $arrhpower[1] = 0;
-        }
+      {
+	$helm = $veteran -> fields['helm'];
+      } 
+    else 
+      {
         $helm = NOTHING;
-    }
+      }
+    equip('H');
+    $arrhid = $arrid;
+    $arrhname = $arrname;
+    $arrhpower = $arrpower;
     if ($veteran -> fields['legs']) 
-    {
+      {
         $legs = $veteran -> fields['legs'];
-        $arrlid[1] = 0;
-        $arrlname[1] = 0;
-        $arrlpower[1] = 0;
-    }
-        else 
-    {
-        equip('L');
-        $arrlid = $arrid;
-        $arrlname = $arrname;
-        $arrlpower = $arrpower;
-        if (!isset($arrid[1])) 
-        {
-            $arrlid[1] = 0;
-            $arrlname[1] = 0;
-            $arrlpower[1] = 0;
-        }
+      }
+    else 
+      {
         $legs = NOTHING;
-    }
+      }
+    equip('L');
+    $arrlid = $arrid;
+    $arrlname = $arrname;
+    $arrlpower = $arrpower;
     $smarty -> assign(array("Vname" => $veteran -> fields['name'],
-        "Wname" => $veteran -> fields['weapon'],
-        "Wpower" => $veteran -> fields['wpower'],
+			    "Wname" => $veteran -> fields['weapon'],
+			    "Wpower" => $veteran -> fields['wpower'],
+			    "Wname1" => $arrwname,
+			    "Wpower1" => $arrwpower,
+			    "Wid" => $arrwid,
         "Aname" => $armor,
         "Apower" => $veteran -> fields['apower'],
         "Hname" => $helm,
@@ -793,6 +775,11 @@ if (isset($_GET['view']) && $_GET['view'] == 'veterans')
             $text1 = wear($_POST['legs'], $_GET['id'],'legs','lpower');
             $text = YOU_ADD.$text1;
         }
+	if (isset($_POST['weapon']) && intval($_POST['weapon']) > 0)
+	  {
+	    $text1 = wear($_POST['weapon'], $_GET['id'], 'weapon', 'wpower');
+            $text = YOU_ADD.$text1;
+	  }
         if (isset($text1)) 
         {
             $smarty -> assign("Message", $text);

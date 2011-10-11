@@ -1,5 +1,7 @@
 2011-10-11  Bartek thindil Jasicki  <thindil@tuxfamily.org>
 
+	* FEATURE,templates/layout1/outposts.tpl, templates/outposts.tpl, outposts.php: 
+	added option to edit veterans equipment
 	* BUG,templates/layout1/imarket.tpl, templates/imarket.tpl: 
 	fixed sorting oferts
 	* UPDATE,install/db/update.sql, hof2.php: 

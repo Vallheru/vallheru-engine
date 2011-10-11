@@ -27,28 +27,26 @@
 {/if}
 
 {if $View == "veterans"}
-{if $Aid[1] != "0" || $Hid[1] != "0" || $Lid[1] != "0"} <form method="post" action="outposts.php?view=veterans&amp;id={$Vid}&amp;step=modify"> {/if}
+    <form method="post" action="outposts.php?view=veterans&amp;id={$Vid}&amp;step=modify">
     <table>
-    <tr><td><b>{$Vname}</b>:</td><td>{$Vname}</td></tr>
-    <tr><td><b>{$Vwep}</b>:</td><td>{$Wname} ({$Ipower}: {$Wpower}) </td></tr>
-    <tr><td><b>{$Varmor}</b>:</td><td>{$Aname} {if $Aname != $Nothing} ({$Vdefense}: {$Apower}) {/if} {if $Aid[1] != "0"} <select name="armor"> {section name=outpost9 loop=$Aid}
+    <tr><td><b>{$Vname2}</b>:</td><td>{$Vname}</td></tr>
+    <tr><td><b>{$Vwep}</b>:</td><td>{$Wname} ({$Ipower}: {$Wpower}) <select name="weapon"> {section name=vetwep loop=$Wid}
+                    <option value="{$Wid[vetwep]}">{$Wname1[vetwep]} ({$Ipower}: {$Wpower1[vetwep]})</option>
+                  {/section} </select></td></tr>
+    <tr><td><b>{$Varmor}</b>:</td><td>{$Aname} {if $Aname != $Nothing} ({$Vdefense}: {$Apower}) {/if} <select name="armor"> {section name=outpost9 loop=$Aid}
                     <option value="{$Aid[outpost9]}">{$Aname1[outpost9]} ({$Vdefense}: {$Apower1[outpost9]})</option>
-                  {/section} </select>{/if}</td></tr>
-    <tr><td><b>{$Vhelmet}</b>:</td><td>{$Hname} {if $Hname != $Nothing} ({$Vdefense}: {$Hpower}) {/if} {if $Hid[1] != "0"} <select name="helm"> {section name=outpost10 loop=$Hid}
+                  {/section} </select></td></tr>
+    <tr><td><b>{$Vhelmet}</b>:</td><td>{$Hname} {if $Hname != $Nothing} ({$Vdefense}: {$Hpower}) {/if} <select name="helm"> {section name=outpost10 loop=$Hid}
                     <option value="{$Hid[outpost10]}">{$Hname1[outpost10]} ({$Vdefense}: {$Hpower1[outpost10]})</option>
-                  {/section} </select>{/if}</td></tr>
-    <tr><td><b>{$Vlegs}</b>:</td><td>{$Lname} {if $Lname != $Nothing} ({$Vdefense}: {$Lpower}) {/if} {if $Lid[1] != "0"} <select name="legs"> {section name=outpost11 loop=$Lid}
+                  {/section} </select></td></tr>
+    <tr><td><b>{$Vlegs}</b>:</td><td>{$Lname} {if $Lname != $Nothing} ({$Vdefense}: {$Lpower}) {/if} <select name="legs"> {section name=outpost11 loop=$Lid}
                     <option value="{$Lid[outpost11]}">{$Lname1[outpost11]} ({$Vdefense}: {$Lpower1[outpost11]})</option>
-                  {/section} </select>{/if}</td></tr>
+                  {/section} </select></td></tr>
     <tr><td><b>{$Vattack}</b>:</td><td>{$Power}</td></tr>
     <tr><td><b>{$Vdefense}</b>:</td><td>{$Defense}</td></tr>
-    {if $Aid[1] != "0" || $Hid[1] != "0" || $Lid[1] != "0"}
-        <tr><td colspan="2" align="center"><input type="submit" value="{$Amodify}" />
-    {/if}
+    <tr><td colspan="2" align="center"><input type="submit" value="{$Amodify}" />
     </table>
-    {if $Aid[1] != "0" || $Hid[1] != "0" || $Lid[1] != "0"}
-        </form>
-    {/if}
+    </form>
     {$Message}
 {/if}
 
