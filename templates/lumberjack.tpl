@@ -11,7 +11,7 @@
 {if $Action == "chop"}
     {$Message}<br /><br />
     {if $Health > "0"}
-        {if $Curen > 0}
+        {if $Curen >= 1}
             <form method="post" action="lumberjack.php?action=chop">
                 <input type="submit" value="{$Achop}" /> {$Onchop} <input type="text" name="amount" size="5" value="{$Curen}"> {$Tenergy}
             </form>
