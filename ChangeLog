@@ -1,5 +1,7 @@
 2011-10-11  Bartek thindil Jasicki  <thindil@tuxfamily.org>
 
+	* BUG,outposts.php (outpoststats): 
+	fixed typo
 	* FEATURE,install/db/update.sql, templates/layout1/outposts.tpl, templates/outposts.tpl, outposts.php: 
 	added option to equip veterans with rings
 	* FEATURE,templates/layout1/outposts.tpl, templates/outposts.tpl, outposts.php: 

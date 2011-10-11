@@ -292,7 +292,7 @@ function outpoststats($outpost,$veteran,$monster)
         $defense1 = $defense1 + $veteran -> fields['apower']  + $veteran -> fields['hpower']  + $veteran -> fields['lpower'] + 1;
 	if ($veteran->fields['ring1'])
 	  {
-	    if (strpos($veteran->fields['ring1'], 'siły') !== FALSE || strpos($army->fields['ring1'], 'zręczności') !== FALSE)
+	    if (strpos($veteran->fields['ring1'], 'siły') !== FALSE || strpos($veteran->fields['ring1'], 'zręczności') !== FALSE)
 	      {
 		$attack1 += $veteran->fields['rpower1'];
 	      }
@@ -303,7 +303,7 @@ function outpoststats($outpost,$veteran,$monster)
 	  }
 	if ($veteran->fields['ring2'])
 	  {
-	    if (strpos($veteran->fields['ring2'], 'siły') !== FALSE || strpos($army->fields['ring1'], 'zręczności') !== FALSE)
+	    if (strpos($veteran->fields['ring2'], 'siły') !== FALSE || strpos($veteran->fields['ring1'], 'zręczności') !== FALSE)
 	      {
 		$attack1 += $veteran->fields['rpower2'];
 	      }
