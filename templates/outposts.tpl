@@ -42,6 +42,12 @@
     <tr><td><b>{$Vlegs}</b>:</td><td>{$Lname} {if $Lname != $Nothing} ({$Vdefense}: {$Lpower}) {/if} <select name="legs"> {section name=outpost11 loop=$Lid}
                     <option value="{$Lid[outpost11]}">{$Lname1[outpost11]} ({$Vdefense}: {$Lpower1[outpost11]})</option>
                   {/section} </select></td></tr>
+    <tr><td><b>{$Tring}</b>:</td><td>{$Rname1} {if $Rname1 != $Nothing} ({$Ipower}: {$Rpower1}) {/if} <select name="ring1"> {section name=vetring loop=$Rid1}
+                    <option value="{$Rid1[vetring]}">{$Rname12[vetring]} ({$Ipower}: {$Rpower12[vetring]})</option>
+                  {/section} </select></td></tr>
+    <tr><td><b>{$Tring}</b>:</td><td>{$Rname2} {if $Rname2 != $Nothing} ({$Ipower}: {$Rpower2}) {/if} <select name="ring2"> {section name=vetring2 loop=$Rid2}
+                    <option value="{$Rid2[vetring2]}">{$Rname22[vetring2]} ({$Ipower}: {$Rpower22[vetring2]})</option>
+                  {/section} </select></td></tr>
     <tr><td><b>{$Vattack}</b>:</td><td>{$Power}</td></tr>
     <tr><td><b>{$Vdefense}</b>:</td><td>{$Defense}</td></tr>
     <tr><td colspan="2" align="center"><input type="submit" value="{$Amodify}" />
@@ -180,8 +186,7 @@
                     <option value="{$Aid[outpost5]}">{$Aname[outpost5]} ({$Udefense}: {$Apower[outpost5]})</option>
                 {/section}
                 </select><br />
-            {/if}
-            {if $Aid[1] == "0"}
+            {else}
                 {$Nothing}<br />
             {/if}
             {$Vhelmet}:
@@ -191,8 +196,7 @@
                     <option value="{$Hid[outpost6]}">{$Hname[outpost6]} ({$Udefense}: {$Hpower[outpost6]})</option>
                 {/section}
                 </select><br />
-            {/if}
-            {if $Hid[1] == "0"}
+            {else}
                 {$Nothing}<br />
             {/if}
             {$Vlegs}:
@@ -202,8 +206,27 @@
                     <option value="{$Lid[outpost7]}">{$Lname[outpost7]} ({$Udefense}: {$Lpower[outpost7]})</option>
                 {/section}
                 </select><br />
+            {else}
+                {$Nothing}<br />
             {/if}
-            {if $Lid[1] == "0"}
+	    {$Tring}:
+            {if $Rid1[1] != "0"}
+                <select name="ring1">
+                {section name=vetring loop=$Rid1}
+                    <option value="{$Rid1[vetring]}">{$Rname1[vetring]} ({$Ipower2}: {$Rpower1[vetring]})</option>
+                {/section}
+                </select><br />
+            {else}
+                {$Nothing}<br />
+            {/if}
+	    {$Tring}:
+            {if $Rid2[1] != "0"}
+                <select name="ring2">
+                {section name=vetring2 loop=$Rid2}
+                    <option value="{$Rid2[vetring2]}">{$Rname2[vetring2]} ({$Ipower2}: {$Rpower2[vetring2]})</option>
+                {/section}
+                </select><br />
+            {else}
                 {$Nothing}<br />
             {/if}
             {$Fora}</form>

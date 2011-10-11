@@ -60,3 +60,4 @@ CREATE TABLE IF NOT EXISTS `halloffame2` (
   `bdate` varchar(255) NOT NULL,
   PRIMARY KEY (`id`)
 ) ENGINE=MyISAM DEFAULT CHARSET=utf8 AUTO_INCREMENT=1;
+ALTER TABLE `outpost_veterans` ADD `ring1` VARCHAR( 60 ) NULL , ADD `rpower1` INT( 5 ) NOT NULL DEFAULT '0', ADD `ring2` VARCHAR( 60 ) NULL , ADD `rpower2` INT( 5 ) NOT NULL DEFAULT '0';
