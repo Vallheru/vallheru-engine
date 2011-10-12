@@ -24,15 +24,15 @@
     </form><br />
     <table class="dark">
     <tr>
-    <td width="100"><a href="imarket.php?view=market{$Atype}&amp;lista=name"><b><u>{$Tname}</u></b></a></td>
-    <td width="100"><a href="imarket.php?view=market{$Atype}&amp;lista=power"><b><u>{$Tpower}</u></b></a></td>
-    <td width="100"><a href="imarket.php?view=market{$Atype}&amp;lista=wt"><b><u>{$Tdur}</u></b></a></td>
-    <td width="100"><a href="imarket.php?view=market{$Atype}&amp;lista=szyb"><b><u>{$Tspeed}</u></b></a></td>
-    <td width="100"><a href="imarket.php?view=market{$Atype}&amp;lista=zr"><b><u>{$Tagi}</u></b></a></td>
-    <td width="50"><a href="imarket.php?view=market{$Atype}&amp;lista=minlev"><b><u>{$Tlevel}</u></b></a></td>
-    <td width="50"><a href="imarket.php?view=market{$Atype}&amp;lista=amount"><b><u>{$Tamount}</u></b></a></td>
-    <td width="100"><a href="imarket.php?view=market{$Atype}&amp;lista=cost"><b><u>{$Tcost}</u></b></a></td>
-    <td width="50"><a href="imarket.php?view=market{$Atype}&amp;lista=owner"><b><u>{$Tseller}</u></b></a></td>
+    <td width="100"><a href="imarket.php?view=market{$Atype2}&amp;lista=name"><b><u>{$Tname}</u></b></a></td>
+    <td width="100"><a href="imarket.php?view=market{$Atype2}&amp;lista=power"><b><u>{$Tpower}</u></b></a></td>
+    <td width="100"><a href="imarket.php?view=market{$Atype2}&amp;lista=wt"><b><u>{$Tdur}</u></b></a></td>
+    <td width="100"><a href="imarket.php?view=market{$Atype2}&amp;lista=szyb"><b><u>{$Tspeed}</u></b></a></td>
+    <td width="100"><a href="imarket.php?view=market{$Atype2}&amp;lista=zr"><b><u>{$Tagi}</u></b></a></td>
+    <td width="50"><a href="imarket.php?view=market{$Atype2}&amp;lista=minlev"><b><u>{$Tlevel}</u></b></a></td>
+    <td width="50"><a href="imarket.php?view=market{$Atype2}&amp;lista=amount"><b><u>{$Tamount}</u></b></a></td>
+    <td width="100"><a href="imarket.php?view=market{$Atype2}&amp;lista=cost"><b><u>{$Tcost}</u></b></a></td>
+    <td width="50"><a href="imarket.php?view=market{$Atype2}&amp;lista=owner"><b><u>{$Tseller}</u></b></a></td>
     <td width="100"><b><u>{$Toptions}</u></b></td>
     </tr>
     {section name=item loop=$Name}

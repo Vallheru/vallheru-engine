@@ -8,7 +8,7 @@
  *   @author               : thindil <thindil@tuxfamily.org>
  *   @author               : eyescream <tduda@users.sourceforge.net>
  *   @version              : 1.4
- *   @since                : 05.10.2011
+ *   @since                : 12.10.2011
  *
  */
 
@@ -68,6 +68,10 @@ if (!isset($_GET['view']) && !isset($_GET['buy']) && !isset($_GET['wyc']))
 if (isset ($_GET['view']) && $_GET['view'] == 'market') 
   {
     $arrTypes = array('W', 'B', 'T', 'R', 'H', 'A', 'S', 'C', 'L');
+    if (!isset($_GET['order']))
+      {
+	$_GET['order'] = 'desc';
+      }
     $strType = '';
     if (isset($_GET['type']))
       {
@@ -169,12 +173,35 @@ if (isset ($_GET['view']) && $_GET['view'] == 'market')
       }
     if ($_GET['lista'] == 'zr')
       {
-	$strOrder = ' ASC';
+	if ($_GET['order'] == 'desc')
+	  {
+	    $strOrder = ' ASC';
+	  }
+	else
+	  {
+	    $strOrder = ' DESC';
+	  }
       }
     else
       {
-	$strOrder = ' DESC';
+	if ($_GET['order'] == 'desc')
+	  {
+	    $strOrder = ' DESC';
+	  }
+	else
+	  {
+	    $strOrder = ' ASC';
+	  }
       }
+    if ($_GET['order'] == 'desc')
+      {
+	$strType2 = '&amp;order=asc'.$strType;
+      }
+    else
+      {
+	$strType2 = '&amp;order=desc'.$strType;
+      }
+    $strType .= '&amp;order='.$_GET['order'];
     if (empty($_POST['szukany']) && !isset($_POST['szukany1']) && !isset($_POST['type'])) 
       {
 	$pm = $db -> SelectLimit("SELECT * FROM `equipment` WHERE `status`='R' AND `type` NOT IN ('I', 'O') ORDER BY ".$_GET['lista'].$strOrder, 30, (30 * ($page - 1)));
@@ -185,7 +212,7 @@ if (isset ($_GET['view']) && $_GET['view'] == 'market')
       }
     elseif (isset($_POST['szukany1']))
       {
-	$pm = $db -> Execute("SELECT * FROM `equipment` WHERE `status`='R' AND `type` NOT IN ('I', 'O') AND name=".$strSearch);
+	$pm = $db -> SelectLimit("SELECT * FROM `equipment` WHERE `status`='R' AND `type` NOT IN ('I', 'O') AND name=".$strSearch." ORDER BY ".$_GET['lista'].$strOrder, 30, (30 * ($page - 1)));
       }
     else 
       {
@@ -274,6 +301,7 @@ if (isset ($_GET['view']) && $_GET['view'] == 'market')
 			    "Achange" => A_CHANGE,
 			    "Mlist" => $_GET['lista'],
 			    "Atype" => $strType,
+			    "Atype2" => $strType2,
 			    "Seller" => $arrseller));
     if (!isset($_POST['szukany'])) 
       {

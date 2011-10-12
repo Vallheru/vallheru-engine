@@ -8,7 +8,7 @@
  *   @author               : thindil <thindil@tuxfamily.org>
  *   @author               : eyescream <tduda@users.sourceforge.net>
  *   @version              : 1.4
- *   @since                : 05.10.2011
+ *   @since                : 12.10.2011
  *
  */
 
@@ -160,13 +160,29 @@ if (isset ($_GET['view']) && $_GET['view'] == 'market')
       {
 	error(ERROR);
       }
+    if (!isset($_GET['order']))
+      {
+	$_GET['order'] = 'DESC';
+      }
+    elseif ($_GET['order'] != 'DESC' && $_GET['order'] != 'ASC')
+      {
+	error(ERROR);
+      }
+    if ($_GET['order'] == 'DESC')
+      {
+	$strOrder = 'ASC';
+      }
+    else
+      {
+	$strOrder = 'DESC';
+      }
     if (empty($_POST['szukany'])) 
       {
-	$pm = $db -> SelectLimit("SELECT * FROM `amarket` ORDER BY ".$_GET['lista']." DESC", 30, (30 * ($page - 1)));
+	$pm = $db -> SelectLimit("SELECT * FROM `amarket` ORDER BY ".$_GET['lista']." ".$_GET['order'], 30, (30 * ($page - 1)));
       } 
     else 
       {
-	$pm = $db -> SelectLimit("SELECT * FROM `amarket` WHERE `type`='".$strSearch."' ORDER BY ".$_GET['lista']." DESC", 30, (30 * ($page - 1)));
+	$pm = $db -> SelectLimit("SELECT * FROM `amarket` WHERE `type`='".$strSearch."' ORDER BY ".$_GET['lista']." ".$_GET['order'], 30, (30 * ($page - 1)));
       }
     $arrname = array();
     $arramount = array();
@@ -251,6 +267,8 @@ if (isset ($_GET['view']) && $_GET['view'] == 'market')
 			    "Tpages" => $pages,
 			    "Tpage" => $page,
 			    "Fcost" => $arrFcost,
+			    "Aorder" => $_GET['order'],
+			    "Aorder2" => $strOrder,
 			    "Fpage" => "Idź do strony:",
 			    "Tastral" => ASTRAL,
 			    "Tamount" => T_AMOUNT,

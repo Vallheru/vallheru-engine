@@ -18,10 +18,10 @@
     </form><br />
     <table>
     <tr>
-    <td width="100"><a href="pmarket.php?view=market&amp;lista=nazwa"><b><u>{$Mineral}</u></b></a></td>
-    <td width="100"><a href="pmarket.php?view=market&amp;lista=ilosc"><b><u>{$Tamount}</u></b></a></td>
-    <td width="100"><a href="pmarket.php?view=market&amp;lista=cost"><b><u>{$Tcost}</u></b></a></td>
-    <td width="100"><a href="pmarket.php?view=market&amp;lista=seller"><b><u>{$Tseller}</u></b></a></td>
+    <td width="100"><a href="pmarket.php?view=market&amp;lista=nazwa&amp;order={$Aorder2}"><b><u>{$Mineral}</u></b></a></td>
+    <td width="100"><a href="pmarket.php?view=market&amp;lista=ilosc&amp;order={$Aorder2}"><b><u>{$Tamount}</u></b></a></td>
+    <td width="100"><a href="pmarket.php?view=market&amp;lista=cost&amp;order={$Aorder2}"><b><u>{$Tcost}</u></b></a></td>
+    <td width="100"><a href="pmarket.php?view=market&amp;lista=seller&amp;order={$Aorder2}"><b><u>{$Tseller}</u></b></a></td>
     <td width="100"><b><u>{$Toptions}</u></b></td>
     </tr>
     {section name=pmarket loop=$Name}
@@ -48,7 +48,7 @@
 	    {if $page == $Tpage}
 	        {$page}
 	    {else}
-                <a href="pmarket.php?view=market&page={$page}&amp;lista={$Mlist}">{$page}</a>
+                <a href="pmarket.php?view=market&page={$page}&amp;lista={$Mlist}&amp;order={$Aorder}">{$page}</a>
 	    {/if}
     	{/for}
     {/if}

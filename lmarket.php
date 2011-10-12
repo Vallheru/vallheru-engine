@@ -7,7 +7,7 @@
  *   @copyright            : (C) 2011 Vallheru Team based on Gamers-Fusion ver 2.5
  *   @author               : thindil <thindil@tuxfamily.org>
  *   @version              : 1.4
- *   @since                : 05.10.2011
+ *   @since                : 12.10.2011
  *
  */
 
@@ -109,25 +109,33 @@ if (isset ($_GET['view']) && $_GET['view'] == 'market')
       {
 	error("Zapomnij o tym!"); 
       }
-    if ($_GET['lista'] == 'zr')
+    if (!isset($_GET['order']))
       {
-	$strOrder = ' ASC';
+	$_GET['order'] = 'DESC';
+      }
+    elseif ($_GET['order'] != 'DESC' && $_GET['order'] != 'ASC')
+      {
+	error(ERROR);
+      }
+    if ($_GET['order'] == 'DESC')
+      {
+	$strOrder = 'ASC';
       }
     else
       {
-	$strOrder = ' DESC';
+	$strOrder = 'DESC';
       }
     if (empty($_POST['szukany']) && !isset($_POST['szukany1'])) 
       {
-	$pm = $db -> SelectLimit("SELECT * FROM `equipment` WHERE `status`='R' AND `type`='O' ORDER BY ".$_GET['lista'].$strOrder, 30, (30 * ($page - 1)));
+	$pm = $db -> SelectLimit("SELECT * FROM `equipment` WHERE `status`='R' AND `type`='O' ORDER BY ".$_GET['lista']." ".$strOrder, 30, (30 * ($page - 1)));
       }
     elseif (isset($_POST['szukany1']))
       {
-	$pm = $db -> Execute("SELECT * FROM `equipment` WHERE `status`='R' AND `type`='O' AND name=".$strSearch);
+	$pm = $db -> SelectLimit("SELECT * FROM `equipment` WHERE `status`='R' AND `type`='O' AND name=".$strSearch." ORDER BY ".$_GET['lista']." ".$strOrder, 30, (30 * ($page - 1)));
       }
     else 
       {
-	$pm = $db -> SelectLimit("SELECT * FROM `equipment` WHERE `status`='R' AND `type`='O' AND MATCH(`name`) AGAINST (".$strSearch." IN BOOLEAN MODE) ORDER BY ".$_GET['lista'].$strOrder, 30, (30 * ($page - 1)));
+	$pm = $db -> SelectLimit("SELECT * FROM `equipment` WHERE `status`='R' AND `type`='O' AND MATCH(`name`) AGAINST (".$strSearch." IN BOOLEAN MODE) ORDER BY ".$_GET['lista']." ".$strOrder, 30, (30 * ($page - 1)));
       }
     $arrname = array();
     $arrcost = array();
@@ -164,6 +172,8 @@ if (isset ($_GET['view']) && $_GET['view'] == 'market')
 			    "Tpages" => $pages,
 			    "Tpage" => $page,
 			    "Fcost" => $arrFcost,
+			    "Aorder" => $_GET['order'],
+			    "Aorder2" => $strOrder,
 			    "Fpage" => "Idź do strony:",
 			    "Mlist" => $_GET['lista'],
 			    "Abuy" => 'Kup',

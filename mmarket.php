@@ -8,7 +8,7 @@
  *   @author              : thindil <thindil@tuxfamily.org>
  *   @author              : eyescream <tduda@users.sourceforge.net>
  *   @version             : 1.4
- *   @since               : 05.10.2011
+ *   @since               : 12.10.2011
  *
  */
 
@@ -114,9 +114,25 @@ if (isset ($_GET['view']) && $_GET['view'] == 'market')
       {
 	error(ERROR);
       }
+    if (!isset($_GET['order']))
+      {
+	$_GET['order'] = 'DESC';
+      }
+    elseif ($_GET['order'] != 'DESC' && $_GET['order'] != 'ASC')
+      {
+	error(ERROR);
+      }
+    if ($_GET['order'] == 'DESC')
+      {
+	$strOrder = 'ASC';
+      }
+    else
+      {
+	$strOrder = 'DESC';
+      }
     if (empty($_POST['szukany']) && !isset($_POST['szukany1'])) 
       {
-	$pm = $db -> SelectLimit("SELECT * FROM `potions` WHERE `status`='R' ORDER BY ".$_GET['lista']." DESC", 30, (30 * ($page - 1)));
+	$pm = $db -> SelectLimit("SELECT * FROM `potions` WHERE `status`='R' ORDER BY ".$_GET['lista']." ".$strOrder, 30, (30 * ($page - 1)));
       } 
     elseif (isset($_POST['szukany1']))
       {
@@ -124,7 +140,7 @@ if (isset ($_GET['view']) && $_GET['view'] == 'market')
       }
     else 
       {
-	$pm = $db -> SelectLimit("SELECT * FROM `potions` WHERE status='R' AND MATCH(`name`) AGAINST (".$strSearch." IN BOOLEAN MODE) ORDER BY ".$_GET['lista']." DESC", 30, (30 * ($page - 1)));
+	$pm = $db -> SelectLimit("SELECT * FROM `potions` WHERE status='R' AND MATCH(`name`) AGAINST (".$strSearch." IN BOOLEAN MODE) ORDER BY ".$_GET['lista']." ".$strOrder, 30, (30 * ($page - 1)));
       }
     $arritem = array();
     $arrId = array();
@@ -154,6 +170,8 @@ if (isset ($_GET['view']) && $_GET['view'] == 'market')
 			    "Owner" => $arrOwner,
 			    "Tpages" => $pages,
 			    "Tpage" => $page,
+			    "Aorder" => $_GET['order'],
+			    "Aorder2" => $strOrder,
 			    "Fpage" => "Idź do strony:",
 			    "Abuy" => A_BUY,
 			    "Aadd" => A_ADD,

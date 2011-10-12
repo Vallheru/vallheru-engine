@@ -18,11 +18,11 @@
     </form><br />
     <table class="dark">
     <tr>
-    <td width="150"><a href="mmarket.php?view=market&amp;lista=name"><b><u>{$Tname}</u></b></a></td>
-    <td width="100" align="center"><a href="mmarket.php?view=market&amp;lista=efect"><b><u>{$Tefect}</u></b></a></td>
-    <td width="50"><a href="mmarket.php?view=market&amp;lista=amount"><b><u>{$Tamount}</u></b></a></td>
-    <td width="50"><a href="mmarket.php?view=market&amp;lista=cost"><b><u>{$Tcost}</u></b></a></td>
-    <td width="100"><a href="mmarket.php?view=market&amp;lista=owner"><b><u>{$Tseller}</u></b></a></td>
+    <td width="150"><a href="mmarket.php?view=market&amp;lista=name&amp;order={$Aorder2}"><b><u>{$Tname}</u></b></a></td>
+    <td width="100" align="center"><a href="mmarket.php?view=market&amp;lista=efect&amp;order={$Aorder2}"><b><u>{$Tefect}</u></b></a></td>
+    <td width="50"><a href="mmarket.php?view=market&amp;lista=amount&amp;order={$Aorder2}"><b><u>{$Tamount}</u></b></a></td>
+    <td width="50"><a href="mmarket.php?view=market&amp;lista=cost&amp;order={$Aorder2}"><b><u>{$Tcost}</u></b></a></td>
+    <td width="100"><a href="mmarket.php?view=market&amp;lista=owner&amp;order={$Aorder2}"><b><u>{$Tseller}</u></b></a></td>
     <td width="100"><b><u>{$Toptions}</u></b></td>
     </tr>
     {section name=mmarket loop=$Item}
@@ -45,7 +45,7 @@
 	    {if $page == $Tpage}
 	        {$page}
 	    {else}
-                <a href="mmarket.php?view=market&page={$page}&amp;lista={$Mlist}">{$page}</a>
+                <a href="mmarket.php?view=market&page={$page}&amp;lista={$Mlist}&amp;order={$Aorder}">{$page}</a>
 	    {/if}
     	{/for}
     {/if}

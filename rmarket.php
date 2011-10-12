@@ -8,7 +8,7 @@
  *   @author               : thindil <thindil@tuxfamily.org>
  *   @author               : eyescream <tduda@users.sourceforge.net>
  *   @version              : 1.4
- *   @since                : 05.10.2011
+ *   @since                : 12.10.2011
  *
  */
 
@@ -117,17 +117,25 @@ if (isset ($_GET['view']) && $_GET['view'] == 'market')
       {
 	error(ERROR); 
       }
-    if ($_GET['lista'] == 'zr')
+    if (!isset($_GET['order']))
       {
-	$strOrder = ' ASC';
+	$_GET['order'] = 'DESC';
+      }
+    elseif ($_GET['order'] != 'DESC' && $_GET['order'] != 'ASC')
+      {
+	error(ERROR);
+      }
+    if ($_GET['order'] == 'DESC')
+      {
+	$strOrder = 'ASC';
       }
     else
       {
-	$strOrder = ' DESC';
+	$strOrder = 'DESC';
       }
     if (empty($_POST['szukany']) && !isset($_POST['szukany1'])) 
       {
-	$pm = $db -> SelectLimit("SELECT * FROM `equipment` WHERE `status`='R' AND `type`='I' ORDER BY ".$_GET['lista'].$strOrder, 30, (30 * ($page - 1)));
+	$pm = $db -> SelectLimit("SELECT * FROM `equipment` WHERE `status`='R' AND `type`='I' ORDER BY ".$_GET['lista']." ".$strOrder, 30, (30 * ($page - 1)));
       }
     elseif (isset($_POST['szukany1']))
       {
@@ -135,7 +143,7 @@ if (isset ($_GET['view']) && $_GET['view'] == 'market')
       }
     else 
       {
-	$pm = $db -> SelectLimit("SELECT * FROM `equipment` WHERE `status`='R' AND `type`='I' AND MATCH(`name`) AGAINST (".$strSearch." IN BOOLEAN MODE) ORDER BY ".$_GET['lista'].$strOrder, 30, (30 * ($page - 1)));
+	$pm = $db -> SelectLimit("SELECT * FROM `equipment` WHERE `status`='R' AND `type`='I' AND MATCH(`name`) AGAINST (".$strSearch." IN BOOLEAN MODE) ORDER BY ".$_GET['lista']." ".$strOrder, 30, (30 * ($page - 1)));
       }
     $arrname = array();
     $arrpower = array();
@@ -175,6 +183,8 @@ if (isset ($_GET['view']) && $_GET['view'] == 'market')
 			    "Tpages" => $pages,
 			    "Tpage" => $page,
 			    "Fcost" => $arrFcost,
+			    "Aorder" => $_GET['order'],
+			    "Aorder2" => $strOrder,
 			    "Fpage" => "Idź do strony:",
 			    "Mlist" => $_GET['lista'],
 			    "Abuy" => A_BUY,
