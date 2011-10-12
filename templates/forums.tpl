@@ -100,11 +100,14 @@
     <td>{$Ttext}</td>
     </tr>
     </table><br />
+    {if $Prank == "Admin" || $Prank == "Staff"}
+        <form method="post" action="forums.php?delreplies={$Topic}">
+    {/if}
     <center>
     {section name=number2 loop=$Rtext}
         <table class="td" width="98%" cellpadding="0" cellspacing="0">
         <tr>
-        <td><b><a href="view.php?view={$Rplayerid[number2]}">{$Rstarter[number2]}</a></b> {$Wid} {$Rplayerid[number2]} {$Write}... (<a href="forums.php?topics={$Category}">{$Aback}</a>) {if $Closed == 'N'}(<a href="forums.php?topic={$Topic}&amp;quote={$Rid[number2]}">{$Aquote}</a>){/if}
+        <td>{if $Prank == "Admin" || $Prank == "Staff"}<input type="checkbox" name="{$Rid[number2]}" />{/if}<b><a href="view.php?view={$Rplayerid[number2]}">{$Rstarter[number2]}</a></b> {$Wid} {$Rplayerid[number2]} {$Write}... (<a href="forums.php?topics={$Category}">{$Aback}</a>) {if $Closed == 'N'}(<a href="forums.php?topic={$Topic}&amp;quote={$Rid[number2]}">{$Aquote}</a>){/if}
          {$Action2[number2]}
         </td>
         </tr>
@@ -112,6 +115,10 @@
         <td>{$Rtext[number2]}</td></tr></table><br />
     {/section}
     </center>
+    {if $Prank == "Admin" || $Prank == "Staff"}
+    	<input type="submit" value="{$Adelete}" />
+        </form>
+    {/if}
     {if $Tpages > 1}
     	<br />{$Fpage}
     	{for $page = 1 to $Tpages}

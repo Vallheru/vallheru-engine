@@ -8,7 +8,7 @@
  *   @author               : thindil <thindil@tuxfamily.org>
  *   @author               : mori <ziniquel@users.sourceforge.net>
  *   @version              : 1.4
- *   @since                : 26.09.2011
+ *   @since                : 12.10.2011
  *
  */
 
@@ -456,6 +456,8 @@ if (isset($_GET['topic']))
     }
     $reply -> Close();
     $smarty -> assign(array("Topic2" => $strClosed.$topicinfo -> fields['topic'], 
+			    "Prank" => $player->rank,
+			    "Adelete" => "Skasuj wybrane odpowiedzi",
         "Starter" => $topicinfo -> fields['starter'], 
         "Playerid" => $topicinfo -> fields['gracz'], 
         "Category" => $topicinfo -> fields['cat_id'], 
@@ -572,6 +574,32 @@ if (isset($_GET['reply']))
     $db->Execute("UPDATE `topics` SET `w_time`=".$ctime.", `replies`=`replies`+1 WHERE `id`=".$_GET['reply']);
     error (REPLY_ADD." <a href=forums.php?topic=".$_GET['reply'].">".A_HERE."</a>.");
 }
+
+/**
+ * Delete selected replies
+ */
+if (isset($_GET['delreplies']))
+  {
+    if ($player->rank != 'Admin' && $player->rank != 'Staff')
+      {
+        error(ERROR);
+      }
+    checkvalue($_GET['delreplies']);
+    $objReplies = $db->Execute("SELECT `id` FROM `replies` WHERE `topic_id`=".$_GET['delreplies']);
+    $intDeleted = 0;
+    while (!$objReplies->EOF)
+      {
+	if (isset($_POST[$objReplies->fields['id']]))
+	  {
+	    $db->Execute("DELETE FROM `replies` WHERE `id`=".$objReplies->fields['id']);
+	    $intDeleted++;
+	  }
+	$objReplies->MoveNext();
+      }
+    $objReplies->Close();
+    $db->Execute("UPDATE `topics` SET `replies`=`replies`-".$intDeleted." WHERE `id`=".$_GET['delreplies']);
+    error("Wybrane odpowiedzi zostały skasowane. (<a href=forums.php?topic=".$_GET['delreplies'].">Wróć</a>)");
+  }
 
 /**
  * Move topic to other category

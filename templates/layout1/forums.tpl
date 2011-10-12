@@ -100,6 +100,9 @@
     <td>{$Ttext}</td>
     </tr>
     </table><br />
+    {if $Prank == "Admin" || $Prank == "Staff"}
+        <form method="post" action="forums.php?delreplies={$Topic}">
+    {/if}
     <center>
     {section name=number2 loop=$Rtext}
         <table class="td" width="98%" cellpadding="0" cellspacing="0">
@@ -112,6 +115,10 @@
         <td>{$Rtext[number2]}</td></tr></table><br />
     {/section}
     </center>
+    {if $Prank == "Admin" || $Prank == "Staff"}
+    	<input type="submit" value="{$Adelete}" />
+        </form>
+    {/if}
     {if $Tpages > 1}
     	<br />{$Fpage}
     	{for $page = 1 to $Tpages}
