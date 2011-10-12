@@ -33,6 +33,9 @@
     <tr><td><b>{$Vwep}</b>:</td><td>{$Wname} ({$Ipower}: {$Wpower}) <select name="weapon"> {section name=vetwep loop=$Wid}
                     <option value="{$Wid[vetwep]}">{$Wname1[vetwep]} ({$Ipower}: {$Wpower1[vetwep]})</option>
                   {/section} </select></td></tr>
+    <tr><td><b>{$Tarrows}</b>:</td><td>{$Oname} ({$Ipower}: {$Opower}) <select name="arrows"> {section name=vetarr loop=$Oid}
+                    <option value="{$Oid[vetarr]}">{$Oname1[vetarr]} ({$Ipower}: {$Opower1[vetarr]})</option>
+                  {/section} </select></td></tr>
     <tr><td><b>{$Varmor}</b>:</td><td>{$Aname} {if $Aname != $Nothing} ({$Vdefense}: {$Apower}) {/if} <select name="armor"> {section name=outpost9 loop=$Aid}
                     <option value="{$Aid[outpost9]}">{$Aname1[outpost9]} ({$Vdefense}: {$Apower1[outpost9]})</option>
                   {/section} </select></td></tr>
@@ -178,6 +181,16 @@
                 <option value="{$Wid[outpost4]}">{$Wname[outpost4]} ({$Ipower2}: {$Wpower[outpost4]})</option>
             {/section}
             </select><br />
+	    {$Tarrows}:
+	    {if $Oid[1] != "0"}
+                <select name="arrows">
+                {section name=vetarr loop=$Oid}
+                    <option value="{$Oid[vetarr]}">{$Oname[vetarr]} ({$Ipower2}: {$Opower[vetarr]})</option>
+                {/section}
+                </select><br />
+            {else}
+                {$Nothing}<br />
+            {/if}
             <b>{$Udefense}:</b> 1 + <br />
             {$Varmor}:
             {if $Aid[1] != "0"}

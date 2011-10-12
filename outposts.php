@@ -8,7 +8,7 @@
  *   @author               : thindil <thindil@tuxfamily.org>
  *   @author               : eyescream <tduda@users.sourceforge.net>
  *   @version              : 1.4
- *   @since                : 11.10.2011
+ *   @since                : 12.10.2011
  *
  */
  
@@ -71,7 +71,14 @@ function equip($type)
     global $arrpower;
     if ($type != 'I')
       {
-	$armor = $db->Execute("SELECT `id`, `name`, `power` FROM `equipment` WHERE `owner`=".$player->id." AND `type`='".$type."' AND `status`='U'");
+	if ($type != 'W')
+	  {
+	    $armor = $db->Execute("SELECT `id`, `name`, `power`, `wt` FROM `equipment` WHERE `owner`=".$player->id." AND `type`='".$type."' AND `status`='U'");
+	  }
+	else
+	  {
+	    $armor = $db->Execute("SELECT `id`, `name`, `power`, `wt` FROM `equipment` WHERE `owner`=".$player->id." AND `type` IN ('W', 'B') AND `status`='U'");
+	  }
       }
     else
       {
@@ -81,12 +88,19 @@ function equip($type)
     $arrname = array(NOTHING);
     $arrpower = array(0);
     while (!$armor->EOF) 
-    {
+      {
+	if ($type == 'R')
+	  {
+	    if ($armor->fields['wt'] < 20)
+	      {
+		continue;
+	      }
+	  }
         $arrid[] = $armor->fields['id'];
         $arrname[] = $armor->fields['name'];
         $arrpower[] = ceil($armor->fields['power'] / 10);
         $armor->MoveNext();
-    }
+      }
     $armor->Close();
 }
 
@@ -99,7 +113,7 @@ function wear($eid, $vid, $type, $powertype)
     global $db;
     if ($type != 'ring1' && $type != 'ring2')
       {
-	$item1 = $db -> Execute("SELECT `id`, `name`, `power`, `amount` FROM `equipment` WHERE `id`=".$eid." AND `owner`=".$player->id." AND `status`='U'");
+	$item1 = $db -> Execute("SELECT `id`, `name`, `power`, `amount`, `wt` FROM `equipment` WHERE `id`=".$eid." AND `owner`=".$player->id." AND `status`='U'");
       }
     else
       {
@@ -111,13 +125,31 @@ function wear($eid, $vid, $type, $powertype)
       }
     $item = array($item1 -> fields['name'], ceil($item1 -> fields['power'] / 10));
     $info = $item[0].I_POWER.$item[1].") ";
-    if ($item1 -> fields['amount']  == 1) 
+    if ($type != 'arrows')
       {
-        $db -> Execute("DELETE FROM `equipment` WHERE `id`=".$eid." AND `owner`=".$player -> id);
-      } 
-    else 
+	if ($item1 -> fields['amount']  == 1) 
+	  {
+	    $db -> Execute("DELETE FROM `equipment` WHERE `id`=".$eid." AND `owner`=".$player -> id);
+	  } 
+	else 
+	  {
+	    $db -> Execute("UPDATE `equipment` SET `amount`=`amount`-1 WHERE `id`=".$eid." AND `owner`=".$player -> id);
+	  }
+      }
+    else
       {
-        $db -> Execute("UPDATE `equipment` SET `amount`=`amount`-1 WHERE `id`=".$eid." AND `owner`=".$player -> id);
+	if ($item1->fields['wt'] < 20)
+	  {
+	    error("Nie masz tylu strzał.");
+	  }
+	if ($item1->fields['wt'] == 20)
+	  {
+	    $db -> Execute("DELETE FROM `equipment` WHERE `id`=".$eid." AND `owner`=".$player -> id);
+	  } 
+	else 
+	  {
+	    $db -> Execute("UPDATE `equipment` SET `wt`=`wt`-20 WHERE `id`=".$eid." AND `owner`=".$player -> id);
+	  }
       }
     $item1 -> Close();
     $db -> Execute("UPDATE `outpost_veterans` SET `".$type."`='".$item[0]."', `".$powertype."`=".$item[1]." WHERE `id`=".$vid);
@@ -163,6 +195,10 @@ function showspecials($table, $field)
             {
                 $arrid[$i] = $army -> fields['id'];
                 $arrpower[$i] = $army -> fields['wpower'] + 1;
+		if (strpos($army->fields['weapon'], 'Łuk') !== FALSE || strpos($army->fields['weapon'], 'łuk') !== FALSE)
+		  {
+		    $arrpower[$i] += $army->fields['opower'];
+		  }
                 $arrdefense[$i] = $army -> fields['apower'] + $army -> fields['hpower'] + $army -> fields['lpower'] + 1;
 		if ($army->fields['ring1'])
 		  {
@@ -177,7 +213,7 @@ function showspecials($table, $field)
 		  }
 		if ($army->fields['ring2'])
 		  {
-		    if (strpos($army->fields['ring2'], 'siły') !== FALSE || strpos($army->fields['ring1'], 'zręczności') !== FALSE)
+		    if (strpos($army->fields['ring2'], 'siły') !== FALSE || strpos($army->fields['ring2'], 'zręczności') !== FALSE)
 		      {
 			$arrpower[$i] += $army->fields['rpower2'];
 		      }
@@ -289,6 +325,10 @@ function outpoststats($outpost,$veteran,$monster)
     while (!$veteran -> EOF) 
     {
         $attack1 = $attack1 + $veteran -> fields['wpower'] + 1;
+	if (strpos($veteran->fields['weapon'], 'Łuk') !== FALSE || strpos($veteran->fields['weapon'], 'łuk') !== FALSE)
+	  {
+	    $attack1 += $veteran->fields['opower'];
+	  }
         $defense1 = $defense1 + $veteran -> fields['apower']  + $veteran -> fields['hpower']  + $veteran -> fields['lpower'] + 1;
 	if ($veteran->fields['ring1'])
 	  {
@@ -303,7 +343,7 @@ function outpoststats($outpost,$veteran,$monster)
 	  }
 	if ($veteran->fields['ring2'])
 	  {
-	    if (strpos($veteran->fields['ring2'], 'siły') !== FALSE || strpos($veteran->fields['ring1'], 'zręczności') !== FALSE)
+	    if (strpos($veteran->fields['ring2'], 'siły') !== FALSE || strpos($veteran->fields['ring2'], 'zręczności') !== FALSE)
 	      {
 		$attack1 += $veteran->fields['rpower2'];
 	      }
@@ -738,11 +778,27 @@ if (isset($_GET['view']) && $_GET['view'] == 'veterans')
         error(NOT_YOUR);
     }
     $power = $veteran -> fields['wpower'] + 1;
+    if (strpos($veteran->fields['weapon'], 'Łuk') !== FALSE || strpos($veteran->fields['weapon'], 'łuk') !== FALSE)
+      {
+	$power += $veteran->fields['opower'];
+      }
     $defense = $veteran -> fields['apower'] + $veteran -> fields['hpower'] + $veteran -> fields['lpower'] + 1;
     equip('W');
     $arrwid = $arrid;
     $arrwname = $arrname;
     $arrwpower = $arrpower;
+    if ($veteran->fields['arrows'])
+      {
+	$arrows = $veteran->fields['arrows'];
+      }
+    else
+      {
+	$arrows = NOTHING;
+      }
+    equip('R');
+    $arroid = $arrid;
+    $arroname = $arrname;
+    $arropower = $arrpower;
     if ($veteran -> fields['armor']) 
       {
         $armor = $veteran -> fields['armor'];
@@ -782,7 +838,7 @@ if (isset($_GET['view']) && $_GET['view'] == 'veterans')
     if ($veteran->fields['ring1'])
       {
 	$ring1 = $veteran->fields['ring1'];
-	if (strpos($ring1, 'siły') !== FALSE)
+	if (strpos($veteran->fields['ring1'], 'siły') !== FALSE || strpos($veteran->fields['ring1'], 'zręczności') !== FALSE)
 	  {
 	    $power += $veteran->fields['rpower1'];
 	  }
@@ -802,7 +858,7 @@ if (isset($_GET['view']) && $_GET['view'] == 'veterans')
     if ($veteran->fields['ring2'])
       {
 	$ring2 = $veteran->fields['ring2'];
-	if (strpos($ring2, 'siły') !== FALSE)
+	if (strpos($veteran->fields['ring2'], 'siły') !== FALSE || strpos($veteran->fields['ring2'], 'zręczności') !== FALSE)
 	  {
 	    $power += $veteran->fields['rpower1'];
 	  }
@@ -836,6 +892,12 @@ if (isset($_GET['view']) && $_GET['view'] == 'veterans')
 			    "Tring" => "Pierścień",
 			    "Rpower1" => $veteran->fields['rpower1'],
 			    "Rpower2" => $veteran->fields['rpower2'],
+			    "Oname" => $arrows,
+			    "Opower" => $veteran->fields['opower'],
+			    "Oid" => $arroid,
+			    "Oname1" => $arroname,
+			    "Opower1" => $arropower,
+			    "Tarrows" => "Strzały",
         "Aname" => $armor,
         "Apower" => $veteran -> fields['apower'],
         "Hname" => $helm,
@@ -897,6 +959,11 @@ if (isset($_GET['view']) && $_GET['view'] == 'veterans')
 	if (isset($_POST['ring2']) && intval($_POST['ring2']) > 0)
 	  {
 	    $text1 = wear($_POST['ring2'], $_GET['id'], 'ring2', 'rpower2');
+            $text = YOU_ADD.$text1;
+	  }
+	if (isset($_POST['arrows']) && intval($_POST['arrows']) > 0)
+	  {
+	    $text1 = wear($_POST['arrows'], $_GET['id'], 'arrows', 'opower');
             $text = YOU_ADD.$text1;
 	  }
         if (isset($text1)) 
@@ -1240,6 +1307,16 @@ if (isset ($_GET['view']) && $_GET['view'] == 'shop')
             $i = $i + 1;
         }
         $weapon -> Close();
+	equip('R');
+        $arroid = $arrid;
+        $arroname = $arrname;
+        $arropower = $arrpower;
+	if (!isset($arrid[1])) 
+        {
+            $arroid[1] = 0;
+            $arroname[1] = 0;
+            $arropower[1] = 0;
+        }
         equip('A');
         $arraid = $arrid;
         $arraname = $arrname;
@@ -1298,6 +1375,10 @@ if (isset ($_GET['view']) && $_GET['view'] == 'shop')
 				"Rid2" => $arrrid2,
 				"Rname2" => $arrrname2,
 				"Rpower2" => $arrrpower2,
+				"Tarrows" => "Strzały",
+				"Oid" => $arroid,
+				"Oname" => $arroname,
+				"Opower" => $arropower,
             "Wname" => $arrwname,
             "Wpower" => $arrwpower,
             "Aid" => $arraid,
@@ -1407,8 +1488,8 @@ if (isset ($_GET['view']) && $_GET['view'] == 'shop')
         }
         $objQuery -> Close();
         $strName = $db -> qstr($_POST['vname'], get_magic_quotes_gpc());
-        $db -> Execute("INSERT INTO outpost_veterans (outpost, name) VALUES(".$out -> fields['id'].", ".$strName.")");
-        $vetid = $db -> Execute("SELECT id FROM outpost_veterans WHERE outpost=".$out -> fields['id']." AND name=".$strName);
+        $db -> Execute("INSERT INTO outpost_veterans (`outpost`, `name`) VALUES(".$out -> fields['id'].", ".$strName.")");
+        $vetid = $db -> Execute("SELECT `id` FROM `outpost_veterans` WHERE `outpost`=".$out -> fields['id']." AND `name`=".$strName);
         $text = '';
         if (intval($_POST['weapon']) > 0) 
         {
@@ -1440,8 +1521,13 @@ if (isset ($_GET['view']) && $_GET['view'] == 'shop')
             $text1 = wear($_POST['ring2'], $vetid -> fields['id'], 'ring2', 'rpower2');
             $text = $text.$text1;
 	  }
+	if (isset($_POST['arrows']) && intval($_POST['arrows']) > 0) 
+	  {
+            $text1 = wear($_POST['arrows'], $vetid -> fields['id'], 'arrows', 'opower');
+            $text = $text.$text1;
+	  }
         $vetid -> Close();
-        $db -> Execute("UPDATE outposts SET gold=gold-2000 WHERE id=".$out -> fields['id']);
+        $db -> Execute("UPDATE outposts SET `gold`=`gold`-2000 WHERE `id`=".$out -> fields['id']);
         $smarty -> assign("Message", YOU_ADD.$_POST['vname'].FOR_A2.$text.'<a href=outposts.php?view=shop>'.A_REFRESH.'</a>');
     }
     /**

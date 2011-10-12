@@ -1,5 +1,7 @@
 2011-10-12  Bartek thindil Jasicki  <thindil@tuxfamily.org>
 
+	* FEATURE,install/db/update.sql, templates/layout1/outposts.tpl, templates/outposts.tpl, outposts.php: 
+	added option to equip veterans with arrows
 	* FEATURE,templates/layout1/forums.tpl, templates/forums.tpl, forums.php: 
 	added option to delete selected replies
 	* FEATURE,templates/layout1/lmarket.tpl, templates/layout1/amarket.tpl, templates/layout1/imarket.tpl, templates/layout1/rmarket.tpl,
