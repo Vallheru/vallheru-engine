@@ -9,7 +9,7 @@
  *   @author               : mori <ziniquel@users.sourceforge.net>
  *   @author               : eyescream <tduda@users.sourceforge.net>
  *   @version              : 1.4
- *   @since                : 29.09.2011
+ *   @since                : 12.10.2011
  *
  */
 
@@ -29,7 +29,7 @@
 //   along with this program; if not, write to the Free Software
 //   Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 //
-// $Id: tribes.php 918 2007-03-03 17:55:42Z thindil $
+// $Id$
 
 $title = "Klany";
 require_once("includes/head.php");
@@ -1161,6 +1161,10 @@ if (isset ($_GET['view']) && $_GET['view'] == 'my')
                                             "No" => NO));
                     if (isset($_GET['next']) && $_GET['next'] == 'add')
                     {
+		        if (!isset($_POST['memid']))
+			  {
+			    error(ERROR);
+			  }
 			checkvalue($_POST['memid']);
                         $objTest = $db -> Execute("SELECT * FROM tribe_perm WHERE player=".$_POST['memid']);
                         $arrTest = array($objTest -> fields['messages'],
@@ -1259,6 +1263,10 @@ if (isset ($_GET['view']) && $_GET['view'] == 'my')
                 }
                 if (isset($_GET['step3']) && $_GET['step3'] == 'send')
                 {
+		    if (!isset($_POST['body']) || !isset($_POST['mtitle']))
+		      {
+			error(ERROR);
+		      }
                     $strBody = strip_tags($_POST['body']);
                     $strTitle = strip_tags($_POST['mtitle']);
                     if (empty($strBody) || empty($strTitle))
@@ -1302,14 +1310,16 @@ if (isset ($_GET['view']) && $_GET['view'] == 'my')
                                         "Abuy" => A_BUY));
                 if (isset ($_GET['action']) && $_GET['action'] == 'kup') 
                 {
-                    if (!ereg("^[0-9]*$",$_POST['zolnierze'])) 
-                    {
-                        error (ERROR);
-                    }
-                    if (!ereg("^[0-9]*$",$_POST['forty'])) 
-                    {
-                        error (ERROR);
-                    }
+		    if (!isset($_POST['zolnierze']) || !isset($_POST['forty']))
+		      {
+			error(ERROR);
+		      }
+		    $_POST['zolnierze'] = intval($_POST['zolnierze']);
+		    $_POST['forty'] = intval($_POST['forty']);
+		    if ($_POST['zolnierze'] < 0 || $_POST['forty'] < 0)
+		      {
+			error(ERROR);
+		      }
                     if ($_POST["zolnierze"] == 0 && $_POST["forty"] == 0) 
                     {
                         error (EMPTY_FIELDS);
