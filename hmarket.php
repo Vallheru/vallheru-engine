@@ -8,7 +8,7 @@
  *   @author               : thindil <thindil@tuxfamily.org>
  *   @author               : eyescream <tduda@users.sourceforge.net>
  *   @version              : 1.4
- *   @since                : 12.10.2011
+ *   @since                : 13.10.2011
  *
  */
 
@@ -40,7 +40,7 @@ require_once("languages/".$player -> lang."/hmarket.php");
 
 if ($player -> location != 'Altara' && $player -> location != 'Ardulith') 
 {
-    error (ERROR);
+    error (ERROR."<a href");
 }
 $gr = $db -> Execute("SELECT `id`, `illani`, `illanias`, `nutari`, `dynallca`, `ilani_seeds`, `illanias_seeds`, `nutari_seeds`, `dynallca_seeds` FROM `herbs` WHERE `gracz`=".$player -> id) or die($db -> ErrorMsg());
 $arrName = array(N_HERB1, N_HERB2, N_HERB3, N_HERB4, N_HERB5, N_HERB6, N_HERB7, N_HERB8);
@@ -134,49 +134,32 @@ if (isset ($_GET['view']) && $_GET['view'] == 'market')
       {
 	$strOrder = 'DESC';
       }
+    $intLimit = 30 * ($page - 1);
     if (empty($_POST['szukany'])) 
       {
-	$pm = $db -> SelectLimit("SELECT * FROM hmarket ORDER BY ".$_GET['lista']." ".$_GET['order'], 30, (30 * ($page - 1)));
+	$arrOferts = $db->GetAll("SELECT * FROM `hmarket` ORDER BY `".$_GET['lista']."` ".$_GET['order']." LIMIT ".$intLimit.", 30");
       } 
     else 
       {
-	$pm = $db -> SelectLimit("SELECT * FROM hmarket WHERE nazwa LIKE ".$strSearch." ORDER BY ".$_GET['lista']." ".$_GET['order'], 30, (30 * ($page - 1)));
+	$arrOferts = $db->GetAll("SELECT * FROM `hmarket` WHERE `nazwa` LIKE ".$strSearch." ORDER BY `".$_GET['lista']."` ".$_GET['order']." LIMIT ".$intLimit.", 30");
       }
-    $arrname = array();
-    $arramount = array();
-    $arrcost = array();
-    $arrseller = array();
-    $arraction = array();
-    $arruser = array();
-    $arrId = array();
-    $arrFcost = array();
-    while (!$pm -> EOF) 
+    $arrHeaders = array(HERB, T_AMOUNT, "Cena szt / wszystko", T_SELLER);
+    $arrHlinks = array('nazwa', 'ilosc', 'cost', 'seller');
+    $arrKeys = array('nazwa', 'ilosc', 'cost');
+    foreach ($arrOferts as &$arrOfert)
       {
-	$arrname[] = $pm -> fields['nazwa'];
-	$arramount[] = $pm -> fields['ilosc'];
-	$arrcost[] = $pm -> fields['cost'];
-	$arrFcost[] = $pm->fields['cost'] * $pm->fields['ilosc'];
-	$arrseller[] = $pm -> fields['seller'];
-	$seller = $db -> Execute("SELECT user FROM players WHERE id=".$pm -> fields['seller']);
-	$arruser[] = $seller -> fields['user'];
-	$seller -> Close();
-	$arrId[] = $pm->fields['id'];
-	$pm -> MoveNext();
+	$arrOfert['cost'] = $arrOfert['cost']."/".($arrOfert['cost'] * $arrOfert['ilosc']);
+	$query = $db->Execute("SELECT `user` FROM `players` WHERE `id`=".$arrOfert['seller']);
+	$arrOfert['user'] = $query->fields['user'];
+	$query->Close();
       }
-    $pm -> Close();
-    $smarty -> assign(array("Name" => $arrname, 
-			    "Amount" => $arramount, 
-			    "Cost" => $arrcost, 
-			    "Seller" => $arrseller, 
-			    "Action" => $arraction, 
-			    "User" => $arruser,
-			    "Fcost" => $arrFcost,
-			    "Therb" => HERB,
-			    "Tamount" => T_AMOUNT,
-			    "Tcost" => "Cena szt / wszystko",
-			    "Tseller" => T_SELLER,
+    $smarty -> assign(array("Headers" => $arrHeaders,
+			    "Aheaders" => $arrHlinks,
+			    "Tname" => "Nazwa",
+			    "Oferts" => $arrOferts,
+			    "Okeys" => $arrKeys,
+			    "Mtype" => "hmarket",
 			    "Toptions" => T_OPTIONS,
-			    "Iid" => $arrId,
 			    "Pid" => $player->id,
 			    "Tpages" => $pages,
 			    "Tpage" => $page,
@@ -203,16 +186,20 @@ if (isset ($_GET['view']) && $_GET['view'] == 'market')
 if (isset ($_GET['view']) && $_GET['view'] == 'add') 
 {
     $arrSqlname = array('illani', 'illanias', 'nutari', 'dynallca', 'ilani_seeds', 'illanias_seeds', 'nutari_seeds', 'dynallca_seeds');
-    $arrAmount = array($gr -> fields['illani'], $gr -> fields['illanias'], $gr -> fields['nutari'], $gr -> fields['dynallca'], $gr -> fields['ilani_seeds'], $gr -> fields['illanias_seeds'], $gr -> fields['nutari_seeds'], $gr -> fields['dynallca_seeds']);
+    $arrOptions = array();
+    for ($i = 0; $i < count($arrSqlname); $i++)
+      {
+	if ($gr->fields[$arrSqlname[$i]] > 0)
+	  {
+	    $arrOptions[$arrSqlname[$i]] = $arrName[$i]." (".T_AMOUNT.": ".$gr->fields[$arrSqlname[$i]].")";
+	  }
+      }
     $smarty -> assign(array("Addinfo" => ADD_INFO,
-                            "Herb" => HERB,
-                            "Herbname" => $arrName,
-                            "Sqlname" => $arrSqlname,
-                            "Hamount" => H_AMOUNT,
-                            "Hcost" => H_COST,
+                            "Item" => HERB,
+			    "Ioptions" => $arrOptions,
+                            "Amount" => H_AMOUNT,
+                            "Cost" => H_COST,
                             "Aadd" => A_ADD,
-                            "Herbamount" => $arrAmount,
-                            "Tamount" => T_AMOUNT,
 			    "Addall" => "wszystkie posiadane",
                             "Addofert" => 0));
     if (isset ($_GET['step']) && $_GET['step'] == 'add') 
@@ -222,48 +209,48 @@ if (isset ($_GET['view']) && $_GET['view'] == 'add')
             error (ERROR);
         }
 	checkvalue($_POST['cost']);
-        if (!in_array($_POST['mineral'], $arrSqlname))
+        if (!in_array($_POST['item'], $arrSqlname))
         {
             error(ERROR);
         }
-        $intKey = array_search($_POST['mineral'], $arrSqlname);
+        $intKey = array_search($_POST['item'], $arrSqlname);
 	if (!isset($_POST['addall']))
 	  {
-	    if (!isset($_POST['ilosc']))
+	    if (!isset($_POST['amount']))
 	      {
 		error(ERROR);
 	      }
-	    checkvalue($_POST['ilosc']);
-	    if ($_POST['ilosc'] > $gr -> fields[$arrSqlname[$intKey]])
+	    checkvalue($_POST['amount']);
+	    if ($_POST['amount'] > $gr -> fields[$arrSqlname[$intKey]])
 	      {
 		error(NO_AMOUNT.$arrName[$intKey]);
 	      }
 	  }
 	else
 	  {
-	    $_POST['ilosc'] = $gr -> fields[$arrSqlname[$intKey]];
+	    $_POST['amount'] = $gr -> fields[$arrSqlname[$intKey]];
 	  }
         $objTest = $db -> Execute("SELECT `id` FROM `hmarket` WHERE `seller`=".$player -> id." AND `nazwa`='".$arrName[$intKey]."'");
         if (!$objTest -> fields['id'])
         {
-            $db -> Execute("INSERT INTO `hmarket` (`seller`, `ilosc`, `cost`, `nazwa`, `lang`) VALUES(".$player -> id.",".$_POST['ilosc'].",".$_POST['cost'].",'".$arrName[$intKey]."', '".$player -> lang."')") or die($db -> ErrorMsg());
-            $db -> Execute("UPDATE `herbs` SET `".$_POST['mineral']."`=`".$_POST['mineral']."`-".$_POST['ilosc']." WHERE `gracz`=".$player -> id);
-            $smarty -> assign("Message", YOU_ADD.$_POST['ilosc']."</b> ".$arrName[$intKey].ON_MARKET.$_POST['cost'].FOR_GOLDS." <a href=\"hmarket.php?view=add\">".A_REFRESH."</a>");
+            $db -> Execute("INSERT INTO `hmarket` (`seller`, `ilosc`, `cost`, `nazwa`, `lang`) VALUES(".$player -> id.",".$_POST['amount'].",".$_POST['cost'].",'".$arrName[$intKey]."', '".$player -> lang."')") or die($db -> ErrorMsg());
+            $db -> Execute("UPDATE `herbs` SET `".$_POST['item']."`=`".$_POST['item']."`-".$_POST['amount']." WHERE `gracz`=".$player -> id);
+            $smarty -> assign("Message", YOU_ADD.$_POST['amount']."</b> ".$arrName[$intKey].ON_MARKET.$_POST['cost'].FOR_GOLDS." <a href=\"hmarket.php?view=add\">".A_REFRESH."</a>");
         }
             else
         {
             $smarty -> assign(array("Addofert" => $objTest -> fields['id'],
                                     "Youwant" => YOU_WANT,
                                     "Ayes" => YES,
-                                    "Herbname" => $_POST['mineral'],
-                                    "Herbamount" => $_POST['ilosc'],
-                                    "Herbcost" => $_POST['cost']));
+                                    "Iname" => $_POST['item'],
+                                    "Iamount" => $_POST['amount'],
+                                    "Icost" => $_POST['cost']));
             if (isset($_POST['ofert']))
             {
 		checkvalue($_POST['ofert']);
                 require_once('includes/marketaddto.php');
-                addtoherb($_POST['ofert'], $_POST['mineral'], $player -> id, $_POST['ilosc']);
-                $smarty -> assign("Message", YOU_ADD.$_POST['ilosc']."</b> ".$arrName[$intKey].ON_MARKET2." <a href=\"hmarket.php?view=add\">".A_REFRESH."</a>");
+                addtoherb($_POST['ofert'], $_POST['item'], $player -> id, $_POST['amount']);
+                $smarty -> assign("Message", YOU_ADD.$_POST['amount']."</b> ".$arrName[$intKey].ON_MARKET2." <a href=\"hmarket.php?view=add\">".A_REFRESH."</a>");
             }
         }
         $objTest -> Close();
@@ -286,7 +273,7 @@ if (isset ($_GET['view']) && $_GET['view'] == 'del')
 if (isset($_GET['buy'])) 
 {
     checkvalue($_GET['buy']);
-    $buy = $db -> Execute("SELECT * FROM hmarket WHERE id=".$_GET['buy']) ;
+    $buy = $db -> Execute("SELECT * FROM `hmarket` WHERE `id`=".$_GET['buy']) ;
     if (!$buy -> fields['id']) 
     {
         error (NO_OFERTS);
@@ -295,7 +282,7 @@ if (isset($_GET['buy']))
     {
         error (IS_YOUR);
     }
-    $seller = $db -> Execute("SELECT user FROM players WHERE id=".$buy -> fields['seller']);
+    $seller = $db -> Execute("SELECT `user` FROM `players` WHERE `id`=".$buy -> fields['seller']);
     $smarty -> assign(array("Name" => $buy -> fields['nazwa'], 
                             "Amount1" => $buy -> fields['ilosc'], 
                             "Itemid" => $buy -> fields['id'], 
@@ -303,10 +290,10 @@ if (isset($_GET['buy']))
                             "Seller" => $seller -> fields['user'], 
                             "Sid" => $buy -> fields['seller'],
                             "Buyinfo" => BUY_INFO,
-                            "Bherb" => HERB,
+                            "Bitem" => HERB,
                             "Oamount" => O_AMOUNT,
-                            "Hcost" => H_COST,
-                            "Hseller" => SELLER,
+                            "Icost" => H_COST,
+                            "Iseller" => SELLER,
                             "Bamount" => B_AMOUNT,
                             "Abuy" => A_BUY));
     if (isset($_GET['step']) && $_GET['step'] == 'buy') 
@@ -370,33 +357,26 @@ if (isset($_GET['wyc']))
 */
 if (isset($_GET['view']) && $_GET['view'] == 'all') 
 {
-    $oferts = $db -> Execute("SELECT nazwa FROM hmarket GROUP BY nazwa");
+    $oferts = $db -> Execute("SELECT `nazwa` FROM `hmarket` GROUP BY `nazwa`");
     $arrname = array();
     $arramount = array();
-    $i = 0;
     while (!$oferts -> EOF) 
     {
-        $arrname[$i] = $oferts -> fields['nazwa'];
-        $arramount[$i] = 0;
-        $query = $db -> Execute("SELECT id FROM hmarket WHERE nazwa='".$arrname[$i]."'");
-        while (!$query -> EOF) 
-        {
-            $arramount[$i] = $arramount[$i] + 1;
-            $query -> MoveNext();
-        }
+        $arrname[] = $oferts -> fields['nazwa'];
+        $query = $db -> Execute("SELECT count(`id`) FROM `hmarket` WHERE `nazwa`='".$oferts->fields['nazwa']."'");
+	$arramount[] = $query->fields['count(`id`)'];
         $query -> Close();
         $oferts -> MoveNext();
-        $i = $i + 1;
     }
     $oferts -> Close();
     $smarty -> assign(array("Name" => $arrname, 
-        "Amount" => $arramount, 
-        "Message" => "<br />(<a href=\"hmarket.php\">".A_BACK."</a>)",
-        "Listinfo" => LIST_INFO,
-        "Hname" => H_NAME,
-        "Hamount" => H_AMOUNT,
-        "Haction" => H_ACTION,
-        "Ashow" => A_SHOW));
+			    "Amount" => $arramount, 
+			    "Message" => "<br />(<a href=\"hmarket.php\">".A_BACK."</a>)",
+			    "Listinfo" => LIST_INFO,
+			    "Iname" => H_NAME,
+			    "Iamount" => H_AMOUNT,
+			    "Iaction" => H_ACTION,
+			    "Ashow" => A_SHOW));
 }
 
 /**
@@ -419,10 +399,10 @@ if (!isset($_GET['buy']))
 * Assign variables to template and display page
 */
 $smarty -> assign(array("View" => $_GET['view'], 
-    "Remowe" => $_GET['wyc'], 
-    "Buy" => $_GET['buy'],
-    "Aback" => A_BACK));
-$smarty -> display ('hmarket.tpl');
+			"Remowe" => $_GET['wyc'], 
+			"Buy" => $_GET['buy'],
+			"Aback" => A_BACK));
+$smarty -> display ('market2.tpl');
 
 require_once("includes/foot.php");
 ?>
