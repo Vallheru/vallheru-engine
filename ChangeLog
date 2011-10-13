@@ -1,3 +1,8 @@
+2011-10-13  Bartek thindil Jasicki  <thindil@tuxfamily.org>
+
+	* FEATURE,templates/layout1/outposts.tpl, templates/outposts.tpl, outposts.php:
+	added default values for search outposts
+
 2011-10-12  Bartek thindil Jasicki  <thindil@tuxfamily.org>
 
 	* BUG,languages/pl/checkexp.php, includes/checkexp.php, tribes.php: 

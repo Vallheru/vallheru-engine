@@ -8,7 +8,7 @@
  *   @author               : thindil <thindil@tuxfamily.org>
  *   @author               : eyescream <tduda@users.sourceforge.net>
  *   @version              : 1.4
- *   @since                : 12.10.2011
+ *   @since                : 13.10.2011
  *
  */
  
@@ -1767,7 +1767,9 @@ if (isset ($_GET['view']) && $_GET['view'] == 'listing')
                             "Outsize" => OUT_SIZE,
                             "Outowner" => OUT_OWNER,
                             "Outattack" => OUT_ATTACK,
-                            "Aattack" => A_ATTACK));
+                            "Aattack" => A_ATTACK,
+			    "Outmin" => floor($out->fields['size'] / 2),
+			    "Outmax" => ($out->fields['size'] * 2)));
     if (isset ($_GET['step']) && $_GET['step'] == 'list') 
     {
         if (!isset($_POST['slevel']))
@@ -1785,17 +1787,15 @@ if (isset ($_GET['view']) && $_GET['view'] == 'listing')
         $arrsize = array();
         $arrowner = array();
         $arrPlayer = array();
-        $i = 0;
         while (!$op -> EOF) 
         {
-            $arrid[$i] = $op -> fields['id'];
+            $arrid[] = $op -> fields['id'];
             $objName = $db -> Execute("SELECT `user` FROM `players` WHERE `id`=".$op -> fields['owner']);
-            $arrPlayer[$i] = $objName -> fields['user'];
+            $arrPlayer[] = $objName -> fields['user'];
             $objName -> Close();
-            $arrsize[$i] = $op -> fields['size'];
-            $arrowner[$i] = $op -> fields['owner'];
+            $arrsize[] = $op -> fields['size'];
+            $arrowner[] = $op -> fields['owner'];
             $op -> MoveNext();
-            $i ++;
         }
         $op -> Close();
         $smarty -> assign(array("Oid" => $arrid, 

@@ -253,8 +253,8 @@
 {if $View == "listing"}
     {if $Step == ""}
         <form method="post" action="outposts.php?view=listing&amp;step=list">
-        <input type="submit" value="{$Ashow}" /> {$Froml} <input type="text" name="slevel" size="5" value="1" /> {$Tol}
-        <input type="text" name="elevel" size="5" value="1" /></form>
+        <input type="submit" value="{$Ashow}" /> {$Froml} <input type="text" name="slevel" size="5" value="{$Outmin}" /> {$Tol}
+        <input type="text" name="elevel" size="5" value="{$Outmax}" /></form>
     {/if}
     {if $Step != ""}
         <table class="dark">
