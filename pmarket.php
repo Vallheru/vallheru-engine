@@ -299,7 +299,7 @@ if (isset($_GET['buy']))
 			    "Itemid" => $buy -> fields['id'], 
 			    "Cost" => $buy -> fields['cost'], 
 			    "Seller" => $seller -> fields['user'],
-			    "Sellerid" => $buy -> fields['seller'],
+			    "Sid" => $buy -> fields['seller'],
 			    "Buyinfo" => BUY_INFO,
 			    "Oamount" => O_AMOUNT,
 			    "Icost" => M_COST,
