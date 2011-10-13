@@ -7,7 +7,7 @@
  *   @copyright            : (C) 2004,2005,2007,2011 Vallheru Team based on Gamers-Fusion ver 2.5
  *   @author               : thindil <thindil@tuxfamily.org>
  *   @version              : 1.4
- *   @since                : 12.10.2011
+ *   @since                : 13.10.2011
  *
  */
 
@@ -29,7 +29,6 @@
 //
 // $Id$
 
-define("YOU_GAIN3", "Zdobyłeś poziom");
 define("LEVELS", "Poziom(ów)");
 define("AP", "AP");
 define("HIT_POINTS", "Maksymalnych Punktów Życia");

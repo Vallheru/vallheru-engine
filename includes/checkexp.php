@@ -7,7 +7,7 @@
  *   @copyright            : (C) 2004,2005,2006,2011 Vallheru Team based on Gamers-Fusion ver 2.5
  *   @author               : thindil <thindil@tuxfamily.org>
  *   @version              : 1.4
- *   @since                : 12.10.2011
+ *   @since                : 13.10.2011
  *
  */
 
@@ -178,7 +178,7 @@ function checkexp ($exp,$expgain,$level,$rasa,$user,$eid,$enemyid,$enemyuser,$pl
 	$objValls->Close();
         if ($player == $eid) 
         {
-            $text = "<br /><b>".YOU_GAIN3."</b> ".$user.".<br />". $poziom." ".LEVELS."<br />".$ap." ".AP."<br />".$pz." ".HIT_POINTS."<br />";
+            $text = "<br /><b>Zdobyłeś poziom</b> ".$user.".<br />". $poziom." ".LEVELS."<br />".$ap." ".AP."<br />".$pz." ".HIT_POINTS."<br />";
             if ($energia > 0) 
             {
                 $text = $text.$energia." ".GAIN_ENERGY."<br />";
