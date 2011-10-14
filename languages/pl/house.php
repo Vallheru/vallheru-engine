@@ -8,7 +8,7 @@
  *   @author               : thindil <thindil@tuxfamily.org>
  *   @author               : eyescream <tduda@users.sourceforge.net>
  *   @version              : 1.4
- *   @since                : 08.10.2011
+ *   @since                : 14.10.2011
  *
  */
 
@@ -225,7 +225,7 @@ if (isset($_GET['action']) && $_GET['action'] == 'my')
     }
     if (isset($_GET['step']) && $_GET['step'] == 'bedroom') 
     {
-        define("BED_INFO", "W sypialni możesz próbować odpocząć aby zregenerować nadwątlone siły. Szansa na to czy ci się uda, zależy od szczęścia, ale to ile odzyskasz energii, zdrowia, czy też punktów magii zależy od wartości twojego domu. Możesz odpoczywać tylko raz na reset. Oprócz tego jeżeli wylogujesz się z gry w tym miejscu, twoja postać pójdzie spać i nikt nie będzie mógł ciebie zaatakować. Co chcesz robić?");
+        define("BED_INFO", "W sypialni możesz próbować odpocząć aby zregenerować nadwątlone siły. Szansa na to czy ci się uda, zależy od szczęścia, ale to ile odzyskasz energii, zdrowia, czy też punktów magii zależy od wartości twojego domu. Możesz odpoczywać tylko raz na dzień. Oprócz tego jeżeli wylogujesz się z gry w tym miejscu, twoja postać pójdzie spać i nikt nie będzie mógł ciebie zaatakować. Co chcesz robić?");
         define("A_REST", "Chcę nieco odpocząć");
         define("A_SLEEP", "Iść spać");
         define("NO_BEDROOM", "Nie możesz odpoczywać ponieważ nie masz sypialni!");
