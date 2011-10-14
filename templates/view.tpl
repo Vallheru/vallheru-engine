@@ -20,9 +20,7 @@
 {$Tfights}: {$Wins}/{$Losses} {$Fratio}<br />
 {$Tlastkill}: {$Lastkilled}<br />
 {$Tlastkilled}: {$Lastkilledby}<br />
-{$Trefs}: <a href="referrals.php?id={$Id}">{$Refs}</a><br />
-{$Rprofile}<br />
-{$Tprofile}:<br />{$Profile}<br /><br />
+{$Trefs}: <a href="referrals.php?id={$Id}">{$Refs}</a><br /><br />
 {if $Attack != "" || $Mail != "" || $Crime != ""}
     {$Toptions}:<br />
     <ul>
@@ -32,3 +30,5 @@
     {$Crime2}
     </ul>
 {/if}
+{$Rprofile}<br /><br />
+{$Tprofile}:<br />{$Profile}<br /><br />
