@@ -289,6 +289,7 @@ if (isset($_GET['buy']))
                             "Cost" => $buy -> fields['cost'], 
                             "Seller" => $seller -> fields['user'], 
                             "Sid" => $buy -> fields['seller'],
+			    "Infos" => array(),
                             "Buyinfo" => BUY_INFO,
                             "Bitem" => HERB,
                             "Oamount" => O_AMOUNT,

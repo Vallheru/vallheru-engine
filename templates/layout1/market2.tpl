@@ -98,6 +98,9 @@
 {if $Buy != ""}
     {$Buyinfo} <a href="{$SCRIPT_NAME}">{$Aback}</a>.<br /><br />
     <b>{$Bitem}:</b> {$Name} <br />
+    {foreach $Infos as $Info}
+        <b>{$Info@key}:</b> {$Info} <br />
+    {/foreach}
     <b>{$Oamount}:</b> {$Amount1} <br />
     <b>{$Icost}:</b> {$Cost} <br />
     <b>{$Iseller}:</b> <a href="view.php?view={$Sid}">{$Seller}</a> <br /><br />

@@ -7,7 +7,7 @@
  *   @copyright            : (C) 2011 Vallheru Team based on Gamers-Fusion ver 2.5
  *   @author               : thindil <thindil@tuxfamily.org>
  *   @version              : 1.4
- *   @since                : 12.10.2011
+ *   @since                : 14.10.2011
  *
  */
 
@@ -96,15 +96,15 @@ if (isset ($_GET['view']) && $_GET['view'] == 'market')
       {
 	$page = $pages;
       }
-    $smarty -> assign(array("Tname" => "Nazwa",
-                            "Tlevel" => "Poziom",
-                            "Tcost" => "Cena szt / wszystko",
-                            "Tseller" => "Sprzedający",
-                            "Tamount" => "Ilość",
+    $arrHeaders = array("Nazwa", "Poziom", "Ilość", "Cena szt / wszystko", "Sprzedający");
+    $arrHlinks = array('name', 'minlev', 'amount', 'cost', 'owner');
+    $smarty -> assign(array("Headers" => $arrHeaders,
+			    "Aheaders" => $arrHlinks,
                             "Viewinfo" => "Zobacz oferty lub",
 			    "Asearch" => "Szukaj",
                             "Toptions" => "Opcje",
-			    "Aadd2" => "Dodaj ofertę"));
+			    "Aadd2" => "Dodaj ofertę",
+			    "Tname" => "Nazwa"));
     if (!in_array($_GET['lista'], array('id', 'name', 'minlev',  'amount', 'cost', 'owner'))) 
       {
 	error("Zapomnij o tym!"); 
@@ -125,53 +125,34 @@ if (isset ($_GET['view']) && $_GET['view'] == 'market')
       {
 	$strOrder = 'DESC';
       }
+    $intLimit = 30 * ($page - 1);
     if (empty($_POST['szukany']) && !isset($_POST['szukany1'])) 
       {
-	$pm = $db -> SelectLimit("SELECT * FROM `equipment` WHERE `status`='R' AND `type`='O' ORDER BY ".$_GET['lista']." ".$strOrder, 30, (30 * ($page - 1)));
+	$arrOferts = $db->GetAll("SELECT * FROM `equipment` WHERE `status`='R' AND `type`='O' ORDER BY `".$_GET['lista']."` ".$_GET['order']." LIMIT ".$intLimit.", 30");
       }
     elseif (isset($_POST['szukany1']))
       {
-	$pm = $db -> SelectLimit("SELECT * FROM `equipment` WHERE `status`='R' AND `type`='O' AND name=".$strSearch." ORDER BY ".$_GET['lista']." ".$strOrder, 30, (30 * ($page - 1)));
+	$arrOferts = $db->GetAll("SELECT * FROM `equipment` WHERE `status`='R' AND `type`='O' AND name=".$strSearch." ORDER BY `".$_GET['lista']."` ".$_GET['order']." LIMIT ".$intLimit.", 30");
       }
     else 
       {
-	$pm = $db -> SelectLimit("SELECT * FROM `equipment` WHERE `status`='R' AND `type`='O' AND MATCH(`name`) AGAINST (".$strSearch." IN BOOLEAN MODE) ORDER BY ".$_GET['lista']." ".$strOrder, 30, (30 * ($page - 1)));
+	$arrOferts = $db->GetAll("SELECT * FROM `equipment` WHERE `status`='R' AND `type`='O' AND MATCH(`name`) AGAINST (".$strSearch." IN BOOLEAN MODE) ORDER BY `".$_GET['lista']."` ".$_GET['order']." LIMIT ".$intLimit.", 30");
       }
-    $arrname = array();
-    $arrcost = array();
-    $arrowner = array();
-    $arraction = array();
-    $arramount = array();
-    $arrlevel = array();
-    $arrseller = array();
-    $arrId = array();
-    $arrFcost = array();
-    while (!$pm -> EOF) 
+    $arrKeys = array('name', 'minlev', 'amount', 'cost');
+    foreach ($arrOferts as &$arrOfert)
       {
-	$arrname[] = $pm -> fields['name'];
-	$arrcost[] = $pm -> fields['cost'];
-	$arrFcost[] = $pm->fields['cost'] * $pm->fields['amount'];
-	$arrowner[] = $pm -> fields['owner'];
-	$arramount[] = $pm -> fields['amount'];
-	$arrlevel[] = $pm -> fields['minlev'];
-	$seller = $db -> Execute("SELECT `user` FROM `players` WHERE `id`=".$pm -> fields['owner']);
-	$arrseller[] = $seller -> fields['user'];
-	$seller -> Close();
-	$arrId[] = $pm->fields['id'];
-	$pm -> MoveNext();
+	$arrOfert['cost'] = $arrOfert['cost']."/".($arrOfert['cost'] * $arrOfert['amount']);
+	$query = $db->Execute("SELECT `user` FROM `players` WHERE `id`=".$arrOfert['owner']);
+	$arrOfert['user'] = $query->fields['user'];
+	$arrOfert['seller'] = $arrOfert['owner'];
+	$query->Close();
       }
-    $pm -> Close();
-    $smarty -> assign(array("Name" => $arrname, 
-			    "Cost" => $arrcost, 
-			    "Owner" => $arrowner, 
-			    "Action" => $arraction,  
-			    "Amount" => $arramount, 
-			    "Minlev" => $arrlevel,
-			    "Iid" => $arrId,
+    $smarty -> assign(array("Oferts" => $arrOferts,
+			    "Okeys" => $arrKeys,
+			    "Mtype" => "lmarket",
 			    "Pid" => $player->id,
 			    "Tpages" => $pages,
 			    "Tpage" => $page,
-			    "Fcost" => $arrFcost,
 			    "Aorder" => $_GET['order'],
 			    "Aorder2" => $strOrder,
 			    "Fpage" => "Idź do strony:",
@@ -179,12 +160,11 @@ if (isset ($_GET['view']) && $_GET['view'] == 'market')
 			    "Abuy" => 'Kup',
 			    "Aadd" => 'Dodaj',
 			    "Adelete" => 'Wycofaj',
-			    "Achange" => 'Zmień cenę',
-			    "Seller" => $arrseller));
+			    "Achange" => 'Zmień cenę'));
     if (!isset($_POST['szukany'])) 
-        {
-	  $_POST['szukany'] = '';
-        }
+      {
+	$_POST['szukany'] = '';
+      }
 }
 
 /**
@@ -193,31 +173,26 @@ if (isset ($_GET['view']) && $_GET['view'] == 'market')
 if (isset ($_GET['view']) && $_GET['view'] == 'add') 
 {
     $rzecz = $db -> Execute("SELECT `id`, `name`, `amount` FROM `equipment` WHERE `status`='U' AND `type`='O' AND `owner`=".$player -> id);
-    $arrname = array();
-    $arrid = array();
-    $arramount = array();
+    $arrOptions = array();
     while (!$rzecz -> EOF) 
     {
-        $arrname[] = $rzecz -> fields['name'];
-        $arrid[] = $rzecz -> fields['id'];
-        $arramount[] = $rzecz -> fields['amount'];
+	$arrOptions[$rzecz->fields['id']] = $rzecz->fields['name']." (ilość: ".$rzecz->fields['amount'].")";
         $rzecz -> MoveNext();
     }
     $rzecz -> Close();
-    if (count($arrid) == 0)
+    if (count($arrOptions) == 0)
     {
         error("Nie masz przedmiotów na sprzedaż!");
     }
-    $smarty -> assign (array("Name" => $arrname, 
-                             "Itemid" => $arrid, 
-                             "Amount" => $arramount,
+    $smarty -> assign (array("Amount" => "Ilość",
                              "Addinfo" => "Dodaj ofertę na rynku lub",
                              "Item" => "Przedmiot",
                              "Aadd" => "Dodaj",
-                             "Iamount" => "ilość",
-                             "Iamount2" => "Ilość",
+                             "Tamount" => "Ilość",
 			     "Addall" => "wszystkie posiadane",
-                             "Icost" => "Cena za sztukę"));
+                             "Cost" => "Cena za sztukę",
+			     "Addofert" => 0,
+			     "Ioptions" => $arrOptions));
     if (isset ($_GET['step']) && $_GET['step'] == 'add') 
     {
         if (!isset($_POST['cost'])) 
@@ -225,8 +200,8 @@ if (isset ($_GET['view']) && $_GET['view'] == 'add')
             error("Podaj cenę przedmiotu!");
         }
 	checkvalue($_POST['cost']);
-	checkvalue($_POST['przedmiot']);
-        $item = $db -> Execute("SELECT * FROM `equipment` WHERE `id`=".$_POST['przedmiot']." AND `status`='U' AND `type`='O' AND `owner`=".$player -> id);
+	checkvalue($_POST['item']);
+        $item = $db -> Execute("SELECT * FROM `equipment` WHERE `id`=".$_POST['item']." AND `status`='U' AND `type`='O' AND `owner`=".$player -> id);
 	if (!$item->fields['id'])
 	  {
 	    error("Nie ma takiego przedmiotu!");
@@ -326,15 +301,15 @@ if (isset($_GET['buy']))
     {
         error ("Nie możesz kupić swoich przedmiotów!");
     }
-    $seller = $db -> Execute("SELECT user FROM players WHERE id=".$buy -> fields['owner']);    
+    $seller = $db -> Execute("SELECT `user` FROM `players` WHERE `id`=".$buy -> fields['owner']);    
     $smarty -> assign(array("Name" => $buy -> fields['name'], 
                             "Itemid" => $buy -> fields['id'], 
                             "Amount1" => $buy -> fields['amount'], 
                             "Cost" => $buy -> fields['cost'], 
                             "Seller" => $seller -> fields['user'], 
                             "Sid" => $buy -> fields['owner'], 
-                            "Type" => $buy -> fields['type'], 
-                            "Item" => "Przedmiot",
+			    "Infos" => array(),
+                            "Bitem" => "Przedmiot",
                             "Buyinfo" => "Zakup przedmiot lub",
                             "Oamount" => "Ilość w ofercie",
                             "Icost" => "Cena za sztukę",
@@ -393,16 +368,13 @@ if (isset($_GET['view']) && $_GET['view'] == 'all')
     $oferts = $db -> Execute("SELECT `name` FROM `equipment` WHERE `status`='R' AND `type`='O' GROUP BY `name`");
     $arrname = array();
     $arramount = array();
-    $i = 0;
     while (!$oferts -> EOF) 
     {
-        $arrname[$i] = $oferts -> fields['name'];
-        $arramount[$i] = 0;
-        $query = $db -> Execute("SELECT count(`id`) FROM `equipment` WHERE `status`='R' AND `name`='".$arrname[$i]."'");
-        $arramount[$i] = $query -> fields['count(`id`)'];
+        $arrname[] = $oferts -> fields['name'];
+        $query = $db -> Execute("SELECT count(`id`) FROM `equipment` WHERE `status`='R' AND `name`='".$oferts->fields['name']."'");
+        $arramount[] = $query -> fields['count(`id`)'];
         $query -> Close();
         $oferts -> MoveNext();
-        $i = $i + 1;
     }
     $oferts -> Close();
     $smarty -> assign(array("Name" => $arrname, 
@@ -438,7 +410,7 @@ $smarty -> assign(array("View" => $_GET['view'],
                         "Remowe" => $_GET['wyc'], 
                         "Buy" => $_GET['buy'],
                         "Aback" => "wróć"));
-$smarty -> display('lmarket.tpl');
+$smarty -> display('market2.tpl');
 
 require_once("includes/foot.php"); 
 ?>
