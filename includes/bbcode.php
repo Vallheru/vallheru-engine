@@ -7,7 +7,7 @@
  *   @copyright            : (C) 2004,2005,2006,2011 Vallheru Team based on Gamers-Fusion ver 2.5
  *   @author               : thindil <thindil@tuxfamily.org>
  *   @version              : 1.4
- *   @since                : 30.09.2011
+ *   @since                : 15.10.2011
  *
  */
 
@@ -64,7 +64,7 @@ function bbcodetohtml($text, $isChat = FALSE)
     /**
      * Make links clickable
      */
-    $text = preg_replace('#(www\.|https?:\/\/){1}[a-zA-Z0-9]{2,}\.[a-zA-Z0-9]{2,}(\S*)#i', "<a href=\"$0\" target=\"_blank\">$0</a>", $text);
+    $text = preg_replace("#(?i)\b((?:https?://|www\d{0,3}[.]|[a-z0-9.\-]+[.][a-z]{2,4}/)(?:[^\s()<>]+|\(([^\s()<>]+|(\([^\s()<>]+\)))*\))+(?:\(([^\s()<>]+|(\([^\s()<>]+\)))*\)|[^\s`!()\[\]{};:'\".,<>?«»“”‘’]))#i", "<a href=\"$0\" target=\"_blank\">$0</a>", $text);
 
     /**
      * Replace bbcode tags
