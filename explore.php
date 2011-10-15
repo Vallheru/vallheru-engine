@@ -7,7 +7,7 @@
  *   @copyright            : (C) 2004,2005,2006,2011 Vallheru Team based on Gamers-Fusion ver 2.5
  *   @author               : thindil <thindil@tuxfamily.org>
  *   @version              : 1.4
- *   @since                : 02.10.2011
+ *   @since                : 15.10.2011
  *
  */
  
@@ -406,7 +406,7 @@ if (isset($_GET['action']) && $_GET['action'] == 'moutains' && $player -> locati
         }
         $strFind = $strFind."<br />";
     }
-    if (!$intHerbsum && !$intGoldsum && !$intAstral && $strEnemy == '' && $strBridge == '')
+    if (!$intHerbsum && !$intGoldsum && !$intAstral && $strEnemy == '' && $strBridge == '' && !$intMeteor)
     {
         $strFind = $strFind.FIND_NOTHING;
     }
