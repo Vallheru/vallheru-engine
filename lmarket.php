@@ -64,16 +64,16 @@ if (isset ($_GET['view']) && $_GET['view'] == 'market')
       {
         $msel = $db -> Execute("SELECT count(`id`) FROM `equipment` WHERE `status`='R' AND `type`='O'");
       }
-    elseif (isset($_POST['szukany1']))
+    elseif (isset($_POST['szukany']))
       {
-	$_POST['szukany1'] = strip_tags($_POST['szukany1']);
-        $strSearch = $db -> qstr($_POST['szukany1'], get_magic_quotes_gpc());
+	$_POST['szukany'] = strip_tags($_POST['szukany']);
+        $strSearch = $db -> qstr($_POST['szukany'], get_magic_quotes_gpc());
 	$msel = $db -> Execute("SELECT count(`id`) FROM `equipment` WHERE `status`='R' AND `type`='O' AND name=".$strSearch);
       }
     else 
       {
-        $_POST['szukany'] = strip_tags($_POST['szukany']);
-        $strSearch = $db -> qstr("*".$_POST['szukany']."*", get_magic_quotes_gpc());
+        $_POST['szukany1'] = strip_tags($_POST['szukany1']);
+        $strSearch = $db -> qstr("*".$_POST['szukany1']."*", get_magic_quotes_gpc());
         $msel = $db -> Execute("SELECT count(`id`) FROM `equipment` WHERE `status`='R' AND `type`='O' AND MATCH(`name`) AGAINST (".$strSearch." IN BOOLEAN MODE)") or die($db -> ErrorMsg());
       }
     $przed = $msel -> fields['count(`id`)'];
@@ -130,7 +130,7 @@ if (isset ($_GET['view']) && $_GET['view'] == 'market')
       {
 	$arrOferts = $db->GetAll("SELECT * FROM `equipment` WHERE `status`='R' AND `type`='O' ORDER BY `".$_GET['lista']."` ".$_GET['order']." LIMIT ".$intLimit.", 30");
       }
-    elseif (isset($_POST['szukany1']))
+    elseif (isset($_POST['szukany']))
       {
 	$arrOferts = $db->GetAll("SELECT * FROM `equipment` WHERE `status`='R' AND `type`='O' AND name=".$strSearch." ORDER BY `".$_GET['lista']."` ".$_GET['order']." LIMIT ".$intLimit.", 30");
       }
