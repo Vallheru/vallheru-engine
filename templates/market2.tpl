@@ -13,7 +13,7 @@
     {$Viewinfo} <a href="{$SCRIPT_NAME}">{$Aback}</a>.<br />
     <a href="{$SCRIPT_NAME}?view=add">{$Aadd2}</a><br /><br />
     <form method="post" action="{$SCRIPT_NAME}?view=market&amp;lista={$Aheaders[0]}">
-        {$Tname}: <input type="text" name="szukany" /> <input type="submit" value="{$Asearch}" />
+        {$Tname}: <input type="text" name="szukany1" /> <input type="submit" value="{$Asearch}" />
     </form><br />
     <table>
     <tr>

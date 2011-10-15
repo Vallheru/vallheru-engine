@@ -8,7 +8,7 @@
  *   @author               : thindil <thindil@tuxfamily.org>
  *   @author               : eyescream <tduda@users.sourceforge.net>
  *   @version              : 1.4
- *   @since                : 13.10.2011
+ *   @since                : 15.10.2011
  *
  */
 
@@ -69,13 +69,17 @@ if (!isset($_GET['view']) && !isset($_GET['buy']) && !isset($_GET['wyc']))
 */
 if (isset ($_GET['view']) && $_GET['view'] == 'market') 
 {
-    if (empty($_POST['szukany'])) 
-    {
+    if (empty($_POST['szukany']) && empty($_POST['szukany1'])) 
+      {
         $msel = $db -> Execute("SELECT count(`id`) FROM `hmarket`");
         $strSearch = '';
-    } 
-        else 
-    {
+      } 
+    else 
+      {
+	if (isset($_POST['szukany1']))
+	  {
+	    $_POST['szukany'] = $_POST['szukany1'];
+	  }
         $_POST['szukany'] = strip_tags($_POST['szukany']);
         $_POST['szukany'] = str_replace("*","%", $_POST['szukany']);
         $strSearch = $db -> qstr($_POST['szukany'], get_magic_quotes_gpc());

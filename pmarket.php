@@ -70,13 +70,17 @@ if (!isset($_GET['view']) && !isset($_GET['buy']) && !isset($_GET['wyc']))
  */
 if (isset ($_GET['view']) && $_GET['view'] == 'market') 
 {
-    if (empty($_POST['szukany'])) 
-    {
+    if (empty($_POST['szukany']) && empty($_POST['szukany1'])) 
+      {
         $msel = $db -> Execute("SELECT count(`id`) FROM pmarket");
         $_POST['szukany'] = '';
-    } 
-        else 
-    {
+      } 
+    else 
+      {
+	if (isset($_POST['szukany1']))
+	  {
+	    $_POST['szukany'] = $_POST['szukany1'];
+	  }
         $_POST['szukany'] = strip_tags($_POST['szukany']);
         $_POST['szukany'] = str_replace("*","%", $_POST['szukany']);
         $strSearch = $db -> qstr($_POST['szukany'], get_magic_quotes_gpc());
@@ -90,7 +94,7 @@ if (isset ($_GET['view']) && $_GET['view'] == 'market')
 	      }
 	  }
         $msel = $db -> Execute("SELECT count(`id`) FROM `pmarket` WHERE `nazwa` LIKE ".$strSearch);
-    }
+      }
     $oferty = $msel->fields['count(`id`)'];
     $msel -> Close();
     if ($oferty == 0) 
