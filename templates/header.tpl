@@ -46,7 +46,7 @@
                         <b>{$Goldinhand}:</b> {$Gold}<br />
                         <b>{$Goldinbank}:</b> {$Bank}<br />
                         <b>{$Hmithril}:</b> {$Mithril}<br />
-                        <b>{$Vallars}:</b> {$Referals}<br />
+                        <b>{$Vallars}:</b> <a href="referrals.php?id={$Id}">{$Referals}</a><br />
                     </td>
                 </tr>
             </table>
