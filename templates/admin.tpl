@@ -227,6 +227,10 @@
     <option value="R">{$Sarrow}</option>
     </select><br />
     {$Selite}: <input type="text" value="0" name="elite" size="5"/><br />
+    {$Selitetype}: <select name="elitetype">
+        <option value="S">{$Dragon}</option>
+	<option value="E">{$Elven}</option>
+    </select><br />
     <br /><input type="submit" value="{$Aadd}" /></form>
 {/if}
 
@@ -526,6 +530,10 @@
         <option value="Y">{$Ayes}</option>
     </select><br />
     {$Selite}: <input type="text" value="0" name="elite" size="5"/><br />
+    {$Selitetype}: <select name="elitetype">
+        <option value="S">{$Dragon}</option>
+	<option value="E">{$Elven}</option>
+    </select><br /><br />
     <input type="submit" value="{$Aadd}" /></form>
 {/if}
 

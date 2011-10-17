@@ -235,7 +235,7 @@ if (isset ($_GET['mill']) && $_GET['mill'] == 'plany')
 	$objOwned->MoveNext();
       }
     $objOwned->Close();
-    $objPlans = $db -> Execute("SELECT `id`, `name`, `level`, `cost`, `elite` FROM `mill` WHERE `owner`=0 ORDER BY `level` ASC");
+    $objPlans = $db -> Execute("SELECT `id`, `name`, `level`, `cost`, `elite`, `elitetype` FROM `mill` WHERE `owner`=0 ORDER BY `level` ASC");
     $arrname = array();
     $arrcost = array();
     $arrlevel = array();
@@ -249,7 +249,21 @@ if (isset ($_GET['mill']) && $_GET['mill'] == 'plany')
 	  }
 	if (!in_array($objPlans->fields['name'], $arrOwned))
 	  {
-	    $arrname[] = $objPlans -> fields['name'];
+	    if ($objPlans->fields['elite'] > 0)
+	      {
+		if ($objPlans->fields['elitetype'] == 'S')
+		  {
+		    $arrname[] = $objPlans -> fields['name'].' (smoczy)';
+		  }
+		else
+		  {
+		    $arrname[] = $objPlans -> fields['name'].' (elfi)';
+		  }
+	      }
+	    else
+	      {
+		$arrname[] = $objPlans -> fields['name'];
+	      }
 	    $arrcost[] = $objPlans -> fields['cost'];
 	    $arrlevel[] = $objPlans -> fields['level'];
 	    $arrid[] = $objPlans -> fields['id'];
@@ -833,7 +847,14 @@ if (isset ($_GET['mill']) && $_GET['mill'] == 'elite')
             while (!$objLumber -> EOF) 
 	      {
 		$arrid[] = $objLumber -> fields['id'];
-		$arrname[] = $objLumber -> fields['name'];
+		if ($objLumber->fields['elitetype'] == 'S')
+		  {
+		    $arrname[] = $objLumber -> fields['name'].' (smoczy)';
+		  }
+		else
+		  {
+		    $arrname[] = $objLumber -> fields['name'].' (elfi)';
+		  }
 		$arrlevel[] = $objLumber -> fields['level'];
 		$arrlumber[] = $objLumber -> fields['amount'];
 		$objLoot = $db->Execute("SELECT `lootnames` FROM `monsters` WHERE `id`=".$objLumber->fields['elite']);
@@ -904,10 +925,18 @@ if (isset ($_GET['mill']) && $_GET['mill'] == 'elite')
 	    $intRoll = rand(1, 100);
 	    if ($intRoll < $intChance)
 	      {
-		$intPower = floor(rand(1, $player->fletcher) + ($player->strength / 10));
-		if ($intPower > $intMaxbonus)
+		$intBonus = floor(rand(1, $player->fletcher) + ($player->strength / 10));
+		if ($intBonus > $intMaxbonus)
 		  {
-		    $intPower = $intMaxbonus;
+		    $intBonus = $intMaxbonus;
+		  }
+		if ($objLumber->fields['elitetype'] == 'S')
+		  {
+		    $intSpeed = $intBonus;
+		  }
+		else
+		  {
+		    $intPower = $intBonus;
 		  }
 		$intGainexp = ($objLumber->fields['level'] * (100 + $player->fletcher / 5));
 		$intAbility = ($objLumber->fields['level'] / 50);
@@ -923,8 +952,8 @@ if (isset ($_GET['mill']) && $_GET['mill'] == 'elite')
                 $intGainexp = ceil($intGainexp);
 		$arrRepair = array(1, 4, 16, 64, 256);
 		$intRepaircost = $objLumber->fields['level'] * $arrRepair[$intKey] * 2;
-		additem($objLumber->fields['type'], $strName, $intMaxdur, $intPower, $objLumber->fields['level'], $intCost, $player->id, $objLumber->fields['level'], $intRepaircost);
-                $smarty -> assign ("Message", YOU_MAKE.$strName."(+ ".$intPower.") (".$objLumber->fields['level']."% szyb) (".$intMaxdur."/".$intMaxdur.")".AND_GAIN2.$intGainexp.AND_EXP2.$intAbility.IN_MILL);
+		additem($objLumber->fields['type'], $strName, $intMaxdur, $intPower, $intSpeed, $intCost, $player->id, $objLumber->fields['level'], $intRepaircost);
+                $smarty -> assign ("Message", YOU_MAKE.$strName."(+ ".$intPower.") (".$intSpeed."% szyb) (".$intMaxdur."/".$intMaxdur.")".AND_GAIN2.$intGainexp.AND_EXP2.$intAbility.IN_MILL);
             } 
                 else 
             {
@@ -1006,6 +1035,8 @@ if (isset ($_GET['mill']) && $_GET['mill'] == 'elite')
         /**
          * Count item attributes
          */
+	$intSpeed = $objLumber -> fields['level'];
+	$intPower = 0;
 	$arrMaxdur = array(50, 90, 170, 330, 650);
 	$intMaxdur = $arrMaxdur[$intKey];
 	$arrBowname = array(L_HAZEL, L_YEW, L_ELM, L_HARDER, L_COMPOSITE);
@@ -1024,26 +1055,45 @@ if (isset ($_GET['mill']) && $_GET['mill'] == 'elite')
         if ($intAmount > 0) 
 	  {
 	    $arrPower = array();
+	    $arrSpeed = array();
 	    $arrAmount = array();
             for ($i = 1; $i <= $intAmount; $i++) 
 	      {
 		$intRoll = rand(1, 100);
 		if ($intRoll < $intChance)
 		  {
-		    $intPower = floor(rand(1, $player->fletcher) + ($player->strength / 10));
-		    if ($intPower > $intMaxbonus)
+		    $intBonus = floor(rand(1, $player->fletcher) + ($player->strength / 10));
+		    if ($intBonus > $intMaxbonus)
 		      {
-			$intPower = $intMaxbonus;
+			$intBonus = $intMaxbonus;
 		      }
-		    $intIndex = array_search($intPower, $arrPower);
-		    if ($intIndex === FALSE)
+		    if ($objLumber->fields['elitetype'] == 'S')
 		      {
-			$arrPower[] = $intPower;
-			$arrAmount[] = 1;
+			$intIndex = array_search($intBonus, $arrPower);
+			if ($intIndex === FALSE)
+			  {
+			    $arrPower[] = $intBonus;
+			    $arrSpeed[] = $intSpeed;
+			    $arrAmount[] = 1;
+			  }
+			else
+			  {
+			    $arrAmount[$intIndex]++;
+			  }
 		      }
 		    else
 		      {
-			$arrAmount[$intIndex]++;
+			$intIndex = array_search($intBonus, $arrSpeed);
+			if ($intIndex === FALSE)
+			  {
+			    $arrPower[] = $intPower;
+			    $arrSpeed[] = $intBonus;
+			    $arrAmount[] = 1;
+			  }
+			else
+			  {
+			    $arrAmount[$intIndex]++;
+			  }
 		      }
 		    $intGainexp += ($objLumber->fields['level'] * (100 + $player->fletcher / 5));
 		    $intAbility += ($objLumber->fields['level'] / 50);
@@ -1059,8 +1109,8 @@ if (isset ($_GET['mill']) && $_GET['mill'] == 'elite')
             $intRepaircost = $objLumber->fields['level'] * $arrRepair[$intKey] * 2;
 	    for ($i = 0; $i < count($arrPower); $i++)
 	      {
-		additem($objLumber->fields['type'], $strName, $intMaxdur, $arrPower[$i], $objLumber->fields['level'], $intCost, $player->id, $objLumber->fields['level'], $intRepaircost, $arrAmount[$i]);
-		$arrMaked[] = array("name" => $strName, "power" => $arrPower[$i], "speed" => $objLumber->fields['level'], "wt" => $intMaxdur);
+		additem($objLumber->fields['type'], $strName, $intMaxdur, $arrPower[$i], $arrSpeed[$i], $intCost, $player->id, $objLumber->fields['level'], $intRepaircost, $arrAmount[$i]);
+		$arrMaked[] = array("name" => $strName, "power" => $arrPower[$i], "speed" => $arrSpeed[$i], "wt" => $intMaxdur);
 	      }
             if ($player->clas == 'Rzemieślnik') 
             {

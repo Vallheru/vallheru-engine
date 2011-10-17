@@ -8,7 +8,7 @@
  *   @author               : thindil <thindil@tuxfamily.org>
  *   @author               : eyescream <tduda@users.sourceforge.net>
  *   @version              : 1.4
- *   @since                : 27.09.2011
+ *   @since                : 17.10.2011
  *
  */
  
@@ -433,7 +433,7 @@ if (isset($_GET['view']) && $_GET['view'] == 'forums')
 * Add new plans in mill
 */
 if (isset ($_GET['view']) && $_GET['view'] == 'mill') 
-{
+  {
     $smarty -> assign(array("Sname" => S_NAME,
 			    "Scost" => S_COST,
 			    "Samount" => S_AMOUNT,
@@ -442,7 +442,10 @@ if (isset ($_GET['view']) && $_GET['view'] == 'mill')
 			    "Sbow" => S_BOW,
 			    "Sarrow" => S_ARROWS,
 			    "Aadd" => A_ADD,
-			    "Selite" => "Elitarny"));
+			    "Selite" => "Elitarny",
+			    "Selitetype" => "Elitarny typ",
+			    "Dragon" => "Smoczy",
+			    "Elven" => "Elfi"));
     if (isset ($_GET['step']) && $_GET['step'] == 'mill') 
     {
         if (!$_POST['nazwa'] || !$_POST['cena'] || !$_POST['poziom']) 
@@ -459,9 +462,9 @@ if (isset ($_GET['view']) && $_GET['view'] == 'mill')
         }
 	$_POST['elite'] = intval($_POST['elite']);
         $strName = $db -> qstr($_POST['nazwa'], get_magic_quotes_gpc());
-        $db -> Execute("INSERT INTO `mill` (`name`, `cost`, `level`, `amount`, `type`, `twohand`, `elite`) VALUES(".$strName.", ".$_POST['cena'].", ".$_POST['poziom'].", ".$_POST['amount'].", '".$_POST['type']."', '".$strTwohand."', ".$_POST['elite'].")");
+        $db -> Execute("INSERT INTO `mill` (`name`, `cost`, `level`, `amount`, `type`, `twohand`, `elite`, `elitetype`) VALUES(".$strName.", ".$_POST['cena'].", ".$_POST['poziom'].", ".$_POST['amount'].", '".$_POST['type']."', '".$strTwohand."', ".$_POST['elite'].", '".$_POST['elitetype']."')");
     }
-}
+  }
 
 /**
  * Add player to list of donators
@@ -1210,7 +1213,10 @@ if (isset ($_GET['view']) && $_GET['view'] == 'kowal')
 			    "Slegs" => S_LEGS,
 			    "Stwohand" => S_TWOHAND,
 			    "Aadd" => A_ADD,
-			    "Selite" => "Elitarny"));
+			    "Selite" => "Elitarny",
+			    "Selitetype" => "Elitarny typu",
+			    "Dragon" => "Smoczy",
+			    "Elven" => "Elfi"));
     if (isset ($_GET['step']) && $_GET['step'] == 'kowal') 
     {
         if (!$_POST['nazwa'] || !$_POST['cena'] || !$_POST['poziom']) 
@@ -1219,7 +1225,7 @@ if (isset ($_GET['view']) && $_GET['view'] == 'kowal')
         }
         $strName = $db -> qstr($_POST['nazwa'], get_magic_quotes_gpc());
 	$_POST['elite'] = intval($_POST['elite']);
-        $db -> Execute("INSERT INTO `smith` (`name`, `cost`, `level`, `amount`, `type`, `twohand`, `elite`) VALUES(".$strName.", ".$_POST['cena'].", ".$_POST['poziom'].", ".$_POST['amount'].", '".$_POST['type']."', '".$_POST['twohand']."', ".$_POST['elite'].")");
+        $db -> Execute("INSERT INTO `smith` (`name`, `cost`, `level`, `amount`, `type`, `twohand`, `elite`, `elitetype`) VALUES(".$strName.", ".$_POST['cena'].", ".$_POST['poziom'].", ".$_POST['amount'].", '".$_POST['type']."', '".$_POST['twohand']."', ".$_POST['elite'].", '".$_POST['elitetype']."')");
     }
 }
 

@@ -346,7 +346,21 @@ if (isset ($_GET['kowal']) && $_GET['kowal'] == 'plany')
 	      }
 	    if (!in_array($objPlans->fields['name'], $arrOwned))
 	      {
-		$arrname[] = $objPlans -> fields['name'];
+		if ($objPlans->fields['elite'] > 0)
+		  {
+		    if ($objPlans->fields['elitetype'] == 'S')
+		      {
+			$arrname[] = $objPlans -> fields['name'].' (smoczy)';
+		      }
+		    else
+		      {
+			$arrname[] = $objPlans -> fields['name'].' (elfi)';
+		      }
+		  }
+		else
+		  {
+		    $arrname[] = $objPlans -> fields['name'];
+		  }
 		$arrcost[] = $objPlans -> fields['cost'];
 		$arrlevel[] = $objPlans -> fields['level'];
 		$arrid[] = $objPlans -> fields['id'];
@@ -394,7 +408,7 @@ if (isset ($_GET['kowal']) && $_GET['kowal'] == 'plany')
 	  {
 	    error("Tylko Rzemieślnik może kupować plany elitarnych przedmiotów.");
 	  }
-        $db -> Execute("INSERT INTO `smith` (`owner`, `name`, `type`, `cost`, `amount`, `level`, `twohand`, `elite`) VALUES(".$player -> id.", '".$objPlan -> fields['name']."', '".$objPlan -> fields['type']."', ".$objPlan -> fields['cost'].", ".$objPlan -> fields['amount'].", ".$objPlan -> fields['level'].", '".$objPlan -> fields['twohand']."', ".$objPlan->fields['elite'].")");
+        $db -> Execute("INSERT INTO `smith` (`owner`, `name`, `type`, `cost`, `amount`, `level`, `twohand`, `elite`, `elitetype`) VALUES(".$player -> id.", '".$objPlan -> fields['name']."', '".$objPlan -> fields['type']."', ".$objPlan -> fields['cost'].", ".$objPlan -> fields['amount'].", ".$objPlan -> fields['level'].", '".$objPlan -> fields['twohand']."', ".$objPlan->fields['elite'].", '".$objPlan->fields['elitetype']."')");
         $db -> Execute("UPDATE `players` SET `credits`=`credits`-".$objPlan -> fields['cost']." WHERE `id`=".$player -> id);
         $smarty -> assign(array("Cost" => $objPlan -> fields['cost'], 
                                 "Plan" => $objPlan -> fields['name'],
@@ -938,8 +952,15 @@ if (isset ($_GET['kowal']) && $_GET['kowal'] == 'elite')
                 $arrAmount = array();
 		$arrLoot = array();
                 while (!$objSmith -> EOF) 
-                {
-                    $arrname[] = $objSmith -> fields['name'];
+		  {
+		    if ($objSmith->fields['elitetype'] == 'S')
+		      {
+			$arrname[] = $objSmith -> fields['name'].' (smoczy)';
+		      }
+		    else
+		      {
+			$arrname[] = $objSmith -> fields['name'].' (elfi)';
+		      }
                     $arrid[] = $objSmith -> fields['id'];
                     $arrlevel[] = $objSmith -> fields['level'];
                     $arrAmount[] = $objSmith -> fields['amount'];
@@ -955,7 +976,7 @@ if (isset ($_GET['kowal']) && $_GET['kowal'] == 'elite')
 		      }
 		    $objLoot->Close();
                     $objSmith -> MoveNext();
-                }
+		  }
                 $objSmith -> Close();
                 $smarty -> assign(array("Name" => $arrname, 
                                         "Id" => $arrid, 
@@ -998,28 +1019,31 @@ if (isset ($_GET['kowal']) && $_GET['kowal'] == 'elite')
         $arrName = array(M_COPPER, M_BRONZE, M_BRASS, M_IRON, M_STEEL);
         $arrMaxbonus = array(21, 25, 30, 35, 40);
         if ($objSmith -> fields['type'] == 'W' || $objSmith -> fields['type'] == 'A')
-        {
+	  {
             $arrDur = array(50, 90, 170, 330, 650);
-        }
-            else
-        {
-            $arrDur = array(30, 50, 90, 170, 330);
-        }
-	if ($objSmith -> fields['type'] == 'A')
-        {
-            $intAgility = floor($objSmith -> fields['level'] / 2);
-            $intExp = 4;
-        }
-	elseif ($objSmith -> fields['type'] == 'L')
-        {
-            $intAgility = floor($objSmith -> fields['level'] / 5);
-            $intExp = 2;
-        }
+	  }
 	else
-        {
-            $intAgility = 0;
+	  {
+            $arrDur = array(30, 50, 90, 170, 330);
+	  }
+	if ($objSmith -> fields['type'] == 'A')
+	  {
+            $intAgility = floor($objSmith -> fields['level'] / 2);
+	    $intPower = $objSmith -> fields['level'] * 3;
+            $intExp = 4;
+	  }
+	elseif ($objSmith -> fields['type'] == 'L')
+	  {
+            $intAgility = floor($objSmith -> fields['level'] / 5);
+	    $intPower = $objSmith -> fields['level'];
             $intExp = 2;
-        }
+	  }
+	else
+	  {
+            $intAgility = 0;
+	    $intPower = $objSmith -> fields['level'];
+            $intExp = 2;
+	  }
         $arrMineral = array('copper', 'bronze', 'brass', 'iron', 'steel');
         $intKey = array_search($objWork -> fields['mineral'], $arrMineral);
 	$intMaxdur = $arrMaxdur[$intKey];
@@ -1035,10 +1059,18 @@ if (isset ($_GET['kowal']) && $_GET['kowal'] == 'elite')
 	    $intRoll = rand(1, 100);
 	    if ($intRoll < $intChance)
 	      {
-		$intPower = floor(rand(1, $player->smith) + ($player->strength / 10));
-		if ($intPower > $intMaxbonus)
+		$intBonus = floor(rand(1, $player->smith) + ($player->strength / 10));
+		if ($intBonus > $intMaxbonus)
 		  {
-		    $intPower = $intMaxbonus;
+		    $intBonus = $intMaxbonus;
+		  }
+		if ($objWork->fields['elitetype'] == 'S')
+		  {
+		    $intAgility = 0 - $intBonus;
+		  }
+		else
+		  {
+		    $intPower = $intBonus;
 		  }
 		$intGainexp = ($objSmith->fields['level'] * (100 + $player->smith / 5));
 		$intAbility = ($objSmith->fields['level'] / 50);
@@ -1058,7 +1090,7 @@ if (isset ($_GET['kowal']) && $_GET['kowal'] == 'elite')
 		    $intRepaircost = $arrItem['level'] * $arrRepair[$intKey] * 1;
 		  }
 		additem($objSmith->fields['type'], $strName, $intMaxdur, $intPower, $intAgility, $intCost, $player->id, $objSmith->fields['level'], $intRepaircost, $objSmith->fields['twohand']);
-                $smarty -> assign ("Message", YOU_MAKE.$arrMaked['name']."(+ ".$arrMaked['power'].") (".$intAgility."% zr) (".$arrMaked['wt']."/".$arrMaked['wt'].")".AND_GAIN2.$intGainexp.AND_EXP2.$intAbility.IN_SMITH);
+                $smarty -> assign ("Message", YOU_MAKE.$strName."(+ ".$intPower.") (".($intAgility * -1)."% zr) (".$intMaxdur."/".$intMaxdur.")".AND_GAIN2.$intGainexp.AND_EXP2.$intAbility.IN_SMITH);
 	      } 
 	    else 
 	      {
@@ -1173,21 +1205,24 @@ if (isset ($_GET['kowal']) && $_GET['kowal'] == 'elite')
         {
             $arrDur = array(30, 50, 90, 170, 330);
         }
-        if ($objSmith -> fields['type'] == 'A')
-        {
+	if ($objSmith -> fields['type'] == 'A')
+	  {
             $intAgility = floor($objSmith -> fields['level'] / 2);
+	    $intPower = $objSmith -> fields['level'] * 3;
             $intExp = 4;
-        }
-            elseif ($objSmith -> fields['type'] == 'L')
-        {
+	  }
+	elseif ($objSmith -> fields['type'] == 'L')
+	  {
             $intAgility = floor($objSmith -> fields['level'] / 5);
+	    $intPower = $objSmith -> fields['level'];
             $intExp = 2;
-        }
-            else
-        {
+	  }
+	else
+	  {
             $intAgility = 0;
-            $intExp = 1;
-        }
+	    $intPower = $objSmith -> fields['level'];
+            $intExp = 2;
+	  }
         $intKey = array_search($_POST['mineral'], $arrMineral);
 	$intMaxdur = $arrDur[$intKey];
 	$intMaxbonus = $arrMaxbonus[$intKey] * $objSmith->fields['level'];
@@ -1200,26 +1235,45 @@ if (isset ($_GET['kowal']) && $_GET['kowal'] == 'elite')
         if ($intAmount > 0) 
 	  {
 	    $arrPower = array();
+	    $arrAgility = array();
 	    $arrAmount = array();
             for ($i = 1; $i <= $intAmount; $i++) 
 	      {
 		$intRoll = rand(1, 100);
 		if ($intRoll < $intChance)
 		  {
-		    $intPower = floor(rand(1, $player->smith) + ($player->strength / 10));
-		    if ($intPower > $intMaxbonus)
+		    $intBonus = floor(rand(1, $player->smith) + ($player->strength / 10));
+		    if ($intBonus > $intMaxbonus)
 		      {
-			$intPower = $intMaxbonus;
+			$intBonus = $intMaxbonus;
 		      }
-		    $intIndex = array_search($intPower, $arrPower);
-		    if ($intIndex === FALSE)
+		    if ($objSmith->fields['elitetype'] == 'S')
 		      {
-			$arrPower[] = $intPower;
-			$arrAmount[] = 1;
+			$intIndex = array_search($intBonus, $arrPower);
+			if ($intIndex === FALSE)
+			  {
+			    $arrPower[] = $intBonus;
+			    $arrAgility[] = $intAgility;
+			    $arrAmount[] = 1;
+			  }
+			else
+			  {
+			    $arrAmount[$intIndex]++;
+			  }
 		      }
 		    else
 		      {
-			$arrAmount[$intIndex]++;
+			$intIndex = array_search($intBonus, $arrAgility);
+			if ($intIndex === FALSE)
+			  {
+			    $arrPower[] = $intPower;
+			    $arrAgility[] = $intBonus;
+			    $arrAmount[] = 1;
+			  }
+			else
+			  {
+			    $arrAmount[$intIndex]++;
+			  }
 		      }
 		    $intGainexp += ($objSmith->fields['level'] * (100 + $player->smith / 5));
 		    $intAbility += ($objSmith->fields['level'] / 50);
@@ -1235,8 +1289,8 @@ if (isset ($_GET['kowal']) && $_GET['kowal'] == 'elite')
             $intRepaircost = $objSmith->fields['level'] * $arrRepair[$intKey] * 2;
 	    for ($i = 0; $i < count($arrPower); $i++)
 	      {
-		additem($objSmith->fields['type'], $strName, $intMaxdur, $arrPower[$i], $intAgility, $intCost, $player->id, $objSmith->fields['level'], $intRepaircost, $objSmith->fields['twohand'], $arrAmount[$i]);
-		$arrMaked[] = array("name" => $strName, "power" => $arrPower[$i], "zr" => (0 - $intAgility), "wt" => $intMaxdur);
+		additem($objSmith->fields['type'], $strName, $intMaxdur, $arrPower[$i], $arrAgility[$i], $intCost, $player->id, $objSmith->fields['level'], $intRepaircost, $objSmith->fields['twohand'], $arrAmount[$i]);
+		$arrMaked[] = array("name" => $strName, "power" => $arrPower[$i], "zr" => ($arrAgility[$i] * -1), "wt" => $intMaxdur);
 	      }
             $intGainexp = ceil($intGainexp);
 	    $intAbility = $intAbility * $intExp;
