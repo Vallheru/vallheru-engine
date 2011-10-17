@@ -7,7 +7,7 @@
  *   @copyright            : (C) 2004,2005,2006,2007,2011 Vallheru Team based on Gamers-Fusion ver 2.5
  *   @author               : thindil <thindil@users.sourceforge.net>
  *   @version              : 1.4
- *   @since                : 07.10.2011
+ *   @since                : 17.10.2011
  *
  */
 
@@ -904,7 +904,7 @@ if (isset ($_GET['mill']) && $_GET['mill'] == 'elite')
 	    $intRoll = rand(1, 100);
 	    if ($intRoll < $intChance)
 	      {
-		$intPower = floor(rand(1, $player->fletcher) + ($player->strength / 100));
+		$intPower = floor(rand(1, $player->fletcher) + ($player->strength / 10));
 		if ($intPower > $intMaxbonus)
 		  {
 		    $intPower = $intMaxbonus;
@@ -1030,7 +1030,7 @@ if (isset ($_GET['mill']) && $_GET['mill'] == 'elite')
 		$intRoll = rand(1, 100);
 		if ($intRoll < $intChance)
 		  {
-		    $intPower = floor(rand(1, $player->fletcher) + ($player->strength / 100));
+		    $intPower = floor(rand(1, $player->fletcher) + ($player->strength / 10));
 		    if ($intPower > $intMaxbonus)
 		      {
 			$intPower = $intMaxbonus;
