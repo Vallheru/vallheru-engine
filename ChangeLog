@@ -1,5 +1,7 @@
 2011-10-17  Bartek thindil Jasicki  <thindil@tuxfamily.org>
 
+	* UPDATE,includes/funkcje.php: 
+	raised prices for loots
 	* UPDATE,kowal.php, lumbermill.php:
 	raise impact of strength on elite items bonus
 

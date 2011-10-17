@@ -7,7 +7,7 @@
  *   @copyright            : (C) 2004,2005,2006,2007,2011 Vallheru Team based on Gamers-Fusion ver 2.5
  *   @author               : thindil <thindil@tuxfamily.org>
  *   @version              : 1.4
- *   @since                : 10.10.2011
+ *   @since                : 17.10.2011
  *
  */
 
@@ -94,7 +94,7 @@ function monsterloot($arrNames, $arrChances, $intLevel, $intMonsters = 1)
   $strMessage = "<br />Ze zwłok potwora wyciągasz:<br />";
   foreach ($arrFound as $intKey => $intAmount)
     {
-      $intPrice = ceil(($intLevel * 10) / $arrChances[$intKey]);
+      $intPrice = $intLevel * 5;
       $objTest = $db->Execute("SELECT `id` FROM `equipment` WHERE `name`='".$arrNames[$intKey]."' AND `owner`=".$player->id." AND `status`='U' AND `type`='O' AND `minlev`=".$intLevel." AND `cost`=".$intPrice);
       if (!$objTest->fields['id'])
 	{
