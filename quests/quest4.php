@@ -4,10 +4,10 @@
  *   Quest in labirynth
  *
  *   @name                 : quest4.php                            
- *   @copyright            : (C) 2004,2005,2006 Vallheru Team based on Gamers-Fusion ver 2.5
- *   @author               : thindil <thindil@users.sourceforge.net>
- *   @version              : 1.2
- *   @since                : 14.08.2006
+ *   @copyright            : (C) 2004,2005,2006,2011 Vallheru Team based on Gamers-Fusion ver 2.5
+ *   @author               : thindil <thindil@tuxfamily.org>
+ *   @version              : 1.4
+ *   @since                : 18.10.2011
  *
  */
 
@@ -132,7 +132,14 @@ if ($test -> fields['action'] == '1.1.2.1')
     if ($chance < 50) 
     {
         $quest -> Show('jump1');
-        $db -> Execute("UPDATE players SET hp=0 WHERE id=".$player -> id);
+	if ($player->antidote != 'R')
+	  {
+	    $db -> Execute("UPDATE players SET hp=0 WHERE id=".$player -> id);
+	  }
+	else
+	  {
+	    $db->Execute("UPDATE `players` SET `hp`=1, `antidote`='' WHERE `id`=".$player->id);
+	  }
         $quest -> Finish(5);
         $smarty -> assign(array("Box" => ""));
     } 
@@ -437,12 +444,19 @@ if ($test -> fields['action'] == '1.3.1')
             $smarty -> assign(array("Link" => "<br /><br />(<a href=\"grid.php?step=quest\">".A_NEXT2."</a>)",
                 "Box" => ""));
         } 
-            else 
-        {
-            $db -> Execute("UPDATE players SET hp=0 WHERE id=".$player -> id);
+	else 
+	  {
+	    if ($player->antidote != 'R')
+	      {
+		$db -> Execute("UPDATE players SET hp=0 WHERE id=".$player -> id);
+	      }
+	    else
+	      {
+		$db->Execute("UPDATE `players` SET `hp`=1, `antidote`='' WHERE `id`=".$player->id);
+	      }
             $smarty -> assign( array("Box" => ""));
             $quest -> Finish(5);
-        }
+	  }
     } 
         else 
     {

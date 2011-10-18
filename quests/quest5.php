@@ -4,10 +4,10 @@
  *   Quest in labirynth
  *
  *   @name                 : quest5.php                            
- *   @copyright            : (C) 2004,2005,2006 Vallheru Team based on Gamers-Fusion ver 2.5
- *   @author               : thindil <thindil@users.sourceforge.net>
- *   @version              : 1.2
- *   @since                : 24.09.2006
+ *   @copyright            : (C) 2004,2005,2006,2011 Vallheru Team based on Gamers-Fusion ver 2.5
+ *   @author               : thindil <thindil@tuxfamily.org>
+ *   @version              : 1.4
+ *   @since                : 18.10.2011
  *
  */
 
@@ -120,7 +120,14 @@ if ($objAction -> fields['action'] == 'int2')
         else
     {
         $objQuest -> Show('hp2');
-        $db -> Execute("UPDATE players SET hp=0 WHERE id=".$player -> id);
+	if ($player->antidote != 'R')
+	  {
+	    $db -> Execute("UPDATE players SET hp=0 WHERE id=".$player -> id);
+	  }
+	else
+	  {
+	    $db->Execute("UPDATE `players` SET `hp`=1, `antidote`='' WHERE `id`=".$player->id);
+	  }
         $objQuest -> Finish(5);
         $smarty -> assign(array("Box" => ''));
     }

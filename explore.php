@@ -7,7 +7,7 @@
  *   @copyright            : (C) 2004,2005,2006,2011 Vallheru Team based on Gamers-Fusion ver 2.5
  *   @author               : thindil <thindil@tuxfamily.org>
  *   @version              : 1.4
- *   @since                : 15.10.2011
+ *   @since                : 18.10.2011
  *
  */
  
@@ -531,12 +531,21 @@ if (isset($_GET['action']) && $_GET['action'] == 'moutains' && $player -> locati
                                     "Qsucc2" => Q_SUCC2,
                                     "Arefresh" => A_REFRESH));
         } 
-            else 
-        {
-            $db -> Execute("UPDATE `players` SET `hp`=0 WHERE `id`=".$player -> id);
+	else 
+	  {
+	    $strInfo = Q_FAIL;
+	    if ($player->antidote == 'R')
+	      {
+		$db->Execute("UPDATE `players` SET `hp`=1, `antidote`='' WHERE `id`=".$player->id);
+		$strInfo .= '<br />Tym razem jednak udało ci się oszukać śmierć.';
+	      }
+	    else
+	      {
+		$db -> Execute("UPDATE `players` SET `hp`=0 WHERE `id`=".$player -> id);
+	      }
             $smarty -> assign(array("Answer" => "false",
                                     "Qfail" => Q_FAIL));
-        }
+	  }
     }
 }
 

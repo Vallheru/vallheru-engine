@@ -8,7 +8,7 @@
  *   @author               : thindil <thindil@tuxfamily.org>
  *   @author               : eyescream <tduda@users.sourceforge.net>
  *   @version              : 1.4
- *   @since                : 13.09.2011
+ *   @since                : 18.10.2011
  *
  */
 
@@ -921,7 +921,7 @@ function attack1($attacker, $defender, $arrAtequip, $arrDeequip, $attack_bspell,
             lostitem($attack_durarm[3], $arrAtequip[5][6], YOU_SHIELD, $attacker['id'], $arrAtequip[5][0], $starter, HAS_BEEN1);
         }
         $db -> Execute("UPDATE `players` SET `hp`=".$attacker['hp'].", `credits`=`credits`+".$creditgain.", `wins`=`wins`+1, `lastkilled`='".'<a href="view.php?view='.$defender['id'].'">'.$defender['user']."</a>', `bless`='', `blessval`=0 WHERE `id`=".$attacker['id']);
-        $db -> Execute("UPDATE `players` SET `hp`=0, `credits`=`credits`-".$creditgain.", `losses`=`losses`+1, `lastkilledby`='".'<a href="view.php?view='.$attacker['id'].'">'.$attacker['user']."</a>', `bless`='', `blessval`=0, `antidote`='' WHERE `id`=".$defender['id']);
+        $db -> Execute("UPDATE `players` SET `credits`=`credits`-".$creditgain.", `losses`=`losses`+1, `lastkilledby`='".'<a href="view.php?view='.$attacker['id'].'">'.$attacker['user']."</a>', `bless`='', `blessval`=0 WHERE `id`=".$defender['id']);
         checkexp($attacker['exp'],$expgain,$attacker['level'],$attacker['race'],$attacker['user'],$attacker['id'],$defender['id'],$defender['user'],$attacker['id'],'',0);
         if ($attacker['id'] == $starter) 
         {
@@ -947,7 +947,7 @@ function attack1($attacker, $defender, $arrAtequip, $arrDeequip, $attack_bspell,
             $defender['speed'] = $player -> speed;
             $defender['wisdom'] = $player -> wisdom;
         }
-        loststat($defender['id'], $defender['strength'], $defender['agility'], $defender['inteli'], $defender['cond'], $defender['speed'], $defender['wisdom'], $attacker['id'], $attacker['user'], $starter);
+        loststat($defender['id'], $defender['strength'], $defender['agility'], $defender['inteli'], $defender['cond'], $defender['speed'], $defender['wisdom'], $attacker['id'], $attacker['user'], $starter, $defender['antidote']);
         $db -> Execute("INSERT INTO `events` (`text`) VALUES('".L_PLAYER." ".$startuser." ".L_ATTACK." ".$secuser.". ".BATTLE_WIN." ".$attacker['user']."')");
         $strDate = $db -> DBDate($newdate);
         if (($attacker['battlelog'] == 'Y')  || ($attacker['id'] == $starter && $attacker['battlelog'] == 'A') || ($attacker['id'] != $starter && $attacker['battlelog'] == 'D'))

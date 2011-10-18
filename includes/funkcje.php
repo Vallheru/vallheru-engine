@@ -7,7 +7,7 @@
  *   @copyright            : (C) 2004,2005,2006,2007,2011 Vallheru Team based on Gamers-Fusion ver 2.5
  *   @author               : thindil <thindil@tuxfamily.org>
  *   @version              : 1.4
- *   @since                : 17.10.2011
+ *   @since                : 18.10.2011
  *
  */
 
@@ -184,39 +184,60 @@ function autofill($intPlayerid, $intArrowId, $intPlayer2)
 /**
 * Function count lost stats in battle
 */
-function loststat($lostid,$strength,$agility,$inteli,$wytrz,$szyb,$wisdom,$winid,$winuser,$starter) 
+function loststat($lostid, $strength, $agility, $inteli, $wytrz, $szyb, $wisdom, $winid, $winuser, $starter, $antidote) 
 {
     global $db;
     global $newdate;
 
-    $number = rand(0,5);
-    $values = array($strength,$agility,$inteli,$wytrz,$szyb,$wisdom);
-    $stats = array('strength','agility','inteli','wytrz','szyb','wisdom');
-    $name = array(STRENGTH,AGILITY,INTELIGENCE,CONDITION,SPEED,WISDOM);
-    $lost = ($values[$number] / 200);
-    $db -> Execute("UPDATE players SET ".$stats[$number]."=".$stats[$number]."-".$lost." WHERE id=".$lostid);
-    $stat = $name[$number];
+    if ($antidote == 'R')
+      {
+	$db->Execute("UPDATE `players` SET `antidote`='' WHERE `id`=".$lostid);
+      }
+    else
+      {
+	$number = rand(0,5);
+	$values = array($strength, $agility, $inteli, $wytrz, $szyb, $wisdom);
+	$stats = array('strength', 'agility', 'inteli', 'wytrz', 'szyb', 'wisdom');
+	$name = array(STRENGTH,AGILITY,INTELIGENCE,CONDITION,SPEED,WISDOM);
+	$lost = ($values[$number] / 200);
+	$db -> Execute("UPDATE `players` SET `".$stats[$number]."`=`".$stats[$number]."`-".$lost.", `hp`=0, `antidote`='' WHERE `id`=".$lostid);
+	$stat = $name[$number];
+      }
     if ($lostid == $starter) 
-    {
+      {
         $attacktext = YOU_ATTACK;
-    } 
-        else 
-    {
+      } 
+    else 
+      {
         $attacktext = YOU_ATTACKED;
-    }
+      }
     if ($winid) 
-    {
+      {
         $strDate = $db -> DBDate($newdate);
-        $db -> Execute("INSERT INTO log (`owner`, `log`, `czas`, `type`) VALUES(".$lostid.",'".$attacktext." ".YOU_LOSE." <b><a href=view.php?view=".$winid.">".$winuser."</a> ".ID.":".$winid."</b>. ".YOU_LOST." ".$lost." ".$stat."', ".$strDate.", 'B')") or die(E_LOG);
-    } 
-        else 
-    {
+	if ($antidote != 'R')
+	  {
+	    $db -> Execute("INSERT INTO log (`owner`, `log`, `czas`, `type`) VALUES(".$lostid.",'".$attacktext." ".YOU_LOSE." <b><a href=view.php?view=".$winid.">".$winuser."</a> ".ID.":".$winid."</b>. ".YOU_LOST." ".$lost." ".$stat."', ".$strDate.", 'B')") or die(E_LOG);
+	  }
+	else
+	  {
+	    $db -> Execute("INSERT INTO log (`owner`, `log`, `czas`, `type`) VALUES(".$lostid.",'".$attacktext." ".YOU_LOSE." <b><a href=view.php?view=".$winid.">".$winuser."</a> ".ID.":".$winid."</b>. Na szczęście udało ci się tym razem, oszukać śmierć.', ".$strDate.", 'B')") or die(E_LOG);
+	  }
+      } 
+    else 
+      {
         if (!isset($_POST['razy'])) 
-        {
+	  {
             $_POST['razy'] = 1;
-        }
-        print "<br /><b>".B_RESULT." <b>".$_POST['razy']." ".$winuser."</b>. ".YOU_LOST." ".$lost." ".$stat;
-    }
+	  }
+	if ($antidote != 'R')
+	  {
+	    print "<br /><b>".B_RESULT." <b>".$_POST['razy']." ".$winuser."</b>. ".YOU_LOST." ".$lost." ".$stat;
+	  }
+	else
+	  {
+	    print "<br /><b>".B_RESULT." <b>".$_POST['razy']." ".$winuser."</b>. Na szczęście udało ci się tym razem, oszukać śmierć.";
+	  }
+      }
 }
 
 /**
@@ -1108,21 +1129,30 @@ function fightmonster($enemy, $expgain, $goldgain, $times)
     }
     if ($player -> hp <= 0) 
       {
+	if ($player->antidote == 'R')
+	  {
+	    $player->hp = 1;
+	  }
 	$db -> Execute("UPDATE `players` SET `antidote`='' WHERE `id`=".$player -> id);
         if ($title != 'Arena Walk') 
 	  {
-            loststat($player -> id,$player -> strength,$player -> agility,$player -> inteli,$player -> cond,$player -> speed,$player -> wisdom,0,$enemy['name'],0);
+            loststat($player -> id, $player -> strength, $player -> agility, $player -> inteli, $player -> cond, $player -> speed, $player -> wisdom, 0, $enemy['name'], 0, $player->antidote);
 	  } 
 	else 
 	  {
-            $smarty -> assign ("Message", "</ul>".LOST_FIGHT."...<br />");
+	    $strMessage = "</ul>".LOST_FIGHT."...<br />";
+	    if ($player->antidote == 'R')
+	      {
+		$strMessage .= "Nagle oślepia ciebie jasne światło. Leżysz na ziemi zmęczony ale i szczęśliwy, kiedy zdajesz sobie sprawę, że tym razem udało ci się uniknąć śmierci.<br />";
+	      }
+            $smarty -> assign ("Message", $strMessage);
             $smarty -> display ('error1.tpl');
 	  }
-        $db -> Execute("INSERT INTO events (text) VALUES('Gracz ".$player -> user." ".EVENT3." ".$_POST['razy']." ".$enemy['name']."')");
+        $db -> Execute("INSERT INTO `events` (`text`) VALUES('Gracz ".$player -> user." ".EVENT3." ".$_POST['razy']." ".$enemy['name']."')");
       } 
     elseif ($runda > 24 && ($player -> hp > 0 && $enemy['hp'] > 0)) 
       {
-        $db -> Execute("INSERT INTO events (text) VALUES('Gracz ".$player -> user." ".EVENT1." ".$_POST['razy']." ".$enemy['name']." ".EVENT2."')");
+        $db -> Execute("INSERT INTO `events` (`text`) VALUES('Gracz ".$player -> user." ".EVENT1." ".$_POST['razy']." ".$enemy['name']." ".EVENT2."')");
         $smarty -> assign ("Message", "<br /><li><b>".B_RESULT1.": ");
         $smarty -> display ('error1.tpl');
       } 

@@ -7,7 +7,7 @@
  *   @copyright            : (C) 2004,2005,2006,2011 Vallheru Team based on Gamers-Fusion ver 2.5
  *   @author               : thindil <thindil@tuxfamily.org>
  *   @version              : 1.4
- *   @since                : 30.09.2011
+ *   @since                : 18.10.2011
  *
  */
 
@@ -123,8 +123,18 @@ if (isset($_GET['action']) && $_GET['action'] == 'dig')
             $intRoll2 = rand(1, 100);
             if ($intRoll2 <= 50) 
             {
-                $player -> hp = 0;
                 $strInfo = M_DEAD;
+		if ($player->antidote == 'R')
+		  {
+		    $strInfo = ' na szczęście w tym wypadku, udało ci się oszukać przeznaczenie.';
+		    $player->hp = 1;
+		    $db->Execute("UPDATE `players` SET `antidote`='' WHERE `id`=".$player->id);
+		  }
+		else
+		  {
+		    $strInfo .= ' zabijając na miejscu.';
+		    $player -> hp = 0;
+		  }
             } 
                 else
             {

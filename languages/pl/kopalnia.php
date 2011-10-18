@@ -7,7 +7,7 @@
  *   @copyright            : (C) 2004,2005,2006,2011 Vallheru Team based on Gamers-Fusion ver 2.5
  *   @author               : thindil <thindil@tuxfamily.org>
  *   @version              : 1.4
- *   @since                : 19.08.2011
+ *   @since                : 18.10.2011
  *
  */
 
@@ -43,7 +43,7 @@ if (isset($_GET['action']) && $_GET['action'] == 'dig')
 {
     define("NO_ENERGY", "Nie masz tyle energii!");
     define("YOU_DEAD", "Nie możesz pracować w kopalni, ponieważ jesteś martwy!");
-    define("M_DEAD", "<br /><br />Nagle poczułeś, jak całe wyrobisko powoli zaczyna się rozpadać. Najszybciej jak potrafisz próbowałeś biec w kierunku wyjścia. Niestety, tym razem żywioł okazał się szybszy od ciebie. Potężna lawina kamieni spadła na ciebie, zabijając na miejscu.");
+    define("M_DEAD", "<br /><br />Nagle poczułeś, jak całe wyrobisko powoli zaczyna się rozpadać. Najszybciej jak potrafisz próbowałeś biec w kierunku wyjścia. Niestety, tym razem żywioł okazał się szybszy od ciebie. Potężna lawina kamieni spadła na ciebie,");
     define("M_LUCK", "<br /><br />Nagle poczułeś, jak całe wyrobisko powoli zaczyna się rozpadać. Najszybciej jak potrafisz próbowałeś biec w kierunku wyjścia. W ostatnim momencie udało ci się wybiec z zagrożonego wyrobiska, poczułeś jedynie na plecach podmuch walących się ton skał.");
     define("MINES_INFO", "Czy chcesz wyruszyć na poszukiwanie minerałów ponownie?");
     define("YOU_GO", "Wybrałeś się na poszukiwanie minerałów ");

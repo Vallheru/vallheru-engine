@@ -1,5 +1,9 @@
 2011-10-18  Bartek thindil Jasicki  <thindil@tuxfamily.org>
 
+	* FEATURE,quests/quest8.php, quests/quest9.php, quests/quest7.php, quests/quest6.php, quests/quest5.php, quests/quest4.php, explore.php,
+	lumberjack.php, kopalnia.php, languages/pl/kopalnia.php, includes/battle.php, includes/turnfight.php, includes/funkcje.php, 
+	includes/functions.php: 
+	added resurrect potion
 	* FEATURE,templates/layout1/admin.tpl, templates/admin.tpl, admin.php: 
 	added option to add potions and alchemy plans
 	* UPDATE,alchemik.php:

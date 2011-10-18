@@ -7,7 +7,7 @@
  *   @copyright            : (C) 2004,2005,2006,2011 Vallheru Team based on Gamers-Fusion ver 2.5
  *   @author               : thindil <thindil@tuxfamily.org>
  *   @version              : 1.4
- *   @since                : 26.09.2011
+ *   @since                : 18.10.2011
  *
  */
 
@@ -136,8 +136,16 @@ function drink($id)
             $strType2 = 'Illani';
             $strAtype = 'I';
         }
-        $db -> Execute("UPDATE players SET antidote='".$strAtype."' WHERE id=".$player -> id);
-        $efekt = GAIN_ANTI." ".$strType2;
+      if ($miks->fields['name'] != 'Oszukanie śmierci')
+	{
+	  $efekt =  GAIN_ANTI." ".$strType2;
+	}
+      else
+	{
+	  $strAtype = 'R';
+	  $efekt = 'czasowo zabezpieczyłeś się przed śmiercią';
+	}
+      $db -> Execute("UPDATE `players` SET `antidote`='".$strAtype."' WHERE `id`=".$player -> id);
     }
     if ($strType == 'H' && $intRoll > 50 && !isset($message)) 
       {

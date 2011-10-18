@@ -7,7 +7,7 @@
  *   @copyright            : (C) 2004,2005,2006,2007,2011 Vallheru Team based on Gamers-Fusion ver 2.5
  *   @author               : thindil <thindil@tuxfamily.org>
  *   @version              : 1.4
- *   @since                : 10.10.2011
+ *   @since                : 18.10.2011
  *
  */
  
@@ -644,9 +644,13 @@ function turnfight($expgain,$goldgain,$action,$addres)
     if ($player -> hp <= 0) 
     {
         if ($title != 'Arena Walk') 
-        {
-            loststat($player -> id,$player -> strength,$player -> agility,$player -> inteli,$player -> cond,$player -> speed,$player -> wisdom,0,$enemy['name'],0);
-        }
+	  {
+	    loststat($player -> id, $player -> strength, $player -> agility, $player -> inteli, $player -> cond, $player -> speed, $player -> wisdom, 0, $enemy['name'], 0, $player->antidote);
+	  }
+	if ($player->antidote == 'R')
+	  {
+	    $player->hp = 1;
+	  }
         if ($player -> hp < 0) 
         {
             $player -> hp = 0;

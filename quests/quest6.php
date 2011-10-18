@@ -4,10 +4,10 @@
  *   Quest in labirynth
  *
  *   @name                 : quest6.php                            
- *   @copyright            : (C) 2004,2005,2006 Vallheru Team based on Gamers-Fusion ver 2.5
- *   @author               : thindil <thindil@users.sourceforge.net>
- *   @version              : 1.2
- *   @since                : 11.08.2006
+ *   @copyright            : (C) 2004,2005,2006,2011 Vallheru Team based on Gamers-Fusion ver 2.5
+ *   @author               : thindil <thindil@tuxfamily.org>
+ *   @version              : 1.4
+ *   @since                : 18.10.2011
  *
  */
 
@@ -98,11 +98,18 @@ if ($objAction -> fields['action'] == '1')
 if ($objAction -> fields['action'] == 'int2')
 {
     if ($player -> hp < 21)
-    {
-        $db -> Execute("UPDATE players SET hp=0 WHERE id=".$player -> id);
+      {
+	if ($player->antidote != 'R')
+	  {
+	    $db -> Execute("UPDATE players SET hp=0 WHERE id=".$player -> id);
+	  }
+	else
+	  {
+	    $db->Execute("UPDATE `players` SET `hp`=1, `antidote`='' WHERE `id`=".$player->id);
+	  }
         $objQuest -> Show('hp2');
         $objQuest -> Finish(5);
-    }
+      }
         else
     {
         $db -> Execute("UPDATE players SET hp=hp-20 WHERE id=".$player -> id);
@@ -180,11 +187,18 @@ if ($objAction -> fields['action'] == '1.1.1')
 {
     $intChance = ($arrCurstats[2] + rand(1,100));
     if ($intChance < 100) 
-    {
-        $db -> Execute("UPDATE players SET hp=0 WHERE id=".$player -> id);
+      {
+	if ($player->antidote != 'R')
+	  {
+	    $db -> Execute("UPDATE players SET hp=0 WHERE id=".$player -> id);
+	  }
+	else
+	  {
+	    $db->Execute("UPDATE `players` SET `hp`=1, `antidote`='' WHERE `id`=".$player->id);
+	  }
         $objQuest -> Show('int4');
         $objQuest -> Finish(5);
-    } 
+      } 
         else 
     {
         $objQuest -> Show('int3');
@@ -478,9 +492,16 @@ if ($objAction -> fields['action'] == '1.2.3.2')
             $objQuest -> Show('hp3');
             $smarty -> assign(array("Link" => "<br /><br />(<a href=\"grid.php?step=quest\">".A_NEXT2."</a>)", "Box" => ''));
         }
-            else
-        {
-            $db -> Execute("UPDATE players SET hp=0 WHERE id=".$player -> id);
+	else
+	  {
+	    if ($player->antidote != 'R')
+	      {
+		$db -> Execute("UPDATE players SET hp=0 WHERE id=".$player -> id);
+	      }
+	    else
+	      {
+		$db->Execute("UPDATE `players` SET `hp`=1, `antidote`='' WHERE `id`=".$player->id);
+	      }
             $objQuest -> Show('hp4');
             $objQuest -> Finish(5);
         }
@@ -583,8 +604,15 @@ if ($objAction -> fields['action'] == '1.3.2.2.1')
 {
     $intChance = (($arrCurstats[1] + $arrCurstats[0] + $arrCurstats[2] + $arrCurstats[3] + $arrCurstats[4] + $arrCurstats[5]) + rand(1,100));
     if ($intChance < 10000)
-    {
-        $db -> Execute("UPDATE players SET hp=0 WHERE id=".$player -> id);
+      {
+	if ($player->antidote != 'R')
+	  {
+	    $db -> Execute("UPDATE players SET hp=0 WHERE id=".$player -> id);
+	  }
+	else
+	  {
+	    $db->Execute("UPDATE `players` SET `hp`=1, `antidote`='' WHERE `id`=".$player->id);
+	  }
         $objQuest -> Show('atr1');
         $objQuest -> Finish(20);
     }
