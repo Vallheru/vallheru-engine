@@ -1,5 +1,7 @@
 2011-10-18  Bartek thindil Jasicki  <thindil@tuxfamily.org>
 
+	* BUG,bank.php: 
+	fixed typo
 	* FEATURE,quests/quest8.php, quests/quest9.php, quests/quest7.php, quests/quest6.php, quests/quest5.php, quests/quest4.php, explore.php,
 	lumberjack.php, kopalnia.php, languages/pl/kopalnia.php, includes/battle.php, includes/turnfight.php, includes/funkcje.php, 
 	includes/functions.php: 
