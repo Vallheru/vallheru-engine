@@ -8,7 +8,7 @@
  *   @author               : thindil <thindil@tuxfamily.org>
  *   @author               : eyescream <tduda@users.sourceforge.net>
  *   @version              : 1.4
- *   @since                : 17.10.2011
+ *   @since                : 18.10.2011
  *
  */
  
@@ -1282,6 +1282,69 @@ if (isset($_GET['view']))
       }
 
     /**
+     * Add new potions
+     */
+    elseif ($_GET['view'] == 'potions')
+      {
+	$smarty->assign(array("Pname" => "Nazwa mikstury",
+			      "Poison" => "Trucizna",
+			      "Antidote" => "Antidotum",
+			      "Healing" => "Lecząca zdrowie",
+			      "Mana" => "Uzupełnienie many",
+			      "Tefect" => "Efekt",
+			      "Ppower" => "Moc",
+			      "Aadd" => "Dodaj"));
+	if (isset($_GET['step']) && $_GET['step'] == 'add')
+	  {
+	    if (empty($_POST['name']) || empty($_POST['type']) || empty($_POST['effect']) || empty($_POST['power']))
+	      {
+		error("Wypełnij wszystkie pola");
+	      }
+	    if (!in_array($_POST['type'], array('P', 'A', 'H', 'M')))
+	      {
+		error(ERROR);
+	      }
+	    $strName = $db -> qstr($_POST['name'], get_magic_quotes_gpc());
+	    $strEffect = $db -> qstr($_POST['effect'], get_magic_quotes_gpc());
+	    $intPower = intval($_POST['power']);
+	    $db->Execute("INSERT INTO `potions` (`name`, `type`, `efect`, `power`, `status`) VALUES(".$strName.", '".$_POST['type']."', ".$strEffect.", ".$intPower.", 'A')") or die($db->ErrorMsg());
+	  }
+      }
+
+    /**
+     * Add new plan in alchemy
+     */
+    elseif ($_GET['view'] == 'alchemy')
+      {
+	$smarty->assign(array("Pname" => "Nazwa planu",
+			      "Therb1" => "Illani",
+			      "Therb2" => "Illanias",
+			      "Therb3" => "Nutari",
+			      "Therb4" => "Dynallca",
+			      "Tlevel" => "Poziom",
+			      "Tcost" => "Cena",
+			      "Aadd" => "Dodaj"));
+	if (isset($_GET['step']) && $_GET['step'] == 'add')
+	  {
+	    if (empty($_POST['name']) || empty($_POST['illani']) || empty($_POST['illanias']) || empty($_POST['nutari']) || empty($_POST['dynallca']) || empty($_POST['level']) || empty($_POST['cost']))
+	      {
+		error("Wypełnij wszystkie pola.");
+	      }
+	    $strName = $db -> qstr($_POST['name'], get_magic_quotes_gpc());
+	    $arrForm = array('illani', 'illanias', 'nutari', 'dynallca', 'level', 'cost');
+	    foreach ($arrForm as $strKey)
+	      {
+		$_POST[$strKey] = intval($_POST[$strKey]);
+		if ($_POST[$strKey] < 0)
+		  {
+		    error(ERROR);
+		  }
+	      }
+	    $db->Execute("INSERT INTO `alchemy_mill` (`name`, `illani`, `illanias`, `nutari`, `dynallca`, `level`, `cost`) VALUES(".$strName.", ".$_POST['illani'].", ".$_POST['illanias'].", ".$_POST['nutari'].", ".$_POST['dynallca'].", ".$_POST['level'].", ".$_POST['cost'].")") or die($db->ErrorMsg());
+	  }
+      }
+
+    /**
      * Close/open game
      */
     elseif ($_GET['view'] == 'close') 
@@ -1320,8 +1383,8 @@ else
     $arrLinks2 = array(A_DELETE, A_DONATION, A_TAKE, A_RANK, A_IMMU, A_CHAT_BAN, A_JAIL, A_JAILBREAK, A_DEL_PLAYERS, A_BAN, A_DONATOR, A_LOGS, A_PLAYERQUEST, A_BAN_MAIL, 'Daj/Zabierz Vallary graczowi', 'Nadaj unikalną rangę graczowi');
     $arrView3 = array('clearf', 'clearc', 'forums', 'innarchive');
     $arrLinks3 = array(A_FORUM_P, A_CHAT_P, A_FORUMS, A_INNARCHIVE);
-    $arrView4 = array('equipment', 'monster', 'monster2', 'kowal', 'czary', 'mill');
-    $arrLinks4 = array(A_EQUIP, A_MONSTERS, A_MONSTER2, A_SMITH, A_SPELLS, A_MILL);
+    $arrView4 = array('equipment', 'monster', 'monster2', 'kowal', 'czary', 'mill', 'potions', 'alchemy');
+    $arrLinks4 = array(A_EQUIP, A_MONSTERS, A_MONSTER2, A_SMITH, A_SPELLS, A_MILL, 'Dodaj miksturę', 'Dodaj plan u alchemika');
     $arrView5 = array('poczta', 'mail');
     $arrLinks5 = array(A_PM, A_MAIL);
     $arrView6 = array('close', 'register', 'censorship', 'meta', 'changelog', 'bugreport');

@@ -572,6 +572,33 @@
     <input type="submit" value="{$Aadd}" /></form>
 {/if}
 
+{if $View == "potions"}
+    <form method="post" action="admin.php?view=potions&amp;step=add">
+    {$Pname}: <input type="text" name="name" /> <select name="type">
+        <option value="P">{$Poison}</option>
+	<option value="A">{$Antidote}</option>
+	<option value="H">{$Healing}</option>
+	<option value="M">{$Mana}</option>
+    </select><br />
+    {$Tefect}: <input type="text" name="effect" /><br />
+    {$Ppower}: <input type="text" name="power" /><br /> 
+    <input type="submit" value="{$Aadd}" />
+    </form>
+{/if}
+
+{if $View == "alchemy"}
+    <form method="post" action="admin.php?view=alchemy&amp;step=add">
+    {$Pname}: <input type="text" name="name" /><br />
+    {$Therb1}: <input type="text" name="illani" /><br />
+    {$Therb2}: <input type="text" name="illanias" /><br />
+    {$Therb3}: <input type="text" name="nutari" /><br />
+    {$Therb4}: <input type="text" name="dynallca" /><br />
+    {$Tlevel}: <input type="text" name="level" /><br />
+    {$Tcost}: <input type="text" name="cost" /><br />
+    <input type="submit" value="{$Aadd}" />
+    </form>
+{/if}
+
 {$Message}
 
 {if $View != ""}
