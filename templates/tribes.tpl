@@ -10,8 +10,8 @@
 {if $View == "all"}
     {$Showinfo}
     {$Text}
-    {section name=tribes loop=$Name}
-        <li><a href="tribes.php?view=view&amp;id={$Tribeid[tribes]}">{$Name[tribes]}</a>, {$Leaderid} <a href="view.php?view={$Owner[tribes]}">{$Owner[tribes]}</a>.
+    {section name=ltribes loop=$Tribes}
+        <li><a href="tribes.php?view=view&amp;id={$Tribes[ltribes].id}">{$Tribes[ltribes].name}</a>, {$Leaderid} <a href="view.php?view={$Tribes[ltribes].owner}">{$Tribes[ltribes].owner}</a>.
     {/section}
     </ul>
 {/if}
@@ -33,7 +33,13 @@
         {$Jointo} {$Name}<br />
         <input type="submit" value="{$Ajoin}" />
         </form>
-        {$Asteal}
+	{if $Asteal != ""}
+	    <br /><br /><a href="tribes.php?view=view&amp;id={$Tribeid}&amp;step=steal">{$Asteal}</a><br />
+	    {if $Asabotage != ""}
+	        <a href="tribes.php?view=view&amp;id={$Tribeid}&amp;step=sabotage">{$Asabotage}</a><br />
+	    {/if}
+	    <a href="tribes.php?view=view&amp;id={$Tribeid}&amp;step=espionage">{$Aespionage}</a>
+        {/if}
     {/if}
     {if $Step == "members"}
         {$Memberlist} {$Name}<br />

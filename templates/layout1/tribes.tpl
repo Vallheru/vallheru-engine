@@ -10,8 +10,8 @@
 {if $View == "all"}
     {$Showinfo}
     {$Text}
-    {section name=tribes loop=$Name}
-        <li><a href="tribes.php?view=view&amp;id={$Tribeid[tribes]}">{$Name[tribes]}</a>, {$Leaderid} <a href="view.php?view={$Owner[tribes]}">{$Owner[tribes]}</a>.
+    {section name=ltribes loop=$Tribes}
+        <li><a href="tribes.php?view=view&amp;id={$Tribes[ltribes].id}">{$Tribes[ltribes].name}</a>, {$Leaderid} <a href="view.php?view={$Tribes[ltribes].owner}">{$Tribes[ltribes].owner}</a>.
     {/section}
     </ul>
 {/if}
@@ -33,7 +33,13 @@
         {$Jointo} {$Name}<br />
         <input type="submit" value="{$Ajoin}" />
         </form>
-        {$Asteal}
+        {if $Asteal != ""}
+	    <br /><br /><a href="tribes.php?view=view&amp;id={$Tribeid}&amp;step=steal">{$Asteal}</a><br />
+	    {if $Asabotage != ""}
+	        <a href="tribes.php?view=view&amp;id={$Tribeid}&amp;step=sabotage">{$Asabotage}</a><br />
+	    {/if}
+	    <a href="tribes.php?view=view&amp;id={$Tribeid}&amp;step=espionage">{$Aespionage}</a>
+        {/if}
     {/if}
     {if $Step == "members"}
         {$Memberlist} {$Name}<br />
@@ -59,9 +65,19 @@
 {/if}
 
 {if $View == "my"}
-    {include file="tribemenu.tpl"}
-	
-	<table width="98%" class="dark" cellpadding="0" cellspacing="0">
+    <br /><br /><center>
+    (<a href="tribes.php?view=my">{$Menu1}</a>)
+    (<a href="tribes.php?view=my&amp;step=donate">{$Menu2}</a>)
+    (<a href="tribes.php?view=my&amp;step=members">{$Menu3}</a>)
+    (<a href="tribearmor.php">{$Menu4}</a>)
+    (<a href="tribeware.php">{$Menu5}</a>)
+    (<a href="tribes.php?view=my&amp;step=skarbiec">{$Menu6}</a>)
+    (<a href="tribes.php?view=my&amp;step=zielnik">{$Menu7}</a>)
+    (<a href="tribes.php?view=my&amp;step=quit">{$Menu8}</a>)
+    (<a href="tribes.php?view=my&amp;step=owner">{$Menu9}</a>)
+    (<a href="tforums.php?view=topics">{$Menu10}</a>)
+    (<a href="tribeastral.php">{$Menu11}</a>)</center>
+    <br /><center><table width="98%" class="dark" cellpadding="0" cellspacing="0">
     <tr><td align="center"><b>{$Myclan}: {$Name}</b></td></tr>
     <tr><td width="100%" valign="top">
     {if $Step == ""}

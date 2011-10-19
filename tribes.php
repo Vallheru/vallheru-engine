@@ -9,7 +9,7 @@
  *   @author               : mori <ziniquel@users.sourceforge.net>
  *   @author               : eyescream <tduda@users.sourceforge.net>
  *   @version              : 1.4
- *   @since                : 12.10.2011
+ *   @since                : 19.10.2011
  *
  */
 
@@ -113,39 +113,24 @@ if (!isset ($_GET['view']) && !isset($_GET['join']))
 * List of clans
 */
 if (isset ($_GET['view']) && $_GET['view'] == 'all') 
-{
-    $query = $db -> Execute("SELECT count(*) FROM `tribes`");
-    $numt = $query -> fields['count(*)'];
+  {
+    $query = $db -> Execute("SELECT count(`id`) FROM `tribes`");
+    $numt = $query -> fields['count(`id`)'];
     $query -> Close();
     if ($numt <= 0) 
-    {
+      {
         $smarty -> assign(array("Text" => NO_CLANS,
-                           "Showinfo" => ''));
-    } 
-        else 
-    {
+				"Showinfo" => ''));
+      } 
+    else 
+      {
         $smarty -> assign ("Text", "<ul>");
-        $tribe = $db -> Execute("SELECT `id`, `name`, `owner` FROM `tribes` ORDER BY `id`");
-        $arrid = array();
-        $arrname = array();
-        $arrowner = array();
-        $i = 0;
-        while (!$tribe -> EOF) 
-        {
-            $arrid[$i] = $tribe -> fields['id'];
-            $arrname[$i] = $tribe -> fields['name'];
-            $arrowner[$i] = $tribe -> fields['owner'];
-            $tribe -> MoveNext();
-            $i = $i + 1;
-        }
-        $tribe -> Close();
-        $smarty -> assign(array("Tribeid" => $arrid, 
-            "Name" => $arrname, 
-            "Owner" => $arrowner,
-            "Showinfo" => SHOW_INFO,
-            "Leaderid" => LEADER_ID));
-    }
-}
+        $arrTribes = $db->GetAll("SELECT `id`, `name`, `owner` FROM `tribes` ORDER BY `id`");
+        $smarty -> assign(array("Tribes" => $arrTribes, 
+				"Showinfo" => SHOW_INFO,
+				"Leaderid" => LEADER_ID));
+      }
+  }
 
 /**
 * Clan info
@@ -178,7 +163,15 @@ if (isset ($_GET['view']) && $_GET['view'] == 'view')
             $smarty -> assign ("Logo", "<center><img src=\"".$plik."\" width=\"".$arrImageparams[0]."\" height=\"".$arrImageparams[1]."\" /></center><br />");
         }
 
-        $objAstral = $db -> Execute("SELECT `used` FROM `astral_machine` WHERE `owner`=".$tribe -> fields['id']);
+        $objAstral = $db -> Execute("SELECT `used`, `directed` FROM `astral_machine` WHERE `owner`=".$tribe -> fields['id']);
+	if ($objAstral->fields['used'] || $objAstral->fields['directed'])
+	  {
+	    $strSabotage = 'Sabotuj astralną machinę';
+	  }
+	else
+	  {
+	    $strSabotage = '';
+	  }
         if ($objAstral -> fields['used'])
         {
             $intPercent = round($objAstral -> fields['used'] / 100, 2);
@@ -224,13 +217,15 @@ if (isset ($_GET['view']) && $_GET['view'] == 'view')
         {
             $objAstralcrime = $db -> Execute("SELECT `astralcrime` FROM `players` WHERE `id`=".$player -> id);
             if ($objAstralcrime -> fields['astralcrime'] == 'Y')
-            {
-                $smarty -> assign("Asteal", "<br /><br /><a href=\"tribes.php?view=view&id=".$_GET['id']."&amp;step=steal\">".A_STEAL."</a>");
-            }
-                else
-            {
+	      {
+		$smarty->assign(array("Asteal" => A_STEAL,
+				      "Aespionage" => "Szpieguj klan",
+				      "Asabotage" => $strSabotage));
+	      }
+	    else
+	      {
                 $smarty -> assign("Asteal", '');
-            }
+	      }
             $objAstralcrime -> Close();
         }
             else
@@ -241,70 +236,218 @@ if (isset ($_GET['view']) && $_GET['view'] == 'view')
         $tribe -> Close();
     }
 
-    /**
-     * Steal astral components
-     */
-    if (isset($_GET['step']) && $_GET['step'] == 'steal')
-    {
-	checkvalue($_GET['id']);
-        $objTribe = $db -> Execute("SELECT `id`, `owner` FROM `tribes` WHERE `id`=".$_GET['id']);
-        if (!$objTribe -> fields['id']) 
-        {
-            error(NO_CLAN." (<a href=\"tribes.php?view=view&id=".$_GET['id']."\">".BACK."</a>)");
-        }
-        if ($player -> clas != 'Złodziej' || $player -> clas == 'Lochy')
-        {
-            error(ERROR." (<a href=\"tribes.php?view=view&id=".$_GET['id']."\">".BACK."</a>)");
-        }
-        $objAstralcrime = $db -> Execute("SELECT `astralcrime` FROM `players` WHERE `id`=".$player -> id);
-        if ($objAstralcrime -> fields['astralcrime'] == 'N')
-        {
-            error (NO_CRIME." (<a href=\"tribes.php?view=view&id=".$_GET['id']."\">".BACK."</a>)");
-        }
-        $objAstralcrime -> Close();
-        if ($player -> hp <= 0) 
-        {
-            error (YOU_DEAD." (<a href=\"tribes.php?view=view&id=".$_GET['id']."\">".BACK."</a>)");
-        }
-        if ($player -> tribe == $_GET['id'])
-        {
-            error(SAME_CLAN." (<a href=\"tribes.php?view=view&id=".$_GET['id']."\">".BACK."</a>)");
-        }
+    if (isset($_GET['step']))
+      {
 
-        require_once('includes/astralsteal.php');
-        astralsteal($_GET['id'], 'C', $objTribe -> fields['owner']);
+	//Thief actions
+	if (in_array($_GET['step'], array('steal', 'sabotage', 'espionage')))
+	  {
+	    checkvalue($_GET['id']);
+	    $objTribe = $db -> Execute("SELECT `id`, `owner` FROM `tribes` WHERE `id`=".$_GET['id']);
+	    if (!$objTribe -> fields['id']) 
+	      {
+		error(NO_CLAN." (<a href=\"tribes.php?view=view&id=".$_GET['id']."\">".BACK."</a>)");
+	      }
+	    if ($player->clas != 'Złodziej' || $player->location == 'Lochy')
+	      {
+		error(ERROR." (<a href=\"tribes.php?view=view&id=".$_GET['id']."\">".BACK."</a>)");
+	      }
+	    $objAstralcrime = $db -> Execute("SELECT `astralcrime` FROM `players` WHERE `id`=".$player -> id);
+	    if ($objAstralcrime -> fields['astralcrime'] == 'N')
+	      {
+		error (NO_CRIME." (<a href=\"tribes.php?view=view&id=".$_GET['id']."\">".BACK."</a>)");
+	      }
+	    $objAstralcrime -> Close();
+	    if ($player -> hp <= 0) 
+	      {
+		error (YOU_DEAD." (<a href=\"tribes.php?view=view&id=".$_GET['id']."\">".BACK."</a>)");
+	      }
+	    if ($player -> tribe == $_GET['id'])
+	      {
+		error(SAME_CLAN." (<a href=\"tribes.php?view=view&id=".$_GET['id']."\">".BACK."</a>)");
+	      }
+	    if ($_GET['step'] == 'espionage' || $_GET['step'] == 'sabotage')
+	      {
+		$db->Execute("UPDATE `players` SET `astralcrime`='N' WHERE `id`=".$player->id);
+		/**
+		 * Add bonus from bless
+		 */
+		$strBless = FALSE;
+		$objBless = $db -> Execute("SELECT `bless`, `blessval` FROM `players` WHERE `id`=".$player -> id);
+		if ($objBless -> fields['bless'] == 'inteli')
+		  {
+		    $player -> inteli = $player -> inteli + $objBless -> fields['blessval'];
+		    $strBless = 'inteli';
+		  }
+		if ($objBless -> fields['bless'] == 'agility')
+		  {
+		    $player -> agility = $player -> agility + $objBless -> fields['blessval'];
+		    $strBless = 'agility';
+		  }
+		$objBless -> Close();
+		/**
+		 * Add bonus from rings
+		 */
+		$arrEquip = $player -> equipment();
+		$arrRings = array('zręczności', 'inteligencji');
+		$arrStat = array('agility', 'inteli');
+		if ($arrEquip[9][0])
+		  {
+		    $arrRingtype = explode(" ", $arrEquip[9][1]);
+		    $intAmount = count($arrRingtype) - 1;
+		    $intKey = array_search($arrRingtype[$intAmount], $arrRings);
+		    if ($intKey != NULL)
+		      {
+			$strStat = $arrStat[$intKey];
+			$player -> $strStat = $player -> $strStat + $arrEquip[9][2];
+		      }
+		  }
+		if ($arrEquip[10][0])
+		  {
+		    $arrRingtype = explode(" ", $arrEquip[10][1]);
+		    $intAmount = count($arrRingtype) - 1;
+		    $intKey = array_search($arrRingtype[$intAmount], $arrRings);
+		    if ($intKey != NULL)
+		      {
+			$strStat = $arrStat[$intKey];
+			$player -> $strStat = $player -> $strStat + $arrEquip[10][2];
+		      }
+		  }
+		$objMembers = $db->Execute("SELECT `id`, `agility`, `inteli`, `perception`, `bless`, `blessval` FROM `players` WHERE `tribe`=".$_GET['id']);
+		$blnAction = TRUE;
+		$strDate = $db -> DBDate($newdate);
+		while(!$objMembers->EOF)
+		  {
+		    if ($objMembers->fields['bless'] == 'inteli')
+		      {
+			$objMembers->fields['inteli'] += $objMembers->fields['blessval'];
+		      }
+		    if ($objMembers->fields['bless'] == 'agility')
+		      {
+			$objMembers->fields['agility'] += $objMembers->fields['blessval'];
+		      }
+		    $intChance = ($player->agility + $player->inteli + $player->thievery) - ($objMembers->fields['agility'] + $objMembers->fields['inteli'] + $objMembers->fields['perception']);
+		    if ($intChance < 1)
+		      {
+			$db->Execute("UPDATE `players` SET `perception`=`perception`+".($player->level / 100)." WHERE `id`=".$objMembers->fields['id']);
+			$db->Execute("UPDATE `players` SET `miejsce`='Lochy' WHERE `id`=".$player->id);
+			$db -> Execute("INSERT INTO `log` (`owner`, `log`, `czas`, `type`) VALUES(".$objMembers->fields['id'].",'Przyłapałeś <b><a href=view.php?view=".$player->id.">".$player->user."</a></b> ID:".$player->id." jak myszkował po siedzibie twojego klanu i natychmiast przekazałeś go strażnikom.', ".$strDate.", 'T')");
+			$blnAction = FALSE;
+			break;
+		      }
+		    $objMembers->MoveNext();
+		  }
+		$objMembers->Close();
+		$objLevels = $db->Execute("SELECT SUM(`level`) FROM `players` WHERE `tribe`=".$_GET['id']);
+		$intLevels = $objLevels->fields['SUM(`level`)'];
+		$objLevels->Close();
+		if ($blnAction)
+		  {
+		    $intExp = $intLevels * 5;
+		    $fltThievery = $intLevels / 50.0;
+		  }
+		else
+		  {
+		    $intExp = ceil($intLevels / 100);
+		    $fltThievery = $intLevels / 100.0;
+		  }
+		require_once('includes/checkexp.php');
+		checkexp($player->exp, $intExp, $player->level, $player->race, $player->user, $player->id, 0, 0, $player->id, 'thievery', $fltThievery);
+	      }
+	  }
 
-        require_once('includes/checkastral.php');
-        checkastral($objTribe -> fields['id']);
+	/**
+	 * Steal astral components
+	 */
+	if ($_GET['step'] == 'steal')
+	  {
+	    require_once('includes/astralsteal.php');
+	    astralsteal($_GET['id'], 'C', $objTribe -> fields['owner']);
+	    
+	    require_once('includes/checkastral.php');
+	    checkastral($objTribe -> fields['id']);
+	    
+	    $objTribe -> Close();
+	  }
 
-        $objTribe -> Close();
-    }
+	//Espionage of clan
+	elseif ($_GET['step'] == 'espionage')
+	  {
+	    if ($blnAction)
+	      {
+		$objResult = $db->Execute("SELECT `credits`, `platinum`, `zolnierze`, `forty` FROM `tribes` WHERE `id`=".$_GET['id']);
+		$strMessage = 'Oto wiadomości jakie udało ci się zebrać o klanie:<br />Złoto: '.$objResult->fields['credits'].'<br />Mithril: '.$objResult->fields['platinum'].'<br />Żołnierzy: '.$objResult->fields['zolnierze'].'<br />Fortyfikacji: '.$objResult->fields['forty']."<br />";
+		$objResult->Close();
+	      }
+	    else
+	      {
+		$intCost = $player->level * 1000;
+		$db -> Execute("INSERT INTO `jail` (`prisoner`, `verdict`, `duration`, `cost`, `data`) VALUES(".$player -> id.",'Próba szpiegowania klanu', 7, ".$intCost.", '".$data."')");   
+		$db -> Execute("INSERT INTO `log` (`owner`, `log`, `czas`, `type`) VALUES(".$player -> id.",'Zostałeś wtrącony do więzienia na 1 dzień za próbę szpiegowania klanu. Kaucja wynosi: ".$intCost.".', ".$strDate.", 'T')");
+		$strMessage = "Próbowałeś dowiedzieć się czegoś o klanie, niestety zostałeś złapany! I tak oto znalazłeś się w lochach.";
+	      }
+	    $objTribe -> Close();
+	    error($strMessage);
+	  }
 
-    if (isset ($_GET['step']) && $_GET['step'] == 'members') 
-    {
-	checkvalue($_GET['tid']);
-        $tribename = $db -> Execute("SELECT `name`, `owner` FROM `tribes` WHERE `id`=".$_GET['tid']);
-        $mem = $db -> Execute("SELECT `id`, `user`, `tribe_rank` FROM `players` WHERE `tribe`=".$_GET['tid']);
-        $arrlink = array();
-        $i = 0;
-        while (!$mem -> EOF) 
-        {
-            if ($mem -> fields['id'] == $tribename -> fields['owner']) {
-                $arrlink[$i] = "- <a href=\"view.php?view=".$mem -> fields['id']."\">".$mem -> fields['user']."</a> (".$mem -> fields['id'].") (".$mem -> fields['tribe_rank'].") (".LEADER.")<br />";
-            } 
+	//Sabotage of astral machine
+	elseif ($_GET['step'] == 'sabotage')
+	  {
+	    if ($blnAction)
+	      {
+		$objAstral = $db -> Execute("SELECT `used`, `directed` FROM `astral_machine` WHERE `owner`=".$objTribe->fields['id']);
+		$intAmount -= ceil($objAstral->fields['used'] / 20);
+		if ($intAmount < 0)
+		  {
+		    $intAmount = 0;
+		  }
+		$intAmount2 -= ceil($objAstral->fields['directed'] / 20);
+		if ($intAmount2 < 0)
+		  {
+		    $intAmount2 = 0;
+		  }
+		$objAstral->Close();
+		$db->Execute("UPDATE `astral_machine` SET `used`=".$intAmount.", `directed`=".$intAmount2." WHERE `owner`=".$objTribe->fields['id']);
+		$strMessage = "Udało ci się uszkodzić Astralną Machinę! Niezauważony szybko uciekasz w bezpieczne miejsce.";
+		$db -> Execute("INSERT INTO `log` (`owner`, `log`, `czas`, `type`) VALUES(".$objTribe->fields['owner'].",'Olbrzymi pióropusz ognia zakwitł nad Astralną Machiną twojego klanu. Ktoś dokonał sabotażu!', ".$strDate.", 'T')");
+	      }
+	    else
+	      {
+		$intCost = $player->level * 5000;
+		$db -> Execute("INSERT INTO `jail` (`prisoner`, `verdict`, `duration`, `cost`, `data`) VALUES(".$player->id.",'Próba zniszczenia Astralnej Machiny', 7, ".$intCost.", '".$data."')");   
+		$db -> Execute("INSERT INTO `log` (`owner`, `log`, `czas`, `type`) VALUES(".$player->id.",'Zostałeś wtrącony do więzienia na 1 dzień za próbę zniszczenia Astralnej Machiny. Kaucja wynosi: ".$intCost.".', ".$strDate.", 'T')");
+		$strMessage = "Próbowałeś uszkodzić Astralną Machinę, niestety zostałeś złapany! I tak oto znalazłeś się w lochach.";
+	      }
+	    $objTribe -> Close();
+	    error($strMessage);
+	  }
+	
+	//Show list of members
+	elseif ($_GET['step'] == 'members') 
+	  {
+	    checkvalue($_GET['tid']);
+	    $tribename = $db -> Execute("SELECT `name`, `owner` FROM `tribes` WHERE `id`=".$_GET['tid']);
+	    $mem = $db -> Execute("SELECT `id`, `user`, `tribe_rank` FROM `players` WHERE `tribe`=".$_GET['tid']);
+	    $arrlink = array();
+	    while (!$mem -> EOF) 
+	      {
+		if ($mem -> fields['id'] == $tribename -> fields['owner']) 
+		  {
+		    $arrlink[] = "- <a href=\"view.php?view=".$mem -> fields['id']."\">".$mem -> fields['user']."</a> (".$mem -> fields['id'].") (".$mem -> fields['tribe_rank'].") (".LEADER.")<br />";
+		  } 
                 else 
-            {
-                $arrlink[$i] = "- <a href=\"view.php?view=".$mem -> fields['id']."\">".$mem -> fields['user']."</a> (".$mem -> fields['id'].") (".$mem -> fields['tribe_rank'].")<br />";
-            }
-            $mem -> MoveNext();
-            $i = $i + 1;
-        }
-        $mem -> Close();
-        $smarty -> assign(array("Name" => $tribename -> fields['name'], 
-                                "Link" => $arrlink,
-                                "Memberlist" => MEMBER_LIST));
-        $tribename -> Close();
-    }
+		  {
+		    $arrlink[] = "- <a href=\"view.php?view=".$mem -> fields['id']."\">".$mem -> fields['user']."</a> (".$mem -> fields['id'].") (".$mem -> fields['tribe_rank'].")<br />";
+		  }
+		$mem -> MoveNext();
+	      }
+	    $mem -> Close();
+	    $smarty -> assign(array("Name" => $tribename -> fields['name'], 
+				    "Link" => $arrlink,
+				    "Memberlist" => MEMBER_LIST));
+	    $tribename -> Close();
+	  }
+      }
 }
 
 /**
