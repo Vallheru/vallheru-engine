@@ -1,3 +1,8 @@
+2011-10-19  Bartek thindil Jasicki  <thindil@tuxfamily.org>
+
+	* UPDATE,templates/layout1/equip.tpl, templates/equip.tpl, equip.php, includes/functions.php:
+	small redesign
+
 2011-10-18  Bartek thindil Jasicki  <thindil@tuxfamily.org>
 
 	* BUG,bank.php: 

@@ -7,7 +7,7 @@
  *   @copyright            : (C) 2004,2005,2006,2011 Vallheru Team based on Gamers-Fusion ver 2.5
  *   @author               : thindil <thindil@tuxfamily.org>
  *   @version              : 1.4
- *   @since                : 18.10.2011
+ *   @since                : 19.10.2011
  *
  */
 
@@ -192,20 +192,44 @@ function drink($id)
             $db -> Execute("UPDATE potions SET amount=".$amount." WHERE id=".$miks -> fields['id']);
         }
         $strPotionname = $miks -> fields['name'];
-        if ($intRoll > 50)
-        {
-            $smarty -> assign("Message", DRINK." ".$strPotionname." ".ANDT." $efekt.");
-        }
+	if ($player->page != 'Ekwipunek')
+	  {
+	    if ($intRoll > 50)
+	      {
+		$smarty -> assign("Message", DRINK." ".$strPotionname." ".ANDT." ".$efekt.".");
+	      }
             else
-        {
-            $smarty -> assign("Message", DRINK." ".$strPotionname." ".AND_FAIL);
-        }
+	      {
+		$smarty -> assign("Message", DRINK." ".$strPotionname." ".AND_FAIL);
+	      }
+	  }
+	else
+	  {
+	    if ($intRoll > 50)
+	      {
+		$smarty -> assign("Action", DRINK." ".$strPotionname." ".ANDT." ".$efekt.".");
+	      }
+            else
+	      {
+		$smarty -> assign("Action", DRINK." ".$strPotionname." ".AND_FAIL);
+	      }
+	  }
     }
-        else
-    {
-        $smarty -> assign("Message", $message);
+    else
+      {
+	if ($player->page != 'Ekwipunek')
+	  {
+	    $smarty -> assign("Message", $message);
+	  }
+	else
+	  {
+	    $smarty->assign("Action", $message);
+	  }
     }
-    $smarty -> display ('error1.tpl');
+    if ($player->page != 'Ekwipunek')
+      {
+	$smarty -> display ('error1.tpl');
+      }
     $miks -> Close();   
 }
 
@@ -409,8 +433,15 @@ function equip ($id)
         }
         $db -> Execute("INSERT INTO equipment (owner, name, power, type, cost, zr, wt, minlev, maxwt, amount, magic, poison, szyb, status, twohand, ptype, repair) VALUES(".$player -> id.",'".$equip -> fields['name']."',".$equip -> fields['power'].",'".$equip -> fields['type']."',".$equip -> fields['cost'].",".$equip -> fields['zr'].",".$equip -> fields['wt'].",".$equip -> fields['minlev'].",".$equip -> fields['maxwt'].",0,'".$equip -> fields['magic']."',".$equip -> fields['poison'].",".$equip -> fields['szyb'].",'E','".$equip -> fields['twohand']."','".$equip -> fields['ptype']."', ".$equip -> fields['repair'].")") or error(E_WEAR);
     }
-    $smarty -> assign ("Message", WEAR." ".$equip -> fields['name'].".");
-    $smarty -> display ('error1.tpl');
+    if ($player->page != 'Ekwipunek')
+      {
+	$smarty -> assign ("Message", WEAR." ".$equip -> fields['name'].".");
+	$smarty -> display ('error1.tpl');
+      }
+    else
+      {
+	$smarty -> assign ("Action", WEAR." ".$equip -> fields['name'].".");
+      }
     $equip -> Close();
 }
 

@@ -7,7 +7,7 @@
  *   @copyright            : (C) 2004,2005,2006,2007,2011 Vallheru Team based on Gamers-Fusion ver 2.5
  *   @author               : thindil <thindil@tuxfamily.org>
  *   @version              : 1.4
- *   @since                : 08.10.2011
+ *   @since                : 19.10.2011
  *
  */
 
@@ -247,7 +247,6 @@ function backpack($type,$playerid,$nameitems,$type2,$smartyname)
 $smarty -> assign(array("Arrowhead" => '', 
                         "Action" => '', 
                         "Potions1" => 0, 
-                        "Hide" => '', 
                         "Repairequip" => '', 
                         "Arrows1" => '',
 			"Ilevel" => 'Poziom',
@@ -450,8 +449,8 @@ if (isset($_GET['schowaj']))
         $test -> Close();
         $db -> Execute("DELETE FROM equipment WHERE id=".$bron -> fields['id']);
     }
+    $smarty -> assign ("Action", "Zdjąłeś ".$bron->fields['name']." (<a href=\"equip.php\">".REFRESH."</a>)<br />");
     $bron -> Close();
-    $smarty -> assign ("Hide", "<br />(<a href=\"equip.php\">".REFRESH."</a>)<br />\n");
 }
 
 if ($arrEquip[3][0] || $arrEquip[0][0] || $arrEquip[4][0] || $arrEquip[2][0] || $arrEquip[5][0]) 
@@ -1049,11 +1048,11 @@ if (isset ($_GET['poison']))
 		    $db -> Execute("DELETE FROM equipment WHERE id=".$item -> fields['id']);
 		  }
 	      }
-            $smarty -> assign ("Item", YOU_POISON." ".$item -> fields['name'].". <a href=\"equip.php\">".REFRESH."</a>");
+            $smarty -> assign ("Action", YOU_POISON." ".$item -> fields['name'].". <a href=\"equip.php\">".REFRESH."</a>");
         }
             else
         {
-            $smarty -> assign ("Item", YOU_POISON2." ".$item -> fields['name']." ".BUT_NOT.". <a href=\"equip.php\">".REFRESH."</a>");
+            $smarty -> assign ("Action", YOU_POISON2." ".$item -> fields['name']." ".BUT_NOT.". <a href=\"equip.php\">".REFRESH."</a>");
         }
         $amount = $poison -> fields['amount'] - 1;
         if ($amount < 1) 
@@ -1103,7 +1102,7 @@ if (isset($_GET['fill']))
     $objArrows2 -> Close();
     $db -> Execute("UPDATE equipment SET wt=wt+".$intFill." WHERE id=".$objArrows -> fields['id']);
     $objArrows -> Close();
-    $smarty -> assign("Hide", "Uzupełniłeś kołczan");
+    $smarty -> assign("Action", "Uzupełniłeś kołczan");
 }
 
 /**
@@ -1154,14 +1153,6 @@ if (!isset($_GET['drinkfew']))
   }
 
 /**
-* Assign variables and display page
-*/
-$smarty -> assign(array("Poison" => $_GET['poison'], 
-                        "Step" => $_GET['step'],
-			"Drinkfew" => $_GET['drinkfew']));
-$smarty -> display ('equip.tpl');
-
-/**
 * Wear equipment
 */
 if (isset($_GET['equip'])) 
@@ -1176,6 +1167,14 @@ if (isset($_GET['wypij']))
 {
     drink($_GET['wypij']);
 }
+
+/**
+* Assign variables and display page
+*/
+$smarty -> assign(array("Poison" => $_GET['poison'], 
+                        "Step" => $_GET['step'],
+			"Drinkfew" => $_GET['drinkfew']));
+$smarty -> display ('equip.tpl');
 
 require_once("includes/foot.php");
 ?>

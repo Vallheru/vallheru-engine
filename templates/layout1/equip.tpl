@@ -10,7 +10,26 @@
 {$Ring2}
 {$Repairequip}
 </form>
-{$Hide}
+{$Action}
+
+{if $Poison > "0"}
+    <br /><form method="post" action="equip.php?poison={$Poison}&amp;step=poison"><input type="submit" value="{$Poisonit}" /> <select name="weapon">
+    {section name=item loop=$Poisonitem}
+        <option value="{$Poisonid[item]}">{$Poisonitem[item]} (+{$Poisonpower[item]}) ({$Tamount}: {$Poisonamount[item]})</option>
+    {/section}
+    </select>
+    <input type="hidden" value="{$Poison}" name="poison" />
+    </form><br />
+{/if}
+
+{if $Drinkfew > 0}
+    <br /><form method="post" action="equip.php?drinkfew={$Drinkfew}&amp;step=drink">
+        <input type="submit" value="{$Adrink}" /> {$Pname} <input type="text" size="5" value="{$Pamount}" name="amount" /> {$Tamount}
+    </form></br >
+    {if $Step == "drink"}
+       {$Effect}
+    {/if}
+{/if}
 
 {if $Bweaponsamount > 1}
     <div align="center"><a href="#weapons">{$Bweaponsmenu[0]}</a></div>
@@ -236,28 +255,4 @@
 	<input type="submit" value="{$Potionssell}" />
     </form>
     <a href="#top">{$Aback}</a><br />
-{/if}
-
-{$Action}
-
-{if $Poison > "0"}
-    <form method="post" action="equip.php?poison={$Poison}&amp;step=poison"><input type="submit" value="{$Poisonit}" /> <select name="weapon">
-    {section name=item loop=$Poisonitem}
-        <option value="{$Poisonid[item]}">{$Poisonitem[item]} (+{$Poisonpower[item]}) ({$Tamount}: {$Poisonamount[item]})</option>
-    {/section}
-    </select>
-    <input type="hidden" value="{$Poison}" name="poison" />
-    </form>
-    {if $Step == "poison"}
-        {$Item}
-    {/if}
-{/if}
-
-{if $Drinkfew > 0}
-    <form method="post" action="equip.php?drinkfew={$Drinkfew}&amp;step=drink">
-        <input type="submit" value="{$Adrink}" /> {$Pname} <input type="text" size="5" value="{$Pamount}" name="amount" /> {$Tamount}
-    </form>
-    {if $Step == "drink"}
-       {$Effect}
-    {/if}
 {/if}
