@@ -4,10 +4,10 @@
  *   Polish language for select player class
  *
  *   @name                 : klasa.php                            
- *   @copyright            : (C) 2004, 2005, 2006 Vallheru Team based on Gamers-Fusion ver 2.5
- *   @author               : thindil <thindil@users.sourceforge.net>
- *   @version              : 1.2
- *   @since                : 22.08.2006
+ *   @copyright            : (C) 2004,2005,2006,2011 Vallheru Team based on Gamers-Fusion ver 2.5
+ *   @author               : thindil <thindil@tuxfamily.org>
+ *   @version              : 1.4
+ *   @since                : 19.10.2011
  *
  */
 
@@ -27,7 +27,7 @@
 //   along with this program; if not, write to the Free Software
 //   Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 //
-// $Id: klasa.php 566 2006-09-13 09:31:08Z thindil $
+// $Id$
 
 define("A_BACK", "Wróć");
 define("A_SELECT", "Wybierz");
@@ -139,6 +139,8 @@ if (isset ($_GET['klasa']) && $_GET['klasa'] == 'zlodziej' && $player -> clas ==
     Cechy Złodzieja:
     <ul>
     <li>Możliwość okradania banku, gracza lub sklepu</li>
+    <li>Możliwość szpiegowania klanów raz na dzień</li>
+    <li>Możliwość sabotowania budowy Astralnej Machiny raz na dzień</li>
     <li>Jeżeli złodziej dokona nieudanej próby kradzieży (zostanie złapany) - trafia do lochów na jeden dzień z kaucją 1000 x poziom</li>
     </ul>");
     define("YOU_SELECT", "<br />Wybrałeś ścieżkę złodzieja. Kliknij <a href=\"stats.php\">tutaj</a> aby wrócić.");
