@@ -7,7 +7,7 @@
  *   @copyright            : (C) 2004,2005,2006,2011 Vallheru Team based on Gamers-Fusion ver 2.5
  *   @author               : thindil <thindil@tuxfamily.org>
  *   @version              : 1.4
- *   @since                : 30.09.2011
+ *   @since                : 20.10.2011
  *
  */
 
@@ -239,13 +239,17 @@ if (isset($_GET['step']) && $_GET['step'] == 'plantation')
                 {
                     error(NO_MITH);
                 }
+		if ($intLandsamount == 100)
+		  {
+		    error("Nie możesz dokupić większej ilości ziemi do farmy.");
+		  }
                 if (!$objPlantation -> fields['lands'])
                 {
-                    $db -> Execute("INSERT INTO farms(owner, lands) VALUES(".$player -> id.", 1)");
+                    $db -> Execute("INSERT INTO `farms` (`owner`, `lands`) VALUES(".$player -> id.", 1)");
                 }
                     else
                 {
-                    $db -> Execute("UPDATE farms SET lands=lands+1 WHERE id=".$objPlantation -> fields['id']);
+                    $db -> Execute("UPDATE `farms` SET `lands`=`lands`+1 WHERE `id`=".$objPlantation -> fields['id']);
                 }
                 $db -> Execute("UPDATE players SET platinum=platinum-".$intMithcost." WHERE id=".$player -> id);
                 $strBuyitem = BUYING_LAND;
@@ -508,7 +512,12 @@ if (isset($_GET['step']) && $_GET['step'] == 'plantation')
                 require_once('includes/abilitybonus.php');
                 $player -> herbalist = abilitybonus('herbalist');
 
-                $intAmount = floor((($arrAge[$intKey2] * $_POST['amount']) / $arrHerbmodif[$intKey]) * (1 + $player -> herbalist / 20));
+		$intFactor = 1 + ($player->herbalist / 20);
+		if ($intFactor > 10)
+		  {
+		    $intFactor = 10;
+		  }
+                $intAmount = floor((($arrAge[$intKey2] * $_POST['amount']) / $arrHerbmodif[$intKey]) * $intFactor);
                 $intAmount = floor($intAmount + ($intAmount * $intRoll));
                 if ($intAmount < 0)
                 {
@@ -517,7 +526,7 @@ if (isset($_GET['step']) && $_GET['step'] == 'plantation')
 		if ($objHerb -> fields['age'] > 3)
 		  {
 		    $fltAbility = $intAmount * 0.01;
-		    $intExp = $intAmount * 5;
+		    $intExp = $intAmount * 2;
 		  }
 		else
 		  {
