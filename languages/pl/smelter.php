@@ -4,10 +4,10 @@
  *   Polish language for smelter
  *
  *   @name                 : smelter.php                            
- *   @copyright            : (C) 2004,2005,2006 Vallheru Team based on Gamers-Fusion ver 2.5
- *   @author               : thindil <thindil@users.sourceforge.net>
- *   @version              : 1.1
- *   @since                : 26.06.2006
+ *   @copyright            : (C) 2004,2005,2006,2011 Vallheru Team based on Gamers-Fusion ver 2.5
+ *   @author               : thindil <thindil@tuxfamily.org>
+ *   @version              : 1.4
+ *   @since                : 20.10.2011
  *
  */
 
@@ -65,7 +65,7 @@ if (isset($_GET['step']) && $_GET['step'] == 'upgrade')
 if (isset($_GET['step']) && $_GET['step'] == 'smelt')
 {
     define("NO_SMELT", "Nie możesz wytapiać rud surowców ponieważ nie masz odpowiednio rozbudowanej huty!");
-    define("SMELT_INFO", "Tutaj możesz wytapiać rudy minerałów w celu zdobycia surowców potrzebnych do wytwarzania przedmiotów. Każda taka akcja kosztuje ciebie 0.1 energii.");
+    define("SMELT_INFO", "Tutaj możesz wytapiać rudy minerałów w celu zdobycia surowców potrzebnych do wytwarzania przedmiotów. Koszt wytopu zależy od rodzaju metalu, który chcesz wytworzyć.");
     define("SMELT1", "Wytapiaj miedź (2 rudy miedzi + 1 bryła węgla = 1 sztabka miedzi)");
     define("SMELT2", "Wytapiaj brąz (1 ruda miedzi + 1 ruda cyny + 2 bryły węgla = 1 sztabka brązu)");
     define("SMELT3", "Wytapiaj mosiądz (2 rudy miedzi + 1 ruda cynku + 2 bryły węgla = 1 sztabka mosiądzu)");

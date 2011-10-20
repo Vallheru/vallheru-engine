@@ -1,5 +1,7 @@
 2011-10-20  Bartek thindil Jasicki  <thindil@tuxfamily.org>
 
+	* FEATURE,languages/pl/smelter.php, smelter.php: 
+	changed cost of energy for smelting
 	* FEATURE,farm.php:
 	added limit for farm lands, droped amount of experience from gathering, set maximum factor for gathered herbs
 

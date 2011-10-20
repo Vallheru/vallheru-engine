@@ -7,7 +7,7 @@
  *   @copyright            : (C) 2004,2005,2006,2011 Vallheru Team based on Gamers-Fusion ver 2.5
  *   @author               : thindil <thindil@tuxfamily.org>
  *   @version              : 1.4
- *   @since                : 01.10.2011
+ *   @since                : 20.10.2011
  *
  */
 
@@ -230,7 +230,8 @@ if (isset($_GET['step']) && $_GET['step'] == 'smelt')
         if (isset($_POST['amount']))
         {
 	    checkvalue($_POST['amount']);
-            $intEnergy = 0.1 * $_POST['amount'];
+	    $arrBillets = array(1, 2, 3, 5, 8);
+            $intEnergy = ($arrBillets[$intKey] / 10) * $_POST['amount'];
             $intEnergy = round($intEnergy, 2);
             if ($intEnergy > $player -> energy)
             {
@@ -248,7 +249,6 @@ if (isset($_GET['step']) && $_GET['step'] == 'smelt')
                 $i++;
             }
 	    $intAmount = 0;
-	    $arrBillets = array(1, 2, 3, 5, 8);
 	    $intDiff = 100 * $arrBillets[$intKey]; 
 	    for ($i = 0; $i < $_POST['amount']; $i++)
 	      {
