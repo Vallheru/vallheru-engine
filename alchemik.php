@@ -7,7 +7,7 @@
  *   @copyright            : (C) 2004,2005,2006,2007,2011 Vallheru Team based on Gamers-Fusion ver 2.5
  *   @author               : thindil <thindil@tuxfamily.org>
  *   @version              : 1.4
- *   @since                : 18.10.2011
+ *   @since                : 20.10.2011
  *
  */
 
@@ -317,7 +317,7 @@ else
 			  {
 			    $rpd = ($rpd + (($kuznia -> fields['level'] / 100) * (10 * ($intTmpamount - 1))));
 			  }
-			if ($objItem -> fields['type'] == 'P')
+			if ($objItem -> fields['type'] == 'P' || $objItem->fields['type'] == 'A')
 			  {
 			    $intMaxpower = $kuznia -> fields['level'] * 2;
 			    $intPower = ceil($player -> alchemy / 2);

@@ -488,22 +488,15 @@ if ($mik -> fields['id'])
         $arramount[$i] = $mik -> fields['amount'];
         $arreffect[$i] = $mik -> fields['efect'];
         $arraction[$i] = "[ <a href=\"equip.php?wypij=".$mik -> fields['id']."\">".A_DRINK."</a> |";
-        if ($mik -> fields['type'] != 'A') 
-        {
-            $arrpower[$i] = "(".POWER.": ".$mik -> fields['power'].")";
-            if ($mik -> fields['type'] == 'P')
-	      {
-                $arraction[$i] = "[ <a href=\"equip.php?poison=".$mik -> fields['id']."\">".A_POISON."</a> |";
-	      }
-	    elseif ($mik->fields['type'] == 'H' || $mik->fields['type'] == 'M')
-	      {
-		$arraction[$i] .= " <a href=\"equip.php?drinkfew=".$mik->fields['id']."\">wypij kilka</a> |";
-	      }
-        } 
-            else
-        {
-            $arrpower[$i] = '';
-        }
+	$arrpower[$i] = "(".POWER.": ".$mik -> fields['power'].")";
+	if ($mik -> fields['type'] == 'P')
+	  {
+	    $arraction[$i] = "[ <a href=\"equip.php?poison=".$mik -> fields['id']."\">".A_POISON."</a> |";
+	  }
+	elseif ($mik->fields['type'] == 'H' || $mik->fields['type'] == 'M')
+	  {
+	    $arraction[$i] .= " <a href=\"equip.php?drinkfew=".$mik->fields['id']."\">wypij kilka</a> |";
+	  }
 	$arraction[$i] .= " <a href=\"equip.php?sellpotion=".$mik->fields['id']."\">".A_SELL."</a> ".FOR_A." ".$mik->fields['cost']." ".GOLD_COINS." ]";
 	$arrid[$i] = $mik->fields['id'];
         $mik -> MoveNext();

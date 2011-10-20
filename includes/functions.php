@@ -7,7 +7,7 @@
  *   @copyright            : (C) 2004,2005,2006,2011 Vallheru Team based on Gamers-Fusion ver 2.5
  *   @author               : thindil <thindil@tuxfamily.org>
  *   @version              : 1.4
- *   @since                : 19.10.2011
+ *   @since                : 20.10.2011
  *
  */
 
@@ -139,13 +139,20 @@ function drink($id)
       if ($miks->fields['name'] != 'Oszukanie śmierci')
 	{
 	  $efekt =  GAIN_ANTI." ".$strType2;
+	  $db -> Execute("UPDATE `players` SET `antidote`='".$strAtype."' WHERE `id`=".$player -> id);
 	}
       else
 	{
-	  $strAtype = 'R';
-	  $efekt = 'czasowo zabezpieczyłeś się przed śmiercią';
+	  if ($miks->fields['power'] >= $player->level)
+	    {
+	      $efekt = 'czasowo zabezpieczyłeś się przed śmiercią';
+	      $db -> Execute("UPDATE `players` SET `antidote`='R' WHERE `id`=".$player -> id);
+	    }
+	  else
+	    {
+	      $message = 'Ta mikstura jest za słaba dla ciebie.';
+	    }
 	}
-      $db -> Execute("UPDATE `players` SET `antidote`='".$strAtype."' WHERE `id`=".$player -> id);
     }
     if ($strType == 'H' && $intRoll > 50 && !isset($message)) 
       {
