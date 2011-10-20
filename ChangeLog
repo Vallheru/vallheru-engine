@@ -1,5 +1,7 @@
 2011-10-20  Bartek thindil Jasicki  <thindil@tuxfamily.org>
 
+	* UPDATE,mmarket.php: 
+	show power of antidotes too
 	* FEATURE,includes/functions.php, equip.php, alchemik.php: 
 	added strength to antidotes, resurrect potion depends on player level
 	* UPDATE,amarket.php: 

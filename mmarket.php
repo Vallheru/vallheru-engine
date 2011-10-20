@@ -8,7 +8,7 @@
  *   @author              : thindil <thindil@tuxfamily.org>
  *   @author              : eyescream <tduda@users.sourceforge.net>
  *   @version             : 1.4
- *   @since               : 12.10.2011
+ *   @since               : 20.10.2011
  *
  */
 
@@ -145,23 +145,14 @@ if (isset ($_GET['view']) && $_GET['view'] == 'market')
     $arritem = array();
     $arrId = array();
     $arrOwner = array();
-    $i = 0;
     while (!$pm -> EOF) 
       {
 	$seller = $db -> Execute("SELECT `user` FROM `players` WHERE `id`=".$pm -> fields['owner']);
-	if ($pm -> fields['type'] != 'A') 
-	  {
-	    $arritem[$i] = "<tr><td>".$pm -> fields['name']." (moc: ".$pm -> fields['power'].")</td><td align=center>".$pm -> fields['efect']."</td><td align=\"center\">".$pm -> fields['amount']."</td><td align=center>".$pm -> fields['cost']." / ".($pm->fields['cost'] * $pm->fields['amount'])."</td><td><a href=view.php?view=".$pm -> fields['owner'].">".$seller -> fields['user']."</a></td>";
-	  } 
-	else 
-	  {
-	    $arritem[$i] = "<tr><td>".$pm -> fields['name']."</td><td align=center>".$pm -> fields['efect']."</td><td align=\"center\">".$pm -> fields['amount']."</td><td align=center>".$pm -> fields['cost']." / ".($pm->fields['cost'] * $pm->fields['amount'])."</td><td><a href=view.php?view=".$pm -> fields['owner'].">".$seller -> fields['user']."</a></td>";
-	  }
+	$arritem[] = "<tr><td>".$pm -> fields['name']." (moc: ".$pm -> fields['power'].")</td><td align=center>".$pm -> fields['efect']."</td><td align=\"center\">".$pm -> fields['amount']."</td><td align=center>".$pm -> fields['cost']." / ".($pm->fields['cost'] * $pm->fields['amount'])."</td><td><a href=view.php?view=".$pm -> fields['owner'].">".$seller -> fields['user']."</a></td>";
 	$seller -> Close();
-	$arrId[$i] = $pm->fields['id'];
-	$arrOwner[$i] = $pm->fields['owner'];
+	$arrId[] = $pm->fields['id'];
+	$arrOwner[] = $pm->fields['owner'];
 	$pm -> MoveNext();
-	$i = $i + 1;
       }
     $pm -> Close();
     $smarty -> assign(array("Item" => $arritem, 
