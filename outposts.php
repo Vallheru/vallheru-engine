@@ -8,7 +8,7 @@
  *   @author               : thindil <thindil@tuxfamily.org>
  *   @author               : eyescream <tduda@users.sourceforge.net>
  *   @version              : 1.4
- *   @since                : 13.10.2011
+ *   @since                : 21.10.2011
  *
  */
  
@@ -1150,7 +1150,12 @@ if (isset ($_GET['view']) && $_GET['view'] == 'taxes')
         {
             $intFatigue = 100;
         }
-        $db -> Execute("UPDATE `outposts` SET `fatigue`=".$intFatigue.", `gold`=`gold`+".$intGaingold.", `turns`=`turns`-".$_POST['amount']." WHERE `id`=".$out -> fields['id']);
+	$fltMorale = $out->fields['morale'] + ($_POST['amount'] / 10);
+	if ($fltMorale > 10)
+	  {
+	    $fltMorale = 10;
+	  }
+        $db -> Execute("UPDATE `outposts` SET `fatigue`=".$intFatigue.", `gold`=`gold`+".$intGaingold.", `turns`=`turns`-".$_POST['amount'].", `morale`=".$fltMorale." WHERE `id`=".$out -> fields['id']);
         $smarty -> assign ("Message", YOU_ARMY.$_POST['amount'].TIMES_FOR.$intGaingold.GOLD_COINS);
     }
 }
