@@ -7,7 +7,7 @@
  *   @copyright            : (C) 2004,2005,2006,2011 Vallheru Team based on Gamers-Fusion ver 2.5
  *   @author               : thindil <thindil@tuxfamily.org>
  *   @version              : 1.4
- *   @since                : 20.10.2011
+ *   @since                : 21.10.2011
  *
  */
 
@@ -152,6 +152,7 @@ if (isset($_GET['step']) && $_GET['step'] == 'smelt')
         error(NO_SMELT);
     }
     $arrAction = array('copper', 'bronze', 'brass', 'iron', 'steel');
+    $arrBillets = array(1, 2, 3, 5, 8);
     /**
      * Smelt menu
      */
@@ -208,6 +209,7 @@ if (isset($_GET['step']) && $_GET['step'] == 'smelt')
         }
         $i = 0;
         $intMaxamount = 0;
+	$intEnergy = $player->energy / ($arrBillets[$intKey] / 10);
         foreach ($arrOresamount as $intAmount)
         {
             $strKey = $arrOres[$i];
@@ -218,11 +220,14 @@ if (isset($_GET['step']) && $_GET['step'] == 'smelt')
             }
             $i ++;
         }
+	if ($intEnergy < $intMaxamount)
+	  {
+	    $intMaxamount = $intEnergy;
+	  }
         $arrSmeltmineral = array(SMELTM1, SMELTM2, SMELTM3, SMELTM4, SMELTM5);
         $smarty -> assign(array("Asmelt2" => A_SMELT,
                                 "Smeltm" => $arrSmeltmineral[$intKey],
                                 "Youhave" => $strOreshave,
-                                "Youmay" => YOU_MAY,
                                 "Maxamount" => $intMaxamount));
         /**
          * Start smelting
@@ -230,9 +235,8 @@ if (isset($_GET['step']) && $_GET['step'] == 'smelt')
         if (isset($_POST['amount']))
         {
 	    checkvalue($_POST['amount']);
-	    $arrBillets = array(1, 2, 3, 5, 8);
-            $intEnergy = ($arrBillets[$intKey] / 10) * $_POST['amount'];
-            $intEnergy = round($intEnergy, 2);
+	    $intEnergy = ($arrBillets[$intKey] / 10) * $_POST['amount'];
+	    $intEnergy = round($intEnergy, 2);
             if ($intEnergy > $player -> energy)
             {
                 error(NO_ENERGY2);

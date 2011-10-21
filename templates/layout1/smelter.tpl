@@ -37,7 +37,7 @@
     {if $Smelt != ""}
         <br />
         <form method="post" action="smelter.php?step=smelt&amp;smelt={$Smelt}">
-            <input type="submit" value="{$Asmelt2}" /> <input type="text" name="amount" size="5" /> {$Smeltm} {$Youhave} {$Youmay} <b>{$Maxamount}</b> {$Smeltm}
+            <input type="submit" value="{$Asmelt2}" /> <input type="text" name="amount" size="5" value="{$Maxamount}" /> {$Smeltm} {$Youhave}
         </form>
     {/if}
     <br /><br />{$Message}
