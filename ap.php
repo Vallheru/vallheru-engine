@@ -7,7 +7,7 @@
  *   @copyright            : (C) 2004,2005,2006,2011 Vallheru Team based on Gamers-Fusion ver 2.5
  *   @author               : thindil <thindil@tuxfamily.org>
  *   @version              : 1.4
- *   @since                : 09.09.2011
+ *   @since                : 21.10.2011
  *
  */
 
@@ -46,99 +46,108 @@ if (!$player -> race || !$player -> clas)
 * Assign variables to template
 */
 $smarty -> assign(array("Strength" => '',
-    "Agility" => '',
-    "Speed" => '',
-    "Endurance" => '',
-    "Stat" => '',
-	"Stat2" => 0));
+			"Agility" => '',
+			"Speed" => '',
+			"Endurance" => '',
+			"Stat" => '',
+			"Stat2" => 0));
 
-if (!isset ($_GET['step']) && $player -> race == 'Człowiek' && $player -> ap > 0) 
-{
-    $smarty -> assign (array("Strength" => 2.5, 
-        "Agility" => 2.5, 
-        "Speed" => 2.5, 
-        "Endurance" => 2.5));
-}
-
-if (!isset ($_GET['step']) && $player -> race == 'Elf' && $player -> ap > 0) 
-{
-    $smarty -> assign (array("Strength" => 2, 
-        "Agility" => 3, 
-        "Speed" => 3, 
-        "Endurance" => 2));
-}
-
-if (!isset ($_GET['step']) && $player -> race == 'Krasnolud' && $player -> ap > 0) 
-{
-    $smarty -> assign (array("Strength" => 3.5, 
-        "Agility" => 2, 
-        "Speed" => 2, 
-        "Endurance" => 3));
-}
-
-if (!isset ($_GET['step']) && $player -> race == 'Hobbit' && $player -> ap > 0) 
-{
-    $smarty -> assign (array("Strength" => 1.5, 
-        "Agility" => 3.5, 
-        "Speed" => 1.5, 
-        "Endurance" => 2.5));
-}
-
-if (!isset ($_GET['step']) && $player -> race == 'Jaszczuroczłek' && $player -> ap > 0) 
-{
-    $smarty -> assign (array("Strength" => 3.5, 
-        "Agility" => 2.5, 
-        "Speed" => 3, 
-        "Endurance" => 2.5));
-}
-
-if (!isset ($_GET['step']) && $player -> race == 'Gnom' && $player -> ap > 0) 
-{
-    $smarty -> assign (array("Strength" => 1.5, 
-        "Agility" => 2.5, 
-        "Speed" => 1.5, 
-        "Endurance" => 2.5,
-		"Stat2" => 2));
-}
-
-if (!isset ($_GET['step']) && $player -> clas == 'Wojownik' && $player -> ap > 0) 
-{
-    $smarty -> assign ("Stat", 2);
-}
-
-if (!isset ($_GET['step']) && $player -> clas == 'Barbarzyńca' && $player -> ap > 0) 
-{
-    $smarty -> assign ("Stat", 2);
-}
-
-if (!isset ($_GET['step']) && $player -> clas == 'Mag' && $player -> ap > 0) 
-{
-    $smarty -> assign ("Stat", 3);
-}
-
-if (!isset ($_GET['step']) && $player -> clas == 'Rzemieślnik' && $player -> ap > 0) 
-{
-    $smarty -> assign ("Stat", 2.5);
-}
-
-if (!isset ($_GET['step']) && $player -> clas == 'Złodziej' && $player -> ap > 0) 
-{
-    $smarty -> assign ("Stat", 2.5);
-}
-
-if (!isset ($_GET['step']) && $player -> clas == 'Wojownik' && $player -> ap > 0 && $player -> race == 'Jaszczuroczłek') 
-{
-    $smarty -> assign ("Stat", 1);
-}
-
-if (!isset ($_GET['step']) && $player -> clas == 'Mag' && $player -> ap > 0 && $player -> race == 'Jaszczuroczłek') {
-    $smarty -> assign ("Stat", 2);
-}
-
-if (!isset ($_GET['step']) && $player -> clas == 'Rzemieślnik' && $player -> ap > 0 && $player -> race == 'Jaszczuroczłek') 
-{
-    $smarty -> assign ("Stat", 1.5);
-}
+if (!isset($_GET['step']))
+  {
+    $_GET['step'] = '';
+    $smarty -> assign(array("Apinfo" => AP_INFO,
+			    "Ap2" => AP,
+			    "Nstrength" => N_STRENGTH,
+			    "Nagility" => N_AGILITY,
+			    "Nspeed" => N_SPEED,
+			    "Ncond" => N_COND,
+			    "Nint" => N_INT,
+			    "Nwisdom" => N_WISDOM,
+			    "Aadd" => A_ADD));
+    if ($player->ap > 0)
+      {
+	switch ($player->race)
+	  {
+	  case 'Człowiek':
+	    $smarty -> assign (array("Strength" => 2.5, 
+				     "Agility" => 2.5, 
+				     "Speed" => 2.5, 
+				     "Endurance" => 2.5));
+	    break;
+	  case 'Elf':
+	    $smarty -> assign (array("Strength" => 2, 
+				     "Agility" => 3, 
+				     "Speed" => 3, 
+				     "Endurance" => 2));
+	    break;
+	  case 'Krasnolud':
+	    $smarty -> assign (array("Strength" => 3.5, 
+				     "Agility" => 2, 
+				     "Speed" => 2, 
+				     "Endurance" => 3));
+	    break;
+	  case 'Hobbit':
+	    $smarty -> assign (array("Strength" => 1.5, 
+				     "Agility" => 3.5, 
+				     "Speed" => 1.5, 
+				     "Endurance" => 2.5));
+	    break;
+	  case 'Jaszczuroczłek':
+	    $smarty -> assign (array("Strength" => 3.5, 
+				     "Agility" => 2.5, 
+				     "Speed" => 3, 
+				     "Endurance" => 2.5));
+	    break;
+	  case 'Gnom':
+	    $smarty -> assign (array("Strength" => 1.5, 
+				     "Agility" => 2.5, 
+				     "Speed" => 1.5, 
+				     "Endurance" => 2.5,
+				     "Stat2" => 2));
+	    break;
+	  default:
+	    break;
+	  }
+	if ($player->race == 'Jaszczuroczłek')
+	  {
+	    switch ($player->clas)
+	      {
+	      case 'Wojownik':
+	      case 'Barbarzyńca':
+		$smarty -> assign ("Stat", 1);
+		break;
+	      case 'Mag':
+		$smarty -> assign ("Stat", 2);
+		break;
+	      case 'Rzemieślnik':
+	      case 'Złodziej':
+		$smarty -> assign ("Stat", 1.5);
+		break;
+	      default:
+		  break;
+	      }
+	  }
+	else
+	  {
+	    switch ($player->clas)
+	      {
+	      case 'Wojownik':
+	      case 'Barbarzyńca':
+		$smarty -> assign ("Stat", 2);
+		break;
+	      case 'Mag':
+		$smarty -> assign ("Stat", 3);
+		break;
+	      case 'Rzemieślnik':
+	      case 'Złodziej':
+		$smarty -> assign ("Stat", 2.5);
+		break;
+	      default:
+		break;
+	      }
+	  }
+      }
+  }
 
 /**
 * Distribution of Astral Points
@@ -169,89 +178,95 @@ if (isset ($_GET['step']) && $_GET['step'] == 'add')
     {
         error (NO_AP2);
     }
-    if ($player -> race == 'Człowiek') 
-    {
-	    $arrgain[0] = 2.5;
-	    $arrgain[1] = 2.5;
-	    $arrgain[2] = 2.5;
-	    $arrgain[3] = 2.5;
-    }
-    if ($player -> race == 'Elf') 
-    {
-	    $arrgain[0] = 2;
-	    $arrgain[1] = 3;
-	    $arrgain[2] = 3;
-	    $arrgain[3] = 2;
-    }
-    if ($player -> race == 'Krasnolud') 
-    {
-	    $arrgain[0] = 3.5;
-	    $arrgain[1] = 2;
-	    $arrgain[2] = 2;
-	    $arrgain[3] = 3;
-    }
-    if ($player -> race == 'Hobbit') 
-    {
-	    $arrgain[0] = 1.5;
-	    $arrgain[1] = 3.5;
-	    $arrgain[2] = 1.5;
-	    $arrgain[3] = 2.5;
-    }
-    if ($player -> race == 'Jaszczuroczłek') 
-    {
-	    $arrgain[0] = 3.5;
-	    $arrgain[1] = 2.5;
-	    $arrgain[2] = 3;
-	    $arrgain[3] = 2.5;
-    }
-    if ($player -> clas == 'Wojownik' || $player -> clas == 'Barbarzyńca') 
-    {
+    switch ($player->race)
+      {
+      case 'Człowiek':
+	$arrgain[0] = 2.5;
+	$arrgain[1] = 2.5;
+	$arrgain[2] = 2.5;
+	$arrgain[3] = 2.5;
+	break;
+      case 'Elf':
+	$arrgain[0] = 2;
+	$arrgain[1] = 3;
+	$arrgain[2] = 3;
+	$arrgain[3] = 2;
+	break;
+      case 'Krasnolud':
+	$arrgain[0] = 3.5;
+	$arrgain[1] = 2;
+	$arrgain[2] = 2;
+	$arrgain[3] = 3;
+	break;
+      case 'Hobbit':
+	$arrgain[0] = 1.5;
+	$arrgain[1] = 3.5;
+	$arrgain[2] = 1.5;
+	$arrgain[3] = 2.5;
+	break;
+      case 'Jaszczuroczłek':
+	$arrgain[0] = 3.5;
+	$arrgain[1] = 2.5;
+	$arrgain[2] = 3;
+	$arrgain[3] = 2.5;
+	break;
+      case 'Gnom':
+	$arrgain[0] = 1.5;
+	$arrgain[1] = 2.5;
+	$arrgain[2] = 1.5;
+	$arrgain[3] = 2.5;
+	break;
+      default:
+	break;
+      }
+    if ($player->race == 'Jaszczuroczłek')
+      {
+	switch ($player->clas)
+	  {
+	  case 'Wojownik':
+	  case 'Barbarzyńca':
+	    $arrgain[4] = 1;
+	    $arrgain[5] = 1;
+	    break;
+	  case 'Złodziej':
+	  case 'Rzemieślnik':
+	    $arrgain[4] = 1.5;
+	    $arrgain[5] = 1.5;
+	    break;
+	  case 'Mag':
+	    $arrgain[4] = 1.5;
+	    $arrgain[5] = 1.5;
+	    break;
+	  default:
+	    break;
+	  }
+      }
+    else
+      {
+	switch ($player->clas)
+	  {
+	  case 'Wojownik':
+	  case 'Barbarzyńca':
 	    $arrgain[4] = 2;
 	    $arrgain[5] = 2;
-    }
-    if ($player -> clas == 'Mag') 
-    {
-	    $arrgain[4] = 3;
-	    $arrgain[5] = 3;
-    }
-    if ($player -> clas == 'Rzemieślnik' || $player -> clas == 'Złodziej') 
-    {
+	    break;
+	  case 'Rzemieślnik':
+	  case 'Złodziej':
 	    $arrgain[4] = 2.5;
 	    $arrgain[5] = 2.5;
-    }
-    if ($player -> clas == 'Wojownik' && $player -> race == 'Jaszczuroczłek') 
-    {
-	    $arrgain[4] = 1;
-	    $arrgain[5] = 1;
-    }
-    if ($player -> clas == 'Barbarzyńca' && $player -> race == 'Jaszczuroczłek') 
-    {
-	    $arrgain[4] = 1;
-	    $arrgain[5] = 1;
-    }
-    if ($player -> clas == 'Złodziej' && $player -> race == 'Jaszczuroczłek') 
-    {
-	    $arrgain[4] = 1.5;
-	    $arrgain[5] = 1.5;
-    }
-    if ($player -> clas == 'Mag' && $player -> race == 'Jaszczuroczłek') 
-    {
-	    $arrgain[4] = 2;
-	    $arrgain[5] = 2;
-    }
-    if ($player -> clas == 'Rzemieślnik' && $player -> race == 'Jaszczuroczłek') 
-    {
-	    $arrgain[4] = 1.5;
-	    $arrgain[5] = 1.5;
-    }
-    if ($player -> race == 'Gnom') 
-    {
-	    $arrgain[0] = 1.5;
-	    $arrgain[1] = 2.5;
-	    $arrgain[2] = 1.5;
-	    $arrgain[3] = 2.5;
-		$arrgain[5] = 2;
-    }
+	    break;
+	  case 'Mag':
+	    $arrgain[4] = 3;
+	    $arrgain[5] = 3;
+	    break;
+	  default:
+	    break;
+	  }
+      }
+    if ($player->race == 'Gnom')
+      {
+	$arrgain[5] = 2;
+      }
     $arrpoints = array(0,0,0,0,0,0);
     $arrname = array(A_STRENGTH, A_AGILITY, A_SPEED, A_CONDITION, A_INTELIGENCE, A_WISDOM);
     for ($i=0;$i<6;$i++) 
@@ -289,23 +304,6 @@ if (isset ($_GET['step']) && $_GET['step'] == 'add')
         "Click" => CLICK,
         "Here" => HERE,
         "Fora" => FOR_A));
-}
-
-/**
-* Initialization of variable and assign variables to template
-*/
-if (!isset($_GET['step'])) 
-{
-    $_GET['step'] = '';
-	$smarty -> assign(array("Apinfo" => AP_INFO,
-        "Ap2" => AP,
-        "Nstrength" => N_STRENGTH,
-        "Nagility" => N_AGILITY,
-        "Nspeed" => N_SPEED,
-        "Ncond" => N_COND,
-        "Nint" => N_INT,
-        "Nwisdom" => N_WISDOM,
-        "Aadd" => A_ADD));
 }
 
 /**
