@@ -4,10 +4,10 @@
  *   Polish language for turnfight player vs monster
  *
  *   @name                 : turnfight.php                            
- *   @copyright            : (C) 2004,2005,2006 Vallheru Team based on Gamers-Fusion ver 2.5
- *   @author               : thindil <thindil@users.sourceforge.net>
- *   @version              : 1.3
- *   @since                : 16.10.2006
+ *   @copyright            : (C) 2004,2005,2006,2011 Vallheru Team based on Gamers-Fusion ver 2.5
+ *   @author               : thindil <thindil@tuxfamily.org>
+ *   @version              : 1.4
+ *   @since                : 21.10.2011
  *
  */
 
@@ -27,7 +27,7 @@
 //   along with this program; if not, write to the Free Software
 //   Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 //
-// $Id: turnfight.php 727 2006-10-16 15:48:33Z thindil $
+// $Id$
 
 if (isset($title) && $title == 'Arena Walk')
 {
@@ -47,14 +47,14 @@ define("YOU_DEFEAT", "Wynik:</b> Pokonałeś");
 define("AND_GAIN", "oraz");
 define("COINS", "sztuk złota");
 define("NO_WEAPON", "Nie masz broni!");
-define("YOU_ATTACK1", "Atakujesz przy pomocy");
+define("YOU_ATTACK1", "Trafiasz");
 define("BY_SPELL", "przy pomocy czaru");
 define("YOU_FAIL1", "próbował rzucić czar");
 define("YOU_FAIL2", "ale niestety nie udało mu się opanować mocy. Traci przez to");
 define("YOU_FAIL3", "ale stracił panowanie nad swoją koncentracją. Traci przez to wszystkie punkty magii");
 define("YOU_FAIL4", "stracił całkowicie panowanie nad czarem");
 define("YOU_FAIL5", "Czar wybuchł mu prosto w twarz! Traci przez to");
-define("ENEMY_HIT2", "atakuje ciebie i zadaje");
+define("ENEMY_HIT2", "trafia ciebie");
 define("D_ATTACK", "Defensywny atak (-50% obrażeń, -10% trafienia, +50% obrony, +10% uniku)");
 define("N_ATTACK", "Normalny atak (statystyki bez zmian)");
 define("A_ATTACK", "Agresywny atak (+50% obrażeń, +10% trafienia, -50% obrony, -10% uniku)");

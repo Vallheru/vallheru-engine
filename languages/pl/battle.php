@@ -4,11 +4,11 @@
  *   Polish language for battle arena
  *
  *   @name                 : battle.php                            
- *   @copyright            : (C) 2004,2005,2006 Vallheru Team based on Gamers-Fusion ver 2.5
- *   @author               : thindil <thindil@users.sourceforge.net>
+ *   @copyright            : (C) 2004,2005,2006,2011 Vallheru Team based on Gamers-Fusion ver 2.5
+ *   @author               : thindil <thindil@tuxfamily.org>
  *   @author               : eyescream <tduda@users.sourceforge.net>
- *   @version              : 1.3
- *   @since                : 27.11.2006
+ *   @version              : 1.4
+ *   @since                : 21.10.2011
  *
  */
 
@@ -28,7 +28,7 @@
 //   along with this program; if not, write to the Free Software
 //   Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 //
-// $Id: battle.php 856 2006-11-29 17:30:36Z thindil $
+// $Id$
 
 define("ERROR", "Zapomij o tym!");
 define("T_SENDER", "Herold");
@@ -89,7 +89,7 @@ if (isset($_GET['battle']))
     define("PLAYER_R", "Nie możesz atakować gracza, ponieważ obecnie odpoczywa!");
     define("PLAYER_F", "Nie możesz zaatakować tego gracza, ponieważ obecnie walczy z potworem");
     define("P_DODGE", "uniknął ataku");
-    define("P_ATTACK", "atakuje");
+    define("P_ATTACK", "trafia");
     define("AND_KILL", "jednym potężnym ciosem i zabija go!");
     define("HP_LEFT", "zostało");
     define("AND_KILL2", "jednym potężnym zaklęciem i zabija go!");

@@ -7,7 +7,7 @@
  *   @copyright            : (C) 2004,2005,2006,2007,2011 Vallheru Team based on Gamers-Fusion ver 2.5
  *   @author               : thindil <thindil@tuxfamily.org>
  *   @version              : 1.4
- *   @since                : 18.10.2011
+ *   @since                : 21.10.2011
  *
  */
 
@@ -435,30 +435,40 @@ function monsterattack2($intMydodge, &$zmeczenie, &$gunik, $arrEquip, &$enemy, $
   //Monster hit
   else 
     {
-      $player->hp -= $enemy['damage'];
-      if ($times == 1) 
-	{
-	  $strMessage = "<b>".$enemy['name']."</b> ".ENEMY_HIT." <b>".$enemy['damage']."</b> .".DAMAGE."! (".$player -> hp." ".LEFT.")<br>";
-	}
+      $arrLocations = array('w tułów i zadaje(ą)', 'w głowę i zadaje(ą)', 'w nogę i zadaje(ą)', 'w rękę i zadaje(ą)');
       if ($arrEquip[3][0] || $arrEquip[2][0] || $arrEquip[4][0] || $arrEquip[5][0]) 
 	{
 	  $efekt = rand(0, $number);
-	  if ($armor[$efekt] == 'torso') 
+	  switch ($armor[$efekt])
 	    {
+	    case 'torso':
 	      $gwt[0]++;
-	    }
-	  if ($armor[$efekt] == 'head') 
-	    {
+	      $intHit = 0;
+	      break;
+	    case 'head':
 	      $gwt[1]++;
-	    }
-	  if ($armor[$efekt] == 'legs') 
-	    {
+	      $intHit = 1;
+	      break;
+	    case 'legs':
 	      $gwt[2]++;
-	    }
-	  if ($armor[$efekt] == 'shield') 
-	    {
+	      $intHit = 2;
+	      break;
+	    case 'shield':
 	      $gwt[3]++;
+	      $intHit = 3;
+	      break;
+	    default:
+	      break;
 	    }
+	}
+      else
+	{
+	  $intHit = rand(0, 3);
+	}
+      $player->hp -= $enemy['damage'];
+      if ($times == 1) 
+	{
+	  $strMessage = "<b>".$enemy['name']."</b> ".ENEMY_HIT.$arrLocations[$intHit]." <b>".$enemy['damage']."</b> .".DAMAGE."! (".$player -> hp." ".LEFT.")<br>";
 	}
       if ($mczaro -> fields['id']) 
 	{
@@ -557,7 +567,9 @@ function playerattack($eunik, &$gwtbr, $arrEquip, $mczar, &$zmeczenie, &$gatak, 
 	      $enemy['hp'] -= $stat['damage'];
 	      if ($times == 1) 
 		{
-		  $strMessage = YOU_HIT." <b>".$enemy['name']."</b> ".INFLICT." <b>".$stat['damage']."</b> ".DAMAGE."! (".$enemy['hp']." ".LEFT.")</font><br>";
+		  $arrLocations = array('w tułów', 'w głowę', 'w kończynę');
+		  $intHit = rand(0, 2);
+		  $strMessage = YOU_HIT." <b>".$enemy['name']."</b> ".$arrLocations[$intHit]." ".INFLICT." <b>".$stat['damage']."</b> ".DAMAGE."! (".$enemy['hp']." ".LEFT.")</font><br>";
 		}
 	      $gwtbr++;
 	      if ($arrEquip[0][0]) 
@@ -595,7 +607,9 @@ function playerattack($eunik, &$gwtbr, $arrEquip, $mczar, &$zmeczenie, &$gatak, 
 		  $enemy['hp'] = ($enemy['hp'] - $stat['damage']);
 		  if ($times == 1) 
 		    {
-		      $strMessage = YOU_HIT." <b>".$enemy['name']."</b> ".INFLICT." <b>".$stat['damage']."</b> ".DAMAGE."! (".$enemy['hp']." ".LEFT.")</font><br>";
+		      $arrLocations = array('w tułów', 'w głowę', 'w kończynę');
+		      $intHit = rand(0, 2);
+		      $strMessage = YOU_HIT." <b>".$enemy['name']."</b> ".$arrLocations[$intHit]." ".INFLICT." <b>".$stat['damage']."</b> ".DAMAGE."! (".$enemy['hp']." ".LEFT.")</font><br>";
 		    }
 		  if ($stat['damage'] > 0) 
 		    {

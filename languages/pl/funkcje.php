@@ -4,10 +4,10 @@
  *   Polish language for file funkcje.php
  *
  *   @name                 : funkcje.php                            
- *   @copyright            : (C) 2004,2005,2006 Vallheru Team based on Gamers-Fusion ver 2.5
- *   @author               : thindil <thindil@users.sourceforge.net>
- *   @version              : 1.3
- *   @since                : 16.10.2006
+ *   @copyright            : (C) 2004,2005,2006,2011 Vallheru Team based on Gamers-Fusion ver 2.5
+ *   @author               : thindil <thindil@tuxfamily.org>
+ *   @version              : 1.4
+ *   @since                : 21.10.2011
  *
  */
 
@@ -27,7 +27,7 @@
 //   along with this program; if not, write to the Free Software
 //   Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 //
-// $Id: funkcje.php 727 2006-10-16 15:48:33Z thindil $
+// $Id$
 
 define("STRENGTH", "siły");
 define("AGILITY", "zręczności");
@@ -67,7 +67,7 @@ if (isset($title) && $title == 'Arena Walk')
 }
 define("VERSUS", "przeciwko");
 define("ENEMY_DODGE", "uniknął twojego ciosu!");
-define("YOU_HIT", "Atakujesz");
+define("YOU_HIT", "Trafiasz");
 define("INFLICT", "i zadajesz");
 define("DAMAGE", "obrażeń");
 define("LEFT", "zostało");
@@ -77,7 +77,7 @@ define("HP", "punktów życia");
 define("YOU_MISS2", "próbował rzucić czar, ale stracił panowanie nad swoją koncentracją. Traci przez to wszystkie punkty magii");
 define("YOU_MISS3", " stracił całkowicie panowanie nad czarem! Czar wybuchł mu prosto w twarz! Traci przez to");
 define("YOU_DODGE", "Uniknąłeś ciosu");
-define("ENEMY_HIT", "atakuje(ą) ciebie i zadaje(ą)");
+define("ENEMY_HIT", "trafia(ją) ciebie");
 define("LOST_FIGHT", "Oślepiająca gwiazda bólu eksploduje w twojej głowie. Powoli padasz na kolana przed przeciwnikiem. Ostatkiem sił widzisz w zwolnionym tempie jak jego cios spada na twe ciało. Potem następuje już tylko ciemność");
 define("EVENT3", "został pokonany przez");
 define("B_RESULT1", "Wynik:</b> Walka nie rozstrzygnięta!</b>.<li>Zdobywasz");

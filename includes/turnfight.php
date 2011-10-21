@@ -911,7 +911,9 @@ function attack($eunik,$bdamage)
 		else
 		  {
 		    $ehp -= $stat['damage'];
-		    $smarty -> assign ("Message", YOU_ATTACK1." ".$name." <b>".$enemy['name']."</b> ".INFLICT." <b>".$stat['damage']."</b> ".DAMAGE."! (".$ehp." ".LEFT.")</font><br />");
+		    $arrLocations = array('w tułów', 'w głowę', 'w kończynę');
+		    $intHit = rand(0, 2);
+		    $smarty -> assign ("Message", YOU_ATTACK1." <b>".$enemy['name']."</b> ".$arrLocations[$intHit]." przy pomocy ".$name." ".INFLICT." <b>".$stat['damage']."</b> ".DAMAGE."! (".$ehp." ".LEFT.")</font><br />");
 		    if ($stat['damage'] > 0) 
 		      {
 			$gatak = ($gatak + 1);
@@ -1060,7 +1062,9 @@ function castspell ($id,$boost,$eunik)
 		    else
 		      {
 			$ehp -= $stat['damage'];
-			$smarty -> assign ("Message", YOU_HIT." <b>".$enemy['name']."</b> ".BY_SPELL." ".$mczar -> fields['nazwa']." ".INFLICT." <b>".$stat['damage']."</b> ".DAMAGE."! (".$ehp." ".LEFT.")</font><br />");
+			$arrLocations = array('w tułów', 'w głowę', 'w kończynę');
+			$intHit = rand(0, 2);
+			$smarty -> assign ("Message", YOU_HIT." <b>".$enemy['name']."</b> ".$arrLocations[$intHit]." ".BY_SPELL." ".$mczar -> fields['nazwa']." ".INFLICT." <b>".$stat['damage']."</b> ".DAMAGE."! (".$ehp." ".LEFT.")</font><br />");
 			if ($stat['damage'] > 0) 
 			  {
 			    $gmagia++;
@@ -1165,29 +1169,39 @@ function monsterattack($attacks,$enemy,$myunik,$amount)
                     else 
                 {
                     $player -> hp = ($player -> hp - $intDamage);
-                    $db -> Execute("UPDATE players SET hp=".$player -> hp." WHERE id=".$player -> id);
-                    $smarty -> assign ("Message", "<br><b>".$ename."</b> ".ENEMY_HIT2." <b>".$intDamage."</b> obrażeń! (".$player -> hp." zostało)");
+                    $db -> Execute("UPDATE `players` SET `hp`=".$player -> hp." WHERE `id`=".$player -> id);
+		    $arrLocations = array('w tułów i zadaje(ą)', 'w głowę i zadaje(ą)', 'w nogę i zadaje(ą)', 'w rękę i zadaje(ą)');
+		    if ($arrEquip[3][0] || $arrEquip[2][0] || $arrEquip[4][0] || $arrEquip[5][0]) 
+		      {
+			$efekt = rand(0, $number);
+			switch ($armor[$efekt])
+			  {
+			  case 'torso':
+			    $gwt[0]++;
+			    $intHit = 0;
+			    break;
+			  case 'head':
+			    $gwt[1]++;
+			    $intHit = 1;
+			    break;
+			  case 'legs':
+			    $gwt[2]++;
+			    $intHit = 2;
+			    break;
+			  case 'shield':
+			    $gwt[3]++;
+			    $intHit = 3;
+			    break;
+			  default:
+			    break;
+			  }
+		      }
+		    else
+		      {
+			$intHit = rand(0, 3);
+		      }
+                    $smarty -> assign ("Message", "<br><b>".$ename."</b> ".ENEMY_HIT2.$arrLocations[$intHit]." <b>".$intDamage."</b> obrażeń! (".$player -> hp." zostało)");
                     $smarty -> display ('error1.tpl');
-                    if ($arrEquip[3][0] || $arrEquip[2][0] || $arrEquip[4][0] || $arrEquip[5][0]) 
-                    {
-                        $efekt = rand(0,$number);
-                        if ($armor[$efekt] == 'torso') 
-                        {
-                            $gwt[0] = ($gwt[0] + 1);
-                        }
-                        if ($armor[$efekt] == 'head') 
-                        {
-                            $gwt[1] = ($gwt[1] + 1);
-                        }
-                        if ($armor[$efekt] == 'legs') 
-                        {
-                            $gwt[2] = ($gwt[2] + 1);
-                        }
-                        if ($armor[$efekt] == 'shield') 
-                        {
-                            $gwt[3] = ($gwt[3] + 1);
-                        }
-                    }
                     if ($myczaro -> fields['id'] && $player -> mana >= $myczaro -> fields['poziom']) 
                     {
                         $lost_mana = ceil($myczaro -> fields['poziom'] / 2.5);

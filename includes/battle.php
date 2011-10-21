@@ -8,7 +8,7 @@
  *   @author               : thindil <thindil@tuxfamily.org>
  *   @author               : eyescream <tduda@users.sourceforge.net>
  *   @version              : 1.4
- *   @since                : 18.10.2011
+ *   @since                : 21.10.2011
  *
  */
 
@@ -252,6 +252,9 @@ function attack1($attacker, $defender, $arrAtequip, $arrDeequip, $attack_bspell,
     {
         $mypower = $mypower - ($mypower / 4);
     }
+
+    $arrLocations = array('w tułów', 'w głowę', 'w nogę', 'w rękę');
+    $intHit = rand(0, 3);
     
     /**
     * Start fight
@@ -318,22 +321,22 @@ function attack1($attacker, $defender, $arrAtequip, $arrDeequip, $attack_bspell,
                 if ($arrDeequip[3][0] || $arrDeequip[2][0] || $arrDeequip[4][0] || $arrDeequip[5][0]) 
                 {
                     $efekt = rand(0,$number);
-                    if ($earmor[$efekt] == 'torso') 
-                    {
-                        $def_durarm[0] = ($def_durarm[0] + 1);
-                    }
-                    if ($earmor[$efekt] == 'head') 
-                    {
-                        $def_durarm[1] = ($def_durarm[1] + 1);
-                    }
-                    if ($earmor[$efekt] == 'legs') 
-                    {
-                        $def_durarm[2] = ($def_durarm[2] + 1);
-                    }
-                    if ($earmor[$efekt] == 'shield') 
-                    {
-                        $def_durarm[3] = ($def_durarm[3] + 1);
-                    }
+		    switch ($earmor[$efekt])
+		      {
+		      case 'torso':
+			$intHit = 0;
+			break;
+		      case 'head':
+			$intHit = 1;
+			break;
+		      case 'legs':
+			$intHit = 2;
+			break;
+		      case 'shield':
+			$intHit = 3;
+			break;
+		      }
+		    $def_durarm[$intHit] ++;
                 }
                 /**
                  * Count lost mana by defender
@@ -364,7 +367,11 @@ function attack1($attacker, $defender, $arrAtequip, $arrDeequip, $attack_bspell,
                     $attack_durwep = ($attack_durwep + 1);
                     $attack_attack = ($attack_attack + 1);
                     $defender['hp'] = 0;
-                    $strMessage = $strMessage."<b>".$attacker['user']."</b> ".P_ATTACK." <b>".$defender['user']."</b> ".AND_KILL." (".$defender['hp']." ".HP_LEFT.")<br />";
+		    if (!isset($efekt))
+		      {
+			$intHit = rand(0, 3);
+		      }
+                    $strMessage = $strMessage."<b>".$attacker['user']."</b> ".P_ATTACK." <b>".$defender['user']."</b> ".$arrLocations[$intHit]." ".AND_KILL." (".$defender['hp']." ".HP_LEFT.")<br />";
                 }
                 if ($attack_bspell -> fields['id'] && $attacker['mana'] > $attack_bspell -> fields['poziom']) 
                 {
@@ -372,7 +379,11 @@ function attack1($attacker, $defender, $arrAtequip, $arrDeequip, $attack_bspell,
                     {
                         $attack_magic = ($attack_magic + 1);
                         $defender['hp'] = 0;
-                        $strMessage = $strMessage."<b>".$attacker['user']."</b> ".P_ATTACK." <b>".$defender['user']."</b> ".AND_KILL2." (".$defender['hp']." ".HP_LEFT.")<br />";
+			if (!isset($efekt))
+			  {
+			    $intHit = rand(0, 3);
+			  }
+                        $strMessage = $strMessage."<b>".$attacker['user']."</b> ".P_ATTACK." <b>".$defender['user']."</b> ".$arrLocations[$intHit]." ".AND_KILL2." (".$defender['hp']." ".HP_LEFT.")<br />";
                     } 
                         else 
                     {
@@ -443,30 +454,34 @@ function attack1($attacker, $defender, $arrAtequip, $arrDeequip, $attack_bspell,
                     {
                         $intAttackdmg = $attackdmg;
                     }
-                    $strMessage = $strMessage."<b>".$attacker['user']."</b> ".P_ATTACK." <b>".$defender['user']."</b> ".B_DAMAGE." <b>".$intAttackdmg."</b> ".DAMAGE."! (".$defender['hp']." ".LEFT.")<br />";
+		    if ($arrDeequip[3][0] || $arrDeequip[2][0] || $arrDeequip[4][0] || $arrDeequip[5][0]) 
+		      {
+			$efekt = rand(0,$number);
+			switch ($earmor[$efekt])
+			  {
+			  case 'torso':
+			    $intHit = 0;
+			    break;
+			  case 'head':
+			    $intHit = 1;
+			    break;
+			  case 'legs':
+			    $intHit = 2;
+			    break;
+			  case 'shield':
+			    $intHit = 3;
+			    break;
+			  }
+			$def_durarm[$intHit] ++;
+		      }
+		    if (!isset($efekt))
+		      {
+			$intHit = rand(0, 3);
+		      }
+                    $strMessage = $strMessage."<b>".$attacker['user']."</b> ".P_ATTACK." <b>".$defender['user']."</b> ".$arrLocations[$intHit]." ".B_DAMAGE." <b>".$intAttackdmg."</b> ".DAMAGE."! (".$defender['hp']." ".LEFT.")<br />";
                     if ($attackdmg > 0) 
                     {
                         $attack_attack = ($attack_attack + 1);
-                    }
-                    if ($arrDeequip[3][0] || $arrDeequip[2][0] || $arrDeequip[4][0] || $arrDeequip[5][0]) 
-                    {
-                        $efekt = rand(0,$number);
-                        if ($earmor[$efekt] == 'torso') 
-                        {
-                            $def_durarm[0] = ($def_durarm[0] + 1);
-                        }
-                        if ($earmor[$efekt] == 'head') 
-                        {
-                            $def_durarm[1] = ($def_durarm[1] + 1);
-                        }
-                        if ($earmor[$efekt] == 'legs') 
-                        {
-                            $def_durarm[2] = ($def_durarm[2] + 1);
-                        }
-                        if ($earmor[$efekt] == 'shield') 
-                        {
-                            $def_durarm[3] = ($def_durarm[3] + 1);
-                        }
                     }
                     /**
                      * Count lost mana for defender
@@ -559,30 +574,34 @@ function attack1($attacker, $defender, $arrAtequip, $arrDeequip, $attack_bspell,
                             }
                         }
                         $defender['hp'] = ($defender['hp'] - $attackdmg);
-                        $strMessage = $strMessage."<b>".$attacker['user']."</b> ".P_ATTACK." <b>".$defender['user']."</b> ".B_DAMAGE." <b>".$attackdmg."</b> ".DAMAGE."! (".$defender['hp']." ".LEFT.")<br />";
+			if ($arrDeequip[3][0] || $arrDeequip[2][0] || $arrDeequip[4][0] || $arrDeequip[5][0]) 
+			  {
+			    $efekt = rand(0,$number);
+			    switch ($earmor[$efekt])
+			      {
+			      case 'torso':
+				$intHit = 0;
+				break;
+			      case 'head':
+				$intHit = 1;
+				break;
+			      case 'legs':
+				$intHit = 2;
+				break;
+			      case 'shield':
+				$intHit = 3;
+				break;
+			      }
+			    $def_durarm[$intHit] ++;
+			  }
+			if (!isset($efekt))
+			  {
+			    $intHit = rand(0, 3);
+			  }
+                        $strMessage = $strMessage."<b>".$attacker['user']."</b> ".P_ATTACK." <b>".$arrLocations[$intHit]." ".$defender['user']."</b> ".B_DAMAGE." <b>".$attackdmg."</b> ".DAMAGE."! (".$defender['hp']." ".LEFT.")<br />";
                         if ($attackdmg > 0) 
                         {
                             $attack_magic = ($attack_magic + 1);
-                        }
-                        if ($arrDeequip[3][0] || $arrDeequip[2][0] || $arrDeequip[4][0] || $arrDeequip[5][0]) 
-                        {
-                            $efekt = rand(0,$number);
-                            if ($earmor[$efekt] == 'torso') 
-                            {
-                                $def_durarm[0] = ($def_durarm[0] + 1);
-                            }
-                            if ($earmor[$efekt] == 'head') 
-                            {
-                                $def_durarm[1] = ($def_durarm[1] + 1);
-                            }
-                            if ($earmor[$efekt] == 'legs') 
-                            {
-                                $def_durarm[2] = ($def_durarm[2] + 1);
-                            }
-                            if ($earmor[$efekt] == 'shield') 
-                            {
-                                $def_durarm[3] = ($def_durarm[3] + 1);
-                            }
                         }
                         if ($defender['hp'] <= 0) 
                         {

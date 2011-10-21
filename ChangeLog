@@ -1,5 +1,8 @@
 2011-10-21  Bartek thindil Jasicki  <thindil@tuxfamily.org>
 
+	* FEATURE,languages/pl/battle.php, languages/pl/funkcje.php, languages/pl/turnfight.php, includes/battle.php, includes/funkcje.php,
+	includes/turnfight.php: 
+	added hit locations
 	* UPDATE,ap.php: 
 	some code cleanup
 	* FEATURE,templates/layout1/mail.tpl, templates/mail.tpl, mail.php: 
