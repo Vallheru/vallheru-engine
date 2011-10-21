@@ -1,5 +1,7 @@
 2011-10-21  Bartek thindil Jasicki  <thindil@tuxfamily.org>
 
+	* FEATURE,templates/layout1/mail.tpl, templates/mail.tpl, mail.php: 
+	added mail subject to read mails
 	* UPDATE,templates/layout1/smelter.tpl, templates/smelter.tpl, smelter.php: 
 	show max amount based on energy too
 	* FEATURE,install/resetall.php: 

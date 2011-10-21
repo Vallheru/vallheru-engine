@@ -206,7 +206,9 @@
 {/if}
 
 {if $Read != ""}
-    {$Tday} <b><a href="view.php?view={$Senderid}">{$Sender}</a></b> {$Twrite}... "{$Body}"<br /><br />
+    <b>{$Topic} {$Subject}</b><br />
+    {$Tday} <b><a href="view.php?view={$Senderid}">{$Sender}</a></b> {$Twrite}... <br />
+    "{$Body}"<br /><br />
     [<a href="mail.php?view=inbox">{$Ainbox}</a>]
     [<a href="mail.php?zapisz={$Mailid}">{$Asave}</a>]
     [<a href="mail.php?kasuj={$Mailid}">{$Adelete}</a>]
