@@ -1,5 +1,7 @@
 2011-10-21  Bartek thindil Jasicki  <thindil@tuxfamily.org>
 
+	* FEATURE,install/resetall.php: 
+	save players notes during database reset
 	* FEATURE,outposts.php:
 	added gaining morale during collect taxes
 

@@ -1,13 +1,13 @@
 <?php
 /**
  *   File functions:
- *   Additional file - make new era in game. Before start this script - copy table players to table zapas
+ *   Additional file - make new era in game. Before start this script - copy table players to table zapas and table notatnik to table zapas1
  *
  *   @name                 : resetall.php                            
- *   @copyright            : (C) 2004,2005,2006,2007 Vallheru Team based on Gamers-Fusion ver 2.5
- *   @author               : thindil <thindil@users.sourceforge.net>
- *   @version              : 1.3
- *   @since                : 01.03.2007
+ *   @copyright            : (C) 2004,2005,2006,2007,2011 Vallheru Team based on Gamers-Fusion ver 2.5
+ *   @author               : thindil <thindil@tuxfamily.org>
+ *   @version              : 1.4
+ *   @since                : 21.10.2011
  *
  */
 
@@ -57,7 +57,6 @@ $db -> Execute("TRUNCATE TABLE mill_work");
 $db -> Execute("TRUNCATE TABLE minerals");
 $db -> Execute("TRUNCATE TABLE mines");
 $db -> Execute("TRUNCATE TABLE mines_search");
-$db -> Execute("TRUNCATE TABLE notatnik");
 $db -> Execute("TRUNCATE TABLE outposts");
 $db -> Execute("TRUNCATE TABLE outpost_monsters");
 $db -> Execute("TRUNCATE TABLE outpost_veterans");
@@ -77,6 +76,8 @@ $db -> Execute("TRUNCATE TABLE events");
 $db -> Execute("TRUNCATE TABLE questaction");
 $db -> Execute("TRUNCATE TABLE warehouse");
 $db -> Execute("TRUNCATE TABLE `jeweller_work`");
+$db->Execute("TRUNCATE TABLE `players`");
+$db->Execute("TRUNCATE TABLE `notatnik`");
 $db -> Execute("DELETE FROM alchemy_mill WHERE owner>0");
 $db -> Execute("DELETE FROM czary WHERE gracz>0");
 $db -> Execute("DELETE FROM equipment WHERE owner>0");
@@ -103,7 +104,7 @@ $player = $db -> Execute("SELECT * FROM zapas");
 while (!$player -> EOF) 
 {
     $player -> fields['profile'] = addslashes($player -> fields['profile']);
-    $db -> Execute("INSERT INTO players (user, email, pass, rank, age, logins, profile, avatar) VALUES('".$player -> fields['user']."','".$player -> fields['email']."','".$player -> fields['pass']."','".$player -> fields['rank']."',".$player -> fields['age'].",".$player -> fields['logins'].",'".$player -> fields['profile']."','".$player -> fields['avatar']."')") or die($db -> ErrorMsg());
+    $db -> Execute("INSERT INTO `players` (`user`, `email`, `pass`, `rank`, `age`, `logins`, `profile`, `avatar`, `vallars`) VALUES('".$player -> fields['user']."','".$player -> fields['email']."','".$player -> fields['pass']."','".$player -> fields['rank']."',".$player -> fields['age'].",".$player -> fields['logins'].",'".$player -> fields['profile']."','".$player -> fields['avatar']."', ".$player->fields['vallars'].")") or die($db -> ErrorMsg());
     $player -> MoveNext();
 }
 $player -> Close();
@@ -113,9 +114,6 @@ print "Players copied<br />";
 * New id for authors in library
 */
 $objAuthor = $db -> Execute("SELECT author FROM library GROUP BY author");
-$i = 0;
-$arrId = array();
-$arrId2 = array();
 while (!$objAuthor -> EOF)
 {
     $arrAuthorId = explode(": ", $objAuthor -> fields['author']);
@@ -137,6 +135,26 @@ while (!$objAuthor -> EOF)
 }
 $objAuthor -> Close();
 print "Library ok<br />";
+
+/**
+ * Copy notes
+ */
+$objAuthor = $db->Execute("SELECT `gracz` FROM `zapas1` GROUP BY `gracz`");
+while (!$objAuthor->EOF)
+  {
+    $objOldid = $db->Execute("SELECT `user` FROM `zapas` WHERE `id`=".$objAuthor->fields['gracz']);
+    $objNewid = $db->Execute("SELECT `id` FROM `players` WHERE `user`='".$objOldid->fields['user']."'");
+    $objNotes = $db->Execute("SELECT * FROM `zapas1` WHERE `gracz`=".$objAuthor->fields['gracz']);
+    while (!$objNotes->EOF)
+      {
+	$db->Execute("INSERT INTO `notatnik` (`gracz`, `tekst`, `czas`) VALUES(".$objNewid->fields['id'].", '".$objNotes->fields['tekst']."', '".$objNotes->fields['czas']."')");
+	$objNotes->MoveNext();
+      }
+    $objNotes->Close();
+    $objAuthor->MoveNext();
+  }
+$objAuthor->Close();
+print "Notes copied<br />";
 
 /**
 * Copy referrals
