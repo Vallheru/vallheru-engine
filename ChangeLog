@@ -1,5 +1,9 @@
 2011-10-23  Bartek thindil Jasicki  <thindil@tuxfamily.org>
 
+	* BUG,travel.php: 
+	fixed typo
+	* BUG,tribes.php: 
+	fixed send logs about join to tribe
 	* BUG,languages/pl/turnfight.php, languages/pl/funkcje.php:
 	fixed typo
 

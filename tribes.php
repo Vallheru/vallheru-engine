@@ -9,7 +9,7 @@
  *   @author               : mori <ziniquel@users.sourceforge.net>
  *   @author               : eyescream <tduda@users.sourceforge.net>
  *   @version              : 1.4
- *   @since                : 19.10.2011
+ *   @since                : 23.10.2011
  *
  */
 
@@ -454,51 +454,58 @@ if (isset ($_GET['view']) && $_GET['view'] == 'view')
 * Join to clan
 */
 if (isset($_GET['join'])) 
-{
+  {
     checkvalue($_GET['join']);
-    $tribe = $db -> Execute("SELECT * FROM tribes WHERE id=".$_GET['join']);
-    $test = $db -> Execute("SELECT gracz FROM tribe_oczek WHERE gracz=".$player -> id);
+    $tribe = $db -> Execute("SELECT * FROM `tribes` WHERE `id`=".$_GET['join']);
+    $test = $db -> Execute("SELECT `gracz` FROM `tribe_oczek` WHERE `gracz`=".$player -> id);
     if (!isset ($_GET['change'])) 
-    {
+      {
         if ($player -> tribe) 
-        {
+	  {
             error (YOU_IN_CLAN);
-        }
+	  }
         if ($test -> fields['gracz']) 
-        {
+	  {
             $smarty -> assign(array("Tribeid" => $_GET['join'], 
-                "Playerid" => $test -> fields['gracz'], 
-                "Check" => 1,
-                "Youwait" => YOU_WAIT,
-                "Ayes" => YES,
-                "Ano" => NO));
-        } 
-            else 
-        {
+				    "Playerid" => $test -> fields['gracz'], 
+				    "Check" => 1,
+				    "Youwait" => YOU_WAIT,
+				    "Ayes" => YES,
+				    "Ano" => NO));
+	  } 
+	else 
+	  {
             $strDate = $db -> DBDate($newdate);
             $db -> Execute("INSERT INTO `tribe_oczek` (`gracz`, `klan`) VALUES(".$player -> id.",".$tribe -> fields['id'].")");
             $db -> Execute("INSERT INTO `log` (`owner`,`log`, `czas`, `type`) VALUES(".$tribe -> fields['owner'].",'".L_PLAYER."<b><a href=\"view.php?view=".$player -> id."\">".$player -> user.L_ID.'<b>'.$player -> id.'</b>'.HE_WANT."', ".$strDate.", 'C')");
+	    $objPerm = $db -> Execute("SELECT `player` FROM `tribe_perm` WHERE `tribe`=".$tribe -> fields['id']." AND `wait`=1");
+	    while (!$objPerm -> EOF)
+	      {
+		$db -> Execute("INSERT INTO `log` (`owner`,`log`, `czas`, `type`) VALUES(".$objPerm -> fields['player'].",'".L_PLAYER." <b><a href=view.php?view=".$player -> id.">".$player -> user.L_ID.'<b>'.$player -> id.'</b>'.HE_WANT."', ".$strDate.", 'C')");
+		$objPerm -> MoveNext();
+	      }
+	    $objPerm -> Close();
             error (YOU_SEND.$tribe -> fields['name'].".");
-        }
-    } 
-        else 
-    {
+	  }
+      } 
+    else 
+      {
         if ($player -> tribe) 
-        {
+	  {
             error (YOU_IN_CLAN);
-        }
+	  }
         $strDate = $db -> DBDate($newdate);
         $db -> Execute("INSERT INTO `log` (`owner`,`log`, `czas`, `type`) VALUES(".$tribe -> fields['owner'].",'".L_PLAYER." <b><a href=view.php?view=".$player -> id.">".$player -> user.L_ID.'<b>'.$player -> id.'</b>'.HE_WANT."', ".$strDate.", 'C')");
         $objPerm = $db -> Execute("SELECT `player` FROM `tribe_perm` WHERE `tribe`=".$tribe -> fields['id']." AND `wait`=1");
         while (!$objPerm -> EOF)
-        {
+	  {
             $db -> Execute("INSERT INTO `log` (`owner`,`log`, `czas`, `type`) VALUES(".$objPerm -> fields['player'].",'".L_PLAYER." <b><a href=view.php?view=".$player -> id.">".$player -> user.L_ID.'<b>'.$player -> id.'</b>'.HE_WANT."', ".$strDate.", 'C')");
             $objPerm -> MoveNext();
-        }
+	  }
         $objPerm -> Close();
         $db -> Execute("UPDATE `tribe_oczek` SET `klan`=".$tribe -> fields['id']." WHERE `gracz`=".$player -> id);
         error (YOU_SEND.$tribe -> fields['name'].".");
-    }
+      }
 }
 
 /**

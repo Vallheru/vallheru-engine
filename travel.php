@@ -7,7 +7,7 @@
  *   @copyright            : (C) 2004,2005,2006,2011 Vallheru Team based on Gamers-Fusion ver 2.5
  *   @author               : thindil <thindil@tuxfamily.org>
  *   @version              : 1.4
- *   @since                : 10.10.2011
+ *   @since                : 23.10.2011
  *
  */
  
@@ -391,7 +391,7 @@ if (isset($_GET['akcja']) && in_array($_GET['akcja'], array('gory', 'las', 'city
 	      }
 	    break;
 	  case 'magic':
-	    $intGoldneedd = 4000;
+	    $intGoldneed = 4000;
 	    break;
 	  default:
 	    error(ERROR);
