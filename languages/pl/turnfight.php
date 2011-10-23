@@ -7,7 +7,7 @@
  *   @copyright            : (C) 2004,2005,2006,2011 Vallheru Team based on Gamers-Fusion ver 2.5
  *   @author               : thindil <thindil@tuxfamily.org>
  *   @version              : 1.4
- *   @since                : 21.10.2011
+ *   @since                : 23.10.2011
  *
  */
 
@@ -54,7 +54,7 @@ define("YOU_FAIL2", "ale niestety nie udało mu się opanować mocy. Traci przez
 define("YOU_FAIL3", "ale stracił panowanie nad swoją koncentracją. Traci przez to wszystkie punkty magii");
 define("YOU_FAIL4", "stracił całkowicie panowanie nad czarem");
 define("YOU_FAIL5", "Czar wybuchł mu prosto w twarz! Traci przez to");
-define("ENEMY_HIT2", "trafia ciebie");
+define("ENEMY_HIT2", "trafia ciebie ");
 define("D_ATTACK", "Defensywny atak (-50% obrażeń, -10% trafienia, +50% obrony, +10% uniku)");
 define("N_ATTACK", "Normalny atak (statystyki bez zmian)");
 define("A_ATTACK", "Agresywny atak (+50% obrażeń, +10% trafienia, -50% obrony, -10% uniku)");

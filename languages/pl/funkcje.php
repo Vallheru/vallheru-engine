@@ -7,7 +7,7 @@
  *   @copyright            : (C) 2004,2005,2006,2011 Vallheru Team based on Gamers-Fusion ver 2.5
  *   @author               : thindil <thindil@tuxfamily.org>
  *   @version              : 1.4
- *   @since                : 21.10.2011
+ *   @since                : 23.10.2011
  *
  */
 
@@ -77,7 +77,7 @@ define("HP", "punktów życia");
 define("YOU_MISS2", "próbował rzucić czar, ale stracił panowanie nad swoją koncentracją. Traci przez to wszystkie punkty magii");
 define("YOU_MISS3", " stracił całkowicie panowanie nad czarem! Czar wybuchł mu prosto w twarz! Traci przez to");
 define("YOU_DODGE", "Uniknąłeś ciosu");
-define("ENEMY_HIT", "trafia(ją) ciebie");
+define("ENEMY_HIT", "trafia(ją) ciebie ");
 define("LOST_FIGHT", "Oślepiająca gwiazda bólu eksploduje w twojej głowie. Powoli padasz na kolana przed przeciwnikiem. Ostatkiem sił widzisz w zwolnionym tempie jak jego cios spada na twe ciało. Potem następuje już tylko ciemność");
 define("EVENT3", "został pokonany przez");
 define("B_RESULT1", "Wynik:</b> Walka nie rozstrzygnięta!</b>.<li>Zdobywasz");

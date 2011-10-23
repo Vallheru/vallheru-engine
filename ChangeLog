@@ -1,3 +1,8 @@
+2011-10-23  Bartek thindil Jasicki  <thindil@tuxfamily.org>
+
+	* BUG,languages/pl/turnfight.php, languages/pl/funkcje.php:
+	fixed typo
+
 2011-10-21  Bartek thindil Jasicki  <thindil@tuxfamily.org>
 
 	* FEATURE,languages/pl/battle.php, languages/pl/funkcje.php, languages/pl/turnfight.php, includes/battle.php, includes/funkcje.php,
