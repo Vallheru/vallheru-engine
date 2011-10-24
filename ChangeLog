@@ -1,3 +1,8 @@
+2011-10-24  Bartek thindil Jasicki  <thindil@tuxfamily.org>
+
+	* BUG,preset.php:
+	fixed amount of items after partial player reset
+
 2011-10-23  Bartek thindil Jasicki  <thindil@tuxfamily.org>
 
 	* BUG,travel.php: 
