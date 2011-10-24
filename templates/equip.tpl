@@ -10,7 +10,9 @@
 {$Ring2}
 {$Repairequip}
 </form><br />
-{$Action}
+{if $Action != ""}
+{$Action}  (<a href="equip.php">{$Refresh}</a>)<br />
+{/if}
 
 {if $Poison > "0"}
     <br /><form method="post" action="equip.php?poison={$Poison}&amp;step=poison"><input type="submit" value="{$Poisonit}" /> <select name="weapon">

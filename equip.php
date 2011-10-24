@@ -7,7 +7,7 @@
  *   @copyright            : (C) 2004,2005,2006,2007,2011 Vallheru Team based on Gamers-Fusion ver 2.5
  *   @author               : thindil <thindil@tuxfamily.org>
  *   @version              : 1.4
- *   @since                : 19.10.2011
+ *   @since                : 24.10.2011
  *
  */
 
@@ -253,6 +253,7 @@ $smarty -> assign(array("Arrowhead" => '',
                         "Equipped" => EQUIPPED,
                         "Tarrows" => ARROWS,
                         "Asell" => A_SELL,
+			"Refresh" => REFRESH,
 			"Aback" => "Wróć na górę"));
 
 $arrEquip = $player -> equipment();
@@ -449,7 +450,7 @@ if (isset($_GET['schowaj']))
         $test -> Close();
         $db -> Execute("DELETE FROM equipment WHERE id=".$bron -> fields['id']);
     }
-    $smarty -> assign ("Action", "Zdjąłeś ".$bron->fields['name']." (<a href=\"equip.php\">".REFRESH."</a>)<br />");
+    $smarty -> assign ("Action", "Zdjąłeś ".$bron->fields['name']);
     $bron -> Close();
 }
 
@@ -563,7 +564,7 @@ if (isset($_GET['sell']))
     {
         $db -> Execute("DELETE FROM equipment WHERE id=".$sell -> fields['id']);
     }
-    $smarty -> assign ("Action", YOU_SELL." ".$sell -> fields['name']." ".FOR_A." ".$sell -> fields['cost']." ".GOLD_COINS.". (<A href=\"equip.php\">".REFRESH."</a>)");
+    $smarty -> assign ("Action", YOU_SELL." ".$sell -> fields['name']." ".FOR_A." ".$sell -> fields['cost']." ".GOLD_COINS.".");
     $sell -> Close();
 }
 
@@ -600,7 +601,7 @@ if (isset($_GET['sellpotion']))
       {
 	$strLast = "eś";
       }
-    $smarty -> assign ("Action", "Sprzedał".$strLast." ".$sell->fields['name']." ".FOR_A." ".$sell->fields['cost']." ".GOLD_COINS.". (<A href=\"equip.php\">".REFRESH."</a>)");
+    $smarty -> assign ("Action", "Sprzedał".$strLast." ".$sell->fields['name']." ".FOR_A." ".$sell->fields['cost']." ".GOLD_COINS.".");
     $sell->Close();
   }
 
@@ -630,7 +631,7 @@ if (isset($_GET['sellpotions']))
       {
 	$strLast = "eś";
       }
-    $smarty -> assign ("Action", "<br />Sprzedał".$strLast." swoje mikstury ".FOR_A." ".$zysk." ".GOLD_COINS.".<br />\n(<a href=\"equip.php\">".REFRESH."</a>)<br />\n");
+    $smarty -> assign ("Action", "<br />Sprzedał".$strLast." swoje mikstury ".FOR_A." ".$zysk." ".GOLD_COINS.".");
   }
 
 /**
@@ -694,7 +695,7 @@ if (isset($_GET['sellchecked']))
 	  {
 	    $strLast = "eś";
 	  }
-	$smarty -> assign ("Action", "<br />Sprzedał".$strLast." wybrane przedmioty ".FOR_A." ".$intMoney." ".GOLD_COINS.".<br />\n(<a href=\"equip.php\">".REFRESH."</a>)<br />\n");
+	$smarty -> assign ("Action", "<br />Sprzedał".$strLast." wybrane przedmioty ".FOR_A." ".$intMoney." ".GOLD_COINS.".");
       }
   }
 
@@ -760,7 +761,7 @@ if (isset($_GET['sprzedaj']))
         $zysk2 -> Close();
     }
     $db -> Execute("UPDATE players SET credits=credits+".$zysk." WHERE id=".$player -> id);
-    $smarty -> assign ("Action", "<br />".YOU_SELL." ".$typ." ".FOR_A." ".$zysk." ".GOLD_COINS.".<br />\n(<a href=\"equip.php\">".REFRESH."</a>)<br />\n");
+    $smarty -> assign ("Action", "<br />".YOU_SELL." ".$typ." ".FOR_A." ".$zysk." ".GOLD_COINS.".");
 }
 
 /**
@@ -863,7 +864,7 @@ if (isset($_GET['napraw']))
       $db -> Execute("DELETE FROM `equipment` WHERE `id`=".$_GET['napraw']);
     }
     $db -> Execute("UPDATE `players` SET `credits`=`credits`-".$intCost." WHERE `id`=".$player -> id);
-    $smarty -> assign ("Action", "<br />".YOU_REPAIR." <b>".$rzecz -> fields['name']."</b> ".FOR_A." <b>".$intCost."</b> ".GOLD_COINS.".<br />\n(<a href=\"equip.php\">".REFRESH."</a>)<br />\n");
+    $smarty -> assign ("Action", "<br />".YOU_REPAIR." <b>".$rzecz -> fields['name']."</b> ".FOR_A." <b>".$intCost."</b> ".GOLD_COINS.".");
     $rzecz -> Close();
 }
 
@@ -1041,11 +1042,11 @@ if (isset ($_GET['poison']))
 		    $db -> Execute("DELETE FROM equipment WHERE id=".$item -> fields['id']);
 		  }
 	      }
-            $smarty -> assign ("Action", YOU_POISON." ".$item -> fields['name'].". <a href=\"equip.php\">".REFRESH."</a>");
+            $smarty -> assign ("Action", YOU_POISON." ".$item -> fields['name'].".");
         }
             else
         {
-            $smarty -> assign ("Action", YOU_POISON2." ".$item -> fields['name']." ".BUT_NOT.". <a href=\"equip.php\">".REFRESH."</a>");
+            $smarty -> assign ("Action", YOU_POISON2." ".$item -> fields['name']." ".BUT_NOT.".");
         }
         $amount = $poison -> fields['amount'] - 1;
         if ($amount < 1) 
