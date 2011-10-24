@@ -8,7 +8,7 @@
  *   @author               : thindil <thindil@tuxfamily.org>
  *   @author               : eyescream <tduda@users.sourceforge.net>
  *   @version              : 1.4
- *   @since                : 15.10.2011
+ *   @since                : 24.10.2011
  *
  */
 
@@ -69,10 +69,15 @@ if (!isset($_GET['view']) && !isset($_GET['buy']) && !isset($_GET['wyc']))
 */
 if (isset ($_GET['view']) && $_GET['view'] == 'market') 
 {
+    if (isset($_GET['search']))
+      {
+	$_POST['szukany'] = $_GET['search'];
+      }
     if (empty($_POST['szukany']) && empty($_POST['szukany1'])) 
       {
         $msel = $db -> Execute("SELECT count(`id`) FROM `hmarket`");
         $strSearch = '';
+	$_POST['szukany'] = '';
       } 
     else 
       {
@@ -176,6 +181,7 @@ if (isset ($_GET['view']) && $_GET['view'] == 'market')
 			    "Adelete" => A_DELETE,
 			    "Achange" => A_CHANGE,
 			    "Asearch" => A_SEARCH,
+			    "Asearch2" => $_POST['szukany'],
 			    "Aadd2" => "Dodaj ofertę",
 			    "Viewinfo" => VIEW_INFO));
     if (!isset($_POST['szukany']))

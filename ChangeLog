@@ -1,5 +1,8 @@
 2011-10-24  Bartek thindil Jasicki  <thindil@tuxfamily.org>
 
+	* FEATURE,templates/layout1/market2.tpl,templates/market2.tpl, amarket.php, hmarket.php, imarket.php, lmarket.php, mmarket.php,
+	pmarket.php, rmarket.php: 
+	better sorting items on markets
 	* UPDATE,templates/layout1/equip.tpl, templates/equip.tpl, equip.php: 
 	small redesign
 	* BUG,preset.php:

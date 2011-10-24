@@ -8,7 +8,7 @@
  *   @author              : thindil <thindil@tuxfamily.org>
  *   @author              : eyescream <tduda@users.sourceforge.net>
  *   @version             : 1.4
- *   @since               : 20.10.2011
+ *   @since               : 24.10.2011
  *
  */
 
@@ -64,6 +64,10 @@ if (!isset($_GET['view']) && !isset($_GET['buy']) && !isset($_GET['wyc']))
 
 if (isset ($_GET['view']) && $_GET['view'] == 'market') 
 {
+    if (isset($_GET['search']))
+      {
+	$_POST['szukany'] = $_GET['search'];
+      }
     if (empty($_POST['szukany']) && !isset($_POST['szukany1'])) 
       {
         $msel = $db -> Execute("SELECT count(`id`) FROM `potions` WHERE `status`='R'");
@@ -137,10 +141,16 @@ if (isset ($_GET['view']) && $_GET['view'] == 'market')
     elseif (isset($_POST['szukany1']))
       {
 	$pm = $db -> Execute("SELECT * FROM `potions` WHERE `status`='R' AND name=".$strSearch);
+	$_POST['szukany'] = $_POST['szukany1'];
       }
     else 
       {
 	$pm = $db -> SelectLimit("SELECT * FROM `potions` WHERE status='R' AND MATCH(`name`) AGAINST (".$strSearch." IN BOOLEAN MODE) ORDER BY ".$_GET['lista']." ".$strOrder, 30, (30 * ($page - 1)));
+      }
+    if (!empty($_POST['szukany']))
+      {
+	$_GET['order'] .= '&amp;search='.$_POST['szukany'];
+	$strOrder .= '&amp;search='.$_POST['szukany'];
       }
     $arritem = array();
     $arrId = array();

@@ -8,7 +8,7 @@
  *   @author               : thindil <thindil@tuxfamily.org>
  *   @author               : eyescream <tduda@users.sourceforge.net>
  *   @version              : 1.4
- *   @since                : 12.10.2011
+ *   @since                : 24.10.2011
  *
  */
 
@@ -67,6 +67,10 @@ if (!isset($_GET['view']) && !isset($_GET['buy']) && !isset($_GET['wyc']))
 */
 if (isset ($_GET['view']) && $_GET['view'] == 'market') 
   {
+    if (isset($_GET['search']))
+      {
+	$_POST['szukany'] = $_GET['search'];
+      }
     $arrTypes = array('W', 'B', 'T', 'R', 'H', 'A', 'S', 'C', 'L');
     if (!isset($_GET['order']))
       {
@@ -213,10 +217,20 @@ if (isset ($_GET['view']) && $_GET['view'] == 'market')
     elseif (isset($_POST['szukany1']))
       {
 	$pm = $db -> SelectLimit("SELECT * FROM `equipment` WHERE `status`='R' AND `type` NOT IN ('I', 'O') AND name=".$strSearch." ORDER BY ".$_GET['lista'].$strOrder, 30, (30 * ($page - 1)));
+	$_POST['szukany'] = $_POST['szukany1'];
       }
     else 
       {
 	$pm = $db -> SelectLimit("SELECT * FROM `equipment` WHERE `status`='R' AND `type` NOT IN ('I', 'O') AND MATCH(`name`) AGAINST (".$strSearch." IN BOOLEAN MODE) ORDER BY ".$_GET['lista'].$strOrder, 30,  (30 * ($page - 1)));
+      }
+    if (!empty($_POST['szukany']))
+      {
+	$strType2 .= '&amp;search='.$_POST['szukany'];
+	$strType .= '&amp;search='.$_POST['szukany'];
+      }
+    else
+      {
+	$_POST['szukany'] = '';
       }
     $arrname = array();
     $arrpower = array();
@@ -302,11 +316,8 @@ if (isset ($_GET['view']) && $_GET['view'] == 'market')
 			    "Mlist" => $_GET['lista'],
 			    "Atype" => $strType,
 			    "Atype2" => $strType2,
+			    "Asearch2" => $_POST['szukany'],
 			    "Seller" => $arrseller));
-    if (!isset($_POST['szukany'])) 
-      {
-	$_POST['szukany'] = '';
-      }
 }
 
 /**

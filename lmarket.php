@@ -7,7 +7,7 @@
  *   @copyright            : (C) 2011 Vallheru Team based on Gamers-Fusion ver 2.5
  *   @author               : thindil <thindil@tuxfamily.org>
  *   @version              : 1.4
- *   @since                : 14.10.2011
+ *   @since                : 24.10.2011
  *
  */
 
@@ -60,7 +60,11 @@ if (!isset($_GET['view']) && !isset($_GET['buy']) && !isset($_GET['wyc']))
 */
 if (isset ($_GET['view']) && $_GET['view'] == 'market') 
 {
-    if (empty($_POST['szukany']) && !isset($_POST['szukany1'])) 
+    if (isset($_GET['search']))
+      {
+	$_POST['szukany1'] = $_GET['search'];
+      }
+    if (empty($_POST['szukany']) && empty($_POST['szukany1'])) 
       {
         $msel = $db -> Execute("SELECT count(`id`) FROM `equipment` WHERE `status`='R' AND `type`='O'");
       }
@@ -129,10 +133,12 @@ if (isset ($_GET['view']) && $_GET['view'] == 'market')
     if (empty($_POST['szukany']) && !isset($_POST['szukany1'])) 
       {
 	$arrOferts = $db->GetAll("SELECT * FROM `equipment` WHERE `status`='R' AND `type`='O' ORDER BY `".$_GET['lista']."` ".$_GET['order']." LIMIT ".$intLimit.", 30");
+	$_POST['szukany1'] = '';
       }
     elseif (isset($_POST['szukany']))
       {
 	$arrOferts = $db->GetAll("SELECT * FROM `equipment` WHERE `status`='R' AND `type`='O' AND name=".$strSearch." ORDER BY `".$_GET['lista']."` ".$_GET['order']." LIMIT ".$intLimit.", 30");
+	$_POST['szukany1'] = $_POST['szukany'];
       }
     else 
       {
@@ -160,6 +166,7 @@ if (isset ($_GET['view']) && $_GET['view'] == 'market')
 			    "Abuy" => 'Kup',
 			    "Aadd" => 'Dodaj',
 			    "Adelete" => 'Wycofaj',
+			    "Asearch2" => $_POST['szukany1'],
 			    "Achange" => 'Zmień cenę'));
     if (!isset($_POST['szukany'])) 
       {

@@ -8,7 +8,7 @@
  *   @author               : thindil <thindil@tuxfamily.org>
  *   @author               : eyescream <tduda@users.sourceforge.net>
  *   @version              : 1.4
- *   @since                : 15.10.2011
+ *   @since                : 24.10.2011
  *
  */
 
@@ -67,7 +67,11 @@ if (!isset($_GET['view']) && !isset($_GET['buy']) && !isset($_GET['wyc']))
 */
 if (isset ($_GET['view']) && $_GET['view'] == 'market') 
 {
-    if (empty($_POST['szukany']) && !isset($_POST['szukany1'])) 
+    if (isset($_GET['search']))
+      {
+	$_POST['szukany1'] = $_GET['search'];
+      }
+    if (empty($_POST['szukany']) && empty($_POST['szukany1'])) 
       {
         $msel = $db -> Execute("SELECT count(`id`) FROM `equipment` WHERE `status`='R' AND `type`='I'");
       }
@@ -133,13 +137,15 @@ if (isset ($_GET['view']) && $_GET['view'] == 'market')
 	$strOrder = 'DESC';
       }
     $intLimit = 30 * ($page - 1);
-    if (empty($_POST['szukany']) && !isset($_POST['szukany1'])) 
+    if (empty($_POST['szukany']) && empty($_POST['szukany1'])) 
       {
 	$arrOferts = $db->GetAll("SELECT * FROM `equipment` WHERE `status`='R' AND `type`='I' ORDER BY `".$_GET['lista']."` ".$_GET['order']." LIMIT ".$intLimit.", 30");
+	$_POST['szukany1'] = '';
       }
     elseif (isset($_POST['szukany']))
       {
 	$arrOferts = $db->GetAll("SELECT * FROM `equipment` WHERE `status`='R' AND `type`='I' AND name=".$strSearch." ORDER BY `".$_GET['lista']."` ".$_GET['order']." LIMIT ".$intLimit.", 30");
+	$_POST['szukany1'] = $_POST['szukany'];
       }
     else 
       {
@@ -167,11 +173,8 @@ if (isset ($_GET['view']) && $_GET['view'] == 'market')
 			    "Abuy" => A_BUY,
 			    "Aadd" => A_ADD,
 			    "Adelete" => A_DELETE,
+			    "Asearch2" => $_POST['szukany1'],
 			    "Achange" => A_CHANGE));
-    if (!isset($_POST['szukany'])) 
-      {
-	$_POST['szukany'] = '';
-      }
 }
 
 /**

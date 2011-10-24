@@ -8,7 +8,7 @@
  *   @author               : thindil <thindil@tuxfamily.org>
  *   @author               : eyescream <tduda@users.sourceforge.net>
  *   @version              : 1.4
- *   @since                : 20.10.2011
+ *   @since                : 24.10.2011
  *
  */
 
@@ -74,6 +74,10 @@ if (isset($_GET['view']))
      */
     if ($_GET['view'] == 'market') 
       {
+	if (isset($_GET['search']))
+	  {
+	    $_POST['szukany'] = $_GET['search'];
+	  }
 	$arrNames = array_merge($arrNames, $arrNames2);
 	if (empty($_POST['szukany'])) 
 	  {
@@ -185,6 +189,8 @@ if (isset($_GET['view']))
 	else 
 	  {
 	    $pm = $db -> SelectLimit("SELECT * FROM `amarket` WHERE `type`='".$strSearch."' ORDER BY ".$_GET['lista']." ".$_GET['order'], 30, (30 * ($page - 1)));
+	    $_GET['order'] .= '&amp;search='.$_POST['szukany'];
+	    $strOrder .= '&amp;search='.$_POST['szukany'];
 	  }
 	$arrname = array();
 	$arramount = array();
@@ -282,10 +288,6 @@ if (isset($_GET['view']))
 				"Asearch" => A_SEARCH,
 				"Aadd" => "Dodaj ofertę",
 				"Viewinfo" => VIEW_INFO));
-	if (!isset($_POST['szukany']))
-	  {
-	    $_POST['szukany'] = '';
-	  }
       }
 
     /**

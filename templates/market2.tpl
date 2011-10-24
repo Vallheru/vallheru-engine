@@ -18,7 +18,7 @@
     <table>
     <tr>
     {section name=headers loop=$Headers}
-        <th width="100"><a href="{$SCRIPT_NAME}?view=market&amp;lista={$Aheaders[headers]}&amp;order={$Aorder2}">{$Headers[headers]}</a></th>
+        <th width="100"><a href="{$SCRIPT_NAME}?view=market&amp;lista={$Aheaders[headers]}&amp;order={$Aorder2}{if $Asearch2 != ""}&amp;search={$Asearch2}{/if}">{$Headers[headers]}</a></th>
     {/section}
     <th width="100">{$Toptions}</th>
     </tr>
@@ -45,7 +45,7 @@
 	    {if $page == $Tpage}
 	        {$page}
 	    {else}
-                <a href="{$SCRIPT_NAME}?view=market&page={$page}&amp;lista={$Mlist}&amp;order={$Aorder}">{$page}</a>
+                <a href="{$SCRIPT_NAME}?view=market&page={$page}&amp;lista={$Mlist}&amp;order={$Aorder}{if $Asearch2 != ""}&amp;search={$Asearch2}{/if}">{$page}</a>
 	    {/if}
     	{/for}
     {/if}
