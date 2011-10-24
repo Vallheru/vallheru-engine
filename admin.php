@@ -8,7 +8,7 @@
  *   @author               : thindil <thindil@tuxfamily.org>
  *   @author               : eyescream <tduda@users.sourceforge.net>
  *   @version              : 1.4
- *   @since                : 18.10.2011
+ *   @since                : 24.10.2011
  *
  */
  
@@ -202,22 +202,39 @@ if (isset($_GET['view']))
 	  {
 	    $strDate = $db -> DBDate($newdate);
 	    checkvalue($_POST['id']);
+	    $_POST['amount'] = intval($_POST['amount']);
 	    if ($_POST['amount'] > 0)
 	      {
-		$strInfo = "Przyznano Tobie ";
+		$strInfo = "Przyznano Ci ";
 	      }
 	    else
 	      {
-		$strInfo = "Zabrano Tobie ";
-	  }
-	$strInfo .= abs($_POST['amount'])." Vallarów. Przyczyna: ".$_POST['reason'].".";
-	$db->Execute("UPDATE `players` SET `vallars`=`vallars`+".$_POST['amount']." WHERE `id`=".$_POST['id']);
-	$db -> Execute("INSERT INTO `log` (`owner`, `log`, `czas`, `type`) VALUES(".$_POST['id'].", '".$strInfo."', ".$strDate.", 'V')");
-	if ($_POST['amount'] != 0)
-	  {
-	    $db->Execute("INSERT INTO `vallars` (`owner`, `amount`, `reason`) VALUES(".$_POST['id'].", ".$_POST['amount'].", '".$_POST['reason']."')");
-	  }
-	error($strInfo);
+		$strInfo = "Zabrano Ci ";
+	      }
+	    if ($_POST['amount'] < -1 || $_POST['amount'] > 1 || $_POST['amount'] == 0)
+	      {
+		$intLast = $_POST['amount'] % 10;
+		if ($intLast < 5 && $intLast > -5)
+		  {
+		    $strVallars = 'Vallary';
+		  }
+		else
+		  {
+		    $strVallars = 'Vallarów';
+		  }
+	      }
+	    else
+	      {
+		$strVallars = 'Vallar';
+	      }
+	    $strInfo .= abs($_POST['amount'])." ".$strVallars.". Przyczyna: ".$_POST['reason'].".";
+	    $db->Execute("UPDATE `players` SET `vallars`=`vallars`+".$_POST['amount']." WHERE `id`=".$_POST['id']);
+	    $db -> Execute("INSERT INTO `log` (`owner`, `log`, `czas`, `type`) VALUES(".$_POST['id'].", '".$strInfo."', ".$strDate.", 'V')");
+	    if ($_POST['amount'] != 0)
+	      {
+		$db->Execute("INSERT INTO `vallars` (`owner`, `amount`, `reason`) VALUES(".$_POST['id'].", ".$_POST['amount'].", '".$_POST['reason']."')");
+	      }
+	    error($strInfo);
 	  }
       }
     /**

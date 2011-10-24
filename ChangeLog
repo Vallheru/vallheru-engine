@@ -1,5 +1,7 @@
 2011-10-24  Bartek thindil Jasicki  <thindil@tuxfamily.org>
 
+	* BUG,admin.php: 
+	fixed typo
 	* UPDATE,bank.php, armor.php: 
 	some code cleanup
 	* FEATURE,templates/layout1/market2.tpl,templates/market2.tpl, amarket.php, hmarket.php, imarket.php, lmarket.php, mmarket.php,
