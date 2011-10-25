@@ -1,5 +1,7 @@
 2011-10-25  Bartek thindil Jasicki  <thindil@tuxfamily.org>
 
+	* UPDATE,battle.php:
+	some code cleanup
 	* BUG,kowal.php, lumbermill.php:
 	fixed bug with buying elite items plans
 

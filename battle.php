@@ -7,7 +7,7 @@
  *   @copyright            : (C) 2004,2005,2006,2011 Vallheru Team based on Gamers-Fusion ver 2.5
  *   @author               : thindil <thindil@tuxfamily.org>
  *   @version              : 1.4
- *   @since                : 26.09.2011
+ *   @since                : 25.10.2011
  *
  */
 
@@ -50,120 +50,6 @@ if (!isset($_GET['action']) && !isset($_GET['battle']))
                             "Ashowalive" => A_SHOW_ALIVE,
                             "Ashowlevel" => A_SHOW_LEVEL,
                             "Ashowmonster" => A_SHOW_MONSTER));
-}
-
-/**
-* Show players on this same level which have a player
-*/
-if (isset ($_GET['action']) && $_GET['action'] == 'showalive') 
-{
-    $elist = $db -> SelectLimit("SELECT id, user, rank, tribe FROM players WHERE level=".$player -> level." AND hp>0 AND miejsce='".$player -> location."' AND id!=".$player -> id." AND immu='N' AND rasa!='' AND klasa!='' AND rest='N' AND freeze=0", 50);
-    $arrid = array();
-    $arrname = array();
-    $arrrank = array();
-    $arrtribe = array();
-    $i = 0;
-    while (!$elist -> EOF) 
-    {
-        if ($elist -> fields['rank'] == 'Admin') 
-        {
-            $arrrank[$i] = R_ADMIN;
-        } 
-            elseif ($elist -> fields['rank'] == 'Staff') 
-        {
-            $arrrank[$i] = R_STAFF;
-        } 
-            elseif ($elist -> fields['rank'] == 'Member') 
-        {
-            $arrrank[$i] = R_MEMBER;
-        } 
-            else 
-        {
-            $arrrank[$i] = $elist -> fields['rank'];
-        }
-        $arrid[$i] = $elist -> fields['id'];
-        $arrname[$i] = $elist -> fields['user'];
-        $arrtribe[$i] = $elist -> fields['tribe'];
-        $elist -> MoveNext();
-        $i = $i + 1;
-    }
-    $elist -> Close();
-    $smarty -> assign ( array("Level" => $player -> level, 
-                              "Enemyid" => $arrid, 
-                              "Enemyname" => $arrname, 
-                              "Enemytribe" => $arrtribe, 
-                              "Enemyrank" => $arrrank,
-                              "Lid" => L_ID,
-                              "Showinfo" => SHOW_INFO,
-                              "Lname" => L_NAME,
-                              "Lrank" => L_RANK,
-                              "Lclan" => L_CLAN,
-                              "Loption" => L_OPTION,
-                              "Aattack" => A_ATTACK,
-                              "Orback" => OR_BACK,
-                              "Bback" => B_BACK));
-}
-
-if (isset ($_GET['action']) && $_GET['action'] == 'levellist') 
-{
-    $smarty -> assign(array(
-                            "Showall" => SHOW_ALL,
-                            "Tolevel" => TO_LEVEL,
-                            "Ago" => A_GO));
-    if (isset($_GET['step']) && $_GET['step'] == 'go') 
-    {
-        if (!isset($_POST['slevel'])) 
-        {
-            error(S_LEVEL);
-        }
-        if (!isset($_POST['elevel'])) 
-        {
-            error(E_LEVEL);
-        }
-	checkvalue($_POST['slevel']);
-	checkvalue($_POST['elevel']);
-        $elist = $db -> SelectLimit("SELECT id, user, rank, tribe FROM players WHERE level>=".$_POST['slevel']." AND level<=".$_POST['elevel']." AND hp>0 AND miejsce='".$player -> location."' AND id!=".$player -> id." AND immu='N' AND rasa!='' AND klasa!='' AND rest='N' AND freeze=0", 50);
-        $arrid = array();
-        $arrname = array();
-        $arrrank = array();
-        $arrtribe = array();
-        $i = 0;
-        while (!$elist -> EOF) 
-        {
-            if ($elist -> fields['rank'] == 'Admin') 
-            {
-                $arrrank[$i] = R_ADMIN;
-            } 
-                elseif ($elist -> fields['rank'] == 'Staff') 
-            {
-                $arrrank[$i] = R_STAFF;
-            } 
-                elseif ($elist -> fields['rank'] == 'Member') 
-            {
-                $arrrank[$i] = R_MEMBER;
-            } 
-                else 
-            {
-                $arrrank[$i] = $elist -> fields['rank'];
-            }
-            $arrid[$i] = $elist -> fields['id'];
-            $arrname[$i] = $elist -> fields['user'];
-            $arrtribe[$i] = $elist -> fields['tribe'];
-            $elist -> MoveNext();
-            $i = $i + 1;
-        }
-        $elist -> Close();
-        $smarty -> assign (array("Enemyid" => $arrid, 
-                                 "Enemyname" => $arrname, 
-                                 "Enemytribe" => $arrtribe, 
-                                 "Enemyrank" => $arrrank,
-                                 "Lid" => L_ID,
-                                 "Lname" => L_NAME,
-                                 "Lrank" => L_RANK,
-                                 "Lclan" => L_CLAN,
-                                 "Loption" => L_OPTION,
-                                 "Aattack" => A_ATTACK));
-    }
 }
 
 /**
@@ -376,268 +262,380 @@ if (isset($_GET['battle']))
         attack1($arrdefender, $arrattacker, $arrEnequip, $arrMyequip, $eczar, $myczar, $eczaro, $myczaro, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, $gmywt, $gewt, $arrattacker['id'], $strMessage);
     }
 }
+else
+  {
+    $_GET['battle'] = '';
+  }
 
-/**
-* Figth with monsters
-*/
-if (isset ($_GET['action']) && $_GET['action'] == 'monster') 
-{
-    if ($player -> location == 'Lochy')
-    {
-        error(ERROR);
-    }
-    if (!isset($_POST['fight']) && !isset($_POST['fight1']) && !isset($_GET['fight1'])) 
-    {
-        $monster = $db -> Execute("SELECT `id`, `name`, `level`, `hp` FROM `monsters` WHERE `location`='".$player -> location."' ORDER BY `level` ASC");
-        $arrid = array();
-        $arrname = array();
-        $arrlevel = array();
-        $arrhp = array();
-        $i = 0;
-        while (!$monster -> EOF) 
-        {
-            $arrid[$i] = $monster -> fields['id'];
-            $arrname[$i] = $monster -> fields['name'];
-            $arrlevel[$i] = $monster -> fields['level'];
-            $arrhp[$i] = $monster -> fields['hp'];
-            $monster -> MoveNext();
-            $i = $i + 1;
-        }
-        $monster -> Close();
-        $smarty -> assign (array("Enemyid" => $arrid, 
-                                 "Enemyname" => $arrname, 
-                                 "Enemylevel" => $arrlevel, 
-                                 "Enemyhp" => $arrhp,
-                                 "Monsterinfo" => MONSTER_INFO,
-                                 "Mname" => M_NAME,
-                                 "Mlevel" => M_LEVEL,
-                                 "Mhealth" => M_HEALTH,
-                                 "Mfast" => M_FAST,
-                                 "Mturn" => M_TURN,
-                                 "Abattle" => A_BATTLE,
-                                 "Orback2" => OR_BACK2,
-				 "Mtimes" => "walk (szybkich)",
-				 "Mamount" => "Ilość",
-				 "Mmonsters" => "potworów",
-                                 "Bback2" => B_BACK2));
-    }
+if (isset($_GET['action']))
+  {
     /**
-    * Turn fight with monsters
-    */
-    if (isset($_POST['fight1']) || isset($_GET['fight1'])) 
-    {
-        global $arrehp;
-        global $newdate;
-	if (!isset($_GET['fight1']))
+     * Show players on this same level which have a player
+     */
+    if ($_GET['action'] == 'showalive') 
+      {
+	$elist = $db -> SelectLimit("SELECT id, user, rank, tribe FROM players WHERE level=".$player -> level." AND hp>0 AND miejsce='".$player -> location."' AND id!=".$player -> id." AND immu='N' AND rasa!='' AND klasa!='' AND rest='N' AND freeze=0", 50);
+	$arrid = array();
+	$arrname = array();
+	$arrrank = array();
+	$arrtribe = array();
+	while (!$elist -> EOF) 
 	  {
-	    checkvalue($_POST['mid']);
-	    $_GET['fight1'] = $_POST['mid'];
+	    switch ($elist->fields['rank'])
+	      {
+	      case 'Admin':
+		$arrrank[] = R_ADMIN;
+		break;
+	      case 'Staff':
+		$arrrank[] = R_STAFF;
+		break;
+	      case 'Member':
+		$arrrank[] = R_MEMBER;
+		break;
+	      default:
+		$arrrank[] = $elist -> fields['rank'];
+		break;
+	      }
+	    $arrid[] = $elist -> fields['id'];
+	    $arrname[] = $elist -> fields['user'];
+	    $arrtribe[] = $elist -> fields['tribe'];
+	    $elist -> MoveNext();
 	  }
-	if (!isset($_POST['razy']) && !isset ($_POST['action']))
-        {
-            error(ERROR);
-        }
-        if (!intval($_GET['fight1']) || !isset ($_POST['action']) && !intval($_POST['razy']))
-        {
-            error (NO_ID);
-        } 
-        if ($player -> hp <= 0) 
-        {
-            error (NO_HP);
-        }
-	if (!isset ($_POST['action']) && $_POST['razy'] > 20)
-        {
-            error(TOO_MUCH_MONSTERS);
-        }
-        if (isset($_POST['razy']) && !isset ($_POST['action']))
-        {
-            $_SESSION['razy'] = $_POST['razy'];
-        }
-	if (!isset($_POST['action']) && $player -> energy < $_POST['razy'])
-        {
-            error (NO_ENERGY2);
-        }
-        require_once("includes/turnfight.php");
-        $enemy1 = $db -> Execute("SELECT * FROM monsters WHERE id=".$_GET['fight1']);
-        if (!$enemy1 -> fields['id']) 
-        {
-            error (NO_MONSTER);
-        }
-        if ($player -> clas == '') 
-        {
-            error (NO_CLASS3);
-        }
-	if ($player->fight > 0 && $player->fight != $_GET['fight1'])
-	  {
-	    error("Już z kimś walczysz!");
-	  }
-        $span = ($enemy1 -> fields['level'] / $player -> level);
-        if ($span > 2) 
-        {
-            $span = 2;
-        }
-        if (isset ($_POST['write']) && $_POST['write'] == 'Y') 
-        {
-            $db -> Execute("UPDATE players SET fight=".$enemy1 -> fields['id']." WHERE id=".$player -> id);
-            $_POST['write'] = 'N';
-            if (isset($_SESSION['amount']))
-            {
-                for ($k = 0; $k < $_SESSION['amount']; $k ++) 
-                {
-                    $strIndex = "mon".$k;
-                    unset($_SESSION[$strIndex]);
-                }
-                unset($_SESSION['exhaust'], $_SESSION['round'], $_SESSION['points'], $_SESSION['amount']);
-            }
-        }
-        /**
-        * Count gained experience
-        */
-        $expgain1 = ceil(rand($enemy1 -> fields['exp1'],$enemy1 -> fields['exp2']) * $span);
-        $expgain = $expgain1;
-	if ($_SESSION['razy'] > 1)
-        {
-            for ($k = 2; $k <= $_SESSION['razy']; $k++)
-            {
-                $expgain = $expgain + ceil($expgain1 / 5 * (sqrt($k) + 4.5));
-            }
-        }
-        $goldgain = ceil((rand($enemy1 -> fields['credits1'],$enemy1 -> fields['credits2']) * $_SESSION['razy']) * $span); 
-        $enemy = array("strength" => $enemy1 -> fields['strength'], 
-		       "agility" => $enemy1 -> fields['agility'], 
-		       "speed" => $enemy1 -> fields['speed'], 
-		       "endurance" => $enemy1 -> fields['endurance'], 
-		       "hp" => $enemy1 -> fields['hp'], 
-		       "name" => $enemy1 -> fields['name'], 
-		       "exp1" => $enemy1 -> fields['exp1'], 
-		       "exp2" => $enemy1 -> fields['exp2'], 
-		       "level" => $enemy1 -> fields['level'],
-		       "lootnames" => explode(";", $enemy1->fields['lootnames']),
-		       "lootchances" => explode(";", $enemy1->fields['lootchances']));
-        $arrehp = array ();
-        if (!isset ($_POST['action'])) 
-	  {
-	    unset($_SESSION['miss']);
-            $player -> energy = $player -> energy - $_POST['razy'];
-            if ($player -> energy < 0) 
-            {
-                $player -> energy = 0;
-            }
-            $db -> Execute("UPDATE players SET energy=".$player -> energy." WHERE id=".$player -> id);
-            turnfight ($expgain,$goldgain,'',"battle.php?action=monster&fight1=".$enemy1 -> fields['id']);
-	  } 
-	else 
-	  {
-            turnfight ($expgain,$goldgain,$_POST['action'],"battle.php?action=monster&fight1=".$enemy1 -> fields['id']);
-	  }
-        $enemy1 -> Close();
-    }
-    /**
-    * Fast fight with monsters
-    */
-    if (isset($_POST['fight'])) 
-    {
-        global $newdate;
+	$elist -> Close();
+	$smarty -> assign ( array("Level" => $player -> level, 
+				  "Enemyid" => $arrid, 
+				  "Enemyname" => $arrname, 
+				  "Enemytribe" => $arrtribe, 
+				  "Enemyrank" => $arrrank,
+				  "Lid" => L_ID,
+				  "Showinfo" => SHOW_INFO,
+				  "Lname" => L_NAME,
+				  "Lrank" => L_RANK,
+				  "Lclan" => L_CLAN,
+				  "Loption" => L_OPTION,
+				  "Aattack" => A_ATTACK,
+				  "Orback" => OR_BACK,
+				  "Bback" => B_BACK));
+      }
 
-	$_GET['fight'] = $_POST['mid'];
-	checkvalue($_GET['fight']);
-        if (!isset($_POST['razy'])) 
-        {
-            $_POST['razy'] = 1;
-        }
-	checkvalue($_POST['razy']);
-        if (!isset($_POST['times']))
-        {
-            error(ERROR);
-        }
-	checkvalue($_POST['times']);
-        if ($player->hp <= 0) 
-        {
-            error (NO_HP);
-        }
-        if ($_POST['razy'] > 20)
-        {
-            error(TOO_MUCH_MONSTERS);
-        }
-	if ($_POST['times'] > 10)
+    if ($_GET['action'] == 'levellist') 
+      {
+	$smarty -> assign(array("Showall" => SHOW_ALL,
+				"Tolevel" => TO_LEVEL,
+				"Ago" => A_GO));
+	if (isset($_GET['step']) && $_GET['step'] == 'go') 
 	  {
-	    error("Zbyt wiele walk na raz!");
+	    if (!isset($_POST['slevel'])) 
+	      {
+		error(S_LEVEL);
+	      }
+	    if (!isset($_POST['elevel'])) 
+	      {
+		error(E_LEVEL);
+	      }
+	    checkvalue($_POST['slevel']);
+	    checkvalue($_POST['elevel']);
+	    $elist = $db -> SelectLimit("SELECT id, user, rank, tribe FROM players WHERE level>=".$_POST['slevel']." AND level<=".$_POST['elevel']." AND hp>0 AND miejsce='".$player -> location."' AND id!=".$player -> id." AND immu='N' AND rasa!='' AND klasa!='' AND rest='N' AND freeze=0", 50);
+	    $arrid = array();
+	    $arrname = array();
+	    $arrrank = array();
+	    $arrtribe = array();
+	    while (!$elist -> EOF) 
+	      {
+		switch ($elist->fields['rank'])
+		  {
+		  case 'Admin':
+		    $arrrank[] = R_ADMIN;
+		    break;
+		  case 'Staff':
+		    $arrrank[] = R_STAFF;
+		    break;
+		  case 'Member':
+		    $arrrank[] = R_MEMBER;
+		    break;
+		  default:
+		    $arrrank[] = $elist -> fields['rank'];
+		    break;
+		  }
+		$arrid[] = $elist -> fields['id'];
+		$arrname[] = $elist -> fields['user'];
+		$arrtribe[] = $elist -> fields['tribe'];
+		$elist -> MoveNext();
+	      }
+	    
+	    $elist -> Close();
+	    $smarty -> assign (array("Enemyid" => $arrid, 
+				     "Enemyname" => $arrname, 
+				     "Enemytribe" => $arrtribe, 
+				     "Enemyrank" => $arrrank,
+				     "Lid" => L_ID,
+				     "Lname" => L_NAME,
+				     "Lrank" => L_RANK,
+				     "Lclan" => L_CLAN,
+				     "Loption" => L_OPTION,
+				     "Aattack" => A_ATTACK));
 	  }
-        $lostenergy = $_POST['razy'] * $_POST['times'];
-        if ($player->energy < $lostenergy) 
-        {
-            error (NO_ENERGY2);
-        }
-	if ($player -> clas == '') 
+      }
+
+    /**
+     * Figth with monsters
+     */
+    if ($_GET['action'] == 'monster') 
+      {
+	if ($player -> location == 'Lochy')
 	  {
-	    error (NO_CLASS3);
+	    error(ERROR);
 	  }
-        $myhp = $player->hp;
-	$enemy1 = $db -> Execute("SELECT * FROM `monsters` WHERE `id`=".$_GET['fight']);
-	if (!$enemy1 -> fields['id']) 
+	if (!isset($_POST['fight']) && !isset($_POST['fight1']) && !isset($_GET['fight1'])) 
 	  {
-	    error (NO_MONSTER);
+	    $monster = $db -> Execute("SELECT `id`, `name`, `level`, `hp` FROM `monsters` WHERE `location`='".$player -> location."' ORDER BY `level` ASC");
+	    $arrid = array();
+	    $arrname = array();
+	    $arrlevel = array();
+	    $arrhp = array();
+	    while (!$monster -> EOF) 
+	      {
+		$arrid[] = $monster -> fields['id'];
+		$arrname[] = $monster -> fields['name'];
+		$arrlevel[] = $monster -> fields['level'];
+		$arrhp[] = $monster -> fields['hp'];
+		$monster -> MoveNext();
+	      }
+	    $monster -> Close();
+	    $smarty -> assign (array("Enemyid" => $arrid, 
+				     "Enemyname" => $arrname, 
+				     "Enemylevel" => $arrlevel, 
+				     "Enemyhp" => $arrhp,
+				     "Monsterinfo" => MONSTER_INFO,
+				     "Mname" => M_NAME,
+				     "Mlevel" => M_LEVEL,
+				     "Mhealth" => M_HEALTH,
+				     "Mfast" => M_FAST,
+				     "Mturn" => M_TURN,
+				     "Abattle" => A_BATTLE,
+				     "Orback2" => OR_BACK2,
+				     "Mtimes" => "walk (szybkich)",
+				     "Mamount" => "Ilość",
+				     "Mmonsters" => "potworów",
+				     "Bback2" => B_BACK2));
 	  }
-	if ($player->fight > 0 && $player->fight != $_GET['fight'])
+	/**
+	 * Turn fight with monsters
+	 */
+	if (isset($_POST['fight1']) || isset($_GET['fight1'])) 
 	  {
-	    error("Już z kimś walczysz!");
+	    global $arrehp;
+	    global $newdate;
+	    if (!isset($_GET['fight1']))
+	      {
+		checkvalue($_POST['mid']);
+		$_GET['fight1'] = $_POST['mid'];
+	      }
+	    if (!isset($_POST['razy']) && !isset ($_POST['action']))
+	      {
+		error(ERROR);
+	      }
+	    if (!intval($_GET['fight1']) || !isset ($_POST['action']) && !intval($_POST['razy']))
+	      {
+		error (NO_ID);
+	      } 
+	    if ($player -> hp <= 0) 
+	      {
+		error (NO_HP);
+	      }
+	    if (!isset ($_POST['action']) && $_POST['razy'] > 20)
+	      {
+		error(TOO_MUCH_MONSTERS);
+	      }
+	    if (isset($_POST['razy']) && !isset ($_POST['action']))
+	      {
+		$_SESSION['razy'] = $_POST['razy'];
+	      }
+	    if (!isset($_POST['action']) && $player -> energy < $_POST['razy'])
+	      {
+		error (NO_ENERGY2);
+	      }
+	    require_once("includes/turnfight.php");
+	    $enemy1 = $db -> Execute("SELECT * FROM monsters WHERE id=".$_GET['fight1']);
+	    if (!$enemy1 -> fields['id']) 
+	      {
+		error (NO_MONSTER);
+	      }
+	    if ($player -> clas == '') 
+	      {
+		error (NO_CLASS3);
+	      }
+	    if ($player->fight > 0 && $player->fight != $_GET['fight1'])
+	      {
+		error("Już z kimś walczysz!");
+	      }
+	    $span = ($enemy1 -> fields['level'] / $player -> level);
+	    if ($span > 2) 
+	      {
+		$span = 2;
+	      }
+	    if (isset ($_POST['write']) && $_POST['write'] == 'Y') 
+	      {
+		$db -> Execute("UPDATE players SET fight=".$enemy1 -> fields['id']." WHERE id=".$player -> id);
+		$_POST['write'] = 'N';
+		if (isset($_SESSION['amount']))
+		  {
+		    for ($k = 0; $k < $_SESSION['amount']; $k ++) 
+		      {
+			$strIndex = "mon".$k;
+			unset($_SESSION[$strIndex]);
+		      }
+		    unset($_SESSION['exhaust'], $_SESSION['round'], $_SESSION['points'], $_SESSION['amount']);
+		  }
+	      }
+	    /**
+	     * Count gained experience
+	     */
+	    $expgain1 = ceil(rand($enemy1 -> fields['exp1'],$enemy1 -> fields['exp2']) * $span);
+	    $expgain = $expgain1;
+	    if ($_SESSION['razy'] > 1)
+	      {
+		for ($k = 2; $k <= $_SESSION['razy']; $k++)
+		  {
+		    $expgain = $expgain + ceil($expgain1 / 5 * (sqrt($k) + 4.5));
+		  }
+	      }
+	    $goldgain = ceil((rand($enemy1 -> fields['credits1'],$enemy1 -> fields['credits2']) * $_SESSION['razy']) * $span); 
+	    $enemy = array("strength" => $enemy1 -> fields['strength'], 
+			   "agility" => $enemy1 -> fields['agility'], 
+			   "speed" => $enemy1 -> fields['speed'], 
+			   "endurance" => $enemy1 -> fields['endurance'], 
+			   "hp" => $enemy1 -> fields['hp'], 
+			   "name" => $enemy1 -> fields['name'], 
+			   "exp1" => $enemy1 -> fields['exp1'], 
+			   "exp2" => $enemy1 -> fields['exp2'], 
+			   "level" => $enemy1 -> fields['level'],
+			   "lootnames" => explode(";", $enemy1->fields['lootnames']),
+			   "lootchances" => explode(";", $enemy1->fields['lootchances']));
+	    $arrehp = array ();
+	    if (!isset ($_POST['action'])) 
+	      {
+		unset($_SESSION['miss']);
+		$player -> energy = $player -> energy - $_POST['razy'];
+		if ($player -> energy < 0) 
+		  {
+		    $player -> energy = 0;
+		  }
+		$db -> Execute("UPDATE players SET energy=".$player -> energy." WHERE id=".$player -> id);
+		turnfight ($expgain,$goldgain,'',"battle.php?action=monster&fight1=".$enemy1 -> fields['id']);
+	      } 
+	    else 
+	      {
+		turnfight ($expgain,$goldgain,$_POST['action'],"battle.php?action=monster&fight1=".$enemy1 -> fields['id']);
+	      }
+	    $enemy1 -> Close();
 	  }
-	$enemy1 -> fields['hp'] = ($enemy1 -> fields['hp'] * $_POST['razy']);
-	$enemy = array("strength" => $enemy1 -> fields['strength'], 
-		       "agility" => $enemy1 -> fields['agility'], 
-		       "speed" => $enemy1 -> fields['speed'], 
-		       "endurance" => $enemy1 -> fields['endurance'], 
-		       "hp" => $enemy1 -> fields['hp'], 
-		       "name" => $enemy1 -> fields['name'], 
-		       "exp1" => $enemy1 -> fields['exp1'], 
-		       "exp2" => $enemy1 -> fields['exp2'], 
-		       "level" => $enemy1 -> fields['level'],
-		       "lootnames" => explode(";", $enemy1->fields['lootnames']),
-		       "lootchances" => explode(";", $enemy1->fields['lootchances']));
-	$intAmount = 0;
-        for ($j=1; $j<=$_POST['times']; $j++) 
-        {
-	    $myexp = $db  -> Execute("SELECT `exp`, `level` FROM `players` WHERE `id`=".$player -> id);
-            $player -> exp = $myexp -> fields['exp'];
-            $player -> level = $myexp -> fields['level'];
-            $span = ($enemy1 -> fields['level'] / $player -> level);
-            if ($span > 2) 
-            {
-                $span = 2;
-            }
-            /**
-            * Count gained experience
-            */
-            $expgain1 = ceil(rand($enemy1 -> fields['exp1'],$enemy1 -> fields['exp2']) * $span);
-            $expgain = $expgain1;
-            if ($_POST['razy'] > 1)
-            {
-                for ($k = 2; $k <= $_POST['razy']; $k++)
-                {
-                    $expgain = $expgain + ceil($expgain1 / 5 * (sqrt($k) + 4.5));
-                }
-            }
-            $goldgain = ceil((rand($enemy1 -> fields['credits1'],$enemy1 -> fields['credits2']) * $_POST['razy']) * $span);
-            fightmonster ($enemy, $expgain, $goldgain, $_POST['times']);
-	    $intAmount++;
-            if ($player -> hp <= 0) 
-            {
-                break;
-            }
-        }
-	$db -> Execute("UPDATE `players` SET `energy`=`energy`-".($_POST['razy'] * $intAmount)." WHERE `id`=".$player -> id);
-	$enemy1->Close();
-    }
-}
+	/**
+	 * Fast fight with monsters
+	 */
+	if (isset($_POST['fight'])) 
+	  {
+	    global $newdate;
+	    
+	    $_GET['fight'] = $_POST['mid'];
+	    checkvalue($_GET['fight']);
+	    if (!isset($_POST['razy'])) 
+	      {
+		$_POST['razy'] = 1;
+	      }
+	    checkvalue($_POST['razy']);
+	    if (!isset($_POST['times']))
+	      {
+		error(ERROR);
+	      }
+	    checkvalue($_POST['times']);
+	    if ($player->hp <= 0) 
+	      {
+		error (NO_HP);
+	      }
+	    if ($_POST['razy'] > 20)
+	      {
+		error(TOO_MUCH_MONSTERS);
+	      }
+	    if ($_POST['times'] > 10)
+	      {
+		error("Zbyt wiele walk na raz!");
+	      }
+	    $lostenergy = $_POST['razy'] * $_POST['times'];
+	    if ($player->energy < $lostenergy) 
+	      {
+		error (NO_ENERGY2);
+	      }
+	    if ($player -> clas == '') 
+	      {
+		error (NO_CLASS3);
+	      }
+	    $myhp = $player->hp;
+	    $enemy1 = $db -> Execute("SELECT * FROM `monsters` WHERE `id`=".$_GET['fight']);
+	    if (!$enemy1 -> fields['id']) 
+	      {
+		error (NO_MONSTER);
+	      }
+	    if ($player->fight > 0 && $player->fight != $_GET['fight'])
+	      {
+		error("Już z kimś walczysz!");
+	      }
+	    $enemy1 -> fields['hp'] = ($enemy1 -> fields['hp'] * $_POST['razy']);
+	    $enemy = array("strength" => $enemy1 -> fields['strength'], 
+			   "agility" => $enemy1 -> fields['agility'], 
+			   "speed" => $enemy1 -> fields['speed'], 
+			   "endurance" => $enemy1 -> fields['endurance'], 
+			   "hp" => $enemy1 -> fields['hp'], 
+			   "name" => $enemy1 -> fields['name'], 
+			   "exp1" => $enemy1 -> fields['exp1'], 
+			   "exp2" => $enemy1 -> fields['exp2'], 
+			   "level" => $enemy1 -> fields['level'],
+			   "lootnames" => explode(";", $enemy1->fields['lootnames']),
+			   "lootchances" => explode(";", $enemy1->fields['lootchances']));
+	    $intAmount = 0;
+	    for ($j=1; $j<=$_POST['times']; $j++) 
+	      {
+		$myexp = $db  -> Execute("SELECT `exp`, `level` FROM `players` WHERE `id`=".$player -> id);
+		$player -> exp = $myexp -> fields['exp'];
+		$player -> level = $myexp -> fields['level'];
+		$span = ($enemy1 -> fields['level'] / $player -> level);
+		if ($span > 2) 
+		  {
+		    $span = 2;
+		  }
+		/**
+		 * Count gained experience
+		 */
+		$expgain1 = ceil(rand($enemy1 -> fields['exp1'],$enemy1 -> fields['exp2']) * $span);
+		$expgain = $expgain1;
+		if ($_POST['razy'] > 1)
+		  {
+		    for ($k = 2; $k <= $_POST['razy']; $k++)
+		      {
+			$expgain = $expgain + ceil($expgain1 / 5 * (sqrt($k) + 4.5));
+		      }
+		  }
+		$goldgain = ceil((rand($enemy1 -> fields['credits1'],$enemy1 -> fields['credits2']) * $_POST['razy']) * $span);
+		fightmonster ($enemy, $expgain, $goldgain, $_POST['times']);
+		$intAmount++;
+		if ($player -> hp <= 0) 
+		  {
+		    break;
+		  }
+	      }
+	    $db -> Execute("UPDATE `players` SET `energy`=`energy`-".($_POST['razy'] * $intAmount)." WHERE `id`=".$player -> id);
+	    $enemy1->Close();
+	  }
+      }
+  }
+else
+  {
+    $_GET['action'] = '';
+  }
 
 /**
 * Initialization of variables
 */
-if (!isset($_GET['battle'])) 
-{
-    $_GET['battle'] = '';
-}
-
 if (!isset($_GET['step'])) 
 {
     $_GET['step'] = '';
@@ -661,11 +659,6 @@ if (!isset($_GET['dalej']))
 if (!isset($_GET['next'])) 
 {
     $_GET['next'] = '';
-}
-
-if (!isset($_GET['action'])) 
-{
-    $_GET['action'] = '';
 }
 
 /**
