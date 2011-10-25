@@ -8,7 +8,7 @@
  *   @author               : thindil <thindil@tuxfamily.org>
  *   @author               : eyescream <tduda@users.sourceforge.net>
  *   @version              : 1.4
- *   @since                : 21.10.2011
+ *   @since                : 25.10.2011
  *
  */
 
@@ -562,7 +562,7 @@ function attack1($attacker, $defender, $arrAtequip, $arrDeequip, $attack_bspell,
                         if ($defender['clas'] == 'Barbarzyńca') 
                         {
                             $roll = rand(1,100);
-                            $chance = ceil($defender['level'] / 10);
+                            $chance = ceil($defender['level'] / 20);
                             if ($chance > 20) 
                             {
                                 $chance = 20;

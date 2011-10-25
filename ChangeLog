@@ -1,5 +1,7 @@
 2011-10-25  Bartek thindil Jasicki  <thindil@tuxfamily.org>
 
+	* FEATURE,includes/battle.php, languages/pl/klasa.php: 
+	raise chance for defend spell for barbarian
 	* UPDATE,battle.php:
 	some code cleanup
 	* BUG,kowal.php, lumbermill.php:
