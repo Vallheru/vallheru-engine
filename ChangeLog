@@ -1,5 +1,7 @@
 2011-10-25  Bartek thindil Jasicki  <thindil@tuxfamily.org>
 
+	* BUG,includes/funkcje.php: 
+	fixed bug with critical strike
 	* UPDATE,chat.php: 
 	some code cleanup
 	* FEATURE,templates/layout1/lumberjack.tpl, templates/lumberjack.tpl, lumberjack.php: 
