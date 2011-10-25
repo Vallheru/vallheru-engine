@@ -1,5 +1,7 @@
 2011-10-25  Bartek thindil Jasicki  <thindil@tuxfamily.org>
 
+	* FEATURE,templates/layout1/lumberjack.tpl, templates/lumberjack.tpl, lumberjack.php: 
+	added option to choice which trees we want to chop
 	* FEATURE,includes/battle.php, languages/pl/klasa.php: 
 	raise chance for defend spell for barbarian
 	* UPDATE,battle.php:

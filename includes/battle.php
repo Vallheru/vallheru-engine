@@ -562,7 +562,7 @@ function attack1($attacker, $defender, $arrAtequip, $arrDeequip, $attack_bspell,
                         if ($defender['clas'] == 'Barbarzyńca') 
                         {
                             $roll = rand(1,100);
-                            $chance = ceil($defender['level'] / 20);
+                            $chance = ceil($defender['level'] / 5);
                             if ($chance > 20) 
                             {
                                 $chance = 20;

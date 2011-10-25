@@ -7,7 +7,7 @@
  *   @copyright            : (C) 2004,2005,2006,2011 Vallheru Team based on Gamers-Fusion ver 2.5
  *   @author               : thindil <thindil@tuxfamily.org>
  *   @version              : 1.4
- *   @since                : 18.10.2011
+ *   @since                : 25.10.2011
  *
  */
 
@@ -42,6 +42,14 @@ if ($player -> location != 'Las')
     error (ERROR);
 }
 
+$objLumberjack = $db -> Execute("SELECT `level` FROM `lumberjack` WHERE `owner`=".$player -> id);
+if (!$objLumberjack -> fields['level'])
+  {
+    error("Nie posiadasz licencji na wyrąb lasu. Możesz ją zakupić w Tartaku w ".$city2.".");
+  }
+$arrOptions = array("losowego", "sosnowego", "z leszczyny", "cisowego", "z wiązu");
+$arrOptions = array_slice($arrOptions, 0, $objLumberjack->fields['level'] + 1);
+
 /**
  * Chop down trees
  */
@@ -60,11 +68,10 @@ if (isset ($_GET['action']) && $_GET['action'] == 'chop')
     {
         error(YOU_DEAD);
     }
-    $objLumberjack = $db -> Execute("SELECT `level` FROM `lumberjack` WHERE `owner`=".$player -> id);
-    if (!$objLumberjack -> fields['level'])
-    {
-        error(NO_LICENSE);
-    }
+    if (!array_key_exists($_POST['type'], $arrOptions))
+      {
+	error(ERROR);
+      }
     /**
      * Count bonus to ability
      */
@@ -82,10 +89,24 @@ if (isset ($_GET['action']) && $_GET['action'] == 'chop')
     for ($i = 1; $i <= $_POST['amount']; $i++)
     {
         $intRoll = rand(1,8);
-        if ($intRoll == 5 || $intRoll == 6) 
-        {
-            $intKey = (rand(1, $objLumberjack -> fields['level']) - 1);
-            $intAmount = ceil(((rand(1, 20) * 1 / $arrKey[$intKey]) * (1 + $fltAbility / 20)) - $arrKey[$intKey]);
+	switch ($intRoll)
+	  {
+	  case 5:
+	  case 6:
+	    if ($_POST['type'] == 0)
+	      {
+		$intKey = (rand(1, $objLumberjack -> fields['level']) - 1);
+	      }
+	    else
+	      {
+		$intKey = $_POST['type'] - 1;
+	      }
+	    $intBonus = 1 + ($fltAbility / 20);
+	    if ($intBonus > 30)
+	      {
+		$intBonus = 30;
+	      }
+            $intAmount = ceil(((rand(1, 20) * 1 / $arrKey[$intKey]) * $intBonus) - $arrKey[$intKey]);
             if ($intAmount < 1)
             {
                 $intAmount = 1;
@@ -93,22 +114,20 @@ if (isset ($_GET['action']) && $_GET['action'] == 'chop')
             $arrAmount[$intKey] = $arrAmount[$intKey] + $intAmount;
             $intAmountability = $intAmountability + 0.1;
 	    $intExp += ($arrKey[$intKey] * 2) * $intAmount;
-        }
-        if ($intRoll == 7) 
-        {
+	    break;
+	  case 7:
             $intAmount = rand(1,100);
             $intAmountgold = $intAmountgold + $intAmount;
-        }
-        if ($intRoll == 8) 
-        {
-            $intRoll2 = rand(1,100);
-            if ($intRoll2 <= 50) 
-            {
-                $intLosthp = rand(1,100);
-                if ($intLosthp > $player -> hp) 
-                {
+	    break;
+	  case 8:
+	    $intRoll2 = rand(1,100);
+	    if ($intRoll2 <= 50) 
+	      {
+		$intLosthp = rand(1,100);
+		if ($intLosthp > $player -> hp) 
+		  {
                     $intLosthp = $player -> hp;
-                }
+		  }
                 $strInfo = TREE_STOMP.YOU_UNLUCK.$intLosthp.T_HITS;
                 $player -> hp = $player -> hp - $intLosthp;
 		if ($player->hp == 0 && $player->antidote == 'R')
@@ -118,13 +137,19 @@ if (isset ($_GET['action']) && $_GET['action'] == 'chop')
 		    $strInfo .= ' Tym razem jednak udało ci się uniknąć śmierci.';
 		    $player->hp = 1;
 		  }
-            }
-                else
-            {
+	      }
+	    else
+	      {
                 $strInfo = TREE_STOMP.YOU_LUCK;
-            }
+	      }
+	    break;
+	  default:
+	    break;
+	  }
+	if ($intRoll == 8)
+	  {
             break;
-        }
+	  }
     }
     $objLumberjack -> Close();
     $i --;
@@ -167,7 +192,8 @@ if (isset ($_GET['action']) && $_GET['action'] == 'chop')
         $strMessage = $strMessage.$intAmountability.T_ABILITY." oraz ".$intExp." PD.<br />";
       }
     $strMessage = $strMessage.$strInfo;
-    $smarty -> assign("Message", $strMessage);
+    $smarty -> assign(array("Message" => $strMessage,
+			    "Lselected" => $_POST['type']));
     require_once('includes/checkexp.php');
     checkexp($player->exp, $intExp, $player->level, $player->race, $player->user, $player->id, 0, 0, $player->id, 'lumberjack', $intAmountability);
     $db -> Execute("UPDATE `players` SET `energy`=`energy`-".$i.", `credits`=`credits`+".$intAmountgold.", `hp`=`hp`-".$intLosthp." WHERE `id`=".$player -> id);
@@ -202,6 +228,7 @@ $smarty -> assign (array("Action" => $_GET['action'],
 			 "Achop" => A_CHOP,
 			 "Onchop" => ON_CHOP,
 			 "Curen" => $player->energy,
+			 "Loptions" => $arrOptions,
 			 "Tenergy" => T_ENERGY));
 $smarty -> display ('lumberjack.tpl');
 
