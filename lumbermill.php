@@ -7,7 +7,7 @@
  *   @copyright            : (C) 2004,2005,2006,2007,2011 Vallheru Team based on Gamers-Fusion ver 2.5
  *   @author               : thindil <thindil@users.sourceforge.net>
  *   @version              : 1.4
- *   @since                : 17.10.2011
+ *   @since                : 25.10.2011
  *
  */
 
@@ -227,11 +227,11 @@ if (isset($_GET['mill']) && $_GET['mill'] == 'licenses')
 */
 if (isset ($_GET['mill']) && $_GET['mill'] == 'plany') 
 {
-    $objOwned = $db->Execute("SELECT `name` FROM `mill` WHERE `owner`=".$player->id);
+    $objOwned = $db->Execute("SELECT `name`, `elitetype` FROM `mill` WHERE `owner`=".$player->id);
     $arrOwned = array();
     while (!$objOwned->EOF)
       {
-	$arrOwned[] = $objOwned->fields['name'];
+	$arrOwned[$objOwned->fields['name']] = $objOwned->fields['elitetype'];
 	$objOwned->MoveNext();
       }
     $objOwned->Close();
@@ -247,7 +247,7 @@ if (isset ($_GET['mill']) && $_GET['mill'] == 'plany')
 	    $objPlans->MoveNext();
 	    continue;
 	  }
-	if (!in_array($objPlans->fields['name'], $arrOwned))
+	if (!array_key_exists($objPlans->fields['name'], $arrOwned) || (array_key_exists($objPlans->fields['name'], $arrOwned) && $arrOwned[$objPlans->fields['name']] != $objPlans->fields['elitetype']))
 	  {
 	    if ($objPlans->fields['elite'] > 0)
 	      {
@@ -286,9 +286,12 @@ if (isset ($_GET['mill']) && $_GET['mill'] == 'plany')
     {
 	checkvalue($_GET['buy']);
         $objPlan = $db -> Execute("SELECT * FROM `mill` WHERE id=".$_GET['buy']);
-        if (in_array($objPlan->fields['name'], $arrOwned)) 
-        {
-            error (YOU_HAVE);
+        if (array_key_exists($objPlan->fields['name'], $arrOwned)) 
+	  {
+	    if ($arrOwned[$objPlan->fields['name']] == $objPlan->fields['elitetype'])
+	      {
+		error (YOU_HAVE);
+	      }
         }
         if (!$objPlan -> fields['id']) 
         {

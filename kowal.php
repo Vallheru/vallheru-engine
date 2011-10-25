@@ -7,7 +7,7 @@
  *   @copyright            : (C) 2004,2005,2006,2011 Vallheru Team based on Gamers-Fusion ver 2.5
  *   @author               : thindil <thindil@tuxfamily.org>
  *   @version              : 1.4
- *   @since                : 17.10.2011
+ *   @since                : 25.10.2011
  *
  */
 
@@ -324,11 +324,11 @@ if (isset ($_GET['kowal']) && $_GET['kowal'] == 'plany')
         {
             error (ERROR);
         }
-	$objOwned = $db->Execute("SELECT `name` FROM `smith` WHERE `owner`=".$player->id." AND `type`='".$_GET['dalej']."'");
+	$objOwned = $db->Execute("SELECT `name`, `elitetype` FROM `smith` WHERE `owner`=".$player->id." AND `type`='".$_GET['dalej']."'");
 	$arrOwned = array();
 	while (!$objOwned->EOF)
 	  {
-	    $arrOwned[] = $objOwned->fields['name'];
+	    $arrOwned[$objOwned->fields['name']] = $objOwned->fields['elitetype'];
 	    $objOwned->MoveNext();
 	  }
 	$objOwned->Close();
@@ -344,7 +344,7 @@ if (isset ($_GET['kowal']) && $_GET['kowal'] == 'plany')
 		$objPlans->MoveNext();
 		continue;
 	      }
-	    if (!in_array($objPlans->fields['name'], $arrOwned))
+	    if (!array_key_exists($objPlans->fields['name'], $arrOwned) || (array_key_exists($objPlans->fields['name'], $arrOwned) && $arrOwned[$objPlans->fields['name']] != $objPlans->fields['elitetype']))
 	      {
 		if ($objPlans->fields['elite'] > 0)
 		  {
@@ -386,7 +386,7 @@ if (isset ($_GET['kowal']) && $_GET['kowal'] == 'plany')
     {
 	checkvalue($_GET['buy']);
         $objPlan = $db -> Execute("SELECT * FROM `smith` WHERE `id`=".$_GET['buy']);
-	$objTest = $db -> Execute("SELECT `id` FROM `smith` WHERE `owner`=".$player -> id." AND `name`='".$objPlan -> fields['name']."'");
+	$objTest = $db -> Execute("SELECT `id` FROM `smith` WHERE `owner`=".$player -> id." AND `name`='".$objPlan -> fields['name']."' AND `elitetype`='".$objPlan->fields['elitetype']."'");
         if ($objTest -> fields['id']) 
         {
             error (YOU_HAVE);
