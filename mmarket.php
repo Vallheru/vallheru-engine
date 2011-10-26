@@ -8,7 +8,7 @@
  *   @author              : thindil <thindil@tuxfamily.org>
  *   @author              : eyescream <tduda@users.sourceforge.net>
  *   @version             : 1.4
- *   @since               : 24.10.2011
+ *   @since               : 25.10.2011
  *
  */
 
@@ -174,6 +174,7 @@ if (isset ($_GET['view']) && $_GET['view'] == 'market')
 			    "Aorder" => $_GET['order'],
 			    "Aorder2" => $strOrder,
 			    "Fpage" => "Idź do strony:",
+			    "Mlist" => $_GET['lista'],
 			    "Abuy" => A_BUY,
 			    "Aadd" => A_ADD,
 			    "Adelete" => A_DELETE,

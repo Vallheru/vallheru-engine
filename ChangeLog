@@ -1,5 +1,7 @@
 2011-10-26  Bartek thindil Jasicki  <thindil@tuxfamily.org>
 
+	* BUG,mmarket.php: 
+	fixed bug with pagination
 	* UPDATE,core.php:
 	some code cleanup
 
