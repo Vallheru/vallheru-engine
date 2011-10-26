@@ -1,3 +1,8 @@
+2011-10-26  Bartek thindil Jasicki  <thindil@tuxfamily.org>
+
+	* UPDATE,core.php:
+	some code cleanup
+
 2011-10-25  Bartek thindil Jasicki  <thindil@tuxfamily.org>
 
 	* BUG,includes/funkcje.php: 
