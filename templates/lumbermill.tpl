@@ -57,16 +57,18 @@
              <tr>
              <td width="100"><b><u>{$Iname}</u></b></td>
              <td width="50"><b><u>{$Ilevel}</u></b></td>
+	     <td width="50"><b><u>{$Ienergy}</u></b></td>
              <td><b><u>{$Ilumber}</u></b></td>
 	     {if $Mill == "elite"}
 	         <td><b><u>{$Tloot}</u><b></td>
              {/if}
 	     </tr>
-             {section name=mill1 loop=$Names}
+             {section name=mill1 loop=$Plans}
                  <tr>
-                 <td><a href="lumbermill.php?mill={$Mill}&amp;dalej={$Planid[mill1]}">{$Names[mill1]}</a></td>
-                 <td>{$Level[mill1]}</td>
-                 <td>{$Lumber[mill1]}</td>
+                 <td><a href="lumbermill.php?mill={$Mill}&amp;dalej={$Plans[mill1].id}">{$Plans[mill1].name}</a></td>
+                 <td>{$Plans[mill1].level}</td>
+		 <td>{$Plans[mill1].energy}</td>
+                 <td>{$Plans[mill1].amount}</td>
 		 {if $Mill == "elite"}
 		     <td>{$Loot[mill1]}</td>
 		 {/if}

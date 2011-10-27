@@ -1,5 +1,9 @@
 2011-10-27  Bartek thindil Jasicki  <thindil@tuxfamily.org>
 
+	* UPDATE,templates/layout1/lumbermill.tpl, templates/lumbermill.tpl, lumbermill.php: 
+	some code optimization
+	* FEATURE,languages/pl/lumbermill.php: 
+	droped needed energy for made arrows
 	* FEATURE,includes/battle.php, includes/funkcje.php, includes/turnfight.php: 
 	added option to block attack with shield
 	* UPDATE,wieza.php:

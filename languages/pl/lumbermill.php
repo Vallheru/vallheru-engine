@@ -89,7 +89,7 @@ if (isset ($_GET['mill']) && ($_GET['mill'] == 'mill' || $_GET['mill'] == 'elite
 {
     if (!isset($_GET['konty']) && !isset($_GET['rob'])) 
     {
-        define("MILL_INFO", "Tutaj możesz wykonywać przedmioty co do których masz plany. Aby wykonać przedmiot, musisz posiadać również odpowiednią ilość surowców. Każda próba kosztuje ciebie tyle energii jaki jest poziom przedmiotu. Nawet za nieudaną próbę dostajesz 0,01 do umiejętności.");
+        define("MILL_INFO", "Tutaj możesz wykonywać przedmioty co do których masz plany. Aby wykonać przedmiot, musisz posiadać również odpowiednią ilość surowców oraz energii. Nawet za nieudaną próbę dostajesz 0,01 do umiejętności.");
         define("INFO", "Oto lista przedmiotów, które możesz wykonywać. Jeżeli nie masz tyle energii aby wykonać ów przedmiot, możesz po prostu wykonywać go po kawałku");
         define("I_NAME", "Nazwa");
         define("I_LEVEL", "Poziom");

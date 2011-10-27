@@ -7,7 +7,7 @@
  *   @copyright            : (C) 2004,2005,2006,2007,2011 Vallheru Team based on Gamers-Fusion ver 2.5
  *   @author               : thindil <thindil@users.sourceforge.net>
  *   @version              : 1.4
- *   @since                : 25.10.2011
+ *   @since                : 27.10.2011
  *
  */
 
@@ -364,7 +364,8 @@ if (isset($_GET['mill']) && ($_GET['mill'] == 'mill' || $_GET['mill'] == 'elite'
       {
         $smarty -> assign(array("Iname" => I_NAME,
                                 "Ilevel" => I_LEVEL,
-                                "Ilumber" => I_LUMBER));
+                                "Ilumber" => I_LUMBER,
+				"Ienergy" => "Energii"));
       }
     else
       {
@@ -544,24 +545,19 @@ if (isset ($_GET['mill']) && $_GET['mill'] == 'mill')
         $objMaked = $db -> Execute("SELECT * FROM `mill_work` WHERE `owner`=".$player->id." AND `elite`=0");
         if (!$objMaked -> fields['id']) 
         {
-            $objLumber = $db -> Execute("SELECT * FROM `mill` WHERE `owner`=".$player -> id." AND `elite`=0 ORDER BY `level` ASC");
-            $arrid = array();
-            $arrname = array();
-            $arrlevel = array();
-            $arrlumber = array();
-            while (!$objLumber -> EOF) 
-            {
-                $arrid[] = $objLumber -> fields['id'];
-                $arrname[] = $objLumber -> fields['name'];
-                $arrlevel[] = $objLumber -> fields['level'];
-                $arrlumber[] = $objLumber -> fields['amount'];
-                $objLumber -> MoveNext();
-            }
-            $objLumber -> Close();
-            $smarty -> assign(array("Names" => $arrname, 
-                                    "Planid" => $arrid, 
-                                    "Level" => $arrlevel, 
-                                    "Lumber" => $arrlumber));
+	  $arrLumber = $db->GetAll("SELECT `id`, `name`, `level`, `amount`, `type` FROM `mill` WHERE `owner`=".$player -> id." AND `elite`=0 ORDER BY `level` ASC");
+	  foreach ($arrLumber as &$arrPlan)
+	    {
+	      if ($arrPlan['type'] == 'B')
+		{
+		  $arrPlan['energy'] = $arrPlan['level'];
+		}
+	      else
+		{
+		  $arrPlan['energy'] = ceil($arrPlan['level'] / 2);
+		}
+	    }
+	  $smarty->assign("Plans", $arrLumber);
         } 
             else 
         {
@@ -676,8 +672,15 @@ if (isset ($_GET['mill']) && $_GET['mill'] == 'mill')
     * Start making items
     */
     if (isset($_GET['rob'])) 
-    {
-        $intAmount = floor($_POST['razy'] / $objLumber -> fields['level']);
+      {
+	if ($objLumber->fields['type'] == 'B')
+	  {
+	    $intAmount = floor($_POST['razy'] / $objLumber -> fields['level']);
+	  }
+	else
+	  {
+	    $intAmount = floor($_POST['razy'] / ceil($objLumber->fields['level'] / 2));
+	  }
         if ($intAmount > 1) 
         {
             $intNeedmineral = ($intAmount * $objLumber -> fields['amount']);
@@ -785,7 +788,6 @@ if (isset ($_GET['mill']) && $_GET['mill'] == 'mill')
 	    for ($i = 0; $i < count($arrMaked); $i++)
 	      {
 		additem($arrItem['type'], $arrMaked[$i]['name'], $arrMaked[$i]['wt'], $arrMaked[$i]['power'], $arrMaked[$i]['speed'], $intCost, $player->id, $arrItem['level'], $arrMaked[$i]['repaircost'], $arrAmount[$i]);
-		echo $arrAmount[$i]."<br />";
 	      }
             if ($player -> clas == 'Rzemieślnik') 
             {
@@ -806,11 +808,18 @@ if (isset ($_GET['mill']) && $_GET['mill'] == 'mill')
         {
             $procent = (($_POST['razy'] / $arrItem['level']) * 100);
             $procent = round($procent,"0");
-            $need = ($objLumber -> fields['level'] - $_POST['razy']);
+	    if ($objLumber->fields['type'] == 'B')
+	      {
+		$need = ($objLumber -> fields['level'] - $_POST['razy']);
+	      }
+	    else
+	      {
+		$need = (ceil($objLumber -> fields['level'] / 2)- $_POST['razy']);
+	      }
             $smarty -> assign ("Message", YOU_WORK.$arrItem['name'].YOU_USE.$_POST['razy'].AND_MAKE.$procent.TO_END.$need.M_ENERGY);
             if ($objLumber -> fields['type'] == 'R') 
             {
-                $db -> Execute("INSERT INTO `mill_work` (`owner`, `name`, `u_energy`, `n_energy`) VALUES(".$player -> id.", '".$objLumber -> fields['name']."', ".$_POST['razy'].", ".$arrItem['level'].")");
+                $db -> Execute("INSERT INTO `mill_work` (`owner`, `name`, `u_energy`, `n_energy`) VALUES(".$player -> id.", '".$objLumber -> fields['name']."', ".$_POST['razy'].", ".ceil($objLumber -> fields['level'] / 2).")");
             } 
                 else 
             {
@@ -841,38 +850,27 @@ if (isset ($_GET['mill']) && $_GET['mill'] == 'elite')
         $objMaked = $db -> Execute("SELECT * FROM `mill_work` WHERE `owner`=".$player->id." AND `elite`>0");
         if (!$objMaked -> fields['id']) 
         {
-            $objLumber = $db -> Execute("SELECT * FROM `mill` WHERE `owner`=".$player -> id." AND `elite`>0 ORDER BY `level` ASC");
-            $arrid = array();
-            $arrname = array();
-            $arrlevel = array();
-            $arrlumber = array();
+	    $arrLumber = $db->GetAll("SELECT `id`, `name`, `level`, `amount`, `type`, `elite`, `elitetype` FROM `mill` WHERE `owner`=".$player -> id." AND `elite`>0 ORDER BY `level` ASC");
 	    $arrLoot = array();
-            while (!$objLumber -> EOF) 
+	    foreach ($arrLumber as &$arrPlan)
 	      {
-		$arrid[] = $objLumber -> fields['id'];
-		if ($objLumber->fields['elitetype'] == 'S')
+		$arrPlan['energy'] = $arrPlan['level'];
+		if ($arrPlan['elitetype'] == 'S')
 		  {
-		    $arrname[] = $objLumber -> fields['name'].' (smoczy)';
+		    $arrPlan['name'] .= ' (smoczy)';
 		  }
 		else
 		  {
-		    $arrname[] = $objLumber -> fields['name'].' (elfi)';
+		    $arrPlan['name'] .= ' (elfi)';
 		  }
-		$arrlevel[] = $objLumber -> fields['level'];
-		$arrlumber[] = $objLumber -> fields['amount'];
-		$objLoot = $db->Execute("SELECT `lootnames` FROM `monsters` WHERE `id`=".$objLumber->fields['elite']);
+		$objLoot = $db->Execute("SELECT `lootnames` FROM `monsters` WHERE `id`=".$arrPlan['elite']);
 		$arrTmp = explode(";", $objLoot->fields['lootnames']);
 		$arrLoot[] = $arrTmp[0].":8 ".$arrTmp[1].":4 ".$arrTmp[2].":2 ".$arrTmp[3].":1";
 		$objLoot->Close();
-                $objLumber -> MoveNext();
 	      }
-            $objLumber -> Close();
-            $smarty -> assign(array("Names" => $arrname, 
-                                    "Planid" => $arrid, 
-                                    "Level" => $arrlevel, 
-                                    "Lumber" => $arrlumber,
-				    "Tloot" => "Części potwora",
-				    "Loot" => $arrLoot));
+	    $smarty->assign(array("Plans" => $arrLumber,
+				  "Tloot" => "Części potwora",
+				  "Loot" => $arrLoot));
         } 
 	else 
         {
