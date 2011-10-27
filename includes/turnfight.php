@@ -7,7 +7,7 @@
  *   @copyright            : (C) 2004,2005,2006,2007,2011 Vallheru Team based on Gamers-Fusion ver 2.5
  *   @author               : thindil <thindil@tuxfamily.org>
  *   @version              : 1.4
- *   @since                : 18.10.2011
+ *   @since                : 27.10.2011
  *
  */
  
@@ -1137,6 +1137,16 @@ function monsterattack($attacks,$enemy,$myunik,$amount)
     }
     $amount = $temp;
     $armor = checkarmor($arrEquip[3][0], $arrEquip[2][0], $arrEquip[4][0], $arrEquip[5][0]);
+    //Shield block chance
+    $intBlock = 0;
+    if ($arrEquip[5][0])
+      {
+	$intBlock = ceil($arrEquip[5][2] / 5);
+	if ($intBlock > 20)
+	  {
+	    $intBlock = 20;
+	  }
+      }
     for ($j = 1;$j <= $amount;++$j) 
     {
         $ename = $enemy['name']." nr".$j;
@@ -1156,6 +1166,7 @@ function monsterattack($attacks,$enemy,$myunik,$amount)
             {
                 $intDamage = $enemy['strength'];
             }
+	    $blnMiss = FALSE;
             if ($player -> hp > 0) 
             {
                 $szansa = rand(1, 100);
@@ -1165,8 +1176,19 @@ function monsterattack($attacks,$enemy,$myunik,$amount)
                     $smarty -> display ('error1.tpl');
                     $gunik = ($gunik + 1);
                     $zmeczenie = ($zmeczenie + $arrEquip[3][4] + 1);
+		    $blnMiss = TRUE;
                 } 
-                    else 
+		//Player block attack with shield
+		$szansa = rand(1, 100);
+		if ($szansa <= $intBlock && !$blnMiss)
+		  {
+		    $smarty -> assign ("Message", "<br>Zablokowałeś tarczą atak <b>".$ename."</b>!");
+                    $smarty -> display ('error1.tpl');
+		    $zmeczenie = ($zmeczenie + $arrEquip[5][4] + 1);
+		    $gwt[3]++;
+		    $blnMiss = TRUE;
+		  }
+                if (!$blnMiss)
                 {
                     $player -> hp = ($player -> hp - $intDamage);
                     $db -> Execute("UPDATE `players` SET `hp`=".$player -> hp." WHERE `id`=".$player -> id);

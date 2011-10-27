@@ -8,7 +8,7 @@
  *   @author               : thindil <thindil@tuxfamily.org>
  *   @author               : eyescream <tduda@users.sourceforge.net>
  *   @version              : 1.4
- *   @since                : 25.10.2011
+ *   @since                : 27.10.2011
  *
  */
 
@@ -104,7 +104,7 @@ function attack1($attacker, $defender, $arrAtequip, $arrDeequip, $attack_bspell,
     /**
     * Calculate dodge defender and power of attack, critical hit (weapon)
     */
-    if ($arrAtequip[0][0] && $attack_durwep <= $arrAtequip[0][6]) 
+    elseif ($arrAtequip[0][0] && $attack_durwep <= $arrAtequip[0][6]) 
     {
         $unik = (($defender['agility'] - $attacker['agility']) + ($defender['miss'] - $attacker['attack']));
         if ($attacker['clas'] == 'Wojownik' || $attacker['clas'] == 'Barbarzyńca') 
@@ -122,7 +122,7 @@ function attack1($attacker, $defender, $arrAtequip, $arrDeequip, $attack_bspell,
     /**
     * Calculate dodge defender and power of attack, critical hit (spell)
     */
-    if ($attack_bspell -> fields['id'] && (!$arrAtequip[1][0] || $arrAtequip[0][0])) 
+    elseif ($attack_bspell -> fields['id'] && (!$arrAtequip[1][0] || $arrAtequip[0][0])) 
     {
         $unik = (($defender['agility'] - $attacker['agility']) + ($defender['miss'] - $attacker['magic']));
         $mypower = ($attack_bspell -> fields['obr'] * $attacker['inteli']) - (($attack_bspell -> fields['obr'] * $attacker['inteli']) * ($arrAtequip[3][4] / 100));
@@ -181,7 +181,7 @@ function attack1($attacker, $defender, $arrAtequip, $arrDeequip, $attack_bspell,
             $unik = $unik * 2;
         }
     }
-    if ($defender['clas'] == 'Rzemieślnik' || $defender['clas'] == 'Złodziej') 
+    elseif ($defender['clas'] == 'Rzemieślnik' || $defender['clas'] == 'Złodziej') 
     {
         $epower = ($arrDeequip[3][2] + $defender['cond'] + $arrDeequip[2][2] + $arrDeequip[4][2] + $arrDeequip[5][2]);
         if ($arrAtequip[1][0]) 
@@ -189,7 +189,7 @@ function attack1($attacker, $defender, $arrAtequip, $arrDeequip, $attack_bspell,
             $unik = $unik * 2;
         }
     }
-    if ($defender['clas'] == 'Mag') 
+    elseif ($defender['clas'] == 'Mag') 
     {
         if ($defender['mana'] <= 0) 
         {
@@ -252,6 +252,16 @@ function attack1($attacker, $defender, $arrAtequip, $arrDeequip, $attack_bspell,
     {
         $mypower = $mypower - ($mypower / 4);
     }
+    //Shield block chance
+    $intBlock = 0;
+    if ($arrDeequip[5][0])
+      {
+	$intBlock = ceil($arrDeequip[5][2] / 5);
+	if ($intBlock > 20)
+	  {
+	    $intBlock = 20;
+	  }
+      }
 
     $arrLocations = array('w tułów', 'w głowę', 'w nogę', 'w rękę');
     $intHit = rand(0, 3);
@@ -265,6 +275,7 @@ function attack1($attacker, $defender, $arrAtequip, $arrDeequip, $attack_bspell,
         $mypower = ($mypower + $rzut1);
         $rzut2 = (rand(1, $defender['level']) * 10);
         $epower = ($epower + $rzut2);
+	$blnMiss = FALSE;
         if ($attack_stam > $attacker['cond']) 
         {
             $mypower = 0;
@@ -308,8 +319,25 @@ function attack1($attacker, $defender, $arrAtequip, $arrDeequip, $attack_bspell,
                 $def_miss = ($def_miss + 1);
                 $def_stam = ($def_stam + $arrDeequip[3][4] + 1);
             }
+	    $blnMiss = TRUE;
         } 
-            elseif ($attack_stam <= $attacker['cond']) 
+	//Player block attack with shield
+	$szansa = rand(1, 100);
+	if ($szansa <= $intBlock && !$blnMiss)
+	  {
+	    if (($attack_bspell -> fields['id'] && $attacker['mana'] > $attack_bspell -> fields['poziom']) || ($arrAtequip[0][6] > $attack_durwep) || ($arrAtequip[1][6] > $attack_durwep && $arrAtequip[6][6] > $attack_durwep))
+	      {
+                $strMessage = $strMessage."<b>".$defender['user']."</b> zablokował tarczą atak <b>".$attacker['user']."</b><br />";
+                if ($arrAtequip[1][0] && $arrAtequip[6][6] > $attack_durwep) 
+                {
+                    $attack_durwep = ($attack_durwep + 1);
+                }
+                $def_stam = ($def_stam + $arrDeequip[5][4] + 1);
+	      }
+	    $gwt[3]++;
+	    $blnMiss = TRUE;
+	  }
+	if ($attack_stam <= $attacker['cond'] && !$blnMiss) 
         {
             $rzut = rand(1, 1000) / 10;
             $intRoll = rand(1, 100);

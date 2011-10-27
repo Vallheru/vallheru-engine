@@ -1,5 +1,7 @@
 2011-10-27  Bartek thindil Jasicki  <thindil@tuxfamily.org>
 
+	* FEATURE,includes/battle.php, includes/funkcje.php, includes/turnfight.php: 
+	added option to block attack with shield
 	* UPDATE,wieza.php:
 	some code cleanup
 

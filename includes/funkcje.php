@@ -7,7 +7,7 @@
  *   @copyright            : (C) 2004,2005,2006,2007,2011 Vallheru Team based on Gamers-Fusion ver 2.5
  *   @author               : thindil <thindil@tuxfamily.org>
  *   @version              : 1.4
- *   @since                : 25.10.2011
+ *   @since                : 27.10.2011
  *
  */
 
@@ -415,13 +415,14 @@ function checkspeed($speed, $weapon, $bow)
 /**
  * Function made monster attack
  */
-function monsterattack2($intMydodge, &$zmeczenie, &$gunik, $arrEquip, &$enemy, $times, $armor, $mczaro, &$gwt)
+function monsterattack2($intMydodge, &$zmeczenie, &$gunik, $arrEquip, &$enemy, $times, $armor, $mczaro, &$gwt, $intBlock)
 {
   global $player;
   global $smarty;
   global $number;
 
   $szansa = rand(1, 100);
+  $blnMiss = FALSE;
   //Player dodge
   if ($intMydodge >= $szansa && $zmeczenie <= $player->cond && $szansa < 97) 
     {
@@ -431,9 +432,19 @@ function monsterattack2($intMydodge, &$zmeczenie, &$gunik, $arrEquip, &$enemy, $
 	}
       $gunik++;
       $zmeczenie = ($zmeczenie + $arrEquip[3][4] + 1);
+      $blnMiss = TRUE;
     } 
+  //Player block attack with shield
+  $szansa = rand(1, 100);
+  if ($szansa <= $intBlock && !$blnMiss)
+    {
+      $strMessage = "Zablokowałeś tarczą atak <b>".$enemy['name']."</b>!<br />";
+      $zmeczenie = ($zmeczenie + $arrEquip[5][4] + 1);
+      $gwt[3]++;
+      $blnMiss = TRUE;
+    }
   //Monster hit
-  else 
+  if (!$blnMiss)
     {
       $arrLocations = array('w tułów i zadaje(ą)', 'w głowę i zadaje(ą)', 'w nogę i zadaje(ą)', 'w rękę i zadaje(ą)');
       if ($arrEquip[3][0] || $arrEquip[2][0] || $arrEquip[4][0] || $arrEquip[5][0]) 
@@ -1003,6 +1014,16 @@ function fightmonster($enemy, $expgain, $goldgain, $times)
     {
         $enemy['attackstr'] = 5;
     }
+    //Shield block chance
+    $intBlock = 0;
+    if ($arrEquip[5][0])
+      {
+	$intBlock = ceil($arrEquip[5][2] / 5);
+	if ($intBlock > 20)
+	  {
+	    $intBlock = 20;
+	  }
+      }
     $smarty -> assign ("Message", "<ul><li><b>".$player -> user."</b> ".VERSUS." <b>".$enemy['name']."</b><br />");
     $smarty -> display ('error1.tpl');
 
@@ -1097,7 +1118,7 @@ function fightmonster($enemy, $expgain, $goldgain, $times)
             {
                 if ($player -> hp > 0 && $enemy['hp'] > 0) 
 		  {
-		    monsterattack2($intMydodge, $zmeczenie, $gunik, $arrEquip, $enemy, $times, $armor, $mczaro, $gwt);
+		    monsterattack2($intMydodge, $zmeczenie, $gunik, $arrEquip, $enemy, $times, $armor, $mczaro, $gwt, $intBlock);
 		  }
             }
         } 
@@ -1125,7 +1146,7 @@ function fightmonster($enemy, $expgain, $goldgain, $times)
             {
                 if ($player -> hp > 0 && $enemy['hp'] > 0) 
 		  {
-		    monsterattack2($intMydodge, $zmeczenie, $gunik, $arrEquip, $enemy, $times, $armor, $mczaro, $gwt);
+		    monsterattack2($intMydodge, $zmeczenie, $gunik, $arrEquip, $enemy, $times, $armor, $mczaro, $gwt, $intBlock);
 		  }
             }
             for ($i = 1;$i <= $stat['attackstr']; $i++) 
