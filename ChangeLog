@@ -1,5 +1,7 @@
 2011-10-27  Bartek thindil Jasicki  <thindil@tuxfamily.org>
 
+	* BUG,includes/battle.php (attack1): 
+	fixed shield damage
 	* UPDATE,templates/layout1/lumbermill.tpl, templates/lumbermill.tpl, lumbermill.php: 
 	some code optimization
 	* FEATURE,languages/pl/lumbermill.php: 

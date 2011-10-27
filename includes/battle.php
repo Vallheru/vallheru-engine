@@ -334,7 +334,7 @@ function attack1($attacker, $defender, $arrAtequip, $arrDeequip, $attack_bspell,
                 }
                 $def_stam = ($def_stam + $arrDeequip[5][4] + 1);
 	      }
-	    $gwt[3]++;
+	    $def_durarm[3]++;
 	    $blnMiss = TRUE;
 	  }
 	if ($attack_stam <= $attacker['cond'] && !$blnMiss) 
