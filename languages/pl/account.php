@@ -7,7 +7,7 @@
  *   @copyright            : (C) 2004,2005,2006,2011 Vallheru Team based on Gamers-Fusion ver 2.5
  *   @author               : thindil <thindil@tuxfamily.org>
  *   @version              : 1.4
- *   @since                : 04.10.2011
+ *   @since                : 28.10.2011
  *
  */
 
@@ -127,7 +127,7 @@ if (isset($_GET['view']))
 
     elseif ($_GET['view'] == "reset") 
       {
-	define("RESET_INFO", "Tutaj możesz zresetować swoją postać. Na twój mail zostanie wysłany specjalny link aktywacyjny. Dopiero po kliknięciu na niego twoja postać zostanie zresetowana. W przypadku, kiedy wybierzesz całkowity reset, zostanie jej jedynie id, nick, hasło, mail, profil, poleceni oraz wiek. W przypadku małego resetu zachowasz również ekwipunek, pieniądze oraz dom.");
+	define("RESET_INFO", "Tutaj możesz zresetować swoją postać. Na twój mail zostanie wysłany specjalny link aktywacyjny. Dopiero po kliknięciu na niego twoja postać zostanie zresetowana. W przypadku, kiedy wybierzesz całkowity reset, zostanie jej jedynie id, nick, hasło, mail, profil, poleceni oraz wiek. W przypadku małego resetu zachowasz również ekwipunek, pieniądze oraz dom. W obu przypadkach przepadają takie rzeczy jak kopalnia, strażnica oraz farma.");
 	if (isset ($_GET['step']) && $_GET['step'] == 'make') 
 	  {
 	    define("MESSAGE1", "Dostałeś ten list ponieważ chciałeś zresetować postać. Jeżeli nadal pragniesz zresetować swoją postać na");
