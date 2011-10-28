@@ -1,3 +1,8 @@
+2011-10-28  Bartek thindil Jasicki  <thindil@tuxfamily.org>
+
+	* BUG,lumbermill.php:
+	fixed buying elven elite plans
+
 2011-10-27  Bartek thindil Jasicki  <thindil@tuxfamily.org>
 
 	* BUG,includes/battle.php (attack1): 

@@ -7,7 +7,7 @@
  *   @copyright            : (C) 2004,2005,2006,2007,2011 Vallheru Team based on Gamers-Fusion ver 2.5
  *   @author               : thindil <thindil@users.sourceforge.net>
  *   @version              : 1.4
- *   @since                : 27.10.2011
+ *   @since                : 28.10.2011
  *
  */
 
@@ -309,7 +309,7 @@ if (isset ($_GET['mill']) && $_GET['mill'] == 'plany')
 	  {
 	    error("Tylko Rzemieślnik może kupować plany elitarnych przedmiotów.");
 	  }
-        $db -> Execute("INSERT INTO `mill` (`owner`, `name`, `type`, `cost`, `amount`, `level`, `lang`, `twohand`, `elite`) VALUES(".$player -> id.", '".$objPlan -> fields['name']."', '".$objPlan -> fields['type']."', ".$objPlan -> fields['cost'].", ".$objPlan -> fields['amount'].", ".$objPlan -> fields['level'].", '".$player -> lang."', '".$objPlan -> fields['twohand']."', '".$objPlan->fields['elite']."')");
+        $db -> Execute("INSERT INTO `mill` (`owner`, `name`, `type`, `cost`, `amount`, `level`, `lang`, `twohand`, `elite`, `elitetype`) VALUES(".$player -> id.", '".$objPlan -> fields['name']."', '".$objPlan -> fields['type']."', ".$objPlan -> fields['cost'].", ".$objPlan -> fields['amount'].", ".$objPlan -> fields['level'].", '".$player -> lang."', '".$objPlan -> fields['twohand']."', '".$objPlan->fields['elite']."', '".$objPlan->fields['elitetype']."')");
         $db -> Execute("UPDATE `players` SET `credits`=`credits`-".$objPlan -> fields['cost']." WHERE `id`=".$player -> id);
         $smarty -> assign(array("Cost1" => $objPlan -> fields['cost'], 
                                 "Name1" => $objPlan -> fields['name'],
