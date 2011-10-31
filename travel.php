@@ -7,7 +7,7 @@
  *   @copyright            : (C) 2004,2005,2006,2011 Vallheru Team based on Gamers-Fusion ver 2.5
  *   @author               : thindil <thindil@tuxfamily.org>
  *   @version              : 1.4
- *   @since                : 23.10.2011
+ *   @since                : 31.10.2011
  *
  */
  
@@ -219,118 +219,6 @@ if (isset($_GET['akcja']) && in_array($_GET['akcja'], array('gory', 'las', 'city
       {
         error(ERROR);
       }
-    //We fighting in travel
-    $objFight = $db->Execute("SELECT `fight` FROM `players` WHERE `id`=".$player->id);
-    if ($objFight->fields['fight'])
-      {
-	if ($objFight->fields['fight'] != 99999)
-	  {
-	    error(ERROR);
-	  }
-	if (!isset($_GET['step2']) || isset($_SESSION['enemy']))
-	  {
-	    battle("travel.php?akcja=".$_GET['akcja']."&amp;step=".$_GET['step']);
-	  }
-	else
-	  {
-	    switch ($_GET['step2'])
-	      {
-	      case 'fight':
-		battle("travel.php?akcja=".$_GET['akcja']."&amp;step=".$_GET['step']);
-		break;
-	      case 'pay':
-		$intRoll = rand(1, 100);
-		if ($intRoll < 6)
-		  {
-		    $intCost = 5 * $player->level;
-		  }
-		elseif ($intRoll > 5 && $intRoll < 26)
-		  {
-		    $intCost = 15 * $player->level;
-		  }
-		elseif ($intRoll > 25 && $intRoll < 76)
-		  {
-		    $intCost = 25 * $player->level;
-		  }
-		elseif ($intRoll > 75 && $intRoll < 96)
-		  {
-		    $intCost = 50 * $player->level;
-		  }
-		else
-		  {
-		    $intCost = 0;
-		  }
-		if ($intCost > $player->credits || $intCost == 0)
-		  {
-		    $smarty -> assign ("Message", "Nie udało Ci się przekonać bandytów złotem. Rozpoczyna się walka!<br />");
-		    $smarty -> display ('error1.tpl');
-		    battle("travel.php?akcja=".$_GET['akcja']."&amp;step=".$_GET['step']);
-		  }
-		else
-		  {
-		    $db->Execute("UPDATE `players` SET `credits`=`credits`-".$intCost.", `fight`=0 WHERE `id`=".$player->id);
-		    $smarty -> assign ("Message", "Płacisz bandytom ".$intCost." sztuk złota i puszczają Ciebie wolno. Dalsza droga przebiega bez niespodzianek<br />");
-		    $smarty -> display ('error1.tpl');
-		  }
-		break;
-	      case 'escape':
-		/**
-		 * Add bonus from rings
-		 */
-		$arrEquip = $player -> equipment();
-		if ($arrEquip[9][2])
-		  {
-		    $arrRingtype = explode(" ", $arrEquip[9][1]);
-		    $intAmount = count($arrRingtype) - 1;
-		    if ($arrRingtype[$intAmount] == 'szybkości')
-		      {
-			$player->speed = $player->speed + $arrEquip[9][2];
-		      }
-		  } 
-		if ($arrEquip[10][2])
-		  {
-		    $arrRingtype = explode(" ", $arrEquip[10][1]);
-		    $intAmount = count($arrRingtype) - 1;
-		    if ($arrRingtype[$intAmount] == 'szybkości')
-		      {
-			$player->speed = $player->speed + $arrEquip[10][2];
-		      }
-		  }
-		$arrbandit = array ();
-		for ($i = 0; $i < 4; $i++) 
-		  {
-		    $roll2 = rand (1,500);
-		    $arrbandit[$i] = $roll2;
-		  }
-		$chance = (rand(1, $player->level) + ($player->speed + $player->perception) - $arrbandit[0]);
-		if ($chance > 0) 
-		  {
-		    $expgain = rand($arrbandit[1], $arrbandit[2]);
-		    $expgain = ceil($expgain / 100);
-		    $smarty -> assign ("Message", "Udało Ci się uciec przed bandytami. Zdobywasz ".$expgain." doświadczenia oraz 0.1 do umiejętności Spostrzegawczość. Dalsza droga przebiega bez niespodzaniek.<br />");
-		    $smarty -> display ('error1.tpl');
-		    checkexp($player -> exp, $expgain, $player -> level, $player -> race, $player -> user, $player -> id, 0, 0, $player -> id, 'perception', 0.1);
-		    $db -> Execute("UPDATE `players` SET `fight`=0 WHERE `id`=".$player -> id);
-		  } 
-		else 
-		  {
-		    $db->Execute("UPDATE `players` SET `perception`=`perception`+0.01 WHERE `id`=".$player->id);
-		    $smarty -> assign ("Message", "Nie udało Ci się uciec przed bandytami. Rozpoczyna się walka!<br />");
-		    $smarty -> display ('error1.tpl');
-		    battle("travel.php?akcja=".$_GET['akcja']."&amp;step=".$_GET['step']);
-	      }
-		break;
-	      default:
-		battle("travel.php?akcja=".$_GET['akcja']."&amp;step=".$_GET['step']);
-		break;
-	      }
-	  }
-      }
-    $objFight->Close();
-    if ($player->hp == 0)
-      {
-        error(YOU_DEAD);
-      }
     switch ($_GET['akcja'])
       {
       case 'gory':
@@ -440,6 +328,127 @@ if (isset($_GET['akcja']) && in_array($_GET['akcja'], array('gory', 'las', 'city
 	error(ERROR);
 	break;
       }
+    //We fighting in travel
+    $objFight = $db->Execute("SELECT `fight` FROM `players` WHERE `id`=".$player->id);
+    if ($objFight->fields['fight'])
+      {
+	if ($objFight->fields['fight'] != 99999)
+	  {
+	    error(ERROR);
+	  }
+	if (!isset($_GET['step2']) || isset($_SESSION['enemy']))
+	  {
+	    battle("travel.php?akcja=".$_GET['akcja']."&amp;step=".$_GET['step']);
+	  }
+	else
+	  {
+	    switch ($_GET['step2'])
+	      {
+	      case 'fight':
+		battle("travel.php?akcja=".$_GET['akcja']."&amp;step=".$_GET['step']);
+		break;
+	      case 'pay':
+		if ($_GET['step'] == 'caravan')
+		  {
+		    $intCost = $intGoldneed;
+		  }
+		else
+		  {
+		    $intCost = 0;
+		  }
+		$intRoll = rand(1, 100);
+		if ($intRoll < 6)
+		  {
+		    $intCost += 5 * $player->level;
+		  }
+		elseif ($intRoll > 5 && $intRoll < 26)
+		  {
+		    $intCost += 15 * $player->level;
+		  }
+		elseif ($intRoll > 25 && $intRoll < 76)
+		  {
+		    $intCost += 25 * $player->level;
+		  }
+		elseif ($intRoll > 75 && $intRoll < 96)
+		  {
+		    $intCost += 50 * $player->level;
+		  }
+		else
+		  {
+		    $intCost = 0;
+		  }
+		if ($intCost > $player->credits || $intCost == 0)
+		  {
+		    $smarty -> assign ("Message", "Nie udało Ci się przekonać bandytów złotem. Rozpoczyna się walka!<br />");
+		    $smarty -> display ('error1.tpl');
+		    battle("travel.php?akcja=".$_GET['akcja']."&amp;step=".$_GET['step']);
+		  }
+		else
+		  {
+		    $intCost -= $intGoldneed;
+		    $db->Execute("UPDATE `players` SET `credits`=`credits`-".$intCost.", `fight`=0 WHERE `id`=".$player->id);
+		    $smarty -> assign ("Message", "Płacisz bandytom ".$intCost." sztuk złota i puszczają Ciebie wolno. Dalsza droga przebiega bez niespodzianek<br />");
+		    $smarty -> display ('error1.tpl');
+		  }
+		break;
+	      case 'escape':
+		/**
+		 * Add bonus from rings
+		 */
+		$arrEquip = $player -> equipment();
+		if ($arrEquip[9][2])
+		  {
+		    $arrRingtype = explode(" ", $arrEquip[9][1]);
+		    $intAmount = count($arrRingtype) - 1;
+		    if ($arrRingtype[$intAmount] == 'szybkości')
+		      {
+			$player->speed = $player->speed + $arrEquip[9][2];
+		      }
+		  } 
+		if ($arrEquip[10][2])
+		  {
+		    $arrRingtype = explode(" ", $arrEquip[10][1]);
+		    $intAmount = count($arrRingtype) - 1;
+		    if ($arrRingtype[$intAmount] == 'szybkości')
+		      {
+			$player->speed = $player->speed + $arrEquip[10][2];
+		      }
+		  }
+		$arrbandit = array ();
+		for ($i = 0; $i < 4; $i++) 
+		  {
+		    $roll2 = rand (1,500);
+		    $arrbandit[$i] = $roll2;
+		  }
+		$chance = (rand(1, $player->level) + ($player->speed + $player->perception) - $arrbandit[0]);
+		if ($chance > 0) 
+		  {
+		    $expgain = rand($arrbandit[1], $arrbandit[2]);
+		    $expgain = ceil($expgain / 100);
+		    $smarty -> assign ("Message", "Udało Ci się uciec przed bandytami. Zdobywasz ".$expgain." doświadczenia oraz 0.1 do umiejętności Spostrzegawczość. Dalsza droga przebiega bez niespodzaniek.<br />");
+		    $smarty -> display ('error1.tpl');
+		    checkexp($player -> exp, $expgain, $player -> level, $player -> race, $player -> user, $player -> id, 0, 0, $player -> id, 'perception', 0.1);
+		    $db -> Execute("UPDATE `players` SET `fight`=0 WHERE `id`=".$player -> id);
+		  } 
+		else 
+		  {
+		    $db->Execute("UPDATE `players` SET `perception`=`perception`+0.01 WHERE `id`=".$player->id);
+		    $smarty -> assign ("Message", "Nie udało Ci się uciec przed bandytami. Rozpoczyna się walka!<br />");
+		    $smarty -> display ('error1.tpl');
+		    battle("travel.php?akcja=".$_GET['akcja']."&amp;step=".$_GET['step']);
+	      }
+		break;
+	      default:
+		battle("travel.php?akcja=".$_GET['akcja']."&amp;step=".$_GET['step']);
+		break;
+	      }
+	  }
+      }
+    $objFight->Close();
+    if ($player->hp == 0)
+      {
+        error(YOU_DEAD);
+      }     
     if (!in_array($player->location, $arrLocation))
       {
 	error(ERROR);
