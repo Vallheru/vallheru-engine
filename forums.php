@@ -8,7 +8,7 @@
  *   @author               : thindil <thindil@tuxfamily.org>
  *   @author               : mori <ziniquel@users.sourceforge.net>
  *   @version              : 1.4
- *   @since                : 12.10.2011
+ *   @since                : 31.10.2011
  *
  */
 
@@ -334,6 +334,7 @@ if (isset($_GET['topics']))
 			    "Asort" => "Sortuj",
 			    "Tsort" => "według",
 			    "Onames" => $arrOptions,
+			    "Thelp" => "Linki automatycznie zamieniane są na klikalne. Możesz używać następujących znaczników BBCode:<br /><ul><li>[b]<b>Pogrubienie</b>[/b]</li><li>[i]<i>Kursywa</i><[/i]</li><li>[u]<u>Podkreślenie</u>[/u]</li><li>[color (angielska nazwa koloru (red, yellow, itp) lub kod HTML (#FFFF00, itp)]pokolorowanie tekstu[/color]</li><li>[center]wycentrowanie tekstu[/center]</li><li>[quote]cytat[/quote]</ul>",
 			    "Selected" => $_SESSION['fsort']));
 }
 
@@ -458,27 +459,28 @@ if (isset($_GET['topic']))
     $smarty -> assign(array("Topic2" => $strClosed.$topicinfo -> fields['topic'], 
 			    "Prank" => $player->rank,
 			    "Adelete" => "Skasuj wybrane odpowiedzi",
-        "Starter" => $topicinfo -> fields['starter'], 
-        "Playerid" => $topicinfo -> fields['gracz'], 
-        "Category" => $topicinfo -> fields['cat_id'], 
-	"Closed" => $topicinfo->fields['closed'],
-        "Ttext" => $text1, 
-        "Rstarter" => $arrstarter, 
-        "Rplayerid" => $arrplayerid, 
-        "Rtext" => $arrtext, 
-        "Action2" => $arraction, 
-        "Id" => $topicinfo -> fields['id'],
-        "Rid" => $arrRid,
-        "Writeby" => WRITE_BY,
-        "Wid" => W_ID,
-        "Areply" => A_REPLY,
-        "Rtext2" => $strReplytext,
-        "Aback" => A_BACK,
-        "Aquote" => A_QUOTE,
-	"Tpages" => $pages,
-	"Tpage" => $page,
-        "Fpage" => "Idź  do strony:",
-        "Write" => WRITE));
+			    "Starter" => $topicinfo -> fields['starter'], 
+			    "Playerid" => $topicinfo -> fields['gracz'], 
+			    "Category" => $topicinfo -> fields['cat_id'], 
+			    "Closed" => $topicinfo->fields['closed'],
+			    "Ttext" => $text1, 
+			    "Rstarter" => $arrstarter, 
+			    "Rplayerid" => $arrplayerid, 
+			    "Rtext" => $arrtext, 
+			    "Action2" => $arraction, 
+			    "Id" => $topicinfo -> fields['id'],
+			    "Rid" => $arrRid,
+			    "Writeby" => WRITE_BY,
+			    "Wid" => W_ID,
+			    "Areply" => A_REPLY,
+			    "Rtext2" => $strReplytext,
+			    "Aback" => A_BACK,
+			    "Aquote" => A_QUOTE,
+			    "Tpages" => $pages,
+			    "Tpage" => $page,
+			    "Fpage" => "Idź  do strony:",
+			    "Thelp" => "Linki automatycznie zamieniane są na klikalne. Możesz używać następujących znaczników BBCode:<br /><ul><li>[b]<b>Pogrubienie</b>[/b]</li><li>[i]<i>Kursywa</i><[/i]</li><li>[u]<u>Podkreślenie</u>[/u]</li><li>[color (angielska nazwa koloru (red, yellow, itp) lub kod HTML (#FFFF00, itp)]pokolorowanie tekstu[/color]</li><li>[center]wycentrowanie tekstu[/center]</li><li>[quote]cytat[/quote]</ul>",
+			    "Write" => WRITE));
     $topicinfo -> Close();
 }
 

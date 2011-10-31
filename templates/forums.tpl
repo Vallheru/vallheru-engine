@@ -85,7 +85,7 @@
             <input type="checkbox" name="sticky" />{$Tsticky}<br />
         {/if}
         <input type="submit" value="{$Addtopic}" />
-    </form><br /><br />
+    </form><br />{$Thelp}<br /><br />
     <a href="forums.php?view=categories">{$Aback}</a> {$Tocategories}.
 {/if}
 
@@ -135,7 +135,7 @@
     	{$Areply}:<br />
     	<textarea name="rep" cols="40" rows="10">{$Rtext2}</textarea><br />
     	<input type="submit" value="{$Areply}" />
-    	</form>
+    	</form><br />{$Thelp}
     {/if}
 {/if}
 

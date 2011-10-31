@@ -49,7 +49,8 @@
     {$Addtopic}:<br /><input type="text" name="title2" value="" size="40" /><br />
     <textarea name="body" cols="40" rows="10">{$Ttext}</textarea><br />
     {$Sticky}
-    <input type="submit" value="{$Addtopic}" /></form>
+    <input type="submit" value="{$Addtopic}" /></form><br />
+    {$Thelp}
 {/if}
 
 {if $Topics != ""}
@@ -86,7 +87,8 @@
     <form method="post" action="tforums.php?reply={$Id}">
     {$Areply}:<br />
     <textarea name="rep" cols="40" rows="10">{$Rtext}</textarea><br />
-    <input type="submit" value="{$Areply}" /></form>
+    <input type="submit" value="{$Areply}" /></form><br />
+    {$Thelp}
 {/if}
 
 {if $Action2 == "search"}

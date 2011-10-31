@@ -977,7 +977,7 @@ if (isset($_GET['view']))
       {
 	$objProfile = $db->Execute("SELECT `roleplay`, `ooc`, `shortrpg` FROM `players` WHERE `id`=".$player->id);
 	require_once('includes/bbcode.php');
-	$smarty->assign(array("Info" => "Tutaj możesz ustawić swój profil fabularny. Używany jest on jedynie do sesji z innymi graczami, jest czymś w rodzaju twojej wizytówki.",
+	$smarty->assign(array("Info" => "Tutaj możesz ustawić swój profil fabularny. Używany jest on jedynie do sesji z innymi graczami, jest czymś w rodzaju twojej wizytówki. Linki automatycznie zamieniane są na klikalne. Możesz używać następujących znaczników BBCode:<br /><ul><li>[b]<b>Pogrubienie</b>[/b]</li><li>[i]<i>Kursywa</i><[/i]</li><li>[u]<u>Podkreślenie</u>[/u]</li><li>[color (angielska nazwa koloru (red, yellow, itp) lub kod HTML (#FFFF00, itp)]pokolorowanie tekstu[/color]</li><li>[center]wycentrowanie tekstu[/center]</li><li>[quote]cytat[/quote]</ul>",
 			      "Rprofile" => htmltobbcode($objProfile->fields['roleplay']),
 			      "Ooc" => htmltobbcode($objProfile->fields['ooc']),
 			      "Shortrp" => $objProfile->fields['shortrpg'],

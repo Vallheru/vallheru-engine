@@ -7,7 +7,7 @@
  *   @copyright            : (C) 2004,2005,2006,2007,2011 Vallheru Team based on Gamers-Fusion ver 2.5
  *   @author               : thindil <thindil@tuxfamily.org>
  *   @version              : 1.4
- *   @since                : 21.10.2011
+ *   @since                : 31.10.2011
  *
  */
 
@@ -434,7 +434,8 @@ if (isset ($_GET['view']) && $_GET['view'] == 'write')
                             "Sto" => S_TO,
                             "Mtitle" => M_TITLE,
                             "Mbody" => M_BODY,
-                            "Asend" => A_SEND));
+                            "Asend" => A_SEND,
+			    "Mhelp" => "Linki automatycznie zamieniane są na klikalne. Możesz używać następujących znaczników BBCode:<br /><ul><li>[b]<b>Pogrubienie</b>[/b]</li><li>[i]<i>Kursywa</i><[/i]</li><li>[u]<u>Podkreślenie</u>[/u]</li><li>[color (angielska nazwa koloru (red, yellow, itp) lub kod HTML (#FFFF00, itp)]pokolorowanie tekstu[/color]</li><li>[center]wycentrowanie tekstu[/center]</li><li>[quote]cytat[/quote]</ul>"));
     if (isset ($_GET['step']) && $_GET['step'] == 'send') 
     {
         if (empty ($_POST['to']) || empty ($_POST['body'])) 

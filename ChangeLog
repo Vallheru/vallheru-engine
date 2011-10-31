@@ -1,5 +1,8 @@
 2011-10-31  Bartek thindil Jasicki  <thindil@tuxfamily.org>
 
+	* UPDATE,languages/pl/account.php, templates/layout1/mail.tpl, templates/mail.tpl, templates/layout1/forums.tpl, templates/forums.tpl,
+	templates/layout1/tforums.tpl, templates/tforums.tpl, account.php, forums.php, mail.php, tforums.php: 
+	added info about BBCode
 	* BUG,travel.php:
 	fixed bug with bribe bandits
 

@@ -202,7 +202,8 @@
     <tr><td>{$Mtitle}:</td><td><input type="text" name="subject" size="55" value="{$Reply}" /></td></tr>
     <tr><td valign="top">{$Mbody}:</td><td><textarea name="body" rows="13" cols="55">{$Body}</textarea></td></tr>
     <tr><td></td><td align="center"><input type="submit" value="{$Asend}" /></td></tr>
-    </form></table>
+    </form></table><br />
+    {$Mhelp}
 {/if}
 
 {if $Read != ""}
