@@ -145,8 +145,8 @@ if (isset($_GET['go']) && $_GET['go'] == 'fight')
                        'speed' => $arrSpeed[$intNumber], 
                        'exp1' => $arrExp1[$intNumber], 
                        'exp2' => $arrExp2[$intNumber],
-		       'lootnames' = array(),
-		       'lootchances' = array());
+		       'lootnames' => array(),
+		       'lootchances' => array());
         $arrehp = array();
         $strAdress = "portals.php?step=".$intNumber."&amp;go=fight";
         $span = ($enemy['level'] / $player -> level);
