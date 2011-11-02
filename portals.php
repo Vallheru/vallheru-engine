@@ -7,7 +7,7 @@
  *   @copyright            : (C) 2006,2011 Vallheru Team based on Gamers-Fusion ver 2.5
  *   @author               : thindil <thindil@tuxfamily.org>
  *   @version              : 1.4
- *   @since                : 26.09.2011
+ *   @since                : 02.11.2011
  *
  */
 
@@ -144,7 +144,7 @@ if (isset($_GET['go']) && $_GET['go'] == 'fight')
                        'endurance' => $arrConstitution[$intNumber], 
                        'speed' => $arrSpeed[$intNumber], 
                        'exp1' => $arrExp1[$intNumber], 
-                       'exp2' => $arrExp2[$intNumber]
+                       'exp2' => $arrExp2[$intNumber],
 		       'lootnames' = array(),
 		       'lootchances' = array());
         $arrehp = array();
