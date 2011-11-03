@@ -7,7 +7,7 @@
  *   @copyright            : (C) 2004,2005,2006,2007,2011 Vallheru Team based on Gamers-Fusion ver 2.5
  *   @author               : thindil <thindil@tuxfamily.org>
  *   @version              : 1.4
- *   @since                : 27.10.2011
+ *   @since                : 03.11.2011
  *
  */
 
@@ -516,7 +516,7 @@ function playerattack($eunik, &$gwtbr, $arrEquip, $mczar, &$zmeczenie, &$gatak, 
 	{
 	  if ($times == 1) 
 	    {
-	      if (($arrEquip[0][6] > $gwtbr || ($arrEquip[1][6] > $gwtbr && $arrEquip[6][6] > $gwtbr)) && ($arrEquip[0][0] || $arrEquip[1][0])) 
+	      if ((($arrEquip[0][6] > $gwtbr || $arrEquip[11][6] > $gwtbr) || ($arrEquip[1][6] > $gwtbr && $arrEquip[6][6] > $gwtbr)) && ($arrEquip[0][0] || $arrEquip[1][0])) 
 		{
 		  $strMessage = "<b>".$enemy['name']."</b> ".ENEMY_DODGE."<br />";
 		}
@@ -525,7 +525,7 @@ function playerattack($eunik, &$gwtbr, $arrEquip, $mczar, &$zmeczenie, &$gatak, 
 		  $strMessage =  "<b>".$enemy['name']."</b> ".ENEMY_DODGE."<br />";
 		}
 	    }
-	  if (($arrEquip[0][6] > $gwtbr || ($arrEquip[1][6] > $gwtbr && $arrEquip[6][6] > $gwtbr)) && ($arrEquip[0][0] || $arrEquip[1][0])) 
+	  if ((($arrEquip[0][6] > $gwtbr || $arrEquip[11][6] > $gwtbr) || ($arrEquip[1][6] > $gwtbr && $arrEquip[6][6] > $gwtbr)) && ($arrEquip[0][0] || $arrEquip[1][0])) 
 	    {
 	      if ($arrEquip[1][0]) 
 		{
@@ -535,6 +535,10 @@ function playerattack($eunik, &$gwtbr, $arrEquip, $mczar, &$zmeczenie, &$gatak, 
 	      if ($arrEquip[0][0]) 
 		{
 		  $zmeczenie += $arrEquip[0][4];
+		}
+	      if ($arrEquip[11][0])
+		{
+		  $zmeczenie += $arrEquip[11][4];
 		}
 	    }
 	} 
@@ -548,7 +552,7 @@ function playerattack($eunik, &$gwtbr, $arrEquip, $mczar, &$zmeczenie, &$gatak, 
             {
 	      $enemy['hp'] -= $enemyhp;
 	      //Hit with weapon
-	      if (($arrEquip[0][6] > $gwtbr || ($arrEquip[1][6] > $gwtbr && $arrEquip[6][6] > $gwtbr)) && ($arrEquip[0][0] || $arrEquip[1][0])) 
+	      if ((($arrEquip[0][6] > $gwtbr || $arrEquip[11][6] > $gwtbr) || ($arrEquip[1][6] > $gwtbr && $arrEquip[6][6] > $gwtbr)) && ($arrEquip[0][0] || $arrEquip[1][0])) 
 		{
 		  $gwtbr++;
 		  $gatak++;
@@ -573,7 +577,7 @@ function playerattack($eunik, &$gwtbr, $arrEquip, $mczar, &$zmeczenie, &$gatak, 
 	      return TRUE;
 	    }
 	  //Hit with weapon
-	  if (($arrEquip[0][6] > $gwtbr || ($arrEquip[1][6] > $gwtbr && $arrEquip[6][6] > $gwtbr)) && ($arrEquip[0][0] || $arrEquip[1][0])) 
+	  if ((($arrEquip[0][6] > $gwtbr || $arrEquip[11][6] > $gwtbr) || ($arrEquip[1][6] > $gwtbr && $arrEquip[6][6] > $gwtbr)) && ($arrEquip[0][0] || $arrEquip[1][0])) 
 	    {
 	      $enemy['hp'] -= $stat['damage'];
 	      if ($times == 1) 
@@ -590,6 +594,10 @@ function playerattack($eunik, &$gwtbr, $arrEquip, $mczar, &$zmeczenie, &$gatak, 
 	      elseif ($arrEquip[1][0]) 
 		{
 		  $zmeczenie += $arrEquip[1][4];
+		}
+	      if ($arrEquip[11][0])
+		{
+		  $zmeczenie += $arrEquip[11][4];
 		}
 	      if ($stat['damage'] > 0) 
 		{
@@ -831,6 +839,10 @@ function fightmonster($enemy, $expgain, $goldgain, $times)
             $krytyk = $player -> attack;
         }
     }
+    if ($arrEquip[11][0])
+      {
+	$stat['damage'] += (($arrEquip[11][2] + $player->strength) + $player->level);
+      }
     if ($arrEquip[1][0]) 
     {
         $bonus = $arrEquip[1][2] + $arrEquip[6][2];
@@ -938,6 +950,10 @@ function fightmonster($enemy, $expgain, $goldgain, $times)
     {
         $myunik = (($myagility - $enemy['agility']) + $player -> level + $player -> miss);
         $eunik = (($enemy['agility'] - $myagility) - ($player -> attack + $player -> level));
+	if ($arrEquip[11][0])
+	  {
+	    $eunik -= ($player->attack / 5);
+	  }
     }
     if ($player -> clas == 'Rzemieślnik' || $player -> clas == 'Złodziej') 
     {
@@ -1236,6 +1252,14 @@ function fightmonster($enemy, $expgain, $goldgain, $times)
         gainability($player -> id, $player -> user, 0, $gatak, 0, $player -> mana, $player -> id, 'weapon');
         lostitem($gwtbr, $arrEquip[0][6], YOU_WEAPON, $player -> id, $arrEquip[0][0], $player -> id, HAS_BEEN1);
     }
+    if ($arrEquip[11][0])
+      {
+	if (!$arrEquip[0][0])
+	  {
+	    gainability($player -> id, $player -> user, 0, $gatak, 0, $player -> mana, $player -> id, 'weapon');
+	  }
+	lostitem($gwtbr, $arrEquip[11][6], YOU_WEAPON, $player -> id, $arrEquip[11][0], $player -> id, HAS_BEEN1);
+      }
     if ($arrEquip[1][0]) 
     {
         gainability($player -> id, $player -> user, 0, $gatak, 0, $player -> mana, $player -> id, 'bow');

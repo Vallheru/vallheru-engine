@@ -7,7 +7,7 @@
  *   @copyright            : (C) 2004,2005,2006,2011 Vallheru Team based on Gamers-Fusion ver 2.5
  *   @author               : thindil <thindil@tuxfamily.org>
  *   @version              : 1.4
- *   @since                : 20.10.2011
+ *   @since                : 03.11.2011
  *
  */
 
@@ -288,6 +288,14 @@ function equip ($id)
             error (SHIELD_NOT_ALLOWED);
         }
         $test -> Close();
+	if ($player->clas == 'Barbarzyńca')
+	  {
+	    $test = $db->Execute("SELECT count(`id`) FROM `equipment` WHERE `status`='E' AND `type`='W' AND `owner`=".$player->id);
+	    if ($test->fields['count(`id`)'] == 2)
+	      {
+		error("Nie możesz założyć tarczy, ponieważ używasz już dwóch broni.");
+	      }
+	  }
     }
     if ($equip -> fields['twohand'] == 'Y') 
     {
@@ -297,6 +305,14 @@ function equip ($id)
             error (TWO_HAND_NOT_ALLOWED);
         }
         $test -> Close();
+	if ($player->clas == 'Barbarzyńca')
+	  {
+	    $test = $db->Execute("SELECT `id` FROM `equipment` WHERE `status`='E' AND `type`='W' AND `owner`=".$player->id);
+	    if (!empty($test->fields['id']))
+	      {
+		error("Nie możesz wziąć broni dwuręcznej, ponieważ masz już w użyciu jakąś broń!");
+	      }
+	  }
     }
     if ($type == 'R') 
     {
@@ -414,12 +430,20 @@ function equip ($id)
         $blnTake = true;
         if ($equip -> fields['type'] == 'I')
         {
-            $objAmount = $db -> Execute("SELECT count(*) FROM `equipment` WHERE `status`='E' AND `owner`=".$player -> id." AND `type`='I'");
-            if ($objAmount -> fields['count(*)'] == 1)
+            $objAmount = $db -> Execute("SELECT count(`id`) FROM `equipment` WHERE `status`='E' AND `owner`=".$player -> id." AND `type`='I'");
+            if ($objAmount -> fields['count(`id`)'] == 1)
             {
                 $blnTake = false;
             }
         }
+	if ($equip->fields['type'] == 'W' && $player->clas == 'Barbarzyńca')
+	  {
+	    $objAmount = $db -> Execute("SELECT count(`id`) FROM `equipment` WHERE `status`='E' AND `owner`=".$player -> id." AND `type`='W'");
+            if ($objAmount -> fields['count(`id`)'] == 1)
+	      {
+                $blnTake = false;
+	      }
+	  }
         if ($blnTake)
         {
             $test2 = $db -> Execute("SELECT * FROM equipment WHERE status='E' AND owner=".$player -> id." AND type='".$type."'");

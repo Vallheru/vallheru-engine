@@ -8,7 +8,7 @@
  *   @author               : thindil <thindil@tuxfamily.org>
  *   @author               : eyescream <tduda@users.sourceforge.net>
  *   @version              : 1.4
- *   @since                : 27.10.2011
+ *   @since                : 03.11.2011
  *
  */
 
@@ -87,7 +87,7 @@ function attack1($attacker, $defender, $arrAtequip, $arrDeequip, $attack_bspell,
     */
     if ($arrAtequip[1][0] && $attack_durwep <= $arrAtequip[1][6] && $attack_durwep <= $arrAtequip[6][6]) 
     {
-        $unik = (($defender['agility'] - $attacker['agility']) + ($defender['miss'] - $attacker['shoot']));
+        $unik -= $attacker['shoot'];
         $bonus = (($attacker['strength'] / 2) + ($attacker['agility'] / 2));
         if ($attacker['clas'] == 'Wojownik' || $attacker['clas'] == 'Barbarzyńca') 
         {
@@ -106,7 +106,7 @@ function attack1($attacker, $defender, $arrAtequip, $arrDeequip, $attack_bspell,
     */
     elseif ($arrAtequip[0][0] && $attack_durwep <= $arrAtequip[0][6]) 
     {
-        $unik = (($defender['agility'] - $attacker['agility']) + ($defender['miss'] - $attacker['attack']));
+        $unik -= $attacker['attack'];
         if ($attacker['clas'] == 'Wojownik' || $attacker['clas'] == 'Barbarzyńca') 
         {
             $mypower = (($arrAtequip[0][2] + $attacker['strength']) + $attacker['level']);
@@ -118,13 +118,19 @@ function attack1($attacker, $defender, $arrAtequip, $arrDeequip, $attack_bspell,
         }
         $krytyk = critical($attacker['attack']);
     }
+    //Secondary weapon (Barbarian only)
+    if ($arrAtequip[11][0] && $attack_durwep <= $arrAtequip[11][6])
+      {
+	$unik -= ($attacker['attack'] / 5);
+	$mypower += (($arrAtequip[11][2] + $attacker['strength']) + $attacker['level'])
+      }
 
     /**
     * Calculate dodge defender and power of attack, critical hit (spell)
     */
     elseif ($attack_bspell -> fields['id'] && (!$arrAtequip[1][0] || $arrAtequip[0][0])) 
     {
-        $unik = (($defender['agility'] - $attacker['agility']) + ($defender['miss'] - $attacker['magic']));
+        $unik -= $attacker['magic'];
         $mypower = ($attack_bspell -> fields['obr'] * $attacker['inteli']) - (($attack_bspell -> fields['obr'] * $attacker['inteli']) * ($arrAtequip[3][4] / 100));
         if ($arrAtequip[2][0]) 
         {
@@ -240,7 +246,7 @@ function attack1($attacker, $defender, $arrAtequip, $arrDeequip, $attack_bspell,
         $unik = 1;
     }
     $round = 1;
-    if (!($attack_bspell -> fields['id'] && $attacker['mana'] > $attack_bspell -> fields['poziom']) && !($arrAtequip[0][6] > $attack_durwep) && !($arrAtequip[1][6] > $attack_durwep && $arrAtequip[6][6] > $attack_durwep)) 
+    if (!($attack_bspell -> fields['id'] && $attacker['mana'] > $attack_bspell -> fields['poziom']) && !($arrAtequip[0][6] > $attack_durwep) && !($arrAtequip[1][6] > $attack_durwep && $arrAtequip[6][6] > $attack_durwep) && !($arrAtequip[11][6] > $arrack_durwep)) 
     {
         $attackstr = 0;
     }
@@ -298,18 +304,22 @@ function attack1($attacker, $defender, $arrAtequip, $arrDeequip, $attack_bspell,
         $szansa = rand(1,100);
         if ($arrAtequip[0][0]) 
         {
-            $attack_stam = ($attack_stam + $arrAtequip[0][4]);
+            $attack_stam += $arrAtequip[0][4];
         } 
-            elseif ($arrAtequip[1][0]) 
+	elseif ($arrAtequip[1][0]) 
         {
-            $attack_stam = ($attack_stam + $arrAtequip[1][4]);
+            $attack_stam += $arrAtequip[1][4];
         }
+	if ($arrAteequip[11][0])
+	  {
+	    $attack_stam += $arrAtequip[11][4];
+	  }
         /**
         * Player dodge
         */
         if ($unik >= $szansa && $szansa < 90 && $def_stam <= $defender['cond']) 
         {
-            if (($attack_bspell -> fields['id'] && $attacker['mana'] > $attack_bspell -> fields['poziom']) || ($arrAtequip[0][6] > $attack_durwep) || ($arrAtequip[1][6] > $attack_durwep && $arrAtequip[6][6] > $attack_durwep))
+	  if (($attack_bspell -> fields['id'] && $attacker['mana'] > $attack_bspell -> fields['poziom']) || (($arrAtequip[0][6] > $attack_durwep) || ($arrAtequip[11][6] > $attack_durwep)) || ($arrAtequip[1][6] > $attack_durwep && $arrAtequip[6][6] > $attack_durwep))
             {
                 $strMessage = $strMessage."<b>".$defender['user']."</b> ".P_DODGE." <b>".$attacker['user']."</b><br />";
                 if ($arrAtequip[1][0] && $arrAtequip[6][6] > $attack_durwep) 
@@ -325,7 +335,7 @@ function attack1($attacker, $defender, $arrAtequip, $arrDeequip, $attack_bspell,
 	$szansa = rand(1, 100);
 	if ($szansa <= $intBlock && !$blnMiss)
 	  {
-	    if (($attack_bspell -> fields['id'] && $attacker['mana'] > $attack_bspell -> fields['poziom']) || ($arrAtequip[0][6] > $attack_durwep) || ($arrAtequip[1][6] > $attack_durwep && $arrAtequip[6][6] > $attack_durwep))
+	    if (($attack_bspell -> fields['id'] && $attacker['mana'] > $attack_bspell -> fields['poziom']) || (($arrAtequip[0][6] > $attack_durwep) || ($arrAtequip[11][6] > $attack_durwep)) || ($arrAtequip[1][6] > $attack_durwep && $arrAtequip[6][6] > $attack_durwep))
 	      {
                 $strMessage = $strMessage."<b>".$defender['user']."</b> zablokował tarczą atak <b>".$attacker['user']."</b><br />";
                 if ($arrAtequip[1][0] && $arrAtequip[6][6] > $attack_durwep) 
@@ -390,7 +400,7 @@ function attack1($attacker, $defender, $arrAtequip, $arrDeequip, $attack_bspell,
                     }
                     $defender['mana'] = ($defender['mana'] - $lost_mana);
                 }
-                if ($arrAtequip[0][6] > $attack_durwep || ($arrAtequip[1][6] > $attack_durwep && $arrAtequip[6][6] > $attack_durwep)) 
+                if (($arrAtequip[0][6] > $attack_durwep || $arrAtequip[11][6] > $attack_durwep) || ($arrAtequip[1][6] > $attack_durwep && $arrAtequip[6][6] > $attack_durwep)) 
                 {
                     $attack_durwep = ($attack_durwep + 1);
                     $attack_attack = ($attack_attack + 1);
@@ -438,7 +448,7 @@ function attack1($attacker, $defender, $arrAtequip, $arrDeequip, $attack_bspell,
             } 
                 else 
             {
-                if ($arrAtequip[0][6] > $attack_durwep || ($arrAtequip[1][6] > $attack_durwep && $arrAtequip[6][6] > $attack_durwep)) 
+	      if (($arrAtequip[0][6] > $attack_durwep || $arrAtequip[11][6] > $attack_durwep) || ($arrAtequip[1][6] > $attack_durwep && $arrAtequip[6][6] > $attack_durwep)) 
                 {
                     if ($krytyk >= $rzut)
                     {
@@ -746,6 +756,14 @@ function attack1($attacker, $defender, $arrAtequip, $arrDeequip, $attack_bspell,
             lostitem($attack_durwep, $arrAtequip[1][6], YOU_WEAPON, $attacker['id'], $arrAtequip[1][0], $starter, HAS_BEEN1);
             lostitem($attack_durwep, $arrAtequip[6][6], YOU_QUIVER, $attacker['id'], $arrAtequip[6][0], $starter, HAS_BEEN1);
         }
+	if ($arrAtequip[11][0])
+	  {
+	    if (!$arrAtequip[0][0])
+	      {
+		gainability($attacker['id'], $attacker['user'], 0, $attack_attack, 0, $attacker['mana'], $starter, 'weapon');
+	      }
+	    lostitem($attack_durwep, $arrAtequip[11][6], YOU_WEAPON, $attacker['id'], $arrAtequip[11][0], $starter, HAS_BEEN1);
+	  }
         if ($arrDeequip[0][0]) 
         {
             gainability($defender['id'], $defender['user'], 0, $def_attack, 0, $defender['mana'], $starter, 'weapon');
@@ -757,6 +775,14 @@ function attack1($attacker, $defender, $arrAtequip, $arrDeequip, $attack_bspell,
             lostitem($def_durwep, $arrDeequip[1][6], YOU_WEAPON, $defender['id'], $arrDeequip[1][0], $starter, HAS_BEEN1);
             lostitem($def_durwep, $arrDeequip[6][6], YOU_QUIVER, $defender['id'], $arrDeequip[6][0], $starter, HAS_BEEN1);
         }
+	if ($arrDeequip[11][0])
+	  {
+	    if (!$arrDeequip[0][0])
+	      {
+		gainability($defender['id'], $defender['user'], 0, $def_attack, 0, $defender['mana'], $starter, 'weapon');
+	      }
+	    lostitem($def_durwep, $arrDeequip[11][6], YOU_WEAPON, $defender['id'], $arrDeequip[11][0], $starter, HAS_BEEN1);
+	  }
         if ($arrDeequip[3][0]) 
         {
             lostitem($def_durarm[0], $arrDeequip[3][6], YOU_ARMOR, $defender['id'], $arrDeequip[3][0], $starter, HAS_BEEN1);
@@ -924,6 +950,14 @@ function attack1($attacker, $defender, $arrAtequip, $arrDeequip, $attack_bspell,
             lostitem($attack_durwep, $arrAtequip[1][6], YOU_WEAPON, $attacker['id'], $arrAtequip[1][0], $starter, HAS_BEEN1);
             lostitem($attack_durwep, $arrAtequip[6][6], YOU_QUIVER, $attacker['id'], $arrAtequip[6][0], $starter, HAS_BEEN1);
         }
+	if ($arrAtequip[11][0])
+	  {
+	    if (!$arrAtequip[0][0])
+	      {
+		gainability($attacker['id'], $attacker['user'], 0, $attack_attack, 0, $attacker['mana'], $starter, 'weapon');
+	      }
+	    lostitem($attack_durwep, $arrAtequip[11][6], YOU_WEAPON, $attacker['id'], $arrAtequip[11][0], $starter, HAS_BEEN1);
+	  }
         if ($arrDeequip[0][0]) 
         {
             gainability($defender['id'], $defender['user'], 0, $def_attack, 0, $defender['mana'], $starter, 'weapon');
@@ -935,6 +969,14 @@ function attack1($attacker, $defender, $arrAtequip, $arrDeequip, $attack_bspell,
             lostitem($def_durwep, $arrDeequip[1][6], YOU_WEAPON, $defender['id'], $arrDeequip[1][0], $starter, HAS_BEEN1);
             lostitem($def_durwep, $arrDeequip[6][6], YOU_QUIVER, $defender['id'], $arrDeequip[6][0], $starter, HAS_BEEN1);
         }
+	if ($arrDeequip[11][0])
+	  {
+	    if (!$arrDeequip[0][0])
+	      {
+		gainability($defender['id'], $defender['user'], 0, $def_attack, 0, $defender['mana'], $starter, 'weapon');
+	      }
+	    lostitem($def_durwep, $arrDeequip[11][6], YOU_WEAPON, $defender['id'], $arrDeequip[11][0], $starter, HAS_BEEN1);
+	  }
         if ($arrDeequip[3][0]) 
         {
             lostitem($def_durarm[0], $arrDeequip[3][6], YOU_ARMOR, $defender['id'], $arrDeequip[3][0], $starter, HAS_BEEN1);

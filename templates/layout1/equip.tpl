@@ -1,6 +1,7 @@
 <a name="top"><u>{$Equipped}</u>:<br /></a>
 <form method="post" action="equip.php?repair">
 {$Weapon}
+{$Weapon2}
 {$Arrows}
 {$Helmet}
 {$Armor}

@@ -7,7 +7,7 @@
  *   @copyright            : (C) 2004,2005,2006,2007,2011 Vallheru Team based on Gamers-Fusion ver 2.5
  *   @author               : thindil <thindil@tuxfamily.org>
  *   @version              : 1.4
- *   @since                : 27.10.2011
+ *   @since                : 03.11.2011
  *
  */
  
@@ -209,6 +209,10 @@ function turnfight($expgain,$goldgain,$action,$addres)
     {
         $myunik = (($myagility - $enemy['agility']) + $player -> level + $player -> miss);
         $eunik = (($enemy['agility'] - $myagility) - ($player -> attack + $player -> level));
+	if ($arrEquip[11][0])
+	  {
+	    $eunik -= ($player->attack / 5);
+	  }
     }
     if ($player -> clas == 'Rzemieślnik' || $player -> clas == 'Złodziej' || $player -> clas == '') 
     {
@@ -783,8 +787,13 @@ function attack($eunik,$bdamage)
         {
             $krytyk = $player -> attack;
         }
-        $name = $arrEquip[0][1];
+        $name = "bronią";
     }
+    if ($arrEquip[11][0])
+      {
+	$stat['damage'] += (($arrEquip[11][2] + $player->strength) + $player->level);
+	$name = "obiema brońmi";
+      }
     if ($arrEquip[1][0]) 
     {
         $bonus = $arrEquip[1][2] + $arrEquip[6][2];
@@ -818,7 +827,7 @@ function attack($eunik,$bdamage)
         {
             $stat['damage'] = 0;
         }
-        $name = $arrEquip[1][1];
+        $name = "strzałą";
     }
     if (!isset($stat['damage']))
     {
@@ -847,13 +856,26 @@ function attack($eunik,$bdamage)
     $stat['damage'] = ($stat['damage'] - $enemy['endurance']);
     if ($stat['damage'] < 1) 
     {
-        $stat['damage'] =0 ;
+        $stat['damage'] = 0;
     }
     if ($arrEquip[0][0] && $gwtbr > $arrEquip[0][6]) 
-    {
-        $stat['damage'] = 0;
-        $krytyk = 1;
-    }
+      {
+	$stat['damage'] = 0;
+	if ($arrEquip[11][6] > $gwtbr)
+	  {
+	    $stat['damage'] += (($arrEquip[11][2] + $player->strength) + $player->level);
+	  }
+	$krytyk = 1;
+      }
+    if ($arrEquip[11][0] && $gwtbr > $arrEquip[11][6]) 
+      {
+	$stat['damage'] = 0;
+	if ($arrEquip[0][6] > $gwtbr)
+	  {
+	    $stat['damage'] += (($arrEquip[0][2] + $player->strength) + $player->level);
+	  }
+	$krytyk = 1;
+      }
     if ($arrEquip[1][0] && ($gwtbr > $arrEquip[1][6] || $gwtbr > $arrEquip[6][6])) 
     {
         $stat['damage'] = 0;
@@ -881,10 +903,14 @@ function attack($eunik,$bdamage)
         {
             $zmeczenie = $zmeczenie + $arrEquip[0][4];
         } 
-            elseif ($arrEquip[1][0]) 
+	elseif ($arrEquip[1][0]) 
         {
             $zmeczenie = $zmeczenie + $arrEquip[1][4];
         }
+	if ($arrEquip[11][0])
+	  {
+	    $zmeczenie += $arrEquip[11][4];
+	  }
         $szansa = rand(1, 100);
         if ($eunik >= $szansa && $szansa < 97) 
         {
@@ -897,7 +923,7 @@ function attack($eunik,$bdamage)
         } 
 	elseif ($zmeczenie <= $player -> cond) 
         {
-            if ($arrEquip[0][0] || $arrEquip[1][0]) 
+            if ($arrEquip[0][0] || $arrEquip[1][0] || $arrEquip[11][0]) 
 	      {
 		$gwtbr++;
 		$rzut = rand(1, 1000) / 10;
@@ -913,7 +939,7 @@ function attack($eunik,$bdamage)
 		    $ehp -= $stat['damage'];
 		    $arrLocations = array('w tułów', 'w głowę', 'w kończynę');
 		    $intHit = rand(0, 2);
-		    $smarty -> assign ("Message", YOU_ATTACK1." <b>".$enemy['name']."</b> ".$arrLocations[$intHit]." przy pomocy ".$name." ".INFLICT." <b>".$stat['damage']."</b> ".DAMAGE."! (".$ehp." ".LEFT.")</font><br />");
+		    $smarty -> assign ("Message", YOU_ATTACK1." ".$name." <b>".$enemy['name']."</b> ".$arrLocations[$intHit]." ".INFLICT." <b>".$stat['damage']."</b> ".DAMAGE."! (".$ehp." ".LEFT.")</font><br />");
 		    if ($stat['damage'] > 0) 
 		      {
 			$gatak = ($gatak + 1);
@@ -929,6 +955,14 @@ function attack($eunik,$bdamage)
         gainability($player -> id, $player -> user, 0, $gatak, 0, $player -> mana, $player -> id, 'weapon');
         lostitem($gwtbr, $arrEquip[0][6], YOU_WEAPON, $player -> id, $arrEquip[0][0], $player -> id, HAS_BEEN1);
     }
+    if ($arrEquip[11][0])
+      {
+	if (!$arrEquip[0][0])
+	  {
+	     gainability($player -> id, $player -> user, 0, $gatak, 0, $player -> mana, $player -> id, 'weapon');
+	  }
+	lostitem($gwtbr, $arrEquip[11][6], YOU_WEAPON, $player -> id, $arrEquip[11][0], $player -> id, HAS_BEEN1);
+      }
     if ($arrEquip[1][0]) 
     {
         gainability($player -> id, $player -> user, 0, $gatak, 0, $player -> mana, $player -> id, 'bow');

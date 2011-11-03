@@ -7,7 +7,7 @@
  *   @copyright            : (C) 2004,2005,2006,2011 Vallheru Team based on Gamers-Fusion ver 2.5
  *   @author               : thindil <thindil@tuxfamily.org>
  *   @version              : 1.4
- *   @since                : 25.10.2011
+ *   @since                : 03.11.2011
  *
  */
 
@@ -128,6 +128,7 @@ if (isset ($_GET['klasa']) && $_GET['klasa'] == 'barbarzynca' && $player -> clas
     <ul>
     <li>Premia do ataku oraz uniku w wysokości poziomu barbarzyńcy</li>
     <li>Premia do odporności na magię w wysokości 1/5 poziomu (do maksymalnych 20%)</li>
+    <li>Możesz używać dwóch broni jednoręcznych na raz</li>
     <li>Barbarzyńcy nie mogą używać ani czarów ani przedmiotów magicznych - mogą nosić je w plecaku ale nie mogą ich zakładać</li>
     </ul>");
     define("YOU_SELECT", "<br />Wybrałeś drogę barbarzyńcy. Kliknij <a href=\"stats.php\">tutaj</a> aby wrócić.");

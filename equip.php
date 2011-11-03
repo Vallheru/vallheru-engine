@@ -7,7 +7,7 @@
  *   @copyright            : (C) 2004,2005,2006,2007,2011 Vallheru Team based on Gamers-Fusion ver 2.5
  *   @author               : thindil <thindil@tuxfamily.org>
  *   @version              : 1.4
- *   @since                : 24.10.2011
+ *   @since                : 03.11.2011
  *
  */
 
@@ -276,6 +276,20 @@ elseif ($arrEquip[7][0])
  else 
    {
      $smarty -> assign ("Weapon", "<b>".WEAPON.":</b> ".EMPTY_SLOT."<br />\n");
+   }
+
+//Second weapon
+if ($arrEquip[11][0]) 
+  {
+    if ($arrEquip[11][8] > 0) 
+      {
+	$arrEquip[11][2] = $arrEquip[11][2] + $arrEquip[11][8];
+      }
+    $smarty -> assign ("Weapon2", "<input type=\"checkbox\" name=\"".$arrEquip[11][0]."\" /><b>Druga broń:</b> ".$arrEquip[11][1]." (+".$arrEquip[11][2].") (+".$arrEquip[11][7]." ".EQUIP_SPEED.") (".$arrEquip[11][6]."/".$arrEquip[11][9]." ".DURABILITY.") [<a href=\"equip.php?schowaj=".$arrEquip[11][0]."\">".HIDE_WEP."</a>]<br />\n");
+  }
+ else 
+   {
+     $smarty -> assign ("Weapon2", "");
    }
  
 
