@@ -122,7 +122,7 @@ function attack1($attacker, $defender, $arrAtequip, $arrDeequip, $attack_bspell,
     if ($arrAtequip[11][0] && $attack_durwep <= $arrAtequip[11][6])
       {
 	$unik -= ($attacker['attack'] / 5);
-	$mypower += (($arrAtequip[11][2] + $attacker['strength']) + $attacker['level'])
+	$mypower += (($arrAtequip[11][2] + $attacker['strength']) + $attacker['level']);
       }
 
     /**
@@ -310,7 +310,7 @@ function attack1($attacker, $defender, $arrAtequip, $arrDeequip, $attack_bspell,
         {
             $attack_stam += $arrAtequip[1][4];
         }
-	if ($arrAteequip[11][0])
+	if ($arrAtequip[11][0])
 	  {
 	    $attack_stam += $arrAtequip[11][4];
 	  }

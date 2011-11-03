@@ -1,5 +1,7 @@
 2011-11-03  Bartek thindil Jasicki  <thindil@tuxfamily.org>
 
+	* BUG,includes/battle.php: 
+	fixed typo
 	* FEATURE,languages/pl/klasa.php, templates/layout1/equip.tpl, templates/equip.tpl, equip.php, includes/battle.php, includes/funkcje.php,
 	includes/functions.php, includes/turnfight.php, class/player_class.php: 
 	added option to wear two weapons (barbarian only)
