@@ -7,7 +7,7 @@
  *   @copyright            : (C) 2004,2005,2006,2007,2011 Vallheru Team based on Gamers-Fusion ver 2.5
  *   @author               : thindil <thindil@users.sourceforge.net>
  *   @version              : 1.4
- *   @since                : 28.10.2011
+ *   @since                : 04.11.2011
  *
  */
 
@@ -989,12 +989,12 @@ if (isset ($_GET['mill']) && $_GET['mill'] == 'elite')
         if ($intAmount > 1) 
         {
             $intNeedmineral = ($intAmount * $objLumber -> fields['amount']);
-	    $arrLoots = array(8 * $intAmount, 4 * $intAmount, 3 * $intAmount, $intAmount);
+	    $arrLoots = array(8 * $intAmount, 4 * $intAmount, 2 * $intAmount, $intAmount);
         } 
             else 
         {
             $intNeedmineral = ($objLumber -> fields['amount']);
-	    $arrLoots = array(8, 4, 3, 1);
+	    $arrLoots = array(8, 4, 2, 1);
         }
 	$intKey = array_search($_POST['lumber'], $arrMineral);
 	if ($intKey < 3)
