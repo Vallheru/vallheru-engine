@@ -1,5 +1,7 @@
 2011-11-04  Bartek thindil Jasicki  <thindil@tuxfamily.org>
 
+	* FEATURE,languages/pl/view.php, view.php: 
+	added option to spy other players, allow steal gold from dead
 	* BUG,lumbermill.php:
 	fixed bug with needed amount of loot
 

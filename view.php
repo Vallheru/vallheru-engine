@@ -8,7 +8,7 @@
  *   @author               : thindil <thindil@tuxfamily.org>
  *   @author               : eyescream <tduda@users.sourceforge.net>
  *   @version              : 1.4
- *   @since                : 14.09.2011
+ *   @since                : 04.11.2011
  *
  */
 
@@ -216,7 +216,7 @@ if ($player -> clas == 'Złodziej' && $player -> crime > 0 && $player -> locatio
 {
     if (!$objFreeze -> fields['freeze'])
     {
-        $smarty -> assign("Crime", "<li><a href=view.php?view=".$view -> id."&amp;steal=".$view -> id.">".A_STEAL."</a></li>");
+        $smarty -> assign("Crime", "<li><a href=view.php?view=".$view -> id."&amp;steal>".A_STEAL."</a></li><li><a href=view.php?view=".$view->id."&amp;spy>Szpieguj</a></li>");
     }
         else
     {
@@ -273,85 +273,69 @@ switch ($intLastseen)
 $smarty->assign(array("Seen" => "Ostatnio aktywny",
 		      "Lastseen" => $strSeen));
 
-/**
-* Pickpocket
-*/
-if (isset ($_GET['steal'])) 
-{
-    checkvalue($_GET['steal']);
+if (isset($_GET['spy']) || isset($_GET['steal']))
+  {
     if ($player -> clas != 'Złodziej')
-    {
+      {
         error(ERROR." (<a href=\"view.php?view=".$_GET['view']."\">".BACK."</a>)");
-    }
-    if ($_GET['steal'] != $_GET['view']) 
-    {
-        error (NO_PLAYER2." (<a href=\"view.php?view=".$_GET['view']."\">".BACK."</a>)");
-    }
+      }
     if ($player -> crime <= 0) 
-    {
+      {
         error (NO_CRIME." (<a href=\"view.php?view=".$_GET['view']."\">".BACK."</a>)");
-    }
+      }
     if ($player -> location != $view -> location) 
-    {
+      {
         error (BAD_LOCATION." (<a href=\"view.php?view=".$_GET['view']."\">".BACK."</a>)");
-    }
-    if ($view -> hp <= 0) 
-    {
-        error (IS_DEAD." (<a href=\"view.php?view=".$_GET['view']."\">".BACK."</a>)");
-    }
+      }
     if ($player -> hp <= 0) 
-    {
+      {
         error (YOU_DEAD." (<a href=\"view.php?view=".$_GET['view']."\">".BACK."</a>)");
-    }
-    if ($player -> immunited == 'Y') 
-    {
-        error(YOU_IMMU." (<a href=\"view.php?view=".$_GET['view']."\">".BACK."</a>)");
-    }
-    if ($view -> immunited == 'Y') 
-    {
-        error(HE_IMMU." (<a href=\"view.php?view=".$_GET['view']."\">".BACK."</a>)");
-    }
-    if ($objFreeze -> fields['freeze'])
-    {
-        error(ACCOUNT_FREEZED." (<a href=\"view.php?view=".$_GET['view']."\">".BACK."</a>)");
-    }
-    if ($view -> tribe > 0 && $view -> tribe == $player -> tribe)
-    {
-        error(SAME_CLAN." (<a href=\"view.php?view=".$_GET['view']."\">".BACK."</a>)");
-    }
+      }
     if ($view->newbie > 0)
-    {
+      {
         error(TOO_YOUNG." (<a href=\"view.php?view=".$_GET['view']."\">".BACK."</a>)");
-    }
+      }
+    if ($view->id == $player->id)
+      {
+	error(ERROR." (<a href=\"view.php?view=".$_GET['view']."\">".BACK."</a>)");
+      }
+    if ($objFreeze -> fields['freeze'])
+      {
+        error(ACCOUNT_FREEZED." (<a href=\"view.php?view=".$_GET['view']."\">".BACK."</a>)");
+      }
+    if ($view -> tribe > 0 && $view -> tribe == $player -> tribe)
+      {
+        error(SAME_CLAN." (<a href=\"view.php?view=".$_GET['view']."\">".BACK."</a>)");
+      }
     /**
      * Add bonus from bless
      */
     $strBless = FALSE;
     $objBless = $db -> Execute("SELECT `bless`, `blessval` FROM `players` WHERE `id`=".$player -> id);
     if ($objBless -> fields['bless'] == 'inteli')
-    {
+      {
         $player -> inteli = $player -> inteli + $objBless -> fields['blessval'];
         $strBless = 'inteli';
-    }
+      }
     if ($objBless -> fields['bless'] == 'agility')
-    {
+      {
         $player -> agility = $player -> agility + $objBless -> fields['blessval'];
         $strBless = 'agility';
-    }
+      }
     $objBless -> Close();
     if ($strBless)
-    {
+      {
         $db -> Execute("UPDATE `players` SET `bless`='', `blessval`=0 WHERE `id`=".$player -> id);
-    }
+      }
     $objBless = $db -> Execute("SELECT `bless`, `blessval` FROM `players` WHERE `id`=".$view -> id);
     if ($objBless -> fields['bless'] == 'inteli')
-    {
+      {
         $view -> inteli = $view -> inteli + $objBless -> fields['blessval'];
-    }
+      }
     if ($objBless -> fields['bless'] == 'agility')
-    {
+      {
         $view -> agility = $view -> agility + $objBless -> fields['blessval'];
-    }
+      }
     $objBless -> Close();
 
     /**
@@ -361,30 +345,120 @@ if (isset ($_GET['steal']))
     $arrRings = array(R_AGI, R_INT);
     $arrStat = array('agility', 'inteli');
     if ($arrEquip[9][0])
-    {
+      {
         $arrRingtype = explode(" ", $arrEquip[9][1]);
         $intAmount = count($arrRingtype) - 1;
         $intKey = array_search($arrRingtype[$intAmount], $arrRings);
         if ($intKey != NULL)
-        {
+	  {
             $strStat = $arrStat[$intKey];
             $player -> $strStat = $player -> $strStat + $arrEquip[9][2];
-        }
-    }
+	  }
+      }
     if ($arrEquip[10][0])
-    {
+      {
         $arrRingtype = explode(" ", $arrEquip[10][1]);
         $intAmount = count($arrRingtype) - 1;
         $intKey = array_search($arrRingtype[$intAmount], $arrRings);
         if ($intKey != NULL)
-        {
+	  {
             $strStat = $arrStat[$intKey];
             $player -> $strStat = $player -> $strStat + $arrEquip[10][2];
-        }
+	  }
+      }
+    $strDate = $db -> DBDate($newdate);
+  }
+
+/**
+ * Spying
+ */
+if (isset($_GET['spy']))
+  {
+    $db -> Execute("UPDATE `players` SET `crime`=`crime`-1 WHERE `id`=".$player->id);
+    $chance = ($player->agility + $player->inteli + $player->thievery) - ($view->inteli + $view->perception);
+    if ($chance < 1)
+      {
+	$expgain = ceil($view->level / 100);
+	checkexp($player -> exp, $expgain, $player -> level, $player -> race, $player -> user, $player -> id, 0, 0, $player -> id, 'thievery', 0.01);
+	$fltPerception = ($player->level / 100);
+	$db->Execute("UPDATE `players` SET `perception`=`perception`+".$fltPerception." WHERE `id`=".$view->id);
+	$db -> Execute("INSERT INTO `log` (`owner`, `log`, `czas`, `type`) VALUES(".$view -> id.",'Nagle poczułeś, że ktoś się tobie bacznie przygląda. Rozglądając się wokoło zauważyłeś jak <b><a href=view.php?view=".$player -> id.">".$player -> user.L_ID.$player -> id." gwałtownie ucieka od Ciebie.', ".$strDate.", 'T')");
+	error("<br />Próbowałeś dowiedzieć się co posiada ".$view->user." przy sobie, niestety zauwały on Ciebie. Szybko umknąłeś w cień. (<a href=\"view.php?view=".$_GET['view']."\">Wróć</a>)");
+      }
+    elseif ($chance > 0 && $chance < 50)
+      {
+	$fltPerception = ($player->level / 200.0);
+	$fltThief = ($view->level / 200.0);
+	$expgain = ceil($view->level / 10);
+	checkexp($player -> exp, $expgain, $player -> level, $player -> race, $player -> user, $player -> id, 0, 0, $player -> id, 'thievery', $fltThief);
+	$db -> Execute("UPDATE `players` SET `perception`=`perception`+".$fltPerception." WHERE `id`=".$view->id);
+	$objEquipment = $db->Execute("SELECT `name` FROM `equipment` WHERE `owner`=".$view->id." AND `status`='E'");
+	$strEquipment = 'Założony ekwipunek:<ul>';
+	while (!$objEquipment->EOF)
+	  {
+	    $strEquipment .= '<li>'.$objEquipment->fields['name'].'</li>';
+	    $objEquipment->MoveNext();
+	  }
+	if ($strEquipment == 'Założony ekwipunek:<ul>')
+	  {
+	    $strEquipment = 'Nic nie nosi na sobie.<br />';
+	  }
+	else
+	  {
+	    $strEquipment .= '</ul>';
+	  }
+	$objEquipment->Close();
+	$objGold = $db->Execute("SELECT `credits` FROM `players` WHERE `id`=".$view->id);
+	$strEquipment .= 'Złota w sakiewce: '.$objGold->fields['credits'];
+	$objGold->Close();
+	$db -> Execute("INSERT INTO `log` (`owner`, `log`, `czas`, `type`) VALUES(".$view -> id.",'Nagle poczułeś, że ktoś się tobie bacznie przygląda. Rozglądając się wokoło zauważyłeś jak <b><a href=view.php?view=".$player -> id.">".$player -> user.L_ID.$player -> id." gwałtownie ucieka od Ciebie. Ciekawe jak długo obserwował Ciebie.', ".$strDate.", 'T')");
+	error("<br />Przyglądałeś się przez chwilę ".$view->user." niestety, w pewnym momencie zauważył Ciebie. Szybko uciekłeś w cień. Zdobyte informacje:<br />".$strEquipment." (<a href=view.php?view=".$view->id.">Wróć</a>)");
+      }
+    else
+      {
+	$fltThief = ($view->level / 100.0);
+	$expgain = ceil($view->level / 5);
+	checkexp($player -> exp, $expgain, $player -> level, $player -> race, $player -> user, $player -> id, 0, 0, $player -> id, 'thievery', $fltThief);
+	$db -> Execute("UPDATE `players` SET `perception`=`perception`+0.01 WHERE `id`=".$view->id);
+	$objEquipment = $db->Execute("SELECT `name`, `power` FROM `equipment` WHERE `owner`=".$view->id." AND `status`='E'");
+	$strEquipment = 'Założony ekwipunek:<ul>';
+	while (!$objEquipment->EOF)
+	  {
+	    $strEquipment .= '<li>'.$objEquipment->fields['name'].' (+'.$objEquipment->fields['power'].')</li>';
+	    $objEquipment->MoveNext();
+	  }
+	if ($strEquipment == 'Założony ekwipunek:<ul>')
+	  {
+	    $strEquipment = 'Nic nie nosi na sobie';
+	  }
+	else
+	  {
+	    $strEquipment .= '</ul>';
+	  }
+	$objEquipment->Close();
+	$objGold = $db->Execute("SELECT `credits` FROM `players` WHERE `id`=".$view->id);
+	$strEquipment .= 'Złota w sakiewce: '.$objGold->fields['credits'];
+	$objGold->Close();
+	$db -> Execute("INSERT INTO `log` (`owner`, `log`, `czas`, `type`) VALUES(".$view -> id.",'W pewnym momencie odniosłeś nieprzyjemne wrażenie, że ktoś przygląda się Tobie. Rozglądając się na wszystkie strony, niestety nie zauważyłeś źródła niepokoju.', ".$strDate.", 'T')");
+	error("<br />Przyglądałeś się przez dłużą chwilę ".$view->user.". Na szczęście nie zauważył twojej obecności. Zdobyte informacje:<br />".$strEquipment." (<a href=view.php?view=".$view->id.">Wróć</a>)");
+      }
+  }
+
+/**
+* Pickpocket
+*/
+if (isset ($_GET['steal'])) 
+{
+    if ($player -> immunited == 'Y') 
+    {
+        error(YOU_IMMU." (<a href=\"view.php?view=".$_GET['view']."\">".BACK."</a>)");
+    }
+    if ($view -> immunited == 'Y') 
+    {
+        error(HE_IMMU." (<a href=\"view.php?view=".$_GET['view']."\">".BACK."</a>)");
     }
 
     $chance = ($player->agility + $player->inteli + $player->thievery) - ($view->agility + $view->inteli + $view->perception);
-    $strDate = $db -> DBDate($newdate);
     if ($chance < 1) 
     {
         $cost = 1000 * $player -> level;

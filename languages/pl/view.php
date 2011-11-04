@@ -8,7 +8,7 @@
  *   @author               : thindil <thindil@tuxfamily.org>
  *   @author               : eyescream <tduda@users.sourceforge.net>
  *   @version              : 1.4
- *   @since                : 03.09.2011
+ *   @since                : 04.11.2011
  *
  */
 
@@ -104,7 +104,7 @@ if ($view -> location != 'Ardulith')
 $intKey = array_search($view -> page, $arrTitle);
 $strViewpage = $arrTitle2[$intKey];
 
-if (isset ($_GET['steal'])) 
+if (isset ($_GET['steal']) || isset($_GET['spy'])) 
 {
     define("SAME_CLAN", "Nie możesz okradać członków tego samego klanu!");
     define("ACCOUNT_FREEZED", "Nie możesz okradać tego konta, ponieważ jest ono zablokowane.");
