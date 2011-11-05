@@ -8,7 +8,7 @@
  *   @author               : thindil <thindil@tuxfamily.org>
  *   @author               : eyescream <tduda@users.sourceforge.net>
  *   @version              : 1.4
- *   @since                : 03.11.2011
+ *   @since                : 05.11.2011
  *
  */
 
@@ -246,7 +246,7 @@ function attack1($attacker, $defender, $arrAtequip, $arrDeequip, $attack_bspell,
         $unik = 1;
     }
     $round = 1;
-    if (!($attack_bspell -> fields['id'] && $attacker['mana'] > $attack_bspell -> fields['poziom']) && !($arrAtequip[0][6] > $attack_durwep) && !($arrAtequip[1][6] > $attack_durwep && $arrAtequip[6][6] > $attack_durwep) && !($arrAtequip[11][6] > $arrack_durwep)) 
+    if (!($attack_bspell -> fields['id'] && $attacker['mana'] > $attack_bspell -> fields['poziom']) && !($arrAtequip[0][6] > $attack_durwep) && !($arrAtequip[1][6] > $attack_durwep && $arrAtequip[6][6] > $attack_durwep) && !($arrAtequip[11][6] > $attack_durwep)) 
     {
         $attackstr = 0;
     }
