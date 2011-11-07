@@ -7,7 +7,7 @@
  *   @copyright            : (C) 2004,2005,2006,2011 Vallheru Team based on Gamers-Fusion ver 2.5
  *   @author               : thindil <thindil@tuxfamily.org>
  *   @version              : 1.4
- *   @since                : 18.10.2011
+ *   @since                : 07.11.2011
  *
  */
 
@@ -80,9 +80,17 @@ if (isset($_GET['action']) && $_GET['action'] == 'dig')
         {
             $fltGainability = $fltGainability + 0.1;
         }
+	if ($intRoll > 4 && $intRoll < 10)
+	  {
+	    $intBonus = 1 + (($fltAbility + $fltGainability) / 20);
+	    if ($intBonus > 30)
+	      {
+		$intBonus = 30;
+	      }
+	  }
         if ($intRoll == 5)
         {
-            $intAmount = ceil((rand(1,20) * 1/8) * (1 + ($fltAbility + $fltGainability) / 20));
+            $intAmount = ceil((rand(1,20) * 1/8) * $intBonus;
             if ($intAmount < 1)
             {
                 $intAmount = 1;
@@ -92,7 +100,7 @@ if (isset($_GET['action']) && $_GET['action'] == 'dig')
         }
         if ($intRoll == 6 || $intRoll == 7)
         {
-            $intAmount = ceil((rand(1,20) * 1/5) * (1 + ($fltAbility  + $fltGainability) / 20));
+            $intAmount = ceil((rand(1,20) * 1/5) * $intBonus;
             if ($intAmount < 1)
             {
                 $intAmount = 1;
@@ -102,7 +110,7 @@ if (isset($_GET['action']) && $_GET['action'] == 'dig')
         }
         if ($intRoll == 8)
         {
-            $intAmount = ceil((rand(1,20) * 1/3) * (1 + ($fltAbility + $fltGainability) / 20));
+            $intAmount = ceil((rand(1,20) * 1/3) * $intBonus;
             if ($intAmount < 1)
             {
                 $intAmount = 1;
@@ -111,7 +119,7 @@ if (isset($_GET['action']) && $_GET['action'] == 'dig')
         }
         if ($intRoll == 9)
         {
-            $intAmount = ceil(rand(50,200) * (1 + ($fltAbility + $fltGainability) / 20));
+            $intAmount = ceil(rand(50,200) * $intBonus;
             if ($intAmount < 1)
             {
                 $intAmount = 1;
