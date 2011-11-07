@@ -7,7 +7,7 @@
  *   @copyright            : (C) 2004,2005,2006,2007,2011 Vallheru Team based on Gamers-Fusion ver 2.5
  *   @author               : thindil <thindil@tuxfamily.org>
  *   @version              : 1.4
- *   @since                : 03.11.2011
+ *   @since                : 07.11.2011
  *
  */
 
@@ -1195,6 +1195,7 @@ function fightmonster($enemy, $expgain, $goldgain, $times)
 	    if ($player->antidote == 'R')
 	      {
 		$strMessage .= "Nagle oślepia ciebie jasne światło. Leżysz na ziemi zmęczony ale i szczęśliwy, kiedy zdajesz sobie sprawę, że tym razem udało ci się uniknąć śmierci.<br />";
+		$player->antidote = '';
 	      }
             $smarty -> assign ("Message", $strMessage);
             $smarty -> display ('error1.tpl');

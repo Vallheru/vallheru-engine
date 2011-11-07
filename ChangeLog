@@ -1,5 +1,7 @@
 2011-11-07  Bartek thindil Jasicki  <thindil@tuxfamily.org>
 
+	* BUG,includes/funkcje.php, battle.php: 
+	fixed bug with resurrect potion
 	* BUG,kopalnia.php: 
 	fixed typo
 	* UPDATE,help.php, languages/pl/help.php, templates/layout1/help.tpl, templates/help.tpl:
