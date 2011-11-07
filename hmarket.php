@@ -62,9 +62,8 @@ if (!isset($_GET['view']) && !isset($_GET['buy']) && !isset($_GET['wyc']))
                             "Adelete" => A_DELETE,
                             "Alist" => A_LIST,
                             "Aback2" => A_BACK2));
-    $_GET['view'] = '';
   }
-else
+if (isset($_GET['view']))
   {
     /**
      * View oferts on market
@@ -305,6 +304,10 @@ else
 				"Iaction" => H_ACTION,
 				"Ashow" => A_SHOW));
       }
+  }
+else
+  {
+    $_GET['view'] = '';
   }
 
 /**
