@@ -64,3 +64,12 @@ ALTER TABLE `outpost_veterans` ADD `ring1` VARCHAR( 60 ) NULL , ADD `rpower1` IN
 ALTER TABLE `outpost_veterans` ADD `arrows` VARCHAR( 60 ) NULL , ADD `opower` INT NOT NULL DEFAULT '0';
 ALTER TABLE `smith` ADD `elitetype` VARCHAR( 1 ) NOT NULL DEFAULT 'S';
 ALTER TABLE `mill` ADD `elitetype` VARCHAR( 1 ) NOT NULL DEFAULT 'S';
+CREATE TABLE IF NOT EXISTS `contacts` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `owner` int(11) NOT NULL,
+  `pid` int(11) NOT NULL,
+  `order` int(11) NOT NULL DEFAULT '1',
+  UNIQUE KEY `id` (`id`),
+  KEY `owner` (`owner`),
+  KEY `order` (`order`)
+) ENGINE=MyISAM DEFAULT CHARSET=utf8 AUTO_INCREMENT=1 ;

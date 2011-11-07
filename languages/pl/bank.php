@@ -9,7 +9,7 @@
  *   @author               : yeskov <yeskov@users.sourceforge.net>
  *   @author               : eyescream <tduda@users.sourceforge.net>
  *   @version              : 1.4
- *   @since                : 19.09.2011
+ *   @since                : 07.11.2011
  *
  */
 
@@ -76,7 +76,7 @@ define("I_WANT", "Chcę");
 define("A_WITHDRAW", "wycofać");
 define("A_DEPOSIT", "zdeponować");
 define("A_GIVE", "dać");
-define("D_PLAYER", "graczowi ID (numer)");
+define("D_PLAYER", "graczowi");
 define("M_AMOUNT", "sztuk mithrilu.");
 define("I_AMOUNT", "sztuk(i)");
 define("I_AMOUNT2", "ilość");
@@ -196,7 +196,7 @@ if (isset($_GET['action']) && $_GET['action'] == 'astral')
     define("T_MAPS2", "Kompletne mapy");
     define("T_PLANS2", "Kompletne plany");
     define("T_RECIPES2", "Kompletne przepisy");
-    define("T_SEND", "Wyślij graczowi ID:");
+    define("T_SEND", "Wyślij graczowi");
     define("T_PIECE", "kawałek komponentu");
     define("T_COMPONENT", "komponent");
     define("T_NUMBER", "Numer:");

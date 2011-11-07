@@ -4,10 +4,10 @@
  *   Polish language for mail
  *
  *   @name                 : mail.php                            
- *   @copyright            : (C) 2004,2005,2006,2007 Vallheru Team based on Gamers-Fusion ver 2.5
- *   @author               : thindil <thindil@users.sourceforge.net>
- *   @version              : 1.3
- *   @since                : 03.03.2007
+ *   @copyright            : (C) 2004,2005,2006,2007,2011 Vallheru Team based on Gamers-Fusion ver 2.5
+ *   @author               : thindil <thindil@tuxfamily.org>
+ *   @version              : 1.4
+ *   @since                : 07.11.2011
  *
  */
 
@@ -27,7 +27,7 @@
 //   along with this program; if not, write to the Free Software
 //   Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 //
-// $Id: mail.php 919 2007-03-03 17:56:10Z thindil $
+// $Id$
 
 define("MAIL_DEL", "<br />Listy usunięte");
 define("A_REFRESH", "Odśwież");
@@ -93,7 +93,7 @@ if (isset ($_GET['view']) && $_GET['view'] == 'write')
     define("EMPTY_FIELDS", "Wypełnij wszystkie pola.");
     define("NO_PLAYER", "Nie ma takiego gracza.");
     define("YOU_SEND", "Wysłałeś wiadomość do ");
-    define("S_TO", "Do (ID Numer)");
+    define("S_TO", "Do");
     define("M_TITLE", "Temat");
     define("M_BODY", "Treść");
     define("A_SEND", "Wyślij");

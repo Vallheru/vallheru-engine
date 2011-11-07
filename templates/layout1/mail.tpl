@@ -198,7 +198,7 @@
     [<a href="mail.php?view=inbox">{$Ainbox}</a>]<br /><br />
     <table class="dark">
     <form method="post" action="mail.php?view=write&amp;step=send">
-    <tr><td>{$Sto}:</td><td><input type="text" name="to" value="{$To}" /></td></tr>
+    <tr><td>{$Sto} {html_options name=player options=$Contacts}:</td><td><input type="text" name="to" value="{$To}" /></td></tr>
     <tr><td>{$Mtitle}:</td><td><input type="text" name="subject" size="55" value="{$Reply}" /></td></tr>
     <tr><td valign="top">{$Mbody}:</td><td><textarea name="body" rows="13" cols="55">{$Body}</textarea></td></tr>
     <tr><td></td><td align="center"><input type="submit" value="{$Asend}" /></td></tr>

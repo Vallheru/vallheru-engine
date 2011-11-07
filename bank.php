@@ -90,7 +90,15 @@ if (isset($_GET['action']))
      */
     elseif ($_GET['action'] == 'donation') 
       {
-	checkvalue($_POST['pid']);
+	if ($_POST['player'] == 0)
+	  {
+	    checkvalue($_POST['pid']);
+	  }
+	else
+	  {
+	    checkvalue($_POST['player']);
+	    $_POST['pid'] = $_POST['player'];
+	  }
 	checkvalue($_POST['with']);
 	integercheck($_POST['with']);
 	
@@ -136,7 +144,15 @@ if (isset($_GET['action']))
      */
     elseif ($_GET['action'] == 'mithril') 
       {
-	checkvalue($_POST['pid']);
+	if ($_POST['player'] == 0)
+	  {
+	    checkvalue($_POST['pid']);
+	  }
+	else
+	  {
+	    checkvalue($_POST['player']);
+	    $_POST['pid'] = $_POST['player'];
+	  }
 	integercheck($_POST['mithril']);
 	checkvalue($_POST['mithril']);
 	
@@ -178,11 +194,15 @@ if (isset($_GET['action']))
      */
     elseif ($_GET['action'] == 'minerals') 
       {
-	if (!isset($_POST['pid']))
+	if ($_POST['player'] == 0)
 	  {
-	    error(ERROR);
+	    checkvalue($_POST['pid']);
 	  }
-	checkvalue($_POST['pid']);
+	else
+	  {
+	    checkvalue($_POST['player']);
+	    $_POST['pid'] = $_POST['player'];
+	  }
 	if (strlen($_POST['title']) > 0)
 	  {
 	    $strTitle = strip_tags($_POST['title']);
@@ -253,7 +273,15 @@ if (isset($_GET['action']))
      */
     elseif ($_GET['action'] == 'herbs') 
       {
-	checkvalue($_POST['pid']);
+	if ($_POST['player'] == 0)
+	  {
+	    checkvalue($_POST['pid']);
+	  }
+	else
+	  {
+	    checkvalue($_POST['player']);
+	    $_POST['pid'] = $_POST['player'];
+	  }
 	if (strlen($_POST['title']) > 0)
 	  {
 	    $strTitle = strip_tags($_POST['title']);
@@ -324,7 +352,15 @@ if (isset($_GET['action']))
      */
     elseif ($_GET['action'] == 'potions') 
       {
-	checkvalue($_POST['pid']);
+	if ($_POST['player'] == 0)
+	  {
+	    checkvalue($_POST['pid']);
+	  }
+	else
+	  {
+	    checkvalue($_POST['player']);
+	    $_POST['pid'] = $_POST['player'];
+	  }
 	checkvalue($_POST['item']);
 	if (strlen($_POST['title']) > 0)
 	  {
@@ -403,7 +439,15 @@ if (isset($_GET['action']))
      */
     elseif ($_GET['action'] == 'items') 
       {
-	checkvalue($_POST['pid']);
+	if ($_POST['player'] == 0)
+	  {
+	    checkvalue($_POST['pid']);
+	  }
+	else
+	  {
+	    checkvalue($_POST['player']);
+	    $_POST['pid'] = $_POST['player'];
+	  }
 	checkvalue($_POST['item']);
 	if (!isset($_POST['addall']))
 	  {
@@ -763,7 +807,7 @@ if (isset($_GET['action']))
 				    "Agive" => A_GIVE2,
 				    "Asend" => "Wyślij",
 				    "Tall" => "wszystko",
-				    "Taplayer" => "graczowi o ID",
+				    "Taplayer" => "graczowi",
 				    "Taplan" => "wszystkie kawałki",
 				    "Message" => ''));
 	  }
@@ -814,7 +858,15 @@ if (isset($_GET['action']))
 		  {
 		    error(ERROR);
 		  }
-		checkvalue($_POST['pid']);
+		if ($_POST['player'] == 0)
+		  {
+		    checkvalue($_POST['pid']);
+		  }
+		else
+		  {
+		    checkvalue($_POST['player']);
+		    $_POST['pid'] = $_POST['player'];
+		  }
 		$objDonated = $db -> Execute("SELECT `id` FROM `players` WHERE `id`=".$_POST['pid']);
 		if (empty($objDonated -> fields['id'])) 
 		  {
@@ -890,7 +942,7 @@ if (isset($_GET['action']))
 		    $objAmount->MoveNext();
 		  }
 		$objAmount->Close();
-		$strMessage = YOU_GIVE." wszystkie części ".$strCompname." ".D_PLAYER.": ".$_POST['pid'].".";
+		$strMessage = YOU_GIVE." wszystkie części ".$strCompname." ".D_PLAYER." ID: ".$_POST['pid'].".";
 		$strMessage2 = YOU_GET." wszystkie części ".$strCompname." ".D_PLAYER2.$player -> id.".";
 		$db -> Execute("INSERT INTO `log` (`owner`, `log`, `czas`, `type`) VALUES(".$_POST['pid'].", '".$strMessage2."','".$newdate."', 'N')");
 		$db -> Execute("INSERT INTO `log` (`owner`, `log`, `czas`, `type`) VALUES(".$player -> id.", '".$strMessage."','".$newdate."', 'N')");
@@ -931,7 +983,7 @@ if (isset($_GET['action']))
 		    $objAmount->MoveNext();
 		  }
 		$objAmount->Close();
-		$strMessage = YOU_GIVE." wszystkie części astralne ".D_PLAYER.": ".$_POST['pid'].".";
+		$strMessage = YOU_GIVE." wszystkie części astralne ".D_PLAYER." ID: ".$_POST['pid'].".";
 		$strMessage2 = YOU_GET." wszystkie części astralne ".D_PLAYER2.$player -> id.".";
 		$db -> Execute("INSERT INTO `log` (`owner`, `log`, `czas`, `type`) VALUES(".$_POST['pid'].", '".$strMessage2."','".$newdate."', 'N')");
 		$db -> Execute("INSERT INTO `log` (`owner`, `log`, `czas`, `type`) VALUES(".$player -> id.", '".$strMessage."','".$newdate."', 'N')");
@@ -976,7 +1028,7 @@ if (isset($_GET['action']))
 		    $db -> Execute("UPDATE `astral` SET `amount`=`amount`-".$_POST['amount']." WHERE `owner`=".$player -> id." AND `type`='".$strPiecename."' AND `number`=".$intNumber." AND `location`='V'");
 		  }
 		$objAmount -> Close();
-		$strMessage = YOU_GIVE.$strType.$strCompname.M_AMOUNT2.$_POST['amount']." ".D_PLAYER.": ".$_POST['pid'].".";
+		$strMessage = YOU_GIVE.$strType.$strCompname.M_AMOUNT2.$_POST['amount']." ".D_PLAYER." ID: ".$_POST['pid'].".";
 		$strMessage2 = YOU_GET.$strType.$strCompname.M_AMOUNT2.$_POST['amount'].D_PLAYER2.$player -> id.".";
 		$db -> Execute("INSERT INTO `log` (`owner`, `log`, `czas`, `type`) VALUES(".$_POST['pid'].", '".$strMessage2."','".$newdate."', 'N')");
 		$db -> Execute("INSERT INTO `log` (`owner`, `log`, `czas`, `type`) VALUES(".$player -> id.", '".$strMessage."','".$newdate."', 'N')");
@@ -990,6 +1042,18 @@ else
   {
     $_GET['action'] = '';
   }
+
+//Contacts
+$objContacts = $db->Execute("SELECT `pid` FROM `contacts` WHERE `owner`=".$player->id." ORDER BY `order` ASC");
+$arrContacts = array(0 => "ID (numer)");
+while (!$objContacts->EOF)
+  {
+    $objUser = $db->Execute("SELECT `user` FROM `players` WHERE `id`=".$objContacts->fields['pid']);
+    $arrContacts[$objContacts->fields['pid']] = $objUser->fields['user'];
+    $objUser->Close();
+    $objContacts->MoveNext();
+  }
+$objContacts->Close();
 
 /**
 * Assign variables to template
@@ -1013,6 +1077,7 @@ $smarty -> assign(array("Potions" => '',
                         "Aastral" => A_ASTRAL,
                         "Aastral2" => A_ASTRAL2,
                         "Hamount" => H_AMOUNT,
+			"Contacts" => $arrContacts,
 			"Goldcoins2" => "sztuk złota tytułem (opcjonalne, maks 50 znaków)",
 			"Ttitle" => "tytułem (opcjonalne, maks 50 znaków)",
 			"Tall" => "wszystkie posiadane"));

@@ -16,20 +16,20 @@
     </form><br />
 
     <form method="post" action="bank.php?action=donation">
-    {$Iwant} <input type="submit" value="{$Agive}" /> {$Dplayer} <input type="text" name="pid" size="3" />
+    {$Iwant} <input type="submit" value="{$Agive}" /> {$Dplayer} {html_options name=player options=$Contacts} <input type="text" name="pid" size="3" />
     <input type="text" value="{$Bank}" name="with" size="10" /> {$Goldcoins2} <input type="text" name="title" size="50" />
     </form><br />
 
     {if $Mithril > 0}
         <form method="post" action="bank.php?action=mithril">
-        {$Iwant} <input type="submit" value="{$Agive}" /> {$Dplayer} <input type="tekst" name="pid" size="3" />
+        {$Iwant} <input type="submit" value="{$Agive}" /> {$Dplayer} {html_options name=player options=$Contacts} <input type="tekst" name="pid" size="3" />
         <input type="text" name="mithril" size="10" value="{$Mithril}" /> {$Mamount} {$Ttitle} <input type="text" name="title" size="50" />
         </form><br />
     {/if}
 
     {if $Items == 1}
         <form method="post" action="bank.php?action=items">
-        {$Iwant} <input type="submit" value="{$Agive}" /> {$Dplayer} <input type="tekst" name="pid" size="3" />
+        {$Iwant} <input type="submit" value="{$Agive}" /> {$Dplayer} {html_options name=player options=$Contacts} <input type="tekst" name="pid" size="3" />
         <input type="text" name="amount" size="3" /> (<input type="checkbox" name="addall" value="Y" />{$Tall}) {$Iamount}
 	{html_options name=item options=$Ioptions} {$Ttitle} <input type="text" name="title" size="50" />
         </form><br />
@@ -37,7 +37,7 @@
 
     {if $Potions == 1}
         <form method="post" action="bank.php?action=potions">
-        {$Iwant} <input type="submit" value="{$Agive}" /> {$Dplayer} <input type="tekst" name="pid" size="3" />
+        {$Iwant} <input type="submit" value="{$Agive}" /> {$Dplayer} {html_options name=player options=$Contacts} <input type="tekst" name="pid" size="3" />
         <input type="text" name="amount" size="3" /> (<input type="checkbox" name="addall" value="Y" />{$Tall}) {$Iamount}
 	{html_options name=item options=$Poptions} {$Ttitle} <input type="text" name="title" size="50" />
         </form><br />
@@ -45,7 +45,7 @@
 
     {if $Herbs == 1}
         <form method="post" action="bank.php?action=herbs">
-        {$Iwant} <input type="submit" value="{$Agive}" /> {$Dplayer} <input type="tekst" name="pid" size="3" />
+        {$Iwant} <input type="submit" value="{$Agive}" /> {$Dplayer} {html_options name=player options=$Contacts} <input type="tekst" name="pid" size="3" />
 	{html_options name=item options=$Hoptions} 
 	{$Hamount} <input type="text" name="amount" size="5" /> (<input type="checkbox" name="addall" value="Y" />{$Tall}) {$Ttitle} <input type="text" name="title" size="50" />
         </form><br />
@@ -53,7 +53,7 @@
 
     {if $Minerals == 1}
         <form method="post" action="bank.php?action=minerals">
-        {$Iwant} <input type="submit" value="{$Agive}" /> {$Dplayer} <input type="tekst" name="pid" size="3" /> 
+        {$Iwant} <input type="submit" value="{$Agive}" /> {$Dplayer} {html_options name=player options=$Contacts} <input type="tekst" name="pid" size="3" /> 
 	{html_options name=item options=$Moptions} 
 	{$Hamount} <input type="text" name="amount" size="5" /> (<input type="checkbox" name="addall" value="Y" />{$Tall}) {$Ttitle} <input type="text" name="title" size="50" />
         </form><br />
@@ -72,7 +72,7 @@
 
     {if $Type == "p"}
         <form method="post" action="bank.php?action=astral&amp;type=p&amp;step=piece">
-            {$Tsend} <input type="text" name="pid" size="5" /> {$Tpiece} <select name="name">
+            {$Tsend} {html_options name=player options=$Contacts} <input type="text" name="pid" size="5" /> {$Tpiece} <select name="name">
                 {section name=giveastral loop=$Tcomponents}
                     <option value="{$smarty.section.giveastral.index}">{$Tcomponents[giveastral]}</option>
                 {/section}
@@ -87,11 +87,11 @@
                 {section name=giveastral2 loop=$Tcomponents}
                     <option value="{$smarty.section.giveastral2.index}">{$Tcomponents[giveastral2]}</option>
                 {/section}
-            </select> {$Taplayer} <input type="text" name="pid" size="5" />
+            </select> {$Taplayer} {html_options name=player options=$Contacts} <input type="text" name="pid" size="5" />
 	</form><br />
 
 	<form method="post" action="bank.php?action=astral&amp;type=p&amp;step=all">
-	    <input type="submit" value="{$Asend}" /> {$Tall} {$Taplayer} <input type="text" name="pid" size="5" />
+	    <input type="submit" value="{$Asend}" /> {$Tall} {$Taplayer} {html_options name=player options=$Contacts} <input type="text" name="pid" size="5" />
 	</form><br />
 
         <table align="center">
@@ -182,7 +182,7 @@
 
     {if $Type == "c"}
         <form method="post" action="bank.php?action=astral&amp;type=c&amp;step=component">
-            {$Tsend} <input type="text" name="pid" size="5" /> {$Tcomponent3} <select name="name">
+            {$Tsend} {html_options name=player options=$Contacts} <input type="text" name="pid" size="5" /> {$Tcomponent3} <select name="name">
                 {section name=giveastral2 loop=$Tcomponents2}
                     <option value="{$smarty.section.giveastral2.index}">{$Tcomponents2[giveastral2]}</option>
                 {/section}

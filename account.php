@@ -1001,6 +1001,87 @@ if (isset($_GET['view']))
 	    $db->Execute("UPDATE `players` SET `roleplay`='".$strProfile."', `ooc`='".$strOOC."', `shortrpg`='".$strShort."' WHERE `id`=".$player->id);
 	  }
       }
+
+    /**
+     * Manage contacts
+     */
+    elseif ($_GET['view'] == 'contacts')
+      {
+	$arrContacts = $db->GetAll("SELECT `id`, `pid` FROM `contacts` WHERE `owner`=".$player->id." ORDER BY `order`, `pid` ASC");
+	foreach ($arrContacts as &$arrContact)
+	  {
+	    $objUser = $db->Execute("SELECT `user` FROM `players` WHERE `id`=".$arrContact['pid']);
+	    $arrContact['user'] = $objUser->fields['user'];
+	    $objUser->Close();
+	  }
+	$intAmount = count($arrContacts);
+	$smarty->assign(array("Info" => "Tutaj możesz usuwać bądź ustalać kolejność swoich kontaktów w grze. Możesz posiadać maksymalnie 30 kontaktów. Twoja lista kontaktów:",
+			      "Contacts" => $arrContacts,
+			      "Aup" => "Wyżej",
+			      "Adown" => "Niżej",
+			      "Adelete" => "Skasuj",
+			      "Camount" => $intAmount,
+			      "Tplayer" => "Imię",
+			      "Toptions" => "Opcje",
+			      "Nocontacts" => "Nie masz jeszcze żadnych kontaktów.",
+			      "Aadd" => "Dodaj",
+			      "Tadd" => "gracza o ID:",
+			      "Tadd2" => "do kontaktów",
+			      "Tid" => "ID",
+			      "Message" => ''));
+	//Add contact
+	if (isset($_GET['add']))
+	  {
+	    if ($intAmount >= 30)
+	      {
+		error("Twoja lista kontaktów jest już pełna. Nie możesz dodawać nowych kontaktów.");
+	      }
+	    checkvalue($_POST['pid']);
+	    foreach ($arrContacts as $arrContact)
+	      {
+		if ($arrContact['pid'] == $_POST['pid'])
+		  {
+		    error("Masz już tego gracza w kontaktach");
+		  }
+	      }
+	    $db->Execute("INSERT INTO `contacts` (`owner`, `pid`) VALUES(".$player->id.", ".$_POST['pid'].")");
+	    $smarty->assign("Message", "Dodałeś wybranego gracza do kontaktów. (<a href=account.php?view=contacts>Odśwież</a>)");
+	  }
+	//Edit selected contact
+	if (isset($_GET['edit']))
+	  {
+	    checkvalue($_GET['edit']);
+	    $objTest = $db->Execute("SELECT `owner` FROM `contacts` WHERE `id`=".$_GET['edit']);
+	    if (!$objTest->fields['owner'])
+	      {
+		error("Nie ma takiego kontaktu!");
+	      }
+	    if ($objTest->fields['owner'] != $player->id)
+	      {
+		error("To nie jest twój kontakt");
+	      }
+	    $objTest->Close();
+	    if (isset($_GET['delete']))
+	      {
+		$db->Execute("DELETE FROM `contacts` WHERE `id`=".$_GET['edit']);
+		$smarty->assign("Message", "Skasowałeś wybrany kontakt. (<a href=account.php?view=contacts>Odśwież</a>)");
+	      }
+	    elseif (isset($_GET['up']))
+	      {
+		if ($intAmount > 1)
+		  {
+		    $db->Execute("UPDATE `contacts` SET `order`=`order`-1 WHERE `id`=".$_GET['edit']);
+		  }
+	      }
+	    elseif (isset($_GET['down']))
+	      {
+		if ($intAmount > 1)
+		  {
+		    $db->Execute("UPDATE `contacts` SET `order`=`order`+1 WHERE `id`=".$_GET['edit']);
+		  }
+	      }
+	  }
+      }
   }
 else
   {
@@ -1018,8 +1099,8 @@ if (!isset($_GET['step']))
 /**
 * Assign variables and display page
 */
-$arrStep = array('name', 'pass', 'profile', 'roleplay', 'eci', 'avatar', 'reset', 'immu', 'style', 'freeze', 'options', 'changes', 'vallars', 'bugreport', 'bugtrack', 'links', 'forums');
-$arrLinks = array(A_NAME, A_PASS, A_PROFILE, 'Edytuj profil fabularny', A_EMAIL, A_AVATAR, A_RESET, A_IMMU, A_STYLE, A_FREEZE, A_OPTIONS, A_CHANGES, "Ostatnio nagrodzeni Vallarami", A_BUGREPORT, A_BUGTRACK, A_LINKS, 'Obserwowane fora');
+$arrStep = array('name', 'pass', 'profile', 'roleplay', 'eci', 'avatar', 'reset', 'immu', 'style', 'freeze', 'options', 'changes', 'vallars', 'bugreport', 'bugtrack', 'links', 'forums', 'contacts');
+$arrLinks = array(A_NAME, A_PASS, A_PROFILE, 'Edytuj profil fabularny', A_EMAIL, A_AVATAR, A_RESET, A_IMMU, A_STYLE, A_FREEZE, A_OPTIONS, A_CHANGES, "Ostatnio nagrodzeni Vallarami", A_BUGREPORT, A_BUGTRACK, A_LINKS, 'Obserwowane fora', 'Kontakty');
 $smarty -> assign (array ("View" => $_GET['view'], 
                           "Step" => $_GET['step'],
                           "Welcome" => WELCOME,

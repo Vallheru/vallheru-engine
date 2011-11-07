@@ -7,7 +7,7 @@
  *   @copyright            : (C) 2004,2005,2006,2007,2011 Vallheru Team based on Gamers-Fusion ver 2.5
  *   @author               : thindil <thindil@tuxfamily.org>
  *   @version              : 1.4
- *   @since                : 31.10.2011
+ *   @since                : 07.11.2011
  *
  */
 
@@ -406,10 +406,21 @@ if (isset ($_GET['view']) && $_GET['view'] == 'write')
         error(YOU_CANNOT);
     }
     $objBan -> Close();
+    //Contacts
+    $objContacts = $db->Execute("SELECT `pid` FROM `contacts` WHERE `owner`=".$player->id." ORDER BY `order` ASC");
+    $arrContacts = array(0 => "ID (numer)");
+    while (!$objContacts->EOF)
+      {
+	$objUser = $db->Execute("SELECT `user` FROM `players` WHERE `id`=".$objContacts->fields['pid']);
+	$arrContacts[$objContacts->fields['pid']] = $objUser->fields['user'];
+	$objUser->Close();
+	$objContacts->MoveNext();
+      }
+    $objContacts->Close();
     if (!isset ($_GET['to'])) 
-    {
+      {
         $_GET['to'] = '';
-    }
+      }
     if (!isset ($_GET['re'])) 
     {
         $_GET['re'] = '';
@@ -435,9 +446,15 @@ if (isset ($_GET['view']) && $_GET['view'] == 'write')
                             "Mtitle" => M_TITLE,
                             "Mbody" => M_BODY,
                             "Asend" => A_SEND,
+			    "Contacts" => $arrContacts,
 			    "Mhelp" => "Linki automatycznie zamieniane są na klikalne. Możesz używać następujących znaczników BBCode:<br /><ul><li>[b]<b>Pogrubienie</b>[/b]</li><li>[i]<i>Kursywa</i><[/i]</li><li>[u]<u>Podkreślenie</u>[/u]</li><li>[color (angielska nazwa koloru (red, yellow, itp) lub kod HTML (#FFFF00, itp)]pokolorowanie tekstu[/color]</li><li>[center]wycentrowanie tekstu[/center]</li><li>[quote]cytat[/quote]</ul>"));
     if (isset ($_GET['step']) && $_GET['step'] == 'send') 
     {
+        if ($_POST['player'] != 0)
+	  {
+	    checkvalue($_POST['player']);
+	    $_POST['to'] = $_POST['player'];
+	  }
         if (empty ($_POST['to']) || empty ($_POST['body'])) 
         {
             error (EMPTY_FIELDS);

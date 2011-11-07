@@ -270,3 +270,31 @@
     <input type="submit" value="{$Aset}" />
     </form>
 {/if}
+
+{if $View == "contacts"}
+    {$Info}<br /><br />
+    <form method="post" action="account.php?view=contacts&amp;add">
+        <input type="submit" value="{$Aadd}" /> {$Tadd} <input type="text" name="pid" size="5" /> {$Tadd2}
+    </form><br />
+    {$Message}<br />
+    {if $Camount > 0}
+        <table width="90%" align="center">
+	    <tr>
+	        <th>{$Tplayer}</th>
+	        <th>{$Toptions}</th>
+	    </tr>
+	    {section name=clist loop=$Contacts}
+	        <tr>
+	    	    <td>{$Contacts[clist].user} ({$Tid}: {$Contacts[clist].pid})</td>
+		    <td>
+		        <a href="account.php?view=contacts&amp;edit={$Contacts[clist].id}&amp;up">{$Aup}</a><br />
+			<a href="account.php?view=contacts&amp;edit={$Contacts[clist].id}&amp;down">{$Adown}</a><br />
+			<a href="account.php?view=contacts&amp;edit={$Contacts[clist].id}&amp;delete">{$Adelete}</a>
+		    </td>
+		</tr>
+	    {/section}
+    	</table>
+    {else}
+        {$Nocontacts}
+    {/if}
+{/if}
