@@ -90,7 +90,7 @@ if (isset($_GET['action']) && $_GET['action'] == 'dig')
 	  }
         if ($intRoll == 5)
         {
-            $intAmount = ceil((rand(1,20) * 1/8) * $intBonus;
+	    $intAmount = ceil((rand(1,20) * 1/8) * $intBonus);
             if ($intAmount < 1)
             {
                 $intAmount = 1;
@@ -100,7 +100,7 @@ if (isset($_GET['action']) && $_GET['action'] == 'dig')
         }
         if ($intRoll == 6 || $intRoll == 7)
         {
-            $intAmount = ceil((rand(1,20) * 1/5) * $intBonus;
+	    $intAmount = ceil((rand(1,20) * 1/5) * $intBonus);
             if ($intAmount < 1)
             {
                 $intAmount = 1;
@@ -110,7 +110,7 @@ if (isset($_GET['action']) && $_GET['action'] == 'dig')
         }
         if ($intRoll == 8)
         {
-            $intAmount = ceil((rand(1,20) * 1/3) * $intBonus;
+	    $intAmount = ceil((rand(1,20) * 1/3) * $intBonus);
             if ($intAmount < 1)
             {
                 $intAmount = 1;
@@ -119,7 +119,7 @@ if (isset($_GET['action']) && $_GET['action'] == 'dig')
         }
         if ($intRoll == 9)
         {
-            $intAmount = ceil(rand(50,200) * $intBonus;
+	    $intAmount = ceil(rand(50,200) * $intBonus);
             if ($intAmount < 1)
             {
                 $intAmount = 1;
