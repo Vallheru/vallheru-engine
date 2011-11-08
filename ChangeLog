@@ -1,5 +1,7 @@
 2011-11-08  Bartek thindil Jasicki  <thindil@tuxfamily.org>
 
+	* BUG,languages/pl/head1.php, bows.php, las.php, stafflist.php: 
+	fixed location names
 	* UPDATE,hospital.php: 
 	small code cleanup
 	* FEATURE,account.php, view.php:

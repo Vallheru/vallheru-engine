@@ -4,10 +4,10 @@
  *   Forest menu
  *
  *   @name                 : las.php                            
- *   @copyright            : (C) 2004,2005,2006 Vallheru Team based on Gamers-Fusion ver 2.5
- *   @author               : thindil <thindil@users.sourceforge.net>
- *   @version              : 1.3
- *   @since                : 05.10.2006
+ *   @copyright            : (C) 2004,2005,2006,2011 Vallheru Team based on Gamers-Fusion ver 2.5
+ *   @author               : thindil <thindil@tuxfamily.org>
+ *   @version              : 1.4
+ *   @since                : 08.11.2011
  *
  */
 
@@ -27,9 +27,9 @@
 //   along with this program; if not, write to the Free Software
 //   Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 //
-// $Id: las.php 673 2006-10-05 15:32:49Z thindil $
+// $Id$
 
-$title = "Las Avatiel";
+$title = "Las Avantiel";
 require_once("includes/head.php");
 
 /**

@@ -7,7 +7,7 @@
  *   @copyright            : (C) 2004,2005,2006,2011 Vallheru Team based on Gamers-Fusion ver 2.5
  *   @author               : thindil <thindil@tuxfamily.org>
  *   @version              : 1.4
- *   @since                : 10.10.2011
+ *   @since                : 08.11.2011
  *
  */
 
@@ -32,7 +32,7 @@
 if (isset($title) && !isset($title1))
 {
     $arrTitle = array('Opcje konta', 'Dodaj Plotkę', 'Dodaj Wieść', 'Alchemik', 'Pracownia alchemiczna',
-                      'Ekwipunek', 'Panel Administracyjny', 'Dystrybucja AP', 'Płatnerz', 'Bank', 'Arena Walk', 'Fleczer',
+                      'Ekwipunek', 'Panel Administracyjny', 'Dystrybucja AP', 'Płatnerz', 'Bank', 'Arena Walk', 'Łucznik',
                       'Karczma', 'Altara', 'Polana Chowańców', 'Księga czarów', 'Wybierz wyznanie', 'Poszukiwania', 'Farma',
                       'Forum',  'Labirynt', 'Pomoc', 'Rynek ziół', 'Galeria Bohaterów', 'Szpital', 
                       'Domy', 'Rynek z przedmiotami', 'Lochy', 'Wybierz klasę', 'Kuźnia', 
@@ -42,15 +42,13 @@ if (isset($title) && !isset($title1))
                       'Panel Sędziego', 'Statystyki', 'Świątynia', 'Forum klanu', 'Zegar miejski', 'Szkolenie', 'Stajnie',
                       'Zbrojownia klanu', 'Klany', 'Magazyn klanu', 'Zobacz', 'Zbrojmistrz', 'Magiczna wieża', 'Bogactwa', 
                       'Gmach sądu', 'Biblioteka', 'Magazyn Królewski', 'Redakcja gazety', 'Mapa', 'Vallary', 
-                      'Góry Kazad-nar', 'Las Avatiel', 'Wyrąb', 'Aleja zasłużonych', 'Astralny skarbiec', 'Astralny rynek', 
-                      'Spis książąt', 'Jubiler', 'Rynek jubilerski', 'Kopalnia', 'Kopalnie', 'Huta', 'Astralny plan', 'Warsztat jubilerski', 'Rynek z łupami', 'Galeria Machin');
+                      'Góry Kazad-nar', 'Las Avantiel', 'Wyrąb', 'Aleja zasłużonych', 'Astralny skarbiec', 'Astralny rynek', 
+                      'Sala audiencyjna', 'Jubiler', 'Rynek jubilerski', 'Kopalnia', 'Kopalnie', 'Huta', 'Astralny plan', 'Warsztat jubilerski', 
+		      'Rynek z łupami', 'Galeria Machin', 'Propozycje');
         if ($player -> location != 'Ardulith')
         {
             $arrTitle2 = $arrTitle;
-            $arrTitle2[11] = 'Łucznik';
             $arrTitle2[13] = $city1;
-            $arrTitle2[67] = 'Las Avantiel';
-            $arrTitle2[72] = 'Sala audiencyjna';
 	    if ($player->location != 'Altara')
 	      {
 		$arrTitle2[44] = 'Brzoza przeznaczenia';
@@ -59,13 +57,11 @@ if (isset($title) && !isset($title1))
         else
         {
             $arrTitle2 = $arrTitle;
-            $arrTitle2[11] = 'Łucznik';
             $arrTitle2[13] = $city2;
             $arrTitle2[20] = 'Avan Tirith';
             $arrTitle2[30] = 'Polana drwali';
             $arrTitle2[44] = 'Brzoza przeznaczenia';
             $arrTitle2[62] = 'Leśny skład';
-            $arrTitle2[67] = 'Las Avantiel';
             $arrTitle2[72] = 'Korzeń przeznaczenia';
         }
     $intKey = array_search($title, $arrTitle);
