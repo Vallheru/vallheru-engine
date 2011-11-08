@@ -599,6 +599,35 @@
     </form>
 {/if}
 
+{if $View == "pdescriptions"}
+    <table align="center">
+        <tr>
+	    <th>{$Tid}</th>
+	    <th>{$Treporter}</th>
+	    <th>{$Tlocation}</th>
+	</tr>
+	{section name=desc loop=$Proposals}
+	    <tr>
+	        <td><a href="admin.php?view=pdescriptions&amp;step={$Proposals[desc].id}">{$Proposals[desc].id}</a></td>
+		<td>{$Proposals[desc].pid}</td>
+		<td>{$Proposals[desc].name}</td>
+	    </tr>
+	{/section}
+    </table>
+    {if $Step != ""}
+    	<b>{$Tloc}</b> {$Location}<br /><br />
+        <b>{$Tdesc}</b><br />{$Desc}<br /><br />
+	<b>{$Tinfo}</b><br />{$Info}<br /><br />
+	<form method="post" action="admin.php?view=pdescriptions&amp;step={$Step}&amp;confirm">
+	    <select name="response"><option value="A">{$Accepted}</option>
+	        <option value="R">{$Rejected}</option>
+	    </select><br />
+	    {$Treason} <textarea name="reason"></textarea><br />
+	    <input type="submit" value="{$Asend}" />
+	</form>
+    {/if}
+{/if}
+
 {$Message}
 
 {if $View != ""}

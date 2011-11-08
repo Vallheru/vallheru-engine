@@ -72,4 +72,13 @@ CREATE TABLE IF NOT EXISTS `contacts` (
   UNIQUE KEY `id` (`id`),
   KEY `owner` (`owner`),
   KEY `order` (`order`)
-) ENGINE=MyISAM DEFAULT CHARSET=utf8 AUTO_INCREMENT=1 ;
+) ENGINE=MyISAM DEFAULT CHARSET=utf8 AUTO_INCREMENT=1;
+CREATE TABLE IF NOT EXISTS `proposals` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `pid` int(11) NOT NULL,
+  `type` varchar(1) NOT NULL DEFAULT 'D',
+  `name` varchar(255) NOT NULL,
+  `data` text NOT NULL,
+  `info` text NOT NULL,
+  UNIQUE KEY `id` (`id`)
+) ENGINE=MyISAM DEFAULT CHARSET=utf8 AUTO_INCREMENT=1;

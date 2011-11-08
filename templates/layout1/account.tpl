@@ -298,3 +298,10 @@
         {$Nocontacts}
     {/if}
 {/if}
+
+{if $View == "proposals"}
+    {$Info}<br /><br />
+    <ul>
+	<li><a href="proposals.php?type=D">{$Adescription}</a></li>
+    </ul>
+{/if}

@@ -1086,6 +1086,11 @@ if (isset($_GET['view']))
 	      }
 	  }
       }
+    elseif ($_GET['view'] == 'proposals')
+      {
+	$smarty->assign(array("Info" => "Tutaj możesz zgłaszać propozycje (obecnie tylko) dotyczące opisów lokacji. Więcej informacji co i jak znajdziesz po wybraniu odpowiedniej opcji. Zanim dana propozycja pojawi się w grze, musi zostać zaakceptowana przez władzę.",
+			      "Adescription" => "Propozycja opisu lokacji"));
+      }
   }
 else
   {
@@ -1103,8 +1108,8 @@ if (!isset($_GET['step']))
 /**
 * Assign variables and display page
 */
-$arrStep = array('name', 'pass', 'profile', 'roleplay', 'eci', 'avatar', 'reset', 'immu', 'style', 'freeze', 'options', 'changes', 'vallars', 'bugreport', 'bugtrack', 'links', 'forums', 'contacts');
-$arrLinks = array(A_NAME, A_PASS, A_PROFILE, 'Edytuj profil fabularny', A_EMAIL, A_AVATAR, A_RESET, A_IMMU, A_STYLE, A_FREEZE, A_OPTIONS, A_CHANGES, "Ostatnio nagrodzeni Vallarami", A_BUGREPORT, A_BUGTRACK, A_LINKS, 'Obserwowane fora', 'Kontakty');
+$arrStep = array('name', 'pass', 'profile', 'roleplay', 'eci', 'avatar', 'reset', 'immu', 'style', 'freeze', 'options', 'changes', 'vallars', 'bugreport', 'bugtrack', 'links', 'forums', 'contacts', 'proposals');
+$arrLinks = array(A_NAME, A_PASS, A_PROFILE, 'Edytuj profil fabularny', A_EMAIL, A_AVATAR, A_RESET, A_IMMU, A_STYLE, A_FREEZE, A_OPTIONS, A_CHANGES, "Ostatnio nagrodzeni Vallarami", A_BUGREPORT, A_BUGTRACK, A_LINKS, 'Obserwowane fora', 'Kontakty', 'Zgłoś propozycję');
 $smarty -> assign (array ("View" => $_GET['view'], 
                           "Step" => $_GET['step'],
                           "Welcome" => WELCOME,
