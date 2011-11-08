@@ -1,5 +1,7 @@
 2011-11-08  Bartek thindil Jasicki  <thindil@tuxfamily.org>
 
+	* UPDATE,hospital.php: 
+	small code cleanup
 	* FEATURE,account.php, view.php:
 	added link to add/remove contact to profile
 

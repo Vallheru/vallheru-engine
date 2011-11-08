@@ -7,7 +7,7 @@
  *   @copyright            : (C) 2004,2005,2006,2007,2011 Vallheru Team based on Gamers-Fusion ver 2.5
  *   @author               : thindil <thindil@tuxfamily.org>
  *   @version              : 1.4
- *   @since                : 29.08.2011
+ *   @since                : 08.11.2011
  *
  */
 
@@ -79,46 +79,6 @@ if (!isset ($_GET['action']))
         }
         $smarty -> assign ("Need",$crneed);
     }
-}
-
-if (isset ($_GET['action']) && $_GET['action'] == 'heal') 
-{
-    if ($player -> hp <= 0) 
-    {
-        error(BAD_ACTION);
-    }
-    if ($mytribe -> fields['hospass'] == "Y") 
-    {
-	    $crneed = $player -> max_hp - $player -> hp;
-    }
-    else
-      {
-	$crneed = ($player -> max_hp - $player -> hp) * $player->level;
-      }
-    if ($crneed < 0)
-    {
-        $crneed = 0;
-    }
-    if ($crneed > $player -> credits) 
-    {
-        error (NO_MONEY.$crneed.GOLD_COINS." (<a href=\"city.php\">".BACK."</a>)");
-    }
-    $db -> Execute("UPDATE `players` SET `hp`=`max_hp`, `credits`=`credits`-".$crneed." WHERE `id`=".$player -> id);
-    error(YOU_HEALED." (<a href=\"city.php\">".BACK."</a>)");
-}
-$mytribe -> Close();
-
-if (isset ($_GET['action']) && $_GET['action'] == 'ressurect') 
-{
-    require_once('includes/resurect.php');
-    error(YOU_RES.$pdpr.LOST_EXP." (<a href=\"city.php\">".BACK."</a>)");
-}
-
-/**
-* Initialization of variables
-*/
-if (!isset($_GET['action'])) 
-{
     $_GET['action'] = '';
     $smarty -> assign(array("Ayes" => YES,
                             "Couldyou" => COULD_YOU,
@@ -128,6 +88,40 @@ if (!isset($_GET['action']))
                             "Goldcoins" => GOLD_COINS2,
                             "Aheal" => A_HEAL));
 }
+else
+  {
+    if ($_GET['action'] == 'heal') 
+      {
+	if ($player -> hp <= 0) 
+	  {
+	    error(BAD_ACTION);
+	  }
+	if ($mytribe -> fields['hospass'] == "Y") 
+	  {
+	    $crneed = $player -> max_hp - $player -> hp;
+	  }
+	else
+	  {
+	    $crneed = ($player -> max_hp - $player -> hp) * $player->level;
+	  }
+	if ($crneed < 0)
+	  {
+	    $crneed = 0;
+	  }
+	if ($crneed > $player -> credits) 
+	  {
+	    error (NO_MONEY.$crneed.GOLD_COINS." (<a href=\"city.php\">".BACK."</a>)");
+	  }
+	$db -> Execute("UPDATE `players` SET `hp`=`max_hp`, `credits`=`credits`-".$crneed." WHERE `id`=".$player -> id);
+	error(YOU_HEALED." (<a href=\"city.php\">".BACK."</a>)");
+      }
+    elseif ($_GET['action'] == 'ressurect') 
+      {
+	require_once('includes/resurect.php');
+	error(YOU_RES.$pdpr.LOST_EXP." (<a href=\"city.php\">".BACK."</a>)");
+      }
+  }
+$mytribe -> Close();
 
 /**
 * Assign variables to template and display page
