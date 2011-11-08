@@ -1,5 +1,7 @@
 2011-11-08  Bartek thindil Jasicki  <thindil@tuxfamily.org>
 
+	* BUG,includes/head.php: 
+	fixed variable name
 	* BUG,languages/pl/head1.php, bows.php, las.php, stafflist.php: 
 	fixed location names
 	* UPDATE,hospital.php: 

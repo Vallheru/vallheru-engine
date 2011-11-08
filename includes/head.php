@@ -7,7 +7,7 @@
  *   @copyright            : (C) 2004,2005,2006,2007,2011 Vallheru Team based on Gamers-Fusion ver 2.5
  *   @author               : thindil <thindil@tuxfamily.org>
  *   @version              : 1.4
- *   @since                : 03.10.2011
+ *   @since                : 08.11.2011
  *
  */
 
@@ -731,9 +731,9 @@ function checkvalue($value)
 /**
 * Delete session when player escape from fight
 */
-$arrTitle = array('Arena Walk', 'Labirynt', 'Portal', 'Astralny plan');
+$arrTitles = array('Arena Walk', 'Labirynt', 'Portal', 'Astralny plan');
 $arrLocations = array('Altara', 'Ardulith', 'Portal', 'Astralny plan');
-if ($player -> fight != 0 && (!in_array($title, $arrTitle)) && (in_array($player -> location, $arrLocations))) 
+if ($player -> fight != 0 && (!in_array($title, $arrTitles)) && (in_array($player -> location, $arrLocations))) 
 {
     $db -> Execute("UPDATE `players` SET `hp`=0, `fight`=0, `bless`='', `blessval`=0 WHERE `id`=".$player -> id) or die($db -> ErrorMsg());
     if (!isset($_SESSION['amount']))
