@@ -8,7 +8,7 @@
  *   @author               : thindil <thindil@tuxfamily.org>
  *   @author               : eyescream <tduda@users.sourceforge.net>
  *   @version              : 1.4
- *   @since                : 04.11.2011
+ *   @since                : 08.11.2011
  *
  */
 
@@ -190,9 +190,19 @@ if ($player -> location == $view -> location && $view -> immunited == 'N' && $pl
 }
 
 if ($player -> id != $view -> id) 
-{
-    $smarty -> assign ("Mail", "<li><a href=mail.php?view=write&amp;to=".$view -> id.">".A_WRITE_PM."</a></li>");
-}
+  {
+    $strLink = "<li><a href=mail.php?view=write&amp;to=".$view -> id.">".A_WRITE_PM."</a></li>";
+    $objTest = $db->Execute("SELECT `id` FROM `contacts` WHERE `owner`=".$player->id." AND `pid`=".$view->id);
+    if ($objTest->fields['id'])
+      {
+	$strLink .= "<li><a href=account.php?view=contacts&amp;edit=".$objTest->fields['id']."&amp;delete>Usuń z listy kontaktów</a></li>";
+      }
+    else
+      {
+	$strLink .= "<li><a href=account.php?view=contacts&amp;add&amp;pid=".$view->id.">Dodaj do listy kontaktów</a></li>";
+      }
+    $smarty -> assign ("Mail", $strLink);
+  }
 
 if ($objFreeze -> fields['freeze'])
 {
