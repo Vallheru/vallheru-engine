@@ -8,7 +8,7 @@
  *   @author               : thindil <thindil@tuxfamily.org>
  *   @author               : eyescream <tduda@users.sourceforge.net>
  *   @version              : 1.4
- *   @since                : 08.11.2011
+ *   @since                : 09.11.2011
  *
  */
 
@@ -397,8 +397,8 @@ if (isset($_GET['spy']))
       }
     elseif ($chance > 0 && $chance < 50)
       {
-	$fltPerception = ($player->level / 200.0);
-	$fltThief = ($view->level / 200.0);
+	$fltPerception = round($player->level / 200.0, 2);
+	$fltThief = round($view->level / 400.0, 2);
 	$expgain = ceil($view->level / 10);
 	checkexp($player -> exp, $expgain, $player -> level, $player -> race, $player -> user, $player -> id, 0, 0, $player -> id, 'thievery', $fltThief);
 	$db -> Execute("UPDATE `players` SET `perception`=`perception`+".$fltPerception." WHERE `id`=".$view->id);
@@ -426,7 +426,7 @@ if (isset($_GET['spy']))
       }
     else
       {
-	$fltThief = ($view->level / 100.0);
+	$fltThief = round($view->level / 200.0, 2);
 	$expgain = ceil($view->level / 5);
 	checkexp($player -> exp, $expgain, $player -> level, $player -> race, $player -> user, $player -> id, 0, 0, $player -> id, 'thievery', $fltThief);
 	$db -> Execute("UPDATE `players` SET `perception`=`perception`+0.01 WHERE `id`=".$view->id);

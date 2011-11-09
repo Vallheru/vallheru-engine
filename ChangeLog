@@ -1,3 +1,8 @@
+2011-11-09  Bartek thindil Jasicki  <thindil@tuxfamily.org>
+
+	* UPDATE,view.php:
+	droped amount of gained skill for spying other players
+
 2011-11-08  Bartek thindil Jasicki  <thindil@tuxfamily.org>
 
 	* FEATURE,install/db/update.sql, account.php, templates/layout1/account.tpl, templates/account.tpl, admin.php, templates/layout1/admin.tpl,
