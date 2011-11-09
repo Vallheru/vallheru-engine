@@ -7,7 +7,7 @@
  *   @copyright            : (C) 2011 Vallheru Team based on Gamers-Fusion ver 2.5
  *   @author               : thindil <thindil@tuxfamily.org>
  *   @version              : 1.4
- *   @since                : 08.11.2011
+ *   @since                : 09.11.2011
  *
  */
 
@@ -88,6 +88,63 @@ if ($_GET['type'] == 'D')
 	error("Zgłosiłeś swoją propozycję opisu lokacji. <a href=account.php>Wróć do opcji konta</a>");
       }
   }
+/**
+ * Add proposal about new item
+ */
+elseif ($_GET['type'] == 'I')
+{
+  $arrTypes = array('W' => 'Broń jednoręczna',
+		    'W2' => 'Broń dwuręczna',
+		    'B' => 'Łuk',
+		    'R' => 'Strzały',
+		    'H' => 'Hełm',
+		    'A' => 'Zbroja',
+		    'L' => 'Nagolenniki',
+		    'S' => 'Tarcza');
+  $smarty->assign(array("Tname" => "Nazwa przedmiotu:",
+			"Ninfo" => "Nazwa przedmiotu nie może być taka sama jak już istniejący przedmiot.",
+			"Ttype" => "Typ:",
+			"Tinfo" => "Broń dwuręczna zadaje nieco większe obrażenia niż broń jednoręczna.",
+			"Tlevel" => "Poziom:",
+			"Linfo" => "Od poziomu przedmiotu będzie zależała jego podstawowa premia.",
+			"Toptions" => $arrTypes,
+			"Asend" => "Wyślij"));
+  if (isset($_GET['send']))
+    {
+      if (empty($_POST['iname']) || empty($_POST['level']))
+	{
+	  error("Wypełnij wszystkie pola.");
+	}
+      if (!array_key_exists($_POST['itype'], $arrTypes))
+	{
+	  error("Zapomnij o tym.");
+	}
+      checkvalue($_POST['level']);
+      $_POST['iname'] = str_replace("'", "", strip_tags($_POST['iname']));
+      $objTest = $db->Execute("SELECT `id` FROM `equipment` WHERE `owner`=0 AND `name`='".$_POST['iname']."'");
+      if ($objTest->fields['id'])
+	{
+	  error("Już istnieje przedmiot o takiej nazwie.");
+	}
+      $objTest->Close();
+      $objTest = $db->Execute("SELECT `id` FROM `proposals` WHERE `name`='".$_POST['iname']."' AND `type`='I'");
+      if ($objTest->fields['id'])
+	{
+	  error("Ktoś już zgłosił przedmiot o takiej nazwie.");
+	}
+      $objTest->Close();
+      $db->Execute("INSERT INTO `proposals` (`pid`, `type`, `name`, `data`, `info`) VALUES (".$player->id.", 'I', '".$_POST['iname']."', '".$_POST['itype']."', '".$_POST['level']."')");
+	$objStaff = $db -> Execute("SELECT `id` FROM `players` WHERE `rank`='Admin'");
+	$strDate = $db -> DBDate($newdate);
+	while (!$objStaff->EOF) 
+	  {
+	    $db->Execute("INSERT INTO `log` (`owner`, `log`, `czas`, `type`) VALUES(".$objStaff->fields['id'].", 'Zgłoszono nowy przedmiot.', ".$strDate.", 'A')") or die($db->ErrorMsg());
+	    $objStaff->MoveNext();
+	  }
+	$objStaff->Close();
+	error("Zgłosiłeś swoją propozycję nowego przedmiotu. <a href=account.php>Wróć do opcji konta</a>");
+    }
+}
 
 $smarty->assign("Type", $_GET['type']);
 $smarty->display('proposals.tpl');

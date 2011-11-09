@@ -304,5 +304,6 @@
     {$Info}<br /><br />
     <ul>
 	<li><a href="proposals.php?type=D">{$Adescription}</a></li>
+	<li><a href="proposals.php?type=I">{$Aitems}</a></li>
     </ul>
 {/if}

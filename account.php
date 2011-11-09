@@ -1088,8 +1088,9 @@ if (isset($_GET['view']))
       }
     elseif ($_GET['view'] == 'proposals')
       {
-	$smarty->assign(array("Info" => "Tutaj możesz zgłaszać propozycje (obecnie tylko) dotyczące opisów lokacji. Więcej informacji co i jak znajdziesz po wybraniu odpowiedniej opcji. Zanim dana propozycja pojawi się w grze, musi zostać zaakceptowana przez władzę.",
-			      "Adescription" => "Propozycja opisu lokacji"));
+	$smarty->assign(array("Info" => "Tutaj możesz zgłaszać propozycje dotyczące opisów lokacji oraz nowych przedmiotów. Więcej informacji co i jak znajdziesz po wybraniu odpowiedniej opcji. Zanim dana propozycja pojawi się w grze, musi zostać zaakceptowana przez władzę.",
+			      "Adescription" => "Propozycja opisu lokacji",
+			      "Aitems" => "Propozycja nowego przedmiotu"));
       }
   }
 else

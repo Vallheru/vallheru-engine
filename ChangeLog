@@ -1,5 +1,8 @@
 2011-11-09  Bartek thindil Jasicki  <thindil@tuxfamily.org>
 
+	* FEATURE,templates/layout1/account.tpl, templates/account.tpl, account.php, templates/layout1/admin.tpl, templates/admin.tpl, admin.php,
+	templates/layout1/proposals.tpl, templates/proposals.tpl, proposals.php: 
+	added option to send new items proposals
 	* UPDATE,view.php:
 	droped amount of gained skill for spying other players
 

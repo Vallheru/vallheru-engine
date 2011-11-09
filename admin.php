@@ -8,7 +8,7 @@
  *   @author               : thindil <thindil@tuxfamily.org>
  *   @author               : eyescream <tduda@users.sourceforge.net>
  *   @version              : 1.4
- *   @since                : 08.11.2011
+ *   @since                : 09.11.2011
  *
  */
  
@@ -1418,17 +1418,149 @@ if (isset($_GET['view']))
 		$strDate = $db -> DBDate($newdate);
 		if ($_POST['response'] == 'A')
 		  {
-		    $strMessage .= 'zaakceptowany. Dostałeś za to 1 Vallara.';
+		    $strMessage .= 'zaakceptowany. Dostałeś za to 2 Vallary.';
 		    $strAuthor = '<b><a href="view.php?view='.$player -> id.'">'.$player -> user."</a></b>, ID <b>".$player -> id.'</b>';
 		    $db -> Execute("INSERT INTO `changelog` (`author`, `location`, `text`, `date`, `lang`) VALUES('".$strAuthor."', '".$objProposal->fields['name']."', 'Nowy opis lokacji autorstwa ID: ".$objProposal->fields['pid']."', ".$strDate.", 'pl')");
-		    $db->Execute("UPDATE `players` SET `vallars`=`vallars`+1 WHERE `id`=".$objProposal->fields['pid']);
-		    $db->Execute("INSERT INTO `vallars` (`owner`, `amount`, `reason`) VALUES(".$objProposal->fields['pid'].", 1, 'Opis lokacji.')");
+		    $db->Execute("UPDATE `players` SET `vallars`=`vallars`+2 WHERE `id`=".$objProposal->fields['pid']);
+		    $db->Execute("INSERT INTO `vallars` (`owner`, `amount`, `reason`) VALUES(".$objProposal->fields['pid'].", 2, 'Opis lokacji.')");
 		    $strResult = "Zaakceptowałeś opis";
 		  }
 		else
 		  {
 		    $strMessage .= 'odrzucony. Przyczyna: '.$_POST['reason'];
 		    $strResult = "Odrzuciłeś opis.";
+		  }
+		$db->Execute("DELETE FROM `proposals` WHERE `id`=".$_GET['step']);
+		$db->Execute("INSERT INTO `log` (`owner`, `log`, `czas`, `type`) VALUES(".$objProposal->fields['pid'].", '".$strMessage."', ".$strDate.", 'A')") or die($db->ErrorMsg());
+		$smarty->assign("Message", $strResult);
+	      }
+	    $objProposal->Close();
+	  }
+      }
+    elseif ($_GET['view'] == 'pitems')
+      {
+	//Show list
+	$arrProposals = $db->GetAll("SELECT `id`, `pid`, `name` FROM `proposals` WHERE `type`='I'");
+	$smarty->assign(array("Tid" => "ID",
+			      "Treporter" => "Zgłaszający",
+			      "Tlocation" => "Nazwa",
+			      "Proposals" => $arrProposals));
+	if (isset($_GET['step']))
+	  {
+	    checkvalue($_GET['step']);
+	    $objProposal = $db->Execute("SELECT `pid`, `name`, `data`, `info` FROM `proposals` WHERE `id`=".$_GET['step']);
+	    $smarty->assign(array("Tdesc" => "Typ:",
+				  "Tinfo" => "Poziom:",
+				  "Desc" => $objProposal->fields['data'],
+				  "Info" => $objProposal->fields['info'],
+				  "Tloc" => "Nazwa:",
+				  "Location" => $objProposal->fields['name'],
+				  "Asend" => "Wyślij",
+				  "Accepted" => "Zaakceptowany",
+				  "Rejected" => "Odrzucony",
+				  "Treason" => "Przyczyna"));
+	    if (isset($_GET['confirm']))
+	      {
+		$strMessage = 'Twój przedmiot '.$objProposal->fields['name'].' został ';
+		$strDate = $db -> DBDate($newdate);
+		if ($_POST['response'] == 'A')
+		  {
+		    $strMessage .= 'zaakceptowany. Dostałeś za to 1 Vallara.';
+		    $strAuthor = '<b><a href="view.php?view='.$player -> id.'">'.$player -> user."</a></b>, ID <b>".$player -> id.'</b>';
+		    $db -> Execute("INSERT INTO `changelog` (`author`, `location`, `text`, `date`, `lang`) VALUES('".$strAuthor."', '".$objProposal->fields['name']."', 'Nowy opis lokacji autorstwa ID: ".$objProposal->fields['pid']."', ".$strDate.", 'pl')");
+		    $db->Execute("UPDATE `players` SET `vallars`=`vallars`+1 WHERE `id`=".$objProposal->fields['pid']);
+		    $db->Execute("INSERT INTO `vallars` (`owner`, `amount`, `reason`) VALUES(".$objProposal->fields['pid'].", 1, 'Nowy przedmiot.')");
+		    $strResult = "Zaakceptowałeś przedmiot";
+		    //Item stats
+		    $arrItem = array('name' => $objProposal->fields['name'],
+				     'minlev' => $objProposal->fields['info'],
+				     'twohand' => 'N',
+				     'type' => $objProposal->fields['data'],
+				     'power' => $objProposal->fields['info'],
+				     'speed' => 0,
+				     'zr' => 0,
+				     'wt' => 40,
+				     'cost' => 0,
+				     'repaircost' => $objProposal->fields['info'] * 2,
+				     'materials' => 0,
+				     'plancost' => 0);
+		    switch ($objProposal->fields['data'])
+		      {
+		      case 'W2':
+			$arrItem['type'] = 'W';
+			$arrItem['power'] = floor($objProposal->fields['info'] * 1.25);
+			$arrItem['twohand'] = 'Y';
+			break;
+		      case 'B':
+			$arrItem['twohand'] = 'Y';
+			$arrItem['power'] = 0;
+			$arrItem['speed'] = $objProposal->fields['info'];
+			break;
+		      case 'R':
+			$arrItem['wt'] = 20;
+			$arrItem['repaircost'] = 0;
+			break;
+		      case 'A':
+			$arrItem['zr'] = floor($objProposal->fields['info'] / 2);
+			$arrItem['power'] = $objProposal->fields['info'] * 3;
+			break;
+		      case 'L':
+			$arrItem['zr'] = floor($objProposal->fields['info'] / 3);
+			$arrItem['wt'] = 20;
+			break;
+		      case 'H':
+		      case 'S':
+			$arrItem['wt'] = 20;
+			break;
+		      default:
+			break;
+		      }
+		    //Count price and materials for plans
+		    if ($arrItem['type'] != 'B' && $arrItem['type'] != 'R')
+		      {
+			$objMinlev = $db->Execute("SELECT max(`minlev`) FROM `equipment` WHERE `owner`=0 AND `type`='".$arrItem['type']."' AND `minlev`<=".$arrItem['minlev']);
+			$objMaxlev = $db->Execute("SELECT min(`minlev`) FROM `equipment` WHERE `owner`=0 AND `type`='".$arrItem['type']."' AND `minlev`>=".$arrItem['minlev']);
+			$objCost = $db->Execute("SELECT `cost` FROM `equipment` WHERE `owner`=0 AND `type`='".$arrItem['type']."' AND `minlev`=".$objMaxlev->fields['min(`minlev`)']);
+			$objMats = $db->Execute("SELECT `amount`, `cost` FROM `smith` WHERE `owner`=0 AND `type`='".$arrItem['type']."' AND `level`=".$objMaxlev->fields['min(`minlev`)']);
+		      }
+		    else
+		      {
+			$objMinlev = $db->Execute("SELECT max(`minlev`) FROM `bows` WHERE `type`='".$arrItem['type']."' AND `minlev`<=".$arrItem['minlev']);
+			$objMaxlev = $db->Execute("SELECT min(`minlev`) FROM `bows` WHERE `type`='".$arrItem['type']."' AND `minlev`>=".$arrItem['minlev']);
+			$objCost = $db->Execute("SELECT `cost` FROM `bows` WHERE `type`='".$arrItem['type']."' AND `minlev`=".$objMaxlev->fields['min(`minlev`)']);
+			$objMats = $db->Execute("SELECT `amount`, `cost` FROM `mill` WHERE `owner`=0 AND `type`='".$arrItem['type']."' AND `level`=".$objMaxlev->fields['min(`minlev`)']);
+		      }
+		    $arrItem['cost'] = ceil(($objMinlev->fields['max(`minlev`)'] / $objMaxlev->fields['min(`minlev`)']) * $objCost->fields['cost']);
+		    $arrItem['materials'] = ceil(($objMinlev->fields['max(`minlev`)'] / $objMaxlev->fields['min(`minlev`)']) * $objMats->fields['amount']);
+		    $arrItem['plancost'] = ceil(($objMinlev->fields['max(`minlev`)'] / $objMaxlev->fields['min(`minlev`)']) * $objMats->fields['cost']);
+		    $objMinlev->Close();
+		    $objMaxlev->Close();
+		    $objCost->Close();
+		    $objMats->Close();
+		    //Add items and plans
+		    if ($arrItem['type'] != 'B' && $arrItem['type'] != 'R')
+		      {
+			$db->Execute("INSERT INTO `equipment` (`owner`, `name`, `power`, `status`, `type`, `cost`, `minlev`, `zr`, `wt`, `szyb`, `maxwt`, `twohand`, `repair`) VALUES(0, '".$arrItem['name']." z miedzi', ".$arrItem['power'].", 'S', '".$arrItem['type']."', ".$arrItem['cost'].", ".$arrItem['minlev'].", ".$arrItem['zr'].", ".$arrItem['wt'].", ".$arrItem['speed'].", ".$arrItem['wt'].", '".$arrItem['twohand']."', ".$arrItem['repaircost'].")") or die($db->ErrorMsg());
+			$db->Execute("INSERT INTO `smith` (`owner`, `name`, `type`, `cost`, `amount`, `level`, `twohand`) VALUES(0, '".$arrItem['name']."', '".$arrItem['type']."', ".$arrItem['plancost'].", ".$arrItem['materials'].", ".$arrItem['minlev'].", '".$arrItem['twohand']."')") or die($db->ErrorMsg());
+		      }
+		    else
+		      {
+			if ($arrItem['type'] == 'B')
+			  {
+			    $strName = $arrItem['name']." z leszczyny";
+			  }
+			else
+			  {
+			    $strName = $arrItem['name'];
+			  }
+			$db->Execute("INSERT INTO `bows` (`name`, `power`, `type`, `cost, `minlev`, `zr`, `szyb`, `maxwt`, `reapair`) VALUES(0, '".$strName."', ".$arrItem['power'].", '".$arrItem['type']."', ".$arrItem['cost'].", ".$arrItem['minlev'].", ".$arrItem['zr'].", ".$arrItem['speed'].", ".$arrItem['wt'].", ".$arrItem['repaircost'].")") or die("error3");
+			$db->Execute("INSERT INTO `mill` (`owner`, `name`, `type`, `cost`, `amount`, `level`, `twohand`) VALUES(0, '".$arrItem['name']."', '".$arrItem['type']."', ".$arrItem['plancost'].", ".$arrItem['materials'].", ".$arrItem['minlev'].", '".$arrItem['twohand']."')") or die("error4");
+		      }
+		  }
+		else
+		  {
+		    $strMessage .= 'odrzucony. Przyczyna: '.$_POST['reason'];
+		    $strResult = "Odrzuciłeś przedmiot.";
 		  }
 		$db->Execute("DELETE FROM `proposals` WHERE `id`=".$_GET['step']);
 		$db->Execute("INSERT INTO `log` (`owner`, `log`, `czas`, `type`) VALUES(".$objProposal->fields['pid'].", '".$strMessage."', ".$strDate.", 'A')") or die($db->ErrorMsg());
@@ -1444,8 +1576,8 @@ if (isset($_GET['view']))
 else 
   {
     $_GET['view'] = '';
-    $arrView1 = array('bridge', 'poll', 'addtext', 'pdescriptions');
-    $arrLinks1 = array(A_BRIDGE, A_POLL, A_ADD_NEWS, 'Propozycje opisów');
+    $arrView1 = array('bridge', 'poll', 'addtext', 'pdescriptions', 'pitems');
+    $arrLinks1 = array(A_BRIDGE, A_POLL, A_ADD_NEWS, 'Propozycje opisów', 'Propozycje przedmiotów');
     $arrView2 = array('del', 'donate', 'takeaway', 'add', 'tags', 'czat', 'jail', 'jailbreak', 'delplayers', 'ban', 'donator', 'logs', 'playerquest', 'banmail', 'vallars', 'srank');
     $arrLinks2 = array(A_DELETE, A_DONATION, A_TAKE, A_RANK, A_IMMU, A_CHAT_BAN, A_JAIL, A_JAILBREAK, A_DEL_PLAYERS, A_BAN, A_DONATOR, A_LOGS, A_PLAYERQUEST, A_BAN_MAIL, 'Daj/Zabierz Vallary graczowi', 'Nadaj unikalną rangę graczowi');
     $arrView3 = array('clearf', 'clearc', 'forums', 'innarchive');

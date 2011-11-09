@@ -599,7 +599,7 @@
     </form>
 {/if}
 
-{if $View == "pdescriptions"}
+{if $View == "pdescriptions" || $View == "pitems"}
     <table align="center">
         <tr>
 	    <th>{$Tid}</th>
@@ -608,7 +608,7 @@
 	</tr>
 	{section name=desc loop=$Proposals}
 	    <tr>
-	        <td><a href="admin.php?view=pdescriptions&amp;step={$Proposals[desc].id}">{$Proposals[desc].id}</a></td>
+	        <td><a href="admin.php?view={$View}&amp;step={$Proposals[desc].id}">{$Proposals[desc].id}</a></td>
 		<td>{$Proposals[desc].pid}</td>
 		<td>{$Proposals[desc].name}</td>
 	    </tr>
@@ -618,7 +618,7 @@
     	<b>{$Tloc}</b> {$Location}<br /><br />
         <b>{$Tdesc}</b><br />{$Desc}<br /><br />
 	<b>{$Tinfo}</b><br />{$Info}<br /><br />
-	<form method="post" action="admin.php?view=pdescriptions&amp;step={$Step}&amp;confirm">
+	<form method="post" action="admin.php?view={$View}&amp;step={$Step}&amp;confirm">
 	    <select name="response"><option value="A">{$Accepted}</option>
 	        <option value="R">{$Rejected}</option>
 	    </select><br />

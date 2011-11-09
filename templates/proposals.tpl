@@ -8,3 +8,15 @@
 	<input type="submit" value="{$Asend}" />
     </form>
 {/if}
+
+{if $Type == "I"}
+    <form method="post" action="proposals.php?type=I&amp;send">
+        {$Tname} <input type="text" name="iname" size="20" /><br />
+	{$Ninfo}<br /><br />
+	{$Ttype} {html_options name=itype options=$Toptions}<br />
+	{$Tinfo}<br /><br />
+	{$Tlevel} <input type="text" name="level" size="5" /><br />
+	{$Linfo}<br /><br />
+	<input type="submit" value="{$Asend}" />
+    </form>
+{/if}
