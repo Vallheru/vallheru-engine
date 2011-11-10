@@ -1,3 +1,8 @@
+2011-11-10  Bartek thindil Jasicki  <thindil@tuxfamily.org>
+
+	* FEATURE,templates/layout1/proposals.tpl, templates/proposals.tpl, proposals.php:
+	added preview to description proposals
+
 2011-11-09  Bartek thindil Jasicki  <thindil@tuxfamily.org>
 
 	* BUG,bank.php: 

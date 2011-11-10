@@ -7,7 +7,7 @@
  *   @copyright            : (C) 2011 Vallheru Team based on Gamers-Fusion ver 2.5
  *   @author               : thindil <thindil@tuxfamily.org>
  *   @version              : 1.4
- *   @since                : 09.11.2011
+ *   @since                : 10.11.2011
  *
  */
 
@@ -61,7 +61,11 @@ if ($_GET['type'] == 'D')
 			  "Hdesc" => "Linki automatycznie zamieniane są na klikalne. Możesz używać następujących znaczników BBCode:<br /><ul><li>[b]<b>Pogrubienie</b>[/b]</li><li>[i]<i>Kursywa</i><[/i]</li><li>[u]<u>Podkreślenie</u>[/u]</li><li>[color (angielska nazwa koloru (red, yellow, itp) lub kod HTML (#FFFF00, itp)]pokolorowanie tekstu[/color]</li><li>[center]wycentrowanie tekstu[/center]</li><li>[quote]cytat[/quote]</ul> Jeżeli chcesz użyć jakiś własnych znaczników np [imię gracza], [opis dla mężczyzn] itd, wyjaśnij dokładnie co masz na myśli w dodatkowych informacjach.",
 			  "Tinfo" => "Dodatkowe informacje:",
 			  "Hinfo" => "Tutaj możesz dołączyć wszelkie dodatkowe informacje na temat opisu. Np kiedy opis ma się pojawić (wieczorem, co drugie logowanie, tylko dla kobiet, itd), czy ma to być dodatkowy opis czy też zastępujący istniejący. Jeżeli użyłeś jakiś własnych znaczników w opisie, koniecznie dodaj ich wytłumaczenie tutaj. Im więcej dodatkowych informacji na temat opisu zamieścisz tutaj, tym większa szansa, że zostanie on dodany. Nie używaj tutaj jakichkolwiek znaczników, ponieważ zostaną one wykasowane.",
-			  "Asend" => "Wyślij"));
+			  "Asend" => "Wyślij",
+			  "Pdesc" => '',
+			  "Desc" => '',
+			  "Info" => '',
+			  "Apreview" => "Podgląd"));
     if (isset($_GET['send']))
       {
 	if (empty($_POST['desc']) || empty($_POST['info']))
@@ -74,18 +78,28 @@ if ($_GET['type'] == 'D')
 	    error("Zapomnij o tym.");
 	  }
 	require_once('includes/bbcode.php');
+	$strDesc = $_POST['desc'];
 	$_POST['desc'] = bbcodetohtml($_POST['desc']);
 	$_POST['info'] = str_replace("'", "", strip_tags($_POST['info']));
-	$db->Execute("INSERT INTO `proposals` (`pid`, `type`, `name`, `data`, `info`) VALUES (".$player->id.", 'D', '".$arrLocations[$intLoc]."', '".$_POST['desc']."', '".$_POST['info']."')");
-	$objStaff = $db -> Execute("SELECT `id` FROM `players` WHERE `rank`='Admin'");
-	$strDate = $db -> DBDate($newdate);
-	while (!$objStaff->EOF) 
+	if ($_POST['sdesc'] == 'Wyślij')
 	  {
-	    $db->Execute("INSERT INTO `log` (`owner`, `log`, `czas`, `type`) VALUES(".$objStaff->fields['id'].", 'Zgłoszono opis lokacji.', ".$strDate.", 'A')") or die($db->ErrorMsg());
-	    $objStaff->MoveNext();
+	    $db->Execute("INSERT INTO `proposals` (`pid`, `type`, `name`, `data`, `info`) VALUES (".$player->id.", 'D', '".$arrLocations[$intLoc]."', '".$_POST['desc']."', '".$_POST['info']."')");
+	    $objStaff = $db -> Execute("SELECT `id` FROM `players` WHERE `rank`='Admin'");
+	    $strDate = $db -> DBDate($newdate);
+	    while (!$objStaff->EOF) 
+	      {
+		$db->Execute("INSERT INTO `log` (`owner`, `log`, `czas`, `type`) VALUES(".$objStaff->fields['id'].", 'Zgłoszono opis lokacji.', ".$strDate.", 'A')") or die($db->ErrorMsg());
+		$objStaff->MoveNext();
+	      }
+	    $objStaff->Close();
+	    error("Zgłosiłeś swoją propozycję opisu lokacji. <a href=account.php>Wróć do opcji konta</a>");
 	  }
-	$objStaff->Close();
-	error("Zgłosiłeś swoją propozycję opisu lokacji. <a href=account.php>Wróć do opcji konta</a>");
+	else
+	  {
+	    $smarty->assign(array("Pdesc" => $_POST['desc'].'<br /><br />',
+				  "Desc" => $strDesc,
+				  "Info" => $_POST['info']));
+	  }
       }
   }
 /**
