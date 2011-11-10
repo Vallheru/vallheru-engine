@@ -8,7 +8,7 @@
  *   @author               : thindil <thindil@tuxfamily.org>
  *   @author               : eyescream <tduda@users.sourceforge.net>
  *   @version              : 1.4
- *   @since                : 09.11.2011
+ *   @since                : 10.11.2011
  *
  */
  
@@ -1437,6 +1437,9 @@ if (isset($_GET['view']))
 	    $objProposal->Close();
 	  }
       }
+    /**
+     * Items proposals
+     */
     elseif ($_GET['view'] == 'pitems')
       {
 	//Show list
@@ -1467,7 +1470,7 @@ if (isset($_GET['view']))
 		  {
 		    $strMessage .= 'zaakceptowany. Dostałeś za to 1 Vallara.';
 		    $strAuthor = '<b><a href="view.php?view='.$player -> id.'">'.$player -> user."</a></b>, ID <b>".$player -> id.'</b>';
-		    $db -> Execute("INSERT INTO `changelog` (`author`, `location`, `text`, `date`, `lang`) VALUES('".$strAuthor."', '".$objProposal->fields['name']."', 'Nowy opis lokacji autorstwa ID: ".$objProposal->fields['pid']."', ".$strDate.", 'pl')");
+		    $db -> Execute("INSERT INTO `changelog` (`author`, `location`, `text`, `date`, `lang`) VALUES('".$strAuthor."', 'Ogólnie', 'Nowy przedmiot autorstwa ID: ".$objProposal->fields['pid']."', ".$strDate.", 'pl')");
 		    $db->Execute("UPDATE `players` SET `vallars`=`vallars`+1 WHERE `id`=".$objProposal->fields['pid']);
 		    $db->Execute("INSERT INTO `vallars` (`owner`, `amount`, `reason`) VALUES(".$objProposal->fields['pid'].", 1, 'Nowy przedmiot.')");
 		    $strResult = "Zaakceptowałeś przedmiot";
@@ -1569,6 +1572,155 @@ if (isset($_GET['view']))
 	    $objProposal->Close();
 	  }
       }
+    /**
+     * Monsters proposals
+     */
+    elseif ($_GET['view'] == 'pmonsters')
+      {
+	//Show list
+	$arrProposals = $db->GetAll("SELECT `id`, `pid`, `name` FROM `proposals` WHERE `type`='M'");
+	$smarty->assign(array("Tid" => "ID",
+			      "Treporter" => "Zgłaszający",
+			      "Tlocation" => "Nazwa",
+			      "Proposals" => $arrProposals));
+	if (isset($_GET['step']))
+	  {
+	    checkvalue($_GET['step']);
+	    $objProposal = $db->Execute("SELECT `pid`, `name`, `data`, `info` FROM `proposals` WHERE `id`=".$_GET['step']);
+	    $arrLocations = array($city1, $city2);
+	    $arrStats = array("Wysoka", "Normalna", "Niska");
+	    $arrLoots = array("Dużo", "Normalnie", "Mało");
+	    $arrData = explode(';', $objProposal->fields['data']);
+	    $smarty->assign(array("Tname" => "Nazwa:",
+				  "Name" => $objProposal->fields['name'],
+				  "Tloc" => "Lokacja:",
+				  "Loc" => $arrLocations[$objProposal->fields['info']],
+				  "Tstr" => "Siła:",
+				  "Str" => $arrStats[$arrData[0]],
+				  "Tagi" => "Zręczność:",
+				  "Agi" => $arrStats[$arrData[1]],
+				  "Tspeed" => "Szybkość:",
+				  "Speed" => $arrStats[$arrData[2]],
+				  "Tcon" => "Wytrzymałość:",
+				  "Con" => $arrStats[$arrData[3]],
+				  "Tgold" => "Złota:",
+				  "Mgold" => $arrLoots[$arrData[4]],
+				  "Texp" => "Doświadczenie:",
+				  "Mexp" => $arrLoots[$arrData[5]],
+				  "Tlevel" => "Poziom:",
+				  "Mlevel" => $arrData[6],
+				  "Tloot1" => "Łup 1:",
+				  "Loot1" => $arrData[7],
+				  "Tloot2" => "Łup 2:",
+				  "Loot2" => $arrData[8],
+				  "Tloot3" => "Łup 3:",
+				  "Loot3" => $arrData[9],
+				  "Tloot4" => "Łup 4:",
+				  "Loot4" => $arrData[10],
+				  "Asend" => "Wyślij",
+				  "Accepted" => "Zaakceptowany",
+				  "Rejected" => "Odrzucony",
+				  "Treason" => "Przyczyna"));
+	    if (isset($_GET['confirm']))
+	      {
+		$strMessage = 'Twój potwór '.$objProposal->fields['name'].' został ';
+		$strDate = $db -> DBDate($newdate);
+		if ($_POST['response'] == 'A')
+		  {
+		    $strMessage .= 'zaakceptowany. Dostałeś za to 1 Vallara.';
+		    $strAuthor = '<b><a href="view.php?view='.$player -> id.'">'.$player -> user."</a></b>, ID <b>".$player -> id.'</b>';
+		    $db -> Execute("INSERT INTO `changelog` (`author`, `location`, `text`, `date`, `lang`) VALUES('".$strAuthor."', 'Ogólnie', 'Nowy potwór autorstwa ID: ".$objProposal->fields['pid']."', ".$strDate.", 'pl')");
+		    $db->Execute("UPDATE `players` SET `vallars`=`vallars`+1 WHERE `id`=".$objProposal->fields['pid']);
+		    $db->Execute("INSERT INTO `vallars` (`owner`, `amount`, `reason`) VALUES(".$objProposal->fields['pid'].", 1, 'Nowy potwór na arenie.')");
+		    $strResult = "Zaakceptowałeś potwora";
+		    //Monster stats
+		    $objMinlev = $db->Execute("SELECT max(`level`) FROM `monsters` WHERE `level`<=".$arrData[6]." AND `location`='".$arrLocations[$objProposal->fields['info']]."'");
+		    $objMaxlev = $db->Execute("SELECT min(`level`) FROM `monsters` WHERE `level`>=".$arrData[6]." AND `location`='".$arrLocations[$objProposal->fields['info']]."'");
+		    $objStats = $db->Execute("SELECT * FROM `monsters` WHERE `level`=".$objMaxlev->fields['min(`level`)']);
+		    $arrMob = array("str" => 0,
+				    "agi" => 0,
+				    "speed" => 0,
+				    "con" => 0,
+				    "hp" => 0,
+				    "gold1" => 0,
+				    "gold2" => 0,
+				    "exp1" => 0,
+				    "exp2" => 0);
+		    $arrMob['str'] = ceil(($objMinlev->fields['max(`level`)'] / $objMaxlev->fields['min(`level`)']) * $objStats->fields['strength']);
+		    if ($arrData[0] == 0)
+		      {
+			$arrMob['str'] += ceil($arrMob['str'] / 10);
+		      }
+		    elseif ($arrData[0] == 2)
+		      {
+			$arrMob['str'] -= ceil($arrMob['str'] / 10);
+		      }
+		    $arrMob['agi'] = ceil(($objMinlev->fields['max(`level`)'] / $objMaxlev->fields['min(`level`)']) * $objStats->fields['agility']);
+		    if ($arrData[1] == 0)
+		      {
+			$arrMob['agi'] += ceil($arrMob['agi'] / 10);
+		      }
+		    elseif ($arrData[1] == 2)
+		      {
+			$arrMob['agi'] -= ceil($arrMob['agi'] / 10);
+		      }
+		    $arrMob['speed'] = ceil(($objMinlev->fields['max(`level`)'] / $objMaxlev->fields['min(`level`)']) * $objStats->fields['speed']);
+		    if ($arrData[2] == 0)
+		      {
+			$arrMob['speed'] += ceil($arrMob['speed'] / 10);
+		      }
+		    elseif ($arrData[2] == 2)
+		      {
+			$arrMob['speed'] -= ceil($arrMob['speed'] / 10);
+		      }
+		    $arrMob['con'] = ceil(($objMinlev->fields['max(`level`)'] / $objMaxlev->fields['min(`level`)']) * $objStats->fields['endurance']);
+		    if ($arrData[3] == 0)
+		      {
+			$arrMob['con'] += ceil($arrMob['con'] / 10);
+		      }
+		    elseif ($arrData[3] == 2)
+		      {
+			$arrMob['con'] -= ceil($arrMob['con'] / 10);
+		      }
+		    $arrMob['hp'] = ceil(($objMinlev->fields['max(`level`)'] / $objMaxlev->fields['min(`level`)']) * $objStats->fields['hp']);
+		    $arrMob['gold1'] = ceil(($objMinlev->fields['max(`level`)'] / $objMaxlev->fields['min(`level`)']) * $objStats->fields['credits1']);
+		    $arrMob['gold2'] = ceil(($objMinlev->fields['max(`level`)'] / $objMaxlev->fields['min(`level`)']) * $objStats->fields['credits2']);
+		    if ($arrData[1] == 0)
+		      {
+			$arrMob['gold1'] += ceil($arrMob['gold1'] / 10);
+			$arrMob['gold1'] += ceil($arrMob['gold1'] / 10);
+		      }
+		    elseif ($arrData[1] == 2)
+		      {
+			$arrMob['gold1'] -= ceil($arrMob['gold1'] / 10);
+			$arrMob['gold2'] -= ceil($arrMob['gold2'] / 10);
+		      }
+		    $arrMob['exp1'] = ceil(($objMinlev->fields['max(`level`)'] / $objMaxlev->fields['min(`level`)']) * $objStats->fields['exp1']);
+		    $arrMob['exp2'] = ceil(($objMinlev->fields['max(`level`)'] / $objMaxlev->fields['min(`level`)']) * $objStats->fields['exp2']);
+		    if ($arrData[1] == 0)
+		      {
+			$arrMob['exp1'] += ceil($arrMob['exp1'] / 10);
+			$arrMob['exp2'] += ceil($arrMob['exp2'] / 10);
+		      }
+		    elseif ($arrData[1] == 2)
+		      {
+			$arrMob['exp1'] -= ceil($arrMob['exp1'] / 10);
+			$arrMob['exp2'] += ceil($arrMob['exp2'] / 10);
+		      }
+		    $db->Execute("INSERT INTO `monsters` (`name`, `level`, `hp`, `agility`, `strength`, `speed`, `endurance`, `credits1`, `credits2`, `exp1`, `exp2`, `location`, `lootnames`, `lootchances`) VALUES('".$objProposal->fields['name']."', ".$arrData[6].", ".$arrMob['hp'].", ".$arrMob['agi'].", ".$arrMob['str'].", ".$arrMob['speed'].", ".$arrMob['con'].", ".$arrMob['gold1'].", ".$arrMob['gold2'].", ".$arrMob['exp1'].", ".$arrMob['exp2'].", '".$arrLocations[$objProposal->fields['info']]."', '".$arrData[7].";".$arrData[8].";".$arrData[9].";".$arrData[10]."', '55;77;95;100')") or die($db->ErrorMsg());
+		  }
+		else
+		  {
+		    $strMessage .= 'odrzucony. Przyczyna: '.$_POST['reason'];
+		    $strResult = "Odrzuciłeś potwora.";
+		  }
+		$db->Execute("DELETE FROM `proposals` WHERE `id`=".$_GET['step']);
+		$db->Execute("INSERT INTO `log` (`owner`, `log`, `czas`, `type`) VALUES(".$objProposal->fields['pid'].", '".$strMessage."', ".$strDate.", 'A')") or die($db->ErrorMsg());
+		$smarty->assign("Message", $strResult);
+	      }
+	    $objProposal->Close();
+	  }
+      }
   }
 /**
 * Initialization of variables
@@ -1576,8 +1728,8 @@ if (isset($_GET['view']))
 else 
   {
     $_GET['view'] = '';
-    $arrView1 = array('bridge', 'poll', 'addtext', 'pdescriptions', 'pitems');
-    $arrLinks1 = array(A_BRIDGE, A_POLL, A_ADD_NEWS, 'Propozycje opisów', 'Propozycje przedmiotów');
+    $arrView1 = array('bridge', 'poll', 'addtext', 'pdescriptions', 'pitems', 'pmonsters');
+    $arrLinks1 = array(A_BRIDGE, A_POLL, A_ADD_NEWS, 'Propozycje opisów', 'Propozycje przedmiotów', 'Propozycje potworów');
     $arrView2 = array('del', 'donate', 'takeaway', 'add', 'tags', 'czat', 'jail', 'jailbreak', 'delplayers', 'ban', 'donator', 'logs', 'playerquest', 'banmail', 'vallars', 'srank');
     $arrLinks2 = array(A_DELETE, A_DONATION, A_TAKE, A_RANK, A_IMMU, A_CHAT_BAN, A_JAIL, A_JAILBREAK, A_DEL_PLAYERS, A_BAN, A_DONATOR, A_LOGS, A_PLAYERQUEST, A_BAN_MAIL, 'Daj/Zabierz Vallary graczowi', 'Nadaj unikalną rangę graczowi');
     $arrView3 = array('clearf', 'clearc', 'forums', 'innarchive');

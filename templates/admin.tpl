@@ -630,6 +630,45 @@
     {/if}
 {/if}
 
+{if $View == "pmonsters"}
+    <table align="center">
+        <tr>
+	    <th>{$Tid}</th>
+	    <th>{$Treporter}</th>
+	    <th>{$Tlocation}</th>
+	</tr>
+	{section name=desc loop=$Proposals}
+	    <tr>
+	        <td><a href="admin.php?view={$View}&amp;step={$Proposals[desc].id}">{$Proposals[desc].id}</a></td>
+		<td>{$Proposals[desc].pid}</td>
+		<td>{$Proposals[desc].name}</td>
+	    </tr>
+	{/section}
+    </table>
+    {if $Step != ""}
+        {$Tname} {$Name}<br />
+	{$Tlevel} {$Mlevel}<br />
+	{$Tloc} {$Loc}<br />
+	{$Tstr} {$Str}<br />
+	{$Tagi} {$Agi}<br />
+	{$Tspeed} {$Speed}<br />
+	{$Tcon} {$Con}<br />
+	{$Tgold} {$Mgold}<br />
+	{$Texp} {$Mexp}<br />
+	{$Tloot1} {$Loot1}<br />
+	{$Tloot2} {$Loot2}<br />
+	{$Tloot3} {$Loot3}<br />
+	{$Tloot4} {$Loot4}<br /><br />
+	<form method="post" action="admin.php?view={$View}&amp;step={$Step}&amp;confirm">
+	    <select name="response"><option value="A">{$Accepted}</option>
+	        <option value="R">{$Rejected}</option>
+	    </select><br />
+	    {$Treason} <textarea name="reason"></textarea><br />
+	    <input type="submit" value="{$Asend}" />
+	</form>
+    {/if}
+{/if}
+
 {$Message}
 
 {if $View != ""}

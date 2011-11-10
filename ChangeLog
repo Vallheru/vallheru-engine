@@ -1,5 +1,8 @@
 2011-11-10  Bartek thindil Jasicki  <thindil@tuxfamily.org>
 
+	* FEATURE,templates/layout1/account.tpl, templates/account.tpl, account.php, templates/layout1/admin.tpl, templates/admin.tpl, admin.php,
+	templates/layout1/proposals.tpl, templates/proposals.tpl, proposals.php: 
+	added option to send new monsters proposals
 	* FEATURE,templates/layout1/proposals.tpl, templates/proposals.tpl, proposals.php:
 	added preview to description proposals
 

@@ -159,6 +159,152 @@ elseif ($_GET['type'] == 'I')
 	error("Zgłosiłeś swoją propozycję nowego przedmiotu. <a href=account.php>Wróć do opcji konta</a>");
     }
 }
+/**
+ * Add proposal about new item
+ */
+elseif ($_GET['type'] == 'M')
+{
+  $arrValues = array('', '', '', '', '', '', 1, 1, 1, 1, 1, 1);
+  echo $arrValues[0];
+  $smarty->assign(array("Pinfo" => "Punkty służą do zmiany statystyk oraz wysokości zdobyczy (złota i doświadczenia) danego potwora. Osłabienie statystyk czy zwiększenie zdobyczy z niego wymaga posiadania punktów. Podniesienie statystyki czy zmniejszenie zdobyczy dodaje punkty. Aby móc zgłosić propozycję, liczba punktów musi być większa lub równa zero.",
+			"Tpoints" => "Punkty:",
+			"Points" => 0,
+			"Tname" => "Nazwa:",
+			"Tlevel" => "Poziom:",
+			"Tstr" => "Siła:",
+			"Tagi" => "Zręczność:",
+			"Tcon" => "Wytrzymałość:",
+			"Tspeed" => "Szybkość:",
+			"Tgold" => "Złoto:",
+			"Texp" => "Doświadczenie:",
+			"Soptions" => array("Wysoka (+1 punkt)", "Normalna (0 punktów)", "Niska (-1 punkt)"),
+			"Loptions" => array("Dużo (-2 punkty)", "Normalnie (0 punktów)", "Mało (+2 punkty)"),
+			"Asend" => "Wyślij",
+			"Acheck" => "Sprawdź",
+			"Tloot1" => "Nazwa 1 łupu:",
+			"Tloot2" => "Nazwa 2 łupu:",
+			"Tloot3" => "Nazwa 3 łupu:",
+			"Tloot4" => "Nazwa 4 łupu:",
+			"Linfo" => "Łupy z potworów wykorzystywane są do produkcji elitarnego ekwipunku. Nazwa łupu powinna składać się z dwóch części: część ciała potwora oraz nazwa potwora. Na przykład: Palec Goblina, Kość Lisza, Odnóże Gigantycznego Pająka.",
+			"Values" => $arrValues,
+			"Tloc" => "Lokacja:",
+			"Coptions" => array($city1, $city2)));
+  if (isset($_GET['send']))
+    {
+      $_POST['loc'] = intval($_POST['loc']);
+      if ($_POST['loc'] != 0 && $_POST['loc'] != 1)
+	{
+	  error("Zapomnij o tym.");
+	}
+      $arrText = array('mname', 'level', 'loot1', 'loot2', 'loot3', 'loot4');
+      $arrStats = array('mstr', 'magi', 'mspeed', 'mcon');
+      $arrLoot = array('mgold', 'mexp');
+      $arrValues = array();
+      foreach ($arrText as $strText)
+	{
+	  $_POST[$strText] = str_replace("'", "", strip_tags($_POST[$strText]));
+	  if (empty($_POST[$strText]))
+	    {
+	      error("Wypełnij wszystkie pola.");
+	    }
+	  $arrValues[] = $_POST[$strText];
+	}
+      checkvalue($_POST['level']);
+      $blnExists = FALSE;
+      $objTest = $db->Execute("SELECT `id` FROM `monsters` WHERE `name`='".$_POST['mname']."'");
+      if ($objTest->fields['id'])
+	{
+	  $blnExists = TRUE;
+	}
+      $objTest->Close();
+      $objTest = $db->Execute("SELECT `id` FROM `proposals` WHERE `name`='".$_POST['mname']."' AND `type`='M'");
+      if ($objTest->fields['id'])
+	{
+	  $blnExists = TRUE;
+	}
+      $objTest->Close();
+      $intPoints = 0;
+      foreach ($arrStats as $strOption)
+	{
+	  $_POST[$strOption] = intval($_POST[$strOption]);
+	  switch ($_POST[$strOption])
+	    {
+	    case 0:
+	      $intPoints ++;
+	      break;
+	    case 1:
+	      break;
+	    case 2:
+	      $intPoints --;
+	      break;
+	    default:
+	      error("Zapomnij o tym.");
+	      break;
+	    }
+	  $arrValues[] = $_POST[$strOption];
+	}
+      foreach ($arrLoot as $strOption)
+	{
+	  $_POST[$strOption] = intval($_POST[$strOption]);
+	  switch ($_POST[$strOption])
+	    {
+	    case 0:
+	      $intPoints -= 2;
+	      break;
+	    case 1:
+	      break;
+	    case 2:
+	      $intPoints += 2;
+	      break;
+	    default:
+	      error("Zapomnij o tym.");
+	      break;
+	    }
+	  $arrValues[] = $_POST[$strOption];
+	}
+      if ($_POST['smon'] == 'Sprawdź')
+	{
+	  if ($blnExists)
+	    {
+	      $arrValues[0] = 'Potwór istnieje bądź został zgłoszony.';
+	    }
+	  $smarty->assign(array("Values" => $arrValues,
+				"Points" => $intPoints));
+	}
+      else
+	{
+	  if ($intPoints < 0)
+	    {
+	      error("Liczba punktów musi być większa lub równa zero.");
+	    }
+	  if ($blnExists)
+	    {
+	      error("Istnieje już potwór o tej nazwie bądź ktoś zgłosił potwora o tej samej nazwie.");
+	    }
+	  array_shift($arrText);
+	  $arrOptions = array_merge($arrStats, $arrLoot, $arrText);
+	  $strData = '';
+	  foreach ($arrOptions as $strOption)
+	    {
+	      $strData .= $_POST[$strOption].";";
+	    }
+	  $db->Execute("INSERT INTO `proposals` (`pid`, `type`, `name`, `data`, `info`) VALUES (".$player->id.", 'M', '".$_POST['mname']."', '".$strData."', '".$_POST['loc']."')");
+	  $objStaff = $db -> Execute("SELECT `id` FROM `players` WHERE `rank`='Admin'");
+	  $strDate = $db -> DBDate($newdate);
+	  while (!$objStaff->EOF) 
+	    {
+	      $db->Execute("INSERT INTO `log` (`owner`, `log`, `czas`, `type`) VALUES(".$objStaff->fields['id'].", 'Zgłoszono nowego potwora.', ".$strDate.", 'A')") or die($db->ErrorMsg());
+	      $objStaff->MoveNext();
+	    }
+	  $objStaff->Close();
+	  error("Zgłosiłeś swoją propozycję nowego potwora. <a href=account.php>Wróć do opcji konta</a>");
+	}
+    }
+}
+else
+  {
+    error("Zapomnij o tym.");
+  }
 
 $smarty->assign("Type", $_GET['type']);
 $smarty->display('proposals.tpl');

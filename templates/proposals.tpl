@@ -21,3 +21,25 @@
 	<input type="submit" value="{$Asend}" />
     </form>
 {/if}
+
+{if $Type == "M"}
+    <form method="post" action="proposals.php?type=M&amp;send">
+        {$Tpoints} {$Points}<br />
+	{$Pinfo}<br /><br />
+	{$Tname} <input type="text" name="mname" value="{$Values[0]}" /><br />
+	{$Tlevel} <input type="text" name="level" value="{$Values[1]}" size="5" /><br />
+	{$Tloc} {html_options name=loc options=$Coptions}<br />
+	{$Tstr} {html_options name=mstr options=$Soptions selected=$Values[6]}<br />
+	{$Tagi} {html_options name=magi options=$Soptions selected=$Values[7]}<br />
+	{$Tspeed} {html_options name=mspeed options=$Soptions selected=$Values[8]}<br />
+	{$Tcon} {html_options name=mcon options=$Soptions selected=$Values[9]}<br />
+	{$Tgold} {html_options name=mgold options=$Loptions selected=$Values[10]}<br />
+	{$Texp} {html_options name=mexp options=$Loptions selected=$Values[11]}<br />
+	{$Tloot1} <input type="text" name="loot1" value="{$Values[2]}" /><br />
+	{$Tloot2} <input type="text" name="loot2" value="{$Values[3]}" /><br />
+	{$Tloot3} <input type="text" name="loot3" value="{$Values[4]}" /><br />
+	{$Tloot4} <input type="text" name="loot4" value="{$Values[5]}" /><br />
+	{$Linfo}<br /><br />
+	<input type="submit" value="{$Acheck}" name="smon" /> <input type="submit" value="{$Asend}" name="smon" />
+    </form>
+{/if}
