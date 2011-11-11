@@ -1,3 +1,8 @@
+2011-11-11  Bartek thindil Jasicki  <thindil@tuxfamily.org>
+
+	* BUG,includes/head.php, travel.php:
+	fixed bug with block player in travel
+
 2011-11-10  Bartek thindil Jasicki  <thindil@tuxfamily.org>
 
 	* FEATURE,templates/layout1/account.tpl, templates/account.tpl, account.php, templates/layout1/admin.tpl, templates/admin.tpl, admin.php,

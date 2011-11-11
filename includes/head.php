@@ -7,7 +7,7 @@
  *   @copyright            : (C) 2004,2005,2006,2007,2011 Vallheru Team based on Gamers-Fusion ver 2.5
  *   @author               : thindil <thindil@tuxfamily.org>
  *   @version              : 1.4
- *   @since                : 08.11.2011
+ *   @since                : 11.11.2011
  *
  */
 
@@ -509,9 +509,28 @@ switch($player->location)
       {
         if (!isset($_GET['step']))
 	  {
-            $_GET['step'] = 'caravan';
+	    if (isset($_SESSION['travel2']))
+	      {
+		$_GET['step'] = $_SESSION['travel2'];
+	      }
 	  }
-        $smarty -> assign("Location", "<li><a href=\"travel.php?akcja=".$_GET['akcja']."&amp;step=".$_GET['step']."\">".RETURN_TO2."</a></li>");
+	if (!isset($_GET['akcja']))
+	  {
+	    if (isset($_SESSION['travel']))
+	      {
+		$_GET['akcja'] = $_SESSION['travel'];
+	      }
+	  }
+	if (isset($_GET['akcja']))
+	  {
+	    $smarty -> assign("Location", "<li><a href=\"travel.php?akcja=".$_GET['akcja']."&amp;step=".$_GET['step']."\">".RETURN_TO2."</a></li>");
+	  }
+	else
+	  {
+	    $db->Execute("UPDATE `players` SET `miejsce`='Altara' WHERE `id`=".$player->id);
+	    $player->location = 'Altara';
+	    $smarty -> assign("Location", "<li><a href=\"city.php\">".$city1."</a></li>");
+	  }
       }
     $test -> Close();
     break;
