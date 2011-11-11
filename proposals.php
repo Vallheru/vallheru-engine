@@ -7,7 +7,7 @@
  *   @copyright            : (C) 2011 Vallheru Team based on Gamers-Fusion ver 2.5
  *   @author               : thindil <thindil@tuxfamily.org>
  *   @version              : 1.4
- *   @since                : 10.11.2011
+ *   @since                : 11.11.2011
  *
  */
 
@@ -299,6 +299,35 @@ elseif ($_GET['type'] == 'M')
 	  $objStaff->Close();
 	  error("Zgłosiłeś swoją propozycję nowego potwora. <a href=account.php>Wróć do opcji konta</a>");
 	}
+    }
+}
+/**
+ * Add proposal for new question on bridge of death
+ */
+elseif($_GET['type'] == 'B')
+{
+  $smarty->assign(array("Tquestion" => "Pytanie:",
+			"Tanswer" => "Odpowiedź:",
+			"Tinfo" => "Nie używaj jakichkolwiek znaczników HTML czy BBCode w tekście, ponieważ zostaną one i tak usunięte.",
+			"Asend" => "Wyślij"));
+  if (isset($_GET['send']))
+    {
+      if (empty($_POST['question']) || empty($_POST['answer']))
+	{
+	  error("Wypełnij wszystkie pola.");
+	}
+      $_POST['question'] = str_replace("'", "", strip_tags($_POST['question']));
+      $_POST['answer'] = str_replace("'", "", strip_tags($_POST['answer']));
+      $db->Execute("INSERT INTO `proposals` (`pid`, `type`, `name`, `data`, `info`) VALUES (".$player->id.", 'B', 'Most', '".$_POST['question']."', '".$_POST['answer']."')");
+      $objStaff = $db -> Execute("SELECT `id` FROM `players` WHERE `rank`='Admin'");
+      $strDate = $db -> DBDate($newdate);
+      while (!$objStaff->EOF) 
+	{
+	  $db->Execute("INSERT INTO `log` (`owner`, `log`, `czas`, `type`) VALUES(".$objStaff->fields['id'].", 'Zgłoszono nowe pytanie na Moście Śmierci.', ".$strDate.", 'A')") or die($db->ErrorMsg());
+	  $objStaff->MoveNext();
+	}
+      $objStaff->Close();
+      error("Zgłosiłeś swoją propozycję pytania. <a href=account.php>Wróć do opcji konta</a>");
     }
 }
 else

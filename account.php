@@ -7,7 +7,7 @@
  *   @copyright            : (C) 2004,2005,2006,2007,2011 Vallheru Team based on Gamers-Fusion ver 2.5
  *   @author               : thindil <thindil@tuxfamily.org>
  *   @version              : 1.4
- *   @since                : 10.11.2011
+ *   @since                : 11.11.2011
  *
  */
 
@@ -1088,10 +1088,11 @@ if (isset($_GET['view']))
       }
     elseif ($_GET['view'] == 'proposals')
       {
-	$smarty->assign(array("Info" => "Tutaj możesz zgłaszać propozycje dotyczące opisów lokacji, nowych przedmiotów oraz potworów. Więcej informacji co i jak znajdziesz po wybraniu odpowiedniej opcji. Zanim dana propozycja pojawi się w grze, musi zostać zaakceptowana przez władzę.",
+	$smarty->assign(array("Info" => "Tutaj możesz zgłaszać propozycje dotyczące opisów lokacji, nowych przedmiotów, potworów oraz pytań na Moście Śmierci. Więcej informacji co i jak znajdziesz po wybraniu odpowiedniej opcji. Zanim dana propozycja pojawi się w grze, musi zostać zaakceptowana przez władzę.",
 			      "Adescription" => "Propozycja opisu lokacji",
 			      "Aitems" => "Propozycja nowego przedmiotu",
-			      "Amonsters" => "Propozycja nowego potwora"));
+			      "Amonsters" => "Propozycja nowego potwora",
+			      "Abridge" => "Propozycja pytania na Moście Śmierci"));
       }
   }
 else

@@ -599,7 +599,7 @@
     </form>
 {/if}
 
-{if $View == "pdescriptions" || $View == "pitems"}
+{if $View == "pdescriptions" || $View == "pitems" || $View == "pbridge"}
     <table align="center">
         <tr>
 	    <th>{$Tid}</th>

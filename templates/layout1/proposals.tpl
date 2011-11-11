@@ -43,3 +43,14 @@
 	<input type="submit" value="{$Acheck}" name="smon" /> <input type="submit" value="{$Asend}" name="smon" />
     </form>
 {/if}
+
+{if $Type == "B"}
+    <form method="post" action="proposals.php?type=B&amp;send">
+        {$Tquestion}<br />
+	<textarea name="question" cols="50"></textarea><br /><br />
+	{$Tanswer}<br />
+	<textarea name="answer" cols="50"></textarea><br />
+	{$Tinfo}<br /><br />
+	<input type="submit" value="{$Asend}" />
+    </form>
+{/if}
