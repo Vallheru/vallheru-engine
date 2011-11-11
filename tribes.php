@@ -9,7 +9,7 @@
  *   @author               : mori <ziniquel@users.sourceforge.net>
  *   @author               : eyescream <tduda@users.sourceforge.net>
  *   @version              : 1.4
- *   @since                : 23.10.2011
+ *   @since                : 11.11.2011
  *
  */
 
@@ -1613,7 +1613,12 @@ if (isset ($_GET['view']) && $_GET['view'] == 'my')
                                         "Achange" => A_CHANGE,
                                         "Clansite" => CLAN_SITE,
                                         "Logoinfo" => LOGO_INFO,
-                                        "Logoname" => LOGO_NAME));
+                                        "Logoname" => LOGO_NAME,
+					"Tprefix" => "Tag przed imieniem postaci",
+					"Tsuffix" => "Tag po imieniu postaci",
+					"Prefix" => $mytribe->fields['prefix'],
+					"Suffix" => $mytribe->fields['suffix'],
+					"Tinfo" => "Tagi klanowe mogą mieć maksymalnie 5 znaków długości."));
                 $avatar = $db -> Execute("SELECT logo FROM tribes WHERE id=".$mytribe -> fields['id']);
                 $plik = 'images/tribes/'.$avatar -> fields['logo'];
                 if (is_file($plik)) 
@@ -1629,6 +1634,19 @@ if (isset ($_GET['view']) && $_GET['view'] == 'my')
                 {
                     $smarty -> assign("Change", '');
                 }
+		//Set tribe tags
+		if (isset($_GET['action']) && $_GET['action'] == 'tags')
+		  {
+		    $_POST['prefix'] = str_replace("'","",strip_tags($_POST['prefix']));
+		    $_POST['suffix'] = str_replace("'","",strip_tags($_POST['suffix']));
+		    if (strlen($_POST['prefix']) > 5 || strlen($_POST['suffix']) > 5)
+		      {
+			error("Tagi są zbyt długie.");
+		      }
+		    $db->Execute("UPDATE `tribes` SET `prefix`='".$_POST['prefix']."', `suffix`='".$_POST['suffix']."' WHERE `id`=".$mytribe->fields['id']);
+		    $smarty -> assign ("Message", "Ustawiłeś tagi klanowe. <a href=\"tribes.php?view=my&amp;step=owner&amp;step2=messages\">".A_REFRESH."</a><br />");
+		  }
+		//Set tribe webpage
                 if (isset ($_GET['action']) && $_GET['action'] == 'www') 
                 {
                     $_POST['www'] = str_replace("'","",strip_tags($_POST['www']));

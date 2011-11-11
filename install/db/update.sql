@@ -82,3 +82,4 @@ CREATE TABLE IF NOT EXISTS `proposals` (
   `info` text NOT NULL,
   UNIQUE KEY `id` (`id`)
 ) ENGINE=MyISAM DEFAULT CHARSET=utf8 AUTO_INCREMENT=1;
+ALTER TABLE `tribes` ADD `prefix` VARCHAR( 5 ) NOT NULL , ADD `suffix` VARCHAR( 5 ) NOT NULL;

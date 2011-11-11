@@ -444,6 +444,12 @@
             {/if}
         {/if}
         {if $Step2 == "messages"}
+	    <form method="post" action="tribes.php?view=my&amp;step=owner&amp;step2=messages&amp;action=tags">
+	        {$Tprefix} <input type="text" name="prefix" size="5" value="{$Prefix}" /><br />
+		{$Tsuffix} <input type="text" name="suffix" size="5" value="{$Suffix}" /><br />
+		{$Tinfo}<br />
+		<input type="submit" value="{$Achange}" />
+	    </form><br /><br />
             <form method="post" action="tribes.php?view=my&amp;step=owner&amp;step2=messages&amp;action=edit"><table>
             <tr><td valign="top">{$Clandesc}:</td><td><textarea name="public_msg" rows="13" cols="50">{$Pubmessage}</textarea></td></tr>
             <tr><td valign="top">{$Msgtomem}:</td><td><textarea name="private_msg" rows="13" cols="50">{$Privmessage}</textarea></td></tr>

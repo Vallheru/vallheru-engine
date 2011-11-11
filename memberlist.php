@@ -7,7 +7,7 @@
  *   @copyright            : (C) 2004,2005,2006,2007,2011 Vallheru Team based on Gamers-Fusion ver 2.5
  *   @author               : thindil <thindil@tuxfamily.org>
  *   @version              : 1.4
- *   @since                : 24.09.2011
+ *   @since                : 11.11.2011
  *
  */
 
@@ -66,7 +66,7 @@ if (isset($_POST['szukany']))
 
 if (empty($strSearch) && $_POST['id'] == 0) 
   {
-    $msel = $db -> Execute("SELECT count(*) FROM `players`");
+    $msel = $db -> Execute("SELECT count(`id`) FROM `players`");
   } 
  else 
    {
@@ -77,19 +77,19 @@ if (empty($strSearch) && $_POST['id'] == 0)
        }
      if (!empty($strSearch) && $_POST['id'] == 0) 
        {
-	 $msel = $db -> Execute("SELECT count(*) FROM `players` WHERE `user` LIKE ".$strSearch);
+	 $msel = $db -> Execute("SELECT count(`id`) FROM `players` WHERE `user` LIKE ".$strSearch);
        } 
      elseif (!empty($strSearch) && $_POST['id'] > 0) 
        {
-	 $msel = $db -> Execute("SELECT count(*) FROM `players` WHERE `id`=".$_POST['id']." AND `user` LIKE ".$strSearch);
+	 $msel = $db -> Execute("SELECT count(`id`) FROM `players` WHERE `id`=".$_POST['id']." AND `user` LIKE ".$strSearch);
        } 
      elseif (empty($strSearch) && $_POST['id'] > 0) 
        {
-	 $msel = $db -> Execute("SELECT count(*) FROM `players` WHERE `id`=".$_POST['id']);
+	 $msel = $db -> Execute("SELECT count(`id`) FROM `players` WHERE `id`=".$_POST['id']);
        }
    }
 
-$graczy = $msel -> fields['count(*)'];
+$graczy = $msel -> fields['count(`id`)'];
 $msel -> Close();
 if ($graczy == 0 && isset($_POST['szukany'])) 
 {
@@ -127,19 +127,19 @@ if (isset($_GET['ip']))
   }
 if (empty($_POST['szukany']) && $_POST['id'] == 0 && empty($_POST['ip'])) 
   {
-    $mem = $db -> SelectLimit("SELECT `id`, `user`, `rank`, `rasa`, `level`, `gender`, `shortrpg` FROM `players` ORDER BY `".$_GET['lista']."` ASC", 30, (30 * ($page - 1)));
+    $mem = $db -> SelectLimit("SELECT `id`, `user`, `rank`, `rasa`, `level`, `gender`, `shortrpg`, `tribe` FROM `players` ORDER BY `".$_GET['lista']."` ASC", 30, (30 * ($page - 1)));
   } 
 elseif  (!empty($_POST['szukany']) && $_POST['id'] == 0) 
 {
-  $mem = $db -> SelectLimit("SELECT `id`, `user`, `rank`, `rasa`, `level`, `gender`, `shortrpg` FROM `players` WHERE `user` LIKE ".$strSearch." ORDER BY `".$_GET['lista']."` ASC", 30, (30 * ($page - 1)));
+  $mem = $db -> SelectLimit("SELECT `id`, `user`, `rank`, `rasa`, `level`, `gender`, `shortrpg`, `tribe` FROM `players` WHERE `user` LIKE ".$strSearch." ORDER BY `".$_GET['lista']."` ASC", 30, (30 * ($page - 1)));
 } 
 elseif (!empty($_POST['szukany']) && $_POST['id'] > 0) 
 {
-  $mem = $db -> SelectLimit("SELECT `id`, `user`, `rank`, `rasa`, `level`, `gender`, `shortrpg` FROM `players` WHERE `id`=".$_POST['id']." AND `user` LIKE ".$strSearch." ORDER BY `".$_GET['lista']."` ASC", 30,  (30 * ($page - 1)));
+  $mem = $db -> SelectLimit("SELECT `id`, `user`, `rank`, `rasa`, `level`, `gender`, `shortrpg`, `tribe` FROM `players` WHERE `id`=".$_POST['id']." AND `user` LIKE ".$strSearch." ORDER BY `".$_GET['lista']."` ASC", 30,  (30 * ($page - 1)));
 } 
 elseif (empty($_POST['szukany']) && $_POST['id'] > 0) 
 {
-  $mem = $db -> SelectLimit("SELECT `id`, `user`, `rank`, `rasa`, `level`, `gender`, `shortrpg` FROM `players` WHERE `id`=".$_POST['id']." ORDER BY `".$_GET['lista']."` ASC", 30, (30 * ($page - 1)));
+  $mem = $db -> SelectLimit("SELECT `id`, `user`, `rank`, `rasa`, `level`, `gender`, `shortrpg`, `tribe` FROM `players` WHERE `id`=".$_POST['id']." ORDER BY `".$_GET['lista']."` ASC", 30, (30 * ($page - 1)));
 }
 elseif(!empty($_POST['ip']))
 {
@@ -148,7 +148,7 @@ elseif(!empty($_POST['ip']))
       error(NO_PERM);
     }
   $_POST['ip'] = str_replace("*","%", $_POST['ip']);
-  $mem = $db -> SelectLimit("SELECT `id`, `user`, `rank`, `rasa`, `level`, `gender`, `shortrpg` FROM `players` WHERE `ip` LIKE '".$_POST['ip']."' ORDER BY `".$_GET['lista']."` ASC", 30, (30 * ($page - 1)));
+  $mem = $db -> SelectLimit("SELECT `id`, `user`, `rank`, `rasa`, `level`, `gender`, `shortrpg`, `tribe` FROM `players` WHERE `ip` LIKE '".$_POST['ip']."' ORDER BY `".$_GET['lista']."` ASC", 30, (30 * ($page - 1)));
 }
 $arrrank = array();
 $arrid = array();
@@ -156,6 +156,7 @@ $arrname = array();
 $arrrace = array();
 $arrlevel = array();
 $arrShort = array();
+$arrTribes = array();
 while (!$mem -> EOF) 
   {
     /**
@@ -165,7 +166,20 @@ while (!$mem -> EOF)
     $arrrank[] = selectrank($mem -> fields['rank'], $mem -> fields['gender']);
     
     $arrid[] = $mem -> fields['id'];
-    $arrname[] = $mem -> fields['user'];
+    if ($mem->fields['tribe'])
+      {
+	if (!array_key_exists($mem->fields['tribe'], $arrTribes))
+	{
+	  $objTags = $db->Execute("SELECT `prefix`, `suffix` FROM `tribes` WHERE `id`=".$mem->fields['tribe']);
+	  $arrTribes[$mem->fields['tribe']] = array($objTags->fields['prefix'], $objTags->fields['suffix']);
+	  $objTags->Close();
+	}
+	$arrname[] = $arrTribes[$mem->fields['tribe']][0]." ".$mem->fields['user']." ".$arrTribes[$mem->fields['tribe']][1];
+      }
+    else
+      {
+	$arrname[] = $mem->fields['user'];
+      }
     $arrrace[] = $mem -> fields['rasa'];
     $arrlevel[] = $mem -> fields['level'];
     if (strlen($mem->fields['shortrpg']) > 0)

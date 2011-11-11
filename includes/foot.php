@@ -7,7 +7,7 @@
  *   @copyright            : (C) 2004,2005,2006,2011 Vallheru Team based on Gamers-Fusion ver 2.5
  *   @author               : thindil <thindil@tuxfamily.org>
  *   @version              : 1.4
- *   @since                : 30.09.2011
+ *   @since                : 11.11.2011
  *
  */
 
@@ -34,7 +34,7 @@
 */
 require_once("languages/".$player -> lang."/foot.php");
 $span = (time() - 180);
-$objQuery = $db -> Execute("SELECT `id`, `rank`, `user` FROM `players` WHERE `lpv`>=".$span." ORDER BY `id` ASC");
+$objQuery = $db -> Execute("SELECT `id`, `rank`, `user`, `tribe` FROM `players` WHERE `lpv`>=".$span." ORDER BY `id` ASC");
 
 $objPlayers = $db -> Execute("SELECT count(`id`) FROM `players`");
 $intPlayers = $objPlayers -> fields['count(`id`)'];
@@ -42,8 +42,19 @@ $objPlayers -> Close();
 
 $intNumo = 0;
 $arrplayers = array();
+$arrTribes = array();
 while (!$objQuery -> EOF) 
 {
+  if ($objQuery->fields['tribe'])
+    {
+      if (!array_key_exists($objQuery->fields['tribe'], $arrTribes))
+	{
+	  $objTags = $db->Execute("SELECT `prefix`, `suffix` FROM `tribes` WHERE `id`=".$objQuery->fields['tribe']);
+	  $arrTribes[$objQuery->fields['tribe']] = array($objTags->fields['prefix'], $objTags->fields['suffix']);
+	  $objTags->Close();
+	}
+      $objQuery->fields['user'] = $arrTribes[$objQuery->fields['tribe']][0]." ".$objQuery->fields['user']." ".$arrTribes[$objQuery->fields['tribe']][1];
+    }
   switch ($objQuery -> fields['rank'])
     {
     case 'Admin':

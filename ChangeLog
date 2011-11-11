@@ -1,5 +1,7 @@
 2011-11-11  Bartek thindil Jasicki  <thindil@tuxfamily.org>
 
+	* FEATURE,install/db/update.sql, templates/layout1/tribes.tpl, templates/tribes.tpl, tribes.php, includes/foot.php, memberlist.php, view.php: 
+	added tribe tags
 	* FEATURE,templates/layout1/account.tpl, templates/account.tpl, account.php, templates/layout1/admin.tpl, templates/admin.tpl, admin.php,
 	templates/layout1/proposals.tpl, templates/proposals.tpl, proposals.php: 
 	added option to send proposals about questions on bridge of death

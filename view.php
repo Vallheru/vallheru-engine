@@ -8,7 +8,7 @@
  *   @author               : thindil <thindil@tuxfamily.org>
  *   @author               : eyescream <tduda@users.sourceforge.net>
  *   @version              : 1.4
- *   @since                : 09.11.2011
+ *   @since                : 11.11.2011
  *
  */
 
@@ -51,6 +51,18 @@ if (empty ($view -> id))
 {
     error (NO_PLAYER);
 }
+
+$tribe = $db -> Execute("SELECT `name`, `prefix`, `suffix` FROM `tribes` WHERE `id`=".$view -> tribe);
+if ($tribe -> fields['name']) 
+{
+    $smarty -> assign ("Clan", T_CLAN.": <a href=tribes.php?view=view&amp;id=".$view -> tribe.">".$tribe -> fields['name']."</a><br />".T_CLAN_RANK.": ".$view -> tribe_rank."<br />");
+    $view->user = $tribe->fields['prefix']." ".$view->user." ".$tribe->fields['suffix'];
+} 
+    else 
+{
+    $smarty -> assign ("Clan", T_CLAN.": ".NOTHING."<br />");
+}
+
 $smarty -> assign (array("User" => $view -> user, 
                          "Id" => $view -> id, 
                          "Avatar" => '', 
@@ -163,16 +175,6 @@ if ($view -> hp > 0)
     else 
 {
     $smarty -> assign ("Status", "<b>".S_DEAD."</b><br />");
-}
-
-$tribe = $db -> Execute("SELECT name FROM tribes WHERE id=".$view -> tribe);
-if ($tribe -> fields['name']) 
-{
-    $smarty -> assign ("Clan", T_CLAN.": <a href=tribes.php?view=view&amp;id=".$view -> tribe.">".$tribe -> fields['name']."</a><br />".T_CLAN_RANK.": ".$view -> tribe_rank."<br />");
-} 
-    else 
-{
-    $smarty -> assign ("Clan", T_CLAN.": ".NOTHING."<br />");
 }
 
 $objFreeze = $db -> Execute("SELECT `freeze`, `shortrpg` FROM `players` WHERE `id`=".$_GET['view']);
