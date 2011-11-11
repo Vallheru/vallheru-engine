@@ -8,7 +8,7 @@
  *   @author               : thindil <thindil@tuxfamily.org>
  *   @author               : eyescream <tduda@users.sourceforge.net>
  *   @version              : 1.4
- *   @since                : 25.10.2011
+ *   @since                : 11.11.2011
  *
  */
 
@@ -43,16 +43,26 @@ if (isset ($_GET['action']) && $_GET['action'] == 'chat')
 {
     if (isset($_POST['msg']) && $_POST['msg'] != '') 
       {
+	if ($player->tribe)
+	  {
+	    $objTribe = $db->Execute("SELECT `prefix`, `suffix` FROM `tribes` WHERE `id`=".$player->tribe);
+	    $strAuthor = $objTribe->fields['prefix']." ".$player->user." ".$objTribe->fields['suffix'];
+	    $objTribe->Close();
+	  }
+	else
+	  {
+	    $strAuthor = $player -> user;
+	  }
 	switch ($player->rank)
 	  {
 	  case 'Admin':
-	    $starter = "<span style=\"color: #0066cc;\">".$player -> user."</span>";
+	    $starter = "<span style=\"color: #0066cc;\">".$strAuthor."</span>";
 	    break;
 	  case 'Staff':
-	    $starter = "<span style=\"color: #00ff00;\">".$player -> user."</span>";
+	    $starter = "<span style=\"color: #00ff00;\">".$strAuthor."</span>";
 	    break;
 	  default:
-	    $starter = $player -> user;
+	    $starter = $strAuthor;
 	    break;
 	  }
         $czat = $db -> Execute("SELECT `gracz` FROM `chat_config` WHERE `gracz`=".$player -> id);
