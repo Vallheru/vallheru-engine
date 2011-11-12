@@ -83,3 +83,5 @@ CREATE TABLE IF NOT EXISTS `proposals` (
   UNIQUE KEY `id` (`id`)
 ) ENGINE=MyISAM DEFAULT CHARSET=utf8 AUTO_INCREMENT=1;
 ALTER TABLE `tribes` ADD `prefix` VARCHAR( 5 ) NOT NULL , ADD `suffix` VARCHAR( 5 ) NOT NULL;
+UPDATE `bows` SET `maxwt`=25, `cost`=`cost`*1.25 WHERE `type`='R';
+UPDATE `bows` SET `cost`=256000 WHERE `id`=27;

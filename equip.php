@@ -7,7 +7,7 @@
  *   @copyright            : (C) 2004,2005,2006,2007,2011 Vallheru Team based on Gamers-Fusion ver 2.5
  *   @author               : thindil <thindil@tuxfamily.org>
  *   @version              : 1.4
- *   @since                : 03.11.2011
+ *   @since                : 12.11.2011
  *
  */
 
@@ -956,7 +956,7 @@ if (isset ($_GET['poison']))
 		  }
 		else
 		  {
-		    $amount = $item->fields['wt'] - 20;
+		    $amount = $item->fields['wt'] - 25;
 		    if ($amount < 1)
 		      {
 			$db -> Execute("DELETE FROM `equipment` WHERE `id`=".$item -> fields['id']);
@@ -1017,17 +1017,17 @@ if (isset ($_GET['poison']))
 		$test = $db -> Execute("SELECT id FROM equipment WHERE name='".$name."' AND type='R' AND status='U' AND owner=".$player -> id." AND power=".$item -> fields['power']." AND zr=".$item -> fields['zr']." AND szyb=".$item -> fields['szyb']." AND poison=".$intPower." AND ptype='".$strPtype."'");
 		if (!$test -> fields['id']) 
 		  {
-		    $db -> Execute("INSERT INTO `equipment` (`owner`, `name`, `power`, `type`, `cost`, `zr`, `wt`, `minlev`, `maxwt`, `amount`, `magic`, `poison`, `szyb`, `ptype`, `repair`, `twohand`) VALUES(".$player -> id.",'".$name."',".$item -> fields['power'].",'".$item->fields['type']."',".$item -> fields['cost'].",".$item -> fields['zr'].", 20,".$item -> fields['minlev'].", 20, 1, 'N',".$intPower.",".$item -> fields['szyb'].", '".$strPtype."', ".$item -> fields['repair'].", '".$item -> fields['repair']."')") or error($db -> ErrorMsg());
+		    $db -> Execute("INSERT INTO `equipment` (`owner`, `name`, `power`, `type`, `cost`, `zr`, `wt`, `minlev`, `maxwt`, `amount`, `magic`, `poison`, `szyb`, `ptype`, `repair`, `twohand`) VALUES(".$player -> id.",'".$name."',".$item -> fields['power'].",'".$item->fields['type']."',".$item -> fields['cost'].",".$item -> fields['zr'].", 25,".$item -> fields['minlev'].", 25, 1, 'N',".$intPower.",".$item -> fields['szyb'].", '".$strPtype."', ".$item -> fields['repair'].", '".$item -> fields['repair']."')") or error($db -> ErrorMsg());
 		  }
 		else
 		  {
-		    if ($item->fields['wt'] <= 20)
+		    if ($item->fields['wt'] <= 25)
 		      {
 			$db -> Execute("UPDATE `equipment` SET `wt`=`wt`+".$item->fields['wt']." WHERE `id`=".$test -> fields['id']);
 		      }
 		    else
 		      {
-			$db -> Execute("UPDATE `equipment` SET `wt`=`wt`+20 WHERE `id`=".$test -> fields['id']);
+			$db -> Execute("UPDATE `equipment` SET `wt`=`wt`+25 WHERE `id`=".$test -> fields['id']);
 		      }
 		  }
 	      }
@@ -1046,10 +1046,10 @@ if (isset ($_GET['poison']))
 	      }
 	    else
 	      {
-		$iamount = $item->fields['wt'] - 20;
+		$iamount = $item->fields['wt'] - 25;
 		if ($iamount > 0)
 		  {
-		    $db->Execute("UPDATE `equipment` SET `wt`=`wt`-20 WHERE `id`=".$item->fields['id']);
+		    $db->Execute("UPDATE `equipment` SET `wt`=`wt`-25 WHERE `id`=".$item->fields['id']);
 		  }
 		else
 		  {
@@ -1087,7 +1087,7 @@ if (isset($_GET['fill']))
     {
         error(NO_ITEMS);
     }
-    if ($objArrows -> fields['wt'] == 20)
+    if ($objArrows -> fields['wt'] == 25)
     {
         error(NOT_NEED);
     }
@@ -1096,7 +1096,7 @@ if (isset($_GET['fill']))
     {
         error(NO_ARROWS);
     }
-    $intAmount = 20 - $objArrows -> fields['wt'];
+    $intAmount = 25 - $objArrows -> fields['wt'];
     if ($objArrows2 -> fields['wt'] <= $intAmount)
     {
         $db -> Execute("DELETE FROM equipment WHERE id=".$objArrows2 -> fields['id']);

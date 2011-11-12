@@ -7,7 +7,7 @@
  *   @copyright            : (C) 2004,2005,2006,2007,2011 Vallheru Team based on Gamers-Fusion ver 2.5
  *   @author               : thindil <thindil@tuxfamily.org>
  *   @version              : 1.4
- *   @since                : 07.11.2011
+ *   @since                : 12.11.2011
  *
  */
 
@@ -118,7 +118,7 @@ function autofill($intPlayerid, $intArrowId, $intPlayer2)
   global $db;
 
   $objArrows = $db->Execute("SELECT * FROM `equipment` WHERE `id`=".$intArrowId);
-  if ($objArrows->fields['wt'] == 20)
+  if ($objArrows->fields['wt'] == 25)
     {
       return;
     }
@@ -133,7 +133,7 @@ function autofill($intPlayerid, $intArrowId, $intPlayer2)
 	    }
 	  return;
 	}
-      $intAmount = 20 - $objArrows -> fields['wt'];
+      $intAmount = 25 - $objArrows -> fields['wt'];
       if ($intAmount > $objNewArrows->fields['wt'])
 	{
 	  $intAmount = $objNewArrows->fields['wt'];
@@ -156,9 +156,9 @@ function autofill($intPlayerid, $intArrowId, $intPlayer2)
 	    }
 	  return;
 	}
-      if ($objNewArrows->fields['wt'] > 20)
+      if ($objNewArrows->fields['wt'] > 25)
 	{
-	  $intAmount = 20;
+	  $intAmount = 25;
 	}
       else
 	{

@@ -7,7 +7,7 @@
  *   @copyright            : (C) 2004,2005,2006,2011 Vallheru Team based on Gamers-Fusion ver 2.5
  *   @author               : thindil <thindil@tuxfamily.org>
  *   @version              : 1.4
- *   @since                : 08.11.2011
+ *   @since                : 12.11.2011
  *
  */
 
@@ -66,7 +66,7 @@ if (!isset ($_GET['buy']) && !isset($_GET['step']))
         $arrlevel[$i] = $wep -> fields['minlev'];
 	if ($wep->fields['type'] == 'R')
 	  {
-	    $arrcost[$i] = $wep->fields['cost']."/".ceil($wep->fields['cost'] / 20);
+	    $arrcost[$i] = $wep->fields['cost']."/".ceil($wep->fields['cost'] / 25);
 	  }
 	else
 	  {
@@ -174,7 +174,7 @@ if (isset($_GET['arrows']))
         error (NO_ITEM);
     }
     $intAllcost = $objArm -> fields['cost'];
-    $intOnecost = ceil($objArm -> fields['cost'] / 20);
+    $intOnecost = ceil($objArm -> fields['cost'] / 25);
     $smarty -> assign(array("Arrowsname" => $objArm -> fields['name'],
         "Arrowscost" => $intAllcost,
         "Arrowscost2" => $intOnecost,

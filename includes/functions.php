@@ -7,7 +7,7 @@
  *   @copyright            : (C) 2004,2005,2006,2011 Vallheru Team based on Gamers-Fusion ver 2.5
  *   @author               : thindil <thindil@tuxfamily.org>
  *   @version              : 1.4
- *   @since                : 03.11.2011
+ *   @since                : 12.11.2011
  *
  */
 
@@ -322,9 +322,9 @@ function equip ($id)
             error (DONT_HAVE_BOW);
         }
         $test -> Close();
-        if ($equip -> fields['wt'] > 20) 
+        if ($equip -> fields['wt'] > 25) 
         {
-            $wt = 20;
+            $wt = 25;
         } 
             else 
         {
