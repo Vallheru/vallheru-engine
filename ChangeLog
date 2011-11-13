@@ -1,3 +1,8 @@
+2011-11-13  Bartek thindil Jasicki  <thindil@tuxfamily.org>
+
+	* UPDATE,account.php:
+	better check for nick availability
+
 2011-11-12  Bartek thindil Jasicki  <thindil@tuxfamily.org>
 
 	* FEATURE,install/db/update.sql, includes/functions.php, includes/funkcje.php, bows.php, equip.php:

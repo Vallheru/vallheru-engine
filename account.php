@@ -7,7 +7,7 @@
  *   @copyright            : (C) 2004,2005,2006,2007,2011 Vallheru Team based on Gamers-Fusion ver 2.5
  *   @author               : thindil <thindil@tuxfamily.org>
  *   @version              : 1.4
- *   @since                : 11.11.2011
+ *   @since                : 13.11.2011
  *
  */
 
@@ -591,7 +591,7 @@ if (isset($_GET['view']))
 	      {
 		error (ERROR);
 	      } 	
-	    $query = $db -> Execute("SELECT count(`id`) FROM `players` WHERE `user`='".$_POST['name']."'");
+	    $query = $db -> Execute("SELECT count(`id`) FROM `players` WHERE `user`='".$_POST['name']."' AND `id`!=".$player->id);
 	    $dupe = $query -> fields['count(`id`)'];
 	    $query -> Close();
 	    if ($dupe > 0) 
