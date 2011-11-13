@@ -587,6 +587,8 @@ if (isset($_GET['view']))
 		error (EMPTY_NAME);
 	      } 
 	    $_POST['name'] = str_replace("'","",strip_tags($_POST['name']));
+	    $_POST['name'] = str_replace("&nbsp;", "", $_POST['name']);
+	    $_POST['name'] = trim($_POST['name']);
 	    if ($_POST['name'] == 'Admin' || $_POST['name'] == 'Staff' || empty($_POST['name']) || (preg_match("/\S+/", $_POST['name']) == 0)) 
 	      {
 		error (ERROR);
