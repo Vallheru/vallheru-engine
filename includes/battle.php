@@ -8,7 +8,7 @@
  *   @author               : thindil <thindil@tuxfamily.org>
  *   @author               : eyescream <tduda@users.sourceforge.net>
  *   @version              : 1.4
- *   @since                : 05.11.2011
+ *   @since                : 14.11.2011
  *
  */
 
@@ -67,6 +67,7 @@ function attack1($attacker, $defender, $arrAtequip, $arrDeequip, $attack_bspell,
     global $sqltime;
     global $compress;
     global $start_time;
+    global $arrTags;
 
     $krytyk = 0;
     $repeat = ($attacker['speed'] / $defender['speed']);

@@ -1,5 +1,7 @@
 2011-11-14  Bartek thindil Jasicki  <thindil@tuxfamily.org>
 
+	* BUG,includes/battle.php: 
+	fixed notice
 	* FEATURE,templates/layout1/account.tpl, templates/account.tpl, templates/layout1/proposals.tpl, templates/proposals.tpl, account.php,
 	proposals.php, templates/layout1/admin.tpl, templates/admin.tpl, admin.php, templates/layout1/hunters.tpl, templates/hunters.tpl,
 	hunters.php, install/db/update.sql, city.php, languages/pl/head1.php: 
