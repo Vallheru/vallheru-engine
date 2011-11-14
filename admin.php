@@ -1772,6 +1772,57 @@ if (isset($_GET['view']))
 	    $objProposal->Close();
 	  }
       }
+    /**
+     * Monster description proposals
+     */
+    elseif ($_GET['view'] == 'pmdesc')
+      {
+	//Show list
+	$arrProposals = $db->GetAll("SELECT `id`, `pid`, `name` FROM `proposals` WHERE `type`='E'");
+	$smarty->assign(array("Tid" => "ID",
+			      "Treporter" => "Zgłaszający",
+			      "Tlocation" => "Potwór",
+			      "Proposals" => $arrProposals));
+	if (isset($_GET['step']))
+	  {
+	    checkvalue($_GET['step']);
+	    $objProposal = $db->Execute("SELECT `pid`, `name`, `data`, `info` FROM `proposals` WHERE `id`=".$_GET['step']);
+	    $smarty->assign(array("Tdesc" => "Opis:",
+				  "Tinfo" => "ID potwora:",
+				  "Desc" => $objProposal->fields['data'],
+				  "Info" => $objProposal->fields['info'],
+				  "Tloc" => "Potwór:",
+				  "Location" => $objProposal->fields['name'],
+				  "Asend" => "Wyślij",
+				  "Accepted" => "Zaakceptowany",
+				  "Rejected" => "Odrzucony",
+				  "Treason" => "Przyczyna"));
+	    if (isset($_GET['confirm']))
+	      {
+		$strMessage = 'Twój opis potwora '.$objProposal->fields['name'].' został ';
+		$strDate = $db -> DBDate($newdate);
+		if ($_POST['response'] == 'A')
+		  {
+		    $strMessage .= 'zaakceptowany. Dostałeś za to 2 Vallary.';
+		    $strAuthor = '<b><a href="view.php?view='.$player -> id.'">'.$player -> user."</a></b>, ID <b>".$player -> id.'</b>';
+		    $db -> Execute("INSERT INTO `changelog` (`author`, `location`, `text`, `date`, `lang`) VALUES('".$strAuthor."', 'Ogólnie', 'Nowy opis potwora autorstwa ID: ".$objProposal->fields['pid']."', ".$strDate.", 'pl')");
+		    $db->Execute("UPDATE `players` SET `vallars`=`vallars`+2 WHERE `id`=".$objProposal->fields['pid']);
+		    $db->Execute("INSERT INTO `vallars` (`owner`, `amount`, `reason`) VALUES(".$objProposal->fields['pid'].", 2, 'Opis potwora.')");
+		    $db->Execute("UPDATE `monsters` SET `desc`='".$objProposal->fields['data']."' WHERE `id`=".$objProposal->fields['info']);
+		    $strResult = "Zaakceptowałeś opis";
+		  }
+		else
+		  {
+		    $strMessage .= 'odrzucony. Przyczyna: '.$_POST['reason'];
+		    $strResult = "Odrzuciłeś opis.";
+		  }
+		$db->Execute("DELETE FROM `proposals` WHERE `id`=".$_GET['step']);
+		$db->Execute("INSERT INTO `log` (`owner`, `log`, `czas`, `type`) VALUES(".$objProposal->fields['pid'].", '".$strMessage."', ".$strDate.", 'A')") or die($db->ErrorMsg());
+		$smarty->assign("Message", $strResult);
+	      }
+	    $objProposal->Close();
+	  }
+      }
   }
 /**
 * Initialization of variables
@@ -1779,8 +1830,8 @@ if (isset($_GET['view']))
 else 
   {
     $_GET['view'] = '';
-    $arrView1 = array('bridge', 'poll', 'addtext', 'pdescriptions', 'pitems', 'pmonsters', 'pbridge');
-    $arrLinks1 = array(A_BRIDGE, A_POLL, A_ADD_NEWS, 'Propozycje opisów', 'Propozycje przedmiotów', 'Propozycje potworów', 'Propozycje pytań na moście');
+    $arrView1 = array('bridge', 'poll', 'addtext', 'pdescriptions', 'pitems', 'pmonsters', 'pbridge', 'pmdesc');
+    $arrLinks1 = array(A_BRIDGE, A_POLL, A_ADD_NEWS, 'Propozycje opisów', 'Propozycje przedmiotów', 'Propozycje potworów', 'Propozycje pytań na moście', 'Propozycje opisu potworów');
     $arrView2 = array('del', 'donate', 'takeaway', 'add', 'tags', 'czat', 'jail', 'jailbreak', 'delplayers', 'ban', 'donator', 'logs', 'playerquest', 'banmail', 'vallars', 'srank');
     $arrLinks2 = array(A_DELETE, A_DONATION, A_TAKE, A_RANK, A_IMMU, A_CHAT_BAN, A_JAIL, A_JAILBREAK, A_DEL_PLAYERS, A_BAN, A_DONATOR, A_LOGS, A_PLAYERQUEST, A_BAN_MAIL, 'Daj/Zabierz Vallary graczowi', 'Nadaj unikalną rangę graczowi');
     $arrView3 = array('clearf', 'clearc', 'forums', 'innarchive');

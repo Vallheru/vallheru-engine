@@ -1090,11 +1090,13 @@ if (isset($_GET['view']))
       }
     elseif ($_GET['view'] == 'proposals')
       {
+	$arrLinks2 = array('D' => "Propozycja opisu lokacji", 
+			  'I' => "Propozycja nowego przedmiotu", 
+			  'M' => "Propozycja nowego potwora", 
+			  'B' => "Propozycja pytania na Moście Śmierci", 
+			  'E' => "Propozycja opisu potwora");
 	$smarty->assign(array("Info" => "Tutaj możesz zgłaszać propozycje dotyczące opisów lokacji, nowych przedmiotów, potworów oraz pytań na Moście Śmierci. Więcej informacji co i jak znajdziesz po wybraniu odpowiedniej opcji. Zanim dana propozycja pojawi się w grze, musi zostać zaakceptowana przez władzę.",
-			      "Adescription" => "Propozycja opisu lokacji",
-			      "Aitems" => "Propozycja nowego przedmiotu",
-			      "Amonsters" => "Propozycja nowego potwora",
-			      "Abridge" => "Propozycja pytania na Moście Śmierci"));
+			      "Links2" => $arrLinks2));
       }
   }
 else

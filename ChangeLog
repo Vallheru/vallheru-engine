@@ -1,5 +1,9 @@
 2011-11-14  Bartek thindil Jasicki  <thindil@tuxfamily.org>
 
+	* FEATURE,templates/layout1/account.tpl, templates/account.tpl, templates/layout1/proposals.tpl, templates/proposals.tpl, account.php,
+	proposals.php, templates/layout1/admin.tpl, templates/admin.tpl, admin.php, templates/layout1/hunters.tpl, templates/hunters.tpl,
+	hunters.php, install/db/update.sql, city.php, languages/pl/head1.php: 
+	added monsters description and hunters guild
 	* FEATURE,tribes.php: 
 	added info about member leaving clan
 	* FEATURE,addnews.php, account.php, updates.php, portal.php, view.php, memberlist.php, monuments.php, chat.php, forums.php, tforums.php,

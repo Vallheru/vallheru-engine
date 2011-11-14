@@ -302,9 +302,8 @@
 {if $View == "proposals"}
     {$Info}<br /><br />
     <ul>
-	<li><a href="proposals.php?type=D">{$Adescription}</a></li>
-	<li><a href="proposals.php?type=I">{$Aitems}</a></li>
-	<li><a href="proposals.php?type=M">{$Amonsters}</a></li>
-	<li><a href="proposals.php?type=B">{$Abridge}</a></li>
+        {foreach $Links2 as $Link}
+	    <li><a href="proposals.php?type={$Link@key}">{$Link}</a></li>
+	{/foreach}
     </ul>
 {/if}

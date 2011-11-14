@@ -54,3 +54,13 @@
 	<input type="submit" value="{$Asend}" />
     </form>
 {/if}
+
+{if $Type == "E"}
+    <form method="post" action="proposals.php?type=E&amp;send">
+        {$Tselect} {html_options name=loc options=$Moptions}<br /><br />
+	{$Pdesc}
+	<b>{$Tdesc}</b> <br /><textarea name="desc" rows="15" cols="70">{$Desc}</textarea><br />
+	{$Hdesc}<br /><br />
+	<input type="submit" value="{$Apreview}" name="sdesc" /> <input type="submit" value="{$Asend}" name="sdesc" />
+    </form>
+{/if}

@@ -7,7 +7,7 @@
  *   @copyright            : (C) 2004,2005,2006,2011 Vallheru Team based on Gamers-Fusion ver 2.5
  *   @author               : thindil <thindil@tuxfamily.org>
  *   @version              : 1.4
- *   @since                : 10.10.2011
+ *   @since                : 14.11.2011
  *
  */
  
@@ -106,7 +106,7 @@ if ($player -> location == 'Altara')
         }
         $objPoll -> Close();
         $arrTitles = array(BATTLE_FIELD, COMMUNITY, VILLAGE, WEST_SIDE, HOUSES_SIDE, CASTLE, JOBS, SOUTH_SIDE);
-        $arrFiles = array(array('battle.php', 'armor.php', 'weapons.php', 'bows.php', 'outposts.php'),
+        $arrFiles = array(array('battle.php', 'armor.php', 'weapons.php', 'bows.php', 'outposts.php', 'hunters.php'),
                           array('news.php', 'forums.php?view=categories', 'chat.php', 'mail.php', 'tribes.php', 'newspaper.php'),
                           array('train.php', 'mines.php', 'farm.php', 'core.php'),
                           array('grid.php', 'wieza.php', 'temple.php', 'msklep.php', 'jewellershop.php'),
@@ -114,7 +114,7 @@ if ($player -> location == 'Altara')
                           array('updates.php', 'tower.php', 'jail.php', 'court.php', 'polls.php', 'alley.php', 'stafflist.php'),
                           array('landfill.php', 'smelter.php', 'kowal.php', 'alchemik.php'),
                           array('market.php', 'warehouse.php', 'travel.php'));
-        $arrNames = array(array(BATTLE_ARENA, ARMOR_SHOP, WEAPON_SHOP, BOWS_SHOP, OUTPOSTS),
+        $arrNames = array(array(BATTLE_ARENA, ARMOR_SHOP, WEAPON_SHOP, BOWS_SHOP, OUTPOSTS, 'Gildia Łowców'),
                           array(NEWS, FORUMS, INN, PRIV_M, CLANS, PAPER),
                           array(SCHOOL, MINES, FARMS, CORES),
                           array(LABYRYNTH, MAGIC_TOWER, TEMPLE, ALCHEMY_SHOP, JEWELLER_SHOP),
@@ -179,7 +179,7 @@ if ($player -> location == 'Altara')
                           array('alchemik.php', 'lumbermill.php', 'train.php', 'jewellershop.php'),
                           array('landfill.php', 'warehouse.php', 'market.php', 'battle.php', 'core.php', 'polls.php'),
                           array('updates.php', 'tower.php', 'news.php', 'newspaper.php', 'alley.php', 'stafflist.php', 'court.php'),
-                          array('house.php', 'memberlist.php?limit=0&amp;lista=id', 'monuments.php', 'outposts.php', 'farm.php'),
+                          array('house.php', 'memberlist.php?limit=0&amp;lista=id', 'monuments.php', 'outposts.php', 'farm.php', 'hunters.php'),
                           array('travel.php', 'city.php?step=forest'));
         $arrNames = array(array(TEMPLE, LIBRARY, JEWELLER),
                           array(BOWS_SHOP, ALCHEMY_SHOP, MAGIC_TOWER, FORUMS, INN),
@@ -187,7 +187,7 @@ if ($player -> location == 'Altara')
                           array(ALCHEMY_MILL, LUMBER_MILL, SCHOOL, JEWELLER_SHOP),
                           array(CLEAN_CITY, WAREHOUSE, MARKET, BATTLE_ARENA, CORES, $strInfo.POLLS),
                           array(UPDATES, TIMER, NEWS, PAPER, WELLEARNED, STAFF_LIST, COURT),
-                          array(HOUSES, PLAYERS_L, MONUMENTS, OUTPOSTS, FARMS),
+                          array(HOUSES, PLAYERS_L, MONUMENTS, OUTPOSTS, FARMS, 'Gildia Łowców'),
                           array(TRAVEL, FOREST2));
         $smarty -> assign(array("Titles" => $arrTitles,
                                 "Files" => $arrFiles,

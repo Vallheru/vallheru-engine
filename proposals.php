@@ -7,7 +7,7 @@
  *   @copyright            : (C) 2011 Vallheru Team based on Gamers-Fusion ver 2.5
  *   @author               : thindil <thindil@tuxfamily.org>
  *   @version              : 1.4
- *   @since                : 11.11.2011
+ *   @since                : 14.11.2011
  *
  */
 
@@ -160,7 +160,7 @@ elseif ($_GET['type'] == 'I')
     }
 }
 /**
- * Add proposal about new item
+ * Add proposal about new monster
  */
 elseif ($_GET['type'] == 'M')
 {
@@ -330,6 +330,57 @@ elseif($_GET['type'] == 'B')
       error("Zgłosiłeś swoją propozycję pytania. <a href=account.php>Wróć do opcji konta</a>");
     }
 }
+/**
+ * Add proposal about monster description
+ */
+elseif ($_GET['type'] == 'E')
+  {
+    $objMonsters = $db->Execute("SELECT `id`, `name` FROM `monsters`");
+    $arrMonsters = array();
+    while (!$objMonsters->EOF)
+      {
+	$arrMonsters[$objMonsters->fields['id']] = $objMonsters->fields['name'];
+	$objMonsters->MoveNext();
+      }
+    $objMonsters->Close();
+    $smarty->assign(array("Tselect" => "Wybierz potwora, którego opis chcesz zaproponować",
+			  "Moptions" => $arrMonsters,
+			  "Tdesc" => "Opis:",
+			  "Hdesc" => "Linki automatycznie zamieniane są na klikalne. Możesz używać następujących znaczników BBCode:<br /><ul><li>[b]<b>Pogrubienie</b>[/b]</li><li>[i]<i>Kursywa</i><[/i]</li><li>[u]<u>Podkreślenie</u>[/u]</li><li>[color (angielska nazwa koloru (red, yellow, itp) lub kod HTML (#FFFF00, itp)]pokolorowanie tekstu[/color]</li><li>[center]wycentrowanie tekstu[/center]</li><li>[quote]cytat[/quote]</ul>",
+			  "Asend" => "Wyślij",
+			  "Pdesc" => '',
+			  "Desc" => '',
+			  "Apreview" => "Podgląd"));
+    if (isset($_GET['send']))
+      {
+	if (empty($_POST['desc']))
+	  {
+	    error('Wypełnij wszystkie pola.');
+	  }
+	checkvalue($_POST['loc']);
+	require_once('includes/bbcode.php');
+	$strDesc = $_POST['desc'];
+	$_POST['desc'] = bbcodetohtml($_POST['desc']);
+	if ($_POST['sdesc'] == 'Wyślij')
+	  {
+	    $db->Execute("INSERT INTO `proposals` (`pid`, `type`, `name`, `data`, `info`) VALUES (".$player->id.", 'E', '".$arrMonsters[$_POST['loc']]."', '".$_POST['desc']."', '".$_POST['loc']."')");
+	    $objStaff = $db -> Execute("SELECT `id` FROM `players` WHERE `rank`='Admin'");
+	    $strDate = $db -> DBDate($newdate);
+	    while (!$objStaff->EOF) 
+	      {
+		$db->Execute("INSERT INTO `log` (`owner`, `log`, `czas`, `type`) VALUES(".$objStaff->fields['id'].", 'Zgłoszono opis potwora.', ".$strDate.", 'A')") or die($db->ErrorMsg());
+		$objStaff->MoveNext();
+	      }
+	    $objStaff->Close();
+	    error("Zgłosiłeś swoją propozycję opisu potwora. <a href=account.php>Wróć do opcji konta</a>");
+	  }
+	else
+	  {
+	    $smarty->assign(array("Pdesc" => $_POST['desc'].'<br /><br />',
+				  "Desc" => $strDesc));
+	  }
+      }
+  }
 else
   {
     error("Zapomnij o tym.");
