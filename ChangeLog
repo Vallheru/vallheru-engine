@@ -1,5 +1,7 @@
 2011-11-14  Bartek thindil Jasicki  <thindil@tuxfamily.org>
 
+	* FEATURE,tribes.php: 
+	added info about member leaving clan
 	* FEATURE,addnews.php, account.php, updates.php, portal.php, view.php, memberlist.php, monuments.php, chat.php, forums.php, tforums.php,
 	includes/head.php, includes/foot.php, includes/comments.php:
 	redesign and add tribe tags

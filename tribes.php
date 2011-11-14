@@ -9,7 +9,7 @@
  *   @author               : mori <ziniquel@users.sourceforge.net>
  *   @author               : eyescream <tduda@users.sourceforge.net>
  *   @version              : 1.4
- *   @since                : 11.11.2011
+ *   @since                : 14.11.2011
  *
  */
 
@@ -1058,11 +1058,11 @@ if (isset ($_GET['view']) && $_GET['view'] == 'my')
         {
             if ($mem -> fields['id'] == $mytribe -> fields['owner']) 
             {
-                $arrlink[$i] = "- <a href=\"view.php?view=".$mem -> fields['id']."\">".$mem -> fields['user']."</a> (".$mem -> fields['id'].") (".$mem -> fields['tribe_rank'].") (".LEADER.")<br />";
+                $arrlink[$i] = "- <a href=\"view.php?view=".$mem -> fields['id']."\">".$mytribe->fields['prefix'].' '.$mem -> fields['user'].' '.$mytribe->fields['suffix']."</a> (".$mem -> fields['id'].") (".$mem -> fields['tribe_rank'].") (".LEADER.")<br />";
             } 
                 else 
             {
-                $arrlink[$i] = "- <a href=\"view.php?view=".$mem -> fields['id']."\">".$mem -> fields['user']."</a> (".$mem -> fields['id'].") (".$mem -> fields['tribe_rank'].")<br />";
+                $arrlink[$i] = "- <a href=\"view.php?view=".$mem -> fields['id']."\">".$mytribe->fields['prefix'].' '.$mem -> fields['user'].' '.$mytribe->fields['suffix']."</a> (".$mem -> fields['id'].") (".$mem -> fields['tribe_rank'].")<br />";
             }
             $mem -> MoveNext();
             $i = $i + 1;
@@ -1078,12 +1078,20 @@ if (isset ($_GET['view']) && $_GET['view'] == 'my')
     {
         $smarty -> assign(array("Ayes" => YES,
             "Ano" => NO));
+	$strDate = $db -> DBDate($newdate);
         if ($mytribe -> fields['owner'] == $player -> id) 
         {
             $smarty -> assign(array("Owner" => 1,
                 "Qleader" => Q_LEADER));
             if (isset ($_GET['dalej'])) 
-            {
+	      {
+		$objMembers = $db->Execute("SELECT `id` FROM `players` WHERE `tribe`=".$mytribe->fields['id']);
+		while(!$objMembers->EOF)
+		  {
+		    $db->Execute("INSERT INTO `log` (`owner`,`log`, `czas`, `type`) VALUES(".$objMembers->fields['id'].", 'Twój klan ".$mytribe->fields['name']." został rozwiązany przez przywódcę <b><a href=\"view.php?view=".$player->id."\">".$player->user.L_ID.'<b>'.$player->id."'</b>.', ".$strDate.", 'C')");
+		    $objMembers->MoveNext();
+		  }
+		$objMember->Close();
                 $db -> Execute("UPDATE players SET tribe=0 WHERE tribe=".$mytribe -> fields['id']);
                 $db -> Execute("DELETE FROM tribes WHERE id=".$mytribe -> fields['id']);
                 $db -> Execute("DELETE FROM tribe_zbroj WHERE klan=".$mytribe -> fields['id']);
@@ -1100,10 +1108,17 @@ if (isset ($_GET['view']) && $_GET['view'] == 'my')
                 "Qmember" => Q_MEMBER));
             if (isset ($_GET['dalej'])) 
             {
-                $db -> Execute("UPDATE players SET tribe=0, tribe_rank='' WHERE id=".$player -> id);
                 $db -> Execute("DELETE FROM tribe_perm WHERE tribe=".$mytribe -> fields['id']." AND player=".$player -> id);
                 $strDate = $db -> DBDate($newdate);
                 $db -> Execute("INSERT INTO `log` (`owner`,`log`, `czas`, `type`) VALUES(".$mytribe -> fields['owner'].", '".L_PLAYER." <b><a href=\"view.php?view=".$player -> id."\">".$player -> user.L_ID.'<b>'.$player -> id.'</b>'.M_LEAVE."', ".$strDate.", 'C')");
+		$objPerm = $db -> Execute("SELECT `player` FROM `tribe_perm` WHERE `tribe`=".$player->tribe." AND (`wait`=1 OR `kick`=1)");
+		while (!$objPerm -> EOF)
+		  {
+		    $db -> Execute("INSERT INTO `log` (`owner`,`log`, `czas`, `type`) VALUES(".$objPerm -> fields['player'].",'".L_PLAYER." <b><a href=view.php?view=".$player -> id.">".$player -> user.L_ID.'<b>'.$player -> id.'</b>'.M_LEAVE."', ".$strDate.", 'C')");
+		    $objPerm -> MoveNext();
+		  }
+		$objPerm -> Close();
+		$db -> Execute("UPDATE players SET tribe=0, tribe_rank='' WHERE id=".$player -> id);
                 error (L_MEMBER);
             }
         }
