@@ -8,7 +8,7 @@
  *   @author               : thindil <thindil@tuxfamily.org>
  *   @author               : eyescream <tduda@users.sourceforge.net>
  *   @version              : 1.4
- *   @since                : 11.11.2011
+ *   @since                : 14.11.2011
  *
  */
 
@@ -43,16 +43,7 @@ if (isset ($_GET['action']) && $_GET['action'] == 'chat')
 {
     if (isset($_POST['msg']) && $_POST['msg'] != '') 
       {
-	if ($player->tribe)
-	  {
-	    $objTribe = $db->Execute("SELECT `prefix`, `suffix` FROM `tribes` WHERE `id`=".$player->tribe);
-	    $strAuthor = $objTribe->fields['prefix']." ".$player->user." ".$objTribe->fields['suffix'];
-	    $objTribe->Close();
-	  }
-	else
-	  {
-	    $strAuthor = $player -> user;
-	  }
+	$strAuthor = $arrTags[$player->tribe][0].' '.$player->user.' '.$arrTags[$player->tribe][1];
 	switch ($player->rank)
 	  {
 	  case 'Admin':

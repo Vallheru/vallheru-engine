@@ -7,7 +7,7 @@
  *   @copyright            : (C) 2004,2005,2006,2011 Vallheru Team based on Gamers-Fusion ver 2.5
  *   @author               : thindil <thindil@tuxfamily.org>
  *   @version              : 1.4
- *   @since                : 26.09.2011
+ *   @since                : 14.11.2011
  *
  */
  
@@ -162,8 +162,9 @@ if (isset ($_GET['action1']) && $_GET['action1'] == 'fight' && $player -> hp > 0
         }
         $db -> Execute("UPDATE players SET miejsce='Altara', rank='Bohater' WHERE id=".$player -> id);
         $db -> Execute("UPDATE settings SET value=".$player -> id." WHERE setting='player'");
-        $db -> Execute("INSERT INTO halloffame (heroid, oldname, herorace, newid) VALUES(".$player -> id.", '".$player -> user."', '".$player -> race." ".$player -> clas."', ".$player -> id.")");
-        $db -> Execute("INSERT INTO updates (starter, title, updates, lang) VALUES('(Herold)','".U_TITLE."','".U_TEXT.$gamename.U_TEXT2.$gamename.U_TEXT3.$newdate.U_TEXT4.$player -> user.U_TEXT5.$player -> id.U_TEXT6."','".$player -> lang."')");
+	$strHero = $arrTags[$player->tribe][0].' '.$player->user.' '.$arrTags[$player->tribe][1];
+        $db -> Execute("INSERT INTO halloffame (heroid, oldname, herorace, newid) VALUES(".$player -> id.", '".$strHero."', '".$player -> race." ".$player -> clas."', ".$player -> id.")");
+        $db -> Execute("INSERT INTO updates (starter, title, updates, lang) VALUES('(Herold)','".U_TITLE."','".U_TEXT.$gamename.U_TEXT2.$gamename.U_TEXT3.$newdate.U_TEXT4.$strHero.U_TEXT5.$player -> id.U_TEXT6."','".$player -> lang."')");
         $smarty -> assign(array("Steptext" => STEP_TEXT,
                                 "Tgo" => T_GO,
                                 "Ahere" => A_HERE));

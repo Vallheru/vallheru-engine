@@ -8,7 +8,7 @@
  *   @author               : thindil <thindil@tuxfamily.org>
  *   @author               : eyescream <tduda@users.sourceforge.net>
  *   @version              : 1.4
- *   @since                : 25.09.2011
+ *   @since                : 14.11.2011
  *
  */
 
@@ -44,8 +44,9 @@ require_once('languages/'.$player -> lang.'/monuments.php');
 function topplayers($strDbfield, $blnHidden = FALSE)
 {
     global $db;
+    global $arrTags;
     
-    $objTop = $db -> SelectLimit('SELECT `id`, `user`, `'.$strDbfield.'` FROM `players` ORDER BY `'.$strDbfield.'` DESC', 5);
+    $objTop = $db -> SelectLimit('SELECT `id`, `user`, `'.$strDbfield.'`, `tribe` FROM `players` ORDER BY `'.$strDbfield.'` DESC', 5);
 
     while (!$objTop -> EOF) 
       {
@@ -53,6 +54,10 @@ function topplayers($strDbfield, $blnHidden = FALSE)
 	  {
 	    $objTop->fields['user'] = 'XXXXX';
 	    $objTop->fields['id'] = 'X';
+	  }
+	else
+	  {
+	    $objTop->fields['user'] = $arrTags[$objTop->fields['tribe']][0].' '.$objTop->fields['user'].' '.$arrTags[$objTop->fields['tribe']][1];
 	  }
         $arrTop[] = array('user' => $objTop -> fields['user'],
 			  'id' => $objTop -> fields['id'],

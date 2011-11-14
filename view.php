@@ -8,7 +8,7 @@
  *   @author               : thindil <thindil@tuxfamily.org>
  *   @author               : eyescream <tduda@users.sourceforge.net>
  *   @version              : 1.4
- *   @since                : 11.11.2011
+ *   @since                : 14.11.2011
  *
  */
 
@@ -52,16 +52,16 @@ if (empty ($view -> id))
     error (NO_PLAYER);
 }
 
-$tribe = $db -> Execute("SELECT `name`, `prefix`, `suffix` FROM `tribes` WHERE `id`=".$view -> tribe);
-if ($tribe -> fields['name']) 
-{
+$view->user = $arrTags[$view->tribe][0].' '.$view->user.' '.$arrTags[$view->tribe][1];
+if ($view->tribe)
+  {
+    $tribe = $db -> Execute("SELECT `name` FROM `tribes` WHERE `id`=".$view -> tribe);
     $smarty -> assign ("Clan", T_CLAN.": <a href=tribes.php?view=view&amp;id=".$view -> tribe.">".$tribe -> fields['name']."</a><br />".T_CLAN_RANK.": ".$view -> tribe_rank."<br />");
-    $view->user = $tribe->fields['prefix']." ".$view->user." ".$tribe->fields['suffix'];
-} 
-    else 
-{
-    $smarty -> assign ("Clan", T_CLAN.": ".NOTHING."<br />");
-}
+  } 
+ else 
+   {
+     $smarty -> assign ("Clan", T_CLAN.": ".NOTHING."<br />");
+   }
 
 $smarty -> assign (array("User" => $view -> user, 
                          "Id" => $view -> id, 

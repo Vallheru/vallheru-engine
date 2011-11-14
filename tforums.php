@@ -7,7 +7,7 @@
  *   @copyright            : (C) 2004,2005,2006,2011 Vallheru Team based on Gamers-Fusion ver 2.5
  *   @author               : thindil <thindil@tuxfamily.org>
  *   @version              : 1.4
- *   @since                : 31.10.2011
+ *   @since                : 14.11.2011
  *
  */
 
@@ -350,7 +350,8 @@ if (isset ($_GET['action']) && $_GET['action'] == 'addtopic')
     $strBody = $db -> qstr($_POST['body'], get_magic_quotes_gpc());
     $_POST['title2'] = "<b>".$data." ".$time."</b> ".$_POST['title2'];
     $strTitle = $db -> qstr($_POST['title2'], get_magic_quotes_gpc());
-    $db -> Execute("INSERT INTO `tribe_topics` (`topic`, `body`, `starter`, `tribe`, `w_time`, `sticky`, `pid`) VALUES(".$strTitle.", ".$strBody.", '".$player -> user."', '".$player -> tribe."', ".$ctime.", '".$strSticky."', ".$player -> id.")") or $db -> ErrorMsg();
+    $strAuthor = $arrTags[$player->tribe][0].' '.$player->user.' '.$arrTags[$player->tribe][1];
+    $db -> Execute("INSERT INTO `tribe_topics` (`topic`, `body`, `starter`, `tribe`, `w_time`, `sticky`, `pid`) VALUES(".$strTitle.", ".$strBody.", '".$strAuthor."', '".$player -> tribe."', ".$ctime.", '".$strSticky."', ".$player -> id.")") or $db -> ErrorMsg();
     error (TOPIC_ADD." <a href=tforums.php?view=topics>".TO_BACK);
 }
 
@@ -381,7 +382,8 @@ if (isset($_GET['reply']))
     $_POST['rep'] = bbcodetohtml($_POST['rep']);
     $_POST['rep'] = "<b>".$data." ".$time."</b><br />".$_POST['rep'];
     $strRep = $db -> qstr($_POST['rep'], get_magic_quotes_gpc());
-    $db -> Execute("INSERT INTO `tribe_replies` (`starter`, `topic_id`, `body`, `pid`) VALUES('".$player -> user."', ".$_GET['reply'].", ".$strRep." , ".$player -> id.")") or error("Could not add reply.");
+    $strAuthor = $arrTags[$player->tribe][0].' '.$player->user.' '.$arrTags[$player->tribe][1];
+    $db -> Execute("INSERT INTO `tribe_replies` (`starter`, `topic_id`, `body`, `pid`) VALUES('".$strAuthor."', ".$_GET['reply'].", ".$strRep." , ".$player -> id.")") or error("Could not add reply.");
     $db->Execute("UPDATE `tribe_topics` SET `w_time`=".$ctime." WHERE `id`=".$_GET['reply']);
     error (REPLY_ADD." <a href=tforums.php?topic=".$_GET['reply'].">".A_HERE."</a>.");
 }

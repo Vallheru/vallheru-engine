@@ -7,7 +7,7 @@
  *   @copyright            : (C) 2004-2005,2011 Vallheru Team based on Gamers-Fusion ver 2.5
  *   @author               : thindil <thindil@tuxfamily.org>
  *   @version              : 1.4
- *   @since                : 07.08.2011
+ *   @since                : 14.11.2011
  *
  */
 
@@ -70,7 +70,7 @@ if (isset ($_GET['action']) && $_GET['action'] == 'add')
       {
 	$strLang = $player -> lang;
       }
-    $db -> Execute("INSERT INTO news (starter, title, news, lang, added) VALUES('".$player -> user." (".$player -> id.")','".$_POST['addtitle']."','".$_POST['addnews']."', '".$strLang."', 'N')") or error(E_DB);
+    $db -> Execute("INSERT INTO `news` (`starter`, `title`, `news`, `lang`, `added`) VALUES('".$arrTags[$player->tribe][0].' '.$player->user.' '.$arrTags[$player->tribe][1]." (".$player -> id.")','".$_POST['addtitle']."','".$_POST['addnews']."', '".$strLang."', 'N')") or error(E_DB);
     error (N_SUCCES);
 }
 

@@ -7,7 +7,7 @@
  *   @copyright            : (C) 2006,2007,2011 Vallheru Team based on Gamers-Fusion ver 2.5
  *   @author               : thindil <thindil@tuxfamily.org>
  *   @version              : 1.4
- *   @since                : 11.11.2011
+ *   @since                : 14.11.2011
  *
  */
 
@@ -92,6 +92,7 @@ function addcomments($intItemid, $strCommentstable, $strCommentsid)
     global $db;
     global $player;
     global $data;
+    global $arrTags;
 
     if (empty($_POST['body']))
     {
@@ -99,16 +100,7 @@ function addcomments($intItemid, $strCommentstable, $strCommentsid)
     }
     checkvalue($intItemid);
     require_once('includes/bbcode.php');
-    if ($player->tribe)
-      {
-	$objTribe = $db->Execute("SELECT `prefix`, `suffix` FROM `tribes` WHERE `id`=".$player->tribe);
-	$strAuthor = $objTribe->fields['prefix']." ".$player->user." ".$objTribe->fields['suffix']." ID: ".$player -> id;
-	$objTribe->Close();
-      }
-    else
-      {
-	$strAuthor = $player -> user." ID: ".$player -> id;
-      }
+    $strAuthor = $arrTags[$player->tribe][0]." ".$player->user." ".$arrTags[$player->tribe][1]." ID: ".$player -> id;
     $_POST['body'] = bbcodetohtml($_POST['body']);
     $strBody = $db -> qstr($_POST['body'], get_magic_quotes_gpc());
     $strDate = $db -> DBDate($data);

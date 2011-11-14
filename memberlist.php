@@ -7,7 +7,7 @@
  *   @copyright            : (C) 2004,2005,2006,2007,2011 Vallheru Team based on Gamers-Fusion ver 2.5
  *   @author               : thindil <thindil@tuxfamily.org>
  *   @version              : 1.4
- *   @since                : 11.11.2011
+ *   @since                : 14.11.2011
  *
  */
 
@@ -166,20 +166,7 @@ while (!$mem -> EOF)
     $arrrank[] = selectrank($mem -> fields['rank'], $mem -> fields['gender']);
     
     $arrid[] = $mem -> fields['id'];
-    if ($mem->fields['tribe'])
-      {
-	if (!array_key_exists($mem->fields['tribe'], $arrTribes))
-	{
-	  $objTags = $db->Execute("SELECT `prefix`, `suffix` FROM `tribes` WHERE `id`=".$mem->fields['tribe']);
-	  $arrTribes[$mem->fields['tribe']] = array($objTags->fields['prefix'], $objTags->fields['suffix']);
-	  $objTags->Close();
-	}
-	$arrname[] = $arrTribes[$mem->fields['tribe']][0]." ".$mem->fields['user']." ".$arrTribes[$mem->fields['tribe']][1];
-      }
-    else
-      {
-	$arrname[] = $mem->fields['user'];
-      }
+    $arrname[] = $arrTags[$mem->fields['tribe']][0].' '.$mem->fields['user'].' '.$arrTags[$mem->fields['tribe']][1];
     $arrrace[] = $mem -> fields['rasa'];
     $arrlevel[] = $mem -> fields['level'];
     if (strlen($mem->fields['shortrpg']) > 0)

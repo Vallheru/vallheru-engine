@@ -7,7 +7,7 @@
  *   @copyright            : (C) 2004,2005,2006,2007,2011 Vallheru Team based on Gamers-Fusion ver 2.5
  *   @author               : thindil <thindil@tuxfamily.org>
  *   @version              : 1.4
- *   @since                : 13.11.2011
+ *   @since                : 14.11.2011
  *
  */
 
@@ -1012,8 +1012,8 @@ if (isset($_GET['view']))
 	$arrContacts = $db->GetAll("SELECT `id`, `pid` FROM `contacts` WHERE `owner`=".$player->id." ORDER BY `order`, `pid` ASC");
 	foreach ($arrContacts as &$arrContact)
 	  {
-	    $objUser = $db->Execute("SELECT `user` FROM `players` WHERE `id`=".$arrContact['pid']);
-	    $arrContact['user'] = $objUser->fields['user'];
+	    $objUser = $db->Execute("SELECT `user`, `tribe` FROM `players` WHERE `id`=".$arrContact['pid']);
+	    $arrContact['user'] = $arrTags[$objUser->fields['tribe']][0].' '.$objUser->fields['user'].' '.$arrTags[$objUser->fields['tribe']][1];
 	    $objUser->Close();
 	  }
 	$intAmount = count($arrContacts);

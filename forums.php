@@ -8,7 +8,7 @@
  *   @author               : thindil <thindil@tuxfamily.org>
  *   @author               : mori <ziniquel@users.sourceforge.net>
  *   @version              : 1.4
- *   @since                : 11.11.2011
+ *   @since                : 14.11.2011
  *
  */
 
@@ -528,16 +528,7 @@ if (isset ($_GET['action']) && $_GET['action'] == 'addtopic')
     $_POST['title2'] = "<b>".$data." ".$time."</b> ".$_POST['title2'];
     $strBody = $db -> qstr($_POST['body'], get_magic_quotes_gpc());
     $strTitle = $db -> qstr($_POST['title2'], get_magic_quotes_gpc());
-    if ($player->tribe)
-      {
-	$objTribe = $db->Execute("SELECT `prefix`, `suffix` FROM `tribes` WHERE `id`=".$player->tribe);
-	$strAuthor = $objTribe->fields['prefix']." ".$player->user." ".$objTribe->fields['suffix'];
-	$objTribe->Close();
-      }
-    else
-      {
-	$strAuthor = $player -> user;
-      }
+    $strAuthor = $arrTags[$player->tribe][0]." ".$player->user." ".$arrTags[$player->tribe][1];
     $db -> Execute("INSERT INTO `topics` (`topic`, `body`, `starter`, `gracz`, `cat_id`, `w_time`, `sticky`) VALUES(".$strTitle.", ".$strBody.", '".$strAuthor."', ".$player -> id.", ".$_POST['catid'].", ".$ctime.", '".$strSticky."')") or die("Could not add topic.");
     error (TOPIC_ADD." <a href=forums.php?topics=".$_POST['catid'].">".TO_BACK);
 }
@@ -582,16 +573,7 @@ if (isset($_GET['reply']))
     $_POST['rep'] = bbcodetohtml($_POST['rep']);
     $_POST['rep'] = "<b>".$data." ".$time."</b><br />".$_POST['rep'];
     $strBody = $db -> qstr($_POST['rep'], get_magic_quotes_gpc());
-    if ($player->tribe)
-      {
-	$objTribe = $db->Execute("SELECT `prefix`, `suffix` FROM `tribes` WHERE `id`=".$player->tribe);
-	$strAuthor = $objTribe->fields['prefix']." ".$player->user." ".$objTribe->fields['suffix'];
-	$objTribe->Close();
-      }
-    else
-      {
-	$strAuthor = $player -> user;
-      }
+    $strAuthor = $arrTags[$player->tribe][0]." ".$player->user." ".$arrTags[$player->tribe][1];
     $db -> Execute("INSERT INTO `replies` (`starter`, `topic_id`, `body`, `gracz`) VALUES('".$strAuthor."', ".$_GET['reply'].", ".$strBody.", ".$player -> id.")") or die("Could not add reply.");
     $db->Execute("UPDATE `topics` SET `w_time`=".$ctime.", `replies`=`replies`+1 WHERE `id`=".$_GET['reply']);
     error (REPLY_ADD." <a href=forums.php?topic=".$_GET['reply'].">".A_HERE."</a>.");

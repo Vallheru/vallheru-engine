@@ -94,8 +94,8 @@ if (!isset ($_GET['view']))
       {
 	$arrVdate[] = $objVallars->fields['vdate'];
 	$arrOwnerid[] = $objVallars->fields['owner'];
-	$objOwner = $db->Execute("SELECT `user` FROM `players` WHERE `id`=".$objVallars->fields['owner']);
-	$arrOwner[] = $objOwner->fields['user'];
+	$objOwner = $db->Execute("SELECT `user`, `tribe` FROM `players` WHERE `id`=".$objVallars->fields['owner']);
+	$arrOwner[] = $arrTags[$objOwner->fields['tribe']][0].' '.$objOwner->fields['user'].' '.$arrTags[$objOwner->fields['tribe']][1];
 	$arrReason[] = "Przyznano ".$objVallars->fields['amount']." Vallar(y) za ".$objVallars->fields['reason'];
 	$objOwner->Close();
 	$objVallars->MoveNext();

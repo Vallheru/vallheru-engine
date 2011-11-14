@@ -7,7 +7,7 @@
  *   @copyright            : (C) 2004,2005,2006,2007,2011 Vallheru Team based on Gamers-Fusion ver 2.5
  *   @author               : thindil <thindil@tuxfamily.org>
  *   @version              : 1.4
- *   @since                : 11.11.2011
+ *   @since                : 14.11.2011
  *
  */
 
@@ -373,10 +373,20 @@ $arrFilename = explode("/", $_SERVER['PHP_SELF']);
 $intKey = count($arrFilename) - 1;
 $strFilename = $arrFilename[$intKey];
 $strFname = substr($strFilename, 0, -4);
+//Tribe tags
+$objTags = $db->Execute("SELECT `id`, `prefix`, `suffix` FROM `tribes`");
+$arrTags = array(array('', ''));
+while(!$objTags->EOF)
+  {
+    $arrTags[$objTags->fields['id']] = array($objTags->fields['prefix'], $objTags->fields['suffix']);
+    $objTags->MoveNext();
+  }
+$objTags->Close();
+$strUsername = $arrTags[$player->tribe][0].' '.$player->user.' '.$arrTags[$player->tribe][1];
 $smarty -> assign (array ("Time" => $time,
                           "Date" => $newdate,
                           "Title" => $title1,
-                          "Name" =>  $player -> user,
+                          "Name" =>  $strUsername,
                           "Id" => $player -> id,
                           "Level" => $player -> level,
                           "Exp" => $player -> exp,
@@ -711,6 +721,7 @@ function error($text)
     global $sqltime;
     global $phptime;
     global $gamename;
+    global $arrTags;
     if (strpos($text, "<a href") === FALSE)
     {
         $text = $text." (<a href=\"".$_SERVER['PHP_SELF']."\">".BACK."</a>)";
