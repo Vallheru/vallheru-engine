@@ -7,7 +7,7 @@
  *   @copyright            : (C) 2004,2005,2006,2011 Vallheru Team based on Gamers-Fusion ver 2.5
  *   @author               : thindil <thindil@tuxfamily.org>
  *   @version              : 1.4
- *   @since                : 18.10.2011
+ *   @since                : 15.11.2011
  *
  */
  
@@ -293,7 +293,7 @@ if (isset($_GET['action']) && $_GET['action'] == 'moutains' && $player -> locati
         }
         if ($intRoll == 10) 
         {
-            $intAmount = rand(1,10);
+            $intAmount = rand(1,20);
             $intMeteor = $intMeteor + $intAmount;
         }
         if ($intRoll >= 11 && $intRoll <= 13) 
