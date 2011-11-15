@@ -7,7 +7,7 @@
  *   @copyright            : (C) 2004,2005,2006,2007,2011 Vallheru Team based on Gamers-Fusion ver 2.5
  *   @author               : thindil <thindil@tuxfamily.org>
  *   @version              : 1.4
- *   @since                : 10.10.2011
+ *   @since                : 15.11.2011
  *
  */
 
@@ -593,6 +593,69 @@ function mainreset()
         $i ++;
     }
     /**
+     * Add hunters quest
+     */
+    $arrQtypes = array('F', 'I', 'L');
+    foreach (array('altara', 'ardulith') as $strCity)
+      {
+	$strType = $arrQtypes[rand(0, 2)];
+	switch ($strType)
+	  {
+	  case 'F':
+	    $objMonsters = $db->Execute("SELECT `id` FROM `monsters` WHERE `location`='".$strCity."'");
+	    $arrMonsters = array();
+	    while (!$objMonsters->EOF)
+	      {
+		$arrMonsters[] = $objMonsters->fields['id'];
+		$objMonsters->MoveNext();
+	      }
+	    $intKey = array_rand($arrMonsters);
+	    $intId = $arrMonsters[$intKey];
+	    $objMonsters->Close();
+	    $intAmount = rand(1, 10);
+	    $strQuest = 'F;'.$intId.';'.$intAmount;
+	    break;
+	  case 'I':
+	    $objItems = $db->Execute("SELECT `id` FROM `equipment` WHERE `owner`=0");
+	    $arrItems = array();
+	    while (!$objItems->EOF)
+	      {
+		$arrItems[] = $objItems->fields['id'];
+		$objItems->MoveNext();
+	      }
+	    $objItems->Close();
+	    $intKey = array_rand($arrItems);
+	    $intId = $arrItems[$intKey];
+	    $intAmount = rand(1, 10);
+	    $strQuest = 'I;'.$intId.';'.$intAmount;
+	    break;
+	  case 'L':
+	    $objMonsters = $db->Execute("SELECT `id` FROM `monsters` WHERE `location`='".$strCity."'");
+	    $arrMonsters = array();
+	    while (!$objMonsters->EOF)
+	      {
+		$arrMonsters[] = $objMonsters->fields['id'];
+		$objMonsters->MoveNext();
+	      }
+	    $objMonsters->Close();
+	    if (count($arrMonsters) > 0)
+	      {
+		$intKey = array_rand($arrMonsters);
+		$intId = $arrMonsters[$intKey];
+		$intPart = rand(0, 3);
+		$strQuest = 'L;'.$intId.';'.$intPart;
+	      }
+	    else
+	      {
+		$strQuest = '';
+	      }
+	    break;
+	  default:
+	    break;
+	  }
+	$db->Execute("UPDATE `settings` SET `value`='".$strQuest."' WHERE `setting`='hunter".$strCity."' AND `lootnames`!=''");
+      }
+    /**
     * Reopen game
     */
     $db -> Execute("UPDATE settings SET value='Y' WHERE setting='open'");
@@ -774,6 +837,69 @@ function smallreset()
         $db -> Execute("UPDATE `rings` SET `amount`=".$intAmount." WHERE `id`=".$intRing);
         $i ++;
     }
+    /**
+     * Add hunters quest
+     */
+    $arrQtypes = array('F', 'I', 'L');
+    foreach (array('altara', 'ardulith') as $strCity)
+      {
+	$strType = $arrQtypes[rand(0, 2)];
+	switch ($strType)
+	  {
+	  case 'F':
+	    $objMonsters = $db->Execute("SELECT `id` FROM `monsters` WHERE `location`='".$strCity."'");
+	    $arrMonsters = array();
+	    while (!$objMonsters->EOF)
+	      {
+		$arrMonsters[] = $objMonsters->fields['id'];
+		$objMonsters->MoveNext();
+	      }
+	    $intKey = array_rand($arrMonsters);
+	    $intId = $arrMonsters[$intKey];
+	    $objMonsters->Close();
+	    $intAmount = rand(1, 10);
+	    $strQuest = 'F;'.$intId.';'.$intAmount;
+	    break;
+	  case 'I':
+	    $objItems = $db->Execute("SELECT `id` FROM `equipment` WHERE `owner`=0");
+	    $arrItems = array();
+	    while (!$objItems->EOF)
+	      {
+		$arrItems[] = $objItems->fields['id'];
+		$objItems->MoveNext();
+	      }
+	    $objItems->Close();
+	    $intKey = array_rand($arrItems);
+	    $intId = $arrItems[$intKey];
+	    $intAmount = rand(1, 10);
+	    $strQuest = 'I;'.$intId.';'.$intAmount;
+	    break;
+	  case 'L':
+	    $objMonsters = $db->Execute("SELECT `id` FROM `monsters` WHERE `location`='".$strCity."' AND `lootnames`!= ''");
+	    $arrMonsters = array();
+	    while (!$objMonsters->EOF)
+	      {
+		$arrMonsters[] = $objMonsters->fields['id'];
+		$objMonsters->MoveNext();
+	      }
+	    $objMonsters->Close();
+	    if (count($arrMonsters) > 0)
+	      {
+		$intKey = array_rand($arrMonsters);
+		$intId = $arrMonsters[$intKey];
+		$intPart = rand(0, 3);
+		$strQuest = 'L;'.$intId.';'.$intPart;
+	      }
+	    else
+	      {
+		$strQuest = '';
+	      }
+	    break;
+	  default:
+	    break;
+	  }
+	$db->Execute("UPDATE `settings` SET `value`='".$strQuest."' WHERE `setting`='hunter".$strCity."'");
+      }
     /**
      * Reopen game
      */

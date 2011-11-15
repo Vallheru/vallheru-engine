@@ -1,5 +1,8 @@
 2011-11-15  Bartek thindil Jasicki  <thindil@tuxfamily.org>
 
+	* FEATURE,install/db/update.sql, templates/layout1/hunters.tpl, templates/hunters.tpl, hunters.php, includes/resets.php,
+	includes/turnfight.php, includes/head.php: 
+	added random missions to hunters guild
 	* UPDATE,explore.php:
 	raised amount of meteor found
 
