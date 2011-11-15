@@ -8,7 +8,7 @@
  *   @author               : thindil <thindil@tuxfamily.org>
  *   @author               : eyescream <tduda@users.sourceforge.net>
  *   @version              : 1.4
- *   @since                : 12.09.2011
+ *   @since                : 15.11.2011
  *
  */
 
@@ -53,7 +53,8 @@ if ($player -> location == 'Altara' || $player -> location == 'Ardulith')
     $smarty -> display ('jail.tpl');
     $jail = $db -> Execute("SELECT * FROM `jail` ORDER BY `id` ASC");
     $number = $jail -> RecordCount();
-    $smarty -> assign ("Number", $number);
+    $smarty -> assign(array("Number" => $number,
+			    "Jailinfo" => "Tutaj znajdują się lochy ".$gamename." do których wtrącani są wszyscy obywatele łamiący miejscowe prawo. Panuje w nich chroniczny chłód, który w połączeniu z wilgocią i zapachem pleśni, powoduje u zwiedzających parszywe odczucia. Wrażenie pogłębiają jęki oraz wycie torturowanych więźniów. Legenda głosi, że kiedyś ktoś uśmiechnął się w tym miejscu.<br /><br />Wyrok zapada na określony czas, z możliwością wpłacenia kaucji. Aby wpłacić kaucję za daną osobę wystarczy po prostu kliknąć na kwotę kaucji. Oto lista osób skazanych wraz z opisem przewinienia:"));
     if ($number > 0) 
     {
         $arrid = array();
@@ -101,14 +102,12 @@ if ($player -> location == 'Altara' || $player -> location == 'Ardulith')
                                 "Pduration" => P_DURATION,
                                 "Pduration2" => P_DURATION_R,
                                 "Pcost" => P_COST,
-                                "Goldcoins" => GOLD_COINS,
-                                "Jailinfo" => JAIL_INFO));
+                                "Goldcoins" => GOLD_COINS));
     }
-        else
-    {
-        $smarty -> assign(array("Noprisoners" => NO_PRISONERS,
-                                "Jailinfo" => JAIL_INFO));
-    }
+    else
+      {
+	$smarty -> assign("Noprisoners", NO_PRISONERS);
+      }
     $jail -> Close();
 }
 
