@@ -8,7 +8,7 @@
  *   @author               : thindil <thindil@tuxfamily.org>
  *   @author               : eyescream <tduda@users.sourceforge.net>
  *   @version              : 1.4
- *   @since                : 11.11.2011
+ *   @since                : 15.11.2011
  *
  */
  
@@ -1805,9 +1805,9 @@ if (isset($_GET['view']))
 		  {
 		    $strMessage .= 'zaakceptowany. Dostałeś za to 2 Vallary.';
 		    $strAuthor = '<b><a href="view.php?view='.$player -> id.'">'.$player -> user."</a></b>, ID <b>".$player -> id.'</b>';
-		    $db -> Execute("INSERT INTO `changelog` (`author`, `location`, `text`, `date`, `lang`) VALUES('".$strAuthor."', 'Ogólnie', 'Nowy opis potwora autorstwa ID: ".$objProposal->fields['pid']."', ".$strDate.", 'pl')");
+		    $db -> Execute("INSERT INTO `changelog` (`author`, `location`, `text`, `date`, `lang`) VALUES('".$strAuthor."', 'Gildia Łowców', 'Nowy opis potwora: ".$objProposal->fields['name']." autorstwa ID: ".$objProposal->fields['pid']."', ".$strDate.", 'pl')");
 		    $db->Execute("UPDATE `players` SET `vallars`=`vallars`+2 WHERE `id`=".$objProposal->fields['pid']);
-		    $db->Execute("INSERT INTO `vallars` (`owner`, `amount`, `reason`) VALUES(".$objProposal->fields['pid'].", 2, 'Opis potwora.')");
+		    $db->Execute("INSERT INTO `vallars` (`owner`, `amount`, `reason`) VALUES(".$objProposal->fields['pid'].", 2, 'Opis potwora ".$objProposal->fields['name'].".')");
 		    $db->Execute("UPDATE `monsters` SET `desc`='".$objProposal->fields['data']."' WHERE `id`=".$objProposal->fields['info']);
 		    $strResult = "Zaakceptowałeś opis";
 		  }

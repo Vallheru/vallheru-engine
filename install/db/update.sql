@@ -85,3 +85,6 @@ CREATE TABLE IF NOT EXISTS `proposals` (
 ALTER TABLE `tribes` ADD `prefix` VARCHAR( 5 ) NOT NULL , ADD `suffix` VARCHAR( 5 ) NOT NULL;
 UPDATE `bows` SET `maxwt`=25, `cost`=`cost`*1.25 WHERE `type`='R';
 UPDATE `bows` SET `cost`=256000 WHERE `id`=27;
+ALTER TABLE `monsters` ADD `desc` TEXT NOT NULL;
+INSERT INTO `settings` (`setting`, `value`) VALUES ('hunteraltara', NULL);
+INSERT INTO `settings` (`setting`, `value`) VALUES ('hunterardulith', NULL);
