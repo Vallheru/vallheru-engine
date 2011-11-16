@@ -1,5 +1,7 @@
 2011-11-16  Bartek thindil Jasicki  <thindil@tuxfamily.org>
 
+	* BUG,admin.php: 
+	fixed generating monster stats
 	* UPDATE,languages/pl/tribes.php, tribes.php: 
 	added new tribes description
 	* UPDATE,templates/hunters.tpl, templates/layout1/hunters.tpl, hunters.php: 

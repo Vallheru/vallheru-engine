@@ -1644,7 +1644,8 @@ if (isset($_GET['view']))
 		    //Monster stats
 		    $objMinlev = $db->Execute("SELECT max(`level`) FROM `monsters` WHERE `level`<=".$arrData[6]." AND `location`='".$arrLocations[$objProposal->fields['info']]."'");
 		    $objMaxlev = $db->Execute("SELECT min(`level`) FROM `monsters` WHERE `level`>=".$arrData[6]." AND `location`='".$arrLocations[$objProposal->fields['info']]."'");
-		    $objStats = $db->Execute("SELECT * FROM `monsters` WHERE `level`=".$objMaxlev->fields['min(`level`)']);
+		    $objStats = $db->Execute("SELECT * FROM `monsters` WHERE `level`=".$objMaxlev->fields['min(`level`)']." AND `location`='".$arrLocations[$objProposal->fields['info']]."'");
+		    $objHp = $db->Execute("SELECT `hp` FROM `monsters` WHERE `level`=".$objMinlev->fields['max(`level`)']." AND `location`='".$arrLocations[$objProposal->fields['info']]."'");
 		    $arrMob = array("str" => 0,
 				    "agi" => 0,
 				    "speed" => 0,
@@ -1654,7 +1655,8 @@ if (isset($_GET['view']))
 				    "gold2" => 0,
 				    "exp1" => 0,
 				    "exp2" => 0);
-		    $arrMob['str'] = ceil(($objMinlev->fields['max(`level`)'] / $objMaxlev->fields['min(`level`)']) * $objStats->fields['strength']);
+		    $fltFraction = ($objMinlev->fields['max(`level`)'] / $objMaxlev->fields['min(`level`)']);
+		    $arrMob['str'] = ceil($fltFraction * $objStats->fields['strength']);
 		    if ($arrData[0] == 0)
 		      {
 			$arrMob['str'] += ceil($arrMob['str'] / 10);
@@ -1663,7 +1665,7 @@ if (isset($_GET['view']))
 		      {
 			$arrMob['str'] -= ceil($arrMob['str'] / 10);
 		      }
-		    $arrMob['agi'] = ceil(($objMinlev->fields['max(`level`)'] / $objMaxlev->fields['min(`level`)']) * $objStats->fields['agility']);
+		    $arrMob['agi'] = ceil($fltFraction * $objStats->fields['agility']);
 		    if ($arrData[1] == 0)
 		      {
 			$arrMob['agi'] += ceil($arrMob['agi'] / 10);
@@ -1672,7 +1674,7 @@ if (isset($_GET['view']))
 		      {
 			$arrMob['agi'] -= ceil($arrMob['agi'] / 10);
 		      }
-		    $arrMob['speed'] = ceil(($objMinlev->fields['max(`level`)'] / $objMaxlev->fields['min(`level`)']) * $objStats->fields['speed']);
+		    $arrMob['speed'] = ceil($fltFraction * $objStats->fields['speed']);
 		    if ($arrData[2] == 0)
 		      {
 			$arrMob['speed'] += ceil($arrMob['speed'] / 10);
@@ -1681,7 +1683,7 @@ if (isset($_GET['view']))
 		      {
 			$arrMob['speed'] -= ceil($arrMob['speed'] / 10);
 		      }
-		    $arrMob['con'] = ceil(($objMinlev->fields['max(`level`)'] / $objMaxlev->fields['min(`level`)']) * $objStats->fields['endurance']);
+		    $arrMob['con'] = ceil($fltFraction * $objStats->fields['endurance']);
 		    if ($arrData[3] == 0)
 		      {
 			$arrMob['con'] += ceil($arrMob['con'] / 10);
@@ -1690,9 +1692,9 @@ if (isset($_GET['view']))
 		      {
 			$arrMob['con'] -= ceil($arrMob['con'] / 10);
 		      }
-		    $arrMob['hp'] = ceil(($objMinlev->fields['max(`level`)'] / $objMaxlev->fields['min(`level`)']) * $objStats->fields['hp']);
-		    $arrMob['gold1'] = ceil(($objMinlev->fields['max(`level`)'] / $objMaxlev->fields['min(`level`)']) * $objStats->fields['credits1']);
-		    $arrMob['gold2'] = ceil(($objMinlev->fields['max(`level`)'] / $objMaxlev->fields['min(`level`)']) * $objStats->fields['credits2']);
+		    $arrMob['hp'] = $objHp->fields['hp'] + ceil($fltFraction * ($objStats->fields['hp'] - $objHp->fields['hp']));
+		    $arrMob['gold1'] = ceil($fltFraction * $objStats->fields['credits1']);
+		    $arrMob['gold2'] = ceil($fltFraction * $objStats->fields['credits2']);
 		    if ($arrData[1] == 0)
 		      {
 			$arrMob['gold1'] += ceil($arrMob['gold1'] / 10);
@@ -1703,8 +1705,8 @@ if (isset($_GET['view']))
 			$arrMob['gold1'] -= ceil($arrMob['gold1'] / 10);
 			$arrMob['gold2'] -= ceil($arrMob['gold2'] / 10);
 		      }
-		    $arrMob['exp1'] = ceil(($objMinlev->fields['max(`level`)'] / $objMaxlev->fields['min(`level`)']) * $objStats->fields['exp1']);
-		    $arrMob['exp2'] = ceil(($objMinlev->fields['max(`level`)'] / $objMaxlev->fields['min(`level`)']) * $objStats->fields['exp2']);
+		    $arrMob['exp1'] = ceil($fltFraction * $objStats->fields['exp1']);
+		    $arrMob['exp2'] = ceil($fltFraction * $objStats->fields['exp2']);
 		    if ($arrData[1] == 0)
 		      {
 			$arrMob['exp1'] += ceil($arrMob['exp1'] / 10);
