@@ -7,7 +7,7 @@
  *   @copyright            : (C) 2004,2005,2006,2007,2011 Vallheru Team based on Gamers-Fusion ver 2.5
  *   @author               : thindil <thindil@tuxfamily.org>
  *   @version              : 1.4
- *   @since                : 15.11.2011
+ *   @since                : 16.11.2011
  *
  */
 
@@ -602,7 +602,7 @@ function mainreset()
 	switch ($strType)
 	  {
 	  case 'F':
-	    $objMonsters = $db->Execute("SELECT `id` FROM `monsters` WHERE `location`='".$strCity."'");
+	    $objMonsters = $db->Execute("SELECT `id` FROM `monsters` WHERE `location`='".ucfirst($strCity)."'");
 	    $arrMonsters = array();
 	    while (!$objMonsters->EOF)
 	      {
@@ -630,7 +630,7 @@ function mainreset()
 	    $strQuest = 'I;'.$intId.';'.$intAmount;
 	    break;
 	  case 'L':
-	    $objMonsters = $db->Execute("SELECT `id` FROM `monsters` WHERE `location`='".$strCity."'");
+	    $objMonsters = $db->Execute("SELECT `id` FROM `monsters` WHERE `location`='".ucfirst($strCity)."'");
 	    $arrMonsters = array();
 	    while (!$objMonsters->EOF)
 	      {
@@ -653,7 +653,9 @@ function mainreset()
 	  default:
 	    break;
 	  }
-	$db->Execute("UPDATE `settings` SET `value`='".$strQuest."' WHERE `setting`='hunter".$strCity."' AND `lootnames`!=''");
+	$db->Execute("UPDATE `settings` SET `value`='".$strQuest."' WHERE `setting`='hunter".$strCity."'");
+	$intAmount = rand(1, 20);
+	$db->Execute("UPDATE `settings` SET `value`='".$intAmount."' WHERE `setting`='hunter".$strCity."amount'");
       }
     /**
     * Reopen game
@@ -847,7 +849,7 @@ function smallreset()
 	switch ($strType)
 	  {
 	  case 'F':
-	    $objMonsters = $db->Execute("SELECT `id` FROM `monsters` WHERE `location`='".$strCity."'");
+	    $objMonsters = $db->Execute("SELECT `id` FROM `monsters` WHERE `location`='".ucfirst($strCity)."'");
 	    $arrMonsters = array();
 	    while (!$objMonsters->EOF)
 	      {
@@ -875,7 +877,7 @@ function smallreset()
 	    $strQuest = 'I;'.$intId.';'.$intAmount;
 	    break;
 	  case 'L':
-	    $objMonsters = $db->Execute("SELECT `id` FROM `monsters` WHERE `location`='".$strCity."' AND `lootnames`!= ''");
+	    $objMonsters = $db->Execute("SELECT `id` FROM `monsters` WHERE `location`='".ucfirst($strCity)."' AND `lootnames`!= ''");
 	    $arrMonsters = array();
 	    while (!$objMonsters->EOF)
 	      {
@@ -899,6 +901,8 @@ function smallreset()
 	    break;
 	  }
 	$db->Execute("UPDATE `settings` SET `value`='".$strQuest."' WHERE `setting`='hunter".$strCity."'");
+	$intAmount = rand(1, 20);
+	$db->Execute("UPDATE `settings` SET `value`='".$intAmount."' WHERE `setting`='hunter".$strCity."amount'");
       }
     /**
      * Reopen game

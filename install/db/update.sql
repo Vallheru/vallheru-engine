@@ -88,3 +88,5 @@ UPDATE `bows` SET `cost`=256000 WHERE `id`=27;
 ALTER TABLE `monsters` ADD `desc` TEXT NOT NULL;
 INSERT INTO `settings` (`setting`, `value`) VALUES ('hunteraltara', NULL);
 INSERT INTO `settings` (`setting`, `value`) VALUES ('hunterardulith', NULL);
+INSERT INTO `settings` (`setting`, `value`) VALUES ('hunteraltaraamount', '0');
+INSERT INTO `settings` (`setting`, `value`) VALUES ('hunterardulithamount', '0');
