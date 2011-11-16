@@ -8,7 +8,7 @@
  *   @author               : thindil <thindil@tuxfamily.org>
  *   @author               : eyescream <tduda@users.sourceforge.net>
  *   @version              : 1.4
- *   @since                : 15.11.2011
+ *   @since                : 16.11.2011
  *
  */
  
@@ -523,54 +523,62 @@ if (isset($_GET['view']))
 				    "Mid" => $arrMid,
 				    "Anext" => A_NEXT));
 	  }
-	if (isset($_GET['step']) && $_GET['step'] == 'next')
+	if (isset($_GET['step']))
 	  {
-	    checkvalue($_POST['mid']);
-	    $objMonster = $db -> Execute("SELECT * FROM `monsters` WHERE `id`=".$_POST['mid']);
-	    $smarty -> assign(array("Mname" => $objMonster -> fields['name'],
-				    "Mlvl" => $objMonster -> fields['level'],
-				    "Mhp" => $objMonster -> fields['hp'],
-				    "Magility" => $objMonster -> fields['agility'],
-				    "Mstrength" => $objMonster -> fields['strength'],
-				    "Mspeed" => $objMonster -> fields['speed'],
-				    "Mendurance" => $objMonster -> fields['endurance'],
-				    "Mcredits1" => $objMonster -> fields['credits1'],
-				    "Mcredits2" => $objMonster -> fields['credits2'],
-				    "Mexp1" => $objMonster -> fields['exp1'],
-				    "Mexp2" => $objMonster -> fields['exp2'],
-				    "Mlocation" => $objMonster -> fields['location'],
-				    "Mlootname" => $objMonster->fields['lootnames'],
-				    "Mlootchance" => $objMonster->fields['lootchances'],
-				    "Tmname" => M_NAME,
-				    "Tmlevel" => M_LEVEL,
-				    "Tmhp" => M_HP,
-				    "Tmagi" => M_AGI,
-				    "Tmpower" => M_POWER,
-				    "Tmspeed" => M_SPEED,
-				    "Tmcond" => M_COND,
-				    "Tmmingold" => M_MIN_GOLD,
-				    "Tmmaxgold" => M_MAX_GOLD,
-				    "Tmminexp" => M_MIN_EXP,
-				    "Tmmaxexp" => M_MAX_EXP,
-				    "Tmlocation" => M_LOCATION,
-				    "Aedit" => A_EDIT,
-				    "Tmlootnames" => "Nazwy komponentów",
-				    "Tmlootchances" => "Szansa na komponenty",
-				    "Mid" => $_POST['mid']));
-	    $objMonster -> Close();
-	  }
-	if (isset($_GET['step']) && $_GET['step'] == 'monster')
-	  {
-	    if (!$_POST['name'] || !$_POST['level'] || !$_POST['hp'] || !$_POST['agility'] || !$_POST['strength'] || !$_POST['credits1'] || !$_POST['credits2'] || !$_POST['exp1'] || !$_POST['exp2'] || !$_POST['speed'] || !$_POST['endurance']|| !$_POST['location']) 
+	    require_once("includes/bbcode.php");
+	    if ($_GET['step'] == 'next')
 	      {
-		error (EMPTY_FIELDS);
+		checkvalue($_POST['mid']);
+		$objMonster = $db -> Execute("SELECT * FROM `monsters` WHERE `id`=".$_POST['mid']);
+		$strDesc = htmltobbcode($objMonster->fields['desc']);
+		$smarty -> assign(array("Mname" => $objMonster -> fields['name'],
+					"Mlvl" => $objMonster -> fields['level'],
+					"Mhp" => $objMonster -> fields['hp'],
+					"Magility" => $objMonster -> fields['agility'],
+					"Mstrength" => $objMonster -> fields['strength'],
+					"Mspeed" => $objMonster -> fields['speed'],
+					"Mendurance" => $objMonster -> fields['endurance'],
+					"Mcredits1" => $objMonster -> fields['credits1'],
+					"Mcredits2" => $objMonster -> fields['credits2'],
+					"Mexp1" => $objMonster -> fields['exp1'],
+					"Mexp2" => $objMonster -> fields['exp2'],
+					"Mlocation" => $objMonster -> fields['location'],
+					"Mlootname" => $objMonster->fields['lootnames'],
+					"Mlootchance" => $objMonster->fields['lootchances'],
+					"Mdesc" => $strDesc,
+					"Tmdesc" => "Opis potwora",
+					"Tmname" => M_NAME,
+					"Tmlevel" => M_LEVEL,
+					"Tmhp" => M_HP,
+					"Tmagi" => M_AGI,
+					"Tmpower" => M_POWER,
+					"Tmspeed" => M_SPEED,
+					"Tmcond" => M_COND,
+					"Tmmingold" => M_MIN_GOLD,
+					"Tmmaxgold" => M_MAX_GOLD,
+					"Tmminexp" => M_MIN_EXP,
+					"Tmmaxexp" => M_MAX_EXP,
+					"Tmlocation" => M_LOCATION,
+					"Aedit" => A_EDIT,
+					"Tmlootnames" => "Nazwy komponentów",
+					"Tmlootchances" => "Szansa na komponenty",
+					"Mid" => $_POST['mid']));
+		$objMonster -> Close();
 	      }
-	    $strName = $db -> qstr($_POST['name'], get_magic_quotes_gpc());
-	    $strLocation = $db -> qstr($_POST['location'], get_magic_quotes_gpc());
-	    $strLoot1 = $db-> qstr($_POST['lootnames'], get_magic_quotes_gpc());
-	    $strLoot2 = $db-> qstr($_POST['lootchances'], get_magic_quotes_gpc());
-	    $db -> Execute("UPDATE `monsters` SET `name`=".$strName.", `level`=".$_POST['level'].", `hp`=".$_POST['hp'].", `agility`=".$_POST['agility'].", `strength`=".$_POST['strength'].", `credits1`=".$_POST['credits1'].", `credits2`=".$_POST['credits2'].", `exp1`=".$_POST['exp1'].", `exp2`=".$_POST['exp2'].", `speed`=".$_POST['speed'].", `endurance`=".$_POST['endurance'].", `location`=".$strLocation.", `lootnames`=".$strLoot1.", `lootchances`=".$strLoot2." WHERE `id`=".$_POST['mid']);
-	    $smarty -> assign("Message", YOU_EDIT.$_POST['name']);
+	    elseif ($_GET['step'] == 'monster')
+	      {
+		if (!$_POST['name'] || !$_POST['level'] || !$_POST['hp'] || !$_POST['agility'] || !$_POST['strength'] || !$_POST['credits1'] || !$_POST['credits2'] || !$_POST['exp1'] || !$_POST['exp2'] || !$_POST['speed'] || !$_POST['endurance']|| !$_POST['location']) 
+		  {
+		    error (EMPTY_FIELDS);
+		  }
+		$strName = $db -> qstr($_POST['name'], get_magic_quotes_gpc());
+		$strLocation = $db -> qstr($_POST['location'], get_magic_quotes_gpc());
+		$strLoot1 = $db-> qstr($_POST['lootnames'], get_magic_quotes_gpc());
+		$strLoot2 = $db-> qstr($_POST['lootchances'], get_magic_quotes_gpc());
+		$strDesc = bbcodetohtml($_POST['mdesc']);
+		$db -> Execute("UPDATE `monsters` SET `name`=".$strName.", `level`=".$_POST['level'].", `hp`=".$_POST['hp'].", `agility`=".$_POST['agility'].", `strength`=".$_POST['strength'].", `credits1`=".$_POST['credits1'].", `credits2`=".$_POST['credits2'].", `exp1`=".$_POST['exp1'].", `exp2`=".$_POST['exp2'].", `speed`=".$_POST['speed'].", `endurance`=".$_POST['endurance'].", `location`=".$strLocation.", `lootnames`=".$strLoot1.", `lootchances`=".$strLoot2.", `desc`='".$strDesc."' WHERE `id`=".$_POST['mid']);
+		$smarty -> assign("Message", YOU_EDIT.$_POST['name']);
+	      }
 	  }
       }
 

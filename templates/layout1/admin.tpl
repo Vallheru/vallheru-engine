@@ -277,6 +277,8 @@
             {$Tmlocation}: <input type="text" name="location" value="{$Mlocation}" /><br />
 	    {$Tmlootnames}: <input type="text" name="lootnames" value="{$Mlootname}" /><br />
 	    {$Tmlootchances}: <input type="text" name="lootchances" value="{$Mlootchance}" /><br />
+	    {$Tmdesc}: <br />
+	    <textarea name="mdesc">{$Mdesc}</textarea><br /><br />
             <input type="hidden" name="mid" value="{$Mid}" />
             <input type="submit" value="{$Aedit}" />
         </form>
