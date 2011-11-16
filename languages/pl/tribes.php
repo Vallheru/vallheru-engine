@@ -9,7 +9,7 @@
  *   @author               : mori <ziniquel@users.sourceforge.net>
  *   @author               : eyescream <tduda@users.sourceforge.net>
  *   @version              : 1.4
- *   @since                : 21.09.2011
+ *   @since                : 16.11.2011
  *
  */
 
@@ -36,7 +36,6 @@ define("ERROR", "Zapomnij o tym!");
 if (!isset ($_GET['view']) && !isset($_GET['join'])) 
 {
     define("MAKE_NEW", "Stwórz nowy klan (2,500,000 sztuk złota)");
-    define("CLAN_INFO", "Witaj w Domu Klanów. Tutaj możesz zobaczyć, dołączyć lub nawet stworzyć nowy klan.");
     define("A_SHOW", "Zobacz listę klanów");
 }
 
