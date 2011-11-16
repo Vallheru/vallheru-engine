@@ -1,5 +1,7 @@
 2011-11-16  Bartek thindil Jasicki  <thindil@tuxfamily.org>
 
+	* BUG,hunters.php: 
+	added missing back link
 	* FEATURE,templates/layout1/admin.tpl, templates/admin.tpl, admin.php:
 	added option to edit monster description
 

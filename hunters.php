@@ -7,7 +7,7 @@
  *   @copyright            : (C) 2011 Vallheru Team based on Gamers-Fusion ver 2.5
  *   @author               : thindil <thindil@tuxfamily.org>
  *   @version              : 1.4
- *   @since                : 15.11.2011
+ *   @since                : 16.11.2011
  *
  */
 
@@ -65,6 +65,7 @@ if (!isset($_GET['step']))
 elseif ($_GET['step'] == 'bestiary')
   {
     $arrMonsters = $db->GetAll("SELECT `id`, `name` FROM `monsters` WHERE `desc`!='' AND `location`='".$player->location."'");
+    $strMessage = '<br /><br /><a href="hunters.php">Wróć do gildii</a>';
     $smarty->assign(array("Bestiary" => 'Tutaj znajdują się opisy wszystkich potworów jakie można spotkać na terenie królestwa. Opisy te zbierane są przez najodważniejszych poszukiwaczy przygód naszej krainy. Jeżeli chcesz zawsze możesz <a href="proposals.php?type=E">zgłosić swój opis potwora</a>',
 			  "Monsters" => $arrMonsters,
 			  "Amount" => count($arrMonsters),
