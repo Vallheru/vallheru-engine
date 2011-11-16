@@ -11,11 +11,26 @@
     {if $Amount == 0}
         {$Nodesc}
     {else}
-        <ul>
+        <table width="90%" align="center">
+	    <tr>
+	        <th>{$Tmonsters}</th>
+		<th>{$Tmonsters2}</th>
+	    </tr>
             {section name=beast loop=$Monsters}
-	        <li><a href="hunters.php?step={$Monsters[beast].id}">{$Monsters[beast].name}</a></li>
+	        <tr>
+		    {if $Monsters[beast].id != 0}
+	                <td><a href="hunters.php?step={$Monsters[beast].id}">{$Monsters[beast].name}</a></td>
+		    {else}
+		        <td></td>
+		    {/if}
+		    {if $Monsters2[beast].id != 0}
+		        <td><a href="hunters.php?step={$Monsters2[beast].id}">{$Monsters2[beast].name}</a></td>
+		    {else}
+		        <td></td>
+		    {/if}
+		</tr>
 	    {/section}
-        </ul>
+        </table>
     {/if}
 {/if}
 

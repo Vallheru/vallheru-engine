@@ -64,10 +64,49 @@ if (!isset($_GET['step']))
   }
 elseif ($_GET['step'] == 'bestiary')
   {
-    $arrMonsters = $db->GetAll("SELECT `id`, `name` FROM `monsters` WHERE `desc`!='' AND `location`='".$player->location."'");
+    $objMonsters = $db->Execute("SELECT `id`, `name`, `location` FROM `monsters` WHERE `desc`!='' ORDER BY `level`");
+    $arrMonsters = array();
+    $arrMonsters2 = array();
+    while (!$objMonsters->EOF)
+      {
+	if ($objMonsters->fields['location'] == 'Altara')
+	  {
+	    $arrMonsters[] = array("id" => $objMonsters->fields['id'],
+				   "name" => $objMonsters->fields['name']);
+	  }
+	else
+	  {
+	    $arrMonsters2[] = array("id" => $objMonsters->fields['id'],
+				   "name" => $objMonsters->fields['name']);
+	  }
+	$objMonsters->MoveNext();
+      }
+    $objMonsters->Close();
+    if (count($arrMonsters) > count($arrMonsters2))
+      {
+	$intDiff = count($arrMonsters) - count($arrMonsters2);
+	for ($i = 0; $i < $intDiff; $i++)
+	  {
+	    $arrMonsters2[] = array("id" => 0,
+				    "name" => '');
+	  }
+      }
+    elseif (count($arrMonsters) < count($arrMonsters2))
+      {
+	$intDiff = count($arrMonsters2) - count($arrMonsters);
+	for ($i = 0; $i < $intDiff; $i++)
+	  {
+	    $arrMonsters[] = array("id" => 0,
+				    "name" => '');
+	  }
+      }
+    
     $strMessage = '<br /><br /><a href="hunters.php">Wróć do gildii</a>';
     $smarty->assign(array("Bestiary" => 'Tutaj znajdują się opisy wszystkich potworów jakie można spotkać na terenie królestwa. Opisy te zbierane są przez najodważniejszych poszukiwaczy przygód naszej krainy. Jeżeli chcesz zawsze możesz <a href="proposals.php?type=E">zgłosić swój opis potwora</a>',
 			  "Monsters" => $arrMonsters,
+			  "Monsters2" => $arrMonsters2,
+			  "Tmonsters" => "W okolicach ".$city1b,
+			  "Tmonsters2" => "W okolicach ".$city2,
 			  "Amount" => count($arrMonsters),
 			  "Nodesc" => "Nie ma jeszcze opisów bestii w księdze."));
   }
@@ -283,7 +322,7 @@ elseif ($_GET['step'] == 'quest')
 else
   {
     checkvalue($_GET['step']);
-    $objMonster = $db->Execute("SELECT `name`, `desc` FROM `monsters` WHERE `id`=".$_GET['step']." AND `location`='".$player->location."'");
+    $objMonster = $db->Execute("SELECT `name`, `desc` FROM `monsters` WHERE `id`=".$_GET['step']);
     if ($objMonster->fields['desc'] == '')
       {
 	error("Nie ma opisu tego potwora.");
