@@ -247,7 +247,7 @@ elseif ($_GET['step'] == 'quest')
 	  else
 	    {
 	      $intGold = -1;
-	      $strMessage = 'Niestety, nie udało Ci się wykonać zadania.';
+	      $strMessage = 'Niestety, nie udało Ci się wykonać zadania. (<a href="hunters.php">Wróć</a>)';
 	    }
 	}
       else
@@ -319,77 +319,76 @@ elseif ($_GET['step'] == 'quest')
 	  $strCity = 'ardulith';
 	  $db -> Execute("INSERT INTO `events` (`text`) VALUES('Gracz ".$player->user." wykonał zadanie w Gildi Łowców w ".$city2.".')");
 	}
-      $strMessage .= ' Dostajesz '.$intGold.' sztuk złota do ręki.';
-    }
-  $strMessage .= ' (<a href="hunters.php">Wróć</a>)';
-  $objAmount = $db->Execute("SELECT `value` FROM `settings` WHERE `setting`='hunter".$strCity."amount'");
-  $objAmount->fields['value'] --;
-  //Generate new random mission
-  if ($objAmount->fields['value'] > 0)
-    {
-      $arrQtypes = array('F', 'I', 'L');
-      $strType = $arrQtypes[rand(0, 2)];
-      switch ($strType)
+      $strMessage .= ' Dostajesz '.$intGold.' sztuk złota do ręki.  (<a href="hunters.php">Wróć</a>)';
+      $objAmount = $db->Execute("SELECT `value` FROM `settings` WHERE `setting`='hunter".$strCity."amount'");
+      $objAmount->fields['value'] --;
+      //Generate new random mission
+      if ($objAmount->fields['value'] > 0)
 	{
-	case 'F':
-	  $objMonsters = $db->Execute("SELECT `id` FROM `monsters` WHERE `location`='".$player->location."'");
-	  $arrMonsters = array();
-	  while (!$objMonsters->EOF)
+	  $arrQtypes = array('F', 'I', 'L');
+	  $strType = $arrQtypes[rand(0, 2)];
+	  switch ($strType)
 	    {
-	      $arrMonsters[] = $objMonsters->fields['id'];
-	      $objMonsters->MoveNext();
-	    }
-	  $intKey = array_rand($arrMonsters);
-	  $intId = $arrMonsters[$intKey];
-	  $objMonsters->Close();
-	  $intAmount = rand(1, 10);
-	  $strQuest = 'F;'.$intId.';'.$intAmount;
-	  break;
-	case 'I':
-	  $objItems = $db->Execute("SELECT `id` FROM `equipment` WHERE `owner`=0");
-	  $arrItems = array();
-	  while (!$objItems->EOF)
-	    {
-	      $arrItems[] = $objItems->fields['id'];
-	      $objItems->MoveNext();
-	    }
-	  $objItems->Close();
-	  $intKey = array_rand($arrItems);
-	  $intId = $arrItems[$intKey];
-	  $intAmount = rand(1, 10);
-	  $strQuest = 'I;'.$intId.';'.$intAmount;
-	  break;
-	case 'L':
-	  $objMonsters = $db->Execute("SELECT `id` FROM `monsters` WHERE `location`='".$player->location."' AND `lootnames`!= ''");
-	  $arrMonsters = array();
-	  while (!$objMonsters->EOF)
-	    {
-	      $arrMonsters[] = $objMonsters->fields['id'];
-	      $objMonsters->MoveNext();
-	    }
-	  $objMonsters->Close();
-	  if (count($arrMonsters) > 0)
-	    {
+	    case 'F':
+	      $objMonsters = $db->Execute("SELECT `id` FROM `monsters` WHERE `location`='".$player->location."'");
+	      $arrMonsters = array();
+	      while (!$objMonsters->EOF)
+		{
+		  $arrMonsters[] = $objMonsters->fields['id'];
+		  $objMonsters->MoveNext();
+		}
 	      $intKey = array_rand($arrMonsters);
 	      $intId = $arrMonsters[$intKey];
-	      $intPart = rand(0, 3);
-	      $strQuest = 'L;'.$intId.';'.$intPart;
+	      $objMonsters->Close();
+	      $intAmount = rand(1, 10);
+	      $strQuest = 'F;'.$intId.';'.$intAmount;
+	      break;
+	    case 'I':
+	      $objItems = $db->Execute("SELECT `id` FROM `equipment` WHERE `owner`=0");
+	      $arrItems = array();
+	      while (!$objItems->EOF)
+		{
+		  $arrItems[] = $objItems->fields['id'];
+		  $objItems->MoveNext();
+		}
+	      $objItems->Close();
+	      $intKey = array_rand($arrItems);
+	      $intId = $arrItems[$intKey];
+	      $intAmount = rand(1, 10);
+	      $strQuest = 'I;'.$intId.';'.$intAmount;
+	      break;
+	    case 'L':
+	      $objMonsters = $db->Execute("SELECT `id` FROM `monsters` WHERE `location`='".$player->location."' AND `lootnames`!= ''");
+	      $arrMonsters = array();
+	      while (!$objMonsters->EOF)
+		{
+		  $arrMonsters[] = $objMonsters->fields['id'];
+		  $objMonsters->MoveNext();
+		}
+	      $objMonsters->Close();
+	      if (count($arrMonsters) > 0)
+		{
+		  $intKey = array_rand($arrMonsters);
+		  $intId = $arrMonsters[$intKey];
+		  $intPart = rand(0, 3);
+		  $strQuest = 'L;'.$intId.';'.$intPart;
+		}
+	      else
+		{
+		  $strQuest = '';
+		}
+	      break;
+	    default:
+	      break;
 	    }
-	  else
-	    {
-	      $strQuest = '';
-	    }
-	  break;
-	default:
-	  break;
+	  $db->Execute("UPDATE `settings` SET `value`='".$strQuest."' WHERE `setting`='hunter".$strCity."'");
 	}
-      $db->Execute("UPDATE `settings` SET `value`='".$strQuest."' WHERE `setting`='hunter".$strCity."'");
+      else
+	{
+	  $db->Execute("UPDATE `settings` SET `value`='' WHERE `setting`='hunter".$strCity."'");
+	}
+      $db->Execute("UPDATE `settings` SET `value`='".$objAmount->fields['value']."' WHERE `setting`='hunter".$strCity."amont'");
     }
-  else
-    {
-      $db->Execute("UPDATE `settings` SET `value`='' WHERE `setting`='hunter".$strCity."'");
-    }
-  $db->Execute("UPDATE `settings` SET `value`='".$objAmount->fields['value']."' WHERE `setting`='hunter".$strCity."amont'");
 }
 //Monster description
 else

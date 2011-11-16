@@ -1,5 +1,7 @@
 2011-11-16  Bartek thindil Jasicki  <thindil@tuxfamily.org>
 
+	* BUG,hunters.php: 
+	fixed bug with generating new quests
 	* FEATURE,install/db/update.sql, includes/resets.php, hunters.php: 
 	added more random quests on reset
 	* BUG,admin.php: 
