@@ -8,7 +8,7 @@
  *   @author               : thindil <thindil@tuxfamily.org>
  *   @author               : eyescream <tduda@users.sourceforge.net>
  *   @version              : 1.4
- *   @since                : 21.10.2011
+ *   @since                : 17.11.2011
  *
  */
  
@@ -1795,8 +1795,8 @@ if (isset ($_GET['view']) && $_GET['view'] == 'listing')
         while (!$op -> EOF) 
         {
             $arrid[] = $op -> fields['id'];
-            $objName = $db -> Execute("SELECT `user` FROM `players` WHERE `id`=".$op -> fields['owner']);
-            $arrPlayer[] = $objName -> fields['user'];
+            $objName = $db -> Execute("SELECT `user`, `tribe` FROM `players` WHERE `id`=".$op -> fields['owner']);
+            $arrPlayer[] = $arrTags[$objName->fields['tribe']][0].' '.$objName -> fields['user'].' '.$arrTags[$objName->fields['tribe']][1];
             $objName -> Close();
             $arrsize[] = $op -> fields['size'];
             $arrowner[] = $op -> fields['owner'];
