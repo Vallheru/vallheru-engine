@@ -1,5 +1,7 @@
 2011-11-17  Bartek thindil Jasicki  <thindil@tuxfamily.org>
 
+	* FEATURE,templates/layout1/tforums.tpl, templates/tforums.tpl, tforums.php: 
+	added option to delete selected topics
 	* BUG,outposts.php:
 	fixed bug with displaying clan tags
 

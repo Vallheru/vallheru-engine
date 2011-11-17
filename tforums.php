@@ -195,6 +195,7 @@ if (isset ($_GET['view']) && $_GET['view'] == 'topics')
 			    "Ttext" => T_TEXT,
 			    "Asearch" => A_SEARCH,
 			    "Tword" => T_WORD,
+			    "Adelete" => "Skasuj wybrane tematy",
 			    "Thelp" => "Linki automatycznie zamieniane są na klikalne. Możesz używać następujących znaczników BBCode:<br /><ul><li>[b]<b>Pogrubienie</b>[/b]</li><li>[i]<i>Kursywa</i><[/i]</li><li>[u]<u>Podkreślenie</u>[/u]</li><li>[color (angielska nazwa koloru (red, yellow, itp) lub kod HTML (#FFFF00, itp)]pokolorowanie tekstu[/color]</li><li>[center]wycentrowanie tekstu[/center]</li><li>[quote]cytat[/quote]</ul>",
 			    "Newtopic" => $arrNewtopic));
 }
@@ -489,6 +490,32 @@ if (isset($_GET['kasuj1']))
         error (TOPIC_DEL." <a href=tforums.php?view=topics>".A_BACK."</a>");
     }
 }
+
+/**
+ * Delete selected topics
+ */
+if (isset($_GET['action']) && $_GET['action'] == 'deltopics')
+  {
+    $klan = $db -> Execute("SELECT `owner` FROM `tribes` WHERE `id`=".$player->tribe);
+    $perm = $db -> Execute("SELECT `forum` FROM `tribe_perm` WHERE `tribe`=".$player->tribe." AND `player`=".$player->id);
+    if ($player->id != $klan->fields['owner'] && !$perm->fields['forum']) 
+      {
+        error("Nie posiadasz odpowiednich uprawnień.");
+      }
+    $smarty->assign(array("Aback" => "Wróć",
+			  "Tdeleted" => "Wybrane tematy zostały skasowane."));
+    $objTopics = $db->Execute("SELECT `id` FROM `tribe_topics` WHERE `tribe`=".$player->tribe);
+    while (!$objTopics->EOF)
+      {
+	if (isset($_POST[$objTopics->fields['id']]))
+	  {
+	    $db -> Execute("DELETE FROM `tribe_replies` WHERE `topic_id`=".$objTopics->fields['id']);
+	    $db -> Execute("DELETE FROM `tribe_topics` WHERE `id`=".$objTopics->fields['id']);
+	  }
+	$objTopics->MoveNext();
+      }
+    $objTopics->Close();
+  }
 
 /**
 * Search words

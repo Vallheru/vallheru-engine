@@ -20,20 +20,33 @@
     <form method="post" action="tforums.php?action=search">
         <input type="submit" value="{$Asearch}" /> {$Tword}: <input type="text" name="search" />
     </form>
-    <table>
+    {if $Sticky != ''}
+    	<form method="post" action="tforums.php?action=deltopics">
+    {/if}
+    <table width="100%">
     <tr>
-    <td width="150"><u><b>{$Ttopic}</b></u></td>
-    <td width="100"><u><b>{$Tauthor}</b></u></td>
-    <td width="50"><u><b>{$Treplies}</b></u></td>
+        {if $Sticky != ''}
+	    <th width="20"></th>
+        {/if}
+        <th><u><b>{$Ttopic}</b></u></th>
+        <th><u><b>{$Tauthor}</b></u></th>
+        <th><u><b>{$Treplies}</b></u></th>
     </tr>
     {section name=tforums loop=$Topic}
         <tr>
-        <td>{if $Newtopic[tforums] == "Y"}<blink>N</blink> {/if}<a href="tforums.php?topic={$Topicid[tforums]}">{$Topic[tforums]}</a></td>
-        <td><a href="view.php?view={$Starterid[tforums]}">{$Starter[tforums]}</a></td>
-        <td>{$Replies[tforums]}</td>
+	    {if $Sticky != ''}
+	        <td><input type="checkbox" name="{$Topicid[tforums]}" /></td>
+	    {/if}
+            <td>{if $Newtopic[tforums] == "Y"}<blink>N</blink> {/if}<a href="tforums.php?topic={$Topicid[tforums]}">{$Topic[tforums]}</a></td>
+            <td><a href="view.php?view={$Starterid[tforums]}">{$Starter[tforums]}</a></td>
+            <td>{$Replies[tforums]}</td>
         </tr>
     {/section}
     </table>
+    {if $Sticky != ''}
+        <input type="submit" value="{$Adelete}" />
+	</form>
+    {/if}
     {if $Tpages > 1}
     	<br />{$Fpage}
     	{for $page = 1 to $Tpages}
@@ -89,6 +102,10 @@
     <textarea name="rep" cols="40" rows="10">{$Rtext}</textarea><br />
     <input type="submit" value="{$Areply}" /></form><br />
     {$Thelp}
+{/if}
+
+{if $Action2 == "deltopics"}
+    {$Tdeleted} <a href="tforums.php?view=topics">{$Aback}</a>
 {/if}
 
 {if $Action2 == "search"}
