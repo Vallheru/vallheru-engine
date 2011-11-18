@@ -9,7 +9,7 @@
  *   @author               : yeskov <yeskov@users.sourceforge.net>
  *   @author               : eyescream <tduda@users.sourceforge.net>
  *   @version              : 1.4
- *   @since                : 24.10.2011
+ *   @since                : 18.11.2011
  *
  */
 
@@ -1090,7 +1090,7 @@ if (!isset($_GET['action']) || (isset($_GET['action']) && $_GET['action'] != 'as
     /**
      * List of items
      */
-    $item = $db -> Execute("SELECT `id`, `name`, `amount`, `power`, `zr`, `szyb`, `wt`, `type` FROM `equipment` WHERE `owner`=".$player -> id." AND `status`='U'");
+    $item = $db -> Execute("SELECT `id`, `name`, `amount`, `power`, `zr`, `szyb`, `wt`, `type`, `maxwt` FROM `equipment` WHERE `owner`=".$player -> id." AND `status`='U'");
     if ($item -> fields['id']) 
     {
 	$arrItems = array();
@@ -1104,6 +1104,11 @@ if (!isset($_GET['action']) || (isset($_GET['action']) && $_GET['action'] != 'as
 	      {
 		$strAmount = $item->fields['wt'];
 	      }
+	    $strDur = '';
+	    if ($item->fields['maxwt'] > 1)
+	      {
+		$strDur = ' ('.$item->fields['wt'].'/'.$item->fields['maxwt'].' wt)';
+	      }
 	    $strAgi = '';
 	    $strSpeed = '';
 	    if ($item->fields['zr'] != 0)
@@ -1112,9 +1117,9 @@ if (!isset($_GET['action']) || (isset($_GET['action']) && $_GET['action'] != 'as
 	      }
 	    if ($item->fields['szyb'] != 0)
 	      {
-		$strSpeed = " (".$item->fields['szyb']." ".I_SPE.")";
+		$strSpeed = " (".$item->fields['szyb']." szyb)";
 	      }
-	    $arrItems[$item->fields['id']] = $item->fields['name']." (+".$item->fields['power'].")".$strAgi.$strSpeed." (".I_AMOUNT2.": ".$strAmount.")";
+	    $arrItems[$item->fields['id']] = $item->fields['name']." (+".$item->fields['power'].")".$strAgi.$strSpeed.$strDur." (".I_AMOUNT2.": ".$strAmount.")";
             $item -> MoveNext();
         }
         $smarty -> assign (array("Ioptions" => $arrItems,

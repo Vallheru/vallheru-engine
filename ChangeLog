@@ -1,5 +1,7 @@
 2011-11-18  Bartek thindil Jasicki  <thindil@tuxfamily.org>
 
+	* UPDATE,bank.php: 
+	added info about item durability
 	* BUG,includes/funkcje.php, includes/turnfight.php, battle.php:
 	added missing clan tags
 
