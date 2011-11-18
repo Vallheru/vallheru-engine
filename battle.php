@@ -69,7 +69,7 @@ if (isset($_GET['battle']))
     $enemy = new Player($_GET['battle']);
     $arrplayer = array('id','user','level','tribe','credits','location','hp','mana','exp','age','inteli','clas','immunited','strength','agility','attack','miss','magic','speed','cond','race','wisdom','shoot','maps','rest','fight', 'antidote', 'battlelog', 'newbie');
     $arrdefender = $enemy -> stats($arrplayer);
-    $arrdefender['user'] = $arrTags[$arrdefender['tribe']][0].' '.$player->user.' '.$arrTags[$arrdefender['tribe']][1];
+    $arrdefender['user'] = $arrTags[$arrdefender['tribe']][0].' '.$arrdefender['user'].' '.$arrTags[$arrdefender['tribe']][1];
     $arrMyequip = $player -> equipment();
     $arrEnequip = $enemy -> equipment();
     $myczar = $db -> Execute("SELECT * FROM czary WHERE gracz=".$player -> id." AND status='E' AND typ='B'");

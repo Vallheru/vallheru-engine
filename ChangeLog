@@ -1,5 +1,7 @@
 2011-11-18  Bartek thindil Jasicki  <thindil@tuxfamily.org>
 
+	* BUG,battle.php: 
+	fixed typo
 	* FEATURE,tribearmor.php, imarket.php, house.php, equip.php, bank.php: 
 	added quest items
 	* BUG,languages/pl/register.php, templates/register.tpl, register.php, logout.php: 
