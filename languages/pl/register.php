@@ -4,10 +4,10 @@
  *   Polish language for registration page
  *
  *   @name                 : register.php                            
- *   @copyright            : (C) 2004,2005,2006 Vallheru Team based on Gamers-Fusion ver 2.5
- *   @author               : thindil <thindil@users.sourceforge.net>
- *   @version              : 1.2
- *   @since                : 14.07.2006
+ *   @copyright            : (C) 2004,2005,2006,2011 Vallheru Team based on Gamers-Fusion ver 2.5
+ *   @author               : thindil <thindil@tuxfamily.org>
+ *   @version              : 1.4
+ *   @since                : 18.11.2011
  *
  */
 
@@ -53,7 +53,7 @@ if (!isset($_GET['action']))
     define("CONF_EMAIL", "Potwierdź email:");
     define("REFERRAL_ID", "ID Polecającego:");
     define("IF_NO_ID", "Jeżeli nie jesteś czyimś poleconym, to pole jest puste.");
-    define("REGISTER", "Zarejestruj");
+    define("REGISTER2", "Zarejestruj");
     define("SHORT_RULES", "Krótki spis zasad w grze:");
     define("T_LANG", "Wybierz język gry:");
     define("RULE1", "W grze obowiązuje netykieta - w wielkim skrócie - nie rób drugiemu co tobie nie miłe.");

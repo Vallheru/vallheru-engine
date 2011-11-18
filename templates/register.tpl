@@ -14,7 +14,7 @@
     <div class="forms2">{$Password}: <input type="password" name="pass" /></div>
     <div class="forms2">{$Referralid} <input type="text" name="ref" readonly="readonly" value="{$Referal}" /></div>
     <div class="forms2"><em>{$Ifnoid}</em></div>
-    <div class="forms2"><input type="submit" value="{$Register}" /></div>
+    <div class="forms2"><input type="submit" value="{$Register2}" /></div>
     </form>
 
 <div class="text2">{$Shortrules}</div>

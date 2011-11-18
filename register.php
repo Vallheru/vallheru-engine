@@ -7,7 +7,7 @@
  *   @copyright            : (C) 2005,2006,2011 Vallheru Team based on Gamers-Fusion ver 2.5
  *   @author               : thindil <thindil@tuxfamily.org>
  *   @version              : 1.4
- *   @since                : 18.09.2011
+ *   @since                : 18.11.2011
  *
  */
 
@@ -81,8 +81,8 @@ if ($objOpenreg -> fields['value'] == 'N')
 }
 $objOpenreg -> Close();
 
-$query = $db -> Execute("SELECT id FROM players");
-$nump = $query -> RecordCount();
+$query = $db -> Execute("SELECT count(`id`) FROM `players`");
+$nump = $query->fields['count(`id`)'];
 $query -> Close(); 
 
 $time = date("H:i:s");
@@ -96,8 +96,8 @@ $arrtime = array($newhour, $hour[1], $hour[2]);
 $newtime = implode(":",$arrtime);
 
 $span = (time() - 180);
-$objQuery = $db -> Execute("SELECT id FROM players WHERE lpv>=".$span);
-$intNumo = $objQuery -> RecordCount();
+$objQuery = $db -> Execute("SELECT count(`id`) FROM `players` WHERE `lpv`>=".$span);
+$intNumo = $objQuery->fields['count(`id`)'];
 $objQuery -> Close();
 
 $smarty -> assign(array("Gamename" => $gamename, 
@@ -137,7 +137,7 @@ if (!isset($_GET['action']))
         "Confemail" => CONF_EMAIL,
         "Referralid" => REFERRAL_ID,
         "Ifnoid" => IF_NO_ID,
-        "Register" => REGISTER,
+        "Register2" => REGISTER2,
         "Shortrules" => SHORT_RULES,
         "Rule1" => RULE1,
         "Rule2" => RULE2,
@@ -254,7 +254,13 @@ if (!isset($_GET['action']))
 /**
 * Assign variables and display page
 */
-$smarty -> assign(array("Action" => $_GET['action'], "Meta" => ''));
+$objKeywords = $db->Execute("SELECT `value` FROM `settings` WHERE `setting`='metakeywords'");
+$objDesc = $db->Execute("SELECT `value` FROM `settings` WHERE `setting`='metadescr'");
+$smarty -> assign(array("Action" => $_GET['action'], 
+			"Metakeywords" => $objKeywords->fields['value'], 
+			"Metadescription" => $objDesc->fields['value']));
+$objKeywords->Close();
+$objDesc->Close();
 $smarty -> display('register.tpl');
 
 $db -> Close();

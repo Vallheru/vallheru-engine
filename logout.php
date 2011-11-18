@@ -7,7 +7,7 @@
  *   @copyright            : (C) 2004,2005,2006,2011 Vallheru Team based on Gamers-Fusion ver 2.5
  *   @author               : thindil <thindil@tuxfamily.org>
  *   @version              : 1.4
- *   @since                : 11.08.2011
+ *   @since                : 18.11.2011
  *
  */
 
@@ -98,8 +98,9 @@ $db -> Execute("UPDATE `players` SET `lpv`=`lpv`-180 WHERE `id`=".$_GET['did']);
 session_unset();
 session_destroy();
 $smarty -> assign(array("Gamename" => $gamename,
-    "Youare" => YOU_ARE,
-    "Ahere" => A_HERE,
-    "Fora" => FOR_A,
-    "Charset" => CHARSET));
+			"Meta" => '',
+			"Youare" => YOU_ARE,
+			"Ahere" => A_HERE,
+			"Fora" => FOR_A,
+			"Charset" => CHARSET));
 $smarty -> display ('logout.tpl');
