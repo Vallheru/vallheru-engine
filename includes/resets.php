@@ -7,7 +7,7 @@
  *   @copyright            : (C) 2004,2005,2006,2007,2011 Vallheru Team based on Gamers-Fusion ver 2.5
  *   @author               : thindil <thindil@tuxfamily.org>
  *   @version              : 1.4
- *   @since                : 16.11.2011
+ *   @since                : 18.11.2011
  *
  */
 
@@ -630,7 +630,7 @@ function mainreset()
 	    $strQuest = 'I;'.$intId.';'.$intAmount;
 	    break;
 	  case 'L':
-	    $objMonsters = $db->Execute("SELECT `id` FROM `monsters` WHERE `location`='".ucfirst($strCity)."'");
+	    $objMonsters = $db->Execute("SELECT `id` FROM `monsters` WHERE `location`='".ucfirst($strCity)."' AND `lootnames`!=''");
 	    $arrMonsters = array();
 	    while (!$objMonsters->EOF)
 	      {

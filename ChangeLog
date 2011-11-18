@@ -1,5 +1,7 @@
 2011-11-18  Bartek thindil Jasicki  <thindil@tuxfamily.org>
 
+	* BUG,includes/resets.php: 
+	fixed generating random mission
 	* BUG,battle.php: 
 	fixed typo
 	* FEATURE,tribearmor.php, imarket.php, house.php, equip.php, bank.php: 
