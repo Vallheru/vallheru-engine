@@ -7,7 +7,7 @@
  *   @copyright            : (C) 2004,2005,2006,2007,2011 Vallheru Team based on Gamers-Fusion ver 2.5
  *   @author               : thindil <thindil@tuxfamily.org>
  *   @version              : 1.4
- *   @since                : 15.11.2011
+ *   @since                : 18.11.2011
  *
  */
  
@@ -53,12 +53,14 @@ function turnfight($expgain,$goldgain,$action,$addres)
     global $amount;
     global $myagility;
     global $intPoisoned;
+    global $arrTags;
 
     $arrEquip = $player -> equipment();
     $myczaro = $db -> Execute("SELECT * FROM czary WHERE status='E' AND gracz=".$player -> id." AND typ='O'");
     $fight = $db -> Execute("SELECT fight FROM players WHERE id=".$player -> id);
 
     $arrStat = array('agility', 'strength', 'inteli', 'wisdom', 'speed', 'cond', 'attack', 'shoot', 'miss', 'magic');
+    $player->user = $arrTags[$player->tribe][0].' '.$player->user.' '.$arrTags[$player->tribe][1];
 
     /**
     * Add bless to stats
