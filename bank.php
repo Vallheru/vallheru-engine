@@ -468,6 +468,10 @@ if (isset($_GET['action']))
 	  {
 	    error (NO_ITEM);
 	  }
+	if ($item->fields['type'] == 'Q')
+	  {
+	    error('Nie możesz przekazać tego przemiotu.');
+	  }
 	if ($_POST['pid'] == $player -> id) 
 	  {
 	    error (BAD_PLAYER);
@@ -1090,7 +1094,7 @@ if (!isset($_GET['action']) || (isset($_GET['action']) && $_GET['action'] != 'as
     /**
      * List of items
      */
-    $item = $db -> Execute("SELECT `id`, `name`, `amount`, `power`, `zr`, `szyb`, `wt`, `type`, `maxwt` FROM `equipment` WHERE `owner`=".$player -> id." AND `status`='U'");
+    $item = $db -> Execute("SELECT `id`, `name`, `amount`, `power`, `zr`, `szyb`, `wt`, `type`, `maxwt` FROM `equipment` WHERE `owner`=".$player -> id." AND `status`='U' AND `type`!='Q'");
     if ($item -> fields['id']) 
     {
 	$arrItems = array();

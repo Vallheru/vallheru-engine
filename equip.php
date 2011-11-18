@@ -7,7 +7,7 @@
  *   @copyright            : (C) 2004,2005,2006,2007,2011 Vallheru Team based on Gamers-Fusion ver 2.5
  *   @author               : thindil <thindil@tuxfamily.org>
  *   @version              : 1.4
- *   @since                : 12.11.2011
+ *   @since                : 18.11.2011
  *
  */
 
@@ -136,6 +136,7 @@ function backpack($type,$playerid,$nameitems,$type2,$smartyname)
 	  {
 	  case 'O':
 	  case 'I':
+	  case 'Q':
 	    $strDur = '';
 	    break;
 	  case 'R':
@@ -153,6 +154,7 @@ function backpack($type,$playerid,$nameitems,$type2,$smartyname)
 	  case 'T':
             $arrshow[$arm->fields['minlev']][$j] = "<input type=\"checkbox\" name=\"".$arm->fields['id']."\" /><b>(".AMOUNT.": ".$arm -> fields['amount']." )</b> ".$arm -> fields['name']." (".SPELL_POWER.") [ <a href=\"equip.php?equip=".$arm -> fields['id']."\">".A_WEAR."</a> | <A href=\"equip.php?sell=".$arm -> fields['id']."\">".A_SELL."</a> ".FOR_A." ".$arm -> fields['cost']." ".GOLD_COINS." ]<br />";
 	    break;
+	  case 'Q':
 	  case 'O':
 	    $arrshow[$arm->fields['minlev']][$j] = "<input type=\"checkbox\" name=\"".$arm->fields['id']."\" /><b>(".AMOUNT.": ".$arm -> fields['amount']." )</b> ".$arm -> fields['name']." [ <a href=\"equip.php?sell=".$arm -> fields['id']."\">".A_SELL."</a> ".FOR_A." ".$arm->fields['cost']." ".GOLD_COINS." ]<br />";
 	    break;
@@ -483,6 +485,7 @@ backpack('C',$player -> id,CAPES,'','Bcapes');
 backpack('L',$player -> id,LEGS2,'','Blegs');
 backpack('I', $player->id, 'pierścienie', '', 'Brings');
 backpack('O', $player->id, 'Łupy', '', 'Bloots');
+backpack('Q', $player->id, 'Przedmioty do zadań', '', 'Bquests');
 
 /**
  * Show potions

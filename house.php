@@ -8,7 +8,7 @@
  *   @author               : thindil <thindil@tuxfamily.org>
  *   @author               : eyescream <tduda@users.sourceforge.net>
  *   @version              : 1.4
- *   @since                : 08.10.2011
+ *   @since                : 18.11.2011
  *
  */
 
@@ -948,7 +948,7 @@ if (isset ($_GET['action']) && $_GET['action'] == 'my')
          */
         if (isset ($_GET['step2']) && $_GET['step2'] == 'add') 
         {
-            $arritem = $db -> Execute("SELECT * FROM equipment WHERE status='U' AND owner=".$player -> id);
+            $arritem = $db -> Execute("SELECT * FROM `equipment` WHERE `status`='U' AND `type`!='Q' AND `owner`=".$player -> id);
             $arrname = array();
             $arramount = array();
             $arrid = array();
@@ -985,7 +985,7 @@ if (isset ($_GET['action']) && $_GET['action'] == 'my')
                 integercheck($_POST['amount']);
 		checkvalue($_POST['przedmiot']);
 		checkvalue($_POST['amount']);
-                $przed = $db -> Execute("SELECT * FROM equipment WHERE id=".$_POST['przedmiot']);
+                $przed = $db -> Execute("SELECT * FROM `equipment` WHERE `id`=".$_POST['przedmiot']." AND `type`!='Q' AND `owner`=".$player->id);
                 if (!$przed -> fields['id']) 
                 {
                     error (ERROR);

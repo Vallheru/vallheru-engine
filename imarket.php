@@ -8,7 +8,7 @@
  *   @author               : thindil <thindil@tuxfamily.org>
  *   @author               : eyescream <tduda@users.sourceforge.net>
  *   @version              : 1.4
- *   @since                : 24.10.2011
+ *   @since                : 18.11.2011
  *
  */
 
@@ -91,7 +91,7 @@ if (isset ($_GET['view']) && $_GET['view'] == 'market')
       }
     if (empty($_POST['szukany']) && !isset($_POST['szukany1']) && !isset($_POST['type'])) 
       {
-        $msel = $db -> Execute("SELECT count(`id`) FROM `equipment` WHERE `status`='R' AND `type` NOT IN ('I', 'O')");
+        $msel = $db -> Execute("SELECT count(`id`) FROM `equipment` WHERE `status`='R' AND `type` NOT IN ('I', 'O', 'Q')");
       }
     elseif (isset($_POST['type']))
       {
@@ -123,13 +123,13 @@ if (isset ($_GET['view']) && $_GET['view'] == 'market')
       {
 	$_POST['szukany1'] = strip_tags($_POST['szukany1']);
         $strSearch = $db -> qstr($_POST['szukany1'], get_magic_quotes_gpc());
-	$msel = $db -> Execute("SELECT count(`id`) FROM `equipment` WHERE `status`='R' AND `type` NOT IN ('I', 'O') AND name=".$strSearch);
+	$msel = $db -> Execute("SELECT count(`id`) FROM `equipment` WHERE `status`='R' AND `type` NOT IN ('I', 'O', 'Q') AND name=".$strSearch);
       }
     else 
       {
 	$_POST['szukany'] = strip_tags($_POST['szukany']);
         $strSearch = $db -> qstr("*".$_POST['szukany']."*", get_magic_quotes_gpc());
-        $msel = $db -> Execute("SELECT count(`id`) FROM `equipment` WHERE `status`='R' AND `type` NOT IN('I', 'O') AND MATCH(`name`) AGAINST (".$strSearch." IN BOOLEAN MODE)") or die($db -> ErrorMsg());
+        $msel = $db -> Execute("SELECT count(`id`) FROM `equipment` WHERE `status`='R' AND `type` NOT IN('I', 'O', 'Q') AND MATCH(`name`) AGAINST (".$strSearch." IN BOOLEAN MODE)") or die($db -> ErrorMsg());
       }
     $przed = $msel -> fields['count(`id`)'];
     $msel -> Close();
@@ -208,7 +208,7 @@ if (isset ($_GET['view']) && $_GET['view'] == 'market')
     $strType .= '&amp;order='.$_GET['order'];
     if (empty($_POST['szukany']) && !isset($_POST['szukany1']) && !isset($_POST['type'])) 
       {
-	$pm = $db -> SelectLimit("SELECT * FROM `equipment` WHERE `status`='R' AND `type` NOT IN ('I', 'O') ORDER BY ".$_GET['lista'].$strOrder, 30, (30 * ($page - 1)));
+	$pm = $db -> SelectLimit("SELECT * FROM `equipment` WHERE `status`='R' AND `type` NOT IN ('I', 'O', 'Q') ORDER BY ".$_GET['lista'].$strOrder, 30, (30 * ($page - 1)));
       } 
     elseif (isset($_POST['type']))
       {
@@ -216,12 +216,12 @@ if (isset ($_GET['view']) && $_GET['view'] == 'market')
       }
     elseif (isset($_POST['szukany1']))
       {
-	$pm = $db -> SelectLimit("SELECT * FROM `equipment` WHERE `status`='R' AND `type` NOT IN ('I', 'O') AND name=".$strSearch." ORDER BY ".$_GET['lista'].$strOrder, 30, (30 * ($page - 1)));
+	$pm = $db -> SelectLimit("SELECT * FROM `equipment` WHERE `status`='R' AND `type` NOT IN ('I', 'O', 'Q') AND name=".$strSearch." ORDER BY ".$_GET['lista'].$strOrder, 30, (30 * ($page - 1)));
 	$_POST['szukany'] = $_POST['szukany1'];
       }
     else 
       {
-	$pm = $db -> SelectLimit("SELECT * FROM `equipment` WHERE `status`='R' AND `type` NOT IN ('I', 'O') AND MATCH(`name`) AGAINST (".$strSearch." IN BOOLEAN MODE) ORDER BY ".$_GET['lista'].$strOrder, 30,  (30 * ($page - 1)));
+	$pm = $db -> SelectLimit("SELECT * FROM `equipment` WHERE `status`='R' AND `type` NOT IN ('I', 'O', 'Q') AND MATCH(`name`) AGAINST (".$strSearch." IN BOOLEAN MODE) ORDER BY ".$_GET['lista'].$strOrder, 30,  (30 * ($page - 1)));
       }
     if (!empty($_POST['szukany']))
       {
@@ -325,7 +325,7 @@ if (isset ($_GET['view']) && $_GET['view'] == 'market')
 */
 if (isset ($_GET['view']) && $_GET['view'] == 'add') 
 {
-    $rzecz = $db -> Execute("SELECT `id`, `name`, `amount`, `power`, `szyb`, `wt`, `maxwt`, `zr`, `type` FROM `equipment` WHERE `status`='U' AND `type` NOT IN ('I', 'O') AND `owner`=".$player -> id);
+    $rzecz = $db -> Execute("SELECT `id`, `name`, `amount`, `power`, `szyb`, `wt`, `maxwt`, `zr`, `type` FROM `equipment` WHERE `status`='U' AND `type` NOT IN ('I', 'O', 'Q') AND `owner`=".$player -> id);
     $arrname = array();
     $arrid = array();
     $arramount = array();
@@ -391,7 +391,7 @@ if (isset ($_GET['view']) && $_GET['view'] == 'add')
         }
 	checkvalue($_POST['cost']);
 	checkvalue($_POST['przedmiot']);
-        $item = $db -> Execute("SELECT * FROM `equipment` WHERE `id`=".$_POST['przedmiot']." AND `status`='U' AND `type` NOT IN ('I', 'O') AND `owner`=".$player -> id);
+        $item = $db -> Execute("SELECT * FROM `equipment` WHERE `id`=".$_POST['przedmiot']." AND `status`='U' AND `type` NOT IN ('I', 'O', 'Q') AND `owner`=".$player -> id);
 	if (!$item->fields['id'])
 	  {
 	    error("Nie posiadasz takiego przedmiotu.");
@@ -492,7 +492,7 @@ if (isset($_GET['wyc']))
 */
 if (isset ($_GET['view']) && $_GET['view'] == 'del') 
 {
-    $objArm = $db -> Execute("SELECT * FROM `equipment` WHERE `owner`=".$player -> id." AND `status`='R' AND `type` NOT IN ('I', 'O')");
+    $objArm = $db -> Execute("SELECT * FROM `equipment` WHERE `owner`=".$player -> id." AND `status`='R' AND `type` NOT IN ('I', 'O', 'Q')");
     while (!$objArm -> EOF)
     {
         $intTest = $db -> Execute("SELECT id FROM equipment WHERE name='".$objArm -> fields['name']."' AND wt=".$objArm -> fields['wt']." AND type='".$objArm -> fields['type']."' AND status='U' AND owner=".$player -> id." AND power=".$objArm -> fields['power']." AND zr=".$objArm -> fields['zr']." AND szyb=".$objArm -> fields['szyb']." AND maxwt=".$objArm -> fields['maxwt']." AND poison=".$objArm -> fields['poison']." AND cost=1 AND ptype='".$objArm -> fields['ptype']."' AND `twohand`='".$objArm -> fields['twohand']."'");
@@ -524,7 +524,7 @@ if (isset ($_GET['view']) && $_GET['view'] == 'del')
 if (isset($_GET['buy'])) 
 {
     checkvalue($_GET['buy']);
-    $buy = $db -> Execute("SELECT * FROM `equipment` WHERE `id`=".$_GET['buy']." AND `type` NOT IN ('I', 'O') AND `status`='R'");
+    $buy = $db -> Execute("SELECT * FROM `equipment` WHERE `id`=".$_GET['buy']." AND `type` NOT IN ('I', 'O', 'Q') AND `status`='R'");
     if (!$buy -> fields['id']) 
     {
         error (NO_OFERTS);
@@ -670,7 +670,7 @@ if (isset($_GET['view']) && $_GET['view'] == 'all')
       {
 	error(ERROR);
       }
-    $objAmount = $db -> Execute("SELECT `id` FROM `equipment` WHERE `status`='R' AND `type` NOT IN ('I', 'O') GROUP BY `name`");
+    $objAmount = $db -> Execute("SELECT `id` FROM `equipment` WHERE `status`='R' AND `type` NOT IN ('I', 'O', 'Q') GROUP BY `name`");
     $intAmount = $objAmount -> RecordCount();
     $objAmount -> Close();
     if (isset($_POST['previous']))
@@ -687,7 +687,7 @@ if (isset($_GET['view']) && $_GET['view'] == 'all')
     }
     $strNext = '';
     $strPrevious = '';
-    $oferts = $db -> SelectLimit("SELECT `name` FROM `equipment` WHERE `status`='R' AND `type` NOT IN ('I', 'O') GROUP BY `name`", 30, $_GET['limit']);
+    $oferts = $db -> SelectLimit("SELECT `name` FROM `equipment` WHERE `status`='R' AND `type` NOT IN ('I', 'O', 'Q') GROUP BY `name`", 30, $_GET['limit']);
     $arrname = array();
     $arramount = array();
     $i = 0;

@@ -8,7 +8,7 @@
  *   @author               : thindil <thindil@tuxfamily.org>
  *   @author               : eyescream <tduda@users.sourceforge.net>
  *   @version              : 1.4
- *   @since                : 27.09.2011
+ *   @since                : 18.11.2011
  *
  */
 
@@ -368,6 +368,10 @@ if (isset ($_GET['step']) && $_GET['step'] == 'daj')
         {
             error (ERROR);
         }
+	if ($przed->fields['type'] == 'Q')
+	  {
+	    error("Nie możesz przekazać tego przemiotu.");
+	  }
 	if ($przed->fields['type'] != 'R')
 	  {
 	    if ($przed -> fields['amount'] < $_POST['amount']) 
