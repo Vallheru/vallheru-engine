@@ -7,7 +7,7 @@
  *   @copyright            : (C) 2004,2005,2006,2011 Vallheru Team based on Gamers-Fusion ver 2.5
  *   @author               : thindil <thindil@tuxfamily.org>
  *   @version              : 1.4
- *   @since                : 14.11.2011
+ *   @since                : 19.11.2011
  *
  */
 
@@ -44,6 +44,10 @@ $intNumo = 0;
 $arrplayers = array();
 while (!$objQuery -> EOF) 
 {
+  if (!array_key_exists($objQuery->fields['tribe'], $arrTags))
+    {
+      $objQuery->fields['tribe'] = 0;
+    }
   $objQuery->fields['user'] = $arrTags[$objQuery->fields['tribe']][0]." ".$objQuery->fields['user']." ".$arrTags[$objQuery->fields['tribe']][1];
   switch ($objQuery -> fields['rank'])
     {
