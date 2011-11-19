@@ -8,7 +8,7 @@
  *   @author               : thindil <thindil@tuxfamily.org>
  *   @author               : eyescream <tduda@users.sourceforge.net>
  *   @version              : 1.4
- *   @since                : 18.11.2011
+ *   @since                : 19.11.2011
  *
  */
 
@@ -441,28 +441,26 @@ if (isset ($_GET['step']) && $_GET['step'] == 'daj')
     $arrDur = array();
     $arrMaxdur = array();
     $arrAgi = array();
-    $i = 0;
     while (!$arritem -> EOF) 
     {
-        $arrname[$i] = $arritem -> fields['name'];
-        $arrid[$i] = $arritem -> fields['id'];
+        $arrname[] = $arritem -> fields['name'];
+        $arrid[] = $arritem -> fields['id'];
 	if ($arritem->fields['type'] != 'R')
 	  {
-	    $arrDur[$i] =  $arritem->fields['wt'];
-	    $arrMaxdur[$i] = $arritem->fields['maxwt'];
-	    $arramount[$i] = $arritem -> fields['amount'];
+	    $arrDur[] =  $arritem->fields['wt'];
+	    $arrMaxdur[] = $arritem->fields['maxwt'];
+	    $arramount[] = $arritem -> fields['amount'];
 	  }
 	else
 	  {
-	    $arrDur[$i] = 1;
-	    $arrMaxdur[$i] = 1;
-	    $arramount[$i] = $arritem -> fields['wt'];
+	    $arrDur[] = 1;
+	    $arrMaxdur[] = 1;
+	    $arramount[] = $arritem -> fields['wt'];
 	  }
-	$arrPower[$i] = $arritem->fields['power'];
-	$arrSpeed[$i] = $arritem->fields['szyb'];
-	$arrAgi[$i] = $arritem->fields['zr'];
+	$arrPower[] = $arritem->fields['power'];
+	$arrSpeed[] = $arritem->fields['szyb'];
+	$arrAgi[] = $arritem->fields['zr'] * -1;
         $arritem -> MoveNext();
-        $i = $i + 1;
     }
     $arritem -> Close();
     $smarty -> assign(array("Name" => $arrname, 

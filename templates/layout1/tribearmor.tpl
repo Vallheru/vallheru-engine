@@ -59,9 +59,7 @@
 	{if $Ispeed[tribearmor1] > 0}
 	    (+{$Ispeed[tribearmor1]} {$Ispd})
 	{/if}
-	{if $Iagi[tribearmor1] > 0}
-	    (-{$Iagi[tribearmor1]}% {$Iag})
-	{elseif $Iagi[tribearmor1] < 0}
+	{if $Iagi[tribearmor1] != 0}
 	    ({$Iagi[tribearmor1]}% {$Iag})
 	{/if}
 	{if $Imaxdur[tribearmor1] > 1}
