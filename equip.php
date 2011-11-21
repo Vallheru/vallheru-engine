@@ -686,6 +686,7 @@ if (isset($_GET['sellchecked']))
 		  {
 		    $intTime = rand(2, 9);
 		    $db->Execute("UPDATE `revent` SET `state`=4, `qtime`=".$intTime." WHERE `pid`=".$player->id);
+		    $db -> Execute("DELETE FROM `equipment` WHERE `id`=".$objItems->fields['id']);
 		  }
 		elseif ($objItems->fields['maxwt'] == $objItems->fields['wt']) 
 		  {
@@ -766,6 +767,7 @@ if (isset($_GET['sprzedaj']))
 	  {
 	    $intTime = rand(2, 9);
 	    $db->Execute("UPDATE `revent` SET `state`=4, `qtime`=".$intTime." WHERE `pid`=".$player->id);
+	    $db -> Execute("DELETE FROM equipment WHERE id=".$zysk1 -> fields['id']);
 	  }
         elseif ($zysk1 -> fields['maxwt'] == $zysk1 -> fields['wt']) 
         {
