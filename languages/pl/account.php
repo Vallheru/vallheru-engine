@@ -7,7 +7,7 @@
  *   @copyright            : (C) 2004,2005,2006,2011 Vallheru Team based on Gamers-Fusion ver 2.5
  *   @author               : thindil <thindil@tuxfamily.org>
  *   @version              : 1.4
- *   @since                : 31.10.2011
+ *   @since                : 21.11.2011
  *
  */
 
@@ -83,7 +83,7 @@ if (isset($_GET['view']))
 
     if ($_GET['view'] == 'bugreport')
       {
-	define("BUG_DESC", "Opis błędu (minimum 50 znaków)");
+	define("BUG_DESC", "Opis błędu (minimum 20 znaków)");
 	define("A_REPORT", "Zgłoś");
 	define("TOO_SHORT", "Zgłoszenie jest zbyt krótkie!");
 	define("B_REPORTED", "Błąd zgłoszony.");
