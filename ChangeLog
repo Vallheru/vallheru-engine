@@ -1,5 +1,7 @@
 2011-11-21  Bartek thindil Jasicki  <thindil@tuxfamily.org>
 
+	* BUG,equip.php, templates/layout1/equip.tpl, templates/equip.tpl: 
+	fixed showing quest items
 	* UPDATE,account.php, languages/pl/account.php: 
 	droped minimal size of bug report
 	* BUG,bank.php: 

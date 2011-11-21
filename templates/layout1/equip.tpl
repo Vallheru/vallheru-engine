@@ -67,6 +67,9 @@
 {if $Potions1 > "0"}
     <div align="center"><a href="#potions">{$Potions2}</a></div>
 {/if}
+{if $Bquestsamount > 1}
+    <div align="center"><a href="#quests">{$Bquestsmenu[0]}</a></div>
+{/if}
 
 {if $Bweaponsamount > 1}
     <form method="POST" action="equip.php?sellchecked=E">
@@ -256,6 +259,24 @@
         {/section}
         {$Sellallp}
 	<input type="submit" value="{$Potionssell}" />
+    </form>
+    <a href="#top">{$Aback}</a><br />
+{/if}
+
+{if $Bquestsamount > 1}
+    <form method="POST" action="equip.php?sellchecked=E">
+        <br /><a name="quests"><u>{$Bquestsmenu[0]}:</u></a><br />
+        {foreach $Bquests as $key => $value}
+	    {if $key > 0}
+	        {$Ilevel} {$key}:<br />
+	        {foreach $value as $weapon}
+	            {$weapon}
+	        {/foreach}
+		<br />
+	    {/if}
+	{/foreach}
+	{$Bquestsmenu[1]}
+    	<input type="submit" value="{$Bquestssell}" />
     </form>
     <a href="#top">{$Aback}</a><br />
 {/if}
