@@ -782,7 +782,7 @@ if ($player -> fight != 0 && (!in_array($title, $arrTitles)) && (in_array($playe
 /**
  * Random event - check if happen
  */
-if ($player->revent == 0 && ($player->location == 'Altara' || $player->location == 'Ardulith') && $player->fight == 0)
+if ($player->revent == 0 && ($player->location == 'Altara' || $player->location == 'Ardulith') && $player->fight == 0 && (!in_array($title, array('Karczma', 'Poczta', 'Forum'))))
   {
     $intRoll = rand(1, 100);
     if ($intRoll == 1)
