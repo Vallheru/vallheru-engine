@@ -9,7 +9,7 @@
  *   @author               : yeskov <yeskov@users.sourceforge.net>
  *   @author               : eyescream <tduda@users.sourceforge.net>
  *   @version              : 1.4
- *   @since                : 18.11.2011
+ *   @since                : 21.11.2011
  *
  */
 
@@ -123,17 +123,17 @@ if (isset($_GET['action']))
 	  {
 	    error (BAD_PLAYER);
 	  }
-	$objDonated = $db -> Execute("SELECT `id`, `user` FROM `players` WHERE `id`=".$_POST['pid']);
+	$objDonated = $db -> Execute("SELECT `id`, `user`, `tribe` FROM `players` WHERE `id`=".$_POST['pid']);
 	if (!$objDonated -> fields['id'])
 	  {
 	    error (NO_PLAYER);
 	  }
-	$strPlayerName = $objDonated -> fields['user'];
+	$strPlayerName = $arrTags[$objDonated->fields['tribe']][0].' '.$objDonated -> fields['user'].' '.$arrTags[$objDonated->fields['tribe']][1];
 	$objDonated -> Close();
 	$db -> Execute("UPDATE `players` SET `bank`=`bank`+".$_POST['with']." WHERE `id`=".$_POST['pid']);
 	$db -> Execute("UPDATE `players` SET `bank`=`bank`-".$_POST['with']." WHERE `id`=".$player -> id);
 	$strDate = $db -> DBDate($newdate);
-	$db -> Execute("INSERT INTO `log` (`owner`, `log`, `czas`, `type`) VALUES(".$_POST['pid'].",'".T_PLAYER." <b><a href=view.php?view=".$player -> id.">".$player -> user."</a></b>".T_ID."<b>".$player -> id."</b>, ".T_GIVE." ".$_POST['with']." sztuk złota".$strTitle.".', ".$strDate.", 'N')");    
+	$db -> Execute("INSERT INTO `log` (`owner`, `log`, `czas`, `type`) VALUES(".$_POST['pid'].",'".T_PLAYER." <b><a href=view.php?view=".$player -> id.">".$arrTags[$player->tribe][0].' '.$player->user.' '.$arrTags[$player->tribe][1]."</a></b>".T_ID."<b>".$player -> id."</b>, ".T_GIVE." ".$_POST['with']." sztuk złota".$strTitle.".', ".$strDate.", 'N')");    
 	$db -> Execute("INSERT INTO `log` (`owner`, `log`, `czas`, `type`) VALUES(".$player -> id.",'".YOU_SEND." <b><a href=view.php?view=".$_POST['pid'].">".$strPlayerName."</a></b>, ID<b> ".$_POST['pid']."</b> ".G_AMOUNT." ".$_POST['with']." sztuk złota".$strTitle.".', ".$strDate.", 'N')");    
 	$db -> Execute("INSERT INTO `logs` (`owner`, `log`, `czas`) VALUES(".$player -> id.",'".YOU_SEND." <b><a href=view.php?view=".$_POST['pid'].">".$strPlayerName."</a></b>, ID<b> ".$_POST['pid']."</b> ".G_AMOUNT." ".$_POST['with']." sztuk złota".$strTitle.".', ".$strDate.")");
 	error("<br />".YOU_SEND." <b><a href=view.php?view=".$_POST['pid'].">".$strPlayerName."</a></b>, ID<b> ".$_POST['pid']."</b> ".G_AMOUNT." ".$_POST['with']." ".GOLD_COINS);
@@ -173,17 +173,17 @@ if (isset($_GET['action']))
 	  {
 	    error(NO_MITHRIL);
 	  }
-	$objDonated = $db -> Execute("SELECT `id`, `user` FROM `players` WHERE `id`=".$_POST['pid']);
+	$objDonated = $db -> Execute("SELECT `id`, `user`, `tribe` FROM `players` WHERE `id`=".$_POST['pid']);
 	if (!$objDonated -> fields['id'])
 	  {
 	    error (NO_PLAYER);
 	  }
-	$strPlayerName = $objDonated -> fields['user'];
+	$strPlayerName = $arrTags[$objDonated->fields['tribe']][0].' '.$objDonated -> fields['user'].' '.$arrTags[$objDonated->fields['tribe']][1];
 	$objDonated -> Close();
 	$db -> Execute("UPDATE `players` SET `platinum`=`platinum`+".$_POST['mithril']." WHERE `id`=".$_POST['pid']);
 	$db -> Execute("UPDATE `players` SET `platinum`=`platinum`-".$_POST['mithril']." WHERE `id`=".$player -> id);
 	$strDate = $db -> DBDate($newdate);
-	$db -> Execute("INSERT INTO `log` (`owner`, `log`, `czas`, `type`) VALUES(".$_POST['pid'].",'".T_PLAYER."<b><a href=view.php?view=".$player -> id.">".$player ->user."</a></b> ".T_ID."<b>".$player -> id."</b>, ".T_GIVE." ".$_POST['mithril']." sztuk mithrilu".$strTitle.".', ".$strDate.", 'N')");
+	$db -> Execute("INSERT INTO `log` (`owner`, `log`, `czas`, `type`) VALUES(".$_POST['pid'].",'".T_PLAYER."<b><a href=view.php?view=".$player -> id.">".$arrTags[$player->tribe][0].' '.$player ->user.' '.$arrTags[$player->tribe][1]."</a></b> ".T_ID."<b>".$player -> id."</b>, ".T_GIVE." ".$_POST['mithril']." sztuk mithrilu".$strTitle.".', ".$strDate.", 'N')");
 	$db -> Execute("INSERT INTO `log` (`owner`, `log`, `czas`, `type`) VALUES(".$player -> id.",'".YOU_SEND." <b><a href=view.php?view=".$_POST['pid'].">".$strPlayerName."</a></b> ID<b> ".$_POST['pid']."</b>, ".$_POST['mithril']." sztuk mithrilu".$strTitle.".', ".$strDate.", 'N')");
 	$db -> Execute("INSERT INTO `logs` (`owner`, `log`, `czas`) VALUES(".$player -> id.",'".YOU_SEND." <b><a href=view.php?view=".$_POST['pid'].">".$strPlayerName."</a></b> ID<b> ".$_POST['pid']."</b>, ".$_POST['mithril']." sztuk mithrilu ".$strTitle.".', ".$strDate.")");
 	error ("<br />".YOU_SEND." <b><a href=view.php?view=".$_POST['pid'].">".$strPlayerName."</a></b> ID<b> ".$_POST['pid']."</b>, ".$_POST['mithril']." ".M_AMOUNT."");
@@ -243,12 +243,12 @@ if (isset($_GET['action']))
 	  {
 	    error(BAD_PLAYER);
 	  }
-	$objDonated = $db -> Execute("SELECT `id`, `user` FROM `players` WHERE `id`=".$_POST['pid']);
+	$objDonated = $db -> Execute("SELECT `id`, `user`, `tribe` FROM `players` WHERE `id`=".$_POST['pid']);
 	if (empty($objDonated -> fields['id'])) 
 	  {
 	    error(NO_PLAYER);
 	  }
-	$strPlayerName = $objDonated -> fields['user'];
+	$strPlayerName = $arrTags[$objDonated->fields['tribe']][0].' '.$objDonated -> fields['user'].' '.$arrTags[$objDonated->fields['tribe']][1];
 	$objDonated -> Close();
 	$objHave = $db -> Execute("SELECT `owner` FROM `minerals` WHERE `owner`=".$_POST['pid']);
 	if (empty($objHave -> fields['owner'])) 
@@ -262,7 +262,7 @@ if (isset($_GET['action']))
 	$objHave  -> Close();
 	$db -> Execute("UPDATE `minerals` SET `".$_POST['item']."`=`".$_POST['item']."`-".$_POST['amount']." WHERE `owner`=".$player -> id);
 	$strDate = $db -> DBDate($newdate);
-	$db -> Execute("INSERT INTO `log` (`owner`, `log`, `czas`, `type`) VALUES(".$_POST['pid'].",'".T_PLAYER."<b><a href=view.php?view=".$player -> id.">".$player ->user."</a></b> ".T_ID."<b>".$player -> id."</b>, ".T_GIVE." ".$_POST['amount']." ".$strMineralname.$strTitle.".', ".$strDate.", 'N')");
+	$db -> Execute("INSERT INTO `log` (`owner`, `log`, `czas`, `type`) VALUES(".$_POST['pid'].",'".T_PLAYER."<b><a href=view.php?view=".$player -> id.">".$arrTags[$player->tribe][0].' '.$player ->user.' '.$arrTags[$player->tribe][1]."</a></b> ".T_ID."<b>".$player -> id."</b>, ".T_GIVE." ".$_POST['amount']." ".$strMineralname.$strTitle.".', ".$strDate.", 'N')");
 	$db -> Execute("INSERT INTO `log` (`owner`, `log`, `czas`, `type`) VALUES(".$player -> id.", '".YOU_SEND." <b><a href=view.php?view=".$_POST['pid'].">".$strPlayerName."</a></b> ID<b> ".$_POST['pid']."</b>, ".$_POST['amount']." ".T_AMOUNT." ".$strMineralname.$strTitle.".', ".$strDate.", 'N')");
 	$db -> Execute("INSERT INTO `logs` (`owner`, `log`, `czas`) VALUES(".$player -> id.", '".YOU_SEND." <b><a href=view.php?view=".$_POST['pid'].">".$strPlayerName."</a></b> ID<b> ".$_POST['pid'].", ".$_POST['amount']." ".T_AMOUNT." ".$strMineralname.$strTitle.".', ".$strDate.")");
 	error ("<br />".YOU_SEND." <b><a href=view.php?view=".$_POST['pid'].">".$strPlayerName."</a></b> ID<b> ".$_POST['pid']."</b>, <b>".$_POST['amount']."</b> ".T_AMOUNT." <b>".$strMineralname."</b>.");
@@ -322,12 +322,12 @@ if (isset($_GET['action']))
 	  {
 	    error (BAD_PLAYER);
 	  }
-	$objDonated = $db -> Execute("SELECT `id`, `user` FROM `players` WHERE `id`=".$_POST['pid']);
+	$objDonated = $db -> Execute("SELECT `id`, `user`, `tribe` FROM `players` WHERE `id`=".$_POST['pid']);
 	if (empty ($objDonated -> fields['id'])) 
 	  {
 	    error (NO_PLAYER);
 	  }
-	$strPlayerName = $objDonated -> fields['user'];
+	$strPlayerName = $arrTags[$objDonated->fields['tribe']][0].' '.$objDonated -> fields['user'].' '.$arrTags[$objDonated->fields['tribe']][1];
 	$objDonated -> Close();
 	$have = $db -> Execute("SELECT `id` FROM `herbs` WHERE `gracz`=".$_POST['pid']);
 	if (empty ($have -> fields['id'])) 
@@ -341,7 +341,7 @@ if (isset($_GET['action']))
 	$have -> Close();
 	$db -> Execute("UPDATE `herbs` SET `".$_POST['item']."`=`".$_POST['item']."`-".$_POST['amount']." WHERE `gracz`=".$player -> id);
 	$strDate = $db -> DBDate($newdate);
-	$db -> Execute("INSERT INTO `log` (`owner`, `log`, `czas`, `type`) VALUES(".$_POST['pid'].",'".T_PLAYER."<b><a href=view.php?view=".$player -> id.">".$player ->user."</a></b> ".T_ID."<b>".$player -> id."</b>, ".T_GIVE." ".$_POST['amount']." ".$arrName[$intKey].$strTitle.".', ".$strDate.", 'N')");
+	$db -> Execute("INSERT INTO `log` (`owner`, `log`, `czas`, `type`) VALUES(".$_POST['pid'].",'".T_PLAYER."<b><a href=view.php?view=".$player -> id.">".$arrTags[$player->tribe][0].' '.$player ->user.' '.$arrTags[$player->tribe][1]."</a></b> ".T_ID."<b>".$player -> id."</b>, ".T_GIVE." ".$_POST['amount']." ".$arrName[$intKey].$strTitle.".', ".$strDate.", 'N')");
 	$db -> Execute("INSERT INTO `log` (`owner`, `log`, `czas`, `type`) VALUES(".$player -> id.",'".YOU_SEND." <b><a href=view.php?view=".$_POST['pid'].">".$strPlayerName."</a></b> ID<b> ".$_POST['pid']."</b>, ".$_POST['amount']." ".$arrName[$intKey].$strTitle.".', ".$strDate.", 'N')");
 	$db -> Execute("INSERT INTO `logs` (`owner`, `log`, `czas`) VALUES(".$_POST['pid'].",'".T_PLAYER."<b><a href=view.php?view=".$player -> id.">".$player ->user."</a></b> ".T_ID."<b>".$player -> id."</b>, ".T_GIVE." ".$_POST['amount']." ".$arrName[$intKey].$strTitle.".', ".$strDate.")");
 	error ("<br />".YOU_SEND." <b><a href=view.php?view=".$_POST['pid'].">".$strPlayerName."</a></b> ID<b> ".$_POST['pid']."</b>, <b>".$_POST['amount']."</b> ".$arrName[$intKey]);
@@ -388,12 +388,12 @@ if (isset($_GET['action']))
 	  {
 	    error(ERROR);
 	  }
-	$objDonated = $db -> Execute("SELECT `id`, `user` FROM `players` WHERE `id`=".$_POST['pid']);
+	$objDonated = $db -> Execute("SELECT `id`, `user`, `tribe` FROM `players` WHERE `id`=".$_POST['pid']);
 	if (empty ($objDonated -> fields['id'])) 
 	  {
 	    error (NO_PLAYER);
 	  }
-	$strPlayerName = $objDonated -> fields['user'];
+	$strPlayerName = $arrTags[$objDonated->fields['tribe']][0].' '.$objDonated -> fields['user'].' '.$arrTags[$objDonated->fields['tribe']][1];
 	$objDonated -> Close();
 	if (!isset($_POST['addall']))
 	  {
@@ -427,7 +427,7 @@ if (isset($_GET['action']))
 	    $db -> Execute("DELETE FROM `potions` WHERE `id`=".$item -> fields['id']);
 	  }
 	$strDate = $db -> DBDate($newdate);
-	$db -> Execute("INSERT INTO `log` (`owner`, `log`, `czas`, `type`) VALUES(".$_POST['pid'].",'".T_PLAYER."<b><a href=view.php?view=".$player -> id.">".$player ->user."</a></b> ".T_ID."<b>".$player -> id."</b>, ".T_GIVE." ".$_POST['amount']." ".$item ->  fields['name']." (+".$item -> fields['power'].")".$strTitle.".', ".$strDate.", 'N')") or error (E_DB3);
+	$db -> Execute("INSERT INTO `log` (`owner`, `log`, `czas`, `type`) VALUES(".$_POST['pid'].",'".T_PLAYER."<b><a href=view.php?view=".$player -> id.">".$arrTags[$player->tribe][0].' '.$player ->user.' '.$arrTags[$player->tribe][1]."</a></b> ".T_ID."<b>".$player -> id."</b>, ".T_GIVE." ".$_POST['amount']." ".$item ->  fields['name']." (+".$item -> fields['power'].")".$strTitle.".', ".$strDate.", 'N')") or error (E_DB3);
 	$db -> Execute("INSERT INTO `log` (`owner`, `log`, `czas`, `type`) VALUES(".$player -> id.",'".YOU_SEND." <b><a href=view.php?view=".$_POST['pid'].">".$strPlayerName."</a></b> ID<b> ".$_POST['pid']."</b>, ".$_POST['amount']." ".T_AMOUNT." ".$item -> fields['name']." (+".$item -> fields['power'].")".$strTitle.".', ".$strDate.", 'N')");
 	$db -> Execute("INSERT INTO `logs` (`owner`, `log`, `czas`) VALUES(".$_POST['pid'].",'".T_PLAYER."<b><a href=view.php?view=".$player -> id.">".$player ->user."</a></b> ".T_ID."<b>".$player -> id."</b>, ".T_GIVE." ".$_POST['amount']." ".$item ->  fields['name']." (+".$item -> fields['power'].")".$strTitle.".', ".$strDate.")");
 	error ("<br />".YOU_SEND." <b><a href=view.php?view=".$_POST['pid'].">".$strPlayerName."</a></b>, ID<b> ".$_POST['pid']."</b>, <b>".$_POST['amount']."</b> ".T_AMOUNT." <b>".$item -> fields['name']."</b> (+".$item -> fields['power'].").");
@@ -476,12 +476,12 @@ if (isset($_GET['action']))
 	  {
 	    error (BAD_PLAYER);
 	  }
-	$objDonated = $db -> Execute("SELECT `id`, `user` FROM `players` WHERE `id`=".$_POST['pid']);
+	$objDonated = $db -> Execute("SELECT `id`, `user`, `tribe` FROM `players` WHERE `id`=".$_POST['pid']);
 	if (empty ($objDonated -> fields['id'])) 
 	  {
 	    error (NO_PLAYER);
 	  }
-	$strPlayerName = $objDonated -> fields['user'];
+	$strPlayerName = $arrTags[$objDonated->fields['tribe']][0].' '.$objDonated -> fields['user'].' '.$arrTags[$objDonated->fields['tribe']][1];
 	$objDonated -> Close();
 	if ($item->fields['type'] != 'R')
 	  {
@@ -580,7 +580,7 @@ if (isset($_GET['action']))
 	$strAttributes.= ')'.$strTitle.'.';
 	
 	$strDate = $db -> DBDate($newdate);
-	$db -> Execute("INSERT INTO `log` (`owner`, `log`, `czas`, `type`) VALUES(".$_POST['pid'].",'".T_PLAYER." <b><a href=view.php?view=".$player -> id.">".$player ->user."</a></b>".T_ID."<b>".$player -> id."</b>, ".T_GIVE." ".$_POST['amount']." ".I_AMOUNT." ".$item -> fields['name']." ".$strAttributes."', ".$strDate.", 'N')") or die($db->ErrorMsg());   
+	$db -> Execute("INSERT INTO `log` (`owner`, `log`, `czas`, `type`) VALUES(".$_POST['pid'].",'".T_PLAYER." <b><a href=view.php?view=".$player -> id.">".$arrTags[$player->tribe][0].' '.$player ->user.' '.$arrTags[$player->tribe][1]."</a></b>".T_ID."<b>".$player -> id."</b>, ".T_GIVE." ".$_POST['amount']." ".I_AMOUNT." ".$item -> fields['name']." ".$strAttributes."', ".$strDate.", 'N')") or die($db->ErrorMsg());   
 	$db -> Execute("INSERT INTO `log` (`owner`, `log`, `czas`, `type`) VALUES(".$player -> id.",'".YOU_SEND." <b><a href=view.php?view=".$_POST['pid'].">".$strPlayerName."</a></b> ID<b> ".$_POST['pid'].'</b>, '.$_POST['amount']." ".T_AMOUNT." ".$item -> fields['name']." ".$strAttributes."', ".$strDate.", 'N')")or die($db->ErrorMsg());
 	$db -> Execute("INSERT INTO `logs` (`owner`, `log`, `czas`) VALUES(".$player -> id.",'".YOU_SEND." <b><a href=view.php?view=".$_POST['pid'].">".$strPlayerName."</a></b> ID<b> ".$_POST['pid'].'</b>, '.$_POST['amount']." ".T_AMOUNT." ".$item -> fields['name']." ".$strAttributes."', ".$strDate.")")or die($db->ErrorMsg());
     
