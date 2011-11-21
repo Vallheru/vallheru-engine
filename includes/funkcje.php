@@ -7,7 +7,7 @@
  *   @copyright            : (C) 2004,2005,2006,2007,2011 Vallheru Team based on Gamers-Fusion ver 2.5
  *   @author               : thindil <thindil@tuxfamily.org>
  *   @version              : 1.4
- *   @since                : 18.11.2011
+ *   @since                : 21.11.2011
  *
  */
 
@@ -698,6 +698,7 @@ function fightmonster($enemy, $expgain, $goldgain, $times)
     $mczaro = $db -> Execute("SELECT * FROM `czary` WHERE `status`='E' AND `gracz`=".$player -> id." AND `typ`='O'");
     $premia = 0;
     $arrStat = array('agility', 'strength', 'inteli', 'wisdom', 'speed', 'cond', 'attack', 'shoot', 'miss', 'magic');
+    $strName = $player->user;
     $player->user = $arrTags[$player->tribe][0].' '.$player->user.' '.$arrTags[$player->tribe][1];
 
     /**
@@ -1316,5 +1317,6 @@ function fightmonster($enemy, $expgain, $goldgain, $times)
         $db -> Execute("UPDATE settings SET value=".$enemy['hp']." WHERE setting='monsterhp'");
     }
     $db->Execute("UPDATE `players` SET `hp`=".$player->hp.", `fight`=0, `bless`='', `blessval`=0 WHERE `id`=".$player->id);
+    $player->user = $strName;
 }
 ?>
