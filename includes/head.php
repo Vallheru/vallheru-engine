@@ -7,7 +7,7 @@
  *   @copyright            : (C) 2004,2005,2006,2007,2011 Vallheru Team based on Gamers-Fusion ver 2.5
  *   @author               : thindil <thindil@tuxfamily.org>
  *   @version              : 1.4
- *   @since                : 15.11.2011
+ *   @since                : 21.11.2011
  *
  */
 
@@ -779,5 +779,38 @@ if ($player -> fight != 0 && (!in_array($title, $arrTitles)) && (in_array($playe
     error (ESCAPE);
 }
 
+/**
+ * Random event - check if happen
+ */
+if ($player->revent == 0 && ($player->location == 'Altara' || $player->location == 'Ardulith') && $player->fight == 0)
+  {
+    $intRoll = rand(1, 100);
+    if ($intRoll == 1)
+      {
+	require_once('includes/revent.php');
+      }
+  }
+
+/**
+ * Random event - accepting
+ */
+elseif ($player->revent == 1)
+  {
+    require_once('includes/revent.php');
+  }
+
+/**
+ * Random event - finish it
+ */
+elseif ($player->revent == 2 && ($player->location == 'Altara' || $player->location == 'Ardulith') && $player->fight == 0)
+  {
+    $objRevent = $db->Execute("SELECT `location` FROM `revent` WHERE `pid`=".$player->id);
+    $arrLoc = explode(';', $objRevent->fields['location']);
+    $objRevent->Close();
+    if ($arrLoc[1] == $title && $player->location == $arrLoc[0])
+      {
+	require_once('includes/revent.php');
+      }
+  }
 ?>
 

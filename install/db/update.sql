@@ -90,3 +90,10 @@ INSERT INTO `settings` (`setting`, `value`) VALUES ('hunteraltara', NULL);
 INSERT INTO `settings` (`setting`, `value`) VALUES ('hunterardulith', NULL);
 INSERT INTO `settings` (`setting`, `value`) VALUES ('hunteraltaraamount', '0');
 INSERT INTO `settings` (`setting`, `value`) VALUES ('hunterardulithamount', '0');
+CREATE TABLE IF NOT EXISTS `revent` (
+  `pid` int(11) NOT NULL,
+  `state` tinyint(2) NOT NULL,
+  `qtime` smallint(4) NOT NULL,
+  `location` varchar(255) NOT NULL,
+  PRIMARY KEY (`pid`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;

@@ -565,6 +565,11 @@ if (isset($_GET['sell']))
     {
         error (NOT_YOUR);
     }
+    if ($sell->fields['name'] == 'Solidna sakiewka' && $sell->fields['type'] == 'Q')
+      {
+	$intTime = rand(2, 9);
+	$db->Execute("UPDATE `revent` SET `state`=4, `qtime`=".$intTime." WHERE `pid`=".$player->id);
+      }
     if ($sell -> fields['type'] == 'R') 
     {
         $costone = ($sell -> fields['cost'] / 100);
@@ -665,7 +670,7 @@ if (isset($_GET['sellchecked']))
     //Sell items
     if (($_GET['sellchecked'] == 'E') || ($_GET['sellchecked'] == 'A'))
       {
-	$objItems = $db->Execute("SELECT `id`, `type`, `cost`, `wt`, `maxwt`, `amount` FROM `equipment` WHERE `owner`=".$player->id." AND `status`='U'");
+	$objItems = $db->Execute("SELECT `id`, `name`, `type`, `cost`, `wt`, `maxwt`, `amount` FROM `equipment` WHERE `owner`=".$player->id." AND `status`='U'");
 	while (!$objItems->EOF)
 	  {
 	    if (isset($_POST[$objItems->fields['id']]))
@@ -676,6 +681,11 @@ if (isset($_GET['sellchecked']))
 		    $objItems->fields['cost'] = ceil($costone * $objItems->fields['wt']);
 		    $intMoney += $objItems->fields['cost'];
 		    $db -> Execute("DELETE FROM `equipment` WHERE `id`=".$objItems->fields['id']);
+		  }
+		elseif ($objItems->fields['type'] == 'Q' && $objItems->fields['name'] == 'Solidna sakiewka')
+		  {
+		    $intTime = rand(2, 9);
+		    $db->Execute("UPDATE `revent` SET `state`=4, `qtime`=".$intTime." WHERE `pid`=".$player->id);
 		  }
 		elseif ($objItems->fields['maxwt'] == $objItems->fields['wt']) 
 		  {
@@ -721,7 +731,7 @@ if (isset($_GET['sellchecked']))
  */
 if (isset($_GET['sprzedaj'])) 
   {
-    $arrSell = array('A', 'W', 'H', 'L', 'R', 'C', 'T', 'S', 'I', 'O');
+    $arrSell = array('A', 'W', 'H', 'L', 'R', 'C', 'T', 'S', 'I', 'O', 'Q');
     if (!in_array($_GET['sprzedaj'], $arrSell))
       {
 	error(ERROR);
@@ -739,7 +749,7 @@ if (isset($_GET['sprzedaj']))
     {
         error (NO_ITEMS2);
     }
-    $arrType = array(ARMORS, WEAPONS, HELMETS, LEGS2, ARROWS2, CAPES, STAFFS, SHIELDS, RINGS, 'łupy');
+    $arrType = array(ARMORS, WEAPONS, HELMETS, LEGS2, ARROWS2, CAPES, STAFFS, SHIELDS, RINGS, 'łupy', 'przedmioty do zadań');
     $intKey = array_search($_GET['sprzedaj'], $arrSell);
     $typ = $arrType[$intKey];
     $zysk = 0;
@@ -752,7 +762,12 @@ if (isset($_GET['sprzedaj']))
             $zysk = $zysk + $zysk1 -> fields['cost'];
             $db -> Execute("DELETE FROM equipment WHERE id=".$zysk1 -> fields['id']);
         }
-        if ($zysk1 -> fields['maxwt'] == $zysk1 -> fields['wt'] && $zysk1 -> fields['type'] != 'R') 
+	elseif ($_GET['sprzedaj'] == 'Q' && $zysk1->fields['name'] == 'Solidna sakiewka')
+	  {
+	    $intTime = rand(2, 9);
+	    $db->Execute("UPDATE `revent` SET `state`=4, `qtime`=".$intTime." WHERE `pid`=".$player->id);
+	  }
+        elseif ($zysk1 -> fields['maxwt'] == $zysk1 -> fields['wt']) 
         {
             $zysk= $zysk + ($zysk1 -> fields['cost'] * $zysk1 -> fields['amount']);
             $db -> Execute("DELETE FROM equipment WHERE id=".$zysk1 -> fields['id']);
@@ -813,7 +828,7 @@ if (isset($_GET['napraw_uzywane']))
  */
 if (isset($_GET['repair']))
   {
-    $rzecz_wiersz = $db->Execute("SELECT * FROM `equipment` WHERE `owner`=".$player->id." AND `status`='E' AND `type` NOT IN ('R', 'T', 'C', 'I', 'O')");
+    $rzecz_wiersz = $db->Execute("SELECT * FROM `equipment` WHERE `owner`=".$player->id." AND `status`='E' AND `type` NOT IN ('R', 'T', 'C', 'I', 'O', 'Q')");
     $text = '';
     while(!$rzecz_wiersz->EOF) 
       {

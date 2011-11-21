@@ -7,7 +7,7 @@
  *   @copyright            : (C) 2004,2005,2006,2007,2011 Vallheru Team based on Gamers-Fusion ver 2.5
  *   @author               : thindil <thindil@tuxfamily.org>
  *   @version              : 1.4
- *   @since                : 03.11.2011
+ *   @since                : 21.11.2011
  *
  */
 
@@ -107,6 +107,7 @@ class Player
     var $tforumtime;
     var $forumcats;
     var $metallurgy;
+    var $revent;
 /**
 * Class constructor - get data from database and write it to variables
 */
@@ -203,6 +204,16 @@ class Player
 	$this->forumcats = $stats->fields['forumcats'];
 	$this->metallurgy = $stats->fields['metallurgy'];
         $stats -> Close();
+	$objRevent = $db->Execute("SELECT `state` FROM `revent` WHERE `pid`=".$pid);
+	if (!$objRevent->fields['state'])
+	  {
+	    $this->revent = 0;
+	  }
+	else
+	  {
+	    $this->revent = $objRevent->fields['state'];
+	  }
+	$objRevent->Close();
     }
     /**
      * Function return values of selected atributes in array

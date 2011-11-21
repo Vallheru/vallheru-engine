@@ -1,5 +1,7 @@
 2011-11-21  Bartek thindil Jasicki  <thindil@tuxfamily.org>
 
+	* FEATURE,install/db/update.sql, includes/head.php, includes/revent.php, includes/resets.php, class/player_class.php, equip.php: 
+	added random event in cities
 	* BUG,equip.php, templates/layout1/equip.tpl, templates/equip.tpl: 
 	fixed showing quest items
 	* UPDATE,account.php, languages/pl/account.php: 

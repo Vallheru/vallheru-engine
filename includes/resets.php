@@ -7,7 +7,7 @@
  *   @copyright            : (C) 2004,2005,2006,2007,2011 Vallheru Team based on Gamers-Fusion ver 2.5
  *   @author               : thindil <thindil@tuxfamily.org>
  *   @version              : 1.4
- *   @since                : 18.11.2011
+ *   @since                : 21.11.2011
  *
  */
 
@@ -658,6 +658,62 @@ function mainreset()
 	$db->Execute("UPDATE `settings` SET `value`='".$intAmount."' WHERE `setting`='hunter".$strCity."amount'");
       }
     /**
+     * Check for random event
+     */
+    $objRevent = $db->Execute("SELECT `pid`, `state`, `qtime` FROM `revent`");
+    while (!$objRevent->EOF)
+      {
+	//Count down
+	if ($objRevent->fields['qtime'] > 1)
+	  {
+	    $db->Execute("UPDATE `revent` SET `qtime`=`qtime`-1 WHERE `pid`=".$objRevent->fields['pid']);
+	  }
+	//Finish random event
+	else
+	  {
+	    $time = date("Y-m-d H:i:s");
+	    //Unfinished
+	    if ($objRevent->fields['state'] == 2)
+	      {
+		$db->Execute("DELETE FROM `equipment` WHERE `name`='Solidna sakiewka' AND `type`='Q' AND `owner`=".$objRevent->fields['pid']);
+	      }
+	    //Finished - give item to target
+	    elseif ($objRevent->fields['state'] == 3)
+	      {
+		$intGold = rand(10000, 30000);
+		$db->Execute("UPDATE `players` SET `bank`=`bank`+".$intGold." WHERE `id`=".$objRevent->fields['pid']);
+		$db -> Execute("INSERT INTO `log` (`owner`, `log`, `czas`, `type`) VALUES(".$objRevent->fields['pid'].", 'Dostałeś przelew ".$intGold." sztuk złota do banku, tytułem: Dziękuję za pomoc.', '".$time."', 'N')"); 
+	      }
+	    //Finished - item sold
+	    elseif ($objRevent->fields['state'] == 4)
+	      {
+		$intRoll = rand(0, 1);
+		//Go to prison
+		if ($intRoll == 0)
+		  {
+		    $objPlayer = $db->Execute("SELECT `level` FROM `players` WHERE `id`=".$objRevent->fields['pid']);
+		    $intGold = $objPlayer->fields['level'] * 10000;
+		    $objPlayer->Close();
+		    $db -> Execute("INSERT INTO `jail` (`prisoner`, `verdict`, `duration`, `cost`, `data`) VALUES(".$objRevent->fields['pid'].",'Okradzenie poborcy podatkowego.', 18, ".$intGold.", ".$strDate.")");
+		    $db->Execute("UPDATE `players` SET `miejsce`='Lochy' WHRE `id`=".$objRevent->fields['pid']);
+		    $db -> Execute("INSERT INTO `log` (`owner`, `log`, `czas`, `type`) VALUES(".$objRevent->fields['pid'].", 'Nagle wyskoczył na ciebie patrol gwardzistów królewskich. Szybko i sprawnie zakuli ciebie w kajdany i odtransportowali do miasta. Tam przed sądem zostałeś oskarżony o kradzież pieniędzy podatników. I w ten oto sposób znalazłeś się w lochach.', '".$time."', 'T')"); 
+		  }
+		//Bandits
+		elseif ($intRoll == 1)
+		  {
+		    $objPlayer = $db->Execute("SELECT `bank` FROM `players` WHERE `id`=".$objRevent->fields['pid']);
+		    $intBank = floor($objPlayer->fields['bank'] / 2);
+		    $objPlayer->Close();
+		    $db->Execute("UPDATE `players` SET `hp`=0, `credits`=0, `bank`=".$intBank.", `lastkilledby`='własną chciwość' WHERE `id`=".$objRevent->fields['pid']);
+		    $db -> Execute("INSERT INTO `log` (`owner`, `log`, `czas`, `type`) VALUES(".$objRevent->fields['pid'].", 'Nagle wokół ciebie pojawiło się kilka zakapturzonych postaci. Ostatnią rzeczą którą usłyszałeś było: ODDAWAJ NASZE PIENIĄDZE! Kiedy się obudziłeś, okazało się, że zniknęło nie tylko to złoto, które miałeś przy sobie ale również część złota z banku!', '".$time."', 'T')"); 
+		  }
+	      }
+	    $db->Execute("DELETE FROM `revent` WHERE `pid`=".$objRevent->fields['pid']);
+	  }
+	$objRevent->MoveNext();
+      }
+    $objRevent->Close();
+    /**
     * Reopen game
     */
     $db -> Execute("UPDATE settings SET value='Y' WHERE setting='open'");
@@ -904,6 +960,64 @@ function smallreset()
 	$intAmount = rand(1, 20);
 	$db->Execute("UPDATE `settings` SET `value`='".$intAmount."' WHERE `setting`='hunter".$strCity."amount'");
       }
+    /**
+     * Check for random event
+     */
+    $objRevent = $db->Execute("SELECT `pid`, `state`, `qtime` FROM `revent`");
+    while (!$objRevent->EOF)
+      {
+	//Count down
+	if ($objRevent->fields['qtime'] > 1)
+	  {
+	    $db->Execute("UPDATE `revent` SET `qtime`=`qtime`-1 WHERE `pid`=".$objRevent->fields['pid']);
+	  }
+	//Finish random event
+	else
+	  {
+	    $time = date("Y-m-d H:i:s");
+	    //Unfinished
+	    if ($objRevent->fields['state'] == 2)
+	      {
+		$db->Execute("DELETE FROM `equipment` WHERE `name`='Solidna sakiewka' AND `type`='Q' AND `owner`=".$objRevent->fields['pid']);
+	      }
+	    //Finished - give item to target
+	    elseif ($objRevent->fields['state'] == 3)
+	      {
+		$intGold = rand(10000, 30000);
+		$db->Execute("UPDATE `players` SET `bank`=`bank`+".$intGold." WHERE `id`=".$objRevent->fields['pid']);
+		$db -> Execute("INSERT INTO `log` (`owner`, `log`, `czas`, `type`) VALUES(".$objRevent->fields['pid'].", 'Dostałeś przelew ".$intGold." sztuk złota do banku, tytułem: Dziękuję za pomoc.', '".$time."', 'N')"); 
+	      }
+	    //Finished - item sold
+	    elseif ($objRevent->fields['state'] == 4)
+	      {
+		$intRoll = rand(0, 1);
+		//Go to prison
+		if ($intRoll == 0)
+		  {
+		    echo "here";
+		    $objPlayer = $db->Execute("SELECT `level` FROM `players` WHERE `id`=".$objRevent->fields['pid']);
+		    $intGold = $objPlayer->fields['level'] * 10000;
+		    $objPlayer->Close();
+		    $db -> Execute("INSERT INTO `jail` (`prisoner`, `verdict`, `duration`, `cost`, `data`) VALUES(".$objRevent->fields['pid'].",'Okradzenie poborcy podatkowego.', 18, ".$intGold.", ".$strDate.")");
+		    $db->Execute("UPDATE `players` SET `miejsce`='Lochy' WHRE `id`=".$objRevent->fields['pid']);
+		    $db -> Execute("INSERT INTO `log` (`owner`, `log`, `czas`, `type`) VALUES(".$objRevent->fields['pid'].", 'Nagle wyskoczył na ciebie patrol gwardzistów królewskich. Szybko i sprawnie zakuli ciebie w kajdany i odtransportowali do miasta. Tam przed sądem zostałeś oskarżony o kradzież pieniędzy podatników. I w ten oto sposób znalazłeś się w lochach.', '".$time."', 'T')"); 
+		  }
+		//Bandits
+		elseif ($intRoll == 1)
+		  {
+		    echo "here2";
+		    $objPlayer = $db->Execute("SELECT `bank` FROM `players` WHERE `id`=".$objRevent->fields['pid']);
+		    $intBank = floor($objPlayer->fields['bank'] / 2);
+		    $objPlayer->Close();
+		    $db->Execute("UPDATE `players` SET `hp`=0, `credits`=0, `bank`=".$intBank.", `lastkilledby`='własną chciwość' WHERE `id`=".$objRevent->fields['pid']);
+		    $db -> Execute("INSERT INTO `log` (`owner`, `log`, `czas`, `type`) VALUES(".$objRevent->fields['pid'].", 'Nagle wokół ciebie pojawiło się kilka zakapturzonych postaci. Ostatnią rzeczą którą usłyszałeś było: ODDAWAJ NASZE PIENIĄDZE. Kiedy się obudziłeś, okazało się, że zniknęło nie tylko to złoto, które miałeś przy sobie ale również część złota z banku!', '".$time."', 'T')"); 
+		  }
+	      }
+	    $db->Execute("DELETE FROM `revent` WHERE `pid`=".$objRevent->fields['pid']);
+	  }
+	$objRevent->MoveNext();
+      }
+    $objRevent->Close();
     /**
      * Reopen game
      */
