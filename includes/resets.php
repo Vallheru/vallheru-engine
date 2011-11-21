@@ -680,7 +680,7 @@ function mainreset()
 	    //Finished - give item to target
 	    elseif ($objRevent->fields['state'] == 3)
 	      {
-		$intGold = rand(10000, 30000);
+		$intGold = rand(1000, 8000);
 		$db->Execute("UPDATE `players` SET `bank`=`bank`+".$intGold." WHERE `id`=".$objRevent->fields['pid']);
 		$db -> Execute("INSERT INTO `log` (`owner`, `log`, `czas`, `type`) VALUES(".$objRevent->fields['pid'].", 'Dostałeś przelew ".$intGold." sztuk złota do banku, tytułem: Dziękuję za pomoc.', '".$time."', 'N')"); 
 	      }
@@ -983,7 +983,7 @@ function smallreset()
 	    //Finished - give item to target
 	    elseif ($objRevent->fields['state'] == 3)
 	      {
-		$intGold = rand(10000, 30000);
+		$intGold = rand(1000, 8000);
 		$db->Execute("UPDATE `players` SET `bank`=`bank`+".$intGold." WHERE `id`=".$objRevent->fields['pid']);
 		$db -> Execute("INSERT INTO `log` (`owner`, `log`, `czas`, `type`) VALUES(".$objRevent->fields['pid'].", 'Dostałeś przelew ".$intGold." sztuk złota do banku, tytułem: Dziękuję za pomoc.', '".$time."', 'N')"); 
 	      }
