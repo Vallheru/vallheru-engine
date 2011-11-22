@@ -1,5 +1,7 @@
 2011-11-22  Bartek thindil Jasicki  <thindil@tuxfamily.org>
 
+	* UPDATE,includes/head.php: 
+	droped chance for random event in cities
 	* BUG,smelter.php:
 	fixed bug with count max amount of billets
 

@@ -7,7 +7,7 @@
  *   @copyright            : (C) 2004,2005,2006,2007,2011 Vallheru Team based on Gamers-Fusion ver 2.5
  *   @author               : thindil <thindil@tuxfamily.org>
  *   @version              : 1.4
- *   @since                : 21.11.2011
+ *   @since                : 22.11.2011
  *
  */
 
@@ -784,7 +784,7 @@ if ($player -> fight != 0 && (!in_array($title, $arrTitles)) && (in_array($playe
  */
 if ($player->revent == 0 && ($player->location == 'Altara' || $player->location == 'Ardulith') && $player->fight == 0 && (!in_array($title, array('Karczma', 'Poczta', 'Forum'))))
   {
-    $intRoll = rand(1, 100);
+    $intRoll = rand(1, 200);
     if ($intRoll == 1)
       {
 	require_once('includes/revent.php');
