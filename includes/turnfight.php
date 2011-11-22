@@ -7,7 +7,7 @@
  *   @copyright            : (C) 2004,2005,2006,2007,2011 Vallheru Team based on Gamers-Fusion ver 2.5
  *   @author               : thindil <thindil@tuxfamily.org>
  *   @version              : 1.4
- *   @since                : 18.11.2011
+ *   @since                : 22.11.2011
  *
  */
  
@@ -1116,19 +1116,40 @@ function castspell ($id,$boost,$eunik)
                 {
                     $pechowy = rand(1,100);
                     if ($pechowy <= 70) 
-                    {
+		      {
                         $smarty -> assign ("Message", "<b>".$player -> user."</b> ".YOU_FAIL1." ".$mczar -> fields['nazwa'].", ".YOU_FAIL2." <b>".$mczar -> fields['poziom']."</b> ".MANA.".<br />");
                         $smarty -> display ('error1.tpl');
                         $player -> mana = ($player -> mana - $mczar -> fields['poziom']);
-                    }
-                    if ($pechowy > 70 && $pechowy <= 90) 
-                    {
+		      }
+		    elseif ($pechowy > 70 && $pechowy <= 80)
+		      {
+			$intDamage = floor($stat['damage'] / 2);
+			$ehp -= $intDamage;
+			$player->mana -= $mczar -> fields['poziom'];
+			$smarty->assign("Message", "<b>".$player -> user."</b> nie do końca opanowałeś zaklęcie, dlatego twój czar zadaje <b>".$intDamage."</b> obrażeń. (".$ehp." zostało)<br />");
+			$smarty->display('error.tpl');
+		      }
+                    elseif ($pechowy > 80 && $pechowy <= 85) 
+		      {
                         $smarty -> assign ("Message", "<b>".$player -> user." ".YOU_FAIL1." ".$mczar -> fields['nazwa'].", ".YOU_FAIL3.".</b><br />");
                         $smarty -> display ('error1.tpl');
                         $player -> mana = 0;
-                    }
-                    if ($pechowy > 90) 
-                    {
+		      }
+		    elseif ($pechowy > 85 && $pechowy <= 95)
+		      {
+			$intDamage = floor($stat['damage'] / 2);
+			$ehp -= $intDamage;
+			$player->mana -= $mczar -> fields['poziom'];
+			$player->hp -= $intDamage;
+			$strMesage = "<b>".$player -> user."</b> próbował rzucić zaklęcie, ale eksplodowało ono w rękach, raniąc jego oraz wroga. Traci przez to ".$intDamage." punktów życia (".$player->hp." zostało), <b>".$enemy['name']."</b> otrzymuje ".$intDamage." obrażeń (".$ehp." zostało)";
+			if ($player -> hp < 0)
+			  {
+                            $player -> hp = 0;
+			  }
+                        $db -> Execute("UPDATE `players` SET `hp`=".$player -> hp." WHERE `id`=".$player -> id);
+		      }
+                    else 
+		      {
                         $smarty -> assign ("Message", "<b>".$player -> user." ".YOU_FAIL4." ".$mczar -> fields['nazwa']."! ".YOU_FAIL5." ".$stat['damage']." ".HP."!</b><br />");
                         $smarty -> display ('error1.tpl');
                         $player -> hp = ($player -> hp - $stat['damage']);
@@ -1137,7 +1158,7 @@ function castspell ($id,$boost,$eunik)
                             $player -> hp = 0;
                         }
                         $db -> Execute("UPDATE `players` SET `hp`=".$player -> hp." WHERE `id`=".$player -> id);
-                    }
+		      }
                 }
             }
         }

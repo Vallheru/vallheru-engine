@@ -7,7 +7,7 @@
  *   @copyright            : (C) 2004,2005,2006,2007,2011 Vallheru Team based on Gamers-Fusion ver 2.5
  *   @author               : thindil <thindil@tuxfamily.org>
  *   @version              : 1.4
- *   @since                : 21.11.2011
+ *   @since                : 22.11.2011
  *
  */
 
@@ -646,7 +646,17 @@ function playerattack($eunik, &$gwtbr, $arrEquip, $mczar, &$zmeczenie, &$gatak, 
 			}
 		      $player->mana -= $mczar -> fields['poziom'];
 		    }
-		  if ($pechowy > 70 && $pechowy <= 90) 
+		  elseif ($pechowy > 70 && $pechowy <= 80)
+		    {
+		      $intDamage = floor($stat['damage'] / 2);
+		      $enemy['hp'] -= $intDamage;
+		      $player->mana -= $mczar -> fields['poziom'];
+		      if ($times == 1)
+			{
+			  $strMessage = "<b>".$player -> user."</b> nie do końca opanował zaklęcie, dlatego jego czar zadaje <b>".$intDamage."</b> obrażeń. (".$enemy['hp']." zostało)<br />";
+			}
+		    }
+		  elseif ($pechowy > 80 && $pechowy <= 85) 
 		    {
 		      if ($times == 1) 
 			{
@@ -654,7 +664,18 @@ function playerattack($eunik, &$gwtbr, $arrEquip, $mczar, &$zmeczenie, &$gatak, 
 			}
 		      $player->mana = 0;
 		    }
-		  if ($pechowy > 90) 
+		  elseif ($pechowy > 85 && $pechowy <= 95)
+		    {
+		      $intDamage = floor($stat['damage'] / 2);
+		      $enemy['hp'] -= $intDamage;
+		      $player->mana -= $mczar -> fields['poziom'];
+		      $player->hp -= $intDamage;
+		      if ($times == 1)
+			{
+			  $strMesage = "<b>".$player -> user."</b> próbował rzucić zaklęcie, ale eksplodowało ono w rękach, raniąc jego oraz wroga. Traci przez to ".$intDamage." punktów życia (".$player->hp." zostało), <b>".$enemy['name']."</b> otrzymuje ".$intDamage." obrażeń (".$enemy['hp']." zostało)";
+			}
+		    }
+		  else 
 		    {
 		      if ($times == 1) 
 			{
