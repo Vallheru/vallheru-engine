@@ -228,7 +228,7 @@ if (isset($_GET['step']) && $_GET['step'] == 'smelt')
         $smarty -> assign(array("Asmelt2" => A_SMELT,
                                 "Smeltm" => $arrSmeltmineral[$intKey],
                                 "Youhave" => $strOreshave,
-                                "Maxamount" => $intMaxamount));
+                                "Maxamount" => floor($intMaxamount)));
         /**
          * Start smelting
          */
