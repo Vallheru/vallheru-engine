@@ -436,7 +436,7 @@ function attack1($attacker, $defender, $arrAtequip, $arrDeequip, $attack_bspell,
 			  {
 			    $intDamage = floor($attackdmg / 2);
 			    $defender['hp'] -= $intDamage;
-			    $player->mana -= $mczar -> fields['poziom'];
+			    $player->mana -= $attack_bspell->fields['poziom'];
 			    $strMessage = "<b>".$attacker['user']."</b> nie do końca opanował zaklęcie, dlatego jego czar zadaje <b>".$intDamage."</b> obrażeń. (".$defender['hp']." zostało)<br />";
 			  }
                         elseif ($pechowy > 80 && $pechowy <= 85) 
@@ -674,7 +674,7 @@ function attack1($attacker, $defender, $arrAtequip, $arrDeequip, $attack_bspell,
 			  {
 			    $intDamage = floor($attackdmg / 2);
 			    $defender['hp'] -= $intDamage;
-			    $player->mana -= $mczar -> fields['poziom'];
+			    $player->mana -= $attack_bspell->fields['poziom'];
 			    $strMessage = "<b>".$attacker['user']."</b> nie do końca opanował zaklęcie, dlatego jego czar zadaje <b>".$intDamage."</b> obrażeń. (".$defender['hp']." zostało)<br />";
 			  }
                         elseif ($pechowy > 80 && $pechowy <= 85) 
@@ -686,7 +686,7 @@ function attack1($attacker, $defender, $arrAtequip, $arrDeequip, $attack_bspell,
 			  {
 			    $intDamage = floor($attackdmg / 2);
 			    $defender['hp'] -= $intDamage;
-			    $attacker['mana'] -= $$attack_bspell->fields['poziom'];
+			    $attacker['mana'] -= $attack_bspell->fields['poziom'];
 			    $attacker['hp'] -= $intDamage;
 			    $strMesage = "<b>".$player -> user."</b> próbował rzucić zaklęcie, ale eksplodowało ono w rękach, raniąc jego oraz wroga. Traci przez to ".$intDamage." punktów życia (".$attacker['hp']." zostało), <b>".$defender['user']."</b> otrzymuje ".$intDamage." obrażeń (".$defender['hp']." zostało)";
 			  }

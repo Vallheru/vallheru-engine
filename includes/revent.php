@@ -7,7 +7,7 @@
  *   @copyright            : (C) 2011 Vallheru Team based on Gamers-Fusion ver 2.5
  *   @author               : thindil <thindil@tuxfamily.org>
  *   @version              : 1.4
- *   @since                : 21.11.2011
+ *   @since                : 22.11.2011
  *
  */
 
@@ -113,11 +113,14 @@ elseif ($player->revent == 2)
   $db->Execute("UPDATE `revent` SET `state`=3, `qtime`=".$intTime." WHERE `pid`=".$player->id);
 }
 
-$smarty -> assign(array("Message" => $strMessage, 
-			"Gamename" => $gamename, 
-			"Meta" => ''));
-$smarty -> display ('error1.tpl');
-require_once("includes/foot.php");
-exit;
+if (isset($strMessage))
+  {
+    $smarty -> assign(array("Message" => $strMessage, 
+			    "Gamename" => $gamename, 
+			    "Meta" => ''));
+    $smarty -> display ('error1.tpl');
+    require_once("includes/foot.php");
+    exit;
+  }
 
 ?>
