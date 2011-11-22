@@ -9,7 +9,7 @@
  *   @author               : mori <ziniquel@users.sourceforge.net>
  *   @author               : eyescream <tduda@users.sourceforge.net>
  *   @version              : 1.4
- *   @since                : 16.11.2011
+ *   @since                : 22.11.2011
  *
  */
 
@@ -255,7 +255,7 @@ if (isset ($_GET['view']) && $_GET['view'] == 'view')
 	    $objAstralcrime = $db -> Execute("SELECT `astralcrime` FROM `players` WHERE `id`=".$player -> id);
 	    if ($objAstralcrime -> fields['astralcrime'] == 'N')
 	      {
-		error (NO_CRIME." (<a href=\"tribes.php?view=view&id=".$_GET['id']."\">".BACK."</a>)");
+		error ("Możesz szpiegować klany tylko raz na reset. (<a href=\"tribes.php?view=view&id=".$_GET['id']."\">".BACK."</a>)");
 	      }
 	    $objAstralcrime -> Close();
 	    if ($player -> hp <= 0) 

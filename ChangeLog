@@ -1,5 +1,7 @@
 2011-11-22  Bartek thindil Jasicki  <thindil@tuxfamily.org>
 
+	* BUG,tribes.php: 
+	fixed notice
 	* UPDATE,includes/head.php: 
 	droped chance for random event in cities
 	* BUG,smelter.php:
