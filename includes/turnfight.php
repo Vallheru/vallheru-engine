@@ -7,7 +7,7 @@
  *   @copyright            : (C) 2004,2005,2006,2007,2011 Vallheru Team based on Gamers-Fusion ver 2.5
  *   @author               : thindil <thindil@tuxfamily.org>
  *   @version              : 1.4
- *   @since                : 22.11.2011
+ *   @since                : 23.11.2011
  *
  */
  
@@ -1115,48 +1115,76 @@ function castspell ($id,$boost,$eunik)
                     else 
                 {
                     $pechowy = rand(1,100);
-                    if ($pechowy <= 70) 
+		    if ($pechowy <= 25) 
 		      {
-                        $smarty -> assign ("Message", "<b>".$player -> user."</b> ".YOU_FAIL1." ".$mczar -> fields['nazwa'].", ".YOU_FAIL2." <b>".$mczar -> fields['poziom']."</b> ".MANA.".<br />");
+			$smarty -> assign ("Message", "<b>".$player -> user."</b> ".YOU_FAIL1." ".$mczar -> fields['nazwa'].", ".YOU_FAIL2." <b>".$mczar -> fields['poziom']."</b> ".MANA.".<br />");
                         $smarty -> display ('error1.tpl');
                         $player -> mana = ($player -> mana - $mczar -> fields['poziom']);
 		      }
-		    elseif ($pechowy > 70 && $pechowy <= 80)
+		    elseif ($pechowy > 25 && $pechowy <= 45)
 		      {
-			$intDamage = floor($stat['damage'] / 2);
-			$ehp -= $intDamage;
-			$player->mana -= $mczar -> fields['poziom'];
-			$smarty->assign("Message", "<b>".$player -> user."</b> nie do końca opanowałeś zaklęcie, dlatego twój czar zadaje <b>".$intDamage."</b> obrażeń. (".$ehp." zostało)<br />");
-			$smarty->display('error.tpl');
+			$smarty->assign("Message", "<b>".$player->user."</b> zapatrzyłeś się na szybko poruszającego się żółwia i straciłeś koncentrację.<br />");
+			$smarty->display('error1.tpl');
 		      }
-                    elseif ($pechowy > 80 && $pechowy <= 85) 
+		    elseif ($pechowy > 45 && $pechowy <= 50)
 		      {
-                        $smarty -> assign ("Message", "<b>".$player -> user." ".YOU_FAIL1." ".$mczar -> fields['nazwa'].", ".YOU_FAIL3.".</b><br />");
+			$smarty -> assign ("Message", "<b>".$player -> user." ".YOU_FAIL1." ".$mczar -> fields['nazwa'].", ".YOU_FAIL3.".</b><br />");
                         $smarty -> display ('error1.tpl');
                         $player -> mana = 0;
 		      }
-		    elseif ($pechowy > 85 && $pechowy <= 95)
+		    elseif ($pechowy > 50 && $pechowy <= 55)
 		      {
-			$intDamage = floor($stat['damage'] / 2);
-			$ehp -= $intDamage;
-			$player->mana -= $mczar -> fields['poziom'];
-			$player->hp -= $intDamage;
-			$strMesage = "<b>".$player -> user."</b> próbował rzucić zaklęcie, ale eksplodowało ono w rękach, raniąc jego oraz wroga. Traci przez to ".$intDamage." punktów życia (".$player->hp." zostało), <b>".$enemy['name']."</b> otrzymuje ".$intDamage." obrażeń (".$ehp." zostało)";
-			if ($player -> hp < 0)
-			  {
-                            $player -> hp = 0;
-			  }
-                        $db -> Execute("UPDATE `players` SET `hp`=".$player -> hp." WHERE `id`=".$player -> id);
-		      }
-                    else 
-		      {
-                        $smarty -> assign ("Message", "<b>".$player -> user." ".YOU_FAIL4." ".$mczar -> fields['nazwa']."! ".YOU_FAIL5." ".$stat['damage']." ".HP."!</b><br />");
+			$smarty -> assign ("Message", "<b>".$player -> user." ".YOU_FAIL4." ".$mczar -> fields['nazwa']."! ".YOU_FAIL5." ".$stat['damage']." ".HP."!</b><br />");
                         $smarty -> display ('error1.tpl');
                         $player -> hp = ($player -> hp - $stat['damage']);
                         if ($player -> hp < 0)
                         {
                             $player -> hp = 0;
                         }
+                        $db -> Execute("UPDATE `players` SET `hp`=".$player -> hp." WHERE `id`=".$player -> id);
+		      }
+		    elseif ($pechowy > 55 && $pechowy <= 85)
+		      {
+			if ($pechowy < 65)
+			  {
+			    $intDamage = floor($stat['damage'] * 0.75);
+			  }
+			elseif ($pechowy < 75)
+			  {
+			    $intDamage = floor($stat['damage'] * 0.5);
+			  }
+			else
+			  {
+			    $intDamage = floor($stat['damage'] * 0.25);
+			  }
+			$ehp -= $intDamage;
+			$player->mana -= $mczar -> fields['poziom'];
+			$smarty->assign("Message", "<b>".$player -> user."</b> nie do końca opanowałeś zaklęcie, dlatego twój czar zadaje <b>".$intDamage."</b> obrażeń. (".$ehp." zostało)<br />");
+			$smarty->display('error.tpl');
+		      }
+		    else
+		      {
+			if ($pechowy < 90)
+			  {
+			    $intDamage = floor($stat['damage'] * 0.25);
+			  }
+			elseif ($pechowy < 95)
+			  {
+			    $intDamage = floor($stat['damage'] * 0.5);
+			  }
+			else
+			  {
+			    $intDamage = floor($stat['damage'] * 0.75);
+			  }
+			$ehp -= $intDamage;
+			$player->mana -= $mczar -> fields['poziom'];
+			$player->hp -= $intDamage;
+			$smarty->assign("Message", "<b>".$player -> user."</b> próbował rzucić zaklęcie, ale eksplodowało ono w rękach, raniąc jego oraz wroga. Traci przez to ".$intDamage." punktów życia (".$player->hp." zostało), <b>".$enemy['name']."</b> otrzymuje ".$intDamage." obrażeń (".$ehp." zostało)");
+			$smarty->display('error.tpl');
+			if ($player -> hp < 0)
+			  {
+                            $player -> hp = 0;
+			  }
                         $db -> Execute("UPDATE `players` SET `hp`=".$player -> hp." WHERE `id`=".$player -> id);
 		      }
                 }

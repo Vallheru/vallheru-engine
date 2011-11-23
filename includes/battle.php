@@ -8,7 +8,7 @@
  *   @author               : thindil <thindil@tuxfamily.org>
  *   @author               : eyescream <tduda@users.sourceforge.net>
  *   @version              : 1.4
- *   @since                : 22.11.2011
+ *   @since                : 23.11.2011
  *
  */
 
@@ -427,35 +427,61 @@ function attack1($attacker, $defender, $arrAtequip, $arrDeequip, $attack_bspell,
                         else 
                     {
                         $pechowy = rand(1,100);
-                        if ($pechowy <= 70) 
+			if ($pechowy <= 25) 
 			  {
-                            $strMessage = $strMessage."<b>".$attacker['user']."</b> ".YOU_MISS1." <b>".$attack_bspell -> fields['poziom']."</b> ".MANA.".<br />";
+			    $strMessage = $strMessage."<b>".$attacker['user']."</b> ".YOU_MISS1." <b>".$attack_bspell -> fields['poziom']."</b> ".MANA.".<br />";
                             $attacker['mana'] = ($attacker['mana'] - $attack_bspell -> fields['poziom']);
 			  }
-			elseif ($pechowy > 70 && $pechowy <= 80)
+			elseif ($pechowy > 25 && $pechowy <= 45)
 			  {
-			    $intDamage = floor($attackdmg / 2);
-			    $defender['hp'] -= $intDamage;
-			    $player->mana -= $attack_bspell->fields['poziom'];
-			    $strMessage = "<b>".$attacker['user']."</b> nie do końca opanował zaklęcie, dlatego jego czar zadaje <b>".$intDamage."</b> obrażeń. (".$defender['hp']." zostało)<br />";
+			    $strMessage = $strMessage."<b>".$attacker['user']."</b> zapatrzył się na szybko poruszającego się żółwia i stracił koncentrację.<br />";
 			  }
-                        elseif ($pechowy > 80 && $pechowy <= 85) 
+			elseif ($pechowy > 45 && $pechowy <= 50)
 			  {
-                            $strMessage = $strMessage."<b>".$attacker['user']."</b> ".YOU_MISS2.".<br />";
+			    $strMessage = $strMessage."<b>".$attacker['user']."</b> ".YOU_MISS2.".<br />";
                             $attacker['mana'] = 0;
 			  }
-			elseif ($pechowy > 85 && $pechowy <= 95)
+			elseif ($pechowy > 50 && $pechowy <= 55)
 			  {
-			    $intDamage = floor($attackdmg / 2);
+			     $strMessage = $strMessage."<b>".$attacker['user']."</b> ".YOU_MISS3." ".$mypower." ".HP."!<br />";
+			     $attacker['hp'] = ($attacker['hp'] - $mypower);			  
+			  }
+			elseif ($pechowy > 55 && $pechowy <= 85)
+			  {
+			    if ($pechowy < 65)
+			      {
+				$intDamage = floor($attackdmg * 0.75);
+			      }
+			    elseif ($pechowy < 75)
+			      {
+				$intDamage = floor($attackdmg * 0.5);
+			      }
+			    else
+			      {
+				$intDamage = floor($attackdmg * 0.25);
+			      }
+			    $defender['hp'] -= $intDamage;
+			    $player->mana -= $attack_bspell->fields['poziom'];
+			    $strMessage = $strMessage."<b>".$attacker['user']."</b> nie do końca opanował zaklęcie, dlatego jego czar zadaje <b>".$intDamage."</b> obrażeń. (".$defender['hp']." zostało)<br />";
+			  }
+			else
+			  {
+			    if ($pechowy < 90)
+			      {
+				$intDamage = floor($attackdmg * 0.25);
+			      }
+			    elseif ($pechowy < 95)
+			      {
+				$intDamage = floor($attackdmg * 0.5);
+			      }
+			    else
+			      {
+				$intDamage = floor($attackdmg * 0.75);
+			      }
 			    $defender['hp'] -= $intDamage;
 			    $attacker['mana'] -= $$attack_bspell->fields['poziom'];
 			    $attacker['hp'] -= $intDamage;
-			    $strMesage = "<b>".$player -> user."</b> próbował rzucić zaklęcie, ale eksplodowało ono w rękach, raniąc jego oraz wroga. Traci przez to ".$intDamage." punktów życia (".$attacker['hp']." zostało), <b>".$defender['user']."</b> otrzymuje ".$intDamage." obrażeń (".$defender['hp']." zostało)";
-			  }
-                        else
-			  {
-                            $strMessage = $strMessage."<b>".$attacker['user']."</b> ".YOU_MISS3." ".$mypower." ".HP."!<br />";
-                            $attacker['hp'] = ($attacker['hp'] - $mypower);
+			    $strMesage = $strMessage."<b>".$attacker['user']."</b> próbował rzucić zaklęcie, ale eksplodowało ono w rękach, raniąc jego oraz wroga. Traci przez to ".$intDamage." punktów życia (".$attacker['hp']." zostało), <b>".$defender['user']."</b> otrzymuje ".$intDamage." obrażeń (".$defender['hp']." zostało)";
 			  }
                         break;
                     }
@@ -665,35 +691,61 @@ function attack1($attacker, $defender, $arrAtequip, $arrDeequip, $attack_bspell,
                         else 
                     {
                         $pechowy = rand(1,100);
-                        if ($pechowy <= 70) 
+			if ($pechowy <= 25) 
 			  {
-                            $strMessage = $strMessage."<b>".$attacker['user']."</b> ".YOU_MISS1." <b>".$attack_bspell -> fields['poziom']."</b> ".MANA.".<br />";
+			    $strMessage = $strMessage."<b>".$attacker['user']."</b> ".YOU_MISS1." <b>".$attack_bspell -> fields['poziom']."</b> ".MANA.".<br />";
                             $attacker['mana'] = ($attacker['mana'] - $attack_bspell -> fields['poziom']);
 			  }
-			elseif ($pechowy > 70 && $pechowy <= 80)
+			elseif ($pechowy > 25 && $pechowy <= 45)
 			  {
-			    $intDamage = floor($attackdmg / 2);
-			    $defender['hp'] -= $intDamage;
-			    $player->mana -= $attack_bspell->fields['poziom'];
-			    $strMessage = "<b>".$attacker['user']."</b> nie do końca opanował zaklęcie, dlatego jego czar zadaje <b>".$intDamage."</b> obrażeń. (".$defender['hp']." zostało)<br />";
+			    $strMessage = $strMessage."<b>".$attacker['user']."</b> zapatrzył się na szybko poruszającego się żółwia i stracił koncentrację.<br />";
 			  }
-                        elseif ($pechowy > 80 && $pechowy <= 85) 
+			elseif ($pechowy > 45 && $pechowy <= 50)
 			  {
-                            $strMessage = $strMessage."<b>".$attacker['user']."</b> ".YOU_MISS2.".<br />";
+			    $strMessage = $strMessage."<b>".$attacker['user']."</b> ".YOU_MISS2.".<br />";
                             $attacker['mana'] = 0;
 			  }
-			elseif ($pechowy > 85 && $pechowy <= 95)
+			elseif ($pechowy > 50 && $pechowy <= 55)
 			  {
-			    $intDamage = floor($attackdmg / 2);
-			    $defender['hp'] -= $intDamage;
-			    $attacker['mana'] -= $attack_bspell->fields['poziom'];
-			    $attacker['hp'] -= $intDamage;
-			    $strMesage = "<b>".$player -> user."</b> próbował rzucić zaklęcie, ale eksplodowało ono w rękach, raniąc jego oraz wroga. Traci przez to ".$intDamage." punktów życia (".$attacker['hp']." zostało), <b>".$defender['user']."</b> otrzymuje ".$intDamage." obrażeń (".$defender['hp']." zostało)";
+			     $strMessage = $strMessage."<b>".$attacker['user']."</b> ".YOU_MISS3." ".$mypower." ".HP."!<br />";
+			     $attacker['hp'] = ($attacker['hp'] - $mypower);			  
 			  }
-                        else 
+			elseif ($pechowy > 55 && $pechowy <= 85)
 			  {
-                            $strMessage = $strMessage."<b>".$attacker['user']."</b> ".YOU_MISS3." ".$mypower." ".HP."!<br />";
-                            $attacker['hp'] = ($attacker['hp'] - $mypower);
+			    if ($pechowy < 65)
+			      {
+				$intDamage = floor($attackdmg * 0.75);
+			      }
+			    elseif ($pechowy < 75)
+			      {
+				$intDamage = floor($attackdmg * 0.5);
+			      }
+			    else
+			      {
+				$intDamage = floor($attackdmg * 0.25);
+			      }
+			    $defender['hp'] -= $intDamage;
+			    $player->mana -= $attack_bspell->fields['poziom'];
+			    $strMessage = $strMessage."<b>".$attacker['user']."</b> nie do końca opanował zaklęcie, dlatego jego czar zadaje <b>".$intDamage."</b> obrażeń. (".$defender['hp']." zostało)<br />";
+			  }
+			else
+			  {
+			    if ($pechowy < 90)
+			      {
+				$intDamage = floor($attackdmg * 0.25);
+			      }
+			    elseif ($pechowy < 95)
+			      {
+				$intDamage = floor($attackdmg * 0.5);
+			      }
+			    else
+			      {
+				$intDamage = floor($attackdmg * 0.75);
+			      }
+			    $defender['hp'] -= $intDamage;
+			    $attacker['mana'] -= $$attack_bspell->fields['poziom'];
+			    $attacker['hp'] -= $intDamage;
+			    $strMesage = $strMessage."<b>".$attacker['user']."</b> próbował rzucić zaklęcie, ale eksplodowało ono w rękach, raniąc jego oraz wroga. Traci przez to ".$intDamage." punktów życia (".$attacker['hp']." zostało), <b>".$defender['user']."</b> otrzymuje ".$intDamage." obrażeń (".$defender['hp']." zostało)";
 			  }
                         break;
                     }
