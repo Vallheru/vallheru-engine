@@ -794,6 +794,7 @@ function attack($eunik,$bdamage)
             $krytyk = $player -> attack;
         }
         $name = "bronią";
+	$strAtype = 'melee';
     }
     if ($arrEquip[11][0])
       {
@@ -834,6 +835,7 @@ function attack($eunik,$bdamage)
             $stat['damage'] = 0;
         }
         $name = "strzałą";
+	$strAtype = 'ranged';
     }
     if (!isset($stat['damage']))
     {
@@ -934,17 +936,17 @@ function attack($eunik,$bdamage)
 		$gwtbr++;
 		$rzut = rand(1, 1000) / 10;
 		$intRoll = rand(1, 100);
+		$arrLocations = array('w tułów', 'w głowę', 'w kończynę');
+		$intHit = rand(0, 2);
 		if ($krytyk >= $rzut && $intRoll <= $krytyk) 
 		  {
 		    $gatak++;
 		    $ehp = 0;
-		    $smarty->assign("Message", "Jednym niezwykle celnym trafieniem powalasz ".$enemy['name']." na ziemię!<br />");
+		    $smarty->assign("Message", showcritical($arrLocations[$intHit], $strAtype, 'pve', $enemy['name']));
 		  }
 		else
 		  {
 		    $ehp -= $stat['damage'];
-		    $arrLocations = array('w tułów', 'w głowę', 'w kończynę');
-		    $intHit = rand(0, 2);
 		    $smarty -> assign ("Message", YOU_ATTACK1." ".$name." <b>".$enemy['name']."</b> ".$arrLocations[$intHit]." ".INFLICT." <b>".$stat['damage']."</b> ".DAMAGE."! (".$ehp." ".LEFT.")</font><br />");
 		    if ($stat['damage'] > 0) 
 		      {
@@ -1097,7 +1099,9 @@ function castspell ($id,$boost,$eunik)
 		      {
 			$gmagia++;
 			$ehp = 0;
-			$smarty->assign("Message", "Jednym niezwykle celnym trafieniem powalasz ".$enemy['name']." na ziemię!<br />");
+			$arrLocations = array('w tułów', 'w głowę', 'w kończynę');
+			$intHit = rand(0, 2);
+			$smarty->assign("Message", showcritical($arrLocations[$intHit], 'spell', 'pve', $enemy['name']));
 		      }
 		    else
 		      {

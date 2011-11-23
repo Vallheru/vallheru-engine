@@ -413,6 +413,107 @@ function checkspeed($speed, $weapon, $bow)
 }
 
 /**
+ * Function return message for critical hit
+ */
+function showcritical($strLocation, $strAtype, $strBtype, $strEnemy, $strAttacker = '')
+{
+  $strMessage = '';
+  switch ($strBtype)
+    {
+    case 'pve':
+      $strMessage = 'Jednym niezwykle celnym ';
+      switch ($strAtype)
+	{
+	case 'melee':
+	  $strMessage .= 'ciosem trafiasz '.$strEnemy.' '.$strLocation.'. ';
+	  switch ($strLocation)
+	    {
+	    case 'w głowę':
+	      $strMessage .= 'Ciężkie jest życie głupka, który na dodatek ma pecha. Dlatego umiera na miejscu.';
+	      break;
+	    default:
+	      $strMessage .= 'Niemal natychmiast twój przeciwnik przechodzi w czas przeszły, dokonany.';
+	      break;
+	    }
+	  break;
+	case 'ranged':
+	  $strMessage .= 'strzałem trafiasz '.$strEnemy.' '.$strLocation.'. ';
+	  switch ($strLocation)
+	    {
+	    case 'w głowę':
+	      $strMessage .= 'Ofiara natychmiast pada martwa, pozbywając się również brudu z małżowin usznych.';
+	      break;
+	    default:
+	      $strMessage .= 'Twój przeciwnik właśnie się przekonał, że nie jest nieśmiertelny.';
+	      break;
+	    }
+	  break;
+	case 'spell':
+	  $strMessage .= 'czarem trafiasz '.$strEnemy.' '.$strLocation.'. ';
+	  switch ($strLocation)
+	    {
+	    case 'w głowę':
+	      $strMessage .= 'Nienaruszony korpus jeszcze przez chwilę stoi w miejscu, jakby nie zauważył braku pewnej części ciała.';
+	      break;
+	    default:
+	      $strMessage .= 'Jedyna pamiątka jaka pozostaje po przeciwniku to nieco dymu w okolicy.';
+	    }
+	  break;
+	default:
+	  break;
+	}
+      $strMessage .= '<br />';
+      break;
+    case 'pvp':
+      $strMessage = '<b>'.$strAttacker.'</b> jednym niezwykle celnym ';
+      switch ($strAtype)
+	{
+	case 'melee':
+	  $strMessage .= 'ciosem trafia <b>'.$strEnemy.'</b> '.$strLocation.'. ';
+	  switch ($strLocation)
+	    {
+	    case 'w głowę':
+	      $strMessage .= 'Ciężkie jest życie głupka, który na dodatek ma pecha. Dlatego <b>'.$strEnemy.'</b> umiera na miejscu.';
+	      break;
+	    default:
+	      $strMessage .= 'Niemal natychmiast <b>'.$strEnemy.'</b> przechodzi w czas przeszły, dokonany.';
+	      break;
+	    }
+	  break;
+	case 'ranged':
+	  $strMessage .= 'strzałem trafia <b>'.$strEnemy.'</b> '.$strLocation.'. ';
+	  switch ($strLocation)
+	    {
+	    case 'w głowę':
+	      $strMessage .= '<b>'.$strEnemy.'</b> natychmiast pada martwy, pozbywając się również brudu z małżowin usznych.';
+	      break;
+	    default:
+	      $strMessage .= '<b>'.$strEnemy.'</b> właśnie się przekonał, że nie jest nieśmiertelny.';
+	      break;
+	    }
+	  break;
+	case 'spell':
+	  $strMessage .= 'czarem trafia <b>'.$strEnemy.'</b> '.$strLocation.'. ';
+	  switch ($strLocation)
+	    {
+	    case 'w głowę':
+	      $strMessage .= 'Nienaruszony korpus jeszcze przez chwilę stoi w miejscu, jakby nie zauważył braku pewnej części ciała.';
+	      break;
+	    default:
+	      $strMessage .= 'Jedyna pamiątka jaka pozostaje po <b>'.$strEnemy.'</b> to nieco dymu w okolicy.';
+	    }
+	  break;
+	default:
+	  break;
+	}
+      break;
+    default:
+      break;
+    }
+  return $strMessage;
+}
+
+/**
  * Function made monster attack
  */
 function monsterattack2($intMydodge, &$zmeczenie, &$gunik, $arrEquip, &$enemy, $times, $armor, $mczaro, &$gwt, $intBlock)
@@ -502,7 +603,7 @@ function monsterattack2($intMydodge, &$zmeczenie, &$gunik, $arrEquip, &$enemy, $
 /**
  * Function made player attack
  */
-function playerattack($eunik, &$gwtbr, $arrEquip, $mczar, &$zmeczenie, &$gatak, $stat, &$enemy, &$gmagia, $times, $intPldamage, $krytyk, $enemyhp)
+function playerattack($eunik, &$gwtbr, $arrEquip, $mczar, &$zmeczenie, &$gatak, $stat, &$enemy, &$gmagia, $times, $intPldamage, $krytyk, $enemyhp, $strAtype)
 {
   global $player;
   global $smarty;
@@ -571,7 +672,9 @@ function playerattack($eunik, &$gwtbr, $arrEquip, $mczar, &$zmeczenie, &$gatak, 
 		}
 	      if ($times == 1)
 		{
-		  $smarty->assign("Message", "Jednym niezwykle celnym trafieniem powalasz ".$enemy['name']." na ziemię!<br />");
+		  $arrLocations = array('w tułów', 'w głowę', 'w kończynę');
+		  $intHit = rand(0, 2);
+		  $smarty->assign("Message", showcritical($arrLocations[$intHit], $strAtype, 'pve', $enemy['name']));
 		  $smarty->display('error1.tpl');
 		}
 	      return TRUE;
@@ -862,6 +965,7 @@ function fightmonster($enemy, $expgain, $goldgain, $times)
     {
         $premia = ($premia + $arrEquip[3][2]);
     }
+    $strAtype = 'none';
     if ($arrEquip[0][0]) 
     {
         if ($arrEquip[0][3] == 'D') 
@@ -891,6 +995,7 @@ function fightmonster($enemy, $expgain, $goldgain, $times)
         {
             $krytyk = $player -> attack;
         }
+	$strAtype = 'melee';
     }
     if ($arrEquip[11][0])
       {
@@ -931,6 +1036,7 @@ function fightmonster($enemy, $expgain, $goldgain, $times)
         {
             $stat['damage'] = 0;
         }
+	$strAtype = 'ranged';
     }
     if ($mczar -> fields['id']) 
     {
@@ -970,6 +1076,7 @@ function fightmonster($enemy, $expgain, $goldgain, $times)
         {
             $krytyk = $player -> magic;
         }
+	$strAtype = 'spell';
     }
     if ($mczaro -> fields['id']) 
     {
@@ -1148,7 +1255,7 @@ function fightmonster($enemy, $expgain, $goldgain, $times)
             {
                 if ($enemy['hp'] > 0 && $player -> hp > 0) 
 		  {
-		    if (!playerattack($eunik, $gwtbr, $arrEquip, $mczar, $zmeczenie, $gatak, $stat, $enemy, $gmagia, $times, $intPldamage, $krytyk, $enemyhp))
+		    if (!playerattack($eunik, $gwtbr, $arrEquip, $mczar, $zmeczenie, $gatak, $stat, $enemy, $gmagia, $times, $intPldamage, $krytyk, $enemyhp, $strAtype))
 		      {
 			break;
 		      }
@@ -1222,7 +1329,7 @@ function fightmonster($enemy, $expgain, $goldgain, $times)
             {
                 if ($enemy['hp'] > 0 && $player -> hp > 0) 
 		  {
-                    if (!playerattack($eunik, $gwtbr, $arrEquip, $mczar, $zmeczenie, $gatak, $stat, $enemy, $gmagia, $times, $intPldamage, $krytyk, $enemyhp))
+                    if (!playerattack($eunik, $gwtbr, $arrEquip, $mczar, $zmeczenie, $gatak, $stat, $enemy, $gmagia, $times, $intPldamage, $krytyk, $enemyhp, $strAtype))
 		      {
 			break;
 		      }

@@ -100,6 +100,7 @@ function attack1($attacker, $defender, $arrAtequip, $arrDeequip, $attack_bspell,
             $mypower = ($arrAtequip[1][2] + $bonus + $arrAtequip[6][2]);
         }
         $krytyk = critical($attacker['shoot']);
+	$strAtype = 'ranged';
     }
 
     /**
@@ -118,6 +119,7 @@ function attack1($attacker, $defender, $arrAtequip, $arrDeequip, $attack_bspell,
             $mypower = ($arrAtequip[0][2] + $attacker['strength']);
         }
         $krytyk = critical($attacker['attack']);
+	$strAtype = 'melee';
     }
     //Secondary weapon (Barbarian only)
     if ($arrAtequip[11][0] && $attack_durwep <= $arrAtequip[11][6])
@@ -174,6 +176,7 @@ function attack1($attacker, $defender, $arrAtequip, $arrDeequip, $attack_bspell,
         {
             $mypower = 0;
         }
+	$strAtype = 'spell';
     }
 
     /**
@@ -410,7 +413,7 @@ function attack1($attacker, $defender, $arrAtequip, $arrDeequip, $attack_bspell,
 		      {
 			$intHit = rand(0, 3);
 		      }
-                    $strMessage = $strMessage."<b>".$attacker['user']."</b> ".P_ATTACK." <b>".$defender['user']."</b> ".$arrLocations[$intHit]." ".AND_KILL." (".$defender['hp']." ".HP_LEFT.")<br />";
+		    $strMessage = $strMessage.showcritical($arrLocations[$intHit], $strAtype, 'pvp', $defender['user'], $attacker['user']);
                 }
                 if ($attack_bspell -> fields['id'] && $attacker['mana'] > $attack_bspell -> fields['poziom']) 
                 {
@@ -422,7 +425,7 @@ function attack1($attacker, $defender, $arrAtequip, $arrDeequip, $attack_bspell,
 			  {
 			    $intHit = rand(0, 3);
 			  }
-                        $strMessage = $strMessage."<b>".$attacker['user']."</b> ".P_ATTACK." <b>".$defender['user']."</b> ".$arrLocations[$intHit]." ".AND_KILL2." (".$defender['hp']." ".HP_LEFT.")<br />";
+			$strMessage = $strMessage.showcritical($arrLocations[$intHit], $strAtype, 'pvp', $defender['user'], $attacker['user']);
                     } 
                         else 
                     {
