@@ -7,7 +7,7 @@
  *   @copyright            : (C) 2004,2005,2006,2007,2011 Vallheru Team based on Gamers-Fusion ver 2.5
  *   @author               : thindil <thindil@tuxfamily.org>
  *   @version              : 1.4
- *   @since                : 23.11.2011
+ *   @since                : 24.11.2011
  *
  */
 
@@ -812,7 +812,7 @@ function playerattack($eunik, &$gwtbr, $arrEquip, $mczar, &$zmeczenie, &$gatak, 
 		      $player->hp -= $intDamage;
 		      if ($times == 1)
 			{
-			  $strMesage = "<b>".$player -> user."</b> próbował rzucić zaklęcie, ale eksplodowało ono w rękach, raniąc jego oraz wroga. Traci przez to ".$intDamage." punktów życia (".$player->hp." zostało), <b>".$enemy['name']."</b> otrzymuje ".$intDamage." obrażeń (".$enemy['hp']." zostało)";
+			  $strMessage = "<b>".$player -> user."</b> próbował rzucić zaklęcie, ale eksplodowało ono w rękach, raniąc jego oraz wroga. Traci przez to ".$intDamage." punktów życia (".$player->hp." zostało), <b>".$enemy['name']."</b> otrzymuje ".$intDamage." obrażeń (".$enemy['hp']." zostało)";
 			}
 		    }
 		  if ($times == 1)

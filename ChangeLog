@@ -1,5 +1,7 @@
 2011-11-24  Bartek thindil Jasicki  <thindil@tuxfamily.org>
 
+	* BUG,includes/funkcje.php: 
+	fixed typo
 	* UPDATE,includes/resurect.php:
 	added info how much gold player need for resurrect
 
