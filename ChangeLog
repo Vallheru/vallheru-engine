@@ -1,5 +1,7 @@
 2011-11-24  Bartek thindil Jasicki  <thindil@tuxfamily.org>
 
+	* FEATURE,forums.php: 
+	added lenght limit to forum topic
 	* BUG,maze.php: 
 	added check if value is set
 	* BUG,includes/funkcje.php: 

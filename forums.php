@@ -8,7 +8,7 @@
  *   @author               : thindil <thindil@tuxfamily.org>
  *   @author               : mori <ziniquel@users.sourceforge.net>
  *   @version              : 1.4
- *   @since                : 14.11.2011
+ *   @since                : 24.11.2011
  *
  */
 
@@ -298,7 +298,14 @@ if (isset($_GET['topics']))
 	  }
 	$arrreplies[$i] = $topic->fields['replies'];
 	$arrid[$i] = $topic -> fields['id'];
-	$arrtopic[$i] = $topic -> fields['topic'];
+	if (strlen($topic->fields['topic']) > 60)
+	  {
+	    $arrtopic[$i] = substr($topic->fields['topic'], 0, 57).'...';
+	  }
+	else
+	  {
+	    $arrtopic[$i] = $topic -> fields['topic'];
+	  }
 	$arrstarter[$i] = $topic -> fields['starter'];
 	$arrPlayerid[$i] = $topic->fields['gracz'];
 	$topic -> MoveNext();
@@ -489,6 +496,7 @@ if (isset($_GET['topic']))
 */
 if (isset ($_GET['action']) && $_GET['action'] == 'addtopic') 
 {
+    $_POST['title2'] = strip_tags($_POST['title2']);
     if (empty ($_POST['title2']) || empty ($_POST['body'])) 
     {
         error (EMPTY_FIELDS);
@@ -522,9 +530,12 @@ if (isset ($_GET['action']) && $_GET['action'] == 'addtopic')
     {
         $strSticky = 'N';
     }
-    $_POST['title2'] = strip_tags($_POST['title2']);
     require_once('includes/bbcode.php');
-    $_POST['body'] = bbcodetohtml($_POST['body']);    
+    $_POST['body'] = bbcodetohtml($_POST['body']);
+    if (strlen($_POST['title2']) > 100)
+      {
+	$_POST['title2'] = substr($_POST['title2'], 0, 97).'...';
+      }
     $_POST['title2'] = "<b>".$data." ".$time."</b> ".$_POST['title2'];
     $strBody = $db -> qstr($_POST['body'], get_magic_quotes_gpc());
     $strTitle = $db -> qstr($_POST['title2'], get_magic_quotes_gpc());
