@@ -7,7 +7,7 @@
  *   @copyright            : (C) 2004,2005,2006,2011 Vallheru Team based on Gamers-Fusion ver 2.5
  *   @author               : thindil <thindil@tuxfamily.org>
  *   @version              : 1.4
- *   @since                : 28.09.2011
+ *   @since                : 24.11.2011
  *
  */
 
@@ -228,6 +228,10 @@ $strQuestName = "";
  */
 if (isset($_GET['action']) && $_GET['action'] == 'explore')
 {
+    if (!isset($_POST['amount']))
+      {
+	error("Podaj ile razy chcesz zwiedzać.");
+      }
     integercheck($_POST['amount']);
     checkvalue($_POST['amount']);
     $intAmount2 = intval($_POST['amount']);
