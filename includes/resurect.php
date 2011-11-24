@@ -4,10 +4,10 @@
  *   Resurect players
  *
  *   @name                 : resurect.php                            
- *   @copyright            : (C) 2004,2005,2006 Vallheru Team based on Gamers-Fusion ver 2.5
- *   @author               : thindil <thindil@users.sourceforge.net>
- *   @version              : 1.3
- *   @since                : 11.10.2006
+ *   @copyright            : (C) 2004,2005,2006,2011 Vallheru Team based on Gamers-Fusion ver 2.5
+ *   @author               : thindil <thindil@tuxfamily.org>
+ *   @version              : 1.4
+ *   @since                : 24.11.2011
  *
  */
 
@@ -27,14 +27,14 @@
 //   along with this program; if not, write to the Free Software
 //   Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 //
-// $Id: resurect.php 697 2006-10-11 02:05:14Z thindil $
+// $Id$
 
 /**
 * Check - player need ressurection?
 */
 if ($player -> hp > 0)
 {
-    error(NOT_NEED);
+    error("Nie potrzebujesz wskrzeszenia.");
 }
 
 $crneed = (50 * $player -> level);
@@ -53,7 +53,7 @@ if ($pd < 0 && $player -> exp > 0)
 
 if ($crneed > $player -> credits) 
 {
-    error (NO_MONEY_FOR);
+    error ("Nie masz przy sobie pieniędzy na wskrzeszenie. Potrzebujesz ".$crneed." sztuk złota.");
 }
 $db -> Execute("UPDATE `players` SET `exp`=".$pd.", `hp`=`max_hp`, `credits`=`credits`-".$crneed." WHERE `id`=".$player -> id);
 ?>
