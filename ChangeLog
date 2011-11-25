@@ -1,3 +1,8 @@
+2011-11-25  Bartek thindil Jasicki  <thindil@tuxfamily.org>
+
+	* BUG,maze.php:
+	fixed bug with finding items
+
 2011-11-24  Bartek thindil Jasicki  <thindil@tuxfamily.org>
 
 	* FEATURE,forums.php: 
