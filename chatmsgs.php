@@ -75,6 +75,7 @@ $pl = $db -> Execute("SELECT `rank`, `id`, `lpv`, `user` FROM `players` WHERE `p
 $arrtext = array();
 $arrauthor = array();
 $arrsenderid = array();
+$arrSdate = array();
 if ($stat -> fields['rank'] == 'Admin' || $stat -> fields['rank'] == 'Staff' || $stat -> fields['rank'] == 'Karczmarka') 
 {
     $smarty -> assign ("Showid", 1);
@@ -96,6 +97,7 @@ while (!$chat -> EOF)
     $arrtext[] = $text;
     $arrauthor[] = $chat -> fields['user'];
     $arrsenderid[] = $chat -> fields['senderid'];
+    $arrSdate[] = $chat->fields['sdate'];
     $chat -> MoveNext();
   }
 $chat -> Close();
@@ -119,18 +121,19 @@ $query = $db -> Execute("SELECT count(`id`) FROM `chat`");
 $numchat = $query -> fields['count(`id`)'];
 $query -> Close();
 
-$smarty -> assign ( array("Player" => $on, 
-    "Text1" => $numchat, 
-    "Online" => $numon, 
-    "Author" => $arrauthor, 
-    "Text" => $arrtext, 
-    "Senderid" => $arrsenderid,
-    "Charset" => CHARSET,
-    "Thereis" => THERE_IS,
-    "Texts" => TEXTS,
-    "Cplayers" => C_PLAYERS,
-    "Cid" => C_ID,
-    "CSS" => $strCss));
+$smarty->assign(array("Player" => $on, 
+		      "Text1" => $numchat, 
+		      "Online" => $numon, 
+		      "Author" => $arrauthor, 
+		      "Text" => $arrtext, 
+		      "Senderid" => $arrsenderid,
+		      "Sdate" => $arrSdate,
+		      "Charset" => CHARSET,
+		      "Thereis" => THERE_IS,
+		      "Texts" => TEXTS,
+		      "Cplayers" => C_PLAYERS,
+		      "Cid" => C_ID,
+		      "CSS" => $strCss));
 $smarty -> display ('chatmsgs.tpl');
 if ($compress)
   {

@@ -8,7 +8,7 @@
  *   @author               : thindil <thindil@tuxfamily.org>
  *   @author               : eyescream <tduda@users.sourceforge.net>
  *   @version              : 1.4
- *   @since                : 14.11.2011
+ *   @since                : 25.11.2011
  *
  */
 
@@ -151,11 +151,11 @@ if (isset ($_GET['action']) && $_GET['action'] == 'chat')
 	$message = $db -> qstr($message, get_magic_quotes_gpc());
         if (!isset($evade)) 
         {
-	  $db -> Execute("INSERT INTO `chat` (`user`, `chat`, `senderid`, `ownerid`) VALUES('".$starter."', ".$message.", ".$player -> id.", ".$owner.")") or die($db->ErrorMsg());
+	  $db -> Execute("INSERT INTO `chat` (`user`, `chat`, `senderid`, `ownerid`, `sdate`) VALUES('".$starter."', ".$message.", ".$player -> id.", ".$owner.", '".$newdate."')") or die($db->ErrorMsg());
         }
 	if (isset($strTarget))
 	  {
-	    $db -> Execute("INSERT INTO `chat` (`user`, `chat`) VALUES('".$strTarget."', '".$strMessage."')");
+	    $db -> Execute("INSERT INTO `chat` (`user`, `chat`, `sdate`) VALUES('".$strTarget."', '".$strMessage."', '".$newdate."')");
 	  }
         $intLpv = (time() - 180);
         $objInnkeeper = $db -> Execute("SELECT `user` FROM `players` WHERE `rank`='Karczmarka' AND `page`='Chat' AND `lpv`>=".$intLpv);
@@ -164,14 +164,14 @@ if (isset ($_GET['action']) && $_GET['action'] == 'chat')
             if (isset($strAnswer))
 	      {
 		$strAnswer = $db -> qstr($strAnswer, get_magic_quotes_gpc());
-                $db -> Execute("INSERT INTO `chat` (`user`, `chat`) VALUES('<i>".INNKEEPER2."</i>', ".$strAnswer.")");
+                $db -> Execute("INSERT INTO `chat` (`user`, `chat`, `sdate`) VALUES('<i>".INNKEEPER2."</i>', ".$strAnswer.", '".$newdate."')");
 	      }
         }
 	else
         {
             if ($blnCheckbot)
             {
-                $db -> Execute("INSERT INTO `chat` (`user`, `chat`) VALUES('<i>Barnaba</i>', '".INNKEEPER_GONE.$objInnkeeper -> fields['user'].RULES."')");
+                $db -> Execute("INSERT INTO `chat` (`user`, `chat`, `sdate`) VALUES('<i>Barnaba</i>', '".INNKEEPER_GONE.$objInnkeeper -> fields['user'].RULES."', '".$newdate."')");
             }
         }
         $objInnkeeper -> Close();
