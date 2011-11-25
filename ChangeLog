@@ -1,5 +1,7 @@
 2011-11-25  Bartek thindil Jasicki  <thindil@tuxfamily.org>
 
+	* BUG,equip.php: 
+	fixed notice
 	* FEATURE,install/db/update.sql, templates/layout1/chatmsg.tpl, templates/chatmsg.tpl, chatmsg.php, chat.php:
 	added timestamp to messages
 	* UPDATE,includes/revent.php: 
