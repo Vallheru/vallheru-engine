@@ -1,5 +1,7 @@
 2011-11-25  Bartek thindil Jasicki  <thindil@tuxfamily.org>
 
+	* UPDATE,includes/revent.php: 
+	added more places to end event
 	* BUG,maze.php:
 	fixed bug with finding items
 

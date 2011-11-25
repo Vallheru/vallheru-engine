@@ -7,7 +7,7 @@
  *   @copyright            : (C) 2011 Vallheru Team based on Gamers-Fusion ver 2.5
  *   @author               : thindil <thindil@tuxfamily.org>
  *   @version              : 1.4
- *   @since                : 22.11.2011
+ *   @since                : 25.11.2011
  *
  */
 
@@ -66,16 +66,15 @@ elseif ($player->revent == 1)
     }
   else
     {
+      $arrLocs = array('Rynek', 'Arena Walk', 'Miejskie Plotki', 'Magiczna wieża', 'Biblioteka', 'Farma', 'Świątynia');
       if ($player->location == 'Altara')
 	{
 	  $strTarget = $city2;
-	  $arrLocs = array('Rynek', 'Arena Walk', 'Miejskie Plotki', 'Magiczna wieża', 'Biblioteka');
 	  $strCity = $city2;
 	}
       else
 	{
 	  $strTarget = $city1a;
-	  $arrLocs = array('Rynek', 'Arena Walk', 'Miejskie Plotki', 'Magiczna wieża', 'Biblioteka');
 	  $strCity = $city1;
 	}
       if ($_POST['revent'] == 'Tak')
