@@ -99,3 +99,4 @@ CREATE TABLE IF NOT EXISTS `revent` (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 ALTER TABLE `chat` ADD `sdate` TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP;
 UPDATE `players` SET `max_energy`=`max_energy`*7;
+ALTER TABLE `players` CHANGE `max_energy` `max_energy` DOUBLE( 11, 2 ) NOT NULL DEFAULT '70.00';
