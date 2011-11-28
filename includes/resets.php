@@ -7,7 +7,7 @@
  *   @copyright            : (C) 2004,2005,2006,2007,2011 Vallheru Team based on Gamers-Fusion ver 2.5
  *   @author               : thindil <thindil@tuxfamily.org>
  *   @version              : 1.4
- *   @since                : 21.11.2011
+ *   @since                : 28.11.2011
  *
  */
 
@@ -30,28 +30,85 @@
 // $Id$
 
 /**
- * Check avaible languages
+ * Check available languages
  */    
 $arrLanguage = scandir('languages/', 1);
 $arrLanguage = array_diff($arrLanguage, array(".", "..", "index.htm"));
- 
+
 /**
-* Main reset of game
-**/
-function mainreset() 
+ * Add energy every 20 minutes
+ */
+function energyreset()
+{
+  global $db;
+  $db->Execute("UPDATE `players` SET `energy`=`energy`+(`max_energy`/72) WHERE `miejsce`!='Lochy' AND `freeze`=0 AND `rasa`!='' AND `klasa`!='' AND `energy`<(21 * `max_energy`)");
+}
+
+/**
+* Other reset in this same day
+*/
+function smallreset($blnSmall = FALSE) 
 {
     global $db;
     global $arrLanguage;
-
-    $db -> Execute("UPDATE `settings` SET `value`='N' WHERE `setting`='open'");
-    $db -> Execute("UPDATE `settings` SET `value`='Wykonywanie resetu' WHERE `setting`='close_reason'");
-    $db -> Execute("TRUNCATE TABLE `events`");
-    $db -> Execute("UPDATE `farm` SET `age`=`age`+1");
-    $db -> Execute("DELETE FROM `farm` WHERE `age`>26");
-    $db -> Execute("UPDATE `players` SET `age`=`age`+1, `hp`=`max_hp`, `bridge`='N', `houserest`='N'");
-    $db->Execute("UPDATE `players` SET `newbie`=`newbie`-1 WHERE `newbie`>0");
+    if ($blnSmall)
+      {
+	$db -> Execute("UPDATE settings SET value='N' WHERE setting='open'");
+	$db -> Execute("UPDATE settings SET value='Wykonywanie resetu' WHERE setting='close_reason'");
+	$db -> Execute("UPDATE `players` SET `hp`=`max_hp`, `bridge`='N'");
+      }
+    $db -> Execute("TRUNCATE TABLE events");
     /**
-     * Add bonus to mana from items and check for duration of antidote
+     * Grow herbs
+     */
+    $db -> Execute("UPDATE farm SET age=age+1");
+    $db -> Execute("DELETE FROM farm WHERE age>26");
+    $itemid = $db -> Execute("SELECT `id` FROM `potions` WHERE `owner`=0");
+    while (!$itemid -> EOF) 
+    {
+        $amount = rand(1, 50);
+        $db -> Execute("UPDATE `potions` SET `amount`=".$amount." WHERE `id`=".$itemid -> fields['id']);
+        $itemid -> MoveNext();
+    }
+    $itemid -> Close();
+    /**
+    * Count available army in outposts
+    */
+    $intOutSize = 1;
+    $objOutpost = $db -> Execute("SELECT size FROM outposts");
+    while (!$objOutpost -> EOF)
+    {
+        $intOutSize = $intOutSize + $objOutpost -> fields['size'];
+        $objOutpost -> MoveNext();
+    }
+    $objOutpost -> Close();
+    $intMaxtroops = $intOutSize * 20;
+    $intMintroops = $intOutSize * 15;
+    $intMaxspecials = $intOutSize * 10;
+    $intMinspecials = $intOutSize * 7;
+    $intWarriors = rand($intMintroops, $intMaxtroops);
+    $intArchers = rand($intMintroops, $intMaxtroops);
+    $intCatapults = rand($intMinspecials, $intMaxspecials);
+    $intBarricades = rand($intMinspecials, $intMaxspecials);
+    $db -> Execute("UPDATE settings SET value='20' WHERE setting='maps'");
+    $objWarriors = $db -> Execute("SELECT value FROM settings WHERE setting='warriors'");
+    $objArchers = $db -> Execute("SELECT value FROM settings WHERE setting='archers'");
+    $objCatapults = $db -> Execute("SELECT value FROM settings WHERE setting='catapults'");
+    $objBarricades = $db -> Execute("SELECT value FROM settings WHERE setting='barricades'");
+    $intWarriors = $intWarriors + $objWarriors -> fields['value'];
+    $intArchers = $intArchers + $objArchers -> fields['value'];
+    $intCatapults = $intCatapults + $objCatapults -> fields['value'];
+    $intBarricades = $intBarricades + $objBarricades -> fields['value'];
+    $objWarriors -> Close();
+    $objArchers -> Close();
+    $objCatapults -> Close();
+    $objBarricades -> Close();
+    $db -> Execute("UPDATE settings SET value='".$intWarriors."' WHERE setting='warriors'");
+    $db -> Execute("UPDATE settings SET value='".$intArchers."' WHERE setting='archers'");
+    $db -> Execute("UPDATE settings SET value='".$intCatapults."' WHERE setting='catapults'");
+    $db -> Execute("UPDATE settings SET value='".$intBarricades."' WHERE setting='barricades'");
+    /**
+     * Add bonus to mana from items and check duration of antidote
      */
     $arrRings = array();
     $intLangs = 0;
@@ -106,11 +163,11 @@ function mainreset()
         
     }
     $objStats -> Close();
-    $db -> Execute("UPDATE `players` SET `energy`=`energy`+`max_energy` WHERE `miejsce`!='Lochy' AND `freeze`=0 AND `rasa`!='' AND `klasa`!='' AND `energy`<(150 * `max_energy`)");
-    $db -> Execute("UPDATE `players` SET `crime`=`crime`+1, `astralcrime`='Y' WHERE `klasa`='Złodziej' AND `freeze`=0");
-    $intCtime = (time() - 200);
-    $db -> Execute("UPDATE players SET freeze=freeze-1, lpv=".$intCtime." WHERE freeze>0");
+    $db -> Execute("UPDATE `players` SET `crime`=`crime`+1, `astralcrime`='Y' WHERE `klasa`='Złodziej' AND `freeze`=0");  
+    energyreset();
     $db -> Execute("UPDATE outposts SET turns=turns+2, fatigue=100, attacks=0");
+    $db -> Execute("UPDATE tribes SET atak='N'");
+    $db -> Execute("UPDATE houses SET points=points+2");
     $objItemname = $db -> Execute("SELECT `name`, `id` FROM `equipment` WHERE `poison`>0 AND `type`!='R'");
     while (!$objItemname -> EOF)
     {
@@ -119,6 +176,194 @@ function mainreset()
         $objItemname -> MoveNext();
     }
     $objItemname -> Close();
+    /**
+     * Jail - count duration and free prisoners
+     */
+    $db -> Execute("UPDATE `jail` SET `duration`=`duration`-1");
+    $jail = $db -> Execute("SELECT `id`, `duration`, `prisoner` FROM `jail`");
+    while (!$jail -> EOF) 
+    {
+        if ($jail -> fields['duration'] == 0) 
+        {
+            $db -> Execute("UPDATE `players` SET `miejsce`='Altara' WHERE `id`=".$jail -> fields['prisoner']);
+            $db -> Execute("DELETE FROM `jail` WHERE `id`=".$jail -> fields['id']);
+        }
+        $jail -> MoveNext();
+    }
+    $jail -> Close();
+    /**
+     * Ban on chat
+     */
+    $db -> Execute("UPDATE `chat_config` SET `resets`=`resets`-1");
+    $db -> Execute("DELETE FROM `chat_config` WHERE `resets`=0");
+    /**
+     * Add rings in shop
+     */
+    $objRings = $db -> Execute("SELECT `id`, `amount` FROM `rings` WHERE `amount`<28");
+    $arrRings = array();
+    $arrAmount = array();
+    $i = 0;
+    while (!$objRings -> EOF)
+    {
+        $arrRings[$i] = $objRings -> fields['id'];
+        $arrAmount[$i] = $objRings -> fields['amount'];
+        $i ++;
+        $objRings -> MoveNext();
+    }
+    $objRings -> Close();
+    $i = 0;
+    foreach ($arrRings as $intRing)
+    {
+        $intAmount = rand(1, 4) + $arrAmount[$i];
+        if ($intAmount > 28)
+        {
+            $intAmount = 28;
+        }
+        $db -> Execute("UPDATE `rings` SET `amount`=".$intAmount." WHERE `id`=".$intRing);
+        $i ++;
+    }
+    /**
+     * Add hunters quest
+     */
+    $arrQtypes = array('F', 'I', 'L');
+    foreach (array('altara', 'ardulith') as $strCity)
+      {
+	$strType = $arrQtypes[rand(0, 2)];
+	switch ($strType)
+	  {
+	  case 'F':
+	    $objMonsters = $db->Execute("SELECT `id` FROM `monsters` WHERE `location`='".ucfirst($strCity)."'");
+	    $arrMonsters = array();
+	    while (!$objMonsters->EOF)
+	      {
+		$arrMonsters[] = $objMonsters->fields['id'];
+		$objMonsters->MoveNext();
+	      }
+	    $intKey = array_rand($arrMonsters);
+	    $intId = $arrMonsters[$intKey];
+	    $objMonsters->Close();
+	    $intAmount = rand(1, 10);
+	    $strQuest = 'F;'.$intId.';'.$intAmount;
+	    break;
+	  case 'I':
+	    $objItems = $db->Execute("SELECT `id` FROM `equipment` WHERE `owner`=0");
+	    $arrItems = array();
+	    while (!$objItems->EOF)
+	      {
+		$arrItems[] = $objItems->fields['id'];
+		$objItems->MoveNext();
+	      }
+	    $objItems->Close();
+	    $intKey = array_rand($arrItems);
+	    $intId = $arrItems[$intKey];
+	    $intAmount = rand(1, 10);
+	    $strQuest = 'I;'.$intId.';'.$intAmount;
+	    break;
+	  case 'L':
+	    $objMonsters = $db->Execute("SELECT `id` FROM `monsters` WHERE `location`='".ucfirst($strCity)."' AND `lootnames`!= ''");
+	    $arrMonsters = array();
+	    while (!$objMonsters->EOF)
+	      {
+		$arrMonsters[] = $objMonsters->fields['id'];
+		$objMonsters->MoveNext();
+	      }
+	    $objMonsters->Close();
+	    if (count($arrMonsters) > 0)
+	      {
+		$intKey = array_rand($arrMonsters);
+		$intId = $arrMonsters[$intKey];
+		$intPart = rand(0, 3);
+		$strQuest = 'L;'.$intId.';'.$intPart;
+	      }
+	    else
+	      {
+		$strQuest = '';
+	      }
+	    break;
+	  default:
+	    break;
+	  }
+	$db->Execute("UPDATE `settings` SET `value`='".$strQuest."' WHERE `setting`='hunter".$strCity."'");
+	$intAmount = rand(1, 20);
+	$db->Execute("UPDATE `settings` SET `value`='".$intAmount."' WHERE `setting`='hunter".$strCity."amount'");
+      }
+    /**
+     * Check for random event
+     */
+    $objRevent = $db->Execute("SELECT `pid`, `state`, `qtime` FROM `revent`");
+    while (!$objRevent->EOF)
+      {
+	//Count down
+	if ($objRevent->fields['qtime'] > 1)
+	  {
+	    $db->Execute("UPDATE `revent` SET `qtime`=`qtime`-1 WHERE `pid`=".$objRevent->fields['pid']);
+	  }
+	//Finish random event
+	else
+	  {
+	    $time = date("Y-m-d H:i:s");
+	    //Unfinished
+	    if ($objRevent->fields['state'] == 2)
+	      {
+		$db->Execute("DELETE FROM `equipment` WHERE `name`='Solidna sakiewka' AND `type`='Q' AND `owner`=".$objRevent->fields['pid']);
+	      }
+	    //Finished - give item to target
+	    elseif ($objRevent->fields['state'] == 3)
+	      {
+		$intGold = rand(1000, 8000);
+		$db->Execute("UPDATE `players` SET `bank`=`bank`+".$intGold." WHERE `id`=".$objRevent->fields['pid']);
+		$db -> Execute("INSERT INTO `log` (`owner`, `log`, `czas`, `type`) VALUES(".$objRevent->fields['pid'].", 'Dostałeś przelew ".$intGold." sztuk złota do banku, tytułem: Dziękuję za pomoc.', '".$time."', 'N')"); 
+	      }
+	    //Finished - item sold
+	    elseif ($objRevent->fields['state'] == 4)
+	      {
+		$intRoll = rand(0, 1);
+		//Go to prison
+		if ($intRoll == 0)
+		  {
+		    $objPlayer = $db->Execute("SELECT `level` FROM `players` WHERE `id`=".$objRevent->fields['pid']);
+		    $intGold = $objPlayer->fields['level'] * 10000;
+		    $objPlayer->Close();
+		    $db -> Execute("INSERT INTO `jail` (`prisoner`, `verdict`, `duration`, `cost`, `data`) VALUES(".$objRevent->fields['pid'].",'Okradzenie poborcy podatkowego.', 18, ".$intGold.", ".$strDate.")");
+		    $db->Execute("UPDATE `players` SET `miejsce`='Lochy' WHRE `id`=".$objRevent->fields['pid']);
+		    $db -> Execute("INSERT INTO `log` (`owner`, `log`, `czas`, `type`) VALUES(".$objRevent->fields['pid'].", 'Nagle wyskoczył na ciebie patrol gwardzistów królewskich. Szybko i sprawnie zakuli ciebie w kajdany i odtransportowali do miasta. Tam przed sądem zostałeś oskarżony o kradzież pieniędzy podatników. I w ten oto sposób znalazłeś się w lochach.', '".$time."', 'T')"); 
+		  }
+		//Bandits
+		elseif ($intRoll == 1)
+		{
+		  $objPlayer = $db->Execute("SELECT `bank` FROM `players` WHERE `id`=".$objRevent->fields['pid']);
+		  $intBank = floor($objPlayer->fields['bank'] / 2);
+		  $objPlayer->Close();
+		  $db->Execute("UPDATE `players` SET `hp`=0, `credits`=0, `bank`=".$intBank.", `lastkilledby`='własną chciwość' WHERE `id`=".$objRevent->fields['pid']);
+		  $db -> Execute("INSERT INTO `log` (`owner`, `log`, `czas`, `type`) VALUES(".$objRevent->fields['pid'].", 'Nagle wokół ciebie pojawiło się kilka zakapturzonych postaci. Ostatnią rzeczą którą usłyszałeś było: ODDAWAJ NASZE PIENIĄDZE! Kiedy się obudziłeś, okazało się, że zniknęło nie tylko to złoto, które miałeś przy sobie ale również część złota z banku!', '".$time."', 'T')"); 
+		}
+	      }
+	    $db->Execute("DELETE FROM `revent` WHERE `pid`=".$objRevent->fields['pid']);
+	  }
+	$objRevent->MoveNext();
+      }
+    $objRevent->Close();
+    /**
+     * Reopen game
+     */
+    $db -> Execute("UPDATE settings SET value='Y' WHERE setting='open'");
+    $db -> Execute("UPDATE settings SET value='' WHERE setting='close_reason'");
+}
+ 
+/**
+* Main reset of game
+**/
+function mainreset() 
+{
+    global $db;
+    global $arrLanguage;
+
+    $db -> Execute("UPDATE `settings` SET `value`='N' WHERE `setting`='open'");
+    $db -> Execute("UPDATE `settings` SET `value`='Wykonywanie resetu' WHERE `setting`='close_reason'");
+    $db -> Execute("UPDATE `players` SET `age`=`age`+1, `hp`=`max_hp`, `bridge`='N', `houserest`='N'");
+    $db->Execute("UPDATE `players` SET `newbie`=`newbie`-1 WHERE `newbie`>0");
+    $intCtime = (time() - 200);
+    $db -> Execute("UPDATE players SET freeze=freeze-1, lpv=".$intCtime." WHERE freeze>0");
     /**
      * Outposts taxes
      */
@@ -235,54 +480,7 @@ function mainreset()
         $outcost -> MoveNext();
     }
     $outcost -> Close(); 
-    $db -> Execute("UPDATE houses SET points=points+2");
     $intMithcost = rand(100, 300);
-    /**
-    * Count aviable army in outposts
-    */
-    $intMaxtroops = $intOutSize * 20;
-    $intMintroops = $intOutSize * 15;
-    $intMaxspecials = $intOutSize * 10;
-    $intMinspecials = $intOutSize * 7;
-    $intWarriors = rand($intMintroops, $intMaxtroops);
-    $intArchers = rand($intMintroops, $intMaxtroops);
-    $intCatapults = rand($intMinspecials, $intMaxspecials);
-    $intBarricades = rand($intMinspecials, $intMaxspecials);
-    $itemid = $db -> Execute("SELECT `id` FROM `potions` WHERE `owner`=0");
-    while (!$itemid -> EOF) 
-    {
-        $amount = rand(1, 50);
-        $db -> Execute("UPDATE `potions` SET `amount`=".$amount." WHERE `id`=".$itemid -> fields['id']);
-        $itemid -> MoveNext();
-    }
-    $itemid -> Close();
-    $db -> Execute("UPDATE settings SET value='20' WHERE setting='maps'");
-    $db -> Execute("UPDATE settings SET value='".$intWarriors."' WHERE setting='warriors'");
-    $db -> Execute("UPDATE settings SET value='".$intArchers."' WHERE setting='archers'");
-    $db -> Execute("UPDATE settings SET value='".$intCatapults."' WHERE setting='catapults'");
-    $db -> Execute("UPDATE settings SET value='".$intBarricades."' WHERE setting='barricades'");
-    $db -> Execute("UPDATE players SET trains=trains+15 WHERE corepass='Y' AND freeze=0");
-    $db -> Execute("UPDATE tribes SET atak='N'");
-    /**
-     * Jail - count duration and free prisoners
-     */
-    $db -> Execute("UPDATE `jail` SET `duration`=`duration`-1");
-    $jail = $db -> Execute("SELECT `id`, `duration`, `prisoner` FROM `jail`");
-    while (!$jail -> EOF) 
-    {
-        if ($jail -> fields['duration'] == 0) 
-        {
-            $db -> Execute("UPDATE `players` SET `miejsce`='Altara' WHERE `id`=".$jail -> fields['prisoner']);
-            $db -> Execute("DELETE FROM `jail` WHERE `id`=".$jail -> fields['id']);
-        }
-        $jail -> MoveNext();
-    }
-    $jail -> Close();
-    /**
-     * Ban on chat
-     */
-    $db -> Execute("UPDATE `chat_config` SET `resets`=`resets`-1");
-    $db -> Execute("DELETE FROM `chat_config` WHERE `resets`=0");
     /**
     * Lenght of poll
     */
@@ -566,463 +764,7 @@ function mainreset()
         $objAstral -> Close();
     }
     $objTest -> Close();
-    /**
-     * Add rings in shop
-     */
-    $objRings = $db -> Execute("SELECT `id`, `amount` FROM `rings` WHERE `amount`<28");
-    $arrRings = array();
-    $arrAmount = array();
-    $i = 0;
-    while (!$objRings -> EOF)
-    {
-        $arrRings[$i] = $objRings -> fields['id'];
-        $arrAmount[$i] = $objRings -> fields['amount'];
-        $i ++;
-        $objRings -> MoveNext();
-    }
-    $objRings -> Close();
-    $i = 0;
-    foreach ($arrRings as $intRing)
-    {
-        $intAmount = rand(1, 4) + $arrAmount[$i];
-        if ($intAmount > 28)
-        {
-            $intAmount = 28;
-        }
-        $db -> Execute("UPDATE `rings` SET `amount`=".$intAmount." WHERE `id`=".$intRing);
-        $i ++;
-    }
-    /**
-     * Add hunters quest
-     */
-    $arrQtypes = array('F', 'I', 'L');
-    foreach (array('altara', 'ardulith') as $strCity)
-      {
-	$strType = $arrQtypes[rand(0, 2)];
-	switch ($strType)
-	  {
-	  case 'F':
-	    $objMonsters = $db->Execute("SELECT `id` FROM `monsters` WHERE `location`='".ucfirst($strCity)."'");
-	    $arrMonsters = array();
-	    while (!$objMonsters->EOF)
-	      {
-		$arrMonsters[] = $objMonsters->fields['id'];
-		$objMonsters->MoveNext();
-	      }
-	    $intKey = array_rand($arrMonsters);
-	    $intId = $arrMonsters[$intKey];
-	    $objMonsters->Close();
-	    $intAmount = rand(1, 10);
-	    $strQuest = 'F;'.$intId.';'.$intAmount;
-	    break;
-	  case 'I':
-	    $objItems = $db->Execute("SELECT `id` FROM `equipment` WHERE `owner`=0");
-	    $arrItems = array();
-	    while (!$objItems->EOF)
-	      {
-		$arrItems[] = $objItems->fields['id'];
-		$objItems->MoveNext();
-	      }
-	    $objItems->Close();
-	    $intKey = array_rand($arrItems);
-	    $intId = $arrItems[$intKey];
-	    $intAmount = rand(1, 10);
-	    $strQuest = 'I;'.$intId.';'.$intAmount;
-	    break;
-	  case 'L':
-	    $objMonsters = $db->Execute("SELECT `id` FROM `monsters` WHERE `location`='".ucfirst($strCity)."' AND `lootnames`!=''");
-	    $arrMonsters = array();
-	    while (!$objMonsters->EOF)
-	      {
-		$arrMonsters[] = $objMonsters->fields['id'];
-		$objMonsters->MoveNext();
-	      }
-	    $objMonsters->Close();
-	    if (count($arrMonsters) > 0)
-	      {
-		$intKey = array_rand($arrMonsters);
-		$intId = $arrMonsters[$intKey];
-		$intPart = rand(0, 3);
-		$strQuest = 'L;'.$intId.';'.$intPart;
-	      }
-	    else
-	      {
-		$strQuest = '';
-	      }
-	    break;
-	  default:
-	    break;
-	  }
-	$db->Execute("UPDATE `settings` SET `value`='".$strQuest."' WHERE `setting`='hunter".$strCity."'");
-	$intAmount = rand(1, 20);
-	$db->Execute("UPDATE `settings` SET `value`='".$intAmount."' WHERE `setting`='hunter".$strCity."amount'");
-      }
-    /**
-     * Check for random event
-     */
-    $objRevent = $db->Execute("SELECT `pid`, `state`, `qtime` FROM `revent`");
-    while (!$objRevent->EOF)
-      {
-	//Count down
-	if ($objRevent->fields['qtime'] > 1)
-	  {
-	    $db->Execute("UPDATE `revent` SET `qtime`=`qtime`-1 WHERE `pid`=".$objRevent->fields['pid']);
-	  }
-	//Finish random event
-	else
-	  {
-	    $time = date("Y-m-d H:i:s");
-	    //Unfinished
-	    if ($objRevent->fields['state'] == 2)
-	      {
-		$db->Execute("DELETE FROM `equipment` WHERE `name`='Solidna sakiewka' AND `type`='Q' AND `owner`=".$objRevent->fields['pid']);
-	      }
-	    //Finished - give item to target
-	    elseif ($objRevent->fields['state'] == 3)
-	      {
-		$intGold = rand(1000, 8000);
-		$db->Execute("UPDATE `players` SET `bank`=`bank`+".$intGold." WHERE `id`=".$objRevent->fields['pid']);
-		$db -> Execute("INSERT INTO `log` (`owner`, `log`, `czas`, `type`) VALUES(".$objRevent->fields['pid'].", 'Dostałeś przelew ".$intGold." sztuk złota do banku, tytułem: Dziękuję za pomoc.', '".$time."', 'N')"); 
-	      }
-	    //Finished - item sold
-	    elseif ($objRevent->fields['state'] == 4)
-	      {
-		$intRoll = rand(0, 1);
-		//Go to prison
-		if ($intRoll == 0)
-		  {
-		    $objPlayer = $db->Execute("SELECT `level` FROM `players` WHERE `id`=".$objRevent->fields['pid']);
-		    $intGold = $objPlayer->fields['level'] * 10000;
-		    $objPlayer->Close();
-		    $db -> Execute("INSERT INTO `jail` (`prisoner`, `verdict`, `duration`, `cost`, `data`) VALUES(".$objRevent->fields['pid'].",'Okradzenie poborcy podatkowego.', 18, ".$intGold.", ".$strDate.")");
-		    $db->Execute("UPDATE `players` SET `miejsce`='Lochy' WHRE `id`=".$objRevent->fields['pid']);
-		    $db -> Execute("INSERT INTO `log` (`owner`, `log`, `czas`, `type`) VALUES(".$objRevent->fields['pid'].", 'Nagle wyskoczył na ciebie patrol gwardzistów królewskich. Szybko i sprawnie zakuli ciebie w kajdany i odtransportowali do miasta. Tam przed sądem zostałeś oskarżony o kradzież pieniędzy podatników. I w ten oto sposób znalazłeś się w lochach.', '".$time."', 'T')"); 
-		  }
-		//Bandits
-		elseif ($intRoll == 1)
-		  {
-		    $objPlayer = $db->Execute("SELECT `bank` FROM `players` WHERE `id`=".$objRevent->fields['pid']);
-		    $intBank = floor($objPlayer->fields['bank'] / 2);
-		    $objPlayer->Close();
-		    $db->Execute("UPDATE `players` SET `hp`=0, `credits`=0, `bank`=".$intBank.", `lastkilledby`='własną chciwość' WHERE `id`=".$objRevent->fields['pid']);
-		    $db -> Execute("INSERT INTO `log` (`owner`, `log`, `czas`, `type`) VALUES(".$objRevent->fields['pid'].", 'Nagle wokół ciebie pojawiło się kilka zakapturzonych postaci. Ostatnią rzeczą którą usłyszałeś było: ODDAWAJ NASZE PIENIĄDZE! Kiedy się obudziłeś, okazało się, że zniknęło nie tylko to złoto, które miałeś przy sobie ale również część złota z banku!', '".$time."', 'T')"); 
-		  }
-	      }
-	    $db->Execute("DELETE FROM `revent` WHERE `pid`=".$objRevent->fields['pid']);
-	  }
-	$objRevent->MoveNext();
-      }
-    $objRevent->Close();
-    /**
-    * Reopen game
-    */
-    $db -> Execute("UPDATE settings SET value='Y' WHERE setting='open'");
-    $db -> Execute("UPDATE settings SET value='' WHERE setting='close_reason'");
-}
-
-/**
-* Other reset in this same day
-*/
-function smallreset() 
-{
-    global $db;
-    global $arrLanguage;
-    $db -> Execute("UPDATE settings SET value='N' WHERE setting='open'");
-    $db -> Execute("UPDATE settings SET value='Wykonywanie resetu' WHERE setting='close_reason'");
-    $db -> Execute("TRUNCATE TABLE events");
-    /**
-     * Grow herbs
-     */
-    $db -> Execute("UPDATE farm SET age=age+1");
-    $db -> Execute("DELETE FROM farm WHERE age>26");
-    $itemid = $db -> Execute("SELECT `id` FROM `potions` WHERE `owner`=0");
-    while (!$itemid -> EOF) 
-    {
-        $amount = rand(1, 50);
-        $db -> Execute("UPDATE `potions` SET `amount`=".$amount." WHERE `id`=".$itemid -> fields['id']);
-        $itemid -> MoveNext();
-    }
-    $itemid -> Close();
-    /**
-    * Count aviable army in outposts
-    */
-    $intOutSize = 1;
-    $objOutpost = $db -> Execute("SELECT size FROM outposts");
-    while (!$objOutpost -> EOF)
-    {
-        $intOutSize = $intOutSize + $objOutpost -> fields['size'];
-        $objOutpost -> MoveNext();
-    }
-    $objOutpost -> Close();
-    $intMaxtroops = $intOutSize * 20;
-    $intMintroops = $intOutSize * 15;
-    $intMaxspecials = $intOutSize * 10;
-    $intMinspecials = $intOutSize * 7;
-    $intWarriors = rand($intMintroops, $intMaxtroops);
-    $intArchers = rand($intMintroops, $intMaxtroops);
-    $intCatapults = rand($intMinspecials, $intMaxspecials);
-    $intBarricades = rand($intMinspecials, $intMaxspecials);
-    $db -> Execute("UPDATE settings SET value='20' WHERE setting='maps'");
-    $objWarriors = $db -> Execute("SELECT value FROM settings WHERE setting='warriors'");
-    $objArchers = $db -> Execute("SELECT value FROM settings WHERE setting='archers'");
-    $objCatapults = $db -> Execute("SELECT value FROM settings WHERE setting='catapults'");
-    $objBarricades = $db -> Execute("SELECT value FROM settings WHERE setting='barricades'");
-    $intWarriors = $intWarriors + $objWarriors -> fields['value'];
-    $intArchers = $intArchers + $objArchers -> fields['value'];
-    $intCatapults = $intCatapults + $objCatapults -> fields['value'];
-    $intBarricades = $intBarricades + $objBarricades -> fields['value'];
-    $objWarriors -> Close();
-    $objArchers -> Close();
-    $objCatapults -> Close();
-    $objBarricades -> Close();
-    $db -> Execute("UPDATE settings SET value='".$intWarriors."' WHERE setting='warriors'");
-    $db -> Execute("UPDATE settings SET value='".$intArchers."' WHERE setting='archers'");
-    $db -> Execute("UPDATE settings SET value='".$intCatapults."' WHERE setting='catapults'");
-    $db -> Execute("UPDATE settings SET value='".$intBarricades."' WHERE setting='barricades'");
-    $db -> Execute("UPDATE `players` SET `hp`=`max_hp`, `bridge`='N'");
-    /**
-     * Add bonus to mana from items and check duration of antidote
-     */
-    $arrRings = array();
-    $intLangs = 0;
-    foreach ($arrLanguage as $strLanguage)
-    {
-         require_once("languages/".$strLanguage."/resets.php");
-         $arrRings[] = R_INT;
-         $arrRings[] = R_WIS;
-         $intLangs ++;
-    }
-    $arrStat = array('inteli', 'wisdom');
-    $objStats = $db -> Execute("SELECT `id`, `inteli`, `wisdom`, `antidote` FROM `players`");
-    while (!$objStats -> EOF)
-    {
-        $objRings = $db -> Execute("SELECT `power`, `name` FROM `equipment` WHERE `type`='I' AND `status`='E' AND `owner`=".$objStats -> fields['id']);
-        while (!$objRings -> EOF)
-        {
-            $arrRingtype = explode(" ", $objRings -> fields['name']);
-            $intAmount = count($arrRingtype) - 1;
-            $intKey = array_search($arrRingtype[$intAmount], $arrRings);
-            if ($intKey !== FALSE)
-            {
-                $intKey = $intKey / $intLangs;
-                $strStat = $arrStat[$intKey];
-                $objStats -> fields[$strStat] = $objStats -> fields[$strStat] + $objRings -> fields['power'];
-            }
-            $objRings -> MoveNext();
-        }
-        $objRings -> Close();
-        $objCape = $db -> Execute("SELECT `power` FROM `equipment` WHERE `type`='C' AND `status`='E' AND `owner`=".$objStats -> fields['id']);
-        $intMaxmana = $objStats -> fields['inteli'] + $objStats -> fields['wisdom'];
-        $intMaxmana = $intMaxmana + (($objCape -> fields['power'] / 100) * $intMaxmana);
-        $objCape -> Close();
-        if (!empty($objStats -> fields['antidote']))
-        {
-            $intAntidote = (int)$objStats -> fields['antidote']{1} + 1;
-            if ($intAntidote == 10)
-            {
-                $strAntidote = '';
-            }
-                else
-            {
-                $strAntidote = $objStats -> fields['antidote']{0}.$intAntidote;
-            }
-        }
-            else
-        {
-            $strAntidote = '';
-        }
-        $db -> Execute("UPDATE `players` SET `pm`=".$intMaxmana.", `antidote`='".$strAntidote."' WHERE `id`=".$objStats -> fields['id']);
-        $objStats -> MoveNext();
-        
-    }
-    $objStats -> Close();
-    $db -> Execute("UPDATE `players` SET `crime`=`crime`+1, `astralcrime`='Y' WHERE `klasa`='Złodziej' AND `freeze`=0");  
-    $db -> Execute("UPDATE `players` SET `energy`=`energy`+`max_energy` WHERE `miejsce`!='Lochy' AND `freeze`=0 AND `rasa`!='' AND `klasa`!='' AND `energy`<(150 * `max_energy`)");
-    $db -> Execute("UPDATE outposts SET turns=turns+2, fatigue=100, attacks=0");
-    $db -> Execute("UPDATE tribes SET atak='N'");
-    $db -> Execute("UPDATE houses SET points=points+2");
-    $objItemname = $db -> Execute("SELECT `name`, `id` FROM `equipment` WHERE `poison`>0 AND `type`!='R'");
-    while (!$objItemname -> EOF)
-    {
-        $strName = str_replace("Zatruty ", "", $objItemname -> fields['name']);
-        $db -> Execute("UPDATE `equipment` SET `name`='".$strName."', `poison`=0, `ptype`='' WHERE `id`=".$objItemname -> fields['id']);
-        $objItemname -> MoveNext();
-    }
-    $objItemname -> Close();
-    /**
-     * Jail - count duration and free prisoners
-     */
-    $db -> Execute("UPDATE `jail` SET `duration`=`duration`-1");
-    $jail = $db -> Execute("SELECT `id`, `duration`, `prisoner` FROM `jail`");
-    while (!$jail -> EOF) 
-    {
-        if ($jail -> fields['duration'] == 0) 
-        {
-            $db -> Execute("UPDATE `players` SET `miejsce`='Altara' WHERE `id`=".$jail -> fields['prisoner']);
-            $db -> Execute("DELETE FROM `jail` WHERE `id`=".$jail -> fields['id']);
-        }
-        $jail -> MoveNext();
-    }
-    $jail -> Close();
-    /**
-     * Ban on chat
-     */
-    $db -> Execute("UPDATE `chat_config` SET `resets`=`resets`-1");
-    $db -> Execute("DELETE FROM `chat_config` WHERE `resets`=0");
-    /**
-     * Add rings in shop
-     */
-    $objRings = $db -> Execute("SELECT `id`, `amount` FROM `rings` WHERE `amount`<28");
-    $arrRings = array();
-    $arrAmount = array();
-    $i = 0;
-    while (!$objRings -> EOF)
-    {
-        $arrRings[$i] = $objRings -> fields['id'];
-        $arrAmount[$i] = $objRings -> fields['amount'];
-        $i ++;
-        $objRings -> MoveNext();
-    }
-    $objRings -> Close();
-    $i = 0;
-    foreach ($arrRings as $intRing)
-    {
-        $intAmount = rand(1, 4) + $arrAmount[$i];
-        if ($intAmount > 28)
-        {
-            $intAmount = 28;
-        }
-        $db -> Execute("UPDATE `rings` SET `amount`=".$intAmount." WHERE `id`=".$intRing);
-        $i ++;
-    }
-    /**
-     * Add hunters quest
-     */
-    $arrQtypes = array('F', 'I', 'L');
-    foreach (array('altara', 'ardulith') as $strCity)
-      {
-	$strType = $arrQtypes[rand(0, 2)];
-	switch ($strType)
-	  {
-	  case 'F':
-	    $objMonsters = $db->Execute("SELECT `id` FROM `monsters` WHERE `location`='".ucfirst($strCity)."'");
-	    $arrMonsters = array();
-	    while (!$objMonsters->EOF)
-	      {
-		$arrMonsters[] = $objMonsters->fields['id'];
-		$objMonsters->MoveNext();
-	      }
-	    $intKey = array_rand($arrMonsters);
-	    $intId = $arrMonsters[$intKey];
-	    $objMonsters->Close();
-	    $intAmount = rand(1, 10);
-	    $strQuest = 'F;'.$intId.';'.$intAmount;
-	    break;
-	  case 'I':
-	    $objItems = $db->Execute("SELECT `id` FROM `equipment` WHERE `owner`=0");
-	    $arrItems = array();
-	    while (!$objItems->EOF)
-	      {
-		$arrItems[] = $objItems->fields['id'];
-		$objItems->MoveNext();
-	      }
-	    $objItems->Close();
-	    $intKey = array_rand($arrItems);
-	    $intId = $arrItems[$intKey];
-	    $intAmount = rand(1, 10);
-	    $strQuest = 'I;'.$intId.';'.$intAmount;
-	    break;
-	  case 'L':
-	    $objMonsters = $db->Execute("SELECT `id` FROM `monsters` WHERE `location`='".ucfirst($strCity)."' AND `lootnames`!= ''");
-	    $arrMonsters = array();
-	    while (!$objMonsters->EOF)
-	      {
-		$arrMonsters[] = $objMonsters->fields['id'];
-		$objMonsters->MoveNext();
-	      }
-	    $objMonsters->Close();
-	    if (count($arrMonsters) > 0)
-	      {
-		$intKey = array_rand($arrMonsters);
-		$intId = $arrMonsters[$intKey];
-		$intPart = rand(0, 3);
-		$strQuest = 'L;'.$intId.';'.$intPart;
-	      }
-	    else
-	      {
-		$strQuest = '';
-	      }
-	    break;
-	  default:
-	    break;
-	  }
-	$db->Execute("UPDATE `settings` SET `value`='".$strQuest."' WHERE `setting`='hunter".$strCity."'");
-	$intAmount = rand(1, 20);
-	$db->Execute("UPDATE `settings` SET `value`='".$intAmount."' WHERE `setting`='hunter".$strCity."amount'");
-      }
-    /**
-     * Check for random event
-     */
-    $objRevent = $db->Execute("SELECT `pid`, `state`, `qtime` FROM `revent`");
-    while (!$objRevent->EOF)
-      {
-	//Count down
-	if ($objRevent->fields['qtime'] > 1)
-	  {
-	    $db->Execute("UPDATE `revent` SET `qtime`=`qtime`-1 WHERE `pid`=".$objRevent->fields['pid']);
-	  }
-	//Finish random event
-	else
-	  {
-	    $time = date("Y-m-d H:i:s");
-	    //Unfinished
-	    if ($objRevent->fields['state'] == 2)
-	      {
-		$db->Execute("DELETE FROM `equipment` WHERE `name`='Solidna sakiewka' AND `type`='Q' AND `owner`=".$objRevent->fields['pid']);
-	      }
-	    //Finished - give item to target
-	    elseif ($objRevent->fields['state'] == 3)
-	      {
-		$intGold = rand(1000, 8000);
-		$db->Execute("UPDATE `players` SET `bank`=`bank`+".$intGold." WHERE `id`=".$objRevent->fields['pid']);
-		$db -> Execute("INSERT INTO `log` (`owner`, `log`, `czas`, `type`) VALUES(".$objRevent->fields['pid'].", 'Dostałeś przelew ".$intGold." sztuk złota do banku, tytułem: Dziękuję za pomoc.', '".$time."', 'N')"); 
-	      }
-	    //Finished - item sold
-	    elseif ($objRevent->fields['state'] == 4)
-	      {
-		$intRoll = rand(0, 1);
-		//Go to prison
-		if ($intRoll == 0)
-		  {
-		    echo "here";
-		    $objPlayer = $db->Execute("SELECT `level` FROM `players` WHERE `id`=".$objRevent->fields['pid']);
-		    $intGold = $objPlayer->fields['level'] * 10000;
-		    $objPlayer->Close();
-		    $db -> Execute("INSERT INTO `jail` (`prisoner`, `verdict`, `duration`, `cost`, `data`) VALUES(".$objRevent->fields['pid'].",'Okradzenie poborcy podatkowego.', 18, ".$intGold.", ".$strDate.")");
-		    $db->Execute("UPDATE `players` SET `miejsce`='Lochy' WHRE `id`=".$objRevent->fields['pid']);
-		    $db -> Execute("INSERT INTO `log` (`owner`, `log`, `czas`, `type`) VALUES(".$objRevent->fields['pid'].", 'Nagle wyskoczył na ciebie patrol gwardzistów królewskich. Szybko i sprawnie zakuli ciebie w kajdany i odtransportowali do miasta. Tam przed sądem zostałeś oskarżony o kradzież pieniędzy podatników. I w ten oto sposób znalazłeś się w lochach.', '".$time."', 'T')"); 
-		  }
-		//Bandits
-		elseif ($intRoll == 1)
-		  {
-		    echo "here2";
-		    $objPlayer = $db->Execute("SELECT `bank` FROM `players` WHERE `id`=".$objRevent->fields['pid']);
-		    $intBank = floor($objPlayer->fields['bank'] / 2);
-		    $objPlayer->Close();
-		    $db->Execute("UPDATE `players` SET `hp`=0, `credits`=0, `bank`=".$intBank.", `lastkilledby`='własną chciwość' WHERE `id`=".$objRevent->fields['pid']);
-		    $db -> Execute("INSERT INTO `log` (`owner`, `log`, `czas`, `type`) VALUES(".$objRevent->fields['pid'].", 'Nagle wokół ciebie pojawiło się kilka zakapturzonych postaci. Ostatnią rzeczą którą usłyszałeś było: ODDAWAJ NASZE PIENIĄDZE. Kiedy się obudziłeś, okazało się, że zniknęło nie tylko to złoto, które miałeś przy sobie ale również część złota z banku!', '".$time."', 'T')"); 
-		  }
-	      }
-	    $db->Execute("DELETE FROM `revent` WHERE `pid`=".$objRevent->fields['pid']);
-	  }
-	$objRevent->MoveNext();
-      }
-    $objRevent->Close();
-    /**
-     * Reopen game
-     */
-    $db -> Execute("UPDATE settings SET value='Y' WHERE setting='open'");
-    $db -> Execute("UPDATE settings SET value='' WHERE setting='close_reason'");
+    smallreset();
 }
  
 ?>

@@ -7,7 +7,7 @@
  *   @copyright            : (C) 2004,2005,2006,2011 Vallheru Team based on Gamers-Fusion ver 2.5
  *   @author               : thindil <thindil@tuxfamily.org>
  *   @version              : 1.4
- *   @since                : 10.9.2011
+ *   @since                : 28.11.2011
  *
  */
 
@@ -53,6 +53,7 @@ $smarty -> assign(array("Text1" => TEXT1,
                         "Text2" => TEXT2,
                         "Text3" => TEXT3,
                         "Text4" => TEXT4,
+			"Text5" => "Oprócz tego co 20 minut odzyskujesz ".(round($player->max_energy / 72, 2))." punktów energii.",
                         "Tage" => $objAge -> fields['value'],
                         "Tday" => $objDay -> fields['value'],
                         "Thours" => $arrTime[0],

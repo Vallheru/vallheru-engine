@@ -4,10 +4,10 @@
  *   Game resets by Cron
  *
  *   @name                 : reset.php                            
- *   @copyright            : (C) 2004-2005 Vallheru Team based on Gamers-Fusion ver 2.5
- *   @author               : thindil <thindil@users.sourceforge.net>
- *   @version              : 0.8 beta
- *   @since                : 03.03.2005
+ *   @copyright            : (C) 2004,2005,2011 Vallheru Team based on Gamers-Fusion ver 2.5
+ *   @author               : thindil <thindil@tuxfamily.org>
+ *   @version              : 1.4
+ *   @since                : 28.11.2011
  *
  */
 
@@ -33,19 +33,27 @@
 */
 /*if ($_SERVER['REMOTE_ADDR'] != '83.142.73.186')
 {
-	die("Ciekawe co chciaĹeĹ tutaj zrobiÄ?");
+	die("Ciekawe co chciałeś tutaj zrobić?");
 } */
 
+if (!isset($_GET['step']))
+  {
+    die("Zapomnij o tym.");
+  }
 require_once("includes/config.php");
 require_once('includes/resets.php');
-if ($_GET['step'] == 'reset') 
-{
+switch ($_GET['step'])
+  {
+  case 'reset':
     mainreset();
-    exit;
-}
-if ($_GET['step'] == 'revive') 
-{
-    smallreset();
-    exit;
+    break;
+  case 'revive':
+    smallreset(TRUE);
+    break;
+  case 'energy':
+    energyreset();
+    break;
+  deault:
+    break;
 }
 ?>

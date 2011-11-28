@@ -1,3 +1,9 @@
+2011-11-28  Bartek thindil Jasicki  <thindil@tuxfamily.org>
+
+	* FEATURE,install/db/update.sql, templates/layout1/tower.tpl, templates/tower.tpl, tower.php, includes/resets.php, reset.php,
+	languages/pl/tower.php:
+	added smoth gaining of energy
+
 2011-11-25  Bartek thindil Jasicki  <thindil@tuxfamily.org>
 
 	* BUG,equip.php: 
