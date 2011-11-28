@@ -8,7 +8,7 @@
  *   @author               : thindil <thindil@tuxfamily.org>
  *   @author               : eyescream <tduda@users.sourceforge.net>
  *   @version              : 1.4
- *   @since                : 22.11.2011
+ *   @since                : 28.11.2011
  *
  */
  
@@ -887,6 +887,9 @@ if (isset($_GET['view']))
 	    $db -> Execute("DELETE FROM `jeweller_work` WHERE `owner`=".$arrdelete -> fields['id']);
 	    $db -> Execute("DELETE FROM `ban_mail` WHERE `id`=".$arrdelete -> fields['id']);
 	    $db -> Execute("DELETE FROM `links` WHERE `owner`=".$arrdelete -> fields['id']);
+	    $db->Execute("DELETE FROM `revent` WHERE `pid`=".$arrdelete->fields['id']);
+	    $db->Execute("DELETE FROM `contacts` WHERE `owner`=".$arrdelete->fields['id']);
+	    $db->Execute("DELETE FROM `contacts` WHERE `pid`=".$arrdelete->fields['id']);
 	    $strFile = 'avatars/'.$arrdelete -> fields['avatar'];
 	    if (is_file($strFile)) 
 	      {
@@ -1020,6 +1023,9 @@ if (isset($_GET['view']))
 		$db -> Execute("DELETE FROM `jeweller_work` WHERE `owner`=".$_POST['did']);
 		$db -> Execute("DELETE FROM `ban_mail` WHERE `id`=".$_POST['did']);
 		$db -> Execute("DELETE FROM `links` WHERE `owner`=".$_POST['did']);
+		$db->Execute("DELETE FROM `revent` WHERE `pid`=".$_POST['did']);
+		$db->Execute("DELETE FROM `contacts` WHERE `owner`=".$_POST['did']);
+		$db->Execute("DELETE FROM `contacts` WHERE `pid`=".$_POST['did']);
 		$smarty -> assign ("Message", YOU_DELETE2." ".$_POST['did']);
 	      } 
             else 
