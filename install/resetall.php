@@ -7,7 +7,7 @@
  *   @copyright            : (C) 2004,2005,2006,2007,2011 Vallheru Team based on Gamers-Fusion ver 2.5
  *   @author               : thindil <thindil@tuxfamily.org>
  *   @version              : 1.4
- *   @since                : 21.10.2011
+ *   @since                : 28.11.2011
  *
  */
 
@@ -89,12 +89,14 @@ $db -> Execute("UPDATE settings SET value='100000' WHERE setting='monsterhp'");
 $db -> Execute("UPDATE settings SET value='' WHERE setting='item'");
 $db -> Execute("UPDATE settings SET value='' WHERE setting='player'");
 $db -> Execute("UPDATE `settings` SET `value`='' WHERE `setting`='tribe'");
+$db->Execute("UPDATE `settings` SET `value`=1 WHERE `setting`='day'");
 $db -> Execute("TRUNCATE TABLE `lost_pass`");
 $db -> Execute("TRUNCATE TABLE `astral_machine`");
 $db -> Execute("TRUNCATE TABLE `astral_bank`");
 $db -> Execute("TRUNCATE TABLE `amarket`");
 $db -> Execute("TRUNCATE TABLE `astral_plans`");
 $db -> Execute("TRUNCATE TABLE `astral`");
+$db->Execute("TRUNCATE TABLE `revent`");
 print "Tables cleared<br />";
 
 /**
@@ -155,6 +157,24 @@ while (!$objAuthor->EOF)
   }
 $objAuthor->Close();
 print "Notes copied<br />";
+
+/**
+ * Update contacts
+ */
+$objContact = $db->Execute("SELECT `id`, `owner`, `pid` FROM `contacts`");
+while (!$objContact->EOF)
+  {
+    $objOwner = $db->Execute("SELECT `user` FROM `zapas` WHERE `id`=".$objContact->fields['owner']);
+    $objNewowner = $db->Execute("SELECT `id` FROM `players` WHERE `user`='".$objOwner->fields['user']."'");
+    $objOwner->Close();
+    $objPid = $db->Execute("SELECT `user` FROM `zapas` WHERE `id`=".$objContact->fields['pid']);
+    $objNewpid = $db->Execute("SELECT `id` FROM `players` WHERE `user`='".$objPid->fields['user']."'");
+    $objPid->Close();
+    $db->Execute("UPDATE `contacts` SET `owner`=".$objNewowner->fields['id'].", `pid`=".$objNewpid->fields['id']." WHERE `id`=".$objContact->fields['id']);
+    $objContact->MoveNext();
+  }
+$objContact->Close();
+print "Contacts OK<br />";
 
 /**
 * Copy referrals
