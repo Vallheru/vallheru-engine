@@ -1,5 +1,7 @@
 2011-11-28  Bartek thindil Jasicki  <thindil@tuxfamily.org>
 
+	* BUG,includes/resets.php: 
+	fixed random event
 	* UPDATE,install/db/update.sql, preset.php: 
 	changed default amount of max energy
 	* UPDATE,admin.php: 

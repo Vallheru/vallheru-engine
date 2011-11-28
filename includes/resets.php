@@ -57,6 +57,8 @@ function smallreset($blnSmall = FALSE)
 	$db -> Execute("UPDATE settings SET value='Wykonywanie resetu' WHERE setting='close_reason'");
 	$db -> Execute("UPDATE `players` SET `hp`=`max_hp`, `bridge`='N'");
       }
+    $data = date("y-m-d");
+    $strDate = $db -> DBDate($data);
     $db -> Execute("TRUNCATE TABLE events");
     /**
      * Grow herbs
@@ -325,7 +327,7 @@ function smallreset($blnSmall = FALSE)
 		    $intGold = $objPlayer->fields['level'] * 10000;
 		    $objPlayer->Close();
 		    $db -> Execute("INSERT INTO `jail` (`prisoner`, `verdict`, `duration`, `cost`, `data`) VALUES(".$objRevent->fields['pid'].",'Okradzenie poborcy podatkowego.', 18, ".$intGold.", ".$strDate.")");
-		    $db->Execute("UPDATE `players` SET `miejsce`='Lochy' WHRE `id`=".$objRevent->fields['pid']);
+		    $db->Execute("UPDATE `players` SET `miejsce`='Lochy' WHERE `id`=".$objRevent->fields['pid']);
 		    $db -> Execute("INSERT INTO `log` (`owner`, `log`, `czas`, `type`) VALUES(".$objRevent->fields['pid'].", 'Nagle wyskoczył na ciebie patrol gwardzistów królewskich. Szybko i sprawnie zakuli ciebie w kajdany i odtransportowali do miasta. Tam przed sądem zostałeś oskarżony o kradzież pieniędzy podatników. I w ten oto sposób znalazłeś się w lochach.', '".$time."', 'T')"); 
 		  }
 		//Bandits
