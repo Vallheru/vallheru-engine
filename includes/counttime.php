@@ -4,10 +4,10 @@
  *   Function to count time to reset
  *
  *   @name                 : counttime.php                            
- *   @copyright            : (C) 2006 Vallheru Team based on Gamers-Fusion ver 2.5
- *   @author               : thindil <thindil@users.sourceforge.net>
- *   @version              : 1.3
- *   @since                : 16.10.2006
+ *   @copyright            : (C) 2006,2011 Vallheru Team based on Gamers-Fusion ver 2.5
+ *   @author               : thindil <thindil@tuxfamily.org>
+ *   @version              : 1.4
+ *   @since                : 28.11.2011
  *
  */
 
@@ -27,7 +27,7 @@
 //   along with this program; if not, write to the Free Software
 //   Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 //
-// $Id: counttime.php 725 2006-10-16 15:47:57Z thindil $
+// $Id$
 
 /**
 * Get the localization for game
@@ -75,17 +75,17 @@ function counttime()
         $arrTime[1] = '';
     }
     if ($intMinutes == 1)
-    {
+      {
         $arrTime[1] = $intMinutes.T_MINUTE;
-    }
-    if (($intMinutes > 1 && $intMinutes < 5) || ereg("^[2-5][2-4]*$", $intMinutes))
-    {
+      }
+    elseif (in_array($intMinutes, array(2, 3, 4, 22, 23, 24, 32, 33, 34, 42, 43, 44, 52, 53, 54)))
+      {
         $arrTime[1] = $intMinutes.T_MINUTES2;
-    }
-    if (($intMinutes > 4 && $intMinutes < 20) || ereg("^[2-5][5-9]*$", $intMinutes) || ereg("^[2-5][0-1]*$", $intMinutes))
-    {
+      }
+    else
+      {
         $arrTime[1] = $intMinutes.T_MINUTES;
-    }
+      }
 
     return $arrTime;
 }
