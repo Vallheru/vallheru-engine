@@ -7,7 +7,11 @@
 	</tr>
         {section name=online loop=$Ponline}
 	    <tr>
-		<td>{$Ponline[online].user}</td>
+	        {if $Ponline[online].id > 0}
+		    <td>{$Ponline[online].user} {$Tid} {$Ponline[online].id}</td>
+		{else}
+		    <td>{$Ponline[online].user}</td>
+		{/if}
  	    </tr>
 	{/section}
     </table>

@@ -158,10 +158,10 @@ else
 
         $objCodexdate = $db -> Execute("SELECT `date` FROM `court` WHERE `title`='".CODEX." ".$gamename."'");
 
-	$arrUsers = $db->GetAll("SELECT `user` FROM `players` WHERE `lpv`>=".(time() - 180)." ORDER BY `id` ASC");
+	$arrUsers = $db->GetAll("SELECT `id`, `user` FROM `players` WHERE `lpv`>=".(time() - 180)." ORDER BY `id` ASC");
 	if (count($arrUsers) == 0)
 	  {
-	    $arrUsers[] = array('user' => 'Cisza i spokój');
+	    $arrUsers[] = array('user' => 'Cisza i spokój', 'id' => 0);
 	  }
     
         $smarty->assign( array ("Update" => $arrnews, 
@@ -178,7 +178,7 @@ else
                                 "Pagetitle" => WELCOME,
 				"Tonline" => "Grasują w okolicy:",
 				"Ponline" => $arrUsers,
-				"Tlevel" => "Poziom:",
+				"Tid" => "ID:",
 				"Step" => ""));
         $smarty->display('index.tpl');
         $objCodexdate -> Close();
