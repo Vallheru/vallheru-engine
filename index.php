@@ -114,21 +114,10 @@ else
     $arrtime = array($newhour, $hour[1], $hour[2]);
     $newtime = implode(":",$arrtime);
 
-    $query = $db -> Execute("SELECT count(`id`) FROM `players`");
-    $nump = $query -> fields['count(`id`)'];
-    $query -> Close();
-    
-    $span = (time() - 180);
-    $objQuery = $db -> Execute("SELECT count(`id`) FROM `players` WHERE `lpv`>=".$span);
-    $intNumo = $objQuery -> fields['count(`id`)'];
-    $objQuery -> Close();
-
     $objMetakey = $db -> Execute("SELECT `value` FROM `settings` WHERE `setting`='metakeywords'");
     $objMetadesc = $db -> Execute("SELECT `value` FROM `settings` WHERE `setting`='metadescr'");
 
     $smarty->assign(array("Time" => $newtime, 
-                          "Players" => $nump, 
-                          "Online" => $intNumo, 
                           "Email" => EMAIL,
                           "Password" => PASSWORD,
                           "Login" => LOGIN,
@@ -168,6 +157,12 @@ else
         $adminmail1 = str_replace("@","[at]",$adminmail);
 
         $objCodexdate = $db -> Execute("SELECT `date` FROM `court` WHERE `title`='".CODEX." ".$gamename."'");
+
+	$arrUsers = $db->GetAll("SELECT `user` FROM `players` WHERE `lpv`>=".(time() - 180)." ORDER BY `id` ASC");
+	if (count($arrUsers) == 0)
+	  {
+	    $arrUsers[] = array('user' => 'Cisza i spokój');
+	  }
     
         $smarty->assign( array ("Update" => $arrnews, 
                                 "Adminname" => $adminname, 
@@ -181,6 +176,9 @@ else
                                 "Charset" => CHARSET,
                                 "Codexdate" => $objCodexdate -> fields['date'],
                                 "Pagetitle" => WELCOME,
+				"Tonline" => "Grasują w okolicy:",
+				"Ponline" => $arrUsers,
+				"Tlevel" => "Poziom:",
 				"Step" => ""));
         $smarty->display('index.tpl');
         $objCodexdate -> Close();

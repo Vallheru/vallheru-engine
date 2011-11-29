@@ -43,7 +43,7 @@ body, iframe, select, textarea {
 }
 
 div.info {
-  position: absolute; left: 580px; top: 100px;
+  position: absolute; left: 580px; top: 130px;
 }
 
 div.login1 {
@@ -79,6 +79,7 @@ div.text {
   text-align: justify;
   margin-left: 10px;
   margin-right: 10px;
+  width: 75%;
 }
 
 div.mail {
@@ -158,11 +159,6 @@ input:focus, select:focus {
   background: #7B1D1D;
 }
 
-span.info {
-  display: block;
-  margin-bottom: 3px;
-}
-
 span.login {
   display: block;
   margin-bottom: 5px;
@@ -172,5 +168,13 @@ span.login {
 span.login2 {
   display: block;
   margin-bottom:5px;
+  text-align: center;
+}
+
+table.online {
+  float: right;
+  width: 20%;
+  margin-left: 20px;
+  margin-right: 20px;
   text-align: center;
 }

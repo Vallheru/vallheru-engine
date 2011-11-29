@@ -95,11 +95,6 @@ if ($newhour > 23)
 $arrtime = array($newhour, $hour[1], $hour[2]);
 $newtime = implode(":",$arrtime);
 
-$span = (time() - 180);
-$objQuery = $db -> Execute("SELECT count(`id`) FROM `players` WHERE `lpv`>=".$span);
-$intNumo = $objQuery->fields['count(`id`)'];
-$objQuery -> Close();
-
 $smarty -> assign(array("Gamename" => $gamename, 
                         "Meta" => '',
                         "Welcome" => WELCOME,
@@ -109,7 +104,6 @@ $smarty -> assign(array("Gamename" => $gamename,
                         "Forums" => FORUMS,
                         "Time" => $newtime, 
                         "Players" => $nump, 
-                        "Online" => $intNumo, 
                         "Email" => EMAIL,
                         "Password" => PASSWORD,
                         "Login" => LOGIN,

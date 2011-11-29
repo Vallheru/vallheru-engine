@@ -20,8 +20,6 @@
 <div><img src="vallheru.jpg" width="560" height="352" alt="Vallheru-MMORPG" title="Vallheru-MMORPG" border="0" /></div>
 <div class="info">
     <span class="info">{$Ctime}: {$Time}</span>
-    <span class="info">{$Whave} <b>{$Players}</b> {$Registered}</span>
-    <span class="info"><b>{$Online}</b> {$Ingame}.</span>
 </div>
 <form method="post" action="updates.php">
     <div class="login1">
