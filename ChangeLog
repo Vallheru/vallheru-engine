@@ -1,5 +1,7 @@
 2011-11-29  Bartek thindil Jasicki  <thindil@tuxfamily.org>
 
+	* BUG,updates.php: 
+	fixed notice
 	* UPDATE,templates/index.tpl, index.php: 
 	added ID to player list
 	* FEATURE,templates/head.tpl, templates/index.tpl, templates/rules.tpl, index.php, main.css, register.php: 

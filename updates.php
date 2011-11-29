@@ -8,7 +8,7 @@
  *   @author               : thindil <thindil@tuxfamily.org>
  *   @author               : mori <ziniquel@users.sourceforge.net>
  *   @version              : 1.4
- *   @since                : 08.09.2011
+ *   @since                : 29.11.2011
  *
  */
 
@@ -94,8 +94,15 @@ if (!isset ($_GET['view']))
       {
 	$arrVdate[] = $objVallars->fields['vdate'];
 	$arrOwnerid[] = $objVallars->fields['owner'];
-	$objOwner = $db->Execute("SELECT `user`, `tribe` FROM `players` WHERE `id`=".$objVallars->fields['owner']);
-	$arrOwner[] = $arrTags[$objOwner->fields['tribe']][0].' '.$objOwner->fields['user'].' '.$arrTags[$objOwner->fields['tribe']][1];
+	$objOwner = $db->Execute("SELECT `id`, `user`, `tribe` FROM `players` WHERE `id`=".$objVallars->fields['owner']);
+	if ($objOwner->fields['id'])
+	  {
+	    $arrOwner[] = $arrTags[$objOwner->fields['tribe']][0].' '.$objOwner->fields['user'].' '.$arrTags[$objOwner->fields['tribe']][1];
+	  }
+	else
+	  {
+	    $arrOwner[] = '';
+	  }
 	$arrReason[] = "Przyznano ".$objVallars->fields['amount']." Vallar(y) za ".$objVallars->fields['reason'];
 	$objOwner->Close();
 	$objVallars->MoveNext();
