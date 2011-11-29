@@ -34,4 +34,4 @@
 <div class="menu">[<a href="index.php">{$Welcome}</a>]</div>
 <div class="menu2">[<a href="register.php">{$Register}</a>]</div>
 <div class="menu2">[<a href="index.php?step=rules">{$Rules}</a>]</div>
-<!--<div class="menu2">[<a href="http://www.vallheru.livenet.pl/">{$Forums}</a>]</div>-->
+<div class="menu2">[<a href="index.php?step=donate">{$Donate}</a>]</div>

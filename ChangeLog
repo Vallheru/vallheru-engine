@@ -1,3 +1,8 @@
+2011-11-29  Bartek thindil Jasicki  <thindil@tuxfamily.org>
+
+	* UPDATE,templates/head.tpl, templates/index.tpl, index.php, register.php, main.css:
+	some redesign of main page
+
 2011-11-28  Bartek thindil Jasicki  <thindil@tuxfamily.org>
 
 	* BUG,includes/resets.php: 
