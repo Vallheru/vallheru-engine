@@ -1,5 +1,7 @@
 2011-11-30  Bartek thindil Jasicki  <thindil@tuxfamily.org>
 
+	* FEATURE,templates/layout1/mail.tpl, templates/mail.tpl, install/db/updte.sql, mail.php, includes/head.php, languages/pl/mail.php:
+	new mail system
 	* UPDATE,house.php:
 	updated rest in house
 

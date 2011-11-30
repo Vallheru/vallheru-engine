@@ -7,7 +7,7 @@
  *   @copyright            : (C) 2004,2005,2006,2007,2011 Vallheru Team based on Gamers-Fusion ver 2.5
  *   @author               : thindil <thindil@tuxfamily.org>
  *   @version              : 1.4
- *   @since                : 07.11.2011
+ *   @since                : 30.11.2011
  *
  */
 
@@ -40,10 +40,9 @@ require_once("languages/".$player -> lang."/mail.php");
 if (!isset($_GET['view']) && !isset($_GET['read']) && !isset($_GET['zapisz']) && !isset($_GET['kasuj']))
 {
     $smarty -> assign(array("Mailinfo" => MAIL_INFO,
-                            "Aoutbox" => A_OUTBOX,
                             "Asaved" => A_SAVED,
                             "Awrite" => A_WRITE,
-                            "Ablocklist" => A_BLOCK_LIST,
+                            "Ablocked" => A_BLOCK_LIST,
 			    "Asearch" => "Szukaj wiadomości"));
 }
 
@@ -106,7 +105,7 @@ if (isset($_GET['view']) && $_GET['view'] == 'search')
 /**
  * Sorting of mails.
  */
-if (isset($_GET['view']) && in_array($_GET['view'], array('inbox', 'zapis', 'send')))
+if (isset($_GET['view']) && in_array($_GET['view'], array('inbox', 'saved')))
   {
     if (isset($_GET['sort1']))
       {
@@ -118,14 +117,7 @@ if (isset($_GET['view']) && in_array($_GET['view'], array('inbox', 'zapis', 'sen
 	$_POST['sort1'] = intval($_POST['sort1']);
 	if ($_POST['sort1'] != -1)
 	  {
-	    if ($_GET['view'] != 'send')
-	      {
-		$strQuery = " AND `senderid`=".$_POST['sort1'];
-	      }
-	    else
-	      {
-		$strQuery = " AND `send`=".$_POST['sort1'];
-	      }
+	    $strQuery = " AND `senderid`=".$_POST['sort1'];
 	  }
 	$_POST['sort2'] = intval($_POST['sort2']);
 	if ($_POST['sort2'] != -1)
@@ -168,7 +160,7 @@ if (isset($_GET['view']) && in_array($_GET['view'], array('inbox', 'zapis', 'sen
  */
 if (isset ($_GET['view']) && $_GET['view'] == 'inbox') 
   {
-    $objSort = $db->Execute("SELECT `sender`, `senderid` FROM `mail`  WHERE `owner`=".$player -> id." AND `zapis`='N' AND `send`=0 GROUP BY `senderid` ASC");
+    $objSort = $db->Execute("SELECT `sender`, `senderid` FROM `mail`  WHERE `owner`=".$player -> id." GROUP BY `senderid` ASC");
     $arrSendersid = array();
     $arrSenders = array();
     while (!$objSort->EOF) 
@@ -180,7 +172,7 @@ if (isset ($_GET['view']) && $_GET['view'] == 'inbox')
     $objSort->Close();
 
     //Pagination
-    $objAmount = $db->Execute("SELECT count(`id`) FROM `mail` WHERE `owner`=".$player -> id." AND `zapis`='N' AND `send`=0".$strQuery);
+    $objAmount = $db->Execute("SELECT count(`id`) FROM `mail` WHERE `owner`=".$player->id.$strQuery." GROUP BY `topic`");
     $intPages = ceil($objAmount->fields['count(`id`)'] / 30);
     $objAmount->Close();
     if (!isset($intPage))
@@ -188,18 +180,20 @@ if (isset ($_GET['view']) && $_GET['view'] == 'inbox')
 	$intPage = 1;
       }
 
-    $mail = $db->SelectLimit("SELECT * FROM `mail` WHERE `owner`=".$player -> id." AND `zapis`='N' AND `send`=0".$strQuery." ORDER BY `id` DESC", 30, 30 * ($intPage - 1));
+    $mail = $db->SelectLimit("SELECT * FROM (SELECT * FROM `mail` WHERE `owner`=".$player->id.$strQuery." ORDER BY `id` ASC) AS s GROUP BY `topic`", 30, 30 * ($intPage - 1));
     $arrsender = array();
     $arrsenderid = array();
     $arrsubject = array();
     $arrid = array();
     $arrRead = array();
+    $arrTopic = array();
     while (!$mail -> EOF) 
       {
         $arrsender[] = $mail -> fields['sender'];
         $arrsenderid[] = $mail -> fields['senderid'];
         $arrsubject[] = $mail -> fields['subject'];
         $arrid[] = $mail -> fields['id'];
+	$arrTopic[] = $mail->fields['topic'];
         if ($mail -> fields['unread'] == 'F')
         {
             $arrRead[] = 'Y';
@@ -242,17 +236,18 @@ if (isset ($_GET['view']) && $_GET['view'] == 'inbox')
 			    "Tpage" => $intPage,
 			    "Fpage" => "Idź do strony:",
 			    "Lpage" => $strPage,
+			    "Mtopic" => $arrTopic,
                             "Mread" => $arrRead));
     if (isset ($_GET['step']) && $_GET['step'] == 'clear') 
     {
-        $db -> Execute("DELETE FROM mail WHERE owner=".$player -> id." AND zapis='N' AND send=0");
+        $db -> Execute("DELETE FROM `mail` WHERE `owner`=".$player -> id." AND `saved`='N'");
         error (MAIL_DEL.". (<a href=mail.php?view=inbox>".A_REFRESH."</a>)");
     }
 }
 
-if (isset ($_GET['view']) && $_GET['view'] == 'zapis') 
+if (isset ($_GET['view']) && $_GET['view'] == 'saved') 
 {
-    $objSort = $db->Execute("SELECT `sender`, `senderid` FROM `mail`  WHERE `owner`=".$player->id." AND `zapis`='Y' GROUP BY `senderid` ASC");
+    $objSort = $db->Execute("SELECT `sender`, `senderid` FROM `mail`  WHERE `owner`=".$player->id." AND `saved`='Y' GROUP BY `senderid` ASC");
     $arrSendersid = array();
     $arrSenders = array();
     while (!$objSort->EOF) 
@@ -264,7 +259,7 @@ if (isset ($_GET['view']) && $_GET['view'] == 'zapis')
     $objSort->Close();
 
     //Pagination
-    $objAmount = $db->Execute("SELECT count(`id`) FROM `mail` WHERE `owner`=".$player -> id." AND `zapis`='Y' AND `send`=0".$strQuery);
+    $objAmount = $db->Execute("SELECT count(`id`) FROM `mail` WHERE `owner`=".$player -> id." AND `saved`='Y'".$strQuery." GROUP BY `topic`");
     $intPages = ceil($objAmount->fields['count(`id`)'] / 30);
     $objAmount->Close();
     if (!isset($intPage))
@@ -272,7 +267,7 @@ if (isset ($_GET['view']) && $_GET['view'] == 'zapis')
 	$intPage = 1;
       }
 
-    $mail = $db->SelectLimit("SELECT * FROM `mail` WHERE `owner`=".$player -> id." AND `zapis`='Y'".$strQuery." ORDER BY id DESC", 30, 30 * ($intPage - 1));
+    $mail = $db->SelectLimit("SELECT * FROM (SELECT * FROM `mail` WHERE `owner`=".$player -> id." AND `saved`='Y'".$strQuery." ORDER BY `id` ASC) AS s GROUP BY `topic`", 30, 30 * ($intPage - 1));
     $arrsender = array();
     $arrsenderid = array();
     $arrsubject = array();
@@ -318,80 +313,8 @@ if (isset ($_GET['view']) && $_GET['view'] == 'zapis')
                             "Moption" => M_OPTION));
     if (isset ($_GET['step']) && $_GET['step'] == 'clear') 
     {
-        $db -> Execute("DELETE FROM mail WHERE owner=".$player -> id." AND zapis='Y'");
+        $db -> Execute("DELETE FROM `mail` WHERE `owner`=".$player -> id." AND `saved`='Y'");
         error (MAIL_DEL.". (<a href=mail.php?view=zapis>".A_REFRESH."</a>)");
-    }
-}
-
-if (isset ($_GET['view']) && $_GET['view'] == 'send') 
-{
-    $objSort = $db->Execute("SELECT `send` FROM `mail`  WHERE `owner`=".$player->id." AND `send`!=0 GROUP BY `send` ASC");
-    $arrSendersid = array();
-    $arrSenders = array();
-    while (!$objSort->EOF) 
-      {
-	$arrSendersid[] = $objSort->fields['send'];
-	$objName = $db->Execute("SELECT `user` FROM `players` WHERE `id`=".$objSort->fields['send']);
-	$arrSenders[] = $objName->fields['user'];
-	$objName->Close();
-	$objSort->MoveNext();
-      }
-    $objSort->Close();
-
-    //Pagination
-    $objAmount = $db->Execute("SELECT count(`id`) FROM `mail` WHERE `send`!=0 AND `owner`=".$player->id.$strQuery);
-    $intPages = ceil($objAmount->fields['count(`id`)'] / 30);
-    $objAmount->Close();
-    if (!isset($intPage))
-      {
-	$intPage = 1;
-      }
-
-    $mail = $db->SelectLimit("SELECT * FROM mail WHERE send!=0 AND owner=".$player->id.$strQuery." ORDER BY id DESC", 30, 30 * ($intPage - 1));
-    $arrsend = array();
-    $arrsubject = array();
-    $arrid = array();
-    $i = 0;
-    while (!$mail -> EOF) 
-    {
-        $arrsend[$i] = $mail -> fields['send'];
-        $arrsubject[$i] = $mail -> fields['subject'];
-        $arrid[$i] = $mail -> fields['id'];
-        $mail -> MoveNext();
-        $i = $i + 1;
-    }
-    $mail -> Close();
-    $smarty -> assign(array("Send1" => $arrsend, 
-                            "Subject" => $arrsubject, 
-                            "Mailid" => $arrid,
-                            "Aclear" => A_CLEAR,
-                            "Sto" => S_TO,
-                            "Mtitle" => M_TITLE,
-                            "Aread" => A_READ,
-                            "Aback" => A_BACK,
-                            "Adeleteold" => A_DELETE_OLD,
-                            "Aweek" => A_WEEK,
-                            "A2week" => A_2WEEK,
-                            "Amonth" => A_MONTH,
-			    "Asort" => "Sortuj",
-			    "Sall" => "Wszyscy",
-			    "Sall2" => "Bez ograniczeń",
-			    "Senders" => $arrSenders,
-			    "Sendersid" => $arrSendersid,
-			    "Tsender" => "Odbiorca",
-			    "Ttime" => "Okres",
-			    "Tlastweek" => "Ostatni tydzień",
-			    "Tlastmonth" => "Ostatni miesiąc",
-			    "Toldest" => "Starsze niż miesiąc",
-			    "Tpages" => $intPages,
-			    "Tpage" => $intPage,
-			    "Fpage" => "Idź do strony:",
-			    "Lpage" => $strPage,
-                            "Moption" => M_OPTION));
-    if (isset ($_GET['step']) && $_GET['step'] == 'clear') 
-    {
-        $db -> Execute("DELETE FROM mail WHERE send!=0 AND owner=".$player -> id);
-        error (MAIL_DEL.". (<a href=mail.php?view=send>".A_REFRESH."</a>)");
     }
 }
 
@@ -421,27 +344,7 @@ if (isset ($_GET['view']) && $_GET['view'] == 'write')
       {
         $_GET['to'] = '';
       }
-    if (!isset ($_GET['re'])) 
-    {
-        $_GET['re'] = '';
-    }
-    $body = '';
-    if (!empty ($_GET['id'])) 
-    {
-	checkvalue($_GET['id']);
-        $mail = $db -> Execute("SELECT `body`, `owner`, `sender` FROM `mail` WHERE `id`=".$_GET['id']);
-        if ($mail -> fields['owner'] != $player -> id) 
-        {
-            error(NOT_YOUR);
-        }
-        require_once('includes/bbcode.php');
-        $postbody = htmltobbcode($mail -> fields['body']);
-        $body = "Gracz ".$mail -> fields['sender']." napisał(a):[quote]".$postbody."[/quote]";
-        $mail -> Close();
-    }
     $smarty -> assign(array("To" => $_GET['to'], 
-                            "Reply" => $_GET['re'], 
-                            "Body" => $body,
                             "Sto" => S_TO,
                             "Mtitle" => M_TITLE,
                             "Mbody" => M_BODY,
@@ -455,15 +358,19 @@ if (isset ($_GET['view']) && $_GET['view'] == 'write')
 	    checkvalue($_POST['player']);
 	    $_POST['to'] = $_POST['player'];
 	  }
-        if (empty ($_POST['to']) || empty ($_POST['body'])) 
+	else
+	  {
+	    checkvalue($_POST['to']);
+	  }
+	$_POST['subject'] = strip_tags($_POST['subject']);
+        if (empty ($_POST['to']) || empty ($_POST['body']) || empty($_POST['subject'])) 
         {
             error (EMPTY_FIELDS);
         }
-        if (empty ($_POST['subject'])) 
-        {
-            $_POST['subject'] = "Brak";
-        }
-	checkvalue($_POST['to']);
+	if (isset($_POST['topic']))
+	  {
+	    checkvalue($_POST['topic']);
+	  }
         $rec = $db -> Execute("SELECT `id`, `user` FROM `players` WHERE `id`=".$_POST['to']);
         if (!$rec -> fields['id']) 
         {
@@ -479,84 +386,121 @@ if (isset ($_GET['view']) && $_GET['view'] == 'write')
             error(YOU_CANNOT);
         }
         $objBan -> Close();
-        $_POST['subject'] = strip_tags($_POST['subject']);
         require_once('includes/bbcode.php');
         $_POST['body'] = bbcodetohtml($_POST['body']);
         $strBody = $db -> qstr($_POST['body'], get_magic_quotes_gpc());
         $strSubject = $db -> qstr($_POST['subject'], get_magic_quotes_gpc());
         $strDate = $db -> DBDate($newdate);
-        $db -> Execute("INSERT INTO mail (sender, senderid, owner, subject, body, date) VALUES('".$player -> user."','".$player -> id."',".$_POST['to'].", ".$strSubject." , ".$strBody.", ".$strDate.")");
-        $db -> Execute("INSERT INTO mail (sender, senderid, owner, subject, body,  send, date) VALUES('".$player -> user."','".$player -> id."',".$player -> id.", ".$strSubject.", ".$strBody.",".$_POST['to'].", ".$strDate.")");
+	if (!isset($_POST['topic']))
+	  {
+	    $objTopic = $db->Execute("SELECT max(`topic`) FROM `mail`");
+	    $_POST['topic'] = $objTopic->fields['max(`topic`)'] + 1;
+	    $objTopic->Close();
+	    $strUnread = 'F';
+	  }
+	else
+	  {
+	    $strUnread = 'T';
+	    $objId = $db->Execute("SELECT min(`id`) FROM `mail` WHERE `owner`=".$_POST['to']." AND `topic`=".$_POST['topic']);
+	    $db->Execute("UPDATE `mail` SET `unread`='F' WHERE `id`=".$objId->fields['min(`id`)']);
+	    $objId->Close();
+	  }
+	$db -> Execute("INSERT INTO mail (`sender`, `senderid`, `owner`, `subject`, `body`, `date`, `topic`, `unread`) VALUES('".$player -> user."','".$player -> id."',".$_POST['to'].", ".$strSubject." , ".$strBody.", ".$strDate.", ".$_POST['topic'].", '".$strUnread."')");
+	$db -> Execute("INSERT INTO mail (`sender`, `senderid`, `owner`, `subject`, `body`, `date`, `unread`, `topic`) VALUES('".$player -> user."','".$player -> id."',".$player -> id.", ".$strSubject.", ".$strBody.", ".$strDate.", 'T', ".$_POST['topic'].")");
         error (YOU_SEND.$rec -> fields['user'].".");
     }
 }
 
+/**
+ * Read selected message/topic
+ */
 if (isset ($_GET['read'])) 
 {
     checkvalue($_GET['read']);
-    $mail = $db -> Execute("SELECT * FROM mail WHERE id=".$_GET['read']);
-    if (!$mail -> fields['id']) 
-    {
-        error (NO_MAIL);
-    }
-    if ($mail -> fields['owner'] != $player -> id) 
-    {
-        error (NOT_YOUR);
-    }
-    $db -> Execute("UPDATE mail SET unread='T' WHERE id=".$mail -> fields['id']);
-    if ($mail -> fields['date'])
-    {
-        $strDay = T_DAY.$mail -> fields['date'];
-    }
-        else
-    {
-        $strDay = '';
-    }
-    $smarty -> assign(array("Sender" => $mail -> fields['sender'], 
-                            "Body" => $mail -> fields['body'], 
-                            "Mailid" => $mail -> fields['id'], 
-                            "Senderid" => $mail -> fields['senderid'], 
-                            "Subject" => $mail -> fields['subject'],
+    $intReceiver = 0;
+    $db -> Execute("UPDATE `mail` SET `unread`='T' WHERE `topic`=".$_GET['read']." AND `owner`=".$player->id);
+    $arrSender = array();
+    $arrSenderid = array();
+    $arrMid = array();
+    $arrBody = array();
+    $arrDate = array();
+    if (!isset($_GET['one']))
+      {
+	$objMails = $db->Execute("SELECT * FROM `mail` WHERE `topic`=".$_GET['read']." AND `owner`=".$player->id." ORDER BY `id` ASC");
+	$_GET['one'] = 0;
+      }
+    else
+      {
+	$objMails = $db->Execute("SELECT * FROM `mail` WHERE `id`=".$_GET['read']." AND `owner`=".$player->id);
+	$_GET['one'] = 1;
+      }
+    if (!$objMails->fields['id'])
+      {
+	error("Nie ma takiej wiadomości.");
+      }
+    $strSubject = $objMails->fields['subject'];
+    while (!$objMails->EOF)
+      {
+	if ($intReceiver == 0 && $objMails->fields['senderid'] != $player->id)
+	  {
+	    $intReceiver = $objMails->fields['senderid'];
+	  }
+	$arrSender[] = $objMails->fields['sender'];
+	$arrSenderid[] = $objMails->fields['senderid'];
+	$arrMid[] = $objMails->fields['id'];
+	$arrBody[] = $objMails->fields['body'];
+	$arrDate[] = T_DAY.$objMails->fields['date'];
+	$objMails->MoveNext();
+      }
+    $objMails->Close();
+    $smarty -> assign(array("Senders" => $arrSender,
+			    "Sendersid" => $arrSenderid,
+			    "Mailsid" => $arrMid,
+			    "Bodies" => $arrBody,
+			    "Date2" => $arrDate,
+			    "Mtopic" => $_GET['read'],
+			    "Receiver" => $intReceiver,
+			    "Subject" => $strSubject,
+			    "One" => $_GET['one'],
                             "Asave" => A_SAVE,
                             "Adelete" => A_DELETE,
-                            "Areply" => A_REPLY,
                             "Twrite" => T_WRITE,
-                            "Asend" => A_SEND,
+                            "Asend2" => A_SEND,
                             "Ablock" => A_BLOCK,
+			    "Asaved" => "Oznaczone",
+			    "Amail" => "Poczta",
 			    "Topic" => "Temat",
-                            "Tday" => $strDay));
-    $mail -> Close();
+			    "Asend" => "Odpisz",
+			    "Mhelp" => "Linki automatycznie zamieniane są na klikalne. Możesz używać następujących znaczników BBCode:<br /><ul><li>[b]<b>Pogrubienie</b>[/b]</li><li>[i]<i>Kursywa</i><[/i]</li><li>[u]<u>Podkreślenie</u>[/u]</li><li>[color (angielska nazwa koloru (red, yellow, itp) lub kod HTML (#FFFF00, itp)]pokolorowanie tekstu[/color]</li><li>[center]wycentrowanie tekstu[/center]</li><li>[quote]cytat[/quote]</ul>"));
 }
 
+/**
+ * Mark selected message
+ */
 if (isset ($_GET['zapisz'])) 
 {
     checkvalue($_GET['zapisz']);
-    $mail = $db -> Execute("SELECT id, owner FROM mail WHERE id=".$_GET['zapisz']);
+    $mail = $db -> Execute("SELECT `id`, `topic` FROM `mail` WHERE `id`=".$_GET['zapisz']." AND `owner`=".$player->id);
     if (!$mail -> fields['id']) 
     {
         error (NO_MAIL);
     }
-    if ($mail -> fields['owner'] != $player -> id) 
-    {
-        error (NOT_YOUR);
-    }
-    $db -> Execute("UPDATE mail SET zapis='Y' WHERE id=".$_GET['zapisz']);
+    $db -> Execute("UPDATE `mail` SET `saved`='Y' WHERE `id`=".$_GET['zapisz']);
     error (MAIL_SAVE.". (<a href=mail.php>".A_REFRESH."</a>)");
 }
 
+/**
+ * Delete selected message
+ */
 if (isset ($_GET['kasuj'])) 
 {
     checkvalue($_GET['kasuj']);
-    $mail = $db -> Execute("SELECT id, owner FROM mail WHERE id=".$_GET['kasuj']);
+    $mail = $db -> Execute("SELECT `id` FROM `mail` WHERE `id`=".$_GET['kasuj']." AND `owner`=".$player->id);
     if (!$mail -> fields['id']) 
     {
         error (NO_MAIL);
     }
-    if ($mail -> fields['owner'] != $player -> id) 
-    {
-        error (NOT_YOUR);
-    }
-    $db -> Execute("DELETE FROM mail WHERE id=".$_GET['kasuj']);
+    $db->Execute("DELETE FROM `mail` WHERE `id`=".$_GET['kasuj']);
     error (MAIL_DEL.". (<a href=mail.php>".A_REFRESH."</a>)");
 }
 
@@ -595,14 +539,10 @@ if (isset ($_GET['send']))
         {
             error (NOT_STAFF);
         }
-        $arrmessage = $db -> Execute("SELECT * FROM `mail` WHERE `id`=".$_POST['mid']);
+        $arrmessage = $db -> Execute("SELECT * FROM `mail` WHERE `id`=".$_POST['mid']." AND `owner`=".$player->id);
         if (!$arrmessage -> fields['id']) 
         {
             error (NOT_MAIL);
-        }
-        if ($arrmessage -> fields['owner'] != $player -> id) 
-        {
-            error (NOT_YOUR);
         }
         $strDate = $db -> DBDate($newdate);
         $db -> Execute("INSERT INTO `log` (`owner`, `log`, `czas`, `type`) VALUES(".$arrtest -> fields['id'].",'".L_PLAYER."<a href=view.php?view=".$player -> id.">".$player -> user."</a>".L_ID.$player -> id.SEND_YOU.$arrmessage -> fields['sender'].L_ID.$arrmessage -> fields['senderid'].".', ".$strDate.", 'A')");
@@ -620,76 +560,39 @@ if (isset($_GET['step']) && $_GET['step'] == 'mail')
     {
         error(ERROR);
     }
-    $arrType = array('I', 'W', 'S');
-    if (!in_array($_GET['box'], $arrType))
-    {
-        error(ERROR);
-    }
-    if ($_GET['box'] == 'I')
-    {
-        $objMid = $db -> Execute("SELECT `id` FROM `mail` WHERE `owner`=".$player -> id." AND `zapis`='N' AND `send`=0");
-    }
-    if ($_GET['box'] == 'W')
-    {
-        $objMid = $db -> Execute("SELECT `id` FROM `mail` WHERE `owner`=".$player -> id." AND `zapis`='Y'");
-    }
-    if ($_GET['box'] == 'S')
-    {
-        $objMid = $db -> Execute("SELECT `id` FROM `mail` WHERE `send`!=0 AND `owner`=".$player -> id);
-    }
-    $arrId = array();
-    $i = 0;
+    $objMid = $db -> Execute("SELECT `id` FROM `mail` WHERE `owner`=".$player->id);
     while (!$objMid -> EOF)
-    {
-        $arrId[$i] = $objMid -> fields['id'];
-        $i = $i + 1;
+      {
+	if (isset($_POST['delete']) && isset($_POST[$objMid->fields['id']]))
+	  {
+	    $objTopic = $db->Execute("SELECT `topic` FROM `mail` WHERE `id`=".$objMid->fields['id']);
+	    $db->Execute("DELETE FROM `mail` WHERE `topic`=".$objTopic->fields['topic']);
+	    $objTopic->Close();
+	  }
+	elseif (isset($_POST['read2']) && isset($_POST[$objMid->fields['id']]))
+	  {
+	    $db->Execute("UPDATE `mail` SET `unread`='T' WHERE `id`=".$objMid->fields['id']);
+	  }
+	elseif (isset($_POST['unread']) && isset($_POST[$objMid->fields['id']]))
+	  {
+	    $db->Execute("UPDATE `mail` SET `unread`='F' WHERE `id`=".$objMid->fields['id']);
+	  }
         $objMid -> MoveNext();
-    }
+      }
     $objMid -> Close();
-    foreach ($arrId as $bid) 
-    {
-        if (isset($_POST['delete']))
-        {
-            if (isset($_POST[$bid])) 
-            {
-                $db -> Execute("DELETE FROM `mail` WHERE `id`=".$bid);
-            }
-        }
-        if (isset($_POST['write']))
-        {
-            if (isset($_POST[$bid])) 
-            {
-                $db -> Execute("UPDATE `mail` SET `zapis`='Y' WHERE `id`=".$bid);
-            }
-        }
-        if (isset($_POST['read2']))
-        {
-            if (isset($_POST[$bid])) 
-            {
-                $db -> Execute("UPDATE `mail` SET `unread`='T' WHERE `id`=".$bid);
-            }
-        }
-        if (isset($_POST['unread']))
-        {
-            if (isset($_POST[$bid])) 
-            {
-                $db -> Execute("UPDATE `mail` SET `unread`='F' WHERE `id`=".$bid);
-            }
-        }
-    }
     if (isset($_POST['delete']))
     {
         error(DELETED);
     }
-    if (isset($_POST['write']))
+    elseif (isset($_POST['write']))
     {
         error(SAVED);
     }
-    if (isset($_POST['read2']))
+    elseif (isset($_POST['read2']))
     {
         error(MARK_AS_READ);
     }
-    if (isset($_POST['unread']))
+    elseif (isset($_POST['unread']))
     {
         error(MARK_AS_UNREAD);
     }
@@ -700,7 +603,7 @@ if (isset($_GET['step']) && $_GET['step'] == 'mail')
  */
 if (isset($_GET['step']) && $_GET['step'] == 'deleteold')
 {
-    $arrType = array('I', 'W', 'S');
+    $arrType = array('I', 'W');
     $arrAmount = array(7, 14, 30);
     if (!in_array($_GET['box'], $arrType) || !in_array($_POST['oldtime'], $arrAmount))
     {
@@ -724,15 +627,11 @@ if (isset($_GET['step']) && $_GET['step'] == 'deleteold')
     $strDate = $db -> DBDate($strDate);
     if ($_GET['box'] == 'I')
     {
-        $db -> Execute("DELETE FROM `mail` WHERE `owner`=".$player -> id." AND `zapis`='N' AND `send`=0 AND `date`<".$strDate);
+        $db -> Execute("DELETE FROM `mail` WHERE `owner`=".$player->id." AND `saved`='N' AND `date`<".$strDate);
     }
-    if ($_GET['box'] == 'W')
+    elseif ($_GET['box'] == 'W')
     {
-        $db -> Execute("DELETE FROM `mail` WHERE `owner`=".$player -> id." AND `zapis`='Y' AND `date`<".$strDate);
-    }
-    if ($_GET['box'] == 'S')
-    {
-        $db -> Execute("DELETE FROM `mail` WHERE `send`!=0 AND `owner`=".$player -> id." AND `date`<".$strDate);
+        $db -> Execute("DELETE FROM `mail` WHERE `owner`=".$player->id." AND `saved`='Y' AND `date`<".$strDate);
     }
     error(DELETED2);
 }

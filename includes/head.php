@@ -7,7 +7,7 @@
  *   @copyright            : (C) 2004,2005,2006,2007,2011 Vallheru Team based on Gamers-Fusion ver 2.5
  *   @author               : thindil <thindil@tuxfamily.org>
  *   @version              : 1.4
- *   @since                : 22.11.2011
+ *   @since                : 30.11.2011
  *
  */
 
@@ -579,11 +579,11 @@ switch($player->location)
     break;
   }
 
-$unread = $db -> Execute("SELECT `id` FROM `mail` WHERE `owner`=".$player -> id." AND `zapis`='N' AND `unread`='F' AND `send`=0 ORDER BY `id` DESC");
+$unread = $db -> Execute("SELECT `topic` FROM `mail` WHERE `owner`=".$player -> id." AND `unread`='F' ORDER BY `id` DESC");
 $intUnreadmails = $unread->RecordCount();
 if ($intUnreadmails)
   {
-    $strUnread = '<a href="mail.php?read='.$unread->fields['id'].'"><blink>'.$intUnreadmails.'</blink></a>';
+    $strUnread = '<a href="mail.php?read='.$unread->fields['topic'].'"><blink>'.$intUnreadmails.'</blink></a>';
     $strMailadd = '?view=inbox';
   }
  else

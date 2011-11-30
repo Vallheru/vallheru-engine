@@ -7,7 +7,7 @@
  *   @copyright            : (C) 2004,2005,2006,2007,2011 Vallheru Team based on Gamers-Fusion ver 2.5
  *   @author               : thindil <thindil@tuxfamily.org>
  *   @version              : 1.4
- *   @since                : 07.11.2011
+ *   @since                : 30.11.2011
  *
  */
 
@@ -52,12 +52,11 @@ define("MARK_AS_UNREAD", "Wybrane wiadomości zostały oznaczone jako nieprzeczy
 if (!isset($_GET['view']) && !isset($_GET['read']) && !isset($_GET['zapisz']) && !isset($_GET['kasuj']))
 {
     define("MAIL_INFO", "Co chcesz zrobić?");
-    define("A_SAVED", "Zapisane");
-    define("A_OUTBOX", "Wysłane");
+    define("A_SAVED", "Oznaczone");
     define("A_BLOCK_LIST", "Lista zablokowanych");
 }
 
-if (isset($_GET['view']) && ($_GET['view'] == 'inbox' || $_GET['view'] == 'zapis')) 
+if (isset($_GET['view']) && ($_GET['view'] == 'inbox' || $_GET['view'] == 'saved')) 
 {
     define("FROM", "Od");
     define("S_ID", "ID");
@@ -69,22 +68,12 @@ if (isset($_GET['view']) && ($_GET['view'] == 'inbox' || $_GET['view'] == 'zapis
 if (isset ($_GET['view']) && $_GET['view'] == 'inbox')
 {
     define("A_CLEAR", "Wyczyść Skrzynkę");
-    define("A_SAVED", "Zapisane");
+    define("A_SAVED", "Oznaczone");
 }
 
-if (isset ($_GET['view']) && $_GET['view'] == 'zapis')
+if (isset ($_GET['view']) && $_GET['view'] == 'saved')
 {
     define("A_CLEAR", "Wykasuj zapisane listy");
-}
-
-if (isset ($_GET['view']) && $_GET['view'] == 'send') 
-{
-    define("S_TO", "Do");
-    define("M_TITLE", "Tytuł");
-    define("M_OPTION", "Opcje");
-    define("A_READ", "Czytaj");
-    define("A_CLEAR", "Wykasuj wysłane listy");
-    define("A_BACK", "Wróć");
 }
 
 if (isset ($_GET['view']) && $_GET['view'] == 'write') 
@@ -103,15 +92,14 @@ if (isset ($_GET['view']) && $_GET['view'] == 'write')
 
 if (isset ($_GET['read']) || isset ($_GET['zapisz']) || isset ($_GET['kasuj'])) 
 {
-    define("NO_MAIL", "Nie ta wiadomość.");
-    define("NOT_YOUR", "To nie twój list.");
-    define("MAIL_SAVE", "<br />Zapisano list");
-    define("MAIL_DEL2", "<br />Usunięto list");
+    define("NO_MAIL", "Nie ma takiej wiadomości.");
+    define("MAIL_SAVE", "<br />Oznaczono wiadomość");
+    define("MAIL_DEL2", "<br />Usunięto wiadomość");
 }
 
 if (isset ($_GET['read'])) 
 {
-    define("A_SAVE", "Zapisz");
+    define("A_SAVE", "Oznacz");
     define("A_DELETE", "Skasuj");
     define("A_REPLY", "Odpisz");
     define("A_SEND", "Wyślij do władcy lub księcia");
