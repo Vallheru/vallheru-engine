@@ -8,7 +8,7 @@
  *   @author               : thindil <thindil@tuxfamily.org>
  *   @author               : eyescream <tduda@users.sourceforge.net>
  *   @version              : 1.4
- *   @since                : 18.11.2011
+ *   @since                : 30.11.2011
  *
  */
 
@@ -746,11 +746,10 @@ if (isset ($_GET['action']) && $_GET['action'] == 'my')
                 {
                     $gainmagic = $maxmana;
                 }
-                if ($gainenergy > $player -> max_energy) 
-                {
-                    $gainenergy = $player -> max_energy;
-                }
-		$gainenergy = 4 * $gainenergy;
+                if ($gainenergy > ($player->max_energy * 0.75)) 
+		  {
+		    $gainenergy = ($player->max_energy * 0.75);
+		  }
                 $db -> Execute("UPDATE `players` SET `hp`=".$gainlife.", `energy`=`energy`+".$gainenergy.", `pm`=".$gainmagic." WHERE `id`=".$player -> id);
                 $intGainlife = $gainlife - $player -> hp;
                 $intGainmagic = $gainmagic - $player -> mana;
