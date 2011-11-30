@@ -167,6 +167,16 @@
 	<br /><br />
     {/section}
     {if $One == 0}
+        {if $Tpages > 1}
+    	    <br />{$Fpage}
+    	    {for $page = 1 to $Tpages}
+	        {if $page == $Tpage}
+	            {$page}
+	        {else}
+                    <a href="mail.php?read={$Read}&page={$page}">{$page}</a>
+	        {/if}
+    	    {/for}
+        {/if}
         <form method="post" action="mail.php?view=write&amp;step=send">
             <textarea name="body" rows="13" cols="55"></textarea><br />
             <input type="hidden" name="topic" value="{$Mtopic}" />

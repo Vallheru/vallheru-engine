@@ -424,13 +424,25 @@ if (isset ($_GET['read']))
     $arrMid = array();
     $arrBody = array();
     $arrDate = array();
+
     if (!isset($_GET['one']))
       {
-	$objMails = $db->Execute("SELECT * FROM `mail` WHERE `topic`=".$_GET['read']." AND `owner`=".$player->id." ORDER BY `id` ASC");
+	//Pagination
+	$objAmount = $db->Execute("SELECT count(`id`) FROM `mail` WHERE `owner`=".$player->id.$strQuery." AND `topic`=".$_GET['read']);
+	$intPages = ceil($objAmount->fields['count(`id`)'] / 20);
+	$objAmount->Close();
+	if (!isset($intPage))
+	  {
+	    $intPage = $intPages;
+	  }
+	
+	$objMails = $db->SelectLimit("SELECT * FROM `mail` WHERE `topic`=".$_GET['read']." AND `owner`=".$player->id." ORDER BY `id` ASC", 20, 20 * ($intPage - 1));
 	$_GET['one'] = 0;
       }
     else
       {
+	$intPage = 0;
+	$intPages = 0;
 	$objMails = $db->Execute("SELECT * FROM `mail` WHERE `id`=".$_GET['read']." AND `owner`=".$player->id);
 	$_GET['one'] = 1;
       }
@@ -471,6 +483,9 @@ if (isset ($_GET['read']))
 			    "Amail" => "Poczta",
 			    "Topic" => "Temat",
 			    "Asend" => "Odpisz",
+			    "Tpages" => $intPages,
+			    "Tpage" => $intPage,
+			    "Fpage" => "Idź do strony:",
 			    "Mhelp" => "Linki automatycznie zamieniane są na klikalne. Możesz używać następujących znaczników BBCode:<br /><ul><li>[b]<b>Pogrubienie</b>[/b]</li><li>[i]<i>Kursywa</i><[/i]</li><li>[u]<u>Podkreślenie</u>[/u]</li><li>[color (angielska nazwa koloru (red, yellow, itp) lub kod HTML (#FFFF00, itp)]pokolorowanie tekstu[/color]</li><li>[center]wycentrowanie tekstu[/center]</li><li>[quote]cytat[/quote]</ul>"));
 }
 
