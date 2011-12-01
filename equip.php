@@ -7,7 +7,7 @@
  *   @copyright            : (C) 2004,2005,2006,2007,2011 Vallheru Team based on Gamers-Fusion ver 2.5
  *   @author               : thindil <thindil@tuxfamily.org>
  *   @version              : 1.4
- *   @since                : 25.11.2011
+ *   @since                : 01.12.2011
  *
  */
 
@@ -812,7 +812,7 @@ if (isset($_GET['napraw_uzywane']))
 	    $intCost = ceil($rzecz_wiersz->fields['repair'] * (1 - $rzecz_wiersz->fields['wt'] / $rzecz_wiersz->fields['maxwt']));
             if ($intCost > $player->credits) 
 	      {
-                error ("Nie stać Ciebie na naprawę ekwipunku.");
+                error ("Nie stać Cię na naprawę ekwipunku.");
 	      }
             $player->credits = $player->credits - $intCost;
             $db -> Execute("UPDATE `equipment` SET `wt`=".$rzecz_wiersz -> fields['maxwt']." WHERE `id`=".$rzecz_wiersz -> fields['id']);
