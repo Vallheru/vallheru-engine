@@ -7,7 +7,7 @@
  *   @copyright            : (C) 2004,2005,2006,2007,2011 Vallheru Team based on Gamers-Fusion ver 2.5
  *   @author               : thindil <thindil@tuxfamily.org>
  *   @version              : 1.4
- *   @since                : 23.08.2011
+ *   @since                : 01.11.2011
  *
  */
 
@@ -277,11 +277,7 @@ Wypełnij wszystkie pola!<br />
     <tr>
         <td>Rodzaj bazy danych:</td>
     <td>
-        <select name="dbtype">
-            <option value="mysql5">MySQL 5.0</option>
-            <option value="mysqli">MySQLi</option>
-            <option value="postgres">PostgresSQL</option>
-        </select>
+        MySQL
     </td>
     </tr>
     <tr>
@@ -388,20 +384,11 @@ if (isset($_GET['step']) && $_GET['step'] == 'install3')
 /**
 * Create file config.php
 */
-    $arrDBtype = array('mysql40', 'mysql50');
-    if (in_array($_POST['dbtype'], $arrDBtype))
-    {
-        $strDBtype = 'mysql';
-    }
-        else
-    {
-        $strDBtype = $_POST['dbtype'];
-    }
     print "Tworzenie pliku config.php...";
     $configtext = "<?php
 require_once('adodb/adodb.inc.php');
 \$ADODB_CACHE_DIR = './cache/';
-\$db = NewADOConnection('".$strDBtype."');
+\$db = NewADOConnection('mysqli');
 \$db -> Connect(\"".$_POST['dbhost']."\", \"".$_POST['dbuser']."\", \"".$_POST['dbpass']."\", \"".$_POST['dbname']."\");
 \$ADODB_FETCH_MODE = ADODB_FETCH_ASSOC;
 \$gamename= \"".$_POST['gamename']."\";
@@ -423,14 +410,7 @@ require_once('adodb/adodb.inc.php');
 * Create database
 */
     print "Tworzenie bazy danych...";
-    if ($_POST['dbtype'] == 'mysqli')
-    {
-        $strFile = 'db/mysql50.sql';
-    }
-        else
-    {
-        $strFile = "db/".$_POST['dbtype'].".sql";
-    }
+    $strFile = 'db/mysql.sql';
     $file = fopen($strFile, "rb");
     $sql_query = fread($file, filesize($strFile));
     fclose($file);
@@ -537,20 +517,11 @@ if (isset($_GET['step']) && $_GET['step'] == 'update2')
     /**
      * Modify file config.php
      */
-    $arrDBtype = array('mysql40', 'mysql50');
-    if (in_array($_POST['dbtype'], $arrDBtype))
-    {
-        $strDBtype = 'mysql';
-    }
-        else
-    {
-        $strDBtype = $_POST['dbtype'];
-    }
     print "Modyfikacja pliku config.php...";
     $configtext = "<?php
 require_once('adodb/adodb.inc.php');
 \$ADODB_CACHE_DIR = './cache/';
-\$db = NewADOConnection('".$strDBtype."');
+\$db = NewADOConnection('mysqli');
 \$db -> Connect(\"".$_POST['dbhost']."\", \"".$_POST['dbuser']."\", \"".$_POST['dbpass']."\", \"".$_POST['dbname']."\");
 \$ADODB_FETCH_MODE = ADODB_FETCH_ASSOC;
 \$gamename= \"".$_POST['gamename']."\";
@@ -578,17 +549,8 @@ require_once('adodb/adodb.inc.php');
     fclose($file);
     $pieces = array();
     splitschema($pieces, $sql_query);
-    $arrDBtype = array('mysql40', 'mysql41');
-    if (in_array($_POST['dbtype'], $arrDBtype))
-    {
-        $strDBtype = 'mysql';
-    }
-        else
-    {
-        $strDBtype = $_POST['dbtype'];
-    }
     require_once('../adodb/adodb.inc.php');
-    $db = NewADOConnection($strDBtype);
+    $db = NewADOConnection('mysqli');
     $db -> Connect($_POST['dbhost'], $_POST['dbuser'], $_POST['dbpass'], $_POST['dbname']) or die("Nie mogę połączyć się z bazą danych!");
     $amount = count($pieces);
     for ($i = 0; $i < $amount; $i ++) 
