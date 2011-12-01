@@ -7,7 +7,7 @@
  *   @copyright            : (C) 2004,2005,2006,2011 Vallheru Team based on Gamers-Fusion ver 2.5
  *   @author               : thindil <thindil@tuxfamily.org>
  *   @version              : 1.4
- *   @since                : 18.10.2011
+ *   @since                : 01.12.2011
  *
  */
 
@@ -526,7 +526,7 @@ if (isset($_POST['box13']) && $_POST['box13'] == '2')
     $objQuest -> Finish(10);
 }
 
-if ((isset($_POST['box13']) && $_POST['box13'] == '1') || $objAction -> fields['action'] == '1.2.3.2.1')
+if (((isset($_POST['box13']) && $_POST['box13'] == '1') || $objAction -> fields['action'] == '1.2.3.2.1') && !isset($_POST['box7']))
 {
     $objQuest -> Show('1.2.3.2.1');
     $objQuest -> Box(7);

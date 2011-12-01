@@ -1,3 +1,8 @@
+2011-12-01  Bartek thindil Jasicki  <thindil@tuxfamily.org>
+
+	* BUG,quests/quest6.php:
+	fixed bug with ending quest
+
 2011-11-30  Bartek thindil Jasicki  <thindil@tuxfamily.org>
 
 	* FEATURE,templates/layout1/mail.tpl, templates/mail.tpl, mail.php:
