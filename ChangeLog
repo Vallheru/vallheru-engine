@@ -1,5 +1,7 @@
 2011-12-01  Bartek thindil Jasicki  <thindil@tuxfamily.org>
 
+	* UPDATE,install/INSTALL: 
+	updated informations
 	* FEATURE,install/install.php: 
 	drop support for PostgreSQL
 	* FEATURE,templates/index.tpl, templates/head.php, index.php, register.php, main.css: 
