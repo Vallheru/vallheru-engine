@@ -7,7 +7,7 @@
  *   @copyright            : (C) 2004,2005,2006,2011 Vallheru Team based on Gamers-Fusion ver 2.5
  *   @author               : thindil <thindil@tuxfamily.org>
  *   @version              : 1.4
- *   @since                : 29.11.2011
+ *   @since                : 01.12.2011
  *
  */
  
@@ -83,12 +83,13 @@ else
                             "Gameadress" => $gameadress,
                             "Meta" => '',
                             "Welcome" => WELCOME,
-                            "Register" => REGISTER,
+                            "Register" => "Dołącz do nas",
                             "Rules" => RULES,
                             "Forums" => FORUMS,
                             "Irc" => IRC,
 			    "Help" => "Poradnik",
-			    "Donate" => "Dotuj nas"));
+			    "Donate" => "Dotuj nas",
+			    "Promote" => "Promocja gry"));
 
     $objOpengame = $db -> Execute("SELECT `value` FROM `settings` WHERE `setting`='open'");
     /**
@@ -326,6 +327,18 @@ else
 				  "Dmail" => "skontaktuj się z nami",
 				  "Dinfo3" => "wtedy przekażemy wszelkie potrzebne informacje do wykonania przelewu.",
 				  "Adminmail" => $adminmail));
+	    $smarty->display('index.tpl');
+	  }
+
+	/**
+	 * Promote game
+	 */
+	elseif ($_GET['step'] == 'promote')
+	  {
+	    $smarty->assign(array("Pagetitle" => "Promocja gry",
+				  "Step" => "promote",
+				  "Pinfo" => "Możesz wspomóc ".$gamename." poprzez promowanie jej wśród znajomych. Im więcej nas będzie bawić się w grze, tym sama zabawa będzie ciekawsza. Możliwości promocji gry jest kilka:",
+				  "Pinfo2" => "- Głosowanie na grę w toplistach. Wystarczy, że klikniesz raz dziennie w któryś z obrazków umieszczonych poniżej aby zagłosować na ".$gamename."."));
 	    $smarty->display('index.tpl');
 	  }
 	$db -> Close();

@@ -27,4 +27,9 @@
     <div class="text2">{$Dinfo}</div>
     <div class="text2">{$Dinfo2} <a href="mailto:{$Adminmail}">{$Dmail}</a> {$Dinfo3}</div>
 {/if}
+{if $Step == "promote"}
+    <div class="pagename">{$Pagetitle}</div>
+    <div class="text2">{$Pinfo}</div>
+    <div class="text2">{$Pinfo2}</div>
+{/if}
 {include file="foot.tpl"}

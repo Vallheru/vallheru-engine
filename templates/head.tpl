@@ -27,9 +27,12 @@
         <span class="login">{$Password}: <input type="password" name="pass" /></span>
         <span class="login2"><input type="submit" value="{$Login}" /></span>
     </div>
-    <div class="lostpass"><a href="index.php?step=lostpasswd">{$Lostpasswd}</a></div>
+    <div class="lostpass">
+        <a href="index.php?step=lostpasswd">{$Lostpasswd}</a><br />
+	<a href="register.php">{$Register}</a>
+    </div>
 </form>
 <div class="menu">[<a href="index.php">{$Welcome}</a>]</div>
-<div class="menu2">[<a href="register.php">{$Register}</a>]</div>
 <div class="menu2">[<a href="index.php?step=rules">{$Rules}</a>]</div>
 <div class="menu2">[<a href="index.php?step=donate">{$Donate}</a>]</div>
+<div class="menu2">[<a href="index.php?step=promote">{$Promote}</a>]<div>
