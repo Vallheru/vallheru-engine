@@ -1,16 +1,17 @@
 * {
   color: #FFFC9F;
-  font-family: "Lucida Sans Unicode","Lucida Grande",Verdana,sans-serif;
+  font-family: Verdana,sans-serif;
   font-size: 10pt;
 }
 
 input, textarea, select {
-  color: #FFFC9F;
-  background: black;
+  color: khaki;
+  background: #181818;
   border: solid dimgray 1px;
   margin-left: 10px;
   font-weight: bold;
   font-size: 8pt;
+  padding-left: 5px;
 }
 
 a {
@@ -107,6 +108,9 @@ div.news {
   width: 70%;
   padding: 10px;
   font-style: italic;
+  -webkit-border-radius: 10px;
+  -moz-border-radius: 15px;
+  border-radius: 15px;
 }
 
 div.news2 {

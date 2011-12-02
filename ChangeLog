@@ -1,5 +1,7 @@
 2011-12-02  Bartek thindil Jasicki  <thindil@tuxfamily.org>
 
+	* UPDATE,main.css: 
+	some redesign of main page
 	* BUG,index.php: 
 	fixed character encoding
 	* FEATURE,chat.php: 
