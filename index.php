@@ -7,7 +7,7 @@
  *   @copyright            : (C) 2004,2005,2006,2011 Vallheru Team based on Gamers-Fusion ver 2.5
  *   @author               : thindil <thindil@tuxfamily.org>
  *   @version              : 1.4
- *   @since                : 01.12.2011
+ *   @since                : 02.12.2011
  *
  */
  
@@ -128,6 +128,7 @@ else
                           "Registered" => REGISTERED,
                           "Metakeywords" => $objMetakey -> fields['value'],
                           "Metadescription" => $objMetadesc -> fields['value'],
+			  "Charset" => CHARSET,
                           "Ingame" => IN_GAME));
     $objMetakey -> Close();
     $objMetadesc -> Close();
@@ -174,7 +175,6 @@ else
                                 "Codex" => CODEX,
                                 "Codex2" => CODEX2,
                                 "News" => NEWS,
-                                "Charset" => CHARSET,
                                 "Codexdate" => $objCodexdate -> fields['date'],
                                 "Pagetitle" => WELCOME,
 				"Tonline" => "Grasują w okolicy:",
@@ -194,7 +194,6 @@ else
 	    $objRules = $db -> Execute("SELECT body FROM court WHERE title='".CODEX." ".$gamename."'");
 	    $smarty -> assign(array("Title" => PAGE_NAME,
 				    "Rules2" => $objRules -> fields['body'],
-				    "Charset" => CHARSET,
 				    "Pagetitle" => RULES));
 	    $smarty -> display('rules.tpl');
 	    $objRules -> Close();
@@ -280,7 +279,6 @@ else
 				    "Success" => SUCCESS,
 				    "Email" => EMAIL,
 				    "Send" => SEND,
-				    "Charset" => CHARSET,
 				    "Message" => $strMessage,
 				    "Pagetitle" => LOST_PASSWORD));
 	    $smarty -> display ('passwd.tpl');
@@ -309,8 +307,7 @@ else
 	    $db -> Execute("UPDATE `players` SET `email`='".$strEmail."' WHERE `email`='".$objTest -> fields['email']."' AND `id`=".$objTest -> fields['id']);
 	    $db -> Execute("DELETE FROM `lost_pass` WHERE `number`='".$strCode."' AND `newemail`='".$strEmail."' AND `id`=".$objTest -> fields['id']);
 	    $objTest -> Close();
-	    $smarty -> assign(array("Error" => MAIL_CHANGED,
-				    "Charset" => CHARSET));
+	    $smarty -> assign("Error", MAIL_CHANGED);
 	    $smarty -> display('error.tpl');
 	    exit;
 	  }
