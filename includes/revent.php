@@ -7,7 +7,7 @@
  *   @copyright            : (C) 2011 Vallheru Team based on Gamers-Fusion ver 2.5
  *   @author               : thindil <thindil@tuxfamily.org>
  *   @version              : 1.4
- *   @since                : 25.11.2011
+ *   @since                : 02.12.2011
  *
  */
 
@@ -87,7 +87,8 @@ elseif ($player->revent == 1)
 	}
       else
 	{
-	  $db->Execute("DELETE FROM `revent` WHERE `pid`=".$player->id);
+	  $intTime = rand(7, 18);
+	  $db->Execute("UPDATE `revent` SET `state`=5, `qtime`=".$intTime." WHERE `pid`=".$player->id);
 	  $strMessage = 'Mrucząc coś pod nosem o niewychowanej dzisiejszej młodzieży staruszek odchodzi.';
 	}
     }
