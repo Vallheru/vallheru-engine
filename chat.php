@@ -8,7 +8,7 @@
  *   @author               : thindil <thindil@tuxfamily.org>
  *   @author               : eyescream <tduda@users.sourceforge.net>
  *   @version              : 1.4
- *   @since                : 25.11.2011
+ *   @since                : 02.12.2011
  *
  */
 
@@ -56,6 +56,7 @@ if (isset ($_GET['action']) && $_GET['action'] == 'chat')
 	    $starter = $strAuthor;
 	    break;
 	  }
+	$starter = '<a href="view.php?view='.$player->id.'" target="_parent">'.$starter.'</a>';
         $czat = $db -> Execute("SELECT `gracz` FROM `chat_config` WHERE `gracz`=".$player -> id);
         if ($czat -> fields['gracz'])
         {

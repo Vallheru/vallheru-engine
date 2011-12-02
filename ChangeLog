@@ -1,5 +1,7 @@
 2011-12-02  Bartek thindil Jasicki  <thindil@tuxfamily.org>
 
+	* FEATURE,chat.php: 
+	added link to player profile
 	* UPDATE,includes/revent.php:
 	added break from event if player refuse
 
