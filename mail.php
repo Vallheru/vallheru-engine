@@ -577,7 +577,7 @@ if (isset($_GET['step']) && $_GET['step'] == 'mail')
 	if (isset($_POST['delete']) && isset($_POST[$objMid->fields['id']]))
 	  {
 	    $objTopic = $db->Execute("SELECT `topic` FROM `mail` WHERE `id`=".$objMid->fields['id']);
-	    $db->Execute("DELETE FROM `mail` WHERE `topic`=".$objTopic->fields['topic']);
+	    $db->Execute("DELETE FROM `mail` WHERE `topic`=".$objTopic->fields['topic']." AND `owner`=".$player->id);
 	    $objTopic->Close();
 	  }
 	elseif (isset($_POST['read2']) && isset($_POST[$objMid->fields['id']]))
