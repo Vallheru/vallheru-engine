@@ -8,7 +8,7 @@
  *   @author               : thindil <thindil@tuxfamily.org>
  *   @author               : eyescream <tduda@users.sourceforge.net>
  *   @version              : 1.4
- *   @since                : 02.12.2011
+ *   @since                : 03.12.2011
  *
  */
 
@@ -53,7 +53,7 @@ if (isset ($_GET['action']) && $_GET['action'] == 'chat')
 	    $starter = "<span style=\"color: #00ff00;\">".$strAuthor."</span>";
 	    break;
 	  default:
-	    $starter = $strAuthor;
+	    $starter = "<span style=\"color: #FFFC9F;\">".$strAuthor."</span>";
 	    break;
 	  }
 	$starter = '<a href="view.php?view='.$player->id.'" target="_parent">'.$starter.'</a>';
