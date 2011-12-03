@@ -30,6 +30,11 @@
 {if $Step == "promote"}
     <div class="pagename">{$Pagetitle}</div>
     <div class="text2">{$Pinfo}</div>
-    <div class="text2">{$Pinfo2}</div>
+    <div class="pagename">{$Pinfo2}</div>
+    <div class="pagename"><img src="images/vuserbar.gif" /></div>
+    <div class="pagename">{$Pinfo3}</div>
+    <div class="pagename"><img src="images/vbutton.png" /></div>
+    <div class="pagename">{$Pinfo4}</div>
+    <div class="pagename"><img src="images/vantipixel.png" /></div>
 {/if}
 {include file="foot.tpl"}

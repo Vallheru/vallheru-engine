@@ -334,8 +334,10 @@ else
 	  {
 	    $smarty->assign(array("Pagetitle" => "Promocja gry",
 				  "Step" => "promote",
-				  "Pinfo" => "Możesz wspomóc ".$gamename." poprzez promowanie jej wśród znajomych. Im więcej nas będzie bawić się w grze, tym sama zabawa będzie ciekawsza. Możliwości promocji gry jest kilka:",
-				  "Pinfo2" => "- Głosowanie na grę w toplistach. Wystarczy, że klikniesz raz dziennie w któryś z obrazków umieszczonych poniżej aby zagłosować na ".$gamename."."));
+				  "Pinfo" => "Możesz wspomóc ".$gamename." poprzez promowanie jej wśród znajomych. Im więcej nas będzie bawić się w grze, tym sama zabawa będzie ciekawsza. W tym celu przygotowaliśmy parę grafik:",
+				  "Pinfo2" => "- Userbar",
+				  "Pinfo3" => "- Przycisk (button) (100x51 pikseli)",
+				  "Pinfo4" => "- Anty-pixel"));
 	    $smarty->display('index.tpl');
 	  }
 	$db -> Close();
