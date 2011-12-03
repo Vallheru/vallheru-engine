@@ -7,7 +7,7 @@
  *   @copyright            : (C) 2004,2005,2006,2007,2011 Vallheru Team based on Gamers-Fusion ver 2.5
  *   @author               : thindil <thindil@tuxfamily.org>
  *   @version              : 1.4
- *   @since                : 30.11.2011
+ *   @since                : 03.12.2011
  *
  */
 
@@ -571,10 +571,6 @@ if (isset ($_GET['send']))
 */
 if (isset($_GET['step']) && $_GET['step'] == 'mail')
 {
-    if (!isset($_GET['box']))
-    {
-        error(ERROR);
-    }
     $objMid = $db -> Execute("SELECT `id` FROM `mail` WHERE `owner`=".$player->id);
     while (!$objMid -> EOF)
       {

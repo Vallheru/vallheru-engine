@@ -1,5 +1,7 @@
 2011-12-03  Bartek thindil Jasicki  <thindil@tuxfamily.org>
 
+	* BUG,mail.php: 
+	fixed bug with deleting messages
 	* FEATURE,templates/index.tpl, index.php, images/vbutton.png, images/vuserbar.gif, images/vantipixel.png: 
 	added few graphics
 	* UPDATE,battle.php: 
