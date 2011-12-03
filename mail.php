@@ -401,11 +401,14 @@ if (isset ($_GET['view']) && $_GET['view'] == 'write')
 	else
 	  {
 	    $strUnread = 'T';
+	  }
+	$db -> Execute("INSERT INTO mail (`sender`, `senderid`, `owner`, `subject`, `body`, `date`, `topic`, `unread`) VALUES('".$player -> user."','".$player -> id."',".$_POST['to'].", ".$strSubject." , ".$strBody.", ".$strDate.", ".$_POST['topic'].", '".$strUnread."')");
+	if (isset($_POST['topic']))
+	  {
 	    $objId = $db->Execute("SELECT min(`id`) FROM `mail` WHERE `owner`=".$_POST['to']." AND `topic`=".$_POST['topic']);
 	    $db->Execute("UPDATE `mail` SET `unread`='F' WHERE `id`=".$objId->fields['min(`id`)']);
 	    $objId->Close();
 	  }
-	$db -> Execute("INSERT INTO mail (`sender`, `senderid`, `owner`, `subject`, `body`, `date`, `topic`, `unread`) VALUES('".$player -> user."','".$player -> id."',".$_POST['to'].", ".$strSubject." , ".$strBody.", ".$strDate.", ".$_POST['topic'].", '".$strUnread."')");
 	$db -> Execute("INSERT INTO mail (`sender`, `senderid`, `owner`, `subject`, `body`, `date`, `unread`, `topic`) VALUES('".$player -> user."','".$player -> id."',".$player -> id.", ".$strSubject.", ".$strBody.", ".$strDate.", 'T', ".$_POST['topic'].")");
         error (YOU_SEND.$rec -> fields['user'].".");
     }
