@@ -31,10 +31,19 @@
     <div class="pagename">{$Pagetitle}</div>
     <div class="text2">{$Pinfo}</div>
     <div class="pagename">{$Pinfo2}</div>
-    <div class="pagename"><img src="images/vuserbar.gif" /></div>
+    <div class="pagename"><img src="images/vuserbar.gif" alt="Vallheru userbar" /></div>
+    <div align="center">http://vallheru.net/images/vuserbar.gif (adres)<br />
+    &lt;a href="http://vallheru.net">&lt;img src="http://vallheru.net/images/vuserbar.gif" border="0" alt="{$Gamename} RPG" /></a> (kod HTML)<br />
+    [url=http://vallheru.net][img=http://vallheru.net/images/vuserbar.gif][/url] (BBCode - do wklejenia na forach itd)</div>
     <div class="pagename">{$Pinfo3}</div>
-    <div class="pagename"><img src="images/vbutton.png" /></div>
+    <div class="pagename"><img src="images/vbutton.png" alt="Vallheru przycisk" /></div>
+    <div align="center">http://vallheru.net/images/vbutton.png (adres)<br />
+    &lt;a href="http://vallheru.net">&lt;img src="http://vallheru.net/images/vbutton.png" border="0" alt="{$Gamename} RPG" /></a> (kod HTML)<br />
+    [url=http://vallheru.net][img=http://vallheru.net/images/vbutton.png][/url] (BBCode - do wklejenia na forach itd)</div>
     <div class="pagename">{$Pinfo4}</div>
-    <div class="pagename"><img src="images/vantipixel.png" /></div>
+    <div class="pagename"><img src="images/vantipixel.png" alt="Vallheru antypixel" /></div>
+    <div align="center">http://vallheru.net/images/vantipixel.png (adres)<br />
+    &lt;a href="http://vallheru.net">&lt;img src="http://vallheru.net/images/vantipixel.png" border="0" alt="{$Gamename} RPG" /></a> (kod HTML)<br />
+    [url=http://vallheru.net][img=http://vallheru.net/images/vantipixel.png][/url] (BBCode - do wklejenia na forach itd)</div>
 {/if}
 {include file="foot.tpl"}
