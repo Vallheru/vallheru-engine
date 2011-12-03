@@ -38,10 +38,20 @@ $arrLanguage = array_diff($arrLanguage, array(".", "..", "index.htm"));
 /**
  * Add energy every 20 minutes
  */
-function energyreset()
+function energyreset($blnSmall = FALSE)
 {
   global $db;
+  if ($blnSmall)
+      {
+	$db -> Execute("UPDATE settings SET value='N' WHERE setting='open'");
+	$db -> Execute("UPDATE settings SET value='Przeliczanie energii' WHERE setting='close_reason'");
+      }
   $db->Execute("UPDATE `players` SET `energy`=`energy`+(`max_energy`/72) WHERE `miejsce`!='Lochy' AND `freeze`=0 AND `rasa`!='' AND `klasa`!='' AND `energy`<(21 * `max_energy`)");
+  if ($blnSmall)
+    {
+      $db -> Execute("UPDATE settings SET value='Y' WHERE setting='open'");
+      $db -> Execute("UPDATE settings SET value='' WHERE setting='close_reason'");
+    }
 }
 
 /**

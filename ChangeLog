@@ -1,5 +1,7 @@
 2011-12-03  Bartek thindil Jasicki  <thindil@tuxfamily.org>
 
+	* UPDATE,includes/resets.php, reset.php: 
+	added lock during adding energy
 	* BUG,stats.php: 
 	fixed bug with show max allowed energy
 	* BUG,css/light.css, chat.php: 
