@@ -56,7 +56,7 @@ if (isset ($_GET['action']) && $_GET['action'] == 'chat')
 	    $starter = $strAuthor;
 	    break;
 	  }
-	$starter = '<a class="chat" href="view.php?view='.$player->id.'" target="_parent">'.$starter.'</a>';
+	$starter = '<a href="view.php?view='.$player->id.'" target="_parent">'.$starter.'</a>';
         $czat = $db -> Execute("SELECT `gracz` FROM `chat_config` WHERE `gracz`=".$player -> id);
         if ($czat -> fields['gracz'])
         {
