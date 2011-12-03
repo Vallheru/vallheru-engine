@@ -7,7 +7,7 @@
  *   @copyright            : (C) 2004,2005,2006,2007,2011 Vallheru Team based on Gamers-Fusion ver 2.5
  *   @author               : thindil <thindil@tuxfamily.org>
  *   @version              : 1.4
- *   @since                : 30.11.2011
+ *   @since                : 03.12.2011
  *
  */
 
@@ -76,11 +76,6 @@ $smarty = new Smarty;
 
 $smarty-> compile_check = true;
 
-/**
-* Errors reporting level
-*/
-error_reporting(E_ALL);
-
 $numquery = 0;
 $sqltime = 0;
 
@@ -110,6 +105,12 @@ function &CountExecs($db, $sql, $inputarray)
 $db->fnExecute = 'CountExecs';
 
 /**
+* Errors reporting level
+*/
+error_reporting(E_ALL);
+ini_set('display_errors','On');
+
+/**
 * function to catch errors and write it to bugtrack
 */
 function catcherror($errortype, $errorinfo, $errorfile, $errorline) 
@@ -127,10 +128,7 @@ function catcherror($errortype, $errorinfo, $errorfile, $errorline)
     $referer = explode("/", $_SERVER['HTTP_REFERER']);
     $elements1 = count($referer);
     $numrefer = $elements1 - 1;
-    echo $errorline."<br />";
-    echo $errorfile."<br />";
-    echo $errorinfo."<br />";
-    /*$objtest = $db -> Execute("SELECT `id` FROM `bugtrack` WHERE `file`='".$file[$numfile]."' AND `line`=".$errorline." AND `info`='".$errorinfo."' AND `type`=".$errortype." AND `referer`='".$referer[$numrefer]."'");
+    $objtest = $db -> Execute("SELECT `id` FROM `bugtrack` WHERE `file`='".$file[$numfile]."' AND `line`=".$errorline." AND `info`='".$errorinfo."' AND `type`=".$errortype." AND `referer`='".$referer[$numrefer]."'");
     if ($objtest -> fields['id'] > 0)
       {
 	$db -> Execute("UPDATE `bugtrack` SET `amount`=`amount`+1 WHERE `id`=".$objtest -> fields['id']);
@@ -139,7 +137,7 @@ function catcherror($errortype, $errorinfo, $errorfile, $errorline)
       {
         $db -> Execute("INSERT INTO `bugtrack` (`type`, `info`, `file`, `line`, `referer`) VALUES(".$errortype.", '".$errorinfo."', '".$file[$numfile]."', ".$errorline.", '".$referer[$numrefer]."')");
       }
-      $objtest -> Close();*/
+    $objtest -> Close();
     if ($errortype == E_USER_ERROR || $errortype == E_ERROR) 
       {
         $smarty -> assign("Message", E_ERRORS);

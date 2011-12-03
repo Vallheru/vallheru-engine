@@ -1,5 +1,7 @@
 2011-12-03  Bartek thindil Jasicki  <thindil@tuxfamily.org>
 
+	* UPDATE,includes/head.php: 
+	fixed error handling
 	* BUG,chat.php:
 	fixed color on player name
 
