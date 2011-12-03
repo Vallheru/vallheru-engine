@@ -1,5 +1,7 @@
 2011-12-03  Bartek thindil Jasicki  <thindil@tuxfamily.org>
 
+	* BUG,includes/resets.php: 
+	fixed bug with gaining train points
 	* BUG,mail.php: 
 	another bug with deleting mails
 	* BUG,mail.php: 
