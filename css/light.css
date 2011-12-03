@@ -44,3 +44,9 @@ margin-bottom: 0px;
 margin-left: 0px;
 margin-right: 0px;
 }
+a.chat {
+text-decoration: none;
+text-transform: none;
+color: #FFFC9F;
+font-size: 11px;
+}

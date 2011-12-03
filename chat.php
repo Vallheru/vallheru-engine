@@ -53,10 +53,10 @@ if (isset ($_GET['action']) && $_GET['action'] == 'chat')
 	    $starter = "<span style=\"color: #00ff00;\">".$strAuthor."</span>";
 	    break;
 	  default:
-	    $starter = "<span style=\"color: #FFFC9F;\">".$strAuthor."</span>";
+	    $starter = $strAuthor;
 	    break;
 	  }
-	$starter = '<a href="view.php?view='.$player->id.'" target="_parent">'.$starter.'</a>';
+	$starter = '<a class="chat" href="view.php?view='.$player->id.'" target="_parent">'.$starter.'</a>';
         $czat = $db -> Execute("SELECT `gracz` FROM `chat_config` WHERE `gracz`=".$player -> id);
         if ($czat -> fields['gracz'])
         {
