@@ -8,7 +8,7 @@
  *   @author               : thindil <thindil@tuxfamily.org>
  *   @author               : mori <ziniquel@users.sourceforge.net>
  *   @version              : 1.4
- *   @since                : 03.10.2011
+ *   @since                : 03.12.2011
  *
  */
 
@@ -201,7 +201,7 @@ $smarty -> assign(array("Stats" => $arrStats,
                         "Miss" => $player -> miss."<br />", 
                         "Magic" => $player -> magic."<br />",
                         "PW" => $player -> pw."<br />",
-			"Energy" => $player->energy."/".$player->max_energy."/".($player->max_energy * 150)."<br />",
+			"Energy" => $player->energy."/".$player->max_energy."/".($player->max_energy * 21)."<br />",
                         "Total" => $player -> wins."/".$player -> losses."/".$rt."<br />", 
                         "Lastkilled" => $player -> lastkilled."<br />", 
                         "Lastkilledby" => $player -> lastkilledby,
