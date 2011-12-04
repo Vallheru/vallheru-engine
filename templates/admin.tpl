@@ -620,9 +620,9 @@
     </table>
     {if $Step != ""}
     	<b>{$Tloc}</b> {$Location}<br /><br />
+	<form method="post" action="admin.php?view={$View}&amp;step={$Step}&amp;confirm">
         <b>{$Tdesc}</b><br /><textarea name="desc">{$Desc}</textarea><br /><br />
 	<b>{$Tinfo}</b><br /><textarea name="info">{$Info}</textarea><br /><br />
-	<form method="post" action="admin.php?view={$View}&amp;step={$Step}&amp;confirm">
 	    <select name="response"><option value="A">{$Accepted}</option>
 	        <option value="R">{$Rejected}</option>
 	    </select><br />
