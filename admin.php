@@ -8,7 +8,7 @@
  *   @author               : thindil <thindil@tuxfamily.org>
  *   @author               : eyescream <tduda@users.sourceforge.net>
  *   @version              : 1.4
- *   @since                : 28.11.2011
+ *   @since                : 04.12.2011
  *
  */
  
@@ -1425,6 +1425,7 @@ if (isset($_GET['view']))
 				  "Asend" => "Wyślij",
 				  "Accepted" => "Zaakceptowany",
 				  "Rejected" => "Odrzucony",
+				  "Tvallars" => "Ilość vallarów",
 				  "Treason" => "Przyczyna"));
 	    if (isset($_GET['confirm']))
 	      {
@@ -1432,11 +1433,11 @@ if (isset($_GET['view']))
 		$strDate = $db -> DBDate($newdate);
 		if ($_POST['response'] == 'A')
 		  {
-		    $strMessage .= 'zaakceptowany. Dostałeś za to 1 Vallara.';
+		    $strMessage .= 'zaakceptowany. Dostałeś za to '.$_POST['valars'].' Vallara(y).';
 		    $strAuthor = '<b><a href="view.php?view='.$player -> id.'">'.$player -> user."</a></b>, ID <b>".$player -> id.'</b>';
 		    $db -> Execute("INSERT INTO `changelog` (`author`, `location`, `text`, `date`, `lang`) VALUES('".$strAuthor."', '".$objProposal->fields['name']."', 'Nowy opis lokacji autorstwa ID: ".$objProposal->fields['pid']."', ".$strDate.", 'pl')");
-		    $db->Execute("UPDATE `players` SET `vallars`=`vallars`+1 WHERE `id`=".$objProposal->fields['pid']);
-		    $db->Execute("INSERT INTO `vallars` (`owner`, `amount`, `reason`) VALUES(".$objProposal->fields['pid'].", 1, 'Opis lokacji.')");
+		    $db->Execute("UPDATE `players` SET `vallars`=`vallars`+".$_POST['valars']." WHERE `id`=".$objProposal->fields['pid']);
+		    $db->Execute("INSERT INTO `vallars` (`owner`, `amount`, `reason`) VALUES(".$objProposal->fields['pid'].", ".$_POST['valars'].", 'Opis lokacji.')");
 		    $strResult = "Zaakceptowałeś opis";
 		  }
 		else
@@ -1761,6 +1762,7 @@ if (isset($_GET['view']))
 				  "Asend" => "Wyślij",
 				  "Accepted" => "Zaakceptowany",
 				  "Rejected" => "Odrzucony",
+				  "Tvallars" => "Ilość vallarów",
 				  "Treason" => "Przyczyna"));
 	    if (isset($_GET['confirm']))
 	      {
@@ -1812,6 +1814,7 @@ if (isset($_GET['view']))
 				  "Asend" => "Wyślij",
 				  "Accepted" => "Zaakceptowany",
 				  "Rejected" => "Odrzucony",
+				  "Tvallars" => "Ilość vallarów",
 				  "Treason" => "Przyczyna"));
 	    if (isset($_GET['confirm']))
 	      {
@@ -1819,11 +1822,11 @@ if (isset($_GET['view']))
 		$strDate = $db -> DBDate($newdate);
 		if ($_POST['response'] == 'A')
 		  {
-		    $strMessage .= 'zaakceptowany. Dostałeś za to 1 Vallara.';
+		    $strMessage .= 'zaakceptowany. Dostałeś za to '.$_POST['valars'].' Vallara(y).';
 		    $strAuthor = '<b><a href="view.php?view='.$player -> id.'">'.$player -> user."</a></b>, ID <b>".$player -> id.'</b>';
 		    $db -> Execute("INSERT INTO `changelog` (`author`, `location`, `text`, `date`, `lang`) VALUES('".$strAuthor."', 'Gildia Łowców', 'Nowy opis potwora: ".$objProposal->fields['name']." autorstwa ID: ".$objProposal->fields['pid']."', ".$strDate.", 'pl')");
-		    $db->Execute("UPDATE `players` SET `vallars`=`vallars`+1 WHERE `id`=".$objProposal->fields['pid']);
-		    $db->Execute("INSERT INTO `vallars` (`owner`, `amount`, `reason`) VALUES(".$objProposal->fields['pid'].", 1, 'Opis potwora ".$objProposal->fields['name'].".')");
+		    $db->Execute("UPDATE `players` SET `vallars`=`vallars`+".$_POST['valars']." WHERE `id`=".$objProposal->fields['pid']);
+		    $db->Execute("INSERT INTO `vallars` (`owner`, `amount`, `reason`) VALUES(".$objProposal->fields['pid'].", ".$_POST['valars'].", 'Opis potwora ".$objProposal->fields['name'].".')");
 		    $db->Execute("UPDATE `monsters` SET `desc`='".$_POST['desc']."' WHERE `id`=".$_POST['info']);
 		    $strResult = "Zaakceptowałeś opis";
 		  }

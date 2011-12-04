@@ -624,6 +624,7 @@
 	    <select name="response"><option value="A">{$Accepted}</option>
 	        <option value="R">{$Rejected}</option>
 	    </select><br />
+	    {$Tvallars} <input type="text" name="valars" value="1" size="5" /><br />
 	    {$Treason} <textarea name="reason"></textarea><br />
 	    <input type="submit" value="{$Asend}" />
 	</form>
