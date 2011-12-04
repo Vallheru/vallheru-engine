@@ -158,7 +158,7 @@ function checkexp ($exp,$expgain,$level,$rasa,$user,$eid,$enemyid,$enemyuser,$pl
         {
             $pz = ($pz + 3);
         }
-        $energia = $energia + 0.3;
+        $energia = $energia + 2.1;
         $maxenergy = $energy -> fields['max_energy'] + $energia;
     }
     $energy -> Close();    
