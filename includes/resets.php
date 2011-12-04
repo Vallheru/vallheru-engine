@@ -7,7 +7,7 @@
  *   @copyright            : (C) 2004,2005,2006,2007,2011 Vallheru Team based on Gamers-Fusion ver 2.5
  *   @author               : thindil <thindil@tuxfamily.org>
  *   @version              : 1.4
- *   @since                : 03.12.2011
+ *   @since                : 04.12.2011
  *
  */
 
@@ -38,20 +38,10 @@ $arrLanguage = array_diff($arrLanguage, array(".", "..", "index.htm"));
 /**
  * Add energy every 20 minutes
  */
-function energyreset($blnSmall = FALSE)
+function energyreset()
 {
   global $db;
-  if ($blnSmall)
-      {
-	$db -> Execute("UPDATE settings SET value='N' WHERE setting='open'");
-	$db -> Execute("UPDATE settings SET value='Przeliczanie energii' WHERE setting='close_reason'");
-      }
   $db->Execute("UPDATE `players` SET `energy`=`energy`+(`max_energy`/72) WHERE `miejsce`!='Lochy' AND `freeze`=0 AND `rasa`!='' AND `klasa`!='' AND `energy`<(21 * `max_energy`)");
-  if ($blnSmall)
-    {
-      $db -> Execute("UPDATE settings SET value='Y' WHERE setting='open'");
-      $db -> Execute("UPDATE settings SET value='' WHERE setting='close_reason'");
-    }
 }
 
 /**

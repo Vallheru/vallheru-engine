@@ -7,7 +7,7 @@
  *   @copyright            : (C) 2004,2005,2006,2011 Vallheru Team based on Gamers-Fusion ver 2.5
  *   @author               : thindil <thindil@tuxfamily.org>
  *   @version              : 1.4
- *   @since                : 13.10.2011
+ *   @since                : 04.12.2011
  *
  */
 
@@ -160,10 +160,6 @@ function checkexp ($exp,$expgain,$level,$rasa,$user,$eid,$enemyid,$enemyuser,$pl
         }
         $energia = $energia + 0.3;
         $maxenergy = $energy -> fields['max_energy'] + $energia;
-        if ($maxenergy > 100) 
-        {
-            $maxenergy = 100;
-        }
     }
     $energy -> Close();    
     if ($poziom > 0) 
