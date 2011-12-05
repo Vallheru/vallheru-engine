@@ -57,7 +57,7 @@ define("T_DAY", "Dnia ");
 define("A_BLOCK", "Zablokuj/Odblokuj tego gracza");
 define("FROM", "Od");
 define("S_ID", "ID");
-define("M_TITLE", "Tytuł");
+define("M_TITLE", "Temat");
 define("A_READ", "Czytaj");
 define("M_OPTION", "Opcje");
 define("A_SAVED", "Oznaczone");
@@ -77,7 +77,6 @@ if (isset ($_GET['view']) && $_GET['view'] == 'write')
     define("NO_PLAYER", "Nie ma takiego gracza.");
     define("YOU_SEND", "Wysłałeś wiadomość do ");
     define("S_TO", "Do");
-    define("M_TITLE", "Temat");
     define("M_BODY", "Treść");
     define("A_SEND2", "Wyślij");
     define("YOURSELF", "Nie możesz wysyłać listu do samego siebie!");

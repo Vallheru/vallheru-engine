@@ -1,5 +1,7 @@
 2011-12-05  Bartek thindil Jasicki  <thindil@tuxfamily.org>
 
+	* BUG,languages/pl/mail.php: 
+	fixed notice
 	* BUG,bank.php: 
 	added check if thief is alive
 	* UPDATE,templates/layout1/message.tpl, templates/message.tpl, templates/layout1/mail.tpl, templates/mail.tpl, templates/layout1/layout1.css,
