@@ -7,7 +7,7 @@
  *   @copyright            : (C) 2004,2005,2006,2007,2011 Vallheru Team based on Gamers-Fusion ver 2.5
  *   @author               : thindil <thindil@tuxfamily.org>
  *   @version              : 1.4
- *   @since                : 03.12.2011
+ *   @since                : 05.12.2011
  *
  */
 
@@ -160,7 +160,7 @@ if (isset($_GET['view']) && in_array($_GET['view'], array('inbox', 'saved')))
  */
 if (isset ($_GET['view']) && $_GET['view'] == 'inbox') 
   {
-    $objSort = $db->Execute("SELECT `sender`, `senderid` FROM `mail`  WHERE `owner`=".$player -> id." GROUP BY `senderid` ASC");
+    $objSort = $db->Execute("SELECT `sender`, `senderid` FROM `mail`  WHERE `owner`=".$player -> id." AND `senderid`!=".$player->id." GROUP BY `senderid` ASC");
     $arrSendersid = array();
     $arrSenders = array();
     while (!$objSort->EOF) 
@@ -189,8 +189,16 @@ if (isset ($_GET['view']) && $_GET['view'] == 'inbox')
     $arrTopic = array();
     while (!$mail -> EOF) 
       {
-        $arrsender[] = $mail -> fields['sender'];
-        $arrsenderid[] = $mail -> fields['senderid'];
+	if ($mail->fields['senderid'] == $player->id && $mail->fields['to'] > 0)
+	  {
+	    $arrsenderid[] = $mail->fields['to'];
+	    $arrsender[] = $mail->fields['toname'];
+	  }
+	else
+	  {
+	    $arrsender[] = $mail -> fields['sender'];
+	    $arrsenderid[] = $mail -> fields['senderid'];
+	  }
         $arrsubject[] = $mail -> fields['subject'];
         $arrid[] = $mail -> fields['id'];
 	$arrTopic[] = $mail->fields['topic'];
@@ -210,7 +218,7 @@ if (isset ($_GET['view']) && $_GET['view'] == 'inbox')
                             "Subject" => $arrsubject, 
                             "Mailid" => $arrid,
                             "Aclear" => A_CLEAR,
-                            "From" => FROM,
+                            "From" => "Od/Do",
                             "Sid" => S_ID,
                             "Mtitle" => M_TITLE,
                             "Aread" => A_READ,
@@ -402,14 +410,14 @@ if (isset ($_GET['view']) && $_GET['view'] == 'write')
 	  {
 	    $strUnread = 'T';
 	  }
-	$db -> Execute("INSERT INTO mail (`sender`, `senderid`, `owner`, `subject`, `body`, `date`, `topic`, `unread`) VALUES('".$player -> user."','".$player -> id."',".$_POST['to'].", ".$strSubject." , ".$strBody.", ".$strDate.", ".$_POST['topic'].", '".$strUnread."')");
+	$db -> Execute("INSERT INTO mail (`sender`, `senderid`, `owner`, `subject`, `body`, `date`, `topic`, `unread`, `to`, `toname`) VALUES('".$player -> user."','".$player -> id."',".$_POST['to'].", ".$strSubject." , ".$strBody.", ".$strDate.", ".$_POST['topic'].", '".$strUnread."', ".$_POST['to'].", '".$rec->fields['user']."')");
 	if (isset($_POST['topic']))
 	  {
 	    $objId = $db->Execute("SELECT min(`id`) FROM `mail` WHERE `owner`=".$_POST['to']." AND `topic`=".$_POST['topic']);
 	    $db->Execute("UPDATE `mail` SET `unread`='F' WHERE `id`=".$objId->fields['min(`id`)']);
 	    $objId->Close();
 	  }
-	$db -> Execute("INSERT INTO mail (`sender`, `senderid`, `owner`, `subject`, `body`, `date`, `unread`, `topic`) VALUES('".$player -> user."','".$player -> id."',".$player -> id.", ".$strSubject.", ".$strBody.", ".$strDate.", 'T', ".$_POST['topic'].")");
+	$db -> Execute("INSERT INTO mail (`sender`, `senderid`, `owner`, `subject`, `body`, `date`, `unread`, `topic`, `to`, `toname`) VALUES('".$player -> user."','".$player -> id."',".$player -> id.", ".$strSubject.", ".$strBody.", ".$strDate.", 'T', ".$_POST['topic'].", ".$_POST['to'].", '".$rec->fields['user']."')");
         error (YOU_SEND.$rec -> fields['user'].".");
     }
 }

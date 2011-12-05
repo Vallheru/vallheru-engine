@@ -100,3 +100,9 @@ CREATE TABLE IF NOT EXISTS `revent` (
 ALTER TABLE `chat` ADD `sdate` TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP;
 UPDATE `players` SET `max_energy`=`max_energy`*7;
 ALTER TABLE `players` CHANGE `max_energy` `max_energy` DOUBLE( 11, 2 ) NOT NULL DEFAULT '70.00';
+ALTER TABLE `mail` DROP `send`;
+ALTER TABLE `mail` CHANGE `zapis` `saved` CHAR( 1 ) CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL DEFAULT 'N';
+ALTER TABLE `mail` ADD `topic` INT( 11 ) NOT NULL DEFAULT '1';
+ALTER TABLE `mail` DROP INDEX `zapis`, ADD INDEX `saved` ( `saved` );
+ALTER TABLE `mail` ADD `to` INT( 11 ) NOT NULL DEFAULT '0';
+ALTER TABLE `mail` ADD `toname` VARCHAR( 20 ) NOT NULL;
