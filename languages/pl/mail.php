@@ -7,7 +7,7 @@
  *   @copyright            : (C) 2004,2005,2006,2007,2011 Vallheru Team based on Gamers-Fusion ver 2.5
  *   @author               : thindil <thindil@tuxfamily.org>
  *   @version              : 1.4
- *   @since                : 30.11.2011
+ *   @since                : 05.12.2011
  *
  */
 
@@ -48,32 +48,26 @@ define("A_READ2", "Oznacz jako przeczytane");
 define("A_UNREAD", "Oznacz jako nieprzeczytane");
 define("MARK_AS_READ", "Wybrane wiadomości zostały oznaczone jako przeczytane.");
 define("MARK_AS_UNREAD", "Wybrane wiadomości zostały oznaczone jako nieprzeczytane.");
+define("A_SAVE", "Oznacz");
+define("A_DELETE", "Skasuj");
+define("A_REPLY", "Odpisz");
+define("A_SEND", "Wyślij do władcy lub księcia");
+define("T_WRITE", "napisał(a)");
+define("T_DAY", "Dnia ");
+define("A_BLOCK", "Zablokuj/Odblokuj tego gracza");
+define("FROM", "Od");
+define("S_ID", "ID");
+define("M_TITLE", "Tytuł");
+define("A_READ", "Czytaj");
+define("M_OPTION", "Opcje");
+define("A_SAVED", "Oznaczone");
+define("A_CLEAR2", "Wyczyść Skrzynkę");
+define("A_CLEAR", "Wykasuj zapisane listy");
 
-if (!isset($_GET['view']) && !isset($_GET['read']) && !isset($_GET['zapisz']) && !isset($_GET['kasuj']))
+if (!isset($_GET['view']) && !isset($_GET['read']) && !isset($_GET['zapisz']))
 {
     define("MAIL_INFO", "Co chcesz zrobić?");
-    define("A_SAVED", "Oznaczone");
     define("A_BLOCK_LIST", "Lista zablokowanych");
-}
-
-if (isset($_GET['view']) && ($_GET['view'] == 'inbox' || $_GET['view'] == 'saved')) 
-{
-    define("FROM", "Od");
-    define("S_ID", "ID");
-    define("M_TITLE", "Tytuł");
-    define("A_READ", "Czytaj");
-    define("M_OPTION", "Opcje");
-}
-
-if (isset ($_GET['view']) && $_GET['view'] == 'inbox')
-{
-    define("A_CLEAR", "Wyczyść Skrzynkę");
-    define("A_SAVED", "Oznaczone");
-}
-
-if (isset ($_GET['view']) && $_GET['view'] == 'saved')
-{
-    define("A_CLEAR", "Wykasuj zapisane listy");
 }
 
 if (isset ($_GET['view']) && $_GET['view'] == 'write') 
@@ -85,7 +79,7 @@ if (isset ($_GET['view']) && $_GET['view'] == 'write')
     define("S_TO", "Do");
     define("M_TITLE", "Temat");
     define("M_BODY", "Treść");
-    define("A_SEND", "Wyślij");
+    define("A_SEND2", "Wyślij");
     define("YOURSELF", "Nie możesz wysyłać listu do samego siebie!");
     define("YOU_CANNOT", "Nie możesz wysyłać listów, ponieważ zostałeś zablokowany!");
 }
@@ -93,19 +87,8 @@ if (isset ($_GET['view']) && $_GET['view'] == 'write')
 if (isset ($_GET['read']) || isset ($_GET['zapisz']) || isset ($_GET['kasuj'])) 
 {
     define("NO_MAIL", "Nie ma takiej wiadomości.");
-    define("MAIL_SAVE", "<br />Oznaczono wiadomość");
-    define("MAIL_DEL2", "<br />Usunięto wiadomość");
-}
-
-if (isset ($_GET['read'])) 
-{
-    define("A_SAVE", "Oznacz");
-    define("A_DELETE", "Skasuj");
-    define("A_REPLY", "Odpisz");
-    define("A_SEND", "Wyślij do władcy lub księcia");
-    define("T_WRITE", "napisał(a)");
-    define("T_DAY", "Dnia ");
-    define("A_BLOCK", "Zablokuj/Odblokuj tego gracza");
+    define("MAIL_SAVE", "Oznaczono wiadomość");
+    define("MAIL_DEL2", "Usunięto wiadomość");
 }
 
 if (isset ($_GET['send'])) 
@@ -122,7 +105,7 @@ if (isset ($_GET['send']))
     define("M_BODY", "<br /><b>Treść</b>:");
     define("YOU_SEND", "Wysłałeś(aś) list do ");
     define("SEND_THIS", "Wyślij ten list do");
-    define("A_SEND", "Wyślij");
+    define("A_SEND2", "Wyślij");
     define("M_DATE", "<br /><b>Data wysłania</b>:");
 }
 

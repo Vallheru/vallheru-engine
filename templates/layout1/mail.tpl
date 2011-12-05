@@ -1,4 +1,4 @@
-{if $View == "" && $Read == "" && $Write == "" && $Delete == "" && $Send == "" && $Step == "" && $Block == ""}
+{if $View == "" && $Read == "" && $Send == "" && $Step == ""}
     {$Mailinfo}<br /><br />
     - <a href="mail.php?view=inbox">{$Ainbox}</a><br />
     - <a href="mail.php?view=saved">{$Asaved}</a><br />
@@ -44,7 +44,7 @@
 	    <option value="31">{$Toldest}</option>
 	</select>
     </form>
-    <form method="post" action="mail.php?step=mail">
+    <form method="post" action="mail.php?step=mail&amp;box=I">
     <table>
     <tr>
     <td width="20"><b><u>{$Tselect}</u></b></td>
@@ -99,7 +99,7 @@
 	    <option value="31">{$Toldest}</option>
 	</select>
     </form>
-    <form method="post" action="mail.php?step=mail">
+    <form method="post" action="mail.php?step=mail&amp;box=W">
     <table>
     <tr>
     <td width="20"><b><u>{$Tselect}</u></b></td>
@@ -162,7 +162,7 @@
     	[<a href="mail.php?kasuj={$Mailsid[read]}">{$Adelete}</a>]
 	{if $Sendersid[read] != $Id}
 	    [<a href="mail.php?send={$Mailsid[read]}">{$Asend2}</a>]
-    	    [<a href="mail.php?block={$Sendersid[read]}">{$Ablock}</a>]
+    	    [<a href="mail.php?block={$Sendersid[read]}&amp;read={$Read}">{$Ablock}</a>]
 	{/if}
 	<br /><br />
     {/section}

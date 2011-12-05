@@ -44,4 +44,32 @@ margin-bottom: 0px;
 margin-left: 0px;
 margin-right: 0px;
 }
-
+div.error {
+  border-style: dotted;
+  border-color: darkred;
+  border-width: 2px;
+  text-align: center;
+  padding: 10px;
+  color: red;
+  font-weight: bold;
+  margin: 10px;
+}
+div.success {
+  border-style: dotted;
+  border-color: green;
+  border-width: 2px;
+  text-align: center;
+  padding: 10px;
+  color: lightgreen;
+  margin: 10px;
+}
+div.info {
+  border-style: dotted;
+  border-color: gold;
+  border-width: 2px;
+  text-align: center;
+  padding: 10px;
+  color: yellow;
+  font-weight: bold;
+  margin: 10px;
+}

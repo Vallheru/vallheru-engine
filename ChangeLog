@@ -1,5 +1,8 @@
 2011-12-05  Bartek thindil Jasicki  <thindil@tuxfamily.org>
 
+	* UPDATE,templates/layout1/message.tpl, templates/message.tpl, templates/layout1/mail.tpl, templates/mail.tpl, templates/layout1/layout1.css,
+	css/light.css, includes/head.php, languages/pl/mail.php, mail.php: 
+	redesigned mail
 	* BUG,logout.php: 
 	fixed notice
 	* UPDATE,install/install.php: 

@@ -7,7 +7,7 @@
  *   @copyright            : (C) 2004,2005,2006,2007,2011 Vallheru Team based on Gamers-Fusion ver 2.5
  *   @author               : thindil <thindil@tuxfamily.org>
  *   @version              : 1.4
- *   @since                : 03.12.2011
+ *   @since                : 05.12.2011
  *
  */
 
@@ -436,7 +436,8 @@ $smarty -> assign (array ("Time" => $time,
                           "Nhelp" => N_HELP,
                           "Nmap" => N_MAP,
                           "Stephead" => '',
-			  "Filename" => $strFname));
+			  "Filename" => $strFname,
+			  "Message" => ''));
 
 if (isset($_GET['step']) && $strFilename == 'newspaper.php')
 {
@@ -730,6 +731,30 @@ function error($text)
     $smarty -> display ('error1.tpl');
     require_once("includes/foot.php");
     exit;
+}
+
+/**
+ * Function show message
+ */
+function message($strType, $strText, $strLink = '')
+{
+  global $smarty;
+  global $player;
+
+  if (strlen($strLink) != 0)
+    {
+      $strText = $strText.' '.$strLink;
+    }
+  if ($player->graphic != '' || $player->style == 'light.css')
+    {
+      $strMessage = '<div class="'.$strType.'">'.$strText.'</div>';
+    }
+  else
+    {
+      $strMessage = '<div style="text-align:center;font-weight:bold;text-decoration:underline;margin:10px;">'.$strText.'</div>';
+    }
+  $smarty->assign("Message", $strMessage);
+  $smarty->display('message.tpl');
 }
 
 /**
