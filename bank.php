@@ -9,7 +9,7 @@
  *   @author               : yeskov <yeskov@users.sourceforge.net>
  *   @author               : eyescream <tduda@users.sourceforge.net>
  *   @version              : 1.4
- *   @since                : 21.11.2011
+ *   @since                : 05.12.2011
  *
  */
 
@@ -604,6 +604,10 @@ if (isset($_GET['action']))
 	if ($_POST['tp'] > $player->crime)
 	  {
 	    error("Nie masz tylu punktów kradzieży!");
+	  }
+	if ($player->hp <= 0)
+	  {
+	    error("Nie możesz okradać banku kiedy jesteś martwy.");
 	  }
 	require_once("includes/checkexp.php");
 	$intMax = (50 - ($_POST['tp'] * 2)) * $player->level;
