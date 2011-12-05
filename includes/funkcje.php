@@ -7,7 +7,7 @@
  *   @copyright            : (C) 2004,2005,2006,2007,2011 Vallheru Team based on Gamers-Fusion ver 2.5
  *   @author               : thindil <thindil@tuxfamily.org>
  *   @version              : 1.4
- *   @since                : 24.11.2011
+ *   @since                : 05.12.2011
  *
  */
 
@@ -651,12 +651,14 @@ function playerattack($eunik, &$gwtbr, $arrEquip, $mczar, &$zmeczenie, &$gatak, 
 	  $intRoll = rand(1, 100);
 	  if ($krytyk >= $rzut && $intRoll <= $krytyk)
             {
-	      $enemy['hp'] -= $enemyhp;
 	      //Hit with weapon
+	      $blnHit = FALSE;
 	      if ((($arrEquip[0][6] > $gwtbr || $arrEquip[11][6] > $gwtbr) || ($arrEquip[1][6] > $gwtbr && $arrEquip[6][6] > $gwtbr)) && ($arrEquip[0][0] || $arrEquip[1][0])) 
 		{
 		  $gwtbr++;
 		  $gatak++;
+		  $enemy['hp'] -= $enemyhp;
+		  $blnHit = TRUE;
 		}
 	      //Hit with spell
 	      if ($mczar -> fields['id'] && $player -> mana > $mczar -> fields['poziom']) 
@@ -669,15 +671,17 @@ function playerattack($eunik, &$gwtbr, $arrEquip, $mczar, &$zmeczenie, &$gatak, 
 		    }
 		  $player -> mana = ($player -> mana - $lost_mana);
 		  $gmagia++;
+		  $enemy['hp'] -= $enemyhp;
+		  $blnHit = TRUE;
 		}
-	      if ($times == 1)
+	      if ($times == 1 && $blnHit)
 		{
 		  $arrLocations = array('w tułów', 'w głowę', 'w kończynę');
 		  $intHit = rand(0, 2);
 		  $smarty->assign("Message", showcritical($arrLocations[$intHit], $strAtype, 'pve', $enemy['name']));
 		  $smarty->display('error1.tpl');
 		}
-	      return TRUE;
+	      return $blnHit;
 	    }
 	  //Hit with weapon
 	  if ((($arrEquip[0][6] > $gwtbr || $arrEquip[11][6] > $gwtbr) || ($arrEquip[1][6] > $gwtbr && $arrEquip[6][6] > $gwtbr)) && ($arrEquip[0][0] || $arrEquip[1][0])) 
