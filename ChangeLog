@@ -1,5 +1,7 @@
 2011-12-05  Bartek thindil Jasicki  <thindil@tuxfamily.org>
 
+	* UPDATAE,includes/turnfight.php: 
+	disable critical hit in fight with guardian
 	* UPDATE,mail.php, install/db/update.sql:
 	show to who or who starts topic
 

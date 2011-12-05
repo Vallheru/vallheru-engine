@@ -7,7 +7,7 @@
  *   @copyright            : (C) 2004,2005,2006,2007,2011 Vallheru Team based on Gamers-Fusion ver 2.5
  *   @author               : thindil <thindil@tuxfamily.org>
  *   @version              : 1.4
- *   @since                : 23.11.2011
+ *   @since                : 05.12.2011
  *
  */
  
@@ -938,7 +938,7 @@ function attack($eunik,$bdamage)
 		$intRoll = rand(1, 100);
 		$arrLocations = array('w tułów', 'w głowę', 'w kończynę');
 		$intHit = rand(0, 2);
-		if ($krytyk >= $rzut && $intRoll <= $krytyk) 
+		if ($krytyk >= $rzut && $intRoll <= $krytyk && $player->fight != 999) 
 		  {
 		    $gatak++;
 		    $ehp = 0;
@@ -1095,7 +1095,7 @@ function castspell ($id,$boost,$eunik)
                     $player -> mana = ($player -> mana - $lost_mana);
 		    $rzut = rand(1, 1000) / 10;
 		    $intRoll = rand(1, 100);
-		    if ($krytyk >= $rzut && $intRoll <= $krytyk) 
+		    if ($krytyk >= $rzut && $intRoll <= $krytyk && $player->fight != 999) 
 		      {
 			$gmagia++;
 			$ehp = 0;
