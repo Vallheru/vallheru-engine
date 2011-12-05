@@ -1,86 +1,89 @@
 -- phpMyAdmin SQL Dump
--- version 2.9.0.2
+-- version 3.4.3.2
 -- http://www.phpmyadmin.net
--- 
+--
 -- Host: localhost
--- Czas wygenerowania: 07 Mar 2007, 13:05
--- Wersja serwera: 5.0.26
--- Wersja PHP: 5.1.6-pl6-gentoo
--- 
+-- Czas wygenerowania: 05 Gru 2011, 18:27
+-- Wersja serwera: 5.5.16
+-- Wersja PHP: 5.3.8
+
+SET SQL_MODE="NO_AUTO_VALUE_ON_ZERO";
+SET time_zone = "+00:00";
+
+
+/*!40101 SET @OLD_CHARACTER_SET_CLIENT=@@CHARACTER_SET_CLIENT */;
+/*!40101 SET @OLD_CHARACTER_SET_RESULTS=@@CHARACTER_SET_RESULTS */;
+/*!40101 SET @OLD_COLLATION_CONNECTION=@@COLLATION_CONNECTION */;
+/*!40101 SET NAMES utf8 */;
+
+--
 -- Baza danych: `test`
--- 
+--
 
 -- --------------------------------------------------------
 
--- 
+--
 -- Struktura tabeli dla  `adodb_logsql`
--- 
+--
 
-CREATE TABLE `adodb_logsql` (
-  `created` datetime NOT NULL default '0000-00-00 00:00:00',
-  `sql0` varchar(250) NOT NULL default '',
+DROP TABLE IF EXISTS `adodb_logsql`;
+CREATE TABLE IF NOT EXISTS `adodb_logsql` (
+  `created` datetime NOT NULL DEFAULT '0000-00-00 00:00:00',
+  `sql0` varchar(250) NOT NULL DEFAULT '',
   `sql1` text NOT NULL,
   `params` text NOT NULL,
   `tracer` text NOT NULL,
-  `timer` decimal(16,6) NOT NULL default '0.000000'
+  `timer` decimal(16,6) NOT NULL DEFAULT '0.000000'
 ) ENGINE=MyISAM DEFAULT CHARSET=utf8;
-
--- 
--- Zrzut danych tabeli `adodb_logsql`
--- 
-
 
 -- --------------------------------------------------------
 
--- 
+--
 -- Struktura tabeli dla  `aktywacja`
--- 
+--
 
-CREATE TABLE `aktywacja` (
-  `id` int(11) NOT NULL auto_increment,
-  `user` varchar(15) NOT NULL default '',
-  `email` varchar(60) NOT NULL default '',
-  `pass` varchar(32) NOT NULL default '',
-  `aktyw` int(11) NOT NULL default '0',
-  `refs` int(11) NOT NULL default '0',
-  `ip` varchar(50) NOT NULL default '',
-  `data` date NOT NULL default '0000-00-00',
-  `lang` varchar(3) NOT NULL default 'pl',
-  PRIMARY KEY  (`id`),
+DROP TABLE IF EXISTS `aktywacja`;
+CREATE TABLE IF NOT EXISTS `aktywacja` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `user` varchar(15) NOT NULL DEFAULT '',
+  `email` varchar(60) NOT NULL DEFAULT '',
+  `pass` varchar(32) NOT NULL DEFAULT '',
+  `aktyw` int(11) NOT NULL DEFAULT '0',
+  `refs` int(11) NOT NULL DEFAULT '0',
+  `ip` varchar(50) NOT NULL DEFAULT '',
+  `data` date NOT NULL DEFAULT '0000-00-00',
+  `lang` varchar(3) NOT NULL DEFAULT 'pl',
+  PRIMARY KEY (`id`),
   KEY `user` (`user`)
 ) ENGINE=MyISAM DEFAULT CHARSET=utf8 PACK_KEYS=0 AUTO_INCREMENT=1 ;
 
--- 
--- Zrzut danych tabeli `aktywacja`
--- 
-
-
 -- --------------------------------------------------------
 
--- 
+--
 -- Struktura tabeli dla  `alchemy_mill`
--- 
+--
 
-CREATE TABLE `alchemy_mill` (
-  `id` int(11) NOT NULL auto_increment,
-  `name` varchar(60) NOT NULL default '',
-  `owner` int(11) NOT NULL default '0',
-  `illani` int(11) NOT NULL default '0',
-  `illanias` int(11) NOT NULL default '0',
-  `nutari` int(11) NOT NULL default '0',
-  `cost` int(11) NOT NULL default '0',
-  `level` int(11) NOT NULL default '0',
-  `status` char(1) NOT NULL default 'S',
-  `dynallca` int(11) NOT NULL default '0',
-  `lang` varchar(3) NOT NULL default 'pl',
-  PRIMARY KEY  (`id`)
-) ENGINE=MyISAM  DEFAULT CHARSET=utf8 PACK_KEYS=0 AUTO_INCREMENT=29 ;
+DROP TABLE IF EXISTS `alchemy_mill`;
+CREATE TABLE IF NOT EXISTS `alchemy_mill` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `name` varchar(60) NOT NULL DEFAULT '',
+  `owner` int(11) NOT NULL DEFAULT '0',
+  `illani` int(11) NOT NULL DEFAULT '0',
+  `illanias` int(11) NOT NULL DEFAULT '0',
+  `nutari` int(11) NOT NULL DEFAULT '0',
+  `cost` int(11) NOT NULL DEFAULT '0',
+  `level` int(11) NOT NULL DEFAULT '0',
+  `status` char(1) NOT NULL DEFAULT 'S',
+  `dynallca` int(11) NOT NULL DEFAULT '0',
+  `lang` varchar(3) NOT NULL DEFAULT 'pl',
+  PRIMARY KEY (`id`)
+) ENGINE=MyISAM  DEFAULT CHARSET=utf8 PACK_KEYS=0 AUTO_INCREMENT=30 ;
 
--- 
+--
 -- Zrzut danych tabeli `alchemy_mill`
--- 
+--
 
-INSERT INTO `alchemy_mill` (`id`, `name`, `owner`, `illani`, `illanias`, `nutari`, `cost`, `level`, `status`, `dynallca`, `lang`) VALUES 
+INSERT INTO `alchemy_mill` (`id`, `name`, `owner`, `illani`, `illanias`, `nutari`, `cost`, `level`, `status`, `dynallca`, `lang`) VALUES
 (1, 'bardzo silna mikstura z Nutari', 0, 0, 0, 50, 50000, 50, 'S', 0, 'pl'),
 (2, 'silna mikstura z Nutari', 0, 0, 0, 10, 20000, 20, 'S', 0, 'pl'),
 (3, 'mikstura z Nutari', 0, 0, 0, 5, 10000, 10, 'S', 0, 'pl'),
@@ -108,262 +111,231 @@ INSERT INTO `alchemy_mill` (`id`, `name`, `owner`, `illani`, `illanias`, `nutari
 (25, 'bardzo silna trucizna z Nutari', 0, 0, 0, 30, 200000, 60, 'S', 15, 'pl'),
 (26, 'antidotum na truciznę z Illani', 0, 10, 10, 0, 20000, 20, 'S', 0, 'pl'),
 (27, 'antidotum na truciznę z Nutari', 0, 0, 10, 10, 20000, 20, 'S', 0, 'pl'),
-(28, 'antidotum na truciznę z Dynallca', 0, 0, 5, 0, 10000, 10, 'S', 5, 'pl');
+(28, 'antidotum na truciznę z Dynallca', 0, 0, 5, 0, 10000, 10, 'S', 5, 'pl'),
+(29, 'Oszukanie śmierci', 0, 30, 20, 15, 50000, 50, 'S', 20, 'pl');
 
 -- --------------------------------------------------------
 
--- 
+--
 -- Struktura tabeli dla  `amarket`
--- 
+--
 
-CREATE TABLE `amarket` (
-  `id` int(11) NOT NULL auto_increment,
-  `seller` int(11) NOT NULL default '0',
-  `type` varchar(2) NOT NULL default '',
-  `number` tinyint(2) NOT NULL default '0',
-  `amount` int(3) NOT NULL default '1',
-  `cost` int(11) unsigned NOT NULL default '0',
+DROP TABLE IF EXISTS `amarket`;
+CREATE TABLE IF NOT EXISTS `amarket` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `seller` int(11) NOT NULL DEFAULT '0',
+  `type` varchar(2) NOT NULL DEFAULT '',
+  `number` tinyint(2) NOT NULL DEFAULT '0',
+  `amount` int(3) NOT NULL DEFAULT '1',
+  `cost` int(11) unsigned NOT NULL DEFAULT '0',
   KEY `type` (`type`),
   KEY `number` (`number`),
   KEY `cost` (`cost`),
   KEY `id` (`id`),
   KEY `seller` (`seller`)
-) ENGINE=MyISAM  DEFAULT CHARSET=utf8 AUTO_INCREMENT=14 ;
-
--- 
--- Zrzut danych tabeli `amarket`
--- 
-
+) ENGINE=MyISAM DEFAULT CHARSET=utf8 AUTO_INCREMENT=1 ;
 
 -- --------------------------------------------------------
 
--- 
+--
 -- Struktura tabeli dla  `astral`
--- 
+--
 
-CREATE TABLE `astral` (
-  `owner` int(11) NOT NULL default '0',
-  `type` varchar(2) NOT NULL default '',
-  `number` tinyint(2) NOT NULL default '0',
-  `amount` int(3) NOT NULL default '1',
-  `location` char(1) NOT NULL default 'V',
+DROP TABLE IF EXISTS `astral`;
+CREATE TABLE IF NOT EXISTS `astral` (
+  `owner` int(11) NOT NULL DEFAULT '0',
+  `type` varchar(2) NOT NULL DEFAULT '',
+  `number` tinyint(2) NOT NULL DEFAULT '0',
+  `amount` int(3) NOT NULL DEFAULT '1',
+  `location` char(1) NOT NULL DEFAULT 'V',
   KEY `owner` (`owner`),
   KEY `type` (`type`),
   KEY `location` (`location`),
   KEY `number` (`number`)
 ) ENGINE=MyISAM DEFAULT CHARSET=utf8;
 
--- 
--- Zrzut danych tabeli `astral`
--- 
-
-
 -- --------------------------------------------------------
 
--- 
+--
 -- Struktura tabeli dla  `astral_bank`
--- 
+--
 
-CREATE TABLE `astral_bank` (
-  `owner` int(11) NOT NULL default '0',
-  `level` tinyint(2) NOT NULL default '0',
-  `location` char(1) NOT NULL default 'V',
+DROP TABLE IF EXISTS `astral_bank`;
+CREATE TABLE IF NOT EXISTS `astral_bank` (
+  `owner` int(11) NOT NULL DEFAULT '0',
+  `level` tinyint(2) NOT NULL DEFAULT '0',
+  `location` char(1) NOT NULL DEFAULT 'V',
   KEY `owner` (`owner`),
   KEY `location` (`location`)
 ) ENGINE=MyISAM DEFAULT CHARSET=utf8;
 
--- 
--- Zrzut danych tabeli `astral_bank`
--- 
-
-
 -- --------------------------------------------------------
 
--- 
+--
 -- Struktura tabeli dla  `astral_machine`
--- 
+--
 
-CREATE TABLE `astral_machine` (
-  `owner` int(11) NOT NULL default '0',
-  `used` int(11) NOT NULL default '0',
-  `directed` int(11) NOT NULL default '0',
-  `aviable` char(1) NOT NULL default 'N',
+DROP TABLE IF EXISTS `astral_machine`;
+CREATE TABLE IF NOT EXISTS `astral_machine` (
+  `owner` int(11) NOT NULL DEFAULT '0',
+  `used` int(11) NOT NULL DEFAULT '0',
+  `directed` int(11) NOT NULL DEFAULT '0',
+  `aviable` char(1) NOT NULL DEFAULT 'N',
   KEY `owner` (`owner`)
 ) ENGINE=MyISAM DEFAULT CHARSET=utf8;
 
--- 
--- Zrzut danych tabeli `astral_machine`
--- 
-
-
 -- --------------------------------------------------------
 
--- 
+--
 -- Struktura tabeli dla  `astral_plans`
--- 
+--
 
-CREATE TABLE `astral_plans` (
-  `owner` int(11) NOT NULL default '0',
-  `name` varchar(2) NOT NULL default '',
-  `amount` int(11) NOT NULL default '0',
-  `location` char(1) NOT NULL default 'V',
+DROP TABLE IF EXISTS `astral_plans`;
+CREATE TABLE IF NOT EXISTS `astral_plans` (
+  `owner` int(11) NOT NULL DEFAULT '0',
+  `name` varchar(2) NOT NULL DEFAULT '',
+  `amount` int(11) NOT NULL DEFAULT '0',
+  `location` char(1) NOT NULL DEFAULT 'V',
   KEY `owner` (`owner`),
   KEY `location` (`location`)
 ) ENGINE=MyISAM DEFAULT CHARSET=utf8;
 
--- 
--- Zrzut danych tabeli `astral_plans`
--- 
-
-
 -- --------------------------------------------------------
 
--- 
+--
 -- Struktura tabeli dla  `bad_words`
--- 
+--
 
-CREATE TABLE `bad_words` (
-  `bword` varchar(255) NOT NULL default '',
+DROP TABLE IF EXISTS `bad_words`;
+CREATE TABLE IF NOT EXISTS `bad_words` (
+  `bword` varchar(255) NOT NULL DEFAULT '',
   KEY `bword` (`bword`)
 ) ENGINE=MyISAM DEFAULT CHARSET=utf8;
 
--- 
+--
 -- Zrzut danych tabeli `bad_words`
--- 
+--
 
-INSERT INTO `bad_words` (`bword`) VALUES 
+INSERT INTO `bad_words` (`bword`) VALUES
+('bezalkoholowe'),
+('bezalkoholowy'),
 ('chuj'),
-('Chuj'),
 ('cieciu'),
-('Cieciu'),
-('Cipa'),
 ('cipa'),
-('Cipo'),
+('cipą'),
 ('cipo'),
 ('cipom'),
 ('ciul'),
-('Ciul'),
 ('dupa'),
-('Dupa'),
 ('dupę'),
 ('dupe'),
-('Dupe'),
+('dupie'),
 ('dupy'),
-('Dupy'),
 ('dureń'),
 ('durniów'),
 ('dziwka'),
-('Dziwka'),
 ('dziwko'),
-('Dziwko'),
-('gówno'),
+('fuck'),
 ('Gówno'),
 ('guwno'),
-('Guwno'),
 ('huj'),
-('Huj'),
-('jeb'),
 ('Jeb'),
+('jebać'),
 ('jeban'),
-('Jeban'),
 ('jebańcu'),
+('kurewsko'),
 ('kurw'),
-('Kurw'),
 ('kurwa'),
-('Kurwa'),
 ('kutas'),
-('Kutas'),
+('napierdalać'),
+('opierdalać'),
+('opierdolic'),
 ('pieprzon'),
-('Pieprzon'),
 ('pierdol'),
-('Pierdol'),
 ('pizd'),
-('Pizd'),
 ('pizda'),
-('Pizda'),
 ('pizdom'),
 ('podupcon'),
 ('Podupcon'),
 ('pojeban'),
-('Pojeban'),
+('popierdalać'),
 ('popierdolon'),
-('Popierdolon'),
+('przypierdalać'),
+('rozpierdolić'),
+('ruchałbym'),
+('ruchnąłbym'),
+('skurwić'),
 ('skurwysyn'),
-('Skurwysyn'),
 ('spierdalaj'),
-('SPIERDALAJ'),
+('spierdolić'),
 ('sranie'),
 ('sukinsyn'),
-('Sukinsyn'),
+('wpierdol'),
+('wyjebany'),
+('wypierdalać'),
 ('wypierdalaj'),
 ('zajeb'),
-('Zajeb'),
+('zajekurwabiście'),
+('zakurwiście'),
+('zapierdalać'),
 ('zbuk'),
-('zjeb'),
-('Zjeb');
+('zjeb');
 
 -- --------------------------------------------------------
 
--- 
+--
 -- Struktura tabeli dla  `ban`
--- 
+--
 
-CREATE TABLE `ban` (
-  `type` varchar(10) NOT NULL default '',
-  `amount` varchar(50) NOT NULL default '',
+DROP TABLE IF EXISTS `ban`;
+CREATE TABLE IF NOT EXISTS `ban` (
+  `type` varchar(10) NOT NULL DEFAULT '',
+  `amount` varchar(50) NOT NULL DEFAULT '',
   KEY `type` (`type`)
 ) ENGINE=MyISAM DEFAULT CHARSET=utf8;
 
--- 
--- Zrzut danych tabeli `ban`
--- 
-
-
 -- --------------------------------------------------------
 
--- 
+--
 -- Struktura tabeli dla  `ban_mail`
--- 
+--
 
-CREATE TABLE `ban_mail` (
-  `id` int(11) NOT NULL default '0',
-  `owner` int(11) NOT NULL default '0',
+DROP TABLE IF EXISTS `ban_mail`;
+CREATE TABLE IF NOT EXISTS `ban_mail` (
+  `id` int(11) NOT NULL DEFAULT '0',
+  `owner` int(11) NOT NULL DEFAULT '0',
   KEY `owner` (`owner`),
   KEY `id` (`id`)
 ) ENGINE=MyISAM DEFAULT CHARSET=utf8;
 
--- 
--- Zrzut danych tabeli `ban_mail`
--- 
-
-
 -- --------------------------------------------------------
 
--- 
+--
 -- Struktura tabeli dla  `bows`
--- 
+--
 
-CREATE TABLE `bows` (
-  `id` int(11) NOT NULL auto_increment,
-  `name` varchar(60) NOT NULL default '',
-  `power` int(11) NOT NULL default '0',
-  `type` char(1) NOT NULL default 'B',
-  `cost` int(11) NOT NULL default '0',
-  `minlev` int(2) NOT NULL default '1',
-  `zr` int(11) NOT NULL default '0',
-  `szyb` int(11) NOT NULL default '0',
-  `maxwt` int(11) NOT NULL default '0',
-  `lang` varchar(3) NOT NULL default 'pl',
-  `repair` int(11) NOT NULL default '10',
+DROP TABLE IF EXISTS `bows`;
+CREATE TABLE IF NOT EXISTS `bows` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `name` varchar(60) NOT NULL DEFAULT '',
+  `power` int(11) NOT NULL DEFAULT '0',
+  `type` char(1) NOT NULL DEFAULT 'B',
+  `cost` int(11) NOT NULL DEFAULT '0',
+  `minlev` int(2) NOT NULL DEFAULT '1',
+  `zr` int(11) NOT NULL DEFAULT '0',
+  `szyb` int(11) NOT NULL DEFAULT '0',
+  `maxwt` int(11) NOT NULL DEFAULT '0',
+  `lang` varchar(3) NOT NULL DEFAULT 'pl',
+  `repair` int(11) NOT NULL DEFAULT '10',
   KEY `type` (`type`),
   KEY `id` (`id`)
 ) ENGINE=MyISAM  DEFAULT CHARSET=utf8 PACK_KEYS=0 AUTO_INCREMENT=31 ;
 
--- 
+--
 -- Zrzut danych tabeli `bows`
--- 
+--
 
-INSERT INTO `bows` (`id`, `name`, `power`, `type`, `cost`, `minlev`, `zr`, `szyb`, `maxwt`, `lang`, `repair`) VALUES 
+INSERT INTO `bows` (`id`, `name`, `power`, `type`, `cost`, `minlev`, `zr`, `szyb`, `maxwt`, `lang`, `repair`) VALUES
 (1, 'Łuk ćwiczebny z leszczyny', 0, 'B', 100, 1, 0, 1, 40, 'pl', 2),
 (2, 'Łuk giermka z leszczyny', 0, 'B', 400, 3, 0, 3, 40, 'pl', 6),
 (3, 'Łuk krótki z leszczyny', 0, 'B', 800, 5, 0, 5, 40, 'pl', 10),
@@ -379,206 +351,200 @@ INSERT INTO `bows` (`id`, `name`, `power`, `type`, `cost`, `minlev`, `zr`, `szyb
 (13, 'Łuk bojowy z leszczyny', 0, 'B', 819200, 80, 0, 80, 40, 'pl', 160),
 (14, 'Łuk refleksyjny z leszczyny', 0, 'B', 1638400, 90, 0, 90, 40, 'pl', 180),
 (15, 'Łuk retrorefleksyjny z leszczyny', 0, 'B', 3276800, 100, 0, 100, 40, 'pl', 200),
-(16, 'Strzały ćwiczebne', 1, 'R', 50, 1, 0, 0, 20, 'pl', 0),
-(17, 'Strzały turniejowe', 3, 'R', 200, 3, 0, 0, 20, 'pl', 0),
-(18, 'Strzały krótkie', 5, 'R', 400, 5, 0, 0, 20, 'pl', 0),
-(19, 'Strzały myśliwskie', 10, 'R', 800, 10, 0, 0, 20, 'pl', 0),
-(20, 'Strzały łowieckie', 15, 'R', 1600, 15, 0, 0, 20, 'pl', 0),
-(21, 'Strzały zwiadowcy', 20, 'R', 3200, 20, 0, 0, 20, 'pl', 0),
-(22, 'Strzały wojskowe', 25, 'R', 6400, 25, 0, 0, 20, 'pl', 0),
-(23, 'Strzały bitewne', 30, 'R', 12800, 30, 0, 0, 20, 'pl', 0),
-(24, 'Strzały liściaste', 40, 'R', 25600, 40, 0, 0, 20, 'pl', 0),
-(25, 'Strzały wojenne', 50, 'R', 51200, 50, 0, 0, 20, 'pl', 0),
-(26, 'Strzały haczykowe', 60, 'R', 102400, 60, 0, 0, 20, 'pl', 0),
-(27, 'Strzały długie', 70, 'R', 2048000, 70, 0, 0, 20, 'pl', 0),
-(28, 'Strzały bojowe', 80, 'R', 409600, 80, 0, 0, 20, 'pl', 0),
-(29, 'Strzały wężowe', 90, 'R', 819200, 90, 0, 0, 20, 'pl', 0),
-(30, 'Strzały ząbkowane', 100, 'R', 1638400, 100, 0, 0, 20, 'pl', 0);
+(16, 'Strzały ćwiczebne', 1, 'R', 63, 1, 0, 0, 25, 'pl', 0),
+(17, 'Strzały turniejowe', 3, 'R', 250, 3, 0, 0, 25, 'pl', 0),
+(18, 'Strzały krótkie', 5, 'R', 500, 5, 0, 0, 25, 'pl', 0),
+(19, 'Strzały myśliwskie', 10, 'R', 1000, 10, 0, 0, 25, 'pl', 0),
+(20, 'Strzały łowieckie', 15, 'R', 2000, 15, 0, 0, 25, 'pl', 0),
+(21, 'Strzały zwiadowcy', 20, 'R', 4000, 20, 0, 0, 25, 'pl', 0),
+(22, 'Strzały wojskowe', 25, 'R', 8000, 25, 0, 0, 25, 'pl', 0),
+(23, 'Strzały bitewne', 30, 'R', 16000, 30, 0, 0, 25, 'pl', 0),
+(24, 'Strzały liściaste', 40, 'R', 32000, 40, 0, 0, 25, 'pl', 0),
+(25, 'Strzały wojenne', 50, 'R', 64000, 50, 0, 0, 25, 'pl', 0),
+(26, 'Strzały haczykowe', 60, 'R', 128000, 60, 0, 0, 25, 'pl', 0),
+(27, 'Strzały długie', 70, 'R', 256000, 70, 0, 0, 25, 'pl', 0),
+(28, 'Strzały bojowe', 80, 'R', 512000, 80, 0, 0, 25, 'pl', 0),
+(29, 'Strzały wężowe', 90, 'R', 1024000, 90, 0, 0, 25, 'pl', 0),
+(30, 'Strzały ząbkowane', 100, 'R', 2048000, 100, 0, 0, 25, 'pl', 0);
 
 -- --------------------------------------------------------
 
--- 
+--
 -- Struktura tabeli dla  `bridge`
--- 
+--
 
-CREATE TABLE `bridge` (
-  `id` int(11) NOT NULL auto_increment,
+DROP TABLE IF EXISTS `bridge`;
+CREATE TABLE IF NOT EXISTS `bridge` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
   `question` text NOT NULL,
   `answer` text NOT NULL,
-  `lang` varchar(3) NOT NULL default 'pl',
   KEY `id` (`id`)
 ) ENGINE=MyISAM  DEFAULT CHARSET=utf8 AUTO_INCREMENT=17 ;
 
--- 
+--
 -- Zrzut danych tabeli `bridge`
--- 
+--
 
-INSERT INTO `bridge` (`id`, `question`, `answer`, `lang`) VALUES 
-(1, 'Stolica Abanasyni', 'Łubu-dubu', 'pl'),
-(2, 'Jak się nazywa władca Vallheru', 'Thindil', 'pl'),
-(3, 'Jak się nazywa główne miasto Vallheru', 'Altara', 'pl'),
-(4, 'Ile to 2+2', '4', 'pl'),
-(5, 'Pociąg jedzie z punktu A do punktu B, w jedną stronę trwa to 2 godziny w drugą godzinę i 20 minut. Podaj jaki jest wiek maszynisty biorąc pod uwagę że nosi on ciemnoniebieską koszulę', 'Skąd mam wiedzieć?', 'pl'),
-(6, 'Jaka jest prędkość przelotowa jaskółki europejskiej', '23', 'pl'),
-(7, 'Jaki jest udźwig jaskółki afrykańskiej', '1/2 kokosa', 'pl'),
-(8, 'Jakie jest drugie słowo w naszym języku ', 'języku', 'pl'),
-(9, 'Co wojownik ma pod łóżkiem', 'sprzątać', 'pl'),
-(10, 'Co powstanie ze skrzyżowania węgorza elektrycznego i jeża', 'Elektryczna szczoteczka do zębów', 'pl'),
-(11, 'Ile to jest 2+2*2 ?', '6', 'pl'),
-(12, 'Jak karpie nazywają święta Bożego Narodzenia? ', 'Zaduszki', 'pl'),
-(13, 'Jakiego koloru są czarne skrzynki w samolotach?', 'Czerwonego', 'pl'),
-(14, 'Jak się nazywa właściciel Avan Tirith?', 'Myrdalis', 'pl'),
-(15, 'Jak się nazywał mag, którego imieniem, nazwano miasto Ardulith?', 'Ardulith', 'pl'),
-(16, 'Jak się nazywa słynny rewolucjonista, który został skazany na 999 lat pobytu w lochach?', 'Grejpfrut', 'pl');
+INSERT INTO `bridge` (`id`, `question`, `answer`) VALUES
+(16, 'Jak się nazywa słynny rewolucjonista, który został skazany na 999 lat pobytu w lochach?', 'Grejpfrut'),
+(15, 'Jak się nazywał mag, którego imieniem, nazwano miasto Ardulith?', 'Ardulith'),
+(11, 'Ile to jest 2+2*2 ?', '6'),
+(12, 'Jak karpie nazywają święta Bożego Narodzenia? ', 'Zaduszki'),
+(13, 'Jakiego koloru są czarne skrzynki w samolotach?', 'Czerwonego'),
+(14, 'Jak się nazywa właściciel Avan Tirith?', 'Myrdalis'),
+(10, 'Co powstanie ze skrzyżowania węgorza elektrycznego i jeża', 'Elektryczna szczoteczka do zębów'),
+(9, 'Co wojownik ma pod łóżkiem', 'sprzątać'),
+(8, 'Jakie jest drugie słowo w naszym języku ', 'języku'),
+(7, 'Jaki jest udźwig jaskółki afrykańskiej', '1/2 kokosa'),
+(6, 'Jaka jest prędkość przelotowa jaskółki europejskiej', '23'),
+(5, 'Pociąg jedzie z punktu A do punktu B, w jedną stronę trwa to 2 godziny w drugą godzinę i 20 minut. Podaj jaki jest wiek maszynisty biorąc pod uwagę że nosi on ciemnoniebieską koszulę', 'Skąd mam wiedzieć?'),
+(3, 'Jak się nazywa główne miasto Vallheru', 'Altara'),
+(4, 'Ile to 2+2', '4'),
+(1, 'Stolica Abanasyni', 'Łubu-dubu'),
+(2, 'Jak się nazywa władca Vallheru', 'Thindil');
 
 -- --------------------------------------------------------
 
--- 
+--
 -- Struktura tabeli dla  `bugreport`
--- 
+--
 
-CREATE TABLE `bugreport` (
-  `id` int(11) NOT NULL auto_increment,
-  `sender` int(11) NOT NULL default '0',
-  `title` varchar(255) NOT NULL default '',
-  `type` varchar(20) NOT NULL default '',
-  `location` varchar(255) NOT NULL default '',
+DROP TABLE IF EXISTS `bugreport`;
+CREATE TABLE IF NOT EXISTS `bugreport` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `sender` int(11) NOT NULL DEFAULT '0',
+  `title` varchar(255) NOT NULL DEFAULT '',
+  `type` varchar(20) NOT NULL DEFAULT '',
+  `location` varchar(255) NOT NULL DEFAULT '',
   `desc` text NOT NULL,
-  `resolution` tinyint(2) NOT NULL default '0',
+  `resolution` tinyint(2) NOT NULL DEFAULT '0',
   KEY `id` (`id`)
 ) ENGINE=MyISAM DEFAULT CHARSET=utf8 AUTO_INCREMENT=1 ;
 
--- 
--- Zrzut danych tabeli `bugreport`
--- 
-
-
 -- --------------------------------------------------------
 
--- 
+--
 -- Struktura tabeli dla  `bugtrack`
--- 
+--
 
-CREATE TABLE `bugtrack` (
-  `id` int(11) NOT NULL auto_increment,
-  `type` int(5) NOT NULL default '0',
-  `info` varchar(255) NOT NULL default '',
-  `amount` int(11) NOT NULL default '1',
-  `file` varchar(255) NOT NULL default '',
-  `line` int(11) NOT NULL default '0',
-  `referer` varchar(255) NOT NULL default '',
+DROP TABLE IF EXISTS `bugtrack`;
+CREATE TABLE IF NOT EXISTS `bugtrack` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `type` int(5) NOT NULL DEFAULT '0',
+  `info` varchar(255) CHARACTER SET utf8 NOT NULL DEFAULT '',
+  `amount` int(11) NOT NULL DEFAULT '1',
+  `file` varchar(255) CHARACTER SET utf8 NOT NULL DEFAULT '',
+  `line` int(11) NOT NULL DEFAULT '0',
+  `referer` varchar(255) CHARACTER SET utf8 NOT NULL DEFAULT '',
   KEY `id` (`id`)
-) ENGINE=MyISAM  DEFAULT CHARSET=utf8 AUTO_INCREMENT=57 ;
-
--- 
--- Zrzut danych tabeli `bugtrack`
--- 
-
+) ENGINE=MyISAM DEFAULT CHARSET=utf8 COLLATE=utf8_polish_ci AUTO_INCREMENT=1 ;
 
 -- --------------------------------------------------------
 
--- 
+--
 -- Struktura tabeli dla  `categories`
--- 
+--
 
-CREATE TABLE `categories` (
-  `id` int(11) NOT NULL auto_increment,
-  `name` varchar(100) NOT NULL default '',
-  `desc` varchar(255) NOT NULL default '',
-  `lang` varchar(3) NOT NULL default 'pl',
-  `perm_write` varchar(255) NOT NULL default 'All;',
-  `perm_visit` varchar(255) NOT NULL default 'All;',
-  PRIMARY KEY  (`id`)
+DROP TABLE IF EXISTS `categories`;
+CREATE TABLE IF NOT EXISTS `categories` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `name` varchar(100) NOT NULL DEFAULT '',
+  `desc` varchar(255) NOT NULL DEFAULT '',
+  `lang` varchar(3) NOT NULL DEFAULT 'pl',
+  `perm_write` varchar(255) NOT NULL DEFAULT 'All;',
+  `perm_visit` varchar(255) NOT NULL DEFAULT 'All;',
+  PRIMARY KEY (`id`)
 ) ENGINE=MyISAM DEFAULT CHARSET=utf8 AUTO_INCREMENT=1 ;
-
--- 
--- Zrzut danych tabeli `categories`
--- 
-
 
 -- --------------------------------------------------------
 
--- 
+--
 -- Struktura tabeli dla  `changelog`
--- 
+--
 
-CREATE TABLE `changelog` (
-  `id` int(11) NOT NULL auto_increment,
-  `author` varchar(255) NOT NULL default '',
-  `location` varchar(255) NOT NULL default '',
+DROP TABLE IF EXISTS `changelog`;
+CREATE TABLE IF NOT EXISTS `changelog` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `author` varchar(255) NOT NULL DEFAULT '',
+  `location` varchar(255) NOT NULL DEFAULT '',
   `text` text NOT NULL,
-  `date` datetime NOT NULL default '0000-00-00 00:00:00',
-  `lang` varchar(2) NOT NULL default '',
+  `date` datetime NOT NULL DEFAULT '0000-00-00 00:00:00',
+  `lang` varchar(2) NOT NULL DEFAULT '',
   KEY `id` (`id`)
 ) ENGINE=MyISAM DEFAULT CHARSET=utf8 AUTO_INCREMENT=1 ;
 
--- 
--- Zrzut danych tabeli `changelog`
--- 
-
-
 -- --------------------------------------------------------
 
--- 
+--
 -- Struktura tabeli dla  `chat`
--- 
+--
 
-CREATE TABLE `chat` (
-  `id` int(11) NOT NULL auto_increment,
-  `user` varchar(100) NOT NULL default '',
+DROP TABLE IF EXISTS `chat`;
+CREATE TABLE IF NOT EXISTS `chat` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `user` varchar(100) NOT NULL DEFAULT '',
   `chat` text NOT NULL,
-  `senderid` int(11) NOT NULL default '0',
-  `ownerid` int(11) NOT NULL default '0',
-  `lang` varchar(3) NOT NULL default 'pl',
-  PRIMARY KEY  (`id`),
-  KEY `id_2` (`id`)
+  `senderid` int(11) NOT NULL DEFAULT '0',
+  `ownerid` int(11) NOT NULL DEFAULT '0',
+  `lang` varchar(3) NOT NULL DEFAULT 'pl',
+  `sdate` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  PRIMARY KEY (`id`)
 ) ENGINE=MyISAM DEFAULT CHARSET=utf8 PACK_KEYS=0 AUTO_INCREMENT=1 ;
 
--- 
--- Zrzut danych tabeli `chat`
--- 
-
-
 -- --------------------------------------------------------
 
--- 
+--
 -- Struktura tabeli dla  `chat_config`
--- 
+--
 
-CREATE TABLE `chat_config` (
-  `id` int(11) NOT NULL auto_increment,
-  `cisza` char(2) NOT NULL default 'Y',
-  `gracz` int(11) NOT NULL default '0',
-  `resets` int(11) NOT NULL default '0',
+DROP TABLE IF EXISTS `chat_config`;
+CREATE TABLE IF NOT EXISTS `chat_config` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `cisza` char(2) NOT NULL DEFAULT 'Y',
+  `gracz` int(11) NOT NULL DEFAULT '0',
+  `resets` int(11) NOT NULL DEFAULT '0',
   UNIQUE KEY `gracz` (`gracz`),
   KEY `id` (`id`)
-) ENGINE=MyISAM  DEFAULT CHARSET=utf8 PACK_KEYS=0 AUTO_INCREMENT=9 ;
-
--- 
--- Zrzut danych tabeli `chat_config`
--- 
-
+) ENGINE=MyISAM  DEFAULT CHARSET=utf8 PACK_KEYS=0 AUTO_INCREMENT=23 ;
 
 -- --------------------------------------------------------
 
--- 
--- Struktura tabeli dla  `core`
--- 
+--
+-- Struktura tabeli dla  `contacts`
+--
 
-CREATE TABLE `core` (
-  `id` int(11) NOT NULL auto_increment,
-  `owner` int(11) NOT NULL default '0',
-  `name` varchar(20) NOT NULL default '',
-  `type` varchar(20) NOT NULL default '',
-  `ref_id` int(11) NOT NULL default '0',
-  `power` double(11,3) NOT NULL default '0.000',
-  `defense` double(11,3) NOT NULL default '0.000',
-  `status` varchar(5) NOT NULL default 'Alive',
-  `active` char(1) NOT NULL default 'N',
-  `corename` varchar(30) NOT NULL default '',
-  `gender` char(1) NOT NULL default '',
-  `wins` int(11) NOT NULL default '0',
-  `losses` int(11) NOT NULL default '0',
+DROP TABLE IF EXISTS `contacts`;
+CREATE TABLE IF NOT EXISTS `contacts` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `owner` int(11) NOT NULL,
+  `pid` int(11) NOT NULL,
+  `order` int(11) NOT NULL DEFAULT '1',
+  UNIQUE KEY `id` (`id`),
+  KEY `owner` (`owner`),
+  KEY `order` (`order`)
+) ENGINE=MyISAM DEFAULT CHARSET=utf8 AUTO_INCREMENT=1 ;
+
+-- --------------------------------------------------------
+
+--
+-- Struktura tabeli dla  `core`
+--
+
+DROP TABLE IF EXISTS `core`;
+CREATE TABLE IF NOT EXISTS `core` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `owner` int(11) NOT NULL DEFAULT '0',
+  `name` varchar(20) NOT NULL DEFAULT '',
+  `type` varchar(20) NOT NULL DEFAULT '',
+  `ref_id` int(11) NOT NULL DEFAULT '0',
+  `power` double(11,3) NOT NULL DEFAULT '0.000',
+  `defense` double(11,3) NOT NULL DEFAULT '0.000',
+  `status` varchar(5) NOT NULL DEFAULT 'Alive',
+  `active` char(1) NOT NULL DEFAULT 'N',
+  `corename` varchar(30) NOT NULL DEFAULT '',
+  `gender` char(1) NOT NULL DEFAULT '',
+  `wins` int(11) NOT NULL DEFAULT '0',
+  `losses` int(11) NOT NULL DEFAULT '0',
   KEY `id` (`id`),
   KEY `name` (`name`),
   KEY `corename` (`corename`),
@@ -586,62 +552,31 @@ CREATE TABLE `core` (
   KEY `owner` (`owner`)
 ) ENGINE=MyISAM DEFAULT CHARSET=utf8 PACK_KEYS=0 AUTO_INCREMENT=1 ;
 
--- 
--- Zrzut danych tabeli `core`
--- 
-
-
 -- --------------------------------------------------------
 
--- 
--- Struktura tabeli dla  `core_market`
--- 
-
-CREATE TABLE `core_market` (
-  `id` int(11) NOT NULL auto_increment,
-  `name` varchar(20) NOT NULL default '',
-  `cost` int(11) unsigned NOT NULL default '0',
-  `seller` int(11) NOT NULL default '0',
-  `type` varchar(20) NOT NULL default '',
-  `power` double(11,3) NOT NULL default '0.000',
-  `defense` double(11,3) NOT NULL default '0.000',
-  `gender` char(1) NOT NULL default '',
-  `ref_id` int(11) NOT NULL default '0',
-  `wins` int(11) NOT NULL default '0',
-  `losses` int(11) NOT NULL default '0',
-  PRIMARY KEY  (`id`),
-  KEY `id` (`id`)
-) ENGINE=MyISAM  DEFAULT CHARSET=utf8 PACK_KEYS=0 AUTO_INCREMENT=6 ;
-
--- 
--- Zrzut danych tabeli `core_market`
--- 
-
-
--- --------------------------------------------------------
-
--- 
+--
 -- Struktura tabeli dla  `cores`
--- 
+--
 
-CREATE TABLE `cores` (
-  `id` int(11) NOT NULL auto_increment,
-  `name` varchar(20) NOT NULL default '',
-  `type` varchar(20) NOT NULL default '',
-  `power` double(11,4) NOT NULL default '1.0000',
-  `defense` double(11,4) NOT NULL default '1.0000',
-  `rarity` int(1) NOT NULL default '1',
+DROP TABLE IF EXISTS `cores`;
+CREATE TABLE IF NOT EXISTS `cores` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `name` varchar(20) NOT NULL DEFAULT '',
+  `type` varchar(20) NOT NULL DEFAULT '',
+  `power` double(11,4) NOT NULL DEFAULT '1.0000',
+  `defense` double(11,4) NOT NULL DEFAULT '1.0000',
+  `rarity` int(1) NOT NULL DEFAULT '1',
   `desc` text NOT NULL,
-  `lang` varchar(3) NOT NULL default 'pl',
-  PRIMARY KEY  (`id`),
+  `lang` varchar(3) NOT NULL DEFAULT 'pl',
+  PRIMARY KEY (`id`),
   KEY `id` (`id`)
 ) ENGINE=MyISAM  DEFAULT CHARSET=utf8 AUTO_INCREMENT=31 ;
 
--- 
+--
 -- Zrzut danych tabeli `cores`
--- 
+--
 
-INSERT INTO `cores` (`id`, `name`, `type`, `power`, `defense`, `rarity`, `desc`, `lang`) VALUES 
+INSERT INTO `cores` (`id`, `name`, `type`, `power`, `defense`, `rarity`, `desc`, `lang`) VALUES
 (1, 'Łasica', 'Plant', 1.0000, 1.0000, 1, '', 'pl'),
 (2, 'Sokół', 'Plant', 2.0000, 2.0000, 1, '', 'pl'),
 (3, 'Jeleń', 'Plant', 3.0000, 3.0000, 1, '', 'pl'),
@@ -675,68 +610,84 @@ INSERT INTO `cores` (`id`, `name`, `type`, `power`, `defense`, `rarity`, `desc`,
 
 -- --------------------------------------------------------
 
--- 
+--
+-- Struktura tabeli dla  `core_market`
+--
+
+DROP TABLE IF EXISTS `core_market`;
+CREATE TABLE IF NOT EXISTS `core_market` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `name` varchar(20) NOT NULL DEFAULT '',
+  `cost` int(11) unsigned NOT NULL DEFAULT '0',
+  `seller` int(11) NOT NULL DEFAULT '0',
+  `type` varchar(20) NOT NULL DEFAULT '',
+  `power` double(11,3) NOT NULL DEFAULT '0.000',
+  `defense` double(11,3) NOT NULL DEFAULT '0.000',
+  `gender` char(1) NOT NULL DEFAULT '',
+  `ref_id` int(11) NOT NULL DEFAULT '0',
+  `wins` int(11) NOT NULL DEFAULT '0',
+  `losses` int(11) NOT NULL DEFAULT '0',
+  PRIMARY KEY (`id`),
+  KEY `id` (`id`)
+) ENGINE=MyISAM DEFAULT CHARSET=utf8 PACK_KEYS=0 AUTO_INCREMENT=1 ;
+
+-- --------------------------------------------------------
+
+--
 -- Struktura tabeli dla  `court`
--- 
+--
 
-CREATE TABLE `court` (
-  `id` int(11) NOT NULL auto_increment,
-  `title` varchar(255) NOT NULL default '',
+DROP TABLE IF EXISTS `court`;
+CREATE TABLE IF NOT EXISTS `court` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `title` varchar(255) NOT NULL DEFAULT '',
   `body` text NOT NULL,
-  `lang` varchar(2) NOT NULL default 'pl',
-  `type` varchar(20) NOT NULL default 'case',
-  `date` date NOT NULL default '0000-00-00',
+  `lang` varchar(2) NOT NULL DEFAULT 'pl',
+  `type` varchar(20) NOT NULL DEFAULT 'case',
+  `date` date NOT NULL DEFAULT '0000-00-00',
   KEY `id` (`id`)
 ) ENGINE=MyISAM DEFAULT CHARSET=utf8 AUTO_INCREMENT=1 ;
 
--- 
--- Zrzut danych tabeli `court`
--- 
-
-
 -- --------------------------------------------------------
 
--- 
+--
 -- Struktura tabeli dla  `court_cases`
--- 
+--
 
-CREATE TABLE `court_cases` (
-  `id` int(11) NOT NULL auto_increment,
-  `textid` int(11) NOT NULL default '0',
-  `author` varchar(40) NOT NULL default '',
+DROP TABLE IF EXISTS `court_cases`;
+CREATE TABLE IF NOT EXISTS `court_cases` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `textid` int(11) NOT NULL DEFAULT '0',
+  `author` varchar(40) NOT NULL DEFAULT '',
   `body` text NOT NULL,
   KEY `id` (`id`)
 ) ENGINE=MyISAM DEFAULT CHARSET=utf8 AUTO_INCREMENT=1 ;
 
--- 
--- Zrzut danych tabeli `court_cases`
--- 
-
-
 -- --------------------------------------------------------
 
--- 
+--
 -- Struktura tabeli dla  `czary`
--- 
+--
 
-CREATE TABLE `czary` (
-  `id` int(11) NOT NULL auto_increment,
-  `nazwa` varchar(30) NOT NULL default '',
-  `gracz` int(11) NOT NULL default '0',
-  `cena` int(11) NOT NULL default '0',
-  `poziom` int(11) NOT NULL default '1',
-  `typ` char(1) NOT NULL default 'B',
-  `obr` double(11,1) NOT NULL default '1.0',
-  `status` char(1) NOT NULL default 'S',
-  `lang` varchar(3) NOT NULL default 'pl',
+DROP TABLE IF EXISTS `czary`;
+CREATE TABLE IF NOT EXISTS `czary` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `nazwa` varchar(30) NOT NULL DEFAULT '',
+  `gracz` int(11) NOT NULL DEFAULT '0',
+  `cena` int(11) NOT NULL DEFAULT '0',
+  `poziom` int(11) NOT NULL DEFAULT '1',
+  `typ` char(1) NOT NULL DEFAULT 'B',
+  `obr` double(11,1) NOT NULL DEFAULT '1.0',
+  `status` char(1) NOT NULL DEFAULT 'S',
+  `lang` varchar(3) NOT NULL DEFAULT 'pl',
   KEY `id` (`id`)
 ) ENGINE=MyISAM  DEFAULT CHARSET=utf8 PACK_KEYS=0 AUTO_INCREMENT=46 ;
 
--- 
+--
 -- Zrzut danych tabeli `czary`
--- 
+--
 
-INSERT INTO `czary` (`id`, `nazwa`, `gracz`, `cena`, `poziom`, `typ`, `obr`, `status`, `lang`) VALUES 
+INSERT INTO `czary` (`id`, `nazwa`, `gracz`, `cena`, `poziom`, `typ`, `obr`, `status`, `lang`) VALUES
 (1, 'Piekielne płomienie', 0, 2500000, 65, 'B', 2.3, 'S', 'pl'),
 (2, 'Uderzenie umysłu', 0, 2000000, 60, 'B', 2.2, 'S', 'pl'),
 (3, 'Błyskawica', 0, 100000, 35, 'B', 1.7, 'S', 'pl'),
@@ -785,30 +736,33 @@ INSERT INTO `czary` (`id`, `nazwa`, `gracz`, `cena`, `poziom`, `typ`, `obr`, `st
 
 -- --------------------------------------------------------
 
--- 
+--
 -- Struktura tabeli dla  `donators`
--- 
+--
 
-CREATE TABLE `donators` (
-  `name` varchar(30) NOT NULL default '',
+DROP TABLE IF EXISTS `donators`;
+CREATE TABLE IF NOT EXISTS `donators` (
+  `name` varchar(30) NOT NULL DEFAULT '',
   KEY `name` (`name`)
 ) ENGINE=MyISAM DEFAULT CHARSET=utf8;
 
--- 
+--
 -- Zrzut danych tabeli `donators`
--- 
+--
 
-INSERT INTO `donators` (`name`) VALUES 
+INSERT INTO `donators` (`name`) VALUES
 ('Agatka Saurelin'),
 ('Agloval'),
 ('Arronax'),
 ('Arvena Loria'),
 ('Corwin'),
 ('Dellas'),
+('Don Rincewind'),
 ('Dwalin'),
 ('Eldarion'),
 ('Furiomir'),
 ('Graffi'),
+('Gredo'),
 ('Irian'),
 ('Jaro'),
 ('Kalarone'),
@@ -818,14 +772,18 @@ INSERT INTO `donators` (`name`) VALUES
 ('Mario'),
 ('Mariopan'),
 ('Nebu'),
+('Necro'),
+('Nikt Taki'),
 ('Niris'),
 ('PaVe'),
 ('Regulus'),
 ('Solostran'),
+('Storm'),
 ('Syraell'),
 ('Telcontar'),
 ('Topek'),
 ('Ugly'),
+('Venim'),
 ('WilQ'),
 ('Yarpan'),
 ('Zbójnik'),
@@ -833,42 +791,45 @@ INSERT INTO `donators` (`name`) VALUES
 
 -- --------------------------------------------------------
 
--- 
+--
 -- Struktura tabeli dla  `equipment`
--- 
+--
 
-CREATE TABLE `equipment` (
-  `id` int(11) NOT NULL auto_increment,
-  `owner` int(11) NOT NULL default '0',
-  `name` varchar(100) NOT NULL default '',
-  `power` int(11) NOT NULL default '0',
-  `status` char(1) NOT NULL default 'U',
-  `type` char(1) NOT NULL default 'W',
-  `cost` int(11) unsigned NOT NULL default '0',
-  `minlev` int(2) NOT NULL default '1',
-  `zr` int(11) NOT NULL default '0',
-  `wt` int(11) NOT NULL default '0',
-  `szyb` int(11) NOT NULL default '0',
-  `maxwt` int(11) NOT NULL default '0',
-  `magic` char(1) NOT NULL default 'N',
-  `poison` int(11) NOT NULL default '0',
-  `amount` int(11) NOT NULL default '1',
-  `twohand` char(1) NOT NULL default 'N',
-  `lang` varchar(3) NOT NULL default 'pl',
-  `ptype` char(1) NOT NULL default '',
-  `repair` int(11) NOT NULL default '10',
-  `location` varchar(20) NOT NULL default 'Altara',
+DROP TABLE IF EXISTS `equipment`;
+CREATE TABLE IF NOT EXISTS `equipment` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `owner` int(11) NOT NULL DEFAULT '0',
+  `name` varchar(100) NOT NULL DEFAULT '',
+  `power` int(11) NOT NULL DEFAULT '0',
+  `status` char(1) NOT NULL DEFAULT 'U',
+  `type` char(1) NOT NULL DEFAULT 'W',
+  `cost` int(11) unsigned NOT NULL DEFAULT '0',
+  `minlev` int(2) NOT NULL DEFAULT '1',
+  `zr` int(11) NOT NULL DEFAULT '0',
+  `wt` int(11) NOT NULL DEFAULT '0',
+  `szyb` int(11) NOT NULL DEFAULT '0',
+  `maxwt` int(11) NOT NULL DEFAULT '0',
+  `magic` char(1) NOT NULL DEFAULT 'N',
+  `poison` int(11) NOT NULL DEFAULT '0',
+  `amount` int(11) NOT NULL DEFAULT '1',
+  `twohand` char(1) NOT NULL DEFAULT 'N',
+  `lang` varchar(3) NOT NULL DEFAULT 'pl',
+  `ptype` char(1) NOT NULL DEFAULT '',
+  `repair` int(11) NOT NULL DEFAULT '10',
+  `location` varchar(20) NOT NULL DEFAULT 'Altara',
   KEY `status` (`status`),
   KEY `type` (`type`),
   KEY `owner` (`owner`),
-  KEY `id` (`id`)
+  KEY `id` (`id`),
+  KEY `minlev` (`minlev`),
+  FULLTEXT KEY `name` (`name`)
 ) ENGINE=MyISAM  DEFAULT CHARSET=utf8 PACK_KEYS=0 AUTO_INCREMENT=76 ;
 
--- 
+--
 -- Zrzut danych tabeli `equipment`
--- 
+--
 
-INSERT INTO `equipment` (`id`, `owner`, `name`, `power`, `status`, `type`, `cost`, `minlev`, `zr`, `wt`, `szyb`, `maxwt`, `magic`, `poison`, `amount`, `twohand`, `lang`, `ptype`, `repair`, `location`) VALUES 
+INSERT INTO `equipment` (`id`, `owner`, `name`, `power`, `status`, `type`, `cost`, `minlev`, `zr`, `wt`, `szyb`, `maxwt`, `magic`, `poison`, `amount`, `twohand`, `lang`, `ptype`, `repair`, `location`) VALUES
 (1, 0, 'Anima z miedzi', 3, 'S', 'A', 200, 1, 0, 40, 0, 40, 'N', 0, 3, 'N', 'pl', '', 2, 'Altara'),
 (2, 0, 'Bajdana z miedzi', 9, 'S', 'A', 800, 3, 1, 40, 0, 40, 'N', 0, 1, 'N', 'pl', '', 6, 'Altara'),
 (3, 0, 'Brygantyna z miedzi', 15, 'S', 'A', 1600, 5, 2, 40, 0, 40, 'N', 0, 1, 'N', 'pl', '', 10, 'Altara'),
@@ -947,208 +908,192 @@ INSERT INTO `equipment` (`id`, `owner`, `name`, `power`, `status`, `type`, `cost
 
 -- --------------------------------------------------------
 
--- 
+--
 -- Struktura tabeli dla  `events`
--- 
+--
 
-CREATE TABLE `events` (
-  `id` int(11) NOT NULL auto_increment,
+DROP TABLE IF EXISTS `events`;
+CREATE TABLE IF NOT EXISTS `events` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
   `text` text NOT NULL,
-  `lang` varchar(3) NOT NULL default 'pl',
+  `lang` varchar(3) NOT NULL DEFAULT 'pl',
   KEY `id` (`id`)
 ) ENGINE=MyISAM DEFAULT CHARSET=utf8 AUTO_INCREMENT=1 ;
 
--- 
--- Zrzut danych tabeli `events`
--- 
-
-
 -- --------------------------------------------------------
 
--- 
+--
 -- Struktura tabeli dla  `farm`
--- 
+--
 
-CREATE TABLE `farm` (
-  `id` int(11) NOT NULL auto_increment,
-  `owner` int(11) NOT NULL default '0',
-  `amount` int(11) NOT NULL default '0',
-  `name` varchar(20) default NULL,
-  `age` int(3) NOT NULL default '0',
+DROP TABLE IF EXISTS `farm`;
+CREATE TABLE IF NOT EXISTS `farm` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `owner` int(11) NOT NULL DEFAULT '0',
+  `amount` int(11) NOT NULL DEFAULT '0',
+  `name` varchar(20) DEFAULT NULL,
+  `age` int(3) NOT NULL DEFAULT '0',
   KEY `owner` (`owner`),
   KEY `id` (`id`)
-) ENGINE=MyISAM  DEFAULT CHARSET=utf8 PACK_KEYS=0 AUTO_INCREMENT=116 ;
-
--- 
--- Zrzut danych tabeli `farm`
--- 
-
+) ENGINE=MyISAM DEFAULT CHARSET=utf8 PACK_KEYS=0 AUTO_INCREMENT=1 ;
 
 -- --------------------------------------------------------
 
--- 
+--
 -- Struktura tabeli dla  `farms`
--- 
+--
 
-CREATE TABLE `farms` (
-  `id` int(11) NOT NULL auto_increment,
-  `owner` int(11) NOT NULL default '0',
-  `lands` int(11) NOT NULL default '0',
-  `glasshouse` int(11) NOT NULL default '0',
-  `irrigation` int(11) NOT NULL default '0',
-  `creeper` int(11) NOT NULL default '0',
+DROP TABLE IF EXISTS `farms`;
+CREATE TABLE IF NOT EXISTS `farms` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `owner` int(11) NOT NULL DEFAULT '0',
+  `lands` int(11) NOT NULL DEFAULT '0',
+  `glasshouse` int(11) NOT NULL DEFAULT '0',
+  `irrigation` int(11) NOT NULL DEFAULT '0',
+  `creeper` int(11) NOT NULL DEFAULT '0',
   KEY `id` (`id`),
   KEY `owner` (`owner`)
 ) ENGINE=MyISAM DEFAULT CHARSET=utf8 AUTO_INCREMENT=1 ;
 
--- 
--- Zrzut danych tabeli `farms`
--- 
-
-
 -- --------------------------------------------------------
 
--- 
+--
 -- Struktura tabeli dla  `halloffame`
--- 
+--
 
-CREATE TABLE `halloffame` (
-  `id` int(11) NOT NULL auto_increment,
-  `heroid` int(11) NOT NULL default '0',
-  `oldname` varchar(100) NOT NULL default '',
-  `herorace` varchar(100) NOT NULL default '',
-  `newid` int(11) NOT NULL default '0',
+DROP TABLE IF EXISTS `halloffame`;
+CREATE TABLE IF NOT EXISTS `halloffame` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `heroid` int(11) NOT NULL DEFAULT '0',
+  `oldname` varchar(100) NOT NULL DEFAULT '',
+  `herorace` varchar(100) NOT NULL DEFAULT '',
+  `newid` int(11) NOT NULL DEFAULT '0',
   KEY `id` (`id`)
 ) ENGINE=MyISAM DEFAULT CHARSET=utf8 AUTO_INCREMENT=1 ;
 
--- 
--- Zrzut danych tabeli `halloffame`
--- 
+-- --------------------------------------------------------
 
+--
+-- Struktura tabeli dla  `halloffame2`
+--
+
+DROP TABLE IF EXISTS `halloffame2`;
+CREATE TABLE IF NOT EXISTS `halloffame2` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `tribe` varchar(255) NOT NULL,
+  `leader` varchar(255) NOT NULL,
+  `bdate` varchar(255) NOT NULL,
+  PRIMARY KEY (`id`)
+) ENGINE=MyISAM DEFAULT CHARSET=utf8 AUTO_INCREMENT=1 ;
 
 -- --------------------------------------------------------
 
--- 
+--
 -- Struktura tabeli dla  `herbs`
--- 
+--
 
-CREATE TABLE `herbs` (
-  `id` int(11) NOT NULL auto_increment,
-  `gracz` int(11) NOT NULL default '0',
-  `illani` int(11) NOT NULL default '0',
-  `illanias` int(11) NOT NULL default '0',
-  `nutari` int(11) NOT NULL default '0',
-  `dynallca` int(11) NOT NULL default '0',
-  `ilani_seeds` int(11) NOT NULL default '0',
-  `illanias_seeds` int(11) NOT NULL default '0',
-  `nutari_seeds` int(11) NOT NULL default '0',
-  `dynallca_seeds` int(11) NOT NULL default '0',
-  PRIMARY KEY  (`gracz`),
+DROP TABLE IF EXISTS `herbs`;
+CREATE TABLE IF NOT EXISTS `herbs` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `gracz` int(11) NOT NULL DEFAULT '0',
+  `illani` int(11) NOT NULL DEFAULT '0',
+  `illanias` int(11) NOT NULL DEFAULT '0',
+  `nutari` int(11) NOT NULL DEFAULT '0',
+  `dynallca` int(11) NOT NULL DEFAULT '0',
+  `ilani_seeds` int(11) NOT NULL DEFAULT '0',
+  `illanias_seeds` int(11) NOT NULL DEFAULT '0',
+  `nutari_seeds` int(11) NOT NULL DEFAULT '0',
+  `dynallca_seeds` int(11) NOT NULL DEFAULT '0',
+  PRIMARY KEY (`gracz`),
   UNIQUE KEY `id` (`id`)
 ) ENGINE=MyISAM DEFAULT CHARSET=utf8 PACK_KEYS=0 AUTO_INCREMENT=1 ;
 
--- 
--- Zrzut danych tabeli `herbs`
--- 
-
-
 -- --------------------------------------------------------
 
--- 
+--
 -- Struktura tabeli dla  `hmarket`
--- 
+--
 
-CREATE TABLE `hmarket` (
-  `id` int(11) NOT NULL auto_increment,
-  `seller` int(11) NOT NULL default '0',
-  `ilosc` int(11) NOT NULL default '0',
-  `cost` int(11) unsigned NOT NULL default '0',
-  `nazwa` varchar(30) NOT NULL default '',
-  `lang` varchar(3) NOT NULL default 'pl',
+DROP TABLE IF EXISTS `hmarket`;
+CREATE TABLE IF NOT EXISTS `hmarket` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `seller` int(11) NOT NULL DEFAULT '0',
+  `ilosc` int(11) NOT NULL DEFAULT '0',
+  `cost` int(11) unsigned NOT NULL DEFAULT '0',
+  `nazwa` varchar(30) NOT NULL DEFAULT '',
+  `lang` varchar(3) NOT NULL DEFAULT 'pl',
   UNIQUE KEY `id` (`id`)
 ) ENGINE=MyISAM DEFAULT CHARSET=utf8 PACK_KEYS=0 AUTO_INCREMENT=1 ;
 
--- 
--- Zrzut danych tabeli `hmarket`
--- 
-
-
 -- --------------------------------------------------------
 
--- 
+--
 -- Struktura tabeli dla  `houses`
--- 
+--
 
-CREATE TABLE `houses` (
-  `id` int(11) NOT NULL auto_increment,
-  `owner` int(11) NOT NULL default '0',
-  `size` int(11) NOT NULL default '1',
-  `value` int(11) NOT NULL default '1',
-  `bedroom` char(1) NOT NULL default 'N',
-  `wardrobe` int(11) NOT NULL default '0',
-  `points` int(11) NOT NULL default '10',
-  `name` varchar(60) default NULL,
-  `used` int(11) NOT NULL default '0',
-  `build` int(11) NOT NULL default '0',
-  `locator` int(11) NOT NULL default '0',
-  `cost` int(11) unsigned NOT NULL default '0',
-  `seller` int(11) NOT NULL default '0',
-  `location` varchar(20) NOT NULL default 'Altara',
+DROP TABLE IF EXISTS `houses`;
+CREATE TABLE IF NOT EXISTS `houses` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `owner` int(11) NOT NULL DEFAULT '0',
+  `size` int(11) NOT NULL DEFAULT '1',
+  `value` int(11) NOT NULL DEFAULT '1',
+  `bedroom` char(1) NOT NULL DEFAULT 'N',
+  `wardrobe` int(11) NOT NULL DEFAULT '0',
+  `points` int(11) NOT NULL DEFAULT '10',
+  `name` varchar(60) DEFAULT NULL,
+  `used` int(11) NOT NULL DEFAULT '0',
+  `build` int(11) NOT NULL DEFAULT '0',
+  `locator` int(11) NOT NULL DEFAULT '0',
+  `cost` int(11) unsigned NOT NULL DEFAULT '0',
+  `seller` int(11) NOT NULL DEFAULT '0',
+  `location` varchar(20) NOT NULL DEFAULT 'Altara',
   KEY `id` (`id`),
   KEY `owner` (`owner`)
 ) ENGINE=MyISAM DEFAULT CHARSET=utf8 PACK_KEYS=0 AUTO_INCREMENT=1 ;
 
--- 
--- Zrzut danych tabeli `houses`
--- 
-
-
 -- --------------------------------------------------------
 
--- 
+--
 -- Struktura tabeli dla  `jail`
--- 
+--
 
-CREATE TABLE `jail` (
-  `id` int(11) NOT NULL auto_increment,
-  `prisoner` int(11) NOT NULL default '0',
-  `duration` int(3) NOT NULL default '0',
-  `data` date NOT NULL default '0000-00-00',
+DROP TABLE IF EXISTS `jail`;
+CREATE TABLE IF NOT EXISTS `jail` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `prisoner` int(11) NOT NULL DEFAULT '0',
+  `duration` int(3) NOT NULL DEFAULT '0',
+  `data` date NOT NULL DEFAULT '0000-00-00',
   `verdict` text NOT NULL,
-  `cost` int(11) unsigned NOT NULL default '0',
+  `cost` int(11) unsigned NOT NULL DEFAULT '0',
   KEY `id` (`id`)
-) ENGINE=MyISAM  DEFAULT CHARSET=utf8 PACK_KEYS=0 AUTO_INCREMENT=35 ;
-
--- 
--- Zrzut danych tabeli `jail`
--- 
-
+) ENGINE=MyISAM  DEFAULT CHARSET=utf8 PACK_KEYS=0 AUTO_INCREMENT=106 ;
 
 -- --------------------------------------------------------
 
--- 
+--
 -- Struktura tabeli dla  `jeweller`
--- 
+--
 
-CREATE TABLE `jeweller` (
-  `id` int(11) NOT NULL auto_increment,
-  `owner` int(11) NOT NULL default '0',
-  `name` varchar(60) NOT NULL default '',
-  `type` char(1) NOT NULL default 'I',
-  `cost` int(11) NOT NULL default '0',
-  `level` smallint(4) NOT NULL default '0',
-  `bonus` int(11) NOT NULL default '0',
-  `lang` varchar(3) NOT NULL default 'pl',
+DROP TABLE IF EXISTS `jeweller`;
+CREATE TABLE IF NOT EXISTS `jeweller` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `owner` int(11) NOT NULL DEFAULT '0',
+  `name` varchar(60) NOT NULL DEFAULT '',
+  `type` char(1) NOT NULL DEFAULT 'I',
+  `cost` int(11) NOT NULL DEFAULT '0',
+  `level` smallint(4) NOT NULL DEFAULT '0',
+  `bonus` int(11) NOT NULL DEFAULT '0',
+  `lang` varchar(3) NOT NULL DEFAULT 'pl',
   KEY `id` (`id`),
   KEY `owner` (`owner`),
   KEY `name` (`name`)
 ) ENGINE=MyISAM  DEFAULT CHARSET=utf8 AUTO_INCREMENT=16 ;
 
--- 
+--
 -- Zrzut danych tabeli `jeweller`
--- 
+--
 
-INSERT INTO `jeweller` (`id`, `owner`, `name`, `type`, `cost`, `level`, `bonus`, `lang`) VALUES 
+INSERT INTO `jeweller` (`id`, `owner`, `name`, `type`, `cost`, `level`, `bonus`, `lang`) VALUES
 (1, 0, 'pierścień', 'I', 50, 1, 0, 'pl'),
 (2, 0, 'pierścień nowicjusza', 'I', 100, 1, 1, 'pl'),
 (3, 0, 'pierścień ucznia', 'I', 1000, 5, 5, 'pl'),
@@ -1167,189 +1112,161 @@ INSERT INTO `jeweller` (`id`, `owner`, `name`, `type`, `cost`, `level`, `bonus`,
 
 -- --------------------------------------------------------
 
--- 
+--
 -- Struktura tabeli dla  `jeweller_work`
--- 
+--
 
-CREATE TABLE `jeweller_work` (
-  `id` int(11) NOT NULL auto_increment,
-  `owner` int(11) NOT NULL default '0',
-  `name` varchar(100) NOT NULL default '',
-  `n_energy` float(10,2) NOT NULL default '0.00',
-  `u_energy` float(10,2) NOT NULL default '0.00',
-  `bonus` varchar(30) NOT NULL default '',
-  `type` char(1) NOT NULL default '',
+DROP TABLE IF EXISTS `jeweller_work`;
+CREATE TABLE IF NOT EXISTS `jeweller_work` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `owner` int(11) NOT NULL DEFAULT '0',
+  `name` varchar(100) NOT NULL DEFAULT '',
+  `n_energy` float(10,2) NOT NULL DEFAULT '0.00',
+  `u_energy` float(10,2) NOT NULL DEFAULT '0.00',
+  `bonus` varchar(30) NOT NULL DEFAULT '',
+  `type` char(1) NOT NULL DEFAULT '',
   KEY `id` (`id`),
   KEY `owner` (`owner`)
-) ENGINE=MyISAM  DEFAULT CHARSET=utf8 AUTO_INCREMENT=17 ;
-
--- 
--- Zrzut danych tabeli `jeweller_work`
--- 
-
+) ENGINE=MyISAM  DEFAULT CHARSET=utf8 AUTO_INCREMENT=23 ;
 
 -- --------------------------------------------------------
 
--- 
--- Struktura tabeli dla  `lib_comments`
--- 
-
-CREATE TABLE `lib_comments` (
-  `id` int(11) NOT NULL auto_increment,
-  `textid` int(11) NOT NULL default '0',
-  `author` varchar(40) NOT NULL default '',
-  `body` text NOT NULL,
-  `time` date default NULL,
-  KEY `id` (`id`)
-) ENGINE=MyISAM DEFAULT CHARSET=utf8 AUTO_INCREMENT=1 ;
-
--- 
--- Zrzut danych tabeli `lib_comments`
--- 
-
-
--- --------------------------------------------------------
-
--- 
+--
 -- Struktura tabeli dla  `library`
--- 
+--
 
-CREATE TABLE `library` (
-  `id` int(11) NOT NULL auto_increment,
-  `title` varchar(255) NOT NULL default '',
+DROP TABLE IF EXISTS `library`;
+CREATE TABLE IF NOT EXISTS `library` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `title` varchar(255) NOT NULL DEFAULT '',
   `body` text NOT NULL,
-  `added` char(1) NOT NULL default 'N',
-  `type` varchar(20) NOT NULL default '',
-  `lang` varchar(2) NOT NULL default 'pl',
-  `author` varchar(50) NOT NULL default '',
+  `added` char(1) NOT NULL DEFAULT 'N',
+  `type` varchar(20) NOT NULL DEFAULT '',
+  `lang` varchar(2) NOT NULL DEFAULT 'pl',
+  `author` varchar(50) NOT NULL DEFAULT '',
   KEY `id` (`id`)
 ) ENGINE=MyISAM DEFAULT CHARSET=utf8 AUTO_INCREMENT=1 ;
 
--- 
--- Zrzut danych tabeli `library`
--- 
+-- --------------------------------------------------------
 
+--
+-- Struktura tabeli dla  `lib_comments`
+--
+
+DROP TABLE IF EXISTS `lib_comments`;
+CREATE TABLE IF NOT EXISTS `lib_comments` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `textid` int(11) NOT NULL DEFAULT '0',
+  `author` varchar(40) NOT NULL DEFAULT '',
+  `body` text NOT NULL,
+  `time` date DEFAULT NULL,
+  KEY `id` (`id`)
+) ENGINE=MyISAM DEFAULT CHARSET=utf8 AUTO_INCREMENT=1 ;
 
 -- --------------------------------------------------------
 
--- 
+--
 -- Struktura tabeli dla  `links`
--- 
+--
 
-CREATE TABLE `links` (
-  `id` int(11) NOT NULL auto_increment,
-  `owner` int(11) NOT NULL default '0',
-  `file` varchar(255) NOT NULL default '',
-  `text` varchar(100) NOT NULL default '',
+DROP TABLE IF EXISTS `links`;
+CREATE TABLE IF NOT EXISTS `links` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `owner` int(11) NOT NULL DEFAULT '0',
+  `file` varchar(255) NOT NULL DEFAULT '',
+  `text` varchar(100) NOT NULL DEFAULT '',
+  `number` int(11) NOT NULL,
   KEY `id` (`id`),
   KEY `owner` (`owner`)
 ) ENGINE=MyISAM DEFAULT CHARSET=utf8 AUTO_INCREMENT=1 ;
 
--- 
--- Zrzut danych tabeli `links`
--- 
-
-
 -- --------------------------------------------------------
 
--- 
+--
 -- Struktura tabeli dla  `log`
--- 
+--
 
-CREATE TABLE `log` (
-  `id` int(11) NOT NULL auto_increment,
-  `owner` int(11) NOT NULL default '0',
+DROP TABLE IF EXISTS `log`;
+CREATE TABLE IF NOT EXISTS `log` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `owner` int(11) NOT NULL DEFAULT '0',
   `log` text NOT NULL,
-  `unread` char(1) NOT NULL default 'F',
-  `czas` datetime NOT NULL default '0000-00-00 00:00:00',
+  `unread` char(1) NOT NULL DEFAULT 'F',
+  `czas` datetime NOT NULL DEFAULT '0000-00-00 00:00:00',
+  `type` char(1) NOT NULL DEFAULT 'U',
   KEY `id` (`id`),
-  KEY `owner` (`owner`)
+  KEY `owner` (`owner`),
+  KEY `type` (`type`)
 ) ENGINE=MyISAM DEFAULT CHARSET=utf8 AUTO_INCREMENT=1 ;
-
--- 
--- Zrzut danych tabeli `log`
--- 
-
 
 -- --------------------------------------------------------
 
--- 
+--
 -- Struktura tabeli dla  `logs`
--- 
+--
 
-CREATE TABLE `logs` (
-  `owner` int(11) NOT NULL default '0',
-  `log` varchar(255) NOT NULL default '',
-  `czas` date NOT NULL default '0000-00-00'
+DROP TABLE IF EXISTS `logs`;
+CREATE TABLE IF NOT EXISTS `logs` (
+  `owner` int(11) NOT NULL DEFAULT '0',
+  `log` varchar(255) NOT NULL DEFAULT '',
+  `czas` date NOT NULL DEFAULT '0000-00-00'
 ) ENGINE=MyISAM DEFAULT CHARSET=utf8;
 
--- 
--- Zrzut danych tabeli `logs`
--- 
-
-
 -- --------------------------------------------------------
 
--- 
+--
 -- Struktura tabeli dla  `lost_pass`
--- 
+--
 
-CREATE TABLE `lost_pass` (
-  `number` varchar(32) NOT NULL default '',
-  `email` varchar(100) NOT NULL default '',
-  `newpass` varchar(32) NOT NULL default '',
-  `id` int(11) NOT NULL default '0',
-  `newemail` varchar(100) NOT NULL default '',
+DROP TABLE IF EXISTS `lost_pass`;
+CREATE TABLE IF NOT EXISTS `lost_pass` (
+  `number` varchar(32) NOT NULL DEFAULT '',
+  `email` varchar(100) NOT NULL DEFAULT '',
+  `newpass` varchar(32) NOT NULL DEFAULT '',
+  `id` int(11) NOT NULL DEFAULT '0',
+  `newemail` varchar(100) NOT NULL DEFAULT '',
   KEY `number` (`number`),
   KEY `email` (`email`),
   KEY `id` (`id`)
 ) ENGINE=MyISAM DEFAULT CHARSET=utf8;
 
--- 
--- Zrzut danych tabeli `lost_pass`
--- 
-
-
 -- --------------------------------------------------------
 
--- 
+--
 -- Struktura tabeli dla  `lumberjack`
--- 
+--
 
-CREATE TABLE `lumberjack` (
-  `owner` int(11) NOT NULL default '0',
-  `level` tinyint(2) NOT NULL default '0',
+DROP TABLE IF EXISTS `lumberjack`;
+CREATE TABLE IF NOT EXISTS `lumberjack` (
+  `owner` int(11) NOT NULL DEFAULT '0',
+  `level` tinyint(2) NOT NULL DEFAULT '0',
   KEY `owner` (`owner`)
 ) ENGINE=MyISAM DEFAULT CHARSET=utf8;
 
--- 
--- Zrzut danych tabeli `lumberjack`
--- 
-
-
 -- --------------------------------------------------------
 
--- 
+--
 -- Struktura tabeli dla  `mage_items`
--- 
+--
 
-CREATE TABLE `mage_items` (
-  `id` int(11) NOT NULL auto_increment,
-  `name` varchar(60) NOT NULL default '',
-  `power` int(11) NOT NULL default '0',
-  `type` char(1) NOT NULL default 'B',
-  `cost` int(11) NOT NULL default '0',
-  `minlev` int(2) NOT NULL default '1',
-  `lang` varchar(3) NOT NULL default 'pl',
-  PRIMARY KEY  (`id`),
+DROP TABLE IF EXISTS `mage_items`;
+CREATE TABLE IF NOT EXISTS `mage_items` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `name` varchar(60) NOT NULL DEFAULT '',
+  `power` int(11) NOT NULL DEFAULT '0',
+  `type` char(1) NOT NULL DEFAULT 'B',
+  `cost` int(11) NOT NULL DEFAULT '0',
+  `minlev` int(2) NOT NULL DEFAULT '1',
+  `lang` varchar(3) NOT NULL DEFAULT 'pl',
+  PRIMARY KEY (`id`),
   KEY `type` (`type`)
 ) ENGINE=MyISAM  DEFAULT CHARSET=utf8 PACK_KEYS=0 AUTO_INCREMENT=13 ;
 
--- 
+--
 -- Zrzut danych tabeli `mage_items`
--- 
+--
 
-INSERT INTO `mage_items` (`id`, `name`, `power`, `type`, `cost`, `minlev`, `lang`) VALUES 
+INSERT INTO `mage_items` (`id`, `name`, `power`, `type`, `cost`, `minlev`, `lang`) VALUES
 (1, 'elfia różdżka', 0, 'T', 1000, 1, 'pl'),
 (2, 'elfie szaty', 10, 'C', 1000, 1, 'pl'),
 (3, 'różdżka adepta', 0, 'T', 50000, 20, 'pl'),
@@ -1365,596 +1282,579 @@ INSERT INTO `mage_items` (`id`, `name`, `power`, `type`, `cost`, `minlev`, `lang
 
 -- --------------------------------------------------------
 
--- 
+--
 -- Struktura tabeli dla  `mail`
--- 
+--
 
-CREATE TABLE `mail` (
-  `id` int(11) NOT NULL auto_increment,
-  `sender` varchar(20) NOT NULL default '',
-  `senderid` int(11) NOT NULL default '0',
-  `owner` int(11) NOT NULL default '0',
-  `subject` varchar(50) NOT NULL default '',
+DROP TABLE IF EXISTS `mail`;
+CREATE TABLE IF NOT EXISTS `mail` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `sender` varchar(20) NOT NULL DEFAULT '',
+  `senderid` int(11) NOT NULL DEFAULT '0',
+  `owner` int(11) NOT NULL DEFAULT '0',
+  `subject` varchar(50) NOT NULL DEFAULT '',
   `body` text NOT NULL,
-  `unread` char(1) NOT NULL default 'F',
-  `zapis` char(1) NOT NULL default 'N',
-  `send` int(11) NOT NULL default '0',
-  `date` datetime default NULL,
+  `unread` char(1) NOT NULL DEFAULT 'F',
+  `saved` char(1) NOT NULL DEFAULT 'N',
+  `date` datetime DEFAULT NULL,
+  `topic` int(11) NOT NULL DEFAULT '1',
   KEY `id` (`id`),
   KEY `owner` (`owner`),
   KEY `unread` (`unread`),
-  KEY `zapis` (`zapis`),
-  KEY `send` (`send`)
+  KEY `zapis` (`saved`),
+  FULLTEXT KEY `subject` (`subject`,`body`)
 ) ENGINE=MyISAM DEFAULT CHARSET=utf8 PACK_KEYS=0 AUTO_INCREMENT=1 ;
 
--- 
--- Zrzut danych tabeli `mail`
--- 
-
-
 -- --------------------------------------------------------
 
--- 
+--
 -- Struktura tabeli dla  `mill`
--- 
+--
 
-CREATE TABLE `mill` (
-  `id` int(11) NOT NULL auto_increment,
-  `owner` int(11) NOT NULL default '0',
-  `name` varchar(60) NOT NULL default '',
-  `type` char(1) NOT NULL default '',
-  `cost` int(11) NOT NULL default '0',
-  `amount` int(11) NOT NULL default '0',
-  `level` tinyint(4) NOT NULL default '0',
-  `lang` varchar(2) NOT NULL default 'pl',
-  `twohand` char(1) NOT NULL default 'N',
+DROP TABLE IF EXISTS `mill`;
+CREATE TABLE IF NOT EXISTS `mill` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `owner` int(11) NOT NULL DEFAULT '0',
+  `name` varchar(60) NOT NULL DEFAULT '',
+  `type` char(1) NOT NULL DEFAULT '',
+  `cost` int(11) NOT NULL DEFAULT '0',
+  `amount` int(11) NOT NULL DEFAULT '0',
+  `level` tinyint(4) NOT NULL DEFAULT '0',
+  `lang` varchar(2) NOT NULL DEFAULT 'pl',
+  `twohand` char(1) NOT NULL DEFAULT 'N',
+  `elite` int(11) NOT NULL DEFAULT '0',
+  `elitetype` varchar(1) NOT NULL DEFAULT 'S',
   KEY `id` (`id`),
   KEY `owner` (`owner`)
-) ENGINE=MyISAM  DEFAULT CHARSET=utf8 AUTO_INCREMENT=31 ;
+) ENGINE=MyISAM  DEFAULT CHARSET=utf8 AUTO_INCREMENT=39 ;
 
--- 
+--
 -- Zrzut danych tabeli `mill`
--- 
+--
 
-INSERT INTO `mill` (`id`, `owner`, `name`, `type`, `cost`, `amount`, `level`, `lang`, `twohand`) VALUES 
-(1, 0, 'Łuk ćwiczebny', 'B', 500, 2, 1, 'pl', 'Y'),
-(2, 0, 'Łuk giermka', 'B', 2000, 8, 3, 'pl', 'Y'),
-(3, 0, 'Łuk krótki', 'B', 4000, 16, 5, 'pl', 'Y'),
-(4, 0, 'Łuk myśliwski', 'B', 8000, 40, 10, 'pl', 'Y'),
-(5, 0, 'Łuk łowiecki', 'B', 16000, 72, 15, 'pl', 'Y'),
-(6, 0, 'Łuk zwiadowcy', 'B', 32000, 120, 20, 'pl', 'Y'),
-(7, 0, 'Łuk wojskowy', 'B', 64000, 172, 25, 'pl', 'Y'),
-(8, 0, 'Łuk bitewny', 'B', 128000, 240, 30, 'pl', 'Y'),
-(9, 0, 'Łuk angularny', 'B', 256000, 400, 40, 'pl', 'Y'),
-(10, 0, 'Łuk wojenny', 'B', 512000, 600, 50, 'pl', 'Y'),
-(11, 0, 'Łuk podwójny', 'B', 1024000, 840, 60, 'pl', 'Y'),
-(12, 0, 'Łuk długi', 'B', 2048000, 1120, 70, 'pl', 'Y'),
-(13, 0, 'Łuk bojowy', 'B', 4096000, 1440, 80, 'pl', 'Y'),
-(14, 0, 'Łuk refleksyjny', 'B', 8192000, 1800, 90, 'pl', 'Y'),
-(15, 0, 'Łuk retrorefleksyjny', 'B', 16384000, 2200, 100, 'pl', 'Y'),
-(16, 0, 'Strzały ćwiczebne', 'R', 250, 1, 1, 'pl', 'N'),
-(17, 0, 'Strzały turniejowe', 'R', 1000, 4, 3, 'pl', 'N'),
-(18, 0, 'Strzały krótkie', 'R', 2000, 8, 5, 'pl', 'N'),
-(19, 0, 'Strzały myśliwskie', 'R', 4000, 20, 10, 'pl', 'N'),
-(20, 0, 'Strzały łowieckie', 'R', 8000, 36, 15, 'pl', 'N'),
-(21, 0, 'Strzały zwiadowcy', 'R', 16000, 60, 20, 'pl', 'N'),
-(22, 0, 'Strzały wojskowe', 'R', 32000, 86, 25, 'pl', 'N'),
-(23, 0, 'Strzały bitewne', 'R', 64000, 120, 30, 'pl', 'N'),
-(24, 0, 'Strzały liściaste', 'R', 128000, 200, 40, 'pl', 'N'),
-(25, 0, 'Strzały wojenne', 'R', 256000, 300, 50, 'pl', 'N'),
-(26, 0, 'Strzały haczykowe', 'R', 512000, 420, 60, 'pl', 'N'),
-(27, 0, 'Strzały długie', 'R', 1024000, 560, 70, 'pl', 'N'),
-(28, 0, 'Strzały bojowe', 'R', 2048000, 720, 80, 'pl', 'N'),
-(29, 0, 'Strzały wężowe', 'R', 4096000, 900, 90, 'pl', 'N'),
-(30, 0, 'Strzały ząbkowane', 'R', 8192000, 1100, 100, 'pl', 'N');
+INSERT INTO `mill` (`id`, `owner`, `name`, `type`, `cost`, `amount`, `level`, `lang`, `twohand`, `elite`, `elitetype`) VALUES
+(1, 0, 'Łuk ćwiczebny', 'B', 500, 2, 1, 'pl', 'Y', 0, 'S'),
+(2, 0, 'Łuk giermka', 'B', 2000, 8, 3, 'pl', 'Y', 0, 'S'),
+(3, 0, 'Łuk krótki', 'B', 4000, 16, 5, 'pl', 'Y', 0, 'S'),
+(4, 0, 'Łuk myśliwski', 'B', 8000, 40, 10, 'pl', 'Y', 0, 'S'),
+(5, 0, 'Łuk łowiecki', 'B', 16000, 72, 15, 'pl', 'Y', 0, 'S'),
+(6, 0, 'Łuk zwiadowcy', 'B', 32000, 120, 20, 'pl', 'Y', 0, 'S'),
+(7, 0, 'Łuk wojskowy', 'B', 64000, 172, 25, 'pl', 'Y', 0, 'S'),
+(8, 0, 'Łuk bitewny', 'B', 128000, 240, 30, 'pl', 'Y', 0, 'S'),
+(9, 0, 'Łuk angularny', 'B', 256000, 400, 40, 'pl', 'Y', 0, 'S'),
+(10, 0, 'Łuk wojenny', 'B', 512000, 600, 50, 'pl', 'Y', 0, 'S'),
+(11, 0, 'Łuk podwójny', 'B', 1024000, 840, 60, 'pl', 'Y', 0, 'S'),
+(12, 0, 'Łuk długi', 'B', 2048000, 1120, 70, 'pl', 'Y', 0, 'S'),
+(13, 0, 'Łuk bojowy', 'B', 4096000, 1440, 80, 'pl', 'Y', 0, 'S'),
+(14, 0, 'Łuk refleksyjny', 'B', 8192000, 1800, 90, 'pl', 'Y', 0, 'S'),
+(15, 0, 'Łuk retrorefleksyjny', 'B', 16384000, 2200, 100, 'pl', 'Y', 0, 'S'),
+(16, 0, 'Strzały ćwiczebne', 'R', 250, 1, 1, 'pl', 'N', 0, 'S'),
+(17, 0, 'Strzały turniejowe', 'R', 1000, 4, 3, 'pl', 'N', 0, 'S'),
+(18, 0, 'Strzały krótkie', 'R', 2000, 8, 5, 'pl', 'N', 0, 'S'),
+(19, 0, 'Strzały myśliwskie', 'R', 4000, 20, 10, 'pl', 'N', 0, 'S'),
+(20, 0, 'Strzały łowieckie', 'R', 8000, 36, 15, 'pl', 'N', 0, 'S'),
+(21, 0, 'Strzały zwiadowcy', 'R', 16000, 60, 20, 'pl', 'N', 0, 'S'),
+(22, 0, 'Strzały wojskowe', 'R', 32000, 86, 25, 'pl', 'N', 0, 'S'),
+(23, 0, 'Strzały bitewne', 'R', 64000, 120, 30, 'pl', 'N', 0, 'S'),
+(24, 0, 'Strzały liściaste', 'R', 128000, 200, 40, 'pl', 'N', 0, 'S'),
+(25, 0, 'Strzały wojenne', 'R', 256000, 300, 50, 'pl', 'N', 0, 'S'),
+(26, 0, 'Strzały haczykowe', 'R', 512000, 420, 60, 'pl', 'N', 0, 'S'),
+(27, 0, 'Strzały długie', 'R', 1024000, 560, 70, 'pl', 'N', 0, 'S'),
+(28, 0, 'Strzały bojowe', 'R', 2048000, 720, 80, 'pl', 'N', 0, 'S'),
+(29, 0, 'Strzały wężowe', 'R', 4096000, 900, 90, 'pl', 'N', 0, 'S'),
+(30, 0, 'Strzały ząbkowane', 'R', 8192000, 1100, 100, 'pl', 'N', 0, 'S'),
+(31, 0, 'Elitarny łuk ćwiczebny', 'B', 5000, 5, 1, 'pl', 'Y', 2, 'S'),
+(32, 0, 'Elitarny łuk krótki', 'B', 40000, 160, 5, 'pl', 'Y', 6, 'S'),
+(33, 0, 'Elitarny łuk myśliwski', 'B', 80000, 400, 10, 'pl', 'Y', 9, 'S'),
+(34, 0, 'Elitarny łuk łowiecki', 'B', 160000, 720, 15, 'pl', 'Y', 14, 'S'),
+(35, 0, 'Elitarny łuk ćwiczebny', 'B', 5000, 5, 1, 'pl', 'Y', 57, 'E'),
+(36, 0, 'Elitarny łuk krótki', 'B', 40000, 160, 5, 'pl', 'Y', 61, 'E'),
+(37, 0, 'Elitarny łuk myśliwski', 'B', 80000, 400, 10, 'pl', 'Y', 64, 'E'),
+(38, 0, 'Elitarny łuk łowiecki', 'B', 160000, 720, 15, 'pl', 'Y', 67, 'E');
 
 -- --------------------------------------------------------
 
--- 
+--
 -- Struktura tabeli dla  `mill_work`
--- 
+--
 
-CREATE TABLE `mill_work` (
-  `id` int(11) NOT NULL auto_increment,
-  `owner` int(11) NOT NULL default '0',
-  `name` varchar(60) NOT NULL default '',
-  `n_energy` smallint(4) NOT NULL default '0',
-  `u_energy` smallint(4) NOT NULL default '0',
-  `mineral` char(1) NOT NULL default '',
+DROP TABLE IF EXISTS `mill_work`;
+CREATE TABLE IF NOT EXISTS `mill_work` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `owner` int(11) NOT NULL DEFAULT '0',
+  `name` varchar(60) NOT NULL DEFAULT '',
+  `n_energy` smallint(4) NOT NULL DEFAULT '0',
+  `u_energy` smallint(4) NOT NULL DEFAULT '0',
+  `mineral` char(1) NOT NULL DEFAULT '',
+  `elite` int(11) NOT NULL DEFAULT '0',
   KEY `id` (`id`)
-) ENGINE=MyISAM  DEFAULT CHARSET=utf8 PACK_KEYS=0 AUTO_INCREMENT=2 ;
-
--- 
--- Zrzut danych tabeli `mill_work`
--- 
-
+) ENGINE=MyISAM  DEFAULT CHARSET=utf8 PACK_KEYS=0 AUTO_INCREMENT=6 ;
 
 -- --------------------------------------------------------
 
--- 
+--
 -- Struktura tabeli dla  `minerals`
--- 
+--
 
-CREATE TABLE `minerals` (
-  `owner` int(11) NOT NULL default '0',
-  `copperore` int(11) NOT NULL default '0',
-  `zincore` int(11) NOT NULL default '0',
-  `tinore` int(11) NOT NULL default '0',
-  `ironore` int(11) NOT NULL default '0',
-  `coal` int(11) NOT NULL default '0',
-  `copper` int(11) NOT NULL default '0',
-  `bronze` int(11) NOT NULL default '0',
-  `brass` int(11) NOT NULL default '0',
-  `iron` int(11) NOT NULL default '0',
-  `steel` int(11) NOT NULL default '0',
-  `pine` int(11) NOT NULL default '0',
-  `hazel` int(11) NOT NULL default '0',
-  `yew` int(11) NOT NULL default '0',
-  `elm` int(11) NOT NULL default '0',
-  `crystal` int(11) NOT NULL default '0',
-  `adamantium` int(11) NOT NULL default '0',
-  `meteor` int(11) NOT NULL default '0',
+DROP TABLE IF EXISTS `minerals`;
+CREATE TABLE IF NOT EXISTS `minerals` (
+  `owner` int(11) NOT NULL DEFAULT '0',
+  `copperore` int(11) NOT NULL DEFAULT '0',
+  `zincore` int(11) NOT NULL DEFAULT '0',
+  `tinore` int(11) NOT NULL DEFAULT '0',
+  `ironore` int(11) NOT NULL DEFAULT '0',
+  `coal` int(11) NOT NULL DEFAULT '0',
+  `copper` int(11) NOT NULL DEFAULT '0',
+  `bronze` int(11) NOT NULL DEFAULT '0',
+  `brass` int(11) NOT NULL DEFAULT '0',
+  `iron` int(11) NOT NULL DEFAULT '0',
+  `steel` int(11) NOT NULL DEFAULT '0',
+  `pine` int(11) NOT NULL DEFAULT '0',
+  `hazel` int(11) NOT NULL DEFAULT '0',
+  `yew` int(11) NOT NULL DEFAULT '0',
+  `elm` int(11) NOT NULL DEFAULT '0',
+  `crystal` int(11) NOT NULL DEFAULT '0',
+  `adamantium` int(11) NOT NULL DEFAULT '0',
+  `meteor` int(11) NOT NULL DEFAULT '0',
   KEY `owner` (`owner`)
 ) ENGINE=MyISAM DEFAULT CHARSET=utf8;
 
--- 
--- Zrzut danych tabeli `minerals`
--- 
-
-
 -- --------------------------------------------------------
 
--- 
+--
 -- Struktura tabeli dla  `mines`
--- 
+--
 
-CREATE TABLE `mines` (
-  `owner` int(11) NOT NULL default '0',
-  `copper` int(11) NOT NULL default '0',
-  `zinc` int(11) NOT NULL default '0',
-  `tin` int(11) NOT NULL default '0',
-  `iron` int(11) NOT NULL default '0',
-  `coal` int(11) NOT NULL default '0',
+DROP TABLE IF EXISTS `mines`;
+CREATE TABLE IF NOT EXISTS `mines` (
+  `owner` int(11) NOT NULL DEFAULT '0',
+  `copper` int(11) NOT NULL DEFAULT '0',
+  `zinc` int(11) NOT NULL DEFAULT '0',
+  `tin` int(11) NOT NULL DEFAULT '0',
+  `iron` int(11) NOT NULL DEFAULT '0',
+  `coal` int(11) NOT NULL DEFAULT '0',
   KEY `owner` (`owner`)
 ) ENGINE=MyISAM DEFAULT CHARSET=utf8;
 
--- 
--- Zrzut danych tabeli `mines`
--- 
-
-
 -- --------------------------------------------------------
 
--- 
+--
 -- Struktura tabeli dla  `mines_search`
--- 
+--
 
-CREATE TABLE `mines_search` (
-  `player` int(11) NOT NULL default '0',
-  `days` tinyint(2) NOT NULL default '0',
-  `mineral` varchar(30) NOT NULL default '',
-  `searchdays` tinyint(2) NOT NULL default '0',
+DROP TABLE IF EXISTS `mines_search`;
+CREATE TABLE IF NOT EXISTS `mines_search` (
+  `player` int(11) NOT NULL DEFAULT '0',
+  `days` tinyint(2) NOT NULL DEFAULT '0',
+  `mineral` varchar(30) NOT NULL DEFAULT '',
+  `searchdays` tinyint(2) NOT NULL DEFAULT '0',
   KEY `player` (`player`)
 ) ENGINE=MyISAM DEFAULT CHARSET=utf8;
 
--- 
--- Zrzut danych tabeli `mines_search`
--- 
-
-
 -- --------------------------------------------------------
 
--- 
+--
 -- Struktura tabeli dla  `monsters`
--- 
+--
 
-CREATE TABLE `monsters` (
-  `id` int(11) NOT NULL auto_increment,
-  `name` varchar(25) NOT NULL default '',
-  `level` int(11) NOT NULL default '0',
-  `hp` int(11) NOT NULL default '0',
-  `agility` double(11,2) NOT NULL default '0.00',
-  `strength` double(11,2) NOT NULL default '0.00',
-  `speed` double(11,2) NOT NULL default '0.00',
-  `endurance` double(11,2) NOT NULL default '0.00',
-  `credits1` int(11) NOT NULL default '0',
-  `credits2` int(11) NOT NULL default '0',
-  `exp1` int(11) NOT NULL default '0',
-  `exp2` int(11) NOT NULL default '0',
-  `lang` varchar(3) NOT NULL default 'pl',
-  `location` varchar(20) NOT NULL default 'Altara',
+DROP TABLE IF EXISTS `monsters`;
+CREATE TABLE IF NOT EXISTS `monsters` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `name` varchar(45) NOT NULL,
+  `level` int(11) NOT NULL DEFAULT '0',
+  `hp` int(11) NOT NULL DEFAULT '0',
+  `agility` double(11,2) NOT NULL DEFAULT '0.00',
+  `strength` double(11,2) NOT NULL DEFAULT '0.00',
+  `speed` double(11,2) NOT NULL DEFAULT '0.00',
+  `endurance` double(11,2) NOT NULL DEFAULT '0.00',
+  `credits1` int(11) NOT NULL DEFAULT '0',
+  `credits2` int(11) NOT NULL DEFAULT '0',
+  `exp1` int(11) NOT NULL DEFAULT '0',
+  `exp2` int(11) NOT NULL DEFAULT '0',
+  `lang` varchar(3) NOT NULL DEFAULT 'pl',
+  `location` varchar(20) NOT NULL DEFAULT 'Altara',
+  `lootnames` text NOT NULL,
+  `lootchances` varchar(255) NOT NULL,
+  `desc` text NOT NULL,
   KEY `id` (`id`),
   KEY `level` (`level`),
   KEY `location` (`location`)
-) ENGINE=MyISAM  DEFAULT CHARSET=utf8 PACK_KEYS=0 AUTO_INCREMENT=106 ;
+) ENGINE=MyISAM  DEFAULT CHARSET=utf8 PACK_KEYS=0 AUTO_INCREMENT=107 ;
 
--- 
+--
 -- Zrzut danych tabeli `monsters`
--- 
+--
 
-INSERT INTO `monsters` (`id`, `name`, `level`, `hp`, `agility`, `strength`, `speed`, `endurance`, `credits1`, `credits2`, `exp1`, `exp2`, `lang`, `location`) VALUES 
-(1, 'Szczur', 1, 10, 3.00, 3.00, 3.00, 3.00, 1, 2, 1, 2, 'pl', 'Altara'),
-(2, 'Goblin', 2, 20, 5.00, 5.00, 5.00, 5.00, 2, 4, 3, 5, 'pl', 'Altara'),
-(3, 'Ork', 4, 40, 10.00, 10.00, 10.00, 10.00, 4, 6, 6, 10, 'pl', 'Altara'),
-(4, 'Szczurołak', 7, 70, 17.00, 24.00, 24.00, 17.00, 6, 10, 10, 15, 'pl', 'Altara'),
-(5, 'Gwardzista', 10, 100, 30.00, 30.00, 30.00, 30.00, 10, 15, 15, 20, 'pl', 'Altara'),
-(6, 'Troll', 14, 140, 38.00, 52.00, 38.00, 52.00, 15, 25, 20, 25, 'pl', 'Altara'),
-(7, 'Ogr', 18, 180, 51.00, 69.00, 21.00, 69.00, 25, 40, 25, 30, 'pl', 'Altara'),
-(8, 'Orog', 22, 220, 80.00, 80.00, 80.00, 80.00, 40, 55, 30, 40, 'pl', 'Altara'),
-(9, 'Szkielet', 26, 260, 143.00, 117.00, 143.00, 117.00, 55, 80, 40, 50, 'pl', 'Altara'),
-(10, 'Gigantyczny Pająk', 30, 390, 165.00, 195.00, 165.00, 195.00, 80, 100, 50, 60, 'pl', 'Altara'),
-(11, 'Bezgłowy Rycerz', 35, 420, 233.00, 268.00, 268.00, 233.00, 100, 130, 60, 80, 'pl', 'Altara'),
-(12, 'Ghul', 40, 480, 300.00, 340.00, 300.00, 340.00, 130, 160, 80, 100, 'pl', 'Altara'),
-(13, 'Nekromanta', 45, 585, 378.00, 423.00, 423.00, 378.00, 160, 200, 100, 125, 'pl', 'Altara'),
-(14, 'Wilkołak', 50, 650, 455.00, 505.00, 505.00, 455.00, 200, 250, 125, 150, 'pl', 'Altara'),
-(15, 'Wampir', 55, 650, 598.00, 598.00, 543.00, 543.00, 250, 300, 150, 175, 'pl', 'Altara'),
-(16, 'Lassaukaur', 60, 720, 690.00, 630.00, 690.00, 630.00, 300, 360, 175, 200, 'pl', 'Altara'),
-(17, 'Obserwator', 65, 780, 750.00, 750.00, 750.00, 750.00, 360, 420, 200, 240, 'pl', 'Altara'),
-(18, 'Golem', 70, 840, 825.00, 895.00, 825.00, 895.00, 420, 480, 240, 280, 'pl', 'Altara'),
-(19, 'Żywiołak Powietrza', 75, 975, 943.00, 1018.00, 1018.00, 943.00, 480, 550, 280, 320, 'pl', 'Altara'),
-(20, 'Żywiołak Wody', 80, 1120, 1100.00, 1100.00, 1100.00, 1100.00, 550, 620, 320, 360, 'pl', 'Altara'),
-(21, 'Żywiołak Ziemi', 85, 1190, 1243.00, 1158.00, 1243.00, 1158.00, 620, 690, 360, 400, 'pl', 'Altara'),
-(22, 'Żywiołak Ognia', 90, 1260, 1255.00, 1345.00, 1345.00, 1255.00, 690, 760, 400, 450, 'pl', 'Altara'),
-(23, 'Troll Górski', 95, 1425, 1353.00, 1448.00, 1353.00, 1448.00, 760, 830, 450, 500, 'pl', 'Altara'),
-(24, 'Centaur', 100, 1400, 1550.00, 1550.00, 1450.00, 1450.00, 830, 900, 500, 550, 'pl', 'Altara'),
-(25, 'Gliniany Golem', 105, 1470, 1548.00, 1653.00, 1548.00, 1653.00, 900, 970, 550, 600, 'pl', 'Altara'),
-(26, 'Kamienny Golem', 110, 1540, 1755.00, 1645.00, 1755.00, 1645.00, 970, 1040, 600, 650, 'pl', 'Altara'),
-(27, 'Brązowy Golem', 115, 1610, 1858.00, 1743.00, 1858.00, 1743.00, 1040, 1110, 650, 700, 'pl', 'Altara'),
-(28, 'Żelazny Golem', 120, 1680, 1960.00, 1960.00, 1840.00, 1840.00, 1110, 1180, 700, 775, 'pl', 'Altara'),
-(29, 'Piekielny Pies', 125, 1875, 1938.00, 2063.00, 1938.00, 2063.00, 1180, 1250, 775, 850, 'pl', 'Altara'),
-(30, 'Sukkub', 130, 2080, 2035.00, 2165.00, 2165.00, 2035.00, 1250, 1320, 850, 925, 'pl', 'Altara'),
-(31, 'Widmowy Pies', 135, 2295, 2268.00, 2133.00, 2268.00, 2133.00, 1320, 1400, 925, 1000, 'pl', 'Altara'),
-(32, 'Dżin', 140, 2240, 2300.00, 2300.00, 2300.00, 2300.00, 1400, 1480, 1000, 1100, 'pl', 'Altara'),
-(33, 'Smoczy żuk', 145, 2320, 2328.00, 2473.00, 2328.00, 2473.00, 1480, 1560, 1100, 1200, 'pl', 'Altara'),
-(34, 'Przeklęty Wojownik', 150, 2550, 2425.00, 2575.00, 2575.00, 2425.00, 1560, 1640, 1200, 1300, 'pl', 'Altara'),
-(35, 'Ekkimu', 155, 2635, 2523.00, 2678.00, 2523.00, 2678.00, 1640, 1730, 1300, 1400, 'pl', 'Altara'),
-(36, 'Czarny Jednorożec', 160, 2720, 2620.00, 2780.00, 2620.00, 2780.00, 1730, 1820, 1400, 1500, 'pl', 'Altara'),
-(37, 'Lich', 165, 2805, 2718.00, 2883.00, 2718.00, 2883.00, 1820, 1910, 1500, 1600, 'pl', 'Altara'),
-(38, 'Mroczne Widmo', 170, 2720, 2985.00, 2815.00, 2985.00, 2815.00, 1910, 2000, 1600, 1700, 'pl', 'Altara'),
-(39, 'Alaghi', 175, 2975, 2913.00, 3088.00, 2913.00, 3088.00, 2000, 2100, 1700, 1800, 'pl', 'Altara'),
-(40, 'Kyton', 180, 3240, 3100.00, 3100.00, 3100.00, 3100.00, 2100, 2200, 1800, 1900, 'pl', 'Altara'),
-(41, 'Salamandra', 185, 3330, 3108.00, 3293.00, 3108.00, 3293.00, 2200, 2300, 1900, 2000, 'pl', 'Altara'),
-(42, 'Vintaru', 190, 3420, 3350.00, 3350.00, 3350.00, 3350.00, 2300, 2400, 2000, 2100, 'pl', 'Altara'),
-(43, 'Hydra', 195, 3510, 3403.00, 3598.00, 3403.00, 3598.00, 2400, 2500, 2100, 2200, 'pl', 'Altara'),
-(44, 'Mimik', 200, 3800, 3550.00, 3750.00, 3750.00, 3550.00, 2500, 2600, 2200, 2300, 'pl', 'Altara'),
-(45, 'Sfinks', 205, 3895, 3800.00, 3800.00, 3800.00, 3800.00, 2600, 2700, 2300, 2400, 'pl', 'Altara'),
-(46, 'Feniks', 210, 3990, 3845.00, 4055.00, 3845.00, 4055.00, 2700, 2800, 2400, 2500, 'pl', 'Altara'),
-(47, 'Cyklop', 215, 3870, 3993.00, 4208.00, 4208.00, 3993.00, 2800, 2900, 2500, 2600, 'pl', 'Altara'),
-(48, 'Gigant', 220, 4180, 4140.00, 4360.00, 4140.00, 4360.00, 2900, 3000, 2600, 2700, 'pl', 'Altara'),
-(49, 'Tytan', 225, 4275, 4400.00, 4400.00, 4400.00, 4400.00, 3000, 3100, 2700, 2800, 'pl', 'Altara'),
-(50, 'Jabberwock', 230, 4600, 4600.00, 4600.00, 4600.00, 4600.00, 3100, 3200, 2800, 3000, 'pl', 'Altara'),
-(51, 'Dracolich', 235, 4800, 4800.00, 4800.00, 4800.00, 4800.00, 3200, 3300, 3000, 3100, 'pl', 'Altara'),
-(52, 'Bagienny Smok', 240, 5000, 5000.00, 5000.00, 5000.00, 5000.00, 3200, 3300, 3200, 3300, 'pl', 'Altara'),
-(53, 'Lodowy Smok', 245, 5200, 5200.00, 5200.00, 5200.00, 5200.00, 3300, 3400, 3300, 3400, 'pl', 'Altara'),
-(54, 'Widmowy Smok', 250, 5500, 5500.00, 5500.00, 5500.00, 5500.00, 3400, 3500, 3400, 3500, 'pl', 'Altara'),
-(55, 'Mroczny Paladyn', 260, 6000, 6000.00, 6000.00, 6000.00, 6000.00, 3500, 3700, 3500, 3700, 'pl', 'Altara'),
-(56, 'Szablozębna Łasica', 1, 10, 3.00, 3.00, 3.00, 3.00, 1, 1, 1, 1, 'pl', 'Ardulith'),
-(57, 'Płaskostopy Kobold', 2, 20, 5.00, 5.00, 5.00, 5.00, 2, 4, 3, 5, 'pl', 'Ardulith'),
-(58, 'Szerokonosy Goblin', 4, 40, 10.00, 10.00, 10.00, 10.00, 4, 6, 6, 10, 'pl', 'Ardulith'),
-(59, 'Wysoki Hobogoblin', 7, 70, 20.00, 20.00, 20.00, 20.00, 6, 10, 10, 15, 'pl', 'Ardulith'),
-(60, 'Leśny Wąż', 10, 100, 35.00, 35.00, 25.00, 25.00, 10, 15, 15, 20, 'pl', 'Ardulith'),
-(61, 'Chaotyczny Chochlik', 14, 140, 52.00, 38.00, 52.00, 38.00, 15, 25, 20, 25, 'pl', 'Ardulith'),
-(62, 'Gnoll Łupieżca', 18, 180, 60.00, 60.00, 60.00, 60.00, 25, 40, 25, 30, 'pl', 'Ardulith'),
-(63, 'Zielony Ork', 22, 220, 80.00, 80.00, 80.00, 80.00, 40, 55, 30, 40, 'pl', 'Ardulith'),
-(64, 'Ostrokły Krenshar', 26, 260, 117.00, 143.00, 143.00, 117.00, 55, 80, 40, 50, 'pl', 'Ardulith'),
-(65, 'Baśniowy Pseudosmok', 30, 390, 165.00, 195.00, 165.00, 195.00, 80, 100, 50, 60, 'pl', 'Ardulith'),
-(66, 'Nocny Wilk', 35, 420, 233.00, 285.00, 285.00, 233.00, 100, 130, 60, 80, 'pl', 'Ardulith'),
-(67, 'Leśny Gepard', 40, 480, 340.00, 300.00, 340.00, 300.00, 130, 160, 80, 100, 'pl', 'Ardulith'),
-(68, 'Ziemny Mefit', 45, 585, 378.00, 423.00, 423.00, 378.00, 160, 200, 100, 125, 'pl', 'Ardulith'),
-(69, 'Pierścieniowy Lampart', 50, 600, 505.00, 455.00, 505.00, 455.00, 200, 250, 125, 150, 'pl', 'Ardulith'),
-(70, 'Czarny Niedźwiedź', 55, 715, 543.00, 598.00, 543.00, 598.00, 250, 300, 150, 175, 'pl', 'Ardulith'),
-(71, 'Krótkowłosy Niedźwież', 60, 780, 630.00, 690.00, 630.00, 690.00, 300, 360, 175, 200, 'pl', 'Ardulith'),
-(72, 'Ogromny Pająk', 65, 780, 750.00, 750.00, 750.00, 750.00, 360, 420, 200, 240, 'pl', 'Ardulith'),
-(73, 'Spaczony Satyr', 70, 840, 860.00, 860.00, 860.00, 860.00, 420, 480, 240, 280, 'pl', 'Ardulith'),
-(74, 'Czarny Worg', 75, 900, 943.00, 1018.00, 1018.00, 943.00, 480, 550, 280, 320, 'pl', 'Ardulith'),
-(75, 'Złowrogi Allip', 80, 1120, 1100.00, 1100.00, 1100.00, 1100.00, 550, 620, 320, 360, 'pl', 'Ardulith'),
-(76, 'Leśny Centaur', 85, 1190, 1243.00, 1243.00, 1158.00, 1158.00, 620, 690, 360, 400, 'pl', 'Ardulith'),
-(77, 'Czarnogrzywy Lew', 90, 1260, 1255.00, 1345.00, 1345.00, 1255.00, 690, 760, 400, 450, 'pl', 'Ardulith'),
-(78, 'Złoty Jednorożec', 95, 1330, 1400.00, 1400.00, 1400.00, 1400.00, 760, 830, 450, 500, 'pl', 'Ardulith'),
-(79, 'Złudna Bestia', 100, 1400, 1500.00, 1500.00, 1500.00, 1500.00, 830, 900, 500, 550, 'pl', 'Ardulith'),
-(80, 'Srebny Pegaz', 105, 1470, 1653.00, 1548.00, 1653.00, 1548.00, 900, 970, 550, 600, 'pl', 'Ardulith'),
-(81, 'Dwugłowa Aranea', 110, 1540, 1700.00, 1700.00, 1700.00, 1700.00, 970, 1040, 600, 650, 'pl', 'Ardulith'),
-(82, 'Pajęczonogi Ettercap', 115, 1610, 1800.00, 1800.00, 1800.00, 1800.00, 1040, 1110, 650, 700, 'pl', 'Ardulith'),
-(83, 'Czworopalczasta Meduza', 120, 1680, 1960.00, 1840.00, 1960.00, 1840.00, 1110, 1180, 700, 775, 'pl', 'Ardulith'),
-(84, 'Bengalski Tygrys', 125, 1750, 1938.00, 2063.00, 2063.00, 1938.00, 1180, 1250, 850, 925, 'pl', 'Ardulith'),
-(85, 'Leśna Wiedźma', 130, 2080, 2100.00, 2100.00, 2100.00, 2100.00, 1250, 1320, 850, 925, 'pl', 'Ardulith'),
-(86, 'Białogrzywy Girallon', 135, 2295, 2133.00, 2268.00, 2133.00, 2268.00, 1320, 1400, 925, 1000, 'pl', 'Ardulith'),
-(87, 'Skrzydlaty Koszmar', 140, 2240, 2300.00, 2300.00, 2300.00, 2300.00, 1400, 1480, 1000, 1100, 'pl', 'Ardulith'),
-(88, 'Wściekły Wilkołak', 145, 2320, 2473.00, 2328.00, 2473.00, 2328.00, 1480, 1560, 1200, 1300, 'pl', 'Ardulith'),
-(89, 'Jaskiniowy Niedźwiedź', 150, 2400, 2500.00, 2500.00, 2500.00, 2500.00, 1560, 1640, 1200, 1300, 'pl', 'Ardulith'),
-(90, 'Bagienny Troll', 155, 2635, 2523.00, 2678.00, 2523.00, 2678.00, 1640, 1730, 1300, 1400, 'pl', 'Ardulith'),
-(91, 'Brunatna Mantikora', 160, 2560, 2780.00, 2620.00, 2780.00, 2620.00, 1730, 1820, 1400, 1500, 'pl', 'Ardulith'),
-(92, 'Wynaturzony Yuan-ti', 165, 2640, 2800.00, 2800.00, 2800.00, 2800.00, 1820, 1910, 1500, 1600, 'pl', 'Ardulith'),
-(93, 'Ognisty Wywern', 170, 2720, 2985.00, 2815.00, 2985.00, 2815.00, 1900, 2000, 1600, 1700, 'pl', 'Ardulith'),
-(94, 'Ziemny Żywiołak', 175, 2975, 2913.00, 3088.00, 2913.00, 3088.00, 2000, 2100, 1700, 1800, 'pl', 'Ardulith'),
-(95, 'Złotoskóry Chuul', 180, 3240, 3100.00, 3100.00, 3100.00, 3100.00, 2100, 2200, 1800, 1900, 'pl', 'Ardulith'),
-(96, 'Mroczny Mastiff', 185, 3330, 3293.00, 3108.00, 3293.00, 3108.00, 2200, 2300, 1900, 2000, 'pl', 'Ardulith'),
-(97, 'Zielony Slaad', 190, 3420, 3350.00, 3350.00, 3350.00, 3350.00, 2300, 2400, 2000, 2100, 'pl', 'Ardulith'),
-(98, 'Olbrzymi Drzewiec', 195, 3510, 3403.00, 3598.00, 3403.00, 3598.00, 2400, 2500, 2100, 2200, 'pl', 'Ardulith'),
-(99, 'Czarny Lammasu', 200, 3600, 3550.00, 3750.00, 3750.00, 3550.00, 2500, 2600, 2200, 2300, 'pl', 'Ardulith'),
-(100, 'Sukkub', 205, 3690, 3903.00, 3698.00, 3903.00, 3698.00, 2600, 2700, 2300, 2400, 'pl', 'Ardulith'),
-(101, 'Szary Rozpruwacz', 210, 3990, 3845.00, 4055.00, 3845.00, 4055.00, 2700, 2800, 2400, 2500, 'pl', 'Ardulith'),
-(102, 'Tygrysi Beschalor', 215, 3870, 4208.00, 4208.00, 3993.00, 3993.00, 2800, 2900, 2500, 2600, 'pl', 'Ardulith'),
-(103, 'Czerwonooki Couatl', 220, 3960, 4250.00, 4250.00, 4250.00, 4250.00, 2900, 3000, 2600, 2700, 'pl', 'Ardulith'),
-(104, 'Czworonożna Hydra', 225, 4050, 4400.00, 4400.00, 4400.00, 4400.00, 3000, 3100, 2700, 2800, 'pl', 'Ardulith'),
-(105, 'Zielony Smok', 230, 4600, 4600.00, 4600.00, 4600.00, 4600.00, 3100, 3200, 2800, 3200, 'pl', 'Ardulith');
+INSERT INTO `monsters` (`id`, `name`, `level`, `hp`, `agility`, `strength`, `speed`, `endurance`, `credits1`, `credits2`, `exp1`, `exp2`, `lang`, `location`, `lootnames`, `lootchances`, `desc`) VALUES
+(1, 'Szczur', 1, 10, 3.00, 3.00, 3.00, 3.00, 1, 2, 1, 2, 'pl', 'Altara', '', '', 'Szczury, które można spotkać na Arenie Walk, wywodzą się od pospolitego <i>ratti norvegici</i> i mają podobne do niego nawyki żywieniowe, przez całe lata jednak były modyfikowane przez zespół gnomich przyrodników, któremu przewodził słynny badacz natury, Muddy Doodle, by uczynić z nich odpowiedniego przeciwnika do treningów.<br />\r\n<br />\r\nMimo niewielkich gabarytów, <i>rattus pugnandus</i> stanowi nie lada wyzwanie dla początkujących magów i wojowników. Tę – stosunkowo nową – odmianę szczura cechuje przede wszystkim niespotykana u jego kuzynów wytrzymałość oraz niezwykła inteligencja. Dzięki temu stworzenia owe potrafią na arenie przez bardzo długi czas utrzymać się przy życiu, bądź to unikając ataków, bądź też po prostu nic sobie z nich nie robiąc.<br />\r\n<br />\r\nPonadto szczury z Areny Walk w chwili zagrożenia zaczynają wydawać bardzo wysokie dźwięki, dzięki którym chcą zdezorientować przeciwnika. Zdarza się, że piski te powodują uszkodzenie błony bębenkowej trenującego, toteż bardzo ważne jest, by do walki zakładać hełm albo przynajmniej zatykać sobie uszy.<br />\r\n<br />\r\nMuddy Doodle tak mówił o efekcie prac jego zespołu:<br />\r\n<br />Cytat:<br /><i>„Mamy nadzieję, że w ten sposób młodzi będą mogli ćwiczyć bez niepotrzebnego narażania życia. Istnieje bardzo znikoma szansa, że nasze szczury kogokolwiek zabiją. Trzeba tu jednak zaznaczyć, że – wypuszczone na wolność – te gryzonie stanowiłyby ogromne zagrożenie dla społeczeństwa ze względu na ich niebywałą inteligencję. Już zwykłe szczury są kłopotliwe dla ludzi, cóż dopiero nasze ratti pugnandi!”</i><br />\r\n<br />\r\nStrażnicy miejscy zapewniają, że żaden zmodyfikowany szczur nie ma szansy wydostać się z pojemnika, w którym się je trzyma, jednakowoż mieszkańcy Altary są dość nieufnie nastawieni:<br />\r\n<br />Cytat:<br /><i>Szczury?! A bo to nam potrzeba więcej szczurów?! Już i tak ganiam za nimi całymi dniami z miotłą! Temu miastu nie potrzeba więcej tego plugastwa!</i> (karczmarka, 28 l.)'),
+(2, 'Goblin', 2, 20, 5.00, 5.00, 5.00, 5.00, 2, 4, 3, 5, 'pl', 'Altara', 'Kieł Goblina;Skóra Goblina;Pazur Goblina;Czaszka Goblina', '45;77;95;100', 'Gobliny są nieco niższe od ludzi i dużo szczuplejsze, z wyraźnie zaznaczonymi stawami i nie raz mocno sterczącym uzębieniem. W przeciwieństwie do pozostałych zielonoskórych, mają bardzo ostre pazury, stanowiące rekompensatę za mikrą posturę i niewielką siłę fizyczną. W walce zazwyczaj gryzą i zadają rany szarpane – zaraz po treningu należy zdezynfekować wszystkie skaleczenia, jako że gobliny roznoszą bardzo szeroki wachlarz chorób.<br />\r\n<br />\r\nDo niedawna uważano gobliny za kuzynów orków, etnolog Mad Doodle jednak wykazał w szeregu rozpraw naukowych, że pokrewieństwo to jest luźniejsze, niż przypuszczano. Gobliny więcej wspólnego mają z ludźmi. Ogromnym zaskoczeniem okazało się na przykład, że niekiedy parają się handlem. Najprawdopodobniej wiele osobników, które znalazły swój koniec na Arenie Walk, wbrew słowom Łowców nie zostało bohatersko pojmanych w dziczy, a sprzedanych przez goblińską starszyznę w zamian za skóry i narzędzia.<br />\r\n<br />\r\nMało kto wie, że gobliny dzielą się na trzy grupy: na Arenie spotkać można pospolite gobliny jaskiniowe, istnieje jednak klan bardzo sprytnych, podstępnych i inteligentnych „Stalodzierżców”, jak oni sami o sobie mówią, oraz – odznaczających się nieprzeciętną jak na ten gatunek siłą – goblinów Hob, niebezpiecznych samotników, zamieszkujących głównie górskie szczyty.<br />\r\n<br />\r\nŚwiadkowie relacjonują spotkania z tymi zielonoskórymi:<br />\r\n<br />Cytat:<br /><i>„Aye, odwiedził nas tu kiedyś taki jeden… Z tych cholernych Stalodzierżców. Nie cierpię ich. Przez te jego przeklęte wynalazki prawie połowa wsi poszła z dymem. Powinni go zaciągnąć za te wielkie uszy do lochu, ale uciekł, mynda jedna.”</i> (rolnik z okolic Altary, 58 l.)<br />\r\n<br />Cytat:<br /><i>„Hob gobliny? Nie, nigdy nie słyszałam. Tutaj w okolicy to tylko takie zwykłe żyją. A kto ich tam wie, czy w wioskach, czy w jaskiniach. Przeca ja tam ich nie odwiedzam. Obwieszają się kośćmi i machają patykami. Paskudne stworzenia. Jak to: skąd wiem? Na Arenie widziałam. No… nie no, właściwie nie wiem, czy faktycznie same się w te gnaty ubierają, czy przystraja je do walki mistrz ceremonii. Ale każdy wie, że to dzicz.”</i> (mieszkanka Altary, 34 l.)<br />\r\n<br />Cytat:<br /><i>Myślę, że opinie, które krążą o goblinach, są dla nich bardzo krzywdzące. Gobliny mogą być dla nas fantastycznym rynkiem zbytu, należałoby nawiązać z nimi kontakty handlowe. Jeśli nie ze wszystkimi, to przynajmniej ze Stalodzierżcami.</i> (kupiec Geldgier, 382 l.)'),
+(3, 'Ork', 4, 40, 10.00, 10.00, 10.00, 10.00, 4, 6, 6, 10, 'pl', 'Altara', 'Pazur Orka;Skóra Orka;Kość Orka;Czaszka Orka', '45;77;95;100', 'Nikt nie wie, jak tak naprawdę nazywają się orkowie. Miano, pod którym są nam znani, stanowi tylko uproszczoną transkrypcję odgłosu, jaki wydają dorosłe osobniki chcące zamanifestować swoją siłę – czy to przed resztą klanu, czy to przed wrogiem. Towarzyszy temu zazwyczaj uderzanie o ziemię tarczą lub przynajmniej tupanie. Również ich strój – zazwyczaj powiązane byle jak strzępy odzienia ich ofiar, wielekroć ozdobione czaszkami – służy obniżeniu morale przeciwnika.<br />\r\n<br />\r\nOrkowie są masywni i dysponują ogromną siłą fizyczną. Ich słabą stronę stanowi natomiast głupota. Nie potrafią posługiwać się żadnym rodzajem broni bardziej skomplikowanej od topora bojowego, nie mają też pazurów, kły zaś służą jedynie ustaleniu hierarchii w klanie – nie używają ich w walce. <br />\r\n<br />\r\nKultura orków przez całe wieki była owiana tajemnicą. Dopiero śmiała misja Glummy’ego Doodle’a pozwoliła poznać nieco zwyczaje tego niebezpiecznego gatunku. Glummy, pojmawszy młodego, wchodzącego dopiero w dorosłość orka, zdołał go udomowić i nauczyć czytania i pisania. Przy tej okazji zresztą wyszło na jaw, że orkowie mają bardzo słaby wzrok. Nim Glummy zginął śmiercią tragiczną, zmiażdżony przez ciśnięty z dużą siłą dyliżans pocztowy, sporządził obszerne sprawozdanie ze swoich sesji z Ballcrusherem:<br />\r\n<br />Cytat:<br /><i><b>Dzień 5.</b><br />\r\nObiekt wreszcie przestał rzucać odchodami. Myślę, że w końcu uda nam się podać mu jakieś jedzenie. Nie chcę, żeby padł z głodu.<br />\r\n<br />\r\n<b>Dzień 6.</b><br />\r\nNie, jednak nie przestał. Chciał zmylić naszą czujność. Bestie są bardziej cwane, niż dotąd myśleliśmy.<br />\r\n<br />\r\n<b>Dzień 7.</b><br />\r\n<u>Do zapamiętania</u>: nie karmić orka mlekiem i ogórkami.<br />\r\n<br />\r\n(…)<br />\r\n<br />\r\n<b>Dzień 28.</b><br />\r\nWidać postępy. Faszerowanie naparem z illanias przynosi pożądany efekt. Uspokojonego orka można przebadać. Staramy się wzbudzić w nim zainteresowanie naszą kulturą, żeby sam zapragnął nauczyć się czytać. Trochę nam przeszkadza senność obiektu. Może będzie trzeba podawać mniej ziółek.<br />\r\n<br />\r\n<b>Dzień 32.</b><br />\r\nWracamy do poprzedniej dawki illanias. Mam złamaną rękę i zmiażdżony nos. Żuchwa powoli się zrasta.<br />\r\n<br />\r\n(…)<br />\r\n<br />\r\n<b>Dzień 78.</b><br />\r\nUdało się! Ork zaczął dziś naukę!<br />\r\n<br />\r\n(…)<br />\r\n<br />\r\n<b>Dzień 239.</b><br />\r\nTAK! TAK!!! Opanowaliśmy literę „A”!!! Idę się upić z radości.<br />\r\n<br />\r\n<b>Dzień 240.</b><br />\r\nKac-gigant.<br />\r\n<br />\r\n(…)<br />\r\n<br />\r\n<b>Dzień 1625.</b><br />\r\nObiekt nazywa się Ballcrusher. Opowiedział mi, w jaki sposób zdobył to imię, ale nie chcę o tym pisać… W klanie był wojownikiem. Oprócz wojowników, każdy klan ma też bardzo wpływową kastę szamanów i, jeśli dobrze zrozumiałem, starszyznę, która ma władzę sądowniczą. Orkowie darzą ogromnym szacunkiem przyrodę, wierząc, że każdy obiekt ma swojego ducha opiekuńczego. Szamani potrafią wzywać te duchy i nakłaniać do pomocy. Jutro spróbuję się dowiedzieć, co tak naprawdę oznacza słowo „ork” i jak w rzeczywistości nazywa się ten gatunek. To może być odkrycie większe, niż zbudowanie Astralnej Machiny!<br />\r\n<br />\r\n<b>Dzień 1626.</b> (innym, bardzo koślawym charakterem pisma)<br />\r\nPAN ROZPŁASZCZONY! JEGO MAGICZNE KULE JA ZAWIESZA SOBIE NA SZYJA! JA WRACA DO KLAN! ORK! ORK! ORK!</i>'),
+(4, 'Szczurołak', 7, 70, 17.00, 24.00, 24.00, 17.00, 6, 10, 10, 15, 'pl', 'Altara', 'Ząb Szczurołaka;Futro Szczurołaka;Pazur Szczurołaka;Ogon Szczurołaka', '45;77;95;100', 'O pochodzeniu szczurołaków niewiele wiadomo, ale powszechnie uważa się, że dużo taśmy klejącej zużyto, nim udało się stworzyć nowy gatunek.<br />\r\n<br />\r\nWzrost szczurołaków waha się między metrem a półtora metra. Sylwetkę mają raczej gruszkowatą, a do tego długi, łysy, chwytny ogon oraz szarą bądź brązową, krótką sierść. Ze względu na niezbyt imponujący wygląd, często bywają niedoceniane jako przeciwnicy na arenie, podczas gdy zdolnościami bojowymi przewyższają orków. Co prawda nie dysponują zbyt dużą siłą, w dodatku są niebywale tchórzliwe, tym niemniej ponadprzeciętny spryt pozwala tym stworzeniom na długie stawianie oporu. Szczurołaki używają halucynogennych pyłków, wytwarzanych przez nich z grzybów hodowanych w kanałach, potrafią posługiwać się też bronią tnącą i miotającą.<br />\r\nPodobnie jak gobliny, szczurołaki roznoszą mnogość chorób, na które one same są odporne.<br />\r\n<br />\r\nTak naprawdę bardzo trudno skłonić szczurołaka do walki. Schwytane w kanałach i przetransportowane na Arenę, zazwyczaj chętniej proponują przeciwnikom umowy handlowe, wysokie stanowiska w swoim panteonie (ubóstwienie żyjącej istoty to wśród szczurołaków bardzo powszechna praktyka) lub usiłują wzbudzić litość, zwijając się w kulkę i żałośnie piszcząc.<br />\r\n<br />\r\nSzczurołaki są jednymi z najbardziej znienawidzonych stworzeń w Altarze.<br />\r\n<br />Cytat:<br /><i>Szczurołaki? Że niby pół-ludzie, pół-szczury? Dużo taśmy klejącej musieli zużyć, no nie? He, he, he…</i> (górnik z Kazad-nar, 92 l.)<br />\r\n<br />Cytat:<br /><i>Co takiego?! A żeby mi tu w pobliżu nogi nie postawiły?! Bo jak przegonię, to futro bydzie latać po całej Altarze! Won mi z takim wynaturzeniem! Ludzie-szczury… Co za pomysł! Nawet Tartus by na coś takiego nie mógł patrzeć! … Zresztą… Ludzie-szczury? Jak to miałoby w ogóle powstać…? Że niby oni tak te szczury, he, he, he, taśmą, no wiesz…?</i> (zielarka Pansy, 189 l.)<br />\r\n<br />\r\nSame szczurołaki jednak nie przejmują się złą sławą. Są przekonane o wyższości ich gatunku:<br />\r\n<br />Cytat:<br /><i>Och, to oczywiste, tak, oczywiste. Kiedy Wielki Zębaty zaprosi nas do Przedwiecznej Piwnicy, żaden obcy nie będzie tam miał wstępu, o nie, nie będzie miał. Jesteśmy wybrani, tak. A że nas łapią i rzucają na Arenę? To przejściowe trudności, o tak, przejściowe. Zobaczycie, wszyscy zobaczycie. Ludzie, niziołki, plugawe krasnoludy… nikt nie trwa wiecznie. My trwamy, tak, trwamy. Wielki Zębaty rozkruszy kiedyś Cuchnącego Grzyba. Wtedy wszyscy zobaczycie, tak!</i> (Nool, kapłan Wielkiego Zębatego)<br />\r\n<br />\r\nMało istnieje rycin przedstawiających szczurołaki – w kronikach najczęściej pojawia się jedna, o której mówi się, że jest karykaturą. Choć księgi wspominają, że jeszcze nim stworzenia te zeszły do kanałów, tak właśnie wyglądały.'),
+(5, 'Gwardzista', 10, 100, 30.00, 30.00, 30.00, 30.00, 10, 15, 15, 20, 'pl', 'Altara', 'Kość Gwardzisty;Czaszka Gwardzisty;Palec Gwardzisty;Serce Gwardzisty', '45;77;95;100', ''),
+(6, 'Troll', 14, 140, 38.00, 52.00, 38.00, 52.00, 15, 25, 20, 25, 'pl', 'Altara', 'Pazur Trolla;Skóra Trolla;Kieł Trolla;Czaszka Trolla', '45;77;95;100', ''),
+(7, 'Ogr', 18, 180, 51.00, 69.00, 21.00, 69.00, 25, 40, 25, 30, 'pl', 'Altara', 'Kieł Ogra;Skóra Ogra;Pazur Ogra;Czaszka Ogra', '45;77;95;100', ''),
+(8, 'Orog', 22, 220, 80.00, 80.00, 80.00, 80.00, 40, 55, 30, 40, 'pl', 'Altara', 'Kieł Oroga;Futro Oroga;Pazur Oroga;Krew Oroga', '45;77;95;100', ''),
+(9, 'Szkielet', 26, 260, 143.00, 117.00, 143.00, 117.00, 55, 80, 40, 50, 'pl', 'Altara', 'Kość Szkieleta;Czaszka Szkieleta;Ząb Szkieleta;Korpus Szkieleta', '45;77;95;100', ''),
+(10, 'Gigantyczny Pająk', 30, 390, 165.00, 195.00, 165.00, 195.00, 80, 100, 50, 60, 'pl', 'Altara', 'Odnóża Gigantycznego Pająka;Odwłok Gigantycznego Pająka;Szczękoczułki Gigantycznego Pająka;Gruczoł Jadowy Gigantycznego Pająka', '45;77;95;100', ''),
+(11, 'Bezgłowy Rycerz', 35, 420, 233.00, 268.00, 268.00, 233.00, 100, 130, 60, 80, 'pl', 'Altara', 'Kość Bezgłowego Rycerza;Czaszka Bezgłowego Rycerza;Serce Bezgłowego Rycerza;Głowa Bezgłowego Rycerza', '45;77;95;100', ''),
+(12, 'Ghul', 40, 480, 300.00, 340.00, 300.00, 340.00, 130, 160, 80, 100, 'pl', 'Altara', 'Kieł Ghoula;Skóra Ghoula;Pazur Ghoula;Szpik Ghoula', '45;77;95;100', ''),
+(13, 'Nekromanta', 45, 585, 378.00, 423.00, 423.00, 378.00, 160, 200, 100, 125, 'pl', 'Altara', 'Pazur Nekromanty;Kość Nekromanty;Czaszka Nekromanty;Pancerz Nekromanty', '45;77;95;100', ''),
+(14, 'Wilkołak', 50, 650, 455.00, 505.00, 505.00, 455.00, 200, 250, 125, 150, 'pl', 'Altara', 'Kieł Wilkołaka;Futro Wilkołaka;Krew Wilkołaka;Pysk Wilkołaka', '45;77;95;100', ''),
+(15, 'Wampir', 55, 650, 598.00, 598.00, 543.00, 543.00, 250, 300, 150, 175, 'pl', 'Altara', 'Popiół z Wampira;Kość Wampira;Kieł Wampira;Krew Wampira', '45;77;95;100', ''),
+(16, 'Lassaukaur', 60, 720, 690.00, 630.00, 690.00, 630.00, 300, 360, 175, 200, 'pl', 'Altara', '', '', ''),
+(17, 'Obserwator', 65, 780, 750.00, 750.00, 750.00, 750.00, 360, 420, 200, 240, 'pl', 'Altara', '', '', ''),
+(18, 'Golem', 70, 840, 825.00, 895.00, 825.00, 895.00, 420, 480, 240, 280, 'pl', 'Altara', '', '', ''),
+(19, 'Żywiołak Powietrza', 75, 975, 943.00, 1018.00, 1018.00, 943.00, 480, 550, 280, 320, 'pl', 'Altara', '', '', ''),
+(20, 'Żywiołak Wody', 80, 1120, 1100.00, 1100.00, 1100.00, 1100.00, 550, 620, 320, 360, 'pl', 'Altara', '', '', ''),
+(21, 'Żywiołak Ziemi', 85, 1190, 1243.00, 1158.00, 1243.00, 1158.00, 620, 690, 360, 400, 'pl', 'Altara', '', '', ''),
+(22, 'Żywiołak Ognia', 90, 1260, 1255.00, 1345.00, 1345.00, 1255.00, 690, 760, 400, 450, 'pl', 'Altara', '', '', ''),
+(23, 'Troll Górski', 95, 1425, 1353.00, 1448.00, 1353.00, 1448.00, 760, 830, 450, 500, 'pl', 'Altara', '', '', ''),
+(24, 'Centaur', 100, 1400, 1550.00, 1550.00, 1450.00, 1450.00, 830, 900, 500, 550, 'pl', 'Altara', '', '', ''),
+(25, 'Gliniany Golem', 105, 1470, 1548.00, 1653.00, 1548.00, 1653.00, 900, 970, 550, 600, 'pl', 'Altara', '', '', ''),
+(26, 'Kamienny Golem', 110, 1540, 1755.00, 1645.00, 1755.00, 1645.00, 970, 1040, 600, 650, 'pl', 'Altara', '', '', ''),
+(27, 'Brązowy Golem', 115, 1610, 1858.00, 1743.00, 1858.00, 1743.00, 1040, 1110, 650, 700, 'pl', 'Altara', '', '', ''),
+(28, 'Żelazny Golem', 120, 1680, 1960.00, 1960.00, 1840.00, 1840.00, 1110, 1180, 700, 775, 'pl', 'Altara', '', '', ''),
+(29, 'Piekielny Pies', 125, 1875, 1938.00, 2063.00, 1938.00, 2063.00, 1180, 1250, 775, 850, 'pl', 'Altara', '', '', ''),
+(30, 'Sukkub', 130, 2080, 2035.00, 2165.00, 2165.00, 2035.00, 1250, 1320, 850, 925, 'pl', 'Altara', '', '', ''),
+(31, 'Widmowy Pies', 135, 2295, 2268.00, 2133.00, 2268.00, 2133.00, 1320, 1400, 925, 1000, 'pl', 'Altara', '', '', ''),
+(32, 'Dżin', 140, 2240, 2300.00, 2300.00, 2300.00, 2300.00, 1400, 1480, 1000, 1100, 'pl', 'Altara', '', '', ''),
+(33, 'Smoczy żuk', 145, 2320, 2328.00, 2473.00, 2328.00, 2473.00, 1480, 1560, 1100, 1200, 'pl', 'Altara', '', '', ''),
+(34, 'Przeklęty Wojownik', 150, 2550, 2425.00, 2575.00, 2575.00, 2425.00, 1560, 1640, 1200, 1300, 'pl', 'Altara', '', '', ''),
+(35, 'Ekkimu', 155, 2635, 2523.00, 2678.00, 2523.00, 2678.00, 1640, 1730, 1300, 1400, 'pl', 'Altara', '', '', ''),
+(36, 'Czarny Jednorożec', 160, 2720, 2620.00, 2780.00, 2620.00, 2780.00, 1730, 1820, 1400, 1500, 'pl', 'Altara', '', '', ''),
+(37, 'Lich', 165, 2805, 2718.00, 2883.00, 2718.00, 2883.00, 1820, 1910, 1500, 1600, 'pl', 'Altara', '', '', ''),
+(38, 'Mroczne Widmo', 170, 2720, 2985.00, 2815.00, 2985.00, 2815.00, 1910, 2000, 1600, 1700, 'pl', 'Altara', '', '', ''),
+(39, 'Alaghi', 175, 2975, 2913.00, 3088.00, 2913.00, 3088.00, 2000, 2100, 1700, 1800, 'pl', 'Altara', '', '', ''),
+(40, 'Kyton', 180, 3240, 3100.00, 3100.00, 3100.00, 3100.00, 2100, 2200, 1800, 1900, 'pl', 'Altara', '', '', ''),
+(41, 'Salamandra', 185, 3330, 3108.00, 3293.00, 3108.00, 3293.00, 2200, 2300, 1900, 2000, 'pl', 'Altara', '', '', ''),
+(42, 'Vintaru', 190, 3420, 3350.00, 3350.00, 3350.00, 3350.00, 2300, 2400, 2000, 2100, 'pl', 'Altara', '', '', ''),
+(43, 'Hydra', 195, 3510, 3403.00, 3598.00, 3403.00, 3598.00, 2400, 2500, 2100, 2200, 'pl', 'Altara', '', '', ''),
+(44, 'Mimik', 200, 3800, 3550.00, 3750.00, 3750.00, 3550.00, 2500, 2600, 2200, 2300, 'pl', 'Altara', '', '', ''),
+(45, 'Sfinks', 205, 3895, 3800.00, 3800.00, 3800.00, 3800.00, 2600, 2700, 2300, 2400, 'pl', 'Altara', '', '', ''),
+(46, 'Feniks', 210, 3990, 3845.00, 4055.00, 3845.00, 4055.00, 2700, 2800, 2400, 2500, 'pl', 'Altara', '', '', ''),
+(47, 'Cyklop', 215, 3870, 3993.00, 4208.00, 4208.00, 3993.00, 2800, 2900, 2500, 2600, 'pl', 'Altara', '', '', ''),
+(48, 'Gigant', 220, 4180, 4140.00, 4360.00, 4140.00, 4360.00, 2900, 3000, 2600, 2700, 'pl', 'Altara', '', '', ''),
+(49, 'Tytan', 225, 4275, 4400.00, 4400.00, 4400.00, 4400.00, 3000, 3100, 2700, 2800, 'pl', 'Altara', '', '', ''),
+(50, 'Jabberwock', 230, 4600, 4600.00, 4600.00, 4600.00, 4600.00, 3100, 3200, 2800, 3000, 'pl', 'Altara', '', '', ''),
+(51, 'Dracolich', 235, 4800, 4800.00, 4800.00, 4800.00, 4800.00, 3200, 3300, 3000, 3100, 'pl', 'Altara', '', '', ''),
+(52, 'Bagienny Smok', 240, 5000, 5000.00, 5000.00, 5000.00, 5000.00, 3200, 3300, 3200, 3300, 'pl', 'Altara', '', '', ''),
+(53, 'Lodowy Smok', 245, 5200, 5200.00, 5200.00, 5200.00, 5200.00, 3300, 3400, 3300, 3400, 'pl', 'Altara', '', '', ''),
+(54, 'Widmowy Smok', 250, 5500, 5500.00, 5500.00, 5500.00, 5500.00, 3400, 3500, 3400, 3500, 'pl', 'Altara', '', '', ''),
+(55, 'Mroczny Paladyn', 260, 6000, 6000.00, 6000.00, 6000.00, 6000.00, 3500, 3700, 3500, 3700, 'pl', 'Altara', '', '', ''),
+(56, 'Szablozębna Łasica', 1, 10, 3.00, 3.00, 3.00, 3.00, 1, 2, 1, 2, 'pl', 'Ardulith', '', '', ''),
+(57, 'Płaskostopy Kobold', 2, 20, 5.00, 5.00, 5.00, 5.00, 2, 4, 3, 5, 'pl', 'Ardulith', 'Kieł Kobolda;Skóra Kobolda;Pazur Kobolda;Czaszka Kobolda', '45;77;95;100', ''),
+(58, 'Szerokonosy Goblin', 4, 40, 10.00, 10.00, 10.00, 10.00, 4, 6, 6, 10, 'pl', 'Ardulith', '', '', ''),
+(59, 'Wysoki Hobogoblin', 7, 70, 20.00, 20.00, 20.00, 20.00, 6, 10, 10, 15, 'pl', 'Ardulith', 'Kieł Hobogoblina;Skóra Hobogoblina;Pazur Hobogoblina;Czaszka Hobogoblina', '45;77;95;100', ''),
+(60, 'Leśny Wąż', 10, 100, 35.00, 35.00, 25.00, 25.00, 10, 15, 15, 20, 'pl', 'Ardulith', '', '', ''),
+(61, 'Chaotyczny Chochlik', 14, 140, 52.00, 38.00, 52.00, 38.00, 15, 25, 20, 25, 'pl', 'Ardulith', 'Kość Chochlika;Czaszka Chochlika;Palec Chochlika;Serce Chochlika', '45;77;95;100', ''),
+(62, 'Gnoll Łupieżca', 18, 180, 60.00, 60.00, 60.00, 60.00, 25, 40, 25, 30, 'pl', 'Ardulith', 'Kość Gnolla;Czaszka Gnolla;Palec Gnolla;Serce Gnolla', '45;77;95;100', ''),
+(63, 'Zielony Ork', 22, 220, 80.00, 80.00, 80.00, 80.00, 40, 55, 30, 40, 'pl', 'Ardulith', '', '', ''),
+(64, 'Ostrokły Krenshar', 26, 260, 117.00, 143.00, 143.00, 117.00, 55, 80, 40, 50, 'pl', 'Ardulith', 'Kieł Krenshara;Furto Krenshara;Pazur Krenshara;Krew Krenshara', '45;77;95;100', ''),
+(65, 'Baśniowy Pseudosmok', 30, 390, 165.00, 195.00, 165.00, 195.00, 80, 100, 50, 60, 'pl', 'Ardulith', 'Skrzydło Pseudosmoka;Czaszka Pseudosmoka;Pazur Pseudosmoka;Skóra Pseudosmoka', '45;77;95;100', ''),
+(66, 'Nocny Wilk', 35, 420, 233.00, 285.00, 285.00, 233.00, 100, 130, 60, 80, 'pl', 'Ardulith', '', '', ''),
+(67, 'Leśny Gepard', 40, 480, 340.00, 300.00, 340.00, 300.00, 130, 160, 80, 100, 'pl', 'Ardulith', 'Kieł Geparda;Skóra Geparda;Ogon Geparda;Czaszka Geparda', '45;77;95;100', ''),
+(68, 'Ziemny Mefit', 45, 585, 378.00, 423.00, 423.00, 378.00, 160, 200, 100, 125, 'pl', 'Ardulith', 'Esencja Mefita;Skrzydło Mefita;Skóra Mefita;Czaszka Mefita', '45;77;95;100', ''),
+(69, 'Pierścieniowy Lampart', 50, 600, 505.00, 455.00, 505.00, 455.00, 200, 250, 125, 150, 'pl', 'Ardulith', '', '', ''),
+(70, 'Czarny Niedźwiedź', 55, 715, 543.00, 598.00, 543.00, 598.00, 250, 300, 150, 175, 'pl', 'Ardulith', '', '', ''),
+(71, 'Krótkowłosy Niedźwieżuk', 60, 780, 630.00, 690.00, 630.00, 690.00, 300, 360, 175, 200, 'pl', 'Ardulith', '', '', ''),
+(72, 'Ogromny Pająk', 65, 780, 750.00, 750.00, 750.00, 750.00, 360, 420, 200, 240, 'pl', 'Ardulith', '', '', ''),
+(73, 'Spaczony Satyr', 70, 840, 860.00, 860.00, 860.00, 860.00, 420, 480, 240, 280, 'pl', 'Ardulith', '', '', ''),
+(74, 'Czarny Worg', 75, 900, 943.00, 1018.00, 1018.00, 943.00, 480, 550, 280, 320, 'pl', 'Ardulith', '', '', ''),
+(75, 'Złowrogi Allip', 80, 1120, 1100.00, 1100.00, 1100.00, 1100.00, 550, 620, 320, 360, 'pl', 'Ardulith', '', '', ''),
+(76, 'Leśny Centaur', 85, 1190, 1243.00, 1243.00, 1158.00, 1158.00, 620, 690, 360, 400, 'pl', 'Ardulith', '', '', ''),
+(77, 'Czarnogrzywy Lew', 90, 1260, 1255.00, 1345.00, 1345.00, 1255.00, 690, 760, 400, 450, 'pl', 'Ardulith', '', '', ''),
+(78, 'Złoty Jednorożec', 95, 1330, 1400.00, 1400.00, 1400.00, 1400.00, 760, 830, 450, 500, 'pl', 'Ardulith', '', '', ''),
+(79, 'Złudna Bestia', 100, 1400, 1500.00, 1500.00, 1500.00, 1500.00, 830, 900, 500, 550, 'pl', 'Ardulith', '', '', ''),
+(80, 'Srebny Pegaz', 105, 1470, 1653.00, 1548.00, 1653.00, 1548.00, 900, 970, 550, 600, 'pl', 'Ardulith', '', '', ''),
+(81, 'Dwugłowa Aranea', 110, 1540, 1700.00, 1700.00, 1700.00, 1700.00, 970, 1040, 600, 650, 'pl', 'Ardulith', '', '', ''),
+(82, 'Pajęczonogi Ettercap', 115, 1610, 1800.00, 1800.00, 1800.00, 1800.00, 1040, 1110, 650, 700, 'pl', 'Ardulith', '', '', ''),
+(83, 'Czworopalczasta Meduza', 120, 1680, 1960.00, 1840.00, 1960.00, 1840.00, 1110, 1180, 700, 775, 'pl', 'Ardulith', '', '', ''),
+(84, 'Bengalski Tygrys', 125, 1750, 1938.00, 2063.00, 2063.00, 1938.00, 1180, 1250, 775, 850, 'pl', 'Ardulith', '', '', ''),
+(85, 'Leśna Wiedźma', 130, 2080, 2100.00, 2100.00, 2100.00, 2100.00, 1250, 1320, 850, 925, 'pl', 'Ardulith', '', '', ''),
+(86, 'Białogrzywy Girallon', 135, 2295, 2133.00, 2268.00, 2133.00, 2268.00, 1320, 1400, 925, 1000, 'pl', 'Ardulith', '', '', ''),
+(87, 'Skrzydlaty Koszmar', 140, 2240, 2300.00, 2300.00, 2300.00, 2300.00, 1400, 1480, 1000, 1100, 'pl', 'Ardulith', '', '', ''),
+(88, 'Wściekły Wilkołak', 145, 2320, 2473.00, 2328.00, 2473.00, 2328.00, 1480, 1560, 1100, 1200, 'pl', 'Ardulith', '', '', ''),
+(89, 'Jaskiniowy Niedźwiedź', 150, 2400, 2500.00, 2500.00, 2500.00, 2500.00, 1560, 1640, 1200, 1300, 'pl', 'Ardulith', '', '', ''),
+(90, 'Bagienny Troll', 155, 2635, 2523.00, 2678.00, 2523.00, 2678.00, 1640, 1730, 1300, 1400, 'pl', 'Ardulith', '', '', ''),
+(91, 'Brunatna Mantikora', 160, 2560, 2780.00, 2620.00, 2780.00, 2620.00, 1730, 1820, 1400, 1500, 'pl', 'Ardulith', '', '', ''),
+(92, 'Wynaturzony Yuan-ti', 165, 2640, 2800.00, 2800.00, 2800.00, 2800.00, 1820, 1910, 1500, 1600, 'pl', 'Ardulith', '', '', ''),
+(93, 'Ognisty Wywern', 170, 2720, 2985.00, 2815.00, 2985.00, 2815.00, 1900, 2000, 1600, 1700, 'pl', 'Ardulith', '', '', ''),
+(94, 'Ziemny Żywiołak', 175, 2975, 2913.00, 3088.00, 2913.00, 3088.00, 2000, 2100, 1700, 1800, 'pl', 'Ardulith', '', '', ''),
+(95, 'Złotoskóry Chuul', 180, 3240, 3100.00, 3100.00, 3100.00, 3100.00, 2100, 2200, 1800, 1900, 'pl', 'Ardulith', '', '', ''),
+(96, 'Mroczny Mastiff', 185, 3330, 3293.00, 3108.00, 3293.00, 3108.00, 2200, 2300, 1900, 2000, 'pl', 'Ardulith', '', '', ''),
+(97, 'Zielony Slaad', 190, 3420, 3350.00, 3350.00, 3350.00, 3350.00, 2300, 2400, 2000, 2100, 'pl', 'Ardulith', '', '', ''),
+(98, 'Olbrzymi Drzewiec', 195, 3510, 3403.00, 3598.00, 3403.00, 3598.00, 2400, 2500, 2100, 2200, 'pl', 'Ardulith', '', '', ''),
+(99, 'Czarny Lammasu', 200, 3600, 3550.00, 3750.00, 3750.00, 3550.00, 2500, 2600, 2200, 2300, 'pl', 'Ardulith', '', '', ''),
+(100, 'Sukkub', 205, 3690, 3903.00, 3698.00, 3903.00, 3698.00, 2600, 2700, 2300, 2400, 'pl', 'Ardulith', '', '', ''),
+(101, 'Szary Rozpruwacz', 210, 3990, 3845.00, 4055.00, 3845.00, 4055.00, 2700, 2800, 2400, 2500, 'pl', 'Ardulith', '', '', ''),
+(102, 'Tygrysi Beschalor', 215, 3870, 4208.00, 4208.00, 3993.00, 3993.00, 2800, 2900, 2500, 2600, 'pl', 'Ardulith', '', '', ''),
+(103, 'Czerwonooki Couatl', 220, 3960, 4250.00, 4250.00, 4250.00, 4250.00, 2900, 3000, 2600, 2700, 'pl', 'Ardulith', '', '', ''),
+(104, 'Czworonożna Hydra', 225, 4050, 4400.00, 4400.00, 4400.00, 4400.00, 3000, 3100, 2700, 2800, 'pl', 'Ardulith', '', '', ''),
+(105, 'Zielony Smok', 230, 4600, 4600.00, 4600.00, 4600.00, 4600.00, 3100, 3200, 2800, 3200, 'pl', 'Ardulith', '', '', ''),
+(106, 'Szpadyzor', 69, 830, 844.00, 832.00, 844.00, 832.00, 472, 446, 246, 286, 'pl', 'Altara', 'Pazur Szpadyzora;Łapa Szpadyzora;Oko Szpadyzora;Czaszka Szpadyzora', '55;77;95;100', 'Szpadyzor wyglądem przypomina zwykłego czarnego kota, aczkolwiek jest od niego większy i bardziej niebezpieczny. Jak wcześniej było wspomniane jest koloru czarnego, ma ostre długie pazury, a jego oczy świecą się na zielono. Stwór ten zamieszkuje najciemniejsze zakamarki lasów. Atakuje z ukrycia i jedynie co jego ofiara zobaczy przed śmiercią to błysk jego świecących na zielono oczu, które wręcz paraliżują ofiarę.');
 
 -- --------------------------------------------------------
 
--- 
+--
 -- Struktura tabeli dla  `news`
--- 
+--
 
-CREATE TABLE `news` (
-  `id` int(11) NOT NULL auto_increment,
+DROP TABLE IF EXISTS `news`;
+CREATE TABLE IF NOT EXISTS `news` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
   `starter` text NOT NULL,
   `title` text NOT NULL,
   `news` text NOT NULL,
-  `lang` varchar(3) NOT NULL default 'pl',
-  `added` char(1) NOT NULL default 'Y',
-  `show` char(1) NOT NULL default 'Y',
+  `lang` varchar(3) NOT NULL DEFAULT 'pl',
+  `added` char(1) NOT NULL DEFAULT 'Y',
+  `show` char(1) NOT NULL DEFAULT 'Y',
+  `pdate` date NOT NULL,
   UNIQUE KEY `id` (`id`)
 ) ENGINE=MyISAM DEFAULT CHARSET=utf8 PACK_KEYS=0 AUTO_INCREMENT=1 ;
 
--- 
--- Zrzut danych tabeli `news`
--- 
-
-
 -- --------------------------------------------------------
 
--- 
--- Struktura tabeli dla  `news_comments`
--- 
-
-CREATE TABLE `news_comments` (
-  `id` int(11) NOT NULL auto_increment,
-  `newsid` int(11) NOT NULL default '0',
-  `author` varchar(40) NOT NULL default '',
-  `body` text NOT NULL,
-  `time` date default NULL,
-  KEY `id` (`id`)
-) ENGINE=MyISAM DEFAULT CHARSET=utf8 AUTO_INCREMENT=1 ;
-
--- 
--- Zrzut danych tabeli `news_comments`
--- 
-
-
--- --------------------------------------------------------
-
--- 
+--
 -- Struktura tabeli dla  `newspaper`
--- 
+--
 
-CREATE TABLE `newspaper` (
-  `id` int(11) NOT NULL auto_increment,
-  `paper_id` int(11) NOT NULL default '0',
-  `title` varchar(255) NOT NULL default '',
+DROP TABLE IF EXISTS `newspaper`;
+CREATE TABLE IF NOT EXISTS `newspaper` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `paper_id` int(11) NOT NULL DEFAULT '0',
+  `title` varchar(255) NOT NULL DEFAULT '',
   `body` text NOT NULL,
-  `lang` varchar(3) NOT NULL default 'pl',
-  `added` char(1) NOT NULL default 'N',
-  `author` varchar(50) NOT NULL default '',
-  `type` char(1) NOT NULL default '',
+  `lang` varchar(3) NOT NULL DEFAULT 'pl',
+  `added` char(1) NOT NULL DEFAULT 'N',
+  `author` varchar(50) NOT NULL DEFAULT '',
+  `type` char(1) NOT NULL DEFAULT '',
   KEY `id` (`id`)
 ) ENGINE=MyISAM DEFAULT CHARSET=utf8 AUTO_INCREMENT=1 ;
 
--- 
--- Zrzut danych tabeli `newspaper`
--- 
-
-
 -- --------------------------------------------------------
 
--- 
+--
 -- Struktura tabeli dla  `newspaper_comments`
--- 
+--
 
-CREATE TABLE `newspaper_comments` (
-  `id` int(11) NOT NULL auto_increment,
-  `textid` int(11) NOT NULL default '0',
-  `author` varchar(40) NOT NULL default '',
+DROP TABLE IF EXISTS `newspaper_comments`;
+CREATE TABLE IF NOT EXISTS `newspaper_comments` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `textid` int(11) NOT NULL DEFAULT '0',
+  `author` varchar(40) NOT NULL DEFAULT '',
   `body` text NOT NULL,
-  `time` date default NULL,
+  `time` date DEFAULT NULL,
   KEY `id` (`id`)
 ) ENGINE=MyISAM DEFAULT CHARSET=utf8 PACK_KEYS=0 AUTO_INCREMENT=1 ;
 
--- 
--- Zrzut danych tabeli `newspaper_comments`
--- 
+-- --------------------------------------------------------
 
+--
+-- Struktura tabeli dla  `news_comments`
+--
+
+DROP TABLE IF EXISTS `news_comments`;
+CREATE TABLE IF NOT EXISTS `news_comments` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `newsid` int(11) NOT NULL DEFAULT '0',
+  `author` varchar(40) NOT NULL DEFAULT '',
+  `body` text NOT NULL,
+  `time` date DEFAULT NULL,
+  KEY `id` (`id`)
+) ENGINE=MyISAM DEFAULT CHARSET=utf8 AUTO_INCREMENT=1 ;
 
 -- --------------------------------------------------------
 
--- 
+--
 -- Struktura tabeli dla  `notatnik`
--- 
+--
 
-CREATE TABLE `notatnik` (
-  `id` int(11) NOT NULL auto_increment,
-  `gracz` int(11) NOT NULL default '0',
+DROP TABLE IF EXISTS `notatnik`;
+CREATE TABLE IF NOT EXISTS `notatnik` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `gracz` int(11) NOT NULL DEFAULT '0',
   `tekst` text NOT NULL,
-  `czas` datetime NOT NULL default '0000-00-00 00:00:00',
+  `czas` datetime NOT NULL DEFAULT '0000-00-00 00:00:00',
   KEY `id` (`id`)
 ) ENGINE=MyISAM DEFAULT CHARSET=utf8 PACK_KEYS=0 AUTO_INCREMENT=1 ;
 
--- 
--- Zrzut danych tabeli `notatnik`
--- 
+-- --------------------------------------------------------
 
+--
+-- Struktura tabeli dla  `outposts`
+--
+
+DROP TABLE IF EXISTS `outposts`;
+CREATE TABLE IF NOT EXISTS `outposts` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `owner` int(11) NOT NULL DEFAULT '0',
+  `size` int(11) NOT NULL DEFAULT '1',
+  `warriors` int(11) NOT NULL DEFAULT '0',
+  `archers` int(11) NOT NULL DEFAULT '0',
+  `catapults` int(11) NOT NULL DEFAULT '0',
+  `barricades` int(11) NOT NULL DEFAULT '0',
+  `gold` int(11) NOT NULL DEFAULT '500',
+  `turns` int(11) NOT NULL DEFAULT '3',
+  `battack` tinyint(2) NOT NULL DEFAULT '0',
+  `bdefense` tinyint(2) NOT NULL DEFAULT '0',
+  `btax` tinyint(2) NOT NULL DEFAULT '0',
+  `blost` tinyint(2) NOT NULL DEFAULT '0',
+  `bcost` tinyint(2) NOT NULL DEFAULT '0',
+  `fence` int(11) NOT NULL DEFAULT '0',
+  `barracks` int(11) NOT NULL DEFAULT '0',
+  `fatigue` int(3) NOT NULL DEFAULT '100',
+  `morale` double(11,1) NOT NULL DEFAULT '0.0',
+  `attacks` tinyint(2) NOT NULL DEFAULT '0',
+  PRIMARY KEY (`id`),
+  KEY `id` (`id`)
+) ENGINE=MyISAM DEFAULT CHARSET=utf8 AUTO_INCREMENT=1 ;
 
 -- --------------------------------------------------------
 
--- 
+--
 -- Struktura tabeli dla  `outpost_monsters`
--- 
+--
 
-CREATE TABLE `outpost_monsters` (
-  `id` int(11) NOT NULL auto_increment,
-  `outpost` int(11) NOT NULL default '0',
-  `name` varchar(50) NOT NULL default '',
-  `power` int(11) NOT NULL default '0',
-  `defense` int(11) NOT NULL default '0',
-  PRIMARY KEY  (`id`),
+DROP TABLE IF EXISTS `outpost_monsters`;
+CREATE TABLE IF NOT EXISTS `outpost_monsters` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `outpost` int(11) NOT NULL DEFAULT '0',
+  `name` varchar(50) NOT NULL DEFAULT '',
+  `power` int(11) NOT NULL DEFAULT '0',
+  `defense` int(11) NOT NULL DEFAULT '0',
+  PRIMARY KEY (`id`),
   KEY `id` (`id`),
   KEY `outpost` (`outpost`)
 ) ENGINE=MyISAM DEFAULT CHARSET=utf8 AUTO_INCREMENT=1 ;
 
--- 
--- Zrzut danych tabeli `outpost_monsters`
--- 
-
-
 -- --------------------------------------------------------
 
--- 
+--
 -- Struktura tabeli dla  `outpost_veterans`
--- 
+--
 
-CREATE TABLE `outpost_veterans` (
-  `id` int(11) NOT NULL auto_increment,
-  `outpost` int(11) NOT NULL default '0',
-  `name` varchar(20) NOT NULL default '',
-  `weapon` varchar(60) default NULL,
-  `wpower` int(5) NOT NULL default '0',
-  `armor` varchar(60) default NULL,
-  `apower` int(5) NOT NULL default '0',
-  `helm` varchar(60) default NULL,
-  `hpower` int(5) NOT NULL default '0',
-  `legs` varchar(60) default NULL,
-  `lpower` int(5) NOT NULL default '0',
-  PRIMARY KEY  (`id`),
+DROP TABLE IF EXISTS `outpost_veterans`;
+CREATE TABLE IF NOT EXISTS `outpost_veterans` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `outpost` int(11) NOT NULL DEFAULT '0',
+  `name` varchar(20) NOT NULL DEFAULT '',
+  `weapon` varchar(60) DEFAULT NULL,
+  `wpower` int(5) NOT NULL DEFAULT '0',
+  `armor` varchar(60) DEFAULT NULL,
+  `apower` int(5) NOT NULL DEFAULT '0',
+  `helm` varchar(60) DEFAULT NULL,
+  `hpower` int(5) NOT NULL DEFAULT '0',
+  `legs` varchar(60) DEFAULT NULL,
+  `lpower` int(5) NOT NULL DEFAULT '0',
+  `ring1` varchar(60) DEFAULT NULL,
+  `rpower1` int(5) NOT NULL DEFAULT '0',
+  `ring2` varchar(60) DEFAULT NULL,
+  `rpower2` int(5) NOT NULL DEFAULT '0',
+  `arrows` varchar(60) DEFAULT NULL,
+  `opower` int(5) NOT NULL DEFAULT '0',
+  PRIMARY KEY (`id`),
   KEY `outpost` (`outpost`)
-) ENGINE=MyISAM  DEFAULT CHARSET=utf8 AUTO_INCREMENT=3 ;
-
--- 
--- Zrzut danych tabeli `outpost_veterans`
--- 
-
-
--- --------------------------------------------------------
-
--- 
--- Struktura tabeli dla  `outposts`
--- 
-
-CREATE TABLE `outposts` (
-  `id` int(11) NOT NULL auto_increment,
-  `owner` int(11) NOT NULL default '0',
-  `size` int(11) NOT NULL default '1',
-  `warriors` int(11) NOT NULL default '0',
-  `archers` int(11) NOT NULL default '0',
-  `catapults` int(11) NOT NULL default '0',
-  `barricades` int(11) NOT NULL default '0',
-  `gold` int(11) NOT NULL default '500',
-  `turns` int(11) NOT NULL default '3',
-  `battack` tinyint(2) NOT NULL default '0',
-  `bdefense` tinyint(2) NOT NULL default '0',
-  `btax` tinyint(2) NOT NULL default '0',
-  `blost` tinyint(2) NOT NULL default '0',
-  `bcost` tinyint(2) NOT NULL default '0',
-  `fence` int(11) NOT NULL default '0',
-  `barracks` int(11) NOT NULL default '0',
-  `fatigue` int(3) NOT NULL default '100',
-  `morale` double(11,1) NOT NULL default '0.0',
-  `attacks` tinyint(2) NOT NULL default '0',
-  PRIMARY KEY  (`id`),
-  KEY `id` (`id`)
 ) ENGINE=MyISAM DEFAULT CHARSET=utf8 AUTO_INCREMENT=1 ;
 
--- 
--- Zrzut danych tabeli `outposts`
--- 
-
-
 -- --------------------------------------------------------
 
--- 
+--
 -- Struktura tabeli dla  `players`
--- 
+--
 
-CREATE TABLE `players` (
-  `id` int(11) NOT NULL auto_increment,
-  `user` varchar(20) NOT NULL default '',
-  `email` varchar(60) NOT NULL default '',
-  `pass` varchar(32) NOT NULL default '',
-  `rank` varchar(20) NOT NULL default 'Member',
-  `level` int(11) NOT NULL default '1',
-  `exp` int(11) NOT NULL default '0',
-  `credits` int(11) NOT NULL default '1000',
-  `energy` double(11,2) NOT NULL default '10.00',
-  `max_energy` double(11,2) NOT NULL default '10.00',
-  `strength` double(11,3) NOT NULL default '3.000',
-  `agility` double(11,3) NOT NULL default '3.000',
-  `ap` int(11) NOT NULL default '5',
-  `wins` int(11) NOT NULL default '0',
-  `losses` int(11) NOT NULL default '0',
-  `lastkilled` varchar(60) NOT NULL default '...',
-  `lastkilledby` varchar(60) NOT NULL default '...',
-  `platinum` int(11) NOT NULL default '0',
-  `age` int(11) NOT NULL default '1',
-  `logins` int(11) NOT NULL default '0',
-  `hp` int(11) unsigned NOT NULL default '15',
-  `max_hp` int(11) NOT NULL default '15',
-  `bank` int(11) NOT NULL default '0',
-  `lpv` bigint(20) NOT NULL default '0',
-  `page` varchar(100) NOT NULL default '',
-  `ip` varchar(50) NOT NULL default '',
-  `ability` double(11,2) NOT NULL default '0.01',
-  `tribe` int(11) NOT NULL default '0',
+DROP TABLE IF EXISTS `players`;
+CREATE TABLE IF NOT EXISTS `players` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `user` varchar(20) NOT NULL DEFAULT '',
+  `email` varchar(60) NOT NULL DEFAULT '',
+  `pass` varchar(32) NOT NULL DEFAULT '',
+  `rank` varchar(20) NOT NULL DEFAULT 'Member',
+  `level` int(11) NOT NULL DEFAULT '1',
+  `exp` int(11) NOT NULL DEFAULT '0',
+  `credits` int(11) NOT NULL DEFAULT '1000',
+  `energy` double(11,2) NOT NULL DEFAULT '10.00',
+  `max_energy` double(11,2) NOT NULL DEFAULT '70.00',
+  `strength` double(11,3) NOT NULL DEFAULT '3.000',
+  `agility` double(11,3) NOT NULL DEFAULT '3.000',
+  `ap` int(11) NOT NULL DEFAULT '5',
+  `wins` int(11) NOT NULL DEFAULT '0',
+  `losses` int(11) NOT NULL DEFAULT '0',
+  `lastkilled` varchar(60) NOT NULL DEFAULT '...',
+  `lastkilledby` varchar(60) NOT NULL DEFAULT '...',
+  `platinum` int(11) NOT NULL DEFAULT '0',
+  `age` int(11) NOT NULL DEFAULT '1',
+  `logins` int(11) NOT NULL DEFAULT '0',
+  `hp` int(11) unsigned NOT NULL DEFAULT '15',
+  `max_hp` int(11) NOT NULL DEFAULT '15',
+  `bank` int(11) NOT NULL DEFAULT '0',
+  `lpv` bigint(20) NOT NULL DEFAULT '0',
+  `page` varchar(100) NOT NULL DEFAULT '',
+  `ip` varchar(50) NOT NULL DEFAULT '',
+  `ability` double(11,2) NOT NULL DEFAULT '0.01',
+  `tribe` int(11) NOT NULL DEFAULT '0',
   `profile` text NOT NULL,
-  `refs` int(11) NOT NULL default '0',
-  `corepass` char(1) NOT NULL default 'N',
-  `fight` int(11) NOT NULL default '0',
-  `trains` int(11) NOT NULL default '5',
-  `rasa` varchar(20) NOT NULL default '',
-  `klasa` varchar(20) NOT NULL default '',
-  `inteli` double(11,3) NOT NULL default '3.000',
-  `pw` int(11) NOT NULL default '0',
-  `atak` double(11,2) NOT NULL default '0.01',
-  `unik` double(11,2) NOT NULL default '0.01',
-  `magia` double(11,2) NOT NULL default '0.01',
-  `immu` char(1) NOT NULL default 'N',
-  `pm` int(11) NOT NULL default '3',
-  `miejsce` varchar(15) NOT NULL default 'Altara',
-  `szyb` double(11,3) NOT NULL default '3.000',
-  `wytrz` double(11,3) NOT NULL default '3.000',
-  `alchemia` double(11,2) NOT NULL default '0.01',
-  `gg` varchar(255) NOT NULL default '0',
-  `avatar` varchar(36) NOT NULL default '',
-  `wisdom` double(11,3) NOT NULL default '3.000',
-  `shoot` double(11,2) NOT NULL default '0.01',
-  `tribe_rank` varchar(60) NOT NULL default '',
-  `fletcher` double(11,2) NOT NULL default '0.01',
-  `deity` varchar(20) default NULL,
-  `maps` int(2) NOT NULL default '0',
-  `rest` char(1) NOT NULL default 'N',
-  `crime` int(11) NOT NULL default '1',
-  `gender` char(1) default NULL,
-  `bridge` char(1) NOT NULL default 'N',
-  `temp` int(11) NOT NULL default '0',
-  `style` varchar(100) NOT NULL default 'light.css',
-  `leadership` double(11,2) NOT NULL default '0.01',
-  `graphic` varchar(255) default NULL,
-  `lang` varchar(3) NOT NULL default 'pl',
-  `seclang` varchar(3) default NULL,
-  `forum_time` bigint(20) NOT NULL default '0',
-  `tforum_time` bigint(20) NOT NULL default '0',
-  `bless` varchar(30) NOT NULL default '',
-  `blessval` int(11) NOT NULL default '0',
-  `antidote` char(2) default NULL,
-  `freeze` tinyint(3) NOT NULL default '0',
-  `breeding` double(11,2) NOT NULL default '0.01',
-  `battlelog` char(1) NOT NULL default 'N',
-  `houserest` char(1) NOT NULL default 'N',
-  `poll` char(1) NOT NULL default 'N',
-  `mining` double(11,2) NOT NULL default '0.01',
-  `lumberjack` double(11,2) NOT NULL default '0.01',
-  `herbalist` double(11,2) NOT NULL default '0.01',
-  `astralcrime` char(1) NOT NULL default 'Y',
-  `changedeity` int(11) NOT NULL default '0',
-  `jeweller` double(11,2) NOT NULL default '0.01',
-  `graphbar` char(1) NOT NULL default 'N',
+  `refs` int(11) NOT NULL DEFAULT '0',
+  `corepass` char(1) NOT NULL DEFAULT 'N',
+  `fight` int(11) NOT NULL DEFAULT '0',
+  `trains` int(11) NOT NULL DEFAULT '5',
+  `rasa` varchar(20) NOT NULL DEFAULT '',
+  `klasa` varchar(20) NOT NULL DEFAULT '',
+  `inteli` double(11,3) NOT NULL DEFAULT '3.000',
+  `pw` int(11) NOT NULL DEFAULT '0',
+  `atak` double(11,2) NOT NULL DEFAULT '0.01',
+  `unik` double(11,2) NOT NULL DEFAULT '0.01',
+  `magia` double(11,2) NOT NULL DEFAULT '0.01',
+  `immu` char(1) NOT NULL DEFAULT 'N',
+  `pm` int(11) NOT NULL DEFAULT '3',
+  `miejsce` varchar(15) NOT NULL DEFAULT 'Altara',
+  `szyb` double(11,3) NOT NULL DEFAULT '3.000',
+  `wytrz` double(11,3) NOT NULL DEFAULT '3.000',
+  `alchemia` double(11,2) NOT NULL DEFAULT '0.01',
+  `gg` varchar(255) NOT NULL DEFAULT '0',
+  `avatar` varchar(36) NOT NULL DEFAULT '',
+  `wisdom` double(11,3) NOT NULL DEFAULT '3.000',
+  `shoot` double(11,2) NOT NULL DEFAULT '0.01',
+  `tribe_rank` varchar(60) NOT NULL DEFAULT '',
+  `fletcher` double(11,2) NOT NULL DEFAULT '0.01',
+  `deity` varchar(20) DEFAULT NULL,
+  `maps` int(2) NOT NULL DEFAULT '0',
+  `rest` char(1) NOT NULL DEFAULT 'N',
+  `crime` int(11) NOT NULL DEFAULT '1',
+  `gender` char(1) DEFAULT NULL,
+  `bridge` char(1) NOT NULL DEFAULT 'N',
+  `temp` int(11) NOT NULL DEFAULT '0',
+  `style` varchar(100) NOT NULL DEFAULT 'light.css',
+  `leadership` double(11,2) NOT NULL DEFAULT '0.01',
+  `graphic` varchar(255) DEFAULT NULL,
+  `lang` varchar(3) NOT NULL DEFAULT 'pl',
+  `seclang` varchar(3) DEFAULT NULL,
+  `forum_time` bigint(20) NOT NULL DEFAULT '0',
+  `tforum_time` bigint(20) NOT NULL DEFAULT '0',
+  `bless` varchar(30) NOT NULL DEFAULT '',
+  `blessval` int(11) NOT NULL DEFAULT '0',
+  `antidote` char(2) DEFAULT NULL,
+  `freeze` tinyint(3) NOT NULL DEFAULT '0',
+  `breeding` double(11,2) NOT NULL DEFAULT '0.01',
+  `battlelog` char(1) NOT NULL DEFAULT 'N',
+  `houserest` char(1) NOT NULL DEFAULT 'N',
+  `poll` char(1) NOT NULL DEFAULT 'N',
+  `mining` double(11,2) NOT NULL DEFAULT '0.01',
+  `lumberjack` double(11,2) NOT NULL DEFAULT '0.01',
+  `herbalist` double(11,2) NOT NULL DEFAULT '0.01',
+  `astralcrime` char(1) NOT NULL DEFAULT 'Y',
+  `changedeity` int(11) NOT NULL DEFAULT '0',
+  `jeweller` double(11,2) NOT NULL DEFAULT '0.01',
+  `graphbar` char(1) NOT NULL DEFAULT 'N',
+  `vallars` int(11) NOT NULL DEFAULT '0',
+  `metallurgy` double(11,2) NOT NULL DEFAULT '0.01',
+  `newbie` tinyint(1) NOT NULL DEFAULT '3',
+  `autodrink` char(1) NOT NULL DEFAULT 'N',
+  `thievery` double(11,2) NOT NULL DEFAULT '0.01',
+  `perception` double(11,2) NOT NULL DEFAULT '0.01',
+  `forumcats` varchar(255) NOT NULL DEFAULT 'All',
+  `roleplay` text NOT NULL,
+  `ooc` text NOT NULL,
+  `shortrpg` varchar(40) NOT NULL,
   KEY `user` (`user`),
   KEY `email` (`email`),
   KEY `lpv` (`lpv`),
@@ -1963,172 +1863,173 @@ CREATE TABLE `players` (
   KEY `id` (`id`)
 ) ENGINE=MyISAM DEFAULT CHARSET=utf8 PACK_KEYS=0 AUTO_INCREMENT=1 ;
 
--- 
--- Zrzut danych tabeli `players`
--- 
-
-
 -- --------------------------------------------------------
 
--- 
+--
 -- Struktura tabeli dla  `pmarket`
--- 
+--
 
-CREATE TABLE `pmarket` (
-  `id` int(11) NOT NULL auto_increment,
-  `seller` int(11) NOT NULL default '0',
-  `ilosc` int(11) NOT NULL default '0',
-  `cost` int(11) unsigned NOT NULL default '0',
-  `nazwa` varchar(20) NOT NULL default 'mithril',
-  `lang` varchar(3) NOT NULL default 'pl',
+DROP TABLE IF EXISTS `pmarket`;
+CREATE TABLE IF NOT EXISTS `pmarket` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `seller` int(11) NOT NULL DEFAULT '0',
+  `ilosc` int(11) NOT NULL DEFAULT '0',
+  `cost` int(11) unsigned NOT NULL DEFAULT '0',
+  `nazwa` varchar(20) NOT NULL DEFAULT 'mithril',
+  `lang` varchar(3) NOT NULL DEFAULT 'pl',
   UNIQUE KEY `id` (`id`)
 ) ENGINE=MyISAM DEFAULT CHARSET=utf8 PACK_KEYS=0 AUTO_INCREMENT=1 ;
 
--- 
--- Zrzut danych tabeli `pmarket`
--- 
-
-
 -- --------------------------------------------------------
 
--- 
+--
 -- Struktura tabeli dla  `polls`
--- 
+--
 
-CREATE TABLE `polls` (
-  `id` int(11) NOT NULL default '0',
-  `poll` varchar(255) NOT NULL default '',
-  `votes` int(11) NOT NULL default '0',
-  `lang` varchar(2) NOT NULL default 'pl',
-  `days` smallint(3) NOT NULL default '7',
-  `members` int(11) NOT NULL default '0',
+DROP TABLE IF EXISTS `polls`;
+CREATE TABLE IF NOT EXISTS `polls` (
+  `id` int(11) NOT NULL DEFAULT '0',
+  `poll` varchar(255) NOT NULL DEFAULT '',
+  `votes` int(11) NOT NULL DEFAULT '0',
+  `lang` varchar(2) NOT NULL DEFAULT 'pl',
+  `days` smallint(3) NOT NULL DEFAULT '7',
+  `members` int(11) NOT NULL DEFAULT '0',
+  `desc` text NOT NULL,
   KEY `id` (`id`)
 ) ENGINE=MyISAM DEFAULT CHARSET=utf8;
 
--- 
--- Zrzut danych tabeli `polls`
--- 
-
-
 -- --------------------------------------------------------
 
--- 
+--
 -- Struktura tabeli dla  `polls_comments`
--- 
+--
 
-CREATE TABLE `polls_comments` (
-  `id` int(11) NOT NULL auto_increment,
-  `pollid` int(11) NOT NULL default '0',
-  `author` varchar(40) NOT NULL default '',
+DROP TABLE IF EXISTS `polls_comments`;
+CREATE TABLE IF NOT EXISTS `polls_comments` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `pollid` int(11) NOT NULL DEFAULT '0',
+  `author` varchar(40) NOT NULL DEFAULT '',
   `body` text NOT NULL,
-  `time` date default NULL,
+  `time` date DEFAULT NULL,
   KEY `id` (`id`)
 ) ENGINE=MyISAM DEFAULT CHARSET=utf8 AUTO_INCREMENT=1 ;
 
--- 
--- Zrzut danych tabeli `polls_comments`
--- 
-
-
 -- --------------------------------------------------------
 
--- 
+--
 -- Struktura tabeli dla  `potions`
--- 
+--
 
-CREATE TABLE `potions` (
-  `id` int(11) NOT NULL auto_increment,
-  `owner` int(11) NOT NULL default '0',
-  `name` varchar(80) NOT NULL default '',
-  `type` char(1) NOT NULL default '',
-  `efect` varchar(30) NOT NULL default '',
-  `status` char(1) NOT NULL default 'S',
-  `power` int(3) NOT NULL default '100',
-  `amount` int(11) NOT NULL default '0',
-  `lang` varchar(3) NOT NULL default 'pl',
-  `cost` int(11) unsigned NOT NULL default '0',
-  PRIMARY KEY  (`id`)
-) ENGINE=MyISAM  DEFAULT CHARSET=utf8 PACK_KEYS=0 AUTO_INCREMENT=29 ;
+DROP TABLE IF EXISTS `potions`;
+CREATE TABLE IF NOT EXISTS `potions` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `owner` int(11) NOT NULL DEFAULT '0',
+  `name` varchar(80) NOT NULL DEFAULT '',
+  `type` char(1) NOT NULL DEFAULT '',
+  `efect` varchar(30) NOT NULL DEFAULT '',
+  `status` char(1) NOT NULL DEFAULT 'S',
+  `power` int(3) NOT NULL DEFAULT '100',
+  `amount` int(11) NOT NULL DEFAULT '0',
+  `lang` varchar(3) NOT NULL DEFAULT 'pl',
+  `cost` int(11) unsigned NOT NULL DEFAULT '0',
+  PRIMARY KEY (`id`),
+  FULLTEXT KEY `name` (`name`)
+) ENGINE=MyISAM  DEFAULT CHARSET=utf8 PACK_KEYS=0 AUTO_INCREMENT=30 ;
 
--- 
+--
 -- Zrzut danych tabeli `potions`
--- 
+--
 
-INSERT INTO `potions` (`id`, `owner`, `name`, `type`, `efect`, `status`, `power`, `amount`, `lang`, `cost`) VALUES 
-(1, 0, 'bardzo silna mikstura z Nutari', 'M', 'regeneruje manę', 'S', 500, 5, 'pl', 0),
-(2, 0, 'słaba mikstura z Nutari', 'M', 'regeneruje manę', 'S', 40, 44, 'pl', 0),
-(3, 0, 'mikstura z Nutari', 'M', 'regeneruje manę', 'S', 100, 14, 'pl', 0),
-(4, 0, 'bardzo słaba mikstura z Nutari', 'M', 'regeneruje manę', 'S', 20, 31, 'pl', 0),
-(5, 0, 'silna mikstura z Nutari', 'M', 'regeneruje manę', 'S', 200, 37, 'pl', 0),
-(6, 0, 'bardzo słaba mikstura z Illani', 'H', 'regeneruje życie', 'S', 10, 50, 'pl', 0),
-(7, 0, 'słaba mikstura z Illani', 'H', 'regeneruje życie', 'S', 20, 18, 'pl', 0),
-(8, 0, 'mikstura z Illani', 'H', 'regeneruje życie', 'S', 50, 16, 'pl', 0),
-(9, 0, 'silna mikstura z Illani', 'H', 'regeneruje życie', 'S', 100, 34, 'pl', 0),
-(10, 0, 'bardzo silna mikstura z Illani', 'H', 'regeneruje życie', 'S', 200, 31, 'pl', 0),
-(11, 0, 'bardzo słaba trucizna z Dynallca', 'P', 'premia do obrażeń(broń)', 'A', 1, 33, 'pl', 0),
-(12, 0, 'słaba trucizna z Dynallca', 'P', 'premia do obrażeń(broń)', 'A', 10, 38, 'pl', 0),
-(13, 0, 'trucizna z Dynallca', 'P', 'premia do obrażeń (broń)', 'A', 20, 26, 'pl', 0),
-(14, 0, 'silna trucizna z Dynallca', 'P', 'premia do obrażeń (broń)', 'A', 30, 32, 'pl', 0),
-(15, 0, 'bardzo silna trucizna z Dynallca', 'P', 'premia do obrażeń(broń)', 'A', 50, 6, 'pl', 0),
-(16, 0, 'bardzo słaba trucizna z Illani', 'P', 'specjalna premia do obrażeń', 'A', 5, 15, 'pl', 0),
-(17, 0, 'słaba trucizna z Illani', 'P', 'specjalna premia do obrażeń', 'A', 15, 44, 'pl', 0),
-(18, 0, 'trucizna z Illani', 'P', 'specjalna premia do obrażeń', 'A', 25, 33, 'pl', 0),
-(19, 0, 'silna trucizna z Illani', 'P', 'specjalna premia do obrażeń', 'A', 40, 41, 'pl', 0),
+INSERT INTO `potions` (`id`, `owner`, `name`, `type`, `efect`, `status`, `power`, `amount`, `lang`, `cost`) VALUES
+(1, 0, 'bardzo silna mikstura z Nutari', 'M', 'regeneruje manę', 'A', 500, 38, 'pl', 0),
+(2, 0, 'słaba mikstura z Nutari', 'M', 'regeneruje manę', 'A', 40, 1, 'pl', 0),
+(3, 0, 'mikstura z Nutari', 'M', 'regeneruje manę', 'A', 100, 4, 'pl', 0),
+(4, 0, 'bardzo słaba mikstura z Nutari', 'M', 'regeneruje manę', 'S', 20, 40, 'pl', 0),
+(5, 0, 'silna mikstura z Nutari', 'M', 'regeneruje manę', 'A', 200, 49, 'pl', 0),
+(6, 0, 'bardzo słaba mikstura z Illani', 'H', 'regeneruje życie', 'S', 10, 32, 'pl', 0),
+(7, 0, 'słaba mikstura z Illani', 'H', 'regeneruje życie', 'A', 20, 24, 'pl', 0),
+(8, 0, 'mikstura z Illani', 'H', 'regeneruje życie', 'A', 50, 43, 'pl', 0),
+(9, 0, 'silna mikstura z Illani', 'H', 'regeneruje życie', 'A', 100, 15, 'pl', 0),
+(10, 0, 'bardzo silna mikstura z Illani', 'H', 'regeneruje życie', 'A', 200, 48, 'pl', 0),
+(11, 0, 'bardzo słaba trucizna z Dynallca', 'P', 'premia do obrażeń(broń)', 'A', 1, 14, 'pl', 0),
+(12, 0, 'słaba trucizna z Dynallca', 'P', 'premia do obrażeń(broń)', 'A', 10, 7, 'pl', 0),
+(13, 0, 'trucizna z Dynallca', 'P', 'premia do obrażeń (broń)', 'A', 20, 35, 'pl', 0),
+(14, 0, 'silna trucizna z Dynallca', 'P', 'premia do obrażeń (broń)', 'A', 30, 44, 'pl', 0),
+(15, 0, 'bardzo silna trucizna z Dynallca', 'P', 'premia do obrażeń(broń)', 'A', 50, 42, 'pl', 0),
+(16, 0, 'bardzo słaba trucizna z Illani', 'P', 'specjalna premia do obrażeń', 'A', 5, 21, 'pl', 0),
+(17, 0, 'słaba trucizna z Illani', 'P', 'specjalna premia do obrażeń', 'A', 15, 37, 'pl', 0),
+(18, 0, 'trucizna z Illani', 'P', 'specjalna premia do obrażeń', 'A', 25, 14, 'pl', 0),
+(19, 0, 'silna trucizna z Illani', 'P', 'specjalna premia do obrażeń', 'A', 40, 20, 'pl', 0),
 (20, 0, 'bardzo silna trucizna z Illani', 'P', 'specjalna premia do obrażeń', 'A', 60, 2, 'pl', 0),
-(21, 0, 'bardzo słaba trucizna z Nutari', 'P', 'zmniejsza PM przeciwnika', 'A', 5, 7, 'pl', 0),
-(22, 0, 'słaba trucizna z Nutari', 'P', 'zmniejsza PM przeciwnika', 'A', 15, 24, 'pl', 0),
-(23, 0, 'trucizna z Nutari', 'P', 'zmniejsza PM przeciwnika', 'A', 25, 47, 'pl', 0),
+(21, 0, 'bardzo słaba trucizna z Nutari', 'P', 'zmniejsza PM przeciwnika', 'A', 5, 25, 'pl', 0),
+(22, 0, 'słaba trucizna z Nutari', 'P', 'zmniejsza PM przeciwnika', 'A', 15, 34, 'pl', 0),
+(23, 0, 'trucizna z Nutari', 'P', 'zmniejsza PM przeciwnika', 'A', 25, 24, 'pl', 0),
 (24, 0, 'silna trucizna z Nutari', 'P', 'zmniejsza PM przeciwnika', 'A', 40, 13, 'pl', 0),
-(25, 0, 'bardzo silna trucizna z Nutari', 'P', 'zmniejsza PM przeciwnika', 'A', 60, 16, 'pl', 0),
-(26, 0, 'antidotum na truciznę z Dynallca', 'A', 'likwiduje zatrucie Dynallca', 'A', 100, 31, 'pl', 0),
-(27, 0, 'antidotum na truciznę z Nutari', 'A', 'likwiduje zatrucie Nutari', 'A', 100, 17, 'pl', 0),
-(28, 0, 'antidotum na truciznę z Illani', 'A', 'likwiduje zatrucie Illani', 'A', 100, 17, 'pl', 0);
+(25, 0, 'bardzo silna trucizna z Nutari', 'P', 'zmniejsza PM przeciwnika', 'A', 60, 5, 'pl', 0),
+(26, 0, 'antidotum na truciznę z Dynallca', 'A', 'likwiduje zatrucie Dynallca', 'A', 100, 23, 'pl', 0),
+(27, 0, 'antidotum na truciznę z Nutari', 'A', 'likwiduje zatrucie Nutari', 'A', 100, 39, 'pl', 0),
+(28, 0, 'antidotum na truciznę z Illani', 'A', 'likwiduje zatrucie Illani', 'A', 100, 7, 'pl', 0),
+(29, 0, 'Oszukanie śmierci', 'A', 'pozwala uniknąć śmierci', 'A', 100, 19, 'pl', 0);
 
 -- --------------------------------------------------------
 
--- 
--- Struktura tabeli dla  `questaction`
--- 
+--
+-- Struktura tabeli dla  `proposals`
+--
 
-CREATE TABLE `questaction` (
-  `id` int(11) NOT NULL auto_increment,
-  `player` int(11) NOT NULL default '0',
-  `quest` int(11) NOT NULL default '0',
-  `action` varchar(20) NOT NULL default '',
+DROP TABLE IF EXISTS `proposals`;
+CREATE TABLE IF NOT EXISTS `proposals` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `pid` int(11) NOT NULL,
+  `type` varchar(1) NOT NULL DEFAULT 'D',
+  `name` varchar(255) NOT NULL,
+  `data` text NOT NULL,
+  `info` text NOT NULL,
+  UNIQUE KEY `id` (`id`)
+) ENGINE=MyISAM  DEFAULT CHARSET=utf8 AUTO_INCREMENT=24 ;
+
+-- --------------------------------------------------------
+
+--
+-- Struktura tabeli dla  `questaction`
+--
+
+DROP TABLE IF EXISTS `questaction`;
+CREATE TABLE IF NOT EXISTS `questaction` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `player` int(11) NOT NULL DEFAULT '0',
+  `quest` int(11) NOT NULL DEFAULT '0',
+  `action` varchar(20) NOT NULL DEFAULT '',
   KEY `id` (`id`),
   KEY `player` (`player`)
 ) ENGINE=MyISAM DEFAULT CHARSET=utf8 AUTO_INCREMENT=1 ;
 
--- 
--- Zrzut danych tabeli `questaction`
--- 
-
-
 -- --------------------------------------------------------
 
--- 
+--
 -- Struktura tabeli dla  `quests`
--- 
+--
 
-CREATE TABLE `quests` (
-  `id` int(11) NOT NULL auto_increment,
-  `qid` int(11) NOT NULL default '2',
-  `location` varchar(20) NOT NULL default 'grid.php',
-  `name` varchar(20) NOT NULL default '',
-  `option` varchar(20) NOT NULL default '0',
+DROP TABLE IF EXISTS `quests`;
+CREATE TABLE IF NOT EXISTS `quests` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `qid` int(11) NOT NULL DEFAULT '2',
+  `location` varchar(20) NOT NULL DEFAULT 'grid.php',
+  `name` varchar(20) NOT NULL DEFAULT '',
+  `option` varchar(20) NOT NULL DEFAULT '0',
   `text` text NOT NULL,
-  `lang` varchar(3) NOT NULL default 'pl',
+  `lang` varchar(3) NOT NULL DEFAULT 'pl',
   KEY `id` (`id`),
   KEY `qid` (`qid`),
   KEY `location` (`location`),
   KEY `name` (`name`)
 ) ENGINE=MyISAM  DEFAULT CHARSET=utf8 PACK_KEYS=0 AUTO_INCREMENT=664 ;
 
--- 
+--
 -- Zrzut danych tabeli `quests`
--- 
+--
 
-INSERT INTO `quests` (`id`, `qid`, `location`, `name`, `option`, `text`, `lang`) VALUES 
+INSERT INTO `quests` (`id`, `qid`, `location`, `name`, `option`, `text`, `lang`) VALUES
 (1, 1, 'grid.php', 'start', '0', 'Wędrując korytarzami labiryntu w pewnym momencie dostrzegasz przejście prawie całkowicie zasłonięte pajęczynami. Wygląda to tak, jakby nikt nie wędrował tą drogą od setek lat. Zdecydowanym ruchem zrywasz pajęczyny. Twoim oczom ukazuje się długi korytarz prowadzący lekko w dół. Podłogę pokrywa gruba warstwa kurzu, która zmienia się w obłok przy każdym twoim kroku. Co jakiś czas korytarz skręca to w lewo to w prawo, jednak ciągle prowadzi lekko w dół. Po pewnym okresie wędrówki docierasz do rozwidlenia korytarza w kształcie litery T. Którą drogę wybierasz?', 'pl'),
 (2, 1, 'grid.php', 'box1', '1', 'Korytarz w prawo', 'pl'),
 (3, 1, 'grid.php', 'box1', '2', 'Korytarz w lewo', 'pl'),
@@ -2241,7 +2142,7 @@ INSERT INTO `quests` (`id`, `qid`, `location`, `name`, `option`, `text`, `lang`)
 (110, 3, 'grid.php', 'box2', '3', 'Zawrócić', 'pl'),
 (111, 3, 'grid.php', '1.3', '0', 'Postanowiłeś zostawić posąg wraz z jego tajemnicami i zawrócić do znanej ci części labiryntu. Kiedy ruszyłeś w drogę powrotną, doznałeś niejasnego przeczucia że o czymś zapomniałeś. Przystanąłeś na chwilę zastanawiając się. Już po chwili orientujesz się o co chodzi ? zgubiłeś gdzieś fragment mapki. Po chwili dochodzisz do wniosku, że i tak na razie nie będzie ci zupełnie potrzebna. Ruszasz z powrotem w swoją drogę, by po jakimś czasie dojść do dobrze znanej ci części labiryntu. Postanawiasz wrócić do miasta aby nieco odpocząć oraz doprowadzić się do porządku. Kierujesz się w stronę wyjścia z labiryntu a następnie wychodzisz na gwarne ulice miasta.', 'pl'),
 (112, 3, 'grid.php', '1.1', '0', 'Skierowałeś się do korytarza prowadzącego na wprost od korytarza którym przyszedłeś. Prowadzi on cały czas prosto, czasami tylko skręcając nieznacznie to w prawo to w lewo. Ściany korytarza, podobnie jak tego którym tutaj przyszedłeś, są doskonale obrobione, na ścianach widać ślady dawnych fresków przedstawiających różne istoty inteligentne oraz zwierzęta i potwory. Na podłodze leży cienka warstewka kurzu, która zmienia się w niewielkie obłoczki, kiedy stawiasz kroki. Co jakiś czas widzisz niewielkie pajęczyny w rogach korytarza. Ostrożnie przyglądając się ścianom i podłodze idziesz cały czas przed siebie.', 'pl');
-INSERT INTO `quests` (`id`, `qid`, `location`, `name`, `option`, `text`, `lang`) VALUES 
+INSERT INTO `quests` (`id`, `qid`, `location`, `name`, `option`, `text`, `lang`) VALUES
 (113, 3, 'grid.php', 'int1', '0', 'W pewnym momencie z jednej ze ścian słyszysz odgłos delikatnego świstu a po chwili czujesz w lewym boku lekkie pieczenie. Po chwili dostajesz lekkich zawrotów głowy, które zaraz mijają. Odruchowo dotykasz dłonią tego miejsca na ciele. Pod palcami wyczuwasz dwie małe igiełki. Ostrożnie wyciągasz je z boku i odrzucasz na ziemię. Patrząc na lewą ścianę, dopiero teraz przyuważasz że jedna z twarzy na ścianie nie została do końca zatarta przez czas. Jej oczodoły to dwa niewielkie otwory z których prawdopodobnie wyleciały owe maleńkie strzałki. Przyglądając się uważnie podłodze dopiero teraz widzisz doskonale zakamuflowany mały, ruchomy fragment podłogi. Cóż, masz szczęście że tak to się tylko skończyło. Po krótkim odpoczynku ruszasz dalej przed siebie.', 'pl'),
 (114, 3, 'grid.php', 'int2', '0', 'Przyglądając się ścianą zauważasz, że jedna z figur nie została zatarta przez czas. Jest to twarz jakiegoś nieznanego ci stworzenia. Oczy owej postaci są głębokimi otworami o średnicy palca. Wietrząc w tym jakiś podstęp uważnie rozglądasz się na boki oraz na podłogę. Po chwili twoje przypuszczenia okazują się słuszne. Przyglądając się uważnie podłodze widzisz doskonale zakamuflowany mały, ruchomy fragment podłogi. Prawdopodobnie jest to spust zwalniający jakąś pułapkę. Ostrożnie wymijasz niebezpieczny fragment i kierujesz się dalej przed siebie jeszcze uważniej sprawdzając okolicę.', 'pl'),
 (115, 3, 'grid.php', '1.1next', '0', 'Podróżując dalej korytarzem w pewnym momencie zauważasz że zaczyna on się rozszerzać na boki. Po jakimś czasie widzisz że plama czerni przed tobą jakby się rozszerzyła. Domyślasz się że dochodzisz do jakiegoś pomieszczenia. Ostrożnie patrząc na wszystkie strony, wchodzisz do środka. Jest to niewielka komnata o rozmiarach 10 kroków na 6 kroków i wysokości ok 15 stóp. Jej ściany są wykonane z jednolitego, gładkiego kamienia. Jednak twoją uwagę przykuwa przede wszystkim podłoga. Ta wykonana jest z niewielkich płyt. Większość płyt jest na poziomie podłogi, ale dziewięć płytek ustawionych w trzech rzędach nieco wystaje ponad poziom. Kiedy ostrożnie naciskasz jedną płytkę nic się nie dzieje. Domyślasz się, że musisz ustawić jakiś wzór na nich przyciskając odpowiednie z nich.', 'pl'),
@@ -2361,7 +2262,7 @@ INSERT INTO `quests` (`id`, `qid`, `location`, `name`, `option`, `text`, `lang`)
 (229, 4, 'grid.php', 'talk1', '0', '<i>Hej</i><br />Odpowiadasz niepewnie, zdziwiony sytuacją <br /><i>Słuchaj, nie mam nic do ciebie, więc może pogadamy?</i> odpowiada Goblin', 'pl'),
 (230, 4, 'grid.php', 'box12', '1', 'Tak', 'pl'),
 (231, 4, 'grid.php', 'box12', '2', 'Nie', 'pl');
-INSERT INTO `quests` (`id`, `qid`, `location`, `name`, `option`, `text`, `lang`) VALUES 
+INSERT INTO `quests` (`id`, `qid`, `location`, `name`, `option`, `text`, `lang`) VALUES
 (232, 4, 'grid.php', 'talk2.2', '0', '<i>Dobra, niech ci będzie</i> - mówi Goblin. - <i>Proponuję aby każdy poszedł w swoją stronę</i><br />Przystajesz na ten warunek, ostrożnie odstępujecie od siebie, cały czas patrząc uważnie co robi druga strona. Kiedy jesteście już jakiś kawałek drogi od siebie, widzisz, że Goblin skręca w jeden z bocznych tuneli. Przez chwilę stoisz nasłuchując odgłosów jego kroków, które po jakimś czasie całkowicie cichną.', 'pl'),
 (233, 4, 'grid.php', 'talk2.1', '0', '<i>Czego tu szukasz?</i> - pyta się Goblin.<br /><i>Tego i owego</i> - odpowiadasz cały czas nieufnie przyglądając się stworowi<br /><i>Słuchaj, mam dla ciebie propozycję, znalazłem jakąś dziwną głupią skrzynię z durnymi napisami na niej, za 100 sztuk złota zaprowadzę cię do niej, chcesz?</i>', 'pl'),
 (234, 4, 'grid.php', 'box13', '1', 'Tak', 'pl'),
@@ -2459,7 +2360,7 @@ INSERT INTO `quests` (`id`, `qid`, `location`, `name`, `option`, `text`, `lang`)
 (326, 5, 'grid.php', 'answer3', '0', 'Kiedy wypowiedziałeś słowo <i>Oddech</i>, na moment cały napis zaczął mocniej świecić by po chwili zgasnąć. W tym momencie bezszelestnie uniosło się wieko skrzyni. Kiedy zajrzałeś do środka, zauważyłeś na dnie kawałek starego pergaminu. Ostrożnie podnosząc go, stwierdzasz że to kawałek starożytnej mapy! Delikatnie bierzesz go do ręki i wyruszasz w drogę powrotną. Z powrotem przeprawiłeś się przez jezioro, zebrałeś swój ekwipunek i ruszyłeś w drogę powrotną. Okazała się ona nieco trudniejsza niż poprzednio - pewnie dlatego że tym razem musiałeś iść pod górkę. W połowie drogi urządziłeś sobie chwilowy odpoczynek. Kiedy nieco odpocząłeś, ponownie kierujesz się do skrzyżowania. Przez chwilę odpoczywasz na skrzyżowaniu, następnie zbierasz swój ekwipunek i udajesz się w kierunku wyjścia z owego tunelu. Wstajesz więc z ziemi i z powrotem kierujesz się znanym ci już korytarzem. Szybkim krokiem kierujesz się do znanej ci już wcześniej części korytarza. Po jakimś czasie docierasz do skrzyżowania. Droga powrotna jest nieco trudniejsza, gdyż prowadzi lekko pod górę. W połowie znanego ci już tunelu robisz sobie krótki postój na zebranie sił. Po chwili ruszasz ponownie przed siebie. Po pewnym czasie docierasz do wyjścia z tunelu. Przez chwilę odpoczywasz niedaleko wejścia do niego. Następnie zbierasz swój ekwipunek i kierujesz się w stronę wyjścia z labiryntu. Kiedy docierasz do niego, w twoje oczy uderza blask dawno nie widzianego słońca.', 'pl'),
 (327, 5, 'grid.php', '1.2.3', '0', 'Korytarz wije się raz w jedną, raz w drugą stronę. Sprawia to iż nie jesteś do końca pewien, co też cię czeka. Z tego też względu wędrujesz bardzo ostrożnie, z napięciem obserwując okolicę w poszukiwaniu niebezpieczeństw. Poruszając się tak przez jakiś czas w pewnym momencie, słyszysz gdzieś przed sobą jakiś podejrzany dźwięk. Niestety ze względu na zakręcający korytarz, nie jesteś w stanie stwierdzić co to było. Z nerwami napiętymi do ostatnich granic, powoli podchodzisz do załomu korytarza. Kiedy zaglądasz za jego róg widzisz kilka kroków przed sobą równie zdziwionego jak ty Orka! Natychmiast otrząsacie się z zaskoczenia. Ork, warknął tylko, wyciągnął szablę i błyskawicznie ruszył w twoim kierunku.', 'pl'),
 (328, 5, 'grid.php', 'lostfight2', '0', 'Przez pewien czas próbowałeś powstrzymać ataki Orka, ale jego wprawa w posługiwaniu się bronią, była znacznie większa niż twoje doświadczenie w walce. Raz po raz, zadając cios, pozbawiał cię sił. W pewnym momencie jedyne co mogłeś tylko zrobić to ugiąć kolana i paść na ziemię. Ostatnią rzeczą jaką zapamiętałeś to szyderczy grymas na twarzy Orka. Potem nastąpiła ciemność.', 'pl');
-INSERT INTO `quests` (`id`, `qid`, `location`, `name`, `option`, `text`, `lang`) VALUES 
+INSERT INTO `quests` (`id`, `qid`, `location`, `name`, `option`, `text`, `lang`) VALUES
 (329, 5, 'grid.php', 'escape2', '0', 'Błyskawicznie odwróciłeś się na pięcie i pędem pognałeś z powrotem korytarzem. Za sobą usłyszałeś triumfalny wrzask zwycięstwa Orka a następnie odgłos podkutych butów uderzających o kamienną posadzkę. Ã“w dźwięk dodał ci sił do ucieczki. Błyskawicznie docierasz do skrzyżowania a nastepnie równie szybko kierujesz się w stronę wyjścia z owego tunelu. Przerażony nie oglądasz się za siebie, wydaje ci się, że potwór cały czas biegnie za tobą. W ten sposób docierasz do korytarza prowadzącego pod górę. Tutaj dopiero kompletnie zmęczony przystajesz na moment. Płuca pracują ci niczym miechy kowalskie. Ostrożnie odwracasz się, ale nigdzie nie dostrzegasz potwora. Odpoczywasz jakiś czas. Jednego jesteś pewnien - na pewno nie wrócisz do tego korytarza - gdzieś tam w mroku czai się bestia czyhająca na ciebie. Po pewnym czasie zbierasz swój ekwipunek i kierujesz się z powrotem do wyjścia labiryntu - wystarczy ci wrażeń jak na jeden dzień. Droga powrotna jest nieco trudniejsza, gdyż prowadzi lekko pod górę. W połowie znanego ci już tunelu robisz sobie krótki postój na zebranie sił. Po chwili ruszasz ponownie przed siebie. Po pewnym czasie docierasz do wyjścia z tunelu. Przez chwilę odpoczywasz niedaleko wejścia do niego. Następnie zbierasz swój ekwipunek i kierujesz się w stronę wyjścia z labiryntu. Kiedy docierasz do niego, w twoje oczy uderza blask dawno nie widzianego słońca.', 'pl'),
 (330, 5, 'grid.php', 'winfight2', '0', 'Jeszcze tylko jeden cios i potwór który stanął ci na drodze padł martwy. Przez moment stoisz w miejscu ciężko dysząc ze zmęczenia, to niespodziewane wydarzenie nieco nadszarpnęło twoje nerwy. Przez kilka chwil dochodzisz do siebie. Szybko uświadamiasz sobie, że Ork mógł nie być sam. Jednak kiedy nasłuchujesz, dookoła otacza cię tylko martwa cisza. Zbierasz więc swój rozrzucony podczas walki ekwipunek i z jeszcze większą ostrożnością niż wcześniej zacznynasz przemierzać korytarz. ', 'pl'),
 (331, 5, 'grid.php', '1.2.3.next', '0', 'Prowadzi on długi czas przed siebie, wijąc się to w lewo to w prawo. Przed każdym zakrętem, pełen najgorszych przeczuć ostrożnie badasz co kryje się za rogiem. Na szczęście nie spotykasz nic niebezpiecznego. Po jakimś czasie widzisz iż korytarz kończy się. Kiedy podchodzisz bliżej, Na wschodniej ścianie dostrzegasz dużą płaskorzeźbę przedstawiającą prawdopodobnie jakąś osadę istot rozumnych z dawnych czasów. Uważnie przyglądasz się ścianie.', 'pl'),
@@ -2554,7 +2455,7 @@ INSERT INTO `quests` (`id`, `qid`, `location`, `name`, `option`, `text`, `lang`)
 (420, 6, 'grid.php', '1.2.3.1.1', '0', 'Odkładasz na bok zbędną część ekwipunku i przygotowujesz się do walki. Następnie szybko wychodzisz z korytarza w kierunku ogniska. Orkowie, zauważają cię prawie natychmiast. Są zaskoczeni twoim pojawieniem się, lecz już po chwili wyciągają szable i ruszają w twoim kierunku. Rozpoczyna się walka.', 'pl'),
 (421, 6, 'grid.php', 'escape2', '0', 'Wykonujesz gwałtowny unik, odwracasz się i zaczynasz uciekać. Słyszysz za sobą triumfalny wrzask przeciwników oraz tupot podkutych butów. Pędem wpadasz do korytarza z którego przybyłeś, szybko zbierasz swój ekwipunek i biegiem ruszasz w drogę powrotną. Za sobą cały czas słyszysz dzikie wrzaski Orków. Błyskawicznie docierasz do rozwidlenia i pędzisz dalej. Biegniesz pod górę, po ciemku, nie zatrzymujesz się ani na moment. Dopiero kiedy docierasz do skrzyżowania u góry, przystajesz na moment. Jednak twój odpoczynek nie trwa długo. Uważnie nasłuchując słyszysz z oddali zbliżające się odgłosy pogoni. Masz wprawdzie nad nimi niewielką czasową przewagę, ale lepiej nie ryzykować. Szybko podnosisz się z ziemi i ruszasz dalej w kierunku wyjścia z labiryntu. Wracasz więc przez drzwi i udajesz się w drogę powrotną. Zbierasz więc swój ekwipunek i zawracasz w kierunku skrzyżowania. Po drodze znów urządzasz sobie w pewnym momencie odpoczynek. Nie jesteś dokładnie w stanie stwierdzić ile już przebywasz w labiryncie. W tych ciemnościach jedynie światło twojej pochodni w jakiś sposób wyznacza upływ czasu. Jednak nie jesteś pewien ile już go spędziłeś pod ziemią. Po odpoczynku zbierasz swój ekwipunek i wyruszasz dalej przed siebie. Po pewnym czasie docierasz do skrzyżowania. Następnie kierujesz się do wyjścia z owego bogato rzeźbionego tunelu. Po drodze ze zmęczenia omal nie zapomniałeś o czyhającej pułapce na drodze. Na szczęście zorientowałeś się zanim w nią wszedłeś. Przy wylocie korytarza znów na moment przystajesz aby odpocząć. Po chwili kierujesz się w stronę wyjścia z labiryntu. Kiedy do niego docierasz, w twoje oczy uderza blask niewidzianego od pewnego czasu słońca, zaś do twoich uszu dochodzi gwar rozmów wielu istot. Jesteś z powrotem w mieście.', 'pl'),
 (422, 6, 'grid.php', 'lostfight2', '0', 'Walka z potworami nie była najlepszym rozwiązaniem. Raz za razem ich ciosy spadały na ciebie, osłabiając cię coraz bardziej. Po pewnym czasie już ledwo stojąc na nogach, widzisz jak w zwolnionym tempie szabla orcza opada w twoim kierunku, podczas gdy na twarzach Orków maluje się wyraz zwycięstwa. Następnie w twojej głowie eksplodowała jasna gwiazda. To była ostatnia rzecz jaką zapamiętałeś. Po tym wydarzeniu ogarnęła cię całkowita ciemność.', 'pl');
-INSERT INTO `quests` (`id`, `qid`, `location`, `name`, `option`, `text`, `lang`) VALUES 
+INSERT INTO `quests` (`id`, `qid`, `location`, `name`, `option`, `text`, `lang`) VALUES
 (423, 6, 'grid.php', 'winfight2', '0', 'Jeden po drugim Orkowie charcząc padają martwi u twych stóp. Bez problemu pokonujesz ich wszystkich - nie stanowili dla ciebie poważniejszego zagrożenia. Przez moment stoisz w miejscu odpoczywając po walce. Następnie zbierasz swój ekwipunek i wyruszasz dalej na zbadanie tego co kryje się w pomieszczeniu. Ostrożnie idąc przed siebie, wkrótce docierasz do przeciwległego końca sali. Widzisz tutaj kolejny korytarz prowadzący na zachód.', 'pl'),
 (424, 6, 'grid.php', '1.2.3.1.1.next', '0', 'Korytarz ten, jest znacznie mniejszy od tego którym wcześniej wędrowałeś. Jest też znacznie gorzej wykonany od poprzenich. Widać to pewnie robota tych Orków których spotkałeś. Prowadzi on kilkanaście kroków do niewielkiego pomieszczenia. Kiedy wchodzisz ostrożnie do środka - widzisz że jest to coś w rodzaju magazynu - pełno tutaj lekko nadgniłego jedzenia oraz różnych orczych trunków. Dokładnie przeszukujesz pomieszczenie w poszukiwaniu skarbów. Okazuje się że nie były to daremne poszukiwania. W jednym z rogów pomieszczenia znajdujesz wciśniętą pomiędzy amfory niewielką sakiewkę. Kiedy zaglądasz do środka znajdujesz w niej 20 sztuk mithrilu. Szybko chowasz ją do plecaka i kierujesz się w drogę powrotną. Spokojnie przechodzisz więc przez tunel a potem przez pomieszczenie, mijając martwych Orków a dochodząc do wyjścia z pomieszczenia. Następnie szybkim krokiem udajesz się z powrotem do skrzyżowania aby wybrać inną drogę.', 'pl'),
 (425, 6, 'grid.php', '1.2.3.1.2.next', '0', 'orytarz ten, jest znacznie mniejszy od tego którym wcześniej wędrowałeś. Jest też znacznie gorzej wykonany od poprzenich. Widać to pewnie robota tych Orków których spotkałeś. Prowadzi on kilkanaście kroków do niewielkiego pomieszczenia. Kiedy wchodzisz ostrożnie do środka - widzisz że jest to coś w rodzaju magazynu - pełno tutaj lekko nadgniłego jedzenia oraz różnych orczych trunków. Dokładnie przeszukujesz pomieszczenie w poszukiwaniu skarbów. Okazuje się że nie były to daremne poszukiwania. W jednym z rogów pomieszczenia znajdujesz wciśniętą pomiędzy amfory niewielką sakiewkę. Kiedy zaglądasz do środka znajdujesz w niej 20 sztuk mithrilu. Szybko chowasz ją do plecaka i kierujesz się w drogę powrotną. Ostrożnie wchodzisz do pomieszczenia i tą samą drogą przekradasz się powoli w kierunku wyjścia. I tym razem udało ci się przejść niezauważonym. Przemykasz się do tunelu a następnie szybkim krokiem kierujesz się do skrzyżowania. Nie jesteś do końca pewien ile masz czasu zanim Orkowie odkryją twoje ślady. Po jakimś czasie docierasz z powrotem do rozwidlenia. Tutaj na moment przystajesz aby odpocząć i ponownie wybrać w którą stronę chcesz się teraz udać.', 'pl'),
@@ -2701,7 +2602,7 @@ INSERT INTO `quests` (`id`, `qid`, `location`, `name`, `option`, `text`, `lang`)
 (566, 7, 'grid.php', '17.2.2', '0', 'Ponownie przeszukujesz pomieszczenie, ale nic tam nie ma. Zawiedziony, zły i głodny zawracasz do city1b.', 'pl'),
 (567, 7, 'grid.php', '12.1', '0', 'Próbujesz przeskoczyć przepaść. Rozpęd jest utrudniony wznoszącym się terenem, ale twoje przywykłe do pracy nogi i tym razem nie zawodzą. Odbijasz się mocno i już chwilę potem szybujesz niczym ptak wprost na drugą stronę drogi.', 'pl'),
 (568, 7, 'grid.php', '12.2', '0', 'Drogą, którą tu przybyłeś zawracasz do city1b.', 'pl');
-INSERT INTO `quests` (`id`, `qid`, `location`, `name`, `option`, `text`, `lang`) VALUES 
+INSERT INTO `quests` (`id`, `qid`, `location`, `name`, `option`, `text`, `lang`) VALUES
 (569, 7, 'grid.php', '12.1.n', '0', 'Opadasz na ubitą ziemię i dyszysz wyczerpany.<br />-Ładny skok -słyszysz za sobą. Odwracasz się, by zobaczyć stojącego obok starca w powłóczystej szacie.<br />-Kim jesteś? -pytasz.<br />-A co ci da moje imię? I tak mnie nie znasz... Ale dobrze... Nazywam się Trezor i od wieków strzegę przejścia do komnaty na końcu tej drogi.<br />Popatrzyłeś na kościstego starucha i zaśmiałeś się w duchu. Taka marnota strażnikiem?!<br />-A co jest w tej komnacie?<br />-Odpowiedz na moje pytanie, a sam się przekonasz...', 'pl'),
 (570, 7, 'grid.php', 'box19', '1', '-Słucham zatem...', 'pl'),
 (571, 7, 'grid.php', 'box19', '2', 'sięgasz po broń', 'pl'),
@@ -2800,63 +2701,72 @@ INSERT INTO `quests` (`id`, `qid`, `location`, `name`, `option`, `text`, `lang`)
 
 -- --------------------------------------------------------
 
--- 
+--
 -- Struktura tabeli dla  `replies`
--- 
+--
 
-CREATE TABLE `replies` (
-  `id` int(11) NOT NULL auto_increment,
-  `starter` varchar(30) NOT NULL default '',
-  `topic_id` text NOT NULL,
+DROP TABLE IF EXISTS `replies`;
+CREATE TABLE IF NOT EXISTS `replies` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `starter` varchar(30) NOT NULL DEFAULT '',
+  `topic_id` int(11) NOT NULL,
   `body` text NOT NULL,
-  `gracz` int(11) NOT NULL default '0',
-  `lang` varchar(3) NOT NULL default 'pl',
-  `w_time` bigint(20) NOT NULL default '0',
-  UNIQUE KEY `id` (`id`)
+  `gracz` int(11) NOT NULL DEFAULT '0',
+  `lang` varchar(3) NOT NULL DEFAULT 'pl',
+  UNIQUE KEY `id` (`id`),
+  KEY `topic_id` (`topic_id`)
 ) ENGINE=MyISAM DEFAULT CHARSET=utf8 PACK_KEYS=0 AUTO_INCREMENT=1 ;
-
--- 
--- Zrzut danych tabeli `replies`
--- 
-
 
 -- --------------------------------------------------------
 
--- 
+--
 -- Struktura tabeli dla  `reset`
--- 
+--
 
-CREATE TABLE `reset` (
-  `id` int(11) NOT NULL auto_increment,
-  `player` int(11) NOT NULL default '0',
-  `code` int(11) NOT NULL default '0',
+DROP TABLE IF EXISTS `reset`;
+CREATE TABLE IF NOT EXISTS `reset` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `player` int(11) NOT NULL DEFAULT '0',
+  `code` int(11) NOT NULL DEFAULT '0',
+  `type` char(1) NOT NULL DEFAULT 'A',
   KEY `id` (`id`)
 ) ENGINE=MyISAM DEFAULT CHARSET=utf8 AUTO_INCREMENT=1 ;
 
--- 
--- Zrzut danych tabeli `reset`
--- 
+-- --------------------------------------------------------
 
+--
+-- Struktura tabeli dla  `revent`
+--
+
+DROP TABLE IF EXISTS `revent`;
+CREATE TABLE IF NOT EXISTS `revent` (
+  `pid` int(11) NOT NULL,
+  `state` tinyint(2) NOT NULL,
+  `qtime` smallint(4) NOT NULL,
+  `location` varchar(255) NOT NULL,
+  PRIMARY KEY (`pid`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 -- --------------------------------------------------------
 
--- 
+--
 -- Struktura tabeli dla  `rings`
--- 
+--
 
-CREATE TABLE `rings` (
-  `id` int(11) NOT NULL auto_increment,
-  `name` varchar(60) NOT NULL default '',
-  `amount` int(11) NOT NULL default '0',
-  `lang` varchar(2) NOT NULL default 'pl',
+DROP TABLE IF EXISTS `rings`;
+CREATE TABLE IF NOT EXISTS `rings` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `name` varchar(60) NOT NULL DEFAULT '',
+  `amount` int(11) NOT NULL DEFAULT '0',
+  `lang` varchar(2) NOT NULL DEFAULT 'pl',
   KEY `id` (`id`)
 ) ENGINE=MyISAM  DEFAULT CHARSET=utf8 AUTO_INCREMENT=7 ;
 
--- 
+--
 -- Zrzut danych tabeli `rings`
--- 
+--
 
-INSERT INTO `rings` (`id`, `name`, `amount`, `lang`) VALUES 
+INSERT INTO `rings` (`id`, `name`, `amount`, `lang`) VALUES
 (1, 'pierścień nowicjusza siły', 28, 'pl'),
 (2, 'pierścień nowicjusza zręczności', 28, 'pl'),
 (3, 'pierścień nowicjusza inteligencji', 28, 'pl'),
@@ -2866,550 +2776,564 @@ INSERT INTO `rings` (`id`, `name`, `amount`, `lang`) VALUES
 
 -- --------------------------------------------------------
 
--- 
+--
 -- Struktura tabeli dla  `sessions`
--- 
+--
 
-CREATE TABLE `sessions` (
-  `sesskey` varchar(32) character set latin1 collate latin1_bin NOT NULL default '',
-  `expiry` int(11) unsigned NOT NULL default '0',
-  `expireref` varchar(64) default NULL,
+DROP TABLE IF EXISTS `sessions`;
+CREATE TABLE IF NOT EXISTS `sessions` (
+  `sesskey` varchar(32) CHARACTER SET latin1 COLLATE latin1_bin NOT NULL DEFAULT '',
+  `expiry` int(11) unsigned NOT NULL DEFAULT '0',
+  `expireref` varchar(64) DEFAULT NULL,
   `data` longtext,
-  PRIMARY KEY  (`sesskey`),
+  PRIMARY KEY (`sesskey`),
   KEY `expiry` (`expiry`)
 ) ENGINE=MyISAM DEFAULT CHARSET=utf8;
 
--- 
--- Zrzut danych tabeli `sessions`
--- 
-
-
 -- --------------------------------------------------------
 
--- 
+--
 -- Struktura tabeli dla  `settings`
--- 
+--
 
-CREATE TABLE `settings` (
-  `setting` varchar(255) NOT NULL default '',
-  `value` varchar(255) default NULL,
+DROP TABLE IF EXISTS `settings`;
+CREATE TABLE IF NOT EXISTS `settings` (
+  `setting` varchar(255) NOT NULL DEFAULT '',
+  `value` varchar(255) DEFAULT NULL,
   KEY `setting` (`setting`),
   KEY `value` (`value`)
 ) ENGINE=MyISAM DEFAULT CHARSET=utf8;
 
--- 
+--
 -- Zrzut danych tabeli `settings`
--- 
+--
 
-INSERT INTO `settings` (`setting`, `value`) VALUES 
+INSERT INTO `settings` (`setting`, `value`) VALUES
 ('maps', '20'),
 ('item', NULL),
 ('player', NULL),
 ('open', 'Y'),
 ('reset', 'N'),
-('warriors', '0'),
-('archers', '0'),
-('catapults', '0'),
-('barricades', '0'),
+('warriors', '1942113'),
+('archers', '1910454'),
+('catapults', '927311'),
+('barricades', '941955'),
 ('close_reason', ''),
-('copper', '7'),
-('iron', '15'),
-('coal', '3'),
-('mithril', '24'),
-('adamantium', '24'),
-('meteor', '395'),
-('crystal', '30'),
-('illani', '31'),
-('illanias', '20'),
-('nutari', '33'),
-('dynallca', '35'),
+('copper', '43'),
+('iron', '82'),
+('coal', '6'),
+('mithril', '40'),
+('adamantium', '5'),
+('meteor', '244'),
+('crystal', '8'),
+('illani', '52'),
+('illanias', '23'),
+('nutari', '68'),
+('dynallca', '46'),
 ('register', 'Y'),
 ('close_register', ''),
 ('poll', 'N'),
 ('age', '1'),
 ('day', '1'),
-('copperore', '3'),
-('zincore', '5'),
-('tinore', '7'),
-('ironore', '11'),
-('bronze', '18'),
-('brass', '22'),
-('steel', '5'),
-('pine', '7'),
-('hazel', '10'),
-('yew', '12'),
-('elm', '10'),
-('illani_seeds', '26'),
-('illanias_seeds', '12'),
-('nutari_seeds', '30'),
-('dynallca_seeds', '25'),
+('copperore', '5'),
+('zincore', '20'),
+('tinore', '16'),
+('ironore', '13'),
+('bronze', '56'),
+('brass', '76'),
+('steel', '117'),
+('pine', '27'),
+('hazel', '18'),
+('yew', '23'),
+('elm', '43'),
+('illani_seeds', '119'),
+('illanias_seeds', '46'),
+('nutari_seeds', '81'),
+('dynallca_seeds', '84'),
 ('caravan', 'N'),
-('metakeywords', NULL),
+('metakeywords', ''),
 ('metadescr', NULL),
 ('tribe', NULL),
-('caravanday', '0');
+('caravanday', '10'),
+('hunteraltara', 'L;5;3'),
+('hunterardulith', 'L;64;1'),
+('hunteraltaraamount', '13'),
+('hunterardulithamount', '2');
 
 -- --------------------------------------------------------
 
--- 
+--
 -- Struktura tabeli dla  `smelter`
--- 
+--
 
-CREATE TABLE `smelter` (
-  `owner` int(11) NOT NULL default '0',
-  `level` tinyint(2) NOT NULL default '0',
+DROP TABLE IF EXISTS `smelter`;
+CREATE TABLE IF NOT EXISTS `smelter` (
+  `owner` int(11) NOT NULL DEFAULT '0',
+  `level` tinyint(2) NOT NULL DEFAULT '0',
   KEY `owner` (`owner`)
 ) ENGINE=MyISAM DEFAULT CHARSET=utf8;
 
--- 
--- Zrzut danych tabeli `smelter`
--- 
-
-
 -- --------------------------------------------------------
 
--- 
+--
 -- Struktura tabeli dla  `smith`
--- 
+--
 
-CREATE TABLE `smith` (
-  `id` int(11) NOT NULL auto_increment,
-  `owner` int(11) NOT NULL default '0',
-  `name` varchar(60) NOT NULL default '',
-  `type` char(1) NOT NULL default '',
-  `cost` int(11) NOT NULL default '0',
-  `amount` int(11) NOT NULL default '0',
-  `level` tinyint(4) NOT NULL default '0',
-  `lang` varchar(2) NOT NULL default 'pl',
-  `twohand` char(1) NOT NULL default 'N',
+DROP TABLE IF EXISTS `smith`;
+CREATE TABLE IF NOT EXISTS `smith` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `owner` int(11) NOT NULL DEFAULT '0',
+  `name` varchar(60) NOT NULL DEFAULT '',
+  `type` char(1) NOT NULL DEFAULT '',
+  `cost` int(11) NOT NULL DEFAULT '0',
+  `amount` int(11) NOT NULL DEFAULT '0',
+  `level` tinyint(4) NOT NULL DEFAULT '0',
+  `lang` varchar(2) NOT NULL DEFAULT 'pl',
+  `twohand` char(1) NOT NULL DEFAULT 'N',
+  `elite` int(11) NOT NULL DEFAULT '0',
+  `elitetype` varchar(1) NOT NULL DEFAULT 'S',
   KEY `id` (`id`),
   KEY `owner` (`owner`)
-) ENGINE=MyISAM  DEFAULT CHARSET=utf8 AUTO_INCREMENT=78 ;
+) ENGINE=MyISAM  DEFAULT CHARSET=utf8 AUTO_INCREMENT=118 ;
 
--- 
+--
 -- Zrzut danych tabeli `smith`
--- 
+--
 
-INSERT INTO `smith` (`id`, `owner`, `name`, `type`, `cost`, `amount`, `level`, `lang`, `twohand`) VALUES 
-(2, 0, 'Bajdana', 'A', 4000, 8, 3, 'pl', 'N'),
-(4, 0, 'Anima', 'A', 1000, 2, 1, 'pl', 'N'),
-(5, 0, 'Brygantyna', 'A', 8000, 16, 5, 'pl', 'N'),
-(6, 0, 'Koszulka kolcza', 'A', 16000, 40, 10, 'pl', 'N'),
-(7, 0, 'Kaftan kolczy', 'A', 32000, 72, 15, 'pl', 'N'),
-(8, 0, 'Kirys', 'A', 64000, 120, 20, 'pl', 'N'),
-(9, 0, 'Kolczuga', 'A', 128000, 172, 25, 'pl', 'N'),
-(10, 0, 'Zbroja lamelkowa', 'A', 256000, 240, 30, 'pl', 'N'),
-(11, 0, 'Zbroja łuskowa', 'A', 512000, 400, 40, 'pl', 'N'),
-(12, 0, 'Zbroja karacenowa', 'A', 1024000, 600, 50, 'pl', 'N'),
-(13, 0, 'Zbroja paskowa', 'A', 2048000, 840, 60, 'pl', 'N'),
-(14, 0, 'Karacena', 'A', 4096000, 1120, 70, 'pl', 'N'),
-(15, 0, 'Zbroja półpłytowa', 'A', 8192000, 1440, 80, 'pl', 'N'),
-(16, 0, 'Zbroja płytowa', 'A', 16384000, 1800, 90, 'pl', 'N'),
-(17, 0, 'Zbroja zwierciadlana', 'A', 32768000, 2200, 100, 'pl', 'N'),
-(18, 0, 'Mały puklerz', 'S', 500, 1, 1, 'pl', 'N'),
-(19, 0, 'Puklerz', 'S', 2000, 3, 3, 'pl', 'N'),
-(20, 0, 'Mała tarcza', 'S', 4000, 8, 5, 'pl', 'N'),
-(21, 0, 'Sipar', 'S', 8000, 20, 10, 'pl', 'N'),
-(22, 0, 'Średnia tarcza', 'S', 16000, 36, 15, 'pl', 'N'),
-(23, 0, 'Trójkątna tarcza', 'S', 32000, 60, 20, 'pl', 'N'),
-(24, 0, 'Wielka tarcza', 'S', 64000, 86, 25, 'pl', 'N'),
-(25, 0, 'Tarcza migdałowa', 'S', 128000, 120, 30, 'pl', 'N'),
-(26, 0, 'Prostokątna tarcza', 'S', 256000, 200, 40, 'pl', 'N'),
-(27, 0, 'Pawęż', 'S', 512000, 300, 50, 'pl', 'N'),
-(28, 0, 'Ciężka tarcza', 'S', 1024000, 420, 60, 'pl', 'N'),
-(29, 0, 'Tarcza turniejowa', 'S', 2048000, 560, 70, 'pl', 'N'),
-(30, 0, 'Rycerska tarcza', 'S', 4096000, 720, 80, 'pl', 'N'),
-(31, 0, 'Kolczasta tarcza', 'S', 8192000, 900, 90, 'pl', 'N'),
-(32, 0, 'Żołnierska tarcza', 'S', 16384000, 1100, 100, 'pl', 'N'),
-(33, 0, 'Kolczy czepiec', 'H', 500, 1, 1, 'pl', 'N'),
-(34, 0, 'Szyszak', 'H', 2000, 4, 3, 'pl', 'N'),
-(35, 0, 'Szyszak z kołnierzem', 'H', 4000, 8, 5, 'pl', 'N'),
-(36, 0, 'Kapalin', 'H', 8000, 20, 10, 'pl', 'N'),
-(37, 0, 'Łebka', 'H', 16000, 36, 15, 'pl', 'N'),
-(38, 0, 'Hełm otwarty', 'H', 32000, 60, 20, 'pl', 'N'),
-(39, 0, 'Hełm stożkowy', 'H', 64000, 86, 25, 'pl', 'N'),
-(40, 0, 'Hełm garnczkowy', 'H', 128000, 120, 30, 'pl', 'N'),
-(41, 0, 'Hełm zamknięty', 'H', 256000, 200, 40, 'pl', 'N'),
-(42, 0, 'Hełm obręczowy', 'H', 512000, 300, 50, 'pl', 'N'),
-(43, 0, 'Hełm rycerski', 'H', 1024000, 420, 60, 'pl', 'N'),
-(44, 0, 'Hełm przyłbicowy', 'H', 2048000, 560, 70, 'pl', 'N'),
-(45, 0, 'Armet', 'H', 4096000, 720, 80, 'pl', 'N'),
-(46, 0, 'Rogaty hełm', 'H', 8192000, 900, 90, 'pl', 'N'),
-(47, 0, 'Wielki hełm', 'H', 16384000, 1100, 100, 'pl', 'N'),
-(48, 0, 'Ochraniacze kolcze', 'L', 500, 1, 1, 'pl', 'N'),
-(49, 0, 'Nagolenniki kolcze', 'L', 2000, 4, 3, 'pl', 'N'),
-(50, 0, 'Nagolenniki żeberkowe', 'L', 8000, 20, 10, 'pl', 'N'),
-(51, 0, 'Nagolenniki łuskowe', 'L', 32000, 60, 20, 'pl', 'N'),
-(52, 0, 'Nagolenniki paskowe', 'L', 128000, 120, 30, 'pl', 'N'),
-(53, 0, 'Nagolenniki lamelkowe', 'L', 512000, 300, 50, 'pl', 'N'),
-(54, 0, 'Nagolenniki półpłytowe', 'L', 2048000, 560, 70, 'pl', 'N'),
-(55, 0, 'Nagolenniki płytowe', 'L', 8192000, 900, 90, 'pl', 'N'),
-(56, 0, 'Nogawice kolcze', 'L', 4000, 8, 5, 'pl', 'N'),
-(57, 0, 'Nogawice żeberkowe', 'L', 16000, 36, 15, 'pl', 'N'),
-(58, 0, 'Nogawice łuskowe', 'L', 64000, 86, 25, 'pl', 'N'),
-(59, 0, 'Nogawice paskowe', 'L', 256000, 200, 40, 'pl', 'N'),
-(60, 0, 'Nogawice lamelkowe', 'L', 1024000, 420, 60, 'pl', 'N'),
-(61, 0, 'Nogawice półpłytowe', 'L', 4096000, 720, 80, 'pl', 'N'),
-(62, 0, 'Nogawice płytowe', 'L', 16384000, 1100, 100, 'pl', 'N'),
-(63, 0, 'Krótki miecz', 'W', 500, 1, 1, 'pl', 'N'),
-(64, 0, 'Topór ręczny', 'W', 2000, 4, 3, 'pl', 'N'),
-(65, 0, 'Rapier', 'W', 4000, 8, 5, 'pl', 'N'),
-(66, 0, 'Szabla', 'W', 8000, 20, 10, 'pl', 'N'),
-(67, 0, 'Morgensztern', 'W', 16000, 36, 15, 'pl', 'N'),
-(68, 0, 'Pałasz', 'W', 128000, 120, 30, 'pl', 'N'),
-(69, 0, 'Lekki korbacz', 'W', 64000, 86, 25, 'pl', 'N'),
-(70, 0, 'Długi miecz', 'W', 1024000, 420, 60, 'pl', 'N'),
-(71, 0, 'Topór żołnierski', 'W', 256000, 200, 40, 'pl', 'N'),
-(72, 0, 'Młot bojowy', 'W', 512000, 300, 50, 'pl', 'N'),
-(73, 0, 'Scimitar', 'W', 32000, 60, 20, 'pl', 'N'),
-(74, 0, 'Ciężki korbacz', 'W', 2048000, 560, 70, 'pl', 'N'),
-(75, 0, 'Katana', 'W', 4096000, 720, 80, 'pl', 'N'),
-(76, 0, 'Topór bitewny', 'W', 8192000, 900, 90, 'pl', 'N'),
-(77, 0, 'Bastard', 'W', 16384000, 1100, 100, 'pl', 'N');
+INSERT INTO `smith` (`id`, `owner`, `name`, `type`, `cost`, `amount`, `level`, `lang`, `twohand`, `elite`, `elitetype`) VALUES
+(2, 0, 'Bajdana', 'A', 4000, 8, 3, 'pl', 'N', 0, 'S'),
+(4, 0, 'Anima', 'A', 1000, 2, 1, 'pl', 'N', 0, 'S'),
+(5, 0, 'Brygantyna', 'A', 8000, 16, 5, 'pl', 'N', 0, 'S'),
+(6, 0, 'Koszulka kolcza', 'A', 16000, 40, 10, 'pl', 'N', 0, 'S'),
+(7, 0, 'Kaftan kolczy', 'A', 32000, 72, 15, 'pl', 'N', 0, 'S'),
+(8, 0, 'Kirys', 'A', 64000, 120, 20, 'pl', 'N', 0, 'S'),
+(9, 0, 'Kolczuga', 'A', 128000, 172, 25, 'pl', 'N', 0, 'S'),
+(10, 0, 'Zbroja lamelkowa', 'A', 256000, 240, 30, 'pl', 'N', 0, 'S'),
+(11, 0, 'Zbroja łuskowa', 'A', 512000, 400, 40, 'pl', 'N', 0, 'S'),
+(12, 0, 'Zbroja karacenowa', 'A', 1024000, 600, 50, 'pl', 'N', 0, 'S'),
+(13, 0, 'Zbroja paskowa', 'A', 2048000, 840, 60, 'pl', 'N', 0, 'S'),
+(14, 0, 'Karacena', 'A', 4096000, 1120, 70, 'pl', 'N', 0, 'S'),
+(15, 0, 'Zbroja półpłytowa', 'A', 8192000, 1440, 80, 'pl', 'N', 0, 'S'),
+(16, 0, 'Zbroja płytowa', 'A', 16384000, 1800, 90, 'pl', 'N', 0, 'S'),
+(17, 0, 'Zbroja zwierciadlana', 'A', 32768000, 2200, 100, 'pl', 'N', 0, 'S'),
+(18, 0, 'Mały puklerz', 'S', 500, 1, 1, 'pl', 'N', 0, 'S'),
+(19, 0, 'Puklerz', 'S', 2000, 3, 3, 'pl', 'N', 0, 'S'),
+(20, 0, 'Mała tarcza', 'S', 4000, 8, 5, 'pl', 'N', 0, 'S'),
+(21, 0, 'Sipar', 'S', 8000, 20, 10, 'pl', 'N', 0, 'S'),
+(22, 0, 'Średnia tarcza', 'S', 16000, 36, 15, 'pl', 'N', 0, 'S'),
+(23, 0, 'Trójkątna tarcza', 'S', 32000, 60, 20, 'pl', 'N', 0, 'S'),
+(24, 0, 'Wielka tarcza', 'S', 64000, 86, 25, 'pl', 'N', 0, 'S'),
+(25, 0, 'Tarcza migdałowa', 'S', 128000, 120, 30, 'pl', 'N', 0, 'S'),
+(26, 0, 'Prostokątna tarcza', 'S', 256000, 200, 40, 'pl', 'N', 0, 'S'),
+(27, 0, 'Pawęż', 'S', 512000, 300, 50, 'pl', 'N', 0, 'S'),
+(28, 0, 'Ciężka tarcza', 'S', 1024000, 420, 60, 'pl', 'N', 0, 'S'),
+(29, 0, 'Tarcza turniejowa', 'S', 2048000, 560, 70, 'pl', 'N', 0, 'S'),
+(30, 0, 'Rycerska tarcza', 'S', 4096000, 720, 80, 'pl', 'N', 0, 'S'),
+(31, 0, 'Kolczasta tarcza', 'S', 8192000, 900, 90, 'pl', 'N', 0, 'S'),
+(32, 0, 'Żołnierska tarcza', 'S', 16384000, 1100, 100, 'pl', 'N', 0, 'S'),
+(33, 0, 'Kolczy czepiec', 'H', 500, 1, 1, 'pl', 'N', 0, 'S'),
+(34, 0, 'Szyszak', 'H', 2000, 4, 3, 'pl', 'N', 0, 'S'),
+(35, 0, 'Szyszak z kołnierzem', 'H', 4000, 8, 5, 'pl', 'N', 0, 'S'),
+(36, 0, 'Kapalin', 'H', 8000, 20, 10, 'pl', 'N', 0, 'S'),
+(37, 0, 'Łebka', 'H', 16000, 36, 15, 'pl', 'N', 0, 'S'),
+(38, 0, 'Hełm otwarty', 'H', 32000, 60, 20, 'pl', 'N', 0, 'S'),
+(39, 0, 'Hełm stożkowy', 'H', 64000, 86, 25, 'pl', 'N', 0, 'S'),
+(40, 0, 'Hełm garnczkowy', 'H', 128000, 120, 30, 'pl', 'N', 0, 'S'),
+(41, 0, 'Hełm zamknięty', 'H', 256000, 200, 40, 'pl', 'N', 0, 'S'),
+(42, 0, 'Hełm obręczowy', 'H', 512000, 300, 50, 'pl', 'N', 0, 'S'),
+(43, 0, 'Hełm rycerski', 'H', 1024000, 420, 60, 'pl', 'N', 0, 'S'),
+(44, 0, 'Hełm przyłbicowy', 'H', 2048000, 560, 70, 'pl', 'N', 0, 'S'),
+(45, 0, 'Armet', 'H', 4096000, 720, 80, 'pl', 'N', 0, 'S'),
+(46, 0, 'Rogaty hełm', 'H', 8192000, 900, 90, 'pl', 'N', 0, 'S'),
+(47, 0, 'Wielki hełm', 'H', 16384000, 1100, 100, 'pl', 'N', 0, 'S'),
+(48, 0, 'Ochraniacze kolcze', 'L', 500, 1, 1, 'pl', 'N', 0, 'S'),
+(49, 0, 'Nagolenniki kolcze', 'L', 2000, 4, 3, 'pl', 'N', 0, 'S'),
+(50, 0, 'Nagolenniki żeberkowe', 'L', 8000, 20, 10, 'pl', 'N', 0, 'S'),
+(51, 0, 'Nagolenniki łuskowe', 'L', 32000, 60, 20, 'pl', 'N', 0, 'S'),
+(52, 0, 'Nagolenniki paskowe', 'L', 128000, 120, 30, 'pl', 'N', 0, 'S'),
+(53, 0, 'Nagolenniki lamelkowe', 'L', 512000, 300, 50, 'pl', 'N', 0, 'S'),
+(54, 0, 'Nagolenniki półpłytowe', 'L', 2048000, 560, 70, 'pl', 'N', 0, 'S'),
+(55, 0, 'Nagolenniki płytowe', 'L', 8192000, 900, 90, 'pl', 'N', 0, 'S'),
+(56, 0, 'Nogawice kolcze', 'L', 4000, 8, 5, 'pl', 'N', 0, 'S'),
+(57, 0, 'Nogawice żeberkowe', 'L', 16000, 36, 15, 'pl', 'N', 0, 'S'),
+(58, 0, 'Nogawice łuskowe', 'L', 64000, 86, 25, 'pl', 'N', 0, 'S'),
+(59, 0, 'Nogawice paskowe', 'L', 256000, 200, 40, 'pl', 'N', 0, 'S'),
+(60, 0, 'Nogawice lamelkowe', 'L', 1024000, 420, 60, 'pl', 'N', 0, 'S'),
+(61, 0, 'Nogawice półpłytowe', 'L', 4096000, 720, 80, 'pl', 'N', 0, 'S'),
+(62, 0, 'Nogawice płytowe', 'L', 16384000, 1100, 100, 'pl', 'N', 0, 'S'),
+(63, 0, 'Krótki miecz', 'W', 500, 1, 1, 'pl', 'N', 0, 'S'),
+(64, 0, 'Topór ręczny', 'W', 2000, 4, 3, 'pl', 'N', 0, 'S'),
+(65, 0, 'Rapier', 'W', 4000, 8, 5, 'pl', 'N', 0, 'S'),
+(66, 0, 'Szabla', 'W', 8000, 20, 10, 'pl', 'N', 0, 'S'),
+(67, 0, 'Morgensztern', 'W', 16000, 36, 15, 'pl', 'N', 0, 'S'),
+(68, 0, 'Pałasz', 'W', 128000, 120, 30, 'pl', 'N', 0, 'S'),
+(69, 0, 'Lekki korbacz', 'W', 64000, 86, 25, 'pl', 'N', 0, 'S'),
+(70, 0, 'Długi miecz', 'W', 1024000, 420, 60, 'pl', 'N', 0, 'S'),
+(71, 0, 'Topór żołnierski', 'W', 256000, 200, 40, 'pl', 'N', 0, 'S'),
+(72, 0, 'Młot bojowy', 'W', 512000, 300, 50, 'pl', 'N', 0, 'S'),
+(73, 0, 'Scimitar', 'W', 32000, 60, 20, 'pl', 'N', 0, 'S'),
+(74, 0, 'Ciężki korbacz', 'W', 2048000, 560, 70, 'pl', 'N', 0, 'S'),
+(75, 0, 'Katana', 'W', 4096000, 720, 80, 'pl', 'N', 0, 'S'),
+(76, 0, 'Topór bitewny', 'W', 8192000, 900, 90, 'pl', 'N', 0, 'S'),
+(77, 0, 'Bastard', 'W', 16384000, 1100, 100, 'pl', 'N', 0, 'S'),
+(78, 0, 'Elitarny krótki miecz', 'W', 5000, 5, 1, 'pl', 'N', 2, 'S'),
+(79, 0, 'Elitarny rapier', 'W', 40000, 40, 5, 'pl', 'N', 6, 'S'),
+(80, 0, 'Elitarna szabla', 'W', 80000, 200, 10, 'pl', 'N', 10, 'S'),
+(81, 0, 'Elitarny morgensztern', 'W', 160000, 360, 15, 'pl', 'N', 14, 'S'),
+(82, 0, 'Elitarna anima', 'A', 10000, 10, 1, 'pl', 'N', 3, 'S'),
+(83, 0, 'Elitarna brygantyna', 'A', 80000, 160, 5, 'pl', 'N', 7, 'S'),
+(84, 0, 'Elitarna koszulka kolcza', 'A', 160000, 400, 10, 'pl', 'N', 11, 'S'),
+(85, 0, 'Elitarny kaftan kolczy', 'A', 320000, 720, 15, 'pl', 'N', 15, 'S'),
+(86, 0, 'Elitarny mały puklerz', 'S', 5000, 5, 1, 'pl', 'N', 3, 'S'),
+(87, 0, 'Elitarna mała tarcza', 'S', 40000, 80, 5, 'pl', 'N', 7, 'S'),
+(88, 0, 'Elitarny sipar', 'S', 80000, 200, 10, 'pl', 'N', 11, 'S'),
+(89, 0, 'Elitarna średnia tarcza', 'S', 160000, 360, 15, 'pl', 'N', 15, 'S'),
+(90, 0, 'Elitarny kolczy czepiec', 'H', 5000, 5, 1, 'pl', 'N', 3, 'S'),
+(91, 0, 'Elitarny szyszak z kołnierzem', 'H', 40000, 80, 5, 'pl', 'N', 7, 'S'),
+(92, 0, 'Elitarny kapalin', 'H', 80000, 200, 10, 'pl', 'N', 11, 'S'),
+(93, 0, 'Elitarna łebka', 'H', 160000, 360, 15, 'pl', 'N', 15, 'S'),
+(94, 0, 'Elitarne ochraniacze kolcze', 'L', 5000, 5, 1, 'pl', 'N', 3, 'S'),
+(95, 0, 'Elitarne nogawice kolcze', 'L', 40000, 80, 5, 'pl', 'N', 7, 'S'),
+(96, 0, 'Elitarne nagolenniki żeberkowe', 'L', 80000, 200, 10, 'pl', 'N', 11, 'S'),
+(97, 0, 'Elitarne nogawice żeberkowe', 'L', 160000, 360, 15, 'pl', 'N', 15, 'S'),
+(98, 0, 'Elitarny krótki miecz', 'W', 5000, 5, 1, 'pl', 'N', 57, 'E'),
+(99, 0, 'Elitarny rapier', 'W', 40000, 40, 5, 'pl', 'N', 61, 'E'),
+(100, 0, 'Elitarna szabla', 'W', 80000, 200, 10, 'pl', 'N', 64, 'E'),
+(101, 0, 'Elitarny morgensztern', 'W', 160000, 360, 15, 'pl', 'N', 67, 'E'),
+(102, 0, 'Elitarna anima', 'A', 10000, 10, 1, 'pl', 'N', 59, 'E'),
+(103, 0, 'Elitarna brygantyna', 'A', 80000, 160, 5, 'pl', 'N', 62, 'E'),
+(104, 0, 'Elitarna koszulka kolcza', 'A', 160000, 400, 10, 'pl', 'N', 65, 'E'),
+(105, 0, 'Elitarny kaftan kolczy', 'A', 320000, 720, 15, 'pl', 'N', 68, 'E'),
+(106, 0, 'Elitarny mały puklerz', 'S', 5000, 5, 1, 'pl', 'N', 59, 'E'),
+(107, 0, 'Elitarna mała tarcza', 'S', 40000, 80, 5, 'pl', 'N', 62, 'E'),
+(108, 0, 'Elitarny sipar', 'S', 80000, 200, 10, 'pl', 'N', 65, 'E'),
+(109, 0, 'Elitarna średnia tarcza', 'S', 160000, 360, 15, 'pl', 'N', 68, 'E'),
+(110, 0, 'Elitarny kolczy czepiec', 'H', 5000, 5, 1, 'pl', 'N', 59, 'E'),
+(111, 0, 'Elitarny szyszak z kołnierzem', 'H', 40000, 80, 5, 'pl', 'N', 62, 'E'),
+(112, 0, 'Elitarny kapalin', 'H', 80000, 200, 10, 'pl', 'N', 65, 'E'),
+(113, 0, 'Elitarna łebka', 'H', 160000, 360, 15, 'pl', 'N', 68, 'E'),
+(114, 0, 'Elitarne ochraniacze kolcze', 'L', 5000, 5, 1, 'pl', 'N', 59, 'E'),
+(115, 0, 'Elitarne nogawice kolcze', 'L', 40000, 80, 5, 'pl', 'N', 62, 'E'),
+(116, 0, 'Elitarne nagolenniki żeberkowe', 'L', 80000, 200, 10, 'pl', 'N', 65, 'E'),
+(117, 0, 'Elitarne nogawice żeberkowe', 'L', 160000, 360, 15, 'pl', 'N', 68, 'E');
 
 -- --------------------------------------------------------
 
--- 
+--
 -- Struktura tabeli dla  `smith_work`
--- 
+--
 
-CREATE TABLE `smith_work` (
-  `id` int(11) NOT NULL auto_increment,
-  `owner` int(11) NOT NULL default '0',
-  `name` varchar(60) NOT NULL default '',
-  `n_energy` smallint(4) NOT NULL default '0',
-  `u_energy` smallint(4) NOT NULL default '0',
-  `mineral` varchar(10) NOT NULL default '',
+DROP TABLE IF EXISTS `smith_work`;
+CREATE TABLE IF NOT EXISTS `smith_work` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `owner` int(11) NOT NULL DEFAULT '0',
+  `name` varchar(60) NOT NULL DEFAULT '',
+  `n_energy` smallint(4) NOT NULL DEFAULT '0',
+  `u_energy` smallint(4) NOT NULL DEFAULT '0',
+  `mineral` varchar(10) NOT NULL DEFAULT '',
+  `elite` int(11) NOT NULL DEFAULT '0',
   KEY `id` (`id`)
-) ENGINE=MyISAM DEFAULT CHARSET=utf8 AUTO_INCREMENT=1 ;
-
--- 
--- Zrzut danych tabeli `smith_work`
--- 
-
+) ENGINE=MyISAM  DEFAULT CHARSET=utf8 AUTO_INCREMENT=22 ;
 
 -- --------------------------------------------------------
 
--- 
+--
 -- Struktura tabeli dla  `topics`
--- 
+--
 
-CREATE TABLE `topics` (
-  `id` int(11) NOT NULL auto_increment,
+DROP TABLE IF EXISTS `topics`;
+CREATE TABLE IF NOT EXISTS `topics` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
   `topic` text NOT NULL,
   `body` text NOT NULL,
-  `starter` varchar(30) NOT NULL default '',
-  `gracz` int(11) NOT NULL default '0',
-  `cat_id` int(11) NOT NULL default '0',
-  `lang` varchar(3) NOT NULL default 'pl',
-  `w_time` bigint(20) NOT NULL default '0',
-  `sticky` char(1) NOT NULL default 'N',
-  UNIQUE KEY `id` (`id`)
+  `starter` varchar(30) NOT NULL DEFAULT '',
+  `gracz` int(11) NOT NULL DEFAULT '0',
+  `cat_id` int(11) NOT NULL DEFAULT '0',
+  `lang` varchar(3) NOT NULL DEFAULT 'pl',
+  `w_time` bigint(20) NOT NULL DEFAULT '0',
+  `sticky` char(1) NOT NULL DEFAULT 'N',
+  `closed` char(1) NOT NULL DEFAULT 'N',
+  `replies` int(11) NOT NULL DEFAULT '0',
+  UNIQUE KEY `id` (`id`),
+  KEY `cat_id` (`cat_id`)
 ) ENGINE=MyISAM DEFAULT CHARSET=utf8 PACK_KEYS=0 AUTO_INCREMENT=1 ;
-
--- 
--- Zrzut danych tabeli `topics`
--- 
-
 
 -- --------------------------------------------------------
 
--- 
--- Struktura tabeli dla  `tribe_mag`
--- 
+--
+-- Struktura tabeli dla  `tribes`
+--
 
-CREATE TABLE `tribe_mag` (
-  `id` int(11) NOT NULL auto_increment,
-  `owner` int(11) NOT NULL default '0',
-  `name` varchar(80) NOT NULL default '',
-  `efect` varchar(30) NOT NULL default '',
-  `power` int(11) NOT NULL default '0',
-  `amount` int(11) NOT NULL default '0',
-  `type` char(1) NOT NULL default '',
-  PRIMARY KEY  (`id`),
+DROP TABLE IF EXISTS `tribes`;
+CREATE TABLE IF NOT EXISTS `tribes` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `name` varchar(255) NOT NULL DEFAULT '',
+  `owner` int(11) NOT NULL DEFAULT '0',
+  `credits` int(11) NOT NULL DEFAULT '0',
+  `platinum` int(11) NOT NULL DEFAULT '0',
+  `public_msg` text NOT NULL,
+  `private_msg` text NOT NULL,
+  `hospass` char(1) NOT NULL DEFAULT 'N',
+  `atak` char(1) NOT NULL DEFAULT 'N',
+  `wygr` int(11) NOT NULL DEFAULT '0',
+  `przeg` int(11) NOT NULL DEFAULT '0',
+  `zolnierze` int(11) NOT NULL DEFAULT '0',
+  `forty` int(11) NOT NULL DEFAULT '0',
+  `copper` int(11) NOT NULL DEFAULT '0',
+  `illani` int(11) NOT NULL DEFAULT '0',
+  `illanias` int(11) NOT NULL DEFAULT '0',
+  `nutari` int(11) NOT NULL DEFAULT '0',
+  `logo` varchar(36) NOT NULL DEFAULT '',
+  `www` varchar(60) NOT NULL DEFAULT '',
+  `dynallca` int(11) NOT NULL DEFAULT '0',
+  `ilani_seeds` int(11) NOT NULL DEFAULT '0',
+  `illanias_seeds` int(11) NOT NULL DEFAULT '0',
+  `nutari_seeds` int(11) NOT NULL DEFAULT '0',
+  `dynallca_seeds` int(11) NOT NULL DEFAULT '0',
+  `copperore` int(11) NOT NULL DEFAULT '0',
+  `zincore` int(11) NOT NULL DEFAULT '0',
+  `tinore` int(11) NOT NULL DEFAULT '0',
+  `ironore` int(11) NOT NULL DEFAULT '0',
+  `coal` int(11) NOT NULL DEFAULT '0',
+  `bronze` int(11) NOT NULL DEFAULT '0',
+  `brass` int(11) NOT NULL DEFAULT '0',
+  `iron` int(11) NOT NULL DEFAULT '0',
+  `steel` int(11) NOT NULL DEFAULT '0',
+  `pine` int(11) NOT NULL DEFAULT '0',
+  `hazel` int(11) NOT NULL DEFAULT '0',
+  `yew` int(11) NOT NULL DEFAULT '0',
+  `elm` int(11) NOT NULL DEFAULT '0',
+  `crystal` int(11) NOT NULL DEFAULT '0',
+  `adamantium` int(11) NOT NULL DEFAULT '0',
+  `meteor` int(11) NOT NULL DEFAULT '0',
+  `prefix` varchar(5) NOT NULL,
+  `suffix` varchar(5) NOT NULL,
+  UNIQUE KEY `id` (`id`)
+) ENGINE=MyISAM DEFAULT CHARSET=utf8 AUTO_INCREMENT=1 ;
+
+-- --------------------------------------------------------
+
+--
+-- Struktura tabeli dla  `tribe_mag`
+--
+
+DROP TABLE IF EXISTS `tribe_mag`;
+CREATE TABLE IF NOT EXISTS `tribe_mag` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `owner` int(11) NOT NULL DEFAULT '0',
+  `name` varchar(80) NOT NULL DEFAULT '',
+  `efect` varchar(30) NOT NULL DEFAULT '',
+  `power` int(11) NOT NULL DEFAULT '0',
+  `amount` int(11) NOT NULL DEFAULT '0',
+  `type` char(1) NOT NULL DEFAULT '',
+  PRIMARY KEY (`id`),
   UNIQUE KEY `id` (`id`),
   KEY `id_2` (`id`),
   KEY `klan` (`owner`)
 ) ENGINE=MyISAM DEFAULT CHARSET=utf8 PACK_KEYS=0 AUTO_INCREMENT=1 ;
 
--- 
--- Zrzut danych tabeli `tribe_mag`
--- 
-
-
 -- --------------------------------------------------------
 
--- 
+--
 -- Struktura tabeli dla  `tribe_oczek`
--- 
+--
 
-CREATE TABLE `tribe_oczek` (
-  `id` int(11) NOT NULL auto_increment,
-  `gracz` int(11) NOT NULL default '0',
-  `klan` int(11) NOT NULL default '0',
-  PRIMARY KEY  (`gracz`),
+DROP TABLE IF EXISTS `tribe_oczek`;
+CREATE TABLE IF NOT EXISTS `tribe_oczek` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `gracz` int(11) NOT NULL DEFAULT '0',
+  `klan` int(11) NOT NULL DEFAULT '0',
+  PRIMARY KEY (`gracz`),
   KEY `id` (`id`)
 ) ENGINE=MyISAM DEFAULT CHARSET=utf8 PACK_KEYS=0 AUTO_INCREMENT=1 ;
 
--- 
--- Zrzut danych tabeli `tribe_oczek`
--- 
-
-
 -- --------------------------------------------------------
 
--- 
+--
 -- Struktura tabeli dla  `tribe_perm`
--- 
+--
 
-CREATE TABLE `tribe_perm` (
-  `id` int(11) NOT NULL auto_increment,
-  `tribe` int(11) NOT NULL default '0',
-  `player` int(11) NOT NULL default '0',
-  `messages` smallint(2) NOT NULL default '0',
-  `wait` smallint(2) NOT NULL default '0',
-  `kick` smallint(2) NOT NULL default '0',
-  `army` smallint(2) NOT NULL default '0',
-  `attack` smallint(2) NOT NULL default '0',
-  `loan` smallint(2) NOT NULL default '0',
-  `armory` smallint(2) NOT NULL default '0',
-  `warehouse` smallint(2) NOT NULL default '0',
-  `bank` smallint(2) NOT NULL default '0',
-  `herbs` smallint(2) NOT NULL default '0',
-  `forum` smallint(2) NOT NULL default '0',
-  `mail` smallint(2) NOT NULL default '0',
-  `ranks` smallint(2) NOT NULL default '0',
-  `info` smallint(2) NOT NULL default '0',
-  `astralvault` smallint(2) NOT NULL default '0',
-  PRIMARY KEY  (`id`)
+DROP TABLE IF EXISTS `tribe_perm`;
+CREATE TABLE IF NOT EXISTS `tribe_perm` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `tribe` int(11) NOT NULL DEFAULT '0',
+  `player` int(11) NOT NULL DEFAULT '0',
+  `messages` smallint(2) NOT NULL DEFAULT '0',
+  `wait` smallint(2) NOT NULL DEFAULT '0',
+  `kick` smallint(2) NOT NULL DEFAULT '0',
+  `army` smallint(2) NOT NULL DEFAULT '0',
+  `attack` smallint(2) NOT NULL DEFAULT '0',
+  `loan` smallint(2) NOT NULL DEFAULT '0',
+  `armory` smallint(2) NOT NULL DEFAULT '0',
+  `warehouse` smallint(2) NOT NULL DEFAULT '0',
+  `bank` smallint(2) NOT NULL DEFAULT '0',
+  `herbs` smallint(2) NOT NULL DEFAULT '0',
+  `forum` smallint(2) NOT NULL DEFAULT '0',
+  `mail` smallint(2) NOT NULL DEFAULT '0',
+  `ranks` smallint(2) NOT NULL DEFAULT '0',
+  `info` smallint(2) NOT NULL DEFAULT '0',
+  `astralvault` smallint(2) NOT NULL DEFAULT '0',
+  PRIMARY KEY (`id`)
 ) ENGINE=MyISAM DEFAULT CHARSET=utf8 AUTO_INCREMENT=1 ;
 
--- 
--- Zrzut danych tabeli `tribe_perm`
--- 
-
-
 -- --------------------------------------------------------
 
--- 
+--
 -- Struktura tabeli dla  `tribe_rank`
--- 
+--
 
-CREATE TABLE `tribe_rank` (
-  `id` int(11) NOT NULL auto_increment,
-  `tribe_id` int(11) NOT NULL default '0',
-  `rank1` varchar(60) NOT NULL default '',
-  `rank2` varchar(60) NOT NULL default '',
-  `rank3` varchar(60) NOT NULL default '',
-  `rank4` varchar(60) NOT NULL default '',
-  `rank5` varchar(60) NOT NULL default '',
-  `rank6` varchar(60) NOT NULL default '',
-  `rank7` varchar(60) NOT NULL default '',
-  `rank8` varchar(60) NOT NULL default '',
-  `rank9` varchar(60) NOT NULL default '',
-  `rank10` varchar(60) NOT NULL default '',
+DROP TABLE IF EXISTS `tribe_rank`;
+CREATE TABLE IF NOT EXISTS `tribe_rank` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `tribe_id` int(11) NOT NULL DEFAULT '0',
+  `rank1` varchar(60) NOT NULL DEFAULT '',
+  `rank2` varchar(60) NOT NULL DEFAULT '',
+  `rank3` varchar(60) NOT NULL DEFAULT '',
+  `rank4` varchar(60) NOT NULL DEFAULT '',
+  `rank5` varchar(60) NOT NULL DEFAULT '',
+  `rank6` varchar(60) NOT NULL DEFAULT '',
+  `rank7` varchar(60) NOT NULL DEFAULT '',
+  `rank8` varchar(60) NOT NULL DEFAULT '',
+  `rank9` varchar(60) NOT NULL DEFAULT '',
+  `rank10` varchar(60) NOT NULL DEFAULT '',
   UNIQUE KEY `tribe_id` (`tribe_id`),
   KEY `id` (`id`)
 ) ENGINE=MyISAM DEFAULT CHARSET=utf8 AUTO_INCREMENT=1 ;
 
--- 
--- Zrzut danych tabeli `tribe_rank`
--- 
-
-
 -- --------------------------------------------------------
 
--- 
+--
 -- Struktura tabeli dla  `tribe_replies`
--- 
+--
 
-CREATE TABLE `tribe_replies` (
-  `id` int(11) NOT NULL auto_increment,
-  `starter` varchar(30) NOT NULL default '',
-  `topic_id` int(11) NOT NULL default '0',
+DROP TABLE IF EXISTS `tribe_replies`;
+CREATE TABLE IF NOT EXISTS `tribe_replies` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `starter` varchar(30) NOT NULL DEFAULT '',
+  `topic_id` int(11) NOT NULL DEFAULT '0',
   `body` text NOT NULL,
-  `w_time` bigint(20) NOT NULL default '0',
-  `pid` int(11) NOT NULL default '0',
+  `pid` int(11) NOT NULL DEFAULT '0',
   UNIQUE KEY `id` (`id`),
   KEY `topic_id` (`topic_id`)
-) ENGINE=MyISAM  DEFAULT CHARSET=utf8 PACK_KEYS=0 AUTO_INCREMENT=2 ;
-
--- 
--- Zrzut danych tabeli `tribe_replies`
--- 
-
+) ENGINE=MyISAM DEFAULT CHARSET=utf8 PACK_KEYS=0 AUTO_INCREMENT=1 ;
 
 -- --------------------------------------------------------
 
--- 
+--
 -- Struktura tabeli dla  `tribe_topics`
--- 
+--
 
-CREATE TABLE `tribe_topics` (
-  `id` int(11) NOT NULL auto_increment,
+DROP TABLE IF EXISTS `tribe_topics`;
+CREATE TABLE IF NOT EXISTS `tribe_topics` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
   `topic` text NOT NULL,
   `body` text NOT NULL,
-  `starter` varchar(30) NOT NULL default '',
-  `tribe` int(11) NOT NULL default '0',
-  `w_time` bigint(20) NOT NULL default '0',
-  `sticky` char(1) NOT NULL default 'N',
-  `pid` int(11) NOT NULL default '0',
+  `starter` varchar(30) NOT NULL DEFAULT '',
+  `tribe` int(11) NOT NULL DEFAULT '0',
+  `w_time` bigint(20) NOT NULL DEFAULT '0',
+  `sticky` char(1) NOT NULL DEFAULT 'N',
+  `pid` int(11) NOT NULL DEFAULT '0',
   UNIQUE KEY `id` (`id`)
 ) ENGINE=MyISAM DEFAULT CHARSET=utf8 PACK_KEYS=0 AUTO_INCREMENT=1 ;
 
--- 
--- Zrzut danych tabeli `tribe_topics`
--- 
-
-
 -- --------------------------------------------------------
 
--- 
+--
 -- Struktura tabeli dla  `tribe_zbroj`
--- 
+--
 
-CREATE TABLE `tribe_zbroj` (
-  `id` int(11) NOT NULL auto_increment,
-  `klan` int(11) NOT NULL default '0',
-  `name` varchar(60) NOT NULL default '',
-  `power` int(11) NOT NULL default '0',
-  `wt` int(11) NOT NULL default '0',
-  `maxwt` int(11) NOT NULL default '0',
-  `zr` int(11) NOT NULL default '0',
-  `szyb` int(11) NOT NULL default '0',
-  `minlev` int(11) NOT NULL default '0',
-  `type` char(1) NOT NULL default '',
-  `magic` char(1) NOT NULL default 'N',
-  `poison` int(11) NOT NULL default '0',
-  `amount` int(11) NOT NULL default '1',
-  `twohand` char(1) NOT NULL default 'N',
-  `ptype` char(1) NOT NULL default '',
-  `repair` int(11) NOT NULL default '10',
-  PRIMARY KEY  (`id`),
+DROP TABLE IF EXISTS `tribe_zbroj`;
+CREATE TABLE IF NOT EXISTS `tribe_zbroj` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `klan` int(11) NOT NULL DEFAULT '0',
+  `name` varchar(60) NOT NULL DEFAULT '',
+  `power` int(11) NOT NULL DEFAULT '0',
+  `wt` int(11) NOT NULL DEFAULT '0',
+  `maxwt` int(11) NOT NULL DEFAULT '0',
+  `zr` int(11) NOT NULL DEFAULT '0',
+  `szyb` int(11) NOT NULL DEFAULT '0',
+  `minlev` int(11) NOT NULL DEFAULT '0',
+  `type` char(1) NOT NULL DEFAULT '',
+  `magic` char(1) NOT NULL DEFAULT 'N',
+  `poison` int(11) NOT NULL DEFAULT '0',
+  `amount` int(11) NOT NULL DEFAULT '1',
+  `twohand` char(1) NOT NULL DEFAULT 'N',
+  `ptype` char(1) NOT NULL DEFAULT '',
+  `repair` int(11) NOT NULL DEFAULT '10',
+  PRIMARY KEY (`id`),
   UNIQUE KEY `id` (`id`),
   KEY `id_2` (`id`),
   KEY `klan` (`klan`)
 ) ENGINE=MyISAM DEFAULT CHARSET=utf8 PACK_KEYS=0 AUTO_INCREMENT=1 ;
 
--- 
--- Zrzut danych tabeli `tribe_zbroj`
--- 
-
-
 -- --------------------------------------------------------
 
--- 
--- Struktura tabeli dla  `tribes`
--- 
-
-CREATE TABLE `tribes` (
-  `id` int(11) NOT NULL auto_increment,
-  `name` varchar(255) NOT NULL default '',
-  `owner` int(11) NOT NULL default '0',
-  `credits` int(11) NOT NULL default '0',
-  `platinum` int(11) NOT NULL default '0',
-  `public_msg` text NOT NULL,
-  `private_msg` text NOT NULL,
-  `hospass` char(1) NOT NULL default 'N',
-  `atak` char(1) NOT NULL default 'N',
-  `wygr` int(11) NOT NULL default '0',
-  `przeg` int(11) NOT NULL default '0',
-  `zolnierze` int(11) NOT NULL default '0',
-  `forty` int(11) NOT NULL default '0',
-  `copper` int(11) NOT NULL default '0',
-  `illani` int(11) NOT NULL default '0',
-  `illanias` int(11) NOT NULL default '0',
-  `nutari` int(11) NOT NULL default '0',
-  `logo` varchar(36) NOT NULL default '',
-  `www` varchar(60) NOT NULL default '',
-  `dynallca` int(11) NOT NULL default '0',
-  `ilani_seeds` int(11) NOT NULL default '0',
-  `illanias_seeds` int(11) NOT NULL default '0',
-  `nutari_seeds` int(11) NOT NULL default '0',
-  `dynallca_seeds` int(11) NOT NULL default '0',
-  `copperore` int(11) NOT NULL default '0',
-  `zincore` int(11) NOT NULL default '0',
-  `tinore` int(11) NOT NULL default '0',
-  `ironore` int(11) NOT NULL default '0',
-  `coal` int(11) NOT NULL default '0',
-  `bronze` int(11) NOT NULL default '0',
-  `brass` int(11) NOT NULL default '0',
-  `iron` int(11) NOT NULL default '0',
-  `steel` int(11) NOT NULL default '0',
-  `pine` int(11) NOT NULL default '0',
-  `hazel` int(11) NOT NULL default '0',
-  `yew` int(11) NOT NULL default '0',
-  `elm` int(11) NOT NULL default '0',
-  `crystal` int(11) NOT NULL default '0',
-  `adamantium` int(11) NOT NULL default '0',
-  `meteor` int(11) NOT NULL default '0',
-  UNIQUE KEY `id` (`id`)
-) ENGINE=MyISAM DEFAULT CHARSET=utf8 AUTO_INCREMENT=1 ;
-
--- 
--- Zrzut danych tabeli `tribes`
--- 
-
-
--- --------------------------------------------------------
-
--- 
--- Struktura tabeli dla  `upd_comments`
--- 
-
-CREATE TABLE `upd_comments` (
-  `id` int(11) NOT NULL auto_increment,
-  `updateid` int(11) NOT NULL default '0',
-  `author` varchar(40) NOT NULL default '',
-  `body` text NOT NULL,
-  `time` date default NULL,
-  KEY `id` (`id`)
-) ENGINE=MyISAM DEFAULT CHARSET=utf8 AUTO_INCREMENT=1 ;
-
--- 
--- Zrzut danych tabeli `upd_comments`
--- 
-
-
--- --------------------------------------------------------
-
--- 
+--
 -- Struktura tabeli dla  `updates`
--- 
+--
 
-CREATE TABLE `updates` (
-  `id` int(11) NOT NULL auto_increment,
+DROP TABLE IF EXISTS `updates`;
+CREATE TABLE IF NOT EXISTS `updates` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
   `starter` text NOT NULL,
   `title` text NOT NULL,
   `updates` text NOT NULL,
-  `time` date default NULL,
-  `lang` varchar(3) NOT NULL default 'pl',
+  `time` date DEFAULT NULL,
+  `lang` varchar(3) NOT NULL DEFAULT 'pl',
   UNIQUE KEY `id` (`id`)
 ) ENGINE=MyISAM DEFAULT CHARSET=utf8 PACK_KEYS=0 AUTO_INCREMENT=1 ;
 
--- 
--- Zrzut danych tabeli `updates`
--- 
+-- --------------------------------------------------------
 
+--
+-- Struktura tabeli dla  `upd_comments`
+--
+
+DROP TABLE IF EXISTS `upd_comments`;
+CREATE TABLE IF NOT EXISTS `upd_comments` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `updateid` int(11) NOT NULL DEFAULT '0',
+  `author` varchar(40) NOT NULL DEFAULT '',
+  `body` text NOT NULL,
+  `time` date DEFAULT NULL,
+  KEY `id` (`id`),
+  KEY `updateid` (`updateid`)
+) ENGINE=MyISAM DEFAULT CHARSET=utf8 AUTO_INCREMENT=1 ;
 
 -- --------------------------------------------------------
 
--- 
--- Struktura tabeli dla  `warehouse`
--- 
+--
+-- Struktura tabeli dla  `vallars`
+--
 
-CREATE TABLE `warehouse` (
-  `reset` smallint(3) NOT NULL default '0',
-  `mineral` varchar(30) NOT NULL default '',
-  `sell` bigint(22) NOT NULL default '0',
-  `buy` bigint(22) NOT NULL default '0',
-  `cost` double(20,3) NOT NULL default '0.000',
-  `amount` bigint(22) NOT NULL default '0',
+DROP TABLE IF EXISTS `vallars`;
+CREATE TABLE IF NOT EXISTS `vallars` (
+  `owner` int(11) NOT NULL,
+  `reason` varchar(255) NOT NULL,
+  `amount` int(11) NOT NULL,
+  `vdate` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  KEY `owner` (`owner`),
+  KEY `vdate` (`vdate`)
+) ENGINE=MyISAM DEFAULT CHARSET=utf8;
+
+-- --------------------------------------------------------
+
+--
+-- Struktura tabeli dla  `warehouse`
+--
+
+DROP TABLE IF EXISTS `warehouse`;
+CREATE TABLE IF NOT EXISTS `warehouse` (
+  `reset` smallint(3) NOT NULL DEFAULT '0',
+  `mineral` varchar(30) NOT NULL DEFAULT '',
+  `sell` bigint(22) NOT NULL DEFAULT '0',
+  `buy` bigint(22) NOT NULL DEFAULT '0',
+  `cost` double(20,3) NOT NULL DEFAULT '0.000',
+  `amount` bigint(22) NOT NULL DEFAULT '0',
   KEY `reset` (`reset`),
   KEY `mineral` (`mineral`)
 ) ENGINE=MyISAM DEFAULT CHARSET=utf8;
 
--- 
--- Zrzut danych tabeli `warehouse`
--- 
-
+/*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;
+/*!40101 SET CHARACTER_SET_RESULTS=@OLD_CHARACTER_SET_RESULTS */;
+/*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
