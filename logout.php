@@ -7,7 +7,7 @@
  *   @copyright            : (C) 2004,2005,2006,2011 Vallheru Team based on Gamers-Fusion ver 2.5
  *   @author               : thindil <thindil@tuxfamily.org>
  *   @version              : 1.4
- *   @since                : 18.11.2011
+ *   @since                : 05.12.2011
  *
  */
 
@@ -37,30 +37,7 @@ $smarty = new Smarty;
 
 $smarty -> compile_check = true;
 
-/**
-* Check avaible languages
-*/
-$arrLanguage = scandir('languages/', 1);
-$arrLanguage = array_diff($arrLanguage, array(".", "..", "index.htm"));    
-
-/**
-* Get the localization for game
-*/
-$strLanguage = $_SERVER['HTTP_ACCEPT_LANGUAGE'];
-foreach ($arrLanguage as $strTrans)
-{
-    $strSearch = "^".$strTrans;
-    if (eregi($strSearch, $strLanguage))
-    {
-        $strTranslation = $strTrans;
-        break;
-    }
-}
-if (!isset($strTranslation))
-{
-    $strTranslation = 'pl';
-}
-require_once("languages/".$strTranslation."/logout.php");
+require_once("languages/".$lang."/logout.php");
 
 
 $_GET['did'] = intval($_GET['did']);

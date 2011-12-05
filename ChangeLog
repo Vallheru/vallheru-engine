@@ -1,5 +1,7 @@
 2011-12-05  Bartek thindil Jasicki  <thindil@tuxfamily.org>
 
+	* BUG,logout.php: 
+	fixed notice
 	* UPDATE,install/install.php: 
 	added lang variable to config
 	* BUG,includes/funkcje.php: 
