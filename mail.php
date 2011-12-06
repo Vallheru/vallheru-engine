@@ -355,6 +355,9 @@ if (isset ($_GET['view']) && $_GET['view'] == 'inbox')
     }
 }
 
+/**
+ * Marked mails
+ */
 if (isset ($_GET['view']) && $_GET['view'] == 'saved') 
 {
     $objSort = $db->Execute("SELECT `sender`, `senderid` FROM `mail`  WHERE `owner`=".$player->id." AND `saved`='Y' GROUP BY `senderid` ASC");
@@ -460,6 +463,8 @@ if (isset ($_GET['view']) && $_GET['view'] == 'write')
                             "Mbody" => M_BODY,
                             "Asend" => A_SEND2,
 			    "Contacts" => $arrContacts,
+			    "Body" => '',
+			    "Subject" => '',
 			    "Mhelp" => "Linki automatycznie zamieniane są na klikalne. Możesz używać następujących znaczników BBCode:<br /><ul><li>[b]<b>Pogrubienie</b>[/b]</li><li>[i]<i>Kursywa</i><[/i]</li><li>[u]<u>Podkreślenie</u>[/u]</li><li>[color (angielska nazwa koloru (red, yellow, itp) lub kod HTML (#FFFF00, itp)]pokolorowanie tekstu[/color]</li><li>[center]wycentrowanie tekstu[/center]</li><li>[quote]cytat[/quote]</ul>"));
     if (isset ($_GET['step']) && $_GET['step'] == 'send') 
     {
@@ -530,6 +535,19 @@ if (isset ($_GET['view']) && $_GET['view'] == 'write')
 	    message('success', YOU_SEND.$rec -> fields['user'].".");
 	    $_GET['view'] = '';
 	    $_GET['read'] = $_POST['topic'];
+	  }
+	else
+	  {
+	    if (!isset($_POST['body']))
+	      {
+		$_POST['body'] = '';
+	      }
+	    if (!isset($_POST['subject']))
+	      {
+		$_POST['subject'] = '';
+	      }
+	    $smarty->assign(array("Body" => $_POST['body'],
+				  "Subject" => $_POST['subject']));
 	  }
     }
 }
@@ -738,6 +756,7 @@ if (isset ($_GET['read']))
 			    "Tpages" => $intPages,
 			    "Tpage" => $intPage,
 			    "Fpage" => "Idź do strony:",
+			    "Body" => '',
 			    "Mhelp" => "Linki automatycznie zamieniane są na klikalne. Możesz używać następujących znaczników BBCode:<br /><ul><li>[b]<b>Pogrubienie</b>[/b]</li><li>[i]<i>Kursywa</i><[/i]</li><li>[u]<u>Podkreślenie</u>[/u]</li><li>[color (angielska nazwa koloru (red, yellow, itp) lub kod HTML (#FFFF00, itp)]pokolorowanie tekstu[/color]</li><li>[center]wycentrowanie tekstu[/center]</li><li>[quote]cytat[/quote]</ul>"));
 }
 

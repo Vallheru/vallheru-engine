@@ -145,14 +145,15 @@
     <table>
     <form method="post" action="mail.php?view=write&amp;step=send">
     <tr><td>{$Sto} {html_options name=player options=$Contacts}:</td><td><input type="text" name="to" value="{$To}" /></td></tr>
-    <tr><td>{$Mtitle}:</td><td><input type="text" name="subject" size="55" /></td></tr>
-    <tr><td valign="top">{$Mbody}:</td><td><textarea name="body" rows="13" cols="55"></textarea></td></tr>
+    <tr><td>{$Mtitle}:</td><td><input type="text" name="subject" size="55" value="{$Subject}" /></td></tr>
+    <tr><td valign="top">{$Mbody}:</td><td><textarea name="body" rows="13" cols="55">{$Body}</textarea></td></tr>
     <tr><td></td><td align="center"><input type="submit" value="{$Asend}" /></td></tr>
     </form></table><br />
     {$Mhelp}
 {/if}
 
 {if $Read != ""}
+    <b>{$Subject}</b><br /><br />
     {section name=read loop=$Sendersid}
         {$Date2[read]} <b><a href="view.php?view={$Sendersid[read]}">{$Senders[read]}</a></b> {$Twrite}... <br />
 	"{$Bodies[read]}"<br />
@@ -178,7 +179,7 @@
     	    {/for}
         {/if}
         <form method="post" action="mail.php?view=write&amp;step=send">
-            <textarea name="body" rows="13" cols="55"></textarea><br />
+            <textarea name="body" rows="13" cols="55">{$Body}</textarea><br />
             <input type="hidden" name="topic" value="{$Mtopic}" />
 	    <input type="hidden" name="player" value="{$Receiver}" />
 	    <input type="hidden" name="subject" value="{$Subject}" />
