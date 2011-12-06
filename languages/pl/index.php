@@ -4,10 +4,10 @@
  *   Polish language for main site index.php
  *
  *   @name                 : index.php                            
- *   @copyright            : (C) 2004,2005,2006 Vallheru Team based on Gamers-Fusion ver 2.5
- *   @author               : thindil <thindil@users.sourceforge.net>
- *   @version              : 1.1
- *   @since                : 21.06.2006
+ *   @copyright            : (C) 2004,2005,2006,2011 Vallheru Team based on Gamers-Fusion ver 2.5
+ *   @author               : thindil <thindil@tuxfamily.org>
+ *   @version              : 1.5
+ *   @since                : 06.12.2011
  *
  */
 
@@ -58,6 +58,9 @@ if (!isset($_GET['step']))
 
 if (isset($_GET['step']) && $_GET['step'] == 'lostpasswd')
 {
+    define("SUCCESS", "Mail z hasłem oraz linkiem aktywującym został wysłany na podany adres e-mail. Musisz jeszcze aktywować nowe hasło");
+    define("LOST_PASSWORD2", "Jeżeli zapomniałeś hasła do swojej postaci, wpisz tutaj swój adres email. Jednak ze względu na to, że hasła w bazie danych są kodowane, niemożliwe jest odzyskanie twojego starego hasła. Dlatego dostaniesz nowe hasło. Jeżeli twoje konto istnieje, informacja o haśle zostanie wysłana pod podany mail. <b>Uwaga!</b> jeżeli masz na swoim koncie włączony filtr anty-spamowy, wyłącz go przed wysłaniem maila, inaczej informacja o haśle nie dojdzie do ciebie!");
+    define("SEND", "Wyślij");
     if (isset($_GET['action']) && $_GET['action'] == 'haslo')
     {
         define("ERROR_MAIL", "Podaj adres email.");
@@ -68,12 +71,9 @@ if (isset($_GET['step']) && $_GET['step'] == 'lostpasswd')
         define("MESSAGE_PART4", "Zmień je jak tylko wejdziesz do gry. Życzę miłej zabawy w");
         define("MESSAGE_SUBJECT", "Przypomnienie hasła na");
         define("MESSAGE_NOT_SEND", "Wiadomość nie została wysłana. Błąd:<br />");
-        define("SUCCESS", "Mail z hasłem oraz linkiem aktywującym został wysłany na podany adres e-mail. Musisz jeszcze aktywować nowe hasło");
     }
         else
     {
-        define("LOST_PASSWORD2", "Jeżeli zapomniałeś hasła do swojej postaci, wpisz tutaj swój adres email. Jednak ze względu na to, że hasła w bazie danych są kodowane, niemożliwe jest odzyskanie twojego starego hasła. Dlatego dostaniesz nowe hasło. Jeżeli twoje konto istnieje, informacja o haśle zostanie wysłana pod podany mail. <b>Uwaga!</b> jeżeli masz na swoim koncie włączony filtr anty-spamowy, wyłącz go przed wysłaniem maila, inaczej informacja o haśle nie dojdzie do ciebie!");
-        define("SEND", "Wyślij");
         define("PASS_CHANGED", "Hasło do konta zostało zmienione.");
         define("ERROR", "Zapomnij o tym!");
     }

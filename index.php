@@ -6,8 +6,8 @@
  *   @name                 : index.php                            
  *   @copyright            : (C) 2004,2005,2006,2011 Vallheru Team based on Gamers-Fusion ver 2.5
  *   @author               : thindil <thindil@tuxfamily.org>
- *   @version              : 1.4
- *   @since                : 02.12.2011
+ *   @version              : 1.5
+ *   @since                : 06.12.2011
  *
  */
  
@@ -46,38 +46,8 @@ else
 
     $smarty = new Smarty;
     $smarty->compile_check = true;
-
-    /**
-    * Check avaible languages
-    */
-    $arrLanguage = scandir('languages/', 1);
-    $arrLanguage = array_diff($arrLanguage, array(".", "..", "index.htm"));
-
-    /**
-    * Get the localization for game
-    */
-    $strLanguage = $_SERVER['HTTP_ACCEPT_LANGUAGE'];
-    foreach ($arrLanguage as $strTrans)
-    {
-	if (strpos($strLanguage, $strTrans) === 0)
-	  {
-	    $strTranlsation = $strTrans;
-	    break;
-	  }
-    }
-    if (!isset($strTranslation))
-    {
-        $strTranslation = 'pl';
-    }
-    if (isset($_GET['lang']))
-    {
-        if (in_array($_GET['lang'], $arrLanguage))
-        {
-            $strTranslation = $_GET['lang'];
-        }
-    }
             
-    require_once("languages/".$strTranslation."/index.php");
+    require_once("languages/".$lang."/index.php");
 
     $smarty -> assign(array("Gamename" => $gamename, 
                             "Gameadress" => $gameadress,
@@ -139,7 +109,7 @@ else
     if (!isset ($_GET['step'])) 
     {
     
-        $update = $db -> SelectLimit("SELECT * FROM `updates` WHERE `lang`='".$strTranslation."' ORDER BY `id` DESC", 3);
+        $update = $db -> SelectLimit("SELECT * FROM `updates` ORDER BY `id` DESC", 3);
         $arrnews = array();
         while (!$update -> EOF) 
         {

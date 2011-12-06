@@ -1,5 +1,7 @@
 2011-12-06  Bartek thindil Jasicki  <thindil@tuxfamily.org>
 
+	* BUG,languages/pl/index.php, index.php: 
+	fixed some notices
 	* UPDATE,bank.php: 
 	redesigned bank layout
 	* UPDATE,templates/layout1/mail.tpl, templates/mail.tpl, mail.php: 
