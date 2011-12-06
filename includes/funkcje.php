@@ -6,8 +6,8 @@
  *   @name                 : funkcje.php                            
  *   @copyright            : (C) 2004,2005,2006,2007,2011 Vallheru Team based on Gamers-Fusion ver 2.5
  *   @author               : thindil <thindil@tuxfamily.org>
- *   @version              : 1.4
- *   @since                : 05.12.2011
+ *   @version              : 1.5
+ *   @since                : 06.12.2011
  *
  */
 
@@ -147,7 +147,7 @@ function autofill($intPlayerid, $intArrowId, $intPlayer2)
     }
   else
     {
-      $objNewArrows = $db->SelectLimit("SELECT * FROM `equipment` WHERE `owner`=".$intPlayerid." AND `type`='R' AND status='U'", 1);
+      $objNewArrows = $db->SelectLimit("SELECT * FROM `equipment` WHERE `owner`=".$intPlayerid." AND `type`='R' AND status='U' ORDER BY `power` ASC", 1);
       if (!$objNewArrows->fields['id'])
 	{
 	  if ($intPlayerid == $intPlayer2)
