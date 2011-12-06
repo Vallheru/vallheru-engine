@@ -8,8 +8,8 @@
  *   @author               : thindil <thindil@tuxfamily.org>
  *   @author               : yeskov <yeskov@users.sourceforge.net>
  *   @author               : eyescream <tduda@users.sourceforge.net>
- *   @version              : 1.4
- *   @since                : 05.12.2011
+ *   @version              : 1.5
+ *   @since                : 06.12.2011
  *
  */
 
@@ -38,7 +38,7 @@ require_once("includes/head.php");
 * Get the localization for game
 */
 
-require_once("languages/".$player -> lang."/bank.php");
+require_once("languages/".$lang."/bank.php");
 
 if ($player -> location != 'Altara' && $player -> location != 'Ardulith') 
 {
@@ -54,16 +54,23 @@ if (isset($_GET['action']))
       {
 	if (!isset($_POST['with'])) 
 	  {
-	    error(EMPTY_FIELD);
+	    message('error', EMPTY_FIELD);
 	  }
-	integercheck($_POST['with']);
-	checkvalue($_POST['with']);
-	if ($_POST['with'] > $player -> bank) 
+	else
 	  {
-	    error (NO_MONEY);
+	    checkvalue($_POST['with']);
+	    if ($_POST['with'] > $player -> bank) 
+	      {
+		message('error', NO_MONEY);
+	      }
+	    else
+	      {
+		$db -> Execute("UPDATE `players` SET `credits`=`credits`+".$_POST['with'].", `bank`=`bank`-".$_POST['with']." WHERE `id`=".$player -> id);
+		$player->credits += $_POST['with'];
+		$player->bank -= $_POST['with'];
+		message('success', WITHDRAW." ".$_POST['with']." ".GOLD_COINS);
+	      }
 	  }
-	$db -> Execute("UPDATE `players` SET `credits`=`credits`+".$_POST['with'].", `bank`=`bank`-".$_POST['with']." WHERE `id`=".$player -> id);
-	error ("<br />".WITHDRAW." ".$_POST['with']." ".GOLD_COINS);
       }
 
     /**
@@ -73,16 +80,23 @@ if (isset($_GET['action']))
       {
 	if (!isset($_POST['dep'])) 
 	  {
-	    error (EMPTY_FIELD);
+	    message('error', EMPTY_FIELD);
 	  }
-	integercheck($_POST['dep']);
-	checkvalue($_POST['dep']);
-	if ($_POST['dep'] > $player -> credits || $_POST['dep'] <= 0) 
+	else
 	  {
-	    error (NO_MONEY);
+	    checkvalue($_POST['dep']);
+	    if ($_POST['dep'] > $player -> credits || $_POST['dep'] <= 0) 
+	      {
+		message('error', NO_MONEY);
+	      }
+	    else
+	      {
+		$db -> Execute("UPDATE players SET credits=credits-".$_POST['dep'].", bank=bank+".$_POST['dep']." WHERE id=".$player -> id);
+		$player->credits -= $_POST['dep'];
+		$player->bank += $_POST['dep'];
+		message ('success', DEPOSIT." ".$_POST['dep']." ".GOLD_COINS);
+	      }
 	  }
-	$db -> Execute("UPDATE players SET credits=credits-".$_POST['dep'].", bank=bank+".$_POST['dep']." WHERE id=".$player -> id);
-	error ("<br />".DEPOSIT." ".$_POST['dep']." ".GOLD_COINS);
       }
 
     /**
@@ -99,9 +113,7 @@ if (isset($_GET['action']))
 	    checkvalue($_POST['player']);
 	    $_POST['pid'] = $_POST['player'];
 	  }
-	checkvalue($_POST['with']);
-	integercheck($_POST['with']);
-	
+	checkvalue($_POST['with']);	
 	if (strlen($_POST['title']) > 0)
 	  {
 	    $strTitle = strip_tags($_POST['title']);
@@ -111,32 +123,41 @@ if (isset($_GET['action']))
 	  {
 	    $strTitle = '';
 	  }
+	$blnValid = TRUE;
 	if ($player->bank < $_POST['with'])
 	  {
-	    error(NO_GOLD);
+	    message('error', NO_GOLD);
+	    $blnValid = FALSE;
 	  }
 	if ($player -> credits < 0)
 	  {
-	    error(MINUS_GOLD);
+	    message('error', MINUS_GOLD);
+	    $blnValid = FALSE;
 	  }
 	if ($_POST['pid'] == $player -> id) 
 	  {
-	    error (BAD_PLAYER);
+	    message('error', BAD_PLAYER);
+	    $blnValid = FALSE;
 	  }
 	$objDonated = $db -> Execute("SELECT `id`, `user`, `tribe` FROM `players` WHERE `id`=".$_POST['pid']);
 	if (!$objDonated -> fields['id'])
 	  {
-	    error (NO_PLAYER);
+	    message('error', NO_PLAYER);
+	    $blnValid = FALSE;
 	  }
-	$strPlayerName = $arrTags[$objDonated->fields['tribe']][0].' '.$objDonated -> fields['user'].' '.$arrTags[$objDonated->fields['tribe']][1];
+	if ($blnValid)
+	  {
+	    $strPlayerName = $arrTags[$objDonated->fields['tribe']][0].' '.$objDonated -> fields['user'].' '.$arrTags[$objDonated->fields['tribe']][1];
+	    $db -> Execute("UPDATE `players` SET `bank`=`bank`+".$_POST['with']." WHERE `id`=".$_POST['pid']);
+	    $db -> Execute("UPDATE `players` SET `bank`=`bank`-".$_POST['with']." WHERE `id`=".$player -> id);
+	    $player->bank -= $_POST['with'];
+	    $strDate = $db -> DBDate($newdate);
+	    $db -> Execute("INSERT INTO `log` (`owner`, `log`, `czas`, `type`) VALUES(".$_POST['pid'].",'".T_PLAYER." <b><a href=view.php?view=".$player -> id.">".$arrTags[$player->tribe][0].' '.$player->user.' '.$arrTags[$player->tribe][1]."</a></b>".T_ID."<b>".$player -> id."</b>, ".T_GIVE." ".$_POST['with']." sztuk złota".$strTitle.".', ".$strDate.", 'N')");    
+	    $db -> Execute("INSERT INTO `log` (`owner`, `log`, `czas`, `type`) VALUES(".$player -> id.",'".YOU_SEND." <b><a href=view.php?view=".$_POST['pid'].">".$strPlayerName."</a></b>, ID<b> ".$_POST['pid']."</b> ".G_AMOUNT." ".$_POST['with']." sztuk złota".$strTitle.".', ".$strDate.", 'N')");    
+	    $db -> Execute("INSERT INTO `logs` (`owner`, `log`, `czas`) VALUES(".$player -> id.",'".YOU_SEND." <b><a href=view.php?view=".$_POST['pid'].">".$strPlayerName."</a></b>, ID<b> ".$_POST['pid']."</b> ".G_AMOUNT." ".$_POST['with']." sztuk złota".$strTitle.".', ".$strDate.")");
+	    message('success', YOU_SEND." <b><a href=view.php?view=".$_POST['pid'].">".$strPlayerName."</a></b>, ID<b> ".$_POST['pid']."</b> ".G_AMOUNT." ".$_POST['with']." ".GOLD_COINS);
+	  }
 	$objDonated -> Close();
-	$db -> Execute("UPDATE `players` SET `bank`=`bank`+".$_POST['with']." WHERE `id`=".$_POST['pid']);
-	$db -> Execute("UPDATE `players` SET `bank`=`bank`-".$_POST['with']." WHERE `id`=".$player -> id);
-	$strDate = $db -> DBDate($newdate);
-	$db -> Execute("INSERT INTO `log` (`owner`, `log`, `czas`, `type`) VALUES(".$_POST['pid'].",'".T_PLAYER." <b><a href=view.php?view=".$player -> id.">".$arrTags[$player->tribe][0].' '.$player->user.' '.$arrTags[$player->tribe][1]."</a></b>".T_ID."<b>".$player -> id."</b>, ".T_GIVE." ".$_POST['with']." sztuk złota".$strTitle.".', ".$strDate.", 'N')");    
-	$db -> Execute("INSERT INTO `log` (`owner`, `log`, `czas`, `type`) VALUES(".$player -> id.",'".YOU_SEND." <b><a href=view.php?view=".$_POST['pid'].">".$strPlayerName."</a></b>, ID<b> ".$_POST['pid']."</b> ".G_AMOUNT." ".$_POST['with']." sztuk złota".$strTitle.".', ".$strDate.", 'N')");    
-	$db -> Execute("INSERT INTO `logs` (`owner`, `log`, `czas`) VALUES(".$player -> id.",'".YOU_SEND." <b><a href=view.php?view=".$_POST['pid'].">".$strPlayerName."</a></b>, ID<b> ".$_POST['pid']."</b> ".G_AMOUNT." ".$_POST['with']." sztuk złota".$strTitle.".', ".$strDate.")");
-	error("<br />".YOU_SEND." <b><a href=view.php?view=".$_POST['pid'].">".$strPlayerName."</a></b>, ID<b> ".$_POST['pid']."</b> ".G_AMOUNT." ".$_POST['with']." ".GOLD_COINS);
       }
 
     /**
@@ -153,9 +174,7 @@ if (isset($_GET['action']))
 	    checkvalue($_POST['player']);
 	    $_POST['pid'] = $_POST['player'];
 	  }
-	integercheck($_POST['mithril']);
-	checkvalue($_POST['mithril']);
-	
+	checkvalue($_POST['mithril']);	
 	if (strlen($_POST['title']) > 0)
 	  {
 	    $strTitle = strip_tags($_POST['title']);
@@ -165,28 +184,36 @@ if (isset($_GET['action']))
 	  {
 	    $strTitle = '';
 	  }
+	$blnValid = TRUE;
 	if ($_POST['pid'] == $player -> id) 
 	  {
-	    error (BAD_PLAYER);
+	    message('error', BAD_PLAYER);
+	    $blnValid = FALSE;
 	  }
 	if ($player->platinum < $_POST['mithril'])
 	  {
-	    error(NO_MITHRIL);
+	    message('error', NO_MITHRIL);
+	    $blnValid = FALSE;
 	  }
 	$objDonated = $db -> Execute("SELECT `id`, `user`, `tribe` FROM `players` WHERE `id`=".$_POST['pid']);
 	if (!$objDonated -> fields['id'])
 	  {
-	    error (NO_PLAYER);
+	    message('error', NO_PLAYER);
+	    $blnValid = FALSE;
 	  }
-	$strPlayerName = $arrTags[$objDonated->fields['tribe']][0].' '.$objDonated -> fields['user'].' '.$arrTags[$objDonated->fields['tribe']][1];
+	if ($blnValid)
+	  {
+	    $strPlayerName = $arrTags[$objDonated->fields['tribe']][0].' '.$objDonated -> fields['user'].' '.$arrTags[$objDonated->fields['tribe']][1];
+	    $db -> Execute("UPDATE `players` SET `platinum`=`platinum`+".$_POST['mithril']." WHERE `id`=".$_POST['pid']);
+	    $db -> Execute("UPDATE `players` SET `platinum`=`platinum`-".$_POST['mithril']." WHERE `id`=".$player -> id);
+	    $player->platinum -= $_POST['mithril'];
+	    $strDate = $db -> DBDate($newdate);
+	    $db -> Execute("INSERT INTO `log` (`owner`, `log`, `czas`, `type`) VALUES(".$_POST['pid'].",'".T_PLAYER."<b><a href=view.php?view=".$player -> id.">".$arrTags[$player->tribe][0].' '.$player ->user.' '.$arrTags[$player->tribe][1]."</a></b> ".T_ID."<b>".$player -> id."</b>, ".T_GIVE." ".$_POST['mithril']." sztuk mithrilu".$strTitle.".', ".$strDate.", 'N')");
+	    $db -> Execute("INSERT INTO `log` (`owner`, `log`, `czas`, `type`) VALUES(".$player -> id.",'".YOU_SEND." <b><a href=view.php?view=".$_POST['pid'].">".$strPlayerName."</a></b> ID<b> ".$_POST['pid']."</b>, ".$_POST['mithril']." sztuk mithrilu".$strTitle.".', ".$strDate.", 'N')");
+	    $db -> Execute("INSERT INTO `logs` (`owner`, `log`, `czas`) VALUES(".$player -> id.",'".YOU_SEND." <b><a href=view.php?view=".$_POST['pid'].">".$strPlayerName."</a></b> ID<b> ".$_POST['pid']."</b>, ".$_POST['mithril']." sztuk mithrilu ".$strTitle.".', ".$strDate.")");
+	    message('success', YOU_SEND." <b><a href=view.php?view=".$_POST['pid'].">".$strPlayerName."</a></b> ID<b> ".$_POST['pid']."</b>, ".$_POST['mithril']." ".M_AMOUNT."");
+	  }
 	$objDonated -> Close();
-	$db -> Execute("UPDATE `players` SET `platinum`=`platinum`+".$_POST['mithril']." WHERE `id`=".$_POST['pid']);
-	$db -> Execute("UPDATE `players` SET `platinum`=`platinum`-".$_POST['mithril']." WHERE `id`=".$player -> id);
-	$strDate = $db -> DBDate($newdate);
-	$db -> Execute("INSERT INTO `log` (`owner`, `log`, `czas`, `type`) VALUES(".$_POST['pid'].",'".T_PLAYER."<b><a href=view.php?view=".$player -> id.">".$arrTags[$player->tribe][0].' '.$player ->user.' '.$arrTags[$player->tribe][1]."</a></b> ".T_ID."<b>".$player -> id."</b>, ".T_GIVE." ".$_POST['mithril']." sztuk mithrilu".$strTitle.".', ".$strDate.", 'N')");
-	$db -> Execute("INSERT INTO `log` (`owner`, `log`, `czas`, `type`) VALUES(".$player -> id.",'".YOU_SEND." <b><a href=view.php?view=".$_POST['pid'].">".$strPlayerName."</a></b> ID<b> ".$_POST['pid']."</b>, ".$_POST['mithril']." sztuk mithrilu".$strTitle.".', ".$strDate.", 'N')");
-	$db -> Execute("INSERT INTO `logs` (`owner`, `log`, `czas`) VALUES(".$player -> id.",'".YOU_SEND." <b><a href=view.php?view=".$_POST['pid'].">".$strPlayerName."</a></b> ID<b> ".$_POST['pid']."</b>, ".$_POST['mithril']." sztuk mithrilu ".$strTitle.".', ".$strDate.")");
-	error ("<br />".YOU_SEND." <b><a href=view.php?view=".$_POST['pid'].">".$strPlayerName."</a></b> ID<b> ".$_POST['pid']."</b>, ".$_POST['mithril']." ".M_AMOUNT."");
       }
 
     /**
@@ -213,19 +240,21 @@ if (isset($_GET['action']))
 	    $strTitle = '';
 	  }
 	$arrSqlname = array('copperore', 'zincore', 'tinore', 'ironore', 'copper', 'bronze', 'brass', 'iron', 'steel', 'coal', 'adamantium', 'meteor', 'crystal', 'pine', 'hazel', 'yew', 'elm');
+	$blnValid = TRUE;
 	if (!in_array($_POST['item'], $arrSqlname)) 
 	  {
-	    error(ERROR);
+	    message('error', ERROR);
+	    $blnValid = FALSE;
 	  }
 	$intKey = array_search($_POST['item'], $arrSqlname);
 	$objMinerals = $db -> Execute("SELECT ".$_POST['item']." FROM `minerals` WHERE `owner`=".$player -> id);
 	if (!$objMinerals -> fields[$_POST['item']]) 
 	  {
-	    error(NO_MINERALS);
+	    message('error', NO_MINERALS);
+	    $blnValid = FALSE;
 	  }
 	if (!isset($_POST['addall']))
 	  {
-	    integercheck($_POST['amount']);
 	    checkvalue($_POST['amount']);
 	  }
 	else
@@ -236,36 +265,42 @@ if (isset($_GET['action']))
 	$strMineralname = $arrName[$intKey];
 	if ($objMinerals -> fields[$_POST['item']] < $_POST['amount']) 
 	  {
-	    error(NO_MINERAL." ".$strMineralname);
+	    message('error', NO_MINERAL." ".$strMineralname);
+	    $blnValid = FALSE;
 	  }
 	$objMinerals -> Close();
 	if ($_POST['pid'] == $player -> id) 
 	  {
-	    error(BAD_PLAYER);
+	    message('error', BAD_PLAYER);
+	    $blnValid = FALSE;
 	  }
 	$objDonated = $db -> Execute("SELECT `id`, `user`, `tribe` FROM `players` WHERE `id`=".$_POST['pid']);
 	if (empty($objDonated -> fields['id'])) 
 	  {
-	    error(NO_PLAYER);
+	    message('error', NO_PLAYER);
+	    $blnValid = FALSE;
 	  }
-	$strPlayerName = $arrTags[$objDonated->fields['tribe']][0].' '.$objDonated -> fields['user'].' '.$arrTags[$objDonated->fields['tribe']][1];
+	if ($blnValid)
+	  {
+	    $strPlayerName = $arrTags[$objDonated->fields['tribe']][0].' '.$objDonated -> fields['user'].' '.$arrTags[$objDonated->fields['tribe']][1];
+	    $objHave = $db -> Execute("SELECT `owner` FROM `minerals` WHERE `owner`=".$_POST['pid']);
+	    if (empty($objHave -> fields['owner'])) 
+	      {
+		$db -> Execute("INSERT INTO `minerals` (`owner`, `".$_POST['item']."`) VALUES(".$_POST['pid'].",".$_POST['amount'].")") or error (E_DB);
+	      } 
+	    else 
+	      {
+		$db -> Execute("UPDATE `minerals` SET `".$_POST['item']."`=`".$_POST['item']."`+".$_POST['amount']." WHERE `owner`=".$_POST['pid']) or error (E_DB2);
+	      }
+	    $objHave  -> Close();
+	    $db -> Execute("UPDATE `minerals` SET `".$_POST['item']."`=`".$_POST['item']."`-".$_POST['amount']." WHERE `owner`=".$player -> id);
+	    $strDate = $db -> DBDate($newdate);
+	    $db -> Execute("INSERT INTO `log` (`owner`, `log`, `czas`, `type`) VALUES(".$_POST['pid'].",'".T_PLAYER."<b><a href=view.php?view=".$player -> id.">".$arrTags[$player->tribe][0].' '.$player ->user.' '.$arrTags[$player->tribe][1]."</a></b> ".T_ID."<b>".$player -> id."</b>, ".T_GIVE." ".$_POST['amount']." ".$strMineralname.$strTitle.".', ".$strDate.", 'N')");
+	    $db -> Execute("INSERT INTO `log` (`owner`, `log`, `czas`, `type`) VALUES(".$player -> id.", '".YOU_SEND." <b><a href=view.php?view=".$_POST['pid'].">".$strPlayerName."</a></b> ID<b> ".$_POST['pid']."</b>, ".$_POST['amount']." ".T_AMOUNT." ".$strMineralname.$strTitle.".', ".$strDate.", 'N')");
+	    $db -> Execute("INSERT INTO `logs` (`owner`, `log`, `czas`) VALUES(".$player -> id.", '".YOU_SEND." <b><a href=view.php?view=".$_POST['pid'].">".$strPlayerName."</a></b> ID<b> ".$_POST['pid'].", ".$_POST['amount']." ".T_AMOUNT." ".$strMineralname.$strTitle.".', ".$strDate.")");
+	    message('success', YOU_SEND." <b><a href=view.php?view=".$_POST['pid'].">".$strPlayerName."</a></b> ID<b> ".$_POST['pid']."</b>, <b>".$_POST['amount']."</b> ".T_AMOUNT." <b>".$strMineralname."</b>.");
+	  }
 	$objDonated -> Close();
-	$objHave = $db -> Execute("SELECT `owner` FROM `minerals` WHERE `owner`=".$_POST['pid']);
-	if (empty($objHave -> fields['owner'])) 
-	  {
-	    $db -> Execute("INSERT INTO `minerals` (`owner`, `".$_POST['item']."`) VALUES(".$_POST['pid'].",".$_POST['amount'].")") or error (E_DB);
-	  } 
-        else 
-	  {
-	    $db -> Execute("UPDATE `minerals` SET `".$_POST['item']."`=`".$_POST['item']."`+".$_POST['amount']." WHERE `owner`=".$_POST['pid']) or error (E_DB2);
-	  }
-	$objHave  -> Close();
-	$db -> Execute("UPDATE `minerals` SET `".$_POST['item']."`=`".$_POST['item']."`-".$_POST['amount']." WHERE `owner`=".$player -> id);
-	$strDate = $db -> DBDate($newdate);
-	$db -> Execute("INSERT INTO `log` (`owner`, `log`, `czas`, `type`) VALUES(".$_POST['pid'].",'".T_PLAYER."<b><a href=view.php?view=".$player -> id.">".$arrTags[$player->tribe][0].' '.$player ->user.' '.$arrTags[$player->tribe][1]."</a></b> ".T_ID."<b>".$player -> id."</b>, ".T_GIVE." ".$_POST['amount']." ".$strMineralname.$strTitle.".', ".$strDate.", 'N')");
-	$db -> Execute("INSERT INTO `log` (`owner`, `log`, `czas`, `type`) VALUES(".$player -> id.", '".YOU_SEND." <b><a href=view.php?view=".$_POST['pid'].">".$strPlayerName."</a></b> ID<b> ".$_POST['pid']."</b>, ".$_POST['amount']." ".T_AMOUNT." ".$strMineralname.$strTitle.".', ".$strDate.", 'N')");
-	$db -> Execute("INSERT INTO `logs` (`owner`, `log`, `czas`) VALUES(".$player -> id.", '".YOU_SEND." <b><a href=view.php?view=".$_POST['pid'].">".$strPlayerName."</a></b> ID<b> ".$_POST['pid'].", ".$_POST['amount']." ".T_AMOUNT." ".$strMineralname.$strTitle.".', ".$strDate.")");
-	error ("<br />".YOU_SEND." <b><a href=view.php?view=".$_POST['pid'].">".$strPlayerName."</a></b> ID<b> ".$_POST['pid']."</b>, <b>".$_POST['amount']."</b> ".T_AMOUNT." <b>".$strMineralname."</b>.");
       }
 
     /**
@@ -292,21 +327,23 @@ if (isset($_GET['action']))
 	    $strTitle = '';
 	  }
 	$arrHerbs = array('illani', 'illanias', 'nutari', 'dynallca', 'ilani_seeds', 'illanias_seeds', 'nutari_seeds', 'dynallca_seeds');
+	$blnValid = TRUE;
 	if (!in_array($_POST['item'], $arrHerbs))
 	  {
-	    error (ERROR);
+	    message('error', ERROR);
+	    $blnValid = FALSE;
 	  }
 	$herbs = $db -> Execute("SELECT `id`, `".$_POST['item']."` FROM `herbs` WHERE `gracz`=".$player -> id);
 	if (empty ($herbs -> fields['id'])) 
 	  {
-	    error (NO_HERBS);
+	    message('error', NO_HERBS);
+	    $blnValid = FALSE;
 	  }
 	$herb = "$_POST[item]";
 	$arrName = array(HERB1, HERB2, HERB3, HERB4, HERB5, HERB6, HERB7, HERB8);
 	$intKey = array_search($_POST['item'], $arrHerbs);
 	if (!isset($_POST['addall']))
 	  {
-	    integercheck($_POST['amount']);
 	    checkvalue($_POST['amount']);
 	  }
 	else
@@ -315,36 +352,42 @@ if (isset($_GET['action']))
 	  }
 	if ($herbs -> fields[$herb] < $_POST['amount']) 
 	  {
-	    error (NO_MINERAL." ".$arrName[$intKey]);
+	    message('error', NO_MINERAL." ".$arrName[$intKey]);
+	    $blnValid = FALSE;
 	  }
 	$herbs -> Close();
 	if ($_POST['pid'] == $player -> id) 
 	  {
-	    error (BAD_PLAYER);
+	    message('error', BAD_PLAYER);
+	    $blnValid = FALSE;
 	  }
 	$objDonated = $db -> Execute("SELECT `id`, `user`, `tribe` FROM `players` WHERE `id`=".$_POST['pid']);
 	if (empty ($objDonated -> fields['id'])) 
 	  {
-	    error (NO_PLAYER);
+	    message('error', NO_PLAYER);
+	    $blnValid = FALSE;
 	  }
-	$strPlayerName = $arrTags[$objDonated->fields['tribe']][0].' '.$objDonated -> fields['user'].' '.$arrTags[$objDonated->fields['tribe']][1];
+	if ($blnValid)
+	  {
+	    $strPlayerName = $arrTags[$objDonated->fields['tribe']][0].' '.$objDonated -> fields['user'].' '.$arrTags[$objDonated->fields['tribe']][1];
+	    $have = $db -> Execute("SELECT `id` FROM `herbs` WHERE `gracz`=".$_POST['pid']);
+	    if (empty ($have -> fields['id'])) 
+	      {
+		$db -> Execute("INSERT INTO `herbs` (`gracz`, `".$_POST['item']."`) VALUES(".$_POST['pid'].",".$_POST['amount'].")");
+	      } 
+	    else 
+	      {
+		$db -> Execute("UPDATE `herbs` SET `".$_POST['item']."`=`".$_POST['item']."`+".$_POST['amount']." WHERE `gracz`=".$_POST['pid']);
+	      }
+	    $have -> Close();
+	    $db -> Execute("UPDATE `herbs` SET `".$_POST['item']."`=`".$_POST['item']."`-".$_POST['amount']." WHERE `gracz`=".$player -> id);
+	    $strDate = $db -> DBDate($newdate);
+	    $db -> Execute("INSERT INTO `log` (`owner`, `log`, `czas`, `type`) VALUES(".$_POST['pid'].",'".T_PLAYER."<b><a href=view.php?view=".$player -> id.">".$arrTags[$player->tribe][0].' '.$player ->user.' '.$arrTags[$player->tribe][1]."</a></b> ".T_ID."<b>".$player -> id."</b>, ".T_GIVE." ".$_POST['amount']." ".$arrName[$intKey].$strTitle.".', ".$strDate.", 'N')");
+	    $db -> Execute("INSERT INTO `log` (`owner`, `log`, `czas`, `type`) VALUES(".$player -> id.",'".YOU_SEND." <b><a href=view.php?view=".$_POST['pid'].">".$strPlayerName."</a></b> ID<b> ".$_POST['pid']."</b>, ".$_POST['amount']." ".$arrName[$intKey].$strTitle.".', ".$strDate.", 'N')");
+	    $db -> Execute("INSERT INTO `logs` (`owner`, `log`, `czas`) VALUES(".$_POST['pid'].",'".T_PLAYER."<b><a href=view.php?view=".$player -> id.">".$player ->user."</a></b> ".T_ID."<b>".$player -> id."</b>, ".T_GIVE." ".$_POST['amount']." ".$arrName[$intKey].$strTitle.".', ".$strDate.")");
+	    message('success', YOU_SEND." <b><a href=view.php?view=".$_POST['pid'].">".$strPlayerName."</a></b> ID<b> ".$_POST['pid']."</b>, <b>".$_POST['amount']."</b> ".$arrName[$intKey]);
+	  }
 	$objDonated -> Close();
-	$have = $db -> Execute("SELECT `id` FROM `herbs` WHERE `gracz`=".$_POST['pid']);
-	if (empty ($have -> fields['id'])) 
-	  {
-	    $db -> Execute("INSERT INTO `herbs` (`gracz`, `".$_POST['item']."`) VALUES(".$_POST['pid'].",".$_POST['amount'].")");
-	  } 
-        else 
-	  {
-	    $db -> Execute("UPDATE `herbs` SET `".$_POST['item']."`=`".$_POST['item']."`+".$_POST['amount']." WHERE `gracz`=".$_POST['pid']);
-	  }
-	$have -> Close();
-	$db -> Execute("UPDATE `herbs` SET `".$_POST['item']."`=`".$_POST['item']."`-".$_POST['amount']." WHERE `gracz`=".$player -> id);
-	$strDate = $db -> DBDate($newdate);
-	$db -> Execute("INSERT INTO `log` (`owner`, `log`, `czas`, `type`) VALUES(".$_POST['pid'].",'".T_PLAYER."<b><a href=view.php?view=".$player -> id.">".$arrTags[$player->tribe][0].' '.$player ->user.' '.$arrTags[$player->tribe][1]."</a></b> ".T_ID."<b>".$player -> id."</b>, ".T_GIVE." ".$_POST['amount']." ".$arrName[$intKey].$strTitle.".', ".$strDate.", 'N')");
-	$db -> Execute("INSERT INTO `log` (`owner`, `log`, `czas`, `type`) VALUES(".$player -> id.",'".YOU_SEND." <b><a href=view.php?view=".$_POST['pid'].">".$strPlayerName."</a></b> ID<b> ".$_POST['pid']."</b>, ".$_POST['amount']." ".$arrName[$intKey].$strTitle.".', ".$strDate.", 'N')");
-	$db -> Execute("INSERT INTO `logs` (`owner`, `log`, `czas`) VALUES(".$_POST['pid'].",'".T_PLAYER."<b><a href=view.php?view=".$player -> id.">".$player ->user."</a></b> ".T_ID."<b>".$player -> id."</b>, ".T_GIVE." ".$_POST['amount']." ".$arrName[$intKey].$strTitle.".', ".$strDate.")");
-	error ("<br />".YOU_SEND." <b><a href=view.php?view=".$_POST['pid'].">".$strPlayerName."</a></b> ID<b> ".$_POST['pid']."</b>, <b>".$_POST['amount']."</b> ".$arrName[$intKey]);
       }
 
     /**
@@ -372,32 +415,37 @@ if (isset($_GET['action']))
 	    $strTitle = '';
 	  }
 	$item = $db -> Execute("SELECT * FROM `potions` WHERE `id`=".$_POST['item']);
+	$blnValid = TRUE;
 	if ($player -> id != $item -> fields['owner']) 
 	  {
-	    error (NOT_YOUR);
+	    message('error', NOT_YOUR);
+	    $blnValid = FALSE;
 	  }
 	if (empty ($item -> fields['id'])) 
 	  {
-	    error (NO_ITEM);
+	    message('error', NO_ITEM);
+	    $blnValid = FALSE;
 	  }
 	if ($_POST['pid'] == $player -> id) 
 	  {
-	    error (BAD_PLAYER);
+	    message('error', BAD_PLAYER);
+	    $blnValid = FALSE;
 	  }
 	if ($item->fields['status'] != 'K')
 	  {
-	    error(ERROR);
+	    message('error', ERROR);
+	    $blnValid = FALSE;
 	  }
 	$objDonated = $db -> Execute("SELECT `id`, `user`, `tribe` FROM `players` WHERE `id`=".$_POST['pid']);
 	if (empty ($objDonated -> fields['id'])) 
 	  {
-	    error (NO_PLAYER);
+	    message('error', NO_PLAYER);
+	    $blnValid = FALSE;
 	  }
 	$strPlayerName = $arrTags[$objDonated->fields['tribe']][0].' '.$objDonated -> fields['user'].' '.$arrTags[$objDonated->fields['tribe']][1];
 	$objDonated -> Close();
 	if (!isset($_POST['addall']))
 	  {
-	    integercheck($_POST['amount']);
 	    checkvalue($_POST['amount']);
 	  }
 	else
@@ -406,31 +454,35 @@ if (isset($_GET['action']))
 	  }
 	if ($item -> fields['amount'] < $_POST['amount']) 
 	  {
-	    error (NO_MINERAL." ".$item -> fields['name']);
+	    message('error', NO_MINERAL." ".$item -> fields['name']);
+	    $blnValid = FALSE;
 	  }
-	$test = $db -> Execute("SELECT `id` FROM `potions` WHERE `name`='".$item -> fields['name']."' AND `owner`=".$_POST['pid']." AND `status`='K' AND `power`=".$item -> fields['power']);
-	if (empty ($test -> fields['id'])) 
+	if ($blnValid)
 	  {
-	    $db -> Execute("INSERT INTO potions (`owner`, `name`, `efect`, `power`, `amount`, `status`, `type`) VALUES(".$_POST['pid'].",'".$item -> fields['name']."','".$item -> fields['efect']."',".$item -> fields['power'].",".$_POST['amount'].",'K','".$item ->fields['type']."')") or error(E_DB4);
-	  } 
-        else 
-	  {
-	    $db -> Execute("UPDATE `potions` SET `amount`=`amount`+".$_POST['amount']." WHERE `id`=".$test ->fields['id']);
+	    $test = $db -> Execute("SELECT `id` FROM `potions` WHERE `name`='".$item -> fields['name']."' AND `owner`=".$_POST['pid']." AND `status`='K' AND `power`=".$item -> fields['power']);
+	    if (empty ($test -> fields['id'])) 
+	      {
+		$db -> Execute("INSERT INTO potions (`owner`, `name`, `efect`, `power`, `amount`, `status`, `type`) VALUES(".$_POST['pid'].",'".$item -> fields['name']."','".$item -> fields['efect']."',".$item -> fields['power'].",".$_POST['amount'].",'K','".$item ->fields['type']."')") or error(E_DB4);
+	      } 
+	    else 
+	      {
+		$db -> Execute("UPDATE `potions` SET `amount`=`amount`+".$_POST['amount']." WHERE `id`=".$test ->fields['id']);
+	      }
+	    $test -> Close();
+	    if ($_POST['amount'] < $item -> fields['amount']) 
+	      {
+		$db -> Execute("UPDATE `potions` SET `amount`=`amount`-".$_POST['amount']." WHERE `id`=".$item -> fields['id']);
+	      } 
+	    else 
+	      {
+		$db -> Execute("DELETE FROM `potions` WHERE `id`=".$item -> fields['id']);
+	      }
+	    $strDate = $db -> DBDate($newdate);
+	    $db -> Execute("INSERT INTO `log` (`owner`, `log`, `czas`, `type`) VALUES(".$_POST['pid'].",'".T_PLAYER."<b><a href=view.php?view=".$player -> id.">".$arrTags[$player->tribe][0].' '.$player ->user.' '.$arrTags[$player->tribe][1]."</a></b> ".T_ID."<b>".$player -> id."</b>, ".T_GIVE." ".$_POST['amount']." ".$item ->  fields['name']." (+".$item -> fields['power'].")".$strTitle.".', ".$strDate.", 'N')") or error (E_DB3);
+	    $db -> Execute("INSERT INTO `log` (`owner`, `log`, `czas`, `type`) VALUES(".$player -> id.",'".YOU_SEND." <b><a href=view.php?view=".$_POST['pid'].">".$strPlayerName."</a></b> ID<b> ".$_POST['pid']."</b>, ".$_POST['amount']." ".T_AMOUNT." ".$item -> fields['name']." (+".$item -> fields['power'].")".$strTitle.".', ".$strDate.", 'N')");
+	    $db -> Execute("INSERT INTO `logs` (`owner`, `log`, `czas`) VALUES(".$_POST['pid'].",'".T_PLAYER."<b><a href=view.php?view=".$player -> id.">".$player ->user."</a></b> ".T_ID."<b>".$player -> id."</b>, ".T_GIVE." ".$_POST['amount']." ".$item ->  fields['name']." (+".$item -> fields['power'].")".$strTitle.".', ".$strDate.")");
+	    message('success', YOU_SEND." <b><a href=view.php?view=".$_POST['pid'].">".$strPlayerName."</a></b>, ID<b> ".$_POST['pid']."</b>, <b>".$_POST['amount']."</b> ".T_AMOUNT." <b>".$item -> fields['name']."</b> (+".$item -> fields['power'].").");
 	  }
-	$test -> Close();
-	if ($_POST['amount'] < $item -> fields['amount']) 
-	  {
-	    $db -> Execute("UPDATE `potions` SET `amount`=`amount`-".$_POST['amount']." WHERE `id`=".$item -> fields['id']);
-	  } 
-        else 
-	  {
-	    $db -> Execute("DELETE FROM `potions` WHERE `id`=".$item -> fields['id']);
-	  }
-	$strDate = $db -> DBDate($newdate);
-	$db -> Execute("INSERT INTO `log` (`owner`, `log`, `czas`, `type`) VALUES(".$_POST['pid'].",'".T_PLAYER."<b><a href=view.php?view=".$player -> id.">".$arrTags[$player->tribe][0].' '.$player ->user.' '.$arrTags[$player->tribe][1]."</a></b> ".T_ID."<b>".$player -> id."</b>, ".T_GIVE." ".$_POST['amount']." ".$item ->  fields['name']." (+".$item -> fields['power'].")".$strTitle.".', ".$strDate.", 'N')") or error (E_DB3);
-	$db -> Execute("INSERT INTO `log` (`owner`, `log`, `czas`, `type`) VALUES(".$player -> id.",'".YOU_SEND." <b><a href=view.php?view=".$_POST['pid'].">".$strPlayerName."</a></b> ID<b> ".$_POST['pid']."</b>, ".$_POST['amount']." ".T_AMOUNT." ".$item -> fields['name']." (+".$item -> fields['power'].")".$strTitle.".', ".$strDate.", 'N')");
-	$db -> Execute("INSERT INTO `logs` (`owner`, `log`, `czas`) VALUES(".$_POST['pid'].",'".T_PLAYER."<b><a href=view.php?view=".$player -> id.">".$player ->user."</a></b> ".T_ID."<b>".$player -> id."</b>, ".T_GIVE." ".$_POST['amount']." ".$item ->  fields['name']." (+".$item -> fields['power'].")".$strTitle.".', ".$strDate.")");
-	error ("<br />".YOU_SEND." <b><a href=view.php?view=".$_POST['pid'].">".$strPlayerName."</a></b>, ID<b> ".$_POST['pid']."</b>, <b>".$_POST['amount']."</b> ".T_AMOUNT." <b>".$item -> fields['name']."</b> (+".$item -> fields['power'].").");
 	$item -> Close();
       }
 
@@ -451,7 +503,6 @@ if (isset($_GET['action']))
 	checkvalue($_POST['item']);
 	if (!isset($_POST['addall']))
 	  {
-	    integercheck($_POST['amount']);
 	    checkvalue($_POST['amount']);
 	  }
 	if (strlen($_POST['title']) > 0)
@@ -464,127 +515,137 @@ if (isset($_GET['action']))
 	    $strTitle = '';
 	  }
 	$item = $db -> Execute("SELECT * FROM `equipment` WHERE `id`=".$_POST['item']." AND `status`='U' AND `owner`=".$player->id);
+	$blnValid = TRUE;
 	if (empty ($item -> fields['id'])) 
 	  {
-	    error (NO_ITEM);
+	    message('error', NO_ITEM);
+	    $blnValid = FALSE;
 	  }
 	if ($item->fields['type'] == 'Q')
 	  {
-	    error('Nie możesz przekazać tego przemiotu.');
+	    message('error', 'Nie możesz przekazać tego przemiotu.');
+	    $blnValid = FALSE;
 	  }
 	if ($_POST['pid'] == $player -> id) 
 	  {
-	    error (BAD_PLAYER);
+	    message('error', BAD_PLAYER);
+	    $blnValid = FALSE;
 	  }
 	$objDonated = $db -> Execute("SELECT `id`, `user`, `tribe` FROM `players` WHERE `id`=".$_POST['pid']);
 	if (empty ($objDonated -> fields['id'])) 
 	  {
-	    error (NO_PLAYER);
+	    message('error', NO_PLAYER);
+	    $blnValid = FALSE;
+	  }
+	if (($item->fields['type'] != 'R') && ($item -> fields['amount'] < $_POST['amount']))
+	  {
+	    message('error', NO_MINERAL." ".$item -> fields['name']);
+	    $blnValid = FALSE;
+	  }
+	elseif (($item->fields['type'] == 'R') && ($item -> fields['wt'] < $_POST['amount']))
+	  {
+	    message('error', NO_MINERAL." ".$item -> fields['name']);
+	    $blnValid = FALSE;
 	  }
 	$strPlayerName = $arrTags[$objDonated->fields['tribe']][0].' '.$objDonated -> fields['user'].' '.$arrTags[$objDonated->fields['tribe']][1];
 	$objDonated -> Close();
-	if ($item->fields['type'] != 'R')
+	if ($blnValid)
 	  {
-	    if (isset($_POST['addall']))
+	    if ($item->fields['type'] != 'R')
 	      {
-		$_POST['amount'] = $item -> fields['amount'];
+		if (isset($_POST['addall']))
+		  {
+		    $_POST['amount'] = $item -> fields['amount'];
+		  }
+		$test = $db -> Execute("SELECT `id` FROM `equipment` WHERE `name`='".$item -> fields['name']."' AND `wt`=".$item -> fields['wt']." AND `type`='".$item -> fields['type']."' AND `status`='U' AND `owner`=".$_POST['pid']." AND `power`=".$item -> fields['power']." AND `zr`=".$item -> fields['zr']." AND `szyb`=".$item -> fields['szyb']." AND `maxwt`=".$item -> fields['maxwt']." AND `poison`=".$item -> fields['poison']." AND `cost`=".$item -> fields['cost']);
+		if (empty ($test -> fields['id'])) 
+		  {
+		    $db -> Execute("INSERT INTO `equipment` (`owner`, `name`, `power`, `type`, `cost`, `zr`, `wt`, `minlev`, `maxwt`, `amount`, `magic`, `poison`, `szyb`, `twohand`, `repair`) VALUES(".$_POST['pid'].",'".$item -> fields['name']."',".$item -> fields['power'].",'".$item -> fields['type']."',".$item -> fields['cost'].",".$item -> fields['zr'].",".$item -> fields['wt'].",".$item -> fields['minlev'].",".$item -> fields['maxwt'].",".$_POST['amount'].",'".$item -> fields['magic']."',".$item -> fields['poison'].",".$item -> fields['szyb'].",'".$item  -> fields['twohand']."', ".$item -> fields['repair'].")") or error(E_DB4);
+		  } 
+		else 
+		  {
+		    $db -> Execute("UPDATE `equipment` SET `amount`=`amount`+".$_POST['amount']." WHERE `id`=".$test -> fields['id']);
+		  }
+		if ($_POST['amount'] < $item -> fields['amount']) 
+		  {
+		    $db -> Execute("UPDATE `equipment` SET `amount`=`amount`-".$_POST['amount']." WHERE `id`=".$item -> fields['id']);
+		  } 
+		else 
+		  {
+		    $db -> Execute("DELETE FROM `equipment` WHERE `id`=".$item -> fields['id']);
+		  }
 	      }
-	    if ($item -> fields['amount'] < $_POST['amount']) 
+	    else
 	      {
-		error (NO_MINERAL." ".$item -> fields['name']);
+		if (isset($_POST['addall']))
+		  {
+		    $_POST['amount'] = $item -> fields['wt'];
+		  }
+		$test = $db -> Execute("SELECT `id` FROM `equipment` WHERE `name`='".$item -> fields['name']."' AND `type`='R' AND `status`='U' AND `owner`=".$_POST['pid']." AND `power`=".$item -> fields['power']." AND `zr`=".$item -> fields['zr']." AND `szyb`=".$item -> fields['szyb']." AND `poison`=".$item -> fields['poison']." AND `cost`=".$item -> fields['cost']);
+		if (empty ($test -> fields['id'])) 
+		  {
+		    $db -> Execute("INSERT INTO `equipment` (`owner`, `name`, `power`, `type`, `cost`, `zr`, `wt`, `minlev`, `maxwt`, `amount`, `magic`, `poison`, `szyb`, `twohand`, `repair`) VALUES(".$_POST['pid'].",'".$item -> fields['name']."',".$item -> fields['power'].",'".$item -> fields['type']."',".$item -> fields['cost'].",".$item -> fields['zr'].",".$_POST['amount'].",".$item -> fields['minlev'].",".$_POST['amount'].",1,'".$item -> fields['magic']."',".$item -> fields['poison'].",".$item -> fields['szyb'].",'".$item  -> fields['twohand']."', ".$item -> fields['repair'].")") or error(E_DB4);
+		  } 
+		else 
+		  {
+		    $db -> Execute("UPDATE `equipment` SET `wt`=`wt`+".$_POST['amount']." WHERE `id`=".$test -> fields['id']);
+		  }
+		if ($_POST['amount'] < $item -> fields['wt']) 
+		  {
+		    $db -> Execute("UPDATE `equipment` SET `wt`=`wt`-".$_POST['amount']." WHERE `id`=".$item -> fields['id']);
+		  } 
+		else 
+		  {
+		    $db -> Execute("DELETE FROM `equipment` WHERE `id`=".$item -> fields['id']);
+		  }
 	      }
-	    $test = $db -> Execute("SELECT `id` FROM `equipment` WHERE `name`='".$item -> fields['name']."' AND `wt`=".$item -> fields['wt']." AND `type`='".$item -> fields['type']."' AND `status`='U' AND `owner`=".$_POST['pid']." AND `power`=".$item -> fields['power']." AND `zr`=".$item -> fields['zr']." AND `szyb`=".$item -> fields['szyb']." AND `maxwt`=".$item -> fields['maxwt']." AND `poison`=".$item -> fields['poison']." AND `cost`=".$item -> fields['cost']);
-	    if (empty ($test -> fields['id'])) 
+	    $test -> Close();
+	    
+	    // Display detailed information about bonuses of each item.
+	    $strAttributes = '(';
+	    switch($item -> fields['type'])
 	      {
-		$db -> Execute("INSERT INTO `equipment` (`owner`, `name`, `power`, `type`, `cost`, `zr`, `wt`, `minlev`, `maxwt`, `amount`, `magic`, `poison`, `szyb`, `twohand`, `repair`) VALUES(".$_POST['pid'].",'".$item -> fields['name']."',".$item -> fields['power'].",'".$item -> fields['type']."',".$item -> fields['cost'].",".$item -> fields['zr'].",".$item -> fields['wt'].",".$item -> fields['minlev'].",".$item -> fields['maxwt'].",".$_POST['amount'].",'".$item -> fields['magic']."',".$item -> fields['poison'].",".$item -> fields['szyb'].",'".$item  -> fields['twohand']."', ".$item -> fields['repair'].")") or error(E_DB4);
-	      } 
-	    else 
-	      {
-		$db -> Execute("UPDATE `equipment` SET `amount`=`amount`+".$_POST['amount']." WHERE `id`=".$test -> fields['id']);
-	      }
-	    if ($_POST['amount'] < $item -> fields['amount']) 
-	      {
-		$db -> Execute("UPDATE `equipment` SET `amount`=`amount`-".$_POST['amount']." WHERE `id`=".$item -> fields['id']);
-	      } 
-	    else 
-	      {
-		$db -> Execute("DELETE FROM `equipment` WHERE `id`=".$item -> fields['id']);
-	      }
-	  }
-	else
-	  {
-	    if (isset($_POST['addall']))
-	      {
-		$_POST['amount'] = $item -> fields['wt'];
-	      }
-	    if ($item -> fields['wt'] < $_POST['amount']) 
-	      {
-		error (NO_MINERAL." ".$item -> fields['name']);
-	      }
-	    $test = $db -> Execute("SELECT `id` FROM `equipment` WHERE `name`='".$item -> fields['name']."' AND `type`='R' AND `status`='U' AND `owner`=".$_POST['pid']." AND `power`=".$item -> fields['power']." AND `zr`=".$item -> fields['zr']." AND `szyb`=".$item -> fields['szyb']." AND `poison`=".$item -> fields['poison']." AND `cost`=".$item -> fields['cost']);
-	    if (empty ($test -> fields['id'])) 
-	      {
-		$db -> Execute("INSERT INTO `equipment` (`owner`, `name`, `power`, `type`, `cost`, `zr`, `wt`, `minlev`, `maxwt`, `amount`, `magic`, `poison`, `szyb`, `twohand`, `repair`) VALUES(".$_POST['pid'].",'".$item -> fields['name']."',".$item -> fields['power'].",'".$item -> fields['type']."',".$item -> fields['cost'].",".$item -> fields['zr'].",".$_POST['amount'].",".$item -> fields['minlev'].",".$_POST['amount'].",1,'".$item -> fields['magic']."',".$item -> fields['poison'].",".$item -> fields['szyb'].",'".$item  -> fields['twohand']."', ".$item -> fields['repair'].")") or error(E_DB4);
-	      } 
-	    else 
-	      {
-		$db -> Execute("UPDATE `equipment` SET `wt`=`wt`+".$_POST['amount']." WHERE `id`=".$test -> fields['id']);
-	      }
-	    if ($_POST['amount'] < $item -> fields['wt']) 
-	      {
-		$db -> Execute("UPDATE `equipment` SET `wt`=`wt`-".$_POST['amount']." WHERE `id`=".$item -> fields['id']);
-	      } 
-	    else 
-	      {
-		$db -> Execute("DELETE FROM `equipment` WHERE `id`=".$item -> fields['id']);
-	      }
-	  }
-	$test -> Close();
-    
-	// Display detailed information about bonuses of each item.
-	$strAttributes = '(';
-	switch($item -> fields['type'])
-	  {
-	  case 'A':   // Pieces of armor: defense, agility and durability.
-	  case 'L':
-            $intAgi = $item -> fields['zr'] * -1;
-            $strAttributes.= I_DEF.' +'.$item -> fields['power'].', '.I_AGI.' '.$intAgi.'%, '.I_DUR.' '.$item -> fields['wt'].'/'.$item -> fields['maxwt'];
-            break;
-	  case 'B':   // Bows: speed and durability.
-            $strAttributes.= I_SPE.' +'.$item -> fields['szyb'].', '.I_DUR.' '.$item -> fields['wt'].'/'.$item -> fields['maxwt'];
-            break;
-	  case 'H':   // Helmets, 
-	  case 'P':   // plate legs,
-	  case 'S':   // and shiels: defense and durability.
-            $strAttributes.= I_DEF.' +'.$item -> fields['power'].', '.I_DUR.' '.$item -> fields['wt'].'/'.$item -> fields['maxwt'];
-            break;
-	  case 'R':   // Arrows: attack.
-            $strAttributes.= I_ATT.' +'.$item -> fields['power'];
-            break;
-	  case 'W':   // Melee weapons: attack and durability.
-            $strAttributes.= I_ATT.' +'.$item -> fields['power'].', '.I_DUR.' '.$item -> fields['wt'].'/'.$item -> fields['maxwt'];
-            break;
+	      case 'A':   // Pieces of armor: defense, agility and durability.
+	      case 'L':
+		$intAgi = $item -> fields['zr'] * -1;
+		$strAttributes.= I_DEF.' +'.$item -> fields['power'].', '.I_AGI.' '.$intAgi.'%, '.I_DUR.' '.$item -> fields['wt'].'/'.$item -> fields['maxwt'];
+		break;
+	      case 'B':   // Bows: speed and durability.
+		$strAttributes.= I_SPE.' +'.$item -> fields['szyb'].', '.I_DUR.' '.$item -> fields['wt'].'/'.$item -> fields['maxwt'];
+		break;
+	      case 'H':   // Helmets, 
+	      case 'P':   // plate legs,
+	      case 'S':   // and shiels: defense and durability.
+		$strAttributes.= I_DEF.' +'.$item -> fields['power'].', '.I_DUR.' '.$item -> fields['wt'].'/'.$item -> fields['maxwt'];
+		break;
+	      case 'R':   // Arrows: attack.
+		$strAttributes.= I_ATT.' +'.$item -> fields['power'];
+		break;
+	      case 'W':   // Melee weapons: attack and durability.
+		$strAttributes.= I_ATT.' +'.$item -> fields['power'].', '.I_DUR.' '.$item -> fields['wt'].'/'.$item -> fields['maxwt'];
+		break;
+		
+	      case 'C':   // Mage robe: percent bonus to mana.
+		$strAttributes.= I_MANA.' +'.$item -> fields['power'].'%';
+		break;
+	      case 'T':   // Mage wand: percent bonus to spell strength.
+		$strAttributes.= I_ATT.' +'.$item -> fields['power'].'%';
+		break;
             
-	  case 'C':   // Mage robe: percent bonus to mana.
-            $strAttributes.= I_MANA.' +'.$item -> fields['power'].'%';
-            break;
-	  case 'T':   // Mage wand: percent bonus to spell strength.
-            $strAttributes.= I_ATT.' +'.$item -> fields['power'].'%';
-            break;
-            
-	  case 'I':   // Rings: bonus type is in ring's description, so here we only display value.
-	  default:    // same for items that may be added in future, only 'power' field in database with no description.
-            $strAttributes.= '+'.$item -> fields['power'];
-	    break;
-	  }
-	$strAttributes.= ')'.$strTitle.'.';
-	
-	$strDate = $db -> DBDate($newdate);
-	$db -> Execute("INSERT INTO `log` (`owner`, `log`, `czas`, `type`) VALUES(".$_POST['pid'].",'".T_PLAYER." <b><a href=view.php?view=".$player -> id.">".$arrTags[$player->tribe][0].' '.$player ->user.' '.$arrTags[$player->tribe][1]."</a></b>".T_ID."<b>".$player -> id."</b>, ".T_GIVE." ".$_POST['amount']." ".I_AMOUNT." ".$item -> fields['name']." ".$strAttributes."', ".$strDate.", 'N')") or die($db->ErrorMsg());   
-	$db -> Execute("INSERT INTO `log` (`owner`, `log`, `czas`, `type`) VALUES(".$player -> id.",'".YOU_SEND." <b><a href=view.php?view=".$_POST['pid'].">".$strPlayerName."</a></b> ID<b> ".$_POST['pid'].'</b>, '.$_POST['amount']." ".T_AMOUNT." ".$item -> fields['name']." ".$strAttributes."', ".$strDate.", 'N')")or die($db->ErrorMsg());
-	$db -> Execute("INSERT INTO `logs` (`owner`, `log`, `czas`) VALUES(".$player -> id.",'".YOU_SEND." <b><a href=view.php?view=".$_POST['pid'].">".$strPlayerName."</a></b> ID<b> ".$_POST['pid'].'</b>, '.$_POST['amount']." ".T_AMOUNT." ".$item -> fields['name']." ".$strAttributes."', ".$strDate.")")or die($db->ErrorMsg());
+	      case 'I':   // Rings: bonus type is in ring's description, so here we only display value.
+	      default:    // same for items that may be added in future, only 'power' field in database with no description.
+		$strAttributes.= '+'.$item -> fields['power'];
+		break;
+	      }
+	    $strAttributes.= ')'.$strTitle.'.';
+	    
+	    $strDate = $db -> DBDate($newdate);
+	    $db -> Execute("INSERT INTO `log` (`owner`, `log`, `czas`, `type`) VALUES(".$_POST['pid'].",'".T_PLAYER." <b><a href=view.php?view=".$player -> id.">".$arrTags[$player->tribe][0].' '.$player ->user.' '.$arrTags[$player->tribe][1]."</a></b>".T_ID."<b>".$player -> id."</b>, ".T_GIVE." ".$_POST['amount']." ".I_AMOUNT." ".$item -> fields['name']." ".$strAttributes."', ".$strDate.", 'N')") or die($db->ErrorMsg());   
+	    $db -> Execute("INSERT INTO `log` (`owner`, `log`, `czas`, `type`) VALUES(".$player -> id.",'".YOU_SEND." <b><a href=view.php?view=".$_POST['pid'].">".$strPlayerName."</a></b> ID<b> ".$_POST['pid'].'</b>, '.$_POST['amount']." ".T_AMOUNT." ".$item -> fields['name']." ".$strAttributes."', ".$strDate.", 'N')")or die($db->ErrorMsg());
+	    $db -> Execute("INSERT INTO `logs` (`owner`, `log`, `czas`) VALUES(".$player -> id.",'".YOU_SEND." <b><a href=view.php?view=".$_POST['pid'].">".$strPlayerName."</a></b> ID<b> ".$_POST['pid'].'</b>, '.$_POST['amount']." ".T_AMOUNT." ".$item -> fields['name']." ".$strAttributes."', ".$strDate.")")or die($db->ErrorMsg());
     
-	error ("<br />".YOU_SEND." <b><a href=view.php?view=".$_POST['pid'].">".$strPlayerName."</a></b>, ID<b> ".$_POST['pid'].'</b> '.$_POST['amount']." ".T_AMOUNT." ".$item -> fields['name']." ".$strAttributes);
+	    message('success', YOU_SEND." <b><a href=view.php?view=".$_POST['pid'].">".$strPlayerName."</a></b>, ID<b> ".$_POST['pid'].'</b> '.$_POST['amount']." ".T_AMOUNT." ".$item -> fields['name']." ".$strAttributes);
+	  }
       }
 
     /**
@@ -592,118 +653,126 @@ if (isset($_GET['action']))
      */
     elseif ($_GET['action'] == 'steal' && $player->clas == 'Złodziej') 
       {
+	$blnValid = TRUE;
 	if (!isset($_POST['tp']))
 	  {
-	    error("Podaj ile punktów kradzieży chcesz przeznaczyć na próbę.");
+	    message('error', "Podaj ile punktów kradzieży chcesz przeznaczyć na próbę.");
+	    $blnValid = FALSE;
 	  }
 	checkvalue($_POST['tp']);
 	if ($_POST['tp'] > 12)
 	  {
-	    error("Nie możesz przeznaczyć aż tylu punktów kradzieży (maksymalnie 12).");
+	    message('error', "Nie możesz przeznaczyć aż tylu punktów kradzieży (maksymalnie 12).");
+	    $blnValid = FALSE;
 	  }
 	if ($_POST['tp'] > $player->crime)
 	  {
-	    error("Nie masz tylu punktów kradzieży!");
+	    message('error', "Nie masz tylu punktów kradzieży!");
+	    $blnValid = FALSE;
 	  }
 	if ($player->hp <= 0)
 	  {
-	    error("Nie możesz okradać banku kiedy jesteś martwy.");
+	    message('error', "Nie możesz okradać banku kiedy jesteś martwy.");
+	    $blnValid = FALSE;
 	  }
-	require_once("includes/checkexp.php");
-	$intMax = (50 - ($_POST['tp'] * 2)) * $player->level;
-	$roll = rand (1, $intMax);
-	if ($roll == 1)
+	if ($blnValid)
 	  {
-	    $chance = 0;
-	  }
-	elseif ($roll == $intMax)
-	  {
-	    $chance = 1000000;
-	  }
-	else
-	  {
-	    /**
-	     * Add bonus from bless
-	     */
-	    $strBless = FALSE;
-	    $objBless = $db -> Execute("SELECT bless, blessval FROM players WHERE id=".$player -> id);
-	    if ($objBless -> fields['bless'] == 'inteli')
+	    require_once("includes/checkexp.php");
+	    $intMax = (50 - ($_POST['tp'] * 2)) * $player->level;
+	    $roll = rand (1, $intMax);
+	    if ($roll == 1)
 	      {
-		$player -> inteli = $player -> inteli + $objBless -> fields['blessval'];
-		$strBless = 'inteli';
+		$chance = 0;
 	      }
-	    elseif ($objBless -> fields['bless'] == 'agility')
+	    elseif ($roll == $intMax)
 	      {
-		$player -> agility = $player -> agility + $objBless -> fields['blessval'];
-		$strBless = 'agility';
+		$chance = 1000000;
 	      }
-	    elseif ($objBless -> fields['bless'] == 'speed')
+	    else
 	      {
-		$player->speed = $player->speed + $objBless -> fields['blessval'];
-		$strBless = 'speed';
-	      }
-	    $objBless -> Close();
-	    if ($strBless)
-	      {
-		$db -> Execute("UPDATE players SET bless='', blessval=0 WHERE id=".$player -> id);
-	      }
-	    
-	    /**
-	     * Add bonus from rings
-	     */
-	    $arrEquip = $player -> equipment();
-	    $arrRings = array('zręczności', 'inteligencji', 'szybkości');
-	    $arrStat = array('agility', 'inteli', 'speed');
-	    if ($arrEquip[9][0])
-	      {
-		$arrRingtype = explode(" ", $arrEquip[9][1]);
-		$intAmount = count($arrRingtype) - 1;
-		$intKey = array_search($arrRingtype[$intAmount], $arrRings);
-		if ($intKey != NULL)
+		/**
+		 * Add bonus from bless
+		 */
+		$strBless = FALSE;
+		$objBless = $db -> Execute("SELECT bless, blessval FROM players WHERE id=".$player -> id);
+		if ($objBless -> fields['bless'] == 'inteli')
 		  {
-		    $strStat = $arrStat[$intKey];
-		    $player -> $strStat = $player -> $strStat + $arrEquip[9][2];
+		    $player -> inteli = $player -> inteli + $objBless -> fields['blessval'];
+		    $strBless = 'inteli';
 		  }
-	      }
-	    if ($arrEquip[10][0])
-	      {
-		$arrRingtype = explode(" ", $arrEquip[10][1]);
-		$intAmount = count($arrRingtype) - 1;
-		$intKey = array_search($arrRingtype[$intAmount], $arrRings);
-		if ($intKey != NULL)
+		elseif ($objBless -> fields['bless'] == 'agility')
 		  {
-		    $strStat = $arrStat[$intKey];
-		    $player -> $strStat = $player -> $strStat + $arrEquip[10][2];
+		    $player -> agility = $player -> agility + $objBless -> fields['blessval'];
+		    $strBless = 'agility';
 		  }
-	      }
+		elseif ($objBless -> fields['bless'] == 'speed')
+		  {
+		    $player->speed = $player->speed + $objBless -> fields['blessval'];
+		    $strBless = 'speed';
+		  }
+		$objBless -> Close();
+		if ($strBless)
+		  {
+		    $db -> Execute("UPDATE players SET bless='', blessval=0 WHERE id=".$player -> id);
+		  }
+		
+		/**
+		 * Add bonus from rings
+		 */
+		$arrEquip = $player -> equipment();
+		$arrRings = array('zręczności', 'inteligencji', 'szybkości');
+		$arrStat = array('agility', 'inteli', 'speed');
+		if ($arrEquip[9][0])
+		  {
+		    $arrRingtype = explode(" ", $arrEquip[9][1]);
+		    $intAmount = count($arrRingtype) - 1;
+		    $intKey = array_search($arrRingtype[$intAmount], $arrRings);
+		    if ($intKey != NULL)
+		      {
+			$strStat = $arrStat[$intKey];
+			$player -> $strStat = $player -> $strStat + $arrEquip[9][2];
+		      }
+		  }
+		if ($arrEquip[10][0])
+		  {
+		    $arrRingtype = explode(" ", $arrEquip[10][1]);
+		    $intAmount = count($arrRingtype) - 1;
+		    $intKey = array_search($arrRingtype[$intAmount], $arrRings);
+		    if ($intKey != NULL)
+		      {
+			$strStat = $arrStat[$intKey];
+			$player -> $strStat = $player -> $strStat + $arrEquip[10][2];
+		      }
+		  }
 	    
-	    $chance = ($player->agility + $player->inteli + $player->thievery + $player->speed) - $roll;
-	  }
-	if ($chance < 1) 
-	  {
-	    $cost = 1000 * $player -> level;
-	    $expgain = ceil($player -> level / 10);
-	    checkexp($player -> exp, $expgain, $player -> level, $player -> race, $player -> user, $player -> id, 0, 0, $player -> id, 'thievery', 0.01);
-	    $db -> Execute("UPDATE players SET miejsce='Lochy', crime=crime-".$_POST['tp']." WHERE id=".$player -> id);
-	    $strDate = $db -> DBDate($newdate);
-	    $db -> Execute("INSERT INTO `jail` (`prisoner`, `verdict`, `duration`, `cost`, `data`) VALUES(".$player -> id.", '".VERDICT."', 7, ".$cost.", ".$strDate.")") or error (E_DB4);
-	    $db -> Execute("INSERT INTO `log` (`owner`, `log`, `czas`, `type`) VALUES(".$player -> id.",'".L_REASON.": ".$cost.".','".$newdate."', 'T')");
-	    error (C_CACHED);
-	  }
-	else 
-	  { 
-	    $gain = $player -> level * 1000;
-	    $expgain = ($player -> level * 10);
-	    $fltThief = ($player->level / 100);
-	    if ($chance == 1000000)
-	      {
-		$gain = 2 * $gain;
-		$expgain = 2 * $expgain;
-		$fltThief = 2 * $fltThief;
+		$chance = ($player->agility + $player->inteli + $player->thievery + $player->speed) - $roll;
 	      }
-	    $db -> Execute("UPDATE `players` SET `crime`=`crime`-".$_POST['tp'].", `credits`=`credits`+".$gain." WHERE `id`=".$player -> id);
-	    checkexp($player -> exp, $expgain, $player -> level, $player -> race, $player -> user, $player -> id, 0, 0, $player -> id, 'thievery', $fltThief);
-	    error (C_SUCCES.$gain.C_SUCCES2." Zdobyłeś ".$fltThief." w umiejętności Złodziejstwo.");
+	    if ($chance < 1) 
+	      {
+		$cost = 1000 * $player -> level;
+		$expgain = ceil($player -> level / 10);
+		checkexp($player -> exp, $expgain, $player -> level, $player -> race, $player -> user, $player -> id, 0, 0, $player -> id, 'thievery', 0.01);
+		$db -> Execute("UPDATE players SET miejsce='Lochy', crime=crime-".$_POST['tp']." WHERE id=".$player -> id);
+		$strDate = $db -> DBDate($newdate);
+		$db -> Execute("INSERT INTO `jail` (`prisoner`, `verdict`, `duration`, `cost`, `data`) VALUES(".$player -> id.", '".VERDICT."', 7, ".$cost.", ".$strDate.")") or error (E_DB4);
+		$db -> Execute("INSERT INTO `log` (`owner`, `log`, `czas`, `type`) VALUES(".$player -> id.",'".L_REASON.": ".$cost.".','".$newdate."', 'T')");
+		message('error', C_CACHED);
+	      }
+	    else 
+	      { 
+		$gain = $player -> level * 1000;
+		$expgain = ($player -> level * 10);
+		$fltThief = ($player->level / 100);
+		if ($chance == 1000000)
+		  {
+		    $gain = 2 * $gain;
+		    $expgain = 2 * $expgain;
+		    $fltThief = 2 * $fltThief;
+		  }
+		$db -> Execute("UPDATE `players` SET `crime`=`crime`-".$_POST['tp'].", `credits`=`credits`+".$gain." WHERE `id`=".$player -> id);
+		checkexp($player -> exp, $expgain, $player -> level, $player -> race, $player -> user, $player -> id, 0, 0, $player -> id, 'thievery', $fltThief);
+		message('success', C_SUCCES.$gain.C_SUCCES2." Zdobyłeś ".$fltThief." w umiejętności Złodziejstwo.");
+	      }
 	  }
       }
 
@@ -723,38 +792,46 @@ if (isset($_GET['action']))
 				 array(40000, 300, 50, 0),
 				 array(100000, 450, 100, 50));
 	    $intKey = $objSafebox -> fields['level'];
+	    $blnValid = TRUE;
 	    if ($player -> credits < $arrSafeneed[$intKey][0])
 	      {
-		error(NO_MONEY);
+		message('error', NO_MONEY);
+		$blnValid = FALSE;
 	      }
 	    if ($player -> platinum < $arrSafeneed[$intKey][1])
 	      {
-		error(NO_MITHRIL);
+		message('error', NO_MITHRIL);
+		$blnValid = FALSE;
 	      }
 	    $objMinerals = $db -> Execute("SELECT `crystal`, `adamantium` FROM `minerals` WHERE `owner`=".$player -> id);
 	    if ($objMinerals -> fields['adamantium'] < $arrSafeneed[$intKey][2])
 	      {
-		error(NO_MINERAL." ".ADAMANTIUM."!");
+		message('error', NO_MINERAL." ".ADAMANTIUM."!");
+		$blnValid = FALSE;
 	      }
 	    if ($objMinerals -> fields['crystal'] < $arrSafeneed[$intKey][3])
 	      {
-		error(NO_MINERAL." ".CRYSTAL."!");
+		message('error', NO_MINERAL." ".CRYSTAL."!");
+		$blnValid = FALSE;
 	      }
-	    if (!$objSafebox -> fields['level'])
+	    if ($blnValid)
 	      {
-		$db -> Execute("INSERT INTO `astral_bank` (`owner`, `level`, `location`) VALUES(".$player -> id.", 1, 'V')");
+		if (!$objSafebox -> fields['level'])
+		  {
+		    $db -> Execute("INSERT INTO `astral_bank` (`owner`, `level`, `location`) VALUES(".$player -> id.", 1, 'V')");
+		  }
+		else
+		  {
+		    $db -> Execute("UPDATE `astral_bank` SET `level`=`level`+1 WHERE `owner`=".$player -> id." AND `location`='V'");
+		  }
+		$db -> Execute("UPDATE `players` SET `credits`=`credits`-".$arrSafeneed[$intKey][0].", `platinum`=`platinum`-".$arrSafeneed[$intKey][1]." WHERE `id`=".$player -> id);
+		$db -> Execute("UPDATE `minerals` SET `adamantium`=`adamantium`-".$arrSafeneed[$intKey][2].", `crystal`=`crystal`-".$arrSafeneed[$intKey][3]." WHERE `owner`=".$player -> id);
+		message('success', YOU_UPGRADE);
 	      }
-            else
-	      {
-		$db -> Execute("UPDATE `astral_bank` SET `level`=`level`+1 WHERE `owner`=".$player -> id." AND `location`='V'");
-	      }
-	    $db -> Execute("UPDATE `players` SET `credits`=`credits`-".$arrSafeneed[$intKey][0].", `platinum`=`platinum`-".$arrSafeneed[$intKey][1]." WHERE `id`=".$player -> id);
-	    $db -> Execute("UPDATE `minerals` SET `adamantium`=`adamantium`-".$arrSafeneed[$intKey][2].", `crystal`=`crystal`-".$arrSafeneed[$intKey][3]." WHERE `owner`=".$player -> id);
-	    error(YOU_UPGRADE);
 	  }
         else
 	  {
-	    error(SAFE_ENOUGH);
+	    message('error', SAFE_ENOUGH);
 	  }
 	$objSafebox -> Close();
       }
@@ -762,7 +839,7 @@ if (isset($_GET['action']))
     /**
      * Astral vault
      */
-    if ($_GET['action'] == 'astral')
+    elseif ($_GET['action'] == 'astral')
       {
 	if (!isset($_GET['type']))
 	  {
