@@ -1,5 +1,7 @@
 2011-12-07  Bartek thindil Jasicki  <thindil@tuxfamily.org>
 
+	* BUG,includes/resets.php: 
+	fixed notice
 	* FEATURE,includes/head.php, includes/revent.php, includes/resets.php: 
 	added more random events to cities
 	* FEATURE,includes/resets.php, hunters.php: 

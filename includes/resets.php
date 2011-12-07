@@ -123,7 +123,6 @@ function smallreset($blnSmall = FALSE)
             $intKey = array_search($arrRingtype[$intAmount], $arrRings);
             if ($intKey !== FALSE)
             {
-                $intKey = $intKey / $intLangs;
                 $strStat = $arrStat[$intKey];
                 $objStats -> fields[$strStat] = $objStats -> fields[$strStat] + $objRings -> fields['power'];
             }
