@@ -6,8 +6,8 @@
  *   @name                 : hunters.php                            
  *   @copyright            : (C) 2011 Vallheru Team based on Gamers-Fusion ver 2.5
  *   @author               : thindil <thindil@tuxfamily.org>
- *   @version              : 1.4
- *   @since                : 16.11.2011
+ *   @version              : 1.5
+ *   @since                : 07.12.2011
  *
  */
 
@@ -137,7 +137,21 @@ elseif ($_GET['step'] == 'table')
       $objMonster->Close();
       break;
     case 'I':
-      $objItem = $db->Execute("SELECT `name`, `cost` FROM `equipment` WHERE `id`=".$arrQuest[1]);
+    case 'B':
+    case 'P':
+      if ($arrQuest[0] == 'I')
+	{
+	  $objItem = $db->Execute("SELECT `name`, `cost` FROM `equipment` WHERE `id`=".$arrQuest[1]);
+	}
+      elseif ($arrQuest[0] == 'B')
+	{
+	  $objItem = $db->Execute("SELECT `name`, `cost` FROM `bows` WHERE `id`=".$arrQuest[1]);
+	}
+      else
+	{
+	  $objItem = $db->Execute("SELECT `name`, `power` FROM `potions` WHERE `id`=".$arrQuest[1]);
+	  $objItem->fields['cost'] = $objItem->fields['power'] * 3;
+	}
       $strQuest .= '<i>Gildia Łowców poszukuje kogoś, kto dostarczy do gildii zapasy. Szczegóły zlecenia:<br />Przedmiot: '.$objItem->fields['name'].'<br />Ilość: '.$arrQuest[2].'<br />Nagroda: '.($objItem->fields['cost'] * 1.25 * $arrQuest[2]).' sztuk złota</i>';
       $objItem->Close();
       break;
@@ -256,8 +270,29 @@ elseif ($_GET['step'] == 'quest')
 	}
       break;
     case 'I':
-      $objItem = $db->Execute("SELECT `name`, `cost` FROM `equipment` WHERE `id`=".$arrQuest[1]);
-      $objItem2 = $db->Execute("SELECT `id`, `amount` FROM `equipment` WHERE `owner`=".$player->id." AND `status`='U' AND `name`='".$objItem->fields['name']."'");
+    case 'B':
+    case 'P':
+      if ($arrQuest[0] == 'I')
+	{
+	  $objItem = $db->Execute("SELECT `name`, `cost` FROM `equipment` WHERE `id`=".$arrQuest[1]);
+	}
+      elseif ($arrQuest[0] == 'B')
+	{
+	  $objItem = $db->Execute("SELECT `name`, `cost` FROM `bows` WHERE `id`=".$arrQuest[1]);
+	}
+      else
+	{
+	  $objItem = $db->Execute("SELECT `name`, `power` FROM `potions` WHERE `id`=".$arrQuest[1]);
+	  $objItem->fields['cost'] = $objItem->fields['power'] * 3;
+	}
+      if ($arrQuest[0] != 'P')
+	{
+	  $objItem2 = $db->Execute("SELECT `id`, `amount` FROM `equipment` WHERE `owner`=".$player->id." AND `status`='U' AND `name`='".$objItem->fields['name']."'");
+	}
+      else
+	{
+	  $objItem2 = $db->Execute("SELECT `id`, `amount` FROM `potions` WHERE `owner`=".$player->id." AND `status`='K' AND `name`='".$objItem->fields['name']."'");
+	}
       if (!$objItem2->fields['id'])
 	{
 	  error("Nie posiadasz takiego przedmiotu w plecaku.");
@@ -266,13 +301,27 @@ elseif ($_GET['step'] == 'quest')
 	{
 	  error("Nie posiadasz aż tyle takiego przedmiotu w plecaku.");
 	}
-      if ($objItem2->fields['amount'] == $arrQuest[2])
+      if ($arrQuest[0] != 'P')
 	{
-	  $db->Execute("DELETE FROM `equipment` WHERE `id`=".$objItem2->fields['id']);
+	  if ($objItem2->fields['amount'] == $arrQuest[2])
+	    {
+	      $db->Execute("DELETE FROM `equipment` WHERE `id`=".$objItem2->fields['id']);
+	    }
+	  else
+	    {
+	      $db->Execute("UPDATE `equipment` SET `amount`=`amount`-".$arrQuest[2]." WHERE `id`=".$objItem2->fields['id']);
+	    }
 	}
       else
 	{
-	  $db->Execute("UPDATE `equipment` SET `amount`=`amount`-".$arrQuest[2]." WHERE `id`=".$objItem2->fields['id']);
+	  if ($objItem2->fields['amount'] == $arrQuest[2])
+	    {
+	      $db->Execute("DELETE FROM `potions` WHERE `id`=".$objItem2->fields['id']);
+	    }
+	  else
+	    {
+	      $db->Execute("UPDATE `potions` SET `amount`=`amount`-".$arrQuest[2]." WHERE `id`=".$objItem2->fields['id']);
+	    }
 	}
       $intGold = ($objItem->fields['cost'] * 1.25 * $arrQuest[2]);
       $objItem->Close();
@@ -325,8 +374,8 @@ elseif ($_GET['step'] == 'quest')
       //Generate new random mission
       if ($objAmount->fields['value'] > 0)
 	{
-	  $arrQtypes = array('F', 'I', 'L');
-	  $strType = $arrQtypes[rand(0, 2)];
+	  $arrQtypes = array('F', 'I', 'L', 'B', 'P');
+	  $strType = $arrQtypes[rand(0, 4)];
 	  switch ($strType)
 	    {
 	    case 'F':
@@ -344,7 +393,20 @@ elseif ($_GET['step'] == 'quest')
 	      $strQuest = 'F;'.$intId.';'.$intAmount;
 	      break;
 	    case 'I':
-	      $objItems = $db->Execute("SELECT `id` FROM `equipment` WHERE `owner`=0");
+	    case 'B':
+	    case 'P':
+	      if ($strType == 'I')
+		{
+		  $objItems = $db->Execute("SELECT `id` FROM `equipment` WHERE `owner`=0");
+		}
+	      elseif ($strType == 'B')
+		{
+		  $objItems = $db->Execute("SELECT `id` FROM `bows` WHERE `type`='B'");
+		}
+	      else
+		{
+		  $objItems = $db->Execute("SELECT `id` FROM `potions` WHERE `owner`=0");
+		}
 	      $arrItems = array();
 	      while (!$objItems->EOF)
 		{
@@ -355,7 +417,7 @@ elseif ($_GET['step'] == 'quest')
 	      $intKey = array_rand($arrItems);
 	      $intId = $arrItems[$intKey];
 	      $intAmount = rand(1, 10);
-	      $strQuest = 'I;'.$intId.';'.$intAmount;
+	      $strQuest = $strType.';'.$intId.';'.$intAmount;
 	      break;
 	    case 'L':
 	      $objMonsters = $db->Execute("SELECT `id` FROM `monsters` WHERE `location`='".$player->location."' AND `lootnames`!= ''");

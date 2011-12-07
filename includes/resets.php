@@ -6,8 +6,8 @@
  *   @name                 : resets.php                            
  *   @copyright            : (C) 2004,2005,2006,2007,2011 Vallheru Team based on Gamers-Fusion ver 2.5
  *   @author               : thindil <thindil@tuxfamily.org>
- *   @version              : 1.4
- *   @since                : 04.12.2011
+ *   @version              : 1.5
+ *   @since                : 07.12.2011
  *
  */
 
@@ -30,12 +30,6 @@
 // $Id$
 
 /**
- * Check available languages
- */    
-$arrLanguage = scandir('languages/', 1);
-$arrLanguage = array_diff($arrLanguage, array(".", "..", "index.htm"));
-
-/**
  * Add energy every 20 minutes
  */
 function energyreset()
@@ -50,7 +44,7 @@ function energyreset()
 function smallreset($blnSmall = FALSE) 
 {
     global $db;
-    global $arrLanguage;
+    global $lang;
     if ($blnSmall)
       {
 	$db -> Execute("UPDATE settings SET value='N' WHERE setting='open'");
@@ -114,13 +108,9 @@ function smallreset($blnSmall = FALSE)
      */
     $arrRings = array();
     $intLangs = 0;
-    foreach ($arrLanguage as $strLanguage)
-    {
-         require_once("languages/".$strLanguage."/resets.php");
-         $arrRings[] = R_INT;
-         $arrRings[] = R_WIS;
-         $intLangs ++;
-    }
+    require_once("languages/".$lang."/resets.php");
+    $arrRings[] = R_INT;
+    $arrRings[] = R_WIS;
     $arrStat = array('inteli', 'wisdom');
     $objStats = $db -> Execute("SELECT `id`, `inteli`, `wisdom`, `antidote` FROM `players`");
     while (!$objStats -> EOF)
@@ -227,10 +217,10 @@ function smallreset($blnSmall = FALSE)
     /**
      * Add hunters quest
      */
-    $arrQtypes = array('F', 'I', 'L');
+    $arrQtypes = array('F', 'I', 'L', 'B', 'P');
     foreach (array('altara', 'ardulith') as $strCity)
       {
-	$strType = $arrQtypes[rand(0, 2)];
+	$strType = $arrQtypes[rand(0, 4)];
 	switch ($strType)
 	  {
 	  case 'F':
@@ -248,7 +238,20 @@ function smallreset($blnSmall = FALSE)
 	    $strQuest = 'F;'.$intId.';'.$intAmount;
 	    break;
 	  case 'I':
-	    $objItems = $db->Execute("SELECT `id` FROM `equipment` WHERE `owner`=0");
+	  case 'B':
+	  case 'P':
+	    if ($strType == 'I')
+	      {
+		$objItems = $db->Execute("SELECT `id` FROM `equipment` WHERE `owner`=0");
+	      }
+	    elseif ($strType == 'B')
+	      {
+		$objItems = $db->Execute("SELECT `id` FROM `bows` WHERE `type`='B'");
+	      }
+	    else
+	      {
+		$objItems = $db->Execute("SELECT `id` FROM `potions` WHERE `owner`=0");
+	      }
 	    $arrItems = array();
 	    while (!$objItems->EOF)
 	      {
@@ -259,7 +262,7 @@ function smallreset($blnSmall = FALSE)
 	    $intKey = array_rand($arrItems);
 	    $intId = $arrItems[$intKey];
 	    $intAmount = rand(1, 10);
-	    $strQuest = 'I;'.$intId.';'.$intAmount;
+	    $strQuest = $strType.';'.$intId.';'.$intAmount;
 	    break;
 	  case 'L':
 	    $objMonsters = $db->Execute("SELECT `id` FROM `monsters` WHERE `location`='".ucfirst($strCity)."' AND `lootnames`!= ''");
@@ -358,7 +361,7 @@ function smallreset($blnSmall = FALSE)
 function mainreset() 
 {
     global $db;
-    global $arrLanguage;
+    global $lang;
 
     $db -> Execute("UPDATE `settings` SET `value`='N' WHERE `setting`='open'");
     $db -> Execute("UPDATE `settings` SET `value`='Wykonywanie resetu' WHERE `setting`='close_reason'");
@@ -727,11 +730,8 @@ function mainreset()
                 $newdata = implode("-",$arrdate);
                 $arrtemp = array($newdata, $newtime);
                 $newdate = implode(" ",$arrtemp);
-                foreach ($arrLanguage as $strLanguage)
-                {
-                    require_once("languages/".$strLanguage."/resets.php");
-                    $db -> Execute("INSERT INTO `updates` (`starter`, `title`, `updates`, `lang`, `time`) VALUES('(Herold)','".U_TITLE."','".U_TEXT.$gamename.U_TEXT2.$gamename.U_TEXT3.$newdate.U_TEXT4.$objName -> fields['name'].U_TEXT5."','".$strLanguage."', ".$strDate.")");
-                }
+		require_once("languages/".$lang."/resets.php");
+		$db -> Execute("INSERT INTO `updates` (`starter`, `title`, `updates`, `lang`, `time`) VALUES('(Herold)','".U_TITLE."','".U_TEXT.$gamename.U_TEXT2.$gamename.U_TEXT3.$newdate.U_TEXT4.$objName -> fields['name'].U_TEXT5."','".$lang."', ".$strDate.")");
 		$objEra = $db->Execute("SELECT `value` FROM `settings` WHERE `setting`='age'");
 		$db->Execute("INSERT INTO `halloffame2` (`tribe`, `owner`, `bdate`) VALUES('".$objName->fields['name']." ID:".$objName->fields['id']."', '".$objOwner->fields['user']." ID:".$objName->fields['owner']."', '".$intDay.", ".$objEra->fields['value']."')");
 		$objEra->Close();
