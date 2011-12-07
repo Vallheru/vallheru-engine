@@ -6,8 +6,8 @@
  *   @name                 : head.php                            
  *   @copyright            : (C) 2004,2005,2006,2007,2011 Vallheru Team based on Gamers-Fusion ver 2.5
  *   @author               : thindil <thindil@tuxfamily.org>
- *   @version              : 1.4
- *   @since                : 05.12.2011
+ *   @version              : 1.5
+ *   @since                : 07.12.2011
  *
  */
 
@@ -43,29 +43,7 @@ if ($compress)
 
 $start_time = microtime(true);
 
-/**
-* Check avaible languages
-*/ 
-$arrLanguage = scandir('languages/', 1);
-$arrLanguage = array_diff($arrLanguage, array(".", "..", "index.htm"));
-
-/**
-* Get the localization for game
-*/
-$strLanguage = $_SERVER['HTTP_ACCEPT_LANGUAGE'];
-foreach ($arrLanguage as $strTrans)
-{
-  if (strpos($strLanguage, $strTrans) === 0)
-    {
-      $strTranslation = $strTrans;
-      break;
-    }
-}
-if (!isset($strTranslation))
-{
-    $strTranslation = 'pl';
-}
-require_once("languages/".$strTranslation."/head.php");
+require_once("languages/".$lang."/head.php");
 
 require_once('includes/sessions.php');
 require_once 'libs/Smarty.class.php';
@@ -128,14 +106,15 @@ function catcherror($errortype, $errorinfo, $errorfile, $errorline)
     $referer = explode("/", $_SERVER['HTTP_REFERER']);
     $elements1 = count($referer);
     $numrefer = $elements1 - 1;
-    $objtest = $db -> Execute("SELECT `id` FROM `bugtrack` WHERE `file`='".$file[$numfile]."' AND `line`=".$errorline." AND `info`='".$errorinfo."' AND `type`=".$errortype." AND `referer`='".$referer[$numrefer]."'");
+    $errorinfo = $db->qstr($errorinfo, get_magic_quotes_gpc());
+    $objtest = $db -> Execute("SELECT `id` FROM `bugtrack` WHERE `file`='".$file[$numfile]."' AND `line`=".$errorline." AND `info`=".$errorinfo." AND `type`=".$errortype." AND `referer`='".$referer[$numrefer]."'");
     if ($objtest -> fields['id'] > 0)
       {
 	$db -> Execute("UPDATE `bugtrack` SET `amount`=`amount`+1 WHERE `id`=".$objtest -> fields['id']);
       }
     else
       {
-        $db -> Execute("INSERT INTO `bugtrack` (`type`, `info`, `file`, `line`, `referer`) VALUES(".$errortype.", '".$errorinfo."', '".$file[$numfile]."', ".$errorline.", '".$referer[$numrefer]."')");
+        $db -> Execute("INSERT INTO `bugtrack` (`type`, `info`, `file`, `line`, `referer`) VALUES(".$errortype.", ".$errorinfo.", '".$file[$numfile]."', ".$errorline.", '".$referer[$numrefer]."')");
       }
     $objtest -> Close();
     if ($errortype == E_USER_ERROR || $errortype == E_ERROR) 
@@ -293,7 +272,7 @@ $objOpen -> Close();
 /**
 * Get the localization for game
 */
-require_once("languages/".$player -> lang."/head1.php");
+require_once("languages/".$lang."/head1.php");
 
 if ($player -> graphic != '') 
 {
@@ -619,7 +598,7 @@ else
   }
 if ($player->forumcats == 'All')
   {
-    $objFcat = $db->Execute("SELECT `id` FROM `categories` WHERE `perm_visit` LIKE 'All;' AND `lang`='".$player -> lang."' OR `lang`='".$player -> seclang."'");
+    $objFcat = $db->Execute("SELECT `id` FROM `categories` WHERE `perm_visit` LIKE 'All;'");
     $arrForums = array();
     while (!$objFcat -> EOF) 
       {
