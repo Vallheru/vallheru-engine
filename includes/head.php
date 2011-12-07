@@ -784,7 +784,7 @@ if ($player -> fight != 0 && (!in_array($title, $arrTitles)) && (in_array($playe
 /**
  * Random event - check if happen
  */
-if ($player->revent == 0 && ($player->location == 'Altara' || $player->location == 'Ardulith') && $player->fight == 0 && (!in_array($title, array('Karczma', 'Poczta', 'Forum'))))
+if ($player->revent == 0 && ($player->location == 'Altara' || $player->location == 'Ardulith') && $player->fight == 0 && (!in_array($title, array('Karczma', 'Poczta', 'Forum', 'Forum klanu', 'Opcje konta'))))
   {
     $intRoll = rand(1, 200);
     if ($intRoll == 1)
@@ -796,7 +796,7 @@ if ($player->revent == 0 && ($player->location == 'Altara' || $player->location 
 /**
  * Random event - accepting
  */
-elseif ($player->revent == 1)
+elseif ($player->revent == 1 || $player->revent == 6)
   {
     require_once('includes/revent.php');
   }

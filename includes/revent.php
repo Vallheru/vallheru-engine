@@ -6,8 +6,8 @@
  *   @name                 : revent.php                            
  *   @copyright            : (C) 2011 Vallheru Team based on Gamers-Fusion ver 2.5
  *   @author               : thindil <thindil@tuxfamily.org>
- *   @version              : 1.4
- *   @since                : 02.12.2011
+ *   @version              : 1.5
+ *   @since                : 07.12.2011
  *
  */
 
@@ -34,31 +34,55 @@
  */
 if ($player->revent == 0)
   {
-    $db->Execute("INSERT INTO `revent` (`pid`, `state`, `qtime`, `location`) VALUES(".$player->id.", 1, 0, '')") or die($db->ErrorMsg());
-    if ($player->gender == 'M')
+    $intType = rand(0, 1);
+    switch ($intType)
       {
-	$strGender = 'chłopcze';
-	$strSuffix = 'byś';
+      case 0:
+	if ($player->gender == 'M')
+	  {
+	    $strGender = 'chłopcze';
+	    $strSuffix = 'byś';
+	  }
+	else
+	  {
+	    $strGender = 'dziewczynko';
+	    $strSuffix = 'abyś';
+	  }
+	if ($player->location == 'Altara')
+	  {
+	    $strTarget = $city2;
+	  }
+	else
+	  {
+	    $strTarget = $city1a;
+	  }
+	$db->Execute("INSERT INTO `revent` (`pid`, `state`, `qtime`, `location`) VALUES(".$player->id.", 1, 0, '')") or die($db->ErrorMsg());
+	$strMessage = 'W pewnym momencie podchodzi do ciebie staruszek.<br /><i>Witaj '.$strGender.', zrobił'.$strSuffix.' coś dla mnie? Mam do przekazania pewną rzecz w '.$strTarget.'. Niestety, sam nie mogę się tam udać. Zrobisz to w moim imieniu?</i><br /><br /><form method="post" action="'.$_SERVER['PHP_SELF'].'"><input type="submit" name="revent" value="Tak" /><br /><br /><input type="submit" name="revent" value="Nie" /></form>';
+	break;
+      case 1:
+	$db->Execute("INSERT INTO `revent` (`pid`, `state`, `qtime`, `location`) VALUES(".$player->id.", 6, 0, '')") or die($db->ErrorMsg());
+	$strMessage = 'Drogę zastępuje ci niewielka, przygarbiona postać. To Staruszek! Z pewnym niepokojem oczekujesz czego też będzie on od ciebie chciał. Może dostaniesz wypchaną sakiewkę albo prośbę o dostarczenie przesyłki, a może napadną cię bandyci?';
+	$intRoll = rand(1, 100);
+	if ($intRoll < 51)
+	  {
+	    $strMessage .= '<br /><br />Tymczasem Staruszek uważnie cie obserwuje i po chwili odchodzi mrucząc pod nosem coś o dzisiejszej młodzieży. Najwyraźniej twój wygląd nie wzbudził jego zaufania. Może już czas na kąpiel?';
+	    $intTime = rand(7, 18);
+	    $db->Execute("UPDATE `revent` SET `state`=5, `qtime`=".$intTime." WHERE `pid`=".$player->id);
+	  }
+	else
+	  {
+	    $strMessage .= '<br /><br />Tymczasem Staruszek zadziera głowę tak, by móc ci spojrzeć prosto w oczy.<br />- Wspomóż biednego inwalidę wojennego! - krzyczy.<form method="post" action="'.$_SERVER['PHP_SELF'].'"><input type="submit" name="revent" value="Wspomóż żebraka" /><br /><br /><input type="submit" name="revent" value="Precz żebraku!" /></form>';
+
+	  }
+	break;
+      default:
+	break;
       }
-    else
-      {
-	$strGender = 'dziewczynko';
-	$strSuffix = 'abyś';
-      }
-    if ($player->location == 'Altara')
-      {
-	$strTarget = $city2;
-      }
-    else
-      {
-	$strTarget = $city1a;
-      }
-    $strMessage = 'W pewnym momencie podchodzi do ciebie staruszek.<br /><i>Witaj '.$strGender.', zrobił'.$strSuffix.' coś dla mnie? Mam do przekazania pewną rzecz w '.$strTarget.'. Niestety, sam nie mogę się tam udać. Zrobisz to w moim imieniu?</i><br /><br /><form method="post" action="'.$_SERVER['PHP_SELF'].'"><input type="submit" name="revent" value="Tak" /><br /><br /><input type="submit" name="revent" value="Nie" /></form>';
   }
 /**
  * Accept/refuse event
  */
-elseif ($player->revent == 1)
+elseif ($player->revent == 1 || $player->revent == 6)
 {
   if (!isset($_POST['revent']))
     {
@@ -66,19 +90,36 @@ elseif ($player->revent == 1)
     }
   else
     {
-      $arrLocs = array('Rynek', 'Arena Walk', 'Miejskie Plotki', 'Magiczna wieża', 'Biblioteka', 'Farma', 'Świątynia');
-      if ($player->location == 'Altara')
+      if ($_POST['revent'] == 'Wspomóż żebraka' && $player->revent == 6)
 	{
-	  $strTarget = $city2;
-	  $strCity = $city2;
+	  $intMoneys = rand(10, 100);
+	  if ($player->credits < $intMoneys)
+	    {
+	      $strMessage = 'Orientujesz się, że nie masz przy sobie zbyt wielu pieniędzy aby dać coś żebrakowi. Machasz na wszystko ręką i idziesz dalej.';
+	      $intTime = rand(7, 18);
+	      $db->Execute("UPDATE `revent` SET `state`=5, `qtime`=".$intTime." WHERE `pid`=".$player->id);
+	    }
+	  else
+	    {
+	      $strMessage = 'Wspomagasz inwalidę wojennego '.$intMoneys.' sztukami złota. Zadowolony weteran dziękuje i przysięga dozgonną wdzięczność.';
+	      $db->Execute("UPDATE `players` SET `credits`=`credits`-".$intMoneys." WHERE `id`=".$player->id);
+	      $intTime = rand(3, 9);
+	      $db->Execute("UPDATE `revent` SET `state`=7, `qtime`=".$intTime." WHERE `pid`=".$player->id);
+	    }
 	}
-      else
+      elseif ($_POST['revent'] == 'Tak' && $player->revent == 1)
 	{
-	  $strTarget = $city1a;
-	  $strCity = $city1;
-	}
-      if ($_POST['revent'] == 'Tak')
-	{
+	  $arrLocs = array('Rynek', 'Arena Walk', 'Miejskie Plotki', 'Magiczna wieża', 'Biblioteka', 'Farma', 'Świątynia');
+	  if ($player->location == 'Altara')
+	    {
+	      $strTarget = $city2;
+	      $strCity = $city2;
+	    }
+	  else
+	    {
+	      $strTarget = $city1a;
+	      $strCity = $city1;
+	    }
 	  $intKey = array_rand($arrLocs);
 	  $strMessage = 'Wyraźnie ucieszony, staruszek wręcza tobie sporych rozmiarów sakiewkę.<i>Dziękuję dziecko, proszę dostarcz to jak najszybciej do mojego przyjaciela w '.$strTarget.'. Najczęściej przebywa on w lokacji: '.$arrLocs[$intKey].'</i><br />Nucąc coś pod nosem, staruszek odchodzi.';
 	  $intTime = rand(2, 5);
@@ -89,7 +130,14 @@ elseif ($player->revent == 1)
 	{
 	  $intTime = rand(7, 18);
 	  $db->Execute("UPDATE `revent` SET `state`=5, `qtime`=".$intTime." WHERE `pid`=".$player->id);
-	  $strMessage = 'Mrucząc coś pod nosem o niewychowanej dzisiejszej młodzieży staruszek odchodzi.';
+	  if ($player->revent == 6)
+	    {
+	      $strMessage = '(przeganiasz Staruszka, który, wyraźnie smutny, odchodzi)';
+	    }
+	  else
+	    {
+	      $strMessage = 'Mrucząc coś pod nosem o niewychowanej dzisiejszej młodzieży staruszek odchodzi.';
+	    }
 	}
     }
 }

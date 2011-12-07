@@ -343,6 +343,22 @@ function smallreset($blnSmall = FALSE)
 		  $db -> Execute("INSERT INTO `log` (`owner`, `log`, `czas`, `type`) VALUES(".$objRevent->fields['pid'].", 'Nagle wokół ciebie pojawiło się kilka zakapturzonych postaci. Ostatnią rzeczą którą usłyszałeś było: ODDAWAJ NASZE PIENIĄDZE! Kiedy się obudziłeś, okazało się, że zniknęło nie tylko to złoto, które miałeś przy sobie ale również część złota z banku!', '".$time."', 'T')"); 
 		}
 	      }
+	    //Finished - gave gold to old man
+	    elseif ($objRevent->fields['state'] == 7)
+	      {
+		$objOutpost = $db->Execute("SELECT `id`, `barracks` FROM `outposts` WHERE `owner`=".$objRevent->fields['pid']);
+		if ($objOutpost->fields['barracks'])
+		  {
+		    $objVeterans = $db->Execute("SELECT count(`id`) FROM `outpost_veterans` WHERE `outpost`=".$objOutpost->fields['id']);
+		    if ($objVeterans->fields['count(`id`)'] < $objOutpost->fields['barracks'])
+		      {
+			$db->Execute("INSERT INTO outpost_veterans (`outpost`, `name`) VALUES(".$objOutpost->fields['id'].", 'Weteran nr ".$objVeterans->fields['count(`id`)']."')");
+			$db -> Execute("INSERT INTO `log` (`owner`, `log`, `czas`, `type`) VALUES(".$objRevent->fields['pid'].", 'Do Twojej strażnicy zgłosił się na służbę doświadczony weteran!', '".$time."', 'O')"); 
+		      }
+		    $objVeterans->Close();
+		  }
+		$objOutpost->Close();
+	      }
 	    $db->Execute("DELETE FROM `revent` WHERE `pid`=".$objRevent->fields['pid']);
 	  }
 	$objRevent->MoveNext();
