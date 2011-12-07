@@ -1,4 +1,7 @@
 {if $View == "categories"}
+    {if $Funread > 0}
+        <a href="forums.php?view=newposts">{$Anew}</a><br /><br />
+    {/if}
     <table class="dark"><tr><td width="75%"><b><u>{$Tcategory}</u></b></td><td><b><u>{$Ttopics}</u></b></td></tr>
     {section name=number loop=$Name}
         <tr>
@@ -13,9 +16,6 @@
         </tr>
     {/section}
     </table><br /><br />
-    {if $Funread > 0}
-        <a href="forums.php?view=newposts">{$Anew}</a>
-    {/if}
 {/if}
 
 {if $View == "newposts"}
