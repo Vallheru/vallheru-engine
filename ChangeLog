@@ -1,5 +1,7 @@
 2011-12-08  Bartek thindil Jasicki  <thindil@tuxfamily.org>
 
+	* UPDATE,templates/head.tpl, register.php, main.css: 
+	added link to wiki
 	* BUG,includes/astralsteal.php: 
 	fixed notice
 	* BUG,register.php, languages/pl/register.php: 

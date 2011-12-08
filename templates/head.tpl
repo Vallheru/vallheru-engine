@@ -35,4 +35,5 @@
 <div class="menu">[<a href="index.php">{$Welcome}</a>]</div>
 <div class="menu2">[<a href="index.php?step=rules">{$Rules}</a>]</div>
 <div class="menu2">[<a href="index.php?step=donate">{$Donate}</a>]</div>
-<div class="menu2">[<a href="index.php?step=promote">{$Promote}</a>]<div>
+<div class="menu2">[<a href="index.php?step=promote">{$Promote}</a>]</div>
+<div class="menu2">[<a href="wiki/">{$Help}</a>]</div>

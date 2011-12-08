@@ -85,6 +85,7 @@ $smarty -> assign(array("Gamename" => $gamename,
                         "Charset" => CHARSET,
 			"Donate" => "Dotuj nas",
 			"Promote" => "Promocja gry",
+			"Help" => "Poradnik",
                         "Pagetitle" => REGISTER));
 
 if (isset($_GET['ref'])) 
