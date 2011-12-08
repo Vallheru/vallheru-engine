@@ -7,7 +7,7 @@
  *   @copyright            : (C) 2011 Vallheru Team based on Gamers-Fusion ver 2.5
  *   @author               : thindil <thindil@tuxfamily.org>
  *   @version              : 1.5
- *   @since                : 07.12.2011
+ *   @since                : 08.12.2011
  *
  */
 
@@ -34,7 +34,7 @@
  */
 if ($player->revent == 0)
   {
-    $intType = rand(0, 1);
+    $intType = rand(0, 2);
     switch ($intType)
       {
       case 0:
@@ -73,6 +73,77 @@ if ($player->revent == 0)
 	  {
 	    $strMessage .= '<br /><br />Tymczasem Staruszek zadziera głowę tak, by móc ci spojrzeć prosto w oczy.<br />- Wspomóż biednego inwalidę wojennego! - krzyczy.<form method="post" action="'.$_SERVER['PHP_SELF'].'"><input type="submit" name="revent" value="Wspomóż żebraka" /><br /><br /><input type="submit" name="revent" value="Precz żebraku!" /></form>';
 
+	  }
+	break;
+      case 2:
+	if ($player->race == 'Elf')
+	  {
+	    if ($player->gender == 'M')
+	      {
+		$strRace = 'elfie';
+	      }
+	    else
+	      {
+		$strRace = 'elfico';
+	      }
+	  }
+	elseif ($player->race == 'Krasnolud')
+	  {
+	    if ($player->gender == 'M')
+	      {
+		$strRace = 'krasnoludzie';
+	      }
+	    else
+	      {
+		$strRace = 'krasnoludzico';
+	      }
+	  }
+	elseif ($player->race == 'Gnom')
+	  {
+	    if ($player->gender == 'M')
+	      {
+		$strRace = 'gnomie';
+	      }
+	    else
+	      {
+		$strRace = 'gnomico';
+	      }
+	  }
+	elseif ($player->race == 'Hobbit')
+	  {
+	    $strRace = 'niziołku';
+	  }
+	elseif ($player->race == 'Jaszczuroczłek')
+	  {
+	    $strRace = 'jaszczuroczłeku';
+	  }
+	else
+	  {
+	    if ($player->gender == 'M')
+	      {
+		$strRace = 'człowieku';
+	      }
+	    else
+	      {
+		$strRace = 'kobieto';
+	      }
+	  }
+	$strMessage = 'Twoją uwagę przykuł widok małej skulonej postaci przemykającej zaułkami miasta. Czy to może być osławiony Staruszek? Bez trudu doganiasz tę postać i zastępujesz jej drogę. <br />- Czego chcessz '.$strRace.'? - pyta.';
+	if ($player->perception > rand(10, 300))
+	  {
+	    $strMessage .= 'Dzięki swojej wysokiej spostrzegawczości dostrzegasz końcówkę ogona, która na ułamek sekundy wysunęła się spod płaszcza.<br />- Czy ty masz ogon? - pytasz zdziwiony.<br />Postać odrzuca płaszcz i twoim oczom ukazuje się szczurołak!<br />- Zginiessz '.$strRace.'! - wysykuje. Rozpoczyna się walka.';
+	    $db->Execute("UPDATE `players` SET `fight`=4, `perception`=`perception`+0.1 WHERE `id`=".$player->id);
+	    $player->fight = 4;
+	    $player->revent = 8;
+	    $intTime = rand(7, 18);
+	    $db->Execute("INSERT INTO `revent` (`pid`, `state`, `qtime`, `location`) VALUES(".$player->id.", 8, ".$intTime.", '')") or die($db->ErrorMsg());
+	  }
+	else
+	  {
+	    $strMessage .= '- Może w czymś pomóc? - pytasz.<br />Zakapturzona postać mierzy cię wzrokiem.<br />- Komnaty królewsskie. Którędy?<br />Nieco zdziwiony pytaniem wskazujesz kierunek. Indywiduum czym prędzej znika w mroku a tobie pozostaje tylko poczucie nie do końca dobrze spełnionego obowiązku.';
+	    $db->Execute("UPDATE `players` SET `perception`=`perception`+0.01 WHERE `id`=".$player->id);
+	    $intTime = rand(7, 18);
+	    $db->Execute("INSERT INTO `revent` (`pid`, `state`, `qtime`, `location`) VALUES(".$player->id.", 5, ".$intTime.", '')") or die($db->ErrorMsg());
 	  }
 	break;
       default:
@@ -167,8 +238,79 @@ if (isset($strMessage))
 			    "Gamename" => $gamename, 
 			    "Meta" => ''));
     $smarty -> display ('error1.tpl');
-    require_once("includes/foot.php");
-    exit;
+    if ($player->revent != 8)
+      {
+	require_once("includes/foot.php");
+	exit;
+      }
   }
-
+/**
+ * Random event - fight
+ */
+if ($player->revent == 8)
+{
+  require_once("includes/turnfight.php");
+  require_once("includes/funkcje.php");
+  global $enemy;
+  global $arrehp;
+  $enemy1 = $db -> Execute("SELECT * FROM monsters WHERE id=".$player->fight);
+  $span = ($enemy1 -> fields['level'] / $player->level);
+  if ($span > 2) 
+    {
+      $span = 2;
+    }
+  $expgain = ceil(rand($enemy1 -> fields['exp1'],$enemy1 -> fields['exp2']) * $span);
+  $goldgain = ceil(rand($enemy1 -> fields['credits1'],$enemy1 -> fields['credits2']) * $span);
+  if (!isset($_SESSION['enemy']))
+    {
+      $enemy = array("strength" => $enemy1 -> fields['strength'], 
+		     "agility" => $enemy1 -> fields['agility'], 
+		     "speed" => $enemy1 -> fields['speed'], 
+		     "endurance" => $enemy1 -> fields['endurance'], 
+		     "hp" => $enemy1 -> fields['hp'], 
+		     "name" => $enemy1 -> fields['name'], 
+		     "exp1" => $enemy1 -> fields['exp1'], 
+		     "exp2" => $enemy1 -> fields['exp2'], 
+		     "level" => $enemy1 -> fields['level'],
+		     "lootnames" => explode(";", $enemy1->fields['lootnames']),
+		     "lootchances" => explode(";", $enemy1->fields['lootchances']));
+    }
+  else
+    {
+      $enemy = $_SESSION['enemy'];
+    }
+  if (!isset ($_POST['action'])) 
+    {
+      turnfight($expgain, $goldgain, '', $_SERVER['PHP_SELF']);
+    } 
+  else 
+    {
+      turnfight($expgain, $goldgain, $_POST['action'], $_SERVER['PHP_SELF']);
+    }
+  $myhp = $db -> Execute("SELECT `hp`, `fight` FROM `players` WHERE `id`=".$player -> id);
+  if ($myhp->fields['fight'] == 0)
+    {
+      unset($_SESSION['enemy']);
+      $player->energy--;
+      if ($player->energy < 0)
+	{
+	  $player->energy = 0;
+	}
+      $db -> Execute("UPDATE `players` SET `energy`=".$player->energy." WHERE `id`=".$player -> id);
+      $intTime = rand(7, 18);
+      $db->Execute("UPDATE `revent` SET `state`=5, `qtime`=".$intTime." WHERE `pid`=".$player->id);
+      if ($myhp -> fields['hp'] == 0) 
+	{
+	  error("W zwolnionym tempie obserwujesz z niezwykłym spokojem, jak ostatni cios przeciwnika spada na ciebie. Przed twoimi oczami eksploduje najjaśniejsza gwiazda, a po chwili wszystko zapada w ciemność.");
+	}
+      else
+	{
+	  error("Ostatnim ciosem dobijasz konającego przeciwnika. Nie będzie się poczwara włóczyć po twoim mieście!");
+	}
+    }
+  $myhp->Close();
+  $enemy1 -> Close();
+  require_once("includes/foot.php");
+  exit;
+}
 ?>

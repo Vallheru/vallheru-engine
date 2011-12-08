@@ -7,7 +7,7 @@
  *   @copyright            : (C) 2004,2005,2006,2007,2011 Vallheru Team based on Gamers-Fusion ver 2.5
  *   @author               : thindil <thindil@tuxfamily.org>
  *   @version              : 1.5
- *   @since                : 07.12.2011
+ *   @since                : 08.12.2011
  *
  */
 
@@ -765,7 +765,7 @@ function checkvalue($value)
 */
 $arrTitles = array('Arena Walk', 'Labirynt', 'Portal', 'Astralny plan', 'Gildia Łowców');
 $arrLocations = array('Altara', 'Ardulith', 'Portal', 'Astralny plan');
-if ($player -> fight != 0 && (!in_array($title, $arrTitles)) && (in_array($player -> location, $arrLocations))) 
+if ($player -> fight != 0 && (!in_array($title, $arrTitles)) && (in_array($player -> location, $arrLocations)) && $player->revent != 8) 
 {
     $db -> Execute("UPDATE `players` SET `hp`=0, `fight`=0, `bless`='', `blessval`=0 WHERE `id`=".$player -> id) or die($db -> ErrorMsg());
     if (!isset($_SESSION['amount']))
@@ -813,6 +813,14 @@ elseif ($player->revent == 2 && ($player->location == 'Altara' || $player->locat
       {
 	require_once('includes/revent.php');
       }
+  }
+
+/**
+ * Random event - fight
+ */
+if ($player->revent == 8)
+  {
+    require_once('includes/revent.php');
   }
 ?>
 
