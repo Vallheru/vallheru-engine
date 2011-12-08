@@ -6,8 +6,8 @@
  *   @name                 : register.php                            
  *   @copyright            : (C) 2004,2005,2006,2011 Vallheru Team based on Gamers-Fusion ver 2.5
  *   @author               : thindil <thindil@tuxfamily.org>
- *   @version              : 1.4
- *   @since                : 18.11.2011
+ *   @version              : 1.5
+ *   @since                : 08.12.2011
  *
  */
 
@@ -60,7 +60,7 @@ if (!isset($_GET['action']))
     define("RULE2", "Wielokrotne ataki na jednego gracza w ciągu kilku minut - czyli zwykłe nękanie - są karane.");
     define("RULE3", "Wykorzystywanie błędów w grze do zdobycia przewagi nad innymi kończy się najczęściej skasowaniem postaci. Natomiast pomoc w ich znalezieniu może zostać nagrodzona przyznaniem specjalnej rangi.");
     define("RULE4", "W sprawie jakichkolwiek naruszeń prawa możesz zgłaszać to do książąt - oni najczęściej również wymierzają kary.");
-    define("RULE5", "Jeżeli nie zgadzasz się z karą, możesz zawsze decyzję zaskarżyć do Sądu Najwyższego Vallheru - jego siedziba znajduje się na forum zewnętrznym (link podany jest u góry).");
+    define("RULE5", "Jeżeli nie zgadzasz się z karą, możesz zawsze decyzję zaskarżyć do Sądu Najwyższego ".$gamename." - jego siedziba znajduje się w każdym mieście.");
     define("RULE6", "Zabrania się posiadania więcej niż 1 konta na osobę.");
     define("RULE7", "Więcej informacji na ten temat znajdziesz <a href=\"index.php?step=rules\">tutaj</a>.");
     define("RULE8", "Pamiętaj, jeżeli chcesz grać w tę grę, musisz zaakceptować zasady w niej obowiązujące.");
