@@ -7,8 +7,8 @@
  *   @copyright            : (C) 2006,2011 Vallheru Team based on Gamers-Fusion ver 2.5
  *   @author               : thindil <thindil@tuxfamily.org>
  *   @author               : eyescream <tduda@users.sourceforge.net>
- *   @version              : 1.4
- *   @since                : 14.09.2011
+ *   @version              : 1.5
+ *   @since                : 08.12.2011
  *
  */
 
@@ -33,7 +33,7 @@
 /**
 * Get the localization for game
 */
-require_once("languages/".$player -> lang."/astralsteal.php");
+require_once("languages/".$lang."/astralsteal.php");
 
 /**
  * Function to steal astral components
@@ -206,9 +206,8 @@ function astralsteal($intVictim, $strLocation, $intOwner = 0, $intId = 0)
                                       array(CONST1, CONST2, CONST3, CONST4, CONST5), 
                                       array(POTION1, POTION2, POTION3, POTION4, POTION5));
         $arrNames = array('M', 'P', 'R', 'C', 'O', 'T');
-        $strName = ereg_replace("[0-9]", "", $objAmount -> fields['type']);
-        $intKey = array_search($strName, $arrNames);
-        $intKey2 = (int)ereg_replace($arrNames[$intKey], "", $objAmount -> fields['type']);
+        $intKey = array_search($objAmount->fields['type']{0}, $arrNames);
+	$intKey2 = (int)substr($objAmount->fields['type'], 1);
         $strCompname = $arrCompnames[$intKey][$intKey2];
         if ($intKey < 3)
         {
