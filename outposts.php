@@ -8,7 +8,7 @@
  *   @author               : thindil <thindil@tuxfamily.org>
  *   @author               : eyescream <tduda@users.sourceforge.net>
  *   @version              : 1.4
- *   @since                : 17.11.2011
+ *   @since                : 09.12.2011
  *
  */
  
@@ -1712,7 +1712,8 @@ if (isset ($_GET['view']) && $_GET['view'] == 'shop')
             {
                 $_POST[$strArmy] = 0;
             }
-            if (!ereg("^[0-9]*$", $_POST[$strArmy])) 
+	    $_POST[$strArmy] = intval($_POST[$strArmy]);
+            if ($_POST[$strArmy] < 0) 
             {
                 error(ERROR);
             }

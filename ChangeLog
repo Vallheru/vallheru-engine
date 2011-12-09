@@ -1,5 +1,7 @@
 2011-12-09  Bartek thindil Jasicki  <thindil@tuxfamily.org>
 
+	* BUG,outposts.php: 
+	fixed notice
 	* BUG,includes/battle.php:
 	probably fixed bug with no attack in fight
 	* BUG,includes/resets.php:
