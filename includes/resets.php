@@ -7,7 +7,7 @@
  *   @copyright            : (C) 2004,2005,2006,2007,2011 Vallheru Team based on Gamers-Fusion ver 2.5
  *   @author               : thindil <thindil@tuxfamily.org>
  *   @version              : 1.5
- *   @since                : 07.12.2011
+ *   @since                : 09.12.2011
  *
  */
 
@@ -112,7 +112,7 @@ function smallreset($blnSmall = FALSE)
     $arrRings[] = R_INT;
     $arrRings[] = R_WIS;
     $arrStat = array('inteli', 'wisdom');
-    $objStats = $db -> Execute("SELECT `id`, `inteli`, `wisdom`, `antidote` FROM `players`");
+    $objStats = $db -> Execute("SELECT `id`, `inteli`, `wisdom` FROM `players`");
     while (!$objStats -> EOF)
     {
         $objRings = $db -> Execute("SELECT `power`, `name` FROM `equipment` WHERE `type`='I' AND `status`='E' AND `owner`=".$objStats -> fields['id']);
@@ -133,23 +133,7 @@ function smallreset($blnSmall = FALSE)
         $intMaxmana = $objStats -> fields['inteli'] + $objStats -> fields['wisdom'];
         $intMaxmana = $intMaxmana + (($objCape -> fields['power'] / 100) * $intMaxmana);
         $objCape -> Close();
-        if (!empty($objStats -> fields['antidote']))
-        {
-            $intAntidote = (int)$objStats -> fields['antidote']{1} + 1;
-            if ($intAntidote == 10)
-            {
-                $strAntidote = '';
-            }
-                else
-            {
-                $strAntidote = $objStats -> fields['antidote']{0}.$intAntidote;
-            }
-        }
-            else
-        {
-            $strAntidote = '';
-        }
-        $db -> Execute("UPDATE `players` SET `pm`=".$intMaxmana.", `antidote`='".$strAntidote."' WHERE `id`=".$objStats -> fields['id']);
+        $db -> Execute("UPDATE `players` SET `pm`=".$intMaxmana.", `antidote`='' WHERE `id`=".$objStats -> fields['id']);
         $objStats -> MoveNext();
         
     }
