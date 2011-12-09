@@ -7,8 +7,8 @@
  *   @copyright            : (C) 2006,2007,2011 Vallheru Team based on Gamers-Fusion ver 2.5
  *   @author               : thindil <thindil@tuxfamily.org>
  *   @author               : eyescream <tduda@users.sourceforge.net>
- *   @version              : 1.4
- *   @since                : 23.11.2011
+ *   @version              : 1.5
+ *   @since                : 09.12.2011
  *
  */
 
@@ -106,7 +106,7 @@ function attack1($attacker, $defender, $arrAtequip, $arrDeequip, $attack_bspell,
     /**
     * Calculate dodge defender and power of attack, critical hit (weapon)
     */
-    elseif ($arrAtequip[0][0] && $attack_durwep <= $arrAtequip[0][6]) 
+    if ($arrAtequip[0][0] && $attack_durwep <= $arrAtequip[0][6]) 
     {
         $unik -= $attacker['attack'];
         if ($attacker['clas'] == 'Wojownik' || $attacker['clas'] == 'Barbarzyńca') 
@@ -131,7 +131,7 @@ function attack1($attacker, $defender, $arrAtequip, $arrDeequip, $attack_bspell,
     /**
     * Calculate dodge defender and power of attack, critical hit (spell)
     */
-    elseif ($attack_bspell -> fields['id'] && (!$arrAtequip[1][0] || $arrAtequip[0][0])) 
+    if ($attack_bspell -> fields['id'] && (!$arrAtequip[1][0] || $arrAtequip[0][0])) 
     {
         $unik -= $attacker['magic'];
         $mypower = ($attack_bspell -> fields['obr'] * $attacker['inteli']) - (($attack_bspell -> fields['obr'] * $attacker['inteli']) * ($arrAtequip[3][4] / 100));
@@ -250,7 +250,7 @@ function attack1($attacker, $defender, $arrAtequip, $arrDeequip, $attack_bspell,
         $unik = 1;
     }
     $round = 1;
-    if (!($attack_bspell -> fields['id'] && $attacker['mana'] > $attack_bspell -> fields['poziom']) && !($arrAtequip[0][6] > $attack_durwep) && !($arrAtequip[1][6] > $attack_durwep && $arrAtequip[6][6] > $attack_durwep) && !($arrAtequip[11][6] > $attack_durwep)) 
+    if (!isset($strAtype)) 
     {
         $attackstr = 0;
     }
