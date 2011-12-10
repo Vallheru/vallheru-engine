@@ -6,8 +6,8 @@
  *   @name                 : newspaper.php                            
  *   @copyright            : (C) 2004,2005,2006,2011 Vallheru Team based on Gamers-Fusion ver 2.5
  *   @author               : thindil <thindil@tuxfamily.org>
- *   @version              : 1.4
- *   @since                : 08.09.2011
+ *   @version              : 1.5
+ *   @since                : 10.12.2011
  *
  */
 
@@ -35,16 +35,9 @@ require_once("includes/head.php");
 /**
 * Get the localization for game
 */
-require_once("languages/".$player -> lang."/newspaper.php");
+require_once("languages/".$lang."/newspaper.php");
 
-if ($player -> lang != $player -> seclang)
-{
-    $strQuery = "lang='".$player -> lang."' OR lang='".$player -> seclang."'";
-}
-    else
-{
-    $strQuery = "lang='".$player -> lang."'";
-}
+$strQuery = "lang='".$lang."'";
 
 /**
 * Assign variables to template
@@ -303,9 +296,10 @@ if (isset($_GET['step']) && $_GET['step'] == 'redaction')
                                 "Sectionnames" => $arrSecnames));
         if ($_GET['step3'] == 'edit')
         {
-            $objArticle = $db -> Execute("SELECT title, type, body FROM newspaper WHERE id=".$_GET['edit']);
-            $smarty -> assign(array("Mtitle" => $objArticle -> fields['title'],
-                                    "Mbody" => $objArticle -> fields['body'],
+	    require_once('includes/bbcode.php');
+            $objArticle = $db -> Execute("SELECT `title`, `type`, `body` FROM `newspaper` WHERE `id`=".$_GET['edit']);
+            $smarty -> assign(array("Mtitle" => htmltobbcode($objArticle -> fields['title']),
+                                    "Mbody" => htmltobbcode($objArticle -> fields['body']),
                                     "Mtype" => $objArticle -> fields['type']));
             $objArticle -> Close();
         }
@@ -320,13 +314,10 @@ if (isset($_GET['step']) && $_GET['step'] == 'redaction')
             {
                 error(EMPTY_FIELDS);
             }
-            $_POST['mbody'] = nl2br($_POST['mbody']);
             require_once('includes/bbcode.php');
-            $_POST['mbody'] = bbcodetohtml($_POST['mbody']);
-            $_POST['mtitle'] = bbcodetohtml($_POST['mtitle']);
-            $strMail = T_TITLE." ".$_POST['mtitle']."<br />".T_BODY." <br />".$_POST['mbody'];
-            $_POST['mbody'] = htmltobbcode($_POST['mbody']);
-            $_POST['mtitle'] = htmltobbcode($_POST['mtitle']);
+            $strBody = bbcodetohtml($_POST['mbody']);
+            $strTitle = bbcodetohtml($_POST['mtitle']);
+            $strMail = T_TITLE." ".$strTitle."<br />".T_BODY." <br />".$strBody;
             $smarty -> assign(array("Showmail" => $strMail,
                                     "Mtitle" => $_POST['mtitle'],
                                     "Mbody" => $_POST['mbody'],
@@ -343,7 +334,6 @@ if (isset($_GET['step']) && $_GET['step'] == 'redaction')
             {
                 error(EMPTY_FIELDS);
             }
-            $_POST['mbody'] = nl2br($_POST['mbody']);
             require_once('includes/bbcode.php');
             $_POST['mbody'] = bbcodetohtml($_POST['mbody']);
             $_POST['mtitle'] = bbcodetohtml($_POST['mtitle']);
@@ -423,15 +413,12 @@ if (isset($_GET['step']) && $_GET['step'] == 'mail')
         {
             error(EMPTY_FIELDS);
         }
-        $_POST['mbody'] = nl2br($_POST['mbody']);
         require_once('includes/bbcode.php');
-        $_POST['mbody'] = bbcodetohtml($_POST['mbody']);
-        $_POST['mtitle'] = bbcodetohtml($_POST['mtitle']);
+        $strBody = bbcodetohtml($_POST['mbody']);
+        $strTitle = bbcodetohtml($_POST['mtitle']);
         if (isset($_POST['show']))
         {
-            $strMail = T_TITLE." ".$_POST['mtitle']."<br />".T_BODY." <br />".$_POST['mbody'];
-            $_POST['mbody'] = htmltobbcode($_POST['mbody']);
-            $_POST['mtitle'] = htmltobbcode($_POST['mtitle']);
+            $strMail = T_TITLE." ".$strTitle."<br />".T_BODY." <br />".$strBody;
             $smarty -> assign(array("Showmail" => $strMail,
                                     "Mtitle" => $_POST['mtitle'],
                                     "Mbody" => $_POST['mbody'],
@@ -440,12 +427,12 @@ if (isset($_GET['step']) && $_GET['step'] == 'mail')
         if (isset($_POST['sendmail']))
         {
             $strAuthor = $player -> user." ID: ".$player -> id;
-            $objPaperid = $db -> Execute("SELECT paper_id FROM newspaper WHERE added='Y' GROUP BY paper_id DESC");
+            $objPaperid = $db -> Execute("SELECT `paper_id` FROM `newspaper` WHERE `added`='Y' GROUP BY `paper_id` DESC");
             $intPaperid = $objPaperid -> fields['paper_id'] + 1;
             $objPaperid -> Close();
-            $strBody = $db -> qstr($_POST['mbody'], get_magic_quotes_gpc());
-            $strTitle = $db -> qstr($_POST['mtitle'], get_magic_quotes_gpc());
-            $db -> Execute("INSERT INTO newspaper (paper_id, title, body, author, lang, added, type) VALUES(".$intPaperid.", ".$strTitle.", ".$strBody.", '".$strAuthor."', '".$player -> lang."', 'N', '".$_POST['mail']."')");
+            $strBody = $db -> qstr($strBody, get_magic_quotes_gpc());
+            $strTitle = $db -> qstr($strTitle, get_magic_quotes_gpc());
+            $db -> Execute("INSERT INTO `newspaper` (`paper_id`, `title`, `body`, `author`, `lang`, `added`, `type`) VALUES(".$intPaperid.", ".$strTitle.", ".$strBody.", '".$strAuthor."', '".$lang."', 'N', '".$_POST['mail']."')");
             $smarty -> assign("Message", "<br /><br />".MAIL_SEND);
         }
     }

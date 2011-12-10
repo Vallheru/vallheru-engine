@@ -1,3 +1,8 @@
+2011-12-10  Bartek thindil Jasicki  <thindil@vallheru.net>
+
+	* BUG,newspaper.php:
+	fixed editing news
+
 2011-12-09  Bartek thindil Jasicki  <thindil@tuxfamily.org>
 
 	* BUG,outposts.php: 
