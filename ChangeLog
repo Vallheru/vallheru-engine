@@ -1,5 +1,7 @@
 2011-12-10  Bartek thindil Jasicki  <thindil@vallheru.net>
 
+	* BUG,mail.php: 
+	fixed bug with empty mail subjects
 	* BUG,newspaper.php:
 	fixed editing news
 

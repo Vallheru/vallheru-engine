@@ -5,9 +5,9 @@
  *
  *   @name                 : mail.php                            
  *   @copyright            : (C) 2004,2005,2006,2007,2011 Vallheru Team based on Gamers-Fusion ver 2.5
- *   @author               : thindil <thindil@tuxfamily.org>
+ *   @author               : thindil <thindil@vallheru.net>
  *   @version              : 1.4
- *   @since                : 05.12.2011
+ *   @since                : 10.12.2011
  *
  */
 
@@ -35,7 +35,7 @@ require_once("includes/head.php");
 /**
 * Get the localization for game
 */
-require_once("languages/".$player -> lang."/mail.php");
+require_once("languages/".$lang."/mail.php");
 
 if (!isset($_GET['view']) && !isset($_GET['read']) && !isset($_GET['zapisz']))
 {
@@ -477,9 +477,10 @@ if (isset ($_GET['view']) && $_GET['view'] == 'write')
 	  {
 	    checkvalue($_POST['to']);
 	  }
-	$_POST['subject'] = strip_tags($_POST['subject']);
+	$_POST['subject'] = str_replace("&nbsp", " ", $_POST['subject']);
+	$_POST['subject'] = trim(strip_tags($_POST['subject']));
 	$blnValid = TRUE;
-        if (empty ($_POST['to']) || empty ($_POST['body']) || empty($_POST['subject'])) 
+        if (empty ($_POST['to']) || empty ($_POST['body']) || preg_match("/[a-zA-Z0-9]+/", $_POST['subject']) == 0 || empty($_POST['subject'])) 
         {
 	    message('error', EMPTY_FIELDS);
 	    $blnValid = FALSE;
