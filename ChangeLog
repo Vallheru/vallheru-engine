@@ -1,5 +1,7 @@
 2011-12-10  Bartek thindil Jasicki  <thindil@vallheru.net>
 
+	* BUG,newspaper.php: 
+	fixed adding comments
 	* BUG,mail.php: 
 	fixed bug with empty mail subjects
 	* BUG,newspaper.php:

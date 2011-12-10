@@ -211,7 +211,7 @@ if (isset($_GET['comments']))
     */
     if (!isset($_GET['action']))
       {
-	if (!isset($_GET['page']))
+	if (!isset($_GET['page']) || empty($_GET['page']))
 	  {
 	    $intPage = -1;
 	  }
