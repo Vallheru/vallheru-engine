@@ -97,7 +97,7 @@ if ((isset($_GET['step']) && $_GET['step'] == 'new') || (isset($_GET['read']) ||
             if (isset($_GET['step']) && $_GET['step'] == 'new')
             {
                 $objPaperid = $db -> Execute("SELECT `paper_id` FROM `newspaper` WHERE `added`='Y' GROUP BY `paper_id` DESC");
-                $objArticles = $db -> Execute("SELECT `newspaper`.`title`, `newspaper`.`author`, `newspaper`.`id`, count(`newspaper_comments`.`id`) FROM `newspaper`, `newspaper_comments` WHERE `newspaper`.`paper_id`=".$objPaperid -> fields['paper_id']." AND `newspaper`.`type`='".$strType."' AND `newspaper`.`added`='Y' AND `newspaper_comments`.`textid`=`newspaper`.`id`");
+                $objArticles = $db -> Execute("SELECT `title`, `author`, `id` FROM `newspaper` WHERE `paper_id`=".$objPaperid -> fields['paper_id']." AND `type`='".$strType."' AND `added`='Y'");
                 $objPaperid -> Close();
             }
                 elseif (isset($_GET['read']))
@@ -128,7 +128,9 @@ if ((isset($_GET['step']) && $_GET['step'] == 'new') || (isset($_GET['read']) ||
 		    $arrId[$j][$i] = $objArticles -> fields['id'];
 		    $arrTitle[$j][$i] = $objArticles -> fields['title'];
 		    $arrAuthor[$j][$i] = $objArticles -> fields['author'];
-		    $arrComments[$j][$i] = $objArticles->fields['count(`newspaper_comments`.`id`)'];
+		    $objComments = $db->Execute("SELECT count(`id`) FROM `newspaper_comments` WHERE `textid`=",$objArticles->fields['id']);
+		    $arrComments[$j][$i] = $objComments->fields['count(`id`)'];
+		    $objComments->Close();
 		    $i ++;
 		    $objArticles -> MoveNext();
 		  }
