@@ -69,6 +69,7 @@
                         <div style="margin-left: 10px">
                         {section name=art1 loop=$Artidm[sec1]}
                             - <a href="newspaper.php?{$Newslink}&amp;article={$Artidm[sec1][art1]}">{$Arttitlem[sec1][art1]}</a> ({$Aauthor}: {$Artauthorm[sec1][art1]})<br />
+			    {$Tcomments}<a href="newspaper.php?{$Newslink}&amp;comments={$Artidm[sec1][art1]}">{$Artcomments[sec1][art1]}</a>)<br />
                         {/section}
                         </div>
                     {/if}
@@ -81,6 +82,7 @@
                         <div style="margin-left: 10px">
                         {section name=art1 loop=$Artidm[sec2]}
                             - <a href="newspaper.php?{$Newslink}&amp;article={$Artidm[sec2][art1]}">{$Arttitlem[sec2][art1]}</a> ({$Aauthor}: {$Artauthorm[sec2][art1]})<br />
+			    {$Tcomments}<a href="newspaper.php?{$Newslink}&amp;comments={$Artidm[sec2][art1]}">{$Artcomments[sec2][art1]}</a>)<br />
                         {/section}
                         </div>
                     {/if}

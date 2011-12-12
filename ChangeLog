@@ -1,5 +1,7 @@
 2011-12-12  Bartek thindil Jasicki  <thindil@vallheru.net>
 
+	* FEATURE,templates/layout1/newspaper.tpl, templates/newspaper.tpl, newspaper.php: 
+	added link to comments on contents page
 	* FEATURE,newspaper.php, includes/comments.php: 
 	allow redactor delete newspaper comments
 	* BUG,includes/funkcje.php:

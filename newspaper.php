@@ -37,8 +37,6 @@ require_once("includes/head.php");
 */
 require_once("languages/".$lang."/newspaper.php");
 
-$strQuery = "lang='".$lang."'";
-
 /**
 * Assign variables to template
 */
@@ -91,6 +89,7 @@ if ((isset($_GET['step']) && $_GET['step'] == 'new') || (isset($_GET['read']) ||
         $arrId = array(array());
         $arrTitle = array(array());
         $arrAuthor = array(array());
+	$arrComments = array(array());
         $j = 0;
         $blnPage = false;
         foreach ($arrTypes as $strType)
@@ -98,16 +97,16 @@ if ((isset($_GET['step']) && $_GET['step'] == 'new') || (isset($_GET['read']) ||
             if (isset($_GET['step']) && $_GET['step'] == 'new')
             {
                 $objPaperid = $db -> Execute("SELECT `paper_id` FROM `newspaper` WHERE `added`='Y' GROUP BY `paper_id` DESC");
-                $objArticles = $db -> Execute("SELECT `title`, `author`, `id` FROM `newspaper` WHERE `paper_id`=".$objPaperid -> fields['paper_id']." AND `type`='".$strType."' AND `added`='Y' AND ".$strQuery);
+                $objArticles = $db -> Execute("SELECT `newspaper`.`title`, `newspaper`.`author`, `newspaper`.`id`, count(`newspaper_comments`.`id`) FROM `newspaper`, `newspaper_comments` WHERE `newspaper`.`paper_id`=".$objPaperid -> fields['paper_id']." AND `newspaper`.`type`='".$strType."' AND `newspaper`.`added`='Y' AND `newspaper_comments`.`textid`=`newspaper`.`id`");
                 $objPaperid -> Close();
             }
                 elseif (isset($_GET['read']))
             {
-                $objArticles = $db -> Execute("SELECT `title`, `author`, `id` FROM `newspaper` WHERE `paper_id`=".$_GET['read']." AND `type`='".$strType."' AND `added`='Y' AND ".$strQuery);
+                $objArticles = $db -> Execute("SELECT `title`, `author`, `id` FROM `newspaper` WHERE `paper_id`=".$_GET['read']." AND `type`='".$strType."' AND `added`='Y'");
             }
                 elseif (isset($_GET['step3']))
             {
-                $objArticles = $db -> Execute("SELECT `title`, `author`, `id` FROM `newspaper` WHERE `added`='N' AND `type`='".$strType."' AND ".$strQuery);
+                $objArticles = $db -> Execute("SELECT `title`, `author`, `id` FROM `newspaper` WHERE `added`='N' AND `type`='".$strType."'");
             }
             $i = 0;
             if (empty($objArticles -> fields['id']))
@@ -115,6 +114,7 @@ if ((isset($_GET['step']) && $_GET['step'] == 'new') || (isset($_GET['read']) ||
                 $arrId[$j][0] = 0;
                 $arrTitle[$j][0] = '';
                 $arrAuthor[$j][0] = '';
+		$arrComments[$j][0] = 0;
             }
 	    elseif (!$blnPage)
             {
@@ -128,6 +128,7 @@ if ((isset($_GET['step']) && $_GET['step'] == 'new') || (isset($_GET['read']) ||
 		    $arrId[$j][$i] = $objArticles -> fields['id'];
 		    $arrTitle[$j][$i] = $objArticles -> fields['title'];
 		    $arrAuthor[$j][$i] = $objArticles -> fields['author'];
+		    $arrComments[$j][$i] = $objArticles->fields['count(`newspaper_comments`.`id`)'];
 		    $i ++;
 		    $objArticles -> MoveNext();
 		  }
@@ -138,7 +139,9 @@ if ((isset($_GET['step']) && $_GET['step'] == 'new') || (isset($_GET['read']) ||
         $strNext = "<input type=\"submit\" name=\"next\" value=\"".A_NEXT."\" />";
         $smarty -> assign(array("Artidm" => $arrId,
                                 "Arttitlem" => $arrTitle,
-                                "Artauthorm" => $arrAuthor));
+                                "Artauthorm" => $arrAuthor,
+				"Artcomments" => $arrComments,
+				"Tcomments" => "(komentarzy: "));
     }
     if (isset($_GET['step']) && $_GET['step'] == 'new')
     {
