@@ -210,7 +210,7 @@ function loststat($lostid, $strength, $agility, $inteli, $wytrz, $szyb, $wisdom,
 	  {
 	    $objStat->fields[$stats[$number]] -= $lost;
 	  }
-	$db -> Execute("UPDATE `players` SET `".$stats[$number]."`=`".$objStat->fields[$stats[$number]].", `hp`=0, `antidote`='' WHERE `id`=".$lostid);
+	$db -> Execute("UPDATE `players` SET `".$stats[$number]."`=".$objStat->fields[$stats[$number]].", `hp`=0, `antidote`='' WHERE `id`=".$lostid);
 	$stat = $name[$number];
       }
     if ($lostid == $starter) 
