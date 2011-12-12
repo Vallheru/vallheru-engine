@@ -1,5 +1,7 @@
 2011-12-12  Bartek thindil Jasicki  <thindil@vallheru.net>
 
+	* BUG,class/quests_class.php: 
+	fixed fight during quests
 	* BUG,includes/funkcje.php (loststat): 
 	fixed typo
 	* BUG,languages/pl/newspaper.php, languages/pl/explore.php: 

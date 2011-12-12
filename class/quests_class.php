@@ -5,9 +5,9 @@
  *
  *   @name                 : quests_class.php                            
  *   @copyright            : (C) 2004,2005,2006,2011 Vallheru Team based on Gamers-Fusion ver 2.5
- *   @author               : thindil <thindil@tuxfamily.org>
- *   @version              : 1.4
- *   @since                : 29.09.2011
+ *   @author               : thindil <thindil@vallheru.net>
+ *   @version              : 1.5
+ *   @since                : 12.12.2011
  *
  */
 
@@ -166,6 +166,7 @@ class Quests
         global $arrehp;
         global $db;
         global $newdate;
+	global $lang;
 
         require_once('includes/turnfight.php');
         require_once('includes/funkcje.php');
