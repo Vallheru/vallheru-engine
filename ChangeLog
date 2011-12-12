@@ -1,3 +1,8 @@
+2011-12-12  Bartek thindil Jasicki  <thindil@vallheru.net>
+
+	* BUG,includes/funkcje.php:
+	fixed bug with losing stats
+
 2011-12-10  Bartek thindil Jasicki  <thindil@vallheru.net>
 
 	* BUG,newspaper.php: 

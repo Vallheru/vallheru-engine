@@ -5,9 +5,9 @@
  *
  *   @name                 : funkcje.php                            
  *   @copyright            : (C) 2004,2005,2006,2007,2011 Vallheru Team based on Gamers-Fusion ver 2.5
- *   @author               : thindil <thindil@tuxfamily.org>
+ *   @author               : thindil <thindil@vallheru.net>
  *   @version              : 1.5
- *   @since                : 06.12.2011
+ *   @since                : 12.12.2011
  *
  */
 
@@ -34,7 +34,7 @@ require_once ('includes/checkexp.php');
 /**
 * Get the localization for game
 */
-require_once("languages/".$player -> lang."/funkcje.php");
+require_once("languages/".$lang."/funkcje.php");
 
 /**
  * Function check for monsters loot
@@ -200,7 +200,17 @@ function loststat($lostid, $strength, $agility, $inteli, $wytrz, $szyb, $wisdom,
 	$stats = array('strength', 'agility', 'inteli', 'wytrz', 'szyb', 'wisdom');
 	$name = array(STRENGTH,AGILITY,INTELIGENCE,CONDITION,SPEED,WISDOM);
 	$lost = ($values[$number] / 200);
-	$db -> Execute("UPDATE `players` SET `".$stats[$number]."`=`".$stats[$number]."`-".$lost.", `hp`=0, `antidote`='' WHERE `id`=".$lostid);
+	$objStat = $db->Execute("SELECT `".$stats[$number]."` FROM `players` WHERE `id`=".$lostid);
+	if ($objStat->fields[$stats[$number]] - $lost < 3)
+	  {
+	    $lost = 0;
+	    $objStat->fields[$stats[$number]] = 3;
+	  }
+	else
+	  {
+	    $objStat->fields[$stats[$number]] -= $lost;
+	  }
+	$db -> Execute("UPDATE `players` SET `".$stats[$number]."`=`".$objStat->fields[$stats[$number]].", `hp`=0, `antidote`='' WHERE `id`=".$lostid);
 	$stat = $name[$number];
       }
     if ($lostid == $starter) 
@@ -216,7 +226,12 @@ function loststat($lostid, $strength, $agility, $inteli, $wytrz, $szyb, $wisdom,
         $strDate = $db -> DBDate($newdate);
 	if ($antidote != 'R')
 	  {
-	    $db -> Execute("INSERT INTO log (`owner`, `log`, `czas`, `type`) VALUES(".$lostid.",'".$attacktext." ".YOU_LOSE." <b><a href=view.php?view=".$winid.">".$winuser."</a> ".ID.":".$winid."</b>. ".YOU_LOST." ".$lost." ".$stat."', ".$strDate.", 'B')") or die(E_LOG);
+	    $strMessage = '';
+	    if ($lost > 0)
+	      {
+		$strMessage = " ".YOU_LOST." ".$lost." ".$stat;
+	      }
+	    $db -> Execute("INSERT INTO log (`owner`, `log`, `czas`, `type`) VALUES(".$lostid.",'".$attacktext." ".YOU_LOSE." <b><a href=view.php?view=".$winid.">".$winuser."</a> ".ID.":".$winid."</b>.".$strMessage."', ".$strDate.", 'B')") or die(E_LOG);
 	  }
 	else
 	  {
@@ -231,7 +246,12 @@ function loststat($lostid, $strength, $agility, $inteli, $wytrz, $szyb, $wisdom,
 	  }
 	if ($antidote != 'R')
 	  {
-	    print "<br /><b>".B_RESULT." <b>".$_POST['razy']." ".$winuser."</b>. ".YOU_LOST." ".$lost." ".$stat;
+	    $strMessage = '';
+	    if ($lost > 0)
+	      {
+		$strMessage = " ".YOU_LOST." ".$lost." ".$stat;
+	      }
+	    print "<br /><b>".B_RESULT." <b>".$_POST['razy']." ".$winuser."</b>.".$strMessage;
 	  }
 	else
 	  {
