@@ -1,5 +1,7 @@
 2011-12-12  Bartek thindil Jasicki  <thindil@vallheru.net>
 
+	* BUG,languages/pl/newspaper.php, languages/pl/explore.php: 
+	fixed some notices
 	* BUG,newspaper.php: 
 	fixed showing articles
 	* FEATURE,templates/layout1/newspaper.tpl, templates/newspaper.tpl, newspaper.php: 

@@ -4,10 +4,10 @@
  *   Polish language for exploring forest and moutains
  *
  *   @name                 : explore.php                            
- *   @copyright            : (C) 2004,2005,2006,2007 Vallheru Team based on Gamers-Fusion ver 2.5
- *   @author               : thindil <thindil@users.sourceforge.net>
- *   @version              : 1.3
- *   @since                : 06.02.2007
+ *   @copyright            : (C) 2004,2005,2006,2007,2011 Vallheru Team based on Gamers-Fusion ver 2.5
+ *   @author               : thindil <thindil@vallheru.net>
+ *   @version              : 1.5
+ *   @since                : 12.12.2011
  *
  */
 
@@ -27,7 +27,7 @@
 //   along with this program; if not, write to the Free Software
 //   Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 //
-// $Id: explore.php 880 2007-02-07 19:14:14Z thindil $
+// $Id$
 
 define("NO_LIFE", "Nie masz wystarczająco dużo życia aby walczyć.");
 define("A_REFRESH", "Odśwież");
@@ -38,6 +38,7 @@ define("Y_TURN_F", "Tak (turowa walka)");
 define("Y_NORM_F", "Tak (szybka walka)");
 define("YOU_WANT", "Czy chcesz zwiedzać dalej?");
 define("YOU_MEET", "Napotkałeś");
+define("YOU_DEAD2", "Nie możesz wędrować po lesie ponieważ jesteś martwy");
 
 if (isset($_GET['step']) && $_GET['step'] == 'run') 
 {
@@ -112,7 +113,6 @@ if ($player -> location == 'Las')
 
 if (isset ($_GET['action']) && $_GET['action'] == 'forest' && $player -> location == 'Las') 
 {
-    define("YOU_DEAD2", "Nie możesz wędrować po lesie ponieważ jesteś martwy");
     define("YOU_GO", "Przeznaczyłeś na zwiedzanie lasu ");
     define("T_ENERGY2", " energii<br />");
 }

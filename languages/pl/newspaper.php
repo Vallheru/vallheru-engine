@@ -4,10 +4,10 @@
  *   Polish language for newspaper
  *
  *   @name                 : newspaper.php                            
- *   @copyright            : (C) 2004,2005,2006 Vallheru Team based on Gamers-Fusion ver 2.5
- *   @author               : thindil <thindil@users.sourceforge.net>
- *   @version              : 1.2
- *   @since                : 29.06.2006
+ *   @copyright            : (C) 2004,2005,2006,2011 Vallheru Team based on Gamers-Fusion ver 2.5
+ *   @author               : thindil <thindil@vallheru.net>
+ *   @version              : 1.5
+ *   @since                : 12.12.2011
  *
  */
 
@@ -48,6 +48,7 @@ define("A_AUTHOR", "Autor");
 define("T_TITLE", "Tytuł:");
 define("A_NEXT", "Następna strona");
 define("A_PREVIOUS", "Poprzednia strona");
+define("A_DELETE", "Kasuj");
 
 if (isset($_GET['comments']))
 {
@@ -84,7 +85,6 @@ if ((isset($_GET['step']) && $_GET['step'] == 'new') || isset($_GET['read']) || 
     define("T_COMMENTS", "komentarzy");
     define("READINFO", " Wybierz artykuł który chcesz przeczytać.");
     define("A_EDIT", "Edytuj");
-    define("A_DELETE", "Kasuj");
     define("NO_PAPER", "Nie ma jeszcze wydań gazety!");
     define("A_MAIN", "Strona główna");
     define("A_CONTENTS", "Spis treści");
