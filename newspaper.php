@@ -5,9 +5,9 @@
  *
  *   @name                 : newspaper.php                            
  *   @copyright            : (C) 2004,2005,2006,2011 Vallheru Team based on Gamers-Fusion ver 2.5
- *   @author               : thindil <thindil@tuxfamily.org>
+ *   @author               : thindil <thindil@vallheru.net>
  *   @version              : 1.5
- *   @since                : 10.12.2011
+ *   @since                : 12.12.2011
  *
  */
 
@@ -249,7 +249,7 @@ if (isset($_GET['comments']))
     */
     if (isset($_GET['action']) && $_GET['action'] == 'delete')
     {
-        deletecomments('newspaper_comments');
+      deletecomments('newspaper_comments', array('Admin', 'Staff', 'Redaktor'));
     }
 }
 

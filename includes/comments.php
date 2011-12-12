@@ -5,9 +5,9 @@
  *
  *   @name                 : comments.php                            
  *   @copyright            : (C) 2006,2007,2011 Vallheru Team based on Gamers-Fusion ver 2.5
- *   @author               : thindil <thindil@tuxfamily.org>
- *   @version              : 1.4
- *   @since                : 14.11.2011
+ *   @author               : thindil <thindil@vallheru.net>
+ *   @version              : 1.5
+ *   @since                : 12.12.2011
  *
  */
 
@@ -111,12 +111,12 @@ function addcomments($intItemid, $strCommentstable, $strCommentsid)
 /**
  * Function to delete comments
  */
-function deletecomments($strCommentstable)
+function deletecomments($strCommentstable, $arrRanks = array('Admin', 'Staff'))
 {
     global $db;
     global $player;
 
-    if ($player -> rank != 'Admin' && $player -> rank != 'Staff')
+    if (!in_array($player->rank, $arrRanks))
     {
         error(NO_PERM);
     }
