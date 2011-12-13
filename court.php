@@ -5,9 +5,9 @@
  *
  *   @name                 : court.php                            
  *   @copyright            : (C) 2004,2005,2006,2011 Vallheru Team based on Gamers-Fusion ver 2.5
- *   @author               : thindil <thindil@tuxfamily.org>
- *   @version              : 1.4
- *   @since                : 10.09.2011
+ *   @author               : thindil <thindil@vallheru.net>
+ *   @version              : 1.5
+ *   @since                : 13.12.2011
  *
  */
 
@@ -46,7 +46,7 @@ if ($player -> location == 'Altara')
 /**
 * Get the localization for game
 */
-require_once("languages/".$player -> lang."/court.php");
+require_once("languages/".$lang."/court.php");
 
 /**
 * Main menu
@@ -281,7 +281,6 @@ if (isset($_GET['modify']))
             error(EMPTY_FIELDS);
         }
 	checkvalue($_POST['tid']);
-        $_POST['body'] = nl2br($_POST['body']);
         require_once('includes/bbcode.php');
         $_POST['body'] = bbcodetohtml($_POST['body']);
         $strBody = $db -> qstr($_POST['body'], get_magic_quotes_gpc());

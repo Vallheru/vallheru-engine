@@ -1,5 +1,7 @@
 2011-12-13  Bartek thindil Jasicki  <thindil@vallheru.net>
 
+	* BUG,court.php: 
+	fixed bug with editing things in court
 	* FEATURE,outposts.php: 
 	added info about lost veterans/monsters to defender log
 	* UPDATE,log.php: 
