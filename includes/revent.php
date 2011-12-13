@@ -7,7 +7,7 @@
  *   @copyright            : (C) 2011 Vallheru Team based on Gamers-Fusion ver 2.5
  *   @author               : thindil <thindil@tuxfamily.org>
  *   @version              : 1.5
- *   @since                : 08.12.2011
+ *   @since                : 13.12.2011
  *
  */
 
@@ -95,7 +95,7 @@ if ($player->revent == 0)
 	      }
 	    else
 	      {
-		$strRace = 'krasnoludzico';
+		$strRace = 'krasnoludko';
 	      }
 	  }
 	elseif ($player->race == 'Gnom')
@@ -115,7 +115,7 @@ if ($player->revent == 0)
 	  }
 	elseif ($player->race == 'Jaszczuroczłek')
 	  {
-	    $strRace = 'jaszczuroczłeku';
+	    $strRace = 'jaszczuro';
 	  }
 	else
 	  {
@@ -128,7 +128,15 @@ if ($player->revent == 0)
 		$strRace = 'kobieto';
 	      }
 	  }
-	$strMessage = 'Twoją uwagę przykuł widok małej skulonej postaci przemykającej zaułkami miasta. Czy to może być osławiony Staruszek? Bez trudu doganiasz tę postać i zastępujesz jej drogę. <br />- Czego chcessz '.$strRace.'? - pyta.';
+	if ($player->gender == 'M')
+	  {
+	    $strSuffix = 'y';
+	  }
+	else
+	  {
+	    $strSuffix = 'a';
+	  }
+	$strMessage = 'Twoją uwagę przykuł widok małej, skulonej postaci przemykającej zaułkami miasta. Czy to może być osławiony Staruszek? Bez trudu doganiasz tę postać i zastępujesz jej drogę. <br />- Czego chcessz '.$strRace.'? - pyta.';
 	if ($player->perception > rand(10, 300))
 	  {
 	    $strMessage .= 'Dzięki swojej wysokiej spostrzegawczości dostrzegasz końcówkę ogona, która na ułamek sekundy wysunęła się spod płaszcza.<br />- Czy ty masz ogon? - pytasz zdziwiony.<br />Postać odrzuca płaszcz i twoim oczom ukazuje się szczurołak!<br />- Zginiessz '.$strRace.'! - wysykuje. Rozpoczyna się walka.';
@@ -140,7 +148,7 @@ if ($player->revent == 0)
 	  }
 	else
 	  {
-	    $strMessage .= '- Może w czymś pomóc? - pytasz.<br />Zakapturzona postać mierzy cię wzrokiem.<br />- Komnaty królewsskie. Którędy?<br />Nieco zdziwiony pytaniem wskazujesz kierunek. Indywiduum czym prędzej znika w mroku a tobie pozostaje tylko poczucie nie do końca dobrze spełnionego obowiązku.';
+	    $strMessage .= '- Może w czymś pomóc? - pytasz.<br />Czujesz na sobie nieprzychylny wzrok istoty.<br />- Komnaty królewsskie. Którędy?<br />Nieco zdziwion'.$strSuffix.' pytaniem wskazujesz kierunek. Indywiduum czym prędzej znika w mroku, a tobie pozostaje tylko poczucie nie do końca dobrze spełnionego obowiązku.';
 	    $db->Execute("UPDATE `players` SET `perception`=`perception`+0.01 WHERE `id`=".$player->id);
 	    $intTime = rand(7, 18);
 	    $db->Execute("INSERT INTO `revent` (`pid`, `state`, `qtime`, `location`) VALUES(".$player->id.", 5, ".$intTime.", '')") or die($db->ErrorMsg());
