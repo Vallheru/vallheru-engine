@@ -35,7 +35,49 @@ require_once("includes/head.php");
 /**
 * Get the localization for game
 */
-require_once("languages/".$player -> lang."/log.php");
+require_once("languages/".$lang."/log.php");
+
+/**
+ * Clear log
+ */
+if (isset($_GET['akcja']) && $_GET['akcja'] == 'wyczysc') 
+{
+    $db -> Execute("DELETE FROM `log` WHERE `owner`=".$player -> id);
+    message('success', YOU_CLEAR);
+}
+
+/**
+ * Delete old logs
+ */
+if (isset($_GET['step']) && $_GET['step'] == 'deleteold')
+{
+    $arrAmount = array(7, 14, 30);
+    if (!in_array($_POST['oldtime'], $arrAmount))
+      {
+	message('error', ERROR);
+      }
+    else
+      {
+	$arrDate = explode("-", $data);
+	$arrDate[0] = date("Y");
+	$arrDate[2] = $arrDate[2] - $_POST['oldtime'];
+	if ($arrDate[2] < 1)
+	  {
+	    $arrDays = array(31, 28, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31);
+	    $arrDate[1] = $arrDate[1] - 1;
+	    if ($arrDate[1] == 0)
+	      {
+		$arrDate[1] = 12;
+	      }
+	    $intKey = $arrDate[1] - 1;
+	    $arrDate[2] = $arrDays[$intKey] + $arrDate[2];
+	  }
+	$strDate = implode("-", $arrDate);
+	$strDate = $db -> DBDate($strDate);
+	$db -> Execute("DELETE FROM `log` WHERE `owner`=".$player -> id." AND `czas`<".$strDate);
+	message('success', DELETED2);
+      }
+}
 
 $db -> Execute("UPDATE log SET unread='T' WHERE unread='F' AND owner=".$player -> id);
 
@@ -48,8 +90,112 @@ while (!$sid->EOF)
   }
 $sid -> Close();
 
-$objTest = $db -> Execute("SELECT count(*) FROM `log` WHERE `owner`=".$player -> id." ORDER BY `id` DESC");
-$intPages = ceil($objTest -> fields['count(*)'] / 30);
+/**
+ * Send log to admin/staff
+ */
+if (isset($_GET['send'])) 
+{
+    $smarty -> assign(array("Sendthis" => SEND_THIS,
+                            "Asend" => A_SEND));
+    if (isset ($_GET['step']) && $_GET['step'] == 'send') 
+    {
+	checkvalue($_POST['staff']);
+	checkvalue($_POST['lid']);
+        $arrtest = $db -> Execute("SELECT `id`, `user`, `rank` FROM `players` WHERE `id`=".$_POST['staff']);
+	$blnValid = TRUE;
+        if (!$arrtest -> fields['id']) 
+	  {
+	    message('error', NO_PLAYER);
+	    $blnValid = FALSE;
+	  }
+        if ($arrtest -> fields['rank'] != 'Admin' && $arrtest -> fields['rank'] != 'Staff') 
+	  {
+            message('error', NOT_STAFF);
+	    $blnValid = FALSE;
+	  }
+        $arrmessage = $db -> Execute("SELECT * FROM `log` WHERE id=".$_POST['lid']);
+        if (!$arrmessage -> fields['id']) 
+	  {
+            message('error', NO_EVENT);
+	    $blnValid = FALSE;
+	  }
+        if ($arrmessage -> fields['owner'] != $player -> id) 
+	  {
+            message('error', NOT_YOUR);
+	    $blnValid = FALSE;
+	  }
+	if ($blnValid)
+	  {
+	    $strDate = $db -> DBDate($newdate);
+	    $db -> Execute("INSERT INTO `log` (`owner`, `log`, `czas`, `type`) VALUES(".$arrtest -> fields['id'].",'".L_PLAYER."<a href=view.php?view=".$player -> id.">".$player -> user."</a>".L_ID.$player -> id.SEND_YOU."', ".$strDate.", 'A')");
+	    $db -> Execute("INSERT INTO `mail` (`sender`, `senderid`, `owner`, `subject`, `body`) values('".$player -> user."','".$player -> id."',".$arrtest -> fields['id'].",'".L_TITLE."','".$arrmessage -> fields['czas']."<br />".$arrmessage -> fields['log']."')");
+	    message('success', YOU_SEND.$arrtest -> fields['user'].". <a href=log.php>".A_REFRESH."</a>");
+	  }
+    }
+}
+
+/**
+* Delete or send to staff selected logs
+*/
+if (isset($_GET['action']) && $_GET['action'] == 'selected')
+  {
+    if (isset($_POST['selected']))
+      {
+	if ($_POST['selected'] == A_DELETE)
+	  {
+	    $objLid = $db -> Execute("SELECT `id` FROM `log` WHERE `owner`=".$player -> id);
+	    while (!$objLid->EOF)
+	      {
+		if (isset($_POST[$objLid->fields['id']]))
+		  {
+		    $db->Execute("DELETE FROM `log` WHERE `id`=".$objLid->fields['id']);
+		  }
+		$objLid->MoveNext();
+	      }
+	    $objLid->Close();
+	    message('success', DELETED);
+	  }
+	else
+	  {
+	    $arrtest = $db -> Execute("SELECT `id`, `user`, `rank` FROM `players` WHERE `id`=".$_POST['staff']);
+	    $blnValid = TRUE;
+	    if (!$arrtest -> fields['id']) 
+	      {
+		message('error', NO_PLAYER);
+		$blnValid = FALSE;
+	      }
+	    if ($arrtest -> fields['rank'] != 'Admin' && $arrtest -> fields['rank'] != 'Staff') 
+	      {
+		message('error', NOT_STAFF);
+		$blnValid = FALSE;
+	      }
+	    if ($blnValid)
+	      {
+		$strDate = $db -> DBDate($newdate);
+		$objMessages = $db -> Execute("SELECT * FROM `log` WHERE `owner`=".$player->id);
+		$blnSent = FALSE;
+		while (!$objMessages->EOF)
+		  {
+		    if (isset($_POST[$objMessages->fields['id']]))
+		      {
+			$db->Execute("INSERT INTO `mail` (`sender`, `senderid`, `owner`, `subject`, `body`) values('".$player->user."','".$player->id."',".$arrtest->fields['id'].",'".L_TITLE."','".$objMessages->fields['czas']."<br />".$objMessages->fields['log']."')");
+			$blnSent = TRUE;
+		      }
+		    $objMessages->MoveNext();
+		  }
+		if ($blnSent)
+		  {
+		    $db->Execute("INSERT INTO `log` (`owner`, `log`, `czas`, `type`) VALUES(".$arrtest->fields['id'].",'".L_PLAYER."<a href=view.php?view=".$player->id.">".$player->user."</a>".L_ID.$player -> id." wysłał tobie fragmenty swojego dziennika na pocztę.', ".$strDate.", 'A')");
+		  }
+		$objMessages->Close();
+		message('success', "Wysłałeś wybrane wpisy do ".$arrtest->fields['user'].".");
+	      }
+	  }
+      }
+  }
+
+$objTest = $db -> Execute("SELECT count(`id`) FROM `log` WHERE `owner`=".$player -> id." ORDER BY `id` DESC");
+$intPages = ceil($objTest -> fields['count(`id`)'] / 30);
 $objTest -> Close();
 if (isset($_GET['page']))
   {
@@ -108,129 +254,6 @@ while (!$log -> EOF)
     $i++;
 }
 $log -> Close();
-
-if (isset($_GET['akcja']) && $_GET['akcja'] == 'wyczysc') 
-{
-    $db -> Execute("DELETE FROM `log` WHERE `owner`=".$player -> id);
-    error ("<br />".YOU_CLEAR." (<a href=\"log.php\">".A_REFRESH."</a>)");
-}
-
-if (isset($_GET['send'])) 
-{
-    $smarty -> assign(array("Sendthis" => SEND_THIS,
-                            "Asend" => A_SEND));
-    if (isset ($_GET['step']) && $_GET['step'] == 'send') 
-    {
-	checkvalue($_POST['staff']);
-	checkvalue($_POST['lid']);
-        $arrtest = $db -> Execute("SELECT `id`, `user`, `rank` FROM `players` WHERE `id`=".$_POST['staff']);
-        if (!$arrtest -> fields['id']) 
-        {
-            error (NO_PLAYER);
-        }
-        if ($arrtest -> fields['rank'] != 'Admin' && $arrtest -> fields['rank'] != 'Staff') 
-        {
-            error (NOT_STAFF);
-        }
-        $arrmessage = $db -> Execute("SELECT * FROM `log` WHERE id=".$_POST['lid']);
-        if (!$arrmessage -> fields['id']) 
-        {
-            error (NO_EVENT);
-        }
-        if ($arrmessage -> fields['owner'] != $player -> id) 
-        {
-            error (NOT_YOUR);
-        }
-        $strDate = $db -> DBDate($newdate);
-        $db -> Execute("INSERT INTO `log` (`owner`, `log`, `czas`, `type`) VALUES(".$arrtest -> fields['id'].",'".L_PLAYER."<a href=view.php?view=".$player -> id.">".$player -> user."</a>".L_ID.$player -> id.SEND_YOU."', ".$strDate.", 'A')");
-        $db -> Execute("INSERT INTO `mail` (`sender`, `senderid`, `owner`, `subject`, `body`) values('".$player -> user."','".$player -> id."',".$arrtest -> fields['id'].",'".L_TITLE."','".$arrmessage -> fields['czas']."<br />".$arrmessage -> fields['log']."')");
-        error (YOU_SEND.$arrtest -> fields['user'].". <a href=log.php>".A_REFRESH."</a>");
-    }
-}
-
-/**
-* Delete or send to staff selected logs
-*/
-if (isset($_GET['action']) && $_GET['action'] == 'selected')
-  {
-    if (isset($_POST['selected']))
-      {
-	if ($_POST['selected'] == A_DELETE)
-	  {
-	    $objLid = $db -> Execute("SELECT `id` FROM `log` WHERE `owner`=".$player -> id);
-	    while (!$objLid->EOF)
-	      {
-		if (isset($_POST[$objLid->fields['id']]))
-		  {
-		    $db->Execute("DELETE FROM `log` WHERE `id`=".$objLid->fields['id']);
-		  }
-		$objLid->MoveNext();
-	      }
-	    $objLid->Close();
-	    error(DELETED);
-	  }
-	else
-	  {
-	    $arrtest = $db -> Execute("SELECT `id`, `user`, `rank` FROM `players` WHERE `id`=".$_POST['staff']);
-	    if (!$arrtest -> fields['id']) 
-	      {
-		error (NO_PLAYER);
-	      }
-	    if ($arrtest -> fields['rank'] != 'Admin' && $arrtest -> fields['rank'] != 'Staff') 
-	      {
-		error (NOT_STAFF);
-	      }
-	    $strDate = $db -> DBDate($newdate);
-	    $objMessages = $db -> Execute("SELECT * FROM `log` WHERE `owner`=".$player->id);
-	    $blnSent = FALSE;
-	    while (!$objMessages->EOF)
-	      {
-		if (isset($_POST[$objMessages->fields['id']]))
-		  {
-		    $db->Execute("INSERT INTO `mail` (`sender`, `senderid`, `owner`, `subject`, `body`) values('".$player->user."','".$player->id."',".$arrtest->fields['id'].",'".L_TITLE."','".$objMessages->fields['czas']."<br />".$objMessages->fields['log']."')");
-		    $blnSent = TRUE;
-		  }
-		$objMessages->MoveNext();
-	      }
-	    if ($blnSent)
-	      {
-		$db->Execute("INSERT INTO `log` (`owner`, `log`, `czas`, `type`) VALUES(".$arrtest->fields['id'].",'".L_PLAYER."<a href=view.php?view=".$player->id.">".$player->user."</a>".L_ID.$player -> id." wysłał tobie fragmenty swojego dziennika na pocztę.', ".$strDate.", 'A')");
-	      }
-	    $objMessages->Close();
-	    error("Wysłałeś wybrane wpisy do ".$arrtest->fields['user'].".");
-	  }
-      }
-  }
-
-/**
- * Delete old logs
- */
-if (isset($_GET['step']) && $_GET['step'] == 'deleteold')
-{
-    $arrAmount = array(7, 14, 30);
-    if (!in_array($_POST['oldtime'], $arrAmount))
-    {
-        error(ERROR);
-    }
-    $arrDate = explode("-", $data);
-    $arrDate[0] = date("Y");
-    $arrDate[2] = $arrDate[2] - $_POST['oldtime'];
-    if ($arrDate[2] < 1)
-    {
-        $arrDays = array(31, 28, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31);
-        $arrDate[1] = $arrDate[1] - 1;
-        if ($arrDate[1] == 0)
-        {
-            $arrDate[1] = 12;
-        }
-        $intKey = $arrDate[1] - 1;
-        $arrDate[2] = $arrDays[$intKey] + $arrDate[2];
-    }
-    $strDate = implode("-", $arrDate);
-    $strDate = $db -> DBDate($strDate);
-    $db -> Execute("DELETE FROM `log` WHERE `owner`=".$player -> id." AND `czas`<".$strDate);
-    error(DELETED2);
-}
 
 /**
 * Initialization of variable
