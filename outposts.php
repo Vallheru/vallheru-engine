@@ -8,7 +8,7 @@
  *   @author               : thindil <thindil@tuxfamily.org>
  *   @author               : eyescream <tduda@users.sourceforge.net>
  *   @version              : 1.4
- *   @since                : 09.12.2011
+ *   @since                : 13.12.2011
  *
  */
  
@@ -2019,7 +2019,7 @@ if (isset ($_GET['view']) && $_GET['view'] == 'battle')
                 * Add event in log defender player
                 */
                 $strDate = $db -> DBDate($newdate);
-                $db -> Execute("INSERT INTO `log` (`owner`, `log`, `czas`, `type`) VALUES(".$enemy -> fields['owner'].",'".L_PLAYER." <b><a href=\"view.php?view=".$player -> id."\">".$player -> user.'</a></b>'.L_ID.'<b>'.$player -> id.'</b>'.HE_ATTACK.$lostgold.L_GOLD.$arrlog[0]." ".SOLDIERS.", ".$arrlog[1]." ".ARCHERS.", ".$arrlog[2]." ".MACHINES.L_AND.$arrlog[3]." ".FORTS.". Zdobywasz ".$gainexp." w umiejętności Dowodzenie.', ".$strDate.", 'O')");
+                $strMessage = HE_ATTACK.$lostgold.L_GOLD.$arrlog[0]." ".SOLDIERS.", ".$arrlog[1]." ".ARCHERS.", ".$arrlog[2]." ".MACHINES.L_AND.$arrlog[3]." ".FORTS.". Zdobywasz ".$gainexp." w umiejętności Dowodzenie.";
             } 
                 else 
             {
@@ -2070,11 +2070,7 @@ if (isset ($_GET['view']) && $_GET['view'] == 'battle')
                 */
                 $db -> Execute("UPDATE `outposts` SET `morale`=`morale`-10 WHERE `id`=".$myout -> fields['id']);
                 $db -> Execute("UPDATE `outposts` SET `morale`=`morale`+7.5 WHERE `id`=".$enemy -> fields['id']);
-                /**
-                * Add event to defender log
-                */
-                $strDate = $db -> DBDate($newdate);
-                $db -> Execute("INSERT INTO `log` (`owner`, `log`, `czas`, `type`) VALUES(".$enemy -> fields['owner'].",'".L_PLAYER." <b><a href=\"view.php?view=".$player -> id."\">".$player -> user.'</a></b>'.L_ID.'<b>'.$player -> id.'</b>'.HE_ATTACK2.$arrlog[0]." ".SOLDIERS.", ".$arrlog[1]." ".ARCHERS.", ".$arrlog[2]." ".MACHINES.L_AND.$arrlog[3]." ".FORTS.". Zdobywasz ".$gainexp1." w umiejętności Dowodzenie.', ".$strDate.", 'O')");
+                $strMessage = HE_ATTACK2.$arrlog[0]." ".SOLDIERS.", ".$arrlog[1]." ".ARCHERS.", ".$arrlog[2]." ".MACHINES.L_AND.$arrlog[3]." ".FORTS.". Zdobywasz ".$gainexp1." w umiejętności Dowodzenie.";
             }
             /**
             * Count losses in monsters of attacker
@@ -2083,7 +2079,7 @@ if (isset ($_GET['view']) && $_GET['view'] == 'battle')
             /**
             * Count losses in monsters of defender
             */
-            $arrmessage[$k] = $arrmessage[$k].lostspecials('monsters', $defenduser -> fields['user'], $arremid, $arremname);
+	    $strLost = lostspecials('monsters', $defenduser -> fields['user'], $arremid, $arremname);
             /**
             * Count losses in veterans of attacker
             */
@@ -2091,7 +2087,10 @@ if (isset ($_GET['view']) && $_GET['view'] == 'battle')
             /**
             * Count losses in veterans of defender
             */
-            $$arrmessage[$k] = $arrmessage[$k].lostspecials('veterans', $defenduser -> fields['user'], $arrevid, $arrevname);
+	    $strLost .= lostspecials('veterans', $defenduser -> fields['user'], $arrevid, $arrevname);
+            $$arrmessage[$k] .= $strLost;
+	    $strDate = $db -> DBDate($newdate);
+	    $db -> Execute("INSERT INTO `log` (`owner`, `log`, `czas`, `type`) VALUES(".$enemy -> fields['owner'].",'".L_PLAYER." <b><a href=\"view.php?view=".$player -> id."\">".$player -> user."</a></b>".L_ID."<b>".$player -> id."</b>".$strMessage." ".str_replace("<br />", " ", $strLost)."', ".$strDate.", 'O')") or die($db->ErrorMsg());
             /**
             * Add attack to attacks limit
             */
