@@ -65,11 +65,11 @@ div.success {
 }
 div.info {
   border-style: dotted;
-  border-color: gold;
+  border-color: blue;
   border-width: 2px;
   text-align: center;
   padding: 10px;
-  color: yellow;
+  color: mediumaquamarine;
   font-weight: bold;
   margin: 10px;
 }
