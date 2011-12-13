@@ -1,5 +1,7 @@
 2011-12-13  Bartek thindil Jasicki  <thindil@vallheru.net>
 
+	* BUG,includes/astralvault.php, portals.php: 
+	fixed some notices
 	* BUG,includes/revent.php: 
 	fixed text for random encounter
 	* BUG,log.php:

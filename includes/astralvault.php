@@ -4,10 +4,10 @@
  *   Astral vault function (show, merge components)
  *
  *   @name                 : astralvault.php                            
- *   @copyright            : (C) 2006 Vallheru Team based on Gamers-Fusion ver 2.5
- *   @author               : thindil <thindil@users.sourceforge.net>
- *   @version              : 1.3
- *   @since                : 30.10.2006
+ *   @copyright            : (C) 2006,2011 Vallheru Team based on Gamers-Fusion ver 2.5
+ *   @author               : thindil <thindil@vallheru.net>
+ *   @version              : 1.5
+ *   @since                : 13.12.2011
  *
  */
 
@@ -27,7 +27,7 @@
 //   along with this program; if not, write to the Free Software
 //   Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 //
-// $Id: astralvault.php 798 2006-10-30 14:41:36Z thindil $
+// $Id$
 
 /**
  * Function assign maps, plans, recipes to arrays
@@ -246,7 +246,8 @@ function mergeplans($strLocation, $intOwner)
     {
         error(ERROR);
     }
-    if (!ereg("^[0-9]*$", $_GET['number'])) 
+    $_GET['number'] = intval($_GET['number']);
+    if ($_GET['number'] < 0) 
     {
         error (ERROR);
     }

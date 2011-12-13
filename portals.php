@@ -5,9 +5,9 @@
  *
  *   @name                 : portals.php                            
  *   @copyright            : (C) 2006,2011 Vallheru Team based on Gamers-Fusion ver 2.5
- *   @author               : thindil <thindil@tuxfamily.org>
- *   @version              : 1.4
- *   @since                : 02.11.2011
+ *   @author               : thindil <thindil@vallheru.net>
+ *   @version              : 1.5
+ *   @since                : 13.12.2011
  *
  */
 
@@ -35,12 +35,17 @@ require_once("includes/head.php");
 /**
 * Get the localization for game
 */
-require_once("languages/".$player -> lang."/portals.php");
+require_once("languages/".$lang."/portals.php");
 
-if (!isset($_GET['step']) || !ereg("^[0-6]*$", $_GET['step']))
+if (!isset($_GET['step']))
 {
     error(ERROR." (<a href=\"city.php\">".BACK."</a>)");
 }
+$_GET['step'] = intval($_GET['step']);
+if ($_GET['step'] < 0 || $_GET['step'] > 6)
+  {
+    error(ERROR." (<a href=\"city.php\">".BACK."</a>)");
+  }
 
 if ($player -> location != 'Altara' && $player -> location != 'Astralny plan')
 {
