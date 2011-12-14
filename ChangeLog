@@ -1,3 +1,8 @@
+2011-12-14  Bartek thindil Jasicki  <thindil@vallheru.net>
+
+	* FEATURE,languages/pl/head1.php, templates/layout1/guilds.tpl, templates/guilds.tpl, city.php, guilds.php, monuments.php:
+	moved crafts monuments to separate location
+
 2011-12-13  Bartek thindil Jasicki  <thindil@vallheru.net>
 
 	* BUG,court.php: 
