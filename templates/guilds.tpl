@@ -1,7 +1,7 @@
 {* Copyright notice: Code for smart display of odd/even number of monuments is based on http://smarty.php.net/contribs/examples/dynamic_table_columns/table.tpl.txt *}
 {$Guildinfo}<br />
 {* Each monument group is a separate table. *}
-    <table align="center">
+    <table align="center" width="100%">
     <tr>
     {section name=j loop=$Titles}
         {if $smarty.section.j.last && ($smarty.section.j.iteration % 2 == 1)}
