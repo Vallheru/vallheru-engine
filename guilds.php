@@ -6,9 +6,8 @@
  *   @name                 : guilds.php                            
  *   @copyright            : (C) 2011 Vallheru Team based on Gamers-Fusion ver 2.5
  *   @author               : thindil <thindil@vallheru.net>
- *   @author               : eyescream <tduda@users.sourceforge.net>
  *   @version              : 1.5
- *   @since                : 14.12.2011
+ *   @since                : 15.12.2011
  *
  */
 
@@ -65,7 +64,7 @@ $smarty -> assign(array('Titles' => $arrayMonumentTitles,
                         'Descriptions' => $arrayMonumentDescriptions,
                         'Monuments' => $arrayMonuments,
                         'Mname' => "Imię (ID)",
-			"Guildinfo" => "Wchodzisz do dużego, wykonanego z kamienia budynku. W wielkim holu, na bogato zdobionych ścianach, widzisz długą galerię portretów, przedstawiającą różnych mieszkańców ".$gamename.". To najznamienitsi rzemieślnicy w całym królestwie.")
+			"Guildinfo" => "Wchodzisz do dużego budynku wykonanego z ciężkich, kamiennych bloków. W wielkim holu, na bogato zdobionych ścianach dostrzegasz długą galerię portretów w solidnych ramach. Przyglądasz się uważniej i udaje ci się rozpoznać kilka z przedstawionych postaci. To najznamienitsi rzemieślnicy w całym królestwie.")
                   );   
 $smarty -> display ('guilds.tpl');
 require_once('includes/foot.php');

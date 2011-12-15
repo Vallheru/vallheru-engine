@@ -1,5 +1,7 @@
 2011-12-15  Bartek thindil Jasicki  <thindil@vallheru.net>
 
+	* UPDATE,guilds.php: 
+	better location description
 	* BUG,includes/funkcje.php:
 	fixed bug with wrong level for arrows
 
