@@ -1,3 +1,8 @@
+2011-12-15  Bartek thindil Jasicki  <thindil@vallheru.net>
+
+	* BUG,includes/funkcje.php:
+	fixed bug with wrong level for arrows
+
 2011-12-14  Bartek thindil Jasicki  <thindil@vallheru.net>
 
 	* UPDATE,templates/guilds.tpl: 
