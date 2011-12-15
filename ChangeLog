@@ -1,5 +1,7 @@
 2011-12-15  Bartek thindil Jasicki  <thindil@vallheru.net>
 
+	* FEATURE,crafts.php: 
+	continue work on random mission for craftsmen
 	* UPDATE,guilds.php: 
 	better location description
 	* BUG,includes/funkcje.php:
