@@ -1,5 +1,7 @@
 2011-12-16  Bartek thindil Jasicki  <thindil@vallheru.net>
 
+	* BUG,crafts.php (if): 
+	fixed missions for lumberjack
 	* BUG,crafts.php: 
 	fixed missions for fletcher
 	* BUG,mail.php: 

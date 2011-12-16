@@ -97,6 +97,7 @@ if (isset($_GET['step']))
 	    $_SESSION['craftenergy'] = $arrBillets[$intLevel] * 2;
 	    $_SESSION['craftindex'] = $intLevel;
 	    $strInfo = 'drwala, który zdobędzie dla nas nieco drewna '.$arrOptions[$intLevel];
+	    break;
 	    //mining
 	  case 2:
 	    $arrOptions = array('rudy miedzi', 'cynku', 'cyny', 'rudy żelaza', 'brył węgla', 'adamantium', 'kryształów', 'meteorytu');
