@@ -173,8 +173,8 @@ if (isset($_GET['step']))
 	      }
 	    else
 	      {
-		$intLevel = $objBow->fields['level'];
-		$_SESSION['craftindex'] = $objBow->fields['id'];
+		$intLevel = $objBows->fields['level'];
+		$_SESSION['craftindex'] = $objBows->fields['id'];
 	      }
 	    $_SESSION['craftenergy'] = 5 * $intLevel;
 	    $strInfo = 'stolarza, który wykona dla nas parę ';
@@ -430,7 +430,7 @@ if (isset($_GET['step']))
 	    $intExp = $fltSkill * 50;
 	    $strSkill = 'fletcher';
 	    $strSkill2 = 'stolarstwo';
-	    if ($$objBow->fields['type'] == 'B')
+	    if ($objBow->fields['type'] == 'B')
 	      {
 		$intCost = $objBow->fields['cost'] / 20;
 		$objBow->fields['name'] .= ' z leszczyny';
@@ -438,7 +438,7 @@ if (isset($_GET['step']))
 		$test = $db -> Execute("SELECT `id` FROM `equipment` WHERE `name`='".$objBow->fields['name']."' AND `wt`=40 AND `type`='B' AND `status`='U' AND `owner`=".$player->id." AND `power`=0 AND `zr`=0 AND `szyb`=".$objBow->fields['level']." AND `maxwt`=40 AND `poison`=0 AND `cost`=".$intCost);
 		if (!$test -> fields['id']) 
 		  {
-		    $db -> Execute("INSERT INTO `equipment` (`owner`, `name`, `power`, `type`, `cost`, `zr`, `wt`, `minlev`, `maxwt`, `amount`, `magic`, `poison`, `szyb`, `twohand`, `repair`) VALUES(".$player->id.", '".$objBow->fields['name']."', 0, 'B', ".$intCost.", 0, 40, ".$objBow->fields['level'].", 40, 1, 'N', 0, ".$objBow->fields['level'].",'Y', ".$intRepair.")");
+		    $db -> Execute("INSERT INTO `equipment` (`owner`, `name`, `power`, `type`, `cost`, `zr`, `wt`, `minlev`, `maxwt`, `amount`, `magic`, `poison`, `szyb`, `twohand`, `repair`) VALUES(".$player->id.", '".$objBow->fields['name']."', 0, 'B', ".$intCost.", 0, 40, ".$objBow->fields['level'].", 40, 1, 'N', 0, ".$objBow->fields['level'].",'Y', ".$intRepaircost.")");
 		  } 
 		else 
 		  {
@@ -453,7 +453,7 @@ if (isset($_GET['step']))
 		$test = $db -> Execute("SELECT `id` FROM `equipment` WHERE `owner`=".$player->id." AND `name`='".$objBow->fields['name']."' AND `power`=".$objBow->fields['level']." AND `status`='U' AND `cost`=".$intCost." AND `poison`=0");
 		if (!$test -> fields['id']) 
 		  {
-		    $db -> Execute("INSERT INTO `equipment` (`owner`, `name`, `power`, `type`, `cost`, `status`, `minlev`, `wt`) VALUES(".$player->id.", '".$objBow->fields['name']."', ".$objBow->fields['level'].", 'R', ".$intCost.", 'U', ".$objBows->fields['level'].", 100)");
+		    $db -> Execute("INSERT INTO `equipment` (`owner`, `name`, `power`, `type`, `cost`, `status`, `minlev`, `wt`) VALUES(".$player->id.", '".$objBow->fields['name']."', ".$objBow->fields['level'].", 'R', ".$intCost.", 'U', ".$objBow->fields['level'].", 100)") or die($db->ErrorMsg());
 		  } 
 		else 
 		  {
