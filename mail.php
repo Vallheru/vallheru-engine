@@ -6,8 +6,8 @@
  *   @name                 : mail.php                            
  *   @copyright            : (C) 2004,2005,2006,2007,2011 Vallheru Team based on Gamers-Fusion ver 2.5
  *   @author               : thindil <thindil@vallheru.net>
- *   @version              : 1.4
- *   @since                : 10.12.2011
+ *   @version              : 1.5
+ *   @since                : 16.12.2011
  *
  */
 
@@ -548,7 +548,8 @@ if (isset ($_GET['view']) && $_GET['view'] == 'write')
 		$_POST['subject'] = '';
 	      }
 	    $smarty->assign(array("Body" => $_POST['body'],
-				  "Subject" => $_POST['subject']));
+				  "Subject" => $_POST['subject'],
+				  "To" => $_POST['to']));
 	  }
     }
 }

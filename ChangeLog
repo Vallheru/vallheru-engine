@@ -1,5 +1,7 @@
 2011-12-16  Bartek thindil Jasicki  <thindil@vallheru.net>
 
+	* BUG,mail.php: 
+	fixed bug with clearing to field
 	* FEATURE,languages/pl/head1.php, templates/layout1/crafts.tpl, templates/crafts.tpl, crafts.php, city.php, includes/resets.php:
 	finished work on random missions for craftsmen
 
