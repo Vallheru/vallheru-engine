@@ -7,7 +7,7 @@
  *   @copyright            : (C) 2004,2005,2006,2007,2011 Vallheru Team based on Gamers-Fusion ver 2.5
  *   @author               : thindil <thindil@tuxfamily.org>
  *   @version              : 1.5
- *   @since                : 09.12.2011
+ *   @since                : 16.12.2011
  *
  */
 
@@ -49,7 +49,7 @@ function smallreset($blnSmall = FALSE)
       {
 	$db -> Execute("UPDATE settings SET value='N' WHERE setting='open'");
 	$db -> Execute("UPDATE settings SET value='Wykonywanie resetu' WHERE setting='close_reason'");
-	$db -> Execute("UPDATE `players` SET `hp`=`max_hp`, `bridge`='N'");
+	$db -> Execute("UPDATE `players` SET `hp`=`max_hp`, `bridge`='N', `craftmission`='N'");
       }
     $data = date("y-m-d");
     $strDate = $db -> DBDate($data);

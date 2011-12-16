@@ -1,3 +1,8 @@
+2011-12-16  Bartek thindil Jasicki  <thindil@vallheru.net>
+
+	* FEATURE,languages/pl/head1.php, templates/layout1/crafts.tpl, templates/crafts.tpl, crafts.php, city.php, includes/resets.php:
+	finished work on random missions for craftsmen
+
 2011-12-15  Bartek thindil Jasicki  <thindil@vallheru.net>
 
 	* FEATURE,crafts.php: 
