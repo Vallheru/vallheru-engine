@@ -446,7 +446,7 @@ if (isset($_GET['step']))
 		    $db -> Execute("UPDATE `equipment` SET `amount`=`amount`+1 WHERE `id`=".$test -> fields['id']);
 		  }
 		$test -> Close();
-		$stInfo2 .= 'łuków. W nagrodę dostał'.$strSuffix.' '.$objBow->fields['name'];
+		$strInfo2 .= 'łuków. W nagrodę dostał'.$strSuffix.' '.$objBow->fields['name'];
 	      }
 	    else
 	      {
