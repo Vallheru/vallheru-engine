@@ -7,7 +7,7 @@
  *   @copyright            : (C) 2011 Vallheru Team based on Gamers-Fusion ver 2.5
  *   @author               : thindil <thindil@vallheru.net>
  *   @version              : 1.5
- *   @since                : 16.12.2011
+ *   @since                : 17.12.2011
  *
  */
 
@@ -362,7 +362,7 @@ if (isset($_GET['step']))
 	    $intExp = $fltSkill * 50;
 	    $strSkill = 'jeweller';
 	    $strSkill2 = 'jubilerstwo';
-	    $strInfo2 .= 'wykonywaniu pierścieni. W nagrodę otrzymał'.$strSuffix.' '.$intAmount.' sztuk '.$objiRing->fields['name'];
+	    $strInfo2 .= 'wykonywaniu pierścieni. W nagrodę otrzymał'.$strSuffix.' '.$intAmount.' sztuk '.$objRing->fields['name'];
 	    $objRing->Close();
 	    break;
 	    //herbalist
@@ -387,7 +387,7 @@ if (isset($_GET['step']))
 	    $strSkill = 'herbalist';
 	    $strSkill2 = 'zielarstwo';
 	    $objTest = $db->Execute("SELECT `gracz`, `".$arrBillets[$_SESSION['craftindex']]."` FROM `herbs` WHERE `gracz`=".$player->id) or die($db->ErrorMsg());
-	    if (!$objTest->fields['owner'])
+	    if (!$objTest->fields['gracz'])
 	      {
 		$db->Execute("INSERT INTO `herbs` (`gracz`, `".$arrBillets[$_SESSION['craftindex']]."`) VALUES (".$player->id.", ".$intAmount.")");
 	      }
