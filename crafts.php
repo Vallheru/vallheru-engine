@@ -345,7 +345,7 @@ if (isset($_GET['step']))
 		$intAmount = 1;
 		$intStat = rand(0, 5);
 		$objRing->fields['name'] .= $arrStats[$intStat];
-		$intCost = $objRing->fields['cost'] * 20;
+		$intCost = $objRing->fields['cost'] / 20;
 		$intPower = ceil($objRing->fields['bonus'] / 10);
 	      }
 	    $objTest = $db -> Execute("SELECT `id` FROM `equipment` WHERE `owner`=".$player -> id." AND status='U' AND `name`='".$objRing->fields['name']."' AND `power`=".$intPower." AND `cost`=".$intCost);
