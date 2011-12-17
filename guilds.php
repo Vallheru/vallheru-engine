@@ -7,7 +7,7 @@
  *   @copyright            : (C) 2011 Vallheru Team based on Gamers-Fusion ver 2.5
  *   @author               : thindil <thindil@vallheru.net>
  *   @version              : 1.5
- *   @since                : 15.12.2011
+ *   @since                : 17.12.2011
  *
  */
 
@@ -40,7 +40,14 @@ function topplayers($strDbfield)
     global $db;
     global $arrTags;
     
-    $objTop = $db -> SelectLimit('SELECT `id`, `user`, `'.$strDbfield.'`, `tribe` FROM `players` ORDER BY `'.$strDbfield.'` DESC', 10);
+    if ($strDbfield != 'mpoints')
+      {
+	$objTop = $db -> SelectLimit('SELECT `id`, `user`, `'.$strDbfield.'`, `tribe` FROM `players` ORDER BY `'.$strDbfield.'` DESC', 10);
+      }
+    else
+      {
+	$objTop = $db -> SelectLimit("SELECT `id`, `user`, `".$strDbfield."`, `tribe` FROM `players` WHERE `klasa`='Rzemieślnik' ORDER BY `".$strDbfield."` DESC", 10) or die($db->ErrorMsg());
+      }
 
     while (!$objTop -> EOF) 
       {
@@ -54,11 +61,11 @@ function topplayers($strDbfield)
     return $arrTop;
 }
 
-$arrayMonumentTitles = array("Najwyższe Kowalstwo", "Najwyższe Stolarstwo", "Najwyższa Alchemia", "Najwyższe Zielarstwo", "Najwyższe Jubilerstwo", "Najwyższa Hodowla", "Najwyższe Górnictwo", "Najwyższe Drwalnictwo", 'Najwyższe Hutnictwo');
+$arrayMonumentTitles = array("Najwyższe Kowalstwo", "Najwyższe Stolarstwo", "Najwyższa Alchemia", "Najwyższe Zielarstwo", "Najwyższe Jubilerstwo", "Najwyższa Hodowla", "Najwyższe Górnictwo", "Najwyższe Drwalnictwo", 'Najwyższe Hutnictwo', 'Wykonanych Zadań');
 
-$arrayMonumentDescriptions = array("Kowalstwo", "Stolarstwo", "Alchemia", "Zielarstwo", "Jubilerstwo", "Hodowla", "Górnictwo", "Drwalnictwo", 'Hutnictwo');
+$arrayMonumentDescriptions = array("Kowalstwo", "Stolarstwo", "Alchemia", "Zielarstwo", "Jubilerstwo", "Hodowla", "Górnictwo", "Drwalnictwo", 'Hutnictwo', 'Zadań');
         
-$arrayMonuments = array(topplayers('ability'), topplayers('fletcher'), topplayers('alchemia'), topplayers('herbalist'), topplayers('jeweller'), topplayers('breeding'), topplayers('mining'), topplayers('lumberjack'), topplayers('metallurgy'));
+$arrayMonuments = array(topplayers('ability'), topplayers('fletcher'), topplayers('alchemia'), topplayers('herbalist'), topplayers('jeweller'), topplayers('breeding'), topplayers('mining'), topplayers('lumberjack'), topplayers('metallurgy'), topplayers('mpoints'));
     
 $smarty -> assign(array('Titles' => $arrayMonumentTitles,
                         'Descriptions' => $arrayMonumentDescriptions,

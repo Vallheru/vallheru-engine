@@ -1,5 +1,7 @@
 2011-12-17  Bartek thindil Jasicki  <thindil@vallheru.net>
 
+	* FEATURE,guilds.php: 
+	added monument with amount of missions
 	* UPDATE,crafts.php: 
 	added more items from craftsmen missions
 	* FEATURE,install/db/update.sql, templates/layout1/crafts.tpl, templates/crafts.tpl, crafts.php: 
