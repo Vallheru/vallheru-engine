@@ -258,14 +258,14 @@ if (isset($_GET['step']))
 		break;
 	      }
 	  }
-	$smarty->assign(array('Jobinfo' => 'Przez dłuższą chwilę opowiadasz niziołkowi o swoich umiejętnościach. Ten co chwila przerywa, zadając jakieś pytania a następnie sprawdzając coś w papierach. W końcu, znajduje odpowiedni papier i mówi do ciebie:<i>-Zdaje się, że mam coś dla ciebie</i>',
+	$smarty->assign(array('Jobinfo' => 'Przez dłuższą chwilę opowiadasz niziołkowi o swoich umiejętnościach. Ten co chwila przerywa, zadając jakieś pytania a następnie sprawdzając coś w papierach. W końcu, znajduje odpowiedni papier i mówi do ciebie:<br /><i>-Zdaje się, że mam coś dla ciebie</i>',
 			      "Ayes" => "Przyjmuję zlecenie (koszt: ",
 			      "Ayes2" => " energii)",
 			      "Jobs" => $arrInfo,
 			      "Jenergy" => $_SESSION['craftenergy'],
 			      "Ano" => "Nie, dziękuję",
 			      'Jobinfo2' => 'Pamiętaj, oferta jest ważna tylko w tym momencie, jeżeli ją odrzucisz, następna szansa dopiero po kolejnym resecie.'));
-	//$db->Execute("UPDATE `players` SET `craftmission`='Y' WHERE `id`=".$player->id);
+	$db->Execute("UPDATE `players` SET `craftmission`='Y' WHERE `id`=".$player->id);
       }
     /**
      * Finish task
@@ -297,6 +297,19 @@ if (isset($_GET['step']))
 	    $strSuffix = 'aś';
 	  }
 	$strInfo2 = 'Pracował'.$strSuffix.' przez pewien czas przy ';
+	$intRoll = rand(1, 100);
+	$blnCase = FALSE;
+	if ($intRoll < 6)
+	  {
+	    $blnCase = TRUE;
+	    $intDamage = ceil(($player->max_hp / 100) * rand(1, 25));
+	    $player->hp -= $intDamage;
+	    if ($player->hp < 0)
+	      {
+		$player->hp = 0;
+	      }
+	    $db->Execute("UPDATE `players` SET `hp`=".$player->hp." WHERE `id`=".$player->id);
+	  }
 	switch ($_SESSION['craft'][$intIndex])
 	  {
 	    //smelting
@@ -308,7 +321,15 @@ if (isset($_GET['step']))
 	    $intExp = $fltSkill * 20;
 	    $strSkill = 'metallurgy';
 	    $strSkill2 = 'hutnictwo';
-	    $strInfo2 .= 'wytapianiu sztabek '.$arrOptions[$_SESSION['craftindex'][$intIndex]].'. W nagrodę otrzymał'.$strSuffix.' '.$intAmount.' sztuk '.$arrOptions[$_SESSION['craftindex'][$intIndex]];
+	    $strInfo2 .= 'wytapianiu sztabek '.$arrOptions[$_SESSION['craftindex'][$intIndex]].'. ';
+	    if (!$blnCase)
+	      {
+		$strInfo2 .= 'W nagrodę otrzymał'.$strSuffix.' '.$intAmount.' sztuk '.$arrOptions[$_SESSION['craftindex'][$intIndex]];
+	      }
+	    else
+	      {
+		$strInfo2 .= 'W pewnym momencie, nie przypilnował'.$strSuffix.' temperatury pieca, który nagle wybuchł raniąc wszystkich dookoła.';
+	      }
 	    $objTest = $db->Execute("SELECT `owner`, `".$arrBillets[$_SESSION['craftindex'][$intIndex]]."` FROM `minerals` WHERE `owner`=".$player->id);
 	    if (!$objTest->fields['owner'])
 	      {
@@ -327,7 +348,15 @@ if (isset($_GET['step']))
 	    $arrOptions = array("sosnowego", "z leszczyny", "cisowego", "z wiązu");
 	    $arrBillets = array('pine', 'hazel', 'yew', 'elm');
 	    $intAmount = rand(1, 50);
-	    $strInfo2 .= 'ścinaniu drewna '.$arrOptions[$_SESSION['craftindex'][$intIndex]].'. W nagrodę otrzymał'.$strSuffix.' '.$intAmount.' sztuk '.$arrOptions[$_SESSION['craftindex'][$intIndex]];
+	    $strInfo2 .= 'ścinaniu drewna '.$arrOptions[$_SESSION['craftindex'][$intIndex]].'. ';
+	    if (!$blnCase)
+	      {
+		$strInfo2 .= 'W nagrodę otrzymał'.$strSuffix.' '.$intAmount.' sztuk '.$arrOptions[$_SESSION['craftindex'][$intIndex]];
+	      }
+	    else
+	      {
+		$strInfo2 .= 'Niestety przy jednym z drzew ustawiłeś się ze złej strony. Spadło ono prosto na Ciebie.';
+	      }
 	    $fltSkill = ((float)rand(1, 10) / 10) * ($_SESSION['craftindex'][$intIndex] + 1);
 	    $intExp = $fltSkill * 20;
 	    $strSkill = 'lumberjack';
@@ -350,7 +379,15 @@ if (isset($_GET['step']))
 	    $arrOptions = array('rudy miedzi', 'cynku', 'cyny', 'rudy żelaza', 'brył węgla', 'adamantium', 'kryształów', 'meteorytu');
 	    $arrBillets = array('copperore', 'zincore', 'tinore', 'ironore', 'coal', 'adamantium', 'crystal', 'meteor');
 	    $intAmount = rand(1, 50);
-	    $strInfo2 .= 'wydobywaniu '.$arrOptions[$_SESSION['craftindex'][$intIndex]].'. W nagrodę otrzymał'.$strSuffix.' '.$intAmount.' sztuk '.$arrOptions[$_SESSION['craftindex'][$intIndex]];
+	    $strInfo2 .= 'wydobywaniu '.$arrOptions[$_SESSION['craftindex'][$intIndex]].'. ';
+	    if (!$blnCase)
+	      {
+		$strInfo2 .= 'W nagrodę otrzymał'.$strSuffix.' '.$intAmount.' sztuk '.$arrOptions[$_SESSION['craftindex'][$intIndex]];
+	      }
+	    else
+	      {
+		$strInfo2 .= 'Niezbyt poprawnie podstęplował'.$strSuffix.' tunel w skutek czego, zawalił się na wszystkich w okolicy.';
+	      }
 	    $fltSkill = ((float)rand(1, 10) / 10) * ($_SESSION['craftindex'][$intIndex] + 1);
 	    $intExp = $fltSkill * 20;
 	    $strSkill = 'mining';
@@ -377,7 +414,15 @@ if (isset($_GET['step']))
 	    $strGen = array_rand(array('M', 'F'));
 	    $objCore = $db->Execute("SELECT * FROM `cores` WHERE `id`=".$_SESSION['craftindex'][$intIndex]);
 	    $db -> Execute("INSERT INTO `core` (`owner`, `name`, `type`, `ref_id`, `power`, `defense`, `gender`) VALUES(".$player -> id.",'".$objCore->fields['name']."','".$objCore->fields['type']."',".$_SESSION['craftindex'][$intIndex].",".$objCore->fields['power'].",".$objCore->fields['defense'].", '".$strGen."')");
-	    $strInfo2 .= 'chowańcach. W nagrodę otrzymał'.$strSuffix.' nowego chowańca: '.$objCore->fields['name'];
+	    $strInfo2 .= 'chowańcach. ';
+	    if (!$blnCase)
+	      {
+		$strInfo2 .= 'W nagrodę otrzymał'.$strSuffix.' nowego chowańca: '.$objCore->fields['name'];
+	      }
+	    else
+	      {
+		$strInfo2 .= 'Jeden z chowańców wpadł w szał i stratował Ciebie.';
+	      }
 	    $objCore->Close();
 	    break;
 	    //jeweller
@@ -412,7 +457,15 @@ if (isset($_GET['step']))
 	    $intExp = $fltSkill * 50;
 	    $strSkill = 'jeweller';
 	    $strSkill2 = 'jubilerstwo';
-	    $strInfo2 .= 'wykonywaniu pierścieni. W nagrodę otrzymał'.$strSuffix.' '.$intAmount.' sztuk '.$objRing->fields['name'];
+	    $strInfo2 .= 'wykonywaniu pierścieni. ';
+	    if (!$blnCase)
+	      {
+		$strInfo2 .= 'W nagrodę otrzymał'.$strSuffix.' '.$intAmount.' sztuk '.$objRing->fields['name'];
+	      }
+	    else
+	      {
+		$strInfo2 .= 'W pewnym momencie pękła forma do wytwarzania pierścieni, wylewając surówkę prosto na twoją rękę.';
+	      }
 	    $objRing->Close();
 	    break;
 	    //herbalist
@@ -432,7 +485,15 @@ if (isset($_GET['step']))
 		$intAmount = rand(1, 20);
 		$fltSkill = ((float)rand(1, 5) / 10) * ($_SESSION['craftindex'][$intIndex] + 1);
 	      }
-	    $strInfo2 .= $arrOptions[$_SESSION['craftindex'][$intIndex]].'. W nagrodę otrzymał'.$strSuffix.' '.$intAmount.' sztuk '.$arrOptions[$_SESSION['craftindex'][$intIndex]];
+	    $strInfo2 .= $arrOptions[$_SESSION['craftindex'][$intIndex]].'. ';
+	    if (!$blnCase)
+	      {
+		$strInfo2 .= 'W nagrodę otrzymał'.$strSuffix.' '.$intAmount.' sztuk '.$arrOptions[$_SESSION['craftindex'][$intIndex]];
+	      }
+	    else
+	      {
+		$strInfo2 .= 'Kiedy montował'.$strSuffix.' rusztowanie, to nagle pękło, przygniatając Ciebie.';
+	      }
 	    $intExp = $fltSkill * 20;
 	    $strSkill = 'herbalist';
 	    $strSkill2 = 'zielarstwo';
@@ -470,7 +531,15 @@ if (isset($_GET['step']))
 		$db -> Execute("UPDATE `potions` SET `amount`=`amount`+".$intAmount." WHERE `id`=".$objTest->fields['id']);
 	      }
 	    $objTest -> Close();
-	    $strInfo2 .= 'warzeniu mikstur. W nagrodę otrzymał'.$strSuffix.' '.$intAmount.' sztuk '.$objPotion->fields['name'];
+	    $strInfo2 .= 'warzeniu mikstur. ';
+	    if (!$blnCase)
+	      {
+		$strInfo2 .= 'W nagrodę otrzymał'.$strSuffix.' '.$intAmount.' sztuk '.$objPotion->fields['name'];
+	      }
+	    else
+	      {
+		$strInfo2 .= 'Niestety pomyliły Ci się składniki i w pewnym momencie cały kociołek eksplodował, raniąc wszystkich w okolicy.';
+	      }
 	    $objPotion->Close();
 	    break;
 	    //fletcher
@@ -496,7 +565,15 @@ if (isset($_GET['step']))
 		    $db -> Execute("UPDATE `equipment` SET `amount`=`amount`+1 WHERE `id`=".$test -> fields['id']);
 		  }
 		$test -> Close();
-		$strInfo2 .= 'łuków. W nagrodę dostał'.$strSuffix.' '.$objBow->fields['name'];
+		$strInfo2 .= 'łuków. ';
+		if (!$blnCase)
+		  {
+		    $strInfo2 .= 'W nagrodę dostał'.$strSuffix.' '.$objBow->fields['name'];
+		  }
+		else
+		  {
+		    $strInfo2 .= 'Tnąc drewno na odpowiednie kawałki, w pewnym momencie straciłeś kontrolę nad piłą, która wgryzła się w Twoją nogę.';
+		  }
 	      }
 	    else
 	      {
@@ -511,7 +588,15 @@ if (isset($_GET['step']))
 		    $db -> Execute("UPDATE `equipment` SET `wt`=`wt`+100 WHERE `id`=".$test -> fields['id']);
 		  }
 		$test -> Close();
-		$strInfo2 .= 'strzał. W nagrodę dostał'.$strSuffix.' 100 strzał typu: '.$objBow->fields['name'];
+		$strInfo2 .= 'strzał. ';
+		if (!$blnCase)
+		  {
+		    $strInfo2 .= 'W nagrodę dostał'.$strSuffix.' 100 strzał typu: '.$objBow->fields['name'];
+		  }
+		else
+		  {
+		    $strInfo2 .= 'Tnąc drewno na odpowiednie kawałki, w pewnym momencie stracił'.$strSuffix.' kontrolę nad piłą, która wgryzła się w Twoją nogę.';
+		  }
 	      }
 	    $objBow->Close();
 	    break;
@@ -552,17 +637,32 @@ if (isset($_GET['step']))
 		$db -> Execute("UPDATE `equipment` SET `amount`=`amount`+1 WHERE `id`=".$test -> fields['id']);
 	      }
 	    $intName = array_search($objItem->fields['type'], $arrTypes);
-	    $strInfo2 .= 'wykonywaniu '.$arrNames[$intName].'. W nagrodę otrzymał'.$strSuffix.' '.$objItem->fields['name'];
+	    $strInfo2 .= 'wykonywaniu '.$arrNames[$intName].'. ';
+	    if (!$blnCase)
+	      {
+		$strInfo2 .= 'W nagrodę otrzymał'.$strSuffix.' '.$objItem->fields['name'];
+	      }
+	    else
+	      {
+		$strInfo2 .= 'Zbyt mocno uderzał'.$strSuffix.' w kawałek metalu. Ten nagle pękł rozsiewając rozgrzane do czerwoności rykoszety wokoło.';
+	      }
 	    $test -> Close();
 	    $objItem->Close();
 	    break;
 	  default:
 	    break;
 	  }
-	$strInfo2 .= ', '.$intExp.' punktów doświadczenia, '.$fltSkill.' w umiejętności '.$strSkill2.' oraz '.$intGold.' sztuk złota.';
-	require_once("includes/checkexp.php");
-	checkexp($player->exp, $intExp, $player->level, $player->race, $player->user, $player->id, 0, 0, $player->id, $strSkill, $fltSkill);
-	$db->Execute("UPDATE `players` SET `credits`=`credits`+".$intGold.", `mpoints`=`mpoints`+1 WHERE `id`=".$player->id);
+	if (!$blnCase)
+	  {
+	    $strInfo2 .= ', '.$intExp.' punktów doświadczenia, '.$fltSkill.' w umiejętności '.$strSkill2.' oraz '.$intGold.' sztuk złota.';
+	    require_once("includes/checkexp.php");
+	    checkexp($player->exp, $intExp, $player->level, $player->race, $player->user, $player->id, 0, 0, $player->id, $strSkill, $fltSkill);
+	    $db->Execute("UPDATE `players` SET `credits`=`credits`+".$intGold.", `mpoints`=`mpoints`+1 WHERE `id`=".$player->id);
+	  }
+	else
+	  {
+	    $strInfo2 .= 'W wyniku wypadku stracił'.$strSuffix.' '.$intDamage.' punktów życia, na dodatek nie dostał'.$strSuffix.' wypłaty.';
+	  }
 	$smarty->assign("Result", $strInfo2);
 	unset($_SESSION['craft'], $_SESSION['craftindex'], $_SESSION['craftenergy']);
       }

@@ -1,5 +1,7 @@
 2011-12-17  Bartek thindil Jasicki  <thindil@vallheru.net>
 
+	* FEATURE,install/db/update.sql, templates/layout1/crafts.tpl, templates/crafts.tpl, crafts.php: 
+	added bad luck to craftsmen missions
 	* BUG,includes/resets.php: 
 	fixed bug with reset craft missions
 	* FEATURE,crafts.php: 

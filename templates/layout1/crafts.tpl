@@ -4,10 +4,15 @@
 {/if}
 {if $Step == "first"}
     {$Jobinfo}<br />
-    <a href="crafts.php?step=second">{$Ayes}</a><br />
+    <ul>
+    {section name=job loop=$Jobs}
+        <li>{$Jobs[job]}<br />
+        <a href="crafts.php?step={$smarty.section.job.index}">{$Ayes}{$Jenergy[job]}{$Ayes2}</a><br /><br /></li>
+    {/section}
+    </ul>
     <a href="city.php">{$Ano}</a><br /><br />
     {$Jobinfo2}
 {/if}
-{if $Step == "second"}
+{if $Step != "" && $Step != "first"}
     {$Result}<br />
 {/if}
