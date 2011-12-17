@@ -316,7 +316,7 @@ if (isset($_GET['step']))
 	  case 0:
 	    $arrOptions = array('miedzi', 'brązu', 'mosiądzu', 'żelaza', 'stali');
 	    $arrBillets = array('copper', 'bronze', 'brass', 'iron', 'steel');
-	    $intAmount = rand(1, 50);
+	    $intAmount = rand(1, 100);
 	    $fltSkill = ((float)rand(1, 10) / 10) * ($_SESSION['craftindex'][$intIndex] + 1);
 	    $intExp = $fltSkill * 20;
 	    $strSkill = 'metallurgy';
@@ -340,14 +340,14 @@ if (isset($_GET['step']))
 		$db->Execute("UPDATE `minerals` SET `".$arrBillets[$_SESSION['craftindex'][$intIndex]]."`=`".$arrBillets[$_SESSION['craftindex'][$intIndex]]."` WHERE `owner`=".$player->id);
 	      }
 	    $objTest->Close();
-	    $intWarehouse = $intAmount * 10;
+	    $intWarehouse = $intAmount * 5;
 	    $db->Execute("UPDATE `warehouse` SET `amount`=`amount`+'".$intWarehouse."' WHERE `mineral`='".$arrBillets[$_SESSION['craftindex'][$intIndex]]."'");
 	    break;
 	    //lumberjack
 	  case 1:
 	    $arrOptions = array("sosnowego", "z leszczyny", "cisowego", "z wiązu");
 	    $arrBillets = array('pine', 'hazel', 'yew', 'elm');
-	    $intAmount = rand(1, 50);
+	    $intAmount = rand(1, 100);
 	    $strInfo2 .= 'ścinaniu drewna '.$arrOptions[$_SESSION['craftindex'][$intIndex]].'. ';
 	    if (!$blnCase)
 	      {
@@ -371,14 +371,14 @@ if (isset($_GET['step']))
 		$db->Execute("UPDATE `minerals` SET `".$arrBillets[$_SESSION['craftindex'][$intIndex]]."`=`".$arrBillets[$_SESSION['craftindex'][$intIndex]]."` WHERE `owner`=".$player->id);
 	      }
 	    $objTest->Close();
-	    $intWarehouse = $intAmount * 10;
+	    $intWarehouse = $intAmount * 5;
 	    $db->Execute("UPDATE `warehouse` SET `amount`=`amount`+'".$intWarehouse."' WHERE `mineral`='".$arrBillets[$_SESSION['craftindex'][$intIndex]]."'");
 	    break;
 	    //mining
 	  case 2:
 	    $arrOptions = array('rudy miedzi', 'cynku', 'cyny', 'rudy żelaza', 'brył węgla', 'adamantium', 'kryształów', 'meteorytu');
 	    $arrBillets = array('copperore', 'zincore', 'tinore', 'ironore', 'coal', 'adamantium', 'crystal', 'meteor');
-	    $intAmount = rand(1, 50);
+	    $intAmount = rand(1, 100);
 	    $strInfo2 .= 'wydobywaniu '.$arrOptions[$_SESSION['craftindex'][$intIndex]].'. ';
 	    if (!$blnCase)
 	      {
@@ -402,7 +402,7 @@ if (isset($_GET['step']))
 		$db->Execute("UPDATE `minerals` SET `".$arrBillets[$_SESSION['craftindex'][$intIndex]]."`=`".$arrBillets[$_SESSION['craftindex'][$intIndex]]."` WHERE `owner`=".$player->id);
 	      }
 	    $objTest->Close();
-	    $intWarehouse = $intAmount * 10;
+	    $intWarehouse = $intAmount * 5;
 	    $db->Execute("UPDATE `warehouse` SET `amount`=`amount`+'".$intWarehouse."' WHERE `mineral`='".$arrBillets[$_SESSION['craftindex'][$intIndex]]."'");
 	    break;
 	    //breeding
@@ -476,13 +476,13 @@ if (isset($_GET['step']))
 	    if ($_SESSION['craftindex'][$intIndex] < 4)
 	      {
 		$strInfo2 .= 'hodowaniu ziół: ';
-		$intAmount = rand(1, 40);
+		$intAmount = rand(1, 60);
 		$fltSkill = ((float)rand(1, 10) / 10) * ($_SESSION['craftindex'][$intIndex] + 1);
 	      }
 	    else
 	      {
 		$strInfo2 .= 'zdobywaniu nasion: ';
-		$intAmount = rand(1, 20);
+		$intAmount = rand(1, 30);
 		$fltSkill = ((float)rand(1, 5) / 10) * ($_SESSION['craftindex'][$intIndex] + 1);
 	      }
 	    $strInfo2 .= $arrOptions[$_SESSION['craftindex'][$intIndex]].'. ';
@@ -507,7 +507,7 @@ if (isset($_GET['step']))
 		$db->Execute("UPDATE `herbs` SET `".$arrBillets[$_SESSION['craftindex'][$intIndex]]."`=`".$arrBillets[$_SESSION['craftindex'][$intIndex]]."` WHERE `gracz`=".$player->id);
 	      }
 	    $objTest->Close();
-	    $intWarehouse = $intAmount * 10;
+	    $intWarehouse = $intAmount * 7;
 	    $db->Execute("UPDATE `warehouse` SET `amount`=`amount`+'".$intWarehouse."' WHERE `mineral`='".$arrBillets2[$_SESSION['craftindex'][$intIndex]]."'");
 	    break;
 	    //alchemy
