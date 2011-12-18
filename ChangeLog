@@ -1,5 +1,7 @@
 2011-12-18  Bartek thindil Jasicki  <thindil@vallheru.net>
 
+	* BUG,includes/battle.php: 
+	fixed typo
 	* BUG,crafts.php: 
 	fixed making billets
 	* BUG,crafts.php:

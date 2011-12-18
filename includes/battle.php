@@ -8,7 +8,7 @@
  *   @author               : thindil <thindil@tuxfamily.org>
  *   @author               : eyescream <tduda@users.sourceforge.net>
  *   @version              : 1.5
- *   @since                : 09.12.2011
+ *   @since                : 18.12.2011
  *
  */
 
@@ -464,7 +464,7 @@ function attack1($attacker, $defender, $arrAtequip, $arrDeequip, $attack_bspell,
 				$intDamage = floor($attackdmg * 0.25);
 			      }
 			    $defender['hp'] -= $intDamage;
-			    $player->mana -= $attack_bspell->fields['poziom'];
+			    $attacker['mana'] -= $attack_bspell->fields['poziom'];
 			    $strMessage = $strMessage."<b>".$attacker['user']."</b> nie do końca opanował zaklęcie, dlatego jego czar zadaje <b>".$intDamage."</b> obrażeń. (".$defender['hp']." zostało)<br />";
 			  }
 			else
@@ -482,7 +482,7 @@ function attack1($attacker, $defender, $arrAtequip, $arrDeequip, $attack_bspell,
 				$intDamage = floor($attackdmg * 0.75);
 			      }
 			    $defender['hp'] -= $intDamage;
-			    $attacker['mana'] -= $$attack_bspell->fields['poziom'];
+			    $attacker['mana'] -= $attack_bspell->fields['poziom'];
 			    $attacker['hp'] -= $intDamage;
 			    $strMesage = $strMessage."<b>".$attacker['user']."</b> próbował rzucić zaklęcie, ale eksplodowało ono w rękach, raniąc jego oraz wroga. Traci przez to ".$intDamage." punktów życia (".$attacker['hp']." zostało), <b>".$defender['user']."</b> otrzymuje ".$intDamage." obrażeń (".$defender['hp']." zostało)";
 			  }
@@ -728,7 +728,7 @@ function attack1($attacker, $defender, $arrAtequip, $arrDeequip, $attack_bspell,
 				$intDamage = floor($attackdmg * 0.25);
 			      }
 			    $defender['hp'] -= $intDamage;
-			    $player->mana -= $attack_bspell->fields['poziom'];
+			    $attacker['mana'] -= $attack_bspell->fields['poziom'];
 			    $strMessage = $strMessage."<b>".$attacker['user']."</b> nie do końca opanował zaklęcie, dlatego jego czar zadaje <b>".$intDamage."</b> obrażeń. (".$defender['hp']." zostało)<br />";
 			  }
 			else
@@ -746,7 +746,7 @@ function attack1($attacker, $defender, $arrAtequip, $arrDeequip, $attack_bspell,
 				$intDamage = floor($attackdmg * 0.75);
 			      }
 			    $defender['hp'] -= $intDamage;
-			    $attacker['mana'] -= $$attack_bspell->fields['poziom'];
+			    $attacker['mana'] -= $attack_bspell->fields['poziom'];
 			    $attacker['hp'] -= $intDamage;
 			    $strMesage = $strMessage."<b>".$attacker['user']."</b> próbował rzucić zaklęcie, ale eksplodowało ono w rękach, raniąc jego oraz wroga. Traci przez to ".$intDamage." punktów życia (".$attacker['hp']." zostało), <b>".$defender['user']."</b> otrzymuje ".$intDamage." obrażeń (".$defender['hp']." zostało)";
 			  }
