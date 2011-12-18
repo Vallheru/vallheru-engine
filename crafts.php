@@ -7,7 +7,7 @@
  *   @copyright            : (C) 2011 Vallheru Team based on Gamers-Fusion ver 2.5
  *   @author               : thindil <thindil@vallheru.net>
  *   @version              : 1.5
- *   @since                : 17.12.2011
+ *   @since                : 18.12.2011
  *
  */
 
@@ -94,12 +94,12 @@ if (isset($_GET['step']))
 	    $_SESSION['craft'] = array(8, 0, $intRand);
 	    break;
 	  default:
+	    $_SESSION['craft'] = array(0, 1, $intRand);
 	    break;
 	  }
 	$_SESSION['craftenergy'] = array();
 	$_SESSION['craftindex'] = array();
 	$arrInfo = array();
-	$arrLink = array();
 	for ($i = 0; $i < 3; $i++)
 	  {
 	    switch ($_SESSION['craft'][$i])
