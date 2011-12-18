@@ -337,7 +337,7 @@ if (isset($_GET['step']))
 	      }
 	    else
 	      {
-		$db->Execute("UPDATE `minerals` SET `".$arrBillets[$_SESSION['craftindex'][$intIndex]]."`=`".$arrBillets[$_SESSION['craftindex'][$intIndex]]."` WHERE `owner`=".$player->id);
+		$db->Execute("UPDATE `minerals` SET `".$arrBillets[$_SESSION['craftindex'][$intIndex]]."`=`".$arrBillets[$_SESSION['craftindex'][$intIndex]]."`+".$intAmount." WHERE `owner`=".$player->id);
 	      }
 	    $objTest->Close();
 	    $intWarehouse = $intAmount * 5;
