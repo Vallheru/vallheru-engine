@@ -5,10 +5,10 @@
  *
  *   @name                 : view.php                            
  *   @copyright            : (C) 2004,2005,2006,2011 Vallheru Team based on Gamers-Fusion ver 2.5
- *   @author               : thindil <thindil@tuxfamily.org>
+ *   @author               : thindil <thindil@vallheru.net>
  *   @author               : eyescream <tduda@users.sourceforge.net>
- *   @version              : 1.4
- *   @since                : 04.11.2011
+ *   @version              : 1.5
+ *   @since                : 19.12.2011
  *
  */
 
@@ -78,7 +78,8 @@ $arrTitle = array('Opcje konta', 'Dodaj Plotkę', 'Dodaj Wieść', 'Alchemik', '
                   'Zbrojownia klanu', 'Klany', 'Magazyn klanu', 'Zobacz', 'Zbrojmistrz', 'Magiczna wieża', 'Bogactwa', 
                   'Gmach sądu', 'Biblioteka', 'Magazyn Królewski', 'Redakcja gazety', 'Mapa', 'Centrum poleconych', 
                   'Góry Kazad-nar', 'Las Avatiel', 'Wyrąb', 'Aleja zasłużonych', 'Astralny skarbiec', 'Astralny rynek', 'Spis książąt',
-                  'Jubiler', 'Rynek jubilerski', 'Kopalnia', 'Kopalnie', 'Huta', 'Astralny plan', 'Warsztat jubilerski');
+                  'Jubiler', 'Rynek jubilerski', 'Kopalnia', 'Kopalnie', 'Huta', 'Astralny plan', 'Warsztat jubilerski',
+		  'Rynek z łupami', 'Galeria Machin', 'Propozycje', 'Gildia Łowców', 'Gildia Rzemieślników', 'Cześnik', 'Aula Gladiatorów');
 if ($view -> location != 'Ardulith')
 {
     $arrTitle2 = $arrTitle;

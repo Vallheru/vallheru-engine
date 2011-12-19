@@ -79,7 +79,7 @@ $arrayMonumentDescriptions = array(array(LEVEL, GOLD_IN_MONEYBAG, GOLD_ON_ACCOUN
 				   array("Spostrzegawczość", "Złodziejstwo")
                                    );
         
-$arrayMonuments = array(array(topplayers('level'), topplayers('wins'), topplayers('credits'),topplayers('bank'), topplayers('vallars')),
+$arrayMonuments = array(array(topplayers('level'), topplayers('credits'),topplayers('bank'), topplayers('vallars')),
 			array(topplayers('perception'), topplayers('thievery', TRUE))
                         );
     
