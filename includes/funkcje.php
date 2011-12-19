@@ -43,6 +43,11 @@ function battlerecords($strEname, $intLevel, $intPid)
 {
   global $db;
 
+  //Don't count bandits in travel
+  if ($strEname == 'Bandyta')
+    {
+      return;
+    }
   //Update battle records
   $objTest = $db->Execute("SELECT `pid` FROM `brecords` WHERE `pid`=".$intPid." AND `mlevel`>=".$intLevel);
   if (!$objTest->fields['pid'])
