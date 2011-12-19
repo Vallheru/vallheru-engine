@@ -8,7 +8,7 @@
  *   @author               : thindil <thindil@vallheru.net>
  *   @author               : eyescream <tduda@users.sourceforge.net>
  *   @version              : 1.5
- *   @since                : 14.12.2011
+ *   @since                : 19.12.2011
  *
  */
 
@@ -69,23 +69,17 @@ function topplayers($strDbfield, $blnHidden = FALSE)
 }
 
 // Set monument groups.
-$arrayMonumentGroups = array(PLAYER_RANKING, STATS, COMBAT_SKILLS, "Posągi różnych umiejętności" );
+$arrayMonumentGroups = array(PLAYER_RANKING, "Posągi różnych umiejętności" );
 // For each group decide which monuments should go there...
 $arrayMonumentTitles = array(array(HIGHEST_LEVEL, HIGHEST_WINS, HIGHEST_GOLD_IN_MONEYBAG, HIGHEST_GOLD_ON_ACCOUNT, "Najwięcej Vallarów"),
-                             array(HIGHEST_STRENGTH, HIGHEST_ENDURANCE, HIGHEST_INTELLIGENCE, HIGHEST_WISDOM, HIGHEST_SPEED, HIGHEST_AGILITY),
-                             array(HIGHEST_SIDEARMS_SKILL, HIGHEST_GAME_SHOOTING, HIGHEST_SPELL_CASTING, HIGHEST_DODGING, HIGHEST_LEADERSHIP),
 			     array("Najwyższa Spostrzegawczość", "Najwyższe Złodziejstwo")
                              );
 // ...and add description of stat/skill/achievement.
 $arrayMonumentDescriptions = array(array(LEVEL, WINS, GOLD_IN_MONEYBAG, GOLD_ON_ACCOUNT, "Vallary"),
-                                   array(STRENGTH, ENDURANCE, INTELLIGENCE, WISDOM, SPEED, AGILITY),
-                                   array(SIDEARMS_SKILL, GAME_SHOOTING, SPELL_CASTING, DODGING, LEADERSHIP),
 				   array("Spostrzegawczość", "Złodziejstwo")
                                    );
         
 $arrayMonuments = array(array(topplayers('level'), topplayers('wins'), topplayers('credits'),topplayers('bank'), topplayers('vallars')),
-                        array(topplayers('strength'), topplayers('wytrz'), topplayers('inteli'), topplayers('wisdom'), topplayers('szyb'), topplayers('agility')),
-                        array(topplayers('atak'), topplayers('shoot'), topplayers('magia'), topplayers('unik'), topplayers('leadership')),
 			array(topplayers('perception'), topplayers('thievery', TRUE))
                         );
     

@@ -7,7 +7,7 @@
  *   @copyright            : (C) 2004,2005,2006,2007,2011 Vallheru Team based on Gamers-Fusion ver 2.5
  *   @author               : thindil <thindil@vallheru.net>
  *   @version              : 1.5
- *   @since                : 15.12.2011
+ *   @since                : 19.12.2011
  *
  */
 
@@ -35,6 +35,24 @@ require_once ('includes/checkexp.php');
 * Get the localization for game
 */
 require_once("languages/".$lang."/funkcje.php");
+
+/**
+ * Function update battle records
+ */
+function battlerecords($strEname, $intLevel, $intPid)
+{
+  global $db;
+
+  //Update battle records
+  $objTest = $db->Execute("SELECT `pid` FROM `brecords` WHERE `pid`=".$intPid." AND `mlevel`>=".$intLevel);
+  if (!$objTest->fields['pid'])
+    {
+      $objDay = $db->Execute("SELECT `value` FROM `settings` WHERE `setting`='day'");
+      $db->Execute("INSERT INTO `brecords` (`pid`, `mdate`, `mlevel`, `mname`) VALUES(".$intPid.", ".$objDay->fields['value'].", ".$intLevel.", '".$strEname."')") or die($db->ErrorMsg());
+      $objDay->Close();
+    }
+  $objTest->Close();
+}
 
 /**
  * Function check for monsters loot
@@ -1395,6 +1413,7 @@ function fightmonster($enemy, $expgain, $goldgain, $times)
     else 
       {
         monsterloot($enemy['lootnames'], $enemy['lootchances'], $enemy['level'], $_POST['razy']);
+	battlerecords($enemy['name'], $enemy['level'], $player->id);
         $db -> Execute("UPDATE `players` SET `credits`=`credits`+".$goldgain." WHERE `id`=".$player -> id);
         $db -> Execute("INSERT INTO `events` (`text`) VALUES('Gracz ".$player -> user." ".EVENT." ".$_POST['razy']." ".$enemy['name']."')");
         $smarty -> assign ("Message", "<br /><li><b".B_RESULT2." <b>".$_POST['razy']." ".$enemy['name']."</b>.");
