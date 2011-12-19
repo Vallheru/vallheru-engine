@@ -7,7 +7,7 @@
  *   @copyright            : (C) 2011 Vallheru Team based on Gamers-Fusion ver 2.5
  *   @author               : thindil <thindil@vallheru.net>
  *   @version              : 1.5
- *   @since                : 18.12.2011
+ *   @since                : 19.12.2011
  *
  */
 
@@ -160,14 +160,11 @@ if (isset($_GET['step']))
 		$objRing = $db->Execute("SELECT `id`, `name`, `level` FROM `jeweller` WHERE `owner`=".$player->id." AND `name`!='pierścień' AND `level`<=".$player->level." ORDER BY RAND() LIMIT 1");
 		if (!$objRing->fields['id'])
 		  {
-		    $intLevel = 1;
-		    $_SESSION['craftindex'][$i] = 1;
+		    $objRing->Close();
+		    $objRing = $db->Execute("SELECT `id`, `name`, `level` FROM `jeweller` WHERE `id`=1");
 		  }
-		else
-		  {
-		    $intLevel = $objRing->fields['level'];
-		    $_SESSION['craftindex'][$i] = $objRing->fields['id'];
-		  }
+		$intLevel = $objRing->fields['level'];
+		$_SESSION['craftindex'][$i] = $objRing->fields['id'];
 		$_SESSION['craftenergy'] = 5 * $intLevel;
 		$arrInfo[$i] = 'Potrzebujemy jubilera, który wykona dla nas parę pierścieni typu: '.$objRing->fields['name'];
 		$objRing->Close();
@@ -194,14 +191,11 @@ if (isset($_GET['step']))
 		$objPotion = $db->Execute("SELECT `id`, `name`, `level` FROM `alchemy_mill` WHERE `owner`=".$player->id." AND `level`<=".$player->level." ORDER BY RAND() LIMIT 1");
 		if (!$objPotion->fields['id'])
 		  {
-		    $intLevel = 1;
-		    $_SESSION['craftindex'][$i] = 5;
+		    $objPotion->Close();
+		    $objPotion = $db->Execute("SELECT `id`, `name`, `level` FROM `alchemy_mill` WHERE `id`=5");
 		  }
-		else
-		  {
-		    $intLevel = $objPotion->fields['level'];
-		    $_SESSION['craftindex'][$i] = $objPotion->fields['id'];
-		  }
+		$intLevel = $objPotion->fields['level'];
+		$_SESSION['craftindex'][$i] = $objPotion->fields['id'];
 		$_SESSION['craftenergy'][$i] = 5 * $intLevel;
 		$arrInfo[$i] = 'Potrzebujemy alchemika, który wykona dla nas parę mikstur typu: '.$objPotion->fields['name'];
 		$objPotion->Close();
@@ -211,14 +205,11 @@ if (isset($_GET['step']))
 		$objBows = $db->Execute("SELECT `id`, `name`, `level`, `type` FROM `mill` WHERE `owner`=".$player->id." AND `elite`=0 AND `level`<=".$player->level." ORDER BY RAND() LIMIT 1");
 		if (!$objBows->fields['id'])
 		  {
-		    $intLevel = 1;
-		    $_SESSION['craftindex'][$i] = 1;
+		    $objBows->Close();
+		    $objBows = $db->Execute("SELECT `id`, `name`, `level`, `type` FROM `mill` WHERE `id`=1");
 		  }
-		else
-		  {
-		    $intLevel = $objBows->fields['level'];
-		    $_SESSION['craftindex'][$i] = $objBows->fields['id'];
-		  }
+		$intLevel = $objBows->fields['level'];
+		$_SESSION['craftindex'][$i] = $objBows->fields['id'];
 		$_SESSION['craftenergy'][$i] = 5 * $intLevel;
 		$arrInfo[$i] = 'Potrzebujemy stolarza, który wykona dla nas parę ';
 		if ($objBows->fields['type'] == 'B')
@@ -239,16 +230,12 @@ if (isset($_GET['step']))
 		$arrNames = array('zbrój', 'tarcz', 'hełmów', 'nagolenników', 'broni');
 		if (!$objSmith->fields['id'])
 		  {
-		    $intLevel = 1;
-		    $_SESSION['craftindex'][$i] = 18;
-		    $intName = 1;
+		    $objSmith->Close();
+		    $objSmith = $db->Execute("SELECT `id`, `name`, `level`, `type` FROM `smith` WHERE `id`=18");
 		  }
-		else
-		  {
-		    $intLevel = $objSmith->fields['level'];
-		    $_SESSION['craftindex'][$i] = $objSmith->fields['id'];
-		    $intName = array_search($objSmith->fields['type'], $arrTypes);
-		  }
+		$intLevel = $objSmith->fields['level'];
+		$_SESSION['craftindex'][$i] = $objSmith->fields['id'];
+		$intName = array_search($objSmith->fields['type'], $arrTypes);
 		$_SESSION['craftenergy'][$i] = 5 * $intLevel;
 		$arrInfo[$i] = 'Potrzebujemy kowala, który wykona dla nas parę '.$arrNames[$intName];
 		$arrInfo[$i] .= ' typu: '.$objSmith->fields['name'];
