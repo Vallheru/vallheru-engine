@@ -1,5 +1,7 @@
 2011-12-20  Bartek thindil Jasicki  <thindil@vallheru.net>
 
+	* UPDATE,preset.php: 
+	clear mission points too
 	* BUG,crafts.php:
 	fixed typo
 
