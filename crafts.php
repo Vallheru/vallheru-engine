@@ -7,7 +7,7 @@
  *   @copyright            : (C) 2011 Vallheru Team based on Gamers-Fusion ver 2.5
  *   @author               : thindil <thindil@vallheru.net>
  *   @version              : 1.5
- *   @since                : 19.12.2011
+ *   @since                : 20.12.2011
  *
  */
 
@@ -165,7 +165,7 @@ if (isset($_GET['step']))
 		  }
 		$intLevel = $objRing->fields['level'];
 		$_SESSION['craftindex'][$i] = $objRing->fields['id'];
-		$_SESSION['craftenergy'] = 5 * $intLevel;
+		$_SESSION['craftenergy'][$i] = 5 * $intLevel;
 		$arrInfo[$i] = 'Potrzebujemy jubilera, który wykona dla nas parę pierścieni typu: '.$objRing->fields['name'];
 		$objRing->Close();
 		break;
