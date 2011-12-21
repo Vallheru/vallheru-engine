@@ -7,7 +7,7 @@
  *   @copyright            : (C) 2011 Vallheru Team based on Gamers-Fusion ver 2.5
  *   @author               : thindil <thindil@vallheru.net>
  *   @version              : 1.5
- *   @since                : 20.12.2011
+ *   @since                : 21.12.2011
  *
  */
 
@@ -32,6 +32,9 @@
 $title = 'Prefektura Gwardii';
 require_once('includes/head.php');
 
+require_once('includes/funkcje.php');
+require_once('includes/turnfight.php');
+
 if($player->location != 'Altara' && $player->location != 'Ardulith') 
 {
     error ("Nie znajdujesz się w mieście.");
@@ -41,6 +44,104 @@ if (!in_array($player->clas, array('Wojownik', 'Barbarzyńca', 'Mag')))
   {
     error("Drogę zastępuje tobie straż. <i>Tylko parający się bronią bądź magią mają wstęp do tego budynku!</i><a href=");
   }
+
+/**
+ * Fight with bandits
+ */
+function battle($intEnemy = 0)
+{
+  global $db;
+  global $player;
+  global $enemy;
+  global $smarty;
+
+  if (!isset($_SESSION['enemy']))
+    {
+      if ($_GET['step'] != 'fight')
+	{
+	  $_SESSION['index'] = $_GET['step'];
+	}
+      if (!$intEnemy)
+	{
+	  $arrbandit = array ();
+	  for ($i=0; $i<8; $i++) 
+	    {
+	      $roll2 = rand (1, 500);
+	      $arrbandit[$i] = $roll2;
+	    }
+	  $enemy = array('name' => 'Bandyta', 
+			 'strength' => $arrbandit[0], 
+			 'agility' => $arrbandit[1], 
+			 'hp' => $arrbandit[2], 
+			 'level' => $arrbandit[3], 
+			 'endurance' => $arrbandit[6], 
+			 'speed' => $arrbandit[7], 
+			 'exp1' => $arrbandit[4], 
+			 'exp2' => $arrbandit[4],
+			 "gold" => $arrbandit[5],
+			 "lootnames" => array(),
+			 "lootchances" => array());
+	}
+      else
+	{
+	  $objMonster = $db->Execute("SELECT * FROM `monsters` WHERE `id`=".$intEnemy);
+	  $enemy = array('name' => $objMonster->fields['name'],
+			 'strength' => $objMonster->fields['strength'],
+			 'agility' => $objMonster->fields['agility'],
+			 'hp' => $objMonster->fields['hp'],
+			 'level' => $objMonster->fields['level'],
+			 'endurance' => $objMonster->fields['endurance'],
+			 'speed' => $objMonster->fields['speed'],
+			 'exp1' => $objMonster->fields['exp1'],
+			 'exp2' => $objMonster->fields['exp2'],
+			 'gold' => $objMonster->fields['gold'],
+			 "lootnames" => explode(";", $objMonster->fields['lootnames']),
+			 "lootchances" => explode(";", $objMonster->fields['lootchances']));
+	}
+      $_SESSION['enemy'] = $enemy;
+    }
+  else
+    {
+      $enemy = $_SESSION['enemy'];
+    }
+  if ($player->fight == 0)
+    {
+      if (!$intEnemy)
+	{
+	  $db -> Execute("UPDATE `players` SET `fight`=99999 WHERE `id`=".$player->id);
+	}
+      else
+	{
+	  $db -> Execute("UPDATE `players` SET `fight`=".$intEnemy." WHERE `id`=".$player->id);
+	}
+    }
+  $arrehp = array ();
+  if (!isset ($_POST['action'])) 
+    {
+      turnfight ($enemy['exp1'], $enemy['gold'], '', 'outpost.php?step=fight');
+    } 
+  else 
+    {
+      turnfight ($enemy['exp1'], $enemy['gold'], $_POST['action'], 'outpost.php?step=fight');
+    }
+  $myhp = $db -> Execute("SELECT `hp`, `fight` FROM `players` WHERE `id`=".$player -> id);
+  if ($myhp -> fields['fight'] == 0) 
+    {
+      unset($_SESSION['enemy']);
+      if ($myhp->fields['hp'] == 0)
+	{
+	  $_SESSION['result'] = 0;
+	  $smarty->assign("Message", 'Niestety, tym razem przeciwnik okazał się silniejszy od Ciebie.');
+	}
+      else
+	{
+	  $_SESSION['result'] = 1;
+	  $smarty -> assign ("Message", 'Dobijasz przeciwnika i rozglądasz się w około jak radzą sobie twoi towarzysze.');
+	}
+      $smarty -> display ('error1.tpl');
+    }
+  $myhp -> Close();
+}
 
 /**
  * Get job
@@ -199,7 +300,7 @@ if (isset($_GET['step']))
 	    error('Zapomnij o tym.');
 	  }
 	$intIndex = intval($_GET['step']);
-	if ($intIndex < 0 || $intIndex > 10)
+	if ($intIndex < 0 || $intIndex > 2)
 	  {
 	    error('Zapomnij o tym');
 	  }
@@ -210,6 +311,7 @@ if (isset($_GET['step']))
 	  }
 	$db->Execute("UPDATE `players` SET `energy`=`energy`-5  WHERE `id`=".$player->id);
 	$intRoll = rand(1, 100);
+	$intGold = $player->level * 125;
 	if ($player->gender == 'M')
 	  {
 	    $strSuffix = 'eś';
@@ -218,15 +320,50 @@ if (isset($_GET['step']))
 	  {
 	    $strSuffix = 'aś';
 	  }
-	switch ($_SESSION['craft'])
+	switch ($_SESSION['craft'][$intIndex])
 	  {
-	    //Road patrol
+	    //Road, mountain and forest patrol
 	  case 0:
+	  case 3:
+	  case 4:
+	    if ($intRoll < 80)
+	      {
+		$intExp = rand(1, 5) * $player->level;
+		$strResult = 'Patrol minął bez większych niespodzanek. Zwiedził'.$strSuffix.' sobie nieco okolicę, jednak nic ciekawego się nie wydarzyło. Po powrocie otrzymał'.$strSuffix.' '.$intGold.' sztuk złota oraz '.$intExp.' punktów doświadczenia.';
+		require_once("includes/checkexp.php");
+		checkexp($player->exp, $intExp, $player->level, $player->race, $player->user, $player->id, 0, 0, $player->id, "", 0);
+		$db->Execute("UPDATE `players` SET `credits`=`credits`+".$intGold.", `mpoints`=`mpoints`+1 WHERE `id`=".$player->id);
+	      }
+	    elseif ($intRoll < 91)
+	      {
+		$intExp = rand(1, 20) * $player->level;
+		$intGold += $player->level * 50;
+		$strResult = 'Patrol zakończył się pełnym powodzeniem! Udało wam się podejść i ująć tych, których szukaliście. Po odeskortowaniu więźniów do miasta, otrzymał'.$strSuffix.' '.$intGold.' sztuk złota oraz '.$intExp.' punktów doświadczenia.';
+		require_once("includes/checkexp.php");
+		checkexp($player->exp, $intExp, $player->level, $player->race, $player->user, $player->id, 0, 0, $player->id, "", 0);
+		$db->Execute("UPDATE `players` SET `credits`=`credits`+".$intGold.", `mpoints`=`mpoints`+1 WHERE `id`=".$player->id);
+	      }
+	    elseif ($intRoll < 95)
+	      {
+		$smarty->assign("Message", 'Udało wam się odnaleźć tych, których szukaliście. Niestety, nie udało się ich zaskoczyć. Bandyci stanęli do walki!');
+		$smarty -> display ('error1.tpl');
+		battle();
+	      }
+	    else
+	      {
+		$intDamage = ceil(($player->max_hp / 100) * rand(1, 25));
+		$player->hp -= $intDamage;
+		if ($player->hp < 0)
+		  {
+		    $player->hp = 0;
+		  }
+		$db->Execute("UPDATE `players` SET `hp`=".$player->hp." WHERE `id`=".$player->id);
+		$strResult = 'To nie był twój szczęśliwy dzień. Najpierw natknęliście się na resztki ograbionej karawany, następnie sami wpadliście w zasadkę bandytów. Odniosł'.$strSuffix.' '.$intDamage.' obrażeń. Niestety po powrocie, nie otrzymał'.$strSuffix.' zapłaty za zmarnowany czas.';
+	      }
 	    break;
 	    //Train soldiers or adepts
 	  case 1:
 	  case 10:
-	    $intGold = $player->level * 125;
 	    if ($intRoll < 20)
 	      {
 		$intGold += $player->level * 50;
@@ -251,22 +388,33 @@ if (isset($_GET['step']))
 	    break;
 	    //Hunt for bandits
 	  case 2:
-	    break;
-	    //Mountain patrol
-	  case 3:
-	    break;
-	    //Forest patrol
-	  case 4:
+	    if ($intRoll < 80)
+	      {
+		$intExp = rand(1, 5) * $player->level;
+		$strResult = 'Udaliście się we wskazane na mapie miejsce. Po jakimś czasie zauważyliście z oddali obozowisko bandytów. Tym razem udało się ich przechytrzyć. Zaskoczeni w ogóle nie stawiali oporu. Związanych przestępców dostarczyliście do lochów w mieście. W nagrodę otrzymał'.$strSuffix.' sztuk złota oraz '.$intExp.' punktów doświadczenia.';
+		require_once("includes/checkexp.php");
+		checkexp($player->exp, $intExp, $player->level, $player->race, $player->user, $player->id, 0, 0, $player->id, "", 0);
+		$db->Execute("UPDATE `players` SET `credits`=`credits`+".$intGold.", `mpoints`=`mpoints`+1 WHERE `id`=".$player->id);
+	      }
+	    elseif ($intRoll < 95)
+	      {
+		$smarty->assign("Message", 'Udało wam się odnaleźć tych, których szukaliście. Niestety, nie udało się ich zaskoczyć. Bandyci stanęli do walki!');
+		$smarty -> display ('error1.tpl');
+		battle();
+	      }
+	    else
+	      {
+		$strResult = 'Po dotarciu na miejsce, znaleźliście tylko resztki dawnego obozowiska przestępców. Niestety w okolicy brak jakichkolwiek śladów dokąd odeszli. Tym razem nawet nie otrzymał'.$strSuffix.' wynagrodzenia za swój stracony czas.';
+	      }
 	    break;
 	    //City patrol
 	  case 5:
-	    $intGold = $player->level * 125;
 	    if ($intRoll < 20)
 	      {
 		$intGold += $player->level * 50;
 		$intExp = rand(1, 20) * $player->level;
 		$fltSkill = rand(1, 10) / 100;
-		$strResult = 'Ten dzień zaliczysz do udanych. W pewnym momencie, udało ci się przyuważyć złodziejaszka, który próbował okraść mieszkańca. Dzięki Twojej szybkiej reakcji, przestępca trafił do lochów. W nagrodę za swoją pracę dostajesz '.$intGold.' sztuk złota, '.$intExp.' punktów doświadczenia oraz '$fltSkill' do umiejętności Spostrzegawczość.';
+		$strResult = 'Ten dzień zaliczysz do udanych. W pewnym momencie, udało ci się przyuważyć złodziejaszka, który próbował okraść mieszkańca. Dzięki Twojej szybkiej reakcji, przestępca trafił do lochów. W nagrodę za swoją pracę dostajesz '.$intGold.' sztuk złota, '.$intExp.' punktów doświadczenia oraz '.$fltSkill.' do umiejętności Spostrzegawczość.';
 		require_once("includes/checkexp.php");
 		checkexp($player->exp, $intExp, $player->level, $player->race, $player->user, $player->id, 0, 0, $player->id, "perception", $fltSkill);
 		$db->Execute("UPDATE `players` SET `credits`=`credits`+".$intGold.", `mpoints`=`mpoints`+1 WHERE `id`=".$player->id);
@@ -286,18 +434,182 @@ if (isset($_GET['step']))
 	    break;
 	    //Hunt for monsters
 	  case 6:
+	    if ($intRoll < 90)
+	      {
+		$smarty->assign("Message", 'Udało wam się odnaleźć bestie, których szukaliście. Z okrzykiem bojowym na ustach, ruszasz wprost na najbliższą bestię');
+		$smarty -> display ('error1.tpl');
+		battle($_SESSION['mdata'][$intIndex]);
+	      }
+	    else
+	      {
+		$strResult = 'Po dotarciu na miejsce, znaleźliście tylko ślady bytności bestii. Niestety w okolicy brak jakichkolwiek wskazówek dokąd odeszły. Tym razem nawet nie otrzymał'.$strSuffix.' wynagrodzenia za swój stracony czas.';
+	      }
 	    break;
 	    //Attack on bandits
 	  case 7:
+	    if ($intRoll < 50)
+	      {
+		$intGold += $player->level * 50;
+		$intExp = rand(1, 20) * $player->level;
+		$fltSkill = rand(1, 10) / 100;
+		$strResult = 'Dotarłszy na miejsce, sprawnie dowodzisz swoim oddziałem. Posuwacie się ostrożnie przed siebie. Niezauważeni podchodzicie pod obóz bandytów. Na twój sygnał oddział rusza do akcji. Przestępcy kompletnie zaskoczeni, nie stawiają oporu. Związujecie ich wszystkich i wracacie do miasta. W nagrodę za doskonale przeprowadzoną akcję otrzymujesz '.$intGold.' sztuk złota, '.$intExp.' punktów doświadczenia oraz '.$fltSkill.' punktów do umiejętności Dowodzenie.';
+		require_once("includes/checkexp.php");
+		checkexp($player->exp, $intExp, $player->level, $player->race, $player->user, $player->id, 0, 0, $player->id, "leadership", $fltSkill);
+		$db->Execute("UPDATE `players` SET `credits`=`credits`+".$intGold.", `mpoints`=`mpoints`+1 WHERE `id`=".$player->id);
+	      }
+	    elseif ($intRoll < 95)
+	      {
+		$intExp = rand(1, 5) * $player->level;
+		$strResult = 'Mimo twoich najlepszych chęci, nie udało wam się podejść niezauważenie bandytów. Wywiązała się walka między nimi. Uważnie obserwujesz i wydajesz rozkazy swoim podwładnym. Na szczęście walka kończy się dobrze. Tych bandytów, którzy ocaleli, doprowadzacie do miasta. W nagrodę otrzymujesz '.$intGold.' sztuk złota oraz '.$intExp.' punktów doświadczenia.';
+		require_once("includes/checkexp.php");
+		checkexp($player->exp, $intExp, $player->level, $player->race, $player->user, $player->id, 0, 0, $player->id, "", 0);
+		$db->Execute("UPDATE `players` SET `credits`=`credits`+".$intGold.", `mpoints`=`mpoints`+1 WHERE `id`=".$player->id);
+	      }
+	    else
+	      {
+		$strResult = 'Po dotarciu na miejsce, znaleźliście tylko resztki dawnego obozowiska przestępców. Niestety w okolicy brak jakichkolwiek śladów dokąd odeszli. Tym razem nawet nie otrzymał'.$strSuffix.' wynagrodzenia za swój stracony czas.';
+	      }
 	    break;
 	    //Attack on monsters
 	  case 8:
+	    if ($intRoll < 50)
+	      {
+		$intGold += $player->level * 50;
+		$intExp = rand(1, 20) * $player->level;
+		$fltSkill = rand(1, 10) / 100;
+		$strResult = 'Bez problemu odnajdujecie kryjówkę bestii. Te nie zauważają waszej obecności. W odpowienim momencie z okrzykiem bojowym na ustach, prowadzisz swoich żołnierzy do ataku. Walka jest krótka ale zacięta. Udaje wam się zabić wszystkie potwory. Po powrocie do miasta w nagrodę otrzymujesz '.$intGold.' sztuk złota, '.$intExp.' punktów doświadczenia oraz '.$fltSkill.' punktów do umiejętności Dowodzenie.';
+		require_once("includes/checkexp.php");
+		checkexp($player->exp, $intExp, $player->level, $player->race, $player->user, $player->id, 0, 0, $player->id, "leadership", $fltSkill);
+		$db->Execute("UPDATE `players` SET `credits`=`credits`+".$intGold.", `mpoints`=`mpoints`+1 WHERE `id`=".$player->id);
+	      }
+	    elseif ($intRoll < 95)
+	      {
+		$smarty->assign("Message", 'Docieracie na miejsce, jednak tym razem bestie nie dały się zaskoczyć. Na wasz atak odpowiedziały własnym atakiem. Przywódca stada rzuca się wprost na ciebie. Rozpoczyna się walka!');
+		$smarty -> display ('error1.tpl');
+		battle($_SESSION['mdata'][$intIndex]);
+	      }
+	    else
+	      {
+		$strResult = 'Po dotarciu na miejsce, znaleźliście tylko ślady bytności bestii. Niestety w okolicy brak jakichkolwiek wskazówek dokąd odeszły. Tym razem nawet nie otrzymał'.$strSuffix.' wynagrodzenia za swój stracony czas.';
+	      }
 	    break;
 	    //Guard caravan
 	  case 9:
+	    if ($intRoll < 80)
+	      {
+		$intExp = rand(1, 5) * $player->level;
+		$strResult = 'Podróż minęła spokojnie, nie licząc kłótni, które od czasu do czasu wybuchały w karawanie. Zwiedził'.$strSuffix.' sobie nieco okolicę, jednak nic ciekawego się nie wydarzyło. Po powrocie otrzymał'.$strSuffix.' '.$intGold.' sztuk złota oraz '.$intExp.' punktów doświadczenia.';
+		require_once("includes/checkexp.php");
+		checkexp($player->exp, $intExp, $player->level, $player->race, $player->user, $player->id, 0, 0, $player->id, "", 0);
+		$db->Execute("UPDATE `players` SET `credits`=`credits`+".$intGold.", `mpoints`=`mpoints`+1 WHERE `id`=".$player->id);
+	      }
+	    elseif ($intRoll < 91)
+	      {
+		$intExp = rand(1, 20) * $player->level;
+		$intGold += $player->level * 50;
+		$strResult = 'Rzeczywiście, ostatnio bandyci się rozplenili w okolicy. Tym razem jednak nie przewidzieli, że karawana posiada zwiększoną obronę. Bez problemu wyłapaliście ich. Po odeskortowaniu więźniów do miasta, otrzymał'.$strSuffix.' '.$intGold.' sztuk złota oraz '.$intExp.' punktów doświadczenia.';
+		require_once("includes/checkexp.php");
+		checkexp($player->exp, $intExp, $player->level, $player->race, $player->user, $player->id, 0, 0, $player->id, "", 0);
+		$db->Execute("UPDATE `players` SET `credits`=`credits`+".$intGold.", `mpoints`=`mpoints`+1 WHERE `id`=".$player->id);
+	      }
+	    elseif ($intRoll < 95)
+	      {
+		$smarty->assign("Message", 'Bandyci pojawili się nagle na drodze. Na moment zawachali się, widząc zwiększoną ochronę karawany, ale już po chwili ruszyli do ataku. Rozpoczyna się walka!');
+		$smarty -> display ('error1.tpl');
+		battle();
+	      }
+	    else
+	      {
+		$intDamage = ceil(($player->max_hp / 100) * rand(1, 25));
+		$player->hp -= $intDamage;
+		if ($player->hp < 0)
+		  {
+		    $player->hp = 0;
+		  }
+		$db->Execute("UPDATE `players` SET `hp`=".$player->hp." WHERE `id`=".$player->id);
+		$strResult = 'Chwila nieuwagi i wpadliście w zasadkę bandytów. Odniosł'.$strSuffix.' '.$intDamage.' obrażeń. Niestety po powrocie, nie otrzymał'.$strSuffix.' zapłaty za zmarnowany czas.';
+	      }
 	    break;
 	  default:
 	    break;
+	  }
+	if (isset($strResult))
+	  {
+	    $smarty->assign("Result", $strResult);
+	    unset($_SESSION['craft'], $_SESSION['mdata']);
+	  }
+	else
+	  {
+	    $smarty->assign("Result", '');
+	  }
+      }
+    /**
+     * Fight during task
+     */
+    if ($_GET['step'] == 'fight')
+      {
+	if (!isset($_SESSION['craft']))
+	  {
+	    error('Zapomnij o tym1.');
+	  }
+	$objFight = $db->Execute("SELECT `fight` FROM `players` WHERE `id`=".$player->id);
+	if (!$objFight->fields['fight'] && !isset($_SESSION['result']))
+	  {
+	    error('Zapomnij o tym2.');
+	  }
+	if (!isset($_SESSION['result']))
+	  {
+	    $_SESSION['result'] = -1;
+	    if ($objFight != 99999)
+	      {
+		battle($objFight->fields['fight']);
+	      }
+	    else
+	      {
+		battle();
+	      }
+	  }
+	$objFight->Close();
+	if ($_SESSION['result'] == 1)
+	  {
+	    $intExp = rand(1, 5) * $player->level;
+	    $intGold = $player->level * 125;
+	    if ($player->gender == 'M')
+	      {
+		$strSuffix = 'eś';
+	      }
+	    else
+	      {
+		$strSuffix = 'aś';
+	      }
+	    require_once("includes/checkexp.php");
+	    checkexp($player->exp, $intExp, $player->level, $player->race, $player->user, $player->id, 0, 0, $player->id, "", 0);
+	    $db->Execute("UPDATE `players` SET `credits`=`credits`+".$intGold.", `mpoints`=`mpoints`+1 WHERE `id`=".$player->id);
+	    if (in_array($_SESSION['craft'][$_SESSION['index']], array(0, 2, 3, 4, 9)))
+	      {
+		$strResult = 'Po zakończonej walce, odeskortowaliście więźniów do miasta. Otrzymał'.$strSuffix.' '.$intGold.' sztuk złota oraz '.$intExp.' punktów doświadczenia.';
+	      }
+	    elseif (in_array($_SESSION['craft'][$_SESSION['index']], array(6, 9)))
+	      {
+		$strResult = 'Po zakończonej walce spaliliście zwłoki bestii i wróciliście do miasta. Otrzymał'.$strSuffix.' '.$intGold.' sztuk złota oraz '.$intExp.' punktów doświadczenia.';
+	      }
+	    else
+	      {
+		error('Zapomnij o tym3.');
+	      }
+	  }
+	elseif ($_SESSION['result'] == 0)
+	  {
+	    $strResult = 'Niestety nie udało Ci się wykonać zadania dlatego nie dostajesz jakiejkolwiek nagrody za nie.';
+	  }
+	if (isset($strResult))
+	  {
+	    $smarty->assign("Result", $strResult);
+	    unset($_SESSION['craft'], $_SESSION['mdata'], $_SESSION['result'], $_SESSION['index']);
+	  }
+	else
+	  {
+	    $smarty->assign("Result", '');
 	  }
       }
   }

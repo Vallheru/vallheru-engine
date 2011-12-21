@@ -1,5 +1,7 @@
 2011-12-21  Bartek thindil Jasicki  <thindil@vallheru.net>
 
+	* FEATURE,languages/pl/head1.php, languages/pl/view.php, templates/layout1/outpost.tpl, includes/head.php, city.php, outpost.php:
+	continue work on random missions for fighters and mages
 	* FEATURE,templates/layout1/mines.tpl, templates/mines.tpl, mines.php:
 	added remember last entered value for dig
 
