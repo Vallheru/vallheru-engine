@@ -38,7 +38,7 @@
 
 {if $Step == "dig"}
     <form method="post" action="mines.php?mine={$Mine}&amp;step=dig&amp;dig=Y">
-        {$Yousend} {$Minname} <input type="text" name="amount" size="5" />{$Menergy}<br />
+        {$Yousend} {$Minname} <input type="text" name="amount" size="5" value="{$Amount}" />{$Menergy}<br />
         <input type="submit" value="{$Adig}" />
     </form>
     <br />{$Message}

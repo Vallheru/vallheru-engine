@@ -229,12 +229,17 @@ if (isset($_GET['step']) && $_GET['step'] == 'dig')
     {
         error(NO_MINERALS);
     }
+    if (!isset($_POST['amount']))
+      {
+	$_POST['amount'] = '';
+      }
     $arrMinerals = array(M_COPPER, M_ZINC, M_TIN, M_IRON, M_COAL);
     $intKey = array_search($_GET['mine'], $arrMines);
     $smarty -> assign(array("Yousend" => YOU_SEND,
                             "Minname" => $arrMinerals[$intKey],
                             "Adig" => A_DIG,
                             "Menergy" => M_ENERGY,
+			    "Amount" => $_POST['amount'],
                             "Message" => ''));
     if (isset($_GET['dig']) && $_GET['dig'] == 'Y')
     {
