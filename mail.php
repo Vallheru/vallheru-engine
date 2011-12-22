@@ -7,7 +7,7 @@
  *   @copyright            : (C) 2004,2005,2006,2007,2011 Vallheru Team based on Gamers-Fusion ver 2.5
  *   @author               : thindil <thindil@vallheru.net>
  *   @version              : 1.5
- *   @since                : 16.12.2011
+ *   @since                : 22.12.2011
  *
  */
 
@@ -274,8 +274,8 @@ if (isset ($_GET['view']) && $_GET['view'] == 'inbox')
     $objSort->Close();
 
     //Pagination
-    $objAmount = $db->Execute("SELECT count(`id`) FROM `mail` WHERE `owner`=".$player->id.$strQuery." GROUP BY `topic`");
-    $intPages = ceil($objAmount->fields['count(`id`)'] / 30);
+    $objAmount = $db->Execute("SELECT `id` FROM `mail` WHERE `owner`=".$player->id.$strQuery." GROUP BY `topic`");
+    $intPages = ceil($objAmount->RecordCount() / 30);
     $objAmount->Close();
     if (!isset($intPage))
       {
@@ -372,8 +372,8 @@ if (isset ($_GET['view']) && $_GET['view'] == 'saved')
     $objSort->Close();
 
     //Pagination
-    $objAmount = $db->Execute("SELECT count(`id`) FROM `mail` WHERE `owner`=".$player -> id." AND `saved`='Y'".$strQuery." GROUP BY `topic`");
-    $intPages = ceil($objAmount->fields['count(`id`)'] / 30);
+    $objAmount = $db->Execute("SELECT `id` FROM `mail` WHERE `owner`=".$player -> id." AND `saved`='Y'".$strQuery." GROUP BY `topic`");
+    $intPages = ceil($objAmount->RecordCount() / 30);
     $objAmount->Close();
     if (!isset($intPage))
       {

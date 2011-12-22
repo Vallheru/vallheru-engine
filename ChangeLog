@@ -1,3 +1,8 @@
+2011-12-22  Bartek thindil Jasicki  <thindil@vallheru.net>
+
+	* BUG,mail.php:
+	fixed bug with pagination
+
 2011-12-21  Bartek thindil Jasicki  <thindil@vallheru.net>
 
 	* FEATURE,languages/pl/head1.php, languages/pl/view.php, templates/layout1/outpost.tpl, includes/head.php, city.php, outpost.php:
