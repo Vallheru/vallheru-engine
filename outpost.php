@@ -7,7 +7,7 @@
  *   @copyright            : (C) 2011 Vallheru Team based on Gamers-Fusion ver 2.5
  *   @author               : thindil <thindil@vallheru.net>
  *   @version              : 1.5
- *   @since                : 21.12.2011
+ *   @since                : 22.12.2011
  *
  */
 
@@ -85,6 +85,13 @@ function battle($intEnemy = 0)
       else
 	{
 	  $objMonster = $db->Execute("SELECT * FROM `monsters` WHERE `id`=".$intEnemy);
+	  $span = ($objMonster->fields['level'] / $player->level);
+	  if ($span > 2) 
+	    {
+	      $span = 2;
+	    }
+	  $goldgain = ceil(rand($objMonster->fields['credits1'], $objMonster->fields['credits2']) * $span); 
+	  $expgain = ceil(rand($objMonster->fields['exp1'], $objMonster->fields['exp2']) * $span);
 	  $enemy = array('name' => $objMonster->fields['name'],
 			 'strength' => $objMonster->fields['strength'],
 			 'agility' => $objMonster->fields['agility'],
@@ -92,9 +99,9 @@ function battle($intEnemy = 0)
 			 'level' => $objMonster->fields['level'],
 			 'endurance' => $objMonster->fields['endurance'],
 			 'speed' => $objMonster->fields['speed'],
-			 'exp1' => $objMonster->fields['exp1'],
-			 'exp2' => $objMonster->fields['exp2'],
-			 'gold' => $objMonster->fields['gold'],
+			 'exp1' => $expgain,
+			 'exp2' => $expgain,
+			 'gold' => $goldgain,
 			 "lootnames" => explode(";", $objMonster->fields['lootnames']),
 			 "lootchances" => explode(";", $objMonster->fields['lootchances']));
 	}
@@ -130,13 +137,21 @@ function battle($intEnemy = 0)
       unset($_SESSION['enemy']);
       if ($myhp->fields['hp'] == 0)
 	{
-	  $_SESSION['result'] = 0;
-	  $smarty->assign("Message", 'Niestety, tym razem przeciwnik okazał się silniejszy od Ciebie.');
+	  $_SESSION['result'] = 2;
+	  $smarty->assign("Message", '<br /><br />Niestety, tym razem przeciwnik okazał się silniejszy od Ciebie.');
 	}
       else
 	{
-	  $_SESSION['result'] = 1;
-	  $smarty -> assign ("Message", 'Dobijasz przeciwnika i rozglądasz się w około jak radzą sobie twoi towarzysze.');
+	  if (isset($_POST['action']) && $_POST['action'] == 'escape')
+	    {
+	      $_SESSION['result'] = 2;
+	      $smarty -> assign ("Message", '<br /><br />Przerażony uciekasz z pola walki.');
+	    }
+	  else
+	    {
+	      $_SESSION['result'] = 1;
+	      $smarty -> assign ("Message", '<br /><br />Dobijasz przeciwnika i rozglądasz się w około jak radzą sobie twoi towarzysze.');
+	    }
 	}
       $smarty -> display ('error1.tpl');
     }
@@ -157,6 +172,11 @@ if (isset($_GET['step']))
 	if ($objJob->fields['craftmission'] == 'Y')
 	  {
 	    error("Niestety, na chwilę obecną, nie mamy dla ciebie jakiegokolwiek rozkazu. Proszę wróć za jakiś czas. (<a href=city.php>Powrót do miasta</a>)");
+	  }
+	if ($player->hp <= 0)
+	  {
+	    unset($_SESSION['craft'], $_SESSION['mdata']);
+	    error("Nie możesz przyjąć zlecenia, ponieważ jesteś martwy.");
 	  }
 	switch ($player->clas)
 	  {
@@ -288,7 +308,7 @@ if (isset($_GET['step']))
 			      "Jobs" => $arrInfo,
 			      "Ano" => "Nie, dziękuję",
 			      'Jobinfo2' => 'Pamiętaj, oferta jest ważna tylko w tym momencie, jeżeli ją odrzucisz, następna szansa dopiero po kolejnym resecie.'));
-	//$db->Execute("UPDATE `players` SET `craftmission`='Y' WHERE `id`=".$player->id);
+	$db->Execute("UPDATE `players` SET `craftmission`='Y' WHERE `id`=".$player->id);
       }
     /**
      * Start task
@@ -542,6 +562,10 @@ if (isset($_GET['step']))
 	  {
 	    $smarty->assign("Result", '');
 	  }
+	if (isset($_SESSION['result']))
+	  {
+	    $_GET['step'] = 'fight';
+	  }
       }
     /**
      * Fight during task
@@ -550,17 +574,20 @@ if (isset($_GET['step']))
       {
 	if (!isset($_SESSION['craft']))
 	  {
-	    error('Zapomnij o tym1.');
+	    error('Zapomnij o tym.');
 	  }
 	$objFight = $db->Execute("SELECT `fight` FROM `players` WHERE `id`=".$player->id);
 	if (!$objFight->fields['fight'] && !isset($_SESSION['result']))
 	  {
-	    error('Zapomnij o tym2.');
+	    error('Zapomnij o tym.');
 	  }
 	if (!isset($_SESSION['result']))
 	  {
 	    $_SESSION['result'] = -1;
-	    if ($objFight != 99999)
+	  }
+	if ($_SESSION['result'] == -1)
+	  {
+	    if ($objFight->fields['fight'] != 99999)
 	      {
 		battle($objFight->fields['fight']);
 	      }
@@ -569,7 +596,6 @@ if (isset($_GET['step']))
 		battle();
 	      }
 	  }
-	$objFight->Close();
 	if ($_SESSION['result'] == 1)
 	  {
 	    $intExp = rand(1, 5) * $player->level;
@@ -587,20 +613,21 @@ if (isset($_GET['step']))
 	    $db->Execute("UPDATE `players` SET `credits`=`credits`+".$intGold.", `mpoints`=`mpoints`+1 WHERE `id`=".$player->id);
 	    if (in_array($_SESSION['craft'][$_SESSION['index']], array(0, 2, 3, 4, 9)))
 	      {
-		$strResult = 'Po zakończonej walce, odeskortowaliście więźniów do miasta. Otrzymał'.$strSuffix.' '.$intGold.' sztuk złota oraz '.$intExp.' punktów doświadczenia.';
+		$strResult = 'Po zakończonej walce, odeskortowaliście więźniów do miasta. Otrzymał'.$strSuffix.' '.$intGold.' sztuk złota oraz '.$intExp.' punktów doświadczenia. (<a href="city.php">Wróć do miasta</a>)';
 	      }
-	    elseif (in_array($_SESSION['craft'][$_SESSION['index']], array(6, 9)))
+	    elseif (in_array($_SESSION['craft'][$_SESSION['index']], array(6, 8)))
 	      {
-		$strResult = 'Po zakończonej walce spaliliście zwłoki bestii i wróciliście do miasta. Otrzymał'.$strSuffix.' '.$intGold.' sztuk złota oraz '.$intExp.' punktów doświadczenia.';
+		$strResult = 'Po zakończonej walce spaliliście zwłoki bestii i wróciliście do miasta. Otrzymał'.$strSuffix.' '.$intGold.' sztuk złota oraz '.$intExp.' punktów doświadczenia. (<a href="city.php">Wróć do miasta</a>)';
 	      }
 	    else
 	      {
-		error('Zapomnij o tym3.');
+		error('Zapomnij o tym.');
+		unset($_SESSION['craft'], $_SESSION['mdata'], $_SESSION['result'], $_SESSION['index']);
 	      }
 	  }
-	elseif ($_SESSION['result'] == 0)
+	if ($_SESSION['result'] == 2)
 	  {
-	    $strResult = 'Niestety nie udało Ci się wykonać zadania dlatego nie dostajesz jakiejkolwiek nagrody za nie.';
+	    $strResult = 'Ponieważ nie udało Ci się wykonać zadania dlatego nie dostajesz jakiejkolwiek nagrody za nie. (<a href="city.php">Wróć do miasta</a>)';
 	  }
 	if (isset($strResult))
 	  {
@@ -611,6 +638,7 @@ if (isset($_GET['step']))
 	  {
 	    $smarty->assign("Result", '');
 	  }
+	$objFight->Close();
       }
   }
 else
