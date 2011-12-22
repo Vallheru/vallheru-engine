@@ -1,5 +1,7 @@
 2011-12-22  Bartek thindil Jasicki  <thindil@vallheru.net>
 
+	* BUG,crafts.php: 
+	check if player is alive
 	* BUG,mail.php:
 	fixed bug with pagination
 

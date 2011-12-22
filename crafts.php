@@ -7,7 +7,7 @@
  *   @copyright            : (C) 2011 Vallheru Team based on Gamers-Fusion ver 2.5
  *   @author               : thindil <thindil@vallheru.net>
  *   @version              : 1.5
- *   @since                : 20.12.2011
+ *   @since                : 22.12.2011
  *
  */
 
@@ -56,6 +56,10 @@ if (isset($_GET['step']))
 	if ($objJob->fields['craftmission'] == 'Y')
 	  {
 	    error("Niestety, na chwilę obecną, nie mamy dla ciebie jakiegokolwiek zadania. Proszę wróć za jakiś czas. (<a href=city.php>Powrót do miasta</a>)");
+	  }
+	if ($player->hp <= 0)
+	  {
+	    error("Nie możesz wykonywać zadań, ponieważ jesteś martwy.");
 	  }
 	$arrSkills = array($player->metallurgy, $player->lumberjack, $player->mining, $player->breeding, $player->jeweller, $player->herbalist, $player->alchemy, $player->fletcher, $player->smith);
 	$intIndex = array_search(max($arrSkills), $arrSkills);
