@@ -7,7 +7,11 @@
             <b>{$Pdate}:</b> {$Date[jail]}<br />
             <b>{$Preason}:</b> {$Verdict[jail]}<br />
             <b>{$Pduration}:</b> {$Duration[jail]} ({$Duration2[jail]} {$Pduration2})<br />
-            <b>{$Pcost}:</b> <a href=jail.php?prisoner={$Jailid[jail]}>{$Cost[jail]} {$Goldcoins}</a><br /><br /><br />
+	    {if $Cost[jail] > 0}
+                <b>{$Pcost}:</b> <a href=jail.php?prisoner={$Jailid[jail]}>{$Cost[jail]} {$Goldcoins}</a><br /><br /><br />
+	    {else}
+	        <b>{$Nocost}</b><br /><br /><br />
+	    {/if}
         {/section}
     {/if}
     {if $Number == "0"}
@@ -20,7 +24,11 @@
     <b>{$Pdate}:</b> {$Date}<br />
     <b>{$Pduration}:</b> {$Duration} ({$Duration2} {$Pduration2})<br />
     <b>{$Preason}:</b> {$Verdict}<br />
-    <b>{$Pcost}:</b> {$Cost}<br />
+    {if $Cost > 0}
+        <b>{$Pcost}:</b> {$Cost}<br />
+    {else}
+        <b>{$Nocost}</b></br />
+    {/if}
 {/if}
 
 {if $Prisoner != ""}

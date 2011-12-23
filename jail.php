@@ -5,10 +5,10 @@
  *
  *   @name                 : jail.php                            
  *   @copyright            : (C) 2004,2005,2006,2011 Vallheru Team based on Gamers-Fusion ver 2.5
- *   @author               : thindil <thindil@tuxfamily.org>
+ *   @author               : thindil <thindil@vallheru.net>
  *   @author               : eyescream <tduda@users.sourceforge.net>
- *   @version              : 1.4
- *   @since                : 15.11.2011
+ *   @version              : 1.5
+ *   @since                : 23.12.2011
  *
  */
 
@@ -75,13 +75,6 @@ if ($player -> location == 'Altara' || $player -> location == 'Ardulith')
             $arrverdict[$i] = $jail -> fields['verdict'];
             $arrduration[$i] = ceil($jail -> fields['duration'] / 7);
             $arrDurationr[$i] = $jail -> fields['duration'];
-            /**
-             * Easter egg - delete if you want
-             */
-            if ($arrid[$i] == 471)
-            {
-                $arrduration[$i] = 'Dożywocie';
-            }
             $arrjailid[$i] = $jail -> fields['id'];
             $arrcost[$i] = $jail -> fields['cost'];
             $jail -> MoveNext();
@@ -102,6 +95,7 @@ if ($player -> location == 'Altara' || $player -> location == 'Ardulith')
                                 "Pduration" => P_DURATION,
                                 "Pduration2" => P_DURATION_R,
                                 "Pcost" => P_COST,
+				"Nocost" => "Brak możliwości wpłacenia kaucji",
                                 "Goldcoins" => GOLD_COINS));
     }
     else
@@ -118,13 +112,6 @@ if ($player -> location == 'Lochy')
 {
     $prisoner = $db -> Execute("SELECT * FROM `jail` WHERE `prisoner`=".$player -> id);
     $intTime = ceil($prisoner -> fields['duration'] / 7);
-    /**
-     * Easter egg - delete if you want
-     */
-    if ($player -> id == 471)
-    {
-        $intTime = 'Dożywocie';
-    }
     $smarty -> assign(array("Date" => $prisoner -> fields['data'], 
                             "Verdict" => $prisoner -> fields['verdict'], 
                             "Duration" => $intTime, 
@@ -135,6 +122,7 @@ if ($player -> location == 'Lochy')
                             "Pduration" => P_DURATION,
                             "Pduration2" => P_DURATION_R,
                             "Preason" => P_REASON,
+			    "Nocost" => "Brak możliwości wpłacenia kaucji",
                             "Pcost" => P_COST));
     $prisoner -> Close();
 }
@@ -150,6 +138,10 @@ if (isset($_GET['prisoner']))
     {
         error (NO_PRISONER);
     }
+    if ($prisoner->fields['cost'] == 0)
+      {
+	error("Nie możesz wpłacić kaucji za tego więźnia.");
+      }
     if ($prisoner -> fields['cost'] > $player -> credits) 
     {
         error (NO_MONEY);

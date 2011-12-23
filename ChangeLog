@@ -1,5 +1,8 @@
 2011-12-23  Bartek thindil Jasicki  <thindil@vallheru.net>
 
+	* UPDATAE,languages/pl/admin.php, languages/pl/staff.php, templates/layout1/admin.tpl, templates/admin.tpl, templates/layout1/staff.tpl,
+	templates/staff.tpl, templates/layout1/jail.tpl, templates/jail.tpl, includes/admin/jail.php, jail.php:
+	removed bail from jail
 	* FEATURE,install/db/update.sql, languages/pl/admin.php, languages/pl/staff.php, includes/resets.php, includes/admin/czat.php,
 	templates/layout1/admin.tpl, templates/admin.tpl, templates/layout1/staff.tpl, templates/staff.tpl, admin.php, forums.php, staff.php:
 	added ban on forums

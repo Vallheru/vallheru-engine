@@ -69,13 +69,11 @@ if (isset ($_GET['view']) && $_GET['view'] == 'jail')
     define("JAIL_ID", "ID gracza");
     define("JAIL_REASON", "Przyczyna");
     define("JAIL_TIME", "Czas (w dniach)");
-    define("JAIL_COST", "Kaucja za uwolnienie");
     define("A_ADD", "Dodaj");
     define("PLAYER_IN_JAIL", "Ten gracz jest już w lochach!");
     define("PLAYER_JAIL", "Gracz o ID: ");
-    define("HAS_BEEN_J", "został wtrącony do więzienia na");
-    define("DAYS", "dni za");
-    define("HE_MAY", "Może wyjść z więzienia za kaucją: ");;
+    define("HAS_BEEN_J", " został wtrącony do więzienia na ");
+    define("DAYS", " dni za ");
 }
 
 if (isset ($_GET['view']) && $_GET['view'] == 'tags') 

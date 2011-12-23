@@ -43,7 +43,6 @@
     {$Jailid}: <input type="text" name="prisoner" /><br />
     {$Jailreason}: <textarea name="verdict"></textarea><br />
     {$Jailtime}: <input type="text" name="time" /><br />
-    {$Jailcost}: <input type="text" name="cost" /><br />
     <input type="submit" value="{$Aadd}" /></form>
 {/if}
 
