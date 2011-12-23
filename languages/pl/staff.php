@@ -5,9 +5,9 @@
  *
  *   @name                 : staff.php                            
  *   @copyright            : (C) 2004,2005,2006,2007,2011 Vallheru Team based on Gamers-Fusion ver 2.5
- *   @author               : thindil <thindil@users.sourceforge.net>
- *   @version              : 1.4
- *   @since                : 10.08.2011
+ *   @author               : thindil <thindil@vallheru.net>
+ *   @version              : 1.5
+ *   @since                : 23.12.2011
  *
  */
 
@@ -108,7 +108,7 @@ if (isset ($_GET['view']) && $_GET['view'] == 'takeaway')
     define("SANCTION_SET", " Karę wymierzył: ");
 }
 
-if (isset ($_GET['view']) && $_GET['view'] == 'czat') 
+if (isset ($_GET['view']) && ($_GET['view'] == 'czat' || $_GET['view'] == 'bforum')) 
 {
     define("YOU_BLOCK", "Zablokowałeś wysyłanie wiadomości na czacie przez gracza ");
     define("YOU_UNBLOCK", "Odblokowałeś wysyłanie wiadomości na czacie przez gracza ");

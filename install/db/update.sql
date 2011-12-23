@@ -10,3 +10,8 @@ CREATE TABLE IF NOT EXISTS `brecords` (
   KEY `mlevel` (`mlevel`),
   KEY `pid` (`pid`)
 ) ENGINE=MyISAM  DEFAULT CHARSET=utf8;
+CREATE TABLE IF NOT EXISTS `ban_forum` (
+  `pid` int(11) NOT NULL,
+  `resets` int(11) NOT NULL,
+  KEY `pid` (`pid`)
+) ENGINE=MyISAM DEFAULT CHARSET=utf8;

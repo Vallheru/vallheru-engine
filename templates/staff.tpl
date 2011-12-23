@@ -5,6 +5,7 @@
     <li><a href="staff.php?view=takeaway">{$Atake}</a></li>
     <li><a href="staff.php?view=clearc">{$Aclear}</a></li>
     <li><a href="staff.php?view=czat">{$Achat}</a></li>
+    <li><a href="staff.php?view=bforum">{$Aforum}</a></li>
     <li><a href="staff.php?view=tags">{$Aimmu}</a></li>
     <li><a href="staff.php?view=jail">{$Ajail}</a></li>
     <li><a href="staff.php?view=addtext">{$Aaddnews}</a></li>
@@ -75,12 +76,12 @@
     </form>
 {/if}
 
-{if $View == "czat"}
+{if $View == "czat" || $View == "bforum"}
     {$Blocklist}<br />
     {section name=staff loop=$Chatid}
         {$Chatid}: {$Chatid[staff]}
     {/section}
-    <form method="post" action="staff.php?view=czat&amp;step=czat">
+    <form method="post" action="staff.php?view={$View}&amp;step=czat">
     <select name="czat">
     <option value="blok">{$Ablock}</option>
     <option value="odblok">{$Aunblock}</option></select>

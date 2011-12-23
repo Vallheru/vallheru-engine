@@ -548,12 +548,12 @@
     </form></table>
 {/if}
 
-{if $View == "czat"}
+{if $View == "czat" || $View == "bforum"}
     {$Blocklist}<br />
     {section name=player loop=$List1}
         ID {$List1[player]}<br />
     {/section}
-    <form method="post" action="admin.php?view=czat&amp;step=czat">
+    <form method="post" action="admin.php?view={$View}&amp;step=czat">
     <select name="czat">
         <option value="blok">{$Ablock}</option>
         <option value="odblok">{$Aunblock}</option>

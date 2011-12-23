@@ -53,6 +53,10 @@ if (isset($_GET['view']))
     $smarty -> assign("Aback", A_BACK);
     $arrView = array('takeaway', 'clearc', 'czat', 'tags', 'jail', 'innarchive', 'banmail', 'addtext', 'logs');
     $intKey = array_search($_GET['view'], $arrView);
+    if ($_GET['view'] == 'bforum')
+      {
+	$intKey = 2;
+      }
     if ($intKey !== false)
     {
         require_once("includes/admin/".$arrView[$intKey].".php");
@@ -1827,7 +1831,7 @@ if (isset($_GET['view']))
 		    $db -> Execute("INSERT INTO `changelog` (`author`, `location`, `text`, `date`, `lang`) VALUES('".$strAuthor."', 'Gildia Łowców', 'Nowy opis potwora: ".$objProposal->fields['name']." autorstwa ID: ".$objProposal->fields['pid']."', ".$strDate.", 'pl')");
 		    $db->Execute("UPDATE `players` SET `vallars`=`vallars`+".$_POST['valars']." WHERE `id`=".$objProposal->fields['pid']);
 		    $db->Execute("INSERT INTO `vallars` (`owner`, `amount`, `reason`) VALUES(".$objProposal->fields['pid'].", ".$_POST['valars'].", 'Opis potwora ".$objProposal->fields['name'].".')");
-		    $db->Execute("UPDATE `monsters` SET `desc`='".$_POST['desc']."' WHERE `id`=".$_POST['info']);
+		    $db->Execute("UPDATE `monsters` SET `desc`='".$_POST['desc']."' WHERE `id`=".$_POST['info']) or die($db->ErrorMsg());
 		    $strResult = "Zaakceptowałeś opis";
 		  }
 		else
@@ -1851,8 +1855,8 @@ else
     $_GET['view'] = '';
     $arrView1 = array('bridge', 'poll', 'addtext', 'pdescriptions', 'pitems', 'pmonsters', 'pbridge', 'pmdesc');
     $arrLinks1 = array(A_BRIDGE, A_POLL, A_ADD_NEWS, 'Propozycje opisów', 'Propozycje przedmiotów', 'Propozycje potworów', 'Propozycje pytań na moście', 'Propozycje opisu potworów');
-    $arrView2 = array('del', 'donate', 'takeaway', 'add', 'tags', 'czat', 'jail', 'jailbreak', 'delplayers', 'ban', 'donator', 'logs', 'playerquest', 'banmail', 'vallars', 'srank');
-    $arrLinks2 = array(A_DELETE, A_DONATION, A_TAKE, A_RANK, A_IMMU, A_CHAT_BAN, A_JAIL, A_JAILBREAK, A_DEL_PLAYERS, A_BAN, A_DONATOR, A_LOGS, A_PLAYERQUEST, A_BAN_MAIL, 'Daj/Zabierz Vallary graczowi', 'Nadaj unikalną rangę graczowi');
+    $arrView2 = array('del', 'donate', 'takeaway', 'add', 'tags', 'czat', 'bforum', 'jail', 'jailbreak', 'delplayers', 'ban', 'donator', 'logs', 'playerquest', 'banmail', 'vallars', 'srank');
+    $arrLinks2 = array(A_DELETE, A_DONATION, A_TAKE, A_RANK, A_IMMU, A_CHAT_BAN, 'Zablokuj/Odblokuj pisanie przez gracza na forum', A_JAIL, A_JAILBREAK, A_DEL_PLAYERS, A_BAN, A_DONATOR, A_LOGS, A_PLAYERQUEST, A_BAN_MAIL, 'Daj/Zabierz Vallary graczowi', 'Nadaj unikalną rangę graczowi');
     $arrView3 = array('clearf', 'clearc', 'forums', 'innarchive');
     $arrLinks3 = array(A_FORUM_P, A_CHAT_P, A_FORUMS, A_INNARCHIVE);
     $arrView4 = array('equipment', 'monster', 'monster2', 'kowal', 'czary', 'mill', 'potions', 'alchemy');

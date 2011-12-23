@@ -1,14 +1,14 @@
 <?php
 /**
  *   File functions:
- *   Ban/Unban player on chat
+ *   Ban/Unban player on chat or forums
  *
  *   @name                 : czat.php                            
- *   @copyright            : (C) 2006 Vallheru Team based on Gamers-Fusion ver 2.5
- *   @author               : thindil <thindil@users.sourceforge.net>
+ *   @copyright            : (C) 2006,2011 Vallheru Team based on Gamers-Fusion ver 2.5
+ *   @author               : thindil <thindil@vallheru.net>
  *   @author               : eyescream <tduda@users.sourceforge.net>
- *   @version              : 1.3
- *   @since                : 23.11.2006
+ *   @version              : 1.5
+ *   @since                : 23.12.2011
  *
  */
 
@@ -28,7 +28,7 @@
 //   along with this program; if not, write to the Free Software
 //   Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 //
-// $Id: czat.php 840 2006-11-24 16:41:26Z thindil $
+// $Id$
 
 $smarty -> assign(array("Blocklist" => BLOCK_LIST,
                         "Ablock" => A_BLOCK,
@@ -38,30 +38,60 @@ $smarty -> assign(array("Blocklist" => BLOCK_LIST,
                         "Tdays" => T_DAYS,
                         "Ona" => ON_A));
 $arrtemp = array();
-$i = 0;
-$czatb = $db -> Execute("SELECT `gracz` FROM `chat_config`");
-while (!$czatb -> EOF)
-{
-    $arrtemp[$i] = $czatb -> fields['gracz'];
-    $i = $i + 1;
-    $czatb -> MoveNext();
-}
-$czatb -> Close();
+if ($_GET['view'] == 'czat')
+  {
+    $czatb = $db -> Execute("SELECT `gracz` FROM `chat_config`");
+    while (!$czatb -> EOF)
+      {
+	$arrtemp[] = $czatb -> fields['gracz'];
+	$czatb -> MoveNext();
+      }
+    $czatb -> Close();
+  }
+else
+  {
+    $czatb = $db -> Execute("SELECT `pid` FROM `ban_forum`");
+    while (!$czatb -> EOF)
+      {
+	$arrtemp[] = $czatb -> fields['pid'];
+	$czatb -> MoveNext();
+      }
+    $czatb -> Close();
+  }
 $smarty -> assign ("List1", $arrtemp);
-if (isset ($_GET['step']) && $_GET['step'] == 'czat') 
-{
-    if ($_POST['czat'] == 'blok') 
-    {
-        $intTime = $_POST['duration'] * 7;
-        $db -> Execute("INSERT INTO `chat_config` (`gracz`, `resets`) VALUES(".$_POST['czat_id'].", ".$intTime.")");
-        $strDate = $db -> DBDate($newdate);
-        $db -> Execute("INSERT INTO `log` (`owner`, `log`, `czas`) VALUES(".$_POST['czat_id'].", '".YOU_BLOCK2.$_POST['duration'].T_DAYS.$_POST['verdict'].BLOCK_BY.'<b><a href="view.php?view='.$player -> id.'">'.$player -> user."</a></b>, ID ".$player -> id.".', ".$strDate.")") or die($db -> ErrorMsg());
-        error (YOU_BLOCK." ".$_POST['czat_id']);
-    }
-    if ($_POST['czat'] == 'odblok') 
-    {
-        $db -> Execute("DELETE FROM `chat_config` WHERE `gracz`=".$_POST['czat_id']);
-        error (YOU_UNBLOCK." ".$_POST['czat_id']);
-    }
-}
+if (isset ($_GET['step']))
+  {
+    if ($_GET['view'] == 'czat') 
+      {
+	if ($_POST['czat'] == 'blok') 
+	  {
+	    $intTime = $_POST['duration'] * 7;
+	    $db -> Execute("INSERT INTO `chat_config` (`gracz`, `resets`) VALUES(".$_POST['czat_id'].", ".$intTime.")");
+	    $strDate = $db -> DBDate($newdate);
+	    $db -> Execute("INSERT INTO `log` (`owner`, `log`, `czas`) VALUES(".$_POST['czat_id'].", '".YOU_BLOCK2.$_POST['duration'].T_DAYS.$_POST['verdict'].BLOCK_BY.'<b><a href="view.php?view='.$player -> id.'">'.$player -> user."</a></b>, ID ".$player -> id.".', ".$strDate.")") or die($db -> ErrorMsg());
+	    error (YOU_BLOCK." ".$_POST['czat_id']);
+	  }
+	else 
+	  {
+	    $db -> Execute("DELETE FROM `chat_config` WHERE `gracz`=".$_POST['czat_id']);
+	    error (YOU_UNBLOCK." ".$_POST['czat_id']);
+	  }
+      }
+    else
+      {
+	if ($_POST['czat'] == 'blok')
+	  {
+	    $intTime = $_POST['duration'] * 7;
+	    $db -> Execute("INSERT INTO `ban_forum` (`pid`, `resets`) VALUES(".$_POST['czat_id'].", ".$intTime.")");
+	    $strDate = $db -> DBDate($newdate);
+	    $db -> Execute("INSERT INTO `log` (`owner`, `log`, `czas`) VALUES(".$_POST['czat_id'].", 'Masz zakaz pisania na forum przez ".$_POST['duration'].T_DAYS.$_POST['verdict'].BLOCK_BY.'<b><a href="view.php?view='.$player -> id.'">'.$player -> user."</a></b>, ID ".$player -> id.".', ".$strDate.")") or die($db -> ErrorMsg());
+	    error ("Zablokowałeś pisanie na forum graczowi o ID: ".$_POST['czat_id']);
+	  }
+	else
+	  {
+	    $db -> Execute("DELETE FROM `ban_forum` WHERE `pid`=".$_POST['czat_id']);
+	    error ("Odblokowałeś pisanie na forum graczowi o ID: ".$_POST['czat_id']);
+	  }
+      }
+  }
 ?>

@@ -7,7 +7,7 @@
  *   @copyright            : (C) 2004,2005,2006,2007,2011 Vallheru Team based on Gamers-Fusion ver 2.5
  *   @author               : thindil <thindil@tuxfamily.org>
  *   @version              : 1.5
- *   @since                : 17.12.2011
+ *   @since                : 23.12.2011
  *
  */
 
@@ -171,6 +171,11 @@ function smallreset($blnSmall = FALSE)
      */
     $db -> Execute("UPDATE `chat_config` SET `resets`=`resets`-1");
     $db -> Execute("DELETE FROM `chat_config` WHERE `resets`=0");
+    /**
+     * Ban on forums
+     */
+    $db -> Execute("UPDATE `ban_forum` SET `resets`=`resets`-1");
+    $db -> Execute("DELETE FROM `ban_forum` WHERE `resets`=0");
     /**
      * Add rings in shop
      */

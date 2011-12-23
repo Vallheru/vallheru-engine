@@ -5,10 +5,10 @@
  *
  *   @name                 : forums.php                            
  *   @copyright            : (C) 2004,2005,2006,2011 Vallheru Team based on Gamers-Fusion ver 2.5
- *   @author               : thindil <thindil@tuxfamily.org>
+ *   @author               : thindil <thindil@vallheru.net>
  *   @author               : mori <ziniquel@users.sourceforge.net>
- *   @version              : 1.4
- *   @since                : 24.11.2011
+ *   @version              : 1.5
+ *   @since                : 23.12.2011
  *
  */
 
@@ -501,6 +501,12 @@ if (isset ($_GET['action']) && $_GET['action'] == 'addtopic')
     {
         error (EMPTY_FIELDS);
     }
+    $objBan = $db->Execute("SELECT `pid` FROM `ban_forum` WHERE `pid`=".$player->id);
+    if ($objBan->fields['pid'])
+      {
+	error('Nie możesz tworzyć nowych tematów, ponieważ masz zablokowane pisanie na forum. (<a href="forums.php?view=categories">Wróć</a>)');
+      }
+    $objBan->Close();
     /**
      * Check for permissions
      */
@@ -555,6 +561,12 @@ if (isset($_GET['reply']))
     {
         error (NO_TOPIC.'. (<a href="forums.php?view=categories">Wróć</a>)');
     }
+    $objBan = $db->Execute("SELECT `pid` FROM `ban_forum` WHERE `pid`=".$player->id);
+    if ($objBan->fields['pid'])
+      {
+	error('Nie możesz dodać odpowiedzi, ponieważ masz zablokowane pisanie na forum. (<a href="forums.php?view=categories">Wróć</a>)');
+      }
+    $objBan->Close();
     /**
      * Check for permissions
      */

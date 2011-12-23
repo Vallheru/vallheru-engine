@@ -5,9 +5,9 @@
  *
  *   @name                 : staff.php                            
  *   @copyright            : (C) 2004,2005,2006,2011 Vallheru Team based on Gamers-Fusion ver 2.5
- *   @author               : thindil <thindil@tuxfamily.org>
- *   @version              : 1.4
- *   @since                : 30.08.2011
+ *   @author               : thindil <thindil@vallheru.net>
+ *   @version              : 1.5
+ *   @since                : 23.12.2011
  *
  */
 
@@ -44,8 +44,12 @@ if ($player -> rank != 'Staff' && $player -> rank != 'Admin')
 
 if (isset($_GET['view']))
 {
-  $arrView = array('takeaway', 'clearc', 'czat', 'tags', 'jail', 'innarchive', 'banmail', 'addtext', 'logs');
+    $arrView = array('takeaway', 'clearc', 'czat', 'tags', 'jail', 'innarchive', 'banmail', 'addtext', 'logs');
     $intKey = array_search($_GET['view'], $arrView);
+    if ($_GET['view'] == 'bforum')
+      {
+	$intKey = 2;
+      }
     if ($intKey !== false)
     {
         require_once("includes/admin/".$arrView[$intKey].".php");
@@ -63,6 +67,7 @@ if (!isset($_GET['view']))
                             "Atake" => A_TAKE,
                             "Aclear" => A_CLEAR,
                             "Achat" => A_CHAT,
+			    "Aforum" => 'Zablokuj/Odblokuj pisanie przez gracza na forum',
                             "Aimmu" => A_IMMU,
                             "Ajail" => A_JAIL,
                             "Aaddnews" => A_ADD_NEWS,

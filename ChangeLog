@@ -1,3 +1,9 @@
+2011-12-23  Bartek thindil Jasicki  <thindil@vallheru.net>
+
+	* FEATURE,install/db/update.sql, languages/pl/admin.php, languages/pl/staff.php, includes/resets.php, includes/admin/czat.php,
+	templates/layout1/admin.tpl, templates/admin.tpl, templates/layout1/staff.tpl, templates/staff.tpl, admin.php, forums.php, staff.php:
+	added ban on forums
+
 2011-12-22  Bartek thindil Jasicki  <thindil@vallheru.net>
 
 	* FEATURE,outpost.php: 
