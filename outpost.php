@@ -7,7 +7,7 @@
  *   @copyright            : (C) 2011 Vallheru Team based on Gamers-Fusion ver 2.5
  *   @author               : thindil <thindil@vallheru.net>
  *   @version              : 1.5
- *   @since                : 22.12.2011
+ *   @since                : 23.12.2011
  *
  */
 
@@ -411,7 +411,7 @@ if (isset($_GET['step']))
 	    if ($intRoll < 80)
 	      {
 		$intExp = rand(1, 5) * $player->level;
-		$strResult = 'Udaliście się we wskazane na mapie miejsce. Po jakimś czasie zauważyliście z oddali obozowisko bandytów. Tym razem udało się ich przechytrzyć. Zaskoczeni w ogóle nie stawiali oporu. Związanych przestępców dostarczyliście do lochów w mieście. W nagrodę otrzymał'.$strSuffix.' sztuk złota oraz '.$intExp.' punktów doświadczenia.';
+		$strResult = 'Udaliście się we wskazane na mapie miejsce. Po jakimś czasie zauważyliście z oddali obozowisko bandytów. Tym razem udało się ich przechytrzyć. Zaskoczeni w ogóle nie stawiali oporu. Związanych przestępców dostarczyliście do lochów w mieście. W nagrodę otrzymał'.$strSuffix.' '.$intGold.' sztuk złota oraz '.$intExp.' punktów doświadczenia.';
 		require_once("includes/checkexp.php");
 		checkexp($player->exp, $intExp, $player->level, $player->race, $player->user, $player->id, 0, 0, $player->id, "", 0);
 		$db->Execute("UPDATE `players` SET `credits`=`credits`+".$intGold.", `mpoints`=`mpoints`+1 WHERE `id`=".$player->id);

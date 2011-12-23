@@ -1,5 +1,7 @@
 2011-12-23  Bartek thindil Jasicki  <thindil@vallheru.net>
 
+	* BUG,outpost.php: 
+	fixed typo
 	* BUG,view.php: 
 	fixed typo
 	* FEATURE,view.php, templates/layout1/view.tpl, templates/view.tpl: 
