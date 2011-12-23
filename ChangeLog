@@ -1,5 +1,7 @@
 2011-12-23  Bartek thindil Jasicki  <thindil@vallheru.net>
 
+	* BUG,install/db/update.sql: 
+	fixed too short field
 	* BUG,outpost.php: 
 	fixed typo
 	* BUG,view.php: 

@@ -15,3 +15,4 @@ CREATE TABLE IF NOT EXISTS `ban_forum` (
   `resets` int(11) NOT NULL,
   KEY `pid` (`pid`)
 ) ENGINE=MyISAM DEFAULT CHARSET=utf8;
+ALTER TABLE `chat` CHANGE `user` `user` VARCHAR( 255 ) CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL DEFAULT '';
