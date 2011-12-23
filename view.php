@@ -63,7 +63,7 @@ if ($view->tribe)
      $smarty -> assign ("Clan", T_CLAN.": ".NOTHING."<br />");
    }
 
-$objPrev = $db->Execute("SELECT `id` FROM `players` WHERE `id`<".$view->id." ORDER BY `id` ASC LIMIT 1");
+$objPrev = $db->Execute("SELECT `id` FROM `players` WHERE `id`<".$view->id." ORDER BY `id` DESC LIMIT 1");
 $intPrevious = $objPrev->fields['id'];
 $objPrev->Close();
 $objNext = $db->Execute("SELECT `id` FROM `players` WHERE `id`>".$view->id." ORDER BY `id` ASC LIMIT 1");
