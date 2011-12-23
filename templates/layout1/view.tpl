@@ -32,3 +32,9 @@
 {/if}
 {$Rprofile}<br /><br />
 {$Tprofile}:<br />{$Profile}<br /><br />
+<table width="100%">
+    <tr>
+        <td align="left"><a href="view.php?view={$Previous}">{$Aprevious}</a></td>
+        <td align="right"><a href="view.php?view={$Next}">{$Anext}</a></td>
+    </tr>
+</table>

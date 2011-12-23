@@ -5,10 +5,10 @@
  *
  *   @name                 : view.php                            
  *   @copyright            : (C) 2004,2005,2006,2011 Vallheru Team based on Gamers-Fusion ver 2.5
- *   @author               : thindil <thindil@tuxfamily.org>
+ *   @author               : thindil <thindil@vallheru.net>
  *   @author               : eyescream <tduda@users.sourceforge.net>
- *   @version              : 1.4
- *   @since                : 14.11.2011
+ *   @version              : 1.5
+ *   @since                : 23.12.2011
  *
  */
 
@@ -63,6 +63,23 @@ if ($view->tribe)
      $smarty -> assign ("Clan", T_CLAN.": ".NOTHING."<br />");
    }
 
+$objPrev = $db->Execute("SELECT `id` FROM `players` WHERE `id`<".$view->id." ORDER BY `id` ASC LIMIT 1");
+$intPrevious = $objPrev->fields['id'];
+$objPrev->Close();
+$objNext = $db->Execute("SELECT `id` FROM `players` WHERE `id`>".$view->id." ORDER BY `id` ASC LIMIT 1");
+$intNext = $objNext->fields['id'];
+$objNext->Close();
+$objMMid = $db->Execute("SELECT MAX(`id`), MIN(`id`) FROM `players`");
+if ($view->id == $objMMid->fields['MAX(`id`)'])
+  {
+    $intNext = $objMMid->fields['MIN(`id`)'];
+  }
+elseif ($view->id == $objMMid->fields['MIN(`id`)'])
+{
+  $intPrevious = $objMMid->fields['MAX(`id`)'];
+}
+$objMMid->Close();
+
 $smarty -> assign (array("User" => $view -> user, 
                          "Id" => $view -> id, 
                          "Avatar" => '', 
@@ -88,6 +105,10 @@ $smarty -> assign (array("User" => $view -> user,
                          "Tlastkill" => T_LAST_KILL,
                          "Tlastkilled" => T_LAST_KILLED,
                          "Trefs" => T_REFS,
+			 "Anext" => 'Następny profil',
+			 "Aprevious" => 'Poprzedni profil',
+			 "Previous" => $intPrevious,
+			 "Next" => $intNext,
                          "Tprofile" => T_PROFILE,
                          "Toptions" => T_OPTIONS));
 $plik = 'avatars/'.$view -> avatar;
