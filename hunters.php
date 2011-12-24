@@ -5,9 +5,9 @@
  *
  *   @name                 : hunters.php                            
  *   @copyright            : (C) 2011 Vallheru Team based on Gamers-Fusion ver 2.5
- *   @author               : thindil <thindil@tuxfamily.org>
+ *   @author               : thindil <thindil@vallheru.net>
  *   @version              : 1.5
- *   @since                : 07.12.2011
+ *   @since                : 24.12.2011
  *
  */
 
@@ -249,7 +249,7 @@ elseif ($_GET['step'] == 'quest')
       $fight = $db -> Execute("SELECT `fight`, `hp` FROM `players` WHERE `id`=".$player -> id);
       if ($fight -> fields['fight'] == 0) 
 	{
-	  if ($fight->fields['hp'] <= 0)
+	  if ($fight->fields['hp'] <= 0 || isset($_SESSION['ressurect']))
 	    {
 	      error("<br /><br />Niestety nie udało Ci się wykonać zadania.");
 	    }

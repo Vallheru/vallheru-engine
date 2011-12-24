@@ -7,7 +7,7 @@
  *   @copyright            : (C) 2011 Vallheru Team based on Gamers-Fusion ver 2.5
  *   @author               : thindil <thindil@vallheru.net>
  *   @version              : 1.5
- *   @since                : 23.12.2011
+ *   @since                : 24.12.2011
  *
  */
 
@@ -135,7 +135,7 @@ function battle($intEnemy = 0)
   if ($myhp -> fields['fight'] == 0) 
     {
       unset($_SESSION['enemy']);
-      if ($myhp->fields['hp'] == 0)
+      if ($myhp->fields['hp'] == 0 || isset($_SESSION['ressurect']))
 	{
 	  $_SESSION['result'] = 2;
 	  $smarty->assign("Message", '<br /><br />Niestety, tym razem przeciwnik okazał się silniejszy od Ciebie.');

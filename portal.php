@@ -5,9 +5,9 @@
  *
  *   @name                 : portal.php                            
  *   @copyright            : (C) 2004,2005,2006,2011 Vallheru Team based on Gamers-Fusion ver 2.5
- *   @author               : thindil <thindil@tuxfamily.org>
- *   @version              : 1.4
- *   @since                : 14.11.2011
+ *   @author               : thindil <thindil@vallheru.net>
+ *   @version              : 1.5
+ *   @since                : 24.12.2011
  *
  */
  
@@ -106,7 +106,7 @@ if (isset ($_GET['action1']) && $_GET['action1'] == 'fight' && $player -> hp > 0
         }
         $myhp = $db -> Execute("SELECT hp, fight FROM players WHERE id=".$player -> id);
         $item = $db -> Execute("SELECT value FROM settings WHERE setting='item'");
-        if ($myhp -> fields['hp'] <= 0) 
+        if ($myhp -> fields['hp'] <= 0 || isset($_SESSION['ressurect'])) 
         {
             $db -> Execute("UPDATE players SET energy=0, miejsce='Altara' WHERE id=".$player -> id);
             error (LOST_FIGHT2);

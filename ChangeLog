@@ -1,3 +1,8 @@
+2011-12-24  Bartek thindil Jasicki  <thindil@vallheru.net>
+
+	* BUG,portals.php, portal.php, includes/funkcje.php, outpost.php, hunters.php:
+	fixed bug with ressurect potions
+
 2011-12-23  Bartek thindil Jasicki  <thindil@vallheru.net>
 
 	* BUG,install/db/update.sql: 

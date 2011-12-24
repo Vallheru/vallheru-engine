@@ -7,7 +7,7 @@
  *   @copyright            : (C) 2006,2011 Vallheru Team based on Gamers-Fusion ver 2.5
  *   @author               : thindil <thindil@vallheru.net>
  *   @version              : 1.5
- *   @since                : 13.12.2011
+ *   @since                : 24.12.2011
  *
  */
 
@@ -175,7 +175,7 @@ if (isset($_GET['go']) && $_GET['go'] == 'fight')
     /**
      * Win fight and search for components
      */
-    if ($objFight -> fields['hp'] > 0 && $objFight -> fields['fight'] == 0) 
+    if ($objFight -> fields['hp'] > 0 && $objFight -> fields['fight'] == 0 && !isset($_SESSION['ressurect'])) 
     {
         $arrChanges = array(90, 85, 80, 75, 70, 65, 60);
         $intRoll = rand(1, 100);
