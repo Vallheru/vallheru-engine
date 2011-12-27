@@ -1,11 +1,11 @@
 {$Message}
 <table>
 <tr>
-<td width="50"><a href="memberlist.php?lista=id"><b><u>{$Plid}</u></b></a></td>
-<td width="100"><a href="memberlist.php?lista=user"><b><u>{$Plname}</u></b></a></td>
-<td width="100"><a href="memberlist.php?lista=rank"><b><u>{$Plrank}</u></b></a></td>
-<td width="50"><a href="memberlist.php?lista=rasa"><b><u>{$Plrace}</u></b></a></td>
-<td width="50"><a href="memberlist.php?lista=level"><b><u>{$Pllevel}</u></b></a></td>
+<td width="50"><a href="memberlist.php?lista=id&amp;order={$Torder}"><b><u>{$Plid}</u></b></a></td>
+<td width="100"><a href="memberlist.php?lista=user&amp;order={$Torder}"><b><u>{$Plname}</u></b></a></td>
+<td width="100"><a href="memberlist.php?lista=rank&amp;order={$Torder}"><b><u>{$Plrank}</u></b></a></td>
+<td width="50"><a href="memberlist.php?lista=rasa&amp;order={$Torder}"><b><u>{$Plrace}</u></b></a></td>
+<td width="50"><a href="memberlist.php?lista=level&amp;order={$Torder}"><b><u>{$Pllevel}</u></b></a></td>
 <td><b><u>{$Plroleplay}</u><b></td>
 </tr>
 {section name=list1 loop=$Name}
@@ -25,7 +25,7 @@
         {if $page == $Tpage}
 	    {$page}
 	{else}
-            <a href="memberlist.php?page={$page}&amp;lista={$Mlist}">{$page}</a>
+            <a href="memberlist.php?page={$page}&amp;lista={$Mlist}&amp;order={$Torder}">{$page}</a>
 	{/if}
     {/for}
 {/if}

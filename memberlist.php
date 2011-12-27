@@ -125,21 +125,41 @@ if (isset($_GET['ip']))
   {
     $_POST['ip'] = $_GET['ip'];
   }
+if (!isset($_GET['order']))
+  {
+    $_GET['order'] = 'ASC';
+    $strOrder = 'ASC';
+  }
+else
+  {
+    if ($_GET['order'] == 'ASC')
+      {
+	$strOrder = 'DESC';
+      }
+    elseif ($_GET['order'] == 'DESC')
+      {
+	$strOrder = 'ASC';
+      }
+    else
+      {
+	error('Zapomnij o tym.');
+      }
+  }
 if (empty($_POST['szukany']) && $_POST['id'] == 0 && empty($_POST['ip'])) 
   {
-    $mem = $db -> SelectLimit("SELECT `id`, `user`, `rank`, `rasa`, `level`, `gender`, `shortrpg`, `tribe` FROM `players` ORDER BY `".$_GET['lista']."` ASC", 30, (30 * ($page - 1)));
+    $mem = $db -> SelectLimit("SELECT `id`, `user`, `rank`, `rasa`, `level`, `gender`, `shortrpg`, `tribe` FROM `players` ORDER BY `".$_GET['lista']."` ".$_GET['order'], 30, (30 * ($page - 1)));
   } 
 elseif  (!empty($_POST['szukany']) && $_POST['id'] == 0) 
 {
-  $mem = $db -> SelectLimit("SELECT `id`, `user`, `rank`, `rasa`, `level`, `gender`, `shortrpg`, `tribe` FROM `players` WHERE `user` LIKE ".$strSearch." ORDER BY `".$_GET['lista']."` ASC", 30, (30 * ($page - 1)));
+  $mem = $db -> SelectLimit("SELECT `id`, `user`, `rank`, `rasa`, `level`, `gender`, `shortrpg`, `tribe` FROM `players` WHERE `user` LIKE ".$strSearch." ORDER BY `".$_GET['lista']."` ".$_GET['order'], 30, (30 * ($page - 1)));
 } 
 elseif (!empty($_POST['szukany']) && $_POST['id'] > 0) 
 {
-  $mem = $db -> SelectLimit("SELECT `id`, `user`, `rank`, `rasa`, `level`, `gender`, `shortrpg`, `tribe` FROM `players` WHERE `id`=".$_POST['id']." AND `user` LIKE ".$strSearch." ORDER BY `".$_GET['lista']."` ASC", 30,  (30 * ($page - 1)));
+  $mem = $db -> SelectLimit("SELECT `id`, `user`, `rank`, `rasa`, `level`, `gender`, `shortrpg`, `tribe` FROM `players` WHERE `id`=".$_POST['id']." AND `user` LIKE ".$strSearch." ORDER BY `".$_GET['lista']."` ".$_GET['order'], 30,  (30 * ($page - 1)));
 } 
 elseif (empty($_POST['szukany']) && $_POST['id'] > 0) 
 {
-  $mem = $db -> SelectLimit("SELECT `id`, `user`, `rank`, `rasa`, `level`, `gender`, `shortrpg`, `tribe` FROM `players` WHERE `id`=".$_POST['id']." ORDER BY `".$_GET['lista']."` ASC", 30, (30 * ($page - 1)));
+  $mem = $db -> SelectLimit("SELECT `id`, `user`, `rank`, `rasa`, `level`, `gender`, `shortrpg`, `tribe` FROM `players` WHERE `id`=".$_POST['id']." ORDER BY `".$_GET['lista']."` ".$_GET['order'], 30, (30 * ($page - 1)));
 }
 elseif(!empty($_POST['ip']))
 {
@@ -148,7 +168,7 @@ elseif(!empty($_POST['ip']))
       error(NO_PERM);
     }
   $_POST['ip'] = str_replace("*","%", $_POST['ip']);
-  $mem = $db -> SelectLimit("SELECT `id`, `user`, `rank`, `rasa`, `level`, `gender`, `shortrpg`, `tribe` FROM `players` WHERE `ip` LIKE '".$_POST['ip']."' ORDER BY `".$_GET['lista']."` ASC", 30, (30 * ($page - 1)));
+  $mem = $db -> SelectLimit("SELECT `id`, `user`, `rank`, `rasa`, `level`, `gender`, `shortrpg`, `tribe` FROM `players` WHERE `ip` LIKE '".$_POST['ip']."' ORDER BY `".$_GET['lista']."` ".$_GET['order'], 30, (30 * ($page - 1)));
 }
 $arrrank = array();
 $arrid = array();
@@ -180,16 +200,6 @@ while (!$mem -> EOF)
     $mem -> MoveNext();
   }
 $mem -> Close();
-$smarty -> assign(array("Memid" => $arrid, 
-			"Name" => $arrname, 
-			"Race" => $arrrace, 
-			"Rank" => $arrrank,
-			"Roleplay" => $arrShort,
-			"Tpages" => $pages,
-			"Tpage" => $page,
-			"Fpage" => "Idź do strony:",
-			"Mlist" => $_GET['lista'],
-			"Level" => $arrlevel));
 
 /**
 * Initialization of variable
@@ -215,7 +225,18 @@ $smarty -> assign(array("Message" => $strMessage,
 			"Asearch" => A_SEARCH,
 			"Searchip" => SEARCH_IP,
 			"Searchinfo" => SEARCH_INFO,
-			"Rank2" => $player -> rank));
+			"Rank2" => $player -> rank,
+			"Memid" => $arrid, 
+			"Name" => $arrname, 
+			"Race" => $arrrace, 
+			"Rank" => $arrrank,
+			"Roleplay" => $arrShort,
+			"Tpages" => $pages,
+			"Tpage" => $page,
+			"Fpage" => "Idź do strony:",
+			"Mlist" => $_GET['lista'],
+			"Level" => $arrlevel,
+			"Torder" => $strOrder));
 $smarty -> display ('memberlist.tpl');
 
 require_once("includes/foot.php");

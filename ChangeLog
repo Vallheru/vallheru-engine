@@ -1,5 +1,7 @@
 2011-12-27  Bartek thindil Jasicki  <thindil@vallheru.net>
 
+	* FEATURE,templates/layout1/memberlist.tpl, templates/memberlist.tpl, memberlist.php: 
+	added option to sort list in two ways
 	* UPDATE,crafts.php: 
 	changed amount of experience and skill gained
 	* BUG,kowal.php, lumbermill.php:
