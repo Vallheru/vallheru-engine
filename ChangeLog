@@ -1,5 +1,7 @@
 2011-12-27  Bartek thindil Jasicki  <thindil@vallheru.net>
 
+	* BUG,templates/layout1/memberlist.tpl, templates/memberlist.tpl, memberlist.php: 
+	fixed pagination
 	* UPDATE,monuments.php: 
 	removed monument with highest level
 	* FEATURE,templates/layout1/memberlist.tpl, templates/memberlist.tpl, memberlist.php: 

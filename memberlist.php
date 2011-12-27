@@ -236,7 +236,8 @@ $smarty -> assign(array("Message" => $strMessage,
 			"Fpage" => "Idź do strony:",
 			"Mlist" => $_GET['lista'],
 			"Level" => $arrlevel,
-			"Torder" => $strOrder));
+			"Torder" => $strOrder,
+			"Torder2" => $_GET['order']));
 $smarty -> display ('memberlist.tpl');
 
 require_once("includes/foot.php");

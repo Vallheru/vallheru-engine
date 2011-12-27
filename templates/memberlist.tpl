@@ -25,7 +25,7 @@
         {if $page == $Tpage}
 	    {$page}
 	{else}
-            <a href="memberlist.php?page={$page}&amp;lista={$Mlist}&amp;order={$Torder}">{$page}</a>
+            <a href="memberlist.php?page={$page}&amp;lista={$Mlist}&amp;order={$Torder2}">{$page}</a>
 	{/if}
     {/for}
 {/if}
