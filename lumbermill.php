@@ -5,9 +5,9 @@
  *
  *   @name                 : lumbermill.php                            
  *   @copyright            : (C) 2004,2005,2006,2007,2011 Vallheru Team based on Gamers-Fusion ver 2.5
- *   @author               : thindil <thindil@users.sourceforge.net>
- *   @version              : 1.4
- *   @since                : 04.11.2011
+ *   @author               : thindil <thindil@vallheru.net>
+ *   @version              : 1.5
+ *   @since                : 27.12.2011
  *
  */
 
@@ -1023,10 +1023,17 @@ if (isset ($_GET['mill']) && $_GET['mill'] == 'elite')
 	//Check if we have enough loots
 	$objLoot = $db->Execute("SELECT `lootnames` FROM `monsters` WHERE `id`=".$objLumber->fields['elite']);
 	$arrLootsname = explode(";", $objLoot->fields['lootnames']);
+	$intLoot = 0;
 	for ($i = 0; $i < 4; $i++)
 	  {
+	    $intLoot = 0;
 	    $objAmount = $db->Execute("SELECT `amount` FROM `equipment` WHERE `owner`=".$player->id." AND `name`='".$arrLootsname[$i]."' AND status='U'");
-	    if (!$objAmount->fields['amount'] || $objAmount->fields['amount'] < $arrLoots[$i])
+	    while (!$objAmount->EOF)
+	      {
+		$intLoot += $objAmount->fields['amount'];
+		$objAmount->MoveNext();
+	      }
+	    if ($intLoot < $arrLoots[$i])
 	      {
 		error("Nie masz wystarczającej ilości ".$arrLootsname[$i].".");
 	      }
@@ -1144,13 +1151,26 @@ if (isset ($_GET['mill']) && $_GET['mill'] == 'elite')
 	for ($i = 0; $i < 4; $i++)
 	  {
 	    $objAmount = $db->Execute("SELECT `id`, `amount` FROM `equipment` WHERE `owner`=".$player->id." AND `name`='".$arrLootsname[$i]."' AND status='U'");
-	    if ($objAmount->fields['amount'] == $arrLoots[$i])
+	    while (!$objAmount->EOF)
 	      {
-		$db->Execute("DELETE FROM `equipment` WHERE `id`=".$objAmount->fields['id']);
-	      }
-	    else
-	      {
-		$db->Execute("UPDATE `equipment` SET `amount`=`amount`-".$arrLoots[$i]." WHERE `id`=".$objAmount->fields['id']);
+		if ($objAmount->fields['amount'] <= $arrLoots[$i])
+		  {
+		    $db->Execute("DELETE FROM `equipment` WHERE `id`=".$objAmount->fields['id']);
+		    $arrLoots[$i] -= $objAmount->fields['amount'];
+		    if ($arrLoots[$i] > 0)
+		      {
+			$objAmount->MoveNext();
+		      }
+		    else
+		      {
+			break;
+		      }
+		  }
+		else
+		  {
+		    $db->Execute("UPDATE `equipment` SET `amount`=`amount`-".$arrLoots[$i]." WHERE `id`=".$objAmount->fields['id']);
+		    break;
+		  }
 	      }
 	    $objAmount->Close();
 	  }

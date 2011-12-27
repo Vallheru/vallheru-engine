@@ -1,3 +1,8 @@
+2011-12-27  Bartek thindil Jasicki  <thindil@vallheru.net>
+
+	* BUG,kowal.php, lumbermill.php:
+	fixed bug with count loots
+
 2011-12-24  Bartek thindil Jasicki  <thindil@vallheru.net>
 
 	* BUG,portals.php, portal.php, includes/funkcje.php, outpost.php, hunters.php:
