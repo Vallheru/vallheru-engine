@@ -5,9 +5,9 @@
  *
  *   @name                 : roleplay.php                            
  *   @copyright            : (C) 2011 Vallheru Team based on Gamers-Fusion ver 2.5
- *   @author               : thindil <thindil@tuxfamily.org>
- *   @version              : 1.4
- *   @since                : 25.09.2011
+ *   @author               : thindil <thindil@vallheru.net>
+ *   @version              : 1.5
+ *   @since                : 27.12.2011
  *
  */
 
@@ -37,7 +37,7 @@ if (!isset($_GET['view']))
   }
 
 checkvalue($_GET['view']);
-$objProfile = $db->Execute("SELECT `id`, `roleplay`, `ooc` FROM `players` WHERE `id`=".$_GET['view']);
+$objProfile = $db->Execute("SELECT `id`, `user`, `roleplay`, `ooc` FROM `players` WHERE `id`=".$_GET['view']);
 if (!$objProfile->fields['id'])
   {
     error("Nie ma takiego gracza!<a href");
@@ -48,10 +48,33 @@ if (strlen($objProfile->fields['roleplay']) == 0)
     error("Ten gracz nie posiada profilu fabularnego.<a href");
   }
 
+$objPrev = $db->Execute("SELECT `id` FROM `players` WHERE `id`<".$objProfile->fields['id']." AND `roleplay`!='' ORDER BY `id` DESC LIMIT 1");
+$intPrevious = $objPrev->fields['id'];
+$objPrev->Close();
+$objNext = $db->Execute("SELECT `id` FROM `players` WHERE `id`>".$objProfile->fields['id']." AND `roleplay`!='' ORDER BY `id` ASC LIMIT 1");
+$intNext = $objNext->fields['id'];
+$objNext->Close();
+$objMMid = $db->Execute("SELECT MAX(`id`), MIN(`id`) FROM `players` WHERE `roleplay`!=''");
+if ($objProfile->fields['id'] == $objMMid->fields['MAX(`id`)'])
+  {
+    $intNext = $objMMid->fields['MIN(`id`)'];
+  }
+elseif ($objProfile->fields['id'] == $objMMid->fields['MIN(`id`)'])
+{
+  $intPrevious = $objMMid->fields['MAX(`id`)'];
+}
+$objMMid->Close();
+
 $smarty->assign(array("Roleplay" => $objProfile->fields['roleplay'],
 		      "OOC" => $objProfile->fields['ooc'],
 		      "Info" => "Informacje dodatkowe (Poza Grą)",
-		      "Vid" => $objProfile->fields['id']));
+		      "Vid" => $objProfile->fields['id'],
+		      "Anext" => 'Następny profil',
+		      "Aprevious" => 'Poprzedni profil',
+		      "Awrite" => 'Napisz wiadomość',
+		      "Previous" => $intPrevious,
+		      "Pname" => $objProfile->fields['user'],
+		      "Next" => $intNext));
 $objProfile->Close();
 $smarty -> display ('roleplay.tpl');
 

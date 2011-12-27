@@ -1,5 +1,7 @@
 2011-12-27  Bartek thindil Jasicki  <thindil@vallheru.net>
 
+	* FEATURE,templates/layout1/roleplay.tpl, templates/roleplay.tpl, roleplay.php: 
+	added links to next and previous profile
 	* BUG,templates/layout1/memberlist.tpl, templates/memberlist.tpl, memberlist.php: 
 	fixed pagination
 	* UPDATE,monuments.php: 
