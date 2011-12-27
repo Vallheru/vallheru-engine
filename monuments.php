@@ -8,7 +8,7 @@
  *   @author               : thindil <thindil@vallheru.net>
  *   @author               : eyescream <tduda@users.sourceforge.net>
  *   @version              : 1.5
- *   @since                : 19.12.2011
+ *   @since                : 27.12.2011
  *
  */
 
@@ -71,15 +71,15 @@ function topplayers($strDbfield, $blnHidden = FALSE)
 // Set monument groups.
 $arrayMonumentGroups = array(PLAYER_RANKING, "Posągi różnych umiejętności" );
 // For each group decide which monuments should go there...
-$arrayMonumentTitles = array(array(HIGHEST_LEVEL, HIGHEST_GOLD_IN_MONEYBAG, HIGHEST_GOLD_ON_ACCOUNT, "Najwięcej Vallarów"),
+$arrayMonumentTitles = array(array(HIGHEST_GOLD_IN_MONEYBAG, HIGHEST_GOLD_ON_ACCOUNT, "Najwięcej Vallarów"),
 			     array("Najwyższa Spostrzegawczość", "Najwyższe Złodziejstwo")
                              );
 // ...and add description of stat/skill/achievement.
-$arrayMonumentDescriptions = array(array(LEVEL, GOLD_IN_MONEYBAG, GOLD_ON_ACCOUNT, "Vallary"),
+$arrayMonumentDescriptions = array(array(GOLD_IN_MONEYBAG, GOLD_ON_ACCOUNT, "Vallary"),
 				   array("Spostrzegawczość", "Złodziejstwo")
                                    );
         
-$arrayMonuments = array(array(topplayers('level'), topplayers('credits'),topplayers('bank'), topplayers('vallars')),
+$arrayMonuments = array(array(topplayers('credits'),topplayers('bank'), topplayers('vallars')),
 			array(topplayers('perception'), topplayers('thievery', TRUE))
                         );
     
