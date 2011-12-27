@@ -1,5 +1,7 @@
 2011-12-27  Bartek thindil Jasicki  <thindil@vallheru.net>
 
+	* UPDATE,crafts.php: 
+	changed amount of experience and skill gained
 	* BUG,kowal.php, lumbermill.php:
 	fixed bug with count loots
 
