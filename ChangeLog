@@ -1,5 +1,11 @@
 2011-12-28  Bartek thindil Jasicki  <thindil@vallheru.net>
 
+	* FEATURE,tribes.php, includes/steal.php, includes/astralsteal.php, class/player_class.php, templates/layout1/equip.tpl, templates/equip.tpl,
+	templates/layout1/thieves.tpl, templates/thieves.tpl, languages/pl/head1.php, bank.php, equip.php, city.php, monuments.php, view.php,
+	thieves.php:
+	added new location and thieves tools
+	* BUG,install/install.php: 
+	fixed bug #908225
 	* BUG,portals.php:
 	fixed bug with lost fight
 

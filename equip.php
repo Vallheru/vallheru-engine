@@ -5,9 +5,9 @@
  *
  *   @name                 : equip.php                            
  *   @copyright            : (C) 2004,2005,2006,2007,2011 Vallheru Team based on Gamers-Fusion ver 2.5
- *   @author               : thindil <thindil@tuxfamily.org>
- *   @version              : 1.4
- *   @since                : 01.12.2011
+ *   @author               : thindil <thindil@vallheru.net>
+ *   @version              : 1.5
+ *   @since                : 28.12.2011
  *
  */
 
@@ -393,21 +393,36 @@ if ($arrEquip[4][0])
  */
 if ($arrEquip[9][0])
 {
-  $smarty -> assign("Ring1", "<b>".RING.":</b> ".$arrEquip[9][1]." (+".$arrEquip[9][2].") [<a href=\"equip.php?schowaj=".$arrEquip[9][0]."\">".WEAR_OFF."</a>]<br />\n");
+  $smarty -> assign("Ring1", "<b>".RING.":</b> ".$arrEquip[9][1]." (+".$arrEquip[9][2].") [<a href=\"equip.php?schowaj=".$arrEquip[9][0]."\">".WEAR_OFF."</a>]<br />");
 }
     else
 {
-    $smarty -> assign("Ring1", "<b>".RING.":</b> ".EMPTY_SLOT."<br />\n");
+    $smarty -> assign("Ring1", "<b>".RING.":</b> ".EMPTY_SLOT."<br />");
 }
 if ($arrEquip[10][0])
 {
-  $smarty -> assign("Ring2", "<b>".RING.":</b> ".$arrEquip[10][1]." (+".$arrEquip[10][2].") [<a href=\"equip.php?schowaj=".$arrEquip[10][0]."\">".WEAR_OFF."</a>]<br />\n");
+  $smarty -> assign("Ring2", "<b>".RING.":</b> ".$arrEquip[10][1]." (+".$arrEquip[10][2].") [<a href=\"equip.php?schowaj=".$arrEquip[10][0]."\">".WEAR_OFF."</a>]<br />");
 }
     else
 {
-    $smarty -> assign("Ring2", "<b>".RING.":</b> ".EMPTY_SLOT."<br />\n");
+    $smarty -> assign("Ring2", "<b>".RING.":</b> ".EMPTY_SLOT."<br />");
 }
 
+/**
+ * Weared tool
+ */
+if ($arrEquip[12][0])
+  {
+    $smarty->assign("Tool", "<input type=\"checkbox\" name=\"".$arrEquip[12][0]."\" /><b>Narzędzie:</b> ".$arrEquip[12][1]." (+".$arrEquip[12][2]." %) (".$arrEquip[12][6]."/".$arrEquip[12][9]." ".DURABILITY.") [<a href=\"equip.php?schowaj=".$arrEquip[12][0]."\">".WEAR_OFF."</a>]<br />");
+  }
+else
+  {
+    $smarty->assign("Tool", "<b>Narzędzie:</b> brak<br />");
+  }
+
+/**
+ * Take off equipment
+ */
 if (isset($_GET['schowaj'])) 
 {
     checkvalue($_GET['schowaj']);
@@ -484,6 +499,7 @@ backpack('S',$player -> id,SHIELDS,'','Bshields');
 backpack('C',$player -> id,CAPES,'','Bcapes');
 backpack('L',$player -> id,LEGS2,'','Blegs');
 backpack('I', $player->id, 'pierścienie', '', 'Brings');
+backpack('E', $player->id, 'narzędzia', '', 'Btools');
 backpack('O', $player->id, 'Łupy', '', 'Bloots');
 backpack('Q', $player->id, 'Przedmioty do zadań', '', 'Bquests');
 
@@ -732,7 +748,7 @@ if (isset($_GET['sellchecked']))
  */
 if (isset($_GET['sprzedaj'])) 
   {
-    $arrSell = array('A', 'W', 'H', 'L', 'R', 'C', 'T', 'S', 'I', 'O', 'Q');
+    $arrSell = array('A', 'W', 'H', 'L', 'R', 'C', 'T', 'S', 'I', 'O', 'Q', 'E');
     if (!in_array($_GET['sprzedaj'], $arrSell))
       {
 	error(ERROR);

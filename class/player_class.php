@@ -5,9 +5,9 @@
  *
  *   @name                 : player_class.php                            
  *   @copyright            : (C) 2004,2005,2006,2007,2011 Vallheru Team based on Gamers-Fusion ver 2.5
- *   @author               : thindil <thindil@tuxfamily.org>
- *   @version              : 1.4
- *   @since                : 21.11.2011
+ *   @author               : thindil <thindil@vallheru.net>
+ *   @version              : 1.5
+ *   @since                : 28.12.2011
  *
  */
 
@@ -246,8 +246,9 @@ class Player
                           array(0, 0, 0, 0, 0, 0, 0, 0, 0, 0),
                           array(0, 0, 0, 0, 0, 0, 0, 0, 0, 0),
                           array(0, 0, 0, 0, 0, 0, 0, 0, 0, 0),
+			  array(0, 0, 0, 0, 0, 0, 0, 0, 0, 0),
 			  array(0, 0, 0, 0, 0, 0, 0, 0, 0, 0));
-        $arrEquiptype = array('W', 'B', 'H', 'A', 'L', 'S', 'R', 'T', 'C', 'I');
+        $arrEquiptype = array('W', 'B', 'H', 'A', 'L', 'S', 'R', 'T', 'C', 'I', 'E');
         $objEquip = $db -> Execute("SELECT `id`, `name`, `power`, `type`, `minlev`, `zr`, `wt`, `szyb`, `poison`, `ptype`, `maxwt` FROM `equipment` WHERE `owner`=".$this -> id." AND status='E'");
         while (!$objEquip -> EOF)
 	  {
@@ -259,6 +260,10 @@ class Player
 	    elseif ($arrEquip[0][0] && $objEquip -> fields['id'] != $arrEquip[0][0] && $objEquip -> fields['type'] == 'W')
 	      {
 		$intKey = 11;
+	      }
+	    elseif ($objEquip->fields['type'] == 'E')
+	      {
+		$intKey = 12;
 	      }
             $arrEquip[$intKey][0] = $objEquip -> fields['id'];
             $arrEquip[$intKey][1] = $objEquip -> fields['name'];

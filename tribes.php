@@ -5,11 +5,11 @@
  *
  *   @name                 : tribes.php                            
  *   @copyright            : (C) 2004,2005,2006,2007,2011 Vallheru Team based on Gamers-Fusion ver 2.5
- *   @author               : thindil <thindil@tuxfamily.org>
+ *   @author               : thindil <thindil@vallheru.net>
  *   @author               : mori <ziniquel@users.sourceforge.net>
  *   @author               : eyescream <tduda@users.sourceforge.net>
- *   @version              : 1.4
- *   @since                : 22.11.2011
+ *   @version              : 1.5
+ *   @since                : 28.12.2011
  *
  */
 
@@ -313,6 +313,14 @@ if (isset ($_GET['view']) && $_GET['view'] == 'view')
 			$player -> $strStat = $player -> $strStat + $arrEquip[10][2];
 		      }
 		  }
+		$intStats = ($player->agility + $player->inteli + $player->thievery);
+		/**
+		 * Add bonus from tools
+		 */
+		if ($arrEquip[12][0])
+		  {
+		    $intStats += (($arrEquip[12][2] / 100) * $intStats);
+		  }
 		$objMembers = $db->Execute("SELECT `id`, `agility`, `inteli`, `perception`, `bless`, `blessval` FROM `players` WHERE `tribe`=".$_GET['id']);
 		$blnAction = TRUE;
 		$strDate = $db -> DBDate($newdate);
@@ -326,7 +334,7 @@ if (isset ($_GET['view']) && $_GET['view'] == 'view')
 		      {
 			$objMembers->fields['agility'] += $objMembers->fields['blessval'];
 		      }
-		    $intChance = ($player->agility + $player->inteli + $player->thievery) - ($objMembers->fields['agility'] + $objMembers->fields['inteli'] + $objMembers->fields['perception']);
+		    $intChance = $intStats - ($objMembers->fields['agility'] + $objMembers->fields['inteli'] + $objMembers->fields['perception']);
 		    if ($intChance < 1)
 		      {
 			$db->Execute("UPDATE `players` SET `perception`=`perception`+".($player->level / 100)." WHERE `id`=".$objMembers->fields['id']);
@@ -345,11 +353,37 @@ if (isset ($_GET['view']) && $_GET['view'] == 'view')
 		  {
 		    $intExp = $intLevels * 5;
 		    $fltThievery = $intLevels / 50.0;
+		    if ($arrEquip[12][0])
+		      {
+			$arrEquip[12][6] --;
+			if ($arrEquip == 0)
+			  {
+			    $db->Execute("DELETE FROM `equipment` WHERE `id`=".$arrEquip[12][0]);
+			  }
+			else
+			  {
+			    $db->Execute("UPDATE `equipment` SET `wt`=`wt`-1 WHERE `id`=".$arrEquip[12][0]);
+			  }
+		      }
 		  }
 		else
 		  {
 		    $intExp = ceil($intLevels / 100);
 		    $fltThievery = $intLevels / 100.0;
+		    if ($arrEquip[12][0])
+		      {
+			$db->Execute("DELETE FROM `equipment` WHERE `id`=".$arrEquip[12][0]);
+		      }
+		    $objTool = $db->Execute("SELECT `id` FROM `equipment` WHERE `owner`=".$player->id." AND `type`='E' AND `status`='U'");
+		    if ($objTool->fields['id'])
+		      {
+			$intRoll = rand(1, 100);
+			if ($intRoll < 50)
+			  {
+			    $db->Execute("DELETE FROM `equipment` WHERE `owner`=".$player->id." AND `type`='E' AND `status`='U'");
+			  }
+		      }
+		    $objTool->Close();
 		  }
 		require_once('includes/checkexp.php');
 		checkexp($player->exp, $intExp, $player->level, $player->race, $player->user, $player->id, 0, 0, $player->id, 'thievery', $fltThievery);

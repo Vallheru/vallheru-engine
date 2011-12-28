@@ -5,9 +5,9 @@
  *
  *   @name                 : steal.php                            
  *   @copyright            : (C) 2004,2005,2006,2011 Vallheru Team based on Gamers-Fusion ver 2.5
- *   @author               : thindil <thindil@tuxfamily.org>
- *   @version              : 1.4
- *   @since                : 14.09.2011
+ *   @author               : thindil <thindil@vallheru.net>
+ *   @version              : 1.5
+ *   @since                : 28.12.2011
  *
  */
 
@@ -117,7 +117,16 @@ function steal ($itemid)
         }
     }
 
-    $chance = ($player->agility + $player->inteli + $player->thievery) - $roll;
+    $intStats = ($player->agility + $player->inteli + $player->thievery);
+    /**
+     * Add bonus from tools
+     */
+    if ($arrEquip[12][0])
+      {
+	$intStats += (($arrEquip[12][2] / 100) * $intStats);
+      }
+
+    $chance = $intStats - $roll;
     $strDate = $db -> DBDate(date("y-m-d"));
     if ($chance < 1) 
     {
@@ -127,6 +136,20 @@ function steal ($itemid)
         $db -> Execute("UPDATE `players` SET `miejsce`='Lochy', `crime`=`crime`-1 WHERE `id`=".$player -> id);
         $db -> Execute("INSERT INTO `jail` (`prisoner`, `verdict`, `duration`, `cost`, `data`) VALUES(".$player -> id.", '".VERDICT."', 7, ".$cost.", ".$strDate.")") or die("Błąd!");
         $db -> Execute("INSERT INTO log (`owner`, `log`, `czas`, `type`) VALUES(".$player -> id.",'".S_LOG_INFO." ".$cost.".', ".$strDate.", 'T')");
+	if ($arrEquip[12][0])
+	  {
+	    $db->Execute("DELETE FROM `equipment` WHERE `id`=".$arrEquip[12][0]);
+	  }
+	$objTool = $db->Execute("SELECT `id` FROM `equipment` WHERE `owner`=".$player->id." AND `type`='E' AND `status`='U'");
+	if ($objTool->fields['id'])
+	  {
+	    $intRoll = rand(1, 100);
+	    if ($intRoll < 50)
+	      {
+		$db->Execute("DELETE FROM `equipment` WHERE `owner`=".$player->id." AND `type`='E' AND `status`='U'");
+	      }
+	  }
+	$objTool->Close();
         error (CRIME_RESULT1);
     } 
         else 
@@ -166,6 +189,18 @@ function steal ($itemid)
             }
             $test -> Close();
         }
+	if ($arrEquip[12][0])
+	  {
+	    $arrEquip[12][6] --;
+	    if ($arrEquip == 0)
+	      {
+		$db->Execute("DELETE FROM `equipment` WHERE `id`=".$arrEquip[12][0]);
+	      }
+	    else
+	      {
+		$db->Execute("UPDATE `equipment` SET `wt`=`wt`-1 WHERE `id`=".$arrEquip[12][0]);
+	      }
+	  }
         error (CRIME_RESULT2." ".$arritem -> fields['name'].CRIME_RESULT3." Zdobyłeś ".$fltThief." w umiejętności Złodziejstwo.");
     }
 }

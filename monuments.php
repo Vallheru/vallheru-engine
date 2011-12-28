@@ -69,19 +69,13 @@ function topplayers($strDbfield, $blnHidden = FALSE)
 }
 
 // Set monument groups.
-$arrayMonumentGroups = array(PLAYER_RANKING, "Posągi różnych umiejętności" );
+$arrayMonumentGroups = array(PLAYER_RANKING);
 // For each group decide which monuments should go there...
-$arrayMonumentTitles = array(array(HIGHEST_GOLD_IN_MONEYBAG, HIGHEST_GOLD_ON_ACCOUNT, "Najwięcej Vallarów"),
-			     array("Najwyższa Spostrzegawczość", "Najwyższe Złodziejstwo")
-                             );
+$arrayMonumentTitles = array(array("Najwięcej Vallarów"));
 // ...and add description of stat/skill/achievement.
-$arrayMonumentDescriptions = array(array(GOLD_IN_MONEYBAG, GOLD_ON_ACCOUNT, "Vallary"),
-				   array("Spostrzegawczość", "Złodziejstwo")
-                                   );
+$arrayMonumentDescriptions = array(array("Vallary"));
         
-$arrayMonuments = array(array(topplayers('credits'),topplayers('bank'), topplayers('vallars')),
-			array(topplayers('perception'), topplayers('thievery', TRUE))
-                        );
+$arrayMonuments = array(array(topplayers('vallars')));
     
 $smarty -> assign(array('Groups' => $arrayMonumentGroups, 
                         'Titles' => $arrayMonumentTitles,

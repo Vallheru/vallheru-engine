@@ -5,11 +5,11 @@
  *
  *   @name                 : bank.php                            
  *   @copyright            : (C) 2004,2005,2006,2007,2011 Vallheru Team based on Gamers-Fusion ver 2.5
- *   @author               : thindil <thindil@tuxfamily.org>
+ *   @author               : thindil <thindil@vallheru.net>
  *   @author               : yeskov <yeskov@users.sourceforge.net>
  *   @author               : eyescream <tduda@users.sourceforge.net>
  *   @version              : 1.5
- *   @since                : 06.12.2011
+ *   @since                : 28.12.2011
  *
  */
 
@@ -744,8 +744,17 @@ if (isset($_GET['action']))
 			$player -> $strStat = $player -> $strStat + $arrEquip[10][2];
 		      }
 		  }
+		
+		$intStats = ($player->agility + $player->inteli + $player->thievery + $player->speed);
+		/**
+		 * Add bonus from tools
+		 */
+		if ($arrEquip[12][0])
+		  {
+		    $intStats += (($arrEquip[12][2] / 100) * $intStats);
+		  }
 	    
-		$chance = ($player->agility + $player->inteli + $player->thievery + $player->speed) - $roll;
+		$chance = $intStats - $roll;
 	      }
 	    if ($chance < 1) 
 	      {
@@ -756,6 +765,20 @@ if (isset($_GET['action']))
 		$strDate = $db -> DBDate($newdate);
 		$db -> Execute("INSERT INTO `jail` (`prisoner`, `verdict`, `duration`, `cost`, `data`) VALUES(".$player -> id.", '".VERDICT."', 7, ".$cost.", ".$strDate.")") or error (E_DB4);
 		$db -> Execute("INSERT INTO `log` (`owner`, `log`, `czas`, `type`) VALUES(".$player -> id.",'".L_REASON.": ".$cost.".','".$newdate."', 'T')");
+		if ($arrEquip[12][0])
+		  {
+		    $db->Execute("DELETE FROM `equipment` WHERE `id`=".$arrEquip[12][0]);
+		  }
+		$objTool = $db->Execute("SELECT `id` FROM `equipment` WHERE `owner`=".$player->id." AND `type`='E' AND `status`='U'");
+		if ($objTool->fields['id'])
+		  {
+		    $intRoll = rand(1, 100);
+		    if ($intRoll < 50)
+		      {
+			$db->Execute("DELETE FROM `equipment` WHERE `owner`=".$player->id." AND `type`='E' AND `status`='U'");
+		      }
+		  }
+		$objTool->Close();
 		message('error', C_CACHED);
 	      }
 	    else 
@@ -771,6 +794,18 @@ if (isset($_GET['action']))
 		  }
 		$db -> Execute("UPDATE `players` SET `crime`=`crime`-".$_POST['tp'].", `credits`=`credits`+".$gain." WHERE `id`=".$player -> id);
 		checkexp($player -> exp, $expgain, $player -> level, $player -> race, $player -> user, $player -> id, 0, 0, $player -> id, 'thievery', $fltThief);
+		if ($arrEquip[12][0])
+		  {
+		    $arrEquip[12][6] --;
+		    if ($arrEquip == 0)
+		      {
+			$db->Execute("DELETE FROM `equipment` WHERE `id`=".$arrEquip[12][0]);
+		      }
+		    else
+		      {
+			$db->Execute("UPDATE `equipment` SET `wt`=`wt`-1 WHERE `id`=".$arrEquip[12][0]);
+		      }
+		  }
 		message('success', C_SUCCES.$gain.C_SUCCES2." Zdobyłeś ".$fltThief." w umiejętności Złodziejstwo.");
 	      }
 	  }

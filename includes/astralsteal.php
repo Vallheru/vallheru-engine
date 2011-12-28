@@ -5,10 +5,10 @@
  *
  *   @name                 : astralsteal.php                            
  *   @copyright            : (C) 2006,2011 Vallheru Team based on Gamers-Fusion ver 2.5
- *   @author               : thindil <thindil@tuxfamily.org>
+ *   @author               : thindil <thindil@vallheru.net>
  *   @author               : eyescream <tduda@users.sourceforge.net>
  *   @version              : 1.5
- *   @since                : 08.12.2011
+ *   @since                : 28.12.2011
  *
  */
 
@@ -94,15 +94,23 @@ function astralsteal($intVictim, $strLocation, $intOwner = 0, $intId = 0)
         }
     }
 
+    $intStats = ($player->agility + $player->inteli + $player->thievery);
+    /**
+     * Add bonus from tools
+     */
+    if ($arrEquip[12][0])
+      {
+	$intStats += (($arrEquip[12][2] / 100) * $intStats);
+      }
+
     /**
      * Check for succesful steal
      */
     $intRoll = rand(1, ($player -> level * 100));
-    $intChance = ($player->agility + $player->inteli + $player->thievery) - $intRoll;
+    $intChance = $intStats - $intRoll;
     if ($strLocation == 'R')
     {
-        $intChars = $player->agility + $player->inteli + $player->thievery;
-        $intChance =  $intChars - ($intChars * 0.9) - $intRoll;
+        $intChance =  $intStats - ($intChars * 0.7) - $intRoll;
     }
     if ($intChance < 1)
     {
@@ -166,6 +174,20 @@ function astralsteal($intVictim, $strLocation, $intOwner = 0, $intId = 0)
         $db -> Execute("INSERT INTO `jail` (`prisoner`, `verdict`, `duration`, `cost`, `data`) VALUES(".$player -> id.", '".VERDICT."', ".$intDays.", ".$intBail.", ".$strDate.")");
         $db -> Execute("INSERT INTO `log` (`owner`, `log`, `czas`, `type`) VALUES(".$player -> id.",'".L_REASON.": ".$intBail.".', ".$strDate.", 'T')");
         $db -> Execute("INSERT INTO `log` (`owner`, `log`, `czas`, `type`) VALUES(".$intVictim.",'".L_CACHED."<b><a href=\"view.php?view=".$player -> id."\">".$player -> user."</a></b>".L_CACHED2.'<b>'.$player -> id.'</b>'.L_CACHED3."',".$strDate.", 'T')");
+	if ($arrEquip[12][0])
+	  {
+	    $db->Execute("DELETE FROM `equipment` WHERE `id`=".$arrEquip[12][0]);
+	  }
+	$objTool = $db->Execute("SELECT `id` FROM `equipment` WHERE `owner`=".$player->id." AND `type`='E' AND `status`='U'");
+	if ($objTool->fields['id'])
+	  {
+	    $intRoll = rand(1, 100);
+	    if ($intRoll < 50)
+	      {
+		$db->Execute("DELETE FROM `equipment` WHERE `owner`=".$player->id." AND `type`='E' AND `status`='U'");
+	      }
+	  }
+	$objTool->Close();
         error (C_CACHED);
     }
     /**
@@ -258,6 +280,18 @@ function astralsteal($intVictim, $strLocation, $intOwner = 0, $intId = 0)
         {
             $db -> Execute("INSERT INTO `log` (`owner`, `log`, `czas`, `type`) VALUES(".$intOwner.",'".ASTRAL_GONE.$strType.$strCompname."</b>."."',".$strDate.", 'T')");
         }
+	if ($arrEquip[12][0])
+	  {
+	    $arrEquip[12][6] --;
+	    if ($arrEquip == 0)
+	      {
+		$db->Execute("DELETE FROM `equipment` WHERE `id`=".$arrEquip[12][0]);
+	      }
+	    else
+	      {
+		$db->Execute("UPDATE `equipment` SET `wt`=`wt`-1 WHERE `id`=".$arrEquip[12][0]);
+	      }
+	  }
         error(SUCCESFULL.$strType.$strCompname."</b>. Zdobyłeś ".$fltThief." w umiejętności Złodziejstwo.");
     }
 }

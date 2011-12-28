@@ -9,6 +9,7 @@
 {$Legs}
 {$Ring1}
 {$Ring2}
+{$Tool}
 {$Repairequip}
 </form>
 {if $Action != ""}
@@ -60,6 +61,9 @@
 {/if}
 {if $Bringsamount > 1}
     <div align="center"><a href="#rings">{$Bringsmenu[0]}</a></div>
+{/if}
+{if $Btoolsamount > 1}
+    <div align="center"><a href="#tools">{$Btoolsmenu[0]}</a></div>
 {/if}
 {if $Blootsamount > 1}
     <div align="center"><a href="#loots">{$Blootsmenu[0]}</a></div>
@@ -228,6 +232,24 @@
 	    {/if}
 	{/foreach}
 	{$Bringsmenu[1]}
+    	<input type="submit" value="{$Bringssell}" />
+    </form>
+    <a href="#top">{$Aback}</a><br />
+{/if}
+
+{if $Btoolsamount > 1}
+    <form method="POST" action="equip.php?sellchecked=E">
+        <br /><a name="tools"><u>{$Btoolsmenu[0]}:</u></a><br />
+        {foreach $Btools as $key => $value}
+	    {if $key > 0}
+	        {$Ilevel} {$key}:<br />
+	        {foreach $value as $weapon}
+	            {$weapon}
+	        {/foreach}
+		<br />
+	    {/if}
+	{/foreach}
+	{$Btoolsmenu[1]}
     	<input type="submit" value="{$Bringssell}" />
     </form>
     <a href="#top">{$Aback}</a><br />

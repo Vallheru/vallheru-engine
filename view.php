@@ -8,7 +8,7 @@
  *   @author               : thindil <thindil@vallheru.net>
  *   @author               : eyescream <tduda@users.sourceforge.net>
  *   @version              : 1.5
- *   @since                : 23.12.2011
+ *   @since                : 28.12.2011
  *
  */
 
@@ -513,6 +513,20 @@ if (isset ($_GET['steal']))
             $db -> Execute("UPDATE `players` SET `crime`=`crime`-1 WHERE `id`=".$player-> id);
             error ("<br />".YOU_TRY_IN." (<a href=\"view.php?view=".$_GET['view']."\">".BACK."</a>)");          
         }
+	if ($arrEquip[12][0])
+	  {
+	    $db->Execute("DELETE FROM `equipment` WHERE `id`=".$arrEquip[12][0]);
+	  }
+	$objTool = $db->Execute("SELECT `id` FROM `equipment` WHERE `owner`=".$player->id." AND `type`='E' AND `status`='U'");
+	if ($objTool->fields['id'])
+	  {
+	    $intRoll = rand(1, 100);
+	    if ($intRoll < 50)
+	      {
+		$db->Execute("DELETE FROM `equipment` WHERE `owner`=".$player->id." AND `type`='E' AND `status`='U'");
+	      }
+	  }
+	$objTool->Close();
     }
     if ($chance > 0 && $chance < 50) 
     {

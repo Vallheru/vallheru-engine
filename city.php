@@ -66,7 +66,7 @@ if ($player -> location == 'Altara')
                           array('house.php', 'memberlist.php?limit=0&amp;lista=id', 'monuments.php', 'hof.php', 'hof2.php', 'library.php'),
                           array('updates.php', 'tower.php', 'jail.php', 'court.php', 'polls.php', 'alley.php', 'stafflist.php'),
                           array('landfill.php', 'smelter.php', 'kowal.php', 'alchemik.php', 'guilds.php', 'crafts.php'),
-                          array('market.php', 'warehouse.php', 'travel.php'));
+                          array('market.php', 'warehouse.php', 'travel.php', 'thieves.php'));
         $arrNames = array(array(BATTLE_ARENA, ARMOR_SHOP, WEAPON_SHOP, BOWS_SHOP, OUTPOSTS, 'Gildia Łowców', 'Aula Gladiatorów', 'Prefektura Gwardii'),
                           array(NEWS, FORUMS, INN, PRIV_M, CLANS, PAPER),
                           array(SCHOOL, MINES, FARMS, CORES),
@@ -74,7 +74,7 @@ if ($player -> location == 'Altara')
                           array(HOUSES, PLAYERS_L, MONUMENTS, HERO_VALL, 'Galeria Machin', LIBRARY),
                           array(UPDATES, TIMER, JAIL2, COURT, $strInfo.POLLS, WELLEARNED, STAFF_LIST),
                           array(CLEAN_CITY, SMELTER, BLACKSMITH, ALCHEMY_MILL, 'Gildia Rzemieślników', 'Cześnik'),
-                          array(MARKET, WAREHOUSE, TRAVEL));
+                          array(MARKET, WAREHOUSE, TRAVEL, 'Złodziejska Spelunka'));
         $smarty -> assign(array("Titles" => $arrTitles,
                                 "Files" => $arrFiles,
                                 "Names" => $arrNames,
@@ -133,7 +133,7 @@ if ($player -> location == 'Altara')
                           array('landfill.php', 'warehouse.php', 'market.php', 'battle.php', 'core.php', 'polls.php', 'guilds2.php', 'outpost.php'),
                           array('updates.php', 'tower.php', 'news.php', 'newspaper.php', 'alley.php', 'stafflist.php', 'court.php'),
                           array('house.php', 'memberlist.php?limit=0&amp;lista=id', 'monuments.php', 'outposts.php', 'farm.php', 'hunters.php'),
-                          array('travel.php', 'city.php?step=forest'));
+                          array('travel.php', 'city.php?step=forest', 'thieves.php'));
         $arrNames = array(array(TEMPLE, LIBRARY, JEWELLER),
                           array(BOWS_SHOP, ALCHEMY_SHOP, MAGIC_TOWER, FORUMS, INN),
                           array(JAIL2, LABYRYNTH, PRIV_M, CLANS),
@@ -141,7 +141,7 @@ if ($player -> location == 'Altara')
                           array(CLEAN_CITY, WAREHOUSE, MARKET, BATTLE_ARENA, CORES, $strInfo.POLLS, 'Aula Gladiatorów', 'Prefektura Gwardii'),
                           array(UPDATES, TIMER, NEWS, PAPER, WELLEARNED, STAFF_LIST, COURT),
                           array(HOUSES, PLAYERS_L, MONUMENTS, OUTPOSTS, FARMS, 'Gildia Łowców'),
-                          array(TRAVEL, FOREST2));
+                          array(TRAVEL, FOREST2, 'Złodziejska Spelunka'));
         $smarty -> assign(array("Titles" => $arrTitles,
                                 "Files" => $arrFiles,
                                 "Names" => $arrNames,
