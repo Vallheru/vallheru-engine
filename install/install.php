@@ -7,7 +7,7 @@
  *   @copyright            : (C) 2004,2005,2006,2007,2011 Vallheru Team based on Gamers-Fusion ver 2.5
  *   @author               : thindil <thindil@tuxfamily.org>
  *   @version              : 1.4
- *   @since                : 05.12.2011
+ *   @since                : 28.12.2011
  *
  */
 
@@ -418,7 +418,7 @@ require_once('adodb/adodb.inc.php');
     splitschema($pieces, $sql_query);
     $amount = count($pieces);
     require_once('../adodb/adodb.inc.php');
-    $db = NewADOConnection($strDBtype);
+    $db = NewADOConnection('mysqli');
     $db -> Connect($_POST['dbhost'], $_POST['dbuser'], $_POST['dbpass'], $_POST['dbname']) or die("Błąd przy połączeniu z bazą danych!");
     for ($i = 0; $i < $amount; $i ++) 
     {
