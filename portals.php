@@ -7,7 +7,7 @@
  *   @copyright            : (C) 2006,2011 Vallheru Team based on Gamers-Fusion ver 2.5
  *   @author               : thindil <thindil@vallheru.net>
  *   @version              : 1.5
- *   @since                : 24.12.2011
+ *   @since                : 28.12.2011
  *
  */
 
@@ -224,10 +224,11 @@ if (isset($_GET['go']) && $_GET['go'] == 'fight')
     /**
      * Lost fight
      */
-    if ($objFight -> fields['fight'] == 0 && $objFight -> fields['hp'] == 0) 
+    if ($objFight -> fields['fight'] == 0 && ($objFight -> fields['hp'] == 0 || isset($_SESSION['ressurect']))) 
     {
         $db -> Execute("UPDATE `players` SET `energy`=`energy`-1, `miejsce`='Altara' WHERE `id`=".$player -> id);
         coutastralplans($player -> id, $strName);
+	unset($_SESSION['ressurect']);
         error(YOU_LOST2);
     }
 

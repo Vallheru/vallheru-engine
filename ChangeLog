@@ -1,3 +1,8 @@
+2011-12-28  Bartek thindil Jasicki  <thindil@vallheru.net>
+
+	* BUG,portals.php:
+	fixed bug with lost fight
+
 2011-12-27  Bartek thindil Jasicki  <thindil@vallheru.net>
 
 	* FEATURE,templates/layout1/roleplay.tpl, templates/roleplay.tpl, roleplay.php: 
