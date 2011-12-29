@@ -56,7 +56,7 @@ $objVallars = $db->SelectLimit("SELECT `id`, `user`, `tribe`, `vallars` FROM `pl
 $arrVallars = array('<b><u>Imię (ID)</u></b>', '<b><u>Vallarów</u></b>');
 while (!$objVallars->EOF)
   {
-    $arrVallars[] = '<a href="view.php?view='.$objVallars->fields['id'].'">'.$arrTags[$objVallars->fields['tribe']][0].' '.$objVallars->fields['user'].' '.$arrTags[$objVallars->fields['tribe']][1].' '.$objVallars->fields['id'].'</a>';
+    $arrVallars[] = '<a href="view.php?view='.$objVallars->fields['id'].'">'.$arrTags[$objVallars->fields['tribe']][0].' '.$objVallars->fields['user'].' '.$arrTags[$objVallars->fields['tribe']][1].'</a> ('.$objVallars->fields['id'].')';
     $arrVallars[] = $objVallars->fields['vallars'];
     $objVallars->MoveNext();
   }
