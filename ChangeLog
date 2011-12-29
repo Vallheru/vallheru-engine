@@ -1,3 +1,9 @@
+2011-12-29  Bartek thindil Jasicki  <thindil@vallheru.net>
+
+	* UPDATE,templates/layout1/alley.tpl, templates/alley.tpl, alley.php, city.php, templates/layout1/monuments.tpl, templates/monuments.tpl,
+	monuments.php:
+	move Vallars monument to other location, remove monuments location
+
 2011-12-28  Bartek thindil Jasicki  <thindil@vallheru.net>
 
 	* FEATURE,tribes.php, includes/steal.php, includes/astralsteal.php, class/player_class.php, templates/layout1/equip.tpl, templates/equip.tpl,
