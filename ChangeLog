@@ -1,3 +1,8 @@
+2011-12-30  Bartek thindil Jasicki  <thindil@vallheru.net>
+
+	* FEATURE,thieves.php, templates/thieves.tpl:
+	start work on thieves random missions
+
 2011-12-29  Bartek thindil Jasicki  <thindil@vallheru.net>
 
 	* UPDATE,alley.php: 

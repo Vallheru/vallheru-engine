@@ -7,7 +7,7 @@
  *   @copyright            : (C) 2011 Vallheru Team based on Gamers-Fusion ver 2.5
  *   @author               : thindil <thindil@vallheru.net>
  *   @version              : 1.5
- *   @since                : 28.12.2011
+ *   @since                : 30.12.2011
  *
  */
 
@@ -45,10 +45,12 @@ if ($player->clas != 'Złodziej')
 if ($player->gender == 'M')
   {
     $strSuffix = 'eś';
+    $strSuffix2 = 'y';
   }
  else
    {
      $strSuffix = 'aś';
+     $strSuffix2 = 'a';
    }
 
 /**
@@ -59,7 +61,7 @@ if (!isset($_GET['step']))
     $smarty->assign(array('Thiefinfo' => 'Wchodzisz do niewielkiego, drewnianego budynku. Już od drzwi uderza w Ciebie zapach potu, palonego fajkowego ziela oraz kiepskiej jakości alkoholu. Na moment wszystkie rozmowy cichną, kiedy bywalcy tego miejsca uważnie przyglądają się Tobie. Pokazujesz sekretny znak i po chwili wszystko wraca do normy. Podchodzisz do lady i mówisz do barmana',
 			  'Amonuments' => 'Potrzebuję nieco informacji o mieszkańcach '.$gamename.'.',
 			  'Aitems' => 'Potrzebuję narzędzi.',
-			  'Amissions' => ''));
+			  'Amissions' => 'Szukam jakiejś roboty'));
     $_GET['step'] = '';
   }
 else
@@ -141,6 +143,67 @@ else
 		message('success', 'Zakupił'.$strSuffix.' '.$_POST['amount'].' sztuk(i) wytrychów za '.$intGold.' sztuk złota.');
 	      }
 	  }
+      }
+    /**
+     * Generate random missions
+     */
+    elseif ($_GET['step'] == 'missions')
+      {
+	$objJob = $db->Execute("SELECT `craftmission`, `mpoints` FROM `players` WHERE `id`=".$player->id);
+	if ($objJob->fields['craftmission'] == 'Y')
+	  {
+	    error('Niestety, na chwilę obecną nie ma dostępnych prac dla ciebie. Proszę wróć później.');
+	  }
+	if ($objJob->fields['mpoints'] < 30)
+	  {
+	    $strTalk = 'Czołem, now'.$strSuffix2.'. Słyszałem, że szukasz roboty.';
+	  }
+	elseif ($objJob->fields['mpoints'] < 60)
+	  {
+	    $strTalk = 'Witaj młod'.$strSuffix2.'. Ponoć szukasz roboty.';
+	  }
+	else
+	  {
+	    $strTalk = 'Witaj ponownie '.$player->user.'. Znowu chcesz coś dla nas zrobić?';
+	  }
+	$arrJobs = array();
+	$i = 0;
+	while ($i < 3)
+	  {
+	    $intKey = rand(0, 3);
+	    switch ($intKey)
+	      {
+		//Home robbery
+	      case 0:
+		if ($objJob->fields['mpoints'] < 10)
+		  {
+		    $i = -1;
+		  }
+		break;
+		//Steal from people
+	      case 1:
+		break;
+		//Tracking people
+	      case 2:
+		break;
+		//Guard position
+	      case 3:
+		if ($objJob->fields['mpoints'] < 5)
+		  {
+		    $i = -1;
+		  }
+		break;
+	      }
+	    if ($i > -1)
+	      {
+		$arrJobs[$i] = $strJob;
+		$i++;
+	      }
+	  }
+	$smarty->assign(array('Minfo' => 'Ruchem głowy, barman pokazuje tobie schody na górę. Udajesz się we wskazanym kierunku. Dochodzisz do dość ciemnego pokoju na górze. Na jego środku stoi niewielki stolik przy którym siedzi jakiś człowiek, ruchem dłoni wskazuje tobie miejsce przy stoliku. Bardziej wyczuwasz niż widzisz, że w pomieszczeniu znajdują się jeszcze inne osoby. Kiedy zajmujesz swoje miejsce siedzący mężczyzna odzywa się do ciebie.<i>'.$strTalk.' tak się składa, że chyba mamy parę zadań dla ciebie. Zainteresowan'.$strSuffix2.'?</i>',
+			      'Jobinfo2' => 'Pamiętaj, oferta jest ważna tylko w tym momencie, jeżeli ją odrzucisz, następna szansa dopiero po kolejnym resecie.'));
+	$objJob->Close();
+	//$db->Execute("UPDATE `players` SET `crafmission`='Y' WHERE `id`=".$player->id);
       }
   }
 

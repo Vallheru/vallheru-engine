@@ -3,6 +3,7 @@
     <ul>
         <li><a href="thieves.php?step=monuments">{$Amonuments}</a></li>
         <li><a href="thieves.php?step=shop">{$Aitems}</a></li>
+	<li><a href="thieves.php?step=missions">{$Amissions}</a></li>
     </ul>
 {/if}
 {if $Step == "monuments"}
@@ -54,6 +55,10 @@
     <form method="post" action="thieves.php?step=shop&amp;buy">
     <input type="submit" value="{$Abuy}" /> <input type="text" name="amount" size="5" /> {$Tamount}
     </form>
+{/if}
+{if $Step == "missions"}
+{$Minfo}<br /><br />
+{$Jobinfo2}
 {/if}
 {if $Step != ""}
 <br /><br /><a href="thieves.php">{$Aback}</a>
