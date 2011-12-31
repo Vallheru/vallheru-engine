@@ -5,9 +5,9 @@
  *
  *   @name                 : alchemik.php                            
  *   @copyright            : (C) 2004,2005,2006,2007,2011 Vallheru Team based on Gamers-Fusion ver 2.5
- *   @author               : thindil <thindil@tuxfamily.org>
- *   @version              : 1.4
- *   @since                : 20.10.2011
+ *   @author               : thindil <thindil@vallheru.net>
+ *   @version              : 1.5
+ *   @since                : 31.12.2011
  *
  */
 
@@ -362,11 +362,11 @@ else
 		  {
 		    if ($objItem -> fields['type'] == 'M')
 		      {
-			$intCost = ($value[0] * 3) / 20;
+			$intCost = ceil(($value[0] * 3) / 20);
 		      }
 		    else
 		      {
-			$intCost = ((2 * $value[0]) * 3) / 20;
+			$intCost = ceil(((2 * $value[0]) * 3) / 20);
 		      }
 		    $db -> Execute("INSERT INTO potions (`owner`, `name`, `efect`, `power`, `amount`, `status`, `type`, `cost`) VALUES(".$player -> id.", '".$key."', '".$objItem -> fields['efect']."', ".$value[0].", ".$value[1].", 'K', '".$objItem -> fields['type']."', ".$intCost.")");
 		  } 
