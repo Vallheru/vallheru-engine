@@ -5,12 +5,13 @@
 <title></title>
 <meta http-equiv="refresh" content="15;url=chatmsgs.php" />
 <meta http-equiv="content-type" content="text/html; charset={$Charset}" />
+<link type="text/css" rel="stylesheet" href="templates/layout1/layout1.css" />
 </head>
-<body bgcolor="black" text="#FFFC9F" alink="red" link="#FFD700" vlink="#FFD700">
+<body style="background : url('images/center.jpg');">
 {if $Text1 != 0}
-    <font face="verdana" size="-2">
+    <font face="verdana" size="-1">
     {section name=player loop=$Text}
-        <div title="{$Sdate[player]}"><b>{$Author[player]} {if $Showid == "1"}{$Cid}:{$Senderid[player]}{/if}</b>: {$Text[player]}</div>
+        <div title="{$Sdate[player]}">{if $Author[player] != ""}<b>{$Author[player]} {if $Showid == "1"}{$Cid}:{$Senderid[player]}{/if}</b>:{/if} {$Text[player]}</div>
     {/section}
     </font>
 {/if}

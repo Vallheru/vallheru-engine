@@ -4,10 +4,10 @@
  *   Convert HTML to BBcode or BBcode to HTML
  *
  *   @name                 : bbcode.php                            
- *   @copyright            : (C) 2004,2005,2006,2011 Vallheru Team based on Gamers-Fusion ver 2.5
- *   @author               : thindil <thindil@tuxfamily.org>
+ *   @copyright            : (C) 2004,2005,2006,2011,2012 Vallheru Team based on Gamers-Fusion ver 2.5
+ *   @author               : thindil <thindil@vallheru.net>
  *   @version              : 1.4
- *   @since                : 17.11.2011
+ *   @since                : 02.01.2012
  *
  */
 
@@ -35,6 +35,7 @@
 function bbcodetohtml($text, $isChat = FALSE) 
 {
     global $db;
+    global $player;
 
     /**
     * Replace bad words
@@ -92,6 +93,14 @@ function bbcodetohtml($text, $isChat = FALSE)
 		$text .= $arrHtmloff[$i];
 	      }
 	  }
+      }
+    
+    /**
+     * Emotes in chat
+     */
+    if ($isChat)
+      {
+	$text = str_replace('/me', '<a href="view.php?view='.$player->id.'" target="_parent">'.$player->user.'</a>', $text);
       }
 
     /**

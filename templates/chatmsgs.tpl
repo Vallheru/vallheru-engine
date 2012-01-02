@@ -11,7 +11,7 @@
 {if $Text1 != 0}
     <font face="verdana" size="-2">
     {section name=player loop=$Text}
-        <div title="{$Sdate[player]}"><b>{$Author[player]} {if $Showid == "1"}{$Cid}:{$Senderid[player]}{/if}</b>: {$Text[player]}</div>
+        <div title="{$Sdate[player]}">{if $Author[player] != ""}<b>{$Author[player]} {if $Showid == "1"}{$Cid}:{$Senderid[player]}{/if}</b>:{/if} {$Text[player]}</div>
     {/section}
     </font>
 {/if}

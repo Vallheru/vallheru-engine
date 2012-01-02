@@ -1,3 +1,8 @@
+2012-01-02  Bartek thindil Jasicki  <thindil@vallheru.net>
+
+	* FEATURE,templates/layout1/chatmsgs.tpl, templates/chatmsgs.tpl, chat.php, includes/bbcode.php:
+	added emotes to chat
+
 2011-12-31  Bartek thindil Jasicki  <thindil@vallheru.net>
 
 	* BUG,alchemik.php:
