@@ -16,7 +16,9 @@ document.forms['chat'].elements['msg'].focus();
 &nbsp;</td></tr>
 <tr><td colspan="2" align="center">
 
-{$Innis} <b>{$Number}</b> {$Inntexts}.
+<form method="post" action="chat.php?room">
+    <input type="submit" value="{$Arent}" />
+</form>
 
 {if $Rank == "Admin" || $Rank == "Karczmarka"}
     <br />

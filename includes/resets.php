@@ -4,10 +4,10 @@
  *   Resets in game - (mainreset) main reset and (smallreset) other resets
  *
  *   @name                 : resets.php                            
- *   @copyright            : (C) 2004,2005,2006,2007,2011 Vallheru Team based on Gamers-Fusion ver 2.5
- *   @author               : thindil <thindil@tuxfamily.org>
+ *   @copyright            : (C) 2004,2005,2006,2007,2011,2012 Vallheru Team based on Gamers-Fusion ver 2.5
+ *   @author               : thindil <thindil@vallheru.net>
  *   @version              : 1.5
- *   @since                : 23.12.2011
+ *   @since                : 02.01.2012
  *
  */
 
@@ -369,11 +369,13 @@ function mainreset()
 
     $db -> Execute("UPDATE `settings` SET `value`='N' WHERE `setting`='open'");
     $db -> Execute("UPDATE `settings` SET `value`='Wykonywanie resetu' WHERE `setting`='close_reason'");
-    $db -> Execute("UPDATE `players` SET `age`=`age`+1, `hp`=`max_hp`, `bridge`='N', `houserest`='N', `craftmission`='N'");
+    $db -> Execute("UPDATE `players` SET `age`=`age`+1, `hp`=`max_hp`, `bridge`='N', `houserest`='N', `craftmission`='N', `room`=0");
     $db->Execute("UPDATE `players` SET `newbie`=`newbie`-1 WHERE `newbie`>0");
     $db->Execute("UPDATE `players` SET `trains`=`trains`+15 WHERE `corepass`='Y' AND `freeze`=0");
     $intCtime = (time() - 200);
     $db -> Execute("UPDATE players SET freeze=freeze-1, lpv=".$intCtime." WHERE freeze>0");
+    $db->Execute("TRUNCATE TABLE `rooms`");
+    $db->Execute("TRUNCATE TABLE `chatrooms`");
     /**
      * Outposts taxes
      */

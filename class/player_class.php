@@ -4,10 +4,10 @@
  *   Class with information about player and making some things with player (e.g. atributes in array)
  *
  *   @name                 : player_class.php                            
- *   @copyright            : (C) 2004,2005,2006,2007,2011 Vallheru Team based on Gamers-Fusion ver 2.5
+ *   @copyright            : (C) 2004,2005,2006,2007,2011,2012 Vallheru Team based on Gamers-Fusion ver 2.5
  *   @author               : thindil <thindil@vallheru.net>
  *   @version              : 1.5
- *   @since                : 28.12.2011
+ *   @since                : 02.01.2012
  *
  */
 
@@ -108,6 +108,8 @@ class Player
     var $forumcats;
     var $metallurgy;
     var $revent;
+    var $room;
+    var $roomowner;
 /**
 * Class constructor - get data from database and write it to variables
 */
@@ -214,6 +216,17 @@ class Player
 	    $this->revent = $objRevent->fields['state'];
 	  }
 	$objRevent->Close();
+	$this->room = $stats->fields['room'];
+	$this->roomowner = FALSE;
+	if ($this->room)
+	  {
+	    $objRoom = $db->Execute("SELECT `owner` FROM `rooms` WHERE `id`=".$stats->fields['room']);
+	    if ($objRoom->fields['owner'] == $player->id)
+	      {
+		$this->roomowner = TRUE;
+	      }
+	    $objRoom->Close();
+	  }
     }
     /**
      * Function return values of selected atributes in array

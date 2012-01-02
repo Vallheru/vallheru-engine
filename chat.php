@@ -36,7 +36,7 @@ require_once("includes/head.php");
 /**
 * Get the localization for game
 */
-require_once("languages/".$player -> lang."/chat.php");
+require_once("languages/".$lang."/chat.php");
 
 $db -> Execute("UPDATE `players` SET `page`='Chat' WHERE `id`=".$player -> id);
 if (isset ($_GET['action']) && $_GET['action'] == 'chat') 
@@ -189,6 +189,9 @@ if (isset ($_GET['action']) && $_GET['action'] == 'chat')
     }
 }
 
+/**
+ * Chat administration
+ */
 if (isset($_GET['step']))
   {
     if ($player -> rank != 'Admin' && $player -> rank != 'Karczmarka')
@@ -265,6 +268,33 @@ if (isset($_GET['step']))
       }
   }
 
+/**
+ * Rent a room
+ */
+if (isset($_GET['room']))
+  {
+    $blnValid = TRUE;
+    if ($player->credits < 100)
+      {
+	message('error', 'Nie masz tyle sztuk złota przy sobie. Potrzebujesz 100 sztuk złota.');
+	$blnValid = FALSE;
+      }
+    if ($player->room)
+      {
+	message('error', 'Masz już pokój bądź należysz już do jakiegoś pokoju.');
+	$blnValid = FALSE;
+      }
+    if ($blnValid)
+      {
+	$db->Execute("INSERT INTO `rooms` (`owner`) VALUES(".$player->id.")");
+	$objRoom = $db->Execute("SELECT `id` FROM `rooms` WHERE `owner`=".$player->id);
+	$db->Execute("UPDATE `players` SET `credits`=`credits`-100, `room`=".$objRoom->fields['id']." WHERE `id`=".$player->id);
+	$objRoom->Close();
+	message('success', 'Wynająłeś pokój w karczmie. Teraz możesz ustawić wszystko w panelu pokoju oraz zaprosić innych graczy do pokoju.');
+      }
+  }
+
+
 if ($player -> rank == 'Admin' || $player -> rank == 'Karczmarka')
   {
     $arritems = array(BEER, HONEY, WINE, MUSTAK, JUICE, CUCUMBERS, TEA, MEAT, MEAT2, MEAT3, MEAT4, FOOD, FOOD2, FOOD3, EGGS, EGG, EGG2, MILK, ICE, CHICKEN, FLAPJACK, COFFE, "orzeszki");
@@ -281,15 +311,10 @@ if ($player -> rank == 'Admin' || $player -> rank == 'Karczmarka')
                             "Tdays" => T_DAYS));
   }
 
-$query = $db -> Execute("SELECT count(`id`) FROM `chat`");
-$numchat = $query -> fields['count(`id`)'];
-$query -> Close();
-$smarty -> assign (array("Number" => $numchat,
-                         "Arefresh" => A_REFRESH,
+$smarty -> assign (array("Arefresh" => A_REFRESH,
+			 'Arent' => 'Wynajmij pokój za 100 sztuk złota',
                          "Asend" => A_SEND,
                          "Inn" => INN,
-                         "Innis" => INN_IS,
-                         "Inntexts" => INN_TEXTS,
                          "Rank" => $player -> rank));
 $smarty -> display ('chat.tpl');
 
