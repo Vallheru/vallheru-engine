@@ -4,10 +4,10 @@
  *   Game time
  *
  *   @name                 : tower.php                            
- *   @copyright            : (C) 2004,2005,2006,2011 Vallheru Team based on Gamers-Fusion ver 2.5
- *   @author               : thindil <thindil@tuxfamily.org>
- *   @version              : 1.4
- *   @since                : 28.11.2011
+ *   @copyright            : (C) 2004,2005,2006,2011,2012 Vallheru Team based on Gamers-Fusion ver 2.5
+ *   @author               : thindil <thindil@vallheru.net>
+ *   @version              : 1.5
+ *   @since                : 02.01.2012
  *
  */
 
@@ -35,7 +35,7 @@ require_once("includes/head.php");
 /**
 * Get the localization for game
 */
-require_once("languages/".$player -> lang."/tower.php");
+require_once("languages/".$lang."/tower.php");
 
 $objAge = $db -> Execute("SELECT `value` FROM `settings` WHERE `setting`='age'");
 $objDay = $db -> Execute("SELECT `value` FROM `settings` WHERE `setting`='day'");
@@ -52,8 +52,8 @@ $arrTime = counttime();
 $smarty -> assign(array("Text1" => TEXT1,
                         "Text2" => TEXT2,
                         "Text3" => TEXT3,
-                        "Text4" => TEXT4,
-			"Text5" => "Oprócz tego co 20 minut odzyskujesz ".(round($player->max_energy / 72, 2))." punktów energii.",
+                        "Text4" => "Odzyskanie punktów życia i punktów magii dodatkowo o godzinach 14, 16, 18, 20, 22, 24",
+			"Text5" => "O pełnych godzinach oraz 20 i 40 minut po nich odzyskuje się ".(round($player->max_energy / 72, 2))." punktów energii.",
                         "Tage" => $objAge -> fields['value'],
                         "Tday" => $objDay -> fields['value'],
                         "Thours" => $arrTime[0],

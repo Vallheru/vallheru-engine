@@ -1,5 +1,7 @@
 2012-01-02  Bartek thindil Jasicki  <thindil@vallheru.net>
 
+	* UPDATE,languages/pl/tower.php, tower.php:
+	better informations about resets
 	* FEATURE,templates/layout1/chatmsgs.tpl, templates/chatmsgs.tpl, chat.php, includes/bbcode.php:
 	added emotes to chat
 
