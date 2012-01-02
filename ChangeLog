@@ -1,5 +1,7 @@
 2012-01-02  Bartek thindil Jasicki  <thindil@vallheru.net>
 
+	* FEATURE,templates/thieves.tpl, thieves.php: 
+	continue work on generating random missions for thieves
 	* BUG,class/player_class.php: 
 	again typo, heh
 	* BUG,class/player_class.php: 

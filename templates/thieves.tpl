@@ -57,8 +57,14 @@
     </form>
 {/if}
 {if $Step == "missions"}
-{$Minfo}<br /><br />
-{$Jobinfo2}
+    {$Minfo}<br /><br />
+    <ul>
+    {section name=job loop=$Jobs}
+        <li>{$Jobs[job]}<br />
+        <a href="thieves.php?step={$smarty.section.job.index}">{$Ayes}</a><br /><br /></li>
+    {/section}
+    </ul>
+    {$Jobinfo2}
 {/if}
 {if $Step != ""}
 <br /><br /><a href="thieves.php">{$Aback}</a>

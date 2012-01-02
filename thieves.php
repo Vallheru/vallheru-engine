@@ -4,10 +4,10 @@
  *   Thieves den, items, monuments and missions for thieves
  *
  *   @name                 : thieves.php                            
- *   @copyright            : (C) 2011 Vallheru Team based on Gamers-Fusion ver 2.5
+ *   @copyright            : (C) 2011,2012 Vallheru Team based on Gamers-Fusion ver 2.5
  *   @author               : thindil <thindil@vallheru.net>
  *   @version              : 1.5
- *   @since                : 30.12.2011
+ *   @since                : 02.01.2012
  *
  */
 
@@ -149,6 +149,23 @@ else
      */
     elseif ($_GET['step'] == 'missions')
       {
+	/**
+	 * Function return random key from array
+	 */
+	function getoption($arrOptions, $intPoints)
+	{
+	  $arrAvailable = array();
+	  foreach ($arrOptions as $key => $value)
+	    {
+	      if ($key > $intPoints)
+		{
+		  break;
+		}
+	      $arrAvailable[$key] = $value;
+	    }
+	  return array_rand($arrAvailable);
+	}
+	
 	$objJob = $db->Execute("SELECT `craftmission`, `mpoints` FROM `players` WHERE `id`=".$player->id);
 	if ($objJob->fields['craftmission'] == 'Y')
 	  {
@@ -179,12 +196,35 @@ else
 		  {
 		    $i = -1;
 		  }
+		else
+		  {
+		    $arrLocations = array(10 => 'jedno takie mieszkanie w kamienicy. ', 
+					  30 => 'jedną taką niewielką posiadłość. ', 
+					  50 => 'jedną taką kamienicę. ', 
+					  100 => 'jedną taką dużą posiadłość. ', 
+					  150 => 'tutejszy bank. ');
+		    $intOption = getoption($arrLocations, $objJob->fields['mpoints']);
+		    $strJob = 'Robimy '.$arrLocations[$intOption].'Przyda się nam ktoś do pomocy. Jak dobrze pójdzie to dostaniesz część łupów';
+		  }
 		break;
 		//Steal from people
 	      case 1:
+		$arrLocations = array(0 => 'Przejdziesz się po ulicy i poucinasz parę mieszków. ',
+				      15 => 'Spróbjesz obrobić jednego kupca na rynku. ',
+				      40 => 'Jeden zadufany szlachciura potrzebuje nieco nauki, ulżysz jego sakiewce. ',
+				      80 => 'Pewien kupiec nie rozumie co się do niego mówi. Zajmiesz się jego sakiewką. ');
+		$intOption = getoption($arrLocations, $objJob->fields['mpoints']);
+		$strJob = 'Przyda się ktoś o zwinnych palcach. '.$arrLocations[$intOption].' Jak Ci się uda, to dostaniesz część łupu';
 		break;
 		//Tracking people
 	      case 2:
+		$arrLocations = array(0 => 'To mieszczanin, ale mamy oko na jego chatę. ',
+				      20 => 'To kupiec, dobrze by było oskubać jego magazyn kiedy będzie zajęty. ',
+				      60 => 'To bogaty szlachcic, ma bardzo ciekawą kolekcję obrazów w domu, dobrze by było wiedzieć kiedy jest nieobecny. ',
+				      90 => 'To jeden z naszych. Ostatnio zaczął się dziwnie zachowywać, dobrze byłoby sprawdzić co porabia. ',
+				      120 => 'To jakiś podejrzany typ. Nie pytaj się kto jest zainteresowany nim. ');
+		$intOption = getoption($arrLocations, $objJob->fields['mpoints']);
+		$strJob = 'Trzeba powęszyć za jedną osobą. '.$arrLocations[$intOption].' Jak dowiesz się czego trzeba i zostaniesz niezauważon'.$strSuffix2.' to dostaniesz trochę złota';
 		break;
 		//Guard position
 	      case 3:
@@ -196,12 +236,20 @@ else
 	      }
 	    if ($i > -1)
 	      {
-		$arrJobs[$i] = $strJob;
+		$arrLoots = array(0 => '.',
+				  80 => ' oraz nowe wytrychy.',
+				  85 => ' oraz lepsze wytrychy.',
+				  90 => ' oraz plan wytrychów.',
+				  97 => ' oraz plan lepszych wytrychów.');
+		$intLoot = getoption($arrLoots, rand(1, 100));
+		$arrJobs[$i] = $strJob.$arrLoots[$intLoot];
 		$i++;
 	      }
 	  }
 	$smarty->assign(array('Minfo' => 'Ruchem głowy, barman pokazuje tobie schody na górę. Udajesz się we wskazanym kierunku. Dochodzisz do dość ciemnego pokoju na górze. Na jego środku stoi niewielki stolik przy którym siedzi jakiś człowiek, ruchem dłoni wskazuje tobie miejsce przy stoliku. Bardziej wyczuwasz niż widzisz, że w pomieszczeniu znajdują się jeszcze inne osoby. Kiedy zajmujesz swoje miejsce siedzący mężczyzna odzywa się do ciebie.<i>'.$strTalk.' tak się składa, że chyba mamy parę zadań dla ciebie. Zainteresowan'.$strSuffix2.'?</i>',
-			      'Jobinfo2' => 'Pamiętaj, oferta jest ważna tylko w tym momencie, jeżeli ją odrzucisz, następna szansa dopiero po kolejnym resecie.'));
+			      'Jobinfo2' => 'Pamiętaj, oferta jest ważna tylko w tym momencie, jeżeli ją odrzucisz, następna szansa dopiero po kolejnym resecie.',
+			      "Jobs" => $arrJobs,
+			      "Ayes" => "Biorę tę robotę."));
 	$objJob->Close();
 	//$db->Execute("UPDATE `players` SET `crafmission`='Y' WHERE `id`=".$player->id);
       }
