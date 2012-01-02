@@ -1,6 +1,8 @@
 2012-01-02  Bartek thindil Jasicki  <thindil@vallheru.net>
 
 	* BUG,class/player_class.php: 
+	again typo, heh
+	* BUG,class/player_class.php: 
 	fixed typo
 	* FEATURE,install/db/update.sql, class/player_class.php, includes/resets/php, templates/layout1/chat.tpl, templates/chat.tpl, chat.php:
 	start work on player owner rooms

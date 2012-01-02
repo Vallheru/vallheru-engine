@@ -220,7 +220,7 @@ class Player
 	$this->roomowner = FALSE;
 	if ($this->room)
 	  {
-	    $objRoom = $db->Execute("SELECT `owner` FROM `rooms` WHERE `id`=".$this->fields['room']);
+	    $objRoom = $db->Execute("SELECT `owner` FROM `rooms` WHERE `id`=".$this->room);
 	    if ($objRoom->fields['owner'] == $this->id)
 	      {
 		$this->roomowner = TRUE;
