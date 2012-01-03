@@ -8,7 +8,7 @@
  *   @author               : thindil <thindil@vallheru.net>
  *   @author               : eyescream <tduda@users.sourceforge.net>
  *   @version              : 1.4
- *   @since                : 02.01.2012
+ *   @since                : 03.01.2012
  *
  */
 
@@ -206,29 +206,32 @@ if (isset($_GET['step']))
 	$_POST['giveid'] = intval($_POST['giveid']);
 	if ($_POST['giveid'] < 0)
 	  {
-	    error(ERROR);
+	    message('error', ERROR);
 	  }
-	if (isset($_POST['item2']) && strlen($_POST['item2']) > 0)
+	else
 	  {
-	    $_POST['item'] = strip_tags($_POST['item2']);
-	  }
-	if ($_POST['giveid'] > 0)
-	  {
-	    $objUser = $db -> Execute("SELECT `user` FROM `players` WHERE `id`=".$_POST['giveid']);
-	    if (!isset($_POST['innkeeper']))
+	    if (isset($_POST['item2']) && strlen($_POST['item2']) > 0)
 	      {
-		$_POST['innkeeper'] = '';
+		$_POST['item'] = strip_tags($_POST['item2']);
 	      }
-	    $db -> Execute("INSERT INTO `chat` (`user`, `chat`) VALUES('<i>".$player -> user."</i>', '".PLEASE." ".$objUser -> fields['user']." ".HERE_IS." ".$_POST['item']." ".$_POST['innkeeper']."')");
-	    $objUser -> Close();
-	  }
-        else
-	  {
-	    if (!isset($_POST['innkeeper']))
+	    if ($_POST['giveid'] > 0)
 	      {
-		$_POST['innkeeper'] = '';
+		$objUser = $db -> Execute("SELECT `user` FROM `players` WHERE `id`=".$_POST['giveid']);
+		if (!isset($_POST['innkeeper']))
+		  {
+		    $_POST['innkeeper'] = '';
+		  }
+		$db -> Execute("INSERT INTO `chat` (`user`, `chat`) VALUES('<i>".$player -> user."</i>', '".PLEASE." ".$objUser -> fields['user']." ".HERE_IS." ".$_POST['item']." ".$_POST['innkeeper']."')");
+		$objUser -> Close();
 	      }
-	    $db -> Execute("INSERT INTO `chat` (`user`, `chat`) VALUES('<i>".$player -> user."</i>', '".FOR_ALL2." ".$_POST['item'].FOR_ALL3." ".$_POST['innkeeper']."')");
+	    else
+	      {
+		if (!isset($_POST['innkeeper']))
+		  {
+		    $_POST['innkeeper'] = '';
+		  }
+		$db -> Execute("INSERT INTO `chat` (`user`, `chat`) VALUES('<i>".$player -> user."</i>', '".FOR_ALL2." ".$_POST['item'].FOR_ALL3." ".$_POST['innkeeper']."')");
+	      }
 	  }
       }
 
@@ -241,20 +244,23 @@ if (isset($_GET['step']))
 	$_POST['duration'] = intval($_POST['duration']);
 	if (($_POST['duration'] < 1) || ($_POST['banid'] < 2)) 
 	  {
-	    error(ERROR);
+	    message('error', ERROR);
 	  }
-	if ($_POST['ban'] == 'ban') 
+	else
 	  {
-	    $intTime = $_POST['duration'] * 7;
-	    $db -> Execute("INSERT INTO `chat_config` (`gracz`, `resets`) VALUES(".$_POST['banid'].", ".$intTime.")");
-	    $strDate = $db -> DBDate($newdate);
-	    $db -> Execute("INSERT INTO `log` (`owner`, `log`, `czas`, `type`) VALUES(".$_POST['banid'].", '".YOU_BLOCK2.$_POST['duration'].T_DAYS.$_POST['verdict'].BLOCK_BY.'<b><a href="view.php?view='.$player -> id.'">'.$player -> user."</a></b>, ID <b>".$player -> id."</b>.', ".$strDate.", 'A')") or die($db -> ErrorMsg());
-	    error(YOU_BLOCK." ".$_POST['banid']);
-	  }
-	if ($_POST['ban'] == 'unban') 
-	  {
-	    $db -> Execute("DELETE FROM `chat_config` WHERE `gracz`=".$_POST['banid']);
-	    error(YOU_UNBLOCK." ".$_POST['banid']);
+	    if ($_POST['ban'] == 'ban') 
+	      {
+		$intTime = $_POST['duration'] * 7;
+		$db -> Execute("INSERT INTO `chat_config` (`gracz`, `resets`) VALUES(".$_POST['banid'].", ".$intTime.")");
+		$strDate = $db -> DBDate($newdate);
+		$db -> Execute("INSERT INTO `log` (`owner`, `log`, `czas`, `type`) VALUES(".$_POST['banid'].", '".YOU_BLOCK2.$_POST['duration'].T_DAYS.$_POST['verdict'].BLOCK_BY.'<b><a href="view.php?view='.$player -> id.'">'.$player -> user."</a></b>, ID <b>".$player -> id."</b>.', ".$strDate.", 'A')") or die($db -> ErrorMsg());
+		message('success', YOU_BLOCK." ".$_POST['banid']);
+	      }
+	    elseif ($_POST['ban'] == 'unban') 
+	      {
+		$db -> Execute("DELETE FROM `chat_config` WHERE `gracz`=".$_POST['banid']);
+		message('success', YOU_UNBLOCK." ".$_POST['banid']);
+	      }
 	  }
       }
 
@@ -264,7 +270,7 @@ if (isset($_GET['step']))
     elseif ($_GET['step'] == 'clearc') 
       {
 	$db -> Execute("TRUNCATE TABLE `chat`");
-	error(CHAT_PRUNE);
+        message('success', CHAT_PRUNE);
       }
   }
 
@@ -290,7 +296,7 @@ if (isset($_GET['room']))
 	$objRoom = $db->Execute("SELECT `id` FROM `rooms` WHERE `owner`=".$player->id);
 	$db->Execute("UPDATE `players` SET `credits`=`credits`-100, `room`=".$objRoom->fields['id']." WHERE `id`=".$player->id);
 	$objRoom->Close();
-	message('success', 'Wynająłeś pokój w karczmie. Teraz możesz ustawić wszystko w panelu pokoju oraz zaprosić innych graczy do pokoju.');
+	message('success', 'Wynająłeś pokój w karczmie. Teraz możesz ustawić wszystko w panelu pokoju oraz zaprosić innych graczy do pokoju. (<a href="chat.php">Odśwież</a>)');
       }
   }
 
