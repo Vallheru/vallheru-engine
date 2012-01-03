@@ -57,7 +57,7 @@ if (isset ($_GET['action']) && $_GET['action'] == 'chat')
 	      {
 		$starter = '';
 	      }
-	    $message = '<i>'.$message.'</i>';
+	    $message = '<b><i>'.$message.'</i></b>';
 	  }
 	//Private message
         $test1 = explode("=", $_POST['msg']);

@@ -1,5 +1,7 @@
 2012-01-03  Bartek thindil Jasicki  <thindil@vallheru.net>
 
+	* UPDATE,templates/layout1/room.tpl, templates/room.tpl, css/light.css, room.php, chat.php:
+	some redesign
 	* FEATURE,templates/layout1/layout1.css, templates/layout1/room.tpl, templates/room.tpl, css/lucass.css, css/light.css, css/greenforest.css,
 	css/green.css, css/classic.css, css/ender.css, room.php:
 	added expand/collapse div

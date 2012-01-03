@@ -1,6 +1,6 @@
 * {
 color: #FFFC9F;
-font-family: verdana;
+font-family: Verdana,sans-serif;
 font-size: 12px;
 }
 .td {
@@ -11,6 +11,8 @@ border-right: solid black 1px;
 }
 input, textarea, select {
 color: #FFE149;
+font-weight: bold;
+font-size: 11px;
 background: black;
 border: solid gray 1px;
 }
