@@ -8,8 +8,13 @@ document.forms['chat'].elements['msg'].focus();
 </script>
 </td></tr>
 <tr><td width="95%" valign="top">
-<u><b>{$Inn}</b></u><br />
-{$Desc}<br />
+<u><b>{$Inn}</b></u><br /><br />
+{if $Desc != ""}
+    <label for="mytoggle" class="toggle">{$Adesc}</label>
+    <input id="mytoggle" type="checkbox" class="toggle" />
+    <div>{$Desc}</div>
+{/if}
+<br /><br />
 
 <iframe src="roommsgs.php" width="105%" height="500" name="ifr" frameborder="0"></iframe>
 

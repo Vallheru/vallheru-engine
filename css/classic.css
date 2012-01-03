@@ -40,3 +40,13 @@ scrollbar-track-color: black;
 scrollbar-darkshadow-color: black; 
 scrollbar-base-color: black;
 }
+label.toggle { 
+  cursor: pointer; 
+  color: gold; 
+}
+input.toggle { 
+  display: none; 
+}
+input.toggle:checked+div { 
+  display: none; 
+}

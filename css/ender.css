@@ -41,3 +41,13 @@ body, iframe, select, textarea {
 	scrollbar-arrow-color: #000000;
 	scrollbar-track-color: #333333;
 }
+label.toggle { 
+  cursor: pointer; 
+  color: #bbbbbb; 
+}
+input.toggle { 
+  display: none; 
+}
+input.toggle:checked+div { 
+  display: none; 
+}

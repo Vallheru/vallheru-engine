@@ -99,6 +99,7 @@ $smarty -> assign (array("Arefresh" => 'Odśwież',
                          "Asend" => 'Wyślij',
 			 'Amanage' => 'Zarządzaj pokojem',
                          "Inn" => $objRoom->fields['name'],
+			 "Adesc" => 'Opis',
 			 "Desc" => $objRoom->fields['desc'],
                          "Rank" => $player->rank));
 $smarty -> display ('room.tpl');

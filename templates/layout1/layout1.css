@@ -108,3 +108,13 @@ div.info {
   font-weight: bold;
   margin: 10px;
 }
+label.toggle { 
+  cursor: pointer; 
+  color: #FFFFFF; 
+}
+input.toggle { 
+  display: none; 
+}
+input.toggle:checked+div { 
+  display: none; 
+}
