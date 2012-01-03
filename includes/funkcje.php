@@ -4,10 +4,10 @@
  *   Functions to fight in PvP and fast fight PvM
  *
  *   @name                 : funkcje.php                            
- *   @copyright            : (C) 2004,2005,2006,2007,2011 Vallheru Team based on Gamers-Fusion ver 2.5
+ *   @copyright            : (C) 2004,2005,2006,2007,2011,2012 Vallheru Team based on Gamers-Fusion ver 2.5
  *   @author               : thindil <thindil@vallheru.net>
  *   @version              : 1.5
- *   @since                : 24.12.2011
+ *   @since                : 03.01.2012
  *
  */
 
@@ -214,7 +214,7 @@ function loststat($lostid, $strength, $agility, $inteli, $wytrz, $szyb, $wisdom,
 
     if ($antidote == 'R')
       {
-	$db->Execute("UPDATE `players` SET `antidote`='' WHERE `id`=".$lostid);
+	$db->Execute("UPDATE `players` SET `antidote`='', `hp`=1 WHERE `id`=".$lostid);
       }
     else
       {

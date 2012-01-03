@@ -1,5 +1,7 @@
 2012-01-03  Bartek thindil Jasicki  <thindil@vallheru.net>
 
+	* BUG,includes/funkcje.php: 
+	fixed bug with lost hit points after fight
 	* FEATURE,thieves.php, templates/layout1/thieves.tpl, templates/thieves.tpl: 
 	continue work on random mission for thieves
 	* UPDATE,templates/layout1/room.tpl, templates/room.tpl, css/light.css, room.php, chat.php:
