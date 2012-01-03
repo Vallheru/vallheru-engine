@@ -1,5 +1,8 @@
 2012-01-03  Bartek thindil Jasicki  <thindil@vallheru.net>
 
+	* FEATURE,templates/layout1/room.tpl, templates/room.tpl, templates/roommsgs.tpl, templates/layout1/roommsgs.tpl, templates/layout1/header.tpl,
+	templates/header.tpl, install/db/update.sql, templates/footer.tpl, langauges/pl/head1.php, includes/head.php, room.php, roommsgs.php:
+	continue work on players rooms
 	* UPDATE,chat.php: 
 	small redesign
 	* FEATURE,mail.php:

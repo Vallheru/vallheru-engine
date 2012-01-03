@@ -4,10 +4,10 @@
  *   Main file of game, compress site, get information about player from database and more
  *
  *   @name                 : head.php                            
- *   @copyright            : (C) 2004,2005,2006,2007,2011 Vallheru Team based on Gamers-Fusion ver 2.5
+ *   @copyright            : (C) 2004,2005,2006,2007,2011,2012 Vallheru Team based on Gamers-Fusion ver 2.5
  *   @author               : thindil <thindil@vallheru.net>
  *   @version              : 1.5
- *   @since                : 21.12.2011
+ *   @since                : 03.01.2012
  *
  */
 
@@ -635,7 +635,7 @@ else
 
 if ($player->tribe) 
   {
-    $strTforum = "<li><a href=\"tforums.php?view=topics\">".T_FORUM."</a></li>";
+    $strTforum = "<li><a href=\"tforums.php?view=topics\">".T_FORUM."</a>";
     if (!isset($_SESSION['tforums']))
       {
 	$intForums2 = $player->tforumtime;
@@ -650,16 +650,30 @@ if ($player->tribe)
     $objFunread2->Close();
     if ($intFunread2 == 0)
       {
-	$strTforum .= ' [0]';
+	$strTforum .= ' [0]</li>';
       }
     else
       {
-	$strTforum .= '[<a href="tforums.php?view=newposts">'.$intFunread2.'</a>]';
+	$strTforum .= ' [<a href="tforums.php?view=newposts">'.$intFunread2.'</a>]</li>';
       }
     $smarty->assign("Tforum", $strTforum);
   }
 
 $intCtime = time() - 180;
+/**
+ * Chatroom
+ */
+if ($player->room)
+  {
+    $objQuery = $db -> Execute("SELECT count(`id`) FROM `players` WHERE `page`='Pokój w karczmie' AND `lpv`>=".$intCtime." AND `room`=".$player->room);
+    $numoc = $objQuery -> fields['count(`id`)'];
+    $smarty->assign("Room", '<li><a href="room.php">Pokój w karczmie ['.$numoc.']</a><br /><br /></li>');
+  }
+else
+  {
+    $smarty->assign("Room", '<br /><br />');
+  }
+
 $objQuery = $db -> Execute("SELECT count(`id`) FROM `players` WHERE `page`='Chat' AND `lpv`>=".$intCtime);
 $numoc = $objQuery -> fields['count(`id`)'];
 $objQuery -> Close();

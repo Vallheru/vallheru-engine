@@ -3,7 +3,7 @@
                 </table>
             </td>
             {if $Stephead != "new"}
-            <td width="150" valign="top">
+            <td width="15%" valign="top" align="right">
                 <table cellpadding="0" cellspacing="0" class="td" width="100%">
                     <tr>
                         <td align="center">
@@ -32,7 +32,7 @@
     {/if}
     &copy; 2004-2011 <a href="https://launchpad.net/vallheru">Vallheru Team</a> based on <a href="http://sourceforge.net/projects/gamers-fusion">Gamers-Fusion 2.5</a>
     </center>
-    <!--          (C) 2004,2005,2006,2007,2011 Vallheru Team                                         -->
+    <!--          (C) 2004,2005,2006,2007,2011,2012 Vallheru Team                               -->
     <!--           game based on Gamers Fusion ver 2.5 code                                     -->
     </body>
 </html>                        

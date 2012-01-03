@@ -71,7 +71,8 @@
                             {$Lbank}
                             <li><a href="forums.php?view=categories">{$Nforums}</a> {$Funread}</li>
                             {$Tforum}
-                            <li><a href="chat.php">{$Ninn} [{$Players}]</a><br /><br /></li>
+                            <li><a href="chat.php">{$Ninn} [{$Players}]</a></li>
+			    {$Room}
                             {if $Linksfile[0] != ""}
                                 {section name=hlinks loop=$Linksfile}
                                     <li><a href="{$Linksfile[hlinks]}">{$Linkstext[hlinks]}</a>{if $smarty.section.hlinks.iteration == $Linksnum}<br /><br />{/if}</li>
