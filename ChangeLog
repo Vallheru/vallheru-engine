@@ -1,3 +1,8 @@
+2012-01-03  Bartek thindil Jasicki  <thindil@vallheru.net>
+
+	* BUG,account.php, forums.php, mail.php, proposals.php, tforums.php:
+	fixed typo
+
 2012-01-02  Bartek thindil Jasicki  <thindil@vallheru.net>
 
 	* FEATURE,templates/thieves.tpl, thieves.php: 

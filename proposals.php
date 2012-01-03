@@ -4,10 +4,10 @@
  *   Proposals in game
  *
  *   @name                 : proposals.php                            
- *   @copyright            : (C) 2011 Vallheru Team based on Gamers-Fusion ver 2.5
- *   @author               : thindil <thindil@tuxfamily.org>
- *   @version              : 1.4
- *   @since                : 14.11.2011
+ *   @copyright            : (C) 2011,2012 Vallheru Team based on Gamers-Fusion ver 2.5
+ *   @author               : thindil <thindil@vallheru.net>
+ *   @version              : 1.5
+ *   @since                : 03.01.2012
  *
  */
 
@@ -58,7 +58,7 @@ if ($_GET['type'] == 'D')
     $smarty->assign(array("Tselect" => "Wybierz lokację, której opis chcesz zaproponować",
 			  "Loptions" => $arrLocations,
 			  "Tdesc" => "Opis:",
-			  "Hdesc" => "Linki automatycznie zamieniane są na klikalne. Możesz używać następujących znaczników BBCode:<br /><ul><li>[b]<b>Pogrubienie</b>[/b]</li><li>[i]<i>Kursywa</i><[/i]</li><li>[u]<u>Podkreślenie</u>[/u]</li><li>[color (angielska nazwa koloru (red, yellow, itp) lub kod HTML (#FFFF00, itp)]pokolorowanie tekstu[/color]</li><li>[center]wycentrowanie tekstu[/center]</li><li>[quote]cytat[/quote]</ul> Jeżeli chcesz użyć jakiś własnych znaczników np [imię gracza], [opis dla mężczyzn] itd, wyjaśnij dokładnie co masz na myśli w dodatkowych informacjach.",
+			  "Hdesc" => "Linki automatycznie zamieniane są na klikalne. Możesz używać następujących znaczników BBCode:<br /><ul><li>[b]<b>Pogrubienie</b>[/b]</li><li>[i]<i>Kursywa</i>[/i]</li><li>[u]<u>Podkreślenie</u>[/u]</li><li>[color (angielska nazwa koloru (red, yellow, itp) lub kod HTML (#FFFF00, itp)]pokolorowanie tekstu[/color]</li><li>[center]wycentrowanie tekstu[/center]</li><li>[quote]cytat[/quote]</ul> Jeżeli chcesz użyć jakiś własnych znaczników np [imię gracza], [opis dla mężczyzn] itd, wyjaśnij dokładnie co masz na myśli w dodatkowych informacjach.",
 			  "Tinfo" => "Dodatkowe informacje:",
 			  "Hinfo" => "Tutaj możesz dołączyć wszelkie dodatkowe informacje na temat opisu. Np kiedy opis ma się pojawić (wieczorem, co drugie logowanie, tylko dla kobiet, itd), czy ma to być dodatkowy opis czy też zastępujący istniejący. Jeżeli użyłeś jakiś własnych znaczników w opisie, koniecznie dodaj ich wytłumaczenie tutaj. Im więcej dodatkowych informacji na temat opisu zamieścisz tutaj, tym większa szansa, że zostanie on dodany. Nie używaj tutaj jakichkolwiek znaczników, ponieważ zostaną one wykasowane.",
 			  "Asend" => "Wyślij",
@@ -346,7 +346,7 @@ elseif ($_GET['type'] == 'E')
     $smarty->assign(array("Tselect" => "Wybierz potwora, którego opis chcesz zaproponować",
 			  "Moptions" => $arrMonsters,
 			  "Tdesc" => "Opis:",
-			  "Hdesc" => "Linki automatycznie zamieniane są na klikalne. Możesz używać następujących znaczników BBCode:<br /><ul><li>[b]<b>Pogrubienie</b>[/b]</li><li>[i]<i>Kursywa</i><[/i]</li><li>[u]<u>Podkreślenie</u>[/u]</li><li>[color (angielska nazwa koloru (red, yellow, itp) lub kod HTML (#FFFF00, itp)]pokolorowanie tekstu[/color]</li><li>[center]wycentrowanie tekstu[/center]</li><li>[quote]cytat[/quote]</ul>",
+			  "Hdesc" => "Linki automatycznie zamieniane są na klikalne. Możesz używać następujących znaczników BBCode:<br /><ul><li>[b]<b>Pogrubienie</b>[/b]</li><li>[i]<i>Kursywa</i>[/i]</li><li>[u]<u>Podkreślenie</u>[/u]</li><li>[color (angielska nazwa koloru (red, yellow, itp) lub kod HTML (#FFFF00, itp)]pokolorowanie tekstu[/color]</li><li>[center]wycentrowanie tekstu[/center]</li><li>[quote]cytat[/quote]</ul>",
 			  "Asend" => "Wyślij",
 			  "Pdesc" => '',
 			  "Desc" => '',
