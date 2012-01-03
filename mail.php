@@ -315,10 +315,10 @@ if (isset ($_GET['view']) && $_GET['view'] == 'inbox')
         $mail -> MoveNext();
     }
     $mail -> Close();
-    $smarty -> assign(array("Sender" => $arrsender, 
-                            "Senderid" => $arrsenderid, 
-                            "Subject" => $arrsubject, 
-                            "Mailid" => $arrid,
+    $smarty -> assign(array("Sender" => array_reverse($arrsender), 
+                            "Senderid" => array_reverse($arrsenderid), 
+                            "Subject" => array_reverse($arrsubject), 
+                            "Mailid" => array_reverse($arrid),
                             "Aclear" => A_CLEAR2,
                             "From" => "Od/Do",
                             "Sid" => S_ID,
@@ -346,8 +346,8 @@ if (isset ($_GET['view']) && $_GET['view'] == 'inbox')
 			    "Tpage" => $intPage,
 			    "Fpage" => "Idź do strony:",
 			    "Lpage" => $strPage,
-			    "Mtopic" => $arrTopic,
-                            "Mread" => $arrRead));
+			    "Mtopic" => array_reverse($arrTopic),
+                            "Mread" => array_reverse($arrRead)));
     if (isset ($_GET['step']) && $_GET['step'] == 'clear') 
     {
         $db -> Execute("DELETE FROM `mail` WHERE `owner`=".$player -> id." AND `saved`='N'");

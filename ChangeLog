@@ -1,5 +1,7 @@
 2012-01-03  Bartek thindil Jasicki  <thindil@vallheru.net>
 
+	* FEATURE,mail.php:
+	reverse mails order in inbox
 	* BUG,account.php, forums.php, mail.php, proposals.php, tforums.php:
 	fixed typo
 
