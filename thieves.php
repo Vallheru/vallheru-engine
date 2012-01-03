@@ -7,7 +7,7 @@
  *   @copyright            : (C) 2011,2012 Vallheru Team based on Gamers-Fusion ver 2.5
  *   @author               : thindil <thindil@vallheru.net>
  *   @version              : 1.5
- *   @since                : 02.01.2012
+ *   @since                : 03.01.2012
  *
  */
 
@@ -185,6 +185,8 @@ else
 	  }
 	$arrJobs = array();
 	$i = 0;
+	$_SESSION['mission'] = array();
+	$_SESSION['mtype'] = array();
 	while ($i < 3)
 	  {
 	    $intKey = rand(0, 3);
@@ -224,7 +226,7 @@ else
 				      90 => 'To jeden z naszych. Ostatnio zaczął się dziwnie zachowywać, dobrze byłoby sprawdzić co porabia. ',
 				      120 => 'To jakiś podejrzany typ. Nie pytaj się kto jest zainteresowany nim. ');
 		$intOption = getoption($arrLocations, $objJob->fields['mpoints']);
-		$strJob = 'Trzeba powęszyć za jedną osobą. '.$arrLocations[$intOption].' Jak dowiesz się czego trzeba i zostaniesz niezauważon'.$strSuffix2.' to dostaniesz trochę złota';
+		$strJob = 'Trzeba powęszyć za jedną osobą. '.$arrLocations[$intOption].'Jak dowiesz się czego trzeba i zostaniesz niezauważon'.$strSuffix2.' to dostaniesz trochę złota';
 		break;
 		//Guard position
 	      case 3:
@@ -232,6 +234,22 @@ else
 		  {
 		    $i = -1;
 		  }
+		else
+		  {
+		    $arrLocations = array(5 => 'Przypilnujesz aby strażnicy za bardzo nie interesowali się jednym z naszych, kiedy będzie obrabiał sakiewki przechodniów. ',
+					  10 => 'Będziesz mieć oko na okolicę, kiedy będziemy obrabiać pewne mieszkanie w kamienicy. ',
+					  15 => 'Upewnisz się że okolica jest bezpieczna, kiedy my zajmiemy się pewną posiadłością. ',
+					  20 => 'Trzeba się upewnić że nikt niepowołany nie będzie się kręcił w okolicy naszego kasyna. ',
+					  25 => 'Mamy nieco towaru do przerzucenia przez mury i nie chcemy aby ktoś nam przeszkadzał. ',
+					  30 => 'Przepatrzysz okolicę pewnej interesującej nas kamienicy. ',
+					  35 => 'Często próbują wejść do naszej knajpy różne takie typy. Zajmiesz się nimi. ',
+					  40 => 'Będziesz mieć oko na okolicę, kiedy my zajmiemy się pewną posiadłością. ',
+					  50 => 'Robimy dzisiaj bank i nie chcemy aby ktoś nam przeszkadzał. ');
+		    $intOption = getoption($arrLocations, $objJob->fields['mpoints']);
+		    $strJob = 'Potrzebujemy kogoś, kto stanie na czatach w czasie roboty. '.$arrLocations[$intOption].'Jeżeli nikt nam nie przeszkodzi w robocie, to dostaniesz trochę złota';
+		  }
+		break;
+	      default:
 		break;
 	      }
 	    if ($i > -1)
@@ -243,6 +261,8 @@ else
 				  97 => ' oraz plan lepszych wytrychów.');
 		$intLoot = getoption($arrLoots, rand(1, 100));
 		$arrJobs[$i] = $strJob.$arrLoots[$intLoot];
+		$_SESSION['mission'][$i] = $intKey;
+		$_SESSION['mtype'][$i] = $intOption;
 		$i++;
 	      }
 	  }
@@ -252,6 +272,38 @@ else
 			      "Ayes" => "Biorę tę robotę."));
 	$objJob->Close();
 	//$db->Execute("UPDATE `players` SET `crafmission`='Y' WHERE `id`=".$player->id);
+      }
+    /**
+     * Generate random mission
+     */
+    elseif ($_GET['step'] == 'confirm')
+      {
+	if (!isset($_GET['type']) || !isset($_SESSION['mission']) || !isset($_SESSION['mtype']))
+	  {
+	    error('Zapomnij o tym!');
+	  }
+	$_GET['type'] = intval($_GET['type']);
+	if ($_GET['type'] < 0 || $_GET['type'] > 3)
+	  {
+	    error('Zapomnij o tym!');
+	  }
+	switch ($_SESSION['mission'][$_GET['type']])
+	  {
+	    //Home robbery
+	  case 0:
+	    break;
+	    //Steal from people
+	  case 1:
+	    break;
+	    //Tracking people
+	  case 2:
+	    break;
+	    //Guard position
+	  case 3:
+	    break;
+	  default:
+	    break;
+	  }
       }
   }
 

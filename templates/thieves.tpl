@@ -61,7 +61,7 @@
     <ul>
     {section name=job loop=$Jobs}
         <li>{$Jobs[job]}<br />
-        <a href="thieves.php?step={$smarty.section.job.index}">{$Ayes}</a><br /><br /></li>
+        <a href="thieves.php?step=confirm&amp;number={$smarty.section.job.index}">{$Ayes}</a><br /><br /></li>
     {/section}
     </ul>
     {$Jobinfo2}

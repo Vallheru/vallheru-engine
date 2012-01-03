@@ -1,5 +1,7 @@
 2012-01-03  Bartek thindil Jasicki  <thindil@vallheru.net>
 
+	* FEATURE,thieves.php, templates/layout1/thieves.tpl, templates/thieves.tpl: 
+	continue work on random mission for thieves
 	* UPDATE,templates/layout1/room.tpl, templates/room.tpl, css/light.css, room.php, chat.php:
 	some redesign
 	* FEATURE,templates/layout1/layout1.css, templates/layout1/room.tpl, templates/room.tpl, css/lucass.css, css/light.css, css/greenforest.css,
