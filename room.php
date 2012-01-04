@@ -7,7 +7,7 @@
  *   @copyright            : (C) 2012 Vallheru Team based on Gamers-Fusion ver 2.5
  *   @author               : thindil <thindil@vallheru.net>
  *   @version              : 1.5
- *   @since                : 03.01.2012
+ *   @since                : 04.01.2012
  *
  */
 
@@ -37,13 +37,67 @@ if (!$player->room)
     error("Nie posiadasz bądź nie zostałeś zaproszony do jakiegokolwiek pokoju. <a href=");
   }
 
+require_once('includes/bbcode.php');
+
+$objRoom = $db->Execute("SELECT * FROM `rooms` WHERE `id`=".$player->room);
+if ($player->id == $objRoom->fields['owner'])
+  {
+    $strOwner = '+ Panel administracyjny';
+    if (strlen($objRoom->fields['npcs']) > 0)
+      {
+	$arrNPC = explode(';', $objRoom->fields['npcs']);
+	$arrTalk = array_merge(array('Ty', 'Opis'), $arrNPC);
+      }
+    else
+      {
+	$arrTalk = array('Ty', 'Opis');
+      }
+    $smarty->assign(array('Akick' => 'Wyrzuć',
+			  'Tid' => 'gracza o ID:',
+			  'Froom' => 'z pokoju.',
+			  'Achange' => 'Zmień',
+			  'Tdesc' => 'opis pokoju:',
+			  'Tname' => 'nazwę pokoju na',
+			  'Aadd' => 'Dodaj',
+			  'Tas' => 'jako',
+			  'Toptions' => $arrTalk,
+			  'Tnpc' => 'imię NPC, które będziesz używał'));
+  }
+else
+  {
+    $strOwner = '';
+  }
+
 $db -> Execute("UPDATE `players` SET `page`='Pokój w karczmie' WHERE `id`=".$player->id);
 if (isset ($_GET['action']) && $_GET['action'] == 'chat') 
 {
     if (isset($_POST['msg']) && $_POST['msg'] != '') 
       {
-	$starter = '<a href="view.php?view='.$player->id.'" target="_parent">'.$player->user.'</a>';
-        require_once('includes/bbcode.php');
+	if ($strOwner == '')
+	  {
+	    $starter = '<a href="view.php?view='.$player->id.'" target="_parent">'.$player->user.'</a>';
+	  }
+	else
+	  {
+	    $_POST['person'] = intval($_POST['person']);
+	    if ($_POST['person'] < 0 || ($_POST['person'] - 2) > count($arrNPC))
+	      {
+		error('Zapomnij o tym.');
+	      }
+	    if ($_POST['person'] == 0)
+	      {
+		$starter = '<a href="view.php?view='.$player->id.'" target="_parent">'.$player->user.'</a>';
+	      }
+	    elseif($_POST['person'] == 1)
+	      {
+		$starter = '';
+	      }
+	    else
+	      {
+		$intIndex = $_POST['person'] - 2;
+		$starter = $arrNPC[$intIndex];
+	      }
+	  }
         $_POST['msg'] = bbcodetohtml($_POST['msg'], TRUE);
         if (preg_match("/\S+/", $_POST['msg']) == 0)
         {
@@ -86,21 +140,114 @@ if (isset ($_GET['action']) && $_GET['action'] == 'chat')
         {
 	  $db -> Execute("INSERT INTO `chatrooms` (`user`, `chat`, `senderid`, `ownerid`, `sdate`, `room`) VALUES('".$starter."', ".$message.", ".$player -> id.", ".$owner.", '".$newdate."', ".$player->room.")") or die($db->ErrorMsg());
         }
-	if (isset($strTarget))
-	  {
-	    $db -> Execute("INSERT INTO `chatrooms` (`user`, `chat`, `sdate`, `room`) VALUES('".$strTarget."', '".$strMessage."', '".$newdate."', ".$player->room.")");
-	  }
     }
 }
 
-$objRoom = $db->Execute("SELECT * FROM `rooms` WHERE `id`=".$player->room);
+/**
+ * Room administation
+ */
+if (isset($_GET['step']))
+  {
+    //Quit from room
+    if ($_GET['step'] == 'quit')
+      {
+	if ($player->id == $objRoom->fields['owner'])
+	  {
+	    $db->Execute("DELETE FROM `rooms` WHERE `id`=".$player->room);
+	    $db->Execute("DELETE FROM `chatrooms` WHERE `room`=".$player->room);
+	    $objMates = $db->Execute("SELECT `id` FROM `players` WHERE `room`=".$player->room) or die($db->ErrorMsg());
+	    $strDate = $db -> DBDate($newdate);
+	    while (!$objMates->EOF)
+	      {
+		$db->Execute("INSERT INTO `log` (`owner`, `log`, `czas`, `type`) VALUES(".$objMates->fields['id'].", '".$player->user." zlikwidował(a) pokój w karczmie.', ".$strDate.", 'E')");
+		$objMates->MoveNext();
+	      }
+	    $objMates->Close();
+	    $db->Execute("UPDATE `players` SET `room`=0 WHERE `room`=".$player->room);
+	    error("Zlikwidowałeś(aś) swój pokój w karczmie. <a href=");
+	  }
+	else
+	  {
+	    $strMessage = '<a href="view.php?view='.$player->id.'" target="_parent">'.$player->user.'</a> opuścił(a) pokój.';
+	    $strMessage = $db -> qstr($strMessage, get_magic_quotes_gpc());
+	    $db -> Execute("INSERT INTO `chatrooms` (`user`, `chat`, `senderid`, `ownerid`, `sdate`, `room`) VALUES('', ".$strMessage.", ".$player -> id.", 0, '".$newdate."', ".$player->room.")") or die($db->ErrorMsg());
+	    $db->Execute("UPDATE `players` SET `room`=0 WHERE `id`=".$player->id);
+	  }
+      }
+    //Change room settings
+    elseif ($_GET['step'] == 'admin')
+      {
+	if ($strOwner == '' || !isset($_GET['action']))
+	  {
+	    error('Zapomnij o tym.');
+	  }
+	switch ($_GET['action'])
+	  {
+	    //Remove player from room
+	  case 'remove':
+	    checkvalue($_POST['pid']);
+	    $objTest = $db->Execute("SELECT `room` FROM `players` WHERE `id`=".$_POST['pid']);
+	    if ($objTest->fields['room'] != $player->room)
+	      {
+		message('error', 'Ten gracz nie został zaproszony do tego pokoju.');
+	      }
+	    elseif ($_POST['pid'] == $player->id)
+	      {
+		message('error', 'Nie możesz wyrzucić siebie z pokoju.');
+	      }
+	    else
+	      {
+		$db->Execute("UPDATE `players` SET `room`=0 WHERE `id`=".$_POST['pid']);
+		message('success', 'Wyrzuciłeś(aś) gracza o ID: '.$_POST['pid'].' z pokoju.');
+	      }
+	    break;
+	    //Change room description
+	  case 'desc':
+	    if (!isset($_POST['desc']))
+	      {
+		error('Zapomnij o tym.');
+	      }
+	    $_POST['desc'] = bbcodetohtml($_POST['desc']);
+	    $objRoom->fields['desc'] = $_POST['desc'];
+	    $_POST['desc'] = $db->qstr($_POST['desc'], get_magic_quotes_gpc());
+	    $db->Execute("UPDATE `rooms` SET `desc`=".$_POST['desc']." WHERE `id`=".$player->room);
+	    message('success', 'Zmieniłeś(aś) opis pokoju');
+	    break;
+	    //Change room name
+	  case 'name':
+	    $_POST['rname'] = str_replace("'","",strip_tags($_POST['rname']));
+	    $_POST['rname'] = str_replace("&nbsp;", "", $_POST['rname']);
+	    $_POST['rname'] = trim($_POST['rname']);
+	    $objRoom->fields['name'] = $_POST['rname'];
+	    $db->Execute("UPDATE `rooms` SET `name`='".$_POST['rname']."' WHERE `id`=".$player->room);
+	    message('success', 'Zmieniłeś(aś) nazwę pokoju');
+	    break;
+	    //Add npc to room
+	  case 'npc':
+	    $_POST['npc'] = str_replace("'","",strip_tags($_POST['npc']));
+	    $_POST['npc'] = str_replace("&nbsp;", "", $_POST['npc']);
+	    $_POST['npc'] = trim($_POST['npc']);
+	    $arrNPC[] = $_POST['npc'];
+	    $strNPC = implode(';', $arrNPC);
+	    $db->Execute("UPDATE `rooms` SET `npcs`='".$strNPC."' WHERE `id`=".$player->room);
+	    message('success', 'Dodałeś(aś) NPC do pokoju', '(<a href="room.php">Odśwież</a>)');
+	    break;
+	  default:
+	    error('Zapomnij o tym.');
+	    break;
+	  }
+      }
+  }
 
 $smarty -> assign (array("Arefresh" => 'Odśwież',
                          "Asend" => 'Wyślij',
 			 'Amanage' => 'Zarządzaj pokojem',
                          "Inn" => $objRoom->fields['name'],
-			 "Adesc" => 'Opis',
+			 "Adesc" => '+ Opis',
+			 "Aleft" => 'Opuść pokój',
+			 "Aowner" => $strOwner,
 			 "Desc" => $objRoom->fields['desc'],
+			 "Desc2" => htmltobbcode($objRoom->fields['desc']),
                          "Rank" => $player->rank));
 $smarty -> display ('room.tpl');
 $objRoom->Close();
