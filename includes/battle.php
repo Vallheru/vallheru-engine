@@ -4,11 +4,11 @@
  *   Function to fight PvP
  *
  *   @name                 : battle.php                            
- *   @copyright            : (C) 2006,2007,2011 Vallheru Team based on Gamers-Fusion ver 2.5
- *   @author               : thindil <thindil@tuxfamily.org>
+ *   @copyright            : (C) 2006,2007,2011,2012 Vallheru Team based on Gamers-Fusion ver 2.5
+ *   @author               : thindil <thindil@vallheru.net>
  *   @author               : eyescream <tduda@users.sourceforge.net>
  *   @version              : 1.5
- *   @since                : 18.12.2011
+ *   @since                : 04.01.2012
  *
  */
 
@@ -484,7 +484,7 @@ function attack1($attacker, $defender, $arrAtequip, $arrDeequip, $attack_bspell,
 			    $defender['hp'] -= $intDamage;
 			    $attacker['mana'] -= $attack_bspell->fields['poziom'];
 			    $attacker['hp'] -= $intDamage;
-			    $strMesage = $strMessage."<b>".$attacker['user']."</b> próbował rzucić zaklęcie, ale eksplodowało ono w rękach, raniąc jego oraz wroga. Traci przez to ".$intDamage." punktów życia (".$attacker['hp']." zostało), <b>".$defender['user']."</b> otrzymuje ".$intDamage." obrażeń (".$defender['hp']." zostało)";
+			    $strMesage = $strMessage."<b>".$attacker['user']."</b> próbował rzucić zaklęcie, ale eksplodowało ono w rękach, raniąc jego oraz wroga. Traci przez to ".$intDamage." punktów życia (".$attacker['hp']." zostało), <b>".$defender['user']."</b> otrzymuje ".$intDamage." obrażeń (".$defender['hp']." zostało)<br />";
 			  }
                         break;
                     }
@@ -748,7 +748,7 @@ function attack1($attacker, $defender, $arrAtequip, $arrDeequip, $attack_bspell,
 			    $defender['hp'] -= $intDamage;
 			    $attacker['mana'] -= $attack_bspell->fields['poziom'];
 			    $attacker['hp'] -= $intDamage;
-			    $strMesage = $strMessage."<b>".$attacker['user']."</b> próbował rzucić zaklęcie, ale eksplodowało ono w rękach, raniąc jego oraz wroga. Traci przez to ".$intDamage." punktów życia (".$attacker['hp']." zostało), <b>".$defender['user']."</b> otrzymuje ".$intDamage." obrażeń (".$defender['hp']." zostało)";
+			    $strMesage = $strMessage."<b>".$attacker['user']."</b> próbował rzucić zaklęcie, ale eksplodowało ono w rękach, raniąc jego oraz wroga. Traci przez to ".$intDamage." punktów życia (".$attacker['hp']." zostało), <b>".$defender['user']."</b> otrzymuje ".$intDamage." obrażeń (".$defender['hp']." zostało)<br />";
 			  }
                         break;
                     }

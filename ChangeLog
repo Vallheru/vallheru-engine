@@ -1,3 +1,8 @@
+2012-01-04  Bartek thindil Jasicki  <thindil@vallheru.net>
+
+	* BUG,includes/turnfight.php, includes/funkcje.php, includes/battle.php:
+	added missed new line marks
+
 2012-01-03  Bartek thindil Jasicki  <thindil@vallheru.net>
 
 	* BUG,includes/funkcje.php: 
