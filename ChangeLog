@@ -1,5 +1,7 @@
 2012-01-04  Bartek thindil Jasicki  <thindil@vallheru.net>
 
+	* FEATURE,log.php: 
+	added new log category
 	* UPDATE,install/db/update.sql: 
 	update db schema
 	* UPDATE,templates/header.tpl: 

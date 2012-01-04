@@ -4,10 +4,10 @@
  *   Player log - events
  *
  *   @name                 : log.php                            
- *   @copyright            : (C) 2004,2005,2006,2011 Vallheru Team based on Gamers-Fusion ver 2.5
+ *   @copyright            : (C) 2004,2005,2006,2011,2012 Vallheru Team based on Gamers-Fusion ver 2.5
  *   @author               : thindil <thindil@vallheru.net>
  *   @version              : 1.5
- *   @since                : 13.12.2011
+ *   @since                : 04.01.2012
  *
  */
 
@@ -207,7 +207,7 @@ if (isset($_GET['page']))
      $intPage = 1;
    }
 
-$arrTypes = array('O' => 'Strażnica', 'V' => 'Vallary', 'B' => 'Walka', 'T' => 'Złodziejstwo', 'M' => 'Rynek', 'C' => 'Klan', 'A' => 'Administracja', 'N' => 'Bank', 'R' => 'Chowańce', 'H' => 'Dom', 'J' => 'Więzienie', 'L' => 'Biblioteka', 'U' => 'Brak typu');
+$arrTypes = array('O' => 'Strażnica', 'V' => 'Vallary', 'B' => 'Walka', 'T' => 'Złodziejstwo', 'M' => 'Rynek', 'C' => 'Klan', 'A' => 'Administracja', 'N' => 'Bank', 'R' => 'Chowańce', 'H' => 'Dom', 'J' => 'Więzienie', 'L' => 'Biblioteka', 'U' => 'Brak typu', 'E' => 'Różne');
 
 /**
  * Get all available log types
