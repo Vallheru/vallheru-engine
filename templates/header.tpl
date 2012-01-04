@@ -11,7 +11,7 @@
 
 <body onload="window.status='{$Gamename}'">
 
-<table width="95%" class="td" cellpadding="0" cellspacing="0" align="center">
+<table width="90%" class="td" cellpadding="0" cellspacing="0" align="center">
     <tr>
         <td colspan="3" valign="top" align="center">
             <b>{$Gametime}:</b> {$Time} <b>{$Gamename}</b>
