@@ -8,7 +8,7 @@
  *   @author               : thindil <thindil@vallheru.net>
  *   @author               : eyescream <tduda@users.sourceforge.net>
  *   @version              : 1.4
- *   @since                : 03.01.2012
+ *   @since                : 04.01.2012
  *
  */
 
@@ -296,7 +296,7 @@ if (isset($_GET['room']))
 	$objRoom = $db->Execute("SELECT `id` FROM `rooms` WHERE `owner`=".$player->id);
 	$db->Execute("UPDATE `players` SET `credits`=`credits`-100, `room`=".$objRoom->fields['id']." WHERE `id`=".$player->id);
 	$objRoom->Close();
-	message('success', 'Wynająłeś pokój w karczmie. Teraz możesz ustawić wszystko w panelu pokoju oraz zaprosić innych graczy do pokoju. (<a href="chat.php">Odśwież</a>)');
+	message('success', 'Wynająłeś pokój w karczmie. Teraz możesz ustawić wszystko w panelu pokoju oraz zaprosić innych graczy do pokoju.', '(<a href="chat.php">Odśwież</a>)');
       }
   }
 

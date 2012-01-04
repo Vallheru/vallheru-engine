@@ -1,5 +1,7 @@
 2012-01-04  Bartek thindil Jasicki  <thindil@vallheru.net>
 
+	* BUG,chat.php: 
+	fixed message
 	* FEATURE,templates/layout1/account.tpl, templates/account.tpl, account.php:
 	added pagination to changelog and vallars
 	* BUG,includes/turnfight.php, includes/funkcje.php, includes/battle.php:

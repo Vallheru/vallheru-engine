@@ -852,8 +852,8 @@ if (isset($_GET['view']))
     elseif ($_GET['view'] == 'vallars')
       {
 	//Pagination
-	$objAmount = $db->Execute("SELECT count(`id`) FROM `changelog`");
-	$intPages = ceil($objAmount->fields['count(`id`)'] / 30);
+	$objAmount = $db->Execute("SELECT count(`owner`) FROM `vallars`");
+	$intPages = ceil($objAmount->fields['count(`owner`)'] / 30);
 	$objAmount->Close();
 	if (!isset($_GET['page']))
 	  {
