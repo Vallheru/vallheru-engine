@@ -1,5 +1,7 @@
 2012-01-04  Bartek thindil Jasicki  <thindil@vallheru.net>
 
+	* UPDATE,install/db/update.sql: 
+	update db schema
 	* UPDATE,templates/header.tpl: 
 	small redesign
 	* FEATURE,templates/layout1/room.tpl, templates/room.tpl, room.php: 

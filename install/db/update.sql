@@ -30,9 +30,8 @@ ALTER TABLE `players` ADD `room` INT( 11 ) NOT NULL DEFAULT '0';
 CREATE TABLE IF NOT EXISTS `rooms` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
   `owner` int(11) NOT NULL,
-  `members` text NOT NULL,
   `npcs` text NOT NULL,
   `desc` text NOT NULL,
+  `name` varchar(255) NOT NULL DEFAULT 'Pokój',
   PRIMARY KEY (`id`)
 ) ENGINE=MyISAM DEFAULT CHARSET=utf8 AUTO_INCREMENT=1 ;
-ALTER TABLE `rooms` ADD `name` VARCHAR( 255 ) NOT NULL DEFAULT 'Pokój';
