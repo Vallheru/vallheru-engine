@@ -79,7 +79,17 @@
             {$Changetext[changes]}<br /><br />
         </li>
         {/section}
-    </ul>
+    </ul><br /><br />
+    {if $Tpages > 1}
+    	<br />{$Fpage}
+    	{for $page = 1 to $Tpages}
+	    {if $page == $Tpage}
+	        {$page}
+	    {else}
+                <a href="account.php?view=changes&page={$page}">{$page}</a>
+	    {/if}
+    	{/for}
+    {/if}
 {/if}
 
 {if $View == "options"}
@@ -243,7 +253,17 @@
             {$Treason}: {$Reason[vallars]}<br /><br />
         </li>
         {/section}
-    </ul>
+    </ul><br /><br />
+    {if $Tpages > 1}
+    	<br />{$Fpage}
+    	{for $page = 1 to $Tpages}
+	    {if $page == $Tpage}
+	        {$page}
+	    {else}
+                <a href="account.php?view=vallars&page={$page}">{$page}</a>
+	    {/if}
+    	{/for}
+    {/if}
 {/if}
 
 {if $View == "forums"}

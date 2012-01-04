@@ -7,7 +7,7 @@
  *   @copyright            : (C) 2004,2005,2006,2007,2011,2012 Vallheru Team based on Gamers-Fusion ver 2.5
  *   @author               : thindil <thindil@vallheru.net>
  *   @version              : 1.5
- *   @since                : 03.01.2012
+ *   @since                : 04.01.2012
  *
  */
 
@@ -264,7 +264,20 @@ if (isset($_GET['view']))
      */
     elseif ($_GET['view'] == 'changes')
       {
-	$objChanges = $db -> SelectLimit("SELECT `author`, `location`, `text`, `date` FROM `changelog` ORDER BY `id` DESC", 30);
+	//Pagination
+	$objAmount = $db->Execute("SELECT count(`id`) FROM `changelog`");
+	$intPages = ceil($objAmount->fields['count(`id`)'] / 30);
+	$objAmount->Close();
+	if (!isset($_GET['page']))
+	  {
+	    $intPage = 1;
+	  }
+	else
+	  {
+	    $intPage = $_GET['page'];
+	  }
+
+	$objChanges = $db -> SelectLimit("SELECT `author`, `location`, `text`, `date` FROM `changelog` ORDER BY `id` DESC", 30, 30 * ($intPage - 1));
 	$arrAuthor = array();
 	$arrDate = array();
 	$arrText = array();
@@ -283,6 +296,9 @@ if (isset($_GET['view']))
 				"Changeauthor" => $arrAuthor,
 				"Changedate" => $arrDate,
 				"Changelocation" => $arrLocation,
+				"Tpages" => $intPages,
+				"Tpage" => $intPage,
+				"Fpage" => "Idź do strony:",
 				"Changetext" => $arrText));
       }
 
@@ -835,7 +851,20 @@ if (isset($_GET['view']))
      */
     elseif ($_GET['view'] == 'vallars')
       {
-	$objHist = $db->SelectLimit("SELECT * FROM `vallars` ORDER BY `vdate` DESC", 30);
+	//Pagination
+	$objAmount = $db->Execute("SELECT count(`id`) FROM `changelog`");
+	$intPages = ceil($objAmount->fields['count(`id`)'] / 30);
+	$objAmount->Close();
+	if (!isset($_GET['page']))
+	  {
+	    $intPage = 1;
+	  }
+	else
+	  {
+	    $intPage = $_GET['page'];
+	  }
+
+	$objHist = $db->SelectLimit("SELECT * FROM `vallars` ORDER BY `vdate` DESC", 30, 30 * ($intPage - 1));
 	$arrDate = array();
 	$arrReason = array();
 	$arrAmount = array();
@@ -859,6 +888,9 @@ if (isset($_GET['view']))
 			      "Treason" => "Uzasadnienie",
 			      "Id" => "ID",
 			      "Tgranted" => "Nagrodzony(a)",
+			      "Tpages" => $intPages,
+			      "Tpage" => $intPage,
+			      "Fpage" => "Idź do strony:",
 			      "Date" => $arrDate,
 			      "Owner" => $arrOwner,
 			      "Ownerid" => $arrOwnerid,
