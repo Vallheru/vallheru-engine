@@ -4,11 +4,11 @@
  *   Tribe magazine - add potions to clan, give potions to clan members
  *
  *   @name                 : tribeware.php                            
- *   @copyright            : (C) 2004,2005,2006,2007,2011 Vallheru Team based on Gamers-Fusion ver 2.5
- *   @author               : thindil <thindil@tuxfamily.org>
+ *   @copyright            : (C) 2004,2005,2006,2007,2011,2012 Vallheru Team based on Gamers-Fusion ver 2.5
+ *   @author               : thindil <thindil@vallheru.net>
  *   @author               : eyescream <tduda@users.sourceforge.net>
- *   @version              : 1.4
- *   @since                : 13.09.2011
+ *   @version              : 1.5
+ *   @since                : 05.01.2012
  *
  */
 
@@ -36,7 +36,7 @@ require_once("includes/head.php");
 /**
 * Get the localization for game
 */
-require_once("languages/".$player -> lang."/tribeware.php");
+require_once("languages/".$lang."/tribeware.php");
 
 /**
 * Check if player is in clan
@@ -202,6 +202,7 @@ if (isset ($_GET['daj']))
         $smarty -> assign ("Message", YOU_GIVE1.'<b><a href="view.php?view='.$_POST['did'].'">'.$strReceiversName.'</a></b>'.YOU_GIVE2.'<b>'.$_POST['did']."</b> ".$_POST['amount'].T_AMOUNT.$zbroj -> fields['name']);
         $strDate = $db -> DBDate($newdate);
         $db -> Execute("INSERT INTO `log` (`owner`, `log`, `czas`, `type`) VALUES(".$_POST['did'].", '".YOU_GET.$_POST['amount'].T_AMOUNT.$zbroj -> fields['name'].".', ".$strDate.", 'C')");
+	$db -> Execute("INSERT INTO `logs` (`owner`, `log`, `czas`) VALUES(".$_POST['did'].", '".YOU_GET.$_POST['amount'].T_AMOUNT.$zbroj -> fields['name'].".', ".$strDate.")");
         $objPerm = $db -> Execute("SELECT player FROM tribe_perm WHERE tribe=".$player -> tribe." AND warehouse=1");
         while (!$objPerm -> EOF)
         {
@@ -282,6 +283,7 @@ if (isset ($_GET['step']) && $_GET['step'] == 'daj')
         $smarty -> assign ("Message", YOU_ADD.$_POST['amount'].T_AMOUNT."<b>".$przed -> fields['name'].TO_WARE);
         $strDate = $db -> DBDate($newdate);
         $db -> Execute("INSERT INTO `log` (`owner`, `log`, `czas`, `type`) VALUES(".$owner -> fields['owner'].", '".L_PLAYER."<a href=view.php?view=".$player -> id.">".$player -> user.L_ID.$player -> id.ADD_TO.$_POST['amount'].T_AMOUNT.$przed -> fields['name'].".', ".$strDate.", 'C')");
+	$db -> Execute("INSERT INTO `logs` (`owner`, `log`, `czas`) VALUES(".$owner -> fields['owner'].", '".L_PLAYER."<a href=view.php?view=".$player -> id.">".$player -> user.L_ID.$player -> id.ADD_TO.$_POST['amount'].T_AMOUNT.$przed -> fields['name'].".', ".$strDate.")");
         $objPerm = $db -> Execute("SELECT player FROM tribe_perm WHERE tribe=".$player -> tribe." AND warehouse=1");
         while (!$objPerm -> EOF)
         {
