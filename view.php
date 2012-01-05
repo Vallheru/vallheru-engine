@@ -4,11 +4,11 @@
  *   View other players, steal money, astral components from other players
  *
  *   @name                 : view.php                            
- *   @copyright            : (C) 2004,2005,2006,2011 Vallheru Team based on Gamers-Fusion ver 2.5
+ *   @copyright            : (C) 2004,2005,2006,2011,2012 Vallheru Team based on Gamers-Fusion ver 2.5
  *   @author               : thindil <thindil@vallheru.net>
  *   @author               : eyescream <tduda@users.sourceforge.net>
  *   @version              : 1.5
- *   @since                : 28.12.2011
+ *   @since                : 05.01.2012
  *
  */
 
@@ -224,6 +224,18 @@ if ($player -> id != $view -> id)
       {
 	$strLink .= "<li><a href=account.php?view=contacts&amp;add&amp;pid=".$view->id.">Dodaj do listy kontaktów</a></li>";
       }
+    if ($player->room != 0)
+      {
+	$objRowner = $db->Execute("SELECT `owner` FROM `rooms` WHERE `id`=".$player->room);
+	if ($view->room == 0)
+	  {
+	    $strLink .= '<li><a href="view.php?view='.$view->id.'&amp;room=add">Zaproś do pokoju w karczmie</a></li>';
+	  }
+	elseif($view->room == $player->room && $objRowner->fields['owner'] == $player->id)
+	  {
+	    $strLink .= '<li><a href="view.php?view='.$view->id.'&amp;room=remove">Wyrzuć z pokoju w karczmie</a></li>';
+	  }
+      }
     $smarty -> assign ("Mail", $strLink);
   }
 
@@ -305,6 +317,59 @@ switch ($intLastseen)
   }
 $smarty->assign(array("Seen" => "Ostatnio aktywny",
 		      "Lastseen" => $strSeen));
+
+/**
+ * Room actions
+ */
+if (isset($_GET['room']))
+  {
+    //Invitation
+    if ($_GET['room'] == 'add')
+      {
+	$blnValid = TRUE;
+	if ($player->room == 0)
+	  {
+	    message('error', 'Nie posiadasz pokoju, do którego mógłbyś zaprosić tego gracza.');
+	    $blnValid = FALSE;
+	  }
+	if ($view->room > 0)
+	  {
+	    message('error', 'Ten gracz jest już w jakimś pokoju w karczmie.');
+	    $blnValid = FALSE;
+	  }
+	if ($blnValid)
+	  {
+	    $db->Execute("UPDATE `players` SET `room`=".$player->room." WHERE `id`=".$view->id);
+	    $strDate = $db -> DBDate($newdate);
+	    $db->Execute("INSERT INTO `log` (`owner`, `log`, `czas`, `type`) VALUES(".$view->id.", '".$player->user." zaprosił(a) Ciebie do swojego pokoju w karczmie.', ".$strDate.", 'E')");
+	    message('success', 'Zaprosiłeś(aś) '.$view->user.' do swojego pokoju w karczmie.', '(<a href="view.php?view='.$view->id.'">Odśwież</a>)');
+	  }
+      }
+    //Remove from room
+    if ($_GET['room'] == 'remove')
+      {
+	$blnValid = TRUE;
+	$objRowner = $db->Execute("SELECT `owner` FROM `rooms` WHERE `id`=".$player->room);
+	if ($player->room == 0 || $player->id != $objRowner->fields['owner'])
+	  {
+	    message('error', 'Nie posiadasz własnego pokoju w karczmie.');
+	    $blnValid = FALSE;
+	  }
+	$objRowner->Close();
+	if ($player->room != $view->room)
+	  {
+	    message('error', 'Ten gracz nie przebywa w Twoim pokoju w karczmie.');
+	    $blnValid = FALSE;
+	  }
+	if ($blnValid)
+	  {
+	    $strDate = $db -> DBDate($newdate);
+	    $db->Execute("INSERT INTO `log` (`owner`, `log`, `czas`, `type`) VALUES(".$view->id.", '".$player->user." wyrzucił(a) Ciebie z pokoju w karczmie.', ".$strDate.", 'E')");
+	    $db->Execute("UPDATE `players` SET `room`=0 WHERE `id`=".$view->id);
+	    message('success', 'Wyrzuciłeś(aś) '.$view->user.' z pokoju w karczmie.', '(<a href="view.php?view='.$view->id.'">Odśwież</a>)');
+	  }
+      }
+  }
 
 if (isset($_GET['spy']) || isset($_GET['steal']))
   {

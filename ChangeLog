@@ -1,5 +1,7 @@
 2012-01-05  Bartek thindil Jasicki  <thindil@vallheru.net>
 
+	* FEATURE,view.php: 
+	added invitation/remove player from room
 	* UPDATAE,room.php:
 	better NPC's add
 	* UPDATE,css/light.css, templates/footer.tpl:
