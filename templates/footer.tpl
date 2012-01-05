@@ -11,7 +11,7 @@
                         </td>
                     </tr>
                     <tr>
-                        <td>
+                        <td align="left">
                             {$Playerslist}:<br /><br />
                             {section name=players loop=$List}
                                 {$List[players]}
