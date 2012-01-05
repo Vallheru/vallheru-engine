@@ -51,6 +51,7 @@ if ($player->id == $objRoom->fields['owner'])
     else
       {
 	$arrTalk = array('Ty', 'Opis');
+	$arrNPC = array();
       }
     $smarty->assign(array('Akick' => 'Wyrzuć',
 			  'Tid' => 'gracza o ID:',

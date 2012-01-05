@@ -1,5 +1,7 @@
 2012-01-05  Bartek thindil Jasicki  <thindil@vallheru.net>
 
+	* BUG,room.php: 
+	fixed few notices
 	* FEATURE,tribes.php, tribeware.php, tribeastral.php, tribearmor.php:
 	add player donations to tribe to admin logs
 	* UPDATE,css/light.css: 
