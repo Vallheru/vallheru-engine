@@ -96,6 +96,7 @@ if (isset ($_GET['action']) && $_GET['action'] == 'chat')
 	      {
 		$intIndex = $_POST['person'] - 2;
 		$starter = $arrNPC[$intIndex];
+		$_POST['msg'] = str_replace('/me', $starter, $_POST['msg']);
 	      }
 	  }
         $_POST['msg'] = bbcodetohtml($_POST['msg'], TRUE);
@@ -107,9 +108,19 @@ if (isset ($_GET['action']) && $_GET['action'] == 'chat')
 	//Emote
 	if (strpos($message, '*') == 0 && strrpos($message, '*') == (strlen($message) - 1))
 	  {
-	    if (strpos($message, $player->user) !== FALSE)
+	    if ($_POST['person'] < 2)
 	      {
-		$starter = '';
+		if (strpos($message, $player->user) !== FALSE)
+		  {
+		    $starter = '';
+		  }
+	      }
+	    else
+	      {
+		if (strpos($message, $starter) !== FALSE)
+		  {
+		    $starter = '';
+		  }
 	      }
 	    $message = '<b><i>'.$message.'</i></b>';
 	  }
@@ -175,6 +186,7 @@ if (isset($_GET['step']))
 	    $strMessage = $db -> qstr($strMessage, get_magic_quotes_gpc());
 	    $db -> Execute("INSERT INTO `chatrooms` (`user`, `chat`, `senderid`, `ownerid`, `sdate`, `room`) VALUES('', ".$strMessage.", ".$player -> id.", 0, '".$newdate."', ".$player->room.")") or die($db->ErrorMsg());
 	    $db->Execute("UPDATE `players` SET `room`=0 WHERE `id`=".$player->id);
+	    error("Opuściłeś(aś) pokój w karczmie. <a href=");
 	  }
       }
     //Change room settings
@@ -201,7 +213,7 @@ if (isset($_GET['step']))
 	    else
 	      {
 		$strDate = $db -> DBDate($newdate);
-		$db->Execute("INSERT INTO `log` (`owner`, `log`, `czas`, `type`) VALUES(".$objMates->fields['id'].", '".$player->user." wyrzucił(a) Ciebie z pokoju w karczmie.', ".$strDate.", 'E')");
+		$db->Execute("INSERT INTO `log` (`owner`, `log`, `czas`, `type`) VALUES(".$_POST['pid'].", '".$player->user." wyrzucił(a) Ciebie z pokoju w karczmie.', ".$strDate.", 'E')");
 		$db->Execute("UPDATE `players` SET `room`=0 WHERE `id`=".$_POST['pid']);
 		message('success', 'Wyrzuciłeś(aś) gracza o ID: '.$_POST['pid'].' z pokoju.');
 	      }

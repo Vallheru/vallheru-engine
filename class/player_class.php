@@ -7,7 +7,7 @@
  *   @copyright            : (C) 2004,2005,2006,2007,2011,2012 Vallheru Team based on Gamers-Fusion ver 2.5
  *   @author               : thindil <thindil@vallheru.net>
  *   @version              : 1.5
- *   @since                : 02.01.2012
+ *   @since                : 05.01.2012
  *
  */
 
@@ -109,7 +109,6 @@ class Player
     var $metallurgy;
     var $revent;
     var $room;
-    var $roomowner;
 /**
 * Class constructor - get data from database and write it to variables
 */
@@ -217,16 +216,6 @@ class Player
 	  }
 	$objRevent->Close();
 	$this->room = $stats->fields['room'];
-	$this->roomowner = FALSE;
-	if ($this->room)
-	  {
-	    $objRoom = $db->Execute("SELECT `owner` FROM `rooms` WHERE `id`=".$this->room);
-	    if ($objRoom->fields['owner'] == $this->id)
-	      {
-		$this->roomowner = TRUE;
-	      }
-	    $objRoom->Close();
-	  }
     }
     /**
      * Function return values of selected atributes in array
