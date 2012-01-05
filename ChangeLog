@@ -1,5 +1,7 @@
 2012-01-05  Bartek thindil Jasicki  <thindil@vallheru.net>
 
+	* UPDATE,css/light.css: 
+	some redesign
 	* UPDATE,templates/layout1/room.tpl, templates/room.tpl, room.php, class/player_class.php:
 	fixed few bugs and small layout redesign
 	* FEATURE,view.php: 
