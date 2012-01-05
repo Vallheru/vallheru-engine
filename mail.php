@@ -7,7 +7,7 @@
  *   @copyright            : (C) 2004,2005,2006,2007,2011,2012 Vallheru Team based on Gamers-Fusion ver 2.5
  *   @author               : thindil <thindil@vallheru.net>
  *   @version              : 1.5
- *   @since                : 03.01.2012
+ *   @since                : 05.01.2012
  *
  */
 
@@ -282,15 +282,36 @@ if (isset ($_GET['view']) && $_GET['view'] == 'inbox')
 	$intPage = 1;
       }
 
-    $mail = $db->SelectLimit("SELECT * FROM (SELECT * FROM `mail` WHERE `owner`=".$player->id.$strQuery." ORDER BY `id` ASC) AS s GROUP BY `topic`", 30, 30 * ($intPage - 1));
+    $objMail = $db->Execute("SELECT `topic` FROM `mail` WHERE `owner`=".$player->id.$strQuery." ORDER BY `id` DESC");
+    $arrTopic1 = array();
+    while (!$objMail->EOF)
+      {
+	if (!in_array($objMail->fields['topic'], $arrTopic1))
+	  {
+	    $arrTopic1[] = $objMail->fields['topic'];
+	  }
+	$objMail->MoveNext();
+      }
+    $objMail->Close();
+    $intStart = 30 * ($intPage - 1);
+    $intLimit = 30 * $intPage;
+    $arrTopic = array();
+    for ($i = $intStart; $i < $intLimit; $i++)
+      {
+	if ($i == count($arrTopic1))
+	  {
+	    break;
+	  }
+	$arrTopic[] = $arrTopic1[$i];
+      }
     $arrsender = array();
     $arrsenderid = array();
     $arrsubject = array();
     $arrid = array();
     $arrRead = array();
-    $arrTopic = array();
-    while (!$mail -> EOF) 
+    foreach ($arrTopic as $intTopic)
       {
+	$mail = $db->SelectLimit("SELECT * FROM `mail` WHERE `owner`=".$player->id." AND `topic`=".$intTopic." ORDER BY `id` ASC", 1);
 	if ($mail->fields['senderid'] == $player->id && $mail->fields['to'] > 0)
 	  {
 	    $arrsenderid[] = $mail->fields['to'];
@@ -301,24 +322,22 @@ if (isset ($_GET['view']) && $_GET['view'] == 'inbox')
 	    $arrsender[] = $mail -> fields['sender'];
 	    $arrsenderid[] = $mail -> fields['senderid'];
 	  }
-        $arrsubject[] = $mail -> fields['subject'];
-        $arrid[] = $mail -> fields['id'];
-	$arrTopic[] = $mail->fields['topic'];
-        if ($mail -> fields['unread'] == 'F')
-        {
-            $arrRead[] = 'Y';
-        }
-            else
-        {
-            $arrRead[] = 'N';
-        }
-        $mail -> MoveNext();
-    }
-    $mail -> Close();
-    $smarty -> assign(array("Sender" => array_reverse($arrsender), 
-                            "Senderid" => array_reverse($arrsenderid), 
-                            "Subject" => array_reverse($arrsubject), 
-                            "Mailid" => array_reverse($arrid),
+	$arrsubject[] = $mail -> fields['subject'];
+	$arrid[] = $mail -> fields['id'];
+	if ($mail -> fields['unread'] == 'F')
+	  {
+	    $arrRead[] = 'Y';
+	  }
+	else
+	  {
+	    $arrRead[] = 'N';
+	  }
+	$mail -> Close();
+      }
+    $smarty -> assign(array("Sender" => $arrsender, 
+                            "Senderid" => $arrsenderid, 
+                            "Subject" => $arrsubject, 
+                            "Mailid" => $arrid,
                             "Aclear" => A_CLEAR2,
                             "From" => "Od/Do",
                             "Sid" => S_ID,
@@ -346,8 +365,8 @@ if (isset ($_GET['view']) && $_GET['view'] == 'inbox')
 			    "Tpage" => $intPage,
 			    "Fpage" => "Idź do strony:",
 			    "Lpage" => $strPage,
-			    "Mtopic" => array_reverse($arrTopic),
-                            "Mread" => array_reverse($arrRead)));
+			    "Mtopic" => $arrTopic,
+                            "Mread" => $arrRead));
     if (isset ($_GET['step']) && $_GET['step'] == 'clear') 
     {
         $db -> Execute("DELETE FROM `mail` WHERE `owner`=".$player -> id." AND `saved`='N'");
@@ -725,9 +744,16 @@ if (isset ($_GET['read']))
     $strSubject = $objMails->fields['subject'];
     while (!$objMails->EOF)
       {
-	if ($intReceiver == 0 && $objMails->fields['senderid'] != $player->id)
+	if ($intReceiver == 0)
 	  {
-	    $intReceiver = $objMails->fields['senderid'];
+	    if ($objMails->fields['senderid'] != $player->id)
+	      {
+		$intReceiver = $objMails->fields['senderid'];
+	      }
+	    elseif ($objMails->fields['to'] != $player->id)
+	      {
+		$intReceiver = $objMails->fields['to'];
+	      }
 	  }
 	$arrSender[] = $objMails->fields['sender'];
 	$arrSenderid[] = $objMails->fields['senderid'];
