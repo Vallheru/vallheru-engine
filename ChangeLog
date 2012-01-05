@@ -1,5 +1,7 @@
 2012-01-05  Bartek thindil Jasicki  <thindil@vallheru.net>
 
+	* UPDATAE,room.php:
+	better NPC's add
 	* UPDATE,css/light.css, templates/footer.tpl:
 	small fixes in layout
 	* BUG,mail.php:

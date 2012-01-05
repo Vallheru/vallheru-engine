@@ -7,7 +7,7 @@
  *   @copyright            : (C) 2012 Vallheru Team based on Gamers-Fusion ver 2.5
  *   @author               : thindil <thindil@vallheru.net>
  *   @version              : 1.5
- *   @since                : 04.01.2012
+ *   @since                : 05.01.2012
  *
  */
 
@@ -159,7 +159,10 @@ if (isset($_GET['step']))
 	    $strDate = $db -> DBDate($newdate);
 	    while (!$objMates->EOF)
 	      {
-		$db->Execute("INSERT INTO `log` (`owner`, `log`, `czas`, `type`) VALUES(".$objMates->fields['id'].", '".$player->user." zlikwidował(a) pokój w karczmie.', ".$strDate.", 'E')");
+		if ($objMates->fields['id'] != $player->id)
+		  {
+		    $db->Execute("INSERT INTO `log` (`owner`, `log`, `czas`, `type`) VALUES(".$objMates->fields['id'].", '".$player->user." zlikwidował(a) pokój w karczmie.', ".$strDate.", 'E')");
+		  }
 		$objMates->MoveNext();
 	      }
 	    $objMates->Close();
@@ -197,6 +200,8 @@ if (isset($_GET['step']))
 	      }
 	    else
 	      {
+		$strDate = $db -> DBDate($newdate);
+		$db->Execute("INSERT INTO `log` (`owner`, `log`, `czas`, `type`) VALUES(".$objMates->fields['id'].", '".$player->user." wyrzucił(a) Ciebie z pokoju w karczmie.', ".$strDate.", 'E')");
 		$db->Execute("UPDATE `players` SET `room`=0 WHERE `id`=".$_POST['pid']);
 		message('success', 'Wyrzuciłeś(aś) gracza o ID: '.$_POST['pid'].' z pokoju.');
 	      }
@@ -227,10 +232,21 @@ if (isset($_GET['step']))
 	    $_POST['npc'] = str_replace("'","",strip_tags($_POST['npc']));
 	    $_POST['npc'] = str_replace("&nbsp;", "", $_POST['npc']);
 	    $_POST['npc'] = trim($_POST['npc']);
-	    $arrNPC[] = $_POST['npc'];
-	    $strNPC = implode(';', $arrNPC);
-	    $db->Execute("UPDATE `rooms` SET `npcs`='".$strNPC."' WHERE `id`=".$player->room);
-	    message('success', 'Dodałeś(aś) NPC do pokoju', '(<a href="room.php">Odśwież</a>)');
+	    $blnValid = TRUE;
+	    $objTest = $db->Execute("SELECT `id` FROM `players` WHERE `user`='".$_POST['npc']."'");
+	    if ($objTest->fields['id'] || in_array($_POST['npc'], $arrNPC))
+	      {
+		message('error', 'Nie możesz dodać NPC o takim imieniu.');
+		$blnValid = FALSE;
+	      }
+	    else
+	      {
+		$arrNPC[] = $_POST['npc'];
+		$strNPC = implode(';', $arrNPC);
+		$db->Execute("UPDATE `rooms` SET `npcs`='".$strNPC."' WHERE `id`=".$player->room);
+		message('success', 'Dodałeś(aś) NPC do pokoju', '(<a href="room.php">Odśwież</a>)');
+	      }
+	    $objTest->Close();
 	    break;
 	  default:
 	    error('Zapomnij o tym.');
