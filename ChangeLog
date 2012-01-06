@@ -1,5 +1,7 @@
 2012-01-06  Bartek thindil Jasicki  <thindil@vallheru.net>
 
+	* UPDATE,css/light.css: 
+	some redesign
 	* BUG,tribes.php, room.php:
 	fixed some notices
 	* UPDATE,languages/pl/view.php:

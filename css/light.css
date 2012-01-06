@@ -1,7 +1,11 @@
 * {
 color: #FFFC9F;
-font-family: Verdana,sans-serif;
-font-size: 9pt;
+font-size: 100%;
+vertical-align: baseline;
+}
+body { 
+font: 0.75em/1.25 "Lucida Sans Unicode","Lucida Grande",Verdana,sans-serif; 
+background: #000000;
 }
 .td {
 border-top: solid black 1px;
@@ -9,13 +13,18 @@ border-bottom: solid black 1px;
 border-left: solid black 1px;
 border-right: solid black 1px;
 }
+form input[type=submit] { 
+color: #FFFFFF; 
+cursor:pointer; 
+}
+form input[type=submit]:hover { 
+color: #E20000; 
+border:1px solid; 
+}
 input, textarea, select {
-color: gold;
-font-size: 8pt;
-font-weight: bold;
-font-family: Verdana;
-background: black;
-border: solid gray 1px;
+background-color: #101010;
+border: 1px solid #383838;
+font: inherit;
 }
 a {
 text-decoration: none;
@@ -26,9 +35,6 @@ a:hover {
 text-decoration: none;
 text-transform: none;
 color: red;
-}
-body {
-background: #000000;
 }
 body, iframe, select, textarea {
 scrollbar-face-color: black;
