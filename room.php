@@ -7,7 +7,7 @@
  *   @copyright            : (C) 2012 Vallheru Team based on Gamers-Fusion ver 2.5
  *   @author               : thindil <thindil@vallheru.net>
  *   @version              : 1.5
- *   @since                : 05.01.2012
+ *   @since                : 06.01.2012
  *
  */
 
@@ -109,16 +109,26 @@ if (isset ($_GET['action']) && $_GET['action'] == 'chat')
 	//Emote
 	if (strpos($message, '*') == 0 && strrpos($message, '*') == (strlen($message) - 1))
 	  {
-	    if ($_POST['person'] < 2)
+	    if ($strOwner != '')
 	      {
-		if (strpos($message, $player->user) !== FALSE)
+		if ($_POST['person'] < 2)
 		  {
-		    $starter = '';
+		    if (strpos($message, $player->user) !== FALSE)
+		      {
+			$starter = '';
+		      }
+		  }
+		else
+		  {
+		    if (strpos($message, $starter) !== FALSE)
+		      {
+			$starter = '';
+		      }
 		  }
 	      }
 	    else
 	      {
-		if (strpos($message, $starter) !== FALSE)
+		if (strpos($message, $player->user) !== FALSE)
 		  {
 		    $starter = '';
 		  }

@@ -9,7 +9,7 @@
  *   @author               : mori <ziniquel@users.sourceforge.net>
  *   @author               : eyescream <tduda@users.sourceforge.net>
  *   @version              : 1.5
- *   @since                : 05.01.2012
+ *   @since                : 06.01.2012
  *
  */
 
@@ -146,8 +146,8 @@ if (isset ($_GET['view']) && $_GET['view'] == 'view')
             error (NO_CLAN);
         }
         $plik = 'images/tribes/'.$tribe -> fields['logo'];
-        $query = $db -> Execute("SELECT count(*) FROM `players` WHERE `tribe`=".$tribe -> fields['id']);
-        $memnum = $query -> fields['count(*)'];
+        $query = $db -> Execute("SELECT count(`id`) FROM `players` WHERE `tribe`=".$tribe -> fields['id']);
+        $memnum = $query -> fields['count(`id`)'];
         $query -> Close();
         if (is_file($plik)) 
         {
@@ -607,11 +607,11 @@ if (isset ($_GET['view']) && $_GET['view'] == 'my')
         {
             $smarty -> assign ("Logo", "<center><img src=\"".$plik."\" height=\"100\"></center><br>");
         }
-        $query = $db -> Execute("SELECT count(*) FROM `players` WHERE `tribe`=".$mytribe -> fields['id']);
-        $memnum = $query -> fields['count(*)'];
+        $query = $db -> Execute("SELECT count(`id`) FROM `players` WHERE `tribe`=".$mytribe -> fields['id']);
+        $memnum = $query -> fields['count(`id`)'];
         $query -> Close();
         $owner = $db -> Execute("SELECT `id`, `user` FROM `players` WHERE `id`=".$mytribe -> fields['owner']);
-        if ($player -> id == $mytribe -> fields['owner'] || !$perm -> fields['info'])
+        if ($player->id == $mytribe->fields['owner'] || !$perm -> fields['info'])
         {
             $smarty -> assign(array("Gold" => $mytribe -> fields['credits'], 
                                     "Mithril" => $mytribe -> fields['platinum'],
@@ -1428,10 +1428,11 @@ if (isset ($_GET['view']) && $_GET['view'] == 'my')
                                   $_POST['astralvault']);
                     for ($i=0; $i<15; $i++) 
                     {
-                        if (!ereg("^[0-1]*$", $test[$i])) 
-                        {
-                            error (ERROR);
-                        }
+			$test[$i] = intval($test[$i]);
+			if ($test[$i] != 0 && $test[$i] != 1)
+			  {
+			    error(ERROR);
+			  }
 			checkvalue($_POST['memid']);
                         $ttribe = $db -> Execute("SELECT tribe FROM players WHERE id=".$_POST['memid']);
                         if ($ttribe -> fields['tribe'] != $mytribe -> fields['id']) 

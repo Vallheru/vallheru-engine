@@ -1,5 +1,7 @@
 2012-01-06  Bartek thindil Jasicki  <thindil@vallheru.net>
 
+	* BUG,tribes.php, room.php:
+	fixed some notices
 	* UPDATE,languages/pl/view.php:
 	added new locations names
 
