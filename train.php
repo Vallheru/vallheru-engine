@@ -4,10 +4,10 @@
  *   School - train stats
  *
  *   @name                 : train.php                            
- *   @copyright            : (C) 2004,2005,2006,2007,2011 Vallheru Team based on Gamers-Fusion ver 2.5
- *   @author               : thindil <thindil@tuxfamily.org>
- *   @version              : 1.4
- *   @since                : 29.08.2011
+ *   @copyright            : (C) 2004,2005,2006,2007,2011,2012 Vallheru Team based on Gamers-Fusion ver 2.5
+ *   @author               : thindil <thindil@vallheru.net>
+ *   @version              : 1.5
+ *   @since                : 06.01.2012
  *
  */
 
@@ -35,7 +35,7 @@ require_once("includes/head.php");
 /**
 * Get the localization for game
 */
-require_once("languages/".$player -> lang."/train.php");
+require_once("languages/".$lang."/train.php");
 
 if ($player -> location != 'Altara' && $player -> location != 'Ardulith') 
 {
@@ -295,7 +295,6 @@ if (isset ($_GET['action']) && $_GET['action'] == 'train')
         $cecha = T_WIS;
         $intCost = $intWiscost;
     }
-    $intCost = ceil($intCost + (($_POST['rep'] - 1) * 0.03));
     $intCost2 = ($intCost * $_POST['rep']);
     if ($player -> credits < $intCost2) 
     {
