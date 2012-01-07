@@ -767,8 +767,12 @@ function integercheck($strField)
  */
 function checkvalue($value)
 {
+  if (!is_numeric($value))
+    {
+      error(ERROR);
+    }
   $value = intval($value);
-  if ($value < 1 || !is_numeric($value))
+  if ($value < 1)
     {
       error(ERROR);
     }
