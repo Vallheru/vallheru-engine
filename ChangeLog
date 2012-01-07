@@ -1,3 +1,8 @@
+2012-01-07  Bartek thindil Jasicki  <thindil@vallheru.net>
+
+	* BUG,includes/battle.php:
+	probably fixed bug with 0 damage
+
 2012-01-06  Bartek thindil Jasicki  <thindil@vallheru.net>
 
 	* FEATURE,train.php: 

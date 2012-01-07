@@ -8,7 +8,7 @@
  *   @author               : thindil <thindil@vallheru.net>
  *   @author               : eyescream <tduda@users.sourceforge.net>
  *   @version              : 1.5
- *   @since                : 04.01.2012
+ *   @since                : 07.01.2012
  *
  */
 
@@ -519,24 +519,21 @@ function attack1($attacker, $defender, $arrAtequip, $arrDeequip, $attack_bspell,
                         }
                     }
                     $attack_durwep = ($attack_durwep + 1);
-                    $defender['hp'] = ($defender['hp'] - $attackdmg);
+                    $defender['hp'] -= $attackdmg;
+		    $intAttackdmg = $attackdmg;
 		    if ($defender['antidote'] != 'I')
 		      {
 			if ($arrAtequip[0][3] == 'I')
 			  {
-			    $defender['hp'] = ($defender['hp'] - $arrAtequip[0][8]);
-			    $intAttackdmg = $attackdmg + $arrAtequip[0][8];
+			    $defender['hp'] -= $arrAtequip[0][8];
+			    $intAttackdmg += $arrAtequip[0][8];
 			  }
 			if ($arrAtequip[6][3] == 'I')
 			  {
-			    $defender['hp'] = ($defender['hp'] - $arrAtequip[6][8]);
-			    $intAttackdmg = $attackdmg + $arrAtequip[6][8];
+			    $defender['hp'] -= $arrAtequip[6][8];
+			    $intAttackdmg += $arrAtequip[6][8];
 			  }
 		      }
-		    else
-                    {
-                        $intAttackdmg = $attackdmg;
-                    }
 		    if ($arrDeequip[3][0] || $arrDeequip[2][0] || $arrDeequip[4][0] || $arrDeequip[5][0]) 
 		      {
 			$efekt = rand(0,$number);
