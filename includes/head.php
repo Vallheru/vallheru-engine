@@ -7,7 +7,7 @@
  *   @copyright            : (C) 2004,2005,2006,2007,2011,2012 Vallheru Team based on Gamers-Fusion ver 2.5
  *   @author               : thindil <thindil@vallheru.net>
  *   @version              : 1.5
- *   @since                : 03.01.2012
+ *   @since                : 07.01.2012
  *
  */
 
@@ -768,7 +768,7 @@ function integercheck($strField)
 function checkvalue($value)
 {
   $value = intval($value);
-  if ($value < 1)
+  if ($value < 1 || !is_numeric($value))
     {
       error(ERROR);
     }

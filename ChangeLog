@@ -1,5 +1,7 @@
 2012-01-07  Bartek thindil Jasicki  <thindil@vallheru.net>
 
+	* UPDATE,includes/head.php: 
+	better check for numeric values
 	* BUG,includes/battle.php:
 	probably fixed bug with 0 damage
 
