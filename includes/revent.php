@@ -4,10 +4,10 @@
  *   Random event in cities
  *
  *   @name                 : revent.php                            
- *   @copyright            : (C) 2011 Vallheru Team based on Gamers-Fusion ver 2.5
- *   @author               : thindil <thindil@tuxfamily.org>
+ *   @copyright            : (C) 2011,2012 Vallheru Team based on Gamers-Fusion ver 2.5
+ *   @author               : thindil <thindil@vallheru.net>
  *   @version              : 1.5
- *   @since                : 13.12.2011
+ *   @since                : 09.01.2012
  *
  */
 
@@ -233,7 +233,7 @@ elseif ($player->revent == 2)
       {
 	$strSuffix = 'aś';
       }
-  $strMessage = 'Widzisz niemal identycznie wyglądającego staruszka, jak ten, który podarował tobie sakiewkę. Kiedy do niego podchodzisz, uśmiecha się wesoło do Ciebie.<br /><i>Witaj, cieszę się, że już tutaj dotarł'.$strSuffix.'. Ach, to moja sakiewka!</i>Szybko bierze od ciebie przedmiot.<i>Dziękuję bardzo, oto nieco złota za twoją fatygę.</i>Daje tobie parę sztuk złota i szybko odchodzi.';
+  $strMessage = 'Widzisz niemal identycznie wyglądającego staruszka, jak ten, który podarował tobie sakiewkę. Kiedy do niego podchodzisz, uśmiecha się wesoło do Ciebie.<br /><i>Witaj, cieszę się, że już tutaj dotarł'.$strSuffix.'. Ach, to moja sakiewka!</i> Szybko bierze od ciebie przedmiot. <i>Dziękuję bardzo, oto nieco złota za twoją fatygę.</i> Daje tobie parę sztuk złota i szybko odchodzi.';
   $db->Execute("UPDATE `players` SET `credits`=`credits`+1000 WHERE `id`=".$player->id);
   $db->Execute("DELETE FROM `equipment` WHERE `name`='Solidna sakiewka' AND `type`='Q' AND `owner`=".$player->id);
   $intTime = rand(3, 9);
