@@ -7,7 +7,7 @@
  *   @copyright            : (C) 2011,2012 Vallheru Team based on Gamers-Fusion ver 2.5
  *   @author               : thindil <thindil@vallheru.net>
  *   @version              : 1.5
- *   @since                : 03.01.2012
+ *   @since                : 09.01.2012
  *
  */
 
@@ -263,6 +263,7 @@ else
 		$arrJobs[$i] = $strJob.$arrLoots[$intLoot];
 		$_SESSION['mission'][$i] = $intKey;
 		$_SESSION['mtype'][$i] = $intOption;
+		$_SESSION['reward'][$i] = $intLoot;
 		$i++;
 	      }
 	  }
@@ -274,7 +275,7 @@ else
 	//$db->Execute("UPDATE `players` SET `crafmission`='Y' WHERE `id`=".$player->id);
       }
     /**
-     * Generate random mission
+     * Start random mission
      */
     elseif ($_GET['step'] == 'confirm')
       {
@@ -291,15 +292,102 @@ else
 	  {
 	    //Home robbery
 	  case 0:
+	    switch ($_SESSION['mtype'][$_GET['type']])
+	      {
+	      case 10:
+		$intRooms = rand(4, 15);
+		break;
+	      case 30:
+		$intRooms = rand(5, 15);
+		break;
+	      case 50:
+		$intRooms = rand(5, 20);
+		break;
+	      case 100:
+		$intRooms = rand(6, 25);
+		break;
+	      case 150:
+		$intRooms = rand(8, 40);
+		break;
+	      default:
+		break;
+	      }
 	    break;
 	    //Steal from people
 	  case 1:
+	    switch ($_SESSION['mtype'][$_GET['type']])
+	      {
+	      case 0:
+		$intRooms = rand(3, 10);
+		break;
+	      case 15:
+		$intRooms = rand(4, 15);
+		break;
+	      case 40:
+		$intRooms = rand(5, 15);
+		break;
+	      case 80:
+		$intRooms = rand(6, 25);
+		break;
+	      default:
+		break;
+	      }
 	    break;
 	    //Tracking people
 	  case 2:
+	    switch ($_SESSION['mtype'][$_GET['type']])
+	      {
+	      case 0:
+		$intRooms = rand(5, 15);
+		break;
+	      case 20:
+		$intRooms = rand(6, 20);
+		break;
+	      case 60:
+		$intRooms = rand(8, 25);
+		break;
+	      case 90:
+		$intRooms = rand(10, 35);
+		break;
+	      case 120:
+		$intRooms = rand(12, 50);
+		break;
+	      default:
+		break;
+	      }
 	    break;
 	    //Guard position
 	  case 3:
+	    switch ($_SESSION['mtype'][$_GET['type']])
+	      {
+	      case 5:
+		$intRooms = rand(3, 8);
+		break;
+	      case 10:
+		$intRooms = rand(4, 10);
+		break;
+	      case 15:
+		$intRooms = rand(5, 12);
+		break;
+	      case 20:
+		$intRooms = rand(4, 10);
+		break;
+	      case 25:
+		$intRooms = rand(4, 10);
+		break;
+	      case 30:
+		$intRooms = rand(6, 14);
+		break;
+	      case 35:
+		$intRooms = rand(4, 10);
+		break;
+	      case 40:
+		$intRooms = rand(8, 18);
+		break;
+	      case 50:
+		$intRooms = rand(10, 20);
+		break;
+	      }
 	    break;
 	  default:
 	    break;

@@ -669,6 +669,20 @@
     {/if}
 {/if}
 
+{if $View == "rmission"}
+    <form method="post" action="admin.php?view=rmission&amp;step=add">
+        {$Tname} <input type="text" name="name" /><br />
+	{$Ttext} <textarea name="text"></textarea><br />
+	{$Texits} <input type="text" name="exits" /><br />
+	{$Tchances} <input type="text" name="chances" /><br />
+	{$Tmobs} <input type="text" name="mobs" /><br />
+	{$Tchances2} <input type="text" name="chances2" /><br />
+	{$Titems} <input type="text" name="items" /><br />
+	{$Tchances3} <input type="text" name="chances3" /><br />
+	<input type="submit" value="{$Aadd}" />
+    </form>
+{/if}
+
 {$Message}
 
 {if $View != ""}

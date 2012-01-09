@@ -4,11 +4,11 @@
  *   Admin panel
  *
  *   @name                 : admin.php                            
- *   @copyright            : (C) 2004,2005,2006,2007,2011 Vallheru Team based on Gamers-Fusion ver 2.5
- *   @author               : thindil <thindil@tuxfamily.org>
+ *   @copyright            : (C) 2004,2005,2006,2007,2011,2012 Vallheru Team based on Gamers-Fusion ver 2.5
+ *   @author               : thindil <thindil@vallheru.net>
  *   @author               : eyescream <tduda@users.sourceforge.net>
- *   @version              : 1.4
- *   @since                : 04.12.2011
+ *   @version              : 1.5
+ *   @since                : 09.01.2012
  *
  */
  
@@ -1846,6 +1846,32 @@ if (isset($_GET['view']))
 	    $objProposal->Close();
 	  }
       }
+    /**
+     * Random mission location
+     */
+    elseif ($_GET['view'] == 'rmission')
+      {
+	$smarty->assign(array('Tname' => 'Nazwa lokacji',
+			      'Ttext' => 'Wyświetlany tekst',
+			      'Texits' => 'Wyjścia z lokacji',
+			      'Tchances' => 'Szanse na wystąpienie konkretnego wyjścia',
+			      'Tmobs' => 'NPC w lokacji',
+			      'Tchances2' => 'Szansa na wystąpienie konkretnego NPC',
+			      'Titems' => 'Rzeczy w lokacji',
+			      'Tchances3' => 'Szansa na wystąpinie konkretnego przedmiotu',
+			      'Aadd' => 'Dodaj'));
+	if (isset($_GET['step']))
+	  {
+	    if (empty($_POST['name']) || empty($_POST['text']) || empty($_POST['exits']) || empty($_POST['chances']))
+	      {
+		error('Wypełnij wszystkie pola');
+	      }
+	    require_once('includes/bbcode.php');
+	    $_POST['text'] = bbcodetohtml($_POST['text']);
+	    $db->Execute("INSERT INTO `missions` (`name`, `text`, `exits`, `chances`, `mobs`, `chances2`, `items`, `chances3`) VALUES('".$_POST['name']."', '".$_POST['text']."', '".$_POST['exits']."', '".$_POST['chances']."', '".$_POST['mobs']."', '".$_POST['chances2']."', '".$_POST['items']."', '".$_POST['chances3']."')");
+	    $smarty->assign("Message", 'Dodałeś nową lokację do losowych zadań');
+	  }
+      }
   }
 /**
 * Initialization of variables
@@ -1853,8 +1879,8 @@ if (isset($_GET['view']))
 else 
   {
     $_GET['view'] = '';
-    $arrView1 = array('bridge', 'poll', 'addtext', 'pdescriptions', 'pitems', 'pmonsters', 'pbridge', 'pmdesc');
-    $arrLinks1 = array(A_BRIDGE, A_POLL, A_ADD_NEWS, 'Propozycje opisów', 'Propozycje przedmiotów', 'Propozycje potworów', 'Propozycje pytań na moście', 'Propozycje opisu potworów');
+    $arrView1 = array('bridge', 'poll', 'addtext', 'pdescriptions', 'pitems', 'pmonsters', 'pbridge', 'pmdesc', 'rmission');
+    $arrLinks1 = array(A_BRIDGE, A_POLL, A_ADD_NEWS, 'Propozycje opisów', 'Propozycje przedmiotów', 'Propozycje potworów', 'Propozycje pytań na moście', 'Propozycje opisu potworów', 'Dodaj tekst do losowych misji');
     $arrView2 = array('del', 'donate', 'takeaway', 'add', 'tags', 'czat', 'bforum', 'jail', 'jailbreak', 'delplayers', 'ban', 'donator', 'logs', 'playerquest', 'banmail', 'vallars', 'srank');
     $arrLinks2 = array(A_DELETE, A_DONATION, A_TAKE, A_RANK, A_IMMU, A_CHAT_BAN, 'Zablokuj/Odblokuj pisanie przez gracza na forum', A_JAIL, A_JAILBREAK, A_DEL_PLAYERS, A_BAN, A_DONATOR, A_LOGS, A_PLAYERQUEST, A_BAN_MAIL, 'Daj/Zabierz Vallary graczowi', 'Nadaj unikalną rangę graczowi');
     $arrView3 = array('clearf', 'clearc', 'forums', 'innarchive');

@@ -1,5 +1,7 @@
 2012-01-09  Bartek thindil Jasicki  <thindil@vallheru.net>
 
+	* FEATURE,install/db/update.sql, templates/layout1/admin.tpl, templates/admin.tpl, admin.php, thieves.php:
+	continue work on random missions for thieves
 	* BUG,includes/revent.php, city.php:
 	fixed some typos
 	* UPDATE,templates/layout1/layout1.css, templates/layout1/room.tpl, templates/room.tpl, css/light.css:

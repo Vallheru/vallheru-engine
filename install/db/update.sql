@@ -35,3 +35,20 @@ CREATE TABLE IF NOT EXISTS `rooms` (
   `name` varchar(255) NOT NULL DEFAULT 'Pokój',
   PRIMARY KEY (`id`)
 ) ENGINE=MyISAM DEFAULT CHARSET=utf8 AUTO_INCREMENT=1 ;
+CREATE TABLE IF NOT EXISTS `missions` (
+  `name` varchar(255) NOT NULL,
+  `text` text NOT NULL,
+  `exits` varchar(255) NOT NULL,
+  `chances` varchar(255) NOT NULL,
+  `mobs` varchar(255) NOT NULL,
+  `chances2` varchar(255) NOT NULL,
+  `items` varchar(255) NOT NULL,
+  `chances3` varchar(255) NOT NULL,
+  KEY `name` (`name`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+CREATE TABLE IF NOT EXISTS `mactions` (
+  `pid` int(11) NOT NULL,
+  `location` varchar(255) NOT NULL,
+  `exits` varchar(255) NOT NULL,
+  PRIMARY KEY (`pid`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
