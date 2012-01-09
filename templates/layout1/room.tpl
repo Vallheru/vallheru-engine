@@ -20,7 +20,7 @@ document.forms['chat'].elements['msg'].focus();
     <div align="center">
     <label for="mytoggle2" class="toggle">{$Aowner}</label>
     <input id="mytoggle2" type="checkbox" class="toggle" checked="checked" />
-    <div>
+    <div><br />
         <form method="post" action="room.php?step=admin&amp;action=remove">
 	    <input type="submit" value="{$Akick}" /> {$Tid} <input type="text" name="pid" size="5" /> {$Froom}
 	</form><br />
@@ -34,5 +34,5 @@ document.forms['chat'].elements['msg'].focus();
 	    <input type="submit" value="{$Aadd}" /> {$Tnpc} <input type="text" name="npc" />
 	</form>
     </div>
-    </div>
+    </div><br />
 {/if}

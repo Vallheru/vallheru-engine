@@ -1,3 +1,8 @@
+2012-01-09  Bartek thindil Jasicki  <thindil@vallheru.net>
+
+	* UPDATE,templates/layout1/layout1.css, templates/layout1/room.tpl, templates/room.tpl, css/light.css:
+	small redesign
+
 2012-01-07  Bartek thindil Jasicki  <thindil@vallheru.net>
 
 	* UPDATE,includes/head.php: 

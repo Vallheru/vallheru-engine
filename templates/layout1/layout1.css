@@ -112,6 +112,10 @@ label.toggle {
   cursor: pointer; 
   color: #FFFFFF; 
 }
+label.toggle:hover { 
+  cursor: pointer; 
+  color: #00FF00; 
+}
 input.toggle { 
   display: none; 
 }
