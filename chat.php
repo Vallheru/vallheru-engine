@@ -8,7 +8,7 @@
  *   @author               : thindil <thindil@vallheru.net>
  *   @author               : eyescream <tduda@users.sourceforge.net>
  *   @version              : 1.4
- *   @since                : 04.01.2012
+ *   @since                : 10.01.2012
  *
  */
 
@@ -280,9 +280,15 @@ if (isset($_GET['step']))
 if (isset($_GET['room']))
   {
     $blnValid = TRUE;
-    if ($player->credits < 100)
+    checkvalue($_POST['room']);
+    if (!in_array($_POST['room'], array(1, 3, 7, 14, 21)))
       {
-	message('error', 'Nie masz tyle sztuk złota przy sobie. Potrzebujesz 100 sztuk złota.');
+	error('Zapomnij o tym.');
+      }
+    $intGold = $_POST['room'] * 100;
+    if ($player->credits < $intGold)
+      {
+	message('error', 'Nie masz tyle sztuk złota przy sobie. Potrzebujesz '.$intGold.' sztuk złota.');
 	$blnValid = FALSE;
       }
     if ($player->room)
@@ -292,9 +298,9 @@ if (isset($_GET['room']))
       }
     if ($blnValid)
       {
-	$db->Execute("INSERT INTO `rooms` (`owner`) VALUES(".$player->id.")");
+	$db->Execute("INSERT INTO `rooms` (`owner`, `days`) VALUES(".$player->id.", ".$_POST['room'].")");
 	$objRoom = $db->Execute("SELECT `id` FROM `rooms` WHERE `owner`=".$player->id);
-	$db->Execute("UPDATE `players` SET `credits`=`credits`-100, `room`=".$objRoom->fields['id']." WHERE `id`=".$player->id);
+	$db->Execute("UPDATE `players` SET `credits`=`credits`-".$intGold.", `room`=".$objRoom->fields['id']." WHERE `id`=".$player->id);
 	$objRoom->Close();
 	message('success', 'Wynająłeś pokój w karczmie. Teraz możesz ustawić wszystko w panelu pokoju oraz zaprosić innych graczy do pokoju.', '(<a href="chat.php">Odśwież</a>)');
       }
@@ -318,7 +324,14 @@ if ($player -> rank == 'Admin' || $player -> rank == 'Karczmarka')
   }
 
 $smarty -> assign (array("Arefresh" => A_REFRESH,
-			 'Arent' => 'Wynajmij pokój za 100 sztuk złota',
+			 'Arent' => 'Wynajmij',
+			 'Troom' => 'pokój na',
+			 'Roptions' => array(1 => 'dzień za 100',
+					     3 => '3 dni za 300',
+					     7 => '7 dni za 700',
+					     14 => '14 dni za 1400',
+					     21 => '21 dni za 2100'),
+			 'Tgold' => 'sztuk złota.',
                          "Asend" => A_SEND,
                          "Inn" => INN,
                          "Rank" => $player -> rank));

@@ -17,7 +17,7 @@ document.forms['chat'].elements['msg'].focus();
 <tr><td colspan="2" align="center">
 
 <form method="post" action="chat.php?room">
-    <input type="submit" value="{$Arent}" />
+    <input type="submit" value="{$Arent}" /> {$Troom} {html_options name=room options=$Roptions} {$Tgold}
 </form>
 
 {if $Rank == "Admin" || $Rank == "Karczmarka"}

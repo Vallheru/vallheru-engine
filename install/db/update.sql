@@ -52,3 +52,4 @@ CREATE TABLE IF NOT EXISTS `mactions` (
   `exits` varchar(255) NOT NULL,
   PRIMARY KEY (`pid`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+ALTER TABLE `rooms` ADD `days` SMALLINT( 3 ) NOT NULL DEFAULT '1';

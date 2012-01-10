@@ -7,7 +7,7 @@
  *   @copyright            : (C) 2004,2005,2006,2007,2011,2012 Vallheru Team based on Gamers-Fusion ver 2.5
  *   @author               : thindil <thindil@vallheru.net>
  *   @version              : 1.5
- *   @since                : 02.01.2012
+ *   @since                : 10.01.2012
  *
  */
 
@@ -374,7 +374,8 @@ function mainreset()
     $db->Execute("UPDATE `players` SET `trains`=`trains`+15 WHERE `corepass`='Y' AND `freeze`=0");
     $intCtime = (time() - 200);
     $db -> Execute("UPDATE players SET freeze=freeze-1, lpv=".$intCtime." WHERE freeze>0");
-    $db->Execute("TRUNCATE TABLE `rooms`");
+    $db->Execute("UPDATE `rooms` SET `days`=`days`-1");
+    $db->Execute("DELETE FROM `rooms` WHERE `days`=0");
     $db->Execute("TRUNCATE TABLE `chatrooms`");
     /**
      * Outposts taxes

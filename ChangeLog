@@ -1,5 +1,7 @@
 2012-01-10  Bartek thindil Jasicki  <thindil@vallheru.net>
 
+	* FEATURE,install/db/update.sql, includes/resets.php, chat.php, templates/layout1/chat.tpl, templates/chat.tpl:
+	added option to rent room for longer period of time
 	* BUG,outposts.php:
 	fixed message about max lairs
 
