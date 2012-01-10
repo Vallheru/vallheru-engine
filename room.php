@@ -7,7 +7,7 @@
  *   @copyright            : (C) 2012 Vallheru Team based on Gamers-Fusion ver 2.5
  *   @author               : thindil <thindil@vallheru.net>
  *   @version              : 1.5
- *   @since                : 06.01.2012
+ *   @since                : 10.01.2012
  *
  */
 
@@ -54,7 +54,9 @@ if ($player->id == $objRoom->fields['owner'])
 	$arrNPC = array();
       }
     $smarty->assign(array('Akick' => 'Wyrzuć',
+			  'Ainv' => 'Zaproś',
 			  'Tid' => 'gracza o ID:',
+			  'Troom' => 'do pokoju.',
 			  'Froom' => 'z pokoju.',
 			  'Achange' => 'Zmień',
 			  'Tdesc' => 'opis pokoju:',
@@ -228,6 +230,27 @@ if (isset($_GET['step']))
 		$db->Execute("UPDATE `players` SET `room`=0 WHERE `id`=".$_POST['pid']);
 		message('success', 'Wyrzuciłeś(aś) gracza o ID: '.$_POST['pid'].' z pokoju.');
 	      }
+	    break;
+	    //Invite player to room
+	  case 'invite':
+	    checkvalue($_POST['pid']);
+	    $objInv = $db->Execute("SELECT `id`, `room` FROM `players` WHERE `id`=".$_POST['pid']);
+	    if (!$objInv->fields['id'])
+	      {
+		message('error', 'Nie ma takiego gracza');
+	      }
+	    elseif ($objInv->fields['room'])
+	      {
+		message('error', 'Ten gracz posiada już pokój bądź został już zaproszony do jakiegoś pokoju.');
+	      }
+	    else
+	      {
+		$strDate = $db -> DBDate($newdate);
+		$db->Execute("UPDATE `players` SET `room`=".$player->room." WHERE `id`=".$objInv->fields['id']);
+		message('success', 'Zaprosiłeś(aś) gracza o ID: '.$_POST['pid'].' do swojego pokoju.');
+		$db->Execute("INSERT INTO `log` (`owner`, `log`, `czas`, `type`) VALUES(".$objInv->fields['id'].", '".$player->user." zaprosił(a) Ciebie do swojego pokoju w karczmie.', ".$strDate.", 'E')");
+	      }
+	    $objInv->Close();
 	    break;
 	    //Change room description
 	  case 'desc':

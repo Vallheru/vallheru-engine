@@ -21,6 +21,9 @@ document.forms['chat'].elements['msg'].focus();
     <label for="mytoggle2" class="toggle">{$Aowner}</label>
     <input id="mytoggle2" type="checkbox" class="toggle" checked="checked" />
     <div><br />
+        <form method="post" action="room.php?step=admin&amp;action=invite">
+	    <input type="submit" value="{$Ainv}" /> {$Tid} <input type="text" name="pid" size="5" /> {$Troom}
+	</form><br />
         <form method="post" action="room.php?step=admin&amp;action=remove">
 	    <input type="submit" value="{$Akick}" /> {$Tid} <input type="text" name="pid" size="5" /> {$Froom}
 	</form><br />
