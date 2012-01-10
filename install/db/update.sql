@@ -45,11 +45,15 @@ CREATE TABLE IF NOT EXISTS `missions` (
   `items` varchar(255) NOT NULL,
   `chances3` varchar(255) NOT NULL,
   KEY `name` (`name`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+) ENGINE=MyISAM DEFAULT CHARSET=utf8;
+ALTER TABLE `rooms` ADD `days` SMALLINT( 3 ) NOT NULL DEFAULT '1';
 CREATE TABLE IF NOT EXISTS `mactions` (
   `pid` int(11) NOT NULL,
   `location` varchar(255) NOT NULL,
   `exits` varchar(255) NOT NULL,
+  `mobs` varchar(255) NOT NULL,
+  `items` varchar(255) NOT NULL,
+  `type` char(1) NOT NULL,
+  `loot` varchar(255) NOT NULL,
   PRIMARY KEY (`pid`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8;
-ALTER TABLE `rooms` ADD `days` SMALLINT( 3 ) NOT NULL DEFAULT '1';
+) ENGINE=MyISAM DEFAULT CHARSET=utf8;

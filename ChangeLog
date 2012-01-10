@@ -1,5 +1,7 @@
 2012-01-10  Bartek thindil Jasicki  <thindil@vallheru.net>
 
+	* FEATURE,install/db/update.sql, thieves.php:
+	continue work on random missions for thieves
 	* FEATURE,templates/layout1/room.tpl, templates/room.tpl, room.php:
 	added option to invite players to room
 	* FEATURE,install/db/update.sql, includes/resets.php, chat.php, templates/layout1/chat.tpl, templates/chat.tpl:

@@ -7,7 +7,7 @@
  *   @copyright            : (C) 2011,2012 Vallheru Team based on Gamers-Fusion ver 2.5
  *   @author               : thindil <thindil@vallheru.net>
  *   @version              : 1.5
- *   @since                : 09.01.2012
+ *   @since                : 10.01.2012
  *
  */
 
@@ -189,7 +189,8 @@ else
 	$_SESSION['mtype'] = array();
 	while ($i < 3)
 	  {
-	    $intKey = rand(0, 3);
+	    //$intKey = rand(0, 3);
+	    $intKey = 1;
 	    switch ($intKey)
 	      {
 		//Home robbery
@@ -254,11 +255,11 @@ else
 	      }
 	    if ($i > -1)
 	      {
-		$arrLoots = array(0 => '.',
-				  80 => ' oraz nowe wytrychy.',
+		$arrLoots = array(0 => '.');
+				  /*80 => ' oraz nowe wytrychy.',
 				  85 => ' oraz lepsze wytrychy.',
 				  90 => ' oraz plan wytrychów.',
-				  97 => ' oraz plan lepszych wytrychów.');
+				   97 => ' oraz plan lepszych wytrychów.');*/
 		$intLoot = getoption($arrLoots, rand(1, 100));
 		$arrJobs[$i] = $strJob.$arrLoots[$intLoot];
 		$_SESSION['mission'][$i] = $intKey;
@@ -392,6 +393,86 @@ else
 	  default:
 	    break;
 	  }
+	switch ($_SESSION['reward'][$_GET['type']])
+	  {
+	    //Nothing
+	  case 0:
+	    $strLoot = '';
+	    break;
+	    //Ordinary lockpick
+	  case 80:
+	    $strLoot = 'thieftools,=1,E';
+	    break;
+	    //Better lockpick
+	  case 85:
+	    $strLoot = 'thieftools,>1,E';
+	    break;
+	    //Ordinary lockpick plan
+	  case 90:
+	    $strLoot = 'thieftools,=1,P';
+	    break;
+	    //Better lockpic plan
+	  case 97:
+	    $strLoot = 'thieftools,>1,P';
+	    break;
+	  default:
+	    break;
+	  }
+	$objStart = $db->Execute("SELECT * FROM `missions` WHERE `name`='thief".$_SESSION['mission'][$_GET['type']]."start'");
+	$_SESSION['maction'] = array('location' => 'thief'.$_SESSION['mission'][$_GET['type']].'start',
+				     'exits' => array(),
+				     'mobs' => array(),
+				     'items' => array(),
+				     'type' => 'T',
+				     'loot' => $strLoot);
+	$arrOptions = array();
+	//Generate exits
+	$arrTmp = explode(';', $objStart->fields['exits']);
+	$arrChances = explode(';', $objStart->fields['chances']);
+	for ($i = 0; $i < count($arrChances); $i++)
+	  {
+	    $intRoll = rand(0, 100);
+	    if ($intRoll < $arrChances[$i])
+	      {
+		$_SESSION['maction']['exits'][] = $arrTmp[$i];
+		$arrTmp2 = explode(',', $arrTmp[$i]);
+		$arrOptions[$arrTmp2[1]] = $arrTmp2[0];
+	      }
+	  }
+	//Generate mobs
+	$arrTmp = explode(';', $objStart->fields['mobs']);
+	$arrChances = explode(';', $objStart->fields['chances2']);
+	for ($i = 0; $i < count($arrChances); $i ++)
+	  {
+	    $intRoll = rand(0, 100);
+	    if ($intRoll < $arrChances[$i])
+	      {
+		$_SESSION['maction']['mobs'][] = $arrTmp[$i];
+		$arrTmp2 = explode(',', $arrTmp[$i]);
+		for ($j = 1; $j < count($arrTmp2); $j += 2)
+		  {
+		    $arrOptions[$arrTmp2[($j + 1)]] = $arrTmp2[$j];
+		  }
+	      }
+	  }
+	//Generate items
+	$arrTmp = explode(';', $objStart->fields['items']);
+	$arrChances = explode(';', $objStart->fields['chances3']);
+	for ($i = 0; $i < count($arrChances); $i ++)
+	  {
+	    $intRoll = rand(0, 100);
+	    if ($intRoll < $arrChances[$i])
+	      {
+		$_SESSION['maction']['items'][] = $arrTmp[$i];
+		$arrTmp2 = explode(',', $arrTmp[$i]);
+		for ($j = 1; $j < count($arrTmp2); $j += 2)
+		  {
+		    $arrOptions[$arrTmp2[($j + 1)]] = $arrTmp2[$j];
+		  }
+	      }
+	  }
+	$smarty->assign(array("Text" => $objStart->fields['text'],
+			      'Moptions' => $arrOptions));
       }
   }
 
