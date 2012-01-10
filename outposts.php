@@ -4,11 +4,11 @@
  *   Players' outposts and all functions related with these (except taxes).
  *
  *   @name                 : outposts.php                            
- *   @copyright            : (C) 2004,2005,2006,2011 Vallheru Team based on Gamers-Fusion ver 2.5
- *   @author               : thindil <thindil@tuxfamily.org>
+ *   @copyright            : (C) 2004,2005,2006,2011,2012 Vallheru Team based on Gamers-Fusion ver 2.5
+ *   @author               : thindil <thindil@vallheru.net>
  *   @author               : eyescream <tduda@users.sourceforge.net>
- *   @version              : 1.4
- *   @since                : 13.12.2011
+ *   @version              : 1.5
+ *   @since                : 10.01.2012
  *
  */
  
@@ -1600,7 +1600,7 @@ if (isset ($_GET['view']) && $_GET['view'] == 'shop')
         }
         if (floor($out -> fields['size'] / 4) - $out -> fields['barracks'] <= $out -> fields['fence'])
         {
-            error(MAX_FEN);
+            error("Nie masz wolnego miejsca dla kolejnych legowisk bestii. Rozbuduj najpierw strażnicę.");
         }
         $intNeededMeteor = $_POST['amount'] * ($out -> fields['fence'] + ($_POST['amount'] + 1) / 2);
         if (($intNeededMeteor * 50 > $out -> fields['gold']) || ($intNeededMeteor * 5> $dbMinerals -> fields['crystal']) ||

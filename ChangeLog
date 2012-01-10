@@ -1,3 +1,8 @@
+2012-01-10  Bartek thindil Jasicki  <thindil@vallheru.net>
+
+	* BUG,outposts.php:
+	fixed message about max lairs
+
 2012-01-09  Bartek thindil Jasicki  <thindil@vallheru.net>
 
 	* FEATURE,install/db/update.sql, templates/layout1/admin.tpl, templates/admin.tpl, admin.php, thieves.php:
