@@ -1,5 +1,7 @@
 2012-01-10  Bartek thindil Jasicki  <thindil@vallheru.net>
 
+	* BUG,includes/resets.php:
+	fixed bug with deleting rooms
 	* FEATURE,install/db/update.sql, thieves.php:
 	continue work on random missions for thieves
 	* FEATURE,templates/layout1/room.tpl, templates/room.tpl, room.php:

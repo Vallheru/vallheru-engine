@@ -369,12 +369,19 @@ function mainreset()
 
     $db -> Execute("UPDATE `settings` SET `value`='N' WHERE `setting`='open'");
     $db -> Execute("UPDATE `settings` SET `value`='Wykonywanie resetu' WHERE `setting`='close_reason'");
-    $db -> Execute("UPDATE `players` SET `age`=`age`+1, `hp`=`max_hp`, `bridge`='N', `houserest`='N', `craftmission`='N', `room`=0");
+    $db -> Execute("UPDATE `players` SET `age`=`age`+1, `hp`=`max_hp`, `bridge`='N', `houserest`='N', `craftmission`='N'");
     $db->Execute("UPDATE `players` SET `newbie`=`newbie`-1 WHERE `newbie`>0");
     $db->Execute("UPDATE `players` SET `trains`=`trains`+15 WHERE `corepass`='Y' AND `freeze`=0");
     $intCtime = (time() - 200);
     $db -> Execute("UPDATE players SET freeze=freeze-1, lpv=".$intCtime." WHERE freeze>0");
     $db->Execute("UPDATE `rooms` SET `days`=`days`-1");
+    $objRooms = $db->Execute("SELECT `id` FROM `rooms` WHERE `days`=0");
+    while (!$objRooms->EOF)
+      {
+	$db->Execute("UPDATE `players` SET `room`=0 WHERE `room`=".$objRooms->fields['id']);
+	$objRooms->MoveNext();
+      }
+    $objRooms->Close();
     $db->Execute("DELETE FROM `rooms` WHERE `days`=0");
     $db->Execute("TRUNCATE TABLE `chatrooms`");
     /**
