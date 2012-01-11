@@ -27,6 +27,13 @@ document.forms['chat'].elements['msg'].focus();
         <form method="post" action="room.php?step=admin&amp;action=remove">
 	    <input type="submit" value="{$Akick}" /> {$Tid} <input type="text" name="pid" size="5" /> {$Froom}
 	</form><br />
+	<form method="post" action="room.php?step=admin&amp;action=admin">
+	    <select name="action">
+	        <option value="0">{$Aadd}</option>
+		<option value="1">{$Aremove}</option>
+	    </select>
+	    {$Tid} <input type="text" name="pid" size="5" /> {$Towners} <input type="submit" value="{$Amake}" />
+	</form><br />
 	<form method="post" action="room.php?step=admin&amp;action=desc">
 	    <input type="submit" value="{$Achange}" /> {$Tdesc} <br /><textarea name="desc">{$Desc2}</textarea>
 	</form><br />

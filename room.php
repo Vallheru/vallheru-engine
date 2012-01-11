@@ -7,7 +7,7 @@
  *   @copyright            : (C) 2012 Vallheru Team based on Gamers-Fusion ver 2.5
  *   @author               : thindil <thindil@vallheru.net>
  *   @version              : 1.5
- *   @since                : 10.01.2012
+ *   @since                : 11.01.2012
  *
  */
 
@@ -40,7 +40,15 @@ if (!$player->room)
 require_once('includes/bbcode.php');
 
 $objRoom = $db->Execute("SELECT * FROM `rooms` WHERE `id`=".$player->room);
-if ($player->id == $objRoom->fields['owner'])
+if ($objRoom->fields['owners'] != '')
+  {
+    $arrOwners = explode(';', $objRoom->fields['owners']);
+  }
+else
+  {
+    $arrOwners = array();
+  }
+if ($player->id == $objRoom->fields['owner'] || in_array($player->id, $arrOwners))
   {
     $strOwner = '+ Panel administracyjny';
     if (strlen($objRoom->fields['npcs']) > 0)
@@ -62,6 +70,9 @@ if ($player->id == $objRoom->fields['owner'])
 			  'Tdesc' => 'opis pokoju:',
 			  'Tname' => 'nazwę pokoju na',
 			  'Aadd' => 'Dodaj',
+			  'Towners' => 'jako właściciela do pokoju.',
+			  'Aremove' => 'Usuń',
+			  'Amake' => 'Ustaw',
 			  'Tas' => 'jako',
 			  'Toptions' => $arrTalk,
 			  'Tnpc' => 'imię NPC, które będziesz używał'));
@@ -195,6 +206,20 @@ if (isset($_GET['step']))
 	  }
 	else
 	  {
+	    if (in_array($player->id, $arrOwners))
+	      {
+		$intIndex = array_search($player->id, $arrOwners);
+		unset($arrOwners[$intIndex]);
+		$arrOwners = array_values($arrOwners);
+		if (count($arrOwners))
+		  {
+		    $db->Execute("UPDATE `rooms` SET `owners`='".implode(';', $arrOwners)."' WHERE `id`=".$player->room);
+		  }
+		else
+		  {
+		    $db->Execute("UPDATE `rooms` SET `owners`='' WHERE `id`=".$player->room);
+		  }
+	      }
 	    $strMessage = '<a href="view.php?view='.$player->id.'" target="_parent">'.$player->user.'</a> opuścił(a) pokój.';
 	    $strMessage = $db -> qstr($strMessage, get_magic_quotes_gpc());
 	    $db -> Execute("INSERT INTO `chatrooms` (`user`, `chat`, `senderid`, `ownerid`, `sdate`, `room`) VALUES('', ".$strMessage.", ".$player -> id.", 0, '".$newdate."', ".$player->room.")") or die($db->ErrorMsg());
@@ -278,12 +303,10 @@ if (isset($_GET['step']))
 	    $_POST['npc'] = str_replace("'","",strip_tags($_POST['npc']));
 	    $_POST['npc'] = str_replace("&nbsp;", "", $_POST['npc']);
 	    $_POST['npc'] = trim($_POST['npc']);
-	    $blnValid = TRUE;
 	    $objTest = $db->Execute("SELECT `id` FROM `players` WHERE `user`='".$_POST['npc']."'");
 	    if ($objTest->fields['id'] || in_array($_POST['npc'], $arrNPC))
 	      {
 		message('error', 'Nie możesz dodać NPC o takim imieniu.');
-		$blnValid = FALSE;
 	      }
 	    else
 	      {
@@ -293,6 +316,61 @@ if (isset($_GET['step']))
 		message('success', 'Dodałeś(aś) NPC do pokoju', '(<a href="room.php">Odśwież</a>)');
 	      }
 	    $objTest->Close();
+	    break;
+	    //Add/remove admins to rooms
+	  case 'admin':
+	    checkvalue($_POST['pid']);
+	    $objTest = $db->Execute("SELECT `id`, `room` FROM `players` WHERE `id`=".$_POST['pid']);
+	    if ($player->id != $objRoom->fields['owner'])
+	      {
+		message('error', 'Tylko właściciel pokoju może ustawiać współwłaścicieli.');
+	      }
+	    elseif ($_POST['pid'] == $player->id)
+	      {
+		message('error', 'Nie możesz dodać/usunąć siebie jako współwłaściciela');
+	      }
+	    elseif (!$objTest->fields['id'])
+	      {
+		message('error', 'Nie ma takiego gracza.');
+	      }
+	    elseif ($objTest->fields['room'] != $player->room)
+	      {
+		message('error', 'Ten gracz nie został zaproszony do tego pokoju.');
+	      }
+	    elseif (in_array($_POST['pid'], $arrOwners) && $_POST['action'] == 0)
+	      {
+		message('error', 'Ten gracz jest już współwłaścicielem Twojego pokoju.');
+	      }
+	    elseif (!in_array($_POST['pid'], $arrOwners) && $_POST['action'] == 1)
+	      {
+		message('error', 'Ten gracz nie jest współwłaścicielem Twojego pokoju.');
+	      }
+	    elseif ($_POST['action'] == 0)
+	      {
+		$arrOwners[] = $_POST['pid'];
+		$db->Execute("UPDATE `rooms` SET `owners`='".implode(';', $arrOwners)."' WHERE `id`=".$player->room);
+		$strDate = $db -> DBDate($newdate);
+		$db->Execute("INSERT INTO `log` (`owner`, `log`, `czas`, `type`) VALUES(".$_POST['pid'].", '".$player->user." dodał(a) Ciebie jako współwłaściciela pokoju w karczmie.', ".$strDate.", 'E')");
+		message('success', 'Dodałeś gracza o ID: '.$_POST['pid'].' jako współwłaściciela do pokoju.', '(<a href="room.php">Odśwież</a>)');
+		
+	      }
+	    else
+	      {
+		$intIndex = array_search($_POST['pid'], $arrOwners);
+		unset($arrOwners[$intIndex]);
+		$arrOwners = array_values($arrOwners);
+		if (count($arrOwners))
+		  {
+		    $db->Execute("UPDATE `rooms` SET `owners`='".implode(';', $arrOwners)."' WHERE `id`=".$player->room);
+		  }
+		else
+		  {
+		    $db->Execute("UPDATE `rooms` SET `owners`='' WHERE `id`=".$player->room);
+		  }
+		$strDate = $db -> DBDate($newdate);
+		$db->Execute("INSERT INTO `log` (`owner`, `log`, `czas`, `type`) VALUES(".$_POST['pid'].", '".$player->user." usunął Ciebie jako współwłaściciela pokoju w karczmie.', ".$strDate.", 'E')");
+		message('success', 'Usunąłeś gracza o ID: '.$_POST['pid'].' jako współwłaściciela do pokoju.', '(<a href="room.php">Odśwież</a>)');
+	      }
 	    break;
 	  default:
 	    error('Zapomnij o tym.');
