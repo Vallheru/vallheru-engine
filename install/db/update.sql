@@ -57,3 +57,5 @@ CREATE TABLE IF NOT EXISTS `mactions` (
   `loot` varchar(255) NOT NULL,
   PRIMARY KEY (`pid`)
 ) ENGINE=MyISAM DEFAULT CHARSET=utf8;
+ALTER TABLE `rooms` ADD `owners` VARCHAR( 255 ) NOT NULL ;
+ALTER TABLE `mactions` ADD `rooms` SMALLINT( 3 ) NOT NULL ;

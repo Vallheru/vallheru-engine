@@ -65,6 +65,13 @@
     </ul>
     {$Jobinfo2}
 {/if}
-{if $Step != ""}
+{if $Step == "confirm"}
+    {$Text}
+    <form method="post" action="mission.php">
+	{html_radios name=action options=$Moptions separator='<br />'}<br />
+	<input type="submit" value="{$Anext}" />
+    </form>
+{/if}
+{if $Step != "" && $Step != "confirm"}
 <br /><br /><a href="thieves.php">{$Aback}</a>
 {/if}
