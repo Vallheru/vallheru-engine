@@ -1,5 +1,7 @@
 2012-01-11  Bartek thindil Jasicki  <thindil@vallheru.net>
 
+	* UPDATE,install/db/update.sql, templates/admin.tpl, templates/layout1/admin.tpl:
+	litte redesign
 	* FEATURE,templates/layout1/thieves.tpl, templates/thieves.tpl, thieves.php, install/db/update.sql:
 	continue work on random missions for thieves
 	* FEATURE,install/db/update.sql, templates/layout1/room.tpl, templates/room.tpl, room.php:

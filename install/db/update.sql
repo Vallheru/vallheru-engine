@@ -59,3 +59,9 @@ CREATE TABLE IF NOT EXISTS `mactions` (
 ) ENGINE=MyISAM DEFAULT CHARSET=utf8;
 ALTER TABLE `rooms` ADD `owners` VARCHAR( 255 ) NOT NULL ;
 ALTER TABLE `mactions` ADD `rooms` SMALLINT( 3 ) NOT NULL ;
+ALTER TABLE `mactions` CHANGE `exits` `exits` TEXT CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL ,
+CHANGE `mobs` `mobs` TEXT CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL ,
+CHANGE `items` `items` TEXT CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL ;
+ALTER TABLE `missions` CHANGE `exits` `exits` TEXT CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL ,
+CHANGE `mobs` `mobs` TEXT CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL ,
+CHANGE `items` `items` TEXT CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL;
