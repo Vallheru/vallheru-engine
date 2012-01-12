@@ -4,11 +4,11 @@
  *   Core arena
  *
  *   @name                 : core.php                            
- *   @copyright            : (C) 2004,2005,2006,2007,2011 Vallheru Team based on Gamers-Fusion ver 2.5
- *   @author               : thindil <thindil@tuxfamily.org>
+ *   @copyright            : (C) 2004,2005,2006,2007,2011,2012 Vallheru Team based on Gamers-Fusion ver 2.5
+ *   @author               : thindil <thindil@vallheru.net>
  *   @author               : eyescream <tduda@users.sourceforge.net>
- *   @version              : 1.4
- *   @since                : 26.10.2011
+ *   @version              : 1.5
+ *   @since                : 12.01.2012
  *
  */
 
@@ -36,7 +36,7 @@ require_once("includes/head.php");
 /**
 * Get the localization for game
 */
-require_once("languages/".$player -> lang."/core.php");
+require_once("languages/".$lang."/core.php");
 
 if ($player -> location != 'Altara' && $player -> location != 'Ardulith') 
 {
@@ -1114,21 +1114,19 @@ if (isset($_GET['view']))
 	$smarty -> assign ("Trains", $player -> trains);
 	$arrname = array();
 	$arrcoreid = array();
-	$i = 0;
 	$myc = $db -> Execute("SELECT `id`, `name`, `corename` FROM `core` WHERE `owner`=".$player -> id);
 	while (!$myc -> EOF) 
 	  {
 	    if (!empty($myc -> fields['corename']))
 	      {
-		$arrname[$i] = $myc -> fields['corename']." (".$myc -> fields['name'].")";
+		$arrname[] = $myc -> fields['corename']." (".$myc -> fields['name'].")";
 	      }
 	    else
 	      {
-		$arrname[$i] = $myc -> fields['name'];
+		$arrname[] = $myc -> fields['name'];
 	      }
-	    $arrcoreid[$i] = $myc -> fields['id'];
+	    $arrcoreid[] = $myc -> fields['id'];
 	    $myc -> MoveNext();
-	    $i = $i + 1;
 	  }
 	$myc -> Close();
 	$smarty -> assign(array("Corename" => $arrname, 
@@ -1153,36 +1151,44 @@ if (isset($_GET['view']))
 	      {
 		error (HOW_MANY);
 	      } 
-            else 
+	    if ($_POST['technique'] != 'power' && $_POST['technique'] != 'defense') 
 	      {
-		if ($_POST['technique'] != 'power' && $_POST['technique'] != 'defense') 
-		  {
-		    error (ERROR);
-		  }
-		if ($player -> hp == 0) 
-		  {
-		    error (YOU_DEAD);
-		  }
-		if ($_POST['reps'] > $player -> trains) 
-		  {
-		    error (NO_TRAIN_P);
-		  }  
-                else 
-		  {
-		    $gain = ($_POST['reps'] * .125);
-		    $db -> Execute("UPDATE core SET ".$_POST['technique']."=".$_POST['technique']."+".$gain." WHERE id=".$_POST['train_core']) or error ("stage 1 failed<br />");
-		    $db -> Execute("UPDATE players SET trains=trains-".$_POST['reps']." WHERE id=".$player -> id) or error ("stage 2 failed<br />");
-		    if ($_POST['technique'] == 'power') 
-		      {
-			$cecha = T_POWER;
-		      }
-		    if ($_POST['technique'] == 'defense') 
-		      {
-			$cecha = T_DEFENSE;
-		      }
-		    error (YOU_TRAIN.$_POST['reps'].T_AMOUNT.$_POST['reps'].T_TRAIN.$gain." ".$cecha."</b>.");
-		  }
+		error (ERROR);
 	      }
+	    if ($player -> hp == 0) 
+	      {
+		error (YOU_DEAD);
+	      }
+	    $objCore = $db->Execute("SELECT `id`, `status`, `owner` FROM `core` WHERE `id`=".$_POST['train_core']) or die($db->ErrorMsg());
+	    if (!$objCore->fields['id'])
+	      {
+		error('Nie ma takiego chowańca.');
+	      }
+	    if ($objCore->fields['owner'] != $player->id)
+	      {
+		error('Ten chowaniec nie należy do Ciebie!');
+	      }
+	    if ($objCore->fields['status'] != 'Alive')
+	      {
+		error('Nie możesz trenować martwego chowańca.');
+	      }
+	    $objCore->Close();
+	    if ($_POST['reps'] > $player -> trains) 
+	      {
+		error (NO_TRAIN_P);
+	      }  
+	    $gain = ($_POST['reps'] * .125);
+	    $db -> Execute("UPDATE core SET ".$_POST['technique']."=".$_POST['technique']."+".$gain." WHERE id=".$_POST['train_core']) or error ("stage 1 failed<br />");
+	    $db -> Execute("UPDATE players SET trains=trains-".$_POST['reps']." WHERE id=".$player -> id) or error ("stage 2 failed<br />");
+	    if ($_POST['technique'] == 'power') 
+	      {
+		$cecha = T_POWER;
+	      }
+	    if ($_POST['technique'] == 'defense') 
+	      {
+		$cecha = T_DEFENSE;
+	      }
+	    error (YOU_TRAIN.$_POST['reps'].T_AMOUNT.$_POST['reps'].T_TRAIN.$gain." ".$cecha."</b>.");
 	  }
       }
     

@@ -1,5 +1,7 @@
 2012-01-12  Bartek thindil Jasicki  <thindil@vallheru.net>
 
+	* BUG,core.php:
+	fixed bug with train dead cores
 	* UPDATE,install/db/update.sql, templates/layout1/room.tpl, templates/room.tpl, room.php:
 	added list of players to room
 
