@@ -7,7 +7,7 @@
  *   @copyright            : (C) 2004,2005,2006,2007,2011,2012 Vallheru Team based on Gamers-Fusion ver 2.5
  *   @author               : thindil <thindil@vallheru.net>
  *   @version              : 1.5
- *   @since                : 07.01.2012
+ *   @since                : 12.01.2012
  *
  */
 
@@ -552,6 +552,9 @@ switch($player->location)
     $objFight = $db -> Execute("SELECT `fight` FROM `players` WHERE `id`=".$player -> id);
     $smarty -> assign ("Location", "<li><a href=\"portals.php?step=".$objFight -> fields['fight']."\">".ASTRAL_PLAN."</a></li>");
     $objFight -> Close();
+    break;
+  case 'Przygoda':
+    $smarty->assign("Location", '<li><a href="mission.php">Przygoda</a></li>');
     break;
   default:
     break;

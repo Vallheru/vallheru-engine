@@ -7,7 +7,7 @@
  *   @copyright            : (C) 2011,2012 Vallheru Team based on Gamers-Fusion ver 2.5
  *   @author               : thindil <thindil@vallheru.net>
  *   @version              : 1.5
- *   @since                : 11.01.2012
+ *   @since                : 12.01.2012
  *
  */
 
@@ -422,9 +422,9 @@ else
 	//Generate mission
 	if (!isset($_SESSION['maction']) && !$objMission->fields['pid'])
 	  {
-	    $objStart = $db->Execute("SELECT * FROM `missions` WHERE `name`='thief".$_SESSION['mission'][$_GET['number']]."start'");
+	    $objStart = $db->Execute("SELECT * FROM `missions` WHERE `name`='thief".$_SESSION['mission'][$_GET['number']]."start' ORDER BY RAND() LIMIT 1");
 	    $strText = $objStart->fields['text'];
-	    $_SESSION['maction'] = array('location' => 'thief'.$_SESSION['mission'][$_GET['number']].'start',
+	    $_SESSION['maction'] = array('location' => $objStart->fields['id'],
 					 'exits' => array(),
 					 'mobs' => array(),
 					 'items' => array(),
@@ -458,8 +458,8 @@ else
 		  {
 		    $_SESSION['maction']['items'][] = $arrTmp[$i];
 		    $arrTmp2 = explode(',', $arrTmp[$i]);
-		    $strText .= ' '.$arrTmp2[1];
-		    for ($j = 2; $j < count($arrTmp2); $j += 2)
+		    $strText .= ' '.$arrTmp2[2];
+		    for ($j = 3; $j < count($arrTmp2); $j += 2)
 		      {
 			$arrOptions[$arrTmp2[($j + 1)]] = $arrTmp2[$j];
 		      }
@@ -475,14 +475,14 @@ else
 		  {
 		    $_SESSION['maction']['mobs'][] = $arrTmp[$i];
 		    $arrTmp2 = explode(',', $arrTmp[$i]);
-		    $strText .= ' '.$arrTmp2[1];
-		    for ($j = 2; $j < count($arrTmp2); $j += 2)
+		    $strText .= ' '.$arrTmp2[2];
+		    for ($j = 3; $j < count($arrTmp2); $j += 2)
 		      {
 			$arrOptions[$arrTmp2[($j + 1)]] = $arrTmp2[$j];
 		      }
 		  }
 	      }
-	    $db->Execute("INSERT INTO `mactions` (`pid`, `location`, `exits`, `mobs`, `items`, `type`, `loot`, `rooms`) VALUES(".$player->id.", '".$_SESSION['maction']['location']."', '".implode(';', $_SESSION['maction']['exits'])."', '".implode(';', $_SESSION['maction']['mobs'])."', '".implode(';', $_SESSION['maction']['items'])."', 'T', '".$strLoot."', ".$intRooms.")");
+	    $db->Execute("INSERT INTO `mactions` (`pid`, `location`, `exits`, `mobs`, `items`, `type`, `loot`, `rooms`) VALUES(".$player->id.", ".$_SESSION['maction']['location'].", '".implode(';', $_SESSION['maction']['exits'])."', '".implode(';', $_SESSION['maction']['mobs'])."', '".implode(';', $_SESSION['maction']['items'])."', 'T', '".$strLoot."', ".$intRooms.")");
 	  }
 	else
 	  {
@@ -494,10 +494,12 @@ else
 					     'items' => explode(';', $objMission->fields['items']),
 					     'type' => $objMission->fields['type'],
 					     'loot' => $objMission->fields['loot'],
-					     'rooms' => $objMission->fields['rooms']);
+					     'rooms' => $objMission->fields['rooms'],
+					     'id' => $objMission->fields['id']);
 	      }
-	    $objStart = $db->Execute("SELECT `text` FROM `missions` WHERE `name`='".$_SESSION['maction']['location']."'");
+	    $objStart = $db->Execute("SELECT `text` FROM `missions` WHERE `id`='".$_SESSION['maction']['location']."'");
 	    $strText = $objStart->fields['text'];
+	    $objStart->Close();
 	    $arrOptions = array();
 	    //Read exits
 	    foreach ($_SESSION['maction']['exits'] as $strExit)
@@ -509,8 +511,8 @@ else
 	    foreach ($_SESSION['maction']['items'] as $strItem)
 	      {
 		$arrTmp2 = explode(',', $strItem);
-		$strText .= ' '.$arrTmp2[1];
-		for ($j = 2; $j < count($arrTmp2); $j += 2)
+		$strText .= ' '.$arrTmp2[2];
+		for ($j = 3; $j < count($arrTmp2); $j += 2)
 		  {
 		    $arrOptions[$arrTmp2[($j + 1)]] = $arrTmp2[$j];
 		  }
@@ -519,13 +521,14 @@ else
 	    foreach ($_SESSION['maction']['mobs'] as $strMob)
 	      {
 		$arrTmp2 = explode(',', $strMob);
-		$strText .= ' '.$arrTmp2[1];
-		for ($j = 2; $j < count($arrTmp2); $j += 2)
+		$strText .= ' '.$arrTmp2[2];
+		for ($j = 3; $j < count($arrTmp2); $j += 2)
 		  {
 		    $arrOptions[$arrTmp2[($j + 1)]] = $arrTmp2[$j];
 		  }
 	      }
 	  }
+	$db->Execute("UPDATE `players` SET `miejsce`='Przygoda' WHERE `id`=".$player->id);
 	$smarty->assign(array("Text" => $strText,
 			      'Moptions' => $arrOptions,
 			      'Anext' => 'Dalej'));
