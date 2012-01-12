@@ -8,7 +8,7 @@
  *   @author               : thindil <thindil@vallheru.net>
  *   @author               : eyescream <tduda@users.sourceforge.net>
  *   @version              : 1.4
- *   @since                : 10.01.2012
+ *   @since                : 12.01.2012
  *
  */
 
@@ -43,20 +43,19 @@ if (isset ($_GET['action']) && $_GET['action'] == 'chat')
 {
     if (isset($_POST['msg']) && $_POST['msg'] != '') 
       {
-	$strAuthor = $arrTags[$player->tribe][0].' '.$player->user.' '.$arrTags[$player->tribe][1];
 	switch ($player->rank)
 	  {
 	  case 'Admin':
-	    $starter = "<span style=\"color: #0066cc;\">".$strAuthor."</span>";
+	    $starter = "<span style=\"color: #0066cc;\">".$player->user."</span>";
 	    break;
 	  case 'Staff':
-	    $starter = "<span style=\"color: #00ff00;\">".$strAuthor."</span>";
+	    $starter = "<span style=\"color: #00ff00;\">".$player->user."</span>";
 	    break;
 	  default:
-	    $starter = $strAuthor;
+	    $starter = $player->user;
 	    break;
 	  }
-	$starter = '<a href="view.php?view='.$player->id.'" target="_parent">'.$starter.'</a>';
+	$starter = $arrTags[$player->tribe][0].' '.'<a href="view.php?view='.$player->id.'" target="_parent">'.$starter.'</a>'.' '.$arrTags[$player->tribe][1];
         $czat = $db -> Execute("SELECT `gracz` FROM `chat_config` WHERE `gracz`=".$player -> id);
         if ($czat -> fields['gracz'])
         {

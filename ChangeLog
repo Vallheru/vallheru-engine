@@ -1,5 +1,7 @@
 2012-01-12  Bartek thindil Jasicki  <thindil@vallheru.net>
 
+	* UPDATE,chat.php: 
+	remove clan tags from link
 	* FEATURE,install/db/update.sql, languages/pl/head1.php, includes/head.php, templates/mission.tpl, mission.php, thieves.php:
 	continue work on random mission for thieves
 	* BUG,crafts.php:
