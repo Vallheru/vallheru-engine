@@ -4,10 +4,10 @@
  *   Crafts guild - random missions for craftsmen
  *
  *   @name                 : crafts.php                            
- *   @copyright            : (C) 2011 Vallheru Team based on Gamers-Fusion ver 2.5
+ *   @copyright            : (C) 2011,2012 Vallheru Team based on Gamers-Fusion ver 2.5
  *   @author               : thindil <thindil@vallheru.net>
  *   @version              : 1.5
- *   @since                : 27.12.2011
+ *   @since                : 12.01.2012
  *
  */
 
@@ -402,7 +402,15 @@ if (isset($_GET['step']))
 	    $intExp = (20 * $player->level) * rand(1, 10);
 	    $strSkill = 'breeding';
 	    $strSkill2 = 'hodowla';
-	    $strGen = array_rand(array('M', 'F'));
+	    $intGen = rand(0, 1);
+	    if ($intGen)
+	      {
+		$strGen = 'F';
+	      }
+	    else
+	      {
+		$strGen = 'M';
+	      }
 	    $strInfo2 .= 'chowańcach. ';
 	    if (!$blnCase)
 	      {
