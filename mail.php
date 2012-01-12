@@ -7,7 +7,7 @@
  *   @copyright            : (C) 2004,2005,2006,2007,2011,2012 Vallheru Team based on Gamers-Fusion ver 2.5
  *   @author               : thindil <thindil@vallheru.net>
  *   @version              : 1.5
- *   @since                : 05.01.2012
+ *   @since                : 12.01.2012
  *
  */
 
@@ -487,7 +487,7 @@ if (isset ($_GET['view']) && $_GET['view'] == 'write')
 			    "Mhelp" => "Linki automatycznie zamieniane są na klikalne. Możesz używać następujących znaczników BBCode:<br /><ul><li>[b]<b>Pogrubienie</b>[/b]</li><li>[i]<i>Kursywa</i>[/i]</li><li>[u]<u>Podkreślenie</u>[/u]</li><li>[color (angielska nazwa koloru (red, yellow, itp) lub kod HTML (#FFFF00, itp)]pokolorowanie tekstu[/color]</li><li>[center]wycentrowanie tekstu[/center]</li><li>[quote]cytat[/quote]</ul>"));
     if (isset ($_GET['step']) && $_GET['step'] == 'send') 
     {
-        if ($_POST['player'] != 0)
+        if (isset($_POST['player']))
 	  {
 	    checkvalue($_POST['player']);
 	    $_POST['to'] = $_POST['player'];
