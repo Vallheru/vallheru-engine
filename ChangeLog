@@ -1,3 +1,8 @@
+2012-01-12  Bartek thindil Jasicki  <thindil@vallheru.net>
+
+	* UPDATE,install/db/update.sql, templates/layout1/room.tpl, templates/room.tpl, room.php:
+	added list of players to room
+
 2012-01-11  Bartek thindil Jasicki  <thindil@vallheru.net>
 
 	* UPDATE,install/db/update.sql, templates/admin.tpl, templates/layout1/admin.tpl:

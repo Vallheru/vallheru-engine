@@ -7,7 +7,7 @@
  *   @copyright            : (C) 2012 Vallheru Team based on Gamers-Fusion ver 2.5
  *   @author               : thindil <thindil@vallheru.net>
  *   @version              : 1.5
- *   @since                : 11.01.2012
+ *   @since                : 12.01.2012
  *
  */
 
@@ -48,6 +48,14 @@ else
   {
     $arrOwners = array();
   }
+$objPlayers = $db->Execute("SELECT `id`, `user` FROM `players` WHERE `room`=".$player->room);
+$arrPlayers = array();
+while (!$objPlayers->EOF)
+  {
+    $arrPlayers[$objPlayers->fields['id']] = $objPlayers->fields['user'];
+    $objPlayers->MoveNext();
+  }
+$objPlayers->Close();
 if ($player->id == $objRoom->fields['owner'] || in_array($player->id, $arrOwners))
   {
     $strOwner = '+ Panel administracyjny';
@@ -387,6 +395,8 @@ $smarty -> assign (array("Arefresh" => 'Odśwież',
 			 "Aleft" => 'Opuść pokój',
 			 "Aowner" => $strOwner,
 			 "Desc" => $objRoom->fields['desc'],
+			 'Poptions' => $arrPlayers,
+			 'Tinroom' => '+ Osoby w pokoju',
 			 "Desc2" => htmltobbcode($objRoom->fields['desc']),
                          "Rank" => $player->rank));
 $smarty -> display ('room.tpl');

@@ -16,6 +16,16 @@ document.forms['chat'].elements['msg'].focus();
 
 <a href="room.php?step=quit">{$Aleft}</a><br /><br />
 
+<div align="center">
+    <label for="mytoggle3" class="toggle">{$Tinroom}</label>
+    <input id="mytoggle3" type="checkbox" class="toggle" checked="checked" />
+    <div><br />
+        {foreach $Poptions as $Plroom}
+	    <a href="view.php?view={$Plroom@key}">{$Plroom}</a>
+	{/foreach}
+    </div>
+</div><br />
+
 {if $Aowner != ""}
     <div align="center">
     <label for="mytoggle2" class="toggle">{$Aowner}</label>
@@ -25,7 +35,7 @@ document.forms['chat'].elements['msg'].focus();
 	    <input type="submit" value="{$Ainv}" /> {$Tid} <input type="text" name="pid" size="5" /> {$Troom}
 	</form><br />
         <form method="post" action="room.php?step=admin&amp;action=remove">
-	    <input type="submit" value="{$Akick}" /> {$Tid} <input type="text" name="pid" size="5" /> {$Froom}
+	    <input type="submit" value="{$Akick}" /> {$Tid} {html_options name=pid options=$Poptions} {$Froom}
 	</form><br />
 	<form method="post" action="room.php?step=admin&amp;action=admin">
 	    <select name="action">
