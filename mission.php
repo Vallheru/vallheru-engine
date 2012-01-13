@@ -7,7 +7,7 @@
  *   @copyright            : (C) 2012 Vallheru Team based on Gamers-Fusion ver 2.5
  *   @author               : thindil <thindil@vallheru.net>
  *   @version              : 1.5
- *   @since                : 12.01.2012
+ *   @since                : 13.01.2012
  *
  */
 
@@ -153,6 +153,49 @@ if (isset($_POST['action']))
 	//Next room
 	else
 	  {
+	    $objMission = $db->Execute("SELECT * FROM `missions` WHERE `name`='".$_POST['action']."' ORDER BY RAND() LIMIT 1");
+	    $_SESSION['maction']['location'] = $objMission->fields['id'];
+	    $_SESSION['maction']['exits'] = array();
+	    $_SESSION['maction']['items'] = array();
+	    $_SESSION['maction']['mobs'] = array();
+	    //Generate exits
+	    $arrTmp = explode(';', $objMission->fields['exits']);
+	    $arrChances = explode(';', $objMission->fields['chances']);
+	    while (count($arrOptions) == 0)
+	      {
+		for ($i = 0; $i < count($arrChances); $i++)
+		  {
+		    $intRoll = rand(0, 100);
+		    if ($intRoll < $arrChances[$i])
+		      {
+			$_SESSION['maction']['exits'][] = $arrTmp[$i];
+		      }
+		  }
+	      }
+	    //Generate items
+	    $arrTmp = explode(';', $objMission->fields['items']);
+	    $arrChances = explode(';', $objMission->fields['chances3']);
+	    for ($i = 0; $i < count($arrChances); $i ++)
+	      {
+		$intRoll = rand(0, 100);
+		if ($intRoll < $arrChances[$i])
+		  {
+		    $_SESSION['maction']['items'][] = $arrTmp[$i];
+		  }
+	      }
+	    //Generate mobs
+	    $arrTmp = explode(';', $objMission->fields['mobs']);
+	    $arrChances = explode(';', $objMission->fields['chances2']);
+	    for ($i = 0; $i < count($arrChances); $i ++)
+	      {
+		$intRoll = rand(0, 100);
+		if ($intRoll < $arrChances[$i])
+		  {
+		    $_SESSION['maction']['mobs'][] = $arrTmp[$i];
+		  }
+	      }
+	    $objMission->Close();
+	    $db->Execute("UPDATE `mactions` SET `location`=".$_SESSION['maction']['location'].", `exits`='".$_SESSION['maction']['exits']."', `mobs`='".$_SESSION['maction']['mobs']."', `items`='".$_SESSION['maction']['items']."', `rooms`=`rooms`-1 WHERE `pid`=".$player->id);
 	  }
       }
   }
@@ -192,6 +235,41 @@ if ($strFinish == '')
 	    $arrOptions[$arrTmp2[($j + 1)]] = $arrTmp2[$j];
 	  }
       }
+  }
+else
+  {
+    //Successful mission
+    if ($_SESSION['maction']['rooms'] == 0)
+      {
+	if ($_SESSION['maction']['type'] == 'T')
+	  {
+	    $intExpgain = $player->level * 20;
+	    $fltSkill = $player->level / 50;
+	    $intGold = $player->level * 50;
+	    checkexp($player->exp, $player->level, $player->level, $player->race, $player->user, $player->id, 0, 0, $player->id, 'thievery', 0.01);
+	    $strText .= '<br /><br />Zdobywasz '.$intGold.' sztuk złota, '.$intExpgain.' punktów doświadczenia oraz '.$fltSkill.' do umiejętności Złodziejstwo.';
+	    if ($_SESSION['maction']['loot'] != '')
+	      {
+		$arrLoot = explode(';', $_SESSION['maction']['loot']);
+		$objLoot = $db->Execute("SELECT * FROM `".$arrLoot[0]."` WHERE `level`=".$arrLoot[1]." AND `type`='",$arrLoot[2]."' ORDER BY RAND() LIMIT 1");
+		$objTest = $db->Execute("SELECT `id` FROM `equipment` WHERE `owner`=".$player->id." AND `name`='Wytrychy z miedzi' AND `power`=".$objLoot->fields['power']." AND `cost`=1 AND `wt`=".$objLoot->fields['dur']." AND `maxwt`=".$objLoot->fields['dur']." AND `type`='E' AND `minlev`=".$objLoot->fields['level']." AND repair=".$objLoot->fields['repair']);
+		if (!$objTest->fields['id'])
+		  {
+		    $db -> Execute("INSERT INTO `equipment` (`owner`, `name`, `power`, `type`, `cost`, `zr`, `wt`, `minlev`, `maxwt`, `amount`, `magic`, `poison`, `szyb`, `twohand`, `repair`) VALUES(".$player->id.", 'Wytrychy z miedzi', ".$objLoot->fields['power'].", 'E', 1, 0, ".$objLoot->fields['dur'].", ".$objLoot->fields['level'].", ".$objLoot->fields['dur'].", 1, 'N', 0, 0, 'N', ".$objLoot->fields['repair'].")") or die($db->ErrorMsg());
+		  }
+		else
+		  {
+		    $db->Execute("UPDATE `equipment` SET `amount`=`amount`+1 WHERE `id`=".$objTest->fields['id']);
+		  }
+		$objTest->Close();
+		$objLoot->Close();
+		$strText .= 'Oprócz tego dostajesz nowe wytrychy.';
+	      }
+	    $db->Execute("UPDATE `players` SET `miejsce`='Altara', `credits`=`credits`+".$intGold.", `mpoints`=`mpoints`+1 WHERE `id`=".$player->id);
+	  }
+      }
+    unset($_SESSION['maction']);
+    $db->Execute("DELETE FROM `mactions` WHERE `pid`=".$player->id);
   }
 
 /**

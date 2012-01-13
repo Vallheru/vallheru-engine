@@ -7,7 +7,7 @@
  *   @copyright            : (C) 2011,2012 Vallheru Team based on Gamers-Fusion ver 2.5
  *   @author               : thindil <thindil@vallheru.net>
  *   @version              : 1.5
- *   @since                : 12.01.2012
+ *   @since                : 13.01.2012
  *
  */
 
@@ -255,10 +255,10 @@ else
 	      }
 	    if ($i > -1)
 	      {
-		$arrLoots = array(0 => '.');
-				  /*80 => ' oraz nowe wytrychy.',
+		$arrLoots = array(0 => '.',
+				  80 => ' oraz nowe wytrychy.',
 				  85 => ' oraz lepsze wytrychy.',
-				  90 => ' oraz plan wytrychów.',
+				    /*90 => ' oraz plan wytrychów.',
 				   97 => ' oraz plan lepszych wytrychów.');*/
 		$intLoot = getoption($arrLoots, rand(1, 100));
 		$arrJobs[$i] = $strJob.$arrLoots[$intLoot];
@@ -271,7 +271,7 @@ else
 	$smarty->assign(array('Minfo' => 'Ruchem głowy, barman pokazuje tobie schody na górę. Udajesz się we wskazanym kierunku. Dochodzisz do dość ciemnego pokoju na górze. Na jego środku stoi niewielki stolik przy którym siedzi jakiś człowiek, ruchem dłoni wskazuje tobie miejsce przy stoliku. Bardziej wyczuwasz niż widzisz, że w pomieszczeniu znajdują się jeszcze inne osoby. Kiedy zajmujesz swoje miejsce siedzący mężczyzna odzywa się do ciebie.<i>'.$strTalk.' tak się składa, że chyba mamy parę zadań dla ciebie. Zainteresowan'.$strSuffix2.'?</i>',
 			      'Jobinfo2' => 'Pamiętaj, oferta jest ważna tylko w tym momencie, jeżeli ją odrzucisz, następna szansa dopiero po kolejnym resecie.',
 			      "Jobs" => $arrJobs,
-			      "Ayes" => "Biorę tę robotę."));
+			      "Ayes" => "Biorę tę robotę. (koszt: 2 punkty kradzieży)"));
 	$objJob->Close();
 	//$db->Execute("UPDATE `players` SET `crafmission`='Y' WHERE `id`=".$player->id);
       }
@@ -283,6 +283,10 @@ else
 	if (!isset($_GET['number']) || !isset($_SESSION['mission']) || !isset($_SESSION['mtype']))
 	  {
 	    error('Zapomnij o tym!');
+	  }
+	if ($player->crime < 2)
+	  {
+	    error('Nie masz tylu punktów kradzieży.');
 	  }
 	$_GET['number'] = intval($_GET['number']);
 	if ($_GET['number'] < 0 || $_GET['number'] > 3)
@@ -401,19 +405,19 @@ else
 	    break;
 	    //Ordinary lockpick
 	  case 80:
-	    $strLoot = 'thieftools,=1,E';
+	    $strLoot = 'tools;=1;T';
 	    break;
 	    //Better lockpick
 	  case 85:
-	    $strLoot = 'thieftools,>1,E';
+	    $strLoot = 'tools;>1;T';
 	    break;
 	    //Ordinary lockpick plan
 	  case 90:
-	    $strLoot = 'thieftools,=1,P';
+	    $strLoot = 'plans;=1;T';
 	    break;
 	    //Better lockpic plan
 	  case 97:
-	    $strLoot = 'thieftools,>1,P';
+	    $strLoot = 'plans;>1;T';
 	    break;
 	  default:
 	    break;
@@ -528,10 +532,11 @@ else
 		  }
 	      }
 	  }
-	$db->Execute("UPDATE `players` SET `miejsce`='Przygoda' WHERE `id`=".$player->id);
+	$db->Execute("UPDATE `players` SET `miejsce`='Przygoda', `crime`=`crime`-2 WHERE `id`=".$player->id);
 	$smarty->assign(array("Text" => $strText,
 			      'Moptions' => $arrOptions,
 			      'Anext' => 'Dalej'));
+	unset($_SESSION['mission'], $_SESSION['mtype']);
       }
   }
 

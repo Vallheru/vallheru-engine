@@ -69,3 +69,19 @@ ALTER TABLE `players` ADD INDEX ( `room` );
 ALTER TABLE `missions` ADD `id` INT( 11 ) NOT NULL AUTO_INCREMENT PRIMARY KEY FIRST;
 ALTER TABLE `mactions` CHANGE `location` `location` INT( 11 ) NOT NULL;
 ALTER TABLE `rooms` ADD `colors` VARCHAR( 255 ) NOT NULL;
+CREATE TABLE IF NOT EXISTS `tools` (
+  `name` varchar(50) NOT NULL,
+  `level` int(11) NOT NULL DEFAULT '1',
+  `power` int(11) NOT NULL,
+  `dur` int(11) NOT NULL DEFAULT '10',
+  `repair` int(11) NOT NULL DEFAULT '20',
+  `type` char(1) NOT NULL DEFAULT 'T',
+  KEY `name` (`name`)
+) ENGINE=MyISAM DEFAULT CHARSET=utf8;
+INSERT INTO `tools` (`name`, `level`, `power`, `dur`, `repair`, `type`) VALUES
+('Wytrychy', 1, 10, 10, 20, 'T'),
+('Wytrychy', 5, 15, 10, 25, 'T'),
+('Wytrychy', 10, 20, 10, 30, 'T'),
+('Wytrychy', 15, 25, 10, 35, 'T'),
+('Wytrychy', 20, 30, 10, 40, 'T'),
+('Wytrychy', 25, 35, 10, 45, 'T');
