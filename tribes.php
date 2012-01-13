@@ -9,7 +9,7 @@
  *   @author               : mori <ziniquel@users.sourceforge.net>
  *   @author               : eyescream <tduda@users.sourceforge.net>
  *   @version              : 1.5
- *   @since                : 06.01.2012
+ *   @since                : 13.01.2012
  *
  */
 
@@ -1130,7 +1130,7 @@ if (isset ($_GET['view']) && $_GET['view'] == 'my')
 		    $db->Execute("INSERT INTO `log` (`owner`,`log`, `czas`, `type`) VALUES(".$objMembers->fields['id'].", 'Twój klan ".$mytribe->fields['name']." został rozwiązany przez przywódcę <b><a href=\"view.php?view=".$player->id."\">".$player->user.L_ID.'<b>'.$player->id."'</b>.', ".$strDate.", 'C')");
 		    $objMembers->MoveNext();
 		  }
-		$objMember->Close();
+		$objMembers->Close();
                 $db -> Execute("UPDATE players SET tribe=0 WHERE tribe=".$mytribe -> fields['id']);
                 $db -> Execute("DELETE FROM tribes WHERE id=".$mytribe -> fields['id']);
                 $db -> Execute("DELETE FROM tribe_zbroj WHERE klan=".$mytribe -> fields['id']);

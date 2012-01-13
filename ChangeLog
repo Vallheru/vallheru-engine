@@ -1,3 +1,8 @@
+2012-01-13  Bartek thindil Jasicki  <thindil@vallheru.net>
+
+	* BUG,tribes.php:
+	fixed deleting tribe
+
 2012-01-12  Bartek thindil Jasicki  <thindil@vallheru.net>
 
 	* BUG,mail.php: 
