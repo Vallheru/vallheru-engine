@@ -1,5 +1,7 @@
 2012-01-13  Bartek thindil Jasicki  <thindil@vallheru.net>
 
+	* BUG,preset.php:
+	fixed resetting metallurgy skill
 	* FEATURE,install/db/update.sql, templates/layout1/room.tpl, templates/room.tpl, room.php:
 	added option to set player colors in room
 	* BUG,tribes.php:
