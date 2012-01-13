@@ -44,6 +44,9 @@ document.forms['chat'].elements['msg'].focus();
 	    </select>
 	    {$Tid} <input type="text" name="pid" size="5" /> {$Towners} <input type="submit" value="{$Amake}" />
 	</form><br />
+	<form method="post" action="room.php?step=admin&amp;action=color">
+	     <input type="submit" value="{$Amake}" /> {html_options name=color options=$Coptions} {$Tcolor} {html_options name=pid options=$Poptions}
+	</form><br />
 	<form method="post" action="room.php?step=admin&amp;action=desc">
 	    <input type="submit" value="{$Achange}" /> {$Tdesc} <br /><textarea name="desc">{$Desc2}</textarea>
 	</form><br />

@@ -7,7 +7,7 @@
  *   @copyright            : (C) 2012 Vallheru Team based on Gamers-Fusion ver 2.5
  *   @author               : thindil <thindil@vallheru.net>
  *   @version              : 1.5
- *   @since                : 12.01.2012
+ *   @since                : 13.01.2012
  *
  */
 
@@ -69,6 +69,20 @@ if ($player->id == $objRoom->fields['owner'] || in_array($player->id, $arrOwners
 	$arrTalk = array('Ty', 'Opis');
 	$arrNPC = array();
       }
+    $arrColors = array('aqua' => 'cyjan',
+		       'blue' => 'niebieski',
+		       'fuchsia' => 'fuksja',
+		       'green' => 'zielony',
+		       'grey' => 'szary',
+		       'lime' => 'limonka',
+		       'maroon' => 'wiśniowy',
+		       'navy' => 'granatowy',
+		       'olive' => 'oliwkowy',
+		       'purple' => 'fioletowy',
+		       'red' => 'czerwony',
+		       'silver' => 'srebrny',
+		       'teal' => 'morski',
+		       'yellow' => 'żółty');
     $smarty->assign(array('Akick' => 'Wyrzuć',
 			  'Ainv' => 'Zaproś',
 			  'Tid' => 'gracza o ID:',
@@ -83,7 +97,9 @@ if ($player->id == $objRoom->fields['owner'] || in_array($player->id, $arrOwners
 			  'Amake' => 'Ustaw',
 			  'Tas' => 'jako',
 			  'Toptions' => $arrTalk,
-			  'Tnpc' => 'imię NPC, które będziesz używał'));
+			  'Tnpc' => 'imię NPC, które będziesz używał',
+			  'Tcolor' => 'kolor graczowi: ',
+			  'Coptions' => $arrColors));
   }
 else
   {
@@ -108,7 +124,24 @@ if (isset ($_GET['action']) && $_GET['action'] == 'chat')
 	      }
 	    if ($_POST['person'] == 0)
 	      {
-		$starter = '<a href="view.php?view='.$player->id.'" target="_parent">'.$player->user.'</a>';
+		$arrColors2 = array();
+		if ($objRoom->fields['colors'] != '')
+		  {
+		    $arrTmp = explode(';', $objRoom->fields['colors']);
+		    foreach ($arrTmp as $strColor)
+		      {
+			$arrTmp2 = explode(',', $strColor);
+			$arrColors2[$arrTmp2[0]] = $arrTmp2[1];
+		      }
+		  }
+		if (array_key_exists($player->id, $arrColors2))
+		  {
+		    $starter = '<a href="view.php?view='.$player->id.'" target="_parent" style="color:'.$arrColors2[$player->id].';">'.$player->user.'</a>';
+		  }
+		else
+		  {
+		    $starter = '<a href="view.php?view='.$player->id.'" target="_parent">'.$player->user.'</a>';
+		  }
 	      }
 	    elseif($_POST['person'] == 1)
 	      {
@@ -378,6 +411,44 @@ if (isset($_GET['step']))
 		$strDate = $db -> DBDate($newdate);
 		$db->Execute("INSERT INTO `log` (`owner`, `log`, `czas`, `type`) VALUES(".$_POST['pid'].", '".$player->user." usunął Ciebie jako współwłaściciela pokoju w karczmie.', ".$strDate.", 'E')");
 		message('success', 'Usunąłeś gracza o ID: '.$_POST['pid'].' jako współwłaściciela do pokoju.', '(<a href="room.php">Odśwież</a>)');
+	      }
+	    break;
+	    //Change color for room members
+	  case 'color':
+	    checkvalue($_POST['pid']);
+	    if (!array_key_exists($_POST['color'], $arrColors))
+	      {
+		error('Zapomnij o tym.');
+	      }
+	    $objTest = $db->Execute("SELECT `id`, `room` FROM `players` WHERE `id`=".$_POST['pid']);
+	    if (!$objTest->fields['id'])
+	      {
+		message('error', 'Nie ma takiego gracza.');
+	      }
+	    elseif ($objTest->fields['room'] != $player->room)
+	      {
+		message('error', 'Ten gracz nie został zaproszony do tego pokoju.');
+	      }
+	    else
+	      {
+		$arrColors2 = array();
+		if ($objRoom->fields['colors'] != '')
+		  {
+		    $arrTmp = explode(';', $objRoom->fields['colors']);
+		    foreach ($arrTmp as $strColor)
+		      {
+			$arrTmp2 = explode(',', $strColor);
+			$arrColors2[$arrTmp2[0]] = $arrTmp2[1];
+		      }
+		  }
+		$strColor = '';
+		$arrColors2[$_POST['pid']] = $_POST['color'];
+		foreach ($arrColors2 as $key=>$value)
+		  {
+		    $strColor .= $key.','.$value.';';
+		  }
+		$db->Execute("UPDATE `rooms` SET `colors`='".$strColor."' WHERE `id`=".$player->room) or die($db->ErrorMsg());
+		message('success', 'Ustawiłeś(aś) graczowi o ID: '.$_POST['pid'].' kolor nicka.');
 	      }
 	    break;
 	  default:
