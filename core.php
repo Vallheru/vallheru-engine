@@ -8,7 +8,7 @@
  *   @author               : thindil <thindil@vallheru.net>
  *   @author               : eyescream <tduda@users.sourceforge.net>
  *   @version              : 1.5
- *   @since                : 12.01.2012
+ *   @since                : 14.01.2012
  *
  */
 
@@ -1072,7 +1072,7 @@ if (isset($_GET['view']))
 	  }
 	if (isset ($_GET['step']) && $_GET['step'] == 'heal') 
 	  {
-	    $deadcore = $db -> Execute("SELECT power, defense FROM core WHERE owner=".$player -> id." AND status='Dead'");
+	    $deadcore = $db -> Execute("SELECT `power`, `defense` FROM `core` WHERE `owner`=".$player -> id." AND `status`='Dead'");
 	    $numdead = $deadcore -> RecordCount();
 	    $cost = 0;
 	    $intMithcost = 0;
@@ -1095,15 +1095,19 @@ if (isset($_GET['view']))
 				    "Ano2" => A_NO2));
 	    if (isset ($_GET['answer']) && $_GET['answer'] == 'yes') 
 	      {
-		if ($player -> credits < $cost || $player -> platinum < $intMithcost) 
+		 if ($player->hp == 0)
+		   {
+		     message('error', 'Nie możesz leczyć swoich chowańców ponieważ jesteś martwy.');
+		   }
+		elseif ($player->credits < $cost || $player->platinum < $intMithcost) 
 		  {
-		    error (NO_MONEY);
+		    message('error', NO_MONEY);
 		  } 
                 else 
 		  {
 		    $db -> Execute("UPDATE `core` SET `status`='Alive' WHERE `owner`=".$player -> id." AND `status`='Dead'");
 		    $db -> Execute("UPDATE `players` SET `credits`=`credits`-".$cost.", `platinum`=`platinum`-".$intMithcost." WHERE `id`=".$player -> id);
-		    error (ALL_HEALED);
+		    message('success', ALL_HEALED);
 		  }
 	      }
 	  }
