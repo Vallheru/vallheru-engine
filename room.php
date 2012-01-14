@@ -445,6 +445,10 @@ if (isset($_GET['step']))
 		$arrColors2[$_POST['pid']] = $_POST['color'];
 		foreach ($arrColors2 as $key=>$value)
 		  {
+		    if ($key == '' || $value == '')
+		      {
+			continue;
+		      }
 		    $strColor .= $key.','.$value.';';
 		  }
 		$db->Execute("UPDATE `rooms` SET `colors`='".$strColor."' WHERE `id`=".$player->room) or die($db->ErrorMsg());

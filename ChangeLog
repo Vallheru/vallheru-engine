@@ -1,5 +1,7 @@
 2012-01-14  Bartek thindil Jasicki  <thindil@vallheru.net>
 
+	* BUG,room.php:
+	fixed bug with changing player color in room
 	* BUG,core.php:
 	fixed bug with healing cores when dead
 
