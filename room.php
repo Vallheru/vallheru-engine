@@ -7,7 +7,7 @@
  *   @copyright            : (C) 2012 Vallheru Team based on Gamers-Fusion ver 2.5
  *   @author               : thindil <thindil@vallheru.net>
  *   @version              : 1.5
- *   @since                : 13.01.2012
+ *   @since                : 15.01.2012
  *
  */
 
@@ -131,7 +131,10 @@ if (isset ($_GET['action']) && $_GET['action'] == 'chat')
 		    foreach ($arrTmp as $strColor)
 		      {
 			$arrTmp2 = explode(',', $strColor);
-			$arrColors2[$arrTmp2[0]] = $arrTmp2[1];
+			if (count($arrTmp2) == 2)
+			  {
+			    $arrColors2[$arrTmp2[0]] = $arrTmp2[1];
+			  }
 		      }
 		  }
 		if (array_key_exists($player->id, $arrColors2))
@@ -438,7 +441,10 @@ if (isset($_GET['step']))
 		    foreach ($arrTmp as $strColor)
 		      {
 			$arrTmp2 = explode(',', $strColor);
-			$arrColors2[$arrTmp2[0]] = $arrTmp2[1];
+			if (count($arrTmp2) == 2)
+			  {
+			    $arrColors2[$arrTmp2[0]] = $arrTmp2[1];
+			  }
 		      }
 		  }
 		$strColor = '';
