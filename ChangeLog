@@ -1,5 +1,7 @@
 2012-01-15  Bartek thindil Jasicki  <thindil@vallheru.net>
 
+	* BUG,mail.php: 
+	fixed bug with sending mails
 	* BUG,room.php:
 	fixed some notices
 
