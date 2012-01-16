@@ -101,7 +101,7 @@ if (isset ($_GET['action']) && $_GET['action'] == 'chat')
 	  {
             $message = $_POST['msg'];
 	    //Throwing/shooting in inn
-	    if (stripos($message, "*rzuca") === 0 || stripos($message, "*strzela do") === 0)
+	    if (stripos($message, "*rzuca") !== FALSE || stripos($message, "*strzela do") !== FALSE)
 	      {
 		$arrEnd = array("karczmarza*", "barnab", "barda*");
 		$arrTarget = array("Karczmarz", "Barnaba", "Bard");

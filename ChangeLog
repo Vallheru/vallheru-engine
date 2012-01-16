@@ -1,5 +1,7 @@
 2012-01-16  Bartek thindil Jasicki  <thindil@vallheru.net>
 
+	* BUG,chat.php:
+	fixed bug with throwing things in chat
 	* UPATE,includes/bbcode.php, chat.php, room.php:
 	better handling player emotes in chat
 	* FEATURE,templates/layout1/roommsgs.tpl, templates/roommsgs.tpl, roommsgs.php:
