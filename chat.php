@@ -7,8 +7,8 @@
  *   @copyright            : (C) 2004,2005,2006,2011,2012 Vallheru Team based on Gamers-Fusion ver 2.5
  *   @author               : thindil <thindil@vallheru.net>
  *   @author               : eyescream <tduda@users.sourceforge.net>
- *   @version              : 1.4
- *   @since                : 12.01.2012
+ *   @version              : 1.5
+ *   @since                : 16.01.2012
  *
  */
 
@@ -128,13 +128,9 @@ if (isset ($_GET['action']) && $_GET['action'] == 'chat')
 	      }
 	  }
 	//Emote
-	if (strpos($message, '*') == 0 && strrpos($message, '*') == (strlen($message) - 1))
+	if (strpos($message, $player->user) !== FALSE)
 	  {
-	    if (strpos($message, $player->user) !== FALSE)
-	      {
-		$starter = '';
-	      }
-	    $message = '<b><i>'.$message.'</i></b>';
+	    $starter = '';
 	  }
 	//Private message
         $test1 = explode("=", $_POST['msg']);

@@ -7,7 +7,7 @@
  *   @copyright            : (C) 2012 Vallheru Team based on Gamers-Fusion ver 2.5
  *   @author               : thindil <thindil@vallheru.net>
  *   @version              : 1.5
- *   @since                : 15.01.2012
+ *   @since                : 16.01.2012
  *
  */
 
@@ -164,33 +164,29 @@ if (isset ($_GET['action']) && $_GET['action'] == 'chat')
 	}
 	$message = $_POST['msg'];
 	//Emote
-	if (strpos($message, '*') == 0 && strrpos($message, '*') == (strlen($message) - 1))
+	if ($strOwner != '')
 	  {
-	    if ($strOwner != '')
-	      {
-		if ($_POST['person'] < 2)
-		  {
-		    if (strpos($message, $player->user) !== FALSE)
-		      {
-			$starter = '';
-		      }
-		  }
-		else
-		  {
-		    if (strpos($message, $starter) !== FALSE)
-		      {
-			$starter = '';
-		      }
-		  }
-	      }
-	    else
+	    if ($_POST['person'] < 2)
 	      {
 		if (strpos($message, $player->user) !== FALSE)
 		  {
 		    $starter = '';
 		  }
 	      }
-	    $message = '<b><i>'.$message.'</i></b>';
+	    else
+	      {
+		if (strpos($message, $starter) !== FALSE)
+		  {
+		    $starter = '';
+		  }
+	      }
+	  }
+	else
+	  {
+	    if (strpos($message, $player->user) !== FALSE)
+	      {
+		$starter = '';
+	      }
 	  }
 	//Private message
         $test1 = explode("=", $_POST['msg']);

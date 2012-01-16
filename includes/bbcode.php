@@ -6,8 +6,8 @@
  *   @name                 : bbcode.php                            
  *   @copyright            : (C) 2004,2005,2006,2011,2012 Vallheru Team based on Gamers-Fusion ver 2.5
  *   @author               : thindil <thindil@vallheru.net>
- *   @version              : 1.4
- *   @since                : 02.01.2012
+ *   @version              : 1.5
+ *   @since                : 16.01.2012
  *
  */
 
@@ -101,12 +101,29 @@ function bbcodetohtml($text, $isChat = FALSE)
     if ($isChat)
       {
 	$text = str_replace('/me', '<a href="view.php?view='.$player->id.'" target="_parent">'.$player->user.'</a>', $text);
+	$intStart = 0;
+	while (TRUE)
+	  {
+	    $intStart = strpos($text, '*', $intStart);
+	    if ($intStart === FALSE)
+	      {
+		break;
+	      }
+	    $intEnd = strpos($text, '*', $intStart + 1);
+	    if ($intEnd === FALSE)
+	      {
+		break;
+	      }
+	    $text = substr_replace($text, '<i><b>', $intStart, 0);
+	    $text = substr_replace($text, '</b></i>', $intEnd + 7, 0);
+	    $intStart = $intEnd + 8;
+	  }
       }
 
     /**
      * Replace colors
      */
-    if (!$isChat)
+    else
       {
 	$intStart = 0;
 	while (TRUE)
