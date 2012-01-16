@@ -44,7 +44,7 @@ if (!isset($_SESSION['maction']))
 	error('Nie znajdujesz się w przygodzie.');
       }
     $_SESSION['maction'] = array('location' => $objMission->fields['location'],
-				 'exits' => explode(';', $objMission->fields['exits']),
+				 'exits' => array(),
 				 'mobs' => array(),
 				 'items' => array(),
 				 'type' => $objMission->fields['type'],
@@ -52,6 +52,10 @@ if (!isset($_SESSION['maction']))
 				 'rooms' => $objMission->fields['rooms'],
 				 'successes' => $objMission->fields['successes'],
 				 'bonus' => $objMission->fields['bonus']);
+    if ($objMission->fields['exits'] != '')
+      {
+	$_SESSION['maction']['mobs'] = explode(';', $objMission->fields['exits']);
+      }
     if ($objMission->fields['mobs'] != '')
       {
 	$_SESSION['maction']['mobs'] = explode(';', $objMission->fields['mobs']);
@@ -68,6 +72,7 @@ if (!isset($_SESSION['maction']))
  */
 $strFinish = '';
 $blnEnd = FALSE;
+$blnQuest = FALSE;
 if (isset($_POST['action']))
   {
     //Read exits
@@ -106,7 +111,6 @@ if (isset($_POST['action']))
       {
 	$intDiff = 10;
 	$blnTarget = FALSE;
-	$blnQuest = FALSE;
 	foreach ($_SESSION['maction']['mobs'] as $strMob)
 	  {
 	    $intDiff += 5;
@@ -141,7 +145,17 @@ if (isset($_POST['action']))
 	    if ($intRoll <= $intDiff)
 	      {
 		$strFinish = '(<a href="jail.php">Koniec</a>)';
-		$objFinish = $db->Execute("SELECT `id` FROM `missions` WHERE `name`='thieffail' ORDER BY RAND() LIMIT 1");
+		$objName = $db->Execute("SELECT `name` FROM `missions` WHERE `id`=".$_SESSION['maction']['location']);
+		$strName = '';
+		for ($i = 5; $i < 10; $i++)
+		  {
+		    if (is_numeric($objName->fields['name'][$i]))
+		      {
+			$strName .= $objName->fields['name'][$i];
+		      }
+		  }
+		$objName->Close();
+		$objFinish = $db->Execute("SELECT `id` FROM `missions` WHERE `name`='thief".$strName."fail' ORDER BY RAND() LIMIT 1");
 		$_SESSION['maction']['location'] = $objFinish->fields['id'];
 		$cost = 1000 * $player -> level;
 		checkexp($player->exp, $player->level, $player->level, $player->race, $player->user, $player->id, 0, 0, $player->id, 'thievery', 0.01);
@@ -176,7 +190,24 @@ if (isset($_POST['action']))
 	    if ($_SESSION['maction']['type'] == 'T')
 	      {
 		$strFinish = '(<a href="city.php">Koniec</a>)';
-		$objFinish = $db->Execute("SELECT `id` FROM `missions` WHERE `name`='thieffinish' ORDER BY RAND() LIMIT 1");
+		$objName = $db->Execute("SELECT `name` FROM `missions` WHERE `id`=".$_SESSION['maction']['location']);
+		$strName = '';
+		for ($i = 5; $i < 10; $i++)
+		  {
+		    if (is_numeric($objName->fields['name'][$i]))
+		      {
+			$strName .= $objName->fields['name'][$i];
+		      }
+		  }
+		$objName->Close();
+		if (!$blnQuest)
+		  {
+		    $objFinish = $db->Execute("SELECT `id` FROM `missions` WHERE `name`='thief".$strName."finish' ORDER BY RAND() LIMIT 1");
+		  }
+		else
+		  {
+		    $objFinish = $db->Execute("SELECT `id` FROM `missions` WHERE `name`='thief".$strName."finishgood' ORDER BY RAND() LIMIT 1");
+		  }
 		$_SESSION['maction']['location'] = $objFinish->fields['id'];
 		$objFinish->Close();
 	      }
