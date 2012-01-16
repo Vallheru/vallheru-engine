@@ -85,3 +85,4 @@ INSERT INTO `tools` (`name`, `level`, `power`, `dur`, `repair`, `type`) VALUES
 ('Wytrychy', 15, 25, 10, 35, 'T'),
 ('Wytrychy', 20, 30, 10, 40, 'T'),
 ('Wytrychy', 25, 35, 10, 45, 'T');
+ALTER TABLE `mactions` ADD `successes` INT( 11 ) NOT NULL DEFAULT '0';

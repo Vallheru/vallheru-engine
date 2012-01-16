@@ -7,7 +7,7 @@
  *   @copyright            : (C) 2012 Vallheru Team based on Gamers-Fusion ver 2.5
  *   @author               : thindil <thindil@vallheru.net>
  *   @version              : 1.5
- *   @since                : 13.01.2012
+ *   @since                : 16.01.2012
  *
  */
 
@@ -45,11 +45,20 @@ if (!isset($_SESSION['maction']))
       }
     $_SESSION['maction'] = array('location' => $objMission->fields['location'],
 				 'exits' => explode(';', $objMission->fields['exits']),
-				 'mobs' => explode(';', $objMission->fields['mobs']),
-				 'items' => explode(';', $objMission->fields['items']),
+				 'mobs' => array(),
+				 'items' => array(),
 				 'type' => $objMission->fields['type'],
 				 'loot' => $objMission->fields['loot'],
-				 'rooms' => $objMission->fields['rooms']);
+				 'rooms' => $objMission->fields['rooms'],
+				 'successes' => $objMission->fields['successes']);
+    if ($objMission->fields['mobs'] != '')
+      {
+	$_SESSION['maction']['mobs'] = explode(';', $objMission->fields['mobs']);
+      }
+    if ($objMission->fields['items'] != '')
+      {
+	$_SESSION['maction']['items'] = explode(';', $objMission->fields['items']);
+      }
     $objMission->Close();
   }
 
@@ -57,6 +66,7 @@ if (!isset($_SESSION['maction']))
  * Generate new room
  */
 $strFinish = '';
+$blnEnd = FALSE;
 if (isset($_POST['action']))
   {
     //Read exits
@@ -90,11 +100,11 @@ if (isset($_POST['action']))
       {
 	error('Zapomnij o tym!');
       }
-    $blnEnd = FALSE;
     //Player choice action with mob
-    if (in_array($_POST['action'], $arrEactions) || in_array($_POST['action'], $arrIactions))
+    if (in_array($_POST['action'], $arrMactions) || in_array($_POST['action'], $arrIactions))
       {
 	$intDiff = 10;
+	$blnTarget = FALSE;
 	foreach ($_SESSION['maction']['mobs'] as $strMob)
 	  {
 	    $intDiff += 5;
@@ -107,6 +117,15 @@ if (isset($_POST['action']))
 		    $intDiff += 20;
 		  }
 	      }
+	    elseif (in_array('T', $arrTmp2))
+	      {
+		$blnTarget = TRUE;
+	      }
+	  }
+	$intDiff -= $player->level;
+	if ($intDiff < 5)
+	  {
+	    $intDiff = 5;
 	  }
 	$intRoll = rand(1, 100);
 	//Thieves
@@ -115,7 +134,7 @@ if (isset($_POST['action']))
 	    //Mission fail
 	    if ($intRoll <= $intDiff)
 	      {
-		$strFinish = '(<a href="lochy.php">Koniec</a>)';
+		$strFinish = '(<a href="jail.php">Koniec</a>)';
 		$objFinish = $db->Execute("SELECT `id` FROM `missions` WHERE `name`='thieffail' ORDER BY RAND() LIMIT 1");
 		$_SESSION['maction']['location'] = $objFinish->fields['id'];
 		$cost = 1000 * $player -> level;
@@ -128,9 +147,11 @@ if (isset($_POST['action']))
 	      }
 	    else
 	      {
-		$intExpgain = $player->level * 10;
-		$fltSkill = $player->level / 100;
 		checkexp($player->exp, $player->level, $player->level, $player->race, $player->user, $player->id, 0, 0, $player->id, 'thievery', 0.01);
+		if ($blnTarget)
+		  {
+		    $_SESSION['maction']['successes']++;
+		  }
 	      }
 	  }
       }
@@ -139,13 +160,13 @@ if (isset($_POST['action']))
     if (!$blnEnd)
       {
 	//Finish mission
-	if ($_SESSION['maction']['rooms'] == 0)
+	if ($_SESSION['maction']['rooms'] <= 0)
 	  {
 	    //Thieves
 	    if ($_SESSION['maction']['type'] == 'T')
 	      {
 		$strFinish = '(<a href="city.php">Koniec</a>)';
-		$objFinish = $db->Execute("SELECT `text` FROM `missions` WHERE `name`='thieffinish' ORDER BY RAND() LIMIT 1");
+		$objFinish = $db->Execute("SELECT `id` FROM `missions` WHERE `name`='thieffinish' ORDER BY RAND() LIMIT 1");
 		$_SESSION['maction']['location'] = $objFinish->fields['id'];
 		$objFinish->Close();
 	      }
@@ -161,7 +182,7 @@ if (isset($_POST['action']))
 	    //Generate exits
 	    $arrTmp = explode(';', $objMission->fields['exits']);
 	    $arrChances = explode(';', $objMission->fields['chances']);
-	    while (count($arrOptions) == 0)
+	    while (count($_SESSION['maction']['exits']) == 0)
 	      {
 		for ($i = 0; $i < count($arrChances); $i++)
 		  {
@@ -195,7 +216,7 @@ if (isset($_POST['action']))
 		  }
 	      }
 	    $objMission->Close();
-	    $db->Execute("UPDATE `mactions` SET `location`=".$_SESSION['maction']['location'].", `exits`='".$_SESSION['maction']['exits']."', `mobs`='".$_SESSION['maction']['mobs']."', `items`='".$_SESSION['maction']['items']."', `rooms`=`rooms`-1 WHERE `pid`=".$player->id);
+	    $db->Execute("UPDATE `mactions` SET `location`=".$_SESSION['maction']['location'].", `exits`='".implode(';', $_SESSION['maction']['exits'])."', `mobs`='".implode(';', $_SESSION['maction']['mobs'])."', `items`='".implode(';', $_SESSION['maction']['items'])."', `rooms`=`rooms`-1, `successes`=".$_SESSION['maction']['successes']." WHERE `pid`=".$player->id);
 	  }
       }
   }
@@ -239,19 +260,31 @@ if ($strFinish == '')
 else
   {
     //Successful mission
-    if ($_SESSION['maction']['rooms'] == 0)
+    if ($_SESSION['maction']['rooms'] == 0 && !$blnEnd)
       {
 	if ($_SESSION['maction']['type'] == 'T')
 	  {
-	    $intExpgain = $player->level * 20;
-	    $fltSkill = $player->level / 50;
-	    $intGold = $player->level * 50;
+	    $intExpgain = $player->level * $_SESSION['maction']['successes'];
+	    if ($intExpgain == 0)
+	      {
+		$intExpgain = $player->level;
+	      }
+	    $fltSkill = $_SESSION['maction']['successes'] / 50;
+	    if ($fltSkill < 0.01)
+	      {
+		$fltSkill = 0.01;
+	      }
+	    $intGold = $_SESSION['maction']['successes'] * 50;
+	    if ($intGold == 0)
+	      {
+		$intGold = $player->level;
+	      }
 	    checkexp($player->exp, $player->level, $player->level, $player->race, $player->user, $player->id, 0, 0, $player->id, 'thievery', 0.01);
 	    $strText .= '<br /><br />Zdobywasz '.$intGold.' sztuk złota, '.$intExpgain.' punktów doświadczenia oraz '.$fltSkill.' do umiejętności Złodziejstwo.';
 	    if ($_SESSION['maction']['loot'] != '')
 	      {
 		$arrLoot = explode(';', $_SESSION['maction']['loot']);
-		$objLoot = $db->Execute("SELECT * FROM `".$arrLoot[0]."` WHERE `level`=".$arrLoot[1]." AND `type`='",$arrLoot[2]."' ORDER BY RAND() LIMIT 1");
+		$objLoot = $db->Execute("SELECT * FROM `".$arrLoot[0]."` WHERE `level`".$arrLoot[1]." AND `type`='".$arrLoot[2]."' ORDER BY RAND() LIMIT 1") or die($db->ErrorMsg());
 		$objTest = $db->Execute("SELECT `id` FROM `equipment` WHERE `owner`=".$player->id." AND `name`='Wytrychy z miedzi' AND `power`=".$objLoot->fields['power']." AND `cost`=1 AND `wt`=".$objLoot->fields['dur']." AND `maxwt`=".$objLoot->fields['dur']." AND `type`='E' AND `minlev`=".$objLoot->fields['level']." AND repair=".$objLoot->fields['repair']);
 		if (!$objTest->fields['id'])
 		  {

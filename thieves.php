@@ -7,7 +7,7 @@
  *   @copyright            : (C) 2011,2012 Vallheru Team based on Gamers-Fusion ver 2.5
  *   @author               : thindil <thindil@vallheru.net>
  *   @version              : 1.5
- *   @since                : 13.01.2012
+ *   @since                : 16.01.2012
  *
  */
 
@@ -257,7 +257,7 @@ else
 	      {
 		$arrLoots = array(0 => '.',
 				  80 => ' oraz nowe wytrychy.',
-				  85 => ' oraz lepsze wytrychy.',
+				  85 => ' oraz lepsze wytrychy.');
 				    /*90 => ' oraz plan wytrychów.',
 				   97 => ' oraz plan lepszych wytrychów.');*/
 		$intLoot = getoption($arrLoots, rand(1, 100));
@@ -426,7 +426,7 @@ else
 	//Generate mission
 	if (!isset($_SESSION['maction']) && !$objMission->fields['pid'])
 	  {
-	    $objStart = $db->Execute("SELECT * FROM `missions` WHERE `name`='thief".$_SESSION['mission'][$_GET['number']]."start' ORDER BY RAND() LIMIT 1");
+	    $objStart = $db->Execute("SELECT * FROM `missions` WHERE `name`='thief".$_SESSION['mission'][$_GET['number']].$_SESSION['mtype'][$_GET['number']]."start' ORDER BY RAND() LIMIT 1");
 	    $strText = $objStart->fields['text'];
 	    $_SESSION['maction'] = array('location' => $objStart->fields['id'],
 					 'exits' => array(),
@@ -434,7 +434,8 @@ else
 					 'items' => array(),
 					 'type' => 'T',
 					 'loot' => $strLoot,
-					 'rooms' => $intRooms);
+					 'rooms' => $intRooms,
+					 'successes' => 0);
 	    $arrOptions = array();
 	    //Generate exits
 	    $arrTmp = explode(';', $objStart->fields['exits']);
