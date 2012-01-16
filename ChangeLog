@@ -1,5 +1,7 @@
 2012-01-16  Bartek thindil Jasicki  <thindil@vallheru.net>
 
+	* UPDATE,mission.php: 
+	continue work on random missions
 	* UPDATE,install/db/update.sql, mission.php, thieves.php: 
 	changed reward for missions
 	* FEATURE,install/db/update.sql, missions.php, thieves.php:

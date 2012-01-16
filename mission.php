@@ -106,6 +106,7 @@ if (isset($_POST['action']))
       {
 	$intDiff = 10;
 	$blnTarget = FALSE;
+	$blnQuest = FALSE;
 	foreach ($_SESSION['maction']['mobs'] as $strMob)
 	  {
 	    $intDiff += 5;
@@ -118,9 +119,13 @@ if (isset($_POST['action']))
 		    $intDiff += 20;
 		  }
 	      }
-	    elseif (in_array('T', $arrTmp2))
+	    elseif (in_array('T', $arrTmp2) && in_array($_POST['action'], $arrTmp2))
 	      {
 		$blnTarget = TRUE;
+	      }
+	    elseif (in_array('Q', $arrTmp2) && in_array($_POST['action'], $arrTmp2))
+	      {
+		$blnQuest = TRUE;
 	      }
 	  }
 	$intDiff -= $player->level;
@@ -149,9 +154,13 @@ if (isset($_POST['action']))
 	    else
 	      {
 		checkexp($player->exp, $player->level, $player->level, $player->race, $player->user, $player->id, 0, 0, $player->id, 'thievery', 0.01);
-		if ($blnTarget)
+		if ($blnTarget || $blnQuest)
 		  {
 		    $_SESSION['maction']['successes']++;
+		    if ($blnQuest)
+		      {
+			$_SESSION['maction']['rooms'] = 1;
+		      }
 		  }
 	      }
 	  }
