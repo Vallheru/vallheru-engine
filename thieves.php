@@ -435,7 +435,8 @@ else
 					 'type' => 'T',
 					 'loot' => $strLoot,
 					 'rooms' => $intRooms,
-					 'successes' => 0);
+					 'successes' => 0,
+					 'bonus' => $_SESSION['mtype'][$_GET['number']]);
 	    $arrOptions = array();
 	    //Generate exits
 	    $arrTmp = explode(';', $objStart->fields['exits']);
@@ -487,7 +488,7 @@ else
 		      }
 		  }
 	      }
-	    $db->Execute("INSERT INTO `mactions` (`pid`, `location`, `exits`, `mobs`, `items`, `type`, `loot`, `rooms`) VALUES(".$player->id.", ".$_SESSION['maction']['location'].", '".implode(';', $_SESSION['maction']['exits'])."', '".implode(';', $_SESSION['maction']['mobs'])."', '".implode(';', $_SESSION['maction']['items'])."', 'T', '".$strLoot."', ".$intRooms.")");
+	    $db->Execute("INSERT INTO `mactions` (`pid`, `location`, `exits`, `mobs`, `items`, `type`, `loot`, `rooms`, `bonus`) VALUES(".$player->id.", ".$_SESSION['maction']['location'].", '".implode(';', $_SESSION['maction']['exits'])."', '".implode(';', $_SESSION['maction']['mobs'])."', '".implode(';', $_SESSION['maction']['items'])."', 'T', '".$strLoot."', ".$intRooms.", ".$_SESSION['maction']['bonus'].")");
 	  }
 	else
 	  {

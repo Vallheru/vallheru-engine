@@ -50,7 +50,8 @@ if (!isset($_SESSION['maction']))
 				 'type' => $objMission->fields['type'],
 				 'loot' => $objMission->fields['loot'],
 				 'rooms' => $objMission->fields['rooms'],
-				 'successes' => $objMission->fields['successes']);
+				 'successes' => $objMission->fields['successes'],
+				 'bonus' => $objMission->fields['bonus']);
     if ($objMission->fields['mobs'] != '')
       {
 	$_SESSION['maction']['mobs'] = explode(';', $objMission->fields['mobs']);
@@ -264,22 +265,19 @@ else
       {
 	if ($_SESSION['maction']['type'] == 'T')
 	  {
-	    $intExpgain = $player->level * $_SESSION['maction']['successes'];
-	    if ($intExpgain == 0)
+	    if ($_SESSION['maction']['successes'] > 0)
 	      {
-		$intExpgain = $player->level;
+		$intExpgain = ($player->level * $_SESSION['maction']['successes']) + ($player->level * $_SESSION['maction']['bonus']);
+		$fltSkill = ($_SESSION['maction']['successes'] / 50) + (0.01 * $_SESSION['maction']['bonus']);
+		$intGold = ($_SESSION['maction']['successes'] * 25 * $player->level) + (5 * $player->level * $_SESSION['maction']['bonus']);
 	      }
-	    $fltSkill = $_SESSION['maction']['successes'] / 50;
-	    if ($fltSkill < 0.01)
+	    else
 	      {
+		$intExpgain = ceil($player->level / 2);
 		$fltSkill = 0.01;
+		$intGold = 0;
 	      }
-	    $intGold = $_SESSION['maction']['successes'] * 50;
-	    if ($intGold == 0)
-	      {
-		$intGold = $player->level;
-	      }
-	    checkexp($player->exp, $player->level, $player->level, $player->race, $player->user, $player->id, 0, 0, $player->id, 'thievery', 0.01);
+	    checkexp($player->exp, $intExpgain, $player->level, $player->race, $player->user, $player->id, 0, 0, $player->id, 'thievery', $fltSkill);
 	    $strText .= '<br /><br />Zdobywasz '.$intGold.' sztuk złota, '.$intExpgain.' punktów doświadczenia oraz '.$fltSkill.' do umiejętności Złodziejstwo.';
 	    if ($_SESSION['maction']['loot'] != '')
 	      {
