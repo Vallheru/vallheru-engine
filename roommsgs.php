@@ -65,22 +65,57 @@ if ($stat -> fields['graphic'])
     $strCss = $stat -> fields['style'];
 }
 
+$objOwner = $db->Execute("SELECT `owner`, `owners` FROM `rooms` WHERE `id`=".$stat->fields['room']);
+if ($objOwner->fields['owners'] != '')
+  {
+    $arrOwners = explode(';', $objOwner->fields['owners']);
+  }
+else
+  {
+    $arrOwners = array();
+  }
+if ($objOwner->fields['owner'] == $stat->fields['id'] || in_array($stat->fields['id'], $arrOwners)) 
+  {
+    $smarty->assign("Showid", 1);
+  }
+else
+{
+    $smarty->assign("Showid", '');
+}
+
+//Delete selected text
+if (isset($_GET['delete']) && ($objOwner->fields['owner'] == $stat->fields['id'] || in_array($stat->fields['id'], $arrOwners)))
+  {
+    if (!is_numeric($_GET['delete']))
+      {
+	error('Zapomnij o tym.');
+      }
+    $_GET['delete'] = intval($_GET['delete']);
+    if ($_GET['delete'] < 1)
+      {
+	error('Zapomnij o tym.');
+      }
+    $objText = $db->Execute("SELECT `id`, `room` FROM `chatrooms` WHERE `id`=".$_GET['delete']);
+    if (!$objText->fields['id'])
+      {
+	error('Nie ma takiego tekstu.');
+      }
+    if ($objText->fields['room'] != $stat->fields['room'])
+      {
+	error('Nie ma takiego tekstu w twoim pokoju.');
+      }
+    $objText->Close();
+    $db->Execute("DELETE FROM `chatrooms` WHERE `id`=".$_GET['delete']);
+  }
+$objOwner->Close();
+
 $chat = $db -> SelectLimit("SELECT * FROM `chatrooms` WHERE (`ownerid`=0 OR `ownerid`=".$stat -> fields['id']." OR `senderid`=".$stat -> fields['id'].") AND `room`=".$stat->fields['room']." ORDER BY `id` DESC", 25);
 $pl = $db -> Execute("SELECT `id`, `lpv`, `user` FROM `players` WHERE `page`='Pokój w karczmie' AND `room`=".$stat->fields['room']);
 $arrtext = array();
 $arrauthor = array();
 $arrsenderid = array();
 $arrSdate = array();
-$objOwner = $db->Execute("SELECT `owner` FROM `rooms` WHERE `id`=".$stat->fields['room']);
-if ($objOwner->fields['owner'] == $stat->fields['id']) 
-  {
-    $smarty -> assign ("Showid", 1);
-  }
-else
-{
-    $smarty->assign("Showid", '');
-}
-$objOwner->Close();
+$arrTid = array();
 while (!$chat -> EOF) 
   {
     if (strpos($chat->fields['chat'], "<a href=") === FALSE)
@@ -95,10 +130,10 @@ while (!$chat -> EOF)
     $arrauthor[] = $chat -> fields['user'];
     $arrsenderid[] = $chat -> fields['senderid'];
     $arrSdate[] = $chat->fields['sdate'];
+    $arrTid[] = $chat->fields['id'];
     $chat -> MoveNext();
   }
 $chat -> Close();
-
 
 $ctime = time();
 $on = '';
@@ -121,6 +156,7 @@ $smarty->assign(array("Player" => $on,
 		      "Text" => $arrtext, 
 		      "Senderid" => $arrsenderid,
 		      "Sdate" => $arrSdate,
+		      "Tid" => $arrTid,
 		      "Thereis" => 'Jest',
 		      "Charset" => 'utf-8',
 		      "Cplayers" => 'osób w pokoju',

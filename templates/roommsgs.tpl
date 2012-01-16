@@ -10,7 +10,7 @@
 <body>
     <font face="verdana" size="-2">
     {section name=player loop=$Text}
-        <div title="{$Sdate[player]}">{if $Author[player] != ""}<b>{$Author[player]} {if $Showid == "1"}{$Cid}:{$Senderid[player]}{/if}</b>:{/if} {$Text[player]}</div>
+        <div title="{$Sdate[player]}">{if $Showid == "1"}<a href="roommsgs.php?delete={$Tid[player]}">x</a> {/if}{if $Author[player] != ""}<b>{$Author[player]} {if $Showid == "1"}{$Cid}:{$Senderid[player]}{/if}</b>:{/if} {$Text[player]}</div>
     {/section}
     </font>
 <br /><br /><br /><center><font size="-2">{$Player}<br />
