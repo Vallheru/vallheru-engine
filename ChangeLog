@@ -1,5 +1,7 @@
 2012-01-16  Bartek thindil Jasicki  <thindil@vallheru.net>
 
+	* BUG,includes/bbcode.php, chat.php, room.php:
+	fixed bug with emotes
 	* FEATURE,mission.php, thieves.php:
 	added more random missions for thieves
 	* UPDATE,mission.php: 

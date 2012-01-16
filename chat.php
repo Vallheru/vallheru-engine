@@ -128,9 +128,10 @@ if (isset ($_GET['action']) && $_GET['action'] == 'chat')
 	      }
 	  }
 	//Emote
-	if (strpos($message, $player->user) !== FALSE)
+	if (strpos($message, '/me') !== FALSE)
 	  {
 	    $starter = '';
+	    $message = str_replace('/me', '<a href="view.php?view='.$player->id.'" target="_parent">'.$player->user.'</a>', $message);
 	  }
 	//Private message
         $test1 = explode("=", $_POST['msg']);

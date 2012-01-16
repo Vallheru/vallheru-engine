@@ -100,7 +100,6 @@ function bbcodetohtml($text, $isChat = FALSE)
      */
     if ($isChat)
       {
-	$text = str_replace('/me', '<a href="view.php?view='.$player->id.'" target="_parent">'.$player->user.'</a>', $text);
 	$intStart = 0;
 	while (TRUE)
 	  {
