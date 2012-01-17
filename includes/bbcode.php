@@ -119,10 +119,25 @@ function bbcodetohtml($text, $isChat = FALSE)
 	    $intStart = $intEnd + 8;
 	  }
 	//Dice roll
-	if (preg_match('/[0-9]+k[0-9]+/', $text, $arrResults))
+	if (preg_match('/[0-9]+k[0-9]+([\-\+]+[0-9]+)*/', $text, $arrResults))
 	  {
 	    $arrResult = explode('k', $arrResults[0]);
-	    $intRoll = $arrResult[0] * rand(1, $arrResult[1]);
+	    if (strpos($arrResult[1], '+') !== FALSE)
+	      {
+		$arrResult2 = explode('+', $arrResult[1]);
+		$arrResult[1] = $arrResult2[0];
+	      }
+	    elseif (strpos($arrResult[1], '-') !== FALSE)
+	      {
+		$arrResult2 = explode('-', $arrResult[1]);
+		$arrResult[1] = $arrResult2[0];
+		$arrResult2[1] *= -1;
+	      }
+	    else
+	      {
+		$arrResult2 = array(0, 0);
+	      }
+	    $intRoll = ($arrResult[0] * rand(1, $arrResult[1])) + $arrResult2[1];
 	    $text = str_replace($arrResults[0], '<span style="color:silver;">'.$arrResults[0].' => '.$intRoll.'</span>', $text);
 	  }
       }
