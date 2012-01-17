@@ -214,8 +214,8 @@ else
 	      case 1:
 		$arrLocations = array(0 => 'Przejdziesz się po ulicy i poucinasz parę mieszków. ',
 				      15 => 'Spróbjesz obrobić jednego kupca na mieście. ',
-				      40 => 'Jeden zadufany szlachciura potrzebuje nieco nauki, ulżysz jego sakiewce. ');
-		//80 => 'Pewien kupiec nie rozumie co się do niego mówi. Zajmiesz się jego sakiewką. ');*/
+				      40 => 'Jeden zadufany szlachciura potrzebuje nieco nauki, ulżysz jego sakiewce. ',
+				      80 => 'Pewien kupiec nie rozumie co się do niego mówi. Zajmiesz się jego sakiewką. ');
 		$intOption = getoption($arrLocations, $objJob->fields['mpoints']);
 		$strJob = 'Przyda się ktoś o zwinnych palcach. '.$arrLocations[$intOption].' Jak Ci się uda, to dostaniesz część łupu';
 		break;

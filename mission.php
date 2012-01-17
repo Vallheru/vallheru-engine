@@ -311,9 +311,9 @@ else
 	      {
 		if ($_SESSION['maction']['target'] == 'Y' && !$blnQuest)
 		  {
-		    $intExpgain = ceil($player->level / 2);
-		    $fltSkill = 0.01;
-		    $intGold = 0;
+		    $intExpgain = ($player->level * $_SESSION['maction']['successes']);
+		    $fltSkill = ($_SESSION['maction']['successes'] / 50);
+		    $intGold = ($_SESSION['maction']['successes'] * 25 * $player->level);
 		    $intMpoint = 0;
 		  }
 		else
