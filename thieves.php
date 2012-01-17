@@ -7,7 +7,7 @@
  *   @copyright            : (C) 2011,2012 Vallheru Team based on Gamers-Fusion ver 2.5
  *   @author               : thindil <thindil@vallheru.net>
  *   @version              : 1.5
- *   @since                : 16.01.2012
+ *   @since                : 17.01.2012
  *
  */
 
@@ -213,9 +213,9 @@ else
 		//Steal from people
 	      case 1:
 		$arrLocations = array(0 => 'Przejdziesz się po ulicy i poucinasz parę mieszków. ',
-				      15 => 'Spróbjesz obrobić jednego kupca na rynku. ');
-		/*40 => 'Jeden zadufany szlachciura potrzebuje nieco nauki, ulżysz jego sakiewce. ',
-				      80 => 'Pewien kupiec nie rozumie co się do niego mówi. Zajmiesz się jego sakiewką. ');*/
+				      15 => 'Spróbjesz obrobić jednego kupca na mieście. ',
+				      40 => 'Jeden zadufany szlachciura potrzebuje nieco nauki, ulżysz jego sakiewce. ');
+		//80 => 'Pewien kupiec nie rozumie co się do niego mówi. Zajmiesz się jego sakiewką. ');*/
 		$intOption = getoption($arrLocations, $objJob->fields['mpoints']);
 		$strJob = 'Przyda się ktoś o zwinnych palcach. '.$arrLocations[$intOption].' Jak Ci się uda, to dostaniesz część łupu';
 		break;
@@ -293,6 +293,7 @@ else
 	  {
 	    error('Zapomnij o tym!');
 	  }
+	$strTarget = 'N';
 	switch ($_SESSION['mission'][$_GET['number']])
 	  {
 	    //Home robbery
@@ -327,12 +328,15 @@ else
 		break;
 	      case 15:
 		$intRooms = rand(4, 15);
+		$strTarget = 'Y';
 		break;
 	      case 40:
 		$intRooms = rand(5, 15);
+		$strTarget = 'Y';
 		break;
 	      case 80:
 		$intRooms = rand(6, 25);
+		$strTarget = 'Y';
 		break;
 	      default:
 		break;
@@ -344,18 +348,23 @@ else
 	      {
 	      case 0:
 		$intRooms = rand(5, 15);
+		$strTarget = 'Y';
 		break;
 	      case 20:
 		$intRooms = rand(6, 20);
+		$strTarget = 'Y';
 		break;
 	      case 60:
 		$intRooms = rand(8, 25);
+		$strTarget = 'Y';
 		break;
 	      case 90:
 		$intRooms = rand(10, 35);
+		$strTarget = 'Y';
 		break;
 	      case 120:
 		$intRooms = rand(12, 50);
+		$strTarget = 'Y';
 		break;
 	      default:
 		break;
@@ -436,7 +445,9 @@ else
 					 'loot' => $strLoot,
 					 'rooms' => $intRooms,
 					 'successes' => 0,
-					 'bonus' => $_SESSION['mtype'][$_GET['number']]);
+					 'bonus' => $_SESSION['mtype'][$_GET['number']],
+					 'target' => $strTarget,
+					 'place' => $player->location);
 	    $arrOptions = array();
 	    //Generate exits
 	    $arrTmp = explode(';', $objStart->fields['exits']);
@@ -488,7 +499,7 @@ else
 		      }
 		  }
 	      }
-	    $db->Execute("INSERT INTO `mactions` (`pid`, `location`, `exits`, `mobs`, `items`, `type`, `loot`, `rooms`, `bonus`) VALUES(".$player->id.", ".$_SESSION['maction']['location'].", '".implode(';', $_SESSION['maction']['exits'])."', '".implode(';', $_SESSION['maction']['mobs'])."', '".implode(';', $_SESSION['maction']['items'])."', 'T', '".$strLoot."', ".$intRooms.", ".$_SESSION['maction']['bonus'].")");
+	    $db->Execute("INSERT INTO `mactions` (`pid`, `location`, `exits`, `mobs`, `items`, `type`, `loot`, `rooms`, `bonus`, `place`, `target`) VALUES(".$player->id.", ".$_SESSION['maction']['location'].", '".implode(';', $_SESSION['maction']['exits'])."', '".implode(';', $_SESSION['maction']['mobs'])."', '".implode(';', $_SESSION['maction']['items'])."', 'T', '".$strLoot."', ".$intRooms.", ".$_SESSION['maction']['bonus'].", '".$_SESSION['maction']['place']."', '".$_SESSION['maction']['target']."')");
 	  }
 	else
 	  {

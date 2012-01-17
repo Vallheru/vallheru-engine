@@ -1,5 +1,7 @@
 2012-01-17  Bartek thindil Jasicki  <thindil@vallheru.net>
 
+	* FEATURE,install/db/update.sql, mission.php, thieves.php:
+	continue work on random missions for thieves
 	* UPDATE,includes/bbcode.php: 
 	better dice roll
 	* FEATURE,includes/bbcode.php:

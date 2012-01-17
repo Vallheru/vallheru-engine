@@ -87,3 +87,5 @@ INSERT INTO `tools` (`name`, `level`, `power`, `dur`, `repair`, `type`) VALUES
 ('Wytrychy', 25, 35, 10, 45, 'T');
 ALTER TABLE `mactions` ADD `successes` INT( 11 ) NOT NULL DEFAULT '0';
 ALTER TABLE `mactions` ADD `bonus` INT( 11 ) NOT NULL DEFAULT '0';
+ALTER TABLE `mactions` ADD `place` VARCHAR( 30 ) NOT NULL ,
+ADD `target` CHAR( 1 ) NOT NULL ;

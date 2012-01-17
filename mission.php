@@ -7,7 +7,7 @@
  *   @copyright            : (C) 2012 Vallheru Team based on Gamers-Fusion ver 2.5
  *   @author               : thindil <thindil@vallheru.net>
  *   @version              : 1.5
- *   @since                : 16.01.2012
+ *   @since                : 17.01.2012
  *
  */
 
@@ -51,7 +51,9 @@ if (!isset($_SESSION['maction']))
 				 'loot' => $objMission->fields['loot'],
 				 'rooms' => $objMission->fields['rooms'],
 				 'successes' => $objMission->fields['successes'],
-				 'bonus' => $objMission->fields['bonus']);
+				 'bonus' => $objMission->fields['bonus'],
+				 'place' => $objMission->fields['place'],
+				 'target' => $objMission->fields['target']);
     if ($objMission->fields['exits'] != '')
       {
 	$_SESSION['maction']['mobs'] = explode(';', $objMission->fields['exits']);
@@ -307,15 +309,27 @@ else
 	  {
 	    if ($_SESSION['maction']['successes'] > 0)
 	      {
-		$intExpgain = ($player->level * $_SESSION['maction']['successes']) + ($player->level * $_SESSION['maction']['bonus']);
-		$fltSkill = ($_SESSION['maction']['successes'] / 50) + (0.01 * $_SESSION['maction']['bonus']);
-		$intGold = ($_SESSION['maction']['successes'] * 25 * $player->level) + (5 * $player->level * $_SESSION['maction']['bonus']);
+		if ($_SESSION['maction']['target'] == 'Y' && !$blnQuest)
+		  {
+		    $intExpgain = ceil($player->level / 2);
+		    $fltSkill = 0.01;
+		    $intGold = 0;
+		    $intMpoint = 0;
+		  }
+		else
+		  {
+		    $intExpgain = ($player->level * $_SESSION['maction']['successes']) + ($player->level * $_SESSION['maction']['bonus']);
+		    $fltSkill = ($_SESSION['maction']['successes'] / 50) + (0.01 * $_SESSION['maction']['bonus']);
+		    $intGold = ($_SESSION['maction']['successes'] * 25 * $player->level) + (5 * $player->level * $_SESSION['maction']['bonus']);
+		    $intMpoint = 1;
+		  }
 	      }
 	    else
 	      {
 		$intExpgain = ceil($player->level / 2);
 		$fltSkill = 0.01;
 		$intGold = 0;
+		$intMpoint = 0;
 	      }
 	    checkexp($player->exp, $intExpgain, $player->level, $player->race, $player->user, $player->id, 0, 0, $player->id, 'thievery', $fltSkill);
 	    $strText .= '<br /><br />Zdobywasz '.$intGold.' sztuk złota, '.$intExpgain.' punktów doświadczenia oraz '.$fltSkill.' do umiejętności Złodziejstwo.';
@@ -336,7 +350,7 @@ else
 		$objLoot->Close();
 		$strText .= 'Oprócz tego dostajesz nowe wytrychy.';
 	      }
-	    $db->Execute("UPDATE `players` SET `miejsce`='Altara', `credits`=`credits`+".$intGold.", `mpoints`=`mpoints`+1 WHERE `id`=".$player->id);
+	    $db->Execute("UPDATE `players` SET `miejsce`='".$_SESSION['maction']['place']."', `credits`=`credits`+".$intGold.", `mpoints`=`mpoints`+".$intMpoint." WHERE `id`=".$player->id);
 	  }
       }
     unset($_SESSION['maction']);
