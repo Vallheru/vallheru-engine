@@ -7,7 +7,7 @@
  *   @copyright            : (C) 2004,2005,2006,2011,2012 Vallheru Team based on Gamers-Fusion ver 2.5
  *   @author               : thindil <thindil@vallheru.net>
  *   @version              : 1.5
- *   @since                : 16.01.2012
+ *   @since                : 17.01.2012
  *
  */
 
@@ -96,10 +96,11 @@ function bbcodetohtml($text, $isChat = FALSE)
       }
     
     /**
-     * Emotes in chat
+     * Chat options
      */
     if ($isChat)
       {
+	//Emotes
 	$intStart = 0;
 	while (TRUE)
 	  {
@@ -116,6 +117,13 @@ function bbcodetohtml($text, $isChat = FALSE)
 	    $text = substr_replace($text, '<i><b>', $intStart, 0);
 	    $text = substr_replace($text, '</b></i>', $intEnd + 7, 0);
 	    $intStart = $intEnd + 8;
+	  }
+	//Dice roll
+	if (preg_match('/[0-9]+k[0-9]+/', $text, $arrResults))
+	  {
+	    $arrResult = explode('k', $arrResults[0]);
+	    $intRoll = $arrResult[0] * rand(1, $arrResult[1]);
+	    $text = str_replace($arrResults[0], '<span style="color:silver;">'.$arrResults[0].' => '.$intRoll.'</span>', $text);
 	  }
       }
 
