@@ -8,13 +8,13 @@
 
 {if $Action == "showalive"}
     {$Showinfo} {$Level}...<br /><br />
-    <table>
+    <table width="90%" align="center">
     <tr>
-    <td width="20"><b><u>{$Lid}</u></b></td>
-    <td width="100"><b><u>{$Lname}</u></b></td>
-    <td width="100"><b><u>{$Lrank}</u></b></td>
-    <td width="20"><b><u>{$Lclan}</u></b></td>
-    <td width="60"><b><u>{$Loption}</u></b></td>
+        <th>{$Lid}</th>
+        <th>{$Lname}</th>
+        <th>{$Lrank}</th>
+        <th>{$Lclan}</th>
+        <th>{$Loption}</th>
     </tr>
     {section name=player loop=$Enemyid}
         <tr>
@@ -33,13 +33,13 @@
     {$Showall} <input type="text" name="slevel" size="5" /> {$Tolevel} <input type="text" name="elevel" size="5" />
     <input type="submit" value="{$Ago}" /></form>
     {if $Step == "go"}
-        <table>
+        <table width="90%" align="center">
         <tr>
-        <td width="20"><b><u>{$Lid}</u></b></td>
-        <td width="100"><b><u>{$Lname}</u></b></td>
-        <td width="100"><b><u>{$Lrank}</u></b></td>
-        <td width="20"><b><u>{$Lclan}</u></b></td>
-        <td width="60"><b><u>{$Loption}</u></b></td>
+        <th>{$Lid}</th>
+        <th>{$Lname}</th>
+        <th>{$Lrank}</th>
+        <th>{$Lclan}</th>
+        <th>{$Loption}</th>
         </tr>
         {section name=player loop=$Enemyid}
             <tr>

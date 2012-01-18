@@ -10,11 +10,11 @@
     {$Showinfo} {$Level}...<br /><br />
     <table class="dark">
     <tr>
-    <td width="20"><b><u>{$Lid}</u></b></td>
-    <td width="100"><b><u>{$Lname}</u></b></td>
-    <td width="100"><b><u>{$Lrank}</u></b></td>
-    <td width="20"><b><u>{$Lclan}</u></b></td>
-    <td width="60"><b><u>{$Loption}</u></b></td>
+        <th>{$Lid}</th>
+        <th>{$Lname}</th>
+        <th>{$Lrank}</th>
+        <th>{$Lclan}</th>
+        <th>{$Loption}</th>
     </tr>
     {section name=player loop=$Enemyid}
         <tr>
@@ -35,11 +35,11 @@
     {if $Step == "go"}
         <table class="dark">
         <tr>
-        <td width="20"><b><u>{$Lid}</u></b></td>
-        <td width="100"><b><u>{$Lname}</u></b></td>
-        <td width="100"><b><u>{$Lrank}</u></b></td>
-        <td width="20"><b><u>{$Lclan}</u></b></td>
-        <td width="60"><b><u>{$Loption}</u></b></td>
+	<th>{$Lid}</th>
+        <th>{$Lname}</th>
+        <th>{$Lrank}</th>
+        <th>{$Lclan}</th>
+        <th>{$Loption}</th>
         </tr>
         {section name=player loop=$Enemyid}
             <tr>
