@@ -1,5 +1,7 @@
 2012-01-18  Bartek thindil Jasicki  <thindil@vallheru.net>
 
+	* BUG,mission.php: 
+	fixed reward for mission
 	* UPDATE,templates/layout1/battle.tpl, templates/battle.tpl, battle.php:
 	show names of players tribes instead numbers
 	* BUG,account.php:
