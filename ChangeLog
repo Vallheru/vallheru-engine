@@ -1,5 +1,7 @@
 2012-01-18  Bartek thindil Jasicki  <thindil@vallheru.net>
 
+	* UPDATE,mission.php: 
+	finish mission after gain 10 successes
 	* BUG,mission.php: 
 	fixed reward for mission
 	* UPDATE,templates/layout1/battle.tpl, templates/battle.tpl, battle.php:

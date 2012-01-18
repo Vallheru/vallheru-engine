@@ -173,6 +173,10 @@ if (isset($_POST['action']))
 		if ($blnTarget || $blnQuest)
 		  {
 		    $_SESSION['maction']['successes']++;
+		    if ($_SESSION['maction']['successes'] == 10)
+		      {
+			$_SESSION['maction']['rooms'] = 1;
+		      }
 		    if ($blnQuest)
 		      {
 			$_SESSION['maction']['rooms'] = 1;
