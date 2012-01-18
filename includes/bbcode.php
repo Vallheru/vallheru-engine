@@ -131,19 +131,31 @@ function bbcodetohtml($text, $isChat = FALSE)
 	      {
 		$arrResult2 = explode('-', $arrResult[1]);
 		$arrResult[1] = $arrResult2[0];
+		if ($arrResult2[1] < 1)
+		  {
+		    $arrResult2[1] = 1;
+		  }
 		$arrResult2[1] *= -1;
 	      }
 	    else
 	      {
 		$arrResult2 = array(0, 0);
 	      }
+	    if ($arrResult[0] < 1)
+	      {
+		$arrResult[0] = 1;
+	      }
+	    if ($arrResult[1] < 1)
+	      {
+		$arrResult[1] = 1;
+	      }
 	    if ($arrResult[1] > 1000)
 	      {
 		$arrResult[1] = 1000;
 	      }
-	    if ($arrResult2[1] > 100)
+	    if ($arrResult2[1] < -1000)
 	      {
-		$arrResult2[1] = 100;
+		$arrResult2[1] = -1000;
 	      }
 	    $intRoll = 0;
 	    for ($i = 0; $i < $arrResult[0]; $i++)
