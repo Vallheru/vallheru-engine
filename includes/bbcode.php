@@ -7,7 +7,7 @@
  *   @copyright            : (C) 2004,2005,2006,2011,2012 Vallheru Team based on Gamers-Fusion ver 2.5
  *   @author               : thindil <thindil@vallheru.net>
  *   @version              : 1.5
- *   @since                : 17.01.2012
+ *   @since                : 18.01.2012
  *
  */
 
@@ -119,7 +119,7 @@ function bbcodetohtml($text, $isChat = FALSE)
 	    $intStart = $intEnd + 8;
 	  }
 	//Dice roll
-	if (preg_match('/[0-9]+k[0-9]+([\-\+]+[0-9]+)*/', $text, $arrResults))
+	if (preg_match('/[0-9]+k{1}[0-9]+([\-\+]+[0-9]+)*/', $text, $arrResults))
 	  {
 	    $arrResult = explode('k', $arrResults[0]);
 	    if (strpos($arrResult[1], '+') !== FALSE)
@@ -137,7 +137,20 @@ function bbcodetohtml($text, $isChat = FALSE)
 	      {
 		$arrResult2 = array(0, 0);
 	      }
-	    $intRoll = ($arrResult[0] * rand(1, $arrResult[1])) + $arrResult2[1];
+	    if ($arrResult[1] > 1000)
+	      {
+		$arrResult[1] = 1000;
+	      }
+	    if ($arrResult2[1] > 100)
+	      {
+		$arrResult2[1] = 100;
+	      }
+	    $intRoll = 0;
+	    for ($i = 0; $i < $arrResult[0]; $i++)
+	      {
+		$intRoll += rand(1, $arrResult[1]);
+	      }
+	    $intRoll += $arrResult2[1];
 	    $text = str_replace($arrResults[0], '<span style="color:silver;">'.$arrResults[0].' => '.$intRoll.'</span>', $text);
 	  }
       }
