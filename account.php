@@ -7,7 +7,7 @@
  *   @copyright            : (C) 2004,2005,2006,2007,2011,2012 Vallheru Team based on Gamers-Fusion ver 2.5
  *   @author               : thindil <thindil@vallheru.net>
  *   @version              : 1.5
- *   @since                : 04.01.2012
+ *   @since                : 18.01.2012
  *
  */
 
@@ -35,7 +35,7 @@ require_once("includes/head.php");
 /**
 * Get the localization for game
 */
-require_once("languages/".$player -> lang."/account.php");
+require_once("languages/".$lang."/account.php");
 
 /**
 * Assign variable to template
@@ -491,7 +491,7 @@ if (isset($_GET['view']))
 		error(ERROR);
 	      }
 	    $code = rand(1,1000000);
-	    $message = MESSAGE1." ".$gamename." (".$player -> user." ".ID.": ".$player -> id.") ".MESSAGE2." ".$gameadress."/preset.php?id=".$player -> id."&code=".$code." ".MESSAGE4." ".$gameadress."/preset.php?id=".$player -> id." ".MESSAGE4." ".$adminname;
+	    $message = MESSAGE1." ".$gamename." (".$player -> user." ".ID.": ".$player -> id.") ".MESSAGE2." ".$gameadress."/preset.php?id=".$player -> id."&code=".$code." ".MESSAGE3." ".$gameadress."/preset.php?id=".$player -> id." ".MESSAGE4." ".$adminname;
 	    $adress = $_SESSION['email'];
 	    $subject = MSG_TITLE." ".$gamename;
 	    require_once('mailer/mailerconfig.php');
