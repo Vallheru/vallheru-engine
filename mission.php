@@ -210,7 +210,7 @@ if (isset($_POST['action']))
 			//Item from equipment
 		      case 'E':
 			$objItem = $db->Execute("SELECT * FROM `equipment` WHERE `owner`=0 AND `name`='".$arrItem[0]."'");
-			$objTest = $db -> Execute("SELECT `id` FROM `equipment` WHERE `name`='".$arrItem[0]."' AND `wt`=".$objItem->fields['wt']." AND `type`='".$objItem->fields['type']."' AND `status`='U' AND `owner`=".$player->id." AND `power`=".$objItem->fields['power']." AND `zr`=".$objItem->fields['zr'." AND `szyb`=".$objItem->fields['szyb']." AND `maxwt`=".$objItem->fields['maxwt']." AND `poison`=0 AND `cost`=1 AND `twohand`='".$objItem->fields['twohand']."' AND `repair`=".$objItem->fields['repair']);
+			$objTest = $db -> Execute("SELECT `id` FROM `equipment` WHERE `name`='".$arrItem[0]."' AND `wt`=".$objItem->fields['wt']." AND `type`='".$objItem->fields['type']."' AND `status`='U' AND `owner`=".$player->id." AND `power`=".$objItem->fields['power']." AND `zr`=".$objItem->fields['zr']." AND `szyb`=".$objItem->fields['szyb']." AND `maxwt`=".$objItem->fields['maxwt']." AND `poison`=0 AND `cost`=1 AND `twohand`='".$objItem->fields['twohand']."' AND `repair`=".$objItem->fields['repair']);
 			if (!$test -> fields['id']) 
 			  {
 			    $db -> Execute("INSERT INTO `equipment` (`owner`, `name`, `power`, `type`, `cost`, `zr`, `wt`, `minlev`, `maxwt`, `amount`, `magic`, `poison`, `szyb`, `twohand`, `repair`) VALUES(".$player->id.", '".$arrItem[0]."', ".$objItem->fields['power'].", '".$objItem->fields['type']."', 1, ".$objItem->fields['zr'].", ".$objItem->fields['wt'].", ".$objItem->fields['minlev'].", ".$objItem->fields['maxwt'].", 1, 'N', 0, 0, '".$objItem->fields['twohand']."', ".$objItem->fields['repair'].")");
