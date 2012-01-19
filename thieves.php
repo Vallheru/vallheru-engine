@@ -190,7 +190,7 @@ else
 	while ($i < 3)
 	  {
 	    //$intKey = rand(0, 3);
-	    $intKey = 1;
+	    $intKey = rand(1, 2);
 	    switch ($intKey)
 	      {
 		//Home robbery
@@ -348,15 +348,12 @@ else
 	      {
 	      case 0:
 		$intRooms = rand(5, 15);
-		$strTarget = 'Y';
 		break;
 	      case 20:
 		$intRooms = rand(6, 20);
-		$strTarget = 'Y';
 		break;
 	      case 60:
 		$intRooms = rand(8, 25);
-		$strTarget = 'Y';
 		break;
 	      case 90:
 		$intRooms = rand(10, 35);
