@@ -141,6 +141,10 @@ function bbcodetohtml($text, $isChat = FALSE)
 	      {
 		$arrResult2 = array(0, 0);
 	      }
+	    if ($arrResult[0] > 1000)
+	      {
+		$arrResult[0] = 1000;
+	      }
 	    if ($arrResult[0] < 1)
 	      {
 		$arrResult[0] = 1;

@@ -8,7 +8,7 @@
  *   @author               : thindil <thindil@vallheru.net>
  *   @author               : eyescream <tduda@users.sourceforge.net>
  *   @version              : 1.5
- *   @since                : 07.01.2012
+ *   @since                : 19.01.2012
  *
  */
 
@@ -831,13 +831,13 @@ function attack1($attacker, $defender, $arrAtequip, $arrDeequip, $attack_bspell,
         if ($arrAtequip[0][0]) 
         {
             gainability($attacker['id'], $attacker['user'], 0, $attack_attack, 0, $attacker['mana'], $starter, 'weapon');
-            lostitem($attack_durwep, $arrAtequip[0][6], YOU_WEAPON, $attacker['id'], $arrAtequip[0][0], $starter, HAS_BEEN1);
+            lostitem($attack_durwep, $arrAtequip[0][6], YOU_WEAPON, $attacker['id'], $arrAtequip[0][0], $starter, HAS_BEEN1, $attacker['level']);
         }
         if ($arrAtequip[1][0]) 
         {
             gainability($attacker['id'], $attacker['user'], 0, $attack_attack, 0, $attacker['mana'], $starter, 'bow');
-            lostitem($attack_durwep, $arrAtequip[1][6], YOU_WEAPON, $attacker['id'], $arrAtequip[1][0], $starter, HAS_BEEN1);
-            lostitem($attack_durwep, $arrAtequip[6][6], YOU_QUIVER, $attacker['id'], $arrAtequip[6][0], $starter, HAS_BEEN1);
+            lostitem($attack_durwep, $arrAtequip[1][6], YOU_WEAPON, $attacker['id'], $arrAtequip[1][0], $starter, HAS_BEEN1, $attacker['level']);
+            lostitem($attack_durwep, $arrAtequip[6][6], YOU_QUIVER, $attacker['id'], $arrAtequip[6][0], $starter, HAS_BEEN1, $attacker['level']);
         }
 	if ($arrAtequip[11][0])
 	  {
@@ -845,18 +845,18 @@ function attack1($attacker, $defender, $arrAtequip, $arrDeequip, $attack_bspell,
 	      {
 		gainability($attacker['id'], $attacker['user'], 0, $attack_attack, 0, $attacker['mana'], $starter, 'weapon');
 	      }
-	    lostitem($attack_durwep, $arrAtequip[11][6], YOU_WEAPON, $attacker['id'], $arrAtequip[11][0], $starter, HAS_BEEN1);
+	    lostitem($attack_durwep, $arrAtequip[11][6], YOU_WEAPON, $attacker['id'], $arrAtequip[11][0], $starter, HAS_BEEN1, $attacker['level']);
 	  }
         if ($arrDeequip[0][0]) 
         {
             gainability($defender['id'], $defender['user'], 0, $def_attack, 0, $defender['mana'], $starter, 'weapon');
-            lostitem($def_durwep, $arrDeequip[0][6], YOU_WEAPON, $defender['id'], $arrDeequip[0][0], $starter, HAS_BEEN1);
+            lostitem($def_durwep, $arrDeequip[0][6], YOU_WEAPON, $defender['id'], $arrDeequip[0][0], $starter, HAS_BEEN1, $defender['level']);
         }
         if ($arrDeequip[1][0]) 
         {
             gainability($defender['id'], $defender['user'], 0, $def_attack, 0, $defender['mana'], $starter, 'bow');
-            lostitem($def_durwep, $arrDeequip[1][6], YOU_WEAPON, $defender['id'], $arrDeequip[1][0], $starter, HAS_BEEN1);
-            lostitem($def_durwep, $arrDeequip[6][6], YOU_QUIVER, $defender['id'], $arrDeequip[6][0], $starter, HAS_BEEN1);
+            lostitem($def_durwep, $arrDeequip[1][6], YOU_WEAPON, $defender['id'], $arrDeequip[1][0], $starter, HAS_BEEN1, $defender['level']);
+            lostitem($def_durwep, $arrDeequip[6][6], YOU_QUIVER, $defender['id'], $arrDeequip[6][0], $starter, HAS_BEEN1, $defender['level']);
         }
 	if ($arrDeequip[11][0])
 	  {
@@ -864,39 +864,39 @@ function attack1($attacker, $defender, $arrAtequip, $arrDeequip, $attack_bspell,
 	      {
 		gainability($defender['id'], $defender['user'], 0, $def_attack, 0, $defender['mana'], $starter, 'weapon');
 	      }
-	    lostitem($def_durwep, $arrDeequip[11][6], YOU_WEAPON, $defender['id'], $arrDeequip[11][0], $starter, HAS_BEEN1);
+	    lostitem($def_durwep, $arrDeequip[11][6], YOU_WEAPON, $defender['id'], $arrDeequip[11][0], $starter, HAS_BEEN1, $defender['level']);
 	  }
         if ($arrDeequip[3][0]) 
         {
-            lostitem($def_durarm[0], $arrDeequip[3][6], YOU_ARMOR, $defender['id'], $arrDeequip[3][0], $starter, HAS_BEEN1);
+            lostitem($def_durarm[0], $arrDeequip[3][6], YOU_ARMOR, $defender['id'], $arrDeequip[3][0], $starter, HAS_BEEN1, $defender['level']);
         }
         if ($arrDeequip[2][0]) 
         {
-            lostitem($def_durarm[1], $arrDeequip[2][6], YOU_HELMET, $defender['id'], $arrDeequip[2][0], $starter, HAS_BEEN1);
+            lostitem($def_durarm[1], $arrDeequip[2][6], YOU_HELMET, $defender['id'], $arrDeequip[2][0], $starter, HAS_BEEN1, $defender['level']);
         }
         if ($arrDeequip[4][0]) 
         {
-            lostitem($def_durarm[2], $arrDeequip[4][6], YOU_LEGS, $defender['id'], $arrDeequip[4][0], $starter, HAS_BEEN2);
+            lostitem($def_durarm[2], $arrDeequip[4][6], YOU_LEGS, $defender['id'], $arrDeequip[4][0], $starter, HAS_BEEN2, $defender['level']);
         }
         if ($arrDeequip[5][0]) 
         {
-            lostitem($def_durarm[3], $arrDeequip[5][6], YOU_SHIELD, $defender['id'], $arrDeequip[5][0], $starter, HAS_BEEN1);
+            lostitem($def_durarm[3], $arrDeequip[5][6], YOU_SHIELD, $defender['id'], $arrDeequip[5][0], $starter, HAS_BEEN1, $defender['level']);
         }
         if ($arrAtequip[3][0]) 
         {
-            lostitem($attack_durarm[0], $arrAtequip[3][6], YOU_ARMOR, $attacker['id'], $arrAtequip[3][0], $starter, HAS_BEEN1);
+            lostitem($attack_durarm[0], $arrAtequip[3][6], YOU_ARMOR, $attacker['id'], $arrAtequip[3][0], $starter, HAS_BEEN1, $attacker['level']);
         }
         if ($arrAtequip[2][0]) 
         {
-            lostitem($attack_durarm[1], $arrAtequip[2][6], YOU_HELMET, $attacker['id'], $arrAtequip[2][0], $starter, HAS_BEEN1);
+            lostitem($attack_durarm[1], $arrAtequip[2][6], YOU_HELMET, $attacker['id'], $arrAtequip[2][0], $starter, HAS_BEEN1, $attacker['level']);
         }
         if ($arrAtequip[4][0]) 
         {
-            lostitem($attack_durarm[2], $arrAtequip[4][6], YOU_LEGS, $attacker['id'], $arrAtequip[4][0], $starter, HAS_BEEN2);
+            lostitem($attack_durarm[2], $arrAtequip[4][6], YOU_LEGS, $attacker['id'], $arrAtequip[4][0], $starter, HAS_BEEN2, $attacker['level']);
         }
         if ($arrAtequip[5][0]) 
         {
-            lostitem($attack_durarm[3], $arrAtequip[5][6], YOU_SHIELD, $attacker['id'], $arrAtequip[5][0], $starter, HAS_BEEN1);
+            lostitem($attack_durarm[3], $arrAtequip[5][6], YOU_SHIELD, $attacker['id'], $arrAtequip[5][0], $starter, HAS_BEEN1, $attacker['level']);
         }
         $db -> Execute("UPDATE `players` SET `hp`=".$attacker['hp'].", `bless`='', `blessval`=0 WHERE `id`=".$attacker['id']);
         $db -> Execute("UPDATE `players` SET `hp`=".$defender['hp'].", `bless`='', `blessval`=0 WHERE `id`=".$defender['id']);
@@ -1025,13 +1025,13 @@ function attack1($attacker, $defender, $arrAtequip, $arrDeequip, $attack_bspell,
         if ($arrAtequip[0][0]) 
         {
             gainability($attacker['id'], $attacker['user'], 0, $attack_attack, 0, $attacker['mana'], $starter, 'weapon');
-            lostitem($attack_durwep, $arrAtequip[0][6], YOU_WEAPON, $attacker['id'], $arrAtequip[0][0], $starter, HAS_BEEN1);
+            lostitem($attack_durwep, $arrAtequip[0][6], YOU_WEAPON, $attacker['id'], $arrAtequip[0][0], $starter, HAS_BEEN1, $attacker['level']);
         }
         if ($arrAtequip[1][0]) 
         {
             gainability($attacker['id'], $attacker['user'], 0, $attack_attack, 0, $attacker['mana'], $starter, 'bow');
-            lostitem($attack_durwep, $arrAtequip[1][6], YOU_WEAPON, $attacker['id'], $arrAtequip[1][0], $starter, HAS_BEEN1);
-            lostitem($attack_durwep, $arrAtequip[6][6], YOU_QUIVER, $attacker['id'], $arrAtequip[6][0], $starter, HAS_BEEN1);
+            lostitem($attack_durwep, $arrAtequip[1][6], YOU_WEAPON, $attacker['id'], $arrAtequip[1][0], $starter, HAS_BEEN1, $attacker['level']);
+            lostitem($attack_durwep, $arrAtequip[6][6], YOU_QUIVER, $attacker['id'], $arrAtequip[6][0], $starter, HAS_BEEN1, $attacker['level']);
         }
 	if ($arrAtequip[11][0])
 	  {
@@ -1039,18 +1039,18 @@ function attack1($attacker, $defender, $arrAtequip, $arrDeequip, $attack_bspell,
 	      {
 		gainability($attacker['id'], $attacker['user'], 0, $attack_attack, 0, $attacker['mana'], $starter, 'weapon');
 	      }
-	    lostitem($attack_durwep, $arrAtequip[11][6], YOU_WEAPON, $attacker['id'], $arrAtequip[11][0], $starter, HAS_BEEN1);
+	    lostitem($attack_durwep, $arrAtequip[11][6], YOU_WEAPON, $attacker['id'], $arrAtequip[11][0], $starter, HAS_BEEN1, $attacker['level']);
 	  }
         if ($arrDeequip[0][0]) 
         {
             gainability($defender['id'], $defender['user'], 0, $def_attack, 0, $defender['mana'], $starter, 'weapon');
-            lostitem($def_durwep, $arrDeequip[0][6], YOU_WEAPON, $defender['id'], $arrDeequip[0][0], $starter, HAS_BEEN1);
+            lostitem($def_durwep, $arrDeequip[0][6], YOU_WEAPON, $defender['id'], $arrDeequip[0][0], $starter, HAS_BEEN1, $defender['level']);
         }
         if ($arrDeequip[1][0]) 
         {
             gainability($defender['id'], $defender['user'], 0, $def_attack, 0, $defender['mana'], $starter, 'bow');
-            lostitem($def_durwep, $arrDeequip[1][6], YOU_WEAPON, $defender['id'], $arrDeequip[1][0], $starter, HAS_BEEN1);
-            lostitem($def_durwep, $arrDeequip[6][6], YOU_QUIVER, $defender['id'], $arrDeequip[6][0], $starter, HAS_BEEN1);
+            lostitem($def_durwep, $arrDeequip[1][6], YOU_WEAPON, $defender['id'], $arrDeequip[1][0], $starter, HAS_BEEN1, $defender['level']);
+            lostitem($def_durwep, $arrDeequip[6][6], YOU_QUIVER, $defender['id'], $arrDeequip[6][0], $starter, HAS_BEEN1, $defender['level']);
         }
 	if ($arrDeequip[11][0])
 	  {
@@ -1058,39 +1058,39 @@ function attack1($attacker, $defender, $arrAtequip, $arrDeequip, $attack_bspell,
 	      {
 		gainability($defender['id'], $defender['user'], 0, $def_attack, 0, $defender['mana'], $starter, 'weapon');
 	      }
-	    lostitem($def_durwep, $arrDeequip[11][6], YOU_WEAPON, $defender['id'], $arrDeequip[11][0], $starter, HAS_BEEN1);
+	    lostitem($def_durwep, $arrDeequip[11][6], YOU_WEAPON, $defender['id'], $arrDeequip[11][0], $starter, HAS_BEEN1, $defender['level']);
 	  }
         if ($arrDeequip[3][0]) 
         {
-            lostitem($def_durarm[0], $arrDeequip[3][6], YOU_ARMOR, $defender['id'], $arrDeequip[3][0], $starter, HAS_BEEN1);
+            lostitem($def_durarm[0], $arrDeequip[3][6], YOU_ARMOR, $defender['id'], $arrDeequip[3][0], $starter, HAS_BEEN1, $defender['level']);
         }
         if ($arrDeequip[2][0]) 
         {
-            lostitem($def_durarm[1], $arrDeequip[2][6], YOU_HELMET, $defender['id'], $arrDeequip[2][0], $starter, HAS_BEEN1);
+            lostitem($def_durarm[1], $arrDeequip[2][6], YOU_HELMET, $defender['id'], $arrDeequip[2][0], $starter, HAS_BEEN1, $defender['level']);
         }
         if ($arrDeequip[4][0]) 
         {
-            lostitem($def_durarm[2], $arrDeequip[4][6], YOU_LEGS, $defender['id'], $arrDeequip[4][0], $starter, HAS_BEEN2);
+            lostitem($def_durarm[2], $arrDeequip[4][6], YOU_LEGS, $defender['id'], $arrDeequip[4][0], $starter, HAS_BEEN2, $defender['level']);
         }
         if ($arrDeequip[5][0]) 
         {
-            lostitem($def_durarm[3], $arrDeequip[5][6], YOU_SHIELD, $defender['id'], $arrDeequip[5][0], $starter, HAS_BEEN1);
+            lostitem($def_durarm[3], $arrDeequip[5][6], YOU_SHIELD, $defender['id'], $arrDeequip[5][0], $starter, HAS_BEEN1, $defender['level']);
         }
         if ($arrAtequip[3][0]) 
         {
-            lostitem($attack_durarm[0], $arrAtequip[3][6], YOU_ARMOR, $attacker['id'], $arrAtequip[3][0], $starter, HAS_BEEN1);
+            lostitem($attack_durarm[0], $arrAtequip[3][6], YOU_ARMOR, $attacker['id'], $arrAtequip[3][0], $starter, HAS_BEEN1, $attacker['level']);
         }
         if ($arrAtequip[2][0]) 
         {
-            lostitem($attack_durarm[1], $arrAtequip[2][6], YOU_HELMET, $attacker['id'], $arrAtequip[2][0], $starter, HAS_BEEN1);
+            lostitem($attack_durarm[1], $arrAtequip[2][6], YOU_HELMET, $attacker['id'], $arrAtequip[2][0], $starter, HAS_BEEN1, $attacker['level']);
         }
         if ($arrAtequip[4][0]) 
         {
-            lostitem($attack_durarm[2], $arrAtequip[4][6], YOU_LEGS, $attacker['id'], $arrAtequip[4][0], $starter, HAS_BEEN2);
+            lostitem($attack_durarm[2], $arrAtequip[4][6], YOU_LEGS, $attacker['id'], $arrAtequip[4][0], $starter, HAS_BEEN2, $attacker['level']);
         }
         if ($arrAtequip[5][0]) 
         {
-            lostitem($attack_durarm[3], $arrAtequip[5][6], YOU_SHIELD, $attacker['id'], $arrAtequip[5][0], $starter, HAS_BEEN1);
+            lostitem($attack_durarm[3], $arrAtequip[5][6], YOU_SHIELD, $attacker['id'], $arrAtequip[5][0], $starter, HAS_BEEN1, $attacker['level']);
         }
         $db -> Execute("UPDATE `players` SET `hp`=".$attacker['hp'].", `credits`=`credits`+".$creditgain.", `wins`=`wins`+1, `lastkilled`='".'<a href="view.php?view='.$defender['id'].'">'.$defender['user']."</a>', `bless`='', `blessval`=0 WHERE `id`=".$attacker['id']);
         $db -> Execute("UPDATE `players` SET `credits`=`credits`-".$creditgain.", `losses`=`losses`+1, `lastkilledby`='".'<a href="view.php?view='.$attacker['id'].'">'.$attacker['user']."</a>', `bless`='', `blessval`=0 WHERE `id`=".$defender['id']);
