@@ -7,7 +7,7 @@
  *   @copyright            : (C) 2012 Vallheru Team based on Gamers-Fusion ver 2.5
  *   @author               : thindil <thindil@vallheru.net>
  *   @version              : 1.5
- *   @since                : 18.01.2012
+ *   @since                : 19.01.2012
  *
  */
 
@@ -108,7 +108,7 @@ if (isset($_POST['action']))
       {
 	error('Zapomnij o tym!');
       }
-    //Player choice action with mob
+    //Player choice action with mob or item
     if (in_array($_POST['action'], $arrMactions) || in_array($_POST['action'], $arrIactions))
       {
 	$intDiff = 10;
@@ -180,6 +180,49 @@ if (isset($_POST['action']))
 		    if ($blnQuest)
 		      {
 			$_SESSION['maction']['rooms'] = 1;
+		      }
+		  }
+		//Iteraction with item
+		elseif (in_array($_POST['action'], $arrIactions))
+		  {
+		    $intItem = array_search($_POST['action'], $arrIactions);
+		    $arrItem = explode(',', $_SESSION['maction']['items'][$intItem]);
+		    switch ($arrItem[1])
+		      {
+			//Quest target = finish mission
+		      case 'Q':
+			$_SESSION['maction']['rooms'] = 1;
+			break;
+			//Other item
+		      case 'O':
+			$intCost = $player->level * 10;
+			$objTest = $db->Execute("SELECT `id` FROM `equipment` WHERE `owner`=".$player->id." AND `name`='".$arrItem[0]."' AND `type`='Q' AND `cost`=".$intCost);
+			if (!$objTest->fields['id'])
+			  {
+			    $db->Execute("INSERT INTO `equipment` (`owner`, `name`, `type`, `cost`) VALUES (".$player->id.", '".$arrItem[0]."', 'Q', ".$intCost.")") or die($db->ErrorMsg());
+			  }
+			else
+			  {
+			    $db->Execute("UPDATE `equipment` SET `amount`=`amount`+1 WHERE `id`=".$objTest->fields['id']);
+			  }
+			$objTest->Close();
+			break;
+			//Item from equipment
+		      case 'E':
+			$objItem = $db->Execute("SELECT * FROM `equipment` WHERE `owner`=0 AND `name`='".$arrItem[0]."'");
+			$objTest = $db -> Execute("SELECT `id` FROM `equipment` WHERE `name`='".$arrItem[0]."' AND `wt`=".$objItem->fields['wt']." AND `type`='".$objItem->fields['type']."' AND `status`='U' AND `owner`=".$player->id." AND `power`=".$objItem->fields['power']." AND `zr`=".$objItem->fields['zr'." AND `szyb`=".$objItem->fields['szyb']." AND `maxwt`=".$objItem->fields['maxwt']." AND `poison`=0 AND `cost`=1 AND `twohand`='".$objItem->fields['twohand']."' AND `repair`=".$objItem->fields['repair']);
+			if (!$test -> fields['id']) 
+			  {
+			    $db -> Execute("INSERT INTO `equipment` (`owner`, `name`, `power`, `type`, `cost`, `zr`, `wt`, `minlev`, `maxwt`, `amount`, `magic`, `poison`, `szyb`, `twohand`, `repair`) VALUES(".$player->id.", '".$arrItem[0]."', ".$objItem->fields['power'].", '".$objItem->fields['type']."', 1, ".$objItem->fields['zr'].", ".$objItem->fields['wt'].", ".$objItem->fields['minlev'].", ".$objItem->fields['maxwt'].", 1, 'N', 0, 0, '".$objItem->fields['twohand']."', ".$objItem->fields['repair'].")");
+			  } 
+			else 
+			  {
+			    $db -> Execute("UPDATE `equipment` SET `amount`=`amount`+1 WHERE `id`=".$objTest->fields['id']);
+			  }
+			$objTest->Close();
+			break;
+		      default:
+			break;
 		      }
 		  }
 	      }
