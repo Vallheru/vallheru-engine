@@ -8,7 +8,7 @@
  *   @author               : thindil <thindil@vallheru.net>
  *   @author               : eyescream <tduda@users.sourceforge.net>
  *   @version              : 1.5
- *   @since                : 10.01.2012
+ *   @since                : 19.01.2012
  *
  */
  
@@ -1181,6 +1181,7 @@ if (isset ($_GET['view']) && $_GET['view'] == 'shop')
                              "Crystalpcs" => CRYSTAL_PIECES,
                              "Adamantiumpcs" => ADAMANTIUM_PIECES,
                              "Meteorpcs" => METEOR_PIECES));
+    $arrOutpostLevels = array();
     if ($intMaxLevel = checkresources ('size', $player -> platinum, $dbMinerals -> fields['pine']))
     {
         $intGoldSum = 0;
@@ -1192,10 +1193,7 @@ if (isset ($_GET['view']) && $_GET['view'] == 'shop')
             $arrOutpostLevels[ $i ] = ($i + $out -> fields['size']).': '.$intGoldSum.GOLD_COINS.', '.($i * 10).PLATINUM_PIECES.', '.$intPineSum.PINE_PIECES;
         }
     }
-        else
-    {
-        $arrOutpostLevels = array();
-    }
+    $arrLairLevels = array();
     if ($intMaxLair = checkresources ('fence', $dbMinerals -> fields['meteor'], $dbMinerals -> fields['crystal']))
     {
         $intMeteorSum = 0;
@@ -1204,10 +1202,6 @@ if (isset ($_GET['view']) && $_GET['view'] == 'shop')
             $intMeteorSum += $i + $out -> fields['fence'];
             $arrLairLevels[ $i ] = ($i + $out -> fields['fence']).': '.(50 * $intMeteorSum).GOLD_COINS.', '.$intMeteorSum.METEOR_PIECES.', '.(5 * $intMeteorSum).CRYSTAL_PIECES;
         }
-    }
-        else
-    {
-        $arrLairLevels = array();
     }
     $arrBarrackLevels = array();
     if ($intMaxBarracks = checkresources ('barracks', $dbMinerals -> fields['meteor'], $dbMinerals -> fields['adamantium']))
