@@ -7,7 +7,7 @@
  *   @copyright            : (C) 2004,2005,2006,2011,2012 Vallheru Team based on Gamers-Fusion ver 2.5
  *   @author               : thindil <thindil@vallheru.net>
  *   @version              : 1.5
- *   @since                : 03.01.2012
+ *   @since                : 19.01.2012
  *
  */
 
@@ -158,7 +158,7 @@ if (isset ($_GET['view']) && $_GET['view'] == 'topics')
 	$intPage = $intPages;
       }
     
-    $topic = $db->SelectLimit("SELECT * FROM `tribe_topics` WHERE `tribe`=".$player->tribe." AND `sticky`='N' ORDER BY `id` ASC", 25, 25 * ($intPage - 1));
+    $topic = $db->SelectLimit("SELECT * FROM `tribe_topics` WHERE `tribe`=".$player->tribe." AND `sticky`='N' ORDER BY `w_time` DESC", 25, 25 * ($intPage - 1));
     while (!$topic -> EOF) 
     {
         $arrid[$i] = $topic -> fields['id'];

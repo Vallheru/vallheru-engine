@@ -8,7 +8,7 @@
  *   @author               : thindil <thindil@vallheru.net>
  *   @author               : mori <ziniquel@users.sourceforge.net>
  *   @version              : 1.5
- *   @since                : 03.01.2012
+ *   @since                : 19.01.2012
  *
  */
 
@@ -267,15 +267,15 @@ if (isset($_GET['topics']))
 	  $strOrder = '`replies` ASC';
 	  break;
 	default:
-	  $strOrder = '`id` ASC';
-	  $_SESSION['fsort'] = 3;
+	  $strOrder = '`w_time` DESC';
+	  $_SESSION['fsort'] = 0;
 	  break;
 	}
       }
     else
       {
-	$strOrder = '`id` ASC';
-	$_SESSION['fsort'] = 3;
+	$strOrder = '`w_time` DESC';
+	$_SESSION['fsort'] = 0;
       }
     $topic = $db -> SelectLimit("SELECT `w_time`, `id`, `topic`, `starter`, `closed`, `gracz`, `replies` FROM `topics` WHERE `sticky`='N' AND `cat_id`=".$_GET['topics']." ORDER BY ".$strOrder, 25, $intOffset);
     while (!$topic -> EOF) 
