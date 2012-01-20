@@ -8,7 +8,7 @@
  *   @author               : thindil <thindil@vallheru.net>
  *   @author               : mori <ziniquel@users.sourceforge.net>
  *   @version              : 1.5
- *   @since                : 19.01.2012
+ *   @since                : 20.01.2012
  *
  */
 
@@ -147,6 +147,49 @@ if (isset($_GET['view']) && ($_GET['view'] == 'newposts'))
 			  "Tpages" => $pages,
 			  "Tpage" => $page,
 			  "Fpage" => "Idź do strony:",));
+  }
+
+/**
+* Delete topic
+*/
+if (isset($_GET['kasuj1'])) 
+{
+    if ($player -> rank != 'Admin' && $player -> rank != 'Staff')
+    {
+        error(ERROR);
+    }
+    checkvalue($_GET['kasuj1']);
+    $cid = $db -> Execute("SELECT `cat_id` FROM `topics` WHERE `id`=".$_GET['kasuj1']);
+    $db -> Execute("DELETE FROM `replies` WHERE `topic_id`=".$_GET['kasuj1']);
+    $db -> Execute("DELETE FROM `topics` WHERE `id`=".$_GET['kasuj1']);
+    message('success', TOPIC_DEL);
+    $_GET['topics'] = $cid->fields['cat_id'];
+    $cid->Close();
+}
+
+/**
+ * Delete selected topics
+ */
+if (isset($_GET['action']) && $_GET['action'] == 'deltopics')
+  {
+    if ($player -> rank != 'Admin' && $player -> rank != 'Staff')
+    {
+        error(ERROR);
+    }
+    checkvalue($_POST['catid']);
+    $objTopics = $db->Execute("SELECT `id` FROM `topics` WHERE `cat_id`=".$_POST['catid']);
+    while (!$objTopics->EOF)
+      {
+	if (isset($_POST[$objTopics->fields['id']]))
+	  {
+	    $db -> Execute("DELETE FROM `replies` WHERE `topic_id`=".$objTopics->fields['id']);
+	    $db -> Execute("DELETE FROM `topics` WHERE `id`=".$objTopics->fields['id']);
+	  }
+	$objTopics->MoveNext();
+      }
+    $objTopics->Close();
+    message('success',  "Wybrane tematy zostały skasowane.");
+    $_GET['topics'] = $_POST['catid'];
   }
 
 /**
@@ -346,6 +389,269 @@ if (isset($_GET['topics']))
 }
 
 /**
+* Add topic
+*/
+if (isset ($_GET['action']) && $_GET['action'] == 'addtopic') 
+{
+    $_POST['title2'] = strip_tags($_POST['title2']);
+    $blnValid = TRUE;
+    if (empty ($_POST['title2']) || empty ($_POST['body'])) 
+      {
+	$blnValid = FALSE;
+        message('error', EMPTY_FIELDS);
+      }
+    $objBan = $db->Execute("SELECT `pid` FROM `ban_forum` WHERE `pid`=".$player->id);
+    if ($objBan->fields['pid'])
+      {
+	$blnValid = FALSE;
+	message('error', 'Nie możesz tworzyć nowych tematów, ponieważ masz zablokowane pisanie na forum. (<a href="forums.php?view=categories">Wróć</a>)');
+      }
+    $objBan->Close();
+    /**
+     * Check for permissions
+     */
+    checkvalue($_POST['catid']);
+    if ($player -> rank != 'Admin')
+    {
+        $objPerm = $db -> Execute("SELECT `perm_write` FROM `categories` WHERE `id`=".$_POST['catid']);
+        if ($objPerm -> fields['perm_write'] != 'All;')
+        {
+            $intPerm = strpos($objPerm -> fields['perm_write'], $player -> rank);
+            if ($intPerm === false)
+	      {
+		message('error', NO_PERM2);
+	      }
+        }
+        $objPerm -> Close();
+    }
+    if (isset($_POST['sticky']))
+    {
+        if ($player -> rank != 'Admin' && $player -> rank != 'Staff')
+	  {
+	    message('error', NO_PERM3);
+	  }
+        $strSticky = 'Y';
+    }
+    else
+    {
+        $strSticky = 'N';
+    }
+    if ($blnValid)
+      {
+	require_once('includes/bbcode.php');
+	$_POST['body'] = bbcodetohtml($_POST['body']);
+	if (strlen($_POST['title2']) > 100)
+	  {
+	    $_POST['title2'] = substr($_POST['title2'], 0, 97).'...';
+	  }
+	$_POST['title2'] = "<b>".$data." ".$time."</b> ".$_POST['title2'];
+	$strBody = $db -> qstr($_POST['body'], get_magic_quotes_gpc());
+	$strTitle = $db -> qstr($_POST['title2'], get_magic_quotes_gpc());
+	$strAuthor = $arrTags[$player->tribe][0]." ".$player->user." ".$arrTags[$player->tribe][1];
+	$db -> Execute("INSERT INTO `topics` (`topic`, `body`, `starter`, `gracz`, `cat_id`, `w_time`, `sticky`) VALUES(".$strTitle.", ".$strBody.", '".$strAuthor."', ".$player -> id.", ".$_POST['catid'].", ".$ctime.", '".$strSticky."')") or die("Could not add topic.");
+	$objTid = $db->Execute("SELECT MAX(`id`) FROM `topics` WHERE `gracz`=".$player->id);
+	$_GET['topic'] = $objTid->fields['MAX(`id`)'];
+	$objTid->Close();
+	message('success', TOPIC_ADD);
+      }
+}
+
+/**
+* Add reply
+*/
+if (isset($_GET['reply'])) 
+  {
+    checkvalue($_GET['reply']);
+    $blnValid = TRUE;
+    $query = $db -> Execute("SELECT `cat_id`, `closed` FROM `topics` WHERE `id`=".$_GET['reply']);
+    if (!$query->fields['cat_id']) 
+      {
+	message('error', NO_TOPIC.'. (<a href="forums.php?view=categories">Wróć</a>)');
+	$blnValid = FALSE;
+      }
+    $objBan = $db->Execute("SELECT `pid` FROM `ban_forum` WHERE `pid`=".$player->id);
+    if ($objBan->fields['pid'])
+      {
+	message('error', 'Nie możesz dodać odpowiedzi, ponieważ masz zablokowane pisanie na forum. (<a href="forums.php?view=categories">Wróć</a>)');
+	$blnValid = FALSE;
+      }
+    $objBan->Close();
+    /**
+     * Check for permissions
+     */
+    if ($player -> rank != 'Admin')
+    {
+        $objPerm = $db -> Execute("SELECT `perm_write` FROM `categories` WHERE `id`=".$query -> fields['cat_id']);
+        if ($objPerm -> fields['perm_write'] != 'All;')
+        {
+            $intPerm = strpos($objPerm -> fields['perm_write'], $player -> rank);
+            if ($intPerm === false)
+	      {
+		message('error', NO_PERM2);
+		$blnValid = FALSE;
+	      }
+        }
+        $objPerm -> Close();
+    }
+    if ($query->fields['closed'] == 'Y')
+      {
+	message('error', "Ten temat jest zamknięty.");
+	$blnValid = FALSE;
+      }
+    $query -> Close();
+    if (empty ($_POST['rep'])) 
+      {
+	message('error', EMPTY_FIELDS);
+	$blnValid = FALSE;
+      }
+    if ($blnValid)
+      {
+	require_once('includes/bbcode.php');
+	$_POST['rep'] = bbcodetohtml($_POST['rep']);
+	$_POST['rep'] = "<b>".$data." ".$time."</b><br />".$_POST['rep'];
+	$strBody = $db -> qstr($_POST['rep'], get_magic_quotes_gpc());
+	$strAuthor = $arrTags[$player->tribe][0]." ".$player->user." ".$arrTags[$player->tribe][1];
+	$db -> Execute("INSERT INTO `replies` (`starter`, `topic_id`, `body`, `gracz`) VALUES('".$strAuthor."', ".$_GET['reply'].", ".$strBody.", ".$player -> id.")") or die("Could not add reply.");
+	$db->Execute("UPDATE `topics` SET `w_time`=".$ctime.", `replies`=`replies`+1 WHERE `id`=".$_GET['reply']);
+	$_GET['topic'] = $_GET['reply'];
+	message('success', REPLY_ADD);
+      }
+}
+
+/**
+* Delete post
+*/
+if (isset($_GET['kasuj'])) 
+{
+    if ($player -> rank != 'Admin' && $player -> rank != 'Staff')
+    {
+        error(ERROR);
+    }
+    checkvalue($_GET['kasuj']);
+    $tid = $db -> Execute("SELECT `topic_id` FROM `replies` WHERE `id`=".$_GET['kasuj']);
+    $db -> Execute("DELETE FROM `replies` WHERE `id`=".$_GET['kasuj']);
+    $db->Execute("UPDATE `topics` SET `replies`=`replies`-1 WHERE `id`=".$tid->fields['topic_id']);
+    message('success', POST_DEL);
+    $_GET['topic'] = $tid->fields['topic_id'];
+    $tid->Close();
+}
+
+/**
+ * Delete selected replies
+ */
+if (isset($_GET['delreplies']))
+  {
+    if ($player->rank != 'Admin' && $player->rank != 'Staff')
+      {
+        error(ERROR);
+      }
+    checkvalue($_GET['delreplies']);
+    $objReplies = $db->Execute("SELECT `id` FROM `replies` WHERE `topic_id`=".$_GET['delreplies']);
+    $intDeleted = 0;
+    while (!$objReplies->EOF)
+      {
+	if (isset($_POST[$objReplies->fields['id']]))
+	  {
+	    $db->Execute("DELETE FROM `replies` WHERE `id`=".$objReplies->fields['id']);
+	    $intDeleted++;
+	  }
+	$objReplies->MoveNext();
+      }
+    $objReplies->Close();
+    $db->Execute("UPDATE `topics` SET `replies`=`replies`-".$intDeleted." WHERE `id`=".$_GET['delreplies']);
+    message('success', "Wybrane odpowiedzi zostały skasowane.");
+    $_GET['topic'] = $_GET['delreplies'];
+  }
+
+/**
+ * Close/Open topics
+ */
+if (isset($_GET['close']))
+  {
+    if ($player -> rank != 'Admin' && $player -> rank != 'Staff')
+      {
+        error(ERROR);
+      }
+    checkvalue($_GET['close']);
+    if ($_GET['action'] != 'Y' && $_GET['action'] != 'N')
+      {
+        error(ERROR);
+      }
+    $db -> Execute("UPDATE `topics` SET `closed`='".$_GET['action']."' WHERE `id`=".$_GET['close']);
+    if ($_GET['action'] == 'Y')
+      {
+	$strInfo = "Zamknąłeś wybrany temat.";
+      }
+    else
+      {
+        $strInfo = "Otworzyłeś wybrany temat.";
+      }
+    message('success', $strInfo);
+    $_GET['topic'] = $_GET['close'];
+  }
+
+/**
+ * Move topic to other category
+ */
+if (isset($_GET['action']) && $_GET['action'] == 'move')
+  {
+    if ($player->rank != 'Admin' && $player->rank != 'Staff')
+      {
+        error(ERROR);
+      }
+    checkvalue($_GET['tid']);
+    $objCat = $db->Execute("SELECT `id`, `name` FROM `categories` ORDER BY `id` ASC");
+    $arrCats = array();
+    $arrCatid = array();
+    while (!$objCat->EOF)
+      {
+	$arrCatid[] = $objCat->fields['id'];
+	$arrCats[] = $objCat->fields['name'];
+	$objCat->MoveNext();
+      }
+    $objCat->Close();
+    $smarty->assign(array("Categories" => $arrCats,
+			  "Catid" => $arrCatid,
+			  "Amove" => "Przenieś",
+			  "Tto" => "temat do",
+			  "Tid" => $_GET['tid']));
+    if (isset($_POST['category']))
+      {
+	checkvalue($_POST['category']);
+	$db->Execute("UPDATE `topics` SET `cat_id`=".$_POST['category']." WHERE `id`=".$_GET['tid']);
+	message('success', "Temat przeniesiony.");
+	$_GET['topic'] = $_GET['tid'];
+      }
+  }
+
+/**
+ * Sticky/Unsticky topics
+ */
+if (isset($_GET['sticky']))
+{
+    if ($player -> rank != 'Admin' && $player -> rank != 'Staff')
+    {
+        error(ERROR);
+    }
+    checkvalue($_GET['sticky']);
+    if ($_GET['action'] != 'Y' && $_GET['action'] != 'N')
+    {
+        error(ERROR);
+    }
+    $db -> Execute("UPDATE topics SET sticky='".$_GET['action']."' WHERE id=".$_GET['sticky']);
+    if ($_GET['action'] == 'Y')
+    {
+      $strInfo = YOU_STICKY;
+    }
+        else
+    {
+        $strInfo = YOU_UNSTICKY;
+    }
+    message('success', $strInfo);
+    $_GET['topic'] = $_GET['sticky'];
+}
+
+/**
 * View topic
 */
 if (isset($_GET['topic'])) 
@@ -490,286 +796,6 @@ if (isset($_GET['topic']))
 			    "Write" => WRITE));
     $topicinfo -> Close();
 }
-
-/**
-* Add topic
-*/
-if (isset ($_GET['action']) && $_GET['action'] == 'addtopic') 
-{
-    $_POST['title2'] = strip_tags($_POST['title2']);
-    if (empty ($_POST['title2']) || empty ($_POST['body'])) 
-    {
-        error (EMPTY_FIELDS);
-    }
-    $objBan = $db->Execute("SELECT `pid` FROM `ban_forum` WHERE `pid`=".$player->id);
-    if ($objBan->fields['pid'])
-      {
-	error('Nie możesz tworzyć nowych tematów, ponieważ masz zablokowane pisanie na forum. (<a href="forums.php?view=categories">Wróć</a>)');
-      }
-    $objBan->Close();
-    /**
-     * Check for permissions
-     */
-    checkvalue($_POST['catid']);
-    if ($player -> rank != 'Admin')
-    {
-        $objPerm = $db -> Execute("SELECT `perm_write` FROM `categories` WHERE `id`=".$_POST['catid']);
-        if ($objPerm -> fields['perm_write'] != 'All;')
-        {
-            $intPerm = strpos($objPerm -> fields['perm_write'], $player -> rank);
-            if ($intPerm === false)
-            {
-                error(NO_PERM2);
-            }
-        }
-        $objPerm -> Close();
-    }
-    if (isset($_POST['sticky']))
-    {
-        if ($player -> rank != 'Admin' && $player -> rank != 'Staff')
-        {
-            error(NO_PERM3);
-        }
-        $strSticky = 'Y';
-    }
-        else
-    {
-        $strSticky = 'N';
-    }
-    require_once('includes/bbcode.php');
-    $_POST['body'] = bbcodetohtml($_POST['body']);
-    if (strlen($_POST['title2']) > 100)
-      {
-	$_POST['title2'] = substr($_POST['title2'], 0, 97).'...';
-      }
-    $_POST['title2'] = "<b>".$data." ".$time."</b> ".$_POST['title2'];
-    $strBody = $db -> qstr($_POST['body'], get_magic_quotes_gpc());
-    $strTitle = $db -> qstr($_POST['title2'], get_magic_quotes_gpc());
-    $strAuthor = $arrTags[$player->tribe][0]." ".$player->user." ".$arrTags[$player->tribe][1];
-    $db -> Execute("INSERT INTO `topics` (`topic`, `body`, `starter`, `gracz`, `cat_id`, `w_time`, `sticky`) VALUES(".$strTitle.", ".$strBody.", '".$strAuthor."', ".$player -> id.", ".$_POST['catid'].", ".$ctime.", '".$strSticky."')") or die("Could not add topic.");
-    error (TOPIC_ADD." <a href=forums.php?topics=".$_POST['catid'].">".TO_BACK);
-}
-
-/**
-* Add reply
-*/
-if (isset($_GET['reply'])) 
-  {
-    checkvalue($_GET['reply']);
-    $query = $db -> Execute("SELECT `cat_id`, `closed` FROM `topics` WHERE `id`=".$_GET['reply']);
-    if (!$query->fields['cat_id']) 
-    {
-        error (NO_TOPIC.'. (<a href="forums.php?view=categories">Wróć</a>)');
-    }
-    $objBan = $db->Execute("SELECT `pid` FROM `ban_forum` WHERE `pid`=".$player->id);
-    if ($objBan->fields['pid'])
-      {
-	error('Nie możesz dodać odpowiedzi, ponieważ masz zablokowane pisanie na forum. (<a href="forums.php?view=categories">Wróć</a>)');
-      }
-    $objBan->Close();
-    /**
-     * Check for permissions
-     */
-    if ($player -> rank != 'Admin')
-    {
-        $objPerm = $db -> Execute("SELECT `perm_write` FROM `categories` WHERE `id`=".$query -> fields['cat_id']);
-        if ($objPerm -> fields['perm_write'] != 'All;')
-        {
-            $intPerm = strpos($objPerm -> fields['perm_write'], $player -> rank);
-            if ($intPerm === false)
-            {
-                error(NO_PERM2);
-            }
-        }
-        $objPerm -> Close();
-    }
-    if ($query->fields['closed'] == 'Y')
-      {
-	error("Ten temat jest zamknięty.");
-      }
-    $query -> Close();
-    if (empty ($_POST['rep'])) 
-    {
-        error (EMPTY_FIELDS);
-    }
-    require_once('includes/bbcode.php');
-    $_POST['rep'] = bbcodetohtml($_POST['rep']);
-    $_POST['rep'] = "<b>".$data." ".$time."</b><br />".$_POST['rep'];
-    $strBody = $db -> qstr($_POST['rep'], get_magic_quotes_gpc());
-    $strAuthor = $arrTags[$player->tribe][0]." ".$player->user." ".$arrTags[$player->tribe][1];
-    $db -> Execute("INSERT INTO `replies` (`starter`, `topic_id`, `body`, `gracz`) VALUES('".$strAuthor."', ".$_GET['reply'].", ".$strBody.", ".$player -> id.")") or die("Could not add reply.");
-    $db->Execute("UPDATE `topics` SET `w_time`=".$ctime.", `replies`=`replies`+1 WHERE `id`=".$_GET['reply']);
-    error (REPLY_ADD." <a href=forums.php?topic=".$_GET['reply'].">".A_HERE."</a>.");
-}
-
-/**
- * Delete selected replies
- */
-if (isset($_GET['delreplies']))
-  {
-    if ($player->rank != 'Admin' && $player->rank != 'Staff')
-      {
-        error(ERROR);
-      }
-    checkvalue($_GET['delreplies']);
-    $objReplies = $db->Execute("SELECT `id` FROM `replies` WHERE `topic_id`=".$_GET['delreplies']);
-    $intDeleted = 0;
-    while (!$objReplies->EOF)
-      {
-	if (isset($_POST[$objReplies->fields['id']]))
-	  {
-	    $db->Execute("DELETE FROM `replies` WHERE `id`=".$objReplies->fields['id']);
-	    $intDeleted++;
-	  }
-	$objReplies->MoveNext();
-      }
-    $objReplies->Close();
-    $db->Execute("UPDATE `topics` SET `replies`=`replies`-".$intDeleted." WHERE `id`=".$_GET['delreplies']);
-    error("Wybrane odpowiedzi zostały skasowane. (<a href=forums.php?topic=".$_GET['delreplies'].">Wróć</a>)");
-  }
-
-/**
- * Move topic to other category
- */
-if (isset($_GET['action']) && $_GET['action'] == 'move')
-  {
-    if ($player->rank != 'Admin' && $player->rank != 'Staff')
-      {
-        error(ERROR);
-      }
-    checkvalue($_GET['tid']);
-    $objCat = $db->Execute("SELECT `id`, `name` FROM `categories` ORDER BY `id` ASC");
-    $arrCats = array();
-    $arrCatid = array();
-    while (!$objCat->EOF)
-      {
-	$arrCatid[] = $objCat->fields['id'];
-	$arrCats[] = $objCat->fields['name'];
-	$objCat->MoveNext();
-      }
-    $objCat->Close();
-    $smarty->assign(array("Categories" => $arrCats,
-			  "Catid" => $arrCatid,
-			  "Amove" => "Przenieś",
-			  "Tto" => "temat do",
-			  "Tid" => $_GET['tid']));
-    if (isset($_POST['category']))
-      {
-	checkvalue($_POST['category']);
-	$db->Execute("UPDATE `topics` SET `cat_id`=".$_POST['category']." WHERE `id`=".$_GET['tid']);
-	error("Temat przeniesiony.");
-      }
-  }
-
-/**
- * Close/Open topics
- */
-if (isset($_GET['close']))
-  {
-    if ($player -> rank != 'Admin' && $player -> rank != 'Staff')
-      {
-        error(ERROR);
-      }
-    checkvalue($_GET['close']);
-    if ($_GET['action'] != 'Y' && $_GET['action'] != 'N')
-      {
-        error(ERROR);
-      }
-    $db -> Execute("UPDATE `topics` SET `closed`='".$_GET['action']."' WHERE `id`=".$_GET['close']);
-    if ($_GET['action'] == 'Y')
-      {
-	$strInfo = "Zamknąłeś wybrany temat.";
-      }
-    else
-      {
-        $strInfo = "Otworzyłeś wybrany temat.";
-      }
-    error($strInfo." <a href=forums.php?topic=".$_GET['close'].">Wróć</a>");
-  }
-
-/**
- * Sticky/Unsticky topics
- */
-if (isset($_GET['sticky']))
-{
-    if ($player -> rank != 'Admin' && $player -> rank != 'Staff')
-    {
-        error(ERROR);
-    }
-    checkvalue($_GET['sticky']);
-    if ($_GET['action'] != 'Y' && $_GET['action'] != 'N')
-    {
-        error(ERROR);
-    }
-    $db -> Execute("UPDATE topics SET sticky='".$_GET['action']."' WHERE id=".$_GET['sticky']);
-    if ($_GET['action'] == 'Y')
-    {
-      $strInfo = YOU_STICKY;
-    }
-        else
-    {
-        $strInfo = YOU_UNSTICKY;
-    }
-    error($strInfo." <a href=forums.php?topic=".$_GET['sticky'].">".A_BACK."</a>");
-}
-
-/**
-* Delete post
-*/
-if (isset($_GET['kasuj'])) 
-{
-    if ($player -> rank != 'Admin' && $player -> rank != 'Staff')
-    {
-        error(ERROR);
-    }
-    checkvalue($_GET['kasuj']);
-    $tid = $db -> Execute("SELECT `topic_id` FROM `replies` WHERE `id`=".$_GET['kasuj']);
-    $db -> Execute("DELETE FROM `replies` WHERE `id`=".$_GET['kasuj']);
-    $db->Execute("UPDATE `topics` SET `replies`=`replies`-1 WHERE `id`=".$tid->fields['topic_id']);
-    error (POST_DEL." <a href=forums.php?topic=".$tid -> fields['topic_id'].">".A_BACK."</a>");
-}
-
-/**
-* Delete topic
-*/
-if (isset($_GET['kasuj1'])) 
-{
-    if ($player -> rank != 'Admin' && $player -> rank != 'Staff')
-    {
-        error(ERROR);
-    }
-    checkvalue($_GET['kasuj1']);
-    $cid = $db -> Execute("SELECT `cat_id` FROM `topics` WHERE `id`=".$_GET['kasuj1']);
-    $db -> Execute("DELETE FROM `replies` WHERE `topic_id`=".$_GET['kasuj1']);
-    $db -> Execute("DELETE FROM `topics` WHERE `id`=".$_GET['kasuj1']);
-    error (TOPIC_DEL." <a href=forums.php?topics=".$cid -> fields['cat_id'].">".A_BACK."</a>");
-}
-
-/**
- * Delete selected topics
- */
-if (isset($_GET['action']) && $_GET['action'] == 'deltopics')
-  {
-    if ($player -> rank != 'Admin' && $player -> rank != 'Staff')
-    {
-        error(ERROR);
-    }
-    checkvalue($_POST['catid']);
-    $smarty->assign(array("Category" => $_POST['catid'],
-			  "Aback" => "Wróć",
-			  "Tdeleted" => "Wybrane tematy zostały skasowane."));
-    $objTopics = $db->Execute("SELECT `id` FROM `topics` WHERE `cat_id`=".$_POST['catid']);
-    while (!$objTopics->EOF)
-      {
-	if (isset($_POST[$objTopics->fields['id']]))
-	  {
-	    $db -> Execute("DELETE FROM `replies` WHERE `topic_id`=".$objTopics->fields['id']);
-	    $db -> Execute("DELETE FROM `topics` WHERE `id`=".$objTopics->fields['id']);
-	  }
-	$objTopics->MoveNext();
-      }
-    $objTopics->Close();
-  }
 
 /**
 * Search words

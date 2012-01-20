@@ -4,10 +4,10 @@
  *   Polish language for forums
  *
  *   @name                 : forums.php                            
- *   @copyright            : (C) 2004,2005,2006 Vallheru Team based on Gamers-Fusion ver 2.5
- *   @author               : thindil <thindil@users.sourceforge.net>
- *   @version              : 1.0
- *   @since                : 08.02.2006
+ *   @copyright            : (C) 2004,2005,2006,2012 Vallheru Team based on Gamers-Fusion ver 2.5
+ *   @author               : thindil <thindil@vallheru.net>
+ *   @version              : 1.5
+ *   @since                : 20.01.2012
  *
  */
 
@@ -27,7 +27,7 @@
 //   along with this program; if not, write to the Free Software
 //   Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 //
-// $Id: forums.php 566 2006-09-13 09:31:08Z thindil $
+// $Id$
 
 define("NO_TOPIC", "Nie ma takiego tematu");
 define("EMPTY_FIELDS", "Wypełnij wszystkie pola");
@@ -35,6 +35,26 @@ define("A_BACK", "Wróć");
 define("ERROR", "Zapomnij o tym!");
 define("NO_PERM", "Nie masz prawa tutaj przebywać!");
 define("NO_PERM2", "Nie masz prawa pisać tutaj!");
+define("A_DELETE", "Skasuj");
+define("WRITE_BY", "napisany przez");
+define("W_ID", "ID");
+define("A_REPLY", "Odpowiedz");
+define("R_TEXT", "Tekst");
+define("WRITE", "napisał(a)");
+define("A_STICKY", "Przyklej");
+define("A_UNSTICKY", "Odklej");
+define("A_QUOTE", "Cytuj");
+define("POST_DEL", "Post wykasowany");
+define("TOPIC_DEL", "Temat wykasowany");
+define("T_TOPIC", "Temat");
+define("T_AUTHOR", "Autor");
+define("T_REPLIES", "Odpowiedzi");
+define("ADD_TOPIC", "Dodaj temat");
+define("T_TEXT", "Tekst");
+define("TO_CATEGORIES", "do listy kategorii");
+define("A_SEARCH", "Szukaj");
+define("T_WORD", "słowa");
+define("T_STICKY", "Ustaw temat jako ogłoszenie");
 
 if (isset ($_GET['view']) && $_GET['view'] == 'categories') 
 {
@@ -42,59 +62,22 @@ if (isset ($_GET['view']) && $_GET['view'] == 'categories')
     define("T_TOPICS", "Tematów");
 }
 
-if (isset($_GET['topics'])) 
-{
-    define("T_TOPIC", "Temat");
-    define("T_AUTHOR", "Autor");
-    define("T_REPLIES", "Odpowiedzi");
-    define("ADD_TOPIC", "Dodaj temat");
-    define("T_TEXT", "Tekst");
-    define("TO_CATEGORIES", "do listy kategorii");
-    define("A_SEARCH", "Szukaj");
-    define("T_WORD", "słowa");
-    define("T_STICKY", "Ustaw temat jako ogłoszenie");
-}
-
-if (isset($_GET['topic'])) 
-{
-    define("A_DELETE", "Skasuj");
-    define("WRITE_BY", "napisany przez");
-    define("W_ID", "ID");
-    define("A_REPLY", "Odpowiedz");
-    define("R_TEXT", "Tekst");
-    define("WRITE", "napisał(a)");
-    define("A_STICKY", "Przyklej");
-    define("A_UNSTICKY", "Odklej");
-    define("A_QUOTE", "Cytuj");
-}
-
 if (isset ($_GET['action']) && $_GET['action'] == 'addtopic') 
 {
-    define("TOPIC_ADD", "Temat dodany. Kliknij");
+    define("TOPIC_ADD", "Temat dodany.");
     define("TO_BACK", "tutaj</a> aby wrócić do listy tematów w danej kategorii.");
     define("NO_PERM3", "Nie masz uprawnień do tego!");
 }
 
 if (isset($_GET['reply'])) 
 {
-    define("REPLY_ADD", "Odpowiedź dodana. Kliknij");
-    define("A_HERE", "tutaj");
+    define("REPLY_ADD", "Odpowiedź dodana.");
 }
 
 if (isset($_GET['sticky']))
 {
     define("YOU_STICKY", "Przykleiłeś temat");
     define("YOU_UNSTICKY", "Odkleiłeś temat");
-}
-
-if (isset($_GET['kasuj'])) 
-{
-    define("POST_DEL", "Post wykasowany");
-}
-
-if (isset($_GET['kasuj1'])) 
-{
-    define("TOPIC_DEL", "Temat wykasowany");
 }
 
 if (isset($_GET['action']) && $_GET['action'] == 'search')
