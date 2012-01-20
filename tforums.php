@@ -7,7 +7,7 @@
  *   @copyright            : (C) 2004,2005,2006,2011,2012 Vallheru Team based on Gamers-Fusion ver 2.5
  *   @author               : thindil <thindil@vallheru.net>
  *   @version              : 1.5
- *   @since                : 19.01.2012
+ *   @since                : 20.01.2012
  *
  */
 
@@ -35,7 +35,7 @@ require_once("includes/head.php");
 /**
 * Get the localization for game
 */
-require_once("languages/".$player -> lang."/tforums.php");
+require_once("languages/".$lang."/tforums.php");
 
 if ($player -> tribe == 0) 
 {
@@ -155,7 +155,7 @@ if (isset ($_GET['view']) && $_GET['view'] == 'topics')
       }
     else
       {
-	$intPage = $intPages;
+	$intPage = 1;
       }
     
     $topic = $db->SelectLimit("SELECT * FROM `tribe_topics` WHERE `tribe`=".$player->tribe." AND `sticky`='N' ORDER BY `w_time` DESC", 25, 25 * ($intPage - 1));
