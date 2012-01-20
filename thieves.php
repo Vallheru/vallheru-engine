@@ -7,7 +7,7 @@
  *   @copyright            : (C) 2011,2012 Vallheru Team based on Gamers-Fusion ver 2.5
  *   @author               : thindil <thindil@vallheru.net>
  *   @version              : 1.5
- *   @since                : 17.01.2012
+ *   @since                : 20.01.2012
  *
  */
 
@@ -37,7 +37,7 @@ if($player->location != 'Altara' && $player->location != 'Ardulith')
     error ("Nie znajdujesz się w mieście.");
 }
 
-if ($player->clas != 'Złodziej')
+if ($player->clas != 'Złodziej' && $player->rank != 'Admin')
   {
     error("Drogę zastępują tobie podejrzanie wyglądający osobnicy. <i>Dokąd to! Nic tutaj ciekawego nie znajdziesz, zwiewaj!</i><a href=");
   }
@@ -273,7 +273,7 @@ else
 			      "Jobs" => $arrJobs,
 			      "Ayes" => "Biorę tę robotę. (koszt: 2 punkty kradzieży)"));
 	$objJob->Close();
-	//$db->Execute("UPDATE `players` SET `crafmission`='Y' WHERE `id`=".$player->id);
+	$db->Execute("UPDATE `players` SET `craftmission`='Y' WHERE `id`=".$player->id);
       }
     /**
      * Start random mission

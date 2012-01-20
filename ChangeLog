@@ -1,5 +1,7 @@
 2012-01-20  Bartek thindil Jasicki  <thindil@vallheru.net>
 
+	* BUG,thieves.php: 
+	fixed few bugs
 	* UPDATE,languages/pl/forums.php, templates/forums.tpl, forums.php:
 	little redesign of forums
 	* UPDATAE,tforums.php:
