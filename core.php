@@ -8,7 +8,7 @@
  *   @author               : thindil <thindil@vallheru.net>
  *   @author               : eyescream <tduda@users.sourceforge.net>
  *   @version              : 1.5
- *   @since                : 14.01.2012
+ *   @since                : 21.01.2012
  *
  */
 
@@ -288,7 +288,7 @@ if (isset($_GET['view']))
 		  }
                 else
 		  {
-		    $smarty -> assign("Message", YOU_FAIL);
+		    $smarty -> assign("Message", YOU_FAIL.' Otrzymujesz 0.01 umiejętności Hodowla.');
 		    $db -> Execute("UPDATE `players` SET `breeding`=`breeding`+0.01 WHERE `id`=".$player -> id);
 		  }
 		$db -> Execute("UPDATE `players` SET `platinum`=`platinum`-".$intCost.", `trains`=`trains`-15 WHERE `id`=".$player -> id);
