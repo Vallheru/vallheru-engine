@@ -7,7 +7,7 @@
  *   @copyright            : (C) 2012 Vallheru Team based on Gamers-Fusion ver 2.5
  *   @author               : thindil <thindil@vallheru.net>
  *   @version              : 1.5
- *   @since                : 16.01.2012
+ *   @since                : 22.01.2012
  *
  */
 
@@ -111,9 +111,29 @@ if (isset ($_GET['action']) && $_GET['action'] == 'chat')
 {
     if (isset($_POST['msg']) && $_POST['msg'] != '') 
       {
+	$arrColors2 = array();
+	if ($objRoom->fields['colors'] != '')
+	  {
+	    $arrTmp = explode(';', $objRoom->fields['colors']);
+	    foreach ($arrTmp as $strColor)
+	      {
+		$arrTmp2 = explode(',', $strColor);
+		if (count($arrTmp2) == 2)
+		  {
+		    $arrColors2[$arrTmp2[0]] = $arrTmp2[1];
+		  }
+	      }
+	  }
 	if ($strOwner == '')
 	  {
-	    $starter = '<a href="view.php?view='.$player->id.'" target="_parent">'.$player->user.'</a>';
+	    if (array_key_exists($player->id, $arrColors2))
+	      {
+		$starter = '<a href="view.php?view='.$player->id.'" target="_parent" style="color:'.$arrColors2[$player->id].';">'.$player->user.'</a>';
+	      }
+	    else
+	      {
+		$starter = '<a href="view.php?view='.$player->id.'" target="_parent">'.$player->user.'</a>';
+	      }
 	  }
 	else
 	  {
@@ -124,19 +144,6 @@ if (isset ($_GET['action']) && $_GET['action'] == 'chat')
 	      }
 	    if ($_POST['person'] == 0)
 	      {
-		$arrColors2 = array();
-		if ($objRoom->fields['colors'] != '')
-		  {
-		    $arrTmp = explode(';', $objRoom->fields['colors']);
-		    foreach ($arrTmp as $strColor)
-		      {
-			$arrTmp2 = explode(',', $strColor);
-			if (count($arrTmp2) == 2)
-			  {
-			    $arrColors2[$arrTmp2[0]] = $arrTmp2[1];
-			  }
-		      }
-		  }
 		if (array_key_exists($player->id, $arrColors2))
 		  {
 		    $starter = '<a href="view.php?view='.$player->id.'" target="_parent" style="color:'.$arrColors2[$player->id].';">'.$player->user.'</a>';
