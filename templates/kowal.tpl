@@ -68,11 +68,9 @@
 			</header>
 			{if $Maked == ""}
 				<ul>
-					<li><a href="kowal.php?kowal={$Smith}&amp;type=W">{$Amakew}</a></li>
-					<li><a href="kowal.php?kowal={$Smith}&amp;type=A">{$Amakea}</a></li>
-					<li><a href="kowal.php?kowal={$Smith}&amp;type=S">{$Amakes}</a></li>
-					<li><a href="kowal.php?kowal={$Smith}&amp;type=H">{$Amakeh}</a></li>
-					<li><a href="kowal.php?kowal={$Smith}&amp;type=L">{$Amakel}</a></li>
+				    {section name=smith3 loop=$Amake}
+				        <li><a href="kowal.php?kowal={$Smith}&amp;type={$Atype[smith3]}">{$Amake[smith3]}</a></li>
+				    {/section}
 				</ul>
 				{if $Type != ""}
 					{$Info}:

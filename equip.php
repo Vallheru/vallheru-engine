@@ -4,10 +4,10 @@
  *   Player's equip - wear and drop items, repair, sell and more
  *
  *   @name                 : equip.php                            
- *   @copyright            : (C) 2004,2005,2006,2007,2011 Vallheru Team based on Gamers-Fusion ver 2.5
+ *   @copyright            : (C) 2004,2005,2006,2007,2011,2012 Vallheru Team based on Gamers-Fusion ver 2.5
  *   @author               : thindil <thindil@vallheru.net>
  *   @version              : 1.5
- *   @since                : 28.12.2011
+ *   @since                : 23.01.2012
  *
  */
 
@@ -36,23 +36,25 @@ require_once("includes/functions.php");
 /**
 * Get the localization for game
 */
-require_once("languages/".$player -> lang."/equip.php");
+require_once("languages/".$lang."/equip.php");
 
 /**
 * Function show items in backpack
 */
-function backpack($type,$playerid,$nameitems,$type2,$smartyname) 
+function backpack($type, $nameitems, $type2, $smartyname) 
 {
     global $smarty;
     global $db;
+    global $player;
+
     if (!empty ($type2)) 
     {
-        $arm = $db -> Execute("SELECT * FROM `equipment` WHERE `owner`=".$playerid." AND `type`='".$type."' AND status='U' ORDER BY `minlev` ASC, `name` ASC") or die($db->ErrorMsg());
-        $arm1 = $db -> Execute("SELECT * FROM `equipment` WHERE `owner`=".$playerid." AND `type`='".$type2."' AND `status`='U' ORDER BY `minlev` ASC, `name` ASC") or die($db->ErrorMsg());
+        $arm = $db -> Execute("SELECT * FROM `equipment` WHERE `owner`=".$player->id." AND `type`='".$type."' AND status='U' ORDER BY `minlev` ASC, `name` ASC") or die($db->ErrorMsg());
+        $arm1 = $db -> Execute("SELECT * FROM `equipment` WHERE `owner`=".$player->id." AND `type`='".$type2."' AND `status`='U' ORDER BY `minlev` ASC, `name` ASC") or die($db->ErrorMsg());
     } 
         else 
     {
-        $arm = $db -> Execute("SELECT * FROM `equipment` WHERE `owner`=".$playerid." AND `type`='".$type."' AND `status`='U' ORDER BY `minlev` ASC, `name` ASC") or die($db->ErrorMsg());
+        $arm = $db -> Execute("SELECT * FROM `equipment` WHERE `owner`=".$player->id." AND `type`='".$type."' AND `status`='U' ORDER BY `minlev` ASC, `name` ASC") or die($db->ErrorMsg());
     }
     $arrshow = array(array());
     $arrMenu = array();
@@ -137,6 +139,7 @@ function backpack($type,$playerid,$nameitems,$type2,$smartyname)
 	  case 'O':
 	  case 'I':
 	  case 'Q':
+	  case 'P':
 	    $strDur = '';
 	    break;
 	  case 'R':
@@ -157,6 +160,17 @@ function backpack($type,$playerid,$nameitems,$type2,$smartyname)
 	  case 'Q':
 	  case 'O':
 	    $arrshow[$arm->fields['minlev']][$j] = "<input type=\"checkbox\" name=\"".$arm->fields['id']."\" /><b>(".AMOUNT.": ".$arm -> fields['amount']." )</b> ".$arm -> fields['name']." [ <a href=\"equip.php?sell=".$arm -> fields['id']."\">".A_SELL."</a> ".FOR_A." ".$arm->fields['cost']." ".GOLD_COINS." ]<br />";
+	    break;
+	  case 'P':
+	    if ($player->clas == 'Rzemieślnik')
+	      {
+		$strLearn = '<a href="equip.php?learn='.$arm->fields['id'].'">studiuj</a> | ';
+	      }
+	    else
+	      {
+		$strLearn = '';
+	      }
+	    $arrshow[$arm->fields['minlev']][$j] = "<input type=\"checkbox\" name=\"".$arm->fields['id']."\" /><b>(".AMOUNT.": ".$arm -> fields['amount']." )</b> ".$arm -> fields['name']." [ ".$strLearn."<a href=\"equip.php?sell=".$arm -> fields['id']."\">".A_SELL."</a> ".FOR_A." ".$arm->fields['cost']." ".GOLD_COINS." ]<br />";
 	    break;
 	  default:
 	  $arrshow[$arm->fields['minlev']][$j] = "<input type=\"checkbox\" name=\"".$arm->fields['id']."\" /><b>(".AMOUNT.": ".$arm -> fields['amount']." )</b> ".$arm -> fields['name']." (+".$arm -> fields['power'].") ".$agility."".$speed.$strDur." [ <a href=\"equip.php?equip=".$arm -> fields['id']."\">".A_WEAR."</a> | <A href=\"equip.php?sell=".$arm -> fields['id']."\">".A_SELL."</a> ".FOR_A." ".$intCost." ".GOLD_COINS." ".$strRepair."]<br />";
@@ -490,18 +504,19 @@ if ($arrEquip[3][0] || $arrEquip[0][0] || $arrEquip[4][0] || $arrEquip[2][0] || 
     $smarty -> assign ("Repairequip", "[<a href=\"equip.php?napraw_uzywane\">".A_REPAIR2."</a>] <br /><input type=\"submit\" value=\"Napraw wybrane\" /><br />\n");
 }
 
-backpack('W',$player -> id,WEAPONS,'B','Bweapons');
-backpack('T',$player -> id,STAFFS,'','Bstaffs');
-backpack('R', $player->id, 'strzały', '', 'Barrows');
-backpack('H',$player -> id,HELMETS,'','Bhelmets');
-backpack('A',$player -> id,ARMORS,'','Barmors');
-backpack('S',$player -> id,SHIELDS,'','Bshields');
-backpack('C',$player -> id,CAPES,'','Bcapes');
-backpack('L',$player -> id,LEGS2,'','Blegs');
-backpack('I', $player->id, 'pierścienie', '', 'Brings');
-backpack('E', $player->id, 'narzędzia', '', 'Btools');
-backpack('O', $player->id, 'Łupy', '', 'Bloots');
-backpack('Q', $player->id, 'Przedmioty do zadań', '', 'Bquests');
+backpack('W', WEAPONS,'B','Bweapons');
+backpack('T', STAFFS,'','Bstaffs');
+backpack('R', 'strzały', '', 'Barrows');
+backpack('H', HELMETS,'','Bhelmets');
+backpack('A', ARMORS,'','Barmors');
+backpack('S', SHIELDS,'','Bshields');
+backpack('C', CAPES,'','Bcapes');
+backpack('L', LEGS2,'','Blegs');
+backpack('I', 'pierścienie', '', 'Brings');
+backpack('E', 'narzędzia', '', 'Btools');
+backpack('P', 'plany', '', 'Bplans');
+backpack('O', 'Łupy', '', 'Bloots');
+backpack('Q', 'Przedmioty do zadań', '', 'Bquests');
 
 /**
  * Show potions
@@ -561,6 +576,58 @@ $mik -> Close();
 $smarty -> assign(array("Arramount" => ARR_AMOUNT,
                         "Goldcoins" => GOLD_COINS,
                         "Fora" => FOR_A));
+
+/**
+ * Learn new plan (craftsmen only)
+ */
+if (isset($_GET['learn']))
+  {
+    if ($player->clas != 'Rzemieślnik')
+      {
+	error('Tylko rzemieślnik może uczyć się planów.');
+      }
+    checkvalue($_GET['learn']);
+    $objPlan = $db->Execute("SELECT `id`, `name`, `minlev`, `amount` FROM `equipment` WHERE `id`=".$_GET['learn']." AND `owner`=".$player->id." AND `status`='U'");
+    if (!$objPlan->fields['id'])
+      {
+	error('Nie ma takiego planu.');
+      }
+    $objTest = $db->Execute("SELECT `id` FROM `smith` WHERE `owner`=".$player->id." AND `name`='".$objPlan->fields['name']."' AND `level`=".$objPlan->fields['minlev']);
+    if ($objTest->fields['id'])
+      {
+	error('Znasz już ten plan.');
+      }
+    $objTest->Close();
+    $objPlan2 = $db->Execute("SELECT `amount`, `type` FROM `plans` WHERE `name`='".$objPlan->fields['name']."' AND `level`=".$objPlan->fields['minlev']);
+    if ($objPlan2->fields['type'] == 'T')
+      {
+	$strType = 'E';
+      }
+    else
+      {
+	$strType = $objPlan2->fields['type'];
+      }
+    $db -> Execute("INSERT INTO `smith` (`owner`, `name`, `type`, `cost`, `amount`, `level`, `twohand`, `elite`, `elitetype`) VALUES(".$player->id.", '".$objPlan->fields['name']."', '".$strType."', 1, ".$objPlan2->fields['amount'].", ".$objPlan->fields['minlev'].", 'N', 0, 'S')");
+    $objPlan2->Close();
+    if ($objPlan->fields['amount'] == 1)
+      {
+	$db->Execute("DELETE FROM `equipment` WHERE `id`=".$_GET['learn']);
+      }
+    else
+      {
+	$db->Execute("UPDATE `equipment` SET `amount`=`amount`-1 WHERE `id`=".$_GET['learn']);
+      }
+    if ($player->gender == 'M')
+      {
+	$strSuffix = 'eś';
+      }
+    else
+      {
+	$strSuffix = 'aś';
+      }
+    $smarty->assign('Action', 'Nauczył'.$strSuffix.' się wykonywać przedmiot: '.$objPlan->fields['name'].' (poziom: '.$objPlan->fields['minlev'].')');
+    $objPlan->Close();
+  }
 
 /**
 * Sell one item
@@ -766,7 +833,7 @@ if (isset($_GET['sprzedaj']))
     {
         error (NO_ITEMS2);
     }
-    $arrType = array(ARMORS, WEAPONS, HELMETS, LEGS2, ARROWS2, CAPES, STAFFS, SHIELDS, RINGS, 'łupy', 'przedmioty do zadań');
+    $arrType = array(ARMORS, WEAPONS, HELMETS, LEGS2, ARROWS2, CAPES, STAFFS, SHIELDS, RINGS, 'łupy', 'przedmioty do zadań', 'narzędzia');
     $intKey = array_search($_GET['sprzedaj'], $arrSell);
     $typ = $arrType[$intKey];
     $zysk = 0;

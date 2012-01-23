@@ -66,7 +66,7 @@ $smarty -> assign("Message", '');
 $perm = $db -> Execute("SELECT `armory` FROM `tribe_perm` WHERE `tribe`=".$player -> tribe." AND `player`=".$player -> id);
 $owner = $db -> Execute("SELECT `owner` FROM `tribes` WHERE `id`=".$player -> tribe);
 
-$arrType = array('W', 'A', 'H', 'L', 'S', 'B', 'T', 'C', 'R', 'I', 'O', 'E');
+$arrType = array('W', 'A', 'H', 'L', 'S', 'B', 'T', 'C', 'R', 'I', 'O', 'E', 'P');
 
 /**
 * Main menu
@@ -75,7 +75,7 @@ if (!isset($_GET['step']) && !isset($_GET['daj']) && !isset($_GET['step2']) && !
   {
     $smarty -> assign(array("Armorinfo" => ARMOR_INFO,
                             "Armortype" => $arrType,
-                            "Armorlink" => array(A_SHOW_W, A_SHOW_A, A_SHOW_H, A_SHOW_L, A_SHOW_D, A_SHOW_B, A_SHOW_S, A_SHOW_C, A_SHOW_R, A_SHOW_I, 'Zobaczyć listę łupów w zbrojowni klanu', 'Zobaczyć listę narzędzi w zbrojowni klanu'),
+                            "Armorlink" => array(A_SHOW_W, A_SHOW_A, A_SHOW_H, A_SHOW_L, A_SHOW_D, A_SHOW_B, A_SHOW_S, A_SHOW_C, A_SHOW_R, A_SHOW_I, 'Zobaczyć listę łupów w zbrojowni klanu', 'Zobaczyć listę narzędzi w zbrojowni klanu', 'Zobacz listę planów w zbrojowni klanu'),
                             "Aadd" => A_ADD));
   }
 
@@ -97,7 +97,7 @@ if (isset($_GET['step']) && $_GET['step'] == 'zobacz')
     {
         error(WHAT_YOU);
     }
-    $arrItem = array(T_WEAPONS, T_ARMORS, T_HELMETS, T_LEGS, T_SHIELDS, T_BOWS, T_STAFFS, T_CAPES, T_ARROWS, T_RINGS, "łupów", 'narzędzi');
+    $arrItem = array(T_WEAPONS, T_ARMORS, T_HELMETS, T_LEGS, T_SHIELDS, T_BOWS, T_STAFFS, T_CAPES, T_ARROWS, T_RINGS, "łupów", 'narzędzi', 'planów');
     $intKey = array_search($_GET['type'], $arrType);
     $item = $arrItem[$intKey];
     $amount = $db -> Execute("SELECT amount FROM tribe_zbroj WHERE klan=".$player -> tribe." AND type='".$_GET['type']."'");
@@ -188,7 +188,7 @@ if (isset($_GET['step']) && $_GET['step'] == 'zobacz')
         $i ++;
     }
     $arritem -> Close();
-    if ($_GET['type'] == 'I')
+    if (in_array($_GET['type'], array('I', 'P', 'O')))
     {
         $arrInfos = array(T_NAME, T_POWER, T_LEVEL);
         $arrList = array('id', 'name', 'power', 'minlev');

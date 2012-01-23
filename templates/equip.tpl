@@ -66,6 +66,9 @@
 {if $Btoolsamount > 1}
     <div align="center"><a href="#tools">{$Btoolsmenu[0]}</a></div>
 {/if}
+{if $Bplansamount > 1}
+    <div align="center"><a href="#plans">{$Bplansmenu[0]}</a></div>
+{/if}
 {if $Blootsamount > 1}
     <div align="center"><a href="#loots">{$Blootsmenu[0]}</a></div>
 {/if}
@@ -251,7 +254,25 @@
 	    {/if}
 	{/foreach}
 	{$Btoolsmenu[1]}
-    	<input type="submit" value="{$Bringssell}" />
+    	<input type="submit" value="{$Btoolssell}" />
+    </form>
+    <a href="#top">{$Aback}</a><br />
+{/if}
+
+{if $Bplansamount > 1}
+    <form method="POST" action="equip.php?sellchecked=E">
+        <br /><a name="plans"><u>{$Bplansmenu[0]}:</u></a><br />
+        {foreach $Bplans as $key => $value}
+	    {if $key > 0}
+	        {$Ilevel} {$key}:<br />
+	        {foreach $value as $weapon}
+	            {$weapon}
+	        {/foreach}
+		<br />
+	    {/if}
+	{/foreach}
+	{$Bplansmenu[1]}
+    	<input type="submit" value="{$Bplanssell}" />
     </form>
     <a href="#top">{$Aback}</a><br />
 {/if}

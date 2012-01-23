@@ -71,7 +71,7 @@ if (isset ($_GET['view']) && $_GET['view'] == 'market')
       {
 	$_POST['szukany'] = $_GET['search'];
       }
-    $arrTypes = array('W', 'B', 'T', 'R', 'H', 'A', 'S', 'C', 'L', 'E');
+    $arrTypes = array('W', 'B', 'T', 'R', 'H', 'A', 'S', 'C', 'L', 'E', 'P');
     if (!isset($_GET['order']))
       {
 	$_GET['order'] = 'desc';
@@ -151,7 +151,7 @@ if (isset ($_GET['view']) && $_GET['view'] == 'market')
       {
 	$page = $pages;
       }
-    $arrNames = array('broni', 'łuków', 'różdżek', 'strzał', 'hełmów', 'zbrój', 'tarcz', 'szat', 'nagolenników', 'narzędzi');
+    $arrNames = array('broni', 'łuków', 'różdżek', 'strzał', 'hełmów', 'zbrój', 'tarcz', 'szat', 'nagolenników', 'narzędzi', 'planów');
     $smarty -> assign(array("Tname" => T_NAME,
                             "Tpower" => T_POWER,
                             "Tcost" => "Cena szt / wszystko",

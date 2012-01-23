@@ -7,7 +7,7 @@
  *   @copyright            : (C) 2004,2005,2006,2011 Vallheru Team based on Gamers-Fusion ver 2.5
  *   @author               : thindil <thindil@vallheru.net>
  *   @version              : 1.5
- *   @since                : 27.12.2011
+ *   @since                : 23.01.2012
  *
  */
 
@@ -199,7 +199,7 @@ function createitem()
                     $blnSpecial = true;
                 }
             }
-                else
+	    else
             {
                 if ($intRoll3 < 51)
                 {
@@ -207,10 +207,14 @@ function createitem()
                     {
                         $strName = DRAGON1.$arrItem['name'];
                     }
-                    if ($arrItem['type'] == 'S') 
+                    elseif ($arrItem['type'] == 'S') 
                     {
                         $strName = DRAGON2.$arrItem['name'];
                     }
+		    else
+		      {
+			$strName = 'Smocze '.$arrItem['name'];
+		      }
                     $intPowerbonus = $intItembonus + ($player -> strength / 50);
                     $intMaxbonus = $arrMaxbonus[$intKey] * $arrItem['power'];
                     if ($intPowerbonus > $intMaxbonus)
@@ -226,10 +230,14 @@ function createitem()
                     {
                         $strName = DRAGON1.$arrItem['name'];
                     }
-                    if ($arrItem['type'] == 'S') 
+                    elseif ($arrItem['type'] == 'S') 
                     {
                         $strName = DRAGON2.$arrItem['name'];
                     }
+		    else
+		      {
+			$strName = 'Smocze '.$arrItem['name'];
+		      }
                     $intPowerbonus = $intItembonus + ($player -> strength / 50);
                     $intMaxbonus = $arrMaxbonus[$intKey] * $arrItem['power'];
                     if ($intPowerbonus > $intMaxbonus)
@@ -246,7 +254,7 @@ function createitem()
                     $intDur = $arrItem['wt'] + $intDurbonus;
                     $blnSpecial = true;
                 }
-                if ($intRoll3 > 51 && $player -> clas == 'Rzemieślnik')
+                if ($intRoll3 > 51 && $player -> clas == 'Rzemieślnik' && $arrItem['type'] != 'E')
                 {
                     if ($arrItem['type'] == 'H' || $arrItem['type'] == 'W') 
                     {
@@ -286,10 +294,14 @@ function createitem()
         {
             $intRepaircost = $arrItem['level'] * $arrRepair[$intKey] * 2;
         }
-            else
+	elseif ($arrItem['type'] != 'E')
         {
             $intRepaircost = $arrItem['level'] * $arrRepair[$intKey] * 1;
         }
+	else
+	  {
+	    $intRepaircost = ($arrItem['level'] + 20) * $arrRepair[$intKey];
+	  }
 	$arrResult = array("name" => $strName,
 			   "wt" => (int)$intDur,
 			   "power" => (int)$intPower,
@@ -425,24 +437,20 @@ if (isset($_GET['kowal']) && ($_GET['kowal'] == 'kuznia' || $_GET['kowal'] == 'e
   {
     if (!isset($_GET['rob']) && !isset($_GET['konty'])) 
       {
-	$smarty -> assign(array("Amakew" => A_MAKE_W,
-                                "Amakea" => A_MAKE_A,
-                                "Amakeh" => A_MAKE_H,
-                                "Amakel" => A_MAKE_L,
-                                "Amakes" => A_MAKE_S,
-                                "Amaker" => A_MAKE_R,
+	$arrType = array('W', 'A', 'H', 'L', 'S', 'E');
+	$smarty -> assign(array("Amake" => array(A_MAKE_W, A_MAKE_A, A_MAKE_H, A_MAKE_L, A_MAKE_S, 'Wykonuj narzędzia'),
+				"Atype" => $arrType,
                                 "Info" => INFO,
                                 "Iname" => I_NAME,
                                 "Ilevel" => I_LEVEL,
                                 "Iamount" => I_AMOUNT));
 	if (isset($_GET['type'])) 
-            {
-                $arrType = array('W', 'A', 'H', 'L', 'S');
-                if (!in_array($_GET['type'], $arrType)) 
-		  {
-                    error (ERROR);
-		  }
-            }
+	  {
+	    if (!in_array($_GET['type'], $arrType)) 
+	      {
+		error (ERROR);
+	      }
+	  }
       }
     else
       {
@@ -666,33 +674,50 @@ if (isset ($_GET['kowal']) && $_GET['kowal'] == 'kuznia')
         $intAbility = 0;
         $intCost = ceil($objSmith -> fields['cost'] / 20);
         $arrName = array(M_COPPER, M_BRONZE, M_BRASS, M_IRON, M_STEEL);
-        $arrMaxbonus = array(6, 10, 14, 17, 20);
+	if ($objSmith->fields['type'] != 'E')
+	  {
+	    $arrMaxbonus = array(6, 10, 14, 17, 20);
+	  }
+	else
+	  {
+	    $arrMaxbonus = array(2, 4, 6, 8, 10);
+	  }
         if ($objSmith -> fields['type'] == 'W' || $objSmith -> fields['type'] == 'A')
         {
             $arrDur = array(40, 80, 160, 320, 640);
         }
-            else
+	elseif ($objSmith->fields['type'] != 'E')
         {
             $arrDur = array(20, 40, 80, 160, 320);
         }
+	else
+	  {
+	    $arrDur = array(10, 15, 20, 25, 30);
+	  }
         if ($objSmith -> fields['type'] == 'A')
         {
             $intPower = $objSmith -> fields['level'] * 3;
             $intAgility = floor($objSmith -> fields['level'] / 2);
             $intExp = 2;
         }
-            elseif ($objSmith -> fields['type'] == 'L')
-        {
+	elseif ($objSmith -> fields['type'] == 'L')
+	  {
             $intPower = $objSmith -> fields['level'];
             $intAgility = floor($objSmith -> fields['level'] / 5);
             $intExp = 1;
-        }
-            else
-        {
+	  }
+	elseif ($objSmith->fields['type'] != 'E')
+	  {
             $intPower = $objSmith -> fields['level'];
             $intAgility = 0;
             $intExp = 1;
-        }
+	  }
+	else
+	  {
+	    $intPower = 10 + $objSmith->fields['level'];
+	    $intAgility = 0;
+	    $intExp = 1;
+	  }
         $arrMineral = array('copper', 'bronze', 'brass', 'iron', 'steel');
         $intKey = array_search($objWork -> fields['mineral'], $arrMineral);
         $strName = $objSmith -> fields['name']." ".$arrName[$intKey];
@@ -820,33 +845,50 @@ if (isset ($_GET['kowal']) && $_GET['kowal'] == 'kuznia')
         $intAbility = 0;
         $intCost = ceil($objSmith -> fields['cost'] / 20);
         $arrName = array(M_COPPER, M_BRONZE, M_BRASS, M_IRON, M_STEEL);
-        $arrMaxbonus = array(6, 10, 14, 17, 20);
+	if ($objSmith->fields['type'] != 'E')
+	  {
+	    $arrMaxbonus = array(6, 10, 14, 17, 20);
+	  }
+	else
+	  {
+	    $arrMaxbonus = array(2, 4, 6, 8, 10);
+	  }
         if ($objSmith -> fields['type'] == 'W' || $objSmith -> fields['type'] == 'A')
         {
             $arrDur = array(40, 80, 160, 320, 640);
         }
-            else
+	elseif ($objSmith->fields['type'] != 'E')
         {
             $arrDur = array(20, 40, 80, 160, 320);
         }
+	else
+	  {
+	    $arrDur = array(10, 15, 20, 25, 30);
+	  }
         if ($objSmith -> fields['type'] == 'A')
         {
             $intPower = $objSmith -> fields['level'] * 3;
             $intAgility = floor($objSmith -> fields['level'] / 2);
             $intExp = 2;
         }
-            elseif ($objSmith -> fields['type'] == 'L')
+	elseif ($objSmith -> fields['type'] == 'L')
         {
             $intPower = $objSmith -> fields['level'];
             $intAgility = floor($objSmith -> fields['level'] / 5);
             $intExp = 1;
         }
-            else
+	elseif ($objSmith->fields['type'] != 'E')
         {
             $intPower = $objSmith -> fields['level'];
             $intAgility = 0;
             $intExp = 1;
         }
+	else
+	  {
+	    $intPower = 10 + $objSmith->fields['level'];
+	    $intAgility = 0;
+	    $intExp = 1;
+	  }
         $intKey = array_search($_POST['mineral'], $arrMineral);
         $strName = $objSmith -> fields['name']." ".$arrName[$intKey];
         $arrItem = array('power' => $intPower,

@@ -7,7 +7,7 @@
  *   @copyright            : (C) 2011,2012 Vallheru Team based on Gamers-Fusion ver 2.5
  *   @author               : thindil <thindil@vallheru.net>
  *   @version              : 1.5
- *   @since                : 20.01.2012
+ *   @since                : 23.01.2012
  *
  */
 
@@ -257,9 +257,9 @@ else
 	      {
 		$arrLoots = array(0 => '.',
 				  80 => ' oraz nowe wytrychy.',
-				  85 => ' oraz lepsze wytrychy.');
-				    /*90 => ' oraz plan wytrychów.',
-				   97 => ' oraz plan lepszych wytrychów.');*/
+				  85 => ' oraz lepsze wytrychy.',
+				  90 => ' oraz plan wytrychów.',
+				  97 => ' oraz plan lepszych wytrychów.');
 		$intLoot = getoption($arrLoots, rand(1, 100));
 		$arrJobs[$i] = $strJob.$arrLoots[$intLoot];
 		$_SESSION['mission'][$i] = $intKey;
@@ -273,7 +273,7 @@ else
 			      "Jobs" => $arrJobs,
 			      "Ayes" => "Biorę tę robotę. (koszt: 2 punkty kradzieży)"));
 	$objJob->Close();
-	$db->Execute("UPDATE `players` SET `craftmission`='Y' WHERE `id`=".$player->id);
+	//$db->Execute("UPDATE `players` SET `craftmission`='Y' WHERE `id`=".$player->id);
       }
     /**
      * Start random mission

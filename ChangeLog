@@ -1,5 +1,8 @@
 2012-01-23  Bartek thindil Jasicki  <thindil@vallheru.net>
 
+	* FEATURE,mission.php, thieves.php, equip.php, kowal.php, imarket.php, tribearmor.php, install/db/update.sql, templates/layout1/equip.tpl,
+	templates/equip.tpl, templates/layout1/kowal.tpl, templates/kowal.tpl:
+	added new item type - plans
 	* UPDATE,templates/layout1/room.tpl, templates/room.tpl:
 	small redesign
 	* UPDATE,imarket.php, tribearmor.php:
