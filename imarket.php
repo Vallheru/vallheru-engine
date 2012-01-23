@@ -4,11 +4,11 @@
  *   Items market
  *
  *   @name                 : imarket.php                            
- *   @copyright            : (C) 2004,2005,2006,2007,2011 Vallheru Team based on Gamers-Fusion ver 2.5
- *   @author               : thindil <thindil@tuxfamily.org>
+ *   @copyright            : (C) 2004,2005,2006,2007,2011,2012 Vallheru Team based on Gamers-Fusion ver 2.5
+ *   @author               : thindil <thindil@vallheru.net>
  *   @author               : eyescream <tduda@users.sourceforge.net>
- *   @version              : 1.4
- *   @since                : 18.11.2011
+ *   @version              : 1.5
+ *   @since                : 23.01.2012
  *
  */
 
@@ -71,7 +71,7 @@ if (isset ($_GET['view']) && $_GET['view'] == 'market')
       {
 	$_POST['szukany'] = $_GET['search'];
       }
-    $arrTypes = array('W', 'B', 'T', 'R', 'H', 'A', 'S', 'C', 'L');
+    $arrTypes = array('W', 'B', 'T', 'R', 'H', 'A', 'S', 'C', 'L', 'E');
     if (!isset($_GET['order']))
       {
 	$_GET['order'] = 'desc';
@@ -151,7 +151,7 @@ if (isset ($_GET['view']) && $_GET['view'] == 'market')
       {
 	$page = $pages;
       }
-    $arrNames = array('broni', 'łuków', 'różdżek', 'strzał', 'hełmów', 'zbrój', 'tarcz', 'szat', 'nagolenników');
+    $arrNames = array('broni', 'łuków', 'różdżek', 'strzał', 'hełmów', 'zbrój', 'tarcz', 'szat', 'nagolenników', 'narzędzi');
     $smarty -> assign(array("Tname" => T_NAME,
                             "Tpower" => T_POWER,
                             "Tcost" => "Cena szt / wszystko",

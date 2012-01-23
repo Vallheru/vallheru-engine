@@ -8,7 +8,7 @@
  *   @author               : thindil <thindil@vallheru.net>
  *   @author               : eyescream <tduda@users.sourceforge.net>
  *   @version              : 1.5
- *   @since                : 05.01.2012
+ *   @since                : 23.01.2012
  *
  */
 
@@ -66,17 +66,16 @@ $smarty -> assign("Message", '');
 $perm = $db -> Execute("SELECT `armory` FROM `tribe_perm` WHERE `tribe`=".$player -> tribe." AND `player`=".$player -> id);
 $owner = $db -> Execute("SELECT `owner` FROM `tribes` WHERE `id`=".$player -> tribe);
 
-$arrType = array('W', 'A', 'H', 'L', 'S', 'B', 'T', 'C', 'R', 'I', 'O');
+$arrType = array('W', 'A', 'H', 'L', 'S', 'B', 'T', 'C', 'R', 'I', 'O', 'E');
 
 /**
 * Main menu
 */
 if (!isset($_GET['step']) && !isset($_GET['daj']) && !isset($_GET['step2']) && !isset($_GET['step3'])) 
   {
-    $arrLink = array(A_SHOW_W, A_SHOW_A, A_SHOW_H, A_SHOW_L, A_SHOW_D, A_SHOW_B, A_SHOW_S, A_SHOW_C, A_SHOW_R, A_SHOW_I, 'Zobaczyć listę łupów w zbrojownik klanu');
     $smarty -> assign(array("Armorinfo" => ARMOR_INFO,
                             "Armortype" => $arrType,
-                            "Armorlink" => $arrLink,
+                            "Armorlink" => array(A_SHOW_W, A_SHOW_A, A_SHOW_H, A_SHOW_L, A_SHOW_D, A_SHOW_B, A_SHOW_S, A_SHOW_C, A_SHOW_R, A_SHOW_I, 'Zobaczyć listę łupów w zbrojowni klanu', 'Zobaczyć listę narzędzi w zbrojowni klanu'),
                             "Aadd" => A_ADD));
   }
 
@@ -98,7 +97,7 @@ if (isset($_GET['step']) && $_GET['step'] == 'zobacz')
     {
         error(WHAT_YOU);
     }
-    $arrItem = array(T_WEAPONS, T_ARMORS, T_HELMETS, T_LEGS, T_SHIELDS, T_BOWS, T_STAFFS, T_CAPES, T_ARROWS, T_RINGS, "łupów");
+    $arrItem = array(T_WEAPONS, T_ARMORS, T_HELMETS, T_LEGS, T_SHIELDS, T_BOWS, T_STAFFS, T_CAPES, T_ARROWS, T_RINGS, "łupów", 'narzędzi');
     $intKey = array_search($_GET['type'], $arrType);
     $item = $arrItem[$intKey];
     $amount = $db -> Execute("SELECT amount FROM tribe_zbroj WHERE klan=".$player -> tribe." AND type='".$_GET['type']."'");
