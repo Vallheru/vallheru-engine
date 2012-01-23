@@ -12,7 +12,7 @@ document.forms['chat'].elements['msg'].focus();
 {/if}</div>
 <br /><br />
 
-<iframe src="roommsgs.php" width="105%" height="500" name="ifr" frameborder="0"></iframe>
+<iframe src="roommsgs.php" width="100%" height="500" name="ifr" frameborder="0"></iframe>
 
 <a href="room.php?step=quit">{$Aleft}</a><br /><br />
 

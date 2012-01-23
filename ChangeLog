@@ -1,5 +1,7 @@
 2012-01-23  Bartek thindil Jasicki  <thindil@vallheru.net>
 
+	* UPDATE,templates/layout1/room.tpl, templates/room.tpl:
+	small redesign
 	* UPDATE,imarket.php, tribearmor.php:
 	added tools to menus
 
