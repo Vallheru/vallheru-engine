@@ -208,20 +208,37 @@
     {/if}
     {if $Step == "owner"}
         {if $Step2 == ""}
-            Witaj w panelu przywódcy klanu. Co chcesz zrobić?
+            {$Panelinfo}
             <ul>
-            <li><a href="tribes.php?view=my&amp;step=owner&amp;step2=permissions">{$Aperm}</a></li>
-            <li><a href="tribes.php?view=my&amp;step=owner&amp;step2=rank">{$Arank}</a></li>
-            <li><a href="tribes.php?view=my&amp;step=owner&amp;step2=mail">{$Amail2}</a></li>
-            <li><a href="tribes.php?view=my&amp;step=owner&amp;step2=messages">{$Adesc}</a></li>
-            <li><a href="tribes.php?view=my&amp;step=owner&amp;step2=nowy">{$Awaiting}</a></li>
-            <li><a href="tribes.php?view=my&amp;step=owner&amp;step2=kick">{$Akick}</a></li>
-            <li><a href="tribes.php?view=my&amp;step=owner&amp;step2=wojsko">{$Aarmy}</a></li>
-            <li><a href="tribes.php?view=my&amp;step=owner&amp;step2=walka">{$Aattack2}</a></li>
-            <li><a href="tribes.php?view=my&amp;step=owner&amp;step2=loan">{$Aloan}</a></li>
-            <li><a href="tribes.php?view=my&amp;step=owner&amp;step2=te">{$Amisc}</a></li>
+	        {foreach $Links as $value}
+            	    <li><a href="tribes.php?view=my&amp;step=owner&amp;step2={$value@key}">{$value}</a></li>
+		{/foreach}
             </ul>
         {/if}
+	{if $Step2 == "asks"}
+            {$Asksinfo}<br />
+            <form method="post" action="tribes.php?view=my&amp;step=owner&amp;step2=asks&amp;step3=next">
+	        <table align="center" width="90%">
+		    <tr>
+		        <th>{$Taccept}</th>
+		        <th>{$Trefuse}</th>
+		        <th>{$Tplayer}</th>
+		        <th>{$Tamount}</th>
+		        <th>{$Titem}</th>
+		    </tr>
+		    {section name=asks loop=$Cplayers}
+		        <tr>
+		            <td><input type="radio" name="{$Cids[asks]}" value="{$Taccept}" checked="checked" /></td>
+			    <td><input type="radio" name="{$Cids[asks]}" value="{$Trefuse}" /></td>
+			    <td>{$Cplayers[asks]}</td>
+			    <td>{$Camounts[asks]}</td>
+			    <td>{$Citems[asks]}</td>
+			<tr>
+		    {/section}
+		</table>
+		<input type="submit" value="{$Anext}" />
+	    </form>
+	{/if}
         {if $Step2 == "rank"}
             {if $Step3 == ""}
                 {$Ranksinfo}<br />

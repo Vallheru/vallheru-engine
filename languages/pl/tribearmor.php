@@ -4,11 +4,11 @@
  *   Polish language for tribe armor
  *
  *   @name                 : tribearmor.php                            
- *   @copyright            : (C) 2004,2005,2006 Vallheru Team based on Gamers-Fusion ver 2.5
- *   @author               : thindil <thindil@users.sourceforge.net>
+ *   @copyright            : (C) 2004,2005,2006,2012 Vallheru Team based on Gamers-Fusion ver 2.5
+ *   @author               : thindil <thindil@vallheru.net>
  *   @author               : eyescream <tduda@users.sourceforge.net>
- *   @version              : 1.3
- *   @since                : 23.11.2006
+ *   @version              : 1.5
+ *   @since                : 24.01.2012
  *
  */
 
@@ -28,7 +28,7 @@
 //   along with this program; if not, write to the Free Software
 //   Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 //
-// $Id: tribearmor.php 840 2006-11-24 16:41:26Z thindil $
+// $Id$
 
 define("ERROR", "Zapomnij o tym!");
 define("NO_CLAN", "Nie jesteś w klanie.");
@@ -45,21 +45,18 @@ define("A_LEADER", "Opcje przywódcy");
 define("A_FORUMS", "Forum klanu");
 define("A_ASTRAL", "Astralny skarbiec");
 
-if (!isset($_GET['step']) && !isset($_GET['daj']) && !isset($_GET['step2']) && !isset($_GET['step3'])) 
-{
-    define("ARMOR_INFO", "Witaj w zbrojowni klanu. Tutaj są składowane przedmioty należące do klanu. Każdy członek klanu może ofiarować klanowi jakiś przedmiot ale tylko przywódca lub osoba upoważniona przez niego może darować dany przedmiot członkom swojego klanu. Co chcesz zrobić?");
-    define("A_SHOW_W", "Zobaczyć listę broni w zbrojowni klanu");
-    define("A_SHOW_A", "Zobaczyć listę zbrój w zbrojowni klanu");
-    define("A_SHOW_H", "Zobaczyć listę hełmów w zbrojowni klanu");
-    define("A_SHOW_D", "Zobaczyć listę tarcz w zbrojowni klanu");
-    define("A_SHOW_L", "Zobaczyć listę nagolenników w zbrojowni klanu");
-    define("A_SHOW_B", "Zobaczyć listę łuków w zbrojowni klanu");
-    define("A_SHOW_R", "Zobaczyć listę kołczanów strzał w zbrojowni klanu");
-    define("A_SHOW_S", "Zobaczyć listę różdżek w zbrojowni klanu");
-    define("A_SHOW_C", "Zobaczyć listę szat w zbrojowni klanu");
-    define("A_SHOW_I", "Zobaczyć listę pierścieni w zbrojowni klanu");
-    define("A_ADD", "Dać przedmiot do klanu");
-}
+define("ARMOR_INFO", "Witaj w zbrojowni klanu. Tutaj są składowane przedmioty należące do klanu. Każdy członek klanu może ofiarować klanowi jakiś przedmiot ale tylko przywódca lub osoba upoważniona przez niego może darować dany przedmiot członkom swojego klanu. Co chcesz zrobić?");
+define("A_SHOW_W", "Zobaczyć listę broni w zbrojowni klanu");
+define("A_SHOW_A", "Zobaczyć listę zbrój w zbrojowni klanu");
+define("A_SHOW_H", "Zobaczyć listę hełmów w zbrojowni klanu");
+define("A_SHOW_D", "Zobaczyć listę tarcz w zbrojowni klanu");
+define("A_SHOW_L", "Zobaczyć listę nagolenników w zbrojowni klanu");
+define("A_SHOW_B", "Zobaczyć listę łuków w zbrojowni klanu");
+define("A_SHOW_R", "Zobaczyć listę kołczanów strzał w zbrojowni klanu");
+define("A_SHOW_S", "Zobaczyć listę różdżek w zbrojowni klanu");
+define("A_SHOW_C", "Zobaczyć listę szat w zbrojowni klanu");
+define("A_SHOW_I", "Zobaczyć listę pierścieni w zbrojowni klanu");
+define("A_ADD", "Dać przedmiot do klanu");
 
 if (isset($_GET['step']) && $_GET['step'] == 'zobacz') 
 {
@@ -83,7 +80,6 @@ if (isset($_GET['step']) && $_GET['step'] == 'zobacz')
     define("T_AGI", "Premia do zręczności");
     define("T_SPEED", "Premia do szybkości");
     define("T_DUR", "Wytrzymałość");
-    define("T_AMOUNT2", "Ilość");
     define("T_OPTIONS", "Opcje");
     define("T_LEVEL", "Poziom");
     define("T_OR", "Lub");

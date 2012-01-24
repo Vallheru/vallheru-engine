@@ -1167,18 +1167,19 @@ if (isset ($_GET['view']) && $_GET['view'] == 'my')
     * Clan control menu
     */
     if (isset ($_GET['step']) && $_GET['step'] == 'owner') 
-    {
+      {
         $smarty -> assign(array("Panelinfo" => PANEL_INFO,
-                                "Aperm" => A_PERM,
-                                "Arank" => A_RANK,
-                                "Adesc" => A_DESC,
-                                "Awaiting" => A_WAITING,
-                                "Akick" => A_KICK,
-                                "Aarmy" => A_ARMY,
-                                "Aattack2" => A_ATTACK2,
-                                "Aloan" => A_LOAN,
-                                "Amisc" => A_MISC,
-                                "Amail2" => A_MAIL2));
+                                "Links" => array('permissions' => A_PERM,
+						 'rank' => A_RANK,
+						 'mail' => A_MAIL2,
+						 'messages' => A_DESC,
+						 'nowy' => A_WAITING,
+						 'kick' => A_KICK,
+						 'wojsko' => A_ARMY,
+						 'walka' => A_ATTACK2,
+						 'loan' => A_LOAN,
+						 'te' => A_MISC,
+						 'asks' => 'Sprawdź prośby o przedmioty z klanu')));
         $test = array($perm -> fields['messages'],$perm -> fields['wait'],$perm -> fields['kick'],$perm -> fields['army'],$perm -> fields['attack'],$perm -> fields['loan'],$perm -> fields['armory'],$perm -> fields['warehouse'],$perm -> fields['bank'],$perm -> fields['herbs'], $perm -> fields['mail'], $perm -> fields['ranks']);
         $intTest = 0;
         for ($i = 0; $i < 12; $i++)
@@ -1190,7 +1191,66 @@ if (isset ($_GET['view']) && $_GET['view'] == 'my')
             }
         }
         if ($player -> id == $mytribe -> fields['owner'] || $intTest) 
-        {
+	  {
+	    /**
+	     * Check asks for items from tribe
+	     */
+	    if (isset($_GET['step2']) && $_GET['step2'] == 'asks')
+	      {
+		if($player->id != $mytribe -> fields['owner'] && (!$perm -> fields['armory'] || !$perm->fields['warehouse'])) 
+		  {
+		    error('Nie masz prawa tutaj przebywać.');
+		  }
+		$objAsks = $db->SelectLimit("SELECT * FROM `tribe_reserv` WHERE `tribe`=".$player->tribe, 10);
+		$arrPlayers = array();
+		$arrItems = array();
+		$arrIds = array();
+		$arrAmounts = array();
+		while (!$objAsks->EOF)
+		  {
+		    if ($objAsks->fields['type'] == 'A')
+		      {
+			$objItem = $db->Execute("SELECT `name` FROM `tribe_zbroj` WHERE `id`=".$objAsks->fields['iid']);
+			$arrItems[] = $objItem->fields['name'];
+			$objItem->Close();
+		      }
+		    $arrAmounts[] = $objAsks->fields['amount'];
+		    $objPlname = $db->Execute("SELECT `user` FROM `players` WHERE `id`=".$objAsks->fields['pid']);
+		    $arrPlayers[] = $objPlname->fields['user'].' ID: '.$objAsks->fields['pid'];
+		    $objPlname->Close();
+		    $arrIds[] = $objAsks->fields['id'];
+		    $objAsks->MoveNext();
+		  }
+		$smarty->assign(array("Taccept" => 'Akceptuj',
+				      "Trefuse" => 'Odrzuć',
+				      "Tplayer" => 'Gracz',
+				      "Titem" => 'Przedmiot',
+				      "Tamount" => 'Sztuk',
+				      "Anext" => 'Rozpatrz',
+				      'Cplayers' => $arrPlayers,
+				      'Cids' => $arrIds,
+				      'Camounts' => $arrAmounts,
+				      'Citems' => $arrItems,
+				      'Asksinfo' => 'Oto ostatnie 10 próśb o przedmioty z klanu.'));
+		if (isset($_GET['step3']))
+		  {
+		    while(!$objAsks->EOF)
+		      {
+			if ($_POST[$objAsks->fields['id']] == 'Odrzuć')
+			  {
+			   
+			  }
+			else
+			  {
+			    
+			  }
+			$objAsks->MoveNext();
+		      }
+		    $db->Execute("DELETE FROM `tribe_reserv` WHERE `id` IN (".implode(',', $arrIds).")");
+		    message('succes', 'Rozpatrzyłeś prośby o przedmioty z klanu.');
+		  }
+		$objAsks->Close();
+	      }
 
             /**
             * Set ranks for members

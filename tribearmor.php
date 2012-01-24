@@ -8,7 +8,7 @@
  *   @author               : thindil <thindil@vallheru.net>
  *   @author               : eyescream <tduda@users.sourceforge.net>
  *   @version              : 1.5
- *   @since                : 23.01.2012
+ *   @since                : 24.01.2012
  *
  */
 
@@ -56,11 +56,6 @@ if ($player -> location != 'Altara' && $player -> location != 'Ardulith')
 }
 
 /**
-* Assign variable to template
-*/
-$smarty -> assign("Message", '');
-
-/**
 * Check permission who have ability to give items
 */
 $perm = $db -> Execute("SELECT `armory` FROM `tribe_perm` WHERE `tribe`=".$player -> tribe." AND `player`=".$player -> id);
@@ -69,9 +64,94 @@ $owner = $db -> Execute("SELECT `owner` FROM `tribes` WHERE `id`=".$player -> tr
 $arrType = array('W', 'A', 'H', 'L', 'S', 'B', 'T', 'C', 'R', 'I', 'O', 'E', 'P');
 
 /**
+ * Reserve items from tribe
+ */
+if (isset($_GET['reserve']))
+  {
+    checkvalue($_GET['reserve']);
+    if (!isset ($_GET['step3'])) 
+      {
+        $name = $db -> Execute("SELECT `id`, `name`, `type`, `reserved`, `amount`, `wt` FROM `tribe_zbroj` WHERE `id`=".$_GET['reserve']." AND `klan`=".$player->tribe);
+	if (!$name->fields['id'])
+	  {
+	    error('Nie ma takiego przedmiotu.');
+	  }
+	if ($name->fields['type'] != 'R')
+	  {
+	    $intAmount = $name->fields['amount'] - $name->fields['reserved'];
+	  }
+	else
+	  {
+	    $intAmount = $name->fields['wt'] - $name->fields['reserved'];
+	  }
+        $smarty -> assign(array("Amount" => $intAmount, 
+                                "Name" => $name -> fields['name'],
+                                "Aask" => 'Poproś o',
+                                "Tamount" => 'sztuk'));
+        $name -> Close();
+      }
+    else
+      {
+	checkvalue($_POST['amount']);
+        $zbroj = $db -> Execute("SELECT `id`, `name`, `type`, `amount`, `wt`, `reserved` FROM `tribe_zbroj` WHERE `id`=".$_GET['reserve']." AND `klan`=".$player->tribe);
+	if (!$zbroj->fields['id']) 
+	  {
+	    error('Nie ma takiego przedmiotu.');  
+	  }
+	if ($zbroj->fields['type'] != 'R')
+	  {
+	    $intAmount = $zbroj->fields['amount'] - $zbroj->fields['reserved'];
+	  }
+	else
+	  {
+	    $intAmount = $zbroj->fields['wt'] - $zbroj->fields['reserved'];
+	  }
+	if ($intAmount < $_POST['amount']) 
+	  {
+	    message('error', "Klan nie ma dostępnej takiej ilości tego przemiotu!");
+	    $smarty -> assign(array("Amount" => $intAmount, 
+				    "Name" => $zbroj->fields['name'],
+				    "Aask" => 'Poproś o',
+				    "Tamount" => 'sztuk'));
+	    $_GET['step3'] = '';
+	  }
+	else
+	  {
+	    $db->Execute("INSERT INTO `tribe_reserv` (`iid`, `pid`, `amount`, `tribe`, `type`) VALUES(".$_GET['reserve'].", ".$player->id.", ".$_POST['amount'].", ".$player->tribe.", 'A')");
+	    $db->Execute("UPDATE `tribe_zbroj` SET `reserved`=`reserved`+".$_POST['amount']." WHERE `id`=".$_GET['reserve']);
+	    $strMessage = 'Gracz <b><a href="view.php?view='.$player->id.'">'.$player->user.'</a></b> ID: <b>'.$player->id.'</b> prosi o <b>'.$_POST['amount'].'</b> sztuk <b>'.$zbroj->fields['name'].'</b> z klanu.';
+	    $strSQL = "INSERT INTO `log` (`owner`, `log`, `czas`, `type`) VALUES(".$owner -> fields['owner'].", '".$strMessage."','".$newdate."', 'C')";
+	    $objPerm = $db -> Execute("SELECT `player` FROM `tribe_perm` WHERE `tribe`=".$player->tribe." AND `armory`=1");
+	    while (!$objPerm->EOF)
+	      {
+		$strSQL .= ",(".$objPerm -> fields['player'].", '".$strMessage."','".$newdate."', 'C')";
+		$objPerm -> MoveNext();
+	      }
+	    $objPerm -> Close();
+	    $db -> Execute($strSQL);
+	    $zbroj->Close();
+	    if ($player->gender == 'M')
+	      {
+		$strSuffix = 'eś';
+	      }
+	    else
+	      {
+		$strSuffix = 'aś';
+	      }
+	    message('success', 'Poprosił'.$strSuffix.' o '.$_POST['amount'].' sztuk '.$zbroj->fields['name'].' ze zbrojowni klanu.');
+	    $_GET['reserve'] = '';
+	  }
+      }
+  }
+else
+  {
+    $_GET['reserve'] = '';
+  }
+
+/**
 * Main menu
 */
-if (!isset($_GET['step']) && !isset($_GET['daj']) && !isset($_GET['step2']) && !isset($_GET['step3'])) 
+if (!isset($_GET['daj']) && !isset($_GET['step2']) && $_GET['reserve'] == '') 
   {
     $smarty -> assign(array("Armorinfo" => ARMOR_INFO,
                             "Armortype" => $arrType,
@@ -100,124 +180,124 @@ if (isset($_GET['step']) && $_GET['step'] == 'zobacz')
     $arrItem = array(T_WEAPONS, T_ARMORS, T_HELMETS, T_LEGS, T_SHIELDS, T_BOWS, T_STAFFS, T_CAPES, T_ARROWS, T_RINGS, "łupów", 'narzędzi', 'planów');
     $intKey = array_search($_GET['type'], $arrType);
     $item = $arrItem[$intKey];
-    $amount = $db -> Execute("SELECT amount FROM tribe_zbroj WHERE klan=".$player -> tribe." AND type='".$_GET['type']."'");
-    if (!$amount -> fields['amount']) 
-    {
-        error(NO_ITEMS.$item.IN_ARMOR);
-    }
-    $przed = 0;
-    while (!$amount -> EOF) 
-    {
-        $przed = $przed + $amount -> fields['amount'];
-        $amount -> MoveNext();
-    }
-    $amount -> Close();
-    $smarty -> assign(array("Amount1" => $przed, 
-                            "Name1" => $item));
-    if ($_GET['lista'] == 'zr')
-    {
-        $strOrder = ' ASC';
-    }
-        else
-    {
-        $strOrder = ' DESC';
-    }
-    if (isset($_GET['levels']) && $_GET['levels'] == 'yes')
-    {
-	checkvalue($_POST['min']);
-	checkvalue($_POST['max']);
-        if ($_POST['max'] < $_POST['min'])
-        {
-            error(ERROR);
-        }
-        $arritem = $db -> Execute("SELECT * FROM `tribe_zbroj` WHERE `klan`=".$player -> tribe." AND `type`='".$_GET['type']."' AND `minlev`>=".$_POST['min']." AND `minlev`<=".$_POST['max']." ORDER BY ".$_GET['lista'].$strOrder);
-    }
-        else
-    {
-        $arritem = $db -> Execute("SELECT * FROM tribe_zbroj WHERE klan=".$player -> tribe." AND type='".$_GET['type']."' ORDER BY ".$_GET['lista'].$strOrder);
-    }
-    $arragi = array();
-    $arrpower = array();
-    $arrname = array();
-    $arrdur = array();
-    $arrmaxdur = array();
-    $arrspeed = array();
-    $arramount = array();
-    $arraction = array();
-    $arrLevel = array();
-    $i = 0;
-    while (!$arritem -> EOF) 
-    {
-        if ($arritem -> fields['zr'] < 1) 
-        {
-            $arragi[$i] = str_replace("-","",$arritem -> fields['zr']);
-        } 
-            else 
-        {
-            $arragi[$i] = "-".$arritem -> fields['zr'];
-        }
-        $arrpower[$i] = $arritem -> fields['power'];
-        if ($arritem -> fields['poison'] > 0) 
-        {
-            $arrpower[$i] = $arritem -> fields['power'] + $arritem -> fields['poison'];
-        }
-        $arrname[$i] = $arritem -> fields['name'];
-	if ($arritem->fields['type'] != 'R')
+    $amount = $db -> Execute("SELECT SUM(`amount`) FROM `tribe_zbroj` WHERE `klan`=".$player -> tribe." AND `type`='".$_GET['type']."'");
+    if (!$amount -> fields['SUM(`amount`)']) 
+      {
+	message('error', NO_ITEMS.$item.IN_ARMOR);
+	$_GET['step'] = '';
+      }
+    else
+      {
+	$przed = 0;
+	$smarty -> assign(array("Amount1" => $amount->fields['SUM(`amount`)'], 
+				"Name1" => $item));
+	if ($_GET['lista'] == 'zr')
 	  {
-	    $arrdur[$i] = $arritem -> fields['wt'];
-	    $arrmaxdur[$i] = $arritem -> fields['maxwt'];
-	    $arramount[$i] = $arritem -> fields['amount'];
+	    $strOrder = ' ASC';
 	  }
-	else
-	  {
-	    $arrdur[$i] = 1;
-	    $arrmaxdur[$i] = 1;
-	    $arramount[$i] = $arritem -> fields['wt'];
-	  }
-	$arrspeed[$i] = $arritem -> fields['szyb'];
-        $arrLevel[$i] = $arritem -> fields['minlev'];
-        if ($player -> id == $owner -> fields['owner'] || $perm -> fields['armory']) 
-        {
-           $arraction[$i] = "<td>- <a href=tribearmor.php?daj=".$arritem -> fields['id'].">".A_GIVE."</a></td>";
-        } 
-            else 
-        {
-            $arraction[$i] = "<td></td>";
-        }
-        $arritem -> MoveNext();
-        $i ++;
-    }
-    $arritem -> Close();
-    if (in_array($_GET['type'], array('I', 'P', 'O')))
-    {
-        $arrInfos = array(T_NAME, T_POWER, T_LEVEL);
-        $arrList = array('id', 'name', 'power', 'minlev');
-    }
         else
-    {
-        $arrInfos = array(T_NAME, T_POWER, T_DUR, T_AGI, T_SPEED, T_LEVEL);
-        $arrList2 = array('id', 'name', 'power', 'wt', 'zr', 'szyb', 'minlev');
-    }
-    $strId = array_shift($arrList);
-    $smarty -> assign(array("Name" => $arrname, 
-                            "Agility" => $arragi, 
-                            "Power" => $arrpower, 
-                            "Durability" => $arrdur, 
-                            "Maxdurability" => $arrmaxdur, 
-                            "Speed" => $arrspeed, 
-                            "Amount" => $arramount, 
-                            "Action" => $arraction,
-                            "Ilevel" => $arrLevel,
-                            "Type" => $_GET['type'],
-                            "Tinfos" => $arrInfos,
-                            "Ttypes" => $arrList,
-                            "Inarmor2" => IN_ARMOR2,
-                            "Tamount2" => T_AMOUNT2,
-                            "Toptions" => T_OPTIONS,
-                            "Tor" => T_OR,
-                            "Tseek" => T_SEEK,
-                            "Titems" => T_ITEMS,
-                            "Tto" => T_TO));
+	  {
+	    $strOrder = ' DESC';
+	  }
+	if (isset($_GET['levels']) && $_GET['levels'] == 'yes')
+	  {
+	    checkvalue($_POST['min']);
+	    checkvalue($_POST['max']);
+	    if ($_POST['max'] < $_POST['min'])
+	      {
+		error(ERROR);
+	      }
+	    $arritem = $db -> Execute("SELECT * FROM `tribe_zbroj` WHERE `klan`=".$player -> tribe." AND `type`='".$_GET['type']."' AND `minlev`>=".$_POST['min']." AND `minlev`<=".$_POST['max']." ORDER BY ".$_GET['lista'].$strOrder);
+	  }
+        else
+	  {
+	    $arritem = $db -> Execute("SELECT * FROM tribe_zbroj WHERE klan=".$player -> tribe." AND type='".$_GET['type']."' ORDER BY ".$_GET['lista'].$strOrder);
+	  }
+	$arragi = array();
+	$arrpower = array();
+	$arrname = array();
+	$arrdur = array();
+	$arrmaxdur = array();
+	$arrspeed = array();
+	$arramount = array();
+	$arraction = array();
+	$arrLevel = array();
+	$arrReserved = array();
+	while (!$arritem -> EOF) 
+	  {
+	    if ($arritem -> fields['zr'] != 0) 
+	      {
+		$arragi[] = $arritem->fields['zr'] * -1;
+	      }
+	    else
+	      {
+		$arragi[] = 0;
+	      }
+	    $arrpower[] = $arritem -> fields['power'];
+	    if ($arritem -> fields['poison'] > 0) 
+	      {
+		$arrpower[] = $arritem -> fields['power'] + $arritem -> fields['poison'];
+	      }
+	    $arrname[] = $arritem -> fields['name'];
+	    if ($arritem->fields['type'] != 'R')
+	      {
+		$arrdur[] = $arritem -> fields['wt'];
+		$arrmaxdur[] = $arritem -> fields['maxwt'];
+		$arramount[] = $arritem -> fields['amount'];
+	      }
+	    else
+	      {
+		$arrdur[] = 1;
+		$arrmaxdur[] = 1;
+		$arramount[] = $arritem -> fields['wt'];
+	      }
+	    $arrReserved[] = end($arramount) - $arritem->fields['reserved'];
+	    $arrspeed[] = $arritem -> fields['szyb'];
+	    $arrLevel[] = $arritem -> fields['minlev'];
+	    if ($player -> id == $owner -> fields['owner'] || $perm -> fields['armory']) 
+	      {
+		$arraction[] = "<td>- <a href=tribearmor.php?daj=".$arritem -> fields['id'].">".A_GIVE."</a></td>";
+	      } 
+            else 
+	      {
+		$arraction[] = "<td>- <a href=tribearmor.php?reserve=".$arritem->fields['id'].">poproś</a></td>";
+	      }
+	    $arritem -> MoveNext();
+	  }
+	$arritem -> Close();
+	if (in_array($_GET['type'], array('I', 'P', 'O')))
+	  {
+	    $arrInfos = array(T_NAME, T_POWER, T_LEVEL);
+	    $arrList = array('id', 'name', 'power', 'minlev');
+	  }
+        else
+	  {
+	    $arrInfos = array(T_NAME, T_POWER, T_DUR, T_AGI, T_SPEED, T_LEVEL);
+	    $arrList2 = array('id', 'name', 'power', 'wt', 'zr', 'szyb', 'minlev');
+	  }
+	$strId = array_shift($arrList);
+	$smarty -> assign(array("Name" => $arrname, 
+				"Agility" => $arragi, 
+				"Power" => $arrpower, 
+				"Durability" => $arrdur, 
+				"Maxdurability" => $arrmaxdur, 
+				"Speed" => $arrspeed, 
+				"Amount" => $arramount,
+				"Reserved" => $arrReserved,
+				"Action" => $arraction,
+				"Ilevel" => $arrLevel,
+				"Type" => $_GET['type'],
+				"Tinfos" => $arrInfos,
+				"Ttypes" => $arrList,
+				"Inarmor2" => IN_ARMOR2,
+				"Tamount2" => 'Razem/Dostępne',
+				"Toptions" => T_OPTIONS,
+				"Tor" => T_OR,
+				"Tseek" => T_SEEK,
+				"Titems" => T_ITEMS,
+				"Tto" => T_TO));
+      }
+    $amount->Close();
 }
 
 /**
@@ -241,8 +321,7 @@ if (isset ($_GET['daj']))
 	  {
 	    $intAmount = $name->fields['wt'];
 	  }
-        $smarty -> assign(array("Id" => $_GET['daj'], 
-                                "Amount" => $intAmount, 
+        $smarty -> assign(array("Amount" => $intAmount, 
                                 "Name" => $name -> fields['name'],
                                 "Agive" => A_GIVE,
                                 "Tamount" => T_AMOUNT,
@@ -251,7 +330,6 @@ if (isset ($_GET['daj']))
     }
     if (isset ($_GET['step3']) && $_GET['step3'] == 'add') 
     {
-        integercheck($_POST['amount']);
 	checkvalue($_POST['did']);
 	checkvalue($_POST['amount']);
         $zbroj = $db -> Execute("SELECT * FROM tribe_zbroj WHERE id=".$_GET['daj']);
@@ -327,7 +405,7 @@ if (isset ($_GET['daj']))
         $objGetName -> Close();
         unset( $objGetName );
 
-        $smarty -> assign ("Message", YOU_GIVE1.'<b><a href="view.php?view='.$_POST['did'].'">'.$strReceiversName.'</a></b>'.YOU_GIVE2.'<b>'.$_POST['did']."</b> ".$_POST['amount'].T_AMOUNT.$zbroj -> fields['name'].'.');
+        message("success", YOU_GIVE1.'<b><a href="view.php?view='.$_POST['did'].'">'.$strReceiversName.'</a></b>'.YOU_GIVE2.'<b>'.$_POST['did']."</b> ".$_POST['amount'].T_AMOUNT.$zbroj -> fields['name'].'.');
         $db -> Execute("INSERT INTO `log` (`owner`, `log`, `czas`, `type`) VALUES(".$_POST['did'].", '".YOU_GET.$_POST['amount'].T_AMOUNT.$zbroj -> fields['name'].".','".$newdate."', 'C')");
 	$db -> Execute("INSERT INTO `logs` (`owner`, `log`, `czas`) VALUES(".$_POST['did'].", '".YOU_GET.$_POST['amount'].T_AMOUNT.$zbroj -> fields['name'].".','".$newdate."')");
         $objPerm = $db -> Execute("SELECT player FROM tribe_perm WHERE tribe=".$player -> tribe." AND armory=1");
@@ -421,7 +499,7 @@ if (isset ($_GET['step']) && $_GET['step'] == 'daj')
 	      }
 	  }
         $test -> Close();
-        $smarty -> assign ("Message", YOU_ADD.$_POST['amount'].T_AMOUNT.$przed -> fields['name']."</b> ".TO_ARMOR);
+        message("success", YOU_ADD.$_POST['amount'].T_AMOUNT.$przed -> fields['name']."</b> ".TO_ARMOR);
         $db -> Execute("INSERT INTO `log` (`owner`, `log`, `czas`, `type`) VALUES(".$owner -> fields['owner'].", '".L_PLAYER."<a href=view.php?view=".$player -> id.">".$player -> user.L_ID.$player -> id.ADD_TO.$_POST['amount'].T_AMOUNT.$przed -> fields['name'].".','".$newdate."', 'C')");
 	$db -> Execute("INSERT INTO `logs` (`owner`, `log`, `czas`) VALUES(".$owner -> fields['owner'].", '".L_PLAYER."<a href=view.php?view=".$player -> id.">".$player -> user.L_ID.$player -> id.ADD_TO.$_POST['amount'].T_AMOUNT.$przed -> fields['name'].".','".$newdate."')");
         $objPerm = $db -> Execute("SELECT player FROM tribe_perm WHERE tribe=".$player -> tribe." AND armory=1");
@@ -507,6 +585,7 @@ $smarty -> assign(array("Step" => $_GET['step'],
                         "Step2" => $_GET['step2'], 
                         "Give" => $_GET['daj'], 
                         "Step3" => $_GET['step3'],
+			"Reserve" => $_GET['reserve'],
                         "Amain" => A_MAIN,
                         "Adonate" => A_DONATE,
                         "Amembers" => A_MEMBERS,

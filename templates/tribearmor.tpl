@@ -1,6 +1,6 @@
 {include file="tribemenu.tpl"}
 
-{if $Step == "" && $Step2 == "" && $Give == "" && $Step3 == ""}
+{if $Step == "" && $Step2 == "" && $Give == "" && $Reserve == ""}
     {$Armorinfo}<br />
     <ul>
     {section name=armorlinks loop=$Armortype}
@@ -15,13 +15,13 @@
     <form method="post" action="tribearmor.php?step=zobacz&amp;lista=id&amp;type={$Type}&amp;levels=yes">
         {$Tor} <input type="submit" value="{$Tseek}" /> {$Titems} <input type="text" name="min" value="1" size="5" />  {$Tto} <input type="text" name="max" value="1" size="5" />
     </form>
-    <table>
+    <table width="100%" align="center">
     <tr>
     {section name=armortable loop=$Ttypes}
-        <td width="100"><a href="tribearmor.php?step=zobacz&amp;lista={$Ttypes[armortable]}&amp;limit=0&amp;type={$Type}"><b><u>{$Tinfos[armortable]}</u></b></a></td>
+        <th><a href="tribearmor.php?step=zobacz&amp;lista={$Ttypes[armortable]}&amp;limit=0&amp;type={$Type}">{$Tinfos[armortable]}</a></th>
     {/section}
-    <td width="50"><b><u>{$Tamount2}</u></b></td>
-    <td width="100"><b><u>{$Toptions}</u></b></td>
+    <th>{$Tamount2}</th>
+    <th>{$Toptions}</th>
     </tr>
     {section name=tribearmor loop=$Name}
         <tr>
@@ -33,7 +33,7 @@
             <td align="center">{$Speed[tribearmor]}</td>
         {/if}
         <td align="center">{$Ilevel[tribearmor]}</td>
-        <td align="center">{$Amount[tribearmor]}</td>
+        <td align="center">{$Amount[tribearmor]} / {$Reserved[tribearmor]}</td>
         {$Action[tribearmor]}
     {/section}
     </table>
@@ -41,7 +41,7 @@
 
 {if $Give != ""}
     {if $Step3 == ""}
-        <form method="post" action="tribearmor.php?daj={$Id}&amp;step3=add">
+        <form method="post" action="tribearmor.php?daj={$Give}&amp;step3=add">
         <input type="submit" value="{$Agive}" />
         <input type="text" name="amount" value="{$Amount}" size=5 /> {$Tamount} <b>{$Name}</b> {$Playerid}:
         <input type="text" name="did" size="5" /><br />
@@ -72,4 +72,11 @@
     </table></form>
 {/if}
 
-{$Message}
+{if $Reserve != ""}
+    {if $Step3 == ""}
+        <form method="post" action="tribearmor.php?reserve={$Reserve}&amp;step3=add">
+        <input type="submit" value="{$Aask}" />
+        <input type="text" name="amount" value="{$Amount}" size=5 /> {$Tamount} <b>{$Name}</b><br />
+        </form>
+    {/if}
+{/if}
