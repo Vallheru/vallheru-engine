@@ -1,5 +1,7 @@
 2012-01-24  Bartek thindil Jasicki  <thindil@vallheru.net>
 
+	* BUG,includes/funkcje.php: 
+	fixed notice
 	* FEATURE,install/db/update.sql, templates/layout1/tribearmor.tpl, templates/tribearmor.tpl, templates/layout1/tribes.tpl, templates/tribes.tpl,
 	tribearmor.php, tribes.php, languages/pl/tribearmor.php:
 	start work on asks for items from tribes
