@@ -273,7 +273,7 @@ else
 			      "Jobs" => $arrJobs,
 			      "Ayes" => "Biorę tę robotę. (koszt: 2 punkty kradzieży)"));
 	$objJob->Close();
-	//$db->Execute("UPDATE `players` SET `craftmission`='Y' WHERE `id`=".$player->id);
+	$db->Execute("UPDATE `players` SET `craftmission`='Y' WHERE `id`=".$player->id);
       }
     /**
      * Start random mission

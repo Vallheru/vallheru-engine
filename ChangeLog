@@ -1,3 +1,8 @@
+2012-01-24  Bartek thindil Jasicki  <thindil@vallheru.net>
+
+	* BUG,tribes.php:
+	fixed bug with sending mails
+
 2012-01-23  Bartek thindil Jasicki  <thindil@vallheru.net>
 
 	* FEATURE,mission.php, thieves.php, equip.php, kowal.php, imarket.php, tribearmor.php, install/db/update.sql, templates/layout1/equip.tpl,

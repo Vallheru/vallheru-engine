@@ -9,7 +9,7 @@
  *   @author               : mori <ziniquel@users.sourceforge.net>
  *   @author               : eyescream <tduda@users.sourceforge.net>
  *   @version              : 1.5
- *   @since                : 13.01.2012
+ *   @since                : 24.01.2012
  *
  */
 
@@ -1482,11 +1482,14 @@ if (isset ($_GET['view']) && $_GET['view'] == 'my')
                     $strBody = bbcodetohtml($strBody);
                     $strTitle = bbcodetohtml($strTitle);
                     $strTitle = T_CLAN.$strTitle;
-                    $objOwner = $db -> Execute("SELECT `id` FROM `players` WHERE `tribe`=".$mytribe -> fields['id']." AND `id`!=".$player -> id);
+                    $objOwner = $db -> Execute("SELECT `id`, `user` FROM `players` WHERE `tribe`=".$mytribe -> fields['id']." AND `id`!=".$player -> id);
                     $strDate = $db -> DBDate($newdate);
+		    $objTopic = $db->Execute("SELECT max(`topic`) FROM `mail`");
+		    $intTopic = $objTopic->fields['max(`topic`)'] + 1;
+		    $objTopic->Close();
                     while (!$objOwner -> EOF)
                     {
-                        $db -> Execute("INSERT INTO `mail` (`sender`, `senderid`, `owner`, `subject`, `body`, `date`) VALUES('".$player -> user."','".$player -> id."',".$objOwner -> fields['id'].",'".$strTitle."','".$strBody."', ".$strDate.")");
+		      $db -> Execute("INSERT INTO `mail` (`sender`, `senderid`, `owner`, `subject`, `body`, `date`, `topic`, `to`, `toname`) VALUES('".$player -> user."','".$player -> id."',".$objOwner -> fields['id'].",'".$strTitle."','".$strBody."', ".$strDate.", ".$intTopic.", ".$objOwner->fields['id'].", '".$objOwner->fields['user']."')") or die($db->ErrorMsg);
                         $objOwner -> MoveNext();
                     }
                     $objOwner -> Close();
