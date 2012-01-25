@@ -1,3 +1,9 @@
+2012-01-25  Bartek thindil Jasicki  <thindil@vallheru.net>
+
+	* UPDATE,languages/pl/tribes.php, languages/pl/tribeadmin.php, templates/layout1/tribes.tpl, templates/layout1/tribeadmin.tpl, 
+	templates/tribes.tpl, templates/tribeadmin.tpl, templates/layout1/tribemenu.tpl, templates/tribemenu.tpl, tribes.php, tribeadmin.php:
+	move clan owner options to separate files
+
 2012-01-24  Bartek thindil Jasicki  <thindil@vallheru.net>
 
 	* BUG,includes/funkcje.php: 
