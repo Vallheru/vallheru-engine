@@ -8,7 +8,7 @@
  *   @author               : thindil <thindil@vallheru.net>
  *   @author               : eyescream <tduda@users.sourceforge.net>
  *   @version              : 1.5
- *   @since                : 24.01.2012
+ *   @since                : 25.01.2012
  *
  */
 
@@ -343,6 +343,10 @@ if (isset ($_GET['daj']))
             error (NOT_IN_CLAN);
         }
         $dtrib -> Close();
+	if (!isset($intReserved))
+	  {
+	    $intReserved = 0;
+	  }
 	if ($zbroj->fields['type'] != 'R')
 	  {
 	    if ($zbroj -> fields['amount'] < $_POST['amount']) 
@@ -367,7 +371,7 @@ if (isset ($_GET['daj']))
 	      }
 	    if ($_POST['amount'] < $zbroj -> fields['amount']) 
 	      {
-		$db -> Execute("UPDATE tribe_zbroj SET amount=amount-".$_POST['amount']." WHERE id=".$zbroj -> fields['id']);
+		$db -> Execute("UPDATE tribe_zbroj SET amount=amount-".$_POST['amount'].", `reserved`=`reserved`-".$intReserved." WHERE id=".$zbroj -> fields['id']);
 	      } 
             else 
 	      {
@@ -391,7 +395,7 @@ if (isset ($_GET['daj']))
 	      }
 	    if ($_POST['amount'] < $zbroj -> fields['wt']) 
 	      {
-		$db -> Execute("UPDATE tribe_zbroj SET `wt`=`wt-".$_POST['amount']." WHERE `id`=".$zbroj -> fields['id']);
+		$db -> Execute("UPDATE tribe_zbroj SET `wt`=`wt-".$_POST['amount'].", `reserved`=`reserved`-".$intReserved." WHERE `id`=".$zbroj -> fields['id']);
 	      } 
             else 
 	      {
@@ -577,27 +581,34 @@ if (!isset($_GET['daj']))
 {
     $_GET['daj'] = '';
 }
+if (!isset($intReserved))
+  {
+    $intReserved = 0;
+  }
 
-/**
-* Assign variables to template and display page
-*/
-$smarty -> assign(array("Step" => $_GET['step'], 
-                        "Step2" => $_GET['step2'], 
-                        "Give" => $_GET['daj'], 
-                        "Step3" => $_GET['step3'],
-			"Reserve" => $_GET['reserve'],
-                        "Amain" => A_MAIN,
-                        "Adonate" => A_DONATE,
-                        "Amembers" => A_MEMBERS,
-                        "Apotions" => A_POTIONS,
-                        "Aminerals" => A_MINERALS,
-                        "Aherbs" => A_HERBS,
-                        "Aleft" => A_LEFT,
-                        "Aleader" => A_LEADER,
-                        "Aforums" => A_FORUMS,
-                        "Aarmor" => A_ARMOR,
-                        "Aastral" => A_ASTRAL));
-$smarty -> display ('tribearmor.tpl');
-
-require_once("includes/foot.php");
+if ($intReserved == 0)
+  {
+    /**
+     * Assign variables to template and display page
+     */
+    $smarty -> assign(array("Step" => $_GET['step'], 
+			    "Step2" => $_GET['step2'], 
+			    "Give" => $_GET['daj'], 
+			    "Step3" => $_GET['step3'],
+			    "Reserve" => $_GET['reserve'],
+			    "Amain" => A_MAIN,
+			    "Adonate" => A_DONATE,
+			    "Amembers" => A_MEMBERS,
+			    "Apotions" => A_POTIONS,
+			    "Aminerals" => A_MINERALS,
+			    "Aherbs" => A_HERBS,
+			    "Aleft" => A_LEFT,
+			    "Aleader" => A_LEADER,
+			    "Aforums" => A_FORUMS,
+			    "Aarmor" => A_ARMOR,
+			    "Aastral" => A_ASTRAL));
+    $smarty -> display ('tribearmor.tpl');
+    
+    require_once("includes/foot.php");
+  }
 ?>

@@ -112,20 +112,44 @@ else
 	if (isset($_GET['step3']))
 	  {
 	    $arrRejected = array();
+	    $objAsks->MoveFirst();
 	    while(!$objAsks->EOF)
 	      {
 		if ($_POST[$objAsks->fields['id']] == 'Odrzuć')
 		  {
 		    $arrRejected[] = $objAsks->fields['pid'];
+		    if ($objAsks->fields['type'] == 'A')
+		      {
+			$db->Execute("UPDATE `tribe_zbroj` SET `reserved`=`reserved`-".$objAsks->fields['amount']." WHERE `id`=".$objAsks->fields['iid']);
+		      }
 		  }
 		else
 		  {
-		    
+		    if ($objAsks->fields['type'] == 'A')
+		      {
+			$_GET['step3'] = 'add';
+			$_GET['daj'] = $objAsks->fields['iid'];
+			$_POST['did'] = $objAsks->fields['pid'];
+			$_POST['amount'] = $objAsks->fields['amount'];
+			$intReserved = $objAsks->fields['amount'];
+			require_once('tribearmor.php');
+		      }
 		  }
 		$objAsks->MoveNext();
 	      }
+	    if (count($arrRejected))
+	      {
+		$strMessage = 'Twoja prośba o przedmiot z klanu została odrzucona.';
+		$strSQL = "INSERT INTO `log` (`owner`, `log`, `czas`, `type`) VALUES";
+		foreach ($arrRejected as $intRejected)
+		  {
+		    $strSQL .= "(".$intRejected.", '".$strMessage."','".$newdate."', 'C'),";
+		  }
+		$strSQL = trim($strSQL, ',');
+		$db -> Execute($strSQL);
+	      }
 	    $db->Execute("DELETE FROM `tribe_reserv` WHERE `id` IN (".implode(',', $arrIds).")");
-	    message('succes', 'Rozpatrzyłeś prośby o przedmioty z klanu.');
+	    message('success', 'Rozpatrzyłeś prośby o przedmioty z klanu.');
 	  }
 	$objAsks->Close();
       }
@@ -191,7 +215,7 @@ else
 		    $arrRank[$j] = $db -> qstr($_POST[$number], get_magic_quotes_gpc());
 		  }
 		$db -> Execute("INSERT INTO tribe_rank (tribe_id, rank1, rank2, rank3, rank4, rank5, rank6, rank7, rank8, rank9, rank10) VALUES(".$mytribe -> fields['id'].", ".$arrRank[0].", ".$arrRank[1].", ".$arrRank[2].", ".$arrRank[3].", ".$arrRank[4].", ".$arrRank[5].", ".$arrRank[6].", ".$arrRank[7].", ".$arrRank[8].", ".$arrRank[9].")");
-		$smarty -> assign ("Message", RANK_CREATED.". <a href=\"tribeadmin.php?step2=rank\">".BACK_TO."</a><br />");
+		message("success", RANK_CREATED.". <a href=\"tribeadmin.php?step2=rank\">".BACK_TO."</a><br />");
 	      }
 	    if (isset ($_GET['step4']) && $_GET['step4'] == 'edit') 
 	      {
@@ -204,7 +228,7 @@ else
 		    $arrRank[$j] = $db -> qstr($_POST[$number], get_magic_quotes_gpc());
 		  }
 		$db -> Execute("UPDATE tribe_rank SET rank1=".$arrRank[0].", rank2=".$arrRank[1].", rank3=".$arrRank[2].", rank4=".$arrRank[3].", rank5=".$arrRank[4].", rank6=".$arrRank[5].", rank7=".$arrRank[6].", rank8=".$arrRank[7].", rank9=".$arrRank[8].", rank10=".$arrRank[9]." WHERE tribe_id=".$mytribe -> fields['id']);
-		$smarty -> assign ("Message", RANK_CHANGED.". <a href=\"tribeadmin.php?step2=rank\">".BACK_TO."</a><br />");
+		message("success", RANK_CHANGED.". <a href=\"tribeadmin.php?step2=rank\">".BACK_TO."</a><br />");
 	      }
 	  }
 	if (isset ($_GET['step3']) && $_GET['step3'] == 'get') 
@@ -245,7 +269,7 @@ else
 		$test -> Close();
 		$strRank = $db -> qstr($_POST['rank'], get_magic_quotes_gpc());
 		$db -> Execute("UPDATE players SET tribe_rank=".$strRank." WHERE id=".$_POST['rid']);
-		$smarty -> assign ("Message", YOU_GIVE.$_POST['rid'].T_RANK.$_POST['rank']."<br />");
+		message("success", YOU_GIVE.$_POST['rid'].T_RANK.$_POST['rank']."<br />");
 	      }
 	  }
       }
@@ -389,7 +413,7 @@ else
 		$db -> Execute("UPDATE tribe_perm SET messages=".$_POST['messages'].", wait=".$_POST['wait'].", kick=".$_POST['kick'].", army=".$_POST['army'].", attack=".$_POST['attack'].", loan=".$_POST['loan'].", armory=".$_POST['armory'].", warehouse=".$_POST['warehouse'].", bank=".$_POST['bank'].", herbs=".$_POST['herbs'].", forum=".$_POST['forum'].", ranks=".$_POST['ranks'].", mail=".$_POST['mail'].", info=".$_POST['info'].", astralvault=".$_POST['astralvault']." WHERE id=".$objTest -> fields['id']);
 	      }
 	    $objTest -> Close();
-	    $smarty -> assign ("Message", YOU_SET." <a href=\"tribeadmin.php\">".BACK_TO."</a>");
+	    message("success", YOU_SET." <a href=\"tribeadmin.php\">".BACK_TO."</a>");
 	  }
       }
     /**
@@ -428,7 +452,7 @@ else
 		$objOwner -> MoveNext();
 	      }
 	    $objOwner -> Close();
-	    $smarty -> assign("Message", YOU_SEND);
+	    message("success", YOU_SEND);
 	  }
 	else
 	  {
@@ -490,7 +514,7 @@ else
 	    $db -> Execute("UPDATE `tribes` SET `credits`=`credits`-".$suma." WHERE `id`=".$mytribe -> fields['id']);
 	    $message = $message.ALL_COST.$suma.FOR_A;
 	    $strLog = $strLog.ALL_COST2.$suma.FOR_A;
-	    $smarty -> assign("Message", $message);
+	    message("success", $message);
 	    /**
 	     * Send informations about buy army
 	     */
@@ -541,7 +565,7 @@ else
 	      {
 		error(ERROR);
 	      }
-	    $smarty -> assign ("Message", YOU_DROP.$del -> fields['gracz'].".");
+	    message("success", YOU_DROP.$del -> fields['gracz'].".");
 	    $strDate = $db -> DBDate($newdate);
 	    $db -> Execute("INSERT INTO `log` (`owner`, `log`, `czas`, `type`) VALUES(".$del -> fields['gracz'].",'".L_TRIBE.'<b><a href="tribes.php?view=view&amp;id='.$mytribe -> fields['id'].'">'.$mytribe -> fields['name'].'</a></b>'.L_DROP."', ".$strDate.", 'C')");
 	    $db -> Execute("DELETE FROM tribe_oczek WHERE id=".$del -> fields['id']);
@@ -557,7 +581,7 @@ else
 	if (isset($_GET['dodaj'])) 
 	  {
 	    $dod = $db -> Execute("SELECT * FROM tribe_oczek WHERE id=".$_GET['dodaj']);
-	    $smarty -> assign ("Message", YOU_ACCEPT.$dod -> fields['gracz'].".");
+	    message("success", YOU_ACCEPT.$dod -> fields['gracz'].".");
 	    $strDate = $db -> DBDate($newdate);
 	    $db -> Execute("INSERT INTO `log` (`owner`, `log`, `czas`, `type`) VALUES(".$dod -> fields['gracz'].",'".L_TRIBE.'<b><a href="tribes.php?view=my">'.$mytribe -> fields['name'].'</a></b>'.L_ACCEPT."', ".$strDate.", 'C')");
 	    $db -> Execute("UPDATE players SET tribe=".$dod -> fields['klan']." WHERE id=".$dod -> fields['gracz']);
@@ -634,7 +658,7 @@ else
 		error("Tagi są zbyt długie.");
 	      }
 	    $db->Execute("UPDATE `tribes` SET `prefix`='".$_POST['prefix']."', `suffix`='".$_POST['suffix']."' WHERE `id`=".$mytribe->fields['id']);
-	    $smarty -> assign ("Message", "Ustawiłeś tagi klanowe. <a href=\"tribeadmin.php?step2=messages\">".A_REFRESH."</a><br />");
+	    message("success", "Ustawiłeś tagi klanowe. <a href=\"tribeadmin.php?step2=messages\">".A_REFRESH."</a><br />");
 	  }
 	//Set tribe webpage
 	if (isset ($_GET['action']) && $_GET['action'] == 'www') 
@@ -642,7 +666,7 @@ else
 	    $_POST['www'] = str_replace("'","",strip_tags($_POST['www']));
 	    $strWWW = $db -> qstr($_POST['www'], get_magic_quotes_gpc());
 	    $db -> Execute("UPDATE tribes SET www=".$strWWW." WHERE id=".$mytribe -> fields['id']);
-	    $smarty -> assign ("Message", WWW_SET." <a href=\"http://".$_POST['www']."\" target=\"_blank\">".$_POST['www']."</a>. <a href=\"tribeadmin.php?step2=messages\">".A_REFRESH."</a><br />");
+	    message("success", WWW_SET." <a href=\"http://".$_POST['www']."\" target=\"_blank\">".$_POST['www']."</a>. <a href=\"tribeadmin.php?step2=messages\">".A_REFRESH."</a><br />");
 	  }
 	if (isset ($_GET['step4']) && $_GET['step4'] == 'usun') 
 	  {
@@ -655,7 +679,7 @@ else
 	      {
 		unlink($plik);
 		$db -> Execute("UPDATE tribes SET logo='' where id=".$mytribe -> fields['id']) or error ("nie mogÄ skasowaÄ");
-		$smarty -> assign ("Message", LOGO_DEL." <a href=\"tribeadmin.php?step2=messages\">".A_REFRESH."</a><br />");
+		message("success", LOGO_DEL." <a href=\"tribeadmin.php?step2=messages\">".A_REFRESH."</a><br />");
 	      } 
 	    else 
 	      {
@@ -701,7 +725,7 @@ else
 		error (ERROR);
 	      }
 	    $db -> Execute("UPDATE tribes SET logo='".$newname."' where id=".$mytribe -> fields['id']);
-	    $smarty -> assign ("Message",  LOGO_LOAD." <a href=\"tribeadmin.php?step2=messages\">".A_REFRESH."</a><br />");
+	    message("success",  LOGO_LOAD." <a href=\"tribeadmin.php?step2=messages\">".A_REFRESH."</a><br />");
 	  }
 	/**
 	 * Set new description and message
@@ -713,8 +737,8 @@ else
 	    $strPrivatemsg = $db -> qstr($strPrivatemsg, get_magic_quotes_gpc());
 	    $strPublicmsg = $db -> qstr($strPublicmsg, get_magic_quotes_gpc());
 	    $db -> Execute("UPDATE `tribes` SET `private_msg`=".$strPrivatemsg.",  `public_msg`=".$strPublicmsg." WHERE `id`=".$mytribe -> fields['id']);
-	    $smarty -> assign(array("Message" => MSG_CHANGED,
-				    "Pubmessage" => $_POST['public_msg'], 
+	    message("success", MSG_CHANGED);
+	    $smarty -> assign(array("Pubmessage" => $_POST['public_msg'], 
 				    "Privmessage" => $_POST['private_msg']));
 	  }
       }
@@ -765,11 +789,11 @@ else
 		    $objPerm -> MoveNext();
 		  }
 		$objPerm -> Close();
-		$smarty -> assign ("Message", D_ID.$_POST['id'].NOT_IS);
+		message("success", D_ID.$_POST['id'].NOT_IS);
 	      } 
 	    else 
 	      {
-		$smarty -> assign ("Message", IS_LEADER);
+		message("error", IS_LEADER);
 	      }
 	  }
       }
@@ -805,20 +829,20 @@ else
 	    $rec = $db -> Execute("SELECT tribe FROM players WHERE id=".$_POST['id']);
 	    if ($rec -> fields['tribe'] != $mytribe -> fields['id']) 
 	      {
-		$smarty -> assign ("Message", NOT_IN_CLAN);
+		message("error", NOT_IN_CLAN);
 	      } 
 	    else 
 	      {
 		if (!$_POST['amount'] || !$_POST['id']) 
 		  {
-		    $smarty -> assign ("Message", EMPTY_FIELDS);
+		    message("error", EMPTY_FIELDS);
 		  } 
 		else 
 		  {
 		    checkvalue($_POST['amount']);
 		    if ($_POST['amount'] > $mytribe -> fields[$_POST['currency']]) 
 		      {
-			$smarty -> assign ("Message", NO_AMOUNT.$poz.".");
+			message("error", NO_AMOUNT.$poz.".");
 		      } 
 		    else 
 		      {
@@ -841,7 +865,7 @@ else
 			    $objPerm -> MoveNext();
 			  }
 			$objPerm -> Close();
-			$smarty -> assign ("Message", YOU_GIVE.$_POST['id']." ".$_POST['amount']." ".$poz.".");
+			message("success", YOU_GIVE.$_POST['id']." ".$_POST['amount']." ".$poz.".");
 		      }
 		  }
 	      }

@@ -1,5 +1,7 @@
 2012-01-25  Bartek thindil Jasicki  <thindil@vallheru.net>
 
+	* FEATURE,tribeadmin.php, tribearmor.php:
+	added option for ask for items from clan
 	* UPDATE,languages/pl/tribes.php, languages/pl/tribeadmin.php, templates/layout1/tribes.tpl, templates/layout1/tribeadmin.tpl, 
 	templates/tribes.tpl, templates/tribeadmin.tpl, templates/layout1/tribemenu.tpl, templates/tribemenu.tpl, tribes.php, tribeadmin.php:
 	move clan owner options to separate files
