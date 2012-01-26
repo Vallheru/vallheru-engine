@@ -1,3 +1,8 @@
+2012-01-26  Bartek thindil Jasicki  <thindil@vallheru.net>
+
+	* BUG,temple.php:
+	fixed bless to thievery and perception
+
 2012-01-25  Bartek thindil Jasicki  <thindil@vallheru.net>
 
 	* FEATURE,tribeadmin.php, tribearmor.php:

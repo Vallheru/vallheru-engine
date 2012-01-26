@@ -4,10 +4,10 @@
  *   Temple
  *
  *   @name                 : temple.php                            
- *   @copyright            : (C) 2004,2005,2006,2011 Vallheru Team based on Gamers-Fusion ver 2.5
- *   @author               : thindil <thindil@tuxfamily.org>
- *   @version              : 1.4
- *   @since                : 21.09.2011
+ *   @copyright            : (C) 2004,2005,2006,2011,2012 Vallheru Team based on Gamers-Fusion ver 2.5
+ *   @author               : thindil <thindil@vallheru.net>
+ *   @version              : 1.5
+ *   @since                : 26.01.2012
  *
  */
 
@@ -207,9 +207,9 @@ if (isset ($_GET['temp']) && $_GET['temp'] == 'modlitwa')
         }
         $intRoll = rand(1,10);
         if ($intRoll < 9) 
-        {
-            $arrBless = array('agility', 'strength', 'inteli', 'wisdom', 'speed', 'condition', 'smith', 'alchemy', 'fletcher', 'weapon', 'shoot', 'dodge', 'cast', 'breeding', 'mining', 'lumberjack', 'herbalist', 'jeweller');
-            $arrPrays = array(AGI, STR, INTELI, WIS, SPE, CON, SMI, ALC, FLE, WEA, SHO, DOD, CAS, BRE, MINI, LUMBER, HERBS, JEWEL);
+	  {
+	    $arrBless = array('agility', 'strength', 'inteli', 'wisdom', 'speed', 'condition', 'smith', 'alchemy', 'fletcher', 'weapon', 'shoot', 'dodge', 'cast', 'breeding', 'mining', 'lumberjack', 'herbalist', 'jeweller', 'perception', 'thievery');
+            $arrPrays = array(AGI, STR, INTELI, WIS, SPE, CON, SMI, ALC, FLE, WEA, SHO, DOD, CAS, BRE, MINI, LUMBER, HERBS, JEWEL, "Spostrzegawczości", "Złodziejstwa");
             $strBless = $arrBless[$intNumber];
             $intBonus = $_POST['praytype'] * $player -> level;
             if ($intNumber > 5)
@@ -218,7 +218,7 @@ if (isset ($_GET['temp']) && $_GET['temp'] == 'modlitwa')
             }
             $db -> Execute("UPDATE `players` SET `bless`='".$strBless."', `blessval`=".$intBonus." WHERE `id`=".$player -> id);
             $smarty -> assign("Message", YOU_PRAY.$player -> deity.P_SUCCESS.$arrPrays[$intNumber]);
-        }
+	  }
         if ($intRoll == 9) 
         {
             $smarty -> assign ("Message", YOU_PRAY.$player -> deity.BUT_FAIL);
