@@ -9,7 +9,7 @@
  *   @author               : mori <ziniquel@users.sourceforge.net>
  *   @author               : eyescream <tduda@users.sourceforge.net>
  *   @version              : 1.5
- *   @since                : 25.01.2012
+ *   @since                : 26.01.2012
  *
  */
 
@@ -205,36 +205,6 @@ if (isset ($_GET['view']) && $_GET['view'] == 'my')
         define("GOLD_COINS2", "Sztuk(i) Złota");
         define("MITH_COINS2", "Sztuk(i) Mithrilu");
         define("TO_CLAN", " do swojego klanu.");
-    }
-    if (isset ($_GET['step']) && $_GET['step'] == 'zielnik') 
-    {
-        define("HERB1", "Illani");
-        define("HERB2", "Illanias");
-        define("HERB3", "Nutari");
-        define("HERB4", "Dynallca");
-        define("HERB5", "Nasiona Illani");
-        define("HERB6", "Nasiona Illanias");
-        define("HERB7", "Nasiona Nutari");
-        define("HERB8", "Nasiona Dynallca");
-        define("NO_AMOUNT", "Klan nie ma takiej ilości ");
-        define("YOU_SEND1", "Klan przekazał graczowi ");
-        define("YOU_SEND2", ", ID ");
-        define("YOU_GET", "Dostałeś od klanu ");
-        define("NO_AMOUNT2", "Nie masz takiej ilości ");
-        define("YOU_ADD", "Dodałeś <b>");
-        define("TO_CLAN", "</b> do zielnika klanu.");
-        define("HE_ADD", " dodał do zielnika klanu ");
-        define("HERBS_INFO", "Witaj w zielniku klanu. Tutaj są składowane zioła należące do klanu. Każdy członek klanu może ofiarować klanowi jakieś zioła ale tylko przywódca lub osoba upoważniona przez niego może darować dane zioła członkom swojego klanu. Aby dać jakieś zioła członkom klanu, kliknij na nazwę owego zioła");
-        define("WHAT_YOU", "Co chcesz zrobić?");
-        define("A_GIVE_TO", "Dać zioła do klanu");
-        define("GIVE_PLAYER", "Daj graczowi ID:");
-        define("A_GIVE", "Daj");
-        define("ADD_HERB", "Dodaj zioła do zielnika");
-        define("HERB", "Zioło");
-        define("H_AMOUNT", "Sztuk(i)");
-        define("A_ADD", "Dodaj");
-        define("T_AMOUNT", "z posiadanych");
-        define("H_AMOUNT2", "sztuk");
     }
     if (isset ($_GET['step']) && $_GET['step'] == 'skarbiec') 
     {

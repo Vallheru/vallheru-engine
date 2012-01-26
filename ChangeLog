@@ -1,5 +1,8 @@
 2012-01-26  Bartek thindil Jasicki  <thindil@vallheru.net>
 
+	* UPDATE,templates/layout1/tribemenu.tpl, templates/tribemenu.tpl, templates/layout1/tribeherbs.tpl, templates/tribeherbs.tpl,
+	templates/layout1/tribes.tpl, templates/tribes.tpl, languages/pl/tribes.php, tribes.php, tribeherbs.php:
+	move clan herbs to separate file
 	* BUG,temple.php:
 	fixed bless to thievery and perception
 

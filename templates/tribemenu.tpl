@@ -5,7 +5,7 @@
 (<a href="tribearmor.php">{$Aarmor}</a>)
 (<a href="tribeware.php">{$Apotions}</a>)
 (<a href="tribes.php?view=my&amp;step=skarbiec">{$Aminerals}</a>)
-(<a href="tribes.php?view=my&amp;step=zielnik">{$Aherbs}</a>)
+(<a href="tribeherbs.php">{$Aherbs}</a>)
 (<a href="tribes.php?view=my&amp;step=quit">{$Aleft}</a>)
 (<a href="tribeadmin.php">{$Aleader}</a>)
 (<a href="tforums.php?view=topics">{$Aforums}</a>)
