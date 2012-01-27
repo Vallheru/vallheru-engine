@@ -1,6 +1,6 @@
 {include file="tribemenu.tpl"}
 
-{if $Step2 == "" && $Step3 == "" && $Step4 == "" && $Give == ""}
+{if $Step2 == "" && $Step3 == "" && $Step4 == "" && $Give == "" && $Reserve == ""}
     {$Herbsinfo}<br />
     <table>
         <tr>
@@ -10,7 +10,7 @@
         </tr>
         <tr>
             {section name=herbstribe3 loop=$Tamount}
-                <td align="center">{$Tamount[herbstribe3]}</td>
+                <td>{$Tamount[herbstribe3]}</td>
             {/section}
         </tr>
     </table>
@@ -38,4 +38,13 @@
     <tr><td>{$Hamount}:</td><td><input type="text" name="ilosc" /></td></tr>
     <tr><td colspan="2" align="center"><input type="submit" value="{$Aadd}" /></td></tr>
     </table></form>
+{/if}
+
+{if $Reserve != ""}
+    {if $Step3 == ""}
+        <form method="post" action="tribeherbs.php?reserve={$Reserve}&amp;step3=add">
+        <input type="submit" value="{$Aask}" />
+        <input type="text" name="amount" value="{$Amount}" size=5 /> {$Tamount2} <b>{$Name}</b><br />
+        </form>
+    {/if}
 {/if}

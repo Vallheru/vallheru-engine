@@ -89,3 +89,47 @@ ALTER TABLE `mactions` ADD `successes` INT( 11 ) NOT NULL DEFAULT '0';
 ALTER TABLE `mactions` ADD `bonus` INT( 11 ) NOT NULL DEFAULT '0';
 ALTER TABLE `mactions` ADD `place` VARCHAR( 30 ) NOT NULL ,
 ADD `target` CHAR( 1 ) NOT NULL ;
+CREATE TABLE IF NOT EXISTS `plans` (
+  `name` varchar(255) NOT NULL,
+  `level` int(11) NOT NULL DEFAULT '1',
+  `amount` int(11) NOT NULL DEFAULT '2',
+  `type` char(1) NOT NULL DEFAULT 'T',
+  KEY `name` (`name`)
+) ENGINE=MyISAM DEFAULT CHARSET=utf8;
+INSERT INTO `plans` (`name`, `level`, `amount`, `type`) VALUES
+('Wytrychy', 1, 1, 'T'),
+('Wytrychy', 5, 8, 'T'),
+('Wytrychy', 10, 20, 'T'),
+('Wytrychy', 15, 36, 'T'),
+('Wytrychy', 20, 60, 'T'),
+('Wytrychy', 25, 86, 'T');
+ALTER TABLE `tribe_zbroj` ADD `reserved` INT( 11 ) NOT NULL DEFAULT '0';
+CREATE TABLE IF NOT EXISTS `tribe_reserv` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `iid` int(11) NOT NULL,
+  `pid` int(11) NOT NULL,
+  `amount` int(11) NOT NULL,
+  `tribe` int(11) NOT NULL,
+  `type` char(1) NOT NULL DEFAULT 'A',
+  KEY `id` (`id`)
+) ENGINE=MyISAM DEFAULT CHARSET=utf8 AUTO_INCREMENT=1 ;
+CREATE TABLE IF NOT EXISTS `tribe_herbs` (
+  `id` int(11) NOT NULL,
+  `illani` int(11) NOT NULL,
+  `rillani` int(11) NOT NULL,
+  `illanias` int(11) NOT NULL,
+  `rillanias` int(11) NOT NULL,
+  `nutari` int(11) NOT NULL,
+  `rnutari` int(11) NOT NULL,
+  `dynallca` int(11) NOT NULL,
+  `rdynallca` int(11) NOT NULL,
+  `illani_seeds` int(11) NOT NULL,
+  `rillani_seeds` int(11) NOT NULL,
+  `illanias_seeds` int(11) NOT NULL,
+  `rillanias_seeds` int(11) NOT NULL,
+  `nutari_seeds` int(11) NOT NULL,
+  `rnutari_seeds` int(11) NOT NULL,
+  `dynallca_seeds` int(11) NOT NULL,
+  `rdynallca_seeds` int(11) NOT NULL,
+  UNIQUE KEY `id` (`id`)
+) ENGINE=MyISAM DEFAULT CHARSET=utf8;

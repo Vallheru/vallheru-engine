@@ -7,7 +7,7 @@
  *   @copyright            : (C) 2012 Vallheru Team based on Gamers-Fusion ver 2.5
  *   @author               : thindil <thindil@vallheru.net>
  *   @version              : 1.5
- *   @since                : 26.01.2012
+ *   @since                : 27.01.2012
  *
  */
 
@@ -38,8 +38,16 @@ if ($player->location != 'Altara' && $player->location != 'Ardulith')
     error ("Zapomnij o tym.");
 }
 
-$mytribe = $db -> Execute("SELECT * FROM tribes WHERE id=".$player -> tribe);
-$perm = $db -> Execute("SELECT * FROM tribe_perm WHERE tribe=".$mytribe -> fields['id']." AND player=".$player -> id);
+/**
+* Check if player is in clan
+*/
+if (!$player->tribe) 
+{
+    error ("Nie należysz do jakiegokolwiek klanu.");
+}
+
+$mytribe = $db -> Execute("SELECT `id`, `owner` FROM `tribes` WHERE `id`=".$player->tribe);
+$perm = $db -> Execute("SELECT * FROM tribe_perm WHERE tribe=".$mytribe -> fields['id']." AND player=".$player->id);
 $smarty -> assign (array("Amain" => "Główna",
 			 "Adonate" => "Dotuj",
 			 "Amembers" => "Członkowie",
@@ -53,15 +61,96 @@ $smarty -> assign (array("Amain" => "Główna",
 			 "Aastral" => "Astralny skarbiec"));
 
 $arrName = array("Illani", "Illanias", "Nutari", "Dynallca", "Nasiona Illani", "Nasiona Illanias", "Nasiona Nutari", "Nasiona Dynallca");
-$arrSqlname = array('illani', 'illanias', 'nutari', 'dynallca', 'ilani_seeds', 'illanias_seeds', 'nutari_seeds', 'dynallca_seeds');
-$arrAmount = array($mytribe -> fields['illani'],
-		   $mytribe -> fields['illanias'],
-		   $mytribe -> fields['nutari'],
-		   $mytribe -> fields['dynallca'],
-		   $mytribe -> fields['ilani_seeds'],
-		   $mytribe -> fields['illanias_seeds'],
-		   $mytribe -> fields['nutari_seeds'],
-		   $mytribe -> fields['dynallca_seeds']);
+$arrSqlname = array('illani', 'illanias', 'nutari', 'dynallca', 'illani_seeds', 'illanias_seeds', 'nutari_seeds', 'dynallca_seeds');
+$objHerbs = $db->Execute("SELECT * FROM `tribe_herbs` WHERE `id`=".$player->tribe);
+if ($objHerbs->fields['id'])
+  {
+    $arrAmount = array($objHerbs->fields['illani'],
+		       $objHerbs->fields['illanias'],
+		       $objHerbs->fields['nutari'],
+		       $objHerbs->fields['dynallca'],
+		       $objHerbs->fields['illani_seeds'],
+		       $objHerbs->fields['illanias_seeds'],
+		       $objHerbs->fields['nutari_seeds'],
+		       $objHerbs->fields['dynallca_seeds']);
+    $arrReserved = array($objHerbs->fields['rillani'],
+			 $objHerbs->fields['rillanias'],
+			 $objHerbs->fields['rnutari'],
+			 $objHerbs->fields['rdynallca'],
+			 $objHerbs->fields['rillani_seeds'],
+			 $objHerbs->fields['rillanias_seeds'],
+			 $objHerbs->fields['rnutari_seeds'],
+			 $objHerbs->fields['rdynallca_seeds']);
+  }
+else
+  {
+    $arrAmount = array(0, 0, 0, 0, 0, 0, 0, 0);
+    $arrReserved = array(0, 0, 0, 0, 0, 0, 0, 0);
+  }
+$objHerbs->Close();
+
+/**
+ * Reserve items from tribe
+ */
+if (isset($_GET['reserve']))
+  {
+    if (!in_array($_GET['reserve'], $arrSqlname))
+      {
+	error("Zapomnij o tym.");
+      }
+    $intKey = array_search($_GET['reserve'], $arrSqlname);
+    $intAmount = $arrAmount[$intKey] - $arrReserved[$intKey];
+    if (!isset ($_GET['step3'])) 
+      {
+        $smarty -> assign(array("Amount" => $intAmount, 
+                                "Name" => $arrName[$intKey],
+                                "Aask" => 'Poproś o',
+                                "Tamount2" => 'sztuk'));
+      }
+    else
+      {
+	checkvalue($_POST['amount']);
+	$_GET['step3'] = '';
+	if ($intAmount < $_POST['amount']) 
+	  {
+	    message('error', "Klan nie ma dostępnej takiej ilości tego przemiotu!");
+	    $smarty -> assign(array("Amount" => $intAmount, 
+				    "Name" => $arrName[$intKey],
+				    "Aask" => 'Poproś o',
+				    "Tamount2" => 'sztuk'));
+	  }
+	else
+	  {
+	    $db->Execute("INSERT INTO `tribe_reserv` (`iid`, `pid`, `amount`, `tribe`, `type`) VALUES(".$intKey.", ".$player->id.", ".$_POST['amount'].", ".$player->tribe.", 'H')");
+	    $db->Execute("UPDATE `tribe_herbs` SET `r".$arrSqlname[$intKey]."`=`r".$arrSqlname[$intKey]."`+".$_POST['amount']." WHERE `id`=".$player->tribe);
+	    $strMessage = 'Gracz <b><a href="view.php?view='.$player->id.'">'.$player->user.'</a></b> ID: <b>'.$player->id.'</b> prosi o <b>'.$_POST['amount'].'</b> sztuk <b>'.$arrName[$intKey].'</b> z klanu.';
+	    $strSQL = "INSERT INTO `log` (`owner`, `log`, `czas`, `type`) VALUES(".$mytribe->fields['owner'].", '".$strMessage."','".$newdate."', 'C')";
+	    $objPerm = $db -> Execute("SELECT `player` FROM `tribe_perm` WHERE `tribe`=".$player->tribe." AND `armory`=1");
+	    while (!$objPerm->EOF)
+	      {
+		$strSQL .= ",(".$objPerm -> fields['player'].", '".$strMessage."','".$newdate."', 'C')";
+		$objPerm -> MoveNext();
+	      }
+	    $objPerm -> Close();
+	    $db -> Execute($strSQL);
+	    if ($player->gender == 'M')
+	      {
+		$strSuffix = 'eś';
+	      }
+	    else
+	      {
+		$strSuffix = 'aś';
+	      }
+	    message('success', 'Poprosił'.$strSuffix.' o '.$_POST['amount'].' sztuk '.$arrName[$intKey].' z zielnika klanu.');
+	    $_GET['reserve'] = '';
+	  }
+      }
+  }
+else
+  {
+    $_GET['reserve'] = '';
+  }
+
 /**
  * Give herbs to player
  */
@@ -97,8 +186,8 @@ if (isset ($_GET['daj']) && $_GET['daj'])
 	  {
 	    error ('Ten gracz nie należy do klanu.');
 	  }
-	$give = $_GET['daj'];
-	if ($mytribe -> fields[$give] < $_POST['ilosc']) 
+	$dtrib->Close();
+	if (($arrAmount[$intKey] - $arrReserved[$intKey]) < $_POST['ilosc']) 
 	  {
 	    error ("Klan nie ma takiej ilości ".$min1."!");
 	  }
@@ -111,7 +200,11 @@ if (isset ($_GET['daj']) && $_GET['daj'])
 	  {
 	    $db -> Execute("UPDATE `herbs` SET `".$_GET['daj']."`=`".$_GET['daj']."`+".$_POST['ilosc']." WHERE `gracz`=".$_POST['did']);
 	  }
-	$db -> Execute("UPDATE `tribes` SET `".$_GET['daj']."`=`".$_GET['daj']."`-".$_POST['ilosc']." WHERE `id`=".$mytribe -> fields['id']);
+	if (!isset($intReserved))
+	  {
+	    $intReserved = 0;
+	  }
+	$db -> Execute("UPDATE `tribe_herbs` SET `".$_GET['daj']."`=`".$_GET['daj']."`-".$_POST['ilosc'].", `r".$_GET['daj']."`=`r".$_GET['daj']."`-".$intReserved." WHERE `id`=".$mytribe->fields['id']);
         
 	// Get name of the person which receives herbs.
 	$objGetName = $db -> Execute("SELECT `user` FROM `players` WHERE `id`=".$_POST['did'].';');
@@ -185,7 +278,15 @@ if (isset ($_GET['step2']) && $_GET['step2'] == 'daj')
 	  {
 	    error ("Zapomnij o tym.");
 	  }
-	$db -> Execute("UPDATE `tribes` SET `".$min."`=`".$min."`+".$_POST['ilosc']." WHERE `id`=".$mytribe -> fields['id']);
+	$objTest = $db->Execute("SELECT `id` FROM `tribe_herbs` WHERE `id`=".$player->tribe);
+	if ($objTest->fields['id'])
+	  {
+	    $db -> Execute("UPDATE `tribe_herbs` SET `".$min."`=`".$min."`+".$_POST['ilosc']." WHERE `id`=".$mytribe -> fields['id']);
+	  }
+	else
+	  {
+	    $db->Execute("INSERT INTO `tribe_herbs` (`id`, `".$min."`) VALUES(".$player->tribe.", ".$_POST['ilosc'].")");
+	  }
 	$db -> Execute("UPDATE `herbs` SET `".$min."`=`".$min."`-".$_POST['ilosc']." WHERE `gracz`=".$player -> id);
 	message("success", "Dodałeś <b>".$_POST['ilosc']." ".$nazwa."</b> do zielnika klanu.");
 	$_GET['step2'] = '';
@@ -224,35 +325,47 @@ if (!isset($_GET['daj']))
     $_GET['daj'] = '';
   }
 
-if ($_GET['step2'] == '' && $_GET['step3'] == '' && $_GET['daj'] == '' && $_GET['step4'] == '')     
+if ($_GET['step2'] == '' && $_GET['step3'] == '' && $_GET['daj'] == '' && $_GET['step4'] == '' && $_GET['reserve'] == '')     
   {
     $arrTable = array();
+    $arrAmount2 = array();
     $i = 0;
     foreach ($arrName as $strName)
       {
 	if ($player -> id == $mytribe -> fields['owner'] || $perm -> fields['herbs']) 
 	  {
-	    $arrTable[$i] = "<th width=\"100\"><a href=\"tribeherbs.php?daj=".$arrSqlname[$i]."\">".$strName."</a></th>";
+	    $arrTable[] = '<th width="100"><a href="tribeherbs.php?daj='.$arrSqlname[$i].'">'.$strName.'</a></th>';
 	  }
 	else 
 	  {
-	    $arrTable[$i] = "<th width=\"100\"><b><u>".$strName."</u></b></th>";
+	    $arrTable[] = '<th width="100"><a href="tribeherbs.php?reserve='.$arrSqlname[$i].'">'.$strName.'</a></th>';
 	  }
+	$arrAmount2[] = $arrAmount[$i].'/'.($arrAmount[$i] - $arrReserved[$i]);
 	$i++;
       }
-    $smarty -> assign(array("Tamount" => $arrAmount,
+    $smarty -> assign(array("Tamount" => $arrAmount2,
 			    "Ttable" => $arrTable,
 			    "Herbsinfo" => "Witaj w zielniku klanu. Tutaj są składowane zioła należące do klanu. Każdy członek klanu może ofiarować klanowi jakieś zioła ale tylko przywódca lub osoba upoważniona przez niego może darować dane zioła członkom swojego klanu. Aby dać jakieś zioła członkom klanu, kliknij na nazwę owego zioła.",
 			    "Whatyou" => "Co chcesz zrobić?",
 			    "Agiveto" => "Dać zioła do klanu"));
   }
 
-$smarty->assign(array("Step2" => $_GET['step2'],
-		      "Step3" => $_GET['step3'],
-		      "Step4" => $_GET['step4'],
-		      "Give" => $_GET['daj']));
+if (!isset($intReserved))
+  {
+    $intReserved = 0;
+  }
 
-$smarty -> display('tribeherbs.tpl');
 
-require_once("includes/foot.php");
+if ($intReserved == 0)
+  {
+    $smarty->assign(array("Step2" => $_GET['step2'],
+			  "Step3" => $_GET['step3'],
+			  "Step4" => $_GET['step4'],
+			  "Give" => $_GET['daj'],
+			  "Reserve" => $_GET['reserve']));
+    
+    $smarty -> display('tribeherbs.tpl');
+
+    require_once("includes/foot.php");
+  }
 ?>

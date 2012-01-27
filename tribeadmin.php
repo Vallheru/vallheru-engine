@@ -7,7 +7,7 @@
  *   @copyright            : (C) 2012 Vallheru Team based on Gamers-Fusion ver 2.5
  *   @author               : thindil <thindil@vallheru.net>
  *   @version              : 1.5
- *   @since                : 25.01.2012
+ *   @since                : 27.01.2012
  *
  */
 
@@ -74,7 +74,7 @@ else
      */
     if ($_GET['step2'] == 'asks')
       {
-	if($player->id != $mytribe -> fields['owner'] && (!$perm -> fields['armory'] || !$perm->fields['warehouse'])) 
+	if($player->id != $mytribe -> fields['owner'] && (!$perm -> fields['armory'] || !$perm->fields['herbs'])) 
 	  {
 	    error('Nie masz prawa tutaj przebywać.');
 	  }
@@ -83,6 +83,7 @@ else
 	$arrItems = array();
 	$arrIds = array();
 	$arrAmounts = array();
+	$arrName = array("Illani", "Illanias", "Nutari", "Dynallca", "Nasiona Illani", "Nasiona Illanias", "Nasiona Nutari", "Nasiona Dynallca");
 	while (!$objAsks->EOF)
 	  {
 	    if ($objAsks->fields['type'] == 'A')
@@ -90,6 +91,10 @@ else
 		$objItem = $db->Execute("SELECT `name` FROM `tribe_zbroj` WHERE `id`=".$objAsks->fields['iid']);
 		$arrItems[] = $objItem->fields['name'];
 		$objItem->Close();
+	      }
+	    elseif ($objAsks->fields['type'] == 'H')
+	      {
+		$arrItems[] = $arrName[$objAsks->fields['iid']];
 	      }
 	    $arrAmounts[] = $objAsks->fields['amount'];
 	    $objPlname = $db->Execute("SELECT `user` FROM `players` WHERE `id`=".$objAsks->fields['pid']);
@@ -113,6 +118,7 @@ else
 	  {
 	    $arrRejected = array();
 	    $objAsks->MoveFirst();
+	    $arrSqlname = array('illani', 'illanias', 'nutari', 'dynallca', 'illani_seeds', 'illanias_seeds', 'nutari_seeds', 'dynallca_seeds');
 	    while(!$objAsks->EOF)
 	      {
 		if ($_POST[$objAsks->fields['id']] == 'Odrzuć')
@@ -121,6 +127,10 @@ else
 		    if ($objAsks->fields['type'] == 'A')
 		      {
 			$db->Execute("UPDATE `tribe_zbroj` SET `reserved`=`reserved`-".$objAsks->fields['amount']." WHERE `id`=".$objAsks->fields['iid']);
+		      }
+		    elseif($objAsks->fields['type'] == 'H')
+		      {
+			$db->Execute("UPDATE `tribe_herbs` SET `r".$arrSqlname[$objAsks->fields['iid']]."`=`r".$arrSqlname[$objAsks->fields['iid']]."`-".$objAsks->fields['amount']." WHERE `id`=".$player->tribe);
 		      }
 		  }
 		else
@@ -133,6 +143,15 @@ else
 			$_POST['amount'] = $objAsks->fields['amount'];
 			$intReserved = $objAsks->fields['amount'];
 			require_once('tribearmor.php');
+		      }
+		    elseif($objAsks->fields['type'] == 'H')
+		      {
+			$_GET['daj'] = $arrSqlname[$objAsks->fields['iid']];
+			$_POST['did'] = $objAsks->fields['pid'];
+			$_POST['ilosc'] = $objAsks->fields['amount'];
+			$_GET['step4'] = 'add';
+			$intReserved = $objAsks->fields['amount'];
+			require_once('tribeherbs.php');
 		      }
 		  }
 		$objAsks->MoveNext();
@@ -906,8 +925,7 @@ if (!isset($_GET['step3']))
     $_GET['step3'] = '';
   }
 
-$smarty -> assign (array("Name" => $mytribe -> fields['name'],
-			 "Amain" => MENU1,
+$smarty -> assign (array("Amain" => MENU1,
 			 "Adonate" => MENU2,
 			 "Amembers" => MENU3,
 			 "Aarmor" => MENU4,
