@@ -1,3 +1,8 @@
+2012-01-28  Bartek thindil Jasicki  <thindil@vallheru.net>
+
+	* BUG,includes/statsbonus.php:
+	fixed bug with counting speed
+
 2012-01-27  Bartek thindil Jasicki  <thindil@vallheru.net>
 
 	* FEATURE,templates/layout1/tribeherbs.tpl, templates/layout1/tribeherbs.tpl, install/db/update.sql, tribeherbs.php, tribeadmin.php:

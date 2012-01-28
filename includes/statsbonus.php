@@ -4,10 +4,10 @@
  *   Bonus to stats from equipment
  *
  *   @name                 : statsbonus.php                            
- *   @copyright            : (C) 2006 Vallheru Team based on Gamers-Fusion ver 2.5
- *   @author               : thindil <thindil@users.sourceforge.net>
- *   @version              : 1.2
- *   @since                : 25.07.2006
+ *   @copyright            : (C) 2006,2011 Vallheru Team based on Gamers-Fusion ver 2.5
+ *   @author               : thindil <thindil@vallheru.net>
+ *   @version              : 1.5
+ *   @since                : 28.01.2011
  *
  */
 
@@ -27,7 +27,7 @@
 //   along with this program; if not, write to the Free Software
 //   Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 //
-// $Id: statsbonus.php 527 2006-07-25 20:25:50Z thindil $
+// $Id$
 
 /**
  * Bonus from equipment - return new values of stats
@@ -76,9 +76,9 @@ function statbonus ()
         $fltCuragi = $fltCuragi + $intAgibonus;
     }
     $fltCurspeed = $player -> speed;
-    if ($arrEquip[0][0])
+    if ($arrEquip[1][0])
     {
-        $fltCurspeed = $fltCurspeed + $arrEquip[0][7];
+        $fltCurspeed = $fltCurspeed + $arrEquip[1][7];
     }
     $arrCurstats = array($fltCuragi, $player -> strength, $player -> inteli, $player -> wisdom, $fltCurspeed, $player -> cond);
     if ($arrEquip[9][2])

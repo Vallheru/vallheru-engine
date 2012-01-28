@@ -133,3 +133,12 @@ CREATE TABLE IF NOT EXISTS `tribe_herbs` (
   `rdynallca_seeds` int(11) NOT NULL,
   UNIQUE KEY `id` (`id`)
 ) ENGINE=MyISAM DEFAULT CHARSET=utf8;
+ALTER TABLE `tribes`
+  DROP `illani`,
+  DROP `illanias`,
+  DROP `nutari`,
+  DROP `dynallca`,
+  DROP `ilani_seeds`,
+  DROP `illanias_seeds`,
+  DROP `nutari_seeds`,
+  DROP `dynallca_seeds`;
