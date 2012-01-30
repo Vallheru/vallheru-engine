@@ -106,43 +106,6 @@
         </form>
         {$Message}
     {/if}
-    {if $Step == "skarbiec"}
-        {if $Step2 == "" && $Step3 == "" && $Step4 == "" && $Give == ""}
-            {$Mininfo}<br />
-            <table class="dark">
-            {$Menu}
-                {section name=tribemin loop=$Ttable}
-                    {$Ttable[tribemin]}
-                {/section}
-            </table>
-            {$Whatyou}<br />
-            <ul>
-            <li><a href="tribes.php?view=my&amp;step=skarbiec&amp;step2=daj">{$Agiveto}</a></li>
-            </ul>
-        {/if}
-        {if $Give != ""}
-            <form method="post" action="tribes.php?view=my&amp;step=skarbiec&amp;daj={$Itemid}&amp;step4=add">
-                {$Giveplayer} <input type="text" name="did" size="5" /><br />
-                <input type="text" name="ilosc" size="7" /> {$Namemin} {$Tamount} {$Tamount2} {$Mamount2}.<br />
-                <input type="hidden" name="min" value="{$Namemin}" />
-                <input type="submit" value="{$Agive}" /><br />
-            </form>
-            {$Message}
-        {/if}
-        {if $Step2 == "daj"}
-            {$Addmin}<br /><br />
-            <form method="post" action="tribes.php?view=my&amp;step=skarbiec&amp;step2=daj&amp;step3=add"><table class="dark">
-            <tr><td>{$Mineral}:</td><td><select name="mineral">
-                {section name=tribemin2 loop=$Minname}
-                    <option value="{$Minsql[tribemin2]}">{$Minname[tribemin2]}</option>
-                {/section}
-            </select></td></tr>
-            <tr><td>{$Mamount}:</td><td><input type="text" name="ilosc" /></td></tr>
-            <tr><td colspan="2" align="center"><input type="submit" value="{$Aadd}" /></td></tr>
-            </table></form>
-            {$Message}
-        {/if}
-    {/if}
     {if $Step == "members"}
         {section name=tribes2 loop=$Link}
             {$Link[tribes2]}

@@ -9,7 +9,7 @@
  *   @author               : mori <ziniquel@users.sourceforge.net>
  *   @author               : eyescream <tduda@users.sourceforge.net>
  *   @version              : 1.5
- *   @since                : 26.01.2012
+ *   @since                : 30.01.2012
  *
  */
 
@@ -205,65 +205,7 @@ if (isset ($_GET['view']) && $_GET['view'] == 'my')
         define("GOLD_COINS2", "Sztuk(i) Złota");
         define("MITH_COINS2", "Sztuk(i) Mithrilu");
         define("TO_CLAN", " do swojego klanu.");
-    }
-    if (isset ($_GET['step']) && $_GET['step'] == 'skarbiec') 
-    {
-        define("MIN1", "Rudy miedzi");
-        define("MIN2", "Rudy cynku");
-        define("MIN3", "Rudy cyny");
-        define("MIN4", "Rudy żelaza");
-        define("MIN5", "Sztabki miedzi");
-        define("MIN6", "Sztabki brązu");
-        define("MIN7", "Sztabki mosiądzu");
-        define("MIN8", "Sztabki żelaza");
-        define("MIN9", "Sztabki stali");
-        define("MIN10", "Bryły węgla");
-        define("MIN11", "Bryły adamantium");
-        define("MIN12", "Kawałki meteorytu");
-        define("MIN13", "Kryształy");
-        define("MIN14", "Drewno sosnowe");
-        define("MIN15", "Drewno z leszczyny");
-        define("MIN16", "Drewno cisowe");
-        define("MIN17", "Drewno z wiązu");
-        define("MINE1", "rudy miedzi");
-        define("MINE2", "rudy cynku");
-        define("MINE3", "rudy cyny");
-        define("MINE4", "rudy żelaza");
-        define("MINE5", "sztabek miedzi");
-        define("MINE6", "sztabek brązu");
-        define("MINE7", "sztabek mosiądzu");
-        define("MINE8", "sztabek żelaza");
-        define("MINE9", "sztabek stali");
-        define("MINE10", "brył węgla");
-        define("MINE11", "brył adamantium");
-        define("MINE12", "kawałków meteorytu");
-        define("MINE13", "kryształów");
-        define("MINE14", "drewna sosnowego");
-        define("MINE15", "drewna z leszczyny");
-        define("MINE16", "drewna cisowego");
-        define("MINE17", "drewna z wiązu");
-        define("NO_AMOUNT", "Klan nie ma takiej ilości ");
-        define("CLAN_SEND1", "Klan przekazał graczowi ");
-        define("CLAN_SEND2", ", ID ");
-        define("YOU_SEND", "Przekazałeś graczowi ID ");
-        define("YOU_GET", "Dostałeś od klanu ");
-        define("NO_AMOUNT2", "Nie masz takiej ilości ");
-        define("YOU_ADD", "Dodałeś <b>");
-        define("TO_CLAN", "</b> do skarbca klanu.");
-        define("HE_ADD", " dodał do skarbca klanu ");
-        define("PIECES", " sztuk(i) ");
-        define("MIN_INFO", "Witaj w skarbcu klanu. Tutaj są składowane minerały należące do klanu. Każdy członek klanu może ofiarować klanowi jakiś minerał ale tylko przywódca lub osoba upoważniona przez niego może darować dany minerał członkom swojego klanu. Aby dać jakiś minerał członkom klanu, kliknij na nazwę owego minerału.");
-        define("WHAT_YOU", "Co chcesz zrobić?");
-        define("A_GIVE_TO", "Dać minerały do klanu");
-        define("GIVE_PLAYER", "Daj graczowi ID:");
-        define("A_GIVE", "Daj");
-        define("ADD_MIN", "Dodaj minerały do skarbca");
-        define("MINERAL", "Minerał");
-        define("M_AMOUNT", "Ilość minerału");
-        define("A_ADD", "Dodaj");
-        define("T_AMOUNT", "z posiadanych");
-        define("M_AMOUNT2", "sztuk");
-    }
+    }    
     if (isset ($_GET['step']) && $_GET['step'] == 'members') 
     {
         define("LEADER", "Przywódca");
