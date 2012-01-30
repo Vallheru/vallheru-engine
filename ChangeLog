@@ -1,5 +1,7 @@
 2012-01-30  Bartek thindil Jasicki  <thindil@vallheru.net>
 
+	* BUG,battle.php: 
+	fixed notice
 	* UPDATE,install/db/update.sql, languages/pl/tribes.php, templates/layou1/tribemenu.tpl, templates/tribemenu.tpl, templates/layout1/tribes.tpl,
 	templates/tribes.tpl, templates/layout1/tribeminerals.tpl, templates/tribeminerals.tpl, tribes.php, tribeminerals.php:
 	move clan minerals to separate files

@@ -7,7 +7,7 @@
  *   @copyright            : (C) 2004,2005,2006,2011,2012 Vallheru Team based on Gamers-Fusion ver 2.5
  *   @author               : thindil <thindil@vallheru.net>
  *   @version              : 1.5
- *   @since                : 18.01.2012
+ *   @since                : 30.01.2012
  *
  */
 
@@ -502,6 +502,10 @@ if (isset($_GET['action']))
 	     */
 	    $expgain1 = ceil(rand($enemy1 -> fields['exp1'],$enemy1 -> fields['exp2']) * $span);
 	    $expgain = $expgain1;
+	    if (!isset($_SESSION['razy']))
+	      {
+		$_SESSION['razy'] = 1;
+	      }
 	    if ($_SESSION['razy'] > 1)
 	      {
 		for ($k = 2; $k <= $_SESSION['razy']; $k++)
