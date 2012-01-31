@@ -7,7 +7,7 @@
  *   @copyright            : (C) 2012 Vallheru Team based on Gamers-Fusion ver 2.5
  *   @author               : thindil <thindil@vallheru.net>
  *   @version              : 1.5
- *   @since                : 27.01.2012
+ *   @since                : 31.01.2012
  *
  */
 
@@ -84,17 +84,24 @@ else
 	$arrIds = array();
 	$arrAmounts = array();
 	$arrName = array("Illani", "Illanias", "Nutari", "Dynallca", "Nasiona Illani", "Nasiona Illanias", "Nasiona Nutari", "Nasiona Dynallca");
+	$arrName2 = array("rudy miedzi", "rudy cynku", "rudy cyny", "rudy żelaza", "sztabek miedzi", "sztabek brązu", "sztabek mosiądzu", "sztabek żelaza", "sztabek stali", "brył węgla", "brył adamantium", "kawałków meteorytu", "kryształów", "drewna sosnowego", "drewna z leszczyny", "drewna cisowego", "drewna z wiązu");
 	while (!$objAsks->EOF)
 	  {
-	    if ($objAsks->fields['type'] == 'A')
+	    switch ($objAsks->fields['type'])
 	      {
+	      case 'A':
 		$objItem = $db->Execute("SELECT `name` FROM `tribe_zbroj` WHERE `id`=".$objAsks->fields['iid']);
 		$arrItems[] = $objItem->fields['name'];
 		$objItem->Close();
-	      }
-	    elseif ($objAsks->fields['type'] == 'H')
-	      {
+		break;
+	      case 'H':
 		$arrItems[] = $arrName[$objAsks->fields['iid']];
+		break;
+	      case 'M':
+		$arrItems[] = ucfirst($arrName2[$objAsks->fields['iid']]);
+		break;
+	      default:
+		break;
 	      }
 	    $arrAmounts[] = $objAsks->fields['amount'];
 	    $objPlname = $db->Execute("SELECT `user` FROM `players` WHERE `id`=".$objAsks->fields['pid']);
@@ -119,19 +126,27 @@ else
 	    $arrRejected = array();
 	    $objAsks->MoveFirst();
 	    $arrSqlname = array('illani', 'illanias', 'nutari', 'dynallca', 'illani_seeds', 'illanias_seeds', 'nutari_seeds', 'dynallca_seeds');
+	    $arrSqlname2 = array('copperore', 'zincore', 'tinore', 'ironore', 'copper', 'bronze', 'brass', 'iron', 'steel', 'coal', 'adamantium', 'meteor', 'crystal', 'pine', 'hazel', 'yew', 'elm');
 	    while(!$objAsks->EOF)
 	      {
 		if ($_POST[$objAsks->fields['id']] == 'Odrzuć')
 		  {
 		    $arrRejected[] = $objAsks->fields['pid'];
-		    if ($objAsks->fields['type'] == 'A')
+		    switch ($objAsks->fields['type'])
 		      {
+		      case 'A':
 			$db->Execute("UPDATE `tribe_zbroj` SET `reserved`=`reserved`-".$objAsks->fields['amount']." WHERE `id`=".$objAsks->fields['iid']);
-		      }
-		    elseif($objAsks->fields['type'] == 'H')
-		      {
+			break;
+		      case 'H':
 			$db->Execute("UPDATE `tribe_herbs` SET `r".$arrSqlname[$objAsks->fields['iid']]."`=`r".$arrSqlname[$objAsks->fields['iid']]."`-".$objAsks->fields['amount']." WHERE `id`=".$player->tribe);
+			break;
+		      case 'M':
+			$db->Execute("UPDATE `tribe_minerals` SET `r".$arrSqlname2[$objAsks->fields['iid']]."`=`r".$arrSqlname2[$objAsks->fields['iid']]."`-".$objAsks->fields['amount']." WHERE `id`=".$player->tribe);
+			break;
+		      default:
+			break;
 		      }
+		    
 		  }
 		else
 		  {
@@ -144,14 +159,22 @@ else
 			$intReserved = $objAsks->fields['amount'];
 			require_once('tribearmor.php');
 		      }
-		    elseif($objAsks->fields['type'] == 'H')
+		    elseif($objAsks->fields['type'] == 'H' || $objAsks->fields['type'] == 'M')
 		      {
-			$_GET['daj'] = $arrSqlname[$objAsks->fields['iid']];
 			$_POST['did'] = $objAsks->fields['pid'];
 			$_POST['ilosc'] = $objAsks->fields['amount'];
 			$_GET['step4'] = 'add';
 			$intReserved = $objAsks->fields['amount'];
-			require_once('tribeherbs.php');
+			if ($objAsks->fields['type'] == 'H')
+			  {
+			    $_GET['daj'] = $arrSqlname[$objAsks->fields['iid']];
+			    require_once('tribeherbs.php');
+			  }
+			else
+			  {
+			    $_GET['daj'] = $arrSqlname2[$objAsks->fields['iid']];
+			    require_once('tribeminerals.php');
+			  }
 		      }
 		  }
 		$objAsks->MoveNext();

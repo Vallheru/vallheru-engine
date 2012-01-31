@@ -1,6 +1,6 @@
 {include file="tribemenu.tpl"}
 
-{if $Step2 == "" && $Step3 == "" && $Step4 == "" && $Give == ""}
+{if $Step2 == "" && $Step3 == "" && $Step4 == "" && $Give == "" && $Reserve == ""}
     {$Mininfo}<br />
     <table>
         {section name=tribemin loop=$Ttable}
@@ -9,14 +9,13 @@
     </table>
     {$Whatyou}<br />
     <ul>
-        <li><a href="tribeminerals.php?step=skarbiec&amp;step2=daj">{$Agiveto}</a></li>
+        <li><a href="tribeminerals.php?step2=daj">{$Agiveto}</a></li>
     </ul>
 {/if}
 {if $Give != ""}
-    <form method="post" action="tribeminerals.php?step=skarbiec&amp;daj={$Itemid}&amp;step4=add">
+    <form method="post" action="tribeminerals.php?daj={$Itemid}&amp;step4=add">
         {$Giveplayer} <input type="text" name="did" size="5" /><br />
-        <input type="text" name="ilosc" size="7" /> {$Namemin} {$Tamount} {$Tamount2} {$Mamount2}.<br />
-        <input type="hidden" name="min" value="{$Namemin}" />
+        <input type="text" name="ilosc" size="7" /> {$Namemin} {$Tamount3} {$Tamount2} {$Mamount2}.<br />
         <input type="submit" value="{$Agive}" /><br />
     </form>
 {/if}
@@ -28,4 +27,12 @@
         <tr><td>{$Mamount}:</td><td><input type="text" name="ilosc" /></td></tr>
         <tr><td colspan="2" align="center"><input type="submit" value="{$Aadd}" /></td></tr>
     </table></form>
+{/if}
+{if $Reserve != ""}
+    {if $Step3 == ""}
+        <form method="post" action="tribeminerals.php?reserve={$Reserve}&amp;step3=add">
+        <input type="submit" value="{$Aask}" />
+        <input type="text" name="amount" value="{$Amount}" size=5 /> {$Tamount2} <b>{$Name}</b><br />
+        </form>
+    {/if}
 {/if}
