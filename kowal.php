@@ -4,10 +4,10 @@
  *   Blacksmith - making items - weapons, armors, shields, helmets, plate legs, arrowsheads
  *
  *   @name                 : kowal.php                            
- *   @copyright            : (C) 2004,2005,2006,2011 Vallheru Team based on Gamers-Fusion ver 2.5
+ *   @copyright            : (C) 2004,2005,2006,2011,2012 Vallheru Team based on Gamers-Fusion ver 2.5
  *   @author               : thindil <thindil@vallheru.net>
  *   @version              : 1.5
- *   @since                : 23.01.2012
+ *   @since                : 30.01.2012
  *
  */
 
@@ -1440,7 +1440,7 @@ if (isset($_GET['kowal']) && $_GET['kowal'] == 'astral')
      */
     if (isset($_GET['component']))
     {
-	$_GET['component'] = intvalue($_GET['component']);
+	$_GET['component'] = intval($_GET['component']);
 	if (($_GET['component'] < 1) || ($_GET['component'] > 5))
 	  {
 	    error(ERROR);

@@ -1,5 +1,7 @@
 2012-01-31  Bartek thindil Jasicki  <thindil@vallheru.net>
 
+	* BUG,kowal.php: 
+	fixed typo
 	* FEATURE,templates/layout1/tribeminerals.tpl, templates/tribeminerals.tpl, tribeminerals.php, tribeadmin.php:
 	added option for ask for minerals from clan
 
