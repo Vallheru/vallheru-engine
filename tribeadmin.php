@@ -7,7 +7,7 @@
  *   @copyright            : (C) 2012 Vallheru Team based on Gamers-Fusion ver 2.5
  *   @author               : thindil <thindil@vallheru.net>
  *   @version              : 1.5
- *   @since                : 31.01.2012
+ *   @since                : 01.02.2012
  *
  */
 
@@ -41,7 +41,7 @@ $mytribe = $db -> Execute("SELECT * FROM tribes WHERE id=".$player -> tribe);
 $perm = $db -> Execute("SELECT * FROM tribe_perm WHERE tribe=".$mytribe -> fields['id']." AND player=".$player->id);
 $test = array($perm -> fields['messages'],$perm -> fields['wait'],$perm -> fields['kick'],$perm -> fields['army'],$perm -> fields['attack'],$perm -> fields['loan'],$perm -> fields['armory'],$perm -> fields['warehouse'],$perm -> fields['bank'],$perm -> fields['herbs'], $perm -> fields['mail'], $perm -> fields['ranks']);
 
-if (!in_array($player->id, $test) && $player->id != $mytribe->fields['owner'])
+if (!in_array(1, $test) && $player->id != $mytribe->fields['owner'])
   {
     error('Nie masz prawa przebywać tutaj.');
   }
@@ -74,7 +74,7 @@ else
      */
     if ($_GET['step2'] == 'asks')
       {
-	if($player->id != $mytribe -> fields['owner'] && (!$perm -> fields['armory'] || !$perm->fields['herbs'])) 
+	if($player->id != $mytribe -> fields['owner'] && (!$perm -> fields['armory'] || !$perm->fields['herbs'] || !$perm->fields['bank'] || !$perm->fields['warehouse'])) 
 	  {
 	    error('Nie masz prawa tutaj przebywać.');
 	  }
