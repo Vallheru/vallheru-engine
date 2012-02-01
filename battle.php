@@ -7,7 +7,7 @@
  *   @copyright            : (C) 2004,2005,2006,2011,2012 Vallheru Team based on Gamers-Fusion ver 2.5
  *   @author               : thindil <thindil@vallheru.net>
  *   @version              : 1.5
- *   @since                : 30.01.2012
+ *   @since                : 01.02.2012
  *
  */
 
@@ -36,13 +36,18 @@ require_once("includes/funkcje.php");
 /**
 * Get the localization for game
 */
-require_once("languages/".$player -> lang."/battle.php");
+require_once("languages/".$lang."/battle.php");
 
 global $runda;
 global $number;
 global $newdate;
 global $smarty;
 global $db;
+
+if ($player->location == 'Lochy')
+  {
+    error('Nie możesz zwiedzać areny ponieważ znajdujesz się w lochach.');
+  }
 
 if (!isset($_GET['action']) && !isset($_GET['battle']))
 {

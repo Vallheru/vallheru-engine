@@ -1,5 +1,7 @@
 2012-02-01  Bartek thindil Jasicki  <thindil@vallheru.net>
 
+	* BUG,battle.php: 
+	fixed bug with enter on arena when player is in jail
 	* BUG,outposts.php:
 	fixed bug with show equipment for veterans
 
