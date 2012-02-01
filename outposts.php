@@ -8,7 +8,7 @@
  *   @author               : thindil <thindil@vallheru.net>
  *   @author               : eyescream <tduda@users.sourceforge.net>
  *   @version              : 1.5
- *   @since                : 19.01.2012
+ *   @since                : 01.02.2012
  *
  */
  
@@ -93,6 +93,7 @@ function equip($type)
 	  {
 	    if ($armor->fields['wt'] < 20)
 	      {
+		$armor->MoveNext();
 		continue;
 	      }
 	  }
