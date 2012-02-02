@@ -4,10 +4,10 @@
  *   Astral plans
  *
  *   @name                 : portals.php                            
- *   @copyright            : (C) 2006,2011 Vallheru Team based on Gamers-Fusion ver 2.5
+ *   @copyright            : (C) 2006,2011,2012 Vallheru Team based on Gamers-Fusion ver 2.5
  *   @author               : thindil <thindil@vallheru.net>
  *   @version              : 1.5
- *   @since                : 28.12.2011
+ *   @since                : 02.02.2012
  *
  */
 
@@ -170,12 +170,12 @@ if (isset($_GET['go']) && $_GET['go'] == 'fight')
         }
     }
     
-    $objFight = $db -> Execute("SELECT `fight`, `hp` FROM `players` WHERE `id`=".$player -> id);
+    $objFight = $db -> Execute("SELECT `fight`, `hp`, `miejsce` FROM `players` WHERE `id`=".$player -> id);
 
     /**
      * Win fight and search for components
      */
-    if ($objFight -> fields['hp'] > 0 && $objFight -> fields['fight'] == 0 && !isset($_SESSION['ressurect'])) 
+    if ($objFight -> fields['hp'] > 0 && $objFight -> fields['fight'] == 0 && !isset($_SESSION['ressurect']) && $objFight->fields['miejsce'] != 'Altara') 
     {
         $arrChanges = array(90, 85, 80, 75, 70, 65, 60);
         $intRoll = rand(1, 100);
@@ -224,7 +224,7 @@ if (isset($_GET['go']) && $_GET['go'] == 'fight')
     /**
      * Lost fight
      */
-    if ($objFight -> fields['fight'] == 0 && ($objFight -> fields['hp'] == 0 || isset($_SESSION['ressurect']))) 
+    elseif ($objFight -> fields['fight'] == 0 && ($objFight -> fields['hp'] == 0 || isset($_SESSION['ressurect']))) 
     {
         $db -> Execute("UPDATE `players` SET `energy`=`energy`-1, `miejsce`='Altara' WHERE `id`=".$player -> id);
         coutastralplans($player -> id, $strName);
@@ -235,9 +235,9 @@ if (isset($_GET['go']) && $_GET['go'] == 'fight')
     /**
      * Escape from fight
      */
-    if ($objFight -> fields['fight'] == 9999) 
+    if ($objFight -> fields['miejsce'] == 'Altara' || $objFight->fields['fight'] == 9999) 
     {
-        $db -> Execute("UPDATE `players` SET `energy`=`energy`-1, `miejsce`='Altara' WHERE `id`=".$player -> id);
+        $db -> Execute("UPDATE `players` SET `energy`=`energy`-1, `miejsce`='Altara', `fight`=0 WHERE `id`=".$player -> id);
         coutastralplans($player -> id, $strName);
         error(YOU_ESCAPE);
     }

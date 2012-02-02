@@ -1,3 +1,8 @@
+2012-02-02  Bartek thindil Jasicki  <thindil@vallheru.net>
+
+	* BUG,includes/turnfight.php, portal.php, portals.php:
+	fixed few bugs
+
 2012-02-01  Bartek thindil Jasicki  <thindil@vallheru.net>
 
 	* BUG,tribeadmin.php: 

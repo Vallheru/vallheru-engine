@@ -7,7 +7,7 @@
  *   @copyright            : (C) 2004,2005,2006,2007,2011,2012 Vallheru Team based on Gamers-Fusion ver 2.5
  *   @author               : thindil <thindil@vallheru.net>
  *   @version              : 1.5
- *   @since                : 19.01.2012
+ *   @since                : 02.02.2012
  *
  */
  
@@ -101,7 +101,6 @@ function turnfight($expgain,$goldgain,$action,$addres)
     {
         error (NO_ENEMY);
     }
-    $fight -> Close();
     $premia = 0;
     $zmeczenie = 0;
     if (empty ($enemy['id'])) 
@@ -333,7 +332,7 @@ function turnfight($expgain,$goldgain,$action,$addres)
     /**
      * If fight is longer than 24 rounds
      */
-    if ((isset($_SESSION['round']) && $_SESSION['round'] > 24) && ($title != 'Portal' && $title != 'Astralny plan'))
+    if (isset($_SESSION['round']) && $_SESSION['round'] > 24)
     {
         $db -> Execute("UPDATE `players` SET `fight`=0, `hp`=".$player -> hp.", `bless`='', `blessval`=0 WHERE `id`=".$player -> id);
         unset($_SESSION['exhaust'], $_SESSION['round'], $_SESSION['points'], $_SESSION['dodge']);
@@ -354,8 +353,13 @@ function turnfight($expgain,$goldgain,$action,$addres)
             }
             $smarty -> display ('error1.tpl');
         }
+	elseif (in_array($title, array('Portal', 'Astralny plan')))
+	  {
+	    $db->Execute("UPDATE `players` SET `miejsce`='Altara' WHERE `id`=".$player->id);
+	  }
         return;
     }
+    $fight -> Close();
     if ($_POST['action'] == 'drink' && $_SESSION['points'] > 0) 
     {
         $_SESSION['points'] = $_SESSION['points'] - 1;
@@ -420,7 +424,7 @@ function turnfight($expgain,$goldgain,$action,$addres)
                 $smarty -> assign ("Message", "</ul><ul><li><b>".B_OPTIONS."</a><br /></li></ul>");
                 $smarty -> display ('error1.tpl');
             }
-            if ($title == 'Astralny plan')
+            if ($title == 'Astralny plan' || $title == 'Portal')
             {
                 $db -> Execute("UPDATE `players` SET `fight`=9999 WHERE id=".$player -> id);
             }

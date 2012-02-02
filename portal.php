@@ -4,10 +4,10 @@
  *   Magic portal - special location
  *
  *   @name                 : portal.php                            
- *   @copyright            : (C) 2004,2005,2006,2011 Vallheru Team based on Gamers-Fusion ver 2.5
+ *   @copyright            : (C) 2004,2005,2006,2011,2012 Vallheru Team based on Gamers-Fusion ver 2.5
  *   @author               : thindil <thindil@vallheru.net>
  *   @version              : 1.5
- *   @since                : 24.12.2011
+ *   @since                : 02.02.2012
  *
  */
  
@@ -85,7 +85,9 @@ if (isset ($_GET['action1']) && $_GET['action1'] == 'fight' && $player -> hp > 0
                         'endurance' => 15000, 
                         'speed' => 15000,
 			'lootnames' => array(),
-			'lootchance' => array());
+			'lootchance' => array(),
+			'exp1' => 0,
+			'exp2' => 0);
         if ($player -> hp <= 0) 
         {
             error (NO_HP);
@@ -104,14 +106,15 @@ if (isset ($_GET['action1']) && $_GET['action1'] == 'fight' && $player -> hp > 0
         {
             turnfight (1000000, 1000000, $_POST['action'], 'portal.php?action1=fight');
         }
-        $myhp = $db -> Execute("SELECT hp, fight FROM players WHERE id=".$player -> id);
+        $myhp = $db -> Execute("SELECT `hp`, `fight`, `miejsce` FROM `players` WHERE `id`=".$player -> id);
+	echo $myhp->fields['fight'];
         $item = $db -> Execute("SELECT value FROM settings WHERE setting='item'");
-        if ($myhp -> fields['hp'] <= 0 || isset($_SESSION['ressurect'])) 
+        if ($myhp -> fields['hp'] <= 0 || isset($_SESSION['ressurect']) || $myhp->fields['miejsce'] == 'Altara') 
         {
             $db -> Execute("UPDATE players SET energy=0, miejsce='Altara' WHERE id=".$player -> id);
             error (LOST_FIGHT2);
         } 
-            elseif (!$item -> fields['value'] && $myhp -> fields['hp'] > 0 && $myhp -> fields['fight'] == 0) 
+	elseif (!$item -> fields['value'] && $myhp -> fields['hp'] > 0 && $myhp -> fields['fight'] == 0) 
         {
             $db -> Execute("UPDATE players SET energy=0 WHERE id=".$player -> id);
             $smarty -> assign(array("Win" => 1,
@@ -121,6 +124,11 @@ if (isset ($_GET['action1']) && $_GET['action1'] == 'fight' && $player -> hp > 0
                                     "Istaff" => I_STAFF,
                                     "Cape" => CAPE));
         }
+	if ($myhp->fields['miejsce'] == 'Altara' || $myhp->fields['fight'] == 9999) 
+	  {
+	    $_GET['action1'] == 'retreat';
+	    $db->Execute("UPDATE `players` SET `energy`=0, `fight`=0 WHERE `id`=".$player->id);
+	  }
         $myhp -> Close();
         $item -> Close();
     }
