@@ -1,5 +1,7 @@
 2012-02-03  Bartek thindil Jasicki  <thindil@vallheru.net>
 
+	* UPDATE,tribes.php: 
+	added check if player wait for join to clan when creating new
 	* BUG,includes/tribefight.php:
 	fixed bug with link to tribe fights
 

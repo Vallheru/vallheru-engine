@@ -9,7 +9,7 @@
  *   @author               : mori <ziniquel@users.sourceforge.net>
  *   @author               : eyescream <tduda@users.sourceforge.net>
  *   @version              : 1.5
- *   @since                : 30.01.2012
+ *   @since                : 03.02.2012
  *
  */
 
@@ -561,6 +561,12 @@ if (isset ($_GET['view']) && $_GET['view'] == 'make')
     {
         error(YOU_DEAD);
     }
+    $objTest = $db->Execute("SELECT `gracz` FROM `tribe_oczek` WHERE `gracz`=".$player->id);
+    if ($objTest->fields['gracz'])
+      {
+	error('Nie możesz założyć klanu, ponieważ oczekujesz na przyjęcie do innego.');
+      }
+    $objTest->Close();
     if (isset($_GET['step']) && $_GET['step'] == 'make') 
     {
         if (!$_POST['name']) 
