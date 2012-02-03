@@ -4,11 +4,11 @@
  *   Tribes fight
  *
  *   @name                 : tribefight.php                            
- *   @copyright            : (C) 2006,2011 Vallheru Team based on Gamers-Fusion ver 2.5
- *   @author               : thindil <thindil@tuxfamily.org>
+ *   @copyright            : (C) 2006,2011,2012 Vallheru Team based on Gamers-Fusion ver 2.5
+ *   @author               : thindil <thindil@vallheru.net>
  *   @author               : eyescream <tduda@users.sourceforge.net>
- *   @version              : 1.4
- *   @since                : 13.09.2011
+ *   @version              : 1.5
+ *   @since                : 03.02.2012
  *
  */
 
@@ -43,7 +43,7 @@ $arrlink = array();
 $i = 0;
 while (!$klan1 -> EOF) 
 {
-    $arrlink[$i] = "<a href=\"tribes.php?view=my&amp;step=owner&amp;step2=walka&amp;atak=".$klan1 -> fields['id']."\">".A_ATTACK.$klan1 -> fields['name']."<br /></a>";
+    $arrlink[$i] = "<a href=\"tribeadmin.php?step2=walka&amp;atak=".$klan1 -> fields['id']."\">".A_ATTACK.$klan1 -> fields['name']."<br /></a>";
     $klan1 -> MoveNext();
     $i ++;
 }

@@ -1,3 +1,8 @@
+2012-02-03  Bartek thindil Jasicki  <thindil@vallheru.net>
+
+	* BUG,includes/tribefight.php:
+	fixed bug with link to tribe fights
+
 2012-02-02  Bartek thindil Jasicki  <thindil@vallheru.net>
 
 	* BUG,includes/turnfight.php, portal.php, portals.php:
