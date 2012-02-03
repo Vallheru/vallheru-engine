@@ -7,7 +7,7 @@
  *   @copyright            : (C) 2012 Vallheru Team based on Gamers-Fusion ver 2.5
  *   @author               : thindil <thindil@vallheru.net>
  *   @version              : 1.5
- *   @since                : 01.02.2012
+ *   @since                : 03.02.2012
  *
  */
 
@@ -89,14 +89,23 @@ else
 	  {
 	    switch ($objAsks->fields['type'])
 	      {
+		//Items
 	      case 'A':
 		$objItem = $db->Execute("SELECT `name` FROM `tribe_zbroj` WHERE `id`=".$objAsks->fields['iid']);
 		$arrItems[] = $objItem->fields['name'];
 		$objItem->Close();
 		break;
+		//Potions
+	      case 'P':
+		$objItem = $db->Execute("SELECT `name` FROM `tribe_mag` WHERE `id`=".$objAsks->fields['iid']);
+		$arrItems[] = $objItem->fields['name'];
+		$objItem->Close();
+		break;
+		//Herbs
 	      case 'H':
 		$arrItems[] = $arrName[$objAsks->fields['iid']];
 		break;
+		//Minerals
 	      case 'M':
 		$arrItems[] = ucfirst($arrName2[$objAsks->fields['iid']]);
 		break;
@@ -134,12 +143,19 @@ else
 		    $arrRejected[] = $objAsks->fields['pid'];
 		    switch ($objAsks->fields['type'])
 		      {
+			//Items
 		      case 'A':
 			$db->Execute("UPDATE `tribe_zbroj` SET `reserved`=`reserved`-".$objAsks->fields['amount']." WHERE `id`=".$objAsks->fields['iid']);
 			break;
+			//Potions
+		      case 'P':
+			$db->Execute("UPDATE `tribe_mag` SET `reserved`=`reserved`-".$objAsks->fields['amount']." WHERE `id`=".$objAsks->fields['iid']);
+			break;
+			//Herbs
 		      case 'H':
 			$db->Execute("UPDATE `tribe_herbs` SET `r".$arrSqlname[$objAsks->fields['iid']]."`=`r".$arrSqlname[$objAsks->fields['iid']]."`-".$objAsks->fields['amount']." WHERE `id`=".$player->tribe);
 			break;
+			//Minerals
 		      case 'M':
 			$db->Execute("UPDATE `tribe_minerals` SET `r".$arrSqlname2[$objAsks->fields['iid']]."`=`r".$arrSqlname2[$objAsks->fields['iid']]."`-".$objAsks->fields['amount']." WHERE `id`=".$player->tribe);
 			break;
@@ -150,15 +166,24 @@ else
 		  }
 		else
 		  {
-		    if ($objAsks->fields['type'] == 'A')
+		    //Items or potions
+		    if ($objAsks->fields['type'] == 'A' || $objAsks->fields['type'] == 'P')
 		      {
 			$_GET['step3'] = 'add';
 			$_GET['daj'] = $objAsks->fields['iid'];
 			$_POST['did'] = $objAsks->fields['pid'];
 			$_POST['amount'] = $objAsks->fields['amount'];
 			$intReserved = $objAsks->fields['amount'];
-			require_once('tribearmor.php');
+			if ($objAsks->fields['type'] == 'A')
+			  {
+			    require_once('tribearmor.php');
+			  }
+			else
+			  {
+			    require_once('tribeware.php');
+			  }
 		      }
+		    //Herbs or minerals
 		    elseif($objAsks->fields['type'] == 'H' || $objAsks->fields['type'] == 'M')
 		      {
 			$_POST['did'] = $objAsks->fields['pid'];

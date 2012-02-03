@@ -8,7 +8,7 @@
  *   @author               : thindil <thindil@vallheru.net>
  *   @author               : eyescream <tduda@users.sourceforge.net>
  *   @version              : 1.5
- *   @since                : 05.01.2012
+ *   @since                : 03.02.2012
  *
  */
 
@@ -55,25 +55,82 @@ if ($player -> location != 'Altara' && $player -> location != 'Ardulith')
 }
 
 /**
-* Assign variable to template
-*/
-$smarty -> assign("Message",'');
-
-/**
 * Check who have permission to give potions
 */
 $perm = $db -> Execute("SELECT warehouse FROM tribe_perm WHERE tribe=".$player -> tribe." AND player=".$player -> id);
 $owner = $db -> Execute("SELECT owner FROM tribes WHERE id=".$player -> tribe);
 
 /**
-* Main menu
-*/
-if (!isset($_GET['step']) && !isset($_GET['daj']) && !isset($_GET['step2']) && !isset($_GET['step3'])) 
-{
-    $smarty -> assign(array("Wareinfo" => WARE_INFO,
-        "Aadd" => A_ADD,
-        "Ashow" => A_SHOW));
-}
+ * Reserve items from tribe
+ */
+if (isset($_GET['reserve']))
+  {
+    checkvalue($_GET['reserve']);
+    if (!isset ($_GET['step3'])) 
+      {
+        $name = $db -> Execute("SELECT `id`, `name`, `reserved`, `amount` FROM `tribe_mag` WHERE `id`=".$_GET['reserve']." AND `owner`=".$player->tribe);
+	if (!$name->fields['id'])
+	  {
+	    error('Nie ma takiego przedmiotu.');
+	  }
+	$intAmount = $name->fields['amount'] - $name->fields['reserved'];
+        $smarty -> assign(array("Amount" => $intAmount, 
+                                "Name" => $name -> fields['name'],
+                                "Aask" => 'Poproś o',
+                                "Tamount" => 'sztuk'));
+        $name -> Close();
+      }
+    else
+      {
+	checkvalue($_POST['amount']);
+        $zbroj = $db -> Execute("SELECT `id`, `name`, `amount`, `reserved` FROM `tribe_mag` WHERE `id`=".$_GET['reserve']." AND `owner`=".$player->tribe);
+	if (!$zbroj->fields['id']) 
+	  {
+	    error('Nie ma takiego przedmiotu.');  
+	  }
+	$intAmount = $zbroj->fields['amount'] - $zbroj->fields['reserved'];
+	if ($intAmount < $_POST['amount']) 
+	  {
+	    message('error', "Klan nie ma dostępnej takiej ilości tego przemiotu!");
+	    $smarty -> assign(array("Amount" => $intAmount, 
+				    "Name" => $zbroj->fields['name'],
+				    "Aask" => 'Poproś o',
+				    "Tamount" => 'sztuk'));
+	    $_GET['step3'] = '';
+	  }
+	else
+	  {
+	    $db->Execute("INSERT INTO `tribe_reserv` (`iid`, `pid`, `amount`, `tribe`, `type`) VALUES(".$_GET['reserve'].", ".$player->id.", ".$_POST['amount'].", ".$player->tribe.", 'P')");
+	    $db->Execute("UPDATE `tribe_mag` SET `reserved`=`reserved`+".$_POST['amount']." WHERE `id`=".$_GET['reserve']);
+	    $strMessage = 'Gracz <b><a href="view.php?view='.$player->id.'">'.$player->user.'</a></b> ID: <b>'.$player->id.'</b> prosi o <b>'.$_POST['amount'].'</b> sztuk <b>'.$zbroj->fields['name'].'</b> z klanu.';
+	    $strSQL = "INSERT INTO `log` (`owner`, `log`, `czas`, `type`) VALUES(".$owner -> fields['owner'].", '".$strMessage."','".$newdate."', 'C')";
+	    $objPerm = $db -> Execute("SELECT `player` FROM `tribe_perm` WHERE `tribe`=".$player->tribe." AND `armory`=1");
+	    while (!$objPerm->EOF)
+	      {
+		$strSQL .= ",(".$objPerm -> fields['player'].", '".$strMessage."','".$newdate."', 'C')";
+		$objPerm -> MoveNext();
+	      }
+	    $objPerm -> Close();
+	    $db -> Execute($strSQL);
+	    $zbroj->Close();
+	    if ($player->gender == 'M')
+	      {
+		$strSuffix = 'eś';
+	      }
+	    else
+	      {
+		$strSuffix = 'aś';
+	      }
+	    message('success', 'Poprosił'.$strSuffix.' o '.$_POST['amount'].' sztuk '.$zbroj->fields['name'].' z magazynu klanu.');
+	    $_GET['reserve'] = '';
+	    $_GET['step3'] = '';
+	  }
+      }
+  }
+else
+  {
+    $_GET['reserve'] = '';
+  }
 
 /**
 * Potions list in warehouse
@@ -90,13 +147,8 @@ if (isset ($_GET['step']) && $_GET['step'] == 'zobacz')
     {
         error(NO_ITEMS);
     }
-    $amount = $db -> Execute("SELECT amount FROM tribe_mag WHERE owner=".$player-> tribe);
-    $przed = 0;
-    while (!$amount -> EOF) 
-    {
-        $przed = $przed + $amount -> fields['amount'];
-        $amount -> MoveNext();
-    }
+    $amount = $db -> Execute("SELECT SUM(`amount`) FROM `tribe_mag` WHERE `owner`=".$player-> tribe);
+    $przed = $amount->fields['SUM(`amount`)'];
     $amount -> Close();
     $arrname = array();
     $arrefect = array();
@@ -105,20 +157,20 @@ if (isset ($_GET['step']) && $_GET['step'] == 'zobacz')
     $i = 0;
     while (!$miks -> EOF) 
     {
-        $arrname[$i] = $miks -> fields['name'];
+        $arrname[] = $miks -> fields['name'];
         if ($miks -> fields['type'] != 'A')
         {
             $arrname[$i] = $arrname[$i]." (moc:".$miks -> fields['power'].")";
         }
-        $arrefect[$i] = $miks -> fields['efect'];
-        $arramount[$i] = $miks -> fields['amount'];
+        $arrefect[] = $miks -> fields['efect'];
+        $arramount[] = $miks -> fields['amount'].' / '.($miks->fields['amount'] - $miks->fields['reserved']);
         if ($player -> id == $owner -> fields['owner'] || $perm -> fields['warehouse']) 
         {
-            $arrlink[$i] = "<td>- <a href=tribeware.php?daj=".$miks -> fields['id'].">".A_GIVE."</a></td>";
+            $arrlink[] = "<td>- <a href=tribeware.php?daj=".$miks -> fields['id'].">".A_GIVE."</a></td>";
         } 
             else 
         {
-            $arrlink[$i] = "<td></td>";
+            $arrlink[] = "<td>- <a href=tribeware.php?reserve=".$miks->fields['id'].">poproś</a></td>";
         }
         $miks -> MoveNext();
         $i = $i + 1;
@@ -133,7 +185,7 @@ if (isset ($_GET['step']) && $_GET['step'] == 'zobacz')
         "Potions" => POTIONS,
         "Tname" => T_NAME,
         "Tefect" => T_EFECT,
-        "Tamount2" => T_AMOUNT2,
+        "Tamount2" => "Razem/Dostępne",
         "Toptions" => T_OPTIONS));
 }
 
@@ -184,9 +236,13 @@ if (isset ($_GET['daj']))
             $db -> Execute("UPDATE potions SET amount=amount+".$_POST['amount']." WHERE id=".$test -> fields['id']);
         }
         $test -> Close();
+	if (!isset($intReserved))
+	  {
+	    $intReserved = 0;
+	  }
         if ($_POST['amount'] < $zbroj -> fields['amount']) 
         {
-            $db -> Execute("UPDATE tribe_mag SET amount=amount-".$_POST['amount']." WHERE id=".$zbroj -> fields['id']);
+            $db -> Execute("UPDATE `tribe_mag` SET `amount`=`amount`-".$_POST['amount'].", `reserved`=`reserved`-".$intReserved." WHERE `id`=".$zbroj -> fields['id']);
         } 
             else 
         {
@@ -199,7 +255,7 @@ if (isset ($_GET['daj']))
         $objGetName -> Close();
         unset( $objGetName );
 
-        $smarty -> assign ("Message", YOU_GIVE1.'<b><a href="view.php?view='.$_POST['did'].'">'.$strReceiversName.'</a></b>'.YOU_GIVE2.'<b>'.$_POST['did']."</b> ".$_POST['amount'].T_AMOUNT.$zbroj -> fields['name']);
+        message("success", YOU_GIVE1.'<b><a href="view.php?view='.$_POST['did'].'">'.$strReceiversName.'</a></b>'.YOU_GIVE2.'<b>'.$_POST['did']."</b> ".$_POST['amount'].T_AMOUNT.$zbroj -> fields['name']);
         $strDate = $db -> DBDate($newdate);
         $db -> Execute("INSERT INTO `log` (`owner`, `log`, `czas`, `type`) VALUES(".$_POST['did'].", '".YOU_GET.$_POST['amount'].T_AMOUNT.$zbroj -> fields['name'].".', ".$strDate.", 'C')");
 	$db -> Execute("INSERT INTO `logs` (`owner`, `log`, `czas`) VALUES(".$_POST['did'].", '".YOU_GET.$_POST['amount'].T_AMOUNT.$zbroj -> fields['name'].".', ".$strDate.")");
@@ -211,6 +267,8 @@ if (isset ($_GET['daj']))
         }
         $objPerm -> Close();
         $zbroj -> Close();
+	$_GET['daj'] = '';
+	$_GET['step3'] = '';
     }
 }
 
@@ -239,7 +297,7 @@ if (isset ($_GET['step']) && $_GET['step'] == 'daj')
         "Additem" => ADD_ITEM,
         "Potion" => POTION,
         "Amount2" => AMOUNT2,
-        "Aadd" => A_ADD,
+        "Aadd" => "Dodaj",
         "Tamount2" => T_AMOUNT2));
     if (isset ($_GET['step2']) && $_GET['step2'] == 'add') 
     {
@@ -280,7 +338,7 @@ if (isset ($_GET['step']) && $_GET['step'] == 'daj')
         {
             $db -> Execute("DELETE FROM potions WHERE id=".$przed -> fields['id']);
         }
-        $smarty -> assign ("Message", YOU_ADD.$_POST['amount'].T_AMOUNT."<b>".$przed -> fields['name'].TO_WARE);
+        message("success", YOU_ADD.$_POST['amount'].T_AMOUNT."<b>".$przed -> fields['name'].TO_WARE);
         $strDate = $db -> DBDate($newdate);
         $db -> Execute("INSERT INTO `log` (`owner`, `log`, `czas`, `type`) VALUES(".$owner -> fields['owner'].", '".L_PLAYER."<a href=view.php?view=".$player -> id.">".$player -> user.L_ID.$player -> id.ADD_TO.$_POST['amount'].T_AMOUNT.$przed -> fields['name'].".', ".$strDate.", 'C')");
 	$db -> Execute("INSERT INTO `logs` (`owner`, `log`, `czas`) VALUES(".$owner -> fields['owner'].", '".L_PLAYER."<a href=view.php?view=".$player -> id.">".$player -> user.L_ID.$player -> id.ADD_TO.$_POST['amount'].T_AMOUNT.$przed -> fields['name'].".', ".$strDate.")");
@@ -292,6 +350,8 @@ if (isset ($_GET['step']) && $_GET['step'] == 'daj')
         }
         $objPerm -> Close();
         $przed -> Close();
+	$_GET['step'] = '';
+	$_GET['step2'] = '';
     }
 }
 
@@ -316,24 +376,43 @@ if (!isset($_GET['daj']))
 }
 
 /**
-* Assign variables to template and display page
+* Main menu
 */
-$smarty -> assign(array("Step" =>$_GET['step'], 
-                        "Step2" => $_GET['step2'], 
-                        "Give" => $_GET['daj'], 
-                        "Step3" => $_GET['step3'],
-                        "Amain" => A_MAIN,
-                        "Adonate" => A_DONATE,
-                        "Amembers" => A_MEMBERS,
-                        "Apotions" => A_POTIONS,
-                        "Aminerals" => A_MINERALS,
-                        "Aherbs" => A_HERBS,
-                        "Aleft" => A_LEFT,
-                        "Aleader" => A_LEADER,
-                        "Aforums" => A_FORUMS,
-                        "Aarmor" => A_ARMOR,
-                        "Aastral" => A_ASTRAL));
-$smarty -> display('tribeware.tpl');
+if ($_GET['step'] == '' && $_GET['daj'] == '' && $_GET['step2'] == '' && $_GET['step3'] == '' && $_GET['reserve'] == '') 
+{
+    $smarty -> assign(array("Wareinfo" => WARE_INFO,
+        "Aadd" => A_ADD,
+        "Ashow" => A_SHOW));
+}
 
-require_once("includes/foot.php");
+if (!isset($intReserved))
+  {
+    $intReserved = 0;
+  }
+
+if ($intReserved == 0)
+  {
+    /**
+     * Assign variables to template and display page
+     */
+    $smarty -> assign(array("Step" =>$_GET['step'], 
+			    "Step2" => $_GET['step2'], 
+			    "Give" => $_GET['daj'], 
+			    "Step3" => $_GET['step3'],
+			    "Reserve" => $_GET['reserve'],
+			    "Amain" => A_MAIN,
+			    "Adonate" => A_DONATE,
+			    "Amembers" => A_MEMBERS,
+			    "Apotions" => A_POTIONS,
+			    "Aminerals" => A_MINERALS,
+			    "Aherbs" => A_HERBS,
+			    "Aleft" => A_LEFT,
+			    "Aleader" => A_LEADER,
+			    "Aforums" => A_FORUMS,
+			    "Aarmor" => A_ARMOR,
+			    "Aastral" => A_ASTRAL));
+    $smarty -> display('tribeware.tpl');
+    
+    require_once("includes/foot.php");
+  }
 ?>

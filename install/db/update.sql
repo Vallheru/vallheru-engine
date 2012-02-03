@@ -198,3 +198,4 @@ ALTER TABLE `tribes`
   DROP `crystal`,
   DROP `adamantium`,
   DROP `meteor`;
+ALTER TABLE `tribe_mag` ADD `reserved` INT( 11 ) NOT NULL DEFAULT '0';

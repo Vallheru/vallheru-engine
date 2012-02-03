@@ -1,5 +1,8 @@
 2012-02-03  Bartek thindil Jasicki  <thindil@vallheru.net>
 
+	* FEATURE,templates/layout1/tribeware.tpl, templates/tribeware.tpl, languages/pl/tribeware.php, install/db/update.sql, tribeware.php,
+	tribeadmin.php:
+	added option for ask for potions from clan
 	* UPDATE,tribes.php: 
 	added check if player wait for join to clan when creating new
 	* BUG,includes/tribefight.php:

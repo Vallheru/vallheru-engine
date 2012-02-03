@@ -1,6 +1,6 @@
 {include file="tribemenu.tpl"}
 
-{if $Step == "" && $Step2 == "" && $Step3 == "" && $Give == ""}
+{if $Step == "" && $Step2 == "" && $Step3 == "" && $Give == "" && $Reserve == ""}
     {$Wareinfo}<br />
     <ul>
     <li><a href="tribeware.php?step=zobacz&amp;lista=id">{$Ashow}</a></li>
@@ -9,18 +9,18 @@
 
 {if $Step == "zobacz"}
     {$Inware} {$Amount1} {$Potions}<br />
-    <table>
+    <table width="95%">
     <tr>
-    <td width="100"><a href="tribeware.php?step=zobacz&amp;lista=name"><b><u>{$Tname}</u></b></a></td>
-    <td width="100"><a href="tribeware.php?step=zobacz&amp;lista=efect"><b><u>{$Tefect}</u></b></a></td>
-    <td width="50"><b><u>{$Tamount2}</u></b></td>
-    <td width="100"><b><u>{$Toptions}</u></b></td>
+    <th><a href="tribeware.php?step=zobacz&amp;lista=name">{$Tname}</a></th>
+    <th><a href="tribeware.php?step=zobacz&amp;lista=efect">{$Tefect}</a></th>
+    <th>{$Tamount2}</th>
+    <th>{$Toptions}</th>
     </tr>
     {section name=tribeware loop=$Name}
         <tr>
         <td>{$Name[tribeware]}</td>
-        <td align="center">{$Efect[tribeware]}</td>
-        <td align="center">{$Amount[tribeware]}</td>
+        <td>{$Efect[tribeware]}</td>
+        <td>{$Amount[tribeware]}</td>
         {$Link[tribeware]}
     {/section}
     </table>
@@ -31,7 +31,6 @@
         <form method="post" action="tribeware.php?daj={$Id}&amp;step3=add">
         <input type="submit" value="{$Agive}" /> <input type="text" name="amount" value="{$Amount}" size="5" /> {$Tamount}<b>{$Name}</b> {$Playerid}: <input type="text" name="did" size="5" /><br /></form>
     {/if}
-    {$Message}
 {/if}
 
 {if $Step == "daj"}
@@ -44,5 +43,13 @@
     </select> {$Tamount2} <input type="text" name="amount" size="5" /></td></tr>
     <tr><td colspan="2" align="center"><input type="submit" value="{$Aadd}" /></td></tr>
     </table></form>
-    {$Message}
+{/if}
+
+{if $Reserve != ""}
+    {if $Step3 == ""}
+        <form method="post" action="tribeware.php?reserve={$Reserve}&amp;step3=add">
+        <input type="submit" value="{$Aask}" />
+        <input type="text" name="amount" value="{$Amount}" size=5 /> {$Tamount} <b>{$Name}</b><br />
+        </form>
+    {/if}
 {/if}
