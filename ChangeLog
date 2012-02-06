@@ -1,3 +1,8 @@
+2012-02-06  Bartek thindil Jasicki  <thindil@vallheru.net>
+
+	* UPDATE,languages/pl/tforums.php, tforums.php:
+	little redesign
+
 2012-02-03  Bartek thindil Jasicki  <thindil@vallheru.net>
 
 	* FEATURE,templates/layout1/tribeware.tpl, templates/tribeware.tpl, languages/pl/tribeware.php, install/db/update.sql, tribeware.php,

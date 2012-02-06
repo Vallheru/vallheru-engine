@@ -4,10 +4,10 @@
  *   Polish language for clans forums
  *
  *   @name                 : tforums.php                            
- *   @copyright            : (C) 2004,2005,2006 Vallheru Team based on Gamers-Fusion ver 2.5
- *   @author               : thindil <thindil@users.sourceforge.net>
- *   @version              : 1.0
- *   @since                : 08.02.2006
+ *   @copyright            : (C) 2004,2005,2006,2012 Vallheru Team based on Gamers-Fusion ver 2.5
+ *   @author               : thindil <thindil@vallheru.net>
+ *   @version              : 1.5
+ *   @since                : 06.02.2012
  *
  */
 
@@ -33,41 +33,32 @@ define("NO_TOPIC", "Nie ma takiego tematu");
 define("EMPTY_FIELDS", "Wypełnij wszystkie pola");
 define("A_BACK", "Wróć");
 define("ERROR", "Zapomnij o tym!");
-
-if (isset ($_GET['view']) && $_GET['view'] == 'topics') 
-{
-    define("T_TOPIC", "Temat");
-    define("T_AUTHOR", "Autor");
-    define("T_REPLIES", "Odpowiedzi");
-    define("ADD_TOPIC", "Dodaj temat");
-    define("T_TEXT", "Tekst");
-    define("A_SEARCH", "Szukaj");
-    define("T_WORD", "słowa");
-    define("T_STICKY", "Dodaj temat jako ogłoszenie");
-}
-
-if (isset($_GET['topic'])) 
-{
-    define("A_DELETE", "Skasuj");
-    define("WRITE_BY", "napisany przez");
-    define("A_REPLY", "Odpowiedz");
-    define("R_TEXT", "Tekst");
-    define("WRITE", "napisał(a)");
-    define("A_STICKY", "Przyklej");
-    define("A_UNSTICKY", "Odklej");
-    define("A_QUOTE", "Cytuj");
-}
+define("T_TOPIC", "Temat");
+define("T_AUTHOR", "Autor");
+define("T_REPLIES", "Odpowiedzi");
+define("ADD_TOPIC", "Dodaj temat");
+define("T_TEXT", "Tekst");
+define("A_SEARCH", "Szukaj");
+define("T_WORD", "słowa");
+define("T_STICKY", "Dodaj temat jako ogłoszenie");
+define("A_DELETE", "Skasuj");
+define("WRITE_BY", "napisany przez");
+define("A_REPLY", "Odpowiedz");
+define("R_TEXT", "Tekst");
+define("WRITE", "napisał(a)");
+define("A_STICKY", "Przyklej");
+define("A_UNSTICKY", "Odklej");
+define("A_QUOTE", "Cytuj");
 
 if (isset ($_GET['action']) && $_GET['action'] == 'addtopic') 
 {
-    define("TOPIC_ADD", "Temat dodany. Kliknij");
-    define("TO_BACK", "tutaj</a> aby wrócić do listy tematów.");
+    define("TOPIC_ADD", "Temat dodany.");
     define("NO_PERM", "Nie masz uprawnień do tego!");
 }
 
 if (isset($_GET['reply'])) 
 {
-    define("REPLY_ADD", "Odpowiedź dodana. Kliknij");
+    define("REPLY_ADD", "Odpowiedź dodana.");
     define("A_HERE", "tutaj");
 }
 

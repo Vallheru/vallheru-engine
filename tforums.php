@@ -7,7 +7,7 @@
  *   @copyright            : (C) 2004,2005,2006,2011,2012 Vallheru Team based on Gamers-Fusion ver 2.5
  *   @author               : thindil <thindil@vallheru.net>
  *   @version              : 1.5
- *   @since                : 20.01.2012
+ *   @since                : 06.02.2012
  *
  */
 
@@ -83,6 +83,110 @@ if (isset($_GET['view']) && ($_GET['view'] == 'newposts'))
 			  "Tpage" => $page,
 			  "Fpage" => "Idź do strony:",));
   }
+
+/**
+* Delete topic
+*/
+if (isset($_GET['kasuj1'])) 
+{
+    checkvalue($_GET['kasuj1']);
+    $klan = $db -> Execute("SELECT id, owner FROM tribes WHERE id=".$player -> tribe);
+    $perm = $db -> Execute("SELECT forum FROM tribe_perm WHERE tribe=".$klan -> fields['id']." AND player=".$player -> id);
+    if ($player -> id != $klan -> fields['owner'] && !$perm -> fields['forum']) 
+      {
+	message('error', NO_PERM);
+      }
+    else
+      {
+	$test = $db -> Execute("SELECT id FROM tribe_topics WHERE id=".$_GET['kasuj1']." AND tribe=".$player -> tribe);
+	if (!$test -> fields['id']) 
+	  {
+	    message('error', ERROR);
+	  } 
+        else 
+	  {
+	    $db -> Execute("DELETE FROM tribe_replies WHERE topic_id=".$_GET['kasuj1']);
+	    $db -> Execute("DELETE FROM tribe_topics WHERE id=".$_GET['kasuj1']);
+	    message('success', TOPIC_DEL);
+	    $_GET['view'] = 'topics';
+	    $_GET['kasuj1'] = '';
+	  }
+	$test->Close();
+      }
+    $perm -> Close();
+    $klan -> Close();
+}
+
+/**
+ * Delete selected topics
+ */
+if (isset($_GET['action']) && $_GET['action'] == 'deltopics')
+  {
+    $klan = $db -> Execute("SELECT `owner` FROM `tribes` WHERE `id`=".$player->tribe);
+    $perm = $db -> Execute("SELECT `forum` FROM `tribe_perm` WHERE `tribe`=".$player->tribe." AND `player`=".$player->id);
+    if ($player->id != $klan->fields['owner'] && !$perm->fields['forum']) 
+      {
+        message('error', "Nie posiadasz odpowiednich uprawnień.");
+      }
+    else
+      {
+	$objTopics = $db->Execute("SELECT `id` FROM `tribe_topics` WHERE `tribe`=".$player->tribe);
+	while (!$objTopics->EOF)
+	  {
+	    if (isset($_POST[$objTopics->fields['id']]))
+	      {
+		$db -> Execute("DELETE FROM `tribe_replies` WHERE `topic_id`=".$objTopics->fields['id']);
+		$db -> Execute("DELETE FROM `tribe_topics` WHERE `id`=".$objTopics->fields['id']);
+	      }
+	    $objTopics->MoveNext();
+	  }
+	$objTopics->Close();
+	message('success', "Wybrane tematy zostały skasowane.");
+	$_GET['action'] = '';
+	$_GET['view'] = 'topics';
+      }
+    $perm->Close();
+    $klan->Close();
+  }
+
+/**
+* Add topic
+*/
+if (isset ($_GET['action']) && $_GET['action'] == 'addtopic') 
+{
+    if (empty ($_POST['title2']) || empty ($_POST['body'])) 
+      {
+        message('error', EMPTY_FIELDS);
+	$_GET['view'] = 'topics';
+      }
+    else
+      {
+	$strSticky = 'N';
+	if (isset($_POST['sticky']))
+	  {	    
+	    $klan = $db -> Execute("SELECT `id`, `owner` FROM `tribes` WHERE `id`=".$player -> tribe);
+	    $perm = $db -> Execute("SELECT `forum` FROM `tribe_perm` WHERE `tribe`=".$klan -> fields['id']." AND `player`=".$player -> id);
+	    if ($player -> id == $klan -> fields['owner'] || $perm -> fields['forum']) 
+	      {
+		$strSticky = 'Y';
+	      }
+	    $perm -> Close();
+	    $klan -> Close();
+	  }
+	$_POST['title2'] = strip_tags($_POST['title2']);
+	require_once('includes/bbcode.php');
+	$_POST['body'] = bbcodetohtml($_POST['body']);
+	$strBody = $db -> qstr($_POST['body'], get_magic_quotes_gpc());
+	$_POST['title2'] = "<b>".$data." ".$time."</b> ".$_POST['title2'];
+	$strTitle = $db -> qstr($_POST['title2'], get_magic_quotes_gpc());
+	$strAuthor = $arrTags[$player->tribe][0].' '.$player->user.' '.$arrTags[$player->tribe][1];
+	$db -> Execute("INSERT INTO `tribe_topics` (`topic`, `body`, `starter`, `tribe`, `w_time`, `sticky`, `pid`) VALUES(".$strTitle.", ".$strBody.", '".$strAuthor."', '".$player -> tribe."', ".$ctime.", '".$strSticky."', ".$player -> id.")") or $db -> ErrorMsg();
+	$objNewTopic = $db->Execute("SELECT MAX(`id`) FROM `tribe_topics` WHERE `tribe`=".$player->tribe);
+	$_GET['topic'] = $objNewTopic->fields['MAX(`id`)'];
+	$objNewTopic->Close();
+	message('success', TOPIC_ADD);
+      }
+}
 
 /**
 * The topics list
@@ -198,6 +302,123 @@ if (isset ($_GET['view']) && $_GET['view'] == 'topics')
 			    "Adelete" => "Skasuj wybrane tematy",
 			    "Thelp" => "Linki automatycznie zamieniane są na klikalne. Możesz używać następujących znaczników BBCode:<br /><ul><li>[b]<b>Pogrubienie</b>[/b]</li><li>[i]<i>Kursywa</i>[/i]</li><li>[u]<u>Podkreślenie</u>[/u]</li><li>[color (angielska nazwa koloru (red, yellow, itp) lub kod HTML (#FFFF00, itp)]pokolorowanie tekstu[/color]</li><li>[center]wycentrowanie tekstu[/center]</li><li>[quote]cytat[/quote]</ul>",
 			    "Newtopic" => $arrNewtopic));
+}
+
+/**
+* Add reply
+*/
+if (isset($_GET['reply'])) 
+{
+    checkvalue($_GET['reply']);
+    $test = $db -> Execute("SELECT `id` FROM `tribe_topics` WHERE `id`=".$_GET['reply']." AND `tribe`=".$player -> tribe);
+    if (!$test -> fields['id']) 
+      {
+	message('error', NO_TOPIC);
+      }
+    else
+      {
+	if (empty ($_POST['rep'])) 
+	  {
+	    message('error', EMPTY_FIELDS);
+	  }
+	else
+	  {
+	    require_once('includes/bbcode.php');
+	    $_POST['rep'] = bbcodetohtml($_POST['rep']);
+	    $_POST['rep'] = "<b>".$data." ".$time."</b><br />".$_POST['rep'];
+	    $strRep = $db -> qstr($_POST['rep'], get_magic_quotes_gpc());
+	    $strAuthor = $arrTags[$player->tribe][0].' '.$player->user.' '.$arrTags[$player->tribe][1];
+	    $db -> Execute("INSERT INTO `tribe_replies` (`starter`, `topic_id`, `body`, `pid`) VALUES('".$strAuthor."', ".$_GET['reply'].", ".$strRep." , ".$player -> id.")") or error("Could not add reply.");
+	    $db->Execute("UPDATE `tribe_topics` SET `w_time`=".$ctime." WHERE `id`=".$_GET['reply']);
+	    message('success', REPLY_ADD);
+	  }
+	$_GET['topic'] = $_GET['reply'];
+	$_GET['reply'] = '';
+      }
+    $test -> Close();
+}
+
+/**
+ * Sticky/Unsticky topics
+ */
+if (isset($_GET['sticky']))
+{
+    checkvalue($_GET['sticky']);
+    if ($_GET['action'] != 'Y' && $_GET['action'] != 'N')
+    {
+        error(ERROR);
+    }
+    $klan = $db -> Execute("SELECT id, owner FROM tribes WHERE id=".$player -> tribe);
+    $perm = $db -> Execute("SELECT forum FROM tribe_perm WHERE tribe=".$klan -> fields['id']." AND player=".$player -> id);
+    if ($player -> id != $klan -> fields['owner'] && !$perm -> fields['forum']) 
+      {
+	message('error', NO_PERM);
+      }
+    else
+      {
+	$test = $db -> Execute("SELECT id FROM tribe_topics WHERE id=".$_GET['sticky']." AND tribe=".$player -> tribe);
+	if (!$test -> fields['id']) 
+	  {
+	    message('error', 'Nie ma takiego tematu.');
+	  }
+	else
+	  {
+	    $db -> Execute("UPDATE tribe_topics SET sticky='".$_GET['action']."' WHERE id=".$_GET['sticky']);
+	    if ($_GET['action'] == 'Y')
+	      {
+		$strInfo = YOU_STICKY;
+	      }
+	    else
+	      {
+		$strInfo = YOU_UNSTICKY;
+	      }
+	    message('success', $strInfo);
+	    $_GET['topic'] = $_GET['sticky'];
+	  }
+	$test -> Close();
+      }
+    $perm -> Close();
+    $klan -> Close();
+}
+
+/**
+* Delete post
+*/
+if (isset($_GET['kasuj'])) 
+{
+    if (!(int)$_GET['kasuj']) 
+    {
+        error (ERROR);
+    }
+    checkvalue($_GET['kasuj']);
+    $klan = $db -> Execute("SELECT id, owner FROM tribes WHERE id=".$player -> tribe);
+    $perm = $db -> Execute("SELECT forum FROM tribe_perm WHERE tribe=".$klan -> fields['id']." AND player=".$player -> id);
+    if ($player -> id != $klan -> fields['owner'] && !$perm -> fields['forum']) 
+      {
+	message('error', NO_PERM);
+      }
+    else
+      {
+	$test = $db -> Execute("SELECT topic_id FROM tribe_replies WHERE id=".$_GET['kasuj']);
+	if ($test -> fields['topic_id']) 
+	  {
+	    $test2 = $db -> Execute("SELECT id FROM tribe_topics WHERE id=".$test -> fields['topic_id']." and tribe=".$player -> tribe);
+	    if (!$test2 -> fields['id']) 
+	      {
+		error (ERROR);
+	      } 
+            else 
+	      {
+		$db -> Execute("DELETE FROM tribe_replies WHERE id=".$_GET['kasuj']);
+		message('success', POST_DEL);
+		$_GET['topic'] = $test->fields['topic_id'];
+	      }
+	    $test2->Close();
+	  }
+	$test->Close();
+      }
+    $perm -> Close();
+    $klan -> Close();
 }
 
 /**
@@ -319,203 +540,6 @@ if (isset($_GET['topic']))
                             "Aback" => A_BACK));
     $topicinfo -> Close();
 }
-
-/**
-* Add topic
-*/
-if (isset ($_GET['action']) && $_GET['action'] == 'addtopic') 
-{
-    if (empty ($_POST['title2']) || empty ($_POST['body'])) 
-    {
-        error (EMPTY_FIELDS);
-    }
-    if (isset($_POST['sticky']))
-    {
-        $klan = $db -> Execute("SELECT `id`, `owner` FROM `tribes` WHERE `id`=".$player -> tribe);
-        $perm = $db -> Execute("SELECT `forum` FROM `tribe_perm` WHERE `tribe`=".$klan -> fields['id']." AND `player`=".$player -> id);
-        if ($player -> id != $klan -> fields['owner'] && !$perm -> fields['forum']) 
-        {
-            error(NO_PERM);
-        }
-        $perm -> Close();
-        $klan -> Close();
-        $strSticky = 'Y';
-    }
-        else
-    {
-        $strSticky = 'N';
-    }
-    $_POST['title2'] = strip_tags($_POST['title2']);
-    require_once('includes/bbcode.php');
-    $_POST['body'] = bbcodetohtml($_POST['body']);
-    $strBody = $db -> qstr($_POST['body'], get_magic_quotes_gpc());
-    $_POST['title2'] = "<b>".$data." ".$time."</b> ".$_POST['title2'];
-    $strTitle = $db -> qstr($_POST['title2'], get_magic_quotes_gpc());
-    $strAuthor = $arrTags[$player->tribe][0].' '.$player->user.' '.$arrTags[$player->tribe][1];
-    $db -> Execute("INSERT INTO `tribe_topics` (`topic`, `body`, `starter`, `tribe`, `w_time`, `sticky`, `pid`) VALUES(".$strTitle.", ".$strBody.", '".$strAuthor."', '".$player -> tribe."', ".$ctime.", '".$strSticky."', ".$player -> id.")") or $db -> ErrorMsg();
-    error (TOPIC_ADD." <a href=tforums.php?view=topics>".TO_BACK);
-}
-
-/**
-* Add reply
-*/
-if (isset($_GET['reply'])) 
-{
-    checkvalue($_GET['reply']);
-    $test = $db -> Execute("SELECT `tribe` FROM `tribe_topics` WHERE `id`=".$_GET['reply']." AND `tribe`=".$player -> tribe);
-    if (!$test -> fields['tribe']) 
-    {
-        error (ERROR);
-    }
-    $test -> Close();
-    $query = $db -> Execute("SELECT count(`id`) FROM `tribe_topics` WHERE `id`=".$_GET['reply']);
-    $exists = $query -> fields['count(`id`)'];
-    $query -> Close();
-    if ($exists <= 0) 
-    {
-        error (NO_TOPIC);
-    }
-    if (empty ($_POST['rep'])) 
-    {
-        error (EMPTY_FIELDS);
-    }
-    require_once('includes/bbcode.php');
-    $_POST['rep'] = bbcodetohtml($_POST['rep']);
-    $_POST['rep'] = "<b>".$data." ".$time."</b><br />".$_POST['rep'];
-    $strRep = $db -> qstr($_POST['rep'], get_magic_quotes_gpc());
-    $strAuthor = $arrTags[$player->tribe][0].' '.$player->user.' '.$arrTags[$player->tribe][1];
-    $db -> Execute("INSERT INTO `tribe_replies` (`starter`, `topic_id`, `body`, `pid`) VALUES('".$strAuthor."', ".$_GET['reply'].", ".$strRep." , ".$player -> id.")") or error("Could not add reply.");
-    $db->Execute("UPDATE `tribe_topics` SET `w_time`=".$ctime." WHERE `id`=".$_GET['reply']);
-    error (REPLY_ADD." <a href=tforums.php?topic=".$_GET['reply'].">".A_HERE."</a>.");
-}
-
-/**
- * Sticky/Unsticky topics
- */
-if (isset($_GET['sticky']))
-{
-    if (!(int)$_GET['sticky'])
-    {
-        error(ERROR);
-    }
-    if ($_GET['action'] != 'Y' && $_GET['action'] != 'N')
-    {
-        error(ERROR);
-    }
-    $klan = $db -> Execute("SELECT id, owner FROM tribes WHERE id=".$player -> tribe);
-    $perm = $db -> Execute("SELECT forum FROM tribe_perm WHERE tribe=".$klan -> fields['id']." AND player=".$player -> id);
-    if ($player -> id != $klan -> fields['owner'] && !$perm -> fields['forum']) 
-    {
-        error(NO_PERM);
-    }
-    $perm -> Close();
-    $klan -> Close();
-    $test = $db -> Execute("SELECT id FROM tribe_topics WHERE id=".$_GET['sticky']." AND tribe=".$player -> tribe);
-    if (!$test -> fields['id']) 
-    {
-        error (ERROR);
-    } 
-    $test -> Close();
-    $db -> Execute("UPDATE tribe_topics SET sticky='".$_GET['action']."' WHERE id=".$_GET['sticky']);
-    if ($_GET['action'] == 'Y')
-    {
-        $strInfo = YOU_STICKY;
-    }
-        else
-    {
-        $strInfo = YOU_UNSTICKY;
-    }
-    error($strInfo." <a href=tforums.php?view=topics>".A_BACK."</a>");
-}
-
-/**
-* Delete post
-*/
-if (isset($_GET['kasuj'])) 
-{
-    if (!(int)$_GET['kasuj']) 
-    {
-        error (ERROR);
-    }
-    $klan = $db -> Execute("SELECT id, owner FROM tribes WHERE id=".$player -> tribe);
-    $perm = $db -> Execute("SELECT forum FROM tribe_perm WHERE tribe=".$klan -> fields['id']." AND player=".$player -> id);
-    if ($player -> id != $klan -> fields['owner'] && !$perm -> fields['forum']) 
-    {
-        error(NO_PERM);
-    }
-    $perm -> Close();
-    $klan -> Close();
-    $test = $db -> Execute("SELECT topic_id FROM tribe_replies WHERE id=".$_GET['kasuj']);
-    if ($test -> fields['topic_id']) 
-    {
-        $test2 = $db -> Execute("SELECT id FROM tribe_topics WHERE id=".$test -> fields['topic_id']." and tribe=".$player -> tribe);
-        if (!$test2 -> fields['id']) 
-        {
-            error (ERROR);
-        } 
-            else 
-        {
-            $db -> Execute("DELETE FROM tribe_replies WHERE id=".$_GET['kasuj']);
-            error (POST_DEL." <a href=tforums.php?view=topics>".A_BACK."</a>");
-        }
-    }
-}
-
-/**
-* Delete topic
-*/
-if (isset($_GET['kasuj1'])) 
-{
-    if (!(int)$_GET['kasuj1']) 
-    {
-        error (ERROR);
-    }
-    $klan = $db -> Execute("SELECT id, owner FROM tribes WHERE id=".$player -> tribe);
-    $perm = $db -> Execute("SELECT forum FROM tribe_perm WHERE tribe=".$klan -> fields['id']." AND player=".$player -> id);
-    if ($player -> id != $klan -> fields['owner'] && !$perm -> fields['forum']) 
-    {
-        error(NO_PERM);
-    }
-    $perm -> Close();
-    $klan -> Close();
-    $test = $db -> Execute("SELECT id FROM tribe_topics WHERE id=".$_GET['kasuj1']." AND tribe=".$player -> tribe);
-    if (!$test -> fields['id']) 
-    {
-        error (ERROR);
-    } 
-        else 
-    {
-        $db -> Execute("DELETE FROM tribe_replies WHERE topic_id=".$_GET['kasuj1']);
-        $db -> Execute("DELETE FROM tribe_topics WHERE id=".$_GET['kasuj1']);
-        error (TOPIC_DEL." <a href=tforums.php?view=topics>".A_BACK."</a>");
-    }
-}
-
-/**
- * Delete selected topics
- */
-if (isset($_GET['action']) && $_GET['action'] == 'deltopics')
-  {
-    $klan = $db -> Execute("SELECT `owner` FROM `tribes` WHERE `id`=".$player->tribe);
-    $perm = $db -> Execute("SELECT `forum` FROM `tribe_perm` WHERE `tribe`=".$player->tribe." AND `player`=".$player->id);
-    if ($player->id != $klan->fields['owner'] && !$perm->fields['forum']) 
-      {
-        error("Nie posiadasz odpowiednich uprawnień.");
-      }
-    $smarty->assign(array("Aback" => "Wróć",
-			  "Tdeleted" => "Wybrane tematy zostały skasowane."));
-    $objTopics = $db->Execute("SELECT `id` FROM `tribe_topics` WHERE `tribe`=".$player->tribe);
-    while (!$objTopics->EOF)
-      {
-	if (isset($_POST[$objTopics->fields['id']]))
-	  {
-	    $db -> Execute("DELETE FROM `tribe_replies` WHERE `topic_id`=".$objTopics->fields['id']);
-	    $db -> Execute("DELETE FROM `tribe_topics` WHERE `id`=".$objTopics->fields['id']);
-	  }
-	$objTopics->MoveNext();
-      }
-    $objTopics->Close();
-  }
 
 /**
 * Search words
