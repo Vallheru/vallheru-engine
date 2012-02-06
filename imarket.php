@@ -8,7 +8,7 @@
  *   @author               : thindil <thindil@vallheru.net>
  *   @author               : eyescream <tduda@users.sourceforge.net>
  *   @version              : 1.5
- *   @since                : 23.01.2012
+ *   @since                : 06.02.2012
  *
  */
 
@@ -36,7 +36,7 @@ require_once("includes/head.php");
 /**
 * Get the localization for game
 */
-require_once("languages/".$player -> lang."/imarket.php");
+require_once("languages/".$lang."/imarket.php");
 
 if ($player -> location != 'Altara' && $player -> location != 'Ardulith') 
 {
@@ -265,6 +265,20 @@ if (isset ($_GET['view']) && $_GET['view'] == 'market')
 	  {
 	    $speed = 0;
 	  }
+	switch ($pm->fields['ptype'])
+	  {
+	  case 'D':
+	    $pm->fields['name'] .= ' (Dynallca +'.$pm->fields['poison'].')';
+	    break;
+	  case 'N':
+	    $pm->fields['name'] .= ' (Nutari +'.$pm->fields['poison'].')';
+	    break;
+	  case 'I':
+	    $pm->fields['name'] .= ' (Illani +'.$pm->fields['poison'].')';
+	    break;
+	  default:
+	    break;
+	  }
 	$arrname[$i] = $pm -> fields['name'];
 	$arrpower[$i] = $pm -> fields['power'];
 	if ($pm->fields['type'] != 'R')
@@ -325,7 +339,7 @@ if (isset ($_GET['view']) && $_GET['view'] == 'market')
 */
 if (isset ($_GET['view']) && $_GET['view'] == 'add') 
 {
-    $rzecz = $db -> Execute("SELECT `id`, `name`, `amount`, `power`, `szyb`, `wt`, `maxwt`, `zr`, `type` FROM `equipment` WHERE `status`='U' AND `type` NOT IN ('I', 'O', 'Q') AND `owner`=".$player -> id);
+    $rzecz = $db -> Execute("SELECT * FROM `equipment` WHERE `status`='U' AND `type` NOT IN ('I', 'O', 'Q') AND `owner`=".$player -> id);
     $arrname = array();
     $arrid = array();
     $arramount = array();
@@ -335,6 +349,20 @@ if (isset ($_GET['view']) && $_GET['view'] == 'add')
     $arrMaxduf = array();
     while (!$rzecz -> EOF) 
     {
+        switch ($rzecz->fields['ptype'])
+	  {
+	  case 'D':
+	    $rzecz->fields['name'] .= ' (Dynallca +'.$rzecz->fields['poison'].')';
+	    break;
+	  case 'N':
+	    $rzecz->fields['name'] .= ' (Nutari +'.$rzecz->fields['poison'].')';
+	    break;
+	  case 'I':
+	    $rzecz->fields['name'] .= ' (Illani +'.$rzecz->fields['poison'].')';
+	    break;
+	  default:
+	    break;
+	  }
         $arrname[] = $rzecz -> fields['name'];
         $arrid[] = $rzecz -> fields['id'];
 	if ($rzecz->fields['type'] != 'R')

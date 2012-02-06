@@ -8,7 +8,7 @@
  *   @author               : thindil <thindil@vallheru.net>
  *   @author               : eyescream <tduda@users.sourceforge.net>
  *   @version              : 1.5
- *   @since                : 25.01.2012
+ *   @since                : 06.02.2012
  *
  */
 
@@ -237,6 +237,20 @@ if (isset($_GET['step']) && $_GET['step'] == 'zobacz')
 	    if ($arritem -> fields['poison'] > 0) 
 	      {
 		$arrpower[] = $arritem -> fields['power'] + $arritem -> fields['poison'];
+	      }
+	    switch ($arritem->fields['ptype'])
+	      {
+	      case 'D':
+		$arritem->fields['name'] .= ' (Dynallca +'.$arritem->fields['poison'].')';
+		break;
+	      case 'N':
+		$arritem->fields['name'] .= ' (Nutari +'.$arritem->fields['poison'].')';
+		break;
+	      case 'I':
+		$arritem->fields['name'] .= ' (Illani +'.$arritem->fields['poison'].')';
+		break;
+	      default:
+		break;
 	      }
 	    $arrname[] = $arritem -> fields['name'];
 	    if ($arritem->fields['type'] != 'R')
@@ -526,6 +540,20 @@ if (isset ($_GET['step']) && $_GET['step'] == 'daj')
     $arrAgi = array();
     while (!$arritem -> EOF) 
     {
+        switch ($arritem->fields['ptype'])
+	  {
+	  case 'D':
+	    $arritem->fields['name'] .= ' (Dynallca +'.$arritem->fields['poison'].')';
+	    break;
+	  case 'N':
+	    $arritem->fields['name'] .= ' (Nutari +'.$arritem->fields['poison'].')';
+	    break;
+	  case 'I':
+	    $arritem->fields['name'] .= ' (Illani +'.$arritem->fields['poison'].')';
+	    break;
+	  default:
+	    break;
+	  }
         $arrname[] = $arritem -> fields['name'];
         $arrid[] = $arritem -> fields['id'];
 	if ($arritem->fields['type'] != 'R')

@@ -1,5 +1,7 @@
 2012-02-06  Bartek thindil Jasicki  <thindil@vallheru.net>
 
+	* UPDATE,equip.php, bank.php, house.php, imarket.php, tribearmor.php:
+	added info about poison to items
 	* UPDATE,languages/pl/tforums.php, tforums.php:
 	little redesign
 

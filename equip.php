@@ -7,7 +7,7 @@
  *   @copyright            : (C) 2004,2005,2006,2007,2011,2012 Vallheru Team based on Gamers-Fusion ver 2.5
  *   @author               : thindil <thindil@vallheru.net>
  *   @version              : 1.5
- *   @since                : 23.01.2012
+ *   @since                : 06.02.2012
  *
  */
 
@@ -79,7 +79,21 @@ function backpack($type, $nameitems, $type2, $smartyname)
       }
     $j = 1;
     while (!$arm -> EOF) 
-    {
+      {
+	switch ($arm->fields['ptype'])
+	  {
+	  case 'D':
+	    $arm->fields['name'] .= ' (Dynallca +'.$arm->fields['poison'].')';
+	    break;
+	  case 'N':
+	    $arm->fields['name'] .= ' (Nutari +'.$arm->fields['poison'].')';
+	    break;
+	  case 'I':
+	    $arm->fields['name'] .= ' (Illani +'.$arm->fields['poison'].')';
+	    break;
+	  default:
+	    break;
+	  }
         if ($arm -> fields['zr'] < 0) 
         {
             $arm -> fields['zr'] = str_replace("-","",$arm -> fields['zr']);
@@ -100,10 +114,6 @@ function backpack($type, $nameitems, $type2, $smartyname)
             else 
         {
             $speed = '';
-        }
-        if ($arm -> fields['type'] == 'W' && $arm -> fields['poison'] > 0) 
-        {
-            $arm -> fields['power'] = $arm -> fields['power'] + $arm -> fields['poison'];
         }
 	if ($arm->fields['wt'] < $arm->fields['maxwt'])
 	  {
@@ -273,15 +283,26 @@ $smarty -> assign(array("Arrowhead" => '',
 			"Aback" => "Wróć na górę"));
 
 $arrEquip = $player -> equipment();
+//Weapon
 if (!$arrEquip[0][0]) 
   {
     $arrEquip[0] = $arrEquip[1];
   }
 if ($arrEquip[0][0]) 
   {
-    if ($arrEquip[0][8] > 0) 
+    switch ($arrEquip[0][3])
       {
-	$arrEquip[0][2] = $arrEquip[0][2] + $arrEquip[0][8];
+      case 'D':
+	$arrEquip[0][1] .= ' (Dynallca +'.$arrEquip[0][8].')';
+	break;
+      case 'N':
+	$arrEquip[0][1] .= ' (Nutari +'.$arrEquip[0][8].')';
+	break;
+      case 'I':
+	$arrEquip[0][1] .= ' (Illani +'.$arrEquip[0][8].')';
+	break;
+      default:
+	break;
       }
     $smarty -> assign ("Weapon", "<input type=\"checkbox\" name=\"".$arrEquip[0][0]."\" /><b>".WEAPON.":</b> ".$arrEquip[0][1]." (+".$arrEquip[0][2].") (+".$arrEquip[0][7]." ".EQUIP_SPEED.") (".$arrEquip[0][6]."/".$arrEquip[0][9]." ".DURABILITY.") [<a href=\"equip.php?schowaj=".$arrEquip[0][0]."\">".HIDE_WEP."</a>]<br />\n");
   }
@@ -297,9 +318,19 @@ elseif ($arrEquip[7][0])
 //Second weapon
 if ($arrEquip[11][0]) 
   {
-    if ($arrEquip[11][8] > 0) 
+    switch ($arrEquip[11][3])
       {
-	$arrEquip[11][2] = $arrEquip[11][2] + $arrEquip[11][8];
+      case 'D':
+	$arrEquip[11][1] .= ' (Dynallca +'.$arrEquip[11][8].')';
+	break;
+      case 'N':
+	$arrEquip[11][1] .= ' (Nutari +'.$arrEquip[11][8].')';
+	break;
+      case 'I':
+	$arrEquip[11][1] .= ' (Illani +'.$arrEquip[11][8].')';
+	break;
+      default:
+	break;
       }
     $smarty -> assign ("Weapon2", "<input type=\"checkbox\" name=\"".$arrEquip[11][0]."\" /><b>Druga broń:</b> ".$arrEquip[11][1]." (+".$arrEquip[11][2].") (+".$arrEquip[11][7]." ".EQUIP_SPEED.") (".$arrEquip[11][6]."/".$arrEquip[11][9]." ".DURABILITY.") [<a href=\"equip.php?schowaj=".$arrEquip[11][0]."\">".HIDE_WEP."</a>]<br />\n");
   }
@@ -313,7 +344,20 @@ if ($arrEquip[1][0])
 {
     if ($arrEquip[6][0]) 
     {
-      $arrEquip[6][2] += $arrEquip[6][8];
+      switch ($arrEquip[6][3])
+      {
+      case 'D':
+	$arrEquip[6][1] .= ' (Dynallca +'.$arrEquip[6][8].')';
+	break;
+      case 'N':
+	$arrEquip[6][1] .= ' (Nutari +'.$arrEquip[6][8].')';
+	break;
+      case 'I':
+	$arrEquip[6][1] .= ' (Illani +'.$arrEquip[6][8].')';
+	break;
+      default:
+	break;
+      }
       $smarty -> assign ("Arrows", "<b>".QUIVER.":</b> ".$arrEquip[6][1]." (+".$arrEquip[6][2].") (".$arrEquip[6][6]." ".ARROWS.") [<a href=\"equip.php?schowaj=".$arrEquip[6][0]."\">".HIDE_ARR."</a>] [<a href=\"equip.php?fill=".$arrEquip[6][0]."\">".A_FILL."</a>]<br />\n");
     } 
         else 
@@ -996,7 +1040,7 @@ if (isset ($_GET['poison']))
     {
         error (NO_POTION);
     }
-    $wep = $db -> Execute("SELECT `id`, `name`, `amount`, `power` FROM `equipment` WHERE `owner`=".$player -> id." AND `type` IN ('W', 'R') AND `status`='U' AND `poison`=0");
+    $wep = $db -> Execute("SELECT `id`, `name`, `amount`, `power`, `type`, `wt` FROM `equipment` WHERE `owner`=".$player -> id." AND `type` IN ('W', 'R') AND `status`='U' AND `poison`=0");
     $arrname = array();
     $arrid = array();
     $arramount = array();
@@ -1005,7 +1049,14 @@ if (isset ($_GET['poison']))
     {
         $arrname[] = $wep -> fields['name'];
         $arrid[] = $wep -> fields['id'];
-        $arramount[] = $wep -> fields['amount'];
+	if ($wep->fields['type'] == 'W')
+	  {
+	    $arramount[] = $wep -> fields['amount'];
+	  }
+	else
+	  {
+	    $arramount[] = $wep -> fields['wt'];
+	  }
 	$arrPower[] = $wep->fields['power'];
         $wep -> MoveNext();
     }

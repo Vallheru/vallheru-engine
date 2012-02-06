@@ -4,12 +4,12 @@
  *   Bank - deposit gold and give item to another player
  *
  *   @name                 : bank.php                            
- *   @copyright            : (C) 2004,2005,2006,2007,2011 Vallheru Team based on Gamers-Fusion ver 2.5
+ *   @copyright            : (C) 2004,2005,2006,2007,2011,2012 Vallheru Team based on Gamers-Fusion ver 2.5
  *   @author               : thindil <thindil@vallheru.net>
  *   @author               : yeskov <yeskov@users.sourceforge.net>
  *   @author               : eyescream <tduda@users.sourceforge.net>
  *   @version              : 1.5
- *   @since                : 28.12.2011
+ *   @since                : 06.02.2012
  *
  */
 
@@ -600,6 +600,21 @@ if (isset($_GET['action']))
 		  }
 	      }
 	    $test -> Close();
+
+	    switch ($item->fields['ptype'])
+	      {
+	      case 'D':
+		$item->fields['name'] .= ' (Dynallca +'.$item->fields['poison'].')';
+		break;
+	      case 'N':
+		$item->fields['name'] .= ' (Nutari +'.$item->fields['poison'].')';
+		break;
+	      case 'I':
+		$item->fields['name'] .= ' (Illani +'.$item->fields['poison'].')';
+		break;
+	      default:
+		break;
+	      }
 	    
 	    // Display detailed information about bonuses of each item.
 	    $strAttributes = '(';
@@ -1210,12 +1225,26 @@ if (!isset($_GET['action']) || (isset($_GET['action']) && $_GET['action'] != 'as
     /**
      * List of items
      */
-    $item = $db -> Execute("SELECT `id`, `name`, `amount`, `power`, `zr`, `szyb`, `wt`, `type`, `maxwt` FROM `equipment` WHERE `owner`=".$player -> id." AND `status`='U' AND `type`!='Q'");
+    $item = $db -> Execute("SELECT * FROM `equipment` WHERE `owner`=".$player -> id." AND `status`='U' AND `type`!='Q'");
     if ($item -> fields['id']) 
     {
 	$arrItems = array();
         while (!$item -> EOF) 
-        {
+	  {
+	    switch ($item->fields['ptype'])
+	      {
+	      case 'D':
+		$item->fields['name'] .= ' (Dynallca +'.$item->fields['poison'].')';
+		break;
+	      case 'N':
+		$item->fields['name'] .= ' (Nutari +'.$item->fields['poison'].')';
+		break;
+	      case 'I':
+		$item->fields['name'] .= ' (Illani +'.$item->fields['poison'].')';
+		break;
+	      default:
+		break;
+	      }
 	    if ($item->fields['type'] != 'R')
 	      {
 		$strAmount = $item->fields['amount'];

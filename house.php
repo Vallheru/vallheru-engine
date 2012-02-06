@@ -4,11 +4,11 @@
  *   Players houses
  *
  *   @name                 : house.php                            
- *   @copyright            : (C) 2004,2005,2006,2007,2011 Vallheru Team based on Gamers-Fusion ver 2.5
+ *   @copyright            : (C) 2004,2005,2006,2007,2011,2012 Vallheru Team based on Gamers-Fusion ver 2.5
  *   @author               : thindil <thindil@tuxfamily.org>
  *   @author               : eyescream <tduda@users.sourceforge.net>
- *   @version              : 1.4
- *   @since                : 30.11.2011
+ *   @version              : 1.5
+ *   @since                : 06.02.2012
  *
  */
 
@@ -36,7 +36,7 @@ require_once("includes/head.php");
 /**
 * Get the localization for game
 */
-require_once("languages/".$player -> lang."/house.php");
+require_once("languages/".$lang."/house.php");
 
 if ($player -> location != 'Altara' && $player -> location != 'Ardulith') 
 {
@@ -816,6 +816,20 @@ if (isset ($_GET['action']) && $_GET['action'] == 'my')
             $i = 0;
             while (!$arritem -> EOF) 
             {
+	        switch ($arritem->fields['ptype'])
+		  {
+		  case 'D':
+		    $arritem->fields['name'] .= ' (Dynallca +'.$arritem->fields['poison'].')';
+		    break;
+		  case 'N':
+		    $arritem->fields['name'] .= ' (Nutari +'.$arritem->fields['poison'].')';
+		    break;
+		  case 'I':
+		    $arritem->fields['name'] .= ' (Illani +'.$arritem->fields['poison'].')';
+		    break;
+		  default:
+		    break;
+		  }
                 $arrname[$i] = $arritem -> fields['name'];
 		if ($arritem->fields['type'] != 'R')
 		  {
@@ -954,6 +968,20 @@ if (isset ($_GET['action']) && $_GET['action'] == 'my')
             $i = 0;
             while (!$arritem -> EOF) 
             {
+	        switch ($arritem->fields['ptype'])
+		  {
+		  case 'D':
+		    $arritem->fields['name'] .= ' (Dynallca +'.$arritem->fields['poison'].')';
+		    break;
+		  case 'N':
+		    $arritem->fields['name'] .= ' (Nutari +'.$arritem->fields['poison'].')';
+		    break;
+		  case 'I':
+		    $arritem->fields['name'] .= ' (Illani +'.$arritem->fields['poison'].')';
+		    break;
+		  default:
+		    break;
+		  }
                 $arrname[$i] = $arritem -> fields['name'];
 		if ($arritem->fields['type'] != 'R')
 		  {
