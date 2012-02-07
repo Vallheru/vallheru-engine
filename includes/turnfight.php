@@ -7,7 +7,7 @@
  *   @copyright            : (C) 2004,2005,2006,2007,2011,2012 Vallheru Team based on Gamers-Fusion ver 2.5
  *   @author               : thindil <thindil@vallheru.net>
  *   @version              : 1.5
- *   @since                : 02.02.2012
+ *   @since                : 07.02.2012
  *
  */
  
@@ -1471,20 +1471,25 @@ function fightmenu ($points,$exhaust,$round,$addres)
         $smarty -> display ('error1.tpl');
     }
     if ($player -> clas == 'Mag') 
-    {
-        $smarty -> assign ("Message", "<input type=\"radio\" name=\"action\" value=\"cast\"> ".SPELL_ATTACK." <select name=\"castspell\">");
-        $smarty -> display ('error1.tpl');
+      {
+	$strHtml = "<input type=\"radio\" name=\"action\" value=\"cast\"> ".SPELL_ATTACK." <select name=\"castspell\">";
         $arrspell = $db -> Execute("SELECT * FROM czary WHERE gracz=".$player -> id." AND typ='B'");
-        while (!$arrspell -> EOF) 
-        {
-            $smarty -> assign ("Message", "<option value=".$arrspell -> fields['id'].">".$arrspell -> fields['nazwa']." ".POWER.": ".$arrspell -> fields['obr']."</option>");
-            $smarty -> display ('error1.tpl');
+        while (!$arrspell->EOF) 
+	  {
+	    if ($arrspell->fields['status'] == 'U')
+	      {
+		$strHtml .= "<option value=".$arrspell -> fields['id'].">".$arrspell -> fields['nazwa']." ".POWER.": ".$arrspell -> fields['obr']."</option>";
+	      }
+	    else
+	      {
+		$strHtml .= '<option value="'.$arrspell -> fields['id'].'" selected="selected">'.$arrspell -> fields['nazwa']." ".POWER.": ".$arrspell -> fields['obr']."</option>";
+	      }
             $arrspell -> MoveNext();
-        }
-        $smarty -> assign ("Message", "</select><br /><br />");
+	  }
+        $smarty -> assign ("Message", $strHtml."</select><br /><br />");
         $smarty -> display ('error1.tpl');
         $arrspell -> Close();
-    }
+      }
     $arrpotion1 = $db -> Execute("SELECT * FROM potions WHERE owner=".$player -> id." AND status='K' AND  type!='P'");
     if (!empty($arrpotion1 -> fields['id'])) 
     {
@@ -1549,16 +1554,21 @@ function fightmenu ($points,$exhaust,$round,$addres)
         if ($player -> clas == 'Mag') 
         {
             $arrspell = $db -> Execute("SELECT * FROM czary WHERE gracz=".$player -> id." AND typ='B'");
-            $smarty -> assign ("Message", "<input type=\"radio\" name=\"action\" value=\"bspell\"> ".SPELL_BURST." ".$player -> level." ".POWER3.")<select name=\"bspellboost\">");
-            $smarty -> display ('error1.tpl');
+            $strHtml = "<input type=\"radio\" name=\"action\" value=\"bspell\"> ".SPELL_BURST." ".$player -> level." ".POWER3.")<select name=\"bspellboost\">";
             while (!$arrspell -> EOF) 
-            {
-                $smarty -> assign ("Message", "<option value=".$arrspell -> fields['id'].">".$arrspell -> fields['nazwa']." ".POWER.": ".$arrspell -> fields['obr']."</option>");
-                $smarty -> display ('error1.tpl');
+	      {
+		if ($arrspell->fields['status'] == 'U')
+		  {
+		    $strHtml .= "<option value=".$arrspell -> fields['id'].">".$arrspell -> fields['nazwa']." ".POWER.": ".$arrspell -> fields['obr']."</option>";
+		  }
+		else
+		  {
+		    $strHtml .= '<option value='.$arrspell -> fields['id'].' selected="selected">'.$arrspell -> fields['nazwa']." ".POWER.": ".$arrspell -> fields['obr']."</option>";
+		  }
                 $arrspell -> MoveNext();
-            }
+	      }
             $arrspell -> Close();
-            $smarty -> assign ("Message", "</select> <input type=\"text\" name=\"power\" size=\"5\" value=\"0\"><br /><br /><input type=\"radio\" name=\"action\" value=\"dspell\"> ".SPELL_BURST2." ".$player -> level." ".POWER3.") <input type=\"text\" name=\"power1\" size=\"5\" value=\"0\"><br /><br />");
+            $smarty -> assign ("Message", $strHtml."</select> <input type=\"text\" name=\"power\" size=\"5\" value=\"0\"><br /><br /><input type=\"radio\" name=\"action\" value=\"dspell\"> ".SPELL_BURST2." ".$player -> level." ".POWER3.") <input type=\"text\" name=\"power1\" size=\"5\" value=\"0\"><br /><br />");
             $smarty -> display ('error1.tpl');
         }
     }
