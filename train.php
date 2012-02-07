@@ -7,7 +7,7 @@
  *   @copyright            : (C) 2004,2005,2006,2007,2011,2012 Vallheru Team based on Gamers-Fusion ver 2.5
  *   @author               : thindil <thindil@vallheru.net>
  *   @version              : 1.5
- *   @since                : 06.01.2012
+ *   @since                : 07.02.2012
  *
  */
 
@@ -75,49 +75,45 @@ if ($player -> location == 'Altara')
     $intWiscost = ceil(($player -> wisdom / $fltStat) - (($player -> wisdom / $fltStat) / 10));
 }
 
-if ($player -> race == 'Człowiek') 
-{
+switch ($player->race)
+  {
+  case 'Człowiek':
     $smarty -> assign ("Train", T_TRAIN.$intStrcost.T_TRAIN_2.$intAgicost.T_TRAIN_3.$intSpecost.T_TRAIN_4.$intConcost.T_TRAIN_5);
-}
-
-if ($player -> race == 'Elf') 
-{
+    break;
+  case 'Elf':
     $smarty -> assign ("Train", T_TRAIN2.$intStrcost.T_TRAIN2_2.$intConcost.T_TRAIN2_3.$intAgicost.T_TRAIN2_4.$intSpecost.T_TRAIN2_5);
-}
-
-if ($player -> race == 'Krasnolud') 
-{
+    break;
+  case 'Krasnolud':
     $smarty -> assign ("Train", T_TRAIN3.$intStrcost.T_TRAIN3_2.$intConcost.T_TRAIN3_3.$intAgicost.T_TRAIN3_4.$intSpecost.T_TRAIN3_5);
-}
-
-if ($player -> race == 'Hobbit') 
-{
+    break;
+  case 'Hobbit':
     $smarty -> assign ("Train", T_TRAIN4.$intStrcost.T_TRAIN4_2.$intSpecost.T_TRAIN4_3.$intAgicost.T_TRAIN4_4.$intConcost.T_TRAIN4_5);
-}
-
-if ($player -> race == 'Jaszczuroczłek') 
-{
+    break;
+  case 'Jaszczuroczłek':
     $smarty -> assign ("Train", T_TRAIN5.$intAgicost.T_TRAIN5_2.$intConcost.T_TRAIN5_3.$intStrcost.T_TRAIN5_4.$intSpecost.T_TRAIN5_5);
-}
-
-if ($player -> race == 'Gnom') 
-{
+    break;
+  case 'Gnom':
     $smarty -> assign ("Train", T_TRAIN4.$intStrcost.T_TRAIN4_2.$intSpecost.T_TRAIN9.$intAgicost.T_TRAIN4_4.$intConcost.T_TRAIN4_5);
+    break;
+  default:
+    break;
 }
 
-if ($player -> clas == 'Wojownik' || $player -> clas == 'Barbarzyńca') 
-{
+switch ($player->clas)
+  {
+  case 'Wojownik':
+  case 'Barbarzyńca':
     $smarty -> assign ("Train2", T_TRAIN6.$intWiscost.T_TRAIN6_2.$intIntcost.T_TRAIN6_3);
-}
-
-if ($player -> clas == 'Mag') 
-{
+    break;
+  case 'Mag':
     $smarty -> assign ("Train2", T_TRAIN7.$intWiscost.T_TRAIN7_2.$intIntcost.T_TRAIN7_3);
-}
-
-if ($player -> clas == 'Rzemieślnik' || $player -> clas == 'Złodziej') 
-{
+    break;
+  case 'Rzemieślnik':
+  case 'Złodziej':
     $smarty -> assign ("Train2", T_TRAIN8.$intWiscost.T_TRAIN8_2.$intIntcost.T_TRAIN8_3);
+    break;
+  default:
+    break;
 }
 
 if ($player -> race == 'Gnom') 
@@ -137,116 +133,74 @@ if (isset ($_GET['action']) && $_GET['action'] == 'train')
     {
         error (ERROR);
     }
-    if ($player -> race == 'Człowiek') 
-    {
-        $repeat = ($_POST["rep"] * .3);
-    }
-    if ($player -> race == 'Gnom' && ($_POST["train"] == 'agility' || $_POST['train'] == 'wytrz')) 
-    {
-        $repeat = ($_POST["rep"] * .3);
-    }
-    if ($player -> race == 'Elf' && $_POST["train"] == 'strength') 
-    {
-        $repeat = ($_POST["rep"] * .4);
-    }
-    if ($player -> race == 'Elf' && $_POST["train"] == 'wytrz') 
-    {
-        $repeat = ($_POST["rep"] * .4);
-    }
-    if ($player -> race == 'Elf' && $_POST["train"] == 'agility') 
-    {
-        $repeat = ($_POST["rep"] * .2);
-    }
-    if ($player -> race == 'Elf' && $_POST["train"] == 'szyb') 
-    {
-        $repeat = ($_POST["rep"] * .2);
-    }
-    if ($player -> race == 'Krasnolud' && $_POST["train"] == 'strength') 
-    {
-        $repeat = ($_POST["rep"] * .2);
-    }
-    if ($player -> race == 'Krasnolud' && $_POST["train"] == 'wytrz') 
-    {
-        $repeat = ($_POST["rep"] * .2);
-    }
-    if ($player -> race == 'Krasnolud' && $_POST["train"] == 'agility') 
-    {
-        $repeat = ($_POST["rep"] * .4);
-    }
-    if ($player -> race == 'Krasnolud' && $_POST["train"] == 'szyb') 
-    {
-        $repeat = ($_POST["rep"] * .4);
-    }
-    if ($player -> race == 'Jaszczuroczłek' && $_POST["train"] == 'szyb') 
-    {
-        $repeat = ($_POST["rep"] * .2);
-    }
-    if ($player -> race == 'Jaszczuroczłek' && $_POST["train"] == 'wytrz') 
-    {
-        $repeat = ($_POST["rep"] * .4);
-    }
-    if ($player -> race == 'Jaszczuroczłek' && $_POST["train"] == 'agility') 
-    {
-        $repeat = ($_POST["rep"] * .4);
-    }
-    if ($player -> race == 'Jaszczuroczłek' && $_POST["train"] == 'strength') 
-    {
-        $repeat = ($_POST["rep"] * .2);
-    }
-    if (($player -> race == 'Hobbit' || $player -> race == 'Gnom') && $_POST["train"] == 'szyb') 
-    {
-        $repeat = ($_POST["rep"] * .4);
-    }
-    if ($player -> race == 'Hobbit' && $_POST["train"] == 'wytrz') 
-    {
-        $repeat = ($_POST["rep"] * .2);
-    }
-    if ($player -> race == 'Hobbit' && $_POST["train"] == 'agility') 
-    {
-        $repeat = ($_POST["rep"] * .2);
-    }
-    if (($player -> race == 'Hobbit' || $player -> race == 'Gnom') && $_POST["train"] == 'strength') 
-    {
-        $repeat = ($_POST["rep"] * .4);
-    }
     if ($player -> race == '') 
     {
         error (NO_RACE);
     }
-    if ($player -> clas == 'Wojownik' && $_POST["train"]) 
+    if ($player -> clas == '') 
     {
-        if ($_POST['train'] == 'inteli' || $_POST['train'] == 'wisdom') 
-        {
-            $repeat = ($_POST["rep"] * .4);
-        }
+        error (NO_CLASS);
     }
-    if ($player -> clas == 'Mag' && $_POST["train"]) 
+    if ($player -> race == 'Człowiek') 
     {
-        if ($_POST['train'] == 'inteli' || $_POST['train'] == 'wisdom') 
-        {
-            $repeat = ($_POST["rep"] * .2);
-        }
+        $repeat = ($_POST["rep"] * .3);
     }
-    if ($player -> clas == 'Rzemieślnik' && $_POST["train"]) 
+    elseif ($player -> race == 'Gnom' && ($_POST["train"] == 'agility' || $_POST['train'] == 'wytrz')) 
     {
-        if ($_POST['train'] == 'inteli' || $_POST['train'] == 'wisdom') 
-        {
-            $repeat = ($_POST["rep"] * .3);
-        }
+        $repeat = ($_POST["rep"] * .3);
     }
-    if ($player -> clas == 'Barbarzyńca' && $_POST["train"]) 
-    {
-        if ($_POST['train'] == 'inteli' || $_POST['train'] == 'wisdom') 
-        {
-            $repeat = ($_POST["rep"] * .3);
-        }
+    elseif ($player->race == 'Elf')
+      {
+	if ($_POST['train'] == 'strength' || $_POST['train'] == 'wytrz')
+	  {
+	    $repeat = ($_POST["rep"] * .4);
+	  }
+	elseif ($_POST['train'] == 'agility' || $_POST['train'] == 'szyb')
+	  {
+	    $repeat = ($_POST["rep"] * .2);
+	  }
+      }
+    elseif ($player->race == 'Krasnolud')
+      {
+	if ($_POST['train'] == 'strength' || $_POST['train'] == 'wytrz')
+	  {
+	    $repeat = ($_POST["rep"] * .2);
+	  }
+	elseif ($_POST['train'] == 'agility' || $_POST['train'] == 'szyb')
+	  {
+	    $repeat = ($_POST["rep"] * .4);
+	  }
     }
-    if ($player -> clas == 'Złodziej' && $_POST["train"]) 
+    elseif ($player->race == 'Jaszczuroczłek')
+      {
+	if ($_POST['train'] == 'szyb' || $_POST['train'] == 'strength')
+	  {
+	    $repeat = ($_POST["rep"] * .2);
+	  }
+	elseif ($_POST['train'] == 'wytrz' || $_POST['train'] == 'agility')
+	  {
+	    $repeat = ($_POST["rep"] * .4);
+	  }
+      }
+    elseif ($player->race == 'Hobbit' && ($_POST['train'] == 'wytrz' || $_POST['train'] == 'agility'))
+      {
+	$repeat = ($_POST["rep"] * .2);
+      }
+    elseif (($player -> race == 'Hobbit' || $player -> race == 'Gnom') && ($_POST["train"] == 'szyb' || $_POST['train'] == 'strength')) 
     {
-        if ($_POST['train'] == 'inteli' || $_POST['train'] == 'wisdom') 
-        {
-            $repeat = ($_POST["rep"] * .3);
-        }
+        $repeat = ($_POST["rep"] * .4);
+    }
+    if ($player -> clas == 'Wojownik' && ($_POST['train'] == 'inteli' || $_POST['train'] == 'wisdom')) 
+    {
+      $repeat = ($_POST["rep"] * .4);
+    }
+    elseif ($player -> clas == 'Mag' && ($_POST['train'] == 'inteli' || $_POST['train'] == 'wisdom')) 
+    {
+      $repeat = ($_POST["rep"] * .2);
+    }
+    elseif (($player -> clas == 'Rzemieślnik' || $player -> clas == 'Barbarzyńca' || $player -> clas == 'Złodziej') && ($_POST['train'] == 'inteli' || $_POST['train'] == 'wisdom')) 
+    {
+      $repeat = ($_POST["rep"] * .3);
     }
     if ($player -> race == 'Gnom' && $_POST["train"]) 
     {
@@ -255,70 +209,61 @@ if (isset ($_GET['action']) && $_GET['action'] == 'train')
             $repeat = ($_POST["rep"] * .4);
         }
     }
-    if ($player -> clas == '') 
-    {
-        error (NO_CLASS);
-    }
     $gain = ($_POST["rep"] * .060);
     $repeat = round($repeat, 1);
-    if ($repeat > $player -> energy) 
-    {
-        error (NO_ENERGY);
-    }
-    if ($_POST['train'] == 'strength') 
-    {
-        $cecha = T_STR;
+    switch ($_POST['train'])
+      {
+      case 'strength':
+	$cecha = T_STR;
         $intCost = $intStrcost;
-    }
-    if ($_POST['train'] == 'agility') 
-    {
-        $cecha = T_AGI;
+	break;
+      case 'agility':
+	$cecha = T_AGI;
         $intCost = $intAgicost;
-    }
-    if ($_POST['train'] == 'inteli') 
-    {
-        $cecha = T_INT;
+	break;
+      case 'inteli':
+	$cecha = T_INT;
         $intCost = $intIntcost;
-    }
-    if ($_POST['train'] == 'szyb') 
-    {
-        $cecha = T_SPEED;
+	break;
+      case 'szyb':
+	$cecha = T_SPEED;
         $intCost = $intSpecost;
-    }
-    if ($_POST['train'] == 'wytrz') 
-    {
-        $cecha = T_CON;
+	break;
+      case 'wytrz':
+	$cecha = T_CON;
         $intCost = $intConcost;
-    }
-    if ($_POST['train'] == 'wisdom') 
-    {
-        $cecha = T_WIS;
+	break;
+      case 'wisdom':
+	$cecha = T_WIS;
         $intCost = $intWiscost;
+	break;
+      default:
+	break;
     }
     $intCost2 = ($intCost * $_POST['rep']);
-    if ($player -> credits < $intCost2) 
-    {
-        error (NO_MONEY.$intCost2.GOLD_COINS);
-    }
-    $smarty -> assign(array("Allcost" => ALL_COST,
-                            "Maxcost" => $intCost2,
-                            "Train" => $_POST['train'],
-                            "Rep" => $_POST['rep'],
-                            "Goldcoins" => GOLD_COINS));
-    if (isset($_GET['step']) && $_GET['step'] == 'next')
-    {
-        if ($_POST['train'] == 'wytrz') 
-        {
-            $intCondition = floor($player -> cond + $gain);
-            if ($intCondition > $player -> cond)
-            {
-                $intGain = $intCondition - floor($player -> cond);
-                $db -> Execute("UPDATE `players` SET `max_hp`=`max_hp`+".$intGain." WHERE `id`=".$player -> id);
-            } 
-        }
-        $db -> Execute("UPDATE `players` SET `energy`=`energy`-".$repeat.", ".$_POST['train']."=".$_POST['train']."+".$gain.", `credits`=`credits`-".$intCost2." WHERE `id`=".$player -> id);
-        error (YOU_GAIN.$gain." ".$cecha.YOU_PAY.$intCost2.GOLD_COINS);
-    }
+    if ($repeat > $player -> energy) 
+      {
+        message('error', NO_ENERGY);
+      }
+    elseif ($player -> credits < $intCost2) 
+      {
+        message('error', NO_MONEY.$intCost2.GOLD_COINS);
+      }
+    else
+      {
+	if ($_POST['train'] == 'wytrz') 
+	  {
+	    $intCondition = floor($player -> cond + $gain);
+	    if ($intCondition > $player -> cond)
+	      {
+		$intGain = $intCondition - floor($player -> cond);
+		$db -> Execute("UPDATE `players` SET `max_hp`=`max_hp`+".$intGain." WHERE `id`=".$player -> id);
+	      } 
+	  }
+	$db -> Execute("UPDATE `players` SET `energy`=`energy`-".$repeat.", ".$_POST['train']."=".$_POST['train']."+".$gain.", `credits`=`credits`-".$intCost2." WHERE `id`=".$player -> id);
+	message('success', YOU_GAIN.$gain." ".$cecha.YOU_PAY.$intCost2.GOLD_COINS);
+      }
+    $_GET['action'] = '';
 }
 
 /**
@@ -328,10 +273,10 @@ if (!isset($_GET['action']))
 {
     $_GET['action'] = '';
 }
-if (!isset($_GET['step']))
-{
-    $_GET['step'] = '';
-}
+if (!isset($_POST['rep']))
+  {
+    $_POST['rep'] = 0;
+  }
 
 /**
 * Assign variables to template and display page
@@ -346,8 +291,12 @@ $smarty -> assign(array("Traininfo" => TRAIN_INFO,
                         "Iwant" => I_WANT,
                         "Tamount" => T_AMOUNT,
                         "Atrain" => A_TRAIN,
+			"Tinfo" => 'Podaj ile razy chcesz trenować daną cechę.',
+			"Plrace" => $player->race,
+			"Plclass" => $player->clas,
+			"Tcosts" => $intStrcost.', '.$intAgicost.', '.$intIntcost.', '.$intSpecost.', '.$intConcost.', '.$intWiscost,
                         "Action" => $_GET['action'],
-                        "Step" => $_GET['step']));
+			"Rep" => $_POST['rep']));
 $smarty -> display ('train.tpl');
 
 require_once("includes/foot.php");
