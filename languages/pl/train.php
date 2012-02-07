@@ -4,10 +4,10 @@
  *   Polish language for school
  *
  *   @name                 : train.php                            
- *   @copyright            : (C) 2004,2005,2006,2011 Vallheru Team based on Gamers-Fusion ver 2.5
+ *   @copyright            : (C) 2004,2005,2006,2011,2012 Vallheru Team based on Gamers-Fusion ver 2.5
  *   @author               : thindil <thindil@tuxfamily.org>
- *   @version              : 1.4
- *   @since                : 29.09.2011
+ *   @version              : 1.5
+ *   @since                : 07.02.2012
  *
  */
 
@@ -103,6 +103,5 @@ if (isset ($_GET['action']) && $_GET['action'] == 'train')
     define("T_WIS", "Siły Woli");
     define("YOU_GAIN", "Zyskujesz <b>");
     define("YOU_PAY", "</b>. Zapłaciłeś(aś) za to ");
-    define("ALL_COST", "Cały trening będzie kosztował ciebie ");
 }
 ?>
