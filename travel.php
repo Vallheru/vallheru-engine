@@ -4,10 +4,10 @@
  *   Travel to other locations and magic portal
  *
  *   @name                 : travel.php                            
- *   @copyright            : (C) 2004,2005,2006,2011 Vallheru Team based on Gamers-Fusion ver 2.5
- *   @author               : thindil <thindil@tuxfamily.org>
- *   @version              : 1.4
- *   @since                : 11.11.2011
+ *   @copyright            : (C) 2004,2005,2006,2011,2012 Vallheru Team based on Gamers-Fusion ver 2.5
+ *   @author               : thindil <thindil@vallheru.net>
+ *   @version              : 1.5
+ *   @since                : 08.02.2012
  *
  */
  
@@ -471,7 +471,6 @@ if (isset($_GET['akcja']) && in_array($_GET['akcja'], array('gory', 'las', 'city
       }
     if ($player->location != 'Podróż' && $_GET['step'] != 'magic')
       {
-	$db -> Execute("UPDATE `players` SET `miejsce`='Podróż' WHERE `id`=".$player -> id);
 	$_SESSION['travel'] = $_GET['akcja'];
 	$_SESSION['travel2'] = $_GET['step'];
 	$roll = rand(1, 100);
@@ -487,7 +486,7 @@ if (isset($_GET['akcja']) && in_array($_GET['akcja'], array('gory', 'las', 'city
 	    error(ERROR);
 	    break;
 	  }
-	if ($roll < $intChance) 
+	if ($roll > $intChance) 
 	  {
 	    $smarty -> assign ("Message", MESSAGE1);
 	    $smarty -> display ('error1.tpl');
@@ -496,7 +495,7 @@ if (isset($_GET['akcja']) && in_array($_GET['akcja'], array('gory', 'las', 'city
 	  {
 	    $smarty -> assign("Message", "Podróżując do celu wraz z karawaną, nagle zobaczyłeś jak z pobocza drogi wyskakują na Was bandyci. Masz do wyboru:<br /><a href=travel.php?akcja=".$_GET['akcja']."&amp;step=".$_GET['step']."&amp;step2=fight>Walczyć</a><br /><a href=travel.php?akcja=".$_GET['akcja']."&amp;step=".$_GET['step']."&amp;step2=pay>Zapłacić okup</a><br /><a href=travel.php?akcja=".$_GET['akcja']."&amp;step=".$_GET['step']."&amp;step2=escape>Uciekać</a>");
 	    $smarty -> display('error1.tpl');
-	    $db -> Execute("UPDATE `players` SET `fight`=99999 WHERE `id`=".$player->id);
+	    $db -> Execute("UPDATE `players` SET `fight`=99999, `miejsce`='Podróż' WHERE `id`=".$player->id);
 	    require_once("includes/foot.php");
 	    return;
 	  }

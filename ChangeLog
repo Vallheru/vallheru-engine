@@ -1,5 +1,7 @@
 2012-02-08  Bartek thindil Jasicki  <thindil@vallheru.net>
 
+	* BUG,travel.php: 
+	fixed bug with cost of travel
 	* UPDATE,crafts.php:
 	added tools to items list
 
