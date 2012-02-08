@@ -1,3 +1,8 @@
+2012-02-08  Bartek thindil Jasicki  <thindil@vallheru.net>
+
+	* UPDATE,crafts.php:
+	added tools to items list
+
 2012-02-07  Bartek thindil Jasicki  <thindil@vallheru.net>
 
 	* UPDATE,languages/pl/train.php, templates/layou1/train.tpl, templates/train.tpl, js/train.js, train.php:

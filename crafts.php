@@ -7,7 +7,7 @@
  *   @copyright            : (C) 2011,2012 Vallheru Team based on Gamers-Fusion ver 2.5
  *   @author               : thindil <thindil@vallheru.net>
  *   @version              : 1.5
- *   @since                : 12.01.2012
+ *   @since                : 08.02.2012
  *
  */
 
@@ -230,8 +230,8 @@ if (isset($_GET['step']))
 		//smith
 	      case 8:
 		$objSmith = $db->Execute("SELECT `id`, `name`, `level`, `type` FROM `smith` WHERE `owner`=".$player->id." AND `elite`=0 AND `level`<=".$player->level." ORDER BY RAND() LIMIT 1");
-		$arrTypes = array('A', 'S', 'H', 'L', 'W');
-		$arrNames = array('zbrój', 'tarcz', 'hełmów', 'nagolenników', 'broni');
+		$arrTypes = array('A', 'S', 'H', 'L', 'W', 'E');
+		$arrNames = array('zbrój', 'tarcz', 'hełmów', 'nagolenników', 'broni', 'narzędzi');
 		if (!$objSmith->fields['id'])
 		  {
 		    $objSmith->Close();
@@ -602,8 +602,8 @@ if (isset($_GET['step']))
 	    //smith
 	  case 8:
 	    $objItem = $db->Execute("SELECT * FROM `smith` WHERE `id`=".$_SESSION['craftindex'][$intIndex]);
-	    $arrTypes = array('A', 'S', 'H', 'L', 'W');
-	    $arrNames = array('zbrój', 'tarcz', 'hełmów', 'nagolenników', 'broni');
+	    $arrTypes = array('A', 'S', 'H', 'L', 'W', 'E');
+	    $arrNames = array('zbrój', 'tarcz', 'hełmów', 'nagolenników', 'broni', 'narzędzi');
 	    $objItem->fields['name'] .= ' z miedzi';
 	    $fltSkill = (0.01 * $objItem->fields['level']) * rand(1, 5);
 	    $intExp = ($objItem->fields['level'] * 50) * rand(1, 5);
