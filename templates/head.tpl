@@ -25,9 +25,7 @@
     <div class="login1">
         <span class="login">{$Email}: <input type="text" name="email" /></span>
         <span class="login">{$Password}: <input type="password" name="pass" /></span>
-        <span class="login2"><input type="submit" value="{$Login}" /></span>
-    </div>
-    <div class="lostpass">
+        <span class="login2"><input type="submit" value="{$Login}" /></span><br />
         <a href="index.php?step=lostpasswd">{$Lostpasswd}</a><br />
 	<a href="register.php">{$Register}</a>
     </div>

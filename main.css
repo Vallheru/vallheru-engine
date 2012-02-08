@@ -51,10 +51,6 @@ div.login1 {
   position: absolute; left: 580px; top: 160px;
 }
 
-div.lostpass {
-  position: absolute; left: 580px; top: 255px;
-}
-
 div.menu {
   display: inline;
   margin-left: 10%;
