@@ -1,5 +1,7 @@
 2012-02-09  Bartek thindil Jasicki  <thindil@vallheru.net>
 
+	* BUG,tribeastral.php: 
+	fixed bug with give all items to player
 	* UPDATE,reset.php: 
 	redesigned resets trigger
 	* FEATURE,includes/resets.php:

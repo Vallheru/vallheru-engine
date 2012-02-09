@@ -8,7 +8,7 @@
  *   @author               : thindil <thindil@vallheru.net>
  *   @author               : eyescream <tduda@users.sourceforge.net>
  *   @version              : 1.5
- *   @since                : 05.01.2012
+ *   @since                : 05.02.2012
  *
  */
 
@@ -554,14 +554,14 @@ if (isset($_GET['action']) && $_GET['action'] == 'give')
 	    $objTest = $db -> Execute("SELECT `amount` FROM `astral` WHERE `owner`=".$player->id." AND `type`='".$strPiecename."' AND `number`=".$objAmount->fields['number']." AND `location`='V'");
 	    if (!$objTest -> fields['amount'])
 	      {
-		$db -> Execute("INSERT INTO `astral` (`owner`, `type`, `number`, `amount`, `location`) VALUES(".$player->tribe.", '".$strPiecename."', ".$objAmount->fields['number'].", ".$objAmount->fields['amount'].", 'V')");
+		$db -> Execute("INSERT INTO `astral` (`owner`, `type`, `number`, `amount`, `location`) VALUES(".$_POST['pid'].", '".$strPiecename."', ".$objAmount->fields['number'].", ".$objAmount->fields['amount'].", 'V')");
 	      }
             else
 	      {
-		$db -> Execute("UPDATE `astral` SET `amount`=`amount`+".$objAmount->fields['amount']." WHERE `owner`=".$player->tribe." AND `type`='".$strPiecename."' AND `number`=".$objAmount->fields['number']." AND `location`='V'");
+		$db -> Execute("UPDATE `astral` SET `amount`=`amount`+".$objAmount->fields['amount']." WHERE `owner`=".$_POST['pid']." AND `type`='".$strPiecename."' AND `number`=".$objAmount->fields['number']." AND `location`='V'");
 	      }
 	    $objTest -> Close();
-	    $db -> Execute("DELETE FROM `astral` WHERE `owner`=".$player -> id." AND `type`='".$strPiecename."' AND `number`=".$objAmount->fields['number']." AND `location`='C'");
+	    $db -> Execute("DELETE FROM `astral` WHERE `owner`=".$player->tribe." AND `type`='".$strPiecename."' AND `number`=".$objAmount->fields['number']." AND `location`='C'");
 	    $objAmount->MoveNext();
 	  }
 	$objAmount->Close();
