@@ -1,3 +1,8 @@
+2012-02-09  Bartek thindil Jasicki  <thindil@vallheru.net>
+
+	* FEATURE,includes/resets.php:
+	delete only oldest texts from private rooms
+
 2012-02-08  Bartek thindil Jasicki  <thindil@vallheru.net>
 
 	* BUG,templates/head.tpl, main.css: 

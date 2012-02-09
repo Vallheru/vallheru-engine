@@ -7,7 +7,7 @@
  *   @copyright            : (C) 2004,2005,2006,2007,2011,2012 Vallheru Team based on Gamers-Fusion ver 2.5
  *   @author               : thindil <thindil@vallheru.net>
  *   @version              : 1.5
- *   @since                : 10.01.2012
+ *   @since                : 09.02.2012
  *
  */
 
@@ -374,16 +374,31 @@ function mainreset()
     $db->Execute("UPDATE `players` SET `trains`=`trains`+15 WHERE `corepass`='Y' AND `freeze`=0");
     $intCtime = (time() - 200);
     $db -> Execute("UPDATE players SET freeze=freeze-1, lpv=".$intCtime." WHERE freeze>0");
+    /**
+     * Manage rooms
+     */
     $db->Execute("UPDATE `rooms` SET `days`=`days`-1");
     $objRooms = $db->Execute("SELECT `id` FROM `rooms` WHERE `days`=0");
     while (!$objRooms->EOF)
       {
 	$db->Execute("UPDATE `players` SET `room`=0 WHERE `room`=".$objRooms->fields['id']);
+	$db->Execute("DELETE FROM `chatrooms` WHERE `room`=".$objRooms->fields['id']);
 	$objRooms->MoveNext();
       }
     $objRooms->Close();
     $db->Execute("DELETE FROM `rooms` WHERE `days`=0");
-    $db->Execute("TRUNCATE TABLE `chatrooms`");
+    $objRooms = $db->Execute("SELECT `id` FROM `rooms`");
+    while (!$objRooms->EOF)
+      {
+	$objMsgs = $db->Execute("SELECT count(`id`) FROM `chatrooms` WHERE `room`=".$objRooms->fields['id']);
+	if ($objMsgs->fields['count(`id`)'] > 1000)
+	  {
+	    $db->Execute("DELETE FROM `chatrooms` WHERE `room`=".$objRooms->fields['id']." ORDER BY `id` LIMIT ".($objMsgs->fields['count(`id`)'] - 1000)) or die($db->ErrorMsg());
+	  }
+	$objMsgs->Close();
+	$objRooms->MoveNext();
+      }
+    $objRooms->Close();
     /**
      * Outposts taxes
      */
