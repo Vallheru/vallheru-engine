@@ -1,5 +1,7 @@
 2012-02-09  Bartek thindil Jasicki  <thindil@vallheru.net>
 
+	* UPDATE,reset.php: 
+	redesigned resets trigger
 	* FEATURE,includes/resets.php:
 	delete only oldest texts from private rooms
 

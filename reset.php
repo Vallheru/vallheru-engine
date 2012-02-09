@@ -4,10 +4,10 @@
  *   Game resets by Cron
  *
  *   @name                 : reset.php                            
- *   @copyright            : (C) 2004,2005,2011 Vallheru Team based on Gamers-Fusion ver 2.5
- *   @author               : thindil <thindil@tuxfamily.org>
- *   @version              : 1.4
- *   @since                : 04.12.2011
+ *   @copyright            : (C) 2004,2005,2011,2012 Vallheru Team based on Gamers-Fusion ver 2.5
+ *   @author               : thindil <thindil@vallheru.net>
+ *   @version              : 1.5
+ *   @since                : 09.02.2012
  *
  */
 
@@ -36,24 +36,25 @@
 	die("Ciekawe co chciałeś tutaj zrobić?");
 } */
 
-if (!isset($_GET['step']))
-  {
-    die("Zapomnij o tym.");
-  }
+date_default_timezone_set('Europe/Warsaw');
+$arrTime = explode(':', date("G:i"));
+$arrRevive = array(0, 14, 16, 18, 20, 22);
+$arrEnergy = array(0, 20, 40);
 require_once("includes/config.php");
 require_once('includes/resets.php');
-switch ($_GET['step'])
+//Main reset
+if ($arrTime[0] == 10 && $arrTime[1] == 0)
   {
-  case 'reset':
     mainreset();
-    break;
-  case 'revive':
-    smallreset(TRUE);
-    break;
-  case 'energy':
-    energyreset();
-    break;
-  deault:
-    break;
+  }
+//Small resets
+elseif (in_array($arrTime[0], $arrRevive) && (int)$arrTime[1] == 0)
+{
+  smallreset(TRUE);
+}
+//Energy resets
+elseif (in_array((int)$arrTime[1], $arrEnergy))
+{
+  energyreset();
 }
 ?>
