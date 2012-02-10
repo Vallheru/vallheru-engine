@@ -7,7 +7,7 @@
  *   @copyright            : (C) 2012 Vallheru Team based on Gamers-Fusion ver 2.5
  *   @author               : thindil <thindil@vallheru.net>
  *   @version              : 1.5
- *   @since                : 03.01.2012
+ *   @since                : 10.02.2012
  *
  */
 
@@ -56,13 +56,11 @@ if ($stat -> fields['graphic'])
 {
     $smarty -> template_dir = "./templates/".$stat -> fields['graphic'];
     $smarty -> compile_dir = "./templates_c/".$stat -> fields['graphic'];
-    $strCss = '';
 }   
     else
 {
     $smarty -> template_dir = './templates';
     $smarty -> compile_dir = './templates_c';
-    $strCss = $stat -> fields['style'];
 }
 
 $objOwner = $db->Execute("SELECT `owner`, `owners` FROM `rooms` WHERE `id`=".$stat->fields['room']);
@@ -83,30 +81,6 @@ else
     $smarty->assign("Showid", '');
 }
 
-//Delete selected text
-if (isset($_GET['delete']) && ($objOwner->fields['owner'] == $stat->fields['id'] || in_array($stat->fields['id'], $arrOwners)))
-  {
-    if (!is_numeric($_GET['delete']))
-      {
-	error('Zapomnij o tym.');
-      }
-    $_GET['delete'] = intval($_GET['delete']);
-    if ($_GET['delete'] < 1)
-      {
-	error('Zapomnij o tym.');
-      }
-    $objText = $db->Execute("SELECT `id`, `room` FROM `chatrooms` WHERE `id`=".$_GET['delete']);
-    if (!$objText->fields['id'])
-      {
-	error('Nie ma takiego tekstu.');
-      }
-    if ($objText->fields['room'] != $stat->fields['room'])
-      {
-	error('Nie ma takiego tekstu w twoim pokoju.');
-      }
-    $objText->Close();
-    $db->Execute("DELETE FROM `chatrooms` WHERE `id`=".$_GET['delete']);
-  }
 $objOwner->Close();
 
 $chat = $db -> SelectLimit("SELECT * FROM `chatrooms` WHERE (`ownerid`=0 OR `ownerid`=".$stat -> fields['id']." OR `senderid`=".$stat -> fields['id'].") AND `room`=".$stat->fields['room']." ORDER BY `id` DESC", 25);
@@ -158,10 +132,8 @@ $smarty->assign(array("Player" => $on,
 		      "Sdate" => $arrSdate,
 		      "Tid" => $arrTid,
 		      "Thereis" => 'Jest',
-		      "Charset" => 'utf-8',
 		      "Cplayers" => 'osób w pokoju',
-		      "Cid" => 'ID',
-		      "CSS" => $strCss));
+		      "Cid" => 'ID'));
 $smarty -> display ('roommsgs.tpl');
 if ($compress)
   {

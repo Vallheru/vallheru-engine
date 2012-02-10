@@ -7,7 +7,7 @@
  *   @copyright            : (C) 2012 Vallheru Team based on Gamers-Fusion ver 2.5
  *   @author               : thindil <thindil@vallheru.net>
  *   @version              : 1.5
- *   @since                : 22.01.2012
+ *   @since                : 10.02.2012
  *
  */
 
@@ -230,6 +230,29 @@ if (isset ($_GET['action']) && $_GET['action'] == 'chat')
 /**
  * Room administation
  */
+if (isset($_GET['delete']) && ($objRoom->fields['owner'] == $player->id || in_array($player->id, $arrOwners)))
+  {
+    if (!is_numeric($_GET['delete']))
+      {
+	error('Zapomnij o tym.');
+      }
+    $_GET['delete'] = intval($_GET['delete']);
+    if ($_GET['delete'] < 1)
+      {
+	error('Zapomnij o tym.');
+      }
+    $objText = $db->Execute("SELECT `id`, `room` FROM `chatrooms` WHERE `id`=".$_GET['delete']);
+    if (!$objText->fields['id'])
+      {
+	error('Nie ma takiego tekstu.');
+      }
+    if ($objText->fields['room'] != $player->room)
+      {
+	error('Nie ma takiego tekstu w twoim pokoju.');
+      }
+    $objText->Close();
+    $db->Execute("DELETE FROM `chatrooms` WHERE `id`=".$_GET['delete']);
+  }
 if (isset($_GET['step']))
   {
     //Quit from room

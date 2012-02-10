@@ -54,6 +54,20 @@ $stat = $db -> Execute("SELECT `id`, `rank`, `style`, `graphic` FROM `players` W
 */
 require_once("languages/pl/chatmsg.php");
 
+/**
+* Select style for chat
+*/
+if ($stat -> fields['graphic']) 
+{
+    $smarty -> template_dir = "./templates/".$stat -> fields['graphic'];
+    $smarty -> compile_dir = "./templates_c/".$stat -> fields['graphic'];
+}   
+    else
+{
+    $smarty -> template_dir = './templates';
+    $smarty -> compile_dir = './templates_c';
+}
+
 $chat = $db -> SelectLimit("SELECT * FROM `chat` WHERE `ownerid`=0 OR `ownerid`=".$stat -> fields['id']." OR `senderid`=".$stat -> fields['id']." ORDER BY `id` DESC", 25);
 $pl = $db -> Execute("SELECT `rank`, `id`, `lpv`, `user` FROM `players` WHERE `page`='Chat'");
 $arrtext = array();

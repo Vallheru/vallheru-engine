@@ -1,5 +1,8 @@
 2012-02-10  Bartek thindil Jasicki  <thindil@vallheru.net>
 
+	* UPDATE,templates/layout1/roommsgs.tpl, templates/layout1/room.tpl, templates/roommsgs.tpl, templates/room.tpl, room.php, roommsgs.php,
+	js/room.js:
+	little redesigned rooms
 	* UPDATE,templates/chatmsgs.tpl, templates/layou1/chatmsgs.tpl, templates/layout1/chat.tpl, templates/chat.tpl, chatmsgs.php, js/chat.js:
 	start work on redesign chat
 
