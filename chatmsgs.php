@@ -4,10 +4,10 @@
  *   Show text in chat
  *
  *   @name                 : chatmsg.php                            
- *   @copyright            : (C) 2004,2005,2006,2011 Vallheru Team based on Gamers-Fusion ver 2.5
- *   @author               : thindil <thindil@tuxfamily.org>
- *   @version              : 1.4
- *   @since                : 22.09.2011
+ *   @copyright            : (C) 2004,2005,2006,2011,2012 Vallheru Team based on Gamers-Fusion ver 2.5
+ *   @author               : thindil <thindil@vallheru.net>
+ *   @version              : 1.5
+ *   @since                : 10.02.2012
  *
  */
 
@@ -53,22 +53,6 @@ $stat = $db -> Execute("SELECT `id`, `rank`, `style`, `graphic` FROM `players` W
 * Get the localization for game
 */
 require_once("languages/pl/chatmsg.php");
-
-/**
-* Select style for chat
-*/
-if ($stat -> fields['graphic']) 
-{
-    $smarty -> template_dir = "./templates/".$stat -> fields['graphic'];
-    $smarty -> compile_dir = "./templates_c/".$stat -> fields['graphic'];
-    $strCss = '';
-}   
-    else
-{
-    $smarty -> template_dir = './templates';
-    $smarty -> compile_dir = './templates_c';
-    $strCss = $stat -> fields['style'];
-}
 
 $chat = $db -> SelectLimit("SELECT * FROM `chat` WHERE `ownerid`=0 OR `ownerid`=".$stat -> fields['id']." OR `senderid`=".$stat -> fields['id']." ORDER BY `id` DESC", 25);
 $pl = $db -> Execute("SELECT `rank`, `id`, `lpv`, `user` FROM `players` WHERE `page`='Chat'");
@@ -128,12 +112,10 @@ $smarty->assign(array("Player" => $on,
 		      "Text" => $arrtext, 
 		      "Senderid" => $arrsenderid,
 		      "Sdate" => $arrSdate,
-		      "Charset" => CHARSET,
 		      "Thereis" => THERE_IS,
 		      "Texts" => TEXTS,
 		      "Cplayers" => C_PLAYERS,
-		      "Cid" => C_ID,
-		      "CSS" => $strCss));
+		      "Cid" => C_ID));
 $smarty -> display ('chatmsgs.tpl');
 if ($compress)
   {

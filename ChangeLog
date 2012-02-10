@@ -1,3 +1,8 @@
+2012-02-10  Bartek thindil Jasicki  <thindil@vallheru.net>
+
+	* UPDATE,templates/chatmsgs.tpl, templates/layou1/chatmsgs.tpl, templates/layout1/chat.tpl, templates/chat.tpl, chatmsgs.php, js/chat.js:
+	start work on redesign chat
+
 2012-02-09  Bartek thindil Jasicki  <thindil@vallheru.net>
 
 	* BUG,tribeastral.php: 
