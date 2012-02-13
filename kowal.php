@@ -140,6 +140,10 @@ function createitem()
                     {
                         $intAbibonus = $intMaxbonus;
                     }
+		    if ($intAbibonus == 0)
+		      {
+			$intAbibonus = 1;
+		      }
                     $intAgi = $arrItem['zr'] - $intAbibonus;
                     $blnSpecial = true;
                 }
@@ -188,6 +192,10 @@ function createitem()
                     {
                         $intAbibonus = $intMaxbonus;
                     }
+		    if ($intAbibonus == 0)
+		      {
+			$intAbibonus = 1;
+		      }
                     $intAgi = $arrItem['zr'] - $intAbibonus;
                     $intDurbonus = $intItembonus + ($player -> inteli / 50);
                     $intMaxbonus = $arrItem['wt'] * 10;
