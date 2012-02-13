@@ -7,7 +7,7 @@
  *   @copyright            : (C) 2004,2005,2006,2011,2012 Vallheru Team based on Gamers-Fusion ver 2.5
  *   @author               : thindil <thindil@vallheru.net>
  *   @version              : 1.5
- *   @since                : 26.01.2012
+ *   @since                : 13.02.2012
  *
  */
 
@@ -97,22 +97,22 @@ if (isset ($_GET['temp']) && $_GET['temp'] == 'modlitwa')
     switch ($player->race)
       {
       case "Człowiek":
-	$arrPraysCost = array('10', '10', '10', '10', '10', '10', '10', '10', '10', '10', '10', '10', '10', '10', '10', '10', '10', '10', '10', '10');
+	$arrPraysCost = array('10', '10', '10', '10', '10', '10', '10', '10', '10', '10', '10', '10', '10', '10', '10', '10', '10', '10', '10', '10', '10');
 	break;
       case 'Elf':
-	$arrPraysCost = array('7', '15', '10', '10', '7', '15', '15', '7', '7', '15', '7', '10', '7', '7', '15', '7', '7', '10', '7', '10');
+	$arrPraysCost = array('7', '15', '10', '10', '7', '15', '15', '7', '7', '15', '7', '10', '7', '7', '15', '7', '7', '10', '7', '10', '15');
 	break;
       case 'Krasnolud':
-        $arrPraysCost = array('15', '7', '10', '10', '15', '7', '7', '15', '10', '7', '15', '10', '15', '15', '7', '15', '15', '7', '10', '15');
+        $arrPraysCost = array('15', '7', '10', '10', '15', '7', '7', '15', '10', '7', '15', '10', '15', '15', '7', '15', '15', '7', '10', '15', '7');
 	break;
       case 'Hobbit':
-        $arrPraysCost = array('7', '15', '10', '10', '7', '10', '10', '15', '10', '10', '10', '10', '7', '7', '10', '10', '7', '10', '7', '7');
+        $arrPraysCost = array('7', '15', '10', '10', '7', '10', '10', '15', '10', '10', '10', '10', '7', '7', '10', '10', '7', '10', '7', '7', '10');
 	break;
       case 'Jaszczuroczłek':
-        $arrPraysCost = array('7', '7', '15', '15', '7', '7', '10', '10', '10', '10', '10', '10', '15', '15', '15', '15', '15', '15', '15', '15');
+        $arrPraysCost = array('7', '7', '15', '15', '7', '7', '10', '10', '10', '10', '10', '10', '15', '15', '15', '15', '15', '15', '15', '15', '15');
 	break;
       case 'Gnom':
-        $arrPraysCost = array('10', '15', '10', '15', '15', '10', '7', '7', '7', '15', '15', '15', '15', '7', '7', '15', '7', '7', '10', '7');
+        $arrPraysCost = array('10', '15', '10', '15', '15', '10', '7', '7', '7', '15', '15', '15', '15', '7', '7', '15', '7', '7', '10', '7', '10');
 	break;
       default:
         error(NO_RACE);
@@ -121,8 +121,8 @@ if (isset ($_GET['temp']) && $_GET['temp'] == 'modlitwa')
     switch ($player->deity)
       {
       case 'Illuminati':
-	$arrPrays = array(AGI, STR, INTELI, WIS, SPE, CON, SMI, ALC, FLE, WEA, SHO, DOD, CAS, BRE, MINI, LUMBER, HERBS, JEWEL, "Spostrzegawczości", "Złodziejstwa");
-        $arrPraysVal = array(0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19);
+	$arrPrays = array(AGI, STR, INTELI, WIS, SPE, CON, SMI, ALC, FLE, WEA, SHO, DOD, CAS, BRE, MINI, LUMBER, HERBS, JEWEL, "Spostrzegawczości", "Złodziejstwa", 'Hutnictwa');
+        $arrPraysVal = array(0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20);
         for ($i = 0; $i < 20; $i ++)
         {
             $arrPraysCost[$i] = $arrPraysCost[$i] * 2;
@@ -137,20 +137,20 @@ if (isset ($_GET['temp']) && $_GET['temp'] == 'modlitwa')
         $arrPraysVal = array(0, 1, 2, 3, 4, 5, 7, 11, 12);
 	break;
       case 'Heluvald':
-	$arrPrays = array(AGI, STR, INTELI, WIS, SPE, CON, SMI, ALC, FLE, BRE, MINI, LUMBER, HERBS, JEWEL, "Spostrzegawczości");
-        $arrPraysVal = array(0, 1, 2, 3, 4, 5, 6, 7, 8, 13, 14, 15, 16, 17, 18);
+	$arrPrays = array(AGI, STR, INTELI, WIS, SPE, CON, SMI, ALC, FLE, BRE, MINI, LUMBER, HERBS, JEWEL, "Spostrzegawczości", 'Hutnictwa');
+        $arrPraysVal = array(0, 1, 2, 3, 4, 5, 6, 7, 8, 13, 14, 15, 16, 17, 18, 20);
 	break;
       case 'Daeraell':
-	$arrPrays = array(AGI, STR, INTELI, WIS, SPE, CON, SMI, ALC, FLE, BRE, MINI, LUMBER, HERBS, JEWEL, "Spostrzegawczości", "Złodziejstwa");
-        $arrPraysVal = array(0, 1, 2, 3, 4, 5, 6, 7, 8, 13, 14, 15, 16, 17, 18, 19);
+	$arrPrays = array(AGI, STR, INTELI, WIS, SPE, CON, SMI, ALC, FLE, BRE, MINI, LUMBER, HERBS, JEWEL, "Spostrzegawczości", "Złodziejstwa", 'Hutnictwa');
+        $arrPraysVal = array(0, 1, 2, 3, 4, 5, 6, 7, 8, 13, 14, 15, 16, 17, 18, 19, 20);
 	break;
       case 'Tartus':
 	$arrPrays = array(AGI, STR, INTELI, WIS, SPE, CON, WEA, CAS);
         $arrPraysVal = array(0, 1, 2, 3, 4, 5, 9, 12);
 	break;
       case 'Oregarl':
-        $arrPrays = array(AGI, STR, INTELI, WIS, SPE, CON, SMI, WEA, MINI, JEWEL, "Spostrzegawczości");
-        $arrPraysVal = array(0, 1, 2, 3, 4, 5, 6, 9, 14, 17, 18);
+        $arrPrays = array(AGI, STR, INTELI, WIS, SPE, CON, SMI, WEA, MINI, JEWEL, "Spostrzegawczości", 'Hutnictwa');
+        $arrPraysVal = array(0, 1, 2, 3, 4, 5, 6, 9, 14, 17, 18, 20);
 	break;
       case 'Teathe-di':
         $arrPrays = array(AGI, STR, INTELI, WIS, SPE, CON, SHO, DOD, "Spostrzegawczości", "Złodziejstwa");
@@ -208,8 +208,8 @@ if (isset ($_GET['temp']) && $_GET['temp'] == 'modlitwa')
         $intRoll = rand(1,10);
         if ($intRoll < 9) 
 	  {
-	    $arrBless = array('agility', 'strength', 'inteli', 'wisdom', 'speed', 'condition', 'smith', 'alchemy', 'fletcher', 'weapon', 'shoot', 'dodge', 'cast', 'breeding', 'mining', 'lumberjack', 'herbalist', 'jeweller', 'perception', 'thievery');
-            $arrPrays = array(AGI, STR, INTELI, WIS, SPE, CON, SMI, ALC, FLE, WEA, SHO, DOD, CAS, BRE, MINI, LUMBER, HERBS, JEWEL, "Spostrzegawczości", "Złodziejstwa");
+	    $arrBless = array('agility', 'strength', 'inteli', 'wisdom', 'speed', 'condition', 'smith', 'alchemy', 'fletcher', 'weapon', 'shoot', 'dodge', 'cast', 'breeding', 'mining', 'lumberjack', 'herbalist', 'jeweller', 'perception', 'thievery', 'metallurgy');
+            $arrPrays = array(AGI, STR, INTELI, WIS, SPE, CON, SMI, ALC, FLE, WEA, SHO, DOD, CAS, BRE, MINI, LUMBER, HERBS, JEWEL, "Spostrzegawczości", "Złodziejstwa", 'Hutnictwa');
             $strBless = $arrBless[$intNumber];
             $intBonus = $_POST['praytype'] * $player -> level;
             if ($intNumber > 5)

@@ -1,3 +1,8 @@
+2012-02-13  Bartek thindil Jasicki  <thindil@vallheru.net>
+
+	* FEATURE,temple.php:
+	added bless to metallurgy
+
 2012-02-10  Bartek thindil Jasicki  <thindil@vallheru.net>
 
 	* UPDATE,templates/layout1/roommsgs.tpl, templates/layout1/room.tpl, templates/roommsgs.tpl, templates/room.tpl, room.php, roommsgs.php,
