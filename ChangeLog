@@ -1,5 +1,7 @@
 2012-02-13  Bartek thindil Jasicki  <thindil@vallheru.net>
 
+	* BUG,kowal.php: 
+	fixed few bugs with continue making elite items
 	* FEATURE,temple.php:
 	added bless to metallurgy
 

@@ -7,7 +7,7 @@
  *   @copyright            : (C) 2004,2005,2006,2011,2012 Vallheru Team based on Gamers-Fusion ver 2.5
  *   @author               : thindil <thindil@vallheru.net>
  *   @version              : 1.5
- *   @since                : 30.01.2012
+ *   @since                : 13.02.2012
  *
  */
 
@@ -595,7 +595,7 @@ function additem($strType, $strName, $intWt, $intPower, $intAgi, $intCost, $intP
 {
   global $db;
 
-  $test = $db -> Execute("SELECT `id` FROM `equipment` WHERE `name`='".$strName."' AND `wt`=".$intWt." AND `type`='".$strType."' AND `status`='U' AND `owner`=".$intPid." AND `power`=".$intPower." AND `zr`=".$intAgi." AND `szyb`=0 AND `maxwt`=".$intWt." AND `poison`=0 AND `cost`=".$intCost);
+  $test = $db -> Execute("SELECT `id` FROM `equipment` WHERE `name`='".$strName."' AND `wt`=".$intWt." AND `type`='".$strType."' AND `status`='U' AND `owner`=".$intPid." AND `power`=".$intPower." AND `zr`=".$intAgi." AND `szyb`=0 AND `maxwt`=".$intWt." AND `poison`=0 AND `cost`=".$intCost) or die($db->ErrorMsg());
   if (!$test -> fields['id']) 
     {
       $db -> Execute("INSERT INTO `equipment` (`owner`, `name`, `power`, `type`, `cost`, `zr`, `wt`, `minlev`, `maxwt`, `amount`, `magic`, `poison`, `szyb`, `twohand`, `repair`) VALUES(".$intPid.", '".$strName."', ".$intPower.", '".$strType."', ".$intCost.", ".$intAgi.", ".$intWt.", ".$intLevel.", ".$intWt.", ".$intAmount.", 'N', 0, 0, '".$strTwohand."', ".$intRepair.")");
@@ -1088,7 +1088,7 @@ if (isset ($_GET['kowal']) && $_GET['kowal'] == 'elite')
 	  }
         $arrMineral = array('copper', 'bronze', 'brass', 'iron', 'steel');
         $intKey = array_search($objWork -> fields['mineral'], $arrMineral);
-	$intMaxdur = $arrMaxdur[$intKey];
+	$intMaxdur = $arrDur[$intKey];
 	$intMaxbonus = $arrMaxbonus[$intKey] * $objSmith->fields['level'];
         $strName = $objSmith -> fields['name']." ".$arrName[$intKey];
         $intChance = $player->smith / $objSmith -> fields['level'];
@@ -1146,13 +1146,13 @@ if (isset ($_GET['kowal']) && $_GET['kowal'] == 'elite')
             else 
         {
             $uenergia = ($_POST['razy'] + $objWork -> fields['u_energy']);
-            if ($objSmith -> fields['type'] == 'A')
+            if ($objSmith -> fields['type'] == 'A' || $objSmith->fields['type'] == 'W')
             {
-                $intEnergy = $objSmith -> fields['level'] * 2;
+                $intEnergy = $objSmith -> fields['level'] * 10;
             }
                 else
             {
-                $intEnergy = $objSmith -> fields['level'];
+                $intEnergy = $objSmith -> fields['level'] * 5;
             }
             $procent = (($uenergia / $intEnergy) * 100);
             $procent = round($procent, "0");
