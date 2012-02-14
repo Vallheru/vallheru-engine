@@ -1,5 +1,7 @@
 2012-02-14  Bartek thindil Jasicki  <thindil@vallheru.net>
 
+	* FEATURE,templates/layout1/account.tpl, templates/layout1/account.tpl, account.php:
+	added link to write message to contact
 	* UPDATE,templates/layout1/layout1.css: 
 	small update in graphic layout
 	* UPDATE,templates/layout1/stats.tpl, templates/stats.tpl, stats.php:

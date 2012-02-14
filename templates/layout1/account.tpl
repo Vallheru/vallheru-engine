@@ -301,11 +301,13 @@
         <table width="90%" align="center">
 	    <tr>
 	        <th>{$Tplayer}</th>
+		<th></th>
 	        <th>{$Toptions}</th>
 	    </tr>
 	    {section name=clist loop=$Contacts}
 	        <tr>
-	    	    <td>{$Contacts[clist].user} ({$Tid}: {$Contacts[clist].pid})</td>
+	    	    <td><a href="view.php?view={$Contacts[clist].pid}">{$Contacts[clist].user} ({$Tid}: {$Contacts[clist].pid})</a></td>
+		    <td><a href="mail.php?view=write&to={$Contacts[clist].pid}">{$Twrite}</a></td>
 		    <td>
 		        <a href="account.php?view=contacts&amp;edit={$Contacts[clist].id}&amp;up">{$Aup}</a><br />
 			<a href="account.php?view=contacts&amp;edit={$Contacts[clist].id}&amp;down">{$Adown}</a><br />
