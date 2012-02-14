@@ -1,7 +1,6 @@
 .light {
   color: #FFD700;
   font-family: Verdana, Arial, Helvetica, sans-serif;
-   font-size: 11px;
 }
 
 input, textarea, select {
@@ -21,13 +20,13 @@ a:hover {
 }
 
 body {
+  font: 0.75em/1.25 "Lucida Sans Unicode","Lucida Grande",Verdana,sans-serif; 
   background: #000000;
 }
 
 .dark {
   color : black;
   font-family: Verdana, Arial, Helvetica, sans-serif;
-  font-size: 11px;
   width: 100%
 }
 

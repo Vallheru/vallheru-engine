@@ -1,5 +1,7 @@
 2012-02-14  Bartek thindil Jasicki  <thindil@vallheru.net>
 
+	* UPDATE,templates/layout1/layout1.css: 
+	small update in graphic layout
 	* UPDATE,templates/layout1/stats.tpl, templates/stats.tpl, stats.php:
 	added info about amount of mission made
 
