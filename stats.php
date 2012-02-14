@@ -4,11 +4,11 @@
  *   Player statistics and general informations about account
  *
  *   @name                 : stats.php                            
- *   @copyright            : (C) 2004,2005,2006,2011 Vallheru Team based on Gamers-Fusion ver 2.5
- *   @author               : thindil <thindil@tuxfamily.org>
+ *   @copyright            : (C) 2004,2005,2006,2011,2012 Vallheru Team based on Gamers-Fusion ver 2.5
+ *   @author               : thindil <thindil@vallheru.net>
  *   @author               : mori <ziniquel@users.sourceforge.net>
- *   @version              : 1.4
- *   @since                : 03.12.2011
+ *   @version              : 1.5
+ *   @since                : 14.02.2012
  *
  */
 
@@ -119,7 +119,7 @@ $arrCurstats = statbonus();
 /**
  * Bonus from bless
  */
-$objBless = $db -> Execute("SELECT `bless`, `blessval` FROM `players` WHERE `id`=".$player -> id);
+$objBless = $db -> Execute("SELECT `bless`, `blessval`, `mpoints` FROM `players` WHERE `id`=".$player -> id);
 if (!empty($objBless -> fields['bless']))
 {
     $arrBless = array('agility', 'strength', 'inteli', 'wisdom', 'speed', 'condition', 'smith', 'alchemy', 'fletcher', 'weapon', 'shoot', 'dodge', 'cast', 'breeding', 'mining', 'lumberjack', 'herbalist', 'jeweller');
@@ -139,6 +139,10 @@ if (!empty($objBless -> fields['bless']))
                             "Pray" => "",
                             "Blessval" => ""));
 }
+/**
+ * Mission points
+ */
+$smarty->assign('Mpoints', $objBless->fields['mpoints']);
 $objBless -> Close();
 
 $arrStats = array($player -> agility, $player -> strength, $player -> inteli, $player -> wisdom, $player -> speed, $player -> cond);
@@ -219,6 +223,7 @@ $smarty -> assign(array("Stats" => $arrStats,
 			"Tday" => "dzień",
 			"Newbie" => $player->newbie,
 			"Adisable" => "Wyłącz ochronę",
+			"Tmissions" => 'Wykonanych zadań',
                         "Statsinfo" => STATS_INFO,
                         "Tstats" => T_STATS,
                         "Tinfo" => T_INFO,

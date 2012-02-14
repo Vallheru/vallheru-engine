@@ -1,3 +1,8 @@
+2012-02-14  Bartek thindil Jasicki  <thindil@vallheru.net>
+
+	* UPDATE,templates/layout1/stats.tpl, templates/stats.tpl, stats.php:
+	added info about amount of mission made
+
 2012-02-13  Bartek thindil Jasicki  <thindil@vallheru.net>
 
 	* BUG,kowal.php: 

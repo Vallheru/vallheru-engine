@@ -18,7 +18,8 @@
     {$Crime}<br />
     <b>{$Tfights}:</b> {$Total}
     <b>{$Tlast}:</b> {$Lastkilled}
-    <b>{$Tlast2}:</b>  {$Lastkilledby}
+    <b>{$Tlast2}:</b>  {$Lastkilledby}<br /><br />
+    <b>{$Tmissions}:</b> {$Mpoints}<br />
 </td><td width="50%" valign="top">
     <center><b><u>{$Tinfo}</u></b></center><br />
         <b>{$Trank}:</b> {$Rank}
