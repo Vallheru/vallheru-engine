@@ -8,7 +8,7 @@
  *   @author               : thindil <thindil@vallheru.net>
  *   @author               : eyescream <tduda@users.sourceforge.net>
  *   @version              : 1.5
- *   @since                : 16.01.2012
+ *   @since                : 14.02.2012
  *
  */
 
@@ -316,7 +316,8 @@ if ($player -> rank == 'Admin' || $player -> rank == 'Karczmarka')
                             "Withcomm" => WITH_COMM,
                             "Aprune" => A_PRUNE,
                             "Ona" => ON_A,
-                            "Tdays" => T_DAYS));
+                            "Tdays" => T_DAYS,
+			    "Apanel" => "+ Kontrola karczmy"));
   }
 
 $smarty -> assign (array("Arefresh" => A_REFRESH,
@@ -330,7 +331,11 @@ $smarty -> assign (array("Arefresh" => A_REFRESH,
 			 'Tgold' => 'sztuk złota.',
                          "Asend" => A_SEND,
                          "Inn" => INN,
-                         "Rank" => $player -> rank));
+                         "Rank" => $player -> rank,
+			 "Abold" => "Pogrubienie",
+			 "Aitalic" => "Kursywa",
+			 "Aunderline" => "Podkreślenie",
+			 "Aemote" => "Emocje/czynność"));
 $smarty -> display ('chat.tpl');
 
 require_once("includes/foot.php");

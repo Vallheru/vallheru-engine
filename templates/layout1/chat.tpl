@@ -1,20 +1,30 @@
 <script src="js/chat.js"></script>
-<div align="center">
-<form method="post" action="chat.php?action=chat" name="chat">
-<input type="text" name="msg" size="55" /> <input type="submit" value="{$Asend}" />
-</form></div>
 <u><b>{$Inn}</b></u><br /><br />
 
 <div id="chatmsgs"></div>
 
-<div align="center"><br />
+<div align="center">
+    <form method="post" action="chat.php?action=chat" name="chat">
+        <input id="bold" type="button" value="{$Abold}" onClick="formatText(this.id)" />
+	<input id="italic" type="button" value="{$Aitalic}" onClick="formatText(this.id)" />
+	<input id="underline" type="button" value="{$Aunderline}" onClick="formatText(this.id)" />
+	<input id="emote" type="button" value="{$Aemote}" onClick="formatText(this.id)" /><br />
+	<textarea name="msg" rows="5" cols="55" onKeyDown="javascript:return sendMsg(event);"></textarea><br />
+	<input type="submit" value="{$Asend}" />
+    </form>
+</div>
+
+<div align="center"><br /><br /><br />
 <form method="post" action="chat.php?room">
     <input type="submit" value="{$Arent}" /> {$Troom} {html_options name=room options=$Roptions} {$Tgold}
 </form>
 </div>
 
 {if $Rank == "Admin" || $Rank == "Karczmarka"}
-    <div align="center"><br /><br />
+    <br /><br /><div align="center">
+    <label for="mytoggle2" class="toggle">{$Apanel}</label>
+    <input id="mytoggle2" type="checkbox" class="toggle" checked="checked" />
+    <div align="center"><br />
     <form method="post" action="chat.php?step=give">
         <input type="submit" value="{$Agive}" /> {$Chatid2} <input type="text" size="5" name="giveid" />
         <select name="item">
@@ -34,5 +44,6 @@
 		<textarea name="verdict"></textarea><br /><input type="submit" value="{$Asend}" />.
     </form>
     <a href="chat.php?step=clearc">{$Aprune}</a>
+    </div>
     </div>
 {/if}
