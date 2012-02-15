@@ -4,11 +4,11 @@
  *   Polish language for core arena
  *
  *   @name                 : core.php                            
- *   @copyright            : (C) 2004,2005,2006,2007 Vallheru Team based on Gamers-Fusion ver 2.5
- *   @author               : thindil <thindil@users.sourceforge.net>
+ *   @copyright            : (C) 2004,2005,2006,2007,2012 Vallheru Team based on Gamers-Fusion ver 2.5
+ *   @author               : thindil <thindil@vallheru.net>
  *   @author               : eyescream <tduda@users.sourceforge.net>
- *   @version              : 1.3
- *   @since                : 22.02.2007
+ *   @version              : 1.5
+ *   @since                : 15.02.2012
  *
  */
 
@@ -28,7 +28,7 @@
 //   along with this program; if not, write to the Free Software
 //   Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 //
-// $Id: core.php 896 2007-02-22 18:48:43Z thindil $
+// $Id$
 
 define("ERROR", "Zapomnij o tym");
 define("NO_MONEY", "Nie masz tyle sztuk złota.");
@@ -240,7 +240,7 @@ if (isset ($_GET['view']) && $_GET['view'] == 'arena')
 
 if (isset ($_GET['view']) && $_GET['view'] == 'train') 
 {
-    define("TRAIN_INFO", "Witaj w sali treningowej. Dostajesz 15 punktów treningu każdego dnia. Każdy punkt podwyższa Chowańcowi .125 w odpowiedniej statystyce. Obecnie masz");
+    define("TRAIN_INFO", "Witaj w sali treningowej. Dostajesz 15 punktów treningu każdego dnia. Każdy punkt podwyższa Chowańcowi 0.125 w odpowiedniej statystyce. Obecnie masz");
     define("TRAIN_INFO2", "wolnych punktów treningowych.");
     define("TRAIN_MY", "Trenuj mojego");
     define("TR_CORE", "Chowańca");

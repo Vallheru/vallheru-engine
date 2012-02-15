@@ -1,3 +1,8 @@
+2012-02-15  Bartek thindil Jasicki  <thindil@vallheru.net>
+
+	* BUG,languages/pl/core.php:
+	fixed typo
+
 2012-02-14  Bartek thindil Jasicki  <thindil@vallheru.net>
 
 	* FEATURE,templates/layout1/chatmsgs.tpl, templates/layout1/chat.tpl, templates/chatmsgs.tpl, templates/chatmsgs.tpl, chatmsgs.php, chat.php:
