@@ -6,7 +6,7 @@
  *   @copyright            : (C) 2012 Vallheru Team based on Gamers-Fusion ver 2.5
  *   @author               : thindil <thindil@vallheru.net>
  *   @version              : 1.5
- *   @since                : 14.02.2012
+ *   @since                : 15.02.2012
  *
  */
 
@@ -104,6 +104,7 @@ function formatText(button)
 	insertAtCursor(document.forms['chat'].elements['msg'], "**");
 	break;
     default:
+	insertAtCursor(document.forms['chat'].elements['msg'], button+"=");
 	break;
     }
 }

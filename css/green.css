@@ -50,3 +50,18 @@ input.toggle {
 input.toggle:checked+div { 
   display: none; 
 }
+#tchat
+{
+    width: 100%;
+    border-collapse: collapse;
+}
+#tchat td
+{
+    min-width: 150px;
+    padding: 5px;
+}
+#tchat tr.alt
+{
+    padding: 5px;
+    background-color: #101010;
+}

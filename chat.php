@@ -8,7 +8,7 @@
  *   @author               : thindil <thindil@vallheru.net>
  *   @author               : eyescream <tduda@users.sourceforge.net>
  *   @version              : 1.5
- *   @since                : 14.02.2012
+ *   @since                : 15.02.2012
  *
  */
 
@@ -55,7 +55,7 @@ if (isset ($_GET['action']) && $_GET['action'] == 'chat')
 	    $starter = $player->user;
 	    break;
 	  }
-	$starter = $arrTags[$player->tribe][0].' '.'<a href="view.php?view='.$player->id.'" target="_parent">'.$starter.'</a>'.' '.$arrTags[$player->tribe][1];
+	$starter = $arrTags[$player->tribe][0].' '.$starter.' '.$arrTags[$player->tribe][1];
         $czat = $db -> Execute("SELECT `gracz` FROM `chat_config` WHERE `gracz`=".$player -> id);
         if ($czat -> fields['gracz'])
         {
@@ -267,6 +267,14 @@ if (isset($_GET['step']))
       {
 	$db -> Execute("TRUNCATE TABLE `chat`");
         message('success', CHAT_PRUNE);
+      }
+    /**
+     * Delete one message
+     */
+    elseif ($_GET['step'] == 'delete')
+      {
+	checkvalue($_GET['tid']);
+	$db->Execute("DELETE FROM `chat` WHERE `id`=".$_GET['tid']);
       }
   }
 

@@ -7,7 +7,7 @@
  *   @copyright            : (C) 2004,2005,2006,2011,2012 Vallheru Team based on Gamers-Fusion ver 2.5
  *   @author               : thindil <thindil@vallheru.net>
  *   @version              : 1.5
- *   @since                : 14.02.2012
+ *   @since                : 15.02.2012
  *
  */
 
@@ -74,6 +74,7 @@ $arrtext = array();
 $arrauthor = array();
 $arrsenderid = array();
 $arrSdate = array();
+$arrTextid = array();
 if ($stat -> fields['rank'] == 'Admin' || $stat -> fields['rank'] == 'Staff' || $stat -> fields['rank'] == 'Karczmarka') 
 {
     $smarty -> assign ("Showid", 1);
@@ -82,6 +83,7 @@ else
   {
     $smarty->assign("Showid", '');
   }
+date_default_timezone_set('Europe/Warsaw');
 while (!$chat -> EOF) 
   {
     if (strpos($chat->fields['chat'], "<a href=") === FALSE)
@@ -95,7 +97,20 @@ while (!$chat -> EOF)
     $arrtext[] = $text;
     $arrauthor[] = $chat -> fields['user'];
     $arrsenderid[] = $chat -> fields['senderid'];
-    $arrSdate[] = $chat->fields['sdate'];
+    $arrTextid[] = $chat->fields['id'];
+    $time = time() - strtotime($chat->fields['sdate']);
+    if ($time < 60)
+      {
+	$arrSdate[] = $time.' sekund temu';
+      }
+    elseif ($time > 59 && $time < 3600)
+      {
+	$arrSdate[] = floor($time / 60).' minut temu';
+      }
+    else
+      {
+	$arrSdate[] = floor($time / 3600).' godzin temu';
+      }
     $chat -> MoveNext();
   }
 $chat -> Close();
@@ -103,6 +118,7 @@ $arrtext = array_reverse($arrtext);
 $arrauthor = array_reverse($arrauthor);
 $arrsenderid = array_reverse($arrsenderid);
 $arrSdate = array_reverse($arrSdate);
+$arrTextid = array_reverse($arrTextid);
 
 
 $ctime = time();
@@ -133,7 +149,11 @@ $smarty->assign(array("Player" => $on,
 		      "Thereis" => THERE_IS,
 		      "Texts" => TEXTS,
 		      "Cplayers" => C_PLAYERS,
-		      "Cid" => C_ID));
+		      "Cid" => C_ID,
+		      "Id" => $stat->fields['id'],
+		      "Tid" => $arrTextid,
+		      "Aprofile" => "(profil)",
+		      "Awhisper" => "(szepnij)"));
 $smarty -> display ('chatmsgs.tpl');
 if ($compress)
   {

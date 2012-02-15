@@ -1,5 +1,8 @@
 2012-02-15  Bartek thindil Jasicki  <thindil@vallheru.net>
 
+	* FEATURE,templates/chatmsgs.tpl, templates/layout1/chatmsgs.tpl, templates/layout1/layout1.css, css/light.css, css/lucass.css, 
+	css/greenforest.css, css/green.css, css/ender.css, css/classic.css, chatmsgs.php, chat.php, js/chat.js:
+	continue work on redesign chat
 	* BUG,languages/pl/core.php:
 	fixed typo
 
