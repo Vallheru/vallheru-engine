@@ -1,5 +1,7 @@
 2012-02-16  Bartek thindil Jasicki  <thindil@vallheru.net>
 
+	* BUG,index.php: 
+	better check for email
 	* BUG,includes/bbcode.php, account.php, log.php:
 	fixed some security bugs
 

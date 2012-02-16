@@ -4,10 +4,10 @@
  *   Main site of game
  *
  *   @name                 : index.php                            
- *   @copyright            : (C) 2004,2005,2006,2011 Vallheru Team based on Gamers-Fusion ver 2.5
- *   @author               : thindil <thindil@tuxfamily.org>
+ *   @copyright            : (C) 2004,2005,2006,2011,2012 Vallheru Team based on Gamers-Fusion ver 2.5
+ *   @author               : thindil <thindil@vallheru.net>
  *   @version              : 1.5
- *   @since                : 06.12.2011
+ *   @since                : 16.02.2012
  *
  */
  
@@ -183,7 +183,7 @@ else
 		    $smarty -> display ('error.tpl');
 		    exit;
 		  }
-		$_POST['email'] =  strip_tags($_POST['email']);
+		$_POST['email'] = htmlspecialchars($_POST['email'], ENT_QUOTES);
 		$query = $db -> Execute("SELECT `id` FROM `players` WHERE `email`='".$_POST['email']."'");
 		$intId = $query -> fields['id'];
 		$query -> Close();
@@ -216,8 +216,8 @@ else
 	     */
 	    if (isset($_GET['code']) && isset($_GET['email']))
 	      {
-		$strEmail =  strip_tags($_GET['email']);
-		$strCode =  strip_tags($_GET['code']);
+		$strEmail = htmlspecialchars($_GET['email'], ENT_QUOTES);
+		$strCode =  htmlspecialchars($_GET['code'], ENT_QUOTES);
 		if (empty($strCode) || empty($strEmail)) 
 		  {
 		    $smarty -> assign ("Error", ERROR);
@@ -259,8 +259,8 @@ else
 	 */
 	elseif (isset($_GET['code']) && isset($_GET['email']) && $_GET['step'] == 'newemail')
 	  {
-	    $strEmail =  strip_tags($_GET['email']);
-	    $strCode =  strip_tags($_GET['code']);
+	    $strEmail = htmlspecialchars($_GET['email'], ENT_QUOTES);
+	    $strCode =  htmlspecialchars($_GET['code'], ENT_QUOTES);
 	    if (empty($strCode) || empty($strEmail)) 
 	      {
 		$smarty -> assign ("Error", ERROR);
