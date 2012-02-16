@@ -1,3 +1,8 @@
+2012-02-16  Bartek thindil Jasicki  <thindil@vallheru.net>
+
+	* BUG,includes/bbcode.php, account.php, log.php:
+	fixed some security bugs
+
 2012-02-15  Bartek thindil Jasicki  <thindil@vallheru.net>
 
 	* FEATURE,templates/chatmsgs.tpl, templates/layout1/chatmsgs.tpl, templates/layout1/layout1.css, css/light.css, css/lucass.css, 

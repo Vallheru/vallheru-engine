@@ -7,7 +7,7 @@
  *   @copyright            : (C) 2004,2005,2006,2007,2011,2012 Vallheru Team based on Gamers-Fusion ver 2.5
  *   @author               : thindil <thindil@vallheru.net>
  *   @version              : 1.5
- *   @since                : 14.02.2012
+ *   @since                : 16.02.2012
  *
  */
 
@@ -228,9 +228,8 @@ if (isset($_GET['view']))
 	  {
 	    $arrFields = array($_POST['bugtitle'], $_POST['type'], $_POST['location'], $_POST['desc']);
 	    require_once('includes/bbcode.php');
-	    foreach ($arrFields as $strField)
+	    foreach ($arrFields as &$strField)
 	      {
-		$strField = strip_tags($strField);
 		$strField = bbcodetohtml($strField);
 		if (preg_match("/\S+/", $strField) == 0)
 		  {
