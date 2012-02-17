@@ -9,7 +9,7 @@
  *   @author               : yeskov <yeskov@users.sourceforge.net>
  *   @author               : eyescream <tduda@users.sourceforge.net>
  *   @version              : 1.5
- *   @since                : 06.02.2012
+ *   @since                : 17.02.2012
  *
  */
 
@@ -116,7 +116,7 @@ if (isset($_GET['action']))
 	checkvalue($_POST['with']);	
 	if (strlen($_POST['title']) > 0)
 	  {
-	    $strTitle = strip_tags($_POST['title']);
+	    $strTitle = htmlspecialchars($_POST['title'], ENT_QUOTES);
 	    $strTitle = ", tytułem: <b>".substr($strTitle, 0, 50)."</b>";
 	  }
 	else
@@ -177,7 +177,7 @@ if (isset($_GET['action']))
 	checkvalue($_POST['mithril']);	
 	if (strlen($_POST['title']) > 0)
 	  {
-	    $strTitle = strip_tags($_POST['title']);
+	    $strTitle = htmlspecialchars($_POST['title'], ENT_QUOTES);;
 	    $strTitle = ", tytułem: <b>".substr($strTitle, 0, 50)."</b>";
 	  }
 	else
@@ -232,7 +232,7 @@ if (isset($_GET['action']))
 	  }
 	if (strlen($_POST['title']) > 0)
 	  {
-	    $strTitle = strip_tags($_POST['title']);
+	    $strTitle = htmlspecialchars($_POST['title'], ENT_QUOTES);;
 	    $strTitle = ", tytułem: <b>".substr($strTitle, 0, 50)."</b>";
 	  }
 	else
@@ -319,7 +319,7 @@ if (isset($_GET['action']))
 	  }
 	if (strlen($_POST['title']) > 0)
 	  {
-	    $strTitle = strip_tags($_POST['title']);
+	    $strTitle = htmlspecialchars($_POST['title'], ENT_QUOTES);
 	    $strTitle = ", tytułem: <b>".substr($strTitle, 0, 50)."</b>";
 	  }
 	else
@@ -407,7 +407,7 @@ if (isset($_GET['action']))
 	checkvalue($_POST['item']);
 	if (strlen($_POST['title']) > 0)
 	  {
-	    $strTitle = strip_tags($_POST['title']);
+	    $strTitle = htmlspecialchars($_POST['title'], ENT_QUOTES);
 	    $strTitle = ", tytułem: <b>".substr($strTitle, 0, 50)."</b>";
 	  }
 	else
@@ -507,7 +507,7 @@ if (isset($_GET['action']))
 	  }
 	if (strlen($_POST['title']) > 0)
 	  {
-	    $strTitle = strip_tags($_POST['title']);
+	    $strTitle = htmlspecialchars($_POST['title'], ENT_QUOTES);
 	    $strTitle = ", tytułem: <b>".substr($strTitle, 0, 50)."</b>";
 	  }
 	else

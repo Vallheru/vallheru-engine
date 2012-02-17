@@ -4,10 +4,10 @@
  *   Court of law - information about court, law
  *
  *   @name                 : court.php                            
- *   @copyright            : (C) 2004,2005,2006,2011 Vallheru Team based on Gamers-Fusion ver 2.5
+ *   @copyright            : (C) 2004,2005,2006,2011,2012 Vallheru Team based on Gamers-Fusion ver 2.5
  *   @author               : thindil <thindil@vallheru.net>
  *   @version              : 1.5
- *   @since                : 13.12.2011
+ *   @since                : 17.02.2012
  *
  */
 
@@ -348,7 +348,7 @@ if (isset($_GET['step2']) && $_GET['step2'] == 'comments')
         {
             error(NO_PERM);
         }
-        $_POST['body'] = strip_tags($_POST['body']);
+        $_POST['body'] = htmlspecialchars($_POST['body'], ENT_QUOTES);
         if (empty($_POST['body']))
         {
             error(EMPTY_FIELDS);

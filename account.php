@@ -7,7 +7,7 @@
  *   @copyright            : (C) 2004,2005,2006,2007,2011,2012 Vallheru Team based on Gamers-Fusion ver 2.5
  *   @author               : thindil <thindil@vallheru.net>
  *   @version              : 1.5
- *   @since                : 16.02.2012
+ *   @since                : 17.02.2012
  *
  */
 
@@ -122,8 +122,8 @@ if (isset($_GET['view']))
 		  }
 		if (isset($_GET['action']) && $_GET['action'] == 'change')
 		  {
-		    $strFile = strip_tags($_POST['linkadress']);
-		    $strText = strip_tags($_POST['linkname']);
+		    $strFile = htmlspecialchars($_POST['linkadress'], ENT_QUOTES);
+		    $strText = htmlspecialchars($_POST['linkname'], ENT_QUOTES);
 		    if (empty($strFile) || empty($strText) || !isset($_POST['linknumber']))
 		      {
 			error(EMPTY_FIELDS);
@@ -823,7 +823,7 @@ if (isset($_GET['view']))
 		  {
 		    error(ERROR);
 		  }
-		$_POST['newstyle'] = strip_tags($_POST['newstyle']);
+		$_POST['newstyle'] = htmlspecialchars($_POST['newstyle'], ENT_QUOTES);
 		if ($player -> graphic)
 		  {
 		    $db -> Execute("UPDATE players SET graphic='' WHERE id=".$player -> id);
@@ -839,7 +839,7 @@ if (isset($_GET['view']))
 		  {
 		    error(ERROR);
 		  }
-		$_POST['graphserver'] = strip_tags($_POST['graphserver']);
+		$_POST['graphserver'] = htmlspecialchars($_POST['grpahserver'], ENT_QUOTES);
 		$db -> Execute("UPDATE players SET graphic='".$_POST['graphserver']."' WHERE id=".$player -> id) or error(ERROR2.$path." ".$player -> id);
 	      }
 	  }

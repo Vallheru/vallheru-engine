@@ -4,11 +4,11 @@
  *   Astral market - add, buy astral components from other players
  *
  *   @name                 : amarket.php                            
- *   @copyright            : (C) 2006,2011 Vallheru Team based on Gamers-Fusion ver 2.5
- *   @author               : thindil <thindil@tuxfamily.org>
+ *   @copyright            : (C) 2006,2011,2012 Vallheru Team based on Gamers-Fusion ver 2.5
+ *   @author               : thindil <thindil@vallheru.net>
  *   @author               : eyescream <tduda@users.sourceforge.net>
- *   @version              : 1.4
- *   @since                : 24.10.2011
+ *   @version              : 1.5
+ *   @since                : 17.02.2012
  *
  */
 
@@ -86,7 +86,7 @@ if (isset($_GET['view']))
 	  } 
         else 
 	  {
-	    $_POST['szukany'] = strip_tags($_POST['szukany']);
+	    $_POST['szukany'] = htmlspecialchars($_POST['szukany'], ENT_QUOTES);
 	    $intKey = array_search($_POST['szukany'], $arrNames);
 	    if ($intKey == NULL)
 	      {

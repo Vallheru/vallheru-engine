@@ -1,5 +1,7 @@
 2012-02-17  Bartek thindil Jasicki  <thindil@vallheru.net>
 
+	* BUG,account.php, amarket.php, bank.php, core.php, court.php, explore.php: 
+	fixed some security bugs
 	* FEATURE,templates/layout1/jail.tpl, templates/jail.tpl, jail.php:
 	added option for escape from jail for thieves
 	* UPDATE,lumbermill.php:

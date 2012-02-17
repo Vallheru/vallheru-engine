@@ -8,7 +8,7 @@
  *   @author               : thindil <thindil@vallheru.net>
  *   @author               : eyescream <tduda@users.sourceforge.net>
  *   @version              : 1.5
- *   @since                : 21.01.2012
+ *   @since                : 17.02.2012
  *
  */
 
@@ -556,7 +556,7 @@ if (isset($_GET['view']))
 		  }
 		if ($_GET['step'] == 'name') 
 		  {
-		    $_POST['cname'] = strip_tags($_POST['cname']);
+		    $_POST['cname'] = htmlspecialchars($_POST['cname'], ENT_QUOTES);
 		    $strName = $db -> qstr($_POST['cname'], get_magic_quotes_gpc());
 		    $db -> Execute("UPDATE core SET corename=".$strName." WHERE id=".$rel -> fields['id']) or error ("bĹÄd przy zapisie!");
 		    error (YOU_CHANGE.$strName.". (<a href=core.php?view=mycores>".A_REFRESH."</a>).");
