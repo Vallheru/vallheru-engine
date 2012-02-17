@@ -4,10 +4,10 @@
  *   Lumbermill - making arrows and bows
  *
  *   @name                 : lumbermill.php                            
- *   @copyright            : (C) 2004,2005,2006,2007,2011 Vallheru Team based on Gamers-Fusion ver 2.5
+ *   @copyright            : (C) 2004,2005,2006,2007,2011,2012 Vallheru Team based on Gamers-Fusion ver 2.5
  *   @author               : thindil <thindil@vallheru.net>
  *   @version              : 1.5
- *   @since                : 27.12.2011
+ *   @since                : 17.02.2012
  *
  */
 
@@ -133,12 +133,17 @@ function createitem()
                 $intGainexp = $intGainexp + ($arrItem['level'] * (100 + $player -> fletcher / 10));
             }
         }
-            elseif ($intRoll2 > 20 || !$blnSpecial)
-        {
+	elseif ($intRoll2 > 20 || !$blnSpecial)
+	  {
             $intGainexp = $intGainexp + $arrItem['level'];
-        }
+	  }
         $intItems ++;
         $intAbility = ($intAbility + ($arrItem['level'] / 100));
+	if ($arrItem['type'] == 'R')
+	  {
+	    $intGainexp = ceil($intGainexp / 2);
+	    $intAbility = ceil ($intAbility / 2);
+	  }
         if ($arrItem['type'] == 'B') 
         {
             $arrRepair = array(1, 4, 16, 64, 256);
@@ -554,7 +559,7 @@ if (isset ($_GET['mill']) && $_GET['mill'] == 'mill')
 		}
 	      else
 		{
-		  $arrPlan['energy'] = ceil($arrPlan['level'] / 2);
+		  $arrPlan['energy'] = ceil($arrPlan['level'] / 4);
 		}
 	    }
 	  $smarty->assign("Plans", $arrLumber);
@@ -679,7 +684,7 @@ if (isset ($_GET['mill']) && $_GET['mill'] == 'mill')
 	  }
 	else
 	  {
-	    $intAmount = floor($_POST['razy'] / ceil($objLumber->fields['level'] / 2));
+	    $intAmount = floor($_POST['razy'] / ceil($objLumber->fields['level'] / 4));
 	  }
         if ($intAmount > 1) 
         {
@@ -819,7 +824,7 @@ if (isset ($_GET['mill']) && $_GET['mill'] == 'mill')
             $smarty -> assign ("Message", YOU_WORK.$arrItem['name'].YOU_USE.$_POST['razy'].AND_MAKE.$procent.TO_END.$need.M_ENERGY);
             if ($objLumber -> fields['type'] == 'R') 
             {
-                $db -> Execute("INSERT INTO `mill_work` (`owner`, `name`, `u_energy`, `n_energy`) VALUES(".$player -> id.", '".$objLumber -> fields['name']."', ".$_POST['razy'].", ".ceil($objLumber -> fields['level'] / 2).")");
+                $db -> Execute("INSERT INTO `mill_work` (`owner`, `name`, `u_energy`, `n_energy`) VALUES(".$player -> id.", '".$objLumber -> fields['name']."', ".$_POST['razy'].", ".ceil($objLumber -> fields['level'] / 4).")");
             } 
                 else 
             {
