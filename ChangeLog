@@ -1,5 +1,7 @@
 2012-02-17  Bartek thindil Jasicki  <thindil@vallheru.net>
 
+	* FEATURE,templates/layout1/jail.tpl, templates/jail.tpl, jail.php:
+	added option for escape from jail for thieves
 	* UPDATE,lumbermill.php:
 	reduced amount of energy/materials needed for make arrows
 

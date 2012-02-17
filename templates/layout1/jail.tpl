@@ -29,6 +29,9 @@
     {else}
         <b>{$Nocost}</b></br />
     {/if}
+    {if $Escape != ""}
+        <a href="jail.php?escape">{$Escape}</a>
+    {/if}
 {/if}
 
 {if $Prisoner != ""}

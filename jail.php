@@ -4,11 +4,11 @@
  *   Jail
  *
  *   @name                 : jail.php                            
- *   @copyright            : (C) 2004,2005,2006,2011 Vallheru Team based on Gamers-Fusion ver 2.5
+ *   @copyright            : (C) 2004,2005,2006,2011,2012 Vallheru Team based on Gamers-Fusion ver 2.5
  *   @author               : thindil <thindil@vallheru.net>
  *   @author               : eyescream <tduda@users.sourceforge.net>
  *   @version              : 1.5
- *   @since                : 23.12.2011
+ *   @since                : 17.02.2012
  *
  */
 
@@ -36,7 +36,7 @@ require_once("includes/head.php");
 /**
 * Get the localization for game
 */
-require_once("languages/".$player -> lang."/jail.php");
+require_once("languages/".$lang."/jail.php");
 
 if ($player -> location != 'Altara' && $player -> location != 'Lochy' && $player -> location != 'Ardulith') 
 {
@@ -44,6 +44,172 @@ if ($player -> location != 'Altara' && $player -> location != 'Lochy' && $player
 }
 
 $smarty -> assign("Prisoner", '');
+
+/**
+ * Escape from prison
+ */
+if (isset($_GET['escape']))
+  {
+    if ($player->location != 'Lochy')
+      {
+	error('Nie znajdujesz się w lochach.');
+      }
+    if ($player->clas != 'Złodziej')
+      {
+	error('Tylko złodziej może próbować uciekać z więzienia.');
+      }
+    if ($player->crime < 1)
+      {
+	error('Nie masz wystarczającej ilości punktów kradzieży.');
+      }
+    $prisoner = $db->Execute("SELECT * FROM `jail` WHERE `prisoner`=".$player->id);
+    if (!$prisoner->fields['prisoner'])
+      {
+	error('Zapomnij o tym.');
+      }
+    if (!$prisoner->fields['cost'])
+      {
+	error('Nie możesz próbować ucieczki, ponieważ została nałożona na ciebie kara administracyjna.');
+      }
+    require_once("includes/checkexp.php");
+    $intMax = ceil($prisoner->fields['cost'] / 50);
+    $prisoner->Close();
+    $roll = rand (1, $intMax);
+    if ($roll == 1)
+      {
+	$chance = 0;
+      }
+    elseif ($roll == $intMax)
+      {
+	$chance = 1000000;
+      }
+    else
+      {
+	/**
+	 * Add bonus from bless
+	 */
+	$strBless = FALSE;
+	$objBless = $db -> Execute("SELECT bless, blessval FROM players WHERE id=".$player -> id);
+	if ($objBless -> fields['bless'] == 'inteli')
+	  {
+	    $player -> inteli = $player -> inteli + $objBless -> fields['blessval'];
+	    $strBless = 'inteli';
+	  }
+	elseif ($objBless -> fields['bless'] == 'agility')
+	  {
+	    $player -> agility = $player -> agility + $objBless -> fields['blessval'];
+	    $strBless = 'agility';
+	  }
+	elseif ($objBless -> fields['bless'] == 'speed')
+	  {
+	    $player->speed = $player->speed + $objBless -> fields['blessval'];
+	    $strBless = 'speed';
+	  }
+	$objBless -> Close();
+	if ($strBless)
+	  {
+	    $db -> Execute("UPDATE players SET bless='', blessval=0 WHERE id=".$player -> id);
+	  }
+	
+	/**
+	 * Add bonus from rings
+	 */
+	$arrEquip = $player -> equipment();
+	$arrRings = array('zręczności', 'inteligencji', 'szybkości');
+	$arrStat = array('agility', 'inteli', 'speed');
+	if ($arrEquip[9][0])
+	  {
+	    $arrRingtype = explode(" ", $arrEquip[9][1]);
+	    $intAmount = count($arrRingtype) - 1;
+	    $intKey = array_search($arrRingtype[$intAmount], $arrRings);
+	    if ($intKey != NULL)
+	      {
+		$strStat = $arrStat[$intKey];
+		$player -> $strStat = $player -> $strStat + $arrEquip[9][2];
+	      }
+	  }
+	if ($arrEquip[10][0])
+	  {
+	    $arrRingtype = explode(" ", $arrEquip[10][1]);
+	    $intAmount = count($arrRingtype) - 1;
+	    $intKey = array_search($arrRingtype[$intAmount], $arrRings);
+	    if ($intKey != NULL)
+	      {
+		$strStat = $arrStat[$intKey];
+		$player -> $strStat = $player -> $strStat + $arrEquip[10][2];
+	      }
+	  }
+	
+	$intStats = ($player->agility + $player->inteli + $player->thievery + $player->speed);
+	/**
+	 * Add bonus from tools
+	 */
+	if ($arrEquip[12][0])
+	  {
+	    $intStats += (($arrEquip[12][2] / 100) * $intStats);
+	  }
+	
+	$chance = $intStats - $roll;
+      }
+    if ($player->gender == 'M')
+      {
+	$strSuffix = 'eś';
+      }
+    else
+      {
+	$strSuffix = 'aś';
+      }
+    if ($chance < 1) 
+      {
+	$cost = 1000 * $player -> level;
+	$expgain = ceil($player -> level / 10);
+	checkexp($player -> exp, $expgain, $player -> level, $player -> race, $player -> user, $player -> id, 0, 0, $player -> id, 'thievery', 0.01);
+	$db -> Execute("UPDATE `players` SET `crime`=`crime`-1 WHERE `id`=".$player -> id);
+	$strDate = $db -> DBDate($newdate);
+	$db->Execute("UPDATE `jail` SET `duration`=`duration`+7, `cost`=`cost`+".$cost." WHERE `prisoner`=".$player->id);
+	if ($arrEquip[12][0])
+	  {
+	    $db->Execute("DELETE FROM `equipment` WHERE `id`=".$arrEquip[12][0]);
+	  }
+	$objTool = $db->Execute("SELECT `id` FROM `equipment` WHERE `owner`=".$player->id." AND `type`='E' AND `status`='U'");
+	if ($objTool->fields['id'])
+	  {
+	    $intRoll = rand(1, 100);
+	    if ($intRoll < 50)
+	      {
+		$db->Execute("DELETE FROM `equipment` WHERE `owner`=".$player->id." AND `type`='E' AND `status`='U'");
+	      }
+	  }
+	$objTool->Close();
+	message('error', 'Próbował'.$strSuffix.' wydostać się z celi. Z początku wszystko szło zgodnie z planem, jednak w pewnym momencie straż zauważyła i pojmała ciebie. Wylądował'.$strSuffix.' w innej celi, tym razem znacznie lepiej strzeżonej. Na dodatek podniesiono kaucję za ciebie oraz przedłużono lochy.');
+      }
+    else 
+      { 
+	$expgain = ($player->level * 10);
+	$fltThief = ($player->level / 10);
+	if ($chance == 1000000)
+	  {
+	    $expgain = 2 * $expgain;
+	    $fltThief = 2 * $fltThief;
+	  }
+	$db -> Execute("UPDATE `players` SET `crime`=`crime`-1, `miejsce`='Altara' WHERE `id`=".$player->id);
+	checkexp($player -> exp, $expgain, $player -> level, $player -> race, $player -> user, $player -> id, 0, 0, $player -> id, 'thievery', $fltThief);
+	if ($arrEquip[12][0])
+	  {
+	    $arrEquip[12][6] --;
+	    if ($arrEquip == 0)
+	      {
+		$db->Execute("DELETE FROM `equipment` WHERE `id`=".$arrEquip[12][0]);
+	      }
+	    else
+	      {
+		$db->Execute("UPDATE `equipment` SET `wt`=`wt`-1 WHERE `id`=".$arrEquip[12][0]);
+	      }
+	  }
+	$player->location = 'Altara';
+	message('success', "Wykorzystując nieuwagę straży, otworzył".$strSuffix." drzwi celi i niepostrzeżenie wydostał".$strSuffix." się z lochów do miasta. Zdobył".$strSuffix." ".$fltThief." w umiejętności Złodziejstwo.");
+      }
+  }
 
 /**
 * If player is in city - show prisoners
@@ -112,11 +278,20 @@ if ($player -> location == 'Lochy')
 {
     $prisoner = $db -> Execute("SELECT * FROM `jail` WHERE `prisoner`=".$player -> id);
     $intTime = ceil($prisoner -> fields['duration'] / 7);
+    if ($prisoner->fields['cost'] > 0)
+      {
+	$strEscape = 'Spróbuj ucieczki (1 punkt kradzieży)';
+      }
+    else
+      {
+	$strEscape = '';
+      }
     $smarty -> assign(array("Date" => $prisoner -> fields['data'], 
                             "Verdict" => $prisoner -> fields['verdict'], 
                             "Duration" => $intTime, 
                             "Cost" => $prisoner -> fields['cost'],
                             "Duration2" => $prisoner -> fields['duration'],
+			    "Escape" => $strEscape,
                             "Youare" => YOU_ARE,
                             "Pdate" => P_DATE,
                             "Pduration" => P_DURATION,
