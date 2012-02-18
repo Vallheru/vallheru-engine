@@ -9,7 +9,7 @@
  *   @author               : mori <ziniquel@users.sourceforge.net>
  *   @author               : eyescream <tduda@users.sourceforge.net>
  *   @version              : 1.5
- *   @since                : 03.02.2012
+ *   @since                : 18.02.2012
  *
  */
 
@@ -573,12 +573,13 @@ if (isset ($_GET['view']) && $_GET['view'] == 'make')
         {
             error (NO_NAME);
         }
-        $db -> Execute("INSERT INTO tribes (name,owner) VALUES('".strip_tags($_POST['name'])."',".$player -> id.")");
+	$_POST['name'] = htmlspecialchars($_POST['name'], ENT_QUOTES);
+        $db -> Execute("INSERT INTO tribes (name,owner) VALUES('".$_POST['name']."',".$player -> id.")");
         $db -> Execute("UPDATE players SET credits=credits-2500000 WHERE id=".$player -> id);
         $newt = $db -> Execute("SELECT id FROM tribes WHERE owner=".$player -> id);
         $db -> Execute("UPDATE players SET tribe=".$newt -> fields['id']." WHERE id=".$player -> id);
         $newt -> Close();
-        error (YOU_MAKE.strip_tags($_POST['name'])."</i>.<br />");
+        error (YOU_MAKE.$_POST['name']."</i>.<br />");
     }
 }
 

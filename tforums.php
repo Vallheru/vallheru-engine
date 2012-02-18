@@ -7,7 +7,7 @@
  *   @copyright            : (C) 2004,2005,2006,2011,2012 Vallheru Team based on Gamers-Fusion ver 2.5
  *   @author               : thindil <thindil@vallheru.net>
  *   @version              : 1.5
- *   @since                : 06.02.2012
+ *   @since                : 18.02.2012
  *
  */
 
@@ -550,7 +550,7 @@ if (isset($_GET['action']) && $_GET['action'] == 'search')
     {
         error(EMPTY_FIELDS);
     }
-    $strSearch = strip_tags($_POST['search']);
+    $strSearch = htmlspecialchars($_POST['search'], ENT_QUOTES);
     
     /**
     * Search string in topics

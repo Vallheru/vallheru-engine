@@ -8,7 +8,7 @@
  *   @author               : thindil <thindil@vallheru.net>
  *   @author               : mori <ziniquel@users.sourceforge.net>
  *   @version              : 1.5
- *   @since                : 20.01.2012
+ *   @since                : 18.02.2012
  *
  */
 
@@ -393,7 +393,7 @@ if (isset($_GET['topics']))
 */
 if (isset ($_GET['action']) && $_GET['action'] == 'addtopic') 
 {
-    $_POST['title2'] = strip_tags($_POST['title2']);
+    $_POST['title2'] = htmlspecialchars($_POST['title2'], ENT_QUOTES);
     $blnValid = TRUE;
     if (empty ($_POST['title2']) || empty ($_POST['body'])) 
       {
@@ -807,7 +807,7 @@ if (isset($_GET['action']) && $_GET['action'] == 'search')
         error(EMPTY_FIELDS);
     }
     checkvalue($_POST['catid']);
-    $strSearch = strip_tags($_POST['search']);
+    $strSearch = htmlspecialchars($_POST['search'], ENT_QUOTES);
     
     /**
     * Search string in topics

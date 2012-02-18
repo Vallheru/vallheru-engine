@@ -8,7 +8,7 @@
  *   @author               : thindil <thindil@vallheru.net>
  *   @author               : eyescream <tduda@users.sourceforge.net>
  *   @version              : 1.5
- *   @since                : 01.02.2012
+ *   @since                : 18.02.2012
  *
  */
  
@@ -1465,14 +1465,14 @@ if (isset ($_GET['view']) && $_GET['view'] == 'shop')
         {
             error(NO_MONEY);
         }
-        $query = $db -> Execute("SELECT id FROM outpost_veterans WHERE outpost=".$out -> fields['id']);
-        $numveterans = $query -> RecordCount();
-        $query -> Close();
+        $query = $db -> Execute("SELECT count(`id`) FROM `outpost_veterans` WHERE `outpost`=".$out -> fields['id']);
+        $numveterans = $query->fields['count(`id`)'];
+        $query->Close();
         if ($numveterans >= $out -> fields['barracks']) 
         {
             error(NO_BARRACKS);
         }
-        $_POST['vname'] = strip_tags($_POST['vname']);
+        $_POST['vname'] = htmlspecialchars($_POST['vname'], ENT_QUOTES);
         if (empty($_POST['vname'])) 
         {
             error(NO_NAME);
