@@ -1,5 +1,7 @@
 2012-02-18  Bartek thindil Jasicki  <thindil@vallheru.net>
 
+	* BUG,account.php: 
+	fixed typo
 	* BUG,forums.php, tribes.php, tforums.php, outposts.php, mail.php:
 	fixed few security bugs
 	* BUG,hunters.php: 

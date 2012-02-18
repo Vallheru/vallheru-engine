@@ -7,7 +7,7 @@
  *   @copyright            : (C) 2004,2005,2006,2007,2011,2012 Vallheru Team based on Gamers-Fusion ver 2.5
  *   @author               : thindil <thindil@vallheru.net>
  *   @version              : 1.5
- *   @since                : 17.02.2012
+ *   @since                : 18.02.2012
  *
  */
 
@@ -839,7 +839,7 @@ if (isset($_GET['view']))
 		  {
 		    error(ERROR);
 		  }
-		$_POST['graphserver'] = htmlspecialchars($_POST['grpahserver'], ENT_QUOTES);
+		$_POST['graphserver'] = htmlspecialchars($_POST['graphserver'], ENT_QUOTES);
 		$db -> Execute("UPDATE players SET graphic='".$_POST['graphserver']."' WHERE id=".$player -> id) or error(ERROR2.$path." ".$player -> id);
 	      }
 	  }
