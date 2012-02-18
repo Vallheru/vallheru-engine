@@ -1,5 +1,7 @@
 2012-02-18  Bartek thindil Jasicki  <thindil@vallheru.net>
 
+	* BUG,hunters.php: 
+	probably fixed bug with doing quests
 	* BUG,jail.php:
 	fixed bug with escaping from jail
 

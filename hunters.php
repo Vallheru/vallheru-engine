@@ -4,10 +4,10 @@
  *   Hunters guild - bestiary
  *
  *   @name                 : hunters.php                            
- *   @copyright            : (C) 2011 Vallheru Team based on Gamers-Fusion ver 2.5
+ *   @copyright            : (C) 2011,2012 Vallheru Team based on Gamers-Fusion ver 2.5
  *   @author               : thindil <thindil@vallheru.net>
  *   @version              : 1.5
- *   @since                : 24.12.2011
+ *   @since                : 18.02.2012
  *
  */
 
@@ -251,6 +251,7 @@ elseif ($_GET['step'] == 'quest')
 	{
 	  if ($fight->fields['hp'] <= 0 || isset($_SESSION['ressurect']))
 	    {
+	      unset($_SESSION['ressurect']);
 	      error("<br /><br />Niestety nie udało Ci się wykonać zadania.");
 	    }
 	  if (!isset($_SESSION['razy']))
