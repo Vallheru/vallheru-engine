@@ -8,7 +8,7 @@
  *   @author               : thindil <thindil@vallheru.net>
  *   @author               : eyescream <tduda@users.sourceforge.net>
  *   @version              : 1.5
- *   @since                : 17.02.2012
+ *   @since                : 18.02.2012
  *
  */
 
@@ -192,6 +192,7 @@ if (isset($_GET['escape']))
 	    $expgain = 2 * $expgain;
 	    $fltThief = 2 * $fltThief;
 	  }
+	$db->Execute("DELETE FROM `jail` WHERE `prisoner`=".$player->id);
 	$db -> Execute("UPDATE `players` SET `crime`=`crime`-1, `miejsce`='Altara' WHERE `id`=".$player->id);
 	checkexp($player -> exp, $expgain, $player -> level, $player -> race, $player -> user, $player -> id, 0, 0, $player -> id, 'thievery', $fltThief);
 	if ($arrEquip[12][0])

@@ -1,3 +1,8 @@
+2012-02-18  Bartek thindil Jasicki  <thindil@vallheru.net>
+
+	* BUG,jail.php:
+	fixed bug with escaping from jail
+
 2012-02-17  Bartek thindil Jasicki  <thindil@vallheru.net>
 
 	* BUG,account.php, amarket.php, bank.php, core.php, court.php, explore.php: 
