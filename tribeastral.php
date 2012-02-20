@@ -477,7 +477,15 @@ if (isset($_GET['action']) && $_GET['action'] == 'give')
             $strCompname = $arrNames2[$intCompname];
 	  }
 	$arrNumber = array(0, 1, 2, 3, 4, 5, 6, 0, 1, 2, 3, 4, 0, 1, 2, 3, 4);
-        $strPiecename = $strName.$arrNumber[$_POST['name']];
+	if ($_GET['step'] == 'all')
+	  {
+	    $intNumber = $arrNumber[$_POST['name']] + 1;
+	  }
+	else
+	  {
+	    $intNumber = $arrNumber[$_POST['name']];
+	  }
+        $strPiecename = $strName.$intNumber;
       }
     
     /**
