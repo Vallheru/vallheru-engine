@@ -4,10 +4,10 @@
  *   Steal items from shops
  *
  *   @name                 : steal.php                            
- *   @copyright            : (C) 2004,2005,2006,2011 Vallheru Team based on Gamers-Fusion ver 2.5
+ *   @copyright            : (C) 2004,2005,2006,2011,2012 Vallheru Team based on Gamers-Fusion ver 2.5
  *   @author               : thindil <thindil@vallheru.net>
  *   @version              : 1.5
- *   @since                : 28.12.2011
+ *   @since                : 20.02.2012
  *
  */
 
@@ -58,7 +58,7 @@ function steal ($itemid)
     {
         error (E_CRIME);
     }
-    if ($title != 'Fleczer') 
+    if ($title != 'Łucznik') 
       {
 	$arritem = $db -> Execute("SELECT * FROM `equipment` WHERE `id`=".$itemid);
       } 

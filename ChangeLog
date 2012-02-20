@@ -1,5 +1,7 @@
 2012-02-20  Bartek thindil Jasicki  <thindil@vallheru.net>
 
+	* BUG,includes/steal.php: 
+	fixed bug with stealing items from fletcher
 	* BUG,tribeastral.php: 
 	fixed bug with give complete plans to players
 	* BUG,tribeastral.php: 
