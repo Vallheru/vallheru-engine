@@ -8,7 +8,7 @@
  *   @author               : thindil <thindil@vallheru.net>
  *   @author               : eyescream <tduda@users.sourceforge.net>
  *   @version              : 1.5
- *   @since                : 17.02.2012
+ *   @since                : 20.02.2012
  *
  */
 
@@ -310,7 +310,7 @@ if (isset($_GET['view']))
 	if (isset ($_GET['step']) && ($_GET['step'] == 'piece' || $_GET['step'] == 'component')) 
 	  {
 	    $_POST['name'] = intval($_POST['name']);
-	    if ($_POST['name'] < 0 || $_POST['name'] > 9)
+	    if ($_POST['name'] < 0 || $_POST['name'] > 16)
 	      {
 		error(ERROR);
 	      }

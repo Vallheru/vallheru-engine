@@ -1,3 +1,8 @@
+2012-02-20  Bartek thindil Jasicki  <thindil@vallheru.net>
+
+	* BUG,amarket.php:
+	fixed bug with adding oferts
+
 2012-02-18  Bartek thindil Jasicki  <thindil@vallheru.net>
 
 	* BUG,account.php: 
