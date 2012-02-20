@@ -8,7 +8,7 @@
  *   @author               : thindil <thindil@vallheru.net>
  *   @author               : eyescream <tduda@users.sourceforge.net>
  *   @version              : 1.5
- *   @since                : 05.02.2012
+ *   @since                : 20.02.2012
  *
  */
 
@@ -293,12 +293,12 @@ if (isset($_GET['action']) && $_GET['action'] == 'add')
 	$objAmount->Close();
 
 	$strMessage = HE_ADD."</b> wszystkie posiadane części ".$strCompname.".";
-        $db -> Execute("INSERT INTO `log` (`owner`, `log`, `czas`, `type`) VALUES(".$objOwner -> fields['owner'].", '".T_PLAYER1.'<b><a href="view.php?view="'.$player -> id.'>'.$player -> user.'</a></b>'.T_PLAYER2.'<b>'.$player -> id."</b> ".$strMessage."','".$newdate."', 'C')");
-	$db -> Execute("INSERT INTO `logs` (`owner`, `log`, `czas`) VALUES(".$objOwner -> fields['owner'].", '".T_PLAYER1.'<b><a href="view.php?view="'.$player -> id.'>'.$player -> user.'</a></b>'.T_PLAYER2.'<b>'.$player -> id."</b> ".$strMessage."','".$newdate."')");
+        $db -> Execute("INSERT INTO `log` (`owner`, `log`, `czas`, `type`) VALUES(".$objOwner -> fields['owner'].", '".T_PLAYER1.'<b><a href="view.php?view='.$player -> id.'">'.$player -> user.'</a></b>'.T_PLAYER2.'<b>'.$player -> id."</b> ".$strMessage."','".$newdate."', 'C')");
+	$db -> Execute("INSERT INTO `logs` (`owner`, `log`, `czas`) VALUES(".$objOwner -> fields['owner'].", '".T_PLAYER1.'<b><a href="view.php?view='.$player -> id.'">'.$player -> user.'</a></b>'.T_PLAYER2.'<b>'.$player -> id."</b> ".$strMessage."','".$newdate."')");
         $objPerm = $db -> Execute("SELECT `player` FROM `tribe_perm` WHERE `tribe`=".$player -> tribe." AND `astralvault`=1");
         while (!$objPerm -> EOF)
         {
-            $db -> Execute("INSERT INTO log (`owner`, `log`, `czas`, `type`) VALUES(".$objPerm -> fields['player'].", '".T_PLAYER1.'<a href="view.php?view="'.$player -> id.'>'.$player -> user.'</a>'.T_PLAYER2.'<b>'.$player -> id."</b> ".$strMessage."','".$newdate."', 'C')");
+            $db -> Execute("INSERT INTO log (`owner`, `log`, `czas`, `type`) VALUES(".$objPerm -> fields['player'].", '".T_PLAYER1.'<a href="view.php?view='.$player -> id.'">'.$player -> user.'</a>'.T_PLAYER2.'<b>'.$player -> id."</b> ".$strMessage."','".$newdate."', 'C')");
             $objPerm -> MoveNext();
         }
         $objPerm -> Close();
@@ -332,12 +332,12 @@ if (isset($_GET['action']) && $_GET['action'] == 'add')
 	$objAmount->Close();
 
 	$strMessage = HE_ADD."</b> wszystkie posiadane części astralne.";
-        $db -> Execute("INSERT INTO `log` (`owner`, `log`, `czas`, `type`) VALUES(".$objOwner -> fields['owner'].", '".T_PLAYER1.'<b><a href="view.php?view="'.$player -> id.'>'.$player -> user.'</a></b>'.T_PLAYER2.'<b>'.$player -> id."</b> ".$strMessage."','".$newdate."', 'C')");
-	$db -> Execute("INSERT INTO `logs` (`owner`, `log`, `czas`) VALUES(".$objOwner -> fields['owner'].", '".T_PLAYER1.'<b><a href="view.php?view="'.$player -> id.'>'.$player -> user.'</a></b>'.T_PLAYER2.'<b>'.$player -> id."</b> ".$strMessage."','".$newdate."')");
+        $db -> Execute("INSERT INTO `log` (`owner`, `log`, `czas`, `type`) VALUES(".$objOwner -> fields['owner'].", '".T_PLAYER1.'<b><a href="view.php?view='.$player -> id.'">'.$player -> user.'</a></b>'.T_PLAYER2.'<b>'.$player -> id."</b> ".$strMessage."','".$newdate."', 'C')");
+	$db -> Execute("INSERT INTO `logs` (`owner`, `log`, `czas`) VALUES(".$objOwner -> fields['owner'].", '".T_PLAYER1.'<b><a href="view.php?view='.$player -> id.'">'.$player -> user.'</a></b>'.T_PLAYER2.'<b>'.$player -> id."</b> ".$strMessage."','".$newdate."')");
         $objPerm = $db -> Execute("SELECT `player` FROM `tribe_perm` WHERE `tribe`=".$player -> tribe." AND `astralvault`=1");
         while (!$objPerm -> EOF)
         {
-            $db -> Execute("INSERT INTO log (`owner`, `log`, `czas`, `tribe`) VALUES(".$objPerm -> fields['player'].", '".T_PLAYER1.'<a href="view.php?view="'.$player -> id.'>'.$player -> user.'</a>'.T_PLAYER2.'<b>'.$player -> id."</b> ".$strMessage."','".$newdate."', 'C')");
+            $db -> Execute("INSERT INTO log (`owner`, `log`, `czas`, `tribe`) VALUES(".$objPerm -> fields['player'].", '".T_PLAYER1.'<a href="view.php?view='.$player -> id.'">'.$player -> user.'</a>'.T_PLAYER2.'<b>'.$player -> id."</b> ".$strMessage."','".$newdate."', 'C')");
             $objPerm -> MoveNext();
         }
         $objPerm -> Close();
@@ -386,12 +386,12 @@ if (isset($_GET['action']) && $_GET['action'] == 'add')
         $objAmount -> Close();
 
         $strMessage = HE_ADD.$strType.$strCompname.M_AMOUNT.$_POST['amount'].".";
-        $db -> Execute("INSERT INTO `log` (`owner`, `log`, `czas`, `type`) VALUES(".$objOwner -> fields['owner'].", '".T_PLAYER1.'<b><a href="view.php?view="'.$player -> id.'>'.$player -> user.'</a></b>'.T_PLAYER2.'<b>'.$player -> id."</b> ".$strMessage."','".$newdate."', 'C')");
-	$db -> Execute("INSERT INTO `logs` (`owner`, `log`, `czas`) VALUES(".$objOwner -> fields['owner'].", '".T_PLAYER1.'<b><a href="view.php?view="'.$player -> id.'>'.$player -> user.'</a></b>'.T_PLAYER2.'<b>'.$player -> id."</b> ".$strMessage."','".$newdate."')");
+        $db -> Execute("INSERT INTO `log` (`owner`, `log`, `czas`, `type`) VALUES(".$objOwner -> fields['owner'].", '".T_PLAYER1.'<b><a href="view.php?view='.$player -> id.'">'.$player -> user.'</a></b>'.T_PLAYER2.'<b>'.$player -> id."</b> ".$strMessage."','".$newdate."', 'C')");
+	$db -> Execute("INSERT INTO `logs` (`owner`, `log`, `czas`) VALUES(".$objOwner -> fields['owner'].", '".T_PLAYER1.'<b><a href="view.php?view='.$player -> id.'">'.$player -> user.'</a></b>'.T_PLAYER2.'<b>'.$player -> id."</b> ".$strMessage."','".$newdate."')");
         $objPerm = $db -> Execute("SELECT `player` FROM `tribe_perm` WHERE `tribe`=".$player -> tribe." AND `astralvault`=1");
         while (!$objPerm -> EOF)
         {
-            $db -> Execute("INSERT INTO log (`owner`, `log`, `czas`, `type`) VALUES(".$objPerm -> fields['player'].", '".T_PLAYER1.'<a href="view.php?view="'.$player -> id.'>'.$player -> user.'</a>'.T_PLAYER2.'<b>'.$player -> id."</b> ".$strMessage."','".$newdate."', 'C')");
+            $db -> Execute("INSERT INTO log (`owner`, `log`, `czas`, `type`) VALUES(".$objPerm -> fields['player'].", '".T_PLAYER1.'<a href="view.php?view='.$player -> id.'">'.$player -> user.'</a>'.T_PLAYER2.'<b>'.$player -> id."</b> ".$strMessage."','".$newdate."', 'C')");
             $objPerm -> MoveNext();
         }
         $objPerm -> Close();
