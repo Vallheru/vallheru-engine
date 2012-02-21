@@ -7,7 +7,7 @@
  *   @copyright            : (C) 2004,2005,2006,2007,2011,2012 Vallheru Team based on Gamers-Fusion ver 2.5
  *   @author               : thindil <thindil@vallheru.net>
  *   @version              : 1.5
- *   @since                : 07.02.2012
+ *   @since                : 21.02.2012
  *
  */
  
@@ -32,7 +32,7 @@
 /**
 * Get the localization for game
 */
-require_once("languages/".$player -> lang."/turnfight.php");
+require_once("languages/".$lang."/turnfight.php");
 
 require_once("includes/functions.php");
 
@@ -108,17 +108,37 @@ function turnfight($expgain,$goldgain,$action,$addres)
         $location = $db -> Execute("SELECT miejsce FROM players WHERE id=".$player -> id);
         if ($location -> fields['miejsce'] == 'Góry') 
         {
-            $arrmonsters = array(2,3,6,7,16,17,22,23);
-            $rzut2 = rand(0,7);
-            $enemy1 = $db -> Execute("SELECT * FROM monsters WHERE id=".$arrmonsters[$rzut2]);
+	    $intRoll2 = rand(1, 100);
+	    if ($intRoll2 < 25)
+	      {
+		$enemy1 = $db->SelectLimit("SELECT * FROM `monsters` WHERE `level`<=".$player->level." AND `location`='Altara' ORDER BY RAND()", 1);
+	      }
+	    elseif ($intRoll2 > 24 && $intRoll2 < 75)
+	      {
+		$enemy1 = $db->SelectLimit("SELECT * FROM `monsters` WHERE `level`<=".$player->level." AND `location`='Altara' ORDER BY `level` DESC", 1);
+	      }
+	    else
+	      {
+		$enemy1 = $db->SelectLimit("SELECT * FROM `monsters` WHERE `level`>=".$player->level." AND `location`='Altara' ORDER BY RAND()", 1);
+	      }
             $enemy = array("strength" => $enemy1 -> fields['strength'], "agility" => $enemy1 -> fields['agility'], "speed" => $enemy1 -> fields['speed'], "endurance" => $enemy1 -> fields['endurance'], "hp" => $enemy1 -> fields['hp'], "name" => $enemy1 -> fields['name'], "exp1" => $enemy1 -> fields['exp1'], "exp2" => $enemy1 -> fields['exp2'], "level" => $enemy1 -> fields['level']);
             $enemy1 -> Close();
         }
         if ($location -> fields['miejsce'] == 'Las') 
         {
-            $arrmonsters = array(1,4,11,13,14,19,22,28);
-            $rzut2 = rand(0,7);
-            $enemy1 = $db -> Execute("SELECT * FROM monsters WHERE id=".$arrmonsters[$rzut2]);
+	    $intRoll2 = rand(1, 100);
+	    if ($intRoll2 < 25)
+	      {
+		$enemy1 = $db->SelectLimit("SELECT * FROM `monsters` WHERE `level`<=".$player->level." AND `location`='Ardulith' ORDER BY RAND()", 1);
+	      }
+	    elseif ($intRoll2 > 24 && $intRoll2 < 75)
+	      {
+		$enemy1 = $db->SelectLimit("SELECT * FROM `monsters` WHERE `level`<=".$player->level." AND `location`='Ardulith' ORDER BY `level` DESC", 1);
+	      }
+	    else
+	      {
+		$enemy1 = $db->SelectLimit("SELECT * FROM `monsters` WHERE `level`>=".$player->level." AND `location`='Ardulith' ORDER BY RAND()", 1);
+	      }
             $enemy = array("strength" => $enemy1 -> fields['strength'], "agility" => $enemy1 -> fields['agility'], "speed" => $enemy1 -> fields['speed'], "endurance" => $enemy1 -> fields['endurance'], "hp" => $enemy1 -> fields['hp'], "name" => $enemy1 -> fields['name'], "exp1" => $enemy1 -> fields['exp1'], "exp2" => $enemy1 -> fields['exp2'], "level" => $enemy1 -> fields['level']);
             $enemy1 -> Close();
         }

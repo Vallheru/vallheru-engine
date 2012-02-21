@@ -7,7 +7,7 @@
  *   @copyright            : (C) 2004,2005,2006,2007,2011,2012 Vallheru Team based on Gamers-Fusion ver 2.5
  *   @author               : thindil <thindil@vallheru.net>
  *   @version              : 1.5
- *   @since                : 24.01.2012
+ *   @since                : 21.02.2012
  *
  */
 
@@ -951,15 +951,35 @@ function fightmonster($enemy, $expgain, $goldgain, $times)
     {
         if ($player -> location == 'Góry') 
         {
-            $arrmonsters = array(2,3,6,7,16,17,22,23);
-            $rzut2 = rand(0,7);
-            $enemy1 = $db -> Execute("SELECT * FROM monsters WHERE id=".$arrmonsters[$rzut2]);
+	    $intRoll2 = rand(1, 100);
+	    if ($intRoll2 < 25)
+	      {
+		$enemy1 = $db->SelectLimit("SELECT * FROM `monsters` WHERE `level`<=".$player->level." AND `location`='Altara' ORDER BY RAND()", 1);
+	      }
+	    elseif ($intRoll2 > 24 && $intRoll2 < 75)
+	      {
+		$enemy1 = $db->SelectLimit("SELECT * FROM `monsters` WHERE `level`<=".$player->level." AND `location`='Altara' ORDER BY `level` DESC", 1);
+	      }
+	    else
+	      {
+		$enemy1 = $db->SelectLimit("SELECT * FROM `monsters` WHERE `level`>=".$player->level." AND `location`='Altara' ORDER BY RAND()", 1);
+	      }
         }
         if ($player -> location == 'Las') 
         {
-            $arrmonsters = array(1,4,11,13,14,19,22,28);
-            $rzut2 = rand(0,7);
-            $enemy1 = $db -> Execute("SELECT * FROM monsters WHERE id=".$arrmonsters[$rzut2]);
+	    $intRoll2 = rand(1, 100);
+	    if ($intRoll2 < 25)
+	      {
+		$enemy1 = $db->SelectLimit("SELECT * FROM `monsters` WHERE `level`<=".$player->level." AND `location`='Ardulith' ORDER BY RAND()", 1);
+	      }
+	    elseif ($intRoll2 > 24 && $intRoll2 < 75)
+	      {
+		$enemy1 = $db->SelectLimit("SELECT * FROM `monsters` WHERE `level`<=".$player->level." AND `location`='Ardulith' ORDER BY `level` DESC", 1);
+	      }
+	    else
+	      {
+		$enemy1 = $db->SelectLimit("SELECT * FROM `monsters` WHERE `level`>=".$player->level." AND `location`='Ardulith' ORDER BY RAND()", 1);
+	      }
         }
         $enemy = array("strength" => $enemy1 -> fields['strength'], 
                        "agility" => $enemy1 -> fields['agility'], 

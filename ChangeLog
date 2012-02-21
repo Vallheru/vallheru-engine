@@ -1,5 +1,7 @@
 2012-02-21  Bartek thindil Jasicki  <thindil@vallheru.net>
 
+	* FEATURE,includes/turnfight.php, includes/funkcje.php, explore.php: 
+	changed encounters in mountains and forest
 	* UPDATE,core.php:
 	added more info about cores
 

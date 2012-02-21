@@ -7,7 +7,7 @@
  *   @copyright            : (C) 2004,2005,2006,2011,2012 Vallheru Team based on Gamers-Fusion ver 2.5
  *   @author               : thindil <thindil@vallheru.net>
  *   @version              : 1.5
- *   @since                : 17.02.2012
+ *   @since                : 21.02.2012
  *
  */
  
@@ -37,7 +37,7 @@ require_once("includes/turnfight.php");
 /**
 * Get the localization for game
 */
-require_once("languages/".$player -> lang."/explore.php");
+require_once("languages/".$lang."/explore.php");
 
 if ($player -> location == 'Altara') 
 {
@@ -291,32 +291,32 @@ if (isset($_GET['action']) && $_GET['action'] == 'moutains' && $player -> locati
             $intAmount = rand(1,1000);
             $arrGold[0] = $arrGold[0] + $intAmount;
         }
-        if ($intRoll == 10) 
+        elseif ($intRoll == 10) 
         {
             $intAmount = rand(1,20);
             $intMeteor = $intMeteor + $intAmount;
         }
-        if ($intRoll >= 11 && $intRoll <= 13) 
+        elseif ($intRoll >= 11 && $intRoll <= 13) 
         {
             $intAmount = rand(1,10);
             $arrHerbs[0] = $arrHerbs[0] + $intAmount;
         }
-        if ($intRoll >= 14 && $intRoll <= 15) 
+        elseif ($intRoll >= 14 && $intRoll <= 15) 
         {
             $intAmount = rand(1,10);
             $arrHerbs[1] = $arrHerbs[1] + $intAmount;
         }
-        if ($intRoll == 16) 
+        elseif ($intRoll == 16) 
         {
             $intAmount = rand(1,10);
             $arrHerbs[2] = $arrHerbs[2] + $intAmount;
         }
-        if ($intRoll == 18) 
+        elseif ($intRoll == 18) 
         {
             $intAmount = rand(1,10);
             $arrHerbs[3] = $arrHerbs[3] + $intAmount;
         }
-        if ($intRoll == 19) 
+        elseif ($intRoll == 19) 
         {
             $intRoll2 = rand(1, 50);
             if ($intRoll2 == 50 && $objMaps -> fields['value'] > 0 && $player -> maps < 20 && $player -> rank != 'Bohater') 
@@ -326,7 +326,7 @@ if (isset($_GET['action']) && $_GET['action'] == 'moutains' && $player -> locati
                 $arrGold[1] ++;
             } 
         }
-        if ($intRoll == 20)
+        elseif ($intRoll == 20)
         {
             require_once('includes/findastral.php');
             $strResult = findastral(2);
@@ -335,11 +335,21 @@ if (isset($_GET['action']) && $_GET['action'] == 'moutains' && $player -> locati
                 $intAstral ++;
             }
         }
-        if ($intRoll > 5 && $intRoll < 9) 
-        {
-            $arrMonsters = array(2, 3, 6, 7, 15, 21, 23, 35, 40, 43, 47, 48, 49);
-            $intRoll2 = rand(0, 12);
-            $enemy = $db -> Execute("SELECT `name`, `id` FROM `monsters` WHERE `id`=".$arrMonsters[$intRoll2]);
+        elseif ($intRoll > 5 && $intRoll < 9) 
+	  {
+	    $intRoll2 = rand(1, 100);
+	    if ($intRoll2 < 25)
+	      {
+		$enemy = $db->SelectLimit("SELECT `name`, `id` FROM `monsters` WHERE `level`<=".$player->level." AND `location`='Altara' ORDER BY RAND()", 1);
+	      }
+	    elseif ($intRoll2 > 24 && $intRoll2 < 75)
+	      {
+		$enemy = $db->SelectLimit("SELECT `name`, `id` FROM `monsters` WHERE `level`<=".$player->level." AND `location`='Altara' ORDER BY `level` DESC", 1);
+	      }
+	    else
+	      {
+		$enemy = $db->SelectLimit("SELECT `name`, `id` FROM `monsters` WHERE `level`>=".$player->level." AND `location`='Altara' ORDER BY RAND()", 1);
+	      }
             $db -> Execute("UPDATE `players` SET `fight`=".$enemy -> fields['id']." WHERE `id`=".$player -> id);
             $strEnemy = YOU_MEET." ".$enemy -> fields['name'].FIGHT2."<br />
                <a href=\"explore.php?step=battle\">".YES."</a><br />
@@ -347,8 +357,8 @@ if (isset($_GET['action']) && $_GET['action'] == 'moutains' && $player -> locati
             $player -> fight = $enemy -> fields['id'];
             $enemy -> Close();
             break;
-        }
-        if ($intRoll == 17)
+	  }
+        elseif ($intRoll == 17)
         {
             $objBridge = $db -> Execute("SELECT `bridge` FROM `players` WHERE `id`=".$player -> id);
             if ($objBridge -> fields['bridge'] == 'N')
@@ -614,32 +624,32 @@ if (isset($_GET['action']) && $_GET['action'] == 'forest' && $player -> location
             $intGold = rand(1,1000);
             $arrGold[0] = $arrGold[0] + $intGold;
         }
-        if ($intRoll == 10) 
+        elseif ($intRoll == 10) 
         {
             $intEnergy = rand(1, 2);
             $arrGold[1] = $arrGold[1] + $intEnergy;
         }
-        if ($intRoll >= 11 && $intRoll <= 13) 
+        elseif ($intRoll >= 11 && $intRoll <= 13) 
         {
             $intHerb = rand(1,10);
             $arrHerbs[0] = $arrHerbs[0] + $intHerb;
         }
-        if ($intRoll >= 14 && $intRoll <= 15) 
+        elseif ($intRoll >= 14 && $intRoll <= 15) 
         {
             $intHerb = rand(1,10);
             $arrHerbs[1] = $arrHerbs[1] + $intHerb;
         }
-        if ($intRoll == 16) 
+        elseif ($intRoll == 16) 
         {
             $intHerb = rand(1,10);
             $arrHerbs[2] = $arrHerbs[2] + $intHerb;
         }
-        if ($intRoll == 17) 
+        elseif ($intRoll == 17) 
         {
             $intHerb = rand(1,10);
             $arrHerbs[3] = $arrHerbs[3] + $intHerb;
         }
-        if ($intRoll == 18) 
+        elseif ($intRoll == 18) 
         {
             $intRoll2 = rand(1, 50);
             if ($intRoll2 == 50 && $objMaps -> fields['value'] > 0 && $player -> maps < 20 && $player -> rank != 'Bohater') 
@@ -649,7 +659,7 @@ if (isset($_GET['action']) && $_GET['action'] == 'forest' && $player -> location
                 $arrGold[2] ++;
             } 
         }
-        if ($intRoll == 19)
+        elseif ($intRoll == 19)
         {
             require_once('includes/findastral.php');
             $strResult = findastral(2);
@@ -658,11 +668,21 @@ if (isset($_GET['action']) && $_GET['action'] == 'forest' && $player -> location
                 $intAstral ++;
             }
         }
-        if ($intRoll > 5 && $intRoll < 9) 
+        elseif ($intRoll > 5 && $intRoll < 9) 
         {
-            $arrMonsters = array(1 ,3 ,4 ,8 ,10 ,14 ,16 ,19 ,24 ,33 ,36 ,39 ,42 ,46 ,50, 56, 60, 62, 63, 66, 67, 69, 70, 77, 85, 86, 91, 94, 102);
-            $intRoll2 = rand(0,28);
-            $enemy = $db -> Execute("SELECT `name`, `id` FROM `monsters` WHERE `id`=".$arrMonsters[$intRoll2]);
+	    $intRoll2 = rand(1, 100);
+	    if ($intRoll2 < 25)
+	      {
+		$enemy = $db->SelectLimit("SELECT `name`, `id` FROM `monsters` WHERE `level`<=".$player->level." AND `location`='Ardulith' ORDER BY RAND()", 1);
+	      }
+	    elseif ($intRoll2 > 24 && $intRoll2 < 75)
+	      {
+		$enemy = $db->SelectLimit("SELECT `name`, `id` FROM `monsters` WHERE `level`<=".$player->level." AND `location`='Ardulith' ORDER BY `level` DESC", 1);
+	      }
+	    else
+	      {
+		$enemy = $db->SelectLimit("SELECT `name`, `id` FROM `monsters` WHERE `level`>=".$player->level." AND `location`='Ardulith' ORDER BY RAND()", 1);
+	      }
             $db -> Execute("UPDATE `players` SET `fight`=".$enemy -> fields['id']." WHERE `id`=".$player -> id);
             $strEnemy = YOU_MEET." ".$enemy -> fields['name'].FIGHT2."<br />
                <a href=\"explore.php?step=battle\">".YES."</a><br />
