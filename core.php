@@ -8,7 +8,7 @@
  *   @author               : thindil <thindil@vallheru.net>
  *   @author               : eyescream <tduda@users.sourceforge.net>
  *   @version              : 1.5
- *   @since                : 17.02.2012
+ *   @since                : 21.02.2012
  *
  */
 
@@ -122,7 +122,7 @@ if (isset($_GET['view']))
      */
     elseif ($_GET['view'] == 'breed')
       {
-	$objCoreMale = $db -> Execute("SELECT `corename`, `name`, `id` FROM `core` WHERE `owner`=".$player -> id." AND `gender`='M' AND `status`='Alive'");
+	$objCoreMale = $db -> Execute("SELECT * FROM `core` WHERE `owner`=".$player -> id." AND `gender`='M' AND `status`='Alive'");
 	$arrCoremale = array();
 	$arrCoremaleid = array();
 	$i = 0;
@@ -136,12 +136,13 @@ if (isset($_GET['view']))
 	      {
 		$arrCoremale[$i] = $objCoreMale -> fields['corename']." (".$objCoreMale -> fields['name'].")";
 	      }
+	    $arrCoremale[$i] .= ' Siła: '.$objCoreMale->fields['power'].' Obrona: '.$objCoreMale->fields['defense'];
 	    $arrCoremaleid[$i] = $objCoreMale -> fields['id'];
 	    $i ++;
 	    $objCoreMale -> MoveNext();
 	  }
 	$objCoreMale -> Close();
-	$objCoreFemale = $db -> Execute("SELECT `corename`, `name`, `id` FROM `core` WHERE `owner`=".$player -> id." AND `gender`='F' AND `status`='Alive'");
+	$objCoreFemale = $db -> Execute("SELECT * FROM `core` WHERE `owner`=".$player -> id." AND `gender`='F' AND `status`='Alive'");
 	$arrCorefemale = array();
 	$arrCorefemaleid = array();
 	$i = 0;
@@ -155,6 +156,7 @@ if (isset($_GET['view']))
 	      {
 		$arrCorefemale[$i] = $objCoreFemale -> fields['corename']." (".$objCoreFemale -> fields['name'].")";
 	      }
+	    $arrCorefemale[$i] .= ' Siła: '.$objCoreFemale->fields['power'].' Obrona: '.$objCoreFemale->fields['defense'];
 	    $arrCorefemaleid[$i] = $objCoreFemale -> fields['id'];
 	    $i ++;
 	    $objCoreFemale -> MoveNext();
@@ -1118,19 +1120,30 @@ if (isset($_GET['view']))
 	$smarty -> assign ("Trains", $player -> trains);
 	$arrname = array();
 	$arrcoreid = array();
-	$myc = $db -> Execute("SELECT `id`, `name`, `corename` FROM `core` WHERE `owner`=".$player -> id);
+	$myc = $db -> Execute("SELECT * FROM `core` WHERE `owner`=".$player -> id);
+	$i = 0;
 	while (!$myc -> EOF) 
 	  {
 	    if (!empty($myc -> fields['corename']))
 	      {
-		$arrname[] = $myc -> fields['corename']." (".$myc -> fields['name'].")";
+		$arrname[$i] = $myc -> fields['corename']." (".$myc -> fields['name'].")";
 	      }
 	    else
 	      {
-		$arrname[] = $myc -> fields['name'];
+		$arrname[$i] = $myc -> fields['name'];
 	      }
-	    $arrcoreid[] = $myc -> fields['id'];
+	    if ($myc->fields['gender'] == 'F')
+	      {
+		$arrname[$i] .= ' (Samica';
+	      }
+	    else
+	      {
+		$arrname[$i] .= ' (Samiec';
+	      }
+	    $arrname[$i] .= ' Siła: '.$myc->fields['power'].' Obrona: '.$myc->fields['defense'].')';
+	    $arrcoreid[$i] = $myc -> fields['id'];
 	    $myc -> MoveNext();
+	    $i++;
 	  }
 	$myc -> Close();
 	$smarty -> assign(array("Corename" => $arrname, 
@@ -1299,6 +1312,15 @@ if (isset($_GET['view']))
 		  {
 		    $arrname[$i] = $mc -> fields['name'];
 		  }
+	        if ($mc->fields['gender'] == 'F')
+		  {
+		    $arrname[$i] .= ' (Samica';
+		  }
+		else
+		  {
+		    $arrname[$i] .= ' (Samiec';
+		  }
+		$arrname[$i] .= ' Siła: '.$mc->fields['power'].' Obrona: '.$mc->fields['defense'].')';
 		$mc -> MoveNext();
 		$i = $i + 1;
 	      }
