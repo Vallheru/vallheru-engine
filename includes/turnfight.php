@@ -7,7 +7,7 @@
  *   @copyright            : (C) 2004,2005,2006,2007,2011,2012 Vallheru Team based on Gamers-Fusion ver 2.5
  *   @author               : thindil <thindil@vallheru.net>
  *   @version              : 1.5
- *   @since                : 21.02.2012
+ *   @since                : 22.02.2012
  *
  */
  
@@ -1189,7 +1189,7 @@ function castspell ($id,$boost,$eunik)
 			$ehp -= $intDamage;
 			$player->mana -= $mczar -> fields['poziom'];
 			$smarty->assign("Message", "<b>".$player -> user."</b> nie do końca opanowałeś zaklęcie, dlatego twój czar zadaje <b>".$intDamage."</b> obrażeń. (".$ehp." zostało)<br />");
-			$smarty->display('error.tpl');
+			$smarty->display('error1.tpl');
 		      }
 		    else
 		      {
@@ -1209,7 +1209,7 @@ function castspell ($id,$boost,$eunik)
 			$player->mana -= $mczar -> fields['poziom'];
 			$player->hp -= $intDamage;
 			$smarty->assign("Message", "<b>".$player -> user."</b> próbował rzucić zaklęcie, ale eksplodowało ono w rękach, raniąc jego oraz wroga. Traci przez to ".$intDamage." punktów życia (".$player->hp." zostało), <b>".$enemy['name']."</b> otrzymuje ".$intDamage." obrażeń (".$ehp." zostało)<br />");
-			$smarty->display('error.tpl');
+			$smarty->display('error1.tpl');
 			if ($player -> hp < 0)
 			  {
                             $player -> hp = 0;
