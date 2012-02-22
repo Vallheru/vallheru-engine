@@ -1,7 +1,9 @@
 <center><b>{$Pname}</b></center><br /><br /><br />{$Roleplay}<br /><br /><br />
 {$Info}:<br />
 {$OOC}<br /><br />
-<a href="mail.php?view=write&amp;to={$Vid}">{$Awrite}</a><br /><br />
+{if $Awrite != ""}
+    <a href="mail.php?view=write&amp;to={$Vid}">{$Awrite}</a><br /><br />
+{/if}
 <table width="100%">
     <tr>
         <td align="left"><a href="roleplay.php?view={$Previous}">{$Aprevious}</a></td>

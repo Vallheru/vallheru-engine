@@ -1,5 +1,7 @@
 2012-02-22  Bartek thindil Jasicki  <thindil@vallheru.net>
 
+	* BUG,templates/layout1/roleplay.tpl, templates/roleplay.tpl, roleplay.php: 
+	don't show link to write message on own profile
 	* BUG,includes/turnfight.php:
 	fixed typo
 

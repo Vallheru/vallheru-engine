@@ -4,10 +4,10 @@
  *   Roleplay profile
  *
  *   @name                 : roleplay.php                            
- *   @copyright            : (C) 2011 Vallheru Team based on Gamers-Fusion ver 2.5
+ *   @copyright            : (C) 2011,2012 Vallheru Team based on Gamers-Fusion ver 2.5
  *   @author               : thindil <thindil@vallheru.net>
  *   @version              : 1.5
- *   @since                : 27.12.2011
+ *   @since                : 22.02.2012
  *
  */
 
@@ -48,6 +48,15 @@ if (strlen($objProfile->fields['roleplay']) == 0)
     error("Ten gracz nie posiada profilu fabularnego.<a href");
   }
 
+if ($objProfile->fields['id'] == $player->id)
+  {
+    $strWrite = '';
+  }
+else
+  {
+    $strWrite = 'Napisz wiadomość';
+  }
+
 $objPrev = $db->Execute("SELECT `id` FROM `players` WHERE `id`<".$objProfile->fields['id']." AND `roleplay`!='' ORDER BY `id` DESC LIMIT 1");
 $intPrevious = $objPrev->fields['id'];
 $objPrev->Close();
@@ -71,7 +80,7 @@ $smarty->assign(array("Roleplay" => $objProfile->fields['roleplay'],
 		      "Vid" => $objProfile->fields['id'],
 		      "Anext" => 'Następny profil',
 		      "Aprevious" => 'Poprzedni profil',
-		      "Awrite" => 'Napisz wiadomość',
+		      "Awrite" => $strWrite,
 		      "Previous" => $intPrevious,
 		      "Pname" => $objProfile->fields['user'],
 		      "Next" => $intNext));
