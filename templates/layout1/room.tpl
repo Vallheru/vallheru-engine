@@ -53,7 +53,11 @@
 	</form><br />
 	<form method="post" action="room.php?step=admin&amp;action=npc">
 	    <input type="submit" value="{$Aadd}" /> {$Tnpc} <input type="text" name="npc" />
-	</form>
+	</form><br />
+	{$Trent}<br />
+	<form method="post" action="room.php?step=admin&amp;action=rent">
+	    <input type="submit" value="{$Arent}" /> {$Trent2} {html_options name=rent options=$Roptions} {$Trent3}
+	</form><br />
     </div>
     </div><br />
 {/if}

@@ -7,7 +7,7 @@
  *   @copyright            : (C) 2012 Vallheru Team based on Gamers-Fusion ver 2.5
  *   @author               : thindil <thindil@vallheru.net>
  *   @version              : 1.5
- *   @since                : 10.02.2012
+ *   @since                : 22.02.2012
  *
  */
 
@@ -69,6 +69,11 @@ if ($player->id == $objRoom->fields['owner'] || in_array($player->id, $arrOwners
 	$arrTalk = array('Ty', 'Opis');
 	$arrNPC = array();
       }
+    $arrRoptions = array('1' => '1 dzień za 100',
+			 '3' => '3 dni za 300',
+			 '7' => '7 dni za 700',
+			 '14' => '14 dni za 1400',
+			 '21' => '21 dni za 2100');
     $arrColors = array('aqua' => 'cyjan',
 		       'blue' => 'niebieski',
 		       'fuchsia' => 'fuksja',
@@ -86,6 +91,7 @@ if ($player->id == $objRoom->fields['owner'] || in_array($player->id, $arrOwners
     $smarty->assign(array('Akick' => 'Wyrzuć',
 			  'Ainv' => 'Zaproś',
 			  'Tid' => 'gracza o ID:',
+			  'Tid2' => 'gracza:',
 			  'Troom' => 'do pokoju.',
 			  'Froom' => 'z pokoju.',
 			  'Achange' => 'Zmień',
@@ -99,6 +105,10 @@ if ($player->id == $objRoom->fields['owner'] || in_array($player->id, $arrOwners
 			  'Toptions' => $arrTalk,
 			  'Tnpc' => 'imię NPC, które będziesz używał',
 			  'Tcolor' => 'kolor graczowi: ',
+			  'Arent' => 'Przedłuż',
+			  'Trent2' => 'wynajem pokoju o ',
+			  'Trent3' => 'sztuk złota.',
+			  'Roptions' => $arrRoptions,
 			  'Coptions' => $arrColors));
   }
 else
@@ -489,6 +499,30 @@ if (isset($_GET['step']))
 		message('success', 'Ustawiłeś(aś) graczowi o ID: '.$_POST['pid'].' kolor nicka.');
 	      }
 	    break;
+	    //Rent room for longer
+	  case 'rent':
+	    checkvalue($_POST['rent']);
+	    if (!in_array($_POST['rent'], array(1, 3, 7, 14, 21)))
+	      {
+		error('Zapomnij o tym.');
+	      }
+	    $intGold = $_POST['rent'] * 100;
+	    if ($player->credits < $intGold)
+	      {
+		message('error', 'Nie masz tyle sztuk złota przy sobie. Potrzebujesz '.$intGold.' sztuk złota.');
+	      }
+	    elseif ($_POST['rent'] + $objRoom->fields['days'] > 100)
+	      {
+		message('error', 'Nie możesz przedłużyć aż o tyle dni wynajęcia pokoju.');
+	      }
+	    else
+	      {
+		$db->Execute("UPDATE `rooms` SET `days`=`days`+".$_POST['rent']." WHERE `id`=".$player->room);
+		$db->Execute("UPDATE `players` SET `credits`=`credits`-".$intGold." WHERE `id`=".$player->id);
+		$objRoom->fields['days'] += $_POST['rent'];
+		message('success', 'Przedłużyłeś(aś) wynajem pokoju o '.$_POST['rent'].' dni.');
+	      }
+	    break;
 	  default:
 	    error('Zapomnij o tym.');
 	    break;
@@ -507,6 +541,7 @@ $smarty -> assign (array("Arefresh" => 'Odśwież',
 			 'Poptions' => $arrPlayers,
 			 'Tinroom' => '+ Osoby w pokoju',
 			 "Desc2" => htmltobbcode($objRoom->fields['desc']),
+			 'Trent' => 'Pokój będzie istniał jeszcze przez '.$objRoom->fields['days'].' dni.',
                          "Rank" => $player->rank));
 $smarty -> display ('room.tpl');
 $objRoom->Close();

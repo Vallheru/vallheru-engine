@@ -33,7 +33,7 @@
 	    <input type="submit" value="{$Ainv}" /> {$Tid} <input type="text" name="pid" size="5" /> {$Troom}
 	</form><br />
         <form method="post" action="room.php?step=admin&amp;action=remove">
-	    <input type="submit" value="{$Akick}" /> {$Tid} {html_options name=pid options=$Poptions} {$Froom}
+	    <input type="submit" value="{$Akick}" /> {$Tid2} {html_options name=pid options=$Poptions} {$Froom}
 	</form><br />
 	<form method="post" action="room.php?step=admin&amp;action=admin">
 	    <select name="action">
@@ -53,7 +53,11 @@
 	</form><br />
 	<form method="post" action="room.php?step=admin&amp;action=npc">
 	    <input type="submit" value="{$Aadd}" /> {$Tnpc} <input type="text" name="npc" />
-	</form>
+	</form><br />
+	{$Trent}<br />
+	<form method="post" action="room.php?step=admin&amp;action=rent">
+	    <input type="submit" value="{$Arent}" /> {$Trent2} {html_options name=rent options=$Roptions} {$Trent3}
+	</form><br />
     </div>
     </div><br />
 {/if}
