@@ -4,10 +4,10 @@
  *   Polish language for markets menu
  *
  *   @name                 : market.php                            
- *   @copyright            : (C) 2004,2005,2006,2011 Vallheru Team based on Gamers-Fusion ver 2.5
- *   @author               : thindil <thindil@tuxfamily.org>
- *   @version              : 1.4
- *   @since                : 10.10.2011
+ *   @copyright            : (C) 2004,2005,2006,2011,2012 Vallheru Team based on Gamers-Fusion ver 2.5
+ *   @author               : thindil <thindil@vallheru.net>
+ *   @version              : 1.5
+ *   @since                : 23.02.2012
  *
  */
 
@@ -70,7 +70,7 @@ if (isset($_GET['view']) && $_GET['view'] == 'myoferts')
     define("MIN6", "Kawałki meteorytu");
     define("MIN7", "Kryształów");
     define("MIN8", "Drewno sosnowe");
-    define("MIN9", "Sztabek brązu");
+    define("MIN9", "Sztabki brązu");
     define("MIN10", "Sztabki mosiądzu");
     define("MIN11", "Sztabki stali");
     define("MIN12", "Drewno z leszczyny");

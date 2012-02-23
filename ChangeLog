@@ -1,3 +1,8 @@
+2012-02-23  Bartek thindil Jasicki  <thindil@vallheru.net>
+
+	* BUG,languages/pl/market.php:
+	fixed typo
+
 2012-02-22  Bartek thindil Jasicki  <thindil@vallheru.net>
 
 	* FEATURE,templates/layout1/room.tpl, templates/room.tpl, room.php: 
