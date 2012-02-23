@@ -4,10 +4,10 @@
  *   Quest class - actions in quest
  *
  *   @name                 : quests_class.php                            
- *   @copyright            : (C) 2004,2005,2006,2011 Vallheru Team based on Gamers-Fusion ver 2.5
+ *   @copyright            : (C) 2004,2005,2006,2011,2012 Vallheru Team based on Gamers-Fusion ver 2.5
  *   @author               : thindil <thindil@vallheru.net>
  *   @version              : 1.5
- *   @since                : 12.12.2011
+ *   @since                : 23.02.2011
  *
  */
 
@@ -32,13 +32,12 @@
 /**
 * Get the localization for game
 */
-require_once("languages/".$player -> lang."/quests_class.php");
+require_once("languages/".$lang."/quests_class.php");
 
 class Quests 
 {
     var $number;
     var $location;
-    var $lang;
 
     /**
     * Class constructor - start quest and show first text, check for phishing
@@ -60,7 +59,7 @@ class Quests
         }
         if (!$action || $action == 'start') 
         {
-            $text = $db -> Execute("SELECT `text` FROM `quests` WHERE `qid`=".$number." AND `location`='".$location."' AND `name`='start' AND `lang`='".$player -> lang."'");
+            $text = $db -> Execute("SELECT `text` FROM `quests` WHERE `qid`=".$number." AND `location`='".$location."' AND `name`='start'");
             $smarty -> assign("Start", $text -> fields['text']);
             $text -> Close();
             $db -> Execute("UPDATE `players` SET `miejsce`='Podróż' WHERE `id`=".$player -> id);
@@ -80,7 +79,6 @@ class Quests
                                 "Addanswer" => ADD_ANSWER));
         $this -> number = $number;
         $this -> location = $location;
-        $this -> lang = $player -> lang;
     }
 
     /**
@@ -92,7 +90,7 @@ class Quests
         global $smarty;
 
         $name = "box".$num;
-        $box = $db -> Execute("SELECT text FROM quests WHERE qid=".$this -> number." AND location='".$this -> location."' AND name='".$name."' AND lang='".$this -> lang."'");
+        $box = $db -> Execute("SELECT text FROM quests WHERE qid=".$this -> number." AND location='".$this -> location."' AND name='".$name."'");
         $arrtext = array();
         $arroption = array();
         $i = 0;
@@ -121,7 +119,7 @@ class Quests
         global $city2;
 
         $db -> Execute("UPDATE `questaction` SET `action`='".$num."' WHERE `player`=".$player -> id." AND `quest`=".$this -> number);
-        $text = $db -> Execute("SELECT `text` FROM `quests` WHERE `qid`=".$this -> number." AND `location`='".$this -> location."' AND `name`='".$num."' AND `lang`='".$this -> lang."'");
+        $text = $db -> Execute("SELECT `text` FROM `quests` WHERE `qid`=".$this -> number." AND `location`='".$this -> location."' AND `name`='".$num."'");
         $arrSearch = array("city1a", "city1b", "city2", "city1");
         $arrReplace = array($city1a, $city1b, $city2, $city1);
         $strText = str_replace($arrSearch, $arrReplace, $text -> fields['text']);
@@ -140,6 +138,13 @@ class Quests
         global $city1;
 
         $db -> Execute("UPDATE `questaction` SET `action`='end' WHERE `player`=".$player -> id." AND `quest`=".$this -> number);
+	$intQuests = count(glob('quests/*.php'));
+	$objPlquests = $db->Execute("SELECT count(`id`) FROM `questaction` WHERE `player`=".$player->id." AND `action`='end'");
+	if ($intQuests == $objPlquests->fields['count(`id`)'])
+	  {
+	    $db->Execute("DELETE FROM `questaction` WHERE `player`=".$player->id);
+	  }
+	$objPlquests->Close();
         $db -> Execute("UPDATE `players` SET `miejsce`='Altara' WHERE `id`=".$player -> id);
         $gainexp = $exp * $player -> level;
         if ($exp > 0) 
@@ -249,7 +254,7 @@ class Quests
             $_POST['planswer'] = '';
         }
         $_POST['planswer'] = strip_tags($_POST['planswer']);
-        $ans = $db -> Execute("SELECT * FROM quests WHERE qid=".$this -> number." AND location='".$this -> location."' AND name='".$num."' AND lang='".$this -> lang."'");
+        $ans = $db -> Execute("SELECT * FROM quests WHERE qid=".$this -> number." AND location='".$this -> location."' AND name='".$num."'");
         if ($repeat == 'Y') 
         {
             $db -> Execute("UPDATE players SET temp=temp-1 WHERE id=".$player -> id);
@@ -264,7 +269,7 @@ class Quests
         {
             if (!empty($answfalse)) 
             {
-                $text = $db -> Execute("SELECT text FROM quests WHERE qid=".$this -> number." AND location='".$this -> location."' AND name='".$answfalse."' AND lang='".$this -> lang."'");
+                $text = $db -> Execute("SELECT text FROM quests WHERE qid=".$this -> number." AND location='".$this -> location."' AND name='".$answfalse."'");
                 $smarty -> assign("Link", $text -> fields['text']);
                 $text -> Close();
             }

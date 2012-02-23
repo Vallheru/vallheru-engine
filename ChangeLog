@@ -1,5 +1,7 @@
 2012-02-23  Bartek thindil Jasicki  <thindil@vallheru.net>
 
+	* FEATURE,class/quests_class.php: 
+	allow player go again on quests if he finish all
 	* BUG,kopalnia.php: 
 	fixed info about death in mine
 	* UPDATE,includes/funkcje.php, includes/turnfight.php, explore.php: 
