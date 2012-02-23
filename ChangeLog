@@ -1,5 +1,7 @@
 2012-02-23  Bartek thindil Jasicki  <thindil@vallheru.net>
 
+	* BUG,crafts.php:
+	don't allow player to work if he is dead
 	* BUG,languages/pl/market.php:
 	fixed typo
 

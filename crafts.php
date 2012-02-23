@@ -7,7 +7,7 @@
  *   @copyright            : (C) 2011,2012 Vallheru Team based on Gamers-Fusion ver 2.5
  *   @author               : thindil <thindil@vallheru.net>
  *   @version              : 1.5
- *   @since                : 08.02.2012
+ *   @since                : 23.02.2012
  *
  */
 
@@ -266,6 +266,10 @@ if (isset($_GET['step']))
 	if (!isset($_SESSION['craft']))
 	  {
 	    error('Zapomnij o tym.');
+	  }
+	if ($player->hp <= 0)
+	  {
+	    error("Nie możesz wykonywać zadań, ponieważ jesteś martwy.");
 	  }
 	$intIndex = intval($_GET['step']);
 	if ($intIndex < 0 || $intIndex > 2)
