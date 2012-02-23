@@ -7,7 +7,7 @@
  *   @copyright            : (C) 2004,2005,2006,2011,2012 Vallheru Team based on Gamers-Fusion ver 2.5
  *   @author               : thindil <thindil@vallheru.net>
  *   @version              : 1.5
- *   @since                : 21.02.2012
+ *   @since                : 22.02.2012
  *
  */
  
@@ -342,7 +342,7 @@ if (isset($_GET['action']) && $_GET['action'] == 'moutains' && $player -> locati
 	      {
 		$enemy = $db->SelectLimit("SELECT `name`, `id` FROM `monsters` WHERE `level`<=".$player->level." AND `location`='Altara' ORDER BY RAND()", 1);
 	      }
-	    elseif ($intRoll2 > 24 && $intRoll2 < 75)
+	    elseif ($intRoll2 > 24 && $intRoll2 < 90)
 	      {
 		$enemy = $db->SelectLimit("SELECT `name`, `id` FROM `monsters` WHERE `level`<=".$player->level." AND `location`='Altara' ORDER BY `level` DESC", 1);
 	      }
@@ -675,7 +675,7 @@ if (isset($_GET['action']) && $_GET['action'] == 'forest' && $player -> location
 	      {
 		$enemy = $db->SelectLimit("SELECT `name`, `id` FROM `monsters` WHERE `level`<=".$player->level." AND `location`='Ardulith' ORDER BY RAND()", 1);
 	      }
-	    elseif ($intRoll2 > 24 && $intRoll2 < 75)
+	    elseif ($intRoll2 > 24 && $intRoll2 < 90)
 	      {
 		$enemy = $db->SelectLimit("SELECT `name`, `id` FROM `monsters` WHERE `level`<=".$player->level." AND `location`='Ardulith' ORDER BY `level` DESC", 1);
 	      }

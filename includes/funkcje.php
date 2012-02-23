@@ -7,7 +7,7 @@
  *   @copyright            : (C) 2004,2005,2006,2007,2011,2012 Vallheru Team based on Gamers-Fusion ver 2.5
  *   @author               : thindil <thindil@vallheru.net>
  *   @version              : 1.5
- *   @since                : 21.02.2012
+ *   @since                : 23.02.2012
  *
  */
 
@@ -956,7 +956,7 @@ function fightmonster($enemy, $expgain, $goldgain, $times)
 	      {
 		$enemy1 = $db->SelectLimit("SELECT * FROM `monsters` WHERE `level`<=".$player->level." AND `location`='Altara' ORDER BY RAND()", 1);
 	      }
-	    elseif ($intRoll2 > 24 && $intRoll2 < 75)
+	    elseif ($intRoll2 > 24 && $intRoll2 < 90)
 	      {
 		$enemy1 = $db->SelectLimit("SELECT * FROM `monsters` WHERE `level`<=".$player->level." AND `location`='Altara' ORDER BY `level` DESC", 1);
 	      }
@@ -972,7 +972,7 @@ function fightmonster($enemy, $expgain, $goldgain, $times)
 	      {
 		$enemy1 = $db->SelectLimit("SELECT * FROM `monsters` WHERE `level`<=".$player->level." AND `location`='Ardulith' ORDER BY RAND()", 1);
 	      }
-	    elseif ($intRoll2 > 24 && $intRoll2 < 75)
+	    elseif ($intRoll2 > 24 && $intRoll2 < 90)
 	      {
 		$enemy1 = $db->SelectLimit("SELECT * FROM `monsters` WHERE `level`<=".$player->level." AND `location`='Ardulith' ORDER BY `level` DESC", 1);
 	      }

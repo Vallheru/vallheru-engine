@@ -1,5 +1,7 @@
 2012-02-23  Bartek thindil Jasicki  <thindil@vallheru.net>
 
+	* UPDATE,includes/funkcje.php, includes/turnfight.php, explore.php: 
+	changed chance for meet stronger enemy
 	* BUG,crafts.php:
 	don't allow player to work if he is dead
 	* BUG,languages/pl/market.php:
