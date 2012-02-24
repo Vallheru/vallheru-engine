@@ -185,14 +185,10 @@
             {/if}
         {/if}
         {if $Step2 == "add"}
-            <form method="post" action="house.php?action=my&amp;step=wardrobe&amp;step2=add&amp;step3=add"><table class="dark">
-            <tr><td colspan="2">{$Item}: <select name="przedmiot">
-            {section name=house2 loop=$Itemname1}
-                <option value="{$Itemid1[house2]}">({$Iamount3}: {$Itemamount1[house2]}) {$Itemname1[house2]}</option>
-            {/section}
-            </select> {$Amount2} <input type="text" name="amount" size="5" /></td></tr>
-            <tr><td colspan="2" align="center"><input type="submit" value="{$Ahide}" /></td></tr>
-            </table></form>
+	    <br />
+	    <form method="post" action="house.php?action=my&amp;step=wardrobe&amp;step2=add&amp;step3=add">
+	        <input type="submit" value="{$Ahide}" /> {$Item}: {html_options name=przedmiot options=$Ioptions} {$Amount2} <input type="text" name="amount" size="5" />
+            </form>
         {/if}
     {/if}
     {if $Step != "" && $Step2 != "sell"}

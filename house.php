@@ -5,10 +5,10 @@
  *
  *   @name                 : house.php                            
  *   @copyright            : (C) 2004,2005,2006,2007,2011,2012 Vallheru Team based on Gamers-Fusion ver 2.5
- *   @author               : thindil <thindil@tuxfamily.org>
+ *   @author               : thindil <thindil@vallheru.net>
  *   @author               : eyescream <tduda@users.sourceforge.net>
  *   @version              : 1.5
- *   @since                : 06.02.2012
+ *   @since                : 24.02.2012
  *
  */
 
@@ -488,14 +488,16 @@ if (isset ($_GET['action']) && $_GET['action'] == 'my')
             $smarty -> assign ("Bedroom", NO);
         }
         $unused = $house -> fields['build'] - $house -> fields['used'];
-        $amount = $db -> Execute("SELECT amount FROM equipment WHERE owner=".$player -> id." AND status='H'");
-        $items = 0;
-        while (!$amount -> EOF) 
-        {
-            $items = $items + $amount -> fields['amount'];
-            $amount -> MoveNext();
-        }
-        $amount -> Close();
+        $amount = $db -> Execute("SELECT SUM(`amount`) FROM `equipment` WHERE `owner`=".$player -> id." AND `status`='H' AND `location`='".$player->location."'") or die($db->ErrorMsg());
+	if (!$amount->fields['SUM(`amount`)'])
+	  {
+	    $intAmount = 0;
+	  }
+	else
+	  {
+	    $intAmount = $amount->fields['SUM(`amount`)'];
+	  }
+	$amount->Close();
         $smarty -> assign(array("Name" => $house -> fields['name'], 
                                 "Size" => $house -> fields['size'], 
                                 "Build" => $house -> fields['build'], 
@@ -503,7 +505,7 @@ if (isset ($_GET['action']) && $_GET['action'] == 'my')
                                 "Housename" => $homename, 
                                 "Unused" => $unused, 
                                 "Wardrobe" => $house -> fields['wardrobe'], 
-                                "Items" => $items,
+                                "Items" => $intAmount,
                                 "Houseinfo" => HOUSE_INFO,
                                 "Hname" => H_NAME,
                                 "Hsize" => H_SIZE,
@@ -774,13 +776,15 @@ if (isset ($_GET['action']) && $_GET['action'] == 'my')
         {
             error (NO_WARDROBE);
         }
-        $amount = $db -> Execute("SELECT `amount` FROM `equipment` WHERE `owner`=".$player -> id." AND `status`='H' AND location='".$player -> location."'");
-        $items = 0;
-        while (!$amount -> EOF) 
-        {
-            $items = $items + $amount -> fields['amount'];
-            $amount -> MoveNext();
-        }
+        $amount = $db -> Execute("SELECT SUM(`amount`) FROM `equipment` WHERE `owner`=".$player -> id." AND `status`='H' AND location='".$player -> location."'");
+	if (!$amount->fields['SUM(`amount`)'])
+	  {
+	    $items = 0;
+	  }
+	else
+	  {
+	    $items = $amount->fields['SUM(`amount`)'];
+	  }
         $amount -> Close();
         $smarty -> assign(array("Amount" => $items,
             "Wardrobe" => $house -> fields['wardrobe'],
@@ -961,45 +965,53 @@ if (isset ($_GET['action']) && $_GET['action'] == 'my')
          */
         if (isset ($_GET['step2']) && $_GET['step2'] == 'add') 
         {
-            $arritem = $db -> Execute("SELECT * FROM `equipment` WHERE `status`='U' AND `type`!='Q' AND `owner`=".$player -> id);
-            $arrname = array();
-            $arramount = array();
-            $arrid = array();
-            $i = 0;
-            while (!$arritem -> EOF) 
-            {
-	        switch ($arritem->fields['ptype'])
+            $item = $db -> Execute("SELECT * FROM `equipment` WHERE `status`='U' AND `type`!='Q' AND `owner`=".$player -> id);
+	    $arrItems = array();
+            while (!$item -> EOF) 
+	      {
+		switch ($item->fields['ptype'])
 		  {
 		  case 'D':
-		    $arritem->fields['name'] .= ' (Dynallca +'.$arritem->fields['poison'].')';
+		    $item->fields['name'] .= ' (Dynallca +'.$item->fields['poison'].')';
 		    break;
 		  case 'N':
-		    $arritem->fields['name'] .= ' (Nutari +'.$arritem->fields['poison'].')';
+		    $item->fields['name'] .= ' (Nutari +'.$item->fields['poison'].')';
 		    break;
 		  case 'I':
-		    $arritem->fields['name'] .= ' (Illani +'.$arritem->fields['poison'].')';
+		    $item->fields['name'] .= ' (Illani +'.$item->fields['poison'].')';
 		    break;
 		  default:
 		    break;
 		  }
-                $arrname[$i] = $arritem -> fields['name'];
-		if ($arritem->fields['type'] != 'R')
+		if ($item->fields['type'] != 'R')
 		  {
-		    $arramount[$i] = $arritem -> fields['amount'];
+		    $strAmount = $item->fields['amount'];
 		  }
 		else
 		  {
-		    $arramount[$i] = $arritem -> fields['wt'];
+		    $strAmount = $item->fields['wt'];
 		  }
-                $arrid[$i] = $arritem -> fields['id'];
-                $arritem -> MoveNext();
-                $i = $i + 1;
-            }
-            $arritem -> Close();
-            $smarty -> assign(array("Itemname1" => $arrname, 
-                "Itemamount1" => $arramount, 
-                "Itemid1" => $arrid,
-                "Item" => ITEM,
+		$strDur = '';
+		if ($item->fields['maxwt'] > 1)
+		  {
+		    $strDur = ' ('.$item->fields['wt'].'/'.$item->fields['maxwt'].' wt)';
+		  }
+		$strAgi = '';
+		$strSpeed = '';
+		if ($item->fields['zr'] != 0)
+		  {
+		    $strAgi = " (".($item->fields['zr'] * -1)." zr)";
+		  }
+		if ($item->fields['szyb'] != 0)
+		  {
+		    $strSpeed = " (".$item->fields['szyb']." szyb)";
+		  }
+		$arrItems[$item->fields['id']] = $item->fields['name']." (+".$item->fields['power'].")".$strAgi.$strSpeed.$strDur." (ilość: ".$strAmount.")";
+                $item -> MoveNext();
+	      }
+            $item -> Close();
+            $smarty -> assign(array("Ioptions" => $arrItems,
+                "Item" => "przedmiot",
                 "Iamount3" => I_AMOUNT3,
                 "Ahide" => A_HIDE,
                 "Amount2" => AMOUNT2));
