@@ -1,5 +1,7 @@
 2012-02-24  Bartek thindil Jasicki  <thindil@vallheru.net>
 
+	* UPDATE,templates/layout1/farm.tpl, templates/farm.tpl, languages/pl/farm.php, farm.php:
+	small redesign on farm
 	* UPDATE,house.php, templates/layout1/house.tpl, templates/house.tpl:
 	added info about items stats during adding items to house
 

@@ -4,10 +4,10 @@
  *   Polish language for farms
  *
  *   @name                 : farm.php                            
- *   @copyright            : (C) 2004,2005,2006,2011 Vallheru Team based on Gamers-Fusion ver 2.5
- *   @author               : thindil <thindil@tuxfamily.org>
- *   @version              : 1.4
- *   @since                : 30.09.2011
+ *   @copyright            : (C) 2004,2005,2006,2011,2012 Vallheru Team based on Gamers-Fusion ver 2.5
+ *   @author               : thindil <thindil@vallheru.net>
+ *   @version              : 1.5
+ *   @since                : 24.02.2012
  *
  */
 
@@ -74,11 +74,17 @@ if (isset($_GET['step']) && $_GET['step'] == 'house')
 
 if (isset($_GET['step']) && $_GET['step'] == 'plantation')
 {
-    define("FARM_INFO", "Witaj na plantacji. Tutaj możesz hodować różne zioła.");
     define("NO_PLANT", "Nie masz jeszcze plantacji - kup ziemię pod nią za 20 sztuk mithrilu");
     define("A_UPGRADE", "Rozbuduj plantację");
     define("A_SOW", "Idź zasiać zioła");
     define("A_CHOP", "Zbieraj zioła");
+    define("I_LANDS", "Obszarów farmy:");
+    define("I_GLASS", "Szklarni:");
+    define("I_IRRIGATION", "Systemów nawadniających:");
+    define("I_CREEPER", "Konstrukcji na pnącza:");
+    define("FREE_LANDS", "Wolnych obszarów:");
+    define("T_AGE", "wiek:");
+    define("FARM_INFO", "Witaj na plantacji. Tutaj możesz hodować różne zioła.");
     if (isset($_GET['action']) && $_GET['action'] == 'upgrade')
     {
         define("BUY_LAND", "Zakup obszar ziemi za");
@@ -87,7 +93,6 @@ if (isset($_GET['step']) && $_GET['step'] == 'plantation')
         define("BUY_IRRIGATION", "Zakup system nawadniania za");
         define("BUY_CREEPER", "Zakup konstrukcje na pnącza za");
         define("T_GOLDCOINS", "sztuk złota.");
-        define("UPGRADE_INFO", "Tutaj możesz dokupywać ziemie oraz wyposażenie do swojej farmy");
         if (isset($_GET['buy']))
         {
             define("NO_MITH", "Nie masz takiej ilości mithrilu!");
@@ -109,14 +114,9 @@ if (isset($_GET['step']) && $_GET['step'] == 'plantation')
         define("HERB2", "Illanias");
         define("HERB3", "Nutari");
         define("HERB4", "Dynallca");
-        define("I_LANDS", "Obszarów farmy:");
-        define("I_GLASS", "Szklarni:");
-        define("I_IRRIGATION", "Systemów nawadniających:");
-        define("I_CREEPER", "Konstrukcji na pnącza:");
         define("NO_FARM", "Nie masz farmy aby siać zioła");
         define("NO_SEEDS", "Nie masz nasion aby hodować zioła!");
         define("NO_LAND", "Nie masz wolnych obszarów na farmie!");
-        define("FREE_LANDS", "Wolnych obszarów:");
         if (isset($_GET['step2']) && $_GET['step2'] == 'next')
         {
             define("NO_FREE", "Nie masz tyle wolnych obszarów!");
@@ -133,7 +133,6 @@ if (isset($_GET['step']) && $_GET['step'] == 'plantation')
     {
         define("CHOP_INFO", "Tutaj możesz zbierać zioła które wcześniej zasiałeś na swojej farmie. Zebranie ziół z jednego pola kosztuje 0.2 energii. W zamian otrzymujesz 0.01 do umiejętności Zielarstwo. Zioła możesz zbierać już po jednym resecie od zasiania. Im dłużej będziesz je hodował tym więcej możesz ich zebrać. Jednak jeżeli zbyt długo będą hodowane, po prostu zwiędną. Poniżej znajduje się lista obecnie hodowanych na farmie ziół.");
         define("NO_HERBS", "Nie hodujesz jakichkolwiek ziół!");
-        define("T_AGE", "wiek:");
         define("NO_FARM", "Nie masz farmy aby zbierać zioła");
         if (isset($_GET['id']))
         {

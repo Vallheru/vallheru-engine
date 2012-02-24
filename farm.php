@@ -4,10 +4,10 @@
  *   Players farms - herbs
  *
  *   @name                 : farm.php                            
- *   @copyright            : (C) 2004,2005,2006,2011 Vallheru Team based on Gamers-Fusion ver 2.5
- *   @author               : thindil <thindil@tuxfamily.org>
- *   @version              : 1.4
- *   @since                : 20.10.2011
+ *   @copyright            : (C) 2004,2005,2006,2011,2012 Vallheru Team based on Gamers-Fusion ver 2.5
+ *   @author               : thindil <thindil@vallheru.net>
+ *   @version              : 1.5
+ *   @since                : 24.02.2012
  *
  */
 
@@ -52,6 +52,7 @@ if (!isset($_GET['step']))
                             "Ahouse" => A_HOUSE,
                             "Aencyclopedia" => A_ENCYCLOPEDIA));
     $_GET['step'] = '';
+    $_GET['action'] = '';
 }
 
 /**
@@ -157,7 +158,7 @@ if (isset($_GET['step']) && $_GET['step'] == 'house')
 	  {
 	    $strLast = "eś";
 	  }
-        $smarty -> assign("Message", YOU_MAKE.$intAmountherbs.T_HERB.$intAmountseeds.T_PACKS." Zdobył".$strLast." <b>".$fltSkill."</b> do umiejętności Zielarstwo oraz ".$intExp." PD.");
+        message("success", YOU_MAKE.$intAmountherbs.T_HERB.$intAmountseeds.T_PACKS." Zdobył".$strLast." <b>".$fltSkill."</b> do umiejętności Zielarstwo oraz ".$intExp." PD.");
     }
     $smarty -> assign(array("Houseinfo" => HOUSE_INFO,
                             "Adry" => A_DRY,
@@ -176,22 +177,18 @@ if (isset($_GET['step']) && $_GET['step'] == 'house')
  */
 if (isset($_GET['step']) && $_GET['step'] == 'plantation')
 {
-    $objPlantation = $db -> Execute("SELECT id, owner, lands, glasshouse, irrigation, creeper FROM farms WHERE owner=".$player -> id);
+    $objPlantation = $db -> Execute("SELECT * FROM `farms` WHERE `owner`=".$player -> id);
+    if ($objPlantation->fields['lands'])
+      {
+	$intLandsamount = $objPlantation -> fields['lands'];
+      }
+    else
+      {
+	$intLandsamount = '';
+      }
+    $smarty -> assign("Farminfo", FARM_INFO);
     if (!isset($_GET['action']))
     {
-        if (!$objPlantation -> fields['lands'])
-        {
-            $smarty -> assign("Aupgrade", NO_PLANT);
-            $intLandsamount = '';
-        }
-            else
-        {
-            $smarty -> assign(array("Aupgrade" => A_UPGRADE,
-                                    "Asow" => A_SOW,
-                                    "Achop" => A_CHOP));
-            $intLandsamount = $objPlantation -> fields['lands'];
-        }
-        $smarty -> assign("Farminfo", FARM_INFO);
         $_GET['action'] = '';
     }
 
@@ -203,25 +200,18 @@ if (isset($_GET['step']) && $_GET['step'] == 'plantation')
         if (!$objPlantation -> fields['lands'])
         {
             $intMithcost = 20;
-            $intLandsamount = '';
             $intGoldcost = 0;
         }
             else
         {
             $intMithcost = 20 * $objPlantation -> fields['lands'];
-            $intLandsamount = $objPlantation -> fields['lands'];
             $intGoldcost = 1000;
-            $smarty -> assign(array("Buyglass" => BUY_GLASS,
-                                    "Buyirrigation" => BUY_IRRIGATION,
-                                    "Buycreeper" => BUY_CREEPER));
         }
         $smarty -> assign(array("Tmith" => T_MITH,
                                 "Tgoldcoins" => T_GOLDCOINS,
-                                "Upgradeinfo" => UPGRADE_INFO,
                                 "Buyland" => BUY_LAND,
                                 "Buylandcost" => $intMithcost,
-                                "Tgoldcost" => $intGoldcost,
-                                "Message" => ''));
+                                "Tgoldcost" => $intGoldcost));
 
         /**
          * Buy land, glasshouse, irrigation etc
@@ -233,26 +223,34 @@ if (isset($_GET['step']) && $_GET['step'] == 'plantation')
             {
                 error(ERROR);
             }
+	    $strBuyitem = '';
             if ($_GET['buy'] == 'L')
             {
                 if ($player -> platinum < $intMithcost)
-                {
-                    error(NO_MITH);
-                }
-		if ($intLandsamount == 100)
 		  {
-		    error("Nie możesz dokupić większej ilości ziemi do farmy.");
+		    message('error', NO_MITH);
 		  }
-                if (!$objPlantation -> fields['lands'])
-                {
-                    $db -> Execute("INSERT INTO `farms` (`owner`, `lands`) VALUES(".$player -> id.", 1)");
-                }
+		elseif ($intLandsamount == 100)
+		  {
+		    message('error', "Nie możesz dokupić większej ilości ziemi do farmy.");
+		  }
+		else
+		  {
+		    if (!$objPlantation -> fields['lands'])
+		      {
+			$db -> Execute("INSERT INTO `farms` (`owner`, `lands`) VALUES(".$player -> id.", 1)");
+			$objPlantation = $db -> Execute("SELECT * FROM `farms` WHERE `owner`=".$player -> id);
+			$intLandsamount = $objPlantation -> fields['lands'];
+		      }
                     else
-                {
-                    $db -> Execute("UPDATE `farms` SET `lands`=`lands`+1 WHERE `id`=".$objPlantation -> fields['id']);
-                }
-                $db -> Execute("UPDATE players SET platinum=platinum-".$intMithcost." WHERE id=".$player -> id);
-                $strBuyitem = BUYING_LAND;
+		      {
+			$db -> Execute("UPDATE `farms` SET `lands`=`lands`+1 WHERE `id`=".$objPlantation -> fields['id']);
+			$objPlantation->fields['lands'] ++;
+			$intLandsamount ++;
+		      }
+		    $db -> Execute("UPDATE players SET platinum=platinum-".$intMithcost." WHERE id=".$player -> id);
+		    $strBuyitem = BUYING_LAND;
+		  }
             }
                 else
             {
@@ -270,8 +268,13 @@ if (isset($_GET['step']) && $_GET['step'] == 'plantation')
                 $db -> Execute("UPDATE players SET credits=credits-".$intGoldcost." WHERE id=".$player -> id);
                 $arrText = array(BUYING_GLASS, BUYING_IRRIGATION, BUYING_CREEPER);
                 $strBuyitem = $arrText[$intKey];
+		$objPlantation->fields[$arrItems[$intKey]]++;
             }
-            $smarty -> assign("Message", YOU_BUY.$strBuyitem);
+	    if ($strBuyitem != '')
+	      {
+		message("success", YOU_BUY.$strBuyitem);
+	      }
+	    $_GET['action'] = '';
         }
     }
 
@@ -284,14 +287,17 @@ if (isset($_GET['step']) && $_GET['step'] == 'plantation')
         {
             error(NO_FARM);
         }
-        $objUsedlands = $db -> Execute("SELECT `amount` FROM `farm` WHERE `owner`=".$player -> id);
-        $intUsedlands = 0;
-        while (!$objUsedlands -> EOF)
-        {
-            $intUsedlands = $intUsedlands + $objUsedlands -> fields['amount'];
-            $objUsedlands -> MoveNext();
-        }
-        $objUsedlands -> Close();
+	$objUsedlands = $db -> Execute("SELECT SUM(`amount`) FROM `farm` WHERE `owner`=".$player -> id);
+	if (!$objUsedlands->fields['SUM(`amount`)'])
+	  {
+	    $intUsedlands = 0;
+	  }
+	else
+	  {
+	    $intUsedlands = $objUsedlands->fields['SUM(`amount`)'];
+	  }
+	$objUsedlands -> Close();
+	$intFreelands = $objPlantation->fields['lands'] - $intUsedlands;
         if ($objPlantation -> fields['lands'] == $intUsedlands)
         {
             error(NO_LAND);
@@ -318,25 +324,13 @@ if (isset($_GET['step']) && $_GET['step'] == 'plantation')
                 $j++;
             }
         }
-        $intLandsamount = $objPlantation -> fields['lands'];
-        $intFreelands = $intLandsamount - $intUsedlands;
-        $smarty -> assign(array("Sawinfo" => SAW_INFO,
-                                "Ilands" => I_LANDS,
-                                "Iglass" => I_GLASS,
-                                "Iirrigation" => I_IRRIGATION,
-                                "Icreeper" => I_CREEPER,
+        $smarty -> assign(array("Farminfo" => SAW_INFO,
                                 "Asaw" => A_SAW,
                                 "Tlands" => T_LANDS,
                                 "Tamount" => T_AMOUNT,
-                                "Ifreelands" => FREE_LANDS,
-                                "Freelands" => $intFreelands,
                                 "Seedsname" => $arrSeedsaviable,
                                 "Seedsamount" => $arrSeedsamount,
-                                "Seedsoption" => $arrSeedsoption,
-                                "Glasshouse" => $objPlantation -> fields['glasshouse'],
-                                "Irrigation" => $objPlantation -> fields['irrigation'],
-                                "Creeper" => $objPlantation -> fields['creeper'],
-                                "Message" => ''));
+                                "Seedsoption" => $arrSeedsoption));
 
         /**
          * Start sow herbs
@@ -413,7 +407,7 @@ if (isset($_GET['step']) && $_GET['step'] == 'plantation')
             $db -> Execute("INSERT INTO farm (owner, amount, name, age) VALUES(".$player -> id.", ".$_POST['amount'].", '".$arrHerbsname[$intKey]."', 0)");
 	    checkexp($player->exp, $intExp, $player->level, $player->race, $player->user, $player->id, 0, 0, $player->id, 'herbalist', $fltAbility);
             $db -> Execute("UPDATE `players` SET `energy`=`energy`-".$intEnergy." WHERE `id`=".$player -> id);
-            $smarty -> assign("Message", YOU_SAW.$_POST['amount'].T_LANDS2.$arrHerbsname[$intKey].YOU_GAIN.$fltAbility.T_ABILITY." oraz ".$intExp." PD.");
+            message("success", YOU_SAW.$_POST['amount'].T_LANDS2.$arrHerbsname[$intKey].YOU_GAIN.$fltAbility.T_ABILITY." oraz ".$intExp." PD.");
         }
     }
 
@@ -431,31 +425,8 @@ if (isset($_GET['step']) && $_GET['step'] == 'plantation')
         {
             error(NO_HERBS);
         }
-        $intLandsamount = $objPlantation -> fields['lands'];
-        $arrHerbsname = array();
-        $arrHerbsid = array();
-        $arrHerbsamount = array();
-        $arrHerbsage = array();
-        $i = 0;
-        while (!$objHerbs -> EOF)
-        {
-            $arrHerbsname[$i] = $objHerbs -> fields['name'];
-            $arrHerbsid[$i] = $objHerbs -> fields['id'];
-            $arrHerbsamount[$i] = $objHerbs -> fields['amount'];
-            $arrHerbsage[$i] = $objHerbs -> fields['age'];
-            $i++;
-            $objHerbs -> MoveNext();
-        }
         $objHerbs -> Close();
-        $smarty -> assign(array("Chopinfo" => CHOP_INFO,
-                                "Tamount" => T_AMOUNT,
-                                "Tage" => T_AGE,
-                                "Message" => '',
-                                "Herbsname" => $arrHerbsname,
-                                "Herbsid" => $arrHerbsid,
-                                "Herbsamount" => $arrHerbsamount,
-                                "Herbsage" => $arrHerbsage,
-                                "Herbid" => 0));
+        $smarty -> assign(array("Farminfo" => CHOP_INFO));
         /**
          * Start gather
          */
@@ -549,24 +520,118 @@ if (isset($_GET['step']) && $_GET['step'] == 'plantation')
                 $db -> Execute("UPDATE `herbs` SET `".$arrHerbname[$intKey]."`=`".$arrHerbname[$intKey]."`+".$intAmount." WHERE `gracz`=".$player -> id);
 		checkexp($player->exp, $intExp, $player->level, $player->race, $player->user, $player->id, 0, 0, $player->id, 'herbalist', $fltAbility);
                 $db -> Execute("UPDATE `players` SET `energy`=`energy`-".$intEnergy." WHERE `id`=".$player -> id);
-                $smarty -> assign("Message", YOU_GATHER.$intAmount.T_AMOUNT2.$arrHerbname[$intKey].T_FARM.$fltAbility.T_ABILITY." oraz ".$intExp." PD");
+                message("success", YOU_GATHER.$intAmount.T_AMOUNT2.$arrHerbname[$intKey].T_FARM.$fltAbility.T_ABILITY." oraz ".$intExp." PD");
             }
             $objHerb -> Close();
         }
     }
 
-    $smarty -> assign(array("Action" => $_GET['action'],
-                            "Lands" => $intLandsamount));
+    $smarty -> assign("Lands", $intLandsamount);
+    if (!$objPlantation -> fields['lands'])
+      {
+	$smarty -> assign("Aupgrade", NO_PLANT);
+      }
+    else
+      {
+	$smarty -> assign("Asow", A_SOW);
+      }
     if ($objPlantation -> fields['id'])
-    {
+      {
+	$objUsedlands = $db -> Execute("SELECT SUM(`amount`) FROM `farm` WHERE `owner`=".$player -> id);
+	if (!$objUsedlands->fields['SUM(`amount`)'])
+	  {
+	    $intUsedlands = 0;
+	  }
+	else
+	  {
+	    $intUsedlands = $objUsedlands->fields['SUM(`amount`)'];
+	  }
+	$objUsedlands -> Close();
+	$intFreelands = $objPlantation->fields['lands'] - $intUsedlands;
+	$objHerbs = $db -> Execute("SELECT * FROM `farm` WHERE `owner`=".$player->id);
+	$arrHerbsname = array();
+        $arrHerbsid = array();
+        $arrHerbsamount = array();
+        $arrHerbsage = array();
+        while (!$objHerbs -> EOF)
+        {
+            $arrHerbsname[] = $objHerbs -> fields['name'];
+            $arrHerbsid[] = $objHerbs -> fields['id'];
+            $arrHerbsamount[] = $objHerbs -> fields['amount'];
+            $arrHerbsage[] = $objHerbs -> fields['age'];
+            $objHerbs -> MoveNext();
+        }
+	$objHerbs->Close();
+	if (count($arrHerbsid))
+	  {
+	    $strHerbs = 'Lista hodowanych ziół:';
+	  }
+	else
+	  {
+	    $strHerbs = 'Obecnie nic nie hodujesz na farmie.';
+	  }
+	if ($intLandsamount >= 100)
+	  {
+	    $strBuylands = '';
+	  }
+	else
+	  {
+	    $intMithcost = 20 * $objPlantation -> fields['lands'];
+	    $strBuylands = 'Dokup obszar ziemi za '.$intMithcost.' sztuk mithrilu.';
+	  }
+	if ($objPlantation->fields['glasshouse'] == $intLandsamount)
+	  {
+	    $strBuyglass = '';
+	  }
+	else
+	  {
+	    $strBuyglass = 'Dokup szklarnię za 1000 sztuk złota.';
+	  }
+	if ($objPlantation->fields['irrigation'] == $intLandsamount)
+	  {
+	    $strBuyirrigation = '';
+	  }
+	else
+	  {
+	    $strBuyirrigation = 'Dokup system nawadniający za 1000 sztuk złota.';
+	  }
+	if ($objPlantation->fields['creeper'] == $intLandsamount)
+	  {
+	    $strBuycreeper = '';
+	  }
+	else
+	  {
+	    $strBuycreeper = 'Dokup konstrukcję na pnącza za 1000 sztuk złota.';
+	  }
+	$smarty->assign(array("Ilands" => I_LANDS,
+			      "Iglass" => I_GLASS,
+			      "Iirrigation" => I_IRRIGATION,
+			      "Icreeper" => I_CREEPER,
+			      "Ifreelands" => FREE_LANDS,
+			      "Tamount" => T_AMOUNT,
+			      "Tage" => T_AGE,
+			      "Aland" => $strBuylands,
+			      "Aglass" => $strBuyglass,
+			      "Airrigation" => $strBuyirrigation,
+			      "Acreeper" => $strBuycreeper,
+			      "Therbs" => $strHerbs,
+			      "Freelands" => $intFreelands,
+			      "Herbsname" => $arrHerbsname,
+			      "Herbsid" => $arrHerbsid,
+			      "Herbsamount" => $arrHerbsamount,
+			      "Herbsage" => $arrHerbsage,
+			      "Glasshouse" => $objPlantation -> fields['glasshouse'],
+			      "Irrigation" => $objPlantation -> fields['irrigation'],
+			      "Creeper" => $objPlantation -> fields['creeper']));
         $objPlantation -> Close();
-    }
+      }
 }
 
 /**
 * Assign variable to template and display page
 */
 $smarty -> assign(array("Step" => $_GET['step'],
+			"Action" => $_GET['action'],
                         "Aback" => A_BACK));
 $smarty -> display ('farm.tpl');
 
