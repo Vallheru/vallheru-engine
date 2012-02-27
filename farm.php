@@ -7,7 +7,7 @@
  *   @copyright            : (C) 2004,2005,2006,2011,2012 Vallheru Team based on Gamers-Fusion ver 2.5
  *   @author               : thindil <thindil@vallheru.net>
  *   @version              : 1.5
- *   @since                : 24.02.2012
+ *   @since                : 27.02.2012
  *
  */
 
@@ -35,7 +35,7 @@ require_once("includes/head.php");
 /**
 * Get the localization for game
 */
-require_once("languages/".$player -> lang."/farm.php");
+require_once("languages/".$lang."/farm.php");
 
 if ($player -> location != 'Altara' && $player -> location != 'Ardulith') 
 {
@@ -198,20 +198,24 @@ if (isset($_GET['step']) && $_GET['step'] == 'plantation')
     if (isset($_GET['action']) && $_GET['action'] == 'upgrade')
     {
         if (!$objPlantation -> fields['lands'])
-        {
+	  {
             $intMithcost = 20;
-            $intGoldcost = 0;
-        }
-            else
-        {
-            $intMithcost = 20 * $objPlantation -> fields['lands'];
-            $intGoldcost = 1000;
-        }
+	  }
+	else
+	  {
+	    $intMithcost = 0;
+	    if (isset($_POST['lamount']))
+	      {
+		checkvalue($_POST['lamount']);
+		for ($i = 0; $i < $_POST['lamount']; $i++)
+		  {
+		    $intMithcost += 20 * ($objPlantation -> fields['lands'] + $i);
+		  }
+	      }
+	  }
         $smarty -> assign(array("Tmith" => T_MITH,
-                                "Tgoldcoins" => T_GOLDCOINS,
                                 "Buyland" => BUY_LAND,
-                                "Buylandcost" => $intMithcost,
-                                "Tgoldcost" => $intGoldcost));
+                                "Buylandcost" => $intMithcost));
 
         /**
          * Buy land, glasshouse, irrigation etc
@@ -230,7 +234,7 @@ if (isset($_GET['step']) && $_GET['step'] == 'plantation')
 		  {
 		    message('error', NO_MITH);
 		  }
-		elseif ($intLandsamount == 100)
+		elseif ($intLandsamount + $_POST['lamount'] > 100)
 		  {
 		    message('error', "Nie możesz dokupić większej ilości ziemi do farmy.");
 		  }
@@ -241,34 +245,40 @@ if (isset($_GET['step']) && $_GET['step'] == 'plantation')
 			$db -> Execute("INSERT INTO `farms` (`owner`, `lands`) VALUES(".$player -> id.", 1)");
 			$objPlantation = $db -> Execute("SELECT * FROM `farms` WHERE `owner`=".$player -> id);
 			$intLandsamount = $objPlantation -> fields['lands'];
+			$strBuyitem = ' nieco ziemi pod uprawę. Kosztowało to 20 sztuk mithrilu.';
 		      }
                     else
 		      {
-			$db -> Execute("UPDATE `farms` SET `lands`=`lands`+1 WHERE `id`=".$objPlantation -> fields['id']);
-			$objPlantation->fields['lands'] ++;
-			$intLandsamount ++;
+			$db -> Execute("UPDATE `farms` SET `lands`=`lands`+".$_POST['lamount']." WHERE `id`=".$objPlantation -> fields['id']);
+			$objPlantation->fields['lands'] += $_POST['lamount'];
+			$intLandsamount += $_POST['lamount'];
+			$strBuyitem = ' '.$_POST['lamount'].' obszar(ów) ziemi do plantacji. Kosztowało to '.$intMithcost.' sztuk mithrilu.';
 		      }
 		    $db -> Execute("UPDATE players SET platinum=platinum-".$intMithcost." WHERE id=".$player -> id);
-		    $strBuyitem = BUYING_LAND;
 		  }
             }
-                else
-            {
+	    else
+	      {
+		checkvalue($_POST[strtolower($_GET['buy']).'amount']);
+		$intGoldcost = $_POST[strtolower($_GET['buy']).'amount'] * 1000;
                 $arrItems = array('glasshouse', 'irrigation', 'creeper');
                 $intKey = array_search($_GET['buy'], $arrBuy) - 1;
                 if ($player -> credits < $intGoldcost)
-                {
-                    error(NO_MONEY);
-                }
-                if ($objPlantation -> fields['lands'] == $objPlantation -> fields[$arrItems[$intKey]])
-                {
-                    error(NO_LANDS);
-                }
-                $db -> Execute("UPDATE farms SET ".$arrItems[$intKey]."=".$arrItems[$intKey]."+1 WHERE owner=".$player -> id) or die($db -> ErrorMsg());
-                $db -> Execute("UPDATE players SET credits=credits-".$intGoldcost." WHERE id=".$player -> id);
-                $arrText = array(BUYING_GLASS, BUYING_IRRIGATION, BUYING_CREEPER);
-                $strBuyitem = $arrText[$intKey];
-		$objPlantation->fields[$arrItems[$intKey]]++;
+		  {
+		    message('error', NO_MONEY);
+		  }
+                elseif ($objPlantation -> fields['lands'] < ($objPlantation -> fields[$arrItems[$intKey]] + $_POST[strtolower($_GET['buy']).'amount']))
+		  {
+                    message('error', NO_LANDS);
+		  }
+		else
+		  {
+		    $db -> Execute("UPDATE farms SET ".$arrItems[$intKey]."=".$arrItems[$intKey]."+".$_POST[strtolower($_GET['buy']).'amount']." WHERE owner=".$player -> id) or die($db -> ErrorMsg());
+		    $db -> Execute("UPDATE players SET credits=credits-".$intGoldcost." WHERE id=".$player -> id);
+		    $arrText = array('szklarnię(i)', 'system(y) nawiadniający(e)', 'konstrukcję(i) na pnącza');
+		    $strBuyitem = ' '.$_POST[strtolower($_GET['buy']).'amount'].' '.$arrText[$intKey].'. Kosztowało to '.$intGoldcost.' sztuk złota.';
+		    $objPlantation->fields[$arrItems[$intKey]] += $_POST[strtolower($_GET['buy']).'amount'];
+		  }
             }
 	    if ($strBuyitem != '')
 	      {
@@ -576,8 +586,7 @@ if (isset($_GET['step']) && $_GET['step'] == 'plantation')
 	  }
 	else
 	  {
-	    $intMithcost = 20 * $objPlantation -> fields['lands'];
-	    $strBuylands = 'Dokup obszar ziemi za '.$intMithcost.' sztuk mithrilu.';
+	    $strBuylands = 'obszar(ów) ziemi za';
 	  }
 	if ($objPlantation->fields['glasshouse'] == $intLandsamount)
 	  {
@@ -585,7 +594,7 @@ if (isset($_GET['step']) && $_GET['step'] == 'plantation')
 	  }
 	else
 	  {
-	    $strBuyglass = 'Dokup szklarnię za 1000 sztuk złota.';
+	    $strBuyglass = 'szklarnię(e) za';
 	  }
 	if ($objPlantation->fields['irrigation'] == $intLandsamount)
 	  {
@@ -593,7 +602,7 @@ if (isset($_GET['step']) && $_GET['step'] == 'plantation')
 	  }
 	else
 	  {
-	    $strBuyirrigation = 'Dokup system nawadniający za 1000 sztuk złota.';
+	    $strBuyirrigation = 'system(y) nawadniający(e) za';
 	  }
 	if ($objPlantation->fields['creeper'] == $intLandsamount)
 	  {
@@ -601,7 +610,7 @@ if (isset($_GET['step']) && $_GET['step'] == 'plantation')
 	  }
 	else
 	  {
-	    $strBuycreeper = 'Dokup konstrukcję na pnącza za 1000 sztuk złota.';
+	    $strBuycreeper = 'konstrukcję(e) na pnącza za';
 	  }
 	$smarty->assign(array("Ilands" => I_LANDS,
 			      "Iglass" => I_GLASS,
@@ -610,6 +619,9 @@ if (isset($_GET['step']) && $_GET['step'] == 'plantation')
 			      "Ifreelands" => FREE_LANDS,
 			      "Tamount" => T_AMOUNT,
 			      "Tage" => T_AGE,
+			      "Abuy" => "Dokup",
+			      "Tmithcost" => 'sztuk mithrilu.',
+			      "Tgoldcost" => 'sztuk złota.',
 			      "Aland" => $strBuylands,
 			      "Aglass" => $strBuyglass,
 			      "Airrigation" => $strBuyirrigation,

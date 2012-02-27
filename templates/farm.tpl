@@ -29,11 +29,32 @@
 {if $Step == "plantation"}
     {$Farminfo}<br /><br />
     {if $Lands != ""}
-        {$Ilands} <b>{$Lands}</b> <a href="farm.php?step=plantation&amp;action=upgrade&amp;buy=L">{$Aland}</a><br />
-        {$Ifreelands} <b>{$Freelands}</b><br />
-        {$Iglass} <b>{$Glasshouse}</b> <a href="farm.php?step=plantation&amp;action=upgrade&amp;buy=G">{$Aglass}</a><br />
-        {$Iirrigation} <b>{$Irrigation}</b> <a href="farm.php?step=plantation&amp;action=upgrade&amp;buy=I">{$Airrigation}</a><br />
-        {$Icreeper} <b>{$Creeper}</b> <a href="farm.php?step=plantation&amp;action=upgrade&amp;buy=C">{$Acreeper}</a><br /><br />
+        <script src="js/farm.js"></script>
+        <form method="post" action="farm.php?step=plantation&amp;action=upgrade&amp;buy=L">
+            {$Ilands} <b>{$Lands}</b> 
+	    {if $Aland != ''}
+	        <input type="submit" value="{$Abuy}" /> <input type="text" name="lamount" id="lamount" size="5" value="0" onChange="checkcost('{$Lands}', 'l', '0')"/> {$Aland} <span id="lcost">0</span> {$Tmithcost}
+	    {/if}
+	</form>
+        {$Ifreelands} <b>{$Freelands}</b><br /> 
+	<form method="post" action="farm.php?step=plantation&amp;action=upgrade&amp;buy=G">
+	    {$Iglass} <b>{$Glasshouse}</b>
+	    {if $Aglass != ''}
+	        <input type="submit" value="{$Abuy}" /> <input type="text" name="gamount" id="gamount" size="5" value="0" onChange="checkcost('{$Lands}', 'g', '{$Glasshouse}')"/> {$Aglass} <span id="gcost">0</span> {$Tgoldcost}
+	    {/if}
+	</form>
+	<form method="post" action="farm.php?step=plantation&amp;action=upgrade&amp;buy=I">
+	    {$Iirrigation} <b>{$Irrigation}</b>
+	    {if $Airrigation != ''}
+	        <input type="submit" value="{$Abuy}" /> <input type="text" name="iamount" id="iamount" size="5" value="0" onChange="checkcost('{$Lands}', 'i', '{$Irrigation}')"/> {$Airrigation} <span id="icost">0</span> {$Tgoldcost}
+	    {/if}
+	</form>
+	<form method="post" action="farm.php?step=plantation&amp;action=upgrade&amp;buy=C">
+	    {$Icreeper} <b>{$Creeper}</b>
+	    {if $Acreeper != ''}
+	        <input type="submit" value="{$Abuy}" /> <input type="text" name="camount" id="camount" size="5" value="0" onChange="checkcost('{$Lands}', 'c', '{$Creeper}')"/> {$Acreeper} <span id="ccost">0</span> {$Tgoldcost}
+	    {/if}
+	</form><br />
 	{$Therbs}
 	<ul>
 	{section name=farm3 loop=$Herbsname}
