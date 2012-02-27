@@ -558,21 +558,41 @@ if (isset($_GET['step']) && $_GET['step'] == 'plantation')
 	  }
 	$objUsedlands -> Close();
 	$intFreelands = $objPlantation->fields['lands'] - $intUsedlands;
-	$objHerbs = $db -> Execute("SELECT * FROM `farm` WHERE `owner`=".$player->id);
-	$arrHerbsname = array();
-        $arrHerbsid = array();
-        $arrHerbsamount = array();
-        $arrHerbsage = array();
-        while (!$objHerbs -> EOF)
-        {
-            $arrHerbsname[] = $objHerbs -> fields['name'];
-            $arrHerbsid[] = $objHerbs -> fields['id'];
-            $arrHerbsamount[] = $objHerbs -> fields['amount'];
-            $arrHerbsage[] = $objHerbs -> fields['age'];
-            $objHerbs -> MoveNext();
-        }
-	$objHerbs->Close();
-	if (count($arrHerbsid))
+	$arrHerbs = $db->GetAll("SELECT * FROM `farm` WHERE `owner`=".$player->id);
+	foreach ($arrHerbs as &$arrHerb)
+	  {
+	    $arrHerb['stage'] = 'test';
+	    $arrAge = array(0, 1, 2, 2, 3, 3, 4, 4, 5, 6, 7, 8, 9, 10, 10, 10, 10, 9, 8, 7, 6, 5, 4, 3, 2, 1);
+	    if ($arrHerb['age'] < 2)
+	      {
+		$arrHerb['stage'] = '(zasiana)';
+	      }
+	    elseif ($arrHerb['age'] > 1 && $arrHerb['age'] < 7)
+	      {
+		$arrHerb['stage'] = '(sadzonka)';
+	      }
+	    elseif ($arrHerb['age'] > 6 && $arrHerb['age'] < 11)
+	      {
+		$arrHerb['stage'] = '(młoda roślina)';
+	      }
+	    elseif ($arrHerb['age'] > 10 && $arrHerb['age'] < 14)
+	      {
+		$arrHerb['stage'] = '(rozkwita)';
+	      }
+	    elseif ($arrHerb['age'] > 13 && $arrHerb['age'] < 18)
+	      {
+		$arrHerb['stage'] = '(gotowa do zebrania)';
+	      }
+	    elseif ($arrHerb['age'] > 17 && $arrHerb['age'] < 23)
+	      {
+		$arrHerb['stage'] = '(przekwita)';
+	      }
+	    elseif ($arrHerb['age'] > 22)
+	      {
+		$arrHerb['stage'] = '(zwiędła)';
+	      }
+	  }
+	if (count($arrHerbs))
 	  {
 	    $strHerbs = 'Lista hodowanych ziół:';
 	  }
@@ -628,10 +648,7 @@ if (isset($_GET['step']) && $_GET['step'] == 'plantation')
 			      "Acreeper" => $strBuycreeper,
 			      "Therbs" => $strHerbs,
 			      "Freelands" => $intFreelands,
-			      "Herbsname" => $arrHerbsname,
-			      "Herbsid" => $arrHerbsid,
-			      "Herbsamount" => $arrHerbsamount,
-			      "Herbsage" => $arrHerbsage,
+			      "Herbs" => $arrHerbs,
 			      "Glasshouse" => $objPlantation -> fields['glasshouse'],
 			      "Irrigation" => $objPlantation -> fields['irrigation'],
 			      "Creeper" => $objPlantation -> fields['creeper']));

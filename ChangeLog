@@ -1,5 +1,7 @@
 2012-02-27  Bartek thindil Jasicki  <thindil@vallheru.net>
 
+	* UPDATE,templates/layout1/farm.tpl, templates/farm.tpl. farm.php:
+	added info about plant state
 	* FEATURE,templates/layout1/farm.tpl, templates/farm.tpl, js/farm.js, farm.php:
 	added option to buy few lands/updates to plantations
 

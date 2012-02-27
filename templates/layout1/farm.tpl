@@ -57,8 +57,8 @@
 	</form><br />
 	{$Therbs}
 	<ul>
-	{section name=farm3 loop=$Herbsname}
-            <li><a href="farm.php?step=plantation&amp;action=chop&amp;id={$Herbsid[farm3]}">{$Herbsname[farm3]}</a> {$Tamount} {$Herbsamount[farm3]} {$Tage} {$Herbsage[farm3]}</li>
+	{section name=farm3 loop=$Herbs}
+            <li><a href="farm.php?step=plantation&amp;action=chop&amp;id={$Herbs[farm3].id}">{$Herbs[farm3].name}</a> {$Tamount} {$Herbs[farm3].amount} {$Tage} {$Herbs[farm3].age} {$Herbs[farm3].stage}</li>
         {/section}
 	</ul>
     {/if}
