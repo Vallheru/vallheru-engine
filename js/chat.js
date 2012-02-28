@@ -6,7 +6,7 @@
  *   @copyright            : (C) 2012 Vallheru Team based on Gamers-Fusion ver 2.5
  *   @author               : thindil <thindil@vallheru.net>
  *   @version              : 1.5
- *   @since                : 16.02.2012
+ *   @since                : 28.02.2012
  *
  */
 
@@ -28,7 +28,7 @@
 //
 // $Id$
 
-function showChat()
+function showChat(intBottom)
 {
     if (window.XMLHttpRequest)
     {
@@ -43,6 +43,10 @@ function showChat()
 	if (xmlhttp.readyState == 4 && xmlhttp.status == 200)
 	{
 	    document.getElementById("chatmsgs").innerHTML = xmlhttp.responseText;
+	    if (window.location.search == '?action=chat' && parseInt(intBottom) == 1)
+	    {
+		window.scrollTo(0,document.body.scrollHeight);
+	    }
 	}
     }
     xmlhttp.open("GET","chatmsgs.php", true);
@@ -52,8 +56,8 @@ function showChat()
 function refreshChat()
 {
     document.forms['chat'].elements['msg'].focus();
-    showChat();
-    setInterval("showChat()", 3000);
+    showChat('1');
+    setInterval("showChat('0')", 3000);
 }
 
 function sendMsg(evt)
@@ -104,7 +108,7 @@ function formatText(button)
 	insertAtCursor(document.forms['chat'].elements['msg'], "**");
 	break;
     default:
-	if(!isNaN(parseInt(userAge)))
+	if(!isNaN(parseInt(button)))
 	{
 	    insertAtCursor(document.forms['chat'].elements['msg'], button+"=");
 	}

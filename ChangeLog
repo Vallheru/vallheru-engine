@@ -1,5 +1,7 @@
 2012-02-28  Bartek thindil Jasicki  <thindil@vallheru.net>
 
+	* BUG,js/chat.js: 
+	fixed few bugs in chat
 	* UPDATE,templates/layout1/chat.tpl, templates/chat.tpl, js/chat.js, chat.php:
 	small changes in rent room form
 	* UPDATE,includes/revent.php:
