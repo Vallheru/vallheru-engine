@@ -8,7 +8,7 @@
  *   @author               : thindil <thindil@vallheru.net>
  *   @author               : eyescream <tduda@users.sourceforge.net>
  *   @version              : 1.5
- *   @since                : 15.02.2012
+ *   @since                : 28.02.2012
  *
  */
 
@@ -285,9 +285,10 @@ if (isset($_GET['room']))
   {
     $blnValid = TRUE;
     checkvalue($_POST['room']);
-    if (!in_array($_POST['room'], array(1, 3, 7, 14, 21)))
+    if ($_POST['room'] > 100)
       {
-	error('Zapomnij o tym.');
+	$blnValid = FALSE;
+	message('error', 'Możesz wynająć pokój maksymalnie na 100 dni.');
       }
     $intGold = $_POST['room'] * 100;
     if ($player->credits < $intGold)
@@ -331,11 +332,7 @@ if ($player -> rank == 'Admin' || $player -> rank == 'Karczmarka')
 $smarty -> assign (array("Arefresh" => A_REFRESH,
 			 'Arent' => 'Wynajmij',
 			 'Troom' => 'pokój na',
-			 'Roptions' => array(1 => 'dzień za 100',
-					     3 => '3 dni za 300',
-					     7 => '7 dni za 700',
-					     14 => '14 dni za 1400',
-					     21 => '21 dni za 2100'),
+			 "Tfor" => 'dni za',
 			 'Tgold' => 'sztuk złota.',
                          "Asend" => A_SEND,
                          "Inn" => INN,

@@ -16,7 +16,7 @@
 
 <div align="center"><br /><br /><br />
 <form method="post" action="chat.php?room">
-    <input type="submit" value="{$Arent}" /> {$Troom} {html_options name=room options=$Roptions} {$Tgold}
+    <input type="submit" value="{$Arent}" /> {$Troom} <input type="text" name="room" id="room" size="5" value="0" onChange="checkCost()" /> {$Tfor} <span id="rcost">0</span> {$Tgold}
 </form>
 </div>
 

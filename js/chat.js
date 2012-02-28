@@ -112,4 +112,22 @@ function formatText(button)
     }
 }
 
+function checkCost()
+{
+    var intValue = document.getElementById("room").value;
+    if((parseFloat(intValue) == parseInt(intValue)) && !isNaN(intValue) && (parseInt(intValue) > 0))
+    {
+	if (parseInt(intValue) > 100)
+	{
+	    intValue = 100;
+	}
+	var intCost = intValue * 100;
+	document.getElementById("rcost").innerHTML = Math.round(intCost);
+    }
+    else
+    {
+	document.getElementById("rcost").innerHTML = "0";
+    }
+}
+
 window.onload = refreshChat;
