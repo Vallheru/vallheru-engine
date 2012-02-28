@@ -7,7 +7,7 @@
  *   @copyright            : (C) 2011,2012 Vallheru Team based on Gamers-Fusion ver 2.5
  *   @author               : thindil <thindil@vallheru.net>
  *   @version              : 1.5
- *   @since                : 09.01.2012
+ *   @since                : 28.02.2012
  *
  */
 
@@ -65,7 +65,7 @@ if ($player->revent == 0)
 	$intRoll = rand(1, 100);
 	if ($intRoll < 51)
 	  {
-	    $strMessage .= '<br /><br />Tymczasem Staruszek uważnie cie obserwuje i po chwili odchodzi mrucząc pod nosem coś o dzisiejszej młodzieży. Najwyraźniej twój wygląd nie wzbudził jego zaufania. Może już czas na kąpiel?';
+	    $strMessage .= '<br /><br />Tymczasem Staruszek uważnie cie obserwuje i po chwili odchodzi mrucząc pod nosem coś o dzisiejszej młodzieży. Najwyraźniej twój wygląd nie wzbudził jego zaufania. Może już czas na kąpiel?<br /><br /><a href="'.$_SERVER['PHP_SELF'].'">Wróć</a>';
 	    $intTime = rand(7, 18);
 	    $db->Execute("UPDATE `revent` SET `state`=5, `qtime`=".$intTime." WHERE `pid`=".$player->id);
 	  }
@@ -148,7 +148,7 @@ if ($player->revent == 0)
 	  }
 	else
 	  {
-	    $strMessage .= '- Może w czymś pomóc? - pytasz.<br />Czujesz na sobie nieprzychylny wzrok istoty.<br />- Komnaty królewsskie. Którędy?<br />Nieco zdziwion'.$strSuffix.' pytaniem wskazujesz kierunek. Indywiduum czym prędzej znika w mroku, a tobie pozostaje tylko poczucie nie do końca dobrze spełnionego obowiązku.';
+	    $strMessage .= '- Może w czymś pomóc? - pytasz.<br />Czujesz na sobie nieprzychylny wzrok istoty.<br />- Komnaty królewsskie. Którędy?<br />Nieco zdziwion'.$strSuffix.' pytaniem wskazujesz kierunek. Indywiduum czym prędzej znika w mroku, a tobie pozostaje tylko poczucie nie do końca dobrze spełnionego obowiązku.<br /><br /><a href="'.$_SERVER['PHP_SELF'].'">Wróć</a>';
 	    $db->Execute("UPDATE `players` SET `perception`=`perception`+0.01 WHERE `id`=".$player->id);
 	    $intTime = rand(7, 18);
 	    $db->Execute("INSERT INTO `revent` (`pid`, `state`, `qtime`, `location`) VALUES(".$player->id.", 5, ".$intTime.", '')") or die($db->ErrorMsg());
@@ -174,13 +174,13 @@ elseif ($player->revent == 1 || $player->revent == 6)
 	  $intMoneys = rand(10, 100);
 	  if ($player->credits < $intMoneys)
 	    {
-	      $strMessage = 'Orientujesz się, że nie masz przy sobie zbyt wielu pieniędzy aby dać coś żebrakowi. Machasz na wszystko ręką i idziesz dalej.';
+	      $strMessage = 'Orientujesz się, że nie masz przy sobie zbyt wielu pieniędzy aby dać coś żebrakowi. Machasz na wszystko ręką i idziesz dalej.<br /><br /><a href="'.$_SERVER['PHP_SELF'].'">Wróć</a>';
 	      $intTime = rand(7, 18);
 	      $db->Execute("UPDATE `revent` SET `state`=5, `qtime`=".$intTime." WHERE `pid`=".$player->id);
 	    }
 	  else
 	    {
-	      $strMessage = 'Wspomagasz inwalidę wojennego '.$intMoneys.' sztukami złota. Zadowolony weteran dziękuje i przysięga dozgonną wdzięczność.';
+	      $strMessage = 'Wspomagasz inwalidę wojennego '.$intMoneys.' sztukami złota. Zadowolony weteran dziękuje i przysięga dozgonną wdzięczność.<br /><br /><a href="'.$_SERVER['PHP_SELF'].'">Wróć</a>';
 	      $db->Execute("UPDATE `players` SET `credits`=`credits`-".$intMoneys." WHERE `id`=".$player->id);
 	      $intTime = rand(3, 9);
 	      $db->Execute("UPDATE `revent` SET `state`=7, `qtime`=".$intTime." WHERE `pid`=".$player->id);
@@ -200,7 +200,7 @@ elseif ($player->revent == 1 || $player->revent == 6)
 	      $strCity = $city1;
 	    }
 	  $intKey = array_rand($arrLocs);
-	  $strMessage = 'Wyraźnie ucieszony, staruszek wręcza tobie sporych rozmiarów sakiewkę.<i>Dziękuję dziecko, proszę dostarcz to jak najszybciej do mojego przyjaciela w '.$strTarget.'. Najczęściej przebywa on w lokacji: '.$arrLocs[$intKey].'</i><br />Nucąc coś pod nosem, staruszek odchodzi.';
+	  $strMessage = 'Wyraźnie ucieszony, staruszek wręcza tobie sporych rozmiarów sakiewkę.<i>Dziękuję dziecko, proszę dostarcz to jak najszybciej do mojego przyjaciela w '.$strTarget.'. Najczęściej przebywa on w lokacji: '.$arrLocs[$intKey].'</i><br />Nucąc coś pod nosem, staruszek odchodzi.<br /><br /><a href="'.$_SERVER['PHP_SELF'].'">Wróć</a>';
 	  $intTime = rand(2, 5);
 	  $db->Execute("UPDATE `revent` SET `state`=2, `qtime`=".$intTime.", `location`='".$strCity.";".$arrLocs[$intKey]."' WHERE `pid`=".$player->id);
 	  $db->Execute("INSERT INTO `equipment` (`owner`, `name`, `type`, `cost`) VALUES (".$player->id.", 'Solidna sakiewka', 'Q', 10000)") or die($db->ErrorMsg());
@@ -211,11 +211,11 @@ elseif ($player->revent == 1 || $player->revent == 6)
 	  $db->Execute("UPDATE `revent` SET `state`=5, `qtime`=".$intTime." WHERE `pid`=".$player->id);
 	  if ($player->revent == 6)
 	    {
-	      $strMessage = '(przeganiasz Staruszka, który, wyraźnie smutny, odchodzi)';
+	      $strMessage = '(przeganiasz Staruszka, który, wyraźnie smutny, odchodzi)<br /><br /><a href="'.$_SERVER['PHP_SELF'].'">Wróć</a>';
 	    }
 	  else
 	    {
-	      $strMessage = 'Mrucząc coś pod nosem o niewychowanej dzisiejszej młodzieży staruszek odchodzi.';
+	      $strMessage = 'Mrucząc coś pod nosem o niewychowanej dzisiejszej młodzieży staruszek odchodzi.<br /><br /><a href="'.$_SERVER['PHP_SELF'].'">Wróć</a>';
 	    }
 	}
     }
@@ -233,7 +233,7 @@ elseif ($player->revent == 2)
       {
 	$strSuffix = 'aś';
       }
-  $strMessage = 'Widzisz niemal identycznie wyglądającego staruszka, jak ten, który podarował tobie sakiewkę. Kiedy do niego podchodzisz, uśmiecha się wesoło do Ciebie.<br /><i>Witaj, cieszę się, że już tutaj dotarł'.$strSuffix.'. Ach, to moja sakiewka!</i> Szybko bierze od ciebie przedmiot. <i>Dziękuję bardzo, oto nieco złota za twoją fatygę.</i> Daje tobie parę sztuk złota i szybko odchodzi.';
+  $strMessage = 'Widzisz niemal identycznie wyglądającego staruszka, jak ten, który podarował tobie sakiewkę. Kiedy do niego podchodzisz, uśmiecha się wesoło do Ciebie.<br /><i>Witaj, cieszę się, że już tutaj dotarł'.$strSuffix.'. Ach, to moja sakiewka!</i> Szybko bierze od ciebie przedmiot. <i>Dziękuję bardzo, oto nieco złota za twoją fatygę.</i> Daje tobie parę sztuk złota i szybko odchodzi.<br /><br /><a href="'.$_SERVER['PHP_SELF'].'">Wróć</a>';
   $db->Execute("UPDATE `players` SET `credits`=`credits`+1000 WHERE `id`=".$player->id);
   $db->Execute("DELETE FROM `equipment` WHERE `name`='Solidna sakiewka' AND `type`='Q' AND `owner`=".$player->id);
   $intTime = rand(3, 9);
