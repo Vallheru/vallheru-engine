@@ -4,10 +4,10 @@
  *   Guilds2 - the best players in various fight skills.
  *
  *   @name                 : guilds2.php                            
- *   @copyright            : (C) 2011 Vallheru Team based on Gamers-Fusion ver 2.5
+ *   @copyright            : (C) 2011,2012 Vallheru Team based on Gamers-Fusion ver 2.5
  *   @author               : thindil <thindil@vallheru.net>
  *   @version              : 1.5
- *   @since                : 19.12.2011
+ *   @since                : 29.02.2012
  *
  */
 
@@ -76,9 +76,16 @@ function topplayers2()
     {
       if (!in_array($objTop->fields['mname'], $arrMonsters))
 	{
-	  $objTribe = $db->Execute("SELECT `user`, `tribe` FROM `players` WHERE `id`=".$objTop->fields['pid']);
-	  $objTribe->fields['user'] = $arrTags[$objTribe->fields['tribe']][0].' '.$objTribe->fields['user'].' '.$arrTags[$objTribe->fields['tribe']][1];
-	  $arrTop[] = $objTop->fields['mdate'].' dnia obecnej ery <b><a href="view.php?view='.$objTop->fields['pid'].'">'.$objTribe->fields['user'].'</a></b> pokonał(a) jako pierwszy(a) potwora: <b>'.$objTop->fields['mname'].'</b>';
+	  $objTribe = $db->Execute("SELECT `id`, `user`, `tribe` FROM `players` WHERE `id`=".$objTop->fields['pid']);
+	  if ($objTribe->fields['id'])
+	    {
+	      $objTribe->fields['user'] = '<a href="view.php?view='.$objTop->fields['pid'].'">'.$arrTags[$objTribe->fields['tribe']][0].' '.$objTribe->fields['user'].' '.$arrTags[$objTribe->fields['tribe']][1].'</a>';
+	    }
+	  else
+	    {
+	      $objTribe->fields['user'] = 'ktoś';
+	    }
+	  $arrTop[] = $objTop->fields['mdate'].' dnia obecnej ery <b>'.$objTribe->fields['user'].'</b> pokonał(a) jako pierwszy(a) potwora: <b>'.$objTop->fields['mname'].'</b>';
 	  $objTribe->Close();
 	  $arrMonsters[] = $objTop->fields['mname'];
 	}
