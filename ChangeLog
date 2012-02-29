@@ -1,3 +1,10 @@
+2012-02-29  Bartek thindil Jasicki  <thindil@vallheru.net>
+
+	* FEATURE,templates/layout1/cmarket.tpl, templates/cmarket.tpl, templates/layout1/market.tpl, templates/markte.tpl, templates/layout1/core.tpl,
+	templates/core.tpl, languages/pl/market.php, languages/pl/view.php, languages/pl/head1.php, languages/pl/core.php, includes/marketdelall.php,
+	core.php, cmarket.php, market.php:
+	move core market to other markets
+
 2012-02-28  Bartek thindil Jasicki  <thindil@vallheru.net>
 
 	* BUG,js/chat.js: 

@@ -8,7 +8,7 @@
  *   @author               : thindil <thindil@vallheru.net>
  *   @author               : eyescream <tduda@users.sourceforge.net>
  *   @version              : 1.5
- *   @since                : 15.02.2012
+ *   @since                : 29.02.2012
  *
  */
 
@@ -255,49 +255,6 @@ if (isset ($_GET['view']) && $_GET['view'] == 'train')
     define("YOU_TRAIN", "Trenowałeś swojego Chowańca <b>");
     define("T_AMOUNT", "</b> razy, zużywając <b>");
     define("T_TRAIN", "</b> punktów treningowych. Dostaje za to <b>");
-}
-
-if (isset ($_GET['view']) && $_GET['view'] == 'market') 
-{
-    define("MARKET_INFO", "Witaj w sklepie z Chowańcami. Tutaj możesz kupić Chowańca od innych graczy. Co chcesz zrobić?");
-    define("A_SHOW", "Zobacz oferty");
-    define("A_ADD", "Dodaj ofertę");
-    define("M_OWNER", "Mój");
-    define("A_DELETE", "Usuń");
-    define("A_BUY", "Kup");
-    define("GC", "</b> sztuk złota.");
-    define("LIST_INFO", "Tutaj są oferty sprzedaży Chowańców przez innych graczy.");
-    define("LI_NAME", "Nazwa Chowańca");
-    define("LI_ID", "ID Sprzedającego");
-    define("LI_COST", "Cena");
-    if (isset($_GET['remove'])) 
-    {
-        define("NOT_YOUR_O", "To nie jest twoja oferta!");
-        define("YOU_DELETE", "Usunąłeś ofertę. Twój Chowaniec <b>");
-        define("C_BACK", "</b> wrócił do ciebie.");
-    }
-    if (isset($_GET['buy'])) 
-    {
-        define("NO_BUY", "Nie możesz kupić swojego Chowańca.");
-        define("BUY_YOU", "</b> kupił Twojego Chowańca ");
-        define("L_INFO2", " za ");
-        define("GOLD_COINS2", " sztuk złota.");
-        define("YOU_BUY", "Kupiłeś <b>Chowańca ");
-        define("FOR_A", " za ");
-    }
-    if (isset ($_GET['step']) && $_GET['step'] == 'add') 
-    {
-        define("MAX_OFFERS", "Możesz maksymalnie wystawić 5 ofert na raz!");
-        define("NO_CORE3", "Nie możesz sprzedać cudzego chowańca!");
-        define("YOU_ADD", "Dodałeś swojego <b>");
-        define("TO_SHOP", " Chowańca</b> do sklepu za <b>");
-        define("ADD_INFO", "Tutaj dodasz swoją ofertę sprzedaży chowańca.");
-        define("ADD_MY", "Dodaj mojego");
-        define("ADD_CORE", "Chowańca za");
-        define("COINS", "sztuk złota.");
-        define("A_SELL", "Sprzedaj");
-        define("DEAD_CORE", "Nie możesz wystawić chowańca na rynku, ponieważ jest martwy!");
-    }
 }
 
 if (isset ($_GET['view']) && $_GET['view'] == 'explore') 

@@ -16,7 +16,6 @@
     <li><a href="core.php?view=arena">{$Aarena}</a></li>
     <li><a href="core.php?view=train">{$Atrain}</a></li>
     <li><a href="core.php?view=breed">{$Abreed}</a></li>
-    <li><a href="core.php?view=market">{$Amarket}</a></li>
     <li><a href="core.php?view=explore">{$Asearch}</a></li>
     <li><a href="core.php?view=library">{$Alibrary}</a>
     <li><a href="core.php?view=best">{$Amonuments}</a></li>
@@ -276,37 +275,6 @@
     <option value="power">{$Tpower2}</option>
     <option value="defense">{$Tdefense2}</option>
     </select>. <input type="submit" value="{$Atrain}" /></form>
-{/if}
-
-{if $View == "market"}
-    {if $Step == ""}
-        {$Marketinfo}
-        <ul>
-        <li><a href="core.php?view=market&amp;step=market">{$Ashow}</a></li>
-        <li><a href="core.php?view=market&amp;step=add">{$Aadd}</a></li>
-        </ul>
-    {/if}
-    {if $Step == "market"}
-        {$Listinfo}<br /><br />
-        <table class="dark">
-        <tr><td width="150"><b><u>{$Liname}</u></b></td>
-        <td width="50"><b><u>{$Liid}</u></b></td>
-        <td width="100"><b><u>{$Licost}</u></b></td>
-        <td width="100"><b><u>{$Coptions}</u></b></td></tr>
-        {section name=core5 loop=$Link}
-            {$Link[core5]}
-        {/section}
-        </table>
-    {/if}
-    {if $Step == "add"}
-        {$Addinfo}
-        <form method="post" action="core.php?view=market&amp;step=add&amp;action=add">
-        {$Addmy} <select name="add_core">
-        {section name=core6 loop=$Corename}
-            <option value="{$Coreid1[core6]}">{$Corename[core6]}</option>
-        {/section}
-        </select> {$Addcore} <input type="text" size="7" name="cost" /> {$Coins} <input type=submit value="{$Asell}" /></form>
-    {/if}
 {/if}
 
 {if $View == "explore"}

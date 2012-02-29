@@ -4,10 +4,10 @@
  *   Markets menu
  *
  *   @name                 : market.php                            
- *   @copyright            : (C) 2004,2005,2006,2011 Vallheru Team based on Gamers-Fusion ver 2.5
- *   @author               : thindil <thindil@tuxfamily.org>
- *   @version              : 1.4
- *   @since                : 10.10.2011
+ *   @copyright            : (C) 2004,2005,2006,2011,2012 Vallheru Team based on Gamers-Fusion ver 2.5
+ *   @author               : thindil <thindil@vallheru.net>
+ *   @version              : 1.5
+ *   @since                : 29.02.2012
  *
  */
 
@@ -42,8 +42,8 @@ if ($player -> location != 'Altara' && $player -> location != 'Ardulith')
     error (ERROR);
 }
 
-$arrMarkets = array(MARKET1, MARKET2, MARKET3, MARKET4, MARKET5, MARKET6, MARKET7);
-$arrFiles = array('pmarket', 'imarket', 'mmarket', 'hmarket', 'amarket', 'rmarket', 'lmarket');
+$arrMarkets = array(MARKET1, MARKET2, MARKET3, MARKET4, MARKET5, MARKET6, MARKET7, MARKET8);
+$arrFiles = array('pmarket', 'imarket', 'mmarket', 'hmarket', 'amarket', 'rmarket', 'lmarket', 'cmarket');
 
 /**
  * Main menu
@@ -118,6 +118,7 @@ if (isset($_GET['view']) && $_GET['view'] == 'myoferts')
                 deleteallherb($player -> id, $arrName);
                 deleteallpotion($player -> id);
                 deleteallastral($player -> id);
+		deleteallcores($player->id);
                 $smarty -> assign(array("Actiondelete" => 'yes',
                                         "Message" => DELETED_ALL));
             }
@@ -127,15 +128,16 @@ if (isset($_GET['view']) && $_GET['view'] == 'myoferts')
             $_GET['deleteall'] = '';
         }
 
-        $arrAmount = array(0, 0, 0, 0, 0, 0, 0);
+        $arrAmount = array(0, 0, 0, 0, 0, 0, 0, 0);
         $arrQueries = array("SELECT count(`id`) FROM `pmarket` WHERE `seller`=".$player -> id, 
                             "SELECT count(`id`) FROM `equipment` WHERE `status`='R' AND `type` NOT IN ('I', 'O') AND `owner`=".$player -> id,
                             "SELECT count(`id`) FROM `potions` WHERE `status`='R' AND `owner`=".$player -> id,
                             "SELECT count(`id`) FROM `hmarket` WHERE `seller`=".$player -> id,
                             "SELECT count(`id`) FROM `amarket` WHERE `seller`=".$player -> id,
                             "SELECT count(`id`) FROM `equipment` WHERE `status`='R' AND `type`='I' AND `owner`=".$player -> id,
-			    "SELECT count(`id`) FROM `equipment` WHERE `status`='R' AND `type`='O' AND `owner`=".$player -> id);
-        for ($i = 0; $i < 7; $i ++)
+			    "SELECT count(`id`) FROM `equipment` WHERE `status`='R' AND `type`='O' AND `owner`=".$player -> id,
+			    "SELECT count(`id`) FROM `core_market` WHERE `seller`=".$player -> id);
+        for ($i = 0; $i < count($arrQueries); $i ++)
         {
             $objAmount = $db -> Execute($arrQueries[$i]);
             $arrAmount[$i] = $objAmount -> fields['count(`id`)'];
@@ -167,7 +169,8 @@ if (isset($_GET['view']) && $_GET['view'] == 'myoferts')
                                 "SELECT `id`, `ilosc`, `cost`, `nazwa` FROM `hmarket` WHERE `seller`=".$player -> id,
                                 "SELECT `id`, `type`, `number`, `amount`, `cost` FROM `amarket` WHERE `seller`=".$player -> id,
                                 "SELECT `id`, `name`, `power`, `cost`, `amount` FROM `equipment` WHERE `status`='R' AND `type`='I' AND `owner`=".$player -> id,
-				"SELECT `id`, `name`, `cost`, `amount`, `minlev` FROM `equipment` WHERE `status`='R' AND `type`='O' AND `owner`=".$player -> id);
+				"SELECT `id`, `name`, `cost`, `amount`, `minlev` FROM `equipment` WHERE `status`='R' AND `type`='O' AND `owner`=".$player -> id,
+				"SELECT `id`, `name`, `cost`, `gender`, `power`, `defense` FROM `core_market` WHERE `seller`=".$player->id);
             $objOferts = $db -> Execute($arrQueries[$intKey]);
             $intAmount = $objOferts -> RecordCount();
             if (!$intAmount)
@@ -334,12 +337,42 @@ if (isset($_GET['view']) && $_GET['view'] == 'myoferts')
                     $objOferts -> MoveNext();
                 }
             }
+	    /**
+	     * Core market
+	     */
+	    if ($intKey == 7)
+	      {
+		$arrTable = array("Nazwa", "Płeć", "Siła", "Obrona", "Cena");
+		while(!$objOferts->EOF)
+		  {
+		    $arrValues[$i][0] = $objOferts->fields['name'];
+		    if ($objOferts->fields['gender'] == 'F')
+		      {
+			$arrValues[$i][1] = 'Samica';
+		      }
+		    else
+		      {
+			$arrValues[$i][1] = 'Samiec';
+		      }
+		    $arrValues[$i][2] = $objOferts->fields['power'];
+		    $arrValues[$i][3] = $objOferts->fields['defense'];
+		    $arrValues[$i][4] = $objOferts->fields['cost'];
+		    $arrId[$i] = $objOferts -> fields['id'];
+		    $i++;
+		    $objOferts->MoveNext();
+		  }
+		$strAdd = '';
+	      }
+	    else
+	      {
+		$strAdd = A_ADD;
+	      }
             $objOferts -> Close();
             $arrTable[] = T_OPTIONS;
             $smarty -> assign(array("Ttable" => $arrTable,
                                     "Tvalues" => $arrValues,
                                     "Tid" => $arrId,
-                                    "Aadd" => A_ADD,
+                                    "Aadd" => $strAdd,
                                     "Achange" => A_CHANGE,
                                     "Adelete" => A_DELETE,
                                     "Change" => '',
@@ -383,7 +416,8 @@ if (isset($_GET['view']) && $_GET['view'] == 'myoferts')
                                 "SELECT `id`, `ilosc`, `cost`, `nazwa` FROM `hmarket` WHERE `id`=".$intId." AND `seller`=".$player -> id,
                                 "SELECT `id`, `type`, `number`, `amount`, `cost` FROM `amarket` WHERE `id`=".$intId." AND `seller`=".$player -> id,
                                 "SELECT * FROM `equipment` WHERE `id`=".$intId." AND `status`='R' AND `type`='I' AND `owner`=".$player -> id,
-				"SELECT * FROM `equipment` WHERE `id`=".$intId." AND `status`='R' AND `type`='O' AND `owner`=".$player -> id);
+				"SELECT * FROM `equipment` WHERE `id`=".$intId." AND `status`='R' AND `type`='O' AND `owner`=".$player -> id,
+				"SELECT * FROM `core_market` WHERE `id`=".$intId." AND `seller`=".$player -> id);
             $objOfert = $db -> Execute($arrQueries[$intKey]);
             $intTest = $objOfert -> RecordCount();
             if (!$intTest)
@@ -405,7 +439,7 @@ if (isset($_GET['view']) && $_GET['view'] == 'myoferts')
                 }
                 $strName = $objOfert -> fields['nazwa'];
             }
-            if ($intKey == 1 || $intKey == 2 || $intKey == 5 || $intKey == 6)
+            if (in_array($intKey, array(1, 2, 5, 6, 7)))
             {
                 $strName = $objOfert -> fields['name'];
             }
@@ -471,6 +505,9 @@ if (isset($_GET['view']) && $_GET['view'] == 'myoferts')
 		  case 3:
 		    $intAmount = $objOfert->fields['ilosc'];
 		    break;
+		  case 7:
+		    $intAmount = 1;
+		    break;
 		  default:
 		    $intAmount = $objOfert->fields['amount'];
 		    break;
@@ -510,6 +547,10 @@ if (isset($_GET['view']) && $_GET['view'] == 'myoferts')
 			break;
 		      case 4:
                         deleteastral($objOfert, $player->id, $_POST['amount']);
+			break;
+		      case 7:
+			$db -> Execute("INSERT INTO `core` (`owner`, `name`, `type`, `power`, `defense`, `gender`, `ref_id`, `wins`, `losses`) VALUES(".$player -> id.",'".$rem -> fields['name']."','".$objOfert -> fields['type']."',".$objOfert -> fields['power'].",".$objOfert -> fields['defense'].", '".$objOfert -> fields['gender']."', ".$objOfert -> fields['ref_id'].", ".$objOfert -> fields['wins'].", ".$objOfert -> fields['losses'].")") or error("Could not get back.");
+			$db -> Execute("DELETE FROM `core_market` WHERE `id`=".$objOfert -> fields['id']);
 			break;
 		      default:
 			error(ERROR);
@@ -687,7 +728,7 @@ if (isset($_GET['view']) && $_GET['view'] == 'myoferts')
                         error(ERROR);
                     }
 		    checkvalue($_POST['amount']);
-                    $arrTables = array('pmarket', 'equipment', 'potions', 'hmarket', 'amarket', 'equipment', 'equipment');
+                    $arrTables = array('pmarket', 'equipment', 'potions', 'hmarket', 'amarket', 'equipment', 'equipment', 'core_market');
                     $db -> Execute("UPDATE `".$arrTables[$intKey]."` SET `cost`=".$_POST['amount']." WHERE `id`=".$_GET['change']);
                     $strMessage = YOU_CHANGE;
                 }

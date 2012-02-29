@@ -4,10 +4,10 @@
  *   Functions to delete all oferts from markets
  *
  *   @name                 : marketdelall.php                            
- *   @copyright            : (C) 2006,2011 Vallheru Team based on Gamers-Fusion ver 2.5
- *   @author               : thindil <thindil@tuxfamily.org>
- *   @version              : 1.4
- *   @since                : 12.08.2011
+ *   @copyright            : (C) 2006,2011,2012 Vallheru Team based on Gamers-Fusion ver 2.5
+ *   @author               : thindil <thindil@vallheru.net>
+ *   @version              : 1.5
+ *   @since                : 29.02.2012
  *
  */
 
@@ -125,5 +125,22 @@ function deleteallastral($intOwner)
         $del -> MoveNext();
     }
     $del -> Close();
+}
+
+/**
+ * Function to delete all oferts from core market
+ */
+function deleteallcores($intOwner)
+{
+  global $db;
+
+  $rem = $db->Execute("SELECT * FROM `core_market` WHERE `seller`=".$intOwner);
+  while(!$rem->EOF)
+    {
+      $db -> Execute("INSERT INTO `core` (`owner`, `name`, `type`, `power`, `defense`, `gender`, `ref_id`, `wins`, `losses`) VALUES(".$intOwner.",'".$rem -> fields['name']."','".$rem -> fields['type']."',".$rem -> fields['power'].",".$rem -> fields['defense'].", '".$rem -> fields['gender']."', ".$rem -> fields['ref_id'].", ".$rem -> fields['wins'].", ".$rem -> fields['losses'].")") or error($db->ErrorMsg());
+      $db -> Execute("DELETE FROM core_market WHERE id=".$rem -> fields['id']);
+      $rem->MoveNext();
+    }
+  $rem->Close();
 }
 ?>

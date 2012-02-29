@@ -11,12 +11,13 @@
             <li><a href="{$Filesname[market]}.php?view=market&amp;lista=id">{$Ashow}</a></li>
             <li><a href="{$Filesname[market]}.php?view=add">{$Aadd}</a></li>
             <li><a href="{$Filesname[market]}.php?view=del">{$Adelete}</a></li>
-            {if $smarty.section.market.index != "1"}
-                <li><a href="{$Filesname[market]}.php?view=all">{$Alist}</a></li>
-            {/if}
-            {if $smarty.section.market.index == "1"}
-                <li><a href="{$Filesname[market]}.php?view=all&amp;limit=0">{$Alist}</a></li>
-            {/if}
+	    {if $smarty.section.market.index != 7}
+                {if $smarty.section.market.index != "1"}
+                    <li><a href="{$Filesname[market]}.php?view=all">{$Alist}</a></li>
+                {else}
+                    <li><a href="{$Filesname[market]}.php?view=all&amp;limit=0">{$Alist}</a></li>
+                {/if}
+	    {/if}
         </ul>
     {/section}
 {/if}

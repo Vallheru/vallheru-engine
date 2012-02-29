@@ -7,7 +7,7 @@
  *   @copyright            : (C) 2004,2005,2006,2011,2012 Vallheru Team based on Gamers-Fusion ver 2.5
  *   @author               : thindil <thindil@vallheru.net>
  *   @version              : 1.5
- *   @since                : 12.01.2012
+ *   @since                : 29.02.2012
  *
  */
 
@@ -45,7 +45,7 @@ if (isset($title) && !isset($title1))
                       'Góry Kazad-nar', 'Las Avantiel', 'Wyrąb', 'Aleja zasłużonych', 'Astralny skarbiec', 'Astralny rynek', 
                       'Sala audiencyjna', 'Jubiler', 'Rynek jubilerski', 'Kopalnia', 'Kopalnie', 'Huta', 'Astralny plan', 'Warsztat jubilerski', 
 		      'Rynek z łupami', 'Galeria Machin', 'Propozycje', 'Gildia Łowców', 'Gildia Rzemieślników', 'Cześnik', 'Aula Gladiatorów', 
-		      'Prefektura Gwardii', 'Złodziejska Spelunka', 'Pokój w karczmie', 'Przygoda');
+		      'Prefektura Gwardii', 'Złodziejska Spelunka', 'Pokój w karczmie', 'Przygoda', 'Rynek chowańców');
         if ($player -> location != 'Ardulith')
         {
             $arrTitle2 = $arrTitle;
