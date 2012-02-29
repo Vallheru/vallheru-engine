@@ -7,7 +7,7 @@
  *   @copyright            : (C) 2012 Vallheru Team based on Gamers-Fusion ver 2.5
  *   @author               : thindil <thindil@vallheru.net>
  *   @version              : 1.5
- *   @since                : 27.01.2012
+ *   @since                : 29.02.2012
  *
  */
 
@@ -61,7 +61,7 @@ $smarty -> assign (array("Amain" => "Główna",
 			 "Aastral" => "Astralny skarbiec"));
 
 $arrName = array("Illani", "Illanias", "Nutari", "Dynallca", "Nasiona Illani", "Nasiona Illanias", "Nasiona Nutari", "Nasiona Dynallca");
-$arrSqlname = array('illani', 'illanias', 'nutari', 'dynallca', 'illani_seeds', 'illanias_seeds', 'nutari_seeds', 'dynallca_seeds');
+$arrSqlname = array('illani', 'illanias', 'nutari', 'dynallca', 'ilani_seeds', 'illanias_seeds', 'nutari_seeds', 'dynallca_seeds');
 $objHerbs = $db->Execute("SELECT * FROM `tribe_herbs` WHERE `id`=".$player->tribe);
 if ($objHerbs->fields['id'])
   {
@@ -69,7 +69,7 @@ if ($objHerbs->fields['id'])
 		       $objHerbs->fields['illanias'],
 		       $objHerbs->fields['nutari'],
 		       $objHerbs->fields['dynallca'],
-		       $objHerbs->fields['illani_seeds'],
+		       $objHerbs->fields['ilani_seeds'],
 		       $objHerbs->fields['illanias_seeds'],
 		       $objHerbs->fields['nutari_seeds'],
 		       $objHerbs->fields['dynallca_seeds']);
@@ -77,7 +77,7 @@ if ($objHerbs->fields['id'])
 			 $objHerbs->fields['rillanias'],
 			 $objHerbs->fields['rnutari'],
 			 $objHerbs->fields['rdynallca'],
-			 $objHerbs->fields['rillani_seeds'],
+			 $objHerbs->fields['rilani_seeds'],
 			 $objHerbs->fields['rillanias_seeds'],
 			 $objHerbs->fields['rnutari_seeds'],
 			 $objHerbs->fields['rdynallca_seeds']);

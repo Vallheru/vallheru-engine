@@ -1,5 +1,7 @@
 2012-02-29  Bartek thindil Jasicki  <thindil@vallheru.net>
 
+	* BUG,install/db/update.sql, tribeherbs.php: 
+	fixed bug with illani seeds
 	* BUG,guilds2.php: 
 	fixed bug with non exist players
 	* FEATURE,templates/layout1/cmarket.tpl, templates/cmarket.tpl, templates/layout1/market.tpl, templates/markte.tpl, templates/layout1/core.tpl,
