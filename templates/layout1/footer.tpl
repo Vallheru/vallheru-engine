@@ -41,7 +41,7 @@
                 {/if}
                 <td align="center">
                     <span class="light">
-                    &copy; 2004-2011 <a href="https://launchpad.net/vallheru">Vallheru Team</a> based on <a href="http://sourceforge.net/projects/gamers-fusion">Gamers-Fusion 2.5</a></span>
+                    &copy; 2004-2012 <a href="https://launchpad.net/vallheru">Vallheru Team</a> based on <a href="http://sourceforge.net/projects/gamers-fusion">Gamers-Fusion 2.5</a></span>
                 </td>
                 {if $Stephead != "new"}
                 <td class="foot">
@@ -49,7 +49,7 @@
                 {/if}
             </tr>
         </table>
-    <!--          (C) 2004,2005,2006,2007,2011 Vallheru Team                                   -->
+    <!--          (C) 2004,2005,2006,2007,2011,2012 Vallheru Team                         -->
     <!--           game based on code Gamers Fusion ver 2.5                               -->
     </body>
 </html>                        
