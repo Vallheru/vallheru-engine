@@ -273,7 +273,7 @@ function backpack($type, $nameitems, $type2, $smartyname)
 $smarty -> assign(array("Arrowhead" => '', 
                         "Action" => '', 
                         "Potions1" => 0,
-			"Pets" => 0,
+			"Pets1" => 0,
                         "Repairequip" => '', 
                         "Arrows1" => '',
 			"Ilevel" => 'Poziom',
