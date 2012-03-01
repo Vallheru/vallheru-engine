@@ -59,6 +59,13 @@
         </form>
     {/if}
 
+    {if $Pets1 == 1}
+        <form method="post" action="bank.php?action=pets">
+	    {$Iwant} <input type="submit" value="{$Agive}" /> {$Dplayer} {html_options name=player options=$Contacts} <input type="tekst" name="pid" size="3" /> 
+	    {html_options name=item options=$Coptions} {$Ttitle} <input type="text" name="title" size="50" />
+	</form><br />
+    {/if}
+
     {if $Crime == 'Y'}
         <form method="post" action="bank.php?action=steal">
 	    <br /><br /><input type="submit" value="{$Asteal}" /> {$Tcrime} <input type="text" size="5" name="tp" value="1" /> {$Ttp}

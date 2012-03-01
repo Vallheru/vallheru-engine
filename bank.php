@@ -9,7 +9,7 @@
  *   @author               : yeskov <yeskov@users.sourceforge.net>
  *   @author               : eyescream <tduda@users.sourceforge.net>
  *   @version              : 1.5
- *   @since                : 17.02.2012
+ *   @since                : 01.03.2012
  *
  */
 
@@ -660,6 +660,70 @@ if (isset($_GET['action']))
 	    $db -> Execute("INSERT INTO `logs` (`owner`, `log`, `czas`) VALUES(".$player -> id.",'".YOU_SEND." <b><a href=view.php?view=".$_POST['pid'].">".$strPlayerName."</a></b> ID<b> ".$_POST['pid'].'</b>, '.$_POST['amount']." ".T_AMOUNT." ".$item -> fields['name']." ".$strAttributes."', ".$strDate.")")or die($db->ErrorMsg());
     
 	    message('success', YOU_SEND." <b><a href=view.php?view=".$_POST['pid'].">".$strPlayerName."</a></b>, ID<b> ".$_POST['pid'].'</b> '.$_POST['amount']." ".T_AMOUNT." ".$item -> fields['name']." ".$strAttributes);
+	  }
+      }
+
+    /**
+     * Donation of pet to other player
+     */
+    elseif($_GET['action'] == 'pets')
+      {
+	if ($_POST['player'] == 0)
+	  {
+	    checkvalue($_POST['pid']);
+	  }
+	else
+	  {
+	    checkvalue($_POST['player']);
+	    $_POST['pid'] = $_POST['player'];
+	  }
+	checkvalue($_POST['item']);
+	if (strlen($_POST['title']) > 0)
+	  {
+	    $strTitle = htmlspecialchars($_POST['title'], ENT_QUOTES);
+	    $strTitle = ", tytułem: <b>".substr($strTitle, 0, 50)."</b>";
+	  }
+	else
+	  {
+	    $strTitle = '';
+	  }
+	$blnValid = TRUE;
+	$objPet = $db->Execute("SELECT `id`, `corename`, `name` FROM `core` WHERE `owner`=".$player->id." AND `id`=".$_POST['item']) or die($db->ErrorMsg());
+	if (!$objPet->fields['id'])
+	  {
+	    message('error', 'Nie ma takiego chowańca.');
+	    $blnValid = FALSE;
+	  }
+	if ($_POST['pid'] == $player -> id) 
+	  {
+	    message('error', 'Nie możesz przekazać chowańca samemu sobie.');
+	    $blnValid = FALSE;
+	  }
+	$objDonated = $db -> Execute("SELECT `id`, `user`, `tribe` FROM `players` WHERE `id`=".$_POST['pid']);
+	if (empty ($objDonated -> fields['id'])) 
+	  {
+	    message('error', 'Nie ma takiego gracza.');
+	    $blnValid = FALSE;
+	  }
+	if ($objPet->fields['corename'] != '')
+	  {
+	    $strCorename = $objPet->fields['corename'].' ('.$objPet->fields['name'].')';
+	  }
+	else
+	  {
+	    $strCorename = $objPet->fields['name'];
+	  }
+	$objPet->Close();
+	$strPlayerName = $arrTags[$objDonated->fields['tribe']][0].' '.$objDonated -> fields['user'].' '.$arrTags[$objDonated->fields['tribe']][1];
+	$objDonated -> Close();
+	if ($blnValid)
+	  {
+	    $db->Execute("UPDATE `core` SET `owner`=".$_POST['pid']." WHERE `id`=".$_POST['item']);
+	    $strDate = $db -> DBDate($newdate);
+	    $db -> Execute("INSERT INTO `log` (`owner`, `log`, `czas`, `type`) VALUES('".$_POST['pid']."','Gracz <b><a href=view.php?view=".$player->id.">".$arrTags[$player->tribe][0].' '.$player ->user.' '.$arrTags[$player->tribe][1]."</a></b> ID:<b>".$player->id."</b>, przekazał tobie chowańca ".$strCorename.$strTitle.".', ".$strDate.", 'R')");
+	    $db -> Execute("INSERT INTO `logs` (`owner`, `log`, `czas`) VALUES('".$_POST['pid']."','Gracz <b><a href=view.php?view=".$player->id.">".$arrTags[$player->tribe][0].' '.$player ->user.' '.$arrTags[$player->tribe][1]."</a></b> ID:<b>".$player->id."</b>, przekazał tobie chowańca ".$strCorename.".', ".$strDate.")");
+	    $db -> Execute("INSERT INTO `log` (`owner`, `log`, `czas`, `type`) VALUES('".$player -> id."', 'Przekazałeś chowańca <b>".$strCorename."</b> graczowi <b><a href=\"view.php?view=".$_POST['pid']."\">".$strPlayerName."</a></b> ID:<b>".$_POST['pid']."</b>".$strTitle.".', ".$strDate.", 'R')") or die($db->ErrorMsg());
+	    message('success', "Przekazałeś chowańca <b>".$strCorename."</b> graczowi <b><a href=\"view.php?view=".$_POST['pid']."\">".$strPlayerName."</a></b> ID:<b>".$_POST['pid']."</b>".$strTitle.".");
 	  }
       }
 
@@ -1344,6 +1408,44 @@ if (!isset($_GET['action']) || (isset($_GET['action']) && $_GET['action'] != 'as
     $smarty -> assign (array("Minerals" => $intMinerals, 
 			     "Moptions" => $arrOptions));
     $objMinerals -> Close();
+
+    /**
+     * List of pets
+     */
+    $objPets = $db->Execute("SELECT `id`, `name`, `power`, `defense`, `gender`, `corename` FROM `core` WHERE `owner`=".$player->id);
+    $arrPets = array();
+    while (!$objPets->EOF)
+      {
+	if ($objPets->fields['gender'] == 'F')
+	  {
+	    $strGender = 'Samica';
+	  }
+	else
+	  {
+	    $strGender = 'Samiec';
+	  }
+	if ($objPets->fields['corename'] != '')
+	  {
+	    $strName = $objPets->fields['corename'].' ('.$objPets->fields['name'].')';
+	  }
+	else
+	  {
+	    $strName = $objPets->fields['name'];
+	  }
+	$arrPets[$objPets->fields['id']] = $strName.' ('.$strGender.') Siła:'.$objPets->fields['power'].' Obrona:'.$objPets->fields['defense'];
+	$objPets->MoveNext();
+      }
+    $objPets->Close();
+    if (count($arrPets))
+      {
+	$intCores = 1;
+      }
+    else
+      {
+	$intCores = 0;
+      }
+    $smarty->assign(array("Pets1" => $intCores,
+			  "Coptions" => $arrPets));
 
     /**
      * Buy safe box

@@ -1,5 +1,7 @@
 2012-03-01  Bartek thindil Jasicki  <thindil@vallheru.net>
 
+	* FEATURE,templates/layout1/bank.tpl, templates/bank.tpl, bank.php:
+	added option to send cores to another player
 	* FEATURE,templates/layout1/equip.tpl templates/equip.tpl, equip.php:
 	added cores to equipment
 
