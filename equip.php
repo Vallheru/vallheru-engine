@@ -7,7 +7,7 @@
  *   @copyright            : (C) 2004,2005,2006,2007,2011,2012 Vallheru Team based on Gamers-Fusion ver 2.5
  *   @author               : thindil <thindil@vallheru.net>
  *   @version              : 1.5
- *   @since                : 06.02.2012
+ *   @since                : 01.03.2012
  *
  */
 
@@ -272,7 +272,8 @@ function backpack($type, $nameitems, $type2, $smartyname)
 */
 $smarty -> assign(array("Arrowhead" => '', 
                         "Action" => '', 
-                        "Potions1" => 0, 
+                        "Potions1" => 0,
+			"Pets" => 0,
                         "Repairequip" => '', 
                         "Arrows1" => '',
 			"Ilevel" => 'Poziom',
@@ -617,9 +618,83 @@ if ($mik -> fields['id'])
 }
 $mik -> Close();
 
+/**
+ * Show pets
+ */
+$arrPets = $db->GetAll("SELECT `id`, `name`, `power`, `defense`, `gender`, `corename` FROM `core` WHERE `owner`=".$player->id);
+if ($arrPets)
+  {
+    foreach ($arrPets as &$arrPet)
+      {
+	if ($arrPet['gender'] == 'F')
+	  {
+	    $arrPet['gender'] = 'Samica';
+	  }
+	else
+	  {
+	    $arrPet['gender'] = 'Samiec';
+	  }
+	if ($arrPet['corename'] != '')
+	  {
+	    $arrPet['name'] = $arrPet['corename'].' ('.$arrPet['name'].')';
+	  }
+      }
+    $smarty->assign(array("Pets1" => 1,
+			  "Pets" => $arrPets,
+			  "Tpets" => 'Posiadane chowańce',
+			  "Pname" => 'Imię:',
+			  "Pgender" => 'Płeć:',
+			  "Ppower" => 'Siła:',
+			  "Pdefense" => 'Obrona:',
+			  "Pchname" => 'zmień imię',
+			  "Prelease" => 'uwolnij'));
+  }
+
 $smarty -> assign(array("Arramount" => ARR_AMOUNT,
                         "Goldcoins" => GOLD_COINS,
                         "Fora" => FOR_A));
+
+/**
+ * Change name for pet
+ */
+if (isset($_GET['name']))
+  {
+    checkvalue($_GET['name']);
+    $objPet = $db->Execute("SELECT `id` FROM `core` WHERE `owner`=".$player->id." AND `id`=".$_GET['name']);
+    if (!$objPet->fields['id'])
+      {
+	error('Nie ma takiego chowańca.');
+      }
+    $objPet->Close();
+    if (!isset($_GET['step']))
+      {
+	$smarty->assign(array("Achange" => 'Zmień',
+			      "Tpname" => 'imię chowańcowi na'));
+      }
+    else
+      {
+	$_POST['cname'] = htmlspecialchars($_POST['cname'], ENT_QUOTES);
+	$strName = $db -> qstr($_POST['cname'], get_magic_quotes_gpc());
+	$db -> Execute("UPDATE `core` SET `corename`=".$strName." WHERE `id`=".$_GET['name']);
+	$smarty->assign("Action", "Zmieniłeś imię chowańca.");
+      }
+  }
+
+/**
+ * Release pet
+ */
+if (isset($_GET['release']))
+  {
+    checkvalue($_GET['release']);
+    $objPet = $db->Execute("SELECT `id` FROM `core` WHERE `owner`=".$player->id." AND `id`=".$_GET['release']);
+    if (!$objPet->fields['id'])
+      {
+	error('Nie ma takiego chowańca.');
+      }
+    $objPet->Close();
+    $db->Execute("DELETE FROM `core` WHERE `id`=".$_GET['release']);
+    $smarty->assign("Action", "Uwolniłeś chowańca.");
+  }
 
 /**
  * Learn new plan (craftsmen only)
@@ -1317,6 +1392,10 @@ if (!isset($_GET['drinkfew']))
   {
     $_GET['drinkfew'] = 0;
   }
+if (!isset($_GET['name']))
+  {
+    $_GET['name'] = 0;
+  }
 
 /**
 * Wear equipment
@@ -1339,7 +1418,8 @@ if (isset($_GET['wypij']))
 */
 $smarty -> assign(array("Poison" => $_GET['poison'], 
                         "Step" => $_GET['step'],
-			"Drinkfew" => $_GET['drinkfew']));
+			"Drinkfew" => $_GET['drinkfew'],
+			"Petname" => $_GET['name']));
 $smarty -> display ('equip.tpl');
 
 require_once("includes/foot.php");

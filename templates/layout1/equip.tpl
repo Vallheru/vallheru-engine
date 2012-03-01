@@ -35,6 +35,12 @@
     {/if}
 {/if}
 
+{if $Petname > 0 && $Step == ""}
+    <br /><form method="post" action="equip.php?name={$Petname}&amp;step=rename">
+        <input type="submit" value="{$Achange}" /> {$Tpname} <input type="text" name="cname" />
+    </form><br />
+{/if}
+
 {if $Bweaponsamount > 1}
     <div align="center"><a href="#weapons">{$Bweaponsmenu[0]}</a></div>
 {/if}
@@ -73,6 +79,9 @@
 {/if}
 {if $Potions1 > "0"}
     <div align="center"><a href="#potions">{$Potions2}</a></div>
+{/if}
+{if $Pets1 > "0"}
+    <div align="center"><a href="#pets">{$Tpets}</a></div>
 {/if}
 {if $Bquestsamount > 1}
     <div align="center"><a href="#quests">{$Bquestsmenu[0]}</a></div>
@@ -303,6 +312,14 @@
         {$Sellallp}
 	<input type="submit" value="{$Potionssell}" />
     </form>
+    <a href="#top">{$Aback}</a><br />
+{/if}
+
+{if $Pets1 > "0"}
+    <br /><a name="pets"><u>{$Tpets}:</u></a><br />
+    {section name=pets loop=$Pets}
+        <b>{$Pname}</b> {$Pets[pets].name} <b>{$Pgender}</b> {$Pets[pets].gender} <b>{$Ppower}</b> {$Pets[pets].power} <b>{$Pdefense}</b> {$Pets[pets].defense} [ <a href="equip.php?name={$Pets[pets].id}">{$Pchname}</a> | <a href="equip.php?release={$Pets[pets].id}">{$Prelease}</a> ]<br />
+    {/section}
     <a href="#top">{$Aback}</a><br />
 {/if}
 
