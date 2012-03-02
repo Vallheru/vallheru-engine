@@ -7,7 +7,7 @@
  *   @copyright            : (C) 2011,2012 Vallheru Team based on Gamers-Fusion ver 2.5
  *   @author               : thindil <thindil@vallheru.net>
  *   @version              : 1.5
- *   @since                : 23.01.2012
+ *   @since                : 02.03.2012
  *
  */
 
@@ -190,7 +190,7 @@ else
 	while ($i < 3)
 	  {
 	    //$intKey = rand(0, 3);
-	    $intKey = rand(1, 2);
+	    $intKey = rand(1, 3);
 	    switch ($intKey)
 	      {
 		//Home robbery
