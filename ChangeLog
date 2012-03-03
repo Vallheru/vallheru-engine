@@ -1,3 +1,8 @@
+2012-03-03  Bartek thindil Jasicki  <thindil@vallheru.net>
+
+	* BUG,includes/functions.php:
+	fixed bug with wearing arrows
+
 2012-03-02  Bartek thindil Jasicki  <thindil@vallheru.net>
 
 	* FEATURE,thieves.php:

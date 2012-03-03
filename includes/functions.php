@@ -4,10 +4,10 @@
  *   Functions drink - drink potions and equip - wear equipment
  *
  *   @name                 : functions.php                            
- *   @copyright            : (C) 2004,2005,2006,2011 Vallheru Team based on Gamers-Fusion ver 2.5
- *   @author               : thindil <thindil@tuxfamily.org>
- *   @version              : 1.4
- *   @since                : 12.11.2011
+ *   @copyright            : (C) 2004,2005,2006,2011,2012 Vallheru Team based on Gamers-Fusion ver 2.5
+ *   @author               : thindil <thindil@vallheru.net>
+ *   @version              : 1.5
+ *   @since                : 03.03.2012
  *
  */
 
@@ -330,25 +330,39 @@ function equip ($id)
         {
             $wt = $equip -> fields['wt'];
         }
-        $arrows = $db -> Execute("SELECT id, name, wt FROM equipment WHERE type='R' AND owner=".$player -> id." AND status='E'");
-        if (empty($arrows -> fields['id'])) 
-        {
-	    $db -> Execute("INSERT INTO `equipment` (`name`, `wt`, `power`, `status`, `type`, `owner`, `ptype`, `poison`, `minlev`) VALUES('".$equip -> fields['name']."',".$wt.",".$equip -> fields['power'].",'E','R',".$player -> id.", '".$equip->fields['ptype']."', ".$equip->fields['poison'].", ".$equip->fields['minlev'].")") or error($db->ErrorMsg());
-            $testwt = ($equip -> fields['wt'] - $wt);
-            if ($testwt < 1) 
-            {
-                $db -> Execute("DELETE FROM equipment WHERE id=".$equip -> fields['id']);
-            } 
-                else 
-            {
-                $db -> Execute("UPDATE equipment SET wt=".$testwt." WHERE id=".$equip -> fields['id']);
-            }
-        }
+        $arrows = $db -> Execute("SELECT * FROM equipment WHERE type='R' AND owner=".$player -> id." AND status='E'");
+	//Take off old arrows
+	if ($arrows->fields['id'])
+	  {
+	    $test = $db -> Execute("SELECT id FROM equipment WHERE name='".$arrows->fields['name']."' AND status='U' AND owner=".$player->id." AND power=".$arrows->fields['power']." AND poison=".$arrows->fields['poison']." AND `ptype`='".$arrows->fields['ptype']."'");
+	    if (!isset($test -> fields['id'])) 
+	      {
+		$db -> Execute("UPDATE `equipment` SET `status`='U' WHERE `type`='R' AND `owner`=".$player -> id." AND `status`='E'");
+	      } 
+            else 
+	      {
+		$db -> Execute("UPDATE `equipment` SET `wt`=`wt`+".$arrows->fields['wt']." WHERE `id`=".$test -> fields['id']);
+		$db -> Execute("DELETE FROM `equipment` WHERE `id`=".$arrows->fields['id']);
+	      }
+	    $test->Close();
+	  }
+	$db -> Execute("INSERT INTO `equipment` (`name`, `wt`, `power`, `status`, `type`, `owner`, `ptype`, `poison`, `minlev`) VALUES('".$equip -> fields['name']."',".$wt.",".$equip -> fields['power'].",'E','R',".$player -> id.", '".$equip->fields['ptype']."', ".$equip->fields['poison'].", ".$equip->fields['minlev'].")") or error($db->ErrorMsg());
+	$testwt = ($equip -> fields['wt'] - $wt);
+	if ($testwt < 1) 
+	  {
+	    $db -> Execute("DELETE FROM equipment WHERE id=".$equip -> fields['id']);
+	  } 
+	else 
+	  {
+	    $db -> Execute("UPDATE equipment SET wt=".$testwt." WHERE id=".$equip -> fields['id']);
+	  }
+	$arrows->Close();
     }
     if ($type == 'W' || $type == 'B' || $type == 'T') 
     {
         if ($type == 'W' || $type == 'T') 
         {
+	    $arrows = $db -> Execute("SELECT id, name, wt FROM equipment WHERE type='R' AND owner=".$player -> id." AND status='E'");
             if (isset($arrows -> fields['id'])) 
             {
                 $test = $db -> Execute("SELECT id FROM equipment WHERE name='".$arrows -> fields['name']."' AND status='U' AND owner=".$player -> id);
@@ -363,6 +377,7 @@ function equip ($id)
                 $db -> Execute("DELETE FROM equipment WHERE id=".$arrows -> fields['id']);
                 $test -> Close();
             }
+	    $arrows->Close();
         }
         $test = $db -> Execute("SELECT id FROM equipment WHERE status='E' AND type='".$type."' AND owner=".$player -> id);
         if (empty($test -> fields['id'])) 
