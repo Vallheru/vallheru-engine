@@ -7,7 +7,7 @@
  *   @copyright            : (C) 2004,2005,2006,2007,2011,2012 Vallheru Team based on Gamers-Fusion ver 2.5
  *   @author               : thindil <thindil@vallheru.net>
  *   @version              : 1.5
- *   @since                : 01.03.2012
+ *   @since                : 03.03.2012
  *
  */
 
@@ -500,7 +500,7 @@ if (isset($_GET['schowaj']))
     }
     if (isset($arrEquip[6][0])) 
     {
-        $test = $db -> Execute("SELECT id FROM equipment WHERE name='".$arrEquip[6][1]."' AND status='U' AND owner=".$player -> id." AND power=".$arrEquip[6][2]." AND poison=".$arrEquip[6][8]." AND `ptype`=".$arrEquip[6][3]);
+        $test = $db -> Execute("SELECT id FROM equipment WHERE name='".$arrEquip[6][1]."' AND status='U' AND owner=".$player -> id." AND power=".$arrEquip[6][2]." AND poison=".$arrEquip[6][8]." AND `ptype`='".$arrEquip[6][3]."'");
     }
     if ($bron -> fields['type'] == 'B') 
     {

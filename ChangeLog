@@ -1,5 +1,7 @@
 2012-03-03  Bartek thindil Jasicki  <thindil@vallheru.net>
 
+	* BUG,equip.php:
+	fixed typo
 	* BUG,includes/functions.php:
 	fixed bug with wearing arrows
 
