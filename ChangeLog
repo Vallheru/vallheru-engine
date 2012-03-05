@@ -1,5 +1,7 @@
 2012-03-05  Bartek thindil Jasicki  <thindil@vallheru.net>
 
+	* UPDATE,templates/layout1/czary.tpl, templates/czary.tpl, czary.php: 
+	redesigned spellbook
 	* UPDATE,templates/layout1/equip.tpl, templates/equip.tpl:
 	redesigned equipment
 

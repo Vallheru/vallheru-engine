@@ -27,14 +27,5 @@
     </select>
     <input type="hidden" name="spell" value="{$Spellname}" /><br />
 	</form>
-    {$Message}
-{/if}
-
-{if $Learn > "0"}
-    {$Youuse} {$Name}. (<a href="czary.php">{$Arefresh}</a>)
-{/if}
-
-{if $Deaktiv > "0"}
-    <a href="czary.php">({$Arefresh})</a>
 {/if}
 
