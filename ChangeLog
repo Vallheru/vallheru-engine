@@ -1,3 +1,8 @@
+2012-03-05  Bartek thindil Jasicki  <thindil@vallheru.net>
+
+	* UPDATE,templates/layout1/equip.tpl, templates/equip.tpl:
+	redesigned equipment
+
 2012-03-03  Bartek thindil Jasicki  <thindil@vallheru.net>
 
 	* BUG,equip.php:

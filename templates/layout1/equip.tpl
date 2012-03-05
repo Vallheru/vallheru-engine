@@ -1,4 +1,4 @@
-<a name="top"><u>{$Equipped}</u>:<br /></a>
+<u>{$Equipped}</u>:<br />
 <form method="post" action="equip.php?repair">
 {$Weapon}
 {$Weapon2}
@@ -11,7 +11,7 @@
 {$Ring2}
 {$Tool}
 {$Repairequip}
-</form>
+</form><br />
 {if $Action != ""}
 {$Action}  (<a href="equip.php">{$Refresh}</a>)<br />
 {/if}
@@ -41,302 +41,302 @@
     </form><br />
 {/if}
 
+
 {if $Bweaponsamount > 1}
-    <div align="center"><a href="#weapons">{$Bweaponsmenu[0]}</a></div>
+    <div>
+    <label for="weapons" class="toggle">+{$Bweaponsmenu[0]}</label>
+    <input id="weapons" type="checkbox" class="toggle" checked="checked" />
+    <div><br />
+        <form method="POST" action="equip.php?sellchecked=E">
+            {foreach $Bweapons as $key => $value}
+	        {if $key > 0}
+	            {$Ilevel} {$key}:<br />
+	            {foreach $value as $weapon}
+	                {$weapon}
+	            {/foreach}
+		    <br />
+	        {/if}
+	    {/foreach}
+	    {$Bweaponsmenu[1]}
+	    <input type="submit" value="{$Bweaponssell}" />
+        </form>
+    </div><br />
 {/if}
+
 {if $Bstaffsamount > 1}
-    <div align="center"><a href="#staffs">{$Bstaffsmenu[0]}</a></div>
+    <div>
+    <label for="staffs" class="toggle">+{$Bstaffsmenu[0]}</label>
+    <input id="staffs" type="checkbox" class="toggle" checked="checked" />
+    <div><br />
+        <form method="POST" action="equip.php?sellchecked=E">
+            {foreach $Bstaffs as $key => $value}
+	        {if $key > 0}
+	            {$Ilevel} {$key}:<br />
+	            {foreach $value as $weapon}
+	                {$weapon}
+	            {/foreach}
+		    <br />
+	        {/if}
+	   {/foreach}
+	   {$Bstaffsmenu[1]}
+	   <input type="submit" value="{$Bstaffssell}" />
+        </form>
+    </div><br />
 {/if}
+
 {if $Barrowsamount > 1}
-    <div align="center"><a href="#arrows">{$Barrowsmenu[0]}</a></div>
+    <div>
+    <label for="arrows" class="toggle">+{$Barrowsmenu[0]}</label>
+    <input id="arrows" type="checkbox" class="toggle" checked="checked" />
+    <div><br />
+        <form method="POST" action="equip.php?sellchecked=A">
+            {foreach $Barrows as $key => $value}
+	        {if $key > 0}
+	            {$Ilevel} {$key}:<br />
+	            {foreach $value as $weapon}
+	                {$weapon}
+	            {/foreach}
+		    <br />
+	        {/if}
+	    {/foreach}
+	    {$Barrowsmenu[1]}
+	    <input type="submit" value="{$Barrowssell}" />
+        </form>
+    </div><br />
 {/if}
+
 {if $Bhelmetsamount > 1}
-    <div align="center"><a href="#helmets">{$Bhelmetsmenu[0]}</a></div>
+    <div>
+    <label for="helmets" class="toggle">+{$Bhelmetsmenu[0]}</label>
+    <input id="helmets" type="checkbox" class="toggle" checked="checked" />
+    <div><br />
+        <form method="POST" action="equip.php?sellchecked=E">
+            {foreach $Bhelmets as $key => $value}
+	        {if $key > 0}
+	            {$Ilevel} {$key}:<br />
+	            {foreach $value as $weapon}
+	                {$weapon}
+	            {/foreach}
+		    <br />
+	    	{/if}
+	    {/foreach}
+	    {$Bhelmetsmenu[1]}
+  	    <input type="submit" value="{$Bhelmetssell}" />
+        </form>
+    </div><br />
 {/if}
+
 {if $Barmorsamount > 1}
-    <div align="center"><a href="#armors">{$Barmorsmenu[0]}</a></div>
+    <div>
+    <label for="armors" class="toggle">+{$Barmorsmenu[0]}</label>
+    <input id="armors" type="checkbox" class="toggle" checked="checked" />
+    <div><br />
+        <form method="POST" action="equip.php?sellchecked=E">
+            {foreach $Barmors as $key => $value}
+	        {if $key > 0}
+	            {$Ilevel} {$key}:<br />
+	            {foreach $value as $weapon}
+	                {$weapon}
+	            {/foreach}
+		    <br />
+	        {/if}
+	    {/foreach}
+	    {$Barmorsmenu[1]}
+    	    <input type="submit" value="{$Barmorssell}" />
+    	</form>
+    </div><br />
 {/if}
+
 {if $Bshieldsamount > 1}
-    <div align="center"><a href="#shields">{$Bshieldsmenu[0]}</a></div>
+    <div>
+    <label for="shields" class="toggle">+{$Bshieldsmenu[0]}</label>
+    <input id="shields" type="checkbox" class="toggle" checked="checked" />
+    <div><br />
+        <form method="POST" action="equip.php?sellchecked=E">
+            {foreach $Bshields as $key => $value}
+	        {if $key > 0}
+	            {$Ilevel} {$key}:<br />
+	            {foreach $value as $weapon}
+	                {$weapon}
+	            {/foreach}
+		    <br />
+	        {/if}
+	    {/foreach}
+	    {$Bshieldsmenu[1]}
+            <input type="submit" value="{$Bshieldssell}" />
+        </form>
+    </div><br />
 {/if}
+
 {if $Bcapesamount > 1}
-    <div align="center"><a href="#capes">{$Bcapesmenu[0]}</a></div>
+    <div>
+    <label for="capes" class="toggle">+{$Bcapesmenu[0]}</label>
+    <input id="capes" type="checkbox" class="toggle" checked="checked" />
+    <div><br />
+        <form method="POST" action="equip.php?sellchecked=E">
+            {foreach $Bcapes as $key => $value}
+	        {if $key > 0}
+	            {$Ilevel} {$key}:<br />
+	            {foreach $value as $weapon}
+	                {$weapon}
+	            {/foreach}
+		    <br />
+	        {/if}
+	    {/foreach}
+	    {$Bcapesmenu[1]}
+    	    <input type="submit" value="{$Bcapessell}" />
+        </form>
+    </div><br />
 {/if}
+
 {if $Blegsamount > 1}
-    <div align="center"><a href="#legs">{$Blegsmenu[0]}</a></div>
+    <div>
+    <label for="legs" class="toggle">+{$Blegsmenu[0]}</label>
+    <input id="legs" type="checkbox" class="toggle" checked="checked" />
+    <div><br />
+        <form method="POST" action="equip.php?sellchecked=E">
+            {foreach $Blegs as $key => $value}
+	        {if $key > 0}
+	            {$Ilevel} {$key}:<br />
+	            {foreach $value as $weapon}
+	                {$weapon}
+	            {/foreach}
+		    <br />
+	        {/if}
+	    {/foreach}
+	    {$Blegsmenu[1]}
+    	    <input type="submit" value="{$Blegssell}" />
+        </form>
+    </div><br />
 {/if}
+
 {if $Bringsamount > 1}
-    <div align="center"><a href="#rings">{$Bringsmenu[0]}</a></div>
+    <div>
+    <label for="rings" class="toggle">+{$Bringsmenu[0]}</label>
+    <input id="rings" type="checkbox" class="toggle" checked="checked" />
+    <div><br />
+        <form method="POST" action="equip.php?sellchecked=E">
+            {foreach $Brings as $key => $value}
+	        {if $key > 0}
+	            {$Ilevel} {$key}:<br />
+	            {foreach $value as $weapon}
+	                {$weapon}
+	            {/foreach}
+		    <br />
+	        {/if}
+	    {/foreach}
+	    {$Bringsmenu[1]}
+    	    <input type="submit" value="{$Bringssell}" />
+    	</form>
+    </div><br />
 {/if}
+
 {if $Btoolsamount > 1}
-    <div align="center"><a href="#tools">{$Btoolsmenu[0]}</a></div>
+    <div>
+    <label for="tools" class="toggle">+{$Btoolsmenu[0]}</label>
+    <input id="tools" type="checkbox" class="toggle" checked="checked" />
+    <div><br />
+        <form method="POST" action="equip.php?sellchecked=E">
+            {foreach $Btools as $key => $value}
+	        {if $key > 0}
+	            {$Ilevel} {$key}:<br />
+	            {foreach $value as $weapon}
+	                {$weapon}
+	            {/foreach}
+		    <br />
+	        {/if}
+	    {/foreach}
+	    {$Btoolsmenu[1]}
+    	    <input type="submit" value="{$Btoolssell}" />
+        </form>
+    </div><br />
 {/if}
+
 {if $Bplansamount > 1}
-    <div align="center"><a href="#plans">{$Bplansmenu[0]}</a></div>
+    <div>
+    <label for="plans" class="toggle">+{$Bplansmenu[0]}</label>
+    <input id="plans" type="checkbox" class="toggle" checked="checked" />
+    <div><br />
+        <form method="POST" action="equip.php?sellchecked=E">
+            {foreach $Bplans as $key => $value}
+	        {if $key > 0}
+	            {$Ilevel} {$key}:<br />
+	            {foreach $value as $weapon}
+	                {$weapon}
+	            {/foreach}
+		    <br />
+	        {/if}
+	    {/foreach}
+	    {$Bplansmenu[1]}
+    	    <input type="submit" value="{$Bplanssell}" />
+        </form>
+    </div><br />
 {/if}
+
 {if $Blootsamount > 1}
-    <div align="center"><a href="#loots">{$Blootsmenu[0]}</a></div>
+    <div>
+    <label for="loots" class="toggle">+{$Blootsmenu[0]}</label>
+    <input id="loots" type="checkbox" class="toggle" checked="checked" />
+    <div><br />
+        <form method="POST" action="equip.php?sellchecked=E">
+            {foreach $Bloots as $key => $value}
+	        {if $key > 0}
+	            {$Ilevel} {$key}:<br />
+	            {foreach $value as $weapon}
+	                {$weapon}
+	            {/foreach}
+		    <br />
+	        {/if}
+	    {/foreach}
+	    {$Blootsmenu[1]}
+    	    <input type="submit" value="{$Blootssell}" />
+        </form>
+    </div><br />
 {/if}
+
 {if $Potions1 > "0"}
-    <div align="center"><a href="#potions">{$Potions2}</a></div>
+    <div>
+    <label for="potions" class="toggle">+{$Potions2}</label>
+    <input id="potions" type="checkbox" class="toggle" checked="checked" />
+    <div><br />
+        <form method="POST" action="equip.php?sellchecked=P">
+            {section name=item10 loop=$Pname1}
+                <input type="checkbox" name="{$Potionid1[item10]}" /><b>({$Amount}: {$Pamount1[item10]} )</b> {$Pname1[item10]} ({$Peffect1[item10]}) {$Ppower1[item10]} {$Paction1[item10]}<br />
+            {/section}
+            {$Sellallp}
+	    <input type="submit" value="{$Potionssell}" />
+        </form>
+    </div><br />
 {/if}
+
 {if $Pets1 > "0"}
-    <div align="center"><a href="#pets">{$Tpets}</a></div>
-{/if}
-{if $Bquestsamount > 1}
-    <div align="center"><a href="#quests">{$Bquestsmenu[0]}</a></div>
-{/if}
-
-{if $Bweaponsamount > 1}
-    <form method="POST" action="equip.php?sellchecked=E">
-        <br /><a name="weapons"><u>{$Bweaponsmenu[0]}:</u></a><br />
-        {foreach $Bweapons as $key => $value}
-	    {if $key > 0}
-	        {$Ilevel} {$key}:<br />
-	        {foreach $value as $weapon}
-	            {$weapon}
-	        {/foreach}
-		<br />
-	    {/if}
-	{/foreach}
-	{$Bweaponsmenu[1]}
-	<input type="submit" value="{$Bweaponssell}" />
-    </form>
-    <a href="#top">{$Aback}</a><br />
-{/if}
-
-{if $Bstaffsamount > 1}
-    <form method="POST" action="equip.php?sellchecked=E">
-        <br /><a name="staffs"><u>{$Bstaffsmenu[0]}:</u></a><br />
-        {foreach $Bstaffs as $key => $value}
-	    {if $key > 0}
-	        {$Ilevel} {$key}:<br />
-	        {foreach $value as $weapon}
-	            {$weapon}
-	        {/foreach}
-		<br />
-	    {/if}
-	{/foreach}
-	{$Bstaffsmenu[1]}
-	<input type="submit" value="{$Bstaffssell}" />
-    </form>
-    <a href="#top">{$Aback}</a><br />
-{/if}
-
-{if $Barrowsamount > 1}
-    <form method="POST" action="equip.php?sellchecked=A">
-        <br /><a name="arrows"><u>{$Barrowsmenu[0]}:</u></a><br />
-        {foreach $Barrows as $key => $value}
-	    {if $key > 0}
-	        {$Ilevel} {$key}:<br />
-	        {foreach $value as $weapon}
-	            {$weapon}
-	        {/foreach}
-		<br />
-	    {/if}
-	{/foreach}
-	{$Barrowsmenu[1]}
-	<input type="submit" value="{$Barrowssell}" />
-    </form>
-    <a href="#top">{$Aback}</a><br />
-{/if}
-
-{if $Bhelmetsamount > 1}
-    <form method="POST" action="equip.php?sellchecked=E">
-        <br /><a name="helmets"><u>{$Bhelmetsmenu[0]}:</u></a><br />
-        {foreach $Bhelmets as $key => $value}
-	    {if $key > 0}
-	        {$Ilevel} {$key}:<br />
-	        {foreach $value as $weapon}
-	            {$weapon}
-	        {/foreach}
-		<br />
-	    {/if}
-	{/foreach}
-	{$Bhelmetsmenu[1]}
-  	<input type="submit" value="{$Bhelmetssell}" />
-    </form>
-    <a href="#top">{$Aback}</a><br />
-{/if}
-
-{if $Barmorsamount > 1}
-    <form method="POST" action="equip.php?sellchecked=E">
-        <br /><a name="armors"><u>{$Barmorsmenu[0]}:</u></a><br />
-        {foreach $Barmors as $key => $value}
-	    {if $key > 0}
-	        {$Ilevel} {$key}:<br />
-	        {foreach $value as $weapon}
-	            {$weapon}
-	        {/foreach}
-		<br />
-	    {/if}
-	{/foreach}
-	{$Barmorsmenu[1]}
-    <input type="submit" value="{$Barmorssell}" />
-    </form>
-    <a href="#top">{$Aback}</a><br />
-{/if}
-
-{if $Bshieldsamount > 1}
-    <form method="POST" action="equip.php?sellchecked=E">
-        <br /><a name="shields"><u>{$Bshieldsmenu[0]}:</u></a><br />
-        {foreach $Bshields as $key => $value}
-	    {if $key > 0}
-	        {$Ilevel} {$key}:<br />
-	        {foreach $value as $weapon}
-	            {$weapon}
-	        {/foreach}
-		<br />
-	    {/if}
-	{/foreach}
-	{$Bshieldsmenu[1]}
-        <input type="submit" value="{$Bshieldssell}" />
-    </form>
-    <a href="#top">{$Aback}</a><br />
-{/if}
-
-{if $Bcapesamount > 1}
-    <form method="POST" action="equip.php?sellchecked=E">
-        <br /><a name="capes"><u>{$Bcapesmenu[0]}:</u></a><br />
-        {foreach $Bcapes as $key => $value}
-	    {if $key > 0}
-	        {$Ilevel} {$key}:<br />
-	        {foreach $value as $weapon}
-	            {$weapon}
-	        {/foreach}
-		<br />
-	    {/if}
-	{/foreach}
-	{$Bcapesmenu[1]}
-    	<input type="submit" value="{$Bcapessell}" />
-    </form>
-    <a href="#top">{$Aback}</a><br />
-{/if}
-
-{if $Blegsamount > 1}
-    <form method="POST" action="equip.php?sellchecked=E">
-        <br /><a name="legs"><u>{$Blegsmenu[0]}:</u></a><br />
-        {foreach $Blegs as $key => $value}
-	    {if $key > 0}
-	        {$Ilevel} {$key}:<br />
-	        {foreach $value as $weapon}
-	            {$weapon}
-	        {/foreach}
-		<br />
-	    {/if}
-	{/foreach}
-	{$Blegsmenu[1]}
-    	<input type="submit" value="{$Blegssell}" />
-    </form>
-    <a href="#top">{$Aback}</a><br />
-{/if}
-
-{if $Bringsamount > 1}
-    <form method="POST" action="equip.php?sellchecked=E">
-        <br /><a name="rings"><u>{$Bringsmenu[0]}:</u></a><br />
-        {foreach $Brings as $key => $value}
-	    {if $key > 0}
-	        {$Ilevel} {$key}:<br />
-	        {foreach $value as $weapon}
-	            {$weapon}
-	        {/foreach}
-		<br />
-	    {/if}
-	{/foreach}
-	{$Bringsmenu[1]}
-    	<input type="submit" value="{$Bringssell}" />
-    </form>
-    <a href="#top">{$Aback}</a><br />
-{/if}
-
-{if $Btoolsamount > 1}
-    <form method="POST" action="equip.php?sellchecked=E">
-        <br /><a name="tools"><u>{$Btoolsmenu[0]}:</u></a><br />
-        {foreach $Btools as $key => $value}
-	    {if $key > 0}
-	        {$Ilevel} {$key}:<br />
-	        {foreach $value as $weapon}
-	            {$weapon}
-	        {/foreach}
-		<br />
-	    {/if}
-	{/foreach}
-	{$Btoolsmenu[1]}
-    	<input type="submit" value="{$Btoolssell}" />
-    </form>
-    <a href="#top">{$Aback}</a><br />
-{/if}
-
-{if $Bplansamount > 1}
-    <form method="POST" action="equip.php?sellchecked=E">
-        <br /><a name="plans"><u>{$Bplansmenu[0]}:</u></a><br />
-        {foreach $Bplans as $key => $value}
-	    {if $key > 0}
-	        {$Ilevel} {$key}:<br />
-	        {foreach $value as $weapon}
-	            {$weapon}
-	        {/foreach}
-		<br />
-	    {/if}
-	{/foreach}
-	{$Bplansmenu[1]}
-    	<input type="submit" value="{$Bplanssell}" />
-    </form>
-    <a href="#top">{$Aback}</a><br />
-{/if}
-
-{if $Blootsamount > 1}
-    <form method="POST" action="equip.php?sellchecked=E">
-        <br /><a name="loots"><u>{$Blootsmenu[0]}:</u></a><br />
-        {foreach $Bloots as $key => $value}
-	    {if $key > 0}
-	        {$Ilevel} {$key}:<br />
-	        {foreach $value as $weapon}
-	            {$weapon}
-	        {/foreach}
-		<br />
-	    {/if}
-	{/foreach}
-	{$Blootsmenu[1]}
-    	<input type="submit" value="{$Blootssell}" />
-    </form>
-    <a href="#top">{$Aback}</a><br />
-{/if}
-
-{if $Potions1 > "0"}
-    <br /><a name="potions"><u>{$Potions2}:</u></a><br />
-    <form method="POST" action="equip.php?sellchecked=P">
-        {section name=item10 loop=$Pname1}
-            <input type="checkbox" name="{$Potionid1[item10]}" /><b>({$Amount}: {$Pamount1[item10]} )</b> {$Pname1[item10]} ({$Peffect1[item10]}) {$Ppower1[item10]} {$Paction1[item10]}<br />
+    <div>
+    <label for="pets" class="toggle">+{$Tpets}</label>
+    <input id="pets" type="checkbox" class="toggle" checked="checked" />
+    <div><br />
+        {section name=pets loop=$Pets}
+            <b>{$Pname}</b> {$Pets[pets].name} <b>{$Pgender}</b> {$Pets[pets].gender} <b>{$Ppower}</b> {$Pets[pets].power} <b>{$Pdefense}</b> {$Pets[pets].defense} [ <a href="equip.php?name={$Pets[pets].id}">{$Pchname}</a> | <a href="equip.php?release={$Pets[pets].id}">{$Prelease}</a> ]<br />
         {/section}
-        {$Sellallp}
-	<input type="submit" value="{$Potionssell}" />
-    </form>
-    <a href="#top">{$Aback}</a><br />
-{/if}
-
-{if $Pets1 > "0"}
-    <br /><a name="pets"><u>{$Tpets}:</u></a><br />
-    {section name=pets loop=$Pets}
-        <b>{$Pname}</b> {$Pets[pets].name} <b>{$Pgender}</b> {$Pets[pets].gender} <b>{$Ppower}</b> {$Pets[pets].power} <b>{$Pdefense}</b> {$Pets[pets].defense} [ <a href="equip.php?name={$Pets[pets].id}">{$Pchname}</a> | <a href="equip.php?release={$Pets[pets].id}">{$Prelease}</a> ]<br />
-    {/section}
-    <a href="#top">{$Aback}</a><br />
+    </div><br />
 {/if}
 
 {if $Bquestsamount > 1}
-    <form method="POST" action="equip.php?sellchecked=E">
-        <br /><a name="quests"><u>{$Bquestsmenu[0]}:</u></a><br />
-        {foreach $Bquests as $key => $value}
-	    {if $key > 0}
-	        {$Ilevel} {$key}:<br />
-	        {foreach $value as $weapon}
-	            {$weapon}
-	        {/foreach}
-		<br />
-	    {/if}
-	{/foreach}
-	{$Bquestsmenu[1]}
-    	<input type="submit" value="{$Bquestssell}" />
-    </form>
-    <a href="#top">{$Aback}</a><br />
+    <div>
+    <label for="quests" class="toggle">+{$Bquestsmenu[0]}</label>
+    <input id="quests" type="checkbox" class="toggle" checked="checked" />
+    <div><br />
+        <form method="POST" action="equip.php?sellchecked=E">
+            {foreach $Bquests as $key => $value}
+	        {if $key > 0}
+	            {$Ilevel} {$key}:<br />
+	            {foreach $value as $weapon}
+	                {$weapon}
+	            {/foreach}
+		    <br />
+	        {/if}
+	    {/foreach}
+	    {$Bquestsmenu[1]}
+    	    <input type="submit" value="{$Bquestssell}" />
+        </form>
+    </div><br />
 {/if}
