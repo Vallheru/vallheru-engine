@@ -1,5 +1,7 @@
 2012-03-06  Bartek thindil Jasicki  <thindil@vallheru.net>
 
+	* UPADATE,mission.php: 
+	small code redesign
 	* BUG,hunters.php: 
 	probably fixed bug with finishing quests
 	* BUG,farm.php: 
