@@ -1,5 +1,7 @@
 2012-03-06  Bartek thindil Jasicki  <thindil@vallheru.net>
 
+	* UPDATE,mission.php: 
+	better item handling
 	* UPADATE,mission.php: 
 	small code redesign
 	* BUG,hunters.php: 

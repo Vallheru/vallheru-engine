@@ -191,6 +191,15 @@ if (isset($_POST['action']))
 	      {
 		$intItem = array_search($_POST['action'], $arrIactions);
 		$arrItem = explode(',', $_SESSION['maction']['items'][$intItem]);
+		if ($arrItem[1][0] == 'T')
+		  {
+		    $_SESSION['maction']['successes']++;
+		    if ($_SESSION['maction']['successes'] == 10)
+		      {
+			$_SESSION['maction']['rooms'] = 1;
+		      }
+		    $arrItem[1] = $arrItem[1][1];
+		  }
 		switch ($arrItem[1])
 		  {
 		    //Quest target = finish mission
