@@ -1,3 +1,8 @@
+2012-03-06  Bartek thindil Jasicki  <thindil@vallheru.net>
+
+	* BUG,thieves.php:
+	fixed bug with freeze page
+
 2012-03-05  Bartek thindil Jasicki  <thindil@vallheru.net>
 
 	* UPDATE,templates/layout1/czary.tpl, templates/czary.tpl, czary.php: 

@@ -7,7 +7,7 @@
  *   @copyright            : (C) 2011,2012 Vallheru Team based on Gamers-Fusion ver 2.5
  *   @author               : thindil <thindil@vallheru.net>
  *   @version              : 1.5
- *   @since                : 02.03.2012
+ *   @since                : 06.03.2012
  *
  */
 
@@ -197,7 +197,7 @@ else
 	      case 0:
 		if ($objJob->fields['mpoints'] < 10)
 		  {
-		    $i = -1;
+		    $intKey = -1;
 		  }
 		else
 		  {
@@ -233,7 +233,7 @@ else
 	      case 3:
 		if ($objJob->fields['mpoints'] < 5)
 		  {
-		    $i = -1;
+		    $intKey = -1;
 		  }
 		else
 		  {
@@ -253,7 +253,7 @@ else
 	      default:
 		break;
 	      }
-	    if ($i > -1)
+	    if ($intKey > -1)
 	      {
 		$arrLoots = array(0 => '.',
 				  80 => ' oraz nowe wytrychy.',
@@ -265,7 +265,7 @@ else
 		$_SESSION['mission'][$i] = $intKey;
 		$_SESSION['mtype'][$i] = $intOption;
 		$_SESSION['reward'][$i] = $intLoot;
-		$i++;
+		$i ++;
 	      }
 	  }
 	$smarty->assign(array('Minfo' => 'Ruchem głowy, barman pokazuje tobie schody na górę. Udajesz się we wskazanym kierunku. Dochodzisz do dość ciemnego pokoju na górze. Na jego środku stoi niewielki stolik przy którym siedzi jakiś człowiek, ruchem dłoni wskazuje tobie miejsce przy stoliku. Bardziej wyczuwasz niż widzisz, że w pomieszczeniu znajdują się jeszcze inne osoby. Kiedy zajmujesz swoje miejsce siedzący mężczyzna odzywa się do ciebie.<i>'.$strTalk.' tak się składa, że chyba mamy parę zadań dla ciebie. Zainteresowan'.$strSuffix2.'?</i>',
