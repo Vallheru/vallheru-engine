@@ -1,5 +1,7 @@
 2012-03-06  Bartek thindil Jasicki  <thindil@vallheru.net>
 
+	* BUG,farm.php: 
+	fixed notice
 	* BUG,thieves.php:
 	fixed bug with freeze page
 
