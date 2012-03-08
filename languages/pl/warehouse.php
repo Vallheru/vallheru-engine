@@ -4,10 +4,10 @@
  *   Polish language for warehouse
  *
  *   @name                 : warehouse.php                            
- *   @copyright            : (C) 2004,2005,2006 Vallheru Team based on Gamers-Fusion ver 2.5
- *   @author               : thindil <thindil@users.sourceforge.net>
- *   @version              : 1.1
- *   @since                : 28.03.2006
+ *   @copyright            : (C) 2004,2005,2006,2012 Vallheru Team based on Gamers-Fusion ver 2.5
+ *   @author               : thindil <thindil@vallheru.net>
+ *   @version              : 1.5
+ *   @since                : 08.03.2012
  *
  */
 
@@ -82,16 +82,16 @@ if (!isset($_GET['action']))
 
 if (isset($_GET['action']) && ($_GET['action'] == 'sell' || $_GET['action'] == 'buy'))
 {
-    define("MIN5", "sztabkek miedzi");
-    define("MIN8", "sztabkek żelaza");
+    define("MIN5", "sztabek miedzi");
+    define("MIN8", "sztabek żelaza");
     define("MIN10", "brył węgla");
     define("MIN11", "brył adamantium");
     define("MIN12", "kawałków meteorytu");
     define("MIN13", "kryształów");
     define("MIN14", "drewna sosnowego");
     define("MIN6", "sztabek brązu");
-    define("MIN7", "sztabkek mosiądzu");
-    define("MIN9", "sztabkek stali");
+    define("MIN7", "sztabek mosiądzu");
+    define("MIN9", "sztabek stali");
     define("MIN15", "drewna z leszczyny");
     define("MIN16", "drewna cisowego");
     define("MIN17", "drewna z wiązu");

@@ -1,3 +1,8 @@
+2012-03-08  Bartek thindil Jasicki  <thindil@vallheru.net>
+
+	* BUG,languages/pl/warehouse.php:
+	fixed typo
+
 2012-03-06  Bartek thindil Jasicki  <thindil@vallheru.net>
 
 	* UPDATE,mission.php: 
