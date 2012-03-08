@@ -7,7 +7,7 @@
  *   @copyright            : (C) 2004,2005,2006,2011,2012 Vallheru Team based on Gamers-Fusion ver 2.5
  *   @author               : thindil <thindil@vallheru.net>
  *   @version              : 1.5
- *   @since                : 23.02.2011
+ *   @since                : 08.03.2011
  *
  */
 
@@ -206,8 +206,7 @@ class Quests
                 $expgain = $expgain + ceil($expgain1 / 5 * (sqrt($k) + 4.5));
             }
         }
-        $goldgain = ceil(rand($enemy1 -> fields['credits1'],$enemy1 -> fields['credits2']) * $span);
-        $enemy1 -> Close();        
+        $goldgain = ceil(rand($enemy1 -> fields['credits1'],$enemy1 -> fields['credits2']) * $span);        
         $arrehp = array ();
         if (!isset ($_POST['action'])) 
         {
@@ -219,10 +218,11 @@ class Quests
         }
         if ($fight -> fields['fight'] == 0) 
         {
-            $player -> energy = $player -> energy - 1;
+            $player -> energy = $player -> energy - $enemy1->fields['level'];
             $db -> Execute("UPDATE players SET energy=".$player -> energy." WHERE id=".$player -> id);
        }
        $fight -> Close();
+       $enemy1 -> Close();
    }
 
    /**
