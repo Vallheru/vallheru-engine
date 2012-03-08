@@ -1,5 +1,7 @@
 2012-03-08  Bartek thindil Jasicki  <thindil@vallheru.net>
 
+	* FEATURE,hunters.php: 
+	changed count energy for missions with kill
 	* FEATURE,class/quests_class.php, includes/funkcje.php, includes/turnfight.php, battle.php, maze.php, explore.php:
 	changed count energy and skills for fight with monsters
 	* BUG,languages/pl/warehouse.php:
