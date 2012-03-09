@@ -1,3 +1,8 @@
+2012-03-09  Bartek thindil Jasicki  <thindil@vallheru.net>
+
+	* BUG,install/install.php:
+	fixed phpmailer to work with gmail account
+
 2012-03-08  Bartek thindil Jasicki  <thindil@vallheru.net>
 
 	* BUG,languages/pl/warehouse.php:

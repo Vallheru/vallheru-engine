@@ -4,10 +4,10 @@
  *   Install or update game
  *
  *   @name                 : install.php                            
- *   @copyright            : (C) 2004,2005,2006,2007,2011 Vallheru Team based on Gamers-Fusion ver 2.5
- *   @author               : thindil <thindil@tuxfamily.org>
- *   @version              : 1.4
- *   @since                : 28.12.2011
+ *   @copyright            : (C) 2004,2005,2006,2007,2011,2012 Vallheru Team based on Gamers-Fusion ver 2.5
+ *   @author               : thindil <thindil@vallheru.net>
+ *   @version              : 1.5
+ *   @since                : 09.03.2012
  *
  */
 
@@ -482,8 +482,17 @@ require_once('class.phpmailer.php');
 
 ?>";
     }
-        else
-    {
+    else
+      {
+	if ($_POST['mailserv'] == 'smtp.gmail.com')
+	  {
+	    $strGmail = "\$mail -> SMTPSecure = true;
+\$mail -> Port = 465;";
+	  }
+	else
+	  {
+	    $strGmail = '';
+	  }
         $strConfigtext = "<?php
 require_once('class.phpmailer.php');
 \$mail = new PHPMailer();
@@ -492,6 +501,7 @@ require_once('class.phpmailer.php');
 \$mail -> CharSet = \"utf-8\";
 \$mail -> Sender = \$gamemail;
 \$mail -> IsSMTP();
+".$strGmail."
 \$mail -> Host = \"".$_POST['mailserv']."\"; 
 \$mail -> SMTPAuth = true; 
 \$mail -> Username = \"".$_POST['user']."\";
