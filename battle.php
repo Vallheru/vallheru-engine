@@ -7,7 +7,7 @@
  *   @copyright            : (C) 2004,2005,2006,2011,2012 Vallheru Team based on Gamers-Fusion ver 2.5
  *   @author               : thindil <thindil@vallheru.net>
  *   @version              : 1.5
- *   @since                : 08.03.2012
+ *   @since                : 01.02.2012
  *
  */
 
@@ -465,6 +465,10 @@ if (isset($_GET['action']))
 	      {
 		$_SESSION['razy'] = $_POST['razy'];
 	      }
+	    if (!isset($_POST['action']) && $player -> energy < $_POST['razy'])
+	      {
+		error (NO_ENERGY2);
+	      }
 	    require_once("includes/turnfight.php");
 	    $enemy1 = $db -> Execute("SELECT * FROM monsters WHERE id=".$_GET['fight1']);
 	    if (!$enemy1 -> fields['id']) 
@@ -478,11 +482,6 @@ if (isset($_GET['action']))
 	    if ($player->fight > 0 && $player->fight != $_GET['fight1'])
 	      {
 		error("Już z kimś walczysz!");
-	      }
-	    $intEnergy = $_SESSION['razy'] * $enemy1->fields['level'];
-	    if (!isset($_POST['action']) && $player -> energy < $intEnergy)
-	      {
-		error (NO_ENERGY2);
 	      }
 	    $span = ($enemy1 -> fields['level'] / $player -> level);
 	    if ($span > 2) 
@@ -535,7 +534,7 @@ if (isset($_GET['action']))
 	    if (!isset ($_POST['action'])) 
 	      {
 		unset($_SESSION['miss']);
-		$player -> energy = $player -> energy - $intEnergy;
+		$player -> energy = $player -> energy - $_POST['razy'];
 		if ($player -> energy < 0) 
 		  {
 		    $player -> energy = 0;
@@ -580,6 +579,11 @@ if (isset($_GET['action']))
 	      {
 		error("Zbyt wiele walk na raz!");
 	      }
+	    $lostenergy = $_POST['razy'] * $_POST['times'];
+	    if ($player->energy < $lostenergy) 
+	      {
+		error (NO_ENERGY2);
+	      }
 	    if ($player -> clas == '') 
 	      {
 		error (NO_CLASS3);
@@ -589,11 +593,6 @@ if (isset($_GET['action']))
 	    if (!$enemy1 -> fields['id']) 
 	      {
 		error (NO_MONSTER);
-	      }
-	    $lostenergy = ($_POST['razy'] * $_POST['times']) * $enemy1->fields['level'];
-	    if ($player->energy < $lostenergy) 
-	      {
-		error (NO_ENERGY2);
 	      }
 	    if ($player->fight > 0 && $player->fight != $_GET['fight'])
 	      {
@@ -650,8 +649,7 @@ if (isset($_GET['action']))
 		    break;
 		  }
 	      }
-	    $intEnergy = ($_POST['razy'] * $intAmount) * $enemy1->fields['level'];
-	    $db -> Execute("UPDATE `players` SET `energy`=`energy`-".$intEnergy." WHERE `id`=".$player -> id);
+	    $db -> Execute("UPDATE `players` SET `energy`=`energy`-".($_POST['razy'] * $intAmount)." WHERE `id`=".$player -> id);
 	    $enemy1->Close();
 	  }
       }

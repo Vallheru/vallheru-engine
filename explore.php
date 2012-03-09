@@ -7,7 +7,7 @@
  *   @copyright            : (C) 2004,2005,2006,2011,2012 Vallheru Team based on Gamers-Fusion ver 2.5
  *   @author               : thindil <thindil@vallheru.net>
  *   @version              : 1.5
- *   @since                : 08.03.2012
+ *   @since                : 22.02.2012
  *
  */
  
@@ -105,7 +105,7 @@ function battle($type,$adress)
     $fight = $db -> Execute("SELECT `fight`, `hp` FROM `players` WHERE `id`=".$player -> id);
     if ($fight -> fields['fight'] == 0) 
     {
-        $player -> energy = $player -> energy - $enemy1->fields['level'];
+        $player -> energy = $player -> energy - 1;
         if ($player -> energy < 0) 
         {
             $player -> energy = 0;

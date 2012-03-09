@@ -7,7 +7,7 @@
  *   @copyright            : (C) 2011,2012 Vallheru Team based on Gamers-Fusion ver 2.5
  *   @author               : thindil <thindil@vallheru.net>
  *   @version              : 1.5
- *   @since                : 08.03.2012
+ *   @since                : 06.03.2012
  *
  */
 
@@ -245,15 +245,10 @@ elseif ($_GET['step'] == 'quest')
         {
             turnfight ($expgain, $goldgain, $_POST['action'], "hunters.php?step=quest");
         }
+      $enemy1->Close();
       $fight = $db -> Execute("SELECT `fight`, `hp` FROM `players` WHERE `id`=".$player -> id);
       if ($fight -> fields['fight'] == 0) 
 	{
-	  $player->energy -= $enemy1->fields['level'];
-	  if ($player->energy < 0)
-	    {
-	      $player->energy = 0;
-	    }
-	  $db->Execute("UPDATE `players` SET `energy`=".$player->energy." WHERE `id`=".$player->id);
 	  if ($fight->fields['hp'] <= 0 || isset($_SESSION['ressurect']))
 	    {
 	      unset($_SESSION['ressurect']);
@@ -275,7 +270,6 @@ elseif ($_GET['step'] == 'quest')
 	{
 	  $intGold = 0;
 	}
-      $enemy1->Close();
       break;
     case 'I':
     case 'B':

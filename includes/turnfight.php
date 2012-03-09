@@ -7,7 +7,7 @@
  *   @copyright            : (C) 2004,2005,2006,2007,2011,2012 Vallheru Team based on Gamers-Fusion ver 2.5
  *   @author               : thindil <thindil@vallheru.net>
  *   @version              : 1.5
- *   @since                : 08.03.2012
+ *   @since                : 23.02.2012
  *
  */
  
@@ -965,7 +965,7 @@ function attack($eunik,$bdamage)
 		$intHit = rand(0, 2);
 		if ($krytyk >= $rzut && $intRoll <= $krytyk && $player->fight != 999) 
 		  {
-		    $gatak += $enemy['level'];
+		    $gatak++;
 		    $ehp = 0;
 		    $smarty->assign("Message", showcritical($arrLocations[$intHit], $strAtype, 'pve', $enemy['name']));
 		  }
@@ -975,7 +975,7 @@ function attack($eunik,$bdamage)
 		    $smarty -> assign ("Message", YOU_ATTACK1." ".$name." <b>".$enemy['name']."</b> ".$arrLocations[$intHit]." ".INFLICT." <b>".$stat['damage']."</b> ".DAMAGE."! (".$ehp." ".LEFT.")</font><br />");
 		    if ($stat['damage'] > 0) 
 		      {
-			$gatak += $enemy['level'];
+			$gatak = ($gatak + 1);
 		      }
 		  }
 		$smarty -> display ('error1.tpl');
@@ -1122,7 +1122,7 @@ function castspell ($id,$boost,$eunik)
 		    $intRoll = rand(1, 100);
 		    if ($krytyk >= $rzut && $intRoll <= $krytyk && $player->fight != 999) 
 		      {
-			$gmagia += $enemy['level'];
+			$gmagia++;
 			$ehp = 0;
 			$arrLocations = array('w tułów', 'w głowę', 'w kończynę');
 			$intHit = rand(0, 2);
@@ -1136,7 +1136,7 @@ function castspell ($id,$boost,$eunik)
 			$smarty -> assign ("Message", YOU_HIT." <b>".$enemy['name']."</b> ".$arrLocations[$intHit]." ".BY_SPELL." ".$mczar -> fields['nazwa']." ".INFLICT." <b>".$stat['damage']."</b> ".DAMAGE."! (".$ehp." ".LEFT.")</font><br />");
 			if ($stat['damage'] > 0) 
 			  {
-			    $gmagia += $enemy['level'];
+			    $gmagia++;
 			  }
 		      }
 		    $smarty->display('error1.tpl');
@@ -1292,7 +1292,7 @@ function monsterattack($attacks,$enemy,$myunik,$amount)
                 {
                     $smarty -> assign ("Message", "<br>".YOU_DODGE." <b>".$ename."</b>!");
                     $smarty -> display ('error1.tpl');
-                    $gunik += $enemy['level'];
+                    $gunik = ($gunik + 1);
                     $zmeczenie = ($zmeczenie + $arrEquip[3][4] + 1);
 		    $blnMiss = TRUE;
                 } 

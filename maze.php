@@ -4,10 +4,10 @@
  *   Labyrynth in forrest city
  *
  *   @name                 : maze.php                            
- *   @copyright            : (C) 2004,2005,2006,2011,2012 Vallheru Team based on Gamers-Fusion ver 2.5
- *   @author               : thindil <thindil@vallheru.net>
- *   @version              : 1.5
- *   @since                : 08.03.2012
+ *   @copyright            : (C) 2004,2005,2006,2011 Vallheru Team based on Gamers-Fusion ver 2.5
+ *   @author               : thindil <thindil@tuxfamily.org>
+ *   @version              : 1.4
+ *   @since                : 25.11.2011
  *
  */
 
@@ -37,7 +37,7 @@ require_once("includes/turnfight.php");
 /**
 * Get the localization for game
 */
-require_once("languages/".$lang."/maze.php");
+require_once("languages/".$player -> lang."/maze.php");
 
 if ($player -> location != 'Ardulith') 
 {
@@ -96,7 +96,7 @@ function battle($type,$adress)
     $fight = $db -> Execute("SELECT `fight` FROM `players` WHERE `id`=".$player -> id);
     if ($fight -> fields['fight'] == 0) 
     {
-        $player -> energy = $player -> energy - $enemy1->fields['level'];
+        $player -> energy = $player -> energy - 1;
         if ($player -> energy < 0) 
         {
             $player -> energy = 0;

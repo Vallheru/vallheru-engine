@@ -7,7 +7,7 @@
  *   @copyright            : (C) 2004,2005,2006,2007,2011,2012 Vallheru Team based on Gamers-Fusion ver 2.5
  *   @author               : thindil <thindil@vallheru.net>
  *   @version              : 1.5
- *   @since                : 08.03.2012
+ *   @since                : 23.02.2012
  *
  */
 
@@ -576,7 +576,7 @@ function monsterattack2($intMydodge, &$zmeczenie, &$gunik, $arrEquip, &$enemy, $
 	{
 	  $strMessage = YOU_DODGE." <b>".$enemy['name']."</b>!<br />";
 	}
-      $gunik += $enemy['level'];
+      $gunik++;
       $zmeczenie = ($zmeczenie + $arrEquip[3][4] + 1);
       $blnMiss = TRUE;
     } 
@@ -701,7 +701,7 @@ function playerattack($eunik, &$gwtbr, $arrEquip, $mczar, &$zmeczenie, &$gatak, 
 	      if ((($arrEquip[0][6] > $gwtbr || $arrEquip[11][6] > $gwtbr) || ($arrEquip[1][6] > $gwtbr && $arrEquip[6][6] > $gwtbr)) && ($arrEquip[0][0] || $arrEquip[1][0])) 
 		{
 		  $gwtbr++;
-		  $gatak += $enemy['level'];
+		  $gatak++;
 		  $enemy['hp'] -= $enemyhp;
 		  $blnHit = TRUE;
 		}
@@ -715,7 +715,7 @@ function playerattack($eunik, &$gwtbr, $arrEquip, $mczar, &$zmeczenie, &$gatak, 
 		      $lost_mana = 1;
 		    }
 		  $player -> mana = ($player -> mana - $lost_mana);
-		  $gmagia += $enemy['level'];
+		  $gmagia++;
 		  $enemy['hp'] -= $enemyhp;
 		  $blnHit = TRUE;
 		}
@@ -753,7 +753,7 @@ function playerattack($eunik, &$gwtbr, $arrEquip, $mczar, &$zmeczenie, &$gatak, 
 		}
 	      if ($stat['damage'] > 0) 
 		{
-		  $gatak += $enemy['level'];
+		  $gatak++;
 		}
 	    }
 	  //Hit with spell
@@ -784,7 +784,7 @@ function playerattack($eunik, &$gwtbr, $arrEquip, $mczar, &$zmeczenie, &$gatak, 
 		    }
 		  if ($stat['damage'] > 0) 
 		    {
-		      $gmagia += $enemy['level'];
+		      $gmagia++;
 		    }
 		}
 	      else 
