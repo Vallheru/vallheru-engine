@@ -189,8 +189,7 @@ else
 	$_SESSION['mtype'] = array();
 	while ($i < 3)
 	  {
-	    //$intKey = rand(0, 3);
-	    $intKey = rand(1, 3);
+	    $intKey = rand(0, 3);
 	    switch ($intKey)
 	      {
 		//Home robbery

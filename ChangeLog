@@ -1,5 +1,7 @@
 2012-03-12  Bartek thindil Jasicki  <thindil@vallheru.net>
 
+	* UPDATE,thieves.php:
+	unlock last missions type
 	* FEATURE,mission.php, thieves.php:
 	added better handling quest items
 
