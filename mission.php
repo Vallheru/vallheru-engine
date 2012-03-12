@@ -7,7 +7,7 @@
  *   @copyright            : (C) 2012 Vallheru Team based on Gamers-Fusion ver 2.5
  *   @author               : thindil <thindil@vallheru.net>
  *   @version              : 1.5
- *   @since                : 06.03.2012
+ *   @since                : 12.03.2012
  *
  */
 
@@ -196,6 +196,7 @@ if (isset($_POST['action']))
 		    //Quest target = finish mission
 		  case 'Q':
 		    $_SESSION['maction']['rooms'] = 1;
+		    $blnQuest = TRUE;
 		    break;
 		    //Target item
 		  case 'T':

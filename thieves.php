@@ -7,7 +7,7 @@
  *   @copyright            : (C) 2011,2012 Vallheru Team based on Gamers-Fusion ver 2.5
  *   @author               : thindil <thindil@vallheru.net>
  *   @version              : 1.5
- *   @since                : 06.03.2012
+ *   @since                : 12.03.2012
  *
  */
 
@@ -314,6 +314,7 @@ else
 		break;
 	      case 150:
 		$intRooms = rand(8, 40);
+		$strTarget = 'Y';
 		break;
 	      default:
 		break;

@@ -1,3 +1,8 @@
+2012-03-12  Bartek thindil Jasicki  <thindil@vallheru.net>
+
+	* FEATURE,mission.php, thieves.php:
+	added better handling quest items
+
 2012-03-09  Bartek thindil Jasicki  <thindil@vallheru.net>
 
 	* BUG,install/install.php:
