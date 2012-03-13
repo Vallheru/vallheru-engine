@@ -1,3 +1,8 @@
+2012-03-13  Bartek thindil Jasicki  <thindil@vallheru.net>
+
+	* BUG,guilds2.php:
+	fixed notice
+
 2012-03-12  Bartek thindil Jasicki  <thindil@vallheru.net>
 
 	* UPDATE,thieves.php:
