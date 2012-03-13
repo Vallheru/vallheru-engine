@@ -5,7 +5,7 @@
 <div align="center"><u><b>{$Inn}</b></u><br /><br />
 {if $Desc != ""}
     <label for="mytoggle" class="toggle">{$Adesc}</label>
-    <input id="mytoggle" type="checkbox" class="toggle" checked="checked" />
+    <input id="mytoggle" type="checkbox" class="toggle" {$Checked} />
     <div>{$Desc}</div>
 {/if}</div>
 <br /><br />
@@ -16,7 +16,7 @@
 
 <div align="center">
     <label for="mytoggle3" class="toggle">{$Tinroom}</label>
-    <input id="mytoggle3" type="checkbox" class="toggle" checked="checked" />
+    <input id="mytoggle3" type="checkbox" class="toggle" {$Checked} />
     <div><br />
         {foreach $Poptions as $Plroom}
 	    <a href="view.php?view={$Plroom@key}">{$Plroom}</a>
@@ -27,7 +27,7 @@
 {if $Aowner != ""}
     <div align="center">
     <label for="mytoggle2" class="toggle">{$Aowner}</label>
-    <input id="mytoggle2" type="checkbox" class="toggle" checked="checked" />
+    <input id="mytoggle2" type="checkbox" class="toggle" {$Checked} />
     <div><br />
         <form method="post" action="room.php?step=admin&amp;action=invite">
 	    <input type="submit" value="{$Ainv}" /> {$Tid} <input type="text" name="pid" size="5" /> {$Troom}

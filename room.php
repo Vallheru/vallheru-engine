@@ -7,7 +7,7 @@
  *   @copyright            : (C) 2012 Vallheru Team based on Gamers-Fusion ver 2.5
  *   @author               : thindil <thindil@vallheru.net>
  *   @version              : 1.5
- *   @since                : 22.02.2012
+ *   @since                : 13.03.2012
  *
  */
 
@@ -530,6 +530,15 @@ if (isset($_GET['step']))
       }
   }
 
+if (strpos($_SERVER['HTTP_USER_AGENT'], 'Opera Mini') !== FALSE)
+  {
+    $strChecked = "";
+  }
+else
+  {
+    $strChecked = "checked=checkded";
+  }
+
 $smarty -> assign (array("Arefresh" => 'Odśwież',
                          "Asend" => 'Wyślij',
 			 'Amanage' => 'Zarządzaj pokojem',
@@ -540,6 +549,7 @@ $smarty -> assign (array("Arefresh" => 'Odśwież',
 			 "Desc" => $objRoom->fields['desc'],
 			 'Poptions' => $arrPlayers,
 			 'Tinroom' => '+ Osoby w pokoju',
+			 'Checked' => $strChecked,
 			 "Desc2" => htmltobbcode($objRoom->fields['desc']),
 			 'Trent' => 'Pokój będzie istniał jeszcze przez '.$objRoom->fields['days'].' dni.',
                          "Rank" => $player->rank));
