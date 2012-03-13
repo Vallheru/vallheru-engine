@@ -1,5 +1,7 @@
 2012-03-13  Bartek thindil Jasicki  <thindil@vallheru.net>
 
+	* BUG,templates/layout1/equip.tpl, templates/equip.tpl, equip.php: 
+	fixed equipment under Opera Mini
 	* BUG,languages/pl/tribearmor.php, tribearmor.php: 
 	fixed typo
 	* BUG,guilds2.php:

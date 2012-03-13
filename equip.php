@@ -267,6 +267,15 @@ function backpack($type, $nameitems, $type2, $smartyname)
     }
 }
 
+if (strpos($_SERVER['HTTP_USER_AGENT'], 'Opera Mini') !== FALSE)
+  {
+    $strChecked = "";
+  }
+else
+  {
+    $strChecked = "checked=checkded";
+  }
+
 /**
 * Assign variables to template
 */
@@ -281,6 +290,7 @@ $smarty -> assign(array("Arrowhead" => '',
                         "Tarrows" => ARROWS,
                         "Asell" => A_SELL,
 			"Refresh" => REFRESH,
+			"Checked" => $strChecked,
 			"Aback" => "Wróć na górę"));
 
 $arrEquip = $player -> equipment();

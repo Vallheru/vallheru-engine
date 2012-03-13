@@ -45,7 +45,7 @@
 {if $Bweaponsamount > 1}
     <div>
     <label for="weapons" class="toggle">+{$Bweaponsmenu[0]}</label>
-    <input id="weapons" type="checkbox" class="toggle" checked="checked" />
+    <input id="weapons" type="checkbox" class="toggle" {$Checked} />
     <div><br />
         <form method="POST" action="equip.php?sellchecked=E">
             {foreach $Bweapons as $key => $value}
@@ -66,7 +66,7 @@
 {if $Bstaffsamount > 1}
     <div>
     <label for="staffs" class="toggle">+{$Bstaffsmenu[0]}</label>
-    <input id="staffs" type="checkbox" class="toggle" checked="checked" />
+    <input id="staffs" type="checkbox" class="toggle" {$Checked} />
     <div><br />
         <form method="POST" action="equip.php?sellchecked=E">
             {foreach $Bstaffs as $key => $value}
@@ -87,7 +87,7 @@
 {if $Barrowsamount > 1}
     <div>
     <label for="arrows" class="toggle">+{$Barrowsmenu[0]}</label>
-    <input id="arrows" type="checkbox" class="toggle" checked="checked" />
+    <input id="arrows" type="checkbox" class="toggle" {$Checked} />
     <div><br />
         <form method="POST" action="equip.php?sellchecked=A">
             {foreach $Barrows as $key => $value}
@@ -108,7 +108,7 @@
 {if $Bhelmetsamount > 1}
     <div>
     <label for="helmets" class="toggle">+{$Bhelmetsmenu[0]}</label>
-    <input id="helmets" type="checkbox" class="toggle" checked="checked" />
+    <input id="helmets" type="checkbox" class="toggle" {$Checked} />
     <div><br />
         <form method="POST" action="equip.php?sellchecked=E">
             {foreach $Bhelmets as $key => $value}
@@ -129,7 +129,7 @@
 {if $Barmorsamount > 1}
     <div>
     <label for="armors" class="toggle">+{$Barmorsmenu[0]}</label>
-    <input id="armors" type="checkbox" class="toggle" checked="checked" />
+    <input id="armors" type="checkbox" class="toggle" {$Checked} />
     <div><br />
         <form method="POST" action="equip.php?sellchecked=E">
             {foreach $Barmors as $key => $value}
@@ -150,7 +150,7 @@
 {if $Bshieldsamount > 1}
     <div>
     <label for="shields" class="toggle">+{$Bshieldsmenu[0]}</label>
-    <input id="shields" type="checkbox" class="toggle" checked="checked" />
+    <input id="shields" type="checkbox" class="toggle" {$Checked} />
     <div><br />
         <form method="POST" action="equip.php?sellchecked=E">
             {foreach $Bshields as $key => $value}
@@ -171,7 +171,7 @@
 {if $Bcapesamount > 1}
     <div>
     <label for="capes" class="toggle">+{$Bcapesmenu[0]}</label>
-    <input id="capes" type="checkbox" class="toggle" checked="checked" />
+    <input id="capes" type="checkbox" class="toggle" {$Checked} />
     <div><br />
         <form method="POST" action="equip.php?sellchecked=E">
             {foreach $Bcapes as $key => $value}
@@ -192,7 +192,7 @@
 {if $Blegsamount > 1}
     <div>
     <label for="legs" class="toggle">+{$Blegsmenu[0]}</label>
-    <input id="legs" type="checkbox" class="toggle" checked="checked" />
+    <input id="legs" type="checkbox" class="toggle" {$Checked} />
     <div><br />
         <form method="POST" action="equip.php?sellchecked=E">
             {foreach $Blegs as $key => $value}
@@ -213,7 +213,7 @@
 {if $Bringsamount > 1}
     <div>
     <label for="rings" class="toggle">+{$Bringsmenu[0]}</label>
-    <input id="rings" type="checkbox" class="toggle" checked="checked" />
+    <input id="rings" type="checkbox" class="toggle" {$Checked} />
     <div><br />
         <form method="POST" action="equip.php?sellchecked=E">
             {foreach $Brings as $key => $value}
@@ -234,7 +234,7 @@
 {if $Btoolsamount > 1}
     <div>
     <label for="tools" class="toggle">+{$Btoolsmenu[0]}</label>
-    <input id="tools" type="checkbox" class="toggle" checked="checked" />
+    <input id="tools" type="checkbox" class="toggle" {$Checked} />
     <div><br />
         <form method="POST" action="equip.php?sellchecked=E">
             {foreach $Btools as $key => $value}
@@ -255,7 +255,7 @@
 {if $Bplansamount > 1}
     <div>
     <label for="plans" class="toggle">+{$Bplansmenu[0]}</label>
-    <input id="plans" type="checkbox" class="toggle" checked="checked" />
+    <input id="plans" type="checkbox" class="toggle" {$Checked} />
     <div><br />
         <form method="POST" action="equip.php?sellchecked=E">
             {foreach $Bplans as $key => $value}
@@ -276,7 +276,7 @@
 {if $Blootsamount > 1}
     <div>
     <label for="loots" class="toggle">+{$Blootsmenu[0]}</label>
-    <input id="loots" type="checkbox" class="toggle" checked="checked" />
+    <input id="loots" type="checkbox" class="toggle" {$Checked} />
     <div><br />
         <form method="POST" action="equip.php?sellchecked=E">
             {foreach $Bloots as $key => $value}
@@ -297,7 +297,7 @@
 {if $Potions1 > "0"}
     <div>
     <label for="potions" class="toggle">+{$Potions2}</label>
-    <input id="potions" type="checkbox" class="toggle" checked="checked" />
+    <input id="potions" type="checkbox" class="toggle" {$Checked} />
     <div><br />
         <form method="POST" action="equip.php?sellchecked=P">
             {section name=item10 loop=$Pname1}
@@ -312,7 +312,7 @@
 {if $Pets1 > "0"}
     <div>
     <label for="pets" class="toggle">+{$Tpets}</label>
-    <input id="pets" type="checkbox" class="toggle" checked="checked" />
+    <input id="pets" type="checkbox" class="toggle" {$Checked} />
     <div><br />
         {section name=pets loop=$Pets}
             <b>{$Pname}</b> {$Pets[pets].name} <b>{$Pgender}</b> {$Pets[pets].gender} <b>{$Ppower}</b> {$Pets[pets].power} <b>{$Pdefense}</b> {$Pets[pets].defense} [ <a href="equip.php?name={$Pets[pets].id}">{$Pchname}</a> | <a href="equip.php?release={$Pets[pets].id}">{$Prelease}</a> ]<br />
@@ -323,7 +323,7 @@
 {if $Bquestsamount > 1}
     <div>
     <label for="quests" class="toggle">+{$Bquestsmenu[0]}</label>
-    <input id="quests" type="checkbox" class="toggle" checked="checked" />
+    <input id="quests" type="checkbox" class="toggle" {$Checked} />
     <div><br />
         <form method="POST" action="equip.php?sellchecked=E">
             {foreach $Bquests as $key => $value}
