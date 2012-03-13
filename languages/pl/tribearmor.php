@@ -8,7 +8,7 @@
  *   @author               : thindil <thindil@vallheru.net>
  *   @author               : eyescream <tduda@users.sourceforge.net>
  *   @version              : 1.5
- *   @since                : 24.01.2012
+ *   @since                : 13.03.2012
  *
  */
 
@@ -111,6 +111,6 @@ if (isset ($_GET['step']) && $_GET['step'] == 'daj')
     define("ADD_ITEM", "Dodaj przedmiot do zbrojowni");
     define("ITEM", "Przedmiot");
     define("AMOUNT2", "ilość");
-    define("A_ADD", "Dodaj");
+    define("A_ADD2", "Dodaj");
 }
 ?>

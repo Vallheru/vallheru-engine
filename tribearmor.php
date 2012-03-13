@@ -8,7 +8,7 @@
  *   @author               : thindil <thindil@vallheru.net>
  *   @author               : eyescream <tduda@users.sourceforge.net>
  *   @version              : 1.5
- *   @since                : 06.02.2012
+ *   @since                : 13.03.2012
  *
  */
 
@@ -587,7 +587,7 @@ if (isset ($_GET['step']) && $_GET['step'] == 'daj')
                             "Additem" => ADD_ITEM,
                             "Item" => ITEM,
                             "Amount2" => AMOUNT2,
-                            "Aadd" => A_ADD));
+                            "Aadd" => A_ADD2));
 }
 
 /**
