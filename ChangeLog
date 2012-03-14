@@ -1,3 +1,8 @@
+2012-03-14  Bartek thindil Jasicki  <thindil@vallheru.net>
+
+	* BUG,lumbermill.php:
+	fixed info about needed energy
+
 2012-03-13  Bartek thindil Jasicki  <thindil@vallheru.net>
 
 	* BUG,templates/layout1/room.tpl, templates/room.tpl, room.php: 

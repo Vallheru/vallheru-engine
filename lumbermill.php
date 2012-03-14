@@ -7,7 +7,7 @@
  *   @copyright            : (C) 2004,2005,2006,2007,2011,2012 Vallheru Team based on Gamers-Fusion ver 2.5
  *   @author               : thindil <thindil@vallheru.net>
  *   @version              : 1.5
- *   @since                : 17.02.2012
+ *   @since                : 14.03.2012
  *
  */
 
@@ -819,7 +819,7 @@ if (isset ($_GET['mill']) && $_GET['mill'] == 'mill')
 	      }
 	    else
 	      {
-		$need = (ceil($objLumber -> fields['level'] / 2)- $_POST['razy']);
+		$need = (ceil($objLumber -> fields['level'] / 4)- $_POST['razy']);
 	      }
             $smarty -> assign ("Message", YOU_WORK.$arrItem['name'].YOU_USE.$_POST['razy'].AND_MAKE.$procent.TO_END.$need.M_ENERGY);
             if ($objLumber -> fields['type'] == 'R') 
