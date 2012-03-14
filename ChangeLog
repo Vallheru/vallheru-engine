@@ -1,5 +1,7 @@
 2012-03-14  Bartek thindil Jasicki  <thindil@vallheru.net>
 
+	* BUG,mmarket.php: 
+	fixed order of oferts on market
 	* BUG,lumbermill.php:
 	fixed info about needed energy
 
