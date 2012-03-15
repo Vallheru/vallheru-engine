@@ -1,5 +1,7 @@
 2012-03-15  Bartek thindil Jasicki  <thindil@vallheru.net>
 
+	* UPDATE,preset.php: 
+	updated to new mission system
 	* FEATURE,templates/layout1/crafts.tpl, templates/layout1/outpost.tpl, templates/layout1/thieves.tpl, templates/crafts.tpl, templates/outpost.tpl,
 	templates/thieves.tpl, includes/resets.php, install/db/update.sql, crafts.php, outpost.php, thieves.php:
 	changed amount of available missions for player
