@@ -7,7 +7,7 @@
  *   @copyright            : (C) 2011,2012 Vallheru Team based on Gamers-Fusion ver 2.5
  *   @author               : thindil <thindil@vallheru.net>
  *   @version              : 1.5
- *   @since                : 12.03.2012
+ *   @since                : 15.03.2012
  *
  */
 
@@ -167,9 +167,13 @@ else
 	}
 	
 	$objJob = $db->Execute("SELECT `craftmission`, `mpoints` FROM `players` WHERE `id`=".$player->id);
-	if ($objJob->fields['craftmission'] == 'Y')
+	if ($objJob->fields['craftmission'] <= 0)
 	  {
 	    error('Niestety, na chwilę obecną nie ma dostępnych prac dla ciebie. Proszę wróć później.');
+	  }
+	if ($player->hp <= 0)
+	  {
+	    error('Nie możesz wykonywać zadań, ponieważ jesteś martwy.');
 	  }
 	if ($objJob->fields['mpoints'] < 30)
 	  {
@@ -267,12 +271,21 @@ else
 		$i ++;
 	      }
 	  }
+	$objJob->fields['craftmission']--;
+	if ($objJob->fields['craftmission'] > 0)
+	  {
+	    $strRefresh = 'Odśwież listę (możesz odświeżyć jeszcze '.$objJob->fields['craftmission'].' razy).';
+	  }
+	else
+	  {
+	    $strRefresh = '';
+	  }
 	$smarty->assign(array('Minfo' => 'Ruchem głowy, barman pokazuje tobie schody na górę. Udajesz się we wskazanym kierunku. Dochodzisz do dość ciemnego pokoju na górze. Na jego środku stoi niewielki stolik przy którym siedzi jakiś człowiek, ruchem dłoni wskazuje tobie miejsce przy stoliku. Bardziej wyczuwasz niż widzisz, że w pomieszczeniu znajdują się jeszcze inne osoby. Kiedy zajmujesz swoje miejsce siedzący mężczyzna odzywa się do ciebie.<i>'.$strTalk.' tak się składa, że chyba mamy parę zadań dla ciebie. Zainteresowan'.$strSuffix2.'?</i>',
-			      'Jobinfo2' => 'Pamiętaj, oferta jest ważna tylko w tym momencie, jeżeli ją odrzucisz, następna szansa dopiero po kolejnym resecie.',
+			      'Jobinfo2' => $strRefresh,
 			      "Jobs" => $arrJobs,
-			      "Ayes" => "Biorę tę robotę. (koszt: 2 punkty kradzieży)"));
+			      "Ayes" => "Biorę tę robotę. (koszt: 2 punkty kradzieży)",));
 	$objJob->Close();
-	$db->Execute("UPDATE `players` SET `craftmission`='Y' WHERE `id`=".$player->id);
+	$db->Execute("UPDATE `players` SET `craftmission`=`craftmission`-1 WHERE `id`=".$player->id);
       }
     /**
      * Start random mission

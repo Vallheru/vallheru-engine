@@ -7,7 +7,7 @@
  *   @copyright            : (C) 2011,2012 Vallheru Team based on Gamers-Fusion ver 2.5
  *   @author               : thindil <thindil@vallheru.net>
  *   @version              : 1.5
- *   @since                : 23.02.2012
+ *   @since                : 15.03.2012
  *
  */
 
@@ -53,7 +53,7 @@ if (isset($_GET['step']))
      */
     if ($_GET['step'] == 'first')
       {
-	if ($objJob->fields['craftmission'] == 'Y')
+	if ($objJob->fields['craftmission'] <= 0)
 	  {
 	    error("Niestety, na chwilę obecną, nie mamy dla ciebie jakiegokolwiek zadania. Proszę wróć za jakiś czas. (<a href=city.php>Powrót do miasta</a>)");
 	  }
@@ -249,14 +249,23 @@ if (isset($_GET['step']))
 		break;
 	      }
 	  }
+	$objJob->fields['craftmission'] --;
+	if ($objJob->fields['craftmission'] > 0)
+	  {
+	    $strRefresh = 'Odśwież listę (możesz odświeżyć jeszcze '.$objJob->fields['craftmission'].' razy).';
+	  }
+	else
+	  {
+	    $strRefresh = '';
+	  }
 	$smarty->assign(array('Jobinfo' => 'Przez dłuższą chwilę opowiadasz niziołkowi o swoich umiejętnościach. Ten co chwila przerywa, zadając jakieś pytania a następnie sprawdzając coś w papierach. W końcu, znajduje odpowiedni papier i mówi do ciebie:<br /><i>-Zdaje się, że mam coś dla ciebie</i>',
 			      "Ayes" => "Przyjmuję zlecenie (koszt: ",
 			      "Ayes2" => " energii)",
 			      "Jobs" => $arrInfo,
 			      "Jenergy" => $_SESSION['craftenergy'],
 			      "Ano" => "Nie, dziękuję",
-			      'Jobinfo2' => 'Pamiętaj, oferta jest ważna tylko w tym momencie, jeżeli ją odrzucisz, następna szansa dopiero po kolejnym resecie.'));
-	$db->Execute("UPDATE `players` SET `craftmission`='Y' WHERE `id`=".$player->id);
+			      'Jobinfo2' => $strRefresh));
+	$db->Execute("UPDATE `players` SET `craftmission`=`craftmission`-1 WHERE `id`=".$player->id);
       }
     /**
      * Finish task

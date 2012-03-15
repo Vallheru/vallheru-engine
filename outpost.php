@@ -4,10 +4,10 @@
  *   Outpost - random missions for fighters, barbarians and mages
  *
  *   @name                 : outpost.php                            
- *   @copyright            : (C) 2011 Vallheru Team based on Gamers-Fusion ver 2.5
+ *   @copyright            : (C) 2011,2012 Vallheru Team based on Gamers-Fusion ver 2.5
  *   @author               : thindil <thindil@vallheru.net>
  *   @version              : 1.5
- *   @since                : 24.12.2011
+ *   @since                : 15.03.2012
  *
  */
 
@@ -169,7 +169,7 @@ if (isset($_GET['step']))
      */
     if ($_GET['step'] == 'first')
       {
-	if ($objJob->fields['craftmission'] == 'Y')
+	if ($objJob->fields['craftmission'] <= 0)
 	  {
 	    error("Niestety, na chwilę obecną, nie mamy dla ciebie jakiegokolwiek rozkazu. Proszę wróć za jakiś czas. (<a href=city.php>Powrót do miasta</a>)");
 	  }
@@ -303,12 +303,21 @@ if (isset($_GET['step']))
 		break;
 	      }
 	  }
+	$objJob->fields['craftmission'] --;
+	if ($objJob->fields['craftmission'] > 0)
+	  {
+	    $strRefresh = 'Odśwież listę (możesz odświeżyć jeszcze '.$objJob->fields['craftmission'].' razy).';
+	  }
+	else
+	  {
+	    $strRefresh = '';
+	  }
 	$smarty->assign(array('Jobinfo' => 'Mężczyzna zaprasza ciebie do swojego biura. Tam przez pewien czas odpowiadasz na krótkie pytania dotyczące twoich umiejętności. Po każdej odpowiedzi, gwardzista zapisuje coś na kartce. W pewnym momencie przegląda stos papierów leżący na biurku, wybiera kilka z nich i oświadcza:<br /><i>-Zdaje się, że mamy zlecienia dla ciebie</i>',
 			      "Ayes" => "Przyjmuję zlecienie (koszt: 5 energii)",
 			      "Jobs" => $arrInfo,
 			      "Ano" => "Nie, dziękuję",
-			      'Jobinfo2' => 'Pamiętaj, oferta jest ważna tylko w tym momencie, jeżeli ją odrzucisz, następna szansa dopiero po kolejnym resecie.'));
-	$db->Execute("UPDATE `players` SET `craftmission`='Y' WHERE `id`=".$player->id);
+			      'Jobinfo2' => $strRefresh));
+	$db->Execute("UPDATE `players` SET `craftmission`=`craftmission`-1 WHERE `id`=".$player->id);
       }
     /**
      * Start task

@@ -63,7 +63,7 @@
         <a href="thieves.php?step=confirm&amp;number={$smarty.section.job.index}">{$Ayes}</a><br /><br /></li>
     {/section}
     </ul>
-    {$Jobinfo2}
+    <a hfef="thieves.php?step=missions">{$Jobinfo2}</a>
 {/if}
 {if $Step == "confirm"}
     {$Text}

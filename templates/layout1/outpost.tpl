@@ -11,7 +11,7 @@
     {/section}
     </ul>
     <a href="city.php">{$Ano}</a><br /><br />
-    {$Jobinfo2}
+    <a href="outpost.php?step=first">{$Jobinfo2}</a>
 {/if}
 {if $Step != "" && $Step != "first"}
     {$Result}<br />

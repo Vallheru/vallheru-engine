@@ -7,7 +7,7 @@
  *   @copyright            : (C) 2004,2005,2006,2007,2011,2012 Vallheru Team based on Gamers-Fusion ver 2.5
  *   @author               : thindil <thindil@vallheru.net>
  *   @version              : 1.5
- *   @since                : 09.02.2012
+ *   @since                : 15.03.2012
  *
  */
 
@@ -49,7 +49,7 @@ function smallreset($blnSmall = FALSE)
       {
 	$db -> Execute("UPDATE settings SET value='N' WHERE setting='open'");
 	$db -> Execute("UPDATE settings SET value='Wykonywanie resetu' WHERE setting='close_reason'");
-	$db -> Execute("UPDATE `players` SET `hp`=`max_hp`, `bridge`='N', `craftmission`='N'");
+	$db -> Execute("UPDATE `players` SET `hp`=`max_hp`, `bridge`='N'");
       }
     $data = date("y-m-d");
     $strDate = $db -> DBDate($data);
@@ -369,7 +369,7 @@ function mainreset()
 
     $db -> Execute("UPDATE `settings` SET `value`='N' WHERE `setting`='open'");
     $db -> Execute("UPDATE `settings` SET `value`='Wykonywanie resetu' WHERE `setting`='close_reason'");
-    $db -> Execute("UPDATE `players` SET `age`=`age`+1, `hp`=`max_hp`, `bridge`='N', `houserest`='N', `craftmission`='N'");
+    $db -> Execute("UPDATE `players` SET `age`=`age`+1, `hp`=`max_hp`, `bridge`='N', `houserest`='N', `craftmission`=7");
     $db->Execute("UPDATE `players` SET `newbie`=`newbie`-1 WHERE `newbie`>0");
     $db->Execute("UPDATE `players` SET `trains`=`trains`+15 WHERE `corepass`='Y' AND `freeze`=0");
     $intCtime = (time() - 200);

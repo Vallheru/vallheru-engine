@@ -199,3 +199,4 @@ ALTER TABLE `tribes`
   DROP `adamantium`,
   DROP `meteor`;
 ALTER TABLE `tribe_mag` ADD `reserved` INT( 11 ) NOT NULL DEFAULT '0';
+ALTER TABLE `players` CHANGE `craftmission` `craftmission` TINYINT( 1 ) NOT NULL DEFAULT '7';
