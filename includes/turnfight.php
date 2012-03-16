@@ -7,7 +7,7 @@
  *   @copyright            : (C) 2004,2005,2006,2007,2011,2012 Vallheru Team based on Gamers-Fusion ver 2.5
  *   @author               : thindil <thindil@vallheru.net>
  *   @version              : 1.5
- *   @since                : 23.02.2012
+ *   @since                : 16.03.2012
  *
  */
  
@@ -501,8 +501,16 @@ function turnfight($expgain,$goldgain,$action,$addres)
             {
                 $_POST['power'] = $player -> level;
             }
-            $intSpelllevel = $db -> Execute("SELECT `poziom` FROM `czary` WHERE `id`=".$_POST['bspellboost']);
-            $intMaxburst = $player -> mana - $intSpelllevel -> fields['poziom'];
+	    checkvalue($_POST['bspellboost']);
+            $intSpelllevel = $db -> Execute("SELECT `gracz, `poziom` FROM `czary` WHERE `id`=".$_POST['bspellboost']);
+	    if ($intSpelllevel->fields['gracz'] != $player->id)
+	      {
+		$intMaxburst = 0;
+	      }
+	    else
+	      {
+		$intMaxburst = $player -> mana - $intSpelllevel -> fields['poziom'];
+	      }
             $intSpelllevel -> Close();
             if ($_POST['power'] > $intMaxburst)
             {

@@ -1,3 +1,8 @@
+2012-03-16  Bartek thindil Jasicki  <thindil@vallheru.net>
+
+	* BUG,house.php, includes/turnfight.php:
+	fixed few security bugs
+
 2012-03-15  Bartek thindil Jasicki  <thindil@vallheru.net>
 
 	* UPDATE,preset.php: 

@@ -8,7 +8,7 @@
  *   @author               : thindil <thindil@vallheru.net>
  *   @author               : eyescream <tduda@users.sourceforge.net>
  *   @version              : 1.5
- *   @since                : 24.02.2012
+ *   @since                : 16.03.2012
  *
  */
 
@@ -880,34 +880,28 @@ if (isset ($_GET['action']) && $_GET['action'] == 'my')
          */
         if (isset ($_GET['take'])) 
 	  {
-	    $_GET['take'] = intval($_GET['take']);
+	    checkvalue($_GET['take']);
+	    $zbroj = $db -> Execute("SELECT * FROM equipment WHERE id=".$_GET['take']." AND `status`='H' AND `owner`=".$player->id);
+	    if (!$zbroj->fields['id'])
+	      {
+		error(ERROR);
+	      }
             if (!isset($_GET['step3'])) 
 	      {
-                $name = $db -> Execute("SELECT * FROM equipment WHERE id=".$_GET['take']);
-		if ($name -> fields['owner'] != $player -> id) 
-		  {
-		    error(ERROR);
-		  }
-                if ($name -> fields['status'] != 'H') 
-		  {
-		    error(ERROR);
-		  }
                 $smarty -> assign(array("Id" => $_GET['take'], 
-                    "Amount" => $name -> fields['amount'], 
-                    "Name" => $name -> fields['name'],
+                    "Amount" => $zbroj -> fields['amount'], 
+                    "Name" => $zbroj -> fields['name'],
                     "Fromh" => FROM_H,
                     "Amount2" => AMOUNT2));
-                $name -> Close();
             }
             if (isset($_GET['step3']) && $_GET['step3'] == 'add') 
             {
-                integercheck($_POST['amount']);
-                if (!isset($_POST['amount'])) 
+	        if (!isset($_POST['amount'])) 
                 {
                     error (ERROR);
                 }
+                integercheck($_POST['amount']);
 		checkvalue($_POST['amount']);
-                $zbroj = $db -> Execute("SELECT * FROM equipment WHERE id=".$_GET['take']);
 		if ($zbroj->fields['type'] != 'R')
 		  {
 		    if ($zbroj -> fields['amount'] < $_POST['amount']) 
@@ -959,6 +953,7 @@ if (isset ($_GET['action']) && $_GET['action'] == 'my')
 		$test -> Close();
                 error (YOU_GET.$_POST['amount'].I_AMOUNT.$zbroj -> fields['name']);
             }
+	    $zbroj->Close();
 	  }
         /**
          * Add item to wardrobe
@@ -1024,7 +1019,7 @@ if (isset ($_GET['action']) && $_GET['action'] == 'my')
                 integercheck($_POST['amount']);
 		checkvalue($_POST['przedmiot']);
 		checkvalue($_POST['amount']);
-                $przed = $db -> Execute("SELECT * FROM `equipment` WHERE `id`=".$_POST['przedmiot']." AND `type`!='Q' AND `owner`=".$player->id);
+                $przed = $db -> Execute("SELECT * FROM `equipment` WHERE `id`=".$_POST['przedmiot']." AND `type`!='Q' AND status='U' AND `owner`=".$player->id);
                 if (!$przed -> fields['id']) 
                 {
                     error (ERROR);
