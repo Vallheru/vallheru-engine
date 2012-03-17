@@ -291,6 +291,38 @@
     </form>
 {/if}
 
+{if $View == "ignored"}
+    {$Info}<br /><br />
+    <form method="post" action="account.php?view=ignored&amp;add">
+        <input type="submit" value="{$Aadd}" /> {$Tadd} <input type="text" name="pid" size="5" /> {$Tadd2}
+    </form><br />
+    {$Message}<br />
+    {if $Iamount > 0}
+        <table width="90%" align="center">
+	    <tr>
+	        <th>{$Tplayer}</th>
+		<th>{$Tmail}</th>
+		<th>{$Tinn}</th>
+	        <th>{$Toptions}</th>
+	    </tr>
+	    {section name=ilist loop=$Ignored}
+	        <tr>
+		    <form method="post" action="account.php?view=ignored&amp;edit={$Ignored[ilist].id}">
+	    	    <td><a href="view.php?view={$Ignored[ilist].pid}">{$Ignored[ilist].user} ({$Tid}: {$Ignored[ilist].pid})</a></td>
+		    <td><input type="checkbox" {$Ignored[ilist].mail} name="mail{$Ignored[ilist].pid}" /></td>
+		    <td><input type="checkbox" {$Ignored[ilist].inn} name="inn{$Ignored[ilist].pid}" /></td>
+		    <td><a href="account.php?view=ignored&amp;edit={$Ignored[ilist].id}&amp;delete">{$Adelete}</a><br />
+		        <input type="submit" value="{$Aedit}" />
+		    </td>
+		    </form>
+		</tr>
+	    {/section}
+    	</table>
+    {else}
+        {$Noignored}
+    {/if}
+{/if}
+
 {if $View == "contacts"}
     {$Info}<br /><br />
     <form method="post" action="account.php?view=contacts&amp;add">

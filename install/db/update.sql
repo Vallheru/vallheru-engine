@@ -200,3 +200,11 @@ ALTER TABLE `tribes`
   DROP `meteor`;
 ALTER TABLE `tribe_mag` ADD `reserved` INT( 11 ) NOT NULL DEFAULT '0';
 ALTER TABLE `players` CHANGE `craftmission` `craftmission` TINYINT( 1 ) NOT NULL DEFAULT '7';
+CREATE TABLE IF NOT EXISTS `ignored` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `owner` int(11) NOT NULL,
+  `pid` int(11) NOT NULL,
+  `mail` char(1) NOT NULL DEFAULT 'Y',
+  `inn` char(1) NOT NULL DEFAULT 'Y',
+  KEY `id` (`id`)
+) ENGINE=MyISAM DEFAULT CHARSET=utf8 AUTO_INCREMENT=1;

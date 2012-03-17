@@ -1036,6 +1036,109 @@ if (isset($_GET['view']))
       }
 
     /**
+     * Manage ignored
+     */
+    elseif ($_GET['view'] == 'ignored')
+      {
+	$arrIgnored = $db->GetAll("SELECT `id`, `pid`, `mail`, `inn` FROM `ignored` WHERE `owner`=".$player->id." ORDER BY `pid` ASC");
+	foreach ($arrIgnored as &$arrIgnored2)
+	  {
+	    $objUser = $db->Execute("SELECT `user`, `tribe` FROM `players` WHERE `id`=".$arrIgnored2['pid']);
+	    $arrIgnored2['user'] = $arrTags[$objUser->fields['tribe']][0].' '.$objUser->fields['user'].' '.$arrTags[$objUser->fields['tribe']][1];
+	    $objUser->Close();
+	    if ($arrIgnored2['mail'] == 'Y')
+	      {
+		$arrIgnored2['mail'] = 'checked="checked"';
+	      }
+	    else
+	      {
+		$arrIgnored2['mail'] = '';
+	      }
+	    if ($arrIgnored2['inn'] == 'Y')
+	      {
+		$arrIgnored2['inn'] = 'checked="checked"';
+	      }
+	    else
+	      {
+		$arrIgnored2['inn'] = '';
+	      }
+	  }
+	$intAmount = count($arrIgnored);
+	$smarty->assign(array("Info" => "Tutaj możesz zarządzać osobami ignorowanymi w grze. Możesz maksymalnie posiadać 30 osób ignorowanych. Twoja lista ignorowanych:",
+			      "Ignored" => $arrIgnored,
+			      "Adelete" => "Skasuj",
+			      "Aedit" => "Edytuj",
+			      "Iamount" => $intAmount,
+			      "Tid" => "ID",
+			      "Tplayer" => "Imię",
+			      "Tmail" => "Blokada poczty",
+			      "Tinn" => "Blokada zaproszeń do pokoju",
+			      "Toptions" => "Opcje",
+			      "Noignored" => "Nikogo jeszcze nie ignorujesz.",
+			      "Aadd" => "Dodaj",
+			      "Tadd" => "gracza o ID:",
+			      "Tadd2" => "do ignorowanych (automatycznie poczta i zaproszenia)",
+			      "Message" => ''));
+	//Add ignored
+	if (isset($_GET['add']))
+	  {
+	    if ($intAmount >= 30)
+	      {
+		error("Twoja lista ignorowanych jest już pełna. Nie możesz dodać do niej nowej osoby.");
+	      }
+	    if (isset($_GET['pid']))
+	      {
+		$_POST['pid'] = $_GET['pid'];
+	      }
+	    checkvalue($_POST['pid']);
+	    foreach ($arrIgnored as $arrIgnored2)
+	      {
+		if ($arrIgnored2['pid'] == $_POST['pid'])
+		  {
+		    error("Ignorujesz już tego gracza.");
+		  }
+	      }
+	    $db->Execute("INSERT INTO `ignored` (`owner`, `pid`) VALUES (".$player->id.", ".$_POST['pid'].")");
+	    $smarty->assign("Message", "Dodałeś wybranego gracza do listy ignorowanych. (<a href=account.php?view=ignored>Odśwież</a>)");
+	  }
+	//Edit selected ignored
+	if (isset($_GET['edit']))
+	  {
+	    checkvalue($_GET['edit']);
+	    $objTest = $db->Execute("SELECT `owner` FROM `ignored` WHERE `id`=".$_GET['edit']);
+	    if (!$objTest->fields['owner'])
+	      {
+		error("Nie ignorujesz tego gracza!");
+	      }
+	    if ($objTest->fields['owner'] != $player->id)
+	      {
+		error("To nie jest twój ignorowany");
+	      }
+	    $objTest->Close();
+	    if (isset($_GET['delete']))
+	      {
+		$db->Execute("DELETE FROM `ignored` WHERE `id`=".$_GET['edit']);
+		$smarty->assign("Message", "Usunąłeś wybranego gracza z listy ignorowanych. (<a href=account.php?view=ignored>Odśwież</a>)");
+	      }
+	    else
+	      {
+		$strMail = 'N';
+		if (isset($_POST['mail'.$_GET['edit']]))
+		  {
+		    $strMail = 'Y';
+		  }
+		$strInn = 'N';
+		if (isset($_POST['inn'.$_GET['edit']]))
+		  {
+		    $strInn = 'Y';
+		  }
+		$db->Execute("UPDATE `ignored` SET `mail`='".$strMail."', `inn`='".$strInn."' WHERE `id`=".$_GET['edit']);
+		$smarty->assign("Message", "Edytowałeś wybraną ignorowaną osobę. (<a href=account.php?view=ignored>Odśwież</a>)");
+	      }
+	  }
+      }
+
+    /**
      * Manage contacts
      */
     elseif ($_GET['view'] == 'contacts')
@@ -1147,8 +1250,8 @@ if (!isset($_GET['step']))
 /**
 * Assign variables and display page
 */
-$arrStep = array('name', 'pass', 'profile', 'roleplay', 'eci', 'avatar', 'reset', 'immu', 'style', 'freeze', 'options', 'changes', 'vallars', 'bugreport', 'bugtrack', 'links', 'forums', 'contacts', 'proposals');
-$arrLinks = array(A_NAME, A_PASS, A_PROFILE, 'Edytuj profil fabularny', A_EMAIL, A_AVATAR, A_RESET, A_IMMU, A_STYLE, A_FREEZE, A_OPTIONS, A_CHANGES, "Ostatnio nagrodzeni Vallarami", A_BUGREPORT, A_BUGTRACK, A_LINKS, 'Obserwowane fora', 'Kontakty', 'Zgłoś propozycję');
+$arrStep = array('name', 'pass', 'profile', 'roleplay', 'eci', 'avatar', 'reset', 'immu', 'style', 'freeze', 'options', 'changes', 'vallars', 'bugreport', 'bugtrack', 'links', 'forums', 'contacts', 'ignored', 'proposals');
+$arrLinks = array(A_NAME, A_PASS, A_PROFILE, 'Edytuj profil fabularny', A_EMAIL, A_AVATAR, A_RESET, A_IMMU, A_STYLE, A_FREEZE, A_OPTIONS, A_CHANGES, "Ostatnio nagrodzeni Vallarami", A_BUGREPORT, A_BUGTRACK, A_LINKS, 'Obserwowane fora', 'Kontakty', 'Ignorowani', 'Zgłoś propozycję');
 $smarty -> assign (array ("View" => $_GET['view'], 
                           "Step" => $_GET['step'],
                           "Welcome" => WELCOME,
