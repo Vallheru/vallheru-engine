@@ -1,3 +1,8 @@
+2012-03-18  Bartek thindil Jasicki  <thindil@vallheru.net>
+
+	* FEATURE,templates/layout1/mail.tpl, templates/mail.tpl, mail.php, view.php, room.php:
+	added ignored list
+
 2012-03-17  Bartek thindil Jasicki  <thindil@vallheru.net>
 
 	* FEATURE,install/db/update.sql, templates/layout1/account.tpl, templates/account.tpl, account.php:

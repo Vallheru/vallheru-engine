@@ -7,7 +7,7 @@
  *   @copyright            : (C) 2012 Vallheru Team based on Gamers-Fusion ver 2.5
  *   @author               : thindil <thindil@vallheru.net>
  *   @version              : 1.5
- *   @since                : 13.03.2012
+ *   @since                : 18.03.2012
  *
  */
 
@@ -341,16 +341,26 @@ if (isset($_GET['step']))
 	    //Invite player to room
 	  case 'invite':
 	    checkvalue($_POST['pid']);
+	    $blnValid = TRUE;
 	    $objInv = $db->Execute("SELECT `id`, `room` FROM `players` WHERE `id`=".$_POST['pid']);
 	    if (!$objInv->fields['id'])
 	      {
 		message('error', 'Nie ma takiego gracza');
+		$blnValid = FALSE;
 	      }
 	    elseif ($objInv->fields['room'])
 	      {
 		message('error', 'Ten gracz posiada już pokój bądź został już zaproszony do jakiegoś pokoju.');
+		$blnValid = FALSE;
 	      }
-	    else
+	    $objTest = $db->Execute("SELECT `id` FROM `ignored` WHERE `owner`=".$objInv->fields['id']." AND `pid`=".$player->id." AND `inn`='Y'");
+	    if ($objTest->fields['id'])
+	      {
+		message('error', 'Ten gracz ignoruje zaproszenia od ciebie.');
+		$blnValid = FALSE;
+	      }
+	    $objTest->Close();
+	    if ($blnValid)
 	      {
 		$strDate = $db -> DBDate($newdate);
 		$db->Execute("UPDATE `players` SET `room`=".$player->room." WHERE `id`=".$objInv->fields['id']);

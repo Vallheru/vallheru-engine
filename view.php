@@ -8,7 +8,7 @@
  *   @author               : thindil <thindil@vallheru.net>
  *   @author               : eyescream <tduda@users.sourceforge.net>
  *   @version              : 1.5
- *   @since                : 05.01.2012
+ *   @since                : 18.03.2012
  *
  */
 
@@ -224,6 +224,17 @@ if ($player -> id != $view -> id)
       {
 	$strLink .= "<li><a href=account.php?view=contacts&amp;add&amp;pid=".$view->id.">Dodaj do listy kontaktów</a></li>";
       }
+    $objTest->Close();
+    $objTest = $db->Execute("SELECT `id` FROM `ignored` WHERE `owner`=".$player->id." AND `pid`=".$view->id);
+    if ($objTest->fields['id'])
+      {
+	$strLink .= "<li><a href=account.php?view=ignored&amp;edit=".$objTest->fields['id']."&amp;delete>Usuń z listy ignorowanych</a></li>";
+      }
+    else
+      {
+	$strLink .= "<li><a href=account.php?view=ignored&amp;add&amp;pid=".$view->id.">Dodaj do listy ignorowanych</a></li>";
+      }
+    $objTest->Close();
     if ($player->room != 0)
       {
 	$objRowner = $db->Execute("SELECT `owner` FROM `rooms` WHERE `id`=".$player->room);
@@ -337,6 +348,13 @@ if (isset($_GET['room']))
 	    message('error', 'Ten gracz jest już w jakimś pokoju w karczmie.');
 	    $blnValid = FALSE;
 	  }
+	$objTest = $db->Execute("SELECT `id` FROM `ignored` WHERE `owner`=".$view->id." AND `pid`=".$player->id." AND `inn`='Y'");
+	if ($objTest->fields['id'])
+	  {
+	    message('error', 'Ta osoba ignoruje twoje zaproszenia do pokoju w karczmie.');
+	    $blnValid = FALSE;
+	  }
+	$objTest->Close();
 	if ($blnValid)
 	  {
 	    $db->Execute("UPDATE `players` SET `room`=".$player->room." WHERE `id`=".$view->id);

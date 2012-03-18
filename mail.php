@@ -7,7 +7,7 @@
  *   @copyright            : (C) 2004,2005,2006,2007,2011,2012 Vallheru Team based on Gamers-Fusion ver 2.5
  *   @author               : thindil <thindil@vallheru.net>
  *   @version              : 1.5
- *   @since                : 18.02.2012
+ *   @since                : 18.03.2012
  *
  */
 
@@ -42,7 +42,6 @@ if (!isset($_GET['view']) && !isset($_GET['read']) && !isset($_GET['zapisz']))
     $smarty -> assign(array("Mailinfo" => MAIL_INFO,
                             "Asaved" => A_SAVED,
                             "Awrite" => A_WRITE,
-                            "Ablocked" => A_BLOCK_LIST,
 			    "Asearch" => "Szukaj wiadomości"));
 }
 
@@ -519,7 +518,7 @@ if (isset ($_GET['view']) && $_GET['view'] == 'write')
 	    message('error', YOURSELF);
 	    $blnValid = FALSE;
 	  }
-        $objBan = $db -> Execute("SELECT `id` FROM `ban_mail` WHERE `owner`=".$_POST['to']." AND `id`=".$player -> id);
+        $objBan = $db -> Execute("SELECT `id` FROM `ignored` WHERE `owner`=".$_POST['to']." AND `pid`=".$player->id." AND `mail`='Y'");
         if ($objBan -> fields['id'])
 	  {
             message('error', YOU_CANNOT);
@@ -630,15 +629,22 @@ if (isset($_GET['block']))
 	message('error', NO_PLAYER);
       }
     $objPlayer -> Close();
-    $objBan = $db -> Execute("SELECT `id` FROM `ban_mail` WHERE `id`=".$_GET['block']." AND `owner`=".$player -> id);
-    if ($objBan -> fields['id'])
+    $objBan = $db -> Execute("SELECT `id`, `mail` FROM `ignored` WHERE `pid`=".$_GET['block']." AND `owner`=".$player->id);
+    if ($objBan->fields['mail'] == 'Y')
       {
-        $db -> Execute("DELETE FROM `ban_mail` WHERE `id`=".$_GET['block']." AND `owner`=".$player -> id);
+        $db -> Execute("UPDATE `ignored` SET `mail`='N' WHERE `pid`=".$_GET['block']." AND `owner`=".$player -> id);
         message('success', YOU_UNBLOCK);
       }
     else
       {
-        $db -> Execute("INSERT INTO `ban_mail` (`id`, `owner`) VALUES(".$_GET['block'].", ".$player -> id.")");
+	if (!$objBan->fields['id'])
+	  {
+	    $db -> Execute("INSERT INTO `ignored` (`pid`, `owner`) VALUES(".$_GET['block'].", ".$player -> id.")");
+	  }
+	else
+	  {
+	    $db->Execute("UPDATE `ignored` SET `mail`='Y' WHERE `owner`=".$player->id." AND `pid`=".$_GET['block']);
+	  }
         message('success', YOU_BLOCK);
       }
     $objBan -> Close();
@@ -786,42 +792,6 @@ if (isset ($_GET['read']))
 			    "Fpage" => "Idź do strony:",
 			    "Body" => '',
 			    "Mhelp" => "Linki automatycznie zamieniane są na klikalne. Możesz używać następujących znaczników BBCode:<br /><ul><li>[b]<b>Pogrubienie</b>[/b]</li><li>[i]<i>Kursywa</i>[/i]</li><li>[u]<u>Podkreślenie</u>[/u]</li><li>[color (angielska nazwa koloru (red, yellow, itp) lub kod HTML (#FFFF00, itp)]pokolorowanie tekstu[/color]</li><li>[center]wycentrowanie tekstu[/center]</li><li>[quote]cytat[/quote]</ul>"));
-}
-
-/**
- * Blocked list
- */
-if (isset($_GET['view']) && $_GET['view'] == 'blocks')
-{
-    $objBlocked = $db -> Execute("SELECT `id` FROM `ban_mail` WHERE `owner`=".$player -> id);
-    $arrId = array(0);
-    $arrName = array();
-    $i = 0;
-    while (!$objBlocked -> EOF)
-    {
-        $arrId[$i] = $objBlocked -> fields['id'];
-        $objName = $db -> Execute("SELECT `user` FROM `players` WHERE `id`=".$objBlocked -> fields['id']);
-        $arrName[$i] = $objName -> fields['user'];
-        $objBlocked -> MoveNext();
-        $i ++;
-    }
-    $objBlocked -> Close();
-    $smarty -> assign(array("Blockid" => $arrId,
-                            "Blockname" => $arrName,
-                            "Aunblock" => A_UNBLOCK,
-                            "Nobanned" => NO_BANNED,
-                            "Aback" => A_BACK));
-    if (isset($_GET['step']) && $_GET['step'] == 'unblock')
-    {
-        foreach ($arrId as $bid) 
-        {
-            if (isset($_POST[$bid])) 
-            {
-                $db -> Execute("DELETE FROM `ban_mail` WHERE `id`=".$bid." AND `owner`=".$player -> id);
-            }
-        }
-        message('success', YOU_UNBAN, '(<a href="mail.php?view=blocks">Odśwież</a>)');
-    }
 }
 
 /**

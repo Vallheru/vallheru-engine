@@ -3,7 +3,6 @@
     - <a href="mail.php?view=inbox">{$Ainbox}</a><br />
     - <a href="mail.php?view=saved">{$Asaved}</a><br />
     - <a href="mail.php?view=write">{$Awrite}</a><br />
-    - <a href="mail.php?view=blocks">{$Ablocked}</a><br />
     - <a href="mail.php?view=search">{$Asearch}</a>
 {/if}
 
@@ -202,23 +201,4 @@
     </select><br />
     <input type="hidden" name="mid" value="{$Send}" />
     <input type="submit" value="{$Asend}" /></form>
-{/if}
-
-{if $View == "blocks"}
-    {if $Blockid[0] != ""}
-        <form method="post" action="mail.php?view=blocks&amp;step=unblock">
-            <table>
-                <tr>
-                    {section name=blocks loop=$Blockid}
-                        <td><input type="checkbox" name="{$Blockid[blocks]}" /></td>
-                        <td>{$Blockname[blocks]} ID: {$Blockid[blocks]}</td>
-                    {/section}
-                </tr>
-            </table>
-            <input type="submit" value="{$Aunblock}" />
-        </form>
-    {else}
-        {$Nobanned}
-    {/if}
-    <br /><br />(<a href="mail.php">{$Aback}</a>)
 {/if}
