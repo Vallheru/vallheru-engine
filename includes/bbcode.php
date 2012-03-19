@@ -7,7 +7,7 @@
  *   @copyright            : (C) 2004,2005,2006,2011,2012 Vallheru Team based on Gamers-Fusion ver 2.5
  *   @author               : thindil <thindil@vallheru.net>
  *   @version              : 1.5
- *   @since                : 16.02.2012
+ *   @since                : 19.03.2012
  *
  */
 
@@ -40,21 +40,13 @@ function bbcodetohtml($text, $isChat = FALSE)
     /**
     * Replace bad words
     */
-    $objBadwords = $db -> Execute("SELECT * FROM bad_words");
-    $arrText = explode(" ", $text);
-    while (!$objBadwords -> EOF)
+    $arrBadwords = $db->GetAll("SELECT * FROM `bad_words`");
+    $arrWords = array();
+    foreach ($arrBadwords as $arrBadword)
       {
-	foreach ($arrText as &$word)
-	  {
-	    if (stripos($word, $objBadwords->fields['bword']) === 0)
-	      {
-		$word = '[kwiatek]';
-	      }
-	  }
-	$objBadwords->MoveNext();
+	$arrWords[] = '/\b'.$arrBadword['bword'].'\b/'; 
       }
-    $objBadwords -> Close();
-    $text = implode(" ", $arrText);
+    $text = preg_replace($arrWords, '[kwiatek]', $text);
 
     /**
     * Delete HTML tags from text
