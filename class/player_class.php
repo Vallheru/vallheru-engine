@@ -7,7 +7,7 @@
  *   @copyright            : (C) 2004,2005,2006,2007,2011,2012 Vallheru Team based on Gamers-Fusion ver 2.5
  *   @author               : thindil <thindil@vallheru.net>
  *   @version              : 1.5
- *   @since                : 05.01.2012
+ *   @since                : 19.03.2012
  *
  */
 
@@ -109,6 +109,7 @@ class Player
     var $metallurgy;
     var $revent;
     var $room;
+    var $rinvites;
 /**
 * Class constructor - get data from database and write it to variables
 */
@@ -216,6 +217,7 @@ class Player
 	  }
 	$objRevent->Close();
 	$this->room = $stats->fields['room'];
+	$this->rinvites = $stats->fields['rinvites'];
     }
     /**
      * Function return values of selected atributes in array

@@ -208,3 +208,4 @@ CREATE TABLE IF NOT EXISTS `ignored` (
   `inn` char(1) NOT NULL DEFAULT 'Y',
   KEY `id` (`id`)
 ) ENGINE=MyISAM DEFAULT CHARSET=utf8 AUTO_INCREMENT=1;
+ALTER TABLE  `players` ADD  `rinvites` CHAR( 1 ) NOT NULL DEFAULT  'Y';

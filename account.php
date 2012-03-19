@@ -7,7 +7,7 @@
  *   @copyright            : (C) 2004,2005,2006,2007,2011,2012 Vallheru Team based on Gamers-Fusion ver 2.5
  *   @author               : thindil <thindil@vallheru.net>
  *   @version              : 1.5
- *   @since                : 18.02.2012
+ *   @since                : 19.03.2012
  *
  */
 
@@ -363,6 +363,15 @@ if (isset($_GET['view']))
 		break;
 	      }
 	  }
+	//Enable/disable room invitations
+	if ($player->rinvites == 'N')
+	  {
+	    $strChecked10 = 'checked="checked"';
+	  }
+	else
+	  {
+	    $strChecked10 = '';
+	  }
 	$smarty -> assign(array("Toptions" => T_OPTIONS,
 				"Tbattlelog" => T_BATTLELOG,
 				"Tgraphbar" => T_GRAPHBAR,
@@ -374,6 +383,7 @@ if (isset($_GET['view']))
 				"Tautoheal" => "Do leczenia obrażeń",
 				"Tautomana" => "Do regeneracji punktów magii",
 				"Tautoall" => "Do regeneracji punktów życia oraz magii",
+				"Trinvites" => "Zablokuj zaproszenia do karczmy",
 				"Checked" => $strChecked,
 				"Checked3" => $strChecked3,
 				"Checked4" => $strChecked4,
@@ -382,7 +392,8 @@ if (isset($_GET['view']))
 				"Checked7" => $strChecked7,
 				"Checked8" => $strChecked8,
 				"Checked9" => $strChecked9,
-				"Checked2" => $strChecked2));
+				"Checked2" => $strChecked2,
+				"Checked10" => $strChecked10));
 	if (isset($_GET['step']) && $_GET['step'] == 'options')
 	  {
 	    if (isset($_POST['battlelog']))
@@ -422,6 +433,14 @@ if (isset($_GET['view']))
 	    else
 	      {
 		$db -> Execute("UPDATE `players` SET `autodrink`='N' WHERE `id`=".$player -> id);
+	      }
+	    if (isset($_POST['rinvites']))
+	      {
+		$db->Execute("UPDATE `players` SET `rinvites`='N' WHERE `id`=".$player->id);
+	      }
+	    else
+	      {
+		$db->Execute("UPDATE `players` SET `rinvites`='Y' WHERE `id`=".$player->id);
 	      }
 	    $smarty -> assign("Message", A_SAVED);
 	  }

@@ -99,7 +99,8 @@
 	<input type="radio" name="battle" value="A" {$Checked4} /> {$Tonlyattack}<br />
 	<input type="radio" name="battle" value="D" {$Checked5} /> {$Tonlyattacked}<br />
 	<input type="radio" name="battle" value="Y" {$Checked3} /> {$Talways}<br /><br />
-        <input type="checkbox" name="graphbar" {$Checked2} /> {$Tgraphbar}<br /><br />
+        <input type="checkbox" name="graphbar" {$Checked2} /> {$Tgraphbar}<br />
+	<input type="checkbox" name="rinvites" {$Checked10} /> {$Trinvites}<br /><br />
 	<input type="checkbox" name="autodrink" {$Checked6} /> {$Tautodrink}<br />
 	<input type="radio" name="drink" value="H" {$Checked7} /> {$Tautoheal}<br />
 	<input type="radio" name="drink" value="M" {$Checked8} /> {$Tautomana}<br />
