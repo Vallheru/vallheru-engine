@@ -8,7 +8,7 @@
  *   @author               : thindil <thindil@vallheru.net>
  *   @author               : eyescream <tduda@users.sourceforge.net>
  *   @version              : 1.5
- *   @since                : 09.01.2012
+ *   @since                : 19.03.2012
  *
  */
  
@@ -894,6 +894,8 @@ if (isset($_GET['view']))
 	    $db->Execute("DELETE FROM `revent` WHERE `pid`=".$arrdelete->fields['id']);
 	    $db->Execute("DELETE FROM `contacts` WHERE `owner`=".$arrdelete->fields['id']);
 	    $db->Execute("DELETE FROM `contacts` WHERE `pid`=".$arrdelete->fields['id']);
+	    $db->Execute("DELETE FROM `ignored` WHERE `owner`=".$arrdelete->fields['id']);
+	    $db->Execute("DELETE FROM `ignored` WHERE `pid`=".$arrdelete->fields['id']);
 	    $strFile = 'avatars/'.$arrdelete -> fields['avatar'];
 	    if (is_file($strFile)) 
 	      {
@@ -1030,6 +1032,8 @@ if (isset($_GET['view']))
 		$db->Execute("DELETE FROM `revent` WHERE `pid`=".$_POST['did']);
 		$db->Execute("DELETE FROM `contacts` WHERE `owner`=".$_POST['did']);
 		$db->Execute("DELETE FROM `contacts` WHERE `pid`=".$_POST['did']);
+		$db->Execute("DELETE FROM `ignored` WHERE `owner`=".$_POST['did']);
+		$db->Execute("DELETE FROM `ignored` WHERE `pid`=".$_POST['did']);
 		$smarty -> assign ("Message", YOU_DELETE2." ".$_POST['did']);
 	      } 
             else 
