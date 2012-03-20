@@ -201,14 +201,12 @@
     {/if}
 {/if}
 {if $Step2 == "wojsko"}
-    {if $Action == ""}
-        {$Armyinfo}<br />
-        <form method="post" action="tribeadmin.php?step2=wojsko&amp;action=kup">
-            {$Howmanys} <input type="text" name="zolnierze" value="0" /><br />
-            {$Howmanyf} <input type="text" name="forty" value="0" /><br />
-            <input type="submit" value="{$Abuy}" />
-	</form>
-    {/if}
+    {$Armyinfo}<br />
+    <form method="post" action="tribeadmin.php?step2=wojsko&amp;action=kup">
+        {$Howmanys} <input type="text" name="zolnierze" value="0" /><br />
+        {$Howmanyf} <input type="text" name="forty" value="0" /><br />
+        <input type="submit" value="{$Abuy}" />
+    </form>
 {/if}
 {if $Step2 == "nowy"}
     {if $New == "1"}

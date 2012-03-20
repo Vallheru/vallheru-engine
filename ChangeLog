@@ -1,5 +1,7 @@
 2012-03-20  Bartek thindil Jasicki  <thindil@vallheru.net>
 
+	* BUG,templates/layout1/tribeadmin.tpl, templates/tribeadmin.tpl:
+	fixed notices
 	* UPDATE,lumbermill.php: 
 	changed gained ability and experience for making arrows
 	* UPDATE,crafts.php, outpost.php:
