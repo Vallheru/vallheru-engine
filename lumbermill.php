@@ -7,7 +7,7 @@
  *   @copyright            : (C) 2004,2005,2006,2007,2011,2012 Vallheru Team based on Gamers-Fusion ver 2.5
  *   @author               : thindil <thindil@vallheru.net>
  *   @version              : 1.5
- *   @since                : 14.03.2012
+ *   @since                : 20.03.2012
  *
  */
 
@@ -138,12 +138,7 @@ function createitem()
             $intGainexp = $intGainexp + $arrItem['level'];
 	  }
         $intItems ++;
-        $intAbility = ($intAbility + ($arrItem['level'] / 100));
-	if ($arrItem['type'] == 'R')
-	  {
-	    $intGainexp = ceil($intGainexp / 2);
-	    $intAbility = ceil ($intAbility / 2);
-	  }
+	$intAbility += ($arrItem['level'] / 100);
         if ($arrItem['type'] == 'B') 
         {
             $arrRepair = array(1, 4, 16, 64, 256);
@@ -644,6 +639,11 @@ if (isset ($_GET['mill']) && $_GET['mill'] == 'mill')
             $arrMaked = createitem();
             if ($intItems)
             {
+	        if ($arrItem['type'] == 'R')
+		  {
+		    $intGainexp = ceil($intGainexp / 2);
+		    $intAbility = $intAbility / 2;
+		  }
                 if ($player -> clas == 'Rzemieślnik') 
                 {
                     $intGainexp = $intGainexp * 2;
@@ -793,6 +793,11 @@ if (isset ($_GET['mill']) && $_GET['mill'] == 'mill')
 	    for ($i = 0; $i < count($arrMaked); $i++)
 	      {
 		additem($arrItem['type'], $arrMaked[$i]['name'], $arrMaked[$i]['wt'], $arrMaked[$i]['power'], $arrMaked[$i]['speed'], $intCost, $player->id, $arrItem['level'], $arrMaked[$i]['repaircost'], $arrAmount[$i]);
+	      }
+	    if ($arrItem['type'] == 'R')
+	      {
+		$intGainexp = ceil($intGainexp / 2);
+		$intAbility = $intAbility / 2;
 	      }
             if ($player -> clas == 'Rzemieślnik') 
             {
