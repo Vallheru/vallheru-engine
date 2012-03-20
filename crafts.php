@@ -7,7 +7,7 @@
  *   @copyright            : (C) 2011,2012 Vallheru Team based on Gamers-Fusion ver 2.5
  *   @author               : thindil <thindil@vallheru.net>
  *   @version              : 1.5
- *   @since                : 15.03.2012
+ *   @since                : 20.03.2012
  *
  */
 
@@ -674,6 +674,14 @@ if (isset($_GET['step']))
 	else
 	  {
 	    $strInfo2 .= 'W wyniku wypadku stracił'.$strSuffix.' '.$intDamage.' punktów życia, na dodatek nie dostał'.$strSuffix.' wypłaty.';
+	  }
+	if ($objJob->fields['craftmission'] > 0)
+	  {
+	    $strInfo2 .= '<br /><br />(<a href="crafts.php?step=first">Wróć do listy zadań</a>)';
+	  }
+	else
+	  {
+	    $strInfo2 .= '<br /><br />(<a href="city.php">Wróć do miasta</a>)';
 	  }
 	$smarty->assign("Result", $strInfo2);
 	unset($_SESSION['craft'], $_SESSION['craftindex'], $_SESSION['craftenergy']);

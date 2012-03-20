@@ -7,7 +7,7 @@
  *   @copyright            : (C) 2011,2012 Vallheru Team based on Gamers-Fusion ver 2.5
  *   @author               : thindil <thindil@vallheru.net>
  *   @version              : 1.5
- *   @since                : 15.03.2012
+ *   @since                : 20.03.2012
  *
  */
 
@@ -564,6 +564,14 @@ if (isset($_GET['step']))
 	  }
 	if (isset($strResult))
 	  {
+	    if ($objJob->fields['craftmission'] > 0)
+	      {
+		$strResult .= '<br /><br />(<a href="outpost.php?step=first">Wróć do listy zadań</a>)';
+	      }
+	    else
+	      {
+		$strResult .= '<br /><br />(<a href="city.php">Wróć do miasta</a>)';
+	      }	      
 	    $smarty->assign("Result", $strResult);
 	    unset($_SESSION['craft'], $_SESSION['mdata']);
 	  }
@@ -622,16 +630,24 @@ if (isset($_GET['step']))
 	    $db->Execute("UPDATE `players` SET `credits`=`credits`+".$intGold.", `mpoints`=`mpoints`+1 WHERE `id`=".$player->id);
 	    if (in_array($_SESSION['craft'][$_SESSION['index']], array(0, 2, 3, 4, 9)))
 	      {
-		$strResult = 'Po zakończonej walce, odeskortowaliście więźniów do miasta. Otrzymał'.$strSuffix.' '.$intGold.' sztuk złota oraz '.$intExp.' punktów doświadczenia. (<a href="city.php">Wróć do miasta</a>)';
+		$strResult = 'Po zakończonej walce, odeskortowaliście więźniów do miasta. Otrzymał'.$strSuffix.' '.$intGold.' sztuk złota oraz '.$intExp.' punktów doświadczenia.';
 	      }
 	    elseif (in_array($_SESSION['craft'][$_SESSION['index']], array(6, 8)))
 	      {
-		$strResult = 'Po zakończonej walce spaliliście zwłoki bestii i wróciliście do miasta. Otrzymał'.$strSuffix.' '.$intGold.' sztuk złota oraz '.$intExp.' punktów doświadczenia. (<a href="city.php">Wróć do miasta</a>)';
+		$strResult = 'Po zakończonej walce spaliliście zwłoki bestii i wróciliście do miasta. Otrzymał'.$strSuffix.' '.$intGold.' sztuk złota oraz '.$intExp.' punktów doświadczenia.';
 	      }
 	    else
 	      {
 		error('Zapomnij o tym.');
 		unset($_SESSION['craft'], $_SESSION['mdata'], $_SESSION['result'], $_SESSION['index']);
+	      }
+	    if ($objJob->fields['craftmission'] > 0)
+	      {
+		$strResult .= '<br /><br />(<a href="outpost.php?step=first">Wróć do listy zadań</a>)';
+	      }
+	    else
+	      {
+		$strResult .= '<br /><br />(<a href="city.php">Wróć do miasta</a>)';
 	      }
 	  }
 	if ($_SESSION['result'] == 2)
