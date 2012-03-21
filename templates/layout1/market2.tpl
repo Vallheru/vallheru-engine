@@ -96,16 +96,17 @@
 {/if}
 
 {if $Buy != ""}
+    <script src="js/market.js"></script>
     {$Buyinfo} <a href="{$SCRIPT_NAME}">{$Aback}</a>.<br /><br />
     <b>{$Bitem}:</b> {$Name} <br />
     {foreach $Infos as $Info}
         <b>{$Info@key}:</b> {$Info} <br />
     {/foreach}
-    <b>{$Oamount}:</b> {$Amount1} <br />
+    <b>{$Oamount}:</b> <a href="#" onClick="buyAll({$Amount1}, {$Cost});">{$Amount1}</a> <br />
     <b>{$Icost}:</b> {$Cost} <br />
     <b>{$Iseller}:</b> <a href="view.php?view={$Sid}">{$Seller}</a> <br /><br />
-    <table class="dark"><form method="post" action="{$SCRIPT_NAME}?buy={$Itemid}&amp;step=buy">
-    <tr><td>{$Bamount}:</td><td><input type="text" name="amount" /></td></tr>
+    <table class="dark"><form id="buy" method="post" action="{$SCRIPT_NAME}?buy={$Itemid}&amp;step=buy">
+    <tr><td>{$Bamount}:</td><td><input type="text" name="amount" onChange="countPrice({$Cost}, this.value, {$Amount1});"/> <span id="acost"></span></td></tr>
     <tr><td colspan="2" align="center"><input type="submit" value="{$Abuy}" /></td></tr>
     </form></table>
 {/if}

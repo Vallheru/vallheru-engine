@@ -96,6 +96,7 @@
 {/if}
 
 {if $Buy != ""}
+    <script src="js/market.js"></script>
     {$Buyinfo} <a href="imarket.php">{$Aback}</a>.<br /><br />
     <b>{$Item}:</b> {$Name} <br />
     <b>{$Ipower}:</b> {$Power} <br />
@@ -111,11 +112,11 @@
     {if $Type == "G"}
         <b>{$Hamount}:</b> {$Dur} <br />
     {/if}
-    <b>{$Oamount}:</b> {$Amount1} <br />
+    <b>{$Oamount}:</b> <a href="#" onClick="buyAll({$Amount1}, {$Cost});">{$Amount1}</a> <br />
     <b>{$Icost}:</b> {$Cost} <br />
     <b>{$Iseller}:</b> <a href="view.php?view={$Sid}">{$Seller}</a> <br /><br />
-    <form method="post" action="imarket.php?buy={$Itemid}&amp;step=buy"><table class="dark">
-    <tr><td>{$Bamount}:</td><td><input type="text" name="amount" /></td></tr>
+    <form id="buy" method="post" action="imarket.php?buy={$Itemid}&amp;step=buy"><table class="dark">
+    <tr><td>{$Bamount}:</td><td><input type="text" name="amount" onChange="countPrice({$Cost}, this.value, {$Amount1});"/> <span id="acost"></span></td></tr>
     <tr><td colspan="2" align="center"><input type="submit" value="{$Abuy}" /></td></tr>
     </table></form>
 {/if}

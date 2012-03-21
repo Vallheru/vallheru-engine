@@ -85,16 +85,17 @@
 {/if}
 
 {if $Buy != ""}
+    <script src="js/market.js"></script>
     {$Buyinfo} <a href="mmarket.php">{$Aback}</a>.<br /><br />
     <b>{$Potion}:</b> {$Name} <br />
     {if $Type == "M" || $Type == "P"}
         <b>{$Ppower}:</b> {$Power}<br />
     {/if}
-    <b>{$Oamount}:</b> {$Amount1} <br />
+    <b>{$Oamount}:</b> <a href="#" onClick="buyAll({$Amount1}, {$Cost});">{$Amount1}</a> <br />
     <b>{$Pcost}:</b> {$Cost} <br />
     <b>{$Pseller}:</b> <a href="view.php?view={$Sid}">{$Seller}</a> <br /><br />
-    <table><form method="post" action="mmarket.php?buy={$Itemid}&amp;step=buy">
-    <tr><td>{$Bamount}:</td><td><input type="text" name="amount" /></td></tr>
+    <table><form id="buy" method="post" action="mmarket.php?buy={$Itemid}&amp;step=buy">
+    <tr><td>{$Bamount}:</td><td><input type="text" name="amount" onChange="countPrice({$Cost}, this.value, {$Amount1});"/> <span id="acost"></span></td></tr>
     <tr><td colspan="2" align="center"><input type="submit" value="{$Abuy}" /></td></tr>
     </form></table>
 {/if}
