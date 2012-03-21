@@ -1,5 +1,7 @@
 2012-03-21  Bartek thindil Jasicki  <thindil@vallheru.net>
 
+	* FEATURE,mission.php:
+	added options which depends on player profession
 	* UPDATE,templates/layout1/amarket.tpl, templates/layout1/imarket.tpl, templates/layout1/mmarket.tpl, templates/layout1/market2.tpl,
 	templates/amarket.tpl, templates/imarket.tpl, templates/mmarket.tpl, templates/market2.tpl, js/market.js:
 	small redesign of buy items on market

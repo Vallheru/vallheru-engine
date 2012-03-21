@@ -7,7 +7,7 @@
  *   @copyright            : (C) 2012 Vallheru Team based on Gamers-Fusion ver 2.5
  *   @author               : thindil <thindil@vallheru.net>
  *   @version              : 1.5
- *   @since                : 12.03.2012
+ *   @since                : 21.03.2012
  *
  */
 
@@ -140,7 +140,7 @@ if (isset($_POST['action']))
 	    $intDiff = 5;
 	  }
 	$intRoll = rand(1, 100);
-	//Thieves
+	//Thieves missions
 	if ($_SESSION['maction']['type'] == 'T')
 	  {
 	    //Mission fail
@@ -291,6 +291,10 @@ if (isset($_POST['action']))
 		    $intRoll = rand(0, 100);
 		    if ($intRoll < $arrChances[$i])
 		      {
+			if (strpos($arrTmp[$i], '%prof%') !== FALSE)
+			  {
+			    $arrTmp[$i] = str_replace('%prof%', $player->clas, $arrTmp[$i]);
+			  }
 			$_SESSION['maction']['exits'][] = $arrTmp[$i];
 		      }
 		  }
@@ -303,6 +307,10 @@ if (isset($_POST['action']))
 		$intRoll = rand(0, 100);
 		if ($intRoll < $arrChances[$i])
 		  {
+		    if (strpos($arrTmp[$i], '%prof%') !== FALSE)
+		      {
+			$arrTmp[$i] = str_replace('%prof%', $player->clas, $arrTmp[$i]);
+		      }
 		    $_SESSION['maction']['items'][] = $arrTmp[$i];
 		  }
 	      }
@@ -314,6 +322,10 @@ if (isset($_POST['action']))
 		$intRoll = rand(0, 100);
 		if ($intRoll < $arrChances[$i])
 		  {
+		    if (strpos($arrTmp[$i], '%prof%') !== FALSE)
+		      {
+			$arrTmp[$i] = str_replace('%prof%', $player->clas, $arrTmp[$i]);
+		      }
 		    $_SESSION['maction']['mobs'][] = $arrTmp[$i];
 		  }
 	      }
