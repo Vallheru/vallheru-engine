@@ -7,7 +7,7 @@
  *   @copyright            : (C) 2012 Vallheru Team based on Gamers-Fusion ver 2.5
  *   @author               : thindil <thindil@vallheru.net>
  *   @version              : 1.5
- *   @since                : 21.03.2012
+ *   @since                : 22.03.2012
  *
  */
 
@@ -276,13 +276,47 @@ if (isset($_POST['action']))
 	//Next room
 	else
 	  {
+	    //Function parse actions available for players
+	    function parseOptions($arrOptions)
+	    {
+	      global $player;
+	      $arrTmp = explode(';', $arrOptions);
+	      $arrProfs = array('Wojownik' => '%fight%', 'Mag' => '%mag%', 'Barbarzyńca' => '%barb%', 'Złodziej' => '%thief%', 'Rzemieślnik' => '%craft%');
+	      foreach ($arrTmp as &$strOption)
+		{
+		  if (strpos($strOption, '%prof%') !== FALSE)
+		    {
+		      $strOption = str_replace('%prof%', $player->clas, $strOption);
+		    }
+		  foreach ($arrProfs as $clas => $prof)
+		    {
+		      $intPos = strpos($strOption, $prof);
+		      if ($intPos !== FALSE)
+			{
+			  if ($player->clas != $clas)
+			    {
+			      $intEnd = (strlen($strOption) - strpos($strOption, ',', $intPos)) * -1;
+			      $intPos -= (strlen($strOption) + 2);
+			      $intStart = strrpos($strOption, ',', $intPos);
+			      $strOption = substr_replace($strOption, '', $intStart, $intEnd);
+			    }
+			  else
+			    {
+			      $strOption = str_replace($prof, $player->clas, $strOption);
+			    }
+			}
+		    }
+		}
+	      return $arrTmp;
+	    }
+
 	    $objMission = $db->Execute("SELECT * FROM `missions` WHERE `name`='".$_POST['action']."' ORDER BY RAND() LIMIT 1");
 	    $_SESSION['maction']['location'] = $objMission->fields['id'];
 	    $_SESSION['maction']['exits'] = array();
 	    $_SESSION['maction']['items'] = array();
 	    $_SESSION['maction']['mobs'] = array();
 	    //Generate exits
-	    $arrTmp = explode(';', $objMission->fields['exits']);
+	    $arrTmp = parseOptions($objMission->fields['exits']);
 	    $arrChances = explode(';', $objMission->fields['chances']);
 	    while (count($_SESSION['maction']['exits']) == 0)
 	      {
@@ -291,41 +325,29 @@ if (isset($_POST['action']))
 		    $intRoll = rand(0, 100);
 		    if ($intRoll < $arrChances[$i])
 		      {
-			if (strpos($arrTmp[$i], '%prof%') !== FALSE)
-			  {
-			    $arrTmp[$i] = str_replace('%prof%', $player->clas, $arrTmp[$i]);
-			  }
 			$_SESSION['maction']['exits'][] = $arrTmp[$i];
 		      }
 		  }
 	      }
 	    //Generate items
-	    $arrTmp = explode(';', $objMission->fields['items']);
+	    $arrTmp = parseOptions($objMission->fields['items']);
 	    $arrChances = explode(';', $objMission->fields['chances3']);
 	    for ($i = 0; $i < count($arrChances); $i ++)
 	      {
 		$intRoll = rand(0, 100);
 		if ($intRoll < $arrChances[$i])
 		  {
-		    if (strpos($arrTmp[$i], '%prof%') !== FALSE)
-		      {
-			$arrTmp[$i] = str_replace('%prof%', $player->clas, $arrTmp[$i]);
-		      }
 		    $_SESSION['maction']['items'][] = $arrTmp[$i];
 		  }
 	      }
 	    //Generate mobs
-	    $arrTmp = explode(';', $objMission->fields['mobs']);
+	    $arrTmp = parseOptions($objMission->fields['mobs']);
 	    $arrChances = explode(';', $objMission->fields['chances2']);
 	    for ($i = 0; $i < count($arrChances); $i ++)
 	      {
 		$intRoll = rand(0, 100);
 		if ($intRoll < $arrChances[$i])
 		  {
-		    if (strpos($arrTmp[$i], '%prof%') !== FALSE)
-		      {
-			$arrTmp[$i] = str_replace('%prof%', $player->clas, $arrTmp[$i]);
-		      }
 		    $_SESSION['maction']['mobs'][] = $arrTmp[$i];
 		  }
 	      }

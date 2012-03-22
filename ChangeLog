@@ -1,5 +1,7 @@
 2012-03-22  Bartek thindil Jasicki  <thindil@vallheru.net>
 
+	* FEATURE,mission.php: 
+	added option available only for selected player profesions
 	* BUG,languages/pl/imarket.php:
 	fixed typo
 
