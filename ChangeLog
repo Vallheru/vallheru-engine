@@ -1,3 +1,8 @@
+2012-03-22  Bartek thindil Jasicki  <thindil@vallheru.net>
+
+	* BUG,languages/pl/imarket.php:
+	fixed typo
+
 2012-03-21  Bartek thindil Jasicki  <thindil@vallheru.net>
 
 	* FEATURE,mission.php:

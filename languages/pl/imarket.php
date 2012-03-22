@@ -4,11 +4,11 @@
  *   Polish language for items market
  *
  *   @name                 : imarket.php                            
- *   @copyright            : (C) 2004,2005,2006,2011 Vallheru Team based on Gamers-Fusion ver 2.5
- *   @author               : thindil <thindil@tuxfamily.org>
+ *   @copyright            : (C) 2004,2005,2006,2011,2012 Vallheru Team based on Gamers-Fusion ver 2.5
+ *   @author               : thindil <thindil@vallheru.net>
  *   @author               : eyescream <tduda@users.sourceforge.net>
- *   @version              : 1.4
- *   @since                : 20.08.2011
+ *   @version              : 1.5
+ *   @since                : 22.03.2012
  *
  */
 
@@ -58,7 +58,7 @@ if (isset ($_GET['view']) && $_GET['view'] == 'market')
     define("T_SELLER", "Sprzedający");
     define("T_OPTIONS", "Opcje");
     define("T_NAME", "Nazwa");
-    define("T_POWER", "Siła");
+    define("T_POWER", "Premia");
     define("T_DUR", "Wytrzymałość");
     define("T_SPEED", "Szybkość");
     define("T_AGI", "Zręczność");
