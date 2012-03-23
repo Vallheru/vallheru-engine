@@ -312,7 +312,7 @@ if (isset ($_GET['view']) && $_GET['view'] == 'inbox')
 	if ($mail->fields['senderid'] == $player->id && $mail->fields['to'] > 0)
 	  {
 	    $arrsenderid[] = $mail->fields['to'];
-	    $arrsender[] = $mail->fields['toname'];
+	    $arrsender[] = $mail->fields['toname'].' (ID:'.$mail->fields['to'].')';
 	  }
 	else
 	  {
@@ -323,8 +323,9 @@ if (isset ($_GET['view']) && $_GET['view'] == 'inbox')
 	      }
 	    else
 	      {
-		$arrsender[] = $mail->fields['sender'];
-		$arrsenderid[] = 0;
+		$arrsender[] = $mail->fields['sender'].' nieobecny(a)';
+		$arrsenderid[] = $mail->fields['senderid'];
+		$arrSenders[$mail->fields['senderid']] = $mail->fields['sender'];
 	      }
 	  }
 	$arrsubject[] = $mail -> fields['subject'];

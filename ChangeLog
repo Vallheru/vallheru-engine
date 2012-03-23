@@ -1,6 +1,8 @@
 2012-03-23  Bartek thindil Jasicki  <thindil@vallheru.net>
 
 	* BUG,mail.php: 
+	fixed few typos
+	* BUG,mail.php: 
 	fixed few bugs with players names
 	* UPDATE,templates/layout1/mail.tpl, templates/mail.tpl, mail.php:
 	small redesign of mail box
