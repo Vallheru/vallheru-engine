@@ -312,12 +312,20 @@ if (isset ($_GET['view']) && $_GET['view'] == 'inbox')
 	if ($mail->fields['senderid'] == $player->id && $mail->fields['to'] > 0)
 	  {
 	    $arrsenderid[] = $mail->fields['to'];
-	    $arrsender[] = $arrSenders[$mail->fields['to']];
+	    $arrsender[] = $mail->fields['toname'];
 	  }
 	else
 	  {
-	    $arrsender[] = $arrSenders[$mail -> fields['senderid']];
-	    $arrsenderid[] = $mail -> fields['senderid'];
+	    if (array_key_exists($mail->fields['senderid'], $arrSenders))
+	      {
+		$arrsender[] = $arrSenders[$mail -> fields['senderid']];
+		$arrsenderid[] = $mail -> fields['senderid'];
+	      }
+	    else
+	      {
+		$arrsender[] = $mail->fields['sender'];
+		$arrsenderid[] = 0;
+	      }
 	  }
 	$arrsubject[] = $mail -> fields['subject'];
 	$arrid[] = $mail -> fields['id'];
@@ -399,9 +407,17 @@ if (isset ($_GET['view']) && $_GET['view'] == 'saved')
     $arrsubject = array();
     $arrid = array();
     while (!$mail -> EOF) 
-    {
-        $arrsender[] = $arrSenders[$mail->fields['senderid']];
-        $arrsenderid[] = $mail -> fields['senderid'];
+      {
+	if (array_key_exists($mail->fields['senderid'], $arrSenders))
+	  {
+	    $arrsender[] = $arrSenders[$mail -> fields['senderid']];
+	    $arrsenderid[] = $mail -> fields['senderid'];
+	  }
+	else
+	  {
+	    $arrsender[] = $mail->fields['sender'];
+	    $arrsenderid[] = 0;
+	  }
         $arrsubject[] = $mail -> fields['subject'];
         $arrid[] = $mail -> fields['id'];
         $mail -> MoveNext();
@@ -723,14 +739,14 @@ if (isset ($_GET['read']))
 	    $intPage = $intPages;
 	  }
 	
-	$objMails = $db->SelectLimit("SELECT `mail`.*, `players`.`user`, `players`.`tribe` FROM `mail` JOIN `players` ON `mail`.`senderid`=`players`.`id` WHERE `mail`.`topic`=".$_GET['read']." AND `mail`.`owner`=".$player->id." ORDER BY `mail`.`id` ASC", 20, 20 * ($intPage - 1));
+	$objMails = $db->SelectLimit("SELECT * FROM `mail` WHERE `topic`=".$_GET['read']." AND `owner`=".$player->id." ORDER BY `id` ASC", 20, 20 * ($intPage - 1));
 	$_GET['one'] = 0;
       }
     else
       {
 	$intPage = 0;
 	$intPages = 0;
-	$objMails = $db->Execute("SELECT `mail`.*, `players`.`user`, `players`.`tribe` FROM `mail` JOIN `players` ON `mail`.`senderid`=`players`.`id` WHERE `mail`.`id`=".$_GET['read']." AND `mail`.`owner`=".$player->id);
+	$objMails = $db->Execute("SELECT * FROM `mail` WHERE `id`=".$_GET['read']." AND `owner`=".$player->id);
 	$_GET['one'] = 1;
       }
     if (!$objMails->fields['id'])
@@ -738,6 +754,7 @@ if (isset ($_GET['read']))
 	error("Nie ma takiej wiadomości.");
       }
     $strSubject = $objMails->fields['subject'];
+    
     while (!$objMails->EOF)
       {
 	if ($intReceiver == 0)
@@ -751,7 +768,7 @@ if (isset ($_GET['read']))
 		$intReceiver = $objMails->fields['to'];
 	      }
 	  }
-	$arrSender[] = $arrTags[$objMails->fields['tribe']][0]." ".$objMails->fields['user']." ".$arrTags[$objMails->fields['tribe']][1].' (ID: '.$objMails->fields['senderid'].')';
+	$arrSender[] = $objMails->fields['sender'].' (ID: '.$objMails->fields['senderid'].')';
 	$arrSenderid[] = $objMails->fields['senderid'];
 	$arrMid[] = $objMails->fields['id'];
 	$arrBody[] = $objMails->fields['body'];
