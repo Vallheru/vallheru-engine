@@ -1,3 +1,8 @@
+2012-03-23  Bartek thindil Jasicki  <thindil@vallheru.net>
+
+	* FEATURE,includes/resets.php, log.php:
+	added info to player log about ready to gather herbs
+
 2012-03-22  Bartek thindil Jasicki  <thindil@vallheru.net>
 
 	* FEATURE,mission.php: 

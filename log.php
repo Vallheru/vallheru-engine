@@ -7,7 +7,7 @@
  *   @copyright            : (C) 2004,2005,2006,2011,2012 Vallheru Team based on Gamers-Fusion ver 2.5
  *   @author               : thindil <thindil@vallheru.net>
  *   @version              : 1.5
- *   @since                : 16.02.2012
+ *   @since                : 23.03.2012
  *
  */
 
@@ -208,7 +208,21 @@ if (isset($_GET['page']))
      $intPage = 1;
    }
 
-$arrTypes = array('O' => 'Strażnica', 'V' => 'Vallary', 'B' => 'Walka', 'T' => 'Złodziejstwo', 'M' => 'Rynek', 'C' => 'Klan', 'A' => 'Administracja', 'N' => 'Bank', 'R' => 'Chowańce', 'H' => 'Dom', 'J' => 'Więzienie', 'L' => 'Biblioteka', 'U' => 'Brak typu', 'E' => 'Różne');
+$arrTypes = array('O' => 'Strażnica', 
+		  'V' => 'Vallary', 
+		  'B' => 'Walka', 
+		  'T' => 'Złodziejstwo', 
+		  'M' => 'Rynek', 
+		  'C' => 'Klan', 
+		  'A' => 'Administracja', 
+		  'N' => 'Bank', 
+		  'R' => 'Chowańce', 
+		  'H' => 'Dom', 
+		  'J' => 'Więzienie', 
+		  'L' => 'Biblioteka', 
+		  'U' => 'Brak typu', 
+		  'E' => 'Różne', 
+		  'F' => 'Farma');
 
 /**
  * Get all available log types
