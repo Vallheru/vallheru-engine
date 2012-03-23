@@ -7,7 +7,7 @@
  *   @copyright            : (C) 2004,2005,2006,2007,2011,2012 Vallheru Team based on Gamers-Fusion ver 2.5
  *   @author               : thindil <thindil@vallheru.net>
  *   @version              : 1.5
- *   @since                : 18.03.2012
+ *   @since                : 23.03.2012
  *
  */
 
@@ -83,7 +83,7 @@ if (isset($_GET['view']) && $_GET['view'] == 'search')
 		    $intPage = 1;
 		  }
 		
-		$objMails = $db->SelectLimit("SELECT `id`, `sender`, `subject` FROM `mail` WHERE `owner`=".$player->id." AND MATCH(`subject`, `body`) AGAINST (".$strSearch." IN BOOLEAN MODE)", 30, 30 * ($intPage - 1)) or die($db -> ErrorMsg());
+		$objMails = $db->SelectLimit("SELECT `mail`.`id`, `mail`.`subject`, `players`.`user`, `players`.`tribe` FROM `mail` JOIN `players` ON `mail`.`senderid`=`players`.`id` WHERE `owner`=".$player->id." AND MATCH(`subject`, `body`) AGAINST (".$strSearch." IN BOOLEAN MODE)", 30, 30 * ($intPage - 1)) or die($db -> ErrorMsg());
 		$arrsender = array();
 		$arrsubject = array();
 		$arrid = array();
@@ -216,7 +216,7 @@ if (isset($_GET['view']) && in_array($_GET['view'], array('inbox', 'saved')))
     if (isset($_POST['sort1']))
       {
 	$_POST['sort1'] = intval($_POST['sort1']);
-	if ($_POST['sort1'] != -1)
+	if ($_POST['sort1'] != 0)
 	  {
 	    $strQuery = " AND `senderid`=".$_POST['sort1'];
 	  }
@@ -261,13 +261,11 @@ if (isset($_GET['view']) && in_array($_GET['view'], array('inbox', 'saved')))
  */
 if (isset ($_GET['view']) && $_GET['view'] == 'inbox') 
   {
-    $objSort = $db->Execute("SELECT `sender`, `senderid` FROM `mail`  WHERE `owner`=".$player -> id." AND `senderid`!=".$player->id." GROUP BY `senderid` ASC");
-    $arrSendersid = array();
-    $arrSenders = array();
+    $objSort = $db->Execute("SELECT `mail`.`senderid`, `players`.`tribe`, `players`.`user` FROM `mail` JOIN `players` ON `mail`.`senderid`=`players`.`id` WHERE `mail`.`owner`=".$player->id." AND `mail`.`senderid`!=".$player->id." GROUP BY `mail`.`senderid` ASC") or die($db->ErrorMsg());
+    $arrSenders = array('Wszyscy');
     while (!$objSort->EOF) 
       {
-	$arrSenders[] = $objSort->fields['sender'];
-	$arrSendersid[] = $objSort->fields['senderid'];
+	$arrSenders[$objSort->fields['senderid']] = $arrTags[$objSort->fields['tribe']][0]." ".$objSort->fields['user']." ".$arrTags[$objSort->fields['tribe']][1].' (ID: '.$objSort->fields['senderid'].')';
 	$objSort->MoveNext();
       }
     $objSort->Close();
@@ -314,11 +312,11 @@ if (isset ($_GET['view']) && $_GET['view'] == 'inbox')
 	if ($mail->fields['senderid'] == $player->id && $mail->fields['to'] > 0)
 	  {
 	    $arrsenderid[] = $mail->fields['to'];
-	    $arrsender[] = $mail->fields['toname'];
+	    $arrsender[] = $arrSenders[$mail->fields['to']];
 	  }
 	else
 	  {
-	    $arrsender[] = $mail -> fields['sender'];
+	    $arrsender[] = $arrSenders[$mail -> fields['senderid']];
 	    $arrsenderid[] = $mail -> fields['senderid'];
 	  }
 	$arrsubject[] = $mail -> fields['subject'];
@@ -354,7 +352,6 @@ if (isset ($_GET['view']) && $_GET['view'] == 'inbox')
 			    "Sall" => "Wszyscy",
 			    "Sall2" => "Bez ograniczeń",
 			    "Senders" => $arrSenders,
-			    "Sendersid" => $arrSendersid,
 			    "Tsender" => "Nadawca",
 			    "Ttime" => "Okres",
 			    "Tlastweek" => "Ostatni tydzień",
@@ -378,13 +375,11 @@ if (isset ($_GET['view']) && $_GET['view'] == 'inbox')
  */
 if (isset ($_GET['view']) && $_GET['view'] == 'saved') 
 {
-    $objSort = $db->Execute("SELECT `sender`, `senderid` FROM `mail`  WHERE `owner`=".$player->id." AND `saved`='Y' GROUP BY `senderid` ASC");
-    $arrSendersid = array();
-    $arrSenders = array();
+    $objSort = $db->Execute("SELECT `mail`.`senderid`, `players`.`tribe`, `players`.`user` FROM `mail` JOIN `players` ON `mail`.`senderid`=`players`.`id` WHERE `mail`.`owner`=".$player->id." AND `mail`.`saved`='Y' GROUP BY `mail`.`senderid` ASC");
+    $arrSenders = array('Wszyscy');
     while (!$objSort->EOF) 
       {
-	$arrSenders[] = $objSort->fields['sender'];
-	$arrSendersid[] = $objSort->fields['senderid'];
+	$arrSenders[$objSort->fields['senderid']] = $arrTags[$objSort->fields['tribe']][0]." ".$objSort->fields['user']." ".$arrTags[$objSort->fields['tribe']][1].' (ID: '.$objSort->fields['senderid'].')';
 	$objSort->MoveNext();
       }
     $objSort->Close();
@@ -403,15 +398,13 @@ if (isset ($_GET['view']) && $_GET['view'] == 'saved')
     $arrsenderid = array();
     $arrsubject = array();
     $arrid = array();
-    $i = 0;
     while (!$mail -> EOF) 
     {
-        $arrsender[$i] = $mail -> fields['sender'];
-        $arrsenderid[$i] = $mail -> fields['senderid'];
-        $arrsubject[$i] = $mail -> fields['subject'];
-        $arrid[$i] = $mail -> fields['id'];
+        $arrsender[] = $arrSenders[$mail->fields['senderid']];
+        $arrsenderid[] = $mail -> fields['senderid'];
+        $arrsubject[] = $mail -> fields['subject'];
+        $arrid[] = $mail -> fields['id'];
         $mail -> MoveNext();
-        $i = $i + 1;
     }
     $mail -> Close();
     $smarty -> assign(array("Sender" => $arrsender, 
@@ -431,7 +424,6 @@ if (isset ($_GET['view']) && $_GET['view'] == 'saved')
 			    "Sall" => "Wszyscy",
 			    "Sall2" => "Bez ograniczeń",
 			    "Senders" => $arrSenders,
-			    "Sendersid" => $arrSendersid,
 			    "Tsender" => "Nadawca",
 			    "Ttime" => "Okres",
 			    "Tlastweek" => "Ostatni tydzień",
@@ -461,13 +453,11 @@ if (isset ($_GET['view']) && $_GET['view'] == 'write')
       }
     $objBan -> Close();
     //Contacts
-    $objContacts = $db->Execute("SELECT `pid` FROM `contacts` WHERE `owner`=".$player->id." ORDER BY `order` ASC");
+    $objContacts = $db->Execute("SELECT `contacts`.`pid`, `players`.`user`, `players`.`tribe` FROM `contacts` JOIN `players` ON `contacts`.`pid`=`players`.`id` WHERE `owner`=".$player->id." ORDER BY `order` ASC");
     $arrContacts = array(0 => "ID (numer)");
     while (!$objContacts->EOF)
       {
-	$objUser = $db->Execute("SELECT `user` FROM `players` WHERE `id`=".$objContacts->fields['pid']);
-	$arrContacts[$objContacts->fields['pid']] = $objUser->fields['user'];
-	$objUser->Close();
+	$arrContacts[$objContacts->fields['pid']] = $arrTags[$objContacts->fields['tribe']][0]." ".$objContacts->fields['user']." ".$arrTags[$objContacts->fields['tribe']][1].' (ID: '.$objContacts->fields['pid'].')';;
 	$objContacts->MoveNext();
       }
     $objContacts->Close();
@@ -733,14 +723,14 @@ if (isset ($_GET['read']))
 	    $intPage = $intPages;
 	  }
 	
-	$objMails = $db->SelectLimit("SELECT * FROM `mail` WHERE `topic`=".$_GET['read']." AND `owner`=".$player->id." ORDER BY `id` ASC", 20, 20 * ($intPage - 1));
+	$objMails = $db->SelectLimit("SELECT `mail`.*, `players`.`user`, `players`.`tribe` FROM `mail` JOIN `players` ON `mail`.`senderid`=`players`.`id` WHERE `mail`.`topic`=".$_GET['read']." AND `mail`.`owner`=".$player->id." ORDER BY `mail`.`id` ASC", 20, 20 * ($intPage - 1));
 	$_GET['one'] = 0;
       }
     else
       {
 	$intPage = 0;
 	$intPages = 0;
-	$objMails = $db->Execute("SELECT * FROM `mail` WHERE `id`=".$_GET['read']." AND `owner`=".$player->id);
+	$objMails = $db->Execute("SELECT `mail`.*, `players`.`user`, `players`.`tribe` FROM `mail` JOIN `players` ON `mail`.`senderid`=`players`.`id` WHERE `mail`.`id`=".$_GET['read']." AND `mail`.`owner`=".$player->id);
 	$_GET['one'] = 1;
       }
     if (!$objMails->fields['id'])
@@ -761,7 +751,7 @@ if (isset ($_GET['read']))
 		$intReceiver = $objMails->fields['to'];
 	      }
 	  }
-	$arrSender[] = $objMails->fields['sender'];
+	$arrSender[] = $arrTags[$objMails->fields['tribe']][0]." ".$objMails->fields['user']." ".$arrTags[$objMails->fields['tribe']][1].' (ID: '.$objMails->fields['senderid'].')';
 	$arrSenderid[] = $objMails->fields['senderid'];
 	$arrMid[] = $objMails->fields['id'];
 	$arrBody[] = $objMails->fields['body'];

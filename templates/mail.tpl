@@ -13,7 +13,7 @@
     {if $Amount > 0}
         <ul>
         {section name=search loop=$Senders}
-	    <li>{$Senders[search]} <a href="mail.php?read={$Mailid[search]}">{$Subjects[search]}</a></li>
+	    <li>{$Senders[search]} <a href="mail.php?read={$Mailid[search]}&amp;one">{$Subjects[search]}</a></li>
 	{/section}
 	</ul>
 	{if $Tpages > 1}
@@ -31,12 +31,7 @@
 
 {if $View == "inbox"}
     <form method="post" action="mail.php?view=inbox&amp;sort">
-        <input type="submit" value="{$Asort}" /> {$Tsender}: <select name="sort1">
-	    <option value="-1">{$Sall}</option>
-	    {section name=sort1 loop=$Sendersid}
-	        <option value="{$Sendersid[sort1]}">{$Senders[sort1]}</option>
-	    {/section}
-	</select> {$Ttime}: <select name="sort2">
+        <input type="submit" value="{$Asort}" /> {$Tsender}: {html_options name=sort1 options=$Senders} {$Ttime}: <select name="sort2">
 	    <option value="-1">{$Sall2}</option>
 	    <option value="7">{$Tlastweek}</option>
 	    <option value="30">{$Tlastmonth}</option>
@@ -44,18 +39,16 @@
 	</select>
     </form>
     <form method="post" action="mail.php?step=mail&amp;box=I">
-    <table>
+    <table align="center" width="90%">
     <tr>
-    <td width="20"><b><u>{$Tselect}</u></b></td>
-    <td width="75"><b><u>{$From}</u></b></td>
-    <td width="75"><b><u>{$Sid}</u></b></td>
-    <td><b><u>{$Mtitle}</u></b></td>
+    <th width="20">{$Tselect}</th>
+    <th>{$From}</th>
+    <th width="60%">{$Mtitle}</th>
     </tr>
     {section name=mail loop=$Sender}
         <tr>
         <td><input type="checkbox" name="{$Mailid[mail]}" /></td>
         <td><a href="view.php?view={$Senderid[mail]}">{$Sender[mail]}</a></td>
-        <td>{$Senderid[mail]}</td>
         <td><a href="mail.php?read={$Mtopic[mail]}">{$Subject[mail]}</a>{if $Mread[mail] == "Y"} <blink>!!</blink> {/if}</td>
         </tr>
     {/section}
@@ -85,13 +78,8 @@
 {/if}
 
 {if $View == "saved"}
-    <form method="post" action="mail.php?view=zapis&amp;sort">
-        <input type="submit" value="{$Asort}" /> {$Tsender}: <select name="sort1">
-	    <option value="-1">{$Sall}</option>
-	    {section name=sort1 loop=$Sendersid}
-	        <option value="{$Sendersid[sort1]}">{$Senders[sort1]}</option>
-	    {/section}
-	</select> {$Ttime}: <select name="sort2">
+    <form method="post" action="mail.php?view=saved&amp;sort">
+        <input type="submit" value="{$Asort}" /> {$Tsender}: {html_options name=sort1 options=$Senders} {$Ttime}: <select name="sort2">
 	    <option value="-1">{$Sall2}</option>
 	    <option value="7">{$Tlastweek}</option>
 	    <option value="30">{$Tlastmonth}</option>
@@ -99,18 +87,16 @@
 	</select>
     </form>
     <form method="post" action="mail.php?step=mail&amp;box=W">
-    <table>
+    <table align="center" width="90%">
     <tr>
-    <td width="20"><b><u>{$Tselect}</u></b></td>
-    <td width="75"><b><u>{$From}</u></b></td>
-    <td width="75"><b><u>{$Sid}</u></b></td>
-    <td><b><u>{$Mtitle}</u></b></td>
+    <th width="20">{$Tselect}</th>
+    <th>{$From}</th>
+    <th width="60%">{$Mtitle}</th>
     </tr>
     {section name=mail1 loop=$Sender}
         <tr>
         <td><input type="checkbox" name="{$Mailid[mail1]}" /></td>
         <td><a href="view.php?view={$Senderid[mail1]}">{$Sender[mail1]}</a></td>
-        <td>{$Senderid[mail1]}</td>
         <td><a href="mail.php?read={$Mailid[mail1]}&amp;one">{$Subject[mail1]}</a></td>
         </tr>
     {/section}
@@ -154,7 +140,7 @@
 {if $Read != ""}
     <b>{$Subject}</b><br /><br />
     {section name=read loop=$Sendersid}
-        {$Date2[read]} <b><a href="view.php?view={$Sendersid[read]}">{$Senders[read]}</a></b> {$Twrite}... <br />
+        {$Date2[read]} <a href="view.php?view={$Sendersid[read]}">{$Senders[read]}</a> {$Twrite}... <br />
 	"{$Bodies[read]}"<br />
 	{if $One == 0}
 	    [<a href="mail.php?zapisz={$Mailsid[read]}">{$Asave}</a>]
