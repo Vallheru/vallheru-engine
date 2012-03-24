@@ -235,6 +235,7 @@ if (isset($_GET['cast']))
 		  {
 		    $db -> Execute("UPDATE players SET magia=magia+0.01 WHERE id=".$player -> id);
 		    message('error', YOU_TRY.$arritem -> fields['name'].BUT_FAIL);
+		    $blnValid = FALSE;
 		  }
 	      }
 	    if ($arrspell -> fields['nazwa'] == E_SPELL2) 
@@ -270,6 +271,7 @@ if (isset($_GET['cast']))
 		  {
 		    $db -> Execute("UPDATE players SET magia=magia+0.01 WHERE id=".$player -> id);
 		    message('error', YOU_TRY.$arritem -> fields['name'].BUT_FAIL);
+		    $blnValid = FALSE;
 		  }
 	      }
 	    if ($arrspell -> fields['nazwa'] == E_SPELL3) 
@@ -312,6 +314,14 @@ if (isset($_GET['cast']))
 			  }
 			$speed = $arritem -> fields['szyb'];
 			$text = YOU_RISE4;
+		      }
+		    else 
+		      {
+			message('error', NOT_ABLE3);
+			$blnValid = FALSE;
+		      }
+		    if ($blnValid)
+		      {
 			message("success", $text." ".$arritem -> fields['name']." o ".$bonus.NOW_IS.$bonus.S_EXP.$magic.S_CAST);
 			$test = $db -> Execute("SELECT id FROM equipment WHERE name='".$name."' AND wt=".$arritem -> fields['wt']." AND type='".$arritem -> fields['type']."' AND status='U' AND owner=".$player -> id." AND power=".$arritem -> fields['power']." AND zr=".$agi." AND szyb=".$speed." AND maxwt=".$arritem -> fields['maxwt']." AND poison=".$arritem -> fields['poison']." AND magic='Y' AND ptype='".$arritem -> fields['ptype']."' AND repair=".$arritem -> fields['repair']);
 			if (!$test -> fields['id']) 
@@ -324,14 +334,10 @@ if (isset($_GET['cast']))
 			  }
 			checkexp($player -> exp,$bonus,$player -> level,$player -> race,$player -> user,$player -> id,0,0,$player -> id,'magia',$magic);
 		      } 
-                    else 
-		      {
-			message('error', NOT_ABLE3);
-			$blnValid = FALSE;
-		      }
 		  } 
                 else 
 		  {
+		    $blnValid = FALSE;
 		    $db -> Execute("UPDATE players SET magia=magia+0.01 WHERE id=".$player -> id);
 		    message("error", YOU_TRY.$arritem -> fields['name'].BUT_FAIL);
 		  }

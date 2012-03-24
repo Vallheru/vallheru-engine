@@ -1,5 +1,7 @@
 2012-03-24  Bartek thindil Jasicki  <thindil@vallheru.net>
 
+	* BUG,languages/pl/czary.php, czary.php: 
+	fixed item enchanting
 	* BUG,includes/resets.php:
 	fixed bug with farm notifications
 

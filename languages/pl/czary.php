@@ -4,10 +4,10 @@
  *   Polish language czary.php
  *
  *   @name                 : czary.php                            
- *   @copyright            : (C) 2004,2005,2006 Vallheru Team based on Gamers-Fusion ver 2.5
- *   @author               : thindil <thindil@users.sourceforge.net>
- *   @version              : 1.1
- *   @since                : 12.06.2006
+ *   @copyright            : (C) 2004,2005,2006,2012 Vallheru Team based on Gamers-Fusion ver 2.5
+ *   @author               : thindil <thindil@vallheru.net>
+ *   @version              : 1.5
+ *   @since                : 24.03.2012
  *
  */
 
@@ -97,7 +97,7 @@ if (isset($_GET['cast']))
     define("I_STEEL", " ze stali");
     define("I_HAZEL", "z leszczyny");
     define("I_YEW", "z cisu");
-    define("I_ELM", "z wiąz");
+    define("I_ELM", "z wiązu");
     define("I_HARDER", "wzmocniony");
     define("I_COMPOSITE", "kompozytowy");
 }
