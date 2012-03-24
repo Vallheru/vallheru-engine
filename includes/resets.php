@@ -7,7 +7,7 @@
  *   @copyright            : (C) 2004,2005,2006,2007,2011,2012 Vallheru Team based on Gamers-Fusion ver 2.5
  *   @author               : thindil <thindil@vallheru.net>
  *   @version              : 1.5
- *   @since                : 23.03.2012
+ *   @since                : 24.03.2012
  *
  */
 
@@ -57,15 +57,16 @@ function smallreset($blnSmall = FALSE)
     /**
      * Grow herbs
      */
-    $db -> Execute("UPDATE farm SET age=age+1");
+    //$db -> Execute("UPDATE farm SET age=age+1");
     $db -> Execute("DELETE FROM farm WHERE age>26");
     $arrPlants = $db->GetAll("SELECT `owner`, `name` FROM `farm` WHERE `age`=14");
-    $strSql = '';
+    $strSql = "INSERT INTO `log` (`owner`, `log`, `czas`, `type`) VALUES";
     $time = date("Y-m-d H:i:s");
     foreach ($arrPlants as $arrPlant)
       {
-	$strSql .= "INSERT INTO `log` (`owner`, `log`, `czas`, `type`) VALUES(".$arrPlant['owner'].", 'Twoja uprawa ".$arrPlant['name']." jest już gotowa do zebrania.', '".$time."', 'F');";
+	$strSql .= "(".$arrPlant['owner'].", 'Twoja uprawa ".$arrPlant['name']." jest już gotowa do zebrania.', '".$time."', 'F'),";
       }
+    $strSql = rtrim($strSql, ',').';';
     $db->Execute($strSql);
     $itemid = $db -> Execute("SELECT `id` FROM `potions` WHERE `owner`=0");
     while (!$itemid -> EOF) 
