@@ -342,22 +342,19 @@ if (isset($_GET['cast']))
 		    message("error", YOU_TRY.$arritem -> fields['name'].BUT_FAIL);
 		  }
 	      }
-	    if ($blnValid)
+	    $db -> Execute("UPDATE `players` SET `pm`=`pm`-".$arrspell -> fields['poziom'].", `energy`=`energy`-".$arrspell -> fields['poziom']." WHERE id=".$player -> id);
+	    $arrspell -> Close();
+	    $amount = $arritem -> fields['amount'] - 1;
+	    if ($amount > 0) 
 	      {
-		$db -> Execute("UPDATE `players` SET `pm`=`pm`-".$arrspell -> fields['poziom'].", `energy`=`energy`-".$arrspell -> fields['poziom']." WHERE id=".$player -> id);
-		$arrspell -> Close();
-		$amount = $arritem -> fields['amount'] - 1;
-		if ($amount > 0) 
-		  {
-		    $db -> Execute("UPDATE equipment SET amount=amount-1 WHERE id=".$arritem -> fields['id']);
-		  } 
-		else 
-		  {
-		    $db -> Execute("DELETE FROM equipment WHERE id=".$arritem -> fields['id']);
-		  }
-		$objBonus -> Close();
-		$arritem -> Close();
+		$db -> Execute("UPDATE equipment SET amount=amount-1 WHERE id=".$arritem -> fields['id']);
+	      } 
+	    else 
+	      {
+		$db -> Execute("DELETE FROM equipment WHERE id=".$arritem -> fields['id']);
 	      }
+	    $objBonus -> Close();
+	    $arritem -> Close();	    
 	  }
     }
     $smarty -> assign(array("Spellid" => $czary -> fields['id'], 
