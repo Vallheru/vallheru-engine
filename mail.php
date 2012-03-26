@@ -7,7 +7,7 @@
  *   @copyright            : (C) 2004,2005,2006,2007,2011,2012 Vallheru Team based on Gamers-Fusion ver 2.5
  *   @author               : thindil <thindil@vallheru.net>
  *   @version              : 1.5
- *   @since                : 23.03.2012
+ *   @since                : 26.03.2012
  *
  */
 
@@ -261,14 +261,53 @@ if (isset($_GET['view']) && in_array($_GET['view'], array('inbox', 'saved')))
  */
 if (isset ($_GET['view']) && $_GET['view'] == 'inbox') 
   {
-    $objSort = $db->Execute("SELECT `mail`.`senderid`, `players`.`tribe`, `players`.`user` FROM `mail` JOIN `players` ON `mail`.`senderid`=`players`.`id` WHERE `mail`.`owner`=".$player->id." AND `mail`.`senderid`!=".$player->id." GROUP BY `mail`.`senderid` ASC") or die($db->ErrorMsg());
+    if (isset ($_GET['step']) && $_GET['step'] == 'clear') 
+    {
+        $db -> Execute("DELETE FROM `mail` WHERE `owner`=".$player -> id." AND `saved`='N'");
+	message("success", 'Wykasowano wszystkie wiadomości.');
+    }
+
+    $arrSendersid = $db->GetAll("SELECT `senderid` FROM `mail` WHERE `owner`=".$player->id." GROUP BY `senderid` ORDER BY `senderid` ASC");
     $arrSenders = array('Wszyscy');
-    while (!$objSort->EOF) 
+    $arrTmp = array();
+    foreach ($arrSendersid as $arrSenderid)
       {
-	$arrSenders[$objSort->fields['senderid']] = $arrTags[$objSort->fields['tribe']][0]." ".$objSort->fields['user']." ".$arrTags[$objSort->fields['tribe']][1].' (ID: '.$objSort->fields['senderid'].')';
-	$objSort->MoveNext();
+	$arrTmp[] = $arrSenderid['senderid'];
       }
-    $objSort->Close();
+    if (count($arrTmp))
+      {
+	$objSort = $db->Execute("SELECT `id`, `user`, `tribe` FROM `players` WHERE `id` IN (".implode(',', $arrTmp).")");
+	while (!$objSort->EOF)
+	  {
+	    if ($objSort->fields['id'] == $player->id)
+	      {
+		$arrSenders[$objSort->fields['id']] = 'Ja';
+	      }
+	    else
+	      {
+		$arrSenders[$objSort->fields['id']] = $arrTags[$objSort->fields['tribe']][0]." ".$objSort->fields['user']." ".$arrTags[$objSort->fields['tribe']][1].' (ID: '.$objSort->fields['id'].')';
+	      }
+	    $objSort->MoveNext();
+	  }
+	$objSort->Close();
+      }
+    $arrTmp = array();
+    $arrReceiversid = $db->GetAll("SELECT `to` FROM `mail` WHERE `owner`=".$player->id." AND `to`!=".$player->id." GROUP BY `to` ORDER BY `to` ASC");
+    foreach ($arrReceiversid as $arrReceiverid)
+      {
+	$arrTmp[] = $arrReceiverid['to'];
+      }
+    $arrReceivers = array();
+    if (count($arrTmp))
+      {
+	$objSort = $db->Execute("SELECT `id`, `user`, `tribe` FROM `players` WHERE `id` IN (".implode(',', $arrTmp).")") or die($db->ErrorMsg());
+	while (!$objSort->EOF)
+	  {
+	    $arrReceivers[$objSort->fields['id']] = $arrTags[$objSort->fields['tribe']][0]." ".$objSort->fields['user']." ".$arrTags[$objSort->fields['tribe']][1].' (ID: '.$objSort->fields['id'].')';
+	    $objSort->MoveNext();
+	  }
+	$objSort->Close();
+      }
 
     //Pagination
     $objAmount = $db->Execute("SELECT `id` FROM `mail` WHERE `owner`=".$player->id.$strQuery." GROUP BY `topic`");
@@ -279,58 +318,44 @@ if (isset ($_GET['view']) && $_GET['view'] == 'inbox')
 	$intPage = 1;
       }
 
-    $objMail = $db->Execute("SELECT `topic` FROM `mail` WHERE `owner`=".$player->id.$strQuery." ORDER BY `id` DESC");
-    $arrTopic1 = array();
-    while (!$objMail->EOF)
-      {
-	if (!in_array($objMail->fields['topic'], $arrTopic1))
-	  {
-	    $arrTopic1[] = $objMail->fields['topic'];
-	  }
-	$objMail->MoveNext();
-      }
-    $objMail->Close();
-    $intStart = 30 * ($intPage - 1);
-    $intLimit = 30 * $intPage;
-    $arrTopic = array();
-    for ($i = $intStart; $i < $intLimit; $i++)
-      {
-	if ($i == count($arrTopic1))
-	  {
-	    break;
-	  }
-	$arrTopic[] = $arrTopic1[$i];
-      }
     $arrsender = array();
     $arrsenderid = array();
     $arrsubject = array();
     $arrid = array();
     $arrRead = array();
-    foreach ($arrTopic as $intTopic)
+    $mail = $db->SelectLimit("SELECT * FROM (SELECT * FROM `mail` WHERE `owner`=".$player -> id.$strQuery." ORDER BY `id` DESC) AS s GROUP BY `topic` ORDER BY `id` DESC", 30, 30 * ($intPage - 1));
+    $arrTopic = array();
+    while (!$mail->EOF)
       {
-	$mail = $db->SelectLimit("SELECT * FROM `mail` WHERE `owner`=".$player->id." AND `topic`=".$intTopic." ORDER BY `id` ASC", 1);
 	if ($mail->fields['senderid'] == $player->id && $mail->fields['to'] > 0)
 	  {
+	    if (array_key_exists($mail->fields['to'], $arrReceivers))
+	      {
+		$arrsender[] = $arrReceivers[$mail->fields['to']];
+	      }
+	    else
+	      {
+		$arrsender[] = $mail->fields['toname'].' nieobecny(a)';
+	      }
 	    $arrsenderid[] = $mail->fields['to'];
-	    $arrsender[] = $mail->fields['toname'].' (ID:'.$mail->fields['to'].')';
 	  }
 	else
 	  {
 	    if (array_key_exists($mail->fields['senderid'], $arrSenders))
 	      {
-		$arrsender[] = $arrSenders[$mail -> fields['senderid']];
-		$arrsenderid[] = $mail -> fields['senderid'];
+		$arrsender[] = $arrSenders[$mail->fields['senderid']];
 	      }
 	    else
 	      {
 		$arrsender[] = $mail->fields['sender'].' nieobecny(a)';
-		$arrsenderid[] = $mail->fields['senderid'];
 		$arrSenders[$mail->fields['senderid']] = $mail->fields['sender'];
 	      }
+	    $arrsenderid[] = $mail->fields['senderid'];
 	  }
-	$arrsubject[] = $mail -> fields['subject'];
-	$arrid[] = $mail -> fields['id'];
-	if ($mail -> fields['unread'] == 'F')
+	$arrsubject[] = $mail->fields['subject'];
+	$arrid[] = $mail->fields['id'];
+	$arrTopic[] = $mail->fields['topic'];
+	if ($mail->fields['unread'] == 'F')
 	  {
 	    $arrRead[] = 'Y';
 	  }
@@ -338,7 +363,7 @@ if (isset ($_GET['view']) && $_GET['view'] == 'inbox')
 	  {
 	    $arrRead[] = 'N';
 	  }
-	$mail -> Close();
+	$mail->MoveNext();
       }
     $smarty -> assign(array("Sender" => $arrsender, 
                             "Senderid" => $arrsenderid, 
@@ -372,26 +397,43 @@ if (isset ($_GET['view']) && $_GET['view'] == 'inbox')
 			    "Lpage" => $strPage,
 			    "Mtopic" => $arrTopic,
                             "Mread" => $arrRead));
-    if (isset ($_GET['step']) && $_GET['step'] == 'clear') 
-    {
-        $db -> Execute("DELETE FROM `mail` WHERE `owner`=".$player -> id." AND `saved`='N'");
-	message("success", 'Wykasowano wszystkie wiadomości.', '(<a href=mail.php?view=inbox>Odśwież</a>)');
-    }
 }
 
 /**
  * Marked mails
  */
 if (isset ($_GET['view']) && $_GET['view'] == 'saved') 
-{
-    $objSort = $db->Execute("SELECT `mail`.`senderid`, `players`.`tribe`, `players`.`user` FROM `mail` JOIN `players` ON `mail`.`senderid`=`players`.`id` WHERE `mail`.`owner`=".$player->id." AND `mail`.`saved`='Y' GROUP BY `mail`.`senderid` ASC");
-    $arrSenders = array('Wszyscy');
-    while (!$objSort->EOF) 
+  {
+    if (isset ($_GET['step']) && $_GET['step'] == 'clear') 
       {
-	$arrSenders[$objSort->fields['senderid']] = $arrTags[$objSort->fields['tribe']][0]." ".$objSort->fields['user']." ".$arrTags[$objSort->fields['tribe']][1].' (ID: '.$objSort->fields['senderid'].')';
-	$objSort->MoveNext();
+        $db -> Execute("DELETE FROM `mail` WHERE `owner`=".$player -> id." AND `saved`='Y'");
+	message("success", 'Wykasowano wszystkie zapisane wiadomości.');
       }
-    $objSort->Close();
+
+    $arrSendersid = $db->GetAll("SELECT `senderid` FROM `mail` WHERE `owner`=".$player->id." AND `saved`='Y' GROUP BY `senderid` ORDER BY `senderid` ASC");
+    $arrSenders = array('Wszyscy');
+    $arrTmp = array();
+    foreach ($arrSendersid as $arrSenderid)
+      {
+	$arrTmp[] = $arrSenderid['senderid'];
+      }
+    if (count($arrTmp))
+      {
+	$objSort = $db->Execute("SELECT `id`, `user`, `tribe` FROM `players` WHERE `id` IN (".implode(',', $arrTmp).")");
+	while (!$objSort->EOF)
+	  {
+	    if ($objSort->fields['id'] == $player->id)
+	      {
+		$arrSenders[$objSort->fields['id']] = 'Ja';
+	      }
+	    else
+	      {
+		$arrSenders[$objSort->fields['id']] = $arrTags[$objSort->fields['tribe']][0]." ".$objSort->fields['user']." ".$arrTags[$objSort->fields['tribe']][1].' (ID: '.$objSort->fields['id'].')';
+	      }
+	    $objSort->MoveNext();
+	  }
+	$objSort->Close();
+      }
 
     //Pagination
     $objAmount = $db->Execute("SELECT `id` FROM `mail` WHERE `owner`=".$player -> id." AND `saved`='Y'".$strQuery." GROUP BY `topic`");
@@ -412,13 +454,13 @@ if (isset ($_GET['view']) && $_GET['view'] == 'saved')
 	if (array_key_exists($mail->fields['senderid'], $arrSenders))
 	  {
 	    $arrsender[] = $arrSenders[$mail -> fields['senderid']];
-	    $arrsenderid[] = $mail -> fields['senderid'];
 	  }
 	else
 	  {
-	    $arrsender[] = $mail->fields['sender'];
-	    $arrsenderid[] = 0;
+	    $arrsender[] = $mail->fields['sender'].' nieobecny(a)';
+	    $arrSenders[$mail->fields['senderid']] = $mail->fields['sender'];
 	  }
+	$arrsenderid[] = $mail -> fields['senderid'];
         $arrsubject[] = $mail -> fields['subject'];
         $arrid[] = $mail -> fields['id'];
         $mail -> MoveNext();
@@ -451,11 +493,6 @@ if (isset ($_GET['view']) && $_GET['view'] == 'saved')
 			    "Fpage" => "Idź do strony:",
 			    "Lpage" => $strPage,
                             "Moption" => M_OPTION));
-    if (isset ($_GET['step']) && $_GET['step'] == 'clear') 
-    {
-        $db -> Execute("DELETE FROM `mail` WHERE `owner`=".$player -> id." AND `saved`='Y'");
-	message("success", 'Wykasowano wszystkie zapisane wiadomości.', '(<a href=mail.php?view=saved>Odśwież</a>)');
-    }
 }
 
 /**
