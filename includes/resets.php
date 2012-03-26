@@ -57,7 +57,7 @@ function smallreset($blnSmall = FALSE)
     /**
      * Grow herbs
      */
-    //$db -> Execute("UPDATE farm SET age=age+1");
+    $db -> Execute("UPDATE farm SET age=age+1");
     $db -> Execute("DELETE FROM farm WHERE age>26");
     $arrPlants = $db->GetAll("SELECT `owner`, `name` FROM `farm` WHERE `age`=14");
     $strSql = "INSERT INTO `log` (`owner`, `log`, `czas`, `type`) VALUES";
