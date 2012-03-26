@@ -1,5 +1,7 @@
 2012-03-26  Bartek thindil Jasicki  <thindil@vallheru.net>
 
+	* UPDATE,mail.php: 
+	added missing tribe tags
 	* BUG,cmarket.php: 
 	fixed typo
 	* UPDATE,mail.php: 

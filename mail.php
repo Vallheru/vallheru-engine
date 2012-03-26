@@ -341,7 +341,11 @@ if (isset ($_GET['view']) && $_GET['view'] == 'inbox')
 	  }
 	else
 	  {
-	    if (array_key_exists($mail->fields['senderid'], $arrSenders))
+	    if ($mail->fields['senderid'] == 0)
+	      {
+		$arrsender[] = $mail->fields['sender'];
+	      }
+	    elseif (array_key_exists($mail->fields['senderid'], $arrSenders))
 	      {
 		$arrsender[] = $arrSenders[$mail->fields['senderid']];
 	      }
@@ -451,7 +455,11 @@ if (isset ($_GET['view']) && $_GET['view'] == 'saved')
     $arrid = array();
     while (!$mail -> EOF) 
       {
-	if (array_key_exists($mail->fields['senderid'], $arrSenders))
+	if ($mail->fields['senderid'] == 0)
+	  {
+	    $arrsender[] = $mail->fields['sender'];
+	  }
+	elseif (array_key_exists($mail->fields['senderid'], $arrSenders))
 	  {
 	    $arrsender[] = $arrSenders[$mail -> fields['senderid']];
 	  }
@@ -792,7 +800,8 @@ if (isset ($_GET['read']))
 	error("Nie ma takiej wiadomości.");
       }
     $strSubject = $objMails->fields['subject'];
-    
+    $objSender = $db->Execute("SELECT `id`, `user`, `tribe` FROM `players` WHERE `id`=".$objMails->fields['senderid']);
+    $objReceiver = $db->Execute("SELECT `id`, `user`, `tribe` FROM `players` WHERE `id`=".$objMails->fields['to']);
     while (!$objMails->EOF)
       {
 	if ($intReceiver == 0)
@@ -806,13 +815,33 @@ if (isset ($_GET['read']))
 		$intReceiver = $objMails->fields['to'];
 	      }
 	  }
-	$arrSender[] = $objMails->fields['sender'].' (ID: '.$objMails->fields['senderid'].')';
+	if ($objMails->fields['senderid'] == $objSender->fields['id'])
+	  {
+	    $arrSender[] = $arrTags[$objSender->fields['tribe']][0]." ".$objSender->fields['user']." ".$arrTags[$objSender->fields['tribe']][1].' (ID: '.$objSender->fields['id'].')';
+	  }
+	elseif ($objMails->fields['senderid'] = $objReceiver->fields['id'])
+	  {
+	    $arrSender[] = $arrTags[$objReceiver->fields['tribe']][0]." ".$objReceiver->fields['user']." ".$arrTags[$objReceiver->fields['tribe']][1].' (ID: '.$objReceiver->fields['id'].')';
+	  }
+	else
+	  {
+	    if ($objMails->fields['senderid'] == 0)
+	      {
+		$arrSender[] = $objMails->fields['sender'];
+	      }
+	    else
+	      {
+		$arrSender[] = $objMails->fields['sender'].' (nieobecny(a))';
+	      }
+	  }
 	$arrSenderid[] = $objMails->fields['senderid'];
 	$arrMid[] = $objMails->fields['id'];
 	$arrBody[] = $objMails->fields['body'];
 	$arrDate[] = T_DAY.$objMails->fields['date'];
 	$objMails->MoveNext();
-      }
+      }    
+    $objReceiver->Close();
+    $objSender->Close();
     $objMails->Close();
     $smarty -> assign(array("Senders" => $arrSender,
 			    "Sendersid" => $arrSenderid,
