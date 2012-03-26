@@ -7,7 +7,7 @@
  *   @copyright            : (C) 2012 Vallheru Team based on Gamers-Fusion ver 2.5
  *   @author               : thindil <thindil@vallheru.net>
  *   @version              : 1.5
- *   @since                : 29.02.2012
+ *   @since                : 26.03.2012
  *
  */
 
@@ -163,7 +163,7 @@ if (isset ($_GET['view']) && $_GET['view'] == 'add')
 			    "Addmy" => "Dodaj mojego",
 			    "Addcore" => "Chowańca za",
 			    "Coins" => "sztuk złota.",
-			    "Asell" => "Sprzedaj"));
+			    "Asell" => "Dodaj"));
     if (isset ($_GET['action']) && $_GET['action'] == 'add') 
       {
 	checkvalue($_POST['cost']);
