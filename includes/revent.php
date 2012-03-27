@@ -7,7 +7,7 @@
  *   @copyright            : (C) 2011,2012 Vallheru Team based on Gamers-Fusion ver 2.5
  *   @author               : thindil <thindil@vallheru.net>
  *   @version              : 1.5
- *   @since                : 28.02.2012
+ *   @since                : 27.03.2012
  *
  */
 
@@ -66,7 +66,7 @@ if ($player->revent == 0)
 	if ($intRoll < 51)
 	  {
 	    $strMessage .= '<br /><br />Tymczasem Staruszek uważnie cie obserwuje i po chwili odchodzi mrucząc pod nosem coś o dzisiejszej młodzieży. Najwyraźniej twój wygląd nie wzbudził jego zaufania. Może już czas na kąpiel?<br /><br /><a href="'.$_SERVER['PHP_SELF'].'">Wróć</a>';
-	    $intTime = rand(7, 18);
+	    $intTime = rand(18, 36);
 	    $db->Execute("UPDATE `revent` SET `state`=5, `qtime`=".$intTime." WHERE `pid`=".$player->id);
 	  }
 	else
@@ -143,14 +143,14 @@ if ($player->revent == 0)
 	    $db->Execute("UPDATE `players` SET `fight`=4, `perception`=`perception`+0.1 WHERE `id`=".$player->id);
 	    $player->fight = 4;
 	    $player->revent = 8;
-	    $intTime = rand(7, 18);
+	    $intTime = rand(18, 36);
 	    $db->Execute("INSERT INTO `revent` (`pid`, `state`, `qtime`, `location`) VALUES(".$player->id.", 8, ".$intTime.", '')") or die($db->ErrorMsg());
 	  }
 	else
 	  {
 	    $strMessage .= '- Może w czymś pomóc? - pytasz.<br />Czujesz na sobie nieprzychylny wzrok istoty.<br />- Komnaty królewsskie. Którędy?<br />Nieco zdziwion'.$strSuffix.' pytaniem wskazujesz kierunek. Indywiduum czym prędzej znika w mroku, a tobie pozostaje tylko poczucie nie do końca dobrze spełnionego obowiązku.<br /><br /><a href="'.$_SERVER['PHP_SELF'].'">Wróć</a>';
 	    $db->Execute("UPDATE `players` SET `perception`=`perception`+0.01 WHERE `id`=".$player->id);
-	    $intTime = rand(7, 18);
+	    $intTime = rand(18, 36);
 	    $db->Execute("INSERT INTO `revent` (`pid`, `state`, `qtime`, `location`) VALUES(".$player->id.", 5, ".$intTime.", '')") or die($db->ErrorMsg());
 	  }
 	break;
@@ -175,7 +175,7 @@ elseif ($player->revent == 1 || $player->revent == 6)
 	  if ($player->credits < $intMoneys)
 	    {
 	      $strMessage = 'Orientujesz się, że nie masz przy sobie zbyt wielu pieniędzy aby dać coś żebrakowi. Machasz na wszystko ręką i idziesz dalej.<br /><br /><a href="'.$_SERVER['PHP_SELF'].'">Wróć</a>';
-	      $intTime = rand(7, 18);
+	      $intTime = rand(18, 36);
 	      $db->Execute("UPDATE `revent` SET `state`=5, `qtime`=".$intTime." WHERE `pid`=".$player->id);
 	    }
 	  else
@@ -207,7 +207,7 @@ elseif ($player->revent == 1 || $player->revent == 6)
 	}
       else
 	{
-	  $intTime = rand(7, 18);
+	  $intTime = rand(18, 36);
 	  $db->Execute("UPDATE `revent` SET `state`=5, `qtime`=".$intTime." WHERE `pid`=".$player->id);
 	  if ($player->revent == 6)
 	    {
@@ -305,7 +305,7 @@ if ($player->revent == 8)
 	  $player->energy = 0;
 	}
       $db -> Execute("UPDATE `players` SET `energy`=".$player->energy." WHERE `id`=".$player -> id);
-      $intTime = rand(7, 18);
+      $intTime = rand(18, 36);
       $db->Execute("UPDATE `revent` SET `state`=5, `qtime`=".$intTime." WHERE `pid`=".$player->id);
       if ($myhp -> fields['hp'] == 0) 
 	{
