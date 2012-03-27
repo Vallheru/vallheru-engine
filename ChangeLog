@@ -1,5 +1,7 @@
 2012-03-27  Bartek thindil Jasicki  <thindil@vallheru.net>
 
+	* FEATURE,includes/functions.php:
+	added more ressurection potions
 	* UPDATAE,includes/head.php, includes/revent.php:
 	made random events much rarer
 
