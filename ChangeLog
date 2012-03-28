@@ -1,3 +1,8 @@
+2012-03-28  Bartek thindil Jasicki  <thindil@vallheru.net>
+
+	* UPDATE,templates/layout1/stats.tpl, templates/stats.tpl, stats.php:
+	added info about used antidote
+
 2012-03-27  Bartek thindil Jasicki  <thindil@vallheru.net>
 
 	* FEATURE,includes/functions.php:

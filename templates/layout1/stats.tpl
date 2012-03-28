@@ -15,6 +15,7 @@
     <b>{$Tpw}:</b> {$PW}
     <b>{$Tenergy}:</b> {$Energy}
     <b>{$Blessfor}</b>{$Pray} <b>{$Blessval}</b>
+    <b>{$Effect}</b> {$Antidote}<br />
     {$Crime}<br />
     <b>{$Tfights}:</b> {$Total}
     <b>{$Tlast}:</b> {$Lastkilled}

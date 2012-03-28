@@ -139,11 +139,34 @@ if (!empty($objBless -> fields['bless']))
                             "Pray" => "",
                             "Blessval" => ""));
 }
-/**
- * Mission points
- */
-$smarty->assign('Mpoints', $objBless->fields['mpoints']);
 $objBless -> Close();
+/**
+ * Antidote info
+ */
+$strEffect = 'Antidotum:';
+switch ($player->antidote)
+  {
+  case 'I':
+    $strAntidote = 'na truciznę z Illani';
+    break;
+  case 'D':
+    $strAntidote = 'na truciznę z Dynallca';
+    break;
+  case 'N':
+    $strAntidote = 'na truciznę z Nutari';
+    break;
+  case 'R':
+    $strEffect = 'Wpływ:';
+    $strAntidote = 'Wypita mikstura Oszukania śmierci';
+    break;
+  default:
+    $strAntidote = '';
+    $strEffect = '';
+    break;
+  }
+$smarty->assign(array('Mpoints' => $objBless->fields['mpoints'],
+		      'Antidote' => $strAntidote,
+		      'Effect' => $strEffect));
 
 $arrStats = array($player -> agility, $player -> strength, $player -> inteli, $player -> wisdom, $player -> speed, $player -> cond);
 $arrCurstats2 = array();
