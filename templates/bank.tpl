@@ -7,6 +7,8 @@
 
 {if $Action != "astral"}
 
+    <script src="js/bank.js"></script>
+
     <form method="post" action="bank.php?action=withdraw">
     {$Iwant} <input type="submit" value="{$Awithdraw}" /> <input type="text" value="{$Bank}" name="with" size="10" /> {$Goldcoins}
     </form><br />
@@ -16,52 +18,52 @@
     </form><br />
 
     <form method="post" action="bank.php?action=donation">
-    {$Iwant} <input type="submit" value="{$Agive}" /> {$Dplayer} {html_options name=player options=$Contacts} <input type="text" name="pid" size="3" />
+    {$Iwant} <input type="submit" value="{$Agive}" /> {$Dplayer} <select name="player" onClick="showIdField(this.value, 1);">{html_options options=$Contacts}</select> <input type="text" id="pid1" name="pid" size="3" />
     <input type="text" value="{$Bank}" name="with" size="10" /> {$Goldcoins2} <input type="text" name="title" size="50" />
     </form><br />
 
     {if $Mithril > 0}
         <form method="post" action="bank.php?action=mithril">
-        {$Iwant} <input type="submit" value="{$Agive}" /> {$Dplayer} {html_options name=player options=$Contacts} <input type="tekst" name="pid" size="3" />
+        {$Iwant} <input type="submit" value="{$Agive}" /> {$Dplayer} <select name="player" onClick="showIdField(this.value, 2);">{html_options options=$Contacts}</select> <input type="tekst" id="pid2" name="pid" size="3" />
         <input type="text" name="mithril" size="10" value="{$Mithril}" /> {$Mamount} {$Ttitle} <input type="text" name="title" size="50" />
         </form><br />
     {/if}
 
     {if $Items == 1}
         <form method="post" action="bank.php?action=items">
-        {$Iwant} <input type="submit" value="{$Agive}" /> {$Dplayer} {html_options name=player options=$Contacts} <input type="tekst" name="pid" size="3" />
-        <input type="text" name="amount" size="3" /> (<input type="checkbox" name="addall" value="Y" />{$Tall}) {$Iamount}
+        {$Iwant} <input type="submit" value="{$Agive}" /> {$Dplayer} <select name="player" onClick="showIdField(this.value, 3);">{html_options options=$Contacts}</select> <input type="tekst" id="pid3" name="pid" size="3" />
+        <input type="text" id="amount1" name="amount" size="3" /> (<input type="checkbox" id="addall1" name="addall" value="Y" onClick="showAfield(1);" />{$Tall}) {$Iamount}
 	{html_options name=item options=$Ioptions} {$Ttitle} <input type="text" name="title" size="50" />
         </form><br />
     {/if}
 
     {if $Potions == 1}
         <form method="post" action="bank.php?action=potions">
-        {$Iwant} <input type="submit" value="{$Agive}" /> {$Dplayer} {html_options name=player options=$Contacts} <input type="tekst" name="pid" size="3" />
-        <input type="text" name="amount" size="3" /> (<input type="checkbox" name="addall" value="Y" />{$Tall}) {$Iamount}
+        {$Iwant} <input type="submit" value="{$Agive}" /> {$Dplayer} <select name="player" onClick="showIdField(this.value, 4);">{html_options options=$Contacts}</select> <input type="tekst" id="pid4" name="pid" size="3" />
+        <input type="text" id="amount2" name="amount" size="3" /> (<input type="checkbox" id="addall2" name="addall" value="Y" onClick="showAfield(2);" />{$Tall}) {$Iamount}
 	{html_options name=item options=$Poptions} {$Ttitle} <input type="text" name="title" size="50" />
         </form><br />
     {/if}
 
     {if $Herbs == 1}
         <form method="post" action="bank.php?action=herbs">
-        {$Iwant} <input type="submit" value="{$Agive}" /> {$Dplayer} {html_options name=player options=$Contacts} <input type="tekst" name="pid" size="3" />
+        {$Iwant} <input type="submit" value="{$Agive}" /> {$Dplayer} <select name="player" onClick="showIdField(this.value, 5);">{html_options options=$Contacts}</select> <input type="tekst" id="pid5" name="pid" size="3" />
 	{html_options name=item options=$Hoptions} 
-	{$Hamount} <input type="text" name="amount" size="5" /> (<input type="checkbox" name="addall" value="Y" />{$Tall}) {$Ttitle} <input type="text" name="title" size="50" />
+	{$Hamount} <input type="text" id="amount3" name="amount" size="5" /> (<input type="checkbox" id="addall3" name="addall" value="Y" onClick="showAfield(3);" />{$Tall}) {$Ttitle} <input type="text" name="title" size="50" />
         </form><br />
     {/if}
 
     {if $Minerals == 1}
         <form method="post" action="bank.php?action=minerals">
-        {$Iwant} <input type="submit" value="{$Agive}" /> {$Dplayer} {html_options name=player options=$Contacts} <input type="tekst" name="pid" size="3" /> 
+        {$Iwant} <input type="submit" value="{$Agive}" /> {$Dplayer} <select name="player" onClick="showIdField(this.value, 6);">{html_options options=$Contacts}</select> <input type="tekst" id="pid6" name="pid" size="3" /> 
 	{html_options name=item options=$Moptions} 
-	{$Hamount} <input type="text" name="amount" size="5" /> (<input type="checkbox" name="addall" value="Y" />{$Tall}) {$Ttitle} <input type="text" name="title" size="50" />
+	{$Hamount} <input type="text" id="amount4" name="amount" size="5" /> (<input type="checkbox" id="addall4" name="addall" value="Y" onClick="showAfield(4);" />{$Tall}) {$Ttitle} <input type="text" name="title" size="50" />
         </form><br />
     {/if}
 
     {if $Pets1 == 1}
         <form method="post" action="bank.php?action=pets">
-	    {$Iwant} <input type="submit" value="{$Agive}" /> {$Dplayer} {html_options name=player options=$Contacts} <input type="tekst" name="pid" size="3" /> 
+	    {$Iwant} <input type="submit" value="{$Agive}" /> {$Dplayer} <select name="player" onClick="showIdField(this.value, 7);">{html_options options=$Contacts}</select> <input type="tekst" id="pid7" name="pid" size="3" /> 
 	    {html_options name=item options=$Coptions} {$Ttitle} <input type="text" name="title" size="50" />
 	</form><br />
     {/if}

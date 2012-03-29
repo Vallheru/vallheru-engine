@@ -1243,16 +1243,14 @@ else
   }
 
 //Contacts
-$objContacts = $db->Execute("SELECT `pid` FROM `contacts` WHERE `owner`=".$player->id." ORDER BY `order` ASC");
-$arrContacts = array(0 => "ID (numer)");
-while (!$objContacts->EOF)
-  {
-    $objUser = $db->Execute("SELECT `user` FROM `players` WHERE `id`=".$objContacts->fields['pid']);
-    $arrContacts[$objContacts->fields['pid']] = $objUser->fields['user'];
-    $objUser->Close();
-    $objContacts->MoveNext();
-  }
-$objContacts->Close();
+$objContacts = $db->Execute("SELECT `contacts`.`pid`, `players`.`user`, `players`.`tribe` FROM `contacts` JOIN `players` ON `contacts`.`pid`=`players`.`id` WHERE `owner`=".$player->id." ORDER BY `order` ASC");
+    $arrContacts = array(0 => "ID (numer)");
+    while (!$objContacts->EOF)
+      {
+	$arrContacts[$objContacts->fields['pid']] = $arrTags[$objContacts->fields['tribe']][0]." ".$objContacts->fields['user']." ".$arrTags[$objContacts->fields['tribe']][1].' (ID: '.$objContacts->fields['pid'].')';;
+	$objContacts->MoveNext();
+      }
+    $objContacts->Close();
 
 /**
 * Assign variables to template

@@ -1,5 +1,7 @@
 2012-03-29  Bartek thindil Jasicki  <thindil@vallheru.net>
 
+	* UPDATE,templates/layout1/bank.tpl, templates/bank.tpl, js/bank.js, bank.php:
+	small redesign, added tribe tags to contacts
 	* BUG,bank.php:
 	fixed typo
 
