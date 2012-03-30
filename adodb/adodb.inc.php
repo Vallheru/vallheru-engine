@@ -467,7 +467,7 @@
 	* All error messages go through this bottleneck function.
 	* You can define your own handler by defining the function name in ADODB_OUTP.
 	*/
-	static function outp($msg,$newline=true)
+	function outp($msg,$newline=true)
 	{
 	global $ADODB_FLUSH,$ADODB_OUTP;
 	
@@ -2503,7 +2503,7 @@ http://www.stanford.edu/dept/itss/docs/oracle/10g/server.101/b10759/statements_1
 	 *
 	 * @return date in unix timestamp format, or 0 if before TIMESTAMP_FIRST_YEAR, or false if invalid date format
 	 */
-	static function UnixDate($v)
+	function UnixDate($v)
 	{
 		if (is_object($v)) {
 		// odbtp support
@@ -2527,7 +2527,7 @@ http://www.stanford.edu/dept/itss/docs/oracle/10g/server.101/b10759/statements_1
 	 *
 	 * @return date in unix timestamp format, or 0 if before TIMESTAMP_FIRST_YEAR, or false if invalid date format
 	 */
-	static function UnixTimeStamp($v)
+	function UnixTimeStamp($v)
 	{
 		if (is_object($v)) {
 		// odbtp support
@@ -3226,7 +3226,7 @@ http://www.stanford.edu/dept/itss/docs/oracle/10g/server.101/b10759/statements_1
 	 *
 	 * @return date in unix timestamp format, or 0 if before TIMESTAMP_FIRST_YEAR, or false if invalid date format
 	 */
-	static function UnixDate($v)
+	function UnixDate($v)
 	{
 		return ADOConnection::UnixDate($v);
 	}
@@ -3237,7 +3237,7 @@ http://www.stanford.edu/dept/itss/docs/oracle/10g/server.101/b10759/statements_1
 	 *
 	 * @return date in unix timestamp format, or 0 if before TIMESTAMP_FIRST_YEAR, or false if invalid date format
 	 */
-	static function UnixTimeStamp($v)
+	function UnixTimeStamp($v)
 	{
 		return ADOConnection::UnixTimeStamp($v);
 	}

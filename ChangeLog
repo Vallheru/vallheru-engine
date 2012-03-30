@@ -1,5 +1,7 @@
 2012-03-30  Bartek thindil Jasicki  <thindil@vallheru.net>
 
+	* BUG,adodb/adodb.inc.php:
+	remove more static keywords
 	* BUG,czary.php: 
 	fixed notices
 	* BUG,adodb/adodb.inc.php:
