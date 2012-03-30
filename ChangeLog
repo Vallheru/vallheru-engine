@@ -1,3 +1,8 @@
+2012-03-30  Bartek thindil Jasicki  <thindil@vallheru.net>
+
+	* BUG,adodb/adodb.inc.php:
+	fixed bug with not working adodb in some cases
+
 2012-03-29  Bartek thindil Jasicki  <thindil@vallheru.net>
 
 	* UPDATE,templates/layout1/bank.tpl, templates/bank.tpl, js/bank.js, bank.php:

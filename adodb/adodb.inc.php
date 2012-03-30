@@ -432,7 +432,7 @@
 		die('Virtual Class -- cannot instantiate');
 	}
 	
-	static function Version()
+	function Version()
 	{
 	global $ADODB_vers;
 	
