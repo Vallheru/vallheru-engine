@@ -7,7 +7,7 @@
  *   @copyright            : (C) 2004,2005,2006,2011,2012 Vallheru Team based on Gamers-Fusion ver 2.5
  *   @author               : thindil <thindil@vallheru.net>
  *   @version              : 1.5
- *   @since                : 05.03.2012
+ *   @since                : 30.03.2012
  *
  */
 
@@ -90,11 +90,11 @@ if (isset($_GET['cast']))
         message('error', YOU_BARBARIAN);
 	$blnValid = FALSE;
       }
+    $arriname = array();
+    $arriamount = array();
+    $arriid = array();
     if ($blnValid)
       {
-	$arriname = array();
-	$arriamount = array();
-	$arriid = array();
 	$arritem = $db -> Execute("SELECT `name`, `id`, `amount` FROM `equipment` WHERE `owner`=".$player -> id." AND `status`='U' AND `magic`='N' AND `type`NOT IN ('I', 'Q', 'P', 'E', 'O')");
 	while (!$arritem -> EOF) 
 	  {

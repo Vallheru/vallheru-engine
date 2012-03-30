@@ -1,5 +1,7 @@
 2012-03-30  Bartek thindil Jasicki  <thindil@vallheru.net>
 
+	* BUG,czary.php: 
+	fixed notices
 	* BUG,adodb/adodb.inc.php:
 	fixed bug with not working adodb in some cases
 
