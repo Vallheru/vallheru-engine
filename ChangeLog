@@ -1,5 +1,7 @@
 2012-04-02  Bartek thindil Jasicki  <thindil@vallheru.net>
 
+	* BUG,lumberjack.php:
+	fixed link to back to forest
 	* BUG,languages/pl/kopalnia.php:
 	fixed text in mines
 

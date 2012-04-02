@@ -4,10 +4,10 @@
  *   Chop trees
  *
  *   @name                 : lumberjack.php                            
- *   @copyright            : (C) 2004,2005,2006,2011 Vallheru Team based on Gamers-Fusion ver 2.5
- *   @author               : thindil <thindil@tuxfamily.org>
- *   @version              : 1.4
- *   @since                : 25.10.2011
+ *   @copyright            : (C) 2004,2005,2006,2011,2012 Vallheru Team based on Gamers-Fusion ver 2.5
+ *   @author               : thindil <thindil@vallheru.net>
+ *   @version              : 1.5
+ *   @since                : 02.04.2012
  *
  */
 
@@ -35,7 +35,7 @@ require_once("includes/head.php");
 /**
 * Get the localization for game
 */
-require_once("languages/".$player -> lang."/lumberjack.php");
+require_once("languages/".$lang."/lumberjack.php");
 
 if ($player -> location != 'Las') 
 {
@@ -45,7 +45,7 @@ if ($player -> location != 'Las')
 $objLumberjack = $db -> Execute("SELECT `level` FROM `lumberjack` WHERE `owner`=".$player -> id);
 if (!$objLumberjack -> fields['level'])
   {
-    error("Nie posiadasz licencji na wyrąb lasu. Możesz ją zakupić w Tartaku w ".$city2.".");
+    error("Nie posiadasz licencji na wyrąb lasu. Możesz ją zakupić w Tartaku w ".$city2.". (<a href=las.php>Wróć do lasu</a>)");
   }
 $arrOptions = array("losowego", "sosnowego", "z leszczyny", "cisowego", "z wiązu");
 $arrOptions = array_slice($arrOptions, 0, $objLumberjack->fields['level'] + 1);
