@@ -7,7 +7,7 @@
  *   @copyright            : (C) 2004,2005,2006,2011,2012 Vallheru Team based on Gamers-Fusion ver 2.5
  *   @author               : thindil <thindil@vallheru.net>
  *   @version              : 1.5
- *   @since                : 19.03.2012
+ *   @since                : 02.04.2012
  *
  */
 
@@ -175,13 +175,14 @@ function bbcodetohtml($text, $isChat = FALSE)
 	      {
 		break;
 	      }
-	    $intScolor = strpos($text, " ", $intStart) + 1;
+	    $intScolor = strpos($text, " ", $intStart);
 	    if ($intScolor === FALSE)
 	      {
 		$intStart += 3;
 		continue;
 	      }
-	    $intEnd = strpos($text, "]", $intScolor);
+	    $intScolor ++;
+	    $intEnd = strpos($text, "]", $intScolor + 1);
 	    if ($intEnd === FALSE)
 	      {
 		break;
@@ -197,7 +198,7 @@ function bbcodetohtml($text, $isChat = FALSE)
 	  {
 	    for ($j = 0; $j < ($intStart - $intEnd); $j++)
 	      {
-	    $text .= "</span>";
+		$text .= "</span>";
 	      }
 	  }
       }
