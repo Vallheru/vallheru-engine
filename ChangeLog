@@ -1,5 +1,7 @@
 2012-04-02  Bartek thindil Jasicki  <thindil@vallheru.net>
 
+	* UPDATE,templates/layout1/tribeware.tpl, templates/tribeware.tpl, tribeware.php:
+	added info about potions power
 	* BUG,includes/bbcode.php:
 	fixed bug with parsing colors
 	* BUG,lumberjack.php:

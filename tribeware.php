@@ -68,14 +68,22 @@ if (isset($_GET['reserve']))
     checkvalue($_GET['reserve']);
     if (!isset ($_GET['step3'])) 
       {
-        $name = $db -> Execute("SELECT `id`, `name`, `reserved`, `amount` FROM `tribe_mag` WHERE `id`=".$_GET['reserve']." AND `owner`=".$player->tribe);
+        $name = $db -> Execute("SELECT * FROM `tribe_mag` WHERE `id`=".$_GET['reserve']." AND `owner`=".$player->tribe);
 	if (!$name->fields['id'])
 	  {
 	    error('Nie ma takiego przedmiotu.');
 	  }
 	$intAmount = $name->fields['amount'] - $name->fields['reserved'];
+	if ($name -> fields['type'] == 'A' && stripos($name->fields['name'], 'oszukanie') === FALSE)
+        {
+            $strName = $name -> fields['name'];
+        }
+	else
+	  {
+	    $strName = $name->fields['name']." (moc:".$name -> fields['power'].")";
+	  }
         $smarty -> assign(array("Amount" => $intAmount, 
-                                "Name" => $name -> fields['name'],
+                                "Name" => $strName,
                                 "Aask" => 'Poproś o',
                                 "Tamount" => 'sztuk'));
         $name -> Close();
@@ -154,14 +162,16 @@ if (isset ($_GET['step']) && $_GET['step'] == 'zobacz')
     $arrefect = array();
     $arramount = array();
     $arrlink = array();
-    $i = 0;
     while (!$miks -> EOF) 
     {
-        $arrname[] = $miks -> fields['name'];
-        if ($miks -> fields['type'] != 'A')
+      if ($miks -> fields['type'] == 'A' && stripos($miks->fields['name'], 'oszukanie') === FALSE)
         {
-            $arrname[$i] = $arrname[$i]." (moc:".$miks -> fields['power'].")";
+            $arrname[] = $miks -> fields['name'];
         }
+	else
+	  {
+	    $arrname[] = $miks->fields['name']." (moc:".$miks -> fields['power'].")";
+	  }
         $arrefect[] = $miks -> fields['efect'];
         $arramount[] = $miks -> fields['amount'].' / '.($miks->fields['amount'] - $miks->fields['reserved']);
         if ($player -> id == $owner -> fields['owner'] || $perm -> fields['warehouse']) 
@@ -173,7 +183,6 @@ if (isset ($_GET['step']) && $_GET['step'] == 'zobacz')
             $arrlink[] = "<td>- <a href=tribeware.php?reserve=".$miks->fields['id'].">poproś</a></td>";
         }
         $miks -> MoveNext();
-        $i = $i + 1;
     }
     $miks -> Close();
     $smarty -> assign ( array("Amount1" => $przed, 
@@ -202,8 +211,16 @@ if (isset ($_GET['daj']))
     if (!isset ($_GET['step3'])) 
     {
         $miks = $db -> Execute("SELECT * FROM tribe_mag WHERE id=".$_GET['daj']);
+	if ($miks -> fields['type'] == 'A' && stripos($miks->fields['name'], 'oszukanie') === FALSE)
+        {
+            $strName = $miks -> fields['name'];
+        }
+	else
+	  {
+	    $strName = $miks->fields['name']." (moc:".$miks -> fields['power'].")";
+	  }
         $smarty -> assign ( array("Id" => $_GET['daj'], 
-            "Name" => $miks -> fields['name'], 
+            "Name" => $strName, 
             "Amount" => $miks -> fields['amount'],
             "Agive" => A_GIVE,
             "Playerid" => PLAYER_ID,
@@ -278,27 +295,19 @@ if (isset ($_GET['daj']))
 if (isset ($_GET['step']) && $_GET['step'] == 'daj') 
 {
     $miks = $db -> Execute("SELECT * FROM potions WHERE status='K' AND owner=".$player -> id);
-    $arrid = array();
-    $arrname = array();
-    $arramount = array();
-    $i = 0;
+    $arrPotions = array();
     while (!$miks -> EOF) 
-    {
-        $arrid[$i] = $miks -> fields['id'];
-        $arrname[$i] = $miks -> fields['name'];
-        $arramount[$i] = $miks -> fields['amount'];
+      {
+	$arrPotions[$miks->fields['id']] = '(ilość: '.$miks->fields['amount'].') '.$miks->fields['name'].' (moc: '.$miks->fields['power'].')';
         $miks -> MoveNext();
-        $i = $i + 1;
-    }
+      }
     $miks -> Close();
-    $smarty -> assign( array("Itemid" => $arrid,
-        "Name" => $arrname, 
-        "Amount" => $arramount,
-        "Additem" => ADD_ITEM,
-        "Potion" => POTION,
-        "Amount2" => AMOUNT2,
-        "Aadd" => "Dodaj",
-        "Tamount2" => T_AMOUNT2));
+    $smarty -> assign( array("Additem" => ADD_ITEM,
+			     "Potions" => $arrPotions,
+			     "Potion" => POTION,
+			     "Amount2" => AMOUNT2,
+			     "Aadd" => "Dodaj",
+			     "Tamount2" => T_AMOUNT2));
     if (isset ($_GET['step2']) && $_GET['step2'] == 'add') 
     {
         integercheck($_POST['amount']);

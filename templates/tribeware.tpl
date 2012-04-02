@@ -36,11 +36,7 @@
 {if $Step == "daj"}
     {$Additem}<br /><br />
     <form method="post" action="tribeware.php?step=daj&amp;step2=add"><table>
-    <tr><td>{$Potion}: <select name="przedmiot">
-    {section name=tribeware1 loop=$Name}
-        <option value="{$Itemid[tribeware1]}">({$Amount2}: {$Amount[tribeware1]}) {$Name[tribeware1]}</option>
-    {/section}
-    </select> {$Tamount2} <input type="text" name="amount" size="5" /></td></tr>
+    <tr><td>{$Potion}: {html_options name=przedmiot options=$Potions} {$Tamount2} <input type="text" name="amount" size="5" /></td></tr>
     <tr><td colspan="2" align="center"><input type="submit" value="{$Aadd}" /></td></tr>
     </table></form>
 {/if}
