@@ -4,11 +4,11 @@
  *   Polish language for outposts
  *
  *   @name                 : outposts.php                            
- *   @copyright            : (C) 2004,2005,2006,2011 Vallheru Team based on Gamers-Fusion ver 2.5
- *   @author               : thindil <thindil@tuxfamily.org>
+ *   @copyright            : (C) 2004,2005,2006,2011,2012 Vallheru Team based on Gamers-Fusion ver 2.5
+ *   @author               : thindil <thindil@vallheru.net>
  *   @author               : eyescream <tduda@users.sourceforge.net>
- *   @version              : 1.4
- *   @since                : 07.10.2011
+ *   @version              : 1.5
+ *   @since                : 03.04.2012
  *
  */
 
@@ -38,7 +38,7 @@ define("VETERAN", "weterana");
 define("AND_LOST", "Dodatkowo ");
 define("T_LOST", " traci ");
 define("GC", "sz");
-define("NO_OUTPOST", "Nie masz dostępu do strażnicy! Za 500 sztuk złota, możesz wykupić kawałek ziemi pod nią. Więc jak, chcesz kupić?");
+define("NO_OUTPOST", "Nie masz dostępu do strażnicy! Za 500 sztuk złota możesz wykupić kawałek ziemi pod nią. Więc jak, chcesz kupić?");
 define("A_BACK", "Menu");
 define("ERROR", "Zapomnij o tym!");
 define("YOU_DEAD", "Ponieważ jesteś martwy, nie możesz korzystać ze strażnicy.");

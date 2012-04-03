@@ -4,11 +4,11 @@
  *   Polish language for battle arena
  *
  *   @name                 : battle.php                            
- *   @copyright            : (C) 2004,2005,2006,2011 Vallheru Team based on Gamers-Fusion ver 2.5
- *   @author               : thindil <thindil@tuxfamily.org>
+ *   @copyright            : (C) 2004,2005,2006,2011,2012 Vallheru Team based on Gamers-Fusion ver 2.5
+ *   @author               : thindil <thindil@vallheru.net>
  *   @author               : eyescream <tduda@users.sourceforge.net>
- *   @version              : 1.4
- *   @since                : 21.10.2011
+ *   @version              : 1.5
+ *   @since                : 03.04.2012
  *
  */
 
@@ -151,7 +151,7 @@ if (isset ($_GET['action']) && $_GET['action'] == 'monster')
 
 if (!isset($_GET['action']) && !isset($_GET['battle']))
 {
-    define("BATTLE_INFO", "Idziesz sobie alejką pod górę i nagle widzisz tłumy magów, wojowników a nawet obywateli podążających do pewnego budynku. Gdy zbliżyłeś się do niego, zauważyłeś, że jest on wykonany z mocnego kamienia w kolorze jasnoszarym, w niektórych miejscach pozłacanym. Na górze owego budynku znajdują się trzy wieże. Każda z nich jest pokryta innym materiałem: pierwsza brązem, druga srebrem, i w końcu trzecia złotem. Przy wejściu do budynku jest wyryty w ścianie napis Arena Walk. Wchodzisz do środka gdzie widzisz tłumy wojowników. Ściany są zrobione z twardego kamienia, w częściach pozłacanego. Ciekawy wbiegasz do największej z sal gdzie wszystko jest pokryte kamieniem i gdzie znajdują się drzwi. Podekscytowany chciałeś owe drzwi otworzyć, ale w tym momencie złapał Cię za dłoń silny wojownik i powiedział: <i>Witaj, czego tutaj szukasz?</i> Ty odpowiadasz:");
+    define("BATTLE_INFO", "Idziesz sobie alejką pod górę i nagle widzisz tłumy magów, wojowników, a nawet obywateli podążających do pewnego budynku. Gdy zbliżyłeś się do niego, zauważyłeś, że jest on wykonany z mocnego kamienia w kolorze jasnoszarym, w niektórych miejscach pozłacanym. Na górze owego budynku znajdują się trzy wieże. Każda z nich jest pokryta innym materiałem: pierwsza brązem, druga srebrem, i w końcu trzecia złotem. Przy wejściu do budynku jest wyryty w ścianie napis Arena Walk. Wchodzisz do środka gdzie widzisz tłumy wojowników. Ściany są zrobione z twardego kamienia, w częściach pozłacanego. Ciekawy wbiegasz do największej z sal gdzie wszystko jest pokryte kamieniem i gdzie znajdują się drzwi. Podekscytowany chciałeś owe drzwi otworzyć, ale w tym momencie złapał Cię za dłoń silny wojownik i powiedział: <i>Witaj, czego tutaj szukasz?</i> Ty odpowiadasz:");
     define("A_SHOW_ALIVE", "Chcę walczyć z osobami na tym samym poziomie, co ja...");
     define("A_SHOW_LEVEL", "Pokaż mi listę osób na danych poziomach.");
     define("A_SHOW_MONSTER", "Chcę trenować z potworami.");
