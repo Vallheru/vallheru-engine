@@ -4,10 +4,10 @@
  *   Polish language for msklep.php
  *
  *   @name                 : msklep.php                            
- *   @copyright            : (C) 2004,2005,2006 Vallheru Team based on Gamers-Fusion ver 2.5
- *   @author               : thindil <thindil@users.sourceforge.net>
- *   @version              : 1.1
- *   @since                : 28.03.2006
+ *   @copyright            : (C) 2004,2005,2006,2012 Vallheru Team based on Gamers-Fusion ver 2.5
+ *   @author               : thindil <thindil@vallheru.net>
+ *   @version              : 1.5
+ *   @since                : 03.04.2012
  *
  */
 
@@ -41,7 +41,7 @@ if (!isset($_GET['buy']))
 	}
 		else
 	{
-		define("WELCOME", "Krocząc przepięknym pomostem, który, co stwierdzasz po dotknięciu poręczy, jest żywą gałęzią, stajesz przed drzewem, które znane jest w całym mieście z tego, iż swą siedzibę urządził tutaj najlepszy alchemik w całym królestwie - Servalon. Wchodząc do środka dostrzegasz wysokiego i niezwykle młodego elfa... Słyszałeś plotki, że Servalon ma ponad 900 lat i jest jednym z osadników, który założył miasto... jednakże teraz patrząc na niego, nie możesz dać temu wiary. Słyszałeś również, że Servalon jako jedyny w królestwie stworzył miksturę zdolną zatrzymać starzenie się... Nie wiesz jednak czy obie plotki są fałszywe czy obie prawdziwe... Nagle alchemik odzywa się, przerywając Twe przemyślenia:<br /><br /><i>- Witaj w mojej pracowni. Co chciałbyś nabyć?</i>");
+		define("WELCOME", "Krocząc przepięknym pomostem, który - co stwierdzasz po dotknięciu poręczy - jest żywą gałęzią, stajesz przed drzewem, które znane jest w całym mieście z tego, iż swą siedzibę urządził tutaj najlepszy alchemik w całym królestwie - Servalon. Wchodząc do środka dostrzegasz wysokiego i niezwykle młodego elfa... Słyszałeś plotki, że Servalon ma ponad 900 lat i jest jednym z osadników, który założył miasto... jednakże teraz patrząc na niego, nie możesz dać temu wiary. Słyszałeś również, że Servalon jako jedyny w królestwie stworzył miksturę zdolną zatrzymać starzenie się... Nie wiesz jednak czy obie plotki są fałszywe czy obie prawdziwe... Nagle alchemik odzywa się, przerywając Twe przemyślenia:<br /><br /><i>- Witaj w mojej pracowni. Co chciałbyś nabyć?</i>");
 	}
     define("N_NAME", "Nazwa");
     define("N_EFECT", "Efekt");

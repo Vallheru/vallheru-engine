@@ -1,5 +1,7 @@
 2012-04-03  Bartek thindil Jasicki  <thindil@vallheru.net>
 
+	* BUG,languages/pl/temple.php, languages/pl/msklep.php, languages/pl/library.php: 
+	fixed typo
 	* BUG,languages/pl/battle.php: 
 	fixed typo
 	* BUG,languages/pl/outposts.php: 

@@ -4,10 +4,10 @@
  *   Polish language for library
  *
  *   @name                 : library.php                            
- *   @copyright            : (C) 2004-2005 Vallheru Team based on Gamers-Fusion ver 2.5
- *   @author               : thindil <thindil@users.sourceforge.net>
- *   @version              : 1.0
- *   @since                : 20.12.2005
+ *   @copyright            : (C) 2004,2005,2012 Vallheru Team based on Gamers-Fusion ver 2.5
+ *   @author               : thindil <thindil@vallheru.net>
+ *   @version              : 1.5
+ *   @since                : 03.04.2012
  *
  */
 
@@ -44,7 +44,7 @@ define("A_MODIFY", "Modyfikuj");
 if (!isset($_GET['step']))
 {
     define("WELCOME", "Witaj w Bibliotece");
-    define("WELCOME2", "Znajdziesz tutaj różne opowiadania, wiersze jakie zostawili od siebie podróżnicy wędrujący ścieżkami");
+    define("WELCOME2", "Znajdziesz tutaj różne opowiadania, wiersze jakie pozostawili podróżnicy wędrujący ścieżkami");
     define("WELCOME3", "Jeżeli chcesz, rówież możesz zostawić tutaj coś od siebie. Opiekę nad tym miejscem sprawuje Bibliotekarz");
     define("WELCOME4", "Do niego należy ocena czy dany tekst nadaje się do publikacji w Bibliotece.");
     define("WELCOME5", "Wszelkie prawa autorskie należą do autorów tekstów.");
