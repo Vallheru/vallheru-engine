@@ -4,10 +4,10 @@
  *   Polish language for chop trees
  *
  *   @name                 : lumberjack.php                            
- *   @copyright            : (C) 2004,2005,2006,2011 Vallheru Team based on Gamers-Fusion ver 2.5
- *   @author               : thindil <thindil@tuxfamily.org>
- *   @version              : 1.4
- *   @since                : 30.09.2011
+ *   @copyright            : (C) 2004,2005,2006,2011,2012 Vallheru Team based on Gamers-Fusion ver 2.5
+ *   @author               : thindil <thindil@vallheru.net>
+ *   @version              : 1.5
+ *   @since                : 03.04.2012
  *
  */
 
@@ -50,7 +50,7 @@ if (isset ($_GET['action']) && $_GET['action'] == 'chop')
     define("T_ABILITY", " poziomu w umiejętności Drwalnictwo");
     define("TREE_STOMP", "Podczas wyrębu przewróciło się na ciebie drzewo. ");
     define("YOU_LUCK", "Na szczęście zdążyłeś uniknąć przygniecenia, jednak przerwało to na moment twoją pracę.");
-    define("YOU_UNLUCK", "Niestety nie udało ci się go uniknąć. Spadając na ciebie zadało tobie ");
+    define("YOU_UNLUCK", "Niestety nie udało Ci się go uniknąć. Spadając zadało Tobie ");
     define("T_HITS", " obrażeń.");
     define("NOTHING", "Niestety nic nie znalazłeś.<br />");
     define("YOU_FIND", "Zdobyłeś:<br />");

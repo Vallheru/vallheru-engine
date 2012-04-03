@@ -1,3 +1,8 @@
+2012-04-03  Bartek thindil Jasicki  <thindil@vallheru.net>
+
+	* BUG,languages/pl/lumberjack.php:
+	fixed typo
+
 2012-04-02  Bartek thindil Jasicki  <thindil@vallheru.net>
 
 	* UPDATE,templates/layout1/tribeware.tpl, templates/tribeware.tpl, tribeware.php:
