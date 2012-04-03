@@ -4,10 +4,10 @@
  *   Polish language for hospital
  *
  *   @name                 : hospital.php                            
- *   @copyright            : (C) 2004,2005,2007 Vallheru Team based on Gamers-Fusion ver 2.5
- *   @author               : thindil <thindil@users.sourceforge.net>
- *   @version              : 1.3
- *   @since                : 24.02.2007
+ *   @copyright            : (C) 2004,2005,2007,2012 Vallheru Team based on Gamers-Fusion ver 2.5
+ *   @author               : thindil <thindil@vallheru.net>
+ *   @version              : 1.5
+ *   @since                : 03.04.2012
  *
  */
 
@@ -27,7 +27,7 @@
 //   along with this program; if not, write to the Free Software
 //   Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 //
-// $Id: hospital.php 898 2007-02-24 21:24:28Z thindil $
+// $Id$
 
 define("ERROR", "Zapomnij o tym!");
 
@@ -57,7 +57,7 @@ if (isset ($_GET['action']) && $_GET['action'] == 'heal')
 if (isset ($_GET['action']) && $_GET['action'] == 'ressurect') 
 {
     define("NO_MONEY_FOR", "Nie możesz być wskrzeszony.");
-    define("YOU_RES", "<br>Zostałeś wskrzeszony ale straciłeś ");
+    define("YOU_RES", "<br>Zostałeś wskrzeszony, ale straciłeś ");
     define("LOST_EXP", " Punktów Doświadczenia.");
     define("NOT_NEED", "Nie potrzebujesz wskrzeszenia!");
 }

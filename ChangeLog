@@ -1,5 +1,7 @@
 2012-04-03  Bartek thindil Jasicki  <thindil@vallheru.net>
 
+	* BUG,languages/pl/hospital.php, languages/pl/las.php, languages/pl/gory.php:
+	fixed typo
 	* BUG,languages/pl/lumberjack.php:
 	fixed typo
 

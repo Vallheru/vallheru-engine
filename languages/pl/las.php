@@ -4,10 +4,10 @@
  *   Polish language for forest menu
  *
  *   @name                 : las.php                            
- *   @copyright            : (C) 2004,2005,2006,2011 Vallheru Team based on Gamers-Fusion ver 2.5
- *   @author               : thindil <thindil@tuxfamily.org>
- *   @version              : 1.4
- *   @since                : 16.09.2011
+ *   @copyright            : (C) 2004,2005,2006,2011,2012 Vallheru Team based on Gamers-Fusion ver 2.5
+ *   @author               : thindil <thindil@vallheru.net>
+ *   @version              : 1.5
+ *   @since                : 03.04.2012
  *
  */
 
@@ -45,7 +45,7 @@ define("A_ELFCITY", "Bramy ".$city2."");
 if (isset($_GET['action']))
 {
     define("NO_MONEY_FOR", "Nie możesz być wskrzeszony.");
-    define("YOU_RES", "<br />Zostałeś wskrzeszony ale straciłeś ");
+    define("YOU_RES", "<br />Zostałeś wskrzeszony, ale straciłeś ");
     define("LOST_EXP", " Punktów Doświadczenia.");
     define("A_BACK", "Wróć");
     define("HERMIT", "Twoje ciało odnalazł mieszkający w pobliżu pustelnik. Ku twemu zdziwieniu, starzec ten posiadł zdolność kontaktowania się z duszami umarłych... Zauważasz to, gdy zaczynasz słyszeć słowa...");
