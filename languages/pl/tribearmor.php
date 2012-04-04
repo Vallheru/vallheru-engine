@@ -8,7 +8,7 @@
  *   @author               : thindil <thindil@vallheru.net>
  *   @author               : eyescream <tduda@users.sourceforge.net>
  *   @version              : 1.5
- *   @since                : 13.03.2012
+ *   @since                : 04.04.2012
  *
  */
 
@@ -45,7 +45,7 @@ define("A_LEADER", "Opcje przywódcy");
 define("A_FORUMS", "Forum klanu");
 define("A_ASTRAL", "Astralny skarbiec");
 
-define("ARMOR_INFO", "Witaj w zbrojowni klanu. Tutaj są składowane przedmioty należące do klanu. Każdy członek klanu może ofiarować klanowi jakiś przedmiot ale tylko przywódca lub osoba upoważniona przez niego może darować dany przedmiot członkom swojego klanu. Co chcesz zrobić?");
+define("ARMOR_INFO", "Witaj w zbrojowni klanu. Tutaj są składowane przedmioty należące do klanu. Każdy członek klanu może ofiarować klanowi jakiś przedmiot, ale tylko przywódca lub osoba upoważniona przez niego może darować dany przedmiot członkom swojego klanu. Co chcesz zrobić?");
 define("A_SHOW_W", "Zobaczyć listę broni w zbrojowni klanu");
 define("A_SHOW_A", "Zobaczyć listę zbrój w zbrojowni klanu");
 define("A_SHOW_H", "Zobaczyć listę hełmów w zbrojowni klanu");

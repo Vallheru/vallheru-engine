@@ -1,3 +1,9 @@
+2012-04-04  Bartek thindil Jasicki  <thindil@vallheru.net>
+
+	* BUG,languages/pl/wieza.php, jail.php, languages/pl/maze.php, languages/pl/house.php, languages/pl/core.php, languages/pl/tribeware.php,
+	languages/pl/tribearmor.php:
+	fixed typos
+
 2012-04-03  Bartek thindil Jasicki  <thindil@vallheru.net>
 
 	* BUG,languages/pl/temple.php, languages/pl/msklep.php, languages/pl/library.php: 

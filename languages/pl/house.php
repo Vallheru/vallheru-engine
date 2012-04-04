@@ -4,11 +4,11 @@
  *   Polish language for houses
  *
  *   @name                 : house.php                            
- *   @copyright            : (C) 2004,2005,2006,2011 Vallheru Team based on Gamers-Fusion ver 2.5
- *   @author               : thindil <thindil@tuxfamily.org>
+ *   @copyright            : (C) 2004,2005,2006,2011,2012 Vallheru Team based on Gamers-Fusion ver 2.5
+ *   @author               : thindil <thindil@vallheru.net>
  *   @author               : eyescream <tduda@users.sourceforge.net>
- *   @version              : 1.4
- *   @since                : 14.10.2011
+ *   @version              : 1.5
+ *   @since                : 04.04.2012
  *
  */
 
@@ -45,7 +45,7 @@ if (!isset($_GET['action']))
 {
     if ($player -> location == 'Altara')
     {
-        define("HOUSE_INFO", "Zgiełk miasta powoli maleje. Nachodzi Cię myśl, że ten dzień można już zakończyć z czystym sumieniem. Wykonałeś swoje obowiązki. Ba, odwiedziłeś Karczmę z przyjaciółmi, tak możesz już udać się na spoczynek. Kierując się w stronę swojej siedziby mijasz różne zabudowania. Widzisz małe elfiątka bawiące się na drodze. Po chwili pojawia się straszna rudera, zrujnowany barak, który zdaje się być składzikiem buraków. Podchodzisz bliżej i myślisz sobie: \"Najważniejsze to mieć dach nad głową...\"");
+        define("HOUSE_INFO", "Zgiełk miasta powoli maleje. Nachodzi Cię myśl, że ten dzień można już zakończyć z czystym sumieniem. Wykonałeś swoje obowiązki. Ba, odwiedziłeś Karczmę z przyjaciółmi, tak więc możesz już udać się na spoczynek. Kierując się w stronę swojej siedziby mijasz różne zabudowania. Widzisz małe elfiątka bawiące się na drodze. Po chwili pojawia się straszna rudera, zrujnowany barak, który zdaje się być składzikiem buraków. Podchodzisz bliżej i myślisz sobie: \"Najważniejsze to mieć dach nad głową...\"");
         define("HOUSE_INFO2", "Słońce leniwie przesuwa się ku zachodowi, pokrywając miasto czerwienią. Hałas na ulicach zaczyna ustępować ciszy. Opuściłeś już główne ulice ".$city1b.", kierując się w stronę dzielnicy mieszkalnej. Domy, które mijasz zbudowane są w najróżniejszych stylach. Po prawej, wśród bujnych konarów drzew, znajduje się wielki pałac, którego motywem przewodnim jest liść. Marmurowe kolumny ozdobione są szmaragdowymi ornamentami. Tuż za bramą dostrzegasz dwie wspaniałe fontanny, a przy podjeździe wykonany z niezwykłym kunsztem, kryształowy pomnik. Okrągłe okna nadają tej budowli nieco zabawnego charakteru, jednocześnie wzbudzając nieco zazdrości. Wchodzisz w jedną z bocznych uliczek mijając po drodze kilka mniejszych pałacyków. W oddali zaczynasz dostrzegać znajome zarysy, myślisz sobie: \"nareszcie w domu\"");
     }
         else

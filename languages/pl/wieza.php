@@ -4,10 +4,10 @@
  *   Polish language for magic tower
  *
  *   @name                 : wieza.php                            
- *   @copyright            : (C) 2004,2005,2007 Vallheru Team based on Gamers-Fusion ver 2.5
- *   @author               : thindil <thindil@users.sourceforge.net>
- *   @version              : 1.3
- *   @since                : 21.02.2007
+ *   @copyright            : (C) 2004,2005,2007,2012 Vallheru Team based on Gamers-Fusion ver 2.5
+ *   @author               : thindil <thindil@vallheru.net>
+ *   @version              : 1.5
+ *   @since                : 04.04.2012
  *
  */
 
@@ -27,7 +27,7 @@
 //   along with this program; if not, write to the Free Software
 //   Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 //
-// $Id: wieza.php 890 2007-02-21 19:37:53Z thindil $
+// $Id$
 
 define("ERROR", "Zapomnij o tym!");
 
@@ -46,7 +46,7 @@ if (!isset($_GET['buy']))
     }
         else
     {
-        define("TOWER_INFO", "Widzisz przed sobą ogromną wieżę, wyróżniającą się spośród całego sadu. Wchodząc wyczuwasz w niej prawdziwą potęgę jej mistycznej magii. Ściany owijają purpurowe migoczące blaski. Od tego pięknego widoku odrywa cię melodyjny głos Witaj, wiem czego chcesz, chodź za mną.. Idąc za elfim magiem dostrzegasz wiele innych postaci w pięknych jedwabnych szatach praktykujących swoją magię. Dochodzisz do ogromnej biblioteki. Które zaklęcie cię interesuje? A może potrzebujesz nowej różdżki lub szaty? Wszystko jest do Twojej dyspozycji o ile posiadasz odpowiednie pieniądze i odpowiednie doświadczenie w posługiwaniu się magią.");
+        define("TOWER_INFO", "Widzisz przed sobą ogromną wieżę, wyróżniającą się spośród całego sadu. Wchodząc wyczuwasz w niej prawdziwą potęgę jej mistycznej magii. Ściany owijają purpurowe migoczące blaski. Od tego pięknego widoku odrywa cię melodyjny głos: <br /><i>- Witaj, wiem czego chcesz, chodź za mną...</i><br /> Idąc za elfim magiem dostrzegasz wiele innych postaci w pięknych jedwabnych szatach praktykujących swoją magię. Dochodzisz do ogromnej biblioteki. <br /><i>- Które zaklęcie cię interesuje? A może potrzebujesz nowej różdżki lub szaty? Wszystko jest do Twojej dyspozycji, o ile posiadasz odpowiednie pieniądze i odpowiednie doświadczenie w posługiwaniu się magią.</i>");
     }
     define("A_BUY_S", "Kup czary");
     define("A_BUY_C", "Kup szaty");

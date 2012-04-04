@@ -8,7 +8,7 @@
  *   @author               : thindil <thindil@vallheru.net>
  *   @author               : eyescream <tduda@users.sourceforge.net>
  *   @version              : 1.5
- *   @since                : 03.02.2012
+ *   @since                : 04.04.2012
  *
  */
 
@@ -45,7 +45,7 @@ define("A_LEADER", "Opcje przywódcy");
 define("A_FORUMS", "Forum klanu");
 define("A_ASTRAL", "Astralny skarbiec");
 
-define("WARE_INFO", "Witaj w magazynie klanu. Tutaj są składowane mikstury należące do klanu. Każdy członek klanu może ofiarować klanowi jakąś miksturę ale tylko przywódca lub osoba upoważniona przez niego może darować daną miksturę członkom swojego klanu. Co chcesz zrobić?");
+define("WARE_INFO", "Witaj w magazynie klanu. Tutaj są składowane mikstury należące do klanu. Każdy członek klanu może ofiarować klanowi jakąś miksturę, ale tylko przywódca lub osoba upoważniona przez niego może darować daną miksturę członkom swojego klanu. Co chcesz zrobić?");
 define("A_ADD", "Dać przedmiot do klanu");
 define("A_SHOW", "Zobaczyć listę mikstur w magazynie klanu");
 

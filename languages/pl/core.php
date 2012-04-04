@@ -8,7 +8,7 @@
  *   @author               : thindil <thindil@vallheru.net>
  *   @author               : eyescream <tduda@users.sourceforge.net>
  *   @version              : 1.5
- *   @since                : 29.02.2012
+ *   @since                : 04.04.2012
  *
  */
 
@@ -93,7 +93,7 @@ if (!isset($_GET['view']))
 
 if (isset ($_GET['view']) && $_GET['view'] == 'breed') 
 {
-    define("BREED_INFO", "Witaj w Zagrodzie Chowańców. Tutaj możesz łączyć Chowańce w pary, dzięki czemu wyhodujesz nowego Chowańca.<br />Możesz łączyć tylko chowańce tego samego typu. Jeżeli ci się powiedzie cała operacja, młody chowaniec będzie miał statystyki zależne od statystyk rodziców oraz twojej umiejętności hodowla. Koszt takiej operacji to 15 punktów treningowych oraz ilość mithrilu zależna od statystyk rodziców. Posiadasz");
+    define("BREED_INFO", "Witaj w Zagrodzie Chowańców. Tutaj możesz łączyć Chowańce w pary, dzięki czemu wyhodujesz nowego Chowańca.<br />Możesz łączyć tylko chowańce tego samego typu. Jeżeli ci się powiedzie cała operacja, młody chowaniec będzie miał statystyki zależne od statystyk rodziców oraz twojej umiejętności hodowli. Koszt takiej operacji to 15 punktów treningowych oraz ilość mithrilu zależna od statystyk rodziców. Posiadasz");
     define("TRAIN_PTS", "punktów treningowych.");
     define("WRONG_TYPE", "Nie możesz połączyć tych chowańców, ponieważ są one różnych typów!");
     define("NO_MITH2", "Nie masz tyle mithrilu.");

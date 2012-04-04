@@ -4,10 +4,10 @@
  *   Labyrynth in forrest city
  *
  *   @name                 : maze.php                            
- *   @copyright            : (C) 2004,2005,2006,2011 Vallheru Team based on Gamers-Fusion ver 2.5
- *   @author               : thindil <thindil@tuxfamily.prg>
- *   @version              : 1.4
- *   @since                : 11.08.2011
+ *   @copyright            : (C) 2004,2005,2006,2011,2012 Vallheru Team based on Gamers-Fusion ver 2.5
+ *   @author               : thindil <thindil@vallheru.net>
+ *   @version              : 1.5
+ *   @since                : 04.04.2012
  *
  */
 
@@ -49,7 +49,7 @@ if (isset($_GET['step']) && $_GET['step'] == 'run')
 
 if (!isset($_GET['action']))
 {
-    define("MAZE_INFO", "Dochodzisz powoli do Starego buku. Zauważasz, że dwóch elfickich wartowników pilnuje jakiegoś podziemnego wejścia. Podchodzisz z zamiarem zbadania podziemia, a jeden z nich zagaduje Ciebie:<br />- Czy na pewno chcesz tam wejść? Zanim podejmiesz decyzje wiesz, że jest to stara i opuszczona siedziba potężnego czarownika Myrdalisa. Podziemia te nigdy nie zostały dokładnie spenetrowane... Nie istnieje żadna mapa która mogła by być pomocna przy znalezieniu tam czegokolwiek. Na dodatek całe podziemia aż roją się od potworów. Czarownik przyzywał często różne demony, a te po jego śmierci stały się całkowicie wolne. Niektóre opuściły podziemia i zostały schwytane bądź zabite, lecz spora ich część nadal się tam znajduje. Zaletą penetracji tych podziemi jest fakt, że można tam znaleźć mnóstwo skarbów, ale czy jesteś gotów podjąć ryzyko?");
+    define("MAZE_INFO", "Dochodzisz powoli do starego buku. Zauważasz, że dwóch elfickich wartowników pilnuje jakiegoś podziemnego wejścia. Podchodzisz z zamiarem zbadania podziemia, a jeden z nich zagaduje Ciebie:<br />- Czy na pewno chcesz tam wejść? Zanim podejmiesz decyzje powinieneś wiedzieć, że jest to stara i opuszczona siedziba potężnego czarownika Myrdalisa. Podziemia te nigdy nie zostały dokładnie spenetrowane... Nie istnieje żadna mapa która mogła by być pomocna przy znalezieniu tam czegokolwiek. Na dodatek całe podziemia aż roją się od potworów. Czarownik przyzywał często różne demony, a te po jego śmierci stały się całkowicie wolne. Niektóre opuściły podziemia i zostały schwytane bądź zabite, lecz spora ich część nadal się tam znajduje. Zaletą penetracji tych podziemi jest fakt, że można tam znaleźć mnóstwo skarbów, ale czy jesteś gotów podjąć ryzyko?");
 }
     else
 {
