@@ -1,5 +1,7 @@
 2012-04-05  Bartek thindil Jasicki  <thindil@vallheru.net>
 
+	* UPDATE,languages/pl/city.php: 
+	added new Altara description (author: Samaelka)
 	* BUG,tribeminerals.php, tribeherbs.php, thieves.php:
 	fixed typos
 

@@ -4,10 +4,10 @@
  *   Polish language for city
  *
  *   @name                 : city.php                            
- *   @copyright            : (C) 2004,2005,2006 Vallheru Team based on Gamers-Fusion ver 2.5
- *   @author               : thindil <thindil@users.sourceforge.net>
- *   @version              : 1.2
- *   @since                : 12.10.2006
+ *   @copyright            : (C) 2004,2005,2006,2012 Vallheru Team based on Gamers-Fusion ver 2.5
+ *   @author               : thindil <thindil@vallheru.net>
+ *   @version              : 1.5
+ *   @since                : 05.04.2012
  *
  */
 
@@ -27,13 +27,13 @@
 //   along with this program; if not, write to the Free Software
 //   Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 //
-// $Id: city.php 704 2006-10-12 16:21:03Z thindil $
+// $Id:$
 
 define("NO_CITY", "Nie znajdujesz się w mieście");
 
 if ($player -> location == 'Altara')
 {
-    define("CITY_INFO", "Witaj w stolicy Vallheru, ".$city1a.".");
+    define("CITY_INFO", "Do miasta prowadzi tylko jedna brama, znajdująca się w zachodniej części miasta. Jest zamykana po zmierzchu, więc spóźnieni podróżni, którzy nie zdążą dotrzeć do ".$city1b." przed zachodem słońca, zmuszeni są spędzić noc w stajni poza murami. Chyba, że strażnicy będą na tyle uczynni, by zlitować się nad strudzonym podróżnym i wpuszczą go do środka. Główne ulice miasta są szerokie, wybrukowane i oświetlone. W pozostałe strach zaglądać. Wąskie, błotniste uliczki, pełne dziur, ciemnych zakamarków i wszelkiego rodzaju plugastwa, sprawiają, że trzeba być albo bardzo głupim, albo bardzo odważnym, by spacerować po nich, nawet w biały dzień. Miasto podzielone jest na 8 dzielnic, z których każda spełnia określoną rolę. Najważniejszym punktem miasta jest plac zamkowy, ulokowany we wschodniej części ".$city1b.". Na środku placu zbudowano Zamek, który od pokoleń zamieszkują Władcy ".$gamename.". Obok zamku ulokowana jest siedziba sądu i areszt miejski, w którym przetrzymywani są mieszkańcy, którzy złamali prawo, bądź narazili się komuś, komu narażać się nie powinni. Na wschód od Placu Zamkowego znajduje się Dzielnica Mieszkalna, w której zamożniejsi mieszkańcy ".$city1b." mają swoje posiadłości. Tam również znajduje się miejska biblioteka, posiadająca bogaty zbiór ksiąg i rękopisów dostępnych dla wszystkich. Północna część miasta składa się z trzech dzielnic, w których można zarówno nabyć ekwipunek potrzebny każdemu wojakowi, jak i napić się stęchniętego piwa w miejskiej karczmie. Tam również znajduje się szkoła i siedziba miejskiej gazety. Zachodnia część miasta jest mekką dla czarodziei, kapłanów i alchemików, ale również poszukiwacze przygód, których interesuje miejski labirynt, jak i zakochani mężczyźni, chcący kupić jakąś błyskotkę dla żony, czy kochanki często się w nią zapuszczają. Część południowa zamieszkiwana głównie przez plebs i biedniejszych kupców. Znajdują się w niej miejskie magazyny, rynek, pełniący funkcję bazaru, na którym znaleźć można niemal wszystko, jak i kilka pomniejszych budynków, gdzie zdesperowani szukają pracy. To raj dla wszelkiej maści rzezimieszków i złodziei.");
     define("BATTLE_FIELD", "Wojenne Pola");
     define("COMMUNITY", "Społeczność");
     define("VILLAGE", "Podgrodzie");
