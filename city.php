@@ -58,6 +58,8 @@ if ($player -> location == 'Altara')
             $strInfo = '';
         }
         $objPoll -> Close();
+	$strShort = substr(CITY_INFO, 0, 150);
+	$strLong = substr(CITY_INFO, 150);
         $arrTitles = array(BATTLE_FIELD, COMMUNITY, VILLAGE, WEST_SIDE, HOUSES_SIDE, CASTLE, JOBS, SOUTH_SIDE);
         $arrFiles = array(array('battle.php', 'armor.php', 'weapons.php', 'bows.php', 'outposts.php', 'hunters.php', 'guilds2.php', 'outpost.php'),
                           array('news.php', 'forums.php?view=categories', 'chat.php', 'mail.php', 'tribes.php', 'newspaper.php'),
@@ -78,7 +80,9 @@ if ($player -> location == 'Altara')
         $smarty -> assign(array("Titles" => $arrTitles,
                                 "Files" => $arrFiles,
                                 "Names" => $arrNames,
-                                "Cityinfo" => CITY_INFO));
+                                "Cityinfo" => $strShort,
+				"Citylong" => $strLong,
+				"Anext" => "(czytaj dalej)"));
     }
         else
     {

@@ -1,5 +1,8 @@
 {if $Item == "0" && $Location == 'Altara'}
-    {$Cityinfo}<br /><br />
+    {$Cityinfo}
+    <label for="citydesc" class="toggle">{$Anext}</label>
+    <input id="citydesc" type="checkbox" class="toggle" checked=checked/>
+    <span>{$Citylong}</span><br /><br />
     
     <table width="100%" class="dark">
         {section name=row1 loop=$Titles}

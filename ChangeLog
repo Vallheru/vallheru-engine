@@ -1,5 +1,8 @@
 2012-04-05  Bartek thindil Jasicki  <thindil@vallheru.net>
 
+	* FEATURE,templates/layout1/city.tpl, templates/layout1/layout1.css, templates/city.tpl, city.php, css/light.css, css/green.css, css/lucass.css,
+	css/greenforest.css, css/ender.css, css/classic.css:
+	added option to hide/show city description
 	* UPDATE,includes/foot.php: 
 	move tribe tags from link
 	* UPDATE,languages/pl/city.php: 

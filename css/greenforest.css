@@ -72,6 +72,9 @@ input.toggle {
 input.toggle:checked+div { 
   display: none; 
 }
+input.toggle:checked+span { 
+  display: none; 
+}
 #tchat
 {
     width: 100%;
