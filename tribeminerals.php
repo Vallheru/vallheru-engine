@@ -7,7 +7,7 @@
  *   @copyright            : (C) 2012 Vallheru Team based on Gamers-Fusion ver 2.5
  *   @author               : thindil <thindil@vallheru.net>
  *   @version              : 1.5
- *   @since                : 31.01.2012
+ *   @since                : 05.04.2012
  *
  */
 
@@ -353,7 +353,7 @@ if ($_GET['step2'] == ''  && $_GET['step3'] == '' && $_GET['daj'] == '' && $_GET
 	  }
 	$i++;
       }
-    $smarty -> assign(array("Mininfo" => "Witaj w skarbcu klanu. Tutaj są składowane minerały należące do klanu. Każdy członek klanu może ofiarować klanowi jakiś minerał ale tylko przywódca lub osoba upoważniona przez niego może darować dany minerał członkom swojego klanu. Aby dać jakiś minerał członkom klanu, kliknij na nazwę owego minerału.",
+    $smarty -> assign(array("Mininfo" => "Witaj w skarbcu klanu. Tutaj są składowane minerały należące do klanu. Każdy członek klanu może ofiarować klanowi jakiś minerał, ale tylko przywódca lub osoba upoważniona przez niego może darować dany minerał członkom swojego klanu. Aby dać jakiś minerał członkom klanu, kliknij na nazwę owego minerału.",
 			    "Whatyou" => "Co chcesz zrobić?",
 			    "Agiveto" => "Dać minerały do klanu",
 			    "Ttable" => $arrTable));

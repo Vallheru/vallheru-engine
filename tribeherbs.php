@@ -7,7 +7,7 @@
  *   @copyright            : (C) 2012 Vallheru Team based on Gamers-Fusion ver 2.5
  *   @author               : thindil <thindil@vallheru.net>
  *   @version              : 1.5
- *   @since                : 29.02.2012
+ *   @since                : 05.04.2012
  *
  */
 
@@ -345,7 +345,7 @@ if ($_GET['step2'] == '' && $_GET['step3'] == '' && $_GET['daj'] == '' && $_GET[
       }
     $smarty -> assign(array("Tamount" => $arrAmount2,
 			    "Ttable" => $arrTable,
-			    "Herbsinfo" => "Witaj w zielniku klanu. Tutaj są składowane zioła należące do klanu. Każdy członek klanu może ofiarować klanowi jakieś zioła ale tylko przywódca lub osoba upoważniona przez niego może darować dane zioła członkom swojego klanu. Aby dać jakieś zioła członkom klanu, kliknij na nazwę owego zioła.",
+			    "Herbsinfo" => "Witaj w zielniku klanu. Tutaj są składowane zioła należące do klanu. Każdy członek klanu może ofiarować klanowi jakieś zioła, ale tylko przywódca lub osoba upoważniona przez niego może darować dane zioła członkom swojego klanu. Aby dać jakieś zioła członkom klanu, kliknij na nazwę owego zioła.",
 			    "Whatyou" => "Co chcesz zrobić?",
 			    "Agiveto" => "Dać zioła do klanu"));
   }

@@ -1,3 +1,8 @@
+2012-04-05  Bartek thindil Jasicki  <thindil@vallheru.net>
+
+	* BUG,tribeminerals.php, tribeherbs.php, thieves.php:
+	fixed typos
+
 2012-04-04  Bartek thindil Jasicki  <thindil@vallheru.net>
 
 	* BUG,languages/pl/wieza.php, jail.php, languages/pl/maze.php, languages/pl/house.php, languages/pl/core.php, languages/pl/tribeware.php,
