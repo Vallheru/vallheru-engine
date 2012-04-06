@@ -8,7 +8,7 @@
  *   @author               : thindil <thindil@vallheru.net>
  *   @author               : eyescream <tduda@users.sourceforge.net>
  *   @version              : 1.5
- *   @since                : 03.04.2012
+ *   @since                : 05.04.2012
  *
  */
 
@@ -118,7 +118,7 @@ if (isset ($_GET['view']) && $_GET['view'] == 'myoutpost')
     define("T_MONSTERS", "Bestie");
     define("T_BARRACKS", "Kwater weteranów");
     define("T_VETERANS", "Weteranów");
-    define("T_FATIGUE", "Zmęcznie Armii");
+    define("T_FATIGUE", "Zmęczenie Armii");
     define("T_MORALE", "Morale Armii");
     define("T_COST", "Koszt");
     define("T_BONUS", "Premie dowódcy");

@@ -1,3 +1,8 @@
+2012-04-06  Bartek thindil Jasicki  <thindil@vallheru.net>
+
+	* BUG,languages/pl/outposts.php:
+	fixed typo
+
 2012-04-05  Bartek thindil Jasicki  <thindil@vallheru.net>
 
 	* FEATURE,templates/layout1/city.tpl, templates/layout1/layout1.css, templates/city.tpl, city.php, css/light.css, css/green.css, css/lucass.css,
