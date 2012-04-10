@@ -8,7 +8,7 @@
  *   @author               : thindil <thindil@vallheru.net>
  *   @author               : eyescream <tduda@users.sourceforge.net>
  *   @version              : 1.5
- *   @since                : 20.02.2012
+ *   @since                : 10.04.2012
  *
  */
 
@@ -681,7 +681,7 @@ if (isset($_GET['action']) && $_GET['action'] == 'safe')
             error(NO_MITHRIL);
         }
         $objTribe -> Close();
-        $objMinerals = $db -> Execute("SELECT `crystal`, `adamantium`, `meteor` FROM `tribes` WHERE `id`=".$player -> tribe);
+        $objMinerals = $db -> Execute("SELECT `crystal`, `adamantium`, `meteor` FROM `tribe_minerals` WHERE `id`=".$player -> tribe);
         if ($objMinerals -> fields['adamantium'] < $arrSafeneed[$intKey][2])
         {
             error(NO_MINERAL.ADAMANTIUM."!");

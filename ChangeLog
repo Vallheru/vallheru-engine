@@ -1,5 +1,7 @@
 2012-04-10  Bartek thindil Jasicki  <thindil@vallheru.net>
 
+	* BUG,tribeastral.php: 
+	fixed bug with buying astral box
 	* BUG,outposts.php:
 	fixed bug with show available outposts updates
 
