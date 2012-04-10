@@ -7,7 +7,7 @@
  *   @copyright            : (C) 2012 Vallheru Team based on Gamers-Fusion ver 2.5
  *   @author               : thindil <thindil@vallheru.net>
  *   @version              : 1.5
- *   @since                : 03.02.2012
+ *   @since                : 10.04.2012
  *
  */
 
@@ -43,7 +43,7 @@ $test = array($perm -> fields['messages'],$perm -> fields['wait'],$perm -> field
 
 if (!in_array(1, $test) && $player->id != $mytribe->fields['owner'])
   {
-    error('Nie masz prawa przebywać tutaj.');
+    error('Nie masz prawa przebywać tutaj. (<a href="tribes.php">Wróć</a>)');
   }
 
 /**
