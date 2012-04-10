@@ -8,7 +8,7 @@
  *   @author               : thindil <thindil@vallheru.net>
  *   @author               : eyescream <tduda@users.sourceforge.net>
  *   @version              : 1.5
- *   @since                : 04.04.2012
+ *   @since                : 10.04.2012
  *
  */
 
@@ -186,7 +186,7 @@ if (isset($_GET['escape']))
     else 
       { 
 	$expgain = ($player->level * 10);
-	$fltThief = ($player->level / 10);
+	$fltThief = ($player->level / 100.0);
 	if ($chance == 1000000)
 	  {
 	    $expgain = 2 * $expgain;

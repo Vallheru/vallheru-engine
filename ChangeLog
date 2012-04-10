@@ -1,5 +1,7 @@
 2012-04-10  Bartek thindil Jasicki  <thindil@vallheru.net>
 
+	* UPDATE,jail.php: 
+	reduced amount of skill gained from escape
 	* BUG,tribeastral.php: 
 	fixed bug with buying astral box
 	* BUG,outposts.php:
