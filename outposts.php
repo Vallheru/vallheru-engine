@@ -8,7 +8,7 @@
  *   @author               : thindil <thindil@vallheru.net>
  *   @author               : eyescream <tduda@users.sourceforge.net>
  *   @version              : 1.5
- *   @since                : 18.02.2012
+ *   @since                : 10.04.2012
  *
  */
  
@@ -644,7 +644,9 @@ function checkresources($strImprovement, $intArg1, $intArg2)
     $intDelta = 4 * $out -> fields[$strImprovement] * ($out -> fields[$strImprovement] + 3) + 9 + 4 * $out -> fields['gold'] / 25;
     $intMaxGold = floor ((sqrt ($intDelta) - 3) / 2 - $out -> fields[$strImprovement]);
     $intDelta = 4 * $out -> fields[$strImprovement] * ($out -> fields[$strImprovement] + 1) + 1 + 8 * $intArg1;
-    $intMaxMeteor = floor ((sqrt ($intDelta) + 1 - 2 * $out -> fields[$strImprovement]) / 2);
+    $intMaxMeteor = floor ((sqrt ($intDelta) + 1 - 2 * $out -> fields[$strImprovement]) / 2) - 1;
+    $intDelta = 4 * $out -> fields[$strImprovement] * ($out -> fields[$strImprovement] + 1) + 1 + 8 * $intArg2 / 5;
+    $intArg2 = floor ((sqrt ($intDelta) + 1 - 2 * $out -> fields[$strImprovement]) / 2) - 1;
     $intMaxArg2 = min ($intMaxMeteor, $intArg2);
     $intMaxNumber = floor ( $out -> fields['size'] / 4) - $out -> fields['fence'] - $out -> fields['barracks'];
     // select lowest level

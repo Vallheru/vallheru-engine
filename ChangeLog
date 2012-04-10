@@ -1,3 +1,8 @@
+2012-04-10  Bartek thindil Jasicki  <thindil@vallheru.net>
+
+	* BUG,outposts.php:
+	fixed bug with show available outposts updates
+
 2012-04-06  Bartek thindil Jasicki  <thindil@vallheru.net>
 
 	* BUG,languages/pl/outposts.php:
