@@ -51,11 +51,6 @@
 {if $Step == "add"}
     {$Addinfo}<br />
     <form method="post" action="news.php?step=add&amp;step2=add">
-        {$Tlang}: <select name="lang">
-            {section name=library loop=$Llang}
-                <option value="{$Llang[library]}">{$Llang[library]}</option>
-            {/section}
-        </select><br />
         {$Ttitle2}: <input type="text" name="ttitle" /><br />
         {$Tbody2}: <br /><textarea name="body" rows="30" cols="60"></textarea><br />
         <input type="submit" value="{$Aadd}" />

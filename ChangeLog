@@ -1,5 +1,7 @@
 2012-04-10  Bartek thindil Jasicki  <thindil@vallheru.net>
 
+	* UPDATE,templates/layout1/news.tpl, templates/news.tpl, news.php: 
+	removed language selection from adding news
 	* BUG,tribeadmin.php: 
 	fixed link "back"
 	* UPDATE,jail.php: 

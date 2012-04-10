@@ -4,10 +4,10 @@
  *   Show game news
  *
  *   @name                 : news.php                            
- *   @copyright            : (C) 2004,2005,2006,2011 Vallheru Team based on Gamers-Fusion ver 2.5
- *   @author               : thindil <thindil@tuxfamily.org>
- *   @version              : 1.4
- *   @since                : 12.09.2011
+ *   @copyright            : (C) 2004,2005,2006,2011,2012 Vallheru Team based on Gamers-Fusion ver 2.5
+ *   @author               : thindil <thindil@vallheru.net>
+ *   @version              : 1.5
+ *   @since                : 10.04.2012
  *
  */
 
@@ -35,14 +35,14 @@ require_once("includes/head.php");
 /**
 * Get the localization for game
 */
-require_once("languages/".$player -> lang."/news.php");
+require_once("languages/".$lang."/news.php");
 
 /**
 * Display one news
 */
 if (!isset ($_GET['view'])) 
 {
-    $upd = $db -> SelectLimit("SELECT * FROM `news` WHERE `lang`='".$player -> lang."' AND `added`='Y' AND `show`='Y' ORDER BY `id` DESC", 1);
+    $upd = $db -> SelectLimit("SELECT * FROM `news` WHERE `lang`='".$lang."' AND `added`='Y' AND `show`='Y' ORDER BY `id` DESC", 1);
     if (isset($upd -> fields['id']))
     {
         $objQuery = $db -> Execute("SELECT count(`id`) FROM `news_comments` WHERE `newsid`=".$upd -> fields['id']);
@@ -53,10 +53,10 @@ if (!isset ($_GET['view']))
     {
         $intComments = 0;
     }
-    $objQuery = $db -> Execute("SELECT count(`id`) FROM `news` WHERE `lang`='".$player -> lang."' AND `added`='N'");
+    $objQuery = $db -> Execute("SELECT count(`id`) FROM `news` WHERE `lang`='".$lang."' AND `added`='N'");
     $intWaiting = $objQuery -> fields['count(`id`)'];
     $objQuery -> Close();
-    $objAccepted = $db -> Execute("SELECT count(`id`) FROM `news` WHERE `lang`='".$player -> lang."' AND `show`='N'");
+    $objAccepted = $db -> Execute("SELECT count(`id`) FROM `news` WHERE `lang`='".$lang."' AND `show`='N'");
     $intAccepted = $objAccepted -> fields['count(`id`)'];
     $objAccepted -> Close();
     $smarty -> assign(array("Title1" => $upd -> fields['title'], 
@@ -71,40 +71,48 @@ if (!isset ($_GET['view']))
 			    "Accepted" => $intAccepted,
 			    "Nonews" => "Nie ma jeszcze opublikowanych plotek",
 			    "Waiting" => $intWaiting));
+    $_GET['view'] = '';
 } 
 
 /**
 * Display last 10 news
 */
-if (isset($_GET['view']))
+else
 {
-    $upd = $db -> SelectLimit("SELECT * FROM news WHERE `lang`='".$player -> lang."' AND `added`='Y' AND `show`='Y'  ORDER BY `id` DESC", 10);
-    $arrtitle = array();
-    $arrstarter = array();
-    $arrnews = array();
-    $arrId = array();
-    $arrComments = array();
-    $arrDate = array();
-    while (!$upd -> EOF) 
+  if ($_GET['view'] == 'all')
     {
-        $objQuery = $db -> Execute("SELECT count(`id`) FROM `news_comments` WHERE `newsid`=".$upd -> fields['id']);
-        $arrComments[] = $objQuery -> fields['count(`id`)'];
-        $objQuery -> Close();
-        $arrtitle[] = $upd -> fields['title'];
-        $arrstarter[] = $upd -> fields['starter'];
-        $arrnews[] = $upd -> fields['news'];
-        $arrId[] = $upd -> fields['id'];
-	$arrDate[] = $upd->fields['pdate'];
-        $upd -> MoveNext();
+      $upd = $db -> SelectLimit("SELECT * FROM news WHERE `lang`='".$lang."' AND `added`='Y' AND `show`='Y'  ORDER BY `id` DESC", 10);
+      $arrtitle = array();
+      $arrstarter = array();
+      $arrnews = array();
+      $arrId = array();
+      $arrComments = array();
+      $arrDate = array();
+      while (!$upd -> EOF) 
+	{
+	  $objQuery = $db -> Execute("SELECT count(`id`) FROM `news_comments` WHERE `newsid`=".$upd -> fields['id']);
+	  $arrComments[] = $objQuery -> fields['count(`id`)'];
+	  $objQuery -> Close();
+	  $arrtitle[] = $upd -> fields['title'];
+	  $arrstarter[] = $upd -> fields['starter'];
+	  $arrnews[] = $upd -> fields['news'];
+	  $arrId[] = $upd -> fields['id'];
+	  $arrDate[] = $upd->fields['pdate'];
+	  $upd -> MoveNext();
+	}
+      $upd -> Close();
+      $smarty -> assign(array("Title1" => $arrtitle, 
+			      "Starter" => $arrstarter, 
+			      "News" => $arrnews,
+			      "Newsid" => $arrId,
+			      "Newsdate" => $arrDate,
+			      "Comments" => $arrComments));
     }
-    $upd -> Close();
-    $smarty -> assign(array("Title1" => $arrtitle, 
-			    "Starter" => $arrstarter, 
-			    "News" => $arrnews,
-			    "Newsid" => $arrId,
-			    "Newsdate" => $arrDate,
-			    "Comments" => $arrComments));
-}
+  else
+    {
+      error('Zapomnij o tym.');
+    }
+ }
 
 /**
 * Comments to text
@@ -166,12 +174,7 @@ if (isset($_GET['step']) && $_GET['step'] == 'comments')
 */
 if (isset($_GET['step']) && $_GET['step'] == 'add')
 {
-    $arrLanguage = scandir('languages/', 1);
-    $arrLanguage = array_diff($arrLanguage, array(".", "..", "index.htm"));
-
-    $smarty -> assign(array("Llang" => $arrLanguage,
-        "Tlang" => T_LANG,
-        "Ttitle2" => T_TITLE,
+    $smarty -> assign(array("Ttitle2" => T_TITLE,
         "Tbody2" => T_BODY,
         "Aadd" => A_ADD,
         "Addinfo" => ADD_INFO));
@@ -182,17 +185,13 @@ if (isset($_GET['step']) && $_GET['step'] == 'add')
         {
             error(EMPTY_FIELDS);
         }
-	if (!in_array($_POST['lang'], $arrLanguage))
-	  {
-	    error(ERROR);
-	  }
         $_POST['body'] = nl2br($_POST['body']);
         require_once('includes/bbcode.php');
         $_POST['body'] = bbcodetohtml($_POST['body']);
         $strAuthor = $player -> user." (".$player -> id.")";
         $strBody = $db -> qstr($_POST['body'], get_magic_quotes_gpc());
         $strTitle = $db -> qstr($_POST['ttitle'], get_magic_quotes_gpc());
-        $db -> Execute("INSERT INTO news (title, news, added, lang, starter) VALUES(".$strTitle.", ".$strBody.", 'N', '".$_POST['lang']."', '".$strAuthor."')");
+        $db -> Execute("INSERT INTO news (title, news, added, lang, starter) VALUES(".$strTitle.", ".$strBody.", 'N', '".$lang."', '".$strAuthor."')");
 	$objStaff = $db -> Execute("SELECT `id` FROM `players` WHERE `rank`='Admin' OR `rank`='Staff'");
 	$strDate = $db -> DBDate($newdate);
 	$_POST['ttitle'] = str_replace("'", "", strip_tags($_POST['ttitle']));
@@ -209,10 +208,6 @@ if (isset($_GET['step']) && $_GET['step'] == 'add')
 /**
 * Initialization of variable
 */
-if (!isset($_GET['view'])) 
-{
-    $_GET['view'] = '';
-}
 if (!isset($_GET['step']))
 {
     $_GET['step'] = '';
