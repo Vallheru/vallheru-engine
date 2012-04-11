@@ -7,7 +7,7 @@
  *   @copyright            : (C) 2004,2005,2006,2007,2011,2012 Vallheru Team based on Gamers-Fusion ver 2.5
  *   @author               : thindil <thindil@vallheru.net>
  *   @version              : 1.5
- *   @since                : 26.03.2012
+ *   @since                : 11.04.2012
  *
  */
 
@@ -800,8 +800,6 @@ if (isset ($_GET['read']))
 	error("Nie ma takiej wiadomości.");
       }
     $strSubject = $objMails->fields['subject'];
-    $objSender = $db->Execute("SELECT `id`, `user`, `tribe` FROM `players` WHERE `id`=".$objMails->fields['senderid']);
-    $objReceiver = $db->Execute("SELECT `id`, `user`, `tribe` FROM `players` WHERE `id`=".$objMails->fields['to']);
     while (!$objMails->EOF)
       {
 	if ($intReceiver == 0)
@@ -815,33 +813,21 @@ if (isset ($_GET['read']))
 		$intReceiver = $objMails->fields['to'];
 	      }
 	  }
-	if ($objMails->fields['senderid'] == $objSender->fields['id'])
-	  {
-	    $arrSender[] = $arrTags[$objSender->fields['tribe']][0]." ".$objSender->fields['user']." ".$arrTags[$objSender->fields['tribe']][1].' (ID: '.$objSender->fields['id'].')';
-	  }
-	elseif ($objMails->fields['senderid'] = $objReceiver->fields['id'])
-	  {
-	    $arrSender[] = $arrTags[$objReceiver->fields['tribe']][0]." ".$objReceiver->fields['user']." ".$arrTags[$objReceiver->fields['tribe']][1].' (ID: '.$objReceiver->fields['id'].')';
-	  }
-	else
-	  {
-	    if ($objMails->fields['senderid'] == 0)
-	      {
-		$arrSender[] = $objMails->fields['sender'];
-	      }
-	    else
-	      {
-		$arrSender[] = $objMails->fields['sender'].' (nieobecny(a))';
-	      }
-	  }
+	$arrSender[] = $objMails->fields['sender'].' (nieobecny(a))';
 	$arrSenderid[] = $objMails->fields['senderid'];
 	$arrMid[] = $objMails->fields['id'];
 	$arrBody[] = $objMails->fields['body'];
 	$arrDate[] = T_DAY.$objMails->fields['date'];
 	$objMails->MoveNext();
       }    
-    $objReceiver->Close();
-    $objSender->Close();
+    $objPeople = $db->Execute("SELECT `id`, `user`, `tribe` FROM `players` WHERE `id` IN (".implode(',', $arrSenderid).");") or die($db->ErrorMsg());
+    while (!$objPeople->EOF)
+      {
+	$intKey = array_search($objPeople->fields['id'], $arrSenderid);
+	$arrSender[$intKey] = $arrTags[$objPeople->fields['tribe']][0]." ".$objPeople->fields['user']." ".$arrTags[$objPeople->fields['tribe']][1].' (ID: '.$objPeople->fields['id'].')';
+	$objPeople->MoveNext();
+      }
+    $objPeople->Close();
     $objMails->Close();
     $smarty -> assign(array("Senders" => $arrSender,
 			    "Sendersid" => $arrSenderid,
