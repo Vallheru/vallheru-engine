@@ -1,5 +1,7 @@
 2012-04-11  Bartek thindil Jasicki  <thindil@vallheru.net>
 
+	* BUG,tribeadmin.php: 
+	fixed typo
 	* BUG,languages/pl/tribeadmin.php:
 	fixed bug with HTML tags in tribe mails
 	* BUG,mail.php:
