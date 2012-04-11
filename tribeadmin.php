@@ -7,7 +7,7 @@
  *   @copyright            : (C) 2012 Vallheru Team based on Gamers-Fusion ver 2.5
  *   @author               : thindil <thindil@vallheru.net>
  *   @version              : 1.5
- *   @since                : 10.04.2012
+ *   @since                : 11.04.2012
  *
  */
 
@@ -507,7 +507,7 @@ else
 	    require_once('includes/bbcode.php');
 	    $strBody = bbcodetohtml($strBody);
 	    $strTitle = bbcodetohtml($strTitle);
-	    $strTitle = T_CLAN.$strTitle;
+	    $strTitle = "[Klan] ".$strTitle;
 	    $objOwner = $db -> Execute("SELECT `id`, `user` FROM `players` WHERE `tribe`=".$mytribe -> fields['id']." AND `id`!=".$player -> id);
 	    $strDate = $db -> DBDate($newdate);
 	    $objTopic = $db->Execute("SELECT max(`topic`) FROM `mail`");

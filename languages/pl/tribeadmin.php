@@ -7,7 +7,7 @@
  *   @copyright            : (C) 2012 Vallheru Team based on Gamers-Fusion ver 2.5
  *   @author               : thindil <thindil@vallheru.net>
  *   @version              : 1.5
- *   @since                : 25.01.2012
+ *   @since                : 11.04.2012
  *
  */
 
@@ -105,7 +105,6 @@ if (isset($_GET['step2']) && $_GET['step2'] == 'mail')
     define("EMPTY_FIELDS", "Wypełnij wszystkie pola!");
     define("YOU_SEND", "Wysłałeś(aś) wiadomość do członków swojego klanu");
     define("T_TITLE", "Tytuł");
-    define("T_CLAN", "<b>[Klan]</b> ");
   }
 if (isset ($_GET['step2']) && $_GET['step2'] == 'wojsko') 
   {
