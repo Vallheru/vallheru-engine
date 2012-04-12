@@ -29,7 +29,7 @@
 {if $Give != ""}
     {if $Step3 == ""}
         <form method="post" action="tribeware.php?daj={$Id}&amp;step3=add">
-        <input type="submit" value="{$Agive}" /> <input type="text" name="amount" value="{$Amount}" size="5" /> {$Tamount}<b>{$Name}</b> {$Playerid}: <input type="text" name="did" size="5" /><br /></form>
+        <input type="submit" value="{$Agive}" /> <input type="text" name="amount" value="{$Amount}" size="5" /> {$Tamount}<b>{$Name}</b> {$Playerid}: {html_options name=did options=$Members}<br /></form>
     {/if}
 {/if}
 

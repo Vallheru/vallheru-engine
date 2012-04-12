@@ -7,7 +7,7 @@
  *   @copyright            : (C) 2012 Vallheru Team based on Gamers-Fusion ver 2.5
  *   @author               : thindil <thindil@vallheru.net>
  *   @version              : 1.5
- *   @since                : 05.04.2012
+ *   @since                : 12.04.2012
  *
  */
 
@@ -170,7 +170,16 @@ if (isset ($_GET['daj']) && $_GET['daj'])
 	error("Klan nie posiada takich ziół.");
       }
     $min1 = $arrName[$intKey];
-    $smarty -> assign(array("Giveplayer" => "Daj graczowi ID:",
+    $objMembers = $db->Execute("SELECT `id`, `user` FROM `players` WHERE `tribe`=".$player->tribe);
+    $arrMembers = array();
+    while (!$objMembers->EOF)
+      {
+	$arrMembers[$objMembers->fields['id']] = $objMembers->fields['user'];
+	$objMembers->MoveNext();
+      }
+    $objMembers->Close();
+    $smarty -> assign(array("Giveplayer" => "Daj graczowi:",
+			    "Members" => $arrMembers,
 			    "Agive" => "Daj",
 			    "Tamount" => "z posiadanych",
 			    "Hamount2" => "sztuk",

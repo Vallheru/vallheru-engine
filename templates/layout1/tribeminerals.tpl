@@ -14,7 +14,7 @@
 {/if}
 {if $Give != ""}
     <form method="post" action="tribeminerals.php?daj={$Itemid}&amp;step4=add">
-        {$Giveplayer} <input type="text" name="did" size="5" /><br />
+        {$Giveplayer} {html_options name=did options=$Members}<br />
         <input type="text" name="ilosc" size="7" /> {$Namemin} {$Tamount3} {$Tamount2} {$Mamount2}.<br />
         <input type="submit" value="{$Agive}" /><br />
     </form>

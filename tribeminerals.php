@@ -7,7 +7,7 @@
  *   @copyright            : (C) 2012 Vallheru Team based on Gamers-Fusion ver 2.5
  *   @author               : thindil <thindil@vallheru.net>
  *   @version              : 1.5
- *   @since                : 05.04.2012
+ *   @since                : 12.04.2012
  *
  */
 
@@ -182,8 +182,17 @@ if (isset ($_GET['daj']) && $_GET['daj'])
 	error("Zapomnij o tym.");
       }
     $intKey = array_search($_GET['daj'], $arrSqlname2);
+    $objMembers = $db->Execute("SELECT `id`, `user` FROM `players` WHERE `tribe`=".$player->tribe);
+    $arrMembers = array();
+    while (!$objMembers->EOF)
+      {
+	$arrMembers[$objMembers->fields['id']] = $objMembers->fields['user'];
+	$objMembers->MoveNext();
+      }
+    $objMembers->Close();
     $smarty -> assign(array("Itemid" => $_GET['daj'],
-			    "Giveplayer" => "Daj graczowi ID:",
+			    "Giveplayer" => "Daj graczowi:",
+			    "Members" => $arrMembers,
 			    "Agive" => "Daj",
 			    "Tamount3" => "z posiadanych",
 			    "Mamount2" => "sztuk",

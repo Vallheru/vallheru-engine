@@ -8,7 +8,7 @@
  *   @author               : thindil <thindil@vallheru.net>
  *   @author               : eyescream <tduda@users.sourceforge.net>
  *   @version              : 1.5
- *   @since                : 03.02.2012
+ *   @since                : 12.04.2012
  *
  */
 
@@ -219,12 +219,21 @@ if (isset ($_GET['daj']))
 	  {
 	    $strName = $miks->fields['name']." (moc:".$miks -> fields['power'].")";
 	  }
-        $smarty -> assign ( array("Id" => $_GET['daj'], 
-            "Name" => $strName, 
-            "Amount" => $miks -> fields['amount'],
-            "Agive" => A_GIVE,
-            "Playerid" => PLAYER_ID,
-            "Tamount" => T_AMOUNT));
+	$objMembers = $db->Execute("SELECT `id`, `user` FROM `players` WHERE `tribe`=".$player->tribe);
+	$arrMembers = array();
+	while (!$objMembers->EOF)
+	  {
+	    $arrMembers[$objMembers->fields['id']] = $objMembers->fields['user'];
+	    $objMembers->MoveNext();
+	  }
+	$objMembers->Close();
+        $smarty -> assign(array("Id" => $_GET['daj'], 
+				"Members" => $arrMembers,
+				"Name" => $strName, 
+				"Amount" => $miks -> fields['amount'],
+				"Agive" => A_GIVE,
+				"Playerid" => PLAYER_ID,
+				"Tamount" => T_AMOUNT));
         $miks -> Close();
     }
     if (isset ($_GET['step3']) && $_GET['step3'] == 'add') 

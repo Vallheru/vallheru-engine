@@ -22,7 +22,7 @@
 {if $Give != ""}
     {if $Step4 == ""}
         <form method=post action="tribeherbs.php?daj={$Itemid}&amp;step4=add">
-            {$Giveplayer} <input type="text" name="did" size="5" /><br />
+            {$Giveplayer} {html_options name=did options=$Members}<br />
             <input type="text" name="ilosc" size="5" /> {$Nameherb} {$Tamount} {$Tamount2} {$Hamount2}.<br />
             <input type="hidden" name="min" value="{$Nameherb}" />
             <input type="submit" value="{$Agive}" /><br />

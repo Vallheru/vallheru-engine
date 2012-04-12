@@ -167,7 +167,7 @@
 
 {if $Action == 'give'}
     <form method="post" action="tribeastral.php?action=give&amp;step=piece">
-        {$Addto} <input type="text" name="pid" size="5" /> <select name="name">
+        {$Addto} {html_options name=pid options=$Members} <select name="name">
             {section name=giveastral loop=$Inames}
                 <option value="{$smarty.section.giveastral.index}">{$Inames[giveastral]}</option>
             {/section}
@@ -177,14 +177,14 @@
         <input type="submit" value="{$Agive}" />
     </form><br />
     <form method="post" action="tribeastral.php?action=give&amp;step=plan">
-	<input type="submit" value="{$Agive}" /> {$Taplan} <input type="text" name="pid" size="5" /> <select name="name">
+	<input type="submit" value="{$Agive}" /> {$Taplan} {html_options name=pid options=$Members} <select name="name">
             {section name=giveastral2 loop=$Inames}
                 <option value="{$smarty.section.giveastral2.index}">{$Inames[giveastral2]}</option>
             {/section}
         </select>
     </form><br />
     <form method="post" action="tribeastral.php?action=give&amp;step=all">
-        {$Addto2} <input type="text" name="pid" size="5" /> <select name="name">
+        {$Addto2} {html_options name=pid options=$Members} <select name="name">
             {section name=giveastral2 loop=$Inames}
                 <option value="{$smarty.section.giveastral2.index}">{$Inames[giveastral2]}</option>
             {/section}
@@ -193,7 +193,7 @@
         <input type="submit" value="{$Agive}" />
     </form><br />
     <form method="post" action="tribeastral.php?action=give&amp;step=component">
-        {$Addto3} <input type="text" name="pid" size="5" /> <select name="name">
+        {$Addto3} {html_options name=pid options=$Members} <select name="name">
             {section name=giveastral3 loop=$Inames2}
                 <option value="{$smarty.section.giveastral3.index}">{$Inames2[giveastral3]}</option>
             {/section}

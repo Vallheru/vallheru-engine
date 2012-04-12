@@ -8,7 +8,7 @@
  *   @author               : thindil <thindil@vallheru.net>
  *   @author               : eyescream <tduda@users.sourceforge.net>
  *   @version              : 1.5
- *   @since                : 10.04.2012
+ *   @since                : 12.04.2012
  *
  */
 
@@ -413,6 +413,14 @@ if (isset($_GET['action']) && $_GET['action'] == 'give')
     }
     $arrNames = array_merge($arrMaps, $arrPlans, $arrRecipes);
     $arrNames2 = array_merge($arrCompnames[0], $arrCompnames[1], $arrCompnames[2]);
+    $objMembers = $db->Execute("SELECT `id`, `user` FROM `players` WHERE `tribe`=".$player->tribe);
+    $arrMembers = array();
+    while (!$objMembers->EOF)
+      {
+	$arrMembers[$objMembers->fields['id']] = $objMembers->fields['user'];
+	$objMembers->MoveNext();
+      }
+    $objMembers->Close();
     $smarty -> assign(array("Addto" => ADD_TO,
                             "Piecenumber" => PIECE_NUMBER,
                             "Astralamount" => ASTRAL_AMOUNT,
@@ -421,7 +429,8 @@ if (isset($_GET['action']) && $_GET['action'] == 'give')
                             "Inames2" => $arrNames2,
                             "Addto2" => ADD_TO2,
                             "Addto3" => ADD_TO3,
-			    "Taplan" => "wszystkie kawałki (mapy, planu, przepisu) graczowi ID:",
+			    "Taplan" => "wszystkie kawałki (mapy, planu, przepisu) graczowi:",
+			    "Members" => $arrMembers,
                             "Message" => ''));
 
     if (isset($_GET['step']) && in_array($_GET['step'], array('piece', 'component', 'all', 'plan')))

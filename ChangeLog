@@ -1,5 +1,10 @@
 2012-04-12  Bartek thindil Jasicki  <thindil@vallheru.net>
 
+	* UPDATE,languages/pl/tribeastral.php, languages/pl/tribeware.php, tribeware.php, tribearmor.php, tribeastral.php, tribeminerals.php, 
+	tribeherbs.php, templates/tribeastral.tpl, templates/tribeware.tpl, templates/tribearmor.tpl, templates/tribeminerals.tpl, 
+	templates/tribeherbs.tpl, templates/layout1/tribeware.tpl, templates/layout1/tribeastral.tpl, templates/layout1/tribearmor.tpl,
+	templates/layout1/tribeherbs.tpl, templates/layou1/tribeherbs.tpl: 
+	added list of tribe members
 	* UPDATE,alchemik.php:
 	raised chances for made astral potions
 

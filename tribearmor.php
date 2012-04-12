@@ -8,7 +8,7 @@
  *   @author               : thindil <thindil@vallheru.net>
  *   @author               : eyescream <tduda@users.sourceforge.net>
  *   @version              : 1.5
- *   @since                : 13.03.2012
+ *   @since                : 12.04.2012
  *
  */
 
@@ -335,11 +335,20 @@ if (isset ($_GET['daj']))
 	  {
 	    $intAmount = $name->fields['wt'];
 	  }
+	$objMembers = $db->Execute("SELECT `id`, `user` FROM `players` WHERE `tribe`=".$player->tribe);
+	$arrMembers = array();
+	while (!$objMembers->EOF)
+	  {
+	    $arrMembers[$objMembers->fields['id']] = $objMembers->fields['user'];
+	    $objMembers->MoveNext();
+	  }
+	$objMembers->Close();
         $smarty -> assign(array("Amount" => $intAmount, 
                                 "Name" => $name -> fields['name'],
+				"Members" => $arrMembers,
                                 "Agive" => A_GIVE,
                                 "Tamount" => T_AMOUNT,
-                                "Playerid" => PLAYER_ID));
+                                "Playerid" => "graczowi"));
         $name -> Close();
     }
     if (isset ($_GET['step3']) && $_GET['step3'] == 'add') 
