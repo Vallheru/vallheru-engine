@@ -8,7 +8,7 @@
  *   @author               : thindil <thindil@vallheru.net>
  *   @author               : eyescream <tduda@users.sourceforge.net>
  *   @version              : 1.5
- *   @since                : 04.04.2012
+ *   @since                : 12.04.2012
  *
  */
 
@@ -69,7 +69,7 @@ if (isset ($_GET['daj']))
     define("YOU_GIVE2", ", ID ");
     define("YOU_GET", "Dostałeś od klanu ");
     define("A_GIVE", "Daj");
-    define("PLAYER_ID", "graczowi ID");
+    define("PLAYER_ID", "graczowi");
 }
 
 if (isset ($_GET['step']) && $_GET['step'] == 'daj') 

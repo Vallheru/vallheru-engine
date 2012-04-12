@@ -4,11 +4,11 @@
  *   Polish language for tribe astral vault
  *
  *   @name                 : tribeastral.php                            
- *   @copyright            : (C) 2006,2007 Vallheru Team based on Gamers-Fusion ver 2.5
- *   @author               : thindil <thindil@users.sourceforge.net>
+ *   @copyright            : (C) 2006,2007,2012 Vallheru Team based on Gamers-Fusion ver 2.5
+ *   @author               : thindil <thindil@vallheru.net>
  *   @author               : eyescream <tduda@users.sourceforge.net>
- *   @version              : 1.3
- *   @since                : 07.02.2007
+ *   @version              : 1.5
+ *   @since                : 12.04.2012
  *
  */
 
@@ -130,7 +130,7 @@ if (isset($_GET['action']) && $_GET['action'] == 'add')
 
 if (isset($_GET['action']) && $_GET['action'] == 'give')
 {
-    define("ADD_TO", "Daj kawałek komponentu (mapy, planu, przepisu) graczowi ID:");
+    define("ADD_TO", "Daj kawałek komponentu (mapy, planu, przepisu) graczowi:");
     define("PIECE_NUMBER", "numer");
     define("ASTRAL_AMOUNT", "ilość");
     define("A_GIVE", "Daj");
@@ -138,8 +138,8 @@ if (isset($_GET['action']) && $_GET['action'] == 'give')
     define("NO_PERM", "Nie masz uprawnień aby tutaj przebywać!");
     define("YOU_GIVE", "Przekazano z astralnego skarbca klanu");
     define("YOU_GET", "Dostałeś od klanu");
-    define("ADD_TO2", "Daj kompletny komponent (mapa, plan, przepis) graczowi ID:");
-    define("ADD_TO3", "Daj przedmiot (komponent, konstrukcję, miksturę) graczowi ID:");
+    define("ADD_TO2", "Daj kompletny komponent (mapa, plan, przepis) graczowi:");
+    define("ADD_TO3", "Daj przedmiot (komponent, konstrukcję, miksturę) graczowi:");
     define("TO_PLAYER1", " członkowi klanu ");
     define("TO_PLAYER2", " , ID ");
     define("NO_PLAYER", "Nie ma takiego gracza!");
