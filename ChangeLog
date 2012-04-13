@@ -1,3 +1,8 @@
+2012-04-13  Bartek thindil Jasicki  <thindil@vallheru.net>
+
+	* UPDATE,tribearmor.php, tribeastral.php, tribeherbs.php, tribeminerals.php, tribeware.php:
+	added member ID to list
+
 2012-04-12  Bartek thindil Jasicki  <thindil@vallheru.net>
 
 	* UPDATE,languages/pl/tribeastral.php, languages/pl/tribeware.php, tribeware.php, tribearmor.php, tribeastral.php, tribeminerals.php, 

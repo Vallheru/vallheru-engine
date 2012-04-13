@@ -7,7 +7,7 @@
  *   @copyright            : (C) 2012 Vallheru Team based on Gamers-Fusion ver 2.5
  *   @author               : thindil <thindil@vallheru.net>
  *   @version              : 1.5
- *   @since                : 12.04.2012
+ *   @since                : 13.04.2012
  *
  */
 
@@ -174,7 +174,7 @@ if (isset ($_GET['daj']) && $_GET['daj'])
     $arrMembers = array();
     while (!$objMembers->EOF)
       {
-	$arrMembers[$objMembers->fields['id']] = $objMembers->fields['user'];
+	$arrMembers[$objMembers->fields['id']] = $objMembers->fields['user'].' ID:'.$objMembers->fields['id'];
 	$objMembers->MoveNext();
       }
     $objMembers->Close();

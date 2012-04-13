@@ -8,7 +8,7 @@
  *   @author               : thindil <thindil@vallheru.net>
  *   @author               : eyescream <tduda@users.sourceforge.net>
  *   @version              : 1.5
- *   @since                : 12.04.2012
+ *   @since                : 13.04.2012
  *
  */
 
@@ -223,7 +223,7 @@ if (isset ($_GET['daj']))
 	$arrMembers = array();
 	while (!$objMembers->EOF)
 	  {
-	    $arrMembers[$objMembers->fields['id']] = $objMembers->fields['user'];
+	    $arrMembers[$objMembers->fields['id']] = $objMembers->fields['user'].' ID:'.$objMembers->fields['id'];
 	    $objMembers->MoveNext();
 	  }
 	$objMembers->Close();
