@@ -7,7 +7,7 @@
  *   @copyright            : (C) 2004,2005,2006,2007,2011,2012 Vallheru Team based on Gamers-Fusion ver 2.5
  *   @author               : thindil <thindil@vallheru.net>
  *   @version              : 1.5
- *   @since                : 11.04.2012
+ *   @since                : 13.04.2012
  *
  */
 
@@ -821,11 +821,18 @@ if (isset ($_GET['read']))
 	$objMails->MoveNext();
       }    
     $objPeople = $db->Execute("SELECT `id`, `user`, `tribe` FROM `players` WHERE `id` IN (".implode(',', $arrSenderid).");") or die($db->ErrorMsg());
+    $arrNames = array();
     while (!$objPeople->EOF)
       {
-	$intKey = array_search($objPeople->fields['id'], $arrSenderid);
-	$arrSender[$intKey] = $arrTags[$objPeople->fields['tribe']][0]." ".$objPeople->fields['user']." ".$arrTags[$objPeople->fields['tribe']][1].' (ID: '.$objPeople->fields['id'].')';
+	$arrNames[$objPeople->fields['id']] = $arrTags[$objPeople->fields['tribe']][0]." ".$objPeople->fields['user']." ".$arrTags[$objPeople->fields['tribe']][1].' (ID: '.$objPeople->fields['id'].')';
 	$objPeople->MoveNext();
+      }
+    for ($i = 0; $i < count($arrSenderid); $i++)
+      {
+	if (array_key_exists($arrSenderid[$i], $arrNames))
+	  {
+	    $arrSender[$i] = $arrNames[$arrSenderid[$i]];
+	  }
       }
     $objPeople->Close();
     $objMails->Close();
