@@ -7,7 +7,7 @@
  *   @copyright            : (C) 2012 Vallheru Team based on Gamers-Fusion ver 2.5
  *   @author               : thindil <thindil@vallheru.net>
  *   @version              : 1.5
- *   @since                : 11.04.2012
+ *   @since                : 13.04.2012
  *
  */
 
@@ -246,7 +246,7 @@ else
 	  }
 	if (isset ($_GET['step3']) && $_GET['step3'] == 'set') 
 	  {
-	    $ranks = $db -> Execute("select id, rank1, rank2, rank3, rank4, rank5, rank6, rank7, rank8, rank9, rank10 from tribe_rank where tribe_id=".$mytribe -> fields['id']);
+	    $ranks = $db -> Execute("SELECT id, rank1, rank2, rank3, rank4, rank5, rank6, rank7, rank8, rank9, rank10 FROM tribe_rank WHERE tribe_id=".$mytribe -> fields['id']);
 	    if (!$ranks -> fields['id']) 
 	      {
 		$smarty -> assign(array("Empty" => 1,
@@ -256,16 +256,9 @@ else
 	      } 
 	    else 
 	      {
-		$smarty -> assign(array("Rank1" => $ranks -> fields['rank1'], 
-					"Rank2" => $ranks -> fields['rank2'], 
-					"Rank3" => $ranks -> fields['rank3'], 
-					"Rank4" => $ranks -> fields['rank4'], 
-					"Rank5" => $ranks -> fields['rank5'], 
-					"Rank6" => $ranks -> fields['rank6'], 
-					"Rank7" => $ranks -> fields['rank7'], 
-					"Rank8" => $ranks -> fields['rank8'], 
-					"Rank9" => $ranks -> fields['rank9'], 
-					"Rank10" => $ranks -> fields['rank10'], 
+		$arrRanks = array($ranks -> fields['rank1'], $ranks -> fields['rank2'], $ranks -> fields['rank3'], $ranks -> fields['rank4'], $ranks -> fields['rank5'], $ranks -> fields['rank6'], $ranks -> fields['rank7'], $ranks -> fields['rank8'], $ranks -> fields['rank9'], $ranks -> fields['rank10']);
+		$smarty -> assign(array("Ranks" => $arrRanks,
+					"Members" => $arrMembers,
 					"Empty" => 0,
 					"Editranks" => EDIT_RANKS,
 					"Asave" => A_SAVE,
@@ -306,21 +299,27 @@ else
 		error (NO_RANKS);
 	      }
 	    $test -> Close();
-	    $rank = $db -> Execute("select rank1, rank2, rank3, rank4, rank5, rank6, rank7, rank8, rank9, rank10 from tribe_rank where tribe_id=".$mytribe -> fields['id']);
+	    $rank = $db -> Execute("SELECT rank1, rank2, rank3, rank4, rank5, rank6, rank7, rank8, rank9, rank10 FROM tribe_rank WHERE tribe_id=".$mytribe -> fields['id']);
 	    $name = array('rank1','rank2','rank3','rank4','rank5','rank6','rank7','rank8','rank9','rank10');
 	    $arrname = array();
-	    $j = 0;
-	    for ($i=0;$i<10;$i++) 
+	    foreach ($name as $strName)
 	      {
-		$number = $name[$i];
-		if ($rank -> fields[$number]) 
+		if ($rank->fields[$strName])
 		  {
-		    $arrname[$j] = $rank -> fields[$number];
-		    $j = $j + 1;
+		    $arrname[] = $rank->fields[$strName];
 		  }
 	      }
 	    $rank -> Close();
+	    $objMembers = $db -> Execute("SELECT `id`, `user` FROM `players` WHERE `tribe`=".$mytribe -> fields['id']." AND `id`!=".$mytribe -> fields['owner']);
+	    $arrMembers = array();
+	    while (!$objMembers -> EOF)
+	      {
+		$arrMembers[$objMembers->fields['id']] = $objMembers -> fields['user'].' ID:'.$objMembers->fields['id'];
+		$objMembers -> MoveNext();
+	      }
+	    $objMembers -> Close();
 	    $smarty -> assign (array("Rank" => $arrname,
+				     "Members" => $arrMembers,
 				     "Aset" => A_SET,
 				     "Setrank" => SET_RANK,
 				     "Rankplayer" => RANK_PLAYER));
@@ -351,15 +350,11 @@ else
 	  }
 	if (!isset ($_GET['step3'])) 
 	  {
-	    $objMembers = $db -> Execute("SELECT user, id FROM players WHERE tribe=".$mytribe -> fields['id']." AND id!=".$mytribe -> fields['owner']);
+	    $objMembers = $db -> Execute("SELECT `id`, `user` FROM `players` WHERE `tribe`=".$mytribe -> fields['id']." AND `id`!=".$mytribe -> fields['owner']);
 	    $arrMembers = array();
-	    $arrMemid = array();
-	    $i = 0;
 	    while (!$objMembers -> EOF)
 	      {
-		$arrMembers[$i] = $objMembers -> fields['user'];
-		$arrMemid[$i] = $objMembers -> fields['id'];
-		$i = $i + 1;
+		$arrMembers[$objMembers->fields['id']] = $objMembers -> fields['user'].' ID:'.$objMembers->fields['id'];
 		$objMembers -> MoveNext();
 	      }
 	    $objMembers -> Close();
@@ -367,27 +362,13 @@ else
 	      {
 		$_GET['next'] = '';
 	      }
+	    $arrPerms = array(T_PERM1, T_PERM2, T_PERM3, T_PERM4, T_PERM5, T_PERM6, T_PERM7, T_PERM8, T_PERM9, T_PERM10, T_PERM11, T_PERM12, T_PERM13, T_PERM14, T_PERM15);
 	    $smarty -> assign(array("Perminfo" => PERM_INFO,
-				    "Tperm1" => T_PERM1,
-				    "Tperm2" => T_PERM2,
-				    "Tperm3" => T_PERM3,
-				    "Tperm4" => T_PERM4,
-				    "Tperm5" => T_PERM5,
-				    "Tperm6" => T_PERM6,
-				    "Tperm7" => T_PERM7,
-				    "Tperm8" => T_PERM8,
-				    "Tperm9" => T_PERM9,
-				    "Tperm10" => T_PERM10,
-				    "Tperm11" => T_PERM11,
-				    "Tperm12" => T_PERM12,
-				    "Tperm13" => T_PERM13,
-				    "Tperm14" => T_PERM14,
-				    "Tperm15" => T_PERM15,
+				    "Tperms" => $arrPerms,
 				    "Asave" => A_SAVE,
 				    "Anext" => A_NEXT,
 				    "Next" => $_GET['next'],
 				    "Members" => $arrMembers,
-				    "Memid" => $arrMemid,
 				    "Yes" => YES,
 				    "No" => NO));
 	    if (isset($_GET['next']) && $_GET['next'] == 'add')
@@ -397,7 +378,7 @@ else
 		    error(ERROR);
 		  }
 		checkvalue($_POST['memid']);
-		$objTest = $db -> Execute("SELECT * FROM tribe_perm WHERE player=".$_POST['memid']);
+		$objTest = $db -> Execute("SELECT * FROM tribe_perm WHERE player=".$_POST['memid']) or die ($db->ErrorMsg());
 		$arrTest = array($objTest -> fields['messages'],
 				 $objTest -> fields['wait'],
 				 $objTest -> fields['kick'],
@@ -416,21 +397,21 @@ else
 		$objTest -> Close();
 		$objName = $db -> Execute("SELECT user FROM players WHERE id=".$_POST['memid']);
 		$arrSelected = array();
-		$i = 0;
 		foreach ($arrTest as $intTest)
 		  {
-		    if ($intTest)
+		    if ($intTest == 1)
 		      {
-			$arrSelected[$i] = 'selected';
+			$arrSelected[] = ' selected="selected"';
 		      }
 		    else
 		      {
-			$arrSelected[$i] = '';
+			$arrSelected[] = '';
 		      }
-		    $i ++;
 		  }
+		$arrNames = array('messages', 'wait', 'kick', 'army', 'attack', 'loan', 'armory', 'warehouse', 'bank', 'herbs', 'forum', 'ranks', 'mail', 'info', 'astralvault');
 		$smarty -> assign(array("Memid2" => $_POST['memid'],
 					"Tselected" => $arrSelected,
+					"Tnames" => $arrNames,
 					"Tname" => $objName -> fields['user'],
 					"Tuser" => T_USER));
 		$objName -> Close();
@@ -453,18 +434,18 @@ else
 			  $_POST['mail'], 
 			  $_POST['info'],
 			  $_POST['astralvault']);
+	    checkvalue($_POST['memid']);
+	    $ttribe = $db -> Execute("SELECT tribe FROM players WHERE id=".$_POST['memid']);
+	    if ($ttribe -> fields['tribe'] != $mytribe -> fields['id']) 
+	      {
+		error (NOT_IN_CLAN." <a href=\"tribeadmin.php\">".BACK_TO."</a>");
+	      }
 	    for ($i=0; $i<15; $i++) 
 	      {
 		$test[$i] = intval($test[$i]);
 		if ($test[$i] != 0 && $test[$i] != 1)
 		  {
 		    error(ERROR);
-		  }
-		checkvalue($_POST['memid']);
-		$ttribe = $db -> Execute("SELECT tribe FROM players WHERE id=".$_POST['memid']);
-		if ($ttribe -> fields['tribe'] != $mytribe -> fields['id']) 
-		  {
-		    error (NOT_IN_CLAN." <a href=\"tribeadmin.php\">".BACK_TO."</a>");
 		  }
 	      }
 	  }
@@ -473,7 +454,7 @@ else
 	    $objTest = $db -> Execute("SELECT id FROM tribe_perm WHERE tribe=".$mytribe -> fields['id']." AND player=".$_POST['memid']);
 	    if (!$objTest -> fields['id'])
 	      {
-		$db -> Execute("INSERT INTO tribe_perm (tribe, player, messages, wait, kick, army, attack, loan, armory, warehouse, bank, herbs, forum, ranks, mail, info, astralvault) VALUES(".$mytribe -> fields['id'].", ".$_POST['memid'].", ".$_POST['messages'].", ".$_POST['wait'].", ".$_POST['kick'].", ".$_POST['army'].", ".$_POST['attack'].", ".$_POST['loan'].", ".$_POST['armory'].", ".$_POST['warehouse'].", ".$_POST['bank'].", ".$_POST['herbs'].", ".$_POST['forum'].", ".$_POST['ranks'].", ".$_POST['mail'].", ".$_POST['info'].", ".$_POST['astralvault'].")");
+		$db -> Execute("INSERT INTO tribe_perm (tribe, player, messages, wait, kick, army, attack, loan, armory, warehouse, bank, herbs, forum, ranks, mail, info, astralvault) VALUES(".$mytribe -> fields['id'].", ".$_POST['memid'].", ".$_POST['messages'].", ".$_POST['wait'].", ".$_POST['kick'].", ".$_POST['army'].", ".$_POST['attack'].", ".$_POST['loan'].", ".$_POST['armory'].", ".$_POST['warehouse'].", ".$_POST['bank'].", ".$_POST['herbs'].", ".$_POST['forum'].", ".$_POST['ranks'].", ".$_POST['mail'].", ".$_POST['info'].", ".$_POST['astralvault'].")") or die($db->ErrorMsg());
 	      }
 	    else
 	      {
@@ -818,9 +799,18 @@ else
 	  {
 	    error (NO_PERM2);
 	  }
+	$objMembers = $db -> Execute("SELECT `id`, `user` FROM `players` WHERE `tribe`=".$mytribe -> fields['id']." AND `id`!=".$mytribe -> fields['owner']);
+	$arrMembers = array();
+	while (!$objMembers -> EOF)
+	  {
+	    $arrMembers[$objMembers->fields['id']] = $objMembers -> fields['user'].' ID:'.$objMembers->fields['id'];
+	    $objMembers -> MoveNext();
+	  }
+	$objMembers -> Close();
 	$smarty -> assign(array("Kickid" => KICK_ID,
 				"Fromclan" => FROM_CLAN,
-				"Akick" => A_KICK2));
+				"Akick" => A_KICK2,
+				"Members" => $arrMembers));
 	if (isset ($_GET['action']) && $_GET['action'] == 'kick') 
 	  {
 	    if (!isset($_POST['id']))
@@ -873,10 +863,19 @@ else
 	  {
 	    error (NO_PERM2);
 	  }
+	$objMembers = $db->Execute("SELECT `id`, `user` FROM `players` WHERE `tribe`=".$player->tribe);
+	$arrMembers = array();
+	while (!$objMembers->EOF)
+	  {
+	    $arrMembers[$objMembers->fields['id']] = $objMembers->fields['user'].' ID:'.$objMembers->fields['id'];
+	    $objMembers->MoveNext();
+	  }
+	$objMembers->Close();
 	$smarty -> assign(array("Aloan2" => A_LOAN2,
 				"Playerid" => PLAYER_ID,
 				"Goldcoins" => GOLD_COINS,
-				"Mithcoins" => MITHRIL_COINS));
+				"Mithcoins" => MITHRIL_COINS,
+				"Members" => $arrMembers));
 	if (isset($_GET['action']) && $_GET['action'] == 'loan') 
 	  {
 	    integercheck($_POST['amount']);

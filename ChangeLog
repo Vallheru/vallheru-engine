@@ -1,5 +1,7 @@
 2012-04-13  Bartek thindil Jasicki  <thindil@vallheru.net>
 
+	* UPDATE,languages/pl/tribeadmin.php, templates/layout1/tribeadmin.tpl, templates/tribeadmin.tpl, tribeadmin.php:
+	added list of of tribe members, some code cleanup
 	* UPDATE,tribearmor.php, tribeastral.php, tribeherbs.php, tribeminerals.php, tribeware.php:
 	added member ID to list
 

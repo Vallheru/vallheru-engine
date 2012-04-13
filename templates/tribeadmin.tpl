@@ -44,31 +44,17 @@
         {if $Empty == "1"}
             {$Noranks2}<br />
             <form method="post" action="tribeadmin.php?step2=rank&amp;step3=set&amp;step4=add">
-                1 {$Rank} <input type="text" name="rank1" /><br />
-            	2 {$Rank} <input type="text" name="rank2" /><br />
-            	3 {$Rank} <input type="text" name="rank3" /><br />
-            	4 {$Rank} <input type="text" name="rank4" /><br />
-            	5 {$Rank} <input type="text" name="rank5" /><br />
-            	6 {$Rank} <input type="text" name="rank6" /><br />
-            	7 {$Rank} <input type="text" name="rank7" /><br />
-            	8 {$Rank} <input type="text" name="rank8" /><br />
-            	9 {$Rank} <input type="text" name="rank9" /><br />
-            	10 {$Rank} <input type="text" name="rank10" /><br />
+	        {for $rank=1 to 10}
+		    {$rank} {$Rank} <input type="text" name="rank{$rank}" /><br />
+		{/for}
             <input type="submit" value="{$Amake}" /></form><br />
         {/if}
         {if $Empty != "1"}
             {$Editranks}<br />
             <form method="post" action="tribeadmin.php?step2=rank&amp;step3=set&amp;step4=edit">
-                1 {$Rank} <input type="text" name="rank1" value="{$Rank1}" /><br />
-                2 {$Rank} <input type="text" name="rank2" value="{$Rank2}" /><br />
-                3 {$Rank} <input type="text" name="rank3" value="{$Rank3}" /><br />
-                4 {$Rank} <input type="text" name="rank4" value="{$Rank4}" /><br />
-                5 {$Rank} <input type="text" name="rank5" value="{$Rank5}" /><br />
-                6 {$Rank} <input type="text" name="rank6" value="{$Rank6}" /><br />
-                7 {$Rank} <input type="text" name="rank7" value="{$Rank7}" /><br />
-                8 {$Rank} <input type="text" name="rank8" value="{$Rank8}" /><br />
-                9 {$Rank} <input type="text" name="rank9" value="{$Rank9}" /><br />
-                10 {$Rank} <input type="text" name="rank10" value="{$Rank10}" /><br />
+	        {foreach $Ranks as $rank}
+		    {$rank@iteration} {$Rank} <input type="text" name="rank{$rank@iteration}" value="{$rank}" /><br />
+		{/foreach}
                 <input type="submit" value="{$Asave}" /></form><br />
         {/if}
     {/if}
@@ -78,7 +64,7 @@
             {section name=tribes3 loop=$Rank}
                 <option value="{$Rank[tribes3]}">{$Rank[tribes3]}</option>
             {/section}
-            </select> {$Rankplayer}: <input type="tekst" name="rid" /><br />
+            </select> {$Rankplayer}: {html_options name=rid options=$Members}<br />
             <input type="submit" value="{$Aset}" />
     	</form><br />
     {/if}
@@ -88,11 +74,7 @@
         {$Perminfo}<br />
         {if $Next == ""}
             <form method="post" action="tribeadmin.php?step2=permissions&amp;next=add">
-                <select name="memid">
-                {section name=tribes6 loop=$Memid}
-                    <option value="{$Memid[tribes6]}">{$Members[tribes6]}</option>
-                {/section}
-                </select>
+		{html_options name=memid options=$Members}
                 <input type="submit" value="{$Anext}" />
             </form>
         {/if}
@@ -101,81 +83,12 @@
             {$Tuser} <b>{$Tname}</b>
             <form method="post" action="tribeadmin.php?step2=permissions&amp;step3=add">
                 <input type="hidden" name="memid" value="{$Memid2}" />
-                {$Tperm1}: <select name="messages">
-                    <option value="0">{$No}</option>
-                    <option value="1" {$Tselected[0]}>{$Yes}</option>
-                </select>
-                <br />
-                {$Tperm2}: <select name="wait">
-                    <option value="0">{$No}</option>
-                    <option value="1" {$Tselected[1]}>{$Yes}</option>
-                </select>
-                <br />
-                {$Tperm3}: <select name="kick">
-                    <option value="0">{$No}</option>
-                    <option value="1" {$Tselected[2]}>{$Yes}</option>
-                </select>
-                <br />
-                {$Tperm4}: <select name="army">
-                    <option value="0">{$No}</option>
-                    <option value="1" {$Tselected[3]}>{$Yes}</option>
-                </select>
-                <br />
-                {$Tperm5}: <select name="attack">
-                    <option value="0">{$No}</option>
-                    <option value="1" {$Tselected[4]}>{$Yes}</option>
-                </select>
-                <br />
-                {$Tperm6}: <select name="loan">
-                    <option value="0">{$No}</option>
-                    <option value="1" {$Tselected[5]}>{$Yes}</option>
-                </select>
-                <br />
-                {$Tperm7}: <select name="armory">
-                    <option value="0">{$No}</option>
-                    <option value="1" {$Tselected[6]}>{$Yes}</option>
-                </select>
-                <br />
-                {$Tperm8}: <select name="warehouse">
-                    <option value="0">{$No}</option>
-                    <option value="1" {$Tselected[7]}>{$Yes}</option>
-                </select>
-                <br />
-                {$Tperm9}: <select name="bank">
-                    <option value="0">{$No}</option>
-                    <option value="1" {$Tselected[8]}>{$Yes}</option>
-                </select>
-                <br />
-                {$Tperm10}: <select name="herbs">
-                    <option value="0">{$No}</option>
-                    <option value="1" {$Tselected[9]}>{$Yes}</option>
-                </select>
-                <br />
-                {$Tperm11}: <select name="forum">
-                    <option value="0">{$No}</option>
-                    <option value="1" {$Tselected[10]}>{$Yes}</option>
-                </select>
-                <br />
-                {$Tperm12}: <select name="ranks">
-                    <option value="0">{$No}</option>
-                    <option value="1" {$Tselected[11]}>{$Yes}</option>
-                </select>
-                <br />
-                {$Tperm13}: <select name="mail">
-                    <option value="0">{$No}</option>
-                    <option value="1" {$Tselected[12]}>{$Yes}</option>
-                </select>
-                <br />
-                {$Tperm14}: <select name="info">
-                    <option value="0">{$No}</option>
-                    <option value="1" {$Tselected[13]}>{$Yes}</option>
-                </select>
-                <br />
-                {$Tperm15}: <select name="astralvault">
-                    <option value="0">{$No}</option>
-                    <option value="1" {$Tselected[14]}>{$Yes}</option>
-                </select>
-                <br />
+		{for $i=0 to 14}
+		    {$Tperms[$i]}: <select name="{$Tnames[$i]}">
+		        <option value="0">{$No}</option>
+			<option value="1"{$Tselected[$i]}>{$Yes}</option>
+		    </select><br />
+		{/for}
                 <input type="submit" value="{$Asave}" />
             </form>
         {/if}
@@ -275,15 +188,15 @@
 {/if}
 {if $Step2 == "kick"}
     <form method="post" action="tribeadmin.php?step2=kick&amp;action=kick">
-        {$Kickid} <input type="text" size="5" name="id" /> {$Fromclan}. <input type="submit" value="{$Akick}" />
+        {$Kickid} {html_options name=id options=$Members} {$Fromclan}. <input type="submit" value="{$Akick}" />
     </form>
 {/if}
 {if $Step2 == "loan"}
     <form method="post" action="tribeadmin.php?step2=loan&amp;action=loan">
-        {$Aloan2} <input type="text" size="5" name="amount" /> <select name="currency">
+        <input type="submit" value="{$Aloan2}" /> <input type="text" size="5" name="amount" /> <select name="currency">
         <option value="credits">{$Goldcoins}</option>
         <option value="platinum">{$Mithcoins}</option></select>
-        {$Playerid} <input type="text" size="5" name="id" />. <input type="submit" value="{$Aloan2}" />
+        {$Playerid} {html_options name=id options=$Members}.
     </form>
 {/if}
 {if $Step2 == "te"}

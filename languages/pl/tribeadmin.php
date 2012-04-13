@@ -7,7 +7,7 @@
  *   @copyright            : (C) 2012 Vallheru Team based on Gamers-Fusion ver 2.5
  *   @author               : thindil <thindil@vallheru.net>
  *   @version              : 1.5
- *   @since                : 11.04.2012
+ *   @since                : 13.04.2012
  *
  */
 
@@ -70,7 +70,7 @@ if (isset ($_GET['step2']) && $_GET['step2'] == 'rank')
     define("A_MAKE", "Utwórz");
     define("A_SAVE", "Zapisz");
     define("SET_RANK", "Ustaw rangę");
-    define("RANK_PLAYER", "graczowi o ID");
+    define("RANK_PLAYER", "graczowi");
     define("A_SET", "Ustaw");
   }
 if (isset ($_GET['step2']) && $_GET['step2'] == 'permissions') 
@@ -218,7 +218,7 @@ if (isset ($_GET['step2']) && $_GET['step2'] == 'kick')
     define("D_ID", "ID ");
     define("NOT_IS", " nie jest już członkiem klanu.");
     define("IS_LEADER", "Nie możesz wyrzucić Przywódcy.");
-    define("KICK_ID", "Wyrzuć ID");
+    define("KICK_ID", "Wyrzuć");
     define("FROM_CLAN", "z klanu");
     define("A_KICK2", "Wyrzuć");
     define("CLAN_KICK1", "Gracz ");
@@ -234,7 +234,7 @@ if (isset ($_GET['step2']) && $_GET['step2'] == 'loan')
     define("SEND_YOU", "Klan pożyczył ci ");
     define("YOU_GIVE", "Pożyczyłeś graczowi o ID ");
     define("A_LOAN2", "Pożycz");
-    define("PLAYER_ID", "osobie o ID ");
+    define("PLAYER_ID", "osobie:");
     define("CLAN_GIVE1", "Klan pożyczył graczowi ");
     define("CLAN_GIVE2", ", ID ");
   }
