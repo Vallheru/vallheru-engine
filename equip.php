@@ -7,7 +7,7 @@
  *   @copyright            : (C) 2004,2005,2006,2007,2011,2012 Vallheru Team based on Gamers-Fusion ver 2.5
  *   @author               : thindil <thindil@vallheru.net>
  *   @version              : 1.5
- *   @since                : 03.03.2012
+ *   @since                : 16.04.2012
  *
  */
 
@@ -101,7 +101,7 @@ function backpack($type, $nameitems, $type2, $smartyname)
         } 
             elseif ($arm -> fields['zr'] > 0) 
         {
-            $agility = "(-".$arm -> fields['zr']."% ".EQUIP_AGI.")";
+            $agility = "(-".$arm -> fields['zr']." ".EQUIP_AGI.")";
         }
             elseif ($arm -> fields['zr'] == 0)
         {
@@ -201,7 +201,7 @@ function backpack($type, $nameitems, $type2, $smartyname)
             } 
                 elseif ($arm1 -> fields['zr'] > 0) 
             {
-                $agility = "(-".$arm1 -> fields['zr']."% ".EQUIP_AGI.")";
+                $agility = "(-".$arm1 -> fields['zr']." ".EQUIP_AGI.")";
             } 
                 else 
             {
