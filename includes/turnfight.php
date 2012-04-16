@@ -7,7 +7,7 @@
  *   @copyright            : (C) 2004,2005,2006,2007,2011,2012 Vallheru Team based on Gamers-Fusion ver 2.5
  *   @author               : thindil <thindil@vallheru.net>
  *   @version              : 1.5
- *   @since                : 16.03.2012
+ *   @since                : 16.04.2012
  *
  */
  
@@ -97,10 +97,10 @@ function turnfight($expgain,$goldgain,$action,$addres)
         $player -> $strStat = $player -> $strStat + $arrEquip[10][2];
     }
 
-    if ($fight -> fields['fight'] == 0 && $title = 'Arena Walk') 
-    {
-        error (NO_ENEMY);
-    }
+    if ($fight -> fields['fight'] == 0 && $title == 'Arena Walk') 
+      {
+	error (NO_ENEMY);
+      }
     $premia = 0;
     $zmeczenie = 0;
     if (empty ($enemy['id'])) 

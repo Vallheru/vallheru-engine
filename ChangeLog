@@ -1,5 +1,7 @@
 2012-04-16  Bartek thindil Jasicki  <thindil@vallheru.net>
 
+	* BUG,includes/turnfight.php: 
+	fixed notice
 	* BUG,equip.php:
 	fixed typo
 
