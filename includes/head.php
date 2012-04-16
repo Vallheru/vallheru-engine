@@ -7,7 +7,7 @@
  *   @copyright            : (C) 2004,2005,2006,2007,2011,2012 Vallheru Team based on Gamers-Fusion ver 2.5
  *   @author               : thindil <thindil@vallheru.net>
  *   @version              : 1.5
- *   @since                : 27.03.2012
+ *   @since                : 16.04.2012
  *
  */
 
@@ -416,7 +416,8 @@ $smarty -> assign (array ("Time" => $time,
                           "Nmap" => N_MAP,
                           "Stephead" => '',
 			  "Filename" => $strFname,
-			  "Message" => ''));
+			  "Message" => '',
+			  "Reportbug" => 'Zgłoś błąd'));
 
 if (isset($_GET['step']) && $strFilename == 'newspaper.php')
 {

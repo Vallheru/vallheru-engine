@@ -7,7 +7,7 @@
  *   @copyright            : (C) 2004,2005,2006,2007,2011,2012 Vallheru Team based on Gamers-Fusion ver 2.5
  *   @author               : thindil <thindil@vallheru.net>
  *   @version              : 1.5
- *   @since                : 19.03.2012
+ *   @since                : 16.04.2012
  *
  */
 
@@ -213,6 +213,14 @@ if (isset($_GET['view']))
      */
     elseif ($_GET['view'] == 'bugreport')
       {
+	if (isset($_GET['loc']))
+	  {
+	    $strLoc = $_GET['loc'];
+	  }
+	else
+	  {
+	    $strLoc = '';
+	  }
 	$smarty -> assign(array("Bugtype" => BUG_TYPE,
 				"Bugtext" => BUG_TEXT,
 				"Bugcode" => BUG_CODE,
@@ -220,7 +228,8 @@ if (isset($_GET['view']))
 				"Bugdesc" => BUG_DESC,
 				"Areport" => A_REPORT,
 				"Bugname" => BUG_NAME,
-				"Buginfo" => BUG_INFO));
+				"Buginfo" => BUG_INFO,
+				"Loc" => $strLoc));
 	/**
 	 * Report bug
 	 */

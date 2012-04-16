@@ -8,7 +8,6 @@
 <link rel="shortcut icon" href="{$Gameadress}/favicon.png" type="image/png"/>
 <meta http-equiv="Content-Type" content="text/html; charset={$Charset}" />
 </head>
-
 <body onload="window.status='{$Gamename}'">
 
 <table width="90%" class="td" cellpadding="0" cellspacing="0" align="center">
@@ -84,6 +83,7 @@
                             <li><a href="account.php">{$Noptions}</a></li>
                             <li><a href="logout.php?did={$Id}">{$Nlogout}</a></li>
                             <li><a href="{$Gameadress}/wiki/" target="_blank">{$Nhelp}</a></li>
+			    <li><a href="account.php?view=bugreport&amp;loc={$Title}">{$Reportbug}</a></li>
                             <li><a href="map.php">{$Nmap}</a><br /><br /></li>
                             {$Special}
                         </ul>

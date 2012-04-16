@@ -64,7 +64,7 @@
             <option value="text">{$Bugtext}</option>
             <option value="code">{$Bugcode}</option>
         </select><br /><br />
-        {$Bugloc}: <input type="text" name="location" size="40" /><br /><br />
+        {$Bugloc}: <input type="text" name="location" size="40" value="{$Loc}" /><br /><br />
         {$Bugdesc}: <textarea name="desc" rows="13" cols="50"></textarea><br /><br />
         <input type="submit" value="{$Areport}" />
     </form>

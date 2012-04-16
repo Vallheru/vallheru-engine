@@ -1,5 +1,7 @@
 2012-04-16  Bartek thindil Jasicki  <thindil@vallheru.net>
 
+	* FEATURE,templates/layout1/account.tpl, templates/layout1/header.tpl, templates/account.tpl, templates/header.tpl, account.php, includes/head.php:
+	added link to bug report
 	* BUG,includes/turnfight.php: 
 	fixed notice
 	* BUG,equip.php:
