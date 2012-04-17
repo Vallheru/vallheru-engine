@@ -1,5 +1,7 @@
 2012-04-17  Bartek thindil Jasicki  <thindil@vallheru.net>
 
+	* BUG,battle.php: 
+	fixed bug with searching players
 	* FEATURE,install/db/update.sql, templates/layout1/tribes.tpl, templates/tribes.tpl, tribes.php:
 	start work on new tribes system
 	* UPDATE,mail.php: 
