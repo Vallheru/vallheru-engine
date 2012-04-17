@@ -7,7 +7,7 @@
  *   @copyright            : (C) 2004,2005,2006,2007,2011,2012 Vallheru Team based on Gamers-Fusion ver 2.5
  *   @author               : thindil <thindil@vallheru.net>
  *   @version              : 1.5
- *   @since                : 13.04.2012
+ *   @since                : 17.04.2012
  *
  */
 
@@ -751,7 +751,15 @@ if (isset ($_GET['send']))
 	    $objTopic = $db->Execute("SELECT max(`topic`) FROM `mail`");
 	    $intTopic = $objTopic->fields['max(`topic`)'] + 1;
 	    $objTopic->Close();
-	    $db -> Execute("INSERT INTO `mail` (`sender`, `senderid`, `owner`, `subject`, `body`, `date`, `topic`) VALUES('".$player -> user."','".$player -> id."',".$arrtest -> fields['id'].",'".M_TITTLE.$arrmessage -> fields['sender'].L_ID.$arrmessage -> fields['senderid']."','".M_TITLE2.$arrmessage -> fields['subject'].M_DATE.$arrmessage -> fields['date'].M_BODY.$arrmessage -> fields['body']."', ".$strDate.", ".$intTopic.")");
+	    $objMessage = $db->Execute("SELECT * FROM `mail` WHERE `topic`=".$arrmessage->fields['topic']." AND `owner`=".$player->id);
+	    $strBody = M_TITLE2.$arrmessage -> fields['subject'].M_DATE.$arrmessage -> fields['date'].M_BODY."<br /><br />";
+	    while (!$objMessage->EOF)
+	      {
+		$strBody .= $objMessage->fields['sender'].' ID: '.$objMessage->fields['senderid'].' napisał(a): <br />'.$objMessage->fields['body']."<br /><br />";
+		$objMessage->MoveNext();
+	      }
+	    $objMessage->Close();
+	    $db -> Execute("INSERT INTO `mail` (`sender`, `senderid`, `owner`, `subject`, `body`, `date`, `topic`) VALUES('".$player -> user."','".$player -> id."',".$arrtest -> fields['id'].",'".M_TITTLE.$arrmessage -> fields['sender'].L_ID.$arrmessage -> fields['senderid']."','".$strBody."', ".$strDate.", ".$intTopic.")");
 	    message('success', YOU_SEND.$arrtest -> fields['user'].".");
 	    $_GET['read'] = $arrmessage->fields['topic'];
 	  }
