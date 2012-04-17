@@ -4,10 +4,10 @@
  *   Players logs
  *
  *   @name                 : logs.php                            
- *   @copyright            : (C) 2011 Vallheru Team based on Gamers-Fusion ver 2.5
- *   @author               : thindil <thindil@tuxfamily.org>
- *   @version              : 1.4
- *   @since                : 01.09.2011
+ *   @copyright            : (C) 2011,2012 Vallheru Team based on Gamers-Fusion ver 2.5
+ *   @author               : thindil <thindil@vallheru.net>
+ *   @version              : 1.5
+ *   @since                : 17.04.2012
  *
  */
 
@@ -28,7 +28,27 @@
 //   Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 //
 
-$objAmount = $db -> Execute("SELECT count(*) FROM `logs`");
+if (isset($_GET['lid']))
+  {
+    $_POST['lid'] = $_GET['lid'];
+  }
+if (isset($_POST['lid']))
+  {
+    checkvalue($_POST['lid']);
+    $strQuery = " WHERE `owner`=".$_POST['lid'];
+    $strPage = '&amp;lid='.$_POST['lid'];
+  }
+else
+  {
+    $strQuery = '';
+    $strPage = '';
+  }
+
+$objAmount = $db -> Execute("SELECT count(*) FROM `logs`".$strQuery);
+if ($objAmount->fields['count(*)'] == 0 && isset($_POST['lid']))
+  {
+    error('Nie ma logów tego gracza. (<a href="'.$_SERVER['PHP_SELF'].'?view=logs">Wróć</a>)');
+  }
 $intPages = ceil($objAmount -> fields['count(*)'] / 50);
 $objAmount -> Close();
 if (isset($_GET['page']))
@@ -44,7 +64,7 @@ else
   {
     $page = 1;
   }
-$objLogs = $db -> SelectLimit("SELECT `owner`, `log` FROM `logs`", 50, 50 * ($page - 1));
+$objLogs = $db -> SelectLimit("SELECT `owner`, `log` FROM `logs`".$strQuery, 50, 50 * ($page - 1));
 $arrOwner = array();
 $arrLog = array();
 while (!$objLogs -> EOF)
@@ -58,6 +78,9 @@ $smarty -> assign(array("Logsinfo" => "Tutaj możesz przeglądać logi z niektó
 			"Lowner" => "Właściciel (ID)",
 			"Ltext" => "Treść",
 			"Lclear" => "Wyczyść",
+			"Tsearch" => "logi gracza o ID:",
+			"Asearch" => "Szukaj",
+			"Lid" => $strPage,
 			"Aowner" => $arrOwner,
 			"Alog" => $arrLog,
 			"Page" => $page,

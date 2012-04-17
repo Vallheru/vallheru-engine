@@ -156,6 +156,9 @@
 
 {if $View == "logs"}
     {$Logsinfo}<br /><br />
+    <form method="post" action="admin.php?view=logs">
+        <input type="submit" value="{$Asearch}" /> {$Tsearch} <input type="text" name="lid" size="5" />
+    </form><br />
     <table align="center" width="75%">
         <tr>
             <td align="center">{$Lowner}</td>
@@ -173,7 +176,7 @@
 	    {if $page == $Page}
 	        {$page}
 	    {else}
-                <a href="admin.php?view=logs&amp;page={$page}">{$page}</a>
+                <a href="admin.php?view=logs&amp;page={$page}{$Lid}">{$page}</a>
 	    {/if}
     	{/for}
     {/if}

@@ -1,3 +1,8 @@
+2012-04-17  Bartek thindil Jasicki  <thindil@vallheru.net>
+
+	* FEATURE,templates/layout1/admin.tpl, templates/layout1/staff.tpl, templates/admin.tpl, templates/staff.tpl, includes/admin/logs.php:
+	added option to show logs for selected players
+
 2012-04-16  Bartek thindil Jasicki  <thindil@vallheru.net>
 
 	* FEATURE,templates/layout1/account.tpl, templates/layout1/header.tpl, templates/account.tpl, templates/header.tpl, account.php, includes/head.php:
