@@ -11,7 +11,7 @@
     {$Showinfo}
     {$Text}
     {section name=ltribes loop=$Tribes}
-        <li><a href="tribes.php?view=view&amp;id={$Tribes[ltribes].id}">{$Tribes[ltribes].name}</a>, {$Leaderid} <a href="view.php?view={$Tribes[ltribes].owner}">{$Tribes[ltribes].owner}</a>.
+        <li><a href="tribes.php?view=view&amp;id={$Tribes[ltribes].id}">{$Tribes[ltribes].name}</a>, {$Leaderid} <a href="view.php?view={$Tribes[ltribes].owner}">{$Tribes[ltribes].ownername}</a>, {$Ttype} {$Tribes[ltribes].level}.
     {/section}
     </ul>
 {/if}
@@ -21,18 +21,20 @@
         <ul>
         <li>{$Yousee}: {$Name}<br /><br />
         {$Logo}
-        {$Leader2} <a href="view.php?view={$Owner}">{$Owner}</a><br /><br />
+        {$Leader2} <a href="view.php?view={$Owner}">{$Ownername}</a><br /><br />
         {$Memamount}: {$Members}<br />
         <a href="tribes.php?view=view&amp;step=members&tid={$Tribeid}">{$Amembers}</a><br />
-        {$Winamount}: {$Wins}<br />
-        {$Lostamount}: {$Lost}<br />
+	{$Tlevel} {$Tlevel2}<br />
+        {$Wins}
+        {$Lost}
         {$Astral}
         {$WWW}<br />
-        {$Pubmessage}<br /><br />
-        <form method="post" action="tribes.php?join={$Tribeid}">
-        {$Jointo} {$Name}<br />
-        <input type="submit" value="{$Ajoin}" />
-        </form>
+        {$Pubmessage}
+	{if $Ptribe == 0}
+            <br /><br /><form method="post" action="tribes.php?join={$Tribeid}">
+                {$Jointo} {$Name}<br />
+            <input type="submit" value="{$Ajoin}" />
+	{/if}
         {if $Asteal != ""}
 	    <br /><br /><a href="tribes.php?view=view&amp;id={$Tribeid}&amp;step=steal">{$Asteal}</a><br />
 	    {if $Asabotage != ""}
@@ -47,6 +49,7 @@
             {$Link[tribes1]}
         {/section}
     {/if}
+    <br /><br /><a href="tribes.php?view=all">{$Aback}</a>
 {/if}
 
 {if $Join != ""}

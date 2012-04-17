@@ -9,7 +9,7 @@
  *   @author               : mori <ziniquel@users.sourceforge.net>
  *   @author               : eyescream <tduda@users.sourceforge.net>
  *   @version              : 1.5
- *   @since                : 18.02.2012
+ *   @since                : 17.04.2012
  *
  */
 
@@ -125,10 +125,27 @@ if (isset ($_GET['view']) && $_GET['view'] == 'all')
     else 
       {
         $smarty -> assign ("Text", "<ul>");
-        $arrTribes = $db->GetAll("SELECT `id`, `name`, `owner` FROM `tribes` ORDER BY `id`");
+        $arrTribes = $db->GetAll("SELECT `id`, `name`, `owner`, `level` FROM `tribes` ORDER BY `id` ASC, `level` DESC");
+	$arrOwners = array();
+	$arrLevels = array('Kryjówka', 'Kamienica', 'Dworek', 'Dwór', 'Zamek');
+	foreach ($arrTribes as &$arrTribe)
+	  {
+	    $arrOwners[] = $arrTribe['owner'];
+	    $arrTribe['ownername'] = 'Nieobecny(a)';
+	    $arrTribe['level'] = $arrLevels[($arrTribe['level'] - 1)];
+	  }
+	$objOwners = $db->Execute("SELECT `id`, `user` FROM `players` WHERE `id` IN (".implode(',', $arrOwners).")");
+	while (!$objOwners->EOF)
+	  {
+	    $intKey = array_search($objOwners->fields['id'], $arrOwners);
+	    $arrTribes[$intKey]['ownername'] = $objOwners->fields['user'];
+	    $objOwners->MoveNext();
+	  }
+	$objOwners->Close();
         $smarty -> assign(array("Tribes" => $arrTribes, 
 				"Showinfo" => SHOW_INFO,
-				"Leaderid" => LEADER_ID));
+				"Leaderid" => "Przywódca: ",
+				"Ttype" => "Typ: "));
       }
   }
 
@@ -140,7 +157,7 @@ if (isset ($_GET['view']) && $_GET['view'] == 'view')
     if (!isset ($_GET['step'])) 
     {
 	checkvalue($_GET['id']);
-        $tribe = $db -> Execute("SELECT `id`, `name`, `owner`, `wygr`, `przeg`, `public_msg`, `www`, `logo` FROM `tribes` WHERE `id`=".$_GET['id']);
+        $tribe = $db -> Execute("SELECT `id`, `name`, `owner`, `wygr`, `przeg`, `public_msg`, `www`, `logo`, `level` FROM `tribes` WHERE `id`=".$_GET['id']);
         if (!$tribe -> fields['id']) 
         {
             error (NO_CLAN);
@@ -186,26 +203,60 @@ if (isset ($_GET['view']) && $_GET['view'] == 'view')
             }
             $strAstral = ASTRAL.$arrAstral[$i]."<br />";
         }
-            else
-        {
-            $strAstral = ASTRAL."Nie rozpoczęto jeszcze prac.<br />";
-        }
+	else
+	  {
+	    if ($tribe->fields['level'] == 5)
+	      {
+		$strAstral = ASTRAL."Nie rozpoczęto jeszcze prac.<br />";
+	      }
+	    else
+	      {
+		$strAstral = '';
+	      }
+	  }
         $objAstral -> Close();
+
+	//Tribe level
+	$arrLevels = array('Kryjówka', 'Kamienica', 'Dworek', 'Dwór', 'Zamek');
+	if ($tribe->fields['level'] == 5)
+	  {
+	    $strWins = WIN_AMOUNT.": ".$tribe->fields['wygr']."<br />";
+	    $strLoses = LOST_AMOUNT.": ".$tribe->fields['przeg']."<br />";
+	  }
+	else
+	  {
+	    $strWins = '';
+	    $strLoses = '';
+	  }
+
+	$objOwner = $db->Execute("SELECT `id`, `user` FROM `players` WHERE `id`=".$tribe->fields['owner']);
+	if (!$objOwner->fields['id'])
+	  {
+	    $strOwner = 'Nieobecny';
+	  }
+	else
+	  {
+	    $strOwner = $objOwner->fields['user'];
+	  }
+	$objOwner->Close();
 
         $smarty -> assign(array("Name" => $tribe -> fields['name'], 
                                 "Owner" => $tribe -> fields['owner'], 
+				"Ownername" => $strOwner,
                                 "Members" => $memnum, 
                                 "Tribeid" => $tribe -> fields['id'], 
-                                "Wins"=> $tribe -> fields['wygr'], 
-                                "Lost" => $tribe -> fields['przeg'], 
+                                "Wins"=> $strWins, 
+                                "Lost" => $strLoses, 
                                 "Pubmessage" => $tribe -> fields['public_msg'],
                                 "Astral" => $strAstral,
+				"Tlevel2" => $arrLevels[($tribe->fields['level'] - 1)],
                                 "Yousee" => YOU_SEE,
-                                "Leader2" => LEADER2,
+                                "Leader2" => "Przywódca:",
                                 "Memamount" => MEM_AMOUNT,
                                 "Amembers" => A_MEMBERS,
-                                "Winamount" => WIN_AMOUNT,
-                                "Lostamount" => LOST_AMOUNT,
+				"Tlevel" => "Rodzaj klanu:",
+				"Ptribe" => $player->tribe,
+				"Aback" => "Wróć do spisu klanów",
                                 "Jointo" => JOIN_TO,
                                 "Ajoin" => A_JOIN));
         if ($tribe -> fields['www']) 
@@ -243,7 +294,7 @@ if (isset ($_GET['view']) && $_GET['view'] == 'view')
 	if (in_array($_GET['step'], array('steal', 'sabotage', 'espionage')))
 	  {
 	    checkvalue($_GET['id']);
-	    $objTribe = $db -> Execute("SELECT `id`, `owner` FROM `tribes` WHERE `id`=".$_GET['id']);
+	    $objTribe = $db -> Execute("SELECT `id`, `owner`, `level` FROM `tribes` WHERE `id`=".$_GET['id']);
 	    if (!$objTribe -> fields['id']) 
 	      {
 		error(NO_CLAN." (<a href=\"tribes.php?view=view&id=".$_GET['id']."\">".BACK."</a>)");
@@ -398,8 +449,11 @@ if (isset ($_GET['view']) && $_GET['view'] == 'view')
 	    require_once('includes/astralsteal.php');
 	    astralsteal($_GET['id'], 'C', $objTribe -> fields['owner']);
 	    
-	    require_once('includes/checkastral.php');
-	    checkastral($objTribe -> fields['id']);
+	    if ($objTribe->fields['level'] == 5)
+	      {
+		require_once('includes/checkastral.php');
+		checkastral($objTribe -> fields['id']);
+	      }
 	    
 	    $objTribe -> Close();
 	  }
