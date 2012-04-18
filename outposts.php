@@ -8,7 +8,7 @@
  *   @author               : thindil <thindil@vallheru.net>
  *   @author               : eyescream <tduda@users.sourceforge.net>
  *   @version              : 1.5
- *   @since                : 10.04.2012
+ *   @since                : 18.04.2012
  *
  */
  
@@ -43,7 +43,7 @@ require_once("includes/head.php");
 /**
 * Get the localization for game
 */
-require_once("languages/".$player -> lang."/outposts.php");
+require_once("languages/".$lang."/outposts.php");
 
 /**
 * Check player location - if player not in city, block page
@@ -1762,7 +1762,7 @@ if (isset ($_GET['view']) && $_GET['view'] == 'shop')
 * Outposts list by levels from slevel to elevel
 */
 if (isset ($_GET['view']) && $_GET['view'] == 'listing') 
-{
+  {
     $smarty -> assign(array("Ashow" => A_SHOW,
                             "Froml" => FROM_L,
                             "Tol" => TO_L,
@@ -1771,7 +1771,7 @@ if (isset ($_GET['view']) && $_GET['view'] == 'listing')
                             "Outowner" => OUT_OWNER,
                             "Outattack" => OUT_ATTACK,
                             "Aattack" => A_ATTACK,
-			    "Outmin" => floor($out->fields['size'] / 2),
+			    "Outmin" => ceil($out->fields['size'] / 2),
 			    "Outmax" => ($out->fields['size'] * 2)));
     if (isset ($_GET['step']) && $_GET['step'] == 'list') 
     {

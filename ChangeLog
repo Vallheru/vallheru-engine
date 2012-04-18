@@ -1,3 +1,8 @@
+2012-04-18  Bartek thindil Jasicki  <thindil@vallheru.net>
+
+	* BUG,outposts.php:
+	fixed bug with minimal size of outposts on list
+
 2012-04-17  Bartek thindil Jasicki  <thindil@vallheru.net>
 
 	* BUG,battle.php: 
