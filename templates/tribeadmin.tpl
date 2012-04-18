@@ -83,12 +83,12 @@
             {$Tuser} <b>{$Tname}</b>
             <form method="post" action="tribeadmin.php?step2=permissions&amp;step3=add">
                 <input type="hidden" name="memid" value="{$Memid2}" />
-		{for $i=0 to 14}
-		    {$Tperms[$i]}: <select name="{$Tnames[$i]}">
+		{foreach $Tperms as $Perm}
+		    {$Perm}: <select name="{$Tnames[$Perm@index]}">
 		        <option value="0">{$No}</option>
-			<option value="1"{$Tselected[$i]}>{$Yes}</option>
+			<option value="1"{$Tselected[$Perm@index]}>{$Yes}</option>
 		    </select><br />
-		{/for}
+		{/foreach}
                 <input type="submit" value="{$Asave}" />
             </form>
         {/if}
@@ -208,4 +208,11 @@
         {$Youbuy}
         <a href="tribeadmin.php">... {$Aback}</a>
     {/if}
+{/if}
+{if $Step2 == "upgrade"}
+    {$Upgradeinfo}<br />
+    <form method="post" action="tribeadmin.php?step2=upgrade&amp;upgrade">
+        {html_radios name=update options=$Uoptions separator='<br />'}
+	<input type="submit" value="{$Aupgrade}" />
+    </form>
 {/if}

@@ -1,5 +1,7 @@
 2012-04-18  Bartek thindil Jasicki  <thindil@vallheru.net>
 
+	* FEATURE,templates/layout1/tribeadmin.tpl, templates/tribeadmin.tpl, tribeadmin.php, languages/pl/tribeadmin.php:
+	continue work on new tribes system
 	* BUG,maze.php: 
 	fixed bug with escaping
 	* BUG,outposts.php:

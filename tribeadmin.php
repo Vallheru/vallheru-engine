@@ -7,7 +7,7 @@
  *   @copyright            : (C) 2012 Vallheru Team based on Gamers-Fusion ver 2.5
  *   @author               : thindil <thindil@vallheru.net>
  *   @version              : 1.5
- *   @since                : 13.04.2012
+ *   @since                : 18.04.2012
  *
  */
 
@@ -53,18 +53,24 @@ require_once("languages/".$lang."/tribeadmin.php");
 
 if (!isset($_GET['step2']))
   {
-    $smarty -> assign(array("Panelinfo" => PANEL_INFO,
-			    "Links" => array('permissions' => A_PERM,
-					     'rank' => A_RANK,
-					     'mail' => A_MAIL2,
-					     'messages' => A_DESC,
-					     'nowy' => A_WAITING,
-					     'kick' => A_KICK,
-					     'wojsko' => A_ARMY,
-					     'walka' => A_ATTACK2,
-					     'loan' => A_LOAN,
-					     'te' => A_MISC,
-					     'asks' => 'Sprawdź prośby o przedmioty z klanu')));
+    $arrLinks = array('permissions' => "Ustawić uprawnienia członków klanu",
+		      'rank' => "Ustawić rangi członkom klanu",
+		      'mail' => "Wyślij pocztę do członków klanu",
+		      'messages' => "Edytować opis klanu, wiadomość dla członków oraz herb klanu i stronę klanu",
+		      'nowy' => "Sprawdź listę oczekujących na dołączenie do klanu",
+		      'kick' => "Wyrzucić Członka",
+		      'wojsko' => "Dokupić żołnierzy lub fortyfikacji do klanu",
+		      'walka' => "Zaatakować inny klan",
+		      'loan' => "Pożycz pieniądze członkowi",
+		      'te' => "Dodatki klanu",
+		      'asks' => 'Sprawdź prośby o przedmioty z klanu');
+    if ($mytribe->fields['level'] < 5)
+      {
+	unset($arrLinks['wojsko'], $arrLinks['walka']);
+	$arrLinks['upgrade'] = 'Rozbuduj klan';
+      }
+    $smarty -> assign(array("Panelinfo" => "Witaj w panelu przywódcy klanu. Co chcesz zrobić?",
+			    "Links" => $arrLinks));
     $_GET['step2'] = '';
   }
 else
@@ -362,7 +368,33 @@ else
 	      {
 		$_GET['next'] = '';
 	      }
-	    $arrPerms = array(T_PERM1, T_PERM2, T_PERM3, T_PERM4, T_PERM5, T_PERM6, T_PERM7, T_PERM8, T_PERM9, T_PERM10, T_PERM11, T_PERM12, T_PERM13, T_PERM14, T_PERM15);
+	    $arrPerms = array("Może edytować opisy klanu", 
+			      "Może dołączać nowych członków", 
+			      "Może wyrzucać członków z klanu", 
+			      "Może kupować żołnierzy oraz fortyfikacje", 
+			      "Może wykonywać ataki na inny klan", 
+			      "Może pożyczać pieniądze członkom klanu", 
+			      "Może dawać przedmioty ze zbrojowni", 
+			      "Może dawać przedmioty z magazynu", 
+			      "Może dawać minerały ze skarbca", 
+			      "Może dawać zioła z zielnika", 
+			      "Może kasować posty na forum", 
+			      "Może ustalać rangi członkom klanu", 
+			      "Może wysyłać listy do członków klanu", 
+			      "Nie może oglądać informacji o klanie", 
+			      "Może łączyć astralne plany, dawać je członkom klanu");
+	    if ($mytribe->fields['level'] < 5)
+	      {
+		unset($arrPerms[3], $arrPerms[4]);
+	      }
+	    if ($mytribe->fields['level'] < 3)
+	      {
+		unset($arrPerms[14], $arrPerms[8], $arrPerms[9]);
+	      }
+	    if ($mytribe->fields['level'] == 1)
+	      {
+		unset($arrPerms[6], $arrPerms[7]);
+	      }
 	    $smarty -> assign(array("Perminfo" => PERM_INFO,
 				    "Tperms" => $arrPerms,
 				    "Asave" => A_SAVE,
@@ -375,7 +407,7 @@ else
 	      {
 		if (!isset($_POST['memid']))
 		  {
-		    error(ERROR);
+		    error('Zapomnij o tym.');
 		  }
 		checkvalue($_POST['memid']);
 		$objTest = $db -> Execute("SELECT * FROM tribe_perm WHERE player=".$_POST['memid']) or die ($db->ErrorMsg());
@@ -394,6 +426,18 @@ else
 				 $objTest -> fields['mail'],
 				 $objTest -> fields['info'],
 				 $objTest -> fields['astralvault']);
+		if ($mytribe->fields['level'] < 5)
+		  {
+		    unset($arrTest[3], $arrTest[4]);
+		  }
+		if ($mytribe->fields['level'] < 3)
+		  {
+		    unset($arrTest[14], $arrTest[8], $arrTest[9]);
+		  }
+		if ($mytribe->fields['level'] == 1)
+		  {
+		    unset($arrTest[6], $arrTest[7]);
+		  }
 		$objTest -> Close();
 		$objName = $db -> Execute("SELECT user FROM players WHERE id=".$_POST['memid']);
 		$arrSelected = array();
@@ -409,6 +453,18 @@ else
 		      }
 		  }
 		$arrNames = array('messages', 'wait', 'kick', 'army', 'attack', 'loan', 'armory', 'warehouse', 'bank', 'herbs', 'forum', 'ranks', 'mail', 'info', 'astralvault');
+		if ($mytribe->fields['level'] < 5)
+		  {
+		    unset($arrNames[3], $arrNames[4]);
+		  }
+		if ($mytribe->fields['level'] < 3)
+		  {
+		    unset($arrNames[14], $arrNames[8], $arrNames[9]);
+		  }
+		if ($mytribe->fields['level'] == 1)
+		  {
+		    unset($arrNames[6], $arrNames[7]);
+		  }
 		$smarty -> assign(array("Memid2" => $_POST['memid'],
 					"Tselected" => $arrSelected,
 					"Tnames" => $arrNames,
@@ -419,6 +475,22 @@ else
 	  }
 	if (isset ($_GET['step3'])) 
 	  {
+	    if ($mytribe->fields['level'] < 5)
+	      {
+		$_POST['army'] = 0;
+		$_POST['attack'] = 0;
+	      }
+	    if ($mytribe->fields['level'] < 3)
+	      {
+		$_POST['astralvault'] = 0;
+		$_POST['bank'] = 0;
+		$_POST['herbs'] = 0;
+	      }
+	    if ($mytribe->fields['level'] == 1)
+	      {
+		$_POST['armory'] = 0;
+		$_POST['warehouse'] = 0;
+	      }
 	    $test = array($_POST['messages'],
 			  $_POST['wait'],
 			  $_POST['kick'],
@@ -517,6 +589,10 @@ else
 	if ($player -> id != $mytribe -> fields['owner'] && !$perm -> fields['army']) 
 	  {
 	    error (NO_PERM);
+	  }
+	if ($mytribe->fields['level'] < 5)
+	  {
+	    error('Rozbuduj klan do zamku, aby móc kupować wojsko.');
 	  }
 	$smarty -> assign(array("Armyinfo" => ARMY_INFO,
 				"Howmanys" => HOW_MANY_S,
@@ -628,6 +704,17 @@ else
 	  }
 	if (isset($_GET['dodaj'])) 
 	  {
+	    if ($mytribe->fields['level'] < 4)
+	      {
+		$arrMax = array(1 => 5,
+				2 => 10,
+				3 => 20);
+		$objMembers = $db->Execute("SELECT count(`id`) FROM `players` WHERE `tribe`=".$mytribe->fields['id']);
+		if ($objMembers->fields['count(`id`)'] == $arrMax[$mytribe->fields['level']])
+		  {
+		    error('Nie masz miejsca w klanie na nowych członków. Najpierw trzeba rozbudować klan.');
+		  }
+	      }
 	    $dod = $db -> Execute("SELECT * FROM tribe_oczek WHERE id=".$_GET['dodaj']);
 	    message("success", YOU_ACCEPT.$dod -> fields['gracz'].".");
 	    $strDate = $db -> DBDate($newdate);
@@ -649,6 +736,10 @@ else
      */
     elseif ($_GET['step2'] == 'walka') 
       {
+	if ($mytribe->fields['level'] < 5)
+	  {
+	    error('Rozbuduj klan do zamku, aby móc atakować inne klany.');
+	  }
 	require_once('includes/tribefight.php');
       }
     
@@ -964,6 +1055,54 @@ else
 		$smarty -> assign ("Hospass1", 1);
 	      }
 	  }
+      }
+    elseif ($_GET['step2'] == 'upgrade')
+      {
+	if ($player->id != $mytribe -> fields['owner'])
+	  {
+	    error("Tylko przywódca może rozbudowywać klan.");
+	  }
+	if (isset($_GET['upgrade']))
+	  {
+	    if (!isset($_POST['update']))
+	      {
+		error('Zapomnij o tym.');
+	      }
+	    checkvalue($_POST['update']);
+	    $intCost = ($_POST['update'] * 500000) - ($mytribe->fields['level'] * 500000);
+	    if ($mytribe->fields['credits'] < $intCost)
+	      {
+		message('error', 'Klan nie posiada takiej ilości złota.');
+	      }
+	    elseif ($mytribe->fields['level'] >= $_POST['update'])
+	      {
+		message('error', 'Nie możesz obniżyć poziomu rozbudowy swojego klanu.');
+	      }
+	    else
+	      {
+		$db->Execute("UPDATE `tribes` SET `level`=".$_POST['update'].", `credits`=`credits`-".$intCost." WHERE `id`=".$mytribe->fields['id']) or die($db->ErrorMsg());
+		$mytribe->fields['level'] = $_POST['update'];
+		message('success', 'Rozbudowałeś swój klan.');
+	      }
+	  }
+	if ($mytribe->fields['level'] == 5)
+	  {
+	    error("Nie możesz już rozbudowywać klanu.");
+	  }
+	$arrOptions = array(2 => 'Kamienica (koszt: 500000 sztuk złota, dodaje zbrojownię oraz magazyn klanowy, maksymalnie 10 osób w klanie)',
+			    3 => 'Dworek (koszt: '.(1500000 - ($mytribe->fields['level'] * 500000)).' sztuk złota, dodaje skarbiec, astralny skarbiec oraz zielnik klanowy, maksymalnie 20 osób w klanie)',
+			    4 => 'Dwór (koszt: '.(2000000 - ($mytribe->fields['level'] * 500000)).' sztuk złota, liczba osób w klanie bez ograniczeń)',
+			    5 => 'Zamek (koszt: '.(2500000 - ($mytribe->fields['level'] * 500000)).' sztuk złota, liczba osób w klanie bez ograniczeń, pozwala budować Astralną Machinę oraz uczestniczyć w walkach klanowych)');
+	if ($mytribe->fields['level'] > 1)
+	  {
+	    for ($i = 2; $i <= $mytribe->fields['level']; $i++)
+	      {
+		unset($arrOptions[$i]);
+	      }
+	  }
+	$smarty->assign(array("Upgradeinfo" => "Tutaj możesz ulepszyć swój klan do wyższego poziomu. Co dokładnie otrzyma klan w zamian za ulepszenie, podane jest poniżej. Pamiętaj jednak, że nie można cofnąć takiej decyzji.",
+			      "Uoptions" => $arrOptions,
+			      "Aupgrade" => "Ulepsz"));
       }
   }
 
