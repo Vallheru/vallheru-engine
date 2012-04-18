@@ -4,10 +4,10 @@
  *   Labyrynth in forrest city
  *
  *   @name                 : maze.php                            
- *   @copyright            : (C) 2004,2005,2006,2011 Vallheru Team based on Gamers-Fusion ver 2.5
- *   @author               : thindil <thindil@tuxfamily.org>
- *   @version              : 1.4
- *   @since                : 25.11.2011
+ *   @copyright            : (C) 2004,2005,2006,2011,2012 Vallheru Team based on Gamers-Fusion ver 2.5
+ *   @author               : thindil <thindil@vallheru.net>
+ *   @version              : 1.5
+ *   @since                : 18.04.2012
  *
  */
 
@@ -158,6 +158,10 @@ if (isset($_GET['step']) && $_GET['step'] == 'battle')
 if (isset($_GET['step']) && $_GET['step'] == 'run') 
 {
     $enemy = $db -> Execute("SELECT `level`, `speed`, `name`, `exp1`, `exp2`, `id` FROM `monsters` WHERE `id`=".$player -> fight);
+    if (!$enemy->fields['id'])
+      {
+	error('Nie masz przed kim uciekać!');
+      }
     /**
      * Add bonus from rings
      */

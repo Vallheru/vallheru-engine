@@ -1,5 +1,7 @@
 2012-04-18  Bartek thindil Jasicki  <thindil@vallheru.net>
 
+	* BUG,maze.php: 
+	fixed bug with escaping
 	* BUG,outposts.php:
 	fixed bug with minimal size of outposts on list
 
