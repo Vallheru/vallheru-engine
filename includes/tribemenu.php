@@ -46,7 +46,9 @@ if ($objTribe->fields['level'] > 2)
     $arrMenus[] = array("address" => 'tribeherbs.php', "name" => 'Zielnik');
     $arrMenus[] = array("address" => 'tribeastral.php', "name" => 'Astralny skarbiec');
   }
-if ($player->id == $objTribe->fields['owner'])
+$perm = $db -> Execute("SELECT * FROM tribe_perm WHERE tribe=".$player->tribe." AND player=".$player->id);
+$test = array($perm -> fields['messages'],$perm -> fields['wait'],$perm -> fields['kick'],$perm -> fields['army'],$perm -> fields['attack'],$perm -> fields['loan'],$perm -> fields['armory'],$perm -> fields['warehouse'],$perm -> fields['bank'],$perm -> fields['herbs'], $perm -> fields['mail'], $perm -> fields['ranks']);
+if (in_array(1, $test) || $player->id == $objTribe->fields['owner'])
   {
     $arrMenus[] = array("address" => 'tribeadmin.php', "name" => 'Opcje przywódcy');
   }
