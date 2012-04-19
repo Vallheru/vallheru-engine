@@ -7,7 +7,7 @@
  *   @copyright            : (C) 2012 Vallheru Team based on Gamers-Fusion ver 2.5
  *   @author               : thindil <thindil@vallheru.net>
  *   @version              : 1.5
- *   @since                : 13.04.2012
+ *   @since                : 19.04.2012
  *
  */
 
@@ -48,17 +48,7 @@ if (!$player->tribe)
 
 $mytribe = $db -> Execute("SELECT `id`, `owner` FROM `tribes` WHERE `id`=".$player->tribe);
 $perm = $db -> Execute("SELECT * FROM tribe_perm WHERE tribe=".$mytribe -> fields['id']." AND player=".$player->id);
-$smarty -> assign (array("Amain" => "Główna",
-			 "Adonate" => "Dotuj",
-			 "Amembers" => "Członkowie",
-			 "Aarmor" => "Zbrojownia",
-			 "Apotions" => "Magazyn",
-			 "Aminerals" => "Skarbiec",
-			 "Aherbs" => "Zielnik",
-			 "Aleft" => "Opuść klan",
-			 "Aleader" => "Opcje przywódcy",
-			 "Aforums" => "Forum klanu",
-			 "Aastral" => "Astralny skarbiec"));
+require_once('includes/tribemenu.php');
 
 $arrName = array("Illani", "Illanias", "Nutari", "Dynallca", "Nasiona Illani", "Nasiona Illanias", "Nasiona Nutari", "Nasiona Dynallca");
 $arrSqlname = array('illani', 'illanias', 'nutari', 'dynallca', 'ilani_seeds', 'illanias_seeds', 'nutari_seeds', 'dynallca_seeds');

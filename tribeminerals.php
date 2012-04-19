@@ -7,7 +7,7 @@
  *   @copyright            : (C) 2012 Vallheru Team based on Gamers-Fusion ver 2.5
  *   @author               : thindil <thindil@vallheru.net>
  *   @version              : 1.5
- *   @since                : 13.04.2012
+ *   @since                : 19.04.2012
  *
  */
 
@@ -47,17 +47,7 @@ if (!$player->tribe)
 
 $mytribe = $db -> Execute("SELECT `id`, `owner` FROM `tribes` WHERE `id`=".$player->tribe);
 $perm = $db -> Execute("SELECT * FROM tribe_perm WHERE tribe=".$mytribe -> fields['id']." AND player=".$player->id);
-$smarty -> assign (array("Amain" => "Główna",
-			 "Adonate" => "Dotuj",
-			 "Amembers" => "Członkowie",
-			 "Aarmor" => "Zbrojownia",
-			 "Apotions" => "Magazyn",
-			 "Aminerals" => "Skarbiec",
-			 "Aherbs" => "Zielnik",
-			 "Aleft" => "Opuść klan",
-			 "Aleader" => "Opcje przywódcy",
-			 "Aforums" => "Forum klanu",
-			 "Aastral" => "Astralny skarbiec"));
+require_once('includes/tribemenu.php');
 
 $arrSqlname2 = array('copperore', 'zincore', 'tinore', 'ironore', 'copper', 'bronze', 'brass', 'iron', 'steel', 'coal', 'adamantium', 'meteor', 'crystal', 'pine', 'hazel', 'yew', 'elm');
 $arrName = array("rudy miedzi", "rudy cynku", "rudy cyny", "rudy żelaza", "sztabek miedzi", "sztabek brązu", "sztabek mosiądzu", "sztabek żelaza", "sztabek stali", "brył węgla", "brył adamantium", "kawałków meteorytu", "kryształów", "drewna sosnowego", "drewna z leszczyny", "drewna cisowego", "drewna z wiązu");

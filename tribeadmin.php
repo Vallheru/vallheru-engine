@@ -1111,18 +1111,8 @@ if (!isset($_GET['step3']))
     $_GET['step3'] = '';
   }
 
-$smarty -> assign (array("Amain" => MENU1,
-			 "Adonate" => MENU2,
-			 "Amembers" => MENU3,
-			 "Aarmor" => MENU4,
-			 "Apotions" => MENU5,
-			 "Aminerals" => MENU6,
-			 "Aherbs" => MENU7,
-			 "Aleft" => MENU8,
-			 "Aleader" => MENU9,
-			 "Aforums" => MENU10,
-			 "Aastral" => MENU11,
-			 "Step2" => $_GET['step2'],
+require_once("includes/tribemenu.php");
+$smarty -> assign (array("Step2" => $_GET['step2'],
 			 "Step3" => $_GET['step3']));
 $smarty->display('tribeadmin.tpl');
 require_once('includes/foot.php');

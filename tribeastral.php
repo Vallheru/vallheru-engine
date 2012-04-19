@@ -8,7 +8,7 @@
  *   @author               : thindil <thindil@vallheru.net>
  *   @author               : eyescream <tduda@users.sourceforge.net>
  *   @version              : 1.5
- *   @since                : 13.04.2012
+ *   @since                : 19.04.2012
  *
  */
 
@@ -725,18 +725,8 @@ if (isset($_GET['action']) && $_GET['action'] == 'safe')
 /**
 * Assign variables to template and display page
 */
-$smarty -> assign(array("Action" =>$_GET['action'], 
-                        "Amain" => A_MAIN,
-                        "Adonate" => A_DONATE,
-                        "Amembers" => A_MEMBERS,
-                        "Apotions" => A_POTIONS,
-                        "Aminerals" => A_MINERALS,
-                        "Aherbs" => A_HERBS,
-                        "Aleft" => A_LEFT,
-                        "Aleader" => A_LEADER,
-                        "Aforums" => A_FORUMS,
-                        "Aarmor" => A_ARMOR,
-                        "Aastral" => A_ASTRAL));
+require_once('includes/tribemenu.php');
+$smarty -> assign("Action", $_GET['action']);
 $smarty -> display('tribeastral.tpl');
 
 require_once("includes/foot.php");

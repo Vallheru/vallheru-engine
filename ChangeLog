@@ -1,3 +1,9 @@
+2012-04-19  Bartek thindil Jasicki  <thindil@vallheru.net>
+
+	* FEATURE,templates/layout1/tribemenu.tpl, templates/tribemenu.tpl, includes/tribefight.php, includes/tribemenu.php, tribes.php, tribeadmin.php,
+	tribearmor.php, tribeastral.php, tribeherbs.php, tribeminerals.php, tribeware.php:
+	updated tribe menus
+
 2012-04-18  Bartek thindil Jasicki  <thindil@vallheru.net>
 
 	* FEATURE,templates/layout1/tribeadmin.tpl, templates/tribeadmin.tpl, tribeadmin.php, languages/pl/tribeadmin.php:

@@ -9,7 +9,7 @@
  *   @author               : mori <ziniquel@users.sourceforge.net>
  *   @author               : eyescream <tduda@users.sourceforge.net>
  *   @version              : 1.5
- *   @since                : 17.04.2012
+ *   @since                : 19.04.2012
  *
  */
 
@@ -648,19 +648,9 @@ if (isset ($_GET['view']) && $_GET['view'] == 'my')
     }
     $mytribe = $db -> Execute("SELECT * FROM tribes WHERE id=".$player -> tribe);
     $perm = $db -> Execute("SELECT * FROM tribe_perm WHERE tribe=".$mytribe -> fields['id']." AND player=".$player -> id);
+    require_once('includes/tribemenu.php');
     $smarty -> assign (array("Name" => $mytribe -> fields['name'],
-                             "Myclan" => MY_CLAN,
-                             "Amain" => MENU1,
-                             "Adonate" => MENU2,
-                             "Amembers" => MENU3,
-                             "Aarmor" => MENU4,
-                             "Apotions" => MENU5,
-                             "Aminerals" => MENU6,
-                             "Aherbs" => MENU7,
-                             "Aleft" => MENU8,
-                             "Aleader" => MENU9,
-                             "Aforums" => MENU10,
-                             "Aastral" => MENU11));
+                             "Myclan" => MY_CLAN));
     if (!isset ($_GET['step'])) 
     {
         $plik = 'images/tribes/'.$mytribe -> fields['logo'];

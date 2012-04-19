@@ -8,7 +8,7 @@
  *   @author               : thindil <thindil@vallheru.net>
  *   @author               : eyescream <tduda@users.sourceforge.net>
  *   @version              : 1.5
- *   @since                : 13.04.2012
+ *   @since                : 19.04.2012
  *
  */
 
@@ -628,22 +628,12 @@ if ($intReserved == 0)
     /**
      * Assign variables to template and display page
      */
+    require_once('includes/tribemenu.php');
     $smarty -> assign(array("Step" => $_GET['step'], 
 			    "Step2" => $_GET['step2'], 
 			    "Give" => $_GET['daj'], 
 			    "Step3" => $_GET['step3'],
-			    "Reserve" => $_GET['reserve'],
-			    "Amain" => A_MAIN,
-			    "Adonate" => A_DONATE,
-			    "Amembers" => A_MEMBERS,
-			    "Apotions" => A_POTIONS,
-			    "Aminerals" => A_MINERALS,
-			    "Aherbs" => A_HERBS,
-			    "Aleft" => A_LEFT,
-			    "Aleader" => A_LEADER,
-			    "Aforums" => A_FORUMS,
-			    "Aarmor" => A_ARMOR,
-			    "Aastral" => A_ASTRAL));
+			    "Reserve" => $_GET['reserve']));
     $smarty -> display ('tribearmor.tpl');
     
     require_once("includes/foot.php");

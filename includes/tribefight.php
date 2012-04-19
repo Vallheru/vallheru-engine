@@ -8,7 +8,7 @@
  *   @author               : thindil <thindil@vallheru.net>
  *   @author               : eyescream <tduda@users.sourceforge.net>
  *   @version              : 1.5
- *   @since                : 03.02.2012
+ *   @since                : 19.04.2012
  *
  */
 
@@ -57,11 +57,15 @@ $smarty -> assign(array("Link" => $arrlink,
 if (!isset($_GET['step3']) && isset($_GET['atak']))
 {
     checkvalue($_GET['atak']);
-    $objEntribe = $db -> Execute("SELECT `id`, `name` FROM `tribes` WHERE `id`=".$_GET['atak']);
+    $objEntribe = $db -> Execute("SELECT `id`, `name`, `level` FROM `tribes` WHERE `id`=".$_GET['atak']);
     if (!$objEntribe -> fields['id'])
     {
         error(ERROR);
     }
+    if ($objEntribe->fields['level'] != 5)
+      {
+	error('Można atakować tylko klany typu Zamek.');
+      }
     $smarty -> assign(array("Youwant" => YOU_WANT,
                             "Entribe" => $objEntribe -> fields['name'],
                             "Ayes" => YES,
@@ -71,11 +75,15 @@ if (!isset($_GET['step3']) && isset($_GET['atak']))
 if (isset($_GET['atak']) && (isset($_GET['step3']) && $_GET['step3'] == 'confirm')) 
 {
     checkvalue($_GET['atak']);
-    $objTest = $db -> Execute("SELECT `id` FROM `tribes` WHERE `id`=".$_GET['atak']);
+    $objTest = $db -> Execute("SELECT `id`, `level` FROM `tribes` WHERE `id`=".$_GET['atak']);
     if (!$objTest -> fields['id'])
     {
         error(ERROR);
     }
+    if ($objTest->fields['level'] != 5)
+      {
+	error('Można atakować tylko klany typu Zamek.');
+      }
     $objTest -> Close();
     $matak = 0;
     $eobrona = 0;
