@@ -63,7 +63,11 @@ $smarty -> assign("Message",'');
 * Check who have permission to give potions
 */
 $objPerm = $db -> Execute("SELECT `astralvault` FROM `tribe_perm` WHERE `tribe`=".$player -> tribe." AND `player`=".$player -> id);
-$objOwner = $db -> Execute("SELECT `owner` FROM `tribes` WHERE id=".$player -> tribe);
+$objOwner = $db -> Execute("SELECT `owner`, `level` FROM `tribes` WHERE id=".$player -> tribe);
+if ($objOwner->fields['level'] < 3)
+  {
+    error('Najpierw musisz rozbudować klan, aby mieć dostęp do tego miejsca. (<a href="tribes.php?view=my">Wróć</a>)');
+  }
 
 /**
 * Main menu

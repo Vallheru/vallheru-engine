@@ -91,22 +91,16 @@ if (!isset ($_GET['view']) && !isset($_GET['join']))
     $smarty -> assign(array("Claninfo" => "Witaj w Domu Klanów. Tutaj możesz zobaczyć, dołączyć lub nawet stworzyć nowy klan.<br /><br />Klany to dobrowolne zrzeszenia mieszkańców ".$gamename.". Posiadają odrębne zasady (lub brak zasad), cele, strukturę i organizację. Mogą prowadzić ze sobą wojny lub zabrać się za budową Astralnej Machiny. Dysponują również własnym forum. Każdy gracz może należeć do maksymalnie jednego klanu.<br /><br />Klany nazywane bywają \"państwami w państwie\" ze względu na swoją organizację wewnątrz-klanową. Postępują według własnych reguł, nierzadko stawiając je ponad vallheryjskim prawem. Są to zamożne instytucje, posiadające warowne siedziby we wszystkich miastach królestwa. Niepodzielnie panują na swoim terytorium przy pomocy najemnych wojsk. Krążą pogłoski o wspaniałych bogactwach jakie gromadzą w swych podziemnych skarbcach.",
         "Ashow" => A_SHOW));
     if ($player -> tribe) 
-    {
+      {
         $mytribe = $db -> Execute("SELECT `name` FROM `tribes` WHERE `id`=".$player -> tribe);
-        $smarty -> assign ("Mytribe", "<li><a href=\"tribes.php?view=my\">".MY_TRIBE."</a> (".$mytribe -> fields['name'].")</li>");
-    } 
-        else 
-    {
-        $smarty -> assign ("Mytribe", "<li>".MY_TRIBE."</li>");
-    }
-    if (!$player -> tribe && $player -> credits >= 2500000) 
-    {
-        $smarty -> assign ("Make", "<li><a href=\"tribes.php?view=make\">".MAKE_NEW."</a></li>");
-    } 
-        else 
-    {
-        $smarty -> assign ("Make", "<li>".MAKE_NEW."</li>");
-    }
+        $smarty -> assign(array("Mytribe" => "<li><a href=\"tribes.php?view=my\">".MY_TRIBE."</a> (".$mytribe -> fields['name'].")</li>",
+				"Make" => ""));
+      } 
+    else 
+      {
+	$smarty -> assign(array("Mytribe" => "",
+				"Make" => '<li><a href="tribes.php?view=make">Stwórz nowy klan</a></li>'));
+      }
 }
 
 /**
@@ -600,13 +594,15 @@ if (isset($_GET['join']))
 * Make clan
 */
 if (isset ($_GET['view']) && $_GET['view'] == 'make') 
-{
+  {
+    $arrOptions = array(1 => 'Kryjówka (koszt: 500 000 sztuk złota, maksymalnie 5 osób w klanie)',
+			2 => 'Kamienica (koszt: 1 000 000 sztuk złota, dodaje zbrojownię oraz magazyn klanowy, maksymalnie 10 osób w klanie)',
+			3 => 'Dworek (koszt: 1 500 000 sztuk złota, dodaje skarbiec, astralny skarbiec oraz zielnik klanowy, maksymalnie 20 osób w klanie)',
+			4 => 'Dwór (koszt: 2 000 000 sztuk złota, liczba osób w klanie bez ograniczeń)',
+			5 => 'Zamek (koszt: 2 500 000 sztuk złota, liczba osób w klanie bez ograniczeń, pozwala budować Astralną Machinę oraz uczestniczyć w walkach klanowych)');
     $smarty -> assign(array("Clanname" => CLAN_NAME,
-        "Amake" => A_MAKE));
-    if ($player -> credits < 2500000) 
-    {
-        error (NO_MONEY);
-    }
+			    "Amake" => A_MAKE,
+			    "Coptions" => $arrOptions));
     if ($player -> tribe) 
     {
         error (YOU_IN_CLAN);
@@ -627,11 +623,24 @@ if (isset ($_GET['view']) && $_GET['view'] == 'make')
         {
             error (NO_NAME);
         }
+	if (!isset($_POST['ctype']))
+	  {
+	    error("Podaj, jaki typ klanu chcesz założyć");
+	  }
+	checkvalue($_POST['ctype']);
+	if ($_POST['ctype'] > 5)
+	  {
+	    error('Zapomnij o tym.');
+	  }
+	$intCost = $_POST['ctype'] * 500000;
+	if ($player->credits < $intCost)
+	  {
+	    error('Nie masz tyle sztuk złota przy sobie.');
+	  }
 	$_POST['name'] = htmlspecialchars($_POST['name'], ENT_QUOTES);
-        $db -> Execute("INSERT INTO tribes (name,owner) VALUES('".$_POST['name']."',".$player -> id.")");
-        $db -> Execute("UPDATE players SET credits=credits-2500000 WHERE id=".$player -> id);
-        $newt = $db -> Execute("SELECT id FROM tribes WHERE owner=".$player -> id);
-        $db -> Execute("UPDATE players SET tribe=".$newt -> fields['id']." WHERE id=".$player -> id);
+        $db -> Execute("INSERT INTO `tribes` (`name`, `owner`, `level`) VALUES('".$_POST['name']."', ".$player -> id.", ".$_POST['ctype'].")");
+	$newt = $db -> Execute("SELECT id FROM tribes WHERE owner=".$player -> id);
+        $db -> Execute("UPDATE `players` SET `credits`=`credits`-".$intCost.", `tribe`=".$newt -> fields['id']." WHERE `id`=".$player -> id);
         $newt -> Close();
         error (YOU_MAKE.$_POST['name']."</i>.<br />");
     }
@@ -695,6 +704,7 @@ if (isset ($_GET['view']) && $_GET['view'] == 'my')
         }
         $objAstral -> Close();
         $smarty -> assign(array("Members" => $memnum, 
+				"Tlevel" => $mytribe->fields['level'],
                                 "Owner" => $owner -> fields['user'], 
                                 "Ownerid" => $owner -> fields['id'],  
                                 "Wins" => $mytribe -> fields['wygr'], 

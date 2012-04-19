@@ -1078,6 +1078,10 @@ else
 	      {
 		message('error', 'Nie możesz obniżyć poziomu rozbudowy swojego klanu.');
 	      }
+	    elseif ($_POST['update'] > 5)
+	      {
+		error('Zapomnij o tym.');
+	      }
 	    else
 	      {
 		$db->Execute("UPDATE `tribes` SET `level`=".$_POST['update'].", `credits`=`credits`-".$intCost." WHERE `id`=".$mytribe->fields['id']) or die($db->ErrorMsg());

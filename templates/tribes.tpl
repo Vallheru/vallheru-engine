@@ -62,10 +62,11 @@
 {/if}
 
 {if $View == "make"}
-    <table><form method="post" action="tribes.php?view=make&amp;step=make">
-    <tr><td>{$Clanname}:</td><td><input type="text" name="name" /></td></tr>
-    <tr><td colspan="2" align="center"><input type="submit" value="{$Amake}" /></td></tr>
-    </form></table>
+    <form method="post" action="tribes.php?view=make&amp;step=make">
+        {$Clanname}:<input type="text" name="name" /><br />
+	{html_radios name=ctype options=$Coptions selected=5 separator='<br />'}
+        <input type="submit" value="{$Amake}" />
+    </form>
 {/if}
 
 {if $View == "my"}
@@ -83,12 +84,14 @@
         <li>{$Leader}: <a href="view.php?view={$Ownerid}">{$Owner}</a></li>
         <li>{$Goldcoins}: {$Gold}</li>
         <li>{$Mithcoins}: {$Mithril}</li>
-        <li>{$Winamount}: {$Wins}</li>
-        <li>{$Lostamount}: {$Lost}</li>
-        <li>{$Tsoldiers}: {$Soldiers}</li>
-        <li>{$Tforts}: {$Forts}</li>
+	{if $Tlevel == 5}
+            <li>{$Winamount}: {$Wins}</li>
+            <li>{$Lostamount}: {$Lost}</li>
+            <li>{$Tsoldiers}: {$Soldiers}</li>
+            <li>{$Tforts}: {$Forts}</li>
+	    <li>{$Amachine} ({$Percent}% {$Apercent})</li>
+	{/if}
         {$WWW}
-        <li>{$Amachine} ({$Percent}% {$Apercent})</li>
         </ul>
         {$Privmessage}
     {/if}

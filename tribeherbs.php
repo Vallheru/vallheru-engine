@@ -46,7 +46,11 @@ if (!$player->tribe)
     error ("Nie należysz do jakiegokolwiek klanu.");
 }
 
-$mytribe = $db -> Execute("SELECT `id`, `owner` FROM `tribes` WHERE `id`=".$player->tribe);
+$mytribe = $db -> Execute("SELECT `id`, `owner`, `level` FROM `tribes` WHERE `id`=".$player->tribe);
+if ($mytribe->fields['level'] < 3)
+  {
+    error('Najpierw musisz rozbudować klan, aby mieć dostęp do tego miejsca. (<a href="tribes.php?view=my">Wróć</a>)');
+  }
 $perm = $db -> Execute("SELECT * FROM tribe_perm WHERE tribe=".$mytribe -> fields['id']." AND player=".$player->id);
 require_once('includes/tribemenu.php');
 

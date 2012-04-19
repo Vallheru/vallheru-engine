@@ -59,7 +59,11 @@ if ($player -> location != 'Altara' && $player -> location != 'Ardulith')
 * Check permission who have ability to give items
 */
 $perm = $db -> Execute("SELECT `armory` FROM `tribe_perm` WHERE `tribe`=".$player -> tribe." AND `player`=".$player -> id);
-$owner = $db -> Execute("SELECT `owner` FROM `tribes` WHERE `id`=".$player -> tribe);
+$owner = $db -> Execute("SELECT `owner`, `level` FROM `tribes` WHERE `id`=".$player -> tribe);
+if ($owner->fields['level'] == 1)
+  {
+    error('Najpierw musisz rozbudować klan, aby mieć dostęp do tego miejsca. (<a href="tribes.php?view=my">Wróć</a>)');
+  }
 
 $arrType = array('W', 'A', 'H', 'L', 'S', 'B', 'T', 'C', 'R', 'I', 'O', 'E', 'P');
 
