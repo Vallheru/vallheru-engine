@@ -38,14 +38,12 @@ if ($mytribe -> fields['atak'] == 'Y')
 {
     error(ONLY_ONE);
 }
-$klan1 = $db -> Execute("SELECT `id`, `name` FROM `tribes` WHERE `id`!=".$mytribe -> fields['id']);
+$klan1 = $db -> Execute("SELECT `id`, `name` FROM `tribes` WHERE `id`!=".$mytribe -> fields['id']." AND `level`=5");
 $arrlink = array();
-$i = 0;
 while (!$klan1 -> EOF) 
 {
-    $arrlink[$i] = "<a href=\"tribeadmin.php?step2=walka&amp;atak=".$klan1 -> fields['id']."\">".A_ATTACK.$klan1 -> fields['name']."<br /></a>";
+    $arrlink[] = "<a href=\"tribeadmin.php?step2=walka&amp;atak=".$klan1 -> fields['id']."\">".A_ATTACK.$klan1 -> fields['name']."<br /></a>";
     $klan1 -> MoveNext();
-    $i ++;
 }
 $klan1 -> Close();
 $smarty -> assign(array("Link" => $arrlink, 
