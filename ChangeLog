@@ -1,5 +1,7 @@
 2012-04-20  Bartek thindil Jasicki  <thindil@vallheru.net>
 
+	* UPDATE,includes/turnfight.php: 
+	update to new loststats function
 	* UPDATE,class/player_class.php, includes/funkcje.php, includes/battle.php, battle.php:
 	move stats and skill bonuses to player class
 	* BUG,includes/battle.php: 
