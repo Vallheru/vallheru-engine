@@ -1,5 +1,12 @@
+2012-04-20  Bartek thindil Jasicki  <thindil@vallheru.net>
+
+	* BUG,view.php:
+	fixed typo
+
 2012-04-19  Bartek thindil Jasicki  <thindil@vallheru.net>
 
+	* BUG,includes/tribemenu.php: 
+	fixed link to tribe leader options
 	* UPDATE,includes/tribefight.php: 
 	show only tribes which can be attacked
 	* FEATURE,templates/layout1/tribes.tpl, templates/tribes.tpl, tribes.php, tribeadmin.php, tribearmor.php, tribeastral.php, tribeherbs.php,

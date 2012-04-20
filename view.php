@@ -8,7 +8,7 @@
  *   @author               : thindil <thindil@vallheru.net>
  *   @author               : eyescream <tduda@users.sourceforge.net>
  *   @version              : 1.5
- *   @since                : 19.03.2012
+ *   @since                : 20.03.2012
  *
  */
 
@@ -504,7 +504,7 @@ if (isset($_GET['spy']))
 	$fltPerception = ($player->level / 100);
 	$db->Execute("UPDATE `players` SET `perception`=`perception`+".$fltPerception." WHERE `id`=".$view->id);
 	$db -> Execute("INSERT INTO `log` (`owner`, `log`, `czas`, `type`) VALUES(".$view -> id.",'Nagle poczułeś, że ktoś się tobie bacznie przygląda. Rozglądając się wokoło zauważyłeś jak <b><a href=view.php?view=".$player -> id.">".$player -> user.L_ID.$player -> id." gwałtownie ucieka od Ciebie.', ".$strDate.", 'T')");
-	error("<br />Próbowałeś dowiedzieć się co posiada ".$view->user." przy sobie, niestety zauwały on Ciebie. Szybko umknąłeś w cień. (<a href=\"view.php?view=".$_GET['view']."\">Wróć</a>)");
+	error("<br />Próbowałeś dowiedzieć się co posiada ".$view->user." przy sobie, niestety zauważył on Ciebie. Szybko umknąłeś w cień. (<a href=\"view.php?view=".$_GET['view']."\">Wróć</a>)");
       }
     elseif ($chance > 0 && $chance < 50)
       {
