@@ -131,7 +131,7 @@ function attack1($attacker, $defender, $arrAtequip, $arrDeequip, $attack_bspell,
     /**
     * Calculate dodge defender and power of attack, critical hit (spell)
     */
-    if ($attack_bspell -> fields['id'] && (!$arrAtequip[1][0] || $arrAtequip[0][0])) 
+    if ($attack_bspell -> fields['id'] && (!$arrAtequip[1][0] && !$arrAtequip[0][0])) 
     {
         $unik -= $attacker['magic'];
         $mypower = ($attack_bspell -> fields['obr'] * $attacker['inteli']) - (($attack_bspell -> fields['obr'] * $attacker['inteli']) * ($arrAtequip[3][4] / 100));

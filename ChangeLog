@@ -1,5 +1,7 @@
 2012-04-20  Bartek thindil Jasicki  <thindil@vallheru.net>
 
+	* BUG,includes/battle.php: 
+	fixed counting damage in PvP fight
 	* BUG,view.php:
 	fixed typo
 
