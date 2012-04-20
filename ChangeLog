@@ -1,5 +1,9 @@
 2012-04-20  Bartek thindil Jasicki  <thindil@vallheru.net>
 
+	* UPDATE,class/player_class.php, includes/funkcje.php, includes/battle.php, battle.php:
+	move stats and skill bonuses to player class
+	* BUG,includes/battle.php: 
+	fixed bug with fighting with spell and weapon
 	* BUG,includes/battle.php: 
 	fixed counting damage in PvP fight
 	* BUG,view.php:

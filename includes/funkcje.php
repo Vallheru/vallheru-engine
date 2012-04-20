@@ -7,7 +7,7 @@
  *   @copyright            : (C) 2004,2005,2006,2007,2011,2012 Vallheru Team based on Gamers-Fusion ver 2.5
  *   @author               : thindil <thindil@vallheru.net>
  *   @version              : 1.5
- *   @since                : 23.02.2012
+ *   @since                : 20.04.2012
  *
  */
 
@@ -207,7 +207,7 @@ function autofill($intPlayerid, $intArrowId, $intPlayer2, $intPlevel)
 /**
 * Function count lost stats in battle
 */
-function loststat($lostid, $strength, $agility, $inteli, $wytrz, $szyb, $wisdom, $winid, $winuser, $starter, $antidote) 
+function loststat($lostid, $values, $winid, $winuser, $starter, $antidote) 
 {
     global $db;
     global $newdate;
@@ -219,21 +219,19 @@ function loststat($lostid, $strength, $agility, $inteli, $wytrz, $szyb, $wisdom,
     else
       {
 	$number = rand(0,5);
-	$values = array($strength, $agility, $inteli, $wytrz, $szyb, $wisdom);
-	$stats = array('strength', 'agility', 'inteli', 'wytrz', 'szyb', 'wisdom');
-	$name = array(STRENGTH,AGILITY,INTELIGENCE,CONDITION,SPEED,WISDOM);
+	$stats = array('agility', 'strength', 'inteli', 'wytrz', 'szyb', 'wisdom');
+	$name = array(AGILITY, STRENGTH, INTELIGENCE,CONDITION,SPEED,WISDOM);
 	$lost = ($values[$number] / 200);
-	$objStat = $db->Execute("SELECT `".$stats[$number]."` FROM `players` WHERE `id`=".$lostid);
-	if ($objStat->fields[$stats[$number]] - $lost < 3)
+	if ($values[$number] - $lost < 3)
 	  {
 	    $lost = 0;
-	    $objStat->fields[$stats[$number]] = 3;
+	    $values[$number] = 3;
 	  }
 	else
 	  {
-	    $objStat->fields[$stats[$number]] -= $lost;
+	    $values[$number] -= $lost;
 	  }
-	$db -> Execute("UPDATE `players` SET `".$stats[$number]."`=".$objStat->fields[$stats[$number]].", `hp`=0, `antidote`='' WHERE `id`=".$lostid);
+	$db -> Execute("UPDATE `players` SET `".$stats[$number]."`=".$values[$number].", `hp`=0, `antidote`='' WHERE `id`=".$lostid);
 	$stat = $name[$number];
       }
     if ($lostid == $starter) 
@@ -1416,7 +1414,7 @@ function fightmonster($enemy, $expgain, $goldgain, $times)
 	$db -> Execute("UPDATE `players` SET `antidote`='' WHERE `id`=".$player -> id);
         if ($title != 'Arena Walk') 
 	  {
-            loststat($player -> id, $player -> strength, $player -> agility, $player -> inteli, $player -> cond, $player -> speed, $player -> wisdom, 0, $enemy['name'], 0, $player->antidote);
+            loststat($player->id, $player->oldstats, 0, $enemy['name'], 0, $player->antidote);
 	  } 
 	else 
 	  {

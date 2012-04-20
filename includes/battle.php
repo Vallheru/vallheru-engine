@@ -8,7 +8,7 @@
  *   @author               : thindil <thindil@vallheru.net>
  *   @author               : eyescream <tduda@users.sourceforge.net>
  *   @version              : 1.5
- *   @since                : 19.01.2012
+ *   @since                : 20.04.2012
  *
  */
 
@@ -1119,7 +1119,7 @@ function attack1($attacker, $defender, $arrAtequip, $arrDeequip, $attack_bspell,
             $defender['speed'] = $player -> speed;
             $defender['wisdom'] = $player -> wisdom;
         }
-        loststat($defender['id'], $defender['strength'], $defender['agility'], $defender['inteli'], $defender['cond'], $defender['speed'], $defender['wisdom'], $attacker['id'], $attacker['user'], $starter, $defender['antidote']);
+        loststat($defender['id'], $defender['oldstats'], $attacker['id'], $attacker['user'], $starter, $defender['antidote']);
         $db -> Execute("INSERT INTO `events` (`text`) VALUES('".L_PLAYER." ".$startuser." ".L_ATTACK." ".$secuser.". ".BATTLE_WIN." ".$attacker['user']."')");
         $strDate = $db -> DBDate($newdate);
         if (($attacker['battlelog'] == 'Y')  || ($attacker['id'] == $starter && $attacker['battlelog'] == 'A') || ($attacker['id'] != $starter && $attacker['battlelog'] == 'D'))

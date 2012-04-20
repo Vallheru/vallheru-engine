@@ -7,7 +7,7 @@
  *   @copyright            : (C) 2004,2005,2006,2007,2011,2012 Vallheru Team based on Gamers-Fusion ver 2.5
  *   @author               : thindil <thindil@vallheru.net>
  *   @version              : 1.5
- *   @since                : 19.03.2012
+ *   @since                : 20.04.2012
  *
  */
 
@@ -110,6 +110,7 @@ class Player
     var $revent;
     var $room;
     var $rinvites;
+    var $oldstats;
 /**
 * Class constructor - get data from database and write it to variables
 */
@@ -218,7 +219,138 @@ class Player
 	$objRevent->Close();
 	$this->room = $stats->fields['room'];
 	$this->rinvites = $stats->fields['rinvites'];
+	$this->oldstats = array($this->agility, $this->strength, $this->inteli, $this->wisdom, $this->speed, $this->cond);
     }
+
+    /**
+     * Function return modified player stats
+     */
+    function curstats($arrEquip = array(), $blnClear = FALSE)
+    {
+      global $db;
+
+      if (count($arrEquip) == 0)
+	{
+	  $arrEquip = $this->equipment();
+	}
+      //Add bonuses from equipment
+      if ($arrEquip[3][0])
+	{
+	  if ($arrEquip[3][5] < 0) 
+	    {
+	      $intAgibonus = str_replace("-","",$arrEquip[3][5]);
+	    } 
+	  elseif ($arrEquip[3][5] >= 0) 
+	    {
+	      $intAgibonus = 0 - $arrEquip[3][5];
+	    }
+	  $this->agility += $intAgibonus;
+	}
+      if ($arrEquip[5][0])
+	{
+	  if ($arrEquip[5][5] < 0) 
+	    {
+	      $intAgibonus = str_replace("-","",$arrEquip[5][5]);
+	    } 
+	  elseif ($arrEquip[5][5] >= 0) 
+	    {
+	      $intAgibonus = 0 - $arrEquip[5][5];
+	    }
+	  $this->agility += $intAgibonus;
+	}
+      if ($arrEquip[4][0])
+	{
+	  if ($arrEquip[4][5] < 0) 
+	    {
+	      $intAgibonus = str_replace("-","",$arrEquip[4][5]);
+	    } 
+	  elseif ($arrEquip[4][5] >= 0) 
+	    {
+	      $intAgibonus = 0 - $arrEquip[4][5];
+	    }
+	  $this->agility += $intAgibonus;
+	}
+      if ($arrEquip[1][0])
+	{
+	  $this->speed += $arrEquip[1][7];
+	}
+      $arrStats = array('agility', 'strength', 'inteli', 'wisdom', 'speed', 'cond');
+      //Add bonuses from rings
+      if ($arrEquip[9][2])
+	{
+	  $arrRings = array("zręczności", "siły", "inteligencji", "woli", "szybkości", "wytrzymałości");
+	  $arrRingtype = explode(" ", $arrEquip[9][1]);
+	  $intAmount = count($arrRingtype) - 1;
+	  $intKey = array_search($arrRingtype[$intAmount], $arrRings);
+	  $this->$arrStats[$intKey] += $arrEquip[9][2];
+	}
+      if ($arrEquip[10][2])
+	{
+	  $arrRings = array("zręczności", "siły", "inteligencji", "woli", "szybkości", "wytrzymałości");
+	  $arrRingtype = explode(" ", $arrEquip[10][1]);
+	  $intAmount = count($arrRingtype) - 1;
+	  $intKey = array_search($arrRingtype[$intAmount], $arrRings);
+	  $this->$arrStats[$intKey] += $arrEquip[10][2];
+	}
+      //Add bonuses from bless
+      $objBless = $db -> Execute("SELECT `bless`, `blessval` FROM `players` WHERE `id`=".$this->id);
+      if ($objBless->fields['bless'] != '')
+	{
+	  $this->$objBless->fields['bless'] += $objBless->fields['blessval'];
+	  if ($blnClear)
+	    {
+	      $db -> Execute("UPDATE `players` SET `bless`='', `blessval`=0 WHERE `id`=".$this->id);
+	    }
+	}
+      $objBless->Close();
+    }
+
+    /**
+     * Function return modified player skills
+     */
+    function curskills($arrNames, $blnClear = TRUE, $blnCraft = FALSE)
+    {
+      global $db;
+
+      /**
+       * Add bless
+       */
+      $objBless = $db -> Execute("SELECT `bless`, `blessval` FROM `players` WHERE `id`=".$this->id);
+      foreach ($arrNames as $strName)
+	{
+	  if ($objBless -> fields['bless'] == $strName)
+	    {
+	      $this->$strName += $objBless->fields['blessval'];
+	      if ($blnClear)
+		{
+		  $db -> Execute("UPDATE `players` SET `bless`='', `blessval`=0 WHERE `id`=".$this->id);
+		}
+	    }
+	}
+      $objBless -> Close();
+    
+      /**
+       * Add bonus from race and class
+       */
+      if ($this->clas == 'Rzemieślnik' && $blnCraft)
+	{
+	  $intBonus = ($this->level / 10);
+	  if ($this->race == 'Gnom')
+	    {
+	      $intBonus += ($this->level / 5);
+	    }
+	  $intMaxbonus = $this->$strName * 2;
+	  if ($intBonus > $intMaxbonus)
+	    {
+	      $intBonus = $intMaxbonus;
+	    }
+	  foreach ($arrNames as $strName)
+	    {
+	      $this->$strName += $intBonus;
+	    }
+	}
+    }
+
     /**
      * Function return values of selected atributes in array
      */

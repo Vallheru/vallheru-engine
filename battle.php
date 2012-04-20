@@ -7,7 +7,7 @@
  *   @copyright            : (C) 2004,2005,2006,2011,2012 Vallheru Team based on Gamers-Fusion ver 2.5
  *   @author               : thindil <thindil@vallheru.net>
  *   @version              : 1.5
- *   @since                : 17.04.2012
+ *   @since                : 20.04.2012
  *
  */
 
@@ -68,94 +68,34 @@ if (isset($_GET['battle']))
     global $smarty;
     global $db;
 
-    $arrmenu = array('age','inteli','clas','immunited','strength','agility','attack','miss','magic','speed','cond','race','wisdom','shoot','id','user','level','exp','hp','credits','mana','maps', 'antidote', 'battlelog', 'newbie');
+    checkvalue($_GET['battle']);
+    $arrmenu = array('age','inteli','clas','immunited','strength','agility','attack','miss','magic','speed','cond','race','wisdom','shoot','id','user','level','exp','hp','credits','mana','maps', 'antidote', 'battlelog', 'newbie', 'oldstats');
+    $arrMyequip = $player->equipment();
+    $player->curstats($arrMyequip);
+    $player->curskills(array('weapon', 'shoot', 'dodge', 'cast'), FALSE);
     $arrattacker = $player -> stats($arrmenu);
     $arrattacker['user'] = $arrTags[$player->tribe][0].' '.$player->user.' '.$arrTags[$player->tribe][1];
     $enemy = new Player($_GET['battle']);
-    $arrplayer = array('id','user','level','tribe','credits','location','hp','mana','exp','age','inteli','clas','immunited','strength','agility','attack','miss','magic','speed','cond','race','wisdom','shoot','maps','rest','fight', 'antidote', 'battlelog', 'newbie');
+    $arrplayer = array('id','user','level','tribe','credits','location','hp','mana','exp','age','inteli','clas','immunited','strength','agility','attack','miss','magic','speed','cond','race','wisdom','shoot','maps','rest','fight', 'antidote', 'battlelog', 'newbie', 'oldstats');
+    $arrEnequip = $enemy -> equipment();
+    $enemy->curstats($arrEnequip);
+    $enemy->curskills(array('weapon', 'shoot', 'dodge', 'cast'), FALSE);
     $arrdefender = $enemy -> stats($arrplayer);
     $arrdefender['user'] = $arrTags[$arrdefender['tribe']][0].' '.$arrdefender['user'].' '.$arrTags[$arrdefender['tribe']][1];
-    $arrMyequip = $player -> equipment();
-    $arrEnequip = $enemy -> equipment();
     $myczar = $db -> Execute("SELECT * FROM czary WHERE gracz=".$player -> id." AND status='E' AND typ='B'");
     $eczar = $db -> Execute("SELECT * FROM czary WHERE gracz=".$arrdefender['id']." AND status='E' AND typ='B'");
     $myczaro = $db -> Execute("SELECT * FROM czary WHERE gracz=".$player -> id." AND status='E' AND typ='O'");
     $eczaro = $db -> Execute("SELECT * FROM czary WHERE gracz=".$arrdefender['id']." AND status='E' AND typ='O'");
 
-    $arrStat = array('agility', 'strength', 'inteli', 'wisdom', 'speed', 'cond', 'attack', 'shoot', 'miss', 'magic');
-    $arrRings = array(R_AGI2, R_STR2, R_INT2, R_WIS2, R_SPE2, R_CON2);
-
-    /**
-    * Add bless to stats
-    */
-    $objMybless = $db -> Execute("SELECT bless, blessval FROM players WHERE id=".$player -> id);
-    if (!empty($objMybless -> fields['bless']))
-    {
-        $arrBless = array('agility', 'strength', 'inteli', 'wisdom', 'speed', 'condition', 'weapon', 'shoot', 'dodge', 'cast');
-        $intKey = array_search($objMybless -> fields['bless'], $arrBless);
-        $strStat = $arrStat[$intKey];
-        $arrattacker[$strStat] = ($arrattacker[$strStat] + $objMybless -> fields['blessval']);
-    }
-    $objMybless -> Close();
-    $objEnemybless = $db -> Execute("SELECT bless, blessval, freeze FROM players WHERE id=".$arrdefender['id']);
-    if (!empty($objEnemybless -> fields['bless']))
-    {
-        $arrBless = array('agility', 'strength', 'inteli', 'wisdom', 'speed', 'condition', 'weapon', 'shoot', 'dodge', 'cast');
-        $intKey = array_search($objMybless -> fields['bless'], $arrBless);
-        $strStat = $arrStat[$intKey];
-        $arrdefender[$strStat] = ($arrdefender[$strStat] + $objEnemybless -> fields['blessval']);
-    }
-
-    /**
-     * Add bonus to stats from rings
-     */
-    if ($arrMyequip[9][2])
-    {
-        $arrRingtype = explode(" ", $arrMyequip[9][1]);
-        $intAmount = count($arrRingtype) - 1;
-        $intKey = array_search($arrRingtype[$intAmount], $arrRings);
-        $strStat = $arrStat[$intKey];
-        $arrattacker[$strStat] = $arrattacker[$strStat] + $arrMyequip[9][2];
-    }
-    if ($arrMyequip[10][2])
-    {
-        $arrRingtype = explode(" ", $arrMyequip[10][1]);
-        $intAmount = count($arrRingtype) - 1;
-        $intKey = array_search($arrRingtype[$intAmount], $arrRings);
-        $strStat = $arrStat[$intKey];
-        $arrattacker[$strStat] = $arrattacker[$strStat] + $arrMyequip[10][2];
-    }
-    if ($arrEnequip[9][2])
-    {
-        $arrRingtype = explode(" ", $arrEnequip[9][1]);
-        $intAmount = count($arrRingtype) - 1;
-        $intKey = array_search($arrRingtype[$intAmount], $arrRings);
-        $strStat = $arrStat[$intKey];
-        $arrdefender[$strStat] = $arrdefender[$strStat] + $arrEnequip[9][2];
-    }
-    if ($arrEnequip[10][2])
-    {
-        $arrRingtype = explode(" ", $arrEnequip[10][1]);
-        $intAmount = count($arrRingtype) - 1;
-        $intKey = array_search($arrRingtype[$intAmount], $arrRings);
-        $strStat = $arrStat[$intKey];
-        $arrdefender[$strStat] = $arrdefender[$strStat] + $arrEnequip[10][2];
-    }
-    if ($objEnemybless -> fields['freeze'])
+    $objFreezed = $db->Execute("SELECT `freeze` FROM `players` WHERE `id`=".$enemy->id);
+    if ($objFreezed -> fields['freeze'])
     {
         error(ACCOUNT_FREEZED);
     }
-    $objEnemybless -> Close();
+    $objFreezed->Close();
     $gmywt = array(0,0,0,0);
     $gewt = array(0,0,0,0);
     $runda = 0;
-    /**
-    * Count players agility and speed
-    */
-    $arrattacker['agility'] = checkagility($arrattacker['agility'], $arrMyequip[3][5], $arrMyequip[4][5], $arrMyequip[5][5]);
-    $arrdefender['agility'] = checkagility($arrdefender['agility'], $arrEnequip[3][5], $arrEnequip[4][5], $arrEnequip[5][5]);
-    $arrattacker['speed'] = checkspeed($arrattacker['speed'], $arrMyequip[0][7], $arrMyequip[1][7]);
-    $arrdefender['speed'] = checkspeed($arrdefender['speed'], $arrEnequip[0][7], $arrEnequip[1][7]);
     if ($arrMyequip[0][3] != $arrdefender['antidote']) 
     {
         if ($arrMyequip[0][3] == 'D')
