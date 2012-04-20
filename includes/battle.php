@@ -415,7 +415,7 @@ function attack1($attacker, $defender, $arrAtequip, $arrDeequip, $attack_bspell,
 		      }
 		    $strMessage = $strMessage.showcritical($arrLocations[$intHit], $strAtype, 'pvp', $defender['user'], $attacker['user']);
                 }
-                if ($attack_bspell -> fields['id'] && $attacker['mana'] > $attack_bspell -> fields['poziom']) 
+                elseif ($attack_bspell -> fields['id'] && $attacker['mana'] > $attack_bspell -> fields['poziom'] && (!$arrAtequip[0][0] && !$arrAtequip[1][0])) 
                 {
                     if ($pech > 5) 
                     {
@@ -592,7 +592,7 @@ function attack1($attacker, $defender, $arrAtequip, $arrDeequip, $attack_bspell,
                         break;
                     }
                 }
-                if ($attack_bspell -> fields['id'] && $attacker['mana'] > $attack_bspell -> fields['poziom']) 
+	      elseif ($attack_bspell -> fields['id'] && $attacker['mana'] > $attack_bspell -> fields['poziom'] && (!$arrAtequip[0][0] && !$arrAtequip[1][0])) 
                 {
                     if ($pech > 5) 
                     {
