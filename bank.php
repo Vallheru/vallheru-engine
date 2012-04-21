@@ -756,6 +756,7 @@ if (isset($_GET['action']))
 	  }
 	if ($blnValid)
 	  {
+	    $arrEquip = $player -> equipment();
 	    require_once("includes/checkexp.php");
 	    $intMax = (50 - ($_POST['tp'] * 2)) * $player->level;
 	    $roll = rand (1, $intMax);
@@ -769,7 +770,6 @@ if (isset($_GET['action']))
 	      }
 	    else
 	      {		
-		$arrEquip = $player -> equipment();
 		$player->curstats($arrEquip);
 		$player->curskills(array('thievery'));
 		

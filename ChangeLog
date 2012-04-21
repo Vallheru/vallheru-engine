@@ -1,5 +1,7 @@
 2012-04-21  Bartek thindil Jasicki  <thindil@vallheru.net>
 
+	* BUG,bank.php: 
+	fixed notice
 	* UPDATE,includes/astralsteal.php, includes/steal.php, bank.php, jail.php, tribe.php, view.php:
 	better check for bonuses to stats for thieves
 
