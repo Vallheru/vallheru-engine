@@ -9,7 +9,7 @@
  *   @author               : mori <ziniquel@users.sourceforge.net>
  *   @author               : eyescream <tduda@users.sourceforge.net>
  *   @version              : 1.5
- *   @since                : 19.04.2012
+ *   @since                : 21.04.2012
  *
  */
 
@@ -315,49 +315,11 @@ if (isset ($_GET['view']) && $_GET['view'] == 'view')
 	      {
 		$db->Execute("UPDATE `players` SET `astralcrime`='N' WHERE `id`=".$player->id);
 		/**
-		 * Add bonus from bless
-		 */
-		$strBless = FALSE;
-		$objBless = $db -> Execute("SELECT `bless`, `blessval` FROM `players` WHERE `id`=".$player -> id);
-		if ($objBless -> fields['bless'] == 'inteli')
-		  {
-		    $player -> inteli = $player -> inteli + $objBless -> fields['blessval'];
-		    $strBless = 'inteli';
-		  }
-		if ($objBless -> fields['bless'] == 'agility')
-		  {
-		    $player -> agility = $player -> agility + $objBless -> fields['blessval'];
-		    $strBless = 'agility';
-		  }
-		$objBless -> Close();
-		/**
 		 * Add bonus from rings
 		 */
 		$arrEquip = $player -> equipment();
-		$arrRings = array('zręczności', 'inteligencji');
-		$arrStat = array('agility', 'inteli');
-		if ($arrEquip[9][0])
-		  {
-		    $arrRingtype = explode(" ", $arrEquip[9][1]);
-		    $intAmount = count($arrRingtype) - 1;
-		    $intKey = array_search($arrRingtype[$intAmount], $arrRings);
-		    if ($intKey != NULL)
-		      {
-			$strStat = $arrStat[$intKey];
-			$player -> $strStat = $player -> $strStat + $arrEquip[9][2];
-		      }
-		  }
-		if ($arrEquip[10][0])
-		  {
-		    $arrRingtype = explode(" ", $arrEquip[10][1]);
-		    $intAmount = count($arrRingtype) - 1;
-		    $intKey = array_search($arrRingtype[$intAmount], $arrRings);
-		    if ($intKey != NULL)
-		      {
-			$strStat = $arrStat[$intKey];
-			$player -> $strStat = $player -> $strStat + $arrEquip[10][2];
-		      }
-		  }
+		$player->curstats($arrEquip);
+		$player->curskills(array('thievery'));
 		$intStats = ($player->agility + $player->inteli + $player->thievery);
 		/**
 		 * Add bonus from tools

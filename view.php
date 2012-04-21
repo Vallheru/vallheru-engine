@@ -8,7 +8,7 @@
  *   @author               : thindil <thindil@vallheru.net>
  *   @author               : eyescream <tduda@users.sourceforge.net>
  *   @version              : 1.5
- *   @since                : 20.03.2012
+ *   @since                : 21.04.2012
  *
  */
 
@@ -45,7 +45,7 @@ $view = new Player($_GET['view']);
 /**
 * Get the localization for game
 */
-require_once("languages/".$player -> lang."/view.php");
+require_once("languages/".$lang."/view.php");
 
 if (empty ($view -> id)) 
 {
@@ -428,65 +428,11 @@ if (isset($_GET['spy']) || isset($_GET['steal']))
       {
         error(SAME_CLAN." (<a href=\"view.php?view=".$_GET['view']."\">".BACK."</a>)");
       }
-    /**
-     * Add bonus from bless
-     */
-    $strBless = FALSE;
-    $objBless = $db -> Execute("SELECT `bless`, `blessval` FROM `players` WHERE `id`=".$player -> id);
-    if ($objBless -> fields['bless'] == 'inteli')
-      {
-        $player -> inteli = $player -> inteli + $objBless -> fields['blessval'];
-        $strBless = 'inteli';
-      }
-    if ($objBless -> fields['bless'] == 'agility')
-      {
-        $player -> agility = $player -> agility + $objBless -> fields['blessval'];
-        $strBless = 'agility';
-      }
-    $objBless -> Close();
-    if ($strBless)
-      {
-        $db -> Execute("UPDATE `players` SET `bless`='', `blessval`=0 WHERE `id`=".$player -> id);
-      }
-    $objBless = $db -> Execute("SELECT `bless`, `blessval` FROM `players` WHERE `id`=".$view -> id);
-    if ($objBless -> fields['bless'] == 'inteli')
-      {
-        $view -> inteli = $view -> inteli + $objBless -> fields['blessval'];
-      }
-    if ($objBless -> fields['bless'] == 'agility')
-      {
-        $view -> agility = $view -> agility + $objBless -> fields['blessval'];
-      }
-    $objBless -> Close();
-
-    /**
-     * Add bonus from rings
-     */
     $arrEquip = $player -> equipment();
-    $arrRings = array(R_AGI, R_INT);
-    $arrStat = array('agility', 'inteli');
-    if ($arrEquip[9][0])
-      {
-        $arrRingtype = explode(" ", $arrEquip[9][1]);
-        $intAmount = count($arrRingtype) - 1;
-        $intKey = array_search($arrRingtype[$intAmount], $arrRings);
-        if ($intKey != NULL)
-	  {
-            $strStat = $arrStat[$intKey];
-            $player -> $strStat = $player -> $strStat + $arrEquip[9][2];
-	  }
-      }
-    if ($arrEquip[10][0])
-      {
-        $arrRingtype = explode(" ", $arrEquip[10][1]);
-        $intAmount = count($arrRingtype) - 1;
-        $intKey = array_search($arrRingtype[$intAmount], $arrRings);
-        if ($intKey != NULL)
-	  {
-            $strStat = $arrStat[$intKey];
-            $player -> $strStat = $player -> $strStat + $arrEquip[10][2];
-	  }
-      }
+    $player->curstats($arrEquip);
+    $player->curskills(array('thievery'));
+    $view->curstats();
+    $view->curskills(array('perception'));
     $strDate = $db -> DBDate($newdate);
   }
 

@@ -4,11 +4,11 @@
  *   Functions to steal astral components
  *
  *   @name                 : astralsteal.php                            
- *   @copyright            : (C) 2006,2011 Vallheru Team based on Gamers-Fusion ver 2.5
+ *   @copyright            : (C) 2006,2011,2012 Vallheru Team based on Gamers-Fusion ver 2.5
  *   @author               : thindil <thindil@vallheru.net>
  *   @author               : eyescream <tduda@users.sourceforge.net>
  *   @version              : 1.5
- *   @since                : 28.12.2011
+ *   @since                : 21.04.2012
  *
  */
 
@@ -28,7 +28,7 @@
 //   along with this program; if not, write to the Free Software
 //   Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 //
-// $Id:$
+// $Id$
 
 /**
 * Get the localization for game
@@ -45,54 +45,11 @@ function astralsteal($intVictim, $strLocation, $intOwner = 0, $intId = 0)
     global $newdate;
 
     /**
-     * Add bonus from bless
-     */
-    $strBless = FALSE;
-    $objBless = $db -> Execute("SELECT `bless`, `blessval` FROM `players` WHERE `id`=".$player -> id);
-    if ($objBless -> fields['bless'] == 'inteli')
-    {
-        $player -> inteli = $player -> inteli + $objBless -> fields['blessval'];
-        $strBless = 'inteli';
-    }
-    if ($objBless -> fields['bless'] == 'agility')
-    {
-        $player -> agility = $player -> agility + $objBless -> fields['blessval'];
-        $strBless = 'agility';
-    }
-    $objBless -> Close();
-    if ($strBless)
-    {
-        $db -> Execute("UPDATE `players` SET `bless`='', `blessval`=0 WHERE `id`=".$player -> id);
-    }
-
-    /**
      * Add bonus from rings
      */
     $arrEquip = $player -> equipment();
-    $arrRings = array(R_AGI, R_INT);
-    $arrStat = array('agility', 'inteli');
-    if ($arrEquip[9][0])
-    {
-        $arrRingtype = explode(" ", $arrEquip[9][1]);
-        $intAmount = count($arrRingtype) - 1;
-        $intKey = array_search($arrRingtype[$intAmount], $arrRings);
-        if ($intKey != NULL)
-        {
-            $strStat = $arrStat[$intKey];
-            $player -> $strStat = $player -> $strStat + $arrEquip[9][2];
-        }
-    }
-    if ($arrEquip[10][0])
-    {
-        $arrRingtype = explode(" ", $arrEquip[10][1]);
-        $intAmount = count($arrRingtype) - 1;
-        $intKey = array_search($arrRingtype[$intAmount], $arrRings);
-        if ($intKey != NULL)
-        {
-            $strStat = $arrStat[$intKey];
-            $player -> $strStat = $player -> $strStat + $arrEquip[10][2];
-        }
-    }
+    $player->curstats($arrEquip);
+    $player->curskills(array('thievery'));
 
     $intStats = ($player->agility + $player->inteli + $player->thievery);
     /**

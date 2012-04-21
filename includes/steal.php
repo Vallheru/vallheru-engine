@@ -7,7 +7,7 @@
  *   @copyright            : (C) 2004,2005,2006,2011,2012 Vallheru Team based on Gamers-Fusion ver 2.5
  *   @author               : thindil <thindil@vallheru.net>
  *   @version              : 1.5
- *   @since                : 20.02.2012
+ *   @since                : 21.04.2012
  *
  */
 
@@ -32,7 +32,7 @@
 /**
 * Get the localization for game
 */
-require_once("languages/".$player -> lang."/steal.php");
+require_once("languages/".$lang."/steal.php");
 
 /**
 * Steal items from shops
@@ -67,55 +67,10 @@ function steal ($itemid)
 	$arritem = $db -> Execute("SELECT * FROM `bows` WHERE `id`=".$itemid);
       }
     $roll = rand (1, ($arritem->fields['minlev'] * 100));
-    /**
-     * Add bonus from bless
-     */
-    $strBless = FALSE;
-    $objBless = $db -> Execute("SELECT `bless`, `blessval` FROM `players` WHERE `id`=".$player -> id);
-    if ($objBless -> fields['bless'] == 'inteli')
-    {
-        $player -> inteli = $player -> inteli + $objBless -> fields['blessval'];
-        $strBless = 'inteli';
-    }
-    if ($objBless -> fields['bless'] == 'agility')
-    {
-        $player -> agility = $player -> agility + $objBless -> fields['blessval'];
-        $strBless = 'agility';
-    }
-    $objBless -> Close();
-    if ($strBless)
-    {
-        $db -> Execute("UPDATE `players` SET `bless`='', `blessval`=0 WHERE `id`=".$player -> id);
-    }
 
-    /**
-     * Add bonus from rings
-     */
     $arrEquip = $player -> equipment();
-    $arrRings = array(R_AGI, R_INT);
-    $arrStat = array('agility', 'inteli');
-    if ($arrEquip[9][0])
-    {
-        $arrRingtype = explode(" ", $arrEquip[9][1]);
-        $intAmount = count($arrRingtype) - 1;
-        $intKey = array_search($arrRingtype[$intAmount], $arrRings);
-        if ($intKey != NULL)
-        {
-            $strStat = $arrStat[$intKey];
-            $player -> $strStat = $player -> $strStat + $arrEquip[9][2];
-        }
-    }
-    if ($arrEquip[10][0])
-    {
-        $arrRingtype = explode(" ", $arrEquip[10][1]);
-        $intAmount = count($arrRingtype) - 1;
-        $intKey = array_search($arrRingtype[$intAmount], $arrRings);
-        if ($intKey != NULL)
-        {
-            $strStat = $arrStat[$intKey];
-            $player -> $strStat = $player -> $strStat + $arrEquip[10][2];
-        }
-    }
+    $player->curstats($arrEquip);
+    $player->curskills(array('thievery'));
 
     $intStats = ($player->agility + $player->inteli + $player->thievery);
     /**

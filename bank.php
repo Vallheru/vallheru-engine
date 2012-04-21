@@ -9,7 +9,7 @@
  *   @author               : yeskov <yeskov@users.sourceforge.net>
  *   @author               : eyescream <tduda@users.sourceforge.net>
  *   @version              : 1.5
- *   @since                : 29.03.2012
+ *   @since                : 21.04.2012
  *
  */
 
@@ -768,61 +768,10 @@ if (isset($_GET['action']))
 		$chance = 1000000;
 	      }
 	    else
-	      {
-		/**
-		 * Add bonus from bless
-		 */
-		$strBless = FALSE;
-		$objBless = $db -> Execute("SELECT bless, blessval FROM players WHERE id=".$player -> id);
-		if ($objBless -> fields['bless'] == 'inteli')
-		  {
-		    $player -> inteli = $player -> inteli + $objBless -> fields['blessval'];
-		    $strBless = 'inteli';
-		  }
-		elseif ($objBless -> fields['bless'] == 'agility')
-		  {
-		    $player -> agility = $player -> agility + $objBless -> fields['blessval'];
-		    $strBless = 'agility';
-		  }
-		elseif ($objBless -> fields['bless'] == 'speed')
-		  {
-		    $player->speed = $player->speed + $objBless -> fields['blessval'];
-		    $strBless = 'speed';
-		  }
-		$objBless -> Close();
-		if ($strBless)
-		  {
-		    $db -> Execute("UPDATE players SET bless='', blessval=0 WHERE id=".$player -> id);
-		  }
-		
-		/**
-		 * Add bonus from rings
-		 */
+	      {		
 		$arrEquip = $player -> equipment();
-		$arrRings = array('zręczności', 'inteligencji', 'szybkości');
-		$arrStat = array('agility', 'inteli', 'speed');
-		if ($arrEquip[9][0])
-		  {
-		    $arrRingtype = explode(" ", $arrEquip[9][1]);
-		    $intAmount = count($arrRingtype) - 1;
-		    $intKey = array_search($arrRingtype[$intAmount], $arrRings);
-		    if ($intKey != NULL)
-		      {
-			$strStat = $arrStat[$intKey];
-			$player -> $strStat = $player -> $strStat + $arrEquip[9][2];
-		      }
-		  }
-		if ($arrEquip[10][0])
-		  {
-		    $arrRingtype = explode(" ", $arrEquip[10][1]);
-		    $intAmount = count($arrRingtype) - 1;
-		    $intKey = array_search($arrRingtype[$intAmount], $arrRings);
-		    if ($intKey != NULL)
-		      {
-			$strStat = $arrStat[$intKey];
-			$player -> $strStat = $player -> $strStat + $arrEquip[10][2];
-		      }
-		  }
+		$player->curstats($arrEquip);
+		$player->curskills(array('thievery'));
 		
 		$intStats = ($player->agility + $player->inteli + $player->thievery + $player->speed);
 		/**
