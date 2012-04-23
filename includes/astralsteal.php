@@ -8,7 +8,7 @@
  *   @author               : thindil <thindil@vallheru.net>
  *   @author               : eyescream <tduda@users.sourceforge.net>
  *   @version              : 1.5
- *   @since                : 21.04.2012
+ *   @since                : 23.04.2012
  *
  */
 
@@ -240,7 +240,7 @@ function astralsteal($intVictim, $strLocation, $intOwner = 0, $intId = 0)
 	if ($arrEquip[12][0])
 	  {
 	    $arrEquip[12][6] --;
-	    if ($arrEquip == 0)
+	    if ($arrEquip[12][6] <= 0)
 	      {
 		$db->Execute("DELETE FROM `equipment` WHERE `id`=".$arrEquip[12][0]);
 	      }

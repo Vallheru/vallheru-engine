@@ -7,7 +7,7 @@
  *   @copyright            : (C) 2004,2005,2006,2011,2012 Vallheru Team based on Gamers-Fusion ver 2.5
  *   @author               : thindil <thindil@vallheru.net>
  *   @version              : 1.5
- *   @since                : 21.04.2012
+ *   @since                : 23.04.2012
  *
  */
 
@@ -147,7 +147,7 @@ function steal ($itemid)
 	if ($arrEquip[12][0])
 	  {
 	    $arrEquip[12][6] --;
-	    if ($arrEquip == 0)
+	    if ($arrEquip[12][6] <= 0)
 	      {
 		$db->Execute("DELETE FROM `equipment` WHERE `id`=".$arrEquip[12][0]);
 	      }
