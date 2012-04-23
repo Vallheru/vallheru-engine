@@ -7,7 +7,7 @@
  *   @copyright            : (C) 2004,2005,2006,2007,2011,2012 Vallheru Team based on Gamers-Fusion ver 2.5
  *   @author               : thindil <thindil@vallheru.net>
  *   @version              : 1.5
- *   @since                : 20.04.2012
+ *   @since                : 23.04.2012
  *
  */
 
@@ -207,7 +207,7 @@ function autofill($intPlayerid, $intArrowId, $intPlayer2, $intPlevel)
 /**
 * Function count lost stats in battle
 */
-function loststat($lostid, $values, $winid, $winuser, $starter, $antidote) 
+function loststat($lostid, $values, $winid, $winuser, $starter, $antidote, $winlevel = 0) 
 {
     global $db;
     global $newdate;
@@ -242,7 +242,7 @@ function loststat($lostid, $values, $winid, $winuser, $starter, $antidote)
       {
         $attacktext = YOU_ATTACKED;
       }
-    if ($winid) 
+    if ($winid > 0) 
       {
         $strDate = $db -> DBDate($newdate);
 	if ($antidote != 'R')
@@ -252,7 +252,7 @@ function loststat($lostid, $values, $winid, $winuser, $starter, $antidote)
 	      {
 		$strMessage = " ".YOU_LOST." ".$lost." ".$stat;
 	      }
-	    $db -> Execute("INSERT INTO log (`owner`, `log`, `czas`, `type`) VALUES(".$lostid.",'".$attacktext." ".YOU_LOSE." <b><a href=view.php?view=".$winid.">".$winuser."</a> ".ID.":".$winid."</b>.".$strMessage."', ".$strDate.", 'B')") or die(E_LOG);
+	    $db -> Execute("INSERT INTO log (`owner`, `log`, `czas`, `type`) VALUES(".$lostid.",'".$attacktext." ".YOU_LOSE." <b><a href=view.php?view=".$winid.">".$winuser."</a> </b>(poziom: ".$winlevel.") <b>".ID.":".$winid."</b>.".$strMessage."', ".$strDate.", 'B')") or die(E_LOG);
 	  }
 	else
 	  {

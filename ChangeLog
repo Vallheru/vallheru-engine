@@ -1,5 +1,7 @@
 2012-04-23  Bartek thindil Jasicki  <thindil@vallheru.net>
 
+	* FEATURE,includes/funkcje.php, includes/battle.php: 
+	added info about player level
 	* BUG,includes/astralsteal.php, includes/steal.php, bank.php, tribes.php: 
 	fixed destroying lockpicks
 	* UPDATE,languages/pl/view.php, view.php:

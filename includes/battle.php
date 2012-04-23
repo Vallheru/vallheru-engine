@@ -8,7 +8,7 @@
  *   @author               : thindil <thindil@vallheru.net>
  *   @author               : eyescream <tduda@users.sourceforge.net>
  *   @version              : 1.5
- *   @since                : 20.04.2012
+ *   @since                : 23.04.2012
  *
  */
 
@@ -929,8 +929,8 @@ function attack1($attacker, $defender, $arrAtequip, $arrDeequip, $attack_bspell,
              $strSubject = T_SUBJECT.$attacker['user'].T_SUB_ID.$attacker['id'];
             $db -> Execute("INSERT INTO `mail` (`sender`, `senderid`, `owner`, `subject`, `body`, `date`) VALUES('".T_SENDER."','0',".$defender['id'].",'".$strSubject."','".$strMessage."', ".$strDate.")");
         }
-        $db -> Execute("INSERT INTO `log` (`owner`, `log`, `czas`, `type`) VALUES(".$attacker['id'].",'".$attacktext." ".L_BATTLE2."  <b><a href=view.php?view=".$defender['id'].">".$defender['user']."</a></b> ".L_ID.'<b>'.$defender['id']."</b>.', ".$strDate.", 'B')");
-        $db -> Execute("INSERT INTO `log` (`owner`, `log`, `czas`, `type`) VALUES(".$defender['id'].",'".$defendtext." ".L_BATTLE2." <b><a href=view.php?view=".$attacker['id'].">".$attacker['user']."</a></b> ".L_ID.'<b>'.$attacker['id']."</b>.', ".$strDate.", 'B')");
+        $db -> Execute("INSERT INTO `log` (`owner`, `log`, `czas`, `type`) VALUES(".$attacker['id'].",'".$attacktext." ".L_BATTLE2."  <b><a href=view.php?view=".$defender['id'].">".$defender['user']."</a></b> (poziom: ".$defender['level'].') '.L_ID.'<b>'.$defender['id']."</b>.', ".$strDate.", 'B')");
+        $db -> Execute("INSERT INTO `log` (`owner`, `log`, `czas`, `type`) VALUES(".$defender['id'].",'".$defendtext." ".L_BATTLE2." <b><a href=view.php?view=".$attacker['id'].">".$attacker['user']."</a></b> (poziom: ".$attacker['level'].') '.L_ID.'<b>'.$attacker['id']."</b>.', ".$strDate.", 'B')");
         require_once("includes/foot.php");
         exit;
     }
@@ -1100,26 +1100,14 @@ function attack1($attacker, $defender, $arrAtequip, $arrDeequip, $attack_bspell,
             $attacktext = YOU_ATTACK_AND;
             $startuser = $attacker['user'];
             $secuser = $defender['user'];
-            $defender['agility'] = $enemy -> agility;
-            $defender['strength'] = $enemy -> strength;
-            $defender['inteli'] = $enemy -> inteli;
-            $defender['cond'] = $enemy -> cond;
-            $defender['speed'] = $enemy -> speed;
-            $defender['wisdom'] = $enemy -> wisdom;
         } 
             else 
         {
             $attacktext = YOU_ATTACKED_AND;
             $startuser = $defender['user'];
             $secuser = $attacker['user'];
-            $defender['agility'] = $player -> agility;
-            $defender['strength'] = $player -> strength;
-            $defender['inteli'] = $player -> inteli;
-            $defender['cond'] = $player -> cond;
-            $defender['speed'] = $player -> speed;
-            $defender['wisdom'] = $player -> wisdom;
         }
-        loststat($defender['id'], $defender['oldstats'], $attacker['id'], $attacker['user'], $starter, $defender['antidote']);
+        loststat($defender['id'], $defender['oldstats'], $attacker['id'], $attacker['user'], $starter, $defender['antidote'], $attacker['level']);
         $db -> Execute("INSERT INTO `events` (`text`) VALUES('".L_PLAYER." ".$startuser." ".L_ATTACK." ".$secuser.". ".BATTLE_WIN." ".$attacker['user']."')");
         $strDate = $db -> DBDate($newdate);
         if (($attacker['battlelog'] == 'Y')  || ($attacker['id'] == $starter && $attacker['battlelog'] == 'A') || ($attacker['id'] != $starter && $attacker['battlelog'] == 'D'))
@@ -1132,7 +1120,7 @@ function attack1($attacker, $defender, $arrAtequip, $arrDeequip, $attack_bspell,
             $strSubject = T_SUBJECT.$attacker['user'].T_SUB_ID.$attacker['id'];
             $db -> Execute("INSERT INTO `mail` (`sender`, `senderid`, `owner`, `subject`, `body`, `date`) VALUES('".T_SENDER."','0',".$defender['id'].",'".$strSubject."','".$strMessage."', ".$strDate.")");
         }
-        $db -> Execute("INSERT INTO `log` (`owner`, `log`, `czas`, `type`) VALUES(".$attacker['id'].",'".$attacktext." ".YOU_DEFEAT." <b><a href=view.php?view=".$defender['id'].">".$defender['user']."</a></b>".L_ID.'<b>'.$defender['id']."</b>. ".YOU_REWARD." <b>$expgain</b> ".EXPERIENCE." <b>$creditgain</b> ".GOLD_COINS.".', ".$strDate.", 'B')");
+        $db -> Execute("INSERT INTO `log` (`owner`, `log`, `czas`, `type`) VALUES(".$attacker['id'].",'".$attacktext." ".YOU_DEFEAT." <b><a href=view.php?view=".$defender['id'].">".$defender['user']."</a></b> (poziom: ".$defender['level'].') '.L_ID.'<b>'.$defender['id']."</b>. ".YOU_REWARD." <b>$expgain</b> ".EXPERIENCE." <b>$creditgain</b> ".GOLD_COINS.".', ".$strDate.", 'B')");
         require_once("includes/foot.php");
         exit;
     }
