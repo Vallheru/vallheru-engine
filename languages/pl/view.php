@@ -8,7 +8,7 @@
  *   @author               : thindil <thindil@vallheru.net>
  *   @author               : eyescream <tduda@users.sourceforge.net>
  *   @version              : 1.5
- *   @since                : 29.02.2012
+ *   @since                : 23.04.2012
  *
  */
 
@@ -50,7 +50,6 @@ define("A_STEAL2", "Ukradnij astralny komponent");
 define("PLAYER_IP", "IP gracza: ");
 define("T_RANK", "Ranga");
 define("T_LOCATION", "Lokacja");
-define("T_LAST_SEEN", "Ostatnio widziany");
 define("T_AGE", "Wiek");
 define("T_RACE", "Rasa");
 define("T_CLASS2", "Klasa");
@@ -59,7 +58,6 @@ define("T_STATUS", "Status");
 define("T_MAX_HP", "Maksymalne PŻ");
 define("T_FIGHTS", "Wyniki");
 define("T_LAST_KILL", "Ostatnio zabity");
-define("T_LAST_KILLED", "Ostatnio zabity przez");
 define("T_REFS", "Vallary");
 define("T_PROFILE", "Profil");
 define("T_OPTIONS", "Opcje");

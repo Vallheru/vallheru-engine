@@ -8,7 +8,7 @@
  *   @author               : thindil <thindil@vallheru.net>
  *   @author               : eyescream <tduda@users.sourceforge.net>
  *   @version              : 1.5
- *   @since                : 21.04.2012
+ *   @since                : 23.04.2012
  *
  */
 
@@ -80,6 +80,15 @@ elseif ($view->id == $objMMid->fields['MIN(`id`)'])
 }
 $objMMid->Close();
 
+if ($view->gender == 'M')
+  {
+    $strSuffix = 'y';
+  }
+else
+  {
+    $strSuffix = 'a';
+  }
+
 $smarty -> assign (array("User" => $view -> user, 
                          "Id" => $view -> id, 
                          "Avatar" => '', 
@@ -94,7 +103,7 @@ $smarty -> assign (array("User" => $view -> user,
                          "IP" => '',
                          "Trank" => T_RANK,
                          "Tlocation" => T_LOCATION,
-                         "Tlastseen" => T_LAST_SEEN,
+                         "Tlastseen" => 'Ostatnio widzian'.$strSuffix,
                          "Tage" => T_AGE,
                          "Tclass2" => T_CLASS2,
                          "Trace" => T_RACE,
@@ -103,7 +112,7 @@ $smarty -> assign (array("User" => $view -> user,
                          "Tmaxhp" => T_MAX_HP,
                          "Tfights" => T_FIGHTS,
                          "Tlastkill" => T_LAST_KILL,
-                         "Tlastkilled" => T_LAST_KILLED,
+                         "Tlastkilled" => 'Ostatnio zabit'.$strSuffix.' przez',
                          "Trefs" => T_REFS,
 			 "Anext" => 'Następny profil',
 			 "Aprevious" => 'Poprzedni profil',
@@ -326,7 +335,7 @@ switch ($intLastseen)
     $strSeen = $intLastseen." dni temu.";
     break;
   }
-$smarty->assign(array("Seen" => "Ostatnio aktywny",
+$smarty->assign(array("Seen" => "Ostatnio aktywn".$strSuffix,
 		      "Lastseen" => $strSeen));
 
 /**

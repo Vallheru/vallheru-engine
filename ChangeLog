@@ -1,3 +1,8 @@
+2012-04-23  Bartek thindil Jasicki  <thindil@vallheru.net>
+
+	* UPDATE,languages/pl/view.php, view.php:
+	added gender specified suffixes
+
 2012-04-21  Bartek thindil Jasicki  <thindil@vallheru.net>
 
 	* BUG,bank.php: 
