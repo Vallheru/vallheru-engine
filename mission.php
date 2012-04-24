@@ -7,7 +7,7 @@
  *   @copyright            : (C) 2012 Vallheru Team based on Gamers-Fusion ver 2.5
  *   @author               : thindil <thindil@vallheru.net>
  *   @version              : 1.5
- *   @since                : 22.03.2012
+ *   @since                : 24.04.2012
  *
  */
 
@@ -322,6 +322,14 @@ if (isset($_POST['action']))
 	      {
 		for ($i = 0; $i < count($arrChances); $i++)
 		  {
+		    if (preg_match('/\[[a-zA-Z]\]', $arrTmp[$i], $arrResults))
+		      {
+			if ($arrResults[0][1] != $_SESSION['maction']['type'])
+			  {
+			    continue;
+			  }
+			$arrTmp[$i] = str_replace($arrResults[0], '', $arrTmp[$i]);
+		      }
 		    $intRoll = rand(0, 100);
 		    if ($intRoll < $arrChances[$i])
 		      {
