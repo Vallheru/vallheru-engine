@@ -322,7 +322,7 @@ if (isset($_POST['action']))
 	      {
 		for ($i = 0; $i < count($arrChances); $i++)
 		  {
-		    if (preg_match('/\[[a-zA-Z]\]', $arrTmp[$i], $arrResults))
+		    if (preg_match('/\[[a-zA-Z]\]/', $arrTmp[$i], $arrResults))
 		      {
 			if ($arrResults[0][1] != $_SESSION['maction']['type'])
 			  {

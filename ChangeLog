@@ -1,5 +1,7 @@
 2012-04-24  Bartek thindil Jasicki  <thindil@vallheru.net>
 
+	* BUG,mission.php: 
+	fixed typo
 	* FEATURE,mission.php: 
 	added exists for selected type of mission only
 	* FEATURE,includes/resets.php, log.php:
