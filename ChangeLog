@@ -1,3 +1,8 @@
+2012-04-24  Bartek thindil Jasicki  <thindil@vallheru.net>
+
+	* FEATURE,includes/resets.php, log.php:
+	added info about finished minerals search
+
 2012-04-23  Bartek thindil Jasicki  <thindil@vallheru.net>
 
 	* FEATURE,includes/funkcje.php, includes/battle.php: 

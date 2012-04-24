@@ -7,7 +7,7 @@
  *   @copyright            : (C) 2004,2005,2006,2007,2011,2012 Vallheru Team based on Gamers-Fusion ver 2.5
  *   @author               : thindil <thindil@vallheru.net>
  *   @version              : 1.5
- *   @since                : 24.03.2012
+ *   @since                : 24.04.2012
  *
  */
 
@@ -697,6 +697,11 @@ function mainreset()
                          'zinc' => 2, 
                          'tin' => 3, 
                          'iron' => 4);
+    $arrMineso = array();
+    $arrMinesc = array();
+    $strSql = "INSERT INTO `log` (`owner`, `log`, `czas`, `type`) VALUES";
+    $time = date("Y-m-d H:i:s");
+    $blnBack = FALSE;
     while (!$objSearchmin -> EOF)
     {
         $intDays = $objSearchmin -> fields['days'] - 1;
@@ -727,14 +732,25 @@ function mainreset()
             }
             $objTest -> Close();
             $db -> Execute("DELETE FROM mines_search WHERE player=".$objSearchmin -> fields['player']);
+	    $strSql .= "(".$objSearchmin->fields['player'].", 'Twój geolog wrócił już z poszukiwania minerałów.', '".$time."', 'I'),";
+	    $blnBack = TRUE;
         }
-            else
-        {
-            $db -> Execute("UPDATE mines_search SET days=days-1 WHERE player=".$objSearchmin -> fields['player']);
-        }
+	else
+	  {
+	    $arrMinesc[] = $objSearchmin->fields['player'];
+	  }
         $objSearchmin -> MoveNext();
     }
     $objSearchmin -> Close();
+    if ($blnBack)
+      {
+	$strSql = rtrim($strSql, ',').';';
+	$db->Execute($strSql);
+      }
+    if (count($arrMinesc) > 0)
+      {
+	$db->Execute("UPDATE `mines_search` SET `days`=`days`-1 WHERE `player` IN (".implode(',', $arrMinesc).")");
+      }
     /**
      * Show new news
      */

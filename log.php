@@ -7,7 +7,7 @@
  *   @copyright            : (C) 2004,2005,2006,2011,2012 Vallheru Team based on Gamers-Fusion ver 2.5
  *   @author               : thindil <thindil@vallheru.net>
  *   @version              : 1.5
- *   @since                : 23.03.2012
+ *   @since                : 24.04.2012
  *
  */
 
@@ -222,7 +222,8 @@ $arrTypes = array('O' => 'Strażnica',
 		  'L' => 'Biblioteka', 
 		  'U' => 'Brak typu', 
 		  'E' => 'Różne', 
-		  'F' => 'Farma');
+		  'F' => 'Farma',
+		  'I' => 'Kopalnia');
 
 /**
  * Get all available log types
