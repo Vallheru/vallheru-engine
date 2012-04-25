@@ -141,7 +141,16 @@
             <b>{$Author[player]} {$Cid}:{$Senderid[player]}</b>: {$Text[player]}<br />
         {/section}
     {/if}
-    {$Previous} {$Next}
+    {if $Tpages > 1}
+    	<br />{$Fpage}
+    	{for $page = 1 to $Tpages}
+	    {if $page == $Tpage}
+	        {$page}
+	    {else}
+                <a href="admin.php?view=innarchive&page={$page}">{$page}</a>
+	    {/if}
+    	{/for}
+    {/if}
 {/if}
 
 {if $View == "changelog"}

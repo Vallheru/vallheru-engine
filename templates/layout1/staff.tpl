@@ -35,7 +35,16 @@
             <b>{$Author[player]} {$Cid}:{$Senderid[player]}</b>: {$Text[player]}<br />
         {/section}
     {/if}
-    {$Previous} {$Next}
+    {if $Tpages > 1}
+    	<br />{$Fpage}
+    	{for $page = 1 to $Tpages}
+	    {if $page == $Tpage}
+	        {$page}
+	    {else}
+                <a href="staff.php?view=innarchive&page={$page}">{$page}</a>
+	    {/if}
+    	{/for}
+    {/if}
 {/if}
 
 {if $View == "jail"}
@@ -77,8 +86,8 @@
 
 {if $View == "czat" || $View == "bforum"}
     {$Blocklist}<br />
-    {section name=staff loop=$Chatid}
-        {$Chatid}: {$Chatid[staff]}
+    {section name=player loop=$List1}
+        ID {$List1[player]}<br />
     {/section}
     <form method="post" action="staff.php?view={$View}&amp;step=czat">
     <select name="czat">
