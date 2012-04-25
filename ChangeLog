@@ -1,5 +1,7 @@
 2012-04-25  Bartek thindil Jasicki  <thindil@vallheru.net>
 
+	* BUG,hunters.php: 
+	fixed bug with gold award
 	* BUG,class/player_class.php (Player):
 	fixed counting bless to player stats
 

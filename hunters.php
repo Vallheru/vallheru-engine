@@ -7,7 +7,7 @@
  *   @copyright            : (C) 2011,2012 Vallheru Team based on Gamers-Fusion ver 2.5
  *   @author               : thindil <thindil@vallheru.net>
  *   @version              : 1.5
- *   @since                : 06.03.2012
+ *   @since                : 24.04.2012
  *
  */
 
@@ -152,7 +152,7 @@ elseif ($_GET['step'] == 'table')
 	  $objItem = $db->Execute("SELECT `name`, `power` FROM `potions` WHERE `id`=".$arrQuest[1]);
 	  $objItem->fields['cost'] = $objItem->fields['power'] * 3;
 	}
-      $strQuest .= '<i>Gildia Łowców poszukuje kogoś, kto dostarczy do gildii zapasy. Szczegóły zlecenia:<br />Przedmiot: '.$objItem->fields['name'].'<br />Ilość: '.$arrQuest[2].'<br />Nagroda: '.($objItem->fields['cost'] * 1.25 * $arrQuest[2]).' sztuk złota</i>';
+      $strQuest .= '<i>Gildia Łowców poszukuje kogoś, kto dostarczy do gildii zapasy. Szczegóły zlecenia:<br />Przedmiot: '.$objItem->fields['name'].'<br />Ilość: '.$arrQuest[2].'<br />Nagroda: '.(ceil($objItem->fields['cost'] * 1.25 * $arrQuest[2])).' sztuk złota</i>';
       $objItem->Close();
       break;
     case 'L':
@@ -325,7 +325,7 @@ elseif ($_GET['step'] == 'quest')
 	      $db->Execute("UPDATE `potions` SET `amount`=`amount`-".$arrQuest[2]." WHERE `id`=".$objItem2->fields['id']);
 	    }
 	}
-      $intGold = ($objItem->fields['cost'] * 1.25 * $arrQuest[2]);
+      $intGold = ceil($objItem->fields['cost'] * 1.25 * $arrQuest[2]);
       $objItem->Close();
       $objItem2->Close();
       $strMessage = 'Dziękujemy za dostarczenie zapasów do Gildii.';
