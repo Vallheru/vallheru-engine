@@ -1,5 +1,7 @@
 2012-04-25  Bartek thindil Jasicki  <thindil@vallheru.net>
 
+	* BUG,includes/admin/czat.php: 
+	fixed list of banned on chat, added duration of ban
 	* FEATURE,includes/admin/innarchive.php, templates/layout1/admin.tpl, templates/layout1/staff.tpl, templates/admin.tpl, templates/staff.tpl:
 	better pagination in inn archive, added timestamp
 	* BUG,hunters.php: 

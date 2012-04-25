@@ -4,11 +4,11 @@
  *   Ban/Unban player on chat or forums
  *
  *   @name                 : czat.php                            
- *   @copyright            : (C) 2006,2011 Vallheru Team based on Gamers-Fusion ver 2.5
+ *   @copyright            : (C) 2006,2011,2012 Vallheru Team based on Gamers-Fusion ver 2.5
  *   @author               : thindil <thindil@vallheru.net>
  *   @author               : eyescream <tduda@users.sourceforge.net>
  *   @version              : 1.5
- *   @since                : 23.12.2011
+ *   @since                : 25.04.2012
  *
  */
 
@@ -40,10 +40,10 @@ $smarty -> assign(array("Blocklist" => BLOCK_LIST,
 $arrtemp = array();
 if ($_GET['view'] == 'czat')
   {
-    $czatb = $db -> Execute("SELECT `gracz` FROM `chat_config`");
+    $czatb = $db -> Execute("SELECT `gracz`, `resets` FROM `chat_config`");
     while (!$czatb -> EOF)
       {
-	$arrtemp[] = $czatb -> fields['gracz'];
+	$arrtemp[] = $czatb -> fields['gracz'].' czas: '.$czatb->fields['resets'].' resetów';
 	$czatb -> MoveNext();
       }
     $czatb -> Close();
