@@ -7,7 +7,7 @@
  *   @copyright            : (C) 2004,2005,2006,2007,2011,2012 Vallheru Team based on Gamers-Fusion ver 2.5
  *   @author               : thindil <thindil@vallheru.net>
  *   @version              : 1.5
- *   @since                : 20.04.2012
+ *   @since                : 25.04.2012
  *
  */
 
@@ -294,9 +294,10 @@ class Player
 	}
       //Add bonuses from bless
       $objBless = $db -> Execute("SELECT `bless`, `blessval` FROM `players` WHERE `id`=".$this->id);
-      if ($objBless->fields['bless'] != '')
+      if (in_array($objBless->fields['bless'], $arrStats))
 	{
-	  $this->$objBless->fields['bless'] += $objBless->fields['blessval'];
+	  $strVarname = $objBless->fields['bless'];
+	  $this->$strVarname += $objBless->fields['blessval'];
 	  if ($blnClear)
 	    {
 	      $db -> Execute("UPDATE `players` SET `bless`='', `blessval`=0 WHERE `id`=".$this->id);
