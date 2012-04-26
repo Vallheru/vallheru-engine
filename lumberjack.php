@@ -101,7 +101,7 @@ if (isset ($_GET['action']) && $_GET['action'] == 'chop')
 	      {
 		$intKey = $_POST['type'] - 1;
 	      }
-	    $intBonus = 1 + ($fltAbility / 20);
+	    $intBonus = 1 + ($player->lumberjack / 20);
 	    if ($intBonus > 30)
 	      {
 		$intBonus = 30;
