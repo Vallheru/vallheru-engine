@@ -82,7 +82,7 @@ if (isset($_GET['action']) && $_GET['action'] == 'dig')
         }
 	if ($intRoll > 4 && $intRoll < 10)
 	  {
-	    $intBonus = 1 + (($fltAbility + $fltGainability) / 20);
+	    $intBonus = 1 + (($player->mining + $fltGainability) / 20);
 	    if ($intBonus > 30)
 	      {
 		$intBonus = 30;
