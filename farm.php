@@ -7,7 +7,7 @@
  *   @copyright            : (C) 2004,2005,2006,2011,2012 Vallheru Team based on Gamers-Fusion ver 2.5
  *   @author               : thindil <thindil@vallheru.net>
  *   @version              : 1.5
- *   @since                : 06.03.2012
+ *   @since                : 26.04.2012
  *
  */
 
@@ -488,11 +488,11 @@ if (isset($_GET['step']) && $_GET['step'] == 'plantation')
                 $intRoll = rand(-15, 15) / 100;
                 $intKey2 = $objHerb -> fields['age'] - 1;
 
-                /**
-                 * Add bonuses to ability
-                 */
-                require_once('includes/abilitybonus.php');
-                $player -> herbalist = abilitybonus('herbalist');
+		/**
+		 * Add bonuses to ability
+		 */
+		$player->curstats(array(), TRUE);
+		$player->curskills(array('herbalist'));
 
 		$intFactor = 1 + ($player->herbalist / 20);
 		if ($intFactor > 10)

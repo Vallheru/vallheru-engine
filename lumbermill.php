@@ -7,7 +7,7 @@
  *   @copyright            : (C) 2004,2005,2006,2007,2011,2012 Vallheru Team based on Gamers-Fusion ver 2.5
  *   @author               : thindil <thindil@vallheru.net>
  *   @version              : 1.5
- *   @since                : 20.03.2012
+ *   @since                : 26.04.2012
  *
  */
 
@@ -36,7 +36,7 @@ require_once('includes/checkexp.php');
 /**
 * Get the localization for game
 */
-require_once("languages/".$player -> lang."/lumbermill.php");
+require_once("languages/".$lang."/lumbermill.php");
 
 if ($player -> location != 'Ardulith') 
 {
@@ -397,8 +397,8 @@ if (isset($_GET['mill']) && ($_GET['mill'] == 'mill' || $_GET['mill'] == 'elite'
 	/**
          * Add bonuses to ability
          */
-        require_once('includes/abilitybonus.php');
-        $player -> fletcher = abilitybonus('fletcher');
+	$player->curstats(array(), TRUE);
+	$player->curskills(array('fletcher'));
       }
     if (isset($_GET['ko'])) 
       {
@@ -1266,6 +1266,8 @@ if (isset($_GET['mill']) && $_GET['mill'] == 'astral')
         {
             error(NO_ENERGY);
         }
+	$player->curstats(array(), TRUE);
+	$player->curskills(array('fletcher', 'smith'));
         $arrChance = array(0.25, 0.2, 0.15, 0.1, 0.05);
         $intChance = floor(($player -> smith * $arrChance[$intKey]) + ($player -> fletcher * $arrChance[$intKey]));
         if ($intChance > 95)

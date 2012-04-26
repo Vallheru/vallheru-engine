@@ -4,10 +4,10 @@
  *   Smelter - smelt minerals
  *
  *   @name                 : smelter.php                            
- *   @copyright            : (C) 2004,2005,2006,2011 Vallheru Team based on Gamers-Fusion ver 2.5
- *   @author               : thindil <thindil@tuxfamily.org>
- *   @version              : 1.4
- *   @since                : 03.11.2011
+ *   @copyright            : (C) 2004,2005,2006,2011,2012 Vallheru Team based on Gamers-Fusion ver 2.5
+ *   @author               : thindil <thindil@vallheru.net>
+ *   @version              : 1.5
+ *   @since                : 26.04.2012
  *
  */
 
@@ -35,7 +35,7 @@ require_once("includes/head.php");
 /**
 * Get the localization for game
 */
-require_once("languages/".$player -> lang."/smelter.php");
+require_once("languages/".$lang."/smelter.php");
 
 if ($player -> location != 'Altara') 
 {
@@ -243,6 +243,8 @@ if (isset($_GET['step']) && $_GET['step'] == 'smelt')
             }
             $i = 0;
             $arrAmount = array();
+	    $player->curstats(array(), TRUE);
+	    $player->curskills(array('metallurgy'));
             foreach ($arrOres as $strOres)
             {
                 $arrAmount[$i] = $_POST['amount'] * $arrOresamount[$i];

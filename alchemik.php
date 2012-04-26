@@ -7,7 +7,7 @@
  *   @copyright            : (C) 2004,2005,2006,2007,2011,2012 Vallheru Team based on Gamers-Fusion ver 2.5
  *   @author               : thindil <thindil@vallheru.net>
  *   @version              : 1.5
- *   @since                : 12.04.2012
+ *   @since                : 26.04.2012
  *
  */
 
@@ -36,7 +36,7 @@ require_once("includes/checkexp.php");
 /**
 * Get the localization for game
 */
-require_once("languages/".$player -> lang."/alchemik.php");
+require_once("languages/".$lang."/alchemik.php");
 
 if ($player -> location != 'Altara' && $player -> location != 'Ardulith') 
   {
@@ -246,8 +246,8 @@ else
 	    /**
 	     * Add bonuses to ability
 	     */
-	    require_once('includes/abilitybonus.php');
-	    $player -> alchemy = abilitybonus('alchemy');
+	    $player->curstats(array(), TRUE);
+	    $player->curskills(array('alchemy'));
 	    
 	    $rprzedmiot = 0;
 	    $rpd = 0;
@@ -472,6 +472,11 @@ else
 	      {
 		error(NO_ENERGY);
 	      }
+	    /**
+	     * Add bonuses to ability
+	     */
+	    $player->curstats(array(), TRUE);
+	    $player->curskills(array('alchemy'));
 	    $arrChance = array(0.1, 0.08, 0.06, 0.04, 0.02);
 	    $intChance = floor($player -> alchemy * $arrChance[$intKey]);
 	    if ($intChance > 95)

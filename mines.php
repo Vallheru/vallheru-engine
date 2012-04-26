@@ -261,10 +261,10 @@ if (isset($_GET['step']) && $_GET['step'] == 'dig')
         /**
          * Add bonuses to ability
          */
-        require_once('includes/abilitybonus.php');
-        $fltAbility = abilitybonus('mining');
+	$player->curstats(array(), TRUE);
+	$player->curskills(array('mining'));
 
-        $intAmount = ceil(((rand(1, 20) * $_POST['amount'] / $arrMinerals2[$intKey]) * (1 + $fltAbility / 20)) - $arrMinerals2[$intKey]);
+        $intAmount = ceil(((rand(1, 20) * $_POST['amount'] / $arrMinerals2[$intKey]) * (1 + $player->mining / 20)) - $arrMinerals2[$intKey]);
         if ($intAmount < 1)
         {
             $intAmount = 1;

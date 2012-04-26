@@ -7,7 +7,7 @@
  *   @copyright            : (C) 2004,2005,2006,2011,2012 Vallheru Team based on Gamers-Fusion ver 2.5
  *   @author               : thindil <thindil@vallheru.net>
  *   @version              : 1.5
- *   @since                : 23.02.2012
+ *   @since                : 26.04.2012
  *
  */
 
@@ -64,8 +64,8 @@ if (isset($_GET['action']) && $_GET['action'] == 'dig')
     /**
      * Count bonus to ability
      */
-    require_once('includes/abilitybonus.php');
-    $fltAbility = abilitybonus('mining');
+    $player->curstats(array(), TRUE);
+    $player->curskills(array('mining'));
 
     $fltGainability = 0;
     $arrMinerals = array(0, 0);

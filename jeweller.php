@@ -4,10 +4,10 @@
  *   Jeweller - make rings
  *
  *   @name                 : jeweller.php                            
- *   @copyright            : (C) 2006,2011 Vallheru Team based on Gamers-Fusion ver 2.5
- *   @author               : thindil <thindil@tuxfamily.org>
- *   @version              : 1.4
- *   @since                : 03.10.2011
+ *   @copyright            : (C) 2006,2011,2012 Vallheru Team based on Gamers-Fusion ver 2.5
+ *   @author               : thindil <thindil@vallheru.net>
+ *   @version              : 1.5
+ *   @since                : 26.04.2012
  *
  */
 
@@ -36,7 +36,7 @@ require_once("includes/checkexp.php");
 /**
 * Get the localization for game
 */
-require_once("languages/".$player -> lang."/jeweller.php");
+require_once("languages/".$lang."/jeweller.php");
 
 if ($player -> location != 'Ardulith') 
 {
@@ -174,10 +174,10 @@ if (isset($_GET['step']) && $_GET['step'] == 'make')
         /**
          * Add bonuses to ability
          */
-        require_once('includes/abilitybonus.php');
-        $intJeweller = abilitybonus('jeweller');
+	$player->curstats(array(), TRUE);
+	$player->curskills(array('jeweller'));
         
-        $intChance = $intJeweller * 100;
+        $intChance = $player->jeweller * 100;
         if ($intChance > 95)
         {
             $intChance = 95;
@@ -398,12 +398,12 @@ if (isset($_GET['step']) && $_GET['step'] == 'make2')
             /**
              * Add bonuses to ability
              */
-            require_once('includes/abilitybonus.php');
-            $intJeweller = abilitybonus('jeweller');
+	    $player->curstats(array(), TRUE);
+	    $player->curskills(array('jeweller'));
 
             $objRing2 = $db -> Execute("SELECT `level`, `bonus`, `cost`, `type` FROM `jeweller` WHERE `owner`=".$player -> id." AND `name`='".$objRing -> fields['name']."'");
 
-            $intChance = ($intJeweller / $objRing2 -> fields['level']) * 50;
+            $intChance = ($player->jeweller / $objRing2 -> fields['level']) * 50;
             if ($intChance > 95)
             {
                 $intChance = 95;
@@ -423,7 +423,7 @@ if (isset($_GET['step']) && $_GET['step'] == 'make2')
              */
             if ($intRoll <= $intChance)
             {
-                $intRoll2 = rand(0, $intJeweller);
+                $intRoll2 = rand(0, $player->jeweller);
                 $intBonus = floor($intRoll2 + ($intStat / 50));
                 if ($intBonus < 1)
                 {
@@ -516,10 +516,10 @@ if (isset($_GET['step']) && $_GET['step'] == 'make2')
         /**
          * Add bonuses to ability
          */
-        require_once('includes/abilitybonus.php');
-        $intJeweller = abilitybonus('jeweller');
+	$player->curstats(array(), TRUE);
+	$player->curskills(array('jeweller'));
 
-        $intChance = ($intJeweller / $objRing -> fields['level']) * 50;
+        $intChance = ($player->jeweller / $objRing -> fields['level']) * 50;
         if ($intChance > 95)
         {
             $intChance = 95;
@@ -556,7 +556,7 @@ if (isset($_GET['step']) && $_GET['step'] == 'make2')
             if ($intRoll <= $intChance)
             {
                 $intAmount2++;
-                $intRoll2 = rand(0, $intJeweller);
+                $intRoll2 = rand(0, $player->jeweller);
                 $intBonus = floor($intRoll2 + ($intStat / 50));
                 if ($intBonus < 1)
                 {
@@ -781,8 +781,8 @@ if (isset($_GET['step']) && $_GET['step'] == 'make3')
             /**
              * Add bonuses to ability
              */
-            require_once('includes/abilitybonus.php');
-            $intJeweller = abilitybonus('jeweller');
+	    $player->curstats(array(), TRUE);
+	    $player->curskills(array('jeweller'));
 
             /**
              * Select ring name
@@ -815,7 +815,7 @@ if (isset($_GET['step']) && $_GET['step'] == 'make3')
             
             $objRing2 = $db -> Execute("SELECT `level`, `cost`, `type` FROM `jeweller` WHERE `owner`=".$player -> id." AND `name`='".$strName2."'");
 
-            $intChance = floor(($intJeweller / 50) * 0.5) + 5;
+            $intChance = floor(($player->jeweller / 50) * 0.5) + 5;
             if ($intChance > 15)
             {
                 $intChance = 15;
@@ -960,10 +960,10 @@ if (isset($_GET['step']) && $_GET['step'] == 'make3')
         /**
          * Add bonuses to ability
          */
-        require_once('includes/abilitybonus.php');
-        $intJeweller = abilitybonus('jeweller');
+	$player->curstats(array(), TRUE);
+	$player->curskills(array('jeweller'));
 
-        $intChance = floor(($intJeweller / 50) * 0.5) + 5;
+        $intChance = floor(($player->jeweller / 50) * 0.5) + 5;
         if ($intChance > 15)
         {
             $intChance = 15;

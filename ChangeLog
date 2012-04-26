@@ -1,3 +1,9 @@
+2012-04-26  Bartek thindil Jasicki  <thindil@vallheru.net>
+
+	* UPDATE,smelter.php, lumbermill.php, lumberjack.php, kowal.php, alchemik.php, jeweller.php, czary.php, farm.php, core.php, kopalnia.php,
+	mines.php:
+	better check for bonus to stats and skills for craftsmen
+
 2012-04-25  Bartek thindil Jasicki  <thindil@vallheru.net>
 
 	* BUG,includes/admin/czat.php: 

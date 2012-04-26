@@ -7,7 +7,7 @@
  *   @copyright            : (C) 2004,2005,2006,2011,2012 Vallheru Team based on Gamers-Fusion ver 2.5
  *   @author               : thindil <thindil@vallheru.net>
  *   @version              : 1.5
- *   @since                : 30.03.2012
+ *   @since                : 26.04.2012
  *
  */
 
@@ -182,15 +182,10 @@ if (isset($_GET['cast']))
 	if ($blnValid)
 	  {
 	    /**
-	     * Add bless
+	     * Add bonuses to ability
 	     */
-	    $objBless = $db -> Execute("SELECT `bless`, `blessval` FROM `players` WHERE `id`=".$player -> id);
-	    if ($objBless -> fields['bless'] == 'cast')
-	      {
-		$player -> magic = $player -> magic + $objBless -> fields['blessval'];
-		$db -> Execute("UPDATE `players` SET `bless`='', `blessval`=0 WHERE `id`=".$player -> id);
-	      }
-	    $objBless -> Close();
+	    $player->curstats(array(), TRUE);
+	    $player->curskills(array('magic'));
 	    
 	    $chance = ($player -> magic - $arritem -> fields['minlev'] - $arrspell -> fields['poziom'] + rand(1,100));
 	    $bonus = ceil($player -> magic / $arrspell -> fields['poziom']);

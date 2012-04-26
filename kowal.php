@@ -7,7 +7,7 @@
  *   @copyright            : (C) 2004,2005,2006,2011,2012 Vallheru Team based on Gamers-Fusion ver 2.5
  *   @author               : thindil <thindil@vallheru.net>
  *   @version              : 1.5
- *   @since                : 13.02.2012
+ *   @since                : 26.04.2012
  *
  */
 
@@ -36,7 +36,7 @@ require_once("includes/checkexp.php");
 /**
 * Get the localization for game
 */
-require_once("languages/".$player -> lang."/kowal.php");
+require_once("languages/".$lang."/kowal.php");
 
 if ($player -> location != 'Altara') 
 {
@@ -490,8 +490,8 @@ if (isset($_GET['kowal']) && ($_GET['kowal'] == 'kuznia' || $_GET['kowal'] == 'e
 	/**
          * Add bonuses to ability
          */
-        require_once('includes/abilitybonus.php');
-        $intSmith = abilitybonus('smith');
+	$player->curstats(array(), TRUE);
+	$player->curskills(array('smith'));
       }
     if (isset($_GET['ko'])) 
     {
@@ -741,7 +741,7 @@ if (isset ($_GET['kowal']) && $_GET['kowal'] == 'kuznia')
         {
             $intExp = $intExp * 2;
         }
-        $intChance = (50 - $arrMaxbonus[$intKey]) * $intSmith / $objSmith -> fields['level'];
+        $intChance = (50 - $arrMaxbonus[$intKey]) * $player->smith / $objSmith -> fields['level'];
         if ($intChance > 95)
         {
             $intChance = 95;
@@ -911,7 +911,7 @@ if (isset ($_GET['kowal']) && $_GET['kowal'] == 'kuznia')
         {
             $intExp = $intExp * 2;
         }
-        $intChance = (50 - $arrMaxbonus[$intKey]) * $intSmith / $objSmith -> fields['level'];
+        $intChance = (50 - $arrMaxbonus[$intKey]) * $player->smith / $objSmith -> fields['level'];
         if ($intChance > 95)
         {
             $intChance = 95;

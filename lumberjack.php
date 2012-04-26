@@ -7,7 +7,7 @@
  *   @copyright            : (C) 2004,2005,2006,2011,2012 Vallheru Team based on Gamers-Fusion ver 2.5
  *   @author               : thindil <thindil@vallheru.net>
  *   @version              : 1.5
- *   @since                : 02.04.2012
+ *   @since                : 26.04.2012
  *
  */
 
@@ -75,8 +75,8 @@ if (isset ($_GET['action']) && $_GET['action'] == 'chop')
     /**
      * Count bonus to ability
      */
-    require_once('includes/abilitybonus.php');
-    $fltAbility = abilitybonus('lumberjack');
+    $player->curstats(array(), TRUE);
+    $player->curskills(array('lumberjack'));
     
     $intAmountgold = 0;
     $arrKey = array(1, 2, 3, 4);
