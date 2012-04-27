@@ -1,3 +1,9 @@
+2012-04-27  Bartek thindil Jasicki  <thindil@vallheru.net>
+
+	* UPDATE,templates/layout1/chat.tpl, templates/layout1/chatmsgs.tpl, templates/chat.tpl, templates/chatmsgs.tpl, chat.php, chatmsgs.php,
+	templates/layout1/layout1.css, css/light.css, css/green.css, css/lucass.css, css/greenforest.css, css/ender.css, css/classic.css:
+	redesigned chat
+
 2012-04-26  Bartek thindil Jasicki  <thindil@vallheru.net>
 
 	* BUG,lumberjack.php: 

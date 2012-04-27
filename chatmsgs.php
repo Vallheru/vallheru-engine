@@ -7,7 +7,7 @@
  *   @copyright            : (C) 2004,2005,2006,2011,2012 Vallheru Team based on Gamers-Fusion ver 2.5
  *   @author               : thindil <thindil@vallheru.net>
  *   @version              : 1.5
- *   @since                : 15.02.2012
+ *   @since                : 27.04.2012
  *
  */
 
@@ -101,15 +101,15 @@ while (!$chat -> EOF)
     $time = time() - strtotime($chat->fields['sdate']);
     if ($time < 60)
       {
-	$arrSdate[] = $time.' sekund temu';
+	$arrSdate[] = $time.' sekund temu ('.$chat->fields['sdate'].')';
       }
     elseif ($time > 59 && $time < 3600)
       {
-	$arrSdate[] = floor($time / 60).' minut temu';
+	$arrSdate[] = floor($time / 60).' minut temu ('.$chat->fields['sdate'].')';
       }
     else
       {
-	$arrSdate[] = floor($time / 3600).' godzin temu';
+	$arrSdate[] = floor($time / 3600).' godzin temu ('.$chat->fields['sdate'].')';
       }
     $chat -> MoveNext();
   }
@@ -152,8 +152,7 @@ $smarty->assign(array("Player" => $on,
 		      "Cid" => C_ID,
 		      "Id" => $stat->fields['id'],
 		      "Tid" => $arrTextid,
-		      "Aprofile" => "(profil)",
-		      "Awhisper" => "(szepnij)"));
+		      "Awhisper" => "Szepnij"));
 $smarty -> display ('chatmsgs.tpl');
 if ($compress)
   {

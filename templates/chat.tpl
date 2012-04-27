@@ -4,7 +4,7 @@
 <div id="chatmsgs"></div>
 
 <div align="center">
-    <form method="post" action="chat.php?action=chat" name="chat">
+    <form method="post" action="chat.php" name="chat">
         <input id="bold" type="button" value="{$Abold}" onClick="formatText(this.id)" />
 	<input id="italic" type="button" value="{$Aitalic}" onClick="formatText(this.id)" />
 	<input id="underline" type="button" value="{$Aunderline}" onClick="formatText(this.id)" />
@@ -13,6 +13,7 @@
 	<input type="submit" value="{$Asend}" />
     </form>
 </div>
+<a name="thebottom"></a>
 
 <div align="center"><br /><br /><br />
 <form method="post" action="chat.php?room">
@@ -20,7 +21,7 @@
 </form>
 </div>
 
-{if $Rank == "Admin" || $Rank == "Karczmarka"}
+{if $Rank == "Admin" || $Rank == "Karczmarka" || $Rank == "Staff"}
     <br /><br /><div align="center">
     <label for="mytoggle2" class="toggle">{$Apanel}</label>
     <input id="mytoggle2" type="checkbox" class="toggle" checked="checked" />

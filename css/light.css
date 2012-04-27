@@ -37,14 +37,6 @@ text-transform: none;
 color: red;
 }
 body, iframe, select, textarea {
-scrollbar-face-color: black;
-scrollbar-highlight-color: gray; 
-scrollbar-shadow-color: gray; 
-scrollbar-3dlight-color: black; 
-scrollbar-arrow-color: gray;
-scrollbar-track-color: black; 
-scrollbar-darkshadow-color: black; 
-scrollbar-base-color: black;
 margin-top: 0px;
 margin-bottom: 0px;
 margin-left: 0px;
@@ -95,19 +87,4 @@ input.toggle:checked+div {
 }
 input.toggle:checked+span { 
   display: none; 
-}
-#tchat
-{
-    width: 100%;
-    border-collapse: collapse;
-}
-#tchat td
-{
-    min-width: 150px;
-    padding: 5px;
-}
-#tchat tr.alt
-{
-    padding: 5px;
-    background-color: #101010;
 }
