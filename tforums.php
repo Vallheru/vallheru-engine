@@ -7,7 +7,7 @@
  *   @copyright            : (C) 2004,2005,2006,2011,2012 Vallheru Team based on Gamers-Fusion ver 2.5
  *   @author               : thindil <thindil@vallheru.net>
  *   @version              : 1.5
- *   @since                : 18.02.2012
+ *   @since                : 27.04.2012
  *
  */
 
@@ -54,7 +54,7 @@ if (isset($_GET['view']) && ($_GET['view'] == 'newposts'))
     }
     if ($intFunread2 == 0)
       {
-	error("Nie ma nowych wpisów na forum.");
+	error("Nie ma nowych wpisów na forum. (<a href=tforums.php?view=topics>Wróć</a>)");
       }
     $pages = ceil($intFunread2 / 25);
     if (isset($_GET['page']))

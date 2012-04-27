@@ -8,7 +8,7 @@
  *   @author               : thindil <thindil@vallheru.net>
  *   @author               : mori <ziniquel@users.sourceforge.net>
  *   @version              : 1.5
- *   @since                : 18.02.2012
+ *   @since                : 27.04.2012
  *
  */
 
@@ -115,7 +115,7 @@ if (isset($_GET['view']) && ($_GET['view'] == 'newposts'))
     }
     if ($intFunread == 0)
       {
-	error("Nie ma nowych wpisów na forum.");
+	error("Nie ma nowych wpisów na forum. (<a href=forums.php?view=categories>Wróć</a>)");
       }
     $pages = ceil($intFunread / 25);
     if (isset($_GET['page']))

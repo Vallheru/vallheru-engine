@@ -1,5 +1,7 @@
 2012-04-27  Bartek thindil Jasicki  <thindil@vallheru.net>
 
+	* BUG,forums.php, tforums.php: 
+	fixed link back in new posts
 	* BUG,includes/head.php: 
 	fixed info about new post on tribe forum
 	* UPDATE,templates/layout1/chat.tpl, templates/layout1/chatmsgs.tpl, templates/chat.tpl, templates/chatmsgs.tpl, chat.php, chatmsgs.php,
