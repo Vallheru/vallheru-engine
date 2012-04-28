@@ -1,3 +1,8 @@
+2012-04-28  Bartek thindil Jasicki  <thindil@vallheru.net>
+
+	* BUG,view.php:
+	fixed typo
+
 2012-04-27  Bartek thindil Jasicki  <thindil@vallheru.net>
 
 	* BUG,forums.php, tforums.php: 

@@ -8,7 +8,7 @@
  *   @author               : thindil <thindil@vallheru.net>
  *   @author               : eyescream <tduda@users.sourceforge.net>
  *   @version              : 1.5
- *   @since                : 23.04.2012
+ *   @since                : 28.04.2012
  *
  */
 
@@ -458,7 +458,7 @@ if (isset($_GET['spy']))
 	checkexp($player -> exp, $expgain, $player -> level, $player -> race, $player -> user, $player -> id, 0, 0, $player -> id, 'thievery', 0.01);
 	$fltPerception = ($player->level / 100);
 	$db->Execute("UPDATE `players` SET `perception`=`perception`+".$fltPerception." WHERE `id`=".$view->id);
-	$db -> Execute("INSERT INTO `log` (`owner`, `log`, `czas`, `type`) VALUES(".$view -> id.",'Nagle poczułeś, że ktoś się tobie bacznie przygląda. Rozglądając się wokoło zauważyłeś jak <b><a href=view.php?view=".$player -> id.">".$player -> user.L_ID.$player -> id." gwałtownie ucieka od Ciebie.', ".$strDate.", 'T')");
+	$db -> Execute("INSERT INTO `log` (`owner`, `log`, `czas`, `type`) VALUES(".$view -> id.",'Nagle poczułeś, że ktoś się tobie bacznie przygląda. Rozglądając się wokoło zauważyłeś jak <b><a href=view.php?view=".$player -> id.">".$player -> user.L_ID.$player -> id."</b> gwałtownie ucieka od Ciebie.', ".$strDate.", 'T')");
 	error("<br />Próbowałeś dowiedzieć się co posiada ".$view->user." przy sobie, niestety zauważył on Ciebie. Szybko umknąłeś w cień. (<a href=\"view.php?view=".$_GET['view']."\">Wróć</a>)");
       }
     elseif ($chance > 0 && $chance < 50)
@@ -487,7 +487,7 @@ if (isset($_GET['spy']))
 	$objGold = $db->Execute("SELECT `credits` FROM `players` WHERE `id`=".$view->id);
 	$strEquipment .= 'Złota w sakiewce: '.$objGold->fields['credits'];
 	$objGold->Close();
-	$db -> Execute("INSERT INTO `log` (`owner`, `log`, `czas`, `type`) VALUES(".$view -> id.",'Nagle poczułeś, że ktoś się tobie bacznie przygląda. Rozglądając się wokoło zauważyłeś jak <b><a href=view.php?view=".$player -> id.">".$player -> user.L_ID.$player -> id." gwałtownie ucieka od Ciebie. Ciekawe jak długo obserwował Ciebie.', ".$strDate.", 'T')");
+	$db -> Execute("INSERT INTO `log` (`owner`, `log`, `czas`, `type`) VALUES(".$view -> id.",'Nagle poczułeś, że ktoś się tobie bacznie przygląda. Rozglądając się wokoło zauważyłeś jak <b><a href=view.php?view=".$player -> id.">".$player -> user.L_ID.$player -> id."</b> gwałtownie ucieka od Ciebie. Ciekawe jak długo obserwował Ciebie.', ".$strDate.", 'T')");
 	error("<br />Przyglądałeś się przez chwilę ".$view->user." niestety, w pewnym momencie zauważył Ciebie. Szybko uciekłeś w cień. Zdobyte informacje:<br />".$strEquipment." (<a href=view.php?view=".$view->id.">Wróć</a>)");
       }
     else
