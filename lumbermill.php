@@ -7,7 +7,7 @@
  *   @copyright            : (C) 2004,2005,2006,2007,2011,2012 Vallheru Team based on Gamers-Fusion ver 2.5
  *   @author               : thindil <thindil@vallheru.net>
  *   @version              : 1.5
- *   @since                : 26.04.2012
+ *   @since                : 30.04.2012
  *
  */
 
@@ -651,7 +651,7 @@ if (isset ($_GET['mill']) && $_GET['mill'] == 'mill')
                 }
                 $intGainexp = ceil($intGainexp);
 		additem($arrItem['type'], $arrMaked['name'], $arrMaked['wt'], $arrMaked['power'], $arrMaked['speed'], $intCost, $player->id, $arrItem['level'], $arrMaked['repaircost']);
-                $smarty -> assign ("Message", YOU_MAKE.$arrMaked['name']."(+ ".$arrMaked['power'].") (".$arrMaked['speed']."% szyb) (".$arrMaked['wt']."/".$arrMaked['wt'].")".AND_GAIN2.$intGainexp.AND_EXP2.$intAbility.IN_MILL);
+                $smarty -> assign ("Message", YOU_MAKE.$arrMaked['name']."(+ ".$arrMaked['power'].") (+ ".$arrMaked['speed']." szyb) (".$arrMaked['wt']."/".$arrMaked['wt'].")".AND_GAIN2.$intGainexp.AND_EXP2.$intAbility.IN_MILL);
             } 
                 else 
             {
@@ -964,7 +964,7 @@ if (isset ($_GET['mill']) && $_GET['mill'] == 'elite')
 		$arrRepair = array(1, 4, 16, 64, 256);
 		$intRepaircost = $objLumber->fields['level'] * $arrRepair[$intKey] * 2;
 		additem($objLumber->fields['type'], $strName, $intMaxdur, $intPower, $intSpeed, $intCost, $player->id, $objLumber->fields['level'], $intRepaircost);
-                $smarty -> assign ("Message", YOU_MAKE.$strName."(+ ".$intPower.") (".$intSpeed."% szyb) (".$intMaxdur."/".$intMaxdur.")".AND_GAIN2.$intGainexp.AND_EXP2.$intAbility.IN_MILL);
+                $smarty -> assign ("Message", YOU_MAKE.$strName."(+ ".$intPower.") (+".$intSpeed." szyb) (".$intMaxdur."/".$intMaxdur.")".AND_GAIN2.$intGainexp.AND_EXP2.$intAbility.IN_MILL);
             } 
                 else 
             {
