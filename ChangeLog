@@ -1,3 +1,8 @@
+2012-04-30  Bartek thindil Jasicki  <thindil@vallheru.net>
+
+	* BUG,kowal.php:
+	fixed notice
+
 2012-04-28  Bartek thindil Jasicki  <thindil@vallheru.net>
 
 	* BUG,view.php:

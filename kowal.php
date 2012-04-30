@@ -7,7 +7,7 @@
  *   @copyright            : (C) 2004,2005,2006,2011,2012 Vallheru Team based on Gamers-Fusion ver 2.5
  *   @author               : thindil <thindil@vallheru.net>
  *   @version              : 1.5
- *   @since                : 26.04.2012
+ *   @since                : 30.04.2012
  *
  */
 
@@ -970,7 +970,8 @@ if (isset ($_GET['kowal']) && $_GET['kowal'] == 'kuznia')
             $need = ($intEnergy - $_POST['razy']);
             $intEnergy2 = $_POST['razy'];
             $db -> Execute("INSERT INTO `smith_work` (`owner`, `name`, `u_energy`, `n_energy`, `mineral`) VALUES(".$player -> id.", '".$objSmith -> fields['name']."', ".$_POST['razy'].", ".$intEnergy.", '".$_POST['mineral']."')");
-            $smarty -> assign ("Message", YOU_WORK.$objSmith -> fields['name'].YOU_USE.$_POST['razy'].AND_MAKE.$procent.TO_END.$need.S_ENERGY);
+            $smarty -> assign(array("Message" => YOU_WORK.$objSmith -> fields['name'].YOU_USE.$_POST['razy'].AND_MAKE.$procent.TO_END.$need.S_ENERGY,
+				    "Amt" => 0));
 	  }
         $db -> Execute("UPDATE `minerals` SET `".$_POST['mineral']."`=`".$_POST['mineral']."`-".$intAmineral." WHERE `owner`=".$player -> id);
         $db -> Execute("UPDATE `players` SET `energy`=`energy`-".$intEnergy2." WHERE `id`=".$player -> id);
