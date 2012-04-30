@@ -4,10 +4,10 @@
  *   Quest in labirynth
  *
  *   @name                 : quest2.php                            
- *   @copyright            : (C) 2004,2005,2006 Vallheru Team based on Gamers-Fusion ver 2.5
- *   @author               : thindil <thindil@users.sourceforge.net>
- *   @version              : 1.2
- *   @since                : 24.07.2006
+ *   @copyright            : (C) 2004,2005,2006,2012 Vallheru Team based on Gamers-Fusion ver 2.5
+ *   @author               : thindil <thindil@vallheru.net>
+ *   @version              : 1.5
+ *   @since                : 30.04.2012
  *
  */
 
@@ -243,7 +243,7 @@ if ($test -> fields['action'] == '1.2.2' || $test -> fields['action'] == 'hp1')
 
 if ($test -> fields['action'] == '1.2next') 
 {
-    $_POST['razy'] = 5;
+    $_SESSION['razy'] = 5;
     $quest -> Battle('grid.php?step=quest');
     $fight = $db -> Execute("SELECT fight FROM players WHERE id=".$player -> id);            
     if ($fight -> fields['fight'] == 0) 

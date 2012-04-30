@@ -1,5 +1,7 @@
 2012-04-30  Bartek thindil Jasicki  <thindil@vallheru.net>
 
+	* BUG,quests/quest1.php, quests/quest2.php, quests/quest4.php, quests/quest6.php, quests/quest7.php, quests/quest8.php, quests/quest9.php: 
+	fixed amount of monsters in fight
 	* BUG,kowal.php:
 	fixed notice
 

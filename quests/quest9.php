@@ -4,10 +4,10 @@
  *   Quest in labirynth - concept author ???
  *
  *   @name                 : quest9.php                            
- *   @copyright            : (C) 2004,2005,2006,2011 Vallheru Team based on Gamers-Fusion ver 2.5
- *   @author               : thindil <thindil@tuxfamily.org>
- *   @version              : 1.4
- *   @since                : 18.10.2011
+ *   @copyright            : (C) 2004,2005,2006,2011,2012 Vallheru Team based on Gamers-Fusion ver 2.5
+ *   @author               : thindil <thindil@vallheru.net>
+ *   @version              : 1.5
+ *   @since                : 30.04.2012
  *
  */
 
@@ -76,7 +76,7 @@ if ($objAction -> fields['action'] == 'start')
 
 if ($objAction -> fields['action'] == 'next')
 {
-    $_POST['razy'] = 4;
+    $_SESSION['razy'] = 4;
     $objQuest -> Battle('grid.php?step=quest');
     $objFight = $db -> Execute("SELECT fight FROM players WHERE id=".$player -> id);            
     if ($objFight -> fields['fight'] == 0) 
@@ -168,7 +168,7 @@ if ((isset($_POST['box1']) && $_POST['box1'] == 1) || (isset($_POST['box2']) && 
 
 if ($objAction -> fields['action'] == '1')
 {
-    $_POST['razy'] = 1;
+    $_SESSION['razy'] = 1;
     $objQuest -> Battle('grid.php?step=quest');
     $objFight = $db -> Execute("SELECT fight FROM players WHERE id=".$player -> id);            
     if ($objFight -> fields['fight'] == 0) 

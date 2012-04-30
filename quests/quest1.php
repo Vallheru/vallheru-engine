@@ -4,10 +4,10 @@
  *   Quest in labirynth
  *
  *   @name                 : quest1.php                            
- *   @copyright            : (C) 2004,2005,2006 Vallheru Team based on Gamers-Fusion ver 2.5
- *   @author               : thindil <thindil@users.sourceforge.net>
- *   @version              : 1.2
- *   @since                : 24.07.2006
+ *   @copyright            : (C) 2004,2005,2006,2012 Vallheru Team based on Gamers-Fusion ver 2.5
+ *   @author               : thindil <thindil@vallheru.net>
+ *   @version              : 1.5
+ *   @since                : 30.04.2012
  *
  */
 
@@ -44,7 +44,7 @@ require_once('class/quests_class.php');
 /**
 * Get the localization for game
 */
-require_once("languages/".$player -> lang."/quest1.php");
+require_once("languages/".$lang."/quest1.php");
 
 $test = $db -> Execute("SELECT action FROM questaction WHERE player=".$player -> id." AND quest=1");
 $quest = new Quests('grid.php',1,$test -> fields['action']);
@@ -205,7 +205,7 @@ if ($test -> fields['action'] == 'answer1' || $test -> fields['action'] == 'door
 
 if ($test -> fields['action'] == 'answer2') 
 {
-    $_POST['razy'] = 2;
+    $_SESSION['razy'] = 2;
     $quest -> Battle('grid.php?step=quest');
     $fight = $db -> Execute("SELECT fight FROM players WHERE id=".$player -> id);            
     if ($fight -> fields['fight'] == 0) 
@@ -248,7 +248,7 @@ if ($test -> fields['action'] == '2.1')
         else 
     {
         $quest -> Show('inteli4');
-        $_POST['razy'] = 2;
+        $_SESSION['razy'] = 2;
         $db -> Execute("UPDATE players SET fight=18 WHERE id=".$player -> id);              
         $smarty -> assign("Link", "<br /><br />(<a href=\"grid.php?step=quest\">".A_FIGHT2."</a>)");                 
     }
@@ -256,7 +256,7 @@ if ($test -> fields['action'] == '2.1')
 
 if ($test -> fields['action'] == 'inteli4') 
 {
-    $_POST['razy'] = 2; 
+    $_SESSION['razy'] = 2; 
     $quest -> Battle('grid.php?step=quest');
     $fight = $db -> Execute("SELECT fight FROM players WHERE id=".$player -> id);            
     if ($fight -> fields['fight'] == 0) 

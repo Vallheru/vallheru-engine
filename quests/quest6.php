@@ -4,10 +4,10 @@
  *   Quest in labirynth
  *
  *   @name                 : quest6.php                            
- *   @copyright            : (C) 2004,2005,2006,2011 Vallheru Team based on Gamers-Fusion ver 2.5
- *   @author               : thindil <thindil@tuxfamily.org>
- *   @version              : 1.4
- *   @since                : 01.12.2011
+ *   @copyright            : (C) 2004,2005,2006,2011,2012 Vallheru Team based on Gamers-Fusion ver 2.5
+ *   @author               : thindil <thindil@vallheru.net>
+ *   @version              : 1.5
+ *   @since                : 30.04.2012
  *
  */
 
@@ -139,7 +139,7 @@ if (isset($_POST['box2']) && $_POST['box2'] == '1')
 
 if ($objAction -> fields['action'] == '1.1')
 {
-    $_POST['razy'] = 2;
+    $_SESSION['razy'] = 2;
     $objQuest -> Battle('grid.php?step=quest');
     $objFight = $db -> Execute("SELECT fight FROM players WHERE id=".$player -> id);            
     if ($objFight -> fields['fight'] == 0) {
@@ -448,7 +448,7 @@ if (($objAction -> fields['action'] == '1.2.3.1.1.next' || $objAction -> fields[
 
 if ($objAction -> fields['action'] == 'agi5' || $objAction -> fields['action'] == '1.2.3.1.1')
 {
-    $_POST['razy'] = 3;
+    $_SESSION['razy'] = 3;
     $objQuest -> Battle('grid.php?step=quest');
     $objFight = $db -> Execute("SELECT fight FROM players WHERE id=".$player -> id);            
     if ($objFight -> fields['fight'] == 0) {

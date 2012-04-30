@@ -4,10 +4,10 @@
  *   Quest in labirynth - concept author ???
  *
  *   @name                 : quest8.php                            
- *   @copyright            : (C) 2004,2005,2006,2011 Vallheru Team based on Gamers-Fusion ver 2.5
- *   @author               : thindil <thindil@tuxfamily.org>
- *   @version              : 1.4
- *   @since                : 18.10.2011
+ *   @copyright            : (C) 2004,2005,2006,2011,2012 Vallheru Team based on Gamers-Fusion ver 2.5
+ *   @author               : thindil <thindil@vallheru.net>
+ *   @version              : 1.5
+ *   @since                : 30.04.2012
  *
  */
 
@@ -44,7 +44,7 @@ require_once('class/quests_class.php');
 /**
 * Get the localization for game
 */
-require_once("languages/".$player -> lang."/quest8.php");
+require_once("languages/".$lang."/quest8.php");
 
 $objAction = $db -> Execute("SELECT action FROM questaction WHERE player=".$player -> id." AND quest=8");
 $objQuest = new Quests('grid.php', 8, $objAction -> fields['action']);
@@ -142,7 +142,7 @@ if (isset($_POST['box5']) && $_POST['box5'] == 1)
 
 if ($objAction -> fields['action'] == '2.2.2.1')
 {
-    $_POST['razy'] = 2;
+    $_SESSION['razy'] = 2;
     $objQuest -> Battle('grid.php?step=quest');
     $objFight = $db -> Execute("SELECT fight FROM players WHERE id=".$player -> id);            
     if ($objFight -> fields['fight'] == 0) 

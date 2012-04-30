@@ -4,10 +4,10 @@
  *   Quest in labirynth - concept author Nubia
  *
  *   @name                 : quest7.php                            
- *   @copyright            : (C) 2004,2005,2006,2011 Vallheru Team based on Gamers-Fusion ver 2.5
- *   @author               : thindil <thindil@tuxfamily.org>
- *   @version              : 1.4
- *   @since                : 18.10.2011
+ *   @copyright            : (C) 2004,2005,2006,2011,2012 Vallheru Team based on Gamers-Fusion ver 2.5
+ *   @author               : thindil <thindil@vallheru.net>
+ *   @version              : 1.5
+ *   @since                : 30.04.2012
  *
  */
 
@@ -44,7 +44,7 @@ require_once('class/quests_class.php');
 /**
 * Get the localization for game
 */
-require_once("languages/".$player -> lang."/quest7.php");
+require_once("languages/".$lang."/quest7.php");
 
 $objAction = $db -> Execute("SELECT action FROM questaction WHERE player=".$player -> id." AND quest=7");
 $objQuest = new Quests('grid.php', 7, $objAction -> fields['action']);
@@ -109,7 +109,7 @@ if ($objAction -> fields['action'] == '1.1')
 
 if ($objAction -> fields['action'] == 'answer1' || $objAction -> fields['action'] == '1.1.1.1' || $objAction -> fields['action'] == 'answer10' || $objAction -> fields['action'] == '1.2.n.3.n.n' || $objAction -> fields['action'] == 'answer12')
 {
-    $_POST['razy'] = 20;
+    $_SESSION['razy'] = 20;
     $objQuest -> Battle('grid.php?step=quest');
     $objFight = $db -> Execute("SELECT fight FROM players WHERE id=".$player -> id);            
     if ($objFight -> fields['fight'] == 0) 
@@ -250,7 +250,7 @@ if (isset($_POST['box5']) && $_POST['box5'] == 1)
 
 if ($objAction -> fields['action'] == '1.1.1.2.next.3.1' || $objAction -> fields['action'] == '1.1.1.2.next.3.2' || $objAction -> fields['action'] == '1.2.next.a' || $objAction -> fields['action'] == '1.2.next.2.1' || $objAction -> fields['action'] == '17.1')
 {
-    $_POST['razy'] = 1;
+    $_SESSION['razy'] = 1;
     $objQuest -> Battle('grid.php?step=quest');
     $objFight = $db -> Execute("SELECT fight FROM players WHERE id=".$player -> id);            
     if ($objFight -> fields['fight'] == 0) 
