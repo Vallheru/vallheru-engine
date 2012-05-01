@@ -8,7 +8,7 @@
  *   @author               : thindil <thindil@vallheru.net>
  *   @author               : eyescream <tduda@users.sourceforge.net>
  *   @version              : 1.5
- *   @since                : 28.04.2012
+ *   @since                : 01.05.2012
  *
  */
 
@@ -496,11 +496,20 @@ if (isset($_GET['spy']))
 	$expgain = ceil($view->level / 5);
 	checkexp($player -> exp, $expgain, $player -> level, $player -> race, $player -> user, $player -> id, 0, 0, $player -> id, 'thievery', $fltThief);
 	$db -> Execute("UPDATE `players` SET `perception`=`perception`+0.01 WHERE `id`=".$view->id);
-	$objEquipment = $db->Execute("SELECT `name`, `power` FROM `equipment` WHERE `owner`=".$view->id." AND `status`='E'");
+	$objEquipment = $db->Execute("SELECT `name`, `power`, `zr`, `szyb` FROM `equipment` WHERE `owner`=".$view->id." AND `status`='E'");
 	$strEquipment = 'Założony ekwipunek:<ul>';
 	while (!$objEquipment->EOF)
 	  {
-	    $strEquipment .= '<li>'.$objEquipment->fields['name'].' (+'.$objEquipment->fields['power'].')</li>';
+	    $strEquipment .= '<li>'.$objEquipment->fields['name'].' (+'.$objEquipment->fields['power'].') ';
+	    if ($objEquipment->fields['zr'] != 0)
+	      {
+		$strEquipment .= '('.($objEquipment->fields['zr'] * -1).' zr) ';
+	      }
+	    if ($objEquipment->fields['szyb'] != 0)
+	      {
+		$strEquipment .= '('.$objEquipment->fields['szyb'].' szyb)';
+	      }
+	    $strEquipment .= '</li>';
 	    $objEquipment->MoveNext();
 	  }
 	if ($strEquipment == 'Założony ekwipunek:<ul>')
@@ -513,7 +522,7 @@ if (isset($_GET['spy']))
 	  }
 	$objEquipment->Close();
 	$objGold = $db->Execute("SELECT `credits` FROM `players` WHERE `id`=".$view->id);
-	$strEquipment .= 'Złota w sakiewce: '.$objGold->fields['credits'];
+	$strEquipment .= 'Złota w sakiewce: '.$objGold->fields['credits'].'<br />';
 	$objGold->Close();
 	$db -> Execute("INSERT INTO `log` (`owner`, `log`, `czas`, `type`) VALUES(".$view -> id.",'W pewnym momencie odniosłeś nieprzyjemne wrażenie, że ktoś przygląda się Tobie. Rozglądając się na wszystkie strony, niestety nie zauważyłeś źródła niepokoju.', ".$strDate.", 'T')");
 	error("<br />Przyglądałeś się przez dłużą chwilę ".$view->user.". Na szczęście nie zauważył twojej obecności. Zdobyte informacje:<br />".$strEquipment." (<a href=view.php?view=".$view->id.">Wróć</a>)");

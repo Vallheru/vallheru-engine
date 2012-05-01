@@ -1,5 +1,7 @@
 2012-05-01  Bartek thindil Jasicki  <thindil@vallheru.net>
 
+	* BUG,view.php: 
+	added info about bonuses to agility and speed during spying
 	* BUG,mission.php:
 	fixed bug with amount of crimes
 
