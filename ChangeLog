@@ -1,3 +1,8 @@
+2012-05-02  Bartek thindil Jasicki  <thindil@vallheru.net>
+
+	* UPDATE,templates/layout1/account.tpl, templates/account.tpl, account.php:
+	redesigned account menu
+
 2012-05-01  Bartek thindil Jasicki  <thindil@vallheru.net>
 
 	* BUG,view.php: 

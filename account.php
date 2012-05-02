@@ -7,7 +7,7 @@
  *   @copyright            : (C) 2004,2005,2006,2007,2011,2012 Vallheru Team based on Gamers-Fusion ver 2.5
  *   @author               : thindil <thindil@vallheru.net>
  *   @version              : 1.5
- *   @since                : 16.04.2012
+ *   @since                : 02.05.2012
  *
  */
 
@@ -1278,13 +1278,31 @@ if (!isset($_GET['step']))
 /**
 * Assign variables and display page
 */
-$arrStep = array('name', 'pass', 'profile', 'roleplay', 'eci', 'avatar', 'reset', 'immu', 'style', 'freeze', 'options', 'changes', 'vallars', 'bugreport', 'bugtrack', 'links', 'forums', 'contacts', 'ignored', 'proposals');
-$arrLinks = array(A_NAME, A_PASS, A_PROFILE, 'Edytuj profil fabularny', A_EMAIL, A_AVATAR, A_RESET, A_IMMU, A_STYLE, A_FREEZE, A_OPTIONS, A_CHANGES, "Ostatnio nagrodzeni Vallarami", A_BUGREPORT, A_BUGTRACK, A_LINKS, 'Obserwowane fora', 'Kontakty', 'Ignorowani', 'Zgłoś propozycję');
+$arrMenus = array("Konto" => array('name' => A_NAME,
+					      'pass' => A_PASS,
+					      'eci' => A_EMAIL,
+					      'reset' => A_RESET,
+					      'immu' => A_IMMU,
+					      'freeze' => A_FREEZE),
+		  "Profil" => array('profile' => A_PROFILE,
+				    'roleplay' => 'Edytuj profil fabularny',
+				    'avatar' => A_AVATAR),
+		  "Socjalne" => array('contacts' => 'Kontakty',
+				      'ignored' => 'Ignorowani'),
+		  
+		  "Ustawienia" => array('style' => A_STYLE,
+					'options' => A_OPTIONS,
+					'links' => A_LINKS,
+					'forums' => 'Obserwowane fora'),
+		  "Inne" => array('changes' => A_CHANGES,
+				  'vallars' => 'Ostatnio nagrodzeni Vallarami',
+				  'bugreport' => A_BUGREPORT,
+				  'bugtrack' => A_BUGTRACK,
+				  'proposals' => 'Zgłoś propozycję'));
 $smarty -> assign (array ("View" => $_GET['view'], 
                           "Step" => $_GET['step'],
                           "Welcome" => WELCOME,
-                          "Steps" => $arrStep,
-                          "Links" => $arrLinks));
+                          "Menus" => $arrMenus));
 $smarty -> display('account.tpl');
 
 require_once("includes/foot.php");

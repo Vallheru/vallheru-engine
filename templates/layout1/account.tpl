@@ -1,9 +1,21 @@
 {$Welcome}
-<ul>
-    {section name=menu loop=$Steps}
-        <li><a href="account.php?view={$Steps[menu]}">{$Links[menu]}</a></li>
-    {/section}
-</ul>
+<table align="center" width="90%">
+{foreach $Menus as $Category}
+    {if $Category@iteration is not div by 2}
+        <tr>
+    {/if}
+        <td valign="top"><b>{$Category@key}</b>
+        <ul>
+        {foreach $Category as $Menu}
+            <li><a href="account.php?view={$Menu@key}">{$Menu}</a></li>
+	{/foreach}
+	</ul>
+    </td>
+    {if $Category@iteration is div by 2}
+        </tr>
+    {/if}
+{/foreach}
+</table>
 
 {if $View == "links"}
     {$Linksinfo}<br />
