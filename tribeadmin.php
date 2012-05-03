@@ -7,7 +7,7 @@
  *   @copyright            : (C) 2012 Vallheru Team based on Gamers-Fusion ver 2.5
  *   @author               : thindil <thindil@vallheru.net>
  *   @version              : 1.5
- *   @since                : 18.04.2012
+ *   @since                : 03.05.2012
  *
  */
 
@@ -264,7 +264,6 @@ else
 	      {
 		$arrRanks = array($ranks -> fields['rank1'], $ranks -> fields['rank2'], $ranks -> fields['rank3'], $ranks -> fields['rank4'], $ranks -> fields['rank5'], $ranks -> fields['rank6'], $ranks -> fields['rank7'], $ranks -> fields['rank8'], $ranks -> fields['rank9'], $ranks -> fields['rank10']);
 		$smarty -> assign(array("Ranks" => $arrRanks,
-					"Members" => $arrMembers,
 					"Empty" => 0,
 					"Editranks" => EDIT_RANKS,
 					"Asave" => A_SAVE,

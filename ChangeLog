@@ -1,3 +1,8 @@
+2012-05-03  Bartek thindil Jasicki  <thindil@vallheru.net>
+
+	* BUG,tribeadmin.php:
+	fixed notice
+
 2012-05-02  Bartek thindil Jasicki  <thindil@vallheru.net>
 
 	* UPDATE,templates/layout1/account.tpl, templates/account.tpl, account.php:
