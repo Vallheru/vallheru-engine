@@ -7,7 +7,7 @@
  *   @copyright            : (C) 2004,2005,2006,2011,2012 Vallheru Team based on Gamers-Fusion ver 2.5
  *   @author               : thindil <thindil@vallheru.net>
  *   @version              : 1.5
- *   @since                : 30.04.2012
+ *   @since                : 03.05.2012
  *
  */
 
@@ -328,114 +328,106 @@ function createitem()
 */
 if (isset ($_GET['kowal']) && $_GET['kowal'] == 'plany') 
 {
-    $smarty -> assign(array("Plansinfo" => PLANS_INFO,
-                            "Aplansw" => A_PLANS_W,
-                            "Aplansa" => A_PLANS_A,
-                            "Aplansh" => A_PLANS_H,
-                            "Aplansl" => A_PLANS_L,
-                            "Aplanss" => A_PLANS_S));
-    /**
-     * Show available plans
-     */
-    if (isset($_GET['dalej'])) 
-    {
-        $arrType = array('W', 'A', 'H', 'L', 'S');
-        if (!in_array($_GET['dalej'], $arrType)) 
-        {
-            error (ERROR);
-        }
-	$objOwned = $db->Execute("SELECT `name`, `elitetype` FROM `smith` WHERE `owner`=".$player->id." AND `type`='".$_GET['dalej']."'");
-	$arrOwned = array();
-	while (!$objOwned->EOF)
-	  {
-	    $arrOwned[$objOwned->fields['name']] = $objOwned->fields['elitetype'];
-	    $objOwned->MoveNext();
-	  }
-	$objOwned->Close();
-        $objPlans = $db -> Execute("SELECT * FROM `smith` WHERE `owner`=0 AND `type`='".$_GET['dalej']."' ORDER BY `level` ASC");
-        $arrname = array();
-        $arrcost = array();
-        $arrlevel = array();
-        $arrid = array();
-        while (!$objPlans -> EOF) 
-	  {
-	    if ($player->clas != 'Rzemieślnik' && $objPlans->fields['elite'] > 0)
-	      {
-		$objPlans->MoveNext();
-		continue;
-	      }
-	    if (!array_key_exists($objPlans->fields['name'], $arrOwned) || (array_key_exists($objPlans->fields['name'], $arrOwned) && $arrOwned[$objPlans->fields['name']] != $objPlans->fields['elitetype']))
-	      {
-		if ($objPlans->fields['elite'] > 0)
-		  {
-		    if ($objPlans->fields['elitetype'] == 'S')
-		      {
-			$arrname[] = $objPlans -> fields['name'].' (smoczy)';
-		      }
-		    else
-		      {
-			$arrname[] = $objPlans -> fields['name'].' (elfi)';
-		      }
-		  }
-		else
-		  {
-		    $arrname[] = $objPlans -> fields['name'];
-		  }
-		$arrcost[] = $objPlans -> fields['cost'];
-		$arrlevel[] = $objPlans -> fields['level'];
-		$arrid[] = $objPlans -> fields['id'];
-	      }
-            $objPlans -> MoveNext();
-	  }
-        $objPlans -> Close();
-        $smarty -> assign(array("Name" => $arrname, 
-                                "Cost" => $arrcost, 
-                                "Level" => $arrlevel, 
-                                "Id" => $arrid,
-                                "Iname" => I_NAME,
-                                "Ilevel" => I_LEVEL,
-                                "Icost" => I_COST,
-                                "Ioption" => I_OPTION,
-                                "Abuy" => A_BUY,
-                                "Hereis" => HERE_IS));
-    }
     /**
      * Buy new plan
      */
     if (isset($_GET['buy'])) 
     {
 	checkvalue($_GET['buy']);
-        $objPlan = $db -> Execute("SELECT * FROM `smith` WHERE `id`=".$_GET['buy']);
+        $objPlan = $db -> Execute("SELECT * FROM `smith` WHERE `id`=".$_GET['buy']." AND `owner`=0");
 	$objTest = $db -> Execute("SELECT `id` FROM `smith` WHERE `owner`=".$player -> id." AND `name`='".$objPlan -> fields['name']."' AND `elitetype`='".$objPlan->fields['elitetype']."'");
         if ($objTest -> fields['id']) 
-        {
-            error (YOU_HAVE);
-        }
-        $objTest -> Close();
-        if (!$objPlan -> fields['id']) 
-        {
-            error (NO_PLAN);
-        }
-        if ($objPlan -> fields['owner']) 
-        {
-            error (NOT_FOR_SALE);
-        }
-        if ($objPlan -> fields['cost'] > $player -> credits) 
-        {
-            error (NO_MONEY);
-        }
-	if ($objPlan->fields['elite'] > 0 && $player->clas != 'Rzemieślnik')
 	  {
-	    error("Tylko Rzemieślnik może kupować plany elitarnych przedmiotów.");
+	    message('error', YOU_HAVE);
 	  }
-        $db -> Execute("INSERT INTO `smith` (`owner`, `name`, `type`, `cost`, `amount`, `level`, `twohand`, `elite`, `elitetype`) VALUES(".$player -> id.", '".$objPlan -> fields['name']."', '".$objPlan -> fields['type']."', ".$objPlan -> fields['cost'].", ".$objPlan -> fields['amount'].", ".$objPlan -> fields['level'].", '".$objPlan -> fields['twohand']."', ".$objPlan->fields['elite'].", '".$objPlan->fields['elitetype']."')");
-        $db -> Execute("UPDATE `players` SET `credits`=`credits`-".$objPlan -> fields['cost']." WHERE `id`=".$player -> id);
-        $smarty -> assign(array("Cost" => $objPlan -> fields['cost'], 
-                                "Plan" => $objPlan -> fields['name'],
-                                "Youpay" => YOU_PAY,
-                                "Andbuy" => AND_BUY));
+	elseif (!$objPlan -> fields['id']) 
+	  {
+            message('error', NO_PLAN);
+        }
+        elseif ($objPlan -> fields['cost'] > $player -> credits) 
+	  {
+            message('error', NO_MONEY);
+	  }
+	elseif ($objPlan->fields['elite'] > 0 && $player->clas != 'Rzemieślnik')
+	  {
+	    message('error', "Tylko Rzemieślnik może kupować plany elitarnych przedmiotów.");
+	  }
+	else
+	  {
+	    $db -> Execute("INSERT INTO `smith` (`owner`, `name`, `type`, `cost`, `amount`, `level`, `twohand`, `elite`, `elitetype`) VALUES(".$player -> id.", '".$objPlan -> fields['name']."', '".$objPlan -> fields['type']."', ".$objPlan -> fields['cost'].", ".$objPlan -> fields['amount'].", ".$objPlan -> fields['level'].", '".$objPlan -> fields['twohand']."', ".$objPlan->fields['elite'].", '".$objPlan->fields['elitetype']."')");
+	    $db -> Execute("UPDATE `players` SET `credits`=`credits`-".$objPlan -> fields['cost']." WHERE `id`=".$player -> id);
+	    message('success', YOU_PAY." <b>".$objPlan->fields['cost']."</b> ".AND_BUY.": <b>".$objPlan->fields['name']."</b>.");
+	  }
+        $objTest -> Close();
         $objPlan -> Close();
     }
+
+    /**
+     * Show available plans
+     */
+    $objOwned = $db->Execute("SELECT `name`, `elitetype` FROM `smith` WHERE `owner`=".$player->id."");
+    $arrOwned = array();
+    while (!$objOwned->EOF)
+      {
+	$arrOwned[$objOwned->fields['name']] = $objOwned->fields['elitetype'];
+	$objOwned->MoveNext();
+      }
+    $objOwned->Close();
+    $arrPlans = array(array(), array(), array(), array(), array());
+    $arrTypes = array('W', 'A', 'S', 'H', 'L');
+    $arrLinks = array('+ Plany broni', '+ Plany zbrój', '+ Plany tarcz', '+ Plany hełmów', '+ Plany nagolenników');
+    $objPlans = $db -> Execute("SELECT * FROM `smith` WHERE `owner`=0 ORDER BY `level` ASC");
+    $i = 0;
+    while (!$objPlans->EOF)
+      {
+	if ($player->clas != 'Rzemieślnik' && $objPlans->fields['elite'] > 0)
+	  {
+	    $objPlans->MoveNext();
+	    continue;
+	  }
+	if (!array_key_exists($objPlans->fields['name'], $arrOwned) || (array_key_exists($objPlans->fields['name'], $arrOwned) && $arrOwned[$objPlans->fields['name']] != $objPlans->fields['elitetype']))
+	  {
+	    $intKey = array_search($objPlans->fields['type'], $arrTypes);
+	    if ($objPlans->fields['elite'] > 0)
+	      {
+		if ($objPlans->fields['elitetype'] == 'S')
+		  {
+		    $arrPlans[$intKey][$i]['name'] = $objPlans -> fields['name'].' (smoczy)';
+		  }
+		else
+		  {
+		    $arrPlans[$intKey][$i]['name'] = $objPlans -> fields['name'].' (elfi)';
+		  }
+	      }
+	    else
+	      {
+		$arrPlans[$intKey][$i]['name'] = $objPlans -> fields['name'];
+	      }
+	    $arrPlans[$intKey][$i]['cost'] = $objPlans -> fields['cost'];
+	    $arrPlans[$intKey][$i]['level'] = $objPlans -> fields['level'];
+	    $arrPlans[$intKey][$i]['id'] = $objPlans -> fields['id'];
+	    $i++;
+	  }
+	$objPlans -> MoveNext();
+      }
+    $objPlans -> Close();
+    if (strpos($_SERVER['HTTP_USER_AGENT'], 'Opera Mini') !== FALSE)
+      {
+	$strChecked = "";
+      }
+    else
+      {
+	$strChecked = "checked=checkded";
+      }
+    $smarty -> assign(array("Plansinfo" => PLANS_INFO,
+			    "Plans" => $arrPlans,
+			    "Links" => $arrLinks,
+			    "Checked" => $strChecked,
+			    "Iname" => 'Nazwa',
+			    "Icost" => 'Cena',
+			    "Ilevel" => 'Poziom',
+			    "Ioption" => 'Opcje',
+			    "Abuy" => 'Kup'));
 }
 
 /**
@@ -1602,10 +1594,6 @@ if (!isset($_GET['dalej']))
 {
     $_GET['dalej'] = '';
 }
-if (!isset($_GET['buy'])) 
-{
-    $_GET['buy'] = '';
-}
 if (!isset($_GET['rob'])) 
 {
     $_GET['rob'] = '';
@@ -1628,7 +1616,6 @@ if (!isset($_GET['ko']))
 */
 $smarty -> assign(array("Smith" => $_GET['kowal'], 
                         "Next" => $_GET['dalej'], 
-                        "Buy" => $_GET['buy'], 
                         "Make" => $_GET['rob'], 
                         "Continue" => $_GET['konty'], 
                         "Type" => $_GET['type'], 

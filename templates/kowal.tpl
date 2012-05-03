@@ -21,43 +21,30 @@
 			<p>{$Plansinfo}</p>
 		</header>
 		
-		<ul>
-			<li><a href="kowal.php?kowal=plany&amp;dalej=W">{$Aplansw}</a></li>
-			<li><a href="kowal.php?kowal=plany&amp;dalej=A">{$Aplansa}</a></li>
-			<li><a href="kowal.php?kowal=plany&amp;dalej=S">{$Aplanss}</a></li>
-			<li><a href="kowal.php?kowal=plany&amp;dalej=H">{$Aplansh}</a></li>
-			<li><a href="kowal.php?kowal=plany&amp;dalej=L">{$Aplansl}</a></li>
-		</ul>
-		{if $Next != ""}
-			{$Hereis}:
-			<table>
-				<thead>
-					<tr>
-						<th>{$Iname}</th>
-						<th>{$Icost}</th>
-						<th>{$Ilevel}</th>
-						<th>{$Ioption}</th>
-					</tr>
-				</thead>
-				<tbody>
-					{section name=smith loop=$Name}
-						<tr>
-							<td>{$Name[smith]}</td>
-							<td>{$Cost[smith]}</td>
-							<td>{$Level[smith]}</td>
-							<td>
-								<ul>
-									<li><a href="kowal.php?kowal=plany&amp;buy={$Id[smith]}">{$Abuy}</a></li>
-								</ul>
-							</td>
-						</tr>
-					{/section}
-				</tbody>
-			</table>
-		{/if}
-		{if $Buy != ""}
-			<p>{$Youpay} <b>{$Cost}</b> {$Andbuy}: <b>{$Plan}</b>.</p>
-		{/if}
+		{foreach $Plans as $Plans1}
+		    <div>
+		        <label for="mytoggle{$Plans1@iteration}" class="toggle">{$Links[$Plans1@key]}</label>
+			<input id="mytoggle{$Plans1@iteration}" type="checkbox" class="toggle" {$Checked} />
+			<div>
+			    <table>
+			        <tr>
+			            <th>{$Iname}</th>
+				    <th>{$Icost}</th>
+				    <th>{$Ilevel}</th>
+				    <th>{$Ioption}</th>
+				</tr>
+				{foreach $Plans1 as $Plan}
+				    <tr>
+				        <td>{$Plan.name}</td>
+					<td>{$Plan.cost}</td>
+					<td>{$Plan.level}</td>
+					<td><a href="kowal.php?kowal=plany&amp;buy={$Plan.id}">{$Abuy}</a></td>
+				    </tr>
+				{/foreach}
+			    </table>
+			</div>
+		    </div>
+		{/foreach}
 	{/if}
 	
 	{if $Smith == "kuznia" || $Smith == "elite"}

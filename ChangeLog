@@ -1,5 +1,7 @@
 2012-05-03  Bartek thindil Jasicki  <thindil@vallheru.net>
 
+	* UPDATE,templates/layout1/kowal.tpl, templates/kowal.tpl, kowal.php:
+	redesigned buying plans
 	* BUG,tribeadmin.php:
 	fixed notice
 
