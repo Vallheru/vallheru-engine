@@ -210,3 +210,5 @@ CREATE TABLE IF NOT EXISTS `ignored` (
 ) ENGINE=MyISAM DEFAULT CHARSET=utf8 AUTO_INCREMENT=1;
 ALTER TABLE  `players` ADD  `rinvites` CHAR( 1 ) NOT NULL DEFAULT  'Y';
 ALTER TABLE  `tribes` ADD  `level` TINYINT( 1 ) NOT NULL DEFAULT  '1', ADD INDEX (  `level` );
+ALTER TABLE  `missions` ADD  `moreinfo` TEXT NOT NULL;
+ALTER TABLE  `mactions` ADD  `moreinfo` TEXT NOT NULL;

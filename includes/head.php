@@ -7,7 +7,7 @@
  *   @copyright            : (C) 2004,2005,2006,2007,2011,2012 Vallheru Team based on Gamers-Fusion ver 2.5
  *   @author               : thindil <thindil@vallheru.net>
  *   @version              : 1.5
- *   @since                : 24.04.2012
+ *   @since                : 04.05.2012
  *
  */
 
@@ -786,8 +786,8 @@ function checkvalue($value)
 /**
 * Delete session when player escape from fight
 */
-$arrTitles = array('Arena Walk', 'Labirynt', 'Portal', 'Astralny plan', 'Gildia Łowców', 'Prefektura Gwardii');
-$arrLocations = array('Altara', 'Ardulith', 'Portal', 'Astralny plan');
+$arrTitles = array('Arena Walk', 'Labirynt', 'Portal', 'Astralny plan', 'Gildia Łowców', 'Prefektura Gwardii', 'Przygoda');
+$arrLocations = array('Altara', 'Ardulith', 'Portal', 'Astralny plan', 'Przygoda');
 if ($player -> fight != 0 && (!in_array($title, $arrTitles)) && (in_array($player -> location, $arrLocations)) && $player->revent != 8) 
 {
     $db -> Execute("UPDATE `players` SET `hp`=0, `fight`=0, `bless`='', `blessval`=0 WHERE `id`=".$player -> id) or die($db -> ErrorMsg());

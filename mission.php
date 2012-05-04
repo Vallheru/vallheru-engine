@@ -53,7 +53,8 @@ if (!isset($_SESSION['maction']))
 				 'successes' => $objMission->fields['successes'],
 				 'bonus' => $objMission->fields['bonus'],
 				 'place' => $objMission->fields['place'],
-				 'target' => $objMission->fields['target']);
+				 'target' => $objMission->fields['target'],
+				 'moreinfo' => array());
     if ($objMission->fields['exits'] != '')
       {
 	$_SESSION['maction']['mobs'] = explode(';', $objMission->fields['exits']);
@@ -66,14 +67,106 @@ if (!isset($_SESSION['maction']))
       {
 	$_SESSION['maction']['items'] = explode(';', $objMission->fields['items']);
       }
+    if ($objMission->fields['moreinfo'] != '')
+      {
+	$_SESSION['maction']['moreinfo'] = explode(';', $objMission->fields['moreinfo']);
+      }
     $objMission->Close();
+  }
+
+$strFinish = '';
+$blnEnd = FALSE;
+
+/**
+ * Fight with monsters
+ */
+if ($player->fight == 8888)
+  {
+    //Generate new monster
+    if (!isset($_SESSION['enemy']))
+    {
+      $arrStats = array(0, 0, $player->hp, $player->endurance, $player->speed);
+      if ($player->strength > $player->inteli)
+	{
+	  $arrStats[0] = $player->strength;
+	}
+      else
+	{
+	  $arrStats[0] = $player->inteli;
+	}
+      if ($player->agility > $player->wisdom)
+	{
+	  $arrStats[1] = $player->agility;
+	}
+      else
+	{
+	  $arrStats[1] = $player->wisdom;
+	}
+      foreach ($arrStats as &$fltStat)
+	{
+	  $fltBonus = (rand(-15, 15) / 100) * $fltStat;
+	  $fltStat += $fltBonus;
+	}
+      $enemy = array('name' => $_SESSION['maction']['moreinfo'][1], 
+		     'strength' => $arrStats[0], 
+		     'agility' => $arrStats[1], 
+		     'hp' => $arrStats[2], 
+		     'level' => $player->level, 
+		     'endurance' => $arrStats[6], 
+		     'speed' => $arrStats[7], 
+		     'exp1' => $player->level * 1, 
+		     'exp2' => $player->level * 10,
+		     "gold" => $player->level * 10,
+		     "lootnames" => array(),
+		     "lootchances" => array());
+      $_SESSION['enemy'] = $enemy;
+    }
+    else
+      {
+	$enemy = $_SESSION['enemy'];
+      }
+    $db -> Execute("UPDATE `players` SET `fight`=8888 WHERE `id`=".$player->id);
+    $arrehp = array ();
+    if (!isset ($_POST['action'])) 
+      {
+	turnfight ($enemy['exp1'], $enemy['gold'], '', $strAddress);
+      } 
+    else 
+      {
+	turnfight ($enemy['exp1'], $enemy['gold'], $_POST['action'], $strAddress);
+      }
+    $myhp = $db -> Execute("SELECT `hp`, `fight` FROM `players` WHERE `id`=".$player -> id);
+    //End of fight
+    if ($myhp -> fields['fight'] == 0) 
+      {
+	unset($_SESSION['enemy']);
+	$player->energy--;
+	if ($player->energy < 0)
+	  {
+	    $player->energy = 0;
+	  }
+	if ($myhp->fields['hp'] == 0)
+	  {
+	    $db -> Execute("UPDATE `players` SET `energy`=".$player->energy.", `miejsce`='".$_SESSION['maction']['place']."' WHERE `id`=".$player -> id);
+	    $strFinish = '(<a href="city.php">Koniec</a>)';
+	    $blnEnd = TRUE;
+	  }
+	else
+	  {
+	    $db -> Execute("UPDATE `players` SET `energy`=".$player->energy." WHERE `id`=".$player -> id);
+	  }
+      }
+    else
+      {
+	require_once("includes/foot.php");
+	return;
+      }
+    $myhp -> Close();
   }
 
 /**
  * Generate new room
  */
-$strFinish = '';
-$blnEnd = FALSE;
 $blnQuest = FALSE;
 if (isset($_POST['action']))
   {
@@ -315,6 +408,7 @@ if (isset($_POST['action']))
 	    $_SESSION['maction']['exits'] = array();
 	    $_SESSION['maction']['items'] = array();
 	    $_SESSION['maction']['mobs'] = array();
+	    $_SESSION['maction']['moreinfo'] = array();
 	    //Generate exits
 	    $arrTmp = parseOptions($objMission->fields['exits']);
 	    $arrChances = explode(';', $objMission->fields['chances']);
@@ -359,8 +453,13 @@ if (isset($_POST['action']))
 		    $_SESSION['maction']['mobs'][] = $arrTmp[$i];
 		  }
 	      }
+	    //More data for location
+	    if ($objMission->fields['moreinfo'] != '')
+	      {
+		$_SESSION['maction']['moreinfo'] = explode(';', $objMission->fields['moreinfo']);
+	      }
 	    $objMission->Close();
-	    $db->Execute("UPDATE `mactions` SET `location`=".$_SESSION['maction']['location'].", `exits`='".implode(';', $_SESSION['maction']['exits'])."', `mobs`='".implode(';', $_SESSION['maction']['mobs'])."', `items`='".implode(';', $_SESSION['maction']['items'])."', `rooms`=`rooms`-1, `successes`=".$_SESSION['maction']['successes']." WHERE `pid`=".$player->id);
+	    $db->Execute("UPDATE `mactions` SET `location`=".$_SESSION['maction']['location'].", `exits`='".implode(';', $_SESSION['maction']['exits'])."', `mobs`='".implode(';', $_SESSION['maction']['mobs'])."', `items`='".implode(';', $_SESSION['maction']['items'])."', `rooms`=`rooms`-1, `successes`=".$_SESSION['maction']['successes'].", `moreinfo`='".implode(';', $_SESSION['maction']['moreinfo'])."' WHERE `pid`=".$player->id);
 	  }
       }
   }
