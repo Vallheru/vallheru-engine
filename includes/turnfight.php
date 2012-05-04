@@ -7,7 +7,7 @@
  *   @copyright            : (C) 2004,2005,2006,2007,2011,2012 Vallheru Team based on Gamers-Fusion ver 2.5
  *   @author               : thindil <thindil@vallheru.net>
  *   @version              : 1.5
- *   @since                : 20.04.2012
+ *   @since                : 04.05.2012
  *
  */
  
@@ -56,46 +56,11 @@ function turnfight($expgain,$goldgain,$action,$addres)
     global $arrTags;
 
     $arrEquip = $player -> equipment();
+    $player->curstats($arrEquip);
     $myczaro = $db -> Execute("SELECT * FROM czary WHERE status='E' AND gracz=".$player -> id." AND typ='O'");
     $fight = $db -> Execute("SELECT fight FROM players WHERE id=".$player -> id);
 
-    $arrStat = array('agility', 'strength', 'inteli', 'wisdom', 'speed', 'cond', 'attack', 'shoot', 'miss', 'magic');
     $player->user = $arrTags[$player->tribe][0].' '.$player->user.' '.$arrTags[$player->tribe][1];
-
-    /**
-    * Add bless to stats
-    */
-    $objMybless = $db -> Execute("SELECT bless, blessval FROM players WHERE id=".$player -> id);
-    if (!empty($objMybless -> fields['bless']))
-    {
-        $arrBless = array('agility', 'strength', 'inteli', 'wisdom', 'speed', 'condition', 'weapon', 'shoot', 'dodge', 'cast');
-        $intKey = array_search($objMybless -> fields['bless'], $arrBless);
-        $strStat = $arrStat[$intKey];
-        $player -> $strStat = ($player -> $strStat + $objMybless -> fields['blessval']);
-    }
-    $objMybless -> Close();
-
-    /**
-     * Add bonus to stats from rings
-     */
-    if ($arrEquip[9][2])
-    {
-        $arrRings = array(R_AGI2, R_STR2, R_INT2, R_WIS2, R_SPE2, R_CON2);
-        $arrRingtype = explode(" ", $arrEquip[9][1]);
-        $intAmount = count($arrRingtype) - 1;
-        $intKey = array_search($arrRingtype[$intAmount], $arrRings);
-        $strStat = $arrStat[$intKey];
-        $player -> $strStat = $player -> $strStat + $arrEquip[9][2];
-    }
-    if ($arrEquip[10][2])
-    {
-        $arrRings = array(R_AGI2, R_STR2, R_INT2, R_WIS2, R_SPE2, R_CON2);
-        $arrRingtype = explode(" ", $arrEquip[10][1]);
-        $intAmount = count($arrRingtype) - 1;
-        $intKey = array_search($arrRingtype[$intAmount], $arrRings);
-        $strStat = $arrStat[$intKey];
-        $player -> $strStat = $player -> $strStat + $arrEquip[10][2];
-    }
 
     if ($fight -> fields['fight'] == 0 && $title == 'Arena Walk') 
       {
@@ -214,22 +179,20 @@ function turnfight($expgain,$goldgain,$action,$addres)
     }
     $smarty -> assign ("Message", "<ul><li><b>".$player -> user."</b> ".VERSUS." <b>".$enemy['name']."</b><br />");
     $smarty -> display ('error1.tpl');
-    $myagility = checkagility($player -> agility, $arrEquip[3][5], $arrEquip[4][5], $arrEquip[5][5]);
-    $myspeed = checkspeed($player -> speed, $arrEquip[0][7], $arrEquip[1][7]);
     /**
     * Count points in fight
     */
     if (!isset($_SESSION['points']) || $_SESSION['points'] == 0)
     {
-        $_SESSION['points'] = ceil($myspeed / $enemy['speed']);
+        $_SESSION['points'] = ceil($player->speed / $enemy['speed']);
     }
     /**
     * Count dodge - player and monster
     */
     if ($player -> clas == 'Wojownik' || $player -> clas == 'Barbarzyńca') 
     {
-        $myunik = (($myagility - $enemy['agility']) + $player -> level + $player -> miss);
-        $eunik = (($enemy['agility'] - $myagility) - ($player -> attack + $player -> level));
+        $myunik = (($player->agility - $enemy['agility']) + $player -> level + $player -> miss);
+        $eunik = (($enemy['agility'] - $player->agility) - ($player -> attack + $player -> level));
 	if ($arrEquip[11][0])
 	  {
 	    $eunik -= ($player->attack / 5);
@@ -237,13 +200,13 @@ function turnfight($expgain,$goldgain,$action,$addres)
     }
     if ($player -> clas == 'Rzemieślnik' || $player -> clas == 'Złodziej' || $player -> clas == '') 
     {
-        $myunik = ($myagility - $enemy['agility'] + $player -> miss);
-        $eunik = (($enemy['agility'] - $myagility) - $player -> attack);
+        $myunik = ($player->agility - $enemy['agility'] + $player -> miss);
+        $eunik = (($enemy['agility'] - $player->agility) - $player -> attack);
     }
     if ($player -> clas == 'Mag') 
     {
-        $myunik = ($myagility - $enemy['agility'] + $player -> miss);
-        $eunik = (($enemy['agility'] - $myagility) - ($player -> magic + $player -> level));
+        $myunik = ($player->agility - $enemy['agility'] + $player -> miss);
+        $eunik = (($enemy['agility'] - $player->agility) - ($player -> magic + $player -> level));
     }
     if (!isset($myunik)) 
     {
@@ -340,7 +303,7 @@ function turnfight($expgain,$goldgain,$action,$addres)
     {
         $myunik = 1;
     }
-    $attacks = ceil($enemy['speed'] / $myspeed);
+    $attacks = ceil($enemy['speed'] / $player->speed);
     if ($attacks > 5) 
     {
         $attacks = 5;
@@ -457,7 +420,7 @@ function turnfight($expgain,$goldgain,$action,$addres)
             if ($player -> hp > 0) 
             {
                 $_SESSION['round'] = $_SESSION['round'] + 1;
-                $_SESSION['points'] = ceil($myspeed / $enemy['speed']);
+                $_SESSION['points'] = ceil($player->speed / $enemy['speed']);
                 fightmenu($_SESSION['points'],$zmeczenie,$_SESSION['round'],$addres);
             }
         }
@@ -559,7 +522,7 @@ function turnfight($expgain,$goldgain,$action,$addres)
         if ($player -> hp > 0) 
         {
             $_SESSION['round'] = $_SESSION['round'] + 1;
-            $_SESSION['points'] = ceil($myspeed / $enemy['speed']);
+            $_SESSION['points'] = ceil($player->speed / $enemy['speed']);
             fightmenu($_SESSION['points'],$zmeczenie,$_SESSION['round'],$addres);
         }
     }
@@ -648,7 +611,7 @@ function turnfight($expgain,$goldgain,$action,$addres)
         if ($player -> hp > 0) 
         {
             $_SESSION['round'] = $_SESSION['round'] + 1;
-            $_SESSION['points'] = ceil($myspeed / $enemy['speed']);
+            $_SESSION['points'] = ceil($player->speed / $enemy['speed']);
             if ($_SESSION['points'] > 5) 
             {
                 $_SESSION['points'] = 5;
@@ -671,7 +634,7 @@ function turnfight($expgain,$goldgain,$action,$addres)
             }
             $_SESSION['exhaust'] = $zmeczenie;
             $_SESSION['round'] = $_SESSION['round'] + 1;
-            $_SESSION['points'] = ceil($myspeed / $enemy['speed']);
+            $_SESSION['points'] = ceil($player->speed / $enemy['speed']);
             if ($_SESSION['points'] > 5) 
             {
                 $_SESSION['points'] = 5;
@@ -784,7 +747,6 @@ function attack($eunik,$bdamage)
     global $zmeczenie;
     global $enemy;
     global $amount;
-    global $myagility;
     $number1 = $_POST['monster'] - 1;
     $number = "mon".$number1;
     $gwtbr = 0;
@@ -841,7 +803,7 @@ function attack($eunik,$bdamage)
 	  {
 	    $bonus += $arrEquip[6][8];
 	  }
-        $bonus2 = (($player  -> strength / 2) + ($myagility / 2));
+        $bonus2 = (($player  -> strength / 2) + ($player->agility / 2));
         if ($player -> clas == 'Wojownik'  || $player -> clas == 'Barbarzyńca') 
         {
             $stat['damage'] = (($bonus2 + $bonus) + $player -> level);

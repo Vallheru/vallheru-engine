@@ -7,7 +7,7 @@
  *   @copyright            : (C) 2004,2005,2006,2007,2011,2012 Vallheru Team based on Gamers-Fusion ver 2.5
  *   @author               : thindil <thindil@vallheru.net>
  *   @version              : 1.5
- *   @since                : 23.04.2012
+ *   @since                : 04.05.2012
  *
  */
 
@@ -408,51 +408,6 @@ function checkarmor($torso,$head,$legs,$shield)
         }
     }
     return $armor;
-}
-
-/**
-* Function count player's agility
-*/
-function checkagility($agility, $armor, $legs, $shield) 
-{
-    if ($armor > -1)
-    {
-        $intArmor = ($agility * ($armor / 100));
-    }
-        else
-    {
-        $intArmor = $armor;
-    }
-    if ($legs > -1)
-    {
-        $agi2 = ($agility * ($legs / 100));
-    }
-        else
-    {
-        $agi2 = $legs;
-    }
-    if ($shield > -1)
-    {
-        $agi3 = ($agility * ($shield / 100));
-    }
-        else
-    {
-        $agi3 = $shield;
-    }
-    $agi1 = ($agility - $intArmor);
-    $newagi = ($agi1 - $agi2);
-    $newagility = ($newagi - $agi3);
-    return $newagility;
-}
-
-/**
-* Function count player's speed
-*/
-function checkspeed($speed, $weapon, $bow) 
-{
-    $speed2 = ($speed + ($speed * ($weapon / 100)));
-    $newspeed = ($speed2 + $bow);
-    return $newspeed;
 }
 
 /**
@@ -897,44 +852,9 @@ function fightmonster($enemy, $expgain, $goldgain, $times)
     $mczar = $db -> Execute("SELECT * FROM `czary` WHERE `status`='E' AND `gracz`=".$player -> id." AND `typ`='B'");
     $mczaro = $db -> Execute("SELECT * FROM `czary` WHERE `status`='E' AND `gracz`=".$player -> id." AND `typ`='O'");
     $premia = 0;
-    $arrStat = array('agility', 'strength', 'inteli', 'wisdom', 'speed', 'cond', 'attack', 'shoot', 'miss', 'magic');
     $strName = $player->user;
     $player->user = $arrTags[$player->tribe][0].' '.$player->user.' '.$arrTags[$player->tribe][1];
-
-    /**
-    * Add bless to stats
-    */
-    $objMybless = $db -> Execute("SELECT bless, blessval FROM players WHERE id=".$player -> id);
-    if (!empty($objMybless -> fields['bless']))
-    {
-        $arrBless = array('agility', 'strength', 'inteli', 'wisdom', 'speed', 'condition', 'weapon', 'shoot', 'dodge', 'cast');
-        $intKey = array_search($objMybless -> fields['bless'], $arrBless);
-        $strStat = $arrStat[$intKey];
-        $player -> $strStat = ($player -> $strStat + $objMybless -> fields['blessval']);
-    }
-    $objMybless -> Close();
-
-    /**
-     * Add bonus to stats from rings
-     */
-    if ($arrEquip[9][2])
-    {
-        $arrRings = array(AGILITY, STRENGTH, INTELIGENCE, R_WIS3, SPEED, CONDITION);
-        $arrRingtype = explode(" ", $arrEquip[9][1]);
-        $intAmount = count($arrRingtype) - 1;
-        $intKey = array_search($arrRingtype[$intAmount], $arrRings);
-        $strStat = $arrStat[$intKey];
-        $player -> $strStat = $player -> $strStat + $arrEquip[9][2];
-    }
-    if ($arrEquip[10][2])
-    {
-        $arrRings = array(AGILITY, STRENGTH, INTELIGENCE, R_WIS3, SPEED, CONDITION);
-        $arrRingtype = explode(" ", $arrEquip[10][1]);
-        $intAmount = count($arrRingtype) - 1;
-        $intKey = array_search($arrRingtype[$intAmount], $arrRings);
-        $strStat = $arrStat[$intKey];
-        $player -> $strStat = $player -> $strStat + $arrEquip[10][2];
-    }
+    $player->curstats($arrEquip);
 
     if (isset ($_POST['razy']) && $_POST['razy'] > 1) 
     {
@@ -1014,8 +934,6 @@ function fightmonster($enemy, $expgain, $goldgain, $times)
             error (E_MANA);
         }
     }
-    $myagility = checkagility($player -> agility, $arrEquip[3][5], $arrEquip[4][5], $arrEquip[5][5]);
-    $myspeed = checkspeed($player -> speed, $arrEquip[0][7], $arrEquip[1][7]);
     if ($arrEquip[2][0]) 
     {
         $premia = ($premia + $arrEquip[2][2]);
@@ -1175,8 +1093,8 @@ function fightmonster($enemy, $expgain, $goldgain, $times)
     }
     if ($player -> clas == 'Wojownik'  || $player -> clas == 'Barbarzyńca') 
     {
-        $myunik = (($myagility - $enemy['agility']) + $player -> level + $player -> miss);
-        $eunik = (($enemy['agility'] - $myagility) - ($player -> attack + $player -> level));
+        $myunik = (($player->agility - $enemy['agility']) + $player -> level + $player -> miss);
+        $eunik = (($enemy['agility'] - $player->agility) - ($player -> attack + $player -> level));
 	if ($arrEquip[11][0])
 	  {
 	    $eunik -= ($player->attack / 5);
@@ -1184,13 +1102,13 @@ function fightmonster($enemy, $expgain, $goldgain, $times)
     }
     if ($player -> clas == 'Rzemieślnik' || $player -> clas == 'Złodziej') 
     {
-        $myunik = ($myagility - $enemy['agility'] + $player -> miss);
-        $eunik = (($enemy['agility'] - $myagility) - $player -> attack);
+        $myunik = ($player->agility - $enemy['agility'] + $player -> miss);
+        $eunik = (($enemy['agility'] - $player->agility) - $player -> attack);
     }
     if ($player -> clas == 'Mag') 
     {
-        $myunik = ($myagility - $enemy['agility'] + $player -> miss);
-        $eunik = (($enemy['agility'] - $myagility) - ($player -> magic + $player -> level));
+        $myunik = ($player->agility - $enemy['agility'] + $player -> miss);
+        $eunik = (($enemy['agility'] - $player->agility) - ($player -> magic + $player -> level));
     }
     if (!isset($myunik) || $myunik < 1) 
     {
@@ -1243,16 +1161,16 @@ function fightmonster($enemy, $expgain, $goldgain, $times)
     {
         $enemy['damage'] = 1;
     }
-    if ($myspeed < 1)
+    if ($player->speed < 1)
     {
-        $myspeed = 1;
+        $player->speed = 1;
     }
-    $stat['attackstr'] = ceil($myspeed / $enemy['speed']);
+    $stat['attackstr'] = ceil($player->speed / $enemy['speed']);
     if ($stat['attackstr'] > 5) 
     {
         $stat['attackstr'] = 5;
     }
-    $enemy['attackstr'] = ceil($enemy['speed'] / $myspeed);
+    $enemy['attackstr'] = ceil($enemy['speed'] / $player->speed);
     if ($enemy['attackstr'] > 5) 
     {
         $enemy['attackstr'] = 5;

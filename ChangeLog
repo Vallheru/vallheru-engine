@@ -1,5 +1,7 @@
 2012-05-04  Bartek thindil Jasicki  <thindil@vallheru.net>
 
+	* UPDATE,includes/funkcje.php, includes/turnfight.php: 
+	some code optimization
 	* BUG,kowal.php, lumbermill.php:
 	don't add bonus from ring twice
 
