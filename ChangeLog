@@ -1,3 +1,8 @@
+2012-05-04  Bartek thindil Jasicki  <thindil@vallheru.net>
+
+	* BUG,kowal.php, lumbermill.php:
+	don't add bonus from ring twice
+
 2012-05-03  Bartek thindil Jasicki  <thindil@vallheru.net>
 
 	* UPDATE,templates/layout1/kowal.tpl, templates/kowal.tpl, kowal.php:

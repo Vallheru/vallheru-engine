@@ -7,7 +7,7 @@
  *   @copyright            : (C) 2004,2005,2006,2007,2011,2012 Vallheru Team based on Gamers-Fusion ver 2.5
  *   @author               : thindil <thindil@vallheru.net>
  *   @version              : 1.5
- *   @since                : 30.04.2012
+ *   @since                : 04.05.2012
  *
  */
 
@@ -369,31 +369,6 @@ if (isset($_GET['mill']) && ($_GET['mill'] == 'mill' || $_GET['mill'] == 'elite'
       }
     else
       {
-	$arrEquip = $player -> equipment();
-	$arrRings = array('zręczności', 'siły', 'inteligencji');
-	$arrStat = array('agility', 'strength', 'inteli');
-	if ($arrEquip[9][2])
-	  {
-	    $arrRingtype = explode(" ", $arrEquip[9][1]);
-	    $intAmount = count($arrRingtype) - 1;
-	    $intKey = array_search($arrRingtype[$intAmount], $arrRings);
-	    if ($intKey != NULL)
-	      {
-		$strStat = $arrStat[$intKey];
-		$player -> $strStat = $player -> $strStat + $arrEquip[9][2];
-	      }
-	  }
-	if ($arrEquip[10][2])
-	  {
-	    $arrRingtype = explode(" ", $arrEquip[10][1]);
-	    $intAmount = count($arrRingtype) - 1;
-	    $intKey = array_search($arrRingtype[$intAmount], $arrRings);
-	    if ($intKey != NULL)
-	      {
-		$strStat = $arrStat[$intKey];
-		$player -> $strStat = $player -> $strStat + $arrEquip[10][2];
-	      }
-	  }
 	/**
          * Add bonuses to ability
          */
