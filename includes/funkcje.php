@@ -993,7 +993,7 @@ function fightmonster($enemy, $expgain, $goldgain, $times)
         {
 	  $bonus += $arrEquip[6][8];
 	}
-        $bonus2 = (($player  -> strength / 2) + ($myagility / 2));
+        $bonus2 = (($player  -> strength / 2) + ($player->agility / 2));
         if ($player -> clas == 'Wojownik' || $player -> clas == 'Barbarzyńca') 
         {
             $stat['damage'] = (($bonus2 + $bonus) + $player -> level);

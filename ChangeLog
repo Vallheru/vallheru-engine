@@ -1,5 +1,7 @@
 2012-05-04  Bartek thindil Jasicki  <thindil@vallheru.net>
 
+	* BUG,includes/funkcje.php: 
+	fixed typo
 	* FEATURE,install/db/update.sql, includes/head.php, mission.php: 
 	start work on fight in missions
 	* UPDATE,includes/funkcje.php, includes/turnfight.php: 
