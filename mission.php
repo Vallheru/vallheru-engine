@@ -7,7 +7,7 @@
  *   @copyright            : (C) 2012 Vallheru Team based on Gamers-Fusion ver 2.5
  *   @author               : thindil <thindil@vallheru.net>
  *   @version              : 1.5
- *   @since                : 01.05.2012
+ *   @since                : 05.05.2012
  *
  */
 
@@ -125,19 +125,29 @@ if ($player->fight == 8888)
       {
 	$enemy = $_SESSION['enemy'];
       }
+    if (!isset($_SESSION['razy']))
+      {
+	if (count($_SESSION['maction']['moreinfo']) > 2)
+	  {
+	    $_SESSION['razy'] = $_SESSION['maction']['moreinfo'][2];
+	  }
+	else
+	  {
+	    $_SESSION['razy'] = 1;
+	  }
+      }
     $db -> Execute("UPDATE `players` SET `fight`=8888 WHERE `id`=".$player->id);
-    $arrehp = array ();
     if (!isset ($_POST['action'])) 
       {
-	turnfight ($enemy['exp1'], $enemy['gold'], '', $strAddress);
+	turnfight ($enemy['exp1'], $enemy['gold'], '', 'mission.php');
       } 
     else 
       {
-	turnfight ($enemy['exp1'], $enemy['gold'], $_POST['action'], $strAddress);
+	turnfight ($enemy['exp1'], $enemy['gold'], $_POST['action'], 'mission.php');
       }
     $myhp = $db -> Execute("SELECT `hp`, `fight` FROM `players` WHERE `id`=".$player -> id);
     //End of fight
-    if ($myhp -> fields['fight'] == 0) 
+    if ($myhp -> fields['fight'] == 0 || $myhp->fields['fight'] == -1) 
       {
 	unset($_SESSION['enemy']);
 	$player->energy--;
@@ -145,11 +155,19 @@ if ($player->fight == 8888)
 	  {
 	    $player->energy = 0;
 	  }
-	if ($myhp->fields['hp'] == 0)
+	if ($myhp->fields['fight'] == -1)
 	  {
-	    $db -> Execute("UPDATE `players` SET `energy`=".$player->energy.", `miejsce`='".$_SESSION['maction']['place']."' WHERE `id`=".$player -> id);
+	    $db -> Execute("UPDATE `players` SET `energy`=".$player->energy.", `miejsce`='".$_SESSION['maction']['place']."', `fight`=0 WHERE `id`=".$player -> id);
 	    $strFinish = '(<a href="city.php">Koniec</a>)';
 	    $blnEnd = TRUE;
+	    //TODO
+	    /*$objName = $db->Execute("SELECT `name` FROM `missions` WHERE `id`=".$_SESSION['maction']['location']);
+	    $strName = '';
+	    $intPos = 0;
+	    $objName->Close();
+	    $objFinish = $db->Execute("SELECT `id` FROM `missions` WHERE `name`='".$strName."lostfight' ORDER BY RAND() LIMIT 1");
+	    $_SESSION['maction']['location'] = $objFinish->fields['id'];
+	    $objFinish->Close();*/
 	  }
 	else
 	  {
@@ -252,6 +270,7 @@ if (isset($_POST['action']))
 		$objName->Close();
 		$objFinish = $db->Execute("SELECT `id` FROM `missions` WHERE `name`='thief".$strName."fail' ORDER BY RAND() LIMIT 1");
 		$_SESSION['maction']['location'] = $objFinish->fields['id'];
+		$objFinish->Close();
 		$cost = 1000 * $player -> level;
 		checkexp($player->exp, $player->level, $player->level, $player->race, $player->user, $player->id, 0, 0, $player->id, 'thievery', 0.01);
 		$db -> Execute("UPDATE `players` SET `miejsce`='Lochy' WHERE `id`=".$player -> id);

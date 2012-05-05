@@ -7,7 +7,7 @@
  *   @copyright            : (C) 2004,2005,2006,2007,2011,2012 Vallheru Team based on Gamers-Fusion ver 2.5
  *   @author               : thindil <thindil@vallheru.net>
  *   @version              : 1.5
- *   @since                : 04.05.2012
+ *   @since                : 05.05.2012
  *
  */
  
@@ -411,6 +411,10 @@ function turnfight($expgain,$goldgain,$action,$addres)
             {
                 $db -> Execute("UPDATE `players` SET `fight`=9999 WHERE id=".$player -> id);
             }
+	    if ($title == 'Przygoda')
+	      {
+		$db -> Execute("UPDATE `players` SET `fight`=-1 WHERE id=".$player -> id);
+	      }
         } 
             else 
         {
@@ -656,8 +660,16 @@ function turnfight($expgain,$goldgain,$action,$addres)
         {
             $player -> hp = 0;
         }
+	if ($title == 'Przygoda')
+	  {
+	    $intFight = -1;
+	  }
+	else
+	  {
+	    $intFight = 0;
+	  }
         $db -> Execute("INSERT INTO `events` (`text`) VALUES('Gracz ".$player -> user." ".DEFEATED_BY.$enemy['name']."')");
-        $db -> Execute("UPDATE `players` SET `fight`=0, `hp`=".$player -> hp.", `bless`='', `blessval`=0, `antidote`='' WHERE `id`=".$player -> id);
+        $db -> Execute("UPDATE `players` SET `fight`=".$intFight.", `hp`=".$player -> hp.", `bless`='', `blessval`=0, `antidote`='' WHERE `id`=".$player -> id);
         unset($_SESSION['exhaust'], $_SESSION['round'], $_SESSION['points'], $_SESSION['dodge']);
         for ($k = 0; $k < $amount; $k ++) 
         {

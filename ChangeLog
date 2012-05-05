@@ -1,3 +1,8 @@
+2012-05-05  Bartek thindil Jasicki  <thindil@vallheru.net>
+
+	* FEATURE,includes/turnfight.php, mission.php:
+	continue work on fight in missions
+
 2012-05-04  Bartek thindil Jasicki  <thindil@vallheru.net>
 
 	* BUG,includes/funkcje.php: 
