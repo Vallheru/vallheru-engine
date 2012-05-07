@@ -1,5 +1,7 @@
 2012-05-07  Bartek thindil Jasicki  <thindil@vallheru.net>
 
+	* BUG,bank.php: 
+	fixed sendig plans to other players
 	* BUG,smelter.php, mines.php, lumberjack.php, lumbermill.php, kowal.php, kopalnia.php, alchemik.php, farm.php, jeweller.php, core.php, 
 	class/player_class.php:
 	fixed craftsmen bonus to skills

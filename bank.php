@@ -9,7 +9,7 @@
  *   @author               : yeskov <yeskov@users.sourceforge.net>
  *   @author               : eyescream <tduda@users.sourceforge.net>
  *   @version              : 1.5
- *   @since                : 23.04.2012
+ *   @since                : 07.05.2012
  *
  */
 
@@ -557,7 +557,7 @@ if (isset($_GET['action']))
 		  {
 		    $_POST['amount'] = $item -> fields['amount'];
 		  }
-		$test = $db -> Execute("SELECT `id` FROM `equipment` WHERE `name`='".$item -> fields['name']."' AND `wt`=".$item -> fields['wt']." AND `type`='".$item -> fields['type']."' AND `status`='U' AND `owner`=".$_POST['pid']." AND `power`=".$item -> fields['power']." AND `zr`=".$item -> fields['zr']." AND `szyb`=".$item -> fields['szyb']." AND `maxwt`=".$item -> fields['maxwt']." AND `poison`=".$item -> fields['poison']." AND `cost`=".$item -> fields['cost']);
+		$test = $db -> Execute("SELECT `id` FROM `equipment` WHERE `name`='".$item -> fields['name']."' AND `wt`=".$item -> fields['wt']." AND `type`='".$item -> fields['type']."' AND `status`='U' AND `owner`=".$_POST['pid']." AND `power`=".$item -> fields['power']." AND `zr`=".$item -> fields['zr']." AND `szyb`=".$item -> fields['szyb']." AND `maxwt`=".$item -> fields['maxwt']." AND `poison`=".$item -> fields['poison']." AND `cost`=".$item -> fields['cost']." AND `minlev`=".$item->fields['minlev']);
 		if (empty ($test -> fields['id'])) 
 		  {
 		    $db -> Execute("INSERT INTO `equipment` (`owner`, `name`, `power`, `type`, `cost`, `zr`, `wt`, `minlev`, `maxwt`, `amount`, `magic`, `poison`, `szyb`, `twohand`, `repair`) VALUES(".$_POST['pid'].",'".$item -> fields['name']."',".$item -> fields['power'].",'".$item -> fields['type']."',".$item -> fields['cost'].",".$item -> fields['zr'].",".$item -> fields['wt'].",".$item -> fields['minlev'].",".$item -> fields['maxwt'].",".$_POST['amount'].",'".$item -> fields['magic']."',".$item -> fields['poison'].",".$item -> fields['szyb'].",'".$item  -> fields['twohand']."', ".$item -> fields['repair'].")") or error(E_DB4);
@@ -629,7 +629,6 @@ if (isset($_GET['action']))
 		$strAttributes.= I_SPE.' +'.$item -> fields['szyb'].', '.I_DUR.' '.$item -> fields['wt'].'/'.$item -> fields['maxwt'];
 		break;
 	      case 'H':   // Helmets, 
-	      case 'P':   // plate legs,
 	      case 'S':   // and shiels: defense and durability.
 		$strAttributes.= I_DEF.' +'.$item -> fields['power'].', '.I_DUR.' '.$item -> fields['wt'].'/'.$item -> fields['maxwt'];
 		break;
@@ -646,7 +645,10 @@ if (isset($_GET['action']))
 	      case 'T':   // Mage wand: percent bonus to spell strength.
 		$strAttributes.= I_ATT.' +'.$item -> fields['power'].'%';
 		break;
-            
+		// Crafts plans
+	      case 'P':
+		$strAttributes .= 'plan, poziom: '.$item->fields['minlev'];
+		break;
 	      case 'I':   // Rings: bonus type is in ring's description, so here we only display value.
 	      default:    // same for items that may be added in future, only 'power' field in database with no description.
 		$strAttributes.= '+'.$item -> fields['power'];
@@ -1279,7 +1281,19 @@ if (!isset($_GET['action']) || (isset($_GET['action']) && $_GET['action'] != 'as
 	      {
 		$strSpeed = " (".$item->fields['szyb']." szyb)";
 	      }
-	    $arrItems[$item->fields['id']] = $item->fields['name']." (+".$item->fields['power'].")".$strAgi.$strSpeed.$strDur." (".I_AMOUNT2.": ".$strAmount.")";
+	    if ($item->fields['type'] == 'P')
+	      {
+		$item->fields['name'] = 'Plan: '.$item->fields['name'].' poziom: '.$item->fields['minlev'];
+	      }
+	    if ($item->fields['power'] != 0)
+	      {
+		$strPower = " (+".$item->fields['power'].")";
+	      }
+	    else
+	      {
+		$strPower = '';
+	      }
+	    $arrItems[$item->fields['id']] = $item->fields['name'].$strPower.$strAgi.$strSpeed.$strDur." (".I_AMOUNT2.": ".$strAmount.")";
             $item -> MoveNext();
         }
         $smarty -> assign (array("Ioptions" => $arrItems,
