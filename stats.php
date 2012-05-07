@@ -8,7 +8,7 @@
  *   @author               : thindil <thindil@vallheru.net>
  *   @author               : mori <ziniquel@users.sourceforge.net>
  *   @version              : 1.5
- *   @since                : 14.02.2012
+ *   @since                : 07.05.2012
  *
  */
 
@@ -113,8 +113,8 @@ $strRank = selectrank($player -> rank, $player -> gender);
 /**
  * Bonuses from equipment to stats
  */
-require_once('includes/statsbonus.php');
-$arrCurstats = statbonus();
+$player->curstats(array());
+$arrCurstats = array($player->agility, $player->strength, $player->inteli, $player->wisdom, $player->speed, $player->cond);
 
 /**
  * Bonus from bless
@@ -122,13 +122,9 @@ $arrCurstats = statbonus();
 $objBless = $db -> Execute("SELECT `bless`, `blessval`, `mpoints` FROM `players` WHERE `id`=".$player -> id);
 if (!empty($objBless -> fields['bless']))
 {
-    $arrBless = array('agility', 'strength', 'inteli', 'wisdom', 'speed', 'condition', 'smith', 'alchemy', 'fletcher', 'weapon', 'shoot', 'dodge', 'cast', 'breeding', 'mining', 'lumberjack', 'herbalist', 'jeweller');
+    $arrBless = array('agility', 'strength', 'inteli', 'wisdom', 'speed', 'condition', 'smith', 'alchemy', 'fletcher', 'weapon', 'shoot', 'dodge', 'cast', 'breeding', 'mining', 'lumberjack', 'herbalist', 'jeweller', 'perception', 'thievery', 'metallurgy');
     $intKey = array_search($objBless -> fields['bless'], $arrBless);
-    if ($intKey < 6)
-    {
-        $arrCurstats[$intKey] = $arrCurstats[$intKey] + $objBless -> fields['blessval'];
-    }
-    $arrPrays = array(AGI, STR, INTELI, WIS, SPE, CON, SMI, ALC, FLE, WEA, SHO, DOD, CAS, BRE, MINI, LUMBER, HERBS, JEWEL);
+    $arrPrays = array(AGI, STR, INTELI, WIS, SPE, CON, SMI, ALC, FLE, WEA, SHO, DOD, CAS, BRE, MINI, LUMBER, HERBS, JEWEL, "Spostrzegawczości", "Złodziejstwa", 'Hutnictwa');
     $smarty -> assign(array("Blessfor" => BLESS_FOR,
                             "Pray" => "<br />".$arrPrays[$intKey],
                             "Blessval" => "(".$objBless -> fields['blessval'].")<br />"));
@@ -168,12 +164,11 @@ $smarty->assign(array('Mpoints' => $objBless->fields['mpoints'],
 		      'Antidote' => $strAntidote,
 		      'Effect' => $strEffect));
 
-$arrStats = array($player -> agility, $player -> strength, $player -> inteli, $player -> wisdom, $player -> speed, $player -> cond);
 $arrCurstats2 = array();
 $i = 0;
 foreach ($arrCurstats as $fltStats)
 {
-    if ($fltStats != $arrStats[$i])
+    if ($fltStats != $player->oldstats[$i])
     {
         $arrCurstats2[$i] = "(".$fltStats.")<br />";
     }
@@ -211,7 +206,7 @@ if ($player->mana < $maxmana)
     $smarty -> assign ("Rest", "<br />");
 }
    
-$smarty -> assign(array("Stats" => $arrStats,
+$smarty -> assign(array("Stats" => $player->oldstats,
                         "Curstats" => $arrCurstats2,
                         "Tstats2" => $arrStatstext,
                         "Mana" =>  $player -> mana."/".$maxmana, 

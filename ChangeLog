@@ -1,5 +1,7 @@
 2012-05-07  Bartek thindil Jasicki  <thindil@vallheru.net>
 
+	* UPDATE,stats.php: 
+	fixed bug with info about bless, some code cleanup
 	* BUG,includes/battle.php: 
 	fixed amount of gained gold
 	* BUG,bank.php: 
