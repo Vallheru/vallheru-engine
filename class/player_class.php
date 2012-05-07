@@ -7,7 +7,7 @@
  *   @copyright            : (C) 2004,2005,2006,2007,2011,2012 Vallheru Team based on Gamers-Fusion ver 2.5
  *   @author               : thindil <thindil@vallheru.net>
  *   @version              : 1.5
- *   @since                : 25.04.2012
+ *   @since                : 07.05.2012
  *
  */
 
@@ -340,13 +340,13 @@ class Player
 	    {
 	      $intBonus += ($this->level / 5);
 	    }
-	  $intMaxbonus = $this->$strName * 2;
-	  if ($intBonus > $intMaxbonus)
-	    {
-	      $intBonus = $intMaxbonus;
-	    }
 	  foreach ($arrNames as $strName)
 	    {
+	      $intMaxbonus = $this->$strName * 2;
+	      if ($intBonus > $intMaxbonus)
+		{
+		  $intBonus = $intMaxbonus;
+		}
 	      $this->$strName += $intBonus;
 	    }
 	}

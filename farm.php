@@ -492,7 +492,7 @@ if (isset($_GET['step']) && $_GET['step'] == 'plantation')
 		 * Add bonuses to ability
 		 */
 		$player->curstats(array(), TRUE);
-		$player->curskills(array('herbalist'));
+		$player->curskills(array('herbalist'), TRUE, TRUE);
 
 		$intFactor = 1 + ($player->herbalist / 20);
 		if ($intFactor > 10)

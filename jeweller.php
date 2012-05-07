@@ -7,7 +7,7 @@
  *   @copyright            : (C) 2006,2011,2012 Vallheru Team based on Gamers-Fusion ver 2.5
  *   @author               : thindil <thindil@vallheru.net>
  *   @version              : 1.5
- *   @since                : 26.04.2012
+ *   @since                : 07.05.2012
  *
  */
 
@@ -175,7 +175,7 @@ if (isset($_GET['step']) && $_GET['step'] == 'make')
          * Add bonuses to ability
          */
 	$player->curstats(array(), TRUE);
-	$player->curskills(array('jeweller'));
+	$player->curskills(array('jeweller'), TRUE, TRUE);
         
         $intChance = $player->jeweller * 100;
         if ($intChance > 95)
@@ -399,7 +399,7 @@ if (isset($_GET['step']) && $_GET['step'] == 'make2')
              * Add bonuses to ability
              */
 	    $player->curstats(array(), TRUE);
-	    $player->curskills(array('jeweller'));
+	    $player->curskills(array('jeweller'), TRUE, TRUE);
 
             $objRing2 = $db -> Execute("SELECT `level`, `bonus`, `cost`, `type` FROM `jeweller` WHERE `owner`=".$player -> id." AND `name`='".$objRing -> fields['name']."'");
 
@@ -517,7 +517,7 @@ if (isset($_GET['step']) && $_GET['step'] == 'make2')
          * Add bonuses to ability
          */
 	$player->curstats(array(), TRUE);
-	$player->curskills(array('jeweller'));
+	$player->curskills(array('jeweller'), TRUE, TRUE);
 
         $intChance = ($player->jeweller / $objRing -> fields['level']) * 50;
         if ($intChance > 95)
@@ -782,7 +782,7 @@ if (isset($_GET['step']) && $_GET['step'] == 'make3')
              * Add bonuses to ability
              */
 	    $player->curstats(array(), TRUE);
-	    $player->curskills(array('jeweller'));
+	    $player->curskills(array('jeweller'), TRUE, TRUE);
 
             /**
              * Select ring name
@@ -961,7 +961,7 @@ if (isset($_GET['step']) && $_GET['step'] == 'make3')
          * Add bonuses to ability
          */
 	$player->curstats(array(), TRUE);
-	$player->curskills(array('jeweller'));
+	$player->curskills(array('jeweller'), TRUE, TRUE);
 
         $intChance = floor(($player->jeweller / 50) * 0.5) + 5;
         if ($intChance > 15)

@@ -1,3 +1,9 @@
+2012-05-07  Bartek thindil Jasicki  <thindil@vallheru.net>
+
+	* BUG,smelter.php, mines.php, lumberjack.php, lumbermill.php, kowal.php, kopalnia.php, alchemik.php, farm.php, jeweller.php, core.php, 
+	class/player_class.php:
+	fixed craftsmen bonus to skills
+
 2012-05-05  Bartek thindil Jasicki  <thindil@vallheru.net>
 
 	* FEATURE,includes/turnfight.php, mission.php:

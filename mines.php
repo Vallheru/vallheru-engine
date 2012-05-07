@@ -4,10 +4,10 @@
  *   Mines - digging for minerals
  *
  *   @name                 : mines.php
- *   @copyright            : (C) 2004,2005,2006,2011 Vallheru Team based on Gamers-Fusion ver 2.5
- *   @author               : thindil <thindil@tuxfamily.org>
- *   @version              : 1.4
- *   @since                : 30.09.2011
+ *   @copyright            : (C) 2004,2005,2006,2011,2012 Vallheru Team based on Gamers-Fusion ver 2.5
+ *   @author               : thindil <thindil@vallheru.net>
+ *   @version              : 1.5
+ *   @since                : 07.05.2012
  *
  */
 
@@ -262,7 +262,7 @@ if (isset($_GET['step']) && $_GET['step'] == 'dig')
          * Add bonuses to ability
          */
 	$player->curstats(array(), TRUE);
-	$player->curskills(array('mining'));
+	$player->curskills(array('mining'), TRUE, TRUE);
 
         $intAmount = ceil(((rand(1, 20) * $_POST['amount'] / $arrMinerals2[$intKey]) * (1 + $player->mining / 20)) - $arrMinerals2[$intKey]);
         if ($intAmount < 1)

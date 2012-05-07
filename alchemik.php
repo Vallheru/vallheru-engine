@@ -7,7 +7,7 @@
  *   @copyright            : (C) 2004,2005,2006,2007,2011,2012 Vallheru Team based on Gamers-Fusion ver 2.5
  *   @author               : thindil <thindil@vallheru.net>
  *   @version              : 1.5
- *   @since                : 26.04.2012
+ *   @since                : 07.05.2012
  *
  */
 
@@ -247,7 +247,7 @@ else
 	     * Add bonuses to ability
 	     */
 	    $player->curstats(array(), TRUE);
-	    $player->curskills(array('alchemy'));
+	    $player->curskills(array('alchemy'), TRUE, TRUE);
 	    
 	    $rprzedmiot = 0;
 	    $rpd = 0;
@@ -476,7 +476,7 @@ else
 	     * Add bonuses to ability
 	     */
 	    $player->curstats(array(), TRUE);
-	    $player->curskills(array('alchemy'));
+	    $player->curskills(array('alchemy'), TRUE, TRUE);
 	    $arrChance = array(0.1, 0.08, 0.06, 0.04, 0.02);
 	    $intChance = floor($player -> alchemy * $arrChance[$intKey]);
 	    if ($intChance > 95)
