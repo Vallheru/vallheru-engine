@@ -1,5 +1,7 @@
 2012-05-07  Bartek thindil Jasicki  <thindil@vallheru.net>
 
+	* BUG,includes/battle.php: 
+	fixed amount of gained gold
 	* BUG,bank.php: 
 	fixed sendig plans to other players
 	* BUG,smelter.php, mines.php, lumberjack.php, lumbermill.php, kowal.php, kopalnia.php, alchemik.php, farm.php, jeweller.php, core.php, 

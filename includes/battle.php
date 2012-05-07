@@ -8,7 +8,7 @@
  *   @author               : thindil <thindil@vallheru.net>
  *   @author               : eyescream <tduda@users.sourceforge.net>
  *   @version              : 1.5
- *   @since                : 23.04.2012
+ *   @since                : 07.05.2012
  *
  */
 
@@ -954,7 +954,7 @@ function attack1($attacker, $defender, $arrAtequip, $arrDeequip, $attack_bspell,
             $text = '';
         }
         $expgain = (rand(5,10) * $defender['level']);
-        $creditgain = ($defender['credits'] / 10);
+        $creditgain = floor($defender['credits'] / 10);
         if ($creditgain < 0)
         {
             $creditgain = 0;
