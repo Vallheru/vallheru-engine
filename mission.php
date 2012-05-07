@@ -7,7 +7,7 @@
  *   @copyright            : (C) 2012 Vallheru Team based on Gamers-Fusion ver 2.5
  *   @author               : thindil <thindil@vallheru.net>
  *   @version              : 1.5
- *   @since                : 05.05.2012
+ *   @since                : 07.05.2012
  *
  */
 
@@ -160,14 +160,12 @@ if ($player->fight == 8888)
 	    $db -> Execute("UPDATE `players` SET `energy`=".$player->energy.", `miejsce`='".$_SESSION['maction']['place']."', `fight`=0 WHERE `id`=".$player -> id);
 	    $strFinish = '(<a href="city.php">Koniec</a>)';
 	    $blnEnd = TRUE;
-	    //TODO
-	    /*$objName = $db->Execute("SELECT `name` FROM `missions` WHERE `id`=".$_SESSION['maction']['location']);
-	    $strName = '';
-	    $intPos = 0;
+	    $objName = $db->Execute("SELECT `name` FROM `missions` WHERE `id`=".$_SESSION['maction']['location']);
+	    preg_match('/^[a-zA-Z]+[0-9]+/', $objName->fields['name'], $arrResults);
 	    $objName->Close();
-	    $objFinish = $db->Execute("SELECT `id` FROM `missions` WHERE `name`='".$strName."lostfight' ORDER BY RAND() LIMIT 1");
+	    $objFinish = $db->Execute("SELECT `id` FROM `missions` WHERE `name`='".$arrResults[0]."lostfight' ORDER BY RAND() LIMIT 1");
 	    $_SESSION['maction']['location'] = $objFinish->fields['id'];
-	    $objFinish->Close();*/
+	    $objFinish->Close();
 	  }
 	else
 	  {
@@ -259,16 +257,9 @@ if (isset($_POST['action']))
 	      {
 		$strFinish = '(<a href="jail.php">Koniec</a>)';
 		$objName = $db->Execute("SELECT `name` FROM `missions` WHERE `id`=".$_SESSION['maction']['location']);
-		$strName = '';
-		for ($i = 5; $i < 10; $i++)
-		  {
-		    if (is_numeric($objName->fields['name'][$i]))
-		      {
-			$strName .= $objName->fields['name'][$i];
-		      }
-		  }
+		preg_match('/^[a-zA-Z]+[0-9]+/', $objName->fields['name'], $arrResults);
 		$objName->Close();
-		$objFinish = $db->Execute("SELECT `id` FROM `missions` WHERE `name`='thief".$strName."fail' ORDER BY RAND() LIMIT 1");
+		$objFinish = $db->Execute("SELECT `id` FROM `missions` WHERE `name`='".$arrResults[0]."fail' ORDER BY RAND() LIMIT 1");
 		$_SESSION['maction']['location'] = $objFinish->fields['id'];
 		$objFinish->Close();
 		$cost = 1000 * $player -> level;
@@ -359,31 +350,20 @@ if (isset($_POST['action']))
 	//Finish mission
 	if ($_SESSION['maction']['rooms'] <= 0)
 	  {
-	    //Thieves
-	    if ($_SESSION['maction']['type'] == 'T')
+	    $strFinish = '(<a href="city.php">Koniec</a>)';
+	    $objName = $db->Execute("SELECT `name` FROM `missions` WHERE `id`=".$_SESSION['maction']['location']);
+	    preg_match('/^[a-zA-Z]+[0-9]+/', $objName->fields['name'], $arrResults);
+	    $objName->Close();
+	    if (!$blnQuest)
 	      {
-		$strFinish = '(<a href="city.php">Koniec</a>)';
-		$objName = $db->Execute("SELECT `name` FROM `missions` WHERE `id`=".$_SESSION['maction']['location']);
-		$strName = '';
-		for ($i = 5; $i < 10; $i++)
-		  {
-		    if (is_numeric($objName->fields['name'][$i]))
-		      {
-			$strName .= $objName->fields['name'][$i];
-		      }
-		  }
-		$objName->Close();
-		if (!$blnQuest)
-		  {
-		    $objFinish = $db->Execute("SELECT `id` FROM `missions` WHERE `name`='thief".$strName."finish' ORDER BY RAND() LIMIT 1");
-		  }
-		else
-		  {
-		    $objFinish = $db->Execute("SELECT `id` FROM `missions` WHERE `name`='thief".$strName."finishgood' ORDER BY RAND() LIMIT 1");
-		  }
-		$_SESSION['maction']['location'] = $objFinish->fields['id'];
-		$objFinish->Close();
+		$objFinish = $db->Execute("SELECT `id` FROM `missions` WHERE `name`='".$arrResults[0]."finish' ORDER BY RAND() LIMIT 1");
 	      }
+	    else
+	      {
+		$objFinish = $db->Execute("SELECT `id` FROM `missions` WHERE `name`='".$arrResults[0]."finishgood' ORDER BY RAND() LIMIT 1");
+	      }
+	    $_SESSION['maction']['location'] = $objFinish->fields['id'];
+	    $objFinish->Close();
 	  }
 	//Next room
 	else

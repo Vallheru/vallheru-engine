@@ -1,5 +1,7 @@
 2012-05-07  Bartek thindil Jasicki  <thindil@vallheru.net>
 
+	* FEATURE,mission.php: 
+	continue work on missions
 	* UPDATE,stats.php: 
 	fixed bug with info about bless, some code cleanup
 	* BUG,includes/battle.php: 
