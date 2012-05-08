@@ -1,5 +1,7 @@
 2012-05-08  Bartek thindil Jasicki  <thindil@vallheru.net>
 
+	* FEATURE,mission.php: 
+	finished work on fight during missions, some code redesign
 	* BUG,languages/pl/view.php:
 	fixed typo
 

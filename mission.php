@@ -7,7 +7,7 @@
  *   @copyright            : (C) 2012 Vallheru Team based on Gamers-Fusion ver 2.5
  *   @author               : thindil <thindil@vallheru.net>
  *   @version              : 1.5
- *   @since                : 07.05.2012
+ *   @since                : 08.05.2012
  *
  */
 
@@ -77,12 +77,12 @@ if (!isset($_SESSION['maction']))
 $strFinish = '';
 $blnEnd = FALSE;
 
-/**
- * Fight with monsters
- */
-if ($player->fight == 8888)
-  {
-    //Generate new monster
+function battle($blnFight = FALSE)
+{
+  global $player;
+  global $db;
+
+  //Generate new monster
     if (!isset($_SESSION['enemy']))
     {
       $arrStats = array(0, 0, $player->hp, $player->endurance, $player->speed);
@@ -136,7 +136,10 @@ if ($player->fight == 8888)
 	    $_SESSION['razy'] = 1;
 	  }
       }
-    $db -> Execute("UPDATE `players` SET `fight`=8888 WHERE `id`=".$player->id);
+    if ($player->fight != 8888)
+      {
+	$db -> Execute("UPDATE `players` SET `fight`=8888 WHERE `id`=".$player->id);
+      }
     if (!isset ($_POST['action'])) 
       {
 	turnfight ($enemy['exp1'], $enemy['gold'], '', 'mission.php');
@@ -155,29 +158,39 @@ if ($player->fight == 8888)
 	  {
 	    $player->energy = 0;
 	  }
+	$objName = $db->Execute("SELECT `name` FROM `missions` WHERE `id`=".$_SESSION['maction']['location']);
+	preg_match('/^[a-zA-Z]+[0-9]+/', $objName->fields['name'], $arrResults);
+	$objName->Close();
 	if ($myhp->fields['fight'] == -1)
 	  {
 	    $db -> Execute("UPDATE `players` SET `energy`=".$player->energy.", `miejsce`='".$_SESSION['maction']['place']."', `fight`=0 WHERE `id`=".$player -> id);
 	    $strFinish = '(<a href="city.php">Koniec</a>)';
 	    $blnEnd = TRUE;
-	    $objName = $db->Execute("SELECT `name` FROM `missions` WHERE `id`=".$_SESSION['maction']['location']);
-	    preg_match('/^[a-zA-Z]+[0-9]+/', $objName->fields['name'], $arrResults);
-	    $objName->Close();
-	    $objFinish = $db->Execute("SELECT `id` FROM `missions` WHERE `name`='".$arrResults[0]."lostfight' ORDER BY RAND() LIMIT 1");
-	    $_SESSION['maction']['location'] = $objFinish->fields['id'];
-	    $objFinish->Close();
+	    $strName = 'lostfight';
 	  }
 	else
 	  {
 	    $db -> Execute("UPDATE `players` SET `energy`=".$player->energy." WHERE `id`=".$player -> id);
+	    $strName = 'winfight';
 	  }
+	$objFinish = $db->Execute("SELECT `id` FROM `missions` WHERE `name`='".$arrResults[0].$strName."' ORDER BY RAND() LIMIT 1");
+	$_SESSION['maction']['location'] = $objFinish->fields['id'];
+	$objFinish->Close();
       }
-    else
+    elseif ($blnFight)
       {
 	require_once("includes/foot.php");
 	return;
       }
     $myhp -> Close();
+}
+
+/**
+ * Fight with monsters
+ */
+if ($player->fight == 8888)
+  {
+    battle(TRUE);
   }
 
 /**
@@ -466,7 +479,7 @@ if (isset($_POST['action']))
 /**
  * Show room
  */
-$objText = $db->Execute("SELECT `text` FROM `missions` WHERE `id`='".$_SESSION['maction']['location']."'");
+$objText = $db->Execute("SELECT `id`, `text` FROM `missions` WHERE `id`='".$_SESSION['maction']['location']."'");
 $strText = $objText->fields['text'];
 $objText->Close();
 $arrOptions = array();
@@ -499,79 +512,120 @@ if ($strFinish == '')
 	  }
       }
   }
-else
+elseif ($strFinish == 'combat')
+{
+  $strFinish = '';
+  battle();
+  if ($objText->fields['id'] != $_SESSION['maction']['location'])
+    {
+      $objText = $db->Execute("SELECT `id`, `text` FROM `missions` WHERE `id`='".$_SESSION['maction']['location']."'");
+      $strText = $objText->fields['text'];
+      $objText->Close();
+      $arrOptions = array();
+    }
+}
+if ($strFinish != '')
   {
     //Successful mission
     if ($_SESSION['maction']['rooms'] == 0 && !$blnEnd)
       {
+	if ($_SESSION['maction']['successes'] > 0)
+	  {
+	    if ($_SESSION['maction']['target'] == 'Y' && !$blnQuest)
+	      {
+		$intExpgain = ($player->level * $_SESSION['maction']['successes']);
+		$intGold = ($_SESSION['maction']['successes'] * 25 * $player->level);
+		$intMpoint = 0;
+	      }
+	    else
+	      {
+		$intExpgain = ($player->level * $_SESSION['maction']['successes']) + ($player->level * $_SESSION['maction']['bonus']);
+		$intGold = ($_SESSION['maction']['successes'] * 25 * $player->level) + (5 * $player->level * $_SESSION['maction']['bonus']);
+		$intMpoint = 1;
+	      }
+	  }
+	else
+	  {
+	    $intExpgain = ceil($player->level / 2);
+	    $intGold = 0;
+	    $intMpoint = 0;
+	  }
+	$fltSkill = 0;
+	$strSkill = '';
+	$strText .= '<br /><br />Zdobywasz ';
+	if ($intGold > 0)
+	  {
+	    $strText .= $intGold.' sztuk złota, ';
+	  }
+	$strText .= $intExpgain.' punktów doświadczenia';
 	if ($_SESSION['maction']['type'] == 'T')
 	  {
 	    if ($_SESSION['maction']['successes'] > 0)
 	      {
 		if ($_SESSION['maction']['target'] == 'Y' && !$blnQuest)
 		  {
-		    $intExpgain = ($player->level * $_SESSION['maction']['successes']);
 		    $fltSkill = ($_SESSION['maction']['successes'] / 50);
-		    $intGold = ($_SESSION['maction']['successes'] * 25 * $player->level);
-		    $intMpoint = 0;
 		  }
 		else
 		  {
-		    $intExpgain = ($player->level * $_SESSION['maction']['successes']) + ($player->level * $_SESSION['maction']['bonus']);
 		    $fltSkill = ($_SESSION['maction']['successes'] / 50) + (0.01 * $_SESSION['maction']['bonus']);
-		    $intGold = ($_SESSION['maction']['successes'] * 25 * $player->level) + (5 * $player->level * $_SESSION['maction']['bonus']);
-		    $intMpoint = 1;
 		  }
 	      }
 	    else
 	      {
-		$intExpgain = ceil($player->level / 2);
 		$fltSkill = 0.01;
-		$intGold = 0;
-		$intMpoint = 0;
 	      }
-	    checkexp($player->exp, $intExpgain, $player->level, $player->race, $player->user, $player->id, 0, 0, $player->id, 'thievery', $fltSkill);
-	    $strText .= '<br /><br />Zdobywasz '.$intGold.' sztuk złota, '.$intExpgain.' punktów doświadczenia oraz '.$fltSkill.' do umiejętności Złodziejstwo.';
+	    $strSkill = 'thievery';
+	    $strText .= ' oraz '.$fltSkill.' do umiejętności Złodziejstwo';
 	    if ($_SESSION['maction']['loot'] != '' && $intMpoint)
 	      {
-		$arrLoot = explode(';', $_SESSION['maction']['loot']);
-		$objLoot = $db->Execute("SELECT * FROM `".$arrLoot[0]."` WHERE `level`".$arrLoot[1]." AND `type`='".$arrLoot[2]."' ORDER BY RAND() LIMIT 1") or die($db->ErrorMsg());
+		$strItemname = 'Wytrychy z miedzi';
+		$strPlanname = 'Wytrychy';
+		$strItemtext = 'nowe wytrychy.';
+		$strPlantext = 'plan wytrychów.';
+	      }
+	  }
+	$strText .= '.';
+	if ($_SESSION['maction']['loot'] != '' && $intMpoint)
+	  {
+	    $arrLoot = explode(';', $_SESSION['maction']['loot']);
+	    $objLoot = $db->Execute("SELECT * FROM `".$arrLoot[0]."` WHERE `level`".$arrLoot[1]." AND `type`='".$arrLoot[2]."' ORDER BY RAND() LIMIT 1") or die($db->ErrorMsg());
+	    if ($arrLoot[0] == 'tools')
+	      {
+		$objTest = $db->Execute("SELECT `id` FROM `equipment` WHERE `owner`=".$player->id." AND `name`='".$strItemname."' AND `power`=".$objLoot->fields['power']." AND `cost`=1 AND `wt`=".$objLoot->fields['dur']." AND `maxwt`=".$objLoot->fields['dur']." AND `type`='E' AND `minlev`=".$objLoot->fields['level']." AND repair=".$objLoot->fields['repair']);
+	      }
+	    else
+	      {
+		$objTest = $db->Execute("SELECT `id` FROM `equipment` WHERE `owner`=".$player->id." AND `name`='".$strPlanname."' AND `minlev`=".$objLoot->fields['level']." AND `cost`=1 AND `type`='P'");
+	      }
+	    if (!$objTest->fields['id'])
+	      {
 		if ($arrLoot[0] == 'tools')
 		  {
-		    $objTest = $db->Execute("SELECT `id` FROM `equipment` WHERE `owner`=".$player->id." AND `name`='Wytrychy z miedzi' AND `power`=".$objLoot->fields['power']." AND `cost`=1 AND `wt`=".$objLoot->fields['dur']." AND `maxwt`=".$objLoot->fields['dur']." AND `type`='E' AND `minlev`=".$objLoot->fields['level']." AND repair=".$objLoot->fields['repair']);
+		    $db -> Execute("INSERT INTO `equipment` (`owner`, `name`, `power`, `type`, `cost`, `zr`, `wt`, `minlev`, `maxwt`, `amount`, `magic`, `poison`, `szyb`, `twohand`, `repair`) VALUES(".$player->id.", '".$strItemname."', ".$objLoot->fields['power'].", 'E', 1, 0, ".$objLoot->fields['dur'].", ".$objLoot->fields['level'].", ".$objLoot->fields['dur'].", 1, 'N', 0, 0, 'N', ".$objLoot->fields['repair'].")") or die($db->ErrorMsg());
 		  }
 		else
 		  {
-		    $objTest = $db->Execute("SELECT `id` FROM `equipment` WHERE `owner`=".$player->id." AND `name`='Wytrychy' AND `minlev`=".$objLoot->fields['level']." AND `cost`=1 AND `type`='P'");
-		  }
-		if (!$objTest->fields['id'])
-		  {
-		    if ($arrLoot[0] == 'tools')
-		      {
-			$db -> Execute("INSERT INTO `equipment` (`owner`, `name`, `power`, `type`, `cost`, `zr`, `wt`, `minlev`, `maxwt`, `amount`, `magic`, `poison`, `szyb`, `twohand`, `repair`) VALUES(".$player->id.", 'Wytrychy z miedzi', ".$objLoot->fields['power'].", 'E', 1, 0, ".$objLoot->fields['dur'].", ".$objLoot->fields['level'].", ".$objLoot->fields['dur'].", 1, 'N', 0, 0, 'N', ".$objLoot->fields['repair'].")") or die($db->ErrorMsg());
-		      }
-		    else
-		      {
-			$db -> Execute("INSERT INTO `equipment` (`owner`, `name`, `power`, `type`, `cost`, `zr`, `wt`, `minlev`, `maxwt`, `amount`, `magic`, `poison`, `szyb`, `twohand`, `repair`) VALUES(".$player->id.", 'Wytrychy', 0, 'P', 1, 0, 1, ".$objLoot->fields['level'].", 1, 1, 'N', 0, 0, 'N', 1)") or die($db->ErrorMsg());
-		      }
-		  }
-		else
-		  {
-		    $db->Execute("UPDATE `equipment` SET `amount`=`amount`+1 WHERE `id`=".$objTest->fields['id']);
-		  }
-		$objTest->Close();
-		$objLoot->Close();
-		if ($arrLoot[0] == 'tools')
-		  {
-		    $strText .= 'Oprócz tego dostajesz nowe wytrychy.';
-		  }
-		else
-		  {
-		    $strText .= 'Oprócz tego dostajesz plan wytrychów.';
+		    $db -> Execute("INSERT INTO `equipment` (`owner`, `name`, `power`, `type`, `cost`, `zr`, `wt`, `minlev`, `maxwt`, `amount`, `magic`, `poison`, `szyb`, `twohand`, `repair`) VALUES(".$player->id.", '".$strPlanname."', 0, 'P', 1, 0, 1, ".$objLoot->fields['level'].", 1, 1, 'N', 0, 0, 'N', 1)") or die($db->ErrorMsg());
 		  }
 	      }
-	    $db->Execute("UPDATE `players` SET `miejsce`='".$_SESSION['maction']['place']."', `credits`=`credits`+".$intGold.", `mpoints`=`mpoints`+".$intMpoint." WHERE `id`=".$player->id);
+	    else
+	      {
+		$db->Execute("UPDATE `equipment` SET `amount`=`amount`+1 WHERE `id`=".$objTest->fields['id']);
+	      }
+	    $objTest->Close();
+	    $objLoot->Close();
+	    if ($arrLoot[0] == 'tools')
+	      {
+		    $strText .= 'Oprócz tego dostajesz '.$strItemtext;
+	      }
+	    else
+	      {
+		$strText .= 'Oprócz tego dostajesz plan wytrychów'.$strPlantext;
+	      }
 	  }
+	checkexp($player->exp, $intExpgain, $player->level, $player->race, $player->user, $player->id, 0, 0, $player->id, $strSkill, $fltSkill);
+	$db->Execute("UPDATE `players` SET `miejsce`='".$_SESSION['maction']['place']."', `credits`=`credits`+".$intGold.", `mpoints`=`mpoints`+".$intMpoint." WHERE `id`=".$player->id);
       }
     unset($_SESSION['maction']);
     $db->Execute("DELETE FROM `mactions` WHERE `pid`=".$player->id);
