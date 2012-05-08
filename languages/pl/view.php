@@ -8,7 +8,7 @@
  *   @author               : thindil <thindil@vallheru.net>
  *   @author               : eyescream <tduda@users.sourceforge.net>
  *   @version              : 1.5
- *   @since                : 23.04.2012
+ *   @since                : 08.05.2012
  *
  */
 
@@ -154,7 +154,7 @@ if (isset($_GET['steal_astral']))
     define("L_CACHED", "Mieszkaniec ");
     define("L_CACHED2", ", ID ");
     define("L_CACHED3", " próbował ukraść astralny komponent z twojej skrytki. Na szczęście został pojmany przez strażników.");
-    define("ASTRAL_GONE", "Kiedy przeglądałeś swoje astralne komponenty, zauważyłeś że jednego brakuje. Ktoś prawdopodobnie okradł ciebie! Ze skarbca zniknął");
+    define("ASTRAL_GONE", "Kiedy przeglądałeś swoje astralne komponenty, zauważyłeś że jednego brakuje. Ktoś prawdopodobnie ciebie okradł! Ze skarbca zniknął");
     define("COMP1", "Ząb Glabrezu");
     define("COMP2", "Ognisty pył");
     define("COMP3", "Pazur Zgłębiczarta");
