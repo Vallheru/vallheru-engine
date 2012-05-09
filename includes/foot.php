@@ -7,7 +7,7 @@
  *   @copyright            : (C) 2004,2005,2006,2011,2012 Vallheru Team based on Gamers-Fusion ver 2.5
  *   @author               : thindil <thindil@vallheru.net>
  *   @version              : 1.5
- *   @since                : 05.04.2012
+ *   @since                : 09.05.2012
  *
  */
 
@@ -32,7 +32,7 @@
 /**
 * Get the localization for game
 */
-require_once("languages/".$player -> lang."/foot.php");
+require_once("languages/".$player->lang."/foot.php");
 $span = (time() - 180);
 $objQuery = $db -> Execute("SELECT `id`, `rank`, `user`, `tribe` FROM `players` WHERE `lpv`>=".$span." ORDER BY `id` ASC");
 
@@ -65,6 +65,9 @@ while (!$objQuery -> EOF)
       break;
     case 'Sędzia':
       $arrplayers[$intNumo] = "<img src=\"images/judge.gif\" title=\"Sędzia\" alt=\"Sędzia\" /> ".$strLink." (".$objQuery -> fields['id'].")<br />";
+      break;
+    case 'Redaktor':
+      $arrplayers[$intNumo] = "<img src=\"images/redactor.gif\" title=\"Redaktor\" alt=\"Redaktor\" /> ".$strLink." (".$objQuery -> fields['id'].")<br />";
       break;
     default:
       $arrplayers[$intNumo] = $strLink." (".$objQuery -> fields['id'].")<br />";
