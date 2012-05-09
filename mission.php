@@ -163,12 +163,14 @@ function battle($blnFight = FALSE)
 	    $db -> Execute("UPDATE `players` SET `energy`=".$player->energy.", `miejsce`='".$_SESSION['maction']['place']."', `fight`=0 WHERE `id`=".$player -> id);
 	    $strFinish = '(<a href="city.php">Koniec</a>)';
 	    $blnEnd = TRUE;
+	    $strName = $_SESSION['maction']['moreinfo'][4];
 	  }
 	else
 	  {
 	    $db -> Execute("UPDATE `players` SET `energy`=".$player->energy." WHERE `id`=".$player -> id);
+	    $strName = $_SESSION['maction']['moreinfo'][3];
 	  }
-	$objFinish = $db->Execute("SELECT `id` FROM `missions` WHERE `name`='".$_SESSION['maction']['moreinfo'][3]."' ORDER BY RAND() LIMIT 1");
+	$objFinish = $db->Execute("SELECT `id` FROM `missions` WHERE `name`='".$strName."' ORDER BY RAND() LIMIT 1");
 	$_SESSION['maction']['location'] = $objFinish->fields['id'];
 	$objFinish->Close();
       }
