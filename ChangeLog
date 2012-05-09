@@ -1,5 +1,7 @@
 2012-05-09  Bartek thindil Jasicki  <thindil@vallheru.net>
 
+	* UPDATE,mission.php: 
+	changed handling combat in missions
 	* UPDATE,includes/foot.php, images/redactor.gif:
 	added icon for redactors
 

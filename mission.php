@@ -7,7 +7,7 @@
  *   @copyright            : (C) 2012 Vallheru Team based on Gamers-Fusion ver 2.5
  *   @author               : thindil <thindil@vallheru.net>
  *   @version              : 1.5
- *   @since                : 08.05.2012
+ *   @since                : 09.05.2012
  *
  */
 
@@ -158,22 +158,17 @@ function battle($blnFight = FALSE)
 	  {
 	    $player->energy = 0;
 	  }
-	$objName = $db->Execute("SELECT `name` FROM `missions` WHERE `id`=".$_SESSION['maction']['location']);
-	preg_match('/^[a-zA-Z]+[0-9]+/', $objName->fields['name'], $arrResults);
-	$objName->Close();
 	if ($myhp->fields['fight'] == -1)
 	  {
 	    $db -> Execute("UPDATE `players` SET `energy`=".$player->energy.", `miejsce`='".$_SESSION['maction']['place']."', `fight`=0 WHERE `id`=".$player -> id);
 	    $strFinish = '(<a href="city.php">Koniec</a>)';
 	    $blnEnd = TRUE;
-	    $strName = 'lostfight';
 	  }
 	else
 	  {
 	    $db -> Execute("UPDATE `players` SET `energy`=".$player->energy." WHERE `id`=".$player -> id);
-	    $strName = 'winfight';
 	  }
-	$objFinish = $db->Execute("SELECT `id` FROM `missions` WHERE `name`='".$arrResults[0].$strName."' ORDER BY RAND() LIMIT 1");
+	$objFinish = $db->Execute("SELECT `id` FROM `missions` WHERE `name`='".$_SESSION['maction']['moreinfo'][3]."' ORDER BY RAND() LIMIT 1");
 	$_SESSION['maction']['location'] = $objFinish->fields['id'];
 	$objFinish->Close();
       }
@@ -522,6 +517,35 @@ elseif ($strFinish == 'combat')
       $strText = $objText->fields['text'];
       $objText->Close();
       $arrOptions = array();
+      if ($strFinish == '')
+	{
+	  //Read exits
+	  foreach ($_SESSION['maction']['exits'] as $strExit)
+	    {
+	      $arrTmp2 = explode(',', $strExit);
+	      $arrOptions[$arrTmp2[1]] = $arrTmp2[0];
+	    }
+	  //Read items
+	  foreach ($_SESSION['maction']['items'] as $strItem)
+	    {
+	      $arrTmp2 = explode(',', $strItem);
+	      $strText .= ' '.$arrTmp2[2];
+	      for ($j = 3; $j < count($arrTmp2); $j += 2)
+		{
+		  $arrOptions[$arrTmp2[($j + 1)]] = $arrTmp2[$j];
+		}
+	    }
+	  //Read mobs
+	  foreach ($_SESSION['maction']['mobs'] as $strMob)
+	    {
+	      $arrTmp2 = explode(',', $strMob);
+	      $strText .= ' '.$arrTmp2[2];
+	      for ($j = 3; $j < count($arrTmp2); $j += 2)
+		{
+		  $arrOptions[$arrTmp2[($j + 1)]] = $arrTmp2[$j];
+		}
+	    }
+	}
     }
 }
 if ($strFinish != '')
