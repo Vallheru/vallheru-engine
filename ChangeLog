@@ -1,5 +1,7 @@
 2012-05-09  Bartek thindil Jasicki  <thindil@vallheru.net>
 
+	* UPDATE,mission.php: 
+	changed chances for making actions in missions
 	* BUG,includes/funkcje.php, battle.php, explore.php, maze.php: 
 	fixed bug with lost energy during fight, better check for bonuses to skills and stats
 	* UPDATE,mission.php: 

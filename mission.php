@@ -258,27 +258,48 @@ if (isset($_POST['action']))
 	  {
 	    $intDiff = 5;
 	  }
+	if ($intDiff > 95)
+	  {
+	    $intDiff = 95;
+	  }
 	$intRoll = rand(1, 100);
+	if ($intRoll >= $intDiff)
+	  {
+	    $objName = $db->Execute("SELECT `name` FROM `missions` WHERE `id`=".$_SESSION['maction']['location']);
+	    preg_match('/^[a-zA-Z]+[0-9]+/', $objName->fields['name'], $arrResults);
+	    $objName->Close();
+	    $objFinish = $db->Execute("SELECT `id` FROM `missions` WHERE `name`='".$arrResults[0]."fail' ORDER BY RAND() LIMIT 1");
+	    $_SESSION['maction']['location'] = $objFinish->fields['id'];
+	    $objFinish->Close();
+	    $blnEnd = TRUE;
+	    if ($_SESSION['maction']['type'] != 'T')
+	      {
+		$db -> Execute("UPDATE `players` SET `miejsce`='".$_SESSION['maction']['place']."' WHERE `id`=".$player -> id);
+	      }
+	  }
+	else
+	  {
+	    if (count($_SESSION['maction']['moreinfo']) > 0)
+	      {
+		if ($_SESSION['maction']['moreinfo'][0] == 'skill')
+		  {
+		    checkexp($player->exp, $player->level, $player->level, $player->race, $player->user, $player->id, 0, 0, $player->id, $_SESSION['maction']['moreinfo'][1], 0.01);
+		  }
+	      }
+	  }
 	//Thieves missions
 	if ($_SESSION['maction']['type'] == 'T')
 	  {
 	    //Mission fail
-	    if ($intRoll <= $intDiff)
+	    if ($blnEnd)
 	      {
 		$strFinish = '(<a href="jail.php">Koniec</a>)';
-		$objName = $db->Execute("SELECT `name` FROM `missions` WHERE `id`=".$_SESSION['maction']['location']);
-		preg_match('/^[a-zA-Z]+[0-9]+/', $objName->fields['name'], $arrResults);
-		$objName->Close();
-		$objFinish = $db->Execute("SELECT `id` FROM `missions` WHERE `name`='".$arrResults[0]."fail' ORDER BY RAND() LIMIT 1");
-		$_SESSION['maction']['location'] = $objFinish->fields['id'];
-		$objFinish->Close();
 		$cost = 1000 * $player -> level;
 		checkexp($player->exp, $player->level, $player->level, $player->race, $player->user, $player->id, 0, 0, $player->id, 'thievery', 0.01);
 		$db -> Execute("UPDATE `players` SET `miejsce`='Lochy' WHERE `id`=".$player -> id);
 		$strDate = $db -> DBDate($newdate);
 		$db -> Execute("INSERT INTO `jail` (`prisoner`, `verdict`, `duration`, `cost`, `data`) VALUES(".$player->id.",'Nieudane zadanie', 7, ".$cost.", '".$data."')");                
 		$db -> Execute("INSERT INTO `log` (`owner`, `log`, `czas`, `type`) VALUES(".$player -> id.",'Zostałeś wtrącony do więzienia na 1 dzień. Możesz wyjść za kaucją: ".$cost.".', ".$strDate.", 'T')");
-		$blnEnd = TRUE;
 	      }
 	    else
 	      {
