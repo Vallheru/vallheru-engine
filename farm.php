@@ -213,10 +213,6 @@ if (isset($_GET['step']) && $_GET['step'] == 'plantation')
 		    $intMithcost += 20 * ($objPlantation -> fields['lands'] + $i);
 		  }
 	      }
-	    else
-	      {
-		error('Podaj ile ziemi chcesz dokupić do plantacji.');
-	      }
 	  }
         $smarty -> assign(array("Tmith" => T_MITH,
                                 "Buyland" => BUY_LAND,
@@ -238,6 +234,10 @@ if (isset($_GET['step']) && $_GET['step'] == 'plantation')
                 if ($player -> platinum < $intMithcost)
 		  {
 		    message('error', NO_MITH);
+		  }
+		elseif (!isset($_POST['lamount']))
+		  {
+		    message('error', 'Podaj ile ziemi chcesz dokupić do plantacji.');
 		  }
 		elseif ($intLandsamount + $_POST['lamount'] > 100)
 		  {
