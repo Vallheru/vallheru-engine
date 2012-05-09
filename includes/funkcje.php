@@ -7,7 +7,7 @@
  *   @copyright            : (C) 2004,2005,2006,2007,2011,2012 Vallheru Team based on Gamers-Fusion ver 2.5
  *   @author               : thindil <thindil@vallheru.net>
  *   @version              : 1.5
- *   @since                : 04.05.2012
+ *   @since                : 09.05.2012
  *
  */
 
@@ -1459,7 +1459,7 @@ function fightmonster($enemy, $expgain, $goldgain, $times)
     {
         $db -> Execute("UPDATE settings SET value=".$enemy['hp']." WHERE setting='monsterhp'");
     }
-    $db->Execute("UPDATE `players` SET `hp`=".$player->hp.", `fight`=0, `bless`='', `blessval`=0 WHERE `id`=".$player->id);
+    $db->Execute("UPDATE `players` SET `hp`=".$player->hp.", `fight`=0, `bless`='', `blessval`=0, `energy`=`energy`-".$_POST['razy']." WHERE `id`=".$player->id);
     $player->user = $strName;
 }
 ?>

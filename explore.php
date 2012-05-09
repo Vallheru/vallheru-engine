@@ -7,7 +7,7 @@
  *   @copyright            : (C) 2004,2005,2006,2011,2012 Vallheru Team based on Gamers-Fusion ver 2.5
  *   @author               : thindil <thindil@vallheru.net>
  *   @version              : 1.5
- *   @since                : 22.02.2012
+ *   @since                : 09.05.2012
  *
  */
  
@@ -105,12 +105,15 @@ function battle($type,$adress)
     $fight = $db -> Execute("SELECT `fight`, `hp` FROM `players` WHERE `id`=".$player -> id);
     if ($fight -> fields['fight'] == 0) 
     {
-        $player -> energy = $player -> energy - 1;
-        if ($player -> energy < 0) 
-        {
-            $player -> energy = 0;
-        }
-        $db -> Execute("UPDATE `players` SET `energy`=".$player -> energy." WHERE `id`=".$player -> id);
+        if ($type == 'T')
+	  {
+	    $player->energy --;
+	    if ($player -> energy < 0) 
+	      {
+		$player -> energy = 0;
+	      }
+	    $db -> Execute("UPDATE `players` SET `energy`=".$player->energy." WHERE `id`=".$player->id);
+	  }
         if ($player -> location == 'Góry') 
         {
             if ($fight -> fields['hp'] > 0)
@@ -165,27 +168,11 @@ if (isset($_GET['step']) && $_GET['step'] == 'run')
 	error('Nie masz przed kim uciekać!');
       }
     /**
-     * Add bonus from rings
+     * Add bonus to stats and skills
      */
     $arrEquip = $player -> equipment();
-    if ($arrEquip[9][2])
-    {
-        $arrRingtype = explode(" ", $arrEquip[9][1]);
-        $intAmount = count($arrRingtype) - 1;
-        if ($arrRingtype[$intAmount] == R_SPE4)
-        {
-            $player -> speed = $player -> speed + $arrEquip[9][2];
-        }
-    } 
-    if ($arrEquip[10][2])
-    {
-        $arrRingtype = explode(" ", $arrEquip[10][1]);
-        $intAmount = count($arrRingtype) - 1;
-        if ($arrRingtype[$intAmount] == R_SPE4)
-        {
-            $player -> speed = $player -> speed + $arrEquip[10][2];
-        }
-    } 
+    $player->curstats($arrEquip);
+    $player->curskills(array('perception'));
     $chance = (rand(1, $player -> level * 100) + ($player->speed + $player->perception) - $enemy -> fields['speed']);
     $smarty -> assign ("Chance", $chance);
     if ($chance > 0) 

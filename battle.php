@@ -7,7 +7,7 @@
  *   @copyright            : (C) 2004,2005,2006,2011,2012 Vallheru Team based on Gamers-Fusion ver 2.5
  *   @author               : thindil <thindil@vallheru.net>
  *   @version              : 1.5
- *   @since                : 20.04.2012
+ *   @since                : 09.05.2012
  *
  */
 
@@ -589,7 +589,6 @@ if (isset($_GET['action']))
 		    break;
 		  }
 	      }
-	    $db -> Execute("UPDATE `players` SET `energy`=`energy`-".($_POST['razy'] * $intAmount)." WHERE `id`=".$player -> id);
 	    $enemy1->Close();
 	  }
       }
