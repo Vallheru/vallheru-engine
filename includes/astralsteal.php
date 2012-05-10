@@ -8,7 +8,7 @@
  *   @author               : thindil <thindil@vallheru.net>
  *   @author               : eyescream <tduda@users.sourceforge.net>
  *   @version              : 1.5
- *   @since                : 23.04.2012
+ *   @since                : 10.05.2012
  *
  */
 
@@ -67,7 +67,7 @@ function astralsteal($intVictim, $strLocation, $intOwner = 0, $intId = 0)
     $intChance = $intStats - $intRoll;
     if ($strLocation == 'R')
     {
-        $intChance =  $intStats - ($intChars * 0.7) - $intRoll;
+        $intChance =  $intStats - ($intStats * 0.7) - $intRoll;
     }
     if ($intChance < 1)
     {

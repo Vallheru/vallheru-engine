@@ -1,5 +1,7 @@
 2012-05-10  Bartek thindil Jasicki  <thindil@vallheru.net>
 
+	* BUG,includes/astralsteal.php:
+	fixed typo
 	* UPDATE,mission.php:
 	raised bonus to skill from success
 
