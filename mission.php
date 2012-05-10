@@ -7,7 +7,7 @@
  *   @copyright            : (C) 2012 Vallheru Team based on Gamers-Fusion ver 2.5
  *   @author               : thindil <thindil@vallheru.net>
  *   @version              : 1.5
- *   @since                : 09.05.2012
+ *   @since                : 10.05.2012
  *
  */
 
@@ -277,16 +277,6 @@ if (isset($_POST['action']))
 		$db -> Execute("UPDATE `players` SET `miejsce`='".$_SESSION['maction']['place']."' WHERE `id`=".$player -> id);
 	      }
 	  }
-	else
-	  {
-	    if (count($_SESSION['maction']['moreinfo']) > 0)
-	      {
-		if ($_SESSION['maction']['moreinfo'][0] == 'skill')
-		  {
-		    checkexp($player->exp, $player->level, $player->level, $player->race, $player->user, $player->id, 0, 0, $player->id, $_SESSION['maction']['moreinfo'][1], 0.01);
-		  }
-	      }
-	  }
 	//Thieves missions
 	if ($_SESSION['maction']['type'] == 'T')
 	  {
@@ -487,6 +477,11 @@ if (isset($_POST['action']))
 	    if ($objMission->fields['moreinfo'] != '')
 	      {
 		$_SESSION['maction']['moreinfo'] = explode(';', $objMission->fields['moreinfo']);
+		if ($_SESSION['maction']['moreinfo'][0] == 'skill')
+		  {
+		    $fltSkill = 0.01 * $player->level
+		    checkexp($player->exp, $player->level, $player->level, $player->race, $player->user, $player->id, 0, 0, $player->id, $_SESSION['maction']['moreinfo'][1], $fltSkill);
+		  }
 	      }
 	    $objMission->Close();
 	    $db->Execute("UPDATE `mactions` SET `location`=".$_SESSION['maction']['location'].", `exits`='".implode(';', $_SESSION['maction']['exits'])."', `mobs`='".implode(';', $_SESSION['maction']['mobs'])."', `items`='".implode(';', $_SESSION['maction']['items'])."', `rooms`=`rooms`-1, `successes`=".$_SESSION['maction']['successes'].", `moreinfo`='".implode(';', $_SESSION['maction']['moreinfo'])."' WHERE `pid`=".$player->id);
