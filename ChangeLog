@@ -1,5 +1,7 @@
 2012-05-10  Bartek thindil Jasicki  <thindil@vallheru.net>
 
+	* BUG,includes/funkcje.php: 
+	fixed bug with lost stats during fight
 	* BUG,includes/astralsteal.php:
 	fixed typo
 	* UPDATE,mission.php:
