@@ -346,7 +346,13 @@ if (isset($_POST['action']))
 		    break;
 		    //Item from equipment
 		  case 'E':
+		    //Search for weapons/armors
 		    $objItem = $db->Execute("SELECT * FROM `equipment` WHERE `owner`=0 AND `name`='".$arrItem[0]."'");
+		    //Search for bows/arrows
+		    if (!$objItem->fields['id'])
+		      {
+			$objItem = $db->Execute("SELECT * FROM `bows` WHERE `name`='".$arrItem[0]."'");
+		      }
 		    $objTest = $db -> Execute("SELECT `id` FROM `equipment` WHERE `name`='".$arrItem[0]."' AND `wt`=".$objItem->fields['wt']." AND `type`='".$objItem->fields['type']."' AND `status`='U' AND `owner`=".$player->id." AND `power`=".$objItem->fields['power']." AND `zr`=".$objItem->fields['zr']." AND `szyb`=".$objItem->fields['szyb']." AND `maxwt`=".$objItem->fields['maxwt']." AND `poison`=0 AND `cost`=1 AND `twohand`='".$objItem->fields['twohand']."' AND `repair`=".$objItem->fields['repair']);
 		    if (!$test -> fields['id']) 
 		      {
