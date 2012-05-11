@@ -212,3 +212,11 @@ ALTER TABLE  `players` ADD  `rinvites` CHAR( 1 ) NOT NULL DEFAULT  'Y';
 ALTER TABLE  `tribes` ADD  `level` TINYINT( 1 ) NOT NULL DEFAULT  '1', ADD INDEX (  `level` );
 ALTER TABLE  `missions` ADD  `moreinfo` TEXT NOT NULL;
 ALTER TABLE  `mactions` ADD  `moreinfo` TEXT NOT NULL;
+CREATE TABLE IF NOT EXISTS `missions2` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `name` varchar(255) NOT NULL,
+  `type` char(1) NOT NULL,
+  `intro` text NOT NULL,
+  `location` VARCHAR( 50 ) NOT NULL DEFAULT  'Altara',
+  KEY `id` (`id`)
+) ENGINE=MyISAM DEFAULT CHARSET=utf8 AUTO_INCREMENT=1 ;

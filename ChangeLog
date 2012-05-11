@@ -1,5 +1,7 @@
 2012-05-11  Bartek thindil Jasicki  <thindil@vallheru.net>
 
+	* FEATURE,install/db/update.sql: 
+	start work on special missions
 	* BUG,stats.php: 
 	fixed bless info
 	* BUG,temple.php:
