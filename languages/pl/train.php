@@ -7,7 +7,7 @@
  *   @copyright            : (C) 2004,2005,2006,2011,2012 Vallheru Team based on Gamers-Fusion ver 2.5
  *   @author               : thindil <thindil@tuxfamily.org>
  *   @version              : 1.5
- *   @since                : 07.02.2012
+ *   @since                : 14.05.2012
  *
  */
 
@@ -30,7 +30,7 @@
 // $Id$
 
 define("ERROR", "Zapomnij o tym!");
-define("YOU_DEAD", "Nie możesz szkolić się, ponieważ jesteś martwy!");
+define("YOU_DEAD", "Nie możesz się szkolić, ponieważ jesteś martwy!");
 define("NO_RACE", "Nie możesz się szkolić ponieważ nie wybrałeś jeszcze rasy!");
 define("NO_CLASS", "Nie możesz się szkolić ponieważ nie wybrałeś jeszcze klasy!");
 define("T_TRAIN", "0,3 energii za 0,06 Siły (");
