@@ -1,5 +1,7 @@
 2012-05-14  Bartek thindil Jasicki  <thindil@vallheru.net>
 
+	* BUG,js/train.js: 
+	fixed show cost for human warrior
 	* BUG,includes/resets.php:
 	fixed bug with info about finished astral machine
 
