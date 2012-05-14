@@ -1,5 +1,7 @@
 2012-05-14  Bartek thindil Jasicki  <thindil@vallheru.net>
 
+	* BUG,tribes.php: 
+	fixed links to astral machine, fixed sabotage astral machine
 	* BUG,languages/pl/train.php: 
 	fixed typo
 	* BUG,js/train.js: 

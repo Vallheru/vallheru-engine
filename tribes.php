@@ -9,7 +9,7 @@
  *   @author               : mori <ziniquel@users.sourceforge.net>
  *   @author               : eyescream <tduda@users.sourceforge.net>
  *   @version              : 1.5
- *   @since                : 23.04.2012
+ *   @since                : 14.05.2012
  *
  */
 
@@ -175,7 +175,8 @@ if (isset ($_GET['view']) && $_GET['view'] == 'view')
         }
 
         $objAstral = $db -> Execute("SELECT `used`, `directed` FROM `astral_machine` WHERE `owner`=".$tribe -> fields['id']);
-	if ($objAstral->fields['used'] || $objAstral->fields['directed'])
+	$objTest = $db -> Execute("SELECT `value` FROM `settings` WHERE `setting`='tribe'");
+	if (($objAstral->fields['used'] || $objAstral->fields['directed']) && !$objTest->fields['value'])
 	  {
 	    $strSabotage = 'Sabotuj astralną machinę';
 	  }
@@ -183,6 +184,7 @@ if (isset ($_GET['view']) && $_GET['view'] == 'view')
 	  {
 	    $strSabotage = '';
 	  }
+	$objTest->Close();
         if ($objAstral -> fields['used'])
         {
             $intPercent = round($objAstral -> fields['used'] / 100, 2);
@@ -313,6 +315,15 @@ if (isset ($_GET['view']) && $_GET['view'] == 'view')
 	      }
 	    if ($_GET['step'] == 'espionage' || $_GET['step'] == 'sabotage')
 	      {
+		if ($_GET['step'] == 'sabotage')
+		  {
+		    $objTest = $db -> Execute("SELECT `value` FROM `settings` WHERE `setting`='tribe'");
+		    if ($objTest->fields['value'])
+		      {
+			error('Nie możesz już sabotować machiny, została wybudowana.  (<a href="tribes.php?view=view&id='.$_GET['id'].'">'.BACK.'</a>)');
+		      }
+		    $objTest->Close();
+		  }
 		$db->Execute("UPDATE `players` SET `astralcrime`='N' WHERE `id`=".$player->id);
 		/**
 		 * Add bonus from rings
@@ -648,7 +659,8 @@ if (isset ($_GET['view']) && $_GET['view'] == 'my')
                                     "Forts" => UNKNOWN));
         }
         $objAstral = $db -> Execute("SELECT `aviable`, `used` FROM `astral_machine` WHERE `owner`=".$mytribe -> fields['id']);
-        if ($objAstral -> fields['aviable'] == 'Y')
+	$objTest = $db -> Execute("SELECT `value` FROM `settings` WHERE `setting`='tribe'");
+        if ($objAstral -> fields['aviable'] == 'Y' && !$objTest->fields['value'])
         {
             $strAstral = "<a href=\"tribes.php?view=my&amp;step=astral\">".A_MACHINE."</a>";
         }
@@ -656,6 +668,7 @@ if (isset ($_GET['view']) && $_GET['view'] == 'my')
         {
             $strAstral = A_MACHINE;
         }
+	$objTest->Close();
         if ($objAstral -> fields['used'])
         {
             $intPercent = round($objAstral -> fields['used'] / 100, 2);
