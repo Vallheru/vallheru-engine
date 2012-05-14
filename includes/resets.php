@@ -7,7 +7,7 @@
  *   @copyright            : (C) 2004,2005,2006,2007,2011,2012 Vallheru Team based on Gamers-Fusion ver 2.5
  *   @author               : thindil <thindil@vallheru.net>
  *   @version              : 1.5
- *   @since                : 24.04.2012
+ *   @since                : 14.05.2012
  *
  */
 
@@ -375,6 +375,7 @@ function mainreset()
 {
     global $db;
     global $lang;
+    global $gamename;
 
     $db -> Execute("UPDATE `settings` SET `value`='N' WHERE `setting`='open'");
     $db -> Execute("UPDATE `settings` SET `value`='Wykonywanie resetu' WHERE `setting`='close_reason'");
@@ -745,7 +746,7 @@ function mainreset()
     if ($blnBack)
       {
 	$strSql = rtrim($strSql, ',').';';
-	$db->Execute($strSql);
+	$db->Execute($strSql) or die($db->ErrorMsg());
       }
     if (count($arrMinesc) > 0)
       {
@@ -787,7 +788,7 @@ function mainreset()
 		require_once("languages/".$lang."/resets.php");
 		$db -> Execute("INSERT INTO `updates` (`starter`, `title`, `updates`, `lang`, `time`) VALUES('(Herold)','".U_TITLE."','".U_TEXT.$gamename.U_TEXT2.$gamename.U_TEXT3.$newdate.U_TEXT4.$objName -> fields['name'].U_TEXT5."','".$lang."', ".$strDate.")");
 		$objEra = $db->Execute("SELECT `value` FROM `settings` WHERE `setting`='age'");
-		$db->Execute("INSERT INTO `halloffame2` (`tribe`, `owner`, `bdate`) VALUES('".$objName->fields['name']." ID:".$objName->fields['id']."', '".$objOwner->fields['user']." ID:".$objName->fields['owner']."', '".$intDay.", ".$objEra->fields['value']."')");
+		$db->Execute("INSERT INTO `halloffame2` (`tribe`, `leader`, `bdate`) VALUES('".$objName->fields['name']." ID:".$objName->fields['id']."', '".$objOwner->fields['user']." ID:".$objName->fields['owner']."', '".$intDay.", ".$objEra->fields['value']."')") or die($db->ErrorMsg());
 		$objEra->Close();
                 $db -> Execute("UPDATE `settings` SET `value`='".$objAstral -> fields['owner']."' WHERE `setting`='tribe'");
                 $arrComponents = array('C', 'O', 'T');
