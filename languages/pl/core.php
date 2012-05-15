@@ -8,7 +8,7 @@
  *   @author               : thindil <thindil@vallheru.net>
  *   @author               : eyescream <tduda@users.sourceforge.net>
  *   @version              : 1.5
- *   @since                : 04.04.2012
+ *   @since                : 15.05.2012
  *
  */
 
@@ -61,7 +61,7 @@ if ($player -> corepass != 'Y')
 {
     define("NO_LICENSE", "<br />Licencja kosztuje 500 sztuk złota - których akurat nie masz przy sobie. Proszę, wróć kiedy będziesz miał odpowiednią sumę.");
     define("YES_LICENSE", "Świetnie - masz już Licencję na Chowańca. Kliknij <a href=\"core.php\">tutaj</a> aby kontynuować.");
-    define("COREPASS_INFO", "Witaj na Polanie Chowańców. Polana Chowańców jest o miescje gdzie trzymane są zwierzęta występujące na Vallheru. Normalnie poluje się na nie jako na zwierzynę łowną, ale tutaj są trzymane pod strażą. Jeżeli kupisz Licencje na Chowańca, będziesz mógł złapać i trenować własnego chowańca.");
+    define("COREPASS_INFO", "Witaj na Polanie Chowańców. Polana Chowańców jest to miescje gdzie trzymane są zwierzęta występujące na Vallheru. Normalnie poluje się na nie jako na zwierzynę łowną, ale tutaj są trzymane pod strażą. Jeżeli kupisz Licencje na Chowańca, będziesz mógł złapać i trenować własnego chowańca.");
     define("A_YES", "Jasne, kupuję.");
     define("A_NO", "Nie...");
     define("HAVE_MONEY", "Masz 500 sztuk złota - dlaczego nie kupisz licencji? To otworzy ci kolejne miejsce w mieście.");
@@ -259,7 +259,7 @@ if (isset ($_GET['view']) && $_GET['view'] == 'train')
 
 if (isset ($_GET['view']) && $_GET['view'] == 'explore') 
 {
-    define("EXPLORE_INFO", "Witaj w centrum poszukiwań Chowańców. Proszę, wybierz region, z którego szukasz chowańca. Jest wiele regionów, ale musisz posiadać odpowiednią ilość mithrilu aby móc wejść w jeden z nich. Każde poszukianie chowańca kosztuje 0.1 energii. Chowańce przyciąga mithril z wielu powodów...");
+    define("EXPLORE_INFO", "Witaj w centrum poszukiwań Chowańców. Proszę, wybierz region, z którego szukasz chowańca. Jest wiele regionów, ale musisz posiadać odpowiednią ilość mithrilu aby móc wejść w jeden z nich. Każde poszukiwanie chowańca kosztuje 0.1 energii. Chowańce przyciąga mithril z wielu powodów...");
     define("MITH2", "mith");
     define("A_SEARCH", "Szukaj");
     define("E_AMOUNT", "razy");

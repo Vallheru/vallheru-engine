@@ -7,7 +7,7 @@
  *   @copyright            : (C) 2004,2005,2006,2011,2012 Vallheru Team based on Gamers-Fusion ver 2.5
  *   @author               : thindil <thindil@vallheru.net>
  *   @version              : 1.5
- *   @since                : 03.04.2012
+ *   @since                : 15.05.2012
  *
  */
 
@@ -40,7 +40,7 @@ if ($player -> location == 'Altara')
 }
     else
 {
-    define("TEMPLE_INFO", "Wkraczasz do Świętego kasztanowca... Uderza Cię tajemnicza aura boskości panująca w tym miejscu. W każdym z rogów pomieszczenia stoi posąg jednego z Bóstw. Podchodzi do Ciebie nieznana postać z kapturem. Domyślasz się, ze jest to kapłan opiekujący się Świątynią...<br /><i>- Witaj w tym świętym przybytku. Jeśli chcesz się pomodlić i uzyskać błogosławieństwo musisz najpierw popracować aby zyskać przychylność Bogów i zdobyć ich czas. Gdy już to uczynisz to możesz próbować  zdobyć błogosławieństwo.</i>");
+    define("TEMPLE_INFO", "Wkraczasz do Świętego kasztanowca... Uderza Cię tajemnicza aura boskości panująca w tym miejscu. W każdym z rogów pomieszczenia stoi posąg jednego z Bóstw. Podchodzi do Ciebie nieznana postać z kapturem. Domyślasz się, że jest to kapłan opiekujący się Świątynią...<br /><i>- Witaj w tym świętym przybytku. Jeśli chcesz się pomodlić i uzyskać błogosławieństwo musisz najpierw popracować, aby zyskać przychylność Bogów i zdobyć ich czas. Gdy już to uczynisz to możesz próbować  zdobyć błogosławieństwo.</i>");
 }
 
 if (!isset($_GET['temp'])) 
