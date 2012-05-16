@@ -218,5 +218,7 @@ CREATE TABLE IF NOT EXISTS `missions2` (
   `type` char(1) NOT NULL,
   `intro` text NOT NULL,
   `location` VARCHAR( 50 ) NOT NULL DEFAULT  'Altara',
-  KEY `id` (`id`)
+  `shortdesc` VARCHAR( 255 ) NOT NULL,
+  KEY `id` (`id`),
+  KEY `location` (`location`)
 ) ENGINE=MyISAM DEFAULT CHARSET=utf8 AUTO_INCREMENT=1 ;

@@ -7,7 +7,7 @@
  *   @copyright            : (C) 2004,2005,2006,2011,2012 Vallheru Team based on Gamers-Fusion ver 2.5
  *   @author               : thindil <thindil@vallheru.net>
  *   @version              : 1.5
- *   @since                : 09.01.2012
+ *   @since                : 16.05.2012
  *
  */
  
@@ -65,7 +65,7 @@ if ($player -> location == 'Altara')
                           array('news.php', 'forums.php?view=categories', 'chat.php', 'mail.php', 'tribes.php', 'newspaper.php'),
                           array('train.php', 'mines.php', 'farm.php', 'core.php'),
                           array('grid.php', 'wieza.php', 'temple.php', 'msklep.php', 'jewellershop.php'),
-                          array('house.php', 'memberlist.php?limit=0&amp;lista=id', 'hof.php', 'hof2.php', 'library.php'),
+                          array('house.php', 'memberlist.php?limit=0&amp;lista=id', 'hof.php', 'hof2.php', 'library.php', 'chronicle.php'),
                           array('updates.php', 'tower.php', 'jail.php', 'court.php', 'polls.php', 'alley.php', 'stafflist.php'),
                           array('landfill.php', 'smelter.php', 'kowal.php', 'alchemik.php', 'guilds.php', 'crafts.php'),
                           array('market.php', 'warehouse.php', 'travel.php', 'thieves.php'));
@@ -73,7 +73,7 @@ if ($player -> location == 'Altara')
                           array(NEWS, FORUMS, INN, PRIV_M, CLANS, PAPER),
                           array(SCHOOL, MINES, FARMS, CORES),
                           array(LABYRYNTH, MAGIC_TOWER, TEMPLE, ALCHEMY_SHOP, JEWELLER_SHOP),
-                          array(HOUSES, PLAYERS_L, HERO_VALL, 'Galeria Machin', LIBRARY),
+                          array(HOUSES, PLAYERS_L, HERO_VALL, 'Galeria Machin', LIBRARY, 'Kronika'),
                           array(UPDATES, TIMER, JAIL2, COURT, $strInfo.POLLS, WELLEARNED, STAFF_LIST),
                           array(CLEAN_CITY, SMELTER, BLACKSMITH, ALCHEMY_MILL, 'Gildia Rzemieślników', 'Cześnik'),
                           array(MARKET, WAREHOUSE, TRAVEL, 'Złodziejska Spelunka'));
@@ -130,7 +130,7 @@ if ($player -> location == 'Altara')
         }
         $objPoll -> Close();
         $arrTitles = array(BATTLE_FIELD, COMMUNITY, VILLAGE, WEST_SIDE, HOUSES_SIDE, CASTLE, JOBS, SOUTH_SIDE);
-        $arrFiles = array(array('temple.php', 'library.php', 'jeweller.php'),
+        $arrFiles = array(array('temple.php', 'library.php', 'chronicle.php', 'jeweller.php'),
                           array('bows.php', 'msklep.php', 'wieza.php', 'forums.php?view=categories', 'chat.php'),
                           array('jail.php', 'maze.php', 'mail.php', 'tribes.php'),
                           array('alchemik.php', 'lumbermill.php', 'train.php', 'jewellershop.php', 'guilds.php', 'crafts.php'),
@@ -138,7 +138,7 @@ if ($player -> location == 'Altara')
                           array('updates.php', 'tower.php', 'news.php', 'newspaper.php', 'alley.php', 'stafflist.php', 'court.php'),
                           array('house.php', 'memberlist.php?limit=0&amp;lista=id', 'outposts.php', 'farm.php', 'hunters.php'),
                           array('travel.php', 'city.php?step=forest', 'thieves.php'));
-        $arrNames = array(array(TEMPLE, LIBRARY, JEWELLER),
+        $arrNames = array(array(TEMPLE, LIBRARY, 'Kronika', JEWELLER),
                           array(BOWS_SHOP, ALCHEMY_SHOP, MAGIC_TOWER, FORUMS, INN),
                           array(JAIL2, LABYRYNTH, PRIV_M, CLANS),
                           array(ALCHEMY_MILL, LUMBER_MILL, SCHOOL, JEWELLER_SHOP, 'Gildia rzemieślników', 'Cześnik'),

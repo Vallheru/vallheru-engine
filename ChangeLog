@@ -1,5 +1,7 @@
 2012-05-16  Bartek thindil Jasicki  <thindil@vallheru.net>
 
+	* FEATURE,install/db/update.sql, city.php, chronicle.php, templates/chronicle.tpl:
+	start work on chronicle in cities
 	* UPDATE,templates/city.tpl, templates/layout1/city.tpl:
 	small redesign
 
