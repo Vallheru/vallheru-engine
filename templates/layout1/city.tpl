@@ -1,15 +1,16 @@
 {if $Item == "0" && $Location == 'Altara'}
-    {$Cityinfo}
+    {$Cityinfo} 
     <label for="citydesc" class="toggle">{$Anext}</label>
     <input id="citydesc" type="checkbox" class="toggle" checked=checked/>
-    <span>{$Citylong}</span><br /><br />
+    <span>{$Citylong}</span>
+    <br /><br />
     
-    <table width="100%" class="dark">
+    <table align="center" width="90%">
         {section name=row1 loop=$Titles}
             {if $smarty.section.row1.index == 0 || $smarty.section.row1.index == 3 || $smarty.section.row1.index == 6}
                 <tr>
             {/if}
-                <td width="150" valign="top"><b><u>{$Titles[row1]}</u></b><br />
+                <td width="35%" valign="top"><b><u>{$Titles[row1]}</u></b><br />
                     {section name=locations loop=$Files[row1]}
                         <a href="{$Files[row1][locations]}">{$Names[row1][locations]}</a><br />
                     {/section}
@@ -36,12 +37,12 @@
 {if $Location == 'Ardulith' && $Step == ""}
     {$Cityinfo}<br /><br />
     
-    <table width="100%" class="dark">
+    <table align="center" width="90%">
         {section name=row1 loop=$Titles}
             {if $smarty.section.row1.index == 0 || $smarty.section.row1.index == 3 || $smarty.section.row1.index == 6}
                 <tr>
             {/if}
-                <td width="150" valign="top"><b><u>{$Titles[row1]}</u></b><br />
+                <td width="35%" valign="top"><b><u>{$Titles[row1]}</u></b><br />
                     {section name=locations loop=$Files[row1]}
                         <a href="{$Files[row1][locations]}">{$Names[row1][locations]}</a><br />
                     {/section}

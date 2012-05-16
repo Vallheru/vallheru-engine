@@ -1,3 +1,8 @@
+2012-05-16  Bartek thindil Jasicki  <thindil@vallheru.net>
+
+	* UPDATE,templates/city.tpl, templates/layout1/city.tpl:
+	small redesign
+
 2012-05-15  Bartek thindil Jasicki  <thindil@vallheru.net>
 
 	* BUG,languages/pl/core.php, languages/pl/armor.php, languages/pl/weapons.php, languages/pl/temple.php:
