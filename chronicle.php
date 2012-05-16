@@ -41,7 +41,7 @@ if($player->location != 'Altara' && $player->location != 'Ardulith')
 if (!isset($_GET['step']))
   {
     $_GET['step'] = '';
-    $objMissions = $db->Execute("SELECT `id`, `shortdesc`, `type` FROM `missions2` WHERE `location`='".$player->location);
+    $objMissions = $db->Execute("SELECT `id`, `shortdesc`, `type` FROM `missions2` WHERE `location`='".$player->location."'");
     $arrStory = array();
     $arrOldstory = array();
     $arrOther = array();
@@ -63,24 +63,54 @@ if (!isset($_GET['step']))
 	      }
 	    $objMissions->MoveNext();
 	  }
-	$objMissions->Close();
       }
-    if (count($arrStory) > 0)
+    $objMissions->Close();
+    $intStory = count($arrStory);
+    $intOldstory = count($arrOldstory);
+    $intOther = count($arrOther);
+    if ($intStory > 0)
       {
 	$arrStory[0] = 'Obecne wydarzenia:';
       }
-    if (count($arrOldstory) > 0)
+    if ($intOldstory > 0)
       {
 	$arrOldstory[0] = 'Dawne historie:';
       }
-    if (count($arrOther) > 0)
+    if ($intOther > 0)
       {
 	$arrOther[0] = 'Poboczne wydarzenia:';
       }
     $smarty->assign(array("Info" => "Wchodzisz do niewielkiego budynku. Kiedy tylko mijasz wejście, gwar dobiegający z ulicy niemal natychmiast milknie. Wnętrze budynku jest niemal puste, tylko na jego środku stoi średnich rozmiarów, kamienny pedestał a na nim znajduje się olbrzymia księga. Kiedy podchodzisz bliżej, księga zaczyna lekko lśnić białym blaskiem. Bez twojej pomocy otwiera się na spisie treści.",
-			  "Story" => $arrStory,
-			  "Oldstory" => $arrOldstory,
-			  "Other" => $arrOther));
+			  "Stories" => $arrStory,
+			  "Oldstories" => $arrOldstory,
+			  "Others" => $arrOther,
+			  "Istory" => $intStory,
+			  "Ioldstory" => $intOldstory,
+			  "Iother" => $intOther));
+  }
+else
+  {
+    //Start mission
+    if ($_GET['step'] == 'go')
+      {
+      }
+    //Show mission info
+    else
+      {
+	checkvalue($_GET['step']);
+	$objMission = $db->Execute("SELECT `id`, `intro`, `shortdesc`, `location` FROM `missions2` WHERE `id`=".$_GET['step']);
+	if (!$objMission->fields['id'])
+	  {
+	    error('Nie ma takiej przygody.');
+	  }
+	if ($objMission->fields['location'] != $player->location)
+	  {
+	    error('Ta przygoda rozpoczyna się w innym mieście.');
+	  }
+	$smarty->assign(array("Mname" => $objMission->fields['shortdesc'],
+			      "Intro" => $objMission->fields['intro'],
+			      "Mid" => $objMission->fields['id']));
+      }
   }
 
 /**
