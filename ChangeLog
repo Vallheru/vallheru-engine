@@ -1,5 +1,7 @@
 2012-05-17  Bartek thindil Jasicki  <thindil@vallheru.net>
 
+	* BUG,mission.php: 
+	fixed some bugs
 	* FEATURE,install/db/update.sql, templates/chronicle.tpl, chronicle.php, mission.php:
 	finished chronicle, fixed some bugs in missions
 

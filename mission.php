@@ -264,7 +264,7 @@ if (isset($_POST['action']))
 	    $intDiff = 95;
 	  }
 	$intRoll = rand(1, 100);
-	if ($intRoll >= $intDiff)
+	if ($intRoll <= $intDiff)
 	  {
 	    preg_match('/^[a-zA-Z]+[0-9]+/', $objName->fields['name'], $arrResults);
 	    $objName->Close();
@@ -275,9 +275,6 @@ if (isset($_POST['action']))
 	    if ($_SESSION['maction']['type'] != 'T')
 	      {
 		$db -> Execute("UPDATE `players` SET `miejsce`='".$_SESSION['maction']['place']."' WHERE `id`=".$player -> id);
-	      }
-	    else
-	      {
 		$strFinish = '(<a href="city.php">Koniec</a>)';
 	      }
 	  }
@@ -398,7 +395,7 @@ if (isset($_POST['action']))
 	//Next room
 	else
 	  {
-	    //Function parse actions available for players FIXME: exits not works
+	    //Function parse actions available for players
 	    function parseOptions($arrOptions)
 	    {
 	      global $player;
@@ -417,10 +414,19 @@ if (isset($_POST['action']))
 			{
 			  if ($player->clas != $clas)
 			    {
-			      $intEnd = (strlen($strOption) - strpos($strOption, ',', $intPos)) * -1;
-			      $intPos -= (strlen($strOption) + 2);
-			      $intStart = strrpos($strOption, ',', $intPos);
-			      $strOption = substr_replace($strOption, '', $intStart, $intEnd);
+			      $arrTmp2 = explode(',', $strOption);
+			      $intIndex = 0;
+			      for ($i = 0; $i < count($arrTmp2); $i++)
+				{
+				  $intIndex = strpos($arrTmp2[$i], $prof);
+				  if ($intIndex !== FALSE)
+				    {
+				      $intIndex = $i;
+				      break;
+				    }
+				}
+			      unset($arrTmp2[$intIndex], $arrTmp2[$intIndex - 1]);
+			      $strOption = implode(',', $arrTmp2);
 			    }
 			  else
 			    {
@@ -439,7 +445,7 @@ if (isset($_POST['action']))
 	    $_SESSION['maction']['mobs'] = array();
 	    $_SESSION['maction']['moreinfo'] = array();
 	    //Generate exits
-	    $arrTmp = parseOptions($objMission->fields['exits'], 'E');
+	    $arrTmp = parseOptions($objMission->fields['exits']);
 	    $arrChances = explode(';', $objMission->fields['chances']);
 	    while (count($_SESSION['maction']['exits']) == 0)
 	      {
