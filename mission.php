@@ -7,7 +7,7 @@
  *   @copyright            : (C) 2012 Vallheru Team based on Gamers-Fusion ver 2.5
  *   @author               : thindil <thindil@vallheru.net>
  *   @version              : 1.5
- *   @since                : 10.05.2012
+ *   @since                : 17.05.2012
  *
  */
 
@@ -227,6 +227,7 @@ if (isset($_POST['action']))
       {
 	error('Zapomnij o tym!');
       }
+    $objName = $db->Execute("SELECT `name` FROM `missions` WHERE `id`=".$_SESSION['maction']['location']);
     //Player choice action with mob or item
     if (in_array($_POST['action'], $arrMactions) || in_array($_POST['action'], $arrIactions))
       {
@@ -265,7 +266,6 @@ if (isset($_POST['action']))
 	$intRoll = rand(1, 100);
 	if ($intRoll >= $intDiff)
 	  {
-	    $objName = $db->Execute("SELECT `name` FROM `missions` WHERE `id`=".$_SESSION['maction']['location']);
 	    preg_match('/^[a-zA-Z]+[0-9]+/', $objName->fields['name'], $arrResults);
 	    $objName->Close();
 	    $objFinish = $db->Execute("SELECT `id` FROM `missions` WHERE `name`='".$arrResults[0]."fail' ORDER BY RAND() LIMIT 1");
@@ -275,6 +275,10 @@ if (isset($_POST['action']))
 	    if ($_SESSION['maction']['type'] != 'T')
 	      {
 		$db -> Execute("UPDATE `players` SET `miejsce`='".$_SESSION['maction']['place']."' WHERE `id`=".$player -> id);
+	      }
+	    else
+	      {
+		$strFinish = '(<a href="city.php">Koniec</a>)';
 	      }
 	  }
 	//Thieves missions
@@ -378,7 +382,6 @@ if (isset($_POST['action']))
 	if ($_SESSION['maction']['rooms'] <= 0)
 	  {
 	    $strFinish = '(<a href="city.php">Koniec</a>)';
-	    $objName = $db->Execute("SELECT `name` FROM `missions` WHERE `id`=".$_SESSION['maction']['location']);
 	    preg_match('/^[a-zA-Z]+[0-9]+/', $objName->fields['name'], $arrResults);
 	    $objName->Close();
 	    if (!$blnQuest)
@@ -395,7 +398,7 @@ if (isset($_POST['action']))
 	//Next room
 	else
 	  {
-	    //Function parse actions available for players
+	    //Function parse actions available for players FIXME: exits not works
 	    function parseOptions($arrOptions)
 	    {
 	      global $player;
@@ -436,12 +439,16 @@ if (isset($_POST['action']))
 	    $_SESSION['maction']['mobs'] = array();
 	    $_SESSION['maction']['moreinfo'] = array();
 	    //Generate exits
-	    $arrTmp = parseOptions($objMission->fields['exits']);
+	    $arrTmp = parseOptions($objMission->fields['exits'], 'E');
 	    $arrChances = explode(';', $objMission->fields['chances']);
 	    while (count($_SESSION['maction']['exits']) == 0)
 	      {
 		for ($i = 0; $i < count($arrChances); $i++)
 		  {
+		    if ($arrTmp[$i] == '')
+		      {
+			continue;
+		      }
 		    if (preg_match('/\[[a-zA-Z]\]/', $arrTmp[$i], $arrResults))
 		      {
 			if ($arrResults[0][1] != $_SESSION['maction']['type'])
@@ -485,7 +492,7 @@ if (isset($_POST['action']))
 		$_SESSION['maction']['moreinfo'] = explode(';', $objMission->fields['moreinfo']);
 		if ($_SESSION['maction']['moreinfo'][0] == 'skill')
 		  {
-		    $fltSkill = 0.01 * $player->level
+		    $fltSkill = 0.01 * $player->level;
 		    checkexp($player->exp, $player->level, $player->level, $player->race, $player->user, $player->id, 0, 0, $player->id, $_SESSION['maction']['moreinfo'][1], $fltSkill);
 		  }
 	      }
@@ -498,10 +505,14 @@ if (isset($_POST['action']))
 /**
  * Show room
  */
-$objText = $db->Execute("SELECT `id`, `text` FROM `missions` WHERE `id`='".$_SESSION['maction']['location']."'");
+$objText = $db->Execute("SELECT `id`, `name`, `text` FROM `missions` WHERE `id`='".$_SESSION['maction']['location']."'");
 $strText = $objText->fields['text'];
-$objText->Close();
 $arrOptions = array();
+if (strpos($objText->fields['name'], 'resign') !== FALSE)
+  {
+    $blnEnd = TRUE;
+    $strFinish = '(<a href="city.php">Koniec</a>)';
+  }
 if ($strFinish == '')
   {
     //Read exits
@@ -572,7 +583,8 @@ elseif ($strFinish == 'combat')
 	}
     }
 }
-if ($strFinish != '')
+$objText->Close();
+if ($strFinish != '' && $strFinish != 'combat')
   {
     //Successful mission
     if ($_SESSION['maction']['rooms'] == 0 && !$blnEnd)
@@ -674,6 +686,10 @@ if ($strFinish != '')
 	  }
 	checkexp($player->exp, $intExpgain, $player->level, $player->race, $player->user, $player->id, 0, 0, $player->id, $strSkill, $fltSkill);
 	$db->Execute("UPDATE `players` SET `miejsce`='".$_SESSION['maction']['place']."', `credits`=`credits`+".$intGold.", `mpoints`=`mpoints`+".$intMpoint." WHERE `id`=".$player->id);
+      }
+    elseif ($_SESSION['maction']['type'] != 'T')
+      {
+	$db->Execute("UPDATE `players` SET `miejsce`='".$_SESSION['maction']['place']."' WHERE `id`=".$player->id);
       }
     unset($_SESSION['maction']);
     $db->Execute("DELETE FROM `mactions` WHERE `pid`=".$player->id);

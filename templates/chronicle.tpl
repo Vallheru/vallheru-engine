@@ -42,6 +42,21 @@
 {else}
     {if $Step != "go"}
         <div align="center"><b>{$Mname}</b></div><br />
-	<div align="center" width="80%">{$Intro}</div>
+	<div style="margin: 5%; text-align: justify;">{$Intro}</div>
+	{if $Mgo}
+	    <div align="center">
+	    <form method="post" action="chronicle.php?step=go">
+	        <input type="hidden" name="qid" value="{$Mid}" />
+		<input type="submit" value="{$Aread}" />
+	    </form>
+	    </div>
+	{/if}
+	<a href="chronicle.php">{$Aback}</a>
+    {else}
+        {$Text}
+    	<form method="post" action="mission.php">
+            {html_radios name=action options=$Moptions separator='<br />'}<br />
+	    <input type="submit" value="{$Anext}" />
+        </form>
     {/if}
 {/if}

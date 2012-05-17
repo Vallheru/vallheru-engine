@@ -219,6 +219,8 @@ CREATE TABLE IF NOT EXISTS `missions2` (
   `intro` text NOT NULL,
   `location` VARCHAR( 50 ) NOT NULL DEFAULT  'Altara',
   `shortdesc` VARCHAR( 255 ) NOT NULL,
+  `chapter` TINYINT NOT NULL DEFAULT  '0',
   KEY `id` (`id`),
   KEY `location` (`location`)
 ) ENGINE=MyISAM DEFAULT CHARSET=utf8 AUTO_INCREMENT=1 ;
+ALTER TABLE  `players` ADD  `chapter` TINYINT( 2 ) NOT NULL DEFAULT  '1';
