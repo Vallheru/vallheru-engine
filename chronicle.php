@@ -7,7 +7,7 @@
  *   @copyright            : (C) 2012 Vallheru Team based on Gamers-Fusion ver 2.5
  *   @author               : thindil <thindil@vallheru.net>
  *   @version              : 1.5
- *   @since                : 16.05.2012
+ *   @since                : 18.05.2012
  *
  */
 
@@ -122,6 +122,10 @@ else
 	      {
 		error('Nie masz wystarczającej ilości energii aby iść na tą przygodę.');
 	      }
+	    if ($player->hp <= 0)
+	      {
+		error('Nie możesz uczestniczyć w przygodzie, ponieważ jesteś martwy.');
+	      }
 	    $objChapter->Close();
 	    $objStart = $db->Execute("SELECT * FROM `missions` WHERE `name`='".$objMission->fields['name']."start' ORDER BY RAND() LIMIT 1");
 	    $strText = $objStart->fields['text'];
@@ -202,7 +206,8 @@ else
 					     'type' => $objMaction->fields['type'],
 					     'loot' => $objMaction->fields['loot'],
 					     'rooms' => $objMaction->fields['rooms'],
-					     'id' => $objMaction->fields['id']);
+					     'id' => $objMaction->fields['id'],
+					     'moreinfo' => array());
 	      }
 	    $objStart = $db->Execute("SELECT `text` FROM `missions` WHERE `id`='".$_SESSION['maction']['location']."'");
 	    $strText = $objStart->fields['text'];

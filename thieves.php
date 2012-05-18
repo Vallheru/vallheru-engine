@@ -7,7 +7,7 @@
  *   @copyright            : (C) 2011,2012 Vallheru Team based on Gamers-Fusion ver 2.5
  *   @author               : thindil <thindil@vallheru.net>
  *   @version              : 1.5
- *   @since                : 05.04.2012
+ *   @since                : 18.05.2012
  *
  */
 
@@ -522,7 +522,8 @@ else
 					     'type' => $objMission->fields['type'],
 					     'loot' => $objMission->fields['loot'],
 					     'rooms' => $objMission->fields['rooms'],
-					     'id' => $objMission->fields['id']);
+					     'id' => $objMission->fields['id'],
+					     'moreinfo' => array());
 	      }
 	    $objStart = $db->Execute("SELECT `text` FROM `missions` WHERE `id`='".$_SESSION['maction']['location']."'");
 	    $strText = $objStart->fields['text'];

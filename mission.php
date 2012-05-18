@@ -7,7 +7,7 @@
  *   @copyright            : (C) 2012 Vallheru Team based on Gamers-Fusion ver 2.5
  *   @author               : thindil <thindil@vallheru.net>
  *   @version              : 1.5
- *   @since                : 17.05.2012
+ *   @since                : 18.05.2012
  *
  */
 
@@ -32,6 +32,8 @@
 $title = "Przygoda";
 require_once("includes/head.php");
 require_once("includes/checkexp.php");
+require_once('includes/funkcje.php');
+require_once('includes/turnfight.php');
 
 /**
  * Set session variables
@@ -57,7 +59,7 @@ if (!isset($_SESSION['maction']))
 				 'moreinfo' => array());
     if ($objMission->fields['exits'] != '')
       {
-	$_SESSION['maction']['mobs'] = explode(';', $objMission->fields['exits']);
+	$_SESSION['maction']['exits'] = explode(';', $objMission->fields['exits']);
       }
     if ($objMission->fields['mobs'] != '')
       {
@@ -73,19 +75,32 @@ if (!isset($_SESSION['maction']))
       }
     $objMission->Close();
   }
-
 $strFinish = '';
 $blnEnd = FALSE;
 
-function battle($blnFight = FALSE)
+if ($player->hp <= 0)
+  {
+    if ($player->location != $_SESSION['maction']['place'])
+      {
+	$db -> Execute("UPDATE `players` SET `miejsce`='".$_SESSION['maction']['place']."' WHERE `id`=".$player->id);
+      }
+    unset($_SESSION['maction']);
+    error('Nie możesz uczestniczyć w przygodzie, ponieważ jesteś martwy.');
+  }
+
+function battle()
 {
   global $player;
   global $db;
+  global $lang;
+  global $enemy;
+  global $blnEnd;
+  global $strFinish;
 
   //Generate new monster
     if (!isset($_SESSION['enemy']))
     {
-      $arrStats = array(0, 0, $player->hp, $player->endurance, $player->speed);
+      $arrStats = array(0, 0, $player->hp, $player->cond, $player->speed);
       if ($player->strength > $player->inteli)
 	{
 	  $arrStats[0] = $player->strength;
@@ -107,14 +122,15 @@ function battle($blnFight = FALSE)
 	  $fltBonus = (rand(-15, 15) / 100) * $fltStat;
 	  $fltStat += $fltBonus;
 	}
+      $arrStats = array(1, 1, 1, 1, 1);
       $enemy = array('name' => $_SESSION['maction']['moreinfo'][1], 
 		     'strength' => $arrStats[0], 
 		     'agility' => $arrStats[1], 
 		     'hp' => $arrStats[2], 
 		     'level' => $player->level, 
-		     'endurance' => $arrStats[6], 
-		     'speed' => $arrStats[7], 
-		     'exp1' => $player->level * 1, 
+		     'endurance' => $arrStats[3], 
+		     'speed' => $arrStats[4], 
+		     'exp1' => $player->level * 5, 
 		     'exp2' => $player->level * 10,
 		     "gold" => $player->level * 10,
 		     "lootnames" => array(),
@@ -173,11 +189,7 @@ function battle($blnFight = FALSE)
 	$objFinish = $db->Execute("SELECT `id` FROM `missions` WHERE `name`='".$strName."' ORDER BY RAND() LIMIT 1");
 	$_SESSION['maction']['location'] = $objFinish->fields['id'];
 	$objFinish->Close();
-      }
-    elseif ($blnFight)
-      {
-	require_once("includes/foot.php");
-	return;
+	$_POST['action'] = $strName;
       }
     $myhp -> Close();
 }
@@ -187,7 +199,14 @@ function battle($blnFight = FALSE)
  */
 if ($player->fight == 8888)
   {
-    battle(TRUE);
+    battle();
+    $myhp = $db -> Execute("SELECT `fight` FROM `players` WHERE `id`=".$player -> id);
+    if ($myhp->fields['fight'])
+      {
+	require_once("includes/foot.php");
+	return;
+      }
+    $myhp->Close();
   }
 
 /**
@@ -221,6 +240,14 @@ if (isset($_POST['action']))
 	for ($j = 4; $j < count($arrTmp2); $j += 2)
 	  {
 	    $arrMactions[] = $arrTmp2[$j];
+	  }
+      }
+    if (count($_SESSION['maction']['moreinfo']) > 0)
+      {
+	if ($_SESSION['maction']['moreinfo'][0] == 'combat')
+	  {
+	    $arrEactions[] = $_SESSION['maction']['moreinfo'][3];
+	    $arrEactions[] = $_SESSION['maction']['moreinfo'][4];
 	  }
       }
     if (!in_array($_POST['action'], $arrEactions) && !in_array($_POST['action'], $arrIactions) && !in_array($_POST['action'], $arrMactions))
@@ -519,6 +546,13 @@ if (strpos($objText->fields['name'], 'resign') !== FALSE)
     $blnEnd = TRUE;
     $strFinish = '(<a href="city.php">Koniec</a>)';
   }
+if (count($_SESSION['maction']['moreinfo']) > 0)
+  {
+    if ($_SESSION['maction']['moreinfo'][0] == 'combat')
+      {
+	$strFinish = 'combat';
+      }
+  }
 if ($strFinish == '')
   {
     //Read exits
@@ -551,6 +585,12 @@ if ($strFinish == '')
 elseif ($strFinish == 'combat')
 {
   $strFinish = '';
+  $smarty->assign(array("Text" => $strText,
+			'Moptions' => array(),
+			'Anext' => '',
+			'Afinish' => ' '));
+  $smarty->display('mission.tpl');
+  unset($_POST['action']);
   battle();
   if ($objText->fields['id'] != $_SESSION['maction']['location'])
     {
@@ -587,6 +627,11 @@ elseif ($strFinish == 'combat')
 		}
 	    }
 	}
+    }
+  else
+    {
+      require_once("includes/foot.php");
+      return;
     }
 }
 $objText->Close();
