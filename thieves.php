@@ -457,7 +457,8 @@ else
 					 'successes' => 0,
 					 'bonus' => $_SESSION['mtype'][$_GET['number']],
 					 'target' => $strTarget,
-					 'place' => $player->location);
+					 'place' => $player->location,
+					 'moreinfo' => array());
 	    $arrOptions = array();
 	    //Generate exits
 	    $arrTmp = explode(';', $objStart->fields['exits']);

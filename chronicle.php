@@ -140,7 +140,8 @@ else
 					 'successes' => 0,
 					 'bonus' => 10,
 					 'target' => 'Y',
-					 'place' => $player->location);
+					 'place' => $player->location,
+					 'moreinfo' => array());
 	    $arrOptions = array();
 	    //Generate exits
 	    $arrTmp = explode(';', $objStart->fields['exits']);
@@ -276,7 +277,7 @@ else
 			      "Intro" => $objMission->fields['intro'],
 			      "Mid" => $objMission->fields['id'],
 			      "Aback" => "Wróć",
-			      "Aread" => "Czytaj dalej",
+			      "Aread" => "Czytaj dalej (koszt: 2 punkty energii)",
 			      "Mgo" => $blnGo));
 	$objMission->Close();
       }

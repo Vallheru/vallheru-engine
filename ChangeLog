@@ -1,5 +1,7 @@
 2012-05-18  Bartek thindil Jasicki  <thindil@vallheru.net>
 
+	* BUG,mission.php, thieves.php, chronicle.php: 
+	fixed few bugs
 	* BUG,thieves.php, mission.php, chronicle.php:
 	fixed some bugs
 
