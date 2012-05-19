@@ -122,7 +122,6 @@ function battle()
 	  $fltBonus = (rand(-15, 15) / 100) * $fltStat;
 	  $fltStat += $fltBonus;
 	}
-      $arrStats = array(1, 1, 1, 1, 1);
       $enemy = array('name' => $_SESSION['maction']['moreinfo'][1], 
 		     'strength' => $arrStats[0], 
 		     'agility' => $arrStats[1], 
