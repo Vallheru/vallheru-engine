@@ -1,5 +1,7 @@
 2012-05-19  Bartek thindil Jasicki  <thindil@vallheru.net>
 
+	* UPDATE,chronicle.php: 
+	added limit how many quests player can do in one day
 	* BUG,mission.php, chronicle.php:
 	fixed some bugs
 

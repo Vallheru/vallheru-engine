@@ -127,6 +127,12 @@ else
 		error('Nie możesz uczestniczyć w przygodzie, ponieważ jesteś martwy.');
 	      }
 	    $objChapter->Close();
+	    $objJob = $db->Execute("SELECT `craftmission` FROM `players` WHERE `id`=".$player->id);
+	    if ($objJob->fields['craftmission'] <= 0)
+	      {
+		error('Nie możesz już dziś wyruszyć na przygodę.');
+	      }
+	    $objJob->Close();
 	    $objStart = $db->Execute("SELECT * FROM `missions` WHERE `name`='".$objMission->fields['name']."start' ORDER BY RAND() LIMIT 1");
 	    $strText = $objStart->fields['text'];
 	    $intRooms = rand(25, 50);
@@ -194,7 +200,7 @@ else
 		  }
 	      }
 	    $db->Execute("INSERT INTO `mactions` (`pid`, `location`, `exits`, `mobs`, `items`, `type`, `loot`, `rooms`, `bonus`, `place`, `target`) VALUES(".$player->id.", ".$_SESSION['maction']['location'].", '".implode(';', $_SESSION['maction']['exits'])."', '".implode(';', $_SESSION['maction']['mobs'])."', '".implode(';', $_SESSION['maction']['items'])."', '".$objMission->fields['type']."', '', ".$intRooms.", ".$_SESSION['maction']['bonus'].", '".$_SESSION['maction']['place']."', '".$_SESSION['maction']['target']."')");
-	    $db->Execute("UPDATE `players` SET `miejsce`='Przygoda', `energy`=`energy`-2 WHERE `id`=".$player->id);
+	    $db->Execute("UPDATE `players` SET `miejsce`='Przygoda', `energy`=`energy`-2, `craftmission`=`craftmission`-1 WHERE `id`=".$player->id);
 	  }
 	else
 	  {
