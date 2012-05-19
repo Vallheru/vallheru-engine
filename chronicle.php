@@ -7,7 +7,7 @@
  *   @copyright            : (C) 2012 Vallheru Team based on Gamers-Fusion ver 2.5
  *   @author               : thindil <thindil@vallheru.net>
  *   @version              : 1.5
- *   @since                : 18.05.2012
+ *   @since                : 19.05.2012
  *
  */
 
@@ -277,7 +277,7 @@ else
 			      "Intro" => $objMission->fields['intro'],
 			      "Mid" => $objMission->fields['id'],
 			      "Aback" => "Wróć",
-			      "Aread" => "Czytaj dalej (koszt: 2 punkty energii)",
+			      "Aread" => "Zbadaj wydarzenie (koszt: 2 punkty energii)",
 			      "Mgo" => $blnGo));
 	$objMission->Close();
       }

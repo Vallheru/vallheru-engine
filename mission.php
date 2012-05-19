@@ -180,11 +180,13 @@ function battle()
 	    $strFinish = '(<a href="city.php">Koniec</a>)';
 	    $blnEnd = TRUE;
 	    $strName = $_SESSION['maction']['moreinfo'][4];
+	    $player->fight = -1;
 	  }
 	else
 	  {
 	    $db -> Execute("UPDATE `players` SET `energy`=".$player->energy." WHERE `id`=".$player -> id);
 	    $strName = $_SESSION['maction']['moreinfo'][3];
+	    $player->fight = 0;
 	  }
 	$objFinish = $db->Execute("SELECT `id` FROM `missions` WHERE `name`='".$strName."' ORDER BY RAND() LIMIT 1");
 	$_SESSION['maction']['location'] = $objFinish->fields['id'];
@@ -201,7 +203,7 @@ if ($player->fight == 8888)
   {
     battle();
     $myhp = $db -> Execute("SELECT `fight` FROM `players` WHERE `id`=".$player -> id);
-    if ($myhp->fields['fight'])
+    if ($myhp->fields['fight'] > 0)
       {
 	require_once("includes/foot.php");
 	return;
@@ -248,6 +250,7 @@ if (isset($_POST['action']))
 	  {
 	    $arrEactions[] = $_SESSION['maction']['moreinfo'][3];
 	    $arrEactions[] = $_SESSION['maction']['moreinfo'][4];
+	    $_SESSION['maction']['moreinfo'] = array();
 	  }
       }
     if (!in_array($_POST['action'], $arrEactions) && !in_array($_POST['action'], $arrIactions) && !in_array($_POST['action'], $arrMactions))
