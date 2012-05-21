@@ -1,5 +1,7 @@
 2012-05-21  Bartek thindil Jasicki  <thindil@vallheru.net>
 
+	* UPDATE,install/db/mysql.sql: 
+	new version of database
 	* BUG,includes/head.php:
 	fixed typo
 

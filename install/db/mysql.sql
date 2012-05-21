@@ -3,8 +3,8 @@
 -- http://www.phpmyadmin.net
 --
 -- Host: localhost
--- Czas wygenerowania: 05 Gru 2011, 18:27
--- Wersja serwera: 5.5.16
+-- Czas wygenerowania: 21 May 2012, 19:52
+-- Wersja serwera: 5.5.23
 -- Wersja PHP: 5.3.8
 
 SET SQL_MODE="NO_AUTO_VALUE_ON_ZERO";
@@ -26,7 +26,6 @@ SET time_zone = "+00:00";
 -- Struktura tabeli dla  `adodb_logsql`
 --
 
-DROP TABLE IF EXISTS `adodb_logsql`;
 CREATE TABLE IF NOT EXISTS `adodb_logsql` (
   `created` datetime NOT NULL DEFAULT '0000-00-00 00:00:00',
   `sql0` varchar(250) NOT NULL DEFAULT '',
@@ -42,7 +41,6 @@ CREATE TABLE IF NOT EXISTS `adodb_logsql` (
 -- Struktura tabeli dla  `aktywacja`
 --
 
-DROP TABLE IF EXISTS `aktywacja`;
 CREATE TABLE IF NOT EXISTS `aktywacja` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
   `user` varchar(15) NOT NULL DEFAULT '',
@@ -63,7 +61,6 @@ CREATE TABLE IF NOT EXISTS `aktywacja` (
 -- Struktura tabeli dla  `alchemy_mill`
 --
 
-DROP TABLE IF EXISTS `alchemy_mill`;
 CREATE TABLE IF NOT EXISTS `alchemy_mill` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
   `name` varchar(60) NOT NULL DEFAULT '',
@@ -76,8 +73,8 @@ CREATE TABLE IF NOT EXISTS `alchemy_mill` (
   `status` char(1) NOT NULL DEFAULT 'S',
   `dynallca` int(11) NOT NULL DEFAULT '0',
   `lang` varchar(3) NOT NULL DEFAULT 'pl',
-  PRIMARY KEY (`id`)
-) ENGINE=MyISAM  DEFAULT CHARSET=utf8 PACK_KEYS=0 AUTO_INCREMENT=30 ;
+  UNIQUE KEY `id` (`id`)
+) ENGINE=MyISAM  DEFAULT CHARSET=utf8 PACK_KEYS=0 AUTO_INCREMENT=31 ;
 
 --
 -- Zrzut danych tabeli `alchemy_mill`
@@ -112,7 +109,8 @@ INSERT INTO `alchemy_mill` (`id`, `name`, `owner`, `illani`, `illanias`, `nutari
 (26, 'antidotum na truciznę z Illani', 0, 10, 10, 0, 20000, 20, 'S', 0, 'pl'),
 (27, 'antidotum na truciznę z Nutari', 0, 0, 10, 10, 20000, 20, 'S', 0, 'pl'),
 (28, 'antidotum na truciznę z Dynallca', 0, 0, 5, 0, 10000, 10, 'S', 5, 'pl'),
-(29, 'Oszukanie śmierci', 0, 30, 20, 15, 50000, 50, 'S', 20, 'pl');
+(29, 'Oszukanie śmierci', 0, 30, 20, 15, 50000, 50, 'S', 20, 'pl'),
+(30, 'Silne oszukanie śmierci', 0, 60, 40, 30, 100000, 100, 'S', 40, 'pl');
 
 -- --------------------------------------------------------
 
@@ -120,7 +118,6 @@ INSERT INTO `alchemy_mill` (`id`, `name`, `owner`, `illani`, `illanias`, `nutari
 -- Struktura tabeli dla  `amarket`
 --
 
-DROP TABLE IF EXISTS `amarket`;
 CREATE TABLE IF NOT EXISTS `amarket` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
   `seller` int(11) NOT NULL DEFAULT '0',
@@ -141,7 +138,6 @@ CREATE TABLE IF NOT EXISTS `amarket` (
 -- Struktura tabeli dla  `astral`
 --
 
-DROP TABLE IF EXISTS `astral`;
 CREATE TABLE IF NOT EXISTS `astral` (
   `owner` int(11) NOT NULL DEFAULT '0',
   `type` varchar(2) NOT NULL DEFAULT '',
@@ -160,7 +156,6 @@ CREATE TABLE IF NOT EXISTS `astral` (
 -- Struktura tabeli dla  `astral_bank`
 --
 
-DROP TABLE IF EXISTS `astral_bank`;
 CREATE TABLE IF NOT EXISTS `astral_bank` (
   `owner` int(11) NOT NULL DEFAULT '0',
   `level` tinyint(2) NOT NULL DEFAULT '0',
@@ -175,7 +170,6 @@ CREATE TABLE IF NOT EXISTS `astral_bank` (
 -- Struktura tabeli dla  `astral_machine`
 --
 
-DROP TABLE IF EXISTS `astral_machine`;
 CREATE TABLE IF NOT EXISTS `astral_machine` (
   `owner` int(11) NOT NULL DEFAULT '0',
   `used` int(11) NOT NULL DEFAULT '0',
@@ -190,7 +184,6 @@ CREATE TABLE IF NOT EXISTS `astral_machine` (
 -- Struktura tabeli dla  `astral_plans`
 --
 
-DROP TABLE IF EXISTS `astral_plans`;
 CREATE TABLE IF NOT EXISTS `astral_plans` (
   `owner` int(11) NOT NULL DEFAULT '0',
   `name` varchar(2) NOT NULL DEFAULT '',
@@ -206,7 +199,6 @@ CREATE TABLE IF NOT EXISTS `astral_plans` (
 -- Struktura tabeli dla  `bad_words`
 --
 
-DROP TABLE IF EXISTS `bad_words`;
 CREATE TABLE IF NOT EXISTS `bad_words` (
   `bword` varchar(255) NOT NULL DEFAULT '',
   KEY `bword` (`bword`)
@@ -220,9 +212,12 @@ INSERT INTO `bad_words` (`bword`) VALUES
 ('bezalkoholowe'),
 ('bezalkoholowy'),
 ('chuj'),
+('chujowym'),
 ('cieciu'),
 ('cipa'),
 ('cipą'),
+('cipe'),
+('cipę'),
 ('cipo'),
 ('cipom'),
 ('ciul'),
@@ -235,7 +230,10 @@ INSERT INTO `bad_words` (`bword`) VALUES
 ('durniów'),
 ('dziwka'),
 ('dziwko'),
+('fiut'),
 ('fuck'),
+('gówienka'),
+('gówienko'),
 ('Gówno'),
 ('guwno'),
 ('huj'),
@@ -243,23 +241,30 @@ INSERT INTO `bad_words` (`bword`) VALUES
 ('jebać'),
 ('jeban'),
 ('jebańcu'),
+('jebie'),
+('jebnę'),
+('jebnięty'),
 ('kurewsko'),
 ('kurw'),
 ('kurwa'),
 ('kutas'),
 ('napierdalać'),
+('odpierdolilo'),
 ('opierdalać'),
 ('opierdolic'),
 ('pieprzon'),
 ('pierdol'),
+('pierdolenie'),
 ('pizd'),
 ('pizda'),
 ('pizdom'),
 ('podupcon'),
 ('Podupcon'),
 ('pojeban'),
+('pokurwię'),
 ('popierdalać'),
 ('popierdolon'),
+('przepierdolić'),
 ('przypierdalać'),
 ('rozpierdolić'),
 ('ruchałbym'),
@@ -270,7 +275,11 @@ INSERT INTO `bad_words` (`bword`) VALUES
 ('spierdolić'),
 ('sranie'),
 ('sukinsyn'),
+('wkurwiła'),
+('wkuwiła'),
 ('wpierdol'),
+('wpierdol'),
+('wyjebali'),
 ('wyjebany'),
 ('wypierdalać'),
 ('wypierdalaj'),
@@ -287,7 +296,6 @@ INSERT INTO `bad_words` (`bword`) VALUES
 -- Struktura tabeli dla  `ban`
 --
 
-DROP TABLE IF EXISTS `ban`;
 CREATE TABLE IF NOT EXISTS `ban` (
   `type` varchar(10) NOT NULL DEFAULT '',
   `amount` varchar(50) NOT NULL DEFAULT '',
@@ -297,10 +305,21 @@ CREATE TABLE IF NOT EXISTS `ban` (
 -- --------------------------------------------------------
 
 --
+-- Struktura tabeli dla  `ban_forum`
+--
+
+CREATE TABLE IF NOT EXISTS `ban_forum` (
+  `pid` int(11) NOT NULL,
+  `resets` int(11) NOT NULL,
+  KEY `pid` (`pid`)
+) ENGINE=MyISAM DEFAULT CHARSET=utf8;
+
+-- --------------------------------------------------------
+
+--
 -- Struktura tabeli dla  `ban_mail`
 --
 
-DROP TABLE IF EXISTS `ban_mail`;
 CREATE TABLE IF NOT EXISTS `ban_mail` (
   `id` int(11) NOT NULL DEFAULT '0',
   `owner` int(11) NOT NULL DEFAULT '0',
@@ -314,7 +333,6 @@ CREATE TABLE IF NOT EXISTS `ban_mail` (
 -- Struktura tabeli dla  `bows`
 --
 
-DROP TABLE IF EXISTS `bows`;
 CREATE TABLE IF NOT EXISTS `bows` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
   `name` varchar(60) NOT NULL DEFAULT '',
@@ -343,7 +361,7 @@ INSERT INTO `bows` (`id`, `name`, `power`, `type`, `cost`, `minlev`, `zr`, `szyb
 (5, 'Łuk łowiecki z leszczyny', 0, 'B', 3200, 15, 0, 15, 40, 'pl', 30),
 (6, 'Łuk zwiadowcy z leszczyny', 0, 'B', 6400, 20, 0, 20, 40, 'pl', 40),
 (7, 'Łuk wojskowy z leszczyny', 0, 'B', 12800, 25, 0, 25, 40, 'pl', 50),
-(8, 'Łuk bitweny z leszczyny', 0, 'B', 25600, 30, 0, 30, 40, 'pl', 60),
+(8, 'Łuk bitewny z leszczyny', 0, 'B', 25600, 30, 0, 30, 40, 'pl', 60),
 (9, 'Łuk angularny z leszczyny', 0, 'B', 51200, 40, 0, 40, 40, 'pl', 80),
 (10, 'Łuk wojenny z leszczyny', 0, 'B', 102400, 50, 0, 50, 40, 'pl', 100),
 (11, 'Łuk podwójny z leszczyny', 0, 'B', 204800, 60, 0, 60, 40, 'pl', 120),
@@ -370,16 +388,32 @@ INSERT INTO `bows` (`id`, `name`, `power`, `type`, `cost`, `minlev`, `zr`, `szyb
 -- --------------------------------------------------------
 
 --
+-- Struktura tabeli dla  `brecords`
+--
+
+CREATE TABLE IF NOT EXISTS `brecords` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `pid` int(11) NOT NULL,
+  `mdate` smallint(3) NOT NULL,
+  `mlevel` int(11) NOT NULL,
+  `mname` varchar(65) NOT NULL,
+  UNIQUE KEY `id` (`id`),
+  KEY `mlevel` (`mlevel`),
+  KEY `pid` (`pid`)
+) ENGINE=MyISAM DEFAULT CHARSET=utf8 AUTO_INCREMENT=1 ;
+
+-- --------------------------------------------------------
+
+--
 -- Struktura tabeli dla  `bridge`
 --
 
-DROP TABLE IF EXISTS `bridge`;
 CREATE TABLE IF NOT EXISTS `bridge` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
   `question` text NOT NULL,
   `answer` text NOT NULL,
   KEY `id` (`id`)
-) ENGINE=MyISAM  DEFAULT CHARSET=utf8 AUTO_INCREMENT=17 ;
+) ENGINE=MyISAM  DEFAULT CHARSET=utf8 AUTO_INCREMENT=40 ;
 
 --
 -- Zrzut danych tabeli `bridge`
@@ -401,7 +435,30 @@ INSERT INTO `bridge` (`id`, `question`, `answer`) VALUES
 (3, 'Jak się nazywa główne miasto Vallheru', 'Altara'),
 (4, 'Ile to 2+2', '4'),
 (1, 'Stolica Abanasyni', 'Łubu-dubu'),
-(2, 'Jak się nazywa władca Vallheru', 'Thindil');
+(2, 'Jak się nazywa władca Vallheru', 'Thindil'),
+(17, 'Jak nazywa się sztandarowe wino Vallheru?', 'Mustak'),
+(18, 'O czym teraz myślę?', 'o mnie?'),
+(19, 'Jak się nazywa pijany rogacz?', 'kjelonek'),
+(20, 'Kto pilnuje porządku w karczmie?', 'Karczmarka'),
+(21, 'Jesteś gotów przekazać całe swoje złoto na ID:1 ?', 'tak'),
+(22, 'Jaki jest mój ulubiony kolor?', 'fioletowy'),
+(23, 'Jak wędrujesz kiedy nie masz butów?', 'boso'),
+(24, 'W którym dniu odbyła się bitwa pod Grunwaldem?', '15'),
+(25, 'Gdzie znajduje się Rapier z miedzi?', 'w sklepie'),
+(26, 'Dokąd wiedzie droga?', 'w przód'),
+(27, 'Czym można rzucać w Karczmarza?', 'wszystkim'),
+(28, 'Gdzie znajduje się Ardulith?', 'w lesie'),
+(29, 'Lubisz odpowiadać na moje pytania?', 'tak'),
+(30, 'Gdzie można spotkać najwięcej koni na Vallheru?', 'w karczmie'),
+(31, 'Czy chcesz spaść z mostu?', 'tak'),
+(32, 'Kto pracuje kiedy gra i gra kiedy pracuje?', 'bard'),
+(33, 'Biegną w górę i w dół, nie poruszając się.', 'schody'),
+(34, 'Kiedy można zobaczyć słońce nad górami?', 'w dzień'),
+(35, 'Jaka jest prędkość przelotowa kufla w karczmie?', 'zależy kto jest celem'),
+(36, 'Co to jest "nic"?', 'pół litra na dwóch.'),
+(37, 'Jaki jest Twój ulubiony kolor?', 'Sino-ogórkowy róż'),
+(38, 'Jam jest ten, który uważał się za najlepszego ze wszystkich. Jakże się myliłem. Pomóż mi, mówiąc jakiego koloru jest oko proroka ? Żółte, niebieskie czy czerwone ?', 'czerwone'),
+(39, 'Jakie zwierze chodzi o poranku na 4 nogach, w południe na 2 a wieczorem na 3?', 'Człowiek');
 
 -- --------------------------------------------------------
 
@@ -409,7 +466,6 @@ INSERT INTO `bridge` (`id`, `question`, `answer`) VALUES
 -- Struktura tabeli dla  `bugreport`
 --
 
-DROP TABLE IF EXISTS `bugreport`;
 CREATE TABLE IF NOT EXISTS `bugreport` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
   `sender` int(11) NOT NULL DEFAULT '0',
@@ -427,7 +483,6 @@ CREATE TABLE IF NOT EXISTS `bugreport` (
 -- Struktura tabeli dla  `bugtrack`
 --
 
-DROP TABLE IF EXISTS `bugtrack`;
 CREATE TABLE IF NOT EXISTS `bugtrack` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
   `type` int(5) NOT NULL DEFAULT '0',
@@ -445,7 +500,6 @@ CREATE TABLE IF NOT EXISTS `bugtrack` (
 -- Struktura tabeli dla  `categories`
 --
 
-DROP TABLE IF EXISTS `categories`;
 CREATE TABLE IF NOT EXISTS `categories` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
   `name` varchar(100) NOT NULL DEFAULT '',
@@ -453,7 +507,7 @@ CREATE TABLE IF NOT EXISTS `categories` (
   `lang` varchar(3) NOT NULL DEFAULT 'pl',
   `perm_write` varchar(255) NOT NULL DEFAULT 'All;',
   `perm_visit` varchar(255) NOT NULL DEFAULT 'All;',
-  PRIMARY KEY (`id`)
+  UNIQUE KEY `id` (`id`)
 ) ENGINE=MyISAM DEFAULT CHARSET=utf8 AUTO_INCREMENT=1 ;
 
 -- --------------------------------------------------------
@@ -462,7 +516,6 @@ CREATE TABLE IF NOT EXISTS `categories` (
 -- Struktura tabeli dla  `changelog`
 --
 
-DROP TABLE IF EXISTS `changelog`;
 CREATE TABLE IF NOT EXISTS `changelog` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
   `author` varchar(255) NOT NULL DEFAULT '',
@@ -479,16 +532,32 @@ CREATE TABLE IF NOT EXISTS `changelog` (
 -- Struktura tabeli dla  `chat`
 --
 
-DROP TABLE IF EXISTS `chat`;
 CREATE TABLE IF NOT EXISTS `chat` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
-  `user` varchar(100) NOT NULL DEFAULT '',
+  `user` varchar(255) NOT NULL DEFAULT '',
   `chat` text NOT NULL,
   `senderid` int(11) NOT NULL DEFAULT '0',
   `ownerid` int(11) NOT NULL DEFAULT '0',
   `lang` varchar(3) NOT NULL DEFAULT 'pl',
   `sdate` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
-  PRIMARY KEY (`id`)
+  UNIQUE KEY `id` (`id`)
+) ENGINE=MyISAM DEFAULT CHARSET=utf8 PACK_KEYS=0 AUTO_INCREMENT=1 ;
+
+-- --------------------------------------------------------
+
+--
+-- Struktura tabeli dla  `chatrooms`
+--
+
+CREATE TABLE IF NOT EXISTS `chatrooms` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `user` varchar(255) NOT NULL DEFAULT '',
+  `chat` text NOT NULL,
+  `senderid` int(11) NOT NULL DEFAULT '0',
+  `ownerid` int(11) NOT NULL DEFAULT '0',
+  `sdate` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  `room` int(11) NOT NULL,
+  UNIQUE KEY `id` (`id`)
 ) ENGINE=MyISAM DEFAULT CHARSET=utf8 PACK_KEYS=0 AUTO_INCREMENT=1 ;
 
 -- --------------------------------------------------------
@@ -497,7 +566,6 @@ CREATE TABLE IF NOT EXISTS `chat` (
 -- Struktura tabeli dla  `chat_config`
 --
 
-DROP TABLE IF EXISTS `chat_config`;
 CREATE TABLE IF NOT EXISTS `chat_config` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
   `cisza` char(2) NOT NULL DEFAULT 'Y',
@@ -505,7 +573,7 @@ CREATE TABLE IF NOT EXISTS `chat_config` (
   `resets` int(11) NOT NULL DEFAULT '0',
   UNIQUE KEY `gracz` (`gracz`),
   KEY `id` (`id`)
-) ENGINE=MyISAM  DEFAULT CHARSET=utf8 PACK_KEYS=0 AUTO_INCREMENT=23 ;
+) ENGINE=MyISAM  DEFAULT CHARSET=utf8 PACK_KEYS=0 AUTO_INCREMENT=61 ;
 
 -- --------------------------------------------------------
 
@@ -513,7 +581,6 @@ CREATE TABLE IF NOT EXISTS `chat_config` (
 -- Struktura tabeli dla  `contacts`
 --
 
-DROP TABLE IF EXISTS `contacts`;
 CREATE TABLE IF NOT EXISTS `contacts` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
   `owner` int(11) NOT NULL,
@@ -530,7 +597,6 @@ CREATE TABLE IF NOT EXISTS `contacts` (
 -- Struktura tabeli dla  `core`
 --
 
-DROP TABLE IF EXISTS `core`;
 CREATE TABLE IF NOT EXISTS `core` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
   `owner` int(11) NOT NULL DEFAULT '0',
@@ -558,7 +624,6 @@ CREATE TABLE IF NOT EXISTS `core` (
 -- Struktura tabeli dla  `cores`
 --
 
-DROP TABLE IF EXISTS `cores`;
 CREATE TABLE IF NOT EXISTS `cores` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
   `name` varchar(20) NOT NULL DEFAULT '',
@@ -568,7 +633,6 @@ CREATE TABLE IF NOT EXISTS `cores` (
   `rarity` int(1) NOT NULL DEFAULT '1',
   `desc` text NOT NULL,
   `lang` varchar(3) NOT NULL DEFAULT 'pl',
-  PRIMARY KEY (`id`),
   KEY `id` (`id`)
 ) ENGINE=MyISAM  DEFAULT CHARSET=utf8 AUTO_INCREMENT=31 ;
 
@@ -614,7 +678,6 @@ INSERT INTO `cores` (`id`, `name`, `type`, `power`, `defense`, `rarity`, `desc`,
 -- Struktura tabeli dla  `core_market`
 --
 
-DROP TABLE IF EXISTS `core_market`;
 CREATE TABLE IF NOT EXISTS `core_market` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
   `name` varchar(20) NOT NULL DEFAULT '',
@@ -627,7 +690,6 @@ CREATE TABLE IF NOT EXISTS `core_market` (
   `ref_id` int(11) NOT NULL DEFAULT '0',
   `wins` int(11) NOT NULL DEFAULT '0',
   `losses` int(11) NOT NULL DEFAULT '0',
-  PRIMARY KEY (`id`),
   KEY `id` (`id`)
 ) ENGINE=MyISAM DEFAULT CHARSET=utf8 PACK_KEYS=0 AUTO_INCREMENT=1 ;
 
@@ -637,7 +699,6 @@ CREATE TABLE IF NOT EXISTS `core_market` (
 -- Struktura tabeli dla  `court`
 --
 
-DROP TABLE IF EXISTS `court`;
 CREATE TABLE IF NOT EXISTS `court` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
   `title` varchar(255) NOT NULL DEFAULT '',
@@ -654,7 +715,6 @@ CREATE TABLE IF NOT EXISTS `court` (
 -- Struktura tabeli dla  `court_cases`
 --
 
-DROP TABLE IF EXISTS `court_cases`;
 CREATE TABLE IF NOT EXISTS `court_cases` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
   `textid` int(11) NOT NULL DEFAULT '0',
@@ -669,7 +729,6 @@ CREATE TABLE IF NOT EXISTS `court_cases` (
 -- Struktura tabeli dla  `czary`
 --
 
-DROP TABLE IF EXISTS `czary`;
 CREATE TABLE IF NOT EXISTS `czary` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
   `nazwa` varchar(30) NOT NULL DEFAULT '',
@@ -740,7 +799,6 @@ INSERT INTO `czary` (`id`, `nazwa`, `gracz`, `cena`, `poziom`, `typ`, `obr`, `st
 -- Struktura tabeli dla  `donators`
 --
 
-DROP TABLE IF EXISTS `donators`;
 CREATE TABLE IF NOT EXISTS `donators` (
   `name` varchar(30) NOT NULL DEFAULT '',
   KEY `name` (`name`)
@@ -795,7 +853,6 @@ INSERT INTO `donators` (`name`) VALUES
 -- Struktura tabeli dla  `equipment`
 --
 
-DROP TABLE IF EXISTS `equipment`;
 CREATE TABLE IF NOT EXISTS `equipment` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
   `owner` int(11) NOT NULL DEFAULT '0',
@@ -850,7 +907,7 @@ INSERT INTO `equipment` (`id`, `owner`, `name`, `power`, `status`, `type`, `cost
 (18, 0, 'Mała tarcza z miedzi', 5, 'S', 'S', 800, 5, 0, 20, 0, 20, 'N', 0, 1, 'N', 'pl', '', 5, 'Altara'),
 (19, 0, 'Sipar z miedzi', 10, 'S', 'S', 1600, 10, 0, 20, 0, 20, 'N', 0, 1, 'N', 'pl', '', 10, 'Altara'),
 (20, 0, 'Średnia tarcza z miedzi', 15, 'S', 'S', 3200, 15, 0, 20, 0, 20, 'N', 0, 1, 'N', 'pl', '', 15, 'Altara'),
-(21, 0, 'Trójkątna tacza z miedzi', 20, 'S', 'S', 6400, 20, 0, 20, 0, 20, 'N', 0, 1, 'N', 'pl', '', 20, 'Altara'),
+(21, 0, 'Trójkątna tarcza z miedzi', 20, 'S', 'S', 6400, 20, 0, 20, 0, 20, 'N', 0, 1, 'N', 'pl', '', 20, 'Altara'),
 (22, 0, 'Wielka tarcza z miedzi', 25, 'S', 'S', 12800, 25, 0, 20, 0, 20, 'N', 0, 1, 'N', 'pl', '', 25, 'Altara'),
 (23, 0, 'Tarcza migdałowa z miedzi', 30, 'S', 'S', 25600, 30, 0, 20, 0, 20, 'N', 0, 1, 'N', 'pl', '', 30, 'Altara'),
 (24, 0, 'Prostokątna tarcza z miedzi', 40, 'S', 'S', 51200, 40, 0, 20, 0, 20, 'N', 0, 1, 'N', 'pl', '', 40, 'Altara'),
@@ -912,7 +969,6 @@ INSERT INTO `equipment` (`id`, `owner`, `name`, `power`, `status`, `type`, `cost
 -- Struktura tabeli dla  `events`
 --
 
-DROP TABLE IF EXISTS `events`;
 CREATE TABLE IF NOT EXISTS `events` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
   `text` text NOT NULL,
@@ -926,7 +982,6 @@ CREATE TABLE IF NOT EXISTS `events` (
 -- Struktura tabeli dla  `farm`
 --
 
-DROP TABLE IF EXISTS `farm`;
 CREATE TABLE IF NOT EXISTS `farm` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
   `owner` int(11) NOT NULL DEFAULT '0',
@@ -943,7 +998,6 @@ CREATE TABLE IF NOT EXISTS `farm` (
 -- Struktura tabeli dla  `farms`
 --
 
-DROP TABLE IF EXISTS `farms`;
 CREATE TABLE IF NOT EXISTS `farms` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
   `owner` int(11) NOT NULL DEFAULT '0',
@@ -961,7 +1015,6 @@ CREATE TABLE IF NOT EXISTS `farms` (
 -- Struktura tabeli dla  `halloffame`
 --
 
-DROP TABLE IF EXISTS `halloffame`;
 CREATE TABLE IF NOT EXISTS `halloffame` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
   `heroid` int(11) NOT NULL DEFAULT '0',
@@ -969,7 +1022,7 @@ CREATE TABLE IF NOT EXISTS `halloffame` (
   `herorace` varchar(100) NOT NULL DEFAULT '',
   `newid` int(11) NOT NULL DEFAULT '0',
   KEY `id` (`id`)
-) ENGINE=MyISAM DEFAULT CHARSET=utf8 AUTO_INCREMENT=1 ;
+) ENGINE=MyISAM  DEFAULT CHARSET=utf8 AUTO_INCREMENT=2 ;
 
 -- --------------------------------------------------------
 
@@ -977,13 +1030,12 @@ CREATE TABLE IF NOT EXISTS `halloffame` (
 -- Struktura tabeli dla  `halloffame2`
 --
 
-DROP TABLE IF EXISTS `halloffame2`;
 CREATE TABLE IF NOT EXISTS `halloffame2` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
   `tribe` varchar(255) NOT NULL,
   `leader` varchar(255) NOT NULL,
   `bdate` varchar(255) NOT NULL,
-  PRIMARY KEY (`id`)
+  UNIQUE KEY `id` (`id`)
 ) ENGINE=MyISAM DEFAULT CHARSET=utf8 AUTO_INCREMENT=1 ;
 
 -- --------------------------------------------------------
@@ -992,7 +1044,6 @@ CREATE TABLE IF NOT EXISTS `halloffame2` (
 -- Struktura tabeli dla  `herbs`
 --
 
-DROP TABLE IF EXISTS `herbs`;
 CREATE TABLE IF NOT EXISTS `herbs` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
   `gracz` int(11) NOT NULL DEFAULT '0',
@@ -1004,8 +1055,8 @@ CREATE TABLE IF NOT EXISTS `herbs` (
   `illanias_seeds` int(11) NOT NULL DEFAULT '0',
   `nutari_seeds` int(11) NOT NULL DEFAULT '0',
   `dynallca_seeds` int(11) NOT NULL DEFAULT '0',
-  PRIMARY KEY (`gracz`),
-  UNIQUE KEY `id` (`id`)
+  UNIQUE KEY `id` (`id`),
+  KEY `gracz` (`gracz`)
 ) ENGINE=MyISAM DEFAULT CHARSET=utf8 PACK_KEYS=0 AUTO_INCREMENT=1 ;
 
 -- --------------------------------------------------------
@@ -1014,7 +1065,6 @@ CREATE TABLE IF NOT EXISTS `herbs` (
 -- Struktura tabeli dla  `hmarket`
 --
 
-DROP TABLE IF EXISTS `hmarket`;
 CREATE TABLE IF NOT EXISTS `hmarket` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
   `seller` int(11) NOT NULL DEFAULT '0',
@@ -1031,7 +1081,6 @@ CREATE TABLE IF NOT EXISTS `hmarket` (
 -- Struktura tabeli dla  `houses`
 --
 
-DROP TABLE IF EXISTS `houses`;
 CREATE TABLE IF NOT EXISTS `houses` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
   `owner` int(11) NOT NULL DEFAULT '0',
@@ -1054,10 +1103,24 @@ CREATE TABLE IF NOT EXISTS `houses` (
 -- --------------------------------------------------------
 
 --
+-- Struktura tabeli dla  `ignored`
+--
+
+CREATE TABLE IF NOT EXISTS `ignored` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `owner` int(11) NOT NULL,
+  `pid` int(11) NOT NULL,
+  `mail` char(1) NOT NULL DEFAULT 'Y',
+  `inn` char(1) NOT NULL DEFAULT 'Y',
+  KEY `id` (`id`)
+) ENGINE=MyISAM DEFAULT CHARSET=utf8 AUTO_INCREMENT=1 ;
+
+-- --------------------------------------------------------
+
+--
 -- Struktura tabeli dla  `jail`
 --
 
-DROP TABLE IF EXISTS `jail`;
 CREATE TABLE IF NOT EXISTS `jail` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
   `prisoner` int(11) NOT NULL DEFAULT '0',
@@ -1066,7 +1129,7 @@ CREATE TABLE IF NOT EXISTS `jail` (
   `verdict` text NOT NULL,
   `cost` int(11) unsigned NOT NULL DEFAULT '0',
   KEY `id` (`id`)
-) ENGINE=MyISAM  DEFAULT CHARSET=utf8 PACK_KEYS=0 AUTO_INCREMENT=106 ;
+) ENGINE=MyISAM  DEFAULT CHARSET=utf8 PACK_KEYS=0 AUTO_INCREMENT=988 ;
 
 -- --------------------------------------------------------
 
@@ -1074,7 +1137,6 @@ CREATE TABLE IF NOT EXISTS `jail` (
 -- Struktura tabeli dla  `jeweller`
 --
 
-DROP TABLE IF EXISTS `jeweller`;
 CREATE TABLE IF NOT EXISTS `jeweller` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
   `owner` int(11) NOT NULL DEFAULT '0',
@@ -1116,7 +1178,6 @@ INSERT INTO `jeweller` (`id`, `owner`, `name`, `type`, `cost`, `level`, `bonus`,
 -- Struktura tabeli dla  `jeweller_work`
 --
 
-DROP TABLE IF EXISTS `jeweller_work`;
 CREATE TABLE IF NOT EXISTS `jeweller_work` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
   `owner` int(11) NOT NULL DEFAULT '0',
@@ -1127,7 +1188,7 @@ CREATE TABLE IF NOT EXISTS `jeweller_work` (
   `type` char(1) NOT NULL DEFAULT '',
   KEY `id` (`id`),
   KEY `owner` (`owner`)
-) ENGINE=MyISAM  DEFAULT CHARSET=utf8 AUTO_INCREMENT=23 ;
+) ENGINE=MyISAM  DEFAULT CHARSET=utf8 AUTO_INCREMENT=34 ;
 
 -- --------------------------------------------------------
 
@@ -1135,7 +1196,6 @@ CREATE TABLE IF NOT EXISTS `jeweller_work` (
 -- Struktura tabeli dla  `library`
 --
 
-DROP TABLE IF EXISTS `library`;
 CREATE TABLE IF NOT EXISTS `library` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
   `title` varchar(255) NOT NULL DEFAULT '',
@@ -1153,7 +1213,6 @@ CREATE TABLE IF NOT EXISTS `library` (
 -- Struktura tabeli dla  `lib_comments`
 --
 
-DROP TABLE IF EXISTS `lib_comments`;
 CREATE TABLE IF NOT EXISTS `lib_comments` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
   `textid` int(11) NOT NULL DEFAULT '0',
@@ -1169,7 +1228,6 @@ CREATE TABLE IF NOT EXISTS `lib_comments` (
 -- Struktura tabeli dla  `links`
 --
 
-DROP TABLE IF EXISTS `links`;
 CREATE TABLE IF NOT EXISTS `links` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
   `owner` int(11) NOT NULL DEFAULT '0',
@@ -1186,7 +1244,6 @@ CREATE TABLE IF NOT EXISTS `links` (
 -- Struktura tabeli dla  `log`
 --
 
-DROP TABLE IF EXISTS `log`;
 CREATE TABLE IF NOT EXISTS `log` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
   `owner` int(11) NOT NULL DEFAULT '0',
@@ -1205,11 +1262,11 @@ CREATE TABLE IF NOT EXISTS `log` (
 -- Struktura tabeli dla  `logs`
 --
 
-DROP TABLE IF EXISTS `logs`;
 CREATE TABLE IF NOT EXISTS `logs` (
   `owner` int(11) NOT NULL DEFAULT '0',
   `log` varchar(255) NOT NULL DEFAULT '',
-  `czas` date NOT NULL DEFAULT '0000-00-00'
+  `czas` date NOT NULL DEFAULT '0000-00-00',
+  KEY `owner` (`owner`)
 ) ENGINE=MyISAM DEFAULT CHARSET=utf8;
 
 -- --------------------------------------------------------
@@ -1218,7 +1275,6 @@ CREATE TABLE IF NOT EXISTS `logs` (
 -- Struktura tabeli dla  `lost_pass`
 --
 
-DROP TABLE IF EXISTS `lost_pass`;
 CREATE TABLE IF NOT EXISTS `lost_pass` (
   `number` varchar(32) NOT NULL DEFAULT '',
   `email` varchar(100) NOT NULL DEFAULT '',
@@ -1236,7 +1292,6 @@ CREATE TABLE IF NOT EXISTS `lost_pass` (
 -- Struktura tabeli dla  `lumberjack`
 --
 
-DROP TABLE IF EXISTS `lumberjack`;
 CREATE TABLE IF NOT EXISTS `lumberjack` (
   `owner` int(11) NOT NULL DEFAULT '0',
   `level` tinyint(2) NOT NULL DEFAULT '0',
@@ -1246,10 +1301,32 @@ CREATE TABLE IF NOT EXISTS `lumberjack` (
 -- --------------------------------------------------------
 
 --
+-- Struktura tabeli dla  `mactions`
+--
+
+CREATE TABLE IF NOT EXISTS `mactions` (
+  `pid` int(11) NOT NULL,
+  `location` int(11) NOT NULL,
+  `exits` text NOT NULL,
+  `mobs` text NOT NULL,
+  `items` text NOT NULL,
+  `type` char(1) NOT NULL DEFAULT 'T',
+  `loot` varchar(255) NOT NULL,
+  `rooms` smallint(3) NOT NULL,
+  `successes` int(11) NOT NULL DEFAULT '0',
+  `bonus` int(11) NOT NULL DEFAULT '0',
+  `place` varchar(30) NOT NULL,
+  `target` char(1) NOT NULL,
+  `moreinfo` text NOT NULL,
+  UNIQUE KEY `pid` (`pid`)
+) ENGINE=MyISAM DEFAULT CHARSET=utf8;
+
+-- --------------------------------------------------------
+
+--
 -- Struktura tabeli dla  `mage_items`
 --
 
-DROP TABLE IF EXISTS `mage_items`;
 CREATE TABLE IF NOT EXISTS `mage_items` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
   `name` varchar(60) NOT NULL DEFAULT '',
@@ -1258,7 +1335,7 @@ CREATE TABLE IF NOT EXISTS `mage_items` (
   `cost` int(11) NOT NULL DEFAULT '0',
   `minlev` int(2) NOT NULL DEFAULT '1',
   `lang` varchar(3) NOT NULL DEFAULT 'pl',
-  PRIMARY KEY (`id`),
+  UNIQUE KEY `id` (`id`),
   KEY `type` (`type`)
 ) ENGINE=MyISAM  DEFAULT CHARSET=utf8 PACK_KEYS=0 AUTO_INCREMENT=13 ;
 
@@ -1286,7 +1363,6 @@ INSERT INTO `mage_items` (`id`, `name`, `power`, `type`, `cost`, `minlev`, `lang
 -- Struktura tabeli dla  `mail`
 --
 
-DROP TABLE IF EXISTS `mail`;
 CREATE TABLE IF NOT EXISTS `mail` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
   `sender` varchar(20) NOT NULL DEFAULT '',
@@ -1298,10 +1374,13 @@ CREATE TABLE IF NOT EXISTS `mail` (
   `saved` char(1) NOT NULL DEFAULT 'N',
   `date` datetime DEFAULT NULL,
   `topic` int(11) NOT NULL DEFAULT '1',
+  `to` int(11) NOT NULL DEFAULT '0',
+  `toname` varchar(20) NOT NULL,
   KEY `id` (`id`),
   KEY `owner` (`owner`),
   KEY `unread` (`unread`),
-  KEY `zapis` (`saved`),
+  KEY `saved` (`saved`),
+  KEY `senderid` (`senderid`),
   FULLTEXT KEY `subject` (`subject`,`body`)
 ) ENGINE=MyISAM DEFAULT CHARSET=utf8 PACK_KEYS=0 AUTO_INCREMENT=1 ;
 
@@ -1311,7 +1390,6 @@ CREATE TABLE IF NOT EXISTS `mail` (
 -- Struktura tabeli dla  `mill`
 --
 
-DROP TABLE IF EXISTS `mill`;
 CREATE TABLE IF NOT EXISTS `mill` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
   `owner` int(11) NOT NULL DEFAULT '0',
@@ -1349,20 +1427,20 @@ INSERT INTO `mill` (`id`, `owner`, `name`, `type`, `cost`, `amount`, `level`, `l
 (14, 0, 'Łuk refleksyjny', 'B', 8192000, 1800, 90, 'pl', 'Y', 0, 'S'),
 (15, 0, 'Łuk retrorefleksyjny', 'B', 16384000, 2200, 100, 'pl', 'Y', 0, 'S'),
 (16, 0, 'Strzały ćwiczebne', 'R', 250, 1, 1, 'pl', 'N', 0, 'S'),
-(17, 0, 'Strzały turniejowe', 'R', 1000, 4, 3, 'pl', 'N', 0, 'S'),
-(18, 0, 'Strzały krótkie', 'R', 2000, 8, 5, 'pl', 'N', 0, 'S'),
-(19, 0, 'Strzały myśliwskie', 'R', 4000, 20, 10, 'pl', 'N', 0, 'S'),
-(20, 0, 'Strzały łowieckie', 'R', 8000, 36, 15, 'pl', 'N', 0, 'S'),
-(21, 0, 'Strzały zwiadowcy', 'R', 16000, 60, 20, 'pl', 'N', 0, 'S'),
-(22, 0, 'Strzały wojskowe', 'R', 32000, 86, 25, 'pl', 'N', 0, 'S'),
-(23, 0, 'Strzały bitewne', 'R', 64000, 120, 30, 'pl', 'N', 0, 'S'),
-(24, 0, 'Strzały liściaste', 'R', 128000, 200, 40, 'pl', 'N', 0, 'S'),
-(25, 0, 'Strzały wojenne', 'R', 256000, 300, 50, 'pl', 'N', 0, 'S'),
-(26, 0, 'Strzały haczykowe', 'R', 512000, 420, 60, 'pl', 'N', 0, 'S'),
-(27, 0, 'Strzały długie', 'R', 1024000, 560, 70, 'pl', 'N', 0, 'S'),
-(28, 0, 'Strzały bojowe', 'R', 2048000, 720, 80, 'pl', 'N', 0, 'S'),
-(29, 0, 'Strzały wężowe', 'R', 4096000, 900, 90, 'pl', 'N', 0, 'S'),
-(30, 0, 'Strzały ząbkowane', 'R', 8192000, 1100, 100, 'pl', 'N', 0, 'S'),
+(17, 0, 'Strzały turniejowe', 'R', 1000, 2, 3, 'pl', 'N', 0, 'S'),
+(18, 0, 'Strzały krótkie', 'R', 2000, 4, 5, 'pl', 'N', 0, 'S'),
+(19, 0, 'Strzały myśliwskie', 'R', 4000, 10, 10, 'pl', 'N', 0, 'S'),
+(20, 0, 'Strzały łowieckie', 'R', 8000, 18, 15, 'pl', 'N', 0, 'S'),
+(21, 0, 'Strzały zwiadowcy', 'R', 16000, 30, 20, 'pl', 'N', 0, 'S'),
+(22, 0, 'Strzały wojskowe', 'R', 32000, 43, 25, 'pl', 'N', 0, 'S'),
+(23, 0, 'Strzały bitewne', 'R', 64000, 60, 30, 'pl', 'N', 0, 'S'),
+(24, 0, 'Strzały liściaste', 'R', 128000, 100, 40, 'pl', 'N', 0, 'S'),
+(25, 0, 'Strzały wojenne', 'R', 256000, 150, 50, 'pl', 'N', 0, 'S'),
+(26, 0, 'Strzały haczykowe', 'R', 512000, 210, 60, 'pl', 'N', 0, 'S'),
+(27, 0, 'Strzały długie', 'R', 1024000, 280, 70, 'pl', 'N', 0, 'S'),
+(28, 0, 'Strzały bojowe', 'R', 2048000, 360, 80, 'pl', 'N', 0, 'S'),
+(29, 0, 'Strzały wężowe', 'R', 4096000, 450, 90, 'pl', 'N', 0, 'S'),
+(30, 0, 'Strzały ząbkowane', 'R', 8192000, 550, 100, 'pl', 'N', 0, 'S'),
 (31, 0, 'Elitarny łuk ćwiczebny', 'B', 5000, 5, 1, 'pl', 'Y', 2, 'S'),
 (32, 0, 'Elitarny łuk krótki', 'B', 40000, 160, 5, 'pl', 'Y', 6, 'S'),
 (33, 0, 'Elitarny łuk myśliwski', 'B', 80000, 400, 10, 'pl', 'Y', 9, 'S'),
@@ -1378,7 +1456,6 @@ INSERT INTO `mill` (`id`, `owner`, `name`, `type`, `cost`, `amount`, `level`, `l
 -- Struktura tabeli dla  `mill_work`
 --
 
-DROP TABLE IF EXISTS `mill_work`;
 CREATE TABLE IF NOT EXISTS `mill_work` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
   `owner` int(11) NOT NULL DEFAULT '0',
@@ -1388,7 +1465,7 @@ CREATE TABLE IF NOT EXISTS `mill_work` (
   `mineral` char(1) NOT NULL DEFAULT '',
   `elite` int(11) NOT NULL DEFAULT '0',
   KEY `id` (`id`)
-) ENGINE=MyISAM  DEFAULT CHARSET=utf8 PACK_KEYS=0 AUTO_INCREMENT=6 ;
+) ENGINE=MyISAM  DEFAULT CHARSET=utf8 PACK_KEYS=0 AUTO_INCREMENT=20 ;
 
 -- --------------------------------------------------------
 
@@ -1396,7 +1473,6 @@ CREATE TABLE IF NOT EXISTS `mill_work` (
 -- Struktura tabeli dla  `minerals`
 --
 
-DROP TABLE IF EXISTS `minerals`;
 CREATE TABLE IF NOT EXISTS `minerals` (
   `owner` int(11) NOT NULL DEFAULT '0',
   `copperore` int(11) NOT NULL DEFAULT '0',
@@ -1425,7 +1501,6 @@ CREATE TABLE IF NOT EXISTS `minerals` (
 -- Struktura tabeli dla  `mines`
 --
 
-DROP TABLE IF EXISTS `mines`;
 CREATE TABLE IF NOT EXISTS `mines` (
   `owner` int(11) NOT NULL DEFAULT '0',
   `copper` int(11) NOT NULL DEFAULT '0',
@@ -1442,7 +1517,6 @@ CREATE TABLE IF NOT EXISTS `mines` (
 -- Struktura tabeli dla  `mines_search`
 --
 
-DROP TABLE IF EXISTS `mines_search`;
 CREATE TABLE IF NOT EXISTS `mines_search` (
   `player` int(11) NOT NULL DEFAULT '0',
   `days` tinyint(2) NOT NULL DEFAULT '0',
@@ -1454,10 +1528,296 @@ CREATE TABLE IF NOT EXISTS `mines_search` (
 -- --------------------------------------------------------
 
 --
+-- Struktura tabeli dla  `missions`
+--
+
+CREATE TABLE IF NOT EXISTS `missions` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `name` varchar(255) NOT NULL,
+  `text` text NOT NULL,
+  `exits` text NOT NULL,
+  `chances` varchar(255) NOT NULL,
+  `mobs` text NOT NULL,
+  `chances2` varchar(255) NOT NULL,
+  `items` text NOT NULL,
+  `chances3` varchar(255) NOT NULL,
+  `moreinfo` text NOT NULL,
+  UNIQUE KEY `id` (`id`),
+  KEY `name` (`name`)
+) ENGINE=MyISAM  DEFAULT CHARSET=utf8 AUTO_INCREMENT=233 ;
+
+--
+-- Zrzut danych tabeli `missions`
+--
+
+INSERT INTO `missions` (`id`, `name`, `text`, `exits`, `chances`, `mobs`, `chances2`, `items`, `chances3`, `moreinfo`) VALUES
+(1, 'thief10start', 'Docierasz na główny plac targowy miasta. Wokół ciebie przechodzą co jakiś czas różne postacie. W okolicy widzisz kilka straganów z rozłożonymi towarami. Przez krótką chwilę rozglądasz się uważnie po okolicy. Następnie przystępujesz do wykonywania swojego zadania.', 'Obserwuj i czekaj,thief10wait;Przejdź się kawałek,thief10walk;', '80;30', 'Strażnik,A,Strażnik miejski przechodzi obok.;Mieszczanin,T,Jakiś mieszczanin robi tutaj zakupy.,Okradnij mieszkańca,thief10steal;Mieszczanka,T,Jakaś kobieta rozgląda się po straganach.,Okradnij kobietę,thief10steal;', '50;50;50', '', '', ''),
+(2, 'thief10wait', 'Odczekujesz chwilę, starając się nie rzucać w oczy nikomu. Cały czas uważnie obserwujesz okolicę w poszukiwaniu celu. Po pewnym czasie ponownie zaczynasz zastanawiać się co robić.', 'Obserwuj i czekaj,thief10wait;Przejdź się kawałek,thief10walk;', '80;30', 'Strażnik,A,Strażnik miejski przechodzi obok.;Mieszczanin,T,Jakiś mieszczanin robi tutaj zakupy.,Okradnij mieszkańca,thief10steal;Mieszczanka,T,Jakaś kobieta rozgląda się po straganach.,Okradnij kobietę,thief10steal;', '50;50;50', '', '', ''),
+(3, 'thief10walk', 'Idziesz kawałek dalej w targ. Tutaj robi się nieco tłoczniej niż na obrzeżach. Wokół ciebie przechodzą różne istoty zajęte swoimi sprawami. Wygląda na to, że nikt nie zwraca na ciebie najmniejszej uwagi.', 'Obserwuj i czekaj,thief10wait;Przejdź się kawałek,thief10walk;', '80;30', 'Strażnik,A,Strażnik miejski przechodzi obok.;Mieszczanin,T,Jakiś mieszczanin robi tutaj zakupy.,Okradnij mieszkańca,thief10steal;Mieszczanka,T,Jakaś kobieta rozgląda się po straganach.,Okradnij kobietę,thief10steal;', '60;60;60', '', '', ''),
+(4, 'thief10steal', 'Postanawiasz spróbować swojego szczęścia oraz umiejętności. Ostrożnie ale i bez zbytniego rzucania się w oczy, podchodzisz do wybranej ofiary. Delikatnie rozglądasz się na boki, czy nikt ciebie nie obserwuje. Po chwili szybkim ruchem nacinasz sakiewkę, wyciągasz jej zawartość i szybko chowasz do kieszeni. Następnie spokojnym krokiem odchodzisz kawałek na bok. Kiedy tylko znajdujesz się w bezpiecznej odległości, zaczynasz zastanawiać się nad kolejnymi krokami.', 'Obserwuj i czekaj,thief10wait;Przejdź się kawałek,thief10walk;', '80;30', 'Strażnik,A,Strażnik miejski przechodzi obok.;Mieszczanin,T,Jakiś mieszczanin robi tutaj zakupy.,Okradnij mieszkańca,thief10steal;Mieszczanka,T,Jakaś kobieta rozgląda się po straganach.,Okradnij kobietę,thief10steal;', '60;40;40', '', '', ''),
+(5, 'thief10fail', 'Ostrożnie zbliżasz się do ofiary. Wszystkie twoje zmysły wyostrzone są do granic możliwości. Wyciągasz rękę wprost do sakiewki, gdy nagle, nie wiadomo skąd pojawia się odziana w kolczugę dłoń, która błyskawicznie chwyta ciebie za rękę i wykręca ją do tyłu. Zupełnie zszokowany widzisz wokół siebie patrol straży miejskiej. Przy pomocy okrzyków i kopniaków prowadzą ciebie wprost do miejskich lochów. Tym razem niestety zadania nie udało się wykonać.', 'tekst', '80', '', '', '', '', ''),
+(6, 'thief10finish', 'Powoli coraz bardziej ogarnia ciebie znużenie. Napięte do ostatnich granic nerwy mają już dosyć. Zadowalasz się tym co udało ci się do tej pory osiągnąć. Szybkim krokiem powracasz do Złodziejskiej Spelunki po odbiór swojej nagrody.', 'Tekst', '100', '', '', '', '', ''),
+(7, 'thief115start', 'Zbierasz swój ekwipunek i ruszasz pod wskazany adres. Jak co dzień ulice są wypełnione przechodniami. Zaczynasz zastanawiać się czy nie warto by było trochę dorobić do spodziewanej nagrody, ucinając kilka przypadkowych mieszków. Po pewnym czasie, docierasz pod wskazany adres i zaczynasz obserwację okolicy.', 'Obserwuj i czekaj,thief115wait;Przejdź się kawałek,thief115walk;', '80;20', 'Strażnik,A,Strażnik miejski przechodzi obok.;Mieszczanin,T,Jakiś mieszczanin przechodzi obok.,Okradnij mieszkańca,thief115steal;Kupiec,Q,Poszukiwany przez ciebie kupiec wychodzi ze swojego domu,Okradnij kupca,thief115qsteal;Ochroniarz,A,Ochroniarz kupca stoi niedaleko.', '30;30;10;30', '', '', ''),
+(8, 'thief115wait', 'Postanawiasz chwilę pokręcić się po okolicy, bacznie obserwując interesujący ciebie budynek. Dokładnie badasz okolicę w poszukiwaniu swojego celu zlecenia. Wokoło  przechodzą różne istoty, co jakiś czas ulicą przejeżdża wyładowany wóz. Zabijasz sobie czas chodząc w tę i z powrotem.', 'Obserwuj i czekaj,thief115wait;Przejdź się kawałek,thief115walk;', '80;20', 'Strażnik,A,Strażnik miejski przechodzi obok.;Mieszczanin,T,Jakiś mieszczanin przechodzi obok.,Okradnij mieszkańca,thief115steal;Kupiec,Q,Poszukiwany przez ciebie kupiec idzie ulicą.,Okradnij kupca,thief115qsteal;Ochroniarz,A,Ochroniarz kupca stoi niedaleko.', '30;30;20;30', '', '', ''),
+(9, 'thief115walk', 'Idziesz kawałek dalej drogą w kierunku sklepu w którym pracuje interesujący ciebie kupiec. Po drodze mijasz przechodniów podążających w sobie znanych interesach. Po pewnym czasie przystajesz w miejscu i zaczynasz ponownie obserwować okolicę w poszukiwaniu celu zlecenia.', 'Obserwuj i czekaj,thief115wait;Przejdź się kawałek,thief115walk;', '80;20', 'Strażnik,A,Strażnik miejski przechodzi obok;.Mieszczanin,T,Jakiś mieszczanin przechodzi obok.,Okradnij mieszkańca,thief115steal;Kupiec,Q,Poszukiwany przez ciebie kupiec idzie ulicą,Okradnij kupca,thief115qsteal;Ochroniarz,A,Ochroniarz kupca stoi niedaleko.', '40;20;30;30', '', '', ''),
+(10, 'thief115steal', 'Rozglądasz się uważnie na boki czy nikt ciebie nie obserwuje. Po upewnieniu się, że okolica jest czysta, podchodzisz ostrożnie do wybranej osoby. Ta na szczęście nie zauważyła ciebie. Szybkim, wyćwiczonym ruchem przecinasz sakiewkę, wysypujesz złoto na rękę i chowasz je do kieszeni. Następnie spokojnie odchodzisz kawałek na bok i ponownie zaczynasz poszukiwać właściwego celu swojego zadania.', 'Obserwuj i czekaj,thief115wait;Przejdź się kawałek,thief115walk;', '80;20', 'Strażnik,A,Strażnik miejski przechodzi obok.;Mieszczanin,T,Jakiś mieszczanin przechodzi obok.,Okradnij mieszkańca,thief115steal;Kupiec,Q,Poszukiwany przez ciebie kupiec idzie ulicą.,Okradnij kupca,thief115qsteal;Ochroniarz,A,Ochroniarz kupca stoi niedaleko.', '40;20;20;30', '', '', ''),
+(11, 'thief115fail', 'Ostrożnie zbliżasz się do ofiary. Wszystkie twoje zmysły wyostrzone są do granic możliwości. Wyciągasz rękę wprost do sakiewki, gdy nagle, nie wiadomo skąd pojawia się odziana w kolczugę dłoń, która błyskawicznie chwyta ciebie za rękę i wykręca ją do tyłu. Zupełnie zszokowany widzisz wokół siebie patrol straży miejskiej. Przy pomocy okrzyków i kopniaków prowadzą ciebie wprost do miejskich lochów. Tym razem niestety zadania nie udało się wykonać.', 'Tekst', '100', '', '', '', '', ''),
+(12, 'thief115finish', 'Czas szybko minął. Zadowalasz się tym, co do tej pory udało ci się osiągnąć. Niestety nie osiągnąłeś głównego celu swojej misji. Zrezygnowany wracasz do Spelunki. Może dadzą tobie nagrodę za to co udało ci się zdobyć?', 'Tekst', '100', '', '', '', '', ''),
+(13, 'thief115finishgood', 'Jedna chwila nieuwagi kupca oraz jego obstawy i pękata sakiewka zmieniła właściciela. Natychmiast odchodzisz spokojnie z miejsca zdarzenia. Przez pewien czas na wszelki wypadek kluczysz jeszcze ulicami miasta. Kiedy zyskujesz pewność, że nikt ciebie nie śledzi, kierujesz się wprost do Spelunki obliczając w myślach ile to zarobisz za tę robotę.', 'Tekst', '100', '', '', '', '', ''),
+(14, 'thief140start', 'Zbierasz swój ekwipunek i ruszasz we wskazane miejsce. Na ulicach miasta, jak co dzień, widać mnóstwo osób. Co jakiś czas przejeżdża ulicą obok ciebie wóz wyładowany towarami. Czasami, przyglądając się uważnie, dostrzegasz znajome twarze z gildii. Po paru chwilach dochodzisz do niewielkiej posiadłości na skraju miasta. Zaczynasz zastanawiać się co dalej.', 'Rozejrzyj się po okolicy,thief140look;Przejdź się kawałek,thief140walk', '50;50', 'Strażnik,A,Strażnik miejski patroluje tutaj okolicę.;Mieszczanin,T,Jakiś mieszczanin przechodzi obok ciebie.,Okradnij mieszkańca,thief140steal;Ochroniarz,A,Ochroniarz szlachcica stoi niedaleko.;Szlachcic,Q,Interesujący ciebie szlachcic wychodzi ze swojej posiadłości.,Okradnij szlachcica,thief140qsteal;', '40;20;40;10', '', '', ''),
+(15, 'thief140look', 'Starając nie zwracać na siebie uwagi, uważnie rozglądasz się po okolicy w poszukiwaniu swojego szlachcica. Obchodzisz kawałek rezydencję, poszukując dobrej drogi ucieczki w przypadku powodzenia zadania. Co jakiś czas mijają ciebie przechodnie.', 'Rozejrzyj się po okolicy,thief140look;Przejdź się kawałek,thief140walk', '30;80', 'Strażnik,A,Strażnik miejski patroluje tutaj okolicę.;Mieszczanin,T,Jakiś mieszczanin przechodzi obok ciebie.,Okradnij mieszkańca,thief140steal;Ochroniarz,A,Ochroniarz szlachcica stoi niedaleko.;Szlachcic,Q,Interesujący ciebie szlachcic wychodzi ze swojej posiadłości.,Okradnij szlachcica,thief140qsteal;', '40;20;50;15', '', '', ''),
+(16, 'thief140walk', 'Odchodzisz kawałek ulicą od rezydencji, uważnie wypatrując interesującej ciebie osoby, jednocześnie starasz się nie zwracać na siebie uwagi, szczególnie wśród ochrony rezydencji. Zastanawiasz się gdzie też najlepiej byłoby zaczaić się na owego szlachcica.', 'Rozejrzyj się po okolicy,thief140look;Przejdź się kawałek,thief140walk', '80;30', 'Strażnik,A,Strażnik miejski patroluje tutaj okolicę.;Mieszczanin,T,Jakiś mieszczanin przechodzi obok ciebie.,Okradnij mieszkańca,thief140steal;Ochroniarz,A,Ochroniarz szlachcica stoi niedaleko.;Szlachcic,Q,Interesujący ciebie szlachcic wychodzi ze swojej posiadłości.,Okradnij szlachcica,thief140qsteal;', '40;20;50;15', '', '', ''),
+(17, 'thief140steal', 'Postanawiasz umilić sobie oczekiwanie, zabierając jakąś przypadkową sakiewkę. Niezauważony podkradasz się ostrożnie do swojej ofiary. Będąc tuż przy niej, rozglądasz się uważnie na boki. Wykorzystując moment w którym nikt na ciebie nie patrzy, szybkim ruchem rozcinasz sakiewkę i wydobywasz z niej złoto. Następnie spokojnym krokiem oddalasz się kawałek, chowając złoto do kieszeni i ponownie zaczynasz wypatrywać swojego szlachcica.', 'Rozejrzyj się po okolicy,thief140look;Przejdź się kawałek,thief140walk', '50;50', 'Strażnik,A,Strażnik miejski patroluje tutaj okolicę.;Mieszczanin,T,Jakiś mieszczanin przechodzi obok ciebie.,Okradnij mieszkańca,thief140steal;Ochroniarz,A,Ochroniarz szlachcica stoi niedaleko.;Szlachcic,Q,Interesujący ciebie szlachcic wychodzi ze swojej posiadłości.,Okradnij szlachcica,thief140qsteal;', '50;10;50;15', '', '', ''),
+(18, 'thief140fail', 'Ostrożnie zbliżasz się do ofiary. Wszystkie twoje zmysły wyostrzone są do granic możliwości. Wyciągasz rękę wprost do sakiewki, gdy nagle, nie wiadomo skąd pojawia się odziana w kolczugę dłoń, która błyskawicznie chwyta ciebie za rękę i wykręca ją do tyłu. Zupełnie zszokowany widzisz wokół siebie patrol straży miejskiej. Przy pomocy okrzyków i kopniaków prowadzą ciebie wprost do miejskich lochów. Tym razem niestety zadania nie udało się wykonać.', 'Tekst', '100', '', '', '', '', ''),
+(19, 'thief140finish', 'Czas szybko minął. Zadowalasz się tym, co do tej pory udało ci się osiągnąć. Niestety nie osiągnąłeś głównego celu swojej misji. Zrezygnowany wracasz do Spelunki. Może dadzą tobie nagrodę za to co udało ci się zdobyć?', 'Tekst', '100', '', '', '', '', ''),
+(20, 'thief140finishgood', 'Bardzo ostrożnie podkradasz się do szlachcica. Na razie szczęście tobie dopisuje, nikt nie zauważył twojej obecności. Niemal wstrzymując oddech zabierasz się do pracy. Kilka szybkich ruchów rąk i zawartość sakiewki ofiary ląduje w twojej kieszeni. Spokojnym krokiem, starając się nie wzbudzić niczyich podejrzeń oddalasz się z miejsca przestępstwa. Przez pewien czas wędrujesz ulicami miasta, powoli uspokajając nerwy. Po paru chwilach zbierasz się w sobie i ruszasz z powrotem do Spelunki. Twoją głowę zaprzątają myśli o nagrodzie jaka czeka na ciebie na miejscu. Po pewnym czasie docierasz do celu i odbierasz należną tobie część łupu.', 'Tekst', '100', '', '', '', '', ''),
+(21, 'thief180start', 'Wiesz, że tym razem robota nie będzie prosta. Ów kupiec wprawdzie najczęściej przebywa w swoim sklepie, jednak akurat tam jest bardzo dobrze strzeżony. Mimo wszystko postanawiasz iż robotę zaczniesz od tego właśnie miejsca. Szybkim krokiem przemierzasz ulice miasta w kierunku rynku. Po jakimś czasie docierasz do celu i zaczynasz uważnie rozglądać się po okolicy w poszukiwaniu odpowiedniego miejsca na zasadzkę.', 'Rozejrzyj się po okolicy,thief180look;Przejdź się kawałek,thief180walk;Wejdź do sklepu,thief180shop', '80;100;30', 'Strażnik,A,Strażnik miejski patroluje tutaj okolicę.;Mieszczanin,T,Jakiś mieszczanin robi zakupy obok.,Okradnij mieszkańca,thief180steal;Ochroniarz,A,Ochroniarz kupca stoi niedaleko.;Kupiec,Q,Interesujący ciebie szlachcic wychodzi ze swojego sklepu.,Okradnij kupca,thief180qsteal;Ochroniarz,A,Ochroniarz kupca stoi niedaleko.;Mieszczanka,T,Jakaś kobieta rozgląda się po straganach.,Okradnij kobietę,thief180steal;', '40;30;40;10;40;30', '', '', ''),
+(22, 'thief180shop', 'Wchodzisz do średniej wielkości sklepu tuż przy placu targowym. Na ladach widzisz poukładane różnego rodzaju codzienne narzędzia, bele materiału i tym podobne rzeczy.', 'Wyjdź ze sklepu,thief180shop2', '100', 'Mieszczanin,T,Jakiś mieszczanin robi zakupy obok.,Okradnij mieszkańca,thief180steal;Ochroniarz,A,Ochroniarz kupca stoi niedaleko.;Kupiec,Q,Interesujący ciebie szlachcic stoi za ladą.,Okradnij kupca,thief180qsteal;Ochroniarz,A,Ochroniarz kupca stoi niedaleko.;Ochroniarz,A,Ochroniarz kupca stoi niedaleko.;Ochroniarz,A,Ochroniarz kupca stoi niedaleko.;', '20;60;90;60;60;60', '', '', ''),
+(23, 'thief180shop2', 'Przez moment udawałeś zainteresowanie towarem w sklepie, uważnie rozglądając się dookoła. Po pewnym czasie, wyszedłeś z powrotem na plac targowy. Zaczynasz zastanawiać się co dalej.', 'Rozejrzyj się po okolicy,thief180look;Przejdź się kawałek,thief180walk;Wejdź do sklepu,thief180shop', '80;100;30', 'Strażnik,A,Strażnik miejski patroluje tutaj okolicę.;Mieszczanin,T,Jakiś mieszczanin robi zakupy obok.,Okradnij mieszkańca,thief180steal;Ochroniarz,A,Ochroniarz kupca stoi niedaleko.;Kupiec,Q,Interesujący ciebie kupiec wychodzi ze swojego sklepu.,Okradnij kupca,thief180qsteal;Ochroniarz,A,Ochroniarz kupca stoi niedaleko.;Mieszczanka,T,Jakaś kobieta rozgląda się po straganach.,Okradnij kobietę,thief180steal;', '40;30;40;10;40;30', '', '', ''),
+(24, 'thief180look', 'Uważnie rozglądasz się dookoła sklepu szukając dobrego miejsca do wykonania zadania. Wokół ciebie przechodzą różne osoby, od czasu do czasu przejeżdża jakiś wóz z towarami. Po pewnym czasie znajdujesz spełniające twoje oczekiwania miejsce i zaczynasz rozglądać się w oczekiwaniu na interesującego ciebie kupca.', 'Rozejrzyj się po okolicy,thief180look;Przejdź się kawałek,thief180walk;Wejdź do sklepu,thief180shop', '30;80;60', 'Strażnik,A,Strażnik miejski patroluje tutaj okolicę.;Mieszczanin,T,Jakiś mieszczanin robi zakupy obok.,Okradnij mieszkańca,thief180steal;Ochroniarz,A,Ochroniarz kupca stoi niedaleko.;Kupiec,Q,Interesujący ciebie kupiec wychodzi ze swojego sklepu.,Okradnij kupca,thief180qsteal;Ochroniarz,A,Ochroniarz kupca stoi niedaleko.;Mieszczanka,T,Jakaś kobieta rozgląda się po straganach.,Okradnij kobietę,thief180steal;', '40;30;40;10;40;30;', '', '', ''),
+(25, 'thief180walk', 'Przechadzasz się po okolicy czekając aż cel twojego zadania wyjdzie ze swojego sklepu. Wokół ciebie chodzi wielu przedstawicieli różnych ras, co jakiś czas przejeżdża wyładowany towarami wóz. Mijasz stragany porozstawianie na całym placu. Wszędzie dookoła panuje hałas: pokrzykiwania sprzedawców, gwar rozmów. Po pewnym czasie wracasz z powrotem w okolice sklepu.', 'Rozejrzyj się po okolicy,thief180look;Przejdź się kawałek,thief180walk;Wejdź do sklepu,thief180shop', '50;30;80', 'Strażnik,A,Strażnik miejski patroluje tutaj okolicę.;Mieszczanin,T,Jakiś mieszczanin robi zakupy obok.,Okradnij mieszkańca,thief180steal;Ochroniarz,A,Ochroniarz kupca stoi niedaleko.;Kupiec,Q,Interesujący ciebie kupiec wychodzi ze swojego sklepu.,Okradnij kupca,thief180qsteal;Ochroniarz,A,Ochroniarz kupca stoi niedaleko.;Mieszczanka,T,Jakaś kobieta rozgląda się po straganach.,Okradnij kobietę,thief180steal;', '40;30;40;10;40;30;', '', '', ''),
+(26, 'thief180steal', 'Postanawiasz umilić sobie oczekiwanie, zabierając jakąś przypadkową sakiewkę. Odchodzisz kawałek od sklepu i zaczynasz wypatrywać jakiejś okazji. Niezauważony podkradasz się ostrożnie do swojej ofiary. Będąc tuż przy niej, rozglądasz się uważnie na boki. Wykorzystując moment w którym nikt na ciebie nie patrzy, szybkim ruchem rozcinasz sakiewkę i wydobywasz z niej złoto. Następnie spokojnym krokiem oddalasz się kawałek, chowając złoto do kieszeni i ponownie wracasz w okolicę interesującego ciebie sklepu.', 'Rozejrzyj się po okolicy,thief180look;Przejdź się kawałek,thief180walk;Wejdź do sklepu,thief180shop', '60;30;50', 'Strażnik,A,Strażnik miejski patroluje tutaj okolicę.;Mieszczanin,T,Jakiś mieszczanin robi zakupy obok.,Okradnij mieszkańca,thief180steal;Ochroniarz,A,Ochroniarz kupca stoi niedaleko.;Kupiec,Q,Interesujący ciebie kupiec wychodzi ze swojego sklepu.,Okradnij kupca,thief180qsteal;Ochroniarz,A,Ochroniarz kupca stoi niedaleko.;Mieszczanka,T,Jakaś kobieta rozgląda się po straganach.,Okradnij kobietę,thief180steal;', '40;20;40;10;40;20;', '', '', ''),
+(27, 'thief180fail', 'Ostrożnie zbliżasz się do ofiary. Wszystkie twoje zmysły wyostrzone są do granic możliwości. Wyciągasz rękę wprost do sakiewki, gdy nagle, nie wiadomo skąd pojawia się odziana w kolczugę dłoń, która błyskawicznie chwyta ciebie za rękę i wykręca ją do tyłu. Zupełnie zszokowany widzisz wokół siebie patrol straży miejskiej. Przy pomocy okrzyków i kopniaków prowadzą ciebie wprost do miejskich lochów. Tym razem niestety zadania nie udało się wykonać.', 'Tekst', '100', '', '', '', '', ''),
+(28, 'thief180finish', 'Czas szybko minął. Zadowalasz się tym, co do tej pory udało ci się osiągnąć. Niestety nie osiągnąłeś głównego celu swojej misji. Zrezygnowany wracasz do Spelunki. Może dadzą tobie nagrodę za to co udało ci się zdobyć?', 'Tekst', '100', '', '', '', '', ''),
+(29, 'thief180finishgood', 'Zręcznie, bez wzbudzania czyichkolwiek podejrzeń udaje ci się dostać w pobliże kupca. Wykorzystując odpowiedni moment, kiedy twój cel akurat był zajęty jakąś rozmową, szybko przystępujesz do działania. Parę wyćwiczonych ruchów rąk i złoto z sakiewki zmieniło właściciela. Spokojnym krokiem, starając się nie wzbudzić niczyich podejrzeń oddalasz się z miejsca przestępstwa. Przez pewien czas wędrujesz ulicami miasta, powoli uspokajając nerwy. Po paru chwilach zbierasz się w sobie i ruszasz z powrotem do Spelunki. Twoją głowę zaprzątają myśli o nagrodzie jaka czeka na ciebie na miejscu. Po pewnym czasie docierasz do celu i odbierasz należną tobie część łupu.', 'Tekst', '100', '', '', '', '', ''),
+(30, 'thief20start', 'Zbierasz swój ekwipunek i wychodzisz ze Spelunki. Kierujesz się pod wskazany adres. Ulice miasta jak zwykle wypełnione są przechodniami oraz przejeżdżającymi co jakiś czas wozami. Po krótkiej podróży docierasz do dzielnicy mieszkalnej miasta. Odnajdujesz wskazany adres i rozpoczynasz obserwację.', 'Rozejrzyj się po okolicy,thief20seek;Poczekaj chwilę,thief20wait;', '50;50', 'Strażnik,A,Strażnik miejski patroluje ulicę.;Mieszczanin,P,Jakiś mieszczanin przechodzi obok.,Okradnij mieszkańca,thief20steal;Mieszkaniec,T,Interesujący ciebie człowiek wychodzi z obserwowanej kamienicy.,Obserwuj mieszczanina,thief20follow;', '40;40;30', '', '', ''),
+(31, 'thief20wait', 'Postanawiasz pozostać na moment w miejscu i poczekać, być może uda ci się z tego miejsca wypatrzyć swój cel. Rozglądasz się uważnie na wszystkie strony, analizujesz otoczenie, zastanawiając się jednocześnie gdzie też interesująca ciebie osoba może się podziewać.', 'Rozejrzyj się po okolicy,thief20seek;Poczekaj jeszcze chwilę,thief20wait;', '80;20', 'Strażnik,A,Strażnik miejski patroluje ulicę.;Mieszczanin,P,Jakiś mieszczanin przechodzi obok.,Okradnij mieszkańca,thief20steal;Mieszkaniec,T,Interesujący ciebie człowiek podąża ulicą.,Obserwuj mieszczanina,thief20follow;', '40;35;35', '', '', ''),
+(32, 'thief20seek', 'Rozglądając się uważnie, chodzisz powoli po okolicy w poszukiwaniu interesującej ciebie osoby. Co chwila mijają ciebie przechodnie co raz ułatwia a raz utrudnia obserwację. Cały czas starasz nie zwracać na siebie uwagi innych osób.', 'Rozejrzyj się jeszcze po okolicy,thief20seek;Poczekaj chwilę,thief20wait;', '20;80', 'Strażnik,A,Strażnik miejski patroluje ulicę.;Mieszczanin,P,Jakiś mieszczanin przechodzi obok.,Okradnij mieszkańca,thief20steal;Mieszkaniec,T,Interesujący ciebie człowiek podąża ulicą.,Obserwuj mieszczanina,thief20follow;', '40;35;35', '', '', ''),
+(33, 'thief20follow', 'Bierzesz głęboki wdech i ruszasz za interesującą ciebie osobą. Starasz się nie iść zbyt szybko ani zbyt daleko od celu, ale jednocześnie próbujesz pozostać niezauważonym oraz nie rzucać się w oczy innym przechodniom. W pamięci uważnie notujesz wszystko co obserwowany przez ciebie mieszczanin robi po drodze oraz samą trasę.', 'Poczekaj chwilę,thief20wait;', '100', 'Strażnik,A,Strażnik miejski patroluje ulicę.;Mieszczanin,P,Jakiś mieszczanin przechodzi obok.,Okradnij mieszkańca,thief20steal;Mieszkaniec,T,Interesujący ciebie człowiek podąża ulicą.,Obserwuj dalej mieszczanina,thief20follow2;', '40;40;100', '', '', ''),
+(34, 'thief20follow2', 'Cały czas podążasz za celem swojego zadania. Czujnie rozglądasz się na wszystkie strony czy twoje działania nie wzbudzają jakichkolwiek podejrzeń. Obserwowana osoba prawdopodobnie jak do tej pory nie zauważyła twojej obecności. Cały czas notujesz w pamięci zachowanie swojego celu. Oby nagroda za tę robotę była warta tego łażenia.', 'Poczekaj chwilę,thief20wait;', '100', 'Strażnik,A,Strażnik miejski patroluje ulicę.;Mieszczanin,P,Jakiś mieszczanin przechodzi obok.,Okradnij mieszkańca,thief20steal;Mieszkaniec,T,Interesujący ciebie człowiek podąża ulicą.,Obserwuj dalej mieszczanina,thief20follow2;', '45;40;100', '', '', ''),
+(35, 'thief20steal', 'Ciągłe oczekiwanie na to aby coś się wydarzyło, zaczyna ciebie lekko nudzić. Postanawiasz dorobić nieco na boku. Akurat mijająca osoba ma zawieszony mieszek przy pasie. Kilka wyćwiczonych ruchów dłońmi i zawartość sakiewki zmienia właściciela. Natychmiast chowasz znalezione złoto do kieszeni. Wiesz że i z tego będziesz musiał rozliczyć się ze swoimi pracodawcami. Po przejściu kolejnych paru kroków zaczynasz ponownie wypatrywać interesującej ciebie osoby.', 'Rozejrzyj się po okolicy,thief20seek;Poczekaj chwilę,thief20wait;', '50;50', 'Strażnik,A,Strażnik miejski patroluje ulicę.;Mieszczanin,P,Jakiś mieszczanin przechodzi obok.,Okradnij mieszkańca,thief20steal;Mieszkaniec,T,Interesujący ciebie człowiek podąża ulicą.,Obserwuj mieszczanina,thief20follow;', '50;25;40', '', '', ''),
+(36, 'thief20finish', 'Nie wiesz dokładnie ile czasu zajęło tobie śledzenie owego mieszczanina. Wydaje ci się że minęło pół dnia na tym kręceniu się po mieście. Ale teraz mniej więcej znasz rozkład zajęć interesującej ciebie osoby. Zawracasz więc w kierunku Spelunki. Po drodze dokładnie sobie przypominasz wszystko co widziałeś do tej pory. Kiedy docierasz na miejsce, składasz kompletny raport. W zamian otrzymujesz gratulacje z wykonanej roboty oraz mieszek złota jako nagrodę.', 'Tekst', '100', '', '', '', '', ''),
+(37, 'thief20fail', 'Skupiwszy całą swoją uwagę, przystępujesz do działania. Ostrożnie i powoli zbliżasz się do swojej ofiary. Kiedy już wydaje ci się, że wszystko pójdzie zgodnie z planem, nagle na twoim ramieniu ląduje ciężka dłoń i szarpie ciebie do tyłu. Przestraszony odwracasz się do tyłu i widzisz patrol straży miejskiej. Sprawnie wykręcają tobie ręce do tyłu. Jeszcze kątem oka zauważasz znikającego gdzieś za rogiem mieszczanina, którego miałeś obserwować. Cicho klniesz pod nosem na swojego pecha. Tymczasem, przy pomocy okrzyków i kopniaków patrol prowadzi ciebie wprost do miejskich lochów. Tym razem niestety zadania nie udało się wykonać. ', 'Tekst', '100', '', '', '', '', ''),
+(38, 'thief220start', 'Przez chwilę wysłuchujesz jeszcze szczegółów oczekującego ciebie zadania. Dowiedziawszy się wszystkiego co potrzebujesz, bierzesz swój ekwipunek i wyruszasz pod podany magazyn. Ulice miasta jak zwykle zapełnione są przechodniami oraz przejeżdżającymi co jakiś czas wozami. Po pewnym czasie docierasz na miejsce. Tutaj już nie ma takich tłumów na ulicach jak wcześniej, dlatego ciężej jest pozostać niezauważonym. Przez chwilę rozglądasz się po okolicy a następnie rozpoczynasz obserwację interesującego ciebie budynku.', 'Rozejrzyj się po okolicy,thief220seek;Poczekaj chwilę,thief220wait;', '50;50', 'Strażnik,A,Strażnik miejski patroluje ulicę.;Mieszczanin,P,Jakiś mieszczanin przechodzi obok.,Okradnij mieszkańca,thief220steal;Kupiec,T,Interesujący ciebie człowiek podąża ulicą.,Obserwuj kupca,thief220follow;Ochroniarz,A,Ochrona magazynu stoi niedaleko;', '40;25;30;80;', '', '', ''),
+(39, 'thief220wait', 'Postanawiasz poczekać chwilę w miejscu. Wybierasz sobie jakiś zaułek z którego masz dobry widok na okolicę, jednocześnie samemu nie wzbudzając niczyich podejrzeń. Rozglądasz się uważnie na wszystkie strony, analizujesz otoczenie, zastanawiając się jednocześnie gdzie też interesująca ciebie osoba może się podziewać.', 'Rozejrzyj się po okolicy,thief220seek;Poczekaj jeszcze chwilę,thief220wait;', '80;10;', 'Strażnik,A,Strażnik miejski patroluje ulicę.;Mieszczanin,P,Jakiś mieszczanin przechodzi obok.,Okradnij mieszkańca,thief220steal;Kupiec,T,Interesujący ciebie człowiek podąża ulicą.,Obserwuj kupca,thief220follow;Ochroniarz,A,Ochroniarz kupiecki przechodzi obok.;', '40;35;35;45', '', '', ''),
+(40, 'thief220seek', 'Rozglądasz się po okolicy poszukując wzrokiem interesującego ciebie kupca. Dookoła panuje niewielki ruch co nieco ułatwia robotę. Cały czas starasz się nie zwracać na siebie uwagi mijających co chwila patroli straży miejskiej czy ochroniarzy kupców.', 'Rozejrzyj się jeszcze po okolicy,thief220seek;Poczekaj chwilę,thief220wait;', '20;80', 'Strażnik,A,Strażnik miejski patroluje ulicę.;Mieszczanin,P,Jakiś mieszczanin przechodzi obok.,Okradnij mieszkańca,thief220steal;Kupiec,T,Interesujący ciebie człowiek podąża ulicą.,Obserwuj kupca,thief220follow;Ochroniarz,A,Ochroniarz kupiecki przechodzi obok.;', '40;35;35;45;', '', '', ''),
+(41, 'thief220follow', 'Natychmiast ruszasz w drogę za kupcem. Starasz się utrzymywać dość dużą odległość od celu, aby nie wzbudzić jego podejrzeń. W tej okolicy nie ma zbyt wielu przechodniów, co nieco utrudnia twoje zdanie. Rozglądając się uważnie po okolicy, starasz się notować w pamięci wszystkie istotne szczegóły.', 'Poczekaj chwilę,thief220wait;', '100', 'Strażnik,A,Strażnik miejski patroluje ulicę.;Mieszczanin,P,Jakiś mieszczanin przechodzi obok.,Okradnij mieszkańca,thief220steal;Kupiec,T,Interesujący ciebie człowiek podąża ulicą.,Obserwuj kupca,thief220follow;Ochroniarz,A,Ochroniarz kupiecki idzie tuż za kupcem.;', '45;25;100;50;', '', '', ''),
+(42, 'thief220follow2', 'Cały czas podążasz za celem swojego zadania. Czujnie rozglądasz się na wszystkie strony czy twoje działania nie wzbudzają jakichkolwiek podejrzeń. Obserwowana osoba prawdopodobnie jak do tej pory nie zauważyła twojej obecności. Cały czas notujesz w pamięci zachowanie swojego celu. Oby nagroda za tę robotę była warta tego łażenia.', 'Poczekaj chwilę,thief220wait;', '100', 'Strażnik,A,Strażnik miejski patroluje ulicę.;Mieszczanin,P,Jakiś mieszczanin przechodzi obok.,Okradnij mieszkańca,thief220steal;Kupiec,T,Interesujący ciebie człowiek podąża ulicą.,Obserwuj kupca,thief220follow;Ochroniarz,A,Ochroniarz kupiecki idzie tuż za kupcem.;', '50;20;100;55;', '', '', ''),
+(43, 'thief220steal', 'Ciągłe oczekiwanie na to aby coś się wydarzyło, zaczyna ciebie lekko nudzić. Postanawiasz dorobić nieco na boku. Akurat mijająca osoba ma zawieszony mieszek przy pasie. Kilka wyćwiczonych ruchów dłońmi i zawartość sakiewki zmienia właściciela. Natychmiast chowasz znalezione złoto do kieszeni. Wiesz że i z tego będziesz musiał rozliczyć się ze swoimi pracodawcami. Po przejściu kolejnych paru kroków zaczynasz ponownie wypatrywać interesującej ciebie osoby.', 'Rozejrzyj się po okolicy,thief220seek;Poczekaj jeszcze chwilę,thief220wait;', '50;50', 'Strażnik,A,Strażnik miejski patroluje ulicę.;Mieszczanin,P,Jakiś mieszczanin przechodzi obok.,Okradnij mieszkańca,thief220steal;Kupiec,T,Interesujący ciebie człowiek podąża ulicą.,Obserwuj kupca,thief220follow;Ochroniarz,A,Ochroniarz kupiecki przechodzi obok.;', '45;25;45;50;', '', '', ''),
+(44, 'thief220finish', 'Nie wiesz dokładnie ile czasu zajęło tobie śledzenie owego kupca. Wydaje ci się że minęło pół dnia na tym kręceniu się po mieście. Ale teraz mniej więcej znasz rozkład zajęć interesującej ciebie osoby. Zawracasz więc w kierunku Spelunki. Po drodze dokładnie sobie przypominasz wszystko co widziałeś do tej pory. Kiedy docierasz na miejsce, składasz kompletny raport. W zamian otrzymujesz gratulacje z wykonanej roboty oraz mieszek złota jako nagrodę.', 'Tekst', '100', '', '', '', '', ''),
+(45, 'thief220fail', 'Skupiwszy całą swoją uwagę, przystępujesz do działania. Ostrożnie i powoli zbliżasz się do swojej ofiary. Kiedy już wydaje ci się, że wszystko pójdzie zgodnie z planem, nagle na twoim ramieniu ląduje ciężka dłoń i szarpie ciebie do tyłu. Przestraszony odwracasz się do tyłu i widzisz patrol straży miejskiej. Sprawnie wykręcają tobie ręce do tyłu. Jeszcze kątem oka zauważasz znikającego gdzieś za rogiem kupca, którego miałeś obserwować. Cicho klniesz pod nosem na swojego pecha. Tymczasem, przy pomocy okrzyków i kopniaków patrol prowadzi ciebie wprost do miejskich lochów. Tym razem niestety zadania nie udało się wykonać. ', 'Tekst', '100', '', '', '', '', ''),
+(46, 'thief260start', 'Po otrzymaniu zadania, zbierasz swój ekwipunek i wyruszasz w drogę. Podróżując ulicami miasta zaczynasz zastanawiać się nad szczegółami swojego zadania. Z początku wędrujesz wśród tłumu mieszkańców, jednak z biegiem czasu, kiedy docierasz na obrzeża miasta, przechodniów na ulicach jest znacznie mniej. Po dość długim spacerze, dochodzisz pod wskazaną rezydencję i zaczynasz obserwację otoczenia w poszukiwaniu interesującego ciebie szlachcica.', 'Rozejrzyj się po okolicy,thief260seek;Poczekaj chwilę,thief260wait;', '50;50', 'Strażnik,A,Strażnik miejski patroluje ulicę.;Mieszczanin,P,Jakiś mieszczanin przechodzi obok.,Okradnij mieszkańca,thief260steal;Szlachcic,T,Interesujący ciebie człowiek podąża ulicą.,Obserwuj szlachcica,thief260follow;Ochroniarz,A,Gwardzista szlachcica stoi przy bramie do posiadłości.;', '40;25;30;80;', '', '', ''),
+(47, 'thief260wait', 'Postanawiasz znaleźć jakieś lepsze miejsce do obserwacji okolicy. To wydaje ci się zbyt eksponowane. Po krótkich poszukiwaniach odnajdujesz nieco bardziej ukryte przed widokiem innych miejsce. Rozglądasz się uważnie na wszystkie strony, analizujesz otoczenie, zastanawiając się jednocześnie gdzie też interesująca ciebie osoba może się podziewać.', 'Rozejrzyj się po okolicy,thief260seek;Poczekaj jeszcze chwilę,thief260wait;', '80;10;', 'Strażnik,A,Strażnik miejski patroluje ulicę.;Mieszczanin,P,Jakiś mieszczanin przechodzi obok.,Okradnij mieszkańca,thief260steal;Szlachcic,T,Interesujący ciebie człowiek podąża ulicą.,Obserwuj szlachcica,thief260follow;Ochroniarz,A,Gwardzista szlachecki przechodzi ulicą.;', '40;35;30;45;', '', '', ''),
+(48, 'thief260seek', 'Przechadzasz się kawałek, pilnując by za bardzo nie rzucać się w oczy. Oglądasz sobie dokładnie posiadłość szlachcica i jednocześnie szukasz wzrokiem jej właściciela. Jak zwykle na tym etapie roboty, czas dłuży ci się niemiłosiernie.', 'Rozejrzyj się jeszcze po okolicy,thief260seek;Poczekaj chwilę,thief260wait;', '20;80', 'Strażnik,A,Strażnik miejski patroluje ulicę.;Mieszczanin,P,Jakiś mieszczanin przechodzi obok.,Okradnij mieszkańca,thief260steal;Szlachcic,T,Interesujący ciebie człowiek podąża ulicą.,Obserwuj szlachcica,thief260follow;Ochroniarz,A,Gwardzista szlachecki przechodzi ulicą.;', '40;35;35;45;', '', '', ''),
+(49, 'thief260follow', 'Natychmiast ruszasz w drogę za szlachcicem. Starasz się utrzymywać dość dużą odległość od celu, aby nie wzbudzić jego podejrzeń. W tej okolicy nie ma zbyt wielu przechodniów, co nieco utrudnia twoje zdanie. Rozglądając się uważnie po okolicy, starasz się notować w pamięci wszystkie istotne szczegóły.', 'Poczekaj chwilę,thief20wait;', '100', 'Strażnik,A,Strażnik miejski patroluje ulicę.;Mieszczanin,P,Jakiś mieszczanin przechodzi obok.,Okradnij mieszkańca,thief260steal;Szlachcic,T,Interesujący ciebie człowiek podąża ulicą.,Obserwuj szlachcica,thief260follow;Ochroniarz,A,Gwardzista szlachecki podąża za swym panem.;', '45;25;100;100;', '', '', ''),
+(50, 'thief260follow2', 'Cały czas podążasz za celem swojego zadania. Czujnie rozglądasz się na wszystkie strony czy twoje działania nie wzbudzają jakichkolwiek podejrzeń. Obserwowana osoba prawdopodobnie jak do tej pory nie zauważyła twojej obecności. Co chwila przystaje w asyście swojej eskorty przed jakimś sklepem. Czasami nawet wchodzi do środka. Cały czas notujesz w pamięci zachowanie swojego celu. Oby nagroda za tę robotę była warta tego łażenia.', 'Poczekaj chwilę,thief20wait;', '100', 'Strażnik,A,Strażnik miejski patroluje ulicę.;Mieszczanin,P,Jakiś mieszczanin przechodzi obok.,Okradnij mieszkańca,thief260steal;Szlachcic,T,Interesujący ciebie człowiek podąża ulicą.,Obserwuj szlachcica,thief260follow;Ochroniarz,A,Gwardzista szlachecki podąża za swym panem.;Służący,P,Służący towarzyszy szlachcicowi.;', '45;25;100;100;100;', '', '', ''),
+(51, 'thief260steal', 'Ciągłe oczekiwanie na to aby coś się wydarzyło, zaczyna ciebie lekko nudzić. Postanawiasz dorobić nieco na boku. Akurat mijająca osoba ma zawieszony mieszek przy pasie. Kilka wyćwiczonych ruchów dłońmi i zawartość sakiewki zmienia właściciela. Natychmiast chowasz znalezione złoto do kieszeni. Wiesz że i z tego będziesz musiał rozliczyć się ze swoimi pracodawcami. Po przejściu kolejnych paru kroków zaczynasz ponownie wypatrywać interesującej ciebie osoby.', 'Rozejrzyj się po okolicy,thief260seek;Poczekaj jeszcze chwilę,thief260wait;', '50;50', 'Strażnik,A,Strażnik miejski patroluje ulicę.;Mieszczanin,P,Jakiś mieszczanin przechodzi obok.,Okradnij mieszkańca,thief260steal;Szlachcic,T,Interesujący ciebie człowiek podąża ulicą.,Obserwuj szlachcica,thief260follow;Ochroniarz,A,Gwardzista szlachecki przechodzi ulicą.;', '45;25;40;50;', '', '', ''),
+(52, 'thief260fail', 'Skupiwszy całą swoją uwagę, przystępujesz do działania. Ostrożnie i powoli zbliżasz się do swojej ofiary. Kiedy już wydaje ci się, że wszystko pójdzie zgodnie z planem, nagle na twoim ramieniu ląduje ciężka dłoń i szarpie ciebie do tyłu. Przestraszony odwracasz się do tyłu i widzisz patrol straży miejskiej. Sprawnie wykręcają tobie ręce do tyłu. Jeszcze kątem oka zauważasz znikającego gdzieś za rogiem kupca, którego miałeś obserwować. Cicho klniesz pod nosem na swojego pecha. Tymczasem, przy pomocy okrzyków i kopniaków patrol prowadzi ciebie wprost do miejskich lochów. Tym razem niestety zadania nie udało się wykonać. ', 'Tekst', '100', '', '', '', '', ''),
+(53, 'thief260finish', 'Nie wiesz dokładnie ile czasu zajęło tobie śledzenie owego szlachcica. Wydaje ci się że minęło pół dnia na tym kręceniu się po mieście. Ale teraz mniej więcej znasz rozkład zajęć interesującej ciebie osoby. Zawracasz więc w kierunku Spelunki. Po drodze dokładnie sobie przypominasz wszystko co widziałeś do tej pory. Kiedy docierasz na miejsce, składasz kompletny raport. W zamian otrzymujesz gratulacje z wykonanej roboty oraz mieszek złota jako nagrodę.', 'Tekst', '100', '', '', '', '', ''),
+(54, 'thief290start', 'Uważnie wysłuchujesz szczegółów zadania. Wiesz że tym razem może być trudno. Skoro to jeden ze złodziei, to znaczy że zna się i na szpiegowaniu innych. Po odprawie, zbierasz swój ekwipunek i wyruszasz w kierunku obszaru na którym zwykł bywać twój cel. Ulice miasta jak zwykle zatłoczone są przechodniami oraz wozami. Po pewnym czasie docierasz do celu podróży i rozpoczynasz poszukiwania osoby, którą masz obserwować.', 'Rozejrzyj się po okolicy,thief290seek;Poczekaj chwilę,thief290wait;', '50;50', 'Strażnik,A,Strażnik miejski patroluje ulicę.;Mieszczanin,P,Jakiś mieszczanin przechodzi obok.,Okradnij mieszkańca,thief290steal;Szlachcic,T,Interesujący ciebie człowiek podąża ulicą.,Obserwuj złodzieja,thief290follow;Strażnik,A,Strażnik miejski patroluje ulicę.;', '50;25;35;50;', '', '', ''),
+(55, 'thief290seek', 'Postanawiasz nieco rozejrzeć się po okolicy. Starając się nie rzucać komukolwiek w oczy, chodzisz kawałek ulicami tej dzielnicy, poszukując wzrokiem celu swojego zadania. Duży ruch panujący wokół ciebie z jednej strony ułatwia ukrycie się, z drugiej utrudnia odnalezienie interesującego ciebie osobnika.', 'Rozejrzyj się jeszcze po okolicy,thief290seek;Poczekaj chwilę;thief290wait;', '20;80', 'Strażnik,A,Strażnik miejski patroluje ulicę.;Mieszczanin,P,Jakiś mieszczanin przechodzi obok.,Okradnij mieszkańca,thief290steal;Szlachcic,T,Interesujący ciebie człowiek podąża ulicą.,Obserwuj złodzieja,thief290follow;Strażnik,A,Strażnik miejski patroluje ulicę.;', '50;25;45;50;', '', '', ''),
+(56, 'thief290wait', 'Zaczajasz się w jednej z bocznych uliczek pomiędzy budynkami i rozpoczynasz obserwację okolicy. Tłum na ulicy oraz gwar dochodzący z niej doskonale maskują twoją obecność, ale również nieco utrudniają obserwację. Rozglądasz się na wszystkie strony, szukając wzrokiem interesującej ciebie osoby.', 'Rozejrzyj się po okolicy;thief290seek;Poczekaj jeszcze chwilę;thief290wait;', '80;10;', 'Strażnik,A,Strażnik miejski patroluje ulicę.;Mieszczanin,P,Jakiś mieszczanin przechodzi obok.,Okradnij mieszkańca,thief290steal;Szlachcic,T,Interesujący ciebie człowiek podąża ulicą.,Obserwuj złodzieja,thief290follow;Strażnik,A,Strażnik miejski patroluje ulicę.;', '50;25;45;50;', '', '', ''),
+(57, 'thief290steal', 'Ciągłe oczekiwanie na to aby coś się wydarzyło, zaczyna ciebie lekko nudzić. Postanawiasz dorobić nieco na boku. Akurat mijająca osoba ma zawieszony mieszek przy pasie. Kilka wyćwiczonych ruchów dłońmi i zawartość sakiewki zmienia właściciela. Natychmiast chowasz znalezione złoto do kieszeni. Wiesz że i z tego będziesz musiał rozliczyć się ze swoimi pracodawcami. Po przejściu kolejnych paru kroków zaczynasz ponownie wypatrywać interesującej ciebie osoby.', 'Rozejrzyj się po okolicy,thief290seek;Poczekaj chwilę,thief290wait;', '50;50', 'Strażnik,A,Strażnik miejski patroluje ulicę.;Mieszczanin,P,Jakiś mieszczanin przechodzi obok.,Okradnij mieszkańca,thief290steal;Szlachcic,T,Interesujący ciebie człowiek podąża ulicą.,Obserwuj złodzieja,thief290follow;Strażnik,A,Strażnik miejski patroluje ulicę.;', '50;25;35;50;', '', '', ''),
+(58, 'thief290follow', 'Natychmiast ruszasz za swoim celem. Starasz się nie iść zbyt blisko, tak aby nie zauważył ciebie. Ów osobnik cały czas nerwowo rozgląda się na boki, jakby podejrzewał że jest obserwowany. Idzie szybkim krokiem, widać że stara się kluczyć ulicami miasta. Pilnowanie go sprawia tobie całkiem spore problemy.', 'Poczekaj chwilę,thief290wait;', '100', 'Strażnik,A,Strażnik miejski patroluje ulicę.;Mieszczanin,P,Jakiś mieszczanin przechodzi obok.,Okradnij mieszkańca,thief290steal;Szlachcic,T,Interesujący ciebie człowiek podąża ulicą.,Obserwuj złodzieja,thief290follow;Strażnik,A,Strażnik miejski patroluje ulicę.;', '50;25;95;50;', '', '', ''),
+(59, 'thief290follow2', 'Widzisz już wyraźnie, że twój cel jest bardzo nieufny. Jesteś pewien że już raz czy dwa razy przechodziłeś obok tego samego budynku. Obserwowana osoba co jakiś czas przystaje w miejscu, rozgląda się na boki a następnie rusza dalej. Widać, że doskonale radzi sobie w tej okolicy. Jednak mimo wszystko wydaje ci się, że chyba wiesz dokąd zmierza.', 'Poczekaj chwilę,thief290wait;Wyprzedź złodzieja;thief290follow3;', '100;25', 'Strażnik,A,Strażnik miejski patroluje ulicę.;Mieszczanin,P,Jakiś mieszczanin przechodzi obok.,Okradnij mieszkańca,thief290steal;Szlachcic,T,Interesujący ciebie człowiek podąża ulicą.,Obserwuj złodzieja,thief290follow2;Strażnik,A,Strażnik miejski patroluje ulicę.;', '50;25;95;50;', '', '', ''),
+(60, 'thief290follow3', 'Bocznymi uliczkami, docierasz do miejsca, do którego twoim zdaniem zdąża obserwowana przez ciebie osoba. Szybko wyszukujesz sobie jakąś kryjówkę z której będziesz mógł obserwować całą okolicę. Po pewnym czasie, zgodnie z twoimi przypuszczeniami pojawia się ten, którego śledziłeś. Mniej więcej w tym samym momencie z innej uliczki wychodzi jakaś postać. Znajdujesz się na tyle blisko, że wyraźnie słyszysz o czym rozmawiają: twój cel sprzedaje informacje o tobie i twoich kompanach.', 'Poczekaj chwilę;thief290wait;', '100', 'sobnik,P,Niezidentyfikowany osobnik stoi niedaleko ciebie;Złodziej,Q,Interesujący ciebie człowiek rozmawia z kimś,Słuchaj uważnie rozmowy,thief290qfollow;', '100;100', '', '', ''),
+(61, 'thief290finishgood', 'Tego co zobaczyłeś, zupełnie się nie spodziewałeś. Jak mogło do tego dojść? Ale to już nie twój problem. Ty wykonałeś swoje zadanie. Zawracasz więc w kierunku Spelunki. Po drodze dokładnie sobie przypominasz wszystko co widziałeś do tej pory. Kiedy docierasz na miejsce, składasz kompletny raport. W zamian otrzymujesz mieszek złota jako nagrodę.', 'Tekst', '100', '', '', '', '', ''),
+(62, 'thief290finish', 'Nie wiesz dokładnie ile czasu zajęło tobie śledzenie owego osobnika. Wydaje ci się że minęło pół dnia na tym kręceniu się po mieście. Ale teraz mniej więcej znasz rozkład zajęć interesującej ciebie osoby. Zawracasz więc w kierunku Spelunki. Po drodze dokładnie sobie przypominasz wszystko co widziałeś do tej pory. Nie wydaje ci się, aby robił cokolwiek podejrzanego po drodze. Kiedy docierasz na miejsce, składasz kompletny raport. W zamian otrzymujesz gratulacje z wykonanej roboty oraz mieszek złota jako nagrodę.', 'Tekst', '100', '', '', '', '', ''),
+(63, 'thief290fail', 'Skupiwszy całą swoją uwagę, przystępujesz do działania. Ostrożnie i powoli zbliżasz się do swojej ofiary. Kiedy już wydaje ci się, że wszystko pójdzie zgodnie z planem, nagle na twoim ramieniu ląduje ciężka dłoń i szarpie ciebie do tyłu. Przestraszony odwracasz się do tyłu i widzisz patrol straży miejskiej. Sprawnie wykręcają tobie ręce do tyłu. Jeszcze kątem oka zauważasz znikającego gdzieś za rogiem osobnika, którego miałeś obserwować. Cicho klniesz pod nosem na swojego pecha. Tymczasem, przy pomocy okrzyków i kopniaków patrol prowadzi ciebie wprost do miejskich lochów. Tym razem niestety zadania nie udało się wykonać. ', 'Tekst', '100', '', '', '', '', ''),
+(64, 'thief2120start', 'Po wysłuchaniu szczegółów zadania, jesteś trochę zdziwiony. Nie dość że dostałeś bardzo mało informacji na temat tego, kogo masz śledzić, to jeszcze na dobrą sprawę, nie wiadomo do końca gdzie go znaleźć. Klnąc lekko pod nosem na myśl o czekającej ciebie wycieczce przez całe miasto, zabierasz swój ekwipunek i wychodzisz ze spelunki. Stwierdzasz, że równie dobrze możesz szukać wiatru w polu.', 'Rozejrzyj się po okolicy,thief2120seek;', '100', 'Strażnik,P,Ochroniarz Spelunki pilnuje wejścia do niej;', '100', '', '', ''),
+(65, 'thief2120seek', 'Poruszasz się ostrożnie ulicami miasta, cały czas uważnie wypatrując interesującej ciebie osoby. W okolicy panuje dość duży ruch co ułatwia tobie ukrywanie się, ale niestety, utrudnia obserwację. Dobrze, że chociaż nie pada.', 'Rozejrzyj się jeszcze po okolicy,thief2120seek;Poczekaj chwilę,thief2120wait;', '50;80;', 'Strażnik,A,Strażnik miejski patroluje ulicę.;Mieszczanin,A,Jakiś mieszczanin przechodzi obok.,Okradnij mieszkańca,thief2120steal;Szlachcic,T,Interesujący ciebie człowiek podąża ulicą.,Obserwuj cel zadania,thief2120follow;Strażnik,A,Strażnik miejski patroluje ulicę.;', '50;25;45;50;', '', '', ''),
+(66, 'thief2120wait', 'Postanawiasz chwilę odpocząć w pobliskim zaułku. Stajesz sobie niedaleko wejścia i obserwujesz okolicę, w nadziei że uda Ci się dostrzec tego, którego szukasz. Ruch na ulicy sprawia, że jesteś prawie niewidoczny ale też jednocześnie utrudnia znalezienie interesującej ciebie osoby.', 'Rozejrzyj się po okolicy;thief2120seek;Poczekaj jeszcze chwilę,thief2120wait;', '80;40;', 'Strażnik,A,Strażnik miejski patroluje ulicę.;Mieszczanin,A,Jakiś mieszczanin przechodzi obok.,Okradnij mieszkańca,thief2120steal;Szlachcic,T,Interesujący ciebie człowiek podąża ulicą.,Obserwuj cel zadania,thief2120follow;Strażnik,A,Strażnik miejski patroluje ulicę.;', '50;20;40;50;', '', '', ''),
+(67, 'thief2120steal', 'Ciągłe oczekiwanie na to aby coś się wydarzyło, zaczyna ciebie lekko nudzić. Postanawiasz dorobić nieco na boku. Akurat mijająca osoba ma zawieszony mieszek przy pasie. Kilka wyćwiczonych ruchów dłońmi i zawartość sakiewki zmienia właściciela. Natychmiast chowasz znalezione złoto do kieszeni. Wiesz że i z tego będziesz musiał rozliczyć się ze swoimi pracodawcami. Po przejściu kolejnych paru kroków zaczynasz ponownie wypatrywać interesującej ciebie osoby.', 'Rozejrzyj się po okolicy,thief2120seek;Poczekaj chwilę,thief2120wait;', '50;50', 'Strażnik,A,Strażnik miejski patroluje ulicę.;Mieszczanin,P,Jakiś mieszczanin przechodzi obok.,Okradnij mieszkańca,thief2120steal;Szlachcic,T,Interesujący ciebie człowiek podąża ulicą.,Obserwuj cel zadania,thief2120follow;Strażnik,A,Strażnik miejski patroluje ulicę.;Mieszczanin,A,Jakiś mieszczanin przechodzi obok.;', '50;25;35;50;100;', '', '', ''),
+(68, 'thief2120follow', 'Ostrożnie, aby nie zostać zauważonym, ruszasz za celem swojego zadania. Na razie wygląda na to, że nie podejrzewa nawet iż ktoś go śledzi. Idzie spokojnym krokiem przed siebie, co jakiś czas zatrzymując się przed jakąś wystawą sklepową aby ją obejrzeć. Tłum przechodniów wokoło, pomaga tobie prowadzić obserwację pozostając niezauważonym.', 'Poczekaj chwilę,thief2120wait;', '100', 'Strażnik,A,Strażnik miejski patroluje ulicę.;Mieszczanin,P,Jakiś mieszczanin przechodzi obok.,Okradnij mieszkańca,thief2120steal;Szlachcic,T,Interesujący ciebie człowiek podąża ulicą.,Obserwuj cel zadania,thief2120follow2;Strażnik,A,Strażnik miejski patroluje ulicę.;Mieszczanin,A,Jakiś mieszczanin przechodzi obok.;', '50;25;35;100;100;', '', '', ''),
+(69, 'thief2120follow2', 'Obserwowana przez ciebie osoba spokojnie podąża swoją drogą. Nie masz pewności czy nie jest to czasem jakaś gra z jego strony. Cały czas idziecie przez miasto. Na ulicach jak co dzień słychać gwar rozmów przechodniów, od czasu do czasu przejeżdża obok ciebie wóz. Dopiero po paru chwilach obserwacji zdajesz sobie sprawę, iż twój cel dyskretnie kluczy, jakby chciał zgubić pościg za sobą.', 'Poczekaj chwilę,thief2120wait;Podążaj bocznymi uliczkami za celem,thief2120follow3;', '100;10;', 'Strażnik,A,Strażnik miejski patroluje ulicę.;Mieszczanin,P,Jakiś mieszczanin przechodzi obok.,Okradnij mieszkańca,thief2120steal;Szlachcic,T,Interesujący ciebie człowiek podąża ulicą.,Obserwuj cel zadania,thief2120follow2;Strażnik,A,Strażnik miejski patroluje ulicę.;Mieszczanin,A,Jakiś mieszczanin przechodzi obok.;', '50;25;35;80;100;', '', '', '');
+INSERT INTO `missions` (`id`, `name`, `text`, `exits`, `chances`, `mobs`, `chances2`, `items`, `chances3`, `moreinfo`) VALUES
+(70, 'thief2120follow3', 'Postanawiasz nieco zaryzykować. Zamiast iść bezpośrednio za obserwowanym osobnikiem, zaczynasz przemykać się bocznymi uliczkami i alejkami. Jak na razie twoja taktyka zdaje rezultaty. W pewnym momencie, kiedy miałeś wskoczyć w kolejną alejkę, zauważyłeś, że obserwowany osobnik również w nią skręcił. Na szczęście nie zdążył ciebie zauważyć. Dostrzegasz jak ów człowiek wchodzi do jednego z zaułków. Ostrożnie podkradasz się bliżej i zerkasz do środka. Widzisz jak stoi on tuż przed jedną ze ścian. Na niej znajduje się płonący jasnoniebieskim ogniem krąg. Słyszysz jak ów osobnik szepcze coś niezrozumiałego w kierunku kręgu. W pewnym momencie z kręgu dobiega jakiś dudniący głos, osobnik kiwa głową i zaczyna zacierać powoli ślady. Natychmiast cofasz się parę kroków w bramę jednej z kamienic. Po chwili widzisz, jak ów osobnik wychodzi z zaułka i wraca na główną ulicę miasta tą samą drogą, którą przyszedł.', 'Poczekaj chwilę,thief2120wait;', '100', 'Szlachcic,Q,Interesujący ciebie człowiek podąża ulicą.,Wracaj do Spelunki,thief2120qfollow;', '100', '', '', ''),
+(71, 'thief2120finishgood', 'Tego co zobaczyłeś, zupełnie się nie spodziewałeś. Zaczynasz domyślać się, kim była obserwowana przez ciebie osoba i kto tak naprawdę zlecił to zadanie. Na szczęście,  ty je wykonałeś. Zawracasz więc w kierunku Spelunki. Po drodze dokładnie sobie przypominasz wszystko co widziałeś do tej pory. Kiedy docierasz na miejsce, składasz kompletny raport. W zamian otrzymujesz mieszek złota jako nagrodę.', 'Tekst', '100', '', '', '', '', ''),
+(72, 'thief2120finish', 'Nie wiesz dokładnie ile czasu zajęło tobie śledzenie owego osobnika. Wydaje ci się że minęło pół dnia na tym kręceniu się po mieście. Ale teraz mniej więcej znasz rozkład zajęć interesującej ciebie osoby. Zawracasz więc w kierunku Spelunki. Po drodze dokładnie sobie przypominasz wszystko co widziałeś do tej pory. Nie wydaje ci się, aby robił cokolwiek podejrzanego po drodze. Kiedy docierasz na miejsce, składasz kompletny raport. W zamian otrzymujesz gratulacje z wykonanej roboty oraz mieszek złota jako nagrodę.', 'Tekst', '100', '', '', '', '', ''),
+(73, 'thief2120fail', 'Skupiwszy całą swoją uwagę, przystępujesz do działania. Ostrożnie i powoli zbliżasz się do swojej ofiary. Kiedy już wydaje ci się, że wszystko pójdzie zgodnie z planem, nagle na twoim ramieniu ląduje ciężka dłoń i szarpie ciebie do tyłu. Przestraszony odwracasz się do tyłu i widzisz patrol straży miejskiej. Sprawnie wykręcają tobie ręce do tyłu. Jeszcze kątem oka zauważasz znikającego gdzieś za rogiem osobnika, którego miałeś obserwować. Cicho klniesz pod nosem na swojego pecha. Tymczasem, przy pomocy okrzyków i kopniaków patrol prowadzi ciebie wprost do miejskich lochów. Tym razem niestety zadania nie udało się wykonać. ', 'Tekst', '100', '', '', '', '', ''),
+(74, 'thief35start', 'Pozostawiasz tym razem część swojego ekwipunku na miejscu. Wiesz, że akurat w tym zadaniu, będzie potrzebna dość duża swoboda ruchów. Następnie opuszczasz wraz ze swoim partnerem Spelunkę i idziecie na swoje tereny łowieckie. Cały czas starasz trzymać się za nim kawałek i obserwujesz okolicę. Na razie głównie dla zabawy. Kiedy docieracie na miejsce, natychmiast poważniejesz i zaczynasz pilnie wypatrywać otoczenie w poszukiwaniu kłopotów.', 'Przejdź się kawałek,thief35walk;Zostań na miejscu,thief35wait;', '50;50', 'Strażnik,T,Strażnik miejski patroluje okolicę.,Odciągnij strażnika,thief35fool,Daj znak złodziejowi,thief35sign;Mieszkaniec,P,Jakiś mieszczanin przechodzi obok.,Okradnij mieszczanina,thief35steal,Strażnik,A,Strażnik miejski patroluje okolicę.;', '30;45;30;', '', '', ''),
+(75, 'thief35wait', 'Wybierasz sobie dobre, nie rzucające się w oczy miejsce do obserwacji okolicy. Tłum przechodniów na ulicy pomaga tobie pozostać niezauważonym. Uważnie rozglądasz się na boki w poszukiwaniu patroli straży miejskiej i jednocześnie patrzysz co porabia twój partner.', 'Przejdź się kawałek,thief35walk;Zostań jeszcze chwilę na miejscu,thief35wait;', '50;50', 'Strażnik,T,Strażnik miejski patroluje okolicę.,Odciągnij strażnika,thief35fool,Daj znak złodziejowi,thief35sign;Mieszkaniec,P,Jakiś mieszczanin przechodzi obok.,Okradnij mieszczanina,thief35steal;Strażnik,A,Strażnik miejski patroluje okolicę.;', '35;45;35;', '', '', ''),
+(76, 'thief35walk', 'Przechadzasz się po okolicy, rozglądając się na wszystkie strony, gotowy do działania, gdyby w okolicy pojawił się jakiś patrol straży miejskiej. Co jakiś czas mijasz stragany ulicznych kupców, przechodniów spieszących gdzieś przed siebie czy wozy przejeżdżające środkiem ulicy. Cały czas starasz się obserwować również, co też Twój partner porabia.', 'Przejdź się jeszcze kawałek,thief35walk;Zostań na miejscu,thief35wait;', '50;50', 'Strażnik,T,Strażnik miejski patroluje okolicę.,Odciągnij strażnika,thief35fool,Daj znak złodziejowi,thief35sign;Mieszkaniec,P,Jakiś mieszczanin przechodzi obok.,Okradnij mieszczanina,thief35steal,Strażnik,A,Strażnik miejski patroluje okolicę.;', '40;50;40', '', '', ''),
+(77, 'thief35steal', 'Postanawiasz nieco zwiększyć pulę łupów jaka będzie za tę robotę. Wykorzystujesz chwilę nieuwagi stojącego obok ciebie mieszkańca. Dyskretnie podchodzisz blisko niego i kilkoma pewnymi ruchami rozcinasz jego sakiewkę, wysypując sobie złoto na rękę. Szybko chowasz zdobycz do kieszeni i starając się nie zwracać na siebie uwagi, odchodzisz kawałek. Chwilę uspokajasz swoje nerwy by następnie powrócić do wykonywania zadania.', 'Przejdź się kawałek,thief35walk;Zostań na miejscu,thief35wait;', '50;50', 'Strażnik,T,Strażnik miejski patroluje okolicę.,Odciągnij strażnika,thief35fool,Daj znak złodziejowi,thief35sign;Mieszkaniec,P,Jakiś mieszczanin przechodzi obok.,Okradnij mieszczanina,thief35steal,Strażnik,A,Strażnik miejski patroluje okolicę.;', '40;30;40;', '', '', ''),
+(78, 'thief35fool', 'Ze złośliwym uśmieszkiem, bierzesz niewielki kamień do ręki i rzucasz w jednego ze strażników. Gdy ten wściekły odwraca się w twoją stronę, dodatkowo posyłasz w jego stronę kilka „barwnych” określeń. Tego było dla niego za wiele, natychmiast rusza w twoim kierunku. Oczywiście na to właśnie czekałeś. Odwracasz się i zaczynasz uciekać. Zręcznie przeciskasz się pomiędzy przechodniami. W pewnym momencie uskakujesz w jakąś bramę kamienicy i patrzysz jak strażnik przebiega dalej. Po chwili odpoczynku, szybkim krokiem wracasz do swojego partnera. Ten na twój widok tylko mruga porozumiewawczo okiem.', 'Przejdź się kawałek,thief35walk;Zostań na miejscu,thief35wait;', '50;50', 'Strażnik,T,Strażnik miejski patroluje okolicę.,Odciągnij strażnika,thief35fool,Daj znak złodziejowi,thief35sign;Mieszkaniec,P,Jakiś mieszczanin przechodzi obok.,Okradnij mieszczanina,thief35steal,Strażnik,A,Strażnik miejski patroluje okolicę.;', '20;30;20', '', '', ''),
+(79, 'thief35sign', 'Dyskretnie zwracasz na siebie uwagę swojego partnera i dajesz mu znak o nadchodzącym niebezpieczeństwie. Przez chwilę obaj udajecie przeciętnych mieszkańców miasta. Strażnik mija was obojętnie, nie zwracając jakiejkolwiek uwagi. Czekacie jeszcze chwilę, obaj uważnie obserwując okolicę w poszukiwaniu problemów.', 'Przejdź się kawałek,thief35walk;Zostań na miejscu,thief35wait;', '50;50', 'Strażnik,T,Strażnik miejski patroluje okolicę.,Odciągnij strażnika,thief35fool,Daj znak złodziejowi,thief35sign;Mieszkaniec,P,Jakiś mieszczanin przechodzi obok.,Okradnij mieszczanina,thief35steal,Strażnik,A,Strażnik miejski patroluje okolicę.;', '20;50;20', '', '', ''),
+(80, 'thief35finish', 'Czas twojego zadania powoli dobiega końca. Twój partner też o tym wie, dlatego zaczyna zmierzać w kierunku Spelunki. Podążasz cały czas za nim, uważnie obserwując okolicę. Na szczęście podróż przebiega spokojnie. Po krótkim spacerze docieracie na miejsce. Teraz już tylko pozostało w miarę spokojnie podzielić się łupami.', 'Tekst', '100', '', '', '', '', ''),
+(81, 'thief35fail', 'Twoje umiejętności jak do tej pory, nie zdradziły ciebie. Pewnie wypełniasz swoje zadanie. Aż nazbyt pewnie. Chwila nieuwagi z twojej strony i nagle przewracasz się, pchnięty przez kogoś. Niemal natychmiast twoje ręce zostają związane. Kątem oka widzisz nad sobą patrol straży miejskiej. Gwałtownym ruchem, stawiają ciebie na nogi i odprowadzają w kierunku lochów. Tym razem niestety, nie udało się wykonać zadania.', 'Tekst', '100', '', '', '', '', ''),
+(82, 'thief310start', 'Dołączasz do grupy z którą będziesz wykonywać zadanie w pokoiku na tyłach Spelunki. Tam dokładnie ustalacie co, kto będzie robić. Po rozdzieleniu zadań, osobno ruszacie w kierunku interesującej was kamienicy. Ulice miasta jak zwykle pełne są przechodniów oraz wozów przejeżdżających obok ciebie. Co jakiś czas dostrzegasz również znajome twarze w tłumie. Po krótkim spacerze, docierasz na miejsce. Tutaj jest już nieco mniej osób na ulicach. Wybierasz sobie ustronne miejsce w bramie kamienicy i zaczynasz obserwować wszystko dookoła.', 'Przejdź się kawałek,thief310walk;Zostań na miejscu,thief310wait;', '50;50', 'Strażnik,T,Strażnik miejski patroluje okolicę.,Odciągnij strażnika,thief310fool;Mieszkaniec,P,Jakiś mieszczanin przechodzi obok.,Okradnij mieszczanina,thief310steal,Strażnik,A,Strażnik miejski patroluje okolicę.;', '30;30;30', '', '', ''),
+(83, 'thief310wait', 'Siedzisz sobie spokojnie w bramie, obserwując uważnie całą okolicę. Co jakiś czas mijają ciebie przechodzący ulicą mieszkańcy miasta. Nikt nie zwraca na ciebie uwagi. Czas mija powoli, zaczynasz nudzić się.', 'Przejdź się kawałek,thief310walk;Zostań jeszcze chwilę na miejscu,thief310wait;', '80;20', 'Strażnik,T,Strażnik miejski patroluje okolicę.,Odciągnij strażnika,thief310fool;Mieszkaniec,P,Jakiś mieszczanin przechodzi obok.,Okradnij mieszczanina,thief310steal,Strażnik,A,Strażnik miejski patroluje okolicę.;', '40;30;40;', '', '', ''),
+(84, 'thief310walk', 'Robisz sobie krótki spacer po okolicy. Dokładnie sprawdzasz cały budynek dookoła, w poszukiwaniu jakiś kłopotów. Starasz się za bardzo nie rzucać w oczy przechodzącym obok ciebie istotom. Po pewnym czasie wracasz do bramy, w której do tej pory się ukrywałeś i zaczynasz zastanawiać się co dalej.', 'Przejdź się jeszcze kawałek,thief310walk;Zostań na miejscu,thief310wait;', '20;80', 'Strażnik,T,Strażnik miejski patroluje okolicę.,Odciągnij strażnika,thief310fool;Mieszkaniec,P,Jakiś mieszczanin przechodzi obok.,Okradnij mieszczanina,thief310steal,Strażnik,A,Strażnik miejski patroluje okolicę.;', '50;40;35;', '', '', ''),
+(85, 'thief310steal', 'Postanawiasz nieco zwiększyć pulę łupów jaka będzie za tę robotę. Wykorzystujesz chwilę nieuwagi jakiegoś przechodnia, który akurat miał pecha blisko ciebie. Dyskretnie podchodzisz blisko niego i kilkoma pewnymi ruchami rozcinasz jego sakiewkę, wysypując sobie złoto na rękę. Szybko chowasz zdobycz do kieszeni i starając się nie zwracać na siebie uwagi, odchodzisz kawałek. Chwilę uspokajasz swoje nerwy by następnie powrócić do wykonywania zadania.', 'Przejdź się kawałek,thief310walk;Zostań na miejscu,thief310wait;', '50;50', 'Strażnik,T,Strażnik miejski patroluje okolicę.,Odciągnij strażnika,thief310fool;Mieszkaniec,P,Jakiś mieszczanin przechodzi obok.,Okradnij mieszczanina,thief310steal,Strażnik,A,Strażnik miejski patroluje okolicę.;', '30;20;30;', '', '', ''),
+(86, 'thief310fool', 'Ze złośliwym uśmieszkiem, bierzesz niewielki kamień do ręki i rzucasz w jednego ze strażników. Gdy ten wściekły odwraca się w twoją stronę, dodatkowo posyłasz w jego stronę kilka „barwnych” określeń. Tego było dla niego za wiele, natychmiast rusza w twoim kierunku. Oczywiście na to właśnie czekałeś. Odwracasz się i zaczynasz uciekać. Zręcznie przeciskasz się pomiędzy przechodniami. W pewnym momencie uskakujesz w jakąś bramę kamienicy i patrzysz jak strażnik przebiega dalej. Po chwili odpoczynku, szybkim krokiem wracasz na swoje miejsce obserwacji.', 'Przejdź się kawałek,thief310walk;Zostań na miejscu,thief310wait;', '50;50', 'Strażnik,T,Strażnik miejski patroluje okolicę.,Odciągnij strażnika,thief310fool;Mieszkaniec,P,Jakiś mieszczanin przechodzi obok.,Okradnij mieszczanina,thief310steal,Strażnik,A,Strażnik miejski patroluje okolicę.;', '20;30;20', '', '', ''),
+(87, 'thief310finish', 'Czas roboty powoli dobiega końca. Widzisz jak osoby, z którymi pracujesz, powoli wychodzą z kamienicy. Kiedy ostatni z nich opuszcza teren, również zaczynasz iść w kierunku Spelunki. Kluczysz nieco ulicami miasta, tak aby zgubić ewentualny pościg za sobą. Na szczęście podróż przebiega spokojnie. Po krótkim spacerze docierasz na miejsce i wchodzisz do tego samego pokoju z którego rozpoczynałeś zadanie. Teraz już tylko pozostało najważniejsze, podzielić się łupami.', 'Tekst', '100', '', '', '', '', ''),
+(88, 'thief310fail', 'Twoje umiejętności jak do tej pory, nie zdradziły ciebie. Pewnie wypełniasz swoje zadanie. Aż nazbyt pewnie. Chwila nieuwagi z twojej strony i nagle przewracasz się, pchnięty przez kogoś. Niemal natychmiast twoje ręce zostają związane. Kątem oka widzisz nad sobą patrol straży miejskiej. Gwałtownym ruchem, stawiają ciebie na nogi i odprowadzają w kierunku lochów. Tym razem niestety, nie udało się wykonać zadania.', 'Tekst', '100', '', '', '', '', ''),
+(89, 'thief315start', 'Dokładnie wysłuchujesz szczegółów zadania. Wiesz, że teren do pilnowania tym razem będzie dość duży. Razem z innymi, ustalacie szczegóły roboty. Po pewnym czasie, każdy osobno, wychodzicie ze Spelunki. Tym razem czeka ciebie nieco dłuższy spacer ulicami miasta. Po drodze mijasz wiele osób, podążających ulicami miasta. Z tego co się orientujesz, dzień powinien być w miarę spokojny. Po kilku dłuższych chwilach, docierasz do okolicy w której znajduje się cel twojej wyprawy. Tutaj już nie ma zbyt wielu ludzi na ulicach, za to często widać patrole straży miejskiej czy strażników szlachciców. Interesująca ciebie posiadłość, znajduje się po drugiej stronie ulicy. Odgrodzona jest od ulicy niewysokim murem. Przez moment przyglądasz się jej uważnie, a następnie zaczynasz zastanawiać się, co dalej.', 'Zaczaj się gdzieś w okolicy,thief315wait;Przejdź się kawałek,thief315walk;', '50;50', 'Strażnik,T,Strażnik miejski patroluje okolicę.,Odciągnij strażnika,thief315fool;Mieszkaniec,P,Jakiś mieszczanin przechodzi obok.,Okradnij mieszczanina,thief315steal,Strażnik,A,Strażnik miejski patroluje okolicę.;Gwardzista,T,Gwardzista szlachcica stoi w okolicy,Odciągnij gwardzistę,thief315fool2;', '30;20;30;50;', '', '', ''),
+(90, 'thief315wait', 'Postanawiasz znaleźć sobie jakąś kryjówkę i z niej obserwować okolicę. Przez chwilę rozglądasz się po okolicy, w poszukiwaniu odpowiedniego miejsca, starając się przy okazji nie rzucać nikomu w oczy. Wreszcie znajdujesz coś odpowiedniego. Przysiadasz w swojej kryjówce na chwilę i zaczynasz baczną obserwację okolicy. Czas dłuży ci się niemiłosiernie.', 'Przejdź się kawałek,thief315walk;Zostań jeszcze chwilę na miejscu,thief315wait;', '80;20', 'Strażnik,T,Strażnik miejski patroluje okolicę.,Odciągnij strażnika,thief315fool;Mieszkaniec,P,Jakiś mieszczanin przechodzi obok.,Okradnij mieszczanina,thief315steal,Strażnik,A,Strażnik miejski patroluje okolicę.;Gwardzista,T,Gwardzista szlachcica stoi w okolicy,Odciągnij gwardzistę,thief315fool2;', '40;30;40;60;', '', '', ''),
+(91, 'thief315walk', 'Chodzisz sobie po okolicy, starając się nie rzucać nikomu w oczy. Mimo wszystko, bacznie obserwujesz otoczenie w poszukiwaniu jakiś problemów. Posiadłość, mimo iż znajduje się w mieście, jest dość rozległa. Trochę czasu zajmuje tobie obejście jej całej. Znów stoisz mniej więcej od strony bramy. Zastanawiasz się, co teraz robić.', 'Przejdź się jeszcze kawałek,thief315walk;Zostań na miejscu,thief315wait;', '20;80;', 'Strażnik,T,Strażnik miejski patroluje okolicę.,Odciągnij strażnika,thief315fool;Mieszkaniec,P,Jakiś mieszczanin przechodzi obok.,Okradnij mieszczanina,thief315steal,Strażnik,A,Strażnik miejski patroluje okolicę.;Gwardzista,T,Gwardzista szlachcica stoi w okolicy,Odciągnij gwardzistę,thief315fool2;', '40;30;40;60;', '', '', ''),
+(92, 'thief315steal', 'Postanawiasz nieco zwiększyć pulę łupów jaka będzie za tę robotę. Wykorzystujesz chwilę nieuwagi jakiegoś przechodnia, który akurat miał pecha blisko ciebie. Dyskretnie podchodzisz blisko niego i kilkoma pewnymi ruchami rozcinasz jego sakiewkę, wysypując sobie złoto na rękę. Szybko chowasz zdobycz do kieszeni i starając się nie zwracać na siebie uwagi, odchodzisz kawałek. Chwilę uspokajasz swoje nerwy by następnie powrócić do wykonywania zadania.', 'Przejdź się kawałek,thief315walk;Zostań na miejscu,thief315wait;', '50;50', 'Strażnik,T,Strażnik miejski patroluje okolicę.,Odciągnij strażnika,thief315fool;Mieszkaniec,P,Jakiś mieszczanin przechodzi obok.,Okradnij mieszczanina,thief315steal,Strażnik,A,Strażnik miejski patroluje okolicę.;Gwardzista,T,Gwardzista szlachcica stoi w okolicy,Odciągnij gwardzistę,thief315fool2;', '40;20;40;50;', '', '', ''),
+(93, 'thief315fool', 'Ze złośliwym uśmieszkiem, bierzesz niewielki kamień do ręki i rzucasz w jednego ze strażników. Gdy ten wściekły odwraca się w twoją stronę, dodatkowo posyłasz w jego stronę kilka „barwnych” określeń. Tego było dla niego za wiele, natychmiast rusza w twoim kierunku. Oczywiście na to właśnie czekałeś. Odwracasz się i zaczynasz uciekać. W pewnym momencie uskakujesz w jakąś bramę kamienicy i patrzysz jak strażnik przebiega dalej. Po chwili odpoczynku, szybkim krokiem wracasz na swoje miejsce obserwacji.', 'Przejdź się kawałek,thief315walk;Zostań na miejscu,thief315wait;', '50;50;', 'Strażnik,T,Strażnik miejski patroluje okolicę.,Odciągnij strażnika,thief315fool;Mieszkaniec,P,Jakiś mieszczanin przechodzi obok.,Okradnij mieszczanina,thief315steal,Strażnik,A,Strażnik miejski patroluje okolicę.;Gwardzista,T,Gwardzista szlachcica stoi w okolicy,Odciągnij gwardzistę,thief315fool2;', '20;20;20;40;', '', '', ''),
+(94, 'thief315fool2', 'Postanawiasz nieco wykorzystać swoje umiejętności aktorskie. Zataczając się po ulicy, przechodzisz kawałek i padasz na ziemię, tuż obok stojącego gwardzisty. Kiedy ten podchodzi, aby sprawdzić co z tobą, nagle podcinasz go ze śmiechem i zaczynasz uciekać. Gwardzista szybko wstaje z wyrzucając z siebie stek wyzwisk, zaczyna gonić za tobą. Wykorzystujesz fakt, że dość dobrze już rozpoznałeś okolicę. Pozwalasz mu przez jakiś czas biec za sobą. Następnie uskakujesz w jakiś zaułek muru i czekasz aż przebiegnie obok ciebie. Po odczekaniu jeszcze chwili, wracasz z powrotem do interesującej ciebie posesji.', 'Przejdź się kawałek,thief315walk;Zostań na miejscu,thief315wait;', '50;50', 'Strażnik,T,Strażnik miejski patroluje okolicę.,Odciągnij strażnika,thief315fool;Mieszkaniec,P,Jakiś mieszczanin przechodzi obok.,Okradnij mieszczanina,thief315steal,Strażnik,A,Strażnik miejski patroluje okolicę.;Gwardzista,T,Gwardzista szlachcica stoi w okolicy,Odciągnij gwardzistę,thief315fool2;', '30;20;30;10;', '', '', ''),
+(95, 'thief315finish', 'Czas roboty powoli dobiega końca. Dostrzegasz w pewnym momencie, jednego z twoich kompanów, który daje tobie sygnał do powrotu. Zbierasz się więc i zaczynasz iść  w kierunku Spelunki. Kluczysz nieco ulicami miasta, tak aby zgubić ewentualny pościg za sobą. Na szczęście podróż przebiega spokojnie. Po krótkim spacerze docierasz na miejsce i wchodzisz do tego samego pokoju z którego rozpoczynałeś zadanie. Teraz już tylko pozostało najważniejsze, podzielić się łupami.', 'Tekst', '100', '', '', '', '', ''),
+(96, 'thief315fail', 'Twoje umiejętności jak do tej pory, nie zdradziły ciebie. Pewnie wypełniasz swoje zadanie. Aż nazbyt pewnie. Chwila nieuwagi z twojej strony i nagle przewracasz się, pchnięty przez kogoś. Niemal natychmiast twoje ręce zostają związane. Kątem oka widzisz nad sobą patrol straży miejskiej. Gwałtownym ruchem, stawiają ciebie na nogi i odprowadzają w kierunku lochów. Tym razem niestety, nie udało się wykonać zadania.', 'Tekst', '100', '', '', '', '', ''),
+(97, 'thief320start', 'Wydaje ci się, że tym razem robota jest dość prosta. Teren do pilnowania jest niewielki a i mniej więcej wiadomo na kogo zwracać szczególną uwagę. Zabierasz swój ekwipunek i wychodzisz z karczmy. Idąc ulicami miasta rozglądasz się uważnie na wszystkie strony. Dookoła mijają ciebie mieszkańcy miasta spieszący gdzieś w swoich sprawach, od czasu do czasu, ulicą przejeżdża wóz bądź powóz jakiegoś kupca czy szlachcica. Po pewnym czasie docierasz na miejsce roboty. Tutaj ulice są już prawie puste. Jeszcze tylko dajesz znak poprzedniemu strażnikowi kasyna i rozpoczynasz swoją zmianę. Stajesz w okolicy zaułka prowadzącego do kasyna i zaczynasz zastanawiać się co dalej.', 'Zaczaj się gdzieś w okolicy,thief320wait;Przejdź się kawałek,thief320walk;', '50;50', 'Strażnik,T,Strażnik miejski patroluje okolicę.,Odciągnij strażnika,thief320fool;Mieszkaniec,P,Jakiś mieszczanin przechodzi obok.,Okradnij mieszczanina,thief320steal;Strażnik,A,Strażnik miejski patroluje okolicę.;', '30;20;30;', '', '', ''),
+(98, 'thief320wait', 'Postanawiasz zaczaić się w jednej z okolicznych kamienic bram. Wybierasz sobie taką aby mieć dobry widok na interesujący ciebie zaułek oraz kawałek ulicy. Opierasz się wygodnie o ścianę i rozpoczynasz obserwację. Widzisz jak od czasu do czasu jakaś postać wchodzi do uliczki z kasynem, uważnie rozglądając się na boki. Ciebie jednak interesuje głównie to aby jacyś strażnicy nie panoszyli się po okolicy. Czas mija bardzo powoli.', 'Przejdź się kawałek,thief320walk;Zostań jeszcze chwilę na miejscu,thief320wait;', '80;20', 'Strażnik,T,Strażnik miejski patroluje okolicę.,Odciągnij strażnika,thief320fool;Mieszkaniec,P,Jakiś mieszczanin przechodzi obok.,Okradnij mieszczanina,thief320steal,Strażnik,A,Strażnik miejski patroluje okolicę.;', '35;20;30;', '', '', ''),
+(99, 'thief320walk', 'Postanawiasz rozejrzeć się nieco. Spokojnym krokiem, starając się nikomu nie rzucać w oczy, chodzisz sobie po okolicy bacznie obserwując wszystko dookoła. Wokół panuje w miarę cicha atmosfera, nie licząc odgłosów dobiegających z podwórek kamienic. Robisz sobie rundkę dookoła kasyna, uważnie przyglądając się każdemu z wejść do niego. Po pewnym czasie wracasz do miejsca, z którego rozpocząłeś patrol i zastanawiasz się co dalej.', 'Przejdź się jeszcze kawałek,thief320walk;Zostań na miejscu,thief320wait;', '20;80', 'Strażnik,T,Strażnik miejski patroluje okolicę.,Odciągnij strażnika,thief320fool;2Mieszkaniec,P,Jakiś mieszczanin przechodzi obok.,Okradnij mieszczanina,thief320steal,Strażnik,A,Strażnik miejski patroluje okolicę.;', '40;20;50;', '', '', ''),
+(100, 'thief320steal', 'Postanawiasz umilić sobie czas i jednocześnie sprawdzić swoje umiejętności kieszonkowca. Akurat pewien mieszczanin miał pecha znaleźć się przy tobie. Dyskretnie podchodzisz blisko niego i kilkoma pewnymi ruchami rozcinasz jego sakiewkę, wysypując sobie złoto na rękę. Szybko chowasz zdobycz do kieszeni i starając się nie zwracać na siebie uwagi, odchodzisz kawałek. Chwilę uspokajasz swoje nerwy by następnie powrócić do wykonywania zadania.', 'Przejdź się kawałek,thief320walk;Zostań na miejscu,thief320wait;', '50;50;', 'Strażnik,T,Strażnik miejski patroluje okolicę.,Odciągnij strażnika,thief320fool;Mieszkaniec,P,Jakiś mieszczanin przechodzi obok.,Okradnij mieszczanina,thief320steal,Strażnik,A,Strażnik miejski patroluje okolicę.;', '40;10;40;', '', '', ''),
+(101, 'thief320fool', 'Ze złośliwym uśmieszkiem, bierzesz niewielki kamień do ręki i rzucasz w jednego ze strażników. Gdy ten wściekły odwraca się w twoją stronę, dodatkowo posyłasz w jego stronę kilka „barwnych” określeń. Tego było dla niego za wiele, natychmiast rusza w twoim kierunku. Oczywiście na to właśnie czekałeś. Odwracasz się i zaczynasz uciekać. Zręcznie przeciskasz się pomiędzy przechodniami. W pewnym momencie uskakujesz w jakąś bramę kamienicy i patrzysz jak strażnik przebiega dalej. Po chwili odpoczynku, szybkim krokiem wracasz na swoje miejsce obserwacji.', 'Przejdź się kawałek,thief320walk;Zostań na miejscu,thief320wait;', '50;50;', 'Strażnik,T,Strażnik miejski patroluje okolicę.,Odciągnij strażnika,thief320fool;Mieszkaniec,P,Jakiś mieszczanin przechodzi obok.,Okradnij mieszczanina,thief320steal,Strażnik,A,Strażnik miejski patroluje okolicę.;', '20;10;20;', '', '', ''),
+(102, 'thief320fool2', 'Postanawiasz nieco wykorzystać swoje umiejętności aktorskie. Zataczając się po ulicy, przechodzisz kawałek i padasz na ziemię, tuż obok stojącego strażnika. Kiedy ten podchodzi, aby sprawdzić co z tobą, nagle podcinasz go ze śmiechem i zaczynasz uciekać. Strażnik szybko wstaje z wyrzucając z siebie stek wyzwisk, zaczyna gonić za tobą. Wykorzystujesz fakt, że dość dobrze już rozpoznałeś okolicę. Pozwalasz mu przez jakiś czas biec za sobą. Następnie uskakujesz w jakiś zaułek muru i czekasz aż przebiegnie obok ciebie. Po odczekaniu jeszcze chwili, wracasz z powrotem do interesującego ciebie zaułka.', 'Przejdź się kawałek,thief320walk;Zostań na miejscu,thief320wait;', '50;50', 'Strażnik,T,Strażnik miejski patroluje okolicę.,Odciągnij strażnika,thief320fool;Mieszkaniec,P,Jakiś mieszczanin przechodzi obok.,Okradnij mieszczanina,thief320steal,Strażnik,A,Strażnik miejski patroluje okolicę.;', '10;20;10;', '', '', ''),
+(103, 'thief320finish', 'Czas roboty powoli dobiega końca, znudzony oczekujesz na zmiennika. Po pewnym czasie dostrzegasz go idącego ostrożnie ulicą. Gdy on zauważa ciebie, daje znak i ukrywa się w innej bramie. Ty tymczasem ruszasz z powrotem w kierunku karczmy. Kluczysz nieco ulicami miasta, tak aby zgubić ewentualny pościg za sobą. Na szczęście podróż przebiega spokojnie. Po pewnym czasie docierasz z powrotem do Spelunki i zdajesz raport ze swoich poczynań. Jeszcze tylko odebranie nagrody i można zająć się swoimi sprawami.', 'Tekst', '100', '', '', '', '', ''),
+(104, 'thief320fail', 'Twoje umiejętności jak do tej pory, nie zdradziły ciebie. Pewnie wypełniasz swoje zadanie. Aż nazbyt pewnie. Chwila nieuwagi z twojej strony i nagle przewracasz się, pchnięty przez kogoś. Niemal natychmiast twoje ręce zostają związane. Kątem oka widzisz nad sobą patrol straży miejskiej. Gwałtownym ruchem, stawiają ciebie na nogi i odprowadzają w kierunku lochów. Tym razem niestety, nie udało się wykonać zadania.', 'Tekst', '100', '', '', '', '', ''),
+(105, 'thief325start', 'Tym razem czeka ciebie wyprawa aż pod mury miasta. Uważnie wysłuchujesz szczegółów oczekującego ciebie zadania. Po rozdzieleniu obowiązków, wyruszacie na miasto. Jego ulice jak zwykle pełne są przechodniów podążających wzdłuż ulic. Czasami obok ciebie przejeżdża jakiś wóz. Na wszelki wypadek rozglądasz się po okolicy sprawdzając czy ktoś ciebie nie śledzi. Po pewnym czasie docierasz do podgrodzia. Tutaj już ulice są znacznie mniej zaludnione a i domy wyglądają na biedniejsze niż w centrum miasta. Idziesz jeszcze kawałek, aż docierasz do interesującego ciebie zaułka. Rozglądasz się przez chwilę, upewniając się, że wszystko jest na swoim miejscu a następnie zaczynasz zastanawiać się co dalej.', 'Zaczaj się gdzieś w okolicy,thief325wait;Przejdź się kawałek,thief325walk;', '50;50', 'Strażnik,T,Strażnik miejski patroluje okolicę.,Odciągnij strażnika,thief325fool;Mieszkaniec,P,Jakiś mieszczanin przechodzi obok.,Okradnij mieszczanina,thief325steal,Strażnik,A,Strażnik miejski patroluje okolicę.;', '30;10;30;', '', '', ''),
+(106, 'thief325wait', 'Postanawiasz zaczaić się w jednym z okolicznych zaułków. Wybierasz sobie taki aby mieć dobry widok na interesujący ciebie kawałek ulicy. Opierasz się wygodnie o ścianę i rozpoczynasz obserwację. Widzisz jak od czasu do czasu, twoi kompani załadowują towar na stojący nieopodal wóz. Ciebie jednak interesuje głównie to aby jacyś strażnicy nie panoszyli się po okolicy. Czas mija bardzo powoli.', 'Przejdź się kawałek,thief325walk;Zostań jeszcze chwilę na miejscu,thief325wait;', '80;20;', 'Strażnik,T,Strażnik miejski patroluje okolicę.,Odciągnij strażnika,thief325fool;Mieszkaniec,P,Jakiś mieszczanin przechodzi obok.,Okradnij mieszczanina,thief325steal,Strażnik,A,Strażnik miejski patroluje okolicę.;Złodziej,T,Podejrzany osobnik idzie ulicą rozglądając się na boki.,Przepędź intruza,thief325catch;', '40;10;40;30;', '', '', ''),
+(107, 'thief325walk', 'Postanawiasz przejść się nieco po okolicy. Spokojnym krokiem idziesz ulicą, uważnie rozglądając się na wszystkie strony, jednocześnie starasz się nie zwracać na siebie uwagi. Wokół panuje cisza i spokój z rzadka tylko mija ciebie jakiś tutejszy mieszczanin. Po krótkim spacerze, dochodzisz do murów miejskich i zawracasz z powrotem. Po pewnym czasie znów jesteś przy wejściu do zaułka.', 'Przejdź się jeszcze kawałek,thief325walk;Zostań na miejscu,thief325wait;', '20;80;', 'Strażnik,T,Strażnik miejski patroluje okolicę.,Odciągnij strażnika,thief325fool2;Mieszkaniec,P,Jakiś mieszczanin przechodzi obok.,Okradnij mieszczanina,thief325steal,Strażnik,A,Strażnik miejski patroluje okolicę.;Złodziej,T,Podejrzany osobnik idzie ulicą rozglądając się na boki.,Przepędź intruza,thief325catch;', '40;20;45;35;', '', '', ''),
+(108, 'thief325steal', 'Postanawiasz umilić sobie czas i jednocześnie sprawdzić swoje umiejętności kieszonkowca. Akurat pewien mieszczanin miał pecha znaleźć się przy tobie. Dyskretnie podchodzisz blisko niego i kilkoma pewnymi ruchami rozcinasz jego sakiewkę, wysypując sobie złoto na rękę. Szybko chowasz zdobycz do kieszeni i starając się nie zwracać na siebie uwagi, odchodzisz kawałek. Chwilę uspokajasz swoje nerwy by następnie powrócić do wykonywania zadania.', 'Przejdź się kawałek,thief325walk;Zostań na miejscu,thief325wait;', '50;50', 'Strażnik,T,Strażnik miejski patroluje okolicę.,Odciągnij strażnika,thief325fool2;Mieszkaniec,P,Jakiś mieszczanin przechodzi obok.,Okradnij mieszczanina,thief325steal,Strażnik,A,Strażnik miejski patroluje okolicę.;Złodziej,T,Podejrzany osobnik idzie ulicą rozglądając się na boki.,Przepędź intruza,thief325catch;', '30;5;30;40;', '', '', ''),
+(109, 'thief325fool', 'Ze złośliwym uśmieszkiem, bierzesz niewielki kamień do ręki i rzucasz w jednego ze strażników. Gdy ten wściekły odwraca się w twoją stronę, dodatkowo posyłasz w jego stronę kilka „barwnych” określeń. Tego było dla niego za wiele, natychmiast rusza w twoim kierunku. Oczywiście na to właśnie czekałeś. Odwracasz się i zaczynasz uciekać. W pewnym momencie uskakujesz w jakiś zaułek i patrzysz jak strażnik przebiega dalej. Po chwili odpoczynku, szybkim krokiem wracasz na swoje miejsce obserwacji.', 'Przejdź się kawałek,thief325walk;Zostań na miejscu,thief325wait;', '50;50;', 'Strażnik,T,Strażnik miejski patroluje okolicę.,Odciągnij strażnika,thief325fool2;Mieszkaniec,P,Jakiś mieszczanin przechodzi obok.,Okradnij mieszczanina,thief325steal,Strażnik,A,Strażnik miejski patroluje okolicę.;Złodziej,T,Podejrzany osobnik idzie ulicą rozglądając się na boki.,Przepędź intruza,thief325catch;', '10;10;10;40;', '', '', ''),
+(110, 'thief325fool2', 'Postanawiasz nieco wykorzystać swoje umiejętności aktorskie. Zataczając się po ulicy, przechodzisz kawałek i padasz na ziemię, tuż obok stojącego strażnika. Kiedy ten podchodzi, aby sprawdzić co z tobą, nagle podcinasz go ze śmiechem i zaczynasz uciekać. Strażnik szybko wstaje z wyrzucając z siebie stek wyzwisk, zaczyna gonić za tobą. Wykorzystujesz fakt, że dość dobrze już rozpoznałeś okolicę. Pozwalasz mu przez jakiś czas biec za sobą. Następnie uskakujesz w jakiś zaułek muru i czekasz aż przebiegnie obok ciebie. Po odczekaniu jeszcze chwili, wracasz z powrotem do interesującego ciebie zaułka.', 'Przejdź się kawałek,thief325walk;Zostań na miejscu,thief325wait;', '50;50;', 'Strażnik,T,Strażnik miejski patroluje okolicę.,Odciągnij strażnika,thief325fool2;Mieszkaniec,P,Jakiś mieszczanin przechodzi obok.,Okradnij mieszczanina,thief325steal,Strażnik,A,Strażnik miejski patroluje okolicę.;Złodziej,T,Podejrzany osobnik idzie ulicą rozglądając się na boki.,Przepędź intruza,thief325catch;', '10;10;10;40;', '', '', ''),
+(111, 'thief325catch', 'Zaintrygowany zachowaniem owego osobnika, postanawiasz przyjrzeć mu się uważniej. Ostrożnie ruszasz w jego kierunku, starając się pozostać niezauważonym. Twój cel rozgląda się po zaułkach jakby czegoś w nich szukał. W pewnym momencie, przez nieuwagę potrąciłeś jakiś przedmiot leżący na ulicy. Natychmiast zastygłeś w miejscu. Niestety, ów osobnik zauważył ciebie i przestraszony rzucił się do ucieczki. Ruszyłeś za nim w pogoń. Jednak po przebiegnięciu parunastu metrów zdałeś sobie sprawę, że być może celowo próbuje ciebie odciągnąć od zaułka. Szybko wróciłeś na miejsce, przekonując się, że wszystko jest w najlepszym porządku. Zaczynasz zastanawiać się co dalej.', 'Przejdź się kawałek,thief325walk;Zostań na miejscu,thief325wait;', '50;50;', 'Strażnik,T,Strażnik miejski patroluje okolicę.,Odciągnij strażnika,thief325fool2;Mieszkaniec,P,Jakiś mieszczanin przechodzi obok.,Okradnij mieszczanina,thief325steal,Strażnik,A,Strażnik miejski patroluje okolicę.;Złodziej,T,Podejrzany osobnik idzie ulicą rozglądając się na boki.,Przepędź intruza,thief325catch;', '20;10;20;5;', '', '', ''),
+(112, 'thief325finish', 'Czas pracy powoli zbliża się do końca. Wóz już prawie cały jest wypełniony towarami. Twoi towarzysze zaprzęgają go i dają tobie sygnał abyś do nich dołączył. Razem wyglądacie jak grupa wędrownych rzemieślników wracająca z pracy do domu. Tym razem nie musisz iść na piechotę. Mimo wszystko nadal uważnie obserwujesz okolicę. Spokojnie dojeżdżacie w okolicę Spelunki, tam na jej tyłach pomagasz rozładować towar z wozu. Następnie wracasz do karczmy i zdajesz raport ze swoich poczynań. Po chwili bogatszy o sakiewkę pełną złota, wracasz do głównej izby.', 'Tekst', '100', '', '', '', '', ''),
+(113, 'thief325fail', 'Twoje umiejętności jak do tej pory, nie zdradziły ciebie. Pewnie wypełniasz swoje zadanie. Aż nazbyt pewnie. Chwila nieuwagi z twojej strony i nagle przewracasz się, pchnięty przez kogoś. Niemal natychmiast twoje ręce zostają związane. Kątem oka widzisz nad sobą patrol straży miejskiej. Gwałtownym ruchem, stawiają ciebie na nogi i odprowadzają w kierunku lochów. Tym razem niestety, nie udało się wykonać zadania.', 'Tekst', '100', '', '', '', '', ''),
+(114, 'thief330start', 'Uważnie przysłuchujesz się szczegółom zadania. Wydaje ci się, że coś podobnego już robiłeś wcześniej. Jesteś pewien, że i tym razem dasz radę. Zbierasz swój ekwipunek i podążasz na miejsce zlecenia. Ulice miasta jak co dzień wypełnione są przechodniami oraz przejeżdżającymi co jakiś czas wozami. Idziesz szybkim krokiem przed siebie, uważnie rozglądając się wokoło. Po pewnym czasie docierasz do bogatszej dzielnicy miasta. Tutaj przechodniów jest już nieco mniej, za to znacznie więcej patroli straży miejskiej oraz gwardzistów szlachciców. Starając się nie zwracać na siebie uwagi, docierasz pod wyznaczoną kamienicę szlachecką. Zaczynasz zastanawiać się co dalej.', 'Rozejrzyj się po okolicy,thief330walk;Znajdź sobie punkt obserwacyjny,thief330wait;', '50;50;', 'Strażnik,T,Strażnik miejski patroluje okolicę.,Odciągnij strażnika,thief330fool2;Mieszkaniec,P,Jakiś mieszczanin przechodzi obok.,Okradnij mieszczanina,thief330steal,Strażnik,A,Strażnik miejski patroluje okolicę.;Gwardzista,T,Gwardzista szlachecki przechodzi obok.,Odciągnij gwardzistę,thief330fool2;Gwardzista,A,Gwardzista szlachecki przechodzi obok.;', '40;20;40;30;35;', '', '', ''),
+(115, 'thief330wait', 'Rozglądając się po okolicy, wypatrzyłeś sobie dobre miejsce do obserwacji interesującej ciebie kamienicy. Spokojnym krokiem, starając się nie zwracać na siebie uwagi innych przechodniów, wchodzisz do niewielkiego zaułka pomiędzy kamienicami. Stąd dokładnie widzisz całą okolicę. Opierasz się wygodnie o ścianę i zaczynasz obserwować otoczenie. Czas dłuży ci się niesamowicie.', 'Rozejrzyj się po okolicy,thief330walk;', '100', 'Strażnik,T,Strażnik miejski patroluje okolicę.,Odciągnij strażnika,thief330fool2;Mieszkaniec,P,Jakiś mieszczanin przechodzi obok.,Okradnij mieszczanina,thief330steal,Strażnik,A,Strażnik miejski patroluje okolicę.;Gwardzista,T,Gwardzista szlachecki przechodzi obok.,Odciągnij gwardzistę,thief330fool2;Gwardzista,A,Gwardzista szlachecki przechodzi obok.;', '45;20;45;40;45;', '', '', ''),
+(116, 'thief330walk', 'Powoli, spokojnym krokiem, przechadzasz się po okolicy. Uważnie przyglądasz się wszystkiemu. Okolica jest tutaj bardzo zadbana, znajduje się dużo zieleni a ulice są wysprzątane. Cały czas mijają ciebie jacyś mieszczanie. Starasz się nie zwracać uwagi na siebie, jednocześnie zapamiętujesz dokładnie rozkład budynków oraz ulic w okolicy. Po krótkim spacerze, wracasz przed „swoją” kamienicę.', 'Rozejrzyj się jeszcze po okolicy,thief330walk;Znajdź sobie punkt obserwacyjny,thief330wait;', '20;80;', 'Strażnik,T,Strażnik miejski patroluje okolicę.,Odciągnij strażnika,thief330fool2;Mieszkaniec,P,Jakiś mieszczanin przechodzi obok.,Okradnij mieszczanina,thief330steal,Strażnik,A,Strażnik miejski patroluje okolicę.;Gwardzista,T,Gwardzista szlachecki przechodzi obok.,Odciągnij gwardzistę,thief330fool2;Gwardzista,A,Gwardzista szlachecki przechodzi obok.;', '45;30;45;45;45;', '', '', ''),
+(117, 'thief330steal', 'Postanawiasz umilić sobie czas i jednocześnie sprawdzić swoje umiejętności kieszonkowca. Akurat pewien mieszczanin miał pecha znaleźć się przy tobie. Dyskretnie podchodzisz blisko niego i kilkoma pewnymi ruchami rozcinasz jego sakiewkę, wysypując sobie złoto na rękę. Szybko chowasz zdobycz do kieszeni i starając się nie zwracać na siebie uwagi, odchodzisz kawałek. Chwilę uspokajasz swoje nerwy by następnie powrócić do wykonywania zadania.', 'Rozejrzyj się po okolicy,thief330walk;Znajdź sobie punkt obserwacyjny,thief330wait;', '50;50;', 'Strażnik,T,Strażnik miejski patroluje okolicę.,Odciągnij strażnika,thief330fool2;Mieszkaniec,P,Jakiś mieszczanin przechodzi obok.,Okradnij mieszczanina,thief330steal,Strażnik,A,Strażnik miejski patroluje okolicę.;Gwardzista,T,Gwardzista szlachecki przechodzi obok.,Odciągnij gwardzistę,thief330fool2;Gwardzista,A,Gwardzista szlachecki przechodzi obok.;', '35;5;35;35;30;', '', '', ''),
+(118, 'thief330fool', 'Ze złośliwym uśmieszkiem, bierzesz niewielki kamień do ręki i rzucasz w jednego ze strażników. Gdy ten wściekły odwraca się w twoją stronę, dodatkowo posyłasz w jego stronę kilka „barwnych” określeń. Tego było dla niego za wiele, natychmiast rusza w twoim kierunku. Oczywiście na to właśnie czekałeś. Odwracasz się i zaczynasz uciekać. W pewnym momencie uskakujesz w jakiś zaułek i patrzysz jak strażnik przebiega dalej. Po chwili odpoczynku, szybkim krokiem wracasz na swoje miejsce obserwacji.', 'Rozejrzyj się po okolicy,thief330walk;Znajdź sobie punkt obserwacyjny,thief330wait;', '50;50;', 'Strażnik,T,Strażnik miejski patroluje okolicę.,Odciągnij strażnika,thief330fool2;Mieszkaniec,P,Jakiś mieszczanin przechodzi obok.,Okradnij mieszczanina,thief330steal,Strażnik,A,Strażnik miejski patroluje okolicę.;Gwardzista,T,Gwardzista szlachecki przechodzi obok.,Odciągnij gwardzistę,thief330fool2;Gwardzista,A,Gwardzista szlachecki przechodzi obok.;', '10;20;10;35;35;', '', '', ''),
+(119, 'thief330fool2', 'Postanawiasz nieco wykorzystać swoje umiejętności aktorskie. Zataczając się po ulicy, przechodzisz kawałek i padasz na ziemię, tuż obok stojącego strażnika. Kiedy ten podchodzi, aby sprawdzić co z tobą, nagle podcinasz go ze śmiechem i zaczynasz uciekać. Gwardzista szybko wstaje z wyrzucając z siebie stek wyzwisk, zaczyna gonić za tobą. Wykorzystujesz fakt, że dość dobrze już rozpoznałeś okolicę. Pozwalasz mu przez jakiś czas biec za sobą. Następnie uskakujesz w jakiś zaułek muru i czekasz aż przebiegnie obok ciebie. Po odczekaniu jeszcze chwili, wracasz z powrotem do interesującej ciebie kamienicy.', 'Rozejrzyj się po okolicy,thief330walk;Znajdź sobie punkt obserwacyjny,thief330wait;', '50;50;', 'Strażnik,T,Strażnik miejski patroluje okolicę.,Odciągnij strażnika,thief330fool2;Mieszkaniec,P,Jakiś mieszczanin przechodzi obok.,Okradnij mieszczanina,thief330steal,Strażnik,A,Strażnik miejski patroluje okolicę.;Gwardzista,T,Gwardzista szlachecki przechodzi obok.,Odciągnij gwardzistę,thief330fool2;Gwardzista,A,Gwardzista szlachecki przechodzi obok.;', '30;10;30;10;10;', '', '', ''),
+(120, 'thief330finish', 'Powoli mija czas przeznaczony na twoje zadanie. W pewnym momencie dostrzegasz idącego ulicą jednego z twoich towarzyszy. Daj on tobie znak iż zadanie zostało wykonane. Spokojnym, nonszalanckim krokiem ruszasz mniej więcej w kierunku Spelunki, uważnie rozglądając się pod drodze czy nikt aby ciebie nie śledzi. Po pewnym czasie takiego kluczenia po mieście docierasz na miejsce, gdzie w znanym sobie pokoju przystępujecie do podziału łupów. Chwilowo atmosfera nie należy do najprzyjaźniejszych.', 'Tekst', '100', '', '', '', '', ''),
+(121, 'thief330fail', 'Twoje umiejętności jak do tej pory, nie zdradziły ciebie. Pewnie wypełniasz swoje zadanie. Aż nazbyt pewnie. Chwila nieuwagi z twojej strony i nagle przewracasz się, pchnięty przez kogoś. Niemal natychmiast twoje ręce zostają związane. Kątem oka widzisz nad sobą patrol straży miejskiej. Gwałtownym ruchem, stawiają ciebie na nogi i odprowadzają w kierunku lochów. Tym razem niestety, nie udało się wykonać zadania.', 'Tekst', '100', '', '', '', '', ''),
+(122, 'thief335start', 'To zadanie wydaje ci się proste. Tym bardziej, że tym razem daleko nie będziesz musiał chodzić. Bierzesz więc swój ekwipunek i wychodzisz z karczmy. Idziesz kawałek ulicą na miejsce, gdzie masz stróżować. Po dotarciu, dajesz sygnał swojemu poprzednikowi. Ten zadowolony wraca szybko do Spelunki. Ty natomiast zaczynasz zastanawiać się co dalej.', 'Rozejrzyj się po okolicy,thief335walk;Znajdź sobie punkt obserwacyjny,thief335wait;', '50;50;', 'Strażnik,T,Strażnik miejski patroluje okolicę.,Odciągnij strażnika,thief335fool;Mieszkaniec,P,Jakiś mieszczanin przechodzi obok.,Okradnij mieszczanina,thief335steal,Strażnik,A,Strażnik miejski patroluje okolicę.;Złodziej,T,Jakiś podejrzany typ kręci się po okolicy.,Przepłosz intruza,thief335catch,Daj sygnał innym,thief335sign;', '20;20;20;10;', '', '', ''),
+(123, 'thief335wait', 'Postanawiasz zaczaić się w którejś z bocznych uliczek. Wybierasz sobie najbliższą, wchodzisz do niej i rozpoczynasz obserwację okolicy. Widzisz przechodzących od czasu do czasu członków twojej gildii, zmierzających od i do Spelunki. Czas dłuży ci się niemiłosiernie.', 'Rozejrzyj się po okolicy,thief335walk;', '100', 'Strażnik,T,Strażnik miejski patroluje okolicę.,Odciągnij strażnika,thief335fool;Mieszkaniec,P,Jakiś mieszczanin przechodzi obok.,Okradnij mieszczanina,thief335steal,Strażnik,A,Strażnik miejski patroluje okolicę.;Złodziej,T,Jakiś podejrzany typ kręci się po okolicy.,Przepłosz intruza,thief335catch,Daj sygnał innym,thief335sign;', '25;25;25;25;', '', '', ''),
+(124, 'thief335walk', 'Przechadzasz się spokojnym krokiem po okolicy, uważnie obserwując wszystkie zaułki oraz boczne uliczki. Wokoło nie ma dużego ruchu, co jakiś czas na ulicy mignie tobie znajoma twarz z gildii. Starasz się nie zwracać na siebie uwagi przechodniów. Po jakimś czasie wracasz ponownie na swoje stanowisko obserwacyjne i zaczynasz zastanawiać się w jaki sposób zabić nudę.', 'Rozejrzyj się jeszcze po okolicy,thief335walk;Znajdź sobie punkt obserwacyjny,thief335wait;', '20;80;', 'Strażnik,T,Strażnik miejski patroluje okolicę.,Odciągnij strażnika,thief335fool;Mieszkaniec,P,Jakiś mieszczanin przechodzi obok.,Okradnij mieszczanina,thief335steal,Strażnik,A,Strażnik miejski patroluje okolicę.;Złodziej,T,Jakiś podejrzany typ kręci się po okolicy.,Przepłosz intruza,thief335catch,Daj sygnał innym,thief335sign;', '30;25;40;40;', '', '', ''),
+(125, 'thief335steal', 'Postanawiasz umilić sobie czas i jednocześnie sprawdzić swoje umiejętności kieszonkowca. Akurat pewien mieszczanin miał pecha znaleźć się przy tobie. Dyskretnie podchodzisz blisko niego i kilkoma pewnymi ruchami rozcinasz jego sakiewkę, wysypując sobie złoto na rękę. Szybko chowasz zdobycz do kieszeni i starając się nie zwracać na siebie uwagi, odchodzisz kawałek. Chwilę uspokajasz swoje nerwy by następnie powrócić do wykonywania zadania.', 'Rozejrzyj się po okolicy,thief335walk;Znajdź sobie punkt obserwacyjny,thief335wait;', '50;50', 'Strażnik,T,Strażnik miejski patroluje okolicę.,Odciągnij strażnika,thief335fool;Mieszkaniec,P,Jakiś mieszczanin przechodzi obok.,Okradnij mieszczanina,thief335steal,Strażnik,A,Strażnik miejski patroluje okolicę.;Złodziej,T,Jakiś podejrzany typ kręci się po okolicy.,Przepłosz intruza,thief335catch,Daj sygnał innym,thief335sign;', '40;10;40;30;', '', '', ''),
+(126, 'thief335fool', 'Ze złośliwym uśmieszkiem, bierzesz niewielki kamień do ręki i rzucasz w jednego ze strażników. Gdy ten wściekły odwraca się w twoją stronę, dodatkowo posyłasz w jego stronę kilka „barwnych” określeń. Tego było dla niego za wiele, natychmiast rusza w twoim kierunku. Oczywiście na to właśnie czekałeś. Odwracasz się i zaczynasz uciekać. W pewnym momencie uskakujesz w jakiś zaułek i patrzysz jak strażnik przebiega dalej. Po chwili odpoczynku, szybkim krokiem wracasz na swoje miejsce obserwacji.', 'Rozejrzyj się po okolicy,thief335walk;Znajdź sobie punkt obserwacyjny,thief335wait;', '50;50', 'Strażnik,T,Strażnik miejski patroluje okolicę.,Odciągnij strażnika,thief335fool;Mieszkaniec,P,Jakiś mieszczanin przechodzi obok.,Okradnij mieszczanina,thief335steal,Strażnik,A,Strażnik miejski patroluje okolicę.;Złodziej,T,Jakiś podejrzany typ kręci się po okolicy.,Przepłosz intruza,thief335catch,Daj sygnał innym,thief335sign;', '10;25;10;40;', '', '', ''),
+(127, 'thief335catch', 'Uważnie przyglądasz się podejrzanemu osobnikowi. Ten idzie ostrożnie ulicą, rozglądając się na boki, jakby czegoś szukał. Postanawiasz nastraszyć go nieco. Ostrożnie wychodzisz ze swojego ukrycia i ruszasz w ślad za typem. Ten nie dostrzegł jeszcze ciebie. Powoli doganiasz go, kątem oka sprawdzając tylko czy w razie potrzeby możesz liczyć na pomoc kompanów. Kiedy byłeś już kilka kroków za swoim celem, ten zerknął do tyłu. Gdy ciebie zobaczył, natychmiast wzdrygnął się przestraszony i rzucił do ucieczki. Pogoniłeś go jakieś parę ulic i zawróciłeś ponownie na swoje miejsce strażowania. Może jednak ten dzień nie będzie aż tak nudny jak ci się wydawało.', 'Rozejrzyj się po okolicy,thief335walk;Znajdź sobie punkt obserwacyjny,thief335wait;', '50;50;', 'Strażnik,T,Strażnik miejski patroluje okolicę.,Odciągnij strażnika,thief335fool;Mieszkaniec,P,Jakiś mieszczanin przechodzi obok.,Okradnij mieszczanina,thief335steal,Strażnik,A,Strażnik miejski patroluje okolicę.;Złodziej,T,Jakiś podejrzany typ kręci się po okolicy.,Przepłosz intruza,thief335catch,Daj sygnał innym,thief335sign;', '30;20;30;10;', '', '', ''),
+(128, 'thief335sign', 'Nie jesteś pewien co to za osobnik, ale nie podoba ci się jego zachowanie. Obserwuje wszystko dookoła jakby węszył za czymś. Dajesz dyskretnie znak grupie osiłków którzy razem z tobą pilnują okolicy. Ci bez zastanowienia ruszają w kierunku owego typa. Gdy tylko ich zobaczył, przerażony rzucił się do ucieczki. Z rozbawieniem obserwujesz jak gna ile sił w nogach a twoi kompani gonią za nim. Po chwili znikają tobie z oczu. Po kolejnych kilku chwilach osiłki nieco zdyszane wracają z powrotem na swoje miejsce, uśmiechając się do ciebie szeroko. Chyba trzeba zmienić miejsce obserwacji.', 'Rozejrzyj się po okolicy,thief335walk;Znajdź sobie punkt obserwacyjny,thief335wait;', '50;50;', 'Strażnik,T,Strażnik miejski patroluje okolicę.,Odciągnij strażnika,thief335fool;Mieszkaniec,P,Jakiś mieszczanin przechodzi obok.,Okradnij mieszczanina,thief335steal,Strażnik,A,Strażnik miejski patroluje okolicę.;Złodziej,T,Jakiś podejrzany typ kręci się po okolicy.,Przepłosz intruza,thief335catch,Daj sygnał innym,thief335sign;', '30;25;40;10;', '', '', '');
+INSERT INTO `missions` (`id`, `name`, `text`, `exits`, `chances`, `mobs`, `chances2`, `items`, `chances3`, `moreinfo`) VALUES
+(129, 'thief335finish', 'Powoli mija czas jaki miałeś spędzić na tym zadaniu. Z niecierpliwością oczekujesz zmiennika. Po pewnym czasie dostrzegasz idącego od strony Spelunki jednego z członków twojej gildii. Wychodzisz nieco z kryjówki aby mógł ciebie zauważyć. Jak tylko zwraca na ciebie uwagę, daje tobie umówiony sygnał. Z ulgą zbierasz swoje rzeczy i ruszasz w kierunku karczmy. Po dotarciu na miejsce i złożeniu raportu twój stan posiadania zwiększa się o jedną pękatą sakiewkę.', 'Tekst', '100', '', '', '', '', ''),
+(130, 'thief335fail', 'Twoje umiejętności jak do tej pory, nie zdradziły ciebie. Pewnie wypełniasz swoje zadanie. Aż nazbyt pewnie. Chwila nieuwagi z twojej strony i nagle przewracasz się, pchnięty przez kogoś. Niemal natychmiast twoje ręce zostają związane. Kątem oka widzisz nad sobą patrol straży miejskiej. Gwałtownym ruchem, stawiają ciebie na nogi i odprowadzają w kierunku lochów. Tym razem niestety, nie udało się wykonać zadania.', 'Tekst', '100', '', '', '', '', ''),
+(131, 'thief340start', 'Uważnie słuchasz szczegółów zadania. Wiesz, że tym razem obszar do pilnowania będzie znacznie większy niż zwykle. Po ustaleniu wszelkich szczegółów z pozostałymi, wychodzicie z karczmy. Spokojnym krokiem idziesz w kierunku obszaru, który masz pilnować. Jak zwykle ulice miasta pełne są przechodniów podążających gdzieś we własnych sprawach. Co jakiś czas ulicą przejeżdża wóz kupiecki. Uważnie rozglądasz się na boki, sprawdzając czy nikt ciebie nie śledzi. Po pewnym czasie docierasz do dzielnicy, gdzie mieszkają bogaci mieszkańcy miasta. Tutaj ruch na ulicach jest znacznie mniejszy, za to kręci się w okolicy znacznie więcej patroli straży miejskiej oraz gwardii poszczególnych szlachciców. Po kolejnych kilku chwilach dochodzisz do interesującej ciebie posiadłości. Domyślasz się, że twoi kompani już rozpoczęli pracę, zaczynasz więc zastanawiać się co dalej.', 'Rozejrzyj się po okolicy,thief340walk;Znajdź sobie punkt obserwacyjny,thief340wait;', '50;50;', 'Strażnik,T,Strażnik miejski patroluje okolicę.,Odciągnij strażnika,thief340fool;Mieszkaniec,P,Jakiś mieszczanin przechodzi obok.,Okradnij mieszczanina,thief340steal,Strażnik,A,Strażnik miejski patroluje okolicę.;Gwardzista,T,Gwardzista szlachecki pilnuje porządku w okolicy.,Odciągnij gwardzistę,thief340fool2;Gwardzista,A,Gwardzista szlachecki pilnuje tutaj porządku.;', '30;20;30;40;40', '', '', ''),
+(132, 'thief340wait', 'Postanawiasz znaleźć sobie jakiś nie rzucający się w oczy punkt obserwacyjny. Rozglądając się uważnie po okolicy, znajdujesz niewielki załom pomiędzy murami jednek z okolicznych posiadłości, doskonale nadający się na kryjówkę. Udajesz się do niego i rozpoczynasz pilnowanie okolicy. Czas mija tobie bardzo powoli.', 'Rozejrzyj się po okolicy,thief340walk;', '100', 'Strażnik,T,Strażnik miejski patroluje okolicę.,Odciągnij strażnika,thief340fool;Mieszkaniec,P,Jakiś mieszczanin przechodzi obok.,Okradnij mieszczanina,thief340steal,Strażnik,A,Strażnik miejski patroluje okolicę.;Gwardzista,T,Gwardzista szlachecki pilnuje porządku w okolicy.,Odciągnij gwardzistę,thief340fool2;Gwardzista,A,Gwardzista szlachecki pilnuje tutaj porządku.;', '35;20;35;50;50;', '', '', ''),
+(133, 'thief340walk', 'Przechadzasz się po okolicy, dokładnie przepatrując teren. Wokoło panuje spokój, na ulicach nie widać zbyt wielu przechodniów. Cała okolica jest bardzo zadbana i czysta, wszędzie stoją duże posiadłości należące do bogatych szlachciców. Czas mija tobie bardzo wolno. Patrząc na interesującą ciebie posiadłość, czasami masz wrażenie że na jej terenie widzisz gdzieś znajome postacie. Po pewnym czasie wracasz z powrotem do miejsca z którego rozpoczynałeś obchód i zaczynasz zastanawiać się co dalej.', 'Rozejrzyj się jeszcze po okolicy,thief340walk;Znajdź sobie punkt obserwacyjny,thief340wait;', '20;80;', 'Strażnik,T,Strażnik miejski patroluje okolicę.,Odciągnij strażnika,thief340fool;Mieszkaniec,P,Jakiś mieszczanin przechodzi obok.,Okradnij mieszczanina,thief340steal,Strażnik,A,Strażnik miejski patroluje okolicę.;Gwardzista,T,Gwardzista szlachecki pilnuje porządku w okolicy.,Odciągnij gwardzistę,thief340fool2;Gwardzista,A,Gwardzista szlachecki pilnuje tutaj porządku.;', '35;25;35;50;50;', '', '', ''),
+(134, 'thief340steal', 'Postanawiasz umilić sobie czas i jednocześnie sprawdzić swoje umiejętności kieszonkowca. Akurat pewien mieszczanin miał pecha znaleźć się przy tobie. Dyskretnie podchodzisz blisko niego i kilkoma pewnymi ruchami rozcinasz jego sakiewkę, wysypując sobie złoto na rękę. Szybko chowasz zdobycz do kieszeni i starając się nie zwracać na siebie uwagi, odchodzisz kawałek. Chwilę uspokajasz swoje nerwy by następnie powrócić do wykonywania zadania.', 'Rozejrzyj się po okolicy,thief340walk;Znajdź sobie punkt obserwacyjny,thief340wait;', '50;50', 'Strażnik,T,Strażnik miejski patroluje okolicę.,Odciągnij strażnika,thief340fool;Mieszkaniec,P,Jakiś mieszczanin przechodzi obok.,Okradnij mieszczanina,thief340steal,Strażnik,A,Strażnik miejski patroluje okolicę.;Gwardzista,T,Gwardzista szlachecki pilnuje porządku w okolicy.,Odciągnij gwardzistę,thief340fool2;Gwardzista,A,Gwardzista szlachecki pilnuje tutaj porządku.;', '35;10;35;50;50;', '', '', ''),
+(135, 'thief340fool', 'Ze złośliwym uśmieszkiem, bierzesz niewielki kamień do ręki i rzucasz w jednego ze strażników. Gdy ten wściekły odwraca się w twoją stronę, dodatkowo posyłasz w jego stronę kilka „barwnych” określeń. Tego było dla niego za wiele, natychmiast rusza w twoim kierunku. Oczywiście na to właśnie czekałeś. Odwracasz się i zaczynasz uciekać. W pewnym momencie uskakujesz w jakiś zaułek i patrzysz jak strażnik przebiega dalej. Po chwili odpoczynku, szybkim krokiem wracasz na swoje miejsce obserwacji.', 'Rozejrzyj się po okolicy,thief340walk;Znajdź sobie punkt obserwacyjny,thief340wait;', '50;50;', 'Strażnik,T,Strażnik miejski patroluje okolicę.,Odciągnij strażnika,thief340fool;Mieszkaniec,P,Jakiś mieszczanin przechodzi obok.,Okradnij mieszczanina,thief340steal,Strażnik,A,Strażnik miejski patroluje okolicę.;Gwardzista,T,Gwardzista szlachecki pilnuje porządku w okolicy.,Odciągnij gwardzistę,thief340fool2;Gwardzista,A,Gwardzista szlachecki pilnuje tutaj porządku.;', '15;15;15;50;50;', '', '', ''),
+(136, 'thief340fool2', 'Jeden z gwardzistów zaczyna zdradzać, twoim zdaniem, zbyt duże zainteresowanie tym co dzieje się na terenie obserwowanej przez ciebie posiadłości. Dyskretnie podchodzisz do niego od tyłu. Kiedy znajdujesz się tuż za jego plecami, mocno popychasz go tak aby upadł na ziemię. Gwardzista szybko wstaje patrząc na ciebie wściekle. Rzucasz się do ucieczki, czując na swoich plecach pogoń. Na szczęście zdołałeś już rozpoznać dość dobrze okolicę. Przez pewien czas uciekasz ale tak by dystans między wami nie był zbyt duży. Nagle wskakujesz za zaułek muru jednej z profesji i zmęczony ale z satysfakcją widzisz jak gwardzista przebiega obok ciebie. Przez chwilę odpoczywasz, uspokajając oddech a następnie wracasz na swój posterunek.', 'Rozejrzyj się po okolicy,thief340walk;Znajdź sobie punkt obserwacyjny,thief340wait;', '50;50;', 'Strażnik,T,Strażnik miejski patroluje okolicę.,Odciągnij strażnika,thief340fool;Mieszkaniec,P,Jakiś mieszczanin przechodzi obok.,Okradnij mieszczanina,thief340steal,Strażnik,A,Strażnik miejski patroluje okolicę.;Gwardzista,T,Gwardzista szlachecki pilnuje porządku w okolicy.,Odciągnij gwardzistę,thief340fool2;Gwardzista,A,Gwardzista szlachecki pilnuje tutaj porządku.;', '40;20;40;10;10;', '', '', ''),
+(137, 'thief340finish', 'Powoli mija czas przeznaczony na zadanie. Masz wrażenie że przebywasz w tej okolicy już całą wieczność. W pewnym momencie dostrzegasz idącego spokojnie ulicą jednego z twoich kompanów. Kierujesz się w jego stronę. Gdy tylko dostrzega ciebie, daje dyskretnie znak, że czas wracać, spokojnym, normalnym krokiem ruszasz w kierunku spelunki, uważnie obserwując czy nikt ciebie nie śledzi. Po dłuższym spacerze ulicami miasta docierasz na miejsce, gdzie po chwili targów i kłótni twój stan posiadania zwiększa się o jedną sakiewkę pełną złota.', 'Tekst', '100', '', '', '', '', ''),
+(138, 'thief340fail', 'Twoje umiejętności jak do tej pory, nie zdradziły ciebie. Pewnie wypełniasz swoje zadanie. Aż nazbyt pewnie. Chwila nieuwagi z twojej strony i nagle przewracasz się, pchnięty przez kogoś. Niemal natychmiast twoje ręce zostają związane. Kątem oka widzisz nad sobą patrol straży miejskiej. Gwałtownym ruchem, stawiają ciebie na nogi i odprowadzają w kierunku lochów. Tym razem niestety, nie udało się wykonać zadania.', 'Tekst', '100', '', '', '', '', ''),
+(139, 'thief350start', 'Z uwagą przysłuchujesz się szczegółom zadania. Tym razem robota będzie bardzo trudna, głównie ze względu na dużą liczbę strażników. Po ustaleniu wszystkich szczegółów, wyruszasz wraz z kompanami na miejsce roboty. Podróż w kierunku banku mija tobie spokojnie. Ulice pełne są pieszych zmierzających gdzieś przed siebie. Jak zwykle uważnie rozglądasz się na boki, sprawdzając czy nikt podejrzany ciebie nie śledzi. Po jakimś czasie docierasz na miejsce roboty. Razem z innymi ostrożnie wchodzisz na teren banku podkopem, który został wykonany jakiś czas temu. Wychodzicie w okolicach skarbca banku. Twoi kompani natychmiast ruszają do swojej pracy a ty zaczynasz zastanawiać się jaka taktyka byłaby najlepsza.', 'Zaczaj się u wejścia,thief350wait;Rozejrzyj się po okolicy,thief350walk;', '50;50;', 'Strażnik,T,Słyszysz zbliżające się kroki strażnika banku.,Odciągnij strażnika,thief350fool,Daj znać innym,thief350sign;Strażnik,A,Słyszysz zbliżające się kroki strażnika banku.;Strażnik,A,Słyszysz zbliżające się kroki strażnika banku.;', '30;20;30;', '', '', ''),
+(140, 'thief350wait', 'Postanawiasz zaczaić się tuż przy schodach prowadzących do skarbca. Stajesz więc nieco z boku i uważnie nasłuchujesz odgłosów kroków z góry. Do twoich uszu docierają też dźwięki pracy twoich kompanów. Cały czas masz mocno napięte nerwy. Czas dłuży ci się niesamowicie w oczekiwaniu na jakiekolwiek wydarzenie.', 'Poczekaj jeszcze chwilę,thief350wait;Rozejrzyj się po okolicy,thief350walk;', '50;50;', 'Strażnik,T,Słyszysz zbliżające się kroki strażnika banku.,Odciągnij strażnika,thief350fool,Daj znać innym,thief350sign;Strażnik,A,Słyszysz zbliżające się kroki strażnika banku.;Strażnik,A,Słyszysz zbliżające się kroki strażnika banku.;', '35;30;40;', '', '', ''),
+(141, 'thief350walk', 'Postanawiasz sprawdzić nieco okolicę. Powoli, starając się wywołać jak najmniej hałasu, wspinasz się po schodach. Uważnie przepatrujesz całą okolicę w poszukiwaniu strażników. Wydaje ci się że odgłos bicia twojego serca rozlega się jak dzwon w pustym korytarzu. Przechadzasz się kawałek po okolicy cały czas oczekując jakiegoś niespodziewanego odgłosu. Po pewnym czasie postanawiasz zawrócić do skarbca. Schodzisz cicho po schodach i spoglądasz na swoich kompanów. Widać że już nieco posunęli się z robotą.', 'Zaczaj się u wejścia,thief350wait;Rozejrzyj się jeszcze po okolicy,thief350walk;', '60;40;', 'Strażnik,T,Słyszysz zbliżające się kroki strażnika banku.,Odciągnij strażnika,thief350fool,Daj znać innym,thief350sign;Strażnik,A,Słyszysz zbliżające się kroki strażnika banku.;Strażnik,A,Słyszysz zbliżające się kroki strażnika banku.;', '35;30;40;', '', '', ''),
+(142, 'thief350fool', 'Czujesz jak adrenalina buzuje tobie we krwi kiedy postanawiasz zacząć działać. Wyciągasz niewielki kamyk z kieszeni i rzucasz go ostrożnie za plecy strażnika. Kiedy upada wydaje niewielki szelest. Strażnik momentalnie przystaje w miejscu, uważnie rozglądając się na wszystkie strony. Widzisz że po chwili rusza mniej więcej w kierunku w którym poleciał kamień. Jeszcze przez chwilę słyszysz odgłosy jego kroków a następnie nastaje cisza. Na wszelki wypadek jeszcze przez jakiś czas pozostajesz w bezruchu i dopiero potem zaczynasz zastanawiać się co robić.', 'Zaczaj się u wejścia,thief350wait;Rozejrzyj się po okolicy,thief350walk;', '50;50;', 'Strażnik,T,Słyszysz zbliżające się kroki strażnika banku.,Odciągnij strażnika,thief350fool,Daj znać innym,thief350sign;Strażnik,A,Słyszysz zbliżające się kroki strażnika banku.;Strażnik,T,Słyszysz zbliżające się kroki strażnika banku.,Odciągnij strażnika,thief350fool,Daj znać innym,thief350sign;', '10;10;10;', '', '', ''),
+(143, 'thief350sign', 'Cofasz się w stronę skarbca i dyskretnie dajesz znak swoim kompanom o zbliżającym się niebezpieczeństwie. Ci natychmiast przerywają swoją pracę i szybko kryją się wśród cieni. Sam również wybierasz sobie kryjówkę i zaczynasz nasłuchiwać. Słyszysz cały czas zbliżające się kroki strażnika banku. W pewnym momencie odgłosy cichną kilka kroków od twojej kryjówki. Twoje nerwy napięte są do granic wytrzymałości. Dostrzegasz wysoko nad swoją głową promień światła z latarni. Na szczęście strażnik nie dostrzega nic niepokojącego w okolicy. Odgłosy kroków jak i światło powoli oddalają się a po chwili znów zapada ciemność i cisza w okolicy. Jeszcze przez moment siedzisz ukryty a następnie wychodzisz z kryjówki i dajesz sygnał swoim kompanom. Ci natychmiast ponownie przystępują do pracy.', 'Zaczaj się u wejścia,thief350wait;Rozejrzyj się po okolicy,thief350walk;', '50;50;', 'Strażnik,T,Słyszysz zbliżające się kroki strażnika banku.,Odciągnij strażnika,thief350fool,Daj znać innym,thief350sign;Strażnik,A,Słyszysz zbliżające się kroki strażnika banku.;Strażnik,T,Słyszysz zbliżające się kroki strażnika banku.,Odciągnij strażnika,thief350fool,Daj znać innym,thief350sign;', '10;10;10;', '', '', ''),
+(144, 'thief350finish', 'Czas zadania powoli zbliża się ku końcowi. Widzisz jak twoi kompani wynoszą ostatnie kosztowności ze skarbca. Gdy tylko ostatni z nich znika w korytarzu, natychmiast opuszczasz swój posterunek i dołączasz do nich. Ostrożnie w całkowitych ciemnościach wracacie do miasta. Przez moment stoicie u wyjścia z korytarza przyzwyczajając wzrok ponownie do światła słonecznego. Następnie czyścicie swoje ubrania z ziemi, tak aby nie wzbudzać podejrzeń przechodniów i wychodzicie na ulicę. Spokojnym krokiem zmierzasz wraz z innymi z powrotem do Spelunki, uważnie rozglądając się na boki czy nikt was nie śledzi. Po jakimś czasie docieracie na miejsce gdzie następuje ulubiona czynność każdego złodzieja: podział łupów.', 'Tekst', '100', '', '', '', '', ''),
+(145, 'thief350fail', 'Twoje umiejętności jak do tej pory, nie zdradziły ciebie. Pewnie wypełniasz swoje zadanie. Aż nazbyt pewnie. Chwila nieuwagi z twojej strony i nagle przewracasz się, pchnięty przez kogoś. Niemal natychmiast twoje ręce zostają związane. Kątem oka widzisz nad sobą patrol straży miejskiej. Gwałtownym ruchem, stawiają ciebie na nogi i odprowadzają w kierunku lochów. Tym razem niestety, nie udało się wykonać zadania.', 'Tekst', '100', '', '', '', '', ''),
+(146, 'thief010start', 'Przysłuchujesz się szczegółom zadania. Wygląda to na dość prostą robotę. Bierzesz swój ekwipunek i wyruszasz pod wskazany adres. Ulice miasta jak zwykle pełne są przechodniów, od czasu do czasu mija ciebie jakiś pojazd. Cały czas rozglądasz się uważnie wokoło, sprawdzając czy nikt ciebie nie śledzi. Po jakimś czasie docierasz na miejsce pracy. Jest to zwykła, mieszczańska kamienica w środku miasta. Bierzesz głęboki wdech i wchodzisz do środka.', 'Idź pod wskazany adres,thief010door;Poczekaj chwilę,thief010wait;', '100;100;', 'Mieszczanin,P,Widzisz jakiegoś mieszczanina idącego korytarzem kamienicy.;', '30;', '', '', ''),
+(147, 'thief010wait', 'Postanawiasz chwilę zaczekać na korytarzu kamienicy aby upewnić się, że nikt nie będzie przeszkadzał tobie w robocie. Stajesz sobie spokojnie u wejścia i nasłuchujesz odgłosów z wewnątrz jednocześnie obserwując okolicę. Hałas panujący na ulicy nieco rozprasza ciebie. Co jakiś czas zdaje ci się, że widzisz kogoś z twojej gildii przechadzającego się po okolicy.', 'dź pod wskazany adres,thief010door;Poczekaj jeszcze chwilę,thief010wait;', '80;20;', 'Mieszczanin,P,Jakiś mieszczanin przechodzi obok kamienicy;Mieszkaniec,P,Słyszysz odgłosy kroków na schodach.;', '30;20;', '', '', ''),
+(148, 'thief010door', 'Idziesz w kierunku interesującego ciebie mieszkania, uważnie nasłuchując odgłosów dobiegających z klatki schodowej. Jesteś gotów w każdej chwili ukryć się w cieniu. Po krótkim spacerze docierasz do celu. Widzisz przed sobą zwykłe, drewniane drzwi. Oczywiście zamknięte ale od czego masz narzędzia.', 'Otwórz drzwi,thief010corridor;', '100;', 'Mieszczanin,P,Słyszysz odgłosy kroków na schodach.,Zaczekaj chwilę,thief010wait;', '20;', '', '', ''),
+(149, 'thief010room', 'Wchodzisz do niewielkiego pokoju. Jest on urządzony dość skromnie ale przytulnie. Jakiś stół, parę krzeseł, łóżko oraz szafa niemal całkowicie wypełniają pomieszczenie. Po przeciwległej ścianie widzisz okno prowadzące na ulicę.', 'Wróć na korytarz,thief010corridor;', '100;', 'Mieszkaniec,A,Właściciel mieszkania śpi na łóżku.;', '20;', 'Zastawa stołowa,T,Posrebrzana zastawa stołowa leży na stole.,Zabierz zastawę,thief010take;Szkatułka,O,Niewielka szkatułka stoi na szafie.,Zabierz szkatułkę,thief010take;Obraz,T,Jakiś obraz wisi na ścianie.,Zabierz obraz,thief010take;', '30;40;10;', ''),
+(150, 'thief010take', 'Ostrożnie, aby nie wywołać zbyt wiele hałasu, zabierasz przedmiot i chowasz do worka. Uważnie przy tym nasłuchujesz dźwięków dobiegających z okolicy. Następnie zaczynasz rozglądać się po okolicy w poszukiwaniu kolejnych łupów.', 'Rozejrzyj się po korytarzu,thief010corridor;Sprawdź pokój,thief010room;', '50;50;', '', '', '', '', ''),
+(151, 'thief010corridor', 'Stoisz w wąskim, krótkim korytarzu mieszkania. Wokoło siebie widzisz zwyczajne, kamienne ściany. Tuż przy drzwiach znajdują się kołki na ubrania. Wystrój dopełnia jeszcze stojąca niewielka, drewniana, prosta szafka. Kilka kroków dalej widzisz wejście do pokoju.', 'Sprawdź pokój,thief010room;', '100;', '', '', 'Szkatułka,O,Niewielka szkatułka stoi na szafie.,Zabierz szkatułkę,thief010take;Obraz,T,Jakiś obraz wisi na ścianie.,Zabierz obraz,thief010take;', '20;10;', ''),
+(152, 'thief010fail', 'Nagle usłyszałeś za sobą przerażający kobiecy krzyk. Odwróciłeś się szybko i zobaczyłeś w drzwiach mieszkania stojącą jakąś kobietę, krzyczącą na twój widok. Nie namyślając się długo, rzuciłeś się do ucieczki. Szybko zbiegłeś po schodach kamienicy i wypadasz na ulicę. Dokładnie na biegnący w tym kierunku patrol straży miejskiej. Przez moment próbowałeś szamotać się z nimi, ale błyskawicznie powalili ciebie na ziemię. Gwałtownym ruchem, stawiają ciebie na nogi i odprowadzają w kierunku lochów. Tym razem niestety, nie udało się wykonać zadania.', 'Tekst', '100;', '', '', '', '', ''),
+(153, 'thief010finish', 'Czas roboty powoli zbliża się do końca, masz już niemal pełen worek łupów. Jeszcze raz uważnie oglądasz mieszkanie. Wydaje ci się, że nic więcej nie da się już stąd wynieść. Ostrożnie otwierasz główne drzwi i wsłuchujesz się w odgłosy korytarza. Upewniwszy się, że panuje cisza, wychodzisz na zewnątrz i z powrotem zamykasz drzwi na zamek. Szybkim krokiem wychodzisz z kamienicy. Po chwili dostrzegasz znajomego z gildii, który pilnował otoczenia. Dajesz mu dyskretnie znak że robota skończona i ruszacie w kierunku Spelunki. Idziecie dość szybkim krokiem, starając się nie zwracać uwagi przechodniów na siebie. Po pewnym czasie docieracie na miejsce. Tutaj następuje podział łupów.', 'Tekst', '100;', '', '', '', '', ''),
+(154, 'thief030start', 'Tym razem teren roboty, będzie nieco większy niż ostatnio. A i dostać się do środka będzie trudniej. Uważnie słuchasz szczegółów zadania. Następnie wraz z kompanami, opracowujecie szczegóły zadania. Kiedy wszystko zostaje ustalone, wyruszacie na miejsce. Ulice miasta jak zwykle tętnią życiem. Przez całą drogę uważnie rozglądasz się na boki, obserwując wszystko dookoła. Po pewnym czasie docieracie do bogatszej dzielnicy miasta. Ruch na ulicach jest tutaj dużo mniejszy, za to chodzi dookoła więcej patroli straży oraz gwardii szlacheckich. Docieracie w końcu na miejsce roboty. Jest to niewielka posiadłość szlachecka położona nieco na uboczu. Twoi towarzysze zaczynają rozchodzić się na boki a ty zastanawiasz się co dalej.', 'Poczekaj chwilę,thief030wait;', '100;', 'Strażnik,A,Strażnik miejski patroluje okolicę.;Gwardzista,A,Gwardzista szlachecki przechodzi obok.;Gwardzista2,A,Gwardzista pilnuje bramy posiadłości.;', '20;30;100;', 'Brama,T,Wejście do posiadłości znajduje się z tej strony.,Przekradnij się obok strażnika bramą,thief030gate;Mur,T,Niski mur otacza całą posiadłość.,Przejdź przez mur,thief030wall;', '100;100;', ''),
+(155, 'thief030wait', 'Postanawiasz przeczekać chwilę i rozejrzeć się po okolicy. Obchodzisz sobie posiadłość dookoła, uważnie przyglądając się jej. Na ulicach prawie nie ma ruchu, co nieco utrudnia tobie nierzucanie się w oczy. Posiadłość ze wszystkich stron otoczona jest niewysokim murem, za którego widać niewielki ogród oraz sam budynek. Przez pewien czas wędrujesz wzdłuż muru a następnie wracasz w okolicę bramy i zaczynasz zastanawiać się co dalej.', 'Poczekaj jeszcze chwilę,thief030wait;', '100;', 'Strażnik,A,Strażnik miejski patroluje okolicę.;Gwardzista,A,Gwardzista szlachecki przechodzi obok.;Gwardzista2,A,Gwardzista pilnuje bramy posiadłości.;', '30;40;100;', 'Brama,T,Wejście do posiadłości znajduje się z tej strony.,Przekradnij się obok strażnika bramą,thief030gate;Mur,T,Niski mur otacza całą posiadłość.,Przejdź przez mur,thief030wall;', '100;100;', ''),
+(156, 'thief030gate', 'Postanawiasz zaryzykować, licząc na swoje szczęście i przekraść się bramą do posiadłości. Uważnie rozglądając się na boki, przechodzisz przez ulicę, kierując się do przeciwległej dla strażnika strony bramy. Nerwy masz napięte do ostatnich granic. Przez moment stoisz obok. W pewnym momencie, wykorzystując fakt, że strażnik zaczął patrzeć w drugą stronę, dyskretnie wślizgujesz się przez bramę do ogrodu otaczającego posiadłość. Natychmiast, szybkim krokiem oddalasz się od bramy, zastanawiając się co dalej.', 'Poczekaj chwilę w ogrodzie,thief030garden;Wejdź do posiadłości,thief030corridor;', '100;50;', 'Gwardzista,A,Gwardzista patroluje okolicę.;', '40;', '', '', ''),
+(157, 'thief030wall', 'Postanawiasz nie kusić losu za bardzo i przejść przez mur. Obchodzisz posiadłość w poszukiwaniu dobrego miejsca. Zauważasz, że mur jest nieco niższy na tyłach posiadłości a i na ulicy nikogo nie widać. Spokojnie podchodzisz do muru, rozglądasz się dookoła a następnie szybko wskakujesz na mur. Po upewnieniu się, że nikogo nie ma po drugiej stronie, zeskakujesz i szybko chowasz się w najbliższych krzakach na terenie ogrodu otaczającego budynek.', 'Poczekaj chwilę w ogrodzie,thief030garden;Wejdź do posiadłości,thief030corridor;', '100;50;', 'Gwardzista,A,Gwardzista patroluje okolicę.;', '40;', '', '', ''),
+(158, 'thief030garden', 'Niewielki ogród otacza interesujący ciebie budynek. Znajduje się tutaj kilka drzew i krzewów, za którymi możesz w razie czego ukryć się. Uważnie rozglądając się na boki, badasz całą okolicę. Wokół panuje cisza. Czasami masz wrażenie że gdzieś na skraju pola widzenia dostrzegasz swoich kompanów z gildii.', 'Poczekaj jeszcze chwilę w ogrodzie,thief030garden;Wejdź do posiadłości,thief030corridor;', '50;100;', 'Gwardzista,A,Gwardzista patroluje okolicę.;', '40;', '', '', ''),
+(159, 'thief030room', 'Wchodzisz do pokoju, całkiem nieźle urządzonego. Widzisz gustowne meble wokół siebie, podłogę pokrywa gruby, tłumiący odgłosy kroków dywan. Przez okno znajdujące się po przeciwległej ścianie budynku widzisz ogród oraz kawałek ulicy.', 'Wróć na korytarz,thief030corridor;', '100;', 'Pokojówka,P,Pokojówka sprząta pokój;Gwardzista,A,Gwardzista stoi przy oknie;', '30;30;', 'Zastawa stołowa,T,Srebrna zastawa stołowa leży na stole.,Zabierz zastawę,thief030take;Szkatułka,O,Niewielka szkatułka stoi na szafie.,Zabierz szkatułkę,thief030take;Obraz,T,Jakiś obraz wisi na ścianie.,Zabierz obraz.,thief030take;Gobelin,T,Niewielki gobelin wisi tuż przy oknie.,Zabierz gobelin,thief030take;', '35;45;20;30;', ''),
+(160, 'thief030corridor', 'Wchodzisz do szerokiego, wysokiego korytarza. Na podłodze leży gruby, puszysty dywan, doskonale tłumiący wszelkie kroki. Co kilka kroków, przy ścianach, stoją niskie szafki oraz różnego rodzaju zbroje. Oprócz tego na końcu korytarza widzisz schody na piętro posiadłości. Po obu stronach znajdują się wejścia do pokojów.', 'Sprawdź pokój,thief030room;', '100;', 'Gwardzista,A,Strażnik szlachcica stoi przy schodach patrząc w górę.;', '50;', 'Szkatułka,O,Niewielka szkatułka stoi na szafie.,Zabierz szkatułkę,thief030take;Obraz,T,Jakiś obraz wisi na ścianie.,Zabierz obraz.thief030take;Gobelin,T,Niewielki gobelin wisi tuż przy oknie.,Zabierz gobelin,thief030take;', '40;25;35;', ''),
+(161, 'thief030take', 'Ostrożnie, aby nie wywołać zbyt wiele hałasu, zabierasz przedmiot i chowasz do worka. Uważnie przy tym nasłuchujesz dźwięków dobiegających z okolicy. Następnie zaczynasz rozglądać się po okolicy w poszukiwaniu kolejnych łupów.', 'Rozejrzyj się po korytarzu,thief030corridor;Rozejrzyj się po pokojach,thief030room;', '100;100;', '', '', '', '', ''),
+(162, 'thief030fail', 'Ostrożnie przekradasz się do swojego celu. Nerwy masz napięte do ostatnich granic. W pewnym momencie wydaje ci się, że słyszysz gdzieś obok siebie jakiś odgłos. Przystajesz, próbując zlokalizować źródło dźwięku i w tym momencie dostajesz solidny cios w głowę. Upadasz ogłuszony na ziemię, za bardzo nie wiedząc co się dzieje. Kiedy w końcu dochodzisz do siebie, widzisz że jesteś już skrępowany a nad tobą stoi gwardzista. Sprawnym ruchem podnosi ciebie z ziemi i odprowadza do bramy posiadłości. Tutaj przez chwilę czekacie na patrol straży miejskiej. Kiedy ten dociera na miejsce, zabierają ciebie do lochów. Tym razem niestety, nie udało się wykonać zadania.', 'Tekst', '100;', '', '', '', '', ''),
+(163, 'thief030finish', 'Postanawiasz więcej nie kusić losu. To co do tej pory zdobyłeś, zupełnie tobie wystarczy. Niezauważony wychodzisz z posiadłości i udajesz się poprzez ogród, na jej tyły. Docierasz do muru posiadłości. Szybki skok, zerknięcie czy nikogo nie ma po drugiej stronie i już jesteś poza terenem posiadłości. Po chwili prawie w tym samym miejscu pojawia się jeden z twoich kompanów, uśmiechnięty, z wyładowanym workiem. Razem ostrożnie wracacie do Spelunki, starając się nie rzucać w oczy mijającym was od czasu do czasu strażnikom miejskim. Po pewnym czasie docieracie na miejsce. Gdy tylko zbiera się reszta zespołu, następuje najciekawszy fragment roboty. Podział łupów.', 'Tekst', '100;', '', '', '', '', ''),
+(164, 'thief050fail', 'Nagle usłyszałeś za sobą przerażający kobiecy krzyk. Odwróciłeś się szybko i zobaczyłeś w drzwiach stojącą jakąś kobietę, krzyczącą na twój widok. Nie namyślając się długo, rzuciłeś się do ucieczki. Szybko zbiegłeś po schodach kamienicy i wypadasz na ulicę. Dokładnie na biegnący w tym kierunku patrol straży miejskiej. Przez moment próbowałeś szamotać się z nimi, ale błyskawicznie powalili ciebie na ziemię. Gwałtownym ruchem, stawiają ciebie na nogi i odprowadzają w kierunku lochów. Tym razem niestety, nie udało się wykonać zadania.', 'Tekst', '100;', '', '', '', '', ''),
+(165, 'thief0100fail', 'Ostrożnie przekradasz się do swojego celu. Nerwy masz napięte do ostatnich granic. W pewnym momencie wydaje ci się, że słyszysz gdzieś obok siebie jakiś odgłos. Przystajesz, próbując zlokalizować źródło dźwięku i w tym momencie dostajesz solidny cios w głowę. Upadasz ogłuszony na ziemię, za bardzo nie wiedząc co się dzieje. Kiedy w końcu dochodzisz do siebie, widzisz że jesteś już skrępowany a nad tobą stoi gwardzista. Sprawnym ruchem podnosi ciebie z ziemi i odprowadza do bramy posiadłości. Tutaj przez chwilę czekacie na patrol straży miejskiej. Kiedy ten dociera na miejsce, zabierają ciebie do lochów. Tym razem niestety, nie udało się wykonać zadania.', 'Tekst', '100;', '', '', '', '', ''),
+(166, 'thief150fail', 'Ostrożnie przekradasz się do swojego celu. Nerwy masz napięte do ostatnich granic. W pewnym momencie wydaje ci się, że słyszysz gdzieś obok siebie jakiś odgłos. Przystajesz, próbując zlokalizować źródło dźwięku i w tym momencie dostajesz solidny cios w głowę. Upadasz ogłuszony na ziemię, za bardzo nie wiedząc co się dzieje. Kiedy w końcu dochodzisz do siebie, widzisz że jesteś już skrępowany a nad tobą stoi strażnik banku. Sprawnym ruchem podnosi ciebie z ziemi i odprowadza do drzwi. Tutaj przez chwilę czekacie na patrol straży miejskiej. Kiedy ten dociera na miejsce, zabierają ciebie do lochów. Tym razem niestety, nie udało się wykonać zadania.', 'Tekst', '100;', '', '', '', '', ''),
+(167, 'thief050start', 'Rozpoczynasz naradę z innymi. Wiesz, że tym razem możesz oczekiwać całkiem niezłych łupów. Ustalasz wraz z kompanami szczegóły zadania, kto, co i gdzie będzie robił. Po obgadaniu wszystkiego, wyruszacie w miasto. Ulice jak zwykle pełne są przechodniów podążających gdzieś w swoich sprawach. Od czasu do czasu mija was jakiś wóz wiozący towary na targ. Uważnie rozglądasz się na boki, sprawdzając czy nikt was nie śledzi. Po dłuższym spacerze docieracie na miejsce roboty. Sama kamienica to niewysoki budynek stojący  blisko innych, podobnych kamienic. Zaczynasz zastanawiać się co robić.', 'Poczekaj chwilę,thief050wait;Przeskocz na budynek z innego budynku,thief050jump;', '80;100;', 'Ochroniarz,A,Ochroniarz pilnuje bramy kamienicy.;Strażnik,A,Strażnik miejski patroluje okolicę.;Mieszczanin,P,Jakiś mieszczanin przechodzi obok.;', '100;40;20;', 'Brama,T,Brama do kamienicy jest lekko uchylona.,Przekradnij się przez bramę,thief050door;', '100;', ''),
+(168, 'thief050wait', 'Postanawiasz najpierw nieco rozejrzeć się po okolicy. Obchodzisz interesujący ciebie budynek ze wszystkich stron. To niewielki, dwupiętrowy budynek. Z trzech stron obiega go ulica, po lewej znajduje się bardzo blisko zwykła, mieszczańska kamienica. Oglądasz sobie wszystko dokładnie, starając się nie zwracać na siebie uwagi przechodniów. Po pewnym czasie docierasz z powrotem w okolicę bramy i zaczynasz zastanawiać się co dalej.', 'Poczekaj jeszcze chwilę,thief050wait;Przeskocz na budynek z innego budynku,thief050jump;', '80;100;', 'Ochroniarz,A,Ochroniarz pilnuje bramy kamienicy.;Strażnik,A,Strażnik miejski patroluje okolicę.;Mieszczanin,P,Jakiś mieszczanin przechodzi obok.;', '100;45;30;', 'Brama,T,Brama do kamienicy jest lekko uchylona.,Przekradnij się przez bramę,thief050door;', '100;', ''),
+(169, 'thief050door', 'Postanawiasz zaryzykować i wejść na teren kamienicy z fantazją. Dajesz znak osobie z gildii pilnującej okolicy aby odwróciła uwagę ochroniarza. Ten podchodzi do drzwi i wdaje się w jakąś energiczną dyskusję ze strażnikiem. Dyskretnie ale i bez zwracania na siebie uwagi przechodniów podchodzisz do bramy. Kiedy ochroniarz odwraca się tyłem aby coś głośniej powiedzieć do twojego kompana, błyskawicznie wślizgujesz się pomiędzy drzwi. Na wszelki wypadek robisz jeszcze kilka kroków korytarzem i dopiero wtedy zaczynasz rozglądać się na boki.', 'Sprawdź pokój,thief050room;Rozejrzyj się po korytarzu,thief050corridor;', '100;100;', 'Ochroniarz,A,Ochroniarz drzemie na krześle tuż przy ścianie;', '20;', '', '', ''),
+(170, 'thief050jump', 'Wydaje ci się, że to najlepsza droga do celu. Wchodzisz spokojnie do kamienicy obok i od razu kierujesz się na jej strych. Stamtąd bez problemu wchodzisz na dach budynku. Przez moment podziwiasz panoramę miasta. Następnie ostrożnie pochodzisz do skraju dachu, obserwując teren pomiędzy kamienicami. Oceniasz na oko odległość jaką musisz przeskoczyć. Następnie cofasz się parę kroków, robisz głęboki wdech, bierzesz rozbieg i skaczesz... Chwila niepewności i bezpiecznie lądujesz na dachu interesującego ciebie budynku. Przez moment nasłuchujesz czy nikt nie kręci się w okolicy. Następnie ostrożnie otwierasz klapę i schodzisz do budynku. Znajdujesz się w korytarzu kamienicy.', 'Sprawdź pokój,thief050room;Rozejrzyj się po korytarzu,thief050corridor;', '100;100;', '', '', '', '', ''),
+(171, 'thief050corridor', 'Szeroki i wysoki korytarz ciągnie się przez całą kamienicę. Okna umieszczone na jednej ze ścian prowadzą bezpośrednio na ulicę. Na podłodze leży dywan nieco tłumiący odgłosy kroków. Pod ścianami, co kilka kroków stoją niewielkie szafki oraz proste rzeźby przedstawiające różne humanoidalne postacie. W przeciwległej do okien ścianie znajdują się drzwi prowadzące do pokojów.', 'Sprawdź pokój,thief050room;Idź dalej korytarzem,thief050corridor;', '100;100;', 'Ochroniarz,A,Słyszysz kroki na korytarzu.;Służący,P,Z daleka dobiega ciebie odgłos rozmowy na korytarzu.;', '30;30;', 'Szkatułka,O,Niewielka szkatułka stoi na szafie.,Zabierz szkatułkę,thief050take;Obraz,T,Jakiś obraz wisi na ścianie.,Zabierz obraz.thief050take;Gobelin,T,Niewielki gobelin wisi tuż przy oknie.,Zabierz gobelin,thief050take;', '40;25;35;', ''),
+(172, 'thief050room', 'Wchodzisz do niedużego pokoju, prawdopodobnie przeznaczonego dla służby. Proste łóżko, takie same szafy oraz stół i krzesła praktycznie wypełniają pokój całkowicie.', 'Wróć na korytarz,thief050corridor;', '100;', 'Służący,P,Jakiś służący drzemie na łóżku.;', '20;', 'Szkatułka,O,Niewielka szkatułka stoi na szafie.,Zabierz szkatułkę,thief050take;', '20;', ''),
+(173, 'thief050room', 'Wchodzisz do gustownie urządzonego pokoju. Podłogę pokrywa wzorzysty dywan, tłumiący doskonale odgłosy kroków. Bogato zdobione meble wypełniają środek pokoju. Na ścianach znajdują się olbrzymie obrazy przedstawiające różne krajobrazy. Na przeciwległej ścianie, na wprost drzwi, znajduje się okno prowadzące na podwórze kamienicy.', 'Wróć na korytarz,thief050corridor;', '100;', 'Służąca,P,Służąca sprząta meble.;Ochroniarz,A,Ochroniarz patrzy przez okno.;', '30;20;', 'Szkatułka,O,Niewielka szkatułka stoi na stole.,Zabierz szkatułkę,thief050take;Obraz,T,Jakiś obraz wisi na ścianie.,Zabierz obraz.thief050take;Gobelin,T,Niewielki gobelin wisi tuż przy oknie.,Zabierz gobelin,thief050take;Zastawa,T,Srebrna zastawa stoi na stole.,Zabierz zastawę,thief050take;Figurka,T,Mała figurka stoi na szafie.,Zabierz figurkę,thief050take;', '40;35;35;50;25;', ''),
+(174, 'thief050take', 'Ostrożnie, aby nie wywołać zbyt wiele hałasu, zabierasz przedmiot i chowasz do worka. Uważnie przy tym nasłuchujesz dźwięków dobiegających z okolicy. Następnie zaczynasz rozglądać się po okolicy w poszukiwaniu kolejnych łupów.', 'Rozejrzyj się po korytarzu,thief050corridor;Rozejrzyj się po pokojach,thief050room;', '100;100;', '', '', '', '', ''),
+(175, 'thief050finish', 'Czas mija bardzo szybko. Twój worek jest już pełen łupów. Pora wracać do Spelunki. Rozglądasz się uważnie, czy nie zostały jakieś ślady, które mogłyby zdradzić twoją obecność w tym miejscu. Następnie wychodzisz na tyły kamienicy, otwierasz jedno z okien, rozglądasz się i wychodzisz na pustą ulicę. Przymykasz okno za sobą i wracasz w kierunku bramy kamienicy. Po chwili dostrzegasz znajomego z gildii, który pilnował otoczenia. Dajesz mu dyskretnie znak że robota skończona i ruszacie w kierunku Spelunki. Idziecie dość szybkim krokiem, starając się nie zwracać uwagi przechodniów na siebie. Po pewnym czasie docieracie na miejsce. Tutaj następuje podział łupów.', 'Tekst', '100;', '', '', '', '', ''),
+(176, 'thief0100start', 'Przysłuchujesz się szczegółom zadania. Tym razem obszar pracy będzie nieco większy niż ostatnio, więc i pewnie łupów powinno być więcej. Następnie ustalasz plan wraz z osobami zaangażowanymi w to zlecenie. Kiedy wszystko zostało już obgadane, wyruszacie na miasto. Ulice jak zwykle pełne są przechodniów oraz przejeżdżających od czasu do czasu wozów kupieckich. Jak zawsze masz napiętą uwagę, uważnie rozglądasz się na boki w poszukiwaniu jakiś niespodzianek. Na szczęście podróż mija wam spokojnie. Po pewnym czasie docieracie do bogatszej dzielnicy miasta. Tutaj ruch na ulicach jest już dużo mniejszy. Docieracie na miejsce zadania. To dość rozległa posiadłość szlachecka, położona tuż przy murach miasta. Twoi kompani rozchodzą się na boki, ty zaś stoisz mniej więcej przed wejściem do posiadłości, zastanawiając się co dalej.', 'Poczekaj chwilę,thief0100wait;', '100;', 'Strażnik,A,Strażnik miejski patroluje okolicę.;Gwardzista,A,Gwardzista szlachecki przechodzi obok.;Gwardzista2,A,Gwardzista pilnuje bramy posiadłości.;Gwardzista,A,Gwardzista szlachecki przechodzi obok.;', '20;30;100;40;', 'Brama,T,Wejście do posiadłości znajduje się z tej strony.,Przekradnij się obok strażnika bramą,thief0100gate;Mur,T,Niski mur otacza całą posiadłość.,Przejdź przez mur,thief0100wall;', '100;100;', ''),
+(177, 'thief0100wait', 'Postanawiasz przeczekać chwilę i rozejrzeć się po okolicy. Obchodzisz sobie posiadłość dookoła, uważnie przyglądając się jej. Na ulicach prawie nie ma ruchu, co nieco utrudnia tobie nierzucanie się w oczy. Posiadłość ze wszystkich stron otoczona jest niewysokim murem, za którego widać rozległy ogród oraz sam budynek. Przez pewien czas wędrujesz wzdłuż muru a następnie wracasz w okolicę bramy i zaczynasz zastanawiać się co dalej.', 'Poczekaj jeszcze chwilę,thief0100wait;', '100;', 'Strażnik,A,Strażnik miejski patroluje okolicę.;Gwardzista,A,Gwardzista szlachecki przechodzi obok.;Gwardzista2,A,Gwardzista pilnuje bramy posiadłości.;Gwardzista,A,Gwardzista szlachecki przechodzi obok.;', '30;40;100;45;', 'Brama,T,Wejście do posiadłości znajduje się z tej strony.,Przekradnij się obok strażnika bramą,thief0100gate;Mur,T,Niski mur otacza całą posiadłość.,Przejdź przez mur,thief0100wall;', '100;100;', ''),
+(178, 'thief100gate', 'Postanawiasz zaryzykować, licząc na swoje szczęście i przekraść się bramą do posiadłości. Uważnie rozglądając się na boki, przechodzisz przez ulicę, kierując się do przeciwległej dla strażnika strony bramy. Nerwy masz napięte do ostatnich granic. Przez moment stoisz obok. W pewnym momencie, wykorzystując fakt, że strażnik zaczął patrzeć w drugą stronę, dyskretnie wślizgujesz się przez bramę do ogrodu otaczającego posiadłość. Natychmiast, szybkim krokiem oddalasz się od bramy, zastanawiając się co dalej.', 'Poczekaj chwilę w ogrodzie,thief0100garden;Wejdź do posiadłości,thief0100corridor;', '100;50;', 'Gwardzista,A,Gwardzista patroluje okolicę.;Gwardzista2,P,Gwardzista stoi niedaleko w ogrodzie.;', '40;40;', '', '', ''),
+(179, 'thief0100wall', 'Postanawiasz nie kusić losu za bardzo i przejść przez mur. Obchodzisz posiadłość w poszukiwaniu dobrego miejsca. Zauważasz, że mur jest nieco niższy na tyłach posiadłości a i na ulicy nikogo nie widać. Spokojnie podchodzisz do muru, rozglądasz się dookoła a następnie szybko wskakujesz na mur. Po upewnieniu się, że nikogo nie ma po drugiej stronie, zeskakujesz i szybko chowasz się w najbliższych krzakach na terenie ogrodu otaczającego budynek.', 'Poczekaj chwilę w ogrodzie,thief0100garden;Wejdź do posiadłości,thief0100corridor;', '100;50;', 'Gwardzista,A,Gwardzista patroluje okolicę.;Gwardzista2,P,Gwardzista stoi niedaleko w ogrodzie.;', '40;40;', '', '', ''),
+(180, 'thief0100garden', 'Twoim oczom ukazuje się rozległy ogród otaczający masywny budynek posiadłości. Znajduje się tutaj wiele drzew i krzewów, które nieco ułatwiają skradanie się. Jednak same ścieżki przypominają raczej jakiś labirynt wśród zieleni. W takich warunkach szybciej coś usłyszysz niż zauważysz.', 'Rozejrzyj się po ogrodzie;thief0100garden;', '100;', 'Gwardzista,A,Gwardzista patroluje okolicę.;Gwardzista2,P,Gwardzista stoi niedaleko w ogrodzie.;', '40;40;', '', '', ''),
+(181, 'thief0100garden', 'Wędrujesz ostrożnie poprzez ogród. Zewsząd otaczają ciebie drzewa oraz wysokie krzewy. Całe otoczenie bardzo ułatwia skradanie się ale z drugiej strony utrudnia obserwację okolicy. Powoduje to, że cały czas masz nerwy napięte do ostatnich granic. Tym bardziej, że po pokonaniu kolejnego zakrętu ścieżki, twoim oczom ukazuje się posiadłość.', 'Rozejrzyj się po ogrodzie;thief0100garden;Wejdź do posiadłości,thief0100corridor;', '100;100;', 'Gwardzista,A,Gwardzista patroluje okolicę.;Gwardzista2,P,Gwardzista stoi niedaleko w ogrodzie.;Ogrodnik,P,Ogrodnik strzyże krzaki.;', '40;40;', '', '', ''),
+(182, 'thief0100room', 'Wchodzisz do pokoju, całkiem nieźle urządzonego. Widzisz gustowne meble wokół siebie, podłogę pokrywa gruby, tłumiący odgłosy kroków dywan. Przez okno znajdujące się po przeciwległej ścianie budynku widzisz ogród oraz kawałek ulicy.', 'Wróć na korytarz,thief0100corridor;', '100;', 'Pokojówka,P,Pokojówka sprząta pokój;Gwardzista,A,Gwardzista stoi przy oknie;', '35;35;', 'Zastawa stołowa,T,Srebrna zastawa stołowa leży na stole.,Zabierz zastawę,thief0100take;Szkatułka,O,Niewielka szkatułka stoi na szafie.,Zabierz szkatułkę,thief0100take;Obraz,T,Jakiś obraz wisi na ścianie.,Zabierz obraz.,thief100take;Gobelin,T,Niewielki gobelin wisi tuż przy oknie.,Zabierz gobelin,thief0100take;', '40;50;25;35;', ''),
+(183, 'thief0100room', 'Znajdujesz się w olbrzymim, niemal okrągłym pokoju, wypełnionym gustownymi, bogato zdobionymi meblami. Na podłodze leży olbrzymi, puszysty dywan, doskonale tłumiący odgłosy kroków. Po przeciwległej stronie pokoju widzisz olbrzymie, szklane wyjście prowadzące na balkon. Z daleka dostrzegasz ogród oraz fragment muru oddzielający posesję od ulicy.', 'Wróć na korytarz,thief0100corridor;', '100;', 'Pokojówka,P,Pokojówka sprząta pokój;Gwardzista,A,Gwardzista stoi przy oknie;', '40;40;', 'Zastawa stołowa,T,Srebrna zastawa stołowa leży na stole.,Zabierz zastawę,thief0100take;Szkatułka,O,Niewielka szkatułka stoi na szafie.,Zabierz szkatułkę,thief0100take;Obraz,T,Jakiś obraz wisi na ścianie.,Zabierz obraz.,thief100take;Gobelin,T,Niewielki gobelin wisi tuż przy oknie.,Zabierz gobelin,thief0100take;Medalion,T,Złoty medalion leży na stoliku.,Zabierz medalion.', '45;55;30;40,20;', ''),
+(184, 'thief0100corridor', 'Wchodzisz do szerokiego, wysokiego korytarza. Na podłodze leży gruby, puszysty dywan, doskonale tłumiący wszelkie kroki. Co kilka kroków, przy ścianach, stoją niskie szafki oraz różnego rodzaju zbroje. Oprócz tego na końcu korytarza widzisz schody na piętro posiadłości. Po obu stronach znajdują się wejścia do pokojów.', 'Sprawdź pokój,thief0100room;', '100;', 'Gwardzista,A,Strażnik szlachcica stoi przy schodach patrząc w górę.;', '50;', 'Szkatułka,O,Niewielka szkatułka stoi na szafie.,Zabierz szkatułkę,thief0100take;Obraz,T,Jakiś obraz wisi na ścianie.,Zabierz obraz.,thief100take;Gobelin,T,Niewielki gobelin wisi tuż przy oknie.,Zabierz gobelin,thief0100take;', '45;30;40;', ''),
+(185, 'thief0100take', 'Ostrożnie, aby nie wywołać zbyt wiele hałasu, zabierasz przedmiot i chowasz do worka. Uważnie przy tym nasłuchujesz dźwięków dobiegających z okolicy. Następnie zaczynasz rozglądać się po okolicy w poszukiwaniu kolejnych łupów.', 'Sprawdź pokój,thief0100room;Rozejrzyj się po korytarzu,thief0100corridor;', '100;100;', '', '', '', '', ''),
+(186, 'thief0100finish', 'Postanawiasz więcej nie kusić losu. To co do tej pory zdobyłeś, zupełnie tobie wystarczy. Niezauważony wychodzisz z posiadłości i udajesz się poprzez ogród, na jej tyły. Docierasz do muru posiadłości. Szybki skok, zerknięcie czy nikogo nie ma po drugiej stronie i już jesteś poza terenem posiadłości. Po chwili prawie w tym samym miejscu pojawia się jeden z twoich kompanów, uśmiechnięty, z wyładowanym workiem. Razem ostrożnie wracacie do Spelunki, starając się nie rzucać w oczy mijającym was od czasu do czasu strażnikom miejskim. Po pewnym czasie docieracie na miejsce. Gdy tylko zbiera się reszta zespołu, następuje najciekawszy fragment roboty. Podział łupów.', 'Tekst', '100;', '', '', '', '', ''),
+(187, 'thief0150start', 'Uważnie przysłuchujesz się szczegółom zadania. Wiesz, że tym razem może być ciężko. Waszym głównym celem jest odnalezienie pewnego sztyletu ukrytego w jednej ze skrytek bankowych. Sam teren działania nie będzie zbyt duży, ale za to dobrze strzeżony. Po ustaleniu wszystkich szczegółów, ruszacie na miasto. Jak zwykle zewsząd otacza was gwar rozmów i turkot kół wozów przejeżdżających ulicą. Po pewnym czasie docieracie w okolice banku. Wchodzicie do jednej z pobliskich kamienic, gdzie w piwnicy parę dni temu wykopano specjalny tunel prowadzący bezpośrednio do skarbca banku. Wchodzisz pierwszy w całkowitą ciemność. Idziesz po omacku przez jakiś czas, aż docierasz do prowizorycznej ściany. Po jej rozebraniu, dostrzegasz w nikłym świetle że znajdujesz się tuż przy skrytkach bankowych. Twój towarzysz natychmiast zajmuje miejsce przy wejściu do skarbca, ty natomiast zaczynasz zastanawiać się co dalej.', 'Sprawdź skrytkę,thief0150box;', '100;', 'Strażnik,A,Słyszysz odgłosy kroków od strony wejścia.,Ukryj się,thief0150wait;', '40;', '', '', ''),
+(188, 'thief0150wait', 'Szybko chowasz się za jedną ze ścian, przykucając. Odgłosy kroków przez moment zbliżają się do ciebie a następnie nagle cichną. Wstrzymujesz oddech aby żaden dźwięk nie zdradził twojej obecności. Po kilku chwilach, kiedy już zaczęły tobie migać czarne plamki przed oczami, znowu słyszysz odgłos kroków, tym razem oddalających się. Kiedy milkną w oddali z ulgą wypuszczasz powietrze i zaczynasz zastanawiać się co dalej.', 'Sprawdź skrytkę,thief0150box;', '100;', 'Strażnik,A,Słyszysz odgłosy kroków od strony wejścia.,Ukryj się znowu,thief0150wait;', '20;', '', '', ''),
+(189, 'thief0150box', 'Bez problemu otwierasz skrytkę narzędziami. Szybko zaglądasz do środka i cicho klniesz pod nosem. Totalna pustka. Po kiego diabła ktoś zamyka pustą skrytkę na klucz? Zastanawiasz się co dalej.', 'Sprawdź kolejną skrytkę,thief0150box;', '100;', 'Strażnik,A,Słyszysz odgłosy kroków od strony wejścia.,Ukryj się znowu,thief0150wait;', '40;', '', '', ''),
+(190, 'thief0150box', 'Chwila pracy narzędziami i skrytka stoi przed tobą otworem. Zaglądasz do środka. Wewnątrz leżą jakieś papiery.', 'Sprawdź kolejną skrytkę,thief0150box;', '100;', 'Strażnik,A,Słyszysz odgłosy kroków od strony wejścia.,Ukryj się,thief0150wait;', '40;', 'Sakiewka,T,Sakiewka z monetami leży obok papierów.,Zabierz sakiewkę,thief0150take;Sakiewka2,T,Mała sakiewka pełna klejnotów leży w rogu skrytki.,Zabierz klejnoty,thief0150take;', '100;40;', ''),
+(191, 'thief0150box', 'Po krótkiej walce z mechanizmem zamka, otwierasz skrytkę, wewnątrz znajduje się całkiem sporo gratów, większość niestety to kompletnie nieprzydatny złom. Podejrzliwie zaczynasz grzebać wśród całego tego bałaganu.', 'Sprawdź kolejną skrytkę,thief0150box;', '100;', 'Strażnik,A,Słyszysz odgłosy kroków od strony wejścia.,Ukryj się znowu,thief0150wait;', '40;', 'Sakiewka,T,Sakiewka z monetami leży na spodzie.,Zabierz sakiewkę,thief0150take;Sakiewka2,T,Mała sakiewka pełna klejnotów leży w rogu skrytki.,Zabierz klejnoty,thief0150take;Sztylet,Q,Pięknie zdobiony sztylet pojawia się twoim oczom.,Zabierz sztylet,thief0150take;', '100;40;50;', ''),
+(192, 'thief0150take', 'Ostrożnie, aby nie wywołać zbyt wiele hałasu, zabierasz przedmiot i chowasz do worka. Uważnie przy tym nasłuchujesz dźwięków dobiegających z okolicy. Następnie zaczynasz rozglądać się po okolicy w poszukiwaniu kolejnych łupów.', 'Sprawdź kolejną skrytkę,thief0150box;', '100;', '', '', '', '', '');
+INSERT INTO `missions` (`id`, `name`, `text`, `exits`, `chances`, `mobs`, `chances2`, `items`, `chances3`, `moreinfo`) VALUES
+(193, 'thief0150finish', 'Czas roboty powoli dobiega końca. Twój worek z łupami jest niemal pełen. Niestety, nigdzie nie możesz znaleźć interesującego ciebie sztyletu. Z mieszanymi uczuciami zamykasz wszystkie wcześniej otwarte skrytki, dajesz znać kompanowi i wycofujecie się do korytarza, którym tutaj przyszliście. Jeszcze tylko zamaskowanie wejścia i wracacie na górę. Po wejściu na korytarz kamienicy na moment oślepia was światło słoneczne. Przez chwilę stoicie, przyzwyczajając się do niego. Następnie ostrożnie, starając nie zwracać na siebie uwagi przechodniów, a przede wszystkim straży miejskiej, ruszacie w kierunku Spelunki. Droga na szczęście mija wam spokojnie. Po pewnym czasie jesteście już na miejscu. Tutaj zdajesz raport z roboty a następnie przystępujesz do najważniejszej czynności. Podziału łupów.', 'Tekst', '100;', '', '', '', '', ''),
+(194, 'thief0150finishgood', 'Uśmiechasz się lekko pod nosem. O to właśnie chodziło. Szybko chowasz znaleziony sztylet do kieszeni ubrania. Następnie rozglądasz się po okolicy. Czas roboty dobiegł końca. Zamykasz wszystkie wcześniej otwarte skrytki, dajesz znać kompanowi i wycofujecie się do korytarza, którym tutaj przyszliście. Jeszcze tylko zamaskowanie wejścia i wracacie na górę. Po wejściu na korytarz kamienicy na moment oślepia was światło słoneczne. Przez chwilę stoicie, przyzwyczajając się do niego. Następnie ostrożnie, starając nie zwracać na siebie uwagi przechodniów, a przede wszystkim straży miejskiej, ruszacie w kierunku Spelunki. Droga na szczęście mija wam spokojnie. Po pewnym czasie jesteście już na miejscu. Tutaj zdajesz raport z roboty a następnie przystępujesz do najważniejszej czynności. Podziału łupów.', 'Tekst', '100;', '', '', '', '', ''),
+(195, 'ele1start', 'Udajesz się do dyrekcji miejskiego zoo. W biurze wita ciebie nieco starszy już Krasnolud. W kilku słowach wyjaśnia sytuację. Słoń Bombaj, ozdoba miejskiego zoo zachorował na nieznaną chorobę. Potrzebna jest osoba, która uda się do lasu Avantiel i odnajdzie pewne bardzo rzadkie zioło, potrzebne do przygotowania mikstury leczącej dla słonia. Nagroda za pomoc to mieszek złota oraz tablica pamiątkowa na klatce ze słoniem.', 'Biorę tę robotę,ele1go1;Nie mam na to ochoty,ele1resign;', '100;100;', '', '', '', '', ''),
+(196, 'ele1resign', 'Postanawiasz nie bawić się w to zlecenie. Wygląda podejrzanie. Uprzejmie dziękujesz Krasnoludowi za poświęcony czas i wracasz do miasta. Jeszcze tego brakowało, aby zrobili z ciebie weterynarza.', 'Tekst,t;', '100;', '', '', '', '', ''),
+(197, 'ele1go1', 'Zgadzasz się podjąć tego zadania. Krasnolud wyraźnie ucieszony, dokładnie opisuje tobie jakie zioło jest niezbędne do uleczenia słonia. Nie jesteś pewien, ale słuchając dokładnie opisu owej rośliny, masz wrażenie że już się z nią spotkałeś. Po ustaleniu wszystkich szczegółów, dostajesz dodatkowo specjalny pergamin z informacją o tym, że pracujesz dla miasta. Dzięki temu, możesz za darmo udać się do lasu i z powrotem przez magiczny portal. Zbierasz swój ekwipunek i wyruszasz do wieży magów. Tutaj pokazujesz owo pismo i magowie natychmiast przystępują do pracy. Kilka chwil i na środku wieży pojawia się rozmiarów człowieka portal. Po jego drugiej stronie widzisz zamazane kształty drzew i krzewów.', 'Przejdź przez portal,ele1forest;', '100;', '', '', '', '', ''),
+(198, 'ele1forest', 'Przekraczasz portal. Przez moment czujesz się lekko zagubiony, kręci ci się lekko w głowie. Po chwili, wszystko wraca do normy i zaczynasz rozglądać się po okolicy. Znajdujesz się wśród olbrzymich drzew. Zewsząd otaczają ciebie dźwięki wydawane przez ptaki. Nie dostrzegasz w okolicy interesujących ciebie rośliny. Wygląda na to, że czeka ciebie wędrówka po lesie.', 'Idź na północ,forest1;Idź na południe,forest1;Idź na wschód,forest1;Idź na zachód,forest1;', '50;50;50;50;', 'Wiewiórka,P,Wiewiórka skacze po drzewach.;', '20;', '', '', ''),
+(199, 'forest1', 'Wędrujesz ostrożnie wśród drzew. Uważnie rozglądasz się na boki w poszukiwaniu niebezpieczeństw czy jakiś interesujących rzeczy. Rosnące gęsto drzewa, sprawiają, że masz bardzo ograniczone pole widzenia. Zewsząd słyszysz odgłosy życia leśnego: śpiew ptaków, czasami na skraju pola widzenia mignie tobie jakieś stworzenie. Gęsty mech, liście oraz gałęzie leżące na ziemi, nieco utrudniają tobie podróż. Wokoło panuje lekki półmrok, korony starych, olbrzymich drzew, niemal zasłaniają słońce.', 'Idź na północ,forest1;Idź na południe,forest1;Idź na zachód,forest1;Idź na wschód,forest1;', '50;50;50;50;', '', '', '', '', ''),
+(200, 'forest1', 'Idziesz przed siebie, ostrożnie stawiając kroki, tak aby nie wywołać niepotrzebnego hałasu złamaną gałęzią czy szeleszczącymi liśćmi. Wokół siebie słyszysz nawoływania ptactwa, co jakiś czas, gdzieś na skraju pola widzenia przemyka szybko jakieś małe leśne zwierzę. Mimo iż dookoła ciebie panuje spokój, doskonale pamiętasz że w tym lesie spotkać można nie tylko zwierzęta. Dlatego cały czas zachowujesz czujność. Gęste listowie drzew zasłania słońce, sprawiając iż w okolicy jest dość ciemno jak na tę porę dnia.', 'Idź na północ,forest1;Idź na południe,forest1;Idź na wschód,forest1;[E]Idź na zachód,ele1forest2;', '50;50;50;50;', '', '', '', '', ''),
+(201, 'ele1forest2', 'Las w tym miejscu, jest nieco rzadszy, promienie słoneczne dają radę przebić się przez liście drzew. W około ciebie widać mnóstwo olbrzymich krzaków paproci. Wszystko to sprawia, że zwiększasz swoją czujność. Masz nieprzyjemne wrażenie, że ktoś ciebie obserwuje zza każdego krzaka. Starając się zachować ciszę, idziesz powoli przed siebie. W pewnym momencie, w oddali nieco na lewo od ciebie, dostrzegasz że las staje się znacznie rzadszy. Wygląda to na jakąś leśną polanę wśród drzew.', 'Idź na północ,forest1;Idź na południe,forest1;Idź na wschód,forest1;Idź na zachód,forest1;Sprawdź polanę,ele1glade1;', '50;50;50;50;100;', '', '', '', '', ''),
+(202, 'ele1glade1', 'Powoli idziesz w kierunku polany. Ostrożnie stawiasz kroki, tak aby nie nadepnąć na jakąś gałąź. Wokół robi się nieco jaśniej, ubywa drzew, za to przybywa dookoła krzaków. Ułatwia to tobie skradanie się, ale z drugiej strony pojawia się niepewność, czy coś nie kryje się za nimi. Po pewnym czasie docierasz do skraju polanki. Jest to niewielka, niemal prostokątna, wolna od drzew przestrzeń, porośnięta gęstą trawą oraz niewielkimi, kolorowymi kwiatami.', 'Wycofaj się do lasu,ele1back;', '100;', 'Skrzat,P,Niewielka istota szuka czegoś w trawie.,Obserwuj skrzata,ele1watch,Wyjdź z ukrycia,ele1glade2,Daj w łeb,ele1%barb%;', '50;', '', '', ''),
+(203, 'ele1back', 'Przez chwilę uważnie obserwujesz okolicę, rozglądając się na wszystkie strony. Następnie, zawracasz tą samą drogą, którą przyszedłeś. Znowu wchodzisz w gęsty las i ruszasz ostrożnie przed siebie, w poszukiwaniu interesujących ciebie ziół.', 'Idź na północ,forest1;Idź na południe,forest1;Idź na wschód,forest1;Idź na zachód,ele1forest2;', '50;50;50;50;', '', '', '', '', ''),
+(204, 'ele1watch', 'Uważnie przyglądasz się skrzatowi. Ten chyba jeszcze nie dostrzegł twojej obecności. Cały czas patrzy w trawę, mamrocząc coś pod nosem. Istota ta, jest niewielkiego wzrostu, ubrana w szpiczastą, czerwoną czapę, stary, podniszczony kaftan oraz spodnie. U jego pasa przyczepiona jest niewielka sakiewka. Wokół ciebie, panuje cisza w lesie, od czasu do czasu, słychać tylko szelest liści wywołany lekkimi podmuchami wiatru.', 'Wycofaj się do lasu,ele1back;', '100;', 'Skrzat,P,Niewielka istota szuka czegoś w trawie.,Wyjdź z ukrycia,ele1glade2,Daj w łeb,ele1%barb%;', '100;', '', '', ''),
+(205, 'ele1barbarzyńca', 'Ostrożnie podkradasz się do swojej ofiary. Ta, niczego nie przeczuwając, nadal szpera w trawie. Kilka szybkich susów i znajdujesz się już przy skrzacie. Jeden solidny cios i istota leci nieprzytomna na ziemię. Stoisz nad nim, ciesząc się ze zwycięstwa. Kiedy mija euforia, zaczynasz zastanawiać się po co to w ogóle zrobiłeś. Zrezygnowany, stawiasz skrzata na nogi i zaczynasz cucić. Po paru chwilach budzi się z lekko zamglonym wzrokiem.', 'Ktoś napadł na ciebie skrzacie?,ele1glade3;', '100;', '', '', '', '', ''),
+(206, 'ele1glade2', 'Ostrożnie wychodzisz ze swojego ukrycia i zmierzasz w kierunku skrzata, bacznie obserwując okolicę. Istota jak na razie zupełnie ciebie nie zauważyła, całkowicie pogrążona jest w poszukiwaniach. Starając się nie wywołać zbyt wiele hałasu stajesz dwa kroki za plecami istoty. Stwierdzasz że ten skrzat, musi być naprawdę szczęściarzem, skoro dożył tak długo będąc tak nieostrożnym. Odchrząkujesz znacząco. Na ten dźwięk, skrzat gwałtownie się prostuje, odwracając przerażony w twoim kierunku.', 'Zgubiłeś coś skrzacie?,ele1glade3;', '100;', '', '', '', '', ''),
+(207, 'ele1glade3', '-Eeee, tak... znaczy się nie... znaczy się nie za bardzo - przestraszony skrzat patrzy na ciebie, rozglądając się na boki w poszukiwaniu drogi ucieczki. Stoisz spokojnie, przyglądając się mu uważnie. Ten uznając, że nie masz wobec niego jakiś wrogich zamiarów, uspokaja się nieco.<br />- Co ciebie sprowadza w te strony podróżniku? - pyta się skrzat już spokojniejszym tonem.', 'Szukam pewnego zioła.,ele1glade4;Powiedzmy że ja też czegoś szukam.,ele1glade4;', '100;100;', '', '', '', '', ''),
+(208, 'ele1glade4', 'Skrzat przygląda się tobie uważnie.<br />- To może pomożemy sobie? Widzisz, mam pewien problem, otóż ostatnio idąc przez las, zgubiłem pewną rzecz. Niestety zanim zauważyłem zgubę, ktoś inny go odnalazł. Teraz muszę to jakoś odzyskać, ale ten osobnik, co to zabrał moją... sakiewkę, jest nieco większy ode mnie. Mógłbyś mi pomóc rozwiązać ten problem? Jeżeli uda ci się odzyskać zgubę, obiecuję, że pomogę w twoich poszukiwaniach. A wierz mi, znam tę okolicę jak mało kto!<br />Z wyraźną dumą w głosie zakończył skrzat.', 'Nie jestem zainteresowany.,ele1glade6;Nie ma sprawy gdzie ta twoja zguba?,ele1glade5;', '100;100;', '', '', '', '', ''),
+(209, 'ele1glade6', 'Spanikowany skrzat spojrzał na ciebie:<br />- Słuchaj, ten koleś naprawdę nie będzie wyzwaniem dla ciebie! Dasz sobie z nim bez problemu radę! To nie jest tak duży problem dla ciebie jak dla mnie! Proszę pomóż mi!', 'Nie,ele1glade7;No dobra co to za robota?,ele1glade5;', '100;100;', '', '', '', '', ''),
+(210, 'ele1glade5', 'Wyraźnie ucieszony skrzat zaciera ręce.<br />-Więc tak, niedaleko stąd, żyje sobie w jaskini jeden osobnik, dość nietowarzyski niestety. To właśnie on zabrał moją rzecz. Po prostu kolekcjonuje różne rzeczy, złodziej jeden. Chcę abyś do niego poszedł i odzyskał moją zgubę, wtedy pomogę tobie szukać tego co potrzebujesz. Bez mojej pomocy na pewno stracisz więcej czasu! Co do tego osobnika, nie obchodzi mnie, co z nim zrobisz i jak rozwiążesz tą sprawę, ja chcę tylko odzyskać swoją rzecz. Jak ją odzyskasz, wróć do mnie, będę na ciebie tutaj czekał.<br />Uważnie wysłuchujesz opisu drogi do celu, przeplataną gorącymi podziękowaniami skrzata.', 'Wyrusz w drogę,ele1forest3;', '100;', '', '', '', '', ''),
+(211, 'ele1glade7', 'Wzruszasz ramionami, zbierasz swoje rzeczy i zostawiasz skrzata samego na polanie, wracając do lasu. Masz swoje sprawy na głowie, nie musisz jeszcze niańczyć jakiś karzełków. Szybkim krokiem, wchodzisz między drzewa i idziesz przed siebie. Po pewnym czasie zwalniasz nieco kroku, ostrożnie rozglądając się w około. W głowie bijesz się z myślami, czy może jednak nie byłoby warto rozważyć propozycji skrzata? Szukanie w tej gęstwinie zajmie chyba cały dzień.', 'Wróć na polanę,ele1glade8;Idź na północ,forest1;Idź na południe,forest1;Idź na wschód,forest1;', '100;100;80;80;', '', '', '', '', ''),
+(212, 'ele1glade8', 'Mamrocząc pod nosem przekleństwa, postanawiasz wrócić do tego denerwującego skrzata. Może jednak jego pomoc będzie coś warta. Szybkim krokiem, zmierzasz w kierunku polany z której przyszedłeś.  Kiedy podchodzisz bliżej widzisz, że skrzat, znowu szuka czegoś w trawie. Tym razem, nie bawiąc się w podchody, zdecydowanie podchodzisz do istoty.', 'Dobra biorę tę robotę.,ele1glade5;', '100;', '', '', '', '', ''),
+(213, 'ele1forest3', 'Ruszasz we wskazanym przez skrzata kierunku w głąb lasu. Znów, ze wszystkich stron otaczają ciebie wiekowe drzewa, wokoło panuje półmrok. Co jakiś czas słychać odgłosy leśnych zwierząt. Ostrożnie idziesz przed siebie, rozglądając się na boki i nasłuchując uważnie wszelkich dobiegających dźwięków. Cały czas zastanawiasz się, co to za nietowarzyska istota czeka na ciebie na końcu drogi. Po krótkiej wędrówce, trafiasz na całkiem sporą leśną dróżką, wydeptaną miedzy drzewami, która prowadzi dokładnie w kierunku w którym zmierzasz. Po kolejnych kilku pacierzach, z daleka dostrzegasz całkiem sporych rozmiarów polanę. Zwiększając czujność, powoli zmierzasz jej kierunku.', 'Zaczaj się przy wejściu,ele1forest4;', '100;', '', '', '', '', ''),
+(214, 'ele1forest4', 'Ostrożnie zbliżasz się do polany. Twoje nerwy są napięte do ostatnich granic. Wokół ciebie jest coraz mniej drzew w zamian pojawia się coraz więcej krzaków. Skradając się od jednego do drugiego, docierasz w końcu na skraj olbrzymiej polany. Niemal na jej środku, widzisz wejście do niewielkiej jaskini. Przez chwilę siedzisz w bezruchu, obserwując uważnie otoczenie i nasłuchując. Kiedy wydawało ci się, że wokoło nikogo nie ma, nagle słyszysz rumor dobiegający od strony jaskini. W wejściu najpierw pojawia się duża, humanoidalna głowa, następnie, przez wąski otwór przeciska się reszta ciała i w ten sposób, na polanie pojawia się olbrzym. To ciebie ten kurdupel urządził!', 'Zaatakuj olbrzyma,ele1fight;Zaczekaj chwilę,ele1wait2;', '100;100;', 'Olbrzym,T,Olbrzym zaczyna rozglądać się dookoła.,Przekradnij się obok,ele1%thief%,Uśpij olbrzyma,ele1%craft%;', '100;', '', '', ''),
+(215, 'ele1fight', 'Wygląda na to, że nie masz wyjścia. Musisz się pozbyć olbrzyma, jeżeli chcesz otrzymać pomoc od skrzata. Bierzesz kilka głębokich oddechów, przygotowujesz się do walki, a następnie zaczynasz podkradać się do przeciwnika. Krok po kroku, zbliżasz się do niego. Niestety, w pewnym momencie, nie zauważyłeś suchej gałązki, która trzasnęła pod twoją stopą. Olbrzym momentalnie odwraca się w twoją stronę, wyszczerza złośliwie zęby i rusza w twoją stronę.', 'Tekst,test;', '100;', '', '', '', '', 'combat;Olbrzym;1;ele1winfight;ele1lostfight;'),
+(216, 'ele1lostfight', '<br /><br />Tym razem jednak przeznaczenie okazało się silniejsze od ciebie. Niestety, przegrywając walkę z olbrzymem, straciłeś szansę na znalezienie lekarstwa. Biedny słoń będzie musiał jeszcze trochę pocierpieć.', 'Tekst,test;', '100;', '', '', '', '', ''),
+(217, 'ele1winfight', '<br /><br />Martwy olbrzym pada u twoich stóp. Zmęczony, ale i szczęśliwy z wyniku walki, rozglądasz się wokoło, czy przez przypadek nie ma więcej zagrożeń w okolicy, o których zapomniał tobie powiedzieć skrzat. Jednak zewsząd otacza ciebie cisza. Kiedy nieco uspokoiłeś oddech, zaczynasz zastanawiać się co dalej.', 'Sprawdź jaskinię,ele1cave;', '100;', '', '', '', '', ''),
+(218, 'ele1wait2', 'Przyczajasz się za krzakiem, uważnie obserwując olbrzyma. Ten jeszcze chyba nie jest świadom twojej obecności w okolicy. Ciągle stoi tuż przy wejściu do jaskini, rozglądając się tępo na wszystkie strony. Po paru chwilach, robi kilka kroków i siada na ziemi, wpatrując się w las. To chyba najlepszy moment aby coś zacząć robić.', 'Zaatakuj olbrzyma,ele1fight;', '100;', 'Olbrzym,T,Olbrzym właśnie drapie się po głowie.,Przekradnij się obok.,ele1%thief%,Uśpij olbrzyma,ele1%craft%;', '100;', '', '', ''),
+(219, 'ele1fail', 'Niestety, mimo twoich usilnych starań, tym razem bogowie nie chcieli aby ci się udało. Chwila nieuwagi i przeciwnik niemal dopadł ciebie. Przerażony zrobiłeś w tył zwrot i co sił skoczyłeś w las. Uciekałeś przez jakiś czas, słysząc za sobą odgłosy pogoni. Po kilku chwilach, wszystko ucichło. Niestety, zgubiłeś również drogę do jaskini. Przez kilka godzin błąkałeś się po lesie, zanim w końcu natrafiłeś na stajnię na jego obrzeżach, przez którą wróciłeś ponownie do miasta.', 'Tekst,test;', '100;', '', '', '', '', ''),
+(220, 'ele1cave4', 'Szybko chwytasz topór oraz sakiewkę (w końcu po nią właśnie przyszedłeś) i ruszasz w kierunku drugiego korytarza. Jak tylko wbiegasz  w niego, zza twoich pleców rozlega się rozjuszony wrzask jakiejś dużej istoty. Nie patrząc za siebie, biegniesz przed siebie. Korytarz bardzo powoli wznosi się do góry. Jest dużo mniejszy niż ten, którym wszedłeś do jaskini. Nie wiesz jak długo nim wędrujesz, masz wrażenie, że mija cały dzień na tej podróży przez ciemność. W pewnym momencie, dostrzegasz w oddali przed sobą, jasny punkt. Kiedy podchodzisz bliżej, zmienia się on w niewielki otwór tuż nad ziemią. Szybko przeciskasz się przez niego i znów znajdujesz się w lesie. Chyba czas pogadać sobie z pewnym skrzatem.', 'Wróć na polankę,ele1glade9;', '100;', '', '', '', '', ''),
+(221, 'ele1finish', 'Powoli dzień dobiega końca a ty ciągle nie możesz znaleźć zioła, po które ciebie wysłano. Przez konary drzew, widzisz jak zmrok powoli zapada nad światem. Postanawiasz nie ryzykować nocnej wędrówki po lesie. Szybkim krokiem wracasz do stajni na obrzeżach lasu a stamtąd magicznym portalem do miasta. Niestety, biedny słoń będzie musiał jeszcze trochę pocierpieć.', 'Tekst,test;', '100;', '', '', '', '', ''),
+(222, 'ele1złodziej', 'Postanawiasz skorzystać ze swoich umiejętności. W końcu zawód zobowiązuje. Ostrożnie, starając nie zwracać na siebie uwagi olbrzyma, zmierzasz w kierunku wejścia do jaskini. W napięciu niemal wstrzymujesz oddech, obawiając się iż nawet on, może zdradzić twoją obecność. W pewnej chwili przechodzisz zaledwie kilka kroków od olbrzyma. Na szczęście ten, jest zbyt zajęty obserwowaniem lasu aby zwracać na ciebie uwagę. Jeszcze chwila i znajdujesz się tuż przy wejściu.', 'Sprawdź jaskinię,ele1cave;', '100;', '', '', '', '', 'skill;thievery;'),
+(223, 'ele1rzemieślnik', 'Wycofujesz się parę kroków w głąb lasu, przystępując do realizacji swojego planu. Chodzisz po okolicy w poszukiwaniu potrzebnych materiałów. Kilka gałęzi tu, upadłe drzewo tam i powoli powstaje machina do uśpienia olbrzyma. Dzięki przeprowadzonym na szybko obliczeniom, praca wre ci w rękach. Kiedy już mała katapulta została zbudowana, umieszczasz na niej duży kamień. Jeszcze raz upewniasz się, że twoje obliczenia są poprawne, następnie zwalniasz mechanizm spustowy. Kamień wylatuje w górę i znika gdzieś pomiędzy drzewami. Po paru chwilach słyszysz głuchy odgłos a po nim drugi. Ostrożnie wracasz na polankę. Widzisz leżącego na jej środku olbrzyma z dużym guzem na głowie a obok niego kamień. Tak więc droga do jaskini stoi przed tobą otworem', 'Sprawdź jaskinię,ele1cave;', '100;', '', '', '', '', ''),
+(224, 'ele1cave', 'Ostrożnie wchodzisz do środka jaskini. Droga prowadzi nieco w dół, korytarz staje się coraz wyższy. Prawie nic nie widzisz w otaczającym ciebie półmroku. Po pewnym czasie, na drugim końcu dostrzegasz jakieś światło. Przygotowany na kolejne niespodzianki, podążasz w jego kierunku. Po pewnym czasie dostrzegasz przed sobą sporych rozmiarów jaskinię a na jej środku, dogasające ognisko. Pod jedną ze ścian dostrzegasz dwa olbrzymie łóżka... znaczy się, że kłopotów jest dwa razy więcej niż mówił skrzat. Z drugiej strony jaskini, widzisz wylot niewielkiego tunelu. Wygląda na to, że z tej jaskini są dwa wyjścia.', 'Opuść jaskinię,ele1cave3;', '100;', '', '', 'Skrzynia,T,Duża drewniana skrzynia stoi pomiędzy łóżkami.,Przeszukaj skrzynię,ele1cave2;', '100;', ''),
+(225, 'ele1cave2', 'Podchodzisz do skrzyni. Uważnie się jej przyglądasz w półmroku, w poszukiwaniu niespodzianek. Nic takiego nie zauważasz, podobnie jak i zamka w samej skrzyni. Ostrożnie podnosisz ciężkie wieko. Skrzypienie zawiasów, rozlega się w całej jaskini, zwielokrotnione przez echo. Niemal w tym samym momencie, do twoich uszu dociera dźwięk ciężkich kroków dobiegających z korytarza, którym przyszedłeś. Masz tylko chwilę na spojrzenie do skrzyni i szybką ucieczkę drugim korytarzem.', 'Uciekaj z jaskini,ele1cave3;', '100;', '', '', 'Sakiewka,T,Malutka sakiewka leży na dnie skrzyni.,Zabierz sakiewkę,ele1cave3;Topór ręczny z miedzi,E,Topór ręczny z miedzi leży w skrzyni.,Weź topór,ele1cave4;Łuk krótki z leszczyny,E,Łuk krótki z leszczyny leży w skrzyni.,Zabierz łuk,ele1cave5;Trójkątna tacza z miedzi,E,Trójkątna tarcza z miedzi leży obok.,Zabierz tarczę,ele1cave6;', '100;25;20;5;', ''),
+(226, 'ele1cave3', 'Szybko chwytasz w rękę sakiewkę (w końcu po nią właśnie przyszedłeś) i ruszasz w kierunku drugiego korytarza. Jak tylko wbiegasz  w niego, zza twoich pleców rozlega się rozjuszony wrzask jakiejś dużej istoty. Nie patrząc za siebie, biegniesz przed siebie. Korytarz bardzo powoli wznosi się do góry. Jest dużo mniejszy niż ten, którym wszedłeś do jaskini. Nie wiesz jak długo nim wędrujesz, masz wrażenie, że mija cały dzień na tej podróży przez ciemność. W pewnym momencie, dostrzegasz w oddali przed sobą, jasny punkt. Kiedy podchodzisz bliżej, zmienia się on w niewielki otwór tuż nad ziemią. Szybko przeciskasz się przez niego i znów znajdujesz się w lesie. Chyba czas pogadać sobie z pewnym skrzatem.', 'Wróć na polankę,ele1glade9;', '100;', '', '', '', '', ''),
+(227, 'ele1glade9', 'Przez chwilę błądziłeś po lesie, zanim trafiłeś w znajomą okolicę. Szybkim krokiem zmierzasz w kierunku polany. Kiedy docierasz na miejsce, widzisz, że twój zleceniodawca siedzi sobie wygodnie na jej skraju, oparty o drzewo. Na twój widok wstaje i zaczyna się dopytywać o swoją zgubę. Kiedy oddajesz mu ją, (przy okazji, nie zapominając oczywiście wspomnieć o napotkanych problemach, co jednak nie robi zbyt dużego wrażenia na skrzacie), ten wyraźnie ucieszony obiecuje dotrzymać swojej części umowy. ', 'Opisz skrzatowi zioło,ele1forest5;', '100;', '', '', '', '', ''),
+(228, 'ele1forest5', 'Skrzat uważnie wysłuchuje twojego opisu. Kiedy kończysz, przez chwilę stoi nieruchomo, jakby zastanawiając się. Nagle obok ciebie, pojawia się w powietrzu niewielka, zielona strzałka wskazująca na las. Masz już serdecznie dość tego małego oszusta. Żegnasz się z nim szybko i ruszasz w kierunku wskazywanym przez strzałkę. Ta cały czas znajduje się przed tobą, dostosowując swoją prędkość do twojej. Wędrujesz tak przez pewien czas przez las. Uważnie rozglądasz się na boki czy gdzieś nie czai się jakieś niebezpieczeństwo między drzewami. Kiedy powoli zaczyna zapadać wieczór, strzałka nagle zatrzymuje się i wskazuje miejsce na ziemi.', 'Rozejrzyj się po okolicy,ele1forest6;', '100;', '', '', 'Zioło,Q,Poszukiwane zioło rośnie sobie tutaj.,Zbierz zioło,ele1forest5;', '100;', ''),
+(229, 'ele1forest6', 'Rozglądasz się uważnie po okolicy. Nie dostrzegasz żadnych zwierząt czy jakiś innych mieszkańców lasu. Strzałka cały czas znajduje się w miejscu gdzie się zatrzymała. Powoli nad lasem zaczyna zapadać zmierzch. Wracasz z powrotem do strzałki.', 'Rozejrzyj się jeszcze po okolicy,ele1forest6;', '100;', '', '', 'Zioło,Q,Poszukiwane zioło rośnie sobie tutaj.,Zbierz zioło,ele1forest5;', '100;', ''),
+(230, 'ele1finishgood', 'Ostrożnie zrywasz poszukiwane zioło. Słoń będzie uratowany! Szybko, aby zdążyć przed zapadnięciem nocy, wracasz w kierunku stajni na obrzeżach lasu. Docierasz na miejsce wraz z pojawieniem się pierwszych gwiazd. Zajmuje ci nieco czasu przekonanie magów aby otworzyli portal o tak późnej porze dnia. Na szczęście po chwili już, przekraczasz magiczną bramę i znajdujesz się z powrotem w mieście. Szybkim krokiem idziesz do dyrekcji zoo. Tam, nieco już śpiący krasnolud, natychmiast ożywia się na twój widok. Kiedy spostrzega z czym przychodzisz, natychmiast zaczyna wychwalać twoje poświęcenie dla sprawy. Wraz z olbrzymią ilością komplementów otrzymujesz również sakiewkę pełną złota. Wychodzisz z zoo w poczuciu dobrze spełnionego obowiązku. Po raz kolejny kryzys w państwie został zażegnany!', 'Tekst,test;', '100;', '', '', '', '', ''),
+(231, 'ele1cave5', 'Szybko chwytasz łuk oraz sakiewkę (w końcu po nią właśnie przyszedłeś) i ruszasz w kierunku drugiego korytarza. Jak tylko wbiegasz  w niego, zza twoich pleców rozlega się rozjuszony wrzask jakiejś dużej istoty. Nie patrząc za siebie, biegniesz przed siebie. Korytarz bardzo powoli wznosi się do góry. Jest dużo mniejszy niż ten, którym wszedłeś do jaskini. Nie wiesz jak długo nim wędrujesz, masz wrażenie, że mija cały dzień na tej podróży przez ciemność. W pewnym momencie, dostrzegasz w oddali przed sobą, jasny punkt. Kiedy podchodzisz bliżej, zmienia się on w niewielki otwór tuż nad ziemią. Szybko przeciskasz się przez niego i znów znajdujesz się w lesie. Chyba czas pogadać sobie z pewnym skrzatem.', 'Wróć na polankę,ele1glade9;', '100;', '', '', '', '', ''),
+(232, 'ele1cave6', 'Szybko chwytasz tarczę oraz sakiewkę (w końcu po nią właśnie przyszedłeś) i ruszasz w kierunku drugiego korytarza. Jak tylko wbiegasz  w niego, zza twoich pleców rozlega się rozjuszony wrzask jakiejś dużej istoty. Nie patrząc za siebie, biegniesz przed siebie. Korytarz bardzo powoli wznosi się do góry. Jest dużo mniejszy niż ten, którym wszedłeś do jaskini. Nie wiesz jak długo nim wędrujesz, masz wrażenie, że mija cały dzień na tej podróży przez ciemność. W pewnym momencie, dostrzegasz w oddali przed sobą, jasny punkt. Kiedy podchodzisz bliżej, zmienia się on w niewielki otwór tuż nad ziemią. Szybko przeciskasz się przez niego i znów znajdujesz się w lesie. Chyba czas pogadać sobie z pewnym skrzatem.', 'Wróć na polankę,ele1glade9;', '100;', '', '', '', '', '');
+
+-- --------------------------------------------------------
+
+--
+-- Struktura tabeli dla  `missions2`
+--
+
+CREATE TABLE IF NOT EXISTS `missions2` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `name` varchar(255) NOT NULL,
+  `type` char(1) NOT NULL,
+  `intro` text NOT NULL,
+  `location` varchar(50) NOT NULL DEFAULT 'Altara',
+  `shortdesc` varchar(255) NOT NULL,
+  `chapter` tinyint(4) NOT NULL DEFAULT '0',
+  KEY `id` (`id`),
+  KEY `location` (`location`)
+) ENGINE=MyISAM  DEFAULT CHARSET=utf8 AUTO_INCREMENT=2 ;
+
+--
+-- Zrzut danych tabeli `missions2`
+--
+
+INSERT INTO `missions2` (`id`, `name`, `type`, `intro`, `location`, `shortdesc`, `chapter`) VALUES
+(1, 'ele1', 'E', 'Drewniane drzwi do biura otworzyły się ze skrzypieniem. Po chwili pojawiła się w nich głowa Gnoma.<br />\r\n - Szefie, mamy problem...<br />\r\nSiedzący za biurkiem wiekowy już Krasnolud, podniósł głowę znad papierów.<br />\r\n - Co się znowu stało?<br />\r\n - Bimbaj nie domaga...<br />\r\n - Jak? Zachorował na coś? Uderzył się?<br />\r\n - Coś mniej więcej w tym stylu szefie...<br />\r\n - Dobrze, chodźmy zobaczyć.<br />\r\nZ ciężkim westchnieniem, dyrektor wstał zza biurka i ruszył za opiekunem w kierunku zagrody. Kiedy dotarli na miejsce, opiekun wszedł do środka a dyrektor zaczął obserwować wszystko zza ogrodzenia. Po chwili opiekun wrócił prowadząc za sobą powoli dużego słonia. Zwierzę ledwo trzymało się na nogach, mrużąc oczy pod wpływem słońca.<br />\r\n - Co mu się stało? - zapytał dyrektor.<br />\r\nGnom bez słowa podał mu puste wiadro.<br />\r\nKrasnolud nachylił się nad wiadrem i nagle odrzucił głowę od zapachu dobiegającego ze środka.<br />\r\n - KTO MU DO JASNEJ... - na moment zamilkł widząc na sobie mordercze spojrzenie przekrwionych oczu słownia. Po chwili kontynuował szeptem – ...dał to do picia?<br />\r\n - Nie wiem szefie – odpowiedział również szeptem Gnom – ale jest tam jeszcze więcej wiader. Wypił chyba połowę zapasów karczmy.<br />\r\nSłoń tymczasem, zdradzając wyraźne objawy syndromu dnia poprzedniego, podszedł do pojemnika z wodą i niemal jednym haustem wypił połowę jego zawartości.<br />\r\n - To podajcie mu to zioło na kaca - nadal szeptem, tak na wszelki wypadek, rzucił Krasnolud.<br />\r\n - No właśnie szefie, jest problem, skończyło się – odparł równie cicho Gnom.<br />\r\n - Jak to się skończyło?<br />\r\n - No jak ostatnio upoili żyrafy Mustakiem, to zużyliśmy cały zapas...<br />\r\n - I nie ma już więcej?<br />\r\n - Ano nie ma.<br />\r\n - Przecież niedługo otwieramy ZOO. Zwiedzający przyjdą. Co? Napiszemy nie hałasować na ogrodzeniu?<br />\r\n - No właśnie szefie mówiłem, że jest problem.<br />\r\nKrasnolud podrapał się po głowie:<br />\r\n - Dobra, coś wymyślę, ty na razie schowaj go do środka i zamknij drzwi... może jeszcze uszczelnij je dobrze. Ja wracam do biura.<br />\r\nTo mówiąc, odwrócił się i ruszył z powrotem. Odszedł parę kroków, kiedy Gnom zawołał za nim:<br />\r\n - A czym uszczelni...oj!<br />\r\nNiestety, było już za późno, słoń schwytał trąbą w pół Gnoma, odwrócił do góry nogami i zaczął rytmicznie uderzać jego głową o podłoże. Krasnolud z ciężkim westchnieniem odwrócił się i poszedł swoją drogą.<br />\r\n<br />\r\nJakiś czas później, na rynku miasta, na słupie ogłoszeniowym pojawił się następujący tekst:<br />\r\n"Szlachetni mieszkańcy Altary! Zwracam się do Was z bardzo naglącą prośbą. Potrzebny jest śmiałek o niezwykłej odwadze, wielkim honorze oraz gotów do poświęceń! Ozdoba naszego ZOO, biedny słoń Bimbaj zapadł na tajemniczą tropikalną chorobę. Potrzebujemy kogoś, kto odnajdzie bardzo rzadkie zioło na owo schorzenie w lesie Avantiel. Dla dzielnego bohatera, który podejmie się tego zadania, przewidywana jest znacząca nagroda pieniężna. Wszystkich zainteresowanych prosimy zgłaszać się do biura dyrektora ZOO."', 'Altara', 'Kłopoty w ZOO', 0);
+
+-- --------------------------------------------------------
+
+--
 -- Struktura tabeli dla  `monsters`
 --
 
-DROP TABLE IF EXISTS `monsters`;
 CREATE TABLE IF NOT EXISTS `monsters` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
   `name` varchar(45) NOT NULL,
@@ -1489,15 +1849,15 @@ INSERT INTO `monsters` (`id`, `name`, `level`, `hp`, `agility`, `strength`, `spe
 (1, 'Szczur', 1, 10, 3.00, 3.00, 3.00, 3.00, 1, 2, 1, 2, 'pl', 'Altara', '', '', 'Szczury, które można spotkać na Arenie Walk, wywodzą się od pospolitego <i>ratti norvegici</i> i mają podobne do niego nawyki żywieniowe, przez całe lata jednak były modyfikowane przez zespół gnomich przyrodników, któremu przewodził słynny badacz natury, Muddy Doodle, by uczynić z nich odpowiedniego przeciwnika do treningów.<br />\r\n<br />\r\nMimo niewielkich gabarytów, <i>rattus pugnandus</i> stanowi nie lada wyzwanie dla początkujących magów i wojowników. Tę – stosunkowo nową – odmianę szczura cechuje przede wszystkim niespotykana u jego kuzynów wytrzymałość oraz niezwykła inteligencja. Dzięki temu stworzenia owe potrafią na arenie przez bardzo długi czas utrzymać się przy życiu, bądź to unikając ataków, bądź też po prostu nic sobie z nich nie robiąc.<br />\r\n<br />\r\nPonadto szczury z Areny Walk w chwili zagrożenia zaczynają wydawać bardzo wysokie dźwięki, dzięki którym chcą zdezorientować przeciwnika. Zdarza się, że piski te powodują uszkodzenie błony bębenkowej trenującego, toteż bardzo ważne jest, by do walki zakładać hełm albo przynajmniej zatykać sobie uszy.<br />\r\n<br />\r\nMuddy Doodle tak mówił o efekcie prac jego zespołu:<br />\r\n<br />Cytat:<br /><i>„Mamy nadzieję, że w ten sposób młodzi będą mogli ćwiczyć bez niepotrzebnego narażania życia. Istnieje bardzo znikoma szansa, że nasze szczury kogokolwiek zabiją. Trzeba tu jednak zaznaczyć, że – wypuszczone na wolność – te gryzonie stanowiłyby ogromne zagrożenie dla społeczeństwa ze względu na ich niebywałą inteligencję. Już zwykłe szczury są kłopotliwe dla ludzi, cóż dopiero nasze ratti pugnandi!”</i><br />\r\n<br />\r\nStrażnicy miejscy zapewniają, że żaden zmodyfikowany szczur nie ma szansy wydostać się z pojemnika, w którym się je trzyma, jednakowoż mieszkańcy Altary są dość nieufnie nastawieni:<br />\r\n<br />Cytat:<br /><i>Szczury?! A bo to nam potrzeba więcej szczurów?! Już i tak ganiam za nimi całymi dniami z miotłą! Temu miastu nie potrzeba więcej tego plugastwa!</i> (karczmarka, 28 l.)'),
 (2, 'Goblin', 2, 20, 5.00, 5.00, 5.00, 5.00, 2, 4, 3, 5, 'pl', 'Altara', 'Kieł Goblina;Skóra Goblina;Pazur Goblina;Czaszka Goblina', '45;77;95;100', 'Gobliny są nieco niższe od ludzi i dużo szczuplejsze, z wyraźnie zaznaczonymi stawami i nie raz mocno sterczącym uzębieniem. W przeciwieństwie do pozostałych zielonoskórych, mają bardzo ostre pazury, stanowiące rekompensatę za mikrą posturę i niewielką siłę fizyczną. W walce zazwyczaj gryzą i zadają rany szarpane – zaraz po treningu należy zdezynfekować wszystkie skaleczenia, jako że gobliny roznoszą bardzo szeroki wachlarz chorób.<br />\r\n<br />\r\nDo niedawna uważano gobliny za kuzynów orków, etnolog Mad Doodle jednak wykazał w szeregu rozpraw naukowych, że pokrewieństwo to jest luźniejsze, niż przypuszczano. Gobliny więcej wspólnego mają z ludźmi. Ogromnym zaskoczeniem okazało się na przykład, że niekiedy parają się handlem. Najprawdopodobniej wiele osobników, które znalazły swój koniec na Arenie Walk, wbrew słowom Łowców nie zostało bohatersko pojmanych w dziczy, a sprzedanych przez goblińską starszyznę w zamian za skóry i narzędzia.<br />\r\n<br />\r\nMało kto wie, że gobliny dzielą się na trzy grupy: na Arenie spotkać można pospolite gobliny jaskiniowe, istnieje jednak klan bardzo sprytnych, podstępnych i inteligentnych „Stalodzierżców”, jak oni sami o sobie mówią, oraz – odznaczających się nieprzeciętną jak na ten gatunek siłą – goblinów Hob, niebezpiecznych samotników, zamieszkujących głównie górskie szczyty.<br />\r\n<br />\r\nŚwiadkowie relacjonują spotkania z tymi zielonoskórymi:<br />\r\n<br />Cytat:<br /><i>„Aye, odwiedził nas tu kiedyś taki jeden… Z tych cholernych Stalodzierżców. Nie cierpię ich. Przez te jego przeklęte wynalazki prawie połowa wsi poszła z dymem. Powinni go zaciągnąć za te wielkie uszy do lochu, ale uciekł, mynda jedna.”</i> (rolnik z okolic Altary, 58 l.)<br />\r\n<br />Cytat:<br /><i>„Hob gobliny? Nie, nigdy nie słyszałam. Tutaj w okolicy to tylko takie zwykłe żyją. A kto ich tam wie, czy w wioskach, czy w jaskiniach. Przeca ja tam ich nie odwiedzam. Obwieszają się kośćmi i machają patykami. Paskudne stworzenia. Jak to: skąd wiem? Na Arenie widziałam. No… nie no, właściwie nie wiem, czy faktycznie same się w te gnaty ubierają, czy przystraja je do walki mistrz ceremonii. Ale każdy wie, że to dzicz.”</i> (mieszkanka Altary, 34 l.)<br />\r\n<br />Cytat:<br /><i>Myślę, że opinie, które krążą o goblinach, są dla nich bardzo krzywdzące. Gobliny mogą być dla nas fantastycznym rynkiem zbytu, należałoby nawiązać z nimi kontakty handlowe. Jeśli nie ze wszystkimi, to przynajmniej ze Stalodzierżcami.</i> (kupiec Geldgier, 382 l.)'),
 (3, 'Ork', 4, 40, 10.00, 10.00, 10.00, 10.00, 4, 6, 6, 10, 'pl', 'Altara', 'Pazur Orka;Skóra Orka;Kość Orka;Czaszka Orka', '45;77;95;100', 'Nikt nie wie, jak tak naprawdę nazywają się orkowie. Miano, pod którym są nam znani, stanowi tylko uproszczoną transkrypcję odgłosu, jaki wydają dorosłe osobniki chcące zamanifestować swoją siłę – czy to przed resztą klanu, czy to przed wrogiem. Towarzyszy temu zazwyczaj uderzanie o ziemię tarczą lub przynajmniej tupanie. Również ich strój – zazwyczaj powiązane byle jak strzępy odzienia ich ofiar, wielekroć ozdobione czaszkami – służy obniżeniu morale przeciwnika.<br />\r\n<br />\r\nOrkowie są masywni i dysponują ogromną siłą fizyczną. Ich słabą stronę stanowi natomiast głupota. Nie potrafią posługiwać się żadnym rodzajem broni bardziej skomplikowanej od topora bojowego, nie mają też pazurów, kły zaś służą jedynie ustaleniu hierarchii w klanie – nie używają ich w walce. <br />\r\n<br />\r\nKultura orków przez całe wieki była owiana tajemnicą. Dopiero śmiała misja Glummy’ego Doodle’a pozwoliła poznać nieco zwyczaje tego niebezpiecznego gatunku. Glummy, pojmawszy młodego, wchodzącego dopiero w dorosłość orka, zdołał go udomowić i nauczyć czytania i pisania. Przy tej okazji zresztą wyszło na jaw, że orkowie mają bardzo słaby wzrok. Nim Glummy zginął śmiercią tragiczną, zmiażdżony przez ciśnięty z dużą siłą dyliżans pocztowy, sporządził obszerne sprawozdanie ze swoich sesji z Ballcrusherem:<br />\r\n<br />Cytat:<br /><i><b>Dzień 5.</b><br />\r\nObiekt wreszcie przestał rzucać odchodami. Myślę, że w końcu uda nam się podać mu jakieś jedzenie. Nie chcę, żeby padł z głodu.<br />\r\n<br />\r\n<b>Dzień 6.</b><br />\r\nNie, jednak nie przestał. Chciał zmylić naszą czujność. Bestie są bardziej cwane, niż dotąd myśleliśmy.<br />\r\n<br />\r\n<b>Dzień 7.</b><br />\r\n<u>Do zapamiętania</u>: nie karmić orka mlekiem i ogórkami.<br />\r\n<br />\r\n(…)<br />\r\n<br />\r\n<b>Dzień 28.</b><br />\r\nWidać postępy. Faszerowanie naparem z illanias przynosi pożądany efekt. Uspokojonego orka można przebadać. Staramy się wzbudzić w nim zainteresowanie naszą kulturą, żeby sam zapragnął nauczyć się czytać. Trochę nam przeszkadza senność obiektu. Może będzie trzeba podawać mniej ziółek.<br />\r\n<br />\r\n<b>Dzień 32.</b><br />\r\nWracamy do poprzedniej dawki illanias. Mam złamaną rękę i zmiażdżony nos. Żuchwa powoli się zrasta.<br />\r\n<br />\r\n(…)<br />\r\n<br />\r\n<b>Dzień 78.</b><br />\r\nUdało się! Ork zaczął dziś naukę!<br />\r\n<br />\r\n(…)<br />\r\n<br />\r\n<b>Dzień 239.</b><br />\r\nTAK! TAK!!! Opanowaliśmy literę „A”!!! Idę się upić z radości.<br />\r\n<br />\r\n<b>Dzień 240.</b><br />\r\nKac-gigant.<br />\r\n<br />\r\n(…)<br />\r\n<br />\r\n<b>Dzień 1625.</b><br />\r\nObiekt nazywa się Ballcrusher. Opowiedział mi, w jaki sposób zdobył to imię, ale nie chcę o tym pisać… W klanie był wojownikiem. Oprócz wojowników, każdy klan ma też bardzo wpływową kastę szamanów i, jeśli dobrze zrozumiałem, starszyznę, która ma władzę sądowniczą. Orkowie darzą ogromnym szacunkiem przyrodę, wierząc, że każdy obiekt ma swojego ducha opiekuńczego. Szamani potrafią wzywać te duchy i nakłaniać do pomocy. Jutro spróbuję się dowiedzieć, co tak naprawdę oznacza słowo „ork” i jak w rzeczywistości nazywa się ten gatunek. To może być odkrycie większe, niż zbudowanie Astralnej Machiny!<br />\r\n<br />\r\n<b>Dzień 1626.</b> (innym, bardzo koślawym charakterem pisma)<br />\r\nPAN ROZPŁASZCZONY! JEGO MAGICZNE KULE JA ZAWIESZA SOBIE NA SZYJA! JA WRACA DO KLAN! ORK! ORK! ORK!</i>'),
-(4, 'Szczurołak', 7, 70, 17.00, 24.00, 24.00, 17.00, 6, 10, 10, 15, 'pl', 'Altara', 'Ząb Szczurołaka;Futro Szczurołaka;Pazur Szczurołaka;Ogon Szczurołaka', '45;77;95;100', 'O pochodzeniu szczurołaków niewiele wiadomo, ale powszechnie uważa się, że dużo taśmy klejącej zużyto, nim udało się stworzyć nowy gatunek.<br />\r\n<br />\r\nWzrost szczurołaków waha się między metrem a półtora metra. Sylwetkę mają raczej gruszkowatą, a do tego długi, łysy, chwytny ogon oraz szarą bądź brązową, krótką sierść. Ze względu na niezbyt imponujący wygląd, często bywają niedoceniane jako przeciwnicy na arenie, podczas gdy zdolnościami bojowymi przewyższają orków. Co prawda nie dysponują zbyt dużą siłą, w dodatku są niebywale tchórzliwe, tym niemniej ponadprzeciętny spryt pozwala tym stworzeniom na długie stawianie oporu. Szczurołaki używają halucynogennych pyłków, wytwarzanych przez nich z grzybów hodowanych w kanałach, potrafią posługiwać się też bronią tnącą i miotającą.<br />\r\nPodobnie jak gobliny, szczurołaki roznoszą mnogość chorób, na które one same są odporne.<br />\r\n<br />\r\nTak naprawdę bardzo trudno skłonić szczurołaka do walki. Schwytane w kanałach i przetransportowane na Arenę, zazwyczaj chętniej proponują przeciwnikom umowy handlowe, wysokie stanowiska w swoim panteonie (ubóstwienie żyjącej istoty to wśród szczurołaków bardzo powszechna praktyka) lub usiłują wzbudzić litość, zwijając się w kulkę i żałośnie piszcząc.<br />\r\n<br />\r\nSzczurołaki są jednymi z najbardziej znienawidzonych stworzeń w Altarze.<br />\r\n<br />Cytat:<br /><i>Szczurołaki? Że niby pół-ludzie, pół-szczury? Dużo taśmy klejącej musieli zużyć, no nie? He, he, he…</i> (górnik z Kazad-nar, 92 l.)<br />\r\n<br />Cytat:<br /><i>Co takiego?! A żeby mi tu w pobliżu nogi nie postawiły?! Bo jak przegonię, to futro bydzie latać po całej Altarze! Won mi z takim wynaturzeniem! Ludzie-szczury… Co za pomysł! Nawet Tartus by na coś takiego nie mógł patrzeć! … Zresztą… Ludzie-szczury? Jak to miałoby w ogóle powstać…? Że niby oni tak te szczury, he, he, he, taśmą, no wiesz…?</i> (zielarka Pansy, 189 l.)<br />\r\n<br />\r\nSame szczurołaki jednak nie przejmują się złą sławą. Są przekonane o wyższości ich gatunku:<br />\r\n<br />Cytat:<br /><i>Och, to oczywiste, tak, oczywiste. Kiedy Wielki Zębaty zaprosi nas do Przedwiecznej Piwnicy, żaden obcy nie będzie tam miał wstępu, o nie, nie będzie miał. Jesteśmy wybrani, tak. A że nas łapią i rzucają na Arenę? To przejściowe trudności, o tak, przejściowe. Zobaczycie, wszyscy zobaczycie. Ludzie, niziołki, plugawe krasnoludy… nikt nie trwa wiecznie. My trwamy, tak, trwamy. Wielki Zębaty rozkruszy kiedyś Cuchnącego Grzyba. Wtedy wszyscy zobaczycie, tak!</i> (Nool, kapłan Wielkiego Zębatego)<br />\r\n<br />\r\nMało istnieje rycin przedstawiających szczurołaki – w kronikach najczęściej pojawia się jedna, o której mówi się, że jest karykaturą. Choć księgi wspominają, że jeszcze nim stworzenia te zeszły do kanałów, tak właśnie wyglądały.'),
-(5, 'Gwardzista', 10, 100, 30.00, 30.00, 30.00, 30.00, 10, 15, 15, 20, 'pl', 'Altara', 'Kość Gwardzisty;Czaszka Gwardzisty;Palec Gwardzisty;Serce Gwardzisty', '45;77;95;100', ''),
-(6, 'Troll', 14, 140, 38.00, 52.00, 38.00, 52.00, 15, 25, 20, 25, 'pl', 'Altara', 'Pazur Trolla;Skóra Trolla;Kieł Trolla;Czaszka Trolla', '45;77;95;100', ''),
+(4, 'Szczurołak', 7, 70, 17.00, 24.00, 24.00, 17.00, 6, 10, 10, 15, 'pl', 'Altara', 'Ząb Szczurołaka;Futro Szczurołaka;Pazur Szczurołaka;Ogon Szczurołaka', '45;77;95;100', 'O pochodzeniu szczurołaków niewiele wiadomo, ale powszechnie uważa się, że dużo taśmy klejącej zużyto, nim udało się stworzyć nowy gatunek.<br />\r\n<br />\r\nWzrost szczurołaków waha się między metrem a półtora metra. Sylwetkę mają raczej gruszkowatą, a do tego długi, łysy, chwytny ogon oraz szarą bądź brązową, krótką sierść. Ze względu na niezbyt imponujący wygląd, często bywają niedoceniane jako przeciwnicy na arenie, podczas gdy zdolnościami bojowymi przewyższają orków. Co prawda nie dysponują zbyt dużą siłą, w dodatku są niebywale tchórzliwe, tym niemniej ponadprzeciętny spryt pozwala tym stworzeniom na długie stawianie oporu. Szczurołaki używają halucynogennych pyłków, wytwarzanych przez nich z grzybów hodowanych w kanałach, potrafią posługiwać się też bronią tnącą i miotającą.<br />\r\nPodobnie jak gobliny, szczurołaki roznoszą mnogość chorób, na które one same są odporne.<br />\r\n<br />\r\nTak naprawdę bardzo trudno skłonić szczurołaka do walki. Schwytane w kanałach i przetransportowane na Arenę, zazwyczaj chętniej proponują przeciwnikom umowy handlowe, wysokie stanowiska w swoim panteonie (ubóstwienie żyjącej istoty to wśród szczurołaków bardzo powszechna praktyka) lub usiłują wzbudzić litość, zwijając się w kulkę i żałośnie piszcząc.<br />\r\n<br />\r\nSzczurołaki są jednymi z najbardziej znienawidzonych stworzeń w Altarze.<br />\r\n<br />Cytat:<br /><i>Szczurołaki? Że niby pół-ludzie, pół-szczury? Dużo taśmy klejącej musieli zużyć, no nie? He, he, he…</i> (górnik z Kazad-nar, 92 l.)<br />\r\n<br />Cytat:<br /><i>Co takiego?! A żeby mi tu w pobliżu nogi nie postawiły?! Bo jak przegonię, to futro bydzie latać po całej Altarze! Won mi z takim wynaturzeniem! Ludzie-szczury… Co za pomysł! Nawet Tartus by na coś takiego nie mógł patrzeć! … Zresztą… Ludzie-szczury? Jak to miałoby w ogóle powstać…? Że niby oni tak te szczury, he, he, he, taśmą, no wiesz…?</i> (zielarka Pansy, 189 l.)<br />\r\n<br />\r\nSame szczurołaki jednak nie przejmują się złą sławą. Są przekonane o wyższości ich gatunku:<br />\r\n<br />Cytat:<br /><i>Och, to oczywiste, tak, oczywiste. Kiedy Wielki Zębaty zaprosi nas do Przedwiecznej Piwnicy, żaden obcy nie będzie tam miał wstępu, o nie, nie będzie miał. Jesteśmy wybrani, tak. A że nas łapią i rzucają na Arenę? To przejściowe trudności, o tak, przejściowe. Zobaczycie, wszyscy zobaczycie. Ludzie, niziołki, plugawe krasnoludy… nikt nie trwa wiecznie. My trwamy, tak, trwamy. Wielki Zębaty rozkruszy kiedyś Cuchnącego Grzyba. Wtedy wszyscy zobaczycie, tak!</i> (Nool, kapłan Wielkiego Zębatego)<br />\r\n<br />\r\nMało istnieje rycin przedstawiających szczurołaki – w kronikach najczęściej pojawia się jedna, o której mówi się, że jest karykaturą. Choć księgi wspominają, że jeszcze nim stworzenia te zeszły do kanałów, tak właśnie wyglądały.<br />\r\n<a href=images/szczurolak.jpg target=_blank>Starożytna rycina przedstawiająca Szczurołaka</a>'),
+(5, 'Gwardzista', 10, 100, 30.00, 30.00, 30.00, 30.00, 10, 15, 15, 20, 'pl', 'Altara', 'Kość Gwardzisty;Czaszka Gwardzisty;Palec Gwardzisty;Serce Gwardzisty', '45;77;95;100', '<br />Cytat:<br /><i>Bez komentarza.</i> (Gotfryd, dowódca Gwardii Królewskiej)<br />\r\n<br />Cytat:<br /><i>Gwardziści, psia ich mać… Banda rozbójników. Gorsi, niż ci co napadają karawany w górach. Bandyci na garnuszku króla… W kupie mocni, ale żebym ja tak dorwał jednego… Ja i moja patelnia…!</i> (Gippo, kucharz, 56 l.)<br />\r\n<br />\r\nPowołanie Gwardii Królewskiej ginie w mrokach niepamięci. Jedni mówią, że król Thindil, wbrew ustaleniom duumwiratu, zgromadził wokół siebie zbrojną drużynę, by z czasem zwiększyć swoje wpływy i zostać jedynowładcą. Inni zaś twierdzą, iż zamachu stanu próbował dokonać drugi duumwir, Cordescu, ale – dowiedziawszy się o tym – Thindil przekupił dowódcę gwardii, wskutek czego gwardziści wyeliminowali samego Cordescu. Władca nie rozpuścił nowopowstałego oddziału, by zawsze mieć w odwodzie wykwalifikowanych żołnierzy.<br />\r\n<br />\r\nNiezależnie jednak od najdawniejszej historii, sława zawsze wyprzedzała królewskich gwardzistów. Słynęli oni jako ludzie o stalowej skórze i mięśniach z adamantium. Ponoć potrafili gołymi rękami zatrzymać lecącą strzałę, a najeźdźców słyszeli z odległości wielu staj. Nie rozmawiali z nikim poza władcą.<br />\r\n<br />\r\nI, jak to często bywa w takich przypadkach, coraz więcej pojawiało się osób, które chciały sprawdzić, ile prawdy kryje się za tymi plotkami.<br />\r\nA kryło się jej niewiele.<br />\r\nGwardziści prędko stracili status żywej legendy. Część z nich, nie mogąc odnaleźć się w nowej rzeczywistości, w której byli wyśmiewani, obrzucani pomidorami i wielekroć układano o nich sprośne wierszyki, występowała z Gwardii Królewskiej, by szukać szczęścia na piasku Areny.<br />\r\n<br />\r\nOkazało się zresztą, że choć pierwotne plotki były mocno przesadzone, straży przybocznej króla nie należy jednak lekceważyć. Niejeden hardy wojownik, a nawet mag, poległ od miecza gwardzisty – i, trzeba przyznać, nie tylko od miecza, zdarzały się też bowiem ukryte w rękawach sztylety, podstępne kopniaki w rzepkę czy sypanie w oczy piaskiem z solą. To właśnie kontrowersyjne metody prowadzenia walki sprawiły, że gwardziści obecnie nie cieszą się sympatią obywateli i są postrzegani raczej jako bandyci, niż niegdysiejsi elitarni strażnicy Jego Królewskiej Mości.'),
+(6, 'Troll', 14, 140, 38.00, 52.00, 38.00, 52.00, 15, 25, 20, 25, 'pl', 'Altara', 'Pazur Trolla;Skóra Trolla;Kieł Trolla;Czaszka Trolla', '45;77;95;100', 'Trolle kojarzą się głównie z twardoskórymi olbrzymami o intelekcie grzebienia – jest to jednakże opinia bardzo dla nich krzywdząca. Jako istoty prawdziwie długowieczne (mówi się, że trolle mają tylko jedno pokolenie, które trwa od początku świata po dziś dzień) miały dość czasu wolnego, by nabrać nieco ogłady i zdobyć wykształcenie. Wedle najnowszych badań, prowadzonych przez słynnego archeologa Rocky’ego Doodle’a, trolle w istocie u zarania dziejów nie należały do szczególnie błyskotliwych stworzeń, ale niesłychana wytrzymałość fizyczna umożliwiła im przetrwanie. Z czasem jednak objętość ich mózgów stawała się coraz większa, toteż dzisiejsi przedstawiciele tego gatunku potrafią biegle posługiwać się nawet sześcioma językami (z których zazwyczaj co najmniej połowa staje się językami wymarłymi, zanim troll opanuje je do końca), świetnie radzą sobie z każdym typem broni, a także pojęły w trakcie ewolucji jedno: dobry wróg to wróg, który ma innego wroga. I to ta ostatnia cecha sprawiła, że walki z trollami na Arenie cieszą się takim zainteresowaniem widowni.<br />\r\nZazwyczaj na te pojedynki przybywają nawet przedstawiciele prasy, a następnego dnia relacje figurują na pierwszych stronach gazet.<br />\r\n<br />\r\n<br />Cytat:<br /><i>Proszę państwa, powitajmy brawami kolejnego śmiałka, który chce skrzyżować miecze z potężnym Zankischem! Co za mięśnie ma nasz troll! Jaki szeroki uśmiech! Jaki pewny siebie! Chyba ma dzisiaj dobry dzień!<br />\r\n<br />\r\nTAK! Zwarli się w śmiertelnym uścis… Zankisch odepchnął przeciwnika i trzyma dystans… Coś powiedział – wojownik opuścił miecz i odpowiada… No i przepadł! Widownia rzuca chlebem, wykrzykując „Nie karm trolla, bucu!”, ale to nic nie daje! Śmiałek poczerwieniał i ewidentnie zaczął dyskutować z Zankischem. Nie słyszę stąd, co mówią, ale wojownik jest coraz bardziej podenerwowany. I JEST! Jest to, na co wszyscy czekali! Ktoś z pierwszych rzędów dołączył do kłótni! Cóż to się dzieje! Zaraz dojdzie do rękoczynów! Troll obserwuje… wyczuł, że emocje opadają, bo znów coś powiedział. Na arenę zeszło kilku obywateli i wykłócają się, gorączkowo gestykulując.<br />\r\n<br />\r\nTak jest, proszę państwa. Troll znów przechytrzył przeciwnika. Odchodzi pod eskortą straży, zaśmiewając się do rozpuku, podczas gdy na arenie coraz więcej osób sięga po broń.<br />\r\n<br />\r\nZ Areny Walk w Altarze mówił dla państwa Bilker Crook.</i> (relacja na żywo z jednej z walk)'),
 (7, 'Ogr', 18, 180, 51.00, 69.00, 21.00, 69.00, 25, 40, 25, 30, 'pl', 'Altara', 'Kieł Ogra;Skóra Ogra;Pazur Ogra;Czaszka Ogra', '45;77;95;100', ''),
 (8, 'Orog', 22, 220, 80.00, 80.00, 80.00, 80.00, 40, 55, 30, 40, 'pl', 'Altara', 'Kieł Oroga;Futro Oroga;Pazur Oroga;Krew Oroga', '45;77;95;100', ''),
 (9, 'Szkielet', 26, 260, 143.00, 117.00, 143.00, 117.00, 55, 80, 40, 50, 'pl', 'Altara', 'Kość Szkieleta;Czaszka Szkieleta;Ząb Szkieleta;Korpus Szkieleta', '45;77;95;100', ''),
 (10, 'Gigantyczny Pająk', 30, 390, 165.00, 195.00, 165.00, 195.00, 80, 100, 50, 60, 'pl', 'Altara', 'Odnóża Gigantycznego Pająka;Odwłok Gigantycznego Pająka;Szczękoczułki Gigantycznego Pająka;Gruczoł Jadowy Gigantycznego Pająka', '45;77;95;100', ''),
-(11, 'Bezgłowy Rycerz', 35, 420, 233.00, 268.00, 268.00, 233.00, 100, 130, 60, 80, 'pl', 'Altara', 'Kość Bezgłowego Rycerza;Czaszka Bezgłowego Rycerza;Serce Bezgłowego Rycerza;Głowa Bezgłowego Rycerza', '45;77;95;100', ''),
-(12, 'Ghul', 40, 480, 300.00, 340.00, 300.00, 340.00, 130, 160, 80, 100, 'pl', 'Altara', 'Kieł Ghoula;Skóra Ghoula;Pazur Ghoula;Szpik Ghoula', '45;77;95;100', ''),
+(11, 'Bezgłowy Rycerz', 35, 420, 233.00, 268.00, 268.00, 233.00, 100, 130, 60, 80, 'pl', 'Altara', 'Kość Bezgłowego Rycerza;Czaszka Bezgłowego Rycerza;Serce Bezgłowego Rycerza;Głowa Bezgłowego Rycerza', '45;77;95;100', 'Podobno ten rycerzyk to niejedną damę zbałamucił! te rysy twarzy, piwne oczy otulone firanką długich, gęstych rzęs... Prosty, arystokratyczny nos, zalotnie usta wycięte, jakby do całowania stworzone... Panny mdlały na jego widok, niektóre piszczały, a innym to podobno dech w piersi zapierało! Bożyszcze na dwóch nogach! A historyje o nim jakie chodzą...<br />\r\n<br />\r\n<b>Pani Piwonia</b>, matrona zacna, co to jej cyc w okolicy znany i lubiany, takoż rzecze: <br />\r\n<br />\r\n<i>  - jak żem młoda była... młodsza znaczy, młodsza... no tego... to ja żem go widziała! och, jak żem ja go widziała! caluśkiego, jak bogowie go stworzyli, a jakiego on miał ptoka! takiego ptoka to każdy chłop ino chciałby... znaczy nie ptoka... ten no... intelekt! ta, intelekta miał takiego wielgachnego, co to nim na pół mógł babę przesiekać.... Piękne to czasy były, zaiste, piękne... </i> <br />\r\n<br />\r\nZ kolei <b>Gertruda</b>, co to teraz królewskie gacie pierze i w zamkowej kuchni niepodzielne rządy sprawuje tak owego rycerza wspomina:<br />\r\n<br />\r\n<i>  - no, widzieć to jo go nie widziała, ale jak żem chyża była, młódka taka nieopierzona, co to za każdym fiu... tym no, MENSZCZYZNĄ! się oglądała, jak to na pinkną krasnoludzicę przystało, to ja się za nim rozglądałam! oj jak ja żem się rozglądała, aż mi ślepia tak biegały, od prawa do lewa! bo to takie słuchy chodziły, że na samą myśl, to babom się ino w galotach woda zbierała! oj, żebym to ja młodsza była.... sama bym go szukać lazła, bo ta głowa to nie ważna przeca... a tero to tylko Król pozostał. No i gacie... Biedna ja </i><br />\r\n<br />\r\n<br />\r\nTak to kiedyś podobno było. Później jakiś zazdrosny mąż, co to żonkę zadowolić nie mógł i ta pocieszenia w ramionach (i nie tylko) innego poszukała łeb rycerzowi odciął, solą posypał, rytuały magiczne jakieś odprawił i nieszczęśnika w niepoświęconej ziemi pochował.<br />\r\nTen po trzech dniach się wykopał, wkurzony wielce, i dalo w świat, głowy szukać. Bo ta się gdzieś w tym całym rozgardiaszu zapodziała. I jak na wkurzonego rycerza przystało, energia go rozpiera, dziewice (i te bardziej używane również - rycerz wszak nikogo nie faworyzuje) bałamuci, chłopów morduje, kozy kradnie... no i głowy szuka, po krainie łażąc. '),
+(12, 'Ghoul', 40, 480, 300.00, 340.00, 300.00, 340.00, 130, 160, 80, 100, 'pl', 'Altara', 'Kieł Ghoula;Skóra Ghoula;Pazur Ghoula;Szpik Ghoula', '45;77;95;100', ''),
 (13, 'Nekromanta', 45, 585, 378.00, 423.00, 423.00, 378.00, 160, 200, 100, 125, 'pl', 'Altara', 'Pazur Nekromanty;Kość Nekromanty;Czaszka Nekromanty;Pancerz Nekromanty', '45;77;95;100', ''),
 (14, 'Wilkołak', 50, 650, 455.00, 505.00, 505.00, 455.00, 200, 250, 125, 150, 'pl', 'Altara', 'Kieł Wilkołaka;Futro Wilkołaka;Krew Wilkołaka;Pysk Wilkołaka', '45;77;95;100', ''),
 (15, 'Wampir', 55, 650, 598.00, 598.00, 543.00, 543.00, 250, 300, 150, 175, 'pl', 'Altara', 'Popiół z Wampira;Kość Wampira;Kieł Wampira;Krew Wampira', '45;77;95;100', ''),
@@ -1508,13 +1868,13 @@ INSERT INTO `monsters` (`id`, `name`, `level`, `hp`, `agility`, `strength`, `spe
 (20, 'Żywiołak Wody', 80, 1120, 1100.00, 1100.00, 1100.00, 1100.00, 550, 620, 320, 360, 'pl', 'Altara', '', '', ''),
 (21, 'Żywiołak Ziemi', 85, 1190, 1243.00, 1158.00, 1243.00, 1158.00, 620, 690, 360, 400, 'pl', 'Altara', '', '', ''),
 (22, 'Żywiołak Ognia', 90, 1260, 1255.00, 1345.00, 1345.00, 1255.00, 690, 760, 400, 450, 'pl', 'Altara', '', '', ''),
-(23, 'Troll Górski', 95, 1425, 1353.00, 1448.00, 1353.00, 1448.00, 760, 830, 450, 500, 'pl', 'Altara', '', '', ''),
+(23, 'Troll Górski', 95, 1425, 1353.00, 1448.00, 1353.00, 1448.00, 760, 830, 450, 500, 'pl', 'Altara', '', '', '<i> Na temat Górskich Trolli krąży wiele historii, niektóre są nawet opisane i dostępne w miejskiej bibliotece. Podobno kiedyś ktoś Górskiego Trolla spotkał i przeżył. Trudno jednak stwierdzić, czy jest to prawdą, gdyż ów "szczęśliwiec" nie pożył zbyt długo, i choć opowiadał jakoby ów Troll zaskoczył go podczas przeprawy przez most w górach, i choć historia ta była dość wiarygodna, to jednak stan umysłu owego delikwenta sprawiał, że należy na tą opowieść zapatrywać się dość sceptycznie. Szczęśliwiec owy, po powrocie do miasta trafił w ręce medyków, uzdrowicieli i wszelakiej maści boskich wysłanników, którzy chorobę i złego ducha próbowali z niego wypędzić. Owe próby zakończyły się tym, że nasz poszukiwacz przygód pianę z ust zaczął toczyć, szczać w majtole w ilościach iście rekordowych i bąki puszczać o zasięgu niemal nieograniczonym. Ale historię o trollu nadal powtarzał, na wszystkich bogów zapewniając, że jest ona prawdziwa. Więc ją przytoczymy, gdyż jak na razie jest to najbardziej wiarygodne źródło, jakie mamy.</i><br />\r\n<br />\r\n<br />\r\n<b>Alojzy Dojak </b>, mąż stateczny, prawy i odważny.... prawdę mówiąc nierób i obibok, któremu znudziło się ugniatanie dupska w glinianej lepiance, comiesięczne bara bara z brzydką żoną i codzienny ryk szóstki bachorów, których zdołał się dorobić, ale o tym wspominać nie wypada... postanowił przygody zaznać. W tobołek wikt wpakował, trunku przedniego, co by w drodze się wzmocnić, miecz jakiś do pasa przywdział i w góry wyruszył. Wędrował długo. Wiedział, że długo, bo trunek się kończył. Zmierzchało już, gdy wędrówkę mu przerwał ogromny głaz, toczący się ze szczytu góry. Kilkanaście metrów dalej ujrzał Wielką kamienną poczwarę, z łapami jak taczki, nogami jak pniem drzew i mordą niebezpiecznie podobną do twarzy jego kochanej małżonki. Ani chybi, Troll! I to kamienny, bo poszarzały jakiś taki i z lekka chropowaty. Pierwowzór jego ukochanej żoneczki nawet z charakteru był do niej podobny, bo ryczeć zaczął wniebogłosy i kolejnymi kamieniami ciskać w biednego Alojzego. Ten – jak na znawcę kobiecej natury przystało, gdyż z założenia wyszedł, że to przeca kobieta być musi, do  żony podoba i wrzeszczy jak diabli, ani chybi kobieta! – o mieczu przy pasie zapomniał, tobołek na ziemię rzucił i wrzeszcząc co sił w płucach <i> „Nie poruchasz, babsztylu!” </i> w dół zbocza się rzucił, gnając, jakby go stado wilków goniło. <br />\r\n<br />\r\n<br />\r\n<i> Później okazało się, że w głowę dostać musiał kilkakrotnie, stąd może to bełkotanie… choć żona mówi, że on zawsze był taki i zmiany nie dostrzega. </i><br />\r\n'),
 (24, 'Centaur', 100, 1400, 1550.00, 1550.00, 1450.00, 1450.00, 830, 900, 500, 550, 'pl', 'Altara', '', '', ''),
 (25, 'Gliniany Golem', 105, 1470, 1548.00, 1653.00, 1548.00, 1653.00, 900, 970, 550, 600, 'pl', 'Altara', '', '', ''),
 (26, 'Kamienny Golem', 110, 1540, 1755.00, 1645.00, 1755.00, 1645.00, 970, 1040, 600, 650, 'pl', 'Altara', '', '', ''),
 (27, 'Brązowy Golem', 115, 1610, 1858.00, 1743.00, 1858.00, 1743.00, 1040, 1110, 650, 700, 'pl', 'Altara', '', '', ''),
 (28, 'Żelazny Golem', 120, 1680, 1960.00, 1960.00, 1840.00, 1840.00, 1110, 1180, 700, 775, 'pl', 'Altara', '', '', ''),
-(29, 'Piekielny Pies', 125, 1875, 1938.00, 2063.00, 1938.00, 2063.00, 1180, 1250, 775, 850, 'pl', 'Altara', '', '', ''),
+(29, 'Piekielny Pies', 125, 1875, 1938.00, 2063.00, 1938.00, 2063.00, 1180, 1250, 775, 850, 'pl', 'Altara', '', '', 'Widzisz przyjacielu, to nie takie proste. Coś dzwoniło, ale nie wiadomo w której świątyni. Dziś ludzie o tym nie pamiętają, zapominają powoli... Tylko nieliczne stare dziady, takie jak ja coś tam pamiętają. A ja wtedy tam byłem, i wszystko widziałem. Co do tego ma moja ręka? Widzisz, ręce są dla wojownika wszystkim. W nich jest kunszt, wiedza, doświadczenie. A dziś nie mogę nią utrzymać kubka...<br />\r\nByło nas dwudziestu, chłopy na schwał. I do wypitki, i do wybitki. Znaliśmy się dobrze, służyłem w Gwardii już od kilku lat. Skierowano nas do strażnicy u podnóża Kazad-Nar. Coś poszarpało poprzednich strażników i paru górników. Nie chcieli w góry wychodzić, ustały dostawy mithrilu... trzeba było coś z tym zrobić.<br />\r\n<br />\r\nPrzez pierwsze dni nic się nie działo. Nie znaleźliśmy nic podejrzanego. Później jednak dotarło do nas, że wszędzie jest niesamowicie cicho... jakby kto makiem zasiał. Żadnego ptaka, dźwięku - nic. Nastrój był ponury, wszyscy spoważnieli. Tego samego wieczora wysłali mnie na obejście. Po chwili dotarł do moich uszu straszny, mrożący krew w żyłach wrzask towarzyszy. Odwróciłem się jak oparzony w stronę posterunku, i wtedy go zobaczyłem. Wyglądał zupełnie jak wilk, nie było jednak na nim ani piędzi ciała - same kości, pokryte czymś, co wyglądało jak łuski. Tak, łuski... takie jak u węża. Biło od niego zło - po prostu się czuło całym ciałem, że to plugawy stwór. Rozwarł pysk i skoczył, a ja zasłoniłem się ręką - jego kły zatopiły się w moim przedramieniu. Ból był straszny, przenikliwy, jakby kto wbił mi rozżarzone gwoździe w rękę. Paliło. Odgłosy walki w obozie dochodziły do mnie jakby zza ściany. Dobyłem miecza i ciąłem go w pysk. Raz, drugi, trzeci - czerwony blask w jego oczodołach przygasł, potwór przewrócił się na ziemię. Ból w ręce eksplodował, o mało nie straciłem przytomności. Znów zapadła cisza, którą po chwili przerwało przeciągłe wycie bestii. Spojrzałem na swoją rękę - karwasz był przegryziony i osmalony. Ruszyłem w kierunku strażnicy. Już po chwili zauważyłem, że płonęła. Wokół leżało kilka ścierw potworów oraz moi towarzysze broni, straszliwie okaleczeni. Krzyknąłem, ale nikt mi nie odpowiedział. Straciłem przytomność. Ocknąłem się po wielu godzinach w osadzie. Już nie mogłem powrócić do służby. Przysłano kolejne oddziały. Po pewnym czasie bestie odeszły, ale kiedyś wrócą. Jestem tego pewien...'),
 (30, 'Sukkub', 130, 2080, 2035.00, 2165.00, 2165.00, 2035.00, 1250, 1320, 850, 925, 'pl', 'Altara', '', '', ''),
 (31, 'Widmowy Pies', 135, 2295, 2268.00, 2133.00, 2268.00, 2133.00, 1320, 1400, 925, 1000, 'pl', 'Altara', '', '', ''),
 (32, 'Dżin', 140, 2240, 2300.00, 2300.00, 2300.00, 2300.00, 1400, 1480, 1000, 1100, 'pl', 'Altara', '', '', ''),
@@ -1532,7 +1892,7 @@ INSERT INTO `monsters` (`id`, `name`, `level`, `hp`, `agility`, `strength`, `spe
 (44, 'Mimik', 200, 3800, 3550.00, 3750.00, 3750.00, 3550.00, 2500, 2600, 2200, 2300, 'pl', 'Altara', '', '', ''),
 (45, 'Sfinks', 205, 3895, 3800.00, 3800.00, 3800.00, 3800.00, 2600, 2700, 2300, 2400, 'pl', 'Altara', '', '', ''),
 (46, 'Feniks', 210, 3990, 3845.00, 4055.00, 3845.00, 4055.00, 2700, 2800, 2400, 2500, 'pl', 'Altara', '', '', ''),
-(47, 'Cyklop', 215, 3870, 3993.00, 4208.00, 4208.00, 3993.00, 2800, 2900, 2500, 2600, 'pl', 'Altara', '', '', ''),
+(47, 'Cyklop', 215, 3870, 3993.00, 4208.00, 4208.00, 3993.00, 2800, 2900, 2500, 2600, 'pl', 'Altara', '', '', 'Cyklop, mityczne stworzenie zamieszkujące górskie tereny, trudno dostępne dla człowieka. Blisko spokrewniony z Gigantem, dlatego współdzielą wiele legend na swój temat. Rękom Cyklopów przypisuje się budowę najznamienitszych, monumentalnych budowli w pobliżu i w samych górach Khazad-Nar, ale nie tylko. Prawdziwość tych opowieści jest poddawana w wątpliwość, ze względu na niski poziom rozwoju cywilizacyjnego tych stworzeń. Z drugiej strony, to nie do wiary, by tak ogromne budowle mogły wznieść istoty o wzroście elfa. <br />\r\nCyklop to humanoid, wysoki na 4 do 5.5 metra, przeważnie dobrze zbudowany. Oprócz rozmiarów, od człowieka odróżnia go znikome owłosienie na ciele oraz tylko jedno oko, na środku twarzy. '),
 (48, 'Gigant', 220, 4180, 4140.00, 4360.00, 4140.00, 4360.00, 2900, 3000, 2600, 2700, 'pl', 'Altara', '', '', ''),
 (49, 'Tytan', 225, 4275, 4400.00, 4400.00, 4400.00, 4400.00, 3000, 3100, 2700, 2800, 'pl', 'Altara', '', '', ''),
 (50, 'Jabberwock', 230, 4600, 4600.00, 4600.00, 4600.00, 4600.00, 3100, 3200, 2800, 3000, 'pl', 'Altara', '', '', ''),
@@ -1599,7 +1959,6 @@ INSERT INTO `monsters` (`id`, `name`, `level`, `hp`, `agility`, `strength`, `spe
 -- Struktura tabeli dla  `news`
 --
 
-DROP TABLE IF EXISTS `news`;
 CREATE TABLE IF NOT EXISTS `news` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
   `starter` text NOT NULL,
@@ -1618,7 +1977,6 @@ CREATE TABLE IF NOT EXISTS `news` (
 -- Struktura tabeli dla  `newspaper`
 --
 
-DROP TABLE IF EXISTS `newspaper`;
 CREATE TABLE IF NOT EXISTS `newspaper` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
   `paper_id` int(11) NOT NULL DEFAULT '0',
@@ -1637,7 +1995,6 @@ CREATE TABLE IF NOT EXISTS `newspaper` (
 -- Struktura tabeli dla  `newspaper_comments`
 --
 
-DROP TABLE IF EXISTS `newspaper_comments`;
 CREATE TABLE IF NOT EXISTS `newspaper_comments` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
   `textid` int(11) NOT NULL DEFAULT '0',
@@ -1653,7 +2010,6 @@ CREATE TABLE IF NOT EXISTS `newspaper_comments` (
 -- Struktura tabeli dla  `news_comments`
 --
 
-DROP TABLE IF EXISTS `news_comments`;
 CREATE TABLE IF NOT EXISTS `news_comments` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
   `newsid` int(11) NOT NULL DEFAULT '0',
@@ -1669,7 +2025,6 @@ CREATE TABLE IF NOT EXISTS `news_comments` (
 -- Struktura tabeli dla  `notatnik`
 --
 
-DROP TABLE IF EXISTS `notatnik`;
 CREATE TABLE IF NOT EXISTS `notatnik` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
   `gracz` int(11) NOT NULL DEFAULT '0',
@@ -1684,7 +2039,6 @@ CREATE TABLE IF NOT EXISTS `notatnik` (
 -- Struktura tabeli dla  `outposts`
 --
 
-DROP TABLE IF EXISTS `outposts`;
 CREATE TABLE IF NOT EXISTS `outposts` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
   `owner` int(11) NOT NULL DEFAULT '0',
@@ -1705,7 +2059,6 @@ CREATE TABLE IF NOT EXISTS `outposts` (
   `fatigue` int(3) NOT NULL DEFAULT '100',
   `morale` double(11,1) NOT NULL DEFAULT '0.0',
   `attacks` tinyint(2) NOT NULL DEFAULT '0',
-  PRIMARY KEY (`id`),
   KEY `id` (`id`)
 ) ENGINE=MyISAM DEFAULT CHARSET=utf8 AUTO_INCREMENT=1 ;
 
@@ -1715,14 +2068,12 @@ CREATE TABLE IF NOT EXISTS `outposts` (
 -- Struktura tabeli dla  `outpost_monsters`
 --
 
-DROP TABLE IF EXISTS `outpost_monsters`;
 CREATE TABLE IF NOT EXISTS `outpost_monsters` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
   `outpost` int(11) NOT NULL DEFAULT '0',
   `name` varchar(50) NOT NULL DEFAULT '',
   `power` int(11) NOT NULL DEFAULT '0',
   `defense` int(11) NOT NULL DEFAULT '0',
-  PRIMARY KEY (`id`),
   KEY `id` (`id`),
   KEY `outpost` (`outpost`)
 ) ENGINE=MyISAM DEFAULT CHARSET=utf8 AUTO_INCREMENT=1 ;
@@ -1733,7 +2084,6 @@ CREATE TABLE IF NOT EXISTS `outpost_monsters` (
 -- Struktura tabeli dla  `outpost_veterans`
 --
 
-DROP TABLE IF EXISTS `outpost_veterans`;
 CREATE TABLE IF NOT EXISTS `outpost_veterans` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
   `outpost` int(11) NOT NULL DEFAULT '0',
@@ -1752,9 +2102,35 @@ CREATE TABLE IF NOT EXISTS `outpost_veterans` (
   `rpower2` int(5) NOT NULL DEFAULT '0',
   `arrows` varchar(60) DEFAULT NULL,
   `opower` int(5) NOT NULL DEFAULT '0',
-  PRIMARY KEY (`id`),
+  UNIQUE KEY `id` (`id`),
   KEY `outpost` (`outpost`)
 ) ENGINE=MyISAM DEFAULT CHARSET=utf8 AUTO_INCREMENT=1 ;
+
+-- --------------------------------------------------------
+
+--
+-- Struktura tabeli dla  `plans`
+--
+
+CREATE TABLE IF NOT EXISTS `plans` (
+  `name` varchar(255) NOT NULL,
+  `level` int(11) NOT NULL DEFAULT '1',
+  `amount` int(11) NOT NULL DEFAULT '2',
+  `type` char(1) NOT NULL DEFAULT 'T',
+  KEY `name` (`name`)
+) ENGINE=MyISAM DEFAULT CHARSET=utf8;
+
+--
+-- Zrzut danych tabeli `plans`
+--
+
+INSERT INTO `plans` (`name`, `level`, `amount`, `type`) VALUES
+('Wytrychy', 1, 1, 'T'),
+('Wytrychy', 5, 8, 'T'),
+('Wytrychy', 10, 20, 'T'),
+('Wytrychy', 15, 36, 'T'),
+('Wytrychy', 20, 60, 'T'),
+('Wytrychy', 25, 86, 'T');
 
 -- --------------------------------------------------------
 
@@ -1762,7 +2138,6 @@ CREATE TABLE IF NOT EXISTS `outpost_veterans` (
 -- Struktura tabeli dla  `players`
 --
 
-DROP TABLE IF EXISTS `players`;
 CREATE TABLE IF NOT EXISTS `players` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
   `user` varchar(20) NOT NULL DEFAULT '',
@@ -1855,12 +2230,18 @@ CREATE TABLE IF NOT EXISTS `players` (
   `roleplay` text NOT NULL,
   `ooc` text NOT NULL,
   `shortrpg` varchar(40) NOT NULL,
+  `craftmission` tinyint(1) NOT NULL DEFAULT '7',
+  `mpoints` int(11) NOT NULL DEFAULT '0',
+  `room` int(11) NOT NULL DEFAULT '0',
+  `rinvites` char(1) NOT NULL DEFAULT 'Y',
+  `chapter` tinyint(2) NOT NULL DEFAULT '1',
   KEY `user` (`user`),
   KEY `email` (`email`),
   KEY `lpv` (`lpv`),
   KEY `page` (`page`),
   KEY `refs` (`refs`),
-  KEY `id` (`id`)
+  KEY `id` (`id`),
+  KEY `room` (`room`)
 ) ENGINE=MyISAM DEFAULT CHARSET=utf8 PACK_KEYS=0 AUTO_INCREMENT=1 ;
 
 -- --------------------------------------------------------
@@ -1869,7 +2250,6 @@ CREATE TABLE IF NOT EXISTS `players` (
 -- Struktura tabeli dla  `pmarket`
 --
 
-DROP TABLE IF EXISTS `pmarket`;
 CREATE TABLE IF NOT EXISTS `pmarket` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
   `seller` int(11) NOT NULL DEFAULT '0',
@@ -1886,7 +2266,6 @@ CREATE TABLE IF NOT EXISTS `pmarket` (
 -- Struktura tabeli dla  `polls`
 --
 
-DROP TABLE IF EXISTS `polls`;
 CREATE TABLE IF NOT EXISTS `polls` (
   `id` int(11) NOT NULL DEFAULT '0',
   `poll` varchar(255) NOT NULL DEFAULT '',
@@ -1904,7 +2283,6 @@ CREATE TABLE IF NOT EXISTS `polls` (
 -- Struktura tabeli dla  `polls_comments`
 --
 
-DROP TABLE IF EXISTS `polls_comments`;
 CREATE TABLE IF NOT EXISTS `polls_comments` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
   `pollid` int(11) NOT NULL DEFAULT '0',
@@ -1920,7 +2298,6 @@ CREATE TABLE IF NOT EXISTS `polls_comments` (
 -- Struktura tabeli dla  `potions`
 --
 
-DROP TABLE IF EXISTS `potions`;
 CREATE TABLE IF NOT EXISTS `potions` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
   `owner` int(11) NOT NULL DEFAULT '0',
@@ -1932,44 +2309,45 @@ CREATE TABLE IF NOT EXISTS `potions` (
   `amount` int(11) NOT NULL DEFAULT '0',
   `lang` varchar(3) NOT NULL DEFAULT 'pl',
   `cost` int(11) unsigned NOT NULL DEFAULT '0',
-  PRIMARY KEY (`id`),
+  UNIQUE KEY `id` (`id`),
   FULLTEXT KEY `name` (`name`)
-) ENGINE=MyISAM  DEFAULT CHARSET=utf8 PACK_KEYS=0 AUTO_INCREMENT=30 ;
+) ENGINE=MyISAM  DEFAULT CHARSET=utf8 PACK_KEYS=0 AUTO_INCREMENT=31 ;
 
 --
 -- Zrzut danych tabeli `potions`
 --
 
 INSERT INTO `potions` (`id`, `owner`, `name`, `type`, `efect`, `status`, `power`, `amount`, `lang`, `cost`) VALUES
-(1, 0, 'bardzo silna mikstura z Nutari', 'M', 'regeneruje manę', 'A', 500, 38, 'pl', 0),
-(2, 0, 'słaba mikstura z Nutari', 'M', 'regeneruje manę', 'A', 40, 1, 'pl', 0),
-(3, 0, 'mikstura z Nutari', 'M', 'regeneruje manę', 'A', 100, 4, 'pl', 0),
-(4, 0, 'bardzo słaba mikstura z Nutari', 'M', 'regeneruje manę', 'S', 20, 40, 'pl', 0),
-(5, 0, 'silna mikstura z Nutari', 'M', 'regeneruje manę', 'A', 200, 49, 'pl', 0),
-(6, 0, 'bardzo słaba mikstura z Illani', 'H', 'regeneruje życie', 'S', 10, 32, 'pl', 0),
-(7, 0, 'słaba mikstura z Illani', 'H', 'regeneruje życie', 'A', 20, 24, 'pl', 0),
-(8, 0, 'mikstura z Illani', 'H', 'regeneruje życie', 'A', 50, 43, 'pl', 0),
-(9, 0, 'silna mikstura z Illani', 'H', 'regeneruje życie', 'A', 100, 15, 'pl', 0),
-(10, 0, 'bardzo silna mikstura z Illani', 'H', 'regeneruje życie', 'A', 200, 48, 'pl', 0),
-(11, 0, 'bardzo słaba trucizna z Dynallca', 'P', 'premia do obrażeń(broń)', 'A', 1, 14, 'pl', 0),
-(12, 0, 'słaba trucizna z Dynallca', 'P', 'premia do obrażeń(broń)', 'A', 10, 7, 'pl', 0),
-(13, 0, 'trucizna z Dynallca', 'P', 'premia do obrażeń (broń)', 'A', 20, 35, 'pl', 0),
-(14, 0, 'silna trucizna z Dynallca', 'P', 'premia do obrażeń (broń)', 'A', 30, 44, 'pl', 0),
-(15, 0, 'bardzo silna trucizna z Dynallca', 'P', 'premia do obrażeń(broń)', 'A', 50, 42, 'pl', 0),
-(16, 0, 'bardzo słaba trucizna z Illani', 'P', 'specjalna premia do obrażeń', 'A', 5, 21, 'pl', 0),
-(17, 0, 'słaba trucizna z Illani', 'P', 'specjalna premia do obrażeń', 'A', 15, 37, 'pl', 0),
-(18, 0, 'trucizna z Illani', 'P', 'specjalna premia do obrażeń', 'A', 25, 14, 'pl', 0),
-(19, 0, 'silna trucizna z Illani', 'P', 'specjalna premia do obrażeń', 'A', 40, 20, 'pl', 0),
-(20, 0, 'bardzo silna trucizna z Illani', 'P', 'specjalna premia do obrażeń', 'A', 60, 2, 'pl', 0),
-(21, 0, 'bardzo słaba trucizna z Nutari', 'P', 'zmniejsza PM przeciwnika', 'A', 5, 25, 'pl', 0),
-(22, 0, 'słaba trucizna z Nutari', 'P', 'zmniejsza PM przeciwnika', 'A', 15, 34, 'pl', 0),
-(23, 0, 'trucizna z Nutari', 'P', 'zmniejsza PM przeciwnika', 'A', 25, 24, 'pl', 0),
-(24, 0, 'silna trucizna z Nutari', 'P', 'zmniejsza PM przeciwnika', 'A', 40, 13, 'pl', 0),
-(25, 0, 'bardzo silna trucizna z Nutari', 'P', 'zmniejsza PM przeciwnika', 'A', 60, 5, 'pl', 0),
-(26, 0, 'antidotum na truciznę z Dynallca', 'A', 'likwiduje zatrucie Dynallca', 'A', 100, 23, 'pl', 0),
-(27, 0, 'antidotum na truciznę z Nutari', 'A', 'likwiduje zatrucie Nutari', 'A', 100, 39, 'pl', 0),
-(28, 0, 'antidotum na truciznę z Illani', 'A', 'likwiduje zatrucie Illani', 'A', 100, 7, 'pl', 0),
-(29, 0, 'Oszukanie śmierci', 'A', 'pozwala uniknąć śmierci', 'A', 100, 19, 'pl', 0);
+(1, 0, 'bardzo silna mikstura z Nutari', 'M', 'regeneruje manę', 'A', 500, 7, 'pl', 0),
+(2, 0, 'słaba mikstura z Nutari', 'M', 'regeneruje manę', 'A', 40, 49, 'pl', 0),
+(3, 0, 'mikstura z Nutari', 'M', 'regeneruje manę', 'A', 100, 20, 'pl', 0),
+(4, 0, 'bardzo słaba mikstura z Nutari', 'M', 'regeneruje manę', 'S', 20, 31, 'pl', 0),
+(5, 0, 'silna mikstura z Nutari', 'M', 'regeneruje manę', 'A', 200, 25, 'pl', 0),
+(6, 0, 'bardzo słaba mikstura z Illani', 'H', 'regeneruje życie', 'S', 10, 23, 'pl', 0),
+(7, 0, 'słaba mikstura z Illani', 'H', 'regeneruje życie', 'A', 20, 10, 'pl', 0),
+(8, 0, 'mikstura z Illani', 'H', 'regeneruje życie', 'A', 50, 12, 'pl', 0),
+(9, 0, 'silna mikstura z Illani', 'H', 'regeneruje życie', 'A', 100, 33, 'pl', 0),
+(10, 0, 'bardzo silna mikstura z Illani', 'H', 'regeneruje życie', 'A', 200, 27, 'pl', 0),
+(11, 0, 'bardzo słaba trucizna z Dynallca', 'P', 'premia do obrażeń(broń)', 'A', 1, 36, 'pl', 0),
+(12, 0, 'słaba trucizna z Dynallca', 'P', 'premia do obrażeń(broń)', 'A', 10, 19, 'pl', 0),
+(13, 0, 'trucizna z Dynallca', 'P', 'premia do obrażeń (broń)', 'A', 20, 22, 'pl', 0),
+(14, 0, 'silna trucizna z Dynallca', 'P', 'premia do obrażeń (broń)', 'A', 30, 41, 'pl', 0),
+(15, 0, 'bardzo silna trucizna z Dynallca', 'P', 'premia do obrażeń(broń)', 'A', 50, 6, 'pl', 0),
+(16, 0, 'bardzo słaba trucizna z Illani', 'P', 'specjalna premia do obrażeń', 'A', 5, 38, 'pl', 0),
+(17, 0, 'słaba trucizna z Illani', 'P', 'specjalna premia do obrażeń', 'A', 15, 36, 'pl', 0),
+(18, 0, 'trucizna z Illani', 'P', 'specjalna premia do obrażeń', 'A', 25, 7, 'pl', 0),
+(19, 0, 'silna trucizna z Illani', 'P', 'specjalna premia do obrażeń', 'A', 40, 23, 'pl', 0),
+(20, 0, 'bardzo silna trucizna z Illani', 'P', 'specjalna premia do obrażeń', 'A', 60, 37, 'pl', 0),
+(21, 0, 'bardzo słaba trucizna z Nutari', 'P', 'zmniejsza PM przeciwnika', 'A', 5, 45, 'pl', 0),
+(22, 0, 'słaba trucizna z Nutari', 'P', 'zmniejsza PM przeciwnika', 'A', 15, 33, 'pl', 0),
+(23, 0, 'trucizna z Nutari', 'P', 'zmniejsza PM przeciwnika', 'A', 25, 5, 'pl', 0),
+(24, 0, 'silna trucizna z Nutari', 'P', 'zmniejsza PM przeciwnika', 'A', 40, 27, 'pl', 0),
+(25, 0, 'bardzo silna trucizna z Nutari', 'P', 'zmniejsza PM przeciwnika', 'A', 60, 24, 'pl', 0),
+(26, 0, 'antidotum na truciznę z Dynallca', 'A', 'likwiduje zatrucie Dynallca', 'A', 100, 26, 'pl', 0),
+(27, 0, 'antidotum na truciznę z Nutari', 'A', 'likwiduje zatrucie Nutari', 'A', 100, 29, 'pl', 0),
+(28, 0, 'antidotum na truciznę z Illani', 'A', 'likwiduje zatrucie Illani', 'A', 100, 45, 'pl', 0),
+(29, 0, 'Oszukanie śmierci', 'A', 'pozwala uniknąć śmierci', 'A', 100, 27, 'pl', 0),
+(30, 0, 'Silne oszukanie śmierci', 'A', 'pozwala uniknąć śmierci', 'A', 200, 6, 'pl', 0);
 
 -- --------------------------------------------------------
 
@@ -1977,7 +2355,6 @@ INSERT INTO `potions` (`id`, `owner`, `name`, `type`, `efect`, `status`, `power`
 -- Struktura tabeli dla  `proposals`
 --
 
-DROP TABLE IF EXISTS `proposals`;
 CREATE TABLE IF NOT EXISTS `proposals` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
   `pid` int(11) NOT NULL,
@@ -1986,7 +2363,7 @@ CREATE TABLE IF NOT EXISTS `proposals` (
   `data` text NOT NULL,
   `info` text NOT NULL,
   UNIQUE KEY `id` (`id`)
-) ENGINE=MyISAM  DEFAULT CHARSET=utf8 AUTO_INCREMENT=24 ;
+) ENGINE=MyISAM  DEFAULT CHARSET=utf8 AUTO_INCREMENT=45 ;
 
 -- --------------------------------------------------------
 
@@ -1994,7 +2371,6 @@ CREATE TABLE IF NOT EXISTS `proposals` (
 -- Struktura tabeli dla  `questaction`
 --
 
-DROP TABLE IF EXISTS `questaction`;
 CREATE TABLE IF NOT EXISTS `questaction` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
   `player` int(11) NOT NULL DEFAULT '0',
@@ -2010,7 +2386,6 @@ CREATE TABLE IF NOT EXISTS `questaction` (
 -- Struktura tabeli dla  `quests`
 --
 
-DROP TABLE IF EXISTS `quests`;
 CREATE TABLE IF NOT EXISTS `quests` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
   `qid` int(11) NOT NULL DEFAULT '2',
@@ -2119,7 +2494,7 @@ INSERT INTO `quests` (`id`, `qid`, `location`, `name`, `option`, `text`, `lang`)
 (87, 2, 'grid.php', '1.3.1', '0', 'Kiedy otwierasz drzwi, w twoje oczy uderza blask słońca a do uszu docierają odgłosy różnych zwierząt. Przez moment stoisz oszołomiony nagłą zmianą otoczenia. W końcu jednak zaczynasz dostrzegać szczegóły otoczenia wokół ciebie. Znajdujesz się na niewielkiej leśnej polance za plecami masz idealnie zamaskowane drzwi przez które tutaj wszedłeś. Rozglądając się uważnie, widzisz po swojej lewej stronie fragment murów miejskich. Znalazłeś się poza miastem. Zastanawiasz się teraz co dalej robić:', 'pl'),
 (88, 2, 'grid.php', 'box8', '2', 'Wrócić do miasta', 'pl'),
 (89, 2, 'grid.php', 'box8', '1', 'Rozejrzeć się po okolicy', 'pl'),
-(90, 2, 'grid.php', '1.3.1.1', '0', 'Postanawiasz rozejrzeć się nieco po okolicy. Wchodzi więc w las otaczający z tej strony miasto i zaczynasz wędrować wśród drzew. Dookoła siebie słyszysz gwar ptasich głosów, co jakiś czas wśród drzew widzisz przemykającą sarnę czy zająca. Pogoda idealnie nadaje się do pieszych wędrówek, więc nie spiesząc się, cały czas podążasz przed siebie. W pewnym momencie dostrzegasz przed sobą wąską leśną ścieżkę wydeptaną przez zwierzęta. Postanawiasz sprawdzić dokąd ona prowadzi.', 'pl'),
+(90, 2, 'grid.php', '1.3.1.1', '0', 'Postanawiasz rozejrzeć się nieco po okolicy. Wchodzisz więc w las otaczający z tej strony miasto i zaczynasz wędrować wśród drzew. Dookoła siebie słyszysz gwar ptasich głosów, co jakiś czas wśród drzew widzisz przemykającą sarnę czy zająca. Pogoda idealnie nadaje się do pieszych wędrówek, więc nie spiesząc się, cały czas podążasz przed siebie. W pewnym momencie dostrzegasz przed sobą wąską leśną ścieżkę wydeptaną przez zwierzęta. Postanawiasz sprawdzić dokąd ona prowadzi.', 'pl'),
 (91, 2, 'grid.php', '1.3.1.1.1', '0', 'Wędrujesz jakiś czas tą ścieżką. Drzewa wokół ciebie robią się coraz starsze, porośnięte mchem wyglądają jakby miały twarze które cały czas przyglądają się tobie. Powietrze zaczyna być coraz gęściejsze, światło dnia powoli przygasa nie mogąc przebić się przez gęste korony wiekowych drzew. W pewnym momencie zauważasz, że znikły gdzieś odgłosy zwierząt a dookoła ciebie panuje niesamowita cisza. Zdwajając czujność wędrujesz powoli szlakiem rozglądając się uważnie na boki. Po pewnym czasie dostrzegasz daleko przed sobą plamę jaśniejszego terenu. Zbliżając się do tamtego miejsca widzisz przed sobą niewielką, zarośniętą krzakami leśną polanę. W jednym z przeciwległych jej rogów widzisz niewielkie, tryskające źródełko wody. Natomiast po przeciwległej ścianie, wejście do małej jaskini. Ostrożnie zbliżasz się do wejścia. Kiedy przebyłeś już połowę drogi, nagle z prawej strony usłyszałeś gwałtowny świst. Szybko rzuciłeś się na ziemię, a nad twoją głową przeleciał dziwny kościany dysk. Błyskawicznie poderwałeś się z ziemi i obróciłeś w tamtą stronę akurat na czas aby zobaczyć szarżującego w twoim kierunku Lassaukara!', 'pl'),
 (92, 2, 'grid.php', 'lostfight2', '0', 'Gwałtowność ataku istoty całkowicie cię zaskoczyła. Nie byłeś w stanie obronić się przed jego atakiem. Ostatkiem sił próbowałeś wycofać się z powrotem, ale potwór nie dał ci tej szansy, zatapiając swoje szpony w twoim karku. To była ostatnia rzecz jaką zapamiętałeś.', 'pl'),
 (93, 2, 'grid.php', 'winfight2', 'karty', 'Mimo początkowego zaskoczenia udało ci nawiązać walkę ze stworem by po chwili powalić go na ziemię. Z walącym jak oszalałe sercem stoisz przez chwilę zbierając myśli. Po chwili jednak ponownie kierujesz się w stronę groty. Kiedy podchodzisz bliżej, widzisz, że jest to niewielka jaskinia jaką można czasami spotkać w lesie. Jej środkiem płynie niewielki strumyk wyciekający ze skały który po opuszczeniu groty skręca w lewą stronę. Przy najdalej położonej ścianie, widzisz jakiś dziwny, kwadratowy przedmiot. Kiedy podchodzisz bliżej dostrzegasz iż jest to dziwna czarna skrzynia. Nigdzie nie widzisz nawet śladów zamka czy zawiasów. Jedynie na wieku dostrzegasz jakieś dziwne zadrapania. Kiedy delikatnie dotykasz tego miejsca, nagle zadrapania zaczynają świecić by po chwili w magiczny sposób ułożyć się w zrozumiały dla ciebie napis: <br />\r\n<i>Podawane do stołu,<br />\r\nDzielone między wszystkich,<br />\r\nNigdy nie jedzone</i><br />\r\nCzy chcesz próbować rozwiązać zagadkę?', 'pl'),
@@ -2705,7 +3080,6 @@ INSERT INTO `quests` (`id`, `qid`, `location`, `name`, `option`, `text`, `lang`)
 -- Struktura tabeli dla  `replies`
 --
 
-DROP TABLE IF EXISTS `replies`;
 CREATE TABLE IF NOT EXISTS `replies` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
   `starter` varchar(30) NOT NULL DEFAULT '',
@@ -2723,7 +3097,6 @@ CREATE TABLE IF NOT EXISTS `replies` (
 -- Struktura tabeli dla  `reset`
 --
 
-DROP TABLE IF EXISTS `reset`;
 CREATE TABLE IF NOT EXISTS `reset` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
   `player` int(11) NOT NULL DEFAULT '0',
@@ -2738,13 +3111,12 @@ CREATE TABLE IF NOT EXISTS `reset` (
 -- Struktura tabeli dla  `revent`
 --
 
-DROP TABLE IF EXISTS `revent`;
 CREATE TABLE IF NOT EXISTS `revent` (
   `pid` int(11) NOT NULL,
   `state` tinyint(2) NOT NULL,
   `qtime` smallint(4) NOT NULL,
   `location` varchar(255) NOT NULL,
-  PRIMARY KEY (`pid`)
+  UNIQUE KEY `pid` (`pid`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 -- --------------------------------------------------------
@@ -2753,7 +3125,6 @@ CREATE TABLE IF NOT EXISTS `revent` (
 -- Struktura tabeli dla  `rings`
 --
 
-DROP TABLE IF EXISTS `rings`;
 CREATE TABLE IF NOT EXISTS `rings` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
   `name` varchar(60) NOT NULL DEFAULT '',
@@ -2777,17 +3148,34 @@ INSERT INTO `rings` (`id`, `name`, `amount`, `lang`) VALUES
 -- --------------------------------------------------------
 
 --
+-- Struktura tabeli dla  `rooms`
+--
+
+CREATE TABLE IF NOT EXISTS `rooms` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `owner` int(11) NOT NULL,
+  `npcs` text NOT NULL,
+  `desc` text NOT NULL,
+  `name` varchar(255) NOT NULL DEFAULT 'Pokój',
+  `days` smallint(3) NOT NULL DEFAULT '1',
+  `owners` varchar(255) NOT NULL,
+  `colors` varchar(255) NOT NULL,
+  UNIQUE KEY `id` (`id`)
+) ENGINE=MyISAM DEFAULT CHARSET=utf8 AUTO_INCREMENT=1 ;
+
+-- --------------------------------------------------------
+
+--
 -- Struktura tabeli dla  `sessions`
 --
 
-DROP TABLE IF EXISTS `sessions`;
 CREATE TABLE IF NOT EXISTS `sessions` (
   `sesskey` varchar(32) CHARACTER SET latin1 COLLATE latin1_bin NOT NULL DEFAULT '',
   `expiry` int(11) unsigned NOT NULL DEFAULT '0',
   `expireref` varchar(64) DEFAULT NULL,
   `data` longtext,
-  PRIMARY KEY (`sesskey`),
-  KEY `expiry` (`expiry`)
+  KEY `expiry` (`expiry`),
+  KEY `sesskey` (`sesskey`)
 ) ENGINE=MyISAM DEFAULT CHARSET=utf8;
 
 -- --------------------------------------------------------
@@ -2796,7 +3184,6 @@ CREATE TABLE IF NOT EXISTS `sessions` (
 -- Struktura tabeli dla  `settings`
 --
 
-DROP TABLE IF EXISTS `settings`;
 CREATE TABLE IF NOT EXISTS `settings` (
   `setting` varchar(255) NOT NULL DEFAULT '',
   `value` varchar(255) DEFAULT NULL,
@@ -2810,55 +3197,55 @@ CREATE TABLE IF NOT EXISTS `settings` (
 
 INSERT INTO `settings` (`setting`, `value`) VALUES
 ('maps', '20'),
-('item', NULL),
-('player', NULL),
+('item', ''),
+('player', ''),
 ('open', 'Y'),
 ('reset', 'N'),
-('warriors', '1942113'),
-('archers', '1910454'),
-('catapults', '927311'),
-('barricades', '941955'),
+('warriors', '0'),
+('archers', '0'),
+('catapults', '0'),
+('barricades', '0'),
 ('close_reason', ''),
-('copper', '43'),
-('iron', '82'),
-('coal', '6'),
-('mithril', '40'),
-('adamantium', '5'),
-('meteor', '244'),
-('crystal', '8'),
-('illani', '52'),
-('illanias', '23'),
-('nutari', '68'),
-('dynallca', '46'),
+('copper', '0'),
+('iron', '0'),
+('coal', '0'),
+('mithril', '0'),
+('adamantium', '0'),
+('meteor', '0'),
+('crystal', '0'),
+('illani', '0'),
+('illanias', '0'),
+('nutari', '0'),
+('dynallca', '0'),
 ('register', 'Y'),
 ('close_register', ''),
 ('poll', 'N'),
 ('age', '1'),
 ('day', '1'),
-('copperore', '5'),
-('zincore', '20'),
-('tinore', '16'),
-('ironore', '13'),
-('bronze', '56'),
-('brass', '76'),
-('steel', '117'),
-('pine', '27'),
-('hazel', '18'),
-('yew', '23'),
-('elm', '43'),
-('illani_seeds', '119'),
-('illanias_seeds', '46'),
-('nutari_seeds', '81'),
-('dynallca_seeds', '84'),
+('copperore', '0'),
+('zincore', '0'),
+('tinore', '0'),
+('ironore', '0'),
+('bronze', '0'),
+('brass', '0'),
+('steel', '0'),
+('pine', '0'),
+('hazel', '0'),
+('yew', '0'),
+('elm', '0'),
+('illani_seeds', '0'),
+('illanias_seeds', '0'),
+('nutari_seeds', '0'),
+('dynallca_seeds', '0'),
 ('caravan', 'N'),
 ('metakeywords', ''),
-('metadescr', NULL),
-('tribe', NULL),
-('caravanday', '10'),
-('hunteraltara', 'L;5;3'),
-('hunterardulith', 'L;64;1'),
-('hunteraltaraamount', '13'),
-('hunterardulithamount', '2');
+('metadescr', ''),
+('tribe', '0'),
+('caravanday', '9'),
+('hunteraltara', 'I;38;3'),
+('hunterardulith', 'L;68;0'),
+('hunteraltaraamount', '9'),
+('hunterardulithamount', '20');
 
 -- --------------------------------------------------------
 
@@ -2866,7 +3253,6 @@ INSERT INTO `settings` (`setting`, `value`) VALUES
 -- Struktura tabeli dla  `smelter`
 --
 
-DROP TABLE IF EXISTS `smelter`;
 CREATE TABLE IF NOT EXISTS `smelter` (
   `owner` int(11) NOT NULL DEFAULT '0',
   `level` tinyint(2) NOT NULL DEFAULT '0',
@@ -2879,7 +3265,6 @@ CREATE TABLE IF NOT EXISTS `smelter` (
 -- Struktura tabeli dla  `smith`
 --
 
-DROP TABLE IF EXISTS `smith`;
 CREATE TABLE IF NOT EXISTS `smith` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
   `owner` int(11) NOT NULL DEFAULT '0',
@@ -2894,7 +3279,7 @@ CREATE TABLE IF NOT EXISTS `smith` (
   `elitetype` varchar(1) NOT NULL DEFAULT 'S',
   KEY `id` (`id`),
   KEY `owner` (`owner`)
-) ENGINE=MyISAM  DEFAULT CHARSET=utf8 AUTO_INCREMENT=118 ;
+) ENGINE=MyISAM  DEFAULT CHARSET=utf8 AUTO_INCREMENT=255 ;
 
 --
 -- Zrzut danych tabeli `smith`
@@ -2981,41 +3366,41 @@ INSERT INTO `smith` (`id`, `owner`, `name`, `type`, `cost`, `amount`, `level`, `
 (80, 0, 'Elitarna szabla', 'W', 80000, 200, 10, 'pl', 'N', 10, 'S'),
 (81, 0, 'Elitarny morgensztern', 'W', 160000, 360, 15, 'pl', 'N', 14, 'S'),
 (82, 0, 'Elitarna anima', 'A', 10000, 10, 1, 'pl', 'N', 3, 'S'),
-(83, 0, 'Elitarna brygantyna', 'A', 80000, 160, 5, 'pl', 'N', 7, 'S'),
-(84, 0, 'Elitarna koszulka kolcza', 'A', 160000, 400, 10, 'pl', 'N', 11, 'S'),
-(85, 0, 'Elitarny kaftan kolczy', 'A', 320000, 720, 15, 'pl', 'N', 15, 'S'),
-(86, 0, 'Elitarny mały puklerz', 'S', 5000, 5, 1, 'pl', 'N', 3, 'S'),
-(87, 0, 'Elitarna mała tarcza', 'S', 40000, 80, 5, 'pl', 'N', 7, 'S'),
-(88, 0, 'Elitarny sipar', 'S', 80000, 200, 10, 'pl', 'N', 11, 'S'),
-(89, 0, 'Elitarna średnia tarcza', 'S', 160000, 360, 15, 'pl', 'N', 15, 'S'),
-(90, 0, 'Elitarny kolczy czepiec', 'H', 5000, 5, 1, 'pl', 'N', 3, 'S'),
-(91, 0, 'Elitarny szyszak z kołnierzem', 'H', 40000, 80, 5, 'pl', 'N', 7, 'S'),
-(92, 0, 'Elitarny kapalin', 'H', 80000, 200, 10, 'pl', 'N', 11, 'S'),
-(93, 0, 'Elitarna łebka', 'H', 160000, 360, 15, 'pl', 'N', 15, 'S'),
-(94, 0, 'Elitarne ochraniacze kolcze', 'L', 5000, 5, 1, 'pl', 'N', 3, 'S'),
-(95, 0, 'Elitarne nogawice kolcze', 'L', 40000, 80, 5, 'pl', 'N', 7, 'S'),
-(96, 0, 'Elitarne nagolenniki żeberkowe', 'L', 80000, 200, 10, 'pl', 'N', 11, 'S'),
-(97, 0, 'Elitarne nogawice żeberkowe', 'L', 160000, 360, 15, 'pl', 'N', 15, 'S'),
-(98, 0, 'Elitarny krótki miecz', 'W', 5000, 5, 1, 'pl', 'N', 57, 'E'),
-(99, 0, 'Elitarny rapier', 'W', 40000, 40, 5, 'pl', 'N', 61, 'E'),
-(100, 0, 'Elitarna szabla', 'W', 80000, 200, 10, 'pl', 'N', 64, 'E'),
-(101, 0, 'Elitarny morgensztern', 'W', 160000, 360, 15, 'pl', 'N', 67, 'E'),
-(102, 0, 'Elitarna anima', 'A', 10000, 10, 1, 'pl', 'N', 59, 'E'),
-(103, 0, 'Elitarna brygantyna', 'A', 80000, 160, 5, 'pl', 'N', 62, 'E'),
-(104, 0, 'Elitarna koszulka kolcza', 'A', 160000, 400, 10, 'pl', 'N', 65, 'E'),
-(105, 0, 'Elitarny kaftan kolczy', 'A', 320000, 720, 15, 'pl', 'N', 68, 'E'),
-(106, 0, 'Elitarny mały puklerz', 'S', 5000, 5, 1, 'pl', 'N', 59, 'E'),
-(107, 0, 'Elitarna mała tarcza', 'S', 40000, 80, 5, 'pl', 'N', 62, 'E'),
-(108, 0, 'Elitarny sipar', 'S', 80000, 200, 10, 'pl', 'N', 65, 'E'),
-(109, 0, 'Elitarna średnia tarcza', 'S', 160000, 360, 15, 'pl', 'N', 68, 'E'),
-(110, 0, 'Elitarny kolczy czepiec', 'H', 5000, 5, 1, 'pl', 'N', 59, 'E'),
-(111, 0, 'Elitarny szyszak z kołnierzem', 'H', 40000, 80, 5, 'pl', 'N', 62, 'E'),
-(112, 0, 'Elitarny kapalin', 'H', 80000, 200, 10, 'pl', 'N', 65, 'E'),
-(113, 0, 'Elitarna łebka', 'H', 160000, 360, 15, 'pl', 'N', 68, 'E'),
-(114, 0, 'Elitarne ochraniacze kolcze', 'L', 5000, 5, 1, 'pl', 'N', 59, 'E'),
-(115, 0, 'Elitarne nogawice kolcze', 'L', 40000, 80, 5, 'pl', 'N', 62, 'E'),
-(116, 0, 'Elitarne nagolenniki żeberkowe', 'L', 80000, 200, 10, 'pl', 'N', 65, 'E'),
-(117, 0, 'Elitarne nogawice żeberkowe', 'L', 160000, 360, 15, 'pl', 'N', 68, 'E');
+(187, 0, 'Elitarna brygantyna', 'A', 80000, 160, 5, 'pl', 'N', 7, 'S'),
+(188, 0, 'Elitarna koszulka kolcza', 'A', 160000, 400, 10, 'pl', 'N', 11, 'S'),
+(189, 0, 'Elitarny kaftan kolczy', 'A', 320000, 720, 15, 'pl', 'N', 15, 'S'),
+(190, 0, 'Elitarny mały puklerz', 'S', 5000, 5, 1, 'pl', 'N', 3, 'S'),
+(191, 0, 'Elitarna mała tarcza', 'S', 40000, 80, 5, 'pl', 'N', 7, 'S'),
+(192, 0, 'Elitarny sipar', 'S', 80000, 200, 10, 'pl', 'N', 11, 'S'),
+(193, 0, 'Elitarna średnia tarcza', 'S', 160000, 360, 15, 'pl', 'N', 15, 'S'),
+(194, 0, 'Elitarny kolczy czepiec', 'H', 5000, 5, 1, 'pl', 'N', 3, 'S'),
+(195, 0, 'Elitarny szyszak z kołnierzem', 'H', 40000, 80, 5, 'pl', 'N', 7, 'S'),
+(196, 0, 'Elitarny kapalin', 'H', 80000, 200, 10, 'pl', 'N', 11, 'S'),
+(197, 0, 'Elitarna łebka', 'H', 160000, 360, 15, 'pl', 'N', 15, 'S'),
+(198, 0, 'Elitarne ochraniacze kolcze', 'L', 5000, 5, 1, 'pl', 'N', 3, 'S'),
+(199, 0, 'Elitarne nogawice kolcze', 'L', 40000, 80, 5, 'pl', 'N', 7, 'S'),
+(200, 0, 'Elitarne nagolenniki żeberkowe', 'L', 80000, 200, 10, 'pl', 'N', 11, 'S'),
+(201, 0, 'Elitarne nogawice żeberkowe', 'L', 160000, 360, 15, 'pl', 'N', 15, 'S'),
+(235, 0, 'Elitarny krótki miecz', 'W', 5000, 5, 1, 'pl', 'N', 57, 'E'),
+(236, 0, 'Elitarny rapier', 'W', 40000, 40, 5, 'pl', 'N', 61, 'E'),
+(237, 0, 'Elitarna szabla', 'W', 80000, 200, 10, 'pl', 'N', 64, 'E'),
+(238, 0, 'Elitarny morgensztern', 'W', 160000, 360, 15, 'pl', 'N', 67, 'E'),
+(239, 0, 'Elitarna anima', 'A', 10000, 10, 1, 'pl', 'N', 59, 'E'),
+(240, 0, 'Elitarna brygantyna', 'A', 80000, 160, 5, 'pl', 'N', 62, 'E'),
+(241, 0, 'Elitarna koszulka kolcza', 'A', 160000, 400, 10, 'pl', 'N', 65, 'E'),
+(242, 0, 'Elitarny kaftan kolczy', 'A', 320000, 720, 15, 'pl', 'N', 68, 'E'),
+(243, 0, 'Elitarny mały puklerz', 'S', 5000, 5, 1, 'pl', 'N', 59, 'E'),
+(244, 0, 'Elitarna mała tarcza', 'S', 40000, 80, 5, 'pl', 'N', 62, 'E'),
+(245, 0, 'Elitarny sipar', 'S', 80000, 200, 10, 'pl', 'N', 65, 'E'),
+(246, 0, 'Elitarna średnia tarcza', 'S', 160000, 360, 15, 'pl', 'N', 68, 'E'),
+(247, 0, 'Elitarny kolczy czepiec', 'H', 5000, 5, 1, 'pl', 'N', 59, 'E'),
+(248, 0, 'Elitarny szyszak z kołnierzem', 'H', 40000, 80, 5, 'pl', 'N', 62, 'E'),
+(249, 0, 'Elitarny kapalin', 'H', 80000, 200, 10, 'pl', 'N', 65, 'E'),
+(250, 0, 'Elitarna łebka', 'H', 160000, 360, 15, 'pl', 'N', 68, 'E'),
+(251, 0, 'Elitarne ochraniacze kolcze', 'L', 5000, 5, 1, 'pl', 'N', 59, 'E'),
+(252, 0, 'Elitarne nogawice kolcze', 'L', 40000, 80, 5, 'pl', 'N', 62, 'E'),
+(253, 0, 'Elitarne nagolenniki żeberkowe', 'L', 80000, 200, 10, 'pl', 'N', 65, 'E'),
+(254, 0, 'Elitarne nogawice żeberkowe', 'L', 160000, 360, 15, 'pl', 'N', 68, 'E');
 
 -- --------------------------------------------------------
 
@@ -3023,7 +3408,6 @@ INSERT INTO `smith` (`id`, `owner`, `name`, `type`, `cost`, `amount`, `level`, `
 -- Struktura tabeli dla  `smith_work`
 --
 
-DROP TABLE IF EXISTS `smith_work`;
 CREATE TABLE IF NOT EXISTS `smith_work` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
   `owner` int(11) NOT NULL DEFAULT '0',
@@ -3033,7 +3417,35 @@ CREATE TABLE IF NOT EXISTS `smith_work` (
   `mineral` varchar(10) NOT NULL DEFAULT '',
   `elite` int(11) NOT NULL DEFAULT '0',
   KEY `id` (`id`)
-) ENGINE=MyISAM  DEFAULT CHARSET=utf8 AUTO_INCREMENT=22 ;
+) ENGINE=MyISAM DEFAULT CHARSET=utf8 AUTO_INCREMENT=1 ;
+
+-- --------------------------------------------------------
+
+--
+-- Struktura tabeli dla  `tools`
+--
+
+CREATE TABLE IF NOT EXISTS `tools` (
+  `name` varchar(50) NOT NULL,
+  `level` int(11) NOT NULL DEFAULT '1',
+  `power` int(11) NOT NULL,
+  `dur` int(11) NOT NULL DEFAULT '10',
+  `repair` int(11) NOT NULL DEFAULT '20',
+  `type` char(1) NOT NULL DEFAULT 'T',
+  KEY `name` (`name`)
+) ENGINE=MyISAM DEFAULT CHARSET=utf8;
+
+--
+-- Zrzut danych tabeli `tools`
+--
+
+INSERT INTO `tools` (`name`, `level`, `power`, `dur`, `repair`, `type`) VALUES
+('Wytrychy', 1, 10, 10, 20, 'T'),
+('Wytrychy', 5, 15, 10, 25, 'T'),
+('Wytrychy', 10, 20, 10, 30, 'T'),
+('Wytrychy', 15, 25, 10, 35, 'T'),
+('Wytrychy', 20, 30, 10, 40, 'T'),
+('Wytrychy', 25, 35, 10, 45, 'T');
 
 -- --------------------------------------------------------
 
@@ -3041,7 +3453,6 @@ CREATE TABLE IF NOT EXISTS `smith_work` (
 -- Struktura tabeli dla  `topics`
 --
 
-DROP TABLE IF EXISTS `topics`;
 CREATE TABLE IF NOT EXISTS `topics` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
   `topic` text NOT NULL,
@@ -3064,7 +3475,6 @@ CREATE TABLE IF NOT EXISTS `topics` (
 -- Struktura tabeli dla  `tribes`
 --
 
-DROP TABLE IF EXISTS `tribes`;
 CREATE TABLE IF NOT EXISTS `tribes` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
   `name` varchar(255) NOT NULL DEFAULT '',
@@ -3079,37 +3489,41 @@ CREATE TABLE IF NOT EXISTS `tribes` (
   `przeg` int(11) NOT NULL DEFAULT '0',
   `zolnierze` int(11) NOT NULL DEFAULT '0',
   `forty` int(11) NOT NULL DEFAULT '0',
-  `copper` int(11) NOT NULL DEFAULT '0',
-  `illani` int(11) NOT NULL DEFAULT '0',
-  `illanias` int(11) NOT NULL DEFAULT '0',
-  `nutari` int(11) NOT NULL DEFAULT '0',
   `logo` varchar(36) NOT NULL DEFAULT '',
   `www` varchar(60) NOT NULL DEFAULT '',
-  `dynallca` int(11) NOT NULL DEFAULT '0',
-  `ilani_seeds` int(11) NOT NULL DEFAULT '0',
-  `illanias_seeds` int(11) NOT NULL DEFAULT '0',
-  `nutari_seeds` int(11) NOT NULL DEFAULT '0',
-  `dynallca_seeds` int(11) NOT NULL DEFAULT '0',
-  `copperore` int(11) NOT NULL DEFAULT '0',
-  `zincore` int(11) NOT NULL DEFAULT '0',
-  `tinore` int(11) NOT NULL DEFAULT '0',
-  `ironore` int(11) NOT NULL DEFAULT '0',
-  `coal` int(11) NOT NULL DEFAULT '0',
-  `bronze` int(11) NOT NULL DEFAULT '0',
-  `brass` int(11) NOT NULL DEFAULT '0',
-  `iron` int(11) NOT NULL DEFAULT '0',
-  `steel` int(11) NOT NULL DEFAULT '0',
-  `pine` int(11) NOT NULL DEFAULT '0',
-  `hazel` int(11) NOT NULL DEFAULT '0',
-  `yew` int(11) NOT NULL DEFAULT '0',
-  `elm` int(11) NOT NULL DEFAULT '0',
-  `crystal` int(11) NOT NULL DEFAULT '0',
-  `adamantium` int(11) NOT NULL DEFAULT '0',
-  `meteor` int(11) NOT NULL DEFAULT '0',
   `prefix` varchar(5) NOT NULL,
   `suffix` varchar(5) NOT NULL,
-  UNIQUE KEY `id` (`id`)
+  `level` tinyint(1) NOT NULL DEFAULT '1',
+  UNIQUE KEY `id` (`id`),
+  KEY `level` (`level`)
 ) ENGINE=MyISAM DEFAULT CHARSET=utf8 AUTO_INCREMENT=1 ;
+
+-- --------------------------------------------------------
+
+--
+-- Struktura tabeli dla  `tribe_herbs`
+--
+
+CREATE TABLE IF NOT EXISTS `tribe_herbs` (
+  `id` int(11) NOT NULL,
+  `illani` int(11) NOT NULL,
+  `rillani` int(11) NOT NULL,
+  `illanias` int(11) NOT NULL,
+  `rillanias` int(11) NOT NULL,
+  `nutari` int(11) NOT NULL,
+  `rnutari` int(11) NOT NULL,
+  `dynallca` int(11) NOT NULL,
+  `rdynallca` int(11) NOT NULL,
+  `ilani_seeds` int(11) NOT NULL,
+  `rilani_seeds` int(11) NOT NULL,
+  `illanias_seeds` int(11) NOT NULL,
+  `rillanias_seeds` int(11) NOT NULL,
+  `nutari_seeds` int(11) NOT NULL,
+  `rnutari_seeds` int(11) NOT NULL,
+  `dynallca_seeds` int(11) NOT NULL,
+  `rdynallca_seeds` int(11) NOT NULL,
+  UNIQUE KEY `id` (`id`)
+) ENGINE=MyISAM DEFAULT CHARSET=utf8;
 
 -- --------------------------------------------------------
 
@@ -3117,7 +3531,6 @@ CREATE TABLE IF NOT EXISTS `tribes` (
 -- Struktura tabeli dla  `tribe_mag`
 --
 
-DROP TABLE IF EXISTS `tribe_mag`;
 CREATE TABLE IF NOT EXISTS `tribe_mag` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
   `owner` int(11) NOT NULL DEFAULT '0',
@@ -3126,11 +3539,55 @@ CREATE TABLE IF NOT EXISTS `tribe_mag` (
   `power` int(11) NOT NULL DEFAULT '0',
   `amount` int(11) NOT NULL DEFAULT '0',
   `type` char(1) NOT NULL DEFAULT '',
-  PRIMARY KEY (`id`),
+  `reserved` int(11) NOT NULL DEFAULT '0',
   UNIQUE KEY `id` (`id`),
-  KEY `id_2` (`id`),
   KEY `klan` (`owner`)
 ) ENGINE=MyISAM DEFAULT CHARSET=utf8 PACK_KEYS=0 AUTO_INCREMENT=1 ;
+
+-- --------------------------------------------------------
+
+--
+-- Struktura tabeli dla  `tribe_minerals`
+--
+
+CREATE TABLE IF NOT EXISTS `tribe_minerals` (
+  `id` int(11) NOT NULL,
+  `copperore` int(11) NOT NULL,
+  `rcopperore` int(11) NOT NULL,
+  `zincore` int(11) NOT NULL,
+  `rzincore` int(11) NOT NULL,
+  `tinore` int(11) NOT NULL,
+  `rtinore` int(11) NOT NULL,
+  `ironore` int(11) NOT NULL,
+  `rironore` int(11) NOT NULL,
+  `copper` int(11) NOT NULL,
+  `rcopper` int(11) NOT NULL,
+  `bronze` int(11) NOT NULL,
+  `rbronze` int(11) NOT NULL,
+  `brass` int(11) NOT NULL,
+  `rbrass` int(11) NOT NULL,
+  `iron` int(11) NOT NULL,
+  `riron` int(11) NOT NULL,
+  `steel` int(11) NOT NULL,
+  `rsteel` int(11) NOT NULL,
+  `coal` int(11) NOT NULL,
+  `rcoal` int(11) NOT NULL,
+  `adamantium` int(11) NOT NULL,
+  `radamantium` int(11) NOT NULL,
+  `meteor` int(11) NOT NULL,
+  `rmeteor` int(11) NOT NULL,
+  `crystal` int(11) NOT NULL,
+  `rcrystal` int(11) NOT NULL,
+  `pine` int(11) NOT NULL,
+  `rpine` int(11) NOT NULL,
+  `hazel` int(11) NOT NULL,
+  `rhazel` int(11) NOT NULL,
+  `yew` int(11) NOT NULL,
+  `ryew` int(11) NOT NULL,
+  `elm` int(11) NOT NULL,
+  `relm` int(11) NOT NULL,
+  UNIQUE KEY `id` (`id`)
+) ENGINE=MyISAM DEFAULT CHARSET=utf8;
 
 -- --------------------------------------------------------
 
@@ -3138,13 +3595,12 @@ CREATE TABLE IF NOT EXISTS `tribe_mag` (
 -- Struktura tabeli dla  `tribe_oczek`
 --
 
-DROP TABLE IF EXISTS `tribe_oczek`;
 CREATE TABLE IF NOT EXISTS `tribe_oczek` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
   `gracz` int(11) NOT NULL DEFAULT '0',
   `klan` int(11) NOT NULL DEFAULT '0',
-  PRIMARY KEY (`gracz`),
-  KEY `id` (`id`)
+  KEY `id` (`id`),
+  KEY `gracz` (`gracz`)
 ) ENGINE=MyISAM DEFAULT CHARSET=utf8 PACK_KEYS=0 AUTO_INCREMENT=1 ;
 
 -- --------------------------------------------------------
@@ -3153,7 +3609,6 @@ CREATE TABLE IF NOT EXISTS `tribe_oczek` (
 -- Struktura tabeli dla  `tribe_perm`
 --
 
-DROP TABLE IF EXISTS `tribe_perm`;
 CREATE TABLE IF NOT EXISTS `tribe_perm` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
   `tribe` int(11) NOT NULL DEFAULT '0',
@@ -3173,7 +3628,7 @@ CREATE TABLE IF NOT EXISTS `tribe_perm` (
   `ranks` smallint(2) NOT NULL DEFAULT '0',
   `info` smallint(2) NOT NULL DEFAULT '0',
   `astralvault` smallint(2) NOT NULL DEFAULT '0',
-  PRIMARY KEY (`id`)
+  UNIQUE KEY `id` (`id`)
 ) ENGINE=MyISAM DEFAULT CHARSET=utf8 AUTO_INCREMENT=1 ;
 
 -- --------------------------------------------------------
@@ -3182,7 +3637,6 @@ CREATE TABLE IF NOT EXISTS `tribe_perm` (
 -- Struktura tabeli dla  `tribe_rank`
 --
 
-DROP TABLE IF EXISTS `tribe_rank`;
 CREATE TABLE IF NOT EXISTS `tribe_rank` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
   `tribe_id` int(11) NOT NULL DEFAULT '0',
@@ -3206,7 +3660,6 @@ CREATE TABLE IF NOT EXISTS `tribe_rank` (
 -- Struktura tabeli dla  `tribe_replies`
 --
 
-DROP TABLE IF EXISTS `tribe_replies`;
 CREATE TABLE IF NOT EXISTS `tribe_replies` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
   `starter` varchar(30) NOT NULL DEFAULT '',
@@ -3220,10 +3673,25 @@ CREATE TABLE IF NOT EXISTS `tribe_replies` (
 -- --------------------------------------------------------
 
 --
+-- Struktura tabeli dla  `tribe_reserv`
+--
+
+CREATE TABLE IF NOT EXISTS `tribe_reserv` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `iid` int(11) NOT NULL,
+  `pid` int(11) NOT NULL,
+  `amount` int(11) NOT NULL,
+  `tribe` int(11) NOT NULL,
+  `type` char(1) NOT NULL DEFAULT 'A',
+  KEY `id` (`id`)
+) ENGINE=MyISAM DEFAULT CHARSET=utf8 AUTO_INCREMENT=1 ;
+
+-- --------------------------------------------------------
+
+--
 -- Struktura tabeli dla  `tribe_topics`
 --
 
-DROP TABLE IF EXISTS `tribe_topics`;
 CREATE TABLE IF NOT EXISTS `tribe_topics` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
   `topic` text NOT NULL,
@@ -3242,7 +3710,6 @@ CREATE TABLE IF NOT EXISTS `tribe_topics` (
 -- Struktura tabeli dla  `tribe_zbroj`
 --
 
-DROP TABLE IF EXISTS `tribe_zbroj`;
 CREATE TABLE IF NOT EXISTS `tribe_zbroj` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
   `klan` int(11) NOT NULL DEFAULT '0',
@@ -3260,9 +3727,8 @@ CREATE TABLE IF NOT EXISTS `tribe_zbroj` (
   `twohand` char(1) NOT NULL DEFAULT 'N',
   `ptype` char(1) NOT NULL DEFAULT '',
   `repair` int(11) NOT NULL DEFAULT '10',
-  PRIMARY KEY (`id`),
+  `reserved` int(11) NOT NULL DEFAULT '0',
   UNIQUE KEY `id` (`id`),
-  KEY `id_2` (`id`),
   KEY `klan` (`klan`)
 ) ENGINE=MyISAM DEFAULT CHARSET=utf8 PACK_KEYS=0 AUTO_INCREMENT=1 ;
 
@@ -3272,7 +3738,6 @@ CREATE TABLE IF NOT EXISTS `tribe_zbroj` (
 -- Struktura tabeli dla  `updates`
 --
 
-DROP TABLE IF EXISTS `updates`;
 CREATE TABLE IF NOT EXISTS `updates` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
   `starter` text NOT NULL,
@@ -3289,7 +3754,6 @@ CREATE TABLE IF NOT EXISTS `updates` (
 -- Struktura tabeli dla  `upd_comments`
 --
 
-DROP TABLE IF EXISTS `upd_comments`;
 CREATE TABLE IF NOT EXISTS `upd_comments` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
   `updateid` int(11) NOT NULL DEFAULT '0',
@@ -3306,7 +3770,6 @@ CREATE TABLE IF NOT EXISTS `upd_comments` (
 -- Struktura tabeli dla  `vallars`
 --
 
-DROP TABLE IF EXISTS `vallars`;
 CREATE TABLE IF NOT EXISTS `vallars` (
   `owner` int(11) NOT NULL,
   `reason` varchar(255) NOT NULL,
@@ -3322,7 +3785,6 @@ CREATE TABLE IF NOT EXISTS `vallars` (
 -- Struktura tabeli dla  `warehouse`
 --
 
-DROP TABLE IF EXISTS `warehouse`;
 CREATE TABLE IF NOT EXISTS `warehouse` (
   `reset` smallint(3) NOT NULL DEFAULT '0',
   `mineral` varchar(30) NOT NULL DEFAULT '',
