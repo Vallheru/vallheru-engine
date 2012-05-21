@@ -401,7 +401,7 @@ require_once('adodb/adodb.inc.php');
 \$city1b = \"".$_POST['city1b']."\";
 \$city2 = \"".$_POST['city2']."\";
 \$pllimit = ".$_POST['pllimit'].";
-\$lan = \"pl\";
+\$lang = \"pl\";
 ?>";
     $configfile = fopen("../includes/config.php", "w");
     fwrite($configfile, $configtext);
