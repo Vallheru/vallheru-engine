@@ -7,7 +7,7 @@
  *   @copyright            : (C) 2004,2005,2006,2007,2011,2012 Vallheru Team based on Gamers-Fusion ver 2.5
  *   @author               : thindil <thindil@vallheru.net>
  *   @version              : 1.5
- *   @since                : 04.05.2012
+ *   @since                : 21.05.2012
  *
  */
 
@@ -763,7 +763,7 @@ function integercheck($strField)
     $intStrlen = strlen($strField);
     if ($intStrlen > 15)
     {
-        error(ERROR);
+        error("Zapomnij o tym.");
     } 
 }
 
@@ -774,12 +774,12 @@ function checkvalue($value)
 {
   if (!is_numeric($value))
     {
-      error(ERROR);
+      error("Zapomnij o tym.");
     }
   $value = intval($value);
   if ($value < 1)
     {
-      error(ERROR);
+      error("Zapomnij o tym.");
     }
 }
 
