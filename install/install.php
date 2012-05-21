@@ -7,7 +7,7 @@
  *   @copyright            : (C) 2004,2005,2006,2007,2011,2012 Vallheru Team based on Gamers-Fusion ver 2.5
  *   @author               : thindil <thindil@vallheru.net>
  *   @version              : 1.5
- *   @since                : 09.03.2012
+ *   @since                : 21.05.2012
  *
  */
 
@@ -401,6 +401,7 @@ require_once('adodb/adodb.inc.php');
 \$city1b = \"".$_POST['city1b']."\";
 \$city2 = \"".$_POST['city2']."\";
 \$pllimit = ".$_POST['pllimit'].";
+\$lan = \"pl\";
 ?>";
     $configfile = fopen("../includes/config.php", "w");
     fwrite($configfile, $configtext);

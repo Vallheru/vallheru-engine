@@ -1,5 +1,7 @@
 2012-05-21  Bartek thindil Jasicki  <thindil@vallheru.net>
 
+	* BUG,install/install.php: 
+	fixed creating config file
 	* UPDATE,install/db/mysql.sql: 
 	new version of database
 	* BUG,includes/head.php:
