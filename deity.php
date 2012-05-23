@@ -4,10 +4,10 @@
  *   Change deity of player
  *
  *   @name                 : deity.php                            
- *   @copyright            : (C) 2004,2005,2006 Vallheru Team based on Gamers-Fusion ver 2.5
- *   @author               : thindil <thindil@users.sourceforge.net>
- *   @version              : 1.2
- *   @since                : 07.08.2006
+ *   @copyright            : (C) 2004,2005,2006,2012 Vallheru Team based on Gamers-Fusion ver 2.5
+ *   @author               : thindil <thindil@vallheru.net>
+ *   @version              : 1.6
+ *   @since                : 23.05.2012
  *
  */
 
@@ -27,7 +27,7 @@
 //   along with this program; if not, write to the Free Software
 //   Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 //
-// $Id: deity.php 560 2006-08-09 08:53:16Z thindil $
+// $Id$
 
 $title = "Wybierz wyznanie";
 require_once("includes/head.php");
@@ -35,7 +35,7 @@ require_once("includes/head.php");
 /**
 * Get the localization for game
 */
-require_once("languages/".$player -> lang."/deity.php");
+require_once("languages/".$lang."/deity.php");
 
 if (isset ($_GET['deity']) && $player -> deity == '') 
 {

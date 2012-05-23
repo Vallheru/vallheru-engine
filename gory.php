@@ -4,10 +4,10 @@
  *   Mountains menu
  *
  *   @name                 : gory.php                            
- *   @copyright            : (C) 2004,2005,2006 Vallheru Team based on Gamers-Fusion ver 2.5
- *   @author               : thindil <thindil@users.sourceforge.net>
- *   @version              : 1.3
- *   @since                : 05.10.2006
+ *   @copyright            : (C) 2004,2005,2006,2012 Vallheru Team based on Gamers-Fusion ver 2.5
+ *   @author               : thindil <thindil@vallheru.net>
+ *   @version              : 1.6
+ *   @since                : 23.05.2012
  *
  */
 
@@ -27,7 +27,7 @@
 //   along with this program; if not, write to the Free Software
 //   Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 //
-// $Id: gory.php 673 2006-10-05 15:32:49Z thindil $
+// $Id$
 
 $title = "Góry Kazad-nar";
 require_once("includes/head.php");
@@ -35,7 +35,7 @@ require_once("includes/head.php");
 /**
 * Get the localization for game
 */
-require_once("languages/".$player -> lang."/gory.php");
+require_once("languages/".$lang."/gory.php");
 
 if($player -> location != 'Góry') 
 {

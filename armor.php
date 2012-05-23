@@ -4,10 +4,10 @@
  *   Armory shop - buying armors, legs, helmets and shields
  *
  *   @name                 : armor.php                            
- *   @copyright            : (C) 2004,2005,2006,2011 Vallheru Team based on Gamers-Fusion ver 2.5
- *   @author               : thindil <thindil@tuxfamily.org>
- *   @version              : 1.4
- *   @since                : 24.10.2011
+ *   @copyright            : (C) 2004,2005,2006,2011,2012 Vallheru Team based on Gamers-Fusion ver 2.5
+ *   @author               : thindil <thindil@vallheru.net>
+ *   @version              : 1.6
+ *   @since                : 23.05.2012
  *
  */
 
@@ -35,7 +35,7 @@ require_once("includes/head.php");
 /**
 * Get the localization for game
 */
-require_once("languages/".$player -> lang."/armor.php");
+require_once("languages/".$lang."/armor.php");
 
 if ($player -> location != 'Altara') 
 {
@@ -66,7 +66,7 @@ if (!isset($_GET['buy']))
         $arrdur = array();
         $arrpower = array();
         $arragility = array();
-        $arm = $db -> Execute("SELECT * FROM equipment WHERE type='".$_GET['dalej']."' AND status='S' AND owner=0 AND lang='".$player -> lang."' ORDER BY cost ASC");
+        $arm = $db -> Execute("SELECT * FROM equipment WHERE type='".$_GET['dalej']."' AND status='S' AND owner=0 AND lang='".$lang."' ORDER BY cost ASC");
         while (!$arm -> EOF) 
 	  {
             $arrname[] = $arm -> fields['name'];
@@ -120,7 +120,7 @@ if (!isset($_GET['buy']))
      $test = $db -> Execute("SELECT id FROM equipment WHERE name='".$arm -> fields['name']."' AND wt=".$arm -> fields['wt']." AND type='".$arm -> fields['type']."' AND status='U' AND owner=".$player -> id." AND power=".$arm -> fields['power']." AND zr=".$arm -> fields['zr']." AND szyb=".$arm -> fields['szyb']." AND maxwt=".$arm -> fields['maxwt']." AND poison=0 AND cost=".$newcost);
      if ($test -> fields['id'] == 0) 
        {
-	 $db -> Execute("INSERT INTO equipment (owner, name, power, type, cost, zr, wt, minlev, maxwt, amount, magic, szyb, lang, repair) VALUES(".$player -> id.",'".$arm -> fields['name']."',".$arm -> fields['power'].",'".$arm -> fields['type']."',".$newcost.",".$arm -> fields['zr'].",".$arm -> fields['wt'].",".$arm -> fields['minlev'].",".$arm -> fields['maxwt'].",1,'".$arm -> fields['magic']."',".$arm -> fields['szyb'].",'".$player -> lang."', ".$arm -> fields['repair'].")");
+	 $db -> Execute("INSERT INTO equipment (owner, name, power, type, cost, zr, wt, minlev, maxwt, amount, magic, szyb, lang, repair) VALUES(".$player -> id.",'".$arm -> fields['name']."',".$arm -> fields['power'].",'".$arm -> fields['type']."',".$newcost.",".$arm -> fields['zr'].",".$arm -> fields['wt'].",".$arm -> fields['minlev'].",".$arm -> fields['maxwt'].",1,'".$arm -> fields['magic']."',".$arm -> fields['szyb'].",'".$lang."', ".$arm -> fields['repair'].")");
        } 
      else 
        {

@@ -6,8 +6,8 @@
  *   @name                 : court.php                            
  *   @copyright            : (C) 2004,2005,2006,2011,2012 Vallheru Team based on Gamers-Fusion ver 2.5
  *   @author               : thindil <thindil@vallheru.net>
- *   @version              : 1.5
- *   @since                : 17.02.2012
+ *   @version              : 1.6
+ *   @since                : 23.05.2012
  *
  */
 
@@ -156,7 +156,7 @@ if (isset($_GET['step']) && ($_GET['step'] == 'rules' || $_GET['step'] == 'cases
             $strInfo = VERDICTS;
             $strInfo2 = VERDICTS2;
         }
-        $objRule = $db -> Execute("SELECT id, title FROM court WHERE lang='".$player -> lang."' AND type='".$strType."'");
+        $objRule = $db -> Execute("SELECT id, title FROM court WHERE lang='".$lang."' AND type='".$strType."'");
         $arrId = array();
         $arrTitle = array();
         $i = 0;

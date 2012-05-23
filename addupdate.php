@@ -4,10 +4,10 @@
  *   Add and modify game updates
  *
  *   @name                 : addupdate.php                            
- *   @copyright            : (C) 2004,2005,2006,2011 Vallheru Team based on Gamers-Fusion ver 2.5
- *   @author               : thindil <thindil@tuxfamily.org>
- *   @version              : 1.4
- *   @since                : 07.08.2011
+ *   @copyright            : (C) 2004,2005,2006,2011,2012 Vallheru Team based on Gamers-Fusion ver 2.5
+ *   @author               : thindil <thindil@vallheru.net>
+ *   @version              : 1.6
+ *   @since                : 23.05.2012
  *
  */
 
@@ -35,7 +35,7 @@ require_once("includes/head.php");
 /**
 * Get the localization of game
 */
-require_once("languages/".$player -> lang."/addupdate.php");
+require_once("languages/".$lang."/addupdate.php");
 
 if ($player -> rank != "Admin") 
 {
@@ -70,12 +70,7 @@ if (isset ($_GET['action']) && $_GET['action'] == 'add')
     $strTitle = $db -> qstr($_POST['addtitle'], get_magic_quotes_gpc());
     $strUpdate = $db -> qstr($_POST['addupdate'], get_magic_quotes_gpc());
     $strDate = $db -> DBDate($data);
-    $strLang = $_POST['addlang'];
-    if (!in_array($strLang, $arrLanguage))
-      {
-	$strLang = $player -> lang;
-      }
-    $db -> Execute("INSERT INTO `updates` (`starter`, `title`, `updates`, `time`, `lang`) VALUES('(".$player -> user.")', ".$strTitle.", ".$strUpdate.", ".$strDate.", '".$strLang."')") or error(E_DB);
+    $db -> Execute("INSERT INTO `updates` (`starter`, `title`, `updates`, `time`, `lang`) VALUES('(".$player -> user.")', ".$strTitle.", ".$strUpdate.", ".$strDate.", '".$lang."')") or error(E_DB);
     error (U_SUCCES);
 }
 

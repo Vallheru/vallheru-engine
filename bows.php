@@ -4,10 +4,10 @@
  *   Fletcher shop - buy arrows and bows
  *
  *   @name                 : bows.php                            
- *   @copyright            : (C) 2004,2005,2006,2011 Vallheru Team based on Gamers-Fusion ver 2.5
- *   @author               : thindil <thindil@tuxfamily.org>
- *   @version              : 1.4
- *   @since                : 12.11.2011
+ *   @copyright            : (C) 2004,2005,2006,2011,2012 Vallheru Team based on Gamers-Fusion ver 2.5
+ *   @author               : thindil <thindil@vallheru.net>
+ *   @version              : 1.6
+ *   @since                : 23.05.2012
  *
  */
 
@@ -35,7 +35,7 @@ require_once("includes/head.php");
 /**
 * Get the localization for game
 */
-require_once("languages/".$player -> lang."/bows.php");
+require_once("languages/".$lang."/bows.php");
 
 if ($player -> location != 'Altara' && $player -> location != 'Ardulith') 
 {
@@ -56,7 +56,7 @@ if (!isset ($_GET['buy']) && !isset($_GET['step']))
     $arrid = array();
     $arrLink = array();
     $i = 0;
-    $wep = $db -> Execute("SELECT * FROM bows WHERE lang='".$player -> lang."' ORDER BY minlev ASC");
+    $wep = $db -> Execute("SELECT * FROM bows WHERE lang='".$lang."' ORDER BY minlev ASC");
     while (!$wep -> EOF) 
     {
         $arrname[$i] = $wep -> fields['name'];

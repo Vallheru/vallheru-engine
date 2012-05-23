@@ -4,10 +4,10 @@
  *   Bugtrack - automated errors and warnings
  *
  *   @name                 : bugtrack.php                            
- *   @copyright            : (C) 2004-2005 Vallheru Team based on Gamers-Fusion ver 2.5
- *   @author               : thindil <thindil@users.sourceforge.net>
- *   @version              : 0.8 beta
- *   @since                : 06.04.2005
+ *   @copyright            : (C) 2004,2005,2012 Vallheru Team based on Gamers-Fusion ver 2.5
+ *   @author               : thindil <thindil@vallheru.net>
+ *   @version              : 1.6
+ *   @since                : 23.05.2012
  *
  */
 
@@ -42,7 +42,7 @@ require_once("includes/head.php");
 /**
 * Get the localization for game
 */
-require_once("languages/".$player -> lang."/bugtrack.php");
+require_once("languages/".$lang."/bugtrack.php");
 
 /**
 * Check permission

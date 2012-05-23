@@ -7,8 +7,8 @@
  *   @copyright            : (C) 2004,2005,2006,2007,2011,2012 Vallheru Team based on Gamers-Fusion ver 2.5
  *   @author               : thindil <thindil@vallheru.net>
  *   @author               : eyescream <tduda@users.sourceforge.net>
- *   @version              : 1.5
- *   @since                : 19.03.2012
+ *   @version              : 1.6
+ *   @since                : 23.05.2012
  *
  */
  
@@ -36,7 +36,7 @@ require_once("includes/head.php");
 /**
 * Get the localization for game
 */
-require_once("languages/".$player -> lang."/admin.php");
+require_once("languages/".$lang."/admin.php");
 
 if ($player -> rank != "Admin") 
 {
@@ -176,7 +176,7 @@ if (isset($_GET['view']))
 		    $strMessage = HAS_FIXED2;
 		    $strAuthor = '<b><a href="view.php?view='.$player -> id.'">'.$player -> user."</a></b>, ID <b>".$player -> id.'</b>';
 		    $strDesc = T_BUG.$strType."): ".$objBug -> fields['title']. REPORTED_BY.$objBug -> fields['sender'];
-		    $db -> Execute("INSERT INTO `changelog` (`author`, `location`, `text`, `date`, `lang`) VALUES('".$strAuthor."', '".$objBug -> fields['location']."', '".$strDesc."', ".$strDate.", '".$player -> lang."')");
+		    $db -> Execute("INSERT INTO `changelog` (`author`, `location`, `text`, `date`, `lang`) VALUES('".$strAuthor."', '".$objBug -> fields['location']."', '".$strDesc."', ".$strDate.", '".$lang."')");
 		    $db->Execute("UPDATE `players` SET `vallars`=`vallars`+".$_POST['vallars']." WHERE `id`=".$objBug->fields['sender']);
 		    if ($_POST['vallars'] != 0)
 		      {
@@ -284,7 +284,7 @@ if (isset($_GET['view']))
 	    $strAuthor = '<b><a href="view.php?view='.$player -> id.'">'.$player -> user."</a></b>, ID <b>".$player -> id.'</b>';
 	    require_once('includes/bbcode.php');
 	    $strText = bbcodetohtml($_POST['changetext']); 
-	    $db -> Execute("INSERT INTO `changelog` (`author`, `location`, `text`, `date`, `lang`) VALUES('".$strAuthor."', '".$_POST['location']."', '".$strText."', ".$strDate.", '".$player -> lang."')");
+	    $db -> Execute("INSERT INTO `changelog` (`author`, `location`, `text`, `date`, `lang`) VALUES('".$strAuthor."', '".$_POST['location']."', '".$strText."', ".$strDate.", '".$lang."')");
 	    $smarty -> assign("Message", CHANGE_ADDED);
 	  }
       }
@@ -932,7 +932,7 @@ if (isset($_GET['view']))
 	    while (!$mail1 -> EOF) 
 	      {
 		$mail -> AddAddress($mail1 -> fields['email']);
-		require_once("languages/".$player -> lang."/admin1.php");
+		require_once("languages/".$lang."/admin1.php");
 		$subject = M_SUBJECT." ".$gamename;
 		if (!$mail -> Send()) 
 		  {
