@@ -7,7 +7,7 @@
  *   @copyright            : (C) 2004,2005,2006,2007,2011,2012 Vallheru Team based on Gamers-Fusion ver 2.5
  *   @author               : thindil <thindil@vallheru.net>
  *   @version              : 1.5
- *   @since                : 02.05.2012
+ *   @since                : 23.05.2012
  *
  */
 
@@ -316,7 +316,7 @@ if (isset($_GET['view']))
     elseif ($_GET['view'] == 'options')
       {
 	//Battlelogs
-	if ($player->battlelog == 'Y')
+	if ($player->settings['battlelog'] == 'Y')
 	  {
 	    $strChecked = 'checked="checked"';
 	    $strChecked3 = 'checked="checked"';
@@ -329,19 +329,19 @@ if (isset($_GET['view']))
 	    $strChecked3 = '';
 	    $strChecked4 = '';
 	    $strChecked5 = '';
-	    if ($player->battlelog == 'A')
+	    if ($player->settings['battlelog'] == 'A')
 	      {
 		$strChecked4 = 'checked="checked"';
 		$strChecked = 'checked="checked"';
 	      }
-	    elseif ($player->battlelog == 'D')
+	    elseif ($player->settings['battlelog'] == 'D')
 	      {
 		$strChecked5 = 'checked="checked"';
 		$strChecked = 'checked="checked"';
 	      }
 	  }
 	//Graph bars in text mode
-	if ($player -> graphbar == 'Y')
+	if ($player->settings['graphbar'] == 'Y')
 	  {
 	    $strChecked2 = 'checked="checked"';
 	  }
@@ -354,10 +354,10 @@ if (isset($_GET['view']))
 	$strChecked8 = '';
 	$strChecked9 = '';
 	$strChecked6 = '';
-	if ($player->autodrink != 'N')
+	if ($player->settings['autodrink'] != 'N')
 	  {
 	    $strChecked6 = 'checked="checked"';
-	    switch ($player->autodrink)
+	    switch ($player->settings['autodrink'])
 	      {
 	      case 'H':
 		$strChecked7 = 'checked="checked"';
@@ -373,7 +373,7 @@ if (isset($_GET['view']))
 	      }
 	  }
 	//Enable/disable room invitations
-	if ($player->rinvites == 'N')
+	if ($player->settings['rinvites'] == 'N')
 	  {
 	    $strChecked10 = 'checked="checked"';
 	  }
@@ -416,19 +416,19 @@ if (isset($_GET['view']))
 		  {
 		    error(ERROR);
 		  }
-		$db -> Execute("UPDATE `players` SET `battlelog`='".$_POST['battle']."' WHERE `id`=".$player -> id);
+		$player->settings['battlelog'] = $_POST['battle'];
 	      }
 	    else
 	      {
-		$db -> Execute("UPDATE `players` SET `battlelog`='N' WHERE `id`=".$player -> id);
+		$player->settings['battlelog'] = 'N';
 	      }
 	    if (isset($_POST['graphbar']))
 	      {
-		$db -> Execute("UPDATE `players` SET `graphbar`='Y' WHERE `id`=".$player -> id);
+		$player->settings['graphbar'] = 'Y';
 	      }
 	    else
 	      {
-		$db -> Execute("UPDATE `players` SET `graphbar`='N' WHERE `id`=".$player -> id);
+		$player->settings['graphbar'] = 'N';
 	      }
 	    if (isset($_POST['autodrink']))
 	      {
@@ -437,19 +437,19 @@ if (isset($_GET['view']))
 		  {
 		    error(ERROR);
 		  }
-		$db -> Execute("UPDATE `players` SET `autodrink`='".$_POST['drink']."' WHERE `id`=".$player -> id);
+		$player->settings['autodrink'] = $_POST['drink'];
 	      }
 	    else
 	      {
-		$db -> Execute("UPDATE `players` SET `autodrink`='N' WHERE `id`=".$player -> id);
+		$player->settings['autodrink'] = 'N';
 	      }
 	    if (isset($_POST['rinvites']))
 	      {
-		$db->Execute("UPDATE `players` SET `rinvites`='N' WHERE `id`=".$player->id);
+		$player->settings['rinvites'] = 'N';
 	      }
 	    else
 	      {
-		$db->Execute("UPDATE `players` SET `rinvites`='Y' WHERE `id`=".$player->id);
+		$player->settings['rinvites'] = 'Y';
 	      }
 	    $smarty -> assign("Message", A_SAVED);
 	  }
@@ -852,11 +852,11 @@ if (isset($_GET['view']))
 		    error(ERROR);
 		  }
 		$_POST['newstyle'] = htmlspecialchars($_POST['newstyle'], ENT_QUOTES);
-		if ($player -> graphic)
+		if ($player->settings['graphic'] != '')
 		  {
-		    $db -> Execute("UPDATE players SET graphic='' WHERE id=".$player -> id);
+		    $player->settings['graphic'] = '';
 		  }
-		$db -> Execute("UPDATE players SET style='".$_POST['newstyle']."' where id=".$player -> id);
+		$player->settings['style'] = $_POST['newstyle'];
 	      }
 	    /**
 	     * If player choice graphic layout
@@ -868,7 +868,7 @@ if (isset($_GET['view']))
 		    error(ERROR);
 		  }
 		$_POST['graphserver'] = htmlspecialchars($_POST['graphserver'], ENT_QUOTES);
-		$db -> Execute("UPDATE players SET graphic='".$_POST['graphserver']."' WHERE id=".$player -> id) or error(ERROR2.$path." ".$player -> id);
+		$player->settings['graphic'] = $_POST['graphserver'];
 	      }
 	  }
       }
@@ -937,7 +937,7 @@ if (isset($_GET['view']))
 	$arrid = array();
 	$arrname = array();
 	$arrChecked = array();
-	$arrPlchecked = explode(",", $player->forumcats);
+	$arrPlchecked = explode(",", $player->settings['forumcats']);
 	while (!$cat -> EOF) 
 	  {
 	    $arrid[] = $cat -> fields['id'];
@@ -986,7 +986,7 @@ if (isset($_GET['view']))
 	    $i ++;
 	  }
 	$cat -> Close();
-	if ($player->forumcats == 'All')
+	if ($player->settings['forumcats'] == 'All')
 	  {
 	    $strAllchecked = 'checked="checked"';
 	    $strSchecked = '';
@@ -1027,7 +1027,7 @@ if (isset($_GET['view']))
 	      {
 		$strCats = implode(",", $arrSet);
 	      }
-	    $db->Execute("UPDATE `players` SET `forumcats`='".$strCats."' WHERE `id`=".$player->id);
+	    $player->settings['forumcats'] = $strCats;
 	  }
       }
 

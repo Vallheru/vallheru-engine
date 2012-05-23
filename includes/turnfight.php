@@ -6,8 +6,8 @@
  *   @name                 : turnfight.php                            
  *   @copyright            : (C) 2004,2005,2006,2007,2011,2012 Vallheru Team based on Gamers-Fusion ver 2.5
  *   @author               : thindil <thindil@vallheru.net>
- *   @version              : 1.5
- *   @since                : 05.05.2012
+ *   @version              : 1.6
+ *   @since                : 23.05.2012
  *
  */
  
@@ -716,16 +716,16 @@ function turnfight($expgain,$goldgain,$action,$addres)
         {
             $player -> hp = 0;
         }
-	if (($player->hp > 0) && ($player->autodrink != 'N'))
+	if (($player->hp > 0) && ($player->settings['autodrink'] != 'N'))
 	  {
-	    if ($player->autodrink == 'A')
+	    if ($player->settings['autodrink'] == 'A')
 	      {
 		drinkfew(0, 0, 'M');
 		drinkfew(0, 0, 'H');
 	      }
 	    else
 	      {
-		drinkfew(0, 0, $player->autodrink);
+		drinkfew(0, 0, $player->settings['autodrink']);
 	      }
 	  }
         if ($title == 'Arena Walk') 

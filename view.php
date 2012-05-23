@@ -7,8 +7,8 @@
  *   @copyright            : (C) 2004,2005,2006,2011,2012 Vallheru Team based on Gamers-Fusion ver 2.5
  *   @author               : thindil <thindil@vallheru.net>
  *   @author               : eyescream <tduda@users.sourceforge.net>
- *   @version              : 1.5
- *   @since                : 01.05.2012
+ *   @version              : 1.6
+ *   @since                : 23.05.2012
  *
  */
 
@@ -247,7 +247,7 @@ if ($player -> id != $view -> id)
     if ($player->room != 0)
       {
 	$objRowner = $db->Execute("SELECT `owner` FROM `rooms` WHERE `id`=".$player->room);
-	if ($view->room == 0 && $view->rinvites == 'Y')
+	if ($view->room == 0 && $view->settings['rinvites'] == 'Y')
 	  {
 	    $strLink .= '<li><a href="view.php?view='.$view->id.'&amp;room=add">Zaproś do pokoju w karczmie</a></li>';
 	  }
@@ -364,7 +364,7 @@ if (isset($_GET['room']))
 	    $blnValid = FALSE;
 	  }
 	$objTest->Close();
-	if ($view->rinvites == 'N')
+	if ($view->settings['rinvites'] == 'N')
 	  {
 	    message('error', 'Ta osoba ma wyłączone zaproszenia do pokojów w karczmie.');
 	    $blnValid = FALSE;

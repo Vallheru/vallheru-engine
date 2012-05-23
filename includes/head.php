@@ -6,8 +6,8 @@
  *   @name                 : head.php                            
  *   @copyright            : (C) 2004,2005,2006,2007,2011,2012 Vallheru Team based on Gamers-Fusion ver 2.5
  *   @author               : thindil <thindil@vallheru.net>
- *   @version              : 1.5
- *   @since                : 21.05.2012
+ *   @version              : 1.6
+ *   @since                : 23.05.2012
  *
  */
 
@@ -249,11 +249,11 @@ if (!$stat -> fields['id'])
 }
 
 $ctime = time();
-$ip = $_SERVER['REMOTE_ADDR'];
 $title = strip_tags($title);
-$db -> Execute("UPDATE `players` SET `lpv`=".$ctime.", `ip`='".$ip."', `page`='".$title."' WHERE `id`=".$stat -> fields['id']);
 
 $player = new Player($stat -> fields['id']);
+$player->ip = $_SERVER['REMOTE_ADDR'];
+$player->page = $title;
 $stat -> Close();
 
 $objOpen = $db -> Execute("SELECT `value` FROM `settings` WHERE `setting`='open'");
@@ -274,10 +274,10 @@ $objOpen -> Close();
 */
 require_once("languages/".$lang."/head1.php");
 
-if ($player -> graphic != '') 
+if ($player->settings['graphic'] != '') 
 {
-    $smarty -> template_dir = "./templates/".$player -> graphic;
-    $smarty -> compile_dir = "./templates_c/".$player -> graphic;
+    $smarty -> template_dir = "./templates/".$player->settings['graphic'];
+    $smarty -> compile_dir = "./templates_c/".$player->settings['graphic'];
 }   
     else
 {
@@ -308,7 +308,7 @@ $query -> Close();
 /**
  * Graph bars
  */
-if ($player -> graphic != '' || $player -> graphbar == 'Y') 
+if ($player->settings['graphic'] != '' || $player->settings['graphbar'] == 'Y') 
 {
     $intExpperc = $pct;
     if ($pct > 97)
@@ -379,8 +379,8 @@ $smarty -> assign (array ("Time" => $time,
                           "Mithril" => $player -> platinum,
                           "Referals" => $player->vallars,
                           "Numlog" => $numlog,
-                          "Style" => $player -> style,
-                          "Graphbar" => $player -> graphbar,
+                          "Style" => $player->settings['style'],
+                          "Graphbar" => $player->settings['graphbar'],
                           "Gamename" => $gamename,
 			  "Gameadress" => $gameadress,
                           "Hospital" => '',
@@ -601,7 +601,7 @@ else
   {
     $intForums = $_SESSION['forums'];
   }
-if ($player->forumcats == 'All')
+if ($player->settings['forumcats'] == 'All')
   {
     $objFcat = $db->Execute("SELECT `id` FROM `categories` WHERE `perm_visit` LIKE 'All;'");
     $arrForums = array();
@@ -620,8 +620,8 @@ if ($player->forumcats == 'All')
   }
 else
   {
-    $arrForums = explode(",", $player->forumcats);
-    $objFunread = $db->Execute("SELECT count(`id`) FROM `topics` WHERE `w_time`>".$intForums." AND `cat_id` IN(".$player->forumcats.")") or die($db->ErrorMsg());
+    $arrForums = explode(",", $player->settings['forumcats']);
+    $objFunread = $db->Execute("SELECT count(`id`) FROM `topics` WHERE `w_time`>".$intForums." AND `cat_id` IN(".$player->settings['forumcats'].")") or die($db->ErrorMsg());
     $intFunread = $objFunread->fields['count(`id`)'];
     $objFunread->Close();
   }
@@ -743,7 +743,7 @@ function message($strType, $strText, $strLink = '')
     {
       $strText = $strText.' '.$strLink;
     }
-  if ($player->graphic != '' || $player->style == 'light.css')
+  if ($player->settings['graphic'] != '' || $player->settings['style'] == 'light.css')
     {
       $strMessage = '<div class="'.$strType.'">'.$strText.'</div>';
     }

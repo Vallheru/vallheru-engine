@@ -6,8 +6,8 @@
  *   @name                 : foot.php                            
  *   @copyright            : (C) 2004,2005,2006,2011,2012 Vallheru Team based on Gamers-Fusion ver 2.5
  *   @author               : thindil <thindil@vallheru.net>
- *   @version              : 1.5
- *   @since                : 09.05.2012
+ *   @version              : 1.6
+ *   @since                : 23.05.2012
  *
  */
 
@@ -85,6 +85,7 @@ else
   {
     $strOnline = PLAYERS_ONLINE;
   }
+$player->save();
 $duration = round(microtime(true) - $start_time, 3);
 $sqltime = round($sqltime, 3);
 $fltMemusage = memory_get_usage(true) / 1048576.0;
@@ -98,7 +99,6 @@ if ($player -> rank == 'Admin')
   $phptime = 0;
   $show = 0;
 }
-
 $db -> Close();
 if ($compress) 
 {

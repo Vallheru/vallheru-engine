@@ -6,8 +6,8 @@
  *   @name                 : chatmsg.php                            
  *   @copyright            : (C) 2004,2005,2006,2011,2012 Vallheru Team based on Gamers-Fusion ver 2.5
  *   @author               : thindil <thindil@vallheru.net>
- *   @version              : 1.5
- *   @since                : 27.04.2012
+ *   @version              : 1.6
+ *   @since                : 23.05.2012
  *
  */
 
@@ -47,7 +47,18 @@ require_once('libs/Smarty.class.php');
 $smarty = new Smarty;
 $smarty->compile_check = true;
 
-$stat = $db -> Execute("SELECT `id`, `rank`, `style`, `graphic` FROM `players` WHERE `email`='".$_SESSION['email']."'");
+$stat = $db -> Execute("SELECT `id`, `rank`, `settings` FROM `players` WHERE `email`='".$_SESSION['email']."'");
+$arrTmp = explode(';', $stat->fields['settings']);
+$arrSettings = array();
+foreach ($arrTmp as $strField)
+{
+  $arrTmp2 = explode(':', $strField);
+  if ($arrTmp2[0] == '')
+    {
+      continue;
+    }
+  $arrSettings[$arrTmp2[0]] = $arrTmp2[1];
+}
 
 /**
 * Get the localization for game
@@ -57,10 +68,10 @@ require_once("languages/pl/chatmsg.php");
 /**
 * Select style for chat
 */
-if ($stat -> fields['graphic']) 
+if ($arrSettings['graphic'] != '') 
 {
-    $smarty -> template_dir = "./templates/".$stat -> fields['graphic'];
-    $smarty -> compile_dir = "./templates_c/".$stat -> fields['graphic'];
+    $smarty -> template_dir = "./templates/".$arrSettings['graphic'];
+    $smarty -> compile_dir = "./templates_c/".$arrSettings['graphic'];
 }   
     else
 {

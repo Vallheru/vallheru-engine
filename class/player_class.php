@@ -6,8 +6,8 @@
  *   @name                 : player_class.php                            
  *   @copyright            : (C) 2004,2005,2006,2007,2011,2012 Vallheru Team based on Gamers-Fusion ver 2.5
  *   @author               : thindil <thindil@vallheru.net>
- *   @version              : 1.5
- *   @since                : 07.05.2012
+ *   @version              : 1.6
+ *   @since                : 23.05.2012
  *
  */
 
@@ -84,33 +84,28 @@ class Player
     var $profile;
     var $crime;
     var $gender;
-    var $style;
     var $leadership;
-    var $graphic;
     var $lang;
     var $seclang;
     var $antidote;
     var $breeding;
-    var $battlelog;
     var $poll;
     var $mining;
     var $lumberjack;
     var $herbalist;
     var $jeweller;
-    var $graphbar;
     var $vallars;
     var $newbie;
-    var $autodrink;
     var $thievery;
     var $perception;
     var $forumtime;
     var $tforumtime;
-    var $forumcats;
     var $metallurgy;
     var $revent;
     var $room;
-    var $rinvites;
     var $oldstats;
+    var $settings;
+    var $changed;
 /**
 * Class constructor - get data from database and write it to variables
 */
@@ -176,9 +171,7 @@ class Player
         $this -> profile = $stats -> fields['profile'];
         $this -> crime = $stats -> fields['crime'];
         $this -> gender = $stats -> fields['gender'];
-        $this -> style = $stats -> fields['style'];
         $this -> leadership = $stats -> fields['leadership'];
-        $this -> graphic = $stats -> fields['graphic'];
         $this -> lang = $stats -> fields['lang'];
         $this -> seclang = $stats -> fields['seclang'];
         if (!empty($stats -> fields['antidote']))
@@ -190,21 +183,17 @@ class Player
             $this -> antidote = '';
         }
         $this -> breeding = $stats -> fields['breeding'];
-        $this -> battlelog = $stats -> fields['battlelog'];
         $this -> poll = $stats -> fields['poll'];
         $this -> mining = $stats -> fields['mining'];
         $this -> lumberjack = $stats -> fields['lumberjack'];
         $this -> herbalist = $stats -> fields['herbalist'];
         $this -> jeweller = $stats -> fields['jeweller'];
-        $this -> graphbar = $stats -> fields['graphbar'];
 	$this->vallars = $stats->fields['vallars'];
 	$this->newbie = $stats->fields['newbie'];
-	$this->autodrink = $stats->fields['autodrink'];
 	$this->thievery = $stats->fields['thievery'];
 	$this->perception = $stats->fields['perception'];
 	$this->forumtime = $stats->fields['forum_time'];
 	$this->tforumtime = $stats->fields['tforum_time'];
-	$this->forumcats = $stats->fields['forumcats'];
 	$this->metallurgy = $stats->fields['metallurgy'];
         $stats -> Close();
 	$objRevent = $db->Execute("SELECT `state` FROM `revent` WHERE `pid`=".$pid);
@@ -218,8 +207,40 @@ class Player
 	  }
 	$objRevent->Close();
 	$this->room = $stats->fields['room'];
-	$this->rinvites = $stats->fields['rinvites'];
 	$this->oldstats = array($this->agility, $this->strength, $this->inteli, $this->wisdom, $this->speed, $this->cond);
+	$this->settings = $this->toarray($stats->fields['settings']);
+    }
+
+    /**
+     * Function convert string value to array
+     */
+    function toarray($strValue)
+    {
+      $arrTmp = explode(';', $strValue);
+      $arrValues = array();
+      foreach ($arrTmp as $strField)
+	{
+	  $arrTmp2 = explode(':', $strField);
+	  if ($arrTmp2[0] == '')
+	    {
+	      continue;
+	    }
+	  $arrValues[$arrTmp2[0]] = $arrTmp2[1];
+	}
+      return $arrValues;
+    }
+
+    /**
+     * Function convert array values to string
+     */
+    function tostring($arrValues)
+    {
+      $strValue = '';
+      foreach ($arrValues as $key => $value)
+	{
+	  $strValue .= $key.':'.$value.';';
+	}
+      return $strValue;
     }
 
     /**
@@ -416,5 +437,16 @@ class Player
         }
         $objEquip -> Close();
         return $arrEquip;
+    }
+    
+    /**
+     * Class destructor, save player to database
+     */
+    function save()
+    {
+      global $db;
+      global $ctime;
+
+      $db->Execute("UPDATE `players` SET `settings`='".$this->tostring($this->settings)."', `lpv`=".$ctime.", `ip`='".$this->ip."', `page`='".$this->page."' WHERE `id`=".$this->id) or die("here");
     }
 }

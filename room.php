@@ -6,8 +6,8 @@
  *   @name                 : room.php                            
  *   @copyright            : (C) 2012 Vallheru Team based on Gamers-Fusion ver 2.5
  *   @author               : thindil <thindil@vallheru.net>
- *   @version              : 1.5
- *   @since                : 19.03.2012
+ *   @version              : 1.6
+ *   @since                : 23.05.2012
  *
  */
 
@@ -342,7 +342,7 @@ if (isset($_GET['step']))
 	  case 'invite':
 	    checkvalue($_POST['pid']);
 	    $blnValid = TRUE;
-	    $objInv = $db->Execute("SELECT `id`, `room`, `rinvites` FROM `players` WHERE `id`=".$_POST['pid']);
+	    $objInv = $db->Execute("SELECT `id`, `room`, `settings` FROM `players` WHERE `id`=".$_POST['pid']);
 	    if (!$objInv->fields['id'])
 	      {
 		message('error', 'Nie ma takiego gracza');
@@ -360,7 +360,7 @@ if (isset($_GET['step']))
 		$blnValid = FALSE;
 	      }
 	    $objTest->Close();
-	    if ($objInv->fields['rinvites'] == 'N')
+	    if (strpos($objInv->fields['settings'], 'rinvites:N') !== FALSE)
 	      {
 		message('error', 'Ta osoba ignoruje wszystkie zaproszenia do pokojów w karczmie.');
 		$blnValid = FALSE;

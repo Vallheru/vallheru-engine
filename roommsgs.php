@@ -6,8 +6,8 @@
  *   @name                 : roommsg.php                            
  *   @copyright            : (C) 2012 Vallheru Team based on Gamers-Fusion ver 2.5
  *   @author               : thindil <thindil@vallheru.net>
- *   @version              : 1.5
- *   @since                : 10.02.2012
+ *   @version              : 1.6
+ *   @since                : 23.05.2012
  *
  */
 
@@ -47,15 +47,26 @@ require_once('libs/Smarty.class.php');
 $smarty = new Smarty;
 $smarty->compile_check = true;
 
-$stat = $db -> Execute("SELECT `id`, `style`, `graphic`, `room` FROM `players` WHERE `email`='".$_SESSION['email']."'");
+$stat = $db -> Execute("SELECT `id`, `settings`, `room` FROM `players` WHERE `email`='".$_SESSION['email']."'");
+$arrTmp = explode(';', $stat->fields['settings']);
+$arrSettings = array();
+foreach ($arrTmp as $strField)
+{
+  $arrTmp2 = explode(':', $strField);
+  if ($arrTmp2[0] == '')
+    {
+      continue;
+    }
+  $arrSettings[$arrTmp2[0]] = $arrTmp2[1];
+}
 
 /**
 * Select style for chat
 */
-if ($stat -> fields['graphic']) 
+if ($arrSettings['graphic']) 
 {
-    $smarty -> template_dir = "./templates/".$stat -> fields['graphic'];
-    $smarty -> compile_dir = "./templates_c/".$stat -> fields['graphic'];
+    $smarty -> template_dir = "./templates/".$arrSettings['graphic'];
+    $smarty -> compile_dir = "./templates_c/".$arrSettings['graphic'];
 }   
     else
 {
