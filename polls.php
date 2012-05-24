@@ -4,10 +4,10 @@
  *   Polls in game
  *
  *   @name                 : polls.php                            
- *   @copyright            : (C) 2004,2005,2006,2011 Vallheru Team based on Gamers-Fusion ver 2.5
- *   @author               : thindil <thindil@tuxfamily.org>
- *   @version              : 1.4
- *   @since                : 08.09.2011
+ *   @copyright            : (C) 2004,2005,2006,2011,2012 Vallheru Team based on Gamers-Fusion ver 2.5
+ *   @author               : thindil <thindil@vallheru.net>
+ *   @version              : 1.6
+ *   @since                : 24.05.2012
  *
  */
 
@@ -35,7 +35,7 @@ require_once("includes/head.php");
 /**
 * Get the localization for game
 */
-require_once("languages/".$player -> lang."/polls.php");
+require_once("languages/".$lang."/polls.php");
 
 if ($player->location == 'Lochy') 
   {
@@ -45,7 +45,7 @@ if ($player->location == 'Lochy')
 /**
 * Select active poll
 */
-$objPollid = $db -> Execute("SELECT `id` FROM `polls` WHERE `lang`='".$player -> lang."' ORDER BY `id` DESC");
+$objPollid = $db -> Execute("SELECT `id` FROM `polls` WHERE `lang`='".$lang."' ORDER BY `id` DESC");
 
 /**
 * Show active poll
@@ -187,7 +187,7 @@ $objPollid -> Close();
 */
 if (isset($_GET['action']) && $_GET['action'] == 'last')
 {
-    $objPollsid = $db -> SelectLimit("SELECT `id` FROM `polls` WHERE `lang`='".$player -> lang."' AND `votes`=-1 ORDER BY `id` DESC", 10) or $db -> ErrorMsg();
+    $objPollsid = $db -> SelectLimit("SELECT `id` FROM `polls` WHERE `lang`='".$lang."' AND `votes`=-1 ORDER BY `id` DESC", 10) or $db -> ErrorMsg();
     $arrQuestions = array();
     $arrPolls = array(array());
     $arrVotes = array(array());

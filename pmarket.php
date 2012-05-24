@@ -4,11 +4,11 @@
  *   Minerals market
  *
  *   @name                 : pmarket.php                            
- *   @copyright            : (C) 2004,2005,2006,2007,2011 Vallheru Team based on Gamers-Fusion ver 2.5
- *   @author               : thindil <thindil@tuxfamily.org>
+ *   @copyright            : (C) 2004,2005,2006,2007,2011,2012 Vallheru Team based on Gamers-Fusion ver 2.5
+ *   @author               : thindil <thindil@vallheru.net>
  *   @author               : eyescream <tduda@users.sourceforge.net>
- *   @version              : 1.4
- *   @since                : 24.10.2011
+ *   @version              : 1.6
+ *   @since                : 24.05.2012
  *
  */
 
@@ -36,7 +36,7 @@ require_once("includes/head.php");
 /**
 * Get the localization for game
 */
-require_once("languages/".$player -> lang."/pmarket.php");
+require_once("languages/".$lang."/pmarket.php");
 
 if ($player -> location != 'Altara' && $player -> location != 'Ardulith') 
 {
@@ -254,7 +254,7 @@ if (isset ($_GET['view']) && $_GET['view'] == 'add')
             {
                 $db -> Execute("UPDATE minerals SET ".$strMineral."=".$strMineral."-".$_POST['amount']." WHERE owner=".$player -> id);
             }
-            $db -> Execute("INSERT INTO pmarket (seller, ilosc, cost, nazwa, lang) VALUES(".$player -> id.",".$_POST['amount'].",".$_POST['cost'].",'".$strSqlname."', '".$player -> lang."')");
+            $db -> Execute("INSERT INTO pmarket (seller, ilosc, cost, nazwa, lang) VALUES(".$player -> id.",".$_POST['amount'].",".$_POST['cost'].",'".$strSqlname."', '".$lang."')");
             $smarty -> assign("Message", YOU_ADD.$_POST['amount']."</b> ".$strName.ON_MARKET.$_POST['cost'].FOR_GOLDS." <a href=\"pmarket.php?view=add\">".A_REFRESH."</a>");
         }
             else

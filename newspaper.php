@@ -4,10 +4,10 @@
  *   City newspaper
  *
  *   @name                 : newspaper.php                            
- *   @copyright            : (C) 2004,2005,2006,2011 Vallheru Team based on Gamers-Fusion ver 2.5
+ *   @copyright            : (C) 2004,2005,2006,2011,2012 Vallheru Team based on Gamers-Fusion ver 2.5
  *   @author               : thindil <thindil@vallheru.net>
- *   @version              : 1.5
- *   @since                : 12.12.2011
+ *   @version              : 1.6
+ *   @since                : 24.05.2012
  *
  */
 
@@ -356,7 +356,7 @@ if (isset($_GET['step']) && $_GET['step'] == 'redaction')
                 $objPaperid = $db -> Execute("SELECT paper_id FROM newspaper WHERE added='Y' GROUP BY paper_id DESC");
                 $intPaperid = $objPaperid -> fields['paper_id'] + 1;
                 $objPaperid -> Close();
-                $db -> Execute("INSERT INTO newspaper (paper_id, title, body, author, lang, added, type) VALUES(".$intPaperid.", ".$strTitle.", ".$strBody.", '".$strAuthor."', '".$player -> lang."', 'N', '".$_POST['mail']."')");
+                $db -> Execute("INSERT INTO newspaper (paper_id, title, body, author, lang, added, type) VALUES(".$intPaperid.", ".$strTitle.", ".$strBody.", '".$strAuthor."', '".$lang."', 'N', '".$_POST['mail']."')");
             }
             $smarty -> assign("Message", "<br /><br />".MAIL_SEND);
         }

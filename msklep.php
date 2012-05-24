@@ -4,10 +4,10 @@
  *   Potions shop in city
  *
  *   @name                 : msklep.php                            
- *   @copyright            : (C) 2004,2005,2006,2007,2011 Vallheru Team based on Gamers-Fusion ver 2.5
- *   @author               : thindil <thindil@tuxfamily.org>
- *   @version              : 1.4
- *   @since                : 12.08.2011
+ *   @copyright            : (C) 2004,2005,2006,2007,2011,2012 Vallheru Team based on Gamers-Fusion ver 2.5
+ *   @author               : thindil <thindil@vallheru.net>
+ *   @version              : 1.6
+ *   @since                : 23.05.2012
  *
  */
 
@@ -35,7 +35,7 @@ require_once("includes/head.php");
 /**
 * Get the localization for game
 */
-require_once("languages/".$player -> lang."/msklep.php");
+require_once("languages/".$lang."/msklep.php");
 
 if ($player -> location != 'Altara' && $player -> location != 'Ardulith') 
 {
@@ -47,7 +47,7 @@ if ($player -> location != 'Altara' && $player -> location != 'Ardulith')
 */
 if (!isset($_GET['buy'])) 
 {
-    $objPotions = $db -> Execute("SELECT * FROM `potions` WHERE `owner`=0 AND `status`='S' AND `lang`='".$player -> lang."' ORDER BY `power` ASC");
+    $objPotions = $db -> Execute("SELECT * FROM `potions` WHERE `owner`=0 AND `status`='S' AND `lang`='".$lang."' ORDER BY `power` ASC");
     $arrName = array();
     $arrPower = array();
     $arrEfect = array();

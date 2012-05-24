@@ -4,10 +4,10 @@
  *   Select player race
  *
  *   @name                 : rasa.php                            
- *   @copyright            : (C) 2004,2005,2006 Vallheru Team based on Gamers-Fusion ver 2.5
- *   @author               : thindil <thindil@users.sourceforge.net>
- *   @version              : 1.1
- *   @since                : 06.03.2006
+ *   @copyright            : (C) 2004,2005,2006,2012 Vallheru Team based on Gamers-Fusion ver 2.5
+ *   @author               : thindil <thindil@vallheru.net>
+ *   @version              : 1.6
+ *   @since                : 24.05.2012
  *
  */
 
@@ -27,7 +27,7 @@
 //   along with this program; if not, write to the Free Software
 //   Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 //
-// $Id: rasa.php 566 2006-09-13 09:31:08Z thindil $
+// $Id:$
 
 $title = "Wybierz rasę";
 require_once("includes/head.php");
@@ -35,7 +35,7 @@ require_once("includes/head.php");
 /**
 * Get the localization for game
 */
-require_once("languages/".$player -> lang."/rasa.php");
+require_once("languages/".$lang."/rasa.php");
 
 if ($player -> race)
 {

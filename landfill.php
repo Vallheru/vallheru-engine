@@ -4,10 +4,10 @@
  *   Clean city and earn money
  *
  *   @name                 : landfill.php                            
- *   @copyright            : (C) 2004,2005,2007,2011 Vallheru Team based on Gamers-Fusion ver 2.5
- *   @author               : thindil <thindil@tuxfamily.org>
- *   @version              : 1.4
- *   @since                : 24.08.2011
+ *   @copyright            : (C) 2004,2005,2007,2011,2012 Vallheru Team based on Gamers-Fusion ver 2.5
+ *   @author               : thindil <thindil@vallheru.net>
+ *   @version              : 1.6
+ *   @since                : 24.05.2012
  *
  */
 
@@ -35,7 +35,7 @@ require_once("includes/head.php");
 /**
 * Get the localization for game
 */
-require_once("languages/".$player -> lang."/landfill.php");
+require_once("languages/".$lang."/landfill.php");
 
 if ($player -> location != 'Altara' && $player -> location != 'Ardulith') 
 {

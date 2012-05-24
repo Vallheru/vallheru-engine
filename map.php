@@ -4,10 +4,10 @@
  *   Show world map
  *
  *   @name                 : map.php                            
- *   @copyright            : (C) 2004-2005 Vallheru Team based on Gamers-Fusion ver 2.5
- *   @author               : thindil <thindil@users.sourceforge.net>
- *   @version              : 1.0 rc1
- *   @since                : 24.11.2005
+ *   @copyright            : (C) 2004,2005,2012 Vallheru Team based on Gamers-Fusion ver 2.5
+ *   @author               : thindil <thindil@vallheru.net>
+ *   @version              : 1.6
+ *   @since                : 23.05.2012
  *
  */
 
@@ -35,7 +35,7 @@ require_once("includes/head.php");
 /**
 * Get the localization for game
 */
-require_once("languages/".$player -> lang."/map.php");
+require_once("languages/".$lang."/map.php");
 
 /**
 * Assign variables to template and display page

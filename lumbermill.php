@@ -6,8 +6,8 @@
  *   @name                 : lumbermill.php                            
  *   @copyright            : (C) 2004,2005,2006,2007,2011,2012 Vallheru Team based on Gamers-Fusion ver 2.5
  *   @author               : thindil <thindil@vallheru.net>
- *   @version              : 1.5
- *   @since                : 07.05.2012
+ *   @version              : 1.6
+ *   @since                : 24.05.2012
  *
  */
 
@@ -309,7 +309,7 @@ if (isset ($_GET['mill']) && $_GET['mill'] == 'plany')
 	  {
 	    error("Tylko Rzemieślnik może kupować plany elitarnych przedmiotów.");
 	  }
-        $db -> Execute("INSERT INTO `mill` (`owner`, `name`, `type`, `cost`, `amount`, `level`, `lang`, `twohand`, `elite`, `elitetype`) VALUES(".$player -> id.", '".$objPlan -> fields['name']."', '".$objPlan -> fields['type']."', ".$objPlan -> fields['cost'].", ".$objPlan -> fields['amount'].", ".$objPlan -> fields['level'].", '".$player -> lang."', '".$objPlan -> fields['twohand']."', '".$objPlan->fields['elite']."', '".$objPlan->fields['elitetype']."')");
+        $db -> Execute("INSERT INTO `mill` (`owner`, `name`, `type`, `cost`, `amount`, `level`, `lang`, `twohand`, `elite`, `elitetype`) VALUES(".$player -> id.", '".$objPlan -> fields['name']."', '".$objPlan -> fields['type']."', ".$objPlan -> fields['cost'].", ".$objPlan -> fields['amount'].", ".$objPlan -> fields['level'].", '".$lang."', '".$objPlan -> fields['twohand']."', '".$objPlan->fields['elite']."', '".$objPlan->fields['elitetype']."')");
         $db -> Execute("UPDATE `players` SET `credits`=`credits`-".$objPlan -> fields['cost']." WHERE `id`=".$player -> id);
         $smarty -> assign(array("Cost1" => $objPlan -> fields['cost'], 
                                 "Name1" => $objPlan -> fields['name'],
