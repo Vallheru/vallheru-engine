@@ -1,5 +1,7 @@
 2012-05-24  Bartek thindil Jasicki  <thindil@vallheru.net>
 
+	* BUG,includes/funkcje.php: 
+	fixed lost stats during fight
 	* BUG,includes/battle.php:
 	fixed typo
 

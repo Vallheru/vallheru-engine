@@ -7,7 +7,7 @@
  *   @copyright            : (C) 2004,2005,2006,2007,2011,2012 Vallheru Team based on Gamers-Fusion ver 2.5
  *   @author               : thindil <thindil@vallheru.net>
  *   @version              : 1.6
- *   @since                : 23.05.2012
+ *   @since                : 24.05.2012
  *
  */
 
@@ -219,7 +219,7 @@ function loststat($lostid, $values, $winid, $winuser, $starter, $antidote, $winl
     else
       {
 	$number = rand(0,5);
-	$stats = array('agility', 'strength', 'inteli', 'wisdom', 'szyb', 'cond');
+	$stats = array('agility', 'strength', 'inteli', 'wisdom', 'szyb', 'wytrz');
 	$name = array(AGILITY, STRENGTH, INTELIGENCE, WISDOM, SPEED, CONDITION);
 	$lost = ($values[$number] / 200);
 	if ($values[$number] - $lost < 3)
