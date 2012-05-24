@@ -7,7 +7,7 @@
  *   @copyright            : (C) 2004,2005,2006,2011,2012 Vallheru Team based on Gamers-Fusion ver 2.5
  *   @author               : thindil <thindil@vallheru.net>
  *   @version              : 1.6
- *   @since                : 23.05.2012
+ *   @since                : 24.05.2012
  *
  */
 
@@ -32,8 +32,9 @@
 /**
 * Get the localization for game
 */
-require_once("languages/".$player->lang."/foot.php");
+require_once("languages/".$lang."/foot.php");
 $span = (time() - 180);
+$player->save();
 $objQuery = $db -> Execute("SELECT `id`, `rank`, `user`, `tribe` FROM `players` WHERE `lpv`>=".$span." ORDER BY `id` ASC");
 
 $objPlayers = $db -> Execute("SELECT count(`id`) FROM `players`");
@@ -85,7 +86,6 @@ else
   {
     $strOnline = PLAYERS_ONLINE;
   }
-$player->save();
 $duration = round(microtime(true) - $start_time, 3);
 $sqltime = round($sqltime, 3);
 $fltMemusage = memory_get_usage(true) / 1048576.0;

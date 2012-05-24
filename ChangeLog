@@ -1,5 +1,7 @@
 2012-05-24  Bartek thindil Jasicki  <thindil@vallheru.net>
 
+	* BUG,includes/foot.php: 
+	fixed show player online
 	* UPDATE,polls.php, rasa.php, pmarket.php, notatnik.php, newspaper.php, msklep.php, mmarket.php, mines.php, memberlist.php, maze.php, market.php,
 	map.php, lumbermill.php, library.php, las.php, landfill.php: 
 	changed language variable
