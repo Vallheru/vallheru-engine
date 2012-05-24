@@ -1,3 +1,8 @@
+2012-05-24  Bartek thindil Jasicki  <thindil@vallheru.net>
+
+	* BUG,includes/battle.php:
+	fixed typo
+
 2012-05-23  Bartek thindil Jasicki  <thindil@vallheru.net>
 
 	* UPDATE,roommsgs.php, room.php, chatmsgs.php, class/player_class.php, head.php, account.php, includes/funkcje.php, includes/turnfight.php,

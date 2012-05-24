@@ -8,7 +8,7 @@
  *   @author               : thindil <thindil@vallheru.net>
  *   @author               : eyescream <tduda@users.sourceforge.net>
  *   @version              : 1.5
- *   @since                : 23.05.2012
+ *   @since                : 24.05.2012
  *
  */
 
@@ -919,7 +919,7 @@ function attack1($attacker, $defender, $arrAtequip, $arrDeequip, $attack_bspell,
         /**
          * Send battle logs
          */
-        if (($attacker['settings']['battlelog'] == 'Y') || ($attacker['id'] == $starter && $attacker['settings'['battlelog'] == 'A') || ($attacker['id'] != $starter && $attacker['settings']['battlelog'] == 'D'))
+        if (($attacker['settings']['battlelog'] == 'Y') || ($attacker['id'] == $starter && $attacker['settings']['battlelog'] == 'A') || ($attacker['id'] != $starter && $attacker['settings']['battlelog'] == 'D'))
         {
             $strSubject = T_SUBJECT.$defender['user'].T_SUB_ID.$defender['id'];
             $db -> Execute("INSERT INTO `mail` (`sender`, `senderid`, `owner`, `subject`, `body`, `date`) VALUES('".T_SENDER."','0',".$attacker['id'].",'".$strSubject."','".$strMessage."', ".$strDate.")");
