@@ -4,11 +4,11 @@
  *   Jewellers market
  *
  *   @name                 : rmarket.php                            
- *   @copyright            : (C) 2006,2007,2011 Vallheru Team based on Gamers-Fusion ver 2.5
- *   @author               : thindil <thindil@tuxfamily.org>
+ *   @copyright            : (C) 2006,2007,2011,2012 Vallheru Team based on Gamers-Fusion ver 2.5
+ *   @author               : thindil <thindil@vallheru.net>
  *   @author               : eyescream <tduda@users.sourceforge.net>
- *   @version              : 1.4
- *   @since                : 24.10.2011
+ *   @version              : 1.6
+ *   @since                : 25.05.2012
  *
  */
 

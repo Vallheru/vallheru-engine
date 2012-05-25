@@ -4,11 +4,11 @@
  *   Show main news in game
  *
  *   @name                 : updates.php                            
- *   @copyright            : (C) 2004,2005,2006,2011 Vallheru Team based on Gamers-Fusion ver 2.5
- *   @author               : thindil <thindil@tuxfamily.org>
+ *   @copyright            : (C) 2004,2005,2006,2011,2012 Vallheru Team based on Gamers-Fusion ver 2.5
+ *   @author               : thindil <thindil@vallheru.net>
  *   @author               : mori <ziniquel@users.sourceforge.net>
- *   @version              : 1.4
- *   @since                : 29.11.2011
+ *   @version              : 1.6
+ *   @since                : 25.05.2012
  *
  */
 
@@ -28,7 +28,7 @@
 //   along with this program; if not, write to the Free Software
 //   Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 //
-// $Id: updates.php 566 2006-09-13 09:31:08Z thindil $
+// $Id$
 
 $title = "Wieści";
 require_once("includes/head.php");
@@ -36,7 +36,7 @@ require_once("includes/head.php");
 /**
 * Get the localization for game
 */
-require_once("languages/".$player -> lang."/updates.php");
+require_once("languages/".$lang."/updates.php");
 
 /**
 * Informations for new players
@@ -52,7 +52,7 @@ if ($player -> logins < 5)
 
 if (!isset ($_GET['view'])) 
   {
-    $upd = $db -> SelectLimit("SELECT * FROM `updates` WHERE `lang`='".$player -> lang."' ORDER BY `id` DESC", 1);
+    $upd = $db -> SelectLimit("SELECT * FROM `updates` ORDER BY `id` DESC", 1);
     if ($player -> rank == 'Admin') 
       {
         $modtext = "(<a href=\"addupdate.php?modify=".$upd -> fields['id']."\">".A_CHANGE."</a>)";
@@ -72,7 +72,7 @@ if (!isset ($_GET['view']))
         $intComments = 0;
       }
     //Get last 5 changes in game
-    $objChanges = $db->SelectLimit("SELECT `location`, `text`, `date` FROM `changelog` WHERE `lang`='".$player->lang."' ORDER BY `id` DESC", 5);
+    $objChanges = $db->SelectLimit("SELECT `location`, `text`, `date` FROM `changelog` ORDER BY `id` DESC", 5);
     $arrLocation = array();
     $arrText = array();
     $arrDate = array();
@@ -134,7 +134,7 @@ if (!isset ($_GET['view']))
 
 if (isset($_GET['view']))
 {
-    $upd = $db -> SelectLimit("SELECT * FROM `updates` WHERE `lang`='".$player -> lang."' ORDER BY `id` DESC", 10);
+    $upd = $db -> SelectLimit("SELECT * FROM `updates` ORDER BY `id` DESC", 10);
     $arrtitle = array();
     $arrstarter = array();
     $arrnews = array();

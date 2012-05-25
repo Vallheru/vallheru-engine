@@ -4,10 +4,10 @@
  *   Staff panel - give immunited, send players to jailetc
  *
  *   @name                 : staff.php                            
- *   @copyright            : (C) 2004,2005,2006,2011 Vallheru Team based on Gamers-Fusion ver 2.5
+ *   @copyright            : (C) 2004,2005,2006,2011,2012 Vallheru Team based on Gamers-Fusion ver 2.5
  *   @author               : thindil <thindil@vallheru.net>
- *   @version              : 1.5
- *   @since                : 23.12.2011
+ *   @version              : 1.6
+ *   @since                : 25.05.2012
  *
  */
 
@@ -35,7 +35,7 @@ require_once("includes/head.php");
 /**
 * Get the localization for game
 */
-require_once("languages/".$player -> lang."/staff.php");
+require_once("languages/".$lang."/staff.php");
 
 if ($player -> rank != 'Staff' && $player -> rank != 'Admin') 
 {

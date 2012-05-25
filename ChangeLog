@@ -1,3 +1,10 @@
+2012-05-25  Bartek thindil Jasicki  <thindil@vallheru.net>
+
+	* UPDATE,zloto.php, wieza.php, weapons.php, warehouse.php, updates.php, travel.php, temple.php, stats.php, staff.php, stafflist.php, sedzia.php,
+	rmarket.php, rest.php, referrals.php, includes/ranks.php, includes/functions.php, includes/findastral.php, includes/counttime.php, 
+	includes/checkexp.php:
+	changed language variable
+
 2012-05-24  Bartek thindil Jasicki  <thindil@vallheru.net>
 
 	* BUG,includes/foot.php: 

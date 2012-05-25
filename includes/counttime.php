@@ -4,10 +4,10 @@
  *   Function to count time to reset
  *
  *   @name                 : counttime.php                            
- *   @copyright            : (C) 2006,2011 Vallheru Team based on Gamers-Fusion ver 2.5
- *   @author               : thindil <thindil@tuxfamily.org>
- *   @version              : 1.4
- *   @since                : 28.11.2011
+ *   @copyright            : (C) 2006,2011,2012 Vallheru Team based on Gamers-Fusion ver 2.5
+ *   @author               : thindil <thindil@vallheru.net>
+ *   @version              : 1.6
+ *   @since                : 25.05.2012
  *
  */
 
@@ -32,7 +32,7 @@
 /**
 * Get the localization for game
 */
-require_once("languages/".$player -> lang."/counttime.php");
+require_once("languages/".$lang."/counttime.php");
 
 /**
  * Function to count time to reset

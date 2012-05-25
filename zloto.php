@@ -4,10 +4,10 @@
  *   Show players minerals, herbs, gold and maps
  *
  *   @name                 : zloto.php                            
- *   @copyright            : (C) 2004,2005,2006,2011 Vallheru Team based on Gamers-Fusion ver 2.5
- *   @author               : thindil <thindil@tuxfamily.org>
- *   @version              : 1.4
- *   @since                : 24.08.2011
+ *   @copyright            : (C) 2004,2005,2006,2011,2012 Vallheru Team based on Gamers-Fusion ver 2.5
+ *   @author               : thindil <thindil@vallheru.net>
+ *   @version              : 1.6
+ *   @since                : 25.05.2012
  *
  */
 
@@ -35,7 +35,7 @@ require_once("includes/head.php");
 /**
 * Get the localization for game
 */
-require_once("languages/".$player -> lang."/zloto.php");
+require_once("languages/".$lang."/zloto.php");
 
 $gr1 = $db -> Execute("SELECT id, nutari, illani, illanias, dynallca, ilani_seeds, illanias_seeds, nutari_seeds, dynallca_seeds FROM herbs WHERE gracz=".$player -> id);
 $smarty -> assign(array("Refs" => $player->vallars, 
