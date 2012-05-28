@@ -1,5 +1,7 @@
 2012-05-28  Bartek thindil Jasicki  <thindil@vallheru.net>
 
+	* BUG,languages/pl/view.php: 
+	fixed info about newbie protection
 	* BUG,tribeadmin.php:
 	added tribe owner to list for ranks
 

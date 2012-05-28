@@ -7,8 +7,8 @@
  *   @copyright            : (C) 2004,2005,2006,2011,2012 Vallheru Team based on Gamers-Fusion ver 2.5
  *   @author               : thindil <thindil@vallheru.net>
  *   @author               : eyescream <tduda@users.sourceforge.net>
- *   @version              : 1.5
- *   @since                : 16.05.2012
+ *   @version              : 1.6
+ *   @since                : 28.05.2012
  *
  */
 
@@ -135,7 +135,7 @@ if (isset ($_GET['steal']) || isset($_GET['spy']))
     define("SUCCESS", "Ostrożnie manipulując przy sakiewce ofiary, udało ci się nieco ją odchudzić. Nieprzyuważony przez nikogo spokojnie oddalasz się. Dopiero po pewnym czasie dokładnie przeliczasz swój zarobek - to ");
     define("EMPTY_BAG3", "Wędrowałeś sobie spokojnie, kiedy pewne niejasne przeczucie powiedziało ci, że coś jest nie w porządku. Przyglądając się uważnie sobie, zauważasz iż brakuje ci sakiewki. Ktoś cię okradł! Zastanawiasz się, na co mu była pusta sakiewka");
     define("EMPTY_BAG4", "Ostrożnie zabierając sakiewkę ofierze, odchodzisz. Jednak wydaje ci się ona podejrzanie lekka. Kiedy przyglądasz się jej, zauważasz że jest pusta. To chyba nie jest twój najlepszy dzień...");
-    define("TOO_YOUNG", "Nie możesz okradać mieszkańców z wiekiem niższym niż 3 dni.");
+    define("TOO_YOUNG", "Nie możesz okradać nowych mieszkańców, posiadających ochronę.");
     define("R_INT", "inteligencji");
     define("R_AGI", "zręczności");
 }
