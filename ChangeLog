@@ -1,3 +1,8 @@
+2012-05-28  Bartek thindil Jasicki  <thindil@vallheru.net>
+
+	* BUG,tribeadmin.php:
+	added tribe owner to list for ranks
+
 2012-05-25  Bartek thindil Jasicki  <thindil@vallheru.net>
 
 	* UPDATE,zloto.php, wieza.php, weapons.php, warehouse.php, updates.php, travel.php, temple.php, stats.php, staff.php, stafflist.php, sedzia.php,
