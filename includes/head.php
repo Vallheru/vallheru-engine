@@ -7,7 +7,7 @@
  *   @copyright            : (C) 2004,2005,2006,2007,2011,2012 Vallheru Team based on Gamers-Fusion ver 2.5
  *   @author               : thindil <thindil@vallheru.net>
  *   @version              : 1.6
- *   @since                : 23.05.2012
+ *   @since                : 28.05.2012
  *
  */
 
@@ -254,6 +254,7 @@ $title = strip_tags($title);
 $player = new Player($stat -> fields['id']);
 $player->ip = $_SERVER['REMOTE_ADDR'];
 $player->page = $title;
+$db->Execute("UPDATE `players` SET `lpv`=".$ctime.", `page`='".$player->page."' WHERE `id`=".$player->id);
 $stat -> Close();
 
 $objOpen = $db -> Execute("SELECT `value` FROM `settings` WHERE `setting`='open'");
@@ -679,7 +680,7 @@ else
     $smarty->assign("Room", '<br /><br />');
   }
 
-$objQuery = $db -> Execute("SELECT count(`id`) FROM `players` WHERE `page`='Chat' AND `lpv`>=".$intCtime);
+$objQuery = $db -> Execute("SELECT count(`id`) FROM `players` WHERE `page`='Karczma' AND `lpv`>=".$intCtime);
 $numoc = $objQuery -> fields['count(`id`)'];
 $objQuery -> Close();
 $smarty -> assign(array("Players" => $numoc,

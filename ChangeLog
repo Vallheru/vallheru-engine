@@ -1,5 +1,7 @@
 2012-05-28  Bartek thindil Jasicki  <thindil@vallheru.net>
 
+	* BUG,class/player_class.php, include/head.php: 
+	fixed bug with show players in chat
 	* UPDATE,install/db/update.sql, class/player_class.php, class/bot_class.php, quests/quest9.php, quests/quest6.php, quests/quest5.php,
 	quests/quest3.php, quests/quest2.php, quests/quest10.php: 
 	changed language variable
