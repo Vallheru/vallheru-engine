@@ -4,10 +4,10 @@
  *   Quest in labirynth
  *
  *   @name                 : quest3.php                            
- *   @copyright            : (C) 2004,2005,2006 Vallheru Team based on Gamers-Fusion ver 2.5
- *   @author               : thindil <thindil@users.sourceforge.net>
- *   @version              : 1.2
- *   @since                : 24.07.2005
+ *   @copyright            : (C) 2004,2005,2006,2012 Vallheru Team based on Gamers-Fusion ver 2.5
+ *   @author               : thindil <thindil@vallheru.net>
+ *   @version              : 1.6
+ *   @since                : 28.05.2012
  *
  */
 
@@ -44,7 +44,7 @@ require_once('class/quests_class.php');
 /**
 * Get the localization for game
 */
-require_once("languages/".$player -> lang."/quest3.php");
+require_once("languages/".$lang."/quest3.php");
 
 $test = $db -> Execute("SELECT action FROM questaction WHERE player=".$player -> id." AND quest=3");
 $quest = new Quests('grid.php',3,$test -> fields['action']);

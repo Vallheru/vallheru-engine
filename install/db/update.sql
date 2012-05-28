@@ -7,3 +7,6 @@ ALTER TABLE `players`
   DROP `autodrink`,
   DROP `forumcats`,
   DROP `rinvites`;
+ALTER TABLE `players`
+  DROP `lang`,
+  DROP `seclang`;

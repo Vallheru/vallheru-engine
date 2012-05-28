@@ -4,10 +4,10 @@
  *   Bot class - based on ELIZA algorithm
  *
  *   @name                 : bot_class.php                            
- *   @copyright            : (C) 2004,2005,2006,2011 Vallheru Team based on Gamers-Fusion ver 2.5
- *   @author               : thindil <thindil@tuxfamily.org>
- *   @version              : 1.4
- *   @since                : 04.09.2011
+ *   @copyright            : (C) 2004,2005,2006,2011,2012 Vallheru Team based on Gamers-Fusion ver 2.5
+ *   @author               : thindil <thindil@vallheru.net>
+ *   @version              : 1.6
+ *   @since                : 28.05.2012
  *
  */
 
@@ -68,10 +68,10 @@ class Bot
      */
     function Bot($strText, $strName) 
     {
-        global $player;
+        global $lang;
         $this -> strPlayertext = $strText;
         $this -> strBotname = $strName;
-        require_once("languages/".$player -> lang."/bot_class.php");
+        require_once("languages/".$lang."/bot_class.php");
         $this -> arrReflorg = $arrReflectionsorg;
         $this -> arrReflans = $arrReflectionsans;
         $this -> arrPatsreg = $arrPatsreglang;

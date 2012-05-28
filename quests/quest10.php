@@ -32,7 +32,7 @@ $smarty -> assign(array("End" => '',
                         "Answer" => '',
                         "Start" => ''));
 require_once('class/quests_class.php');
-require_once("languages/".$player -> lang."/quest10.php");
+require_once("languages/".$lang."/quest10.php");
 $objAction = $db -> Execute("SELECT action FROM questaction WHERE player=".$player -> id." AND quest=10");
 $objQuest = new Quests('grid.php', 10, $objAction -> fields['action']);
 if (isset($_GET['step']) && $_GET['step'] == 'quest' && empty($objAction -> fields['action']))

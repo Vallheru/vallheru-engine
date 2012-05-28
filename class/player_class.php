@@ -85,8 +85,6 @@ class Player
     var $crime;
     var $gender;
     var $leadership;
-    var $lang;
-    var $seclang;
     var $antidote;
     var $breeding;
     var $poll;
@@ -172,8 +170,6 @@ class Player
         $this -> crime = $stats -> fields['crime'];
         $this -> gender = $stats -> fields['gender'];
         $this -> leadership = $stats -> fields['leadership'];
-        $this -> lang = $stats -> fields['lang'];
-        $this -> seclang = $stats -> fields['seclang'];
         if (!empty($stats -> fields['antidote']))
         {
             $this -> antidote = $stats -> fields['antidote']{0};
