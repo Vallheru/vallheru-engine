@@ -134,31 +134,27 @@ function attack1($attacker, $defender, $arrAtequip, $arrDeequip, $attack_bspell,
     if ($attack_bspell -> fields['id'] && (!$arrAtequip[1][0] && !$arrAtequip[0][0])) 
     {
         $unik -= $attacker['magic'];
-        $mypower = $attack_bspell -> fields['dmg'] - ($attack_bspell -> fields['dmg'] * ($arrAtequip[3][4] / 100));
+        $mypower = $attack_bspell -> fields['dmg'];
+	if ($arrAtequip[3][0])
+	  {
+	    $mypower -= ($attack_bspell -> fields['dmg'] * ($arrAtequip[3][4] / 100));
+	  }
         if ($arrAtequip[2][0]) 
         {
             $mypower -= ($attack_bspell -> fields['dmg'] * ($arrAtequip[2][4] / 100));
-            if ($mypower < 0) 
-            {
-                $mypower = 0;
-            }
         }
         if ($arrAtequip[4][0]) 
         {
 	    $mypower -= ($attack_bspell -> fields['dmg'] * ($arrAtequip[4][4] / 100));
-            if ($mypower < 0) 
-            {
-                $mypower = 0;
-            }
         }
         if ($arrAtequip[5][0]) 
         {
             $mypower -= ($attack_bspell -> fields['dmg'] * ($arrAtequip[5][4] / 100));
-            if ($mypower < 0) 
-            {
-                $mypower = 0;
-            }
         }
+	if ($mypower < 0) 
+	  {
+	    $mypower = 0;
+	  }
         if ($arrAtequip[7][0]) 
         {
             $intN = 6 - (int)($arrAtequip[7][4] / 20);
@@ -207,31 +203,27 @@ function attack1($attacker, $defender, $arrAtequip, $arrDeequip, $attack_bspell,
         } 
             else 
         {
-            $eczarobr = ($defender['wisdom'] * $def_dspell -> fields['obr']) - (($def_dspell -> fields['obr'] * $defender['wisdom']) * ($arrDeequip[3][4] / 100));
+            $eczarobr = $def_dspell -> fields['def'];
+	    if ($arrDeequip[3][0])
+	      {
+		$eczarobr -= ($def_dspell -> fields['def'] * ($arrDeequip[3][4] / 100));
+	      }
             if ($arrDeequip[2][0]) 
             {
-                $eczarobr = ($eczarobr - (($def_dspell -> fields['obr'] * $defender['wisdom']) * ($arrDeequip[2][4] / 100)));
-                if ($eczarobr < 0) 
-                {
-                    $eczarobr = 0;
-                }
+                $eczarobr -= ($def_dspell -> fields['def'] * ($arrDeequip[2][4] / 100));
             }
             if ($arrDeequip[4][0]) 
             {
-                $eczarobr = ($eczarobr - (($def_dspell -> fields['obr'] * $defender['wisdom']) * ($arrDeequip[4][4] / 100)));
-                if ($eczarobr < 0) 
-                {
-                    $eczarobr = 0;
-                }
+                $eczarobr -= ($def_dspell -> fields['def'] * ($arrDeequip[4][4] / 100));
             }
             if ($arrDeequip[5][0]) 
             {
-                $eczarobr = ($eczarobr - (($def_dspell -> fields['obr'] * $defender['wisdom']) * ($arrDeequip[5][4] / 100)));
-                if ($eczarobr < 0) 
-                {
-                    $eczarobr = 0;
-                }
+                $eczarobr -= ($def_dspell -> fields['def'] * ($arrDeequip[5][4] / 100));
             }
+	    if ($eczarobr < 0) 
+	      {
+		$eczarobr = 0;
+	      }
             if ($arrDeequip[7][0]) 
             {
                 $intN = 6 - (int)($arrDeequip[7][4] / 20);

@@ -87,36 +87,46 @@ if (isset($_GET['battle']))
     $myczaro = $db -> Execute("SELECT * FROM czary WHERE gracz=".$player -> id." AND status='E' AND typ='O'");
     $eczaro = $db -> Execute("SELECT * FROM czary WHERE gracz=".$arrdefender['id']." AND status='E' AND typ='O'");
     //Count spell damage
-    if ($myczar->fields['id'] && $eczaro->fields['id'])
+    if ($myczar->fields['id'])
       {
 	$myczar->fields['dmg'] = $myczar->fields['obr'] * $player->inteli;
+      }
+    if ($eczar->fields['id'])
+      {
+	$eczar->fields['dmg'] = $eczar->fields['obr'] * $enemy->inteli;
+      }
+    if ($myczaro->fields['id'])
+      {
+	$myczaro->fields['def'] = $myczaro->fields['obr'] * $player->wisdom;
+      }
+    if ($eczaro->fields['id'])
+      {
+	$eczaro->fields['def'] = $eczaro->fields['obr'] * $enemy->wisdom;
+      }
+    $arrElements('water' => 'fire',
+		 'fire' => 'wind',
+		 'wind' => 'earth',
+		 'earth' => 'water');
+    if ($myczar->fields['id'] && $eczaro->fields['id'])
+      {
 	if ($myczar->fields['element'] == $eczaro->fields['element'])
 	  {
-	    $myczar->fields['dmg'] = ($myczar->fields['obr'] * $player->inteli) / 2;
+	    $eczaro->fields['def'] = ($eczaro->fields['obr'] * $enemy->wisdom) * 2;
 	  }
-	$arrElements('water' => 'fire',
-		     'fire' => 'wind',
-		     'wind' => 'earth',
-		     'earth' => 'water');
-	if ($eczaro->fields['element'] == $arrElements[$myczar->fields['element']])
+	elseif ($eczaro->fields['element'] == $arrElements[$myczar->fields['element']])
 	  {
-	    $myczar->fields['dmg'] = ($myczar->fields['obr'] * $player->inteli) * 2;
+	    $eczaro->fields['def'] = ($eczaro->fields['obr'] * $enemy->wisdom) / 2;
 	  }
       }
     if ($myczaro->fields['id'] && $eczar->fields['id'])
       {
-	$eczar->fields['dmg'] = $eczar->fields['obr'] * $enemy->inteli;
 	if ($myczar->fields['element'] == $eczaro->fields['element'])
 	  {
-	    $eczar->fields['dmg'] = ($eczar->fields['obr'] * $enemy->inteli) / 2;
+	    $myczaro->fields['def'] = ($myczaro->fields['obr'] * $player->wisdom) * 2;
 	  }
-	$arrElements('water' => 'fire',
-		     'fire' => 'wind',
-		     'wind' => 'earth',
-		     'earth' => 'water');
-	if ($myczaro->fields['element'] == $arrElements[$eczar->fields['element']])
+	elseif ($myczaro->fields['element'] == $arrElements[$eczar->fields['element']])
 	  {
-	    $eczar->fields['dmg'] = ($eczar->fields['obr'] * $player->inteli) * 2;
+	    $myczaro->fields['def'] = ($myczaro->fields['obr'] * $player->wisdom) * 2;
 	  }
       }
 
