@@ -6,8 +6,8 @@
  *   @name                 : battle.php                            
  *   @copyright            : (C) 2004,2005,2006,2011,2012 Vallheru Team based on Gamers-Fusion ver 2.5
  *   @author               : thindil <thindil@vallheru.net>
- *   @version              : 1.5
- *   @since                : 23.05.2012
+ *   @version              : 1.6
+ *   @since                : 29.05.2012
  *
  */
 
@@ -86,6 +86,39 @@ if (isset($_GET['battle']))
     $eczar = $db -> Execute("SELECT * FROM czary WHERE gracz=".$arrdefender['id']." AND status='E' AND typ='B'");
     $myczaro = $db -> Execute("SELECT * FROM czary WHERE gracz=".$player -> id." AND status='E' AND typ='O'");
     $eczaro = $db -> Execute("SELECT * FROM czary WHERE gracz=".$arrdefender['id']." AND status='E' AND typ='O'");
+    //Count spell damage
+    if ($myczar->fields['id'] && $eczaro->fields['id'])
+      {
+	$myczar->fields['dmg'] = $myczar->fields['obr'] * $player->inteli;
+	if ($myczar->fields['element'] == $eczaro->fields['element'])
+	  {
+	    $myczar->fields['dmg'] = ($myczar->fields['obr'] * $player->inteli) / 2;
+	  }
+	$arrElements('water' => 'fire',
+		     'fire' => 'wind',
+		     'wind' => 'earth',
+		     'earth' => 'water');
+	if ($eczaro->fields['element'] == $arrElements[$myczar->fields['element']])
+	  {
+	    $myczar->fields['dmg'] = ($myczar->fields['obr'] * $player->inteli) * 2;
+	  }
+      }
+    if ($myczaro->fields['id'] && $eczar->fields['id'])
+      {
+	$eczar->fields['dmg'] = $eczar->fields['obr'] * $enemy->inteli;
+	if ($myczar->fields['element'] == $eczaro->fields['element'])
+	  {
+	    $eczar->fields['dmg'] = ($eczar->fields['obr'] * $enemy->inteli) / 2;
+	  }
+	$arrElements('water' => 'fire',
+		     'fire' => 'wind',
+		     'wind' => 'earth',
+		     'earth' => 'water');
+	if ($myczaro->fields['element'] == $arrElements[$eczar->fields['element']])
+	  {
+	    $eczar->fields['dmg'] = ($eczar->fields['obr'] * $player->inteli) * 2;
+	  }
+      }
 
     $objFreezed = $db->Execute("SELECT `freeze` FROM `players` WHERE `id`=".$enemy->id);
     if ($objFreezed -> fields['freeze'])

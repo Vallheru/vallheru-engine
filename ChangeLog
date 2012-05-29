@@ -1,5 +1,7 @@
 2012-05-29  Bartek thindil Jasicki  <thindil@vallheru.net>
 
+	* FEATURE,install/db/update.sql, battle.php, includes/battle.php, wieza.php, templates/layout1/wieza.tpl, templates/wieza.tpl: 
+	start work on new spells system
 	* BUG,farm.php:
 	fixed bug #1005588 (buying new farm)
 

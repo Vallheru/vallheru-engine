@@ -7,8 +7,8 @@
  *   @copyright            : (C) 2006,2007,2011,2012 Vallheru Team based on Gamers-Fusion ver 2.5
  *   @author               : thindil <thindil@vallheru.net>
  *   @author               : eyescream <tduda@users.sourceforge.net>
- *   @version              : 1.5
- *   @since                : 24.05.2012
+ *   @version              : 1.6
+ *   @since                : 29.05.2012
  *
  */
 
@@ -134,10 +134,10 @@ function attack1($attacker, $defender, $arrAtequip, $arrDeequip, $attack_bspell,
     if ($attack_bspell -> fields['id'] && (!$arrAtequip[1][0] && !$arrAtequip[0][0])) 
     {
         $unik -= $attacker['magic'];
-        $mypower = ($attack_bspell -> fields['obr'] * $attacker['inteli']) - (($attack_bspell -> fields['obr'] * $attacker['inteli']) * ($arrAtequip[3][4] / 100));
+        $mypower = $attack_bspell -> fields['dmg'] - ($attack_bspell -> fields['dmg'] * ($arrAtequip[3][4] / 100));
         if ($arrAtequip[2][0]) 
         {
-            $mypower = ($mypower - (($attack_bspell -> fields['obr'] * $attacker['inteli']) * ($arrAtequip[2][4] / 100)));
+            $mypower -= ($attack_bspell -> fields['dmg'] * ($arrAtequip[2][4] / 100));
             if ($mypower < 0) 
             {
                 $mypower = 0;
@@ -145,7 +145,7 @@ function attack1($attacker, $defender, $arrAtequip, $arrDeequip, $attack_bspell,
         }
         if ($arrAtequip[4][0]) 
         {
-            $mypower = ($mypower - (($attack_bspell -> fields['obr'] * $attacker['inteli']) * ($arrAtequip[4][4] / 100)));
+	    $mypower -= ($attack_bspell -> fields['dmg'] * ($arrAtequip[4][4] / 100));
             if ($mypower < 0) 
             {
                 $mypower = 0;
@@ -153,7 +153,7 @@ function attack1($attacker, $defender, $arrAtequip, $arrDeequip, $attack_bspell,
         }
         if ($arrAtequip[5][0]) 
         {
-            $mypower = ($mypower - (($attack_bspell -> fields['obr'] * $attacker['inteli']) * ($arrAtequip[5][4] / 100)));
+            $mypower -= ($attack_bspell -> fields['dmg'] * ($arrAtequip[5][4] / 100));
             if ($mypower < 0) 
             {
                 $mypower = 0;

@@ -7,7 +7,7 @@
  *   @copyright            : (C) 2004,2005,2006,2007,2011,2012 Vallheru Team based on Gamers-Fusion ver 2.5
  *   @author               : thindil <thindil@vallheru.net>
  *   @version              : 1.6
- *   @since                : 25.05.2012
+ *   @since                : 29.05.2012
  *
  */
 
@@ -46,63 +46,70 @@ if (!isset($_GET['buy']))
   {
     $_GET['buy'] = '';
     $smarty -> assign(array("Towerinfo" => TOWER_INFO,
-			    "Abuys" => A_BUY_S,
+			    "Abuys" => 'Kup czary bojowe',
+			    "Abuys2" => 'Kup czary obronne',
+			    "Abuys3" => 'Kup czary użytkowe',
 			    "Abuyc" => A_BUY_C,
 			    "Abuyst" => A_BUY_ST,
 			    "Tname" => T_NAME,
-			    "Tpower" => T_POWER,
 			    "Tcost" => T_COST,
 			    "Tlevel" => T_LEVEL,
 			    "Toptions" => T_OPTIONS,
+			    "Telement" => 'Żywioł',
 			    "Abuy" => A_BUY));
     if (isset ($_GET['dalej'])) 
       {
-        if ($_GET['dalej'] != 'T' && $_GET['dalej'] != 'C' && $_GET['dalej'] != 'P') 
+        if (!in_array($_GET['dalej'], array('T', 'C', 'B', 'O', 'U'))) 
 	  {
             error (ERROR);
 	  }
-        if ($_GET['dalej'] == 'P') 
+        if (in_array($_GET['dalej'], array('B', 'O', 'U'))) 
 	  {
-            $czary = $db -> Execute("SELECT * FROM czary WHERE gracz=0 AND status='S' ORDER BY poziom ASC");
-            $arrname = array();
-            $arrefect = array();
-            $arrcost = array();
-            $arrlevel = array();
-            $arrid = array();
-            while (!$czary -> EOF) 
+	    $arrSpells = $db->GetAll("SELECT * FROM `czary` WHERE `gracz`=0 AND `status`='S' AND `typ`='".$_GET['dalej']."' ORDER BY `poziom` ASC") or die($db->ErrorMsg());
+	    $arrElements = array('earth' => 'Ziemia',
+				 'water' => 'Woda',
+				 'wind' => 'Powietrze',
+				 'fire' => 'Ogień');
+	    switch ($_GET['dalej'])
 	      {
-                $arrname[] = $czary -> fields['nazwa'];
-                if ($czary -> fields['typ'] == 'B') 
-		  {
-                    $arrefect[] = $czary -> fields['obr'].S_POWER;
-		  }
-                elseif ($czary -> fields['typ'] == 'O') 
-		  {
-                    $arrefect[] = $czary -> fields['obr'].S_POWER2;
-		  }
-                elseif ($czary -> fields['nazwa'] == 'Ulepszenie przedmiotu') 
-		  {
-                    $arrefect[] = S_POWER3;
-		  }
-                elseif ($czary -> fields['nazwa'] == 'Utwardzenie przedmiotu') 
-		  {
-                    $arrefect[] = S_POWER4;
-		  }
-                elseif ($czary -> fields['nazwa'] == 'Umagicznienie przedmiotu') 
-		  {
-                    $arrefect[] = S_POWER5;
-		  }
-                $arrcost[] = $czary -> fields['cena'];
-                $arrlevel[] = $czary -> fields['poziom'];
-                $arrid[] = $czary -> fields['id'];
-                $czary -> MoveNext();
+	      case 'B':
+		$strPower = 'Obrażenia';
+		break;
+	      case 'O':
+		$strPower = 'Obrona';
+		break;
+	      case 'U':
+		$strPower = 'Efekt';
+		break;
+	      default:
+		break;
 	      }
-            $czary -> Close();
-            $smarty -> assign(array("Name" => $arrname, 
-				    "Efect" => $arrefect, 
-				    "Cost" => $arrcost, 
-				    "Itemlevel" => $arrlevel, 
-				    "Itemid" => $arrid));
+	    foreach ($arrSpells as &$arrSpell)
+	      {
+		if ($arrSpell['typ'] == 'B')
+		  {
+		    $arrSpell['effect'] = $arrSpell['obr'].S_POWER;
+		  }
+		elseif ($arrSpell['typ'] == 'O')
+		  {
+		    $arrSpell['effect'] = $arrSpell['obr'].S_POWER2;
+		  }
+		elseif ($arrSpell['nazwa'] == 'Ulepszenie przedmiotu') 
+		  {
+                    $arrSpell['effect'] = S_POWER3;
+		  }
+                elseif ($arrSpell['nazwa'] == 'Utwardzenie przedmiotu') 
+		  {
+                    $arrSpell['effect'] = S_POWER4;
+		  }
+                elseif ($arrSpell['nazwa'] == 'Umagicznienie przedmiotu') 
+		  {
+                    $arrSpell['effect'] = S_POWER5;
+		  }
+		$arrSpell['element'] = $arrElements[$arrSpell['element']];
+	      }
+            $smarty -> assign(array("Spells" => $arrSpells,
+				    "Tpower" => $strPower));
 	  } 
 	else 
 	  {
@@ -133,7 +140,8 @@ if (!isset($_GET['buy']))
                                     "Power" => $arrpower, 
                                     "Cost" => $arrcost, 
                                     "Itemlevel" => $arrlevel, 
-                                    "Itemid" => $arrid));
+                                    "Itemid" => $arrid,
+				    "Tpower" => 'Siła'));
 	  }
       }
   }

@@ -10,11 +10,13 @@
 		<ul>
 			<li><a href="wieza.php?dalej=T">{$Abuyst}</a></li>
 			<li><a href="wieza.php?dalej=C">{$Abuyc}</a></li>
-			<li><a href="wieza.php?dalej=P">{$Abuys}</a></li>
+			<li><a href="wieza.php?dalej=B">{$Abuys}</a></li>
+			<li><a href="wieza.php?dalej=O">{$Abuys2}</a></li>
+			<li><a href="wieza.php?dalej=U">{$Abuys3}</a></li>
 		</ul>
 		
 		{if $Next != ""}
-			{if $Next == "P"}
+			{if $Next == "B" || $Next == "O" || $Next == "U"}
 				<table>
 					<thead>
 						<tr>
@@ -22,16 +24,18 @@
 							<th>{$Tpower}</th>
 							<th>{$Tcost}</th>
 							<th>{$Tlevel}</th>
+							<th>{$Telement}</th>
 							<th>{$Toptions}</th>
 						</tr>
 					</thead>
 					<tbody>
-						{section name=tower loop=$Name}
+						{section name=tower loop=$Spells}
 							<tr>
-								<td>{$Name[tower]}</td>
-								<td>{$Efect[tower]}</td>
-								<td>{$Cost[tower]}</td>
-								<td>{$Itemlevel[tower]}</td>
+								<td>{$Spells[tower].nazwa}</td>
+								<td>{$Spells[tower].effect}</td>
+								<td>{$Spells[tower].cena}</td>
+								<td>{$Spells[tower].poziom}</td>
+								<td>{$Spells[tower].element}</td>
 								<td>
 									<ul>
 										<li><a href="wieza.php?buy={$Itemid[tower]}&amp;type=S">{$Abuy}</a></li>
@@ -41,9 +45,7 @@
 						{/section}
 					</tbody>
 				</table>
-			{/if}
-			
-			{if $Next != "P"}
+			{else}
 				<table>
 					<thead>
 						<tr>
