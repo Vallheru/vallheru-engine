@@ -6,8 +6,8 @@
  *   @name                 : farm.php                            
  *   @copyright            : (C) 2004,2005,2006,2011,2012 Vallheru Team based on Gamers-Fusion ver 2.5
  *   @author               : thindil <thindil@vallheru.net>
- *   @version              : 1.5
- *   @since                : 09.05.2012
+ *   @version              : 1.6
+ *   @since                : 29.05.2012
  *
  */
 
@@ -201,6 +201,7 @@ if (isset($_GET['step']) && $_GET['step'] == 'plantation')
         if (!$objPlantation -> fields['lands'])
 	  {
             $intMithcost = 20;
+	    $_POST['lamount'] = 1;
 	  }
 	else
 	  {

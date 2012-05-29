@@ -1,3 +1,8 @@
+2012-05-29  Bartek thindil Jasicki  <thindil@vallheru.net>
+
+	* BUG,farm.php:
+	fixed bug #1005588 (buying new farm)
+
 2012-05-28  Bartek thindil Jasicki  <thindil@vallheru.net>
 
 	* BUG,class/player_class.php, include/head.php: 
