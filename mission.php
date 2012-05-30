@@ -122,6 +122,30 @@ function battle()
 	  $fltBonus = (rand(-15, 15) / 100) * $fltStat;
 	  $fltStat += $fltBonus;
 	}
+      $arrElements = array('water', 'fire', 'wind', 'earth');
+      $intChance = rand(1, 100);
+      if ($intChance < 75)
+	{
+	  $arrResistance = array('none', 'none');
+	  $strDmgtype = 'none';
+	}
+      else
+	{
+	  $intKey = rand(0, 3);
+	  $strDmgtype = $arrElements[$intKey];
+	}
+      if ($intChance > 74 && $intChance < 90)
+	{
+	  $arrResistance = array($arrElements[$intKey], 'weak');
+	}
+      elseif ($intChance < 97)
+	{
+	  $arrResistance = array($arrElements[$intKey], 'medium');
+	}
+      else
+	{
+	  $arrResistance = array($arrElements[$intKey], 'strong');
+	}
       $enemy = array('name' => $_SESSION['maction']['moreinfo'][1], 
 		     'strength' => $arrStats[0], 
 		     'agility' => $arrStats[1], 
@@ -133,7 +157,9 @@ function battle()
 		     'exp2' => $player->level * 10,
 		     "gold" => $player->level * 10,
 		     "lootnames" => array(),
-		     "lootchances" => array());
+		     "lootchances" => array(),
+		     "resistance" => $arrResistance,
+		     "dmgtype" => $strDmgtype);
       $_SESSION['enemy'] = $enemy;
     }
     else

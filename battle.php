@@ -7,7 +7,7 @@
  *   @copyright            : (C) 2004,2005,2006,2011,2012 Vallheru Team based on Gamers-Fusion ver 2.5
  *   @author               : thindil <thindil@vallheru.net>
  *   @version              : 1.6
- *   @since                : 29.05.2012
+ *   @since                : 30.05.2012
  *
  */
 
@@ -103,10 +103,10 @@ if (isset($_GET['battle']))
       {
 	$eczaro->fields['def'] = $eczaro->fields['obr'] * $enemy->wisdom;
       }
-    $arrElements('water' => 'fire',
-		 'fire' => 'wind',
-		 'wind' => 'earth',
-		 'earth' => 'water');
+    $arrElements = array('water' => 'fire',
+			 'fire' => 'wind',
+			 'wind' => 'earth',
+			 'earth' => 'water');
     if ($myczar->fields['id'] && $eczaro->fields['id'])
       {
 	if ($myczar->fields['element'] == $eczaro->fields['element'])
@@ -512,7 +512,9 @@ if (isset($_GET['action']))
 			   "exp2" => $enemy1 -> fields['exp2'], 
 			   "level" => $enemy1 -> fields['level'],
 			   "lootnames" => explode(";", $enemy1->fields['lootnames']),
-			   "lootchances" => explode(";", $enemy1->fields['lootchances']));
+			   "lootchances" => explode(";", $enemy1->fields['lootchances']),
+			   "resistance" => explode(";", $enemy1->fields['resistance']),
+			   "dmgtype" => $enemy1->fields['dmgtype']);
 	    $arrehp = array ();
 	    if (!isset ($_POST['action'])) 
 	      {
@@ -592,7 +594,9 @@ if (isset($_GET['action']))
 			   "exp2" => $enemy1 -> fields['exp2'], 
 			   "level" => $enemy1 -> fields['level'],
 			   "lootnames" => explode(";", $enemy1->fields['lootnames']),
-			   "lootchances" => explode(";", $enemy1->fields['lootchances']));
+			   "lootchances" => explode(";", $enemy1->fields['lootchances']),
+			   "resistance" => explode(";", $enemy1->fields['resistance']),
+			   "dmgtype" => $enemy1->fields['dmgtype']);
 	    $intAmount = 0;
 	    for ($j=1; $j<=$_POST['times']; $j++) 
 	      {

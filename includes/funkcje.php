@@ -7,7 +7,7 @@
  *   @copyright            : (C) 2004,2005,2006,2007,2011,2012 Vallheru Team based on Gamers-Fusion ver 2.5
  *   @author               : thindil <thindil@vallheru.net>
  *   @version              : 1.6
- *   @since                : 24.05.2012
+ *   @since                : 30.05.2012
  *
  */
 
@@ -1025,18 +1025,39 @@ function fightmonster($enemy, $expgain, $goldgain, $times)
     }
     if ($mczar -> fields['id']) 
     {
-        $stat['damage'] = ($mczar -> fields['obr'] * $player -> inteli) - (($mczar -> fields['obr'] * $player -> inteli) * ($arrEquip[3][4] / 100));
+        $stat['damage'] = ($mczar -> fields['obr'] * $player -> inteli);
+	if ($enemy['resistance'][0] == $mczar->fields['element'])
+	  {
+	    switch ($enemy['resistance'][1])
+	      {
+	      case 'weak':
+		$stat['damage'] -= ($stat['damage'] * 0.25);
+		break;
+	      case 'medium':
+		$stat['damage'] -= ($stat['damage'] * 0.5);
+		break;
+	      case 'strong':
+		$stat['damage'] -= ($stat['damage'] * 0.75);
+		break;
+	      default:
+		break;
+	      }
+	  }
+	if ($arrEquip[3][0])
+	  {
+	    $stat['damage'] -= ($stat['damage'] * ($arrEquip[3][4] / 100));
+	  }
         if ($arrEquip[2][0]) 
         {
-            $stat['damage'] = $stat['damage'] - ($stat['damage'] * ($arrEquip[2][4] / 100));
+	  $stat['damage'] -= ($stat['damage'] * ($arrEquip[2][4] / 100));
         }
         if ($arrEquip[4][0]) 
         {
-            $stat['damage'] = $stat['damage'] - ($stat['damage'] * ($arrEquip[4][4] / 100));
+            $stat['damage'] -= ($stat['damage'] * ($arrEquip[4][4] / 100));
         }
         if ($arrEquip[5][0]) 
         {
-            $stat['damage'] = $stat['damage'] - ($stat['damage'] * ($arrEquip[5][4] / 100));
+            $stat['damage'] -= ($stat['damage'] * ($arrEquip[5][4] / 100));
         }
         if ($arrEquip[7][0]) 
         {
@@ -1065,18 +1086,35 @@ function fightmonster($enemy, $expgain, $goldgain, $times)
     }
     if ($mczaro -> fields['id']) 
     {
-        $myczarobr = ($player -> wisdom * $mczaro -> fields['obr']) - (($mczaro -> fields['obr'] * $player -> wisdom) * ($arrEquip[3][4] / 100));
+        $myczarobr = ($player -> wisdom * $mczaro -> fields['obr']);
+	$fltBasedef = $myczarobr;
+	if ($mczaro->fields['element'] == $enemy['dmgtype'])
+	  {
+	    $myczarobr = $myczarobr * 2;
+	  }
+	$arrElements = array('water' => 'fire',
+			     'fire' => 'wind',
+			     'wind' => 'earth',
+			     'earth' => 'water');
+	if ($mczaro->fields['element']  == $arrElements[$enemy['dmgtype']])
+	  {
+	    $myczarobr = $myczarobr / 2;
+	  }
+	if ($arrEquip[3][0])
+	  {
+	    $myczarobr -= ($fltBasedef * ($arrEquip[3][4] / 100));
+	  }
         if ($arrEquip[2][0]) 
         {
-            $myczarobr = ($myczarobr - (($mczaro -> fields['obr'] * $player -> wisdom) * ($arrEquip[2][4] / 100)));
+            $myczarobr -= ($fltBasedef * ($arrEquip[2][4] / 100));
         }
         if ($arrEquip[4][0]) 
         {
-            $myczarobr = ($myczarobr - (($mczaro -> fields['obr'] * $player -> wisdom) * ($arrEquip[4][4] / 100)));
+            $myczarobr -= ($fltBasedef * ($arrEquip[4][4] / 100));
         }
         if ($arrEquip[5][0]) 
         {
-            $myczarobr = ($myczarobr - (($mczaro -> fields['obr'] * $player -> wisdom) * ($arrEquip[5][4] / 100)));
+            $myczarobr -= ($fltBasedef * ($arrEquip[5][4] / 100));
         }
         if ($arrEquip[7][0]) 
         {

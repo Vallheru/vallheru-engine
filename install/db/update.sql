@@ -10,7 +10,7 @@ ALTER TABLE `players`
 ALTER TABLE `players`
   DROP `lang`,
   DROP `seclang`;
-ALTER TABLE  `monsters` ADD  `resistance` VARCHAR( 255 ) NOT NULL;
 ALTER TABLE `czary` DROP `lang`;
 ALTER TABLE  `czary` ADD  `element` VARCHAR( 20 ) NOT NULL;
-ALTER TABLE  `monsters` ADD  `dmgtype` VARCHAR( 10 ) NOT NULL;
+ALTER TABLE  `monsters` ADD  `resistance` VARCHAR( 100 ) NOT NULL DEFAULT  'none;none',
+ADD  `dmgtype` VARCHAR( 20 ) NOT NULL DEFAULT  'none';

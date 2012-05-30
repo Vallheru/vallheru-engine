@@ -6,8 +6,8 @@
  *   @name                 : portals.php                            
  *   @copyright            : (C) 2006,2011,2012 Vallheru Team based on Gamers-Fusion ver 2.5
  *   @author               : thindil <thindil@vallheru.net>
- *   @version              : 1.5
- *   @since                : 02.02.2012
+ *   @version              : 1.6
+ *   @since                : 30.05.2012
  *
  */
 
@@ -139,6 +139,14 @@ if (isset($_GET['go']) && $_GET['go'] == 'fight')
         $arrLevel = array(10, 20, 50, 100, 150, 200, 250);
         $arrExp1 = array(500, 750, 1000, 1250, 1500, 1750, 2000);
         $arrExp2 = array(600, 900, 1250, 1500, 1750, 2000, 2500);
+	$arrResistances = array(array('fire', 'weak'),
+				array('fire', 'medium'),
+				array('fire', 'strong'),
+				array('earth', 'strong'),
+				array('water', 'strong'),
+				array('wind', 'strong'),
+				array('fire', 'strong'));
+	$arrDmgtypes = array('fire', 'fire', 'fire', 'earth', 'water', 'wind', 'fire');
         $arrBonus = array(1, 1.5, 2, 2.5, 3, 3.5, 4);
         $intNumber = $objFight -> fields['fight'] - 1;
         $enemy = array('name' => $arrMonsters[$intNumber], 
@@ -151,7 +159,9 @@ if (isset($_GET['go']) && $_GET['go'] == 'fight')
                        'exp1' => $arrExp1[$intNumber], 
                        'exp2' => $arrExp2[$intNumber],
 		       'lootnames' => array(),
-		       'lootchances' => array());
+		       'lootchances' => array(),
+		       'resistance' = $arrResistances[$intNumber],
+		       'dmgtype' = $arrDmgtypes[$intNumber]);
         $arrehp = array();
         $strAdress = "portals.php?step=".$intNumber."&amp;go=fight";
         $span = ($enemy['level'] / $player -> level);

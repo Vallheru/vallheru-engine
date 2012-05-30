@@ -7,7 +7,7 @@
  *   @copyright            : (C) 2004,2005,2006,2011,2012 Vallheru Team based on Gamers-Fusion ver 2.5
  *   @author               : thindil <thindil@vallheru.net>
  *   @version              : 1.6
- *   @since                : 25.05.2012
+ *   @since                : 30.05.2012
  *
  */
  
@@ -161,7 +161,9 @@ function battle($strAddress)
 		     'exp2' => $arrbandit[4],
 		     "gold" => $arrbandit[5],
 		     "lootnames" => array(),
-		     "lootchances" => array());
+		     "lootchances" => array(),
+		     "resistance" => array('none', 'none'),
+		     "dmgtype" => 'none');
       $_SESSION['enemy'] = $enemy;
     }
   else

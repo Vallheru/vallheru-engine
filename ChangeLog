@@ -1,3 +1,9 @@
+2012-05-30  Bartek thindil Jasicki  <thindil@vallheru.net>
+
+	* FEATURE,class/quests_class.php, includes/funkcje.php, includes/turnfight.php, battle.php, travel.php, portals.php, mission.php, 
+	install/db/update.sql, hunters.php, explore.php:
+	continue work on new spells system
+
 2012-05-29  Bartek thindil Jasicki  <thindil@vallheru.net>
 
 	* UPDATE,includes/battle.php, battle.php: 

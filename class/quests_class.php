@@ -6,8 +6,8 @@
  *   @name                 : quests_class.php                            
  *   @copyright            : (C) 2004,2005,2006,2011,2012 Vallheru Team based on Gamers-Fusion ver 2.5
  *   @author               : thindil <thindil@vallheru.net>
- *   @version              : 1.5
- *   @since                : 23.02.2011
+ *   @version              : 1.6
+ *   @since                : 30.05.2012
  *
  */
 
@@ -188,7 +188,9 @@ class Quests
 		       "exp2" => $enemy1 -> fields['exp2'], 
 		       "level" => $enemy1 -> fields['level'],
 		       "lootnames" => $enemy1->fields['lootnames'],
-		       "lootchances" => $enemy1->fields['lootchances']);
+		       "lootchances" => $enemy1->fields['lootchances'],
+		       "resistance" => explode(";", $enemy1->fields['resistance']),
+		       "dmgtype" => $enemy1->fields['dmgtype']);
         $span = ($enemy1 -> fields['level'] / $player -> level);
         if ($span > 2) 
         {
