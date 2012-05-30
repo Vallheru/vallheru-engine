@@ -1,5 +1,7 @@
 2012-05-30  Bartek thindil Jasicki  <thindil@vallheru.net>
 
+	* BUG,includes/head.php: 
+	fixed notice
 	* UPDATE,templates/layout1/admin.tpl, templates/admin.tpl, admin.php: 
 	added option to edit monster resistance and damage type
 	* BUG,templates/layout1/wieza.tpl, templates/wieza.tpl: 

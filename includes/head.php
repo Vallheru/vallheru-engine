@@ -7,7 +7,7 @@
  *   @copyright            : (C) 2004,2005,2006,2007,2011,2012 Vallheru Team based on Gamers-Fusion ver 2.5
  *   @author               : thindil <thindil@vallheru.net>
  *   @version              : 1.6
- *   @since                : 28.05.2012
+ *   @since                : 30.05.2012
  *
  */
 
@@ -720,6 +720,7 @@ function error($text)
     global $phptime;
     global $gamename;
     global $arrTags;
+    global $lang;
     if (strpos($text, "<a href") === FALSE)
     {
         $text = $text." (<a href=\"".$_SERVER['PHP_SELF']."\">".BACK."</a>)";
