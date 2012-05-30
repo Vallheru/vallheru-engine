@@ -289,6 +289,8 @@
             {$Tmlocation}: <input type="text" name="location" value="{$Mlocation}" /><br />
 	    {$Tmlootnames}: <input type="text" name="lootnames" value="{$Mlootname}" /><br />
 	    {$Tmlootchances}: <input type="text" name="lootchances" value="{$Mlootchance}" /><br />
+	    {$Tmresistance}: <input type="text" name="resistance" value="{$Mresistance}" /><br />
+	    {$Tmdmgtype}: <input type="text" name="dmgtype" value="{$Mdmgtype}" /><br />
 	    {$Tmdesc}: <br />
 	    <textarea name="mdesc">{$Mdesc}</textarea><br /><br />
             <input type="hidden" name="mid" value="{$Mid}" />
@@ -522,6 +524,8 @@
     </select><br />
     {$Mlootnames}: <input type="text" name="lootnames" /><br />
     {$Mlootchances}: <input type="text" name="lootchances" /><br />
+    {$Mresistance}: <input type="text" name="resistance" /><br />
+    {$Mdmgtype}: <input type="text" name="dmgtype" /><br />
     <input type="submit" value="{$Aadd}" /></form>
 {/if}
 

@@ -8,7 +8,7 @@
  *   @author               : thindil <thindil@vallheru.net>
  *   @author               : eyescream <tduda@users.sourceforge.net>
  *   @version              : 1.6
- *   @since                : 23.05.2012
+ *   @since                : 30.05.2012
  *
  */
  
@@ -549,6 +549,8 @@ if (isset($_GET['view']))
 					"Mlocation" => $objMonster -> fields['location'],
 					"Mlootname" => $objMonster->fields['lootnames'],
 					"Mlootchance" => $objMonster->fields['lootchances'],
+					"Mresistance" => $objMonster->fields['resistance'],
+					"Mdmgtype" => $objMonster->fields['dmgtype'],
 					"Mdesc" => $strDesc,
 					"Tmdesc" => "Opis potwora",
 					"Tmname" => M_NAME,
@@ -566,6 +568,8 @@ if (isset($_GET['view']))
 					"Aedit" => A_EDIT,
 					"Tmlootnames" => "Nazwy komponentów",
 					"Tmlootchances" => "Szansa na komponenty",
+					"Tmresistance" => 'Odporność potwora',
+					"Tmdmgtype" => 'Typ zadawanych obrażeń',
 					"Mid" => $_POST['mid']));
 		$objMonster -> Close();
 	      }
@@ -579,8 +583,10 @@ if (isset($_GET['view']))
 		$strLocation = $db -> qstr($_POST['location'], get_magic_quotes_gpc());
 		$strLoot1 = $db-> qstr($_POST['lootnames'], get_magic_quotes_gpc());
 		$strLoot2 = $db-> qstr($_POST['lootchances'], get_magic_quotes_gpc());
+		$strResistance = $db-> qstr($_POST['resistance'], get_magic_quotes_gpc());
+		$strDmgtype = $db-> qstr($_POST['dmgtype'], get_magic_quotes_gpc());
 		$strDesc = bbcodetohtml($_POST['mdesc']);
-		$db -> Execute("UPDATE `monsters` SET `name`=".$strName.", `level`=".$_POST['level'].", `hp`=".$_POST['hp'].", `agility`=".$_POST['agility'].", `strength`=".$_POST['strength'].", `credits1`=".$_POST['credits1'].", `credits2`=".$_POST['credits2'].", `exp1`=".$_POST['exp1'].", `exp2`=".$_POST['exp2'].", `speed`=".$_POST['speed'].", `endurance`=".$_POST['endurance'].", `location`=".$strLocation.", `lootnames`=".$strLoot1.", `lootchances`=".$strLoot2.", `desc`='".$strDesc."' WHERE `id`=".$_POST['mid']);
+		$db -> Execute("UPDATE `monsters` SET `name`=".$strName.", `level`=".$_POST['level'].", `hp`=".$_POST['hp'].", `agility`=".$_POST['agility'].", `strength`=".$_POST['strength'].", `credits1`=".$_POST['credits1'].", `credits2`=".$_POST['credits2'].", `exp1`=".$_POST['exp1'].", `exp2`=".$_POST['exp2'].", `speed`=".$_POST['speed'].", `endurance`=".$_POST['endurance'].", `location`=".$strLocation.", `lootnames`=".$strLoot1.", `lootchances`=".$strLoot2.", `desc`='".$strDesc."' `resistance`=".$strResistance.", `dmgtype`=".$strDmgtype."  WHERE `id`=".$_POST['mid']);
 		$smarty -> assign("Message", YOU_EDIT.$_POST['name']);
 	      }
 	  }
@@ -1212,7 +1218,9 @@ if (isset($_GET['view']))
 				"Mcity2" => M_CITY2,
 				"Mcity3" => M_CITY3,
 				"Mlootnames" => "Nazwy komponentów",
-				"Mlootchances" => "Szanse na komponenty",));
+				"Mlootchances" => "Szanse na komponenty",
+				"Mresistance" => "Odporność potwora",
+				"Mdmgtype" => "Typ zadawanych obrażeń"));
 	if (isset ($_GET['step']) && $_GET['step'] == 'monster') 
 	  {
 	    if (!$_POST['nazwa'] || !$_POST['poziom'] || !$_POST['pz'] || !$_POST['zr'] || !$_POST['sila'] || !$_POST['minzl'] || !$_POST['maxzl'] || !$_POST['minpd'] || !$_POST['maxpd'] || !$_POST['speed'] || !$_POST['endurance']) 
@@ -1222,7 +1230,9 @@ if (isset($_GET['view']))
 	    $strName = $db -> qstr($_POST['nazwa'], get_magic_quotes_gpc());
 	    $strLoot = $db -> qstr($_POST['lootnames'], get_magic_quotes_gpc());
 	    $strLoot2 = $db -> qstr($_POST['lootchances'], get_magic_quotes_gpc());
-	    $db -> Execute("INSERT INTO `monsters` (`name`, `level`, `hp`, `agility`, `strength`, `credits1`, `credits2`, `exp1`, `exp2`, `speed`, `endurance`, `location`, `lootnames`, `lootchances`) VALUES(".$strName.", ".$_POST['poziom'].", ".$_POST['pz'].", ".$_POST['zr'].", ".$_POST['sila'].", ".$_POST['minzl'].", ".$_POST['maxzl'].", ".$_POST['minpd'].", ".$_POST['maxpd'].", ".$_POST['speed'].", ".$_POST['endurance'].", '".$_POST['location']."', ".$strLoot.", ".$strLoot2.")");
+	    $strResistance = $db -> qstr($_POST['resistance'], get_magic_quotes_gpc());
+	    $strDmgtype = $db -> qstr($_POST['dmgtype'], get_magic_quotes_gpc());
+	    $db -> Execute("INSERT INTO `monsters` (`name`, `level`, `hp`, `agility`, `strength`, `credits1`, `credits2`, `exp1`, `exp2`, `speed`, `endurance`, `location`, `lootnames`, `lootchances`, `resistance`, `dmgtype`) VALUES(".$strName.", ".$_POST['poziom'].", ".$_POST['pz'].", ".$_POST['zr'].", ".$_POST['sila'].", ".$_POST['minzl'].", ".$_POST['maxzl'].", ".$_POST['minpd'].", ".$_POST['maxpd'].", ".$_POST['speed'].", ".$_POST['endurance'].", '".$_POST['location']."', ".$strLoot.", ".$strLoot2.", ".$strResistance.", ".$strDmgtype.")");
 	  }
       }
 

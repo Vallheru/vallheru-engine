@@ -1,5 +1,7 @@
 2012-05-30  Bartek thindil Jasicki  <thindil@vallheru.net>
 
+	* UPDATE,templates/layout1/admin.tpl, templates/admin.tpl, admin.php: 
+	added option to edit monster resistance and damage type
 	* BUG,templates/layout1/wieza.tpl, templates/wieza.tpl: 
 	fixed some notices
 	* FEATURE,class/quests_class.php, includes/funkcje.php, includes/turnfight.php, battle.php, travel.php, portals.php, mission.php, 
