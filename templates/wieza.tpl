@@ -38,7 +38,7 @@
 								<td>{$Spells[tower].element}</td>
 								<td>
 									<ul>
-										<li><a href="wieza.php?buy={$Itemid[tower]}&amp;type=S">{$Abuy}</a></li>
+										<li><a href="wieza.php?buy={$Spells[tower].id}&amp;type=S">{$Abuy}</a></li>
 									</ul>
 								</td>
 							</tr>

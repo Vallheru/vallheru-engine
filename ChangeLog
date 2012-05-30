@@ -1,5 +1,7 @@
 2012-05-30  Bartek thindil Jasicki  <thindil@vallheru.net>
 
+	* BUG,templates/layout1/wieza.tpl, templates/wieza.tpl: 
+	fixed some notices
 	* FEATURE,class/quests_class.php, includes/funkcje.php, includes/turnfight.php, battle.php, travel.php, portals.php, mission.php, 
 	install/db/update.sql, hunters.php, explore.php:
 	continue work on new spells system

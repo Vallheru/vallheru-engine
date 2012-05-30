@@ -25,7 +25,7 @@
                 <td>{$Spells[tower].cena}</td>
                 <td>{$Spells[tower].poziom}</td>
 		<td>{$Spells[tower].element}</td>
-                <td>- <A href="wieza.php?buy={$Itemid[tower]}&type=S">{$Abuy}</a></td>
+                <td>- <A href="wieza.php?buy={$Spells[tower].id}&type=S">{$Abuy}</a></td>
                 </tr>
             {/section}
         {else}
