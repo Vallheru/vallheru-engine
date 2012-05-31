@@ -35,6 +35,8 @@
 	{$Tcon} {html_options name=mcon options=$Soptions selected=$Values[9]}<br />
 	{$Tgold} {html_options name=mgold options=$Loptions selected=$Values[10]}<br />
 	{$Texp} {html_options name=mexp options=$Loptions selected=$Values[11]}<br />
+	{$Tresistance} {html_options name=mres options=$Roptions selected=$Values[12]}<br />
+	{$Tdmgtype} {html_options name=mdmg options=$Doptions selected=$Values[13]}<br />
 	{$Tloot1} <input type="text" name="loot1" value="{$Values[2]}" /><br />
 	{$Tloot2} <input type="text" name="loot2" value="{$Values[3]}" /><br />
 	{$Tloot3} <input type="text" name="loot3" value="{$Values[4]}" /><br />

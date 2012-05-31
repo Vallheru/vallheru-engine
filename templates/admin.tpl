@@ -673,6 +673,8 @@
 	{$Tcon} {$Con}<br />
 	{$Tgold} {$Mgold}<br />
 	{$Texp} {$Mexp}<br />
+	{$Tresistance} {$Mresistance}<br />
+	{$Tdmgtype} {$Mdmgtype}<br />
 	{$Tloot1} {$Loot1}<br />
 	{$Tloot2} {$Loot2}<br />
 	{$Tloot3} {$Loot3}<br />

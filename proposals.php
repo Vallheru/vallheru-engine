@@ -7,7 +7,7 @@
  *   @copyright            : (C) 2011,2012 Vallheru Team based on Gamers-Fusion ver 2.5
  *   @author               : thindil <thindil@vallheru.net>
  *   @version              : 1.5
- *   @since                : 03.01.2012
+ *   @since                : 31.05.2012
  *
  */
 
@@ -164,7 +164,7 @@ elseif ($_GET['type'] == 'I')
  */
 elseif ($_GET['type'] == 'M')
 {
-  $arrValues = array('', '', '', '', '', '', 1, 1, 1, 1, 1, 1);
+  $arrValues = array('', '', '', '', '', '', 1, 1, 1, 1, 1, 1, 0, 0);
   echo $arrValues[0];
   $smarty->assign(array("Pinfo" => "Punkty służą do zmiany statystyk oraz wysokości zdobyczy (złota i doświadczenia) danego potwora. Osłabienie statystyk czy zwiększenie zdobyczy z niego wymaga posiadania punktów. Podniesienie statystyki czy zmniejszenie zdobyczy dodaje punkty. Aby móc zgłosić propozycję, liczba punktów musi być większa lub równa zero.",
 			"Tpoints" => "Punkty:",
@@ -185,6 +185,10 @@ elseif ($_GET['type'] == 'M')
 			"Tloot2" => "Nazwa 2 łupu:",
 			"Tloot3" => "Nazwa 3 łupu:",
 			"Tloot4" => "Nazwa 4 łupu:",
+			"Tresistance" => "Odporność na żywioł:",
+			"Tdmgtype" => "Typ obrażeń:",
+			"Roptions" => array("Brak (0 punktów)", "Ogień (słaba) (0 punktów)", "Ogień (normalna) (-1 punkt)", "Ogień (silna) (-2 punkty)", "Woda (słaba) (0 punktów)", "Woda (normalna) (-1 punkt)", "Woda (silna) (-2 punkty)", "Powietrze (słaba) (0 punktów)", "Powietrze (normalna) (-1 punkt)", "Powietrze (silna) (-2 punkty)", "Ziemia (słaba) (0 punktów)", "Ziemia (normalna) (-1 punkt)", "Ziemia (silna) (-2 punkty)"),
+			"Doptions" => array("Brak (0 punktów)", "Ogień (-1 punkt)", "Woda (-1 punkt)", "Powietrze (-1 punkt)", "Ziemia (-1 punkt)"),
 			"Linfo" => "Łupy z potworów wykorzystywane są do produkcji elitarnego ekwipunku. Nazwa łupu powinna składać się z dwóch części: część ciała potwora oraz nazwa potwora. Na przykład: Palec Goblina, Kość Lisza, Odnóże Gigantycznego Pająka.",
 			"Values" => $arrValues,
 			"Tloc" => "Lokacja:",
@@ -262,6 +266,45 @@ elseif ($_GET['type'] == 'M')
 	    }
 	  $arrValues[] = $_POST[$strOption];
 	}
+      $_POST['mres'] = intval($_POST['mres']);
+      switch ($_POST['mres'])
+	{
+	case 0:
+	case 1:
+	case 4:
+	case 7:
+	case 10:
+	  break;
+	case 2:
+	case 5:
+	case 8:
+	case 11:
+	  $intPoints --;
+	  break;
+	case 3:
+	case 6:
+	case 9:
+	case 12:
+	  $intPoints -= 2;
+	  break;
+	default:
+	    error("Zapomnij o tym.");
+	  break;
+	}
+      $arrValues[] = $_POST['mres'];
+      $_POST['mdmg'] = intval($_POST['mdmg']);
+      if ($_POST['mdmg'] >= 0 && $_POST['mdmg'] < 5)
+	{
+	  if ($_POST['mdmg'] > 0)
+	    {
+	      $intPoints --;
+	    }
+	  $arrValues[] = $_POST['mdmg'];
+	}
+      else
+	{
+	  error('Zapomnij o tym.');
+	}
       if ($_POST['smon'] == 'Sprawdź')
 	{
 	  if ($blnExists)
@@ -282,7 +325,7 @@ elseif ($_GET['type'] == 'M')
 	      error("Istnieje już potwór o tej nazwie bądź ktoś zgłosił potwora o tej samej nazwie.");
 	    }
 	  array_shift($arrText);
-	  $arrOptions = array_merge($arrStats, $arrLoot, $arrText);
+	  $arrOptions = array_merge($arrStats, $arrLoot, $arrText, array('mres', 'mdmg'));
 	  $strData = '';
 	  foreach ($arrOptions as $strOption)
 	    {

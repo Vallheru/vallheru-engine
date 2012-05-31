@@ -8,7 +8,7 @@
  *   @author               : thindil <thindil@vallheru.net>
  *   @author               : eyescream <tduda@users.sourceforge.net>
  *   @version              : 1.6
- *   @since                : 30.05.2012
+ *   @since                : 31.05.2012
  *
  */
  
@@ -1650,6 +1650,10 @@ if (isset($_GET['view']))
 				  "Loot3" => $arrData[9],
 				  "Tloot4" => "Łup 4:",
 				  "Loot4" => $arrData[10],
+				  "Tresistance" => "Odporność na żywioł:",
+				  "Mresistance" => $arrData[11],
+				  "Tdmgtype" => "Typ obrażeń:",
+				  "Mdmgtype" => $arrData[12],
 				  "Asend" => "Wyślij",
 				  "Accepted" => "Zaakceptowany",
 				  "Rejected" => "Odrzucony",
@@ -1679,7 +1683,9 @@ if (isset($_GET['view']))
 				    "gold1" => 0,
 				    "gold2" => 0,
 				    "exp1" => 0,
-				    "exp2" => 0);
+				    "exp2" => 0,
+				    "res" => 'none;none',
+				    "dmg" => 'none');
 		    $fltFraction = ($objMinlev->fields['max(`level`)'] / $objMaxlev->fields['min(`level`)']);
 		    $arrMob['str'] = ceil($fltFraction * $objStats->fields['strength']);
 		    if ($arrData[0] == 0)
@@ -1742,7 +1748,11 @@ if (isset($_GET['view']))
 			$arrMob['exp1'] -= ceil($arrMob['exp1'] / 10);
 			$arrMob['exp2'] += ceil($arrMob['exp2'] / 10);
 		      }
-		    $db->Execute("INSERT INTO `monsters` (`name`, `level`, `hp`, `agility`, `strength`, `speed`, `endurance`, `credits1`, `credits2`, `exp1`, `exp2`, `location`, `lootnames`, `lootchances`) VALUES('".$objProposal->fields['name']."', ".$arrData[6].", ".$arrMob['hp'].", ".$arrMob['agi'].", ".$arrMob['str'].", ".$arrMob['speed'].", ".$arrMob['con'].", ".$arrMob['gold1'].", ".$arrMob['gold2'].", ".$arrMob['exp1'].", ".$arrMob['exp2'].", '".$arrLocations[$objProposal->fields['info']]."', '".$arrData[7].";".$arrData[8].";".$arrData[9].";".$arrData[10]."', '55;77;95;100')") or die($db->ErrorMsg());
+		    $arrResistances = array('none;none', 'fire;weak', 'fire;medium', 'fire;strong', 'water;weak', 'water;medium', 'water;strong', 'wind;weak', 'wind;medium', 'wind;strong', 'earth;weak', 'earth;medium', 'earth;strong');
+		    $arrMob['res'] = $arrResistances[$arrData[11]];
+		    $arrDmgtype = array('none', 'fire', 'water', 'wind', 'earth');
+		    $arrMob['dmg'] = $arrDmgtype[$arrData[12]];
+		    $db->Execute("INSERT INTO `monsters` (`name`, `level`, `hp`, `agility`, `strength`, `speed`, `endurance`, `credits1`, `credits2`, `exp1`, `exp2`, `location`, `lootnames`, `lootchances`, `resistance`, `dmgtype`) VALUES('".$objProposal->fields['name']."', ".$arrData[6].", ".$arrMob['hp'].", ".$arrMob['agi'].", ".$arrMob['str'].", ".$arrMob['speed'].", ".$arrMob['con'].", ".$arrMob['gold1'].", ".$arrMob['gold2'].", ".$arrMob['exp1'].", ".$arrMob['exp2'].", '".$arrLocations[$objProposal->fields['info']]."', '".$arrData[7].";".$arrData[8].";".$arrData[9].";".$arrData[10]."', '55;77;95;100', '".$arrMob['res']."', '".$arrMob['dmg']."')") or die($db->ErrorMsg());
 		  }
 		else
 		  {

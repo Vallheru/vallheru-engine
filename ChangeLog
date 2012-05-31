@@ -1,3 +1,8 @@
+2012-05-31  Bartek thindil Jasicki  <thindil@vallheru.net>
+
+	* FEATURE,templates/layout1/admin.tpl, templates/admin.tpl, templates/layout1/proposals.tpl, templates/proposals.tpl, admin.php, proposals.php:
+	finished work on new spells system
+
 2012-05-30  Bartek thindil Jasicki  <thindil@vallheru.net>
 
 	* BUG,includes/head.php: 
