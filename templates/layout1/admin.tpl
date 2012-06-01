@@ -585,7 +585,8 @@
     </select><br />
      {$Swith} <input name="power" type="number" /> {$Spower}<br /> 
     {$Scost} <input type="number" name="cost" /><br /> 
-    {$Sminlev} <input type="number" name="minlev" />
+    {$Sminlev} <input type="number" name="minlev" /><br />
+    {$Selement} {html_options name=element options=$Soptions}<br />
     <input type="submit" value="{$Aadd}" /></form>
 {/if}
 

@@ -1,5 +1,7 @@
 2012-06-01  Bartek thindil Jasicki  <thindil@vallheru.net>
 
+	* UPDATE,templates/layout1/admin.tpl, templates/admin.tpl, admin.php: 
+	updated adding new spells
 	* UPDATE,templates/layout1/wieza.tpl, templates/wieza.tpl, languages/pl/wieza.php, wieza.php, class/player_class.php:
 	redesigned magic tower
 

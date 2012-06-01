@@ -1316,6 +1316,11 @@ if (isset($_GET['view']))
 				"Scost" => S_COST,
 				"Spower" => S_POWER,
 				"Sminlev" => S_MIN_LEV,
+				"Selement" => 'oraz związany z żywiołem',
+				"Soptions" => array('earth' => 'Ziemia',
+						    'water' => 'Woda',
+						    'wind' => 'Powietrze',
+						    'fire' => 'Ogień'),
 				"Hasas" => HAS_A_S,
 				"Aadd" => A_ADD));
 	if (isset ($_GET['step']) && $_GET['step'] == 'add') 
@@ -1325,7 +1330,7 @@ if (isset($_GET['view']))
 		error (EMPTY_FIELDS);
 	      }
 	    $strName = $db -> qstr($_POST['name'], get_magic_quotes_gpc());
-	    $db -> Execute("INSERT INTO czary (nazwa, cena, poziom, typ, obr) VALUES(".$strName.", ".$_POST['cost'].", ".$_POST['minlev'].", '".$_POST['type']."', ".$_POST['power'].")");
+	    $db -> Execute("INSERT INTO `czary` (`nazwa`, `cena`, `poziom`, `typ`, `obr`, `element`) VALUES(".$strName.", ".$_POST['cost'].", ".$_POST['minlev'].", '".$_POST['type']."', ".$_POST['power'].", '".$_POST['element']."')");
 	    error (YOU_ADD_SPELL." ".$_POST['name']." ".HAS_A_S." ".$_POST['type']." ".POWER_S." ".$_POST['power']." ".COST." ".$_POST['cost']." ".MIN_LEV_S." ".$_POST['minlev']);
 	  }
       }
