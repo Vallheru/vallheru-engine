@@ -4,14 +4,22 @@
 
 <br /><u>{$Spellbook}</u>:<br />
 <b>-{$Bspells}:</b><br />
-{section name=spell1 loop=$Bname}
-    {$Bname[spell1]} (+{$Bpower[spell1]} x {$Bdamage}) [ <a href="czary.php?naucz={$Bid[spell1]}">{$Usethis}</a> ]<br />
-{/section}
+{foreach $Bspells2 as $Bspells3}
+    <u>{$Telement} {$Bspells3@key}</u><br />
+    {foreach $Bspells3 as $Spell}
+        {$Spell.name} (+{$Spell.dmg} x {$Bdamage}) [ <a href="czary.php?naucz={$Spell.id}">{$Usethis}</a> ]<br />
+    {/foreach}
+    <br />
+{/foreach}
 
 <br /><b>-{$Dspells}:</b><br />
-{section name=spell2 loop=$Dname}
-    {$Dname[spell2]} (+{$Dpower[spell2]} x {$Ddefense}) [ <a href="czary.php?naucz={$Did[spell2]}">{$Usethis}</a> ]<br />
-{/section}
+{foreach $Dspells2 as $Dspells3}
+    <u>{$Telement} {$Dspells3@key}</u><br />
+    {foreach $Dspells3 as $Spell}
+        {$Spell.name} (+{$Spell.def} x {$Ddefense}) [ <a href="czary.php?naucz={$Spell.id}">{$Usethis}</a> ]<br />
+    {/foreach}
+    <br />
+{/foreach}
 
 <br /><b>-{$Espells}:</b><br />
 {section name=spell3 loop=$Uname}

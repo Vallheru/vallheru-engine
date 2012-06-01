@@ -422,33 +422,28 @@ if ($czaro -> fields['id'])
 }
 $czaro -> Close();
 
-$arrname1 = array();
-$arrpower1 = array();
-$arrid1 = array();
-$i = 0;
 $czary = $db -> Execute("SELECT * FROM `czary` WHERE `gracz`=".$player -> id." AND `status`='U' AND `typ`='B' ORDER BY `poziom` DESC");
+$arrBspells = array("Ziemia" => array(), "Woda" => array(), "Powietrze" => array(), "Ogień" => array());
+$arrElements = array('earth' => 'Ziemia', 'water' => 'Woda', 'wind' => 'Powietrze', 'fire' => 'Ogień');
 while (!$czary -> EOF) 
-{
-    $arrname1[$i] = $czary -> fields['nazwa'];
-    $arrpower1[$i] = $czary -> fields['obr'];
-    $arrid1[$i] = $czary -> fields['id'];
+  {
+    $strKey = $arrElements[$czary->fields['element']];
+    $arrBspells[$strKey][] = array("id" => $czary->fields['id'],
+				   "name" => $czary->fields['nazwa'],
+				   "dmg" => $czary->fields['obr']);
     $czary -> MoveNext();
-    $i = $i + 1;
 }
 $czary -> Close();
 
-$arrname2 = array();
-$arrpower2 = array();
-$arrid2 = array();
-$i = 0;
 $czaryo = $db -> Execute("SELECT * FROM `czary` WHERE `gracz`=".$player -> id." AND `status`='U' AND `typ`='O' ORDER BY `poziom` DESC");
+$arrDspells = array("Ziemia" => array(), "Woda" => array(), "Powietrze" => array(), "Ogień" => array());
 while (!$czaryo -> EOF) 
 {
-    $arrname2[$i] = $czaryo -> fields['nazwa'];
-    $arrpower2[$i] = $czaryo -> fields['obr'];
-    $arrid2[$i] = $czaryo -> fields['id'];
+    $strKey = $arrElements[$czary->fields['element']];
+    $arrDspells[$strKey][] = array("id" => $czaryo->fields['id'],
+				   "name" => $czaryo->fields['nazwa'],
+				   "def" => $czaryo->fields['obr']);
     $czaryo -> MoveNext();
-    $i = $i + 1;
 }
 $czaryo -> Close();
 
@@ -482,12 +477,9 @@ $czaryu -> Close();
 /**
 * Assign variables to template and display page
 */
-$smarty -> assign(array("Bname" => $arrname1, 
-    "Bpower" => $arrpower1,
-    "Bid" => $arrid1, 
-    "Dname" => $arrname2, 
-    "Dpower" => $arrpower2, 
-    "Did" => $arrid2, 
+$smarty -> assign(array("Bspells2" => $arrBspells,
+			"Telement" => "Żywioł:",
+			"Dspells2" => $arrDspells,
     "Uname" => $arrname3, 
     "Ueffect" => $arrefect,
     "Uid" => $arrid3, 
