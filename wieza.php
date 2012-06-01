@@ -71,7 +71,7 @@ if (isset($_GET['buy']))
 	  }
 	else
 	  {
-	    $db -> Execute("INSERT INTO czary (gracz, nazwa, cena, poziom, typ, obr, status) VALUES(".$player -> id.",'".$czary -> fields['nazwa']."',".$czary -> fields['cena'].",".$czary -> fields['poziom'].",'".$czary -> fields['typ']."',".$czary -> fields['obr'].",'U')");
+	    $db -> Execute("INSERT INTO czary (`gracz`, `nazwa`, `cena`, `poziom`, `typ`, `obr`, `status`, `element`) VALUES(".$player -> id.",'".$czary -> fields['nazwa']."',".$czary -> fields['cena'].",".$czary -> fields['poziom'].",'".$czary -> fields['typ']."',".$czary -> fields['obr'].",'U', '".$czary->fields['element']."')");
 	    message("success", YOU_PAY.$czary -> fields['cena'].AND_BUY.$czary -> fields['nazwa']."</b>.");
 	    $player->credits -= $czary -> fields['cena'];
 	  }

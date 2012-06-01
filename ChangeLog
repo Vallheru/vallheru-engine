@@ -1,5 +1,7 @@
 2012-06-01  Bartek thindil Jasicki  <thindil@vallheru.net>
 
+	* BUG,wieza.php: 
+	fixed buying spells
 	* BUG,templates/wieza.tpl: 
 	fixed notice
 	* UPDATE,templates/layout1/admin.tpl, templates/admin.tpl, admin.php: 
