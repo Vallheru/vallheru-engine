@@ -6,8 +6,8 @@
  *   @name                 : wieza.php                            
  *   @copyright            : (C) 2004,2005,2007,2012 Vallheru Team based on Gamers-Fusion ver 2.5
  *   @author               : thindil <thindil@vallheru.net>
- *   @version              : 1.5
- *   @since                : 04.04.2012
+ *   @version              : 1.6
+ *   @since                : 01.06.2012
  *
  */
 
@@ -31,8 +31,6 @@
 
 define("ERROR", "Zapomnij o tym!");
 
-if (!isset($_GET['buy'])) 
-{
     define("S_POWER", " x Int obrażeń");
     define("S_POWER2", " x SW obrony");
     define("S_POWER3", "Zwiększa siłę przedmiotu");
@@ -57,9 +55,7 @@ if (!isset($_GET['buy']))
     define("T_POWER", "Siła");
     define("T_LEVEL", "Wymagany poziom");
     define("A_BUY", "Kup");
-}
-    else
-{
+
     define("YOU_HAVE", "Masz już taki czar!");
     define("NO_SPELL", "Nie ma takiego czaru!");
     define("TOO_LOW", "Twój poziom jest za niski dla tej rzeczy!");
@@ -70,5 +66,4 @@ if (!isset($_GET['buy']))
     define("NO_ITEM", "Nie ma takiego przedmiotu!");
     define("ONLY_MAGE2", "Tylko mag może używać tych przedmiotów!");
     define("AND_BUY2", "</b> sztuk złota, i kupiłeś za to nowy przedmiot <b>");
-}
 ?>

@@ -6,7 +6,6 @@
 		{/if}
 	</header>
 	
-	{if $Buy == ""}
 		<ul>
 			<li><a href="wieza.php?dalej=T">{$Abuyst}</a></li>
 			<li><a href="wieza.php?dalej=C">{$Abuyc}</a></li>
@@ -17,34 +16,37 @@
 		
 		{if $Next != ""}
 			{if $Next == "B" || $Next == "O" || $Next == "U"}
+			    {foreach $Spells as $Spells2}
+			        {if $Next != "U"}
+			            <b>{$Telement} {$Spells2@key}</b><br />
+				{/if}
 				<table>
-					<thead>
-						<tr>
-							<th>{$Tname}</th>
-							<th>{$Tpower}</th>
-							<th>{$Tcost}</th>
-							<th>{$Tlevel}</th>
-							<th>{$Telement}</th>
-							<th>{$Toptions}</th>
-						</tr>
-					</thead>
-					<tbody>
-						{section name=tower loop=$Spells}
-							<tr>
-								<td>{$Spells[tower].nazwa}</td>
-								<td>{$Spells[tower].effect}</td>
-								<td>{$Spells[tower].cena}</td>
-								<td>{$Spells[tower].poziom}</td>
-								<td>{$Spells[tower].element}</td>
-								<td>
-									<ul>
-										<li><a href="wieza.php?buy={$Spells[tower].id}&amp;type=S">{$Abuy}</a></li>
-									</ul>
-								</td>
-							</tr>
-						{/section}
-					</tbody>
-				</table>
+				    <thead>
+				        <tr>
+					    <th>{$Tname}</th>
+					    <th>{$Tpower}</th>
+					    <th>{$Tcost}</th>
+					    <th>{$Tlevel}</th>
+					    <th>{$Toptions}</th>
+					</tr>
+				    </thead>
+				    <tbody>
+					{foreach $Spells2 as $Spell}
+					    <tr>
+					        <td>{$Spell.name}</td>
+					        <td>{$Spell.effect}</td>
+					        <td>{$Spell.price}</td>
+					        <td>{$Spell.level}</td>
+					        <td>
+						    <ul>
+						        <li><a href="wieza.php?dalej={$Next}&amp;buy={$Spell.id}&amp;type=S">{$Abuy}</a></li>
+						    </ul>
+					        </td>
+					    </tr>
+					{/foreach}
+				    </tbody>
+				</table><br />
+			    {/foreach}
 			{else}
 				<table>
 					<thead>
@@ -65,7 +67,7 @@
 								<td>{$Itemlevel[tower1]}</td>
 								<td>
 									<ul>
-										<li><a href="wieza.php?buy={$Itemid[tower1]}&amp;type=I">{$Abuy}</a></li>
+										<li><a href="wieza.php?dalej={$Next}&amp;buy={$Itemid[tower1]}&amp;type=I">{$Abuy}</a></li>
 									</ul>
 								</td>
 							</tr>
@@ -74,11 +76,6 @@
 				</table>
 			{/if}
 			
-		{/if}
-	{/if}
-	
-	{if $Buy != ""}
-		{$Message}
 	{/if}
 	
 </article>
