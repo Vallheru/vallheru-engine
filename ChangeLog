@@ -1,3 +1,8 @@
+2012-06-04  Bartek thindil Jasicki  <thindil@vallheru.net>
+
+	* FEATURE,templates/portal.tpl, templates/layout1/portal.tpl, portal.php, languages/pl/portal.php:
+	changed guardian
+
 2012-06-01  Bartek thindil Jasicki  <thindil@vallheru.net>
 
 	* UPDATE,templates/layout1/czary.tpl, templates/czary.tpl, czary.php: 

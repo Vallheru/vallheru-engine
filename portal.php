@@ -6,8 +6,8 @@
  *   @name                 : portal.php                            
  *   @copyright            : (C) 2004,2005,2006,2011,2012 Vallheru Team based on Gamers-Fusion ver 2.5
  *   @author               : thindil <thindil@vallheru.net>
- *   @version              : 1.5
- *   @since                : 02.02.2012
+ *   @version              : 1.6
+ *   @since                : 04.06.2012
  *
  */
  
@@ -37,7 +37,7 @@ require_once("includes/turnfight.php");
 /**
 * Get the localization for game
 */
-require_once("languages/".$player -> lang."/portal.php");
+require_once("languages/".$lang."/portal.php");
 
 if ($player -> location != 'Portal') 
 {
@@ -78,12 +78,12 @@ if (isset ($_GET['action1']) && $_GET['action1'] == 'fight' && $player -> hp > 0
         $smarty -> assign ("Message", START_FIGHT);
         $smarty -> display ('error1.tpl');
         $enemy = array ('name' => MONSTER_NAME, 
-                        'strength' => 15000, 
-                        'agility' => 15000, 
-                        'hp' => 50000, 
+                        'strength' => 15, 
+                        'agility' => 15, 
+                        'hp' => 50, 
                         'level' => 1, 
-                        'endurance' => 15000, 
-                        'speed' => 15000,
+                        'endurance' => 15, 
+                        'speed' => 15,
 			'lootnames' => array(),
 			'lootchance' => array(),
 			'exp1' => 0,
@@ -119,10 +119,7 @@ if (isset ($_GET['action1']) && $_GET['action1'] == 'fight' && $player -> hp > 0
             $db -> Execute("UPDATE players SET energy=0 WHERE id=".$player -> id);
             $smarty -> assign(array("Win" => 1,
                                     "Portaltext" => PORTAL_TEXT,
-                                    "Sword" => SWORD,
-                                    "Armor" => ARMOR,
-                                    "Istaff" => I_STAFF,
-                                    "Cape" => CAPE));
+				    "Anext" => "Dalej"));
         }
 	if ($myhp->fields['miejsce'] == 'Altara' || $myhp->fields['fight'] == 9999) 
 	  {
@@ -134,45 +131,7 @@ if (isset ($_GET['action1']) && $_GET['action1'] == 'fight' && $player -> hp > 0
     }
     if (isset ($_GET['step'])) 
     {
-        if ($_GET['step'] != 'sword' && $_GET['step'] != 'armor' && $_GET['step'] != 'staff' && $_GET['step'] != 'cape') 
-        {
-            error (ERROR);
-        }
-        $winner = $db -> Execute("SELECT value FROM settings WHERE setting='player'");
-        if ($winner -> fields['value'] > 0)
-        {
-            error(ITEM_TAKE);
-        }
-        $winner -> Close();
-        if ($_GET['step'] == 'sword') 
-        {
-            $smarty -> assign ("Item", SWORD);
-            $db -> Execute("INSERT INTO equipment (owner, name, power, type, cost, zr, wt, minlev, maxwt, amount, magic, poison, szyb, twohand) VALUES(".$player -> id.",'".SWORD."',500,'W',1,0,5000,1,5000,1,'Y',0,100,'Y')");
-            $db -> Execute("UPDATE settings SET value='sword' WHERE setting='item'");
-        }
-        if ($_GET['step'] == 'armor') 
-        {
-            $smarty -> assign ("Item", ARMOR);
-            $db -> Execute("INSERT INTO equipment (owner, name, power, type, cost, zr, wt, minlev, maxwt, amount, magic, poison, szyb, twohand) VALUES(".$player -> id.",'".ARMOR."',2000,'A',1,-100,20000,1,20000,1,'Y',0,100,'N')");
-            $db -> Execute("UPDATE settings SET value='armor' WHERE setting='item'");
-        }
-        if ($_GET['step'] == 'staff') 
-        {
-            $smarty -> assign ("Item", I_STAFF);
-            $db -> Execute("INSERT INTO equipment (owner, name, power, type, cost, zr, wt, minlev, maxwt, amount, magic, poison, szyb, twohand) VALUES(".$player -> id.",'".I_STAFF."',500,'S',1,0,0,1,0,1,'Y',0,0,'N')");
-            $db -> Execute("UPDATE settings SET value='staff' WHERE setting='item'");
-        }
-        if ($_GET['step'] == 'cape') 
-        {
-            $smarty -> assign ("Item", CAPE);
-            $db -> Execute("INSERT INTO equipment (owner, name, power, type, cost, zr, wt, minlev, maxwt, amount, magic, poison, szyb, twohand) VALUES(".$player -> id.",'".CAPE."',500,'Z',1,0,0,1,0,1,'Y',0,0,'N')");
-            $db -> Execute("UPDATE settings SET value='cape' WHERE setting='item'");
-        }
         $db -> Execute("UPDATE players SET miejsce='Altara', rank='Bohater' WHERE id=".$player -> id);
-        $db -> Execute("UPDATE settings SET value=".$player -> id." WHERE setting='player'");
-	$strHero = $arrTags[$player->tribe][0].' '.$player->user.' '.$arrTags[$player->tribe][1];
-        $db -> Execute("INSERT INTO halloffame (heroid, oldname, herorace, newid) VALUES(".$player -> id.", '".$strHero."', '".$player -> race." ".$player -> clas."', ".$player -> id.")");
-        $db -> Execute("INSERT INTO updates (starter, title, updates, lang) VALUES('(Herold)','".U_TITLE."','".U_TEXT.$gamename.U_TEXT2.$gamename.U_TEXT3.$newdate.U_TEXT4.$strHero.U_TEXT5.$player -> id.U_TEXT6."','".$player -> lang."')");
         $smarty -> assign(array("Steptext" => STEP_TEXT,
                                 "Tgo" => T_GO,
                                 "Ahere" => A_HERE));
