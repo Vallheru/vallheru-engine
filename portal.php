@@ -78,12 +78,12 @@ if (isset ($_GET['action1']) && $_GET['action1'] == 'fight' && $player -> hp > 0
         $smarty -> assign ("Message", START_FIGHT);
         $smarty -> display ('error1.tpl');
         $enemy = array ('name' => MONSTER_NAME, 
-                        'strength' => 15, 
-                        'agility' => 15, 
-                        'hp' => 50, 
+                        'strength' => 1500, 
+                        'agility' => 1500, 
+                        'hp' => 50000, 
                         'level' => 1, 
-                        'endurance' => 15, 
-                        'speed' => 15,
+                        'endurance' => 1500, 
+                        'speed' => 1500,
 			'lootnames' => array(),
 			'lootchance' => array(),
 			'exp1' => 0,
@@ -131,7 +131,7 @@ if (isset ($_GET['action1']) && $_GET['action1'] == 'fight' && $player -> hp > 0
     }
     if (isset ($_GET['step'])) 
     {
-        $db -> Execute("UPDATE players SET miejsce='Altara', rank='Bohater' WHERE id=".$player -> id);
+        $db -> Execute("UPDATE players SET miejsce='Altara' WHERE id=".$player -> id);
         $smarty -> assign(array("Steptext" => STEP_TEXT,
                                 "Tgo" => T_GO,
                                 "Ahere" => A_HERE));

@@ -1,5 +1,7 @@
 2012-06-04  Bartek thindil Jasicki  <thindil@vallheru.net>
 
+	* BUG,portal.php: 
+	fixed some bugs with guardian
 	* FEATURE,templates/portal.tpl, templates/layout1/portal.tpl, portal.php, languages/pl/portal.php:
 	changed guardian
 
