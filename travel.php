@@ -115,7 +115,7 @@ if (isset($_GET['action']))
                             "Aback" => A_BACK));
 }
 
-if (isset ($_GET['akcja']) && $_GET['akcja'] == 'tak' && $player->location == 'Altara' && $player->maps >= 20 $player->immunited == 'N') 
+if (isset ($_GET['akcja']) && $_GET['akcja'] == 'tak' && $player->location == 'Altara' && $player->maps >= 20 && $player->immunited == 'N') 
 {
     $db -> Execute("UPDATE players SET miejsce='Portal' WHERE id=".$player -> id);
     $smarty -> assign(array("Portal" => "Y",
