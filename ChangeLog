@@ -1,5 +1,7 @@
 2012-06-05  Bartek thindil Jasicki  <thindil@vallheru.net>
 
+	* BUG,mission.php: 
+	fixed monster resistances
 	* BUG,travel.php: 
 	fixed link to portal
 	* BUG,includes/funkcje.php:

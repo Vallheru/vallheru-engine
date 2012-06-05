@@ -6,8 +6,8 @@
  *   @name                 : mission.php                            
  *   @copyright            : (C) 2012 Vallheru Team based on Gamers-Fusion ver 2.5
  *   @author               : thindil <thindil@vallheru.net>
- *   @version              : 1.5
- *   @since                : 18.05.2012
+ *   @version              : 1.6
+ *   @since                : 05.06.2012
  *
  */
 
@@ -142,7 +142,7 @@ function battle()
 	{
 	  $arrResistance = array($arrElements[$intKey], 'medium');
 	}
-      else
+      elseif ($intChance > 96)
 	{
 	  $arrResistance = array($arrElements[$intKey], 'strong');
 	}
