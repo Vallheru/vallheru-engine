@@ -7,7 +7,7 @@
  *   @copyright            : (C) 2004,2005,2006,2007,2011,2012 Vallheru Team based on Gamers-Fusion ver 2.5
  *   @author               : thindil <thindil@vallheru.net>
  *   @version              : 1.6
- *   @since                : 30.05.2012
+ *   @since                : 05.06.2012
  *
  */
 
@@ -256,7 +256,7 @@ function loststat($lostid, $values, $winid, $winuser, $starter, $antidote, $winl
 	  }
 	else
 	  {
-	    $db -> Execute("INSERT INTO log (`owner`, `log`, `czas`, `type`) VALUES(".$lostid.",'".$attacktext." ".YOU_LOSE." <b><a href=view.php?view=".$winid.">".$winuser."</a> ".ID.":".$winid."</b>. Na szczęście udało ci się tym razem, oszukać śmierć.', ".$strDate.", 'B')") or die(E_LOG);
+	    $db -> Execute("INSERT INTO log (`owner`, `log`, `czas`, `type`) VALUES(".$lostid.",'".$attacktext." ".YOU_LOSE." <b><a href=view.php?view=".$winid.">".$winuser."</a> ".ID.":".$winid."</b>. Na szczęście udało ci się tym razem oszukać śmierć.', ".$strDate.", 'B')") or die(E_LOG);
 	    $_SESSION['ressurect'] = 'Y';
 	  }
       } 
@@ -277,7 +277,7 @@ function loststat($lostid, $values, $winid, $winuser, $starter, $antidote, $winl
 	  }
 	else
 	  {
-	    print "<br /><b>".B_RESULT." <b>".$_POST['razy']." ".$winuser."</b>. Na szczęście udało ci się tym razem, oszukać śmierć.";
+	    print "<br /><b>".B_RESULT." <b>".$_POST['razy']." ".$winuser."</b>. Na szczęście udało ci się tym razem oszukać śmierć.";
 	    $_SESSION['ressurect'] = 'Y';
 	  }
       }

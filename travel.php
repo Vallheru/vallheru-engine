@@ -7,7 +7,7 @@
  *   @copyright            : (C) 2004,2005,2006,2011,2012 Vallheru Team based on Gamers-Fusion ver 2.5
  *   @author               : thindil <thindil@vallheru.net>
  *   @version              : 1.6
- *   @since                : 30.05.2012
+ *   @since                : 05.06.2012
  *
  */
  
@@ -50,11 +50,9 @@ if ($player -> location == 'Lochy')
 $smarty -> assign(array("Portal" => '', 
     "Maps" => ''));
 
-$objItem = $db -> Execute("SELECT value FROM settings WHERE setting='item'");
-
 if (!isset ($_GET['akcja']) && $player -> location == 'Altara' && !isset($_GET['action'])) 
 {
-    if ($player->maps >= 20  &&  !$objItem->fields['value'] && $player->rank != 'Bohater' && $player->immunited == 'N') 
+    if ($player->maps >= 20  && $player->immunited == 'N') 
     {
         $smarty -> assign(array("Maps" => 1,
                                 "Portal1" => PORTAL1,
@@ -117,20 +115,18 @@ if (isset($_GET['action']))
                             "Aback" => A_BACK));
 }
 
-if (isset ($_GET['akcja']) && $_GET['akcja'] == 'tak' && $player->location == 'Altara' && !$objItem->fields['value'] && $player->maps >= 20 && $player->rank != 'Bohater' && $player->immunited == 'N') 
+if (isset ($_GET['akcja']) && $_GET['akcja'] == 'tak' && $player->location == 'Altara' && $player->maps >= 20 $player->immunited == 'N') 
 {
     $db -> Execute("UPDATE players SET miejsce='Portal' WHERE id=".$player -> id);
     $smarty -> assign(array("Portal" => "Y",
                             "Portal2" => PORTAL2));
 }
 
-if (isset ($_GET['akcja']) && $_GET['akcja'] == 'nie' && $player->location == 'Altara' && !$objItem->fields['value']  && $player->maps >= 20 && $player->rank != 'Bohater' && $player->immunited == 'N') 
+if (isset ($_GET['akcja']) && $_GET['akcja'] == 'nie' && $player->location == 'Altara' && $player->maps >= 20 && $player->immunited == 'N') 
 {
     $smarty -> assign(array("Portal" => "N",
                             "Portal3" => PORTAL3));
 }
-
-$objItem -> Close();
 
 /**
  * Fight with bandits

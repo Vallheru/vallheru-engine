@@ -1,3 +1,10 @@
+2012-06-05  Bartek thindil Jasicki  <thindil@vallheru.net>
+
+	* BUG,travel.php: 
+	fixed link to portal
+	* BUG,includes/funkcje.php:
+	fixed typo
+
 2012-06-04  Bartek thindil Jasicki  <thindil@vallheru.net>
 
 	* BUG,portal.php: 
