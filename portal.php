@@ -7,7 +7,7 @@
  *   @copyright            : (C) 2004,2005,2006,2011,2012 Vallheru Team based on Gamers-Fusion ver 2.5
  *   @author               : thindil <thindil@vallheru.net>
  *   @version              : 1.6
- *   @since                : 04.06.2012
+ *   @since                : 06.06.2012
  *
  */
  
@@ -107,7 +107,6 @@ if (isset ($_GET['action1']) && $_GET['action1'] == 'fight' && $player -> hp > 0
             turnfight (1000000, 1000000, $_POST['action'], 'portal.php?action1=fight');
         }
         $myhp = $db -> Execute("SELECT `hp`, `fight`, `miejsce` FROM `players` WHERE `id`=".$player -> id);
-	echo $myhp->fields['fight'];
         $item = $db -> Execute("SELECT value FROM settings WHERE setting='item'");
         if ($myhp -> fields['hp'] <= 0 || isset($_SESSION['ressurect']) || $myhp->fields['miejsce'] == 'Altara') 
         {

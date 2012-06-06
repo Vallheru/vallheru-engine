@@ -1,3 +1,8 @@
+2012-06-06  Bartek thindil Jasicki  <thindil@vallheru.net>
+
+	* BUG,portal.php:
+	removed testing code
+
 2012-06-05  Bartek thindil Jasicki  <thindil@vallheru.net>
 
 	* BUG,mission.php: 
