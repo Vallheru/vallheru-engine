@@ -7,7 +7,7 @@
  *   @copyright            : (C) 2004,2005,2006,2011,2012 Vallheru Team based on Gamers-Fusion ver 2.5
  *   @author               : thindil <thindil@vallheru.net>
  *   @version              : 1.6
- *   @since                : 29.05.2012
+ *   @since                : 06.06.2012
  *
  */
 
@@ -121,7 +121,7 @@ if (isset($_GET['step']) && $_GET['step'] == 'house')
         {
             error(NO_HERB);
         }
-        $intAmountenergy = 0.2 * $_POST['amount'];
+        $intAmountenergy = 0.5 * $_POST['amount'];
         if ($intAmountenergy > $player -> energy)
         {
             error(NO_ENERGY);
@@ -481,7 +481,7 @@ if (isset($_GET['step']) && $_GET['step'] == 'plantation')
                 {
                     error(YOU_DEAD);
                 }
-                $intEnergy = $_POST['amount'] * 0.2;
+                $intEnergy = $_POST['amount'] * 1.5;
                 if ($intEnergy > $player -> energy)
                 {
                     error(NO_ENERGY);
@@ -499,10 +499,10 @@ if (isset($_GET['step']) && $_GET['step'] == 'plantation')
 		$player->curstats(array(), TRUE);
 		$player->curskills(array('herbalist'), TRUE, TRUE);
 
-		$intFactor = 1 + ($player->herbalist / 20);
-		if ($intFactor > 10)
+		$intFactor = ceil($player->herbalist / 10);
+		if ($intFactor > 50)
 		  {
-		    $intFactor = 10;
+		    $intFactor = 50;
 		  }
                 $intAmount = floor((($arrAge[$intKey2] * $_POST['amount']) / $arrHerbmodif[$intKey]) * $intFactor);
                 $intAmount = floor($intAmount + ($intAmount * $intRoll));
@@ -512,12 +512,12 @@ if (isset($_GET['step']) && $_GET['step'] == 'plantation')
                 }
 		if ($objHerb -> fields['age'] > 3)
 		  {
-		    $fltAbility = $intAmount * 0.01;
+		    $fltAbility = $intAmount * 0.001;
 		    $intExp = $intAmount * 2;
 		  }
 		else
 		  {
-		    $fltAbility = 0.01;
+		    $fltAbility = 0.001;
 		    $intExp = 0;
 		  }
 		if ($player->clas == 'Rzemieślnik') 
