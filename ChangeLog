@@ -1,5 +1,7 @@
 2012-06-06  Bartek thindil Jasicki  <thindil@vallheru.net>
 
+	* BUG,class/quests_class.php: 
+	fixed bug with lang variable
 	* UPDATE,farm.php: 
 	changed amount of gathered herbs, needed energy and gained skill
 	* BUG,portal.php:
