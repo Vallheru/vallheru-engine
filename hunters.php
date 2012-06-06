@@ -142,17 +142,26 @@ elseif ($_GET['step'] == 'table')
       if ($arrQuest[0] == 'I')
 	{
 	  $objItem = $db->Execute("SELECT `name`, `cost` FROM `equipment` WHERE `id`=".$arrQuest[1]);
+	  $arrMaterial = array('z miedzi', 'z brązu', 'z mosiądzu', 'z żelaza', 'ze stali');
+	  $objItem->fields['name'] = str_replace('z miedzi', $arrMaterial[$arrQuest[3]], $objItem->fields['name']);
+	  $arrBonus = array(1, 1.05, 1.1, 1.15, 1.2);
+	  $fltBonus = $arrBonus[$arrQuest[3]];
 	}
       elseif ($arrQuest[0] == 'B')
 	{
 	  $objItem = $db->Execute("SELECT `name`, `cost` FROM `bows` WHERE `id`=".$arrQuest[1]);
+	  $arrMaterial = array('z leszczyny', 'z cisu', 'z wiązu', 'wzmocniony', 'kompozytowy');
+	  $objItem->fields['name'] = str_replace('z leszczyny', $arrMaterial[$arrQuest[3]], $objItem->fields['name']);
+	  $arrBonus = array(1, 1.05, 1.1, 1.15, 1.2);
+	  $fltBonus = $arrBonus[$arrQuest[3]];
 	}
       else
 	{
 	  $objItem = $db->Execute("SELECT `name`, `power` FROM `potions` WHERE `id`=".$arrQuest[1]);
 	  $objItem->fields['cost'] = $objItem->fields['power'] * 3;
+	  $fltBonus = 1;
 	}
-      $strQuest .= '<i>Gildia Łowców poszukuje kogoś, kto dostarczy do gildii zapasy. Szczegóły zlecenia:<br />Przedmiot: '.$objItem->fields['name'].'<br />Ilość: '.$arrQuest[2].'<br />Nagroda: '.(ceil($objItem->fields['cost'] * 1.25 * $arrQuest[2])).' sztuk złota</i>';
+      $strQuest .= '<i>Gildia Łowców poszukuje kogoś, kto dostarczy do gildii zapasy. Szczegóły zlecenia:<br />Przedmiot: '.$objItem->fields['name'].'<br />Ilość: '.$arrQuest[2].'<br />Nagroda: '.(ceil($objItem->fields['cost'] * $fltBonus * $arrQuest[2])).' sztuk złota</i>';
       $objItem->Close();
       break;
     case 'L':
@@ -279,15 +288,24 @@ elseif ($_GET['step'] == 'quest')
       if ($arrQuest[0] == 'I')
 	{
 	  $objItem = $db->Execute("SELECT `name`, `cost` FROM `equipment` WHERE `id`=".$arrQuest[1]);
+	  $arrMaterial = array('z miedzi', 'z brązu', 'z mosiądzu', 'z żelaza', 'ze stali');
+	  $objItem->fields['name'] = str_replace('z miedzi', $arrMaterial[$arrQuest[3]], $objItem->fields['name']);
+	  $arrBonus = array(1, 1.05, 1.1, 1.15, 1.2);
+	  $fltBonus = $arrBonus[$arrQuest[3]];
 	}
       elseif ($arrQuest[0] == 'B')
 	{
 	  $objItem = $db->Execute("SELECT `name`, `cost` FROM `bows` WHERE `id`=".$arrQuest[1]);
+	  $arrMaterial = array('z leszczyny', 'z cisu', 'z wiązu', 'wzmocniony', 'kompozytowy');
+	  $objItem->fields['name'] = str_replace('z leszczyny', $arrMaterial[$arrQuest[3]], $objItem->fields['name']);
+	  $arrBonus = array(1, 1.05, 1.1, 1.15, 1.2);
+	  $fltBonus = $arrBonus[$arrQuest[3]];
 	}
       else
 	{
 	  $objItem = $db->Execute("SELECT `name`, `power` FROM `potions` WHERE `id`=".$arrQuest[1]);
 	  $objItem->fields['cost'] = $objItem->fields['power'] * 3;
+	  $fltBonus = 1;
 	}
       if ($arrQuest[0] != 'P')
 	{
@@ -327,7 +345,7 @@ elseif ($_GET['step'] == 'quest')
 	      $db->Execute("UPDATE `potions` SET `amount`=`amount`-".$arrQuest[2]." WHERE `id`=".$objItem2->fields['id']);
 	    }
 	}
-      $intGold = ceil($objItem->fields['cost'] * 1.25 * $arrQuest[2]);
+      $intGold = ceil($objItem->fields['cost'] * $fltBonus * $arrQuest[2]);
       $objItem->Close();
       $objItem2->Close();
       $strMessage = 'Dziękujemy za dostarczenie zapasów do Gildii.';
@@ -402,14 +420,17 @@ elseif ($_GET['step'] == 'quest')
 	      if ($strType == 'I')
 		{
 		  $objItems = $db->Execute("SELECT `id` FROM `equipment` WHERE `owner`=0");
+		  $intKey2 = rand(0, 4);
 		}
 	      elseif ($strType == 'B')
 		{
 		  $objItems = $db->Execute("SELECT `id` FROM `bows` WHERE `type`='B'");
+		  $intKey2 = rand(0, 4);
 		}
 	      else
 		{
 		  $objItems = $db->Execute("SELECT `id` FROM `potions` WHERE `owner`=0");
+		  $intKey2 = 0;
 		}
 	      $arrItems = array();
 	      while (!$objItems->EOF)
@@ -421,7 +442,7 @@ elseif ($_GET['step'] == 'quest')
 	      $intKey = array_rand($arrItems);
 	      $intId = $arrItems[$intKey];
 	      $intAmount = rand(1, 10);
-	      $strQuest = $strType.';'.$intId.';'.$intAmount;
+	      $strQuest = $strType.';'.$intId.';'.$intAmount.';'.$intKey2;
 	      break;
 	    case 'L':
 	      $objMonsters = $db->Execute("SELECT `id` FROM `monsters` WHERE `location`='".$player->location."' AND `lootnames`!= ''");

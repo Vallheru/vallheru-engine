@@ -1,5 +1,7 @@
 2012-06-06  Bartek thindil Jasicki  <thindil@vallheru.net>
 
+	* FEATURE,includes/resets.php, hunters.php: 
+	changed reward for quests with items, added more items to quests
 	* BUG,class/quests_class.php: 
 	fixed bug with lang variable
 	* UPDATE,farm.php: 

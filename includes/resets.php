@@ -6,8 +6,8 @@
  *   @name                 : resets.php                            
  *   @copyright            : (C) 2004,2005,2006,2007,2011,2012 Vallheru Team based on Gamers-Fusion ver 2.5
  *   @author               : thindil <thindil@vallheru.net>
- *   @version              : 1.5
- *   @since                : 14.05.2012
+ *   @version              : 1.6
+ *   @since                : 06.06.2012
  *
  */
 
@@ -217,7 +217,8 @@ function smallreset($blnSmall = FALSE)
     $arrQtypes = array('F', 'I', 'L', 'B', 'P');
     foreach (array('altara', 'ardulith') as $strCity)
       {
-	$strType = $arrQtypes[rand(0, 4)];
+	//$strType = $arrQtypes[rand(0, 4)];
+	$strType = 'I';
 	switch ($strType)
 	  {
 	  case 'F':
@@ -240,14 +241,17 @@ function smallreset($blnSmall = FALSE)
 	    if ($strType == 'I')
 	      {
 		$objItems = $db->Execute("SELECT `id` FROM `equipment` WHERE `owner`=0");
+		$intKey2 = rand(0, 4);
 	      }
 	    elseif ($strType == 'B')
 	      {
 		$objItems = $db->Execute("SELECT `id` FROM `bows` WHERE `type`='B'");
+		$intKey2 = rand(0, 4);
 	      }
 	    else
 	      {
 		$objItems = $db->Execute("SELECT `id` FROM `potions` WHERE `owner`=0");
+		$intKey2 = 0;
 	      }
 	    $arrItems = array();
 	    while (!$objItems->EOF)
@@ -259,7 +263,7 @@ function smallreset($blnSmall = FALSE)
 	    $intKey = array_rand($arrItems);
 	    $intId = $arrItems[$intKey];
 	    $intAmount = rand(1, 10);
-	    $strQuest = $strType.';'.$intId.';'.$intAmount;
+	    $strQuest = $strType.';'.$intId.';'.$intAmount.';'.$intKey2;
 	    break;
 	  case 'L':
 	    $objMonsters = $db->Execute("SELECT `id` FROM `monsters` WHERE `location`='".ucfirst($strCity)."' AND `lootnames`!= ''");
