@@ -1,5 +1,7 @@
 2012-06-09  Bartek thindil Jasicki  <thindil@vallheru.net>
 
+	* BUG,czary.php: 
+	fixed typo
 	* UPDATE,portal.php:
 	changed guardian stats
 

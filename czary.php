@@ -7,7 +7,7 @@
  *   @copyright            : (C) 2004,2005,2006,2011,2012 Vallheru Team based on Gamers-Fusion ver 2.5
  *   @author               : thindil <thindil@vallheru.net>
  *   @version              : 1.5
- *   @since                : 26.04.2012
+ *   @since                : 09.06.2012
  *
  */
 
@@ -439,7 +439,7 @@ $czaryo = $db -> Execute("SELECT * FROM `czary` WHERE `gracz`=".$player -> id." 
 $arrDspells = array("Ziemia" => array(), "Woda" => array(), "Powietrze" => array(), "Ogień" => array());
 while (!$czaryo -> EOF) 
 {
-    $strKey = $arrElements[$czary->fields['element']];
+    $strKey = $arrElements[$czaryo->fields['element']];
     $arrDspells[$strKey][] = array("id" => $czaryo->fields['id'],
 				   "name" => $czaryo->fields['nazwa'],
 				   "def" => $czaryo->fields['obr']);
