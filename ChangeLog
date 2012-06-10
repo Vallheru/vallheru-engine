@@ -1,5 +1,7 @@
 2012-06-10  Bartek thindil Jasicki  <thindil@vallheru.net>
 
+	* BUG,includes/funkcje.php, includes/functions.php: 
+	fixed bug with lang variable
 	* FEATURE,install/db/update.sql, templates/layout1/account.tpl, templates/account.tpl, templates/layout1/chat.tpl, templates/chat.tpl, chat.php,
 	chatmsgs.php: 
 	added option to set old chat style

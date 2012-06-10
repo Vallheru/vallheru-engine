@@ -7,7 +7,7 @@
  *   @copyright            : (C) 2004,2005,2006,2007,2011,2012 Vallheru Team based on Gamers-Fusion ver 2.5
  *   @author               : thindil <thindil@vallheru.net>
  *   @version              : 1.6
- *   @since                : 05.06.2012
+ *   @since                : 10.06.2012
  *
  */
 
@@ -847,6 +847,7 @@ function fightmonster($enemy, $expgain, $goldgain, $times)
     global $db;
     global $number;
     global $arrTags;
+    global $lang;
 
     $arrEquip = $player -> equipment();
     $mczar = $db -> Execute("SELECT * FROM `czary` WHERE `status`='E' AND `gracz`=".$player -> id." AND `typ`='B'");
