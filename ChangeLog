@@ -1,5 +1,7 @@
 2012-06-10  Bartek thindil Jasicki  <thindil@vallheru.net>
 
+	* BUG,rmarket.php: 
+	fixed notice
 	* BUG,includes/head.php: 
 	fixed bug with show players in chat
 	* BUG,includes/funkcje.php, includes/functions.php: 

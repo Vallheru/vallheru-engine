@@ -8,7 +8,7 @@
  *   @author               : thindil <thindil@vallheru.net>
  *   @author               : eyescream <tduda@users.sourceforge.net>
  *   @version              : 1.6
- *   @since                : 25.05.2012
+ *   @since                : 10.06.2012
  *
  */
 
@@ -36,7 +36,7 @@ require_once("includes/head.php");
 /**
 * Get the localization for game
 */
-require_once("languages/".$player -> lang."/rmarket.php");
+require_once("languages/".$lang."/rmarket.php");
 
 if ($player -> location != 'Altara' && $player -> location != 'Ardulith') 
 {
