@@ -74,6 +74,7 @@ if (isset($_GET['buy']))
 	    $db -> Execute("INSERT INTO czary (`gracz`, `nazwa`, `cena`, `poziom`, `typ`, `obr`, `status`, `element`) VALUES(".$player -> id.",'".$czary -> fields['nazwa']."',".$czary -> fields['cena'].",".$czary -> fields['poziom'].",'".$czary -> fields['typ']."',".$czary -> fields['obr'].",'U', '".$czary->fields['element']."')");
 	    message("success", YOU_PAY.$czary -> fields['cena'].AND_BUY.$czary -> fields['nazwa']."</b>.");
 	    $player->credits -= $czary -> fields['cena'];
+	    $db->Execute("UPDATE `players` SET `credits`=`credits`-".$czary->fields['cena']." WHERE `id`=".$player->id);
 	  }
 	$test -> Close();
         $czary -> Close();
@@ -102,6 +103,7 @@ if (isset($_GET['buy']))
 	    $newcost = ceil($items -> fields['cost'] * 0.75);
 	    $db -> Execute("INSERT INTO equipment (owner, name, cost, minlev, type, power, status) VALUES(".$player -> id.",'".$items -> fields['name']."',".$newcost.",".$items -> fields['minlev'].",'".$items -> fields['type']."',".$items -> fields['power'].",'U')");
 	    message("success", YOU_PAY.$items -> fields['cost'].AND_BUY2.$items -> fields['name']."</b>.");
+	    $db->Execute("UPDATE `players` SET `credits`=`credits`-".$item->fields['cost']." WHERE `id`=".$player->id);
 	    $player->credits -= $items -> fields['cost'];
 	  }
         $items -> Close();

@@ -1,3 +1,8 @@
+2012-06-10  Bartek thindil Jasicki  <thindil@vallheru.net>
+
+	* BUG,wieza.php, class/player_class.php: 
+	fixed bug with buying items
+	
 2012-06-09  Bartek thindil Jasicki  <thindil@vallheru.net>
 
 	* BUG,czary.php: 

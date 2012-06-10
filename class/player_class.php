@@ -443,6 +443,6 @@ class Player
       global $db;
       global $ctime;
 
-      $db->Execute("UPDATE `players` SET `credits`=".$this->credits.", `settings`='".$this->tostring($this->settings)."', `ip`='".$this->ip."' WHERE `id`=".$this->id) or die("here");
+      $db->Execute("UPDATE `players` SET `settings`='".$this->tostring($this->settings)."', `ip`='".$this->ip."' WHERE `id`=".$this->id) or die("here");
     }
 }
