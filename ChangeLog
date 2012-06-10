@@ -1,5 +1,7 @@
 2012-06-10  Bartek thindil Jasicki  <thindil@vallheru.net>
 
+	* BUG,class/quests_class.php: 
+	fixed lang variable
 	* BUG,wieza.php, class/player_class.php: 
 	fixed bug with buying items
 	
