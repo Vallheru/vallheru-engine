@@ -1,4 +1,4 @@
-ALTER TABLE  `players` ADD  `settings` VARCHAR( 1024 ) NOT NULL DEFAULT  'style:light.css;graphic:;graphbar:N;forumcats:All;autodrink:N;rinvites:Y;battlelog:N;'
+ALTER TABLE  `players` ADD  `settings` VARCHAR( 1024 ) NOT NULL DEFAULT  'style:light.css;graphic:;graphbar:N;forumcats:All;autodrink:N;rinvites:Y;battlelog:N;oldchat:N;'
 ALTER TABLE `players`
   DROP `style`,
   DROP `graphic`,

@@ -381,6 +381,15 @@ if (isset($_GET['view']))
 	  {
 	    $strChecked10 = '';
 	  }
+	//Old chat design
+	if (!isset($player->settings['oldchat']) || $player->settings['oldchat'] == 'N')
+	  {
+	    $strChecked11 = '';
+	  }
+	else
+	  {
+	    $strChecked11 = 'checked="checked"';
+	  }
 	$smarty -> assign(array("Toptions" => T_OPTIONS,
 				"Tbattlelog" => T_BATTLELOG,
 				"Tgraphbar" => T_GRAPHBAR,
@@ -393,6 +402,7 @@ if (isset($_GET['view']))
 				"Tautomana" => "Do regeneracji punktów magii",
 				"Tautoall" => "Do regeneracji punktów życia oraz magii",
 				"Trinvites" => "Zablokuj zaproszenia do karczmy",
+				"Toldchat" => "Stary układ karczmy",
 				"Checked" => $strChecked,
 				"Checked3" => $strChecked3,
 				"Checked4" => $strChecked4,
@@ -402,7 +412,8 @@ if (isset($_GET['view']))
 				"Checked8" => $strChecked8,
 				"Checked9" => $strChecked9,
 				"Checked2" => $strChecked2,
-				"Checked10" => $strChecked10));
+				"Checked10" => $strChecked10,
+				"Checked11" => $strChecked11));
 	if (isset($_GET['step']) && $_GET['step'] == 'options')
 	  {
 	    if (isset($_POST['battlelog']))
@@ -450,6 +461,14 @@ if (isset($_GET['view']))
 	    else
 	      {
 		$player->settings['rinvites'] = 'Y';
+	      }
+	    if (isset($_POST['oldchat']))
+	      {
+		$player->settings['oldchat'] = 'Y';
+	      }
+	    else
+	      {
+		$player->settings['oldchat'] = 'N';
 	      }
 	    $smarty -> assign("Message", A_SAVED);
 	  }

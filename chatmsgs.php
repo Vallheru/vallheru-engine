@@ -7,7 +7,7 @@
  *   @copyright            : (C) 2004,2005,2006,2011,2012 Vallheru Team based on Gamers-Fusion ver 2.5
  *   @author               : thindil <thindil@vallheru.net>
  *   @version              : 1.6
- *   @since                : 23.05.2012
+ *   @since                : 10.06.2012
  *
  */
 
@@ -125,11 +125,14 @@ while (!$chat -> EOF)
     $chat -> MoveNext();
   }
 $chat -> Close();
-$arrtext = array_reverse($arrtext);
-$arrauthor = array_reverse($arrauthor);
-$arrsenderid = array_reverse($arrsenderid);
-$arrSdate = array_reverse($arrSdate);
-$arrTextid = array_reverse($arrTextid);
+if (!isset($arrSettings['oldchat']) || $arrSettings['oldchat'] == 'N')
+  {
+    $arrtext = array_reverse($arrtext);
+    $arrauthor = array_reverse($arrauthor);
+    $arrsenderid = array_reverse($arrsenderid);
+    $arrSdate = array_reverse($arrSdate);
+    $arrTextid = array_reverse($arrTextid);
+  }
 
 
 $ctime = time();

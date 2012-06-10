@@ -1,8 +1,6 @@
 <script src="js/chat.js"></script>
-<u><b>{$Inn}</b></u><br /><br />
 
-<div id="chatmsgs"></div>
-
+{if $Oldchat == 'Y'}
 <div align="center">
     <form method="post" action="chat.php" name="chat">
         <input id="bold" type="button" value="{$Abold}" onClick="formatText(this.id)" />
@@ -14,6 +12,25 @@
     </form>
 </div>
 <a name="thebottom"></a>
+{/if}
+
+<u><b>{$Inn}</b></u><br /><br />
+
+<div id="chatmsgs"></div>
+
+{if $Oldchat == 'N'}
+<div align="center">
+    <form method="post" action="chat.php" name="chat">
+        <input id="bold" type="button" value="{$Abold}" onClick="formatText(this.id)" />
+	<input id="italic" type="button" value="{$Aitalic}" onClick="formatText(this.id)" />
+	<input id="underline" type="button" value="{$Aunderline}" onClick="formatText(this.id)" />
+	<input id="emote" type="button" value="{$Aemote}" onClick="formatText(this.id)" /><br />
+	<textarea name="msg" rows="5" cols="55" onKeyDown="javascript:return sendMsg(event);"></textarea><br />
+	<input type="submit" value="{$Asend}" />
+    </form>
+</div>
+<a name="thebottom"></a>
+{/if}
 
 <div align="center"><br /><br /><br />
 <form method="post" action="chat.php?room">

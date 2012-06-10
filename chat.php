@@ -7,8 +7,8 @@
  *   @copyright            : (C) 2004,2005,2006,2011,2012 Vallheru Team based on Gamers-Fusion ver 2.5
  *   @author               : thindil <thindil@vallheru.net>
  *   @author               : eyescream <tduda@users.sourceforge.net>
- *   @version              : 1.5
- *   @since                : 27.04.2012
+ *   @version              : 1.6
+ *   @since                : 10.06.2012
  *
  */
 
@@ -326,6 +326,15 @@ if (in_array($player->rank, array('Admin', 'Karczmarka', 'Staff')))
 			    "Apanel" => "+ Kontrola karczmy"));
   }
 
+if (!isset($player->settings['oldchat']) || $player->settings['oldchat'] == 'N')
+  {
+    $strOldchat = 'N';
+  }
+else
+  {
+    $strOldchat = 'Y';
+  }
+
 $smarty -> assign (array("Arefresh" => A_REFRESH,
 			 'Arent' => 'Wynajmij',
 			 'Troom' => 'pokój na',
@@ -334,6 +343,7 @@ $smarty -> assign (array("Arefresh" => A_REFRESH,
                          "Asend" => A_SEND,
                          "Inn" => INN,
                          "Rank" => $player -> rank,
+			 "Oldchat" => $strOldchat,
 			 "Abold" => "Pogrubienie",
 			 "Aitalic" => "Kursywa",
 			 "Aunderline" => "Podkreślenie",
