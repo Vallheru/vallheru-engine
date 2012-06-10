@@ -4,10 +4,10 @@
  *   Activation account
  *
  *   @name                 : aktywacja.php                            
- *   @copyright            : (C) 2004,2005,2006,2011 Vallheru Team based on Gamers-Fusion ver 2.5
- *   @author               : thindil <thindil@users.sourceforge.net>
- *   @version              : 1.4
- *   @since                : 05.09.2011
+ *   @copyright            : (C) 2004,2005,2006,2011,2012 Vallheru Team based on Gamers-Fusion ver 2.5
+ *   @author               : thindil <thindil@vallheru.net>
+ *   @version              : 1.6
+ *   @since                : 10.06.2012
  *
  */
 
@@ -85,7 +85,7 @@ if (isset ($_GET['kod']))
     {
         if ($_GET['kod'] == $aktiv -> fields['aktyw']) 
         {
-            $db -> Execute("INSERT INTO `players` (`user`, `email`, `pass`, `refs`, `lang`, `ip`) VALUES('".$aktiv -> fields['user']."','".$aktiv -> fields['email']."','".$aktiv -> fields['pass']."',".$aktiv -> fields['refs'].",'".$aktiv -> fields['lang']."', '".$aktiv -> fields['ip']."')");
+            $db -> Execute("INSERT INTO `players` (`user`, `email`, `pass`, `refs`, `ip`) VALUES('".$aktiv -> fields['user']."','".$aktiv -> fields['email']."','".$aktiv -> fields['pass']."',".$aktiv -> fields['refs'].", '".$aktiv -> fields['ip']."')");
             $db -> Execute("DELETE FROM `aktywacja` WHERE `aktyw`=".$_GET['kod']);
             
             $time = date("H:i:s");

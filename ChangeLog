@@ -1,5 +1,7 @@
 2012-06-10  Bartek thindil Jasicki  <thindil@vallheru.net>
 
+	* BUG,aktywacja.php: 
+	fixed bug with language variable
 	* BUG,includes/battle.php: 
 	fixed bug with language variable
 	* BUG,rmarket.php: 
