@@ -7,7 +7,14 @@
     <b>{$Trace}:</b> {$Race}
     <b>{$Tclass}:</b> {$Clas}
     <b>{$Tdeity}:</b> {$Deity}
-    <b>{$Tgender}:</b> {$Gender}
+    <b>{$Tgender}:</b> {if $Gender == ""}
+        <form method="post" action="stats.php?action=gender" style="display:inline;">
+        <select name="gender"><option value="M">{$Genderm}</option>
+        <option value="F">{$Genderf}</option></select>
+        <input type="submit" value="{$Aselect}" /></form><br />
+    {else}
+        {$Gender}<br />
+    {/if}
     {section name=stats1 loop=$Tstats2}
         <b>{$Tstats2[stats1]}:</b> {$Stats[stats1]} {$Curstats[stats1]}
     {/section}
@@ -60,12 +67,6 @@
         </table>
 </td></tr>
 </table>
-{if $Action == "gender"}
-    <form method="post" action="stats.php?action=gender&amp;step=gender">
-    <select name="gender"><option value="M">{$Genderm}</option>
-    <option value="F">{$Genderf}</option></select><br />
-    <input type="submit" value="{$Aselect}" /></form>
-{/if}
 {if $Action == "newbie"}
     {$Newbieinfo}<br />
     <a href="stats.php?action=newbie&amp;disable">{$Ayes}</a><br />

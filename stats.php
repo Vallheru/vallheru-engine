@@ -8,7 +8,7 @@
  *   @author               : thindil <thindil@vallheru.net>
  *   @author               : mori <ziniquel@users.sourceforge.net>
  *   @version              : 1.6
- *   @since                : 25.05.2012
+ *   @since                : 11.06.2012
  *
  */
 
@@ -37,6 +37,27 @@ require_once("includes/head.php");
 * Get the localization for game
 */
 require_once("languages/".$lang."/stats.php");
+
+/**
+* Select gender
+*/
+if (isset ($_GET['action']) && $_GET['action'] == 'gender') 
+{
+    if ($player -> gender) 
+      {
+	message('error', YOU_HAVE);
+      }
+    if ((!isset($_POST['gender']))  || ($_POST['gender'] != 'M') && ($_POST['gender'] != 'F'))
+      {
+        message('error', NO_GENDER);
+      }
+    else
+      {
+	$db -> Execute("UPDATE `players` SET `gender`='".$_POST['gender']."' WHERE `id`=".$player -> id);
+	message('success', "Ustawiłeś płeć postaci.");
+	$player->gender = $_POST['gender'];
+      }
+}
 
 /**
 * Assign variables to template
@@ -79,7 +100,7 @@ if ($player -> clas == '')
 }
 if ($player -> gender == '') 
 {
-    $smarty -> assign ("Gender", "(<a href=\"stats.php?action=gender\">".A_SELECT."</a>)<br />");
+    $gender = '';
 } 
     else 
 {
@@ -91,8 +112,8 @@ if ($player -> gender == '')
     {
         $gender = GENDER_F;
     }
-    $smarty -> assign ("Gender", $gender."<br />");
 }
+$smarty -> assign ("Gender", $gender);
 if ($player -> deity == '') 
 {
     $smarty -> assign ("Deity", "(<a href=\"deity.php\">".A_SELECT."</a>)<br />");
@@ -278,7 +299,10 @@ $smarty -> assign(array("Stats" => $player->oldstats,
                         "Tjeweller" => T_JEWELLER,
 			"Tenergy" => "Energia",
 			"Tperception" => "Spostrzegawczość",
-			"Tmetallurgy" => "Hutnictwo"));
+			"Tmetallurgy" => "Hutnictwo",
+			"Genderm" => GENDER_M,
+			"Genderf" => GENDER_F,
+			"Aselect" => A_SELECT));
 
 if ($player->clas == "Złodziej") 
   {
@@ -306,29 +330,6 @@ if ($tribe -> fields['name'])
                             "Triberank" => ""));
 }
 $tribe -> Close();
-
-/**
-* Select gender
-*/
-if (isset ($_GET['action']) && $_GET['action'] == 'gender') 
-{
-    $smarty -> assign(array("Genderm" => GENDER_M,
-                            "Genderf" => GENDER_F,
-                            "Aselect" => A_SELECT));
-    if ($player -> gender) 
-    {
-        error (YOU_HAVE);
-    }
-    if (isset ($_GET['step']) && $_GET['step'] == 'gender') 
-      {
-	if ((!isset($_POST['gender']))  || ($_POST['gender'] != 'M') && ($_POST['gender'] != 'F'))
-	  {
-            error(NO_GENDER);
-	  }
-        $db -> Execute("UPDATE `players` SET `gender`='".$_POST['gender']."' WHERE `id`=".$player -> id);
-        error (YOU_SELECT);
-      }
-}
 
 /**
  * Disable newbie protection
