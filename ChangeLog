@@ -1,5 +1,7 @@
 2012-06-11  Bartek thindil Jasicki  <thindil@vallheru.net>
 
+	* BUG,includes/turnfight.php, includes/funkcje.php: 
+	fixed some notices
 	* BUG,install/resetall.php:
 	fixed bug with vallars info and roleplay profiles
 

@@ -7,7 +7,7 @@
  *   @copyright            : (C) 2004,2005,2006,2007,2011,2012 Vallheru Team based on Gamers-Fusion ver 2.5
  *   @author               : thindil <thindil@vallheru.net>
  *   @version              : 1.6
- *   @since                : 30.05.2012
+ *   @since                : 11.06.2012
  *
  */
  
@@ -144,17 +144,20 @@ function turnfight($expgain,$goldgain,$action,$addres)
     {
 	$myczarobr = ($player -> wisdom * $myczaro -> fields['obr']);
 	$fltBasedef = $myczarobr;
-	if ($myczaro->fields['element'] == $enemy['dmgtype'])
+	if ($enemy['dmgtype'] != 'none')
 	  {
-	    $myczarobr = $myczarobr * 2;
-	  }
-	$arrElements = array('water' => 'fire',
-			     'fire' => 'wind',
-			     'wind' => 'earth',
-			     'earth' => 'water');
-	if ($myczaro->fields['element']  == $arrElements[$enemy['dmgtype']])
-	  {
-	    $myczarobr = $myczarobr / 2;
+	    if ($myczaro->fields['element'] == $enemy['dmgtype'])
+	      {
+		$myczarobr = $myczarobr * 2;
+	      }
+	    $arrElements = array('water' => 'fire',
+				 'fire' => 'wind',
+				 'wind' => 'earth',
+				 'earth' => 'water');
+	    if ($myczaro->fields['element']  == $arrElements[$enemy['dmgtype']])
+	      {
+		$myczarobr = $myczarobr / 2;
+	      }
 	  }
 	if ($arrEquip[3][0])
 	  {

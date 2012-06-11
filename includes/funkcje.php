@@ -7,7 +7,7 @@
  *   @copyright            : (C) 2004,2005,2006,2007,2011,2012 Vallheru Team based on Gamers-Fusion ver 2.5
  *   @author               : thindil <thindil@vallheru.net>
  *   @version              : 1.6
- *   @since                : 10.06.2012
+ *   @since                : 11.06.2012
  *
  */
 
@@ -1089,17 +1089,20 @@ function fightmonster($enemy, $expgain, $goldgain, $times)
     {
         $myczarobr = ($player -> wisdom * $mczaro -> fields['obr']);
 	$fltBasedef = $myczarobr;
-	if ($mczaro->fields['element'] == $enemy['dmgtype'])
+	if ($enemy['dmgtype'] != 'none')
 	  {
-	    $myczarobr = $myczarobr * 2;
-	  }
-	$arrElements = array('water' => 'fire',
-			     'fire' => 'wind',
-			     'wind' => 'earth',
-			     'earth' => 'water');
-	if ($mczaro->fields['element']  == $arrElements[$enemy['dmgtype']])
-	  {
-	    $myczarobr = $myczarobr / 2;
+	    if ($mczaro->fields['element'] == $enemy['dmgtype'])
+	      {
+		$myczarobr = $myczarobr * 2;
+	      }
+	    $arrElements = array('water' => 'fire',
+				 'fire' => 'wind',
+				 'wind' => 'earth',
+				 'earth' => 'water');
+	    if ($mczaro->fields['element']  == $arrElements[$enemy['dmgtype']])
+	      {
+		$myczarobr = $myczarobr / 2;
+	      }
 	  }
 	if ($arrEquip[3][0])
 	  {
