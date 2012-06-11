@@ -7,7 +7,7 @@
  *   @copyright            : (C) 2004,2005,2006,2007,2011,2012 Vallheru Team based on Gamers-Fusion ver 2.5
  *   @author               : thindil <thindil@vallheru.net>
  *   @version              : 1.6
- *   @since                : 01.06.2012
+ *   @since                : 11.06.2012
  *
  */
 
@@ -103,7 +103,7 @@ if (isset($_GET['buy']))
 	    $newcost = ceil($items -> fields['cost'] * 0.75);
 	    $db -> Execute("INSERT INTO equipment (owner, name, cost, minlev, type, power, status) VALUES(".$player -> id.",'".$items -> fields['name']."',".$newcost.",".$items -> fields['minlev'].",'".$items -> fields['type']."',".$items -> fields['power'].",'U')");
 	    message("success", YOU_PAY.$items -> fields['cost'].AND_BUY2.$items -> fields['name']."</b>.");
-	    $db->Execute("UPDATE `players` SET `credits`=`credits`-".$item->fields['cost']." WHERE `id`=".$player->id);
+	    $db->Execute("UPDATE `players` SET `credits`=`credits`-".$items->fields['cost']." WHERE `id`=".$player->id);
 	    $player->credits -= $items -> fields['cost'];
 	  }
         $items -> Close();
