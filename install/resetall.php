@@ -6,8 +6,8 @@
  *   @name                 : resetall.php                            
  *   @copyright            : (C) 2004,2005,2006,2007,2011 Vallheru Team based on Gamers-Fusion ver 2.5
  *   @author               : thindil <thindil@vallheru.net>
- *   @version              : 1.5
- *   @since                : 19.12.2011
+ *   @version              : 1.6
+ *   @since                : 11.06.2012
  *
  */
 
@@ -107,7 +107,10 @@ $player = $db -> Execute("SELECT * FROM zapas");
 while (!$player -> EOF) 
 {
     $player -> fields['profile'] = addslashes($player -> fields['profile']);
-    $db -> Execute("INSERT INTO `players` (`user`, `email`, `pass`, `rank`, `age`, `logins`, `profile`, `avatar`, `vallars`) VALUES('".$player -> fields['user']."','".$player -> fields['email']."','".$player -> fields['pass']."','".$player -> fields['rank']."',".$player -> fields['age'].",".$player -> fields['logins'].",'".$player -> fields['profile']."','".$player -> fields['avatar']."', ".$player->fields['vallars'].")") or die($db -> ErrorMsg());
+    $player -> fields['roleplay'] = addslashes($player -> fields['roleplay']);
+    $player -> fields['shortrpg'] = addslashes($player -> fields['shortrpg']);
+    $player -> fields['ooc'] = addslashes($player -> fields['ooc']);
+    $db -> Execute("INSERT INTO `players` (`user`, `email`, `pass`, `rank`, `age`, `logins`, `profile`, `avatar`, `vallars`, `roleplay`, `shortrpg`, `ooc`) VALUES('".$player -> fields['user']."','".$player -> fields['email']."','".$player -> fields['pass']."','".$player -> fields['rank']."',".$player -> fields['age'].",".$player -> fields['logins'].",'".$player -> fields['profile']."','".$player -> fields['avatar']."', ".$player->fields['vallars'].", '".$player->fields['roleplay']."', '".$player->fields['shortrpg']."', '".$player->fields['ooc']."')") or die($db -> ErrorMsg());
     $player -> MoveNext();
 }
 $player -> Close();
@@ -176,6 +179,21 @@ while (!$objContact->EOF)
   }
 $objContact->Close();
 print "Contacts OK<br />";
+
+/**
+ * Update vallars informations
+ */
+$objVallars = $db->Execute("SELECT `owner` FROM `vallars`");
+while (!$objVallars->EOF)
+  {
+    $objOwner = $db->Execute("SELECT `user` FROM `zapas` WHERE `id`=".$objVallars->fields['owner']);
+    $objNewowner = $db->Execute("SELECT `id` FROM `players` WHERE `user`='".$objOwner->fields['user']."'");
+    $objOwner->Close();
+    $db->Execute("UPDATE `vallars` SET `owner`=".$objNewowner->fields['id']." WHERE `owner`=".$objVallars->fields['id']);
+    $objVallars->MoveNext();
+  }
+$objVallars->Close();
+print "Vallars info OK<br />";
 
 /**
 * Copy referrals
