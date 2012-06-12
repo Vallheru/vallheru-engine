@@ -1,3 +1,8 @@
+2012-06-12  Bartek thindil Jasicki  <thindil@vallheru.net>
+
+	* BUG,outpost.php:
+	fixed monsters stats
+
 2012-06-11  Bartek thindil Jasicki  <thindil@vallheru.net>
 
 	* UPDATE,templates/layout1/stats.tpl, templates/stats.tpl, stats.php: 

@@ -6,8 +6,8 @@
  *   @name                 : outpost.php                            
  *   @copyright            : (C) 2011,2012 Vallheru Team based on Gamers-Fusion ver 2.5
  *   @author               : thindil <thindil@vallheru.net>
- *   @version              : 1.5
- *   @since                : 20.03.2012
+ *   @version              : 1.6
+ *   @since                : 12.06.2012
  *
  */
 
@@ -80,7 +80,9 @@ function battle($intEnemy = 0)
 			 'exp2' => $arrbandit[4],
 			 "gold" => $arrbandit[5],
 			 "lootnames" => array(),
-			 "lootchances" => array());
+			 "lootchances" => array(),
+			 "resistance" => array('none', 'none'),
+			 "dmgtype" => 'none');
 	}
       else
 	{
@@ -103,7 +105,9 @@ function battle($intEnemy = 0)
 			 'exp2' => $expgain,
 			 'gold' => $goldgain,
 			 "lootnames" => explode(";", $objMonster->fields['lootnames']),
-			 "lootchances" => explode(";", $objMonster->fields['lootchances']));
+			 "lootchances" => explode(";", $objMonster->fields['lootchances']),
+			 "resistance" => explode(";", $objMonster->fields['resistance']),
+			 "dmgtype" => $objMonster->fields['dmgtype']);
 	}
       $_SESSION['enemy'] = $enemy;
     }
