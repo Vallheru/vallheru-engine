@@ -4,11 +4,11 @@
  *   Add awaiting news
  *
  *   @name                 : addtext.php                            
- *   @copyright            : (C) 2006,2011 Vallheru Team based on Gamers-Fusion ver 2.5
- *   @author               : thindil <thindil@tuxfamily.org>
+ *   @copyright            : (C) 2006,2011,2012 Vallheru Team based on Gamers-Fusion ver 2.5
+ *   @author               : thindil <thindil@vallheru.net>
  *   @author               : eyescream <tduda@users.sourceforge.net>
- *   @version              : 1.4
- *   @since                : 09.09.2011
+ *   @version              : 1.6
+ *   @since                : 12.06.2012
  *
  */
 
@@ -30,7 +30,7 @@
 //
 // $Id$
 
-$objText = $db -> Execute("SELECT `id`, `title`, `starter` FROM `news` WHERE `added`='N' AND `lang`='".$player -> lang."' OR `lang`='".$player -> seclang."'");
+$objText = $db -> Execute("SELECT `id`, `title`, `starter` FROM `news` WHERE `added`='N'");
 $arrId = array();
 $arrTitle = array();
 $arrAuthor = array();

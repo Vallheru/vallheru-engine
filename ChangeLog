@@ -1,5 +1,7 @@
 2012-06-12  Bartek thindil Jasicki  <thindil@vallheru.net>
 
+	* BUG,includes/admin/addtext.php: 
+	fixed adding news
 	* UPDATE,account.php: 
 	better handling avatar upload
 	* BUG,outpost.php:
