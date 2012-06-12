@@ -7,7 +7,7 @@
  *   @copyright            : (C) 2004,2005,2006,2007,2011,2012 Vallheru Team based on Gamers-Fusion ver 2.5
  *   @author               : thindil <thindil@vallheru.net>
  *   @version              : 1.6
- *   @since                : 10.06.2012
+ *   @since                : 12.06.2012
  *
  */
 
@@ -592,30 +592,51 @@ if (isset($_GET['view']))
 		  {
 		    error(NO_NAME);
 		  }
+		if (isset($_FILES['plik']['error']))
+		  {
+		    switch ($_FILES['plik']['error'])
+		      {
+		      case 1:
+		      case 2:
+			$strMessage = "Ten avatar zajmuje za dużo miejsca (maksymalnie 30kB)!";
+			break;
+		      case 3:
+			$strMessage = 'Niekompletny avatar. Widać coś było nie tak w trakcie przesyłania na serwer. Proszę, prześlij ponownie.';
+			break;
+		      case 4:
+			$strMessage = 'Nie wysłano jakiegokolwiek avatara.';
+			  break;
+		      default:
+			break;
+		      }
+		    if (isset($strMessage))
+		      {
+			error($strMessage);
+		      }
+		  }
 		$plik = $_FILES['plik']['tmp_name'];
 		$nazwa = $_FILES['plik']['name'];
 		$typ = $_FILES['plik']['type'];
-		$intSize = $_FILES['plik']['size'];
-		if ($intSize > 30720)
+		if ($_FILES['plik']['size'] > 30720)
 		  {
 		    error("Ten avatar zajmuje za dużo miejsca (maksymalnie 30kB)!");
 		  }
-		if ($typ != 'image/pjpeg' && $typ != 'image/jpeg' && $typ != 'image/gif' && $typ != 'image/png') 
-		  {
-		    error (BAD_TYPE);
-		  }
 		$liczba = rand(1,1000000);
-		if ($typ == 'image/pjpeg' || $typ == 'image/jpeg') 
+		switch ($typ)
 		  {
+		  case 'image/pjpeg':
+		  case 'image/jpeg':
 		    $newname = md5($liczba).'.jpg';
-		  }
-		if ($typ == 'image/gif') 
-		  {
+		    break;
+		  case 'image/gif':
 		    $newname = md5($liczba).'.gif';
-		  }
-		if ($typ == 'image/png') 
-		  {
+		    break;
+		  case 'image/png':
 		    $newname = md5($liczba).'.png';
+		    break;
+		  default:
+		    error (BAD_TYPE);
+		    break;
 		  }
 		$miejsce = 'avatars/'.$newname;
 		if (is_uploaded_file($plik)) 
@@ -630,7 +651,7 @@ if (isset($_GET['view']))
 		    error (ERROR);
 		  }
 		$db -> Execute("UPDATE players SET avatar='".$newname."' WHERE id=".$player -> id) or error($db->ErrorMsg());
-		error (LOADED."! <a href=\"account.php?view=avatar\">".REFRESH."</a><br />");
+		message('success', LOADED."! <a href=\"account.php?view=avatar\">".REFRESH."</a><br />");
 	      }
 	  }
       }
