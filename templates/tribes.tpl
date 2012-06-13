@@ -10,9 +10,11 @@
 {if $View == "all"}
     {$Showinfo}
     {$Text}
-    {section name=ltribes loop=$Tribes}
-        <li><a href="tribes.php?view=view&amp;id={$Tribes[ltribes].id}">{$Tribes[ltribes].name}</a>, {$Leaderid} <a href="view.php?view={$Tribes[ltribes].owner}">{$Tribes[ltribes].ownername}</a>, {$Ttype} {$Tribes[ltribes].level}.
-    {/section}
+    {if $Showinfo != ''}
+        {section name=ltribes loop=$Tribes}
+            <li><a href="tribes.php?view=view&amp;id={$Tribes[ltribes].id}">{$Tribes[ltribes].name}</a>, {$Leaderid} <a href="view.php?view={$Tribes[ltribes].owner}">{$Tribes[ltribes].ownername}</a>, {$Ttype} {$Tribes[ltribes].level}.
+        {/section}
+    {/if}
     </ul>
 {/if}
 
