@@ -7,7 +7,7 @@
  *   @copyright            : (C) 2004,2005,2006,2011,2012 Vallheru Team based on Gamers-Fusion ver 2.5
  *   @author               : thindil <thindil@vallheru.net>
  *   @version              : 1.6
- *   @since                : 30.05.2012
+ *   @since                : 13.06.2012
  *
  */
 
@@ -325,7 +325,7 @@ if (isset($_GET['action']))
 	      }
 	    checkvalue($_POST['slevel']);
 	    checkvalue($_POST['elevel']);
-	    $elist = $db -> SelectLimit("SELECT `players`.`id`, `user`, `rank`, `tribes`.`name` FROM `players`, `tribes` WHERE `players`.`level`>=".$_POST['slevel']." AND `players`.`level`<=".$_POST['elevel']." AND `players`.`hp`>0 AND `players`.`miejsce`='".$player->location."' AND `players`.`id`!=".$player -> id." AND `immu`='N' AND `rasa`!='' AND `klasa`!='' AND `rest`='N' AND `freeze`=0 AND `tribes`.`id`=`players`.`tribe`", 50) or die($db->ErrorMsg());
+	    $elist = $db -> SelectLimit("SELECT `id`, `user`, `rank`, `tribe` FROM `players` WHERE `level`>=".$_POST['slevel']." AND `level`<=".$_POST['elevel']." AND `hp`>0 AND `miejsce`='".$player->location."' AND `id`!=".$player -> id." AND `immu`='N' AND `rasa`!='' AND `klasa`!='' AND `rest`='N' AND `freeze`=0 AND `tribe`!=".$player->tribe, 50) or die($db->ErrorMsg());
 	    $arrid = array();
 	    $arrname = array();
 	    $arrrank = array();
@@ -349,18 +349,31 @@ if (isset($_GET['action']))
 		  }
 		$arrid[] = $elist -> fields['id'];
 		$arrname[] = $elist -> fields['user'];
-		if (!$elist->fields['name'])
-		  {
-		    $arrtribe[] = 'Brak';
-		  }
-		else
-		  {
-		    $arrtribe[] = $elist -> fields['name'];
-		  }
+		$arrtribe[] = $elist -> fields['tribe'];
 		$elist -> MoveNext();
-	      }
-	    
+	      }	    
 	    $elist -> Close();
+	    $arrTribes = array_unique($arrtribe);
+	    $objTribes = $db->Execute("SELECT `id`, `name` FROM `tribes` WHERE `id` IN (".implode(',', $arrTribes).")");
+	    while (!$objTribes->EOF)
+	      {
+		foreach ($arrtribe as &$strTribe)
+		  {
+		    if ($objTribes->fields['id'] == $strTribe)
+		      {
+			$strTribe = $objTribes->fields['name'];
+		      }
+		  }
+		$objTribes->MoveNext();
+	      }
+	    $objTribes->Close();
+	    foreach ($arrtribe as &$strTribe)
+	      {
+		if ($strTribe == '0')
+		  {
+		    $strTribe = 'Brak';
+		  }
+	      }
 	    $smarty -> assign (array("Enemyid" => $arrid, 
 				     "Enemyname" => $arrname, 
 				     "Enemytribe" => $arrtribe, 
