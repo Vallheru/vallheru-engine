@@ -325,7 +325,7 @@ if (isset($_GET['action']))
 	      }
 	    checkvalue($_POST['slevel']);
 	    checkvalue($_POST['elevel']);
-	    $elist = $db -> SelectLimit("SELECT `id`, `user`, `rank`, `tribe` FROM `players` WHERE `level`>=".$_POST['slevel']." AND `level`<=".$_POST['elevel']." AND `hp`>0 AND `miejsce`='".$player->location."' AND `id`!=".$player -> id." AND `immu`='N' AND `rasa`!='' AND `klasa`!='' AND `rest`='N' AND `freeze`=0 AND `tribe`!=".$player->tribe, 50) or die($db->ErrorMsg());
+	    $elist = $db -> SelectLimit("SELECT `id`, `user`, `rank`, `tribe` FROM `players` WHERE `level`>=".$_POST['slevel']." AND `level`<=".$_POST['elevel']." AND `hp`>0 AND `miejsce`='".$player->location."' AND `id`!=".$player -> id." AND `immu`='N' AND `rasa`!='' AND `klasa`!='' AND `rest`='N' AND `freeze`=0", 50) or die($db->ErrorMsg());
 	    $arrid = array();
 	    $arrname = array();
 	    $arrrank = array();
@@ -354,19 +354,23 @@ if (isset($_GET['action']))
 	      }	    
 	    $elist -> Close();
 	    $arrTribes = array_unique($arrtribe);
-	    $objTribes = $db->Execute("SELECT `id`, `name` FROM `tribes` WHERE `id` IN (".implode(',', $arrTribes).")");
-	    while (!$objTribes->EOF)
+	    unset($arrTribes[array_search('0', $arrTribes)]);
+	    if (count($arrTribes))
 	      {
-		foreach ($arrtribe as &$strTribe)
+		$objTribes = $db->Execute("SELECT `id`, `name` FROM `tribes` WHERE `id` IN (".implode(',', $arrTribes).")");
+		while (!$objTribes->EOF)
 		  {
-		    if ($objTribes->fields['id'] == $strTribe)
+		    foreach ($arrtribe as &$strTribe)
 		      {
-			$strTribe = $objTribes->fields['name'];
+			if ($objTribes->fields['id'] == $strTribe)
+			  {
+			    $strTribe = $objTribes->fields['name'];
+			  }
 		      }
+		    $objTribes->MoveNext();
 		  }
-		$objTribes->MoveNext();
+		$objTribes->Close();
 	      }
-	    $objTribes->Close();
 	    foreach ($arrtribe as &$strTribe)
 	      {
 		if ($strTribe == '0')
