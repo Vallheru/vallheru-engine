@@ -4,11 +4,11 @@
  *   Polish language for admin panel
  *
  *   @name                 : admin.php                            
- *   @copyright            : (C) 2004,2005,2006,2011 Vallheru Team based on Gamers-Fusion ver 2.5
+ *   @copyright            : (C) 2004,2005,2006,2011,2012 Vallheru Team based on Gamers-Fusion ver 2.5
  *   @author               : thindil <thindil@vallheru.net>
  *   @author               : eyescream <tduda@users.sourceforge.net>
- *   @version              : 1.5
- *   @since                : 23.12.2011
+ *   @version              : 1.6
+ *   @since                : 13.06.2012
  *
  */
 
@@ -140,7 +140,7 @@ if (isset($_GET['view']) && $_GET['view'] == 'bugreport')
     define("YOUR_BUG", "Twoje zgłoszenie błędu: <b>");
     define("B_ID", "</b> ID: <b>");
     define("NOT_BUG3", "</b> nie jest błędem.");
-    define("HAS_FIXED", "</b> zostało naprawiowe.");
+    define("HAS_FIXED", "</b> zostało naprawione.");
     define("MORE_INFO2", "</b> wymaga więcej informacji aby mogło zostać naprawione.");
     define("WORK_FOR_ME2", "</b> zostało odrzucone. <b>Przyczyna:</b> u mnie działa poprawnie.");
     define("BUG_DOUBLE2", "</b> zostało odrzucone. <b>Przyczyna:</b> wcześniej ktoś zgłosił już ten błąd.");
