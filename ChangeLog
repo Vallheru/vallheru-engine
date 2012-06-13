@@ -1,5 +1,7 @@
 2012-06-13  Bartek thindil Jasicki  <thindil@vallheru.net>
 
+	* BUG,addnews.php: 
+	fixed language variable
 	* BUG,battle.php: 
 	fixed last fix
 	* BUG,battle.php:

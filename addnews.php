@@ -4,10 +4,10 @@
  *   Adding news in game
  *
  *   @name                 : addnews.php                            
- *   @copyright            : (C) 2004-2005,2011 Vallheru Team based on Gamers-Fusion ver 2.5
- *   @author               : thindil <thindil@tuxfamily.org>
- *   @version              : 1.4
- *   @since                : 14.11.2011
+ *   @copyright            : (C) 2004,2005,2011,2012 Vallheru Team based on Gamers-Fusion ver 2.5
+ *   @author               : thindil <thindil@vallheru.net>
+ *   @version              : 1.6
+ *   @since                : 23.05.2012
  *
  */
 
@@ -35,7 +35,7 @@ require_once("includes/head.php");
 /**
 * Get the localization for game
 */
-require_once("languages/".$player -> lang."/addnews.php");
+require_once("languages/".$lang."/addnews.php");
 
 if ($player -> rank != "Admin" && $player -> rank != 'Staff' && $player -> rank != 'Kronikarz') 
 {
@@ -65,12 +65,7 @@ if (isset ($_GET['action']) && $_GET['action'] == 'add')
 	error (EMPTY_FIELDS);
       }
     $_POST['addnews'] = nl2br($_POST['addnews']);
-    $strLang = $_POST['addlang'];
-    if (!in_array($strLang, $arrLanguage))
-      {
-	$strLang = $player -> lang;
-      }
-    $db -> Execute("INSERT INTO `news` (`starter`, `title`, `news`, `lang`, `added`) VALUES('".$arrTags[$player->tribe][0].' '.$player->user.' '.$arrTags[$player->tribe][1]." (".$player -> id.")','".$_POST['addtitle']."','".$_POST['addnews']."', '".$strLang."', 'N')") or error(E_DB);
+    $db -> Execute("INSERT INTO `news` (`starter`, `title`, `news`, `lang`, `added`) VALUES('".$arrTags[$player->tribe][0].' '.$player->user.' '.$arrTags[$player->tribe][1]." (".$player -> id.")','".$_POST['addtitle']."','".$_POST['addnews']."', '".$lang."', 'N')") or error(E_DB);
     error (N_SUCCES);
 }
 
