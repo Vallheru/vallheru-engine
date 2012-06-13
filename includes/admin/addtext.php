@@ -8,7 +8,7 @@
  *   @author               : thindil <thindil@vallheru.net>
  *   @author               : eyescream <tduda@users.sourceforge.net>
  *   @version              : 1.6
- *   @since                : 12.06.2012
+ *   @since                : 13.06.2012
  *
  */
 
@@ -118,10 +118,13 @@ if (isset($_GET['action']) && ($_GET['action'] == 'add' || $_GET['action'] == 'd
         $strInfo = DELETED;
     }
     $db -> Execute("INSERT INTO `log` (`owner`, `log`, `czas`) VALUES(".$intStarter.",'".YOUR_NEWS.$strTitle.$strAction.".', ".$strDate.")");
-    $objStaff = $db -> Execute("SELECT `id` FROM `players` WHERE `rank`='Admin'");
+    $objStaff = $db -> Execute("SELECT `id` FROM `players` WHERE `rank`='Admin' OR `rank`='Staff'");
     while (!$objStaff->EOF) 
       {
-	$db->Execute("INSERT INTO `log` (`owner`, `log`, `czas`) VALUES(".$objStaff->fields['id'].", 'Plotka \"".$strTitle."\" (autor ID: ".$intStarter.")".$strAction."', ".$strDate.")") or die($db->ErrorMsg());
+	if ($objStaff->fields['id'] != $player->id)
+	  {
+	    $db->Execute("INSERT INTO `log` (`owner`, `log`, `czas`) VALUES(".$objStaff->fields['id'].", 'Plotka \"".$strTitle."\" (autor ID: ".$intStarter.")".$strAction."', ".$strDate.")") or die($db->ErrorMsg());
+	  }
 	$objStaff->MoveNext();
       }
     $objStaff->Close();

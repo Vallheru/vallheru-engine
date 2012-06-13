@@ -1,5 +1,9 @@
 2012-06-13  Bartek thindil Jasicki  <thindil@vallheru.net>
 
+	* UPDATE,includes/admin/addtext.php: 
+	added info about news to all staffs
+	* BUG,templates/layout1/tribes.tpl, templates/tribes.tpl: 
+	fixed notice
 	* BUG,addnews.php: 
 	fixed language variable
 	* BUG,battle.php: 
