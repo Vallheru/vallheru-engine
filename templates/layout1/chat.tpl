@@ -7,7 +7,7 @@
 	<input id="italic" type="button" value="{$Aitalic}" onClick="formatText(this.id)" />
 	<input id="underline" type="button" value="{$Aunderline}" onClick="formatText(this.id)" />
 	<input id="emote" type="button" value="{$Aemote}" onClick="formatText(this.id)" /><br />
-	<textarea name="msg" rows="5" cols="55" onKeyDown="javascript:return sendMsg(event);"></textarea><br />
+	<textarea name="msg" rows="1" cols="60" onKeyDown="javascript:return sendMsg(event);"></textarea><br />
 	<input type="submit" value="{$Asend}" />
     </form>
 </div>
@@ -25,7 +25,7 @@
 	<input id="italic" type="button" value="{$Aitalic}" onClick="formatText(this.id)" />
 	<input id="underline" type="button" value="{$Aunderline}" onClick="formatText(this.id)" />
 	<input id="emote" type="button" value="{$Aemote}" onClick="formatText(this.id)" /><br />
-	<textarea name="msg" rows="5" cols="55" onKeyDown="javascript:return sendMsg(event);"></textarea><br />
+	<textarea name="msg" rows="1" cols="60" onKeyDown="javascript:return sendMsg(event);"></textarea><br />
 	<input type="submit" value="{$Asend}" />
     </form>
 </div>
