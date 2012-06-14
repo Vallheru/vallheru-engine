@@ -6,8 +6,8 @@
  *   @name                 : farm.php                            
  *   @copyright            : (C) 2004,2005,2006,2011,2012 Vallheru Team based on Gamers-Fusion ver 2.5
  *   @author               : thindil <thindil@vallheru.net>
- *   @version              : 1.5
- *   @since                : 24.02.2012
+ *   @version              : 1.6
+ *   @since                : 14.06.2012
  *
  */
 
@@ -53,7 +53,7 @@ if (isset($_GET['step']) && $_GET['step'] == 'herbsinfo')
 
 if (isset($_GET['step']) && $_GET['step'] == 'house')
 {
-    define("HOUSE_INFO", "Witaj w chatce ogrodnika. Tutaj możesz suszyć zioła, aby otrzymać z nich nasiona potrzebne do zasiania plantacji. Za każde 10 ziół danego rodzaju otrzymujesz 1 paczkę nasion. Koszt suszenia ziół to 0.2 enegii za każdą paczkę ziół");
+    define("HOUSE_INFO", "Witaj w chatce ogrodnika. Tutaj możesz suszyć zioła, aby otrzymać z nich nasiona potrzebne do zasiania plantacji. Za każde 10 ziół danego rodzaju otrzymujesz 1 paczkę nasion. Koszt suszenia ziół to 0.5 enegii za każdą paczkę ziół");
     define("A_DRY", "Wysusz");
     define("T_DRY", "aby otrzymać");
     define("T_PACK", "paczek nasion");
@@ -131,7 +131,7 @@ if (isset($_GET['step']) && $_GET['step'] == 'plantation')
     }
     if (isset($_GET['action']) && $_GET['action'] == 'chop')
     {
-        define("CHOP_INFO", "Tutaj możesz zbierać zioła które wcześniej zasiałeś na swojej farmie. Zebranie ziół z jednego pola kosztuje 0.2 energii. W zamian otrzymujesz 0.01 do umiejętności Zielarstwo. Zioła możesz zbierać już po jednym resecie od zasiania. Im dłużej będziesz je hodował tym więcej możesz ich zebrać. Jednak jeżeli zbyt długo będą hodowane, po prostu zwiędną. Poniżej znajduje się lista obecnie hodowanych na farmie ziół.");
+        define("CHOP_INFO", "Tutaj możesz zbierać zioła które wcześniej zasiałeś na swojej farmie. Zebranie ziół z jednego pola kosztuje 1.5 energii. W zamian otrzymujesz 0.001 do umiejętności Zielarstwo. Zioła możesz zbierać już po jednym resecie od zasiania. Im dłużej będziesz je hodował tym więcej możesz ich zebrać. Jednak jeżeli zbyt długo będą hodowane, po prostu zwiędną. Poniżej znajduje się lista obecnie hodowanych na farmie ziół.");
         define("NO_HERBS", "Nie hodujesz jakichkolwiek ziół!");
         define("NO_FARM", "Nie masz farmy aby zbierać zioła");
         if (isset($_GET['id']))
