@@ -53,7 +53,7 @@ if (isset($_GET['step']) && $_GET['step'] == 'herbsinfo')
 
 if (isset($_GET['step']) && $_GET['step'] == 'house')
 {
-    define("HOUSE_INFO", "Witaj w chatce ogrodnika. Tutaj możesz suszyć zioła, aby otrzymać z nich nasiona potrzebne do zasiania plantacji. Za każde 10 ziół danego rodzaju otrzymujesz 1 paczkę nasion. Koszt suszenia ziół to 0.5 enegii za każdą paczkę ziół");
+    define("HOUSE_INFO", "Witaj w chatce ogrodnika. Tutaj możesz suszyć zioła, aby otrzymać z nich nasiona potrzebne do zasiania plantacji. Za każde 10 ziół danego rodzaju otrzymujesz 1 paczkę nasion. Koszt suszenia ziół to 0.5 enegii za każdą paczkę ziół.");
     define("A_DRY", "Wysusz");
     define("T_DRY", "aby otrzymać");
     define("T_PACK", "paczek nasion");

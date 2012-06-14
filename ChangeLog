@@ -1,5 +1,7 @@
 2012-06-14  Bartek thindil Jasicki  <thindil@vallheru.net>
 
+	* BUG,languages/pl/farm.php: 
+	fixed typo
 	* BUG,includes/admin/addtext.php, library.php: 
 	fixed bug with new line marks
 	* BUG,languages/pl/smelter.php: 
