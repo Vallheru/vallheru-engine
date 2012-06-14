@@ -7,8 +7,8 @@
  *   @copyright            : (C) 2004,2005,2006,2011,2012 Vallheru Team based on Gamers-Fusion ver 2.5
  *   @author               : thindil <thindil@vallheru.net>
  *   @author               : eyescream <tduda@users.sourceforge.net>
- *   @version              : 1.5
- *   @since                : 05.04.2012
+ *   @version              : 1.6
+ *   @since                : 14.06.2012
  *
  */
 
@@ -310,7 +310,7 @@ if (isset ($_GET['view']) && $_GET['view'] == 'battle')
 if (isset ($_GET['view']) && $_GET['view'] == 'guide') 
 {
     define("INFO1", "Podstawy");
-    define("INFO1a", "Podstawowym zadaniem w grze jest posiadanie największej strażnicy i najsilniejszej armii Podczas każdego resetu, dostajesz 2 punkty ataku ale również co reset musisz opłacać swoje wojska. Koszty mogą być znacznie niższe jeżeli inwestujesz odpowiednio w umiejętność Dowodzenie. Możesz zrobić co chcesz z tymi punktami.");
+    define("INFO1a", "Podstawowym zadaniem w grze jest posiadanie największej strażnicy i najsilniejszej armii. Podczas każdego resetu, dostajesz 2 punkty ataku, ale również codziennie musisz opłacać swoje wojska. Koszty mogą być znacznie niższe jeżeli inwestujesz odpowiednio w umiejętność Dowodzenie.");
     define("INFO2", "Moja strażnica");
     define("INFO2a", "To centrum zarządzania twoją strażnicą - tutaj znajdziesz wszystkie informacje na jej temat - liczbę posiadanych wojsk, machin oraz fortyfikacji i budynków specjalnych (tylko wtedy jeżeli twoja strażnica osiągnie odpowiedni rozmiar). Oprócz tego tutaj również znajdują się informacje na temat premii jakie posiadasz z umiejętności Dowodzenie. Każdy punkt w tej umiejętności pozwala podnieść jedną premię o 1 % do maksymalnego poziomu 15 % w danej premii. Kiedy będziesz miał możliwość podniesienia jakiejś premii, obok niej, pojawi się link informujący o tym.<br />Oprócz tego tutaj również możesz dozbrajać swoich weteranów (jeżeli takowych posiadasz). Aby to zrobić, wystarczy kliknąć na imię danego weterana.");
     define("INFO3", "Zbieranie danin");
