@@ -8,7 +8,7 @@
  *   @author               : thindil <thindil@vallheru.net>
  *   @author               : eyescream <tduda@users.sourceforge.net>
  *   @version              : 1.6
- *   @since                : 13.06.2012
+ *   @since                : 14.06.2012
  *
  */
 
@@ -62,9 +62,10 @@ $smarty -> assign(array("Ttitle" => $arrTitle,
 if (isset($_GET['action']) && $_GET['action'] == 'modify')
 {
     checkvalue($_GET['text']);
+    require_once('includes/bbcode.php');
     $objText = $db -> Execute("SELECT `id`, `title`, `news` FROM `news` WHERE `id`=".$_GET['text']);
     $smarty -> assign(array("Ttitle" => $objText -> fields['title'],
-                            "Tbody" => $objText -> fields['news'],
+                            "Tbody" => htmltobbcode($objText -> fields['news']),
                             "Tid" => $objText -> fields['id'],
                             "Ttitle2" => T_TITLE,
                             "Tbody2" => T_BODY,
@@ -77,8 +78,6 @@ if (isset($_GET['action']) && $_GET['action'] == 'modify')
         {
             error(EMPTY_FIELDS);
         }
-        $_POST['body'] = nl2br($_POST['body']);
-        require_once('includes/bbcode.php');
         $_POST['body'] = bbcodetohtml($_POST['body']);
         $strBody = $db -> qstr($_POST['body'], get_magic_quotes_gpc());
         $strTitle = $db -> qstr($_POST['ttitle'], get_magic_quotes_gpc());

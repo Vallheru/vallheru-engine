@@ -7,7 +7,7 @@
  *   @copyright            : (C) 2004,2005,2006,2011,2012 Vallheru Team based on Gamers-Fusion ver 2.5
  *   @author               : thindil <thindil@vallheru.net>
  *   @version              : 1.6
- *   @since                : 24.05.2012
+ *   @since                : 14.06.2012
  *
  */
 
@@ -115,7 +115,6 @@ if (isset($_GET['step']) && $_GET['step'] == 'add')
         {
             $strType = 'poetry';
         }
-        $_POST['body'] = nl2br($_POST['body']);
         require_once('includes/bbcode.php');
         $_POST['body'] = bbcodetohtml($_POST['body']);
         $strAuthor = $player -> user." ID: ".$player -> id;
@@ -139,13 +138,11 @@ if (isset($_GET['step']) && $_GET['step'] == 'addtext')
     $arrId = array();
     $arrTitle = array();
     $arrAuthor = array();
-    $i = 0;
     while (!$objText -> EOF)
     {
-        $arrId[$i] = $objText -> fields['id'];
-        $arrTitle[$i] = $objText -> fields['title'];
-        $arrAuthor[$i] = $objText -> fields['author'];
-        $i = $i + 1;
+        $arrId[] = $objText -> fields['id'];
+        $arrTitle[] = $objText -> fields['title'];
+        $arrAuthor[] = $objText -> fields['author'];
         $objText -> MoveNext();
     }
     $objText -> Close();
@@ -166,18 +163,19 @@ if (isset($_GET['step']) && $_GET['step'] == 'addtext')
     */
     if (isset($_GET['action']) && $_GET['action'] == 'modify')
       {
+	require_once('includes/bbcode.php');
 	checkvalue($_GET['text']);
         $objText = $db -> Execute("SELECT id, title, body, type FROM library WHERE id=".$_GET['text']);
         $smarty -> assign(array("Ttitle" => $objText -> fields['title'],
-            "Tbody" => $objText -> fields['body'],
-            "Ttype" => $objText -> fields['type'],
-            "Tid" => $objText -> fields['id'],
-            "Ttitle2" => T_TITLE,
-            "Tbody2" => T_BODY,
-            "Ttype2" => T_TYPE,
-            "Achange" => A_CHANGE,
-            "Ttypet" => T_TYPE1,
-            "Ttypep" => T_TYPE2));
+				"Tbody" => htmltobbcode($objText -> fields['body']),
+				"Ttype" => $objText -> fields['type'],
+				"Tid" => $objText -> fields['id'],
+				"Ttitle2" => T_TITLE,
+				"Tbody2" => T_BODY,
+				"Ttype2" => T_TYPE,
+				"Achange" => A_CHANGE,
+				"Ttypet" => T_TYPE1,
+				"Ttypep" => T_TYPE2));
         $objText -> Close();
         if (isset($_POST['tid']))
         {
@@ -194,8 +192,6 @@ if (isset($_GET['step']) && $_GET['step'] == 'addtext')
             {
                 $strType = 'poetry';
             }
-            $_POST['body'] = nl2br($_POST['body']);
-            require_once('includes/bbcode.php');
             $_POST['body'] = bbcodetohtml($_POST['body']);
             $strTitle = $db -> qstr($_POST['ttitle'], get_magic_quotes_gpc());
             $strBody = $db -> qstr($_POST['body'], get_magic_quotes_gpc());
