@@ -1,5 +1,7 @@
 2012-06-14  Bartek thindil Jasicki  <thindil@vallheru.net>
 
+	* BUG,languages/pl/smelter.php: 
+	fixed typo
 	* BUG,languages/pl/farm.php: 
 	fixed farm info
 	* UPDATE,templates/layout1/chat.tpl, templates/chat.tpl: 

@@ -4,10 +4,10 @@
  *   Polish language for smelter
  *
  *   @name                 : smelter.php                            
- *   @copyright            : (C) 2004,2005,2006,2011 Vallheru Team based on Gamers-Fusion ver 2.5
- *   @author               : thindil <thindil@tuxfamily.org>
- *   @version              : 1.4
- *   @since                : 20.10.2011
+ *   @copyright            : (C) 2004,2005,2006,2011,2012 Vallheru Team based on Gamers-Fusion ver 2.5
+ *   @author               : thindil <thindil@vallheru.net>
+ *   @version              : 1.6
+ *   @since                : 14.06.2012
  *
  */
 
@@ -37,7 +37,7 @@ if (!isset($_GET['step']))
     define("SMELTER_INFO", "Witaj w hucie. Tutaj możesz wytapiać różne minerały.");
     define("NO_SMELTER", "Najpierw musisz nieco ");
     define("A_UPGRADE", "rozbudować");
-    define("NO_SMELTER2", " hutę nim zaczniesz wytapiać w niej surowce");
+    define("NO_SMELTER2", " hutę nim zaczniesz wytapiać w niej surowce.");
     define("A_SMELT", "Wytapiaj surowce");
     define("A_UPGRADE2", "Ulepsz hutę");
 }
