@@ -4,10 +4,10 @@
  *   Logout from game
  *
  *   @name                 : logout.php                            
- *   @copyright            : (C) 2004,2005,2006,2011 Vallheru Team based on Gamers-Fusion ver 2.5
- *   @author               : thindil <thindil@tuxfamily.org>
- *   @version              : 1.4
- *   @since                : 05.12.2011
+ *   @copyright            : (C) 2004,2005,2006,2011,2012 Vallheru Team based on Gamers-Fusion ver 2.5
+ *   @author               : thindil <thindil@vallheru.net>
+ *   @version              : 1.6
+ *   @since                : 15.06.2012
  *
  */
 
@@ -48,7 +48,7 @@ if ($_GET['did'] < 1)
     exit; 
   }
 
-$stat = $db -> Execute("SELECT `id` FROM `players` WHERE `email`='".$_SESSION['email']."' AND `pass`='".$_SESSION['pass']."'");
+$stat = $db -> Execute("SELECT `id`, `miejsce` FROM `players` WHERE `email`='".$_SESSION['email']."' AND `pass`='".$_SESSION['pass']."'");
 if ($stat -> fields['id'] != $_GET['did']) 
 {
     $smarty -> assign ("Error", ERROR);
@@ -56,9 +56,14 @@ if ($stat -> fields['id'] != $_GET['did'])
     exit;
 }
 
-$stat -> Close();
 if (isset($_GET['rest']) && $_GET['rest'] == 'Y') 
-{
+  {
+    if ($stat->fields['miejsce'] != 'Altara' && $stat->fields['miejsce'] != 'Ardulith')
+      {
+	$smarty -> assign ("Error", 'Nie znajdujesz się w mieście aby móc iść spać.');
+        $smarty -> display ('error.tpl');
+        exit;
+      }
     $test = $db -> Execute("SELECT `id` FROM `houses` WHERE `owner`=".$_GET['did']);
     $test1 = $db -> Execute("SELECT `id` FROM `houses` WHERE `locator`=".$_GET['did']);
     if (!$test -> fields['id'] && !$test1 -> fields['id']) 
@@ -70,7 +75,8 @@ if (isset($_GET['rest']) && $_GET['rest'] == 'Y')
     $test -> Close();
     $test1 -> Close();    
     $db -> Execute("UPDATE `players` SET `rest`='Y' WHERE `id`=".$_GET['did']);
-}
+  }
+$stat -> Close();
 $db -> Execute("UPDATE `players` SET `lpv`=`lpv`-180 WHERE `id`=".$_GET['did']);
 session_unset();
 session_destroy();

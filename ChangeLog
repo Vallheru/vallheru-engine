@@ -1,3 +1,8 @@
+2012-06-15  Bartek thindil Jasicki  <thindil@vallheru.net>
+
+	* BUG,logout.php:
+	don't go sleep while not in city
+
 2012-06-14  Bartek thindil Jasicki  <thindil@vallheru.net>
 
 	* BUG,languages/pl/farm.php: 
