@@ -7,8 +7,8 @@
  *   @copyright            : (C) 2006,2011 Vallheru Team based on Gamers-Fusion ver 2.5
  *   @author               : thindil <thindil@vallheru.net>
  *   @author               : eyescream <tduda@users.sourceforge.net>
- *   @version              : 1.5
- *   @since                : 23.12.2011
+ *   @version              : 1.6
+ *   @since                : 15.06.2012
  *
  */
 
@@ -51,7 +51,7 @@ if (isset ($_GET['step']) && $_GET['step'] == 'add')
             $strVerdict = $objVerdict -> fields['verdict']."; ".$_POST['verdict'];
             $objVerdict -> Close();
             $db -> Execute("UPDATE `jail` SET `duration`=`duration`+".$intTime.", `verdict`='".$strVerdict."' WHERE `prisoner`=".$_POST['prisoner']);
-            require_once("languages/".$objTest -> fields['lang']."/admin1.php");
+            require_once("languages/".$lang."/admin1.php");
             $db -> Execute("INSERT INTO `log` (`owner`, `log`, `czas`) VALUES(".$_POST['prisoner'].", '".YOU_JAIL." ".$_POST['time']." ".DAYS2." ".$_POST['verdict'].". ".SEND_YOU.' <b><a href="view.php?view='.$player -> id.'">'.$player -> user."</a></b>, ID <b>".$player -> id."</b>.', ".$strDate.")") or die($db -> ErrorMsg());
             $db -> Execute("INSERT INTO `log` (`owner`, `log`, `czas`) VALUES(1,'".$_POST['prisoner']." - ".YOU_JAIL.$_POST['time'].DAYS.$_POST['verdict'].SEND_YOU.$player -> user." ID: ".$player -> id."', ".$strDate.")");
         }
