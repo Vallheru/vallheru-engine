@@ -7,7 +7,7 @@
  *   @copyright            : (C) 2004,2005,2006,2011,2012 Vallheru Team based on Gamers-Fusion ver 2.5
  *   @author               : thindil <thindil@vallheru.net>
  *   @version              : 1.6
- *   @since                : 30.05.2012
+ *   @since                : 15.06.2012
  *
  */
  
@@ -508,11 +508,7 @@ if (isset($_GET['action']) && $_GET['action'] == 'moutains' && $player -> locati
         $panswer = htmlspecialchars($_POST['tanswer'], ENT_QUOTES);
         if ($panswer == $answer -> fields['answer']) 
         {
-            $query = $db -> Execute("SELECT count(`id`) FROM `equipment` WHERE `owner`=0 AND `minlev`<=".$player -> level);
-            $amount = $query -> fields['count(`id`)'];
-            $query -> Close();
-            $roll = rand (0, ($amount-1));
-            $arritem = $db -> SelectLimit("SELECT * FROM `equipment` WHERE `owner`=0", 1, $roll);
+            $arritem = $db -> Execute("SELECT * FROM `equipment` WHERE `owner`=0 AND `minlev`<=".$player->level." ORDER BY RAND()");
             $test = $db -> Execute("SELECT `id` FROM `equipment` WHERE `name`='".$arritem -> fields['name']."' AND `wt`=".$arritem -> fields['maxwt']." AND `type`='".$arritem -> fields['type']."' AND `status`='U' AND `owner`=".$player -> id." AND `power`=".$arritem -> fields['power']." AND `zr`=".$arritem -> fields['zr']." AND `szyb`=".$arritem -> fields['szyb']." AND `maxwt`=".$arritem -> fields['maxwt']." AND `cost`=1 AND `poison`=0");
             if (!$test -> fields['id']) 
             {

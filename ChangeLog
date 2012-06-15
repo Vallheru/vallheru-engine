@@ -1,5 +1,7 @@
 2012-06-15  Bartek thindil Jasicki  <thindil@vallheru.net>
 
+	* UPDATE,explore.php: 
+	better random item from bridge of death
 	* UPDATE,chat.php: 
 	better check for empty message
 	* BUG,chat.php: 
