@@ -1,5 +1,7 @@
 2012-06-15  Bartek thindil Jasicki  <thindil@vallheru.net>
 
+	* FEATURE,admin.php: 
+	move bug comment to mail
 	* UPDATE,explore.php: 
 	better random item from bridge of death
 	* UPDATE,chat.php: 

@@ -8,7 +8,7 @@
  *   @author               : thindil <thindil@vallheru.net>
  *   @author               : eyescream <tduda@users.sourceforge.net>
  *   @version              : 1.6
- *   @since                : 31.05.2012
+ *   @since                : 15.06.2012
  *
  */
  
@@ -184,9 +184,15 @@ if (isset($_GET['view']))
 		      }
 		  }
 		$db -> Execute("DELETE FROM `bugreport` WHERE `id`=".$_GET['step']);
+		//Send comment as a message to player
 		if (isset($_POST['bugcomment']) && !empty($_POST['bugcomment']))
 		  {
-		    $strInfo = $strInfo." <b>".T_COMMENT2.":</b> ".$_POST['bugcomment'];
+		    $objTopic = $db->Execute("SELECT max(`topic`) FROM `mail`");
+		    $intTopic = $objTopic->fields['max(`topic`)'] + 1;
+		    $objTopic->Close();
+		    $rec = $db->Execute("SELECT `user` FROM `players` WHERE `id`=".$objBug->fields['sender']);
+		    $db -> Execute("INSERT INTO mail (`sender`, `senderid`, `owner`, `subject`, `body`, `date`, `topic`, `unread`, `to`, `toname`) VALUES('".$player->user."','".$player->id."',".$objBug->fields['sender'].", 'Komentarz do twojego zgłoszenia błedu: ".$objBug->fields['title']."' , '".$_POST['bugcomment']."', ".$strDate.", ".$intTopic.", 'F', ".$objBug->fields['sender'].", '".$rec->fields['user']."')");
+		    $rec->Close();
 		  }
 		$db -> Execute("INSERT INTO `log` (`owner`, `log`, `czas`, `type`) VALUES(".$objBug -> fields['sender'].", '".$strInfo."', ".$strDate.", 'A')");
 		error($strMessage);
