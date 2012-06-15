@@ -8,7 +8,7 @@
  *   @author               : thindil <thindil@vallheru.net>
  *   @author               : eyescream <tduda@users.sourceforge.net>
  *   @version              : 1.6
- *   @since                : 10.06.2012
+ *   @since                : 15.06.2012
  *
  */
 
@@ -62,7 +62,7 @@ if (isset($_POST['msg']) && $_POST['msg'] != '')
     $czat -> Close();
     require_once('includes/bbcode.php');
     $_POST['msg'] = bbcodetohtml($_POST['msg'], TRUE);
-    if (preg_match("/\S+/", $_POST['msg']) == 0)
+    if (strlen(strip_tags($_POST['msg'])) == 0)
       {
 	error(ERROR);
       }

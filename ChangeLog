@@ -1,5 +1,7 @@
 2012-06-15  Bartek thindil Jasicki  <thindil@vallheru.net>
 
+	* BUG,chat.php: 
+	fixed bug with sending empty message
 	* BUG,logout.php:
 	don't go sleep while not in city
 
