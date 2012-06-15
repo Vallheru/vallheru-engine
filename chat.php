@@ -62,7 +62,7 @@ if (isset($_POST['msg']) && $_POST['msg'] != '')
     $czat -> Close();
     require_once('includes/bbcode.php');
     $_POST['msg'] = bbcodetohtml($_POST['msg'], TRUE);
-    if (strlen(strip_tags($_POST['msg'])) == 0)
+    if (strlen(trim(strip_tags($_POST['msg']))) == 0)
       {
 	error(ERROR);
       }
