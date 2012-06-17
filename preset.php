@@ -6,8 +6,8 @@
  *   @name                 : preset.php                            
  *   @copyright            : (C) 2004,2005,2006,2007,2011,2012 Vallheru Team based on Gamers-Fusion ver 2.5
  *   @author               : thindil <thindil@vallheru.net>
- *   @version              : 1.5
- *   @since                : 15.03.2012
+ *   @version              : 1.6
+ *   @since                : 17.06.2012
  *
  */
 
@@ -113,7 +113,7 @@ if (isset ($_GET['id']))
 	else
 	  {
 	    $db -> Execute("UPDATE `players` SET `level`=1, `exp`=0, `energy`=0, `max_energy`=70, `strength`=3, `agility`=3, `ap`=5, `hp`=15, `max_hp`=15, `ability`=0.01, `corepass`='N', `trains`=5, `inteli`=3, `pw`=0, `atak`=0.01, `unik`=0.01, `magia`=0.01, `immu`='N', `pm`=6, `szyb`=3, `wytrz`=3, `alchemia`=0.01, `wisdom`=3, `shoot`=0.01, `fletcher`=0.01, `rasa`='', `klasa`='', `deity`='', `gender`='', `leadership`=0.01, `wins`=0, `losses`=0, `lastkilled`='...', `lastkilledby`='...', `breeding`=0.01, `mining`=0.01, `lumberjack`=0.01, `herbalist`=0.01, `crime`=1, `maps`=0, `jeweller`=0.01, `thievery`=0.01, `perception`=0.01, `craftmission`=7, `mpoints`=0, `metallurgy`=0.01 WHERE `id`=".$_GET['id']);
-	    $db->Execute("UPDATE `equipment` SET `status`='U' WHERE `owner`=".$_GET['id']);
+	    $db->Execute("UPDATE `equipment` SET `status`='U', `cost`=1 WHERE `owner`=".$_GET['id']);
 	    $db->Execute("UPDATE `equipment` SET `amount`=1 WHERE `amount`=0 AND `owner`=".$_GET['id']);
 	  }
 	$db->Execute("DELETE FROM `czary` WHERE `gracz`=".$_GET['id']);
