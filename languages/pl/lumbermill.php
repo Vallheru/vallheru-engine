@@ -4,10 +4,10 @@
  *   Polish language for lumbermill
  *
  *   @name                 : lumbermill.php                            
- *   @copyright            : (C) 2004, 2005, 2006,2011 Vallheru Team based on Gamers-Fusion ver 2.5
- *   @author               : thindil <thindil@tuxfamily.org>
- *   @version              : 1.4
- *   @since                : 27.09.2011
+ *   @copyright            : (C) 2004, 2005, 2006,2011,2012 Vallheru Team based on Gamers-Fusion ver 2.5
+ *   @author               : thindil <thindil@vallheru.net>
+ *   @version              : 1.6
+ *   @since                : 18.06.2012
  *
  */
 
@@ -89,7 +89,7 @@ if (isset ($_GET['mill']) && ($_GET['mill'] == 'mill' || $_GET['mill'] == 'elite
 {
     if (!isset($_GET['konty']) && !isset($_GET['rob'])) 
     {
-        define("MILL_INFO", "Tutaj możesz wykonywać przedmioty co do których masz plany. Aby wykonać przedmiot, musisz posiadać również odpowiednią ilość surowców oraz energii. Nawet za nieudaną próbę dostajesz 0,01 do umiejętności.");
+        define("MILL_INFO", "Tutaj możesz wykonywać przedmioty co do których masz plany. Aby wykonać przedmiot, musisz posiadać również odpowiednią ilość surowców oraz energii. Nawet za nieudaną próbę dostajesz 0,01 do umiejętności. Aby wykonywać odpowiednie przedmioty, potrzebujesz odpowiedniego drewna. Drewno sosnowe służy tylko do wyrobu strzał. Pozostałe rodzaje drewna służą do wyrobu łuków.");
         define("INFO", "Oto lista przedmiotów, które możesz wykonywać. Jeżeli nie masz tyle energii aby wykonać ów przedmiot, możesz po prostu wykonywać go po kawałku");
         define("I_NAME", "Nazwa");
         define("I_LEVEL", "Poziom");

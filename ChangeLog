@@ -1,5 +1,7 @@
 2012-06-18  Bartek thindil Jasicki  <thindil@vallheru.net>
 
+	* UPDATE,languages/pl/lumbermill.php: 
+	added info about neede wood
 	* UPDATE,templates/layout1/footer.tpl, templates/footer.tpl:
 	added link to list of players
 
