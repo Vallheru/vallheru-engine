@@ -1,5 +1,7 @@
 2012-06-18  Bartek thindil Jasicki  <thindil@vallheru.net>
 
+	* FEATURE,templates/layout1/memberlist.tpl, templates/memberlist.tpl, memberlist.php: 
+	added location to list, some code cleanup
 	* UPDATE,languages/pl/lumbermill.php: 
 	added info about neede wood
 	* UPDATE,templates/layout1/footer.tpl, templates/footer.tpl:

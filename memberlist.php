@@ -7,7 +7,7 @@
  *   @copyright            : (C) 2004,2005,2006,2007,2011,2012 Vallheru Team based on Gamers-Fusion ver 2.5
  *   @author               : thindil <thindil@vallheru.net>
  *   @version              : 1.6
- *   @since                : 24.05.2012
+ *   @since                : 18.06.2012
  *
  */
 
@@ -117,7 +117,7 @@ if (!isset ($_GET['lista']))
 {
     $_GET['lista'] = 'id';
 }
-if (!in_array($_GET['lista'], array('id', 'user', 'rank', 'rasa', 'level'))) 
+if (!in_array($_GET['lista'], array('id', 'user', 'rank', 'rasa', 'level', 'miejsce', 'shortrpg'))) 
   {
     error(ERROR);
   }
@@ -147,19 +147,19 @@ else
   }
 if (empty($_POST['szukany']) && $_POST['id'] == 0 && empty($_POST['ip'])) 
   {
-    $mem = $db -> SelectLimit("SELECT `id`, `user`, `rank`, `rasa`, `level`, `gender`, `shortrpg`, `tribe` FROM `players` ORDER BY `".$_GET['lista']."` ".$_GET['order'], 30, (30 * ($page - 1)));
+    $mem = $db->GetAll("SELECT `id`, `user`, `rank`, `rasa`, `level`, `gender`, `shortrpg`, `tribe`, `miejsce` FROM `players` ORDER BY `".$_GET['lista']."` ".$_GET['order']." LIMIT ".(30 * ($page - 1)).", 30");
   } 
 elseif  (!empty($_POST['szukany']) && $_POST['id'] == 0) 
 {
-  $mem = $db -> SelectLimit("SELECT `id`, `user`, `rank`, `rasa`, `level`, `gender`, `shortrpg`, `tribe` FROM `players` WHERE `user` LIKE ".$strSearch." ORDER BY `".$_GET['lista']."` ".$_GET['order'], 30, (30 * ($page - 1)));
+  $mem = $db->GetAll("SELECT `id`, `user`, `rank`, `rasa`, `level`, `gender`, `shortrpg`, `tribe`, `miejsce` FROM `players` WHERE `user` LIKE ".$strSearch." ORDER BY `".$_GET['lista']."` ".$_GET['order']." LIMIT ".(30 * ($page - 1)).", 30");
 } 
 elseif (!empty($_POST['szukany']) && $_POST['id'] > 0) 
 {
-  $mem = $db -> SelectLimit("SELECT `id`, `user`, `rank`, `rasa`, `level`, `gender`, `shortrpg`, `tribe` FROM `players` WHERE `id`=".$_POST['id']." AND `user` LIKE ".$strSearch." ORDER BY `".$_GET['lista']."` ".$_GET['order'], 30,  (30 * ($page - 1)));
+  $mem = $db->GetAll("SELECT `id`, `user`, `rank`, `rasa`, `level`, `gender`, `shortrpg`, `tribe`, `miejsce` FROM `players` WHERE `id`=".$_POST['id']." AND `user` LIKE ".$strSearch." ORDER BY `".$_GET['lista']."` ".$_GET['order']." LIMIT ".(30 * ($page - 1)).", 30");
 } 
 elseif (empty($_POST['szukany']) && $_POST['id'] > 0) 
 {
-  $mem = $db -> SelectLimit("SELECT `id`, `user`, `rank`, `rasa`, `level`, `gender`, `shortrpg`, `tribe` FROM `players` WHERE `id`=".$_POST['id']." ORDER BY `".$_GET['lista']."` ".$_GET['order'], 30, (30 * ($page - 1)));
+  $mem = $db->GetAll("SELECT `id`, `user`, `rank`, `rasa`, `level`, `gender`, `shortrpg`, `tribe`, `miejsce` FROM `players` WHERE `id`=".$_POST['id']." ORDER BY `".$_GET['lista']."` ".$_GET['order']." LIMIT ".(30 * ($page - 1)).", 30");
 }
 elseif(!empty($_POST['ip']))
 {
@@ -168,38 +168,18 @@ elseif(!empty($_POST['ip']))
       error(NO_PERM);
     }
   $_POST['ip'] = str_replace("*","%", $_POST['ip']);
-  $mem = $db -> SelectLimit("SELECT `id`, `user`, `rank`, `rasa`, `level`, `gender`, `shortrpg`, `tribe` FROM `players` WHERE `ip` LIKE '".$_POST['ip']."' ORDER BY `".$_GET['lista']."` ".$_GET['order'], 30, (30 * ($page - 1)));
+  $mem = $db->GetAll("SELECT `id`, `user`, `rank`, `rasa`, `level`, `gender`, `shortrpg`, `tribe`, `miejsce` FROM `players` WHERE `ip` LIKE '".$_POST['ip']."' ORDER BY `".$_GET['lista']."` ".$_GET['order']." LIMIT ".(30 * ($page - 1)).", 30");
 }
-$arrrank = array();
-$arrid = array();
-$arrname = array();
-$arrrace = array();
-$arrlevel = array();
-$arrShort = array();
-$arrTribes = array();
-while (!$mem -> EOF) 
-  {
-    /**
-     * Select player rank
-     */
-    require_once('includes/ranks.php');
-    $arrrank[] = selectrank($mem -> fields['rank'], $mem -> fields['gender']);
-    
-    $arrid[] = $mem -> fields['id'];
-    $arrname[] = $arrTags[$mem->fields['tribe']][0].' '.$mem->fields['user'].' '.$arrTags[$mem->fields['tribe']][1];
-    $arrrace[] = $mem -> fields['rasa'];
-    $arrlevel[] = $mem -> fields['level'];
-    if (strlen($mem->fields['shortrpg']) > 0)
-      {
-	$arrShort[] = '<a href="roleplay.php?view='.$mem->fields['id'].'">'.$mem->fields['shortrpg'].'</a>';
-      }
-    else
-      {
-	$arrShort[] = '';
-      }
-    $mem -> MoveNext();
-  }
-$mem -> Close();
+
+require_once('includes/ranks.php');
+foreach ($mem as &$arrMember)
+{
+  $arrMember['rank'] = selectrank($arrMember['rank'], $arrMember['gender']);
+  if (strlen($arrMember['shortrpg']) > 0)
+    {
+      $arrMember['shortrpg'] = '<a href="roleplay.php?view='.$arrMember['id'].'">'.$arrMember['shortrpg'].'</a>';
+    }
+}
 
 /**
 * Initialization of variable
@@ -219,6 +199,7 @@ $smarty -> assign(array("Message" => $strMessage,
 			"Plrace" => PL_RACE,
 			"Pllevel" => PL_LEVEL,
 			"Plroleplay" => "Profil fabularny",
+			"Pllocation" => "Lokacja",
 			"Search" => SEARCH,
 			"Search2" => SEARCH2,
 			"Splayer" => S_PLAYER,
@@ -226,16 +207,11 @@ $smarty -> assign(array("Message" => $strMessage,
 			"Searchip" => SEARCH_IP,
 			"Searchinfo" => SEARCH_INFO,
 			"Rank2" => $player -> rank,
-			"Memid" => $arrid, 
-			"Name" => $arrname, 
-			"Race" => $arrrace, 
-			"Rank" => $arrrank,
-			"Roleplay" => $arrShort,
+			"Playerslist" => $mem,
 			"Tpages" => $pages,
 			"Tpage" => $page,
 			"Fpage" => "Idź do strony:",
 			"Mlist" => $_GET['lista'],
-			"Level" => $arrlevel,
 			"Torder" => $strOrder,
 			"Torder2" => $_GET['order']));
 $smarty -> display ('memberlist.tpl');

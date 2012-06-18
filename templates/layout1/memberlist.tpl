@@ -1,23 +1,25 @@
 {$Message}
-<table class="dark">
+<table width="90%">
 <tr>
-<td width="50"><a href="memberlist.php?lista=id&amp;order={$Torder}"><b><u>{$Plid}</u></b></a></td>
-<td width="100"><a href="memberlist.php?lista=user&amp;order={$Torder}"><b><u>{$Plname}</u></b></a></td>
-<td width="100"><a href="memberlist.php?lista=rank&amp;order={$Torder}"><b><u>{$Plrank}</u></b></a></td>
-<td width="50"><a href="memberlist.php?lista=rasa&amp;order={$Torder}"><b><u>{$Plrace}</u></b></a></td>
-<td width="50"><a href="memberlist.php?lista=level&amp;order={$Torder}"><b><u>{$Pllevel}</u></b></a></td>
-<td><b><u>{$Plroleplay}</u></b></td>
+<th><a href="memberlist.php?lista=id&amp;order={$Torder}">{$Plid}</a></th>
+<th><a href="memberlist.php?lista=user&amp;order={$Torder}">{$Plname}</a></th>
+<th><a href="memberlist.php?lista=rank&amp;order={$Torder}">{$Plrank}</a></th>
+<th><a href="memberlist.php?lista=rasa&amp;order={$Torder}">{$Plrace}</a></th>
+<th><a href="memberlist.php?lista=level&amp;order={$Torder}">{$Pllevel}</a></th>
+<th><a href="memberlist.php?lista=miejsce&amp;order={$Torder}">{$Pllocation}</a></th>
+<th><a href="memberlist.php?lista=shortrpg&amp;order={$Torder}">{$Plroleplay}</a></th>
 </tr>
-{section name=list1 loop=$Name}
+{foreach $Playerslist as $Playerl}
     <tr>
-    <td>{$Memid[list1]}</td>
-    <td><a href="view.php?view={$Memid[list1]}">{$Name[list1]}</a></td>
-    <td>{$Rank[list1]}</td>
-    <td>{$Race[list1]}</td>
-    <td>{$Level[list1]}</td>
-    <td>{$Roleplay[list1]}</td>
+        <td>{$Playerl.id}</td>
+	<td><a href="view.php?view={$Playerl.id}">{$Playerl.user}</a></td>
+	<td>{$Playerl.rank}</td>
+	<td>{$Playerl.rasa}</td>
+	<td>{$Playerl.level}</td>
+	<td>{$Playerl.miejsce}</td>
+	<td>{$Playerl.shortrpg}</td>
     </tr>
-{/section}
+{/foreach}
 </table>
 {if $Tpages > 1}
     <br />{$Fpage}
