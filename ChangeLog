@@ -1,3 +1,8 @@
+2012-06-18  Bartek thindil Jasicki  <thindil@vallheru.net>
+
+	* UPDATE,templates/layout1/footer.tpl, templates/footer.tpl:
+	added link to list of players
+
 2012-06-17  Bartek thindil Jasicki  <thindil@vallheru.net>
 
 	* BUG,preset.php:

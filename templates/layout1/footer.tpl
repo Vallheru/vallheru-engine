@@ -18,7 +18,7 @@
                                 {section name=players loop=$List}
                                     {$List[players]}
                                 {/section}
-                                <br /><b>{$Players} </b> {$Registeredplayers}.<br />
+                                <br /><b>{$Players} </b> <a href="memberlist.php">{$Registeredplayers}</a>.<br />
                                 <b>{$Online}</b> {$Playersonline}.<br /></span>
                             </td>
                         </tr>
