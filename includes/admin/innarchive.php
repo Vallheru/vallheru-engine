@@ -6,8 +6,8 @@
  *   @name                 : innarchive.php                            
  *   @copyright            : (C) 2006,2012 Vallheru Team based on Gamers-Fusion ver 2.5
  *   @author               : thindil <thindil@vallheru.net>
- *   @version              : 1.5
- *   @since                : 25.04.2012
+ *   @version              : 1.6
+ *   @since                : 19.06.2012
  *
  */
 
@@ -41,7 +41,7 @@ if (!isset($intPage))
   {
     $intPage = 1;
   }
-$objChat = $db -> SelectLimit("SELECT `user`, `chat`, `senderid`, `sdate` FROM `chat` ORDER BY `id` DESC", 30, 30 * ($intPage - 1));
+$objChat = $db -> SelectLimit("SELECT `user`, `chat`, `senderid`, `sdate` FROM `chat` WHERE `ownerid`=0 OR `ownerid`=".$player->id." OR `senderid`=".$player->id." ORDER BY `id` DESC", 30, 30 * ($intPage - 1));
 $arrText = array();
 $arrAuthor = array();
 $arrSenderid = array();
