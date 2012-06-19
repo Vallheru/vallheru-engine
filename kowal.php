@@ -6,8 +6,8 @@
  *   @name                 : kowal.php                            
  *   @copyright            : (C) 2004,2005,2006,2011,2012 Vallheru Team based on Gamers-Fusion ver 2.5
  *   @author               : thindil <thindil@vallheru.net>
- *   @version              : 1.5
- *   @since                : 07.05.2012
+ *   @version              : 1.6
+ *   @since                : 19.06.2012
  *
  */
 
@@ -216,9 +216,16 @@ function createitem()
                         $strName = DRAGON1.$arrItem['name'];
                     }
                     elseif ($arrItem['type'] == 'S') 
-                    {
-                        $strName = DRAGON2.$arrItem['name'];
-                    }
+		      {
+			if (stripos($arrItem['name'], 'tarcza'))
+			  {
+			    $strName = DRAGON2.$arrItem['name'];
+			  }
+			else
+			  {
+			    $strName = DRAGON1.$arrItem['name'];
+			  }
+		      }
 		    else
 		      {
 			$strName = 'Smocze '.$arrItem['name'];
@@ -240,7 +247,14 @@ function createitem()
                     }
                     elseif ($arrItem['type'] == 'S') 
                     {
-                        $strName = DRAGON2.$arrItem['name'];
+			if (stripos($arrItem['name'], 'tarcza'))
+			  {
+			    $strName = DRAGON2.$arrItem['name'];
+			  }
+			else
+			  {
+			    $strName = DRAGON1.$arrItem['name'];
+			  }
                     }
 		    else
 		      {
@@ -269,9 +283,16 @@ function createitem()
                         $strName = DWARFS1.$arrItem['name'];
                     }
                     if ($arrItem['type'] == 'S') 
-                    {
-                        $strName = DWARFS2.$arrItem['name'];
-                    }
+		      {
+			if (stripos($arrItem['name'], 'tarcza'))
+			  {
+			    $strName = DWARFS2.$arrItem['name'];
+			  }
+			else
+			  {
+			    $strName = DWARFS1.$arrItem['name'];
+			  }
+		      }
                     $intDurbonus = $intItembonus + ($player -> inteli / 50);
                     $intMaxbonus = $arrItem['wt'] * 10;
                     if ($intDurbonus > $intMaxbonus)
