@@ -6,8 +6,8 @@
  *   @name                 : czary.php                            
  *   @copyright            : (C) 2004,2005,2006,2011,2012 Vallheru Team based on Gamers-Fusion ver 2.5
  *   @author               : thindil <thindil@vallheru.net>
- *   @version              : 1.5
- *   @since                : 09.06.2012
+ *   @version              : 1.6
+ *   @since                : 19.06.2012
  *
  */
 
@@ -434,6 +434,13 @@ while (!$czary -> EOF)
     $czary -> MoveNext();
 }
 $czary -> Close();
+foreach ($arrBspells as $key => $value)
+{
+  if (count($arrBspells[$key]) == 0)
+    {
+      unset($arrBspells[$key]);
+    }
+}
 
 $czaryo = $db -> Execute("SELECT * FROM `czary` WHERE `gracz`=".$player -> id." AND `status`='U' AND `typ`='O' ORDER BY `poziom` DESC");
 $arrDspells = array("Ziemia" => array(), "Woda" => array(), "Powietrze" => array(), "Ogień" => array());
@@ -446,6 +453,13 @@ while (!$czaryo -> EOF)
     $czaryo -> MoveNext();
 }
 $czaryo -> Close();
+foreach ($arrDspells as $key => $value)
+{
+  if (count($arrDspells[$key]) == 0)
+    {
+      unset($arrDspells[$key]);
+    }
+}
 
 
 $arrname3 = array();
@@ -474,12 +488,26 @@ while (!$czaryu -> EOF)
 }
 $czaryu -> Close();
 
+if (strpos($_SERVER['HTTP_USER_AGENT'], 'Opera Mini') !== FALSE)
+  {
+    $strChecked = "";
+  }
+else
+  {
+    $strChecked = "checked=checkded";
+  }
+
 /**
 * Assign variables to template and display page
 */
 $smarty -> assign(array("Bspells2" => $arrBspells,
+			"Bamount" => count($arrBspells),
 			"Telement" => "Żywioł:",
 			"Dspells2" => $arrDspells,
+			"Damount" => count($arrDspells),
+			"Eamount" => count($arrid3),
+			"Nospells" => "Obecnie nie posiadasz jakichkolwiek czarów w księdze. Możesz zakupić nowe czary w Magicznej Wieży w miastach.",
+			"Checked" => $strChecked,
     "Uname" => $arrname3, 
     "Ueffect" => $arrefect,
     "Uid" => $arrid3, 
