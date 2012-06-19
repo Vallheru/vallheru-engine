@@ -1,5 +1,7 @@
 2012-06-19  Bartek thindil Jasicki  <thindil@vallheru.net>
 
+	* UPDATE,armor.php: 
+	small redesign
 	* UPDATE,languages/pl/armor.php, templates/layout1/armor.tpl, templates/armor.tpl, armor.php: 
 	small redesign of armory
 	* UPDATE,templates/layout1/czary.tpl, templates/czary.tpl, czary.php: 
