@@ -42,66 +42,8 @@ if ($player -> location != 'Altara')
     error (ERROR);
 }
 
-if (!isset($_GET['buy'])) 
+if (isset($_GET['buy']))
   {
-    $_GET['buy'] = '';
-    $smarty -> assign(array("Armorinfo" => ARMOR_INFO,
-			    "Aarmors" => A_ARMORS,
-			    "Ahelmets" => A_HELMETS,
-			    "Alegs" => A_LEGS,
-			    "Ashields" => A_SHIELDS));
-    if (isset($_GET['dalej'])) 
-      {
-        /**
-	 * Show aviable armors
-	 */
-        if ($_GET['dalej'] != 'A' && $_GET['dalej'] != 'H' && $_GET['dalej'] != 'L' && $_GET['dalej'] != 'S') 
-	  {
-            error (ERROR);
-	  }
-        $arrname = array();
-        $arrcost = array();
-        $arrlevel = array();
-        $arrid = array();
-        $arrdur = array();
-        $arrpower = array();
-        $arragility = array();
-        $arm = $db -> Execute("SELECT * FROM equipment WHERE type='".$_GET['dalej']."' AND status='S' AND owner=0 AND lang='".$lang."' ORDER BY cost ASC");
-        while (!$arm -> EOF) 
-	  {
-            $arrname[] = $arm -> fields['name'];
-            $arrcost[] = $arm -> fields['cost'];
-            $arrlevel[] = $arm -> fields['minlev'];
-            $arrid[] = $arm -> fields['id'];
-            $arrdur[] = $arm -> fields['wt'];
-            $arrpower[] = $arm -> fields['power'];
-            $arragility[] = $arm -> fields['zr'];
-            $arm -> MoveNext();
-	  }
-        $arm -> Close();
-        $smarty -> assign(array("Name" => $arrname, 
-				"Cost" => $arrcost, 
-				"Level" => $arrlevel, 
-				"Id" => $arrid, 
-				"Durability" => $arrdur, 
-				"Power" => $arrpower, 
-				"Agility" => $arragility,
-				"Iname" => I_NAME,
-				"Idur" => I_DUR,
-				"Iefect" => I_EFECT,
-				"Icost" => I_COST,
-				"Ilevel" => I_LEVEL,
-				"Iagi" => I_AGI,
-				"Ioption" => I_OPTION,
-				"Abuy" => A_BUY,
-				"Asteal" => A_STEAL));
-      }
-  }
-/**
- * Buy items
- */
- else 
-   {
      checkvalue($_GET['buy']);
      $arm = $db -> Execute("SELECT * FROM equipment WHERE id=".$_GET['buy']);
      if ($arm -> fields['id'] == 0) 
@@ -128,14 +70,61 @@ if (!isset($_GET['buy']))
        }
      $test -> Close();
      $db -> Execute("UPDATE players SET credits=credits-".$arm -> fields['cost']." WHERE id=".$player -> id);
-     $smarty -> assign (array ("Name" => $arm -> fields['name'], 
-			       "Cost" => $arm -> fields['cost'], 
-			       "Power" => $arm -> fields['power'],
-			       "Youpay" => YOU_PAY,
-			       "Andbuy" => AND_BUY,
-			       "Ipower" => I_POWER));
+     message('success', YOU_PAY.' <b>'.$arm->fields['cost'].'</b> '.AND_BUY.' <b>'.$arm->fields['name'].' '.I_POWER.' + '.$arm->fields['power'].'</b>.');
      $arm -> Close();
    }
+
+$smarty -> assign(array("Armorinfo" => ARMOR_INFO,
+			"Aarmors" => A_ARMORS,
+			"Ahelmets" => A_HELMETS,
+			"Alegs" => A_LEGS,
+			"Ashields" => A_SHIELDS));
+if (isset($_GET['dalej'])) 
+  {
+    /**
+     * Show aviable armors
+     */
+    if ($_GET['dalej'] != 'A' && $_GET['dalej'] != 'H' && $_GET['dalej'] != 'L' && $_GET['dalej'] != 'S') 
+      {
+	error (ERROR);
+      }
+    $arrname = array();
+    $arrcost = array();
+    $arrlevel = array();
+    $arrid = array();
+    $arrdur = array();
+    $arrpower = array();
+    $arragility = array();
+    $arm = $db -> Execute("SELECT * FROM equipment WHERE type='".$_GET['dalej']."' AND status='S' AND owner=0 AND lang='".$lang."' ORDER BY cost ASC");
+    while (!$arm -> EOF) 
+      {
+	$arrname[] = $arm -> fields['name'];
+	$arrcost[] = $arm -> fields['cost'];
+	$arrlevel[] = $arm -> fields['minlev'];
+	$arrid[] = $arm -> fields['id'];
+	$arrdur[] = $arm -> fields['wt'];
+	$arrpower[] = $arm -> fields['power'];
+	$arragility[] = $arm -> fields['zr'];
+	$arm -> MoveNext();
+      }
+    $arm -> Close();
+    $smarty -> assign(array("Name" => $arrname, 
+			    "Cost" => $arrcost, 
+			    "Level" => $arrlevel, 
+			    "Id" => $arrid, 
+			    "Durability" => $arrdur, 
+			    "Power" => $arrpower, 
+			    "Agility" => $arragility,
+			    "Iname" => I_NAME,
+			    "Idur" => I_DUR,
+			    "Iefect" => I_EFECT,
+			    "Icost" => I_COST,
+			    "Ilevel" => I_LEVEL,
+			    "Iagi" => I_AGI,
+			    "Ioption" => I_OPTION,
+			    "Abuy" => A_BUY,
+			    "Asteal" => A_STEAL));
+  }
 
 /**
 * Stealing items from shop
@@ -162,8 +151,7 @@ if (!isset($_GET['dalej']))
 /**
 * Assign variables and display page
 */
-$smarty -> assign(array("Buy" => $_GET['buy'], 
-			"Next" => $_GET['dalej'], 
+$smarty -> assign(array("Next" => $_GET['dalej'], 
 			"Crime" => $player -> crime));
 $smarty -> display ('armor.tpl');
 

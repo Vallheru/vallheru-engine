@@ -6,8 +6,8 @@
  *   @name                 : armor.php                            
  *   @copyright            : (C) 2004,2005,2006,2012 Vallheru Team based on Gamers-Fusion ver 2.5
  *   @author               : thindil <thindil@vallheru.net>
- *   @version              : 1.5
- *   @since                : 15.05.2012
+ *   @version              : 1.6
+ *   @since                : 19.06.2012
  *
  */
 
@@ -40,21 +40,18 @@ if (isset($_GET['buy']))
     define("AND_BUY", "sztuk złota, i kupiłeś za to nową");
     define("I_POWER", "z Obroną");
 }
-    else
-{
-    define("ARMOR_INFO", " Stoisz przed małym sklepem z bogato ozdobionym szyldem PŁATNERZ. Kiedy wchodzisz do środka widzisz kilka stojaków z żelaznymi i stalowymi zbrojami i kolczugami. Za ladą z narzędziami płatnerskimi stoi stary aczkolwiek tęgi i silny krasnolud. <i>Witaj. W czym stary Brodur może ci pomóc? Mam wszystko co tu widzisz chyba ze szukasz czegoś droższego...</i> Mówiąc to odsłonił małą firankę na zaplecze gdzie na manekinach powieszone były wspaniale mithrilowe i meteorytowe, adamantowe a nawet kryształowe pełne zbroje. <i>Więc? Bierzesz coś?</i>");
-    define("A_ARMORS", "Zbroje");
-    define("A_HELMETS", "Hełmy");
-    define("A_LEGS", "Nagolenniki");
-    define("A_SHIELDS", "Tarcze");
-    define("I_NAME", "Nazwa");
-    define("I_DUR", "Wt");
-    define("I_EFECT", "Efekt");
-    define("I_COST", "Cena");
-    define("I_LEVEL", "Wymagany poziom");
-    define("I_AGI", "Ograniczenie zręczności");
-    define("I_OPTION", "Opcje");
-    define("A_BUY", "Kup");
-    define("A_STEAL", "Kradzież");
-}
+define("ARMOR_INFO", " Stoisz przed małym sklepem z bogato ozdobionym szyldem PŁATNERZ. Kiedy wchodzisz do środka widzisz kilka stojaków z żelaznymi i stalowymi zbrojami i kolczugami. Za ladą z narzędziami płatnerskimi stoi stary aczkolwiek tęgi i silny krasnolud. <i>Witaj. W czym stary Brodur może ci pomóc? Mam wszystko co tu widzisz chyba ze szukasz czegoś droższego...</i> Mówiąc to odsłonił małą firankę na zaplecze gdzie na manekinach powieszone były wspaniale mithrilowe i meteorytowe, adamantowe a nawet kryształowe pełne zbroje. <i>Więc? Bierzesz coś?</i>");
+define("A_ARMORS", "Zbroje");
+define("A_HELMETS", "Hełmy");
+define("A_LEGS", "Nagolenniki");
+define("A_SHIELDS", "Tarcze");
+define("I_NAME", "Nazwa");
+define("I_DUR", "Wt");
+define("I_EFECT", "Efekt");
+define("I_COST", "Cena");
+define("I_LEVEL", "Wymagany poziom");
+define("I_AGI", "Ograniczenie zręczności");
+define("I_OPTION", "Opcje");
+define("A_BUY", "Kup");
+define("A_STEAL", "Kradzież");
 ?>

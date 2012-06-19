@@ -1,4 +1,3 @@
-{if $Buy == 0}
    {$Armorinfo}
     <ul>
     <li><a href="armor.php?dalej=A">{$Aarmors}</a></li>
@@ -25,14 +24,9 @@
             <td>{$Cost[number]}</td>
             <td>{$Level[number]}</td>
             <td>{$Agility[number]} %</td>
-            <td>- <a href="armor.php?buy={$Id[number]}">{$Abuy}</a>{if $Crime > "0"}<br /><a href="armor.php?steal={$Id[number]}">{$Asteal}</a>{/if}</td>
+            <td>- <a href="armor.php?dalej={$Next}&amp;buy={$Id[number]}">{$Abuy}</a>{if $Crime > "0"}<br /><a href="armor.php?steal={$Id[number]}">{$Asteal}</a>{/if}</td>
             </tr>
         {/section}
         </table>
     {/if}
-{/if}
-
-{if $Buy != 0}
-    {$Youpay} <b>{$Cost}</b> {$Andbuy} <b>{$Name} {$Ipower} + {$Power}</b>.
-{/if}
 
