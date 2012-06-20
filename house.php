@@ -7,8 +7,8 @@
  *   @copyright            : (C) 2004,2005,2006,2007,2011,2012 Vallheru Team based on Gamers-Fusion ver 2.5
  *   @author               : thindil <thindil@vallheru.net>
  *   @author               : eyescream <tduda@users.sourceforge.net>
- *   @version              : 1.5
- *   @since                : 16.03.2012
+ *   @version              : 1.6
+ *   @since                : 20.06.2012
  *
  */
 
@@ -526,7 +526,7 @@ if (isset ($_GET['action']) && $_GET['action'] == 'my')
             else 
         {
             $smarty -> assign(array("Locator" => L_EMPTY, 
-                                    "Locleave" => ''));
+                                    "Locleave" => "- <a href=\"house.php?action=my&amp;step=leave\">".A_LEAVE."</a><br />"));
         }
         if ($house -> fields['bedroom'] == 'Y') 
         {
@@ -550,11 +550,11 @@ if (isset ($_GET['action']) && $_GET['action'] == 'my')
         }
     }
     /**
-    * Leave house (locator)
+    * Leave house
     */
     if (isset($_GET['step']) && $_GET['step'] == 'leave')
     {
-        if ($player -> id != $house -> fields['locator'])
+      if (($player -> id != $house -> fields['locator']) && ($player->id != $house->fields['owner']))
         {
             error(ERROR);
         }
@@ -564,10 +564,24 @@ if (isset ($_GET['action']) && $_GET['action'] == 'my')
                                     "Yes" => YES));
         }
         if (isset($_GET['step2']) && $_GET['step2'] == 'confirm')
-        {
-            $db -> Execute("UPDATE `houses` SET `locator`=0 WHERE `id`=".$house -> fields['id']);
-            error(YOU_LEAVE);
-        }
+	  {
+	    if ($player->id == $house->fields['locator'])
+	      {
+		$db -> Execute("UPDATE `houses` SET `locator`=0 WHERE `id`=".$house -> fields['id']);
+	      }
+	    elseif ($player->id == $house->fields['owner'])
+	      {
+		if ($house->fields['locator'])
+		  {
+		    $db->Execute("UPDATE `houses` SET `owner`=".$house->fields['locator'].", `locator`=0 WHERE `id`=".$house->fields['id']);
+		  }
+		else
+		  {
+		    $db->Execute("DELETE FROM `houses` WHERE `id`=".$house->fields['id']);
+		  }
+	      }
+	    error(YOU_LEAVE);
+	  }
     }
     /**
     * Set house for sale
