@@ -5,8 +5,8 @@
  *   @name                 : chat.js                          
  *   @copyright            : (C) 2012 Vallheru Team based on Gamers-Fusion ver 2.5
  *   @author               : thindil <thindil@vallheru.net>
- *   @version              : 1.5
- *   @since                : 28.02.2012
+ *   @version              : 1.6
+ *   @since                : 20.06.2012
  *
  */
 
@@ -69,12 +69,12 @@ function sendMsg(evt)
     }
 }
 
-function insertAtCursor(myField, myValue) 
+function insertAtCursor(myField, myValue, intPos) 
 {
     //IE support
+    myField.focus();
     if (document.selection) 
     {
-	myField.focus();
 	sel = document.selection.createRange();
 	sel.text = myValue;
     }
@@ -84,11 +84,13 @@ function insertAtCursor(myField, myValue)
 	var startPos = myField.selectionStart;
 	var endPos = myField.selectionEnd;
 	myField.value = myField.value.substring(0, startPos) + myValue + myField.value.substring(endPos, myField.value.length);
+	myField.setSelectionRange(startPos + intPos, startPos + intPos);
     } 
     else 
     {
 	myField.value += myValue;
     }
+    
 }
 
 function formatText(button)
@@ -96,16 +98,16 @@ function formatText(button)
     switch (button)
     {
     case "bold":
-	insertAtCursor(document.forms['chat'].elements['msg'], "[b][/b]");
+	insertAtCursor(document.forms['chat'].elements['msg'], "[b][/b]", 3);
 	break;
     case "italic":
-	insertAtCursor(document.forms['chat'].elements['msg'], "[i][/i]");
+	insertAtCursor(document.forms['chat'].elements['msg'], "[i][/i]", 3);
 	break;
     case "underline":
-	insertAtCursor(document.forms['chat'].elements['msg'], "[u][/u]");
+	insertAtCursor(document.forms['chat'].elements['msg'], "[u][/u]", 3);
 	break;
     case "emote":
-	insertAtCursor(document.forms['chat'].elements['msg'], "**");
+	insertAtCursor(document.forms['chat'].elements['msg'], "**", 1);
 	break;
     default:
 	if(!isNaN(parseInt(button)))
@@ -124,6 +126,7 @@ function checkCost()
 	if (parseInt(intValue) > 100)
 	{
 	    intValue = 100;
+	    document.getElementById("room").value = "100";
 	}
 	var intCost = intValue * 100;
 	document.getElementById("rcost").innerHTML = Math.round(intCost);
