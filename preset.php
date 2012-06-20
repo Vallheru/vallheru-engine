@@ -7,7 +7,7 @@
  *   @copyright            : (C) 2004,2005,2006,2007,2011,2012 Vallheru Team based on Gamers-Fusion ver 2.5
  *   @author               : thindil <thindil@vallheru.net>
  *   @version              : 1.6
- *   @since                : 17.06.2012
+ *   @since                : 20.06.2012
  *
  */
 
@@ -120,9 +120,7 @@ if (isset ($_GET['id']))
         $db -> Execute("DELETE FROM `core` WHERE `owner`=".$_GET['id']);
         $db -> Execute("DELETE FROM `core_market` WHERE `seller`=".$_GET['id']);
         $db -> Execute("DELETE FROM `log` WHERE `owner`=".$_GET['id']);
-        $db -> Execute("DELETE FROM `mail` WHERE `owner`=".$_GET['id']);
         $db -> Execute("DELETE FROM `outposts` WHERE `owner`=".$_GET['id']);
-        $db -> Execute("DELETE FROM `notatnik` WHERE `gracz`=".$_GET['id']);
         $db -> Execute("DELETE FROM `tribe_oczek` WHERE `gracz`=".$_GET['id']);
         $db -> Execute("UPDATE `players` SET `miejsce`='Altara' WHERE `miejsce`!='Lochy' AND `id`=".$_GET['id']);
         $db -> Execute("DELETE FROM `farms` WHERE `owner`=".$_GET['id']);

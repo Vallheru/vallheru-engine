@@ -1,5 +1,7 @@
 2012-06-20  Bartek thindil Jasicki  <thindil@vallheru.net>
 
+	* UPDATE,preset.php: 
+	don't delete mails and notes on player reset
 	* BUG,mission.php: 
 	fixed typo
 	* BUG,js/chat.js: 
