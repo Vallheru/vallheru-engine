@@ -7,7 +7,7 @@
  *   @copyright            : (C) 2004,2005,2006,2007,2011,2012 Vallheru Team based on Gamers-Fusion ver 2.5
  *   @author               : thindil <thindil@vallheru.net>
  *   @version              : 1.6
- *   @since                : 01.06.2012
+ *   @since                : 20.06.2012
  *
  */
 
@@ -389,21 +389,21 @@ class Player
     {
         global $db;
 
-        $arrEquip = array(array(0, 0, 0, 0, 0, 0, 0, 0, 0, 0),
-                          array(0, 0, 0, 0, 0, 0, 0, 0, 0, 0),
-                          array(0, 0, 0, 0, 0, 0, 0, 0, 0, 0),
-                          array(0, 0, 0, 0, 0, 0, 0, 0, 0, 0),
-                          array(0, 0, 0, 0, 0, 0, 0, 0, 0, 0),
-                          array(0, 0, 0, 0, 0, 0, 0, 0, 0, 0),
-                          array(0, 0, 0, 0, 0, 0, 0, 0, 0, 0),
-                          array(0, 0, 0, 0, 0, 0, 0, 0, 0, 0),
-                          array(0, 0, 0, 0, 0, 0, 0, 0, 0, 0),
-                          array(0, 0, 0, 0, 0, 0, 0, 0, 0, 0),
-                          array(0, 0, 0, 0, 0, 0, 0, 0, 0, 0),
-			  array(0, 0, 0, 0, 0, 0, 0, 0, 0, 0),
-			  array(0, 0, 0, 0, 0, 0, 0, 0, 0, 0));
+        $arrEquip = array(array(0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 'N'),
+                          array(0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 'N'),
+                          array(0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 'N'),
+                          array(0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 'N'),
+                          array(0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 'N'),
+                          array(0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 'N'),
+                          array(0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 'N'),
+                          array(0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 'N'),
+                          array(0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 'N'),
+                          array(0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 'N'),
+                          array(0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 'N'),
+			  array(0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 'N'),
+			  array(0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 'N'));
         $arrEquiptype = array('W', 'B', 'H', 'A', 'L', 'S', 'R', 'T', 'C', 'I', 'E');
-        $objEquip = $db -> Execute("SELECT `id`, `name`, `power`, `type`, `minlev`, `zr`, `wt`, `szyb`, `poison`, `ptype`, `maxwt` FROM `equipment` WHERE `owner`=".$this -> id." AND status='E'");
+        $objEquip = $db -> Execute("SELECT `id`, `name`, `power`, `type`, `minlev`, `zr`, `wt`, `szyb`, `poison`, `ptype`, `maxwt`, `magic` FROM `equipment` WHERE `owner`=".$this -> id." AND status='E'");
         while (!$objEquip -> EOF)
 	  {
             $intKey = array_search($objEquip -> fields['type'], $arrEquiptype);
@@ -429,6 +429,7 @@ class Player
             $arrEquip[$intKey][7] = $objEquip -> fields['szyb'];
             $arrEquip[$intKey][8] = $objEquip -> fields['poison'];
             $arrEquip[$intKey][9] = $objEquip -> fields['maxwt'];
+	    $arrEquip[$intKey][10] = $objEquip->fields['magic'];
             $objEquip -> MoveNext();
         }
         $objEquip -> Close();

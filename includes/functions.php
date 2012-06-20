@@ -7,7 +7,7 @@
  *   @copyright            : (C) 2004,2005,2006,2011,2012 Vallheru Team based on Gamers-Fusion ver 2.5
  *   @author               : thindil <thindil@vallheru.net>
  *   @version              : 1.6
- *   @since                : 10.06.2012
+ *   @since                : 20.06.2012
  *
  */
 
@@ -263,7 +263,7 @@ function equip ($id)
     {
         error (LEVEL_TOO_LOW);
     }
-    if ($player -> clas == 'Barbarzyńca' && ($equip -> fields['magic'] == 'Y' || ($equip -> fields['type'] == 'I' && $equip -> fields['power']))) 
+    if ($player -> clas == 'Barbarzyńca' && ($equip -> fields['magic'] != 'N' || ($equip -> fields['type'] == 'I' && $equip -> fields['power']))) 
     {
         error (YOU_ARE_BARBARIAN);
     }

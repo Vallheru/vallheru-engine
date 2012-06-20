@@ -37,14 +37,21 @@
 
 {if $Eamount > 0}
     <br /><b>-{$Espells}:</b><br />
-    {section name=spell3 loop=$Uname}
-        {$Uname[spell3]} ({$Ueffect[spell3]}) [ <a href="czary.php?cast={$Uid[spell3]}">{$Castthis}</a> ]<br />
-    {/section}
+    {foreach $Espells2 as $Espells3}
+        <div>
+        <label for="espells{$Dspells3@index}" class="toggle">+{$Telement} {$Dspells3@key}</label>
+        <input id="espells{$Dspells3@index}" type="checkbox" class="toggle" {$Checked} />
+        <div><br />
+            {foreach $Espells3 as $Spell}
+                {$Spell.name} ({$Spell.effect}) [ <a href="czary.php?cast={$Spell.id}">{$Castthis}</a> ]<br />
+	    {/foreach}
+        </div><br />
+    {/foreach}
 {/if}
 
 {if $Cast != ""}
     <form method="post" action="czary.php?cast={$Cast}&amp;step=items">
-    <input type="submit" value="{$Cast2}" /> {$Spell} {$Spellname} {$Ona} <select name="item">
+    <input type="submit" value="{$Cast2}" /> {$Spell23} {$Spellname} {$Ona} <select name="item">
     {section name=spell4 loop=$Itemname}
         <option value="{$Itemid[spell4]}">{$Itemname[spell4]} ({$Iamount}: {$Itemamount[spell4]})</option>
     {/section}

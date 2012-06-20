@@ -1,5 +1,7 @@
 2012-06-20  Bartek thindil Jasicki  <thindil@vallheru.net>
 
+	* FEATURE,templates/czary.tpl, templates/layout1/czary.tpl, czary.php, includes/functions.php, class/player_class.php, equip.php, battle.php:
+	start work on new enchantment system
 	* UPDATE,preset.php: 
 	don't delete mails and notes on player reset
 	* BUG,mission.php: 

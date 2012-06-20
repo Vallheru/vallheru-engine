@@ -7,7 +7,7 @@
  *   @copyright            : (C) 2004,2005,2006,2011,2012 Vallheru Team based on Gamers-Fusion ver 2.5
  *   @author               : thindil <thindil@vallheru.net>
  *   @version              : 1.6
- *   @since                : 19.06.2012
+ *   @since                : 20.06.2012
  *
  */
 
@@ -147,12 +147,12 @@ if (isset($_GET['cast']))
             message('error', NOT_YOUR);
 	    $blnValid = FALSE;
 	  }
-        if ($arritem -> fields['magic'] == 'Y') 
+        if ($arritem -> fields['magic'] != 'N') 
 	  {
             message('error', IS_MAGIC);
 	    $blnValid = FALSE;
 	  }
-        $arrspell = $db -> Execute("SELECT nazwa, poziom FROM czary WHERE nazwa='".$_POST['spell']."' AND gracz=".$player -> id);
+        $arrspell = $db -> Execute("SELECT `nazwa`, `poziom`, `element` FROM `czary` WHERE `nazwa`='".$_POST['spell']."' AND `gracz`=".$player -> id);
         if ($player -> energy < $arrspell -> fields['poziom']) 
 	  {
 	    message('error', NO_ENERGY);
@@ -191,11 +191,15 @@ if (isset($_GET['cast']))
 	    $bonus = ceil($player -> magic / $arrspell -> fields['poziom']);
 	    
 	    $magic = ($arrspell -> fields['poziom'] / 100);
+
+	    $arrElement = array('earth' => 'E', 'water' => 'W', 'fire' => 'F', 'air' => 'A');
+	    $blnValid2 = TRUE;
 	    if ($arrspell -> fields['nazwa'] == E_SPELL1) 
 	      {
 		if ($arritem -> fields['type'] == 'B') 
 		  {
 		    message('error', NOT_ABLE1);
+		    $blnValid2 = FALSE;
 		    $blnValid = FALSE;
 		  }
 		elseif ($chance > 100) 
@@ -207,10 +211,10 @@ if (isset($_GET['cast']))
 		      }
 		    $power = $arritem -> fields['power'] + $bonus;
 		    message('success', YOU_RISE.$arritem -> fields['name'].FOR_A.$bonus.NOW_IS.$bonus.S_EXP.$magic.S_CAST);
-		    $test = $db -> Execute("SELECT id FROM equipment WHERE name='".$name."' AND wt=".$arritem -> fields['wt']." AND type='".$arritem -> fields['type']."' AND status='U' AND owner=".$player -> id." AND power=".$power." AND zr=".$arritem -> fields['zr']." AND szyb=".$arritem -> fields['szyb']." AND maxwt=".$arritem -> fields['maxwt']." AND poison=".$arritem -> fields['poison']." AND ptype='".$arritem -> fields['ptype']."' AND magic='Y' AND repair=".$arritem -> fields['repair']);
+		    $test = $db -> Execute("SELECT id FROM equipment WHERE name='".$name."' AND wt=".$arritem -> fields['wt']." AND type='".$arritem -> fields['type']."' AND status='U' AND owner=".$player -> id." AND power=".$power." AND zr=".$arritem -> fields['zr']." AND szyb=".$arritem -> fields['szyb']." AND maxwt=".$arritem -> fields['maxwt']." AND poison=".$arritem -> fields['poison']." AND ptype='".$arritem -> fields['ptype']."' AND magic='".$arrElement[$arrspell->fields['element']]."' AND repair=".$arritem -> fields['repair']);
 		    if (!$test -> fields['id']) 
 		      {
-			$db -> Execute("INSERT INTO equipment (owner, name, power, type, cost, zr, wt, minlev, maxwt, amount, magic, poison, szyb, ptype, twohand, repair) VALUES(".$player -> id.",'".$name."',".$power.",'".$arritem -> fields['type']."',".$arritem -> fields['cost'].",".$arritem -> fields['zr'].",".$arritem -> fields['wt'].",".$arritem -> fields['minlev'].",".$arritem -> fields['maxwt'].",1,'Y',".$arritem -> fields['poison'].",".$arritem -> fields['szyb'].",'".$arritem -> fields['ptype']."', '".$arritem -> fields['twohand']."', ".$arritem -> fields['repair'].")") or error(E_DB);
+			$db -> Execute("INSERT INTO equipment (owner, name, power, type, cost, zr, wt, minlev, maxwt, amount, magic, poison, szyb, ptype, twohand, repair) VALUES(".$player -> id.",'".$name."',".$power.",'".$arritem -> fields['type']."',".$arritem -> fields['cost'].",".$arritem -> fields['zr'].",".$arritem -> fields['wt'].",".$arritem -> fields['minlev'].",".$arritem -> fields['maxwt'].",1,'".$arrElement[$arrspell->fields['element']]."',".$arritem -> fields['poison'].",".$arritem -> fields['szyb'].",'".$arritem -> fields['ptype']."', '".$arritem -> fields['twohand']."', ".$arritem -> fields['repair'].")") or error(E_DB);
 		      } 
 		    else 
 		      {
@@ -238,6 +242,7 @@ if (isset($_GET['cast']))
 		if ($arritem -> fields['type'] == 'R') 
 		  {
 		    message('error', NOT_ABLE2);
+		    $blnValid2 = FALSE;
 		    $blnValid = FALSE;
 		  }
 		elseif ($chance > 100) 
@@ -250,10 +255,10 @@ if (isset($_GET['cast']))
 		    message('success', YOU_RISE2.$arritem -> fields['name'].FOR_A.$bonus.NOW_IS.$bonus.S_EXP.$magic.S_CAST);
 		    $maxdur = $arritem -> fields['maxwt'] + $bonus;
 		    $dur = $arritem -> fields['wt'] + $bonus;
-		    $test = $db -> Execute("SELECT id FROM equipment WHERE name='".$name."' AND wt=".$dur." AND type='".$arritem -> fields['type']."' AND status='U' AND owner=".$player -> id." AND power=".$arritem -> fields['power']." AND zr=".$arritem -> fields['zr']." AND szyb=".$arritem -> fields['szyb']." AND maxwt=".$maxdur." AND poison=".$arritem -> fields['poison']." AND magic='Y' AND ptype='".$arritem -> fields['ptype']."' AND repair=".$arritem -> fields['repair']);
+		    $test = $db -> Execute("SELECT id FROM equipment WHERE name='".$name."' AND wt=".$dur." AND type='".$arritem -> fields['type']."' AND status='U' AND owner=".$player -> id." AND power=".$arritem -> fields['power']." AND zr=".$arritem -> fields['zr']." AND szyb=".$arritem -> fields['szyb']." AND maxwt=".$maxdur." AND poison=".$arritem -> fields['poison']." AND magic='".$arrElement[$arrspell->fields['element']]."' AND ptype='".$arritem -> fields['ptype']."' AND repair=".$arritem -> fields['repair']);
 		    if (!$test -> fields['id']) 
 		      {
-			$db -> Execute("INSERT INTO equipment (owner, name, power, type, cost, zr, wt, minlev, maxwt, amount, magic, poison, szyb, ptype, twohand, repair) VALUES(".$player -> id.",'".$name."',".$arritem -> fields['power'].",'".$arritem -> fields['type']."',".$arritem -> fields['cost'].",".$arritem -> fields['zr'].",".$dur.",".$arritem -> fields['minlev'].",".$maxdur.",1,'Y',".$arritem -> fields['poison'].",".$arritem -> fields['szyb'].",'".$arritem -> fields['ptype']."', '".$arritem -> fields['twohand']."', ".$arritem -> fields['repair'].")") or error(E_DB);
+			$db -> Execute("INSERT INTO equipment (owner, name, power, type, cost, zr, wt, minlev, maxwt, amount, magic, poison, szyb, ptype, twohand, repair) VALUES(".$player -> id.",'".$name."',".$arritem -> fields['power'].",'".$arritem -> fields['type']."',".$arritem -> fields['cost'].",".$arritem -> fields['zr'].",".$dur.",".$arritem -> fields['minlev'].",".$maxdur.",1,'".$arrElement[$arrspell->fields['element']]."',".$arritem -> fields['poison'].",".$arritem -> fields['szyb'].",'".$arritem -> fields['ptype']."', '".$arritem -> fields['twohand']."', ".$arritem -> fields['repair'].")") or error(E_DB);
 		      } 
                     else 
 		      {
@@ -313,15 +318,16 @@ if (isset($_GET['cast']))
 		    else 
 		      {
 			message('error', NOT_ABLE3);
+			$blnValid2 = FALSE;
 			$blnValid = FALSE;
 		      }
 		    if ($blnValid)
 		      {
 			message("success", $text." ".$arritem -> fields['name']." o ".$bonus.NOW_IS.$bonus.S_EXP.$magic.S_CAST);
-			$test = $db -> Execute("SELECT id FROM equipment WHERE name='".$name."' AND wt=".$arritem -> fields['wt']." AND type='".$arritem -> fields['type']."' AND status='U' AND owner=".$player -> id." AND power=".$arritem -> fields['power']." AND zr=".$agi." AND szyb=".$speed." AND maxwt=".$arritem -> fields['maxwt']." AND poison=".$arritem -> fields['poison']." AND magic='Y' AND ptype='".$arritem -> fields['ptype']."' AND repair=".$arritem -> fields['repair']);
+			$test = $db -> Execute("SELECT id FROM equipment WHERE name='".$name."' AND wt=".$arritem -> fields['wt']." AND type='".$arritem -> fields['type']."' AND status='U' AND owner=".$player -> id." AND power=".$arritem -> fields['power']." AND zr=".$agi." AND szyb=".$speed." AND maxwt=".$arritem -> fields['maxwt']." AND poison=".$arritem -> fields['poison']." AND magic='".$arrElement[$arrspell->fields['element']]."' AND ptype='".$arritem -> fields['ptype']."' AND repair=".$arritem -> fields['repair']);
 			if (!$test -> fields['id']) 
 			  {
-			    $db -> Execute("INSERT INTO equipment (owner, name, power, type, cost, zr, wt, minlev, maxwt, amount, magic, poison, szyb, twohand, repair) VALUES(".$player -> id.",'".$name."',".$arritem -> fields['power'].",'".$arritem -> fields['type']."',".$arritem -> fields['cost'].",".$agi.",".$arritem -> fields['wt'].",".$arritem -> fields['minlev'].",".$arritem -> fields['maxwt'].",1,'Y',".$arritem -> fields['poison'].",".$speed.", '".$arritem -> fields['twohand']."', ".$arritem -> fields['repair'].")") or error(E_DB);
+			    $db -> Execute("INSERT INTO equipment (owner, name, power, type, cost, zr, wt, minlev, maxwt, amount, magic, poison, szyb, twohand, repair) VALUES(".$player -> id.",'".$name."',".$arritem -> fields['power'].",'".$arritem -> fields['type']."',".$arritem -> fields['cost'].",".$agi.",".$arritem -> fields['wt'].",".$arritem -> fields['minlev'].",".$arritem -> fields['maxwt'].",1,'".$arrElement[$arrspell->fields['element']]."',".$arritem -> fields['poison'].",".$speed.", '".$arritem -> fields['twohand']."', ".$arritem -> fields['repair'].")") or error(E_DB);
 			  } 
 			else 
 			  {
@@ -339,14 +345,17 @@ if (isset($_GET['cast']))
 	      }
 	    $db -> Execute("UPDATE `players` SET `pm`=`pm`-".$arrspell -> fields['poziom'].", `energy`=`energy`-".$arrspell -> fields['poziom']." WHERE id=".$player -> id);
 	    $arrspell -> Close();
-	    $amount = $arritem -> fields['amount'] - 1;
-	    if ($amount > 0) 
+	    if ($blnValid2)
 	      {
-		$db -> Execute("UPDATE equipment SET amount=amount-1 WHERE id=".$arritem -> fields['id']);
-	      } 
-	    else 
-	      {
-		$db -> Execute("DELETE FROM equipment WHERE id=".$arritem -> fields['id']);
+		$amount = $arritem -> fields['amount'] - 1;
+		if ($amount > 0) 
+		  {
+		    $db -> Execute("UPDATE equipment SET amount=amount-1 WHERE id=".$arritem -> fields['id']);
+		  } 
+		else 
+		  {
+		    $db -> Execute("DELETE FROM equipment WHERE id=".$arritem -> fields['id']);
+		  }
 	      }
 	    $objBonus -> Close();
 	    $arritem -> Close();	    
@@ -358,7 +367,7 @@ if (isset($_GET['cast']))
         "Itemamount" => $arriamount, 
         "Itemid" => $arriid,
         "Cast2" => CAST,
-        "Spell" => SPELL,
+        "Spell23" => SPELL,
         "Ona" => ON_A,
         "Iamount" => I_AMOUNT));
     $czary -> Close();
@@ -467,26 +476,35 @@ $arrefect = array();
 $arrid3 = array();
 $i = 0;
 $czaryu = $db -> Execute("SELECT * FROM `czary` WHERE `gracz`=".$player -> id." AND `typ`='U' ORDER BY `poziom` DESC");
+$arrEspells = array("Ziemia" => array(), "Woda" => array(), "Powietrze" => array(), "Ogień" => array());
 while (!$czaryu -> EOF) 
 {
+    $strKey = $arrElements[$czaryu->fields['element']];
     if ($czaryu -> fields['nazwa'] == E_SPELL1) 
     {
-        $arrefect[$i] = S_EFECT1;
+        $strEffect = S_EFECT1;
     }
     if ($czaryu -> fields['nazwa'] == E_SPELL2) 
     {
-        $arrefect[$i] = S_EFECT2;
+        $strEffect = S_EFECT2;
     }
     if ($czaryu -> fields['nazwa'] == E_SPELL3) 
     {
-        $arrefect[$i] = S_EFECT3;
+        $strEffect = S_EFECT3;
     }
-    $arrname3[$i] = $czaryu -> fields['nazwa'];
-    $arrid3[$i] = $czaryu -> fields['id'];
+    $arrEspells[$strKey][] = array("id" => $czaryu->fields['id'],
+				   "name" => $czaryu->fields['nazwa'],
+				   "effect" => $strEffect);
     $czaryu -> MoveNext();
-    $i = $i + 1;
 }
 $czaryu -> Close();
+foreach ($arrEspells as $key => $value)
+{
+  if (count($arrEspells[$key]) == 0)
+    {
+      unset($arrEspells[$key]);
+    }
+}
 
 if (strpos($_SERVER['HTTP_USER_AGENT'], 'Opera Mini') !== FALSE)
   {
@@ -505,23 +523,21 @@ $smarty -> assign(array("Bspells2" => $arrBspells,
 			"Telement" => "Żywioł:",
 			"Dspells2" => $arrDspells,
 			"Damount" => count($arrDspells),
-			"Eamount" => count($arrid3),
+			"Eamount" => count($arrEspells),
 			"Nospells" => "Obecnie nie posiadasz jakichkolwiek czarów w księdze. Możesz zakupić nowe czary w Magicznej Wieży w miastach.",
 			"Checked" => $strChecked,
-    "Uname" => $arrname3, 
-    "Ueffect" => $arrefect,
-    "Uid" => $arrid3, 
-    "Cast" => $_GET['cast'],
-    "Arefresh" => S_REFRESH,
-    "Usedspells" => USED_SPELLS,
-    "Spellbook" => SPELL_BOOK,
-    "Bspells" => B_SPELLS,
-    "Dspells" => D_SPELLS,
-    "Espells" => E_SPELLS,
-    "Usethis" => USE_THIS,
-    "Bdamage" => B_DAMAGE,
-    "Ddefense" => D_DEFENSE,
-    "Castthis" => CAST_THIS));
+			"Espells2" => $arrEspells,
+			"Cast" => $_GET['cast'],
+			"Arefresh" => S_REFRESH,
+			"Usedspells" => USED_SPELLS,
+			"Spellbook" => SPELL_BOOK,
+			"Bspells" => B_SPELLS,
+			"Dspells" => D_SPELLS,
+			"Espells" => E_SPELLS,
+			"Usethis" => USE_THIS,
+			"Bdamage" => B_DAMAGE,
+			"Ddefense" => D_DEFENSE,
+			"Castthis" => CAST_THIS));
 $smarty -> display ('czary.tpl');
 
 require_once("includes/foot.php");
