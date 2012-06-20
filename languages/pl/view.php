@@ -8,7 +8,7 @@
  *   @author               : thindil <thindil@vallheru.net>
  *   @author               : eyescream <tduda@users.sourceforge.net>
  *   @version              : 1.6
- *   @since                : 28.05.2012
+ *   @since                : 20.06.2012
  *
  */
 
@@ -57,7 +57,7 @@ define("T_LEVEL", "Poziom");
 define("T_STATUS", "Status");
 define("T_MAX_HP", "Maksymalne PŻ");
 define("T_FIGHTS", "Wyniki");
-define("T_LAST_KILL", "Ostatnio zabity");
+define("T_LAST_KILL", "Ostatnio zabity/a");
 define("T_REFS", "Vallary");
 define("T_PROFILE", "Profil");
 define("T_OPTIONS", "Opcje");
