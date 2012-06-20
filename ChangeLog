@@ -1,5 +1,7 @@
 2012-06-20  Bartek thindil Jasicki  <thindil@vallheru.net>
 
+	* BUG,mission.php: 
+	fixed typo
 	* BUG,js/chat.js: 
 	fixed bug with room cost
 	* BUG,languages/pl/view.php:

@@ -7,7 +7,7 @@
  *   @copyright            : (C) 2012 Vallheru Team based on Gamers-Fusion ver 2.5
  *   @author               : thindil <thindil@vallheru.net>
  *   @version              : 1.6
- *   @since                : 05.06.2012
+ *   @since                : 20.06.2012
  *
  */
 
@@ -764,11 +764,11 @@ if ($strFinish != '' && $strFinish != 'combat')
 	    $objLoot->Close();
 	    if ($arrLoot[0] == 'tools')
 	      {
-		    $strText .= 'Oprócz tego dostajesz '.$strItemtext;
+		$strText .= 'Oprócz tego dostajesz '.$strItemtext;
 	      }
 	    else
 	      {
-		$strText .= 'Oprócz tego dostajesz plan wytrychów'.$strPlantext;
+		$strText .= 'Oprócz tego dostajesz '.$strPlantext;
 	      }
 	  }
 	checkexp($player->exp, $intExpgain, $player->level, $player->race, $player->user, $player->id, 0, 0, $player->id, $strSkill, $fltSkill);
