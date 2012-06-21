@@ -8,7 +8,7 @@
  *   @author               : thindil <thindil@vallheru.net>
  *   @author               : eyescream <tduda@users.sourceforge.net>
  *   @version              : 1.6
- *   @since                : 15.06.2012
+ *   @since                : 21.06.2012
  *
  */
 
@@ -59,7 +59,7 @@ if (isset ($_GET['step']) && $_GET['step'] == 'add')
         {
             $db -> Execute("INSERT INTO `jail` (`prisoner`, `verdict`, `duration`, `cost`, `data`) VALUES(".$_POST['prisoner'].", '".$_POST['verdict']."', ".$intTime.", 0, ".$strDate.")");
             $db -> Execute("UPDATE `players` SET `miejsce`='Lochy' WHERE `id`=".$_POST['prisoner']);
-            require_once("languages/".$objTest -> fields['lang']."/admin1.php");
+            require_once("languages/".$lang."/admin1.php");
             $db -> Execute("INSERT INTO `log` (`owner`, `log`, `czas`) VALUES(".$_POST['prisoner'].", '".YOU_JAIL." ".$_POST['time']." ".DAYS2." ".$_POST['verdict'].". ".SEND_YOU.": ".$player -> user." ID: ".$player -> id."', ".$strDate.")") or die($db -> ErrorMsg());
             $db -> Execute("INSERT INTO `log` (`owner`, `log`, `czas`) VALUES(1,'".$_POST['prisoner']." - ".YOU_JAIL.$_POST['time'].DAYS.$_POST['verdict'].SEND_YOU.$player -> user." ID: ".$player -> id."', ".$strDate.")");
         }

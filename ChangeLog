@@ -1,3 +1,8 @@
+2012-06-21  Bartek thindil Jasicki  <thindil@vallheru.net>
+
+	* BUG,includes/admin/jail.php:
+	fixed language variable
+
 2012-06-20  Bartek thindil Jasicki  <thindil@vallheru.net>
 
 	* FEATURE,house.php: 
