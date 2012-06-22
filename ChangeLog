@@ -1,5 +1,7 @@
 2012-06-22  Bartek thindil Jasicki  <thindil@vallheru.net>
 
+	* UPDATE,includes/bbcode.php: 
+	a bit better check for bad words
 	* FEATURE,templates/layout1/wieza.tpl, templates/wieza.tpl, wieza.php, battle.php, includes/turnfight.php, includes/funkcje.php:
 	finished work on new enchantment system
 
