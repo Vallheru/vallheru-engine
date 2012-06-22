@@ -1,3 +1,8 @@
+2012-06-22  Bartek thindil Jasicki  <thindil@vallheru.net>
+
+	* FEATURE,templates/layout1/wieza.tpl, templates/wieza.tpl, wieza.php, battle.php, includes/turnfight.php, includes/funkcje.php:
+	finished work on new enchantment system
+
 2012-06-21  Bartek thindil Jasicki  <thindil@vallheru.net>
 
 	* BUG,includes/admin/jail.php:

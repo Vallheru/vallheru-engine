@@ -145,37 +145,39 @@ if (isset ($_GET['dalej']))
 	    break;
 	  }
 	$objSpells = $db->Execute("SELECT * FROM `czary` WHERE `gracz`=0 AND `status`='S' AND `typ`='".$_GET['dalej']."' ORDER BY `poziom` ASC");
-	$objOwned = $db->Execute("SELECT `nazwa` FROM `czary` WHERE `gracz`=".$player->id." AND `typ`='".$_GET['dalej']."'");
+	$objOwned = $db->Execute("SELECT `nazwa`, `element` FROM `czary` WHERE `gracz`=".$player->id." AND `typ`='".$_GET['dalej']."'");
 	$arrOwned = array();
+	$arrOelement = array();
 	while (!$objOwned->EOF)
 	  {
 	    $arrOwned[] = $objOwned->fields['nazwa'];
+	    $arrOelement[] = $objOwned->fields['element'];
 	    $objOwned->MoveNext();
 	  }
 	$objOwned->Close();
-	if ($_GET['dalej'] != 'U')
-	  {
-	    $arrSpells = array("Ziemia" => array(), "Woda" => array(), "Powietrze" => array(), "Ogień" => array());
-	    $arrElements = array('earth' => 'Ziemia', 'water' => 'Woda', 'wind' => 'Powietrze', 'fire' => 'Ogień');
-	    $strElement = "Zywioł:";
-	  }
-	else
-	  {
-	    $arrSpells = array(array());
-	    $strElement = '';
-	  }
+	$arrSpells = array("Ziemia" => array(), "Woda" => array(), "Powietrze" => array(), "Ogień" => array());
+	$arrElements = array('earth' => 'Ziemia', 'water' => 'Woda', 'wind' => 'Powietrze', 'fire' => 'Ogień');
+	$strElement = "Zywioł:";
 	while (!$objSpells->EOF)
 	  {
 	    if (in_array($objSpells->fields['nazwa'], $arrOwned))
 	      {
-		$objSpells->MoveNext();
-		continue;
+		if ($objSpells->fields['typ'] != 'U')
+		  {
+		    $objSpells->MoveNext();
+		    continue;
+		  }
+		else
+		  {
+		    $intKey = array_search($objSpells->fields['nazwa'], $arrOwned);
+		    if ($objSpells->fields['element'] == $arrOelement[$intKey])
+		      {
+			$objSpells->MoveNext();
+			continue;
+		      }
+		  }
 	      }
-	    $Key = 0;
-	    if ($_GET['dalej'] != 'U')
-	      {
-		$Key = $arrElements[$objSpells->fields['element']];
-	      }
+	    $Key = $arrElements[$objSpells->fields['element']];
 	    if ($objSpells->fields['typ'] == 'B')
 	      {
 		$strEffect = $objSpells->fields['obr'].S_POWER;

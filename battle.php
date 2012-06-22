@@ -7,7 +7,7 @@
  *   @copyright            : (C) 2004,2005,2006,2011,2012 Vallheru Team based on Gamers-Fusion ver 2.5
  *   @author               : thindil <thindil@vallheru.net>
  *   @version              : 1.6
- *   @since                : 20.06.2012
+ *   @since                : 22.06.2012
  *
  */
 
@@ -115,6 +115,112 @@ if (isset($_GET['battle']))
 			  'fire' => 'F',
 			  'wind' => 'A',
 			  'earth' => 'E');
+    $arrElements4 = array('water' => 'F',
+			    'fire' => 'A',
+			    'wind' => 'E',
+			    'earth' => 'W');
+    $arrElements5 = array('W' => 'F',
+			  'F' => 'A',
+			  'A' => 'E',
+			  'E' => 'W');
+
+    for ($i = 2; $i < 6; $i++)
+      {
+	if ($arrEnequip[$i][10] != 'N')
+	  {
+	    if ($myczar->fields['id'])
+	      {
+		if ($arrElements3[$myczar->fields['element']] == $arrEnequip[$i][10])
+		  {
+		    $arrEnequip[$i][2] = $arrEnequip[$i][2] * 2;
+		  }
+		elseif ($arrElements4[$myczar->fields['element']] == $arrEnequip[$i][10])
+		  {
+		    $arrEnequip[$i][2] = ceil($arrEnequip[$i][2] / 2);
+		  }
+	      }
+	    elseif ($arrMyequip[0][10] != 'N')
+	      {
+		if ($arrMyequip[0][10] == $arrEnequip[$i][10])
+		  {
+		    $arrEnequip[$i][2] = $arrEnequip[$i][2] * 2;
+		  }
+		elseif ($arrElements5[$arrMyequip[0][10]] == $arrEnequip[$i][10])
+		  {
+		    $arrEnequip[$i][2] = ceil($arrEnequip[$i][2] / 2);
+		  }
+	      }
+	    elseif ($arrMyequip[6][10] != 'N')
+	      {
+		if ($arrMyequip[6][10] == $arrEnequip[$i][10])
+		  {
+		    $arrEnequip[$i][2] = $arrEnequip[$i][2] * 2;
+		  }
+		elseif ($arrElements5[$arrMyequip[6][10]] == $arrEnequip[$i][10])
+		  {
+		    $arrEnequip[$i][2] = ceil($arrEnequip[$i][2] / 2);
+		  }
+	      }
+	  }
+	elseif ($arrEnequip[$i][10] == 'N')
+	  {
+	    if ($myczar->fields['id'])
+	      {
+		$arrEnequip[$i][2] = 0;
+	      }
+	    if ($arrMyequip[0][10] != 'N' || $arrMyequip[6][10] != 'N')
+	      {
+		$arrEnequip[$i][2] = ceil($arrEnequip[$i][2] / 2);
+	      }
+	  }
+	if ($arrMyequip[$i][10] != 'N')
+	  {
+	    if ($eczar->fields['id'])
+	      {
+		if ($arrElements3[$eczar->fields['element']] == $arrMyequip[$i][10])
+		  {
+		    $arrMyequip[$i][2] = $arrMyequip[$i][2] * 2;
+		  }
+		elseif ($arrElements4[$eczar->fields['element']] == $arrMyequip[$i][10])
+		  {
+		    $arrMyequip[$i][2] = ceil($arrMyequip[$i][2] / 2);
+		  }
+	      }
+	    elseif ($arrEnEquip[0][10] != 'N')
+	      {
+		if ($arrEnequip[0][10] == $arrMyequip[$i][10])
+		  {
+		    $arrMyequip[$i][2] = $arrMyequip[$i][2] * 2;
+		  }
+		elseif ($arrElements5[$arrEnEquip[0][10]] == $arrMyequip[$i][10])
+		  {
+		    $arrMyequip[$i][2] = ceil($arrMyequip[$i][2] / 2);
+		  }
+	      }
+	    elseif ($arrEnEquip[6][10] != 'N')
+	      {
+		if ($arrEnequip[6][10] == $arrMyequip[$i][10])
+		  {
+		    $arrMyequip[$i][2] = $arrMyequip[$i][2] * 2;
+		  }
+		elseif ($arrElements5[$arrEnEquip[6][10]] == $arrMyequip[$i][10])
+		  {
+		    $arrMyequip[$i][2] = ceil($arrMyequip[$i][2] / 2);
+		  }
+	      }
+	  }
+	elseif ($arrMyequip[$i][10] == 'N')
+	  {
+	    if ($eczar->fields['id'])
+	      {
+		$arrMyequip[$i][2] = 0;
+	      }
+	    if ($arrEnequip[0][10] != 'N' || $arrEnequip[6][10] != 'N')
+	      {
+		$arrMyequip[$i][2] = ceil($arrMyequip[$i][2] / 2);
+	      }
+	  }
+      }
     if ($eczaro->fields['id'])
       {
 	if ($myczar->fields['id'])

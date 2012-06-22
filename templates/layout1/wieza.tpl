@@ -9,9 +9,7 @@
     {if $Next != ""}
         {if $Next == "B" || $Next == "O" || $Next == "U"}
 	    {foreach $Spells as $Spells2}
-	        {if $Next != "U"}
-		    <b>{$Telement} {$Spells2@key}</b><br />
-		{/if}
+		<b>{$Telement} {$Spells2@key}</b><br />
 	    	<table class="dark">
             	    <tr>
             	        <th>{$Tname}</th>

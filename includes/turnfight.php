@@ -7,7 +7,7 @@
  *   @copyright            : (C) 2004,2005,2006,2007,2011,2012 Vallheru Team based on Gamers-Fusion ver 2.5
  *   @author               : thindil <thindil@vallheru.net>
  *   @version              : 1.6
- *   @since                : 11.06.2012
+ *   @since                : 22.06.2012
  *
  */
  
@@ -116,22 +116,24 @@ function turnfight($expgain,$goldgain,$action,$addres)
             error (ONLY_MAGE);
         }
     }
-    if ($arrEquip[2][0]) 
-    {
-        $premia = ($premia + $arrEquip[2][2]);
-    }
-    if ($arrEquip[4][0]) 
-    {
-        $premia = ($premia + $arrEquip[4][2]);
-    }
-    if ($arrEquip[5][0]) 
-    {
-        $premia = ($premia + $arrEquip[5][2]);
-    }
-    if ($arrEquip[3][0]) 
-    {
-        $premia = ($premia + $arrEquip[3][2]);
-    }
+    for ($i = 2; $i < 6; $i++)
+      {
+	$premia += $arrEquip[$i][2];
+	if ($enemy['dmgtype'] != 'none')
+	  {
+	    if ($arrEquip[$i][10] != 'N')
+	      {
+		if ($arrElements3[$enemy['dmgtype']] == $arrEquip[$i][10])
+		  {
+		    $premia += $arrEquip[$i][2];
+		  }
+		elseif ($arrElements4[$enemy['dmgtype']] == $arrEquip[$i][10])
+		  {
+		    $premia -= ceil($arrEquip[$i][2] / 2);
+		  }
+	      }
+	  }
+      }
     if ($player -> clas == 'Wojownik'  || $player -> clas == 'Barbarzyńca') 
     {
         $enemy['damage'] = ($enemy['strength'] - ($player -> level + $player -> cond + $premia));
@@ -799,6 +801,23 @@ function attack($eunik,$bdamage)
         {
             $arrEquip[0][2] = $arrEquip[0][2] + $arrEquip[0][8];
         }
+	if ($arrEquip[0][10] != 'N' && $arrEquip[0][10] == $enemy['resistance'][0])
+	  {
+	    switch ($enemy['resistance'][1])
+	      {
+	      case 'weak':
+		$arrEquip[0][2] -= ($arrEquip[0][2] * 0.1);
+		break;
+	      case 'medium':
+		$arrEquip[0][2] -= ($arrEquip[0][2] * 0.25);
+		break;
+	      case 'strong':
+		$arrEquip[0][2] -= ($arrEquip[0][2] * 0.5);
+		break;
+	      default:
+		break;
+	      }
+	  }
         if ($player -> clas == 'Wojownik' || $player -> clas == 'Barbarzyńca') 
         {
             $stat['damage'] = (($player -> strength + $arrEquip[0][2]) + $player -> level);
@@ -834,6 +853,23 @@ function attack($eunik,$bdamage)
 	if ($arrEquip[6][3] == 'D')
 	  {
 	    $bonus += $arrEquip[6][8];
+	  }
+	if ($arrEquip[6][10] != 'N' && $arrequip[6][10] == $enemy['resistance'][0])
+	  {
+	    switch ($enemy['resistance'][1])
+	      {
+	      case 'weak':
+		$bonus -= ($arrEquip[6][2] * 0.1);
+		break;
+	      case 'medium':
+		$bonus -= ($arrEquip[6][2] * 0.25);
+		break;
+	      case 'strong':
+		$bonus -= ($arrEquip[6][2] * 0.5);
+		break;
+	      default:
+		break;
+	      }
 	  }
         $bonus2 = (($player  -> strength / 2) + ($player->agility / 2));
         if ($player -> clas == 'Wojownik'  || $player -> clas == 'Barbarzyńca') 
