@@ -1,3 +1,8 @@
+2012-06-23  Bartek thindil Jasicki  <thindil@vallheru.net>
+
+	* BUG,languages/pl/outposts.php:
+	fixed typo
+
 2012-06-22  Bartek thindil Jasicki  <thindil@vallheru.net>
 
 	* UPDATE,includes/bbcode.php: 

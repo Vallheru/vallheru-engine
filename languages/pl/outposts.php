@@ -8,7 +8,7 @@
  *   @author               : thindil <thindil@vallheru.net>
  *   @author               : eyescream <tduda@users.sourceforge.net>
  *   @version              : 1.6
- *   @since                : 14.06.2012
+ *   @since                : 23.06.2012
  *
  */
 
@@ -288,7 +288,7 @@ if (isset ($_GET['view']) && $_GET['view'] == 'battle')
     define("TOO_FAT2", "Twoja armia jest zbyt zmęczona aby mogła atakować dalej!");
     define("SOLDIERS", "piechurów");
     define("ARCHERS", "łuczników");
-    define("MACHINES", "katapult");
+    define("MACHINES", "machin");
     define("FORTS", "fortyfikacji");
     define("YOU_ATTACK", "<br />Atakujesz strażnicę gracza ");
     define("AND_WIN", " i wygrywasz!<br />(Siła ataku: ");
