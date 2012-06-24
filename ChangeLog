@@ -1,3 +1,8 @@
+2012-06-24  Bartek thindil Jasicki  <thindil@vallheru.net>
+
+	* BUG,tribeadmin.php:
+	fixed bug with lenght of tribe tags
+
 2012-06-23  Bartek thindil Jasicki  <thindil@vallheru.net>
 
 	* BUG,languages/pl/outposts.php:

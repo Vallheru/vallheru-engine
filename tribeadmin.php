@@ -7,7 +7,7 @@
  *   @copyright            : (C) 2012 Vallheru Team based on Gamers-Fusion ver 2.5
  *   @author               : thindil <thindil@vallheru.net>
  *   @version              : 1.6
- *   @since                : 28.05.2012
+ *   @since                : 24.06.2012
  *
  */
 
@@ -784,14 +784,15 @@ else
 	  } 
 	else 
 	  {
-	    $smarty -> assign("Change", '');
+	    $smarty -> assign(array("Change" => '',
+				    "Logo" => ''));
 	  }
 	//Set tribe tags
 	if (isset($_GET['action']) && $_GET['action'] == 'tags')
 	  {
 	    $_POST['prefix'] = str_replace("'","",strip_tags($_POST['prefix']));
 	    $_POST['suffix'] = str_replace("'","",strip_tags($_POST['suffix']));
-	    if (strlen($_POST['prefix']) > 5 || strlen($_POST['suffix']) > 5)
+	    if (mb_strlen($_POST['prefix'], "UTF-8") > 5 || mb_strlen($_POST['suffix'], "UTF-8") > 5)
 	      {
 		error("Tagi są zbyt długie.");
 	      }
