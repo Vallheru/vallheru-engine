@@ -6,7 +6,7 @@
  *   @copyright            : (C) 2012 Vallheru Team based on Gamers-Fusion ver 2.5
  *   @author               : thindil <thindil@vallheru.net>
  *   @version              : 1.6
- *   @since                : 20.06.2012
+ *   @since                : 25.06.2012
  *
  */
 
@@ -67,6 +67,14 @@ function sendMsg(evt)
     {
 	document.forms['chat'].submit();
     }
+    else
+    {
+	var textarea = document.forms['chat'].elements['msg'];
+	if (textarea.value.length > (textarea.cols * textarea.rows))
+	{
+	    textarea.rows += 1;
+	}
+    }
 }
 
 function insertAtCursor(myField, myValue, intPos) 
@@ -112,7 +120,7 @@ function formatText(button)
     default:
 	if(!isNaN(parseInt(button)))
 	{
-	    insertAtCursor(document.forms['chat'].elements['msg'], button+"=");
+	    insertAtCursor(document.forms['chat'].elements['msg'], button+"=", (button+"=").lenght);
 	}
 	break;
     }

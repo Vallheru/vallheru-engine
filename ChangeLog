@@ -1,5 +1,7 @@
 2012-06-25  Bartek thindil Jasicki  <thindil@vallheru.net>
 
+	* FEATURE,js/chat.js: 
+	fixed cursor position at whisper, added autoresizing of text field
 	* BUG,tribeadmin.php: 
 	fixed bug with tribe permissions
 	* UPDATE,tribes.php:
