@@ -120,7 +120,7 @@ function formatText(button)
     default:
 	if(!isNaN(parseInt(button)))
 	{
-	    insertAtCursor(document.forms['chat'].elements['msg'], button+"=", (button+"=").lenght);
+	    insertAtCursor(document.forms['chat'].elements['msg'], button+"=", (button+"=").length);
 	}
 	break;
     }
