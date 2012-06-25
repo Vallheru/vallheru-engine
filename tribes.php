@@ -8,8 +8,8 @@
  *   @author               : thindil <thindil@vallheru.net>
  *   @author               : mori <ziniquel@users.sourceforge.net>
  *   @author               : eyescream <tduda@users.sourceforge.net>
- *   @version              : 1.5
- *   @since                : 14.05.2012
+ *   @version              : 1.6
+ *   @since                : 25.06.2012
  *
  */
 
@@ -431,7 +431,7 @@ if (isset ($_GET['view']) && $_GET['view'] == 'view')
 	    if ($blnAction)
 	      {
 		$objResult = $db->Execute("SELECT `credits`, `platinum`, `zolnierze`, `forty` FROM `tribes` WHERE `id`=".$_GET['id']);
-		$strMessage = 'Oto wiadomości jakie udało ci się zebrać o klanie:<br />Złoto: '.$objResult->fields['credits'].'<br />Mithril: '.$objResult->fields['platinum'].'<br />Żołnierzy: '.$objResult->fields['zolnierze'].'<br />Fortyfikacji: '.$objResult->fields['forty']."<br />";
+		$strMessage = 'Oto wiadomości jakie udało ci się zebrać o klanie:<br />Złoto: '.$objResult->fields['credits'].'<br />Mithril: '.$objResult->fields['platinum'].'<br />Żołnierzy: '.$objResult->fields['zolnierze'].'<br />Fortyfikacji: '.$objResult->fields['forty']."<br />Zdobyłeś ".$fltThievery." poziomu w umiejętności Złodziejstwo.";
 		$objResult->Close();
 	      }
 	    else
@@ -463,7 +463,7 @@ if (isset ($_GET['view']) && $_GET['view'] == 'view')
 		  }
 		$objAstral->Close();
 		$db->Execute("UPDATE `astral_machine` SET `used`=".$intAmount.", `directed`=".$intAmount2." WHERE `owner`=".$objTribe->fields['id']);
-		$strMessage = "Udało ci się uszkodzić Astralną Machinę! Niezauważony szybko uciekasz w bezpieczne miejsce.";
+		$strMessage = "Udało ci się uszkodzić Astralną Machinę! Niezauważony szybko uciekasz w bezpieczne miejsce. Zdobyłeś ".$fltThievery." poziomu w umiejętności złodziejstwo.";
 		$db -> Execute("INSERT INTO `log` (`owner`, `log`, `czas`, `type`) VALUES(".$objTribe->fields['owner'].",'Olbrzymi pióropusz ognia zakwitł nad Astralną Machiną twojego klanu. Ktoś dokonał sabotażu!', ".$strDate.", 'T')");
 	      }
 	    else
