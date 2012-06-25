@@ -7,7 +7,7 @@
  *   @copyright            : (C) 2004,2005,2006,2011,2012 Vallheru Team based on Gamers-Fusion ver 2.5
  *   @author               : thindil <thindil@vallheru.net>
  *   @version              : 1.6
- *   @since                : 10.06.2012
+ *   @since                : 25.06.2012
  *
  */
 
@@ -79,7 +79,12 @@ if ($arrSettings['graphic'] != '')
     $smarty -> compile_dir = './templates_c';
 }
 
-$chat = $db -> SelectLimit("SELECT * FROM `chat` WHERE `ownerid`=0 OR `ownerid`=".$stat -> fields['id']." OR `senderid`=".$stat -> fields['id']." ORDER BY `id` DESC", 25);
+if (!isset($_SESSION['chatlength']))
+  {
+    $_SESSION['chatlength'] = 25;
+  }
+
+$chat = $db -> SelectLimit("SELECT * FROM `chat` WHERE `ownerid`=0 OR `ownerid`=".$stat -> fields['id']." OR `senderid`=".$stat -> fields['id']." ORDER BY `id` DESC", $_SESSION['chatlength']);
 $pl = $db -> Execute("SELECT `rank`, `id`, `lpv`, `user` FROM `players` WHERE `page`='Chat'");
 $arrtext = array();
 $arrauthor = array();
@@ -152,6 +157,14 @@ $pl -> Close();
 $query = $db -> Execute("SELECT count(`id`) FROM `chat`");
 $numchat = $query -> fields['count(`id`)'];
 $query -> Close();
+if (!isset($arrSettings['oldchat']) || $arrSettings['oldchat'] == 'N')
+  {
+    $strOldchat = 'N';
+  }
+else
+  {
+    $strOldchat = 'Y';
+  }
 
 $smarty->assign(array("Player" => $on, 
 		      "Text1" => $numchat, 
@@ -166,7 +179,11 @@ $smarty->assign(array("Player" => $on,
 		      "Cid" => C_ID,
 		      "Id" => $stat->fields['id'],
 		      "Tid" => $arrTextid,
-		      "Awhisper" => "Szepnij"));
+		      "Awhisper" => "Szepnij",
+		      "Amore" => "Więcej",
+		      "Aless" => "Mniej",
+		      "Chatlength" => $_SESSION['chatlength'],
+		      "Oldchat" => $strOldchat));
 $smarty -> display ('chatmsgs.tpl');
 if ($compress)
   {

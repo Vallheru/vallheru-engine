@@ -8,7 +8,7 @@
  *   @author               : thindil <thindil@vallheru.net>
  *   @author               : eyescream <tduda@users.sourceforge.net>
  *   @version              : 1.6
- *   @since                : 15.06.2012
+ *   @since                : 25.06.2012
  *
  */
 
@@ -39,6 +39,22 @@ require_once("includes/head.php");
 require_once("languages/".$lang."/chat.php");
 
 $db -> Execute("UPDATE `players` SET `page`='Chat' WHERE `id`=".$player -> id);
+if (isset($_GET['more']))
+  {
+    $_SESSION['chatlength'] += 25;
+    if ($_SESSION['chatlength'] > 150)
+      {
+	$_SESSION['chatlength'] = 150;
+      }
+  }
+if (isset($_GET['less']))
+  {
+    $_SESSION['chatlength'] -= 25;
+    if ($_SESSION['chatlength'] < 25)
+      {
+	$_SESSION['chatlength'] = 25;
+      }
+  }
 if (isset($_POST['msg']) && $_POST['msg'] != '') 
   {
     switch ($player->rank)
