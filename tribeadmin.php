@@ -7,7 +7,7 @@
  *   @copyright            : (C) 2012 Vallheru Team based on Gamers-Fusion ver 2.5
  *   @author               : thindil <thindil@vallheru.net>
  *   @version              : 1.6
- *   @since                : 24.06.2012
+ *   @since                : 25.06.2012
  *
  */
 
@@ -464,6 +464,12 @@ else
 		  {
 		    unset($arrNames[6], $arrNames[7]);
 		  }
+		$arrTmpnames = array();
+		foreach ($arrNames as $strName)
+		  {
+		    $arrTmpnames[] = $strName;
+		  }
+		$arrNames = $arrTmpnames;
 		$smarty -> assign(array("Memid2" => $_POST['memid'],
 					"Tselected" => $arrSelected,
 					"Tnames" => $arrNames,
