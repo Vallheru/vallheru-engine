@@ -1,4 +1,4 @@
-ALTER TABLE  `players` ADD  `settings` VARCHAR( 1024 ) NOT NULL DEFAULT  'style:light.css;graphic:;graphbar:N;forumcats:All;autodrink:N;rinvites:Y;battlelog:N;oldchat:N;'
+ALTER TABLE  `players` ADD  `settings` VARCHAR( 1024 ) NOT NULL DEFAULT  'style:light.css;graphic:;graphbar:N;forumcats:All;autodrink:N;rinvites:Y;battlelog:N;oldchat:N;';
 ALTER TABLE `players`
   DROP `style`,
   DROP `graphic`,
@@ -29,3 +29,11 @@ UPDATE `monsters` SET `dmgtype`='earth' WHERE `id` IN (10,11,16,25,97,18,21,26,4
 UPDATE `monsters` SET `dmgtype`='wind' WHERE `id` IN (12,65,79,15,19,55,80,91,32,87);
 UPDATE `monsters` SET `dmgtype`='fire' WHERE `id` IN (13,22,29,37,41,51,93,27,85,88,28,30,100);
 UPDATE `monsters` SET `dmgtype`='water' WHERE `id` IN (14,35,82,20,43,53,104);
+CREATE TABLE IF NOT EXISTS `battlelogs` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `pid` int(11) NOT NULL,
+  `did` int(11) NOT NULL,
+  `wid` int(11) NOT NULL,
+  `bdate` int(11) NOT NULL,
+  PRIMARY KEY (`id`)
+) ENGINE=MyISAM DEFAULT CHARSET=utf8 AUTO_INCREMENT=1 ;

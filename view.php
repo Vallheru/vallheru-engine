@@ -8,7 +8,7 @@
  *   @author               : thindil <thindil@vallheru.net>
  *   @author               : eyescream <tduda@users.sourceforge.net>
  *   @version              : 1.6
- *   @since                : 23.05.2012
+ *   @since                : 26.06.2012
  *
  */
 
@@ -337,6 +337,86 @@ switch ($intLastseen)
   }
 $smarty->assign(array("Seen" => "Ostatnio aktywn".$strSuffix,
 		      "Lastseen" => $strSeen));
+
+/**
+ * Battle logs
+ */
+if (isset($_GET['logs']))
+  {
+    //Pagination
+    $objAmount = $db->Execute("SELECT count(`id`) FROM `battlelogs` WHERE `pid`=".$view->id);
+    $intPages = ceil($objAmount->fields['count(`id`)'] / 30);
+    $objAmount->Close();
+    if (!isset($_GET['page']))
+      {
+	$intPage = 1;
+      }
+    else
+      {
+	$intPage = $_GET['page'];
+      }
+    $arrBattles = $db->GetAll("SELECT `did`, `wid`, `bdate` FROM `battlelogs` WHERE `pid`=".$view->id." ORDER BY `id` DESC LIMIT ".(30 * ($intPage - 1)).", 30");
+    $arrIds = array();
+    if ($view->gender == 'M')
+      {
+	$strSuffix = '';
+      }
+    else
+      {
+	$strSuffix = 'a';
+      }
+    foreach ($arrBattles as &$arrBattle)
+      {
+	if ($arrBattle['wid'] == $view->id)
+	  {
+	    $arrBattle['result'] = 'zwyciężył';
+	  }
+	elseif ($arrBattle['wid'] == 0)
+	  {
+	    $arrBattle['result'] = 'zremisował';
+	  }
+	else
+	  {
+	    $arrBattle['result'] = 'przegrał';
+	  }
+	if (!in_array($arrBattle['did'], $arrIds))
+	  {
+	    $arrIds[] = $arrBattle['did'];
+	  }
+	$arrBattle['result'] .= $strSuffix;
+      }
+    if (count($arrBattles) > 0)
+      {
+	$objNames = $db->Execute("SELECT `id`, `user` FROM `players` WHERE `id` IN (".implode(', ', $arrIds).")") or die ($db->ErrorMsg());
+	while (!$objNames->EOF)
+	  {
+	    foreach ($arrBattles as &$arrBattle)
+	      {
+		if ($arrBattle['pid'] = $objNames->fields['id'])
+		  {
+		    $arrBattle['ename'] = $objNames->fields['user'];
+		  }
+	      }
+	    $objNames->MoveNext();
+	  }
+	$objNames->Close();
+      }
+
+    $smarty->assign(array("Tpages" => $intPages,
+			  "Tpage" => $intPage,
+			  "Fpage" => "Idź do strony:",
+			  "Blogs" => $arrBattles,
+			  "Logs" => 'Y',
+			  "Tage" => "dnia obecnej ery walczył".$strSuffix." i ",
+			  "Twith" => "z",
+			  "Aback" => "Wróć",
+			  "Lamount" => count($arrBattles),
+			  "Nologs" => "Nie ma informacji na temat walk tego gracza."));
+  }
+else
+  {
+    $smarty->assign("Logs", 'N');
+  }
 
 /**
  * Room actions

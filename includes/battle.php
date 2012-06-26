@@ -8,7 +8,7 @@
  *   @author               : thindil <thindil@vallheru.net>
  *   @author               : eyescream <tduda@users.sourceforge.net>
  *   @version              : 1.6
- *   @since                : 10.06.2012
+ *   @since                : 26.06.2012
  *
  */
 
@@ -924,6 +924,11 @@ function attack1($attacker, $defender, $arrAtequip, $arrDeequip, $attack_bspell,
         }
         $db -> Execute("INSERT INTO `log` (`owner`, `log`, `czas`, `type`) VALUES(".$attacker['id'].",'".$attacktext." ".L_BATTLE2."  <b><a href=view.php?view=".$defender['id'].">".$defender['user']."</a></b> (poziom: ".$defender['level'].') '.L_ID.'<b>'.$defender['id']."</b>.', ".$strDate.", 'B')");
         $db -> Execute("INSERT INTO `log` (`owner`, `log`, `czas`, `type`) VALUES(".$defender['id'].",'".$defendtext." ".L_BATTLE2." <b><a href=view.php?view=".$attacker['id'].">".$attacker['user']."</a></b> (poziom: ".$attacker['level'].') '.L_ID.'<b>'.$attacker['id']."</b>.', ".$strDate.", 'B')");
+	//Write battle info
+	$objDay = $db -> Execute("SELECT `value` FROM `settings` WHERE `setting`='day'");
+	$db->Execute("INSERT INTO `battlelogs` (`pid`, `did`, `wid`, `bdate`) VALUES(".$attacker['id'].", ".$defender['id'].", 0, ".$objDay->fields['value'].")");
+	$db->Execute("INSERT INTO `battlelogs` (`pid`, `did`, `wid`, `bdate`) VALUES(".$defender['id'].", ".$attacker['id'].", 0, ".$objDay->fields['value'].")");
+	$objDay->Close();
         require_once("includes/foot.php");
         exit;
     }
@@ -1114,6 +1119,11 @@ function attack1($attacker, $defender, $arrAtequip, $arrDeequip, $attack_bspell,
             $db -> Execute("INSERT INTO `mail` (`sender`, `senderid`, `owner`, `subject`, `body`, `date`) VALUES('".T_SENDER."','0',".$defender['id'].",'".$strSubject."','".$strMessage."', ".$strDate.")");
         }
         $db -> Execute("INSERT INTO `log` (`owner`, `log`, `czas`, `type`) VALUES(".$attacker['id'].",'".$attacktext." ".YOU_DEFEAT." <b><a href=view.php?view=".$defender['id'].">".$defender['user']."</a></b> (poziom: ".$defender['level'].') '.L_ID.'<b>'.$defender['id']."</b>. ".YOU_REWARD." <b>$expgain</b> ".EXPERIENCE." <b>$creditgain</b> ".GOLD_COINS.".', ".$strDate.", 'B')");
+	//Write battle info
+	$objDay = $db -> Execute("SELECT `value` FROM `settings` WHERE `setting`='day'");
+	$db->Execute("INSERT INTO `battlelogs` (`pid`, `did`, `wid`, `bdate`) VALUES(".$attacker['id'].", ".$defender['id'].", ".$attacker['id'].", ".$objDay->fields['value'].")");
+	$db->Execute("INSERT INTO `battlelogs` (`pid`, `did`, `wid`, `bdate`) VALUES(".$defender['id'].", ".$attacker['id'].", ".$attacker['id'].", ".$objDay->fields['value'].")");
+	$objDay->Close();
         require_once("includes/foot.php");
         exit;
     }
