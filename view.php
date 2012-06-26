@@ -392,7 +392,7 @@ if (isset($_GET['logs']))
 	  {
 	    foreach ($arrBattles as &$arrBattle)
 	      {
-		if ($arrBattle['pid'] = $objNames->fields['id'])
+		if ($arrBattle['did'] == $objNames->fields['id'])
 		  {
 		    $arrBattle['ename'] = $objNames->fields['user'];
 		  }

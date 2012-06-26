@@ -1,5 +1,7 @@
 2012-06-26  Bartek thindil Jasicki  <thindil@vallheru.net>
 
+	* BUG,view.php: 
+	fixed typo
 	* FEATURE,templates/layout1/view.tpl, templates/view.tpl, view.php, includes/battle.php, install/db/update.sql:
 	added battle logs to player profile
 
