@@ -313,28 +313,41 @@ if ($player -> rank == 'Admin' || $player -> rank == 'Staff')
 $objViewtime = $db->Execute("SELECT `lpv` FROM `players` WHERE `id`=".$view->id);
 if ($objViewtime->fields['lpv'] == 0)
   {
-    $intLastseen = -1;
+    $strSeen = 'Nigdy';
   }
 else
   {
     $intLastseen = intval(($ctime - $objViewtime->fields['lpv']) / 86400);
+    if ($intLastseen == 0)
+      {
+	$intLastseen = intval(($ctime - $objViewtime->fields['lpv']) / 3600);
+	if ($intLastseen == 0)
+	  {
+	    $intLastseen = intval(($ctime - $objViewtime->fields['lpv']) / 60);
+	    if ($intLastseen == 0)
+	      {
+		$strSeen = 'Teraz';
+	      }
+	    else
+	      {
+		$strSeen = $intLastseen." minut temu.";
+	      }
+	  }
+	else
+	  {
+	    $strSeen = $intLastseen." godzin temu.";
+	  }
+      }
+    elseif ($intLastseen == 1)
+      {
+	$strSeen = 'Wczoraj';
+      }
+    else
+      {
+	$strSeen = $intLastseen." dni temu.";
+      }
   }
 $objViewtime->Close();
-switch ($intLastseen)
-  {
-  case -1:
-    $strSeen = "Nigdy";
-    break;
-  case 0:
-    $strSeen = "Dzisiaj";
-    break;
-  case 1:
-    $strSeen = "Wczoraj";
-    break;
-  default:
-    $strSeen = $intLastseen." dni temu.";
-    break;
-  }
 $smarty->assign(array("Seen" => "Ostatnio aktywn".$strSuffix,
 		      "Lastseen" => $strSeen));
 
