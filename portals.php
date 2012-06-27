@@ -7,7 +7,7 @@
  *   @copyright            : (C) 2006,2011,2012 Vallheru Team based on Gamers-Fusion ver 2.5
  *   @author               : thindil <thindil@vallheru.net>
  *   @version              : 1.6
- *   @since                : 30.05.2012
+ *   @since                : 27.06.2012
  *
  */
 
@@ -160,8 +160,8 @@ if (isset($_GET['go']) && $_GET['go'] == 'fight')
                        'exp2' => $arrExp2[$intNumber],
 		       'lootnames' => array(),
 		       'lootchances' => array(),
-		       'resistance' = $arrResistances[$intNumber],
-		       'dmgtype' = $arrDmgtypes[$intNumber]);
+		       'resistance' => $arrResistances[$intNumber],
+		       'dmgtype' => $arrDmgtypes[$intNumber]);
         $arrehp = array();
         $strAdress = "portals.php?step=".$intNumber."&amp;go=fight";
         $span = ($enemy['level'] / $player -> level);

@@ -1,5 +1,7 @@
 2012-06-27  Bartek thindil Jasicki  <thindil@vallheru.net>
 
+	* BUG,portals.php: 
+	fixed typo
 	* FEATURE,includes/resets.php: 
 	added send info about rent room
 	* UPDATE,templates/layout1/chat.tpl, templates/chat.tpl:
