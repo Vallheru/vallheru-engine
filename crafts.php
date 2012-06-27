@@ -6,8 +6,8 @@
  *   @name                 : crafts.php                            
  *   @copyright            : (C) 2011,2012 Vallheru Team based on Gamers-Fusion ver 2.5
  *   @author               : thindil <thindil@vallheru.net>
- *   @version              : 1.5
- *   @since                : 20.03.2012
+ *   @version              : 1.6
+ *   @since                : 27.06.2012
  *
  */
 
@@ -318,6 +318,7 @@ if (isset($_GET['step']))
 	  {
 	    //smelting
 	  case 0:
+	    $arrTool = array('nowe miechy', 'lepsze miechy', 'miechów', 'lepszych miechów', 'S');
 	    $arrOptions = array('miedzi', 'brązu', 'mosiądzu', 'żelaza', 'stali');
 	    $arrBillets = array('copper', 'bronze', 'brass', 'iron', 'steel');
 	    $intAmount = rand(1, 100);
@@ -349,6 +350,7 @@ if (isset($_GET['step']))
 	    break;
 	    //lumberjack
 	  case 1:
+	    $arrTool = array('nową piłę', 'lepszą piłę', 'piły', 'lepszej piły', 'L');
 	    $arrOptions = array("sosnowego", "z leszczyny", "cisowego", "z wiązu");
 	    $arrBillets = array('pine', 'hazel', 'yew', 'elm');
 	    $intAmount = rand(1, 100);
@@ -380,6 +382,7 @@ if (isset($_GET['step']))
 	    break;
 	    //mining
 	  case 2:
+	    $arrTool = array('nowy kilof', 'lepszy kilof', 'kilofu', 'lepszego kilofu', 'M');
 	    $arrOptions = array('rudy miedzi', 'cynku', 'cyny', 'rudy żelaza', 'brył węgla', 'adamantium', 'kryształów', 'meteorytu');
 	    $arrBillets = array('copperore', 'zincore', 'tinore', 'ironore', 'coal', 'adamantium', 'crystal', 'meteor');
 	    $intAmount = rand(1, 100);
@@ -411,6 +414,7 @@ if (isset($_GET['step']))
 	    break;
 	    //breeding
 	  case 3:
+	    $arrTool = array('nową sieć', 'lepszą sieć', 'sieci', 'lepszej sieci', 'B');
 	    $fltSkill = (0.01 * $_SESSION['craftindex'][$intIndex]) * rand(1, 5);
 	    $intExp = (20 * $player->level) * rand(1, 10);
 	    $strSkill = 'breeding';
@@ -439,6 +443,7 @@ if (isset($_GET['step']))
 	    break;
 	    //jeweller
 	  case 4:
+	    $arrTool = array('nowy nożyk', 'lepszy nożyk', 'nożyka', 'lepszego nożyka', 'J');
 	    $objRing = $db->Execute("SELECT * FROM `jeweller` WHERE `id`=".$_SESSION['craftindex'][$intIndex]);
 	    if ($objRing->fields['id'] == 1)
 	      {
@@ -482,6 +487,7 @@ if (isset($_GET['step']))
 	    break;
 	    //herbalist
 	  case 5:
+	    $arrTool = array('nowy sierp', 'lepszy sierp', 'sierpa', 'lepszego sierpa', 'H');
 	    $arrOptions = array('Illani', 'Illanias', 'Nutari', 'Dynallca', 'Nasiona Illani', 'Nasiona Illanias', 'Nasiona Nutari', 'Nasiona Dynallca');
 	    $arrBillets = array('illani', 'illanias', 'nutari', 'dynallca', 'ilani_seeds', 'illanias_seeds', 'nutari_seeds', 'dynallca_seeds');
 	    $arrBillets2 = array('illani', 'illanias', 'nutari', 'dynallca', 'illani_seeds', 'illanias_seeds', 'nutari_seeds', 'dynallca_seeds');
@@ -524,6 +530,7 @@ if (isset($_GET['step']))
 	    break;
 	    //alchemy
 	  case 6:
+	    $arrTool = array('nowy moździerz', 'lepszy moździerz', 'moździerza', 'lepszego moździerza', 'A');
 	    $objPotion = $db->Execute("SELECT * FROM `alchemy_mill` WHERE `id`=".$_SESSION['craftindex'][$intIndex]);
 	    $intAmount = rand(1, 20);
 	    $fltSkill = (0.01 * $objPotion->fields['level']) * rand(1, 5);
@@ -556,6 +563,7 @@ if (isset($_GET['step']))
 	    break;
 	    //fletcher
 	  case 7:
+	    $arrTool = array('nowy ciesak', 'lepszy ciesak', 'ciesaka', 'lepszego ciesaka', 'F');
 	    $objBow = $db->Execute("SELECT * FROM `mill` WHERE `id`=".$_SESSION['craftindex'][$intIndex]);
 	    $strInfo2 .= 'wykonywaniu ';
 	    $fltSkill = (0.01 * $objBow->fields['level']) * rand(1, 5);
@@ -614,6 +622,7 @@ if (isset($_GET['step']))
 	    break;
 	    //smith
 	  case 8:
+	    $arrTool = array('nowy młot', 'lepszy młot', 'młota', 'lepszego młota', 'I');
 	    $objItem = $db->Execute("SELECT * FROM `smith` WHERE `id`=".$_SESSION['craftindex'][$intIndex]);
 	    $arrTypes = array('A', 'S', 'H', 'L', 'W', 'E');
 	    $arrNames = array('zbrój', 'tarcz', 'hełmów', 'nagolenników', 'broni', 'narzędzi');
@@ -666,7 +675,58 @@ if (isset($_GET['step']))
 	  }
 	if (!$blnCase)
 	  {
-	    $strInfo2 .= ', '.$intExp.' punktów doświadczenia, '.$fltSkill.' w umiejętności '.$strSkill2.' oraz '.$intGold.' sztuk złota.';
+	    $strInfo2 .= ', '.$intExp.' punktów doświadczenia, '.$fltSkill.' w umiejętności '.$strSkill2.' oraz '.$intGold.' sztuk złota';
+	    $intRoll = rand(1, 100);
+	    if ($intRoll > 80 && $intRoll < 86)
+	      {
+		$strInfo2 .= ' oraz '.$arrTool[0];
+		$arrLoot = array('tools', '=1', $arrTool[4]);
+	      }
+	    elseif ($intRoll > 85 && $intRoll < 91)
+	      {
+		$strInfo2 .= ' oraz '.$arrTool[1];
+		$arrLoot = array('tools','>1', $arrTool[4]);
+	      }
+	    elseif ($intRoll > 91 && $intRoll < 98)
+	      {
+		$strInfo2 .= ' oraz '.$arrTool[2];
+		$strLoot = array('plans','=1', $arrTool[4]);
+	      }
+	    else
+	      {
+		$strInfo2 .= ' oraz '.$arrTool[3];
+		$arrLoot = array('plans', '>1', $arrTool[4]);
+	      }
+	    if ($intRoll > 80)
+	      {
+		$objLoot = $db->Execute("SELECT * FROM `".$arrLoot[0]."` WHERE `level`".$arrLoot[1]." AND `type`='".$arrLoot[2]."' ORDER BY RAND() LIMIT 1") or die($db->ErrorMsg());
+		if ($arrLoot[0] == 'tools')
+		  {
+		    $objTest = $db->Execute("SELECT `id` FROM `equipment` WHERE `owner`=".$player->id." AND `name`='".$strItemname."' AND `power`=".$objLoot->fields['power']." AND `cost`=1 AND `wt`=".$objLoot->fields['dur']." AND `maxwt`=".$objLoot->fields['dur']." AND `type`='E' AND `minlev`=".$objLoot->fields['level']." AND repair=".$objLoot->fields['repair']);
+		  }
+		else
+		  {
+		    $objTest = $db->Execute("SELECT `id` FROM `equipment` WHERE `owner`=".$player->id." AND `name`='".$strPlanname."' AND `minlev`=".$objLoot->fields['level']." AND `cost`=1 AND `type`='P'");
+		  }
+		if (!$objTest->fields['id'])
+		  {
+		    if ($arrLoot[0] == 'tools')
+		      {
+			$db -> Execute("INSERT INTO `equipment` (`owner`, `name`, `power`, `type`, `cost`, `zr`, `wt`, `minlev`, `maxwt`, `amount`, `magic`, `poison`, `szyb`, `twohand`, `repair`) VALUES(".$player->id.", '".$strItemname."', ".$objLoot->fields['power'].", 'E', 1, 0, ".$objLoot->fields['dur'].", ".$objLoot->fields['level'].", ".$objLoot->fields['dur'].", 1, 'N', 0, 0, 'N', ".$objLoot->fields['repair'].")") or die($db->ErrorMsg());
+		      }
+		    else
+		      {
+			$db -> Execute("INSERT INTO `equipment` (`owner`, `name`, `power`, `type`, `cost`, `zr`, `wt`, `minlev`, `maxwt`, `amount`, `magic`, `poison`, `szyb`, `twohand`, `repair`) VALUES(".$player->id.", '".$strPlanname."', 0, 'P', 1, 0, 1, ".$objLoot->fields['level'].", 1, 1, 'N', 0, 0, 'N', 1)") or die($db->ErrorMsg());
+		      }
+		  }
+		else
+		  {
+		    $db->Execute("UPDATE `equipment` SET `amount`=`amount`+1 WHERE `id`=".$objTest->fields['id']);
+		  }
+		$objTest->Close();
+		$objLoot->Close();
+	      }
+	    $strInfo2 .= '.';
 	    require_once("includes/checkexp.php");
 	    checkexp($player->exp, $intExp, $player->level, $player->race, $player->user, $player->id, 0, 0, $player->id, $strSkill, $fltSkill);
 	    $db->Execute("UPDATE `players` SET `credits`=`credits`+".$intGold.", `mpoints`=`mpoints`+1 WHERE `id`=".$player->id);

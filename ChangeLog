@@ -1,5 +1,7 @@
 2012-06-27  Bartek thindil Jasicki  <thindil@vallheru.net>
 
+	* FEATURE,crafts.php: 
+	start work on tools for craftsmen
 	* BUG,portals.php: 
 	fixed typo
 	* FEATURE,includes/resets.php: 
