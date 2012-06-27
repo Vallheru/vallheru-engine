@@ -8,7 +8,7 @@
 	<input id="underline" type="button" value="{$Aunderline}" onClick="formatText(this.id)" />
 	<input id="emote" type="button" value="{$Aemote}" onClick="formatText(this.id)" /><br />
 	<textarea name="msg" rows="1" cols="60" onKeyDown="javascript:return sendMsg(event);"></textarea><br />
-	<input type="submit" value="{$Asend}" />
+	<input type="submit" value="{$Asend}" /> [<a href="chat.php">{$Arefresh}</a>]
     </form>
 </div>
 <a name="thebottom"></a>
@@ -26,7 +26,7 @@
 	<input id="underline" type="button" value="{$Aunderline}" onClick="formatText(this.id)" />
 	<input id="emote" type="button" value="{$Aemote}" onClick="formatText(this.id)" /><br />
 	<textarea name="msg" rows="1" cols="60" onKeyDown="javascript:return sendMsg(event);"></textarea><br />
-	<input type="submit" value="{$Asend}" />
+	<input type="submit" value="{$Asend}" /> [<a href="chat.php">{$Arefresh}</a>]
     </form>
 </div>
 <a name="thebottom"></a>
