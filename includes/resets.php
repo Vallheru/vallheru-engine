@@ -7,7 +7,7 @@
  *   @copyright            : (C) 2004,2005,2006,2007,2011,2012 Vallheru Team based on Gamers-Fusion ver 2.5
  *   @author               : thindil <thindil@vallheru.net>
  *   @version              : 1.6
- *   @since                : 06.06.2012
+ *   @since                : 27.06.2012
  *
  */
 
@@ -388,15 +388,35 @@ function mainreset()
     $db->Execute("UPDATE `players` SET `trains`=`trains`+15 WHERE `corepass`='Y' AND `freeze`=0");
     $intCtime = (time() - 200);
     $db -> Execute("UPDATE players SET freeze=freeze-1, lpv=".$intCtime." WHERE freeze>0");
+    $time = date("Y-m-d H:i:s");
     /**
      * Manage rooms
      */
     $db->Execute("UPDATE `rooms` SET `days`=`days`-1");
-    $objRooms = $db->Execute("SELECT `id` FROM `rooms` WHERE `days`=0");
+    $objRooms = $db->Execute("SELECT `id`, `days`, `owner`, `owners` FROM `rooms` WHERE `days`<2");
     while (!$objRooms->EOF)
       {
-	$db->Execute("UPDATE `players` SET `room`=0 WHERE `room`=".$objRooms->fields['id']);
-	$db->Execute("DELETE FROM `chatrooms` WHERE `room`=".$objRooms->fields['id']);
+	if ($objRooms->fields['days'] == 0)
+	  {
+	    $db->Execute("UPDATE `players` SET `room`=0 WHERE `room`=".$objRooms->fields['id']);
+	    $db->Execute("DELETE FROM `chatrooms` WHERE `room`=".$objRooms->fields['id']);
+	  }
+	else
+	  {
+	    $arrOwners = explode(';', $objRooms->fields['owners']);
+	    if ($arrOwners[0] == '')
+	      {
+		$arrOwners[0] = $objRooms->fields['owner'];
+	      }
+	    else
+	      {
+		$arrOwners[] = $objRooms->fields['owner'];
+	      }
+	    foreach ($arrOwners as $intOwner)
+	      {
+		$db->Execute("INSERT INTO `log` (`owner`, `log`, `czas`, `type`) VALUES(".$intOwner.", 'Niedługo zakończy się okres wynajmu Twojego pokoju.', '".$time."', 'E')") or die ($db->ErrorMsg());
+	      }
+	  }
 	$objRooms->MoveNext();
       }
     $objRooms->Close();
