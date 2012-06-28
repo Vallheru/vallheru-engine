@@ -7,7 +7,7 @@
  *   @copyright            : (C) 2004,2005,2006,2007,2011,2012 Vallheru Team based on Gamers-Fusion ver 2.5
  *   @author               : thindil <thindil@vallheru.net>
  *   @version              : 1.6
- *   @since                : 20.06.2012
+ *   @since                : 28.06.2012
  *
  */
 
@@ -801,22 +801,15 @@ if (isset($_GET['learn']))
       {
 	error('Nie ma takiego planu.');
       }
+    $objPlan2 = $db->Execute("SELECT `amount`, `type` FROM `plans` WHERE `name`='".$objPlan->fields['name']."' AND `level`=".$objPlan->fields['minlev']);
     $objTest = $db->Execute("SELECT `id` FROM `smith` WHERE `owner`=".$player->id." AND `name`='".$objPlan->fields['name']."' AND `level`=".$objPlan->fields['minlev']);
     if ($objTest->fields['id'])
       {
 	error('Znasz już ten plan.');
       }
     $objTest->Close();
-    $objPlan2 = $db->Execute("SELECT `amount`, `type` FROM `plans` WHERE `name`='".$objPlan->fields['name']."' AND `level`=".$objPlan->fields['minlev']);
-    if ($objPlan2->fields['type'] == 'T')
-      {
-	$strType = 'E';
-      }
-    else
-      {
-	$strType = $objPlan2->fields['type'];
-      }
-    $db -> Execute("INSERT INTO `smith` (`owner`, `name`, `type`, `cost`, `amount`, `level`, `twohand`, `elite`, `elitetype`) VALUES(".$player->id.", '".$objPlan->fields['name']."', '".$strType."', 1, ".$objPlan2->fields['amount'].", ".$objPlan->fields['minlev'].", 'N', 0, 'S')");
+
+    $db -> Execute("INSERT INTO `smith` (`owner`, `name`, `type`, `cost`, `amount`, `level`, `twohand`, `elite`, `elitetype`) VALUES(".$player->id.", '".$objPlan->fields['name']."', 'E', 1, ".$objPlan2->fields['amount'].", ".$objPlan->fields['minlev'].", 'N', 0, 'S')");
     $objPlan2->Close();
     if ($objPlan->fields['amount'] == 1)
       {

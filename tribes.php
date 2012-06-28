@@ -9,7 +9,7 @@
  *   @author               : mori <ziniquel@users.sourceforge.net>
  *   @author               : eyescream <tduda@users.sourceforge.net>
  *   @version              : 1.6
- *   @since                : 25.06.2012
+ *   @since                : 28.06.2012
  *
  */
 
@@ -335,7 +335,7 @@ if (isset ($_GET['view']) && $_GET['view'] == 'view')
 		/**
 		 * Add bonus from tools
 		 */
-		if ($arrEquip[12][0])
+		if (stripos($arrEquip[12][1], 'wytrychy') !== FALSE)
 		  {
 		    $intStats += (($arrEquip[12][2] / 100) * $intStats);
 		  }
@@ -371,7 +371,7 @@ if (isset ($_GET['view']) && $_GET['view'] == 'view')
 		  {
 		    $intExp = $intLevels * 5;
 		    $fltThievery = $intLevels / 50.0;
-		    if ($arrEquip[12][0])
+		    if (stripos($arrEquip[12][1], 'wytrychy') !== FALSE)
 		      {
 			$arrEquip[12][6] --;
 			if ($arrEquip[12][6] <= 0)
@@ -388,11 +388,11 @@ if (isset ($_GET['view']) && $_GET['view'] == 'view')
 		  {
 		    $intExp = ceil($intLevels / 100);
 		    $fltThievery = $intLevels / 100.0;
-		    if ($arrEquip[12][0])
+		    if (stripos($arrEquip[12][1], 'wytrychy') !== FALSE)
 		      {
 			$db->Execute("DELETE FROM `equipment` WHERE `id`=".$arrEquip[12][0]);
 		      }
-		    $objTool = $db->Execute("SELECT `id` FROM `equipment` WHERE `owner`=".$player->id." AND `type`='E' AND `status`='U'");
+		    $objTool = $db->Execute("SELECT `id` FROM `equipment` WHERE `owner`=".$player->id." AND `type`='E' AND `status`='U' AND `name` LIKE 'Wytrychy%'");
 		    if ($objTool->fields['id'])
 		      {
 			$intRoll = rand(1, 100);

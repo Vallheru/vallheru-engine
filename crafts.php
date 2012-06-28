@@ -7,7 +7,7 @@
  *   @copyright            : (C) 2011,2012 Vallheru Team based on Gamers-Fusion ver 2.5
  *   @author               : thindil <thindil@vallheru.net>
  *   @version              : 1.6
- *   @since                : 27.06.2012
+ *   @since                : 28.06.2012
  *
  */
 
@@ -414,7 +414,7 @@ if (isset($_GET['step']))
 	    break;
 	    //breeding
 	  case 3:
-	    $arrTool = array('nową sieć', 'lepszą sieć', 'sieci', 'lepszej sieci', 'B');
+	    $arrTool = array('nową uprząż', 'lepszą uprząż', 'uprzęży', 'lepszej uprzęży', 'B');
 	    $fltSkill = (0.01 * $_SESSION['craftindex'][$intIndex]) * rand(1, 5);
 	    $intExp = (20 * $player->level) * rand(1, 10);
 	    $strSkill = 'breeding';

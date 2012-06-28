@@ -6,8 +6,8 @@
  *   @name                 : alchemik.php                            
  *   @copyright            : (C) 2004,2005,2006,2007,2011,2012 Vallheru Team based on Gamers-Fusion ver 2.5
  *   @author               : thindil <thindil@vallheru.net>
- *   @version              : 1.5
- *   @since                : 07.05.2012
+ *   @version              : 1.6
+ *   @since                : 28.06.2012
  *
  */
 
@@ -246,7 +246,8 @@ else
 	    /**
 	     * Add bonuses to ability
 	     */
-	    $player->curstats(array(), TRUE);
+	    $arrEquip = $player->equipment();
+	    $player->curstats($arrEquip, TRUE);
 	    $player->curskills(array('alchemy'), TRUE, TRUE);
 	    
 	    $rprzedmiot = 0;
@@ -275,6 +276,10 @@ else
 		if ($objItem -> fields['type'] == 'A')
 		  {
 		    $fltStat = (min($player -> wisdom, $player -> inteli) + $player -> speed) / 2;
+		  }
+		if (stripos($arrEquip[12][1], 'moździerz') !== FALSE)
+		  {
+		    $fltStat += (($arrEquip[12][2] / 100) * $fltStat);
 		  }
 		$intChance = ($player -> level * 5) + ($player -> alchemy / 3) + $fltStat;
 		$intRoll = rand(1, 100);

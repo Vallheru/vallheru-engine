@@ -7,7 +7,7 @@
  *   @copyright            : (C) 2004,2005,2006,2011,2012 Vallheru Team based on Gamers-Fusion ver 2.5
  *   @author               : thindil <thindil@vallheru.net>
  *   @version              : 1.5
- *   @since                : 23.04.2012
+ *   @since                : 28.06.2012
  *
  */
 
@@ -76,7 +76,7 @@ function steal ($itemid)
     /**
      * Add bonus from tools
      */
-    if ($arrEquip[12][0])
+    if (stripos($arrEquip[12][1], 'wytrychy') !== FALSE)
       {
 	$intStats += (($arrEquip[12][2] / 100) * $intStats);
       }
@@ -91,7 +91,7 @@ function steal ($itemid)
         $db -> Execute("UPDATE `players` SET `miejsce`='Lochy', `crime`=`crime`-1 WHERE `id`=".$player -> id);
         $db -> Execute("INSERT INTO `jail` (`prisoner`, `verdict`, `duration`, `cost`, `data`) VALUES(".$player -> id.", '".VERDICT."', 7, ".$cost.", ".$strDate.")") or die("Błąd!");
         $db -> Execute("INSERT INTO log (`owner`, `log`, `czas`, `type`) VALUES(".$player -> id.",'".S_LOG_INFO." ".$cost.".', ".$strDate.", 'T')");
-	if ($arrEquip[12][0])
+	if (stripos($arrEquip[12][1], 'wytrychy') !== FALSE)
 	  {
 	    $db->Execute("DELETE FROM `equipment` WHERE `id`=".$arrEquip[12][0]);
 	  }
@@ -144,7 +144,7 @@ function steal ($itemid)
             }
             $test -> Close();
         }
-	if ($arrEquip[12][0])
+	if (stripos($arrEquip[12][1], 'wytrychy') !== FALSE)
 	  {
 	    $arrEquip[12][6] --;
 	    if ($arrEquip[12][6] <= 0)

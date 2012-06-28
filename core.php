@@ -240,6 +240,10 @@ if (isset($_GET['view']))
 		
 		$fltRoll = rand(1,100) / 100;
 		$fltResult = $player -> breeding + $fltRoll;
+		if (stripos($arrEquip[12][1], 'uprząż') !== FALSE)
+		  {
+		    $fltStat += (($arrEquip[12][2] / 100) * $fltStat);
+		  }
 		if ($fltResult >= $intChance)
 		  {
 		    if ($objCoremale -> fields['power'] < $objCorefemale -> fields['power'])

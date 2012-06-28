@@ -8,8 +8,8 @@
  *   @author               : thindil <thindil@vallheru.net>
  *   @author               : yeskov <yeskov@users.sourceforge.net>
  *   @author               : eyescream <tduda@users.sourceforge.net>
- *   @version              : 1.5
- *   @since                : 07.05.2012
+ *   @version              : 1.6
+ *   @since                : 28.06.2012
  *
  */
 
@@ -779,7 +779,7 @@ if (isset($_GET['action']))
 		/**
 		 * Add bonus from tools
 		 */
-		if ($arrEquip[12][0])
+		if (stripos($arrEquip[12][1], 'wytrychy') !== FALSE)
 		  {
 		    $intStats += (($arrEquip[12][2] / 100) * $intStats);
 		  }
@@ -795,11 +795,11 @@ if (isset($_GET['action']))
 		$strDate = $db -> DBDate($newdate);
 		$db -> Execute("INSERT INTO `jail` (`prisoner`, `verdict`, `duration`, `cost`, `data`) VALUES(".$player -> id.", '".VERDICT."', 7, ".$cost.", ".$strDate.")") or error (E_DB4);
 		$db -> Execute("INSERT INTO `log` (`owner`, `log`, `czas`, `type`) VALUES(".$player -> id.",'".L_REASON.": ".$cost.".','".$newdate."', 'T')");
-		if ($arrEquip[12][0])
+		if (stripos($arrEquip[12][1], 'wytrychy') !== FALSE)
 		  {
 		    $db->Execute("DELETE FROM `equipment` WHERE `id`=".$arrEquip[12][0]);
 		  }
-		$objTool = $db->Execute("SELECT `id` FROM `equipment` WHERE `owner`=".$player->id." AND `type`='E' AND `status`='U'");
+		$objTool = $db->Execute("SELECT `id` FROM `equipment` WHERE `owner`=".$player->id." AND `type`='E' AND `status`='U' AND `name` LIKE 'Wytrychy%'");
 		if ($objTool->fields['id'])
 		  {
 		    $intRoll = rand(1, 100);
@@ -824,7 +824,7 @@ if (isset($_GET['action']))
 		  }
 		$db -> Execute("UPDATE `players` SET `crime`=`crime`-".$_POST['tp'].", `credits`=`credits`+".$gain." WHERE `id`=".$player -> id);
 		checkexp($player -> exp, $expgain, $player -> level, $player -> race, $player -> user, $player -> id, 0, 0, $player -> id, 'thievery', $fltThief);
-		if ($arrEquip[12][0])
+		if (stripos($arrEquip[12][1], 'wytrychy') !== FALSE)
 		  {
 		    $arrEquip[12][6] --;
 		    if ($arrEquip[12][6] <= 0)

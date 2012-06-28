@@ -7,8 +7,8 @@
  *   @copyright            : (C) 2004,2005,2006,2011,2012 Vallheru Team based on Gamers-Fusion ver 2.5
  *   @author               : thindil <thindil@vallheru.net>
  *   @author               : eyescream <tduda@users.sourceforge.net>
- *   @version              : 1.5
- *   @since                : 21.04.2012
+ *   @version              : 1.6
+ *   @since                : 28.06.2012
  *
  */
 
@@ -96,7 +96,7 @@ if (isset($_GET['escape']))
 	/**
 	 * Add bonus from tools
 	 */
-	if ($arrEquip[12][0])
+	if (stripos($arrEquip[12][1], 'wytrychy') !== FALSE)
 	  {
 	    $intStats += (($arrEquip[12][2] / 100) * $intStats);
 	  }
@@ -119,11 +119,11 @@ if (isset($_GET['escape']))
 	$db -> Execute("UPDATE `players` SET `crime`=`crime`-1 WHERE `id`=".$player -> id);
 	$strDate = $db -> DBDate($newdate);
 	$db->Execute("UPDATE `jail` SET `duration`=`duration`+7, `cost`=`cost`+".$cost." WHERE `prisoner`=".$player->id);
-	if ($arrEquip[12][0])
+	if (stripos($arrEquip[12][1], 'wytrychy') !== FALSE)
 	  {
 	    $db->Execute("DELETE FROM `equipment` WHERE `id`=".$arrEquip[12][0]);
 	  }
-	$objTool = $db->Execute("SELECT `id` FROM `equipment` WHERE `owner`=".$player->id." AND `type`='E' AND `status`='U'");
+	$objTool = $db->Execute("SELECT `id` FROM `equipment` WHERE `owner`=".$player->id." AND `type`='E' AND `status`='U' AND `name` LIKE 'Wytrychy%'");
 	if ($objTool->fields['id'])
 	  {
 	    $intRoll = rand(1, 100);
@@ -147,7 +147,7 @@ if (isset($_GET['escape']))
 	$db->Execute("DELETE FROM `jail` WHERE `prisoner`=".$player->id);
 	$db -> Execute("UPDATE `players` SET `crime`=`crime`-1, `miejsce`='Altara' WHERE `id`=".$player->id);
 	checkexp($player -> exp, $expgain, $player -> level, $player -> race, $player -> user, $player -> id, 0, 0, $player -> id, 'thievery', $fltThief);
-	if ($arrEquip[12][0])
+	if (stripos($arrEquip[12][1], 'wytrychy') !== FALSE)
 	  {
 	    $arrEquip[12][6] --;
 	    if ($arrEquip == 0)

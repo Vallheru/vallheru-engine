@@ -7,8 +7,8 @@
  *   @copyright            : (C) 2006,2011,2012 Vallheru Team based on Gamers-Fusion ver 2.5
  *   @author               : thindil <thindil@vallheru.net>
  *   @author               : eyescream <tduda@users.sourceforge.net>
- *   @version              : 1.5
- *   @since                : 10.05.2012
+ *   @version              : 1.6
+ *   @since                : 28.06.2012
  *
  */
 
@@ -55,7 +55,7 @@ function astralsteal($intVictim, $strLocation, $intOwner = 0, $intId = 0)
     /**
      * Add bonus from tools
      */
-    if ($arrEquip[12][0])
+    if (stripos($arrEquip[12][1], 'wytrychy') !== FALSE)
       {
 	$intStats += (($arrEquip[12][2] / 100) * $intStats);
       }
@@ -131,7 +131,7 @@ function astralsteal($intVictim, $strLocation, $intOwner = 0, $intId = 0)
         $db -> Execute("INSERT INTO `jail` (`prisoner`, `verdict`, `duration`, `cost`, `data`) VALUES(".$player -> id.", '".VERDICT."', ".$intDays.", ".$intBail.", ".$strDate.")");
         $db -> Execute("INSERT INTO `log` (`owner`, `log`, `czas`, `type`) VALUES(".$player -> id.",'".L_REASON.": ".$intBail.".', ".$strDate.", 'T')");
         $db -> Execute("INSERT INTO `log` (`owner`, `log`, `czas`, `type`) VALUES(".$intVictim.",'".L_CACHED."<b><a href=\"view.php?view=".$player -> id."\">".$player -> user."</a></b>".L_CACHED2.'<b>'.$player -> id.'</b>'.L_CACHED3."',".$strDate.", 'T')");
-	if ($arrEquip[12][0])
+	if (stripos($arrEquip[12][1], 'wytrychy') !== FALSE)
 	  {
 	    $db->Execute("DELETE FROM `equipment` WHERE `id`=".$arrEquip[12][0]);
 	  }
@@ -237,7 +237,7 @@ function astralsteal($intVictim, $strLocation, $intOwner = 0, $intId = 0)
         {
             $db -> Execute("INSERT INTO `log` (`owner`, `log`, `czas`, `type`) VALUES(".$intOwner.",'".ASTRAL_GONE.$strType.$strCompname."</b>."."',".$strDate.", 'T')");
         }
-	if ($arrEquip[12][0])
+	if (stripos($arrEquip[12][1], 'wytrychy') !== FALSE)
 	  {
 	    $arrEquip[12][6] --;
 	    if ($arrEquip[12][6] <= 0)

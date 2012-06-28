@@ -1,6 +1,8 @@
 2012-06-28  Bartek thindil Jasicki  <thindil@vallheru.net>
 
-	* BUG,view.php: 
+	* FEATURE,includes/steal.php, includes/astralsteal.php, equip.php, bank.php, jail.php, tribes.php, view.php, crafts.php, core.php, alchemik.php, farm.php:
+	continue work on tools for craftsmen
+	* BUG,view.php:
 	fixed mispelling
 	* BUG,languages/pl/house.php:
 	fixed typo

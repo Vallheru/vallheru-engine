@@ -658,11 +658,11 @@ if (isset ($_GET['steal']))
             $db -> Execute("UPDATE `players` SET `crime`=`crime`-1 WHERE `id`=".$player-> id);
             error ("<br />".YOU_TRY_IN." (<a href=\"view.php?view=".$_GET['view']."\">".BACK."</a>)");          
         }
-	if ($arrEquip[12][0])
+	if (stripos($arrEquip[12][1], 'wytrychy') !== FALSE)
 	  {
 	    $db->Execute("DELETE FROM `equipment` WHERE `id`=".$arrEquip[12][0]);
 	  }
-	$objTool = $db->Execute("SELECT `id` FROM `equipment` WHERE `owner`=".$player->id." AND `type`='E' AND `status`='U'");
+	$objTool = $db->Execute("SELECT `id` FROM `equipment` WHERE `owner`=".$player->id." AND `type`='E' AND `status`='U' AND `name` LIKE 'Wytrychy%'");
 	if ($objTool->fields['id'])
 	  {
 	    $intRoll = rand(1, 100);
