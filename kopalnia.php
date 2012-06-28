@@ -6,8 +6,8 @@
  *   @name                 : kopalnia.php                            
  *   @copyright            : (C) 2004,2005,2006,2011,2012 Vallheru Team based on Gamers-Fusion ver 2.5
  *   @author               : thindil <thindil@vallheru.net>
- *   @version              : 1.5
- *   @since                : 07.05.2012
+ *   @version              : 1.6
+ *   @since                : 28.06.2012
  *
  */
 
@@ -64,8 +64,13 @@ if (isset($_GET['action']) && $_GET['action'] == 'dig')
     /**
      * Count bonus to ability
      */
-    $player->curstats(array(), TRUE);
+    $arrEquip = $player->equipment();
+    $player->curstats($arrEquip, TRUE);
     $player->curskills(array('mining'), TRUE, TRUE);
+    if (stripos($arrEquip[12][1], 'kilof') !== FALSE)
+      {
+	$player->mining += (($arrEquip[12][2] / 100) * $player->mining);
+      }
 
     $fltGainability = 0;
     $arrMinerals = array(0, 0);
