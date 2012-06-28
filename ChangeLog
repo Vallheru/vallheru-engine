@@ -1,3 +1,8 @@
+2012-06-28  Bartek thindil Jasicki  <thindil@vallheru.net>
+
+	* BUG,languages/pl/house.php:
+	fixed typo
+
 2012-06-27  Bartek thindil Jasicki  <thindil@vallheru.net>
 
 	* FEATURE,crafts.php: 

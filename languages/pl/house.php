@@ -7,8 +7,8 @@
  *   @copyright            : (C) 2004,2005,2006,2011,2012 Vallheru Team based on Gamers-Fusion ver 2.5
  *   @author               : thindil <thindil@vallheru.net>
  *   @author               : eyescream <tduda@users.sourceforge.net>
- *   @version              : 1.5
- *   @since                : 04.04.2012
+ *   @version              : 1.6
+ *   @since                : 28.06.2012
  *
  */
 
@@ -115,7 +115,7 @@ if(isset($_GET['action']) && $_GET['action'] == 'build')
     {
         define("NO_HOUSE", "Nie masz domu aby go upiększać!");
         define("YOU_UPGRADE", "Zwiększyłeś wartość swojego domu.");
-        define("UPG_INFO", "Tutaj możesz upiększać swój dom. Każde podniesienie jego wartości kosztuje 1000 zł oraz 1 punkt budowlany.");
+        define("UPG_INFO", "Tutaj możesz upiększać swój dom. Każde podniesienie jego wartości kosztuje 1000 sztuk złota oraz 1 punkt budowlany.");
         define("UPGRADE", "Przeznacz na podniesienie wartości domu");
         define("UPGRADE2", "punktów budowlanych");
         define("A_WORK", "Pracuj");
