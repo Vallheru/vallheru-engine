@@ -1,5 +1,7 @@
 2012-06-28  Bartek thindil Jasicki  <thindil@vallheru.net>
 
+	* BUG,view.php: 
+	fixed mispelling
 	* BUG,languages/pl/house.php:
 	fixed typo
 

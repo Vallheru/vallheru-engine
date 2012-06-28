@@ -8,7 +8,7 @@
  *   @author               : thindil <thindil@vallheru.net>
  *   @author               : eyescream <tduda@users.sourceforge.net>
  *   @version              : 1.6
- *   @since                : 26.06.2012
+ *   @since                : 28.06.2012
  *
  */
 
@@ -330,12 +330,12 @@ else
 	      }
 	    else
 	      {
-		$strSeen = $intLastseen." minut temu.";
+		$strSeen = 'około '.$intLastseen." minut temu.";
 	      }
 	  }
 	else
 	  {
-	    $strSeen = $intLastseen." godzin temu.";
+	    $strSeen = 'około '.$intLastseen." godzin temu.";
 	  }
       }
     elseif ($intLastseen == 1)
@@ -344,7 +344,7 @@ else
       }
     else
       {
-	$strSeen = $intLastseen." dni temu.";
+	$strSeen = 'około '.$intLastseen." dni temu.";
       }
   }
 $objViewtime->Close();
