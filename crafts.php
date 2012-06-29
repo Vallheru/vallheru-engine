@@ -7,7 +7,7 @@
  *   @copyright            : (C) 2011,2012 Vallheru Team based on Gamers-Fusion ver 2.5
  *   @author               : thindil <thindil@vallheru.net>
  *   @version              : 1.6
- *   @since                : 28.06.2012
+ *   @since                : 29.06.2012
  *
  */
 
@@ -687,14 +687,14 @@ if (isset($_GET['step']))
 		$strInfo2 .= ' oraz '.$arrTool[1];
 		$arrLoot = array('tools','>1', $arrTool[4]);
 	      }
-	    elseif ($intRoll > 91 && $intRoll < 98)
+	    elseif ($intRoll > 90 && $intRoll < 98)
 	      {
-		$strInfo2 .= ' oraz '.$arrTool[2];
-		$strLoot = array('plans','=1', $arrTool[4]);
+		$strInfo2 .= ' oraz plan '.$arrTool[2];
+		$arrLoot = array('plans','=1', $arrTool[4]);
 	      }
-	    else
+	    elseif ($intRoll > 97)
 	      {
-		$strInfo2 .= ' oraz '.$arrTool[3];
+		$strInfo2 .= ' oraz plan '.$arrTool[3];
 		$arrLoot = array('plans', '>1', $arrTool[4]);
 	      }
 	    if ($intRoll > 80)
@@ -702,21 +702,21 @@ if (isset($_GET['step']))
 		$objLoot = $db->Execute("SELECT * FROM `".$arrLoot[0]."` WHERE `level`".$arrLoot[1]." AND `type`='".$arrLoot[2]."' ORDER BY RAND() LIMIT 1") or die($db->ErrorMsg());
 		if ($arrLoot[0] == 'tools')
 		  {
-		    $objTest = $db->Execute("SELECT `id` FROM `equipment` WHERE `owner`=".$player->id." AND `name`='".$strItemname."' AND `power`=".$objLoot->fields['power']." AND `cost`=1 AND `wt`=".$objLoot->fields['dur']." AND `maxwt`=".$objLoot->fields['dur']." AND `type`='E' AND `minlev`=".$objLoot->fields['level']." AND repair=".$objLoot->fields['repair']);
+		    $objTest = $db->Execute("SELECT `id` FROM `equipment` WHERE `owner`=".$player->id." AND `name`='".$objLoot->fields['name']." z miedzi' AND `power`=".$objLoot->fields['power']." AND `cost`=1 AND `wt`=".$objLoot->fields['dur']." AND `maxwt`=".$objLoot->fields['dur']." AND `type`='E' AND `minlev`=".$objLoot->fields['level']." AND repair=".$objLoot->fields['repair']);
 		  }
 		else
 		  {
-		    $objTest = $db->Execute("SELECT `id` FROM `equipment` WHERE `owner`=".$player->id." AND `name`='".$strPlanname."' AND `minlev`=".$objLoot->fields['level']." AND `cost`=1 AND `type`='P'");
+		    $objTest = $db->Execute("SELECT `id` FROM `equipment` WHERE `owner`=".$player->id." AND `name`='".$objLoot->fields['name']."' AND `minlev`=".$objLoot->fields['level']." AND `cost`=1 AND `type`='P'");
 		  }
 		if (!$objTest->fields['id'])
 		  {
 		    if ($arrLoot[0] == 'tools')
 		      {
-			$db -> Execute("INSERT INTO `equipment` (`owner`, `name`, `power`, `type`, `cost`, `zr`, `wt`, `minlev`, `maxwt`, `amount`, `magic`, `poison`, `szyb`, `twohand`, `repair`) VALUES(".$player->id.", '".$strItemname."', ".$objLoot->fields['power'].", 'E', 1, 0, ".$objLoot->fields['dur'].", ".$objLoot->fields['level'].", ".$objLoot->fields['dur'].", 1, 'N', 0, 0, 'N', ".$objLoot->fields['repair'].")") or die($db->ErrorMsg());
+			$db -> Execute("INSERT INTO `equipment` (`owner`, `name`, `power`, `type`, `cost`, `zr`, `wt`, `minlev`, `maxwt`, `amount`, `magic`, `poison`, `szyb`, `twohand`, `repair`) VALUES(".$player->id.", '".$objLoot->fields['name']." z miedzi', ".$objLoot->fields['power'].", 'E', 1, 0, ".$objLoot->fields['dur'].", ".$objLoot->fields['level'].", ".$objLoot->fields['dur'].", 1, 'N', 0, 0, 'N', ".$objLoot->fields['repair'].")") or die($db->ErrorMsg());
 		      }
 		    else
 		      {
-			$db -> Execute("INSERT INTO `equipment` (`owner`, `name`, `power`, `type`, `cost`, `zr`, `wt`, `minlev`, `maxwt`, `amount`, `magic`, `poison`, `szyb`, `twohand`, `repair`) VALUES(".$player->id.", '".$strPlanname."', 0, 'P', 1, 0, 1, ".$objLoot->fields['level'].", 1, 1, 'N', 0, 0, 'N', 1)") or die($db->ErrorMsg());
+			$db -> Execute("INSERT INTO `equipment` (`owner`, `name`, `power`, `type`, `cost`, `zr`, `wt`, `minlev`, `maxwt`, `amount`, `magic`, `poison`, `szyb`, `twohand`, `repair`) VALUES(".$player->id.", '".$objLoot->fields['name']."', 0, 'P', 1, 0, 1, ".$objLoot->fields['level'].", 1, 1, 'N', 0, 0, 'N', 1)") or die($db->ErrorMsg());
 		      }
 		  }
 		else

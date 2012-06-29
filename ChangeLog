@@ -1,5 +1,7 @@
 2012-06-29  Bartek thindil Jasicki  <thindil@vallheru.net>
 
+	* BUG,crafts.php: 
+	fixed few bugs with tools
 	* FEATURE,class/player_class.php, core.php, alchemik.php, farm.php, kopalnia.php, jeweller.php:
 	finished work on tools for craftsmen
 
