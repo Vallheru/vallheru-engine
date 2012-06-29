@@ -1,3 +1,8 @@
+2012-06-29  Bartek thindil Jasicki  <thindil@vallheru.net>
+
+	* FEATURE,class/player_class.php, core.php, alchemik.php, farm.php, kopalnia.php, jeweller.php:
+	finished work on tools for craftsmen
+
 2012-06-28  Bartek thindil Jasicki  <thindil@vallheru.net>
 
 	* FEATURE,kopalnia.php, jeweller.php: 

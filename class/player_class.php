@@ -7,7 +7,7 @@
  *   @copyright            : (C) 2004,2005,2006,2007,2011,2012 Vallheru Team based on Gamers-Fusion ver 2.5
  *   @author               : thindil <thindil@vallheru.net>
  *   @version              : 1.6
- *   @since                : 20.06.2012
+ *   @since                : 29.06.2012
  *
  */
 
@@ -357,6 +357,16 @@ class Player
 	    {
 	      $intBonus += ($this->level / 5);
 	    }
+	  $arrTools = array('metallurgy' => 'miechy',
+			    'lumberjack' => 'piła',
+			    'mining' => 'kilof',
+			    'breeding' => 'uprząż',
+			    'jeweller' => 'nożyk',
+			    'herbalist' => 'sierp',
+			    'alchemy' => 'moździerz',
+			    'fletcher' => 'ciesak',
+			    'smith' => 'młot');
+	  $arrEquip = $this->equipment();
 	  foreach ($arrNames as $strName)
 	    {
 	      $intMaxbonus = $this->$strName * 2;
@@ -365,6 +375,22 @@ class Player
 		  $intBonus = $intMaxbonus;
 		}
 	      $this->$strName += $intBonus;
+	      if (stripos($arrEquip[12][1], $arrTools[$strName]) !== FALSE)
+		{
+		  $this->$strName += (($arrEquip[12][2] / 100) * $this->$strName);
+		  if ($blnClear)
+		    {
+		      $arrEquip[12][6] --;
+		      if ($arrEquip[12][6] <= 0)
+			{
+			  $db->Execute("DELETE FROM `equipment` WHERE `id`=".$arrEquip[12][0]);
+			}
+		      else
+			{
+			  $db->Execute("UPDATE `equipment` SET `wt`=".$arrEquip[12][6]." WHERE `id`=".$arrEquip[12][0]);
+			}
+		    }
+		}
 	    }
 	}
     }

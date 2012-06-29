@@ -7,7 +7,7 @@
  *   @copyright            : (C) 2006,2011,2012 Vallheru Team based on Gamers-Fusion ver 2.5
  *   @author               : thindil <thindil@vallheru.net>
  *   @version              : 1.6
- *   @since                : 28.06.2012
+ *   @since                : 29.06.2012
  *
  */
 
@@ -177,10 +177,6 @@ if (isset($_GET['step']) && $_GET['step'] == 'make')
 	$arrEquip = $player->equipment();
 	$player->curstats($arrEquip, TRUE);
 	$player->curskills(array('jeweller'), TRUE, TRUE);
-	if (stripos($arrEquip[12][1], 'nożyk') !== FALSE)
-	  {
-	    $player->jeweller += (($arrEquip[12][2] / 100) * $player->jeweller);
-	  }
         
         $intChance = $player->jeweller * 100;
         if ($intChance > 95)
@@ -406,10 +402,6 @@ if (isset($_GET['step']) && $_GET['step'] == 'make2')
 	    $arrEquip = $player->equipment();
 	    $player->curstats($arrEquip, TRUE);
 	    $player->curskills(array('jeweller'), TRUE, TRUE);
-	    if (stripos($arrEquip[12][1], 'nożyk') !== FALSE)
-	      {
-		$player->jeweller += (($arrEquip[12][2] / 100) * $player->jeweller);
-	      }
 
             $objRing2 = $db -> Execute("SELECT `level`, `bonus`, `cost`, `type` FROM `jeweller` WHERE `owner`=".$player -> id." AND `name`='".$objRing -> fields['name']."'");
 
@@ -529,10 +521,6 @@ if (isset($_GET['step']) && $_GET['step'] == 'make2')
 	$arrEquip = $player->equipment();
 	$player->curstats($arrEquip, TRUE);
 	$player->curskills(array('jeweller'), TRUE, TRUE);
-	if (stripos($arrEquip[12][1], 'nożyk') !== FALSE)
-	  {
-	    $player->jeweller += (($arrEquip[12][2] / 100) * $player->jeweller);
-	  }
 
         $intChance = ($player->jeweller / $objRing -> fields['level']) * 50;
         if ($intChance > 95)
@@ -799,10 +787,6 @@ if (isset($_GET['step']) && $_GET['step'] == 'make3')
 	    $arrEquip = $player->equipment();
 	    $player->curstats($arrEquip, TRUE);
 	    $player->curskills(array('jeweller'), TRUE, TRUE);
-	    if (stripos($arrEquip[12][1], 'nożyk') !== FALSE)
-	      {
-		$player->jeweller += (($arrEquip[12][2] / 100) * $player->jeweller);
-	      }
 
             /**
              * Select ring name
@@ -983,10 +967,6 @@ if (isset($_GET['step']) && $_GET['step'] == 'make3')
 	$arrEquip = $player->equipment();
 	$player->curstats($arrEquip, TRUE);
 	$player->curskills(array('jeweller'), TRUE, TRUE);
-	if (stripos($arrEquip[12][1], 'nożyk') !== FALSE)
-	  {
-	    $player->jeweller += (($arrEquip[12][2] / 100) * $player->jeweller);
-	  }
 
         $intChance = floor(($player->jeweller / 50) * 0.5) + 5;
         if ($intChance > 15)

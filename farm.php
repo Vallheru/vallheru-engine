@@ -7,7 +7,7 @@
  *   @copyright            : (C) 2004,2005,2006,2011,2012 Vallheru Team based on Gamers-Fusion ver 2.5
  *   @author               : thindil <thindil@vallheru.net>
  *   @version              : 1.6
- *   @since                : 28.06.2012
+ *   @since                : 29.06.2012
  *
  */
 
@@ -498,10 +498,6 @@ if (isset($_GET['step']) && $_GET['step'] == 'plantation')
 		 */
 		$player->curstats(array(), TRUE);
 		$player->curskills(array('herbalist'), TRUE, TRUE);
-		if (stripos($arrEquip[12][1], 'sierp') !== FALSE)
-		  {
-		    $player->herbalist += (($arrEquip[12][2] / 100) * $player->herbalist);
-		  }
 
 		$intFactor = ceil($player->herbalist / 10);
 		if ($intFactor > 50)

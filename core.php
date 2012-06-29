@@ -7,8 +7,8 @@
  *   @copyright            : (C) 2004,2005,2006,2007,2011,2012 Vallheru Team based on Gamers-Fusion ver 2.5
  *   @author               : thindil <thindil@vallheru.net>
  *   @author               : eyescream <tduda@users.sourceforge.net>
- *   @version              : 1.5
- *   @since                : 07.05.2012
+ *   @version              : 1.6
+ *   @since                : 29.06.2012
  *
  */
 
@@ -240,10 +240,6 @@ if (isset($_GET['view']))
 		
 		$fltRoll = rand(1,100) / 100;
 		$fltResult = $player -> breeding + $fltRoll;
-		if (stripos($arrEquip[12][1], 'uprząż') !== FALSE)
-		  {
-		    $fltStat += (($arrEquip[12][2] / 100) * $fltStat);
-		  }
 		if ($fltResult >= $intChance)
 		  {
 		    if ($objCoremale -> fields['power'] < $objCorefemale -> fields['power'])

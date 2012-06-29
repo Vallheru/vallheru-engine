@@ -67,10 +67,6 @@ if (isset($_GET['action']) && $_GET['action'] == 'dig')
     $arrEquip = $player->equipment();
     $player->curstats($arrEquip, TRUE);
     $player->curskills(array('mining'), TRUE, TRUE);
-    if (stripos($arrEquip[12][1], 'kilof') !== FALSE)
-      {
-	$player->mining += (($arrEquip[12][2] / 100) * $player->mining);
-      }
 
     $fltGainability = 0;
     $arrMinerals = array(0, 0);
