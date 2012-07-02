@@ -1,3 +1,8 @@
+2012-07-02  Bartek thindil Jasicki  <thindil@vallheru.net>
+
+	* BUG,maze.php:
+	fixed bug with finding spells
+
 2012-06-29  Bartek thindil Jasicki  <thindil@vallheru.net>
 
 	* BUG,crafts.php: 

@@ -7,7 +7,7 @@
  *   @copyright            : (C) 2004,2005,2006,2011,2012 Vallheru Team based on Gamers-Fusion ver 2.5
  *   @author               : thindil <thindil@vallheru.net>
  *   @version              : 1.6
- *   @since                : 15.06.2012
+ *   @since                : 02.07.2012
  *
  */
 
@@ -315,7 +315,7 @@ if (isset($_GET['action']) && $_GET['action'] == 'explore')
 	      {
 		$strSymbol = '<';
 	      }
-	    if ($intRoll2 > 5 && $intRoll2 < 9)
+	    else
 	      {
 		$strSymbol = '=';
 	      }
@@ -354,13 +354,12 @@ if (isset($_GET['action']) && $_GET['action'] == 'explore')
 	      }
 	    if ($intRoll2 < 9)
 	      {
-		$objQuery = $db -> Execute("SELECT count(`id`) FROM `czary` WHERE `gracz`=0 AND `poziom`".$strSymbol."".$player -> level." AND `typ`='".$strType."' AND `lang`='".$lang."'");
+		$objQuery = $db -> Execute("SELECT count(`id`) FROM `czary` WHERE `gracz`=0 AND `poziom`".$strSymbol."".$player -> level." AND `typ`='".$strType."'");
 		$intAmount = $objQuery->fields['count(`id`)'];
 		$objQuery -> Close();
 		if ($intAmount > 0)
 		  {
-		    $intRoll4 = rand(0, ($intAmount-1));
-		    $objSpell = $db -> SelectLimit("SELECT `id`, `nazwa`  FROM `czary` WHERE `gracz`=0 AND `poziom`".$strSymbol."".$player -> level." AND `typ`='".$strType."' AND `lang`='".$lang."'", 1, $intRoll4);
+		    $objSpell = $db->Execute("SELECT `id`, `nazwa`  FROM `czary` WHERE `gracz`=0 AND `poziom`".$strSymbol."".$player -> level." AND `typ`='".$strType."' ORDER BY RAND() LIMIT 1");
 		    $objTest = $db->Execute("SELECT `id` FROM `czary` WHERE `gracz`=".$player->id." AND `nazwa`='".$objSpell->fields['nazwa']."'");
 		    if ((!in_array($objSpell->fields['id'], $arrSpells)) && (!$objTest->fields['id']))
 		      {
@@ -635,7 +634,7 @@ if (isset($_GET['action']) && $_GET['action'] == 'explore')
     foreach ($arrSpells as $intSpell)
       {
 	$objSpell = $db->Execute("SELECT * FROM `czary` WHERE `id`=".$intSpell);
-	$db -> Execute("INSERT INTO `czary` (`gracz`, `nazwa`, `cena`, `poziom`, `typ`, `obr`, `status`) VALUES(".$player->id.", '".$objSpell->fields['nazwa']."', ".$objSpell->fields['cena'].", ".$objSpell->fields['poziom'].", '".$objSpell->fields['typ']."', ".$objSpell->fields['obr'].", 'U')");
+	$db -> Execute("INSERT INTO `czary` (`gracz`, `nazwa`, `cena`, `poziom`, `typ`, `obr`, `status`, `element`) VALUES(".$player->id.", '".$objSpell->fields['nazwa']."', ".$objSpell->fields['cena'].", ".$objSpell->fields['poziom'].", '".$objSpell->fields['typ']."', ".$objSpell->fields['obr'].", 'U', '".$objSpell->fields['element']."')");
 	$strText .= "Czar ".$objSpell->fields['nazwa']."<br />";
 	$objSpell->Close();
       }
