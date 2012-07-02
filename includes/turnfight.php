@@ -7,7 +7,7 @@
  *   @copyright            : (C) 2004,2005,2006,2007,2011,2012 Vallheru Team based on Gamers-Fusion ver 2.5
  *   @author               : thindil <thindil@vallheru.net>
  *   @version              : 1.6
- *   @since                : 22.06.2012
+ *   @since                : 02.07.2012
  *
  */
  
@@ -71,40 +71,42 @@ function turnfight($expgain,$goldgain,$action,$addres)
     if (empty ($enemy['id'])) 
     {
         $location = $db -> Execute("SELECT miejsce FROM players WHERE id=".$player -> id);
-        if ($location -> fields['miejsce'] == 'Góry') 
-        {
+	if ($location->fields['miejsce'] == 'Góry' || $location->fields['miejsce'] == 'Las')
+	  {
+	    if ($location -> fields['miejsce'] == 'Góry') 
+	      {
+		$strLocation = 'Altara';
+	      }
+	    elseif ($location->fields['miejsce'] == 'Las')
+	      {
+		$strLocation = 'Ardulith';
+	      }
 	    $intRoll2 = rand(1, 100);
 	    if ($intRoll2 < 25)
 	      {
-		$enemy1 = $db->SelectLimit("SELECT * FROM `monsters` WHERE `level`<=".$player->level." AND `location`='Altara' ORDER BY RAND()", 1);
+		$enemy1 = $db->SelectLimit("SELECT * FROM `monsters` WHERE `level`<=".$player->level." AND `location`='".$strLocation."' ORDER BY RAND()", 1);
 	      }
 	    elseif ($intRoll2 > 24 && $intRoll2 < 90)
 	      {
-		$enemy1 = $db->SelectLimit("SELECT * FROM `monsters` WHERE `level`<=".$player->level." AND `location`='Altara' ORDER BY `level` DESC", 1);
+		$enemy1 = $db->SelectLimit("SELECT * FROM `monsters` WHERE `level`<=".$player->level." AND `location`='".$strLocation."' ORDER BY `level` DESC", 1);
 	      }
 	    else
 	      {
-		$enemy1 = $db->SelectLimit("SELECT * FROM `monsters` WHERE `level`>=".$player->level." AND `location`='Altara' ORDER BY RAND()", 1);
+		$enemy1 = $db->SelectLimit("SELECT * FROM `monsters` WHERE `level`>=".$player->level." AND `location`='".$strLocation."' ORDER BY RAND()", 1);
 	      }
-            $enemy = array("strength" => $enemy1 -> fields['strength'], "agility" => $enemy1 -> fields['agility'], "speed" => $enemy1 -> fields['speed'], "endurance" => $enemy1 -> fields['endurance'], "hp" => $enemy1 -> fields['hp'], "name" => $enemy1 -> fields['name'], "exp1" => $enemy1 -> fields['exp1'], "exp2" => $enemy1 -> fields['exp2'], "level" => $enemy1 -> fields['level']);
-            $enemy1 -> Close();
-        }
-        if ($location -> fields['miejsce'] == 'Las') 
-        {
-	    $intRoll2 = rand(1, 100);
-	    if ($intRoll2 < 25)
-	      {
-		$enemy1 = $db->SelectLimit("SELECT * FROM `monsters` WHERE `level`<=".$player->level." AND `location`='Ardulith' ORDER BY RAND()", 1);
-	      }
-	    elseif ($intRoll2 > 24 && $intRoll2 < 90)
-	      {
-		$enemy1 = $db->SelectLimit("SELECT * FROM `monsters` WHERE `level`<=".$player->level." AND `location`='Ardulith' ORDER BY `level` DESC", 1);
-	      }
-	    else
-	      {
-		$enemy1 = $db->SelectLimit("SELECT * FROM `monsters` WHERE `level`>=".$player->level." AND `location`='Ardulith' ORDER BY RAND()", 1);
-	      }
-            $enemy = array("strength" => $enemy1 -> fields['strength'], "agility" => $enemy1 -> fields['agility'], "speed" => $enemy1 -> fields['speed'], "endurance" => $enemy1 -> fields['endurance'], "hp" => $enemy1 -> fields['hp'], "name" => $enemy1 -> fields['name'], "exp1" => $enemy1 -> fields['exp1'], "exp2" => $enemy1 -> fields['exp2'], "level" => $enemy1 -> fields['level']);
+            $enemy = array("strength" => $enemy1 -> fields['strength'], 
+			   "agility" => $enemy1 -> fields['agility'], 
+			   "speed" => $enemy1 -> fields['speed'], 
+			   "endurance" => $enemy1 -> fields['endurance'], 
+			   "hp" => $enemy1 -> fields['hp'], 
+			   "name" => $enemy1 -> fields['name'], 
+			   "exp1" => $enemy1 -> fields['exp1'], 
+			   "exp2" => $enemy1 -> fields['exp2'], 
+			   "level" => $enemy1 -> fields['level'],
+			   "lootnames" => explode(";", $enemy1->fields['lootnames']),
+			   "lootchances" => explode(";", $enemy1->fields['lootchances']),
+			   "resistance" => explode(";", $enemy1->fields['resistance']),
+			   "dmgtype" => $enemy1->fields['dmgtype']);
             $enemy1 -> Close();
         }
     }
