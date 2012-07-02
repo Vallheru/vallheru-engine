@@ -41,6 +41,17 @@
         </table><br />
         <input type="submit" value="{$Adelete}" name="selected" /> <input type="submit" value="{$Asend2}" name="selected" /> {html_options name=staff options=$Ostaff}
     </form>
+    {if $Tpages > 1}
+    	<br />{$Fpage}
+    	{for $page = 1 to $Tpages}
+	    {if $page == $Tpage}
+	        {$page}
+	    {else}
+                <a href="log.php?page={$page}{$Gsort}">{$page}</a>
+	    {/if}
+    	{/for}
+	<br /><br />
+    {/if}
     <form method="post" action="log.php?step=deleteold">
         <input type="submit" value="{$Adeleteold}" /> <select name="oldtime">
             <option value="7">{$Aweek}</option>
