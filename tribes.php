@@ -9,7 +9,7 @@
  *   @author               : mori <ziniquel@users.sourceforge.net>
  *   @author               : eyescream <tduda@users.sourceforge.net>
  *   @version              : 1.6
- *   @since                : 28.06.2012
+ *   @since                : 02.07.2012
  *
  */
 
@@ -571,7 +571,7 @@ if (isset ($_GET['view']) && $_GET['view'] == 'make')
     $arrOptions = array(1 => 'Kryjówka (koszt: 500 000 sztuk złota, maksymalnie 5 osób w klanie)',
 			2 => 'Kamienica (koszt: 1 000 000 sztuk złota, dodaje zbrojownię oraz magazyn klanowy, maksymalnie 10 osób w klanie)',
 			3 => 'Dworek (koszt: 1 500 000 sztuk złota, dodaje skarbiec, astralny skarbiec oraz zielnik klanowy, maksymalnie 20 osób w klanie)',
-			4 => 'Dwór (koszt: 2 000 000 sztuk złota, liczba osób w klanie bez ograniczeń)',
+			4 => 'Dwór (koszt: 2 000 000 sztuk złota, liczba osób w klanie bez ograniczeń) <br /><b>albo</b>',
 			5 => 'Zamek (koszt: 2 500 000 sztuk złota, liczba osób w klanie bez ograniczeń, pozwala budować Astralną Machinę oraz uczestniczyć w walkach klanowych)');
     $smarty -> assign(array("Clanname" => CLAN_NAME,
 			    "Amake" => A_MAKE,

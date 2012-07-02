@@ -1,5 +1,7 @@
 2012-07-02  Bartek thindil Jasicki  <thindil@vallheru.net>
 
+	* FEATURE,tribeadmin.php, tribes.php: 
+	changed tribe upgrades
 	* UPDATE,includes/turnfight.php: 
 	some code cleanup
 	* BUG,maze.php:

@@ -7,7 +7,7 @@
  *   @copyright            : (C) 2012 Vallheru Team based on Gamers-Fusion ver 2.5
  *   @author               : thindil <thindil@vallheru.net>
  *   @version              : 1.6
- *   @since                : 25.06.2012
+ *   @since                : 02.07.2012
  *
  */
 
@@ -67,6 +67,9 @@ if (!isset($_GET['step2']))
     if ($mytribe->fields['level'] < 5)
       {
 	unset($arrLinks['wojsko'], $arrLinks['walka']);
+      }
+    if ($mytribe->fields['level'] < 4)
+      {
 	$arrLinks['upgrade'] = 'Rozbuduj klan';
       }
     $smarty -> assign(array("Panelinfo" => "Witaj w panelu przywódcy klanu. Co chcesz zrobić?",
@@ -1095,13 +1098,13 @@ else
 		message('success', 'Rozbudowałeś swój klan.');
 	      }
 	  }
-	if ($mytribe->fields['level'] == 5)
+	if ($mytribe->fields['level'] > 3)
 	  {
 	    error("Nie możesz już rozbudowywać klanu.");
 	  }
 	$arrOptions = array(2 => 'Kamienica (koszt: 500000 sztuk złota, dodaje zbrojownię oraz magazyn klanowy, maksymalnie 10 osób w klanie)',
 			    3 => 'Dworek (koszt: '.(1500000 - ($mytribe->fields['level'] * 500000)).' sztuk złota, dodaje skarbiec, astralny skarbiec oraz zielnik klanowy, maksymalnie 20 osób w klanie)',
-			    4 => 'Dwór (koszt: '.(2000000 - ($mytribe->fields['level'] * 500000)).' sztuk złota, liczba osób w klanie bez ograniczeń)',
+			    4 => 'Dwór (koszt: '.(2000000 - ($mytribe->fields['level'] * 500000)).' sztuk złota, liczba osób w klanie bez ograniczeń) <br /><b>albo</b>',
 			    5 => 'Zamek (koszt: '.(2500000 - ($mytribe->fields['level'] * 500000)).' sztuk złota, liczba osób w klanie bez ograniczeń, pozwala budować Astralną Machinę oraz uczestniczyć w walkach klanowych)');
 	if ($mytribe->fields['level'] > 1)
 	  {
