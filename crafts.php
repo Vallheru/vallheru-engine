@@ -7,7 +7,7 @@
  *   @copyright            : (C) 2011,2012 Vallheru Team based on Gamers-Fusion ver 2.5
  *   @author               : thindil <thindil@vallheru.net>
  *   @version              : 1.6
- *   @since                : 29.06.2012
+ *   @since                : 02.07.2012
  *
  */
 
@@ -677,27 +677,30 @@ if (isset($_GET['step']))
 	  {
 	    $strInfo2 .= ', '.$intExp.' punktów doświadczenia, '.$fltSkill.' w umiejętności '.$strSkill2.' oraz '.$intGold.' sztuk złota';
 	    $intRoll = rand(1, 100);
-	    if ($intRoll > 80 && $intRoll < 86)
+	    switch ($intRoll)
 	      {
+	      case 95:
+	      case 96:
 		$strInfo2 .= ' oraz '.$arrTool[0];
 		$arrLoot = array('tools', '=1', $arrTool[4]);
-	      }
-	    elseif ($intRoll > 85 && $intRoll < 91)
-	      {
+		break;
+	      case 97:
 		$strInfo2 .= ' oraz '.$arrTool[1];
 		$arrLoot = array('tools','>1', $arrTool[4]);
-	      }
-	    elseif ($intRoll > 90 && $intRoll < 98)
-	      {
+		break;
+	      case 98:
+	      case 99:
 		$strInfo2 .= ' oraz plan '.$arrTool[2];
 		$arrLoot = array('plans','=1', $arrTool[4]);
-	      }
-	    elseif ($intRoll > 97)
-	      {
+		break;
+	      case 100:
 		$strInfo2 .= ' oraz plan '.$arrTool[3];
 		$arrLoot = array('plans', '>1', $arrTool[4]);
+		break;
+	      default:
+		break;
 	      }
-	    if ($intRoll > 80)
+	    if ($intRoll > 94)
 	      {
 		$objLoot = $db->Execute("SELECT * FROM `".$arrLoot[0]."` WHERE `level`".$arrLoot[1]." AND `type`='".$arrLoot[2]."' ORDER BY RAND() LIMIT 1") or die($db->ErrorMsg());
 		if ($arrLoot[0] == 'tools')
