@@ -1,5 +1,7 @@
 2012-07-03  Bartek thindil Jasicki  <thindil@vallheru.net>
 
+	* BUG,kowal.php: 
+	fixed bug with dragon tools names
 	* BUG,news.php:
 	fixed bug with adding news
 

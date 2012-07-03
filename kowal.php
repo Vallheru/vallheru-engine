@@ -7,7 +7,7 @@
  *   @copyright            : (C) 2004,2005,2006,2011,2012 Vallheru Team based on Gamers-Fusion ver 2.5
  *   @author               : thindil <thindil@vallheru.net>
  *   @version              : 1.6
- *   @since                : 19.06.2012
+ *   @since                : 03.07.2012
  *
  */
 
@@ -228,7 +228,19 @@ function createitem()
 		      }
 		    else
 		      {
-			$strName = 'Smocze '.$arrItem['name'];
+			$arrTools = array('Smocze' => array('Wytrychy', 'Miechy'), 
+					  'Smocza' => array('Piła', 'Uprząż'), 
+					  'Smoczy' => array('Kilof', 'Nożyk', 'Sierp', 'Moździerz', 'Ciesak', 'Młot'));
+			$arrName = explode(' ', $arrItem['name']);
+			foreach ($arrTools as $key => $arrTool)
+			  {
+			    $strKey = array_search($arrName[0], $arrTool);
+			    if ($strKey !== FALSE)
+			      {
+				$strName = $key.' '.$arrItem['name'];
+				break;
+			      }
+			  }
 		      }
                     $intPowerbonus = $intItembonus + ($player -> strength / 50);
                     $intMaxbonus = $arrMaxbonus[$intKey] * $arrItem['power'];
@@ -258,7 +270,19 @@ function createitem()
                     }
 		    else
 		      {
-			$strName = 'Smocze '.$arrItem['name'];
+			$arrTools = array('Smocze' => array('Wytrychy', 'Miechy'), 
+					  'Smocza' => array('Piła', 'Uprząż'), 
+					  'Smoczy' => array('Kilof', 'Nożyk', 'Sierp', 'Moździerz', 'Ciesak', 'Młot'));
+			$arrName = explode(' ', $arrItem['name']);
+			foreach ($arrTools as $key => $arrTool)
+			  {
+			    $strKey = array_search($arrName[0], $arrTool);
+			    if ($strKey !== FALSE)
+			      {
+				$strName = $key.' '.$arrItem['name'];
+				break;
+			      }
+			  }
 		      }
                     $intPowerbonus = $intItembonus + ($player -> strength / 50);
                     $intMaxbonus = $arrMaxbonus[$intKey] * $arrItem['power'];
