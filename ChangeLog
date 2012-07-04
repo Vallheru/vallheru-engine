@@ -1,5 +1,7 @@
 2012-07-04  Bartek thindil Jasicki  <thindil@vallheru.net>
 
+	* UPDATE,templates/layout1/notatnik.tpl, templates/notatnik.tpl, languages/pl/notatnik.php: 
+	small redesign
 	* FEATURE,install/db/update.sql, languages/pl/notatnik.php, templates/layout1/notatnik.tpl, templates/notatnik.tpl, notatnik.php: 
 	redesigned notes, added titles to notes
 	* UPDATE,equip.php: 

@@ -35,12 +35,12 @@ define("NOT_YOUR", "To nie twój wpis!");
 define("YOU_DELETE", "Skasowałeś wpis.");
 define("EMPTY_FIELD", "Wypełnij pole.");
 define("YOU_ADD", "Notatka dodana.");
-define("NOTES_INFO", "Tutaj możesz zapisywać sobie różne przydatne informacje.");
+define("NOTES_INFO", "Tutaj możesz zapisywać sobie różne przydatne informacje.<br /><br />Oto lista notatek:");
 define("N_TIME", "Czas");
-define("A_DELETE", "Skasuj wpis");
+define("A_DELETE", "skasuj");
 define("A_ADD", "Dodaj wpis");
 define("NOTE", "Notatka");
 define("A_SAVE", "Zapisz");
-define("A_EDIT", "Edytuj wpis");
+define("A_EDIT", "edytuj");
 define("YOU_EDIT", "Notatka zmieniona.");
 ?>

@@ -1,10 +1,10 @@
 {if $Action == ""}
     {$Notesinfo}<br /><br />
     {foreach $Notes as $Note}
-        <label for="mytoggle{$Note@index}" class="toggle">{$Note.title} &#187;</label>
+        <label for="mytoggle{$Note@index}" class="toggle">&#171; {$Note.title} &#187;</label> [<a href="notatnik.php?akcja=skasuj&amp;nid={$Note.id}">{$Adelete}</a> | <a href="notatnik.php?akcja=edit&amp;nid={$Note.id}">{$Aedit}</a>]
         <input id="mytoggle{$Note@index}" type="checkbox" class="toggle" {$Checked} />
 	<div>
-            {$Ntime}: {$Note.czas}<br />{$Note.tekst}<br /> (<a href="notatnik.php?akcja=skasuj&amp;nid={$Note.id}">{$Adelete}</a>) (<a href="notatnik.php?akcja=edit&amp;nid={$Note.id}">{$Aedit}</a>)
+            {$Ntime}: {$Note.czas}<br />{$Note.tekst}<br />
 	</div><br /><br />
     {/foreach}
     {if $Tpages > 1}
