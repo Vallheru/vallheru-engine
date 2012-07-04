@@ -40,7 +40,11 @@ scrollbar-track-color: black;
 scrollbar-darkshadow-color: black; 
 scrollbar-base-color: black;
 }
-label.toggle { 
+label.toggle {
+    color: #FAEBD7;
+    cursor: pointer; 
+}
+label.toggle:hover { 
   cursor: pointer; 
   color: red; 
 }
