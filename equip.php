@@ -200,7 +200,26 @@ function backpack($type, $nameitems, $type2, $smartyname)
 	    $arrshow[$arm->fields['minlev']][$j] = "<input type=\"checkbox\" name=\"".$arm->fields['id']."\" /><b>(".AMOUNT.": ".$arm -> fields['amount']." )</b> ".$arm -> fields['name']." [ ".$strLearn."<a href=\"equip.php?sell=".$arm -> fields['id']."\">".A_SELL."</a> ".FOR_A." ".$arm->fields['cost']." ".GOLD_COINS." ]<br />";
 	    break;
 	  case 'E':
-	    $arrshow[$arm->fields['minlev']][$j] = "<input type=\"checkbox\" name=\"".$arm->fields['id']."\" /><b>(".AMOUNT.": ".$arm -> fields['amount']." )</b> ".$arm -> fields['name']." (+".$arm -> fields['power']." %) ".$agility."".$speed.$strDur." [ <a href=\"equip.php?equip=".$arm -> fields['id']."\">".A_WEAR."</a> | <A href=\"equip.php?sell=".$arm -> fields['id']."\">".A_SELL."</a> ".FOR_A." ".$intCost." ".GOLD_COINS." ".$strRepair."]<br />";
+	    $arrName = explode(' ', $arm->fields['name']);
+	    $arrTools = array('Wytrychy' => ' do akcji złodziejskich',
+			      'Miechy' => ' do Hutnictwa',
+			      'Piła' => ' do Drwalnictwa',
+			      'Kilof' => ' do Górnictwa',
+			      'Uprząż' => ' do Hodowli',
+			      'Nożyk' => ' do Jubilerstwa',
+			      'Sierp' => ' do Zielarstwa',
+			      'Możdzierz' => ' do Alchemii',
+			      'Ciesak' => ' do Stolarstwa',
+			      'Młot' => ' do Kowalstwa');
+	    if (count($arrName) == 3)
+	      {
+		$strName = $arrName[0];
+	      }
+	    else
+	      {
+		$strName = $arrName[1];
+	      }
+	    $arrshow[$arm->fields['minlev']][$j] = "<input type=\"checkbox\" name=\"".$arm->fields['id']."\" /><b>(".AMOUNT.": ".$arm -> fields['amount']." )</b> ".$arm -> fields['name']." (+".$arm -> fields['power']." %".$arrTools[$strName].") ".$agility."".$speed.$strDur." [ <a href=\"equip.php?equip=".$arm -> fields['id']."\">".A_WEAR."</a> | <A href=\"equip.php?sell=".$arm -> fields['id']."\">".A_SELL."</a> ".FOR_A." ".$intCost." ".GOLD_COINS." ".$strRepair."]<br />";
 	    break;
 	  default:
 	    $arrshow[$arm->fields['minlev']][$j] = "<input type=\"checkbox\" name=\"".$arm->fields['id']."\" /><b>(".AMOUNT.": ".$arm -> fields['amount']." )</b> ".$arm -> fields['name']." (+".$arm -> fields['power'].") ".$agility."".$speed.$strDur." [ <a href=\"equip.php?equip=".$arm -> fields['id']."\">".A_WEAR."</a> | <A href=\"equip.php?sell=".$arm -> fields['id']."\">".A_SELL."</a> ".FOR_A." ".$intCost." ".GOLD_COINS." ".$strRepair."]<br />";
@@ -565,7 +584,26 @@ if ($arrEquip[10][0])
  */
 if ($arrEquip[12][0])
   {
-    $smarty->assign("Tool", "<input type=\"checkbox\" name=\"".$arrEquip[12][0]."\" /><b>Narzędzie:</b> ".$arrEquip[12][1]." (+".$arrEquip[12][2]." %) (".$arrEquip[12][6]."/".$arrEquip[12][9]." ".DURABILITY.") [<a href=\"equip.php?schowaj=".$arrEquip[12][0]."\">".WEAR_OFF."</a>]<br />");
+    $arrName = explode(' ', $arrEquip[12][1]);
+    $arrTools = array('Wytrychy' => ' do akcji złodziejskich',
+		      'Miechy' => ' do Hutnictwa',
+		      'Piła' => ' do Drwalnictwa',
+		      'Kilof' => ' do Górnictwa',
+		      'Uprząż' => ' do Hodowli',
+		      'Nożyk' => ' do Jubilerstwa',
+		      'Sierp' => ' do Zielarstwa',
+		      'Możdzierz' => ' do Alchemii',
+		      'Ciesak' => ' do Stolarstwa',
+		      'Młot' => ' do Kowalstwa');
+    if (count($arrName) == 3)
+      {
+	$strName = $arrName[0];
+      }
+    else
+      {
+	$strName = $arrName[1];
+      }
+    $smarty->assign("Tool", "<input type=\"checkbox\" name=\"".$arrEquip[12][0]."\" /><b>Narzędzie:</b> ".$arrEquip[12][1]." (+".$arrEquip[12][2]." % ".$arrTools[$strName].") (".$arrEquip[12][6]."/".$arrEquip[12][9]." ".DURABILITY.") [<a href=\"equip.php?schowaj=".$arrEquip[12][0]."\">".WEAR_OFF."</a>]<br />");
   }
 else
   {
