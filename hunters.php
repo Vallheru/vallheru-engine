@@ -7,7 +7,7 @@
  *   @copyright            : (C) 2011,2012 Vallheru Team based on Gamers-Fusion ver 2.5
  *   @author               : thindil <thindil@vallheru.net>
  *   @version              : 1.6
- *   @since                : 30.05.2012
+ *   @since                : 04.07.2012
  *
  */
 
@@ -58,7 +58,7 @@ if (!isset($_GET['step']))
 	$strQuest = '';
       }
     $objQuest->Close();
-    $smarty -> assign(array("Desc" => 'Niewielki, drewniany budynek stoi wsród drzew. Wokół niego kręcą się postacie okryte ciemnozielonymi płaszczami. Nad drzwiami budynku widzać symbol łowców królestwa.',
+    $smarty -> assign(array("Desc" => 'Niewielki, drewniany budynek stoi wsród drzew. Wokół niego kręcą się postacie okryte ciemnozielonymi płaszczami. Nad drzwiami budynku widać symbol łowców królestwa.',
 			    "Abestiary" => 'Bestiariusz znanych ziem',
 			    "Aquest" => $strQuest));
     $_GET['step'] = '';

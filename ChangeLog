@@ -1,5 +1,7 @@
 2012-07-04  Bartek thindil Jasicki  <thindil@vallheru.net>
 
+	* BUG,hunters.php, languages/pl/temple.php: 
+	fixed typos
 	* BUG,equip.php:
 	fixed tool info
 
