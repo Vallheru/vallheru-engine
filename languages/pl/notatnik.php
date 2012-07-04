@@ -4,10 +4,10 @@
  *   Polish language for player notes
  *
  *   @name                 : notatnik.php                            
- *   @copyright            : (C) 2004,2005,2006 Vallheru Team based on Gamers-Fusion ver 2.5
- *   @author               : thindil <thindil@users.sourceforge.net>
- *   @version              : 1.2
- *   @since                : 12.07.2006
+ *   @copyright            : (C) 2004,2005,2006,2012 Vallheru Team based on Gamers-Fusion ver 2.5
+ *   @author               : thindil <thindil@vallheru.net>
+ *   @version              : 1.6
+ *   @since                : 04.07.2012
  *
  */
 
@@ -32,9 +32,9 @@
 define("ERROR", "Zapomnij o tym!");
 define("NO_TEXT", "Nie ma takiego wpisu!");
 define("NOT_YOUR", "To nie twój wpis!");
-define("YOU_DELETE", "<br />Skasowałeś wpis. (<a href=\"notatnik.php\">odśwież</a>)");
+define("YOU_DELETE", "Skasowałeś wpis.");
 define("EMPTY_FIELD", "Wypełnij pole.");
-define("YOU_ADD", "Notatka dodana. (<a href=\"notatnik.php\">odśwież</a>)");
+define("YOU_ADD", "Notatka dodana.");
 define("NOTES_INFO", "Tutaj możesz zapisywać sobie różne przydatne informacje.");
 define("N_TIME", "Czas");
 define("A_DELETE", "Skasuj wpis");
@@ -42,5 +42,5 @@ define("A_ADD", "Dodaj wpis");
 define("NOTE", "Notatka");
 define("A_SAVE", "Zapisz");
 define("A_EDIT", "Edytuj wpis");
-define("YOU_EDIT", "Notatka zmieniona. (<a href=\"notatnik.php\">odśwież</a>)");
+define("YOU_EDIT", "Notatka zmieniona.");
 ?>

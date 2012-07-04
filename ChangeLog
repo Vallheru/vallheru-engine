@@ -1,5 +1,7 @@
 2012-07-04  Bartek thindil Jasicki  <thindil@vallheru.net>
 
+	* FEATURE,install/db/update.sql, languages/pl/notatnik.php, templates/layout1/notatnik.tpl, templates/notatnik.tpl, notatnik.php: 
+	redesigned notes, added titles to notes
 	* UPDATE,equip.php: 
 	added more info about bonus from tools
 	* BUG,hunters.php, languages/pl/temple.php: 

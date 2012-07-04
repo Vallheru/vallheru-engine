@@ -37,3 +37,4 @@ CREATE TABLE IF NOT EXISTS `battlelogs` (
   `bdate` int(11) NOT NULL,
   PRIMARY KEY (`id`)
 ) ENGINE=MyISAM DEFAULT CHARSET=utf8 AUTO_INCREMENT=1 ;
+ALTER TABLE  `notatnik` ADD  `title` VARCHAR( 255 ) NOT NULL DEFAULT  'Bez tytułu';
