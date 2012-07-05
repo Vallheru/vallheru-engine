@@ -7,7 +7,7 @@
  *   @copyright            : (C) 2004,2005,2006,2011,2012 Vallheru Team based on Gamers-Fusion ver 2.5
  *   @author               : thindil <thindil@vallheru.net>
  *   @version              : 1.6
- *   @since                : 22.06.2012
+ *   @since                : 05.07.2012
  *
  */
 
@@ -453,6 +453,34 @@ if (isset($_GET['action']))
 	    $elist -> MoveNext();
 	  }
 	$elist -> Close();
+	$arrTribes = array_unique($arrtribe);
+	if (in_array('0', $arrTribes))
+	  {
+	    unset($arrTribes[array_search('0', $arrTribes)]);
+	  }
+	if (count($arrTribes))
+	  {
+	    $objTribes = $db->Execute("SELECT `id`, `name` FROM `tribes` WHERE `id` IN (".implode(',', $arrTribes).")");
+	    while (!$objTribes->EOF)
+	      {
+		foreach ($arrtribe as &$strTribe)
+		  {
+		    if ($objTribes->fields['id'] == $strTribe)
+		      {
+			$strTribe = $objTribes->fields['name'];
+		      }
+		  }
+		$objTribes->MoveNext();
+	      }
+	    $objTribes->Close();
+	  }
+	foreach ($arrtribe as &$strTribe)
+	  {
+	    if ($strTribe == '0')
+	      {
+		$strTribe = 'Brak';
+	      }
+	  }
 	$smarty -> assign ( array("Level" => $player -> level, 
 				  "Enemyid" => $arrid, 
 				  "Enemyname" => $arrname, 
@@ -515,7 +543,10 @@ if (isset($_GET['action']))
 	      }	    
 	    $elist -> Close();
 	    $arrTribes = array_unique($arrtribe);
-	    unset($arrTribes[array_search('0', $arrTribes)]);
+	    if (in_array('0', $arrTribes))
+	      {
+		unset($arrTribes[array_search('0', $arrTribes)]);
+	      }
 	    if (count($arrTribes))
 	      {
 		$objTribes = $db->Execute("SELECT `id`, `name` FROM `tribes` WHERE `id` IN (".implode(',', $arrTribes).")");
