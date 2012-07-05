@@ -1,5 +1,7 @@
 2012-07-05  Bartek thindil Jasicki  <thindil@vallheru.net>
 
+	* BUG,languages/pl/temple.php: 
+	fixed typo
 	* BUG,equip.php:
 	fixed typo
 
