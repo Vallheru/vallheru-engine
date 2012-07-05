@@ -7,7 +7,7 @@
  *   @copyright            : (C) 2004,2005,2006,2007,2011,2012 Vallheru Team based on Gamers-Fusion ver 2.5
  *   @author               : thindil <thindil@vallheru.net>
  *   @version              : 1.6
- *   @since                : 04.07.2012
+ *   @since                : 05.07.2012
  *
  */
 
@@ -208,7 +208,7 @@ function backpack($type, $nameitems, $type2, $smartyname)
 			      'Uprząż' => ' do Hodowli',
 			      'Nożyk' => ' do Jubilerstwa',
 			      'Sierp' => ' do Zielarstwa',
-			      'Możdzierz' => ' do Alchemii',
+			      'Moździerz' => ' do Alchemii',
 			      'Ciesak' => ' do Stolarstwa',
 			      'Młot' => ' do Kowalstwa');
 	    if (count($arrName) == 3)
@@ -592,7 +592,7 @@ if ($arrEquip[12][0])
 		      'Uprząż' => ' do Hodowli',
 		      'Nożyk' => ' do Jubilerstwa',
 		      'Sierp' => ' do Zielarstwa',
-		      'Możdzierz' => ' do Alchemii',
+		      'Moździerz' => ' do Alchemii',
 		      'Ciesak' => ' do Stolarstwa',
 		      'Młot' => ' do Kowalstwa');
     if (count($arrName) == 3)
