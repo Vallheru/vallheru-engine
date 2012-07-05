@@ -7,7 +7,7 @@
  *   @copyright            : (C) 2004,2005,2006,2007,2011,2012 Vallheru Team based on Gamers-Fusion ver 2.5
  *   @author               : thindil <thindil@vallheru.net>
  *   @version              : 1.6
- *   @since                : 18.06.2012
+ *   @since                : 05.07.2012
  *
  */
 
@@ -172,14 +172,17 @@ elseif(!empty($_POST['ip']))
 }
 
 require_once('includes/ranks.php');
-foreach ($mem as &$arrMember)
-{
-  $arrMember['rank'] = selectrank($arrMember['rank'], $arrMember['gender']);
-  if (strlen($arrMember['shortrpg']) > 0)
-    {
-      $arrMember['shortrpg'] = '<a href="roleplay.php?view='.$arrMember['id'].'">'.$arrMember['shortrpg'].'</a>';
-    }
-}
+if (is_array($mem))
+  {
+    foreach ($mem as &$arrMember)
+      {
+	$arrMember['rank'] = selectrank($arrMember['rank'], $arrMember['gender']);
+	if (strlen($arrMember['shortrpg']) > 0)
+	  {
+	    $arrMember['shortrpg'] = '<a href="roleplay.php?view='.$arrMember['id'].'">'.$arrMember['shortrpg'].'</a>';
+	  }
+      }
+  }
 
 /**
 * Initialization of variable

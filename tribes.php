@@ -307,7 +307,7 @@ if (isset ($_GET['view']) && $_GET['view'] == 'view')
 	    $objAstralcrime -> Close();
 	    if ($player -> hp <= 0) 
 	      {
-		error (YOU_DEAD." (<a href=\"tribes.php?view=view&id=".$_GET['id']."\">".BACK."</a>)");
+		error ("Nie możesz podejmować jakiejkolwiek akcji przeciwko klanom, ponieważ jesteś martwy (<a href=\"tribes.php?view=view&id=".$_GET['id']."\">".BACK."</a>)");
 	      }
 	    if ($player -> tribe == $_GET['id'])
 	      {

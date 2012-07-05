@@ -1,5 +1,7 @@
 2012-07-05  Bartek thindil Jasicki  <thindil@vallheru.net>
 
+	* BUG,memberlist.php, tribes.php: 
+	fixed few notices
 	* BUG,battle.php: 
 	fixed bug with show tribe name
 	* BUG,languages/pl/temple.php: 
