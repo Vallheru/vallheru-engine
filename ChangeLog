@@ -1,5 +1,7 @@
 2012-07-06  Bartek thindil Jasicki  <thindil@vallheru.net>
 
+	* FEATURE,css/grey.css: 
+	added new very light style
 	* BUG,mines.php:
 	fixed typo
 

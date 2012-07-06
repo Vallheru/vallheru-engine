@@ -1,0 +1,87 @@
+* {
+color: #000000;
+font-size: 100%;
+vertical-align: baseline;
+}
+body { 
+font: 0.75em/1.25 "Lucida Sans Unicode","Lucida Grande",Verdana,sans-serif; 
+background: #DCDCDC;
+}
+.td {
+border: solid  #DCDCDC 1px;
+}
+form input[type=submit] { 
+color: black; 
+cursor:pointer; 
+}
+form input[type=submit]:hover { 
+color: #E20000; 
+border:1px solid; 
+}
+input, textarea, select {
+background-color: silver;
+border: 1px solid #383838;
+font: inherit;
+}
+a {
+text-decoration: none;
+text-transform: none;
+color: darkred;
+}
+a:hover {
+text-decoration: none;
+text-transform: none;
+color: crimson;
+}
+body, iframe, select, textarea {
+margin-top: 0px;
+margin-bottom: 0px;
+margin-left: 0px;
+margin-right: 0px;
+}
+div.error {
+  border-style: dotted;
+  border-color: darkred;
+  border-width: 1px;
+  text-align: center;
+  padding: 10px;
+  color: red;
+  font-weight: bold;
+  margin: 10px;
+}
+div.success {
+  border-style: dotted;
+  border-color: green;
+  border-width: 1px;
+  text-align: center;
+  padding: 10px;
+  color: lightgreen;
+  margin: 10px;
+}
+div.info {
+  border-style: dotted;
+  border-color: blue;
+  border-width: 1px;
+  text-align: center;
+  padding: 10px;
+  color: mediumaquamarine;
+  font-weight: bold;
+  margin: 10px;
+}
+label.toggle { 
+  cursor: pointer; 
+  color: darkred; 
+}
+label.toggle:hover { 
+  cursor: pointer; 
+  color: red; 
+}
+input.toggle { 
+  display: none; 
+}
+input.toggle:checked+div { 
+  display: none; 
+}
+input.toggle:checked+span { 
+  display: none; 
+}
