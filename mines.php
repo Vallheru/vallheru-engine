@@ -7,7 +7,7 @@
  *   @copyright            : (C) 2004,2005,2006,2011,2012 Vallheru Team based on Gamers-Fusion ver 2.5
  *   @author               : thindil <thindil@vallheru.net>
  *   @version              : 1.6
- *   @since                : 23.05.2012
+ *   @since                : 06.07.2012
  *
  */
 
@@ -294,7 +294,7 @@ if (isset($_GET['step']) && $_GET['step'] == 'dig')
             $db -> Execute("UPDATE minerals SET ".$arrOre[$intKey]."=".$arrOre[$intKey]."+".$intAmount." WHERE owner=".$player -> id);
         }
         $objTest -> Close();
-        $smarty -> assign("Message", YOU_DIG.$_POST['amount'].M_ENERGY.YOU_GET.$intAmount.T_AMOUNT.$arrMinerals[$intKey].T_ABILITY.$intAbility.T_ABILITY2." oraz ".$intExp." PD.");
+        $smarty -> assign("Message", YOU_DIG.$_POST['amount'].M_ENERGY.' '.YOU_GET.$intAmount.T_AMOUNT.$arrMinerals[$intKey].', '.$intAbility.T_ABILITY2." oraz ".$intExp." PD.");
     }
 }
 
