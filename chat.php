@@ -8,7 +8,7 @@
  *   @author               : thindil <thindil@vallheru.net>
  *   @author               : eyescream <tduda@users.sourceforge.net>
  *   @version              : 1.6
- *   @since                : 25.06.2012
+ *   @since                : 07.07.2012
  *
  */
 
@@ -57,6 +57,40 @@ if (isset($_GET['less']))
   }
 if (isset($_POST['msg']) && $_POST['msg'] != '') 
   {
+    $czat = $db -> Execute("SELECT `gracz` FROM `chat_config` WHERE `gracz`=".$player -> id);
+    if ($czat -> fields['gracz'])
+      {
+	error (NO_PERM);
+      }
+    $czat -> Close();
+    if (!isset($_SESSION['chattime']))
+      {
+	$_SESSION['chattime'] = time() + 5;
+      }
+    if (time() - $_SESSION['chattime'] < 2)
+      {
+	$_POST['msg'] = '';
+      }
+    else
+      {
+	$_SESSION['chattime'] = time();
+      }
+    if (isset($_SESSION['lastchat']))
+      {
+	$strMessage = trim(strip_tags($_POST['msg']));
+	if ($strMessage == $_SESSION['lastchat'])
+	  {
+	    $_POST['msg'] = '';
+	  }
+	else
+	  {
+	    $_SESSION['lastchat'] = $_POST['msg'];
+	  }
+      }
+    else
+      {
+	$_SESSION['lastchat'] = $_POST['msg'];
+      }
     switch ($player->rank)
       {
       case 'Admin':
@@ -70,132 +104,125 @@ if (isset($_POST['msg']) && $_POST['msg'] != '')
 	break;
       }
     $starter = $arrTags[$player->tribe][0].' <a href="view.php?view='.$player->id.'">'.$starter.'</a> '.$arrTags[$player->tribe][1];
-    $czat = $db -> Execute("SELECT `gracz` FROM `chat_config` WHERE `gracz`=".$player -> id);
-    if ($czat -> fields['gracz'])
-      {
-	error (NO_PERM);
-      }
-    $czat -> Close();
     require_once('includes/bbcode.php');
     $_POST['msg'] = bbcodetohtml($_POST['msg'], TRUE);
-    if (strlen(trim(strip_tags($_POST['msg'], '<img>'))) == 0)
+    if (strlen(trim(strip_tags($_POST['msg'], '<img>'))) > 0)
       {
-	error(ERROR);
-      }
-    /**
-     * Start innkeeper bot
-     */
-    require_once('class/bot_class.php');
-    $objBot = new Bot($_POST['msg'], 'Karczmarzu');
-    $blnCheckbot = $objBot -> Checkbot();
-    if ($blnCheckbot)
-      {
-	$strAnswer = $objBot -> Botanswer();
-	$arrText = explode(" ", $_POST['msg']);
-	$id = intval(end($arrText));
-	if ($id > 0) 
-	  { 
-	    $user = $db -> Execute("SELECT `user` FROM `players` WHERE `id`=".$id);
-	    $id = $user -> fields['user'];
-	    $intValues = count($arrText) - 2;
-	    $strItem = ' ';
-	    for ($i = 0; $i < $intValues; $i++)
-	      {
-		$strItem = $strItem.$arrText[$i]." ";
+	/**
+	 * Start innkeeper bot
+	 */
+	require_once('class/bot_class.php');
+	$objBot = new Bot($_POST['msg'], 'Karczmarzu');
+	$blnCheckbot = $objBot -> Checkbot();
+	if ($blnCheckbot)
+	  {
+	    $strAnswer = $objBot -> Botanswer();
+	    $arrText = explode(" ", $_POST['msg']);
+	    $id = intval(end($arrText));
+	    if ($id > 0) 
+	      { 
+		$user = $db -> Execute("SELECT `user` FROM `players` WHERE `id`=".$id);
+		$id = $user -> fields['user'];
+		$intValues = count($arrText) - 2;
+		$strItem = ' ';
+		for ($i = 0; $i < $intValues; $i++)
+		  {
+		    $strItem = $strItem.$arrText[$i]." ";
+		  }
+		$message = $strItem." ".FOR_A." ".$id;
+		$user -> Close();
 	      }
-	    $message = $strItem." ".FOR_A." ".$id;
-	    $user -> Close();
+	    else
+	      {
+		$message = $_POST['msg'];
+	      }
 	  }
 	else
 	  {
 	    $message = $_POST['msg'];
-	  }
-      }
-    else
-      {
-	$message = $_POST['msg'];
-	//Throwing/shooting in inn
-	if (stripos($message, "*rzuca") !== FALSE || stripos($message, "*strzela do") !== FALSE)
-	  {
-	    $arrEnd = array("karczmarza*", "barnab", "barda*");
-	    $arrTarget = array("Karczmarz", "Barnaba", "Bard");
-	    $intIndex = -1;
-	    for ($i = 0; $i < count($arrEnd); $i++)
+	    //Throwing/shooting in inn
+	    if (stripos($message, "*rzuca") !== FALSE || stripos($message, "*strzela do") !== FALSE)
 	      {
-		if (stripos($message, $arrEnd[$i]) !== FALSE)
+		$arrEnd = array("karczmarza*", "barnab", "barda*");
+		$arrTarget = array("Karczmarz", "Barnaba", "Bard");
+		$intIndex = -1;
+		for ($i = 0; $i < count($arrEnd); $i++)
 		  {
-		    $intIndex = $i;
-		    break;
+		    if (stripos($message, $arrEnd[$i]) !== FALSE)
+		      {
+			$intIndex = $i;
+			break;
+		      }
+		  }
+		if ($intIndex > -1)
+		  {
+		    $arrAnswers = array("Ała, za co?",
+					$player->user." jednym niezwykle celnym trafieniem powala cel na ziemię. ".$player->user." dostaje gazylion PD i jeszcze więcej do umiejętności Powalanie.",
+					"*".$player->user." nie trafia celu.* Buahahahahaha",
+					"*".$arrTarget[$intIndex]." zgrabnym ruchem unika trafienia.*",
+					"*".$arrTarget[$intIndex]." odpowiada ogniem ciągłym.*");
+		    $intIndex2 = rand(0, count($arrAnswers) - 1);
+		    $strTarget = "<i>".$arrTarget[$intIndex]."</i>";
+		    $strMessage = $arrAnswers[$intIndex2];
 		  }
 	      }
-	    if ($intIndex > -1)
+	  }
+	//Emote
+	if (strpos($message, '/me') !== FALSE)
+	  {
+	    $starter = '';
+	    $message = str_replace('/me', '<a href="view.php?view='.$player->id.'" target="_parent">'.$player->user.'</a>', $message);
+	  }
+	//Private message
+	$test1 = explode("=", $_POST['msg']);
+	if (is_numeric($test1[0]) && (count($test1) > 1)) 
+	  {
+	    $user = $db -> Execute("SELECT `user` FROM `players` WHERE `id`=".$test1[0]);
+	    $id = $user -> fields['user'];
+	    $owner = 0;
+	    if ($id) 
 	      {
-		$arrAnswers = array("Ała, za co?",
-				    $player->user." jednym niezwykle celnym trafieniem powala cel na ziemię. ".$player->user." dostaje gazylion PD i jeszcze więcej do umiejętności Powalanie.",
-				    "*".$player->user." nie trafia celu.* Buahahahahaha",
-				    "*".$arrTarget[$intIndex]." zgrabnym ruchem unika trafienia.*",
-				    "*".$arrTarget[$intIndex]." odpowiada ogniem ciągłym.*");
-		$intIndex2 = rand(0, count($arrAnswers) - 1);
-		$strTarget = "<i>".$arrTarget[$intIndex]."</i>";
-		$strMessage = $arrAnswers[$intIndex2];
+		$owner = $test1[0];
+		array_shift($test1);
+		$message = "<b>".$id.">>></b> ".join("=", $test1);
+	      } 
+	  } 
+	else 
+	  {
+	    $owner = 0;
+	    if (!isset($test1[0])) 
+	      {
+		$evade = true;
 	      }
 	  }
-      }
-    //Emote
-    if (strpos($message, '/me') !== FALSE)
-      {
-	$starter = '';
-	$message = str_replace('/me', '<a href="view.php?view='.$player->id.'" target="_parent">'.$player->user.'</a>', $message);
-      }
-    //Private message
-    $test1 = explode("=", $_POST['msg']);
-    if (is_numeric($test1[0]) && (count($test1) > 1)) 
-      {
-	$user = $db -> Execute("SELECT `user` FROM `players` WHERE `id`=".$test1[0]);
-	$id = $user -> fields['user'];
-	$owner = 0;
-	if ($id) 
+	$message = $db -> qstr($message, get_magic_quotes_gpc());
+	if (!isset($evade)) 
 	  {
-	    $owner = $test1[0];
-	    array_shift($test1);
-	    $message = "<b>".$id.">>></b> ".join("=", $test1);
-	  } 
-      } 
-    else 
-      {
-	$owner = 0;
-	if (!isset($test1[0])) 
-	  {
-	    $evade = true;
+	    $db -> Execute("INSERT INTO `chat` (`user`, `chat`, `senderid`, `ownerid`, `sdate`) VALUES('".$starter."', ".$message.", ".$player -> id.", ".$owner.", '".$newdate."')") or die($db->ErrorMsg());
 	  }
-      }
-    $message = $db -> qstr($message, get_magic_quotes_gpc());
-    if (!isset($evade)) 
-      {
-	$db -> Execute("INSERT INTO `chat` (`user`, `chat`, `senderid`, `ownerid`, `sdate`) VALUES('".$starter."', ".$message.", ".$player -> id.", ".$owner.", '".$newdate."')") or die($db->ErrorMsg());
-      }
-    if (isset($strTarget))
-      {
-	$db -> Execute("INSERT INTO `chat` (`user`, `chat`, `sdate`) VALUES('".$strTarget."', '".$strMessage."', '".$newdate."')");
-      }
-    $intLpv = (time() - 180);
-    $objInnkeeper = $db -> Execute("SELECT `user` FROM `players` WHERE `rank`='Karczmarka' AND `page`='Chat' AND `lpv`>=".$intLpv);
-    if (!$objInnkeeper -> fields['user'])
-      {
-	if (isset($strAnswer))
+	if (isset($strTarget))
 	  {
-	    $strAnswer = $db -> qstr($strAnswer, get_magic_quotes_gpc());
-	    $db -> Execute("INSERT INTO `chat` (`user`, `chat`, `sdate`) VALUES('<i>".INNKEEPER2."</i>', ".$strAnswer.", '".$newdate."')");
+	    $db -> Execute("INSERT INTO `chat` (`user`, `chat`, `sdate`) VALUES('".$strTarget."', '".$strMessage."', '".$newdate."')");
 	  }
-      }
-    else
-      {
-	if ($blnCheckbot)
+	$intLpv = (time() - 180);
+	$objInnkeeper = $db -> Execute("SELECT `user` FROM `players` WHERE `rank`='Karczmarka' AND `page`='Chat' AND `lpv`>=".$intLpv);
+	if (!$objInnkeeper -> fields['user'])
 	  {
-	    $db -> Execute("INSERT INTO `chat` (`user`, `chat`, `sdate`) VALUES('<i>Barnaba</i>', '".INNKEEPER_GONE.$objInnkeeper -> fields['user'].RULES."', '".$newdate."')");
+	    if (isset($strAnswer))
+	      {
+		$strAnswer = $db -> qstr($strAnswer, get_magic_quotes_gpc());
+		$db -> Execute("INSERT INTO `chat` (`user`, `chat`, `sdate`) VALUES('<i>".INNKEEPER2."</i>', ".$strAnswer.", '".$newdate."')");
+	      }
 	  }
+	else
+	  {
+	    if ($blnCheckbot)
+	      {
+		$db -> Execute("INSERT INTO `chat` (`user`, `chat`, `sdate`) VALUES('<i>Barnaba</i>', '".INNKEEPER_GONE.$objInnkeeper -> fields['user'].RULES."', '".$newdate."')");
+	      }
+	  }
+	$objInnkeeper -> Close();
       }
-    $objInnkeeper -> Close();
   }
 
 /**
