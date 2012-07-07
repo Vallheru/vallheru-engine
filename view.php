@@ -8,7 +8,7 @@
  *   @author               : thindil <thindil@vallheru.net>
  *   @author               : eyescream <tduda@users.sourceforge.net>
  *   @version              : 1.6
- *   @since                : 28.06.2012
+ *   @since                : 07.07.2012
  *
  */
 
@@ -397,6 +397,7 @@ if (isset($_GET['logs']))
 	    $arrIds[] = $arrBattle['did'];
 	  }
 	$arrBattle['result'] .= $strSuffix;
+	$arrBattle['ename'] = 'Nieobecny(a)';
       }
     if (count($arrBattles) > 0)
       {
