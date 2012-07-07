@@ -1,5 +1,7 @@
 2012-07-07  Bartek thindil Jasicki  <thindil@vallheru.net>
 
+	* BUG,chat.php: 
+	fixed few bugs
 	* UPDATE,includes/admin/innarchive.php: 
 	show all whispers
 	* FEATURE,chat.php: 

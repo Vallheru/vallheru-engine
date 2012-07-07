@@ -65,9 +65,9 @@ if (isset($_POST['msg']) && $_POST['msg'] != '')
     $czat -> Close();
     if (!isset($_SESSION['chattime']))
       {
-	$_SESSION['chattime'] = time() + 5;
+	$_SESSION['chattime'] = time() - 5;
       }
-    if (time() - $_SESSION['chattime'] < 2)
+    if (time() - $_SESSION['chattime'] < 3)
       {
 	$_POST['msg'] = '';
       }
@@ -75,10 +75,9 @@ if (isset($_POST['msg']) && $_POST['msg'] != '')
       {
 	$_SESSION['chattime'] = time();
       }
-    if (isset($_SESSION['lastchat']))
+    if (isset($_SESSION['lastchat']) && $_POST['msg'] != '')
       {
-	$strMessage = trim(strip_tags($_POST['msg']));
-	if ($strMessage == $_SESSION['lastchat'])
+	if ($_POST['msg'] == $_SESSION['lastchat'])
 	  {
 	    $_POST['msg'] = '';
 	  }
