@@ -1,5 +1,7 @@
 2012-07-07  Bartek thindil Jasicki  <thindil@vallheru.net>
 
+	* UPDATE,includes/admin/innarchive.php: 
+	show all whispers
 	* FEATURE,chat.php: 
 	added simple check for spam and flood
 	* BUG,view.php:

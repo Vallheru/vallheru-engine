@@ -41,7 +41,7 @@ if (!isset($intPage))
   {
     $intPage = 1;
   }
-$objChat = $db -> SelectLimit("SELECT `user`, `chat`, `senderid`, `sdate` FROM `chat` WHERE `ownerid`=0 OR `ownerid`=".$player->id." OR `senderid`=".$player->id." ORDER BY `id` DESC", 30, 30 * ($intPage - 1));
+$objChat = $db -> SelectLimit("SELECT `user`, `chat`, `senderid`, `sdate` FROM `chat` ORDER BY `id` DESC", 30, 30 * ($intPage - 1));
 $arrText = array();
 $arrAuthor = array();
 $arrSenderid = array();
