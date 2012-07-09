@@ -7,7 +7,7 @@
  *   @copyright            : (C) 2004,2005,2006,2011,2012 Vallheru Team based on Gamers-Fusion ver 2.5
  *   @author               : thindil <thindil@vallheru.net>
  *   @version              : 1.6
- *   @since                : 03.07.2012
+ *   @since                : 09.07.2012
  *
  */
 
@@ -482,8 +482,17 @@ if (isset($_GET['kowal']) && ($_GET['kowal'] == 'kuznia' || $_GET['kowal'] == 'e
   {
     if (!isset($_GET['rob']) && !isset($_GET['konty'])) 
       {
-	$arrType = array('W', 'A', 'H', 'L', 'S', 'E');
-	$smarty -> assign(array("Amake" => array(A_MAKE_W, A_MAKE_A, A_MAKE_H, A_MAKE_L, A_MAKE_S, 'Wykonuj narzędzia'),
+	if ($_GET['kowal'] == 'kuznia')
+	  {
+	    $arrType = array('W', 'A', 'H', 'L', 'S', 'E');
+	    $arrLinks = array(A_MAKE_W, A_MAKE_A, A_MAKE_H, A_MAKE_L, A_MAKE_S, 'Wykonuj narzędzia');
+	  }
+	else
+	  {
+	    $arrType = array('W', 'A', 'H', 'L', 'S');
+	    $arrLinks = array(A_MAKE_W, A_MAKE_A, A_MAKE_H, A_MAKE_L, A_MAKE_S);
+	  }
+	$smarty -> assign(array("Amake" => $arrLinks,
 				"Atype" => $arrType,
                                 "Info" => INFO,
                                 "Iname" => I_NAME,
