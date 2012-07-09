@@ -8,7 +8,7 @@
  *   @author               : thindil <thindil@vallheru.net>
  *   @author               : eyescream <tduda@users.sourceforge.net>
  *   @version              : 1.6
- *   @since                : 28.06.2012
+ *   @since                : 09.07.2012
  *
  */
 
@@ -43,6 +43,7 @@ function astralsteal($intVictim, $strLocation, $intOwner = 0, $intId = 0)
     global $db;
     global $player;
     global $newdate;
+    global $lang;
 
     /**
      * Add bonus from rings
