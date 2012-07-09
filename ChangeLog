@@ -1,3 +1,8 @@
+2012-07-09  Bartek thindil Jasicki  <thindil@vallheru.net>
+
+	* BUG,includes/steal.php:
+	fixed date in log
+
 2012-07-07  Bartek thindil Jasicki  <thindil@vallheru.net>
 
 	* BUG,chat.php: 

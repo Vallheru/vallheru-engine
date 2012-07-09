@@ -6,8 +6,8 @@
  *   @name                 : steal.php                            
  *   @copyright            : (C) 2004,2005,2006,2011,2012 Vallheru Team based on Gamers-Fusion ver 2.5
  *   @author               : thindil <thindil@vallheru.net>
- *   @version              : 1.5
- *   @since                : 28.06.2012
+ *   @version              : 1.6
+ *   @since                : 09.07.2012
  *
  */
 
@@ -42,7 +42,7 @@ function steal ($itemid)
     global $player;
     global $smarty;
     global $title;
-    global $newdata;
+    global $newdate;
     global $db;
     
     if ($player -> clas != 'Złodziej')
@@ -82,7 +82,7 @@ function steal ($itemid)
       }
 
     $chance = $intStats - $roll;
-    $strDate = $db -> DBDate(date("y-m-d"));
+    $strDate = $db -> DBDate($newdate);
     if ($chance < 1) 
     {
         $cost = 1000 * $player -> level;
