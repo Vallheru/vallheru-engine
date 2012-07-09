@@ -7,7 +7,7 @@
  *   @copyright            : (C) 2004,2005,2006,2007,2011,2012 Vallheru Team based on Gamers-Fusion ver 2.5
  *   @author               : thindil <thindil@vallheru.net>
  *   @version              : 1.6
- *   @since                : 29.06.2012
+ *   @since                : 09.07.2012
  *
  */
 
@@ -357,6 +357,18 @@ class Player
 	    {
 	      $intBonus += ($this->level / 5);
 	    }
+	  foreach ($arrNames as $strName)
+	    {
+	      $intMaxbonus = $this->$strName * 2;
+	      if ($intBonus > $intMaxbonus)
+		{
+		  $intBonus = $intMaxbonus;
+		}
+	      $this->$strName += $intBonus;
+	    }
+	}
+      if ($blnCraft)
+	{
 	  $arrTools = array('metallurgy' => 'miechy',
 			    'lumberjack' => 'piła',
 			    'mining' => 'kilof',
@@ -369,12 +381,6 @@ class Player
 	  $arrEquip = $this->equipment();
 	  foreach ($arrNames as $strName)
 	    {
-	      $intMaxbonus = $this->$strName * 2;
-	      if ($intBonus > $intMaxbonus)
-		{
-		  $intBonus = $intMaxbonus;
-		}
-	      $this->$strName += $intBonus;
 	      if (stripos($arrEquip[12][1], $arrTools[$strName]) !== FALSE)
 		{
 		  $this->$strName += (($arrEquip[12][2] / 100) * $this->$strName);
