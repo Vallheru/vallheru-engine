@@ -1,5 +1,7 @@
 2012-07-09  Bartek thindil Jasicki  <thindil@vallheru.net>
 
+	* UPDATE,tribearmor.php: 
+	added info for tribe owner when give item from clan
 	* BUG,includes/steal.php:
 	fixed date in log
 
