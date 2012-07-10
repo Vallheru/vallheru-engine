@@ -294,7 +294,7 @@ $smarty -> assign(array("Traininfo" => TRAIN_INFO,
 			"Tinfo" => 'Podaj ile razy chcesz trenować daną cechę.',
 			"Plrace" => $player->race,
 			"Plclass" => $player->clas,
-			"Tcosts" => $intStrcost.', '.$intAgicost.', '.$intIntcost.', '.$intSpecost.', '.$intConcost.', '.$intWiscost,
+			"Tcosts" => $player->strength.', '.$player->agility.', '.$player->inteli.', '.$player->speed.', '.$player->cond.', '.$player->wisdom.', '.$fltStat,
                         "Action" => $_GET['action'],
 			"Rep" => $_POST['rep']));
 $smarty -> display ('train.tpl');
