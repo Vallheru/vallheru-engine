@@ -1,3 +1,9 @@
+2012-07-10  Bartek thindil Jasicki  <thindil@vallheru.net>
+
+	* FEATURE,templates/layout1/roommsgs.tpl, templates/layout1/room.tpl, templates/roommsgs.tpl, templates/room.tpl, js/room.js, room.php,
+	roommsgs.php:
+	new version of rooms
+
 2012-07-09  Bartek thindil Jasicki  <thindil@vallheru.net>
 
 	* UPDATE,kowal.php: 

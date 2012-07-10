@@ -116,6 +116,23 @@ else
     $strOwner = '';
   }
 
+if (isset($_GET['more']))
+  {
+    $_SESSION['roomlength'] += 25;
+    if ($_SESSION['roomlength'] > 150)
+      {
+	$_SESSION['roomlength'] = 150;
+      }
+  }
+if (isset($_GET['less']))
+  {
+    $_SESSION['roomlength'] -= 25;
+    if ($_SESSION['roomlength'] < 25)
+      {
+	$_SESSION['roomlength'] = 25;
+      }
+  }
+
 $db -> Execute("UPDATE `players` SET `page`='Pokój w karczmie' WHERE `id`=".$player->id);
 if (isset ($_GET['action']) && $_GET['action'] == 'chat') 
 {
@@ -554,6 +571,15 @@ else
     $strChecked = "checked=checkded";
   }
 
+if (!isset($player->settings['oldchat']) || $player->settings['oldchat'] == 'N')
+  {
+    $strOldchat = 'N';
+  }
+else
+  {
+    $strOldchat = 'Y';
+  }
+
 $smarty -> assign (array("Arefresh" => 'Odśwież',
                          "Asend" => 'Wyślij',
 			 'Amanage' => 'Zarządzaj pokojem',
@@ -567,7 +593,12 @@ $smarty -> assign (array("Arefresh" => 'Odśwież',
 			 'Checked' => $strChecked,
 			 "Desc2" => htmltobbcode($objRoom->fields['desc']),
 			 'Trent' => 'Pokój będzie istniał jeszcze przez '.$objRoom->fields['days'].' dni.',
-                         "Rank" => $player->rank));
+                         "Rank" => $player->rank,
+			 "Oldchat" => $strOldchat,
+			 "Abold" => "Pogrubienie",
+			 "Aitalic" => "Kursywa",
+			 "Aunderline" => "Podkreślenie",
+			 "Aemote" => "Emocje/czynność"));
 $smarty -> display ('room.tpl');
 $objRoom->Close();
 

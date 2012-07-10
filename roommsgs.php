@@ -7,7 +7,7 @@
  *   @copyright            : (C) 2012 Vallheru Team based on Gamers-Fusion ver 2.5
  *   @author               : thindil <thindil@vallheru.net>
  *   @version              : 1.6
- *   @since                : 23.05.2012
+ *   @since                : 10.07.2012
  *
  */
 
@@ -94,13 +94,19 @@ else
 
 $objOwner->Close();
 
-$chat = $db -> SelectLimit("SELECT * FROM `chatrooms` WHERE (`ownerid`=0 OR `ownerid`=".$stat -> fields['id']." OR `senderid`=".$stat -> fields['id'].") AND `room`=".$stat->fields['room']." ORDER BY `id` DESC", 25);
+if (!isset($_SESSION['roomlength']))
+  {
+    $_SESSION['roomlength'] = 25;
+  }
+
+$chat = $db -> SelectLimit("SELECT * FROM `chatrooms` WHERE (`ownerid`=0 OR `ownerid`=".$stat -> fields['id']." OR `senderid`=".$stat -> fields['id'].") AND `room`=".$stat->fields['room']." ORDER BY `id` DESC", $_SESSION['roomlength']);
 $pl = $db -> Execute("SELECT `id`, `lpv`, `user` FROM `players` WHERE `page`='Pokój w karczmie' AND `room`=".$stat->fields['room']);
 $arrtext = array();
 $arrauthor = array();
 $arrsenderid = array();
 $arrSdate = array();
 $arrTid = array();
+date_default_timezone_set('Europe/Warsaw');
 while (!$chat -> EOF) 
   {
     if (strpos($chat->fields['chat'], "<a href=") === FALSE)
@@ -114,11 +120,32 @@ while (!$chat -> EOF)
     $arrtext[] = $text;
     $arrauthor[] = $chat -> fields['user'];
     $arrsenderid[] = $chat -> fields['senderid'];
-    $arrSdate[] = $chat->fields['sdate'];
     $arrTid[] = $chat->fields['id'];
+    $time = time() - strtotime($chat->fields['sdate']);
+    if ($time < 60)
+      {
+	$arrSdate[] = $time.' sekund temu ('.$chat->fields['sdate'].')';
+      }
+    elseif ($time > 59 && $time < 3600)
+      {
+	$arrSdate[] = floor($time / 60).' minut temu ('.$chat->fields['sdate'].')';
+      }
+    else
+      {
+	$arrSdate[] = floor($time / 3600).' godzin temu ('.$chat->fields['sdate'].')';
+      }
     $chat -> MoveNext();
   }
 $chat -> Close();
+
+if (!isset($arrSettings['oldchat']) || $arrSettings['oldchat'] == 'N')
+  {
+    $arrtext = array_reverse($arrtext);
+    $arrauthor = array_reverse($arrauthor);
+    $arrsenderid = array_reverse($arrsenderid);
+    $arrSdate = array_reverse($arrSdate);
+    $arrTid = array_reverse($arrTid);
+  }
 
 $ctime = time();
 $on = '';
@@ -135,7 +162,20 @@ while (!$pl -> EOF)
 }
 $pl -> Close();
 
-$smarty->assign(array("Player" => $on, 
+if (!isset($arrSettings['oldchat']) || $arrSettings['oldchat'] == 'N')
+  {
+    $strOldchat = 'N';
+  }
+else
+  {
+    $strOldchat = 'Y';
+  }
+$query = $db -> Execute("SELECT count(`id`) FROM `chat`");
+$numchat = $query -> fields['count(`id`)'];
+$query -> Close();
+
+$smarty->assign(array("Text1" => $numchat, 
+		      "Player" => $on, 
 		      "Online" => $numon, 
 		      "Author" => $arrauthor, 
 		      "Text" => $arrtext, 
@@ -144,7 +184,13 @@ $smarty->assign(array("Player" => $on,
 		      "Tid" => $arrTid,
 		      "Thereis" => 'Jest',
 		      "Cplayers" => 'osób w pokoju',
-		      "Cid" => 'ID'));
+		      "Amore" => "Więcej",
+		      "Aless" => "Mniej",
+		      "Awhisper" => "Szepnij",
+		      "Id" => $stat->fields['id'],
+		      "Cid" => 'ID',
+		      "Chatlength" => $_SESSION['roomlength'],
+		      "Oldchat" => $strOldchat));
 $smarty -> display ('roommsgs.tpl');
 if ($compress)
   {
