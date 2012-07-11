@@ -7,7 +7,7 @@
  *   @copyright            : (C) 2004,2005,2006,2007,2011,2012 Vallheru Team based on Gamers-Fusion ver 2.5
  *   @author               : thindil <thindil@vallheru.net>
  *   @version              : 1.5
- *   @since                : 07.02.2012
+ *   @since                : 11.07.2012
  *
  */
 
@@ -215,32 +215,37 @@ if (isset ($_GET['action']) && $_GET['action'] == 'train')
       {
       case 'strength':
 	$cecha = T_STR;
-        $intCost = $intStrcost;
+	$fltStat2 = $player->strength;
 	break;
       case 'agility':
 	$cecha = T_AGI;
-        $intCost = $intAgicost;
+	$fltStat2 = $player->agility;
 	break;
       case 'inteli':
 	$cecha = T_INT;
-        $intCost = $intIntcost;
+	$fltStat2 = $player->inteli;
 	break;
       case 'szyb':
 	$cecha = T_SPEED;
-        $intCost = $intSpecost;
+	$fltStat2 = $player->speed;
 	break;
       case 'wytrz':
 	$cecha = T_CON;
-        $intCost = $intConcost;
+	$fltStat2 = $player->cond;
 	break;
       case 'wisdom':
 	$cecha = T_WIS;
-        $intCost = $intWiscost;
+	$fltStat2 = $player->wisdom;
 	break;
       default:
 	break;
     }
-    $intCost2 = ($intCost * $_POST['rep']);
+    $intCost2 = 0;
+    for ($i = 0; $i < $_POST['rep']; $i++)
+      {
+	$intCost2 += round($fltStat2 / $fltStat, 0);
+	$fltStat2 += 0.06;
+      }
     if ($repeat > $player -> energy) 
       {
         message('error', NO_ENERGY);

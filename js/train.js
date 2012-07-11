@@ -6,7 +6,7 @@
  *   @copyright            : (C) 2012 Vallheru Team based on Gamers-Fusion ver 2.5
  *   @author               : thindil <thindil@tuxfamily.org>
  *   @version              : 1.6
- *   @since                : 10.07.2012
+ *   @since                : 11.07.2012
  *
  */
 
@@ -64,82 +64,68 @@ function checkcost(strRace, strClass, Strength, Agility, intInt, Speed, Cond, Wi
 	if (strRace == 'Człowiek')
 	{
 	    fltRepeat = intValue * 0.3;
-	    fltGain = 0.3;
 	}
 	else if (strRace == 'Gnom' && (strStat == 'agility' || strStat == 'wytrz'))
 	{
 	    fltRepeat = intValue * 0.3;
-	    fltGain = 0.3;
 	}
 	else if (strRace == 'Elf' && (strStat == 'strength' || strStat == 'wytrz'))
 	{
 	    fltRepeat = intValue * 0.4;
-	    fltGain = 0.4;
 	}
 	else if (strRace == 'Elf' && (strStat == 'agility' || strStat == 'szyb'))
 	{
 	    fltRepeat = intValue * 0.2;
-	    fltGain = 0.2;
 	}
 	else if (strRace == 'Krasnolud' && (strStat == 'strength' || strStat == 'wytrz'))
 	{
 	    fltRepeat = intValue * 0.2;
-	    fltGain = 0.2;
 	}
 	else if (strRace == 'Krasnolud' && (strStat == 'agility' || strStat == 'szyb'))
 	{
 	    fltRepeat = intValue * 0.4;
-	    fltGain = 0.4;
 	}
 	else if (strRace == 'Jaszczuroczłek' && (strStat == 'szyb' || strStat == 'strength'))
 	{
 	    fltRepeat = intValue * 0.2;
-	    fltGain = 0.2;
 	}
 	else if (strRace == 'Jaszczuroczłek' && (strStat == 'wytrz' || strStat == 'agility'))
 	{
 	    fltRepeat = intValue * 0.4;
-	    fltGain = 0.4;
 	}
 	else if (strRace == 'Hobbit' && (strStat == 'wytrz' || strStat == 'agility'))
 	{
 	    fltRepeat = intValue * 0.2;
-	    fltGain = 0.2;
 	}
 	else if ((strRace == 'Hobbit' || strRace == 'Gnom') && (strStat == 'szyb' || strStat == 'strength'))
 	{
 	    fltRepeat = intValue * 0.4;
-	    fltGain = 0.4;
 	}
 	if (strStat == 'inteli' || strStat == 'wisdom')
 	{
 	    if (strClass == 'Wojownik')
 	    {
 		fltRepeat = intValue * 0.4;
-		fltGain = 0.4;
 	    }
 	    else if (strClass == 'Rzemieślnik' || strClass == 'Barbarzyńca' || strClass == 'Złodziej')
 	    {
 		fltRepeat = intValue * 0.3;
-		fltGain = 0.3;
 	    }
 	    else
 	    {
 		fltRepeat = intValue * 0.2;
-		fltGain = 0.2;
 	    }
 	}
 	if (strRace == 'Gnom' && strStat == 'wisdom')
 	{
 	    fltRepeat = intValue * 0.4;
-	    fltGain = 0.4;
 	}
 	for (i = 0; i < intValue; i++)
 	{
 	    intCost = intCost + Math.round(Cost / fltStat);
-	    Cost = Cost + fltGain;
+	    Cost = Cost + 0.06;
 	}
-	document.getElementById("info").innerHTML = "Koszt szkolenia to " + fltRepeat.toFixed(1) + " energii oraz " + Math.round(intCost) + " sztuk złota.";
+	document.getElementById("info").innerHTML = "Koszt szkolenia to " + fltRepeat.toFixed(1) + " energii oraz " + intCost + " sztuk złota.";
     }
     else
     {

@@ -1,5 +1,7 @@
 2012-07-11  Bartek thindil Jasicki  <thindil@vallheru.net>
 
+	* UPDATE,js/train.js, train.php: 
+	changed cost of training
 	* BUG,templates/layout1/czary.tpl, templates/czary.tpl: 
 	fixed spells element
 	* BUG,wieza.php: 
