@@ -7,7 +7,7 @@
  *   @copyright            : (C) 2004,2005,2006,2007,2011,2012 Vallheru Team based on Gamers-Fusion ver 2.5
  *   @author               : thindil <thindil@vallheru.net>
  *   @version              : 1.6
- *   @since                : 11.06.2012
+ *   @since                : 11.07.2012
  *
  */
 
@@ -48,7 +48,7 @@ if (isset($_GET['buy']))
     if ($_GET['type'] == 'S') 
       {
         $czary = $db -> Execute("SELECT * FROM `czary` WHERE `id`=".$_GET['buy']);
-        $test = $db -> Execute("SELECT `id` FROM `czary` WHERE `nazwa`='".$czary -> fields['nazwa']."' AND `gracz`=".$player -> id);
+        $test = $db -> Execute("SELECT `id` FROM `czary` WHERE `nazwa`='".$czary -> fields['nazwa']."' AND `element`='".$czary->fields['element']."' AND `gracz`=".$player -> id);
         if ($test -> fields['id']) 
 	  {
             message('error', YOU_HAVE);

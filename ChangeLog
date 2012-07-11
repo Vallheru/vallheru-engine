@@ -1,5 +1,7 @@
 2012-07-11  Bartek thindil Jasicki  <thindil@vallheru.net>
 
+	* BUG,wieza.php: 
+	fixed bug with buying spells
 	* BUG,tribeherbs.php:
 	fixed bug with giving herbs
 
