@@ -6,8 +6,8 @@
  *   @name                 : tribeherbs.php                            
  *   @copyright            : (C) 2012 Vallheru Team based on Gamers-Fusion ver 2.5
  *   @author               : thindil <thindil@vallheru.net>
- *   @version              : 1.5
- *   @since                : 19.04.2012
+ *   @version              : 1.6
+ *   @since                : 11.07.2012
  *
  */
 
@@ -190,7 +190,7 @@ if (isset ($_GET['daj']) && $_GET['daj'])
 	    error ('Ten gracz nie należy do klanu.');
 	  }
 	$dtrib->Close();
-	if (($arrAmount[$intKey] - $arrReserved[$intKey]) < $_POST['ilosc']) 
+	if (($arrAmount[$intKey] - $arrReserved[$intKey]) < $_POST['ilosc'] && !isset($intReserved)) 
 	  {
 	    error ("Klan nie ma takiej ilości ".$min1."!");
 	  }
