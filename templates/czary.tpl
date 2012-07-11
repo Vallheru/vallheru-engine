@@ -39,8 +39,8 @@
     <br /><b>-{$Espells}:</b><br />
     {foreach $Espells2 as $Espells3}
         <div>
-        <label for="espells{$Dspells3@index}" class="toggle">+{$Telement} {$Dspells3@key}</label>
-        <input id="espells{$Dspells3@index}" type="checkbox" class="toggle" {$Checked} />
+        <label for="espells{$Espells3@index}" class="toggle">+{$Telement} {$Espells3@key}</label>
+        <input id="espells{$Espells3@index}" type="checkbox" class="toggle" {$Checked} />
         <div><br />
             {foreach $Espells3 as $Spell}
                 {$Spell.name} ({$Spell.effect}) [ <a href="czary.php?cast={$Spell.id}">{$Castthis}</a> ]<br />

@@ -1,5 +1,7 @@
 2012-07-11  Bartek thindil Jasicki  <thindil@vallheru.net>
 
+	* BUG,templates/layout1/czary.tpl, templates/czary.tpl: 
+	fixed spells element
 	* BUG,wieza.php: 
 	fixed bug with buying spells
 	* BUG,tribeherbs.php:
