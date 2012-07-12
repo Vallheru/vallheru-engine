@@ -1,5 +1,7 @@
 2012-07-12  Bartek thindil Jasicki  <thindil@vallheru.net>
 
+	* FEATURE,templates/layout1/chatmsgs.tpl, templates/chatmsgs.tpl, chatmsgs.php, chat.php: 
+	move all whispers to separate tabs
 	* BUG,js/train.js, train.php:
 	fixed costs in Ardulith
 

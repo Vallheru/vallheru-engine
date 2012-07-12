@@ -7,7 +7,7 @@
  *   @copyright            : (C) 2004,2005,2006,2011,2012 Vallheru Team based on Gamers-Fusion ver 2.5
  *   @author               : thindil <thindil@vallheru.net>
  *   @version              : 1.6
- *   @since                : 25.06.2012
+ *   @since                : 12.07.2012
  *
  */
 
@@ -47,7 +47,7 @@ require_once('libs/Smarty.class.php');
 $smarty = new Smarty;
 $smarty->compile_check = true;
 
-$stat = $db -> Execute("SELECT `id`, `rank`, `settings` FROM `players` WHERE `email`='".$_SESSION['email']."'");
+$stat = $db -> Execute("SELECT `id`, `rank`, `lpv`, `settings` FROM `players` WHERE `email`='".$_SESSION['email']."'");
 $arrTmp = explode(';', $stat->fields['settings']);
 $arrSettings = array();
 foreach ($arrTmp as $strField)
@@ -83,8 +83,19 @@ if (!isset($_SESSION['chatlength']))
   {
     $_SESSION['chatlength'] = 25;
   }
+if (!isset($_SESSION['chattab']))
+  {
+    $_SESSION['chattab'] = 0;
+  }
 
-$chat = $db -> SelectLimit("SELECT * FROM `chat` WHERE `ownerid`=0 OR `ownerid`=".$stat -> fields['id']." OR `senderid`=".$stat -> fields['id']." ORDER BY `id` DESC", $_SESSION['chatlength']);
+if ($_SESSION['chattab'] == 0)
+  {
+    $chat = $db -> SelectLimit("SELECT * FROM `chat` WHERE `ownerid`=0 ORDER BY `id` DESC", $_SESSION['chatlength']);
+  }
+else
+  {
+    $chat = $db->SelectLimit("SELECT * FROM `chat` WHERE (`ownerid`=".$stat->fields['id']." AND `senderid`=".$_SESSION['chattab'].") OR (`ownerid`=".$_SESSION['chattab']." AND `senderid`=".$stat->fields['id'].") ORDER BY `id` DESC", $_SESSION['chatlength']);
+  }
 $pl = $db -> Execute("SELECT `rank`, `id`, `lpv`, `user` FROM `players` WHERE `page`='Chat'");
 $arrtext = array();
 $arrauthor = array();
@@ -165,6 +176,44 @@ else
   {
     $strOldchat = 'Y';
   }
+//Check did we have any whispers and then create buttons for tabs
+$objWhisps = $db->Execute("SELECT `senderid` FROM `chat` WHERE `ownerid`=".$stat->fields['id']." GROUP BY `senderid`");
+$arrTabs = array();
+if ($objWhisps->fields['senderid'])
+  {
+    $arrTabs = array('Karczma');
+    $_SESSION['chattabs'] = '0;';
+    while (!$objWhisps->EOF)
+      {
+	$objName = $db->Execute("SELECT `user` FROM `players` WHERE `id`=".$objWhisps->fields['senderid']);
+	$arrTabs[$objWhisps->fields['senderid']] = $objName->fields['user'];
+	$objName->Close();
+	$_SESSION['chattabs'] .= $objWhisps->fields['senderid'].';';
+	$objWhisps->MoveNext();
+      }
+  }
+$objWhisps->Close();
+$objWhisps = $db->Execute("SELECT `ownerid` FROM `chat` WHERE `senderid`=".$stat->fields['id']." AND `ownerid`!=0 GROUP BY `ownerid`");
+if ($objWhisps->fields['ownerid'])
+  {
+    if (count($arrTabs) == 0)
+      {
+	$arrTabs = array('Karczma');
+	$_SESSION['chattabs'] = '0;';
+      }
+    while (!$objWhisps->EOF)
+      {
+	if (!array_key_exists($objWhisps->fields['ownerid'], $arrTabs))
+	  {
+	    $objName = $db->Execute("SELECT `user` FROM `players` WHERE `id`=".$objWhisps->fields['ownerid']);
+	    $arrTabs[$objWhisps->fields['ownerid']] = $objName->fields['user'];
+	    $objName->Close();
+	    $_SESSION['chattabs'] .= $objWhisps->fields['ownerid'].';';
+	  }
+	$objWhisps->MoveNext();
+      }
+  }
+$objWhisps->Close();
 
 $smarty->assign(array("Player" => $on, 
 		      "Text1" => $numchat, 
@@ -183,7 +232,8 @@ $smarty->assign(array("Player" => $on,
 		      "Amore" => "Więcej",
 		      "Aless" => "Mniej",
 		      "Chatlength" => $_SESSION['chatlength'],
-		      "Oldchat" => $strOldchat));
+		      "Oldchat" => $strOldchat,
+		      "Tabs" => $arrTabs));
 $smarty -> display ('chatmsgs.tpl');
 if ($compress)
   {

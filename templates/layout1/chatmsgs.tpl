@@ -1,4 +1,11 @@
 {if $Text1 != 0}
+    <div>
+        <form method="post" action="chat.php?tabs">
+	    {foreach $Tabs as $key=>$name}
+	        <input type="submit" value="{$name}" name="{$key}">
+	    {/foreach}
+	</form>
+    </div>
     {if $Oldchat == 'N'}
         <div>{if $Text1 > $Chatlength}<a href="chat.php?more">&#171; {$Amore}</a>{/if} {if $Chatlength > 25} <a href="chat.php?less">{$Aless} &#187;</a>{/if}</div>
     {/if}

@@ -39,6 +39,7 @@ require_once("includes/head.php");
 require_once("languages/".$lang."/chat.php");
 
 $db -> Execute("UPDATE `players` SET `page`='Chat' WHERE `id`=".$player -> id);
+//Show more messages
 if (isset($_GET['more']))
   {
     $_SESSION['chatlength'] += 25;
@@ -47,12 +48,30 @@ if (isset($_GET['more']))
 	$_SESSION['chatlength'] = 150;
       }
   }
+//Show less messages
 if (isset($_GET['less']))
   {
     $_SESSION['chatlength'] -= 25;
     if ($_SESSION['chatlength'] < 25)
       {
 	$_SESSION['chatlength'] = 25;
+      }
+  }
+//Switch tabs in chat
+if (isset($_GET['tabs']))
+  {
+    if (!isset($_SESSION['chattabs']))
+      {
+	error('Nikt do Ciebie nie szeptał ostatnio.');
+      }
+    $arrTabs = explode(';', $_SESSION['chattabs']);
+    foreach ($arrTabs as $intTab)
+      {
+	if (isset($_POST[$intTab]))
+	  {
+	    $_SESSION['chattab'] = $intTab;
+	    break;
+	  }
       }
   }
 if (isset($_POST['msg']) && $_POST['msg'] != '') 
@@ -89,6 +108,13 @@ if (isset($_POST['msg']) && $_POST['msg'] != '')
     else
       {
 	$_SESSION['lastchat'] = $_POST['msg'];
+      }
+    if (isset($_SESSION['chattab']))
+      {
+	if ($_SESSION['chattab'] != 0)
+	  {
+	    $_POST['msg'] = $_SESSION['chattab'].'='.$_POST['msg'];
+	  }
       }
     switch ($player->rank)
       {
@@ -183,7 +209,7 @@ if (isset($_POST['msg']) && $_POST['msg'] != '')
 	      {
 		$owner = $test1[0];
 		array_shift($test1);
-		$message = "<b>".$id.">>></b> ".join("=", $test1);
+		$message = join("=", $test1);
 	      } 
 	  } 
 	else 
