@@ -8,7 +8,7 @@
  *   @author               : thindil <thindil@vallheru.net>
  *   @author               : eyescream <tduda@users.sourceforge.net>
  *   @version              : 1.6
- *   @since                : 07.07.2012
+ *   @since                : 12.07.2012
  *
  */
 
@@ -202,6 +202,10 @@ if (isset($_POST['msg']) && $_POST['msg'] != '')
 	$test1 = explode("=", $_POST['msg']);
 	if (is_numeric($test1[0]) && (count($test1) > 1)) 
 	  {
+	    if ($test1[0] == $player->id)
+	      {
+		error('Nie możesz szeptać do siebie.');
+	      }
 	    $user = $db -> Execute("SELECT `user` FROM `players` WHERE `id`=".$test1[0]);
 	    $id = $user -> fields['user'];
 	    $owner = 0;
