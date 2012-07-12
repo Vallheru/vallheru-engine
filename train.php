@@ -6,8 +6,8 @@
  *   @name                 : train.php                            
  *   @copyright            : (C) 2004,2005,2006,2007,2011,2012 Vallheru Team based on Gamers-Fusion ver 2.5
  *   @author               : thindil <thindil@vallheru.net>
- *   @version              : 1.5
- *   @since                : 11.07.2012
+ *   @version              : 1.6
+ *   @since                : 12.07.2012
  *
  */
 
@@ -68,11 +68,13 @@ if ($player -> location == 'Altara')
 {
     $intIntcost = ceil($player -> inteli / $fltStat);
     $intWiscost = ceil($player -> wisdom / $fltStat);
+    $intLess = 0;
 }
     else
 {
     $intIntcost = ceil(($player -> inteli / $fltStat) - (($player -> inteli / $fltStat) / 10));
     $intWiscost = ceil(($player -> wisdom / $fltStat) - (($player -> wisdom / $fltStat) / 10));
+    $intLess = 1;
 }
 
 switch ($player->race)
@@ -211,6 +213,7 @@ if (isset ($_GET['action']) && $_GET['action'] == 'train')
     }
     $gain = ($_POST["rep"] * .060);
     $repeat = round($repeat, 1);
+    $blnLess = FALSE;
     switch ($_POST['train'])
       {
       case 'strength':
@@ -224,6 +227,10 @@ if (isset ($_GET['action']) && $_GET['action'] == 'train')
       case 'inteli':
 	$cecha = T_INT;
 	$fltStat2 = $player->inteli;
+	if ($player->location == 'Ardulith')
+	  {
+	    $blnLess = TRUE;
+	  }
 	break;
       case 'szyb':
 	$cecha = T_SPEED;
@@ -236,6 +243,10 @@ if (isset ($_GET['action']) && $_GET['action'] == 'train')
       case 'wisdom':
 	$cecha = T_WIS;
 	$fltStat2 = $player->wisdom;
+	if ($player->location == 'Ardulith')
+	  {
+	    $blnLess = TRUE;
+	  }
 	break;
       default:
 	break;
@@ -243,7 +254,14 @@ if (isset ($_GET['action']) && $_GET['action'] == 'train')
     $intCost2 = 0;
     for ($i = 0; $i < $_POST['rep']; $i++)
       {
-	$intCost2 += round($fltStat2 / $fltStat, 0);
+	if ($blnLess)
+	  {
+	    $intCost2 += round(($fltStat2 / $fltStat) - (($fltStat2 / $fltStat) / 10), 0);
+	  }
+	else
+	  {
+	    $intCost2 += round($fltStat2 / $fltStat, 0);
+	  }
 	$fltStat2 += 0.06;
       }
     if ($repeat > $player -> energy) 
@@ -299,7 +317,7 @@ $smarty -> assign(array("Traininfo" => TRAIN_INFO,
 			"Tinfo" => 'Podaj ile razy chcesz trenować daną cechę.',
 			"Plrace" => $player->race,
 			"Plclass" => $player->clas,
-			"Tcosts" => $player->strength.', '.$player->agility.', '.$player->inteli.', '.$player->speed.', '.$player->cond.', '.$player->wisdom.', '.$fltStat,
+			"Tcosts" => $player->strength.', '.$player->agility.', '.$player->inteli.', '.$player->speed.', '.$player->cond.', '.$player->wisdom.', '.$fltStat.', '.$intLess,
                         "Action" => $_GET['action'],
 			"Rep" => $_POST['rep']));
 $smarty -> display ('train.tpl');

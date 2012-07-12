@@ -6,7 +6,7 @@
  *   @copyright            : (C) 2012 Vallheru Team based on Gamers-Fusion ver 2.5
  *   @author               : thindil <thindil@tuxfamily.org>
  *   @version              : 1.6
- *   @since                : 11.07.2012
+ *   @since                : 12.07.2012
  *
  */
 
@@ -28,7 +28,7 @@
 //
 // $Id$
 
-function checkcost(strRace, strClass, Strength, Agility, intInt, Speed, Cond, Wisdom, fltStat)
+function checkcost(strRace, strClass, Strength, Agility, intInt, Speed, Cond, Wisdom, fltStat, intLess)
 {
     var intValue = document.getElementById("rep").value;
     if((parseFloat(intValue) == parseInt(intValue)) && !isNaN(intValue) && (parseInt(intValue) > 0))
@@ -38,6 +38,7 @@ function checkcost(strRace, strClass, Strength, Agility, intInt, Speed, Cond, Wi
 	var intCost = 0;
 	var Cost = 0;
 	var fltGain = 0;
+	var Less = 0;
 	switch (strStat)
 	{
 	case 'strength':
@@ -48,6 +49,10 @@ function checkcost(strRace, strClass, Strength, Agility, intInt, Speed, Cond, Wi
 	    break;
 	case 'inteli':
 	    Cost = intInt;
+	    if (intLess == 1)
+	    {
+		Less = 1;
+	    }
 	    break;
 	case 'szyb':
 	    Cost = Speed;
@@ -57,6 +62,10 @@ function checkcost(strRace, strClass, Strength, Agility, intInt, Speed, Cond, Wi
 	    break;
 	case 'wisdom':
 	    Cost = Wisdom;
+	    if (intLess == 1)
+	    {
+		Less = 1;
+	    }
 	    break;
 	default:
 	    break;
@@ -122,7 +131,14 @@ function checkcost(strRace, strClass, Strength, Agility, intInt, Speed, Cond, Wi
 	}
 	for (i = 0; i < intValue; i++)
 	{
-	    intCost = intCost + Math.round(Cost / fltStat);
+	    if (Less == 1)
+	    {
+		intCost = intCost + Math.round((Cost / fltStat) - ((Cost / fltStat) / 10));
+	    }
+	    else
+	    {
+		intCost = intCost + Math.round(Cost / fltStat);
+	    }
 	    Cost = Cost + 0.06;
 	}
 	document.getElementById("info").innerHTML = "Koszt szkolenia to " + fltRepeat.toFixed(1) + " energii oraz " + intCost + " sztuk złota.";

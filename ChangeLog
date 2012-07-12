@@ -1,3 +1,8 @@
+2012-07-12  Bartek thindil Jasicki  <thindil@vallheru.net>
+
+	* BUG,js/train.js, train.php:
+	fixed costs in Ardulith
+
 2012-07-11  Bartek thindil Jasicki  <thindil@vallheru.net>
 
 	* UPDATE,js/train.js, train.php: 
