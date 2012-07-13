@@ -96,6 +96,18 @@ if (isset($_POST['msg']) && $_POST['msg'] != '')
 	error (NO_PERM);
       }
     $czat -> Close();
+    if (isset($_SESSION['lastchat']))
+      {
+	if ($_SESSION['lastchat'] == $_POST['msg'])
+	  {
+	    $_POST['msg'] = '';
+	  }
+      }
+    if ($_POST['msg'] != '')
+      {
+	$_SESSION['lastchat'] = $_POST['msg'];
+      }
+
     if (isset($_SESSION['chattab']))
       {
 	if ($_SESSION['chattab'] != 0)
