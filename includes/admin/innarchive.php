@@ -7,7 +7,7 @@
  *   @copyright            : (C) 2006,2012 Vallheru Team based on Gamers-Fusion ver 2.5
  *   @author               : thindil <thindil@vallheru.net>
  *   @version              : 1.6
- *   @since                : 19.06.2012
+ *   @since                : 13.07.2012
  *
  */
 
@@ -41,14 +41,21 @@ if (!isset($intPage))
   {
     $intPage = 1;
   }
-$objChat = $db -> SelectLimit("SELECT `user`, `chat`, `senderid`, `sdate` FROM `chat` ORDER BY `id` DESC", 30, 30 * ($intPage - 1));
+$objChat = $db -> SelectLimit("SELECT `user`, `chat`, `senderid`, `sdate`, `ownerid` FROM `chat` ORDER BY `id` DESC", 30, 30 * ($intPage - 1));
 $arrText = array();
 $arrAuthor = array();
 $arrSenderid = array();
 $arrSdate = array();
 while (!$objChat -> EOF) 
 {
-    $arrText[] = wordwrap($objChat -> fields['chat'],30,"\n",1);
+  if ($objChat->fields['ownerid'] == 0)
+    {
+      $arrText[] = wordwrap($objChat -> fields['chat'],30,"\n",1);
+    }
+  else
+    {
+      $arrText[] = '[szept] '.wordwrap($objChat -> fields['chat'],30,"\n",1);
+    }
     $arrAuthor[] = $objChat -> fields['user'];
     $arrSenderid[] = $objChat -> fields['senderid'];
     $arrSdate[] = $objChat->fields['sdate'];
