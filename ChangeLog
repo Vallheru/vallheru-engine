@@ -1,5 +1,7 @@
 2012-07-13  Bartek thindil Jasicki  <thindil@vallheru.net>
 
+	* UPDATE,chat.php: 
+	remove anti flood code
 	* UPDATE,includes/admin/innarchive.php: 
 	added sign to whispers
 	* FEATURE,templates/layout1/chatmsgs.tpl, templates/chatmsgs.tpl, chat.php, chatmsgs.php:

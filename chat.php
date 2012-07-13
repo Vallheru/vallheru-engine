@@ -8,7 +8,7 @@
  *   @author               : thindil <thindil@vallheru.net>
  *   @author               : eyescream <tduda@users.sourceforge.net>
  *   @version              : 1.6
- *   @since                : 12.07.2012
+ *   @since                : 13.07.2012
  *
  */
 
@@ -96,33 +96,6 @@ if (isset($_POST['msg']) && $_POST['msg'] != '')
 	error (NO_PERM);
       }
     $czat -> Close();
-    if (!isset($_SESSION['chattime']))
-      {
-	$_SESSION['chattime'] = time() - 5;
-      }
-    if (time() - $_SESSION['chattime'] < 3)
-      {
-	$_POST['msg'] = '';
-      }
-    else
-      {
-	$_SESSION['chattime'] = time();
-      }
-    if (isset($_SESSION['lastchat']) && $_POST['msg'] != '')
-      {
-	if ($_POST['msg'] == $_SESSION['lastchat'])
-	  {
-	    $_POST['msg'] = '';
-	  }
-	else
-	  {
-	    $_SESSION['lastchat'] = $_POST['msg'];
-	  }
-      }
-    else
-      {
-	$_SESSION['lastchat'] = $_POST['msg'];
-      }
     if (isset($_SESSION['chattab']))
       {
 	if ($_SESSION['chattab'] != 0)
