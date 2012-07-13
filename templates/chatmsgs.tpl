@@ -4,6 +4,9 @@
 	    {foreach $Tabs as $key=>$name}
 	        <input type="submit" value="{$name}" name="{$key}">
 	    {/foreach}
+	    {if $Chattab != 0}
+	        [<a href="chat.php?close">{$Aclose}</a>]
+	    {/if}
 	</form>
     </div>
     {if $Oldchat == 'N'}

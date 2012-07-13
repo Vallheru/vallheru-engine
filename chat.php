@@ -64,7 +64,7 @@ if (isset($_GET['tabs']))
       {
 	error('Nikt do Ciebie nie szeptał ostatnio.');
       }
-    $arrTabs = explode(';', $_SESSION['chattabs']);
+    $arrTabs = array_keys($_SESSION['chattabs']);
     foreach ($arrTabs as $intTab)
       {
 	if (isset($_POST[$intTab]))
@@ -74,6 +74,20 @@ if (isset($_GET['tabs']))
 	  }
       }
   }
+//Update time for active tab
+if (isset($_SESSION['chattab']))
+  {
+    $_SESSION['chattabs'][$_SESSION['chattab']] = $ctime;
+  }
+//Close selected tab
+if (isset($_GET['close']))
+  {
+    checkvalue($_SESSION['chattab']);
+    $db->Execute("DELETE FROM `chat` WHERE (`ownerid`=".$player->id." AND `senderid`=".$_SESSION['chattab'].") OR (`ownerid`=".$_SESSION['chattab']." AND `senderid`=".$player->id.")");
+    $_SESSION['chattab'] = 0;
+    unset($_SESSION['chattabs'][$_SESSION['chattab']]);
+  }
+//Send message
 if (isset($_POST['msg']) && $_POST['msg'] != '') 
   {
     $czat = $db -> Execute("SELECT `gracz` FROM `chat_config` WHERE `gracz`=".$player -> id);

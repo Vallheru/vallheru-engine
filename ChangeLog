@@ -1,3 +1,8 @@
+2012-07-13  Bartek thindil Jasicki  <thindil@vallheru.net>
+
+	* FEATURE,templates/layout1/chatmsgs.tpl, templates/chatmsgs.tpl, chat.php, chatmsgs.php:
+	redesigned whispers tabs
+
 2012-07-12  Bartek thindil Jasicki  <thindil@vallheru.net>
 
 	* UPDATE,chat.php: 
