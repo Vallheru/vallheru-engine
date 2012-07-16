@@ -27,7 +27,7 @@
         <tr>
         <td>{$Name[tribearmor]}</td>
         <td align="center">{$Power[tribearmor]}</td>
-        {if $Type != "I"}
+        {if $Type != "I" && $Type != "P" && $Type != "O"}
             <td align="center">{$Durability[tribearmor]}/{$Maxdurability[tribearmor]}</td>
             <td align="center">{$Agility[tribearmor]}</td>
             <td align="center">{$Speed[tribearmor]}</td>

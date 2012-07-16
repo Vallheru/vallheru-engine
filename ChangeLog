@@ -1,3 +1,8 @@
+2012-07-16  Bartek thindil Jasicki  <thindil@vallheru.net>
+
+	* BUG,templates/layout1/tribearmor.tpl, templates/tribearmor.tpl:
+	fixed headers in show items
+
 2012-07-13  Bartek thindil Jasicki  <thindil@vallheru.net>
 
 	* UPDATE,chat.php: 
