@@ -7,7 +7,7 @@
  *   @copyright            : (C) 2012 Vallheru Team based on Gamers-Fusion ver 2.5
  *   @author               : thindil <thindil@vallheru.net>
  *   @version              : 1.6
- *   @since                : 02.07.2012
+ *   @since                : 16.07.2012
  *
  */
 
@@ -185,11 +185,11 @@ else
 			$intReserved = $objAsks->fields['amount'];
 			if ($objAsks->fields['type'] == 'A')
 			  {
-			    require_once('tribearmor.php');
+			    require('tribearmor.php');
 			  }
 			else
 			  {
-			    require_once('tribeware.php');
+			    require('tribeware.php');
 			  }
 		      }
 		    //Herbs or minerals
@@ -202,12 +202,12 @@ else
 			if ($objAsks->fields['type'] == 'H')
 			  {
 			    $_GET['daj'] = $arrSqlname[$objAsks->fields['iid']];
-			    require_once('tribeherbs.php');
+			    require('tribeherbs.php');
 			  }
 			else
 			  {
 			    $_GET['daj'] = $arrSqlname2[$objAsks->fields['iid']];
-			    require_once('tribeminerals.php');
+			    require('tribeminerals.php');
 			  }
 		      }
 		  }

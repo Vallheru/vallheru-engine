@@ -8,7 +8,7 @@
  *   @author               : thindil <thindil@vallheru.net>
  *   @author               : eyescream <tduda@users.sourceforge.net>
  *   @version              : 1.6
- *   @since                : 09.07.2012
+ *   @since                : 16.07.2012
  *
  */
 
@@ -70,7 +70,7 @@ $arrType = array('W', 'A', 'H', 'L', 'S', 'B', 'T', 'C', 'R', 'I', 'O', 'E', 'P'
 /**
  * Reserve items from tribe
  */
-if (isset($_GET['reserve']))
+if (isset($_GET['reserve']) && $_GET['reserve'] != '')
   {
     checkvalue($_GET['reserve']);
     if (!isset ($_GET['step3'])) 
@@ -362,7 +362,7 @@ if (isset ($_GET['daj']))
         $zbroj = $db -> Execute("SELECT * FROM tribe_zbroj WHERE id=".$_GET['daj']);
 	if ($zbroj -> fields['klan'] != $player -> tribe) 
 	  {
-	    error(ERROR);  
+	    error(ERROR."1");  
 	  }
         $dtrib = $db -> Execute("SELECT tribe FROM players WHERE id=".$_POST['did']);
         if ($dtrib -> fields['tribe'] != $player -> tribe) 

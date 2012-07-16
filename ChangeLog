@@ -1,5 +1,7 @@
 2012-07-16  Bartek thindil Jasicki  <thindil@vallheru.net>
 
+	* BUG,tribeadmin.php, tribearmor.php, tribeherbs.php, tribeminerals.php, tribeware.php: 
+	fixed bug with give items from clan
 	* UPDATE,thieves.php: 
 	in gold monument, show only players without immunited
 	* BUG,templates/layout1/tribearmor.tpl, templates/tribearmor.tpl:

@@ -6,8 +6,8 @@
  *   @name                 : tribeminerals.php                            
  *   @copyright            : (C) 2012 Vallheru Team based on Gamers-Fusion ver 2.5
  *   @author               : thindil <thindil@vallheru.net>
- *   @version              : 1.5
- *   @since                : 19.04.2012
+ *   @version              : 1.6
+ *   @since                : 16.07.2012
  *
  */
 
@@ -103,7 +103,7 @@ $objAmount->Close();
 /**
  * Reserve items from tribe
  */
-if (isset($_GET['reserve']))
+if (isset($_GET['reserve']) && $_GET['reserve'] != '')
   {
     if (!in_array($_GET['reserve'], $arrSqlname2))
       {
