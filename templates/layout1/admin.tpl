@@ -137,6 +137,9 @@
 
 {if $View == "innarchive"}
     {if $Text[0] != ""}
+        <form method="post" action="admin.php?view=innarchive">
+	    <input type="submit" value="{$Ashow}" /> <input type="checkbox" name="whispers" value="Y" {$Checked} />{$Twhispers}<br />
+	</form>
         {section name=player loop=$Text}
             <b>{$Author[player]} {$Cid}:{$Senderid[player]}</b>: {$Text[player]}<br />
         {/section}
@@ -147,7 +150,7 @@
 	    {if $page == $Tpage}
 	        {$page}
 	    {else}
-                <a href="admin.php?view=innarchive&page={$page}">{$page}</a>
+                <a href="admin.php?view=innarchive&page={$page}&amp;whispers={$Whispers}">{$page}</a>
 	    {/if}
     	{/for}
     {/if}

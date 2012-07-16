@@ -1,5 +1,7 @@
 2012-07-16  Bartek thindil Jasicki  <thindil@vallheru.net>
 
+	* FEATURE,templates/layout1/staff.tpl, templates/layout1/admin.tpl, templates/staff.tpl, templates/admin.tpl, includes/admin/innarchive.php: 
+	added option to show/hide whispers
 	* BUG,tribeadmin.php, tribearmor.php, tribeherbs.php, tribeminerals.php, tribeware.php: 
 	fixed bug with give items from clan
 	* UPDATE,thieves.php: 

@@ -7,7 +7,7 @@
  *   @copyright            : (C) 2006,2012 Vallheru Team based on Gamers-Fusion ver 2.5
  *   @author               : thindil <thindil@vallheru.net>
  *   @version              : 1.6
- *   @since                : 13.07.2012
+ *   @since                : 16.07.2012
  *
  */
 
@@ -34,6 +34,24 @@ if (isset($_GET['page']))
     checkvalue($_GET['page']);
     $intPage = $_GET['page'];
   }
+if(isset($_POST['whispers']))
+  {
+    $_GET['whispers'] = 'Y';
+  }
+if (!isset($_GET['whispers']))
+  {
+    $_GET['whispers'] = 'N';
+  }
+if ($_GET['whispers'] == 'N')
+  {
+    $strSql = 'WHERE `ownerid`=0 ';
+    $strChecked = '';
+  }
+else
+  {
+    $strSql = '';
+    $strChecked = 'checked="checked"';
+  }
 $objQuery = $db -> Execute("SELECT count(`id`) FROM `chat`");
 $intPages = $objQuery -> fields['count(`id`)'] / 30;
 $objQuery -> Close();
@@ -41,7 +59,7 @@ if (!isset($intPage))
   {
     $intPage = 1;
   }
-$objChat = $db -> SelectLimit("SELECT `user`, `chat`, `senderid`, `sdate`, `ownerid` FROM `chat` ORDER BY `id` DESC", 30, 30 * ($intPage - 1));
+$objChat = $db -> SelectLimit("SELECT `user`, `chat`, `senderid`, `sdate`, `ownerid` FROM `chat` ".$strSql."ORDER BY `id` DESC", 30, 30 * ($intPage - 1));
 $arrText = array();
 $arrAuthor = array();
 $arrSenderid = array();
@@ -54,7 +72,7 @@ while (!$objChat -> EOF)
     }
   else
     {
-      $arrText[] = '[szept] '.wordwrap($objChat -> fields['chat'],30,"\n",1);
+      $arrText[] = '<b>szept>>></b> '.wordwrap($objChat -> fields['chat'],30,"\n",1);
     }
     $arrAuthor[] = $objChat -> fields['user'];
     $arrSenderid[] = $objChat -> fields['senderid'];
@@ -69,5 +87,9 @@ $smarty -> assign(array("Author" => $arrAuthor,
 			"Sdate" => $arrSdate,
 			"Fpage" => "Idź do strony: ",
 			"Tpages" => $intPages,
-			"Tpage" => $intPage));
+			"Tpage" => $intPage,
+			"Whispers" => $_GET['whispers'],
+			"Ashow" => "Pokaż",
+			"Twhispers" => "szepty",
+			"Checked" => $strChecked));
 ?>
