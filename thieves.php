@@ -6,8 +6,8 @@
  *   @name                 : thieves.php                            
  *   @copyright            : (C) 2011,2012 Vallheru Team based on Gamers-Fusion ver 2.5
  *   @author               : thindil <thindil@vallheru.net>
- *   @version              : 1.5
- *   @since                : 18.05.2012
+ *   @version              : 1.6
+ *   @since                : 16.07.2012
  *
  */
 
@@ -79,13 +79,17 @@ else
 	  global $db;
 	  global $arrTags;
 	  
-	  if ($strDbfield != 'mpoints')
+	  switch ($strDbfield)
 	    {
+	    case 'mpoints':
+	      $objTop = $db -> SelectLimit("SELECT `id`, `user`, `".$strDbfield."`, `tribe` FROM `players` WHERE `klasa`='Złodziej' ORDER BY `".$strDbfield."` DESC", 10);
+	      break;
+	    case 'credits':
+	      $objTop = $db -> SelectLimit("SELECT `id`, `user`, `".$strDbfield."`, `tribe` FROM `players` WHERE `immu`='N' ORDER BY `".$strDbfield."` DESC", 10);
+	      break;
+	    default:
 	      $objTop = $db -> SelectLimit('SELECT `id`, `user`, `'.$strDbfield.'`, `tribe` FROM `players` ORDER BY `'.$strDbfield.'` DESC', 10);
-	    }
-	  else
-	    {
-	      $objTop = $db -> SelectLimit("SELECT `id`, `user`, `".$strDbfield."`, `tribe` FROM `players` WHERE `klasa`='Złodziej' ORDER BY `".$strDbfield."` DESC", 10) or die($db->ErrorMsg());
+	      break;
 	    }
 
 	  while (!$objTop -> EOF) 
