@@ -7,7 +7,7 @@
  *   @copyright            : (C) 2004,2005,2006,2007,2011,2012 Vallheru Team based on Gamers-Fusion ver 2.5
  *   @author               : thindil <thindil@vallheru.net>
  *   @version              : 1.6
- *   @since                : 12.07.2012
+ *   @since                : 17.07.2012
  *
  */
 
@@ -59,21 +59,21 @@ if (!$player -> clas)
 
 $fltStat = (log10($player -> level) + 1);
 
-$intStrcost = ceil($player -> strength / $fltStat);
-$intAgicost = ceil($player -> agility / $fltStat);
-$intConcost = ceil($player -> cond / $fltStat);
-$intSpecost = ceil($player -> speed / $fltStat);
+$intStrcost = ceil($player->oldstats[1] / $fltStat);
+$intAgicost = ceil($player->oldstats[0] / $fltStat);
+$intConcost = ceil($player->oldstats[5] / $fltStat);
+$intSpecost = ceil($player->oldstats[4] / $fltStat);
 
 if ($player -> location == 'Altara')
 {
-    $intIntcost = ceil($player -> inteli / $fltStat);
-    $intWiscost = ceil($player -> wisdom / $fltStat);
+    $intIntcost = ceil($player->oldstats[2] / $fltStat);
+    $intWiscost = ceil($player->oldstats[3] / $fltStat);
     $intLess = 0;
 }
     else
 {
-    $intIntcost = ceil(($player -> inteli / $fltStat) - (($player -> inteli / $fltStat) / 10));
-    $intWiscost = ceil(($player -> wisdom / $fltStat) - (($player -> wisdom / $fltStat) / 10));
+    $intIntcost = ceil(($player->oldstats[2] / $fltStat) - (($player->oldstats[2] / $fltStat) / 10));
+    $intWiscost = ceil(($player->oldstats[3] / $fltStat) - (($player->oldstats[3] / $fltStat) / 10));
     $intLess = 1;
 }
 
@@ -218,15 +218,15 @@ if (isset ($_GET['action']) && $_GET['action'] == 'train')
       {
       case 'strength':
 	$cecha = T_STR;
-	$fltStat2 = $player->strength;
+	$fltStat2 = $player->oldstats[1];
 	break;
       case 'agility':
 	$cecha = T_AGI;
-	$fltStat2 = $player->agility;
+	$fltStat2 = $player->oldstats[0];
 	break;
       case 'inteli':
 	$cecha = T_INT;
-	$fltStat2 = $player->inteli;
+	$fltStat2 = $player->oldstats[2];
 	if ($player->location == 'Ardulith')
 	  {
 	    $blnLess = TRUE;
@@ -234,15 +234,15 @@ if (isset ($_GET['action']) && $_GET['action'] == 'train')
 	break;
       case 'szyb':
 	$cecha = T_SPEED;
-	$fltStat2 = $player->speed;
+	$fltStat2 = $player->oldstats[4];
 	break;
       case 'wytrz':
 	$cecha = T_CON;
-	$fltStat2 = $player->cond;
+	$fltStat2 = $player->oldstats[5];
 	break;
       case 'wisdom':
 	$cecha = T_WIS;
-	$fltStat2 = $player->wisdom;
+	$fltStat2 = $player->oldstats[3];
 	if ($player->location == 'Ardulith')
 	  {
 	    $blnLess = TRUE;
@@ -276,10 +276,10 @@ if (isset ($_GET['action']) && $_GET['action'] == 'train')
       {
 	if ($_POST['train'] == 'wytrz') 
 	  {
-	    $intCondition = floor($player -> cond + $gain);
-	    if ($intCondition > $player -> cond)
+	    $intCondition = floor($player->oldstats[5] + $gain);
+	    if ($intCondition > $player->oldstats[5])
 	      {
-		$intGain = $intCondition - floor($player -> cond);
+		$intGain = $intCondition - floor($player->oldstats[5]);
 		$db -> Execute("UPDATE `players` SET `max_hp`=`max_hp`+".$intGain." WHERE `id`=".$player -> id);
 	      } 
 	  }
@@ -317,7 +317,7 @@ $smarty -> assign(array("Traininfo" => TRAIN_INFO,
 			"Tinfo" => 'Podaj ile razy chcesz trenować daną cechę.',
 			"Plrace" => $player->race,
 			"Plclass" => $player->clas,
-			"Tcosts" => $player->strength.', '.$player->agility.', '.$player->inteli.', '.$player->speed.', '.$player->cond.', '.$player->wisdom.', '.$fltStat.', '.$intLess,
+			"Tcosts" => $player->oldstats[1].', '.$player->oldstats[0].', '.$player->oldstats[2].', '.$player->oldstats[4].', '.$player->oldstats[5].', '.$player->oldstats[3].', '.$fltStat.', '.$intLess,
                         "Action" => $_GET['action'],
 			"Rep" => $_POST['rep']));
 $smarty -> display ('train.tpl');

@@ -1,3 +1,8 @@
+2012-07-17  Bartek thindil Jasicki  <thindil@vallheru.net>
+
+	* BUG,train.php:
+	fixed bug with training cost
+
 2012-07-16  Bartek thindil Jasicki  <thindil@vallheru.net>
 
 	* FEATURE,templates/layout1/staff.tpl, templates/layout1/admin.tpl, templates/staff.tpl, templates/admin.tpl, includes/admin/innarchive.php: 
