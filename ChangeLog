@@ -1,5 +1,7 @@
 2012-07-18  Bartek thindil Jasicki  <thindil@vallheru.net>
 
+	* FEATURE,templates/layout1/forums.tpl, templates/forums.tpl, forums.php: 
+	added link to previous/next topic in category
 	* BUG,czary.php: 
 	fixed enchanting items
 	* FEATURE,templates/layout1/admin.tpl, templates/admin.tpl, admin.php, warehouse.php, install/db/update.sql: 

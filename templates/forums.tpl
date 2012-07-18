@@ -130,6 +130,17 @@
     	{/for}
 	<br /><br />
     {/if}
+    {if $Prevtopic != "" || $Nexttopic != ""}
+        <div>
+	    <br /><br />
+	    {if $Prevtopic != ""}
+                <a href="forums.php?topic={$Prevtopic}">{$Tprevtopic}</a>
+    	    {/if}
+	    {if $Nexttopic != ""}
+                <span style="float:right;"><a href="forums.php?topic={$Nexttopic}">{$Tnexttopic}</a></span>
+    	    {/if}
+	</div>
+    {/if}
     {if $Closed == 'N'}
         <form method="post" action="forums.php?reply={$Id}">
     	{$Areply}:<br />

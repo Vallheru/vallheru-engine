@@ -769,6 +769,8 @@ if (isset($_GET['topic']))
         $i = $i + 1;
     }
     $reply -> Close();
+    $objPrevtopic = $db->Execute("SELECT MAX(`id`) FROM `topics` WHERE `id`<".$topicinfo->fields['id']." AND `cat_id`=".$topicinfo->fields['cat_id']);
+    $objNexttopic = $db->Execute("SELECT MIN(`id`) FROM `topics` WHERE `id`>".$topicinfo->fields['id']." AND `cat_id`=".$topicinfo->fields['cat_id']);
     $smarty -> assign(array("Topic2" => $strClosed.$topicinfo -> fields['topic'], 
 			    "Prank" => $player->rank,
 			    "Adelete" => "Skasuj wybrane odpowiedzi",
@@ -776,6 +778,8 @@ if (isset($_GET['topic']))
 			    "Playerid" => $topicinfo -> fields['gracz'], 
 			    "Category" => $topicinfo -> fields['cat_id'], 
 			    "Closed" => $topicinfo->fields['closed'],
+			    "Prevtopic" => $objPrevtopic->fields['MAX(`id`)'],
+			    "Nexttopic" => $objNexttopic->fields['MIN(`id`)'],
 			    "Ttext" => $text1, 
 			    "Rstarter" => $arrstarter, 
 			    "Rplayerid" => $arrplayerid, 
@@ -792,8 +796,12 @@ if (isset($_GET['topic']))
 			    "Tpages" => $pages,
 			    "Tpage" => $page,
 			    "Fpage" => "Idź  do strony:",
+			    "Tprevtopic" => "<< Poprzedni temat",
+			    "Tnexttopic" => "Następny temat >>",
 			    "Thelp" => "Linki automatycznie zamieniane są na klikalne. Możesz używać następujących znaczników BBCode:<br /><ul><li>[b]<b>Pogrubienie</b>[/b]</li><li>[i]<i>Kursywa</i>[/i]</li><li>[u]<u>Podkreślenie</u>[/u]</li><li>[color (angielska nazwa koloru (red, yellow, itp) lub kod HTML (#FFFF00, itp)]pokolorowanie tekstu[/color]</li><li>[center]wycentrowanie tekstu[/center]</li><li>[quote]cytat[/quote]</ul>",
 			    "Write" => WRITE));
+    $objPrevtopic->Close();
+    $objNexttopic->Close();
     $topicinfo -> Close();
 }
 
