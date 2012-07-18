@@ -7,7 +7,7 @@
  *   @copyright            : (C) 2004,2005,2006,2011,2012 Vallheru Team based on Gamers-Fusion ver 2.5
  *   @author               : thindil <thindil@vallheru.net>
  *   @version              : 1.6
- *   @since                : 20.06.2012
+ *   @since                : 18.07.2012
  *
  */
 
@@ -192,7 +192,7 @@ if (isset($_GET['cast']))
 	    
 	    $magic = ($arrspell -> fields['poziom'] / 100);
 
-	    $arrElement = array('earth' => 'E', 'water' => 'W', 'fire' => 'F', 'air' => 'A');
+	    $arrElement = array('earth' => 'E', 'water' => 'W', 'fire' => 'F', 'wind' => 'A');
 	    $blnValid2 = TRUE;
 	    if ($arrspell -> fields['nazwa'] == E_SPELL1) 
 	      {
