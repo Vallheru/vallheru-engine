@@ -1191,15 +1191,28 @@ if (isset($_GET['view']))
      */
     elseif ($_GET['view'] == 'donate') 
       {
+	$objKgold = $db->Execute("SELECT `value` FROM `settings` WHERE `setting`='gold'");
 	$smarty -> assign(array("Donateid" => DONATE_ID,
 				"Donateamount" => DONATE_AMOUNT,
-				"Adonate" => A_DONATE));
+				"Adonate" => A_DONATE,
+				"Tbudget" => "Budżet (maksymalna dotacja):",
+				"Budget" => $objKgold->fields['value']));
 	if (isset ($_GET['step']) && $_GET['step'] == 'donated') 
 	  {
 	    checkvalue($_POST['amount']);
-	    $db -> Execute("UPDATE players SET credits=credits+".$_POST['amount']." WHERE id=".$_POST['id']);
-	    error (YOU_SEND_M);
+	    if ($objKgold->fields['value'] < $_POST['amount'])
+	      {
+		message('error', 'Królestwo nie posiada tyle złota.');
+	      }
+	    else
+	      {
+		$db -> Execute("UPDATE `players` SET `credits`=`credits`+".$_POST['amount']." WHERE `id`=".$_POST['id']);
+		$intGold = $objKgold->fields['value'] - $_POST['amount'];
+		$db->Execute("UPDATE `settings` SET `value`='".$intGold."' WHERE `setting`='gold'");
+		message('success', YOU_SEND_M);
+	      }
 	  }
+	$objKgold->Close();
       }
 
     /**

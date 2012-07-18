@@ -480,7 +480,7 @@
 {if $View == "donate"}
     <form method="post" action="admin.php?view=donate&amp;step=donated">
     {$Donateid}: <input type="text" name="id" /> <br />
-    {$Donateamount}: <input type="text" name="amount" />
+    {$Donateamount}: <input type="text" name="amount" /> {$Tbudget} {$Budget}<br />
     <input type="submit" value="{$Adonate}" /></form>
 {/if}
 

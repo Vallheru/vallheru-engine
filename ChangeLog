@@ -1,5 +1,7 @@
 2012-07-18  Bartek thindil Jasicki  <thindil@vallheru.net>
 
+	* FEATURE,templates/layout1/admin.tpl, templates/admin.tpl, admin.php, warehouse.php: 
+	added kingdom budget (for players donations for now)
 	* UPDATE,includes/funkcje.php:
 	raised chance for gain loot
 
