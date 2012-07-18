@@ -6,8 +6,8 @@
  *   @name                 : warehouse.php                            
  *   @copyright            : (C) 2004,2005,2006,2011,2012 Vallheru Team based on Gamers-Fusion ver 2.5
  *   @author               : thindil <thindil@vallheru.net>
- *   @version              : 1.6
- *   @since                : 25.05.2012
+ *   @version              : 1.7
+ *   @since                : 18.07.2012
  *
  */
 
@@ -211,6 +211,10 @@ if (isset($_GET['action']) && ($_GET['action'] == 'sell' || $_GET['action'] == '
                 error(NO_MONEY);
             }
             $db -> Execute("UPDATE players SET credits=credits-".$intGold." WHERE id=".$player -> id);
+	    $objKgold = $db->Execute("SELECT `value` FROM `settings` WHERE `setting`='gold'");
+	    $intKgold = $objKgold->fields['value'] + $intGold;
+	    $objKgold->Close();
+	    $db->Execute("UPDATE `settings` SET `value`='".$intKgold."' WHERE `setting`='gold'");
             if ($objReset -> fields['reset'])
             {
                 $db -> Execute("UPDATE warehouse SET buy=buy+".$_POST['amount'].", amount=amount-".$_POST['amount']." WHERE reset=1 AND mineral='".$arrItems[$intItem]."'");
