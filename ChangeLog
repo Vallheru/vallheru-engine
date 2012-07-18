@@ -1,3 +1,8 @@
+2012-07-18  Bartek thindil Jasicki  <thindil@vallheru.net>
+
+	* UPDATE,includes/funkcje.php:
+	raised chance for gain loot
+
 2012-07-17  Bartek thindil Jasicki  <thindil@vallheru.net>
 
 	* BUG,train.php:
