@@ -40,12 +40,14 @@
             </tr>
         {/section}
     </table>
+{else}
+    <script src="js/warehouse.js"></script>
 {/if}
 
 {if $Action == "sell"}
     {$Warehouseinfo2}<br /><br />
-    <form method="post" action="warehouse.php?action=sell&amp;item={$Item}&amp;action2=sell">
-        <input type="submit" value="{$Asell}" /> <input type="text" name="amount" size="5" />{$Tamount}{$Itemname}{$Youhave}{$Iamount}{$Tamount}{$Itemname}.
+    <form method="post" id="warehouse" action="warehouse.php?action=sell&amp;item={$Item}&amp;action2=sell">
+	<input type="submit" value="{$Asell}" /> <input type="text" name="amount" size="5" onChange="countPrice({$Price}, this.value, {$Iamount});"/>{$Tamount}{$Itemname}<span id="acost"></span>{$Youhave}<a href="#" onClick="buyAll({$Iamount}, {$Price});">{$Iamount}</a>{$Tamount}{$Itemname}.
     </form>
     <br /><br />
     <a href="warehouse.php">{$Aback}</a>
@@ -53,8 +55,8 @@
 
 {if $Action == "buy"}
     {$Warehouseinfo3}<br /><br />
-    <form method="post" action="warehouse.php?action=buy&amp;item={$Item}&amp;action2=buy">
-        <input type="submit" value="{$Abuy}" /> <input type="text" name="amount" size="5" />{$Tamount}{$Itemname} - {$Wamount}{$Iamount}{$Tamount}{$Itemname}.
+    <form method="post" id="warehouse" action="warehouse.php?action=buy&amp;item={$Item}&amp;action2=buy">
+	<input type="submit" value="{$Abuy}" /> <input type="text" name="amount" size="5" onChange="countPrice({$Price}, this.value, {$Iamount});"/>{$Tamount}{$Itemname} <span id="acost"></span> - {$Wamount}<a href="#" onClick="buyAll({$Iamount}, {$Price});">{$Iamount}</a>{$Tamount}{$Itemname}.
     </form>
     <br /><br />
     <a href="warehouse.php">{$Aback}</a>

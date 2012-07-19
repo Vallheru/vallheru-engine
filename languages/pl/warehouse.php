@@ -6,8 +6,8 @@
  *   @name                 : warehouse.php                            
  *   @copyright            : (C) 2004,2005,2006,2012 Vallheru Team based on Gamers-Fusion ver 2.5
  *   @author               : thindil <thindil@vallheru.net>
- *   @version              : 1.5
- *   @since                : 08.03.2012
+ *   @version              : 1.6
+ *   @since                : 19.07.2012
  *
  */
 
@@ -43,42 +43,35 @@ rodzajów. Oto ceny obowiązujące dzisiaj:</i>");
 }
 define("WAREHOUSE_INFO2", "Co możesz nam zaoferować?");
 define("WAREHOUSE_INFO3", "Co chcesz kupić?");
+define("CARAVAN_VISIT", "<br />Dzisiaj odwiedziła magazyn karawana z dalekich krain wykupując co nieco minerałów.<br /><br />");
 
-if (!isset($_GET['action']))
-{
-    define("MIN5", "Sztabki miedzi");
-    define("MIN8", "Sztabki żelaza");
-    define("MIN10", "Bryły węgla");
-    define("MIN11", "Bryły adamantium");
-    define("MIN12", "Kawałki meteorytu");
-    define("MIN13", "Kryształów");
-    define("MIN14", "Drewno sosnowe");
-    define("MIN6", "Sztabki brązu");
-    define("MIN7", "Sztabki mosiądzu");
-    define("MIN9", "Sztabki stali");
-    define("MIN15", "Drewno z leszczyny");
-    define("MIN16", "Drewno cisowe");
-    define("MIN17", "Drewno z wiązu");
-    define("MIN18", "Mithril");
-    define("MIN1", "Ruda miedzi");
-    define("MIN2", "Ruda cynku");
-    define("MIN3", "Ruda cyny");
-    define("MIN4", "Ruda żelaza");
-    define("HERB1", "Illani");
-    define("HERB2", "Illanias");
-    define("HERB3", "Nutari");
-    define("HERB4", "Dynallca");
-    define("HERB5", "Nasiona Illani");
-    define("HERB6", "Nasiona Illanias");
-    define("HERB7", "Nasiona Nutari");
-    define("HERB8", "Nasiona Dynallca");
-    define("T_MIN", "Minerał");
-    define("T_HERB", "Zioło");
-    define("T_COST", "Skup / Sprzedaż");
-    define("T_ACTION", "Akcje");
-    define("T_AMOUNT", "Ilość");
-    define("CARAVAN_VISIT", "<br />Dzisiaj odwiedziła magazyn karawana z dalekich krain wykupując co nieco minerałów.<br /><br />");
-}
+define("MIN5A", "Sztabki miedzi");
+define("MIN8A", "Sztabki żelaza");
+define("MIN10A", "Bryły węgla");
+define("MIN11A", "Bryły adamantium");
+define("MIN12A", "Kawałki meteorytu");
+define("MIN13A", "Kryształów");
+define("MIN14A", "Drewno sosnowe");
+define("MIN6A", "Sztabki brązu");
+define("MIN7A", "Sztabki mosiądzu");
+define("MIN9A", "Sztabki stali");
+define("MIN15A", "Drewno z leszczyny");
+define("MIN16A", "Drewno cisowe");
+define("MIN17A", "Drewno z wiązu");
+define("MIN18A", "Mithril");
+define("MIN1A", "Ruda miedzi");
+define("MIN2A", "Ruda cynku");
+define("MIN3A", "Ruda cyny");
+define("MIN4A", "Ruda żelaza");
+define("HERB1A", "Illani");
+define("HERB2A", "Illanias");
+define("HERB3A", "Nutari");
+define("HERB4A", "Dynallca");
+define("HERB5A", "Nasiona Illani");
+define("HERB6A", "Nasiona Illanias");
+define("HERB7A", "Nasiona Nutari");
+define("HERB8A", "Nasiona Dynallca");
+
 
 if (isset($_GET['action']) && ($_GET['action'] == 'sell' || $_GET['action'] == 'buy'))
 {
