@@ -6,8 +6,8 @@
  *   @name                 : mail.php                            
  *   @copyright            : (C) 2004,2005,2006,2007,2011,2012 Vallheru Team based on Gamers-Fusion ver 2.5
  *   @author               : thindil <thindil@vallheru.net>
- *   @version              : 1.5
- *   @since                : 17.04.2012
+ *   @version              : 1.6
+ *   @since                : 19.07.2012
  *
  */
 
@@ -550,6 +550,10 @@ if (isset ($_GET['view']) && $_GET['view'] == 'write')
 	$_POST['subject'] = str_replace("&nbsp", " ", $_POST['subject']);
 	$_POST['subject'] = trim(htmlspecialchars($_POST['subject'], ENT_QUOTES));
 	$blnValid = TRUE;
+	if (preg_match("/[a-zA-Z0-9]+/", $_POST['subject']) == 0 || empty($_POST['subject']))
+	  {
+	    $_POST['subject'] = substr($_POST['body'], 0, 10).'...';
+	  }
         if (empty ($_POST['to']) || empty ($_POST['body']) || preg_match("/[a-zA-Z0-9]+/", $_POST['subject']) == 0 || empty($_POST['subject'])) 
         {
 	    message('error', EMPTY_FIELDS);
