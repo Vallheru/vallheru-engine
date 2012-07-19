@@ -6,8 +6,8 @@
  *   @name                 : tribeadmin.php                            
  *   @copyright            : (C) 2012 Vallheru Team based on Gamers-Fusion ver 2.5
  *   @author               : thindil <thindil@vallheru.net>
- *   @version              : 1.5
- *   @since                : 13.04.2012
+ *   @version              : 1.6
+ *   @since                : 19.07.2012
  *
  */
 
@@ -42,17 +42,6 @@ define("MENU10", "Forum klanu");
 define("MENU11", "Astralny skarbiec");
 define("NO_PERM2", "Tylko przywódca lub osoba upoważniona może przebywać tutaj!");
 define("NOT_LEADER", "Nie masz prawa tutaj przebywać.");
-define("PANEL_INFO", "Witaj w panelu przywódcy klanu. Co chcesz zrobić?");
-define("A_PERM", "Ustawić uprawnienia członków klanu");
-define("A_RANK", "Ustawić rangi członkom klanu");
-define("A_DESC", "Edytować opis klanu, wiadomość dla członków oraz herb klanu i stronę klanu");
-define("A_WAITING", "Sprawdź listę oczekujących na dołączenie do klanu");
-define("A_KICK", "Wyrzucić Członka");
-define("A_ARMY", "Dokupić żołnierzy lub fortyfikacji do klanu");
-define("A_ATTACK2", "Zaatakować inny klan");
-define("A_LOAN", "Pożycz pieniądze członkowi");
-define("A_MISC", "Dodatki klanu");
-define("A_MAIL2", "Wyślij pocztę do członków klanu");
 if (isset ($_GET['step2']) && $_GET['step2'] == 'rank') 
   {
     define("GIVE_RANK", "Daj członkowi klanu rangę");
@@ -79,21 +68,6 @@ if (isset ($_GET['step2']) && $_GET['step2'] == 'permissions')
     define("BACK_TO", "Wróć do menu przywódcy");
     define("YOU_SET", "Ustawiłeś uprawnienia członkowi klanu.");
     define("PERM_INFO", "Tutaj możesz ustawić uprawnienia do różnych miejsc dowolnym członkom klanu. Wybierz z listy odpowiedniego członka klanu a następnie ustaw mu odpowiednie uprawnienia. Nie ma ograniczeń co do ilości osób uprawnionych.");
-    define("T_PERM1", "Może edytować opisy klanu");
-    define("T_PERM2", "Może dołączać nowych członków");
-    define("T_PERM3", "Może wyrzucać członków z klanu");
-    define("T_PERM4", "Może kupować żołnierzy oraz fortyfikacje");
-    define("T_PERM5", "Może wykonywać ataki na inny klan");
-    define("T_PERM6", "Może pożyczać pieniądze członkom klanu");
-    define("T_PERM7", "Może dawać przedmioty ze zbrojowni");
-    define("T_PERM8", "Może dawać przedmioty z magazynu");
-    define("T_PERM9", "Może dawać minerały ze skarbca");
-    define("T_PERM10", "Może dawać zioła z zielnika");
-    define("T_PERM11", "Może kasować posty na forum");
-    define("T_PERM12", "Może ustalać rangi członkom klanu");
-    define("T_PERM13", "Może wysyłać listy do członków klanu");
-    define("T_PERM14", "Nie może oglądać informacji o klanie");
-    define("T_PERM15", "Może łączyć astralne plany, dawać je członkom klanu");
     define("A_SAVE", "Zapisz");
     define("A_NEXT", "Dalej");
     define("T_USER", "Nadaj uprawnienia: ");
@@ -200,7 +174,7 @@ if (isset ($_GET['step2']) && $_GET['step2'] == 'messages')
     define("BAD_TYPE", "Zły typ pliku!");
     define("NO_COPY", "Nie skopiowano pliku!");
     define("LOGO_LOAD", "Herb załadowany!");
-    define("MSG_CHANGED", "Wiadomość została zmieniona.");
+    define("MSG_CHANGED", "Informacje zostały zmienione.");
     define("CLAN_DESC", "Opis klanu");
     define("MSG_TO_MEM", "Wiadomość dla członków");
     define("A_CHANGE", "Zmień");
