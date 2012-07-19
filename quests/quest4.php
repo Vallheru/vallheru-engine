@@ -6,8 +6,8 @@
  *   @name                 : quest4.php                            
  *   @copyright            : (C) 2004,2005,2006,2011,2012 Vallheru Team based on Gamers-Fusion ver 2.5
  *   @author               : thindil <thindil@vallheru.net>
- *   @version              : 1.5
- *   @since                : 30.04.2012
+ *   @version              : 1.6
+ *   @since                : 19.07.2012
  *
  */
 
@@ -569,7 +569,7 @@ if ((isset($_POST['box17']) && $_POST['box17'] == 1) || (isset($_POST['box16']) 
 
 if ($test -> fields['action'] == '1.3.3') 
 {
-    if ($player -> clas == 'Obywatel' || $player -> clas == 'Złodziej' || $player -> clas == 'Mag') 
+    if ($player -> clas == 'Rzemieślnik' || $player -> clas == 'Złodziej' || $player -> clas == 'Mag') 
     {
         $quest -> Show('1.3.3.1a');
     } 
