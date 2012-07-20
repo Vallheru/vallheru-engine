@@ -1,5 +1,7 @@
 2012-07-20  Bartek thindil Jasicki  <thindil@vallheru.net>
 
+	* FEATURE,forums.php: 
+	added simple antiflood check
 	* BUG,forums.php: 
 	fixed bug with permissions on forum
 	* FEATURE,includes/admin/takeaway.php: 

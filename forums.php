@@ -392,10 +392,18 @@ if (isset($_GET['topics']))
 * Add topic
 */
 if (isset ($_GET['action']) && $_GET['action'] == 'addtopic') 
-{
-    $_POST['title2'] = htmlspecialchars($_POST['title2'], ENT_QUOTES);
+  {
     $blnValid = TRUE;
-    if (empty ($_POST['title2']) || empty ($_POST['body'])) 
+    if (isset($_SESSION['posttime']))
+    {
+      if ($ctime - $_SESSION['posttime'] < 10)
+	{
+	  message('error', 'Zapomnij o tym.');
+	  $blnValid = FALSE;
+	}
+    }
+    $_POST['title2'] = htmlspecialchars($_POST['title2'], ENT_QUOTES);
+    if (empty ($_POST['title2']) || empty ($_POST['body']) || $_POST['title2'] == 'Temat' || $_POST['body'] == 'Tekst') 
       {
 	$blnValid = FALSE;
         message('error', EMPTY_FIELDS);
@@ -454,9 +462,10 @@ if (isset ($_GET['action']) && $_GET['action'] == 'addtopic')
 	$objTid = $db->Execute("SELECT MAX(`id`) FROM `topics` WHERE `gracz`=".$player->id);
 	$_GET['topic'] = $objTid->fields['MAX(`id`)'];
 	$objTid->Close();
+	$_SESSION['posttime'] = $ctime;
 	message('success', TOPIC_ADD);
       }
-}
+  }
 
 /**
 * Add reply
@@ -465,6 +474,14 @@ if (isset($_GET['reply']))
   {
     checkvalue($_GET['reply']);
     $blnValid = TRUE;
+    if (isset($_SESSION['posttime']))
+    {
+      if ($ctime - $_SESSION['posttime'] < 10)
+	{
+	  message('error', 'Zapomnij o tym.');
+	  $blnValid = FALSE;
+	}
+    }
     $query = $db -> Execute("SELECT `cat_id`, `closed` FROM `topics` WHERE `id`=".$_GET['reply']);
     if (!$query->fields['cat_id']) 
       {
@@ -501,7 +518,7 @@ if (isset($_GET['reply']))
 	$blnValid = FALSE;
       }
     $query -> Close();
-    if (empty ($_POST['rep'])) 
+    if (empty ($_POST['rep']) || $_POST['rep'] == 'Tekst') 
       {
 	message('error', EMPTY_FIELDS);
 	$blnValid = FALSE;
@@ -516,6 +533,7 @@ if (isset($_GET['reply']))
 	$db -> Execute("INSERT INTO `replies` (`starter`, `topic_id`, `body`, `gracz`) VALUES('".$strAuthor."', ".$_GET['reply'].", ".$strBody.", ".$player -> id.")") or die("Could not add reply.");
 	$db->Execute("UPDATE `topics` SET `w_time`=".$ctime.", `replies`=`replies`+1 WHERE `id`=".$_GET['reply']);
 	$_GET['topic'] = $_GET['reply'];
+	$_SESSION['posttime'] = $ctime;
 	message('success', REPLY_ADD);
       }
 }
