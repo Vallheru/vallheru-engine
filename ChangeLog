@@ -1,5 +1,7 @@
 2012-07-20  Bartek thindil Jasicki  <thindil@vallheru.net>
 
+	* FEATURE,includes/admin/takeaway.php: 
+	move penalty to victim and kingdom budget
 	* UPDATE,smelter.php:
 	changed amount of gained exp and skill
 

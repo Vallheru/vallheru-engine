@@ -4,11 +4,11 @@
  *   Take money from player
  *
  *   @name                 : takeaway.php                            
- *   @copyright            : (C) 2006 Vallheru Team based on Gamers-Fusion ver 2.5
+ *   @copyright            : (C) 2006,2012 Vallheru Team based on Gamers-Fusion ver 2.5
  *   @author               : thindil <thindil@users.sourceforge.net>
  *   @author               : eyescream <tduda@users.sourceforge.net>
- *   @version              : 1.3
- *   @since                : 05.12.2006
+ *   @version              : 1.6
+ *   @since                : 20.07.2012
  *
  */
 
@@ -28,7 +28,7 @@
 //   along with this program; if not, write to the Free Software
 //   Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 //
-// $Id: takeaway.php 879 2007-01-23 17:19:03Z thindil $
+// $Id$
 
 $smarty -> assign(array("Takeid" => TAKE_ID,
                         "Takeamount" => TAKE_AMOUNT,
@@ -39,21 +39,37 @@ $smarty -> assign(array("Takeid" => TAKE_ID,
 if (isset ($_GET['step']) && $_GET['step'] == 'takenaway') 
 {
     $_POST['verdict'] = strip_tags($_POST['verdict']);
-    if (!ereg("^[1-9][0-9]*$", $_POST['taken']) || empty($_POST['verdict']) || !ereg("^[1-9][0-9]*$", $_POST['id']) || !ereg("^[1-9][0-9]*$", $_POST['id2'])) 
+    checkvalue($_POST['taken']);
+    checkvalue($_POST['id']);
+    checkvalue($_POST['id2']);
+    if (empty($_POST['verdict'])) 
     {
-        error (ERROR);
-    }
-    $strDate = $db -> DBDate($newdate);
-    $db -> Execute("UPDATE `players` SET `credits`=`credits`-".$_POST['taken']." WHERE `id`=".$_POST['id']);
-    $db -> Execute("INSERT INTO `log` (`owner`, `log`, `czas`) VALUES(".$_POST['id'].", '".YOU_GET.$_POST['verdict'].T_AMOUNT.$_POST['taken'].GOLD_COINS.'<b><a href="view.php?view='.$player -> id.'">'.$player -> user." </a></b>, ID: <b>".$player -> id."</b>.', ".$strDate.")");
-    
+        error ('Podaj powód kary.');
+    }    
     $dotowany = $db -> Execute("SELECT `id`, `user` FROM `players` WHERE `id`=".$_POST['id']);
     $strReceiversName = $dotowany -> fields['user'];
     if (!$dotowany -> fields['id']) 
     {
-        error (NO_PLAYER);
+        error ('Nie ma takiego gracza (karany)');
     }
     $dotowany -> Close();
+
+    $dotowany = $db -> Execute("SELECT `id` FROM `players` WHERE `id`=".$_POST['id2']);
+    if (!$dotowany -> fields['id']) 
+    {
+        error ('Nie ma takiego gracza (poszkodowany)');
+    }
+    $dotowany -> Close();
+    $intGold = floor($_POST['taken'] / 2);
+
+    $strDate = $db -> DBDate($newdate);
+    $db -> Execute("UPDATE `players` SET `credits`=`credits`-".$_POST['taken']." WHERE `id`=".$_POST['id']);
+    $db->Execute("UPDATE `players` SET `credits`=`credits`+".$intGold." WHERE `id`=".$_POST['id2']);
+    $objKgold = $db->Execute("SELECT `value` FROM `settings` WHERE `setting`='gold'");
+    $intGold2 = $objKgold->fields['value'] + $intGold;
+    $objKgold->Close();
+    $db->Execute("UPDATE `settings` SET `value`='".$intGold2."' WHERE `setting`='gold'");
+    $db -> Execute("INSERT INTO `log` (`owner`, `log`, `czas`) VALUES(".$_POST['id'].", '".YOU_GET.$_POST['verdict'].T_AMOUNT.$_POST['taken'].GOLD_COINS.'<b><a href="view.php?view='.$player -> id.'">'.$player -> user." </a></b>, ID: <b>".$player -> id."</b>.', ".$strDate.")");
 
     $db -> Execute("INSERT INTO `log` (`owner`, `log`, `czas`) VALUES(".$_POST['id2'].", '".T_PLAYER1.'<b><a href="view.php?view='.$_POST['id'].'">'.$strReceiversName.'</a></b>'.T_PLAYER2.'<b>'.$_POST['id'].'</b>'.HAS_TAKEN.$_POST['verdict'].SANCTION_SET.'<b><a href="view.php?view='.$player -> id.'">'.$player -> user."</a></b>".T_PLAYER2."<b>".$player -> id."</b>.', ".$strDate.")");
     error ($_POST['taken']." ".GOLD_TAKEN.": ".$_POST['id']);
