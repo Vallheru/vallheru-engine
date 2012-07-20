@@ -6,8 +6,8 @@
  *   @name                 : smelter.php                            
  *   @copyright            : (C) 2004,2005,2006,2011,2012 Vallheru Team based on Gamers-Fusion ver 2.5
  *   @author               : thindil <thindil@vallheru.net>
- *   @version              : 1.5
- *   @since                : 07.05.2012
+ *   @version              : 1.6
+ *   @since                : 20.07.2012
  *
  */
 
@@ -275,8 +275,8 @@ if (isset($_GET['step']) && $_GET['step'] == 'smelt')
             {
                 $strSql = $strSql.", ".$arrOres[$i]."=".$arrOres[$i]."-".$arrAmount[$i];
             }
-	    $fltAbility = round(($intAmount / 50)  + (($_POST['amount'] - $intAmount) * 0.01), 2);
-	    $intExp = $intAmount * ($arrBillets[$intKey] / 4);
+	    $fltAbility = round(($intAmount / 100)  + (($_POST['amount'] - $intAmount) * 0.01), 2);
+	    $intExp = $intAmount * ($arrBillets[$intKey] / 2);
 	    if ($player->clas == 'Rzemieślnik')
 	      {
 		$fltAbility = $fltAbility * 2;
