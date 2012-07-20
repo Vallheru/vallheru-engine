@@ -8,7 +8,7 @@
  *   @author               : thindil <thindil@vallheru.net>
  *   @author               : mori <ziniquel@users.sourceforge.net>
  *   @version              : 1.6
- *   @since                : 23.05.2012
+ *   @since                : 20.07.2012
  *
  */
 
@@ -420,6 +420,7 @@ if (isset ($_GET['action']) && $_GET['action'] == 'addtopic')
             if ($intPerm === false)
 	      {
 		message('error', NO_PERM2);
+		$blnValid = FALSE;
 	      }
         }
         $objPerm -> Close();
@@ -429,6 +430,7 @@ if (isset ($_GET['action']) && $_GET['action'] == 'addtopic')
         if ($player -> rank != 'Admin' && $player -> rank != 'Staff')
 	  {
 	    message('error', NO_PERM3);
+	    $blnValid = FALSE;
 	  }
         $strSticky = 'Y';
     }
