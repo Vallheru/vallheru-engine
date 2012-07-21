@@ -1,3 +1,8 @@
+2012-07-21  Bartek thindil Jasicki  <thindil@vallheru.net>
+
+	* FEATURE,tforums.php:
+	added simple antiflood check
+
 2012-07-20  Bartek thindil Jasicki  <thindil@vallheru.net>
 
 	* FEATURE,forums.php: 

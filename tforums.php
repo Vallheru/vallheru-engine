@@ -6,8 +6,8 @@
  *   @name                 : tforums.php                            
  *   @copyright            : (C) 2004,2005,2006,2011,2012 Vallheru Team based on Gamers-Fusion ver 2.5
  *   @author               : thindil <thindil@vallheru.net>
- *   @version              : 1.5
- *   @since                : 27.04.2012
+ *   @version              : 1.6
+ *   @since                : 21.07.2012
  *
  */
 
@@ -153,13 +153,23 @@ if (isset($_GET['action']) && $_GET['action'] == 'deltopics')
 * Add topic
 */
 if (isset ($_GET['action']) && $_GET['action'] == 'addtopic') 
-{
+  {
+    $blnValid = TRUE;
+    if (isset($_SESSION['posttime']))
+    {
+      if ($ctime - $_SESSION['posttime'] < 10)
+	{
+	  message('error', 'Zapomnij o tym.');
+	  $blnValid = FALSE;
+	}
+    }
     if (empty ($_POST['title2']) || empty ($_POST['body'])) 
       {
         message('error', EMPTY_FIELDS);
 	$_GET['view'] = 'topics';
+	$blnValid = FALSE;
       }
-    else
+    if ($blnValid)
       {
 	$strSticky = 'N';
 	if (isset($_POST['sticky']))
@@ -185,6 +195,7 @@ if (isset ($_GET['action']) && $_GET['action'] == 'addtopic')
 	$_GET['topic'] = $objNewTopic->fields['MAX(`id`)'];
 	$objNewTopic->Close();
 	message('success', TOPIC_ADD);
+	$_SESSION['posttime'] = $ctime;
       }
 }
 
@@ -310,31 +321,40 @@ if (isset ($_GET['view']) && $_GET['view'] == 'topics')
 if (isset($_GET['reply'])) 
 {
     checkvalue($_GET['reply']);
+    $blnValid = TRUE;
+    if (isset($_SESSION['posttime']))
+    {
+      if ($ctime - $_SESSION['posttime'] < 10)
+	{
+	  message('error', 'Zapomnij o tym.');
+	  $blnValid = FALSE;
+	}
+    }
     $test = $db -> Execute("SELECT `id` FROM `tribe_topics` WHERE `id`=".$_GET['reply']." AND `tribe`=".$player -> tribe);
     if (!$test -> fields['id']) 
       {
 	message('error', NO_TOPIC);
+	$blnValid = FALSE;
       }
-    else
+    if (empty ($_POST['rep'])) 
       {
-	if (empty ($_POST['rep'])) 
-	  {
-	    message('error', EMPTY_FIELDS);
-	  }
-	else
-	  {
-	    require_once('includes/bbcode.php');
-	    $_POST['rep'] = bbcodetohtml($_POST['rep']);
-	    $_POST['rep'] = "<b>".$data." ".$time."</b><br />".$_POST['rep'];
-	    $strRep = $db -> qstr($_POST['rep'], get_magic_quotes_gpc());
-	    $strAuthor = $arrTags[$player->tribe][0].' '.$player->user.' '.$arrTags[$player->tribe][1];
-	    $db -> Execute("INSERT INTO `tribe_replies` (`starter`, `topic_id`, `body`, `pid`) VALUES('".$strAuthor."', ".$_GET['reply'].", ".$strRep." , ".$player -> id.")") or error("Could not add reply.");
-	    $db->Execute("UPDATE `tribe_topics` SET `w_time`=".$ctime." WHERE `id`=".$_GET['reply']);
-	    message('success', REPLY_ADD);
-	  }
-	$_GET['topic'] = $_GET['reply'];
-	$_GET['reply'] = '';
+	message('error', EMPTY_FIELDS);
+	$blnValid = FALSE;
       }
+    if ($blnValid)
+      {
+	require_once('includes/bbcode.php');
+	$_POST['rep'] = bbcodetohtml($_POST['rep']);
+	$_POST['rep'] = "<b>".$data." ".$time."</b><br />".$_POST['rep'];
+	$strRep = $db -> qstr($_POST['rep'], get_magic_quotes_gpc());
+	$strAuthor = $arrTags[$player->tribe][0].' '.$player->user.' '.$arrTags[$player->tribe][1];
+	$db -> Execute("INSERT INTO `tribe_replies` (`starter`, `topic_id`, `body`, `pid`) VALUES('".$strAuthor."', ".$_GET['reply'].", ".$strRep." , ".$player -> id.")") or error("Could not add reply.");
+	$db->Execute("UPDATE `tribe_topics` SET `w_time`=".$ctime." WHERE `id`=".$_GET['reply']);
+	message('success', REPLY_ADD);
+	$_SESSION['posttime'] = $ctime;
+      }
+    $_GET['topic'] = $_GET['reply'];
+    $_GET['reply'] = '';
     $test -> Close();
 }
 
