@@ -1,3 +1,8 @@
+2012-07-23  Bartek thindil Jasicki  <thindil@vallheru.net>
+
+	* BUG,languages/pl/explore.php, explore.php:
+	fixed bug with forest info
+
 2012-07-21  Bartek thindil Jasicki  <thindil@vallheru.net>
 
 	* FEATURE,tforums.php:

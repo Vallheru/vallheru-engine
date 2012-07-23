@@ -6,8 +6,8 @@
  *   @name                 : explore.php                            
  *   @copyright            : (C) 2004,2005,2006,2007,2011 Vallheru Team based on Gamers-Fusion ver 2.5
  *   @author               : thindil <thindil@vallheru.net>
- *   @version              : 1.5
- *   @since                : 12.12.2011
+ *   @version              : 1.6
+ *   @since                : 23.07.2012
  *
  */
 
@@ -97,11 +97,6 @@ if (isset ($_GET['action']) && $_GET['action'] == 'moutains' && $player -> locat
         define("Q_SUCC", "Doskonale, odpowiedziałeś na trzecie pytanie! Zdobyłeś w nagrodę");
         define("Q_SUCC2", "oraz możesz przejść przez most! Postać w kapturze powoli odchodzi, mrucząc pod nosem: <i>Co za świat, człowiek jak już dostaje jakąś rolę to praktycznie niewiele wartą. Muszę pogadać z moim agentem, cały czas daje mi takie same role");
     }
-}
-
-if ($player -> hp > 0 && !isset ($_GET['akcja']) && $player -> location == 'Las' && !isset($_GET['step'])) 
-{
-    define("F_INFO", "Przed sobą widzisz ścianę lasu Avantiel. Wąska ścieżka prowadząca w głąb lasu niknie już po chwili za zakrętem. Zewsząd otaczają się stare, wysokie drzewa, słychać dookoła śpiew ptactwa, gdzieś z lasu dochodzą odgłosy życia zwierząt. Czy chcesz dalej podążać leśną ścieżką? Każde zwiedzanie kosztuje 0,5 energii.");
 }
 
 if ($player -> location == 'Las')

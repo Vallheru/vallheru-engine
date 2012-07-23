@@ -7,7 +7,7 @@
  *   @copyright            : (C) 2004,2005,2006,2011,2012 Vallheru Team based on Gamers-Fusion ver 2.5
  *   @author               : thindil <thindil@vallheru.net>
  *   @version              : 1.6
- *   @since                : 15.06.2012
+ *   @since                : 23.07.2012
  *
  */
  
@@ -559,7 +559,7 @@ if ($player -> hp > 0 && !isset ($_GET['action']) && $player -> location == 'Las
     }
         else
     {
-        $smarty -> assign(array("Finfo" => F_INFO,
+        $smarty -> assign(array("Finfo" => "Przed sobą widzisz ścianę lasu Avantiel. Wąska ścieżka prowadząca w głąb lasu niknie już po chwili za zakrętem. Zewsząd otaczają się stare, wysokie drzewa, słychać dookoła śpiew ptactwa, gdzieś z lasu dochodzą odgłosy życia zwierząt. Czy chcesz dalej podążać leśną ścieżką? Każde zwiedzanie kosztuje 0,5 energii.",
                                 "Howmuch" => HOW_MUCH,
                                 "Tenergy" => T_ENERGY,
                                 "Awalk" => T_WALK));
