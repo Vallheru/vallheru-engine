@@ -4,10 +4,10 @@
  *   Polish language for weapons shop
  *
  *   @name                 : weapons.php                            
- *   @copyright            : (C) 2004-2005,2011 Vallheru Team based on Gamers-Fusion ver 2.5
- *   @author               : thindil <thindil@tuxfamily.org>
- *   @version              : 1.4
- *   @since                : 29.09.2011
+ *   @copyright            : (C) 2004-2005,2011,2012 Vallheru Team based on Gamers-Fusion ver 2.5
+ *   @author               : thindil <thindil@vallheru.net>
+ *   @version              : 1.6
+ *   @since                : 23.07.2012
  *
  */
 
@@ -41,17 +41,14 @@ if (isset($_GET['buy']))
     define("WITH_P", "z");
     define("TO_POWER", "do Obrażeń.");
 }
-    else
-{
-    define("WEAPON_INFO", "Kiedy wchodzisz do dużego domu z szyldem ZBROJMISTRZ dostrzegasz kilku kupców, wojowników i dwóch elfów za ladą. Podchodzisz do jednego z nich a ten pyta: <i>Witaj, czy chcesz kupić u nas oręż? Jeśli tak to powiedz którą z broni wybierasz.</i> W mithrilowej szkatule przez szybę widać wszystkie rodzaje broni jakie wykuwa się w tym zakładzie. Asortyment jest przeogromny - od sztyletów po adamantytowe miecze dwuręczne. Zza firanki za ladą słychać tylko pospieszne kucie broni i krasnoludzkie sapanie <i>Za... Dużo... Tych... Wojaków... Arg... No UKOŃCZONE!</i>. Elf patrząc na Ciebie z uśmiechem mówi tylko: <i>Co podać?</i>");
-    define("I_NAME", "Nazwa");
-    define("I_DUR", "Wt");
-    define("I_EFECT", "Efekt");
-    define("I_COST", "Cena");
-    define("I_LEVEL", "Wymagany poziom");
-    define("I_SPEED", "Szyb");
-    define("I_OPTION", "Opcje");
-    define("A_BUY", "Kup");
-    define("A_STEAL", "Kradzież");
-}
+define("WEAPON_INFO", "Kiedy wchodzisz do dużego domu z szyldem ZBROJMISTRZ dostrzegasz kilku kupców, wojowników i dwóch elfów za ladą. Podchodzisz do jednego z nich a ten pyta: <i>Witaj, czy chcesz kupić u nas oręż? Jeśli tak to powiedz którą z broni wybierasz.</i> W mithrilowej szkatule przez szybę widać wszystkie rodzaje broni jakie wykuwa się w tym zakładzie. Asortyment jest przeogromny - od sztyletów po adamantytowe miecze dwuręczne. Zza firanki za ladą słychać tylko pospieszne kucie broni i krasnoludzkie sapanie <i>Za... Dużo... Tych... Wojaków... Arg... No UKOŃCZONE!</i>. Elf patrząc na Ciebie z uśmiechem mówi tylko: <i>Co podać?</i>");
+define("I_NAME", "Nazwa");
+define("I_DUR", "Wt");
+define("I_EFECT", "Efekt");
+define("I_COST", "Cena");
+define("I_LEVEL", "Wymagany poziom");
+define("I_SPEED", "Szyb");
+define("I_OPTION", "Opcje");
+define("A_BUY", "Kup");
+define("A_STEAL", "Kradzież");
 ?>

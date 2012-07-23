@@ -1,5 +1,7 @@
 2012-07-23  Bartek thindil Jasicki  <thindil@vallheru.net>
 
+	* UPDATE,templates/layout1/weapons.tpl, templates/weapons.tpl, languages/pl/weapons.php, weapons.php: 
+	redesigned weapons shop
 	* BUG,jail.php: 
 	fixed bug with lost tools
 	* BUG,includes/functions.php: 

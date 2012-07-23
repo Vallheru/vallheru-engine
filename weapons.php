@@ -7,7 +7,7 @@
  *   @copyright            : (C) 2004,2005,2006,2011,2012 Vallheru Team based on Gamers-Fusion ver 2.5
  *   @author               : thindil <thindil@vallheru.net>
  *   @version              : 1.6
- *   @since                : 25.05.2012
+ *   @since                : 23.07.2012
  *
  */
 
@@ -42,87 +42,6 @@ if ($player -> location != 'Altara')
     error (ERROR);
 }
 
-if (!isset ($_GET['buy'])) 
-{
-    $wep = $db -> Execute("SELECT * FROM equipment WHERE type='W' AND status='S' AND owner=0 ORDER BY cost ASC");
-    $arrname = array();
-    $arrpower = array();
-    $arrspeed = array();
-    $arrdur = array();
-    $arrlevel = array();
-    $arrcost = array();
-    $arrid = array();
-    $i = 0;
-    while (!$wep -> EOF) 
-    {
-        $arrname[$i] = $wep -> fields['name'];
-        $arrpower[$i] = $wep -> fields['power'];
-        $arrspeed[$i] = $wep -> fields['szyb'];
-        $arrdur[$i] = $wep -> fields['maxwt'];
-        $arrlevel[$i] = $wep -> fields['minlev'];
-        $arrcost[$i] = $wep -> fields['cost'];
-        $arrid[$i] = $wep -> fields['id'];
-        $wep -> MoveNext();
-        $i = $i + 1;        
-    }
-    $wep -> Close();
-    $smarty -> assign(array("Name" => $arrname, 
-        "Power" => $arrpower, 
-        "Speed" => $arrspeed, 
-        "Durability" => $arrdur, 
-        "Level" => $arrlevel, 
-        "Cost" => $arrcost, 
-        "Itemid" => $arrid,
-        "Weaponinfo" => WEAPON_INFO,
-        "Iname" => I_NAME,
-        "Idur" => I_DUR,
-        "Iefect" => I_EFECT,
-        "Ispeed" => I_SPEED,
-        "Icost" => I_COST,
-        "Ioption" => I_OPTION,
-        "Abuy" => A_BUY,
-        "Asteal" => A_STEAL,
-        "Ilevel" => I_LEVEL));
-}
-
-if (isset ($_GET['buy'])) 
-{
-    checkvalue($_GET['buy']);
-    $arm = $db -> Execute("SELECT * FROM equipment WHERE id=".$_GET['buy']);
-    if (!$arm -> fields['id']) 
-    {
-        error (NO_ITEM);
-    }
-    if ($arm -> fields['status'] != 'S') 
-    {
-        error (BAD_STATUS);
-    }
-    if ($arm -> fields['cost'] > $player -> credits) 
-    {
-        error (NO_MONEY);
-    }
-    $newcost = ceil($arm -> fields['cost'] * .75);
-    $test = $db -> Execute("SELECT id FROM equipment WHERE name='".$arm -> fields['name']."' AND wt=".$arm -> fields['wt']." AND type='W' AND status='U' AND owner=".$player -> id." AND power=".$arm -> fields['power']." AND zr=".$arm -> fields['zr']." AND szyb=".$arm -> fields['szyb']." AND maxwt=".$arm -> fields['maxwt']." AND poison=".$arm -> fields['poison']." AND cost=".$newcost);
-    if (!$test -> fields['id']) 
-    {
-        $db -> Execute("INSERT INTO equipment (owner, name, power, type, cost, zr, wt, minlev, maxwt, amount, magic, poison, szyb, twohand, repair) VALUES(".$player -> id.",'".$arm -> fields['name']."',".$arm -> fields['power'].",'".$arm -> fields['type']."',".$newcost.",".$arm -> fields['zr'].",".$arm -> fields['wt'].",".$arm -> fields['minlev'].",".$arm -> fields['maxwt'].",1,'".$arm -> fields['magic']."',".$arm -> fields['poison'].",".$arm -> fields['szyb'].",'".$arm -> fields['twohand']."', ".$arm -> fields['repair'].")");
-    } 
-        else 
-    {
-        $db -> Execute("UPDATE equipment SET amount=amount+1 WHERE id=".$test -> fields['id']);
-    }
-    $test -> Close();
-    $smarty -> assign(array("Name" => $arm -> fields['name'], 
-        "Power" => $arm -> fields['power'], 
-        "Cost" => $arm -> fields['cost'],
-        "Youpay" => YOU_PAY,
-        "Andbuy" => AND_BUY,
-        "Withp" => WITH_P,
-        "Topower" => TO_POWER)); 
-    $db -> Execute("UPDATE players SET credits=credits-".$arm -> fields['cost']." WHERE id=".$player -> id);
-    $arm -> Close();
-}
-
 if (isset ($_GET['steal'])) 
 {
     require_once("includes/steal.php");
@@ -130,24 +49,67 @@ if (isset ($_GET['steal']))
     steal($_GET['steal']);
 }
 
+if (isset ($_GET['buy'])) 
+{
+    checkvalue($_GET['buy']);
+    $arm = $db -> Execute("SELECT * FROM equipment WHERE id=".$_GET['buy']);
+    $blnValid = TRUE;
+    if (!$arm -> fields['id']) 
+      {
+	message('error', NO_ITEM);
+	$blnValid = FALSE;
+      }
+    if ($arm -> fields['status'] != 'S') 
+      {
+	message('error',BAD_STATUS);
+	$blnValid = FALSE;
+      }
+    if ($arm -> fields['cost'] > $player -> credits) 
+      {
+        message('error', NO_MONEY);
+	$blnValid = FALSE;
+      }
+    if ($blnValid)
+      {
+	$newcost = ceil($arm -> fields['cost'] * .75);
+	$test = $db -> Execute("SELECT id FROM equipment WHERE name='".$arm -> fields['name']."' AND wt=".$arm -> fields['wt']." AND type='W' AND status='U' AND owner=".$player -> id." AND power=".$arm -> fields['power']." AND zr=".$arm -> fields['zr']." AND szyb=".$arm -> fields['szyb']." AND maxwt=".$arm -> fields['maxwt']." AND poison=".$arm -> fields['poison']." AND cost=".$newcost);
+	if (!$test -> fields['id']) 
+	  {
+	    $db -> Execute("INSERT INTO equipment (owner, name, power, type, cost, zr, wt, minlev, maxwt, amount, magic, poison, szyb, twohand, repair) VALUES(".$player -> id.",'".$arm -> fields['name']."',".$arm -> fields['power'].",'".$arm -> fields['type']."',".$newcost.",".$arm -> fields['zr'].",".$arm -> fields['wt'].",".$arm -> fields['minlev'].",".$arm -> fields['maxwt'].",1,'".$arm -> fields['magic']."',".$arm -> fields['poison'].",".$arm -> fields['szyb'].",'".$arm -> fields['twohand']."', ".$arm -> fields['repair'].")");
+	  } 
+        else 
+	  {
+	    $db -> Execute("UPDATE equipment SET amount=amount+1 WHERE id=".$test -> fields['id']);
+	  }
+	$test -> Close();
+	message('success', YOU_PAY.' <b>'.$arm->fields['cost'].'</b> '.AND_BUY.' <b>'.$arm->fields['name'].' '.WITH_P.' +'.$arm->fields['power'].'</b> '.TO_POWER);
+	$db -> Execute("UPDATE players SET credits=credits-".$arm -> fields['cost']." WHERE id=".$player -> id);
+      }
+    $arm -> Close();
+}
+
+$arrWeapons = $db->GetAll("SELECT * FROM `equipment` WHERE `type`='W' AND `status`='S' AND `owner`=0 ORDER BY `cost` ASC");
+
 if ($player -> clas != 'Złodziej') 
 {
     $player -> crime = 0;
 }
 
 /**
-* Initialization of variable
-*/
-if (!isset($_GET['buy'])) 
-{
-    $_GET['buy'] = '';
-}
-
-/**
 * Assign variables to template and display page
 */
-$smarty -> assign(array("Buy" => $_GET['buy'], 
-    "Crime" => $player -> crime));
+$smarty -> assign(array("Weapons" => $arrWeapons,
+			"Weaponinfo" => WEAPON_INFO,
+			"Iname" => I_NAME,
+			"Idur" => I_DUR,
+			"Iefect" => I_EFECT,
+			"Ispeed" => I_SPEED,
+			"Icost" => I_COST,
+			"Ioption" => I_OPTION,
+			"Abuy" => A_BUY,
+			"Asteal" => A_STEAL,
+			"Ilevel" => I_LEVEL,
+			"Crime" => $player -> crime));
 $smarty -> display('weapons.tpl');
 
 require_once("includes/foot.php");
