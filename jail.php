@@ -8,7 +8,7 @@
  *   @author               : thindil <thindil@vallheru.net>
  *   @author               : eyescream <tduda@users.sourceforge.net>
  *   @version              : 1.6
- *   @since                : 28.06.2012
+ *   @since                : 23.07.2012
  *
  */
 
@@ -75,6 +75,7 @@ if (isset($_GET['escape']))
     $intMax = ceil($prisoner->fields['cost'] / 50);
     $prisoner->Close();
     $roll = rand (1, $intMax);
+    $arrEquip = $player -> equipment();
     if ($roll == 1)
       {
 	$chance = 0;
@@ -88,7 +89,6 @@ if (isset($_GET['escape']))
 	/**
 	 * Add bonus from rings
 	 */
-	$arrEquip = $player -> equipment();
 	$player->curstats($arrEquip);
 	$player->curskills(array('thievery'));
 	

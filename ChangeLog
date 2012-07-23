@@ -1,5 +1,7 @@
 2012-07-23  Bartek thindil Jasicki  <thindil@vallheru.net>
 
+	* BUG,jail.php: 
+	fixed bug with lost tools
 	* BUG,includes/functions.php: 
 	fixed bug with equip arrows
 	* BUG,languages/pl/explore.php, explore.php:
