@@ -62,15 +62,15 @@
     {if !$Fight && !$Fight1}
         {$Monsterinfo}
         <br /><br />
-        <table>
+        <table align="center" width="95%">
         <tr>
-        <td width="100"><b><u>{$Mname}</u></b></td>
-        <td width="50"><b><u>{$Mlevel}</u></b></td>
-        <td width="50"><b><u>{$Mhealth}</u></b></td>
-        <td><b><u>{$Mturn}</u></b></td>
-        <td><b><u>{$Mfast}</u></b></td>
-	<td><b><u>{$Mamount}<br />{$Mmonsters}</u></b></td>
-	<td><b><u>{$Mamount}<br />{$Mtimes}</u></b></td>
+        <th>{$Mname}</th>
+        <th>{$Mlevel}</th>
+        <th>{$Mhealth}</th>
+        <th>{$Mturn}</th>
+        <th>{$Mfast}</th>
+	<th>{$Mamount}<br />{$Mmonsters}</th>
+	<th>{$Mamount}<br />{$Mtimes}</th>
         </tr>
         {section name=monster loop=$Enemyid}
             <tr>

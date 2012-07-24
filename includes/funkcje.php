@@ -7,7 +7,7 @@
  *   @copyright            : (C) 2004,2005,2006,2007,2011,2012 Vallheru Team based on Gamers-Fusion ver 2.5
  *   @author               : thindil <thindil@vallheru.net>
  *   @version              : 1.6
- *   @since                : 18.07.2012
+ *   @since                : 24.07.2012
  *
  */
 
@@ -1479,6 +1479,9 @@ function fightmonster($enemy, $expgain, $goldgain, $times)
             }
         }
     }
+    $gmagia = $gmagia * floor(1 + ($enemy['level'] / 20));
+    $gatak = $gatak * floor(1 + ($enemy['level'] / 20));
+    $intDamount = $intDamount * floor(1 + ($enemy['level'] / 20));
     gainability($player -> id, $player -> user, $intDamount, 0, $gmagia, $player -> mana, $player -> id, '');
     if ($arrEquip[0][0]) 
     {
@@ -1545,7 +1548,7 @@ function fightmonster($enemy, $expgain, $goldgain, $times)
     {
         $db -> Execute("UPDATE settings SET value=".$enemy['hp']." WHERE setting='monsterhp'");
     }
-    $db->Execute("UPDATE `players` SET `hp`=".$player->hp.", `fight`=0, `bless`='', `blessval`=0, `energy`=`energy`-".$_POST['razy']." WHERE `id`=".$player->id);
+    $db->Execute("UPDATE `players` SET `hp`=".$player->hp.", `fight`=0, `bless`='', `blessval`=0, `energy`=`energy`-".($_POST['razy'] * floor(1 + ($enemy['level'] / 20)))." WHERE `id`=".$player->id);
     $player->user = $strName;
 }
 ?>

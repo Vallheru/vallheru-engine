@@ -1,3 +1,8 @@
+2012-07-24  Bartek thindil Jasicki  <thindil@vallheru.net>
+
+	* FEATURE,templates/layout1/battle.tpl, templates/battle.tpl, includes/funkcje.php, includes/turnfight.php, battle.php:
+	changed energy cost of battles, raised gained skills during fights
+
 2012-07-23  Bartek thindil Jasicki  <thindil@vallheru.net>
 
 	* UPDATE,templates/layout1/weapons.tpl, templates/weapons.tpl, languages/pl/weapons.php, weapons.php: 

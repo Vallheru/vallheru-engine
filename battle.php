@@ -7,7 +7,7 @@
  *   @copyright            : (C) 2004,2005,2006,2011,2012 Vallheru Team based on Gamers-Fusion ver 2.5
  *   @author               : thindil <thindil@vallheru.net>
  *   @version              : 1.6
- *   @since                : 05.07.2012
+ *   @since                : 24.07.2012
  *
  */
 
@@ -649,24 +649,26 @@ if (isset($_GET['action']))
 	      {
 		error (NO_HP);
 	      }
-	    if (!isset ($_POST['action']) && $_POST['razy'] > 20)
-	      {
-		error(TOO_MUCH_MONSTERS);
-	      }
-	    if (isset($_POST['razy']) && !isset ($_POST['action']))
-	      {
-		$_SESSION['razy'] = $_POST['razy'];
-	      }
-	    if (!isset($_POST['action']) && $player -> energy < $_POST['razy'])
-	      {
-		error (NO_ENERGY2);
-	      }
-	    require_once("includes/turnfight.php");
-	    $enemy1 = $db -> Execute("SELECT * FROM monsters WHERE id=".$_GET['fight1']);
+	    $enemy1 = $db -> Execute("SELECT * FROM `monsters` WHERE `id`=".$_GET['fight1']);
 	    if (!$enemy1 -> fields['id']) 
 	      {
 		error (NO_MONSTER);
 	      }
+	    if (!isset($_POST['action']))
+	      {
+		if ($_POST['razy'] > 20)
+		  {
+		    error(TOO_MUCH_MONSTERS);
+		  }
+		$intEnergy = floor(1 + ($enemy1->fields['level'] / 20));
+		if ($player->energy < ($_POST['razy'] * $intEnergy))
+		  {
+		    error (NO_ENERGY2);
+		  }
+		$_SESSION['razy'] = $_POST['razy'];
+		$_SESSION['energy'] = $intEnergy;
+	      }
+	    require_once("includes/turnfight.php");
 	    if ($player -> clas == '') 
 	      {
 		error (NO_CLASS3);
@@ -710,7 +712,9 @@ if (isset($_GET['action']))
 		    $expgain = $expgain + ceil($expgain1 / 5 * (sqrt($k) + 4.5));
 		  }
 	      }
-	    $goldgain = ceil((rand($enemy1 -> fields['credits1'],$enemy1 -> fields['credits2']) * $_SESSION['razy']) * $span); 
+	    $goldgain = ceil((rand($enemy1 -> fields['credits1'],$enemy1 -> fields['credits2']) * $_SESSION['razy']) * $span);
+	    $expgain = $expgain * $_SESSION['energy'];
+	    $goldgain = $goldgain * $_SESSION['energy'];
 	    $enemy = array("strength" => $enemy1 -> fields['strength'], 
 			   "agility" => $enemy1 -> fields['agility'], 
 			   "speed" => $enemy1 -> fields['speed'], 
@@ -728,7 +732,7 @@ if (isset($_GET['action']))
 	    if (!isset ($_POST['action'])) 
 	      {
 		unset($_SESSION['miss']);
-		$player -> energy = $player -> energy - $_POST['razy'];
+		$player->energy -= ($_POST['razy'] * $intEnergy);
 		if ($player -> energy < 0) 
 		  {
 		    $player -> energy = 0;
@@ -773,7 +777,12 @@ if (isset($_GET['action']))
 	      {
 		error("Zbyt wiele walk na raz!");
 	      }
-	    $lostenergy = $_POST['razy'] * $_POST['times'];
+	    $enemy1 = $db -> Execute("SELECT * FROM `monsters` WHERE `id`=".$_GET['fight']);
+	    if (!$enemy1 -> fields['id']) 
+	      {
+		error (NO_MONSTER);
+	      }
+	    $lostenergy = ($_POST['razy'] * $_POST['times'] * floor(1 + ($enemy1->fields['level'] / 20)));
 	    if ($player->energy < $lostenergy) 
 	      {
 		error (NO_ENERGY2);
@@ -783,11 +792,6 @@ if (isset($_GET['action']))
 		error (NO_CLASS3);
 	      }
 	    $myhp = $player->hp;
-	    $enemy1 = $db -> Execute("SELECT * FROM `monsters` WHERE `id`=".$_GET['fight']);
-	    if (!$enemy1 -> fields['id']) 
-	      {
-		error (NO_MONSTER);
-	      }
 	    if ($player->fight > 0 && $player->fight != $_GET['fight'])
 	      {
 		error("Już z kimś walczysz!");
@@ -830,6 +834,8 @@ if (isset($_GET['action']))
 		      }
 		  }
 		$goldgain = ceil((rand($enemy1 -> fields['credits1'],$enemy1 -> fields['credits2']) * $_POST['razy']) * $span);
+		$expgain = $expgain * floor(1 + ($enemy1->fields['level'] / 20));
+		$goldgain = $goldgain * floor(1 + ($enemy1->fields['level'] / 20));
 		if ($player->antidote == 'R')
 		  {
 		    $blnRessurect = TRUE;

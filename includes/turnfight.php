@@ -7,7 +7,7 @@
  *   @copyright            : (C) 2004,2005,2006,2007,2011,2012 Vallheru Team based on Gamers-Fusion ver 2.5
  *   @author               : thindil <thindil@vallheru.net>
  *   @version              : 1.6
- *   @since                : 02.07.2012
+ *   @since                : 24.07.2012
  *
  */
  
@@ -1023,6 +1023,10 @@ function attack($eunik,$bdamage)
         }
     }
     $_SESSION[$number] = $ehp;
+    if ($player->page == 'Arena Walk')
+      {
+	$gatak = $gatak * floor(1 + ($enemy['level'] / 20));
+      }
     if ($arrEquip[0][0]) 
     {
         gainability($player -> id, $player -> user, 0, $gatak, 0, $player -> mana, $player -> id, 'weapon');
@@ -1280,6 +1284,10 @@ function castspell ($id,$boost,$eunik)
                 }
             }
         }
+	if ($player->page == 'Arena Walk')
+	  {
+	    $gmagia = $gmagia * floor(1 + ($enemy['level'] / 20));
+	  }
         gainability($player -> id,$player -> user,0,0,$gmagia,$player -> mana,$player -> id,'');
     }
     $_SESSION[$number] = $ehp;
@@ -1473,6 +1481,10 @@ function monsterattack($attacks,$enemy,$myunik,$amount)
             }
         }
     }
+    if ($player->page == 'Arena Walk')
+      {
+	$intDamount = $intDamount * floor(1 + ($enemy['level'] / 20));
+      }
     gainability($player -> id, $player -> user, $intDamount, 0, 0, $player -> mana, $player -> id, '');
     $_SESSION['exhaust'] = $zmeczenie;
 }
