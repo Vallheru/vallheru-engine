@@ -7,7 +7,7 @@
  *   @copyright            : (C) 2004,2005,2006,2011,2012 Vallheru Team based on Gamers-Fusion ver 2.5
  *   @author               : thindil <thindil@vallheru.net>
  *   @version              : 1.6
- *   @since                : 15.06.2012
+ *   @since                : 25.07.2012
  *
  */
 
@@ -39,7 +39,9 @@ $smarty -> compile_check = true;
 
 require_once("languages/".$lang."/logout.php");
 
-
+$smarty -> assign(array("Gamename" => $gamename,
+			"Meta" => '',
+			"Charset" => CHARSET));
 $_GET['did'] = intval($_GET['did']);
 if ($_GET['did'] < 1)
   {
@@ -80,10 +82,7 @@ $stat -> Close();
 $db -> Execute("UPDATE `players` SET `lpv`=`lpv`-180 WHERE `id`=".$_GET['did']);
 session_unset();
 session_destroy();
-$smarty -> assign(array("Gamename" => $gamename,
-			"Meta" => '',
-			"Youare" => YOU_ARE,
+$smarty -> assign(array("Youare" => YOU_ARE,
 			"Ahere" => A_HERE,
-			"Fora" => FOR_A,
-			"Charset" => CHARSET));
+			"Fora" => FOR_A));
 $smarty -> display ('logout.tpl');
