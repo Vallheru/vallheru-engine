@@ -1,5 +1,9 @@
 2012-07-25  Bartek thindil Jasicki  <thindil@vallheru.net>
 
+	* UPDATE,templates/layout1/bows.tpl, templates/bows.tpl, js/bows.tpl, bows.php, languages/pl/bows.php: 
+	redesigned fletcher shop
+	* UPDATE,battle.php: 
+	changed info about lack energy
 	* FEATURE,templates/layout1/battle.tpl, templates/battle.tpl, js/battle.js, battle.php:
 	added info about fight costs
 

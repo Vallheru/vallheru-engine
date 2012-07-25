@@ -1,7 +1,6 @@
 <article class="nine bows">
 	<header>
 		<h1>{$Title}</h1>
-		{if $Buy == 0 && $Step == ""}
 		    <p>
 			{if $Location == "Altara"}
 				{$Shopinfo} {$Archername} {$Shopinfo2}
@@ -10,16 +9,13 @@
 				{$Shopinfo}
 			{/if}
 		    </p>
-		{/if}
 	</header>
 	
-	{if $Buy == 0 && $Step == ""}
 		{if $Arrows > 0}
-			{if $Step == ""}
+		    <script src="js/bows.js"></script>
 				<form method="post" action="bows.php?arrows={$Arrowsid}&amp;step=buy">
-					<input type="submit" value="{$Abuy}" /> <input type="text" name="arrows1" size="5" value="0" /> {$Tarrows} <b>{$Arrowsname}</b> {$Fora} <b>{$Arrowscost}</b> {$Tamount} <input type="text" name="arrows2" size="5" value="0" /> {$Tamount2} <b>{$Arrowsname}</b> {$Fora} <b>{$Arrowscost2}</b> {$Tamount3}
+					<input type="submit" value="{$Abuy}" /> <input type="text" name="arrows1" size="5" value="0" onChange="countPrice(this.value, {$Arrowscost}, 'Q');" /> {$Tarrows} <b>{$Arrowsname}</b> {$Fora} <b><span id="quivercost">0</span></b> {$Tamount} <input type="text" name="arrows2" size="5" value="0" onChange="countPrice(this.value, {$Arrowscost2}, 'A');" /> {$Tamount2} <b>{$Arrowsname}</b> {$Fora} <b><span id="arrowcost">0</span></b> {$Tamount3}
 				</form>
-			{/if}
 		{/if}   
 		<table>
 			<thead>
@@ -52,10 +48,5 @@
 				{/section}
 			</tbody>
 		</table>
-	{/if}
-
-	{if $Buy > 0 || $Step == "buy"}
-		<p>{$Youbuy} <b>{$Cost}</b> {$Goldcoins} {$Tamount4} <b>{$Name}</b> {$With} <b>+{$Power}</b> {$Damage}</p>
-	{/if}
 	
 </article>
