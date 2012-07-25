@@ -6,8 +6,8 @@
  *   @name                 : quest7.php                            
  *   @copyright            : (C) 2004,2005,2006,2011,2012 Vallheru Team based on Gamers-Fusion ver 2.5
  *   @author               : thindil <thindil@vallheru.net>
- *   @version              : 1.5
- *   @since                : 30.04.2012
+ *   @version              : 1.6
+ *   @since                : 25.07.2012
  *
  */
 
@@ -339,7 +339,7 @@ if ((isset($_POST['box6']) && $_POST['box6'] == 1) && $objAction -> fields['acti
 if (isset($_POST['box6']) && $_POST['box6'] == 2)
 {
     $smarty -> assign(array("Link" => "<br /><br />(<a href=\"grid.php?step=quest\">".A_NEXT2."</a>)"));
-    $db -> Execute("UPDATE players SET credits=credits+100000 WHERE id=".$player -> id);
+    $db -> Execute("UPDATE players SET credits=credits+10000 WHERE id=".$player -> id);
     $objQuest -> Show('1.1.1.2.next.3.2.2');
 }
 
