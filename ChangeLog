@@ -1,3 +1,8 @@
+2012-07-25  Bartek thindil Jasicki  <thindil@vallheru.net>
+
+	* FEATURE,templates/layout1/battle.tpl, templates/battle.tpl, js/battle.js, battle.php:
+	added info about fight costs
+
 2012-07-24  Bartek thindil Jasicki  <thindil@vallheru.net>
 
 	* FEATURE,templates/layout1/battle.tpl, templates/battle.tpl, includes/funkcje.php, includes/turnfight.php, battle.php:

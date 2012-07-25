@@ -594,24 +594,12 @@ if (isset($_GET['action']))
 	  }
 	if (!isset($_POST['fight']) && !isset($_POST['fight1']) && !isset($_GET['fight1'])) 
 	  {
-	    $monster = $db -> Execute("SELECT `id`, `name`, `level`, `hp` FROM `monsters` WHERE `location`='".$player -> location."' ORDER BY `level` ASC");
-	    $arrid = array();
-	    $arrname = array();
-	    $arrlevel = array();
-	    $arrhp = array();
-	    while (!$monster -> EOF) 
+	    $arrMonsters = $db->GetAll("SELECT `id`, `name`, `level`, `hp` FROM `monsters` WHERE `location`='".$player -> location."' ORDER BY `level` ASC");
+	    foreach ($arrMonsters as &$arrMonster)
 	      {
-		$arrid[] = $monster -> fields['id'];
-		$arrname[] = $monster -> fields['name'];
-		$arrlevel[] = $monster -> fields['level'];
-		$arrhp[] = $monster -> fields['hp'];
-		$monster -> MoveNext();
+		$arrMonster['energy'] = floor(1 + ($arrMonster['level'] / 20));
 	      }
-	    $monster -> Close();
-	    $smarty -> assign (array("Enemyid" => $arrid, 
-				     "Enemyname" => $arrname, 
-				     "Enemylevel" => $arrlevel, 
-				     "Enemyhp" => $arrhp,
+	    $smarty -> assign (array("Monsters" => $arrMonsters,
 				     "Monsterinfo" => MONSTER_INFO,
 				     "Mname" => M_NAME,
 				     "Mlevel" => M_LEVEL,
@@ -623,6 +611,8 @@ if (isset($_GET['action']))
 				     "Mtimes" => "walk (szybkich)",
 				     "Mamount" => "Ilość",
 				     "Mmonsters" => "potworów",
+				     "Menergy" => "Koszt energii",
+				     "Menergy2" => "Szybka/Turowa",
 				     "Bback2" => B_BACK2));
 	  }
 	/**

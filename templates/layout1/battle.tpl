@@ -60,6 +60,7 @@
 
 {if $Action == "monster"}
     {if !$Fight && !$Fight1}
+        <script src="js/battle.js"></script>
         {$Monsterinfo}
         <br /><br />
         <table class="dark">
@@ -71,29 +72,30 @@
         <th>{$Mfast}</th>
 	<th>{$Mamount}<br />{$Mmonsters}</th>
 	<th>{$Mamount}<br />{$Mtimes}</th>
+	<th>{$Menergy}<br />{$Menergy2}</th>
         </tr>
-        {section name=monster loop=$Enemyid}
+        {foreach $Monsters as $monster}
             <tr>
-            <td>{$Enemyname[monster]}</td>
-            <td>{$Enemylevel[monster]}</td>
-            <td>{$Enemyhp[monster]}</td>
-	    <form method="post" action="battle.php?action=monster">
+            <td>{$monster.name}</td>
+            <td>{$monster.level}</td>
+            <td>{$monster.hp}</td>
+	    <form id="fight{$monster@index}" method="post" action="battle.php?action=monster">
                 <td><input type="submit" name="fight1" value="{$Mturn}" />
-		    <input type="hidden" value="{$Enemyid[monster]}" name="mid" />
+		    <input type="hidden" value="{$monster.id}" name="mid" />
 		    <input type="hidden" name="write" value="Y" />
 		</td>
 		<td><input type="submit" name="fight" value="{$Mfast}" />
-		    <input type="hidden" value="{$Enemyid[monster]}" name="mid" />
 		</td>
 		<td>
-		    <input type="text" size="5" name="razy" value="1" />
+		    <input id="amount" type="text" size="5" name="razy" value="1" onChange="countEnergy({$monster.level}, {$monster@index});" />
 		</td>
 		<td>
-		    <input type="text" size="5" name="times" value="1" />
+		    <input id="times" type="text" size="5" name="times" value="1" onChange="countEnergy({$monster.level}, {$monster@index});" />
 		</td>
  	    </form>
+	    <td id="mon{$monster@index}">{$monster.energy}/{$monster.energy}</td>
             </tr>
-        {/section}
+        {/foreach}
         </table><br />{$Orback2} <a href="battle.php">{$Bback2}</a>.
     {/if}
 {/if}
