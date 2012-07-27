@@ -1,3 +1,8 @@
+2012-07-27  Bartek thindil Jasicki  <thindil@vallheru.net>
+
+	* BUG,js/warehouse.js:
+	fixed typo
+
 2012-07-25  Bartek thindil Jasicki  <thindil@vallheru.net>
 
 	* UPDATE,quests/quest7.php: 

@@ -6,7 +6,7 @@
  *   @copyright            : (C) 2012 Vallheru Team based on Gamers-Fusion ver 2.5
  *   @author               : thindil <thindil@vallheru.net>
  *   @version              : 1.6
- *   @since                : 19.07.2012
+ *   @since                : 27.07.2012
  *
  */
 
@@ -32,7 +32,7 @@ function countPrice(intCost, intAmount, intAamount)
 {
     if (parseInt(intAmount) > 0 && parseInt(intAmount) <= parseInt(intAamount))
     {
-	document.getElementById("acost").innerHTML = "za " + (parseInt(intCost) * parseInt(intAmount)) + " sztuk złota.";
+	document.getElementById("acost").innerHTML = " za " + (parseInt(intCost) * parseInt(intAmount)) + " sztuk złota.";
     }
     else
     {
