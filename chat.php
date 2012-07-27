@@ -8,7 +8,7 @@
  *   @author               : thindil <thindil@vallheru.net>
  *   @author               : eyescream <tduda@users.sourceforge.net>
  *   @version              : 1.6
- *   @since                : 13.07.2012
+ *   @since                : 27.07.2012
  *
  */
 
@@ -83,9 +83,9 @@ if (isset($_SESSION['chattab']))
 if (isset($_GET['close']))
   {
     checkvalue($_SESSION['chattab']);
-    $db->Execute("DELETE FROM `chat` WHERE (`ownerid`=".$player->id." AND `senderid`=".$_SESSION['chattab'].") OR (`ownerid`=".$_SESSION['chattab']." AND `senderid`=".$player->id.")");
-    $_SESSION['chattab'] = 0;
+    $_SESSION['chatclean'][$_SESSION['chattab']] = $ctime;
     unset($_SESSION['chattabs'][$_SESSION['chattab']]);
+    $_SESSION['chattab'] = 0;
   }
 //Send message
 if (isset($_POST['msg']) && $_POST['msg'] != '') 

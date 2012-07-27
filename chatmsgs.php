@@ -7,7 +7,7 @@
  *   @copyright            : (C) 2004,2005,2006,2011,2012 Vallheru Team based on Gamers-Fusion ver 2.5
  *   @author               : thindil <thindil@vallheru.net>
  *   @version              : 1.6
- *   @since                : 13.07.2012
+ *   @since                : 27.07.2012
  *
  */
 
@@ -48,6 +48,10 @@ $smarty = new Smarty;
 $smarty->compile_check = true;
 
 $stat = $db -> Execute("SELECT `id`, `rank`, `lpv`, `settings` FROM `players` WHERE `email`='".$_SESSION['email']."'");
+if (!$stat->fields['id'])
+  {
+    exit;
+  }
 $arrTmp = explode(';', $stat->fields['settings']);
 $arrSettings = array();
 foreach ($arrTmp as $strField)
@@ -87,6 +91,7 @@ if (!isset($_SESSION['chattab']))
   {
     $_SESSION['chattab'] = 0;
     $_SESSION['chattabs'] = array(0);
+    $_SESSION['chatclean'] = array(0);
   }
 
 if ($_SESSION['chattab'] == 0)
@@ -95,7 +100,11 @@ if ($_SESSION['chattab'] == 0)
   }
 else
   {
-    $chat = $db->SelectLimit("SELECT * FROM `chat` WHERE (`ownerid`=".$stat->fields['id']." AND `senderid`=".$_SESSION['chattab'].") OR (`ownerid`=".$_SESSION['chattab']." AND `senderid`=".$stat->fields['id'].") ORDER BY `id` DESC", $_SESSION['chatlength']);
+    if (!isset($_SESSION['chatclean'][$_SESSION['chattab']]))
+      {
+	$_SESSION['chatclean'][$_SESSION['chattab']] = 0;
+      }
+    $chat = $db->SelectLimit("SELECT * FROM `chat` WHERE ((`ownerid`=".$stat->fields['id']." AND `senderid`=".$_SESSION['chattab'].") OR (`ownerid`=".$_SESSION['chattab']." AND `senderid`=".$stat->fields['id'].")) AND `sdate`>'".date("Y-m-d H:i:s", $_SESSION['chatclean'][$_SESSION['chattab']])."' ORDER BY `id` DESC", $_SESSION['chatlength']);
   }
 $pl = $db -> Execute("SELECT `rank`, `id`, `lpv`, `user` FROM `players` WHERE `page`='Chat'");
 $arrtext = array();
@@ -185,6 +194,17 @@ if ($objWhisps->fields['senderid'])
     $arrTabs = array();
     while (!$objWhisps->EOF)
       {
+	if (isset($_SESSION['chatclean'][$objWhisps->fields['senderid']]))
+	  {
+	    $objTest = $db->Execute("SELECT count(`id`) FROM `chat` WHERE ((`ownerid`=".$stat->fields['id']." AND `senderid`=".$objWhisps->fields['senderid'].") OR (`ownerid`=".$objWhisps->fields['senderid']." AND `senderid`=".$stat->fields['id'].")) AND `sdate`>'".date("Y-m-d H:i:s", $_SESSION['chatclean'][$objWhisps->fields['senderid']])."'");
+	    if ($objTest->fields['count(`id`)'] == 0)
+	      {
+		$objWhisps->MoveNext();
+		$objTest->Close();
+		continue;
+	      }
+	    $objTest->Close();
+	  }
 	$arrTabs[$objWhisps->fields['senderid']] = $objWhisps->fields['senderid'];
 	if (!array_key_exists($objWhisps->fields['senderid'], $_SESSION['chattabs']))
 	  {
@@ -209,6 +229,17 @@ if ($objWhisps->fields['ownerid'])
       {
 	if (!array_key_exists($objWhisps->fields['ownerid'], $arrTabs))
 	  {
+	    if (isset($_SESSION['chatclean'][$objWhisps->fields['ownerid']]))
+	      {
+		$objTest = $db->Execute("SELECT count(`id`) FROM `chat` WHERE ((`ownerid`=".$stat->fields['id']." AND `senderid`=".$objWhisps->fields['ownerid'].") OR (`ownerid`=".$objWhisps->fields['ownerid']." AND `senderid`=".$stat->fields['id'].")) AND `sdate`>'".date("Y-m-d H:i:s", $_SESSION['chatclean'][$objWhisps->fields['ownerid']])."'");
+		if ($objTest->fields['count(`id`)'] == 0)
+		  {
+		    $objWhisps->MoveNext();
+		    $objTest->Close();
+		    continue;
+		  }
+		$objTest->Close();
+	      }
 	    $arrTabs[$objWhisps->fields['ownerid']] = $objWhisps->fields['ownerid'];
 	    if (!array_key_exists($objWhisps->fields['ownerid'], $_SESSION['chattabs']))
 	      {

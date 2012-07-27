@@ -1,5 +1,7 @@
 2012-07-27  Bartek thindil Jasicki  <thindil@vallheru.net>
 
+	* FEATURE,templates/layout1/chatmsgs.tpl, templates/chatmsgs.tpl, chat.php, chatmsgs.php: 
+	redesigned chat
 	* UPDATE,languages/pl/core.php: 
 	added info about used mithril
 	* BUG,js/warehouse.js:

@@ -1,15 +1,20 @@
 {if $Text1 != 0}
-    <div>
-        <form method="post" action="chat.php?tabs">
-	    {foreach $Tabs as $key=>$name}
-	        <input type="submit" value="{$name}" name="{$key}">
-	    {/foreach}
-	    {if $Chattab != 0}
-	        [<a href="chat.php?close">{$Aclose}</a>]
-	    {/if}
-	</form>
-    </div>
-    {if $Oldchat == 'N'}
+    {if $Oldchat == 'Y'}
+        <div>
+            <form method="post" action="chat.php?tabs">
+	        {foreach $Tabs as $key=>$name}
+		    {if $Chattab == $key}
+		        <input type="submit" value="{$name}" name="{$key}" style="color:lime;" />
+		    {else}
+	                <input type="submit" value="{$name}" name="{$key}" />
+		    {/if}
+	        {/foreach}
+	        {if $Chattab != 0}
+	            [<a href="chat.php?close">{$Aclose}</a>]
+	        {/if}
+	    </form>
+        </div>
+    {else}
         <div>{if $Text1 > $Chatlength}<a href="chat.php?more">&#171; {$Amore}</a>{/if} {if $Chatlength > 25} <a href="chat.php?less">{$Aless} &#187;</a>{/if}</div>
     {/if}
     {section name=player loop=$Text}
@@ -18,6 +23,21 @@
     {/section}
     {if $Oldchat == 'Y'}
         <div>{if $Text1 > $Chatlength}<a href="chat.php?more">&#171; {$Amore}</a>{/if} {if $Chatlength > 25} <a href="chat.php?less">{$Aless} &#187;</a>{/if}</div>
+    {else}
+        <div><br />
+            <form method="post" action="chat.php?tabs">
+	        {foreach $Tabs as $key=>$name}
+		    {if $Chattab == $key}
+		        <input type="submit" value="{$name}" name="{$key}" style="color:lime;" />
+		    {else}
+	                <input type="submit" value="{$name}" name="{$key}" />
+		    {/if}
+	        {/foreach}
+	        {if $Chattab != 0}
+	            [<a href="chat.php?close">{$Aclose}</a>]
+	        {/if}
+	    </form>
+        </div>
     {/if}
     </table>
 {/if}
