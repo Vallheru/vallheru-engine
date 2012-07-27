@@ -1,5 +1,7 @@
 2012-07-27  Bartek thindil Jasicki  <thindil@vallheru.net>
 
+	* UPDATE,templates/layout1/chat.tpl, templates/chat.tpl, chat.php: 
+	auto show panel when was used
 	* FEATURE,templates/layout1/chatmsgs.tpl, templates/chatmsgs.tpl, chat.php, chatmsgs.php: 
 	redesigned chat
 	* UPDATE,languages/pl/core.php: 

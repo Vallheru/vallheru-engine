@@ -41,7 +41,7 @@
 {if $Rank == "Admin" || $Rank == "Karczmarka" || $Rank == "Staff"}
     <br /><br /><div align="center">
     <label for="mytoggle2" class="toggle">{$Apanel}</label>
-    <input id="mytoggle2" type="checkbox" class="toggle" checked="checked" />
+    <input id="mytoggle2" type="checkbox" class="toggle" {$Checked} />
     <div align="center"><br />
     <form method="post" action="chat.php?step=give">
         <input type="submit" value="{$Agive}" /> {$Chatid2} <input type="text" size="5" name="giveid" />

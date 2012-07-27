@@ -262,6 +262,10 @@ if (isset($_GET['step']))
     {
         error(ERROR);
     }
+    if (in_array($_GET['step'], array('give', 'ban', 'clearc')))
+      {
+	$_SESSION['chatctrl'] = 1;
+      }
     /**
      * Give items to player
      */
@@ -382,6 +386,18 @@ if (isset($_GET['room']))
 
 if (in_array($player->rank, array('Admin', 'Karczmarka', 'Staff')))
   {
+    if (!isset($_SESSION['chatctrl']))
+      {
+	$_SESSION['chatctrl'] = 0;
+      }
+    if ($_SESSION['chatctrl'] == 0)
+      {
+	$strChecked = 'checked="checked"';
+      }
+    else
+      {
+	$strChecked = '';
+      }
     $arritems = array(BEER, HONEY, WINE, MUSTAK, JUICE, CUCUMBERS, TEA, MEAT, MEAT2, MEAT3, MEAT4, FOOD, FOOD2, FOOD3, EGGS, EGG, EGG2, MILK, ICE, CHICKEN, FLAPJACK, COFFE, "orzeszki");
     $smarty -> assign(array("Aban" => A_BAN,
                             "Aunban" => A_UNBAN,
@@ -394,6 +410,7 @@ if (in_array($player->rank, array('Admin', 'Karczmarka', 'Staff')))
                             "Aprune" => A_PRUNE,
                             "Ona" => ON_A,
                             "Tdays" => T_DAYS,
+			    "Checked" => $strChecked,
 			    "Apanel" => "+ Kontrola karczmy"));
   }
 
@@ -420,6 +437,6 @@ $smarty -> assign (array("Arefresh" => A_REFRESH,
 			 "Aunderline" => "Podkreślenie",
 			 "Aemote" => "Emocje/czynność"));
 $smarty -> display ('chat.tpl');
-
 require_once("includes/foot.php");
+
 ?>
