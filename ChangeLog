@@ -1,5 +1,7 @@
 2012-07-27  Bartek thindil Jasicki  <thindil@vallheru.net>
 
+	* UPDATE,languages/pl/core.php: 
+	added info about used mithril
 	* BUG,js/warehouse.js:
 	fixed typo
 

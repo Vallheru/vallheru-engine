@@ -7,8 +7,8 @@
  *   @copyright            : (C) 2004,2005,2006,2007,2012 Vallheru Team based on Gamers-Fusion ver 2.5
  *   @author               : thindil <thindil@vallheru.net>
  *   @author               : eyescream <tduda@users.sourceforge.net>
- *   @version              : 1.5
- *   @since                : 15.05.2012
+ *   @version              : 1.6
+ *   @since                : 27.07.2012
  *
  */
 
@@ -259,7 +259,7 @@ if (isset ($_GET['view']) && $_GET['view'] == 'train')
 
 if (isset ($_GET['view']) && $_GET['view'] == 'explore') 
 {
-    define("EXPLORE_INFO", "Witaj w centrum poszukiwań Chowańców. Proszę, wybierz region, z którego szukasz chowańca. Jest wiele regionów, ale musisz posiadać odpowiednią ilość mithrilu aby móc wejść w jeden z nich. Każde poszukiwanie chowańca kosztuje 0.1 energii. Chowańce przyciąga mithril z wielu powodów...");
+    define("EXPLORE_INFO", "Witaj w centrum poszukiwań Chowańców. Proszę, wybierz region, z którego szukasz chowańca. Jest wiele regionów, ale musisz posiadać odpowiednią ilość mithrilu aby móc wejść w jeden z nich. Mithril wymagany do wejścia w wybrany region, jest zabierany za każdego znalezionego chowańca. Każde poszukiwanie chowańca kosztuje 0.1 energii. Chowańce przyciąga mithril z wielu powodów...");
     define("MITH2", "mith");
     define("A_SEARCH", "Szukaj");
     define("E_AMOUNT", "razy");
