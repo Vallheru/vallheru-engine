@@ -9,7 +9,7 @@
  *   @author               : mori <ziniquel@users.sourceforge.net>
  *   @author               : eyescream <tduda@users.sourceforge.net>
  *   @version              : 1.6
- *   @since                : 02.07.2012
+ *   @since                : 30.07.2012
  *
  */
 
@@ -257,7 +257,7 @@ if (isset ($_GET['view']) && $_GET['view'] == 'view')
                                 "Ajoin" => A_JOIN));
         if ($tribe -> fields['www']) 
         {
-            $smarty -> assign ("WWW", CLAN_PAGE.": <a href=\"http://".$tribe -> fields['www']."\">".$tribe -> fields['www']."</a><br />");
+            $smarty -> assign ("WWW", CLAN_PAGE.': <a href="http://'.$tribe -> fields['www'].'" target="_blank">'.$tribe -> fields['www'].'</a><br />');
         }
 
         if ($player -> clas == 'Złodziej' && $player -> tribe != $tribe -> fields['id']) 

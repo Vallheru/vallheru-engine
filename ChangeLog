@@ -1,5 +1,7 @@
 2012-07-30  Bartek thindil Jasicki  <thindil@vallheru.net>
 
+	* UPDATE,tribes.php: 
+	open tribe webpage in new tab
 	* BUG,bank.php:
 	fixed typo
 
