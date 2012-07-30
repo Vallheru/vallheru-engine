@@ -7,8 +7,8 @@
  *   @copyright            : (C) 2006,2007,2012 Vallheru Team based on Gamers-Fusion ver 2.5
  *   @author               : thindil <thindil@vallheru.net>
  *   @author               : eyescream <tduda@users.sourceforge.net>
- *   @version              : 1.5
- *   @since                : 12.04.2012
+ *   @version              : 1.6
+ *   @since                : 30.07.2012
  *
  */
 
@@ -91,7 +91,7 @@ define("M_AMOUNT", "</b> sztuk: ");
 
 if (!isset($_GET['action'])) 
 {
-    define("WARE_INFO", "Witaj w astralnym skarbcu klanu. Tutaj są składowane mapy, plany oraz przepisy astralne należące do klanu niezbędne do stowrzenia astralnej machiny. Każdy członek klanu może ofiarować klanowi jakiś komponent astralny ale tylko przywódca lub osoba upoważniona przez niego może darować dany komponent członkom swojego klanu. Co chcesz zrobić?");
+    define("WARE_INFO", "Witaj w astralnym skarbcu klanu. Tutaj są składowane mapy, plany oraz przepisy astralne należące do klanu niezbędne do stworzenia astralnej machiny. Każdy członek klanu może ofiarować klanowi jakiś komponent astralny ale tylko przywódca lub osoba upoważniona przez niego może darować dany komponent członkom swojego klanu. Co chcesz zrobić?");
     define("A_ADD", "Dać przedmiot do klanu");
     define("A_SHOW", "Zobaczyć listę przedmiotów w astralnym skarbcu klanu (mapy, plany, przepisy)");
     define("A_SHOW2", "Zobaczyć listę przedmiotów w astralnym skarbcu klanu (komponenty, konstrukcje, mikstury)");
