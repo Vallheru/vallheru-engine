@@ -1,5 +1,7 @@
 2012-07-30  Bartek thindil Jasicki  <thindil@vallheru.net>
 
+	* UPDATE,templates/layout1/stats.tpl, templates/stats.tpl: 
+	move ask for remove newbie protection to top
 	* UPDATE,tribes.php: 
 	open tribe webpage in new tab
 	* BUG,bank.php:

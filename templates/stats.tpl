@@ -1,5 +1,10 @@
 {$Statsinfo}<br /><br />
 {$Avatar}
+{if $Action == "newbie"}
+    {$Newbieinfo}<br />
+    <a href="stats.php?action=newbie&amp;disable">{$Ayes}</a><br />
+    <a href="stats.php">{$Ano}</a><br />
+{/if}
 <table width="100%">
 <tr><td width="50%" valign="top">
     <center><b><u>{$Tstats}</u></b></center><br />
@@ -67,8 +72,3 @@
         </table>
 </td></tr>
 </table>
-{if $Action == "newbie"}
-    {$Newbieinfo}<br />
-    <a href="stats.php?action=newbie&amp;disable">{$Ayes}</a><br />
-    <a href="stats.php">{$Ano}</a><br />
-{/if}
