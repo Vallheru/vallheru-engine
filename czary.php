@@ -7,7 +7,7 @@
  *   @copyright            : (C) 2004,2005,2006,2011,2012 Vallheru Team based on Gamers-Fusion ver 2.5
  *   @author               : thindil <thindil@vallheru.net>
  *   @version              : 1.6
- *   @since                : 18.07.2012
+ *   @since                : 30.07.2012
  *
  */
 
@@ -63,24 +63,24 @@ if (isset($_GET['deakt']))
 if (isset($_GET['cast'])) 
 {
     checkvalue($_GET['cast']);
-    $czary = $db -> Execute("SELECT * FROM czary WHERE id=".$_GET['cast']);
+    $arrspell = $db -> Execute("SELECT * FROM czary WHERE id=".$_GET['cast']);
     $blnValid = TRUE;
-    if (!$czary -> fields['id']) 
+    if (!$arrspell -> fields['id']) 
       {
 	message('error', NO_SPELL);
 	$blnValid = FALSE;
       }
-    if ($player -> id != $czary -> fields['gracz']) 
+    if ($player -> id != $arrspell -> fields['gracz']) 
       {
         message('error', NOT_YOUR);
 	$blnValid = FALSE;
       }
-    if ($player -> level < $czary -> fields['poziom']) 
+    if ($player -> level < $arrspell -> fields['poziom']) 
       {
         message('error', TO_LOW_L);
 	$blnValid = FALSE;
       }
-    if ($player -> mana < $czary -> fields['poziom']) 
+    if ($player -> mana < $arrspell -> fields['poziom']) 
       {
         message('error', NO_MANA);
 	$blnValid = FALSE;
@@ -152,7 +152,6 @@ if (isset($_GET['cast']))
             message('error', IS_MAGIC);
 	    $blnValid = FALSE;
 	  }
-        $arrspell = $db -> Execute("SELECT `nazwa`, `poziom`, `element` FROM `czary` WHERE `nazwa`='".$_POST['spell']."' AND `gracz`=".$player -> id);
         if ($player -> energy < $arrspell -> fields['poziom']) 
 	  {
 	    message('error', NO_ENERGY);
@@ -344,7 +343,6 @@ if (isset($_GET['cast']))
 		  }
 	      }
 	    $db -> Execute("UPDATE `players` SET `pm`=`pm`-".$arrspell -> fields['poziom'].", `energy`=`energy`-".$arrspell -> fields['poziom']." WHERE id=".$player -> id);
-	    $arrspell -> Close();
 	    if ($blnValid2)
 	      {
 		$amount = $arritem -> fields['amount'] - 1;
@@ -361,8 +359,8 @@ if (isset($_GET['cast']))
 	    $arritem -> Close();	    
 	  }
     }
-    $smarty -> assign(array("Spellid" => $czary -> fields['id'], 
-        "Spellname" => $czary -> fields['nazwa'], 
+    $smarty -> assign(array("Spellid" => $arrspell -> fields['id'], 
+        "Spellname" => $arrspell -> fields['nazwa'], 
         "Itemname" => $arriname, 
         "Itemamount" => $arriamount, 
         "Itemid" => $arriid,
@@ -370,7 +368,7 @@ if (isset($_GET['cast']))
         "Spell23" => SPELL,
         "Ona" => ON_A,
         "Iamount" => I_AMOUNT));
-    $czary -> Close();
+    $arrspell -> Close();
 }
 else
   {

@@ -1,5 +1,7 @@
 2012-07-30  Bartek thindil Jasicki  <thindil@vallheru.net>
 
+	* BUG,czary.php: 
+	fixed enchanting items
 	* BUG,alchemik.php: 
 	fixed cost of energy
 	* BUG,languages/pl/tribeastral.php: 
