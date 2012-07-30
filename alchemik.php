@@ -7,7 +7,7 @@
  *   @copyright            : (C) 2004,2005,2006,2007,2011,2012 Vallheru Team based on Gamers-Fusion ver 2.5
  *   @author               : thindil <thindil@vallheru.net>
  *   @version              : 1.6
- *   @since                : 29.06.2012
+ *   @since                : 30.07.2012
  *
  */
 
@@ -211,7 +211,14 @@ else
 	      }
 	    if ($intAmount > 0)
 	      {
-		$intEnergy = floor($player->energy / ($kuznia -> fields['level'] * 0.2));
+		if ($kuznia->fields['level'] > 1)
+		  {
+		    $intEnergy = floor($player->energy / ($kuznia -> fields['level'] * 0.2));
+		  }
+		else
+		  {
+		    $intEnergy = floor($player->energy);
+		  }
 		if ($intEnergy < $intAmount)
 		  {
 		    $intAmount = $intEnergy;
@@ -244,10 +251,13 @@ else
 	      {
 		error (NO_HERBS);
 	      }
-	    $fltEnergy = $_POST['razy'];
 	    if ($kuznia -> fields['level'] > 1)
 	      {
-		$fltEnergy = $fltEnergy + ($kuznia -> fields['level'] * 0.2);
+		$fltEnergy = $_POST['razy'] * ($kuznia -> fields['level'] * 0.2);
+	      }
+	    else
+	      {
+		$fltEnergy = $_POST['razy'];
 	      }
 	    if ($player -> energy < $fltEnergy) 
 	      {

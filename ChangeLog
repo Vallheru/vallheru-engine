@@ -1,5 +1,7 @@
 2012-07-30  Bartek thindil Jasicki  <thindil@vallheru.net>
 
+	* BUG,alchemik.php: 
+	fixed cost of energy
 	* BUG,languages/pl/tribeastral.php: 
 	fixed typo
 	* BUG,languages/pl/tribeware.php: 
