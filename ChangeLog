@@ -1,5 +1,7 @@
 2012-07-30  Bartek thindil Jasicki  <thindil@vallheru.net>
 
+	* FEATURE,templates/layout1/alchemist.tpl, templates/alchemist.tpl, alchemik.php: 
+	added max amount of maked potions
 	* UPDATE,templates/layout1/stats.tpl, templates/stats.tpl: 
 	move ask for remove newbie protection to top
 	* UPDATE,tribes.php: 

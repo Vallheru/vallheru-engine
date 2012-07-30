@@ -189,9 +189,10 @@ else
 		error (DEAD_PLAYER);
 	      }
 	    checkvalue($_GET['dalej']);
-	    $kuznia = $db -> Execute("SELECT `name`, `illani`, `illanias`, `nutari`, `dynallca` FROM `alchemy_mill` WHERE `id`=".$_GET['dalej']);
+	    $kuznia = $db -> Execute("SELECT `name`, `illani`, `illanias`, `nutari`, `dynallca`, `level` FROM `alchemy_mill` WHERE `id`=".$_GET['dalej']);
 	    $arrHerbs = array('illani', 'illanias', 'nutari', 'dynallca');
 	    $strHerb = 'Posiadasz ';
+	    $intAmount = 0;
 	    foreach ($arrHerbs as $strHerbname)
 	      {
 		if ($kuznia->fields[$strHerbname] > 0)
@@ -201,6 +202,19 @@ else
 			$strHerb = $strHerb.', ';
 		      }
 		    $strHerb = $strHerb.'<b>'.$herb->fields[$strHerbname]."</b> sztuk ".ucfirst($strHerbname);
+		    $intAmount2 = floor($herb->fields[$strHerbname] / $kuznia->fields[$strHerbname]);
+		    if ($intAmount2 < $intAmount || $intAmount == 0)
+		      {
+			$intAmount = $intAmount2;
+		      }
+		  }
+	      }
+	    if ($intAmount > 0)
+	      {
+		$intEnergy = floor($player->energy / ($kuznia -> fields['level'] * 0.2));
+		if ($intEnergy < $intAmount)
+		  {
+		    $intAmount = $intEnergy;
 		  }
 	      }
 	    $strHerb = $strHerb.'.';
@@ -209,6 +223,7 @@ else
 				      "Pstart" => P_START,
 				      "Pamount" => P_AMOUNT,
 				      "Amake" => A_MAKE,
+				      "Tamount" => $intAmount,
 				      "Therb" => $strHerb));
 	    $kuznia -> Close();
 	  }
@@ -232,7 +247,7 @@ else
 	    $fltEnergy = $_POST['razy'];
 	    if ($kuznia -> fields['level'] > 1)
 	      {
-		$intEnergy = $fltEnergy + ($kuznia -> fields['level'] * 0.2);
+		$fltEnergy = $fltEnergy + ($kuznia -> fields['level'] * 0.2);
 	      }
 	    if ($player -> energy < $fltEnergy) 
 	      {
