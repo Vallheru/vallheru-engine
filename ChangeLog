@@ -1,3 +1,8 @@
+2012-07-30  Bartek thindil Jasicki  <thindil@vallheru.net>
+
+	* BUG,bank.php:
+	fixed typo
+
 2012-07-27  Bartek thindil Jasicki  <thindil@vallheru.net>
 
 	* UPDATE,templates/layout1/chat.tpl, templates/chat.tpl, chat.php: 
