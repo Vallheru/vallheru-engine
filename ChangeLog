@@ -1,5 +1,7 @@
 2012-07-30  Bartek thindil Jasicki  <thindil@vallheru.net>
 
+	* BUG,languages/pl/tribeware.php: 
+	fixed typo
 	* FEATURE,templates/layout1/alchemist.tpl, templates/alchemist.tpl, alchemik.php: 
 	added max amount of maked potions
 	* UPDATE,templates/layout1/stats.tpl, templates/stats.tpl: 

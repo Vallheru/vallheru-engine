@@ -7,8 +7,8 @@
  *   @copyright            : (C) 2004,2005,2006,2012 Vallheru Team based on Gamers-Fusion ver 2.5
  *   @author               : thindil <thindil@vallheru.net>
  *   @author               : eyescream <tduda@users.sourceforge.net>
- *   @version              : 1.5
- *   @since                : 12.04.2012
+ *   @version              : 1.6
+ *   @since                : 30.07.2012
  *
  */
 
@@ -46,7 +46,7 @@ define("A_FORUMS", "Forum klanu");
 define("A_ASTRAL", "Astralny skarbiec");
 
 define("WARE_INFO", "Witaj w magazynie klanu. Tutaj są składowane mikstury należące do klanu. Każdy członek klanu może ofiarować klanowi jakąś miksturę, ale tylko przywódca lub osoba upoważniona przez niego może darować daną miksturę członkom swojego klanu. Co chcesz zrobić?");
-define("A_ADD", "Dać przedmiot do klanu");
+define("A_ADD", "Dać miksturę do klanu");
 define("A_SHOW", "Zobaczyć listę mikstur w magazynie klanu");
 
 if (isset($_GET['step']) && $_GET['step'] == 'zobacz') 
