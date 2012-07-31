@@ -1,5 +1,7 @@
 2012-07-31  Bartek thindil Jasicki  <thindil@vallheru.net>
 
+	* UPDATE,languages/pl/alchemik.php: 
+	updated alchemy info
 	* BUG,equip.php:
 	fixed bug with selling plans
 

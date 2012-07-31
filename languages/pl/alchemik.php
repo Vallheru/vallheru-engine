@@ -5,9 +5,9 @@
  *
  *   @name                 : alchemik.php                            
  *   @copyright            : (C) 2004,2005,2006,2011 Vallheru Team based on Gamers-Fusion ver 2.5
- *   @author               : thindil <thindil@tuxfamily.org>
- *   @version              : 1.4
- *   @since                : 03.10.2011
+ *   @author               : thindil <thindil@vallheru.net>
+ *   @version              : 1.6
+ *   @since                : 31.07.2012
  *
  */
 
@@ -63,7 +63,7 @@ if (isset ($_GET['alchemik']) && $_GET['alchemik'] == 'pracownia')
 {
     if (!isset($_GET['rob']))
     {
-        define("ALCHEMIST_INFO", "Tutaj możesz wykonywać mikstury co do których masz przepisy. Aby wykonać miksturę, musisz posiadać również odpowiednią ilość ziół. Każda próba kosztuje ciebie 1 punkt energii. Nawet za nieudaną próbę dostajesz 0,01 do umiejętności.<br /> Oto lista mikstur, które możesz wykonywać:");
+        define("ALCHEMIST_INFO", "Tutaj możesz wykonywać mikstury co do których masz przepisy. Aby wykonać miksturę, musisz posiadać również odpowiednią ilość ziół. Każda próba kosztuje Cię odpowiednią do poziomu trudności wykonania mikstury ilość energii. Nawet za nieudaną próbę dostajesz 0,01 do umiejętności.<br /> Oto lista mikstur, które możesz wykonywać:");
         define("R_NAME", "Nazwa");
         define("R_LEVEL", "Poziom");
         define("R_ILLANI", "Illani");
