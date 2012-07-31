@@ -39,3 +39,4 @@ CREATE TABLE IF NOT EXISTS `battlelogs` (
 ) ENGINE=MyISAM DEFAULT CHARSET=utf8 AUTO_INCREMENT=1 ;
 ALTER TABLE  `notatnik` ADD  `title` VARCHAR( 255 ) NOT NULL DEFAULT  'Bez tytułu';
 INSERT INTO `settings` (`setting`, `value`) VALUES ('gold', '0');
+ALTER TABLE  `players` ADD  `craftskill` VARCHAR( 30 ) NOT NULL;

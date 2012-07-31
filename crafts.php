@@ -7,7 +7,7 @@
  *   @copyright            : (C) 2011,2012 Vallheru Team based on Gamers-Fusion ver 2.5
  *   @author               : thindil <thindil@vallheru.net>
  *   @version              : 1.6
- *   @since                : 02.07.2012
+ *   @since                : 31.07.2012
  *
  */
 
@@ -61,8 +61,17 @@ if (isset($_GET['step']))
 	  {
 	    error("Nie możesz wykonywać zadań, ponieważ jesteś martwy.");
 	  }
-	$arrSkills = array($player->metallurgy, $player->lumberjack, $player->mining, $player->breeding, $player->jeweller, $player->herbalist, $player->alchemy, $player->fletcher, $player->smith);
-	$intIndex = array_search(max($arrSkills), $arrSkills);
+	$objCraftskill = $db->Execute("SELECT `craftskill` FROM `players` WHERE `id`=".$player->id);
+	if ($objCraftskill->fields['craftskill'] == '')
+	  {
+	    $arrSkills = array($player->metallurgy, $player->lumberjack, $player->mining, $player->breeding, $player->jeweller, $player->herbalist, $player->alchemy, $player->fletcher, $player->smith);
+	    $intIndex = array_search(max($arrSkills), $arrSkills);
+	  }
+	else
+	  {
+	    $arrSkills = array('metallurgy', 'lumberjack', 'mining', 'breeding', 'jeweller', 'herbalist', 'alchemy', 'fletcher', 'smith');
+	    $intIndex = array_search($objCraftskill->fields['craftskill'], $arrSkills);
+	  }
 	$intRand = 3;
 	while ($intRand == 3 || $intRand == 4)
 	  {
@@ -270,7 +279,7 @@ if (isset($_GET['step']))
     /**
      * Finish task
      */
-    else
+    elseif ($_GET['step'] != 'first' && $_GET['step'] != 'register')
       {
 	if (!isset($_SESSION['craft']))
 	  {
@@ -749,6 +758,48 @@ if (isset($_GET['step']))
 	$smarty->assign("Result", $strInfo2);
 	unset($_SESSION['craft'], $_SESSION['craftindex'], $_SESSION['craftenergy']);
       }
+    elseif ($_GET['step'] == 'register')
+      {
+	$arrSkills = array("metallurgy" => "Hutnika", "lumberjack" => "Drwala", "mining" => "Górnika", "breeding" => "Hodowcę", "jeweller" => "Jubilera", "herbalist" => "Zielarza", "alchemy" => "Alchemika", "fletcher" => "Stolarza", "smith" => "Kowala");
+	$arrSkills2 = array("metallurgy" => "Hutnik", "lumberjack" => "Drwal", "mining" => "Górnik", "breeding" => "Hodowca", "jeweller" => "Jubiler", "herbalist" => "Zielarz", "alchemy" => "Alchemik", "fletcher" => "Stolarz", "smith" => "Kowal");
+	$objCraftskill = $db->Execute("SELECT `craftskill` FROM `players` WHERE `id`=".$player->id);
+	if ($objCraftskill->fields['craftskill'] != "")
+	  {
+	    $strReginfo = 'Obecnie jesteś zarejestrowany jako '.$arrSkills2[$objCraftskill->fields['craftskill']].'.';
+	  }
+	else
+	  {
+	    $strReginfo = '';
+	  }
+	$intCost = $player->level * 1000;
+	$smarty->assign(array("Oskills" => $arrSkills,
+			      "Reginfo" => "<i>- W porządku.</i> - odpowiada hobbit. - <i>Koszt zarejestrowania się u nas w wybranym zawodzie to ".$intCost." sztuk złota. Jeżeli zmienisz później zdanie, zawsze możesz zarejestrować się ponownie w innym zawodzie. To jak, chcesz się zarejestrować?</i>",
+			      "Reginfo2" => $strReginfo,
+			      "Aregister2" => "Zarejestruj",
+			      "Tregister" => 'mnie jako',
+			      "Ano" => "Nie, dziękuję"));
+	if (isset($_POST['skill']))
+	  {
+	    $blnValid = TRUE;
+	    if (!in_array($_POST['skill'], array_keys($arrSkills)))
+	      {
+		message('error', 'Zapomnij o tym.');
+		$blnValid = FALSE;
+	      }
+	    $intCost = $player->level * 1000;
+	    if ($player->credits < $intCost)
+	      {
+		message('error', 'Nie masz tylu sztuk złota przy sobie.');
+		$blnValid = FALSE;
+	      }
+	    if ($blnValid)
+	      {
+		$db->Execute("UPDATE `players` SET `craftskill`='".$_POST['skill']."', `credits`=`credits`-".$intCost." WHERE `id`=".$player->id);
+		$player->credits -= $intCost;
+		message('success', 'Zarejestrowałeś się u Cześnika jako '.$arrSkills2[$_POST['skill']].'.');
+	      }
+	  }
+      }
   }
 else
   {
@@ -760,7 +811,8 @@ $objJob->Close();
 * Assign variables to template and display page
 */
 $smarty->assign(array("Craftinfo" => 'Znajdujesz się w niewielkiej, drewnianej faktorii. Wokół kręcą się różne istoty: elfy, krasnoludowie, ludzie. Część z nich biega w tę i z powrotem z pakunkami. Tuż przy drzwiach widzisz stolik z napisem "RECEPCJA". Przy stoliku siedzi znudzony hobbit. Kiedy podchodzisz bliżej, podnosi na ciebie wzrok i bezbarwnym głosem pyta:<br /><i>- W czym mogę pomóc?</i>',
-		      "Ajob" => 'Szukam jakiejś pracy do wykonania.',
+		      "Ajob" => 'Szukam jakiejś pracy do wykonania',
+		      "Aregister" => 'Chcę się zarejestrować',
 		      "Step" => $_GET['step']));
 $smarty->display('crafts.tpl');
 

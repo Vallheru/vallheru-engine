@@ -1,5 +1,7 @@
 2012-07-31  Bartek thindil Jasicki  <thindil@vallheru.net>
 
+	* FEATURE,templates/layout1/crafts.tpl, templates/crafts.tpl, crafts.php, install/db/update.sql: 
+	added option to register for crafts missions
 	* UPDATE,languages/pl/alchemik.php: 
 	updated alchemy info
 	* BUG,equip.php:
