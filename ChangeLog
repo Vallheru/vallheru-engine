@@ -1,3 +1,8 @@
+2012-07-31  Bartek thindil Jasicki  <thindil@vallheru.net>
+
+	* BUG,equip.php:
+	fixed bug with selling plans
+
 2012-07-30  Bartek thindil Jasicki  <thindil@vallheru.net>
 
 	* BUG,czary.php: 

@@ -7,7 +7,7 @@
  *   @copyright            : (C) 2004,2005,2006,2007,2011,2012 Vallheru Team based on Gamers-Fusion ver 2.5
  *   @author               : thindil <thindil@vallheru.net>
  *   @version              : 1.6
- *   @since                : 09.07.2012
+ *   @since                : 31.07.2012
  *
  */
 
@@ -1058,7 +1058,7 @@ if (isset($_GET['sellchecked']))
  */
 if (isset($_GET['sprzedaj'])) 
   {
-    $arrSell = array('A', 'W', 'H', 'L', 'R', 'C', 'T', 'S', 'I', 'O', 'Q', 'E');
+    $arrSell = array('A', 'W', 'H', 'L', 'R', 'C', 'T', 'S', 'I', 'O', 'Q', 'E', 'P');
     if (!in_array($_GET['sprzedaj'], $arrSell))
       {
 	error(ERROR);
