@@ -1,5 +1,7 @@
 2012-08-01  Bartek thindil Jasicki  <thindil@vallheru.net>
 
+	* BUG,farm.php: 
+	fixed few bugs
 	* UPDATE,farm.php, install/db/update.sql: 
 	small changes in farms
 	* FEATURE,install/db/update.sql, js/farm.js, farm.php: 
