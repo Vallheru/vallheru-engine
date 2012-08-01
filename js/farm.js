@@ -5,8 +5,8 @@
  *   @name                 : farm.js                          
  *   @copyright            : (C) 2012 Vallheru Team based on Gamers-Fusion ver 2.5
  *   @author               : thindil <thindil@vallheru.net>
- *   @version              : 1.5
- *   @since                : 27.02.2012
+ *   @version              : 1.6
+ *   @since                : 01.08.2012
  *
  */
 
@@ -41,10 +41,30 @@ function checkcost(intAmount, strType, intHave)
 	    if (intSum > 100)
 	    {
 		intValue = 100 - parseInt(intAmount);
+		document.getElementById(strType + "amount").value = intValue;
 	    }
+	    var intNewamount = parseInt(intAmount);
+	    var price = 0;
 	    for (i = 0; i < intValue; i++)
 	    {
-		intCost = intCost + (20 * (parseInt(intAmount) + i));
+		if (intNewamount < 11)
+		{
+		    price = 2;
+		}
+		if (intNewamount > 10 && intNewamount < 21)
+		{
+		    price = 5;
+		}
+		if (intNewamount > 20 && intNewamount < 31)
+		{
+		    price = 10;
+		}
+		if (intNewamount > 30)
+		{
+		    price = 15;
+		}
+		intCost = intCost + (price * intNewamount);
+		intNewamount = intNewamount + 1;
 	    }
 	}
 	else
@@ -53,6 +73,7 @@ function checkcost(intAmount, strType, intHave)
 	    if (intSum > intAmount)
 	    {
 		intValue = parseInt(intAmount) - parseInt(intHave);
+		document.getElementById(strType + "amount").value = intValue;
 	    }
 	    intCost = intValue * 1000;
 	}

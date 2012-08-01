@@ -7,7 +7,7 @@
  *   @copyright            : (C) 2004,2005,2006,2011,2012 Vallheru Team based on Gamers-Fusion ver 2.5
  *   @author               : thindil <thindil@vallheru.net>
  *   @version              : 1.6
- *   @since                : 29.06.2012
+ *   @since                : 01.08.2012
  *
  */
 
@@ -178,7 +178,7 @@ if (isset($_GET['step']) && $_GET['step'] == 'house')
  */
 if (isset($_GET['step']) && $_GET['step'] == 'plantation')
 {
-    $objPlantation = $db -> Execute("SELECT * FROM `farms` WHERE `owner`=".$player -> id);
+    $objPlantation = $db -> Execute("SELECT * FROM `farms` WHERE `owner`=".$player -> id." AND `location`='".$player->location."'");
     if ($objPlantation->fields['lands'])
       {
 	$intLandsamount = $objPlantation -> fields['lands'];
@@ -209,9 +209,27 @@ if (isset($_GET['step']) && $_GET['step'] == 'plantation')
 	    if (isset($_POST['lamount']))
 	      {
 		checkvalue($_POST['lamount']);
+		$intNewamount = $objPlantation->fields['lands'];
 		for ($i = 0; $i < $_POST['lamount']; $i++)
 		  {
-		    $intMithcost += 20 * ($objPlantation -> fields['lands'] + $i);
+		    if ($intNewamount < 11)
+		      {
+			$intPrice = 2;
+		      }
+		    elseif ($intNewamount > 10 && $intNewamount < 21)
+		      {
+			$intPrice = 5;
+		      }
+		    elseif ($intNewamount > 20 && $intNewamount < 31)
+		      {
+			$intPrice = 10;
+		      }
+		    elseif ($intNewamount > 30)
+		      {
+			$intPrice = 15;
+		      }
+		    $intMithcost += $intPrice * $intNewamount;
+		    $intNewamount ++;
 		  }
 	      }
 	  }
@@ -248,8 +266,8 @@ if (isset($_GET['step']) && $_GET['step'] == 'plantation')
 		  {
 		    if (!$objPlantation -> fields['lands'])
 		      {
-			$db -> Execute("INSERT INTO `farms` (`owner`, `lands`) VALUES(".$player -> id.", 1)");
-			$objPlantation = $db -> Execute("SELECT * FROM `farms` WHERE `owner`=".$player -> id);
+			$db -> Execute("INSERT INTO `farms` (`owner`, `lands`, `location`) VALUES(".$player -> id.", 1, '".$player->location."')");
+			$objPlantation = $db -> Execute("SELECT * FROM `farms` WHERE `owner`=".$player -> id." AND `location`='".$player->location."'");
 			$intLandsamount = $objPlantation -> fields['lands'];
 			$strBuyitem = ' nieco ziemi pod uprawę. Kosztowało to 20 sztuk mithrilu.';
 		      }
@@ -303,7 +321,7 @@ if (isset($_GET['step']) && $_GET['step'] == 'plantation')
         {
             error(NO_FARM);
         }
-	$objUsedlands = $db -> Execute("SELECT SUM(`amount`) FROM `farm` WHERE `owner`=".$player -> id);
+	$objUsedlands = $db -> Execute("SELECT SUM(`amount`) FROM `farm` WHERE `owner`=".$objPlantation->fields['id']);
 	if (!$objUsedlands->fields['SUM(`amount`)'])
 	  {
 	    $intUsedlands = 0;
@@ -420,7 +438,7 @@ if (isset($_GET['step']) && $_GET['step'] == 'plantation')
 		$intExp = $intExp * 2;
 	      }
             $db -> Execute("UPDATE herbs SET ".$arrSeeds[$intKey]."=".$arrSeeds[$intKey]."-".$_POST['amount']." WHERE gracz=".$player -> id);
-            $db -> Execute("INSERT INTO farm (owner, amount, name, age) VALUES(".$player -> id.", ".$_POST['amount'].", '".$arrHerbsname[$intKey]."', 0)");
+            $db -> Execute("INSERT INTO `farm` (`owner`, `amount`, `name`, `age`) VALUES(".$objPlantation->fields['id'].", ".$_POST['amount'].", '".$arrHerbsname[$intKey]."', 0)");
 	    checkexp($player->exp, $intExp, $player->level, $player->race, $player->user, $player->id, 0, 0, $player->id, 'herbalist', $fltAbility);
             $db -> Execute("UPDATE `players` SET `energy`=`energy`-".$intEnergy." WHERE `id`=".$player -> id);
             message("success", YOU_SAW.$_POST['amount'].T_LANDS2.$arrHerbsname[$intKey].YOU_GAIN.$fltAbility.T_ABILITY." oraz ".$intExp." PD.");
@@ -436,7 +454,7 @@ if (isset($_GET['step']) && $_GET['step'] == 'plantation')
         {
             error(NO_FARM);
         }
-        $objHerbs = $db -> Execute("SELECT id, amount, name, age FROM farm WHERE owner=".$player -> id);
+        $objHerbs = $db -> Execute("SELECT `id`, `amount`, `name`, `age` FROM `farm` WHERE `owner`=".$objPlantation->fields['id']);
         if (!$objHerbs -> fields['id'])
         {
             error(NO_HERBS);
@@ -450,7 +468,7 @@ if (isset($_GET['step']) && $_GET['step'] == 'plantation')
         {
 	    checkvalue($_GET['id']);
             $objHerb = $db -> Execute("SELECT `owner`, `amount`, `name`, `age` FROM `farm` WHERE `id`=".$_GET['id']);
-            if ($objHerb -> fields['owner'] != $player -> id)
+            if ($objHerb -> fields['owner'] != $objPlantation->fields['id'])
             {
                 error(NOT_YOUR);
             }
@@ -553,7 +571,7 @@ if (isset($_GET['step']) && $_GET['step'] == 'plantation')
       }
     if ($objPlantation -> fields['id'])
       {
-	$objUsedlands = $db -> Execute("SELECT SUM(`amount`) FROM `farm` WHERE `owner`=".$player -> id);
+	$objUsedlands = $db -> Execute("SELECT SUM(`amount`) FROM `farm` WHERE `owner`=".$objPlantation->fields['id']);
 	if (!$objUsedlands->fields['SUM(`amount`)'])
 	  {
 	    $intUsedlands = 0;
@@ -564,7 +582,7 @@ if (isset($_GET['step']) && $_GET['step'] == 'plantation')
 	  }
 	$objUsedlands -> Close();
 	$intFreelands = $objPlantation->fields['lands'] - $intUsedlands;
-	$arrHerbs = $db->GetAll("SELECT * FROM `farm` WHERE `owner`=".$player->id);
+	$arrHerbs = $db->GetAll("SELECT * FROM `farm` WHERE `owner`=".$objPlantation->fields['id']);
 	foreach ($arrHerbs as &$arrHerb)
 	  {
 	    $arrHerb['stage'] = 'test';
