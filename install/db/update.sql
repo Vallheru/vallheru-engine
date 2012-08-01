@@ -41,3 +41,6 @@ ALTER TABLE  `notatnik` ADD  `title` VARCHAR( 255 ) NOT NULL DEFAULT  'Bez tytu≈
 INSERT INTO `settings` (`setting`, `value`) VALUES ('gold', '0');
 ALTER TABLE  `players` ADD  `craftskill` VARCHAR( 30 ) NOT NULL;
 ALTER TABLE  `farms` ADD  `location` VARCHAR( 30 ) NOT NULL DEFAULT  'Altara';
+ALTER TABLE  `farm` CHANGE  `owner`  `farmid` INT( 11 ) NOT NULL DEFAULT  '0';
+ALTER TABLE  `farm` DROP INDEX  `owner` , ADD INDEX  `farmid` (  `farmid` );
+ALTER TABLE  `farm` ADD  `owner` INT( 11 ) NOT NULL;

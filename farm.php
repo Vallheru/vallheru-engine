@@ -438,7 +438,7 @@ if (isset($_GET['step']) && $_GET['step'] == 'plantation')
 		$intExp = $intExp * 2;
 	      }
             $db -> Execute("UPDATE herbs SET ".$arrSeeds[$intKey]."=".$arrSeeds[$intKey]."-".$_POST['amount']." WHERE gracz=".$player -> id);
-            $db -> Execute("INSERT INTO `farm` (`owner`, `amount`, `name`, `age`) VALUES(".$objPlantation->fields['id'].", ".$_POST['amount'].", '".$arrHerbsname[$intKey]."', 0)");
+            $db -> Execute("INSERT INTO `farm` (`farmid`, `owner`, `amount`, `name`, `age`) VALUES(".$objPlantation->fields['id'].", ".$player->id.",".$_POST['amount'].", '".$arrHerbsname[$intKey]."', 0)");
 	    checkexp($player->exp, $intExp, $player->level, $player->race, $player->user, $player->id, 0, 0, $player->id, 'herbalist', $fltAbility);
             $db -> Execute("UPDATE `players` SET `energy`=`energy`-".$intEnergy." WHERE `id`=".$player -> id);
             message("success", YOU_SAW.$_POST['amount'].T_LANDS2.$arrHerbsname[$intKey].YOU_GAIN.$fltAbility.T_ABILITY." oraz ".$intExp." PD.");
