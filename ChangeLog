@@ -1,3 +1,8 @@
+2012-08-01  Bartek thindil Jasicki  <thindil@vallheru.net>
+
+	* BUG,templates/layout1/bank.tpl, templates/bank.tpl, bank.php:
+	fixed giving astral things to players from list
+
 2012-07-31  Bartek thindil Jasicki  <thindil@vallheru.net>
 
 	* FEATURE,templates/layout1/crafts.tpl, templates/crafts.tpl, crafts.php, install/db/update.sql: 

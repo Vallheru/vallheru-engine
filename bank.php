@@ -998,7 +998,7 @@ if (isset($_GET['action']))
 	    if (!in_array($_GET['step'], array('piece', 'component', 'plan', 'all')))
 	      {
 		mergeplans('V', $player -> id);
-		$smarty -> assign("Message", YOU_MERGE);
+		message('success', YOU_MERGE);
 	      }
 
 	    if (in_array($_GET['step'], array('piece', 'component', 'plan')))
@@ -1097,7 +1097,7 @@ if (isset($_GET['action']))
 		$db -> Execute("INSERT INTO `log` (`owner`, `log`, `czas`, `type`) VALUES(".$_POST['pid'].", '".$strMessage2."','".$newdate."', 'N')");
 		$db -> Execute("INSERT INTO `log` (`owner`, `log`, `czas`, `type`) VALUES(".$player -> id.", '".$strMessage."','".$newdate."', 'N')");
 		$db -> Execute("INSERT INTO `logs` (`owner`, `log`, `czas`) VALUES(".$player -> id.", '".$strMessage."','".$newdate."')");
-		$smarty -> assign("Message", $strMessage);
+		message("success", $strMessage);
 	      }
 
 	    /**
@@ -1105,7 +1105,15 @@ if (isset($_GET['action']))
 	     */
 	    if ($_GET['step'] == 'all')
 	      {
-		checkvalue($_POST['pid']);
+		if ($_POST['player'] == 0)
+		  {
+		    checkvalue($_POST['pid']);
+		  }
+		else
+		  {
+		    checkvalue($_POST['player']);
+		    $_POST['pid'] = $_POST['player'];
+		  }
 		$objDonated = $db -> Execute("SELECT `id` FROM `players` WHERE `id`=".$_POST['pid']);
 		if (empty($objDonated -> fields['id'])) 
 		  {
@@ -1138,7 +1146,7 @@ if (isset($_GET['action']))
 		$db -> Execute("INSERT INTO `log` (`owner`, `log`, `czas`, `type`) VALUES(".$_POST['pid'].", '".$strMessage2."','".$newdate."', 'N')");
 		$db -> Execute("INSERT INTO `log` (`owner`, `log`, `czas`, `type`) VALUES(".$player -> id.", '".$strMessage."','".$newdate."', 'N')");
 		$db -> Execute("INSERT INTO `logs` (`owner`, `log`, `czas`) VALUES(".$player -> id.", '".$strMessage."','".$newdate."')");
-		$smarty -> assign("Message", $strMessage);
+		message("success", $strMessage);
 	      }
 
 	    /**
@@ -1183,7 +1191,7 @@ if (isset($_GET['action']))
 		$db -> Execute("INSERT INTO `log` (`owner`, `log`, `czas`, `type`) VALUES(".$_POST['pid'].", '".$strMessage2."','".$newdate."', 'N')");
 		$db -> Execute("INSERT INTO `log` (`owner`, `log`, `czas`, `type`) VALUES(".$player -> id.", '".$strMessage."','".$newdate."', 'N')");
 		$db -> Execute("INSERT INTO `logs` (`owner`, `log`, `czas`, `type`) VALUES(".$player -> id.", '".$strMessage."','".$newdate."', 'N')");
-		$smarty -> assign("Message", $strMessage);
+		message('success', $strMessage);
 	      }
 	  }
       }

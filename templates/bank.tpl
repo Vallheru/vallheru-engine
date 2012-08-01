@@ -4,10 +4,8 @@
 <a href="bank.php?action=astral&amp;type=c">{$Aastral2}</a><br />
 {$Safebox}
 <br />
-
+<script src="js/bank.js"></script>
 {if $Action != "astral"}
-
-    <script src="js/bank.js"></script>
 
     <form method="post" action="bank.php?action=withdraw">
     {$Iwant} <input type="submit" value="{$Awithdraw}" /> <input type="text" value="{$Bank}" name="with" size="10" /> {$Goldcoins}
@@ -77,11 +75,9 @@
 {/if}
 
 {if $Action == 'astral'}
-    <br />{$Message}<br />
-
     {if $Type == "p"}
         <form method="post" action="bank.php?action=astral&amp;type=p&amp;step=piece">
-            {$Tsend} {html_options name=player options=$Contacts} <input type="text" name="pid" size="5" /> {$Tpiece} <select name="name">
+            {$Tsend} <select name="player" onClick="showIdField(this.value, 8);">{html_options options=$Contacts}</select> <input type="text" id="pid8" name="pid" size="5" /> {$Tpiece} <select name="name">
                 {section name=giveastral loop=$Tcomponents}
                     <option value="{$smarty.section.giveastral.index}">{$Tcomponents[giveastral]}</option>
                 {/section}
@@ -96,11 +92,11 @@
                 {section name=giveastral2 loop=$Tcomponents}
                     <option value="{$smarty.section.giveastral2.index}">{$Tcomponents[giveastral2]}</option>
                 {/section}
-            </select> {$Taplayer} {html_options name=player options=$Contacts} <input type="text" name="pid" size="5" />
+            </select> {$Taplayer} <select name="player" onClick="showIdField(this.value, 9);">{html_options options=$Contacts}</select> <input type="text" id="pid9" name="pid" size="5" />
 	</form><br />
 
 	<form method="post" action="bank.php?action=astral&amp;type=p&amp;step=all">
-	    <input type="submit" value="{$Asend}" /> {$Tall} {$Taplayer} {html_options name=player options=$Contacts} <input type="text" name="pid" size="5" />
+	    <input type="submit" value="{$Asend}" /> {$Tall} {$Taplayer} <select name="player" onClick="showIdField(this.value, 10);">{html_options options=$Contacts}</select> <input type="text" id="pid10" name="pid" size="5" />
 	</form><br />
 
         <table align="center">
@@ -191,7 +187,7 @@
 
     {if $Type == "c"}
         <form method="post" action="bank.php?action=astral&amp;type=c&amp;step=component">
-            {$Tsend} {html_options name=player options=$Contacts} <input type="text" name="pid" size="5" /> {$Tcomponent3} <select name="name">
+            {$Tsend} <select name="player" onClick="showIdField(this.value, 11);">{html_options options=$Contacts}</select> <input type="text" id="pid11" name="pid" size="5" /> {$Tcomponent3} <select name="name">
                 {section name=giveastral2 loop=$Tcomponents2}
                     <option value="{$smarty.section.giveastral2.index}">{$Tcomponents2[giveastral2]}</option>
                 {/section}
