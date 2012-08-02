@@ -1,3 +1,8 @@
+2012-08-02  Bartek thindil Jasicki  <thindil@vallheru.net>
+
+	* UPDATE,install/db/update.sql, class/player_class.php, chatmsgs.php:
+	save closed tabs times
+
 2012-08-01  Bartek thindil Jasicki  <thindil@vallheru.net>
 
 	* BUG,farm.php: 

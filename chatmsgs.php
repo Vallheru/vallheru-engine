@@ -7,7 +7,7 @@
  *   @copyright            : (C) 2004,2005,2006,2011,2012 Vallheru Team based on Gamers-Fusion ver 2.5
  *   @author               : thindil <thindil@vallheru.net>
  *   @version              : 1.6
- *   @since                : 27.07.2012
+ *   @since                : 02.08.2012
  *
  */
 
@@ -47,7 +47,7 @@ require_once('libs/Smarty.class.php');
 $smarty = new Smarty;
 $smarty->compile_check = true;
 
-$stat = $db -> Execute("SELECT `id`, `rank`, `lpv`, `settings` FROM `players` WHERE `email`='".$_SESSION['email']."'");
+$stat = $db -> Execute("SELECT `id`, `rank`, `lpv`, `settings`, `chattimes` FROM `players` WHERE `email`='".$_SESSION['email']."'");
 if (!$stat->fields['id'])
   {
     exit;
@@ -91,7 +91,22 @@ if (!isset($_SESSION['chattab']))
   {
     $_SESSION['chattab'] = 0;
     $_SESSION['chattabs'] = array(0);
-    $_SESSION['chatclean'] = array(0);
+    if ($stat->fields['chattimes'] == '')
+      {
+	$_SESSION['chatclean'] = array(0);
+      }
+    else
+      {
+	$arrTimes = explode(',', $stat->fields['chattimes']);
+	for ($i = 0; $i < count($arrTimes); $i += 2)
+	  {
+	    if ($i + 1 >= count($arrTimes))
+	      {
+		break;
+	      }
+	    $_SESSION['chatclean'][$arrTimes[$i]] = $arrTimes[$i + 1];
+	  }
+      }
   }
 
 if ($_SESSION['chattab'] == 0)

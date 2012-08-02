@@ -7,7 +7,7 @@
  *   @copyright            : (C) 2004,2005,2006,2007,2011,2012 Vallheru Team based on Gamers-Fusion ver 2.5
  *   @author               : thindil <thindil@vallheru.net>
  *   @version              : 1.6
- *   @since                : 09.07.2012
+ *   @since                : 02.08.2012
  *
  */
 
@@ -104,6 +104,7 @@ class Player
     var $oldstats;
     var $settings;
     var $changed;
+    var $chattimes;
 /**
 * Class constructor - get data from database and write it to variables
 */
@@ -203,6 +204,7 @@ class Player
 	  }
 	$objRevent->Close();
 	$this->room = $stats->fields['room'];
+	$this->chattimes = $stats->fields['chattimes'];
 	$this->oldstats = array($this->agility, $this->strength, $this->inteli, $this->wisdom, $this->speed, $this->cond);
 	$this->settings = $this->toarray($stats->fields['settings']);
     }
@@ -476,6 +478,23 @@ class Player
       global $db;
       global $ctime;
 
-      $db->Execute("UPDATE `players` SET `settings`='".$this->tostring($this->settings)."', `ip`='".$this->ip."' WHERE `id`=".$this->id) or die("here");
+      if (isset($_SESSION['chatclean']))
+	{
+	  $strChattimes = '';
+	  foreach ($_SESSION['chatclean'] as $key => $value)
+	    {
+	      if ($key == '' || $value == '')
+		{
+		  continue;
+		}
+	      $strChattimes .= $key.','.$value.',';
+	    }
+	}
+      else
+	{
+	  $strChattimes = $this->chattimes;
+	}
+
+      $db->Execute("UPDATE `players` SET `settings`='".$this->tostring($this->settings)."', `ip`='".$this->ip."', `chattimes`='".$strChattimes."' WHERE `id`=".$this->id) or die("here");
     }
 }
