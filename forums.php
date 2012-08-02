@@ -8,7 +8,7 @@
  *   @author               : thindil <thindil@vallheru.net>
  *   @author               : mori <ziniquel@users.sourceforge.net>
  *   @version              : 1.6
- *   @since                : 20.07.2012
+ *   @since                : 02.08.2012
  *
  */
 
@@ -384,6 +384,28 @@ if (isset($_GET['topics']))
 			    "Asort" => "Sortuj",
 			    "Tsort" => "według",
 			    "Onames" => $arrOptions,
+			    "Abold" => "Pogrubienie",
+			    "Aitalic" => "Kursywa",
+			    "Aunderline" => "Podkreślenie",
+			    "Aemote" => "Emocje/Czynność",
+			    "Ocolors" => array("red" => "czerwony",
+					       "green" => "zielony",
+					       "white" => "biały",
+					       "yellow" => "żółty",
+					       "blue" => "niebieski",
+					       "aqua" => "cyjan",
+					       "fuchsia" => "fuksja",
+					       "grey" => "szary",
+					       "lime" => "limonka",
+					       "maroon" => "wiśniowy",
+					       "navy" => "granatowy",
+					       "olive" => "oliwkowy",
+					       "purple" => "purpurowy",
+					       "silver" => "srebrny",
+					       "teal" => "morski"),
+			    "Acolor" => "Kolor",
+			    "Acenter" => "Wycentrowanie",
+			    "Aquote" => "Cytat",
 			    "Thelp" => "Linki automatycznie zamieniane są na klikalne. Możesz używać następujących znaczników BBCode:<br /><ul><li>[b]<b>Pogrubienie</b>[/b]</li><li>[i]<i>Kursywa</i>[/i]</li><li>[u]<u>Podkreślenie</u>[/u]</li><li>[color (angielska nazwa koloru (red, yellow, itp) lub kod HTML (#FFFF00, itp)]pokolorowanie tekstu[/color]</li><li>[center]wycentrowanie tekstu[/center]</li><li>[quote]cytat[/quote]</ul>",
 			    "Selected" => $_SESSION['fsort']));
 }
@@ -818,6 +840,28 @@ if (isset($_GET['topic']))
 			    "Fpage" => "Idź  do strony:",
 			    "Tprevtopic" => "<< Poprzedni temat",
 			    "Tnexttopic" => "Następny temat >>",
+			    "Abold" => "Pogrubienie",
+			    "Aitalic" => "Kursywa",
+			    "Aunderline" => "Podkreślenie",
+			    "Aemote" => "Emocje/Czynność",
+			    "Ocolors" => array("red" => "czerwony",
+					       "green" => "zielony",
+					       "white" => "biały",
+					       "yellow" => "żółty",
+					       "blue" => "niebieski",
+					       "aqua" => "cyjan",
+					       "fuchsia" => "fuksja",
+					       "grey" => "szary",
+					       "lime" => "limonka",
+					       "maroon" => "wiśniowy",
+					       "navy" => "granatowy",
+					       "olive" => "oliwkowy",
+					       "purple" => "purpurowy",
+					       "silver" => "srebrny",
+					       "teal" => "morski"),
+			    "Acolor" => "Kolor",
+			    "Acenter" => "Wycentrowanie",
+			    "Aquote" => "Cytat",
 			    "Thelp" => "Linki automatycznie zamieniane są na klikalne. Możesz używać następujących znaczników BBCode:<br /><ul><li>[b]<b>Pogrubienie</b>[/b]</li><li>[i]<i>Kursywa</i>[/i]</li><li>[u]<u>Podkreślenie</u>[/u]</li><li>[color (angielska nazwa koloru (red, yellow, itp) lub kod HTML (#FFFF00, itp)]pokolorowanie tekstu[/color]</li><li>[center]wycentrowanie tekstu[/center]</li><li>[quote]cytat[/quote]</ul>",
 			    "Write" => WRITE));
     $objPrevtopic->Close();

@@ -1,3 +1,5 @@
+<script src="js/editor.js"></script>
+
 {if $View == "categories"}
     {if $Funread > 0}
         <a href="forums.php?view=newposts">{$Anew}</a><br /><br />
@@ -76,16 +78,24 @@
     	{/for}
 	<br /><br />
     {/if}
-    <form method="post" action="forums.php?action=addtopic">
+    <div align="center">
+    <form method="post" action="forums.php?action=addtopic" name="newtopic">
         {$Addtopic}:<br />
-        <input type="text" name="title2" value="Temat" size="40" /><br />
+        <input type="text" name="title2" value="Temat" size="40" /><br /><br />
+	<input id="bold" type="button" value="{$Abold}" onClick="formatText(this.id, 'newtopic', 'body')" />
+	<input id="italic" type="button" value="{$Aitalic}" onClick="formatText(this.id, 'newtopic', 'body')" />
+	<input id="underline" type="button" value="{$Aunderline}" onClick="formatText(this.id, 'newtopic', 'body')" />
+	<input id="emote" type="button" value="{$Aemote}" onClick="formatText(this.id, 'newtopic', 'body')" />
+	<input id="center" type="button" value="{$Acenter}" onClick="formatText(this.id, 'newtopic', 'body')" />
+	<input id="quote" type="button" value="{$Aquote}" onClick="formatText(this.id, 'newtopic', 'body')" />
+	<input id="color" type="button" value="{$Acolor}" onClick="formatText(this.id, 'newtopic', 'body')" /> {html_options name=colors options=$Ocolors}<br />
         <textarea name="body" cols="40" rows="10">{$Ttext}</textarea><br />
         <input type="hidden" name="catid" value="{$Category}" />
         {if $Rank == "Admin" || $Rank == "Staff"}
             <input type="checkbox" name="sticky" />{$Tsticky}<br />
         {/if}
         <input type="submit" value="{$Addtopic}" />
-    </form><br />{$Thelp}<br /><br />
+    </form></div><br />{$Thelp}<br /><br />
     <a href="forums.php?view=categories">{$Aback}</a> {$Tocategories}.
 {/if}
 
@@ -142,11 +152,19 @@
 	</div>
     {/if}
     {if $Closed == 'N'}
-        <form method="post" action="forums.php?reply={$Id}">
+        <div align="center">
+        <form method="post" action="forums.php?reply={$Id}" name="newreply">
     	{$Areply}:<br />
+	<input id="bold" type="button" value="{$Abold}" onClick="formatText(this.id, 'newreply', 'rep')" />
+	<input id="italic" type="button" value="{$Aitalic}" onClick="formatText(this.id, 'newreply', 'rep')" />
+	<input id="underline" type="button" value="{$Aunderline}" onClick="formatText(this.id, 'newreply', 'rep')" />
+	<input id="emote" type="button" value="{$Aemote}" onClick="formatText(this.id, 'newreply', 'rep')" />
+	<input id="center" type="button" value="{$Acenter}" onClick="formatText(this.id, 'newreply', 'rep')" />
+	<input id="quote" type="button" value="{$Aquote}" onClick="formatText(this.id, 'newreply', 'rep')" />
+	<input id="color" type="button" value="{$Acolor}" onClick="formatText(this.id, 'newreply', 'rep')" /> {html_options name=colors options=$Ocolors}<br />
     	<textarea name="rep" cols="40" rows="10">{$Rtext2}</textarea><br />
     	<input type="submit" value="{$Areply}" />
-    	</form><br />{$Thelp}
+    	</form></div><br />{$Thelp}
     {/if}
 {/if}
 
