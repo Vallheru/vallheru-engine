@@ -8,7 +8,7 @@
  *   @author               : thindil <thindil@vallheru.net>
  *   @author               : mori <ziniquel@users.sourceforge.net>
  *   @version              : 1.6
- *   @since                : 25.05.2012
+ *   @since                : 03.08.2012
  *
  */
 
@@ -189,36 +189,6 @@ if (isset($_GET['step']) && $_GET['step'] == 'comments')
     $smarty -> assign("Amount", '');
     
     require_once('includes/comments.php');
-    /**
-    * Display comments
-    */
-    if (!isset($_GET['action']))
-      {
-	if (!isset($_GET['page']))
-	  {
-	    $intPage = -1;
-	  }
-	else
-	  {
-	    $intPage = $_GET['page'];
-	  }
-        $amount = displaycomments($_GET['text'], 'updates', 'upd_comments', 'updateid');
-        $smarty -> assign(array("Tauthor" => $arrAuthor,
-				"Taid" => $arrAuthorid,
-            "Tbody" => $arrBody,
-            "Amount" => $amount,
-            "Cid" => $arrId,
-            "Tdate" => $arrDate,
-            "Nocomments" => NO_COMMENTS,
-            "Addcomment" => ADD_COMMENT,
-            "Adelete" => A_DELETE,
-            "Aadd" => A_ADD,
-            "Aback" => A_BACK,
-	    "Tpages" => $intPages,
-	    "Tpage" => $intPage,
-	    "Fpage" => "Idź do strony:",
-            "Writed" => WRITED));
-    }
 
     /**
     * Add comment
@@ -235,6 +205,58 @@ if (isset($_GET['step']) && $_GET['step'] == 'comments')
     {
         deletecomments('upd_comments');
     }
+
+    /**
+    * Display comments
+    */
+    if (!isset($_GET['page']))
+      {
+	$intPage = -1;
+      }
+    else
+      {
+	$intPage = $_GET['page'];
+      }
+    $amount = displaycomments($_GET['text'], 'updates', 'upd_comments', 'updateid');
+    $smarty -> assign(array("Tauthor" => $arrAuthor,
+			    "Taid" => $arrAuthorid,
+			    "Tbody" => $arrBody,
+			    "Amount" => $amount,
+			    "Cid" => $arrId,
+			    "Tdate" => $arrDate,
+			    "Nocomments" => NO_COMMENTS,
+			    "Addcomment" => ADD_COMMENT,
+			    "Adelete" => A_DELETE,
+			    "Aadd" => A_ADD,
+			    "Aback" => A_BACK,
+			    "Tpages" => $intPages,
+			    "Tpage" => $intPage,
+			    "Fpage" => "Idź do strony:",
+			    "Faction" => "updates.php?step=comments&amp;text=".$_GET['text'],
+			    "Abold" => "Pogrubienie",
+			    "Aitalic" => "Kursywa",
+			    "Aunderline" => "Podkreślenie",
+			    "Aemote" => "Emocje/Czynność",
+			    "Ocolors" => array("red" => "czerwony",
+					       "green" => "zielony",
+					       "white" => "biały",
+					       "yellow" => "żółty",
+					       "blue" => "niebieski",
+					       "aqua" => "cyjan",
+					       "fuchsia" => "fuksja",
+					       "grey" => "szary",
+					       "lime" => "limonka",
+					       "maroon" => "wiśniowy",
+					       "navy" => "granatowy",
+					       "olive" => "oliwkowy",
+					       "purple" => "purpurowy",
+					       "silver" => "srebrny",
+					       "teal" => "morski"),
+			    "Acolor" => "Kolor",
+			    "Acenter" => "Wycentrowanie",
+			    "Aquote" => "Cytat",
+			    "Writed" => WRITED));
+
 }
 
 /**

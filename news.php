@@ -7,7 +7,7 @@
  *   @copyright            : (C) 2004,2005,2006,2011,2012 Vallheru Team based on Gamers-Fusion ver 2.5
  *   @author               : thindil <thindil@vallheru.net>
  *   @version              : 1.6
- *   @since                : 03.07.2012
+ *   @since                : 03.08.2012
  *
  */
 
@@ -122,35 +122,6 @@ if (isset($_GET['step']) && $_GET['step'] == 'comments')
     $smarty -> assign("Amount", '');
     
     require_once('includes/comments.php');
-    /**
-    * Display comments
-    */
-    if (!isset($_GET['action']))
-    {
-        if (!isset($_GET['page']))
-	  {
-	    $intPage = -1;
-	  }
-	else
-	  {
-	    $intPage = $_GET['page'];
-	  }
-        $intAmount = displaycomments($_GET['text'], 'news', 'news_comments', 'newsid');
-        $smarty -> assign(array("Tauthor" => $arrAuthor,
-				"Taid" => $arrAuthorid,
-            "Tbody" => $arrBody,
-            "Amount" => $intAmount,
-            "Cid" => $arrId,
-            "Tdate" => $arrDate,
-            "Nocomments" => NO_COMMENTS,
-            "Addcomment" => ADD_COMMENT,
-            "Adelete" => A_DELETE,
-            "Aadd" => A_ADD,
-            "Tpages" => $intPages,
-	    "Tpage" => $intPage,
-	    "Fpage" => "Idź do strony:",
-            "Writed" => WRITED));
-    }
 
     /**
     * Add comment
@@ -167,6 +138,56 @@ if (isset($_GET['step']) && $_GET['step'] == 'comments')
     {
         deletecomments('news_comments');
     }
+
+    /**
+    * Display comments
+    */
+    if (!isset($_GET['page']))
+      {
+	$intPage = -1;
+      }
+    else
+      {
+	$intPage = $_GET['page'];
+      }
+    $intAmount = displaycomments($_GET['text'], 'news', 'news_comments', 'newsid');
+    $smarty -> assign(array("Tauthor" => $arrAuthor,
+			    "Taid" => $arrAuthorid,
+			    "Tbody" => $arrBody,
+			    "Amount" => $intAmount,
+			    "Cid" => $arrId,
+			    "Tdate" => $arrDate,
+			    "Nocomments" => NO_COMMENTS,
+			    "Addcomment" => ADD_COMMENT,
+			    "Adelete" => A_DELETE,
+			    "Aadd" => A_ADD,
+			    "Tpages" => $intPages,
+			    "Tpage" => $intPage,
+			    "Fpage" => "Idź do strony:",
+			    "Faction" => "news.php?step=comments&amp;text=".$_GET['text'],
+			    "Abold" => "Pogrubienie",
+			    "Aitalic" => "Kursywa",
+			    "Aunderline" => "Podkreślenie",
+			    "Aemote" => "Emocje/Czynność",
+			    "Ocolors" => array("red" => "czerwony",
+					       "green" => "zielony",
+					       "white" => "biały",
+					       "yellow" => "żółty",
+					       "blue" => "niebieski",
+					       "aqua" => "cyjan",
+					       "fuchsia" => "fuksja",
+					       "grey" => "szary",
+					       "lime" => "limonka",
+					       "maroon" => "wiśniowy",
+					       "navy" => "granatowy",
+					       "olive" => "oliwkowy",
+					       "purple" => "purpurowy",
+					       "silver" => "srebrny",
+					       "teal" => "morski"),
+			    "Acolor" => "Kolor",
+			    "Acenter" => "Wycentrowanie",
+			    "Aquote" => "Cytat",
+			    "Writed" => WRITED));
 }
 
 /**

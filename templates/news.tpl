@@ -40,10 +40,8 @@
     	{/for}
     {/if}
     <br /><br /><center>
-    <form method="post" action="news.php?step=comments&amp;text={$Text}">
-        {$Addcomment}:<textarea name="body" rows="20" cols="50"></textarea><br />
-        <input type="submit" value="{$Aadd}" />
-    </form></center>
+        {include file="comments.tpl"}
+    </center>
     <br /><br />
     <a href="news.php">{$Aback}</a>
 {/if}

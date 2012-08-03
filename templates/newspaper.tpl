@@ -51,10 +51,8 @@
     	{/for}
     {/if}
     <br /><br /><center>
-    <form method="post" action="newspaper.php?comments={$Comments}">
-        {$Addcomment}:<textarea name="body" rows="20" cols="50"></textarea><br />
-        <input type="submit" value="{$Aadd}" />
-    </form></center><br /><br />
+        {include file="comments.tpl"}
+    </center><br /><br />
 {/if}
 
 {if $Step == "new" || $Read != "" || $Step3 == 'S'}

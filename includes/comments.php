@@ -6,8 +6,8 @@
  *   @name                 : comments.php                            
  *   @copyright            : (C) 2006,2007,2011 Vallheru Team based on Gamers-Fusion ver 2.5
  *   @author               : thindil <thindil@vallheru.net>
- *   @version              : 1.5
- *   @since                : 12.12.2011
+ *   @version              : 1.6
+ *   @since                : 03.08.2012
  *
  */
 
@@ -95,17 +95,20 @@ function addcomments($intItemid, $strCommentstable, $strCommentsid)
     global $arrTags;
 
     if (empty($_POST['body']))
-    {
-        error(EMPTY_FIELDS);
-    }
-    checkvalue($intItemid);
-    require_once('includes/bbcode.php');
-    $strAuthor = $arrTags[$player->tribe][0]." ".$player->user." ".$arrTags[$player->tribe][1]." ID: ".$player -> id;
-    $_POST['body'] = bbcodetohtml($_POST['body']);
-    $strBody = $db -> qstr($_POST['body'], get_magic_quotes_gpc());
-    $strDate = $db -> DBDate($data);
-    $db -> Execute("INSERT INTO `".$strCommentstable."` (`".$strCommentsid."`, `author`, `body`, `time`) VALUES(".$intItemid.", '".$strAuthor."', ".$strBody.", ".$strDate.")");
-    error(C_ADDED);
+      {
+	message('error', EMPTY_FIELDS);
+      }
+    else
+      {
+	checkvalue($intItemid);
+	require_once('includes/bbcode.php');
+	$strAuthor = $arrTags[$player->tribe][0]." ".$player->user." ".$arrTags[$player->tribe][1]." ID: ".$player -> id;
+	$_POST['body'] = bbcodetohtml($_POST['body']);
+	$strBody = $db -> qstr($_POST['body'], get_magic_quotes_gpc());
+	$strDate = $db -> DBDate($data);
+	$db -> Execute("INSERT INTO `".$strCommentstable."` (`".$strCommentsid."`, `author`, `body`, `time`) VALUES(".$intItemid.", '".$strAuthor."', ".$strBody.", ".$strDate.")");
+	message('success', C_ADDED);
+      }
 }
 
 /**
@@ -122,6 +125,6 @@ function deletecomments($strCommentstable, $arrRanks = array('Admin', 'Staff'))
     }
     checkvalue($_GET['cid']);
     $db -> Execute("DELETE FROM `".$strCommentstable."` WHERE `id`=".$_GET['cid']);
-    error(C_DELETED);
+    message('success', C_DELETED);
 }
 ?>

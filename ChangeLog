@@ -1,3 +1,10 @@
+2012-08-03  Bartek thindil Jasicki  <thindil@vallheru.net>
+
+	* FEATURE,templates/layout1/library.tpl, templates/layout1/newspaper.tpl, templates/layout1/news.tpl, templates/layout1/updates.tpl,
+	templates/layou1/comments.tpl, templates/library.tpl, templates/newspaper.tpl, templates/news.tpl, templates/updates.tpl, templates/comments.tpl,
+	library.php, newspaper.php, news.php, updates.php, includes/comments.php:
+	redesigned comments
+
 2012-08-02  Bartek thindil Jasicki  <thindil@vallheru.net>
 
 	* FEATURE,templates/layout1/forums.tpl, templates/forums.tpl, forums.php, js/editor.js: 
