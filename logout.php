@@ -7,7 +7,7 @@
  *   @copyright            : (C) 2004,2005,2006,2011,2012 Vallheru Team based on Gamers-Fusion ver 2.5
  *   @author               : thindil <thindil@vallheru.net>
  *   @version              : 1.6
- *   @since                : 25.07.2012
+ *   @since                : 03.08.2012
  *
  */
 
@@ -43,7 +43,7 @@ $smarty -> assign(array("Gamename" => $gamename,
 			"Meta" => '',
 			"Charset" => CHARSET));
 $_GET['did'] = intval($_GET['did']);
-if ($_GET['did'] < 1)
+if ($_GET['did'] < 1 || !isset($_SESSION['email']) || !isset($_SESSION['pass']))
   {
     $smarty -> assign ("Error", ERROR);
     $smarty -> display ('error.tpl');
