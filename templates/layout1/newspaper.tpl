@@ -123,6 +123,7 @@
 {/if}
 
 {if $Step == 'redaction'}
+    <script src="js/editor.js"></script>
     {if $Step3 == ""}
         {$Redactioninfo} {$Gamename}.<br /><br /><br />
         <table class="dark" align="center" width="80%">
@@ -137,14 +138,21 @@
     {if $Step3 == "edit" || $Step3 == "R"}
         {$Youedit}<br /><br />
         {$Showmail}<br /><br />
-        <form method="post" action="newspaper.php?step=redaction&amp;{if $Step3 == 'edit'}step3=edit&amp;edit={$Edit}{/if}{if $Step3 == "R"}step3=R{/if}">
+        <form method="post" action="newspaper.php?step=redaction&amp;{if $Step3 == 'edit'}step3=edit&amp;edit={$Edit}{/if}{if $Step3 == "R"}step3=R{/if}" name="earticle">
             {$Mailtype}: <select name="mail">
                 {section name=edit loop=$Arttypes}
                 <option value="{$Arttypes[edit]}"{if $Mtype == "$Arttypes[edit]"} selected {/if}>{$Sectionnames[edit]}</option>
                 {/section}
             </select><br />
             {$Ttitle} <input type="text" name="mtitle" value="{$Mtitle}" /><br />
-            {$Tbody} <br /><textarea name="mbody" rows="13" cols="55">{$Mbody}</textarea><br />
+	    {$Tbody} <br />
+	    <input id="italic" type="button" value="{$Aitalic}" onClick="formatText(this.id, 'earticle', 'mbody')" />
+	    <input id="underline" type="button" value="{$Aunderline}" onClick="formatText(this.id, 'earticle', 'mbody')" />
+	    <input id="emote" type="button" value="{$Aemote}" onClick="formatText(this.id, 'earticle', 'mbody')" />
+	    <input id="center" type="button" value="{$Acenter}" onClick="formatText(this.id, 'earticle', 'mbody')" />
+	    <input id="quote" type="button" value="{$Aquote}" onClick="formatText(this.id, 'earticle', 'mbody')" />
+	    <input id="color" type="button" value="{$Acolor}" onClick="formatText(this.id, 'earticle', 'mbody')" /> {html_options name=colors options=$Ocolors}<br />
+            <textarea name="mbody" rows="13" cols="55">{$Mbody}</textarea><br />
             <input type="submit" value="{$Ashow}" name="show" /> <input type="submit" name="sendmail" value="{$Asend}" />
         </form>
     {/if}
@@ -152,9 +160,10 @@
 {/if}
 
 {if $Step == "mail"}
+    <script src="js/editor.js"></script>
     {$Mailinfo}<br /><br />
     {$Showmail}<br /><br />
-    <form method="post" action="newspaper.php?step=mail&amp;step3=add">
+    <form method="post" action="newspaper.php?step=mail&amp;step3=add" name="earticle">
         {$Mailtype}: <select name="mail">
             <option value="M" {if $Mtype == "M"} selected {/if}>{$Anews}</option>
             <option value="N" {if $Mtype == "N"} selected {/if}>{$Anews2}</option>
@@ -171,7 +180,14 @@
             <option value="P" {if $Mtype == "P"} selected {/if}>{$Apoetry}</option>
         </select><br />
         {$Ttitle} <input type="text" name="mtitle" value="{$Mtitle}" /><br />
-        {$Tbody} <br /><textarea name="mbody" rows="13" cols="55">{$Mbody}</textarea><br />
+	{$Tbody} <br />
+	<input id="italic" type="button" value="{$Aitalic}" onClick="formatText(this.id, 'earticle', 'mbody')" />
+	    <input id="underline" type="button" value="{$Aunderline}" onClick="formatText(this.id, 'earticle', 'mbody')" />
+	    <input id="emote" type="button" value="{$Aemote}" onClick="formatText(this.id, 'earticle', 'mbody')" />
+	    <input id="center" type="button" value="{$Acenter}" onClick="formatText(this.id, 'earticle', 'mbody')" />
+	    <input id="quote" type="button" value="{$Aquote}" onClick="formatText(this.id, 'earticle', 'mbody')" />
+	    <input id="color" type="button" value="{$Acolor}" onClick="formatText(this.id, 'earticle', 'mbody')" /> {html_options name=colors options=$Ocolors}<br />
+        <textarea name="mbody" rows="13" cols="55">{$Mbody}</textarea><br />
         <input type="submit" value="{$Ashow}" name="show" /> <input type="submit" name="sendmail" value="{$Asend}" />
     </form>
     {$Message}

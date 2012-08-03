@@ -1,5 +1,7 @@
 2012-08-03  Bartek thindil Jasicki  <thindil@vallheru.net>
 
+	* FEATURE,templates/layout1/newspaper.tpl, templates/newspaper.tpl, newspaper.php: 
+	added better text editor
 	* BUG,logout.php: 
 	fixed some notices
 	* FEATURE,templates/layout1/mail.tpl, templates/mail.tpl, mail.php: 
