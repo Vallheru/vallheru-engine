@@ -1,3 +1,5 @@
+<script src="js/editor.js"></script>
+
 {if $View == "" && $Read == "" && $Send == "" && $Step == ""}
     {$Mailinfo}<br /><br />
     - <a href="mail.php?view=inbox">{$Ainbox}</a><br />
@@ -128,11 +130,18 @@
 {if $View == "write"}
     [<a href="mail.php?view=inbox">{$Ainbox}</a>]<br /><br />
     <table>
-    <form method="post" action="mail.php?view=write&amp;step=send">
+    <form method="post" action="mail.php?view=write&amp;step=send" name="newmail">
     <tr><td>{$Sto} {html_options name=player options=$Contacts}:</td><td><input type="text" name="to" value="{$To}" /></td></tr>
     <tr><td>{$Mtitle}:</td><td><input type="text" name="subject" size="55" value="{$Subject}" /></td></tr>
+    <tr><td colspan="2"><input id="bold" type="button" value="{$Abold}" onClick="formatText(this.id, 'newmail', 'body')" />
+	<input id="italic" type="button" value="{$Aitalic}" onClick="formatText(this.id, 'newmail', 'body')" />
+	<input id="underline" type="button" value="{$Aunderline}" onClick="formatText(this.id, 'newmail', 'body')" />
+	<input id="emote" type="button" value="{$Aemote}" onClick="formatText(this.id, 'newmail', 'body')" />
+	<input id="center" type="button" value="{$Acenter}" onClick="formatText(this.id, 'newmail', 'body')" />
+	<input id="quote" type="button" value="{$Aquote}" onClick="formatText(this.id, 'newmail', 'body')" />
+	<input id="color" type="button" value="{$Acolor}" onClick="formatText(this.id, 'newmail', 'body')" /> {html_options name=colors options=$Ocolors}</td></tr>
     <tr><td valign="top">{$Mbody}:</td><td><textarea name="body" rows="13" cols="55">{$Body}</textarea></td></tr>
-    <tr><td></td><td align="center"><input type="submit" value="{$Asend}" /></td></tr>
+    <tr><td align="center" colspan="2"><input type="submit" value="{$Asend}" /></td></tr>
     </form></table><br />
     {$Mhelp}
 {/if}
@@ -163,7 +172,14 @@
 	        {/if}
     	    {/for}
         {/if}
-        <form method="post" action="mail.php?view=write&amp;step=send">
+        <form method="post" action="mail.php?view=write&amp;step=send" name="reply">
+	    <input id="bold" type="button" value="{$Abold}" onClick="formatText(this.id, 'reply', 'body')" />
+	    <input id="italic" type="button" value="{$Aitalic}" onClick="formatText(this.id, 'reply', 'body')" />
+	    <input id="underline" type="button" value="{$Aunderline}" onClick="formatText(this.id, 'reply', 'body')" />
+	    <input id="emote" type="button" value="{$Aemote}" onClick="formatText(this.id, 'reply', 'body')" />
+	    <input id="center" type="button" value="{$Acenter}" onClick="formatText(this.id, 'reply', 'body')" />
+	    <input id="quote" type="button" value="{$Aquote}" onClick="formatText(this.id, 'reply', 'body')" />
+	    <input id="color" type="button" value="{$Acolor}" onClick="formatText(this.id, 'reply', 'body')" /> {html_options name=colors options=$Ocolors}<br />
             <textarea name="body" rows="13" cols="55">{$Body}</textarea><br />
             <input type="hidden" name="topic" value="{$Mtopic}" />
 	    <input type="hidden" name="player" value="{$Receiver}" />
