@@ -7,7 +7,7 @@
  *   @copyright            : (C) 2004,2005,2006,2007,2011,2012 Vallheru Team based on Gamers-Fusion ver 2.5
  *   @author               : thindil <thindil@vallheru.net>
  *   @version              : 1.6
- *   @since                : 27.06.2012
+ *   @since                : 06.08.2012
  *
  */
 
@@ -45,6 +45,9 @@ function smallreset($blnSmall = FALSE)
 {
     global $db;
     global $lang;
+    global $city1a;
+    global $city2;
+
     if ($blnSmall)
       {
 	$db -> Execute("UPDATE settings SET value='N' WHERE setting='open'");
@@ -59,12 +62,20 @@ function smallreset($blnSmall = FALSE)
      */
     $db -> Execute("UPDATE farm SET age=age+1");
     $db -> Execute("DELETE FROM farm WHERE age>26");
-    $arrPlants = $db->GetAll("SELECT `owner`, `name` FROM `farm` WHERE `age`=14");
+    $arrPlants = $db->GetAll("SELECT `farms`.`owner`, `farm`.`name`, `farms`.`location` FROM `farm`, `farms` WHERE `farm`.`age`=14 AND `farms`.`id`=`farm`.`farmid`");
     $strSql = "INSERT INTO `log` (`owner`, `log`, `czas`, `type`) VALUES";
     $time = date("Y-m-d H:i:s");
     foreach ($arrPlants as $arrPlant)
       {
-	$strSql .= "(".$arrPlant['owner'].", 'Twoja uprawa ".$arrPlant['name']." jest już gotowa do zebrania.', '".$time."', 'F'),";
+	if ($arrPlant['location'] == 'Altara')
+	  {
+	    $strCity = $city1a;
+	  }
+	else
+	  {
+	    $strCity = $city2;
+	  }
+	$strSql .= "(".$arrPlant['owner'].", 'Twoja uprawa ".$arrPlant['name']." na farmie w ".$strCity." jest już gotowa do zebrania.', '".$time."', 'F'),";
       }
     $strSql = rtrim($strSql, ',').';';
     $db->Execute($strSql);
