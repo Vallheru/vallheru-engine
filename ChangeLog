@@ -1,5 +1,7 @@
 2012-08-06  Bartek thindil Jasicki  <thindil@vallheru.net>
 
+	* UPDATE,equip.php: 
+	added info about weared equipment level
 	* UPDATE,includes/resets.php: 
 	added more info to farm notification
 	* BUG,languages/pl/outposts.php:
