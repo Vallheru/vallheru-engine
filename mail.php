@@ -7,7 +7,7 @@
  *   @copyright            : (C) 2004,2005,2006,2007,2011,2012 Vallheru Team based on Gamers-Fusion ver 2.5
  *   @author               : thindil <thindil@vallheru.net>
  *   @version              : 1.6
- *   @since                : 03.08.2012
+ *   @since                : 06.08.2012
  *
  */
 
@@ -83,7 +83,7 @@ if (isset($_GET['view']) && $_GET['view'] == 'search')
 		    $intPage = 1;
 		  }
 		
-		$objMails = $db->SelectLimit("SELECT `mail`.`id`, `mail`.`subject`, `players`.`user`, `players`.`tribe` FROM `mail` JOIN `players` ON `mail`.`senderid`=`players`.`id` WHERE `owner`=".$player->id." AND MATCH(`subject`, `body`) AGAINST (".$strSearch." IN BOOLEAN MODE)", 30, 30 * ($intPage - 1)) or die($db -> ErrorMsg());
+		$objMails = $db->SelectLimit("SELECT `mail`.`id`, `mail`.`subject`, `mail`.`sender`, `players`.`user`, `players`.`tribe` FROM `mail` JOIN `players` ON `mail`.`senderid`=`players`.`id` WHERE `owner`=".$player->id." AND MATCH(`subject`, `body`) AGAINST (".$strSearch." IN BOOLEAN MODE)", 30, 30 * ($intPage - 1)) or die($db -> ErrorMsg());
 		$arrsender = array();
 		$arrsubject = array();
 		$arrid = array();
