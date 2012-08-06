@@ -8,7 +8,7 @@
  *   @author               : thindil <thindil@vallheru.net>
  *   @author               : eyescream <tduda@users.sourceforge.net>
  *   @version              : 1.6
- *   @since                : 23.06.2012
+ *   @since                : 06.08.2012
  *
  */
 
@@ -36,7 +36,7 @@ define("I_POWER", " (siła: ");
 define("MONSTER", "bestię");
 define("VETERAN", "weterana");
 define("AND_LOST", "Dodatkowo ");
-define("T_LOST", " traci ");
+define("T_LOST", " traci");
 define("GC", "sz");
 define("NO_OUTPOST", "Nie masz dostępu do strażnicy! Za 500 sztuk złota możesz wykupić kawałek ziemi pod nią. Więc jak, chcesz kupić?");
 define("A_BACK", "Menu");

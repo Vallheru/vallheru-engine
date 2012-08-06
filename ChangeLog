@@ -1,3 +1,8 @@
+2012-08-06  Bartek thindil Jasicki  <thindil@vallheru.net>
+
+	* BUG,languages/pl/outposts.php:
+	fixed typo
+
 2012-08-03  Bartek thindil Jasicki  <thindil@vallheru.net>
 
 	* FEATURE,templates/layout1/newspaper.tpl, templates/newspaper.tpl, newspaper.php: 
