@@ -7,7 +7,7 @@
  *   @copyright            : (C) 2004,2005,2006,2007,2011,2012 Vallheru Team based on Gamers-Fusion ver 2.5
  *   @author               : thindil <thindil@vallheru.net>
  *   @version              : 1.6
- *   @since                : 12.06.2012
+ *   @since                : 06.08.2012
  *
  */
 
@@ -723,7 +723,29 @@ if (isset($_GET['view']))
 	$smarty -> assign(array("Profileinfo" => PROFILE_INFO,
 				"Newprofile" => NEW_PROFILE,
 				"Profile2" => $profile,
-				"Change" => CHANGE));
+				"Change" => CHANGE,
+				"Abold" => "Pogrubienie",
+				"Aitalic" => "Kursywa",
+				"Aunderline" => "Podkreślenie",
+				"Aemote" => "Emocje/Czynność",
+				"Ocolors" => array("red" => "czerwony",
+						   "green" => "zielony",
+						   "white" => "biały",
+						   "yellow" => "żółty",
+						   "blue" => "niebieski",
+						   "aqua" => "cyjan",
+						   "fuchsia" => "fuksja",
+						   "grey" => "szary",
+						   "lime" => "limonka",
+						   "maroon" => "wiśniowy",
+						   "navy" => "granatowy",
+						   "olive" => "oliwkowy",
+						   "purple" => "purpurowy",
+						   "silver" => "srebrny",
+						   "teal" => "morski"),
+				"Acolor" => "Kolor",
+				"Acenter" => "Wycentrowanie",
+				"Aquote" => "Cytat"));
 	if (isset($_GET['step']) && $_GET['step'] == "profile") 
 	  {
 	    if (empty ($_POST['profile'])) 
@@ -732,9 +754,10 @@ if (isset($_GET['view']))
 	      }
 	    $_POST['profile'] = bbcodetohtml($_POST['profile']);
 	    $strProfile = $db -> qstr($_POST['profile'], get_magic_quotes_gpc());
-	    $db -> Execute("UPDATE players SET profile = ".$strProfile." WHERE id = '".$player -> id."'");
+	    $db -> Execute("UPDATE `players` SET `profile`=".$strProfile." WHERE `id`=".$player->id);
 	    $smarty -> assign (array("Profile" => $_POST['profile'],
-				     "Newprofile2" => NEW_PROFILE2));
+				     "Newprofile2" => NEW_PROFILE2,
+				     "Profile2" => htmltobbcode($_POST['profile'])));
 	  }
       }
 
@@ -1084,7 +1107,29 @@ if (isset($_GET['view']))
 			      'Rprofileinfo' => 'Tutaj wpisz informacje związane z twoją postacią dla <b>postaci</b> innych graczy, czyli na przykład wygląd itp sprawy.',
 			      'Oocinfo' => 'Tutaj wpisz informacje dla innych graczy. Na przykład ogólne zasady na jakich chciałbyś(chciałabyś) tworzyć sesję itd.',
 			      'Shortrpinfo' => 'Bardzo krótki (najlepiej dwa, trzy słowa) opis twojej postaci. Zostanie on umieszczony na liście mieszkańców i będzie odnośnikiem do twojego profilu fabularnego. Jeżeli wykasujesz tekst z tego pola, odnośnik na liście mieszkańców do twojego profilu fabularnego również zniknie.',
-			      "Aset" => "Ustaw"));
+			      "Aset" => "Ustaw",
+			      "Abold" => "Pogrubienie",
+			      "Aitalic" => "Kursywa",
+			      "Aunderline" => "Podkreślenie",
+			      "Aemote" => "Emocje/Czynność",
+			      "Ocolors" => array("red" => "czerwony",
+						 "green" => "zielony",
+						 "white" => "biały",
+						 "yellow" => "żółty",
+						 "blue" => "niebieski",
+						 "aqua" => "cyjan",
+						 "fuchsia" => "fuksja",
+						 "grey" => "szary",
+						 "lime" => "limonka",
+						 "maroon" => "wiśniowy",
+						 "navy" => "granatowy",
+						 "olive" => "oliwkowy",
+						 "purple" => "purpurowy",
+						 "silver" => "srebrny",
+						 "teal" => "morski"),
+			      "Acolor" => "Kolor",
+			      "Acenter" => "Wycentrowanie",
+			      "Aquote" => "Cytat"));
 	if (isset($_GET['step']) && $_GET['step'] == 'set')
 	  {
 	    if (!isset($_POST['shortrp']))
@@ -1099,6 +1144,8 @@ if (isset($_GET['view']))
 		error("Wypełnij wszystkie pola!");
 	      }
 	    $db->Execute("UPDATE `players` SET `roleplay`='".$strProfile."', `ooc`='".$strOOC."', `shortrpg`='".$strShort."' WHERE `id`=".$player->id);
+	    $smarty->assign(array("Rprofile" => htmltobbcode($_POST['roleplay']),
+				  "Ooc" => htmltobbcode($_POST['ooc'])));
 	  }
       }
 

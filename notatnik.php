@@ -61,15 +61,41 @@ if (isset ($_GET['akcja']) && $_GET['akcja'] == 'skasuj')
     unset($_GET['akcja']);
 }
 
+if (isset($_GET['akcja']) && ($_GET['akcja'] == 'dodaj' || $_GET['akcja'] == 'edit'))
+  {
+    $smarty -> assign(array("Ttitle" => 'Tytuł:',
+			    "Note" => NOTE,
+                            "Asave" => A_SAVE,
+			    "Abold" => "Pogrubienie",
+			    "Aitalic" => "Kursywa",
+			    "Aunderline" => "Podkreślenie",
+			    "Aemote" => "Emocje/Czynność",
+			    "Ocolors" => array("red" => "czerwony",
+					       "green" => "zielony",
+					       "white" => "biały",
+					       "yellow" => "żółty",
+					       "blue" => "niebieski",
+					       "aqua" => "cyjan",
+					       "fuchsia" => "fuksja",
+					       "grey" => "szary",
+					       "lime" => "limonka",
+					       "maroon" => "wiśniowy",
+					       "navy" => "granatowy",
+					       "olive" => "oliwkowy",
+					       "purple" => "purpurowy",
+					       "silver" => "srebrny",
+					       "teal" => "morski"),
+			    "Acolor" => "Kolor",
+			    "Acenter" => "Wycentrowanie",
+			    "Aquote" => "Cytat"));
+  }
+
 /**
  * Add post
  */
 if (isset ($_GET['akcja']) && $_GET['akcja'] == 'dodaj') 
   {
-    $smarty -> assign(array("Ttitle" => 'Tytuł:',
-			    "Note" => NOTE,
-                            "Asave" => A_SAVE,
-                            "Nlink" => "dodaj&amp;step=send",
+    $smarty -> assign(array("Nlink" => "dodaj&amp;step=send",
                             "Ntext" => '',
 			    "Ntitle" => ''));
     if (isset ($_GET['step']) && $_GET['step'] == 'send') 
@@ -106,11 +132,8 @@ if (isset($_GET['akcja']) && $_GET['akcja'] == 'edit')
     }
     require_once('includes/bbcode.php');
     $strNbody = htmltobbcode($objText -> fields['tekst']);
-    $smarty -> assign(array("Note" => NOTE,
-                            "Asave" => A_SAVE,
-                            "Ntext" => $strNbody,
+    $smarty -> assign(array("Ntext" => $strNbody,
 			    "Ntitle" => $objText->fields['title'],
-			    "Ttitle" => "Tytuł:",
                             "Nlink" => "edit&amp;nid=".$_GET['nid']."&amp;step=edit"));
     $objText -> Close();
     if (isset($_GET['step']) && $_GET['step'] == 'edit') 

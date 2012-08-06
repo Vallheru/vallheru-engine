@@ -21,9 +21,17 @@
 {/if}
 
 {if $Action == "edit" || $Action == "dodaj"}
-    <form method="post" action="notatnik.php?akcja={$Nlink}">
+    <script src="js/editor.js"></script>
+    <form method="post" action="notatnik.php?akcja={$Nlink}" name="notes">
     <table>
     <tr><td>{$Ttitle}</td><td><input type="text" name="title" value="{$Ntitle}"></td></tr>
+    <tr><td colspan="2"><input id="bold" type="button" value="{$Abold}" onClick="formatText(this.id, 'notes', 'body')" />
+	<input id="italic" type="button" value="{$Aitalic}" onClick="formatText(this.id, 'notes', 'body')" />
+	<input id="underline" type="button" value="{$Aunderline}" onClick="formatText(this.id, 'notes', 'body')" />
+	<input id="emote" type="button" value="{$Aemote}" onClick="formatText(this.id, 'notes', 'body')" />
+	<input id="center" type="button" value="{$Acenter}" onClick="formatText(this.id, 'notes', 'body')" />
+	<input id="quote" type="button" value="{$Aquote}" onClick="formatText(this.id, 'notes', 'body')" />
+	<input id="color" type="button" value="{$Acolor}" onClick="formatText(this.id, 'notes', 'body')" /> {html_options name=colors options=$Ocolors}</td></tr>
     <tr><td valign="top">{$Note}:</td><td><textarea name="body" rows="20" cols="40">{$Ntext}</textarea></td></tr>
     <tr><td colspan="2" align="center"><input type="submit" value="{$Asave}" /></td></tr>
     </table>

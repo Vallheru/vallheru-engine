@@ -7,7 +7,7 @@
  *   @copyright            : (C) 2004,2005,2006,2011,2012 Vallheru Team based on Gamers-Fusion ver 2.5
  *   @author               : thindil <thindil@vallheru.net>
  *   @version              : 1.6
- *   @since                : 03.08.2012
+ *   @since                : 06.08.2012
  *
  */
 
@@ -196,9 +196,31 @@ if (isset($_GET['step']) && $_GET['step'] == 'comments')
 if (isset($_GET['step']) && $_GET['step'] == 'add')
 {
     $smarty -> assign(array("Ttitle2" => T_TITLE,
-        "Tbody2" => T_BODY,
-        "Aadd" => A_ADD,
-        "Addinfo" => ADD_INFO));
+			    "Tbody2" => T_BODY,
+			    "Aadd" => A_ADD,
+			    "Addinfo" => ADD_INFO,
+			    "Abold" => "Pogrubienie",
+			    "Aitalic" => "Kursywa",
+			    "Aunderline" => "Podkreślenie",
+			    "Aemote" => "Emocje/Czynność",
+			    "Ocolors" => array("red" => "czerwony",
+					       "green" => "zielony",
+					       "white" => "biały",
+					       "yellow" => "żółty",
+					       "blue" => "niebieski",
+					       "aqua" => "cyjan",
+					       "fuchsia" => "fuksja",
+					       "grey" => "szary",
+					       "lime" => "limonka",
+					       "maroon" => "wiśniowy",
+					       "navy" => "granatowy",
+					       "olive" => "oliwkowy",
+					       "purple" => "purpurowy",
+					       "silver" => "srebrny",
+					       "teal" => "morski"),
+			    "Acolor" => "Kolor",
+			    "Acenter" => "Wycentrowanie",
+			    "Aquote" => "Cytat"));
 
     if (isset($_GET['step2']))
     {

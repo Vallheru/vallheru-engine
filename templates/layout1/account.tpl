@@ -188,19 +188,28 @@
 {/if}
 
 {if $View == "profile"}
-    <form method="post" action="account.php?view=profile&amp;step=profile">
-    <table class="dark">
-    <tr><td>{$Profileinfo}</td></tr>
-    <tr><td align="center">{$Newprofile}:<br /> <textarea name="profile" id="profile" rows="15" cols="40">{$Profile2}</textarea></td></tr>
-    <tr><td colspan="2" align="center"><input type="submit" value="{$Change}" /></td></tr>
-    </table>
-    </form>
+    <script src="js/editor.js"></script>
     {if $Step == "profile"}
     <table class="dark">
     <tr><td>{$Newprofile2}:</td><td></td></tr>
     <tr><td>{$Profile}</td><tr>
     </table>
     {/if}
+    <form method="post" action="account.php?view=profile&amp;step=profile" name="profile">
+    <table class="dark">
+    <tr><td>{$Profileinfo}</td></tr>
+    <tr><td colspan="2" align="center">{$Newprofile}</td></tr>
+    <tr><td colspan="2"><input id="bold" type="button" value="{$Abold}" onClick="formatText(this.id, 'profile', 'profile')" />
+	<input id="italic" type="button" value="{$Aitalic}" onClick="formatText(this.id, 'profile', 'profile')" />
+	<input id="underline" type="button" value="{$Aunderline}" onClick="formatText(this.id, 'profile', 'profile')" />
+	<input id="emote" type="button" value="{$Aemote}" onClick="formatText(this.id, 'profile', 'profile')" />
+	<input id="center" type="button" value="{$Acenter}" onClick="formatText(this.id, 'profile', 'profile')" />
+	<input id="quote" type="button" value="{$Aquote}" onClick="formatText(this.id, 'profile', 'profile')" />
+	<input id="color" type="button" value="{$Acolor}" onClick="formatText(this.id, 'profile', 'profile')" /> {html_options name=colors options=$Ocolors}</td></tr>
+    <tr><td align="center" colspan="2"><textarea name="profile" id="profile" rows="15" cols="40">{$Profile2}</textarea></td></tr>
+    <tr><td colspan="2" align="center"><input type="submit" value="{$Change}" /></td></tr>
+    </table>
+    </form>
 {/if}
 
 {if $View == "eci"}
@@ -293,11 +302,25 @@
 {/if}
 
 {if $View == "roleplay"}
+    <script src="js/editor.js"></script>
     {$Info}<br /><br />
-    <form method="post" action="account.php?view=roleplay&amp;step=set">
+    <form method="post" action="account.php?view=roleplay&amp;step=set" name="roleplay">
     {$Rprofileinfo}<br />
+    <input id="bold" type="button" value="{$Abold}" onClick="formatText(this.id, 'roleplay', 'roleplay')" />
+    <input id="italic" type="button" value="{$Aitalic}" onClick="formatText(this.id, 'roleplay', 'roleplay')" />
+    <input id="underline" type="button" value="{$Aunderline}" onClick="formatText(this.id, 'roleplay', 'roleplay')" />
+    <input id="emote" type="button" value="{$Aemote}" onClick="formatText(this.id, 'roleplay', 'roleplay')" />
+    <input id="center" type="button" value="{$Acenter}" onClick="formatText(this.id, 'roleplay', 'roleplay')" />
+    <input id="quote" type="button" value="{$Aquote}" onClick="formatText(this.id, 'roleplay', 'roleplay')" />
+    <input id="color" type="button" value="{$Acolor}" onClick="formatText(this.id, 'roleplay', 'roleplay')" /> {html_options name=colors options=$Ocolors}<br />
     <textarea name="roleplay" id="roleplay" rows="15" cols="40">{$Rprofile}</textarea><br /><br />
     {$Oocinfo}<br />
+    <input id="bold" type="button" value="{$Abold}" onClick="formatText(this.id, 'roleplay', 'ooc')" />
+    <input id="italic" type="button" value="{$Aitalic}" onClick="formatText(this.id, 'roleplay', 'ooc')" />
+    <input id="underline" type="button" value="{$Aunderline}" onClick="formatText(this.id, 'roleplay', 'ooc')" />
+    <input id="emote" type="button" value="{$Aemote}" onClick="formatText(this.id, 'roleplay', 'ooc')" />
+    <input id="center" type="button" value="{$Acenter}" onClick="formatText(this.id, 'roleplay', 'ooc')" />
+    <input id="quote" type="button" value="{$Aquote}" onClick="formatText(this.id, 'roleplay', 'ooc')" />
     <textarea name="ooc" id="ooc" rows="15" cols="40">{$Ooc}</textarea><br /><br />
     {$Shortrpinfo}<br />
     <input type="text" name="shortrp" size="40" value="{$Shortrp}" /><br /><br />

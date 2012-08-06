@@ -1,5 +1,8 @@
 2012-08-06  Bartek thindil Jasicki  <thindil@vallheru.net>
 
+	* FEATURE,templates/layout1/account.tpl, templates/layout1/news.tpl, templates/layout1/notatnik.tpl, templates/account.tpl, templates/news.tpl,
+	templates/notatnik.tpl, account.php, news.php, notatnik.php:
+	added better text editor
 	* UPDATE,equip.php: 
 	added info about weared equipment level
 	* UPDATE,includes/resets.php: 
