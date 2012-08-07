@@ -401,9 +401,7 @@ if (isset($_GET['schowaj']))
     $arrEquip = $player -> equipment();
     if (isset($arrEquip[6][0])) 
     {
-      $objName = $db->Execute("SELECT `name` FROM `equipment` WHERE `id`=".$arrEquip[6][0]);
-      $test = $db -> Execute("SELECT id FROM equipment WHERE name='".$objName->fields['name']."' AND status='U' AND owner=".$player -> id." AND power=".$arrEquip[6][2]." AND poison=".$arrEquip[6][8]." AND `ptype`='".$arrEquip[6][3]."' AND `magic`='".$arrEquip[6][10]."'");
-      $objName->Close();
+      $test = $db -> Execute("SELECT id FROM equipment WHERE name='".$arrEquip[6][1]."' AND status='U' AND owner=".$player -> id." AND power=".$arrEquip[6][2]." AND poison=".$arrEquip[6][8]." AND `ptype`='".$arrEquip[6][3]."' AND `magic`='".$arrEquip[6][10]."'");
     }
     if ($bron -> fields['type'] == 'B') 
     {

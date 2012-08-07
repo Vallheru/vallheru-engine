@@ -1,5 +1,7 @@
 2012-08-07  Bartek thindil Jasicki  <thindil@vallheru.net>
 
+	* UPDATE,equip.php: 
+	small code optimization
 	* BUG,includes/functions.php, equip.php: 
 	fixed few bugs with wear/take off equipment
 	* BUG,templates/layout1/chatmsgs.tpl, templates/chatmsgs.tpl: 
