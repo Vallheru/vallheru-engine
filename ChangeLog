@@ -1,5 +1,7 @@
 2012-08-07  Bartek thindil Jasicki  <thindil@vallheru.net>
 
+	* BUG,templates/layout1/chatmsgs.tpl, templates/chatmsgs.tpl: 
+	fixed link to expand chat
 	* BUG,bank.php: 
 	fixed bug with sending magic items
 	* BUG,includes/funkcje.php:
