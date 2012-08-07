@@ -1,5 +1,7 @@
 2012-08-07  Bartek thindil Jasicki  <thindil@vallheru.net>
 
+	* BUG,includes/functions.php, equip.php: 
+	fixed few bugs with wear/take off equipment
 	* BUG,templates/layout1/chatmsgs.tpl, templates/chatmsgs.tpl: 
 	fixed link to expand chat
 	* BUG,bank.php: 

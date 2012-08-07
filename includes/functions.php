@@ -7,7 +7,7 @@
  *   @copyright            : (C) 2004,2005,2006,2011,2012 Vallheru Team based on Gamers-Fusion ver 2.5
  *   @author               : thindil <thindil@vallheru.net>
  *   @version              : 1.6
- *   @since                : 23.07.2012
+ *   @since                : 07.08.2012
  *
  */
 
@@ -334,7 +334,7 @@ function equip ($id)
 	//Take off old arrows
 	if ($arrows->fields['id'])
 	  {
-	    $test = $db -> Execute("SELECT id FROM equipment WHERE name='".$arrows->fields['name']."' AND status='U' AND owner=".$player->id." AND power=".$arrows->fields['power']." AND poison=".$arrows->fields['poison']." AND `ptype`='".$arrows->fields['ptype']."' AND `cost`=".$arrows->fields['cost']) or die($db->ErrorMsg());
+	    $test = $db -> Execute("SELECT id FROM equipment WHERE name='".$arrows->fields['name']."' AND status='U' AND owner=".$player->id." AND power=".$arrows->fields['power']." AND poison=".$arrows->fields['poison']." AND `ptype`='".$arrows->fields['ptype']."' AND `cost`=".$arrows->fields['cost']." AND `magic`='".$arrows->fields['magic']."'") or die($db->ErrorMsg());
 	    if (!isset($test -> fields['id'])) 
 	      {
 		$db -> Execute("UPDATE `equipment` SET `status`='U' WHERE `type`='R' AND `owner`=".$player -> id." AND `status`='E'");
@@ -347,7 +347,7 @@ function equip ($id)
 	      }
 	    $test->Close();
 	  }
-	$db -> Execute("INSERT INTO `equipment` (`name`, `wt`, `power`, `status`, `type`, `owner`, `ptype`, `poison`, `minlev`) VALUES('".$equip -> fields['name']."',".$wt.",".$equip -> fields['power'].",'E','R',".$player -> id.", '".$equip->fields['ptype']."', ".$equip->fields['poison'].", ".$equip->fields['minlev'].")") or error($db->ErrorMsg());
+	$db -> Execute("INSERT INTO `equipment` (`name`, `wt`, `power`, `status`, `type`, `owner`, `ptype`, `poison`, `minlev`, `magic`) VALUES('".$equip -> fields['name']."',".$wt.",".$equip -> fields['power'].",'E','R',".$player -> id.", '".$equip->fields['ptype']."', ".$equip->fields['poison'].", ".$equip->fields['minlev'].", '".$equip->fields['magic']."')") or error($db->ErrorMsg());
 	$testwt = ($equip -> fields['wt'] - $wt);
 	if ($testwt < 1) 
 	  {
@@ -465,7 +465,7 @@ function equip ($id)
             $test2 = $db -> Execute("SELECT * FROM equipment WHERE status='E' AND owner=".$player -> id." AND type='".$type."'");
             if (!empty($test2 -> fields['id'])) 
             {
-                $test = $db -> Execute("SELECT id FROM equipment WHERE name='".$test2 -> fields['name']."' AND wt=".$test2 -> fields['wt']." AND status='U' AND owner=".$player -> id." AND power=".$test2 -> fields['power']." AND zr=".$test2 -> fields['zr']." AND szyb=".$test2 -> fields['szyb']." AND maxwt=".$test2 -> fields['maxwt']." AND poison=".$test2 -> fields['poison']." AND ptype='".$test2 -> fields['ptype']."' AND cost=".$test2 -> fields['cost']);
+                $test = $db -> Execute("SELECT id FROM equipment WHERE name='".$test2 -> fields['name']."' AND wt=".$test2 -> fields['wt']." AND status='U' AND owner=".$player -> id." AND power=".$test2 -> fields['power']." AND zr=".$test2 -> fields['zr']." AND szyb=".$test2 -> fields['szyb']." AND maxwt=".$test2 -> fields['maxwt']." AND poison=".$test2 -> fields['poison']." AND ptype='".$test2 -> fields['ptype']."' AND cost=".$test2 -> fields['cost']." AND `magic`='".$test2->fields['magic']."'");
                 if (!empty($test -> fields['id'])) 
                 {
                     $db -> Execute("UPDATE equipment SET amount=amount+1 WHERE id=".$test -> fields['id']);
@@ -487,7 +487,7 @@ function equip ($id)
       }
     else
       {
-	$smarty -> assign ("Action", WEAR." ".$equip -> fields['name'].".");
+	message("success", WEAR." ".$equip -> fields['name'].".");
       }
     $equip -> Close();
 }

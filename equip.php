@@ -7,7 +7,7 @@
  *   @copyright            : (C) 2004,2005,2006,2007,2011,2012 Vallheru Team based on Gamers-Fusion ver 2.5
  *   @author               : thindil <thindil@vallheru.net>
  *   @version              : 1.6
- *   @since                : 06.08.2012
+ *   @since                : 07.08.2012
  *
  */
 
@@ -371,7 +371,84 @@ function checkmagic($strName, $strMagic)
   return $strName;
 }
 
+/**
+* Wear equipment
+*/
+if (isset($_GET['equip'])) 
+{
+    equip($_GET['equip']);
+}
+
+/**
+ * Take off equipment
+ */
+if (isset($_GET['schowaj'])) 
+{
+    checkvalue($_GET['schowaj']);
+    $bron = $db -> Execute("SELECT * FROM equipment WHERE id=".$_GET['schowaj']);
+    if (!$bron -> fields['id']) 
+    {
+        error (NO_ITEM);
+    }
+    if ($player -> id != $bron -> fields['owner']) 
+    {
+        error (NOT_YOUR);
+    }
+    if ($bron -> fields['status'] == 'U') 
+    {
+        error (ERROR);
+    }
+    $arrEquip = $player -> equipment();
+    if (isset($arrEquip[6][0])) 
+    {
+      $objName = $db->Execute("SELECT `name` FROM `equipment` WHERE `id`=".$arrEquip[6][0]);
+      $test = $db -> Execute("SELECT id FROM equipment WHERE name='".$objName->fields['name']."' AND status='U' AND owner=".$player -> id." AND power=".$arrEquip[6][2]." AND poison=".$arrEquip[6][8]." AND `ptype`='".$arrEquip[6][3]."' AND `magic`='".$arrEquip[6][10]."'");
+      $objName->Close();
+    }
+    if ($bron -> fields['type'] == 'B') 
+    {
+        if (!isset($test -> fields['id'])) 
+        {
+            $db -> Execute("UPDATE `equipment` SET `status`='U' WHERE `type`='R' AND `owner`=".$player -> id." AND `status`='E'");
+        } 
+            else 
+        {
+            $db -> Execute("UPDATE `equipment` SET `wt`=`wt`+".$arrEquip[6][6]." WHERE `id`=".$test -> fields['id']);
+            $db -> Execute("DELETE FROM `equipment` WHERE `id`=".$arrEquip[6][0]);
+        }
+    }
+    if ($bron -> fields['type'] == 'R') 
+    {
+        if (!isset($test -> fields['id'])) 
+        {
+            $db -> Execute("UPDATE `equipment` SET `status`='U' WHERE `type`='R' AND `owner`=".$player -> id." AND `status`='E'");
+        } 
+            else 
+        {
+            $db -> Execute("UPDATE `equipment` SET `wt`=`wt`+".$arrEquip[6][6]." WHERE `id`=".$test -> fields['id']);
+            $db -> Execute("DELETE FROM `equipment` WHERE `id`=".$arrEquip[6][0]);
+        }
+    } 
+        else 
+    {
+        $test = $db -> Execute("SELECT id FROM equipment WHERE name='".$bron -> fields['name']."' AND wt=".$bron -> fields['wt']." AND type='".$bron -> fields['type']."' AND status='U' AND owner=".$player -> id." AND power=".$bron -> fields['power']." AND zr=".$bron -> fields['zr']." AND szyb=".$bron -> fields['szyb']." AND maxwt=".$bron -> fields['maxwt']." AND poison=".$bron -> fields['poison']." AND ptype='".$bron -> fields['ptype']."' AND cost=".$bron -> fields['cost']." AND magic='".$bron->fields['magic']."'");
+        if ($test -> fields['id']) 
+        {
+            $db -> Execute("UPDATE equipment SET amount=amount+1 WHERE id=".$test -> fields['id']);
+        } 
+            else 
+        {
+            $db -> Execute("INSERT INTO equipment (owner, name, power, type, cost, zr, wt, minlev, maxwt, amount, magic, poison, szyb, twohand, ptype, repair) VALUES(".$player -> id.",'".$bron -> fields['name']."',".$bron -> fields['power'].",'".$bron -> fields['type']."',".$bron -> fields['cost'].",".$bron -> fields['zr'].",".$bron -> fields['wt'].",".$bron -> fields['minlev'].",".$bron -> fields['maxwt'].",1,'".$bron -> fields['magic']."',".$bron -> fields['poison'].",".$bron -> fields['szyb'].",'".$bron -> fields['twohand']."', '".$bron -> fields['ptype']."', ".$bron -> fields['repair'].")") or error(E_DB);
+        }
+        $test -> Close();
+        $db -> Execute("DELETE FROM equipment WHERE id=".$bron -> fields['id']);
+    }
+    message("success", "Zdjąłeś ".$bron->fields['name']);
+    $bron -> Close();
+}
+
 $arrEquip = $player -> equipment();
+
 //Weapon
 if (!$arrEquip[0][0]) 
   {
@@ -609,71 +686,6 @@ else
   {
     $smarty->assign("Tool", "<b>Narzędzie:</b> brak<br />");
   }
-
-/**
- * Take off equipment
- */
-if (isset($_GET['schowaj'])) 
-{
-    checkvalue($_GET['schowaj']);
-    $bron = $db -> Execute("SELECT * FROM equipment WHERE id=".$_GET['schowaj']);
-    if (!$bron -> fields['id']) 
-    {
-        error (NO_ITEM);
-    }
-    if ($player -> id != $bron -> fields['owner']) 
-    {
-        error (NOT_YOUR);
-    }
-    if ($bron -> fields['status'] == 'U') 
-    {
-        error (ERROR);
-    }
-    if (isset($arrEquip[6][0])) 
-    {
-        $test = $db -> Execute("SELECT id FROM equipment WHERE name='".$arrEquip[6][1]."' AND status='U' AND owner=".$player -> id." AND power=".$arrEquip[6][2]." AND poison=".$arrEquip[6][8]." AND `ptype`='".$arrEquip[6][3]."'");
-    }
-    if ($bron -> fields['type'] == 'B') 
-    {
-        if (!isset($test -> fields['id'])) 
-        {
-            $db -> Execute("UPDATE `equipment` SET `status`='U' WHERE `type`='R' AND `owner`=".$player -> id." AND `status`='E'");
-        } 
-            else 
-        {
-            $db -> Execute("UPDATE `equipment` SET `wt`=`wt`+".$arrEquip[6][6]." WHERE `id`=".$test -> fields['id']);
-            $db -> Execute("DELETE FROM `equipment` WHERE `id`=".$arrEquip[6][0]);
-        }
-    }
-    if ($bron -> fields['type'] == 'R') 
-    {
-        if (!isset($test -> fields['id'])) 
-        {
-            $db -> Execute("UPDATE `equipment` SET `status`='U' WHERE `type`='R' AND `owner`=".$player -> id." AND `status`='E'");
-        } 
-            else 
-        {
-            $db -> Execute("UPDATE `equipment` SET `wt`=`wt`+".$arrEquip[6][6]." WHERE `id`=".$test -> fields['id']);
-            $db -> Execute("DELETE FROM `equipment` WHERE `id`=".$arrEquip[6][0]);
-        }
-    } 
-        else 
-    {
-        $test = $db -> Execute("SELECT id FROM equipment WHERE name='".$bron -> fields['name']."' AND wt=".$bron -> fields['wt']." AND type='".$bron -> fields['type']."' AND status='U' AND owner=".$player -> id." AND power=".$bron -> fields['power']." AND zr=".$bron -> fields['zr']." AND szyb=".$bron -> fields['szyb']." AND maxwt=".$bron -> fields['maxwt']." AND poison=".$bron -> fields['poison']." AND ptype='".$bron -> fields['ptype']."' AND cost=".$bron -> fields['cost']." AND magic='".$bron->fields['magic']."'");
-        if ($test -> fields['id']) 
-        {
-            $db -> Execute("UPDATE equipment SET amount=amount+1 WHERE id=".$test -> fields['id']);
-        } 
-            else 
-        {
-            $db -> Execute("INSERT INTO equipment (owner, name, power, type, cost, zr, wt, minlev, maxwt, amount, magic, poison, szyb, twohand, ptype, repair) VALUES(".$player -> id.",'".$bron -> fields['name']."',".$bron -> fields['power'].",'".$bron -> fields['type']."',".$bron -> fields['cost'].",".$bron -> fields['zr'].",".$bron -> fields['wt'].",".$bron -> fields['minlev'].",".$bron -> fields['maxwt'].",1,'".$bron -> fields['magic']."',".$bron -> fields['poison'].",".$bron -> fields['szyb'].",'".$bron -> fields['twohand']."', '".$bron -> fields['ptype']."', ".$bron -> fields['repair'].")") or error(E_DB);
-        }
-        $test -> Close();
-        $db -> Execute("DELETE FROM equipment WHERE id=".$bron -> fields['id']);
-    }
-    $smarty -> assign ("Action", "Zdjąłeś ".$bron->fields['name']);
-    $bron -> Close();
-}
 
 if ($arrEquip[3][0] || $arrEquip[0][0] || $arrEquip[4][0] || $arrEquip[2][0] || $arrEquip[5][0] || $arrEquip[12][0]) 
 {
@@ -1520,14 +1532,6 @@ if (!isset($_GET['name']))
   {
     $_GET['name'] = 0;
   }
-
-/**
-* Wear equipment
-*/
-if (isset($_GET['equip'])) 
-{
-    equip($_GET['equip']);
-}
 
 /**
 * Drink potion
