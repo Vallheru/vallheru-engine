@@ -284,11 +284,11 @@ if (isset($_GET['step']) && $_GET['step'] == 'zobacz')
 	    $arrItem['reserved'] = $arrItem['amount'] - $arrItem['reserved'];
 	     if ($player -> id == $owner -> fields['owner'] || $perm -> fields['armory']) 
 	      {
-		$arrItem['action'] = "- <a href=tribearmor.php?daj=".$arrItem['id'].">".A_GIVE."</a>";
+		$arrItem['action'] = "<a href=tribearmor.php?daj=".$arrItem['id'].">".A_GIVE."</a>";
 	      } 
             else 
 	      {
-		$arrItem['action'] = "- <a href=tribearmor.php?reserve=".$arrI['id'].">poproś</a>";
+		$arrItem['action'] = "<a href=tribearmor.php?reserve=".$arrItem['id'].">Poproś</a>";
 	      }
 	  }
 	if (isset($_POST['type']) && in_array($_POST['type'], array('I', 'P', 'O')))
