@@ -288,7 +288,7 @@ if (isset($_GET['step']) && $_GET['step'] == 'zobacz')
 	      } 
             else 
 	      {
-		$arrItem[] = "- <a href=tribearmor.php?reserve=".$arrI['id'].">poproś</a>";
+		$arrItem['action'] = "- <a href=tribearmor.php?reserve=".$arrI['id'].">poproś</a>";
 	      }
 	  }
 	if (isset($_POST['type']) && in_array($_POST['type'], array('I', 'P', 'O')))

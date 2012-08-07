@@ -1,5 +1,7 @@
 2012-08-07  Bartek thindil Jasicki  <thindil@vallheru.net>
 
+	* BUG,tribearmor.php: 
+	fixed asking for items from tribe
 	* UPDATE,templates/layout1/tribearmor.tpl, templates/tribearmor.tpl, tribearmor.php: 
 	redesigned tribe armory
 	* UPDATE,equip.php: 
