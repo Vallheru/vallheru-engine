@@ -1,5 +1,7 @@
 2012-08-07  Bartek thindil Jasicki  <thindil@vallheru.net>
 
+	* BUG,bank.php: 
+	fixed bug with sending magic items
 	* BUG,includes/funkcje.php:
 	fixed bug with lost energy after fight
 

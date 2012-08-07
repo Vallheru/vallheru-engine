@@ -9,7 +9,7 @@
  *   @author               : yeskov <yeskov@users.sourceforge.net>
  *   @author               : eyescream <tduda@users.sourceforge.net>
  *   @version              : 1.6
- *   @since                : 30.07.2012
+ *   @since                : 07.08.2012
  *
  */
 
@@ -557,7 +557,7 @@ if (isset($_GET['action']))
 		  {
 		    $_POST['amount'] = $item -> fields['amount'];
 		  }
-		$test = $db -> Execute("SELECT `id` FROM `equipment` WHERE `name`='".$item -> fields['name']."' AND `wt`=".$item -> fields['wt']." AND `type`='".$item -> fields['type']."' AND `status`='U' AND `owner`=".$_POST['pid']." AND `power`=".$item -> fields['power']." AND `zr`=".$item -> fields['zr']." AND `szyb`=".$item -> fields['szyb']." AND `maxwt`=".$item -> fields['maxwt']." AND `poison`=".$item -> fields['poison']." AND `cost`=".$item -> fields['cost']." AND `minlev`=".$item->fields['minlev']);
+		$test = $db -> Execute("SELECT `id` FROM `equipment` WHERE `name`='".$item -> fields['name']."' AND `wt`=".$item -> fields['wt']." AND `type`='".$item -> fields['type']."' AND `status`='U' AND `owner`=".$_POST['pid']." AND `power`=".$item -> fields['power']." AND `zr`=".$item -> fields['zr']." AND `szyb`=".$item -> fields['szyb']." AND `maxwt`=".$item -> fields['maxwt']." AND `poison`=".$item -> fields['poison']." AND `cost`=".$item -> fields['cost']." AND `minlev`=".$item->fields['minlev']." AND `magic`='".$item->fields['magic']."'");
 		if (empty ($test -> fields['id'])) 
 		  {
 		    $db -> Execute("INSERT INTO `equipment` (`owner`, `name`, `power`, `type`, `cost`, `zr`, `wt`, `minlev`, `maxwt`, `amount`, `magic`, `poison`, `szyb`, `twohand`, `repair`) VALUES(".$_POST['pid'].",'".$item -> fields['name']."',".$item -> fields['power'].",'".$item -> fields['type']."',".$item -> fields['cost'].",".$item -> fields['zr'].",".$item -> fields['wt'].",".$item -> fields['minlev'].",".$item -> fields['maxwt'].",".$_POST['amount'].",'".$item -> fields['magic']."',".$item -> fields['poison'].",".$item -> fields['szyb'].",'".$item  -> fields['twohand']."', ".$item -> fields['repair'].")") or error(E_DB4);
@@ -581,7 +581,7 @@ if (isset($_GET['action']))
 		  {
 		    $_POST['amount'] = $item -> fields['wt'];
 		  }
-		$test = $db -> Execute("SELECT `id` FROM `equipment` WHERE `name`='".$item -> fields['name']."' AND `type`='R' AND `status`='U' AND `owner`=".$_POST['pid']." AND `power`=".$item -> fields['power']." AND `zr`=".$item -> fields['zr']." AND `szyb`=".$item -> fields['szyb']." AND `poison`=".$item -> fields['poison']." AND `cost`=".$item -> fields['cost']);
+		$test = $db -> Execute("SELECT `id` FROM `equipment` WHERE `name`='".$item -> fields['name']."' AND `type`='R' AND `status`='U' AND `owner`=".$_POST['pid']." AND `power`=".$item -> fields['power']." AND `zr`=".$item -> fields['zr']." AND `szyb`=".$item -> fields['szyb']." AND `poison`=".$item -> fields['poison']." AND `cost`=".$item -> fields['cost']." AND `magic`='".$item->fields['magic']."'");
 		if (empty ($test -> fields['id'])) 
 		  {
 		    $db -> Execute("INSERT INTO `equipment` (`owner`, `name`, `power`, `type`, `cost`, `zr`, `wt`, `minlev`, `maxwt`, `amount`, `magic`, `poison`, `szyb`, `twohand`, `repair`) VALUES(".$_POST['pid'].",'".$item -> fields['name']."',".$item -> fields['power'].",'".$item -> fields['type']."',".$item -> fields['cost'].",".$item -> fields['zr'].",".$_POST['amount'].",".$item -> fields['minlev'].",".$_POST['amount'].",1,'".$item -> fields['magic']."',".$item -> fields['poison'].",".$item -> fields['szyb'].",'".$item  -> fields['twohand']."', ".$item -> fields['repair'].")") or error(E_DB4);
