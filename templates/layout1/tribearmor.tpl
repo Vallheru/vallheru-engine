@@ -3,17 +3,15 @@
 {if $Step == "" && $Step2 == "" && $Give == "" && $Reserve == ""}
     {$Armorinfo}<br />
     <ul>
-    {section name=armorlinks loop=$Armortype}
-        <li><a href="tribearmor.php?step=zobacz&amp;lista=id&amp;type={$Armortype[armorlinks]}">{$Armorlink[armorlinks]}</a></li>
-    {/section}
-    <li><a href="tribearmor.php?step=daj">{$Aadd}</a></li>
+        <li><a href="tribearmor.php?step=zobacz&amp;lista=id">{$Armorlink}</a></li>
+    	<li><a href="tribearmor.php?step=daj">{$Aadd}</a></li>
     </ul>
 {/if}
 
 {if $Step == "zobacz"}
     {$Inarmor2} {$Amount1} {$Name1}<br />
-    <form method="post" action="tribearmor.php?step=zobacz&amp;lista=id&amp;type={$Type}&amp;levels=yes">
-        {$Tor} <input type="submit" value="{$Tseek}" /> {$Titems} <input type="text" name="min" value="1" size="5" />  {$Tto} <input type="text" name="max" value="1" size="5" />
+    <form method="post" action="tribearmor.php?step=zobacz&amp;lista=id">
+        <input type="submit" value="{$Tseek}" /> {html_options name=type options=$Otypes} {$Titems} <input type="text" name="min" value="1" size="5" />  {$Tto} <input type="text" name="max" value="1" size="5" />
     </form>
     <table width="100%" align="center">
     <tr>
@@ -23,28 +21,38 @@
     <th>{$Tamount2}</th>
     <th>{$Toptions}</th>
     </tr>
-    {section name=tribearmor loop=$Name}
+    {foreach $Items as $Item}
         <tr>
-        <td>{$Name[tribearmor]}</td>
-        <td align="center">{$Power[tribearmor]}</td>
+        <td>{$Item.name}</td>
+        <td align="center">{$Item.power}</td>
         {if $Type != "I" && $Type != "P" && $Type != "O"}
-            <td align="center">{$Durability[tribearmor]}/{$Maxdurability[tribearmor]}</td>
-            <td align="center">{$Agility[tribearmor]}</td>
-            <td align="center">{$Speed[tribearmor]}</td>
+            <td align="center">{$Item.wt}/{$Item.maxwt}</td>
+            <td align="center">{$Item.zr}</td>
+            <td align="center">{$Item.szyb}</td>
         {/if}
-        <td align="center">{$Ilevel[tribearmor]}</td>
-        <td align="center">{$Amount[tribearmor]} / {$Reserved[tribearmor]}</td>
-        {$Action[tribearmor]}
-    {/section}
+        <td align="center">{$Item.minlev}</td>
+        <td align="center">{$Item.amount} / {$Item.reserved}</td>
+        <td>{$Item.action}</td>
+    {/foreach}
     </table>
+    {if $Tpages > 1}
+    	<br />{$Fpage}
+    	{for $page = 1 to $Tpages}
+	    {if $page == $Tpage}
+	        {$page}
+	    {else}
+                <a href="tribearmor.php?step=zobacz&page={$page}&amp;type={$Type}&amp;lista={$Mlist}">{$page}</a>
+	    {/if}
+    	{/for}
+    {/if}
 {/if}
 
 {if $Give != ""}
     {if $Step3 == ""}
-        <form method="post" action="tribearmor.php?daj={$Id}&amp;step3=add">
+        <form method="post" action="tribearmor.php?daj={$Give}&amp;step3=add">
         <input type="submit" value="{$Agive}" />
         <input type="text" name="amount" value="{$Amount}" size=5 /> {$Tamount} <b>{$Name}</b> {$Playerid}:
-        {html_options name=did options=$Members}<br />
+	{html_options name=did options=$Members}<br />
         </form>
     {/if}
 {/if}
@@ -52,7 +60,7 @@
 {if $Step == "daj"}
     {$Additem}<br /><br />
     <form method="post" action="tribearmor.php?step=daj&amp;step2=add">
-    <table class="dark"><tr><td>
+    <table><tr><td>
     {$Item}: <select name="przedmiot">
     {section name=tribearmor1 loop=$Name}
         <option value="{$Itemid[tribearmor1]}">{$Name[tribearmor1]} (+{$Ipower[tribearmor1]})
@@ -70,4 +78,13 @@
     </select> sztuk <input type="text" name="amount" size="5" /></td></tr>
     <tr><td colspan="2" align="center"><input type="submit" value="{$Aadd}" /></td></tr>
     </table></form>
+{/if}
+
+{if $Reserve != ""}
+    {if $Step3 == ""}
+        <form method="post" action="tribearmor.php?reserve={$Reserve}&amp;step3=add">
+        <input type="submit" value="{$Aask}" />
+        <input type="text" name="amount" value="{$Amount}" size=5 /> {$Tamount} <b>{$Name}</b><br />
+        </form>
+    {/if}
 {/if}
