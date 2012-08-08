@@ -6,8 +6,8 @@
  *   @name                 : log.php                            
  *   @copyright            : (C) 2004,2005,2006,2011,2012 Vallheru Team based on Gamers-Fusion ver 2.5
  *   @author               : thindil <thindil@vallheru.net>
- *   @version              : 1.5
- *   @since                : 24.04.2012
+ *   @version              : 1.6
+ *   @since                : 08.08.2012
  *
  */
 
@@ -195,19 +195,6 @@ if (isset($_GET['action']) && $_GET['action'] == 'selected')
       }
   }
 
-$objTest = $db -> Execute("SELECT count(`id`) FROM `log` WHERE `owner`=".$player -> id." ORDER BY `id` DESC");
-$intPages = ceil($objTest -> fields['count(`id`)'] / 30);
-$objTest -> Close();
-if (isset($_GET['page']))
-  {
-    checkvalue($_GET['page']);
-    $intPage = $_GET['page'];
-  }
- else
-   {
-     $intPage = 1;
-   }
-
 $arrTypes = array('O' => 'Strażnica', 
 		  'V' => 'Vallary', 
 		  'B' => 'Walka', 
@@ -239,21 +226,45 @@ while (!$objTypes->EOF)
   }
 $objTypes->Close();
 
-if (!isset($_POST['type']) && !isset($_GET['type']))
+if (isset($_GET['type']))
+  {
+    $_POST['type'] = $_GET['type'];
+  }
+if (isset($_POST['type']))
+  {
+    if (!in_array($_POST['type'], array_keys($arrTypes)))
+      {
+	error(ERROR);
+      }
+  }
+
+if (!isset($_POST['type']))
+  {
+    $objTest = $db -> Execute("SELECT count(`id`) FROM `log` WHERE `owner`=".$player -> id." ORDER BY `id` DESC");
+  }
+else
+  {
+    $objTest = $db -> Execute("SELECT count(`id`) FROM `log` WHERE `owner`=".$player -> id." AND `type`='".$_POST['type']."' ORDER BY `id` DESC");
+  }
+$intPages = ceil($objTest -> fields['count(`id`)'] / 30);
+$objTest -> Close();
+if (isset($_GET['page']))
+  {
+    checkvalue($_GET['page']);
+    $intPage = $_GET['page'];
+  }
+ else
+   {
+     $intPage = 1;
+   }
+
+if (!isset($_POST['type']))
   {
     $log = $db -> SelectLimit("SELECT `id`, `log`, `czas` FROM `log` WHERE `owner`=".$player -> id." ORDER BY `id` DESC", 30, 30 * ($intPage - 1));
     $strSort = '';
   }
 else
   {
-    if (isset($_GET['type']))
-      {
-	$_POST['type'] = $_GET['type'];
-      }
-    if (!in_array($_POST['type'], array_keys($arrTypes)))
-      {
-	error(ERROR);
-      }
     $log = $db -> SelectLimit("SELECT `id`, `log`, `czas` FROM `log` WHERE `owner`=".$player -> id." AND `type`='".$_POST['type']."' ORDER BY `id` DESC", 30, 30 * ($intPage - 1));
     $strSort = '&amp;type='.$_POST['type'];
   }
