@@ -1,5 +1,7 @@
 2012-08-08  Bartek thindil Jasicki  <thindil@vallheru.net>
 
+	* BUG,templates/layout1/kowal.tpl, templates/kowa.tpl, kowalphp: 
+	fixed typo
 	* UPDATE,templates/layout1/tribearmor.tpl, templates/tribearmor.tpl, tribearmor.php:
 	finished work on tribe armory
 

@@ -7,7 +7,7 @@
  *   @copyright            : (C) 2004,2005,2006,2011,2012 Vallheru Team based on Gamers-Fusion ver 2.5
  *   @author               : thindil <thindil@vallheru.net>
  *   @version              : 1.6
- *   @since                : 09.07.2012
+ *   @since                : 08.08.2012
  *
  */
 
@@ -787,7 +787,7 @@ if (isset ($_GET['kowal']) && $_GET['kowal'] == 'kuznia')
 		    $arrMaked['zr'] = 0 - $arrMaked['zr'];
 		  }
 		$arrMaked['zr'] = abs($arrMaked['zr']);
-                $smarty -> assign ("Message", YOU_MAKE.$arrMaked['name']."(+ ".$arrMaked['power'].") (".$arrMaked['zr']."% zr) (".$arrMaked['wt']."/".$arrMaked['wt'].")".AND_GAIN2.$intGainexp.AND_EXP2.$intAbility.IN_SMITH);
+                $smarty -> assign ("Message", YOU_MAKE.$arrMaked['name']."(+ ".$arrMaked['power'].") (".$arrMaked['zr']." zr) (".$arrMaked['wt']."/".$arrMaked['wt'].")".AND_GAIN2.$intGainexp.AND_EXP2.$intAbility.IN_SMITH);
 	      } 
 	    else 
 	      {
@@ -1162,7 +1162,7 @@ if (isset ($_GET['kowal']) && $_GET['kowal'] == 'elite')
 		    $intRepaircost = $arrItem['level'] * $arrRepair[$intKey] * 1;
 		  }
 		additem($objSmith->fields['type'], $strName, $intMaxdur, $intPower, $intAgility, $intCost, $player->id, $objSmith->fields['level'], $intRepaircost, $objSmith->fields['twohand']);
-                $smarty -> assign ("Message", YOU_MAKE.$strName."(+ ".$intPower.") (".($intAgility * -1)."% zr) (".$intMaxdur."/".$intMaxdur.")".AND_GAIN2.$intGainexp.AND_EXP2.$intAbility.IN_SMITH);
+                $smarty -> assign ("Message", YOU_MAKE.$strName."(+ ".$intPower.") (".($intAgility * -1)." zr) (".$intMaxdur."/".$intMaxdur.")".AND_GAIN2.$intGainexp.AND_EXP2.$intAbility.IN_SMITH);
 	      } 
 	    else 
 	      {
