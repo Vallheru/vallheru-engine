@@ -7,7 +7,7 @@
  *   @copyright            : (C) 2004,2005,2006,2011,2012 Vallheru Team based on Gamers-Fusion ver 2.5
  *   @author               : thindil <thindil@vallheru.net>
  *   @version              : 1.6
- *   @since                : 03.08.2012
+ *   @since                : 08.08.2012
  *
  */
 
@@ -84,18 +84,36 @@ if (!isset($_GET['step']))
 */
 if (isset($_GET['step']) && $_GET['step'] == 'add')
 {
-    $arrLanguage = scandir('languages/', 1);
-    $arrLanguage = array_diff($arrLanguage, array(".", "..", "index.htm"));
 
     $arrType = array(T_TYPE1, T_TYPE2);
-    $smarty -> assign(array("Llang" => $arrLanguage,
-        "Ttype" => $arrType,
-        "Tlang" => T_LANG,
-        "Ttype2" => T_TYPE,
-        "Ttitle2" => T_TITLE,
-        "Tbody2" => T_BODY,
-        "Aadd" => A_ADD,
-        "Addinfo" => ADD_INFO));
+    $smarty -> assign(array("Ttype" => $arrType,
+			    "Ttype2" => T_TYPE,
+			    "Ttitle2" => T_TITLE,
+			    "Tbody2" => T_BODY,
+			    "Aadd" => A_ADD,
+			    "Addinfo" => ADD_INFO,
+			    "Abold" => "Pogrubienie",
+			    "Aitalic" => "Kursywa",
+			    "Aunderline" => "Podkreślenie",
+			    "Aemote" => "Emocje/Czynność",
+			    "Ocolors" => array("red" => "czerwony",
+					       "green" => "zielony",
+					       "white" => "biały",
+					       "yellow" => "żółty",
+					       "blue" => "niebieski",
+					       "aqua" => "cyjan",
+					       "fuchsia" => "fuksja",
+					       "grey" => "szary",
+					       "lime" => "limonka",
+					       "maroon" => "wiśniowy",
+					       "navy" => "granatowy",
+					       "olive" => "oliwkowy",
+					       "purple" => "purpurowy",
+					       "silver" => "srebrny",
+					       "teal" => "morski"),
+			    "Acolor" => "Kolor",
+			    "Acenter" => "Wycentrowanie",
+			    "Aquote" => "Cytat"));
 
     if (isset($_GET['step2']))
     {
@@ -120,7 +138,7 @@ if (isset($_GET['step']) && $_GET['step'] == 'add')
         $strAuthor = $player -> user." ID: ".$player -> id;
         $strTitle = $db -> qstr($_POST['ttitle'], get_magic_quotes_gpc());
         $strBody = $db -> qstr($_POST['body'], get_magic_quotes_gpc());
-        $db -> Execute("INSERT INTO library (title, body, type, lang, author) VALUES(".$strTitle.", ".$strBody.", '".$strType."', '".$_POST['lang']."', '".$strAuthor."')");
+        $db -> Execute("INSERT INTO library (title, body, type, lang, author) VALUES(".$strTitle.", ".$strBody.", '".$strType."', '".$lang."', '".$strAuthor."')");
         error(YOU_ADD);
     }
 }
@@ -175,7 +193,29 @@ if (isset($_GET['step']) && $_GET['step'] == 'addtext')
 				"Ttype2" => T_TYPE,
 				"Achange" => A_CHANGE,
 				"Ttypet" => T_TYPE1,
-				"Ttypep" => T_TYPE2));
+				"Ttypep" => T_TYPE2,
+				"Abold" => "Pogrubienie",
+				"Aitalic" => "Kursywa",
+				"Aunderline" => "Podkreślenie",
+				"Aemote" => "Emocje/Czynność",
+				"Ocolors" => array("red" => "czerwony",
+						   "green" => "zielony",
+						   "white" => "biały",
+						   "yellow" => "żółty",
+						   "blue" => "niebieski",
+						   "aqua" => "cyjan",
+						   "fuchsia" => "fuksja",
+						   "grey" => "szary",
+						   "lime" => "limonka",
+						   "maroon" => "wiśniowy",
+						   "navy" => "granatowy",
+						   "olive" => "oliwkowy",
+						   "purple" => "purpurowy",
+						   "silver" => "srebrny",
+						   "teal" => "morski"),
+				"Acolor" => "Kolor",
+				"Acenter" => "Wycentrowanie",
+				"Aquote" => "Cytat",));
         $objText -> Close();
         if (isset($_POST['tid']))
         {

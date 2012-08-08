@@ -18,8 +18,9 @@
 {/if}
 
 {if $Step == "add"}
+    <script src="js/editor.js"></script>
     {$Addinfo}<br />
-    <form method="post" action="library.php?step=add&amp;step2=add">
+    <form method="post" action="library.php?step=add&amp;step2=add" name="add">
         {$Tlang}: <select name="lang">
             {section name=library loop=$Llang}
                 <option value="{$Llang[library]}">{$Llang[library]}</option>
@@ -31,7 +32,15 @@
             {/section}
         </select><br />
         {$Ttitle2}: <input type="text" name="ttitle" /><br />
-        {$Tbody2}: <br /><textarea name="body" rows="30" cols="60"></textarea><br />
+        {$Tbody2}: <br />
+	<input id="bold" type="button" value="{$Abold}" onClick="formatText(this.id, 'add', 'body')" />
+	<input id="italic" type="button" value="{$Aitalic}" onClick="formatText(this.id, 'add', 'body')" />
+	<input id="underline" type="button" value="{$Aunderline}" onClick="formatText(this.id, 'add', 'body')" />
+	<input id="emote" type="button" value="{$Aemote}" onClick="formatText(this.id, 'add', 'body')" />
+	<input id="center" type="button" value="{$Acenter}" onClick="formatText(this.id, 'add', 'body')" />
+	<input id="quote" type="button" value="{$Aquote}" onClick="formatText(this.id, 'add', 'body')" />
+	<input id="color" type="button" value="{$Acolor}" onClick="formatText(this.id, 'add', 'body')" /> {html_options name=colors options=$Ocolors}<br />
+	<textarea name="body" rows="30" cols="60"></textarea><br />
         <input type="submit" value="{$Aadd}" />
     </form>
 {/if}
@@ -129,14 +138,23 @@
 {/if}
 
 {if $Action == "modify"}
-<form method="post" action="library.php?step=addtext&amp;action=modify&amp;text={$Tid}">
+    <script src="js/editor.js"></script>
+    <form method="post" action="library.php?step=addtext&amp;action=modify&amp;text={$Tid}" name="edit">
     {$Ttype2}: <select name="type">
         <option value="{$Ttypet}" {if $Ttype == "tale"} selected="true" {/if}>{$Ttypet}</option>
         <option value="{$Ttypep}" {if $Ttype == "poetry"} selected="true" {/if}>{$Ttypep}</option>
     </select>
     <input type="hidden" name="tid" value="{$Tid}" /><br />
     {$Ttitle2}: <input type="text" name="ttitle" value="{$Ttitle}" /><br />
-    {$Tbody2}: <br /><textarea name="body" rows="30" cols="60">{$Tbody}</textarea><br />
+    {$Tbody2}: <br />
+    <input id="bold" type="button" value="{$Abold}" onClick="formatText(this.id, 'edit', 'body')" />
+	<input id="italic" type="button" value="{$Aitalic}" onClick="formatText(this.id, 'edit', 'body')" />
+	<input id="underline" type="button" value="{$Aunderline}" onClick="formatText(this.id, 'edit', 'body')" />
+	<input id="emote" type="button" value="{$Aemote}" onClick="formatText(this.id, 'edit', 'body')" />
+	<input id="center" type="button" value="{$Acenter}" onClick="formatText(this.id, 'edit', 'body')" />
+	<input id="quote" type="button" value="{$Aquote}" onClick="formatText(this.id, 'edit', 'body')" />
+	<input id="color" type="button" value="{$Acolor}" onClick="formatText(this.id, 'edit', 'body')" /> {html_options name=colors options=$Ocolors}<br />
+    <textarea name="body" rows="30" cols="60">{$Tbody}</textarea><br />
     <input type="hidden" name="tid" value="{$Tid}" />
     <input type="submit" value="{$Achange}" />
 </form>
