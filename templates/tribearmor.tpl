@@ -16,7 +16,7 @@
     <table width="100%" align="center">
     <tr>
     {section name=armortable loop=$Ttypes}
-        <th><a href="tribearmor.php?step=zobacz&amp;lista={$Ttypes[armortable]}&amp;limit=0&amp;type={$Type}">{$Tinfos[armortable]}</a></th>
+        <th><a href="tribearmor.php?step=zobacz&amp;lista={$Ttypes[armortable]}&amp;limit=0{$Type}{$Mmin}{$Mmax}">{$Tinfos[armortable]}</a></th>
     {/section}
     <th>{$Tamount2}</th>
     <th>{$Toptions}</th>
@@ -41,7 +41,7 @@
 	    {if $page == $Tpage}
 	        {$page}
 	    {else}
-                <a href="tribearmor.php?step=zobacz&page={$page}&amp;type={$Type}&amp;lista={$Mlist}">{$page}</a>
+                <a href="tribearmor.php?step=zobacz&page={$page}&amp;lista={$Mlist}{$Type}{$Mmin}{$Mmax}">{$page}</a>
 	    {/if}
     	{/for}
     {/if}

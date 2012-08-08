@@ -8,7 +8,7 @@
  *   @author               : thindil <thindil@vallheru.net>
  *   @author               : eyescream <tduda@users.sourceforge.net>
  *   @version              : 1.6
- *   @since                : 16.07.2012
+ *   @since                : 08.08.2012
  *
  */
 
@@ -168,6 +168,10 @@ if (!isset($_GET['daj']) && !isset($_GET['step2']) && $_GET['reserve'] == '')
 if (isset($_GET['step']) && $_GET['step'] == 'zobacz') 
 {
     $arrList = array('id', 'name', 'power', 'wt', 'zr', 'szyb', 'minlev');
+    if (isset($_GET['type']))
+      {
+	$_POST['type'] = $_GET['type'];
+      }
     if (isset($_POST['type']) && !in_array($_POST['type'], $arrType)) 
     {
         error (ERROR);
@@ -176,10 +180,20 @@ if (isset($_GET['step']) && $_GET['step'] == 'zobacz')
     {
         error (ERROR);
     }
+    if (isset($_GET['min']))
+      {
+	checkvalue($_GET['min']);
+	$_POST['min'] = $_GET['min'];
+      }
+    if (isset($_GET['max']))
+      {
+	checkvalue($_GET['max']);
+	$_POST['max'] = $_GET['max'];
+      }
     if (isset($_POST['type']))
       {
 	$arrItem = array(T_WEAPONS, T_ARMORS, T_HELMETS, T_LEGS, T_SHIELDS, T_BOWS, T_STAFFS, T_CAPES, T_ARROWS, T_RINGS, "łupów", 'narzędzi', 'planów');
-	$amount = $db -> Execute("SELECT SUM(`amount`) FROM `tribe_zbroj` WHERE `klan`=".$player -> tribe." AND `type`='".$_POST['type']."'");
+	$amount = $db -> Execute("SELECT SUM(`amount`) FROM `tribe_zbroj` WHERE `klan`=".$player -> tribe." AND `type`='".$_POST['type']."' AND `minlev`>=".$_POST['min']." AND `minlev`<=".$_POST['max']);
 	$intKey = array_search($_POST['type'], $arrType);
 	$item = $arrItem[$intKey];
       }
@@ -304,10 +318,32 @@ if (isset($_GET['step']) && $_GET['step'] == 'zobacz')
 	$strId = array_shift($arrList);
 	if (!isset($_POST['type']))
 	  {
-	    $_POST['type'] = '';
+	    $strType = '';
+	  }
+	else
+	  {
+	    $strType = '&amp;type='.$_POST['type'];
+	  }
+	if (!isset($_POST['min']))
+	  {
+	    $strMin = '';
+	  }
+	else
+	  {
+	    $strMin = '&amp;min='.$_POST['min'];
+	  }
+	if (!isset($_POST['max']))
+	  {
+	    $strMax = '';
+	  }
+	else
+	  {
+	    $strMax = '&amp;max='.$_POST['max'];
 	  }
 	$smarty -> assign(array("Items" => $arritem, 
-				"Type" => $_POST['type'],
+				"Type" => $strType,
+				"Mmin" => $strMin,
+				"Mmax" => $strMax,
 				"Mlist" => $_GET['lista'],
 				"Tinfos" => $arrInfos,
 				"Ttypes" => $arrList,

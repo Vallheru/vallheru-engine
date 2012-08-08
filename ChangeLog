@@ -1,3 +1,8 @@
+2012-08-08  Bartek thindil Jasicki  <thindil@vallheru.net>
+
+	* UPDATE,templates/layout1/tribearmor.tpl, templates/tribearmor.tpl, tribearmor.php:
+	finished work on tribe armory
+
 2012-08-07  Bartek thindil Jasicki  <thindil@vallheru.net>
 
 	* BUG,tribearmor.php: 
