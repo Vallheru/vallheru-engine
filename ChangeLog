@@ -1,5 +1,7 @@
 2012-08-08  Bartek thindil Jasicki  <thindil@vallheru.net>
 
+	* UPDATE,templates/layout1/tforums.tpl, templates/tforums.tpl, tforums.tpl: 
+	added better text editor
 	* UPDATE,templates/layout1/library.tpl, templates/library.tpl, library.php: 
 	added better text editor
 	* BUG,log.php: 

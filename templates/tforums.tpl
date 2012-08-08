@@ -1,3 +1,4 @@
+<script src="js/editor.js"></script>
 {if $View == "newposts"}
     <ul>
         {section name=numbers loop=$Titles}
@@ -58,8 +59,15 @@
     	{/for}
 	<br /><br />
     {/if}
-    <form method="post" action="tforums.php?action=addtopic">
+    <form method="post" action="tforums.php?action=addtopic" name="addtopic">
     {$Addtopic}:<br /><input type="text" name="title2" value="" size="40" /><br />
+    <input id="bold" type="button" value="{$Abold}" onClick="formatText(this.id, 'addtopic', 'body')" />
+	<input id="italic" type="button" value="{$Aitalic}" onClick="formatText(this.id, 'addtopic', 'body')" />
+	<input id="underline" type="button" value="{$Aunderline}" onClick="formatText(this.id, 'addtopic', 'body')" />
+	<input id="emote" type="button" value="{$Aemote}" onClick="formatText(this.id, 'addtopic', 'body')" />
+	<input id="center" type="button" value="{$Acenter}" onClick="formatText(this.id, 'addtopic', 'body')" />
+	<input id="quote" type="button" value="{$Aquote}" onClick="formatText(this.id, 'addtopic', 'body')" />
+	<input id="color" type="button" value="{$Acolor}" onClick="formatText(this.id, 'addtopic', 'body')" /> {html_options name=colors options=$Ocolors}<br />
     <textarea name="body" cols="40" rows="10">{$Ttext}</textarea><br />
     {$Sticky}
     <input type="submit" value="{$Addtopic}" /></form><br />
@@ -97,8 +105,15 @@
     	{/for}
 	<br /><br />
     {/if}
-    <form method="post" action="tforums.php?reply={$Id}">
+    <form method="post" action="tforums.php?reply={$Id}" name="addreply">
     {$Areply}:<br />
+    <input id="bold" type="button" value="{$Abold}" onClick="formatText(this.id, 'addreply', 'rep')" />
+	<input id="italic" type="button" value="{$Aitalic}" onClick="formatText(this.id, 'addreply', 'rep')" />
+	<input id="underline" type="button" value="{$Aunderline}" onClick="formatText(this.id, 'addreply', 'rep')" />
+	<input id="emote" type="button" value="{$Aemote}" onClick="formatText(this.id, 'addreply', 'rep')" />
+	<input id="center" type="button" value="{$Acenter}" onClick="formatText(this.id, 'addreply', 'rep')" />
+	<input id="quote" type="button" value="{$Aquote}" onClick="formatText(this.id, 'addreply', 'rep')" />
+	<input id="color" type="button" value="{$Acolor}" onClick="formatText(this.id, 'addreply', 'rep')" /> {html_options name=colors options=$Ocolors}<br />
     <textarea name="rep" cols="40" rows="10">{$Rtext}</textarea><br />
     <input type="submit" value="{$Areply}" /></form><br />
     {$Thelp}
