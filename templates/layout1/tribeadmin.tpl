@@ -159,15 +159,29 @@
     {/if}
 {/if}
 {if $Step2 == "messages"}
+    <script src="js/editor.js"></script>
     <form method="post" action="tribeadmin.php?step2=messages&amp;action=tags">
         {$Tprefix} <input type="text" name="prefix" size="5" value="{$Prefix}" /><br />
 	{$Tsuffix} <input type="text" name="suffix" size="5" value="{$Suffix}" /><br />
 	{$Tinfo}<br />
 	<input type="submit" value="{$Achange}" />
     </form><br /><br />
-    <form method="post" action="tribeadmin.php?step2=messages&amp;action=edit"><table>
-        <tr><td valign="top">{$Clandesc}:</td><td><textarea name="public_msg" rows="13" cols="50">{$Pubmessage}</textarea></td></tr>
-        <tr><td valign="top">{$Msgtomem}:</td><td><textarea name="private_msg" rows="13" cols="50">{$Privmessage}</textarea></td></tr>
+    <form method="post" action="tribeadmin.php?step2=messages&amp;action=edit" name="messages"><table>
+        <tr><td valign="top">{$Clandesc}:</td><td><input id="bold" type="button" value="{$Abold}" onClick="formatText(this.id, 'messages', 'public_msg')" />
+	<input id="italic" type="button" value="{$Aitalic}" onClick="formatText(this.id, 'messages', 'public_msg')" />
+	<input id="underline" type="button" value="{$Aunderline}" onClick="formatText(this.id, 'messages', 'public_msg')" />
+	<input id="emote" type="button" value="{$Aemote}" onClick="formatText(this.id, 'messages', 'public_msg')" />
+	<input id="center" type="button" value="{$Acenter}" onClick="formatText(this.id, 'messages', 'public_msg')" />
+	<input id="quote" type="button" value="{$Aquote}" onClick="formatText(this.id, 'messages', 'public_msg')" />
+	<input id="color" type="button" value="{$Acolor}" onClick="formatText(this.id, 'messages', 'public_msg')" /> {html_options name=colors options=$Ocolors}<br />
+	<textarea name="public_msg" rows="13" cols="50">{$Pubmessage}</textarea></td></tr>
+        <tr><td valign="top">{$Msgtomem}:</td><td><input id="bold" type="button" value="{$Abold}" onClick="formatText(this.id, 'messages', 'private_msg')" />
+	<input id="italic" type="button" value="{$Aitalic}" onClick="formatText(this.id, 'messages', 'private_msg')" />
+	<input id="underline" type="button" value="{$Aunderline}" onClick="formatText(this.id, 'messages', 'private_msg')" />
+	<input id="emote" type="button" value="{$Aemote}" onClick="formatText(this.id, 'messages', 'private_msg')" />
+	<input id="center" type="button" value="{$Acenter}" onClick="formatText(this.id, 'messages', 'private_msg')" />
+	<input id="quote" type="button" value="{$Aquote}" onClick="formatText(this.id, 'messages', 'private_msg')" /><br />
+	<textarea name="private_msg" rows="13" cols="50">{$Privmessage}</textarea></td></tr>
         <tr><td colspan="2" align="center"><input type="submit" value="{$Achange}" /></td></tr>
         </table></form>
     <form method="post" action="tribeadmin.php?step2=messages&amp;action=www">
