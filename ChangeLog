@@ -1,5 +1,7 @@
 2012-08-09  Bartek thindil Jasicki  <thindil@vallheru.net>
 
+	* BUG,includes/funkcje.php: 
+	fixed magic arrows
 	* BUG,includes/turnfight.php:
 	fixed magic arrows
 
