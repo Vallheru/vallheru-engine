@@ -7,7 +7,7 @@
  *   @copyright            : (C) 2004,2005,2006,2007,2011,2012 Vallheru Team based on Gamers-Fusion ver 2.5
  *   @author               : thindil <thindil@vallheru.net>
  *   @version              : 1.6
- *   @since                : 24.07.2012
+ *   @since                : 09.08.2012
  *
  */
  
@@ -856,7 +856,7 @@ function attack($eunik,$bdamage)
 	  {
 	    $bonus += $arrEquip[6][8];
 	  }
-	if ($arrEquip[6][10] != 'N' && $arrequip[6][10] == $enemy['resistance'][0])
+	if ($arrEquip[6][10] != 'N' && $arrEquip[6][10] == $enemy['resistance'][0])
 	  {
 	    switch ($enemy['resistance'][1])
 	      {

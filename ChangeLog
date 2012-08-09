@@ -1,3 +1,8 @@
+2012-08-09  Bartek thindil Jasicki  <thindil@vallheru.net>
+
+	* BUG,includes/turnfight.php:
+	fixed magic arrows
+
 2012-08-08  Bartek thindil Jasicki  <thindil@vallheru.net>
 
 	* UPDATE,templates/layout1/tforums.tpl, templates/tforums.tpl, tforums.tpl: 
