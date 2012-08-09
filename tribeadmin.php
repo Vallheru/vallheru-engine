@@ -553,6 +553,28 @@ else
 	  {
 	    error (NO_PERM2);
 	  }
+	$smarty->assign(array("Abold" => "Pogrubienie",
+			      "Aitalic" => "Kursywa",
+			      "Aunderline" => "Podkreślenie",
+			      "Aemote" => "Emocje/Czynność",
+			      "Ocolors" => array("red" => "czerwony",
+						 "green" => "zielony",
+						 "white" => "biały",
+						 "yellow" => "żółty",
+						 "blue" => "niebieski",
+						 "aqua" => "cyjan",
+						 "fuchsia" => "fuksja",
+						 "grey" => "szary",
+						 "lime" => "limonka",
+						 "maroon" => "wiśniowy",
+						 "navy" => "granatowy",
+						 "olive" => "oliwkowy",
+						 "purple" => "purpurowy",
+						 "silver" => "srebrny",
+						 "teal" => "morski"),
+			      "Acolor" => "Kolor",
+			      "Acenter" => "Wycentrowanie",
+			      "Aquote" => "Cytat"));
 	if (isset($_GET['step3']) && $_GET['step3'] == 'send')
 	  {
 	    if (!isset($_POST['body']) || !isset($_POST['mtitle']))

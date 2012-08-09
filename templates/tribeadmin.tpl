@@ -95,8 +95,9 @@
     {/if}
 {/if}
 {if $Step2 == "mail"}
+    <script src="js/editor.js"></script>
     {if $Step3 == ""}
-        <form method="post" action="tribeadmin.php?step2=mail&amp;step3=send">
+        <form method="post" action="tribeadmin.php?step2=mail&amp;step3=send" name="mail">
             <table>
                 <tr>
                     <td>{$Ttitle}:</td>
@@ -104,7 +105,13 @@
                 </tr>
                 <tr>
                     <td valign="top">{$Tbody}:</td>
-                    <td><textarea name="body" rows="13" cols="55"></textarea></td>
+                    <td><input id="bold" type="button" value="{$Abold}" onClick="formatText(this.id, 'mail', 'body')" />
+		    <input id="italic" type="button" value="{$Aitalic}" onClick="formatText(this.id, 'mail', 'body')" />
+		    <input id="underline" type="button" value="{$Aunderline}" onClick="formatText(this.id, 'mail', 'body')" />
+		    <input id="emote" type="button" value="{$Aemote}" onClick="formatText(this.id, 'mail', 'body')" />
+		    <input id="center" type="button" value="{$Acenter}" onClick="formatText(this.id, 'mail', 'body')" />
+		    <input id="quote" type="button" value="{$Aquote}" onClick="formatText(this.id, 'mail', 'body')" />
+		    <input id="color" type="button" value="{$Acolor}" onClick="formatText(this.id, 'mail', 'body')" /> {html_options name=colors options=$Ocolors}<br /><textarea name="body" rows="13" cols="55"></textarea></td>
                 </tr>
                 <tr>
                     <td align="center" colspan="2"><input type="submit" value="{$Asend}" /></td>
