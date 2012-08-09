@@ -1,5 +1,7 @@
 2012-08-09  Bartek thindil Jasicki  <thindil@vallheru.net>
 
+	* UPDATE,js/editor.js: 
+	update for text selection
 	* UPDATE,templates/layout1/tribeadmin.tpl, templates/tribeadmin.tpl, tribeadmin.php: 
 	added better text editor
 	* UPDATE,templates/layout1/tribeadmin.tpl, templates/tribeadmin.tpl, tribeadmin.php: 
