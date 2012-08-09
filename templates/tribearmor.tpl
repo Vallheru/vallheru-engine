@@ -58,24 +58,28 @@
 {/if}
 
 {if $Step == "daj"}
+    <script src="js/tribearmor.js"></script>
     {$Additem}<br /><br />
     <form method="post" action="tribearmor.php?step=daj&amp;step2=add">
     <table><tr><td>
     {$Item}: <select name="przedmiot">
-    {section name=tribearmor1 loop=$Name}
-        <option value="{$Itemid[tribearmor1]}">{$Name[tribearmor1]} (+{$Ipower[tribearmor1]})
-	{if $Ispeed[tribearmor1] > 0}
-	    (+{$Ispeed[tribearmor1]} {$Ispd})
+    {foreach $Items as $Item}
+        <option value="{$Item.id}">{$Item.name} 
+	{if $Item.power > 0}
+	    (+{$Item.power})
 	{/if}
-	{if $Iagi[tribearmor1] != 0}
-	    ({$Iagi[tribearmor1]}% {$Iag})
+	{if $Item.szyb > 0}
+	    (+{$Item.szyb} {$Ispd})
 	{/if}
-	{if $Imaxdur[tribearmor1] > 1}
-	    ({$Idur[tribearmor1]}/{$Imaxdur[tribearmor1]})
+	{if $Item.zr != 0}
+	    ({$Item.zr} {$Iag})
 	{/if}
-	({$Amount2}: {$Amount[tribearmor1]})</option>
-    {/section}
-    </select> sztuk <input type="text" name="amount" size="5" /></td></tr>
+	{if $Item.wt > 1}
+	    ({$Item.wt}/{$Item.maxwt})
+	{/if}
+	({$Amount2}: {$Item.amount})</option>
+    {/foreach}
+    </select> <span id="amount">sztuk <input type="text" name="amount" size="5" /></span> (<input type="checkbox" name="all" id="all" onClick="showField();" />{$Tall}</td></tr>
     <tr><td colspan="2" align="center"><input type="submit" value="{$Aadd}" /></td></tr>
     </table></form>
 {/if}

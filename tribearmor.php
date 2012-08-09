@@ -518,9 +518,12 @@ if (isset ($_GET['step']) && $_GET['step'] == 'daj')
         {
             error(SELECT_ITEM);
         }
-        integercheck($_POST['amount']);
 	checkvalue($_POST['przedmiot']);
-	checkvalue($_POST['amount']);
+	if (!isset($_POST['all']))
+	  {
+	    integercheck($_POST['amount']);
+	    checkvalue($_POST['amount']);
+	  }
         $przed = $db -> Execute("SELECT * FROM equipment WHERE id=".$_POST['przedmiot']);
         if (!$przed -> fields['name']) 
         {
@@ -540,6 +543,10 @@ if (isset ($_GET['step']) && $_GET['step'] == 'daj')
 	  }
 	if ($przed->fields['type'] != 'R')
 	  {
+	    if (isset($_POST['all']))
+	      {
+		$_POST['amount'] = $przed->fields['amount'];
+	      }
 	    if ($przed -> fields['amount'] < $_POST['amount']) 
 	      {
 		error (NO_AMOUNT);
@@ -564,6 +571,10 @@ if (isset ($_GET['step']) && $_GET['step'] == 'daj')
 	  }
 	else
 	  {
+	    if (isset($_POST['all']))
+	      {
+		$_POST['amount'] = $przed->fields['wt'];
+	      }
 	    if ($przed -> fields['wt'] < $_POST['amount']) 
 	      {
 		error (NO_AMOUNT);
@@ -599,64 +610,38 @@ if (isset ($_GET['step']) && $_GET['step'] == 'daj')
         $objPerm -> Close();
         $przed -> Close();
     }
-    $arritem = $db -> Execute("SELECT * FROM equipment WHERE status='U' AND owner=".$player -> id);
-    $arrname = array();
-    $arrid = array();
-    $arramount = array();
-    $arrPower = array();
-    $arrSpeed = array();
-    $arrDur = array();
-    $arrMaxdur = array();
-    $arrAgi = array();
-    while (!$arritem -> EOF) 
-    {
-        switch ($arritem->fields['ptype'])
+    $arrItems = $db->GetAll("SELECT * FROM equipment WHERE status='U' AND owner=".$player -> id." AND `type`!='Q'");
+    foreach ($arrItems as &$arrItem)
+      {
+	switch ($arrItem['ptype'])
 	  {
 	  case 'D':
-	    $arritem->fields['name'] .= ' (Dynallca +'.$arritem->fields['poison'].')';
+	    $arrItem['name'] .= ' (Dynallca +'.$arrItem['poison'].')';
 	    break;
 	  case 'N':
-	    $arritem->fields['name'] .= ' (Nutari +'.$arritem->fields['poison'].')';
+	    $arrItem['name'] .= ' (Nutari +'.$arrItem['poison'].')';
 	    break;
 	  case 'I':
-	    $arritem->fields['name'] .= ' (Illani +'.$arritem->fields['poison'].')';
+	    $arrItem['name'] .= ' (Illani +'.$arrItem['poison'].')';
 	    break;
 	  default:
 	    break;
 	  }
-        $arrname[] = $arritem -> fields['name'];
-        $arrid[] = $arritem -> fields['id'];
-	if ($arritem->fields['type'] != 'R')
+	if ($arrItem['type'] == 'R')
 	  {
-	    $arrDur[] =  $arritem->fields['wt'];
-	    $arrMaxdur[] = $arritem->fields['maxwt'];
-	    $arramount[] = $arritem -> fields['amount'];
+	    $arrItem['amount'] = $arrItem['wt'];
+	    $arrItem['wt'] = 1;
+	    $arrItem['maxwt'] = 1;
 	  }
-	else
-	  {
-	    $arrDur[] = 1;
-	    $arrMaxdur[] = 1;
-	    $arramount[] = $arritem -> fields['wt'];
-	  }
-	$arrPower[] = $arritem->fields['power'];
-	$arrSpeed[] = $arritem->fields['szyb'];
-	$arrAgi[] = $arritem->fields['zr'] * -1;
-        $arritem -> MoveNext();
-    }
-    $arritem -> Close();
-    $smarty -> assign(array("Name" => $arrname, 
-                            "Itemid" => $arrid, 
-                            "Amount" => $arramount,
-			    "Ipower" => $arrPower,
-			    "Ispeed" => $arrSpeed,
-			    "Idur" => $arrDur,
-			    "Imaxdur" => $arrMaxdur,
-			    "Iagi" => $arrAgi,
+	$arrItem['zr'] = $arrItem['zr'] * -1;
+      }
+    $smarty -> assign(array("Items" => $arrItems,
 			    "Iag" => "zr",
 			    "Ispd" => "szyb",
                             "Additem" => ADD_ITEM,
                             "Item" => ITEM,
                             "Amount2" => AMOUNT2,
+			    "Tall" => "wszystkie posiadane)",
                             "Aadd" => A_ADD2));
 }
 
