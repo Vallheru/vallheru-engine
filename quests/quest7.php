@@ -7,7 +7,7 @@
  *   @copyright            : (C) 2004,2005,2006,2011,2012 Vallheru Team based on Gamers-Fusion ver 2.5
  *   @author               : thindil <thindil@vallheru.net>
  *   @version              : 1.6
- *   @since                : 25.07.2012
+ *   @since                : 09.08.2012
  *
  */
 
@@ -336,7 +336,7 @@ if ((isset($_POST['box6']) && $_POST['box6'] == 1) && $objAction -> fields['acti
     $objQuest -> Finish(20);
 }
 
-if (isset($_POST['box6']) && $_POST['box6'] == 2)
+if ((isset($_POST['box6']) && $_POST['box6'] == 2) && $objAction -> fields['action'] != '1.1.1.2.next.3.2.2')
 {
     $smarty -> assign(array("Link" => "<br /><br />(<a href=\"grid.php?step=quest\">".A_NEXT2."</a>)"));
     $db -> Execute("UPDATE players SET credits=credits+10000 WHERE id=".$player -> id);

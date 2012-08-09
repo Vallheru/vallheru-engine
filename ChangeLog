@@ -1,5 +1,7 @@
 2012-08-09  Bartek thindil Jasicki  <thindil@vallheru.net>
 
+	* BUG,quests/quest7.php: 
+	fixed bug with quest
 	* UPDATE,js/editor.js: 
 	update for text selection
 	* UPDATE,templates/layout1/tribeadmin.tpl, templates/tribeadmin.tpl, tribeadmin.php: 
