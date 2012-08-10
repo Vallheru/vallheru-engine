@@ -1,3 +1,8 @@
+2012-08-10  Bartek thindil Jasicki  <thindil@vallheru.net>
+
+	* BUG,lumbermill.php:
+	fixed info about used energy
+
 2012-08-09  Bartek thindil Jasicki  <thindil@vallheru.net>
 
 	* FEATURE,templates/layout1/tribearmor.tpl, templates/tribearmor.tpl, tribearmor.php, js/tribearmor.js: 
