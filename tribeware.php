@@ -154,52 +154,38 @@ if (isset ($_GET['step']) && $_GET['step'] == 'zobacz')
     {
         error (ERROR);
     }
-    $miks = $db -> Execute("SELECT * FROM tribe_mag WHERE owner=".$player -> tribe." ORDER BY ".$_GET['lista']." DESC");
-    if (!$miks -> fields['id']) 
+    $amount = $db -> Execute("SELECT SUM(`amount`) FROM `tribe_mag` WHERE `owner`=".$player-> tribe);
+    $przed = $amount->fields['SUM(`amount`)'];
+    if ($przed == 0) 
     {
         error(NO_ITEMS);
     }
-    $amount = $db -> Execute("SELECT SUM(`amount`) FROM `tribe_mag` WHERE `owner`=".$player-> tribe);
-    $przed = $amount->fields['SUM(`amount`)'];
     $amount -> Close();
-    $arrname = array();
-    $arrefect = array();
-    $arramount = array();
-    $arrlink = array();
-    while (!$miks -> EOF) 
-    {
-      if ($miks -> fields['type'] == 'A' && stripos($miks->fields['name'], 'oszukanie') === FALSE)
-        {
-            $arrname[] = $miks -> fields['name'];
-        }
+    $arrPotions = $db->GetAll("SELECT * FROM tribe_mag WHERE owner=".$player -> tribe." ORDER BY ".$_GET['lista']." DESC");
+    foreach ($arrPotions as &$arrPotion)
+      {
+	if ($arrPotion['type'] != 'A' || stripos($arrPotion['name'], 'oszukanie') !== FALSE)
+	  {
+	    $arrPotion['name'] .= ' (moc:'.$arrPotion['power'].')';
+	  }
+	$arrPotion['amount1'] = $arrPotion['amount'].' / '.($arrPotion['amount'] - $arrPotion['reserved']);
+	if ($player -> id == $owner -> fields['owner'] || $perm -> fields['warehouse']) 
+	  {
+	    $arrPotion['link'] = "- <a href=tribeware.php?daj=".$arrPotion['id'].">".A_GIVE."</a>";
+	  }
 	else
 	  {
-	    $arrname[] = $miks->fields['name']." (moc:".$miks -> fields['power'].")";
+	    $arrPotion['link'] = "- <a href=tribeware.php?reserve=".$arrPotion['id'].">poproś</a>";
 	  }
-        $arrefect[] = $miks -> fields['efect'];
-        $arramount[] = $miks -> fields['amount'].' / '.($miks->fields['amount'] - $miks->fields['reserved']);
-        if ($player -> id == $owner -> fields['owner'] || $perm -> fields['warehouse']) 
-        {
-            $arrlink[] = "<td>- <a href=tribeware.php?daj=".$miks -> fields['id'].">".A_GIVE."</a></td>";
-        } 
-            else 
-        {
-            $arrlink[] = "<td>- <a href=tribeware.php?reserve=".$miks->fields['id'].">poproś</a></td>";
-        }
-        $miks -> MoveNext();
-    }
-    $miks -> Close();
-    $smarty -> assign ( array("Amount1" => $przed, 
-        "Name" => $arrname, 
-        "Efect" => $arrefect, 
-        "Amount" => $arramount,
-        "Link" => $arrlink,
-        "Inware" => IN_WARE,
-        "Potions" => POTIONS,
-        "Tname" => T_NAME,
-        "Tefect" => T_EFECT,
-        "Tamount2" => "Razem/Dostępne",
-        "Toptions" => T_OPTIONS));
+      }
+    $smarty -> assign(array("Amount1" => $przed, 
+			    "Ipotions" => $arrPotions,
+			    "Inware" => IN_WARE,
+			    "Potions" => POTIONS,
+			    "Tname" => T_NAME,
+			    "Tefect" => T_EFECT,
+			    "Tamount2" => "Razem/Dostępne",
+			    "Toptions" => T_OPTIONS));
 }
 
 /**
@@ -320,12 +306,16 @@ if (isset ($_GET['step']) && $_GET['step'] == 'daj')
 			     "Potion" => POTION,
 			     "Amount2" => AMOUNT2,
 			     "Aadd" => "Dodaj",
+			     "Tall" => "wszystkie posiadane)",
 			     "Tamount2" => T_AMOUNT2));
     if (isset ($_GET['step2']) && $_GET['step2'] == 'add') 
     {
-        integercheck($_POST['amount']);
 	checkvalue($_POST['przedmiot']);
-	checkvalue($_POST['amount']);
+	if (!isset($_POST['all']))
+	  {
+	    integercheck($_POST['amount']);
+	    checkvalue($_POST['amount']);
+	  }
         $przed = $db -> Execute("SELECT * FROM potions WHERE id=".$_POST['przedmiot']);
         if (!$przed -> fields['name']) 
         {
@@ -338,6 +328,10 @@ if (isset ($_GET['step']) && $_GET['step'] == 'daj')
         if ($przed -> fields['status'] != 'K') 
 	  {
 	    error(ERROR);  
+	  }
+	if (isset($_POST['all']))
+	  {
+	    $_POST['amount'] = $przed->fields['amount'];
 	  }
         if ($_POST['amount'] > $przed -> fields['amount']) 
         {

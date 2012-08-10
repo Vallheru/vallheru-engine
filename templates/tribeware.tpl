@@ -16,13 +16,13 @@
     <th>{$Tamount2}</th>
     <th>{$Toptions}</th>
     </tr>
-    {section name=tribeware loop=$Name}
+    {foreach $Ipotions as $Potion}
         <tr>
-        <td>{$Name[tribeware]}</td>
-        <td>{$Efect[tribeware]}</td>
-        <td>{$Amount[tribeware]}</td>
-        {$Link[tribeware]}
-    {/section}
+        <td>{$Potion.name}</td>
+        <td>{$Potion.efect}</td>
+        <td>{$Potion.amount1}</td>
+        <td>{$Potion.link}</td>
+    {/foreach}
     </table>
 {/if}
 
@@ -34,9 +34,10 @@
 {/if}
 
 {if $Step == "daj"}
+    <script src="js/tribearmor.js"></script>
     {$Additem}<br /><br />
     <form method="post" action="tribeware.php?step=daj&amp;step2=add"><table>
-    <tr><td>{$Potion}: {html_options name=przedmiot options=$Potions} {$Tamount2} <input type="text" name="amount" size="5" /></td></tr>
+    <tr><td>{$Potion}: {html_options name=przedmiot options=$Potions} <span id="amount">{$Tamount2} <input type="text" name="amount" size="5" /></span> (<input type="checkbox" name="all" id="all" onClick="showField();" />{$Tall}</td></tr>
     <tr><td colspan="2" align="center"><input type="submit" value="{$Aadd}" /></td></tr>
     </table></form>
 {/if}
