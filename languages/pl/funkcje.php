@@ -4,10 +4,10 @@
  *   Polish language for file funkcje.php
  *
  *   @name                 : funkcje.php                            
- *   @copyright            : (C) 2004,2005,2006,2011 Vallheru Team based on Gamers-Fusion ver 2.5
- *   @author               : thindil <thindil@tuxfamily.org>
- *   @version              : 1.4
- *   @since                : 23.10.2011
+ *   @copyright            : (C) 2004,2005,2006,2011,2012 Vallheru Team based on Gamers-Fusion ver 2.5
+ *   @author               : thindil <thindil@vallheru.net>
+ *   @version              : 1.6
+ *   @since                : 10.08.2012
  *
  */
 
@@ -80,7 +80,7 @@ define("YOU_DODGE", "Uniknąłeś ciosu");
 define("ENEMY_HIT", "trafia(ją) ciebie ");
 define("LOST_FIGHT", "Oślepiająca gwiazda bólu eksploduje w twojej głowie. Powoli padasz na kolana przed przeciwnikiem. Ostatkiem sił widzisz w zwolnionym tempie jak jego cios spada na twe ciało. Potem następuje już tylko ciemność");
 define("EVENT3", "został pokonany przez");
-define("B_RESULT1", "Wynik:</b> Walka nie rozstrzygnięta!</b>.<li>Zdobywasz");
+define("B_RESULT1", "Wynik:</b> Walka nierozstrzygnięta!</b>.<li>Zdobywasz");
 define("EVENT", "pokonał");
 define("EVENT1", "zaatakował");
 define("EVENT2", "lecz walka nie została rozstrzygnięta");

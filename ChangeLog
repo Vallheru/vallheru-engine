@@ -1,5 +1,7 @@
 2012-08-10  Bartek thindil Jasicki  <thindil@vallheru.net>
 
+	* BUG,languages/pl/funkcje.php, languages/pl/battle.php: 
+	fixed typos
 	* BUG,lumbermill.php:
 	fixed info about used energy
 

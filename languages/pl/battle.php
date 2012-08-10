@@ -7,8 +7,8 @@
  *   @copyright            : (C) 2004,2005,2006,2011,2012 Vallheru Team based on Gamers-Fusion ver 2.5
  *   @author               : thindil <thindil@vallheru.net>
  *   @author               : eyescream <tduda@users.sourceforge.net>
- *   @version              : 1.5
- *   @since                : 03.04.2012
+ *   @version              : 1.6
+ *   @since                : 10.08.2012
  *
  */
 
@@ -95,12 +95,12 @@ if (isset($_GET['battle']))
     define("AND_KILL2", "jednym potężnym zaklęciem i zabija go!");
     define("B_DAMAGE", "i zadaje");
     define("B_BAR", "lecz ten odpiera atak");
-    define("B_NO_WIN", "Walka nie rozstrzygnięta!");
+    define("B_NO_WIN", "Walka nierozstrzygnięta!");
     define("YOU_ATTACK_BUT", "Zaatakowałeś ale");
     define("YOU_ATTACKED_BUT", "Zostałeś zaatakowany ale");
     define("L_ATTACK", "zaatakował");
-    define("L_BATTLE", "walka została nie rozstrzygnięta");
-    define("L_BATTLE2", "walka została nie rozstrzygnięta z");
+    define("L_BATTLE", "walka została nierozstrzygnięta");
+    define("L_BATTLE2", "walka została nierozstrzygnięta z");
     define("L_ID", ", ID ");
     define("B_WIN", "zwycięża");
     define("AND_MAP", "oraz 1 kawałek mapy!");
