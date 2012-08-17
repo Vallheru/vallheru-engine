@@ -1,3 +1,8 @@
+2012-08-17  Bartek thindil Jasicki  <thindil@vallheru.net>
+
+	* BUG,bank.php:
+	fixed typo
+
 2012-08-10  Bartek thindil Jasicki  <thindil@vallheru.net>
 
 	* FEATURE,templates/layout1/tribeware.tpl, templates/tribeware.tpl, tribeware.php: 

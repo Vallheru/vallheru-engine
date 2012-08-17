@@ -9,7 +9,7 @@
  *   @author               : yeskov <yeskov@users.sourceforge.net>
  *   @author               : eyescream <tduda@users.sourceforge.net>
  *   @version              : 1.6
- *   @since                : 07.08.2012
+ *   @since                : 17.08.2012
  *
  */
 
@@ -623,7 +623,7 @@ if (isset($_GET['action']))
 	      case 'A':   // Pieces of armor: defense, agility and durability.
 	      case 'L':
 		$intAgi = $item -> fields['zr'] * -1;
-		$strAttributes.= I_DEF.' +'.$item -> fields['power'].', '.I_AGI.' '.$intAgi.'%, '.I_DUR.' '.$item -> fields['wt'].'/'.$item -> fields['maxwt'];
+		$strAttributes.= I_DEF.' +'.$item -> fields['power'].', '.I_AGI.' '.$intAgi.', '.I_DUR.' '.$item -> fields['wt'].'/'.$item -> fields['maxwt'];
 		break;
 	      case 'B':   // Bows: speed and durability.
 		$strAttributes.= I_SPE.' +'.$item -> fields['szyb'].', '.I_DUR.' '.$item -> fields['wt'].'/'.$item -> fields['maxwt'];
