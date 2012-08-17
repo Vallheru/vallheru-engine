@@ -1,5 +1,7 @@
 2012-08-17  Bartek thindil Jasicki  <thindil@vallheru.net>
 
+	* BUG,includes/turnfight.php: 
+	fixed bug with aggresive and defensive attacks
 	* BUG,tribearmor.php: 
 	fixed typo
 	* BUG,includes/functions.php: 

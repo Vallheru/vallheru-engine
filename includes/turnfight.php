@@ -7,7 +7,7 @@
  *   @copyright            : (C) 2004,2005,2006,2007,2011,2012 Vallheru Team based on Gamers-Fusion ver 2.5
  *   @author               : thindil <thindil@vallheru.net>
  *   @version              : 1.6
- *   @since                : 09.08.2012
+ *   @since                : 17.08.2012
  *
  */
  
@@ -118,32 +118,26 @@ function turnfight($expgain,$goldgain,$action,$addres)
             error (ONLY_MAGE);
         }
     }
+    $myobrona = 0;
     for ($i = 2; $i < 6; $i++)
       {
-	$premia += $arrEquip[$i][2];
+	$myobrona += $arrEquip[$i][2];
 	if ($enemy['dmgtype'] != 'none')
 	  {
 	    if ($arrEquip[$i][10] != 'N')
 	      {
 		if ($arrElements3[$enemy['dmgtype']] == $arrEquip[$i][10])
 		  {
-		    $premia += $arrEquip[$i][2];
+		    $myobrona += $arrEquip[$i][2];
 		  }
 		elseif ($arrElements4[$enemy['dmgtype']] == $arrEquip[$i][10])
 		  {
-		    $premia -= ceil($arrEquip[$i][2] / 2);
+		    $myobrona -= ceil($arrEquip[$i][2] / 2);
 		  }
 	      }
 	  }
       }
-    if ($player -> clas == 'Wojownik'  || $player -> clas == 'Barbarzyńca') 
-    {
-        $enemy['damage'] = ($enemy['strength'] - ($player -> level + $player -> cond + $premia));
-    } 
-        else 
-    {
-        $enemy['damage'] = ($enemy['strength'] - ($player -> cond + $premia));
-    }
+    $enemy['damage'] = $enemy['strength'] - $player->cond;
     if ($myczaro -> fields['id']) 
     {
 	$myczarobr = ($player -> wisdom * $myczaro -> fields['obr']);
@@ -189,12 +183,15 @@ function turnfight($expgain,$goldgain,$action,$addres)
         {
             $myczarobr = 0;
         }
-        $myobrona = ($myczarobr + $player -> cond + $premia);
-        $enemy['damage'] = ($enemy['strength'] - $myobrona);
+        $myobrona += $myczarobr;
     }
-    if (!$arrEquip[3][0] && !$myczaro -> fields['id']) 
+    if ($player -> clas == 'Wojownik'  || $player -> clas == 'Barbarzyńca') 
     {
-        $enemy['damage'] = ($enemy['strength'] - $player -> cond);
+        $enemy['damage'] -= ($player -> level + $myobrona);
+    } 
+        else 
+    {
+        $enemy['damage'] -= $myobrona;
     }
     $gmagia = 0;
     if (!isset($_SESSION['round']))
@@ -554,6 +551,10 @@ function turnfight($expgain,$goldgain,$action,$addres)
             fightmenu($_SESSION['points'],$zmeczenie,$_SESSION['round'],$addres);
         }
     }
+    if (in_array($_POST['action'], array('dattack', 'aattack')) && $player->clas == 'Rzemieślnik')
+      {
+	$_POST['action'] = 'nattack';
+      }
     if ($_POST['action'] == 'nattack' && $_SESSION['points'] > 0) 
     {
         attack($eunik,0);
@@ -586,6 +587,7 @@ function turnfight($expgain,$goldgain,$action,$addres)
             }
         }
         $myunik = $myunik + ($myunik / 2);
+	$enemy['damage'] += ($myobrona / 2);
         if ($temp > 0 && $attacks <= $_SESSION['points']) 
         {
             fightmenu($_SESSION['points'],$zmeczenie,$_SESSION['round'],$addres);
@@ -605,6 +607,7 @@ function turnfight($expgain,$goldgain,$action,$addres)
             }
         }
         $myunik = $myunik / 2;
+	$enemy['damage'] -= ($myobrona / 2);
         if ($temp > 0 && $attacks <= $_SESSION['points']) 
         {
             fightmenu($_SESSION['points'],$zmeczenie,$_SESSION['round'],$addres);
@@ -1347,11 +1350,11 @@ function monsterattack($attacks,$enemy,$myunik,$amount)
             }
             if ($player -> mana < $myczaro -> fields['poziom']) 
             {
-                $intDamage = $enemy['strength'];
+                $intDamage = $enemy['strength'] + $rzut1;
             }
             if ($zmeczenie > $player -> cond) 
             {
-                $intDamage = $enemy['strength'];
+                $intDamage = $enemy['strength'] + $rzut1;
             }
 	    $blnMiss = FALSE;
             if ($player -> hp > 0) 
