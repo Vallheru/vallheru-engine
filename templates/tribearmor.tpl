@@ -25,7 +25,7 @@
         <tr>
         <td>{$Item.name}</td>
         <td align="center">{$Item.power}</td>
-        {if $Type != "I" && $Type != "P" && $Type != "O"}
+        {if $Type2 != "I" && $Type2 != "P" && $Type2 != "O"}
             <td align="center">{$Item.wt}/{$Item.maxwt}</td>
             <td align="center">{$Item.zr}</td>
             <td align="center">{$Item.szyb}</td>

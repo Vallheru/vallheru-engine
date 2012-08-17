@@ -356,6 +356,7 @@ if (isset($_GET['step']) && $_GET['step'] == 'zobacz')
 				"Tpages" => $pages,
 				"Tpage" => $page,
 				"Fpage" => "Idź do strony:",
+				"Type2" => $_POST['type'],
 				"Otypes" => array('W' => 'broni białej',
 						  'A' => 'zbrój',
 						  'H' => 'hełmów',
