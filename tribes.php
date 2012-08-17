@@ -9,7 +9,7 @@
  *   @author               : mori <ziniquel@users.sourceforge.net>
  *   @author               : eyescream <tduda@users.sourceforge.net>
  *   @version              : 1.6
- *   @since                : 30.07.2012
+ *   @since                : 17.08.2012
  *
  */
 
@@ -482,7 +482,7 @@ if (isset ($_GET['view']) && $_GET['view'] == 'view')
 	  {
 	    checkvalue($_GET['tid']);
 	    $tribename = $db -> Execute("SELECT `name`, `owner` FROM `tribes` WHERE `id`=".$_GET['tid']);
-	    $mem = $db -> Execute("SELECT `id`, `user`, `tribe_rank` FROM `players` WHERE `tribe`=".$_GET['tid']);
+	    $mem = $db -> Execute("SELECT `id`, `user`, `tribe_rank` FROM `players` WHERE `tribe`=".$_GET['tid']." ORDER BY `id` ASC");
 	    $arrlink = array();
 	    while (!$mem -> EOF) 
 	      {
@@ -811,7 +811,7 @@ if (isset ($_GET['view']) && $_GET['view'] == 'my')
     */
     if (isset ($_GET['step']) && $_GET['step'] == 'members') 
     {
-        $mem = $db -> Execute("SELECT id, user, tribe_rank FROM players WHERE tribe=".$mytribe -> fields['id']);
+        $mem = $db -> Execute("SELECT `id`, `user`, `tribe_rank` FROM `players` WHERE `tribe`=".$mytribe -> fields['id']." ORDER BY `id` ASC");
         $arrlink = array();
         $i = 0;
         while (!$mem -> EOF) 

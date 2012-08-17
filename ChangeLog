@@ -1,5 +1,7 @@
 2012-08-17  Bartek thindil Jasicki  <thindil@vallheru.net>
 
+	* BUG,tribes.php: 
+	fixed sorting members
 	* BUG,templates/layout1/tribearmor.tpl, templates/tribearmor.tpl, tribearmor.php: 
 	fixed bug with show items in tribes
 	* BUG,includes/turnfight.php: 
