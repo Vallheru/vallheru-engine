@@ -8,7 +8,7 @@
  *   @author               : thindil <thindil@vallheru.net>
  *   @author               : eyescream <tduda@users.sourceforge.net>
  *   @version              : 1.6
- *   @since                : 27.07.2012
+ *   @since                : 17.08.2012
  *
  */
 
@@ -192,10 +192,10 @@ if (isset($_POST['msg']) && $_POST['msg'] != '')
 	      }
 	  }
 	//Emote
-	if (strpos($message, '/me') !== FALSE)
+	if (strpos($message, '@me') !== FALSE)
 	  {
 	    $starter = '';
-	    $message = str_replace('/me', '<a href="view.php?view='.$player->id.'" target="_parent">'.$player->user.'</a>', $message);
+	    $message = str_replace('@me', '<a href="view.php?view='.$player->id.'" target="_parent">'.$player->user.'</a>', $message);
 	  }
 	//Private message
 	$test1 = explode("=", $_POST['msg']);

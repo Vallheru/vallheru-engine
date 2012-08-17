@@ -7,7 +7,7 @@
  *   @copyright            : (C) 2012 Vallheru Team based on Gamers-Fusion ver 2.5
  *   @author               : thindil <thindil@vallheru.net>
  *   @version              : 1.6
- *   @since                : 23.05.2012
+ *   @since                : 17.08.2012
  *
  */
 
@@ -202,10 +202,10 @@ if (isset ($_GET['action']) && $_GET['action'] == 'chat')
 	  {
 	    if ($_POST['person'] < 2)
 	      {
-		if (strpos($message, '/me') !== FALSE)
+		if (strpos($message, '@me') !== FALSE)
 		  {
 		    $starter = '';
-		    $message = str_replace('/me', '<a href="view.php?view='.$player->id.'" target="_parent">'.$player->user.'</a>', $message);
+		    $message = str_replace('@me', '<a href="view.php?view='.$player->id.'" target="_parent">'.$player->user.'</a>', $message);
 		  }
 	      }
 	    else
@@ -218,10 +218,10 @@ if (isset ($_GET['action']) && $_GET['action'] == 'chat')
 	  }
 	else
 	  {
-	    if (strpos($message, '/me') !== FALSE)
+	    if (strpos($message, '@me') !== FALSE)
 	      {
 		$starter = '';
-		$message = str_replace('/me', '<a href="view.php?view='.$player->id.'" target="_parent">'.$player->user.'</a>', $message);
+		$message = str_replace('@me', '<a href="view.php?view='.$player->id.'" target="_parent">'.$player->user.'</a>', $message);
 	      }
 	  }
 	//Private message

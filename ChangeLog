@@ -1,5 +1,7 @@
 2012-08-17  Bartek thindil Jasicki  <thindil@vallheru.net>
 
+	* UPDATE,room.php, chat.php: 
+	changed "me" macro
 	* BUG,travel.php: 
 	fixed bug with fight with zero energy
 	* BUG,tribes.php: 
