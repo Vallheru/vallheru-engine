@@ -7,7 +7,7 @@
  *   @copyright            : (C) 2004,2005,2006,2011,2012 Vallheru Team based on Gamers-Fusion ver 2.5
  *   @author               : thindil <thindil@vallheru.net>
  *   @version              : 1.6
- *   @since                : 05.06.2012
+ *   @since                : 17.08.2012
  *
  */
  
@@ -165,6 +165,12 @@ function battle($strAddress)
   else
     {
       $enemy = $_SESSION['enemy'];
+    }
+
+  if ($player->energy == 0)
+    {
+      $db->Execute("UPDATE `players` SET `hp`=0, `miejsce`='Altara', `fight`=0 WHERE `id`=".$player->id);
+      error('Zmęczony ruszyłeś zbyt wolno w kierunku napastnika. Ten bez problemu uniknął twojego anemicznego ciosu i wyprowadził swój, wprost na twoją szyję. Była to ostatnia rzecz jaką zapamiętałeś.');
     }
 
   $db -> Execute("UPDATE `players` SET `fight`=99999 WHERE `id`=".$player->id);
