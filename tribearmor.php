@@ -8,7 +8,7 @@
  *   @author               : thindil <thindil@vallheru.net>
  *   @author               : eyescream <tduda@users.sourceforge.net>
  *   @version              : 1.6
- *   @since                : 08.08.2012
+ *   @since                : 17.08.2012
  *
  */
 
@@ -356,7 +356,7 @@ if (isset($_GET['step']) && $_GET['step'] == 'zobacz')
 				"Tpages" => $pages,
 				"Tpage" => $page,
 				"Fpage" => "Idź do strony:",
-				"Otypes" => array('W' => 'broni',
+				"Otypes" => array('W' => 'broni białej',
 						  'A' => 'zbrój',
 						  'H' => 'hełmów',
 						  'L' => 'nagolenników',
