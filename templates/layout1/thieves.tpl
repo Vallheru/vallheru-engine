@@ -3,6 +3,7 @@
     <ul>
         <li><a href="thieves.php?step=monuments">{$Amonuments}</a></li>
         <li><a href="thieves.php?step=shop">{$Aitems}</a></li>
+	<li><a href="thieves.php?step=missions">{$Amissions}</a></li>
     </ul>
 {/if}
 {if $Step == "monuments"}
