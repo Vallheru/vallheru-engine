@@ -7,7 +7,7 @@
  *   @copyright            : (C) 2004,2005,2006,2011,2012 Vallheru Team based on Gamers-Fusion ver 2.5
  *   @author               : thindil <thindil@vallheru.net>
  *   @version              : 1.6
- *   @since                : 17.08.2012
+ *   @since                : 18.08.2012
  *
  */
  
@@ -54,7 +54,7 @@ if (!isset ($_GET['akcja']) && $player -> location == 'Altara' && !isset($_GET['
 {
     if ($player->maps >= 20  && $player->immunited == 'N') 
     {
-        $smarty -> assign(array("Maps" => 1,
+        $smarty -> assign(array("Maps" => 0,
                                 "Portal1" => PORTAL1,
                                 "Ayes" => YES,
                                 "Ano" => NO));
@@ -117,6 +117,7 @@ if (isset($_GET['action']))
 
 if (isset ($_GET['akcja']) && $_GET['akcja'] == 'tak' && $player->location == 'Altara' && $player->maps >= 20 && $player->immunited == 'N') 
 {
+  error('Ta opcja jest na razie wyłączona.');
     $db -> Execute("UPDATE players SET miejsce='Portal' WHERE id=".$player -> id);
     $smarty -> assign(array("Portal" => "Y",
                             "Portal2" => PORTAL2));

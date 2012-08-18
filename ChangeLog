@@ -1,5 +1,7 @@
 2012-08-18  Bartek thindil Jasicki  <thindil@vallheru.net>
 
+	* UPDATE,travel.php: 
+	disable portal to guardian
 	* BUG,templates/layout1/thieves.tpl:
 	fixed link to missions
 
