@@ -7,7 +7,7 @@
  *   @copyright            : (C) 2004,2005,2006,2007,2011,2012 Vallheru Team based on Gamers-Fusion ver 2.5
  *   @author               : thindil <thindil@vallheru.net>
  *   @version              : 1.6
- *   @since                : 10.08.2012
+ *   @since                : 20.08.2012
  *
  */
 
@@ -231,7 +231,14 @@ if (isset ($_GET['mill']) && $_GET['mill'] == 'plany')
     $arrOwned = array();
     while (!$objOwned->EOF)
       {
-	$arrOwned[$objOwned->fields['name']] = $objOwned->fields['elitetype'];
+	if (!array_key_exists($objOwned->fields['name'], $arrOwned))
+	  {
+	    $arrOwned[$objOwned->fields['name']] = $objOwned->fields['elitetype'];
+	  }
+	else
+	  {
+	    $arrOwned[$objOwned->fields['name']] .= ';'.$objOwned->fields['elitetype'];
+	  }
 	$objOwned->MoveNext();
       }
     $objOwned->Close();
@@ -247,7 +254,7 @@ if (isset ($_GET['mill']) && $_GET['mill'] == 'plany')
 	    $objPlans->MoveNext();
 	    continue;
 	  }
-	if (!array_key_exists($objPlans->fields['name'], $arrOwned) || (array_key_exists($objPlans->fields['name'], $arrOwned) && $arrOwned[$objPlans->fields['name']] != $objPlans->fields['elitetype']))
+	if (!array_key_exists($objPlans->fields['name'], $arrOwned) || (array_key_exists($objPlans->fields['name'], $arrOwned) && strpos($arrOwned[$objPlans->fields['name']], $objPlans->fields['elitetype']) === FALSE))
 	  {
 	    if ($objPlans->fields['elite'] > 0)
 	      {
