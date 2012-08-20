@@ -8,7 +8,7 @@
  *   @author               : thindil <thindil@vallheru.net>
  *   @author               : eyescream <tduda@users.sourceforge.net>
  *   @version              : 1.6
- *   @since                : 17.08.2012
+ *   @since                : 20.08.2012
  *
  */
 
@@ -289,11 +289,15 @@ if (isset($_GET['step']) && $_GET['step'] == 'zobacz')
 	      default:
 		break;
 	      }
-	    if ($arrItem['type'] == 'R')
+	    switch ($arrItem['type'])
 	      {
+	      case 'R':
 		$arrItem['amount'] = $arrItem['wt'];
 		$arrItem['wt'] = 1;
 		$arrItem['maxwt'] = 1;
+		break;
+	      case 'P':
+		$arrItem['name'] = $arrItem['name'].' (plan)';
 	      }
 	    $arrItem['reserved'] = $arrItem['amount'] - $arrItem['reserved'];
 	     if ($player -> id == $owner -> fields['owner'] || $perm -> fields['armory']) 
@@ -552,7 +556,7 @@ if (isset ($_GET['step']) && $_GET['step'] == 'daj')
 	      {
 		error (NO_AMOUNT);
 	      }
-	    $test = $db -> Execute("SELECT id FROM tribe_zbroj WHERE name='".$przed -> fields['name']."' AND klan=".$player -> tribe." AND wt=".$przed -> fields['wt']." AND type='".$przed -> fields['type']."' AND power=".$przed -> fields['power']." AND szyb=".$przed -> fields['szyb']." AND zr=".$przed -> fields['zr']." AND maxwt=".$przed -> fields['maxwt']." AND poison=".$przed -> fields['poison']." AND ptype='".$przed -> fields['ptype']."'");
+	    $test = $db -> Execute("SELECT `id` FROM `tribe_zbroj` WHERE `name`='".$przed -> fields['name']."' AND `klan`=".$player -> tribe." AND `wt`=".$przed -> fields['wt']." AND `type`='".$przed -> fields['type']."' AND `power`=".$przed -> fields['power']." AND `szyb`=".$przed -> fields['szyb']." AND `zr`=".$przed -> fields['zr']." AND `maxwt`=".$przed -> fields['maxwt']." AND `poison`=".$przed -> fields['poison']." AND `ptype`='".$przed -> fields['ptype']."' AND `minlev`=".$przed->fields['minlev']);
 	    if (!$test -> fields['id']) 
 	      {
 		$db -> Execute("INSERT INTO tribe_zbroj (klan, name, power, type, zr, wt, minlev, maxwt, amount, magic, poison, szyb, twohand, ptype, repair) VALUES(".$player -> tribe.",'".$przed -> fields['name']."',".$przed -> fields['power'].",'".$przed -> fields['type']."',".$przed -> fields['zr'].",".$przed -> fields['wt'].",".$przed -> fields['minlev'].",".$przed -> fields['maxwt'].",".$_POST['amount'].",'".$przed -> fields['magic']."',".$przed -> fields['poison'].",".$przed -> fields['szyb'].",'".$przed -> fields['twohand']."','".$przed -> fields['ptype']."', ".$przed -> fields['repair'].")");
@@ -628,11 +632,18 @@ if (isset ($_GET['step']) && $_GET['step'] == 'daj')
 	  default:
 	    break;
 	  }
-	if ($arrItem['type'] == 'R')
+	switch ($arrItem['type'])
 	  {
+	  case 'R':
 	    $arrItem['amount'] = $arrItem['wt'];
 	    $arrItem['wt'] = 1;
 	    $arrItem['maxwt'] = 1;
+	    break;
+	  case 'P':
+	    $arrItem['name'] = 'Plan: '.$arrItem['name'].' (poziom: '.$arrItem['minlev'].')';
+	    break;
+	  default:
+	    break;
 	  }
 	$arrItem['zr'] = $arrItem['zr'] * -1;
       }
