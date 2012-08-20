@@ -323,6 +323,7 @@ if (isset($_GET['step']) && $_GET['step'] == 'zobacz')
 	if (!isset($_POST['type']))
 	  {
 	    $strType = '';
+	    $_POST['type'] = '';
 	  }
 	else
 	  {
