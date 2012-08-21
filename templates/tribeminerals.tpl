@@ -20,11 +20,12 @@
     </form>
 {/if}
 {if $Step2 == "daj"}
+    <script src="js/tribearmor.js"></script>
     {$Addmin}<br /><br />
     <form method="post" action="tribeminerals.php?step2=daj&amp;step3=add"><table>
         <tr><td>{$Mineral}:</td>
 	    <td>{html_options name=mineral options=$Minname}</td></tr>
-        <tr><td>{$Mamount}:</td><td><input type="text" name="ilosc" /></td></tr>
+        <tr><td>{$Mamount}:</td><td><span id="amount"><input type="text" name="ilosc" /></span> (<input type="checkbox" name="all" id="all" onClick="showField();" />{$Tall}</td></tr>
         <tr><td colspan="2" align="center"><input type="submit" value="{$Aadd}" /></td></tr>
     </table></form>
 {/if}

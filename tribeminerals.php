@@ -7,7 +7,7 @@
  *   @copyright            : (C) 2012 Vallheru Team based on Gamers-Fusion ver 2.5
  *   @author               : thindil <thindil@vallheru.net>
  *   @version              : 1.6
- *   @since                : 16.07.2012
+ *   @since                : 21.08.2012
  *
  */
 
@@ -270,6 +270,7 @@ if (isset ($_GET['step2']) && $_GET['step2'] == 'daj')
 			    "Aadd" => "Dodaj",
 			    "Mineral" => "Minerał",
 			    "Mamount" => "Ilość minerału",
+			    "Tall" => "wszystkie posiadane)",
 			    "Minname" => $arrOptions));
     if (isset ($_GET['step3']) && $_GET['step3'] == 'add') 
       {
@@ -279,6 +280,10 @@ if (isset ($_GET['step2']) && $_GET['step2'] == 'daj')
 	  }
 	$gr = $db -> Execute("SELECT ".$_POST['mineral']." FROM `minerals` WHERE `owner`=".$player -> id);
 	$intKey = array_search($_POST['mineral'], $arrSqlname2);
+	if (isset($_POST['all']))
+	  {
+	    $_POST['ilosc'] = $gr->fields[$arrSqlname2[$intKey]];
+	  }
 	if ($_POST['ilosc'] > $gr -> fields[$arrSqlname2[$intKey]])
 	  {
 	    error("Nie masz takiej ilości ".$arrName[$intKey].".");
