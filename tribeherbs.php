@@ -7,7 +7,7 @@
  *   @copyright            : (C) 2012 Vallheru Team based on Gamers-Fusion ver 2.5
  *   @author               : thindil <thindil@vallheru.net>
  *   @version              : 1.6
- *   @since                : 16.07.2012
+ *   @since                : 21.08.2012
  *
  */
 
@@ -261,6 +261,7 @@ if (isset ($_GET['step2']) && $_GET['step2'] == 'daj')
 			    "Aadd" => "Dodaj",
 			    "Herb" => "Zioło",
 			    "Hamount" => "Sztuk(i)",
+			    "Tall" => "wszystkie posiadane)",
 			    "Hoptions" => $arrOptions));
     if (isset ($_GET['step3']) && $_GET['step3'] == 'add') 
       {
@@ -272,6 +273,10 @@ if (isset ($_GET['step2']) && $_GET['step2'] == 'daj')
 	$intKey = array_search($_POST['mineral'], $arrSqlname);
 	$nazwa = $arrName[$intKey];
 	$min = $arrSqlname[$intKey];
+	if (isset($_POST['all']))
+	  {
+	    $_POST['ilosc'] = $gr->fields[$min];
+	  }
 	if ($_POST['ilosc'] > $gr -> fields[$min])
 	  {
 	    error("Nie masz takiej ilości ".$nazwa.".");

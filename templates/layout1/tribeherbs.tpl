@@ -30,12 +30,13 @@
     {/if}
 {/if}
 {if $Step2 == "daj"}
+    <script src="js/tribearmor.js"></script>
     {$Addherb}<br /><br />
     <form method="post" action="tribeherbs.php?step2=daj&amp;step3=add"><table>
     <tr><td>{$Herb}:</td>
         <td>{html_options name=mineral options=$Hoptions}</td>
     </tr>
-    <tr><td>{$Hamount}:</td><td><input type="text" name="ilosc" /></td></tr>
+    <tr><td>{$Hamount}:</td><td><span id="amount"><input type="text" name="ilosc" /></span> (<input type="checkbox" name="all" id="all" onClick="showField();" />{$Tall}</td></tr>
     <tr><td colspan="2" align="center"><input type="submit" value="{$Aadd}" /></td></tr>
     </table></form>
 {/if}
