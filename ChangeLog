@@ -1,5 +1,7 @@
 2012-08-22  Bartek thindil Jasicki  <thindil@vallheru.net>
 
+	* BUG,includes/funkcje.php: 
+	fixed destroying equipment
 	* BUG,class/player_class.php: 
 	fixed clearing bless
 	* UPDATE,includes/funkcje.php, includes/turnfight.php: 

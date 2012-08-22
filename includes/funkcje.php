@@ -348,7 +348,6 @@ function lostitem($lostdur,$itemdur,$type,$player,$itemid,$player2,$lost, $intLe
     if ($itemdur < 1) 
     {
         $db -> Execute("DELETE FROM `equipment` WHERE `id`=".$itemid);
-	$player->equip[$intIndex][0] = 0;
         if ($type == YOU_QUIVER)
 	  {
 	    autofill($player, $itemid, $player2, $intLevel);
@@ -855,6 +854,7 @@ function fightmonster($enemy, $expgain, $goldgain, $times)
     $premia = 0;
     $strName = $player->user;
     $player->user = $arrTags[$player->tribe][0].' '.$player->user.' '.$arrTags[$player->tribe][1];
+    $player->equip = $player->equipment();
 
     if (isset ($_POST['razy']) && $_POST['razy'] > 1) 
     {
