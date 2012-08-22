@@ -1,3 +1,8 @@
+2012-08-22  Bartek thindil Jasicki  <thindil@vallheru.net>
+
+	* BUG,includes/turnfight.php:
+	fixed damage type
+
 2012-08-21  Bartek thindil Jasicki  <thindil@vallheru.net>
 
 	* FEATURE,templates/layout1/tribeminerals.tpl, templates/tribeminerals.tpl, tribeminerals.php:
