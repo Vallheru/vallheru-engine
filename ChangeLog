@@ -1,5 +1,7 @@
 2012-08-22  Bartek thindil Jasicki  <thindil@vallheru.net>
 
+	* UPDATE,includes/funkcje.php, includes/turnfight.php: 
+	small code cleanup
 	* UPDATE,alchemik.php, includes/funkcje.php, kopalnia.php, view.php, tribes.php, travel.php, maze.php, jeweller.php, jail.php, house.php,
 	explore.php, equip.php, battle.php, bank.php, includes/turnfight.php, includes/steal.php, includes/statsbonus.php, includes/astralsteal.php: 
 	small code cleanup

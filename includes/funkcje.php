@@ -340,7 +340,7 @@ function gainability ($gid,$user,$gunik,$gatak,$gmagia,$pm,$player2,$stats)
 /**
 * Function count damage of weapons and armors in fight
 */
-function lostitem($lostdur,$itemdur,$type,$player,$itemid,$player2,$lost, $intLevel, $intIndex) 
+function lostitem($lostdur,$itemdur,$type,$player,$itemid,$player2,$lost, $intLevel) 
 {
     global $db;
 
@@ -1485,7 +1485,7 @@ function fightmonster($enemy, $expgain, $goldgain, $times)
     if ($player->equip[0][0]) 
     {
         gainability($player -> id, $player -> user, 0, $gatak, 0, $player -> mana, $player -> id, 'weapon');
-        lostitem($gwtbr, $player->equip[0][6], YOU_WEAPON, $player -> id, $player->equip[0][0], $player -> id, HAS_BEEN1, $player->level, 0);
+        lostitem($gwtbr, $player->equip[0][6], YOU_WEAPON, $player -> id, $player->equip[0][0], $player -> id, HAS_BEEN1, $player->level);
     }
     if ($player->equip[11][0])
       {
@@ -1493,29 +1493,29 @@ function fightmonster($enemy, $expgain, $goldgain, $times)
 	  {
 	    gainability($player -> id, $player -> user, 0, $gatak, 0, $player -> mana, $player -> id, 'weapon');
 	  }
-	lostitem($gwtbr, $player->equip[11][6], YOU_WEAPON, $player -> id, $player->equip[11][0], $player -> id, HAS_BEEN1, $player->level, 11);
+	lostitem($gwtbr, $player->equip[11][6], YOU_WEAPON, $player -> id, $player->equip[11][0], $player -> id, HAS_BEEN1, $player->level);
       }
     if ($player->equip[1][0]) 
     {
         gainability($player -> id, $player -> user, 0, $gatak, 0, $player -> mana, $player -> id, 'bow');
-        lostitem($gwtbr, $player->equip[1][6], YOU_WEAPON, $player -> id, $player->equip[1][0], $player -> id, HAS_BEEN1, $player->level, 1);
-        lostitem($gwtbr, $player->equip[6][6], YOU_QUIVER, $player -> id, $player->equip[6][0], $player -> id, HAS_BEEN1, $player->level, 6);
+        lostitem($gwtbr, $player->equip[1][6], YOU_WEAPON, $player -> id, $player->equip[1][0], $player -> id, HAS_BEEN1, $player->level);
+        lostitem($gwtbr, $player->equip[6][6], YOU_QUIVER, $player -> id, $player->equip[6][0], $player -> id, HAS_BEEN1, $player->level);
     }
     if ($player->equip[3][0]) 
     {
-      lostitem($gwt[0], $player->equip[3][6], YOU_ARMOR, $player -> id, $player->equip[3][0], $player -> id, HAS_BEEN1, $player->level, 3);
+      lostitem($gwt[0], $player->equip[3][6], YOU_ARMOR, $player -> id, $player->equip[3][0], $player -> id, HAS_BEEN1, $player->level);
     }
     if ($player->equip[2][0]) 
     {
-      lostitem($gwt[1], $player->equip[2][6], YOU_HELMET, $player -> id, $player->equip[2][0], $player -> id, HAS_BEEN1, $player->level, 2);
+      lostitem($gwt[1], $player->equip[2][6], YOU_HELMET, $player -> id, $player->equip[2][0], $player -> id, HAS_BEEN1, $player->level);
     }
     if ($player->equip[4][0]) 
     {
-      lostitem($gwt[2], $player->equip[4][6], YOU_LEGS, $player -> id, $player->equip[4][0], $player -> id, HAS_BEEN2, $player->level, 4);
+      lostitem($gwt[2], $player->equip[4][6], YOU_LEGS, $player -> id, $player->equip[4][0], $player -> id, HAS_BEEN2, $player->level);
     }
     if ($player->equip[5][0]) 
     {
-      lostitem($gwt[3], $player->equip[5][6], YOU_SHIELD, $player -> id, $player->equip[5][0], $player -> id, HAS_BEEN2, $player->level, 5);
+      lostitem($gwt[3], $player->equip[5][6], YOU_SHIELD, $player -> id, $player->equip[5][0], $player -> id, HAS_BEEN2, $player->level);
     }
     if ($player -> hp < 0) 
     {
