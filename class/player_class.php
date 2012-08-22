@@ -319,10 +319,6 @@ class Player
 	{
 	  $strVarname = $objBless->fields['bless'];
 	  $this->$strVarname += $objBless->fields['blessval'];
-	  if ($blnClear)
-	    {
-	      $db -> Execute("UPDATE `players` SET `bless`='', `blessval`=0 WHERE `id`=".$this->id);
-	    }
 	}
       $objBless->Close();
     }
