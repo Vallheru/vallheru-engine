@@ -6,8 +6,8 @@
  *   @name                 : statsbonus.php                            
  *   @copyright            : (C) 2006,2011 Vallheru Team based on Gamers-Fusion ver 2.5
  *   @author               : thindil <thindil@vallheru.net>
- *   @version              : 1.5
- *   @since                : 28.01.2011
+ *   @version              : 1.6
+ *   @since                : 22.08.2011
  *
  */
 
@@ -37,65 +37,64 @@ function statbonus ()
     global $db;
     global $player;
 
-    $arrEquip = $player -> equipment();
     $fltCuragi = $player -> agility;
-    if ($arrEquip[3][0])
+    if ($player->equip[3][0])
     {
-        if ($arrEquip[3][5] < 0) 
+        if ($player->equip[3][5] < 0) 
         {
-            $intAgibonus = str_replace("-","",$arrEquip[3][5]);
+            $intAgibonus = str_replace("-","",$player->equip[3][5]);
         } 
-            elseif ($arrEquip[3][5] >= 0) 
+            elseif ($player->equip[3][5] >= 0) 
         {
-            $intAgibonus = 0 - $arrEquip[3][5];
+            $intAgibonus = 0 - $player->equip[3][5];
         }
         $fltCuragi = $fltCuragi + $intAgibonus;
     }
-    if ($arrEquip[5][0])
+    if ($player->equip[5][0])
     {
-        if ($arrEquip[5][5] < 0) 
+        if ($player->equip[5][5] < 0) 
         {
-            $intAgibonus = str_replace("-","",$arrEquip[5][5]);
+            $intAgibonus = str_replace("-","",$player->equip[5][5]);
         } 
-            elseif ($arrEquip[5][5] >= 0) 
+            elseif ($player->equip[5][5] >= 0) 
         {
-            $intAgibonus = 0 - $arrEquip[5][5];
+            $intAgibonus = 0 - $player->equip[5][5];
         }
         $fltCuragi = $fltCuragi + $intAgibonus;
     }
-    if ($arrEquip[4][0])
+    if ($player->equip[4][0])
     {
-        if ($arrEquip[4][5] < 0) 
+        if ($player->equip[4][5] < 0) 
         {
-            $intAgibonus = str_replace("-","",$arrEquip[4][5]);
+            $intAgibonus = str_replace("-","",$player->equip[4][5]);
         } 
-            elseif ($arrEquip[4][5] >= 0) 
+            elseif ($player->equip[4][5] >= 0) 
         {
-            $intAgibonus = 0 - $arrEquip[4][5];
+            $intAgibonus = 0 - $player->equip[4][5];
         }
         $fltCuragi = $fltCuragi + $intAgibonus;
     }
     $fltCurspeed = $player -> speed;
-    if ($arrEquip[1][0])
+    if ($player->equip[1][0])
     {
-        $fltCurspeed = $fltCurspeed + $arrEquip[1][7];
+        $fltCurspeed = $fltCurspeed + $player->equip[1][7];
     }
     $arrCurstats = array($fltCuragi, $player -> strength, $player -> inteli, $player -> wisdom, $fltCurspeed, $player -> cond);
-    if ($arrEquip[9][2])
+    if ($player->equip[9][2])
     {
         $arrRings = array(R_AGI, R_STR, R_INT, R_WIS, R_SPE, R_CON);
-        $arrRingtype = explode(" ", $arrEquip[9][1]);
+        $arrRingtype = explode(" ", $player->equip[9][1]);
         $intAmount = count($arrRingtype) - 1;
         $intKey = array_search($arrRingtype[$intAmount], $arrRings);
-        $arrCurstats[$intKey] = $arrCurstats[$intKey] + $arrEquip[9][2];
+        $arrCurstats[$intKey] = $arrCurstats[$intKey] + $player->equip[9][2];
     }
-    if ($arrEquip[10][2])
+    if ($player->equip[10][2])
     {
         $arrRings = array(R_AGI, R_STR, R_INT, R_WIS, R_SPE, R_CON);
-        $arrRingtype = explode(" ", $arrEquip[10][1]);
+        $arrRingtype = explode(" ", $player->equip[10][1]);
         $intAmount = count($arrRingtype) - 1;
         $intKey = array_search($arrRingtype[$intAmount], $arrRings);
-        $arrCurstats[$intKey] = $arrCurstats[$intKey] + $arrEquip[10][2];
+        $arrCurstats[$intKey] = $arrCurstats[$intKey] + $player->equip[10][2];
     }
     return $arrCurstats;
 }

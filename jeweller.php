@@ -174,7 +174,6 @@ if (isset($_GET['step']) && $_GET['step'] == 'make')
         /**
          * Add bonuses to ability
          */
-	$arrEquip = $player->equipment();
 	$player->curskills(array('jeweller'), TRUE, TRUE);
         
         $intChance = $player->jeweller * 100;
@@ -398,7 +397,6 @@ if (isset($_GET['step']) && $_GET['step'] == 'make2')
             /**
              * Add bonuses to ability
              */
-	    $arrEquip = $player->equipment();
 	    $player->curskills(array('jeweller'), TRUE, TRUE);
 
             $objRing2 = $db -> Execute("SELECT `level`, `bonus`, `cost`, `type` FROM `jeweller` WHERE `owner`=".$player -> id." AND `name`='".$objRing -> fields['name']."'");
@@ -517,7 +515,6 @@ if (isset($_GET['step']) && $_GET['step'] == 'make2')
         /**
          * Add bonuses to ability
          */
-	$arrEquip = $player->equipment();
 	$player->curskills(array('jeweller'), TRUE, TRUE);
 
         $intChance = ($player->jeweller / $objRing -> fields['level']) * 50;
@@ -783,7 +780,6 @@ if (isset($_GET['step']) && $_GET['step'] == 'make3')
             /**
              * Add bonuses to ability
              */
-	    $arrEquip = $player->equipment();
 	    $player->curskills(array('jeweller'), TRUE, TRUE);
 
             /**
@@ -962,7 +958,6 @@ if (isset($_GET['step']) && $_GET['step'] == 'make3')
         /**
          * Add bonuses to ability
          */
-	$arrEquip = $player->equipment();
 	$player->curskills(array('jeweller'), TRUE, TRUE);
 
         $intChance = floor(($player->jeweller / 50) * 0.5) + 5;

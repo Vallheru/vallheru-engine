@@ -365,7 +365,6 @@ function lostitem($lostdur,$itemdur,$type,$player,$itemid,$player2,$lost, $intLe
 	  print "<br />".$type." ".LOST1." ".$lostdur." ".DURABILITY.".<br />";
         }
       $db -> Execute("UPDATE `equipment` SET `wt`=".$itemdur." WHERE `id`=".$itemid);
-      $player->equip[$intIndex][6] = $itemdur;
       if ($type == YOU_QUIVER)
 	{
 	  autofill($player, $itemid, $player2, $intLevel);
@@ -516,7 +515,7 @@ function showcritical($strLocation, $strAtype, $strBtype, $strEnemy, $strAttacke
 /**
  * Function made monster attack
  */
-function monsterattack2($intMydodge, &$zmeczenie, &$gunik, $arrEquip, &$enemy, $times, $armor, $mczaro, &$gwt, $intBlock)
+function monsterattack2($intMydodge, &$zmeczenie, &$gunik, &$enemy, $times, $armor, $mczaro, &$gwt, $intBlock)
 {
   global $player;
   global $smarty;
@@ -532,7 +531,7 @@ function monsterattack2($intMydodge, &$zmeczenie, &$gunik, $arrEquip, &$enemy, $
 	  $strMessage = YOU_DODGE." <b>".$enemy['name']."</b>!<br />";
 	}
       $gunik++;
-      $zmeczenie = ($zmeczenie + $arrEquip[3][4] + 1);
+      $zmeczenie = ($zmeczenie + $player->equip[3][4] + 1);
       $blnMiss = TRUE;
     } 
   //Player block attack with shield
@@ -540,7 +539,7 @@ function monsterattack2($intMydodge, &$zmeczenie, &$gunik, $arrEquip, &$enemy, $
   if ($szansa <= $intBlock && !$blnMiss)
     {
       $strMessage = "Zablokowałeś tarczą atak <b>".$enemy['name']."</b>!<br />";
-      $zmeczenie = ($zmeczenie + $arrEquip[5][4] + 1);
+      $zmeczenie = ($zmeczenie + $player->equip[5][4] + 1);
       $gwt[3]++;
       $blnMiss = TRUE;
     }
@@ -548,7 +547,7 @@ function monsterattack2($intMydodge, &$zmeczenie, &$gunik, $arrEquip, &$enemy, $
   if (!$blnMiss)
     {
       $arrLocations = array('w tułów i zadaje(ą)', 'w głowę i zadaje(ą)', 'w nogę i zadaje(ą)', 'w rękę i zadaje(ą)');
-      if ($arrEquip[3][0] || $arrEquip[2][0] || $arrEquip[4][0] || $arrEquip[5][0]) 
+      if ($player->equip[3][0] || $player->equip[2][0] || $player->equip[4][0] || $player->equip[5][0]) 
 	{
 	  $efekt = rand(0, $number);
 	  switch ($armor[$efekt])
@@ -603,7 +602,7 @@ function monsterattack2($intMydodge, &$zmeczenie, &$gunik, $arrEquip, &$enemy, $
 /**
  * Function made player attack
  */
-function playerattack($eunik, &$gwtbr, $arrEquip, $mczar, &$zmeczenie, &$gatak, $stat, &$enemy, &$gmagia, $times, $intPldamage, $krytyk, $enemyhp, $strAtype)
+function playerattack($eunik, &$gwtbr, $mczar, &$zmeczenie, &$gatak, $stat, &$enemy, &$gmagia, $times, $intPldamage, $krytyk, $enemyhp, $strAtype)
 {
   global $player;
   global $smarty;
@@ -617,7 +616,7 @@ function playerattack($eunik, &$gwtbr, $arrEquip, $mczar, &$zmeczenie, &$gatak, 
 	{
 	  if ($times == 1) 
 	    {
-	      if ((($arrEquip[0][6] > $gwtbr || $arrEquip[11][6] > $gwtbr) || ($arrEquip[1][6] > $gwtbr && $arrEquip[6][6] > $gwtbr)) && ($arrEquip[0][0] || $arrEquip[1][0])) 
+	      if ((($player->equip[0][6] > $gwtbr || $player->equip[11][6] > $gwtbr) || ($player->equip[1][6] > $gwtbr && $player->equip[6][6] > $gwtbr)) && ($player->equip[0][0] || $player->equip[1][0])) 
 		{
 		  $strMessage = "<b>".$enemy['name']."</b> ".ENEMY_DODGE."<br />";
 		}
@@ -626,20 +625,20 @@ function playerattack($eunik, &$gwtbr, $arrEquip, $mczar, &$zmeczenie, &$gatak, 
 		  $strMessage =  "<b>".$enemy['name']."</b> ".ENEMY_DODGE."<br />";
 		}
 	    }
-	  if ((($arrEquip[0][6] > $gwtbr || $arrEquip[11][6] > $gwtbr) || ($arrEquip[1][6] > $gwtbr && $arrEquip[6][6] > $gwtbr)) && ($arrEquip[0][0] || $arrEquip[1][0])) 
+	  if ((($player->equip[0][6] > $gwtbr || $player->equip[11][6] > $gwtbr) || ($player->equip[1][6] > $gwtbr && $player->equip[6][6] > $gwtbr)) && ($player->equip[0][0] || $player->equip[1][0])) 
 	    {
-	      if ($arrEquip[1][0]) 
+	      if ($player->equip[1][0]) 
 		{
 		  $gwtbr++;
-		  $zmeczenie += $arrEquip[1][4];
+		  $zmeczenie += $player->equip[1][4];
 		}
-	      if ($arrEquip[0][0]) 
+	      if ($player->equip[0][0]) 
 		{
-		  $zmeczenie += $arrEquip[0][4];
+		  $zmeczenie += $player->equip[0][4];
 		}
-	      if ($arrEquip[11][0])
+	      if ($player->equip[11][0])
 		{
-		  $zmeczenie += $arrEquip[11][4];
+		  $zmeczenie += $player->equip[11][4];
 		}
 	    }
 	} 
@@ -653,7 +652,7 @@ function playerattack($eunik, &$gwtbr, $arrEquip, $mczar, &$zmeczenie, &$gatak, 
             {
 	      //Hit with weapon
 	      $blnHit = FALSE;
-	      if ((($arrEquip[0][6] > $gwtbr || $arrEquip[11][6] > $gwtbr) || ($arrEquip[1][6] > $gwtbr && $arrEquip[6][6] > $gwtbr)) && ($arrEquip[0][0] || $arrEquip[1][0])) 
+	      if ((($player->equip[0][6] > $gwtbr || $player->equip[11][6] > $gwtbr) || ($player->equip[1][6] > $gwtbr && $player->equip[6][6] > $gwtbr)) && ($player->equip[0][0] || $player->equip[1][0])) 
 		{
 		  $gwtbr++;
 		  $gatak++;
@@ -684,7 +683,7 @@ function playerattack($eunik, &$gwtbr, $arrEquip, $mczar, &$zmeczenie, &$gatak, 
 	      return $blnHit;
 	    }
 	  //Hit with weapon
-	  if ((($arrEquip[0][6] > $gwtbr || $arrEquip[11][6] > $gwtbr) || ($arrEquip[1][6] > $gwtbr && $arrEquip[6][6] > $gwtbr)) && ($arrEquip[0][0] || $arrEquip[1][0])) 
+	  if ((($player->equip[0][6] > $gwtbr || $player->equip[11][6] > $gwtbr) || ($player->equip[1][6] > $gwtbr && $player->equip[6][6] > $gwtbr)) && ($player->equip[0][0] || $player->equip[1][0])) 
 	    {
 	      $enemy['hp'] -= $stat['damage'];
 	      if ($times == 1) 
@@ -694,17 +693,17 @@ function playerattack($eunik, &$gwtbr, $arrEquip, $mczar, &$zmeczenie, &$gatak, 
 		  $strMessage = YOU_HIT." <b>".$enemy['name']."</b> ".$arrLocations[$intHit]." ".INFLICT." <b>".$stat['damage']."</b> ".DAMAGE."! (".$enemy['hp']." ".LEFT.")</font><br>";
 		}
 	      $gwtbr++;
-	      if ($arrEquip[0][0]) 
+	      if ($player->equip[0][0]) 
 		{
-		  $zmeczenie += $arrEquip[0][4];
+		  $zmeczenie += $player->equip[0][4];
 		} 
-	      elseif ($arrEquip[1][0]) 
+	      elseif ($player->equip[1][0]) 
 		{
-		  $zmeczenie += $arrEquip[1][4];
+		  $zmeczenie += $player->equip[1][4];
 		}
-	      if ($arrEquip[11][0])
+	      if ($player->equip[11][0])
 		{
-		  $zmeczenie += $arrEquip[11][4];
+		  $zmeczenie += $player->equip[11][4];
 		}
 	      if ($stat['damage'] > 0) 
 		{
@@ -851,7 +850,6 @@ function fightmonster($enemy, $expgain, $goldgain, $times)
     global $arrTags;
     global $lang;
 
-    $arrEquip = $player -> equipment();
     $mczar = $db -> Execute("SELECT * FROM `czary` WHERE `status`='E' AND `gracz`=".$player -> id." AND `typ`='B'");
     $mczaro = $db -> Execute("SELECT * FROM `czary` WHERE `status`='E' AND `gracz`=".$player -> id." AND `typ`='O'");
     $premia = 0;
@@ -915,15 +913,15 @@ function fightmonster($enemy, $expgain, $goldgain, $times)
     }
     if ($title == 'Arena Walk') 
     {
-        if (!$arrEquip[0][0] && !$mczar -> fields['id'] && !$arrEquip[1][0]) 
+        if (!$player->equip[0][0] && !$mczar -> fields['id'] && !$player->equip[1][0]) 
         {
             error (E_WEAPON);
         }
-        if (($arrEquip[0][0] && $mczar -> fields['id']) || ($arrEquip[1][0] && $mczar -> fields['id']) || ($arrEquip[0][0] && $arrEquip[1][0])) 
+        if (($player->equip[0][0] && $mczar -> fields['id']) || ($player->equip[1][0] && $mczar -> fields['id']) || ($player->equip[0][0] && $player->equip[1][0])) 
         {
             error (E_WEAPON_SPELL);
         }
-        if ($arrEquip[1][0] && !$arrEquip[6][0]) 
+        if ($player->equip[1][0] && !$player->equip[6][0]) 
         {
             error (E_QUIVER);
         }
@@ -946,41 +944,41 @@ function fightmonster($enemy, $expgain, $goldgain, $times)
 			    'earth' => 'W');
     for ($i = 2; $i < 6; $i++)
       {
-	$premia += $arrEquip[$i][2];
+	$premia += $player->equip[$i][2];
 	if ($enemy['dmgtype'] != 'none')
 	  {
-	    if ($arrEquip[$i][10] != 'N')
+	    if ($player->equip[$i][10] != 'N')
 	      {
-		if ($arrElements3[$enemy['dmgtype']] == $arrEquip[$i][10])
+		if ($arrElements3[$enemy['dmgtype']] == $player->equip[$i][10])
 		  {
-		    $premia += $arrEquip[$i][2];
+		    $premia += $player->equip[$i][2];
 		  }
-		elseif ($arrElements4[$enemy['dmgtype']] == $arrEquip[$i][10])
+		elseif ($arrElements4[$enemy['dmgtype']] == $player->equip[$i][10])
 		  {
-		    $premia -= ceil($arrEquip[$i][2] / 2);
+		    $premia -= ceil($player->equip[$i][2] / 2);
 		  }
 	      }
 	  }
       }
     $strAtype = 'none';
-    if ($arrEquip[0][0]) 
+    if ($player->equip[0][0]) 
     {
-        if ($arrEquip[0][3] == 'D') 
+        if ($player->equip[0][3] == 'D') 
         {
-            $arrEquip[0][2] = $arrEquip[0][2] + $arrEquip[0][8];
+            $player->equip[0][2] = $player->equip[0][2] + $player->equip[0][8];
         }
-	if ($arrEquip[0][10] != 'N' && $arrEquip[0][10] == $enemy['resistance'][0])
+	if ($player->equip[0][10] != 'N' && $player->equip[0][10] == $enemy['resistance'][0])
 	  {
 	    switch ($enemy['resistance'][1])
 	      {
 	      case 'weak':
-		$arrEquip[0][2] -= ($arrEquip[0][2] * 0.1);
+		$player->equip[0][2] -= ($player->equip[0][2] * 0.1);
 		break;
 	      case 'medium':
-		$arrEquip[0][2] -= ($arrEquip[0][2] * 0.25);
+		$player->equip[0][2] -= ($player->equip[0][2] * 0.25);
 		break;
 	      case 'strong':
-		$arrEquip[0][2] -= ($arrEquip[0][2] * 0.5);
+		$player->equip[0][2] -= ($player->equip[0][2] * 0.5);
 		break;
 	      default:
 		break;
@@ -988,12 +986,12 @@ function fightmonster($enemy, $expgain, $goldgain, $times)
 	  }
         if ($player -> clas == 'Wojownik' || $player -> clas == 'Barbarzyńca') 
         {
-            $stat['damage'] = (($player -> strength + $arrEquip[0][2]) + $player -> level);
+            $stat['damage'] = (($player -> strength + $player->equip[0][2]) + $player -> level);
             $enemy['damage'] = ($enemy['strength'] - ($player -> level + $player -> cond + $premia));
         } 
             else 
         {
-            $stat['damage'] = ($player -> strength + $arrEquip[0][2]);
+            $stat['damage'] = ($player -> strength + $player->equip[0][2]);
             $enemy['damage'] = ($enemy['strength'] - ($player -> cond + $premia));
         }
         if ($player -> attack < 1) 
@@ -1011,29 +1009,29 @@ function fightmonster($enemy, $expgain, $goldgain, $times)
         }
 	$strAtype = 'melee';
     }
-    if ($arrEquip[11][0])
+    if ($player->equip[11][0])
       {
-	$stat['damage'] += (($arrEquip[11][2] + $player->strength) + $player->level);
+	$stat['damage'] += (($player->equip[11][2] + $player->strength) + $player->level);
       }
-    if ($arrEquip[1][0]) 
+    if ($player->equip[1][0]) 
     {
-        $bonus = $arrEquip[1][2] + $arrEquip[6][2];
-	if ($arrEquip[6][3] == 'D') 
+        $bonus = $player->equip[1][2] + $player->equip[6][2];
+	if ($player->equip[6][3] == 'D') 
         {
-	  $bonus += $arrEquip[6][8];
+	  $bonus += $player->equip[6][8];
 	}
-	if ($arrEquip[6][10] != 'N' && $arrEquip[6][10] == $enemy['resistance'][0])
+	if ($player->equip[6][10] != 'N' && $player->equip[6][10] == $enemy['resistance'][0])
 	  {
 	    switch ($enemy['resistance'][1])
 	      {
 	      case 'weak':
-		$bonus -= ($arrEquip[6][2] * 0.1);
+		$bonus -= ($player->equip[6][2] * 0.1);
 		break;
 	      case 'medium':
-		$bonus -= ($arrEquip[6][2] * 0.25);
+		$bonus -= ($player->equip[6][2] * 0.25);
 		break;
 	      case 'strong':
-		$bonus -= ($arrEquip[6][2] * 0.5);
+		$bonus -= ($player->equip[6][2] * 0.5);
 		break;
 	      default:
 		break;
@@ -1063,7 +1061,7 @@ function fightmonster($enemy, $expgain, $goldgain, $times)
         {
             $krytyk = $player -> shoot;
         }
-        if (!$arrEquip[6][0]) 
+        if (!$player->equip[6][0]) 
         {
             $stat['damage'] = 0;
         }
@@ -1089,25 +1087,25 @@ function fightmonster($enemy, $expgain, $goldgain, $times)
 		break;
 	      }
 	  }
-	if ($arrEquip[3][0])
+	if ($player->equip[3][0])
 	  {
-	    $stat['damage'] -= ($stat['damage'] * ($arrEquip[3][4] / 100));
+	    $stat['damage'] -= ($stat['damage'] * ($player->equip[3][4] / 100));
 	  }
-        if ($arrEquip[2][0]) 
+        if ($player->equip[2][0]) 
         {
-	  $stat['damage'] -= ($stat['damage'] * ($arrEquip[2][4] / 100));
+	  $stat['damage'] -= ($stat['damage'] * ($player->equip[2][4] / 100));
         }
-        if ($arrEquip[4][0]) 
+        if ($player->equip[4][0]) 
         {
-            $stat['damage'] -= ($stat['damage'] * ($arrEquip[4][4] / 100));
+            $stat['damage'] -= ($stat['damage'] * ($player->equip[4][4] / 100));
         }
-        if ($arrEquip[5][0]) 
+        if ($player->equip[5][0]) 
         {
-            $stat['damage'] -= ($stat['damage'] * ($arrEquip[5][4] / 100));
+            $stat['damage'] -= ($stat['damage'] * ($player->equip[5][4] / 100));
         }
-        if ($arrEquip[7][0]) 
+        if ($player->equip[7][0]) 
         {
-            $intN = 6 - (int)($arrEquip[7][4] / 20);
+            $intN = 6 - (int)($player->equip[7][4] / 20);
             $intBonus = (10 / $intN) * $player -> level * rand(1, $intN);
             $stat['damage'] = $stat['damage'] + $intBonus;
         }
@@ -1149,25 +1147,25 @@ function fightmonster($enemy, $expgain, $goldgain, $times)
 		$myczarobr = $myczarobr / 2;
 	      }
 	  }
-	if ($arrEquip[3][0])
+	if ($player->equip[3][0])
 	  {
-	    $myczarobr -= ($fltBasedef * ($arrEquip[3][4] / 100));
+	    $myczarobr -= ($fltBasedef * ($player->equip[3][4] / 100));
 	  }
-        if ($arrEquip[2][0]) 
+        if ($player->equip[2][0]) 
         {
-            $myczarobr -= ($fltBasedef * ($arrEquip[2][4] / 100));
+            $myczarobr -= ($fltBasedef * ($player->equip[2][4] / 100));
         }
-        if ($arrEquip[4][0]) 
+        if ($player->equip[4][0]) 
         {
-            $myczarobr -= ($fltBasedef * ($arrEquip[4][4] / 100));
+            $myczarobr -= ($fltBasedef * ($player->equip[4][4] / 100));
         }
-        if ($arrEquip[5][0]) 
+        if ($player->equip[5][0]) 
         {
-            $myczarobr -= ($fltBasedef * ($arrEquip[5][4] / 100));
+            $myczarobr -= ($fltBasedef * ($player->equip[5][4] / 100));
         }
-        if ($arrEquip[7][0]) 
+        if ($player->equip[7][0]) 
         {
-            $intN = 6 - (int)($arrEquip[7][4] / 20);
+            $intN = 6 - (int)($player->equip[7][4] / 20);
             $intBonus = (10 / $intN) * $player -> level * rand(1, $intN);
             $myczarobr = ($myczarobr + $intBonus);
         }
@@ -1182,7 +1180,7 @@ function fightmonster($enemy, $expgain, $goldgain, $times)
     {
         $myunik = (($player->agility - $enemy['agility']) + $player -> level + $player -> miss);
         $eunik = (($enemy['agility'] - $player->agility) - ($player -> attack + $player -> level));
-	if ($arrEquip[11][0])
+	if ($player->equip[11][0])
 	  {
 	    $eunik -= ($player->attack / 5);
 	  }
@@ -1205,7 +1203,7 @@ function fightmonster($enemy, $expgain, $goldgain, $times)
     {
         $eunik = 1;
     }
-    if ($arrEquip[1][0]) 
+    if ($player->equip[1][0]) 
     {
         $eunik = $eunik * 2;
     }
@@ -1214,7 +1212,7 @@ function fightmonster($enemy, $expgain, $goldgain, $times)
     $gmagia = 0;
     $gwtbr = 0;
     $gwt = array(0,0,0,0);
-    $armor = checkarmor($arrEquip[3][0], $arrEquip[2][0], $arrEquip[4][0], $arrEquip[5][0]);
+    $armor = checkarmor($player->equip[3][0], $player->equip[2][0], $player->equip[4][0], $player->equip[5][0]);
     $zmeczenie = 0;
     $runda = 1;
     if (!isset($stat['damage'])) 
@@ -1264,9 +1262,9 @@ function fightmonster($enemy, $expgain, $goldgain, $times)
     }
     //Shield block chance
     $intBlock = 0;
-    if ($arrEquip[5][0])
+    if ($player->equip[5][0])
       {
-	$intBlock = ceil($arrEquip[5][2] / 5);
+	$intBlock = ceil($player->equip[5][2] / 5);
 	if ($intBlock > 20)
 	  {
 	    $intBlock = 20;
@@ -1297,17 +1295,17 @@ function fightmonster($enemy, $expgain, $goldgain, $times)
         {
             $enemy['damage'] = $enemy['strength'];
         }
-        if ($arrEquip[0][0] && $gwtbr > $arrEquip[0][6]) 
+        if ($player->equip[0][0] && $gwtbr > $player->equip[0][6]) 
         {
             $stat['damage'] = 0;
             $krytyk = 1;
         }
-        if ($arrEquip[1][0] && ($gwtbr > $arrEquip[1][6] || $gwtbr > $arrEquip[6][6])) 
+        if ($player->equip[1][0] && ($gwtbr > $player->equip[1][6] || $gwtbr > $player->equip[6][6])) 
         {
             $stat['damage'] = 0;
             $krytyk = 1;
         }
-        if ($arrEquip[1][0] && !$arrEquip[6][0]) 
+        if ($player->equip[1][0] && !$player->equip[6][0]) 
         {
             $stat['damage'] = 0;
             $krytyk = 1;
@@ -1327,7 +1325,7 @@ function fightmonster($enemy, $expgain, $goldgain, $times)
             {
                 if ($enemy['hp'] > 0 && $player -> hp > 0) 
 		  {
-		    if (!playerattack($eunik, $gwtbr, $arrEquip, $mczar, $zmeczenie, $gatak, $stat, $enemy, $gmagia, $times, $intPldamage, $krytyk, $enemyhp, $strAtype))
+		    if (!playerattack($eunik, $gwtbr, $mczar, $zmeczenie, $gatak, $stat, $enemy, $gmagia, $times, $intPldamage, $krytyk, $enemyhp, $strAtype))
 		      {
 			break;
 		      }
@@ -1366,7 +1364,7 @@ function fightmonster($enemy, $expgain, $goldgain, $times)
             {
                 if ($player -> hp > 0 && $enemy['hp'] > 0) 
 		  {
-		    monsterattack2($intMydodge, $zmeczenie, $gunik, $arrEquip, $enemy, $times, $armor, $mczaro, $gwt, $intBlock);
+		    monsterattack2($intMydodge, $zmeczenie, $gunik, $enemy, $times, $armor, $mczaro, $gwt, $intBlock);
 		  }
             }
         } 
@@ -1394,14 +1392,14 @@ function fightmonster($enemy, $expgain, $goldgain, $times)
             {
                 if ($player -> hp > 0 && $enemy['hp'] > 0) 
 		  {
-		    monsterattack2($intMydodge, $zmeczenie, $gunik, $arrEquip, $enemy, $times, $armor, $mczaro, $gwt, $intBlock);
+		    monsterattack2($intMydodge, $zmeczenie, $gunik, $enemy, $times, $armor, $mczaro, $gwt, $intBlock);
 		  }
             }
             for ($i = 1;$i <= $stat['attackstr']; $i++) 
             {
                 if ($enemy['hp'] > 0 && $player -> hp > 0) 
 		  {
-                    if (!playerattack($eunik, $gwtbr, $arrEquip, $mczar, $zmeczenie, $gatak, $stat, $enemy, $gmagia, $times, $intPldamage, $krytyk, $enemyhp, $strAtype))
+                    if (!playerattack($eunik, $gwtbr, $mczar, $zmeczenie, $gatak, $stat, $enemy, $gmagia, $times, $intPldamage, $krytyk, $enemyhp, $strAtype))
 		      {
 			break;
 		      }
@@ -1484,40 +1482,40 @@ function fightmonster($enemy, $expgain, $goldgain, $times)
     $gatak = $gatak * floor(1 + ($enemy['level'] / 20));
     $intDamount = $intDamount * floor(1 + ($enemy['level'] / 20));
     gainability($player -> id, $player -> user, $intDamount, 0, $gmagia, $player -> mana, $player -> id, '');
-    if ($arrEquip[0][0]) 
+    if ($player->equip[0][0]) 
     {
         gainability($player -> id, $player -> user, 0, $gatak, 0, $player -> mana, $player -> id, 'weapon');
-        lostitem($gwtbr, $arrEquip[0][6], YOU_WEAPON, $player -> id, $arrEquip[0][0], $player -> id, HAS_BEEN1, $player->level, 0);
+        lostitem($gwtbr, $player->equip[0][6], YOU_WEAPON, $player -> id, $player->equip[0][0], $player -> id, HAS_BEEN1, $player->level, 0);
     }
-    if ($arrEquip[11][0])
+    if ($player->equip[11][0])
       {
-	if (!$arrEquip[0][0])
+	if (!$player->equip[0][0])
 	  {
 	    gainability($player -> id, $player -> user, 0, $gatak, 0, $player -> mana, $player -> id, 'weapon');
 	  }
-	lostitem($gwtbr, $arrEquip[11][6], YOU_WEAPON, $player -> id, $arrEquip[11][0], $player -> id, HAS_BEEN1, $player->level, 11);
+	lostitem($gwtbr, $player->equip[11][6], YOU_WEAPON, $player -> id, $player->equip[11][0], $player -> id, HAS_BEEN1, $player->level, 11);
       }
-    if ($arrEquip[1][0]) 
+    if ($player->equip[1][0]) 
     {
         gainability($player -> id, $player -> user, 0, $gatak, 0, $player -> mana, $player -> id, 'bow');
-        lostitem($gwtbr, $arrEquip[1][6], YOU_WEAPON, $player -> id, $arrEquip[1][0], $player -> id, HAS_BEEN1, $player->level, 1);
-        lostitem($gwtbr, $arrEquip[6][6], YOU_QUIVER, $player -> id, $arrEquip[6][0], $player -> id, HAS_BEEN1, $player->level, 6);
+        lostitem($gwtbr, $player->equip[1][6], YOU_WEAPON, $player -> id, $player->equip[1][0], $player -> id, HAS_BEEN1, $player->level, 1);
+        lostitem($gwtbr, $player->equip[6][6], YOU_QUIVER, $player -> id, $player->equip[6][0], $player -> id, HAS_BEEN1, $player->level, 6);
     }
-    if ($arrEquip[3][0]) 
+    if ($player->equip[3][0]) 
     {
-      lostitem($gwt[0], $arrEquip[3][6], YOU_ARMOR, $player -> id, $arrEquip[3][0], $player -> id, HAS_BEEN1, $player->level, 3);
+      lostitem($gwt[0], $player->equip[3][6], YOU_ARMOR, $player -> id, $player->equip[3][0], $player -> id, HAS_BEEN1, $player->level, 3);
     }
-    if ($arrEquip[2][0]) 
+    if ($player->equip[2][0]) 
     {
-      lostitem($gwt[1], $arrEquip[2][6], YOU_HELMET, $player -> id, $arrEquip[2][0], $player -> id, HAS_BEEN1, $player->level, 2);
+      lostitem($gwt[1], $player->equip[2][6], YOU_HELMET, $player -> id, $player->equip[2][0], $player -> id, HAS_BEEN1, $player->level, 2);
     }
-    if ($arrEquip[4][0]) 
+    if ($player->equip[4][0]) 
     {
-      lostitem($gwt[2], $arrEquip[4][6], YOU_LEGS, $player -> id, $arrEquip[4][0], $player -> id, HAS_BEEN2, $player->level, 4);
+      lostitem($gwt[2], $player->equip[4][6], YOU_LEGS, $player -> id, $player->equip[4][0], $player -> id, HAS_BEEN2, $player->level, 4);
     }
-    if ($arrEquip[5][0]) 
+    if ($player->equip[5][0]) 
     {
-      lostitem($gwt[3], $arrEquip[5][6], YOU_SHIELD, $player -> id, $arrEquip[5][0], $player -> id, HAS_BEEN2, $player->level, 5);
+      lostitem($gwt[3], $player->equip[5][6], YOU_SHIELD, $player -> id, $player->equip[5][0], $player -> id, HAS_BEEN2, $player->level, 5);
     }
     if ($player -> hp < 0) 
     {

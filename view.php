@@ -531,7 +531,6 @@ if (isset($_GET['spy']) || isset($_GET['steal']))
       {
         error(SAME_CLAN." (<a href=\"view.php?view=".$_GET['view']."\">".BACK."</a>)");
       }
-    $arrEquip = $player -> equipment();
     $player->curskills(array('thievery'));
     $player->clearbless(array('inteli', 'agility'));
     $view->curskills(array('perception'));
@@ -658,9 +657,9 @@ if (isset ($_GET['steal']))
             $db -> Execute("UPDATE `players` SET `crime`=`crime`-1 WHERE `id`=".$player-> id);
             error ("<br />".YOU_TRY_IN." (<a href=\"view.php?view=".$_GET['view']."\">".BACK."</a>)");          
         }
-	if (stripos($arrEquip[12][1], 'wytrychy') !== FALSE)
+	if (stripos($player->equip[12][1], 'wytrychy') !== FALSE)
 	  {
-	    $db->Execute("DELETE FROM `equipment` WHERE `id`=".$arrEquip[12][0]);
+	    $db->Execute("DELETE FROM `equipment` WHERE `id`=".$player->equip[12][0]);
 	  }
 	$objTool = $db->Execute("SELECT `id` FROM `equipment` WHERE `owner`=".$player->id." AND `type`='E' AND `status`='U' AND `name` LIKE 'Wytrychy%'");
 	if ($objTool->fields['id'])

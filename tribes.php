@@ -325,16 +325,15 @@ if (isset ($_GET['view']) && $_GET['view'] == 'view')
 		    $objTest->Close();
 		  }
 		$db->Execute("UPDATE `players` SET `astralcrime`='N' WHERE `id`=".$player->id);
-		$arrEquip = $player -> equipment();
 		$player->curskills(array('thievery'));
 		$player->clearbless(array('inteli', 'agility'));
 		$intStats = ($player->agility + $player->inteli + $player->thievery);
 		/**
 		 * Add bonus from tools
 		 */
-		if (stripos($arrEquip[12][1], 'wytrychy') !== FALSE)
+		if (stripos($player->equip[12][1], 'wytrychy') !== FALSE)
 		  {
-		    $intStats += (($arrEquip[12][2] / 100) * $intStats);
+		    $intStats += (($player->equip[12][2] / 100) * $intStats);
 		  }
 		$objMembers = $db->Execute("SELECT `id`, `agility`, `inteli`, `perception`, `bless`, `blessval` FROM `players` WHERE `tribe`=".$_GET['id']);
 		$blnAction = TRUE;
@@ -368,16 +367,16 @@ if (isset ($_GET['view']) && $_GET['view'] == 'view')
 		  {
 		    $intExp = $intLevels * 5;
 		    $fltThievery = $intLevels / 50.0;
-		    if (stripos($arrEquip[12][1], 'wytrychy') !== FALSE)
+		    if (stripos($player->equip[12][1], 'wytrychy') !== FALSE)
 		      {
-			$arrEquip[12][6] --;
-			if ($arrEquip[12][6] <= 0)
+			$player->equip[12][6] --;
+			if ($player->equip[12][6] <= 0)
 			  {
-			    $db->Execute("DELETE FROM `equipment` WHERE `id`=".$arrEquip[12][0]);
+			    $db->Execute("DELETE FROM `equipment` WHERE `id`=".$player->equip[12][0]);
 			  }
 			else
 			  {
-			    $db->Execute("UPDATE `equipment` SET `wt`=`wt`-1 WHERE `id`=".$arrEquip[12][0]);
+			    $db->Execute("UPDATE `equipment` SET `wt`=`wt`-1 WHERE `id`=".$player->equip[12][0]);
 			  }
 		      }
 		  }
@@ -385,9 +384,9 @@ if (isset ($_GET['view']) && $_GET['view'] == 'view')
 		  {
 		    $intExp = ceil($intLevels / 100);
 		    $fltThievery = $intLevels / 100.0;
-		    if (stripos($arrEquip[12][1], 'wytrychy') !== FALSE)
+		    if (stripos($player->equip[12][1], 'wytrychy') !== FALSE)
 		      {
-			$db->Execute("DELETE FROM `equipment` WHERE `id`=".$arrEquip[12][0]);
+			$db->Execute("DELETE FROM `equipment` WHERE `id`=".$player->equip[12][0]);
 		      }
 		    $objTool = $db->Execute("SELECT `id` FROM `equipment` WHERE `owner`=".$player->id." AND `type`='E' AND `status`='U' AND `name` LIKE 'Wytrychy%'");
 		    if ($objTool->fields['id'])

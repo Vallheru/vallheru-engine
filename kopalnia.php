@@ -64,7 +64,6 @@ if (isset($_GET['action']) && $_GET['action'] == 'dig')
     /**
      * Count bonus to ability
      */
-    $arrEquip = $player->equipment();
     $player->curskills(array('mining'), TRUE, TRUE);
 
     $fltGainability = 0;

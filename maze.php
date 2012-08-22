@@ -170,7 +170,6 @@ if (isset($_GET['step']) && $_GET['step'] == 'run')
     /**
      * Add bonus to stats and skills
      */
-    $arrEquip = $player -> equipment();
     $player->curskills(array('perception'));
     $player->clearbless(array('speed'));
     $chance = (rand(1, $player -> level * 100) + ($player->speed + $player->perception) - $enemy -> fields['speed']);

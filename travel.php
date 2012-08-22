@@ -7,7 +7,7 @@
  *   @copyright            : (C) 2004,2005,2006,2011,2012 Vallheru Team based on Gamers-Fusion ver 2.5
  *   @author               : thindil <thindil@vallheru.net>
  *   @version              : 1.6
- *   @since                : 18.08.2012
+ *   @since                : 22.08.2012
  *
  */
  
@@ -397,28 +397,6 @@ if (isset($_GET['akcja']) && in_array($_GET['akcja'], array('gory', 'las', 'city
 		  }
 		break;
 	      case 'escape':
-		/**
-		 * Add bonus from rings
-		 */
-		$arrEquip = $player -> equipment();
-		if ($arrEquip[9][2])
-		  {
-		    $arrRingtype = explode(" ", $arrEquip[9][1]);
-		    $intAmount = count($arrRingtype) - 1;
-		    if ($arrRingtype[$intAmount] == 'szybkości')
-		      {
-			$player->speed = $player->speed + $arrEquip[9][2];
-		      }
-		  } 
-		if ($arrEquip[10][2])
-		  {
-		    $arrRingtype = explode(" ", $arrEquip[10][1]);
-		    $intAmount = count($arrRingtype) - 1;
-		    if ($arrRingtype[$intAmount] == 'szybkości')
-		      {
-			$player->speed = $player->speed + $arrEquip[10][2];
-		      }
-		  }
 		$arrbandit = array ();
 		for ($i = 0; $i < 4; $i++) 
 		  {
@@ -426,6 +404,7 @@ if (isset($_GET['akcja']) && in_array($_GET['akcja'], array('gory', 'las', 'city
 		    $arrbandit[$i] = $roll2;
 		  }
 		$chance = (rand(1, $player->level) + ($player->speed + $player->perception) - $arrbandit[0]);
+		$player->clearbless(array('speed'));
 		if ($chance > 0) 
 		  {
 		    $expgain = rand($arrbandit[1], $arrbandit[2]);

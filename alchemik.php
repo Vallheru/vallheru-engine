@@ -271,7 +271,6 @@ else
 	    /**
 	     * Add bonuses to ability
 	     */
-	    $arrEquip = $player->equipment();
 	    $player->curskills(array('alchemy'), TRUE, TRUE);
 	    
 	    $rprzedmiot = 0;
@@ -301,7 +300,7 @@ else
 	      default:
 		break;
 	      }
-	    $player->clearstats($arrStats);
+	    $player->clearbless($arrStats);
 
 	    /**
 	     * Start making potions

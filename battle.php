@@ -249,7 +249,7 @@ if (isset($_GET['battle']))
 	      {
 		$eczaro->fields['def'] = ($eczaro->fields['obr'] * $enemy->wisdom) * 2;
 	      }
-	    elseif ($eczaro->fields['element'] == $arrElements2[$arrEquip[6][10]])
+	    elseif ($eczaro->fields['element'] == $arrElements2[$arrMyequip[6][10]])
 	      {
 		$eczaro->fields['def'] = ($eczaro->fields['obr'] * $enemy->wisdom) / 2;
 	      }

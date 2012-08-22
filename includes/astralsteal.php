@@ -48,7 +48,6 @@ function astralsteal($intVictim, $strLocation, $intOwner = 0, $intId = 0)
     /**
      * Add bonus from rings
      */
-    $arrEquip = $player -> equipment();
     $player->curskills(array('thievery'));
     $player->clearbless(array('agility', 'inteli'));
 
@@ -56,9 +55,9 @@ function astralsteal($intVictim, $strLocation, $intOwner = 0, $intId = 0)
     /**
      * Add bonus from tools
      */
-    if (stripos($arrEquip[12][1], 'wytrychy') !== FALSE)
+    if (stripos($player->equip[12][1], 'wytrychy') !== FALSE)
       {
-	$intStats += (($arrEquip[12][2] / 100) * $intStats);
+	$intStats += (($player->equip[12][2] / 100) * $intStats);
       }
 
     /**
@@ -132,9 +131,9 @@ function astralsteal($intVictim, $strLocation, $intOwner = 0, $intId = 0)
         $db -> Execute("INSERT INTO `jail` (`prisoner`, `verdict`, `duration`, `cost`, `data`) VALUES(".$player -> id.", '".VERDICT."', ".$intDays.", ".$intBail.", ".$strDate.")");
         $db -> Execute("INSERT INTO `log` (`owner`, `log`, `czas`, `type`) VALUES(".$player -> id.",'".L_REASON.": ".$intBail.".', ".$strDate.", 'T')");
         $db -> Execute("INSERT INTO `log` (`owner`, `log`, `czas`, `type`) VALUES(".$intVictim.",'".L_CACHED."<b><a href=\"view.php?view=".$player -> id."\">".$player -> user."</a></b>".L_CACHED2.'<b>'.$player -> id.'</b>'.L_CACHED3."',".$strDate.", 'T')");
-	if (stripos($arrEquip[12][1], 'wytrychy') !== FALSE)
+	if (stripos($player->equip[12][1], 'wytrychy') !== FALSE)
 	  {
-	    $db->Execute("DELETE FROM `equipment` WHERE `id`=".$arrEquip[12][0]);
+	    $db->Execute("DELETE FROM `equipment` WHERE `id`=".$player->equip[12][0]);
 	  }
 	$objTool = $db->Execute("SELECT `id` FROM `equipment` WHERE `owner`=".$player->id." AND `type`='E' AND `status`='U'");
 	if ($objTool->fields['id'])
@@ -238,16 +237,16 @@ function astralsteal($intVictim, $strLocation, $intOwner = 0, $intId = 0)
         {
             $db -> Execute("INSERT INTO `log` (`owner`, `log`, `czas`, `type`) VALUES(".$intOwner.",'".ASTRAL_GONE.$strType.$strCompname."</b>."."',".$strDate.", 'T')");
         }
-	if (stripos($arrEquip[12][1], 'wytrychy') !== FALSE)
+	if (stripos($player->equip[12][1], 'wytrychy') !== FALSE)
 	  {
-	    $arrEquip[12][6] --;
-	    if ($arrEquip[12][6] <= 0)
+	    $player->equip[12][6] --;
+	    if ($player->equip[12][6] <= 0)
 	      {
-		$db->Execute("DELETE FROM `equipment` WHERE `id`=".$arrEquip[12][0]);
+		$db->Execute("DELETE FROM `equipment` WHERE `id`=".$player->equip[12][0]);
 	      }
 	    else
 	      {
-		$db->Execute("UPDATE `equipment` SET `wt`=`wt`-1 WHERE `id`=".$arrEquip[12][0]);
+		$db->Execute("UPDATE `equipment` SET `wt`=`wt`-1 WHERE `id`=".$player->equip[12][0]);
 	      }
 	  }
         error(SUCCESFULL.$strType.$strCompname."</b>. Zdobyłeś ".$fltThief." w umiejętności Złodziejstwo.");

@@ -75,7 +75,6 @@ if (isset($_GET['escape']))
     $intMax = ceil($prisoner->fields['cost'] / 50);
     $prisoner->Close();
     $roll = rand (1, $intMax);
-    $arrEquip = $player -> equipment();
     if ($roll == 1)
       {
 	$chance = 0;
@@ -96,9 +95,9 @@ if (isset($_GET['escape']))
 	/**
 	 * Add bonus from tools
 	 */
-	if (stripos($arrEquip[12][1], 'wytrychy') !== FALSE)
+	if (stripos($player->equip[12][1], 'wytrychy') !== FALSE)
 	  {
-	    $intStats += (($arrEquip[12][2] / 100) * $intStats);
+	    $intStats += (($player->equip[12][2] / 100) * $intStats);
 	  }
 	
 	$chance = $intStats - $roll;
@@ -119,9 +118,9 @@ if (isset($_GET['escape']))
 	$db -> Execute("UPDATE `players` SET `crime`=`crime`-1 WHERE `id`=".$player -> id);
 	$strDate = $db -> DBDate($newdate);
 	$db->Execute("UPDATE `jail` SET `duration`=`duration`+7, `cost`=`cost`+".$cost." WHERE `prisoner`=".$player->id);
-	if (stripos($arrEquip[12][1], 'wytrychy') !== FALSE)
+	if (stripos($player->equip[12][1], 'wytrychy') !== FALSE)
 	  {
-	    $db->Execute("DELETE FROM `equipment` WHERE `id`=".$arrEquip[12][0]);
+	    $db->Execute("DELETE FROM `equipment` WHERE `id`=".$player->equip[12][0]);
 	  }
 	$objTool = $db->Execute("SELECT `id` FROM `equipment` WHERE `owner`=".$player->id." AND `type`='E' AND `status`='U' AND `name` LIKE 'Wytrychy%'");
 	if ($objTool->fields['id'])
@@ -147,16 +146,17 @@ if (isset($_GET['escape']))
 	$db->Execute("DELETE FROM `jail` WHERE `prisoner`=".$player->id);
 	$db -> Execute("UPDATE `players` SET `crime`=`crime`-1, `miejsce`='Altara' WHERE `id`=".$player->id);
 	checkexp($player -> exp, $expgain, $player -> level, $player -> race, $player -> user, $player -> id, 0, 0, $player -> id, 'thievery', $fltThief);
-	if (stripos($arrEquip[12][1], 'wytrychy') !== FALSE)
+	if (stripos($player->equip[12][1], 'wytrychy') !== FALSE)
 	  {
-	    $arrEquip[12][6] --;
-	    if ($arrEquip == 0)
+	    $player->equip[12][6] --;
+	    if ($player->equip[6] == 0)
 	      {
-		$db->Execute("DELETE FROM `equipment` WHERE `id`=".$arrEquip[12][0]);
+		$db->Execute("DELETE FROM `equipment` WHERE `id`=".$player->equip[12][0]);
+		$player->equip[12][0] = 0;
 	      }
 	    else
 	      {
-		$db->Execute("UPDATE `equipment` SET `wt`=`wt`-1 WHERE `id`=".$arrEquip[12][0]);
+		$db->Execute("UPDATE `equipment` SET `wt`=`wt`-1 WHERE `id`=".$player->equip[12][0]);
 	      }
 	  }
 	$player->location = 'Altara';
