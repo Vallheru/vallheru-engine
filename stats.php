@@ -8,7 +8,7 @@
  *   @author               : thindil <thindil@vallheru.net>
  *   @author               : mori <ziniquel@users.sourceforge.net>
  *   @version              : 1.6
- *   @since                : 11.06.2012
+ *   @since                : 22.08.2012
  *
  */
 
@@ -134,7 +134,6 @@ $strRank = selectrank($player -> rank, $player -> gender);
 /**
  * Bonuses from equipment to stats
  */
-$player->curstats(array());
 $arrCurstats = array($player->agility, $player->strength, $player->inteli, $player->wisdom, $player->speed, $player->cond);
 
 /**

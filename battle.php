@@ -7,7 +7,7 @@
  *   @copyright            : (C) 2004,2005,2006,2011,2012 Vallheru Team based on Gamers-Fusion ver 2.5
  *   @author               : thindil <thindil@vallheru.net>
  *   @version              : 1.6
- *   @since                : 24.07.2012
+ *   @since                : 22.08.2012
  *
  */
 
@@ -71,14 +71,12 @@ if (isset($_GET['battle']))
     checkvalue($_GET['battle']);
     $arrmenu = array('age','inteli','clas','immunited','strength','agility','attack','miss','magic','speed','cond','race','wisdom','shoot','id','user','level','exp','hp','credits','mana','maps', 'antidote', 'settings', 'newbie', 'oldstats');
     $arrMyequip = $player->equipment();
-    $player->curstats($arrMyequip);
     $player->curskills(array('weapon', 'shoot', 'dodge', 'cast'), FALSE);
     $arrattacker = $player -> stats($arrmenu);
     $arrattacker['user'] = $arrTags[$player->tribe][0].' '.$player->user.' '.$arrTags[$player->tribe][1];
     $enemy = new Player($_GET['battle']);
     $arrplayer = array('id','user','level','tribe','credits','location','hp','mana','exp','age','inteli','clas','immunited','strength','agility','attack','miss','magic','speed','cond','race','wisdom','shoot','maps','rest','fight', 'antidote', 'settings', 'newbie', 'oldstats');
     $arrEnequip = $enemy -> equipment();
-    $enemy->curstats($arrEnequip);
     $enemy->curskills(array('weapon', 'shoot', 'dodge', 'cast'), FALSE);
     $arrdefender = $enemy -> stats($arrplayer);
     $arrdefender['user'] = $arrTags[$arrdefender['tribe']][0].' '.$arrdefender['user'].' '.$arrTags[$arrdefender['tribe']][1];
@@ -653,7 +651,7 @@ if (isset($_GET['action']))
 		$intEnergy = floor(1 + ($enemy1->fields['level'] / 20));
 		if ($player->energy < ($_POST['razy'] * $intEnergy))
 		  {
-		    error (NO_ENERGY2);
+		    error ("Nie masz wystarczającej ilości energii.");
 		  }
 		$_SESSION['razy'] = $_POST['razy'];
 		$_SESSION['energy'] = $intEnergy;
@@ -775,7 +773,7 @@ if (isset($_GET['action']))
 	    $lostenergy = ($_POST['razy'] * $_POST['times'] * floor(1 + ($enemy1->fields['level'] / 20)));
 	    if ($player->energy < $lostenergy) 
 	      {
-		error (NO_ENERGY2);
+		error ("Nie masz wystarczającej ilości energii.");
 	      }
 	    if ($player -> clas == '') 
 	      {

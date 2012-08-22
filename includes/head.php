@@ -7,7 +7,7 @@
  *   @copyright            : (C) 2004,2005,2006,2007,2011,2012 Vallheru Team based on Gamers-Fusion ver 2.5
  *   @author               : thindil <thindil@vallheru.net>
  *   @version              : 1.6
- *   @since                : 10.06.2012
+ *   @since                : 22.06.2012
  *
  */
 
@@ -325,10 +325,7 @@ if ($player->settings['graphic'] != '' || $player->settings['graphbar'] == 'Y')
         $intPerhealth = 97;
     }
     $intVial2 = 97 - $intPerhealth;
-    $cape = $db -> Execute("SELECT `power` FROM `equipment` WHERE `owner`=".$player -> id." AND `type`='C' AND `status`='E'");
     $maxmana = ($player -> inteli + $player -> wisdom);
-    $maxmana = $maxmana + (($cape -> fields['power'] / 100) * $maxmana);
-    $cape -> Close();
     $intPermana = (($player -> mana / $maxmana) * 100);
     $intPermana = round($intPermana, '0');
     $strMana = $intPermana;

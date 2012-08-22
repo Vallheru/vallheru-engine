@@ -8,7 +8,7 @@
  *   @author               : thindil <thindil@vallheru.net>
  *   @author               : eyescream <tduda@users.sourceforge.net>
  *   @version              : 1.6
- *   @since                : 09.07.2012
+ *   @since                : 22.08.2012
  *
  */
 
@@ -49,8 +49,8 @@ function astralsteal($intVictim, $strLocation, $intOwner = 0, $intId = 0)
      * Add bonus from rings
      */
     $arrEquip = $player -> equipment();
-    $player->curstats($arrEquip);
     $player->curskills(array('thievery'));
+    $player->clearbless(array('agility', 'inteli'));
 
     $intStats = ($player->agility + $player->inteli + $player->thievery);
     /**

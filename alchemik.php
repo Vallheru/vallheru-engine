@@ -7,7 +7,7 @@
  *   @copyright            : (C) 2004,2005,2006,2007,2011,2012 Vallheru Team based on Gamers-Fusion ver 2.5
  *   @author               : thindil <thindil@vallheru.net>
  *   @version              : 1.6
- *   @since                : 30.07.2012
+ *   @since                : 22.08.2012
  *
  */
 
@@ -272,7 +272,6 @@ else
 	     * Add bonuses to ability
 	     */
 	    $arrEquip = $player->equipment();
-	    $player->curstats($arrEquip, TRUE);
 	    $player->curskills(array('alchemy'), TRUE, TRUE);
 	    
 	    $rprzedmiot = 0;
@@ -281,27 +280,34 @@ else
 	    $objItem = $db -> Execute("SELECT `efect`, `type`, `power` FROM `potions` WHERE `name`='".$kuznia -> fields['name']."' AND `owner`=0");
 	    $arrMaked = array();
 
+	    switch ($objItem->fields['type'])
+	      {
+	      case 'M':
+		$fltStat = $player -> wisdom;
+		$arrStats = array('wisdom');
+		break;
+	      case 'H':
+		$fltStat = $player -> inteli;
+		$arrStats = array('inteli');
+		break;
+	      case 'P':
+		$fltStat = (min($player -> wisdom, $player -> inteli) + $player -> agility) / 2;
+		$arrStats = array('wisdom', 'inteli', 'agility');
+		break;
+	      case 'A':
+		$fltStat = (min($player -> wisdom, $player -> inteli) + $player -> speed) / 2;
+		$arrStats = array('wisdom', 'inteli', 'speed');
+		break;
+	      default:
+		break;
+	      }
+	    $player->clearstats($arrStats);
+
 	    /**
 	     * Start making potions
 	     */
 	    for ($i = 1; $i <= $_POST['razy']; $i++)
 	      {
-		if ($objItem -> fields['type'] == 'M')
-		  {
-		    $fltStat = $player -> wisdom;
-		  }
-		if ($objItem -> fields['type'] == 'H')
-		  {
-		    $fltStat = $player -> inteli;
-		  }
-		if ($objItem -> fields['type'] == 'P')
-		  {
-		    $fltStat = (min($player -> wisdom, $player -> inteli) + $player -> agility) / 2;
-		  }
-		if ($objItem -> fields['type'] == 'A')
-		  {
-		    $fltStat = (min($player -> wisdom, $player -> inteli) + $player -> speed) / 2;
-		  }
 		$intChance = ($player -> level * 5) + ($player -> alchemy / 3) + $fltStat;
 		$intRoll = rand(1, 100);
 		$intTmpamount = 0;
@@ -501,7 +507,6 @@ else
 	    /**
 	     * Add bonuses to ability
 	     */
-	    $player->curstats(array(), TRUE);
 	    $player->curskills(array('alchemy'), TRUE, TRUE);
 	    $arrChance = array(0.1, 0.08, 0.06, 0.04, 0.02);
 	    $intChance = floor($player -> alchemy * $arrChance[$intKey]);

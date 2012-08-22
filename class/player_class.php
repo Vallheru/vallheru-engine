@@ -7,7 +7,7 @@
  *   @copyright            : (C) 2004,2005,2006,2007,2011,2012 Vallheru Team based on Gamers-Fusion ver 2.5
  *   @author               : thindil <thindil@vallheru.net>
  *   @version              : 1.6
- *   @since                : 02.08.2012
+ *   @since                : 22.08.2012
  *
  */
 
@@ -105,6 +105,10 @@ class Player
     var $settings;
     var $changed;
     var $chattimes;
+    /**
+     * Player equipment
+     */
+    var $equip;
 /**
 * Class constructor - get data from database and write it to variables
 */
@@ -207,6 +211,8 @@ class Player
 	$this->chattimes = $stats->fields['chattimes'];
 	$this->oldstats = array($this->agility, $this->strength, $this->inteli, $this->wisdom, $this->speed, $this->cond);
 	$this->settings = $this->toarray($stats->fields['settings']);
+	$this->equip = $this->equipment();
+	$this->curstats();
     }
 
     /**
@@ -244,72 +250,68 @@ class Player
     /**
      * Function return modified player stats
      */
-    function curstats($arrEquip = array(), $blnClear = FALSE)
+    function curstats()
     {
       global $db;
 
-      if (count($arrEquip) == 0)
-	{
-	  $arrEquip = $this->equipment();
-	}
       //Add bonuses from equipment
-      if ($arrEquip[3][0])
+      if ($this->equip[3][0])
 	{
-	  if ($arrEquip[3][5] < 0) 
+	  if ($this->equip[3][5] < 0) 
 	    {
-	      $intAgibonus = str_replace("-","",$arrEquip[3][5]);
+	      $intAgibonus = str_replace("-","",$this->equip[3][5]);
 	    } 
-	  elseif ($arrEquip[3][5] >= 0) 
+	  elseif ($this->equip[3][5] >= 0) 
 	    {
-	      $intAgibonus = 0 - $arrEquip[3][5];
+	      $intAgibonus = 0 - $this->equip[3][5];
 	    }
 	  $this->agility += $intAgibonus;
 	}
-      if ($arrEquip[5][0])
+      if ($this->equip[5][0])
 	{
-	  if ($arrEquip[5][5] < 0) 
+	  if ($this->equip[5][5] < 0) 
 	    {
-	      $intAgibonus = str_replace("-","",$arrEquip[5][5]);
+	      $intAgibonus = str_replace("-","",$this->equip[5][5]);
 	    } 
-	  elseif ($arrEquip[5][5] >= 0) 
+	  elseif ($this->equip[5][5] >= 0) 
 	    {
-	      $intAgibonus = 0 - $arrEquip[5][5];
+	      $intAgibonus = 0 - $this->equip[5][5];
 	    }
 	  $this->agility += $intAgibonus;
 	}
-      if ($arrEquip[4][0])
+      if ($this->equip[4][0])
 	{
-	  if ($arrEquip[4][5] < 0) 
+	  if ($this->equip[4][5] < 0) 
 	    {
-	      $intAgibonus = str_replace("-","",$arrEquip[4][5]);
+	      $intAgibonus = str_replace("-","",$this->equip[4][5]);
 	    } 
-	  elseif ($arrEquip[4][5] >= 0) 
+	  elseif ($this->equip[4][5] >= 0) 
 	    {
-	      $intAgibonus = 0 - $arrEquip[4][5];
+	      $intAgibonus = 0 - $this->equip[4][5];
 	    }
 	  $this->agility += $intAgibonus;
 	}
-      if ($arrEquip[1][0])
+      if ($this->equip[1][0])
 	{
-	  $this->speed += $arrEquip[1][7];
+	  $this->speed += $this->equip[1][7];
 	}
       $arrStats = array('agility', 'strength', 'inteli', 'wisdom', 'speed', 'cond');
       //Add bonuses from rings
-      if ($arrEquip[9][2])
+      if ($this->equip[9][2])
 	{
 	  $arrRings = array("zręczności", "siły", "inteligencji", "woli", "szybkości", "wytrzymałości");
-	  $arrRingtype = explode(" ", $arrEquip[9][1]);
+	  $arrRingtype = explode(" ", $this->equip[9][1]);
 	  $intAmount = count($arrRingtype) - 1;
 	  $intKey = array_search($arrRingtype[$intAmount], $arrRings);
-	  $this->$arrStats[$intKey] += $arrEquip[9][2];
+	  $this->$arrStats[$intKey] += $this->equip[9][2];
 	}
-      if ($arrEquip[10][2])
+      if ($this->equip[10][2])
 	{
 	  $arrRings = array("zręczności", "siły", "inteligencji", "woli", "szybkości", "wytrzymałości");
-	  $arrRingtype = explode(" ", $arrEquip[10][1]);
+	  $arrRingtype = explode(" ", $this->equip[10][1]);
 	  $intAmount = count($arrRingtype) - 1;
 	  $intKey = array_search($arrRingtype[$intAmount], $arrRings);
-	  $this->$arrStats[$intKey] += $arrEquip[10][2];
+	  $this->$arrStats[$intKey] += $this->equip[10][2];
 	}
       //Add bonuses from bless
       $objBless = $db -> Execute("SELECT `bless`, `blessval` FROM `players` WHERE `id`=".$this->id);
@@ -321,6 +323,21 @@ class Player
 	    {
 	      $db -> Execute("UPDATE `players` SET `bless`='', `blessval`=0 WHERE `id`=".$this->id);
 	    }
+	}
+      $objBless->Close();
+    }
+
+    /**
+     * Function remove bless
+     */
+    function clearbless($arrNames)
+    {
+      global $db;
+
+      $objBless = $db->Execute("SELECT `bless` FROM `players` WHERE `id`=".$this->id);
+      if (in_array($objBless->fields['bless'], $arrNames))
+	{
+	  $db->Execute("UPDATE `players` SET `bless`='', `blessval`=0 WHERE `id`=".$this->id);
 	}
       $objBless->Close();
     }
@@ -380,22 +397,21 @@ class Player
 			    'alchemy' => 'moździerz',
 			    'fletcher' => 'ciesak',
 			    'smith' => 'młot');
-	  $arrEquip = $this->equipment();
 	  foreach ($arrNames as $strName)
 	    {
-	      if (stripos($arrEquip[12][1], $arrTools[$strName]) !== FALSE)
+	      if (stripos($this->equip[12][1], $arrTools[$strName]) !== FALSE)
 		{
-		  $this->$strName += (($arrEquip[12][2] / 100) * $this->$strName);
+		  $this->$strName += (($this->equip[12][2] / 100) * $this->$strName);
 		  if ($blnClear)
 		    {
-		      $arrEquip[12][6] --;
-		      if ($arrEquip[12][6] <= 0)
+		      $this->equip[12][6] --;
+		      if ($this->equip[12][6] <= 0)
 			{
-			  $db->Execute("DELETE FROM `equipment` WHERE `id`=".$arrEquip[12][0]);
+			  $db->Execute("DELETE FROM `equipment` WHERE `id`=".$this->equip[12][0]);
 			}
 		      else
 			{
-			  $db->Execute("UPDATE `equipment` SET `wt`=".$arrEquip[12][6]." WHERE `id`=".$arrEquip[12][0]);
+			  $db->Execute("UPDATE `equipment` SET `wt`=".$this->equip[12][6]." WHERE `id`=".$this->equip[12][0]);
 			}
 		    }
 		}

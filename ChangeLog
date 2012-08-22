@@ -1,5 +1,9 @@
 2012-08-22  Bartek thindil Jasicki  <thindil@vallheru.net>
 
+	* UPDATE,rest.php, view.php, tribes.php, stats.php, smelter.php, mines.php, maze.php, lumbermill.php, lumberjack.php, kowal.php, kopalnia.php,
+	jeweller.php, farm.php, jail.php, explore.php, czary.php, core.php, battle.php, bank.php, includes/astralsteal.php, includes/steal.php,
+	alchemik.php, includes/turnfight.php, includes/funkcje.php, includes/head.php, class/player_class.php:
+	small code cleanup
 	* BUG,includes/turnfight.php:
 	fixed damage type
 

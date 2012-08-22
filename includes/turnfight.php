@@ -56,7 +56,6 @@ function turnfight($expgain,$goldgain,$action,$addres)
     global $arrTags;
 
     $arrEquip = $player -> equipment();
-    $player->curstats($arrEquip);
     $myczaro = $db -> Execute("SELECT * FROM czary WHERE status='E' AND gracz=".$player -> id." AND typ='O'");
     $fight = $db -> Execute("SELECT fight FROM players WHERE id=".$player -> id);
 
@@ -1041,7 +1040,7 @@ function attack($eunik,$bdamage)
     if ($arrEquip[0][0]) 
     {
         gainability($player -> id, $player -> user, 0, $gatak, 0, $player -> mana, $player -> id, 'weapon');
-        lostitem($gwtbr, $arrEquip[0][6], YOU_WEAPON, $player -> id, $arrEquip[0][0], $player -> id, HAS_BEEN1, $player->level);
+        lostitem($gwtbr, $arrEquip[0][6], YOU_WEAPON, $player -> id, $arrEquip[0][0], $player -> id, HAS_BEEN1, $player->level, 0);
     }
     if ($arrEquip[11][0])
       {
@@ -1049,13 +1048,13 @@ function attack($eunik,$bdamage)
 	  {
 	     gainability($player -> id, $player -> user, 0, $gatak, 0, $player -> mana, $player -> id, 'weapon');
 	  }
-	lostitem($gwtbr, $arrEquip[11][6], YOU_WEAPON, $player -> id, $arrEquip[11][0], $player -> id, HAS_BEEN1, $player->level);
+	lostitem($gwtbr, $arrEquip[11][6], YOU_WEAPON, $player -> id, $arrEquip[11][0], $player -> id, HAS_BEEN1, $player->level, 11);
       }
     if ($arrEquip[1][0]) 
     {
         gainability($player -> id, $player -> user, 0, $gatak, 0, $player -> mana, $player -> id, 'bow');
-        lostitem($gwtbr, $arrEquip[1][6], YOU_WEAPON, $player -> id, $arrEquip[1][0], $player -> id, HAS_BEEN1, $player->level);
-        lostitem($gwtbr, $arrEquip[6][6], YOU_QUIVER, $player -> id, $arrEquip[6][0], $player -> id, HAS_BEEN1, $player->level);
+        lostitem($gwtbr, $arrEquip[1][6], YOU_WEAPON, $player -> id, $arrEquip[1][0], $player -> id, HAS_BEEN1, $player->level, 1);
+        lostitem($gwtbr, $arrEquip[6][6], YOU_QUIVER, $player -> id, $arrEquip[6][0], $player -> id, HAS_BEEN1, $player->level, 6);
     }
     $_SESSION['exhaust'] = $zmeczenie;
 }
@@ -1438,19 +1437,19 @@ function monsterattack($attacks,$enemy,$myunik,$amount)
     }
     if ($arrEquip[3][0]) 
     {
-      lostitem($gwt[0], $arrEquip[3][6], YOU_ARMOR, $player -> id, $arrEquip[3][0], $player -> id, HAS_BEEN1, $player->level);
+      lostitem($gwt[0], $arrEquip[3][6], YOU_ARMOR, $player -> id, $arrEquip[3][0], $player -> id, HAS_BEEN1, $player->level, 3);
     }
     if ($arrEquip[2][0]) 
     {
-      lostitem($gwt[1], $arrEquip[2][6], YOU_HELMET, $player -> id, $arrEquip[2][0], $player -> id, HAS_BEEN1, $player->level);
+      lostitem($gwt[1], $arrEquip[2][6], YOU_HELMET, $player -> id, $arrEquip[2][0], $player -> id, HAS_BEEN1, $player->level, 2);
     }
     if ($arrEquip[4][0]) 
     {
-      lostitem($gwt[2], $arrEquip[4][6], YOU_LEGS, $player -> id, $arrEquip[4][0], $player -> id, HAS_BEEN2, $player->level);
+      lostitem($gwt[2], $arrEquip[4][6], YOU_LEGS, $player -> id, $arrEquip[4][0], $player -> id, HAS_BEEN2, $player->level, 4);
     }
     if ($arrEquip[5][0]) 
     {
-      lostitem($gwt[3], $arrEquip[5][6], YOU_SHIELD, $player -> id, $arrEquip[5][0], $player -> id, HAS_BEEN1, $player->level);
+      lostitem($gwt[3], $arrEquip[5][6], YOU_SHIELD, $player -> id, $arrEquip[5][0], $player -> id, HAS_BEEN1, $player->level, 5);
     }
     $intDamount = 0;
     if ($gunik)

@@ -7,7 +7,7 @@
  *   @copyright            : (C) 2004,2005,2006,2007,2011,2012 Vallheru Team based on Gamers-Fusion ver 2.5
  *   @author               : thindil <thindil@vallheru.net>
  *   @version              : 1.6
- *   @since                : 20.08.2012
+ *   @since                : 22.08.2012
  *
  */
 
@@ -379,8 +379,8 @@ if (isset($_GET['mill']) && ($_GET['mill'] == 'mill' || $_GET['mill'] == 'elite'
 	/**
          * Add bonuses to ability
          */
-	$player->curstats(array(), TRUE);
 	$player->curskills(array('fletcher'), TRUE, TRUE);
+	$player->clearbless(array('strength', 'agility', 'inteli'));
       }
     if (isset($_GET['ko'])) 
       {
@@ -1248,7 +1248,6 @@ if (isset($_GET['mill']) && $_GET['mill'] == 'astral')
         {
             error(NO_ENERGY);
         }
-	$player->curstats(array(), TRUE);
 	$player->curskills(array('fletcher', 'smith'), TRUE, TRUE);
         $arrChance = array(0.25, 0.2, 0.15, 0.1, 0.05);
         $intChance = floor(($player -> smith * $arrChance[$intKey]) + ($player -> fletcher * $arrChance[$intKey]));

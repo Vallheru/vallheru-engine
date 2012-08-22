@@ -7,7 +7,7 @@
  *   @copyright            : (C) 2004,2005,2006,2011,2012 Vallheru Team based on Gamers-Fusion ver 2.5
  *   @author               : thindil <thindil@vallheru.net>
  *   @version              : 1.6
- *   @since                : 28.06.2012
+ *   @since                : 22.08.2012
  *
  */
 
@@ -65,7 +65,6 @@ if (isset($_GET['action']) && $_GET['action'] == 'dig')
      * Count bonus to ability
      */
     $arrEquip = $player->equipment();
-    $player->curstats($arrEquip, TRUE);
     $player->curskills(array('mining'), TRUE, TRUE);
 
     $fltGainability = 0;

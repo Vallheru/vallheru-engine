@@ -8,7 +8,7 @@
  *   @author               : thindil <thindil@vallheru.net>
  *   @author               : eyescream <tduda@users.sourceforge.net>
  *   @version              : 1.6
- *   @since                : 20.08.2012
+ *   @since                : 22.08.2012
  *
  */
 
@@ -532,9 +532,8 @@ if (isset($_GET['spy']) || isset($_GET['steal']))
         error(SAME_CLAN." (<a href=\"view.php?view=".$_GET['view']."\">".BACK."</a>)");
       }
     $arrEquip = $player -> equipment();
-    $player->curstats($arrEquip);
     $player->curskills(array('thievery'));
-    $view->curstats();
+    $player->clearbless(array('inteli', 'agility'));
     $view->curskills(array('perception'));
     $strDate = $db -> DBDate($newdate);
   }

@@ -9,7 +9,7 @@
  *   @author               : mori <ziniquel@users.sourceforge.net>
  *   @author               : eyescream <tduda@users.sourceforge.net>
  *   @version              : 1.6
- *   @since                : 17.08.2012
+ *   @since                : 22.08.2012
  *
  */
 
@@ -325,12 +325,9 @@ if (isset ($_GET['view']) && $_GET['view'] == 'view')
 		    $objTest->Close();
 		  }
 		$db->Execute("UPDATE `players` SET `astralcrime`='N' WHERE `id`=".$player->id);
-		/**
-		 * Add bonus from rings
-		 */
 		$arrEquip = $player -> equipment();
-		$player->curstats($arrEquip);
 		$player->curskills(array('thievery'));
+		$player->clearbless(array('inteli', 'agility'));
 		$intStats = ($player->agility + $player->inteli + $player->thievery);
 		/**
 		 * Add bonus from tools

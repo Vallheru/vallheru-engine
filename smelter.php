@@ -7,7 +7,7 @@
  *   @copyright            : (C) 2004,2005,2006,2011,2012 Vallheru Team based on Gamers-Fusion ver 2.5
  *   @author               : thindil <thindil@vallheru.net>
  *   @version              : 1.6
- *   @since                : 20.07.2012
+ *   @since                : 22.08.2012
  *
  */
 
@@ -243,7 +243,6 @@ if (isset($_GET['step']) && $_GET['step'] == 'smelt')
             }
             $i = 0;
             $arrAmount = array();
-	    $player->curstats(array(), TRUE);
 	    $player->curskills(array('metallurgy'), TRUE, TRUE);
             foreach ($arrOres as $strOres)
             {

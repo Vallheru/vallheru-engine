@@ -9,7 +9,7 @@
  *   @author               : yeskov <yeskov@users.sourceforge.net>
  *   @author               : eyescream <tduda@users.sourceforge.net>
  *   @version              : 1.6
- *   @since                : 17.08.2012
+ *   @since                : 22.08.2012
  *
  */
 
@@ -772,8 +772,8 @@ if (isset($_GET['action']))
 	      }
 	    else
 	      {		
-		$player->curstats($arrEquip);
 		$player->curskills(array('thievery'));
+		$player->clearbless(array('agility', 'inteli', 'speed'));
 		
 		$intStats = ($player->agility + $player->inteli + $player->thievery + $player->speed);
 		/**

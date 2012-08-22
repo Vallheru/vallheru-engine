@@ -7,7 +7,7 @@
  *   @copyright            : (C) 2004,2005,2006,2011,2012 Vallheru Team based on Gamers-Fusion ver 2.5
  *   @author               : thindil <thindil@vallheru.net>
  *   @version              : 1.6
- *   @since                : 09.07.2012
+ *   @since                : 22.08.2012
  *
  */
 
@@ -69,8 +69,8 @@ function steal ($itemid)
     $roll = rand (1, ($arritem->fields['minlev'] * 100));
 
     $arrEquip = $player -> equipment();
-    $player->curstats($arrEquip);
     $player->curskills(array('thievery'));
+    $player->clearbless(array('agility', 'inteli'));
 
     $intStats = ($player->agility + $player->inteli + $player->thievery);
     /**

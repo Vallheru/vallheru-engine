@@ -6,8 +6,8 @@
  *   @name                 : lumberjack.php                            
  *   @copyright            : (C) 2004,2005,2006,2011,2012 Vallheru Team based on Gamers-Fusion ver 2.5
  *   @author               : thindil <thindil@vallheru.net>
- *   @version              : 1.5
- *   @since                : 07.05.2012
+ *   @version              : 1.6
+ *   @since                : 22.08.2012
  *
  */
 
@@ -75,7 +75,6 @@ if (isset ($_GET['action']) && $_GET['action'] == 'chop')
     /**
      * Count bonus to ability
      */
-    $player->curstats(array(), TRUE);
     $player->curskills(array('lumberjack'), TRUE, TRUE);
     
     $intAmountgold = 0;

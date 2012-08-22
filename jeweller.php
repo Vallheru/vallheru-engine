@@ -7,7 +7,7 @@
  *   @copyright            : (C) 2006,2011,2012 Vallheru Team based on Gamers-Fusion ver 2.5
  *   @author               : thindil <thindil@vallheru.net>
  *   @version              : 1.6
- *   @since                : 29.06.2012
+ *   @since                : 22.08.2012
  *
  */
 
@@ -175,7 +175,6 @@ if (isset($_GET['step']) && $_GET['step'] == 'make')
          * Add bonuses to ability
          */
 	$arrEquip = $player->equipment();
-	$player->curstats($arrEquip, TRUE);
 	$player->curskills(array('jeweller'), TRUE, TRUE);
         
         $intChance = $player->jeweller * 100;
@@ -400,7 +399,6 @@ if (isset($_GET['step']) && $_GET['step'] == 'make2')
              * Add bonuses to ability
              */
 	    $arrEquip = $player->equipment();
-	    $player->curstats($arrEquip, TRUE);
 	    $player->curskills(array('jeweller'), TRUE, TRUE);
 
             $objRing2 = $db -> Execute("SELECT `level`, `bonus`, `cost`, `type` FROM `jeweller` WHERE `owner`=".$player -> id." AND `name`='".$objRing -> fields['name']."'");
@@ -415,6 +413,7 @@ if (isset($_GET['step']) && $_GET['step'] == 'make2')
 
             $arrStats = array(R_AGI, R_STR, R_INT, R_WIS, R_SPE, R_CON);
             $arrStats2 = array('agility', 'strength', 'inteli', 'wisdom', 'speed', 'cond');
+	    $player->clearbless($arrStats2);
             $intKey = array_search($objRing -> fields['bonus'], $arrStats);
             $intStat = $player -> $arrStats2[$intKey];
 
@@ -519,7 +518,6 @@ if (isset($_GET['step']) && $_GET['step'] == 'make2')
          * Add bonuses to ability
          */
 	$arrEquip = $player->equipment();
-	$player->curstats($arrEquip, TRUE);
 	$player->curskills(array('jeweller'), TRUE, TRUE);
 
         $intChance = ($player->jeweller / $objRing -> fields['level']) * 50;
@@ -534,6 +532,7 @@ if (isset($_GET['step']) && $_GET['step'] == 'make2')
         $intChange = $objRing -> fields['level'] * 4;
         $arrStats = array(R_AGI, R_STR, R_INT, R_WIS, R_SPE, R_CON);
         $arrStats2 = array('agility', 'strength', 'inteli', 'wisdom', 'speed', 'cond');
+	$player->clearbless($arrStats2);
         if (isset($_POST['bonus']) && $player -> jeweller >= $intChange)
         {
             $strStat = $_POST['bonus'];
@@ -785,7 +784,6 @@ if (isset($_GET['step']) && $_GET['step'] == 'make3')
              * Add bonuses to ability
              */
 	    $arrEquip = $player->equipment();
-	    $player->curstats($arrEquip, TRUE);
 	    $player->curskills(array('jeweller'), TRUE, TRUE);
 
             /**
@@ -965,7 +963,6 @@ if (isset($_GET['step']) && $_GET['step'] == 'make3')
          * Add bonuses to ability
          */
 	$arrEquip = $player->equipment();
-	$player->curstats($arrEquip, TRUE);
 	$player->curskills(array('jeweller'), TRUE, TRUE);
 
         $intChance = floor(($player->jeweller / 50) * 0.5) + 5;

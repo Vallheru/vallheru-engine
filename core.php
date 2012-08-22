@@ -8,7 +8,7 @@
  *   @author               : thindil <thindil@vallheru.net>
  *   @author               : eyescream <tduda@users.sourceforge.net>
  *   @version              : 1.6
- *   @since                : 29.06.2012
+ *   @since                : 22.08.2012
  *
  */
 
@@ -235,7 +235,6 @@ if (isset($_GET['view']))
 		/**
 		 * Add bonuses to ability
 		 */
-		$player->curstats(array(), TRUE);
 		$player->curskills(array('breeding'), TRUE, TRUE);
 		
 		$fltRoll = rand(1,100) / 100;

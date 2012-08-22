@@ -7,7 +7,7 @@
  *   @copyright            : (C) 2004,2005,2006,2011,2012 Vallheru Team based on Gamers-Fusion ver 2.5
  *   @author               : thindil <thindil@vallheru.net>
  *   @version              : 1.6
- *   @since                : 20.08.2012
+ *   @since                : 22.08.2012
  *
  */
 
@@ -518,8 +518,8 @@ if (isset($_GET['kowal']) && ($_GET['kowal'] == 'kuznia' || $_GET['kowal'] == 'e
 	/**
          * Add bonuses to ability
          */
-	$player->curstats(array(), TRUE);
 	$player->curskills(array('smith'), TRUE, TRUE);
+	$player->clearbless(array('strength', 'inteli', 'agility'));
       }
     if (isset($_GET['ko'])) 
     {

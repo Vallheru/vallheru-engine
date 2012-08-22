@@ -8,7 +8,7 @@
  *   @author               : thindil <thindil@vallheru.net>
  *   @author               : eyescream <tduda@users.sourceforge.net>
  *   @version              : 1.6
- *   @since                : 23.07.2012
+ *   @since                : 22.08.2012
  *
  */
 
@@ -89,8 +89,8 @@ if (isset($_GET['escape']))
 	/**
 	 * Add bonus from rings
 	 */
-	$player->curstats($arrEquip);
 	$player->curskills(array('thievery'));
+	$player->clearbless(array('agility', 'inteli', 'speed'));
 	
 	$intStats = ($player->agility + $player->inteli + $player->thievery + $player->speed);
 	/**
