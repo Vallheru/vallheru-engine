@@ -1,5 +1,7 @@
 2012-08-23  Bartek thindil Jasicki  <thindil@vallheru.net>
 
+	* UPDATE,images/staff.gif, images/redactor.gif, images/law.gif:
+	updated icons
 	* BUG,bank.php: 
 	fixed typo
 	* BUG,templates/layout1/armor.tpl, templates/armor.tpl:
