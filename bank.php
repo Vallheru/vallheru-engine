@@ -9,7 +9,7 @@
  *   @author               : yeskov <yeskov@users.sourceforge.net>
  *   @author               : eyescream <tduda@users.sourceforge.net>
  *   @version              : 1.6
- *   @since                : 22.08.2012
+ *   @since                : 23.08.2012
  *
  */
 
@@ -835,7 +835,7 @@ if (isset($_GET['action']))
 			$db->Execute("UPDATE `equipment` SET `wt`=`wt`-1 WHERE `id`=".$player->equip[12][0]);
 		      }
 		  }
-		message('success', C_SUCCES.$gain.C_SUCCES2." Zdobyłeś ".$fltThief." w umiejętności Złodziejstwo.");
+		message('success', C_SUCCES.$gain.C_SUCCES2.". Zdobyłeś ".$fltThief." w umiejętności Złodziejstwo.");
 	      }
 	  }
       }

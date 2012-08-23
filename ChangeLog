@@ -1,5 +1,7 @@
 2012-08-23  Bartek thindil Jasicki  <thindil@vallheru.net>
 
+	* BUG,bank.php: 
+	fixed typo
 	* BUG,templates/layout1/armor.tpl, templates/armor.tpl:
 	fixed info about agility penalty
 
