@@ -23,7 +23,7 @@
             <td>+{$Power[number]} Obrona</td>
             <td>{$Cost[number]}</td>
             <td>{$Level[number]}</td>
-            <td>{$Agility[number]} %</td>
+            <td>{$Agility[number]}</td>
             <td>- <a href="armor.php?dalej={$Next}&amp;buy={$Id[number]}">{$Abuy}</a>{if $Crime > "0"}<br /><a href="armor.php?steal={$Id[number]}">{$Asteal}</a>{/if}</td>
             </tr>
         {/section}

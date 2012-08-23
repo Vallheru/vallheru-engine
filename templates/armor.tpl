@@ -32,7 +32,7 @@
 						<td>+{$Power[number]} Obrona</td>
 						<td>{$Cost[number]}</td>
 						<td>{$Level[number]}</td>
-						<td>{$Agility[number]} %</td>
+						<td>{$Agility[number]}</td>
 						<td>
 							<ul>
 								<li><a href="armor.php?dalej={$Next}&amp;buy={$Id[number]}">{$Abuy}</a></li>
