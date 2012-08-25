@@ -1,119 +1,128 @@
-.light {
-  color: #FFD700;
-  font-family: Verdana, Arial, Helvetica, sans-serif;
+input, textarea, select {
+  background: transparent;
+  color: black;
+  border: solid black 1px;
+  font: 1em/1.25 "Lucida Sans Unicode","Lucida Grande",Verdana,sans-serif;
+  font-style: normal;
 }
 
-input, textarea, select {
-  color: #FFD700;
-  font-size: 11px;
-  background: #000000;
-  border: solid gray 1px;
+input {
+    text-align: center;
+    -webkit-border-radius: 10px;
+    -moz-border-radius: 15px;
+    border-radius: 15px;
+}
+
+input[type=submit], input[type=button], select {
+    background-image: url('images/button.jpg');
+    color: gold;
+    border-color: gold;
 }
 
 a:link, a:active, a:visited {
-  color: #FFFFFF;
+  color: black;
   text-decoration: none;
 }
 a:hover {
-  text-decoration: none;
-  color: #00FF00;
+  text-decoration: underline;
 }
 
 body {
-  font: 0.75em/1.25 "Lucida Sans Unicode","Lucida Grande",Verdana,sans-serif; 
+  font: 0.75em/1.25 "Lucida Sans Unicode","Lucida Grande",Verdana,sans-serif;
   background: #000000;
+  overflow: hidden;
+  color: black;
+  font-style: oblique;
+}
+
+#scroller {
+  position:absolute; 
+  width:100%; 
+  height:80%; 
+  top: 150px; 
+  left:0; 
+  overflow:auto; 
+  z-index:2;
+}
+
+#ownlinks {
+  border-style: none;
+  background: transparent;
+  margin-left: 10px;
+  -webkit-border-radius: 0px;
+  -moz-border-radius: 0px;
+  border-radius: 0px;
+  overflow: auto;
 }
 
 .dark {
   color : black;
-  font-family: Verdana, Arial, Helvetica, sans-serif;
   width: 100%
 }
 
-table.main {
-  background : url('images/main.jpg');
-  border-width : 0px;
+img.bkgd {
+    width: 100%;
+    height: 100%;
+    position: absolute;
+    z-index: -1;
+    top: 0;
+    left: 0;
 }
 
-td.head {
-  background : url('images/head.gif');
-  border-width : 0px;
+input:hover, textarea:hover {
+  background: goldenrod;
 }
 
-table.panels {
-  background : url('images/panels.jpg');
-  border-width : 0px;
-  text-align : center;
+input:hover[type=submit], input:hover[type=button], select:hover {
+    color: white;
+    background: #7a340d;
+    background-image: url('images/button.jpg');
 }
 
-td.center {
-  background : url('images/center.jpg');
-  border-width : 0px;
-  color : #000000;
-}
-
-td.foot {
-  background : url('images/foot.gif');
-  border-width : 0px;
-  text-align : center;
-}
-
-input:hover, textarea:hover, select:hover {
-  background: #7B1D1D;
-}
-
-input:focus, textarea:focus, select:focus {
-  background: #7B1D1D;
+input:focus, textarea:focus {
+  background: goldenrod;
 }
 
 div.error {
   border-style: solid;
   border-color: darkred;
-  border-width: 1px;
+  border-width: 5px;
   -webkit-border-radius: 10px;
   -moz-border-radius: 15px;
   border-radius: 15px;
   text-align: center;
   padding: 10px;
-  background: darkred;
-  color: white;
-  font-weight: bold;
   margin: 10px;
 }
 div.success {
   border-style: solid;
   border-color: green;
-  border-width: 1px;
+  border-width: 5px;
   -webkit-border-radius: 10px;
   -moz-border-radius: 15px;
   border-radius: 15px;
   text-align: center;
   padding: 10px;
-  background: green;
-  color: white;
   margin: 10px;
 }
 div.info {
   border-style: solid;
   border-color: gold;
-  border-width: 1px;
+  border-width: 5px;
   -webkit-border-radius: 10px;
   -moz-border-radius: 15px;
   border-radius: 15px;
   text-align: center;
   padding: 10px;
-  color: black;
-  background: gold;
-  font-weight: bold;
   margin: 10px;
 }
 label.toggle { 
   cursor: pointer; 
-  color: #FFFFFF; 
+  color: black; 
 }
 label.toggle:hover { 
   cursor: pointer; 
-  color: #00FF00; 
+  text-decoration: underline; 
 }
 input.toggle { 
   display: none; 
@@ -123,4 +132,30 @@ input.toggle:checked+div {
 }
 input.toggle:checked+span { 
   display: none; 
+}
+
+div.vial {
+    border-style: outset;
+    border-width: 3px;
+    border-color: black;
+    margin-top: 3px;
+    margin-bottom: 3px;
+    height: 6px;
+    width: 95%;
+    -webkit-border-radius: 10px;
+    -moz-border-radius: 15px;
+    border-radius: 15px;
+}
+
+div.subvial {
+    -webkit-border-radius: 10px;
+    -moz-border-radius: 15px;
+    border-radius: 15px;
+    height: 6px;
+}
+
+img.avatar {
+    -webkit-border-radius: 10px;
+    -moz-border-radius: 15px;
+    border-radius: 15px;
 }

@@ -7,7 +7,7 @@
  *   @copyright            : (C) 2004,2005,2006,2007,2011,2012 Vallheru Team based on Gamers-Fusion ver 2.5
  *   @author               : thindil <thindil@vallheru.net>
  *   @version              : 1.6
- *   @since                : 22.06.2012
+ *   @since                : 24.08.2012
  *
  */
 
@@ -358,97 +358,41 @@ while(!$objTags->EOF)
   }
 $objTags->Close();
 $strUsername = $arrTags[$player->tribe][0].' '.$player->user.' '.$arrTags[$player->tribe][1];
-$smarty -> assign (array ("Time" => $time,
-                          "Date" => $newdate,
-                          "Title" => $title1,
-                          "Name" =>  $strUsername,
-                          "Id" => $player -> id,
-                          "Level" => $player -> level,
-                          "Exp" => $player -> exp,
-                          "Expneed" => $expn,
-                          "Percent" => $pct,
-                          "Health" => $player -> hp,
-                          "Maxhealth" => $player -> max_hp,
-                          "Mana" => $player -> mana,
-                          "Energy" => $player -> energy,
-                          "Maxenergy" => $player -> max_energy,
-                          "Gold" => $player -> credits,
-                          "Bank" => $player -> bank,
-                          "Mithril" => $player -> platinum,
-                          "Referals" => $player->vallars,
-                          "Numlog" => $numlog,
-                          "Style" => $player->settings['style'],
-                          "Graphbar" => $player->settings['graphbar'],
-                          "Gamename" => $gamename,
-			  "Gameadress" => $gameadress,
-                          "Hospital" => '',
-                          "Battle" => '',
-                          "Tribe" => '',
-                          "Lbank" => '',
-                          "Special" => '',
-                          "Tforum" => '',
-                          "Spells" => '',
-                          "Location" => '',
-                          "Plevel" => LEVEL,
-                          "Exppts" => EXP_PTS,
-                          "Healthpts" => HEALTH_PTS,
-                          "Manapts" => MANA_PTS,
-                          "Energypts" => ENERGY_PTS,
-                          "Goldinhand" => GOLD_IN_HAND,
-                          "Goldinbank" => GOLD_IN_BANK,
-                          "Hmithril" => MITHRIL,
-                          "Vallars" => VALLARS,
-                          "Navigation" => NAVIGATION,
-                          "Gametime" => GAME_TIME,
-                          "Nstatistics" => N_STATISTICS,
-                          "Nitems" => N_ITEMS,
-                          "Nequipment" => N_EQUIPMENT,
-                          "Nlog" => N_LOG,
-                          "Nnotes" => N_NOTES,
-                          "Npost" => N_POST,
-                          "Nforums" => N_FORUMS,
-                          "Ninn" => N_INN,
-                          "Noptions" => N_OPTIONS,
-                          "Nlogout" => N_LOGOUT,
-                          "Nhelp" => N_HELP,
-                          "Nmap" => N_MAP,
-                          "Stephead" => '',
-			  "Filename" => $strFname,
-			  "Message" => '',
-			  "Reportbug" => 'Zgłoś błąd'));
+$arrLinks = array("own" => array(),
+		  "character" => array('stats.php' => 'Statystyki',
+				       'zloto.php' => 'Bogactwa',
+				       'equip.php' => 'Ekwipunek',
+				       'czary.php' => 'Księga Czarów',
+				       'log.php' => 'Dziennik ['.$numlog.']',
+				       'notatnik.php' => 'Notatnik'),
+		  "location" => array());
 
 if (isset($_GET['step']) && $strFilename == 'newspaper.php')
-{
-    $arrFile = array('');
-    $smarty -> assign(array("Stephead" => $_GET['step'],
-                            "Linksfile" => $arrFile));
-}
+  {
+    $smarty -> assign("Stephead", $_GET['step']);
+  }
  else
-{
-    $objLinks = $db -> Execute("SELECT `id`, `file`, `text` FROM `links` WHERE `owner`=".$player -> id." ORDER BY `number` ASC");
-    $arrFile = array('');
-    $arrText = array('');
-    $intLinks = 0;
-    if ($objLinks -> fields['id'])
-    {
-        while (!$objLinks -> EOF)
-        {
-            $arrFile[$intLinks] = $objLinks -> fields['file'];
-            $arrText[$intLinks] = $objLinks -> fields['text'];
-            $intLinks ++;
-            $objLinks -> MoveNext();
-        }
-        $objLinks -> Close();
-    }
-    $smarty -> assign(array("Linksfile" => $arrFile,
-                            "Linkstext" => $arrText,
-                            "Linksnum" => $intLinks));
-}
+   {
+     $smarty->assign("Stephead", '');
+   }
+$objLinks = $db -> Execute("SELECT `id`, `file`, `text` FROM `links` WHERE `owner`=".$player -> id." ORDER BY `number` ASC");
+$blnLinks = FALSE;
+if ($objLinks -> fields['id'])
+  {
+    $blnLinks = TRUE;
+    while (!$objLinks -> EOF)
+      {
+	$arrLinks['own'][$objLinks->fields['file']] = $objLinks->fields['text'];
+	$objLinks -> MoveNext();
+      }
+    $objLinks -> Close();
+  }
 
-if ($player -> clas != 'Barbarzyńca') 
-{
-    $smarty -> assign ("Spells", "<li><a href=\"czary.php\">".SPELLS_BOOK."</a></li>");
-}
+//Remove spell book for barbarian
+if ($player -> clas == 'Barbarzyńca') 
+  {
+    unset($arrLinks['character']['czary.php']);
+  }
 
 switch($player->location)
   {
@@ -475,13 +419,13 @@ switch($player->location)
       {
         $healneed = 0;
       }
-    $smarty -> assign(array("Location" => "<li><a href=\"city.php\">".CITY."</a></li>",
-                            "Battle" => "<li><a href=\"battle.php\">".B_ARENA."</a></li>",
-                            "Hospital" => "<li><a href=\"hospital.php\">".HOSPITAL."</a> [".$healneed." sz]</li>",
-                            "Lbank" => "<li><a href=\"bank.php\">".BANK."</a><br /><br /></li>"));
-    if ($player -> tribe) 
+    $arrLinks['location'] = array('city.php' => CITY,
+				  'battle.php' => 'Arena Walk',
+				  'hospital.php' => 'Szpital ['.$healneed.' sz]',
+				  'bank.php' => 'Bank');
+    if ($player->tribe) 
       {
-        $smarty -> assign ("Tribe", "<li><a href=\"tribes.php?view=my\">".MY_TRIBE."</a></li>");
+	$arrLinks['location']['tribes.php?view=my'] = 'Mój klan';
       }
     break;
   case 'Podróż':
@@ -489,7 +433,7 @@ switch($player->location)
     if ($test -> fields['quest'] != 0) 
       {
         $qlocation = $db -> Execute("SELECT location FROM quests WHERE qid=".$test -> fields['quest']);
-        $smarty -> assign("Location", "<li><a href=\"".$qlocation -> fields['location']."?step=quest\">".RETURN_TO."</a></li>");
+	$arrLinks['location'][$qlocation -> fields['location'].'?step=quest'] = RETURN_TO;
         $qlocation -> Close();
       }
     else
@@ -510,13 +454,13 @@ switch($player->location)
 	  }
 	if (isset($_GET['akcja']))
 	  {
-	    $smarty -> assign("Location", "<li><a href=\"travel.php?akcja=".$_GET['akcja']."&amp;step=".$_GET['step']."\">".RETURN_TO2."</a></li>");
+	    $arrLinks['location']['travel.php?akcja='.$_GET['akcja'].'&amp;step='.$_GET['step']] = RETURN_TO2;
 	  }
 	else
 	  {
 	    $db->Execute("UPDATE `players` SET `miejsce`='Altara' WHERE `id`=".$player->id);
 	    $player->location = 'Altara';
-	    $smarty -> assign("Location", "<li><a href=\"city.php\">".$city1."</a></li>");
+	    $arrLinks['location']['city.php'] = $city1;
 	  }
       }
     $test -> Close();
@@ -524,36 +468,36 @@ switch($player->location)
   case 'Góry':
     if ($player -> fight == 0) 
       {
-        $smarty -> assign ("Location", "<li><a href=\"gory.php\">".MOUNTAINS."</a></li>");
+	$arrLinks['location']['gory.php'] = MOUNTAINS;
       } 
     else 
       {
-        $smarty -> assign ("Location", "<li><a href=\"explore.php?akcja=gory\">".MOUNTAINS."</a></li>");
+	$arrLinks['location']['explore.php?akcja=gory'] = MOUNTAINS;
       }
     break;
   case 'Las':
     if  ($player -> fight == 0) 
       {
-        $smarty -> assign ("Location", "<li><a href=\"las.php\">".FOREST."</a></li>");
+	$arrLinks['location']['las.php'] = FOREST;
       } 
     else 
       {
-        $smarty -> assign ("Location", "<li><a href=\"explore.php?akcja=las\">".FOREST."</a></li>");
+	$arrLinks['location']['explore.php?akcja=las'] = FOREST;
       }
     break;
   case 'Lochy':
-    $smarty -> assign ("Location", "<li><a href=\"jail.php\">".JAIL."</a></li>");
+    $arrLinks['location']['jail.php'] = JAIL;
     break;
   case 'Portal':
-    $smarty -> assign ("Location", "<li><a href=\"portal.php\">".PORTAL."</a></li>");
+    $arrLinks['location']['portal.php'] = PORTAL;
     break;
   case 'Astralny plan':
     $objFight = $db -> Execute("SELECT `fight` FROM `players` WHERE `id`=".$player -> id);
-    $smarty -> assign ("Location", "<li><a href=\"portals.php?step=".$objFight -> fields['fight']."\">".ASTRAL_PLAN."</a></li>");
+    $arrLinks['location']['portals.php?step='.$objFight -> fields['fight']] = ASTRAL_PLAN;
     $objFight -> Close();
     break;
   case 'Przygoda':
-    $smarty->assign("Location", '<li><a href="mission.php">Przygoda</a></li>');
+    $arrLinks['location']['mission.php'] = 'Przygoda';
     break;
   default:
     break;
@@ -699,6 +643,55 @@ switch ($player->rank)
   default:
     break;
   }
+
+$smarty -> assign (array ("Time" => $time,
+                          "Date" => $newdate,
+                          "Title" => $title1,
+                          "Name" =>  $strUsername,
+                          "Id" => $player -> id,
+                          "Level" => $player -> level,
+                          "Exp" => $player -> exp,
+                          "Expneed" => $expn,
+                          "Percent" => $pct,
+                          "Health" => $player -> hp,
+                          "Maxhealth" => $player -> max_hp,
+                          "Mana" => $player -> mana,
+                          "Energy" => $player -> energy,
+                          "Maxenergy" => $player -> max_energy,
+                          "Gold" => $player -> credits,
+                          "Bank" => $player -> bank,
+                          "Mithril" => $player -> platinum,
+                          "Referals" => $player->vallars,
+                          "Numlog" => $numlog,
+                          "Style" => $player->settings['style'],
+                          "Graphbar" => $player->settings['graphbar'],
+                          "Gamename" => $gamename,
+			  "Gameadress" => $gameadress,
+			  "Avatar" => $player->avatar,
+                          "Plevel" => LEVEL,
+                          "Exppts" => EXP_PTS,
+                          "Healthpts" => HEALTH_PTS,
+                          "Manapts" => MANA_PTS,
+                          "Energypts" => ENERGY_PTS,
+                          "Goldinhand" => GOLD_IN_HAND,
+                          "Goldinbank" => GOLD_IN_BANK,
+                          "Hmithril" => MITHRIL,
+                          "Vallars" => VALLARS,
+                          "Navigation" => 'Nawigacja',
+                          "Gametime" => GAME_TIME,
+                          "Npost" => N_POST,
+                          "Nforums" => N_FORUMS,
+                          "Ninn" => N_INN,
+                          "Noptions" => N_OPTIONS,
+                          "Nlogout" => N_LOGOUT,
+                          "Nhelp" => N_HELP,
+                          "Nmap" => N_MAP,
+			  "Nstatistics" => "Statystyki",
+			  "Filename" => $strFname,
+			  "Message" => '',
+			  "Reportbug" => 'Zgłoś błąd',
+			  "Links" => $arrLinks,
+			  "Ownlinks" => count($arrLinks['own'])));
 
 $smarty -> display ('header.tpl');
 

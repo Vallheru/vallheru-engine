@@ -59,27 +59,23 @@
                 <tr>
                     <td valign="top">
                         <ul>
-                            <li><a href="stats.php">{$Nstatistics}</a></li>
-                            <li><a href="zloto.php">{$Nitems}</a></li>
-                            <li><a href="equip.php">{$Nequipment}</a></li>
-                            {$Spells}
-                            <li><a href="log.php">{$Nlog}</a> [{$Numlog}]</li>
-                            <li><a href="notatnik.php">{$Nnotes}</a><br /><br /></li>
-                            {$Location}
-                            {$Battle}
-                            {$Hospital}
-                            {$Tribe}
+			    {foreach $Links.character as $link=>$text}
+			        <li><a href="{$link}">{$text}</a></li>
+			    {/foreach}
+			    <br />
+                            {foreach $Links.location as $link=>$text}
+			        <li><a href="{$link}">{$text}</a></li>
+			    {/foreach}
+			    <br />
                             <li><a href="mail.php{$Mailadd}">{$Npost}</a> [{$Unread}]</li>
-                            {$Lbank}
                             <li><a href="forums.php?view=categories">{$Nforums}</a> {$Funread}</li>
                             {$Tforum}
                             <li><a href="chat.php">{$Ninn} [{$Players}]</a></li>
 			    {$Room}
-                            {if $Linksfile[0] != ""}
-                                {section name=hlinks loop=$Linksfile}
-                                    <li><a href="{$Linksfile[hlinks]}">{$Linkstext[hlinks]}</a>{if $smarty.section.hlinks.iteration == $Linksnum}<br /><br />{/if}</li>
-                                {/section}
-                            {/if}
+			    {foreach $Links.own as $link=>$text}
+			        <li><a href="{$link}">{$text}</a></li>
+			    {/foreach}
+			    <br />
                             <li><a href="account.php">{$Noptions}</a></li>
                             <li><a href="logout.php?did={$Id}">{$Nlogout}</a></li>
                             <li><a href="{$Gameadress}/wiki/" target="_blank">{$Nhelp}</a></li>
