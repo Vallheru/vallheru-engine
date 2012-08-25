@@ -1,5 +1,7 @@
 2012-08-25  Bartek thindil Jasicki  <thindil@vallheru.net>
 
+	* BUG,includes/head.php: 
+	fixed notices
 	* BUG,templates/layout1/header.tpl: 
 	fixed bug with wide avatars
 	* UPDATE,templates/layout1/header.tpl, templates/layou1/layout1.css, templates/layout1/footer.tpl, templates/layout1/images/*, 

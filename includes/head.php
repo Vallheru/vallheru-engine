@@ -7,7 +7,7 @@
  *   @copyright            : (C) 2004,2005,2006,2007,2011,2012 Vallheru Team based on Gamers-Fusion ver 2.5
  *   @author               : thindil <thindil@vallheru.net>
  *   @version              : 1.6
- *   @since                : 24.08.2012
+ *   @since                : 25.08.2012
  *
  */
 
@@ -605,6 +605,10 @@ if ($player->tribe)
       }
     $smarty->assign("Tforum", $strTforum);
   }
+else
+  {
+    $smarty->assign("Tforum", '');
+  }
 
 $intCtime = time() - 180;
 /**
@@ -641,6 +645,7 @@ switch ($player->rank)
     $smarty -> assign ("Special", "<li><a href=\"sedzia.php\">".JUDGE."</a></li>");
     break;
   default:
+    $smarty -> assign ("Special", "");
     break;
   }
 
