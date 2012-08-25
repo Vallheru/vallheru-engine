@@ -12,7 +12,7 @@
 <div><img class="bkgd" src="templates/layout1/images/pergamin.jpg" /></div>
 <div style="text-align: center; margin-top: 20px;">{$Gametime}: {$Time}</div>
 <div style="margin-left: 20px;">
-    <div style="text-align:center; width: 12%; float:left;">
+    <div style="text-align:center; max-width: 12%; float:left;">
       <a href="stats.php">
 	{if $Avatar != ""}
 	  <img src="avatars/{$Avatar}" height="90px" alt="{$Nstatistics}" border="1px" class="avatar" />
@@ -21,7 +21,7 @@
 	{/if}<br />
       <b>{$Name} ({$Id})</b></a>
     </div>
-    <div style="width: 150px; float:left;">
+    <div style="width: 150px; float:left; margin-left:10px;">
       <b>{$Plevel}:</b> {$Level}<br />
       <div class="vial" title="{$Exppts}: {$Exp}/{$Expneed} ({$Percent}%)">
           <div class="subvial" style="width: {100 - $Vial}%; background: green;"></div>
