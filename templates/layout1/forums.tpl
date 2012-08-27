@@ -4,7 +4,7 @@
     {if $Funread > 0}
         <a href="forums.php?view=newposts">{$Anew}</a><br /><br />
     {/if}
-    <table class="dark"><tr><td width="75%"><b><u>{$Tcategory}</u></b></td><td><b><u>{$Ttopics}</u></b></td></tr>
+    <table width="100%"><tr><td width="75%"><b><u>{$Tcategory}</u></b></td><td><b><u>{$Ttopics}</u></b></td></tr>
     {section name=number loop=$Name}
         <tr>
         <td><a href="forums.php?topics={$Id[number]}"><u>{$Name[number]}</u></a></td>
@@ -50,7 +50,7 @@
     {if $Prank == "Admin" || $Prank == "Staff"}
         <form method="post" action="forums.php?action=deltopics">
     {/if}
-    <table class="dark"><tr>{if $Prank == "Admin" || $Prank == "Staff"}<td width="20"></td>{/if}<td><u><b>{$Ttopic}</b></u></td><td width="20%"><u><b>{$Tauthor}</b></u></td><td width="10%"><b><u>{$Treplies}</u></b></td></tr>
+    <table width="100%"><tr>{if $Prank == "Admin" || $Prank == "Staff"}<td width="20"></td>{/if}<td><u><b>{$Ttopic}</b></u></td><td width="20%"><u><b>{$Tauthor}</b></u></td><td width="10%"><b><u>{$Treplies}</u></b></td></tr>
     {section name=number1 loop=$Topic1}
         <tr>
 	{if $Prank == "Admin" || $Prank == "Staff"}
@@ -81,8 +81,7 @@
     <div align="center">
     <form method="post" action="forums.php?action=addtopic" name="newtopic">
         {$Addtopic}:<br />
-        <input type="text" name="title2" value="Temat" size="40" /><br />
-	<br />
+        <input type="text" name="title2" value="Temat" size="40" /><br /><br />
 	<input id="bold" type="button" value="{$Abold}" onClick="formatText(this.id, 'newtopic', 'body')" />
 	<input id="italic" type="button" value="{$Aitalic}" onClick="formatText(this.id, 'newtopic', 'body')" />
 	<input id="underline" type="button" value="{$Aunderline}" onClick="formatText(this.id, 'newtopic', 'body')" />
@@ -118,7 +117,7 @@
     {section name=number2 loop=$Rtext}
         <table class="td" width="98%" cellpadding="0" cellspacing="0">
         <tr>
-        <td><b><a href="view.php?view={$Rplayerid[number2]}">{$Rstarter[number2]}</a></b> {$Wid} {$Rplayerid[number2]} {$Write}... (<a href="forums.php?topics={$Category}">{$Aback}</a>) {if $Closed == 'N'}(<a href="forums.php?topic={$Topic}&amp;quote={$Rid[number2]}">{$Aquote}</a>){/if}
+        <td>{if $Prank == "Admin" || $Prank == "Staff"}<input type="checkbox" name="{$Rid[number2]}" />{/if}<b><a href="view.php?view={$Rplayerid[number2]}">{$Rstarter[number2]}</a></b> {$Wid} {$Rplayerid[number2]} {$Write}... (<a href="forums.php?topics={$Category}">{$Aback}</a>) {if $Closed == 'N'}(<a href="forums.php?topic={$Topic}&amp;quote={$Rid[number2]}">{$Aquote}</a>){/if}
          {$Action2[number2]}
         </td>
         </tr>
@@ -153,7 +152,8 @@
 	</div>
     {/if}
     {if $Closed == 'N'}
-        <div align="center"><form method="post" action="forums.php?reply={$Id}" name="newreply">
+        <div align="center">
+        <form method="post" action="forums.php?reply={$Id}" name="newreply">
     	{$Areply}:<br />
 	<input id="bold" type="button" value="{$Abold}" onClick="formatText(this.id, 'newreply', 'rep')" />
 	<input id="italic" type="button" value="{$Aitalic}" onClick="formatText(this.id, 'newreply', 'rep')" />
@@ -164,8 +164,7 @@
 	<input id="color" type="button" value="{$Acolor}" onClick="formatText(this.id, 'newreply', 'rep')" /> {html_options name=colors options=$Ocolors}<br />
     	<textarea name="rep" cols="40" rows="10">{$Rtext2}</textarea><br />
     	<input type="submit" value="{$Areply}" />
-    	</form></div><br />
-	{$Thelp}
+    	</form></div><br />{$Thelp}
     {/if}
 {/if}
 
