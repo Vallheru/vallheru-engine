@@ -7,7 +7,7 @@
  *   @copyright            : (C) 2004,2005,2006,2007,2011,2012 Vallheru Team based on Gamers-Fusion ver 2.5
  *   @author               : thindil <thindil@vallheru.net>
  *   @version              : 1.6
- *   @since                : 22.08.2012
+ *   @since                : 28.08.2012
  *
  */
 
@@ -255,41 +255,21 @@ class Player
       global $db;
 
       //Add bonuses from equipment
-      if ($this->equip[3][0])
+      $arrIndex = array(0, 2, 3, 4, 5);
+      foreach ($arrIndex as $intIndex)
 	{
-	  if ($this->equip[3][5] < 0) 
+	  if ($this->equip[$intIndex][0])
 	    {
-	      $intAgibonus = str_replace("-","",$this->equip[3][5]);
-	    } 
-	  elseif ($this->equip[3][5] >= 0) 
-	    {
-	      $intAgibonus = 0 - $this->equip[3][5];
+	      if ($this->equip[$intIndex][5] < 0)
+		{
+		  $intAgibonus = str_replace("-","",$this->equip[$intIndex][5]);
+		}
+	      elseif ($this->equip[$intIndex][5] >= 0) 
+		{
+		  $intAgibonus = 0 - $this->equip[$intIndex][5];
+		}
+	      $this->agility += $intAgibonus;
 	    }
-	  $this->agility += $intAgibonus;
-	}
-      if ($this->equip[5][0])
-	{
-	  if ($this->equip[5][5] < 0) 
-	    {
-	      $intAgibonus = str_replace("-","",$this->equip[5][5]);
-	    } 
-	  elseif ($this->equip[5][5] >= 0) 
-	    {
-	      $intAgibonus = 0 - $this->equip[5][5];
-	    }
-	  $this->agility += $intAgibonus;
-	}
-      if ($this->equip[4][0])
-	{
-	  if ($this->equip[4][5] < 0) 
-	    {
-	      $intAgibonus = str_replace("-","",$this->equip[4][5]);
-	    } 
-	  elseif ($this->equip[4][5] >= 0) 
-	    {
-	      $intAgibonus = 0 - $this->equip[4][5];
-	    }
-	  $this->agility += $intAgibonus;
 	}
       if ($this->equip[1][0])
 	{
