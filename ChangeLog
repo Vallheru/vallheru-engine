@@ -1,5 +1,7 @@
 2012-08-27  Bartek thindil Jasicki  <thindil@vallheru.net>
 
+	* UPDATE,templates/layout1/layout1.css, templates/layout1/button.jpg: 
+	small design changes
 	* BUG,templates/layout1/forums.tpl: 
 	fixed bug with deleting posts
 	* UPDATE,templates/layout1/header.tpl, templates/layout1/layout1.css: 
