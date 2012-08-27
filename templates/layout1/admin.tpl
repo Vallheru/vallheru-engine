@@ -90,6 +90,7 @@
                     <option value="{$Bugactions2[bugs]}">{$Bugoptions[bugs]}</option>
                 {/section}
             </select><br />
+	    <b>{$Vallars}:</b> <input type="text" size="5" name="vallars" value="0" /><br />
             <b>{$Tcomment}:</b> <textarea name="bugcomment" rows="5" cols="30"></textarea><br /><br />
             <input type="submit" value="{$Amake}" />
         </form>
