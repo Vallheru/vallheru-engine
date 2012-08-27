@@ -1,5 +1,7 @@
 2012-08-27  Bartek thindil Jasicki  <thindil@vallheru.net>
 
+	* UPDATE,templates/layout1/header.tpl, templates/layout1/layout1.css: 
+	some design update
 	* BUG,class/player_class.php: 
 	fixed bonus to stats from weapon and helmets
 	* BUG,templates/layout1/admin.tpl: 

@@ -21,7 +21,7 @@
 	{/if}<br />
       <b>{$Name} ({$Id})</b></a>
     </div>
-    <div style="width: 150px; float:left; margin-left:10px;">
+    <div style="max-width: 150px; float:left; margin-left:10px;">
       <b>{$Plevel}:</b> {$Level}<br />
       <div class="vial" title="{$Exppts}: {$Exp}/{$Expneed} ({$Percent}%)">
           <div class="subvial" style="width: {100 - $Vial}%; background: green;"></div>
@@ -92,7 +92,7 @@
 </div>
 <div id="scroller">
 <div align="center"><b>{$Title}</b></div>
-<table width="97%" style="margin-left: 3%;">
+<table style="margin-left: auto; margin-right: auto; width: 93%; max-width: 1280px;">
 <tr>
   <td width="85%">
 
