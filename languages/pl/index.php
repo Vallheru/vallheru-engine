@@ -4,10 +4,10 @@
  *   Polish language for main site index.php
  *
  *   @name                 : index.php                            
- *   @copyright            : (C) 2004,2005,2006,2011 Vallheru Team based on Gamers-Fusion ver 2.5
- *   @author               : thindil <thindil@tuxfamily.org>
- *   @version              : 1.5
- *   @since                : 06.12.2011
+ *   @copyright            : (C) 2004,2005,2006,2011,2012 Vallheru Team based on Gamers-Fusion ver 2.5
+ *   @author               : thindil <thindil@vallheru.net>
+ *   @version              : 1.6
+ *   @since                : 27.08.2012
  *
  */
 
@@ -49,7 +49,7 @@ define("IN_GAME", "graczy w grze");
 if (!isset($_GET['step']))
 {
     define("WHAT_IS", "Co to jest");
-    define("DESCRIPTION", "Jest to tekstowy RPG dla wielu graczy, rozgrywany turowo. Możesz tutaj walczyć z potworami, innymi graczami, zarządzać własną strażnicą czy też zarabiać pieniądze na własnej kopalni bądź wraz z innymi graczami stworzyć własny klan. Nie spodziewaj się tutaj oszałamiającej grafiki - to gra bardziej na wyobraźnię. Aby w nią grać nie trzeba posiadać potężnego sprzętu czy też ściągać z sieci jakiś programów. Jeżeli zainteresowało Cię to, co do tej pory napisałem, zarejestruj się w grze i dołącz do nas. Zanim jednak to zrobisz, przeczytaj");
+    define("DESCRIPTION", "Jest to tekstowy RPG dla wielu graczy, rozgrywany turowo. Możesz tutaj walczyć z potworami, innymi graczami, zarządzać własną strażnicą czy też zarabiać pieniądze na własnej kopalni bądź wraz z innymi graczami stworzyć własny klan. Nie spodziewaj się tutaj oszałamiającej grafiki - to gra bardziej na wyobraźnię. Aby w nią grać nie trzeba posiadać potężnego sprzętu czy też ściągać z sieci jakichś programów. Jeżeli zainteresowało Cię to, co do tej pory napisałem, zarejestruj się w grze i dołącz do nas. Zanim jednak to zrobisz, przeczytaj");
     define("CODEX2", "(czyli zasady obowiązujące w grze - aktualizacja ");
     define("NEWS", "Wieści");
     define("DAY", "dnia");
