@@ -1,3 +1,8 @@
+2012-08-27  Bartek thindil Jasicki  <thindil@vallheru.net>
+
+	* UPDATE,lumbermill.php, kowal.php:
+	changed formula for elite elven items
+
 2012-08-25  Bartek thindil Jasicki  <thindil@vallheru.net>
 
 	* BUG,includes/head.php: 

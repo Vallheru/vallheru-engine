@@ -7,7 +7,7 @@
  *   @copyright            : (C) 2004,2005,2006,2007,2011,2012 Vallheru Team based on Gamers-Fusion ver 2.5
  *   @author               : thindil <thindil@vallheru.net>
  *   @version              : 1.6
- *   @since                : 22.08.2012
+ *   @since                : 27.08.2012
  *
  */
 
@@ -918,7 +918,14 @@ if (isset ($_GET['mill']) && $_GET['mill'] == 'elite')
 	    $intRoll = rand(1, 100);
 	    if ($intRoll < $intChance)
 	      {
-		$intBonus = floor(rand(1, $player->fletcher) + ($player->strength / 10));
+		if ($objLumber->fields['elitetype'] == 'S')
+		  {
+		    $intBonus = floor(rand(1, $player->fletcher) + ($player->strength / 10));
+		  }
+		else
+		  {
+		    $intBonus = floor(rand(1, $player->fletcher) + ($player->agility / 10));
+		  }
 		if ($intBonus > $intMaxbonus)
 		  {
 		    $intBonus = $intMaxbonus;
@@ -1057,16 +1064,23 @@ if (isset ($_GET['mill']) && $_GET['mill'] == 'elite')
 	    $arrPower = array();
 	    $arrSpeed = array();
 	    $arrAmount = array();
+	    if ($objLumber->fields['elitetype'] == 'S')
+	      {
+		$intBonus = floor(rand(1, $player->fletcher) + ($player->strength / 10));
+	      }
+	    else
+	      {
+		$intBonus = floor(rand(1, $player->fletcher) + ($player->agility / 10));
+	      }
+	    if ($intBonus > $intMaxbonus)
+	      {
+		$intBonus = $intMaxbonus;
+	      }
             for ($i = 1; $i <= $intAmount; $i++) 
 	      {
 		$intRoll = rand(1, 100);
 		if ($intRoll < $intChance)
 		  {
-		    $intBonus = floor(rand(1, $player->fletcher) + ($player->strength / 10));
-		    if ($intBonus > $intMaxbonus)
-		      {
-			$intBonus = $intMaxbonus;
-		      }
 		    if ($objLumber->fields['elitetype'] == 'S')
 		      {
 			$intIndex = array_search($intBonus, $arrPower);

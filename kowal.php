@@ -7,7 +7,7 @@
  *   @copyright            : (C) 2004,2005,2006,2011,2012 Vallheru Team based on Gamers-Fusion ver 2.5
  *   @author               : thindil <thindil@vallheru.net>
  *   @version              : 1.6
- *   @since                : 22.08.2012
+ *   @since                : 27.08.2012
  *
  */
 
@@ -1138,12 +1138,19 @@ if (isset ($_GET['kowal']) && $_GET['kowal'] == 'elite')
 	    $intRoll = rand(1, 100);
 	    if ($intRoll < $intChance)
 	      {
-		$intBonus = floor(rand(1, $player->smith) + ($player->strength / 10));
+		if ($objWork->fields['elitetype'] == 'S')
+		  {
+		    $intBonus = floor(rand(1, $player->smith) + ($player->strength / 10));
+		  }
+		else
+		  {
+		    $intBonus = floor(rand(1, $player->smith) + ($player->agility / 10));
+		  }
 		if ($intBonus > $intMaxbonus)
 		  {
 		    $intBonus = $intMaxbonus;
 		  }
-		if ($objWork->fields['elitetype'] == 'S')
+		if ($objWork->fields['elitetype'] != 'S')
 		  {
 		    $intAgility = 0 - $intBonus;
 		  }
@@ -1323,16 +1330,23 @@ if (isset ($_GET['kowal']) && $_GET['kowal'] == 'elite')
 	    $arrPower = array();
 	    $arrAgility = array();
 	    $arrAmount = array();
+	    if ($objSmith->fields['elitetype'] == 'S')
+	      {
+		$intBonus = floor(rand(1, $player->smith) + ($player->strength / 10));
+	      }
+	    else
+	      {
+		$intBonus = floor(rand(1, $player->smith) + ($player->agility / 10));
+	      }
+	    if ($intBonus > $intMaxbonus)
+	      {
+		$intBonus = $intMaxbonus;
+	      }
             for ($i = 1; $i <= $intAmount; $i++) 
 	      {
 		$intRoll = rand(1, 100);
 		if ($intRoll < $intChance)
 		  {
-		    $intBonus = floor(rand(1, $player->smith) + ($player->strength / 10));
-		    if ($intBonus > $intMaxbonus)
-		      {
-			$intBonus = $intMaxbonus;
-		      }
 		    if ($objSmith->fields['elitetype'] == 'S')
 		      {
 			$intIndex = array_search($intBonus, $arrPower);
@@ -1353,7 +1367,7 @@ if (isset ($_GET['kowal']) && $_GET['kowal'] == 'elite')
 			if ($intIndex === FALSE)
 			  {
 			    $arrPower[] = $intPower;
-			    $arrAgility[] = $intBonus;
+			    $arrAgility[] = $intAgility - $intBonus;
 			    $arrAmount[] = 1;
 			  }
 			else
