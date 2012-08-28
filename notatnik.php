@@ -35,6 +35,7 @@ require_once("includes/head.php");
 
 if (isset($_GET['akcja']))
   {
+    $blnSuccess = FALSE;
     /**
      * Delete post
      */
@@ -51,7 +52,7 @@ if (isset($_GET['akcja']))
 	    $db -> Execute("DELETE FROM `notatnik` WHERE `gracz`=".$player -> id." AND `id`=".$_GET['nid']);
 	    message('success', "Skasowałeś wpis.");
 	  }
-	unset($_GET['akcja']);
+	$blnSuccess = TRUE;
       }
 
     if (($_GET['akcja'] == 'dodaj' || $_GET['akcja'] == 'edit'))
@@ -108,7 +109,7 @@ if (isset($_GET['akcja']))
 		$_POST['title'] = htmlspecialchars($_POST['title'], ENT_QUOTES);
 		$db -> Execute("INSERT INTO `notatnik` (`gracz`, `tekst`, `czas`, `title`) VALUES(".$player -> id.", ".$strBody.", ".$strDate.", '".$_POST['title']."')");
 		message('success', "Notatka dodana.");
-		unset($_GET['akcja']);
+		$blnSuccess = TRUE;
 	      }
 	  }
       }
@@ -152,9 +153,14 @@ if (isset($_GET['akcja']))
 		$strDate = $db -> DBDate($newdate);
 		$db -> Execute("UPDATE `notatnik` SET `tekst`=".$strBody.", `czas`=".$strDate.", `title`='".$_POST['title']."' WHERE `id`=".$_GET['nid']);
 		message('success', "Notatka zmieniona.");
-		unset($_GET['akcja']);
+		$blnSuccess = TRUE;
 	      }
 	  }
+      }
+
+    if ($blnSuccess)
+      {
+	unset($_GET['akcja']);
       }
   }
 

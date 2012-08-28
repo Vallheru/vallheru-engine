@@ -353,7 +353,6 @@ if (isset($_GET['view']))
 				"Catid2" => count($arrId) + 1,
 				"Catid" => $arrId,
 				"Catname" => $arrName,
-				"Catlang" => $arrLanguage,
 				"Toptions" => $arrOptions,
 				"Toptionname" => $arrOptionname,
 				"Tlangsel" => $arrLangsel,
@@ -381,7 +380,6 @@ if (isset($_GET['view']))
 		  {
 		    $arrOptionvsel[] = $strOptionv;
 		  }
-		$i++;
 	      }
 	    foreach ($arrOptions as $strOptiont)
 	      {
