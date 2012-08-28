@@ -1,5 +1,7 @@
 2012-08-28  Bartek thindil Jasicki  <thindil@vallheru.net>
 
+	* BUG,admin.php: 
+	fixed notice
 	* FEATURE,templates/layout1/forums.tpl, templates/layout1/admin.tpl, templates/forums.tpl, templates/admin.tpl, admin.php, forums.php, 
 	install/db/update.sql: 
 	added permission to create new topics

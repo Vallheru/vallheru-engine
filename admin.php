@@ -350,7 +350,7 @@ if (isset($_GET['view']))
 				"Ttopics" => "Mogą tworzyć tematy w kategorii",
 				"Tcatdesc" => '',
 				"Tcatname" => '',
-				"Catid2" => $i + 2,
+				"Catid2" => count($arrId) + 1,
 				"Catid" => $arrId,
 				"Catname" => $arrName,
 				"Catlang" => $arrLanguage,
