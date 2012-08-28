@@ -78,24 +78,26 @@
     	{/for}
 	<br /><br />
     {/if}
-    <div align="center">
-    <form method="post" action="forums.php?action=addtopic" name="newtopic">
-        {$Addtopic}:<br />
-        <input type="text" name="title2" value="Temat" size="40" /><br /><br />
-	<input id="bold" type="button" value="{$Abold}" onClick="formatText(this.id, 'newtopic', 'body')" />
-	<input id="italic" type="button" value="{$Aitalic}" onClick="formatText(this.id, 'newtopic', 'body')" />
-	<input id="underline" type="button" value="{$Aunderline}" onClick="formatText(this.id, 'newtopic', 'body')" />
-	<input id="emote" type="button" value="{$Aemote}" onClick="formatText(this.id, 'newtopic', 'body')" />
-	<input id="center" type="button" value="{$Acenter}" onClick="formatText(this.id, 'newtopic', 'body')" />
-	<input id="quote" type="button" value="{$Aquote}" onClick="formatText(this.id, 'newtopic', 'body')" />
-	<input id="color" type="button" value="{$Acolor}" onClick="formatText(this.id, 'newtopic', 'body')" /> {html_options name=colors options=$Ocolors}<br />
-        <textarea name="body" cols="40" rows="10">{$Ttext}</textarea><br />
-        <input type="hidden" name="catid" value="{$Category}" />
-        {if $Rank == "Admin" || $Rank == "Staff"}
-            <input type="checkbox" name="sticky" />{$Tsticky}<br />
-        {/if}
-        <input type="submit" value="{$Addtopic}" />
-    </form></div><br />{$Thelp}<br /><br />
+    {if $Newtopic}
+        <div align="center">
+    	<form method="post" action="forums.php?action=addtopic" name="newtopic">
+            {$Addtopic}:<br />
+            <input type="text" name="title2" value="Temat" size="40" /><br /><br />
+	    <input id="bold" type="button" value="{$Abold}" onClick="formatText(this.id, 'newtopic', 'body')" />
+	    <input id="italic" type="button" value="{$Aitalic}" onClick="formatText(this.id, 'newtopic', 'body')" />
+	    <input id="underline" type="button" value="{$Aunderline}" onClick="formatText(this.id, 'newtopic', 'body')" />
+	    <input id="emote" type="button" value="{$Aemote}" onClick="formatText(this.id, 'newtopic', 'body')" /><br />
+	    <input id="center" type="button" value="{$Acenter}" onClick="formatText(this.id, 'newtopic', 'body')" />
+	    <input id="quote" type="button" value="{$Aquote}" onClick="formatText(this.id, 'newtopic', 'body')" />
+	    <input id="color" type="button" value="{$Acolor}" onClick="formatText(this.id, 'newtopic', 'body')" /> {html_options name=colors options=$Ocolors}<br />
+            <textarea name="body" cols="40" rows="10">{$Ttext}</textarea><br />
+            <input type="hidden" name="catid" value="{$Category}" />
+            {if $Rank == "Admin" || $Rank == "Staff"}
+                <input type="checkbox" name="sticky" />{$Tsticky}<br />
+            {/if}
+            <input type="submit" value="{$Addtopic}" />
+    	</form></div><br />{$Thelp}<br /><br />
+    {/if}
     <a href="forums.php?view=categories">{$Aback}</a> {$Tocategories}.
 {/if}
 

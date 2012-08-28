@@ -8,7 +8,7 @@
  *   @author               : thindil <thindil@vallheru.net>
  *   @author               : mori <ziniquel@users.sourceforge.net>
  *   @version              : 1.6
- *   @since                : 02.08.2012
+ *   @since                : 28.08.2012
  *
  */
 
@@ -214,9 +214,10 @@ if (isset($_GET['topics']))
     /**
      * Check for permissions
      */
+    $blnTopic = TRUE;
     if ($player -> rank != 'Admin')
     {
-        $objPerm = $db -> Execute("SELECT `perm_visit` FROM `categories` WHERE `id`=".$_GET['topics']);
+        $objPerm = $db -> Execute("SELECT `perm_visit`, `perm_write`, `perm_topic` FROM `categories` WHERE `id`=".$_GET['topics']);
         if ($objPerm -> fields['perm_visit'] != 'All;')
         {
             $intPerm = strpos($objPerm -> fields['perm_visit'], $player -> rank);
@@ -225,6 +226,22 @@ if (isset($_GET['topics']))
                 error(NO_PERM);
             }
         }
+	if ($objPerm -> fields['perm_write'] != 'All;')
+	  {
+            $intPerm = strpos($objPerm -> fields['perm_write'], $player -> rank);
+            if ($intPerm === false)
+	      {
+		$blnTopic = FALSE;
+	      }
+	  }
+	if ($objPerm -> fields['perm_topic'] != 'All;')
+	  {
+            $intPerm = strpos($objPerm -> fields['perm_topic'], $player -> rank);
+            if ($intPerm === false)
+	      {
+                $blnTopic = FALSE;
+	      }
+	  }
         $objPerm -> Close();
     }
 
@@ -388,6 +405,7 @@ if (isset($_GET['topics']))
 			    "Aitalic" => "Kursywa",
 			    "Aunderline" => "Podkreślenie",
 			    "Aemote" => "Emocje/Czynność",
+			    "Newtopic" => $blnTopic,
 			    "Ocolors" => array("red" => "czerwony",
 					       "green" => "zielony",
 					       "white" => "biały",
@@ -437,13 +455,14 @@ if (isset ($_GET['action']) && $_GET['action'] == 'addtopic')
 	message('error', 'Nie możesz tworzyć nowych tematów, ponieważ masz zablokowane pisanie na forum. (<a href="forums.php?view=categories">Wróć</a>)');
       }
     $objBan->Close();
+
     /**
-     * Check for permissions
+     * Check for write permissions
      */
     checkvalue($_POST['catid']);
     if ($player -> rank != 'Admin')
     {
-        $objPerm = $db -> Execute("SELECT `perm_write` FROM `categories` WHERE `id`=".$_POST['catid']);
+        $objPerm = $db -> Execute("SELECT `perm_write`, `perm_topic` FROM `categories` WHERE `id`=".$_POST['catid']);
         if ($objPerm -> fields['perm_write'] != 'All;')
         {
             $intPerm = strpos($objPerm -> fields['perm_write'], $player -> rank);
@@ -453,8 +472,18 @@ if (isset ($_GET['action']) && $_GET['action'] == 'addtopic')
 		$blnValid = FALSE;
 	      }
         }
+	if ($objPerm->fields['perm_topic'] != 'All;' && $blnValid)
+	  {
+	    $intPerm = strpos($objPerm -> fields['perm_topic'], $player -> rank);
+            if ($intPerm === false)
+	      {
+		message('error', "Nie możesz zakładać nowych tematów w tej kategorii.");
+		$blnValid = FALSE;
+	      }
+	  }
         $objPerm -> Close();
     }
+    
     if (isset($_POST['sticky']))
     {
         if ($player -> rank != 'Admin' && $player -> rank != 'Staff')
@@ -462,7 +491,10 @@ if (isset ($_GET['action']) && $_GET['action'] == 'addtopic')
 	    message('error', NO_PERM3);
 	    $blnValid = FALSE;
 	  }
-        $strSticky = 'Y';
+	else
+	  {
+	    $strSticky = 'Y';
+	  }
     }
     else
     {

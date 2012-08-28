@@ -214,19 +214,18 @@
     <form method=post action="admin.php?view=forums&amp;id={$Catid2}&amp;step=add">
         {$Tname}: <input type="text" name="catname" value="{$Tcatname}" /><br />
         {$Tdesc}: <textarea name="catdesc" rows="5" cols="30">{$Tcatdesc}</textarea><br />
-        {$Tlang}: <select name="catlang">
-            {section name=forum2 loop=$Catlang}
-                <option value="{$Catlang[forum2]}" {$Tlangsel[forum2]}>{$Catlang[forum2]}</option>
-            {/section}
-        </select><br />
-        {$Twrite}: <br />
-        {section name=forum3 loop=$Toptionname}
-            <input type="checkbox" name="{$Toptionw[forum3]}" {$Toptionwsel[forum3]} />{$Toptionname[forum3]}<br />
-        {/section}
-        {$Tvisit}: <br />
-        {section name=forum4 loop=$Toptionname}
-            <input type="checkbox" name="{$Toptionv[forum4]}" {$Toptionvsel[forum4]} />{$Toptionname[forum4]}<br />
-        {/section}
+	<div style="float: right;">
+	    {$Tvisit}: <br />
+	    {html_checkboxes name="visit" values=$Toptions output=$Toptionname selected=$Toptionvsel separator="<br />"}
+        </div>
+        <div>
+	    {$Twrite}: <br />
+	    {html_checkboxes name="write" values=$Toptions output=$Toptionname selected=$Toptionwsel separator="<br />"}
+        </div>
+	<div>
+	    {$Ttopics}: <br />
+	    {html_checkboxes name="topics" values=$Toptions output=$Toptionname selected=$Toptiontsel separator="<br />"}
+        </div>
         <input type="submit" value="{$Aadd}" />
     </form>
 {/if}

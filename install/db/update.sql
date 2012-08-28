@@ -45,3 +45,5 @@ ALTER TABLE  `farm` CHANGE  `owner`  `farmid` INT( 11 ) NOT NULL DEFAULT  '0';
 ALTER TABLE  `farm` DROP INDEX  `owner` , ADD INDEX  `farmid` (  `farmid` );
 ALTER TABLE  `farm` ADD  `owner` INT( 11 ) NOT NULL;
 ALTER TABLE  `players` ADD  `chattimes` VARCHAR( 512 ) NOT NULL;
+ALTER TABLE `categories` ADD `perm_topic` VARCHAR( 255 ) NOT NULL DEFAULT 'All;';
+ALTER TABLE `categories` DROP `lang`;

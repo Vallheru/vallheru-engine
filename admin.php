@@ -8,7 +8,7 @@
  *   @author               : thindil <thindil@vallheru.net>
  *   @author               : eyescream <tduda@users.sourceforge.net>
  *   @version              : 1.6
- *   @since                : 15.06.2012
+ *   @since                : 28.08.2012
  *
  */
  
@@ -324,26 +324,22 @@ if (isset($_GET['view']))
      */
     elseif ($_GET['view'] == 'forums')
       {
-	$arrLanguage = scandir('languages/', 1);
-	$arrLanguage = array_diff($arrLanguage, array(".", "..", "index.htm"));
 	$objCatforum = $db -> Execute("SELECT id, name FROM categories");
 	$arrId = array();
 	$arrName = array();
-	$i = 0;
 	while (!$objCatforum -> EOF)
 	  {
-	    $arrId[$i] = $objCatforum -> fields['id'];
-	    $arrName[$i] = $objCatforum -> fields['name'];
+	    $arrId[] = $objCatforum -> fields['id'];
+	    $arrName[] = $objCatforum -> fields['name'];
 	    $objCatforum -> MoveNext();
-	    $i++;
 	  }
 	$objCatforum -> Close();
-	$arrOptionw = array('All;', 'Staff;', 'Sędzia;', 'Kanclerz_Sądu;', 'Marszałek Rady;', 'Poseł;', 'Prawnik;', 'Ławnik;', 'Prokurator;');
-	$arrOptionv = array('1All;', '1Staff;', '1Sędzia;', '1Kanclerz_Sądu;', '1Marszałek Rady;', '1Poseł;', '1Prawnik;', '1Ławnik;', '1Prokurator;');
+	$arrOptions = array('All;', 'Staff;', 'Sędzia;', 'Kanclerz Sądu;', 'Marszałek Rady;', 'Poseł;', 'Prawnik;', 'Ławnik;', 'Prokurator;');
 	$arrOptionname = array(T_ALL, T_STAFF, T_JUDGE, T_JUDGE2, T_COUNT, T_COUNT2, T_LAWYER, T_JUDGE3, T_PROCURATOR);
 	$arrLangsel = array('', '');
-	$arrOptionwsel = array('', '', '', '', '', '', '', '', '');
-	$arrOptionvsel = array('', '', '', '', '', '', '', '', '');
+	$arrOptionwsel = array();
+	$arrOptionvsel = array();
+	$arrOptiontsel = array();
 	$smarty -> assign(array("Catlist" => CAT_LIST,
 				"Aadd" => A_ADD,
 				"Tname" => T_NAME,
@@ -351,62 +347,57 @@ if (isset($_GET['view']))
 				"Tlang" => T_LANG,
 				"Twrite" => T_WRITE,
 				"Tvisit" => T_VISIT,
+				"Ttopics" => "Mogą tworzyć tematy w kategorii",
 				"Tcatdesc" => '',
 				"Tcatname" => '',
 				"Catid2" => $i + 2,
 				"Catid" => $arrId,
 				"Catname" => $arrName,
 				"Catlang" => $arrLanguage,
-				"Toptionw" => $arrOptionw,
-				"Toptionv" => $arrOptionv,
+				"Toptions" => $arrOptions,
 				"Toptionname" => $arrOptionname,
 				"Tlangsel" => $arrLangsel,
 				"Toptionwsel" => $arrOptionwsel,
-				"Toptionvsel" => $arrOptionvsel));
+				"Toptionvsel" => $arrOptionvsel,
+				"Toptiontsel" => $arrOptiontsel));
 	/**
 	 * When category is selected
 	 */
 	if (isset($_GET['id']) && !isset($_GET['step']))
 	  {
 	    $objCategory = $db -> Execute("SELECT * FROM categories WHERE id=".$_GET['id']);
-	    $i = 0;
-	    foreach ($arrLanguage as $strLanguage)
+	    foreach ($arrOptions as $strOptionw)
 	      {
-		if ($strLanguage == $objCategory -> fields['lang'])
-		  {
-		    $arrLangsel[$i] = 'selected';
-		    break;
-		  }
-		$i++;
-	      }
-	    $i = 0;
-	    foreach ($arrOptionw as $strOptionw)
-	      {
-		$strOptionw = str_replace("_", " ", $strOptionw);
 		$intFind = strpos($objCategory -> fields['perm_write'], $strOptionw);
 		if ($intFind !== false)
 		  {
-		    $arrOptionwsel[$i] = 'checked';
+		    $arrOptionwsel[] = $strOptionw;
 		  }
-		$i++;
 	      }
-	    $i = 0;
-	    foreach ($arrOptionw as $strOptionv)
+	    foreach ($arrOptions as $strOptionv)
 	      {
-		$strOptionv = str_replace("_", " ", $strOptionv);
 		$intFind = strpos($objCategory -> fields['perm_visit'], $strOptionv);
 		if ($intFind !== false)
 		  {
-		    $arrOptionvsel[$i] = 'checked';
+		    $arrOptionvsel[] = $strOptionv;
 		  }
 		$i++;
+	      }
+	    foreach ($arrOptions as $strOptiont)
+	      {
+		$intFind = strpos($objCategory -> fields['perm_topic'], $strOptiont);
+		if ($intFind !== false)
+		  {
+		    $arrOptiontsel[] = $strOptiont;
+		  }
 	      }
 	    $smarty -> assign(array("Catid2" => $_GET['id'],
 				    "Tcatdesc" => $objCategory -> fields['desc'],
 				    "Tcatname" => $objCategory -> fields['name'],
 				    "Tlangsel" => $arrLangsel,
 				    "Toptionwsel" => $arrOptionwsel,
-				    "Toptionvsel" => $arrOptionvsel));
+				    "Toptionvsel" => $arrOptionvsel,
+				    "Toptiontsel" => $arrOptiontsel));
 	    $objCategory -> Close();
 	  }
 	/**
@@ -414,38 +405,21 @@ if (isset($_GET['view']))
 	 */
 	if (isset($_GET['step']) && $_GET['step'] == 'add')
 	  {
-	    $strPermwrite = '';
-	    foreach ($arrOptionw as $strOptionw)
-	      {
-		if (isset($_POST[$strOptionw]))
-		  {
-		    $strOptionw = str_replace("_", " ", $strOptionw);
-		    $strPermwrite = $strPermwrite.$strOptionw;
-		  }
-	      }
-	    $strPermvisit = '';
-	    $i = 0;
-	    foreach ($arrOptionv as $strOptionv)
-	      {
-		if (isset($_POST[$strOptionv]))
-		  {
-		    $strOption = str_replace("_", " ", $arrOptionw[$i]);
-		    $strPermvisit = $strPermvisit.$strOption;
-		  }
-		$i++;
-	      }
+	    $strPermwrite = implode('', $_POST['write']);
+	    $strPermvisit = implode('', $_POST['visit']);
+	    $strPermtopic = implode('', $_POST['topics']);
 	    $objTest = $db -> Execute("SELECT id FROM categories WHERE id=".$_GET['id']);
 	    if ($objTest -> fields['id'])
 	      {
-		$db -> Execute("UPDATE categories SET `name`='".$_POST['catname']."', `desc`='".$_POST['catdesc']."', `lang`='".$_POST['catlang']."', `perm_write`='".$strPermwrite."', `perm_visit`='".$strPermvisit."' WHERE id=".$_GET['id']) or die($db -> ErrorMsg());
-		$smarty -> assign("Message", CATEGORY_MODIFIED);
+		$db -> Execute("UPDATE categories SET `name`='".$_POST['catname']."', `desc`='".$_POST['catdesc']."', `perm_write`='".$strPermwrite."', `perm_visit`='".$strPermvisit."', `perm_topic`='".$strPermtopic."' WHERE id=".$_GET['id']) or die($db -> ErrorMsg());
+		message("success", CATEGORY_MODIFIED);
 	      }
 	    else
 	      {
-		$db -> Execute("INSERT INTO categories (`name`, `desc`, `lang`, `perm_write`, `perm_visit`) VALUES('".$_POST['catname']."', '".$_POST['catdesc']."', '".$_POST['catlang']."', '".$strPermwrite."', '".$strPermvisit."')") or die($db -> ErrorMsg());
-		$smarty -> assign("Message", CATEGORY_ADDED);
+		$db -> Execute("INSERT INTO categories (`name`, `desc`, `perm_write`, `perm_visit`, `perm_topic`) VALUES('".$_POST['catname']."', '".$_POST['catdesc']."', '".$strPermwrite."', '".$strPermvisit."', '".$strPermtopic."')") or die($db -> ErrorMsg());
+		message("success", CATEGORY_ADDED);
 	      }
-	    $objTest -> Close();
+	      $objTest -> Close();
 	  }
       }
 
