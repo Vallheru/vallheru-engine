@@ -42,10 +42,6 @@
 				{/section}
 			</tbody>
 		</table>
-		
-		{if $Buy > 0}
-			<p>{$Youpay} <b>{$Cost1}</b> {$Andbuy}: <b>{$Name1}</b>.</p>
-		{/if}
 	{/if}
 	
 	{if $Alchemist == "pracownia"}

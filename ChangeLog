@@ -1,5 +1,7 @@
 2012-08-29  Bartek thindil Jasicki  <thindil@vallheru.net>
 
+	* UPDATE,templates/layout1/alchemist.tpl, templates/alchemist.tpl, alchemik.php: 
+	some code cleanup and redesign
 	* FEATURE,includes/functions.php, alchemik.php: 
 	start work on redesign alchemy
 	* BUG,czary.php:

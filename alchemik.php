@@ -75,6 +75,7 @@ else
      */
     if ($_GET['alchemik'] == 'przepisy') 
       {
+
 	$objOwned = $db->Execute("SELECT `name` FROM `alchemy_mill` WHERE `owner`=".$player->id);
 	$arrOwned = array();
 	while (!$objOwned->EOF)
@@ -83,6 +84,37 @@ else
 	    $objOwned->MoveNext();
 	  }
 	$objOwned->Close();
+
+	if (isset($_GET['buy'])) 
+	  {
+	    checkvalue($_GET['buy']);
+	    $plany = $db -> Execute("SELECT * FROM `alchemy_mill` WHERE `id`=".$_GET['buy']);
+	    if (in_array($plany->fields['name'], $arrOwned)) 
+	      {
+		message('error', P_YOU_HAVE);
+	      }
+	    elseif ($plany -> fields['id'] == 0) 
+	      {
+		message('error', NO_RECIPE);
+	      }
+	    elseif ($plany -> fields['status'] != 'S') 
+	      {
+		message('error', BAD_TYPE);
+	      }
+	    elseif ($plany -> fields['cost'] > $player -> credits) 
+	      {
+		message('error', NO_MONEY);
+	      }
+	    else
+	      {
+		$db -> Execute("INSERT INTO `alchemy_mill` (`owner`, `name`, `cost`, `status`, `level`, `illani`, `illanias`, `nutari`, `dynallca`) VALUES(".$player -> id.",'".$plany -> fields['name']."',".$plany -> fields['cost'].",'N',".$plany -> fields['level'].",".$plany -> fields['illani'].",".$plany -> fields['illanias'].",".$plany -> fields['nutari'].",".$plany -> fields['dynallca'].")") or error(E_DB);
+		$db -> Execute("UPDATE `players` SET `credits`=`credits`-".$plany -> fields['cost']." WHERE `id`=".$player -> id);
+		$arrOwned[] = $plany->fields['name'];
+		message('success', YOU_PAY.' <b>'.$plany->fields['cost'].'</b> '.AND_BUY.': <b>'.$plany->fields['name'].'</b>.');
+		$plany -> Close();
+	      }
+	  }
+
 	$plany = $db -> Execute("SELECT `id`, `name`, `level`, `cost` FROM `alchemy_mill` WHERE `status`='S' AND `owner`=0 ORDER BY `cost` ASC");
 	$arrname = array();
 	$arrcost = array();
@@ -110,40 +142,12 @@ else
 				 "Cost" => $arrcost, 
 				 "Level" => $arrlevel, 
 				 "Id" => $arrid));
-	if (isset($_GET['buy'])) 
-	  {
-	    checkvalue($_GET['buy']);
-	    $plany = $db -> Execute("SELECT * FROM `alchemy_mill` WHERE `id`=".$_GET['buy']);
-	    if (in_array($plany->fields['name'], $arrOwned)) 
-	      {
-		error (P_YOU_HAVE);
-	      }
-	    if ($plany -> fields['id'] == 0) 
-	      {
-		error (NO_RECIPE);
-	      }
-	    if ($plany -> fields['status'] != 'S') 
-	      {
-		error (BAD_TYPE);
-	      }
-	    if ($plany -> fields['cost'] > $player -> credits) 
-	      {
-		error (NO_MONEY);
-	      }
-	    $db -> Execute("INSERT INTO `alchemy_mill` (`owner`, `name`, `cost`, `status`, `level`, `illani`, `illanias`, `nutari`, `dynallca`) VALUES(".$player -> id.",'".$plany -> fields['name']."',".$plany -> fields['cost'].",'N',".$plany -> fields['level'].",".$plany -> fields['illani'].",".$plany -> fields['illanias'].",".$plany -> fields['nutari'].",".$plany -> fields['dynallca'].")") or error(E_DB);
-	    $db -> Execute("UPDATE `players` SET `credits`=`credits`-".$plany -> fields['cost']." WHERE `id`=".$player -> id);
-	    $smarty -> assign (array ("Cost1" => $plany -> fields['cost'],
-				      "Youpay" => YOU_PAY,
-				      "Andbuy" => AND_BUY,
-				      "Name1" => $plany -> fields['name']));
-	    $plany -> Close();
-	  }
       }
 
     /**
      * Making potions
      */
-    if ($_GET['alchemik'] == 'pracownia') 
+    elseif ($_GET['alchemik'] == 'pracownia') 
       {
 	if (!isset($_GET['rob'])) 
 	  {
@@ -339,18 +343,18 @@ else
 			    $intPower = ceil($player -> alchemy / 2);
 			  }
 			$strName = $kuznia -> fields['name']." (S)";
-			$rpd += ($kuznia -> fields['level'] * 10);
+			$rpd += ($kuznia -> fields['level'] * 2);
 			if ($intTmpamount > 1)
 			  {
-			    $rpd += (($kuznia -> fields['level'] * 5) * (10 * ($intTmpamount - 1)));
+			    $rpd += ($kuznia -> fields['level'] * (10 * ($intTmpamount - 1)));
 			  }
 		      }
                     else
 		      {
-			$rpd += $kuznia -> fields['level'] * 5;
+			$rpd += $kuznia -> fields['level'] * 2;
 			if ($intTmpamount > 1)
 			  {
-			    $rpd += ($kuznia -> fields['level'] * (10 * ($intTmpamount - 1)));
+			    $rpd += (($kuznia -> fields['level'] / 2) * (5 * ($intTmpamount - 1)));
 			  }
 			$intPower = ceil($player -> alchemy / 2);
 			if ($objItem -> fields['type'] == 'P' || $objItem->fields['type'] == 'A')
@@ -361,7 +365,7 @@ else
 		  }
                 else
 		  {
-		    $rpd += $kuznia->fields['level'] * 5;
+		    $rpd += ($kuznia->fields['level'] / 2);
 		    if ($objItem -> fields['type'] != 'P')
 		      {
 			$intMaxpower = $kuznia->fields['level'];
@@ -411,7 +415,7 @@ else
 		  }
 		$test -> Close();
 	      }
-	    $rum = ($fltEnergy * 0.01);
+	    $rum = ($fltEnergy / 25);
 	    if ($player -> clas == 'Rzemieślnik') 
 	      {
 		$rpd = $rpd * 2;
@@ -439,7 +443,7 @@ else
     /**
      * Make astral potions
      */
-    if ($_GET['alchemik'] == 'astral')
+    elseif ($_GET['alchemik'] == 'astral')
       {
 	$objAstral = $db -> Execute("SELECT `name` FROM `astral_plans` WHERE `owner`=".$player -> id." AND `name` LIKE 'R%' AND `location`='V'") or die($db -> ErrorMsg());
 	if (!$objAstral -> fields['name'])
@@ -605,10 +609,6 @@ if (!isset($_GET['alchemik']))
 {
     $_GET['alchemik'] = '';
 }
-if (!isset($_GET['buy'])) 
-{
-    $_GET['buy'] = '';
-}
 if (!isset($_GET['rob'])) 
 {
     $_GET['rob'] = '';
@@ -622,7 +622,6 @@ if (!isset($_GET['dalej']))
 * Assing variables and display page
 */
 $smarty -> assign (array ("Alchemist" => $_GET['alchemik'], 
-			  "Buy" => $_GET['buy'], 
 			  "Make" => $_GET['rob'],
 			  "Back" => BACK,
 			  "Next" => $_GET['dalej']));

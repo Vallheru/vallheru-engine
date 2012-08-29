@@ -27,9 +27,6 @@
         </tr>
     {/section}
     </table>
-    {if $Buy > 0}
-        {$Youpay} <b>{$Cost1}</b> {$Andbuy}: <b>{$Name1}</b>.<br />
-    {/if}
 {/if}
 
 {if $Alchemist == "pracownia"}
