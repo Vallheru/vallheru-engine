@@ -7,7 +7,7 @@
  *   @copyright            : (C) 2004,2005,2006,2007,2011,2012 Vallheru Team based on Gamers-Fusion ver 2.5
  *   @author               : thindil <thindil@vallheru.net>
  *   @version              : 1.6
- *   @since                : 22.08.2012
+ *   @since                : 29.08.2012
  *
  */
 
@@ -276,7 +276,7 @@ else
 	    $rprzedmiot = 0;
 	    $rpd = 0;
 	    $rum = 0;
-	    $objItem = $db -> Execute("SELECT `efect`, `type`, `power` FROM `potions` WHERE `name`='".$kuznia -> fields['name']."' AND `owner`=0");
+	    $objItem = $db -> Execute("SELECT `efect`, `type` FROM `potions` WHERE `name`='".$kuznia -> fields['name']."' AND `owner`=0");
 	    $arrMaked = array();
 
 	    switch ($objItem->fields['type'])
@@ -315,19 +315,23 @@ else
 		    $rprzedmiot ++;
 		    $intTmpamount ++;
 		    $intChance = $intChance - 50;
+		    if ($intTmpamount == 20)
+		      {
+			break;
+		      }
 		  }
 		if ($intTmpamount)
 		  {
 		    $intRoll2 = rand(1,100);
 		    $strName = $kuznia -> fields['name'];
-		    $intPower = $objItem -> fields['power'];
+		    $intPower = $kuznia->fields['level'];
 		    $intMaxpower = $intPower;
 		    if ($player -> clas == 'Rzemieślnik' && $intRoll2 > 89 && $objItem -> fields['type'] != 'A')
 		      {
 			if ($objItem -> fields['type'] != 'P')
 			  {
-			    $intMaxpower = $objItem -> fields['power'] * 2;
-			    $intPower = ceil($objItem -> fields['power'] + $player -> alchemy);
+			    $intMaxpower = $kuznia->fields['level'] * 2;
+			    $intPower = ceil($kuznia->fields['level'] + $player -> alchemy);
 			  }
                         else
 			  {
@@ -335,32 +339,32 @@ else
 			    $intPower = ceil($player -> alchemy / 2);
 			  }
 			$strName = $kuznia -> fields['name']." (S)";
-			$rpd = ($rpd + ($kuznia -> fields['level'] * 10));
+			$rpd += ($kuznia -> fields['level'] * 10);
 			if ($intTmpamount > 1)
 			  {
-			    $rpd = ($rpd + ((($kuznia -> fields['level'] * 10) / 100) * (10 * ($intTmpamount - 1))));
+			    $rpd += (($kuznia -> fields['level'] * 5) * (10 * ($intTmpamount - 1)));
 			  }
 		      }
                     else
 		      {
-			$rpd = ($rpd + $kuznia -> fields['level']);
+			$rpd += $kuznia -> fields['level'] * 5;
 			if ($intTmpamount > 1)
 			  {
-			    $rpd = ($rpd + (($kuznia -> fields['level'] / 100) * (10 * ($intTmpamount - 1))));
+			    $rpd += ($kuznia -> fields['level'] * (10 * ($intTmpamount - 1)));
 			  }
+			$intPower = ceil($player -> alchemy / 2);
 			if ($objItem -> fields['type'] == 'P' || $objItem->fields['type'] == 'A')
 			  {
 			    $intMaxpower = $kuznia -> fields['level'] * 2;
-			    $intPower = ceil($player -> alchemy / 2);
 			  }
 		      }
 		  }
                 else
 		  {
-		    $rpd ++;
+		    $rpd += $kuznia->fields['level'] * 5;
 		    if ($objItem -> fields['type'] != 'P')
 		      {
-			$intMaxpower = $objItem -> fields['power'];
+			$intMaxpower = $kuznia->fields['level'];
 			$intPower = ceil($player -> alchemy);
 		      }
                     else

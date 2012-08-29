@@ -7,7 +7,7 @@
  *   @copyright            : (C) 2004,2005,2006,2011,2012 Vallheru Team based on Gamers-Fusion ver 2.5
  *   @author               : thindil <thindil@vallheru.net>
  *   @version              : 1.6
- *   @since                : 17.08.2012
+ *   @since                : 29.08.2012
  *
  */
 
@@ -46,6 +46,14 @@ function drink($id)
 
     checkvalue($id);
     $miks = $db -> Execute("SELECT * FROM potions WHERE status='K' AND id=".$id);
+    if ($player -> id != $miks -> fields['owner']) 
+      {
+        error (NOT_OWNER);
+      }
+    if (empty ($miks -> fields['id'])) 
+      {
+        error (EMPTY_ID);
+      }
     $strType = $miks -> fields['type'];
     if (strpos($miks -> fields['name'], "(K)") !== FALSE)
     {
@@ -64,9 +72,10 @@ function drink($id)
             $db -> Execute("UPDATE players SET hp=0 WHERE id=".$player -> id);
             $player -> hp = 0;
             if ($title == 'Ekwipunek')
-            {
-                error(YOU_POISONED);
-            }
+	      {
+		message('error', YOU_POISONED);
+		return;
+	      }
                 else
             {
                 $message = YOU_POISONED;
@@ -77,26 +86,16 @@ function drink($id)
     {
         $intRoll = 51;
     }
-    if ($player -> id != $miks -> fields['owner']) 
-    {
-        error (NOT_OWNER);
-    }
-    if (empty ($miks -> fields['id'])) 
-    {
-        error (EMPTY_ID);
-    }
     if ($strType == 'M' && $intRoll > 50 && !isset($message)) 
     {
-        $cape = $db -> Execute("SELECT power FROM equipment WHERE owner=".$player -> id." AND type='C' AND status='E'");        
         $maxmana = ($player -> inteli + $player -> wisdom);
-        $maxmana = $maxmana + (($cape -> fields['power'] / 100) * $maxmana);
-        $cape -> Close();
         if ($player -> mana == round($maxmana,0)) 
         {
             if ($title == 'Ekwipunek')
-            {
-                error(NOT_NEED_MANA);
-            }
+	      {
+		message('error', NOT_NEED_MANA);
+		return;
+	      }
                 else
             {
                 $message = NOT_NEED_MANA;
@@ -104,8 +103,8 @@ function drink($id)
         }
         if (!isset($message))
         {
-            $pm = $miks -> fields['power'];
-            $pm1 = ($pm + $player -> mana);
+	    $pm = (($miks->fields['power'] / 100) * $maxmana);
+            $pm1 = $player -> mana + $pm;
             if ($pm1 > $maxmana) 
             {
                 $pm1 = $maxmana;
@@ -160,7 +159,8 @@ function drink($id)
 	  {
 	    if ($title == 'Ekwipunek')
 	      {
-                error("Jesteś kompletnie zdrowy. Nie musisz regenerować życia.<a href");
+                message('error', "Jesteś kompletnie zdrowy. Nie musisz regenerować życia.");
+		return;
 	      }
 	    else
 	      {
@@ -169,7 +169,7 @@ function drink($id)
 	  }
         elseif ($player -> hp > 0) 
 	  {
-            $intRhp = $player -> hp + $miks -> fields['power'];
+            $intRhp = $player -> hp + (($miks -> fields['power'] / 100) * $player->max_hp);
             if ($intRhp > $player -> max_hp)
 	      {
                 $intRhp = $player -> max_hp;
@@ -178,13 +178,14 @@ function drink($id)
             $db -> Execute("UPDATE players SET hp=".$intRhp." WHERE id=".$player -> id);
             if (!isset($efekt))
 	      {
-                $efekt = RESTORE." ".$miks -> fields['power']." ".SOME_HP;
+                $efekt = RESTORE." ".(($miks -> fields['power'] / 100) * $player->max_hp)." ".SOME_HP;
 	      }
             $player -> hp = $intRhp;
 	  } 
 	else 
 	  {
-            error (YOU_NEED_H);
+            message('error', YOU_NEED_H);
+	    return;
 	  }
     }
     if (!isset($message))
@@ -214,11 +215,11 @@ function drink($id)
 	  {
 	    if ($intRoll > 50)
 	      {
-		$smarty -> assign("Action", DRINK." ".$strPotionname." ".ANDT." ".$efekt.".");
+		message("success", DRINK." ".$strPotionname." ".ANDT." ".$efekt.".");
 	      }
             else
 	      {
-		$smarty -> assign("Action", DRINK." ".$strPotionname." ".AND_FAIL);
+		message("error", DRINK." ".$strPotionname." ".AND_FAIL);
 	      }
 	  }
     }
@@ -230,7 +231,7 @@ function drink($id)
 	  }
 	else
 	  {
-	    $smarty->assign("Action", $message);
+	    message("success", $message);
 	  }
     }
     if ($player->page != 'Ekwipunek')
@@ -519,15 +520,12 @@ function drinkfew($intId, $intAmount, $strType = '')
   $intOldmana = $player->mana;
   if ($objPotion->fields['type'] == 'M')
     {
-      $cape = $db -> Execute("SELECT power FROM equipment WHERE owner=".$player -> id." AND type='C' AND status='E'");        
       $maxmana = ($player -> inteli + $player -> wisdom);
-      $maxmana = $maxmana + (($cape -> fields['power'] / 100) * $maxmana);
-      $cape -> Close();
       if ($player->mana == round($maxmana, 0)) 
 	{
 	  if ($intId != 0)
 	    {
-	      error("Nie musisz regenerować punktów magii!");
+	      message('error', "Nie musisz regenerować punktów magii!");
 	    }
 	  return;
 	}
@@ -538,7 +536,7 @@ function drinkfew($intId, $intAmount, $strType = '')
 	{
 	  if ($intId != 0)
 	    {
-	      error("Potrzebujesz wskrzeszenia.");
+	      message('error', "Potrzebujesz wskrzeszenia.");
 	    }
 	  return;
 	}
@@ -546,7 +544,7 @@ function drinkfew($intId, $intAmount, $strType = '')
 	{
 	  if ($intId != 0)
 	    {
-	      error("Nie potrzebujesz leczenia.");
+	      message('error', "Nie potrzebujesz leczenia.");
 	    }
 	  return;
 	}
@@ -570,7 +568,7 @@ function drinkfew($intId, $intAmount, $strType = '')
 	}
       if ($objPotion->fields['type'] == 'M')
 	{
-	  $player->mana += $objPotion->fields['power'];
+	  $player->mana += (($objPotion->fields['power'] / 100) * $maxmana);
 	  if ($player->mana >= $maxmana)
 	    {
 	      $player->mana = $maxmana;
@@ -581,7 +579,7 @@ function drinkfew($intId, $intAmount, $strType = '')
 	}
       else
 	{
-	  $player->hp += $objPotion->fields['power'];
+	  $player->hp += (($objPotion->fields['power'] / 100) * $player->max_hp);
 	  if ($player->hp >= $player->max_hp)
 	    {
 	      $player->hp = $player->max_hp;
@@ -621,7 +619,7 @@ function drinkfew($intId, $intAmount, $strType = '')
     }
   if ($intId != 0)
     {
-      $smarty->assign("Effect", $strEffect);
+      message("success", $strEffect);
     }
   else
     {
