@@ -1,3 +1,8 @@
+2012-08-29  Bartek thindil Jasicki  <thindil@vallheru.net>
+
+	* BUG,czary.php:
+	fixed bug with enchanting items
+
 2012-08-28  Bartek thindil Jasicki  <thindil@vallheru.net>
 
 	* BUG,notatnik.php, admin.php: 

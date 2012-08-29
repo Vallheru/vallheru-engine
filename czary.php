@@ -7,7 +7,7 @@
  *   @copyright            : (C) 2004,2005,2006,2011,2012 Vallheru Team based on Gamers-Fusion ver 2.5
  *   @author               : thindil <thindil@vallheru.net>
  *   @version              : 1.6
- *   @since                : 22.08.2012
+ *   @since                : 29.08.2012
  *
  */
 
@@ -95,7 +95,21 @@ if (isset($_GET['cast']))
     $arriid = array();
     if ($blnValid)
       {
-	$arritem = $db -> Execute("SELECT `name`, `id`, `amount` FROM `equipment` WHERE `owner`=".$player -> id." AND `status`='U' AND `magic`='N' AND `type`NOT IN ('I', 'Q', 'P', 'E', 'O')");
+	switch ($arrspell->fields['nazwa'])
+	  {
+	  case E_SPELL1:
+	    $strTypes = "'I', 'Q', 'P', 'E', 'O', 'B', 'T', 'C'";
+	    break;
+	  case E_SPELL2:
+	    $strTypes = "'I', 'Q', 'P', 'E', 'O', 'R', 'T', 'C'";
+	    break;
+	  case E_SPELL3:
+	    $strTypes = "'I', 'Q', 'P', 'E', 'O', 'R', 'H', 'S', 'T', 'C'";
+	  default:
+	    error('Zapomnij o tym.');
+	    break;
+	  }
+	$arritem = $db -> Execute("SELECT `name`, `id`, `amount` FROM `equipment` WHERE `owner`=".$player -> id." AND `status`='U' AND `magic`='N' AND `type`NOT IN (".$strTypes.")");
 	while (!$arritem -> EOF) 
 	  {
 	    $arriname[] = $arritem -> fields['name'];
@@ -341,7 +355,10 @@ if (isset($_GET['cast']))
 		    message("error", YOU_TRY.$arritem -> fields['name'].BUT_FAIL);
 		  }
 	      }
-	    $db -> Execute("UPDATE `players` SET `pm`=`pm`-".$arrspell -> fields['poziom'].", `energy`=`energy`-".$arrspell -> fields['poziom']." WHERE id=".$player -> id);
+	    if ($blnValid)
+	      {
+		$db -> Execute("UPDATE `players` SET `pm`=`pm`-".$arrspell -> fields['poziom'].", `energy`=`energy`-".$arrspell -> fields['poziom']." WHERE id=".$player -> id);
+	      }
 	    if ($blnValid2)
 	      {
 		$amount = $arritem -> fields['amount'] - 1;
