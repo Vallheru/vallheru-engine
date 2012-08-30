@@ -1,5 +1,7 @@
 {$Statsinfo}<br /><br />
-{$Avatar}
+{if $Avatar != ''}
+<center><img src="{$Avatar}" width="{$Awidth}" height="{$Aheight}" /></center>
+{/if}
 {if $Action == "newbie"}
     {$Newbieinfo}<br />
     <a href="stats.php?action=newbie&amp;disable">{$Ayes}</a><br />

@@ -71,7 +71,9 @@ if (is_file($plik))
 {
     require_once('includes/avatars.php');
     $arrImage = scaleavatar($plik);
-    $smarty -> assign("Avatar", "<center><img src=\"".$plik."\" width=\"".$arrImage[0]."\" height=\"".$arrImage[1]."\" alt=\"".$player -> user."\" title=\"".$player -> user."\" /></center>");
+    $smarty->assign(array('Avatar' => $plik,
+			  'Awidth' => $arrImage[0],
+			  'Aheight' => $arrImage[1]));
 }
 
 if ($player -> ap > 0) 
