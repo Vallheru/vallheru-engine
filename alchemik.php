@@ -428,7 +428,7 @@ else
 		  }
 		$test -> Close();
 	      }
-	    $rum = ($fltEnergy / 10);
+	    $rum = ($fltEnergy / 100);
 	    if ($player -> clas == 'Rzemieślnik') 
 	      {
 		$rpd = $rpd * 2;
