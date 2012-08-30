@@ -30,9 +30,6 @@
     <br /><form method="post" action="equip.php?drinkfew={$Drinkfew}&amp;step=drink">
         <input type="submit" value="{$Adrink}" /> {$Pname} <input type="text" size="5" value="{$Pamount}" name="amount" /> {$Tamount}
     </form></br >
-    {if $Step == "drink"}
-       {$Effect}
-    {/if}
 {/if}
 
 {if $Petname > 0 && $Step == ""}

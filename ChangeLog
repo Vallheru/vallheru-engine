@@ -1,5 +1,7 @@
 2012-08-30  Bartek thindil Jasicki  <thindil@vallheru.net>
 
+	* BUG,templates/layout1/equip.tpl, templates/equip.tpl: 
+	fixed notice
 	* UPDATE,templates/layout1/alchemist.tpl, alchemik.php:
 	finished redesign of alchemy
 
