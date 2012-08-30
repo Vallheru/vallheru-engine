@@ -334,6 +334,10 @@ else
 			  {
 			    $intBonus = 50;
 			  }
+			if ($intBonus < 0)
+			  {
+			    $intBonus = 0;
+			  }
 			$intRoll2 += $intBonus;
 		      }
 		    $strName = $kuznia -> fields['name'];
