@@ -1,5 +1,7 @@
 2012-08-30  Bartek thindil Jasicki  <thindil@vallheru.net>
 
+	* BUG,includes/revent.php: 
+	fixed damage type
 	* BUG,crafts.php: 
 	fixed info about gained pet
 	* UPDATE,alchemik.php: 

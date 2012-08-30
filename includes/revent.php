@@ -6,8 +6,8 @@
  *   @name                 : revent.php                            
  *   @copyright            : (C) 2011,2012 Vallheru Team based on Gamers-Fusion ver 2.5
  *   @author               : thindil <thindil@vallheru.net>
- *   @version              : 1.5
- *   @since                : 27.03.2012
+ *   @version              : 1.6
+ *   @since                : 30.08.2012
  *
  */
 
@@ -281,7 +281,9 @@ if ($player->revent == 8)
 		     "exp2" => $enemy1 -> fields['exp2'], 
 		     "level" => $enemy1 -> fields['level'],
 		     "lootnames" => explode(";", $enemy1->fields['lootnames']),
-		     "lootchances" => explode(";", $enemy1->fields['lootchances']));
+		     "lootchances" => explode(";", $enemy1->fields['lootchances']),
+		     "dmgtype" => $enemy1->fields['dmgtype'],
+		     "resistance" => explode(";", $enemy1->fields['resistance']));
     }
   else
     {
