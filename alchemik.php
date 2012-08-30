@@ -7,7 +7,7 @@
  *   @copyright            : (C) 2004,2005,2006,2007,2011,2012 Vallheru Team based on Gamers-Fusion ver 2.5
  *   @author               : thindil <thindil@vallheru.net>
  *   @version              : 1.6
- *   @since                : 29.08.2012
+ *   @since                : 30.08.2012
  *
  */
 
@@ -327,6 +327,15 @@ else
 		if ($intTmpamount)
 		  {
 		    $intRoll2 = rand(1,100);
+		    if ($player->clas == 'Rzemieślnik')
+		      {
+			$intBonus = floor($player->alchemy / 10) - $kuznia->fields['level'];
+			if ($intBonus > 50)
+			  {
+			    $intBonus = 50;
+			  }
+			$intRoll2 += $intBonus;
+		      }
 		    $strName = $kuznia -> fields['name'];
 		    $intPower = $kuznia->fields['level'];
 		    $intMaxpower = $intPower;
@@ -346,15 +355,15 @@ else
 			$rpd += ($kuznia -> fields['level'] * 2);
 			if ($intTmpamount > 1)
 			  {
-			    $rpd += ($kuznia -> fields['level'] * (10 * ($intTmpamount - 1)));
+			    $rpd += ($kuznia -> fields['level'] * (5 * ($intTmpamount - 1)));
 			  }
 		      }
                     else
 		      {
-			$rpd += $kuznia -> fields['level'] * 2;
+			$rpd += $kuznia -> fields['level'];
 			if ($intTmpamount > 1)
 			  {
-			    $rpd += (($kuznia -> fields['level'] / 2) * (5 * ($intTmpamount - 1)));
+			    $rpd += ($kuznia -> fields['level'] * ($intTmpamount - 1));
 			  }
 			$intPower = ceil($player -> alchemy / 2);
 			if ($objItem -> fields['type'] == 'P' || $objItem->fields['type'] == 'A')

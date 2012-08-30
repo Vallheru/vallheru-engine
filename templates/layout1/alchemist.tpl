@@ -11,19 +11,19 @@
 
 {if $Alchemist == "przepisy"}
     {$Recipesinfo}
-    <table class="dark">
+    <table align="center" width="95%">
     <tr>
-    <td width="100"><b><u>{$Rname}</u></b></td>
-    <td width="50"><b><u>{$Rcost}</u></b></td>
-    <td><b><u>{$Rlevel}</u></b></td>
-    <td><b><u>{$Roption}</u></b></td>
+    <th>{$Rname}</th>
+    <th>{$Rcost}</th>
+    <th>{$Rlevel}</th>
+    <th>{$Roption}</th>
     </tr>
     {section name=alchemy loop=$Name}
         <tr>
         <td>{$Name[alchemy]}</td>
-        <td>{$Cost[alchemy]}</td>
-        <td>{$Level[alchemy]}</td>
-        <td>- <a href="alchemik.php?alchemik=przepisy&amp;buy={$Id[alchemy]}">{$Abuy}</a></td>
+        <td align="center">{$Cost[alchemy]}</td>
+        <td align="center">{$Level[alchemy]}</td>
+        <td align="center">- <a href="alchemik.php?alchemik=przepisy&amp;buy={$Id[alchemy]}">{$Abuy}</a></td>
         </tr>
     {/section}
     </table>
@@ -32,14 +32,14 @@
 {if $Alchemist == "pracownia"}
     {if $Make == 0}
         {$Alchemistinfo}
-        <table class="dark">
+        <table align="center" width="95%">
         <tr>
-        <td width="100"><b><u>{$Rname}</u></b></td>
-        <td width="50"><b><u>{$Rlevel}</u></b></td>
-        <td><b><u>{$Rillani}</u></b></td>
-        <td><b><u>{$Rillanias}</u></b></td>
-        <td><b><u>{$Rnutari}</u></b></td>
-        <td><b><u>{$Rdynallca}</u></b></td>
+        <th>{$Rname}</th>
+        <th>{$Rlevel}</th>
+        <th>{$Rillani}</th>
+        <th>{$Rillanias}</th>
+        <th>{$Rnutari}</th>
+        <th>{$Rdynallca}</th>
         </tr>
         {section name=number loop=$Name}
             <tr>
