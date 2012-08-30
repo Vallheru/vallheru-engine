@@ -1,5 +1,7 @@
 2012-08-30  Bartek thindil Jasicki  <thindil@vallheru.net>
 
+	* BUG,crafts.php: 
+	fixed info about gained pet
 	* UPDATE,alchemik.php: 
 	added minimal bonus
 	* BUG,templates/layout1/equip.tpl, templates/equip.tpl: 

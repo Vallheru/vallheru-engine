@@ -7,7 +7,7 @@
  *   @copyright            : (C) 2011,2012 Vallheru Team based on Gamers-Fusion ver 2.5
  *   @author               : thindil <thindil@vallheru.net>
  *   @version              : 1.6
- *   @since                : 31.07.2012
+ *   @since                : 30.08.2012
  *
  */
 
@@ -440,9 +440,9 @@ if (isset($_GET['step']))
 	    $strInfo2 .= 'chowańcach. ';
 	    if (!$blnCase)
 	      {
-		$strInfo2 .= 'W nagrodę otrzymał'.$strSuffix.' nowego chowańca: '.$objCore->fields['name'];
 		$objCore = $db->Execute("SELECT * FROM `cores` WHERE `id`=".$_SESSION['craftindex'][$intIndex]);
-	    $db -> Execute("INSERT INTO `core` (`owner`, `name`, `type`, `ref_id`, `power`, `defense`, `gender`) VALUES(".$player -> id.",'".$objCore->fields['name']."','".$objCore->fields['type']."',".$_SESSION['craftindex'][$intIndex].",".$objCore->fields['power'].",".$objCore->fields['defense'].", '".$strGen."')");
+		$strInfo2 .= 'W nagrodę otrzymał'.$strSuffix.' nowego chowańca: '.$objCore->fields['name'];
+		$db -> Execute("INSERT INTO `core` (`owner`, `name`, `type`, `ref_id`, `power`, `defense`, `gender`) VALUES(".$player -> id.",'".$objCore->fields['name']."','".$objCore->fields['type']."',".$_SESSION['craftindex'][$intIndex].",".$objCore->fields['power'].",".$objCore->fields['defense'].", '".$strGen."')");
 	      }
 	    else
 	      {
