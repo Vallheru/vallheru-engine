@@ -15,7 +15,7 @@
                             {$Playerslist}:<br /><br />
 			    {foreach $List as $player}
         		        {if $player.image != ""}
-	    			    <img src="images/{$player.image}" title="{$player.title}" alt="{$player.title}" />
+	    			    <img src="images/{$player.image}.gif" title="{$player.title}" alt="{$player.title}" />
 				{/if}
 				{$player.prefix} <a href="view.php?view={$player.id}">{$player.user}</a> {$player.suffix} ({$player.id})<br />
     			    {/foreach}

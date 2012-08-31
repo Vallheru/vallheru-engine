@@ -57,27 +57,27 @@ while (!$objQuery -> EOF)
     {
     case 'Admin':
       $arrplayers[$intNumo]['title'] = 'Król';
-      $arrplayers[$intNumo]['image'] = 'admin.gif';
+      $arrplayers[$intNumo]['image'] = 'admin';
       break;
     case 'Staff':
       $arrplayers[$intNumo]['title'] = 'Książę';
-      $arrplayers[$intNumo]['image'] = 'staff.gif';
+      $arrplayers[$intNumo]['image'] = 'staff';
       break;
     case 'Prawnik':
       $arrplayers[$intNumo]['title'] = 'Prawnik';
-      $arrplayers[$intNumo]['image'] = 'law.gif';
+      $arrplayers[$intNumo]['image'] = 'law';
       break;
     case 'Królewski Błazen':
       $arrplayers[$intNumo]['title'] = 'Królewski Błazen';
-      $arrplayers[$intNumo]['image'] = 'joker.gif';
+      $arrplayers[$intNumo]['image'] = 'joker';
       break;
     case 'Sędzia':
       $arrplayers[$intNumo]['title'] = 'Sędzia';
-      $arrplayers[$intNumo]['image'] = 'judge.gif';
+      $arrplayers[$intNumo]['image'] = 'judge';
       break;
     case 'Redaktor':
       $arrplayers[$intNumo]['title'] = 'Redaktor';
-      $arrplayers[$intNumo]['image'] = 'redactor.gif';
+      $arrplayers[$intNumo]['image'] = 'redactor';
       break;
     default:
       $arrplayers[$intNumo]['title'] = '';
