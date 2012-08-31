@@ -19,9 +19,6 @@
 				{/if}
 				{$player.prefix} <a href="view.php?view={$player.id}">{$player.user}</a> {$player.suffix} ({$player.id})<br />
     			    {/foreach}
-                            {section name=players loop=$List}
-                                {$List[players]}
-                            {/section}
                             <br /><b>{$Players} </b> <a href="memberlist.php">{$Registeredplayers}</a>.<br />
                             <b>{$Online}</b> {$Playersonline}.<br />
                         </td>
