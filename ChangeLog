@@ -1,5 +1,7 @@
 2012-08-31  Bartek thindil Jasicki  <thindil@vallheru.net>
 
+	* UPDATE,templates/footer.tpl, templates/layout1/footer.tpl, includes/foot.php: 
+	small redesign
 	* BUG,admin.php:
 	fixed show bug info
 

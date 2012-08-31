@@ -3,9 +3,12 @@
 <td valign="top">
     <b>{$Statistics}</b><br />
     {$Playerslist}:<br /><br />
-    {section name=players loop=$List}
-        {$List[players]}
-    {/section}
+    {foreach $List as $player}
+        {if $player.image != ""}
+	    <img src="images/{$player.image}" title="{$player.title}" alt="{$player.title}" />
+	{/if}
+	{$player.prefix} <a href="view.php?view={$player.id}">{$player.user}</a> {$player.suffix} ({$player.id})<br />
+    {/foreach}
     <br /><b>{$Players} </b> <a href="memberlist.php">{$Registeredplayers}</a>.<br />
     <b>{$Online}</b> {$Playersonline}.
 </td>

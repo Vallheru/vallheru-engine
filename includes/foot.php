@@ -7,7 +7,7 @@
  *   @copyright            : (C) 2004,2005,2006,2011,2012 Vallheru Team based on Gamers-Fusion ver 2.5
  *   @author               : thindil <thindil@vallheru.net>
  *   @version              : 1.6
- *   @since                : 24.05.2012
+ *   @since                : 31.08.2012
  *
  */
 
@@ -49,29 +49,39 @@ while (!$objQuery -> EOF)
     {
       $objQuery->fields['tribe'] = 0;
     }
-  $strLink = $arrTags[$objQuery->fields['tribe']][0].' <a href="view.php?view='.$objQuery -> fields['id'].'">'.$objQuery->fields['user'].'</a> '.$arrTags[$objQuery->fields['tribe']][1];
+  $arrplayers[$intNumo] = array('id' => $objQuery->fields['id'],
+				'user' => $objQuery->fields['user'],
+				'prefix' => $arrTags[$objQuery->fields['tribe']][0],
+				'suffix' => $arrTags[$objQuery->fields['tribe']][1]);
   switch ($objQuery -> fields['rank'])
     {
     case 'Admin':
-      $arrplayers[$intNumo] = "<img src=\"images/admin.gif\" title=\"".KING."\" alt=\"".KING."\" /> ".$strLink." (".$objQuery -> fields['id'].")<br />";
+      $arrplayers[$intNumo]['title'] = 'Król';
+      $arrplayers[$intNumo]['image'] = 'admin.gif';
       break;
     case 'Staff':
-      $arrplayers[$intNumo] = "<img src=\"images/staff.gif\" title=\"".PRINCE."\" alt=\"".PRINCE."\" /> ".$strLink." (".$objQuery -> fields['id'].")<br />";
+      $arrplayers[$intNumo]['title'] = 'Książę';
+      $arrplayers[$intNumo]['image'] = 'staff.gif';
       break;
     case 'Prawnik':
-      $arrplayers[$intNumo] = "<img src=\"images/law.gif\" title=\"".LAWYER."\" alt=\"".LAWYER."\" /> ".$strLink." (".$objQuery -> fields['id'].")<br />";
+      $arrplayers[$intNumo]['title'] = 'Prawnik';
+      $arrplayers[$intNumo]['image'] = 'law.gif';
       break;
     case 'Królewski Błazen':
-      $arrplayers[$intNumo] = "<img src=\"images/joker.gif\" title=\"".JOKER."\" alt=\"".JOKER."\" /> ".$strLink." (".$objQuery -> fields['id'].")<br />";
+      $arrplayers[$intNumo]['title'] = 'Królewski Błazen';
+      $arrplayers[$intNumo]['image'] = 'joker.gif';
       break;
     case 'Sędzia':
-      $arrplayers[$intNumo] = "<img src=\"images/judge.gif\" title=\"Sędzia\" alt=\"Sędzia\" /> ".$strLink." (".$objQuery -> fields['id'].")<br />";
+      $arrplayers[$intNumo]['title'] = 'Sędzia';
+      $arrplayers[$intNumo]['image'] = 'judge.gif';
       break;
     case 'Redaktor':
-      $arrplayers[$intNumo] = "<img src=\"images/redactor.gif\" title=\"Redaktor\" alt=\"Redaktor\" /> ".$strLink." (".$objQuery -> fields['id'].")<br />";
+      $arrplayers[$intNumo]['title'] = 'Redaktor';
+      $arrplayers[$intNumo]['image'] = 'redactor.gif';
       break;
     default:
-      $arrplayers[$intNumo] = $strLink." (".$objQuery -> fields['id'].")<br />";
+      $arrplayers[$intNumo]['title'] = '';
+      $arrplayers[$intNumo]['image'] = '';
       break;
     }
     $intNumo ++;
