@@ -8,7 +8,7 @@
  *   @author               : thindil <thindil@vallheru.net>
  *   @author               : eyescream <tduda@users.sourceforge.net>
  *   @version              : 1.6
- *   @since                : 21.06.2012
+ *   @since                : 31.08.2012
  *
  */
 
@@ -40,7 +40,7 @@ $smarty -> assign(array("Jailid" => JAIL_ID,
                         "Aadd" => A_ADD));
 if (isset ($_GET['step']) && $_GET['step'] == 'add') 
 {
-    $objTest = $db -> Execute("SELECT `miejsce`, `lang` FROM `players` WHERE `id`=".$_POST['prisoner']);
+    $objTest = $db -> Execute("SELECT `miejsce` FROM `players` WHERE `id`=".$_POST['prisoner']);
     if ($_POST['prisoner'] != 1) 
     {
         $strDate = $db -> DBDate($newdate);
