@@ -8,7 +8,7 @@
  *   @author               : thindil <thindil@vallheru.net>
  *   @author               : eyescream <tduda@users.sourceforge.net>
  *   @version              : 1.6
- *   @since                : 28.08.2012
+ *   @since                : 31.08.2012
  *
  */
  
@@ -124,8 +124,6 @@ if (isset($_GET['view']))
 	      {
 		$strType = BUG_CODE;
 	      }
-	    require_once('includes/bbcode.php');
-	    $strDesc = htmltobbcode($objBug -> fields['desc']);
 	    $arrOptions = array(BUG_FIXED, NOT_BUG, WORK_FOR_ME, MORE_INFO, BUG_DOUBLE);
 	    $arrActions = array('fixed', 'notbug', 'workforme', 'moreinfo', 'duplicate');
 	    $smarty -> assign(array("Bugdesc" => BUG_DESC,
@@ -137,7 +135,7 @@ if (isset($_GET['view']))
 				    "Bugname2" => $objBug -> fields['title'],
 				    "Bugtype2" => $strType,
 				    "Bugloc2" => $objBug -> fields['location'],
-				    "Bugdesc2" => $strDesc));
+				    "Bugdesc2" => $objBug->fields['desc']));
 	    /**
 	     * Set bug status
 	     */
