@@ -7,7 +7,7 @@
  *   @copyright            : (C) 2004,2005,2006,2007,2011,2012 Vallheru Team based on Gamers-Fusion ver 2.5
  *   @author               : thindil <thindil@vallheru.net>
  *   @version              : 1.6
- *   @since                : 06.08.2012
+ *   @since                : 01.09.2012
  *
  */
 
@@ -126,11 +126,9 @@ function smallreset($blnSmall = FALSE)
     /**
      * Add bonus to mana from items and check duration of antidote
      */
-    $arrRings = array();
     $intLangs = 0;
     require_once("languages/".$lang."/resets.php");
-    $arrRings[] = R_INT;
-    $arrRings[] = R_WIS;
+    $arrRings = array(R_INT, R_WIS);
     $arrStat = array('inteli', 'wisdom');
     $objStats = $db -> Execute("SELECT `id`, `inteli`, `wisdom` FROM `players`");
     while (!$objStats -> EOF)
@@ -150,8 +148,8 @@ function smallreset($blnSmall = FALSE)
         }
         $objRings -> Close();
         $objCape = $db -> Execute("SELECT `power` FROM `equipment` WHERE `type`='C' AND `status`='E' AND `owner`=".$objStats -> fields['id']);
-        $intMaxmana = $objStats -> fields['inteli'] + $objStats -> fields['wisdom'];
-        $intMaxmana = $intMaxmana + (($objCape -> fields['power'] / 100) * $intMaxmana);
+        $intMaxmana = floor($objStats -> fields['inteli'] + $objStats -> fields['wisdom']);
+        $intMaxmana += floor(($objCape -> fields['power'] / 100) * $intMaxmana);
         $objCape -> Close();
         $db -> Execute("UPDATE `players` SET `pm`=".$intMaxmana.", `antidote`='' WHERE `id`=".$objStats -> fields['id']);
         $objStats -> MoveNext();

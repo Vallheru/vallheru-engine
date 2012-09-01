@@ -7,7 +7,7 @@
  *   @copyright            : (C) 2004,2005,2006,2007,2011,2012 Vallheru Team based on Gamers-Fusion ver 2.5
  *   @author               : thindil <thindil@vallheru.net>
  *   @version              : 1.6
- *   @since                : 25.08.2012
+ *   @since                : 01.09.2012
  *
  */
 
@@ -325,7 +325,8 @@ if ($player->settings['graphic'] != '' || $player->settings['graphbar'] == 'Y')
         $intPerhealth = 97;
     }
     $intVial2 = 97 - $intPerhealth;
-    $maxmana = ($player -> inteli + $player -> wisdom);
+    $maxmana = floor($player -> inteli + $player -> wisdom);
+    $maxmana += floor(($player->equip[8][2] / 100) * $maxmana);
     $intPermana = (($player -> mana / $maxmana) * 100);
     $intPermana = round($intPermana, '0');
     $strMana = $intPermana;

@@ -1,3 +1,8 @@
+2012-09-01  Bartek thindil Jasicki  <thindil@vallheru.net>
+
+	* BUG,includes/head.php, includes/funkcje.php, stats.php, house.php, includes/resets.php:
+	fixed counting max mana
+
 2012-08-31  Bartek thindil Jasicki  <thindil@vallheru.net>
 
 	* BUG,includes/admin/jail.php: 

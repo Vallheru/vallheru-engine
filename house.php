@@ -8,7 +8,7 @@
  *   @author               : thindil <thindil@vallheru.net>
  *   @author               : eyescream <tduda@users.sourceforge.net>
  *   @version              : 1.6
- *   @since                : 22.08.2012
+ *   @since                : 01.09.2012
  *
  */
 
@@ -724,7 +724,8 @@ if (isset ($_GET['action']) && $_GET['action'] == 'my')
             {
                 $gainenergy =  ceil(($player -> max_energy / 100) * $house -> fields['value']);
                 $gainhp = ceil(($player -> max_hp / 100) * $house -> fields['value']);
-		$maxmana = ($player -> inteli + $player -> wisdom);
+		$maxmana = floor($player -> inteli + $player -> wisdom);
+		$maxmana += floor(($player->equip[8][2] / 100) * $maxmana);
                 $gainmana = ceil(($maxmana / 100) * $house -> fields['value']);
                 $gainlife = (4 * $gainhp) + $player -> hp;
                 if ($gainlife > $player -> max_hp) 

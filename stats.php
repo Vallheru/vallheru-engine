@@ -215,10 +215,8 @@ if ($player -> location == 'Ardulith')
     $strLocation = $city2;
 }
 
-$cape = $db -> Execute("SELECT `power` FROM `equipment` WHERE `owner`=".$player -> id." AND `type`='C' AND `status`='E'");
-$maxmana = ($arrCurstats[2] + $arrCurstats[3]);
-$maxmana = (int)($maxmana + (($cape -> fields['power'] / 100) * $maxmana));
-$cape -> Close();
+$maxmana = floor($player -> inteli + $player -> wisdom);
+$maxmana += floor((($player->equip[8][2] / 100) * $maxmana));
 if ($player->mana < $maxmana) 
 {
     $smarty -> assign ("Rest", "[<a href=\"rest.php\">".A_REST."</a>]<br />");
