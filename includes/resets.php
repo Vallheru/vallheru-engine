@@ -336,12 +336,20 @@ function smallreset($blnSmall = FALSE)
 		//Go to prison
 		if ($intRoll == 0)
 		  {
-		    $objPlayer = $db->Execute("SELECT `level` FROM `players` WHERE `id`=".$objRevent->fields['pid']);
+		    $objPlayer = $db->Execute("SELECT `miejsce`, `level` FROM `players` WHERE `id`=".$objRevent->fields['pid']);
 		    $intGold = $objPlayer->fields['level'] * 10000;
+		    if ($objPlayer->fields['miejsce'] != 'Lochy')
+		      {
+			$db -> Execute("INSERT INTO `jail` (`prisoner`, `verdict`, `duration`, `cost`, `data`) VALUES(".$objRevent->fields['pid'].",'Okradzenie poborcy podatkowego.', 18, ".$intGold.", ".$strDate.")");
+			$db->Execute("UPDATE `players` SET `miejsce`='Lochy' WHERE `id`=".$objRevent->fields['pid']);
+			$db -> Execute("INSERT INTO `log` (`owner`, `log`, `czas`, `type`) VALUES(".$objRevent->fields['pid'].", 'Nagle wyskoczył na ciebie patrol gwardzistów królewskich. Szybko i sprawnie zakuli ciebie w kajdany i odtransportowali do miasta. Tam przed sądem zostałeś oskarżony o kradzież pieniędzy podatników. I w ten oto sposób znalazłeś się w lochach.', '".$time."', 'T')"); 
+		      }
+		    else
+		      {
+			$db->Execute("UPDATE `jail` SET `duration`=`duration`+18 WHERE `prisoner`=".$objRevent->fields['pid']);
+			$db -> Execute("INSERT INTO `log` (`owner`, `log`, `czas`, `type`) VALUES(".$objRevent->fields['pid'].", 'Zostałeś wywleczony z celi i postawiony przed sądem pod zarzutem okradzenia poborcy podatkowego. Po krótkiej rozprawie, sędzia wydłużył twój obecny wyrok.', '".$time."', 'T')");
+		      }
 		    $objPlayer->Close();
-		    $db -> Execute("INSERT INTO `jail` (`prisoner`, `verdict`, `duration`, `cost`, `data`) VALUES(".$objRevent->fields['pid'].",'Okradzenie poborcy podatkowego.', 18, ".$intGold.", ".$strDate.")");
-		    $db->Execute("UPDATE `players` SET `miejsce`='Lochy' WHERE `id`=".$objRevent->fields['pid']);
-		    $db -> Execute("INSERT INTO `log` (`owner`, `log`, `czas`, `type`) VALUES(".$objRevent->fields['pid'].", 'Nagle wyskoczył na ciebie patrol gwardzistów królewskich. Szybko i sprawnie zakuli ciebie w kajdany i odtransportowali do miasta. Tam przed sądem zostałeś oskarżony o kradzież pieniędzy podatników. I w ten oto sposób znalazłeś się w lochach.', '".$time."', 'T')"); 
 		  }
 		//Bandits
 		elseif ($intRoll == 1)

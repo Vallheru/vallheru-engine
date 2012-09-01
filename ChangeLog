@@ -1,5 +1,7 @@
 2012-09-01  Bartek thindil Jasicki  <thindil@vallheru.net>
 
+	* BUG,includes/resets.php: 
+	fixed bug with jail in random events
 	* BUG,includes/head.php, includes/funkcje.php, stats.php, house.php, includes/resets.php:
 	fixed counting max mana
 
