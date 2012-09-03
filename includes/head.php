@@ -456,13 +456,13 @@ switch($player->location)
 	  }
 	if (isset($_GET['akcja']))
 	  {
-	    $arrLinks['location']['travel.php?akcja='.$_GET['akcja'].'&amp;step='.$_GET['step']] = RETURN_TO2;
+	    $arrLinks['location'][] = '<a href="travel.php?akcja='.$_GET['akcja'].'&amp;step='.$_GET['step'].'">'.RETURN_TO2.'</a>';
 	  }
 	else
 	  {
 	    $db->Execute("UPDATE `players` SET `miejsce`='Altara' WHERE `id`=".$player->id);
 	    $player->location = 'Altara';
-	    $arrLinks['location']['city.php'] = $city1;
+	    $arrLinks['location'][] = '<a href="city.php">'.$city1.'</a>';
 	  }
       }
     $test -> Close();
@@ -470,36 +470,36 @@ switch($player->location)
   case 'Góry':
     if ($player -> fight == 0) 
       {
-	$arrLinks['location']['gory.php'] = MOUNTAINS;
+	$arrLinks['location'][] = '<a href="gory.php">'.MOUNTAINS.'</a>';
       } 
     else 
       {
-	$arrLinks['location']['explore.php?akcja=gory'] = MOUNTAINS;
+	$arrLinks['location'][] = '<a href="explore.php?akcja=gory">'.MOUNTAINS.'</a>';
       }
     break;
   case 'Las':
     if  ($player -> fight == 0) 
       {
-	$arrLinks['location']['las.php'] = FOREST;
+	$arrLinks['location'][] = '<a href="las.php">'.FOREST.'</a>';
       } 
     else 
       {
-	$arrLinks['location']['explore.php?akcja=las'] = FOREST;
+	$arrLinks['location'][] = '<a href="explore.php?akcja=las">'.FOREST.'</a>';
       }
     break;
   case 'Lochy':
-    $arrLinks['location']['jail.php'] = JAIL;
+    $arrLinks['location'][] = '<a href="jail.php">'.JAIL.'</a>';
     break;
   case 'Portal':
-    $arrLinks['location']['portal.php'] = PORTAL;
+    $arrLinks['location'][] = '<a href="portal.php">'.PORTAL.'</a>';
     break;
   case 'Astralny plan':
     $objFight = $db -> Execute("SELECT `fight` FROM `players` WHERE `id`=".$player -> id);
-    $arrLinks['location']['portals.php?step='.$objFight -> fields['fight']] = ASTRAL_PLAN;
+    $arrLinks['location'][] = '<a href="portals.php?step='.$objFight -> fields['fight'].'">'.ASTRAL_PLAN.'</a>';
     $objFight -> Close();
     break;
   case 'Przygoda':
-    $arrLinks['location']['mission.php'] = 'Przygoda';
+    $arrLinks['location'][] = '<a href="mission.php">Przygoda</a>';
     break;
   default:
     break;
