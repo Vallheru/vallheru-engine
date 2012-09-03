@@ -69,8 +69,8 @@
 			        <li><a href="{$link}">{$text}</a></li>
 			    {/foreach}
 			    <br />
-                            {foreach $Links.location as $link=>$text}
-			        <li><a href="{$link}">{$text}</a></li>
+                            {foreach $Links.location as $link}
+			        <li>{$link}</li>
 			    {/foreach}
 			    <br />
                             <li><a href="mail.php{$Mailadd}">{$Npost}</a> [{$Unread}]</li>

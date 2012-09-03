@@ -49,8 +49,8 @@
     </div>
     <div style="width: 12%; float: left;">
       <ul>
-	{foreach $Links.location as $link=>$text}
-	    <li><a href="{$link}">{$text}</a></li>
+	{foreach $Links.location as $link}
+	    <li>{$link}</li>
 	{/foreach}
       </ul>
     </div>

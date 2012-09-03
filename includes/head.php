@@ -413,17 +413,21 @@ switch($player->location)
       {
         $healneed = (50 * $player -> level);
       }
-    if ($healneed < 0)
+    if ($healneed <= 0)
       {
-        $healneed = 0;
+        $strHealneed = '0 sz';
       }
-    $arrLinks['location'] = array('city.php' => CITY,
-				  'battle.php' => 'Arena Walk',
-				  'hospital.php' => 'Szpital ['.$healneed.' sz]',
-				  'bank.php' => 'Bank');
+    else
+      {
+	$strHealneed = '<a href="hospital.php?action=heal">'.$healneed.' sz</a>';
+      }
+    $arrLinks['location'] = array('<a href="city.php">'.CITY.'</a>',
+				  '<a href="battle.php">Arena Walk</a>',
+				  '<a href="hospital.php">Szpital </a>['.$strHealneed.']',
+				  '<a href="bank.php">Bank</a>');
     if ($player->tribe) 
       {
-	$arrLinks['location']['tribes.php?view=my'] = 'Mój klan';
+	$arrLinks['location'][] = '<a href="tribes.php?view=my">Mój klan</a>';
       }
     break;
   case 'Podróż':
