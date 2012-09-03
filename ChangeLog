@@ -1,5 +1,7 @@
 2012-09-03  Bartek thindil Jasicki  <thindil@vallheru.net>
 
+	* BUG,jail.php: 
+	fixed notice
 	* BUG,includes/head.php: 
 	fixed links
 	* FEATURE,templates/layout1/header.tpl, templates/header.tpl, includes/head.php: 

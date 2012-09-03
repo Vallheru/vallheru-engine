@@ -8,7 +8,7 @@
  *   @author               : thindil <thindil@vallheru.net>
  *   @author               : eyescream <tduda@users.sourceforge.net>
  *   @version              : 1.6
- *   @since                : 22.08.2012
+ *   @since                : 03.09.2012
  *
  */
 
@@ -169,7 +169,6 @@ if (isset($_GET['escape']))
 */
 if ($player -> location == 'Altara' || $player -> location == 'Ardulith') 
 {
-    $smarty -> display ('jail.tpl');
     $jail = $db -> Execute("SELECT * FROM `jail` ORDER BY `id` ASC");
     $number = $jail -> RecordCount();
     $smarty -> assign(array("Number" => $number,
