@@ -7,7 +7,7 @@
  *   @copyright            : (C) 2004,2005,2006,2007,2011,2012 Vallheru Team based on Gamers-Fusion ver 2.5
  *   @author               : thindil <thindil@vallheru.net>
  *   @version              : 1.6
- *   @since                : 01.09.2012
+ *   @since                : 03.09.2012
  *
  */
 
@@ -312,37 +312,34 @@ $query -> Close();
 if ($player->settings['graphic'] != '' || $player->settings['graphbar'] == 'Y') 
 {
     $intExpperc = $pct;
-    if ($pct > 97)
+    if ($pct > 100)
     {
-        $intExpperc = 97;
+        $intExpperc = 100;
     }
-    $intVial = 97 - $intExpperc;
     $intPerhealth = (($player -> hp / $player -> max_hp) * 100);
     $intPerhealth = round($intPerhealth, '0');
     $strHealth = $intPerhealth;
-    if ($intPerhealth > 97)
+    if ($intPerhealth > 100)
     {
-        $intPerhealth = 97;
+        $intPerhealth = 100;
     }
-    $intVial2 = 97 - $intPerhealth;
     $maxmana = floor($player -> inteli + $player -> wisdom);
     $maxmana += floor(($player->equip[8][2] / 100) * $maxmana);
     $intPermana = (($player -> mana / $maxmana) * 100);
     $intPermana = round($intPermana, '0');
     $strMana = $intPermana;
-    if ($intPermana > 97)
+    if ($intPermana > 100)
     {
-        $intPermana = 97;
+        $intPermana = 100;
     }
-    $intVial3 = 97 - $intPermana;
     $smarty -> assign(array("Barsize" => $intPerhealth,
                             "Healthper" => $strHealth,
                             "Barsize2" => $intPermana,
                             "Manaper" => $strMana,
                             "Expper" => $intExpperc,
-                            "Vial" => $intVial,
-                            "Vial2" => $intVial2,
-                            "Vial3" => $intVial3));
+                            "Vial" => $intExpperc,
+                            "Vial2" => $intPerhealth,
+                            "Vial3" => $intPermana));
 }
 
 $arrFilename = explode("/", $_SERVER['PHP_SELF']);

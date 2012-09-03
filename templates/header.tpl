@@ -31,15 +31,21 @@
                         <b>{$Plevel}:</b> {$Level}<br />
                         <b>{$Exppts}:</b> {$Exp}/{$Expneed} ({$Percent}%)<br />
                         {if $Graphbar == "Y"}
-                            <img src="includes/graphbar.php?statusbar=exp" height="7" width="{$Expper}%" alt="{$Exppts}" title="{$Exppts}: {$Percent}%" style="margin-top: 2px; margin-bottom: 2px; border-style: outset; border-right: 0px;" border="2" /><img src="includes/graphbar2.php" height="7" width="{$Vial}%" alt="{$Exppts}" title="{$Exppts}: {$Percent}%" style="margin-top: 2px; margin-bottom: 2px; border-style: outset; border-left: 0px;" border="2" /><br />
+			    <div class="vial" title="{$Exppts}: {$Exp}/{$Expneed} ({$Percent}%)">
+			      <div class="subvial" style="width: {$Vial}%; background: green;"></div>
+			    </div>
                         {/if}
                         <b>{$Healthpts}:</b> {$Health}/{$Maxhealth}<br />
                         {if $Graphbar == "Y"}
-                            <img src="includes/graphbar.php?statusbar=health" height="7" width="{$Barsize}%" alt="{$Healthpts}" title="{$Healthpts}: {$Healthper}%" style="margin-top: 2px; margin-bottom: 2px; border-style: outset; border-right: 0px;" border="2" /><img src="includes/graphbar2.php" height="7" width="{$Vial2}%" alt="{$Healthpts}" title="{$Healthpts}: {$Healthper}%" style="margin-top: 2px; margin-bottom: 2px; border-style: outset; border-left: 0px;" border="2" /><br />
+			    <div class="vial" title="{$Healthpts}: {$Health}/{$Maxhealth} ({$Healthper}%)">
+			      <div class="subvial" style="width: {$Vial2}%; background: red;"></div>
+			    </div>
                         {/if}
                         <b>{$Manapts}:</b> {$Mana} <br />
                         {if $Graphbar == "Y"}
-                            <img src="includes/graphbar.php?statusbar=mana" height="7" width="{$Barsize2}%" alt="{$Manapts}" title="{$Manapts}: {$Manaper}%" style="margin-top: 2px; margin-bottom: 2px; border-style: outset; border-right: 0px;" border="2" /><img src="includes/graphbar2.php" height="7" width="{$Vial3}%" alt="{$Manapts}" title="{$Manapts}: {$Manaper}%" style="margin-top: 2px; margin-bottom: 2px; border-style: outset; border-left: 0px;" border="2" /><br />
+			    <div class="vial" title="{$Manapts}: {$Mana} ({$Manaper}%)">
+			      <div class="subvial" style="width: {$Vial3}%; background: blue;"></div>
+			    </div>
                         {/if}
                         <b>{$Energypts}:</b> {$Energy}/{$Maxenergy}<br /><br />
                         <b>{$Goldinhand}:</b> {$Gold}<br />

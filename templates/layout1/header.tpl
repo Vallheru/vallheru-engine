@@ -24,13 +24,13 @@
     <div style="max-width: 150px; float:left; margin-left:10px;">
       <b>{$Plevel}:</b> {$Level}<br />
       <div class="vial" title="{$Exppts}: {$Exp}/{$Expneed} ({$Percent}%)">
-          <div class="subvial" style="width: {100 - $Vial}%; background: green;"></div>
+          <div class="subvial" style="width: {$Vial}%; background: green;"></div>
       </div>
       <div class="vial" title="{$Healthpts}: {$Health}/{$Maxhealth} ({$Healthper}%)">
-	  <div class="subvial" style="width: {100 - $Vial2}%; background: red;"></div>
+	  <div class="subvial" style="width: {$Vial2}%; background: red;"></div>
       </div>
       <div class="vial" title="{$Manapts}: {$Mana} ({$Manaper}%)">
-	  <div class="subvial" style="width: {100 - $Vial3}%; background: blue;"></div>
+	  <div class="subvial" style="width: {$Vial3}%; background: blue;"></div>
       </div>
       <b>{$Energypts}:</b> {$Energy}/{$Maxenergy}
     </div>

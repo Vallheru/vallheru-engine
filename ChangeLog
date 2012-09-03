@@ -1,3 +1,9 @@
+2012-09-03  Bartek thindil Jasicki  <thindil@vallheru.net>
+
+	* UPDATE,templates/layout1/header.tpl, templates/header.tpl, css/light.css, css/lucass.css, css/grey.css, css/greenforest.css, css/green.css,
+	css/ender.css, css/classic.css, includes/head.php, includes/graphbar.php, includes/graphbar2.php:
+	redesigned graph bars
+
 2012-09-01  Bartek thindil Jasicki  <thindil@vallheru.net>
 
 	* BUG,includes/resets.php: 
