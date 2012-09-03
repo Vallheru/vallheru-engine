@@ -1,24 +1,24 @@
 <map name="{$Gamename}">
     {if $Action == "" && $Location == "Altara" && $Action2 == ""}
-        <area shape="rect" coords="40, 50, 260, 135" href="travel.php?action=gory" title="{$Amountains}" />
-        <area shape="rect" coords="40, 150, 150, 280" href="travel.php?action=las" title="{$Aforest}" />
-        <area shape="rect" coords="80, 290, 100, 310" href="travel.php?action=city2" title="{$Aelfcity}" />
+        <area shape="rect" coords="57, 57, 464, 230" href="travel.php?action=gory" title="{$Amountains}" />
+        <area shape="rect" coords="70, 255, 270, 493" href="travel.php?action=las" title="{$Aforest}" />
+        <area shape="rect" coords="142, 503, 165, 523" href="travel.php?action=city2" title="{$Aelfcity}" />
     {/if}
     {if $Action == "" && $Location == "Las" && $Action2 == ""}
-        <area shape="rect" coords="190, 220, 210, 250" href="travel.php?action=powrot" title="{$Aaltara}" />
+        <area shape="rect" coords="323, 382, 343, 402" href="travel.php?action=powrot" title="{$Aaltara}" />
     {/if}
     {if $Action == "" && $Location == "Ardulith" && $Action2 == ""}
-        <area shape="rect" coords="40, 50, 260, 135" href="travel.php?action=gory" title="{$Amountains}" />
-        <area shape="rect" coords="190, 220, 210, 250" href="travel.php?action=powrot" title="{$Aaltara}" />
+        <area shape="rect" coords="57, 57, 464, 230" href="travel.php?action=gory" title="{$Amountains}" />
+        <area shape="rect" coords="323, 382, 343, 402" href="travel.php?action=powrot" title="{$Aaltara}" />
     {/if}
     {if $Action == "" && $Location == "Góry" && $Action2 == ""}
-        <area shape="rect" coords="40, 150, 150, 280" href="travel.php?action=las" title="{$Aforest}" />
-        <area shape="rect" coords="190, 220, 210, 250" href="travel.php?action=powrot" title="{$Aaltara}" />
+        <area shape="rect" coords="70, 255, 270, 493" href="travel.php?action=las" title="{$Aforest}" />
+        <area shape="rect" coords="323, 382, 343, 402" href="travel.php?action=powrot" title="{$Aaltara}" />
     {/if}
 </map>
 {if $Action == "" && $Location == "Altara" && $Action2 == ""}
     {$Altarainfo}<br />
-    <img src="images/mapa.jpg" usemap="#{$Gamename}" width="400" border="0" /><br />
+    <center><img src="images/mapa.gif" usemap="#{$Gamename}" border="0" /></center>
     {if $Maps == "1"}
         {$Portal1}<br />
         - <a href="travel.php?akcja=tak">{$Ayes}</a><br />
@@ -43,7 +43,7 @@
 
 {if $Action == "" && $Location == "Ardulith" && $Action2 == ""}
     {$Altarainfo}<br />
-    <img src="images/mapa.jpg" usemap="#{$Gamename}" width="400" border="0" /><br />
+    <center><img src="images/mapa.gif" usemap="#{$Gamename}" border="0" /></center>
 {/if}
 
 {if $Portal == "Y"}

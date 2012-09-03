@@ -1,5 +1,8 @@
 2012-09-03  Bartek thindil Jasicki  <thindil@vallheru.net>
 
+	* UPDATE,templates/map.tpl, templates/layout1/map.tpl, templates/layout1/map.tpl, images/mapa.gif, images/mapa.jpg:
+	updated world map
+
 	* UPDATE,templates/layout1/header.tpl, templates/header.tpl, css/light.css, css/lucass.css, css/grey.css, css/greenforest.css, css/green.css,
 	css/ender.css, css/classic.css, includes/head.php, includes/graphbar.php, includes/graphbar2.php:
 	redesigned graph bars
