@@ -12,9 +12,6 @@
 {$Tool}
 {$Repairequip}
 </form><br />
-{if $Action != ""}
-{$Action}  (<a href="equip.php">{$Refresh}</a>)<br />
-{/if}
 
 {if $Poison > "0"}
     <br /><form method="post" action="equip.php?poison={$Poison}&amp;step=poison"><input type="submit" value="{$Poisonit}" /> <select name="weapon">
@@ -28,7 +25,7 @@
 
 {if $Drinkfew > 0}
     <br /><form method="post" action="equip.php?drinkfew={$Drinkfew}&amp;step=drink">
-        <input type="submit" value="{$Adrink}" /> {$Pname} <input type="text" size="5" value="{$Pamount}" name="amount" /> {$Tamount}
+        <input type="submit" value="{$Adrink}" /> {$Poname} <input type="text" size="5" value="{$Pamount}" name="amount" /> {$Tamount}
     </form></br >
 {/if}
 

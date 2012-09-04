@@ -1,5 +1,7 @@
 2012-09-04  Bartek thindil Jasicki  <thindil@vallheru.net>
 
+	* UPDATE,class/player_class.php, templates/layout1/equip.tpl, templates/equip.tpl, equip.php: 
+	redesigned equipment
 	* BUG,bank.php: 
 	fixed sending poisoned items
 	* BUG,templates/layout1/travel.tpl:

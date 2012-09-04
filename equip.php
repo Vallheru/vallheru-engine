@@ -7,7 +7,7 @@
  *   @copyright            : (C) 2004,2005,2006,2007,2011,2012 Vallheru Team based on Gamers-Fusion ver 2.5
  *   @author               : thindil <thindil@vallheru.net>
  *   @version              : 1.6
- *   @since                : 22.08.2012
+ *   @since                : 04.09.2012
  *
  */
 
@@ -446,6 +446,122 @@ if (isset($_GET['schowaj']))
     $bron -> Close();
 }
 
+/**
+ * Repair used items
+ */
+if (isset($_GET['napraw_uzywane'])) 
+  {
+    $text = '';
+    $arrTypes = array(6, 7, 8, 9);
+    $blnNomoneys = FALSE;
+    for ($i = 0; $i < count($player->equip); $i++)
+      {
+	if (in_array($i, $arrTypes))
+	  {
+	    continue;
+	  }
+	if ($player->equip[$i][9] != $player->equip[$i][6])
+	  {
+	    $intCost = ceil($player->equip[$i][11] * (1 - $player->equip[$i][6] / $player->equip[$i][9]));
+            if ($intCost > $player->credits) 
+	      {
+		$blnNomoneys = TRUE;
+		break;
+	      }
+            $player->credits -= $intCost;
+            $db -> Execute("UPDATE `equipment` SET `wt`=".$player->equip[$i][9]." WHERE `id`=".$player->equip[$i][0]);
+	    $player->equip[$i][6] = $player->equip[$i][9];
+            $text = $text.YOU_REPAIR." ".$player->equip[$i][1]." ".AND_COST." ".$intCost." ".GOLD_COINS.".<br />";
+	  }
+      }
+    $db -> Execute("UPDATE `players` SET `credits`=".$player->credits." WHERE `id`=".$player -> id);
+    if ($text != '')
+      {
+	message("success", $text);
+      }
+    if ($blnNomoneys)
+      {
+	message('error', "Nie stać Cię na naprawę ekwipunku.");
+      }
+}
+
+/**
+ * Repair selected equipment
+ */
+if (isset($_GET['repair']))
+  {
+    $text = '';
+    $arrTypes = array(6, 7, 8, 9);
+    $blnNomoneys = FALSE;
+    for ($i = 0; $i < count($player->equip); $i++)
+      {
+	if (in_array($i, $arrTypes))
+	  {
+	    continue;
+	  }
+	if (isset($_POST[$player->equip[$i][0]]))
+	  {
+	    if ($player->equip[$i][9] != $player->equip[$i][6]) 
+	      {
+		$intCost = ceil($player->equip[$i][11] * (1 - $player->equip[$i][6] / $player->equip[$i][9]));
+		if ($intCost > $player->credits) 
+		  {
+		    $blnNomoneys = TRUE;
+		    break;
+		  }
+		$player->credits -= $intCost;
+		$db->Execute("UPDATE `equipment` SET `wt`=".$player->equip[$i][9]." WHERE `id`=".$player->equip[$i][0]);
+		$player->equip[$i][6] = $player->equip[$i][9];
+		$text = $text."Naprawiłeś ".$player->equip[$i][1].", kosztowało Ciebie to ".$intCost." ".GOLD_COINS.".<br />";
+	      }
+	  }
+      }
+    $db -> Execute("UPDATE `players` SET `credits`=".$player->credits." WHERE `id`=".$player -> id);
+    if ($text != '')
+      {
+	message("success", $text);
+      }
+    if ($blnNomoneys)
+      {
+	message('error', "Nie stać Cię na naprawę ekwipunku.");
+      }
+  }
+
+/**
+* Fill equiped arrows
+*/
+if (isset($_GET['fill']))
+  {
+    if (!$player->equip[6][0])
+      {
+	error('Nie masz strzał w kołczanie.');
+      }
+    if ($player->equip[6][6] == 25)
+    {
+        error(NOT_NEED);
+    }
+    $objArrows2 = $db -> Execute("SELECT `wt`, `id` FROM `equipment` WHERE name='".$player->equip[6][1]."' AND `power`=".$player->equip[6][2]." AND `status`='U' AND `owner`=".$player -> id." AND `ptype`='".$player->equip[6][3]."' AND `poison`=".$player->equip[6][8]." AND `magic`='".$player->equip[6][10]."'");
+    if (!$objArrows2 -> fields['id'])
+    {
+        error(NO_ARROWS);
+    }
+    $intAmount = 25 - $objArrows -> fields['wt'];
+    if ($objArrows2 -> fields['wt'] <= $intAmount)
+    {
+        $db -> Execute("DELETE FROM equipment WHERE id=".$objArrows2 -> fields['id']);
+        $intFill = $objArrows2 -> fields['wt'];
+    }
+        else
+    {
+        $db -> Execute("UPDATE equipment SET wt=wt-".$intAmount." WHERE id=".$objArrows2 -> fields['id']);
+        $intFill = $intAmount;
+    }
+    $objArrows2 -> Close();
+    $db -> Execute("UPDATE equipment SET wt=wt+".$intFill." WHERE id=".$player->equip[6][0]);
+    $player->equip[6][6] = 25;
+    message("success", "Uzupełniłeś kołczan");
+}
+
 //Weapon
 if (!$player->equip[0][0]) 
   {
@@ -504,7 +620,9 @@ if ($player->equip[11][0])
      $smarty -> assign ("Weapon2", "");
    }
  
-
+/**
+ * Equipped arrows
+ */
 if ($player->equip[1][0]) 
 {
     if ($player->equip[6][0]) 
@@ -524,7 +642,7 @@ if ($player->equip[1][0])
 	break;
       }
       $player->equip[6][1] = checkmagic($player->equip[6][1], $player->equip[6][10]);
-      $smarty -> assign ("Arrows", "<b>".QUIVER.':</b> <span title="Poziom: '.$player->equip[6][4].'">'.$player->equip[6][1]." (+".$player->equip[6][2].") (".$player->equip[6][6]." ".ARROWS.")</span> [<a href=\"equip.php?schowaj=".$player->equip[6][0]."\">".HIDE_ARR."</a>] [<a href=\"equip.php?fill=".$player->equip[6][0]."\">".A_FILL."</a>]<br />\n");
+      $smarty -> assign ("Arrows", "<b>".QUIVER.':</b> <span title="Poziom: '.$player->equip[6][4].'">'.$player->equip[6][1]." (+".$player->equip[6][2].") (".$player->equip[6][6]." ".ARROWS.")</span> [<a href=\"equip.php?schowaj=".$player->equip[6][0]."\">".HIDE_ARR."</a>] [<a href=\"equip.php?fill\">".A_FILL."</a>]<br />\n");
     } 
         else 
     {
@@ -689,111 +807,6 @@ if ($player->equip[3][0] || $player->equip[0][0] || $player->equip[4][0] || $pla
     $smarty -> assign ("Repairequip", "[<a href=\"equip.php?napraw_uzywane\">".A_REPAIR2."</a>] <br /><input type=\"submit\" value=\"Napraw wybrane\" /><br />\n");
 }
 
-backpack('W', WEAPONS,'B','Bweapons');
-backpack('T', STAFFS,'','Bstaffs');
-backpack('R', 'strzały', '', 'Barrows');
-backpack('H', HELMETS,'','Bhelmets');
-backpack('A', ARMORS,'','Barmors');
-backpack('S', SHIELDS,'','Bshields');
-backpack('C', CAPES,'','Bcapes');
-backpack('L', LEGS2,'','Blegs');
-backpack('I', 'pierścienie', '', 'Brings');
-backpack('E', 'narzędzia', '', 'Btools');
-backpack('P', 'plany', '', 'Bplans');
-backpack('O', 'Łupy', '', 'Bloots');
-backpack('Q', 'Przedmioty do zadań', '', 'Bquests');
-
-/**
- * Show potions
- */
-$mik = $db -> Execute("SELECT * FROM potions WHERE owner=".$player -> id." AND status='K' ORDER BY `power` ASC, `name` ASC");
-if ($mik -> fields['id']) 
-{
-    $arrname = array();
-    $arramount = array();
-    $arreffect = array();
-    $arrpower = array();
-    $arraction = array();
-    $arrid = array();
-    $i = 0;
-    while (!$mik -> EOF) 
-    {
-        $arrname[$i] = $mik -> fields['name'];
-        $arramount[$i] = $mik -> fields['amount'];
-        $arreffect[$i] = $mik -> fields['efect'];
-        $arraction[$i] = "[ <a href=\"equip.php?wypij=".$mik -> fields['id']."\">".A_DRINK."</a> |";
-	$arrpower[$i] = "(".POWER.": ".$mik -> fields['power'].")";
-	if ($mik -> fields['type'] == 'P')
-	  {
-	    $arraction[$i] = "[ <a href=\"equip.php?poison=".$mik -> fields['id']."\">".A_POISON."</a> |";
-	  }
-	elseif ($mik->fields['type'] == 'H' || $mik->fields['type'] == 'M')
-	  {
-	    $arraction[$i] .= " <a href=\"equip.php?drinkfew=".$mik->fields['id']."\">wypij kilka</a> |";
-	  }
-	$arraction[$i] .= " <a href=\"equip.php?sellpotion=".$mik->fields['id']."\">".A_SELL."</a> ".FOR_A." ".$mik->fields['cost']." ".GOLD_COINS." ]";
-	$arrid[$i] = $mik->fields['id'];
-        $mik -> MoveNext();
-        $i = $i + 1;
-    }
-    if ($i > 0) 
-    {
-        $strSellAll = "(<a href=\"equip.php?sellpotions\">sprzedaj wszystkie mikstury</a>)<br />\n";
-    }
-    else
-      {
-	$strSellAll = '';
-      }
-    $smarty -> assign ( array("Pname1" => $arrname, 
-                              "Pamount1" => $arramount, 
-                              "Peffect1" => $arreffect, 
-                              "Potionid1" => $arrid, 
-                              "Paction1" => $arraction, 
-                              "Ppower1" => $arrpower, 
-                              "Potions1" => $i,
-			      "Sellallp" => $strSellAll,
-			      "Potionssell" => "Sprzedaj wybrane mikstury",
-                              "Potions2" => POTIONS,
-                              "Amount" => AMOUNT));
-}
-$mik -> Close();
-
-/**
- * Show pets
- */
-$arrPets = $db->GetAll("SELECT `id`, `name`, `power`, `defense`, `gender`, `corename` FROM `core` WHERE `owner`=".$player->id);
-if ($arrPets)
-  {
-    foreach ($arrPets as &$arrPet)
-      {
-	if ($arrPet['gender'] == 'F')
-	  {
-	    $arrPet['gender'] = 'Samica';
-	  }
-	else
-	  {
-	    $arrPet['gender'] = 'Samiec';
-	  }
-	if ($arrPet['corename'] != '')
-	  {
-	    $arrPet['name'] = $arrPet['corename'].' ('.$arrPet['name'].')';
-	  }
-      }
-    $smarty->assign(array("Pets1" => 1,
-			  "Pets" => $arrPets,
-			  "Tpets" => 'Posiadane chowańce',
-			  "Pname" => 'Imię:',
-			  "Pgender" => 'Płeć:',
-			  "Ppower" => 'Siła:',
-			  "Pdefense" => 'Obrona:',
-			  "Pchname" => 'zmień imię',
-			  "Prelease" => 'uwolnij'));
-  }
-
-$smarty -> assign(array("Arramount" => ARR_AMOUNT,
-                        "Goldcoins" => GOLD_COINS,
-                        "Fora" => FOR_A));
-
 /**
  * Change name for pet
  */
@@ -816,7 +829,7 @@ if (isset($_GET['name']))
 	$_POST['cname'] = htmlspecialchars($_POST['cname'], ENT_QUOTES);
 	$strName = $db -> qstr($_POST['cname'], get_magic_quotes_gpc());
 	$db -> Execute("UPDATE `core` SET `corename`=".$strName." WHERE `id`=".$_GET['name']);
-	$smarty->assign("Action", "Zmieniłeś imię chowańca.");
+	message("success", "Zmieniłeś imię chowańca.");
       }
   }
 
@@ -833,7 +846,7 @@ if (isset($_GET['release']))
       }
     $objPet->Close();
     $db->Execute("DELETE FROM `core` WHERE `id`=".$_GET['release']);
-    $smarty->assign("Action", "Uwolniłeś chowańca.");
+    message("success", "Uwolniłeś chowańca.");
   }
 
 /**
@@ -877,7 +890,7 @@ if (isset($_GET['learn']))
       {
 	$strSuffix = 'aś';
       }
-    $smarty->assign('Action', 'Nauczył'.$strSuffix.' się wykonywać przedmiot: '.$objPlan->fields['name'].' (poziom: '.$objPlan->fields['minlev'].')');
+    message('success', 'Nauczył'.$strSuffix.' się wykonywać przedmiot: '.$objPlan->fields['name'].' (poziom: '.$objPlan->fields['minlev'].')');
     $objPlan->Close();
   }
 
@@ -921,7 +934,7 @@ if (isset($_GET['sell']))
     {
         $db -> Execute("DELETE FROM equipment WHERE id=".$sell -> fields['id']);
     }
-    $smarty -> assign ("Action", YOU_SELL." ".$sell -> fields['name']." ".FOR_A." ".$sell -> fields['cost']." ".GOLD_COINS.".");
+    message("success", YOU_SELL." ".$sell -> fields['name']." ".FOR_A." ".$sell -> fields['cost']." ".GOLD_COINS.".");
     $sell -> Close();
 }
 
@@ -958,7 +971,7 @@ if (isset($_GET['sellpotion']))
       {
 	$strLast = "eś";
       }
-    $smarty -> assign ("Action", "Sprzedał".$strLast." ".$sell->fields['name']." ".FOR_A." ".$sell->fields['cost']." ".GOLD_COINS.".");
+    message("Action", "Sprzedał".$strLast." ".$sell->fields['name']." ".FOR_A." ".$sell->fields['cost']." ".GOLD_COINS.".");
     $sell->Close();
   }
 
@@ -988,7 +1001,7 @@ if (isset($_GET['sellpotions']))
       {
 	$strLast = "eś";
       }
-    $smarty -> assign ("Action", "<br />Sprzedał".$strLast." swoje mikstury ".FOR_A." ".$zysk." ".GOLD_COINS.".");
+    message("success", "Sprzedał".$strLast." swoje mikstury ".FOR_A." ".$zysk." ".GOLD_COINS.".");
   }
 
 /**
@@ -1058,7 +1071,7 @@ if (isset($_GET['sellchecked']))
 	  {
 	    $strLast = "eś";
 	  }
-	$smarty -> assign ("Action", "<br />Sprzedał".$strLast." wybrane przedmioty ".FOR_A." ".$intMoney." ".GOLD_COINS.".");
+	message("success", "Sprzedał".$strLast." wybrane przedmioty ".FOR_A." ".$intMoney." ".GOLD_COINS.".");
       }
   }
 
@@ -1130,65 +1143,8 @@ if (isset($_GET['sprzedaj']))
         $zysk2 -> Close();
     }
     $db -> Execute("UPDATE players SET credits=credits+".$zysk." WHERE id=".$player -> id);
-    $smarty -> assign ("Action", "<br />".YOU_SELL." ".$typ." ".FOR_A." ".$zysk." ".GOLD_COINS.".");
+    message("success", YOU_SELL." ".$typ." ".FOR_A." ".$zysk." ".GOLD_COINS.".");
 }
-
-/**
- * Repair used items
- */
-if (isset($_GET['napraw_uzywane'])) 
-  {
-    $rzecz_wiersz = $db -> Execute("SELECT * FROM `equipment` WHERE `owner`=".$player -> id." AND `status`='E' AND type NOT IN ('R', 'T', 'C', 'I', 'O')");
-    $text = '';
-    while(!$rzecz_wiersz -> EOF) 
-      {
-        if ($rzecz_wiersz -> fields['maxwt'] != $rzecz_wiersz -> fields['wt']) 
-	  {
-	    $intCost = ceil($rzecz_wiersz->fields['repair'] * (1 - $rzecz_wiersz->fields['wt'] / $rzecz_wiersz->fields['maxwt']));
-            if ($intCost > $player->credits) 
-	      {
-                error ("Nie stać Cię na naprawę ekwipunku.");
-	      }
-            $player->credits = $player->credits - $intCost;
-            $db -> Execute("UPDATE `equipment` SET `wt`=".$rzecz_wiersz -> fields['maxwt']." WHERE `id`=".$rzecz_wiersz -> fields['id']);
-            $db -> Execute("UPDATE `players` SET `credits`=`credits`-".$intCost." WHERE `id`=".$player -> id);
-            $text = $text."<br />".YOU_REPAIR." ".$rzecz_wiersz -> fields['name']." ".AND_COST." ".$intCost." ".GOLD_COINS.".<br />";
-	  }
-        $rzecz_wiersz -> MoveNext();
-      }
-    $rzecz_wiersz -> Close();
-    $smarty -> assign ("Action", $text);
-}
-
-/**
- * Repair selected equipment
- */
-if (isset($_GET['repair']))
-  {
-    $rzecz_wiersz = $db->Execute("SELECT * FROM `equipment` WHERE `owner`=".$player->id." AND `status`='E' AND `type` NOT IN ('R', 'T', 'C', 'I', 'O', 'Q')");
-    $text = '';
-    while(!$rzecz_wiersz->EOF) 
-      {
-	if (isset($_POST[$rzecz_wiersz->fields['id']]))
-	  {
-	    if ($rzecz_wiersz->fields['maxwt'] != $rzecz_wiersz->fields['wt']) 
-	      {
-		$intCost = ceil($rzecz_wiersz->fields['repair'] * (1 - $rzecz_wiersz->fields['wt'] / $rzecz_wiersz->fields['maxwt']));
-		if ($intCost > $player->credits) 
-		  {
-		    error("Nie stać Ciebie na naprawę ekwipunku.");
-		  }
-		$player->credits = $player->credits - $intCost;
-		$db->Execute("UPDATE `equipment` SET `wt`=".$rzecz_wiersz->fields['maxwt']." WHERE `id`=".$rzecz_wiersz->fields['id']);
-		$db->Execute("UPDATE `players` SET `credits`=`credits`-".$intCost." WHERE `id`=".$player -> id);
-		$text = $text."<br />Naprawiłeś ".$rzecz_wiersz->fields['name'].", kosztowało Ciebie to ".$intCost." ".GOLD_COINS.".<br />";
-	      }
-	  }
-        $rzecz_wiersz -> MoveNext();
-      }
-    $rzecz_wiersz -> Close();
-    $smarty -> assign ("Action", $text);
-  }
 
 /**
  * Repair items in backpack
@@ -1233,7 +1189,7 @@ if (isset($_GET['napraw']))
       $db -> Execute("DELETE FROM `equipment` WHERE `id`=".$_GET['napraw']);
     }
     $db -> Execute("UPDATE `players` SET `credits`=`credits`-".$intCost." WHERE `id`=".$player -> id);
-    $smarty -> assign ("Action", "<br />".YOU_REPAIR." <b>".$rzecz -> fields['name']."</b> ".FOR_A." <b>".$intCost."</b> ".GOLD_COINS.".");
+    message("success", YOU_REPAIR." <b>".$rzecz -> fields['name']."</b> ".FOR_A." <b>".$intCost."</b> ".GOLD_COINS.".");
     $rzecz -> Close();
 }
 
@@ -1418,11 +1374,11 @@ if (isset ($_GET['poison']))
 		    $db -> Execute("DELETE FROM equipment WHERE id=".$item -> fields['id']);
 		  }
 	      }
-            $smarty -> assign ("Action", YOU_POISON." ".$item -> fields['name'].".");
+            message("success", YOU_POISON." ".$item -> fields['name'].".");
         }
             else
         {
-            $smarty -> assign ("Action", YOU_POISON2." ".$item -> fields['name']." ".BUT_NOT.".");
+            message("error", YOU_POISON2." ".$item -> fields['name']." ".BUT_NOT.".");
         }
         $amount = $poison -> fields['amount'] - 1;
         if ($amount < 1) 
@@ -1436,43 +1392,6 @@ if (isset ($_GET['poison']))
         $item -> Close();
     }   
     $poison -> Close();
-}
-
-/**
-* Fill equiped arrows
-*/
-if (isset($_GET['fill']))
-{
-    checkvalue($_GET['fill']);
-    $objArrows = $db -> Execute("SELECT * FROM equipment WHERE id=".$_GET['fill']." AND `owner`=".$player->id);
-    if (!$objArrows -> fields['id'])
-    {
-        error(NO_ITEMS);
-    }
-    if ($objArrows -> fields['wt'] == 25)
-    {
-        error(NOT_NEED);
-    }
-    $objArrows2 = $db -> Execute("SELECT `wt`, `id` FROM `equipment` WHERE name='".$objArrows -> fields['name']."' AND `power`=".$objArrows -> fields['power']." AND `status`='U' AND `owner`=".$player -> id." AND `ptype`='".$objArrows->fields['ptype']."' AND `poison`=".$objArrows->fields['poison']);
-    if (!$objArrows2 -> fields['id'])
-    {
-        error(NO_ARROWS);
-    }
-    $intAmount = 25 - $objArrows -> fields['wt'];
-    if ($objArrows2 -> fields['wt'] <= $intAmount)
-    {
-        $db -> Execute("DELETE FROM equipment WHERE id=".$objArrows2 -> fields['id']);
-        $intFill = $objArrows2 -> fields['wt'];
-    }
-        else
-    {
-        $db -> Execute("UPDATE equipment SET wt=wt-".$intAmount." WHERE id=".$objArrows2 -> fields['id']);
-        $intFill = $intAmount;
-    }
-    $objArrows2 -> Close();
-    $db -> Execute("UPDATE equipment SET wt=wt+".$intFill." WHERE id=".$objArrows -> fields['id']);
-    $objArrows -> Close();
-    $smarty -> assign("Action", "Uzupełniłeś kołczan");
 }
 
 /**
@@ -1493,7 +1412,7 @@ if (isset($_GET['drinkfew']))
     $smarty->assign(array("Adrink" => "Wypij",
 			  "Tamount" => "razy",
 			  "Pamount" => $objPotion->fields['amount'],
-			  "Pname" => $objPotion->fields['name']));
+			  "Poname" => $objPotion->fields['name']));
     if (isset($_GET['step']) && $_GET['step'] == 'drink')
       {
 	if (!isset($_POST['amount']))
@@ -1509,6 +1428,111 @@ if (isset($_GET['drinkfew']))
       }
     $objPotion->Close();
   }
+
+backpack('W', WEAPONS,'B','Bweapons');
+backpack('T', STAFFS,'','Bstaffs');
+backpack('R', 'strzały', '', 'Barrows');
+backpack('H', HELMETS,'','Bhelmets');
+backpack('A', ARMORS,'','Barmors');
+backpack('S', SHIELDS,'','Bshields');
+backpack('C', CAPES,'','Bcapes');
+backpack('L', LEGS2,'','Blegs');
+backpack('I', 'pierścienie', '', 'Brings');
+backpack('E', 'narzędzia', '', 'Btools');
+backpack('P', 'plany', '', 'Bplans');
+backpack('O', 'Łupy', '', 'Bloots');
+backpack('Q', 'Przedmioty do zadań', '', 'Bquests');
+
+/**
+ * Show potions
+ */
+$mik = $db -> Execute("SELECT * FROM potions WHERE owner=".$player -> id." AND status='K' ORDER BY `power` ASC, `name` ASC");
+if ($mik -> fields['id']) 
+{
+    $arrname = array();
+    $arramount = array();
+    $arreffect = array();
+    $arrpower = array();
+    $arraction = array();
+    $arrid = array();
+    $i = 0;
+    while (!$mik -> EOF) 
+    {
+        $arrname[$i] = $mik -> fields['name'];
+        $arramount[$i] = $mik -> fields['amount'];
+        $arreffect[$i] = $mik -> fields['efect'];
+        $arraction[$i] = "[ <a href=\"equip.php?wypij=".$mik -> fields['id']."\">".A_DRINK."</a> |";
+	$arrpower[$i] = "(".POWER.": ".$mik -> fields['power'].")";
+	if ($mik -> fields['type'] == 'P')
+	  {
+	    $arraction[$i] = "[ <a href=\"equip.php?poison=".$mik -> fields['id']."\">".A_POISON."</a> |";
+	  }
+	elseif ($mik->fields['type'] == 'H' || $mik->fields['type'] == 'M')
+	  {
+	    $arraction[$i] .= " <a href=\"equip.php?drinkfew=".$mik->fields['id']."\">wypij kilka</a> |";
+	  }
+	$arraction[$i] .= " <a href=\"equip.php?sellpotion=".$mik->fields['id']."\">".A_SELL."</a> ".FOR_A." ".$mik->fields['cost']." ".GOLD_COINS." ]";
+	$arrid[$i] = $mik->fields['id'];
+        $mik -> MoveNext();
+        $i = $i + 1;
+    }
+    if ($i > 0) 
+    {
+        $strSellAll = "(<a href=\"equip.php?sellpotions\">sprzedaj wszystkie mikstury</a>)<br />\n";
+    }
+    else
+      {
+	$strSellAll = '';
+      }
+    $smarty -> assign ( array("Pname1" => $arrname, 
+                              "Pamount1" => $arramount, 
+                              "Peffect1" => $arreffect, 
+                              "Potionid1" => $arrid, 
+                              "Paction1" => $arraction, 
+                              "Ppower1" => $arrpower, 
+                              "Potions1" => $i,
+			      "Sellallp" => $strSellAll,
+			      "Potionssell" => "Sprzedaj wybrane mikstury",
+                              "Potions2" => POTIONS,
+                              "Amount" => AMOUNT));
+}
+$mik -> Close();
+
+/**
+ * Show pets
+ */
+$arrPets = $db->GetAll("SELECT `id`, `name`, `power`, `defense`, `gender`, `corename` FROM `core` WHERE `owner`=".$player->id);
+if ($arrPets)
+  {
+    foreach ($arrPets as &$arrPet)
+      {
+	if ($arrPet['gender'] == 'F')
+	  {
+	    $arrPet['gender'] = 'Samica';
+	  }
+	else
+	  {
+	    $arrPet['gender'] = 'Samiec';
+	  }
+	if ($arrPet['corename'] != '')
+	  {
+	    $arrPet['name'] = $arrPet['corename'].' ('.$arrPet['name'].')';
+	  }
+      }
+    $smarty->assign(array("Pets1" => 1,
+			  "Pets" => $arrPets,
+			  "Tpets" => 'Posiadane chowańce',
+			  "Pname" => 'Imię:',
+			  "Pgender" => 'Płeć:',
+			  "Ppower" => 'Siła:',
+			  "Pdefense" => 'Obrona:',
+			  "Pchname" => 'zmień imię',
+			  "Prelease" => 'uwolnij'));
+  }
+
+$smarty -> assign(array("Arramount" => ARR_AMOUNT,
+                        "Goldcoins" => GOLD_COINS,
+                        "Fora" => FOR_A));
 
 /**
 * Initialization of variables
