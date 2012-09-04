@@ -1,5 +1,7 @@
 2012-09-04  Bartek thindil Jasicki  <thindil@vallheru.net>
 
+	* BUG,bank.php: 
+	fixed sending poisoned items
 	* BUG,templates/layout1/travel.tpl:
 	fixed map
 
