@@ -56,5 +56,5 @@
 
 {if $Action == "" && ($Location != "Altara" && $Location != "Ardulith") && $Action2 == ""}
     {$Outside}<br />
-    <img src="images/mapa.jpg" usemap="#{$Gamename}" width="400" border="0" /><br />
+    <center><img src="images/mapa.gif" usemap="#{$Gamename}" border="0" /></center>
 {/if}

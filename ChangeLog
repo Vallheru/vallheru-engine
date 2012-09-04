@@ -1,3 +1,8 @@
+2012-09-04  Bartek thindil Jasicki  <thindil@vallheru.net>
+
+	* BUG,templates/layout1/travel.tpl:
+	fixed map
+
 2012-09-03  Bartek thindil Jasicki  <thindil@vallheru.net>
 
 	* BUG,jail.php: 
