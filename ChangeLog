@@ -1,3 +1,8 @@
+2012-09-05  Bartek thindil Jasicki  <thindil@vallheru.net>
+
+	* BUG,includes/head.php:
+	fixed link
+
 2012-09-04  Bartek thindil Jasicki  <thindil@vallheru.net>
 
 	* UPDATE,class/player_class.php, templates/layout1/equip.tpl, templates/equip.tpl, equip.php: 

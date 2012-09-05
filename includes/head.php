@@ -7,7 +7,7 @@
  *   @copyright            : (C) 2004,2005,2006,2007,2011,2012 Vallheru Team based on Gamers-Fusion ver 2.5
  *   @author               : thindil <thindil@vallheru.net>
  *   @version              : 1.6
- *   @since                : 03.09.2012
+ *   @since                : 05.09.2012
  *
  */
 
@@ -435,7 +435,7 @@ switch($player->location)
     if ($test -> fields['quest'] != 0) 
       {
         $qlocation = $db -> Execute("SELECT location FROM quests WHERE qid=".$test -> fields['quest']);
-	$arrLinks['location'][$qlocation -> fields['location'].'?step=quest'] = RETURN_TO;
+	$arrLinks['location'][] = '<a href="'.$qlocation -> fields['location'].'?step=quest">RETURN_TO</a>';
         $qlocation -> Close();
       }
     else
