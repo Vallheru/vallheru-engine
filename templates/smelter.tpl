@@ -1,46 +1,38 @@
 {if $Step == ""}
     {if $Smelterlevel == "0"}
         {$Nosmelter}<a href="smelter.php?step=upgrade">{$Aupgrade}</a>{$Nosmelter2}
-    {/if}
-    {if $Smelterlevel > "0"}
+    {else}
         {$Smelterinfo}<br />
-        - <a href="smelter.php?step=smelt">{$Asmelt}</a><br />
+	<ul>
+        <li><a href="smelter.php?step=smelt">{$Asmelt}</a></li>
         {if $Smelterlevel < "5"}
-            - <a href="smelter.php?step=upgrade">{$Aupgrade}</a><br />
+            <li><a href="smelter.php?step=upgrade">{$Aupgrade}</a></li>
         {/if}
+	</ul>
     {/if}
 {/if}
 
 {if $Step == "upgrade"}
-    {if $Upgrade == ""}
-        {if $Smelterlevel < "5"}
-            {$Upgradeinfo}<br />
-            <form method="post" action="smelter.php?step=upgrade&amp;upgrade=Y">
-                {$Levelinfo}<br />
-                <input type="submit" value="{$Aupgrade}" />
-            </form>
-        {/if}
-        {if $Smelterlevel == "5"}
-            {$Levelinfo}<br />
-        {/if}
-    {/if}
-    {if $Upgrade == "Y"}
-        {$Message}
-    {/if}
+    {$Upgradeinfo}<br />
+    <form method="post" action="smelter.php?step=upgrade&amp;upgrade">
+         {$Levelinfo}<br />
+         <input type="submit" value="{$Aupgrade}" />
+    </form>
 {/if}
 
 {if $Step == "smelt"}
     {$Smeltinfo}<br />
+    <ul>
     {section name=smelt1 loop=$Asmelt}
-        - <a href="smelter.php?step=smelt&amp;smelt={$Smeltaction[smelt1]}">{$Asmelt[smelt1]}</a><br />
+        <li><a href="smelter.php?step=smelt&amp;smelt={$Smeltaction[smelt1]}">{$Asmelt[smelt1]}</a></li>
     {/section}
+    </ul>
     {if $Smelt != ""}
         <br />
         <form method="post" action="smelter.php?step=smelt&amp;smelt={$Smelt}">
             <input type="submit" value="{$Asmelt2}" /> <input type="text" name="amount" size="5" value="{$Maxamount}" /> {$Smeltm} {$Youhave}
         </form>
     {/if}
-    <br /><br />{$Message}
 {/if}
 
 {if $Step != ""}
