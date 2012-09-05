@@ -52,9 +52,9 @@
 {if $Cast != ""}
     <form method="post" action="czary.php?cast={$Cast}&amp;step=items">
     <input type="submit" value="{$Cast2}" /> {$Spell23} {$Spellname} {$Ona} <select name="item">
-    {section name=spell4 loop=$Itemname}
-        <option value="{$Itemid[spell4]}">{$Itemname[spell4]} ({$Iamount}: {$Itemamount[spell4]})</option>
-    {/section}
+    {foreach $Items as $item}
+        <option value="{$item.id}">{$item.name} {$item.power}{$item.zr}{$item.szyb}{$item.wt} ({$Iamount}: {$item.amount})</option>
+    {/foreach}
     </select>
     <input type="hidden" name="spell" value="{$Spellname}" /><br />
 	</form>

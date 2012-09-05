@@ -7,7 +7,7 @@
  *   @copyright            : (C) 2004,2005,2006,2011,2012 Vallheru Team based on Gamers-Fusion ver 2.5
  *   @author               : thindil <thindil@vallheru.net>
  *   @version              : 1.6
- *   @since                : 29.08.2012
+ *   @since                : 05.09.2012
  *
  */
 
@@ -90,9 +90,7 @@ if (isset($_GET['cast']))
         message('error', YOU_BARBARIAN);
 	$blnValid = FALSE;
       }
-    $arriname = array();
-    $arriamount = array();
-    $arriid = array();
+    $arrItems = array();
     if ($blnValid)
       {
 	switch ($arrspell->fields['nazwa'])
@@ -109,15 +107,43 @@ if (isset($_GET['cast']))
 	    error('Zapomnij o tym.');
 	    break;
 	  }
-	$arritem = $db -> Execute("SELECT `name`, `id`, `amount` FROM `equipment` WHERE `owner`=".$player -> id." AND `status`='U' AND `magic`='N' AND `type`NOT IN (".$strTypes.")");
-	while (!$arritem -> EOF) 
+	$arrItems = $db->GetAll("SELECT `id`, `name`, `amount`, `power`, `szyb`, `zr`, `wt`, `maxwt`, `type` FROM `equipment` WHERE `owner`=".$player -> id." AND `status`='U' AND `magic`='N' AND `type`NOT IN (".$strTypes.")");
+	foreach ($arrItems as &$arrItem)
 	  {
-	    $arriname[] = $arritem -> fields['name'];
-	    $arriamount[] = $arritem -> fields['amount'];
-	    $arriid[] = $arritem -> fields['id'];
-	    $arritem -> MoveNext();
+	    if ($arrItem['szyb'] != 0)
+	      {
+		$arrItem['szyb'] = ' (+'.$arrItem['szyb'].' szyb) ';
+	      }
+	    else
+	      {
+		$arrItem['szyb'] = '';
+	      }
+	    if ($arrItem['zr'] != 0)
+	      {
+		$arrItem['zr'] = ' ('.($arrItem['zr'] * -1).' zr) ';
+	      }
+	    else
+	      {
+		$arrItem['zr'] = '';
+	      }
+	    if ($arrItem['type'] == 'R')
+	      {
+		$arrItem['amount'] = $arrItem['wt'];
+		$arrItem['wt'] = '';
+	      }
+	    else
+	      {
+		$arrItem['wt'] = ' ('.$arrItem['wt'].'/'.$arrItem['maxwt'].' wt) ';
+	      }
+	    if ($arrItem['power'] != 0)
+	      {
+		$arrItem['power'] = ' (+'.$arrItem['power'].') ';
+	      }
+	    else
+	      {
+		$arrItem['power'] = '';
+	      }
 	  }
-	$arritem -> Close();
       }
     if ((isset($_GET['step']) && $_GET['step'] == 'items') && $blnValid)
     {
@@ -377,9 +403,7 @@ if (isset($_GET['cast']))
     }
     $smarty -> assign(array("Spellid" => $arrspell -> fields['id'], 
         "Spellname" => $arrspell -> fields['nazwa'], 
-        "Itemname" => $arriname, 
-        "Itemamount" => $arriamount, 
-        "Itemid" => $arriid,
+        "Items" => $arrItems, 
         "Cast2" => CAST,
         "Spell23" => SPELL,
         "Ona" => ON_A,
