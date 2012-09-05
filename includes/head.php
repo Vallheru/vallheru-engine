@@ -435,7 +435,7 @@ switch($player->location)
     if ($test -> fields['quest'] != 0) 
       {
         $qlocation = $db -> Execute("SELECT location FROM quests WHERE qid=".$test -> fields['quest']);
-	$arrLinks['location'][] = '<a href="'.$qlocation -> fields['location'].'?step=quest">RETURN_TO</a>';
+	$arrLinks['location'][] = '<a href="'.$qlocation -> fields['location'].'?step=quest">'.RETURN_TO.'</a>';
         $qlocation -> Close();
       }
     else
