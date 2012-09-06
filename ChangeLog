@@ -1,3 +1,8 @@
+2012-09-06  Bartek thindil Jasicki  <thindil@vallheru.net>
+
+	* FEATURE,templates/layout1/smelter.tpl, templates/smelter.tpl, smelter.php:
+	added option to melt items in smelter
+
 2012-09-05  Bartek thindil Jasicki  <thindil@vallheru.net>
 
 	* UPDATE,templates/layout1/smelter.tpl, templates/smelter.tpl, languages/pl/smelter.php, smelter.php: 

@@ -128,6 +128,178 @@ if (isset($_GET['step']))
       }
 
     /**
+     * Melting items
+     */
+    elseif ($_GET['step'] == 'smelt2')
+      {
+	if (!$objSmelter -> fields['level'])
+	  {
+	    error("Nie możesz przetapiać przedmiotów, ponieważ nie masz rozbudowanej huty.");
+	  }
+	$arrMaterials = array('miedzi', 'brązu', 'mosiądzu', 'żelaza', 'stali');
+	//Melt item
+	if (isset($_GET['smelt']))
+	  {
+	    checkvalue($_POST['item']);
+	    $blnValid = TRUE;
+	    $objItem = $db->Execute("SELECT `id`, `name`, `wt`, `maxwt`, `amount`, `minlev` FROM `equipment` WHERE `id`=".$_POST['item']." AND `owner`=".$player->id." AND `status`='U' AND `type` IN ('W', 'A', 'H', 'L', 'S', 'E')");
+	    if (!$objItem->fields['id'])
+	      {
+		message('error', 'Nie ma takiego przedmiotu.');
+		$blnValid = FALSE;
+	      }
+	    if ($objItem->fields['wt'] < $objItem->fields['maxwt'])
+	      {
+		message('error', 'Nie możesz przetapiać uszkodzonych przemiotów.');
+		$blnValid = FALSE;
+	      }
+	    if (!isset($_POST['all']))
+	      {
+		checkvalue($_POST['amount']);
+		if ($_POST['amount'] > $objItem->fields['amount'])
+		  {
+		    message('error', 'Nie możesz przetopić więcej przedmiotów niż posiadasz.');
+		    $blnValid = FALSE;
+		  }
+	      }
+	    else
+	      {
+		$_POST['amount'] = $objItem->fields['amount'];
+	      }
+	    $arrTmp = explode(' ', $objItem->fields['name']);
+	    $intKey = array_search(end($arrTmp), $arrMaterials);
+	    if (($intKey + 1) > $objSmelter->fields['level'])
+	      {
+		message('error', 'Musisz rozbudować hutę aby móc przetapiać ten przedmiot.');
+		$blnValid = FALSE;
+	      }
+	    if ($blnValid)
+	      {
+		$objPlans = $db->Execute("SELECT `name`, `amount` FROM `smith` WHERE `owner`=0") or die($db->ErrorMsg());
+		$intMaxamount = 0;
+		while (!$objPlans->EOF)
+		  {
+		    if (strpos($objItem->fields['name'], $objPlans->fields['name']) !== FALSE)
+		      {
+			$intMaxamount = ceil($objPlans->fields['amount'] * 0.75);
+			break;
+		      }
+		    $objPlans->MoveNext();
+		  }
+		$objPlans->Close();
+		if ($intMaxamount == 0)
+		  {
+		    $objPlans = $db->Execute("SELECT `name`, `amount`, `level` FROM `plans`");
+		    while (!$objPlans->EOF)
+		      {
+			if (strpos($objItem->fields['name'], $objPlans->fields['name']) !== FALSE && $objPlans->fields['level'] == $objItem->fields['minlev'])
+			  {
+			    $intMaxamount = ceil($objPlans->fields['amount'] * 0.75);
+			    break;
+			  }
+			$objPlans->MoveNext();
+		      }
+		    $objPlans->Close();
+		  }
+		if ($intMaxamount == 0)
+		  {
+		    message('error', 'Nie można przetapiać tego przedmiotu.');
+		    $blnValid = FALSE;
+		  }
+		$objCoal = $db->Execute("SELECT `coal` FROM `minerals` WHERE `owner`=".$player->id);
+		$intCoalneed = $intMaxamount * $_POST['amount'];
+		if ($objCoal->fields['coal'] < $intCoalneed)
+		  {
+		    message('error', 'Potrzebujesz '.$intCoalneed.' sztuk węgla aby przetopić ten przedmiot.');
+		    $blnValid = FALSE;
+		  }
+		$objCoal->Close();
+		$arrBillets = array(1, 2, 3, 5, 8);
+		$intEnergy = (($arrBillets[$intKey] / 10) * $intMaxamount) * $_POST['amount'];
+		$intEnergy = round($intEnergy, 2);
+		if ($player->energy < $intEnergy)
+		  {
+		    message('error', 'Potrzebujesz '.$intEnergy.' energii aby przetopić wszystkie wybrane przedmioty.');
+		    $blnValid = FALSE;
+		  }
+		//Start melting
+		if ($blnValid)
+		  {
+		    $player->curskills(array('metallurgy'), TRUE, TRUE);
+		    $intDiff = 100 * $arrBillets[$intKey];
+		    $intAmount = 0;
+		    for ($i = 0; $i < $_POST['amount']; $i++)
+		      {
+			$intRoll = rand(1, $player->metallurgy * 100);
+			$intRoll2 = rand(1, $intDiff);
+			if ($intRoll > $intRoll2)
+			  {
+			    $intAmount += $intMaxamount;
+			  }
+			else
+			  {
+			    $fltRand = rand(0, 50) / 100;
+			    $intAmount += ($intMaxamount * $fltRand);
+			  }
+		      }
+		    $fltAbility = round(($intAmount / 100)  + ($_POST['amount'] * 0.01), 2);
+		    $intExp = $intAmount * ($arrBillets[$intKey] / 2);
+		    if ($player->clas == 'Rzemieślnik')
+		      {
+			$fltAbility = $fltAbility * 2;
+			$intExp = $intExp * 2;
+		      }
+		    require_once('includes/checkexp.php');
+		    checkexp($player->exp, $intExp, $player->level, $player->race, $player->user, $player->id, 0, 0, $player->id, 'metallurgy', $fltAbility);
+		    $db -> Execute("UPDATE `players` SET `energy`=`energy`-".$intEnergy." WHERE `id`=".$player -> id);
+		    $player->energy -= $intEnergy;
+		    if ($_POST['amount'] == $objItem->fields['amount'])
+		      {
+			$db->Execute("DELETE FROM `equipment` WHERE `id`=".$objItem->fields['id']);
+		      }
+		    else
+		      {
+			$db->Execute("UPDATE `equipment` SET `amount`=`amount`-".$_POST['amount']." WHERE `id`=".$objItem->fields['id']);
+		      }
+		    $arrAction = array('copper', 'bronze', 'brass', 'iron', 'steel');
+		    $db->Execute("UPDATE `minerals` SET `coal`=`coal`-".$intCoalneed.", `".$arrAction[$intKey]."`=`".$arrAction[$intKey]."`+".$intAmount." WHERE `owner`=".$player->id);
+		    message('success', 'Przetopiłeś '.$_POST['amount'].' sztuk '.$objItem->fields['name'].' i uzyskałeś '.$intAmount.' sztabek '.$arrMaterials[$intKey].', '.$fltAbility.' do umiejętności Hutnictwo oraz '.$intExp.' punktów doświadczenia. Zużyłeś na to '.$intEnergy.' energii oraz '.$intCoalneed.' sztuk węgla.');
+		  }
+	      }
+	  }
+	//Main menu
+	$objItems = $db->Execute("SELECT `id`, `name`, `power`, `zr`, `szyb`, `amount` FROM `equipment` WHERE `owner`=".$player->id." AND `status`='U' AND `type` IN ('W', 'A', 'H', 'L', 'S', 'E') AND `wt`=`maxwt`");
+	$arrItems = array();
+	while (!$objItems->EOF)
+	  {
+	    $arrTmp = explode(' ', $objItems->fields['name']);
+	    if ((array_search(end($arrTmp), $arrMaterials) + 1) > $objSmelter->fields['level'])
+	      {
+		$objItems->MoveNext();
+		continue;
+	      }
+	    $arrItems[$objItems->fields['id']] = $objItems->fields['name'].' (+'.$objItems->fields['power'].')';
+	    if ($objItems->fields['zr'] != 0)
+	      {
+		$arrItems[$objItems->fields['id']] .= ' ('.($objItems->fields['zr'] * -1).' zr)';
+	      }
+	    if ($objItems->fields['szyb'] != 0)
+	      {
+		$arrItems[$objItems->fields['id']] .= ' ('.$objItems->fields['szyb'].' szyb)';
+	      }
+	    $arrItems[$objItems->fields['id']] .= ' (ilość: '.$objItems->fields['amount'].')';
+	    $objItems->MoveNext();
+	  }
+	$objItems->Close();
+	$smarty->assign(array('Smeltinfo' => 'Tutaj możesz przetapiać posiadane przedmioty na sztabki. Aby móc przetapiać przedmioty wykonane z lepszych materiałów, musisz mieć odpowiednio rozbudowaną hutę. Maksymalnie możesz odzyskać 3/4 sztabek, użytych do wykonania przedmiotu. Koszt energii przetopienia przedmiotu zależy od jego poziomu oraz od materiałów z których został wykonany. Ilość odzyskanych sztabek zależy od poziomu twojej umiejętności Hutnictwo. Do każdego przetapiania potrzebujesz również nieco węgla.',
+			      'Asmelt3' => 'Przetop',
+			      'Tsmelt' => 'na sztabki.',
+			      'Tamount' => 'sztuk',
+			      'Tall' => 'wszystkie posiadane',
+			      'Ioptions' => $arrItems));
+      }
+
+    /**
      * Smelt ore
      */
     elseif ($_GET['step'] == 'smelt')
@@ -320,7 +492,8 @@ if (!isset($_GET['step']))
         $smarty -> assign(array("Smelterinfo" => SMELTER_INFO,
                                 "Smelterlevel" => $objSmelter -> fields['level'],
                                 "Aupgrade" => A_UPGRADE2,
-                                "Asmelt" => A_SMELT));
+                                "Asmelt" => A_SMELT,
+				"Asmelt2" => 'Przetop przedmiot'));
       }
     $_GET['step'] = '';
   }
