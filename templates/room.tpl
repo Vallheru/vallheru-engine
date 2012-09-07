@@ -80,6 +80,15 @@
 	<form method="post" action="room.php?step=admin&amp;action=npc">
 	    <input type="submit" value="{$Aadd}" /> {$Tnpc} <input type="text" name="npc" />
 	</form><br />
+	{if $Dnpc == "Y"}
+	    <form method="post" action="room.php?step=admin&amp;action=dnpc">
+	        <input type="submit" value="{$Aremove}" /> {$Tnpc2} <select name="npc">
+		    {foreach $Noptions as $npc}
+		        <option value="{$npc}">{$npc}</option>
+		    {/foreach}
+		</select>
+	    </form><br />
+	{/if}
 	{$Trent}<br />
 	<form method="post" action="room.php?step=admin&amp;action=rent">
 	    <input type="submit" value="{$Arent}" /> {$Trent2} {html_options name=rent options=$Roptions} {$Trent3}

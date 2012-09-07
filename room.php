@@ -7,7 +7,7 @@
  *   @copyright            : (C) 2012 Vallheru Team based on Gamers-Fusion ver 2.5
  *   @author               : thindil <thindil@vallheru.net>
  *   @version              : 1.6
- *   @since                : 17.08.2012
+ *   @since                : 07.09.2012
  *
  */
 
@@ -63,11 +63,13 @@ if ($player->id == $objRoom->fields['owner'] || in_array($player->id, $arrOwners
       {
 	$arrNPC = explode(';', $objRoom->fields['npcs']);
 	$arrTalk = array_merge(array('Ty', 'Opis'), $arrNPC);
+	$strDNPC = 'Y';
       }
     else
       {
 	$arrTalk = array('Ty', 'Opis');
 	$arrNPC = array();
+	$strDNPC = 'N';
       }
     $arrRoptions = array('1' => '1 dzień za 100',
 			 '3' => '3 dni za 300',
@@ -103,7 +105,10 @@ if ($player->id == $objRoom->fields['owner'] || in_array($player->id, $arrOwners
 			  'Amake' => 'Ustaw',
 			  'Tas' => 'jako',
 			  'Toptions' => $arrTalk,
+			  'Dnpc' => $strDNPC,
+			  'Noptions' => $arrNPC,
 			  'Tnpc' => 'imię NPC, które będziesz używał',
+			  'Tnpc2' => 'NPC o imieniu',
 			  'Tcolor' => 'kolor graczowi: ',
 			  'Arent' => 'Przedłuż',
 			  'Trent2' => 'wynajem pokoju o ',
@@ -430,6 +435,24 @@ if (isset($_GET['step']))
 		message('success', 'Dodałeś(aś) NPC do pokoju', '(<a href="room.php">Odśwież</a>)');
 	      }
 	    $objTest->Close();
+	    break;
+	    //Delete npc from room
+	  case 'dnpc':
+	    $_POST['npc'] = str_replace("'","",strip_tags($_POST['npc']));
+	    $_POST['npc'] = str_replace("&nbsp;", "", $_POST['npc']);
+	    $_POST['npc'] = trim($_POST['npc']);
+	    $intKey = array_search($_POST['npc'], $arrNPC);
+	    if ($intKey === FALSE)
+	      {
+		message('error', 'Nie ma takiego NPC w pokoju.');
+	      }
+	    else
+	      {
+		unset($arrNPC[$intKey]);
+		$strNPC = implode(';', $arrNPC);
+		$db->Execute("UPDATE `rooms` SET `npcs`='".$strNPC."' WHERE `id`=".$player->room);
+		message('success', 'Usunąłeś(aś) NPC do pokoju', '(<a href="room.php">Odśwież</a>)');
+	      }
 	    break;
 	    //Add/remove admins to rooms
 	  case 'admin':

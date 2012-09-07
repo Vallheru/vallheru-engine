@@ -1,5 +1,7 @@
 2012-09-07  Bartek thindil Jasicki  <thindil@vallheru.net>
 
+	* FEATURE,templates/layout1/room.tpl, templates/room.tpl, room.php: 
+	added option to remove NPC from room
 	* UPDATE,templates/layout1/view.tpl, templates/view.tpl, view.php: 
 	small redesign in show avatar
 	* BUG,templates/layout1/library.tpl, templates/library.tpl, bank.php: 
