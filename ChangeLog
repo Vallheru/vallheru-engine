@@ -1,5 +1,7 @@
 2012-09-07  Bartek thindil Jasicki  <thindil@vallheru.net>
 
+	* BUG,templates/layout1/library.tpl, templates/library.tpl, bank.php: 
+	fixed notices
 	* BUG,equip.php: 
 	fixed agility info for helmets
 	* BUG,smelter.php:

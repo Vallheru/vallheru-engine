@@ -21,11 +21,6 @@
     <script src="js/editor.js"></script>
     {$Addinfo}<br />
     <form method="post" action="library.php?step=add&amp;step2=add" name="add">
-        {$Tlang}: <select name="lang">
-            {section name=library loop=$Llang}
-                <option value="{$Llang[library]}">{$Llang[library]}</option>
-            {/section}
-        </select><br />
         {$Ttype2}: <select name="type">
             {section name=library2 loop=$Ttype}
                 <option value="{$Ttype[library2]}">{$Ttype[library2]}</option>

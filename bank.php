@@ -9,7 +9,7 @@
  *   @author               : yeskov <yeskov@users.sourceforge.net>
  *   @author               : eyescream <tduda@users.sourceforge.net>
  *   @version              : 1.6
- *   @since                : 04.09.2012
+ *   @since                : 07.09.2012
  *
  */
 
@@ -740,16 +740,19 @@ if (isset($_GET['action']))
 	    message('error', "Podaj ile punktów kradzieży chcesz przeznaczyć na próbę.");
 	    $blnValid = FALSE;
 	  }
-	checkvalue($_POST['tp']);
-	if ($_POST['tp'] > 12)
+	else
 	  {
-	    message('error', "Nie możesz przeznaczyć aż tylu punktów kradzieży (maksymalnie 12).");
-	    $blnValid = FALSE;
-	  }
-	if ($_POST['tp'] > $player->crime)
-	  {
-	    message('error', "Nie masz tylu punktów kradzieży!");
-	    $blnValid = FALSE;
+	    checkvalue($_POST['tp']);
+	    if ($_POST['tp'] > 12)
+	      {
+		message('error', "Nie możesz przeznaczyć aż tylu punktów kradzieży (maksymalnie 12).");
+		$blnValid = FALSE;
+	      }
+	    if ($_POST['tp'] > $player->crime)
+	      {
+		message('error', "Nie masz tylu punktów kradzieży!");
+		$blnValid = FALSE;
+	      }
 	  }
 	if ($player->hp <= 0)
 	  {
