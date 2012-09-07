@@ -7,7 +7,7 @@
  *   @copyright            : (C) 2004,2005,2006,2011,2012 Vallheru Team based on Gamers-Fusion ver 2.5
  *   @author               : thindil <thindil@vallheru.net>
  *   @version              : 1.6
- *   @since                : 05.09.2012
+ *   @since                : 07.09.2012
  *
  */
 
@@ -239,7 +239,7 @@ if (isset($_GET['step']))
 			else
 			  {
 			    $fltRand = rand(0, 50) / 100;
-			    $intAmount += ($intMaxamount * $fltRand);
+			    $intAmount += floor($intMaxamount * $fltRand);
 			  }
 		      }
 		    $fltAbility = round(($intAmount / 100)  + ($_POST['amount'] * 0.01), 2);
