@@ -8,7 +8,7 @@
  *   @author               : thindil <thindil@vallheru.net>
  *   @author               : eyescream <tduda@users.sourceforge.net>
  *   @version              : 1.6
- *   @since                : 22.08.2012
+ *   @since                : 07.09.2012
  *
  */
 
@@ -125,7 +125,9 @@ if (is_file($plik))
 {
     require_once('includes/avatars.php');
     $arrImage = scaleavatar($plik);
-    $smarty -> assign ("Avatar", "<center><img src=\"".$plik."\" width=\"".$arrImage[0]."\" height=\"".$arrImage[1]."\" /></center>");
+    $smarty->assign(array('Avatar' => $plik,
+			  'Awidth' => $arrImage[0],
+			  'Aheight' => $arrImage[1]));
 }
 if (!empty($view -> gg)) 
 {

@@ -1,5 +1,7 @@
 2012-09-07  Bartek thindil Jasicki  <thindil@vallheru.net>
 
+	* UPDATE,templates/layout1/view.tpl, templates/view.tpl, view.php: 
+	small redesign in show avatar
 	* BUG,templates/layout1/library.tpl, templates/library.tpl, bank.php: 
 	fixed notices
 	* BUG,equip.php: 

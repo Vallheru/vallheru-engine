@@ -1,6 +1,8 @@
 {if $Logs == 'N'}
     <center><b><u>{$User}</u></b> ({$Id})</center><br />
-    {$Avatar}
+    {if $Avatar != ""}
+        <center><img src="{$Avatar}" width="{$Awidth}" height="{$Aheight}" border="1px" class="avatar" /></center>
+    {/if}
     {$IP}<br />
     {$GG}
     <b>{$Tfreezed}</b>
