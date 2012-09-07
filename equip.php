@@ -7,7 +7,7 @@
  *   @copyright            : (C) 2004,2005,2006,2007,2011,2012 Vallheru Team based on Gamers-Fusion ver 2.5
  *   @author               : thindil <thindil@vallheru.net>
  *   @version              : 1.6
- *   @since                : 04.09.2012
+ *   @since                : 07.09.2012
  *
  */
 
@@ -654,32 +654,26 @@ if ($player->equip[1][0])
     $smarty -> assign ("Arrows", "");
 }
 
+//Helmet
 if ($player->equip[2][0]) 
-{
-    switch ($player->equip[2][10])
+  {
+    $agility = '';
+    if ($player->equip[2][5] < 0) 
       {
-      case 'E':
-	$player->equip[2][1] .= ' (Żywioł: Ziemia)';
-	break;
-      case 'W':
-	$player->equip[2][1] .= ' (Żywioł: Woda)';
-	break;
-      case 'F':
-	$player->equip[2][1] .= ' (Żywioł: Ogień)';
-	break;
-      case 'A':
-	$player->equip[2][1] .= ' (Żywioł: Powietrze)';
-	break;
-      default:
-	break;
+	$player->equip[2][5] = str_replace("-","",$player->equip[2][5]);
+	$agility = "(+".$player->equip[2][5]." ".EQUIP_AGI.")";
+      } 
+    elseif ($player->equip[2][5] > 0) 
+      {
+	$agility = "(-".$player->equip[2][5]." ".EQUIP_AGI.")";
       }
     $player->equip[2][1] = checkmagic($player->equip[2][1], $player->equip[2][10]);
-    $smarty -> assign ("Helmet", "<input type=\"checkbox\" name=\"".$player->equip[2][0]."\" /><b>".HELMET.':</b> <span title="Poziom: '.$player->equip[2][4].'">'.$player->equip[2][1]." (+".$player->equip[2][2].") (".$player->equip[2][6]."/".$player->equip[2][9]." ".DURABILITY.")</span> [<a href=\"equip.php?schowaj=".$player->equip[2][0]."\">".WEAR_OFF."</a>]<br />\n");
-} 
-    else 
-{
-    $smarty -> assign ("Helmet", "<b>".HELMET.":</b> ".EMPTY_SLOT."<br />\n");
-}
+    $smarty -> assign ("Helmet", "<input type=\"checkbox\" name=\"".$player->equip[2][0]."\" /><b>".HELMET.':</b> <span title="Poziom: '.$player->equip[2][4].'">'.$player->equip[2][1]." (+".$player->equip[2][2].") ".$agility." (".$player->equip[2][6]."/".$player->equip[2][9]." ".DURABILITY.")</span> [<a href=\"equip.php?schowaj=".$player->equip[2][0]."\">".WEAR_OFF."</a>]<br />\n");
+  } 
+ else 
+   {
+     $smarty -> assign ("Helmet", "<b>".HELMET.":</b> ".EMPTY_SLOT."<br />\n");
+   }
 
 if ($player->equip[3][0]) 
   {

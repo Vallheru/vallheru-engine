@@ -1,5 +1,7 @@
 2012-09-07  Bartek thindil Jasicki  <thindil@vallheru.net>
 
+	* BUG,equip.php: 
+	fixed agility info for helmets
 	* BUG,smelter.php:
 	fixed amount of billets from melting
 
