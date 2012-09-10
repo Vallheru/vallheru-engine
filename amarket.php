@@ -8,7 +8,7 @@
  *   @author               : thindil <thindil@vallheru.net>
  *   @author               : eyescream <tduda@users.sourceforge.net>
  *   @version              : 1.6
- *   @since                : 23.05.2012
+ *   @since                : 10.09.2012
  *
  */
 
@@ -276,6 +276,7 @@ if (isset($_GET['view']))
 				"Tpage" => $page,
 				"Fcost" => $arrFcost,
 				"Aorder" => $_GET['order'],
+				"Mlist" => $_GET['lista'],
 				"Aorder2" => $strOrder,
 				"Fpage" => "Idź do strony:",
 				"Tastral" => ASTRAL,
