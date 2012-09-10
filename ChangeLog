@@ -1,3 +1,8 @@
+2012-09-10  Bartek thindil Jasicki  <thindil@vallheru.net>
+
+	* BUG,equip.php:
+	fixed fill quiver
+
 2012-09-07  Bartek thindil Jasicki  <thindil@vallheru.net>
 
 	* FEATURE,templates/layout1/room.tpl, templates/room.tpl, room.php: 
