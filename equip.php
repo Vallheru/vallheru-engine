@@ -1092,7 +1092,7 @@ if (isset($_GET['sprzedaj']))
     {
         error (NO_ITEMS2);
     }
-    $arrType = array(ARMORS, WEAPONS, HELMETS, LEGS2, ARROWS2, CAPES, STAFFS, SHIELDS, RINGS, 'łupy', 'przedmioty do zadań', 'narzędzia');
+    $arrType = array(ARMORS, WEAPONS, HELMETS, LEGS2, ARROWS2, CAPES, STAFFS, SHIELDS, RINGS, 'łupy', 'przedmioty do zadań', 'narzędzia', 'plany');
     $intKey = array_search($_GET['sprzedaj'], $arrSell);
     $typ = $arrType[$intKey];
     $zysk = 0;

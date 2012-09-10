@@ -1,5 +1,7 @@
 2012-09-10  Bartek thindil Jasicki  <thindil@vallheru.net>
 
+	* BUG,equip.php: 
+	fixed selling plans
 	* BUG,amarket.php: 
 	fixed notice
 	* BUG,kowal.php: 
