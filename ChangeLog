@@ -1,5 +1,7 @@
 2012-09-10  Bartek thindil Jasicki  <thindil@vallheru.net>
 
+	* BUG,kowal.php: 
+	fixed making elite items
 	* BUG,equip.php:
 	fixed fill quiver
 

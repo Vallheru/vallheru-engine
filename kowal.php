@@ -7,7 +7,7 @@
  *   @copyright            : (C) 2004,2005,2006,2011,2012 Vallheru Team based on Gamers-Fusion ver 2.5
  *   @author               : thindil <thindil@vallheru.net>
  *   @version              : 1.6
- *   @since                : 27.08.2012
+ *   @since                : 10.09.2012
  *
  */
 
@@ -1169,11 +1169,11 @@ if (isset ($_GET['kowal']) && $_GET['kowal'] == 'elite')
 		$arrRepair = array(1, 4, 16, 64, 256);
 		if ($objSmith->fields['type'] == 'W' || $objSmith->fields['type'] == 'A')
 		  {
-		    $intRepaircost = $arrItem['level'] * $arrRepair[$intKey] * 2;
+		    $intRepaircost = $objSmith->fields['level'] * $arrRepair[$intKey] * 2;
 		  }
 		else
 		  {
-		    $intRepaircost = $arrItem['level'] * $arrRepair[$intKey] * 1;
+		    $intRepaircost = $objSmith->fields['level'] * $arrRepair[$intKey] * 1;
 		  }
 		additem($objSmith->fields['type'], $strName, $intMaxdur, $intPower, $intAgility, $intCost, $player->id, $objSmith->fields['level'], $intRepaircost, $objSmith->fields['twohand']);
                 $smarty -> assign ("Message", YOU_MAKE.$strName."(+ ".$intPower.") (".($intAgility * -1)." zr) (".$intMaxdur."/".$intMaxdur.")".AND_GAIN2.$intGainexp.AND_EXP2.$intAbility.IN_SMITH);
