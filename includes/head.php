@@ -7,7 +7,7 @@
  *   @copyright            : (C) 2004,2005,2006,2007,2011,2012 Vallheru Team based on Gamers-Fusion ver 2.5
  *   @author               : thindil <thindil@vallheru.net>
  *   @version              : 1.6
- *   @since                : 05.09.2012
+ *   @since                : 11.09.2012
  *
  */
 
@@ -419,7 +419,15 @@ switch($player->location)
       }
     else
       {
-	$strHealneed = '<a href="hospital.php?action=heal">'.$healneed.' sz</a>';
+	if ($player->hp == 0)
+	  {
+	    $strHospital = 'ressurect';
+	  }
+	else
+	  {
+	    $strHospital = 'heal';
+	  }
+	$strHealneed = '<a href="hospital.php?action='.$strHospital.'">'.$healneed.' sz</a>';
       }
     $arrLinks['location'] = array('<a href="city.php">'.CITY.'</a>',
 				  '<a href="battle.php">Arena Walk</a>',

@@ -1,3 +1,8 @@
+2012-09-11  Bartek thindil Jasicki  <thindil@vallheru.net>
+
+	* BUG,includes/head.php:
+	fixed link to heal/ressurect
+
 2012-09-10  Bartek thindil Jasicki  <thindil@vallheru.net>
 
 	* BUG,equip.php: 
