@@ -1047,7 +1047,7 @@ if (isset ($_GET['kowal']) && $_GET['kowal'] == 'elite')
 		    $arrTmp = explode(";", $objLoot->fields['lootnames']);
 		    if ($_GET['type'] == 'A' || $_GET['type'] == 'W')
 		      {
-			$arrLoot[] = $arrTmp[0].":8 ".$arrTmp[1].":4 ".$arrTmp[2].":2 ".$arrTmp[3].":1";
+			$arrLoot[] = $arrTmp[0].":8 ".$arrTmp[1].":4 ".$arrTmp[2].":3 ".$arrTmp[3].":1";
 		      }
 		    else
 		      {
