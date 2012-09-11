@@ -1,5 +1,7 @@
 2012-09-11  Bartek thindil Jasicki  <thindil@vallheru.net>
 
+	* BUG,kowal.php: 
+	fixed making elite items
 	* BUG,includes/head.php:
 	fixed link to heal/ressurect
 
