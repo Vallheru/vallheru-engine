@@ -576,7 +576,7 @@ if (isset($_GET['kowal']) && ($_GET['kowal'] == 'kuznia' || $_GET['kowal'] == 'e
 	checkvalue($_GET['konty']);
 	checkvalue($_POST['razy']);
         $objWork = $db -> Execute("SELECT * FROM `smith_work` WHERE `id`=".$_GET['konty']);
-        $objSmith = $db -> Execute("SELECT `name`, `type`, `cost`, `amount`, `level`, `twohand` FROM `smith` WHERE `owner`=".$player -> id." AND `name`='".$objWork -> fields['name']."'");
+        $objSmith = $db -> Execute("SELECT `name`, `type`, `cost`, `amount`, `level`, `twohand`, `elitetype` FROM `smith` WHERE `owner`=".$player -> id." AND `name`='".$objWork -> fields['name']."'");
         if ($player -> energy < $_POST['razy']) 
 	  {
             error (NO_ENERGY);
