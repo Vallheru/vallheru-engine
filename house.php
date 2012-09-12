@@ -8,7 +8,7 @@
  *   @author               : thindil <thindil@vallheru.net>
  *   @author               : eyescream <tduda@users.sourceforge.net>
  *   @version              : 1.6
- *   @since                : 01.09.2012
+ *   @since                : 12.09.2012
  *
  */
 
@@ -74,397 +74,486 @@ $house = $db -> Execute("SELECT * FROM houses WHERE location='".$player -> locat
 * Assign variables to template
 */
 $smarty -> assign(array("Message" => '', 
-    "Bedroomlink" => '', 
-    "Locatorlink" => '', 
-    "Buildbed" => '', 
-    "Buildwardrobe" => '', 
-    "Upgrade" => '', 
-    "Wardrobelink" => '', 
-    "Buildhouse" => ''));
+			"Bedroomlink" => '', 
+			"Locatorlink" => '', 
+			"Buildbed" => '', 
+			"Buildwardrobe" => '', 
+			"Upgrade" => '', 
+			"Wardrobelink" => '', 
+			"Buildhouse" => ''));
 
-/**
-* Buy areas for house
-*/
-if (isset ($_GET['action']) && $_GET['action'] == 'land') 
-{
-    if (!$house -> fields['id']) 
-    {
-        $cost = COST1;
-    } 
+if (isset($_GET['action']))
+  {
+    /**
+     * Buy areas for house
+     */
+    if ($_GET['action'] == 'land') 
+      {
+	if (!$house -> fields['id']) 
+	  {
+	    $cost = COST1;
+	  } 
         else 
-    {
-        $cost1 = $house -> fields['size'] * 1000;
-        $cost = $cost1.GOLD_COINS;
-    }
-    $smarty -> assign (array("Cost" => $cost,
-        "Landinfo" => LAND_INFO,
-        "Buya" => BUY_A,
-        "Aback" => A_BACK));
-    if (isset ($_GET['step']) && $_GET['step'] == 'buy') 
-    {
-        if (!$house -> fields['id']) 
-        {
-            if ($player -> platinum < 20) 
-            {
-                error (NO_MITH);
-            }
-            $db -> Execute("INSERT INTO houses (owner, location) VALUES(".$player -> id.", '".$player -> location."')") or error ("Nie mogÄ dodaÄ ziemi!");
-            $db -> Execute("UPDATE players SET platinum=platinum-20 WHERE id=".$player -> id);
-            error (BUY_AREA."<a href=house.php?action=build>".WORKSHOP."</a>".FOR_A);
-        } 
-            else 
-        {
-            if ($player -> credits < $cost1) 
-            {
-                error (NO_GOLD);
-            }
-            $db -> Execute("UPDATE houses SET size=size+1 WHERE id=".$house -> fields['id']);
-            $db -> Execute("UPDATE players SET credits=credits-".$cost1." WHERE id=".$player -> id);
-            error (BUY_AREA2);
-        }
-    }
-}
-
-/**
-* Builder workshop
-*/
-if(isset ($_GET['action']) && $_GET['action'] == 'build') 
-{
-    $smarty -> assign(array("Points" => $house -> fields['points'],
-                            "Buildinfo" => BUILD_INFO,
-                            "Buildinfo2" => BUILD_INFO2,
-                            "Aback" => A_BACK));
-    if ($house -> fields['points'] == 0) 
-    {
-        error (NO_POINTS);
-    }
-    if ($house -> fields['build'] == 0) 
-    {
-        $smarty -> assign ("Buildhouse", "<a href=house.php?action=build&amp;step=new>".B_HOUSE);
-    } 
-        else 
-    {
-        if ($house -> fields['build'] < $house -> fields['size'] && $house -> fields['points'] > 9) 
-        {
-            $cost = 1000 * $house -> fields['build'];
-            $smarty -> assign ("Buildhouse", "<a href=house.php?action=build&amp;step=add>".U_HOUSE.$cost.GOLD_COINS."<br />");
-        }
-        if ($house -> fields['used'] < $house -> fields['build'] && $house -> fields['points'] > 9) 
-        {
-            if ($house -> fields['bedroom'] == 'N') 
-            {
-                $smarty -> assign ("Buildbed", "<a href=house.php?action=build&amp;step=bedroom>".B_BEDROOM);
-            }
-            $cost = $house -> fields['wardrobe'] * 1000;
-            if ($cost == 0) 
-            {
-                $cost = 1000;
-            }
-            $smarty -> assign ("Buildwardrobe", "<a href=house.php?action=build&amp;step=wardrobe>".B_WARDROBE.$cost.GOLD_COINS."<br />");
-        }
-        if ($house -> fields['points'] > 0) 
-        {
-            $smarty -> assign ("Upgrade", "<a href=house.php?action=build&amp;step=upgrade>".HOUSE_B."</a><br />");
-        }
-    }
-    if (isset ($_GET['step']) && $_GET['step'] == 'new')
-    {
-        if (!$house -> fields['id']) 
-        {
-            error (NO_AREA);
-        }
-        if ($house -> fields['build'] > 0) 
-        {
-            error (YOU_HAVE);
-        }
-        if ($player -> credits < 1000) 
-        {
-            error (NO_GOLD);
-        }
-        if ($house -> fields['points'] < 10) 
-        {
-            error (NO_POINTS);
-        }
-        $smarty -> assign(array("Hname" => H_NAME,
-            "Abuild" => A_BUILD));
-        if (isset ($_GET['step2']) && $_GET['step2'] == 'make') 
-        {
-	    if (!isset($_POST['name']))
+	  {
+	    $cost1 = $house -> fields['size'] * 1000;
+	    $cost = $cost1.GOLD_COINS;
+	  }
+	if (isset ($_GET['step']) && $_GET['step'] == 'buy') 
+	  {
+	    if (!$house -> fields['id']) 
 	      {
-		$_POST['name'] = '';
+		if ($player -> platinum < 20) 
+		  {
+		    message('error', NO_MITH);
+		  }
+		else
+		  {
+		    $db -> Execute("INSERT INTO `houses` (`owner`, `location`) VALUES(".$player -> id.", '".$player -> location."')") or error ("Nie mogę dodać ziemii!");
+		    $db -> Execute("UPDATE `players` SET `platinum`=`platinum`-20 WHERE `id`=".$player -> id);
+		    $house = $db->Execute("SELECT * FROM `houses` WHERE `owner`=".$player->id." AND `location`='".$player->location."'");
+		    message('success', BUY_AREA."<a href=house.php?action=build>".WORKSHOP."</a>".FOR_A);
+		  }
+	      } 
+            else 
+	      {
+		if ($player -> credits < $cost1) 
+		  {
+		    message('error', NO_GOLD);
+		  }
+		else
+		  {
+		    $db -> Execute("UPDATE `houses` SET `size`=`size`+1 WHERE `id`=".$house -> fields['id']);
+		    $db -> Execute("UPDATE `players` SET `credits`=`credits`-".$cost1." WHERE `id`=".$player -> id);
+		    $house->fields['size'] ++;
+		    message('success', BUY_AREA2);
+		  }
 	      }
-            $_POST['name'] = strip_tags($_POST['name']);
-            $strName = $db -> qstr($_POST['name'], get_magic_quotes_gpc());
-            $db -> Execute("UPDATE `houses` SET `name`=".$strName.", `build`=`build`+1, `points`=`points`-10 WHERE `id`=".$house -> fields['id']);
-            $db -> Execute("UPDATE `players` SET `credits`=`credits`-1000 WHERE `id`=".$player -> id);
-            error (YOU_BUILD);
-        }
-    }
-    if (isset ($_GET['step']) && $_GET['step'] == 'add') 
-    {
-        if (!$house -> fields['id']) {
-            error (NO_AREA);
-        }
-        if ($house -> fields['size'] == $house -> fields['build']) 
-        {
-            error (NO_FIELDS);
-        }
-        $cost = 1000 * $house -> fields['build'];
-        if ($player -> credits < $cost) 
-        {
-            error (NO_GOLD);
-        }
-        if ($house -> fields['points'] < 10) 
-        {
-            error (NO_POINTS);
-        }
-        $house -> fields['value'] = $house -> fields['value'] - 10;
-        if ($house -> fields['value'] < 1) 
-        {
-            $house -> fields['value'] = 1;
-        }
-        $db -> Execute("UPDATE houses SET build=build+1, points=points-10, value=".$house -> fields['value']." WHERE id=".$house -> fields['id']);
-        $db -> Execute("UPDATE players SET credits=credits-".$cost." WHERE id=".$player -> id);
-        error (YOU_UPGRADE);
-    }
-    if (isset ($_GET['step']) && $_GET['step'] == 'bedroom') 
-    {
-        if (!$house -> fields['id']) 
-        {
-            error (NO_HOUSE);
-        }
-        if ($house -> fields['used'] == $house -> fields['build']) 
-        {
-            error (NO_FREE);
-        }
-        if ($house -> fields['bedroom'] == 'Y') 
-        {
-            error (YOU_HAVE);
-        }
-        if ($player -> credits < 10000) 
-        {
-            error (NO_GOLD);
-        }
-        if ($house -> fields['points'] < 10) 
-        {
-            error (NO_POINTS2);
-        }
-        $db -> Execute("UPDATE houses SET bedroom='Y', points=points-10, used=used+1 WHERE id=".$house -> fields['id']);
-        $db -> Execute("UPDATE players SET credits=credits-10000 WHERE id=".$player -> id);
-        error (YOU_BUILD);
-    }
-    if (isset ($_GET['step']) && $_GET['step'] == 'wardrobe') 
-    {
-        if (!$house -> fields['id']) 
-        {
-            error (NO_HOUSE);
-        }
-        if ($house -> fields['used'] == $house -> fields['build']) 
-        {
-            error (NO_FREE);
-        }
-        $cost = $house -> fields['wardrobe'] * 1000;
-        if ($cost == 0) 
-        {
-            $cost = 1000;
-        }
-        if ($player -> credits < $cost) 
-        {
-            error (NO_GOLD);
-        }
-        if ($house -> fields['points'] < 10) 
-        {
-            error (NO_POINTS2);
-        }
-        $db -> Execute("UPDATE houses SET wardrobe=wardrobe+1, points=points-10, used=used+1 WHERE id=".$house -> fields['id']);
-        $db -> Execute("UPDATE players SET credits=credits-".$cost." WHERE id=".$player -> id);
-        error (YOU_BUILD);
-    }
-    if (isset ($_GET['step']) && $_GET['step'] == 'upgrade') 
-    {
-        if (!$house -> fields['id']) 
-        {
-            error (NO_HOUSE);
-        }
-        if ($house -> fields['points'] < 1) 
-        {
-            error (NO_POINTS2);
-        }
-        $smarty -> assign(array("Upginfo" => UPG_INFO,
-            "Upgrade3" => UPGRADE,
-            "Upgrade2" => UPGRADE2,
-            "Awork" => A_WORK));
-        if (isset ($_GET['step2']) && $_GET['step2'] == 'make') 
-        {
-	    checkvalue($_POST['points']);
-            if ($_POST['points'] > $house -> fields['points']) 
-            {
-                error (NO_POINTS);
-            }
-            $cost = 1000 * $_POST['points'];
-            if ($player -> credits < $cost) 
-            {
-                error (NO_GOLD);
-            }
-            $db -> Execute("UPDATE players SET credits=credits-".$cost." WHERE id=".$player -> id);
-            $db -> Execute("UPDATE houses SET points=points-".$_POST['points'].", value=value+".$_POST['points']." WHERE id=".$house -> fields['id']);
-            error (YOU_UPGRADE);
-        }
-    }
-}
+	  }
+	if (!$house -> fields['id']) 
+	  {
+	    $cost = COST1;
+	  } 
+        else 
+	  {
+	    $cost1 = $house -> fields['size'] * 1000;
+	    $cost = $cost1.GOLD_COINS;
+	  }
+	$smarty -> assign (array("Cost" => $cost,
+				 "Landinfo" => LAND_INFO,
+				 "Buya" => BUY_A,
+				 "Aback" => A_BACK));
+      }
 
-/**
-* List of best players houses (50 houses max on list)
-*/
-if (isset ($_GET['action']) && $_GET['action'] == 'list') 
-{
-    $houses = $db -> SelectLimit("SELECT * FROM houses WHERE build>0 AND owner>0 AND location='".$player -> location."' ORDER BY build DESC", 50);
-    $arrid = array();
-    $arrowner = array();
-    $arrname = array();
-    $arrbuild = array();
-    $arrtype = array();
-    $arrlocator = array();
-    $i = 0;
-    while (!$houses -> EOF) {
-        $arrid[$i] = $houses -> fields['id'];
-        $arrowner[$i] = $houses -> fields['owner'];
-        $arrname[$i] = $houses -> fields['name'];
-        $arrbuild[$i] = $houses -> fields['build'];
-        if ($houses -> fields['locator']) 
-        {
-            $arrlocator[$i] = "<a href=\"view.php?view=".$houses -> fields['locator']."\">".$houses -> fields['locator']."</a>";
-        } 
-            else 
-        {
-            $arrlocator[$i] = L_EMPTY;
-        }
-        $arrtype[$i] = housetype($houses -> fields['value'], $houses -> fields['build']);
-        $houses -> MoveNext();
-        $i = $i + 1;
-    }
-    $houses -> Close();
-    $smarty -> assign(array("Housesname" => $arrname, 
-        "Housesid" => $arrid, 
-        "Housesowner" => $arrowner, 
-        "Housesbuild" => $arrbuild, 
-        "Housestype" => $arrtype, 
-        "Locator" => $arrlocator,
-        "Hname" => H_NAME,
-        "Hnumber" => H_NUMBER,
-        "Htype" => H_TYPE,
-        "Hsize" => H_SIZE,
-        "Howner" => H_OWNER,
-        "Hlocator" => H_LOCATOR,
-        "Aback" => A_BACK));
-}
+    /**
+     * Builder workshop
+     */
+    elseif($_GET['action'] == 'build') 
+      {
+	if ($house -> fields['points'] == 0) 
+	  {
+	    error (NO_POINTS);
+	  }
+	if (!$house -> fields['id']) 
+	  {
+	    error ("Nie posiadasz ziemi ani domu aby móc cokolwiek budować.");
+	  }
+	if (isset($_GET['step']))
+	  {
+	    //Build new house
+	    if ($_GET['step'] == 'new')
+	      {
+		unset($_GET['step']);
+		if ($house -> fields['build'] > 0) 
+		  {
+		    message('error', YOU_HAVE);
+		  }
+		elseif ($player -> credits < 1000) 
+		  {
+		    message('error', NO_GOLD);
+		  }
+		elseif ($house -> fields['points'] < 10) 
+		  {
+		    message('error', NO_POINTS);
+		  }
+		else
+		  {
+		    $smarty -> assign(array("Hname" => H_NAME,
+					    "Abuild" => A_BUILD));
+		    $_GET['step'] = 'new';
+		  }
+		if (isset ($_GET['step2']) && $_GET['step2'] == 'make') 
+		  {
+		    if (!isset($_POST['name']))
+		      {
+			$_POST['name'] = '';
+		      }
+		    $_POST['name'] = strip_tags($_POST['name']);
+		    $strName = $db -> qstr($_POST['name'], get_magic_quotes_gpc());
+		    $db -> Execute("UPDATE `houses` SET `name`=".$strName.", `build`=`build`+1, `points`=`points`-10 WHERE `id`=".$house -> fields['id']);
+		    $db -> Execute("UPDATE `players` SET `credits`=`credits`-1000 WHERE `id`=".$player -> id);
+		    $house->fields['name'] = $strName;
+		    $house->fields['build'] ++;
+		    $house->fields['points'] -= 10;
+		    message('success', YOU_BUILD);
+		    unset($_GET['step']);
+		  }
+	      }
+	    //Upgrade house
+	    elseif ($_GET['step'] == 'add') 
+	      {
+		$cost = 1000 * $house -> fields['build'];
+		if ($player -> credits < $cost) 
+		  {
+		    message('error', NO_GOLD);
+		  }
+		elseif ($house -> fields['size'] == $house -> fields['build']) 
+		  {
+		    message('error', NO_FIELDS);
+		  }
+		elseif ($house -> fields['points'] < 10) 
+		  {
+		    message('error', NO_POINTS);
+		  }
+		else
+		  {
+		    $house -> fields['value'] -= 10;
+		    $house->fields['points'] -= 10;
+		    $house->fields['build'] ++;
+		    if ($house -> fields['value'] < 1) 
+		      {
+			$house -> fields['value'] = 1;
+		      }
+		    $db -> Execute("UPDATE `houses` SET `build`=`build`+1, `points`=`points`-10, `value`=".$house -> fields['value']." WHERE `id`=".$house -> fields['id']);
+		    $db -> Execute("UPDATE `players` SET `credits`=`credits`-".$cost." WHERE `id`=".$player -> id);
+		    message('success', YOU_UPGRADE);
+		  }
+	      }
+	    //Build bedroom
+	    elseif (isset ($_GET['step']) && $_GET['step'] == 'bedroom') 
+	      {
+		if ($house -> fields['used'] == $house -> fields['build']) 
+		  {
+		    message('error', NO_FREE);
+		  }
+		elseif ($house -> fields['bedroom'] == 'Y') 
+		  {
+		    message('error', YOU_HAVE);
+		  }
+		elseif ($player -> credits < 10000) 
+		  {
+		    message('error', NO_GOLD);
+		  }
+		elseif ($house -> fields['points'] < 10) 
+		  {
+		    message('error', NO_POINTS2);
+		  }
+		else
+		  {
+		    $house->fields['bedroom'] = 'Y';
+		    $house->fields['points'] -= 10;
+		    $house->fields['used'] ++;
+		    $db -> Execute("UPDATE `houses` SET `bedroom`='Y', `points`=`points`-10, `used`=`used`+1 WHERE `id`=".$house -> fields['id']);
+		    $db -> Execute("UPDATE `players` SET `credits`=`credits`-10000 WHERE `id`=".$player -> id);
+		    message('success', YOU_BUILD);
+		  }
+	      }
+	    //Build wardrobe
+	    elseif (isset ($_GET['step']) && $_GET['step'] == 'wardrobe') 
+	      {
+		$cost = $house -> fields['wardrobe'] * 1000;
+		if ($cost == 0) 
+		  {
+		    $cost = 1000;
+		  }
+		elseif ($house -> fields['used'] == $house -> fields['build']) 
+		  {
+		    message('error', NO_FREE);
+		  }
+		elseif ($player -> credits < $cost) 
+		  {
+		    message('error', NO_GOLD);
+		  }
+		elseif ($house -> fields['points'] < 10) 
+		  {
+		    message('error', NO_POINTS2);
+		  }
+		else
+		  {
+		    $house->fields['wardrobe'] ++;
+		    $house->fields['points'] -= 10;
+		    $house->fields['used'] ++;
+		    $db -> Execute("UPDATE `houses` SET `wardrobe`=`wardrobe`+1, `points`=`points`-10, `used`=`used`+1 WHERE `id`=".$house -> fields['id']);
+		    $db -> Execute("UPDATE `players` SET `credits`=`credits`-".$cost." WHERE `id`=".$player -> id);
+		    message('error', YOU_BUILD);
+		  }
+	      }
+	    //House adorment
+	    elseif (isset ($_GET['step']) && $_GET['step'] == 'upgrade') 
+	      {
+		unset($_GET['step']);
+		if ($house -> fields['points'] < 1) 
+		  {
+		    message('error', NO_POINTS2);
+		  }
+		else
+		  {
+		    $smarty -> assign(array("Upginfo" => UPG_INFO,
+					    "Upgrade3" => UPGRADE,
+					    "Upgrade2" => UPGRADE2,
+					    "Awork" => A_WORK));
+		    $_GET['step'] = 'upgrade';
+		  }
+		if (isset ($_GET['step2']) && $_GET['step2'] == 'make') 
+		  {
+		    checkvalue($_POST['points']);
+		    $cost = 1000 * $_POST['points'];
+		    if ($player -> credits < $cost) 
+		      {
+			message('error', NO_GOLD);
+		      }
+		    elseif ($_POST['points'] > $house -> fields['points']) 
+		      {
+			message('error', NO_POINTS);
+		      }
+		    else
+		      {
+			$house->fields['points'] -= $_POST['points'];
+			$house->fields['value'] += $_POST['points'];
+			$db -> Execute("UPDATE `players` SET `credits`=`credits`-".$cost." WHERE `id`=".$player -> id);
+			$db -> Execute("UPDATE `houses` SET `points`=`points`-".$_POST['points'].", `value`=`value`+".$_POST['points']." WHERE `id`=".$house -> fields['id']);
+			message('success', YOU_UPGRADE);
+		      }
+		  }
+		if ($house->fields['points'] == 0)
+		  {
+		    unset($_GET['action']);
+		  }
+	      }
+	  }
+	$smarty -> assign(array("Points" => $house -> fields['points'],
+				"Buildinfo" => BUILD_INFO,
+				"Buildinfo2" => BUILD_INFO2,
+				"Aback" => A_BACK));
+	if ($house -> fields['build'] == 0) 
+	  {
+	    $smarty -> assign ("Buildhouse", "<a href=house.php?action=build&amp;step=new>".B_HOUSE);
+	  } 
+        else 
+	  {
+	    if ($house -> fields['build'] < $house -> fields['size'] && $house -> fields['points'] > 9) 
+	      {
+		$cost = 1000 * $house -> fields['build'];
+		$smarty -> assign ("Buildhouse", "<a href=house.php?action=build&amp;step=add>".U_HOUSE.$cost.GOLD_COINS."<br />");
+	      }
+	    if ($house -> fields['used'] < $house -> fields['build'] && $house -> fields['points'] > 9) 
+	      {
+		if ($house -> fields['bedroom'] == 'N') 
+		  {
+		    $smarty -> assign ("Buildbed", "<a href=house.php?action=build&amp;step=bedroom>".B_BEDROOM);
+		  }
+		$cost = $house -> fields['wardrobe'] * 1000;
+		if ($cost == 0) 
+		  {
+		    $cost = 1000;
+		  }
+		$smarty -> assign ("Buildwardrobe", "<a href=house.php?action=build&amp;step=wardrobe>".B_WARDROBE.$cost.GOLD_COINS."<br />");
+	      }
+	    if ($house -> fields['points'] > 0) 
+	      {
+		$smarty -> assign ("Upgrade", "<a href=house.php?action=build&amp;step=upgrade>".HOUSE_B."</a><br />");
+	      }
+	  }
+      }
 
-/**
-* List of houses for sale
-*/
-if (isset ($_GET['action']) && $_GET['action'] == 'rent') 
-{
-    $houses = $db -> Execute("SELECT * FROM houses WHERE owner=0 AND location='".$player -> location."' ORDER BY build DESC");
-    $arrid = array();
-    $arrname = array();
-    $arrbuild = array();
-    $arrtype = array();
-    $arrlink = array();
-    $arrcost = array();
-    $arrseller = array();
-    $i = 0;
-    while (!$houses -> EOF) 
-    {
-        $arrid[$i] = $houses -> fields['id'];
-        $arrname[$i] = $houses -> fields['name'];
-        $arrbuild[$i] = $houses -> fields['build'];
-        $arrcost[$i] = $houses -> fields['cost'];
-        $arrseller[$i] = $houses -> fields['seller'];
-        $arrtype[$i] = housetype($houses -> fields['value'], $houses -> fields['build']);
-        if ($player -> id == $houses -> fields['seller']) 
-        {
-            $arrlink[$i] = "<a href=\"house.php?action=rent&amp;back=".$houses -> fields['id']."\">".YOUR_OFERT."</a>";
-        } 
-            elseif ($house -> fields['id']) 
-        {
-            $arrlink[$i] = L_EMPTY;
-        } 
-            else 
-        {
-            $arrlink[$i] = "<a href=\"house.php?action=rent&amp;buy=".$houses -> fields['id']."\">".A_BUY."</a>";
-        }
-        $houses -> MoveNext();
-        $i = $i + 1;
-    }
-    $houses -> Close();
-    $smarty -> assign(array("Housesname" => $arrname, 
-        "Housesid" => $arrid, 
-        "Housesseller" => $arrseller, 
-        "Housesbuild" => $arrbuild, 
-        "Housestype" => $arrtype, 
-        "Housescost" => $arrcost, 
-        "Houseslink" => $arrlink,
-        "Hnumber" => H_NUMBER,
-        "Hseller" => H_SELLER,
-        "Hname" => H_NAME,
-        "Hsize" => H_SIZE,
-        "Htype" => H_TYPE,
-        "Hcost" => H_COST,
-        "Hoption" => H_OPTION,
-        "Aback" => A_BACK));
-    if (isset($_GET['buy'])) 
-    {
-	checkvalue($_GET['buy']);
-        if ($house -> fields['id']) 
-        {
-            error(YOU_HAVE);
-        }
-        $buy = $db -> Execute("SELECT id, owner, cost, seller FROM houses WHERE id=".$_GET['buy']);
-        if (!$buy -> fields['id']) 
-        {
-            error(NO_HOUSE);
-        }
-        if ($buy -> fields['owner']) 
-        {
-            error(NOT_FOR_SALE);
-        }
-        if ($player -> credits < $buy -> fields['cost']) 
-        {
-            error(NO_GOLD);
-        }
-        $db -> Execute("UPDATE players SET credits=credits-".$buy -> fields['cost']." WHERE id=".$player -> id);
-        $db -> Execute("UPDATE players SET bank=bank+".$buy -> fields['cost']." WHERE id=".$buy -> fields['seller']);
-        $db -> Execute("UPDATE houses SET cost=0, seller=0, owner=".$player -> id." WHERE id=".$buy -> fields['id']);
-        $strDate = $db -> DBDate($newdate);
-        $db -> Execute("INSERT INTO `log` (`owner`, `log`, `czas`, `type`) VALUES(".$buy -> fields['seller'].",'<b><a href=view.php?view=".$player -> id.">".$player -> user.L_ACCEPT.$buy -> fields['cost'].L_BANK."', ".$strDate.", 'H')");
-        $smarty -> assign("Message", YOU_BUY);
-        $buy -> Close();
-    }
-    if (isset($_GET['back']))
-    {
-	checkvalue($_GET['back']);
-        if ($house -> fields['id']) 
-        {
-            error(YOU_HAVE);
-        }
-        $buy = $db -> Execute("SELECT id, owner, seller FROM houses WHERE id=".$_GET['back']);
-        if (!$buy -> fields['id']) 
-        {
-            error(NO_HOUSE);
-        }
-        if ($buy -> fields['owner']) 
-        {
-            error(NOT_FOR_SALE);
-        }
-        if ($buy -> fields['seller'] != $player -> id)
-        {
-            error(NOT_YOUR);
-        }
-        $db -> Execute("UPDATE houses SET cost=0, seller=0, owner=".$player -> id." WHERE id=".$buy -> fields['id']);
-        $smarty -> assign("Message", YOU_WITHDRAW);
-        $buy -> Close();
-    }
-}
+    /**
+     * List of best players houses (50 houses max on list)
+     */
+    elseif ($_GET['action'] == 'list') 
+      {
+	$arrHouses = $db->GetAll("SELECT * FROM `houses` WHERE `build`>0 AND `owner`>0 AND `location`='".$player -> location."' ORDER BY `build` DESC LIMIT 0, 50");
+	if (count($arrHouses) < 1)
+	  {
+	    message('error', 'Nie ma jeszcze wybudowanych domów w tym mieście.');
+	    unset($_GET['action']);
+	  }
+	else
+	  {
+	    $arrMembers = array();
+	    foreach ($arrHouses as &$arrHouse)
+	      {
+		if (!in_array($arrHouse['owner'], $arrMembers))
+		  {
+		    $arrMembers[] = $arrHouse['owner'];
+		  }
+		if ($arrHouse['locator'])
+		  {
+		    if (!in_array($arrHouse['locator'], $arrMembers))
+		      {
+			$arrMembers[] = $arrHouse['locator'];
+		      }
+		  }
+		else
+		  {
+		    $arrHouse['locator'] = L_EMPTY;
+		  }
+		$arrHouse['housetype'] = housetype($arrHouse['value'], $arrHouse['build']);
+	      }
+	    $arrMembers = $db->GetAll("SELECT `id`, `user` FROM `players` WHERE `id` IN (".implode(', ', $arrMembers).")");
+	    foreach ($arrMembers as &$arrMember)
+	      {
+		foreach ($arrHouses as &$arrHouse)
+		  {
+		    if ($arrHouse['owner'] == $arrMember['id'])
+		      {
+			$arrHouse['ownername'] = $arrMember['user'];
+			break;
+		      }
+		    elseif ($arrHouse['locator'] == $arrMember['id'])
+		      {
+			$arrHouse['locator'] = "<a href=\"view.php?view=".$arrHouse['locator']."\">".$arrMember['user']."</a>";
+			break;
+		      }
+		  }
+	      }
+	    $smarty -> assign(array("Houses" => $arrHouses, 
+				    "Hname" => H_NAME,
+				    "Hnumber" => H_NUMBER,
+				    "Htype" => H_TYPE,
+				    "Hsize" => H_SIZE,
+				    "Howner" => H_OWNER,
+				    "Hlocator" => H_LOCATOR,
+				    "Aback" => A_BACK));
+	  }
+      }
+
+    /**
+     * List of houses for sale
+     */
+    if (isset ($_GET['action']) && $_GET['action'] == 'rent') 
+      {
+	if (isset($_GET['buy'])) 
+	  {
+	    checkvalue($_GET['buy']);
+	    $blnValid = TRUE;
+	    if ($house -> fields['id']) 
+	      {
+		message('error', YOU_HAVE);
+		$blnValid = FALSE;
+	      }
+	    $buy = $db -> Execute("SELECT `id`, `owner`, `cost`, `seller` FROM `houses` WHERE `id`=".$_GET['buy']);
+	    if (!$buy -> fields['id']) 
+	      {
+		message('error', NO_HOUSE);
+		$blnValid = FALSE;
+	      }
+	    if ($buy -> fields['owner']) 
+	      {
+		message('error', NOT_FOR_SALE);
+		$blnValid = FALSE;
+	      }
+	    if ($player -> credits < $buy -> fields['cost']) 
+	      {
+		message('error', NO_GOLD);
+		$blnValid = FALSE;
+	      }
+	    if ($blnValid)
+	      {
+		$db -> Execute("UPDATE `players` SET `credits`=`credits`-".$buy -> fields['cost']." WHERE `id`=".$player -> id);
+		$db -> Execute("UPDATE `players` SET `bank`=`bank`+".$buy -> fields['cost']." WHERE `id`=".$buy -> fields['seller']);
+		$db -> Execute("UPDATE `houses` SET `cost`=0, `seller`=0, `owner`=".$player -> id." WHERE `id`=".$buy -> fields['id']);
+		$strDate = $db -> DBDate($newdate);
+		$db -> Execute("INSERT INTO `log` (`owner`, `log`, `czas`, `type`) VALUES(".$buy -> fields['seller'].",'<b><a href=view.php?view=".$player -> id.">".$player -> user.L_ACCEPT.$buy -> fields['cost'].L_BANK."', ".$strDate.", 'H')");
+		$house = $db->Execute("SELECT * FROM `houses` WHERE `id`=".$buy->fields['id']);
+		message("success", YOU_BUY);
+	      }
+	    $buy -> Close();
+	  }
+	if (isset($_GET['back']))
+	  {
+	    checkvalue($_GET['back']);
+	    $blnValid = TRUE;
+	    if ($house -> fields['id']) 
+	      {
+		message('error', YOU_HAVE);
+		$blnValid = FALSE;
+	      }
+	    $buy = $db -> Execute("SELECT `id`, `owner`, `seller` FROM `houses` WHERE `id`=".$_GET['back']);
+	    if (!$buy -> fields['id']) 
+	      {
+		message('error', NO_HOUSE);
+		$blnValid = FALSE;
+	      }
+	    if ($buy -> fields['owner']) 
+	      {
+		message('error', NOT_FOR_SALE);
+		$blnValid = FALSE;
+	      }
+	    if ($buy -> fields['seller'] != $player -> id)
+	      {
+		message('error', NOT_YOUR);
+		$blnValid = FALSE;
+	      }
+	    if ($blnValid)
+	      {
+		$db -> Execute("UPDATE `houses` SET `cost`=0, `seller`=0, `owner`=".$player -> id." WHERE `id`=".$buy -> fields['id']);
+		$house = $db->Execute("SELECT * FROM `houses` WHERE `id`=".$buy->fields['id']);
+		message('success', YOU_WITHDRAW);
+	      }
+	    $buy -> Close();
+	  }
+	$arrHouses = $db->GetAll("SELECT * FROM `houses` WHERE `owner`=0 AND `location`='".$player -> location."' ORDER BY `build` DESC");
+	if (count($arrHouses) < 1)
+	  {
+	    message('error', 'Nie ma jeszcze domów na sprzedaż w tym mieście.');
+	    unset($_GET['action']);
+	  }
+	else
+	  {
+	    $arrMembers = array();
+	    foreach ($arrHouses as &$arrHouse)
+	      {
+		if (!in_array($arrHouse['seller'], $arrMembers))
+		  {
+		    $arrMembers[] = $arrHouse['seller'];
+		  }
+		if ($player -> id == $arrHouse['seller']) 
+		  {
+		    $arrHouse['link'] = "<a href=\"house.php?action=rent&amp;back=".$arrHouse['id']."\">".YOUR_OFERT."</a>";
+		  } 
+		elseif ($house -> fields['id']) 
+		  {
+		    $arrHouse['link'] = L_EMPTY;
+		  } 
+		else 
+		  {
+		    $arrHouse['link'] = "<a href=\"house.php?action=rent&amp;buy=".$arrHouse['id']."\">".A_BUY."</a>";
+		  }
+		$arrHouse['housetype'] = housetype($arrHouse['value'], $arrHouse['build']);
+	      }
+	    $arrMembers = $db->GetAll("SELECT `id`, `user` FROM `players` WHERE `id` IN (".implode(', ', $arrMembers).")");
+	    foreach ($arrMembers as &$arrMember)
+	      {
+		foreach ($arrHouses as &$arrHouse)
+		  {
+		    if ($arrHouse['seller'] == $arrMember['id'])
+		      {
+			$arrHouse['sellername'] = $arrMember['user'];
+			break;
+		      }
+		  }
+	      }
+	    $smarty -> assign(array("Houses" => $arrHouses, 
+				    "Hnumber" => H_NUMBER,
+				    "Hseller" => H_SELLER,
+				    "Hname" => H_NAME,
+				    "Hsize" => H_SIZE,
+				    "Htype" => H_TYPE,
+				    "Hcost" => H_COST,
+				    "Hoption" => H_OPTION,
+				    "Aback" => A_BACK));
+	  }
+      }
+  }
 
 /**
 * Player house
@@ -506,7 +595,7 @@ if (isset ($_GET['action']) && $_GET['action'] == 'my')
                                 "Unused" => $unused, 
                                 "Wardrobe" => $house -> fields['wardrobe'], 
                                 "Items" => $intAmount,
-                                "Houseinfo" => HOUSE_INFO,
+                                "Houseinfo" => HOUSE_INFO3,
                                 "Hname" => H_NAME,
                                 "Hsize" => H_SIZE,
                                 "Howner" => H_OWNER,

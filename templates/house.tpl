@@ -1,43 +1,44 @@
 {if $Action == ""}
     {$Houseinfo}<br /><br />
+    <ul>
     {if $Houseid == ""}
-        - <a href="house.php?action=land">{$Aland}</a><br />
-        - <a href="house.php?action=list">{$Alist}</a><br />
-    - <a href="house.php?action=rent">{$Arent}</a><br />
+        <li><a href="house.php?action=land">{$Aland}</a></li>
+        <li><a href="house.php?action=list">{$Alist}</a></li>
+        <li><a href="house.php?action=rent">{$Arent}</a></li>
     {/if}
     {if $Houseid > "0"}
-        - <a href="house.php?action=my">{$Ahouse}</a><br />
-        - <a href="house.php?action=build">{$Aworkshop}</a><br />
-        - <a href="house.php?action=land">{$Aland}</a><br />
-        - <a href="house.php?action=list">{$Alist}</a><br />
-    - <a href="house.php?action=rent">{$Arent}</a><br />
-    {/if}  
+        <li><a href="house.php?action=my">{$Ahouse}</a></li>
+        <li><a href="house.php?action=build">{$Aworkshop}</a></li>
+        <li><a href="house.php?action=land">{$Aland}</a></li>
+        <li><a href="house.php?action=list">{$Alist}</a></li>
+        <li><a href="house.php?action=rent">{$Arent}</a></li>
+    {/if}
+    </ul>
 {/if}
 
 {if $Action == "rent"}
-    <table>
+    <table width="95%" align="center">
     <tr>
-    <td><b><u>{$Hnumber}</u></b></td>
-    <td><b><u>{$Hseller}</u></b></td>
-    <td><b><u>{$Hname}</u></b></td>
-    <td><b><u>{$Hsize}</u></b></td>
-    <td><b><u>{$Htype}</u></b></td>
-    <td><b><u>{$Hcost}</u></b></td>
-    <td><b><u>{$Hoption}</u></b></td>
+    <th>{$Hnumber}</th>
+    <th>{$Hseller}</th>
+    <th>{$Hname}</th>
+    <th>{$Hsize}</th>
+    <th>{$Htype}</th>
+    <th>{$Hcost}</th>
+    <th>{$Hoption}</th>
     </tr>
-    {section name=house loop=$Housesname}
+    {foreach $Houses as $house}
         <tr>
-        <td>{$Housesid[house]}</td>
-        <td><a href="view.php?view={$Housesseller[house]}">{$Housesseller[house]}</a></td>
-        <td>{$Housesname[house]}</td>
-        <td>{$Housesbuild[house]}</td>
-        <td>{$Housestype[house]}</td>
-    <td>{$Housescost[house]}</td>
-    <td>{$Houseslink[house]}</td>
+        <td>{$house.id}</td>
+        <td><a href="view.php?view={$house.seller}">{$house.sellername}</a></td>
+        <td>{$house.name}</td>
+        <td>{$house.build}</td>
+        <td>{$house.housetype}</td>
+    	<td>{$house.cost}</td>
+    	<td>{$house.link}</td>
         </tr>
-    {/section}
+    {/foreach}
     </table> <a href="house.php">{$Aback}</a>
-    {$Message}
 {/if}
 
 {if $Action == "land"}
@@ -50,10 +51,12 @@
 
 {if $Action == "build"}
     {$Buildinfo} <b>{$Points}</b> {$Buildinfo2}:<br /><br /><br />
-    {$Buildhouse}
-    {$Buildbed}
-    {$Buildwardrobe}
-    {$Upgrade}
+    {if $Step != "new" && $Step != "upgrade"}
+        {$Buildhouse}
+        {$Buildbed}
+        {$Buildwardrobe}
+        {$Upgrade}
+    {/if}
     {if $Step == "new"}
         <form method="post" action="house.php?action=build&amp;step=new&amp;step2=make">
         {$Hname} <input type="text" name="name" /><br />
@@ -69,25 +72,25 @@
 {/if}
 
 {if $Action == "list"}
-    <table>
+    <table width="95%" align="center">
     <tr>
-    <td><b><u>{$Hnumber}</u></b></td>
-    <td><b><u>{$Howner}</u></b></td>
-    <td><b><u>{$Hlocator}</u></b></td>
-    <td><b><u>{$Hname}</u></b></td>
-    <td><b><u>{$Hsize}</u></b></td>
-    <td><b><u>{$Htype}</u></b></td>
+    <th>{$Hnumber}</th>
+    <th>{$Howner}</th>
+    <th>{$Hlocator}</th>
+    <th>{$Hname}</th>
+    <th>{$Hsize}</th>
+    <th>{$Htype}</th>
     </tr>
-    {section name=house loop=$Housesname}
+    {foreach $Houses as $house}
         <tr>
-        <td>{$Housesid[house]}</td>
-        <td><a href="view.php?view={$Housesowner[house]}">{$Housesowner[house]}</a></td>
-    <td>{$Locator[house]}</td>
-        <td>{$Housesname[house]}</td>
-        <td>{$Housesbuild[house]}</td>
-        <td>{$Housestype[house]}</td>
+        <td>{$house.id}</td>
+        <td><a href="view.php?view={$house.owner}">{$house.ownername}</a></td>
+    	<td>{$house.locator}</td>
+        <td>{$house.name}</td>
+        <td>{$house.build}</td>
+        <td>{$house.housetype}</td>
         </tr>
-    {/section}
+    {/foreach}
     </table> <a href="house.php">{$Aback}</a>
 {/if}
 

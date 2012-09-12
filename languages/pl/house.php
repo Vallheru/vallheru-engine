@@ -8,7 +8,7 @@
  *   @author               : thindil <thindil@vallheru.net>
  *   @author               : eyescream <tduda@users.sourceforge.net>
  *   @version              : 1.6
- *   @since                : 28.06.2012
+ *   @since                : 12.09.2012
  *
  */
 
@@ -41,24 +41,21 @@ define("H_RANK5", "Pałac");
 define("L_EMPTY", "Brak");
 define("A_BACK", "Wróć");
 
-if (!isset($_GET['action']))
-{
-    if ($player -> location == 'Altara')
-    {
-        define("HOUSE_INFO", "Zgiełk miasta powoli maleje. Nachodzi Cię myśl, że ten dzień można już zakończyć z czystym sumieniem. Wykonałeś swoje obowiązki. Ba, odwiedziłeś Karczmę z przyjaciółmi, tak więc możesz już udać się na spoczynek. Kierując się w stronę swojej siedziby mijasz różne zabudowania. Widzisz małe elfiątka bawiące się na drodze. Po chwili pojawia się straszna rudera, zrujnowany barak, który zdaje się być składzikiem buraków. Podchodzisz bliżej i myślisz sobie: \"Najważniejsze to mieć dach nad głową...\"");
-        define("HOUSE_INFO2", "Słońce leniwie przesuwa się ku zachodowi, pokrywając miasto czerwienią. Hałas na ulicach zaczyna ustępować ciszy. Opuściłeś już główne ulice ".$city1b.", kierując się w stronę dzielnicy mieszkalnej. Domy, które mijasz zbudowane są w najróżniejszych stylach. Po prawej, wśród bujnych konarów drzew, znajduje się wielki pałac, którego motywem przewodnim jest liść. Marmurowe kolumny ozdobione są szmaragdowymi ornamentami. Tuż za bramą dostrzegasz dwie wspaniałe fontanny, a przy podjeździe wykonany z niezwykłym kunsztem, kryształowy pomnik. Okrągłe okna nadają tej budowli nieco zabawnego charakteru, jednocześnie wzbudzając nieco zazdrości. Wchodzisz w jedną z bocznych uliczek mijając po drodze kilka mniejszych pałacyków. W oddali zaczynasz dostrzegać znajome zarysy, myślisz sobie: \"nareszcie w domu\"");
-    }
-        else
-    {
-        define("HOUSE_INFO", "Stoisz przed sadem złożonym z olbrzymich drzew. Na gałęziach każdego znajdują się dziesiątki różnych domów . Widzisz domki w elfim stylu ale nie brakuje domów typowych dla ludzi , krasnoludów czy niziołków. Po dłuższej chwili zauważasz nawet dwie czy trzy posiadłości jaszczuroludzi. <br />Co robisz? ");
-        define("HOUSE_INFO2", "Zgiełk miasta powoli maleje. Nachodzi Cię myśl, że ten dzień można już zakończyć z czystym sumieniem. Wykonałeś swoje obowiązki. Ba, odwiedziłeś Karczmę z przyjaciółmi, tak możesz już udać się na spoczynek. Kierując się w stronę swojej siedziby mijasz różne zabudowania. Widzisz małe elfiątka bawiące się na drodze. Po chwili pojawia się straszna rudera, zrujnowany barak, który zdaje się być składzikiem buraków. Podchodzisz bliżej i myślisz sobie: \"Najważniejsze to mieć dach nad głową...\"");
-    }
-    define("A_LAND", "Kup ziemię");
-    define("A_LIST", "Zobacz listę domów");
-    define("A_RENT", "Zobacz listę domów na sprzedaż");
-    define("A_HOUSE", "Twój dom");
-    define("A_WORKSHOP", "Warsztat budowlany");
-}
+if ($player -> location == 'Altara')
+  {
+    define("HOUSE_INFO", "Zgiełk miasta powoli maleje. Nachodzi Cię myśl, że ten dzień można już zakończyć z czystym sumieniem. Wykonałeś swoje obowiązki. Ba, odwiedziłeś Karczmę z przyjaciółmi, tak więc możesz już udać się na spoczynek. Kierując się w stronę swojej siedziby mijasz różne zabudowania. Widzisz małe elfiątka bawiące się na drodze. Po chwili pojawia się straszna rudera, zrujnowany barak, który zdaje się być składzikiem buraków. Podchodzisz bliżej i myślisz sobie: \"Najważniejsze to mieć dach nad głową...\"");
+    define("HOUSE_INFO2", "Słońce leniwie przesuwa się ku zachodowi, pokrywając miasto czerwienią. Hałas na ulicach zaczyna ustępować ciszy. Opuściłeś już główne ulice ".$city1b.", kierując się w stronę dzielnicy mieszkalnej. Domy, które mijasz zbudowane są w najróżniejszych stylach. Po prawej, wśród bujnych konarów drzew, znajduje się wielki pałac, którego motywem przewodnim jest liść. Marmurowe kolumny ozdobione są szmaragdowymi ornamentami. Tuż za bramą dostrzegasz dwie wspaniałe fontanny, a przy podjeździe wykonany z niezwykłym kunsztem, kryształowy pomnik. Okrągłe okna nadają tej budowli nieco zabawnego charakteru, jednocześnie wzbudzając nieco zazdrości. Wchodzisz w jedną z bocznych uliczek mijając po drodze kilka mniejszych pałacyków. W oddali zaczynasz dostrzegać znajome zarysy, myślisz sobie: \"nareszcie w domu\"");
+  }
+ else
+   {
+     define("HOUSE_INFO", "Stoisz przed sadem złożonym z olbrzymich drzew. Na gałęziach każdego znajdują się dziesiątki różnych domów . Widzisz domki w elfim stylu ale nie brakuje domów typowych dla ludzi , krasnoludów czy niziołków. Po dłuższej chwili zauważasz nawet dwie czy trzy posiadłości jaszczuroludzi. <br />Co robisz? ");
+     define("HOUSE_INFO2", "Zgiełk miasta powoli maleje. Nachodzi Cię myśl, że ten dzień można już zakończyć z czystym sumieniem. Wykonałeś swoje obowiązki. Ba, odwiedziłeś Karczmę z przyjaciółmi, tak możesz już udać się na spoczynek. Kierując się w stronę swojej siedziby mijasz różne zabudowania. Widzisz małe elfiątka bawiące się na drodze. Po chwili pojawia się straszna rudera, zrujnowany barak, który zdaje się być składzikiem buraków. Podchodzisz bliżej i myślisz sobie: \"Najważniejsze to mieć dach nad głową...\"");
+   }
+define("A_LAND", "Kup ziemię");
+define("A_LIST", "Zobacz listę domów");
+define("A_RENT", "Zobacz listę domów na sprzedaż");
+define("A_HOUSE", "Twój dom");
+define("A_WORKSHOP", "Warsztat budowlany");
 
 if (isset($_GET['action']) && $_GET['action'] == 'land') 
 {
@@ -150,14 +147,14 @@ if (isset($_GET['action']) && $_GET['action'] == 'rent')
         define("NOT_FOR_SALE", "Ten dom nie jest na sprzedaż!");
         define("L_ACCEPT", "</a></b> zaakceptował twoją ofertę za dom. Dostałeś <b>");
         define("L_BANK", "</b> sztuk złota do banku.");
-        define("YOU_BUY", "<br />Kupiłeś dom.");
+        define("YOU_BUY", "Kupiłeś dom.");
     }
     if (isset($_GET['back'])) 
     {
         define("YOU_HAVE", "Nie możesz kupić domu, ponieważ posiadasz już jeden!");
         define("NO_HOUSE", "Nie ma takiego domu!");
         define("NOT_FOR_SALE", "Ten dom nie jest na sprzedaż!");
-        define("YOU_WITHDRAW", "<br />Wycofałeś swoją ofertę.");
+        define("YOU_WITHDRAW", "Wycofałeś swoją ofertę.");
         define("NOT_YOUR", "Nie możesz wycofywać cudzych ofert");
     }
 }
@@ -172,7 +169,7 @@ if (isset($_GET['action']) && $_GET['action'] == 'my')
         define("GO_TO_WAR", "Szafy z przedmiotami");
         define("A_LOCATOR", "Drugi mieszkaniec domu");
         define("A_SELL", "Wystaw dom na sprzedaż");
-        define("HOUSE_INFO", "Witaj w swoim domu. Możesz tutaj przechowywać przedmioty - jedno pomieszczenie przeznaczone na przechowalnię pomieści 100 przedmiotów. Jeżeli natomiast posiadasz sypialnię, możesz iść spać dzięki czemu jeżeli opuścisz Vallheru nikt nie będzie mógł ciebie zaatakować. Dodatkowo możesz próbować odpocząć w sypialni i nieco zregenerować nadwątlone siły.");
+        define("HOUSE_INFO3", "Witaj w swoim domu. Możesz tutaj przechowywać przedmioty - jedno pomieszczenie przeznaczone na przechowalnię pomieści 100 przedmiotów. Jeżeli natomiast posiadasz sypialnię, możesz iść spać dzięki czemu jeżeli opuścisz Vallheru nikt nie będzie mógł ciebie zaatakować. Dodatkowo możesz próbować odpocząć w sypialni i nieco zregenerować nadwątlone siły.");
         define("H_NAME", "Nazwa domu");
         define("H_SIZE", "Rozmiar");
         define("H_OWNER", "Właściciel");
