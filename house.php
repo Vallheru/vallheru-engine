@@ -529,6 +529,7 @@ if (isset($_GET['action']))
 		    $arrHouse['link'] = "<a href=\"house.php?action=rent&amp;buy=".$arrHouse['id']."\">".A_BUY."</a>";
 		  }
 		$arrHouse['housetype'] = housetype($arrHouse['value'], $arrHouse['build']);
+		$arrHouse['sellername'] = 'Nieobecny';
 	      }
 	    $arrMembers = $db->GetAll("SELECT `id`, `user` FROM `players` WHERE `id` IN (".implode(', ', $arrMembers).")");
 	    foreach ($arrMembers as &$arrMember)
@@ -538,7 +539,6 @@ if (isset($_GET['action']))
 		    if ($arrHouse['seller'] == $arrMember['id'])
 		      {
 			$arrHouse['sellername'] = $arrMember['user'];
-			break;
 		      }
 		  }
 	      }

@@ -1,5 +1,7 @@
 2012-09-12  Bartek thindil Jasicki  <thindil@vallheru.net>
 
+	* BUG,house.php: 
+	fixed missing seller name
 	* UPDATE,templates/layout1/house.tpl, templates/house.tpl, languages/pl/house.php, house.php:
 	start work on redesign houses
 
