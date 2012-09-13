@@ -98,7 +98,7 @@
     {if $Step == ""}
         {$Houseinfo}<br /><br />
         {$Hname}: {$Name} {if $Owner == $Id} [<a href="house.php?action=my&amp;step=name">{$Cname}</a>] {/if}<br />
-        {$Howner}: <a href="view.php?view={$Owner}">{$Owner}</a><br />
+        {$Howner}: <a href="view.php?view={$Owner}">{$Ownername}</a><br />
         {$Hsize}: {$Build}<br />
         {$Lamount}: {$Size}<br />
         {$Frooms}: {$Unused}<br />
@@ -112,7 +112,7 @@
         {$Locatorlink}
         {$Sellhouse}
         {$Locleave}
-        (<a href="house.php">{$Aback}</a>)
+        <br />(<a href="house.php">{$Aback}</a>)
     {/if}
     {if $Step == "leave" && $Step2 == ""}
         {$Youwant}
@@ -127,10 +127,6 @@
             <input type="submit" value="{$Asend}" /> {$Housesale} <input type="text" name="cost" />{$Goldcoins}
             </form>
         {/if}
-        {if $Step2 == "sell"}
-            {$Message}<br /><br />
-            (<a href="house.php">{$Aback}</a>)<br />
-        {/if}
     {/if}
     {if $Step == "locator"}
         {if $Step2 == ""}
@@ -140,7 +136,6 @@
         {$Lid2}: <input type="text" name="lid" size="5" value="{$Locid}" /><br />
         <input type="submit" value="{$Amake}" /></form><br />
     {/if}
-    {$Message}
     {/if}
     {if $Step == "name"}
         <form method="post" action="house.php?action=my&amp;step=name&amp;step2=change">
@@ -153,48 +148,50 @@
         - <a href="logout.php?rest=Y&amp;did={$Id}">{$Asleep}</a><br />
     {/if}
     {if $Step == "wardrobe"}
-        {$Winfo} <b>{$Wardrobe} {$Wamount}</b> {$And2} <b>{$Amount} {$Iamount4}</b> {$Inw}<br /><br />
-        - <a href="house.php?action=my&amp;step=wardrobe&amp;step2=add">{$Ahidei}</a><br />
-        - <a href="house.php?action=my&amp;step=wardrobe&amp;step2=list">{$Alist}</a><br />
+        {$Winfo} <b>{$Wardrobe} {$Wamount}</b> {$And2} <b>{$Amount} {$Iamount4}</b> {$Inw}
+	<ul>
+            <li><a href="house.php?action=my&amp;step=wardrobe&amp;step2=add">{$Ahidei}</a></li>
+       	    <li><a href="house.php?action=my&amp;step=wardrobe&amp;step2=list">{$Alist}</a></li>
+       </ul>
        {if $Step2 == "list"}
-           <table>
+           <table width="95%" align="center">
            <tr>
-           <td width="100"><b><u>{$Iname}</u></b></td>
-           <td width="100"><b><u>{$Ipower}</u></b></td>
-           <td width="100"><b><u>{$Idur}</u></b></td>
-           <td width="100"><b><u>{$Iagi}</u></b></td>
-           <td width="100"><b><u>{$Ispeed}</u></b></td>
-           <td width="50"><b><u>{$Iamount2}</u></b></td>
-           <td width="100"><b><u>{$Ioption}</u></b></td>
+           <th>{$Iname}</th>
+           <th>{$Ipower}</th>
+           <th>{$Idur}</th>
+           <th>{$Iagi}</th>
+           <th>{$Ispeed}</th>
+           <th>{$Iamount2}</th>
+           <th>{$Ioption}</th>
            </tr>
-           {section name=house1 loop=$Itemname}
+	   {foreach $Items as $item}
                <tr>
-               <td>{$Itemname[house1]}</td>
-               <td align="center">{$Itempower[house1]}</td>
-               <td align="center">{$Itemdur[house1]}/{$Itemmaxdur[house1]}</td>
-               <td align="center">{$Itemagility[house1]}</td>
-               <td align="center">{$Itemspeed[house1]}</td>
-               <td align="center">{$Itemamount[house1]}</td>
-               <td>- <a href="house.php?action=my&amp;step=wardrobe&amp;take={$Itemid[house1]}">{$Aget}</a></td>
+               <td>{$item.name}</td>
+               <td align="center">{$item.power}</td>
+               <td align="center">{$item.wt}/{$item.maxwt}</td>
+               <td align="center">{$item.zr}</td>
+               <td align="center">{$item.szyb}</td>
+               <td align="center">{$item.amount}</td>
+               <td>- <a href="house.php?action=my&amp;step=wardrobe&amp;step2=take&amp;take={$item.id}">{$Aget}</a></td>
                </tr>
-           {/section}
+           {/foreach}
            </table>
         {/if}
-        {if $Take != ""}
+        {if $Step2 == "take"}
             {if $Step3 == ""}
-                <form method="post" action="house.php?action=my&amp;step=wardrobe&amp;take={$Id}&amp;step3=add">
-                <input type="submit" value="{$Aget}" /> {$Fromh} <input type="text" name="amount" value="{$Amount}" size="5" /> {$Amount2} <b>{$Name}</b><br />
+                <form method="post" action="house.php?action=my&amp;step=wardrobe&amp;step2=take&amp;take={$Id}&amp;step3">
+                <input type="submit" value="{$Aget}" /> {$Fromh} <input type="text" name="amount" value="{$Amount23}" size="5" /> {$Amount2} <b>{$Name}</b><br />
                 </form>
             {/if}
         {/if}
         {if $Step2 == "add"}
             <br />
-	    <form method="post" action="house.php?action=my&amp;step=wardrobe&amp;step2=add&amp;step3=add">
-	        <input type="submit" value="{$Ahide}" /> {$Item}: {html_options name=przedmiot options=$Ioptions} {$Amount2} <input type="text" name="amount" size="5" />
+	    <form method="post" action="house.php?action=my&amp;step=wardrobe&amp;step2=add&amp;step3">
+	        <input type="submit" value="{$Ahide}" /> {$Item}: {html_options name=przedmiot options=$Ioptions} <input type="text" name="amount" size="5" /> (<input type="checkbox" name="addall" value="Y" />{$Tall}) {$Amount2}
             </form>
         {/if}
     {/if}
-    {if $Step != "" && $Step2 != "sell"}
-        <br />(<a href="house.php?action=my">{$Aback}</a>)
+    {if $Step != ""}
+        <br /><br />(<a href="house.php?action=my">{$Aback}</a>)
     {/if}
 {/if}

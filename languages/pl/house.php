@@ -8,7 +8,7 @@
  *   @author               : thindil <thindil@vallheru.net>
  *   @author               : eyescream <tduda@users.sourceforge.net>
  *   @version              : 1.6
- *   @since                : 12.09.2012
+ *   @since                : 13.09.2012
  *
  */
 
@@ -163,26 +163,23 @@ if (isset($_GET['action']) && $_GET['action'] == 'my')
 {
     define("NO_HOUSE", "Nie masz domu!");
     define("ONLY_OWNER", "Tylko właściciel domu może przebywać tutaj!");
-    if (!isset($_GET['step']) && !isset ($_GET['step2'])) 
-    {
-        define("GO_TO_BED", "Idź do sypialni");
-        define("GO_TO_WAR", "Szafy z przedmiotami");
-        define("A_LOCATOR", "Drugi mieszkaniec domu");
-        define("A_SELL", "Wystaw dom na sprzedaż");
-        define("HOUSE_INFO3", "Witaj w swoim domu. Możesz tutaj przechowywać przedmioty - jedno pomieszczenie przeznaczone na przechowalnię pomieści 100 przedmiotów. Jeżeli natomiast posiadasz sypialnię, możesz iść spać dzięki czemu jeżeli opuścisz Vallheru nikt nie będzie mógł ciebie zaatakować. Dodatkowo możesz próbować odpocząć w sypialni i nieco zregenerować nadwątlone siły.");
-        define("H_NAME", "Nazwa domu");
-        define("H_SIZE", "Rozmiar");
-        define("H_OWNER", "Właściciel");
-        define("H_LOCATOR", "Współlokator");
-        define("L_AMOUNT", "Ilość ziemi");
-        define("F_ROOMS", "Wolnych pokoi");
-        define("H_VALUE", "Wartość domu");
-        define("I_BEDROOM", "Sypialnia");
-        define("W_AMOUNT", "Ilość szaf");
-        define("I_AMOUNT", "Przedmiotów w domu");
-        define("C_NAME", "Zmień nazwę");
-        define("A_LEAVE", "Opuść dom");
-    }
+    define("GO_TO_BED", "Idź do sypialni");
+    define("GO_TO_WAR", "Szafy z przedmiotami");
+    define("A_LOCATOR", "Drugi mieszkaniec domu");
+    define("A_SELL", "Wystaw dom na sprzedaż");
+    define("HOUSE_INFO3", "Witaj w swoim domu. Możesz tutaj przechowywać przedmioty - jedno pomieszczenie przeznaczone na przechowalnię pomieści 100 przedmiotów. Jeżeli natomiast posiadasz sypialnię, możesz iść spać dzięki czemu jeżeli opuścisz Vallheru nikt nie będzie mógł ciebie zaatakować. Dodatkowo możesz próbować odpocząć w sypialni i nieco zregenerować nadwątlone siły.");
+    define("H_NAME", "Nazwa domu");
+    define("H_SIZE", "Rozmiar");
+    define("H_OWNER", "Właściciel");
+    define("H_LOCATOR", "Współlokator");
+    define("L_AMOUNT", "Ilość ziemi");
+    define("F_ROOMS", "Wolnych pokoi");
+    define("H_VALUE", "Wartość domu");
+    define("I_BEDROOM", "Sypialnia");
+    define("W_AMOUNT", "Ilość szaf");
+    define("I_AMOUNT", "Przedmiotów w domu");
+    define("C_NAME", "Zmień nazwę");
+    define("A_LEAVE", "Opuść dom");
     if (isset($_GET['step']) && $_GET['step'] == 'leave')
     {
         define("YOU_LEAVE", "Opuszczasz dom");
@@ -238,11 +235,11 @@ if (isset($_GET['action']) && $_GET['action'] == 'my')
     if (isset($_GET['step']) && $_GET['step'] == 'wardrobe') 
     {
         define("W_INFO", "W szafach w domu możesz przechowywać przedmioty. W jednej szafie mieści się 100 przedmiotów. Obecnie posiadasz");
-        define("W_AMOUNT", "szaf");
+        define("W_AMOUNT2", "szaf");
         define("AND2", "oraz");
         define("I_AMOUNT4", "przedmiotów");
         define("IN_W", "w nich");
-        define("A_LIST", "Lista przedmiotów w domu");
+        define("A_LIST2", "Lista przedmiotów w domu");
         define("A_HIDE_I", "Schowaj przedmiot w szafie");
         define("I_NAME", "Nazwa");
         define("I_POWER", "Siła");
@@ -260,7 +257,7 @@ if (isset($_GET['action']) && $_GET['action'] == 'my')
         define("NO_WARDROBE", "Nie możesz składować przedmiotów w domu, ponieważ nie masz szaf!");
         define("NO_AMOUNT", "Nie masz tylu przedmiotów w szafach!");
         define("YOU_GET", "Wziąłeś z domu ");
-        define("I_AMOUNT", " sztuk(i) ");
+        define("I_AMOUNTS", " sztuk(i) ");
         define("NO_ITEM", "Podaj który przedmiot chcesz wziąść!");
         define("NOT_ENOUGH", "Nie masz tyle miejsca w szafach!");
         define("NOT_ENOUGH2", "Nie masz tyle przedmiotów tego typu!");

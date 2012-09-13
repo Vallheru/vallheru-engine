@@ -8,7 +8,7 @@
  *   @author               : thindil <thindil@vallheru.net>
  *   @author               : eyescream <tduda@users.sourceforge.net>
  *   @version              : 1.6
- *   @since                : 12.09.2012
+ *   @since                : 13.09.2012
  *
  */
 
@@ -68,13 +68,12 @@ function housetype($intHousevalue, $intHousebuild)
     return $strHousename;
 }
 
-$house = $db -> Execute("SELECT * FROM houses WHERE location='".$player -> location."' AND (owner=".$player -> id." OR locator=".$player -> id.")");
+$house = $db -> Execute("SELECT * FROM `houses` WHERE `location`='".$player -> location."' AND (`owner`=".$player -> id." OR `locator`=".$player -> id.")");
 
 /**
 * Assign variables to template
 */
-$smarty -> assign(array("Message" => '', 
-			"Bedroomlink" => '', 
+$smarty -> assign(array("Bedroomlink" => '', 
 			"Locatorlink" => '', 
 			"Buildbed" => '', 
 			"Buildwardrobe" => '', 
@@ -265,7 +264,7 @@ if (isset($_GET['action']))
 		  {
 		    $cost = 1000;
 		  }
-		elseif ($house -> fields['used'] == $house -> fields['build']) 
+		if ($house -> fields['used'] == $house -> fields['build']) 
 		  {
 		    message('error', NO_FREE);
 		  }
@@ -284,7 +283,7 @@ if (isset($_GET['action']))
 		    $house->fields['used'] ++;
 		    $db -> Execute("UPDATE `houses` SET `wardrobe`=`wardrobe`+1, `points`=`points`-10, `used`=`used`+1 WHERE `id`=".$house -> fields['id']);
 		    $db -> Execute("UPDATE `players` SET `credits`=`credits`-".$cost." WHERE `id`=".$player -> id);
-		    message('error', YOU_BUILD);
+		    message('success', YOU_BUILD);
 		  }
 	      }
 	    //House adorment
@@ -429,7 +428,7 @@ if (isset($_GET['action']))
     /**
      * List of houses for sale
      */
-    if (isset ($_GET['action']) && $_GET['action'] == 'rent') 
+    elseif ($_GET['action'] == 'rent') 
       {
 	if (isset($_GET['buy'])) 
 	  {
@@ -553,618 +552,686 @@ if (isset($_GET['action']))
 				    "Aback" => A_BACK));
 	  }
       }
-  }
 
-/**
-* Player house
-*/
-if (isset ($_GET['action']) && $_GET['action'] == 'my') 
-{
-    $smarty -> assign("Aback", A_BACK);
-    if (!$house -> fields['id']) 
-    {
-        error (NO_HOUSE);
-    }
-    if (!isset ($_GET['step']) && !isset ($_GET['step2'])) 
-    {
-        $homename = housetype($house -> fields['value'], $house -> fields['build']);
-        if ($house -> fields['bedroom'] == 'Y') 
-        {
-            $smarty -> assign ("Bedroom", YES);
-        } 
-            else 
-        {
-            $smarty -> assign ("Bedroom", NO);
-        }
-        $unused = $house -> fields['build'] - $house -> fields['used'];
-        $amount = $db -> Execute("SELECT SUM(`amount`) FROM `equipment` WHERE `owner`=".$player -> id." AND `status`='H' AND `location`='".$player->location."'") or die($db->ErrorMsg());
-	if (!$amount->fields['SUM(`amount`)'])
-	  {
-	    $intAmount = 0;
-	  }
-	else
-	  {
-	    $intAmount = $amount->fields['SUM(`amount`)'];
-	  }
-	$amount->Close();
-        $smarty -> assign(array("Name" => $house -> fields['name'], 
-                                "Size" => $house -> fields['size'], 
-                                "Build" => $house -> fields['build'], 
-                                "Value" => $house -> fields['value'], 
-                                "Housename" => $homename, 
-                                "Unused" => $unused, 
-                                "Wardrobe" => $house -> fields['wardrobe'], 
-                                "Items" => $intAmount,
-                                "Houseinfo" => HOUSE_INFO3,
-                                "Hname" => H_NAME,
-                                "Hsize" => H_SIZE,
-                                "Howner" => H_OWNER,
-                                "Hlocator" => H_LOCATOR,
-                                "Lamount" => L_AMOUNT,
-                                "Frooms" => F_ROOMS,
-                                "Hvalue" => H_VALUE,
-                                "Ibedroom" => I_BEDROOM,
-                                "Wamount" => W_AMOUNT,
-                                "Iamount" => I_AMOUNT,
-                                "Cname" => C_NAME));
-        if ($house -> fields['locator']) 
-        {
-            $smarty -> assign(array("Locator" => "<a href=\"view.php?view=".$house -> fields['locator']."\">".$house -> fields['locator']."</a>", 
-                                    "Locleave" => "- <a href=\"house.php?action=my&amp;step=leave\">".A_LEAVE."</a><br />"));
-        } 
-            else 
-        {
-            $smarty -> assign(array("Locator" => L_EMPTY, 
-                                    "Locleave" => "- <a href=\"house.php?action=my&amp;step=leave\">".A_LEAVE."</a><br />"));
-        }
-        if ($house -> fields['bedroom'] == 'Y') 
-        {
-            $smarty -> assign ("Bedroomlink", "- <a href=house.php?action=my&amp;step=bedroom>".GO_TO_BED."</a><br />");
-        }
-        if ($house -> fields['wardrobe'] > 0) 
-        {
-            $smarty -> assign ("Wardrobelink", "- <a href=house.php?action=my&amp;step=wardrobe>".GO_TO_WAR."</a><br />");
-        }
-        if ($house -> fields['build'] > 3 && $player -> id == $house -> fields['owner']) 
-        {
-            $smarty -> assign("Locatorlink", "- <a href=\"house.php?action=my&amp;step=locator\">".A_LOCATOR."</a><br />");
-        }
-        if ($player -> id == $house -> fields['owner']) 
-        {
-            $smarty -> assign("Sellhouse", "- <a href=\"house.php?action=my&amp;step=sell\">".A_SELL."</a><br />");
-        } 
-            else 
-        {
-            $smarty -> assign("Sellhouse", '');
-        }
-    }
     /**
-    * Leave house
-    */
-    if (isset($_GET['step']) && $_GET['step'] == 'leave')
-    {
-      if (($player -> id != $house -> fields['locator']) && ($player->id != $house->fields['owner']))
-        {
-            error(ERROR);
-        }
-        if (!isset($_GET['step2']))
-        {
-            $smarty -> assign(array("Youwant" => YOU_WANT,
-                                    "Yes" => YES));
-        }
-        if (isset($_GET['step2']) && $_GET['step2'] == 'confirm')
-	  {
-	    if ($player->id == $house->fields['locator'])
-	      {
-		$db -> Execute("UPDATE `houses` SET `locator`=0 WHERE `id`=".$house -> fields['id']);
-	      }
-	    elseif ($player->id == $house->fields['owner'])
-	      {
-		if ($house->fields['locator'])
-		  {
-		    $db->Execute("UPDATE `houses` SET `owner`=".$house->fields['locator'].", `locator`=0 WHERE `id`=".$house->fields['id']);
-		  }
-		else
-		  {
-		    $db->Execute("DELETE FROM `houses` WHERE `id`=".$house->fields['id']);
-		  }
-	      }
-	    error(YOU_LEAVE);
-	  }
-    }
-    /**
-    * Set house for sale
-    */
-    if (isset($_GET['step']) && $_GET['step'] == 'sell') 
-    {
-        $smarty -> assign(array("Sellinfo" => SELL_INFO,
-                                "Housesale" => HOUSE_SALE,
-                                "Goldcoins" => GOLD_COINS,
-                                "Asend" => A_SEND));
-        if ($player -> id != $house -> fields['owner']) 
-        {
-            error (ONLY_OWNER);
-        }
-        if (isset($_GET['step2']) && $_GET['step2'] == 'sell') 
-        {
-	    checkvalue($_POST['cost']);
-            $db -> Execute("UPDATE houses SET cost=".$_POST['cost'].", seller=".$player -> id.", owner=0, locator=0 WHERE id=".$house -> fields['id']);
-            $smarty -> assign("Message", YOU_SELL.$_POST['cost'].GOLD_COINS.".");
-        }
-    } 
-    /**
-     * Add/delete locator to/from house
+     * Player house
      */
-    if (isset($_GET['step']) && $_GET['step'] == 'locator') 
-    {
-        if ($player -> id != $house -> fields['owner']) 
-        {
-            error (ONLY_OWNER);
-        }
-        $smarty -> assign(array("Locid" => $house -> fields['locator'],
-            "Oadd" => O_ADD,
-            "Odelete" => O_DELETE,
-            "Second" => SECOND,
-            "Lid2" => L_ID,
-            "Amake" => A_MAKE));
-        if (isset($_GET['step2']) && $_GET['step2'] == 'change') 
-        {
-	    checkvalue($_POST['lid']);
-            if ($_POST['loc'] == 'add') 
-            {
-                if ($house -> fields['locator']) 
-                {
-                    error (YOU_HAVE);
-                }
-                $test = $db -> Execute("SELECT `id` FROM `houses` WHERE `owner`=".$_POST['lid']." AND `location`='".$player -> location."'");
-                if ($test -> fields['id']) 
-                {
-                    error (BAD_PL);
-                }
-                $test = $db -> Execute("SELECT `id` FROM `houses` WHERE `locator`=".$_POST['lid']." AND `location`='".$player -> location."'");
-                if ($test -> fields['id']) 
-                {
-                    error(LIVE_ANOTHER);
-                }
-                $test = $db -> Execute("SELECT `id` FROM `players` WHERE `id`=".$_POST['lid']);
-                if (!$test -> fields['id']) 
-                {
-                    error(NO_PLAYER);
-                }
-                $test -> Close();
-                $db -> Execute("UPDATE `houses` SET `locator`=".$_POST['lid']." WHERE `id`=".$house -> fields['id']);
-                $smarty -> assign("Message", YOU_ADD);
-                $strLog = YOU_GET;
-            }
-            if ($_POST['loc'] == 'delete') 
-            {
-                if (!$house -> fields['locator']) 
-                {
-                    error (NO_LOC);
-                }
-                if ($_POST['lid'] != $house -> fields['locator']) 
-                {
-                    error (NO_LOC2);
-                }
-                $db -> Execute("UPDATE `houses` SET `locator`=0 WHERE `id`=".$house -> fields['id']);
-                $smarty -> assign("Message", YOU_DELETE);
-                $strLog = YOU_FIRED;
-            }
-            $strDate = $db -> DBDate($newdate);
-            $db -> Execute("INSERT INTO `log` (`owner`, `log`, `czas`, `type`) VALUES(".$_POST['lid'].",'".$strLog."<b><a href=\"view.php?view=".$player -> id."\">".$player -> user."</a></b>.', ".$strDate.", 'H')");
-        }
-    }
-    /**
-    * Rename house
-    */
-    if (isset ($_GET['step']) && $_GET['step'] == 'name') 
-    {
-        $smarty -> assign(array("Achange" => A_CHANGE,
-            "Ona" => ON_A));
-        if ($player -> id != $house -> fields['owner']) 
-        {
-            error (ONLY_OWNER);
-        }
-        if (isset ($_GET['step2']) && $_GET['step2'] == 'change') 
-        {
-            if (empty ($_POST['name'])) 
-            {
-                error (EMPTY_NAME);
-            }
-            $_POST['name'] = strip_tags($_POST['name']);
-            $strName = $db -> qstr($_POST['name'], get_magic_quotes_gpc());
-            $db -> Execute("UPDATE houses SET name=".$strName." WHERE id=".$house -> fields['id']);
-            error (YOU_CHANGE.$_POST['name']);
-        }
-    }
-    
-    /**
-    * Rest in house
-    */
-    if (isset ($_GET['step']) && $_GET['step'] == 'bedroom') 
-    {
-        if ($house -> fields['bedroom'] == 'N') 
-        {
-            error (NO_BEDROOM);
-        }
-        $smarty -> assign(array("Id" => $player -> id,
-            "Bedinfo" => BED_INFO,
-            "Arest" => A_REST,
-            "Asleep" => A_SLEEP));
-        if (isset ($_GET['step2']) && $_GET['step2'] == 'rest') 
-        {
-            if ($player -> hp == 0) 
-            {
-                error ("<br /><br />".YOU_DEAD);
-            }
-            if ($player -> race == '' || $player -> clas == '')
-            {
-                error(NO_RACE);
-            }
-            $objTest = $db -> Execute("SELECT `houserest` FROM `players` WHERE `id`=".$player -> id);
-            if ($objTest -> fields['houserest'] == 'Y') 
-            {
-                error ("<br /><br />".ONLY_ONCE);
-            }
-            $objTest -> Close();
-            $db -> Execute("UPDATE `players` SET `houserest`='Y' WHERE id=".$player -> id);
-            $roll = rand(1, 100);
-            if ($roll > 5) 
-            {
-                $gainenergy =  ceil(($player -> max_energy / 100) * $house -> fields['value']);
-                $gainhp = ceil(($player -> max_hp / 100) * $house -> fields['value']);
-		$maxmana = floor($player -> inteli + $player -> wisdom);
-		$maxmana += floor(($player->equip[8][2] / 100) * $maxmana);
-                $gainmana = ceil(($maxmana / 100) * $house -> fields['value']);
-                $gainlife = (4 * $gainhp) + $player -> hp;
-                if ($gainlife > $player -> max_hp) 
-                {
-                    $gainlife = $player -> max_hp;
-                }
-                $gainmagic = (4 * $gainmana) + $player -> mana;
-                if ($gainmagic > $maxmana) 
-                {
-                    $gainmagic = $maxmana;
-                }
-                if ($gainenergy > ($player->max_energy * 0.75)) 
-		  {
-		    $gainenergy = ($player->max_energy * 0.75);
-		  }
-                $db -> Execute("UPDATE `players` SET `hp`=".$gainlife.", `energy`=`energy`+".$gainenergy.", `pm`=".$gainmagic." WHERE `id`=".$player -> id);
-                $intGainlife = $gainlife - $player -> hp;
-                $intGainmagic = $gainmagic - $player -> mana;
-                if ($intGainmagic < 0)
-                {
-                    $intGainmagic = 0;
-                }
-                error ("<br /><br />".YOU_REST.$gainenergy.G_ENERGY.$intGainlife.G_LIFE.$intGainmagic.G_MAGIC);
-            } 
-                else 
-            {
-                error ("<br /><br />".YOU_REST2);
-            }
-        }
-    }
-    /**
-     * Wardrobe - store item in house
-     */
-    if (isset ($_GET['step']) && $_GET['step'] == 'wardrobe') 
-    {
-        if ($house -> fields['wardrobe'] == 0) 
-        {
-            error (NO_WARDROBE);
-        }
-        $amount = $db -> Execute("SELECT SUM(`amount`) FROM `equipment` WHERE `owner`=".$player -> id." AND `status`='H' AND location='".$player -> location."'");
-	if (!$amount->fields['SUM(`amount`)'])
+    elseif ($_GET['action'] == 'my') 
+      {
+	$smarty -> assign("Aback", A_BACK);
+	if (!$house -> fields['id']) 
 	  {
-	    $items = 0;
+	    error (NO_HOUSE);
 	  }
-	else
+	if (isset($_GET['step']))
 	  {
-	    $items = $amount->fields['SUM(`amount`)'];
-	  }
-        $amount -> Close();
-        $smarty -> assign(array("Amount" => $items,
-            "Wardrobe" => $house -> fields['wardrobe'],
-            "Winfo" => W_INFO,
-            "Wamount" => W_AMOUNT,
-            "And2" => AND2,
-            "Iamount4" => I_AMOUNT4,
-            "Iamount2" => I_AMOUNT2,
-            "Inw" => IN_W,
-            "Alist" => A_LIST,
-            "Ahidei" => A_HIDE_I,
-            "Iname" => I_NAME,
-            "Ipower" => I_POWER,
-            "Iagi" => I_AGI,
-            "Ispeed" => I_SPEED,
-            "Ioption" => I_OPTION,
-            "Aget" => A_GET,
-            "Idur" => I_DUR));
-        /**
-         * List of item in house
-         */
-        if(isset ($_GET['step2']) && $_GET['step2'] == 'list') 
-        {
-            $arritem = $db -> Execute("SELECT * FROM equipment WHERE owner=".$player -> id." AND status='H' AND location='".$player -> location."'");
-            $arrname = array();
-            $arrpower = array();
-            $arrdur = array();
-            $arrmaxdur = array();
-            $arragility = array();
-            $arrspeed = array();
-            $arramount = array();
-            $arrid = array();
-            $i = 0;
-            while (!$arritem -> EOF) 
-            {
-	        switch ($arritem->fields['ptype'])
-		  {
-		  case 'D':
-		    $arritem->fields['name'] .= ' (Dynallca +'.$arritem->fields['poison'].')';
-		    break;
-		  case 'N':
-		    $arritem->fields['name'] .= ' (Nutari +'.$arritem->fields['poison'].')';
-		    break;
-		  case 'I':
-		    $arritem->fields['name'] .= ' (Illani +'.$arritem->fields['poison'].')';
-		    break;
-		  default:
-		    break;
-		  }
-                $arrname[$i] = $arritem -> fields['name'];
-		if ($arritem->fields['type'] != 'R')
-		  {
-		    $arrdur[$i] = $arritem -> fields['wt'];
-		    $arrmaxdur[$i] = $arritem -> fields['maxwt'];
-		    $arramount[$i] = $arritem -> fields['amount'];
-		  }
-		else
-		  {
-		    $arrdur[$i] = 1;
-		    $arrmaxdur[$i] = 1;
-		    $arramount[$i] = $arritem->fields['wt'];
-		  }
-		$arrspeed[$i] = $arritem -> fields['szyb'];
-                $arrid[$i] = $arritem -> fields['id'];
-                $arrpower[$i] = $arritem -> fields['power'];
-                if ($arritem -> fields['zr'] < 1) 
-                {
-                    $arragility[$i] = str_replace("-","",$arritem -> fields['zr']);
-                } 
-                    else 
-                {
-                    $arragility[$i] = "-".$arritem -> fields['zr'];
-                }
-                if ($arritem -> fields['poison'] > 0) 
-                {
-                    $arrpower[$i] = $arritem -> fields['power'] + $arritem -> fields['poison'];
-                }
-                $arritem -> MoveNext();
-                $i = $i + 1;
-            }
-            $arritem -> Close();
-            $smarty -> assign(array("Itemname" => $arrname, 
-                "Itemdur" => $arrdur, 
-                "Itemmaxdur" => $arrmaxdur, 
-                "Itemspeed" => $arrspeed, 
-                "Itemamount" => $arramount, 
-                "Itemid" => $arrid, 
-                "Itempower" => $arrpower, 
-                "Itemagility" => $arragility));
-        }
-        /**
-         * Take items from house
-         */
-        if (isset ($_GET['take'])) 
-	  {
-	    checkvalue($_GET['take']);
-	    $zbroj = $db -> Execute("SELECT * FROM equipment WHERE id=".$_GET['take']." AND `status`='H' AND `owner`=".$player->id);
-	    if (!$zbroj->fields['id'])
+	    /**
+	     * Leave house
+	     */
+	    if ($_GET['step'] == 'leave')
 	      {
-		error(ERROR);
+		if (($player -> id != $house -> fields['locator']) && ($player->id != $house->fields['owner']))
+		  {
+		    error(ERROR);
+		  }
+		if (!isset($_GET['step2']))
+		  {
+		    $smarty -> assign(array("Youwant" => YOU_WANT,
+					    "Yes" => YES));
+		  }
+		elseif ($_GET['step2'] == 'confirm')
+		  {
+		    if ($player->id == $house->fields['locator'])
+		      {
+			$db -> Execute("UPDATE `houses` SET `locator`=0 WHERE `id`=".$house -> fields['id']);
+		      }
+		    elseif ($player->id == $house->fields['owner'])
+		      {
+			if ($house->fields['locator'])
+			  {
+			    $db->Execute("UPDATE `houses` SET `owner`=".$house->fields['locator'].", `locator`=0 WHERE `id`=".$house->fields['id']);
+			  }
+			else
+			  {
+			    $db->Execute("DELETE FROM `houses` WHERE `id`=".$house->fields['id']);
+			  }
+		      }
+		    message('success', YOU_LEAVE);
+		    unset($_GET['action']);
+		    $house = $db -> Execute("SELECT * FROM `houses` WHERE `location`='".$player -> location."' AND (`owner`=".$player -> id." OR `locator`=".$player -> id.")");
+		  }
 	      }
-            if (!isset($_GET['step3'])) 
+	    /**
+	     * Set house for sale
+	     */
+	    elseif ($_GET['step'] == 'sell') 
 	      {
-                $smarty -> assign(array("Id" => $_GET['take'], 
-                    "Amount" => $zbroj -> fields['amount'], 
-                    "Name" => $zbroj -> fields['name'],
-                    "Fromh" => FROM_H,
-                    "Amount2" => AMOUNT2));
-            }
-            if (isset($_GET['step3']) && $_GET['step3'] == 'add') 
-            {
-	        if (!isset($_POST['amount'])) 
-                {
-                    error (ERROR);
-                }
-                integercheck($_POST['amount']);
-		checkvalue($_POST['amount']);
-		if ($zbroj->fields['type'] != 'R')
+		if ($player -> id != $house -> fields['owner']) 
 		  {
-		    if ($zbroj -> fields['amount'] < $_POST['amount']) 
-		      {
-			error (NO_AMOUNT);
-		      }
-		    $test = $db -> Execute("SELECT id FROM equipment WHERE name='".$zbroj -> fields['name']."' AND owner=".$player -> id." AND wt=".$zbroj -> fields['wt']." AND type='".$zbroj -> fields['type']."' AND power=".$zbroj -> fields['power']." AND szyb=".$zbroj -> fields['szyb']." AND zr=".$zbroj -> fields['zr']." AND maxwt=".$zbroj -> fields['maxwt']." AND poison=".$zbroj -> fields['poison']." AND status='U' AND ptype='".$zbroj -> fields['ptype']."' AND cost=".$zbroj -> fields['cost']);
-		    if (!$test -> fields['id']) 
-		      {
-			$db -> Execute("INSERT INTO equipment (owner, name, power, type, cost, zr, wt, minlev, maxwt, amount, magic, poison, szyb, twohand, ptype, repair) VALUES(".$player -> id.",'".$zbroj -> fields['name']."',".$zbroj -> fields['power'].",'".$zbroj -> fields['type']."',".$zbroj -> fields['cost'].",".$zbroj -> fields['zr'].",".$zbroj -> fields['wt'].",".$zbroj -> fields['minlev'].",".$zbroj -> fields['maxwt'].",".$_POST['amount'].",'".$zbroj -> fields['magic']."',".$zbroj -> fields['poison'].",".$zbroj -> fields['szyb'].",'".$zbroj -> fields['twohand']."','".$zbroj -> fields['ptype']."', ".$zbroj -> fields['repair'].")");
-		      } 
-                    else 
-		      {
-			$db -> Execute("UPDATE `equipment` SET `amount`=`amount`+".$_POST['amount']." WHERE `id`=".$test -> fields['id']);
-		      }
-		    if ($_POST['amount'] < $zbroj -> fields['amount']) 
-		      {
-			$db -> Execute("UPDATE equipment SET amount=amount-".$_POST['amount']." WHERE id=".$zbroj -> fields['id']);
-		      } 
-                    else 
-		      {
-			$db -> Execute("DELETE FROM equipment WHERE id=".$zbroj -> fields['id']);
-		      }
+		    error (ONLY_OWNER);
 		  }
-		else
+		$smarty -> assign(array("Sellinfo" => SELL_INFO,
+					"Housesale" => HOUSE_SALE,
+					"Goldcoins" => GOLD_COINS,
+					"Asend" => A_SEND));
+		if (isset($_GET['step2']) && $_GET['step2'] == 'sell') 
 		  {
-		    if ($zbroj -> fields['wt'] < $_POST['amount']) 
-		      {
-			error (NO_AMOUNT);
-		      }
-		    $test = $db -> Execute("SELECT `id` FROM `equipment` WHERE `name`='".$zbroj -> fields['name']."' AND `owner`=".$player -> id." AND `type`='R' AND `power`=".$zbroj -> fields['power']." AND `szyb`=".$zbroj -> fields['szyb']." AND `zr`=".$zbroj -> fields['zr']." AND `poison`=".$zbroj -> fields['poison']." AND `status`='U' AND `ptype`='".$zbroj -> fields['ptype']."' AND `cost`=".$zbroj -> fields['cost']);
-		    if (!$test -> fields['id']) 
-		      {
-			$db -> Execute("INSERT INTO equipment (owner, name, power, type, cost, zr, wt, minlev, maxwt, amount, magic, poison, szyb, twohand, ptype, repair) VALUES(".$player -> id.",'".$zbroj -> fields['name']."',".$zbroj -> fields['power'].",'R',".$zbroj -> fields['cost'].",".$zbroj -> fields['zr'].",".$_POST['amount'].",".$zbroj -> fields['minlev'].",".$_POST['amount'].",1,'".$zbroj -> fields['magic']."',".$zbroj -> fields['poison'].",".$zbroj -> fields['szyb'].",'".$zbroj -> fields['twohand']."','".$zbroj -> fields['ptype']."', ".$zbroj -> fields['repair'].")");
-		      } 
-                    else 
-		      {
-			$db -> Execute("UPDATE `equipment` SET `wt`=`wt`+".$_POST['amount']." WHERE `id`=".$test -> fields['id']);
-		      }
-		    if ($_POST['amount'] < $zbroj -> fields['wt']) 
-		      {
-			$db -> Execute("UPDATE `equipment` SET `wt`=`wt`-".$_POST['amount']." WHERE `id`=".$zbroj -> fields['id']);
-		      } 
-                    else 
-		      {
-			$db -> Execute("DELETE FROM `equipment` WHERE `id`=".$zbroj -> fields['id']);
-		      }
+		    checkvalue($_POST['cost']);
+		    $db -> Execute("UPDATE `houses` SET `cost`=".$_POST['cost'].", `seller`=".$player -> id.", `owner`=0, `locator`=0 WHERE `id`=".$house -> fields['id']);
+		    $house->fields['owner'] = 0;
+		    $house->fields['locator'] = 0;
+		    $house->fields['id'] = 0;
+		    message("success", YOU_SELL.$_POST['cost'].GOLD_COINS.".");
+		    unset($_GET['action']);
 		  }
-		$test -> Close();
-                error (YOU_GET.$_POST['amount'].I_AMOUNT.$zbroj -> fields['name']);
-            }
-	    $zbroj->Close();
-	  }
-        /**
-         * Add item to wardrobe
-         */
-        if (isset ($_GET['step2']) && $_GET['step2'] == 'add') 
-        {
-            $item = $db -> Execute("SELECT * FROM `equipment` WHERE `status`='U' AND `type`!='Q' AND `owner`=".$player -> id);
-	    $arrItems = array();
-            while (!$item -> EOF) 
+	      } 
+	    /**
+	     * Add/delete locator to/from house
+	     */
+	    elseif ($_GET['step'] == 'locator') 
 	      {
-		switch ($item->fields['ptype'])
+		if ($player -> id != $house -> fields['owner']) 
 		  {
-		  case 'D':
-		    $item->fields['name'] .= ' (Dynallca +'.$item->fields['poison'].')';
-		    break;
-		  case 'N':
-		    $item->fields['name'] .= ' (Nutari +'.$item->fields['poison'].')';
-		    break;
-		  case 'I':
-		    $item->fields['name'] .= ' (Illani +'.$item->fields['poison'].')';
-		    break;
-		  default:
-		    break;
+		    error (ONLY_OWNER);
 		  }
-		if ($item->fields['type'] != 'R')
+		$smarty -> assign(array("Locid" => $house -> fields['locator'],
+					"Oadd" => O_ADD,
+					"Odelete" => O_DELETE,
+					"Second" => SECOND,
+					"Lid2" => L_ID,
+					"Amake" => A_MAKE));
+		if (isset($_GET['step2']) && $_GET['step2'] == 'change') 
 		  {
-		    $strAmount = $item->fields['amount'];
+		    checkvalue($_POST['lid']);
+		    $blnValid = TRUE;
+		    if ($_POST['loc'] == 'add') 
+		      {
+			if ($house -> fields['locator']) 
+			  {
+			    message('error', YOU_HAVE);
+			    $blnValid = FALSE;
+			  }
+			$test = $db -> Execute("SELECT `id` FROM `houses` WHERE `owner`=".$_POST['lid']." AND `location`='".$player -> location."'");
+			if ($test -> fields['id']) 
+			  {
+			    message('error', BAD_PL);
+			    $blnValid = FALSE;
+			  }
+			$test = $db -> Execute("SELECT `id` FROM `houses` WHERE `locator`=".$_POST['lid']." AND `location`='".$player -> location."'");
+			if ($test -> fields['id']) 
+			  {
+			    message('error', LIVE_ANOTHER);
+			    $blnValid = FALSE;
+			  }
+			$test = $db -> Execute("SELECT `id` FROM `players` WHERE `id`=".$_POST['lid']);
+			if (!$test -> fields['id']) 
+			  {
+			    message('error', NO_PLAYER);
+			    $blnValid = FALSE;
+			  }
+			$test -> Close();
+			if ($blnValid)
+			  {
+			    $db -> Execute("UPDATE `houses` SET `locator`=".$_POST['lid']." WHERE `id`=".$house -> fields['id']);
+			    message("success", YOU_ADD);
+			    $strLog = YOU_GET;
+			  }
+		      }
+		    elseif ($_POST['loc'] == 'delete') 
+		      {
+			if (!$house -> fields['locator']) 
+			  {
+			    message('error', NO_LOC);
+			    $blnValid = FALSE;
+			  }
+			elseif ($_POST['lid'] != $house -> fields['locator']) 
+			  {
+			    message('error', NO_LOC2);
+			    $blnValid = FALSE;
+			  }
+			else
+			  {
+			    $db -> Execute("UPDATE `houses` SET `locator`=0 WHERE `id`=".$house -> fields['id']);
+			    message("success", YOU_DELETE);
+			    $strLog = YOU_FIRED;
+			  }
+		      }
+		    if ($blnValid)
+		      {
+			$strDate = $db -> DBDate($newdate);
+			$db -> Execute("INSERT INTO `log` (`owner`, `log`, `czas`, `type`) VALUES(".$_POST['lid'].",'".$strLog."<b><a href=\"view.php?view=".$player -> id."\">".$player -> user."</a></b>.', ".$strDate.", 'H')");
+			unset($_GET['step']);
+		      }
 		  }
-		else
-		  {
-		    $strAmount = $item->fields['wt'];
-		  }
-		$strDur = '';
-		if ($item->fields['maxwt'] > 1)
-		  {
-		    $strDur = ' ('.$item->fields['wt'].'/'.$item->fields['maxwt'].' wt)';
-		  }
-		$strAgi = '';
-		$strSpeed = '';
-		if ($item->fields['zr'] != 0)
-		  {
-		    $strAgi = " (".($item->fields['zr'] * -1)." zr)";
-		  }
-		if ($item->fields['szyb'] != 0)
-		  {
-		    $strSpeed = " (".$item->fields['szyb']." szyb)";
-		  }
-		$arrItems[$item->fields['id']] = $item->fields['name']." (+".$item->fields['power'].")".$strAgi.$strSpeed.$strDur." (ilość: ".$strAmount.")";
-                $item -> MoveNext();
 	      }
-            $item -> Close();
-            $smarty -> assign(array("Ioptions" => $arrItems,
-                "Item" => "przedmiot",
-                "Iamount3" => I_AMOUNT3,
-                "Ahide" => A_HIDE,
-                "Amount2" => AMOUNT2));
-            if (isset ($_GET['step3']) && $_GET['step3'] == 'add') 
-            {
-                if (!isset($_POST['przedmiot'])) 
-                {
-                    error(NO_ITEM);
-                }
-                integercheck($_POST['amount']);
-		checkvalue($_POST['przedmiot']);
-		checkvalue($_POST['amount']);
-                $przed = $db -> Execute("SELECT * FROM `equipment` WHERE `id`=".$_POST['przedmiot']." AND `type`!='Q' AND status='U' AND `owner`=".$player->id);
-                if (!$przed -> fields['id']) 
-                {
-                    error (ERROR);
-                }
-                $amount = ($house -> fields['wardrobe'] * 100) - $items;
-		if ($przed->fields['type'] != 'R')
+	    /**
+	     * Rename house
+	     */
+	    elseif ($_GET['step'] == 'name') 
+	      {
+		if ($player -> id != $house -> fields['owner']) 
 		  {
-		    if ($przed -> fields['amount'] < $_POST['amount']) 
+		    error (ONLY_OWNER);
+		  }
+		$smarty -> assign(array("Achange" => A_CHANGE,
+					"Ona" => ON_A));
+		if (isset ($_GET['step2']) && $_GET['step2'] == 'change') 
+		  {
+		    if (empty ($_POST['name'])) 
 		      {
-			error (NOT_ENOUGH);
+			message('error', EMPTY_NAME);
 		      }
-		    if ($amount < $_POST['amount']) 
+		    else
 		      {
-			error (NOT_ENOUGH2);
+			$_POST['name'] = strip_tags($_POST['name']);
+			$strName = $db -> qstr($_POST['name'], get_magic_quotes_gpc());
+			$db -> Execute("UPDATE `houses` SET `name`=".$strName." WHERE `id`=".$house -> fields['id']);
+			message('success', YOU_CHANGE.$_POST['name']);
+			unset($_GET['step']);
 		      }
-		    $test = $db -> Execute("SELECT id FROM equipment WHERE name='".$przed -> fields['name']."' AND owner=".$player -> id." AND wt=".$przed -> fields['wt']." AND type='".$przed -> fields['type']."' AND power=".$przed -> fields['power']." AND szyb=".$przed -> fields['szyb']." AND zr=".$przed -> fields['zr']." AND maxwt=".$przed -> fields['maxwt']." AND poison=".$przed -> fields['poison']." AND status='H' AND ptype='".$przed -> fields['ptype']."' AND cost=".$przed -> fields['cost']." AND location='".$player -> location."'");
-		    if (!$test -> fields['id']) 
+		  }
+	      }
+	    /**
+	     * Rest in house
+	     */
+	    elseif ($_GET['step'] == 'bedroom') 
+	      {
+		if ($house -> fields['bedroom'] == 'N') 
+		  {
+		    error (NO_BEDROOM);
+		  }
+		$smarty -> assign(array("Id" => $player -> id,
+					"Bedinfo" => BED_INFO,
+					"Arest" => A_REST,
+					"Asleep" => A_SLEEP));
+		if (isset ($_GET['step2']) && $_GET['step2'] == 'rest') 
+		  {
+		    $blnValid = TRUE;
+		    if ($player -> hp == 0) 
 		      {
-			$db -> Execute("INSERT INTO equipment (owner, name, power, type, cost, zr, wt, minlev, maxwt, amount, magic, poison, szyb, twohand, status, ptype, repair, location) VALUES(".$player -> id.",'".$przed -> fields['name']."',".$przed -> fields['power'].",'".$przed -> fields['type']."',".$przed -> fields['cost'].",".$przed -> fields['zr'].",".$przed -> fields['wt'].",".$przed -> fields['minlev'].",".$przed -> fields['maxwt'].",".$_POST['amount'].",'".$przed -> fields['magic']."',".$przed -> fields['poison'].",".$przed -> fields['szyb'].",'".$przed -> fields['twohand']."','H','".$przed -> fields['ptype']."', ".$przed -> fields['repair'].", '".$player -> location."')") or die($db -> ErrorMsg());
-		      } 
-                    else 
-		      {
-			$db -> Execute("UPDATE `equipment` SET `amount`=`amount`+".$_POST['amount']." WHERE `id`=".$test -> fields['id']);
+			message('error', YOU_DEAD);
+			$blnValid = FALSE;
 		      }
-		    if ($_POST['amount'] < $przed -> fields['amount']) 
+		    if ($player -> race == '' || $player -> clas == '')
 		      {
-			$db -> Execute("UPDATE equipment SET amount=amount-".$_POST['amount']." WHERE id=".$przed -> fields['id']);
-		      } 
-                    else 
-		      {
-			$db -> Execute("DELETE FROM equipment WHERE id=".$przed -> fields['id']);
+			message('error', NO_RACE);
+			$blnValid = FALSE;
 		      }
+		    $objTest = $db -> Execute("SELECT `houserest` FROM `players` WHERE `id`=".$player -> id);
+		    if ($objTest -> fields['houserest'] == 'Y') 
+		      {
+			message("error", ONLY_ONCE);
+			$blnValid = FALSE;
+		      }
+		    $objTest -> Close();
+		    $db -> Execute("UPDATE `players` SET `houserest`='Y' WHERE id=".$player -> id);
+		    if ($blnValid)
+		      {
+			$roll = rand(1, 100);
+			if ($roll > 5) 
+			  {
+			    $gainenergy =  ceil(($player -> max_energy / 100) * $house -> fields['value']);
+			    $gainhp = ceil(($player -> max_hp / 100) * $house -> fields['value']);
+			    $maxmana = floor($player -> inteli + $player -> wisdom);
+			    $maxmana += floor(($player->equip[8][2] / 100) * $maxmana);
+			    $gainmana = ceil(($maxmana / 100) * $house -> fields['value']);
+			    $gainlife = (4 * $gainhp) + $player -> hp;
+			    if ($gainlife > $player -> max_hp) 
+			      {
+				$gainlife = $player -> max_hp;
+			      }
+			    $gainmagic = (4 * $gainmana) + $player -> mana;
+			    if ($gainmagic > $maxmana) 
+			      {
+				$gainmagic = $maxmana;
+			      }
+			    if ($gainenergy > ($player->max_energy * 0.75)) 
+			      {
+				$gainenergy = ($player->max_energy * 0.75);
+			      }
+			    $db -> Execute("UPDATE `players` SET `hp`=".$gainlife.", `energy`=`energy`+".$gainenergy.", `pm`=".$gainmagic." WHERE `id`=".$player -> id);
+			    $intGainlife = $gainlife - $player -> hp;
+			    $intGainmagic = $gainmagic - $player -> mana;
+			    if ($intGainmagic < 0)
+			      {
+				$intGainmagic = 0;
+			      }
+			    message("success", YOU_REST.$gainenergy.G_ENERGY.$intGainlife.G_LIFE.$intGainmagic.G_MAGIC);
+			  } 
+			else 
+			  {
+			    message("error", YOU_REST2);
+			  }
+			unset($_GET['step']);
+		      }
+		  }
+	      }
+	    /**
+	     * Wardrobe - store item in house
+	     */
+	    elseif ($_GET['step'] == 'wardrobe') 
+	      {
+		if ($house -> fields['wardrobe'] == 0) 
+		  {
+		    error (NO_WARDROBE);
+		  }
+		$amount = $db -> Execute("SELECT SUM(`amount`) FROM `equipment` WHERE `owner`=".$player -> id." AND `status`='H' AND location='".$player -> location."'");
+		if (!$amount->fields['SUM(`amount`)'])
+		  {
+		    $items = 0;
 		  }
 		else
 		  {
-		    if ($przed -> fields['wt'] < $_POST['amount']) 
+		    $items = $amount->fields['SUM(`amount`)'];
+		  }
+		$amount -> Close();
+		if (isset($_GET['step2']))
+		  {
+		    /**
+		     * List of item in house
+		     */
+		    if($_GET['step2'] == 'list') 
 		      {
-			error (NOT_ENOUGH);
+			$arrItems = $db->GetAll("SELECT * FROM `equipment` WHERE `owner`=".$player->id." AND `status`='H' AND `location`='".$player->location."'");
+			if (count($arrItems) == 0)
+			  {
+			    message('error', 'Nie masz jakichkolwiek przedmiotów w szafach.');
+			    unset($_GET['step2']);
+			  }
+			else
+			  {
+			    foreach ($arrItems as &$arrItem)
+			      {
+				switch ($arrItem['ptype'])
+				  {
+				  case 'D':
+				    $arrItem['name'] .= ' (Dynallca +'.$arrItem['poison'].')';
+				    break;
+				  case 'N':
+				    $arrItem['name'] .= ' (Nutari +'.$arrItem['poison'].')';
+				    break;
+				  case 'I':
+				    $arrItem['name'] .= ' (Illani +'.$arrItem['poison'].')';
+				    break;
+				  default:
+				    break;
+				  }
+				if ($arrItem['type'] == 'R')
+				  {
+				    $arrItem['amount'] = $arrItem['wt'];
+				    $arrItem['wt'] = 1;
+				    $arrItem['maxwt'] = 1;
+				  }
+				$arrItem['zr'] = $arrItem['zr'] * -1;
+				if ($arrItem['poison'] > 0)
+				  {
+				    $arrItem['power'] += $arrItem['poison'];
+				  }
+			      }
+			    $smarty->assign("Items", $arrItems);
+			  }
 		      }
-		    if ($amount - 1 < 0)
+		    /**
+		     * Take items from house
+		     */
+		    elseif ($_GET['step2'] == 'take') 
 		      {
-			error (NOT_ENOUGH2);
+			checkvalue($_GET['take']);
+			$zbroj = $db -> Execute("SELECT * FROM `equipment` WHERE `id`=".$_GET['take']." AND `status`='H' AND `owner`=".$player->id);
+			if (!$zbroj->fields['id'])
+			  {
+			    error(ERROR);
+			  }
+			if (isset($_GET['step3'])) 
+			  {
+			    if (!isset($_POST['amount'])) 
+			      {
+				message('error', 'Podaj ile przedmiotów chcesz zabrać z szaf.');
+			      }
+			    else
+			      {
+				integercheck($_POST['amount']);
+				checkvalue($_POST['amount']);
+				if ($zbroj->fields['type'] != 'R')
+				  {
+				    if ($zbroj -> fields['amount'] < $_POST['amount']) 
+				      {
+					message('error', NO_AMOUNT);
+				      }
+				    else
+				      {
+					$test = $db -> Execute("SELECT id FROM equipment WHERE name='".$zbroj -> fields['name']."' AND owner=".$player -> id." AND wt=".$zbroj -> fields['wt']." AND type='".$zbroj -> fields['type']."' AND power=".$zbroj -> fields['power']." AND szyb=".$zbroj -> fields['szyb']." AND zr=".$zbroj -> fields['zr']." AND maxwt=".$zbroj -> fields['maxwt']." AND poison=".$zbroj -> fields['poison']." AND status='U' AND ptype='".$zbroj -> fields['ptype']."' AND cost=".$zbroj -> fields['cost']);
+					if (!$test -> fields['id']) 
+					  {
+					    $db -> Execute("INSERT INTO equipment (owner, name, power, type, cost, zr, wt, minlev, maxwt, amount, magic, poison, szyb, twohand, ptype, repair) VALUES(".$player -> id.",'".$zbroj -> fields['name']."',".$zbroj -> fields['power'].",'".$zbroj -> fields['type']."',".$zbroj -> fields['cost'].",".$zbroj -> fields['zr'].",".$zbroj -> fields['wt'].",".$zbroj -> fields['minlev'].",".$zbroj -> fields['maxwt'].",".$_POST['amount'].",'".$zbroj -> fields['magic']."',".$zbroj -> fields['poison'].",".$zbroj -> fields['szyb'].",'".$zbroj -> fields['twohand']."','".$zbroj -> fields['ptype']."', ".$zbroj -> fields['repair'].")");
+					  } 
+					else 
+					  {
+					    $db -> Execute("UPDATE `equipment` SET `amount`=`amount`+".$_POST['amount']." WHERE `id`=".$test -> fields['id']);
+					  }
+					if ($_POST['amount'] < $zbroj -> fields['amount']) 
+					  {
+					    $db -> Execute("UPDATE equipment SET amount=amount-".$_POST['amount']." WHERE id=".$zbroj -> fields['id']);
+					  } 
+					else 
+					  {
+					    $db -> Execute("DELETE FROM equipment WHERE id=".$zbroj -> fields['id']);
+					  }
+					$test->Close();
+					message('success', YOU_GET.$_POST['amount'].I_AMOUNTS.$zbroj -> fields['name']);
+				      }
+				  }
+				else
+				  {
+				    if ($zbroj -> fields['wt'] < $_POST['amount']) 
+				      {
+					message('error', NO_AMOUNT);
+				      }
+				    else
+				      {
+					$test = $db -> Execute("SELECT `id` FROM `equipment` WHERE `name`='".$zbroj -> fields['name']."' AND `owner`=".$player -> id." AND `type`='R' AND `power`=".$zbroj -> fields['power']." AND `szyb`=".$zbroj -> fields['szyb']." AND `zr`=".$zbroj -> fields['zr']." AND `poison`=".$zbroj -> fields['poison']." AND `status`='U' AND `ptype`='".$zbroj -> fields['ptype']."' AND `cost`=".$zbroj -> fields['cost']);
+					if (!$test -> fields['id']) 
+					  {
+					    $db -> Execute("INSERT INTO equipment (owner, name, power, type, cost, zr, wt, minlev, maxwt, amount, magic, poison, szyb, twohand, ptype, repair) VALUES(".$player -> id.",'".$zbroj -> fields['name']."',".$zbroj -> fields['power'].",'R',".$zbroj -> fields['cost'].",".$zbroj -> fields['zr'].",".$_POST['amount'].",".$zbroj -> fields['minlev'].",".$_POST['amount'].",1,'".$zbroj -> fields['magic']."',".$zbroj -> fields['poison'].",".$zbroj -> fields['szyb'].",'".$zbroj -> fields['twohand']."','".$zbroj -> fields['ptype']."', ".$zbroj -> fields['repair'].")");
+					  } 
+					else 
+					  {
+					    $db -> Execute("UPDATE `equipment` SET `wt`=`wt`+".$_POST['amount']." WHERE `id`=".$test -> fields['id']);
+					  }
+					if ($_POST['amount'] < $zbroj -> fields['wt']) 
+					  {
+					    $db -> Execute("UPDATE `equipment` SET `wt`=`wt`-".$_POST['amount']." WHERE `id`=".$zbroj -> fields['id']);
+					  } 
+					else 
+					  {
+					    $db -> Execute("DELETE FROM `equipment` WHERE `id`=".$zbroj -> fields['id']);
+					  }
+					$test->Close();
+					message('success', YOU_GET.$_POST['amount'].I_AMOUNTS.$zbroj -> fields['name']);
+				      }
+				  }
+			      }
+			  }
+			if ($zbroj->fields['type'] == 'R')
+			  {
+			    $intAmount = $zbroj->fields['wt'];
+			  }
+			else
+			  {
+			    $intAmount = $zbroj->fields['amount'];
+			  }
+			$smarty -> assign(array("Id" => $_GET['take'], 
+						"Amount23" => $intAmount, 
+						"Name" => $zbroj -> fields['name'],
+						"Fromh" => FROM_H,
+						"Amount2" => AMOUNT2));
+			$zbroj->Close();
 		      }
-		    $test = $db -> Execute("SELECT `id` FROM `equipment` WHERE `name`='".$przed -> fields['name']."' AND `owner`=".$player -> id." AND `type`='R' AND `power`=".$przed -> fields['power']." AND `szyb`=".$przed -> fields['szyb']." AND `zr`=".$przed -> fields['zr']." AND `poison`=".$przed -> fields['poison']." AND `status`='H' AND `ptype`='".$przed -> fields['ptype']."' AND `cost`=".$przed -> fields['cost']." AND `location`='".$player -> location."'");
-		    if (!$test -> fields['id']) 
+		    /**
+		     * Add item to wardrobe
+		     */
+		    elseif ($_GET['step2'] == 'add') 
 		      {
-			$db -> Execute("INSERT INTO equipment (owner, name, power, type, cost, zr, wt, minlev, maxwt, amount, magic, poison, szyb, twohand, status, ptype, repair, location) VALUES(".$player -> id.",'".$przed -> fields['name']."',".$przed -> fields['power'].",'R',".$przed -> fields['cost'].",".$przed -> fields['zr'].",".$_POST['amount'].",".$przed -> fields['minlev'].",".$_POST['amount'].",1,'".$przed -> fields['magic']."',".$przed -> fields['poison'].",".$przed -> fields['szyb'].",'".$przed -> fields['twohand']."','H','".$przed -> fields['ptype']."', ".$przed -> fields['repair'].", '".$player -> location."')") or die($db -> ErrorMsg());
-		      } 
-                    else 
-		      {
-			$db -> Execute("UPDATE `equipment` SET `wt`=`wt`+".$_POST['amount']." WHERE `id`=".$test -> fields['id']);
-		      }
-		    if ($_POST['amount'] < $przed -> fields['wt']) 
-		      {
-			$db -> Execute("UPDATE `equipment` SET `wt`=`wt`-".$_POST['amount']." WHERE `id`=".$przed -> fields['id']);
-		      } 
-                    else 
-		      {
-			$db -> Execute("DELETE FROM `equipment` WHERE `id`=".$przed -> fields['id']);
+			if (isset ($_GET['step3'])) 
+			  {
+			    if (!isset($_POST['przedmiot'])) 
+			      {
+				message('error', 'Podaj jaki przedmiot chcesz schować w domu.');
+			      }
+			    else
+			      {
+				checkvalue($_POST['przedmiot']);
+				if (!isset($_POST['addall']))
+				  {
+				    integercheck($_POST['amount']);
+				    checkvalue($_POST['amount']);
+				  }
+				$przed = $db -> Execute("SELECT * FROM `equipment` WHERE `id`=".$_POST['przedmiot']." AND `type`!='Q' AND status='U' AND `owner`=".$player->id);
+				if (!$przed -> fields['id']) 
+				  {
+				    error (ERROR);
+				  }
+				$amount = ($house -> fields['wardrobe'] * 100) - $items;
+				if ($przed->fields['type'] != 'R')
+				  {
+				    if (isset($_POST['addall']))
+				      {
+					$_POST['amount'] = $przed -> fields['amount'];
+				      }
+				    if ($przed -> fields['amount'] < $_POST['amount']) 
+				      {
+					message('error', NOT_ENOUGH);
+				      }
+				    elseif ($amount < $_POST['amount']) 
+				      {
+					message('error', NOT_ENOUGH2);
+				      }
+				    else
+				      {
+					$test = $db -> Execute("SELECT id FROM equipment WHERE name='".$przed -> fields['name']."' AND owner=".$player -> id." AND wt=".$przed -> fields['wt']." AND type='".$przed -> fields['type']."' AND power=".$przed -> fields['power']." AND szyb=".$przed -> fields['szyb']." AND zr=".$przed -> fields['zr']." AND maxwt=".$przed -> fields['maxwt']." AND poison=".$przed -> fields['poison']." AND status='H' AND ptype='".$przed -> fields['ptype']."' AND cost=".$przed -> fields['cost']." AND location='".$player -> location."'");
+					if (!$test -> fields['id']) 
+					  {
+					    $db -> Execute("INSERT INTO equipment (owner, name, power, type, cost, zr, wt, minlev, maxwt, amount, magic, poison, szyb, twohand, status, ptype, repair, location) VALUES(".$player -> id.",'".$przed -> fields['name']."',".$przed -> fields['power'].",'".$przed -> fields['type']."',".$przed -> fields['cost'].",".$przed -> fields['zr'].",".$przed -> fields['wt'].",".$przed -> fields['minlev'].",".$przed -> fields['maxwt'].",".$_POST['amount'].",'".$przed -> fields['magic']."',".$przed -> fields['poison'].",".$przed -> fields['szyb'].",'".$przed -> fields['twohand']."','H','".$przed -> fields['ptype']."', ".$przed -> fields['repair'].", '".$player -> location."')") or die($db -> ErrorMsg());
+					  } 
+					else 
+					  {
+					    $db -> Execute("UPDATE `equipment` SET `amount`=`amount`+".$_POST['amount']." WHERE `id`=".$test -> fields['id']);
+					  }
+					if ($_POST['amount'] < $przed -> fields['amount']) 
+					  {
+					    $db -> Execute("UPDATE equipment SET amount=amount-".$_POST['amount']." WHERE id=".$przed -> fields['id']);
+					  } 
+					else 
+					  {
+					    $db -> Execute("DELETE FROM equipment WHERE id=".$przed -> fields['id']);
+					  }
+					$test -> Close();
+					message('success', YOU_HIDE.$_POST['amount'].I_AMOUNTS.$przed -> fields['name'].IN_HOUSE);
+				      }
+				  }
+				else
+				  {
+				    if (isset($_POST['addall']))
+				      {
+					$_POST['amount'] = $przed -> fields['wt'];
+				      }
+				    if ($przed -> fields['wt'] < $_POST['amount']) 
+				      {
+					message('error', NOT_ENOUGH);
+				      }
+				    if ($amount - 1 < 0)
+				      {
+					message('error', NOT_ENOUGH2);
+				      }
+				    else
+				      {
+					$test = $db -> Execute("SELECT `id` FROM `equipment` WHERE `name`='".$przed -> fields['name']."' AND `owner`=".$player -> id." AND `type`='R' AND `power`=".$przed -> fields['power']." AND `szyb`=".$przed -> fields['szyb']." AND `zr`=".$przed -> fields['zr']." AND `poison`=".$przed -> fields['poison']." AND `status`='H' AND `ptype`='".$przed -> fields['ptype']."' AND `cost`=".$przed -> fields['cost']." AND `location`='".$player -> location."'");
+					if (!$test -> fields['id']) 
+					  {
+					    $db -> Execute("INSERT INTO equipment (owner, name, power, type, cost, zr, wt, minlev, maxwt, amount, magic, poison, szyb, twohand, status, ptype, repair, location) VALUES(".$player -> id.",'".$przed -> fields['name']."',".$przed -> fields['power'].",'R',".$przed -> fields['cost'].",".$przed -> fields['zr'].",".$_POST['amount'].",".$przed -> fields['minlev'].",".$_POST['amount'].",1,'".$przed -> fields['magic']."',".$przed -> fields['poison'].",".$przed -> fields['szyb'].",'".$przed -> fields['twohand']."','H','".$przed -> fields['ptype']."', ".$przed -> fields['repair'].", '".$player -> location."')") or die($db -> ErrorMsg());
+					  } 
+					else 
+					  {
+					    $db -> Execute("UPDATE `equipment` SET `wt`=`wt`+".$_POST['amount']." WHERE `id`=".$test -> fields['id']);
+					  }
+					if ($_POST['amount'] < $przed -> fields['wt']) 
+					  {
+					    $db -> Execute("UPDATE `equipment` SET `wt`=`wt`-".$_POST['amount']." WHERE `id`=".$przed -> fields['id']);
+					  } 
+					else 
+					  {
+					    $db -> Execute("DELETE FROM `equipment` WHERE `id`=".$przed -> fields['id']);
+					  }
+					$test -> Close();
+					message('success', YOU_HIDE.$_POST['amount'].I_AMOUNTS.$przed -> fields['name'].IN_HOUSE);
+				      }
+				  }
+			      }
+			  }
+			$item = $db -> Execute("SELECT * FROM `equipment` WHERE `status`='U' AND `type`!='Q' AND `owner`=".$player -> id);
+			$arrItems = array();
+			while (!$item -> EOF) 
+			  {
+			    switch ($item->fields['ptype'])
+			      {
+			      case 'D':
+				$item->fields['name'] .= ' (Dynallca +'.$item->fields['poison'].')';
+				break;
+			      case 'N':
+				$item->fields['name'] .= ' (Nutari +'.$item->fields['poison'].')';
+				break;
+			      case 'I':
+				$item->fields['name'] .= ' (Illani +'.$item->fields['poison'].')';
+				break;
+			      default:
+				break;
+			      }
+			    if ($item->fields['type'] != 'R')
+			      {
+				$strAmount = $item->fields['amount'];
+			      }
+			    else
+			      {
+				$strAmount = $item->fields['wt'];
+			      }
+			    $strDur = '';
+			    if ($item->fields['maxwt'] > 1)
+			      {
+				$strDur = ' ('.$item->fields['wt'].'/'.$item->fields['maxwt'].' wt)';
+			      }
+			    $strAgi = '';
+			    $strSpeed = '';
+			    if ($item->fields['zr'] != 0)
+			      {
+				$strAgi = " (".($item->fields['zr'] * -1)." zr)";
+			      }
+			    if ($item->fields['szyb'] != 0)
+			      {
+				$strSpeed = " (".$item->fields['szyb']." szyb)";
+			      }
+			    $arrItems[$item->fields['id']] = $item->fields['name']." (+".$item->fields['power'].")".$strAgi.$strSpeed.$strDur." (ilość: ".$strAmount.")";
+			    $item -> MoveNext();
+			  }
+			$item -> Close();
+			$smarty -> assign(array("Ioptions" => $arrItems,
+						"Item" => "przedmiot",
+						"Iamount3" => I_AMOUNT3,
+						"Ahide" => A_HIDE,
+						"Tall" => "wszystkie posiadane",
+						"Amount2" => AMOUNT2));
 		      }
 		  }
-                $test -> Close();
-                error (YOU_HIDE.$_POST['amount'].I_AMOUNT.$przed -> fields['name'].IN_HOUSE);
-            }
-        }
-    }
-}
+		$amount = $db -> Execute("SELECT SUM(`amount`) FROM `equipment` WHERE `owner`=".$player -> id." AND `status`='H' AND location='".$player -> location."'");
+		if (!$amount->fields['SUM(`amount`)'])
+		  {
+		    $items = 0;
+		  }
+		else
+		  {
+		    $items = $amount->fields['SUM(`amount`)'];
+		  }
+		$amount -> Close();
+		$smarty -> assign(array("Amount" => $items,
+					"Wardrobe" => $house -> fields['wardrobe'],
+					"Winfo" => W_INFO,
+					"Wamount" => W_AMOUNT2,
+					"And2" => AND2,
+					"Iamount4" => I_AMOUNT4,
+					"Iamount2" => I_AMOUNT2,
+					"Inw" => IN_W,
+					"Alist" => A_LIST2,
+					"Ahidei" => A_HIDE_I,
+					"Iname" => I_NAME,
+					"Ipower" => I_POWER,
+					"Iagi" => I_AGI,
+					"Ispeed" => I_SPEED,
+					"Ioption" => I_OPTION,
+					"Aget" => A_GET,
+					"Idur" => I_DUR));
+	      }
+	  }
+	//House main menu
+	if (!isset ($_GET['step'])) 
+	  {
+	    $homename = housetype($house -> fields['value'], $house -> fields['build']);
+	    if ($house -> fields['bedroom'] == 'Y') 
+	      {
+		$smarty -> assign ("Bedroom", YES);
+	      } 
+            else 
+	      {
+		$smarty -> assign ("Bedroom", NO);
+	      }
+	    $unused = $house -> fields['build'] - $house -> fields['used'];
+	    $amount = $db -> Execute("SELECT SUM(`amount`) FROM `equipment` WHERE `owner`=".$player -> id." AND `status`='H' AND `location`='".$player->location."'") or die($db->ErrorMsg());
+	    if (!$amount->fields['SUM(`amount`)'])
+	      {
+		$intAmount = 0;
+	      }
+	    else
+	      {
+		$intAmount = $amount->fields['SUM(`amount`)'];
+	      }
+	    $amount->Close();
+	    $objOwner = $db->Execute("SELECT `user` FROM `players` WHERE `id`=".$house->fields['owner']);
+	    $smarty -> assign(array("Name" => $house -> fields['name'], 
+				    "Size" => $house -> fields['size'], 
+				    "Build" => $house -> fields['build'], 
+				    "Value" => $house -> fields['value'], 
+				    "Owner" => $house->fields['owner'],
+				    "Ownername" => $objOwner->fields['user'],
+				    "Housename" => $homename, 
+				    "Unused" => $unused, 
+				    "Wardrobe" => $house -> fields['wardrobe'], 
+				    "Items" => $intAmount,
+				    "Houseinfo" => HOUSE_INFO3,
+				    "Hname" => H_NAME,
+				    "Hsize" => H_SIZE,
+				    "Howner" => H_OWNER,
+				    "Hlocator" => H_LOCATOR,
+				    "Lamount" => L_AMOUNT,
+				    "Frooms" => F_ROOMS,
+				    "Hvalue" => H_VALUE,
+				    "Ibedroom" => I_BEDROOM,
+				    "Wamount" => W_AMOUNT,
+				    "Iamount" => I_AMOUNT,
+				    "Cname" => C_NAME));
+	    $objOwner->Close();
+	    if ($house -> fields['locator']) 
+	      {
+		$objLocator = $db->Execute("SELECT `user` FROM `players` WHERE `id`=".$house->fields['locator']);
+		$smarty -> assign(array("Locator" => "<a href=\"view.php?view=".$house -> fields['locator']."\">".$objLocator->fields['user']."</a>", 
+					"Locleave" => "- <a href=\"house.php?action=my&amp;step=leave\">".A_LEAVE."</a><br />"));
+		$objLocator->Close();
+	      } 
+            else 
+	      {
+		$smarty -> assign(array("Locator" => L_EMPTY, 
+					"Locleave" => "- <a href=\"house.php?action=my&amp;step=leave\">".A_LEAVE."</a><br />"));
+	      }
+	    if ($house -> fields['bedroom'] == 'Y') 
+	      {
+		$smarty -> assign ("Bedroomlink", "- <a href=house.php?action=my&amp;step=bedroom>".GO_TO_BED."</a><br />");
+	      }
+	    if ($house -> fields['wardrobe'] > 0) 
+	      {
+		$smarty -> assign ("Wardrobelink", "- <a href=house.php?action=my&amp;step=wardrobe>".GO_TO_WAR."</a><br />");
+	      }
+	    if ($house -> fields['build'] > 3 && $player -> id == $house -> fields['owner']) 
+	      {
+		$smarty -> assign("Locatorlink", "- <a href=\"house.php?action=my&amp;step=locator\">".A_LOCATOR."</a><br />");
+	      }
+	    if ($player -> id == $house -> fields['owner']) 
+	      {
+		$smarty -> assign("Sellhouse", "- <a href=\"house.php?action=my&amp;step=sell\">".A_SELL."</a><br />");
+	      } 
+            else 
+	      {
+		$smarty -> assign("Sellhouse", '');
+	      }
+	  }
+      }
+  }
 
 /**
 * Initialization of variables
@@ -1174,19 +1241,19 @@ if (!isset($_GET['action']))
     $_GET['action'] = '';
     $fltLogins = fmod($player -> logins, 2);
     if ($fltLogins)
-    {
+      {
         $strHouseinfo = HOUSE_INFO;
-    }
-        else
-    {
-        $strHouseinfo = HOUSE_INFO2;
-    }
+      }
+    else
+      {
+	$strHouseinfo = HOUSE_INFO2;
+      }
     $smarty -> assign(array("Houseinfo" => $strHouseinfo,
-        "Aland" => A_LAND,
-        "Alist" => A_LIST,
-        "Arent" => A_RENT,
-        "Ahouse" => A_HOUSE,
-        "Aworkshop" => A_WORKSHOP));
+			    "Aland" => A_LAND,
+			    "Alist" => A_LIST,
+			    "Arent" => A_RENT,
+			    "Ahouse" => A_HOUSE,
+			    "Aworkshop" => A_WORKSHOP));
 }
 if (!isset($_GET['step'])) 
 {
@@ -1195,10 +1262,6 @@ if (!isset($_GET['step']))
 if (!isset($_GET['step2'])) 
 {
     $_GET['step2'] = '';
-}
-if (!isset($_GET['take'])) 
-{
-    $_GET['take'] = '';
 }
 if (!isset($_GET['step3'])) 
 {
@@ -1209,12 +1272,10 @@ if (!isset($_GET['step3']))
 * Assign variables to template and display page
 */
 $smarty -> assign(array("Action" => $_GET['action'], 
-    "Houseid" => $house -> fields['id'], 
-    "Step" => $_GET['step'], 
-    "Step2" => $_GET['step2'], 
-    "Take" => $_GET['take'], 
-    "Step3" => $_GET['step3'], 
-    "Owner" => $house -> fields['owner']));
+			"Houseid" => $house -> fields['id'], 
+			"Step" => $_GET['step'], 
+			"Step2" => $_GET['step2'], 
+			"Step3" => $_GET['step3']));
 $house -> Close();
 $smarty -> display ('house.tpl');
 

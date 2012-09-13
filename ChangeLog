@@ -1,3 +1,8 @@
+2012-09-13  Bartek thindil Jasicki  <thindil@vallheru.net>
+
+	* UPDATE,languages/pl/house.php, templates/layout1/house.tpl, templates/house.tpl, house.php:
+	redesigned houses
+
 2012-09-12  Bartek thindil Jasicki  <thindil@vallheru.net>
 
 	* BUG,house.php: 
