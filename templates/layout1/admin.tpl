@@ -171,17 +171,19 @@
     <form method="post" action="admin.php?view=logs">
         <input type="submit" value="{$Asearch}" /> {$Tsearch} <input type="text" name="lid" size="5" />
     </form><br />
-    <table align="center" width="75%">
+    <table align="center" width="95%" align="center">
         <tr>
-            <td align="center">{$Lowner}</td>
-            <td align="center">{$Ltext}</td>
+            <th>{$Lowner}</th>
+	    <th>{$Ltime}</th>
+            <th>{$Ltext}</th>
         </tr>
-        {section name=logs loop=$Aowner}
+	{foreach $Logs as $log}
             <tr>
-                <td align="center">{$Aowner[logs]}</td>
-                <td align="center">{$Alog[logs]}</td>
+                <td>{$log.owner}</td>
+                <td>{$log.czas}</td>
+		<td>{$log.log}</td>
             </tr>
-        {/section}
+	{/foreach}
     </table><br />
     {if $Pages > 1}
     	{for $page = 1 to $Pages}

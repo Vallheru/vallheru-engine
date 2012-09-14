@@ -6,8 +6,8 @@
  *   @name                 : logs.php                            
  *   @copyright            : (C) 2011,2012 Vallheru Team based on Gamers-Fusion ver 2.5
  *   @author               : thindil <thindil@vallheru.net>
- *   @version              : 1.5
- *   @since                : 17.04.2012
+ *   @version              : 1.6
+ *   @since                : 14.09.2012
  *
  */
 
@@ -35,12 +35,12 @@ if (isset($_GET['lid']))
 if (isset($_POST['lid']))
   {
     checkvalue($_POST['lid']);
-    $strQuery = " WHERE `owner`=".$_POST['lid'];
+    $strQuery = " WHERE `owner`=".$_POST['lid']." ORDER BY `id` DESC";
     $strPage = '&amp;lid='.$_POST['lid'];
   }
 else
   {
-    $strQuery = '';
+    $strQuery = ' ORDER BY `id` DESC';
     $strPage = '';
   }
 
@@ -64,25 +64,16 @@ else
   {
     $page = 1;
   }
-$objLogs = $db -> SelectLimit("SELECT `owner`, `log` FROM `logs`".$strQuery, 50, 50 * ($page - 1));
-$arrOwner = array();
-$arrLog = array();
-while (!$objLogs -> EOF)
-  {
-    $arrOwner[] = $objLogs -> fields['owner'];
-    $arrLog[] = $objLogs -> fields['log'];
-    $objLogs -> MoveNext();
-  }
-$objLogs -> Close();
+$arrLogs = $db->Execute("SELECT `owner`, `log`, `czas` FROM `logs`".$strQuery." LIMIT ".(50 * ($page - 1)).", 50");
 $smarty -> assign(array("Logsinfo" => "Tutaj możesz przeglądać logi z niektórych akcji graczy.",
 			"Lowner" => "Właściciel (ID)",
+			"Ltime" => "Data",
 			"Ltext" => "Treść",
 			"Lclear" => "Wyczyść",
 			"Tsearch" => "logi gracza o ID:",
 			"Asearch" => "Szukaj",
 			"Lid" => $strPage,
-			"Aowner" => $arrOwner,
-			"Alog" => $arrLog,
+			"Logs" => $arrLogs,
 			"Page" => $page,
 			"Pages" => $intPages));
 /**

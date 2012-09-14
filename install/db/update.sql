@@ -47,3 +47,4 @@ ALTER TABLE  `farm` ADD  `owner` INT( 11 ) NOT NULL;
 ALTER TABLE  `players` ADD  `chattimes` VARCHAR( 512 ) NOT NULL;
 ALTER TABLE `categories` ADD `perm_topic` VARCHAR( 255 ) NOT NULL DEFAULT 'All;';
 ALTER TABLE `categories` DROP `lang`;
+ALTER TABLE `logs` ADD `id` INT NOT NULL AUTO_INCREMENT FIRST , ADD PRIMARY KEY ( `id` );

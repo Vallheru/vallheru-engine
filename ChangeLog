@@ -1,3 +1,9 @@
+2012-09-14  Bartek thindil Jasicki  <thindil@vallheru.net>
+
+	* UPDATE,templates/layout1/staff.tpl, templates/layout1/admin.tpl, includes/admin/logs.php, templates/staff.tpl, templates/admin.tpl,
+	install/db/update.sql: 
+	small redesign for player logs
+
 2012-09-13  Bartek thindil Jasicki  <thindil@vallheru.net>
 
 	* UPDATE,languages/pl/house.php, templates/layout1/house.tpl, templates/house.tpl, house.php:
