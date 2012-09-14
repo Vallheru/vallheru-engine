@@ -49,28 +49,6 @@
 	{/if}
         <b>{$Tclan}:</b> {$Tribe}
         {$Triberank}
-</td></tr><tr>
-<td width="50%" valign="top" colspan="2">
-    <center><b><u>{$Tability}</u></b></center><br />
-        <table align="center" class="dark">
-        <tr>
-        <td><b>{$Tsmith}:</b> {$Smith}
-        <b>{$Talchemy}:</b> {$Alchemy}
-        <b>{$Tlumber}:</b> {$Fletcher}
-        <b>{$Tfight}:</b> {$Attack}
-        <b>{$Tbreeding}:</b> {$Breeding}
-        <b>{$Tlumberjack}:</b> {$Lumberjack}
-        <b>{$Tjeweller}:</b> {$Jeweller}
-	{$Thievery}</td>
-        <td valign="top"><b>{$Tshoot}:</b> {$Shoot}
-        <b>{$Tdodge}:</b> {$Miss}
-        <b>{$Tcast}:</b> {$Magic}
-        <b>{$Tleader}:</b> {$Leadership}
-        <b>{$Tmining}:</b> {$Mining}
-        <b>{$Therbalist}:</b> {$Herbalist}
-	<b>{$Tmetallurgy}:</b> {$Metallurgy}
-	<b>{$Tperception}:</b> {$Perception}</td>
-        </tr>
-        </table>
 </td></tr>
 </table>
+{html_table loop=$Stable cols=2 caption="<b><u>{$Tability}</u></b>" table_attr='border="0" align="center" width="95%"'}

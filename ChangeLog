@@ -1,5 +1,7 @@
 2012-09-14  Bartek thindil Jasicki  <thindil@vallheru.net>
 
+	* FEATURE,class/player_class.php, templates/layout1/stats.tpl, templates/stats.tpl, stats.php: 
+	added info about current skills levels
 	* UPDATE,templates/layout1/staff.tpl, templates/layout1/admin.tpl, includes/admin/logs.php, templates/staff.tpl, templates/admin.tpl,
 	install/db/update.sql: 
 	small redesign for player logs
