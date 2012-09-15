@@ -51,4 +51,4 @@
         {$Triberank}
 </td></tr>
 </table>
-{html_table loop=$Stable cols=2 caption="<b><u>{$Tability}</u></b>" table_attr='border="0" align="center" width="95%"'}
+{html_table loop=$Stable cols=2 caption="<b><u>{$Tability}</u></b>" table_attr='border="0" align="center" width="50%"'}

@@ -1,5 +1,7 @@
 2012-09-15  Bartek thindil Jasicki  <thindil@vallheru.net>
 
+	* UPDATE,templates/layout1/stats.tpl, templates/stats.tpl: 
+	small redesign
 	* BUG,msklep.php:
 	fixed bug with buying potions
 
