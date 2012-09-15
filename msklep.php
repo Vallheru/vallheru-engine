@@ -7,7 +7,7 @@
  *   @copyright            : (C) 2004,2005,2006,2007,2011,2012 Vallheru Team based on Gamers-Fusion ver 2.5
  *   @author               : thindil <thindil@vallheru.net>
  *   @version              : 1.6
- *   @since                : 23.05.2012
+ *   @since                : 15.09.2012
  *
  */
 
@@ -135,7 +135,7 @@ if (isset($_GET['buy']))
         {
             error(NO_MONEY);
         }
-        $objTest = $db -> Execute("SELECT `id` FROM `potions` WHERE `name`='".$objPotions -> fields['name']."' AND `owner`=".$player -> id." AND `status`='K'");
+        $objTest = $db -> Execute("SELECT `id` FROM `potions` WHERE `name`='".$objPotions -> fields['name']."' AND `owner`=".$player -> id." AND `status`='K' AND `power`=".$objPotions->fields['power']);
         if (!$objTest -> fields['id']) 
 	  {
 	    $intNewCost = $intCostone / 20;

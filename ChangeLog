@@ -1,3 +1,8 @@
+2012-09-15  Bartek thindil Jasicki  <thindil@vallheru.net>
+
+	* BUG,msklep.php:
+	fixed bug with buying potions
+
 2012-09-14  Bartek thindil Jasicki  <thindil@vallheru.net>
 
 	* FEATURE,class/player_class.php, templates/layout1/stats.tpl, templates/stats.tpl, stats.php: 
