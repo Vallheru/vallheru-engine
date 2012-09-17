@@ -1,5 +1,8 @@
 2012-09-17  Bartek thindil Jasicki  <thindil@vallheru.net>
 
+	* UPDATE,templates/layout1/layout1.css, templates/layout1/header.tpl, templates/layout1/images/pen.png, templates/layout1/images/mithril.png,
+	templates/layout1/images/coins.png, templates/layout1/images/bank.png: 
+	added few icons and cursor
 	* BUG,tribes.php:
 	remove back link
 

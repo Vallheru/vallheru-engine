@@ -35,9 +35,9 @@
       <b>{$Energypts}:</b> {$Energy}/{$Maxenergy}
     </div>
     <div style="width: 12%; float: left; margin-left: 20px;">
-       <div style="margin-top: 10px;"><b>{$Goldinhand}:</b> {$Gold}</div>
-       <div style="margin-top: 7px;"><b>{$Goldinbank}:</b> {$Bank}</div>
-       <div style="margin-top: 7px;"><b>{$Hmithril}:</b> {$Mithril}</div>
+       <div style="margin-top: 10px;"><img src="templates/layout1/images/coins.png" /> <b>{$Goldinhand}:</b> {$Gold}</div>
+       <div style="margin-top: 7px;"><img src="templates/layout1/images/bank.png" /> <b>{$Goldinbank}:</b> {$Bank}</div>
+       <div style="margin-top: 7px;"><img src="templates/layout1/images/mithril.png" /> <b>{$Hmithril}:</b> {$Mithril}</div>
        <div style="margin-top: 7px;"><b>{$Vallars}:</b> <a href="referrals.php?id={$Id}">{$Referals}</a></div>
     </div>
     <div style="width: 12%; float: left;">

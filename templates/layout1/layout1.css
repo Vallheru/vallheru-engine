@@ -75,10 +75,15 @@ input:hover, textarea:hover {
   background: goldenrod;
 }
 
+input:hover[type=text], textarea:hover {
+    cursor: url('images/pen.png'), auto;
+}
+
 input:hover[type=submit], input:hover[type=button], select:hover {
     color: white;
     background: #481c0a;
     background-image: url('images/button.jpg');
+    cursor: pointer;
 }
 
 input:focus, textarea:focus {
