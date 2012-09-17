@@ -9,7 +9,7 @@
  *   @author               : mori <ziniquel@users.sourceforge.net>
  *   @author               : eyescream <tduda@users.sourceforge.net>
  *   @version              : 1.6
- *   @since                : 22.08.2012
+ *   @since                : 17.09.2012
  *
  */
 
@@ -41,7 +41,7 @@ require_once("languages/".$lang."/tribes.php");
 
 if ($player -> location != 'Altara' && $player -> location != 'Ardulith') 
 {
-    error (ERROR);
+    error ("Nie znajdujesz się w mieście.<a href=");
 }
 
 $smarty -> assign(array("Logo" => '',
