@@ -1,3 +1,8 @@
+2012-09-18  Bartek thindil Jasicki  <thindil@vallheru.net>
+
+	* UPDATE,templates/memberlist.tpl, templates/layout1/memberlist.tpl, memberlist.php:
+	small redesign
+
 2012-09-17  Bartek thindil Jasicki  <thindil@vallheru.net>
 
 	* BUG,templates/layout1/stats.tpl: 

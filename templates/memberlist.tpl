@@ -1,4 +1,3 @@
-{$Message}
 <table width="90%">
 <tr>
 <th><a href="memberlist.php?lista=id&amp;order={$Torder}">{$Plid}</a></th>

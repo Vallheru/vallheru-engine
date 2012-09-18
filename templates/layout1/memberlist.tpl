@@ -1,5 +1,4 @@
-{$Message}
-<table width="90%">
+<table width="95%" align="center">
 <tr>
 <th><a href="memberlist.php?lista=id&amp;order={$Torder}">{$Plid}</a></th>
 <th><a href="memberlist.php?lista=user&amp;order={$Torder}">{$Plname}</a></th>
@@ -10,7 +9,7 @@
 <th><a href="memberlist.php?lista=shortrpg&amp;order={$Torder}">{$Plroleplay}</a></th>
 </tr>
 {foreach $Playerslist as $Playerl}
-    <tr>
+    <tr align="center">
         <td>{$Playerl.id}</td>
 	<td><a href="view.php?view={$Playerl.id}">{$Playerl.user}</a></td>
 	<td>{$Playerl.rank}</td>

@@ -187,16 +187,15 @@ if (is_array($mem))
 /**
 * Initialization of variable
 */
-if (!isset($strMessage))
-{
-    $strMessage = '';
-}
+if (isset($strMessage))
+  {
+    message('error', $strMessage);
+  }
 
 /**
 * Assign variables to template and display page
 */
-$smarty -> assign(array("Message" => $strMessage,
-			"Plid" => PL_ID,
+$smarty -> assign(array("Plid" => PL_ID,
 			"Plname" => PL_NAME,
 			"Plrank" => PL_RANK,
 			"Plrace" => PL_RACE,
