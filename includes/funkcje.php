@@ -7,7 +7,7 @@
  *   @copyright            : (C) 2004,2005,2006,2007,2011,2012 Vallheru Team based on Gamers-Fusion ver 2.5
  *   @author               : thindil <thindil@vallheru.net>
  *   @version              : 1.6
- *   @since                : 22.08.2012
+ *   @since                : 19.09.2012
  *
  */
 
@@ -49,14 +49,27 @@ function battlerecords($strEname, $intLevel, $intPid)
       return;
     }
   //Update battle records
+  $blnAdd = FALSE;
   $objTest = $db->Execute("SELECT `pid` FROM `brecords` WHERE `pid`=".$intPid." AND `mlevel`>=".$intLevel);
   if (!$objTest->fields['pid'])
+    {
+      $blnAdd = TRUE;
+    }
+  else
+    {
+      $objTest = $db->Execute("SELECT `pid` FROM `brecords` WHERE `mlevel`=".$intLevel." AND `mname`='".$strEname."'");
+      if (!$objTest->fields['pid'])
+	{
+	  $blnAdd = TRUE;
+	}
+    }
+  $objTest->Close();
+  if ($blnAdd)
     {
       $objDay = $db->Execute("SELECT `value` FROM `settings` WHERE `setting`='day'");
       $db->Execute("INSERT INTO `brecords` (`pid`, `mdate`, `mlevel`, `mname`) VALUES(".$intPid.", ".$objDay->fields['value'].", ".$intLevel.", '".$strEname."')") or die($db->ErrorMsg());
       $objDay->Close();
     }
-  $objTest->Close();
 }
 
 /**
