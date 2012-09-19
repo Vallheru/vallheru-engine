@@ -8,7 +8,7 @@
  *   @author               : thindil <thindil@vallheru.net>
  *   @author               : eyescream <tduda@users.sourceforge.net>
  *   @version              : 1.6
- *   @since                : 13.09.2012
+ *   @since                : 19.09.2012
  *
  */
 
@@ -193,7 +193,7 @@ if (isset($_GET['action']))
 		    $house->fields['name'] = $strName;
 		    $house->fields['build'] ++;
 		    $house->fields['points'] -= 10;
-		    message('success', YOU_BUILD);
+		    message('success', "Zbudowałeś swój dom.");
 		    unset($_GET['step']);
 		  }
 	      }

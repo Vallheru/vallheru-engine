@@ -8,7 +8,7 @@
  *   @author               : thindil <thindil@vallheru.net>
  *   @author               : eyescream <tduda@users.sourceforge.net>
  *   @version              : 1.6
- *   @since                : 13.09.2012
+ *   @since                : 19.09.2012
  *
  */
 
@@ -88,7 +88,6 @@ if(isset($_GET['action']) && $_GET['action'] == 'build')
     if (isset($_GET['step']) && $_GET['step'] == 'new')
     {
         define("YOU_HAVE", "Masz już zbudowany dom!");
-        define("YOU_BUILD", "Wybudowałeś swój pierwszy dom!");
         define("H_NAME", "Nazwa domu");
         define("A_BUILD", "Buduj");
     }
