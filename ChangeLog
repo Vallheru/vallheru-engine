@@ -1,5 +1,7 @@
 2012-09-20  Bartek thindil Jasicki  <thindil@vallheru.net>
 
+	* UPDATE,languages/pl/grid.php, grid.php: 
+	added new description
 	* BUG,bank.php: 
 	fixed bug with agility bonus info
 	* BUG,house.php:

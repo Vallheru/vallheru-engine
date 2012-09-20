@@ -7,7 +7,7 @@
  *   @copyright            : (C) 2004,2005,2006,2011,2012 Vallheru Team based on Gamers-Fusion ver 2.5
  *   @author               : thindil <thindil@vallheru.net>
  *   @version              : 1.6
- *   @since                : 23.05.2012
+ *   @since                : 20.06.2012
  *
  */
  
@@ -32,14 +32,9 @@
 $title = "Labirynt";
 require_once("includes/head.php");
 
-/**
-* Get the localization for game
-*/
-require_once("languages/".$lang."/grid.php");
-
 if ($player -> location != 'Altara' && $player -> location != 'Podróż') 
 {
-    error (ERROR);
+  error ('Zapomnij o tym.');
 }
 
 $smarty -> assign(array("Chance" => '', 
@@ -49,8 +44,9 @@ $query = $db -> Execute("SELECT `quest` FROM `questaction` WHERE `player`=".$pla
 // Enter to labirynth
 if (!isset($_GET['action']) && !isset($_GET['step']) && empty($query -> fields['quest']))
   {
-    $smarty -> assign(array("Labinfo" => LAB_INFO,
-			    "Explore" => A_EXP,
+    $smarty -> assign(array("Labinfo" => "Idziesz starą drogą w Zachodniej Części miasta. Gwarna część dzielnicy pozostała daleko za Tobą. Mijasz stare opuszczone kamieniczki należące kiedyś do rzemieślników i kupców. Stare zniszczone szyldy,  poruszane lekkim wiatrem, złowieszczo bujają się nad Twoją głową. Wiele budynków jest zniszczonych. Kamienie pokrywają drogę coraz gęściej.<br />W oddali, przy zakręcie widzisz stertę osypanych kamieni tarasującą wejście do przedziwnej budowli. Wielkie wrota w kamiennej zrujnowanej obudowie. Przed zniszczonymi zdobionymi w zawiłe wzory wrotami siedzi starzec.<br />- Stary labirynt - mruczy gdy podchodzisz. - Nikt tam na dół nie schodził od wielu lat. Kiedyś wielu mężnych wojowników zeszło tam zabić potwora, który pustoszył dzielnicę. W końcu go zgładzili, lecz gdy wracali zostali zasypani lawiną kamieni. Ich ciała i pozostałe po nich skarby na pewno tam zostały. Jeśli nie boisz się ciemności to znajdziesz tam interesujące rzeczy. <br />Podchodzisz do wejścia i przekraczasz osypisko. Wrota pchnięte do środka otwierają się z trudem. Kamienne odłamki toczą się w dół po schodach prowadzących w ciemny tunel pod ziemią. <br />
+Czy chcesz tam wejść?<br />",
+			    "Explore" => 'Zwiedzaj',
 			    "Amount" => floor($player->energy / 0.3),
 			    "Times" => "razy"));
   }
@@ -86,11 +82,11 @@ if (isset ($_GET['action']) && $_GET['action'] == 'explore' && empty($query -> f
     $intNeeded = $intAmount * 0.3;
     if ($player -> energy < $intNeeded) 
     {
-        error (NO_ENERGY);
+        error ("Nie masz wystarczająco energii aby zwiedzać labirynt.");
     }
     if ($player -> hp == 0) 
     {
-        error (YOU_DEAD);
+        error ("Nie możesz zwiedzać labiryntu ponieważ jesteś martwy!");
     }
     $intGold = 0;
     $intMithril = 0;
@@ -235,8 +231,6 @@ if ((isset($_GET['step']) && $_GET['step'] == 'quest') || !empty($query -> field
     $name = "quest".$query -> fields['quest'].".php";
     if ($query -> fields['quest'])
     {
-        require_once('includes/statsbonus.php');
-        $arrCurstats = statbonus();
         require_once("quests/".$name);   
     }
 }
@@ -273,8 +267,6 @@ $query -> Close();
 
 if ($strQuestName != "")
   {
-    require_once('includes/statsbonus.php');
-    $arrCurstats = statbonus();
     require_once("quests/".$strQuestName);
   }
 require_once("includes/foot.php");
