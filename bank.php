@@ -9,7 +9,7 @@
  *   @author               : yeskov <yeskov@users.sourceforge.net>
  *   @author               : eyescream <tduda@users.sourceforge.net>
  *   @version              : 1.6
- *   @since                : 07.09.2012
+ *   @since                : 20.09.2012
  *
  */
 
@@ -516,7 +516,7 @@ if (isset($_GET['action']))
 	  }
 	$item = $db -> Execute("SELECT * FROM `equipment` WHERE `id`=".$_POST['item']." AND `status`='U' AND `owner`=".$player->id);
 	$blnValid = TRUE;
-	if (empty ($item -> fields['id'])) 
+	if (empty($item -> fields['id'])) 
 	  {
 	    message('error', NO_ITEM);
 	    $blnValid = FALSE;
@@ -618,25 +618,32 @@ if (isset($_GET['action']))
 	    
 	    // Display detailed information about bonuses of each item.
 	    $strAttributes = '(';
+	    if ($item->fields['zr'] != 0)
+	      {
+		$strAgi = I_AGI.' '.($item->fields['zr'] * -1).', ';
+	      }
+	    else
+	      {
+		$strAgi = '';
+	      }
 	    switch($item -> fields['type'])
 	      {
 	      case 'A':   // Pieces of armor: defense, agility and durability.
 	      case 'L':
-		$intAgi = $item -> fields['zr'] * -1;
-		$strAttributes.= I_DEF.' +'.$item -> fields['power'].', '.I_AGI.' '.$intAgi.', '.I_DUR.' '.$item -> fields['wt'].'/'.$item -> fields['maxwt'];
+		$strAttributes.= I_DEF.' +'.$item -> fields['power'].', '.$strAgi.I_DUR.' '.$item -> fields['wt'].'/'.$item -> fields['maxwt'];
 		break;
 	      case 'B':   // Bows: speed and durability.
-		$strAttributes.= I_SPE.' +'.$item -> fields['szyb'].', '.I_DUR.' '.$item -> fields['wt'].'/'.$item -> fields['maxwt'];
+		$strAttributes.= I_SPE.' +'.$item -> fields['szyb'].', '.$strAgi.I_DUR.' '.$item -> fields['wt'].'/'.$item -> fields['maxwt'];
 		break;
 	      case 'H':   // Helmets, 
 	      case 'S':   // and shiels: defense and durability.
-		$strAttributes.= I_DEF.' +'.$item -> fields['power'].', '.I_DUR.' '.$item -> fields['wt'].'/'.$item -> fields['maxwt'];
+		$strAttributes.= I_DEF.' +'.$item -> fields['power'].', '.$strAgi.I_DUR.' '.$item -> fields['wt'].'/'.$item -> fields['maxwt'];
 		break;
 	      case 'R':   // Arrows: attack.
 		$strAttributes.= I_ATT.' +'.$item -> fields['power'];
 		break;
 	      case 'W':   // Melee weapons: attack and durability.
-		$strAttributes.= I_ATT.' +'.$item -> fields['power'].', '.I_DUR.' '.$item -> fields['wt'].'/'.$item -> fields['maxwt'];
+		$strAttributes.= I_ATT.' +'.$item -> fields['power'].', '.$strAgi.I_DUR.' '.$item -> fields['wt'].'/'.$item -> fields['maxwt'];
 		break;
 		
 	      case 'C':   // Mage robe: percent bonus to mana.
