@@ -1,5 +1,7 @@
 2012-09-20  Bartek thindil Jasicki  <thindil@vallheru.net>
 
+	* UPDATE,bank.php: 
+	simpler deposit/withdraw moneys
 	* BUG,view.php: 
 	fixed typo
 	* UPDATE,languages/pl/grid.php, grid.php: 

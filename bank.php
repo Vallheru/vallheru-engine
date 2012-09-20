@@ -61,15 +61,12 @@ if (isset($_GET['action']))
 	    checkvalue($_POST['with']);
 	    if ($_POST['with'] > $player -> bank) 
 	      {
-		message('error', NO_MONEY);
+		$_POST['with'] = $player->bank;
 	      }
-	    else
-	      {
-		$db -> Execute("UPDATE `players` SET `credits`=`credits`+".$_POST['with'].", `bank`=`bank`-".$_POST['with']." WHERE `id`=".$player -> id);
-		$player->credits += $_POST['with'];
-		$player->bank -= $_POST['with'];
-		message('success', WITHDRAW." ".$_POST['with']." ".GOLD_COINS);
-	      }
+	    $db -> Execute("UPDATE `players` SET `credits`=`credits`+".$_POST['with'].", `bank`=`bank`-".$_POST['with']." WHERE `id`=".$player -> id);
+	    $player->credits += $_POST['with'];
+	    $player->bank -= $_POST['with'];
+	    message('success', WITHDRAW." ".$_POST['with']." ".GOLD_COINS);
 	  }
       }
 
@@ -85,17 +82,14 @@ if (isset($_GET['action']))
 	else
 	  {
 	    checkvalue($_POST['dep']);
-	    if ($_POST['dep'] > $player -> credits || $_POST['dep'] <= 0) 
+	    if ($_POST['dep'] > $player -> credits) 
 	      {
-		message('error', NO_MONEY);
+		$_POST['dep'] = $player->credits;
 	      }
-	    else
-	      {
-		$db -> Execute("UPDATE players SET credits=credits-".$_POST['dep'].", bank=bank+".$_POST['dep']." WHERE id=".$player -> id);
-		$player->credits -= $_POST['dep'];
-		$player->bank += $_POST['dep'];
-		message ('success', DEPOSIT." ".$_POST['dep']." ".GOLD_COINS);
-	      }
+	    $db -> Execute("UPDATE players SET credits=credits-".$_POST['dep'].", bank=bank+".$_POST['dep']." WHERE id=".$player -> id);
+	    $player->credits -= $_POST['dep'];
+	    $player->bank += $_POST['dep'];
+	    message ('success', DEPOSIT." ".$_POST['dep']." ".GOLD_COINS);
 	  }
       }
 
