@@ -8,7 +8,7 @@
  *   @author               : thindil <thindil@vallheru.net>
  *   @author               : eyescream <tduda@users.sourceforge.net>
  *   @version              : 1.6
- *   @since                : 19.09.2012
+ *   @since                : 20.09.2012
  *
  */
 
@@ -764,9 +764,9 @@ if (isset($_GET['action']))
 			$blnValid = FALSE;
 		      }
 		    $objTest -> Close();
-		    $db -> Execute("UPDATE `players` SET `houserest`='Y' WHERE id=".$player -> id);
 		    if ($blnValid)
 		      {
+			$db -> Execute("UPDATE `players` SET `houserest`='Y' WHERE id=".$player -> id);
 			$roll = rand(1, 100);
 			if ($roll > 5) 
 			  {
