@@ -8,7 +8,7 @@
  *   @author               : thindil <thindil@vallheru.net>
  *   @author               : eyescream <tduda@users.sourceforge.net>
  *   @version              : 1.6
- *   @since                : 07.09.2012
+ *   @since                : 20.09.2012
  *
  */
 
@@ -608,7 +608,7 @@ if (isset($_GET['spy']))
 	  }
 	if ($strEquipment == 'Założony ekwipunek:<ul>')
 	  {
-	    $strEquipment = 'Nic nie nosi na sobie';
+	    $strEquipment = 'Nic nie nosi na sobie.<br />';
 	  }
 	else
 	  {
