@@ -9,7 +9,7 @@
  *   @author               : mori <ziniquel@users.sourceforge.net>
  *   @author               : eyescream <tduda@users.sourceforge.net>
  *   @version              : 1.6
- *   @since                : 17.09.2012
+ *   @since                : 21.09.2012
  *
  */
 
@@ -751,55 +751,6 @@ if (isset ($_GET['view']) && $_GET['view'] == 'my')
         }
 
         $objAstral -> Close();
-    }
-
-    /**
-    * Donations to clan
-    */
-    if (isset ($_GET['step']) && $_GET['step'] == 'donate') 
-    {
-        $smarty -> assign(array("Doninfo" => DON_INFO,
-                                "Adonate" => A_DONATE,
-                                "Goldcoins" => GOLD_COINS2,
-                                "Mithcoins" => MITH_COINS2,
-                                "Toclan" => TO_CLAN));
-        if (isset ($_GET['step2']) && $_GET['step2'] == 'donate') 
-        {
-            if ($_POST['type'] == 'credits') 
-            {
-                $dot = GOLD_COINS;
-            }
-            if ($_POST['type'] == 'platinum') 
-            {
-                $dot = MITH_COINS;
-            }
-            integercheck($_POST['amount']);
-	    checkvalue($_POST['amount']);
-            if ($_POST['type'] != 'credits' && $_POST['type'] != 'platinum') 
-            {
-                error(ERROR);
-            }
-            if ($_POST['amount'] > $player -> $_POST['type']) 
-            {
-                $smarty -> assign ("Message", NO_AMOUNT.$dot.".");
-            } 
-                else 
-            {
-                $db -> Execute("UPDATE players SET ".$_POST['type']."=".$_POST['type']."-".$_POST['amount']." WHERE id=".$player -> id);
-                $db -> Execute("UPDATE tribes set ".$_POST['type']."=".$_POST['type']."+".$_POST['amount']." WHERE id=".$mytribe -> fields['id']);
-                $smarty -> assign ("Message", YOU_GIVE.$_POST['amount']." ".$dot."</b>.");
-                $strDate = $db -> DBDate($newdate);
-                $db -> Execute("INSERT INTO `log` (`owner`,`log`, `czas`, `type`) VALUES(".$mytribe -> fields['owner'].", '".L_PLAYER." <b><a href=view.php?view=".$player -> id.">".$player -> user.L_ID.'<b>'.$player -> id.'</b>'.HE_ADD.$_POST['amount']." ".$dot.".', ".$strDate.", 'C')");
-		$db -> Execute("INSERT INTO `logs` (`owner`,`log`, `czas`) VALUES(".$mytribe -> fields['owner'].", '".L_PLAYER." <b><a href=view.php?view=".$player -> id.">".$player -> user.L_ID.'<b>'.$player -> id.'</b>'.HE_ADD.$_POST['amount']." ".$dot.".', ".$strDate.")");
-                $objPerm = $db -> Execute("SELECT player FROM tribe_perm WHERE tribe=".$mytribe -> fields['id']." AND loan=1");
-                while (!$objPerm -> EOF)
-                {
-                    $db -> Execute("INSERT INTO `log` (`owner`,`log`, `czas`, `type`) VALUES(".$objPerm -> fields['player'].", '".L_PLAYER." <b><a href=view.php?view=".$player -> id.">".$player -> user.L_ID.'<b>'.$player -> id.'</b>'.HE_ADD.$_POST['amount']." ".$dot.".', ".$strDate.", 'C')");
-                    $objPerm -> MoveNext();
-                }
-                $objPerm -> Close();
-            }
-        }
     }
 
     /**

@@ -7,7 +7,7 @@
  *   @copyright            : (C) 2012 Vallheru Team based on Gamers-Fusion ver 2.5
  *   @author               : thindil <thindil@vallheru.net>
  *   @version              : 1.6
- *   @since                : 21.08.2012
+ *   @since                : 21.09.2012
  *
  */
 
@@ -31,7 +31,7 @@
 
 $title = "Klany";
 require_once("includes/head.php");
-
+    
 if ($player->location != 'Altara' && $player->location != 'Ardulith') 
 {
     error ("Zapomnij o tym.");
@@ -45,16 +45,12 @@ if (!$player->tribe)
     error ("Nie należysz do jakiegokolwiek klanu.");
 }
 
-$mytribe = $db -> Execute("SELECT `id`, `owner`, `level` FROM `tribes` WHERE `id`=".$player->tribe);
-if ($mytribe->fields['level'] < 3)
-  {
-    error('Najpierw musisz rozbudować klan, aby mieć dostęp do tego miejsca. (<a href="tribes.php?view=my">Wróć</a>)');
-  }
+$mytribe = $db -> Execute("SELECT `id`, `owner`, `credits`, `platinum`, `rcredits`, `rplatinum` FROM `tribes` WHERE `id`=".$player->tribe);
 $perm = $db -> Execute("SELECT * FROM tribe_perm WHERE tribe=".$mytribe -> fields['id']." AND player=".$player->id);
 require_once('includes/tribemenu.php');
 
-$arrSqlname2 = array('copperore', 'zincore', 'tinore', 'ironore', 'copper', 'bronze', 'brass', 'iron', 'steel', 'coal', 'adamantium', 'meteor', 'crystal', 'pine', 'hazel', 'yew', 'elm');
-$arrName = array("rudy miedzi", "rudy cynku", "rudy cyny", "rudy żelaza", "sztabek miedzi", "sztabek brązu", "sztabek mosiądzu", "sztabek żelaza", "sztabek stali", "brył węgla", "brył adamantium", "kawałków meteorytu", "kryształów", "drewna sosnowego", "drewna z leszczyny", "drewna cisowego", "drewna z wiązu");
+$arrSqlname2 = array('copperore', 'zincore', 'tinore', 'ironore', 'copper', 'bronze', 'brass', 'iron', 'steel', 'coal', 'adamantium', 'meteor', 'crystal', 'pine', 'hazel', 'yew', 'elm', 'credits', 'platinum');
+$arrName = array("rudy miedzi", "rudy cynku", "rudy cyny", "rudy żelaza", "sztabek miedzi", "sztabek brązu", "sztabek mosiądzu", "sztabek żelaza", "sztabek stali", "brył węgla", "brył adamantium", "kawałków meteorytu", "kryształów", "drewna sosnowego", "drewna z leszczyny", "drewna cisowego", "drewna z wiązu", "złota", "mithrilu");
 $objAmount = $db->Execute("SELECT * FROM `tribe_minerals` WHERE `id`=".$player->tribe);
 if ($objAmount->fields['id'])
   {
@@ -98,6 +94,10 @@ else
     $arrAmount = array(0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0);
     $arrReserved = array(0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0);
   }
+$arrAmount[] = $mytribe->fields['credits'];
+$arrAmount[] = $mytribe->fields['platinum'];
+$arrReserved[] = $mytribe->fields['rcredits'];
+$arrReserved[] = $mytribe->fields['rplatinum'];
 $objAmount->Close();
 
 /**
@@ -133,7 +133,14 @@ if (isset($_GET['reserve']) && $_GET['reserve'] != '')
 	else
 	  {
 	    $db->Execute("INSERT INTO `tribe_reserv` (`iid`, `pid`, `amount`, `tribe`, `type`) VALUES(".$intKey.", ".$player->id.", ".$_POST['amount'].", ".$player->tribe.", 'M')");
-	    $db->Execute("UPDATE `tribe_minerals` SET `r".$arrSqlname2[$intKey]."`=`r".$arrSqlname2[$intKey]."`+".$_POST['amount']." WHERE `id`=".$player->tribe);
+	    if (!in_array($_GET['reserve'], array('credits', 'platinum')))
+	      {
+		$db->Execute("UPDATE `tribe_minerals` SET `r".$arrSqlname2[$intKey]."`=`r".$arrSqlname2[$intKey]."`+".$_POST['amount']." WHERE `id`=".$player->tribe);
+	      }
+	    else
+	      {
+		$db->Execute("UPDATE `tribes` SET `r".$arrSqlname2[$intKey]."`=`r".$arrSqlname2[$intKey]."`+".$_POST['amount']." WHERE `id`=".$player->tribe);
+	      }
 	    $strMessage = 'Gracz <b><a href="view.php?view='.$player->id.'">'.$player->user.'</a></b> ID: <b>'.$player->id.'</b> prosi o <b>'.$_POST['amount'].'</b> sztuk <b>'.$arrName[$intKey].'</b> z klanu.';
 	    $strSQL = "INSERT INTO `log` (`owner`, `log`, `czas`, `type`) VALUES(".$mytribe->fields['owner'].", '".$strMessage."','".$newdate."', 'C')";
 	    $objPerm = $db -> Execute("SELECT `player` FROM `tribe_perm` WHERE `tribe`=".$player->tribe." AND `armory`=1");
@@ -195,7 +202,6 @@ if (isset ($_GET['daj']) && $_GET['daj'])
     if (isset ($_GET['step4']) && $_GET['step4'] == 'add') 
       {
 	checkvalue($_POST['ilosc']);
-	$daj = $_GET['daj'];
 	checkvalue($_POST['did']);
 	$dtrib = $db -> Execute("SELECT `tribe` FROM `players` WHERE `id`=".$_POST['did']);
 	if ($dtrib -> fields['tribe'] != $mytribe -> fields['id']) 
@@ -208,21 +214,29 @@ if (isset ($_GET['daj']) && $_GET['daj'])
 	  {
 	    error ("Klan nie ma takiej ilości ".$arrName[$intKey]."!");
 	  }
-	$kop = $db -> Execute("SELECT `owner` FROM `minerals` WHERE `owner`=".$_POST['did']);
-	if (!$kop -> fields['owner']) 
-	  {
-	    $db -> Execute("INSERT INTO `minerals` (`owner`, `".$daj."`) VALUES(".$_POST['did'].",".$_POST['ilosc'].")");
-	  } 
-	else 
-	  {
-	    $db -> Execute("UPDATE `minerals` SET `".$daj."`=`".$daj."`+".$_POST['ilosc']." WHERE `owner`=".$_POST['did']);
-	  }
-	$kop -> Close();
 	if (!isset($intReserved))
 	  {
 	    $intReserved = 0;
 	  }
-	$db -> Execute("UPDATE `tribe_minerals` SET `".$daj."`=`".$daj."`-".$_POST['ilosc'].", `r".$_GET['daj']."`=`r".$_GET['daj']."`-".$intReserved." WHERE `id`=".$mytribe -> fields['id']);
+	if (!in_array($give, array('credits', 'platinum')))
+	  {
+	    $kop = $db -> Execute("SELECT `owner` FROM `minerals` WHERE `owner`=".$_POST['did']);
+	    if (!$kop -> fields['owner']) 
+	      {
+		$db -> Execute("INSERT INTO `minerals` (`owner`, `".$give."`) VALUES(".$_POST['did'].",".$_POST['ilosc'].")");
+	      } 
+	    else 
+	      {
+		$db -> Execute("UPDATE `minerals` SET `".$give."`=`".$give."`+".$_POST['ilosc']." WHERE `owner`=".$_POST['did']);
+	      }
+	    $kop -> Close();
+	    $db -> Execute("UPDATE `tribe_minerals` SET `".$give."`=`".$give."`-".$_POST['ilosc'].", `r".$_GET['daj']."`=`r".$_GET['daj']."`-".$intReserved." WHERE `id`=".$mytribe -> fields['id']);
+	  }
+	else
+	  {
+	    $db -> Execute("UPDATE `tribes` SET `".$give."`=`".$give."`-".$_POST['ilosc'].", `r".$_GET['daj']."`=`r".$_GET['daj']."`-".$intReserved." WHERE `id`=".$mytribe -> fields['id']);
+	    $db->Execute("UPDATE `players` SET `".$give."`=`".$give."`+".$_POST['ilosc']." WHERE `id`=".$_POST['did']);
+	  }
         
 	// Get name of the person which receives minerals.
 	$objGetName = $db -> Execute("SELECT `user` FROM `players` WHERE `id`=".$_POST['did'].';');
@@ -260,16 +274,28 @@ if (isset ($_GET['step2']) && $_GET['step2'] == 'daj')
     $arrOptions = array();
     foreach ($arrSqlname2 as $key => $strSqlname)
       {
+	if (in_array($strSqlname, array('credits', 'platinum')))
+	  {
+	    continue;
+	  }
 	if ($objMinerals->fields[$strSqlname])
 	  {
 	    $arrOptions[$strSqlname] = $arrName[$key].' ('.$objMinerals->fields[$strSqlname].' sztuk)';
 	  }
       }
     $objMinerals->Close();
-    $smarty -> assign(array("Addmin" => "Dodaj minerały do skarbca",
+    if ($player->credits > 0)
+      {
+	$arrOptions['credits'] = 'złota ('.$player->credits.' sztuk)';
+      }
+    if ($player->platinum > 0)
+      {
+	$arrOptions['platinum'] = 'mithrilu ('.$player->platinum.' sztuk)';
+      }
+    $smarty -> assign(array("Addmin" => "Dodaj surowce do skarbca",
 			    "Aadd" => "Dodaj",
-			    "Mineral" => "Minerał",
-			    "Mamount" => "Ilość minerału",
+			    "Mineral" => "Surowiec",
+			    "Mamount" => "Ilość surowca",
 			    "Tall" => "wszystkie posiadane)",
 			    "Minname" => $arrOptions));
     if (isset ($_GET['step3']) && $_GET['step3'] == 'add') 
@@ -278,31 +304,40 @@ if (isset ($_GET['step2']) && $_GET['step2'] == 'daj')
 	  {
 	    error("Zapomnij o tym.");
 	  }
-	$gr = $db -> Execute("SELECT ".$_POST['mineral']." FROM `minerals` WHERE `owner`=".$player -> id);
 	$intKey = array_search($_POST['mineral'], $arrSqlname2);
-	if (isset($_POST['all']))
-	  {
-	    $_POST['ilosc'] = $gr->fields[$arrSqlname2[$intKey]];
-	  }
-	if ($_POST['ilosc'] > $gr -> fields[$arrSqlname2[$intKey]])
-	  {
-	    error("Nie masz takiej ilości ".$arrName[$intKey].".");
-	  }  
 	checkvalue($_POST['ilosc']);
-	if ($_POST['ilosc'] <= 0) 
+	if (!in_array($_POST['mineral'], array('credits', 'platinum')))
 	  {
-	    error ("Zapomnij o tym.");
-	  }
-	$objTest = $db->Execute("SELECT `id` FROM `tribe_minerals` WHERE `id`=".$player->tribe);
-	if (!$objTest->fields['id'])
-	  {
-	    $db->Execute("INSERT INTO `tribe_minerals` (`id`, `".$arrSqlname2[$intKey]."`) VALUES(".$player->tribe.", ".$_POST['ilosc'].")");
+	    $gr = $db -> Execute("SELECT ".$_POST['mineral']." FROM `minerals` WHERE `owner`=".$player -> id);
+	    if (isset($_POST['all']))
+	      {
+		$_POST['ilosc'] = $gr->fields[$arrSqlname2[$intKey]];
+	      }
+	    if ($_POST['ilosc'] > $gr -> fields[$arrSqlname2[$intKey]])
+	      {
+		error("Nie masz takiej ilości ".$arrName[$intKey].".");
+	      }  
+	    $objTest = $db->Execute("SELECT `id` FROM `tribe_minerals` WHERE `id`=".$player->tribe);
+	    if (!$objTest->fields['id'])
+	      {
+		$db->Execute("INSERT INTO `tribe_minerals` (`id`, `".$arrSqlname2[$intKey]."`) VALUES(".$player->tribe.", ".$_POST['ilosc'].")");
+	      }
+	    else
+	      {
+		$db -> Execute("UPDATE `tribe_minerals` SET `".$arrSqlname2[$intKey]."`=`".$arrSqlname2[$intKey]."`+".$_POST['ilosc']." WHERE `id`=".$mytribe -> fields['id']);
+	      }
+	    $db -> Execute("UPDATE `minerals` SET `".$arrSqlname2[$intKey]."`=`".$arrSqlname2[$intKey]."`-".$_POST['ilosc']." WHERE `owner`=".$player -> id);
 	  }
 	else
 	  {
-	    $db -> Execute("UPDATE `tribe_minerals` SET `".$arrSqlname2[$intKey]."`=`".$arrSqlname2[$intKey]."`+".$_POST['ilosc']." WHERE `id`=".$mytribe -> fields['id']);
+	    if ($_POST['ilosc'] > $player->$_POST['mineral'])
+	      {
+		error("Nie masz takiej ilości ".$arrName[$intKey].".");
+	      }
+	    $db->Execute("UPDATE `tribes` SET `".$_POST['mineral']."`=`".$_POST['mineral']."` + ".$_POST['ilosc']." WHERE `id`=".$player->tribe);
+	    $db->Execute("UPDATE `players` SET `".$_POST['mineral']."`=`".$_POST['mineral']."` - ".$_POST['ilosc']." WHERE `id`=".$player->id);
+	    $player->$_POST['mineral'] -= $_POST['ilosc'];
 	  }
-	$db -> Execute("UPDATE `minerals` SET `".$arrSqlname2[$intKey]."`=`".$arrSqlname2[$intKey]."`-".$_POST['ilosc']." WHERE `owner`=".$player -> id);
 	message("success", "Dodałeś <b>".$_POST['ilosc']." sztuk(i) ".$arrName[$intKey]."</b> do skarbca klanu.");
 	$arrAmount[$intKey] += $_POST['ilosc'];
 	$_GET['step3'] = '';
@@ -361,9 +396,9 @@ if ($_GET['step2'] == ''  && $_GET['step3'] == '' && $_GET['daj'] == '' && $_GET
 	  }
 	$i++;
       }
-    $smarty -> assign(array("Mininfo" => "Witaj w skarbcu klanu. Tutaj są składowane minerały należące do klanu. Każdy członek klanu może ofiarować klanowi jakiś minerał, ale tylko przywódca lub osoba upoważniona przez niego może darować dany minerał członkom swojego klanu. Aby dać jakiś minerał członkom klanu, kliknij na nazwę owego minerału.",
+    $smarty -> assign(array("Mininfo" => "Witaj w skarbcu klanu. Tutaj są składowane surowce należące do klanu. Każdy członek klanu może ofiarować klanowi jakiś surowiec, ale tylko przywódca lub osoba upoważniona przez niego może darować dany surowiec członkom swojego klanu. Aby dać jakiś surowiec członkom klanu, kliknij na nazwę owego surowca.",
 			    "Whatyou" => "Co chcesz zrobić?",
-			    "Agiveto" => "Dać minerały do klanu",
+			    "Agiveto" => "Dać surowce do klanu",
 			    "Ttable" => $arrTable));
   }
 

@@ -7,7 +7,7 @@
  *   @copyright            : (C) 2012 Vallheru Team based on Gamers-Fusion ver 2.5
  *   @author               : thindil <thindil@vallheru.net>
  *   @version              : 1.6
- *   @since                : 16.07.2012
+ *   @since                : 21.09.2012
  *
  */
 
@@ -93,7 +93,7 @@ else
 	$arrIds = array();
 	$arrAmounts = array();
 	$arrName = array("Illani", "Illanias", "Nutari", "Dynallca", "Nasiona Illani", "Nasiona Illanias", "Nasiona Nutari", "Nasiona Dynallca");
-	$arrName2 = array("rudy miedzi", "rudy cynku", "rudy cyny", "rudy żelaza", "sztabek miedzi", "sztabek brązu", "sztabek mosiądzu", "sztabek żelaza", "sztabek stali", "brył węgla", "brył adamantium", "kawałków meteorytu", "kryształów", "drewna sosnowego", "drewna z leszczyny", "drewna cisowego", "drewna z wiązu");
+	$arrName2 = array("rudy miedzi", "rudy cynku", "rudy cyny", "rudy żelaza", "sztabek miedzi", "sztabek brązu", "sztabek mosiądzu", "sztabek żelaza", "sztabek stali", "brył węgla", "brył adamantium", "kawałków meteorytu", "kryształów", "drewna sosnowego", "drewna z leszczyny", "drewna cisowego", "drewna z wiązu", 'złoto', 'mithril');
 	while (!$objAsks->EOF)
 	  {
 	    switch ($objAsks->fields['type'])
@@ -144,7 +144,7 @@ else
 	    $arrRejected = array();
 	    $objAsks->MoveFirst();
 	    $arrSqlname = array('illani', 'illanias', 'nutari', 'dynallca', 'illani_seeds', 'illanias_seeds', 'nutari_seeds', 'dynallca_seeds');
-	    $arrSqlname2 = array('copperore', 'zincore', 'tinore', 'ironore', 'copper', 'bronze', 'brass', 'iron', 'steel', 'coal', 'adamantium', 'meteor', 'crystal', 'pine', 'hazel', 'yew', 'elm');
+	    $arrSqlname2 = array('copperore', 'zincore', 'tinore', 'ironore', 'copper', 'bronze', 'brass', 'iron', 'steel', 'coal', 'adamantium', 'meteor', 'crystal', 'pine', 'hazel', 'yew', 'elm', 'credits', 'platinum');
 	    while(!$objAsks->EOF)
 	      {
 		if ($_POST[$objAsks->fields['id']] == 'Odrzuć')
@@ -166,7 +166,14 @@ else
 			break;
 			//Minerals
 		      case 'M':
-			$db->Execute("UPDATE `tribe_minerals` SET `r".$arrSqlname2[$objAsks->fields['iid']]."`=`r".$arrSqlname2[$objAsks->fields['iid']]."`-".$objAsks->fields['amount']." WHERE `id`=".$player->tribe);
+			if (!in_array($arrSqlname2[$objAsks->fields['iid']], array('credits', 'platinum')))
+			  {
+			    $db->Execute("UPDATE `tribe_minerals` SET `r".$arrSqlname2[$objAsks->fields['iid']]."`=`r".$arrSqlname2[$objAsks->fields['iid']]."`-".$objAsks->fields['amount']." WHERE `id`=".$player->tribe);
+			  }
+			else
+			  {
+			    $db->Execute("UPDATE `tribes` SET `r".$arrSqlname2[$objAsks->fields['iid']]."`=`r".$arrSqlname2[$objAsks->fields['iid']]."`-".$objAsks->fields['amount']." WHERE `id`=".$player->tribe);
+			  }
 			break;
 		      default:
 			break;

@@ -6,8 +6,8 @@
  *   @name                 : tribemenu.php                            
  *   @copyright            : (C) 2012 Vallheru Team based on Gamers-Fusion ver 2.5
  *   @author               : thindil <thindil@vallheru.net>
- *   @version              : 1.5
- *   @since                : 19.04.2012
+ *   @version              : 1.6
+ *   @since                : 21.09.2012
  *
  */
 
@@ -30,10 +30,10 @@
 // $Id$
 
 $arrMenus = array(array("address" => 'tribes.php?view=my', "name" => 'Główna'),
-		  array("address" => 'tribes.php?view=my&amp;step=donate', "name" => 'Dotuj'),
 		  array("address" => 'tribes.php?view=my&amp;step=members', "name" => 'Członkowie'),
 		  array("address" => 'tribes.php?view=my&amp;step=quit', "name" => 'Opuść klan'),
-		  array("address" => 'tforums.php?view=topics', "name" => 'Forum klanu'));
+		  array("address" => 'tforums.php?view=topics', "name" => 'Forum klanu'),
+		  array("address" => 'tribeminerals.php', "name" => 'Skarbiec'));
 $objTribe = $db->Execute("SELECT `owner`, `level` FROM `tribes` WHERE `id`=".$player->tribe);
 if ($objTribe->fields['level'] > 1)
   {
@@ -42,7 +42,6 @@ if ($objTribe->fields['level'] > 1)
   }
 if ($objTribe->fields['level'] > 2)
   {
-    $arrMenus[] = array("address" => 'tribeminerals.php', "name" => 'Skarbiec');
     $arrMenus[] = array("address" => 'tribeherbs.php', "name" => 'Zielnik');
     $arrMenus[] = array("address" => 'tribeastral.php', "name" => 'Astralny skarbiec');
   }
