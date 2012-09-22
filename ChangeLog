@@ -1,5 +1,7 @@
 2012-09-22  Bartek thindil Jasicki  <thindil@vallheru.net>
 
+	* BUG,stats.php: 
+	fixed typo
 	* BUG,tribeminerals.php:
 	fixed give all option
 

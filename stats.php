@@ -8,7 +8,7 @@
  *   @author               : thindil <thindil@vallheru.net>
  *   @author               : mori <ziniquel@users.sourceforge.net>
  *   @version              : 1.6
- *   @since                : 22.08.2012
+ *   @since                : 22.09.2012
  *
  */
 
@@ -240,7 +240,7 @@ $arrBskills = array("Kowalstwo" => $player->smith,
 		    "Jubilerstwo" => $player->jeweller, 
 		    "Hutnictwo" => $player->metallurgy, 
 		    "Złodziejstwo" => $player->thievery, 
-		    "Percepcja" => $player->perception);
+		    "Spostrzegawczość" => $player->perception);
 $arrSkills = array("smith", "shoot", "alchemy", "miss", "fletcher", "magic", "attack", "leadership", "breeding", "mining", "lumberjack", "herbalist", "jeweller", "metallurgy", "thievery", "perception");
 $player->curskills(array("smith", "alchemy", "fletcher", "breeding", "mining", "lumberjack", "herbalist", "jeweller", "metallurgy", "thievery"), FALSE, TRUE);
 $player->curskills(array("shoot", "miss", "magic", "attack", "leadership", "perception"), FALSE, FALSE);
