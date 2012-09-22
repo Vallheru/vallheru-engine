@@ -7,7 +7,7 @@
  *   @copyright            : (C) 2012 Vallheru Team based on Gamers-Fusion ver 2.5
  *   @author               : thindil <thindil@vallheru.net>
  *   @version              : 1.6
- *   @since                : 21.09.2012
+ *   @since                : 22.09.2012
  *
  */
 
@@ -305,7 +305,10 @@ if (isset ($_GET['step2']) && $_GET['step2'] == 'daj')
 	    error("Zapomnij o tym.");
 	  }
 	$intKey = array_search($_POST['mineral'], $arrSqlname2);
-	checkvalue($_POST['ilosc']);
+	if (!isset($_POST['all']))
+	  {
+	    checkvalue($_POST['ilosc']);
+	  }
 	if (!in_array($_POST['mineral'], array('credits', 'platinum')))
 	  {
 	    $gr = $db -> Execute("SELECT ".$_POST['mineral']." FROM `minerals` WHERE `owner`=".$player -> id);
@@ -330,6 +333,10 @@ if (isset ($_GET['step2']) && $_GET['step2'] == 'daj')
 	  }
 	else
 	  {
+	    if (isset($_POST['all']))
+	      {
+		$_POST['ilosc'] = $player->$_POST['mineral'];
+	      }
 	    if ($_POST['ilosc'] > $player->$_POST['mineral'])
 	      {
 		error("Nie masz takiej ilości ".$arrName[$intKey].".");

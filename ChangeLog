@@ -1,3 +1,8 @@
+2012-09-22  Bartek thindil Jasicki  <thindil@vallheru.net>
+
+	* BUG,tribeminerals.php:
+	fixed give all option
+
 2012-09-21  Bartek thindil Jasicki  <thindil@vallheru.net>
 
 	* FEATURE,install/db/update.sql, includes/tribemenu.php, tribes.php, tribeadmin.php, tribeminerals.php:
