@@ -1,5 +1,7 @@
 2012-09-22  Bartek thindil Jasicki  <thindil@vallheru.net>
 
+	* BUG,court.php: 
+	fixed adding new cases
 	* BUG,outposts.php: 
 	added core names
 	* BUG,stats.php: 

@@ -7,7 +7,7 @@
  *   @copyright            : (C) 2004,2005,2006,2011,2012 Vallheru Team based on Gamers-Fusion ver 2.5
  *   @author               : thindil <thindil@vallheru.net>
  *   @version              : 1.6
- *   @since                : 23.05.2012
+ *   @since                : 22.09.2012
  *
  */
 
@@ -207,8 +207,9 @@ if (isset($_GET['step']) && $_GET['step'] == 'admin')
         error(ERROR);
     }
     $smarty -> assign(array("Aaddrule" => A_ADD_RULE,
-        "Aaddcase" => A_ADD_CASE,
-        "Aaddverd" => A_ADD_VERD));
+			    "Aaddcase" => A_ADD_CASE,
+			    "Aaddverd" => A_ADD_VERD,
+			    "Aadd" => "Dodaj"));
     if (isset($_GET['step2']))
     {
         $arrStep2 = array('addrule', 'addcase', 'addverdict');
@@ -216,15 +217,6 @@ if (isset($_GET['step']) && $_GET['step'] == 'admin')
         {
             error(ERROR);
         }
-
-        /**
-        * Check avaible languages
-        */
-	$arrLanguage = scandir('languages/', 1);
-	$arrLanguage = array_diff($arrLanguage, array(".", "..", "index.htm"));
-
-        $smarty -> assign(array("Llang" => $arrLanguage,
-            "Aadd" => A_ADD));
 
         if ($_GET['step2'] == 'addrule')
         {
@@ -240,13 +232,12 @@ if (isset($_GET['step']) && $_GET['step'] == 'admin')
         }
         if (isset($_GET['action']) && $_GET['action'] == 'add')
         {
-            $_POST['body'] = nl2br($_POST['body']);
             require_once('includes/bbcode.php');
             $_POST['body'] = bbcodetohtml($_POST['body']);
             $strBody = $db -> qstr($_POST['body'], get_magic_quotes_gpc());
             $strTitle = $db -> qstr($_POST['ttitle'], get_magic_quotes_gpc());
             $strDate = $db -> DBDate($newdate);
-            $db -> Execute("INSERT INTO `court` (`title`, `body`, `type`, `lang`, `date`) VALUES(".$strTitle.", ".$strBody.", '".$strType."', '".$_POST['lang']."', ".$strDate.")");
+            $db -> Execute("INSERT INTO `court` (`title`, `body`, `type`, `date`) VALUES(".$strTitle.", ".$strBody.", '".$strType."', ".$strDate.")");
             error(ADDED);
         }
     }
