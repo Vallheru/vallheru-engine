@@ -7,8 +7,8 @@
  *   @copyright            : (C) 2004,2005,2006,2011,2012 Vallheru Team based on Gamers-Fusion ver 2.5
  *   @author               : thindil <thindil@vallheru.net>
  *   @author               : eyescream <tduda@users.sourceforge.net>
- *   @version              : 1.5
- *   @since                : 18.04.2012
+ *   @version              : 1.6
+ *   @since                : 22.09.2012
  *
  */
  
@@ -1245,30 +1245,35 @@ if (isset ($_GET['view']) && $_GET['view'] == 'shop')
     if ($numcore && $nummonsters < $out -> fields['fence']) 
     {
         $freefence = 'Y';
-        $core = $db -> Execute("SELECT id, name, power, defense FROM core WHERE owner=".$player -> id);
+        $core = $db -> Execute("SELECT `id`, `name`, `power`, `defense`, `corename` FROM `core` WHERE `owner`=".$player -> id);
         $arrname = array();
         $arrpower = array();
         $arrdefense = array();
         $arrid = array();
-        $i = 0;
         while (!$core -> EOF) 
         {
-            $arrid[$i] = $core -> fields['id'];
-            $arrname[$i] = $core -> fields['name'];
-            $arrpower[$i] = ceil($core -> fields['power'] / 10);
-            $arrdefense[$i] = ceil($core -> fields['defense'] / 10);
+            $arrid[] = $core -> fields['id'];
+	    if ($core->fields['corename'] == '')
+	      {
+		$arrname[] = $core -> fields['name'];
+	      }
+	    else
+	      {
+		$arrname[] = $core->fields['corename'].' ('.$core->fields['name'].')';
+	      }
+            $arrpower[] = ceil($core -> fields['power'] / 10);
+            $arrdefense[] = ceil($core -> fields['defense'] / 10);
             $core -> MoveNext();
-            $i = $i + 1;
         }
         $core -> Close();
         $smarty -> assign(array("Mid" => $arrid, 
-            "Mname" => $arrname, 
-            "Power" => $arrpower, 
-            "Defense" => $arrdefense,
-            "Aadd" => A_ADD,
-            "Udefense" => U_DEFENSE,
-            "Uattack" => U_ATTACK,
-            "Fora" => FOR_A));
+				"Mname" => $arrname, 
+				"Power" => $arrpower, 
+				"Defense" => $arrdefense,
+				"Aadd" => A_ADD,
+				"Udefense" => U_DEFENSE,
+				"Uattack" => U_ATTACK,
+				"Fora" => FOR_A));
     } 
         else 
     {
@@ -1573,16 +1578,20 @@ if (isset ($_GET['view']) && $_GET['view'] == 'shop')
         {
             error(NO_LAIR);
         }
-        $core = $db -> Execute("SELECT name, power, defense, owner FROM core WHERE id=".$_POST['army']);
+        $core = $db -> Execute("SELECT `name`, `power`, `defense`, `owner`, `corename` FROM `core` WHERE `id`=".$_POST['army']);
+	if ($core->fields['corename'] != '')
+	  {
+	    $core->fields['name'] = $core->fields['corename'].'('.$core->fields['name'].')';
+	  }
         if ($core -> fields['owner'] != $player -> id) 
         {
             error(NOT_YOUR);
         }
         $power = ceil($core -> fields['power'] / 10);
         $defense = ceil($core -> fields['defense'] / 10);
-        $db -> Execute("INSERT INTO outpost_monsters (outpost, name, power, defense) VALUES(".$out -> fields['id'].",'".$core -> fields['name']."',".$power.",".$defense.")");
-        $db -> Execute("DELETE FROM core WHERE id=".$_POST['army']);
-        $db -> Execute("UPDATE outposts SET gold=gold-2000 WHERE id=".$out -> fields['id']);
+        $db -> Execute("INSERT INTO `outpost_monsters` (`outpost`, `name`, `power`, `defense`) VALUES(".$out -> fields['id'].",'".$core -> fields['name']."',".$power.",".$defense.")");
+        $db -> Execute("DELETE FROM `core` WHERE `id`=".$_POST['army']);
+        $db -> Execute("UPDATE `outposts` SET `gold`=`gold`-2000 WHERE `id`=".$out -> fields['id']);
         $smarty -> assign("Message", YOU_ADD.$core -> fields['name'].WITH_P.$power.AND_D.$defense.IT_COST.' <a href=outposts.php?view=shop>'.A_REFRESH.'</a>');
         $core -> Close();
     }
