@@ -8,7 +8,7 @@
  *   @author               : thindil <thindil@vallheru.net>
  *   @author               : eyescream <tduda@users.sourceforge.net>
  *   @version              : 1.6
- *   @since                : 20.09.2012
+ *   @since                : 23.09.2012
  *
  */
 
@@ -189,10 +189,14 @@ if ($view -> gender)
     if ($view -> gender == 'M') 
     {
         $gender = G_MALE;
+	$strAlive = 'Żywy';
+	$strDead = 'Martwy';
     } 
         else 
     {
         $gender = G_FEMALE;
+	$strAlive = 'Żywa';
+	$strDead = 'Alive';
     }
     $smarty -> assign ("Gender", T_GENDER.": ".$gender."<br />");
 }
@@ -202,11 +206,11 @@ if (!empty ($view -> deity))
 }
 if ($view -> hp > 0) 
 {
-    $smarty -> assign ("Status", "<b>".S_LIVE."</b><br />");
+    $smarty -> assign ("Status", "<b>".$strAlive."</b><br />");
 } 
     else 
 {
-    $smarty -> assign ("Status", "<b>".S_DEAD."</b><br />");
+    $smarty -> assign ("Status", "<b>".$strDead."</b><br />");
 }
 
 $objFreeze = $db -> Execute("SELECT `freeze`, `shortrpg` FROM `players` WHERE `id`=".$_GET['view']);
