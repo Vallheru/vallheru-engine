@@ -1,3 +1,8 @@
+2012-09-23  Bartek thindil Jasicki  <thindil@vallheru.net>
+
+	* BUG,tribes.php:
+	fixed bug with sabotage astral machine
+
 2012-09-22  Bartek thindil Jasicki  <thindil@vallheru.net>
 
 	* BUG,court.php: 
