@@ -7,7 +7,7 @@
  *   @copyright            : (C) 2004,2005,2006,2012 Vallheru Team based on Gamers-Fusion ver 2.5
  *   @author               : thindil <thindil@vallheru.net>
  *   @version              : 1.6
- *   @since                : 28.05.2012
+ *   @since                : 24.09.2012
  *
  */
 
@@ -90,7 +90,7 @@ if (isset($_POST['box2']) && $_POST['box2'] == 1)
 
 if ($test -> fields['action'] === '1.1') 
 {
-    $chance = ($arrCurstats[2] + rand(1,100));
+    $chance = ($player->inteli + rand(1,100));
     if ($chance < 30) 
     {
         $quest -> Show('int1');
@@ -164,7 +164,7 @@ if (isset($_POST['box5']) && $_POST['box5'] == 1)
 
 if ($test -> fields['action'] === '1.2.1') 
 {
-    $chance = ($arrCurstats[0] + rand(1,100));
+    $chance = ($player->agility + rand(1,100));
     if ($chance < 200) 
     {
         $quest -> Show('agi1');
@@ -231,7 +231,7 @@ if (isset($_POST['box6']) && $_POST['box6'] == 1)
 
 if ($test -> fields['action'] == '1.2.1.1') 
 {
-    $chance = ($arrCurstats[2] + rand(1,100));
+    $chance = ($player->inteli + rand(1,100));
     if ($chance < 50) 
     {
         $quest -> Show('int3');

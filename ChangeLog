@@ -1,5 +1,7 @@
 2012-09-24  Bartek thindil Jasicki  <thindil@vallheru.net>
 
+	* BUG,quests/quest3.php, quests/quest2.php: 
+	fixed player stats
 	* UPDATE,templates/zloto.tpl, templates/layout1/zloto.tpl: 
 	some redesign
 	* UPDATE,templates/layout1/header.tpl: 

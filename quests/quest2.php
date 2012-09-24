@@ -7,7 +7,7 @@
  *   @copyright            : (C) 2004,2005,2006,2012 Vallheru Team based on Gamers-Fusion ver 2.5
  *   @author               : thindil <thindil@vallheru.net>
  *   @version              : 1.6
- *   @since                : 28.05.2012
+ *   @since                : 24.09.2012
  *
  */
 
@@ -89,7 +89,7 @@ if (isset($_POST['box2']) && $_POST['box2'] == 1)
 
 if ($test -> fields['action'] === '1.1') 
 {
-    $chance = ($arrCurstats[2] + rand(1,100));
+    $chance = ($player->inteli + rand(1,100));
     if ($chance < 200) 
     {
         $quest -> Show('int2');
@@ -128,7 +128,7 @@ if ((isset($_POST['box3']) && $_POST['box3'] == 1) || $test -> fields['action'] 
 
 if ($test -> fields['action'] === '1.1.1') 
 {
-    $chance = ($arrCurstats[5] + rand(1,100));
+    $chance = ($player->cond + rand(1,100));
     if ($chance > 200) 
     {
         $quest -> Show('con1');
@@ -157,7 +157,7 @@ if ((isset($_POST['box2']) && $_POST['box2'] == 2) || $test -> fields['action'] 
 
 if ($test -> fields['action'] === '1.2') 
 {
-    $chance = ($arrCurstats[2] + rand(1,100));
+    $chance = ($player->inteli + rand(1,100));
     if ($chance > 200) 
     {
         $quest -> Show('int3');
@@ -292,7 +292,7 @@ if (isset($_POST['box7']) && $_POST['box7'] == 3)
 
 if ((isset($_POST['box7']) && $_POST['box7'] == 1) && $test -> fields['action'] != '1.3.1') 
 {
-    $chance = ($arrCurstats[0] + rand(1,100));
+    $chance = ($player->agility + rand(1,100));
     if ($chance < 200) 
     {
         $quest -> Show('door1');
@@ -315,7 +315,7 @@ if ((isset($_POST['box7']) && $_POST['box7'] == 1) && $test -> fields['action'] 
 if ($test -> fields['action'] == 'door1') 
 {
     $amount = $db -> Execute("SELECT temp FROM players WHERE id=".$player -> id);
-    $chance = ($arrCurstats[0] + rand(1,100));
+    $chance = ($player->agility + rand(1,100));
     if ($chance < 200 && $amount -> fields['temp'] <= 0) 
     {
         $quest ->Show('door2');
