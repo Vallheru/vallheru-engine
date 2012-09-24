@@ -1,5 +1,7 @@
 2012-09-24  Bartek thindil Jasicki  <thindil@vallheru.net>
 
+	* BUG,view.php: 
+	fixed notice
 	* UPDATE,tribes.php: 
 	changed amount of taken energy during sabotage
 	* BUG,templates/layout1/court.tpl, templates/court.tpl, court.php:
