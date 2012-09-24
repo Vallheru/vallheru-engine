@@ -1,3 +1,8 @@
+2012-09-24  Bartek thindil Jasicki  <thindil@vallheru.net>
+
+	* BUG,templates/layout1/court.tpl, templates/court.tpl, court.php:
+	fixed lawyers permissions to write in court
+
 2012-09-23  Bartek thindil Jasicki  <thindil@vallheru.net>
 
 	* BUG,view.php: 

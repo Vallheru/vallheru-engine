@@ -339,15 +339,15 @@ if (isset($_GET['step2']) && $_GET['step2'] == 'comments')
         {
             error(NO_PERM);
         }
-        $_POST['body'] = htmlspecialchars($_POST['body'], ENT_QUOTES);
         if (empty($_POST['body']))
         {
             error(EMPTY_FIELDS);
         }
+	require_once('includes/bbcode.php');
+	$_POST['body'] = bbcodetohtml($_POST['body']);
 	checkvalue($_POST['tid']);
         $strAuthor = $player -> user." ID: ".$player -> id;
-        $strBody = $db -> qstr($_POST['body'], get_magic_quotes_gpc());
-        $db -> Execute("INSERT INTO court_cases (textid, author, body) VALUES(".$_POST['tid'].", '".$strAuthor."', ".$strBody.")");
+        $db -> Execute("INSERT INTO `court_cases` (`textid`, `author`, `body`) VALUES(".$_POST['tid'].", '".$strAuthor."', '".$_POST['body']."')");
         error(C_ADDED);
     }
 

@@ -64,7 +64,7 @@
         {/section}
     {/if}
     <br /><br />
-    {if $Rank == "Admin" || $Rank == "Sędzia" || $Rank == "Kanclerz Sądu"}
+    {if $Rank == "Admin" || $Rank == "Sędzia" || $Rank == "Prawnik"}
         <center>
         <form method="post" action="court.php?step2=comments&amp;action=add">
             {$Addcomment}:<textarea name="body" rows="20" cols="50"></textarea><br />
@@ -85,11 +85,6 @@
     
     {if $Step == 'admin'}
         <form method="post" action="court.php?step=admin&amp;step2={$Step2}&amp;action=add">
-            {$Tlang}: <select name="lang">
-                {section name=court3 loop=$Llang}
-                    <option value="{$Llang[court3]}">{$Llang[court3]}</option>
-                {/section}
-            </select><br />
             {$Ttitle2}: <input type="text" name="ttitle" /><br />
             {$Tbody2}: <br /><textarea name="body" rows="30" cols="60"></textarea><br />
             <input type="submit" value="{$Aadd}" />
