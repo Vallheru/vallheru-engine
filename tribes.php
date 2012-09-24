@@ -9,7 +9,7 @@
  *   @author               : mori <ziniquel@users.sourceforge.net>
  *   @author               : eyescream <tduda@users.sourceforge.net>
  *   @version              : 1.6
- *   @since                : 23.09.2012
+ *   @since                : 24.09.2012
  *
  */
 
@@ -447,12 +447,12 @@ if (isset ($_GET['view']) && $_GET['view'] == 'view')
 	    if ($blnAction)
 	      {
 		$objAstral = $db -> Execute("SELECT `used`, `directed` FROM `astral_machine` WHERE `owner`=".$objTribe->fields['id']);
-		$intAmount = $objAstral->fields['used'] - ceil($objAstral->fields['used'] / 10);
+		$intAmount = $objAstral->fields['used'] - ceil($objAstral->fields['used'] / rand(10, 50));
 		if ($intAmount < 0)
 		  {
 		    $intAmount = 0;
 		  }
-		$intAmount2 = $objAstral->fields['directed'] - ceil($objAstral->fields['directed'] / 10);
+		$intAmount2 = $objAstral->fields['directed'] - ceil($objAstral->fields['directed'] / rand(10, 50));
 		if ($intAmount2 < 0)
 		  {
 		    $intAmount2 = 0;
