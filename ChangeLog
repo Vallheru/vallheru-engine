@@ -1,5 +1,7 @@
 2012-09-24  Bartek thindil Jasicki  <thindil@vallheru.net>
 
+	* UPDATE,templates/layout1/header.tpl: 
+	small update
 	* BUG,view.php: 
 	fixed notice
 	* UPDATE,tribes.php: 

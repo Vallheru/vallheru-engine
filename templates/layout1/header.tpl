@@ -94,5 +94,5 @@
 <div align="center"><b>{$Title}</b></div>
 <table style="margin-left: auto; margin-right: auto; width: 93%; max-width: 1280px;">
 <tr>
-  <td width="85%">
+  <td width="85%" valign="top">
 
