@@ -8,7 +8,7 @@
  *   @author               : thindil <thindil@vallheru.net>
  *   @author               : mori <ziniquel@users.sourceforge.net>
  *   @version              : 1.6
- *   @since                : 22.09.2012
+ *   @since                : 25.09.2012
  *
  */
 
@@ -187,19 +187,23 @@ $smarty->assign(array('Mpoints' => $objBless->fields['mpoints'],
 
 $arrCurstats2 = array();
 $i = 0;
+$arrStatstext = array(T_AGI, T_STR, T_INT, T_WIS, T_SPEED, T_CON);
 foreach ($arrCurstats as $fltStats)
 {
-    if ($fltStats != $player->oldstats[$i])
+  if ($fltStats > $player->oldstats[$i])
     {
-        $arrCurstats2[$i] = "(".$fltStats.")";
+      $arrCurstats2[] = '<b>'.$arrStatstext[$i].':</b> '.$fltStats.' <span style="color: green;">(+'.($fltStats - $player->oldstats[$i]).')</span>';
     }
-        else
+  elseif ($fltStats < $player->oldstats[$i])
     {
-        $arrCurstats2[$i] = "";
+      $arrCurstats2[] = '<b>'.$arrStatstext[$i].':</b> '.$fltStats.' <span style="color: red;">(-'.($fltStats - $player->oldstats[$i]).')</span>';
+    }
+  else
+    {
+      $arrCurstats2[] = '<b>'.$arrStatstext[$i].':</b> '.$fltStats;
     }
     $i++;
 }
-$arrStatstext = array(T_AGI, T_STR, T_INT, T_WIS, T_SPEED, T_CON);
 
 /**
  * Name of player location
@@ -253,9 +257,13 @@ foreach ($arrBskills as $strName => $fltValue)
     {
       continue;
     }
-  if ($player->$arrSkills[$i] != $fltValue)
+  if ($player->$arrSkills[$i] > $fltValue)
     {
-      $arrStable[] = '<b>'.$strName.':</b> '.$fltValue.' ('.$player->$arrSkills[$i].')';
+      $arrStable[] = '<b>'.$strName.':</b> '.$player->$arrSkills[$i].' <span style="color: green;">(+'.($player->$arrSkills[$i] - $fltValue).')</span>';
+    }
+  elseif ($player->$arrSkills[$i] < $fltValue)
+    {
+      $arrStable[] = '<b>'.$strName.':</b> '.$player->$arrSkills[$i].' <span style="color: red;">(-'.($player->$arrSkills[$i] - $fltValue).')</span>';
     }
   else
     {
@@ -263,10 +271,8 @@ foreach ($arrBskills as $strName => $fltValue)
     }
 }
    
-$smarty -> assign(array("Stats" => $player->oldstats,
-                        "Curstats" => $arrCurstats2,
+$smarty -> assign(array("Curstats" => $arrCurstats2,
 			"Stable" => $arrStable,
-                        "Tstats2" => $arrStatstext,
                         "Mana" =>  $player -> mana."/".$maxmana, 
                         "Location" => $strLocation."<br />", 
                         "Age" => $player -> age."<br />", 

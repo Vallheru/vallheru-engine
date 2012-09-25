@@ -22,8 +22,8 @@
     {else}
         {$Gender}<br />
     {/if}
-    {section name=stats1 loop=$Tstats2}
-        <b>{$Tstats2[stats1]}:</b> {$Stats[stats1]} {$Curstats[stats1]}<br />
+    {section name=stats1 loop=$Curstats}
+        {$Curstats[stats1]}<br />
     {/section}
     <b>{$Tmana}:</b> {$Mana} {$Rest}
     <b>{$Tpw}:</b> {$PW}

@@ -1,5 +1,5 @@
 {$Statsinfo}<br /><br />
-{if $Avatar != ""}
+{if $Avatar != ''}
     <center><img src="{$Avatar}" width="{$Awidth}" height="{$Aheight}" border="1px" class="avatar" /></center>
 {/if}
 {if $Action == "newbie"}
@@ -7,7 +7,7 @@
     <a href="stats.php?action=newbie&amp;disable">{$Ayes}</a><br />
     <a href="stats.php">{$Ano}</a><br />
 {/if}
-<table width="100%" class="dark">
+<table width="100%">
 <tr><td width="50%" valign="top">
     <center><b><u>{$Tstats}</u></b></center><br />
     <b>{$Tap}:</b> {$Ap}
@@ -22,8 +22,8 @@
     {else}
         {$Gender}<br />
     {/if}
-    {section name=stats1 loop=$Tstats2}
-        <b>{$Tstats2[stats1]}:</b> {$Stats[stats1]} {$Curstats[stats1]}<br />
+    {section name=stats1 loop=$Curstats}
+        {$Curstats[stats1]}<br />
     {/section}
     <b>{$Tmana}:</b> {$Mana} {$Rest}
     <b>{$Tpw}:</b> {$PW}

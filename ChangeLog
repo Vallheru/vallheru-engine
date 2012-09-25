@@ -1,5 +1,7 @@
 2012-09-25  Bartek thindil Jasicki  <thindil@vallheru.net>
 
+	* UPDATE,templates/layout1/stats.tpl, templates/stats.tpl, stats.php: 
+	show only bonus to skills/stats
 	* BUG,class/player_class.php: 
 	fixed bug with round bonuses
 	* UPDATE,templates/layout1/zloto.tpl, templates/zloto.tpl, zloto.php, languages/pl/zloto.php:
