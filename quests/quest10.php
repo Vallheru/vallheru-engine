@@ -87,7 +87,7 @@ if ((isset($_POST['box2']) && $_POST['box2'] == 1) && ($objAction -> fields['act
     $smarty -> assign("Box", "");
     $objQuest -> Finish(10);
 }
-if ($arrCurstats[1] < 30 && $objAction -> fields['action'] == '1.1.n.n.n' && (isset($_POST['box2']) && $_POST['box2'] == 2))
+if ($player->strength < 30 && $objAction -> fields['action'] == '1.1.n.n.n' && (isset($_POST['box2']) && $_POST['box2'] == 2))
 {
     $objQuest -> Show('str1');
     $objMinerals = $db -> Execute("SELECT `owner` FROM `minerals` WHERE `owner`=".$player -> id);
@@ -103,12 +103,12 @@ if ($arrCurstats[1] < 30 && $objAction -> fields['action'] == '1.1.n.n.n' && (is
     $smarty -> assign("Box", "");
     $objQuest -> Finish(5);
 }
-if ($arrCurstats[1] >= 30 && $objAction -> fields['action'] == '1.1.n.n.n')
+if ($player->strength >= 30 && $objAction -> fields['action'] == '1.1.n.n.n')
 {
     $objQuest -> Show('str2');
     $smarty -> assign(array("Link" => "<br /><br />(<a href=\"grid.php?step=quest\">".A_NEXT2."</a>)", "Box" => ''));
 }
-if ($arrCurstats[0] < 30 && $objAction -> fields['action'] == 'str2')
+if ($player->agility < 30 && $objAction -> fields['action'] == 'str2')
 {
     $objQuest -> Show('agi1');
     $intStatpenalty = 30;
@@ -129,7 +129,7 @@ if ($arrCurstats[0] < 30 && $objAction -> fields['action'] == 'str2')
     $objMinerals -> Close();
     $objQuest -> Finish(10);
 }
-if ($arrCurstats[0] >= 30 && $objAction -> fields['action'] == 'str2')
+if ($player->agility >= 30 && $objAction -> fields['action'] == 'str2')
 {
     $objQuest -> Show('agi2');
     $objMinerals = $db -> Execute("SELECT `owner` FROM `minerals` WHERE `owner`=".$player -> id);

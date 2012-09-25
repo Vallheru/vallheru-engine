@@ -1,5 +1,7 @@
 2012-09-25  Bartek thindil Jasicki  <thindil@vallheru.net>
 
+	* BUG,quests/quest10.php, quests/quest6.php: 
+	fixed player stats
 	* UPDATE,templates/layout1/stats.tpl, templates/stats.tpl, stats.php: 
 	show only bonus to skills/stats
 	* BUG,class/player_class.php: 

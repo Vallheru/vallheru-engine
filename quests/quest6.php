@@ -7,7 +7,7 @@
  *   @copyright            : (C) 2004,2005,2006,2011,2012 Vallheru Team based on Gamers-Fusion ver 2.5
  *   @author               : thindil <thindil@vallheru.net>
  *   @version              : 1.6
- *   @since                : 28.05.2012
+ *   @since                : 25.09.2012
  *
  */
 
@@ -81,7 +81,7 @@ if (isset($_POST['box1']) && $_POST['box1'] == 1)
 
 if ($objAction -> fields['action'] == '1') 
 {
-    $intChance = ($arrCurstats[2] + rand(1,100));
+    $intChance = ($player->inteli + rand(1,100));
     if ($intChance < 100) 
     {
         $objQuest -> Show('int2');
@@ -185,7 +185,7 @@ if (isset($_POST['box3']) && $_POST['box3'] == '1')
 
 if ($objAction -> fields['action'] == '1.1.1') 
 {
-    $intChance = ($arrCurstats[2] + rand(1,100));
+    $intChance = ($player->inteli + rand(1,100));
     if ($intChance < 100) 
       {
 	if ($player->antidote != 'R')
@@ -217,7 +217,7 @@ if ($objAction -> fields['action'] == 'int3')
 if ($objAction -> fields['action'] == '1.1.1.next' || $objAction -> fields['action'] == 'agi2')
 {
     $objAmount = $db -> Execute("SELECT temp FROM players WHERE id=".$player -> id);
-    $intChance = ($arrCurstats[0] + rand(1,100));
+    $intChance = ($player->agility + rand(1,100));
     if ($intChance < 100 && $objAmount -> fields['temp'] <= 0) 
     {
         $objQuest ->Show('agi3');
@@ -262,7 +262,7 @@ if ((isset($_POST['box3']) && $_POST['box3'] == '2') || (isset($_POST['box5']) &
 
 if ($objAction -> fields['action'] == '1.1.2')
 {
-    $intChance = ($arrCurstats[2] + rand(1,100));
+    $intChance = ($player->inteli + rand(1,100));
     if ($intChance < 100) 
     {
         $objQuest -> Show('int6');
@@ -405,7 +405,7 @@ if (isset($_POST['box11']) && $_POST['box11'] == '2')
 
 if ($objAction -> fields['action'] == '1.2.3.1.2') 
 {
-    $intChance = ($arrCurstats[0] + rand(1,100));
+    $intChance = ($player->agility + rand(1,100));
     if ($intChance < 100) 
     {
         $objQuest -> Show('agi5');
@@ -483,7 +483,7 @@ if ((isset($_POST['box10']) && $_POST['box10'] == '2') || (isset($_POST['box12']
 
 if ($objAction -> fields['action'] == '1.2.3.2')
 {
-    $intChance = ($arrCurstats[2] + rand(1,100));
+    $intChance = ($player->inteli + rand(1,100));
     if ($intChance < 100) 
     {
         if ($player -> hp > 20)
@@ -602,7 +602,7 @@ if (isset($_POST['box18']) && $_POST['box18'] == '1')
 
 if ($objAction -> fields['action'] == '1.3.2.2.1')
 {
-    $intChance = (($arrCurstats[1] + $arrCurstats[0] + $arrCurstats[2] + $arrCurstats[3] + $arrCurstats[4] + $arrCurstats[5]) + rand(1,100));
+    $intChance = (($player->strength + $player->agility + $player->inteli + $player->wisdom + $player->cond + $player->speed) + rand(1,100));
     if ($intChance < 10000)
       {
 	if ($player->antidote != 'R')
