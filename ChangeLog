@@ -1,3 +1,8 @@
+2012-09-25  Bartek thindil Jasicki  <thindil@vallheru.net>
+
+	* UPDATE,templates/layout1/zloto.tpl, templates/zloto.tpl, zloto.php, languages/pl/zloto.php:
+	rewrited code
+
 2012-09-24  Bartek thindil Jasicki  <thindil@vallheru.net>
 
 	* BUG,quests/quest3.php, quests/quest2.php: 

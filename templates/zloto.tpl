@@ -8,54 +8,30 @@
 </table><br />
 <table align="center" width="70%">
     <tr>
-        <th><u>{$Minerals}</u></th>
+        <th><u>{$TMinerals}</u></th>
 	<th><u>{$Lumber}</u></th>
     </tr>
-    <tr>
-        <td>{$Ore1}: {$Copperore}</td>
-	<td>{$Min7}: {$Pine}</td>
-    </tr>
-    <tr>
-        <td>{$Ore2}: {$Zincore}</td>
-	<td>{$Min11}: {$Hazel}</td>
-    </tr>
-    <tr>
-        <td>{$Ore3}: {$Tinore}</td>
-	<td>{$Min12}: {$Yew}</td>
-    </tr>
-    <tr>
-        <td>{$Ore4}: {$Ironore}</td>
-	<td>{$Min13}: {$Elm}</td>
-    </tr>
-    <tr><td>{$Min1}: {$Copper}</td></tr>
-    <tr><td>{$Min8}: {$Bronze}</td></tr>
-    <tr><td>{$Min9}: {$Brass}</td></tr>
-    <tr><td>{$Min2}: {$Iron}</td></tr>
-    <tr><td>{$Min10}: {$Steel}</td></tr>
-    <tr><td>{$Min3}: {$Coal}</td></tr>
-    <tr><td>{$Min4}: {$Adamantium}</td></tr>
-    <tr><td>{$Min5}: {$Meteor}</td></tr>
-    <tr><td>{$Min6}: {$Crystal}</td></tr>
+    {for $i = 0 to 7 step 2}
+        <tr>
+	    <td>{$Minerals[$i][0]}: {$Minerals[$i][1]}</td>
+	    <td>{$Minerals[$i + 1][0]}: {$Minerals[$i + 1][1]}</td>
+	</tr>
+    {/for}
+    {for $i = 8 to 16}
+        <tr>
+	    <td>{$Minerals[$i][0]}: {$Minerals[$i][1]}</td>
+	</tr>
+    {/for}
 </table><br />
 <table align="center" width="70%">
     <tr>
-        <th><u>{$Herbs}</u></th>
+        <th><u>{$THerbs}</u></th>
 	<th><u>{$Seeds}</u></th>
     </tr>
-    <tr>
-        <td>{$Herb1}: {$Illani}</td>
-	<td>{$Seeds1}: {$Ilaniseeds}</td>
-    </tr>
-    <tr>
-        <td>{$Herb2}: {$Illanias}</td>
-	<td>{$Seeds2}: {$Illaniasseeds}</td>
-    </tr>
-    <tr>
-        <td>{$Herb3}: {$Nutari}</td>
-	<td>{$Seeds3}: {$Nutariseeds}</td>
-    </tr>
-    <tr>
-        <td>{$Herb4}: {$Dynallca}</td>
-	<td>{$Seeds4}: {$Dynallcaseeds}</td>
-    </tr>
+    {for $i = 0 to 7 step 2}
+        <tr>
+	    <td>{$Herbs[$i][0]}: {$Herbs[$i][1]}</td>
+	    <td>{$Herbs[$i + 1][0]}: {$Herbs[$i + 1][1]}</td>
+	</tr>
+    {/for}
 </table>
