@@ -7,7 +7,7 @@
  *   @copyright            : (C) 2004,2005,2006,2011,2012 Vallheru Team based on Gamers-Fusion ver 2.5
  *   @author               : thindil <thindil@vallheru.net>
  *   @version              : 1.6
- *   @since                : 25.09.2012
+ *   @since                : 26.09.2012
  *
  */
 
@@ -69,7 +69,7 @@ if ($objOres->fields['owner'])
 			 array("Drewna z leszczyny", $objOres -> fields['hazel']),
 			 array("Rudy cyny", $objOres -> fields['tinore']),
 			 array("Drewna cisowego", $objOres -> fields['yew']),
-			 array("Rudy żelaza", $objOres -> fields['iron']),
+			 array("Rudy żelaza", $objOres -> fields['ironore']),
 			 array("Drewna z wiązu", $objOres->fields['elm']),
 			 array("Sztabek miedzi", $objOres -> fields['copper']),
 			 array("Sztabek brązu", $objOres -> fields['bronze']),

@@ -1,5 +1,7 @@
 2012-09-26  Bartek thindil Jasicki  <thindil@vallheru.net>
 
+	* BUG,zloto.php: 
+	fixed show amount of iron
 	* BUG,quests/quest1.php:
 	fixed player stats
 
