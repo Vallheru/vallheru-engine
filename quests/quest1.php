@@ -6,8 +6,8 @@
  *   @name                 : quest1.php                            
  *   @copyright            : (C) 2004,2005,2006,2012 Vallheru Team based on Gamers-Fusion ver 2.5
  *   @author               : thindil <thindil@vallheru.net>
- *   @version              : 1.5
- *   @since                : 30.04.2012
+ *   @version              : 1.6
+ *   @since                : 26.09.2012
  *
  */
 
@@ -125,7 +125,7 @@ if ($test -> fields['action'] == '1.2')
 
 if ($test -> fields['action'] == 'winfight1') 
 {
-    $chance = ($arrCurstats[2] + rand(1,100));
+    $chance = ($player->inteli + rand(1,100));
     if ($chance > 200) 
     {
         $quest -> Show('int2');
@@ -147,7 +147,7 @@ if ($test -> fields['action'] == 'int1' || $test -> fields['action'] == 'int2')
 
 if ($test -> fields['action'] === '2') 
 {
-    $chance = ($arrCurstats[4] + rand(1,100));
+    $chance = ($player->speed + rand(1,100));
     if ($chance < 200) 
     {
         $quest -> Show('speed1');
@@ -239,7 +239,7 @@ if (isset($_POST['box3']) && $_POST['box3'] == 1)
 
 if ($test -> fields['action'] == '2.1') 
 {
-    $chance = ($arrCurstats[2] + rand(1,100));
+    $chance = ($player->inteli + rand(1,100));
     if ($chance > 200) 
     {
         $quest -> Show('inteli3');
@@ -298,7 +298,7 @@ if ((isset($_POST['box4']) && $_POST['box4'] == 1) || $test -> fields['action'] 
 {
     $quest -> Show('door1');
     $smarty -> assign(array("Answer" => "Y", 
-							"File" => "grid.php"));
+			    "File" => "grid.php"));
     if (isset($_POST['box4']) && $_POST['box4'] == 1) 
     {
         $db -> Execute("UPDATE players SET temp=5 WHERE id=".$player -> id);
@@ -310,11 +310,11 @@ if ($test -> fields['action'] == 'door1')
 {
     $chance = $quest -> Answer('door1','answer3','Y');
     $amount = $db -> Execute("SELECT temp FROM players WHERE id=".$player -> id);
+    $smarty->assign("Box", '');
     if ($chance != 1 && $amount -> fields['temp'] <= 0) 
     {
         $smarty -> assign(array("Link" => '', 
-								"Box" => '', 
-								"Answer" => ""));
+				"Answer" => ""));
         $quest ->Show('end2');
         $quest -> Finish(40);
     }
@@ -322,8 +322,7 @@ if ($test -> fields['action'] == 'door1')
     if ($chance == 1) 
     {
         $smarty -> assign(array("Link" => '', 
-								"Box" => '', 
-								"Answer" => ""));
+				"Answer" => ""));
         $db -> Execute("UPDATE players SET temp=0 WHERE id=".$player -> id);
         $db -> Execute("UPDATE players SET maps=maps+1 WHERE id=".$player -> id);
         $quest ->Show('end3');
