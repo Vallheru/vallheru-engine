@@ -1,5 +1,7 @@
 2012-09-26  Bartek thindil Jasicki  <thindil@vallheru.net>
 
+	* UPDATE,tribes.php: 
+	added soldiers to defense against thieves
 	* UPDATE,templates/layout1/tribeminerals.tpl, templates/tribeminerals.tpl, tribeminerals.php, templates/layout1/layout1.css: 
 	small redesign
 	* BUG,zloto.php: 

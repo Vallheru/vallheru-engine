@@ -9,7 +9,7 @@
  *   @author               : mori <ziniquel@users.sourceforge.net>
  *   @author               : eyescream <tduda@users.sourceforge.net>
  *   @version              : 1.6
- *   @since                : 24.09.2012
+ *   @since                : 26.09.2012
  *
  */
 
@@ -290,7 +290,7 @@ if (isset ($_GET['view']) && $_GET['view'] == 'view')
 	if (in_array($_GET['step'], array('steal', 'sabotage', 'espionage')))
 	  {
 	    checkvalue($_GET['id']);
-	    $objTribe = $db -> Execute("SELECT `id`, `owner`, `level` FROM `tribes` WHERE `id`=".$_GET['id']);
+	    $objTribe = $db -> Execute("SELECT `id`, `owner`, `level`, `zolnierze` FROM `tribes` WHERE `id`=".$_GET['id']);
 	    if (!$objTribe -> fields['id']) 
 	      {
 		error(NO_CLAN." (<a href=\"tribes.php?view=view&id=".$_GET['id']."\">".BACK."</a>)");
@@ -360,6 +360,21 @@ if (isset ($_GET['view']) && $_GET['view'] == 'view')
 		    $objMembers->MoveNext();
 		  }
 		$objMembers->Close();
+		//Check soldiers
+		if ($blnAction && $objTribe->fields['zolnierze'] > 0)
+		  {
+		    $intChance = $intStats - $objTribe->fields['zolnierze'];
+		    if ($intChance < 45)
+		      {
+			$intChance = 45;
+		      }
+		    if ($intChance < rand(1, 100))
+		      {
+			$db->Execute("UPDATE `players` SET `miejsce`='Lochy' WHERE `id`=".$player->id);
+			$db -> Execute("INSERT INTO `log` (`owner`, `log`, `czas`, `type`) VALUES(".$objTribe->fields['owner'].",'Dowódca straży klanowej melduje, że przyłapano <b><a href=view.php?view=".$player->id.">".$player->user."</a></b> ID:".$player->id." jak myszkował po siedzibie twojego klanu i natychmiast przekazano go strażnikom miejskim.', ".$strDate.", 'T')");
+			$blnAction = FALSE;
+		      }
+		  }
 		$objLevels = $db->Execute("SELECT SUM(`level`) FROM `players` WHERE `tribe`=".$_GET['id']);
 		$intLevels = $objLevels->fields['SUM(`level`)'];
 		$objLevels->Close();
