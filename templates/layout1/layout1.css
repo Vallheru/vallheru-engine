@@ -125,7 +125,7 @@ div.info {
 }
 label.toggle { 
   cursor: pointer; 
-  color: black; 
+  font-style: oblique;
 }
 label.toggle:hover { 
   cursor: pointer; 

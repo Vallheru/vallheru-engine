@@ -7,7 +7,7 @@
  *   @copyright            : (C) 2012 Vallheru Team based on Gamers-Fusion ver 2.5
  *   @author               : thindil <thindil@vallheru.net>
  *   @version              : 1.6
- *   @since                : 22.09.2012
+ *   @since                : 26.09.2012
  *
  */
 
@@ -143,7 +143,7 @@ if (isset($_GET['reserve']) && $_GET['reserve'] != '')
 	      }
 	    $strMessage = 'Gracz <b><a href="view.php?view='.$player->id.'">'.$player->user.'</a></b> ID: <b>'.$player->id.'</b> prosi o <b>'.$_POST['amount'].'</b> sztuk <b>'.$arrName[$intKey].'</b> z klanu.';
 	    $strSQL = "INSERT INTO `log` (`owner`, `log`, `czas`, `type`) VALUES(".$mytribe->fields['owner'].", '".$strMessage."','".$newdate."', 'C')";
-	    $objPerm = $db -> Execute("SELECT `player` FROM `tribe_perm` WHERE `tribe`=".$player->tribe." AND `armory`=1");
+	    $objPerm = $db -> Execute("SELECT `player` FROM `tribe_perm` WHERE `tribe`=".$player->tribe." AND `bank`=1");
 	    while (!$objPerm->EOF)
 	      {
 		$strSQL .= ",(".$objPerm -> fields['player'].", '".$strMessage."','".$newdate."', 'C')";
@@ -265,39 +265,32 @@ if (isset ($_GET['daj']) && $_GET['daj'])
       }
   }
 
-/**
- * Give minerals to tribe
- */
-if (isset ($_GET['step2']) && $_GET['step2'] == 'daj') 
+if (!isset($intReserved))
   {
-    $objMinerals = $db->Execute("SELECT * FROM `minerals` WHERE `owner`=".$player->id);
-    $arrOptions = array();
-    foreach ($arrSqlname2 as $key => $strSqlname)
-      {
-	if (in_array($strSqlname, array('credits', 'platinum')))
-	  {
-	    continue;
-	  }
-	if ($objMinerals->fields[$strSqlname])
-	  {
-	    $arrOptions[$strSqlname] = $arrName[$key].' ('.$objMinerals->fields[$strSqlname].' sztuk)';
-	  }
-      }
-    $objMinerals->Close();
-    if ($player->credits > 0)
-      {
-	$arrOptions['credits'] = 'złota ('.$player->credits.' sztuk)';
-      }
-    if ($player->platinum > 0)
-      {
-	$arrOptions['platinum'] = 'mithrilu ('.$player->platinum.' sztuk)';
-      }
-    $smarty -> assign(array("Addmin" => "Dodaj surowce do skarbca",
-			    "Aadd" => "Dodaj",
-			    "Mineral" => "Surowiec",
-			    "Mamount" => "Ilość surowca",
-			    "Tall" => "wszystkie posiadane)",
-			    "Minname" => $arrOptions));
+    $intReserved = 0;
+  }
+
+if (!isset($_GET['step2']))
+  {
+    $_GET['step2'] = '';
+  }
+if (!isset($_GET['step3']))
+  {
+    $_GET['step3'] = '';
+  }
+if (!isset($_GET['step4']))
+  {
+    $_GET['step4'] = '';
+  }
+if (!isset($_GET['daj']))
+  {
+    $_GET['daj'] = '';
+  }
+
+//Main menu
+if ($_GET['daj'] == '' && $_GET['step4'] == '' && $_GET['reserve'] == '') 
+  {
+    //Give minerals to clan
     if (isset ($_GET['step3']) && $_GET['step3'] == 'add') 
       {
 	if (!in_array($_POST['mineral'], $arrSqlname2))
@@ -353,8 +346,17 @@ if (isset ($_GET['step2']) && $_GET['step2'] == 'daj')
 	 * Send information about give minerals to tribe
 	 */
 	$strDate = $db -> DBDate($newdate);
-	$db -> Execute("INSERT INTO `log` (`owner`, `log`, `czas`, `type`) VALUES(".$mytribe -> fields['owner'].", '"."Gracz <b><a href=\"view.php?view=".$player -> id."\">".$player -> user."</a></b> ID: ".'<b>'.$player -> id.'</b> dodał do skarbca klanu '.$_POST['ilosc']." sztuk(i) ".$arrName[$intKey].".', ".$strDate.", 'C')");
-	$db -> Execute("INSERT INTO `logs` (`owner`, `log`, `czas`) VALUES(".$mytribe -> fields['owner'].", '"."Gracz  <b><a href=\"view.php?view=".$player -> id."\">".$player -> user."</a></b> ID: ".'<b>'.$player -> id.'</b> dodał do skarbca klanu '.$_POST['ilosc']." sztuk(i) ".$arrName[$intKey].".', ".$strDate.")");
+	$strMessage = "Gracz <b><a href=\"view.php?view=".$player -> id."\">".$player -> user."</a></b> ID: ".'<b>'.$player -> id.'</b> dodał do skarbca klanu '.$_POST['ilosc']." sztuk(i) ".$arrName[$intKey];
+	$strSQL = "INSERT INTO `log` (`owner`, `log`, `czas`, `type`) VALUES(".$mytribe->fields['owner'].", '".$strMessage."','".$newdate."', 'C')";
+	$objPerm = $db -> Execute("SELECT `player` FROM `tribe_perm` WHERE `tribe`=".$player->tribe." AND `bank`=1");
+	while (!$objPerm->EOF)
+	  {
+	    $strSQL .= ",(".$objPerm -> fields['player'].", '".$strMessage."','".$newdate."', 'C')";
+	    $objPerm -> MoveNext();
+	  }
+	$objPerm -> Close();
+	$db -> Execute($strSQL);
+	$db -> Execute("INSERT INTO `logs` (`owner`, `log`, `czas`) VALUES(".$mytribe -> fields['owner'].", '".$strMessage."', ".$strDate.")");
 	$objPerm = $db -> Execute("SELECT `player` FROM `tribe_perm` WHERE `tribe`=".$mytribe -> fields['id']." AND `bank`=1");
 	while (!$objPerm -> EOF)
 	  {
@@ -363,39 +365,13 @@ if (isset ($_GET['step2']) && $_GET['step2'] == 'daj')
 	  }
 	$objPerm -> Close();
       }
-  }
-
-if (!isset($intReserved))
-  {
-    $intReserved = 0;
-  }
-
-if (!isset($_GET['step2']))
-  {
-    $_GET['step2'] = '';
-  }
-if (!isset($_GET['step3']))
-  {
-    $_GET['step3'] = '';
-  }
-if (!isset($_GET['step4']))
-  {
-    $_GET['step4'] = '';
-  }
-if (!isset($_GET['daj']))
-  {
-    $_GET['daj'] = '';
-  }
-
-if ($_GET['step2'] == ''  && $_GET['step3'] == '' && $_GET['daj'] == '' && $_GET['step4'] == '' && $_GET['reserve'] == '') 
-  {
-    $arrTable = array('<tr><th>Nazwa</th><th align="center">Ilość/Dostępne</th></tr>');
+    $arrTable = array('<tr><th align="left">Nazwa</th><th align="left">Ilość/Dostępne</th></tr>');
     $i = 0;
     foreach ($arrName as $strName)
       {
 	if ($player -> id == $mytribe -> fields['owner'] || $perm -> fields['bank']) 
 	  {
-	    $arrTable[] = "<tr><td><a href=\"tribeminerals.php?daj=".$arrSqlname2[$i]."\">".ucfirst($strName)."</a></td><td width=\"75%\" align=\"center\"><b>".$arrAmount[$i].'/'.($arrAmount[$i] - $arrReserved[$i])."</b></td></tr>";
+	    $arrTable[] = "<tr><td><a href=\"tribeminerals.php?daj=".$arrSqlname2[$i]."\">".ucfirst($strName)."</a></td><td><b>".$arrAmount[$i].'/'.($arrAmount[$i] - $arrReserved[$i])."</b></td></tr>";
 	  }
 	else
 	  {
@@ -403,10 +379,46 @@ if ($_GET['step2'] == ''  && $_GET['step3'] == '' && $_GET['daj'] == '' && $_GET
 	  }
 	$i++;
       }
+    $objMinerals = $db->Execute("SELECT * FROM `minerals` WHERE `owner`=".$player->id);
+    $arrOptions = array();
+    foreach ($arrSqlname2 as $key => $strSqlname)
+      {
+	if (in_array($strSqlname, array('credits', 'platinum')))
+	  {
+	    continue;
+	  }
+	if ($objMinerals->fields[$strSqlname])
+	  {
+	    $arrOptions[$strSqlname] = $arrName[$key].' ('.$objMinerals->fields[$strSqlname].' sztuk)';
+	  }
+      }
+    $objMinerals->Close();
+    if ($player->credits > 0)
+      {
+	$arrOptions['credits'] = 'złota ('.$player->credits.' sztuk)';
+      }
+    if ($player->platinum > 0)
+      {
+	$arrOptions['platinum'] = 'mithrilu ('.$player->platinum.' sztuk)';
+      }
+    if (strpos($_SERVER['HTTP_USER_AGENT'], 'Opera Mini') !== FALSE)
+      {
+	$strChecked = "";
+      }
+    else
+      {
+	$strChecked = "checked=checkded";
+      }
     $smarty -> assign(array("Mininfo" => "Witaj w skarbcu klanu. Tutaj są składowane surowce należące do klanu. Każdy członek klanu może ofiarować klanowi jakiś surowiec, ale tylko przywódca lub osoba upoważniona przez niego może darować dany surowiec członkom swojego klanu. Aby dać jakiś surowiec członkom klanu, kliknij na nazwę owego surowca.",
-			    "Whatyou" => "Co chcesz zrobić?",
 			    "Agiveto" => "Dać surowce do klanu",
-			    "Ttable" => $arrTable));
+			    "Ttable" => $arrTable,
+			    "Addmin" => "Dodaj surowce do skarbca",
+			    "Aadd" => "Dodaj",
+			    "Mineral" => "Surowiec",
+			    "Mamount" => "Ilość surowca",
+			    "Tall" => "wszystkie posiadane)",
+			    "Minname" => $arrOptions,
+			    "Checked" => $strChecked));
   }
 
 if ($intReserved == 0)

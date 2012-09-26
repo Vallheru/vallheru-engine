@@ -1,16 +1,24 @@
 {include file="tribemenu.tpl"}
 
-{if $Step2 == "" && $Step3 == "" && $Step4 == "" && $Give == "" && $Reserve == ""}
+{if $Give == "" && $Reserve == ""}
     {$Mininfo}<br />
-    <table>
+    <table align="center" width="70%">
         {section name=tribemin loop=$Ttable}
             {$Ttable[tribemin]}
         {/section}
-    </table>
-    {$Whatyou}<br />
-    <ul>
-        <li><a href="tribeminerals.php?step2=daj">{$Agiveto}</a></li>
-    </ul>
+    </table><br /><br />
+    <script src="js/tribearmor.js"></script>
+    <div>
+    <label for="weapons" class="toggle">+{$Agiveto}</label>
+    <input id="weapons" type="checkbox" class="toggle" {$Checked} />
+    <div>
+    	<form method="post" action="tribeminerals.php?step3=add"><table>
+            <tr><td>{$Mineral}:</td>
+	        <td>{html_options name=mineral options=$Minname}</td></tr>
+            <tr><td>{$Mamount}:</td><td><span id="amount"><input type="text" name="ilosc" /></span> (<input type="checkbox" name="all" id="all" onClick="showField();" />{$Tall}</td></tr>
+            <tr><td colspan="2" align="center"><input type="submit" value="{$Aadd}" /></td></tr>
+        </table></form>
+    </div>
 {/if}
 {if $Give != ""}
     <form method="post" action="tribeminerals.php?daj={$Itemid}&amp;step4=add">
@@ -18,16 +26,6 @@
         <input type="text" name="ilosc" size="7" /> {$Namemin} {$Tamount3} {$Tamount2} {$Mamount2}.<br />
         <input type="submit" value="{$Agive}" /><br />
     </form>
-{/if}
-{if $Step2 == "daj"}
-    <script src="js/tribearmor.js"></script>
-    {$Addmin}<br /><br />
-    <form method="post" action="tribeminerals.php?step2=daj&amp;step3=add"><table>
-        <tr><td>{$Mineral}:</td>
-	    <td>{html_options name=mineral options=$Minname}</td></tr>
-        <tr><td>{$Mamount}:</td><td><span id="amount"><input type="text" name="ilosc" /></span> (<input type="checkbox" name="all" id="all" onClick="showField();" />{$Tall}</td></tr>
-        <tr><td colspan="2" align="center"><input type="submit" value="{$Aadd}" /></td></tr>
-    </table></form>
 {/if}
 {if $Reserve != ""}
     {if $Step3 == ""}
