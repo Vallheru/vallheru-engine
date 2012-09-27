@@ -7,7 +7,7 @@
  *   @copyright            : (C) 2012 Vallheru Team based on Gamers-Fusion ver 2.5
  *   @author               : thindil <thindil@vallheru.net>
  *   @version              : 1.6
- *   @since                : 26.09.2012
+ *   @since                : 27.09.2012
  *
  */
 
@@ -357,13 +357,6 @@ if ($_GET['daj'] == '' && $_GET['step4'] == '' && $_GET['reserve'] == '')
 	$objPerm -> Close();
 	$db -> Execute($strSQL);
 	$db -> Execute("INSERT INTO `logs` (`owner`, `log`, `czas`) VALUES(".$mytribe -> fields['owner'].", '".$strMessage."', ".$strDate.")");
-	$objPerm = $db -> Execute("SELECT `player` FROM `tribe_perm` WHERE `tribe`=".$mytribe -> fields['id']." AND `bank`=1");
-	while (!$objPerm -> EOF)
-	  {
-	    $db -> Execute("INSERT INTO `log` (`owner`, `log`, `czas`, `type`) VALUES(".$objPerm -> fields['player'].", '"."Gracz <b><a href=\"view.php?view=".$player -> id."\">".$player -> user."</a></b> ID: ".'<b>'.$player -> id.'</b> dodał do skarbca klanu '.$_POST['ilosc']." sztuk(i) ".$arrName[$intKey].".', ".$strDate.", 'C')");
-	    $objPerm -> MoveNext();
-	  }
-	$objPerm -> Close();
       }
     $arrTable = array('<tr><th align="left">Nazwa</th><th align="left">Ilość/Dostępne</th></tr>');
     $i = 0;
