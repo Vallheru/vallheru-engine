@@ -7,7 +7,7 @@
  *   @copyright            : (C) 2004,2005,2006,2011,2012 Vallheru Team based on Gamers-Fusion ver 2.5
  *   @author               : thindil <thindil@vallheru.net>
  *   @version              : 1.6
- *   @since                : 28.05.2012
+ *   @since                : 27.09.2012
  *
  */
 
@@ -95,7 +95,7 @@ if (isset($_POST['box2']) && $_POST['box2'] == 1)
 
 if ($objAction -> fields['action'] == '1.1') 
 {
-    $intChance = ($arrCurstats[2] + rand(1,100));
+    $intChance = ($player->inteli + rand(1,100));
     if ($intChance < 100) 
     {
         $objQuest -> Show('int2');
@@ -147,7 +147,7 @@ if (((isset($_POST['box3']) && $_POST['box3'] == 2) || $objAction -> fields['act
 
 if ((isset($_POST['box3']) && $_POST['box3'] == 1) && $objAction -> fields['action'] != 'int4')
 {
-    $intChance = ($arrCurstats[2] + rand(1,100));
+    $intChance = ($player->inteli + rand(1,100));
     if ($intChance < 100) 
     {
         $objQuest -> Show('int3');
@@ -337,7 +337,7 @@ if ($objAction -> fields['action'] == 'winfight2')
 
 if ($objAction -> fields['action'] == '1.2.3.next')
 {
-    $intChance = ($arrCurstats[2] + rand(1,100));
+    $intChance = ($player->inteli + rand(1,100));
     if ($intChance < 100) 
     {
         $objQuest -> Show('int5');

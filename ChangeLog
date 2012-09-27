@@ -1,5 +1,7 @@
 2012-09-27  Bartek thindil Jasicki  <thindil@vallheru.net>
 
+	* BUG,quests/quest5.php: 
+	fixed player stats
 	* BUG,tribeminerals.php:
 	remove unused code
 
