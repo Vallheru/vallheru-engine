@@ -7,7 +7,7 @@
  *   @copyright            : (C) 2004,2005,2006,2007,2011,2012 Vallheru Team based on Gamers-Fusion ver 2.5
  *   @author               : thindil <thindil@vallheru.net>
  *   @version              : 1.6
- *   @since                : 25.09.2012
+ *   @since                : 27.09.2012
  *
  */
 
@@ -372,8 +372,7 @@ class Player
 			    'herbalist' => 'sierp',
 			    'alchemy' => 'moździerz',
 			    'fletcher' => 'ciesak',
-			    'smith' => 'młot',
-			    'thievery' => 'wytrychy');
+			    'smith' => 'młot');
 	  foreach ($arrNames as $strName)
 	    {
 	      if (!array_key_exists($strName, $arrTools))

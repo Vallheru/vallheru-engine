@@ -1,5 +1,7 @@
 2012-09-27  Bartek thindil Jasicki  <thindil@vallheru.net>
 
+	* BUG,class/player_class.php, stats.php: 
+	don't show bonuses from lockpicks
 	* BUG,quests/quest5.php: 
 	fixed player stats
 	* BUG,tribeminerals.php:
