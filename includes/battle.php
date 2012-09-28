@@ -8,7 +8,7 @@
  *   @author               : thindil <thindil@vallheru.net>
  *   @author               : eyescream <tduda@users.sourceforge.net>
  *   @version              : 1.6
- *   @since                : 26.06.2012
+ *   @since                : 28.09.2012
  *
  */
 
@@ -477,7 +477,7 @@ function attack1($attacker, $defender, $arrAtequip, $arrDeequip, $attack_bspell,
 			    $defender['hp'] -= $intDamage;
 			    $attacker['mana'] -= $attack_bspell->fields['poziom'];
 			    $attacker['hp'] -= $intDamage;
-			    $strMesage = $strMessage."<b>".$attacker['user']."</b> próbował rzucić zaklęcie, ale eksplodowało ono w rękach, raniąc jego oraz wroga. Traci przez to ".$intDamage." punktów życia (".$attacker['hp']." zostało), <b>".$defender['user']."</b> otrzymuje ".$intDamage." obrażeń (".$defender['hp']." zostało)<br />";
+			    $strMessage = $strMessage."<b>".$attacker['user']."</b> próbował rzucić zaklęcie, ale eksplodowało ono w rękach, raniąc jego oraz wroga. Traci przez to ".$intDamage." punktów życia (".$attacker['hp']." zostało), <b>".$defender['user']."</b> otrzymuje ".$intDamage." obrażeń (".$defender['hp']." zostało)<br />";
 			  }
                         break;
                     }
@@ -738,7 +738,7 @@ function attack1($attacker, $defender, $arrAtequip, $arrDeequip, $attack_bspell,
 			    $defender['hp'] -= $intDamage;
 			    $attacker['mana'] -= $attack_bspell->fields['poziom'];
 			    $attacker['hp'] -= $intDamage;
-			    $strMesage = $strMessage."<b>".$attacker['user']."</b> próbował rzucić zaklęcie, ale eksplodowało ono w rękach, raniąc jego oraz wroga. Traci przez to ".$intDamage." punktów życia (".$attacker['hp']." zostało), <b>".$defender['user']."</b> otrzymuje ".$intDamage." obrażeń (".$defender['hp']." zostało)<br />";
+			    $strMessage = $strMessage."<b>".$attacker['user']."</b> próbował rzucić zaklęcie, ale eksplodowało ono w rękach, raniąc jego oraz wroga. Traci przez to ".$intDamage." punktów życia (".$attacker['hp']." zostało), <b>".$defender['user']."</b> otrzymuje ".$intDamage." obrażeń (".$defender['hp']." zostało)<br />";
 			  }
                         break;
                     }
