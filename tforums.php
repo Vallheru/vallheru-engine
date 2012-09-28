@@ -7,7 +7,7 @@
  *   @copyright            : (C) 2004,2005,2006,2011,2012 Vallheru Team based on Gamers-Fusion ver 2.5
  *   @author               : thindil <thindil@vallheru.net>
  *   @version              : 1.6
- *   @since                : 08.08.2012
+ *   @since                : 28.09.2012
  *
  */
 
@@ -476,17 +476,23 @@ if (isset($_GET['topic']))
     {
         error (NO_TOPIC);
     }
+    $strReplytext = R_TEXT;
     if (isset($_GET['quote']))
     {
-        if (!(int)$_GET['quote'])
-        {
-            error(ERROR);
-        }
-        $objTest = $db -> Execute("SELECT id FROM tribe_replies WHERE id=".$_GET['quote']." AND topic_id=".$topicinfo -> fields['id']);
+	checkvalue($_GET['quote']);
+        $objTest = $db -> Execute("SELECT `id`, `body` FROM `tribe_replies` WHERE `id`=".$_GET['quote']." AND `topic_id`=".$topicinfo -> fields['id']);
         if (!$objTest -> fields['id'])
         {
             error(ERROR);
         }
+	else
+	  {
+	    $strText = preg_replace("/[0-9][0-9]-[0-9][0-9]-[0-9][0-9] [0-9][0-9]:[0-9][0-9]:[0-9][0-9]/", "", $objTest->fields['body']);
+            $strText = str_replace("<b></b><br />", "", $strText);
+	    require_once('includes/bbcode.php');
+	    $strText = htmltobbcode($strText);
+            $strReplytext = "[quote]".$strText."[/quote]";
+	  }
         $objTest -> Close();
     }
     $smarty -> assign(array("Topic" => $topicinfo -> fields['topic'], 
@@ -512,10 +518,6 @@ if (isset($_GET['topic']))
     if (isset($_GET['quotet']))
     {
         $strReplytext = "[quote]".$text."[/quote]";
-    }
-        else
-    {
-        $strReplytext = R_TEXT;
     }
     $smarty -> assign ("Topictext", $text);
     $objAmount = $db->Execute("SELECT count(`id`) FROM `tribe_replies` WHERE `topic_id`=".$topicinfo -> fields['id']);
@@ -548,14 +550,6 @@ if (isset($_GET['topic']))
             else 
         {
             $arraction[$i] = '';
-        }
-        if (isset($_GET['quote']) && $_GET['quote'] == $reply -> fields['id'])
-        {
-            $strText = preg_replace("/[0-9][0-9]-[0-9][0-9]-[0-9][0-9] [0-9][0-9]:[0-9][0-9]:[0-9][0-9]/", "", $reply -> fields['body']);
-            $strText = str_replace("<b></b><br />", "", $strText);
-	    require_once('includes/bbcode.php');
-	    $strText = htmltobbcode($strText);
-            $strReplytext = "[quote]".$strText."[/quote]";
         }
         $arrtext[$i] = wordwrap($reply -> fields['body'],45,"\n",1);
         $arrRid[$i] = $reply -> fields['id'];

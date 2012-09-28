@@ -1,3 +1,8 @@
+2012-09-28  Bartek thindil Jasicki  <thindil@vallheru.net>
+
+	* BUG,tforums.php:
+	fixed quoting
+
 2012-09-27  Bartek thindil Jasicki  <thindil@vallheru.net>
 
 	* BUG,class/player_class.php, stats.php: 
