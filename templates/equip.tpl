@@ -1,3 +1,5 @@
+<script src="js/equip.js"></script>
+
 <u>{$Equipped}</u>:<br />
 <form method="post" action="equip.php?repair">
 {$Weapon}
@@ -41,7 +43,7 @@
     <label for="weapons" class="toggle">+{$Bweaponsmenu[0]}</label>
     <input id="weapons" type="checkbox" class="toggle" {$Checked} />
     <div><br />
-        <form method="POST" action="equip.php?sellchecked=E">
+        <form method="POST" action="equip.php?sellchecked=E" style="display: inline;" name="weapons">
             {foreach $Bweapons as $key => $value}
 	        {if $key > 0}
 	            {$Ilevel} {$key}:<br />
@@ -51,9 +53,14 @@
 		    <br />
 	        {/if}
 	    {/foreach}
-	    {$Bweaponsmenu[1]}
+	    <input type="button" value="{$Checkall}" onClick="checkall(document.weapons.list);" />
+	    <input type="button" value="{$Uncheckall}" onClick="uncheckall(document.weapons.list);" />
+	    <input type="button" value="{$Changeselected}" onClick="changeselected(document.weapons.list);" /><br />
 	    <input type="submit" value="{$Bweaponssell}" />
         </form>
+	<form method="POST" action="equip.php?sprzedaj={$Bweaponstype}" style="display: inline;">
+	    <input type="submit" value="{$Bweaponsmenu[1]}" />
+	</form>
     </div><br />
 {/if}
 
@@ -62,7 +69,7 @@
     <label for="staffs" class="toggle">+{$Bstaffsmenu[0]}</label>
     <input id="staffs" type="checkbox" class="toggle" {$Checked} />
     <div><br />
-        <form method="POST" action="equip.php?sellchecked=E">
+        <form method="POST" action="equip.php?sellchecked=E" style="display: inline;">
             {foreach $Bstaffs as $key => $value}
 	        {if $key > 0}
 	            {$Ilevel} {$key}:<br />
@@ -72,9 +79,11 @@
 		    <br />
 	        {/if}
 	   {/foreach}
-	   {$Bstaffsmenu[1]}
 	   <input type="submit" value="{$Bstaffssell}" />
         </form>
+	<form method="POST" action="equip.php?sprzedaj={$Bstaffstype}" style="display: inline;">
+	    <input type="submit" value="{$Bstaffsmenu[1]}" />
+	</form>
     </div><br />
 {/if}
 
@@ -83,7 +92,7 @@
     <label for="arrows" class="toggle">+{$Barrowsmenu[0]}</label>
     <input id="arrows" type="checkbox" class="toggle" {$Checked} />
     <div><br />
-        <form method="POST" action="equip.php?sellchecked=A">
+        <form method="POST" action="equip.php?sellchecked=A" style="display: inline;">
             {foreach $Barrows as $key => $value}
 	        {if $key > 0}
 	            {$Ilevel} {$key}:<br />
@@ -93,9 +102,11 @@
 		    <br />
 	        {/if}
 	    {/foreach}
-	    {$Barrowsmenu[1]}
 	    <input type="submit" value="{$Barrowssell}" />
         </form>
+	<form method="POST" action="equip.php?sprzedaj={$Barrowstype}" style="display: inline;">
+	    <input type="submit" value="{$Barrowsmenu[1]}" />
+	</form>
     </div><br />
 {/if}
 
@@ -104,7 +115,7 @@
     <label for="helmets" class="toggle">+{$Bhelmetsmenu[0]}</label>
     <input id="helmets" type="checkbox" class="toggle" {$Checked} />
     <div><br />
-        <form method="POST" action="equip.php?sellchecked=E">
+        <form method="POST" action="equip.php?sellchecked=E" style="display: inline;">
             {foreach $Bhelmets as $key => $value}
 	        {if $key > 0}
 	            {$Ilevel} {$key}:<br />
@@ -114,9 +125,11 @@
 		    <br />
 	    	{/if}
 	    {/foreach}
-	    {$Bhelmetsmenu[1]}
   	    <input type="submit" value="{$Bhelmetssell}" />
         </form>
+	<form method="POST" action="equip.php?sprzedaj={$Bhelmetstype}" style="display: inline;">
+	    <input type="submit" value="{$Bhelmetsmenu[1]}" />
+	</form>
     </div><br />
 {/if}
 
@@ -125,7 +138,7 @@
     <label for="armors" class="toggle">+{$Barmorsmenu[0]}</label>
     <input id="armors" type="checkbox" class="toggle" {$Checked} />
     <div><br />
-        <form method="POST" action="equip.php?sellchecked=E">
+        <form method="POST" action="equip.php?sellchecked=E" style="display: inline;">
             {foreach $Barmors as $key => $value}
 	        {if $key > 0}
 	            {$Ilevel} {$key}:<br />
@@ -135,9 +148,11 @@
 		    <br />
 	        {/if}
 	    {/foreach}
-	    {$Barmorsmenu[1]}
     	    <input type="submit" value="{$Barmorssell}" />
     	</form>
+	<form method="POST" action="equip.php?sprzedaj={$Barmorstype}" style="display: inline;">
+	    <input type="submit" value="{$Barmorsmenu[1]}" />
+	</form>
     </div><br />
 {/if}
 
@@ -146,7 +161,7 @@
     <label for="shields" class="toggle">+{$Bshieldsmenu[0]}</label>
     <input id="shields" type="checkbox" class="toggle" {$Checked} />
     <div><br />
-        <form method="POST" action="equip.php?sellchecked=E">
+        <form method="POST" action="equip.php?sellchecked=E" style="display: inline;">
             {foreach $Bshields as $key => $value}
 	        {if $key > 0}
 	            {$Ilevel} {$key}:<br />
@@ -156,9 +171,11 @@
 		    <br />
 	        {/if}
 	    {/foreach}
-	    {$Bshieldsmenu[1]}
             <input type="submit" value="{$Bshieldssell}" />
         </form>
+	<form method="POST" action="equip.php?sprzedaj={$Bshieldstype}" style="display: inline;">
+	    <input type="submit" value="{$Bshieldsmenu[1]}" />
+	</form>
     </div><br />
 {/if}
 
@@ -167,7 +184,7 @@
     <label for="capes" class="toggle">+{$Bcapesmenu[0]}</label>
     <input id="capes" type="checkbox" class="toggle" {$Checked} />
     <div><br />
-        <form method="POST" action="equip.php?sellchecked=E">
+        <form method="POST" action="equip.php?sellchecked=E" style="display: inline;">
             {foreach $Bcapes as $key => $value}
 	        {if $key > 0}
 	            {$Ilevel} {$key}:<br />
@@ -177,9 +194,11 @@
 		    <br />
 	        {/if}
 	    {/foreach}
-	    {$Bcapesmenu[1]}
     	    <input type="submit" value="{$Bcapessell}" />
         </form>
+	<form method="POST" action="equip.php?sprzedaj={$Bcapestype}" style="display: inline;">
+	    <input type="submit" value="{$Bcapesmenu[1]}" />
+	</form>
     </div><br />
 {/if}
 
@@ -188,7 +207,7 @@
     <label for="legs" class="toggle">+{$Blegsmenu[0]}</label>
     <input id="legs" type="checkbox" class="toggle" {$Checked} />
     <div><br />
-        <form method="POST" action="equip.php?sellchecked=E">
+        <form method="POST" action="equip.php?sellchecked=E" style="display: inline;">
             {foreach $Blegs as $key => $value}
 	        {if $key > 0}
 	            {$Ilevel} {$key}:<br />
@@ -198,9 +217,11 @@
 		    <br />
 	        {/if}
 	    {/foreach}
-	    {$Blegsmenu[1]}
     	    <input type="submit" value="{$Blegssell}" />
         </form>
+	<form method="POST" action="equip.php?sprzedaj={$Blegstype}" style="display: inline;">
+	    <input type="submit" value="{$Blegsmenu[1]}" />
+	</form>
     </div><br />
 {/if}
 
@@ -209,7 +230,7 @@
     <label for="rings" class="toggle">+{$Bringsmenu[0]}</label>
     <input id="rings" type="checkbox" class="toggle" {$Checked} />
     <div><br />
-        <form method="POST" action="equip.php?sellchecked=E">
+        <form method="POST" action="equip.php?sellchecked=E" style="display: inline;">
             {foreach $Brings as $key => $value}
 	        {if $key > 0}
 	            {$Ilevel} {$key}:<br />
@@ -219,9 +240,11 @@
 		    <br />
 	        {/if}
 	    {/foreach}
-	    {$Bringsmenu[1]}
     	    <input type="submit" value="{$Bringssell}" />
     	</form>
+	<form method="POST" action="equip.php?sprzedaj={$Bringstype}" style="display: inline;">
+	    <input type="submit" value="{$Bringsmenu[1]}" />
+	</form>
     </div><br />
 {/if}
 
@@ -230,7 +253,7 @@
     <label for="tools" class="toggle">+{$Btoolsmenu[0]}</label>
     <input id="tools" type="checkbox" class="toggle" {$Checked} />
     <div><br />
-        <form method="POST" action="equip.php?sellchecked=E">
+        <form method="POST" action="equip.php?sellchecked=E" style="display: inline;">
             {foreach $Btools as $key => $value}
 	        {if $key > 0}
 	            {$Ilevel} {$key}:<br />
@@ -240,9 +263,11 @@
 		    <br />
 	        {/if}
 	    {/foreach}
-	    {$Btoolsmenu[1]}
     	    <input type="submit" value="{$Btoolssell}" />
         </form>
+	<form method="POST" action="equip.php?sprzedaj={$Btoolstype}" style="display: inline;">
+	    <input type="submit" value="{$Btoolsmenu[1]}" />
+	</form>
     </div><br />
 {/if}
 
@@ -251,7 +276,7 @@
     <label for="plans" class="toggle">+{$Bplansmenu[0]}</label>
     <input id="plans" type="checkbox" class="toggle" {$Checked} />
     <div><br />
-        <form method="POST" action="equip.php?sellchecked=E">
+        <form method="POST" action="equip.php?sellchecked=E" style="display: inline;">
             {foreach $Bplans as $key => $value}
 	        {if $key > 0}
 	            {$Ilevel} {$key}:<br />
@@ -261,9 +286,11 @@
 		    <br />
 	        {/if}
 	    {/foreach}
-	    {$Bplansmenu[1]}
     	    <input type="submit" value="{$Bplanssell}" />
         </form>
+	<form method="POST" action="equip.php?sprzedaj={$Bplanstype}" style="display: inline;">
+	    <input type="submit" value="{$Bplansmenu[1]}" />
+	</form>
     </div><br />
 {/if}
 
@@ -272,7 +299,7 @@
     <label for="loots" class="toggle">+{$Blootsmenu[0]}</label>
     <input id="loots" type="checkbox" class="toggle" {$Checked} />
     <div><br />
-        <form method="POST" action="equip.php?sellchecked=E">
+        <form method="POST" action="equip.php?sellchecked=E" style="display: inline;">
             {foreach $Bloots as $key => $value}
 	        {if $key > 0}
 	            {$Ilevel} {$key}:<br />
@@ -282,9 +309,11 @@
 		    <br />
 	        {/if}
 	    {/foreach}
-	    {$Blootsmenu[1]}
     	    <input type="submit" value="{$Blootssell}" />
         </form>
+	<form method="POST" action="equip.php?sprzedaj={$Blootstype}" style="display: inline;">
+	    <input type="submit" value="{$Blootsmenu[1]}" />
+	</form>
     </div><br />
 {/if}
 
@@ -293,13 +322,15 @@
     <label for="potions" class="toggle">+{$Potions2}</label>
     <input id="potions" type="checkbox" class="toggle" {$Checked} />
     <div><br />
-        <form method="POST" action="equip.php?sellchecked=P">
+        <form method="POST" action="equip.php?sellchecked=P" style="display: inline;">
             {section name=item10 loop=$Pname1}
                 <input type="checkbox" name="{$Potionid1[item10]}" /><b>({$Amount}: {$Pamount1[item10]} )</b> {$Pname1[item10]} ({$Peffect1[item10]}) {$Ppower1[item10]} {$Paction1[item10]}<br />
             {/section}
-            {$Sellallp}
 	    <input type="submit" value="{$Potionssell}" />
         </form>
+	<form method="POST" action="equip.php?sellpotions" style="display: inline;">
+	    <input type="submit" value="{$Sellallp}" />
+	</form>
     </div><br />
 {/if}
 
@@ -319,7 +350,7 @@
     <label for="quests" class="toggle">+{$Bquestsmenu[0]}</label>
     <input id="quests" type="checkbox" class="toggle" {$Checked} />
     <div><br />
-        <form method="POST" action="equip.php?sellchecked=E">
+        <form method="POST" action="equip.php?sellchecked=E" style="display: inline;">
             {foreach $Bquests as $key => $value}
 	        {if $key > 0}
 	            {$Ilevel} {$key}:<br />
@@ -329,8 +360,10 @@
 		    <br />
 	        {/if}
 	    {/foreach}
-	    {$Bquestsmenu[1]}
     	    <input type="submit" value="{$Bquestssell}" />
         </form>
+	<form method="POST" action="equip.php?sprzedaj={$Bqueststype}" style="display: inline;">
+	    <input type="submit" value="{$Bquestsmenu[1]}" />
+	</form>
     </div><br />
 {/if}

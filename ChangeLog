@@ -1,5 +1,7 @@
 2012-09-28  Bartek thindil Jasicki  <thindil@vallheru.net>
 
+	* UPDATE,templates/equip.tpl, js/equip.js, equip.php, css/ligh.css: 
+	start work on better check/uncheck items
 	* BUG,battle.php: 
 	fixed typo
 	* BUG,quests/quest4.php: 

@@ -13,11 +13,11 @@ border-bottom: solid black 1px;
 border-left: solid black 1px;
 border-right: solid black 1px;
 }
-form input[type=submit] { 
+form input[type=submit], input[type=button] { 
 color: #FFFFFF; 
 cursor:pointer; 
 }
-form input[type=submit]:hover { 
+form input[type=submit]:hover, input[type=button]:hover { 
 color: #E20000; 
 border:1px solid; 
 }
