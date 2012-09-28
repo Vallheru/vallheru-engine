@@ -1,5 +1,7 @@
 2012-09-28  Bartek thindil Jasicki  <thindil@vallheru.net>
 
+	* BUG,battle.php: 
+	fixed typo
 	* BUG,quests/quest4.php: 
 	fixed player stats
 	* UPDATE,tribes.php: 
