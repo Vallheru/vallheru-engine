@@ -1,5 +1,7 @@
 2012-09-28  Bartek thindil Jasicki  <thindil@vallheru.net>
 
+	* BUG,quests/quest4.php: 
+	fixed player stats
 	* UPDATE,tribes.php: 
 	block thief action on own clan
 	* BUG,includes/battle.php: 
