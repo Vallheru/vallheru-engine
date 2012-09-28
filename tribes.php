@@ -299,6 +299,10 @@ if (isset ($_GET['view']) && $_GET['view'] == 'view')
 	      {
 		error(ERROR." (<a href=\"tribes.php?view=view&id=".$_GET['id']."\">".BACK."</a>)");
 	      }
+	    if ($player->tribe == $_GET['id'])
+	      {
+		error('Nie możesz wykonywać akcji złodziejskich przeciwko swojemu klanowi  (<a href="tribes.php?view=view&id='.$_GET['id'].'">'.BACK.'</a>)');
+	      }
 	    $objAstralcrime = $db -> Execute("SELECT `astralcrime` FROM `players` WHERE `id`=".$player -> id);
 	    if ($objAstralcrime -> fields['astralcrime'] == 'N')
 	      {
