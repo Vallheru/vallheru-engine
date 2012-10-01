@@ -1,5 +1,7 @@
 2012-10-01  Bartek thindil Jasicki  <thindil@vallheru.net>
 
+	* UPDATE,city.php: 
+	remove link to hall of heroes
 	* UPDATE,templates/layout1/equip.tpl, templates/equip.tpl, equip.tpl:
 	code cleanup, finished work on better check/uncheck items
 
