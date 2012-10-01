@@ -1,3 +1,8 @@
+2012-10-01  Bartek thindil Jasicki  <thindil@vallheru.net>
+
+	* UPDATE,templates/layout1/equip.tpl, templates/equip.tpl, equip.tpl:
+	code cleanup, finished work on better check/uncheck items
+
 2012-09-28  Bartek thindil Jasicki  <thindil@vallheru.net>
 
 	* UPDATE,templates/equip.tpl, js/equip.js, equip.php, css/ligh.css: 

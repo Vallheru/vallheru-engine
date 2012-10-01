@@ -41,11 +41,12 @@ require_once("languages/".$lang."/equip.php");
 /**
 * Function show items in backpack
 */
-function backpack($type, $nameitems, $type2, $smartyname) 
+function backpack($type, $nameitems, $type2, $smartyname, $strSelltype) 
 {
-    global $smarty;
     global $db;
     global $player;
+    global $arrBackpack;
+    global $smarty;
 
     if (!empty ($type2)) 
     {
@@ -311,16 +312,18 @@ function backpack($type, $nameitems, $type2, $smartyname)
 	    $arrMenu[1] = "Sprzedaj wszystkie ".$nameitems;
 	  }
       }
-    $smarty -> assign(array($smartyname => $arrshow,
-			    $smartyname."sell" => "Sprzedaj wybrane ".$nameitems,
-			    $smartyname."type" => $type,
-			    $smartyname."amount" => $j,
-			    $smartyname."menu" => $arrMenu));
     $arm -> Close();
     if ($secarm) 
     {
         $arm1 -> Close();
     }
+    $arrBackpack[] = array('items' => $arrshow,
+			   'sell' => "Sprzedaj wybrane ".$nameitems,
+			   'type' => $type,
+			   'amount' => $j,
+			   'menu' => $arrMenu,
+			   'name' => $smartyname,
+			   'selltype' => $strSelltype);
 }
 
 if (strpos($_SERVER['HTTP_USER_AGENT'], 'Opera Mini') !== FALSE)
@@ -329,7 +332,7 @@ if (strpos($_SERVER['HTTP_USER_AGENT'], 'Opera Mini') !== FALSE)
   }
 else
   {
-    $strChecked = "checked=checkded";
+    $strChecked = "checked=checked";
   }
 
 /**
@@ -1442,19 +1445,24 @@ if (isset($_GET['drinkfew']))
     $objPotion->Close();
   }
 
-backpack('W', WEAPONS,'B','Bweapons');
-backpack('T', STAFFS,'','Bstaffs');
-backpack('R', 'strzały', '', 'Barrows');
-backpack('H', HELMETS,'','Bhelmets');
-backpack('A', ARMORS,'','Barmors');
-backpack('S', SHIELDS,'','Bshields');
-backpack('C', CAPES,'','Bcapes');
-backpack('L', LEGS2,'','Blegs');
-backpack('I', 'pierścienie', '', 'Brings');
-backpack('E', 'narzędzia', '', 'Btools');
-backpack('P', 'plany', '', 'Bplans');
-backpack('O', 'Łupy', '', 'Bloots');
-backpack('Q', 'Przedmioty do zadań', '', 'Bquests');
+global $arrBackpack;
+$arrBackpack = array();
+
+backpack('W', WEAPONS,'B','weapons', 'E');
+backpack('T', STAFFS,'','staffs', 'E');
+backpack('R', 'strzały', '', 'arrows', 'A');
+backpack('H', HELMETS,'','helmets', 'E');
+backpack('A', ARMORS,'','armors', 'E');
+backpack('S', SHIELDS,'','shields', 'E');
+backpack('C', CAPES,'','capes', 'E');
+backpack('L', LEGS2,'','legs', 'E');
+backpack('I', 'pierścienie', '', 'rings', 'E');
+backpack('E', 'narzędzia', '', 'tools', 'E');
+backpack('P', 'plany', '', 'plans', 'E');
+backpack('O', 'Łupy', '', 'loots', 'E');
+backpack('Q', 'Przedmioty do zadań', '', 'quests', 'E');
+
+$smarty->assign('Backpack', $arrBackpack);
 
 /**
  * Show potions
