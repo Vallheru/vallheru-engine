@@ -49,3 +49,14 @@ ALTER TABLE `categories` ADD `perm_topic` VARCHAR( 255 ) NOT NULL DEFAULT 'All;'
 ALTER TABLE `categories` DROP `lang`;
 ALTER TABLE `logs` ADD `id` INT NOT NULL AUTO_INCREMENT FIRST , ADD PRIMARY KEY ( `id` );
 ALTER TABLE `tribes` ADD `rcredits` INT( 11 ) NOT NULL , ADD `rplatinum` INT( 11 ) NOT NULL;
+CREATE TABLE IF NOT EXISTS `slog` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `pid` int(11) NOT NULL,
+  `date` date NOT NULL,
+  `log` text NOT NULL,
+  KEY `id` (`id`)
+) ENGINE=MyISAM DEFAULT CHARSET=utf8 AUTO_INCREMENT=1;
+CREATE TABLE IF NOT EXISTS `slogconf` (
+  `id` int(11) NOT NULL,
+  KEY `id` (`id`)
+) ENGINE=MyISAM DEFAULT CHARSET=utf8;
