@@ -44,6 +44,7 @@
 	    {/if}
 	    <a href="tribes.php?view=view&amp;id={$Tribeid}&amp;step=espionage">{$Aespionage}</a>
         {/if}
+	<br /><br /><a href="tribes.php?view=all">{$Aback}</a>
     {/if}
     {if $Step == "members"}
         {$Memberlist} {$Name}<br />
@@ -51,7 +52,6 @@
             {$Link[tribes1]}
         {/section}
     {/if}
-    <br /><br /><a href="tribes.php?view=all">{$Aback}</a>
 {/if}
 
 {if $Join != ""}

@@ -147,8 +147,12 @@ if (isset ($_GET['view']) && $_GET['view'] == 'all')
 * Clan info
 */
 if (isset ($_GET['view']) && $_GET['view'] == 'view') 
-{
-    if (!isset ($_GET['step'])) 
+  {
+    if (!isset($_GET['step']))
+      {
+	$_GET['step'] = '';
+      }
+    if ($_GET['step'] == '') 
     {
 	checkvalue($_GET['id']);
         $tribe = $db -> Execute("SELECT `id`, `name`, `owner`, `wygr`, `przeg`, `public_msg`, `www`, `logo`, `level` FROM `tribes` WHERE `id`=".$_GET['id']);
@@ -282,8 +286,7 @@ if (isset ($_GET['view']) && $_GET['view'] == 'view')
 
         $tribe -> Close();
     }
-
-    if (isset($_GET['step']))
+   else
       {
 
 	//Thief actions
@@ -293,20 +296,16 @@ if (isset ($_GET['view']) && $_GET['view'] == 'view')
 	    $objTribe = $db -> Execute("SELECT `id`, `owner`, `level`, `zolnierze` FROM `tribes` WHERE `id`=".$_GET['id']);
 	    if (!$objTribe -> fields['id']) 
 	      {
-		error(NO_CLAN." (<a href=\"tribes.php?view=view&id=".$_GET['id']."\">".BACK."</a>)");
+		error(NO_CLAN." (<a href=\"tribes.php?view=view&id=".$_GET['id']."\">Wróć</a>)");
 	      }
 	    if ($player->clas != 'Złodziej' || $player->location == 'Lochy')
 	      {
-		error(ERROR." (<a href=\"tribes.php?view=view&id=".$_GET['id']."\">".BACK."</a>)");
-	      }
-	    if ($player->tribe == $_GET['id'])
-	      {
-		error('Nie możesz wykonywać akcji złodziejskich przeciwko swojemu klanowi  (<a href="tribes.php?view=view&id='.$_GET['id'].'">'.BACK.'</a>)');
+		error(ERROR." (<a href=\"tribes.php?view=view&id=".$_GET['id']."\">Wróć</a>)");
 	      }
 	    $objAstralcrime = $db -> Execute("SELECT `astralcrime` FROM `players` WHERE `id`=".$player -> id);
 	    if ($objAstralcrime -> fields['astralcrime'] == 'N')
 	      {
-		error ("Możesz szpiegować klany tylko raz na reset. (<a href=\"tribes.php?view=view&id=".$_GET['id']."\">".BACK."</a>)");
+		error ("Możesz szpiegować klany tylko raz na reset. (<a href=\"tribes.php?view=view&id=".$_GET['id']."\">Wróć</a>)");
 	      }
 	    $objAstralcrime -> Close();
 	    if ($player -> hp <= 0) 
@@ -315,7 +314,7 @@ if (isset ($_GET['view']) && $_GET['view'] == 'view')
 	      }
 	    if ($player -> tribe == $_GET['id'])
 	      {
-		error(SAME_CLAN." (<a href=\"tribes.php?view=view&id=".$_GET['id']."\">".BACK."</a>)");
+		error(SAME_CLAN." (<a href=\"tribes.php?view=view&id=".$_GET['id']."\">Wróć</a>)");
 	      }
 	    if ($_GET['step'] == 'espionage' || $_GET['step'] == 'sabotage')
 	      {
@@ -324,7 +323,7 @@ if (isset ($_GET['view']) && $_GET['view'] == 'view')
 		    $objTest = $db -> Execute("SELECT `value` FROM `settings` WHERE `setting`='tribe'");
 		    if ($objTest->fields['value'])
 		      {
-			error('Nie możesz już sabotować machiny, została wybudowana.  (<a href="tribes.php?view=view&id='.$_GET['id'].'">'.BACK.'</a>)');
+			error('Nie możesz już sabotować machiny, została wybudowana.  (<a href="tribes.php?view=view&id='.$_GET['id'].'">Wróć</a>)');
 		      }
 		    $objTest->Close();
 		  }

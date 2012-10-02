@@ -1,5 +1,7 @@
 2012-10-02  Bartek thindil Jasicki  <thindil@vallheru.net>
 
+	* BUG,templates/layout1/tribes.tpl, tribes.php: 
+	fixed notices
 	* BUG,includes/resets.php, languages/pl/resets.php:
 	fixed typo
 
