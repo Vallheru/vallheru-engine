@@ -7,7 +7,7 @@
  *   @copyright            : (C) 2004,2005,2006,2007,2011,2012 Vallheru Team based on Gamers-Fusion ver 2.5
  *   @author               : thindil <thindil@vallheru.net>
  *   @version              : 1.6
- *   @since                : 01.09.2012
+ *   @since                : 02.10.2012
  *
  */
 
@@ -44,7 +44,6 @@ function energyreset()
 function smallreset($blnSmall = FALSE) 
 {
     global $db;
-    global $lang;
     global $city1a;
     global $city2;
 
@@ -127,8 +126,7 @@ function smallreset($blnSmall = FALSE)
      * Add bonus to mana from items and check duration of antidote
      */
     $intLangs = 0;
-    require_once("languages/".$lang."/resets.php");
-    $arrRings = array(R_INT, R_WIS);
+    $arrRings = array("inteligencji", "woli");
     $arrStat = array('inteli', 'wisdom');
     $objStats = $db -> Execute("SELECT `id`, `inteli`, `wisdom` FROM `players`");
     while (!$objStats -> EOF)
@@ -826,8 +824,7 @@ function mainreset()
                 $newdata = implode("-",$arrdate);
                 $arrtemp = array($newdata, $newtime);
                 $newdate = implode(" ",$arrtemp);
-		require_once("languages/".$lang."/resets.php");
-		$db -> Execute("INSERT INTO `updates` (`starter`, `title`, `updates`, `lang`, `time`) VALUES('(Herold)','".U_TITLE."','".U_TEXT.$gamename.U_TEXT2.$gamename.U_TEXT3.$newdate.U_TEXT4.$objName -> fields['name'].U_TEXT5."','".$lang."', ".$strDate.")");
+		$db -> Execute("INSERT INTO `updates` (`starter`, `title`, `updates`, `lang`, `time`) VALUES('(Herold)','Astralna machina','I tak oto na ".$gamename." pojawiła się nowa konstrukcja - Astralna Machina.<br />Władze ".$gamename." pragną poinformować swoich poddanych iż dziś (".$newdate.") ową konstrukcję dla własnej chwały wybudował klan <b>".$objName -> fields['name']."</b>.<br /> Sława bohaterom!','".$lang."', ".$strDate.")");
 		$objEra = $db->Execute("SELECT `value` FROM `settings` WHERE `setting`='age'");
 		$db->Execute("INSERT INTO `halloffame2` (`tribe`, `leader`, `bdate`) VALUES('".$objName->fields['name']." ID:".$objName->fields['id']."', '".$objOwner->fields['user']." ID:".$objName->fields['owner']."', '".$intDay.", ".$objEra->fields['value']."')") or die($db->ErrorMsg());
 		$objEra->Close();

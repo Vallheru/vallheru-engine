@@ -1,3 +1,8 @@
+2012-10-02  Bartek thindil Jasicki  <thindil@vallheru.net>
+
+	* BUG,includes/resets.php, languages/pl/resets.php:
+	fixed typo
+
 2012-10-01  Bartek thindil Jasicki  <thindil@vallheru.net>
 
 	* UPDATE,city.php: 
