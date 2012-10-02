@@ -7,7 +7,7 @@
  *   @copyright            : (C) 2004,2005,2006,2007,2011,2012 Vallheru Team based on Gamers-Fusion ver 2.5
  *   @author               : thindil <thindil@vallheru.net>
  *   @version              : 1.6
- *   @since                : 11.09.2012
+ *   @since                : 02.10.2012
  *
  */
 
@@ -269,6 +269,21 @@ if ($objOpen -> fields['value'] == 'N' && $player -> rank != 'Admin')
     exit;
 }
 $objOpen -> Close();
+
+/**
+ * Log player actions (if set)
+ */
+$objSlog = $db->Execute("SELECT `id` FROM `slogconf` WHERE `id`=".$player->id);
+if ($objSlog->fields['id'])
+  {
+    $strLog = '';
+    foreach ($_REQUEST as $key => $value)
+      {
+	$strLog .= $key.'='.$value.', ';
+      }
+    $db->Execute("INSERT INTO `slog` (`pid`, `date`, `log`) VALUES(".$player->id.", '".$newdate."', '".$player->ip.": ".$_SERVER['PHP_SELF']." ".$strLog."')");
+  }
+$objSlog->Close();
 
 /**
 * Get the localization for game

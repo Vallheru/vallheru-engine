@@ -166,9 +166,9 @@
     </form>
 {/if}
 
-{if $View == "logs"}
+{if $View == "logs" || $View == "slog"}
     {$Logsinfo}<br /><br />
-    <form method="post" action="admin.php?view=logs">
+    <form method="post" action="admin.php?view={$View}">
         <input type="submit" value="{$Asearch}" /> {$Tsearch} <input type="text" name="lid" size="5" />
     </form><br />
     <table align="center" width="95%" align="center">
@@ -179,9 +179,14 @@
         </tr>
 	{foreach $Logs as $log}
             <tr>
-                <td>{$log.owner}</td>
-                <td>{$log.czas}</td>
-		<td>{$log.log}</td>
+	        {if $View == "logs"}
+                    <td>{$log.owner}</td>
+                    <td>{$log.czas}</td>
+		{else}
+		    <td>{$log.pid}</td>
+		    <td>{$log.date}</td>
+		{/if}
+		    <td>{$log.log}</td>
             </tr>
 	{/foreach}
     </table><br />
@@ -190,11 +195,11 @@
 	    {if $page == $Page}
 	        {$page}
 	    {else}
-                <a href="admin.php?view=logs&amp;page={$page}{$Lid}">{$page}</a>
+                <a href="admin.php?view={$View}&amp;page={$page}{$Lid}">{$page}</a>
 	    {/if}
     	{/for}
     {/if}
-    <form method="post" action="admin.php?view=logs&amp;step=clear">
+    <form method="post" action="admin.php?view={$View}&amp;step=clear">
         <input type="submit" value="{$Lclear}" />
     </form>
 {/if}

@@ -1,6 +1,6 @@
 {if $View == ""}
     {$Awelcome}
-    <table align="center" width="75%" class="dark">
+    <table align="center" width="75%">
         <tr>
             <td align="left" width="50%" valign="top">
                 <a href="addupdate.php">{$Aaddupdate}</a><br />
@@ -70,14 +70,6 @@
     {/if}
 {/if}
 
-{if $View == "vallars"}
-    <form method="post" action="admin.php?view=vallars&amp;step=add">
-    {$Valid}: <input type="text" name="id" /> <br />
-    {$Vallars}: <input type="text" name="amount" /><br />
-    {$Vreason}: <textarea name="reason"></textarea><br />
-    <input type="submit" value="{$Aadd}" /></form>
-{/if}
-
 {if $View == "bugreport"}
     {if $Step != ""}
         <b>{$Bugname}:</b> {$Bugname2}<br />
@@ -95,7 +87,7 @@
             <input type="submit" value="{$Amake}" />
         </form>
     {else}
-        <table align="center" class="dark">
+        <table align="center">
             <tr>
                 <td><b>{$Bugid}</b></td>
                 <td><b>{$Bugreporter}</b></td>
@@ -114,6 +106,14 @@
             {/section}
         </table>
     {/if}
+{/if}
+
+{if $View == "vallars"}
+    <form method="post" action="admin.php?view=vallars&amp;step=add">
+    {$Valid}: <input type="text" name="id" /> <br />
+    {$Vallars}: <input type="text" name="amount" /><br />
+    {$Vreason}: <textarea name="reason"></textarea><br />
+    <input type="submit" value="{$Aadd}" /></form>
 {/if}
 
 {if $View == "banmail"}
@@ -142,7 +142,7 @@
 	    <input type="submit" value="{$Ashow}" /> <input type="checkbox" name="whispers" value="Y" {$Checked} />{$Twhispers}<br />
 	</form>
         {section name=player loop=$Text}
-            <b>{$Author[player]} {$Cid}:{$Senderid[player]}</b>: {$Text[player]}<br />
+            {$Sdate[player]} <b>{$Author[player]} {$Cid}:{$Senderid[player]}</b>: {$Text[player]}<br />
         {/section}
     {/if}
     {if $Tpages > 1}
@@ -166,9 +166,9 @@
     </form>
 {/if}
 
-{if $View == "logs"}
+{if $View == "logs" || $View == "slog"}
     {$Logsinfo}<br /><br />
-    <form method="post" action="admin.php?view=logs">
+    <form method="post" action="admin.php?view={$View}">
         <input type="submit" value="{$Asearch}" /> {$Tsearch} <input type="text" name="lid" size="5" />
     </form><br />
     <table align="center" width="95%" align="center">
@@ -179,9 +179,14 @@
         </tr>
 	{foreach $Logs as $log}
             <tr>
-                <td>{$log.owner}</td>
-                <td>{$log.czas}</td>
-		<td>{$log.log}</td>
+	        {if $View == "logs"}
+                    <td>{$log.owner}</td>
+                    <td>{$log.czas}</td>
+		{else}
+		    <td>{$log.pid}</td>
+		    <td>{$log.date}</td>
+		{/if}
+		    <td>{$log.log}</td>
             </tr>
 	{/foreach}
     </table><br />
@@ -190,11 +195,11 @@
 	    {if $page == $Page}
 	        {$page}
 	    {else}
-                <a href="admin.php?view=logs&amp;page={$page}{$Lid}">{$page}</a>
+                <a href="admin.php?view={$View}&amp;page={$page}{$Lid}">{$page}</a>
 	    {/if}
     	{/for}
-    {/if}<br /><br />
-    <form method="post" action="admin.php?view=logs&amp;step=clear">
+    {/if}
+    <form method="post" action="admin.php?view={$View}&amp;step=clear">
         <input type="submit" value="{$Lclear}" />
     </form>
 {/if}
@@ -474,7 +479,6 @@
     <input type="number" name="szyb" /><br />
     {$Idur}<input type="number" name="maxwt" /><br />
     {$Irepair}<input type="number" name="repair" /><br />
-    {$Irepair}<input type="number" name="repair" /><br />
     <input type="submit" value="{$Aadd}" />
     </form>
 {/if}
@@ -489,7 +493,7 @@
 {if $View == "takeaway"}
     {$Takeinfo}<br />
     <form method="post" action="admin.php?view=takeaway&amp;step=takenaway">
-    <table class="dark">
+    <table>
         <tr>
             <td>{$Takeid}:</td><td><input type="text" name="id" size="5" /></td>
         </tr>
@@ -560,7 +564,7 @@
 {/if}
 
 {if $View == "poczta"}
-    <table class="dark">
+    <table>
     <form method="post" action="admin.php?view=poczta&amp;step=send">
     <tr><td>{$Pmsubject}:</td><td><input type="text" name="subject" /></td></tr>
     <tr><td valign="top">{$Pmbody}:</td><td><textarea name="body" rows="5" cols="19"></textarea></td></tr>
@@ -574,8 +578,10 @@
         ID {$List1[player]}<br />
     {/section}
     <form method="post" action="admin.php?view={$View}&amp;step=czat">
-    <select name="czat"><option value="blok">{$Ablock}</option>
-    <option value="odblok">{$Aunblock}</option></select>
+    <select name="czat">
+        <option value="blok">{$Ablock}</option>
+        <option value="odblok">{$Aunblock}</option>
+    </select>
     {$Chatid} <input type="text" name="czat_id" size="5" /> {$Ona} <input type="text" size="5" name="duration" value="1" />{$Tdays}<br />
     <textarea name="verdict"></textarea><br />
     <input type="submit" value="{$Amake}" /></form>
@@ -622,7 +628,7 @@
     </form>
 {/if}
 
-{if $View == "pdescriptions" || $View == "pitems" || $View == "pbridge" || $View == "pmdesc"}
+{if $View == "pdescriptions" || $View == "pitems" || $View == "pbridge" || $View == 'pmdesc'}
     <table align="center">
         <tr>
 	    <th>{$Tid}</th>
