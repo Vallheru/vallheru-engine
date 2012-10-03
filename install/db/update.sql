@@ -60,3 +60,4 @@ CREATE TABLE IF NOT EXISTS `slogconf` (
   `id` int(11) NOT NULL,
   KEY `id` (`id`)
 ) ENGINE=MyISAM DEFAULT CHARSET=utf8;
+ALTER TABLE `bugreport` DROP `type`;

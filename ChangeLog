@@ -1,5 +1,7 @@
 2012-10-03  Bartek thindil Jasicki  <thindil@vallheru.net>
 
+	* UPDATE,install/db/update.sql: 
+	update database
 	* BUG,quests/quest4.php: 
 	fixed notice
 	* FEATURE,templates/layout1/account.tpl, templates/account.tpl, admin.php, account.php: 
