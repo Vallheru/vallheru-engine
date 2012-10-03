@@ -7,7 +7,7 @@
  *   @copyright            : (C) 2004,2005,2006,2011,2012 Vallheru Team based on Gamers-Fusion ver 2.5
  *   @author               : thindil <thindil@vallheru.net>
  *   @version              : 1.6
- *   @since                : 28.09.2012
+ *   @since                : 03.10.2012
  *
  */
 
@@ -128,7 +128,7 @@ if (isset($_POST['box5']) && $_POST['box5'] == 1)
 
 if ($test -> fields['action'] == '1.1.2.1') 
 {
-    $chance = ($player->agi + $player->speed + rand(1,100));
+    $chance = ($player->agility + $player->speed + rand(1,100));
     if ($chance < 50) 
     {
         $quest -> Show('jump1');
