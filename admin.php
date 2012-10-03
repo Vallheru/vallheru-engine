@@ -8,7 +8,7 @@
  *   @author               : thindil <thindil@vallheru.net>
  *   @author               : eyescream <tduda@users.sourceforge.net>
  *   @version              : 1.6
- *   @since                : 31.08.2012
+ *   @since                : 03.10.2012
  *
  */
  
@@ -1941,6 +1941,67 @@ if (isset($_GET['view']))
 	  {
 	    $db -> Execute("TRUNCATE TABLE `slog`") or die($db -> ErrorMsg());
 	    $smarty -> assign("Message", "Logi wyczyczone");
+	  }
+      }
+    /**
+     * Add/remove player from special logs
+     */
+    elseif ($_GET['view'] == 'slogconf')
+      {
+	$arrList = $db->GetAll("SELECT `id` FROM `slogconf`");
+	$smarty->assign(array("Tlist" => "Śledzeni",
+			      "Slist" => $arrList,
+			      "Add" => "Dodaj do",
+			      "Remove" => "Usuń z",
+			      "Tplayer" => "listy śledzonych, gracza o ID:",
+			      "Asend" => "Wyślij"));
+	if (isset($_GET['step']))
+	  {
+	    if (!isset($_POST['action']) || !isset($_POST['pid']))
+	      {
+		error('Wypełnij wszystkie pola.');
+	      }
+	    if ($_POST['action'] != 'add' && $_POST['action'] != 'delete')
+	      {
+		error('Zapomnij o tym.');
+	      }
+	    checkvalue($_POST['pid']);
+	    $blnValid = TRUE;
+	    $objTest = $db->Execute("SELECT `id` FROM `players` WHERE `id`=".$_POST['pid']);
+	    if (!$objTest->fields['id'])
+	      {
+		message('error', 'Nie ma takiego gracza.');
+		$blnValid = FALSE;
+	      }
+	    $objTest->Close();
+	    if ($blnValid)
+	      {
+		$objTest = $db->Execute("SELECT `id` FROM `slogconf` WHERE `id`=".$_POST['pid']);
+		if ($_POST['action'] == 'delete')
+		  {
+		    if (!$objTest->fields['id'])
+		      {
+			message('error', 'Ten gracz nie znajduje się na liście śledzonych.');
+		      }
+		    else
+		      {
+			$db->Execute("DELETE FROM `slogconf` WHERE `id`=".$_POST['pid']);
+			message('succes', 'Usunąłeś gracza z listy śledzonych.');
+		      }
+		  }
+		else
+		  {
+		    if ($objTest->fields['id'])
+		      {
+			message('error', 'Ten gracz jest już na liście śledzonych.');
+		      }
+		    else
+		      {
+			$db->Execute("INSERT INTO `slogconf` (`id`) VALUES(".$_POST['pid'].")");
+			message('success', 'Dodałeś gracza do listy śledzonych.');
+		      }
+		  }
+	      }
 	  }
       }
   }

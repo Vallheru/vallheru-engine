@@ -713,6 +713,19 @@
     </form>
 {/if}
 
+{if $View == "slogconf"}
+    {$Tlist}<br />
+    {foreach $Slist as $followed}
+        {$followed.id}<br />
+    {/foreach}
+    <form method="post" action="admin.php?view=slogconf&amp;step">
+        <select name="action">
+	    <option value="add">{$Add}</option>
+	    <option value="delete">{$Remove}</option>
+	</select> {$Tplayer} <input type="text" name="pid" size="5" /> <input type="submit" value="{$Asend}" />
+    </form>
+{/if}
+
 {$Message}
 
 {if $View != ""}

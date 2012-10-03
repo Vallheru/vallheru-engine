@@ -1,3 +1,8 @@
+2012-10-03  Bartek thindil Jasicki  <thindil@vallheru.net>
+
+	* FEATURE,templates/layout1/admin.tpl, templates/admin.tpl, admin.php:
+	finished work on players special logs
+
 2012-10-02  Bartek thindil Jasicki  <thindil@vallheru.net>
 
 	* FEATURE,templates/layout1/admin.tpl, templates/admin.tpl, includes/head.php, admin.php: 
