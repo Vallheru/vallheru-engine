@@ -1,5 +1,7 @@
 2012-10-03  Bartek thindil Jasicki  <thindil@vallheru.net>
 
+	* FEATURE,templates/layout1/account.tpl, templates/account.tpl, admin.php, account.php: 
+	redesigned bug reporting
 	* FEATURE,templates/layout1/admin.tpl, templates/admin.tpl, admin.php:
 	finished work on players special logs
 

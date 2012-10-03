@@ -66,63 +66,32 @@ if (isset($_GET['view']))
      */
     elseif ($_GET['view'] == 'bugreport')
       {
-	$smarty -> assign(array("Bugtype" => BUG_TYPE,
+	$smarty -> assign(array("Bugtype" => "Status",
 				"Bugloc" => BUG_LOC,
 				"Bugid" => BUG_ID,
 				"Bugname" => BUG_NAME));
 	/**
-	 * Bugs list
-	 */
-	if (!isset($_GET['step']))
-	  {
-	    $objBugs = $db -> Execute("SELECT `id`, `sender`, `title`, `type`, `location` FROM `bugreport` WHERE `resolution`=0 ORDER BY `id` ASC");
-	    $arrId = array();
-	    $arrReporter = array();
-	    $arrTitle = array();
-	    $arrType = array();
-	    $arrLocation = array();
-	    while (!$objBugs -> EOF)
-	      {
-		$arrId[] = $objBugs -> fields['id'];
-		$arrReporter[] = $objBugs -> fields['sender'];
-		$arrTitle[] = $objBugs -> fields['title'];
-		$arrLocation[] = $objBugs -> fields['location'];
-		if ($objBugs -> fields['type'] == 'text')
-		  {
-		    $arrType[] = BUG_TEXT;
-		  }
-                else
-		  {
-		    $arrType[] = BUG_CODE;
-		  }
-		$objBugs -> MoveNext();
-	      }
-	    $objBugs -> Close();
-	    $smarty -> assign(array("Bugreporter" => BUG_REPORTER,
-				    "Bugstype" => $arrType,
-				    "Bugsloc" => $arrLocation,
-				    "Bugsid" => $arrId,
-				    "Bugsreporter" => $arrReporter,
-				    "Bugsname" => $arrTitle));
-	  }
-	/**
 	 * Edit bug
 	 */
-        else
+        if (isset($_GET['step']))
 	  {
 	    checkvalue($_GET['step']);
-	    $objBug = $db -> Execute("SELECT `id`, `sender`, `title`, `type`, `location`, `desc` FROM `bugreport` WHERE `id`=".$_GET['step']);
+	    $objBug = $db -> Execute("SELECT `id`, `sender`, `title`, `resolution`, `location`, `desc` FROM `bugreport` WHERE `id`=".$_GET['step']);
 	    if (!$objBug -> fields['id'])
 	      {
 		error(ERROR);
 	      }
-	    if ($objBug -> fields['type'] == 'text')
+	    switch ($objBug->fields['resolution'])
 	      {
-		$strType = BUG_TEXT;
-	      }
-            else
-	      {
-		$strType = BUG_CODE;
+	      case 0:
+		$strStatus = "Oczekuje na sprawdzenie";
+		break;
+	      case 2:
+	      case 3:
+		$strStatus = "Wymaga więcej informacji";
+		break;
+	      default:
+		break;
 	      }
 	    $arrOptions = array(BUG_FIXED, NOT_BUG, WORK_FOR_ME, MORE_INFO, BUG_DOUBLE);
 	    $arrActions = array('fixed', 'notbug', 'workforme', 'moreinfo', 'duplicate');
@@ -133,7 +102,7 @@ if (isset($_GET['view']))
 				    "Amake" => A_MAKE,
 				    "Tcomment" => T_COMMENT2,
 				    "Bugname2" => $objBug -> fields['title'],
-				    "Bugtype2" => $strType,
+				    "Bugtype2" => $strStatus,
 				    "Bugloc2" => $objBug -> fields['location'],
 				    "Bugdesc2" => $objBug->fields['desc']));
 	    /**
@@ -148,28 +117,9 @@ if (isset($_GET['view']))
 		$strInfo = YOUR_BUG.$objBug -> fields['title'].B_ID.$_GET['step'];
 		$strDate = $db -> DBDate($newdate);
 		$intKey = array_search($_POST['actions'], $arrActions);
-		if ($intKey == 3)
+		switch ($intKey)
 		  {
-		    $strInfo = $strInfo.MORE_INFO2;
-		    $strMessage = MORE_INFO3;
-		  }
-		if ($intKey == 4)
-		  {
-		    $strInfo = $strInfo.BUG_DOUBLE2;
-		    $strMessage = BUG_DOUBLE3;
-		  }
-		if ($intKey == 2)
-		  {
-		    $strInfo = $strInfo.WORK_FOR_ME2;
-		    $strMessage = WORK_FOR_ME3;
-		  }
-		if ($intKey == 1)
-		  {
-		    $strInfo = $strInfo.NOT_BUG3;
-		    $strMessage = NOT_BUG2;
-		  }
-		if ($intKey == 0)
-		  {
+		  case 0:
 		    $strInfo = $strInfo.HAS_FIXED;
 		    $strMessage = HAS_FIXED2;
 		    $strAuthor = '<b><a href="view.php?view='.$player -> id.'">'.$player -> user."</a></b>, ID <b>".$player -> id.'</b>';
@@ -180,8 +130,34 @@ if (isset($_GET['view']))
 		      {
 			$db->Execute("INSERT INTO `vallars` (`owner`, `amount`, `reason`) VALUES(".$objBug->fields['sender'].", ".$_POST['vallars'].", 'Zgłoszenie błędu.')");
 		      }
+		    break;
+		  case 1:
+		    $strInfo = $strInfo.NOT_BUG3;
+		    $strMessage = NOT_BUG2;
+		    break;
+		  case 2:
+		    $strInfo = $strInfo.WORK_FOR_ME2;
+		    $strMessage = WORK_FOR_ME3;
+		    break;
+		  case 3:
+		    $strInfo = $strInfo.MORE_INFO2;
+		    $strMessage = MORE_INFO3;
+		    break;
+		  case 4:
+		    $strInfo = $strInfo.BUG_DOUBLE2;
+		    $strMessage = BUG_DOUBLE3;
+		    break;
+		  default:
+		    break;
 		  }
-		$db -> Execute("DELETE FROM `bugreport` WHERE `id`=".$_GET['step']);
+		if ($intKey != 2 && $intKey != 3)
+		  {
+		    $db -> Execute("DELETE FROM `bugreport` WHERE `id`=".$_GET['step']);
+		  }
+		else
+		  {
+		    $db->Execute("UPDATE `bugreport` SET `resolution`=".$intKey." WHERE `id`=".$_GET['step']);
+		  }
 		//Send comment as a message to player
 		if (isset($_POST['bugcomment']) && !empty($_POST['bugcomment']))
 		  {
@@ -193,9 +169,49 @@ if (isset($_GET['view']))
 		    $rec->Close();
 		  }
 		$db -> Execute("INSERT INTO `log` (`owner`, `log`, `czas`, `type`) VALUES(".$objBug -> fields['sender'].", '".$strInfo."', ".$strDate.", 'A')");
-		error($strMessage);
+	        message('success', $strMessage);
+		unset($_GET['step']);
 	      }
 	    $objBug -> Close();
+	  }
+	  /**
+	   * Bugs list
+	   */
+	if (!isset($_GET['step']))
+	  {
+	    $objBugs = $db -> Execute("SELECT `id`, `sender`, `title`, `resolution`, `location` FROM `bugreport` ORDER BY `id` ASC");
+	    $arrId = array();
+	    $arrReporter = array();
+	    $arrTitle = array();
+	    $arrType = array();
+	    $arrLocation = array();
+	    while (!$objBugs -> EOF)
+	      {
+		$arrId[] = $objBugs -> fields['id'];
+		$arrReporter[] = $objBugs -> fields['sender'];
+		$arrTitle[] = $objBugs -> fields['title'];
+		$arrLocation[] = $objBugs -> fields['location'];
+		switch ($objBugs->fields['resolution'])
+		  {
+		  case 0:
+		    $arrType[] = "Oczekuje na sprawdzenie";
+		    break;
+		  case 2:
+		  case 3:
+		    $arrType[] = "Wymaga więcej informacji";
+		    break;
+		  default:
+		    break;
+		  }
+		$objBugs -> MoveNext();
+	      }
+	    $objBugs -> Close();
+	    $smarty -> assign(array("Bugreporter" => BUG_REPORTER,
+				    "Bugstype" => $arrType,
+				    "Bugsloc" => $arrLocation,
+				    "Bugsid" => $arrId,
+				    "Bugsreporter" => $arrReporter,
+				    "Bugsname" => $arrTitle));
 	  }
       }
     /**

@@ -52,19 +52,19 @@
     {$Bugtrackinfo}<br /><br />
     <table align="center">
         <tr>
-            <td><b>{$Bugid}</b></td>
-            <td><b>{$Bugtype}</b></td>
-            <td><b>{$Bugloc}</b></td>
-            <td><b>{$Bugname}</b></td>
+            <th>{$Bugid}</td>
+            <th>{$Bugtype}</td>
+            <th>{$Bugloc}</td>
+            <th>{$Bugname}</td>
         </tr>
-        {section name=bugtrack loop=$Bugsid}
-            <tr>
-                <td align="center">{$Bugsid[bugtrack]}</td>
-                <td align="center">{$Bugstype[bugtrack]}</td>
-                <td align="center">{$Bugsloc[bugtrack]}</td>
-                <td align="center">{$Bugsname[bugtrack]}</td>
-            </tr>
-        {/section}
+	{foreach $Bugs as $bug}
+	    <tr>
+	        <td align="center">{$bug.id}</td>
+	        <td align="center">{$bug.status}</td>
+	        <td align="center">{$bug.location}</td>
+	        <td align="center">{$bug.title}</td>
+	    </tr>
+	{/foreach}
     </table>
 {/if}
 
@@ -72,10 +72,6 @@
     {$Buginfo}<br /><br />
     <form method="post" action="account.php?view=bugreport&amp;step=report">
         {$Bugname}: <input type="text" name="bugtitle" size="40" /><br /><br />
-        {$Bugtype}: <select name="type">
-            <option value="text">{$Bugtext}</option>
-            <option value="code">{$Bugcode}</option>
-        </select><br /><br />
         {$Bugloc}: <input type="text" name="location" size="40" value="{$Loc}" /><br /><br />
         {$Bugdesc}: <textarea name="desc" rows="13" cols="50"></textarea><br /><br />
         <input type="submit" value="{$Areport}" />

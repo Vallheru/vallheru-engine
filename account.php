@@ -174,38 +174,28 @@ if (isset($_GET['view']))
      */
     elseif ($_GET['view'] == 'bugtrack')
       {
-	$objBugs = $db -> Execute("SELECT `id`, `title`, `type`, `location` FROM `bugreport` WHERE `resolution`=0 ORDER BY `id` ASC");
-	$arrId = array();
-	$arrTitle = array();
-	$arrType = array();
-	$arrLocation = array();
-	$i = 0;
-	while (!$objBugs -> EOF)
+	$arrBugs = $db->GetAll("SELECT `id`, `title`, `resolution`, `location` FROM `bugreport` ORDER BY `id` ASC");
+	foreach ($arrBugs as &$arrBug)
 	  {
-	    $arrId[$i] = $objBugs -> fields['id'];
-	    $arrTitle[$i] = $objBugs -> fields['title'];
-	    $arrLocation[$i] = $objBugs -> fields['location'];
-	    if ($objBugs -> fields['type'] == 'text')
+	    switch ($arrBug['resolution'])
 	      {
-		$arrType[$i] = BUG_TEXT;
+	      case 0:
+		$arrBug['status'] = 'Oczekuje na sprawdzenie';
+		break;
+	      case 2:
+	      case 3:
+		$arrBug['status'] = 'Wymaga więcej informacji';
+		break;
+	      default:
+		break;
 	      }
-            else
-	      {
-		$arrType[$i] = BUG_CODE;
-	      }
-	    $i++;
-	    $objBugs -> MoveNext();
 	  }
-	$objBugs -> Close();
-	$smarty -> assign(array("Bugtype" => BUG_TYPE,
+	$smarty -> assign(array("Bugtype" => "Status błędu",
 				"Bugloc" => BUG_LOC,
 				"Bugid" => BUG_ID,
 				"Bugname" => BUG_NAME,
 				"Bugtrackinfo" => BUGTRACK_INFO,
-				"Bugstype" => $arrType,
-				"Bugsloc" => $arrLocation,
-				"Bugsid" => $arrId,
-				"Bugsname" => $arrTitle));
+				"Bugs" => $arrBugs));
       }
 
     /**
@@ -221,10 +211,7 @@ if (isset($_GET['view']))
 	  {
 	    $strLoc = '';
 	  }
-	$smarty -> assign(array("Bugtype" => BUG_TYPE,
-				"Bugtext" => BUG_TEXT,
-				"Bugcode" => BUG_CODE,
-				"Bugloc" => BUG_LOC,
+	$smarty -> assign(array("Bugloc" => BUG_LOC,
 				"Bugdesc" => BUG_DESC,
 				"Areport" => A_REPORT,
 				"Bugname" => BUG_NAME,
@@ -235,7 +222,7 @@ if (isset($_GET['view']))
 	 */
 	if (isset($_GET['step']) && $_GET['step'] == 'report')
 	  {
-	    $arrFields = array($_POST['bugtitle'], $_POST['type'], $_POST['location'], $_POST['desc']);
+	    $arrFields = array($_POST['bugtitle'], $_POST['location'], $_POST['desc']);
 	    require_once('includes/bbcode.php');
 	    foreach ($arrFields as &$strField)
 	      {
@@ -245,16 +232,12 @@ if (isset($_GET['view']))
 		    error(EMPTY_FIELDS);
 		  }
 	      }
-	    if (!in_array($arrFields[1], array('text', 'code')))
-	      {
-		error(ERROR);
-	      }
 	    $intDesc = strlen($arrFields[3]);
 	    if ($intDesc < 20)
 	      {
 		error(TOO_SHORT);
 	      }
-	    $db -> Execute("INSERT INTO `bugreport` (`sender`, `title`, `type`, `location`, `desc`) VALUES(".$player -> id.", '".$arrFields[0]."', '".$arrFields[1]."', '".$arrFields[2]."', '".$arrFields[3]."')");
+	    $db -> Execute("INSERT INTO `bugreport` (`sender`, `title`, `location`, `desc`) VALUES(".$player -> id.", '".$arrFields[0]."', '".$arrFields[1]."', '".$arrFields[2]."')");
 	    $objStaff = $db -> Execute("SELECT `id` FROM `players` WHERE `rank`='Admin'");
 	    $strDate = $db -> DBDate($newdate);
 	    while (!$objStaff->EOF) 
