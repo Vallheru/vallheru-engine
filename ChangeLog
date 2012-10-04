@@ -1,3 +1,8 @@
+2012-10-04  Bartek thindil Jasicki  <thindil@vallheru.net>
+
+	* BUG,account.php:
+	fixed bug reporting
+
 2012-10-03  Bartek thindil Jasicki  <thindil@vallheru.net>
 
 	* UPDATE,install/db/update.sql: 
