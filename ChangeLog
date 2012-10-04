@@ -1,5 +1,7 @@
 2012-10-04  Bartek thindil Jasicki  <thindil@vallheru.net>
 
+	* UPDATE,languages/pl/quests_class.php, class/quests_class.php: 
+	remove language file
 	* BUG,account.php:
 	fixed bug reporting
 

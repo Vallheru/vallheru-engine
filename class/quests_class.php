@@ -7,7 +7,7 @@
  *   @copyright            : (C) 2004,2005,2006,2011,2012 Vallheru Team based on Gamers-Fusion ver 2.5
  *   @author               : thindil <thindil@vallheru.net>
  *   @version              : 1.6
- *   @since                : 10.06.2012
+ *   @since                : 04.10.2012
  *
  */
 
@@ -29,11 +29,6 @@
 //
 // $Id$
 
-/**
-* Get the localization for game
-*/
-require_once("languages/".$lang."/quests_class.php");
-
 class Quests 
 {
     var $number;
@@ -50,13 +45,13 @@ class Quests
         
         if (!isset($_SERVER['HTTP_REFERER']))
         {
-            error(ERROR);
+            error("Zapomnij o tym.");
         }
         $arrAddress = explode("/", $_SERVER['HTTP_REFERER']);
         if ($_SERVER['HTTP_HOST'] != $arrAddress[2])
-        {
-            error(ERROR);
-        }
+	  {
+	    error("Zapomnij o tym.");
+	  }
         if (!$action || $action == 'start') 
         {
             $text = $db -> Execute("SELECT `text` FROM `quests` WHERE `qid`=".$number." AND `location`='".$location."' AND `name`='start'");
@@ -72,11 +67,11 @@ class Quests
         }
         if ($action == 'end') 
         {
-            error(VISITED);
+            error("Już byłeś na tej przygodzie!");
         }           
-        $smarty -> assign(array("Aselect" => A_SELECT,
-                                "Anext" => A_NEXT,
-                                "Addanswer" => ADD_ANSWER));
+        $smarty -> assign(array("Aselect" => "Wybierz",
+                                "Anext" => "Zatwierdź",
+                                "Addanswer" => "Podaj odpowiedź"));
         $this -> number = $number;
         $this -> location = $location;
     }
@@ -150,7 +145,7 @@ class Quests
         $gainexp = $exp * $player -> level;
         if ($exp > 0) 
         {
-            $text = Q_YOU_GAIN." ".$gainexp." ".Q_EXPERIENCE;
+            $text =  "Dostajesz ".$gainexp." Punktów Doświadczenia.";
             require_once("includes/checkexp.php");
             checkexp($player -> exp, $gainexp, $player -> level, $player -> race, $player -> user, $player -> id, 0, 0, $player -> id, '', 0);
         } 
@@ -238,7 +233,7 @@ class Quests
         global $player;
 	global $lang;
         $gainexp = $exp * $player -> level;
-        $text = Q_YOU_GAIN." ".$gainexp." ".Q_EXPERIENCE;
+	$text =  "Dostajesz ".$gainexp." Punktów Doświadczenia.";
         require_once("includes/checkexp.php");
         checkexp($player -> exp,$gainexp,$player -> level,$player -> race,$player -> user,$player -> id,0,0,$player -> id,'',0);
         $smarty -> assign("End", "<br /><br />".$text);        
