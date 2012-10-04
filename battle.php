@@ -7,7 +7,7 @@
  *   @copyright            : (C) 2004,2005,2006,2011,2012 Vallheru Team based on Gamers-Fusion ver 2.5
  *   @author               : thindil <thindil@vallheru.net>
  *   @version              : 1.6
- *   @since                : 28.09.2012
+ *   @since                : 04.10.2012
  *
  */
 
@@ -195,13 +195,13 @@ if (isset($_GET['battle']))
 		    $arrMyequip[$i][2] = ceil($arrMyequip[$i][2] / 2);
 		  }
 	      }
-	    elseif ($arrEnEquip[6][10] != 'N')
+	    elseif ($arrEnequip[6][10] != 'N')
 	      {
 		if ($arrEnequip[6][10] == $arrMyequip[$i][10])
 		  {
 		    $arrMyequip[$i][2] = $arrMyequip[$i][2] * 2;
 		  }
-		elseif ($arrElements5[$arrEnEquip[6][10]] == $arrMyequip[$i][10])
+		elseif ($arrElements5[$arrEnequip[6][10]] == $arrMyequip[$i][10])
 		  {
 		    $arrMyequip[$i][2] = ceil($arrMyequip[$i][2] / 2);
 		  }
