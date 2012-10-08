@@ -1,12 +1,12 @@
 {if $Action == ""}
     {$Warehouseinfo}<br />
     {$Caravaninfo}
-    <table align="center">
+    <table align="center" width="95%">
         <tr>
-            <td><b><u>{$Tmin}</u></b></td>
-            <td><b><u>{$Tcost}</u></b></td>
-            <td align="center"><b><u>{$Tamount}</u></b></td>
-            <td><b><u>{$Taction}</u></b></td>
+            <th>{$Tmin}</th>
+            <th align="center">{$Tcost}</th>
+            <th align="center">{$Tamount}</th>
+            <th>{$Taction}</th>
         </tr>
         {section name=warehouse loop=$Minname}
             <tr>
@@ -21,12 +21,12 @@
         {/section}
     </table>
     <br /><br />
-    <table align="center">
+    <table align="center" width="95%">
         <tr>
-            <td><b><u>{$Therb}</u></b></td>
-            <td><b><u>{$Tcost}</u></b></td>
-            <td align="center"><b><u>{$Tamount}</u></b></td>
-            <td><b><u>{$Taction}</u></b></td>
+            <th>{$Therb}</th>
+            <th align="center">{$Tcost}</th>
+            <th align="center">{$Tamount}</th>
+            <th>{$Taction}</th>
         </tr>
         {section name=warehouse2 loop=$Herbname}
             <tr>
@@ -45,7 +45,8 @@
 {/if}
 
 {if $Action == "sell"}
-    {$Warehouseinfo2}<br /><br />
+    {$Warehouseinfo2}<br />
+    {$Tgold}<br /><br />
     <form method="post" id="warehouse" action="warehouse.php?action=sell&amp;item={$Item}&amp;action2=sell">
         <input type="submit" value="{$Asell}" /> <input type="text" name="amount" size="5" onChange="countPrice({$Price}, this.value, {$Iamount});"/>{$Tamount}{$Itemname}<span id="acost"></span>{$Youhave}<a href="#" onClick="buyAll({$Iamount}, {$Price});">{$Iamount}</a>{$Tamount}{$Itemname}.
     </form>

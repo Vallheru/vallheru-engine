@@ -32,17 +32,13 @@
 $title = "Magazyn Królewski";
 require_once("includes/head.php");
 
-/**
-* Get the localization for game
-*/
-require_once("languages/".$lang."/warehouse.php");
-
 if ($player -> location != 'Altara' && $player -> location != 'Ardulith') 
 {
-    error (ERROR);
+    error ('Nie znajdujesz się w mieście.');
 }
 
 $arrItems = array('copperore', 'zincore', 'tinore', 'ironore', 'copper', 'bronze', 'brass', 'iron', 'steel', 'coal', 'adamantium', 'meteor', 'crystal', 'pine', 'hazel', 'yew', 'elm', 'mithril', 'illani', 'illanias', 'nutari', 'dynallca', 'illani_seeds', 'illanias_seeds', 'nutari_seeds', 'dynallca_seeds');
+$objGold = $db->Execute("SELECT `value` FROM `settings` WHERE `setting`='gold'");
 
 /**
 * Sell or buy herbs and minerals
@@ -52,10 +48,10 @@ if (isset($_GET['action']) && ($_GET['action'] == 'sell' || $_GET['action'] == '
     $_GET['item'] = intval($_GET['item']);
     if ($_GET['item'] < 0 || $_GET['item'] > 25)
     {
-        error(ERROR);
+        error('Zapomnij o tym.');
     }
     $intItem = $_GET['item'];
-    $arrItemname = array(MIN1, MIN2, MIN3, MIN4, MIN5, MIN6, MIN7, MIN8, MIN9, MIN10, MIN11, MIN12, MIN13, MIN14, MIN15, MIN16, MIN17, MIN18, HERB1, HERB2, HERB3, HERB4, HERB5, HERB6, HERB7, HERB8);
+    $arrItemname = array("rudy miedzi", "rudy cynku", "rudy cyny", "rudy żelaza", "sztabek miedzi", "sztabek brązu", "sztabek mosiądzu", "sztabek żelaza", "sztabek stali", "brył węgla", "brył adamantium", "kawałków meteorytu", "kryształów", "drewna sosnowego", "drewna z leszczyny", "drewna cisowego", "drewna z wiązu", "mithrilu", "illani", "illanias", "nutari", "dynallca", "nasion illani", "nasion illanias", "nasion nutari", "nasion dynallca");
     if ($_GET['action'] == 'sell')
     {
         if ($intItem == 17)
@@ -80,8 +76,9 @@ if (isset($_GET['action']) && ($_GET['action'] == 'sell' || $_GET['action'] == '
             $objTest = $db -> Execute("SELECT `".$strHerb."` FROM `herbs` WHERE `gracz`=".$player -> id);
             $intAmount = $objTest -> fields[$strHerb];
         }
-        $smarty -> assign(array("Asell" => A_SELL,
-            "Youhave" => YOU_HAVE));
+        $smarty -> assign(array("Asell" => "Sprzedaj",
+				"Youhave" => " spośród posiadanych ",
+				"Tgold" => 'Złota w królestwie: '.$objGold->fields['value']));
     }
         else
     {
@@ -95,8 +92,8 @@ if (isset($_GET['action']) && ($_GET['action'] == 'sell' || $_GET['action'] == '
             $intAmount = 0;
         }
         $objAmount -> Close();
-        $smarty -> assign(array("Abuy" => A_BUY,
-            "Wamount" => W_AMOUNT));
+        $smarty -> assign(array("Abuy" => "Kup",
+				"Wamount" => " w magazynie znajduje się "));
     }
     $objPrice = $db -> Execute("SELECT value FROM settings WHERE setting='".$arrItems[$intItem]."'");
     if ($_GET['action'] == 'sell')
@@ -109,117 +106,145 @@ if (isset($_GET['action']) && ($_GET['action'] == 'sell' || $_GET['action'] == '
       }
     $smarty -> assign(array("Itemname" => $arrItemname[$intItem],
 			    "Item" => $_GET['item'],
-			    "Aback" => A_BACK,
-			    "Tamount" => AMOUNT,
+			    "Aback" => "Wróć",
+			    "Tamount" => " sztuk ",
 			    "Iamount" => $intAmount,
 			    "Price" => $intPrice));
     if (isset($_GET['action2']) && ($_GET['action2'] == 'sell' || $_GET['action2'] == 'buy'))
     {
         if (!isset($_POST['amount']))
         {
-            error(ERROR);
+            error("Zapomnij o tym.");
         }
 	checkvalue($_POST['amount']);
+	$blnValid = TRUE;
         if ($_POST['amount'] > $intAmount)
         {
-            error(NO_AMOUNT.$arrItemname[$intItem]);
+	    if ($_GET['action'] == 'sell')
+	      {
+		$strAmount = "Nie masz tyle sztuk ";
+	      }
+	    else
+	      {
+		$strAmount = "Nie ma tyle sztuk ";
+	      }
+            message('error', $strAmount.$arrItemname[$intItem]);
+	    $blnValid = FALSE;
         }
-        $objReset = $db -> Execute("SELECT reset FROM warehouse WHERE reset=1 AND mineral='".$arrItems[$intItem]."'");
-        if ($_GET['action2'] == 'sell')
-        {
-            $intGold = ($objPrice -> fields['value'] * $_POST['amount']);
-            $db -> Execute("UPDATE players SET credits=credits+".$intGold." WHERE id=".$player -> id);
-            if ($objReset -> fields['reset'])
-            {
-                $db -> Execute("UPDATE warehouse SET sell=sell+".$_POST['amount'].", amount=amount+".$_POST['amount']." WHERE reset=1 AND mineral='".$arrItems[$intItem]."'");
-            }
-        }
+	if ($blnValid)
+	  {
+	    $objReset = $db -> Execute("SELECT reset FROM warehouse WHERE reset=1 AND mineral='".$arrItems[$intItem]."'");
+	    if ($_GET['action2'] == 'sell')
+	      {
+		$intGold = ($objPrice -> fields['value'] * $_POST['amount']);
+		if ($intGold > $objGold->fields['value'])
+		  {
+		    message('error', 'Nie posiadamy aż tyle złota aby móc kupić tyle surowców.');
+		    $blnValid = FALSE;
+		  }
+		else
+		  {
+		    $db -> Execute("UPDATE players SET credits=credits+".$intGold." WHERE id=".$player -> id);
+		    $objGold->fields['value'] -= $intGold;
+		    $db->Execute("UPDATE `settings` SET `value`='".$objGold->fields['value']."' WHERE `setting`='gold'");
+		    if ($objReset -> fields['reset'])
+		      {
+			$db -> Execute("UPDATE warehouse SET sell=sell+".$_POST['amount'].", amount=amount+".$_POST['amount']." WHERE reset=1 AND mineral='".$arrItems[$intItem]."'");
+		      }
+		  }
+	      }
             else
-        {
-            $intGold = ($objPrice -> fields['value'] * $_POST['amount']) * 2;
-            if ($intGold > $player -> credits)
-            {
-                error(NO_MONEY);
-            }
-            $db -> Execute("UPDATE players SET credits=credits-".$intGold." WHERE id=".$player -> id);
-	    $objKgold = $db->Execute("SELECT `value` FROM `settings` WHERE `setting`='gold'");
-	    $intKgold = $objKgold->fields['value'] + $intGold;
-	    $objKgold->Close();
-	    $db->Execute("UPDATE `settings` SET `value`='".$intKgold."' WHERE `setting`='gold'");
-            if ($objReset -> fields['reset'])
-            {
-                $db -> Execute("UPDATE warehouse SET buy=buy+".$_POST['amount'].", amount=amount-".$_POST['amount']." WHERE reset=1 AND mineral='".$arrItems[$intItem]."'");
-            }
-        }
-        $objReset -> Close();
-        if ($intItem == 17)
-        {
-            if ($_GET['action2'] == 'sell')
-            {
-                $db -> Execute("UPDATE players SET platinum=platinum-".$_POST['amount']." WHERE id=".$player -> id);
-            }
-                else
-            {
-                $db -> Execute("UPDATE players SET platinum=platinum+".$_POST['amount']." WHERE id=".$player -> id);
-            }
-        }
-        if ($intItem < 17)
-        {
-            if ($_GET['action2'] == 'sell')
-            {
-                $db -> Execute("UPDATE minerals SET ".$arrItems[$intItem]."=".$arrItems[$intItem]."-".$_POST['amount']." WHERE owner=".$player -> id);
-            }
-                else
-            {
-                $objTest = $db -> Execute("SELECT owner FROM minerals WHERE owner=".$player -> id);
-                if (!$objTest -> fields['owner']) 
-                {
-                    $db -> Execute("INSERT INTO minerals (owner, ".$arrItems[$intItem].") VALUES(".$player -> id.",".$_POST['amount'].")");
-                } 
-                    else 
-                {
-                    $db -> Execute("UPDATE minerals SET ".$arrItems[$intItem]."=".$arrItems[$intItem]."+".$_POST['amount']." WHERE owner=".$player -> id);
-                }
-                $objTest -> Close();
-            }
-        }
-        if ($intItem > 17)
-        {
-            if ($arrItems[$intItem] == 'illani_seeds')
-            {
-                $strHerb = 'ilani_seeds';
-            }
-                else
-            {
-                $strHerb = $arrItems[$intItem];
-            }
-            if ($_GET['action2'] == 'sell')
-            {
-                $db -> Execute("UPDATE herbs SET ".$strHerb."=".$strHerb."-".$_POST['amount']." WHERE gracz=".$player -> id);
-            }
-                else
-            {
-                $objTest = $db -> Execute("SELECT gracz FROM herbs WHERE gracz=".$player -> id);
-                if (!$objTest -> fields['gracz']) 
-                {
-                    $db -> Execute("INSERT INTO herbs (gracz, ".$strHerb.") VALUES(".$player -> id.",".$_POST['amount'].")");
-                } 
-                    else 
-                {
-                    $db -> Execute("UPDATE herbs SET ".$strHerb."=".$strHerb."+".$_POST['amount']." WHERE gracz=".$player -> id);
-                }
-                $objTest -> Close();
-            }
-        }
-        if ($_GET['action2'] == 'sell')
-	  {
-	    message('success', YOU_SELL.$_POST['amount'].AMOUNT.$arrItemname[$intItem].FOR_A.$intGold.GOLD_COINS);
-	    unset($_GET['action']);
+	      {
+		$intGold = ($objPrice -> fields['value'] * $_POST['amount']) * 2;
+		if ($intGold > $player -> credits)
+		  {
+		    message('error', "Nie masz tylu sztuk złota przy sobie.");
+		    $blnValid = FALSE;
+		  }
+		else
+		  {
+		    $db -> Execute("UPDATE players SET credits=credits-".$intGold." WHERE id=".$player -> id);
+		    $objGold->fields['value'] += $intGold;
+		    $db->Execute("UPDATE `settings` SET `value`='".$objGold->fields['value']."' WHERE `setting`='gold'");
+		    if ($objReset -> fields['reset'])
+		      {
+			$db -> Execute("UPDATE warehouse SET buy=buy+".$_POST['amount'].", amount=amount-".$_POST['amount']." WHERE reset=1 AND mineral='".$arrItems[$intItem]."'");
+		      }
+		  }
+	      }
+	    $objReset -> Close();
 	  }
-	else
+	if ($blnValid)
 	  {
-            message('success', YOU_BUY.$_POST['amount'].AMOUNT.$arrItemname[$intItem].FOR_A.$intGold.GOLD_COINS);
-	    unset($_GET['action']);
+	    if ($intItem == 17)
+	      {
+		if ($_GET['action2'] == 'sell')
+		  {
+		    $db -> Execute("UPDATE players SET platinum=platinum-".$_POST['amount']." WHERE id=".$player -> id);
+		  }
+                else
+		  {
+		    $db -> Execute("UPDATE players SET platinum=platinum+".$_POST['amount']." WHERE id=".$player -> id);
+		  }
+	      }
+	    elseif ($intItem < 17)
+	      {
+		if ($_GET['action2'] == 'sell')
+		  {
+		    $db -> Execute("UPDATE minerals SET ".$arrItems[$intItem]."=".$arrItems[$intItem]."-".$_POST['amount']." WHERE owner=".$player -> id);
+		  }
+                else
+		  {
+		    $objTest = $db -> Execute("SELECT owner FROM minerals WHERE owner=".$player -> id);
+		    if (!$objTest -> fields['owner']) 
+		      {
+			$db -> Execute("INSERT INTO minerals (owner, ".$arrItems[$intItem].") VALUES(".$player -> id.",".$_POST['amount'].")");
+		      } 
+                    else 
+		      {
+			$db -> Execute("UPDATE minerals SET ".$arrItems[$intItem]."=".$arrItems[$intItem]."+".$_POST['amount']." WHERE owner=".$player -> id);
+		      }
+		    $objTest -> Close();
+		  }
+	      }
+	    elseif ($intItem > 17)
+	      {
+		if ($arrItems[$intItem] == 'illani_seeds')
+		  {
+		    $strHerb = 'ilani_seeds';
+		  }
+                else
+		  {
+		    $strHerb = $arrItems[$intItem];
+		  }
+		if ($_GET['action2'] == 'sell')
+		  {
+		    $db -> Execute("UPDATE herbs SET ".$strHerb."=".$strHerb."-".$_POST['amount']." WHERE gracz=".$player -> id);
+		  }
+                else
+		  {
+		    $objTest = $db -> Execute("SELECT gracz FROM herbs WHERE gracz=".$player -> id);
+		    if (!$objTest -> fields['gracz']) 
+		      {
+			$db -> Execute("INSERT INTO herbs (gracz, ".$strHerb.") VALUES(".$player -> id.",".$_POST['amount'].")");
+		      } 
+                    else 
+		      {
+			$db -> Execute("UPDATE herbs SET ".$strHerb."=".$strHerb."+".$_POST['amount']." WHERE gracz=".$player -> id);
+		      }
+		    $objTest -> Close();
+		  }
+	      }
+	    if ($_GET['action2'] == 'sell')
+	      {
+		message('success', "Sprzedałeś ".$_POST['amount']." sztuk ".$arrItemname[$intItem]." za ".$intGold." sztuk złota.");
+		unset($_GET['action']);
+	      }
+	    else
+	      {
+		message('success', "Kupiłeś ".$_POST['amount']." sztuk ".$arrItemname[$intItem]." za ".$intGold." sztuk złota.");
+		unset($_GET['action']);
+	      }
 	  }
     }
     $objPrice->Close();
@@ -230,8 +255,8 @@ if (isset($_GET['action']) && ($_GET['action'] == 'sell' || $_GET['action'] == '
 */
 if (!isset($_GET['action']))
 {
-    $arrMinname = array(MIN1A, MIN2A, MIN3A, MIN4A, MIN5A, MIN6A, MIN7A, MIN8A, MIN9A, MIN10A, MIN11A, MIN12A, MIN13A, MIN14A, MIN15A, MIN16A, MIN17A, MIN18A);
-    $arrHerbname = array(HERB1A, HERB2A, HERB3A, HERB4A, HERB5A, HERB6A, HERB7A, HERB8A);
+    $arrMinname = array("Ruda miedzi", "Ruda cynku", "Ruda cyny", "Ruda żelaza", "Sztabki miedzi", "Sztabki brązu", "Sztabki mosiądzu", "Sztabki żelaza", "Sztabki stali", "Bryły węgla", "Bryły adamantium", "Kawałki meteorytu", "Kryształów", "Drewno sosnowe", "Drewno z leszczyny", "Drewno cisowe", "Drewno z wiązu", "Mithril");
+    $arrHerbname = array("Illani", "Illanias", "Nutari", "Dynallca", "Nasiona Illani", "Nasiona Illanias", "Nasiona Nutari", "Nasiona Dynallca");
     $arrHerb = array(18, 19, 20, 21, 22, 23, 24, 25);
     $arrCostmin = array();
     $arrCostherb = array();
@@ -278,39 +303,50 @@ if (!isset($_GET['action']))
     $objCaravan = $db -> Execute("SELECT value FROM settings WHERE setting='caravan'");
     if ($objCaravan -> fields['value'] == 'Y')
     {
-        $strCaravan = CARAVAN_VISIT;
+        $strCaravan = "<br />Dzisiaj odwiedziła magazyn karawana z dalekich krain wykupując co nieco minerałów.<br /><br />";
     }
         else
     {
         $strCaravan = "<br /><br />";
     }
     $smarty -> assign(array("Minname" => $arrMinname,
-        "Herbname" => $arrHerbname,
-        "Costmin" => $arrCostmin,
-        "Costherb" => $arrCostherb,
-        "Herb" => $arrHerb,
-        "Sellmin" => $arrSellmin,
-        "Sellherb" => $arrSellherb,
-        "Amountmin" => $arrAmountmin,
-        "Amountherb" => $arrAmountherb,
-        "Caravaninfo" => $strCaravan,
-        "Tmin" => "Minerał",
-        "Therb" => "Zioło",
-        "Tcost" => "Skup / Sprzedaż",
-        "Taction" => "Akcje",
-        "Asell" => A_SELL,
-        "Abuy" => A_BUY,
-        "Tamount" => "Ilość"));
+			    "Herbname" => $arrHerbname,
+			    "Costmin" => $arrCostmin,
+			    "Costherb" => $arrCostherb,
+			    "Herb" => $arrHerb,
+			    "Sellmin" => $arrSellmin,
+			    "Sellherb" => $arrSellherb,
+			    "Amountmin" => $arrAmountmin,
+			    "Amountherb" => $arrAmountherb,
+			    "Caravaninfo" => $strCaravan,
+			    "Tmin" => "Minerał",
+			    "Therb" => "Zioło",
+			    "Tcost" => "Skup / Sprzedaż",
+			    "Taction" => "Akcje",
+			    "Asell" => "Sprzedaj",
+			    "Abuy" => "Kup",
+			    "Tamount" => "Ilość"));
     $_GET['action'] = '';
 }
+
+if ($player->location != 'Ardulith')
+  {
+    $strWarehouseinfo = "Wchodzisz do Magazynu Królewskiego. Jesteś pod wrażeniem widząc wnętrze tej ogromnej budowli. Z podziwu wyrywają Cię krzyki. To jakiś krasnolud kłóci się z magazynierem, ostro gestykulując...<br /><br /><i>Przecież surowce z mojej, podkreślam - mojej kopalni,  są więcej warte niż te psie grosze, które mi oferujesz!!! Toż to wyzysk!!! Kiedyś ktoś się wkurzy i puści cały ten wasz magazyn z dymem!!</i><br /><br />Bierze sakwy leżące na stole i wychodzi energicznym krokiem mrucząc pod nosem jakieś przekleństwa. Widzisz jak natychmiast pojawiają się pracownicy i zabierają towar kupiony od krasnoluda. Zauważasz zbliżającego się do Ciebie magazyniera . Na chwilę przystaje. Spogląda na odchodzącego krasnoluda i ze zrezygnowaniem kiwa głową. Po chwili zwraca się do Ciebie.<br /><br /><i>Witam w Królewskim Magazynie. Skupujemy wszelkie surowce, zioła, wszystkich
+rodzajów. Oto ceny obowiązujące dzisiaj.<br />Obecnie dysponujemy ".$objGold->fields['value']." sztukami złota.</i>";
+  }
+else
+  {
+    $strWarehouseinfo = "Schodzisz krętymi schodami w dół. Czujesz lekki swąd palących się świec, a oczy zaczynają ci łzawić. Schody prowadzą do jakiegoś pomieszczenia... Po chwili twoje oczy przyzwyczajają się do półmroku. Widzisz ogromną podziemną halę wypełnioną stertami wszelkiego rodzaju rud, liczne regały z miksturami oraz wielkie wiklinowe kosze wypełnione po brzegi ziołami. Wszystko najlepszej jakości. Zewsząd otacza cię gwar sprzeczek i targów sprzedawców i użerających się z nimi klientów.<br />Nieco onieśmielony podchodzisz do pierwszego stoiska i widzisz uśmiechającego się gnoma ubranego w czerwoną, zdobną szatę.<br /><br />- Czym mogę służyć, Panie? - dochodzi do ciebie miły, służalczy głos...<br />Obecnie dysponujemy ".$objGold->fields['value']." sztukami złota.";
+  }
+$objGold->Close();
 
 /**
 * Assign variables to template and display page
 */
 $smarty -> assign(array("Action" => $_GET['action'],
-    "Warehouseinfo" => WAREHOUSE_INFO,
-    "Warehouseinfo2" => WAREHOUSE_INFO2,
-    "Warehouseinfo3" => WAREHOUSE_INFO3));
+			"Warehouseinfo" => $strWarehouseinfo,
+			"Warehouseinfo2" => "Co możesz nam zaoferować?",
+			"Warehouseinfo3" => "Co chcesz kupić?"));
 $smarty -> display('warehouse.tpl');
 
 require_once("includes/foot.php");
