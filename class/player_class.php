@@ -6,8 +6,8 @@
  *   @name                 : player_class.php                            
  *   @copyright            : (C) 2004,2005,2006,2007,2011,2012 Vallheru Team based on Gamers-Fusion ver 2.5
  *   @author               : thindil <thindil@vallheru.net>
- *   @version              : 1.6
- *   @since                : 27.09.2012
+ *   @version              : 1.7
+ *   @since                : 08.10.2012
  *
  */
 
@@ -33,8 +33,6 @@ class Player
 {
     var $user;
     var $id;
-    var $level;
-    var $exp;
     var $hp;
     var $max_hp;
     var $mana;
@@ -49,9 +47,6 @@ class Player
     var $ap;
     var $race;
     var $clas;
-    var $agility;
-    var $strength;
-    var $inteli;
     var $pw;
     var $wins;
     var $losses;
@@ -59,20 +54,10 @@ class Player
     var $lastkilledby;
     var $age;
     var $logins;
-    var $smith;
-    var $attack;
-    var $miss;
-    var $magic;
     var $ip;
-    var $speed;
-    var $cond;
-    var $alchemy;
     var $gg;
     var $avatar;
-    var $wisdom;
-    var $shoot;
     var $tribe_rank;
-    var $fletcher;
     var $immunited;
     var $corepass;
     var $trains;
@@ -84,18 +69,10 @@ class Player
     var $profile;
     var $crime;
     var $gender;
-    var $leadership;
     var $antidote;
-    var $breeding;
     var $poll;
-    var $mining;
-    var $lumberjack;
-    var $herbalist;
-    var $jeweller;
     var $vallars;
     var $newbie;
-    var $thievery;
-    var $perception;
     var $forumtime;
     var $tforumtime;
     var $metallurgy;
@@ -103,12 +80,19 @@ class Player
     var $room;
     var $oldstats;
     var $settings;
-    var $changed;
     var $chattimes;
     /**
      * Player equipment
      */
     var $equip;
+    /**
+     * Player statistics
+     */
+    var $stats;
+    /**
+     * Player skills
+     */
+    var $skills;
 /**
 * Class constructor - get data from database and write it to variables
 */
@@ -123,8 +107,6 @@ class Player
 	  }
         $this -> user = $stats -> fields['user'];
         $this -> id = $stats -> fields['id'];
-        $this -> level = $stats -> fields['level'];
-        $this -> exp = $stats -> fields['exp'];
         $this -> hp = $stats -> fields['hp'];
         $this -> max_hp = $stats -> fields['max_hp'];
         $this -> mana = $stats -> fields['pm'];
@@ -139,9 +121,6 @@ class Player
         $this -> ap = $stats -> fields['ap'];
         $this -> race = $stats -> fields['rasa'];
         $this -> clas = $stats -> fields['klasa'];
-        $this -> agility = $stats -> fields['agility'];
-        $this -> strength = $stats -> fields['strength'];
-        $this -> inteli = $stats -> fields['inteli'];
         $this -> pw = $stats -> fields['pw'];
         $this -> wins = $stats -> fields['wins'];
         $this -> losses = $stats -> fields['losses'];
@@ -149,20 +128,10 @@ class Player
         $this -> lastkilledby = $stats -> fields['lastkilledby'];
         $this -> age = $stats -> fields['age'];
         $this -> logins = $stats -> fields['logins'];
-        $this -> smith = $stats -> fields['ability'];
-        $this -> attack = $stats -> fields['atak'];
-        $this -> miss = $stats -> fields['unik'];
-        $this -> magic = $stats -> fields['magia'];
         $this -> ip = $stats -> fields['ip'];
-        $this -> speed = $stats -> fields['szyb'];
-        $this -> cond = $stats -> fields['wytrz'];
-        $this -> alchemy = $stats -> fields['alchemia'];
         $this -> gg = $stats -> fields['gg'];
         $this -> avatar = $stats -> fields['avatar'];
-        $this -> wisdom = $stats -> fields['wisdom'];
-        $this -> shoot = $stats -> fields['shoot'];
         $this -> tribe_rank = $stats -> fields['tribe_rank'];
-        $this -> fletcher = $stats -> fields['fletcher'];
         $this -> immunited = $stats -> fields['immu'];
         $this -> corepass = $stats -> fields['corepass'];
         $this -> trains = $stats -> fields['trains'];
@@ -174,7 +143,6 @@ class Player
         $this -> profile = $stats -> fields['profile'];
         $this -> crime = $stats -> fields['crime'];
         $this -> gender = $stats -> fields['gender'];
-        $this -> leadership = $stats -> fields['leadership'];
         if (!empty($stats -> fields['antidote']))
         {
             $this -> antidote = $stats -> fields['antidote']{0};
@@ -183,19 +151,11 @@ class Player
         {
             $this -> antidote = '';
         }
-        $this -> breeding = $stats -> fields['breeding'];
         $this -> poll = $stats -> fields['poll'];
-        $this -> mining = $stats -> fields['mining'];
-        $this -> lumberjack = $stats -> fields['lumberjack'];
-        $this -> herbalist = $stats -> fields['herbalist'];
-        $this -> jeweller = $stats -> fields['jeweller'];
 	$this->vallars = $stats->fields['vallars'];
 	$this->newbie = $stats->fields['newbie'];
-	$this->thievery = $stats->fields['thievery'];
-	$this->perception = $stats->fields['perception'];
 	$this->forumtime = $stats->fields['forum_time'];
 	$this->tforumtime = $stats->fields['tforum_time'];
-	$this->metallurgy = $stats->fields['metallurgy'];
         $stats -> Close();
 	$objRevent = $db->Execute("SELECT `state` FROM `revent` WHERE `pid`=".$pid);
 	if (!$objRevent->fields['state'])
@@ -209,8 +169,10 @@ class Player
 	$objRevent->Close();
 	$this->room = $stats->fields['room'];
 	$this->chattimes = $stats->fields['chattimes'];
-	$this->oldstats = array($this->agility, $this->strength, $this->inteli, $this->wisdom, $this->speed, $this->cond);
 	$this->settings = $this->toarray($stats->fields['settings']);
+	$this->stats = $this->toarray($stats->fields['stats']);
+	$this->skills = $this->toarray($stats->fields['skills']);
+	$this->oldstats = $this->stats;
 	$this->equip = $this->equipment();
 	$this->curstats();
     }
@@ -218,7 +180,7 @@ class Player
     /**
      * Function convert string value to array
      */
-    function toarray($strValue)
+    function toarray($strValue, $strType = 'settings')
     {
       $arrTmp = explode(';', $strValue);
       $arrValues = array();
@@ -229,7 +191,14 @@ class Player
 	    {
 	      continue;
 	    }
-	  $arrValues[$arrTmp2[0]] = $arrTmp2[1];
+	  if ($strType == 'settings')
+	    {
+	      $arrValues[$arrTmp2[0]] = $arrTmp2[1];
+	    }
+	  else
+	    {
+	      $arrValues[$arrTmp2[0]] = array_slice($arrTmp2, 1);
+	    }
 	}
       return $arrValues;
     }
@@ -237,12 +206,19 @@ class Player
     /**
      * Function convert array values to string
      */
-    function tostring($arrValues)
+    function tostring($arrValues, $strType = 'settings')
     {
       $strValue = '';
       foreach ($arrValues as $key => $value)
 	{
-	  $strValue .= $key.':'.$value.';';
+	  if ($strType == 'settings')
+	    {
+	      $strValue .= $key.':'.$value.';';
+	    }
+	  else
+	    {
+	      $strValue .= $key.':'.implode(',', $value);
+	    }
 	}
       return $strValue;
     }
@@ -268,12 +244,12 @@ class Player
 		{
 		  $intAgibonus = 0 - $this->equip[$intIndex][5];
 		}
-	      $this->agility += $intAgibonus;
+	      $this->stats['agility'][2] += $intAgibonus;
 	    }
 	}
       if ($this->equip[1][0])
 	{
-	  $this->speed += $this->equip[1][7];
+	  $this->stats['speed'][2] += $this->equip[1][7];
 	}
       $arrStats = array('agility', 'strength', 'inteli', 'wisdom', 'speed', 'cond');
       //Add bonuses from rings
@@ -283,7 +259,7 @@ class Player
 	  $arrRingtype = explode(" ", $this->equip[9][1]);
 	  $intAmount = count($arrRingtype) - 1;
 	  $intKey = array_search($arrRingtype[$intAmount], $arrRings);
-	  $this->$arrStats[$intKey] += $this->equip[9][2];
+	  $this->stats[$arrStats[$intKey]][2] += $this->equip[9][2];
 	}
       if ($this->equip[10][2])
 	{
@@ -291,14 +267,13 @@ class Player
 	  $arrRingtype = explode(" ", $this->equip[10][1]);
 	  $intAmount = count($arrRingtype) - 1;
 	  $intKey = array_search($arrRingtype[$intAmount], $arrRings);
-	  $this->$arrStats[$intKey] += $this->equip[10][2];
+	  $this->stats[$arrStats[$intKey]][2] += $this->equip[10][2];
 	}
       //Add bonuses from bless
       $objBless = $db -> Execute("SELECT `bless`, `blessval` FROM `players` WHERE `id`=".$this->id);
       if (in_array($objBless->fields['bless'], $arrStats))
 	{
-	  $strVarname = $objBless->fields['bless'];
-	  $this->$strVarname += $objBless->fields['blessval'];
+	  $this->stats[$objBless->fields['bless']] += $objBless->fields['blessval'];
 	}
       $objBless->Close();
     }
@@ -329,15 +304,12 @@ class Player
        * Add bless
        */
       $objBless = $db -> Execute("SELECT `bless`, `blessval` FROM `players` WHERE `id`=".$this->id);
-      foreach ($arrNames as $strName)
+      if ($objBless->fields['bless'] != '')
 	{
-	  if ($objBless -> fields['bless'] == $strName)
+	  $this->skills[$objBless->fields['bless']] += $objBless->fields['blessval'];
+	  if ($blnClear)
 	    {
-	      $this->$strName += $objBless->fields['blessval'];
-	      if ($blnClear)
-		{
-		  $db -> Execute("UPDATE `players` SET `bless`='', `blessval`=0 WHERE `id`=".$this->id);
-		}
+	      $db -> Execute("UPDATE `players` SET `bless`='', `blessval`=0 WHERE `id`=".$this->id);
 	    }
 	}
       $objBless -> Close();
@@ -354,12 +326,12 @@ class Player
 	    }
 	  foreach ($arrNames as $strName)
 	    {
-	      $intMaxbonus = $this->$strName * 2;
+	      $intMaxbonus = $this->skills[$strName] * 2;
 	      if ($intBonus > $intMaxbonus)
 		{
 		  $intBonus = $intMaxbonus;
 		}
-	      $this->$strName += floor($intBonus);
+	      $this->skills[$strName] += floor($intBonus);
 	    }
 	}
       if ($blnCraft)
@@ -369,9 +341,9 @@ class Player
 			    'mining' => 'kilof',
 			    'breeding' => 'uprząż',
 			    'jeweller' => 'nożyk',
-			    'herbalist' => 'sierp',
+			    'herbalism' => 'sierp',
 			    'alchemy' => 'moździerz',
-			    'fletcher' => 'ciesak',
+			    'carpentry' => 'ciesak',
 			    'smith' => 'młot');
 	  foreach ($arrNames as $strName)
 	    {
@@ -381,7 +353,7 @@ class Player
 		}
 	      if (stripos($this->equip[12][1], $arrTools[$strName]) !== FALSE)
 		{
-		  $this->$strName += floor(($this->equip[12][2] / 100) * $this->$strName);
+		  $this->skills[$strName] += floor(($this->equip[12][2] / 100) * $this->skills[$strName]);
 		  if ($blnClear)
 		    {
 		      $this->equip[12][6] --;
@@ -407,7 +379,7 @@ class Player
         $arrstats = array();
         foreach ($stats as $value) 
         {
-            $arrstats[$value] = $this -> $value;
+            $arrstats[$value] = $this->stats[$value][2];
         }
         return $arrstats;
     }
@@ -492,6 +464,6 @@ class Player
 	  $strChattimes = $this->chattimes;
 	}
 
-      $db->Execute("UPDATE `players` SET `settings`='".$this->tostring($this->settings)."', `ip`='".$this->ip."', `chattimes`='".$strChattimes."' WHERE `id`=".$this->id) or die("here");
+      $db->Execute("UPDATE `players` SET `settings`='".$this->tostring($this->settings)."', `ip`='".$this->ip."', `chattimes`='".$strChattimes."', `stats`='".$this->tostring($this->oldstats)."', skills='".$this->tostring($this->skills)."' WHERE `id`=".$this->id) or die("can't save player");
     }
 }

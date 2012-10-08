@@ -6,8 +6,8 @@
  *   @name                 : head.php                            
  *   @copyright            : (C) 2004,2005,2006,2007,2011,2012 Vallheru Team based on Gamers-Fusion ver 2.5
  *   @author               : thindil <thindil@vallheru.net>
- *   @version              : 1.6
- *   @since                : 02.10.2012
+ *   @version              : 1.7
+ *   @since                : 08.10.2012
  *
  */
 
@@ -301,22 +301,6 @@ if ($player->settings['graphic'] != '')
     $smarty -> compile_dir = './templates_c';
 }
 
-$arrLevel = array(100, 200, 300, 400, 500, 600, 700, 800, 900, 100);
-$arrPow = array(50, 250, 500, 1000, 2500, 5000, 10000, 25000, 50000, 100000);
-$intLevels = 0;
-foreach ($arrLevel as $intLevel)
-{
-    if ($player -> level < $intLevel)
-    {
-        $expn = (pow($player -> level,2) * $arrPow[$intLevels]);
-        break;
-    }
-    $intLevels ++;
-}
-
-$pct = (($player -> exp / $expn) * 100);
-$pct = round($pct,"0");
-
 $query = $db -> Execute("SELECT count(`id`) FROM `log` WHERE `unread`='F' AND `owner`=".$player -> id);
 $numlog = $query -> fields['count(`id`)'];
 $query -> Close();
@@ -326,11 +310,6 @@ $query -> Close();
  */
 if ($player->settings['graphic'] != '' || $player->settings['graphbar'] == 'Y') 
 {
-    $intExpperc = $pct;
-    if ($pct > 100)
-    {
-        $intExpperc = 100;
-    }
     $intPerhealth = (($player -> hp / $player -> max_hp) * 100);
     $intPerhealth = round($intPerhealth, '0');
     $strHealth = $intPerhealth;
@@ -351,8 +330,6 @@ if ($player->settings['graphic'] != '' || $player->settings['graphbar'] == 'Y')
                             "Healthper" => $strHealth,
                             "Barsize2" => $intPermana,
                             "Manaper" => $strMana,
-                            "Expper" => $intExpperc,
-                            "Vial" => $intExpperc,
                             "Vial2" => $intPerhealth,
                             "Vial3" => $intPermana));
 }
@@ -420,13 +397,13 @@ switch($player->location)
 	  }
         else
 	  {
-            $healneed = ($player -> max_hp - $player -> hp) * $player->level;
+            $healneed = ($player -> max_hp - $player -> hp) * 2;
 	  }
         $objHospass -> Close();
       } 
     else 
       {
-        $healneed = (50 * $player -> level);
+        $healneed = (50 * $player -> max_hp);
       }
     if ($healneed <= 0)
       {
@@ -679,10 +656,6 @@ $smarty -> assign (array ("Time" => $time,
                           "Title" => $title1,
                           "Name" =>  $strUsername,
                           "Id" => $player -> id,
-                          "Level" => $player -> level,
-                          "Exp" => $player -> exp,
-                          "Expneed" => $expn,
-                          "Percent" => $pct,
                           "Health" => $player -> hp,
                           "Maxhealth" => $player -> max_hp,
                           "Mana" => $player -> mana,
@@ -698,8 +671,6 @@ $smarty -> assign (array ("Time" => $time,
                           "Gamename" => $gamename,
 			  "Gameadress" => $gameadress,
 			  "Avatar" => $player->avatar,
-                          "Plevel" => LEVEL,
-                          "Exppts" => EXP_PTS,
                           "Healthpts" => HEALTH_PTS,
                           "Manapts" => MANA_PTS,
                           "Energypts" => ENERGY_PTS,

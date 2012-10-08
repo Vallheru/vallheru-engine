@@ -1,4 +1,6 @@
 2012-10-08  Bartek thindil Jasicki  <thindil@vallheru.net>
 
+	* FEATURE,templates/layout1/header.tpl, templates/header.tpl, class/player_class.php, includes/head.php, install/db/update.sql: 
+	start work on redesign stats and skills
 	* FEATURE,templates/warehouse.tpl, templates/layout1/warehouse.tpl, warehouse.php, languages/pl/warehouse.php, js/warehouse.js:
 	added gold limit to warehouse, small redesign

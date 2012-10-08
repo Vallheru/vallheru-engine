@@ -22,10 +22,6 @@
       <b>{$Name} ({$Id})</b></a>
     </div>
     <div style="max-width: 150px; float:left; margin-left:10px;">
-      <b>{$Plevel}:</b> {$Level}<br />
-      <div class="vial" title="{$Exppts}: {$Exp}/{$Expneed} ({$Percent}%)">
-          <div class="subvial" style="width: {$Vial}%; background: green;"></div>
-      </div>
       <div class="vial" title="{$Healthpts}: {$Health}/{$Maxhealth} ({$Healthper}%)">
 	  <div class="subvial" style="width: {$Vial2}%; background: red;"></div>
       </div>

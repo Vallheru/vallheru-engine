@@ -28,13 +28,6 @@
                 <tr>
                     <td>
                         <center><b><u>{$Name}</u></b> ({$Id})</center><br />
-                        <b>{$Plevel}:</b> {$Level}<br />
-                        <b>{$Exppts}:</b> {$Exp}/{$Expneed} ({$Percent}%)<br />
-                        {if $Graphbar == "Y"}
-			    <div class="vial" title="{$Exppts}: {$Exp}/{$Expneed} ({$Percent}%)">
-			      <div class="subvial" style="width: {$Vial}%; background: green;"></div>
-			    </div>
-                        {/if}
                         <b>{$Healthpts}:</b> {$Health}/{$Maxhealth}<br />
                         {if $Graphbar == "Y"}
 			    <div class="vial" title="{$Healthpts}: {$Health}/{$Maxhealth} ({$Healthper}%)">
