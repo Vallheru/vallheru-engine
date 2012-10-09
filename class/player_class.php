@@ -219,7 +219,7 @@ class Player
 	    }
 	  else
 	    {
-	      $strValue .= $key.':'.implode(',', $value);
+	      $strValue .= $key.':'.implode(',', $value).';';
 	    }
 	}
       return $strValue;
@@ -440,6 +440,124 @@ class Player
         $objEquip -> Close();
         return $arrEquip;
     }
+
+    /**
+     * Function check experience gained by player (TODO)
+     */
+    function checkexp($arrExp, $intEid, $strType)
+    {
+      global $db;
+      
+      $arrGained = array();
+      foreach ($arrExp as $stat => $value)
+	{
+	  if ($strType == 'stats')
+	    {
+	      if ($this->stats[$stat][2] == $this->stats[$stat][1])
+		{
+		  continue;
+		}
+	      $intNeeded = $this->stats[$stat][2] * 2000;
+	      $this->stats[$stat][3] += $value;
+	      while (TRUE)
+		{
+		  if ($this->stats[$stat][2] == $this->stats[$stat][1])
+		    {
+		      break;
+		    }
+		  if ($this->stats[$stat][3] < $intNeeded)
+		    {
+		      break;
+		    }
+		  $this->ap ++;
+		  $this->stats[$stat][2] ++;
+		  $this->stats[$stat][3] -= $intNeeded;
+		  $intNeeded = $this->stats[$stat][2] * 2000;
+		  if ($stat == 'condition')
+		    {
+		      $this->hp ++;
+		      $this->max_hp ++;
+		    }
+		  if (!in_array($stat, $arrGained))
+		    {
+		      $arrGained[] = $stat;
+		    }
+		}
+	    }
+	  else
+	    {
+	      if ($this->skills[$stat][1] == 100)
+		{
+		  continue;
+		}
+	      $intNeeded = $this->skills[$stat][1] * 100;
+	      $this->skills[$stat][2] += $value;
+	      while (TRUE)
+		{
+		  if ($this->skills[$stat][1] == 100)
+		    {
+		      break;
+		    }
+		  if ($this->skills[$stat][2] < $intNeeded)
+		    {
+		      break;
+		    }
+		  $this->skills[$stat][1] ++;
+		  $this->skills[$stat][2] -= $intNeeded;
+		  $intNeeded = $this->skills[$stat][1] * 100;
+		  if (!in_array($stat, $arrGained))
+		    {
+		      $arrGained[] = $stat;
+		    }
+		}
+	    }
+	}
+      $intGained = count($arrGained);
+      if ($intGained > 0)
+	{
+	  if ($intGained == 1)
+	    {
+	      if ($strType == 'stats')
+		{
+		  $strMessage = 'Twoja '.$this->stats[$arrGained[0]][0].' wzrasta.';
+		}
+	      else
+		{
+		  $strMessage = 'Twoja umiejętność '.$this->skills[$arrGained[0]][0].' wzrasta';
+		}
+	    }
+	  else
+	    {
+	      if ($strType == 'stats')
+		{
+		  $strMessage = 'Twoje cechy: ';
+		  foreach ($arrGained as $strKey)
+		    {
+		      $strMessage .= ', '.$this->stats[$strKey][0];
+		    }
+		  $strMessage .= ' rosną.';
+		}
+	      else
+		{
+		  $strMessage = 'Twoje umiejętności: ';
+		  foreach ($arrGained as $strKey)
+		    {
+		      $strMessage .= ', '.$this->skills[$strKey][0];
+		    }
+		  $strMessage .= ' rosną.';
+		}
+	    }
+	  if ($this->id == $intEid)
+	    {
+	      echo $strMessage.'<br />';
+	    }
+	  elseif ($intEid > 0)
+	    {
+	      $strDate = $db -> DBDate($newdate);
+	      $db -> Execute("INSERT INTO `log` (`owner`, `log`, `czas`, `type`) VALUES(".$intEid.",'Podczas walki z <b>".$this->user." ID:".$this->id."</b>, ".lcfirst($strMessage).".', ".$strDate.", 'B')");
+	    }
+	}
+    }
     
     /**
      * Class destructor, save player to database
@@ -465,7 +583,6 @@ class Player
 	{
 	  $strChattimes = $this->chattimes;
 	}
-
-      $db->Execute("UPDATE `players` SET `settings`='".$this->tostring($this->settings)."', `ip`='".$this->ip."', `chattimes`='".$strChattimes."', `stats`='".$this->tostring($this->oldstats, 'stats')."', skills='".$this->tostring($this->oldskills, 'stats')."' WHERE `id`=".$this->id) or die("can't save player");
+      $db->Execute("UPDATE `players` SET `ap`=".$this->ap.", `settings`='".$this->tostring($this->settings)."', `ip`='".$this->ip."', `chattimes`='".$strChattimes."', `stats`='".$this->tostring($this->oldstats, 'stats')."', skills='".$this->tostring($this->oldskills, 'stats')."' WHERE `id`=".$this->id) or die("nie mogę zapisać gracza");
     }
 }

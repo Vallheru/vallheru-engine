@@ -1,5 +1,7 @@
 2012-10-09  Bartek thindil Jasicki  <thindil@vallheru.net>
 
+	* FEATURE,class/player_class.php: 
+	added function to check experience
 	* BUG,includes/head.php: 
 	fixed graph bars
 	* UPDATE,templates/layout1/stats.tpl, templates/stats.tpl, stats.php: 
