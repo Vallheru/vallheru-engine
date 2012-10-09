@@ -1,3 +1,8 @@
+2012-10-09  Bartek thindil Jasicki  <thindil@vallheru.net>
+
+	* BUG,class/player_class.php:
+	fixed read/write player stats/skills
+
 2012-10-08  Bartek thindil Jasicki  <thindil@vallheru.net>
 
 	* FEATURE,templates/layout1/header.tpl, templates/header.tpl, class/player_class.php, includes/head.php, install/db/update.sql: 

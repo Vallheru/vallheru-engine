@@ -7,7 +7,7 @@
  *   @copyright            : (C) 2004,2005,2006,2007,2011,2012 Vallheru Team based on Gamers-Fusion ver 2.5
  *   @author               : thindil <thindil@vallheru.net>
  *   @version              : 1.7
- *   @since                : 08.10.2012
+ *   @since                : 09.10.2012
  *
  */
 
@@ -81,6 +81,7 @@ class Player
     var $oldstats;
     var $settings;
     var $chattimes;
+    var $oldskills;
     /**
      * Player equipment
      */
@@ -170,8 +171,9 @@ class Player
 	$this->room = $stats->fields['room'];
 	$this->chattimes = $stats->fields['chattimes'];
 	$this->settings = $this->toarray($stats->fields['settings']);
-	$this->stats = $this->toarray($stats->fields['stats']);
-	$this->skills = $this->toarray($stats->fields['skills']);
+	$this->stats = $this->toarray($stats->fields['stats'], 'stats');
+	$this->skills = $this->toarray($stats->fields['skills'], 'stats');
+	$this->oldskills = $this->skills;
 	$this->oldstats = $this->stats;
 	$this->equip = $this->equipment();
 	$this->curstats();
@@ -197,7 +199,7 @@ class Player
 	    }
 	  else
 	    {
-	      $arrValues[$arrTmp2[0]] = array_slice($arrTmp2, 1);
+	      $arrValues[$arrTmp2[0]] = explode(',', $arrTmp2[1]);
 	    }
 	}
       return $arrValues;
@@ -464,6 +466,6 @@ class Player
 	  $strChattimes = $this->chattimes;
 	}
 
-      $db->Execute("UPDATE `players` SET `settings`='".$this->tostring($this->settings)."', `ip`='".$this->ip."', `chattimes`='".$strChattimes."', `stats`='".$this->tostring($this->oldstats)."', skills='".$this->tostring($this->skills)."' WHERE `id`=".$this->id) or die("can't save player");
+      $db->Execute("UPDATE `players` SET `settings`='".$this->tostring($this->settings)."', `ip`='".$this->ip."', `chattimes`='".$strChattimes."', `stats`='".$this->tostring($this->oldstats, 'stats')."', skills='".$this->tostring($this->oldskills, 'stats')."' WHERE `id`=".$this->id) or die("can't save player");
     }
 }
