@@ -1,5 +1,7 @@
 2012-10-09  Bartek thindil Jasicki  <thindil@vallheru.net>
 
+	* BUG,includes/head.php: 
+	fixed graph bars
 	* UPDATE,templates/layout1/stats.tpl, templates/stats.tpl, stats.php: 
 	updated to new skills/stats
 	* BUG,class/player_class.php:
