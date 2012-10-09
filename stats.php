@@ -7,8 +7,8 @@
  *   @copyright            : (C) 2004,2005,2006,2011,2012 Vallheru Team based on Gamers-Fusion ver 2.5
  *   @author               : thindil <thindil@vallheru.net>
  *   @author               : mori <ziniquel@users.sourceforge.net>
- *   @version              : 1.6
- *   @since                : 27.09.2012
+ *   @version              : 1.7
+ *   @since                : 09.10.2012
  *
  */
 
@@ -45,11 +45,11 @@ if (isset ($_GET['action']) && $_GET['action'] == 'gender')
 {
     if ($player -> gender) 
       {
-	message('error', YOU_HAVE);
+	error("Już masz wybraną płeć");
       }
     if ((!isset($_POST['gender']))  || ($_POST['gender'] != 'M') && ($_POST['gender'] != 'F'))
       {
-        message('error', NO_GENDER);
+        message('error', "Wybierz płeć.");
       }
     else
       {
@@ -77,7 +77,7 @@ if (is_file($plik))
 
 if ($player -> ap > 0) 
 {
-    $smarty -> assign ("Ap", $player -> ap." (<a href=\"ap.php\">".A_USE."</a>)<br />");
+    $smarty -> assign ("Ap", $player -> ap." (<a href=\"ap.php\">Użyj</a>)<br />");
 } 
     else 
 {
@@ -85,7 +85,7 @@ if ($player -> ap > 0)
 }
 if ($player -> race == '') 
 {
-    $smarty -> assign ("Race", "(<a href=\"rasa.php\">".A_SELECT."</a>)<br />");
+    $smarty -> assign ("Race", "(<a href=\"rasa.php\">Wybierz</a>)<br />");
 } 
     else 
 {
@@ -93,7 +93,7 @@ if ($player -> race == '')
 }
 if ($player -> clas == '') 
 {
-    $smarty -> assign ("Clas", "(<a href=\"klasa.php\">".A_SELECT."</a>)<br />");
+    $smarty -> assign ("Clas", "(<a href=\"klasa.php\">Wybierz</a>)<br />");
 } 
     else 
 {
@@ -107,21 +107,21 @@ if ($player -> gender == '')
 {
     if ($player -> gender == 'M') 
     {
-        $gender = GENDER_M;
+        $gender = "Mężczyzna";
     } 
         else 
     {
-        $gender = GENDER_F;
+        $gender = "Kobieta";
     }
 }
 $smarty -> assign ("Gender", $gender);
 if ($player -> deity == '') 
 {
-    $smarty -> assign ("Deity", "(<a href=\"deity.php\">".A_SELECT."</a>)<br />");
+    $smarty -> assign ("Deity", "(<a href=\"deity.php\">Wybierz</a>)<br />");
 } 
     else 
 {
-    $smarty -> assign ("Deity", $player -> deity." (<a href=\"deity.php?step=change\">".A_CHANGE."</a>)<br />");
+    $smarty -> assign ("Deity", $player -> deity." (<a href=\"deity.php?step=change\">Zmień</a>)<br />");
 }
 
 $rt = ($player -> wins + $player -> losses);
@@ -133,20 +133,15 @@ require_once('includes/ranks.php');
 $strRank = selectrank($player -> rank, $player -> gender);
 
 /**
- * Bonuses from equipment to stats
- */
-$arrCurstats = array($player->agility, $player->strength, $player->inteli, $player->wisdom, $player->speed, $player->cond);
-
-/**
  * Bonus from bless
  */
 $objBless = $db -> Execute("SELECT `bless`, `blessval`, `mpoints` FROM `players` WHERE `id`=".$player -> id);
 if (!empty($objBless -> fields['bless']))
 {
-    $arrBless = array('agility', 'strength', 'inteli', 'wisdom', 'speed', 'cond', 'smith', 'alchemy', 'fletcher', 'weapon', 'shoot', 'dodge', 'cast', 'breeding', 'mining', 'lumberjack', 'herbalist', 'jeweller', 'perception', 'thievery', 'metallurgy');
+  $arrBless = array('agility', 'strength', 'inteli', 'wisdom', 'speed', 'cond', 'smith', 'alchemy', 'carpentry', 'attack', 'shoot', 'dodge', 'magic', 'breeding', 'mining', 'lumberjack', 'herbalism', 'jewellry', 'perception', 'thievery', 'smelting');
     $intKey = array_search($objBless -> fields['bless'], $arrBless);
-    $arrPrays = array(AGI, STR, INTELI, WIS, SPE, CON, SMI, ALC, FLE, WEA, SHO, DOD, CAS, BRE, MINI, LUMBER, HERBS, JEWEL, "Spostrzegawczości", "Złodziejstwa", 'Hutnictwa');
-    $smarty -> assign(array("Blessfor" => BLESS_FOR,
+    $arrPrays = array("Zręczności", "Siły", "Inteligencji", "Siły Woli", "Szybkości", "Kondycji", "Kowalstwa", "Alchemii", "Stolarstwa", "Walki Bronią", "Strzelectwa", "Uników", "Rzucania Czarów", "Hodowli", "Górnictwa", "Drwalnictwa", "Zielarstwa", "Jubilerstwa", "Spostrzegawczości", "Złodziejstwa", 'Hutnictwa');
+    $smarty -> assign(array("Blessfor" => "Błogosławieństwo do ",
                             "Pray" => "<br />".$arrPrays[$intKey],
                             "Blessval" => "(".$objBless -> fields['blessval'].")<br />"));
 }
@@ -187,20 +182,28 @@ $smarty->assign(array('Mpoints' => $objBless->fields['mpoints'],
 
 $arrCurstats2 = array();
 $i = 0;
-$arrStatstext = array(T_AGI, T_STR, T_INT, T_WIS, T_SPEED, T_CON);
-foreach ($arrCurstats as $fltStats)
+$arrSnames = array('strength', 'agility', 'condition', 'speed', 'inteli', 'wisdom');
+foreach ($player->stats as $arrStat)
 {
-  if ($fltStats > $player->oldstats[$i])
+  if ($player->oldstats[$arrSnames[$i]][2] < $player->oldstats[$arrSnames[$i]][1])
+  {
+    $strNeedexp = ' ('.($player->oldstats[$arrSnames[$i]][3] / ($player->oldstats[$arrSnames[$i]][2] * 2000)).'% dośw)';
+  }
+  else
     {
-      $arrCurstats2[] = '<b>'.$arrStatstext[$i].':</b> '.$fltStats.' <span style="color: green;">(+'.($fltStats - $player->oldstats[$i]).')</span>';
+      $strNeedexp = '';
     }
-  elseif ($fltStats < $player->oldstats[$i])
+  if ($arrStat[2] > $player->oldstats[$arrSnames[$i]][2])
     {
-      $arrCurstats2[] = '<b>'.$arrStatstext[$i].':</b> '.$fltStats.' <span style="color: red;">(-'.($fltStats - $player->oldstats[$i]).')</span>';
+      $arrCurstats2[] = '<b>'.$player->oldstats[$arrSnames[$i]][0].':</b> '.$arrStat[2].' <span style="color: green;">(+'.($arrStat[2] - $player->oldstats[$arrSnames[$i]][2]).')</span>'.$strNeedexp;
+    }
+  elseif ($arrStat[2] < $player->oldstats[$arrSnames[$i]][2])
+    {
+      $arrCurstats2[] = '<b>'.$player->oldstats[$arrSnames[$i]][0].':</b> '.$arrStat[2].' <span style="color: red;">(-'.($arrStat[2] - $player->oldstats[$arrSnames[$i]][2]).')</span>'.$strNeedexp;
     }
   else
     {
-      $arrCurstats2[] = '<b>'.$arrStatstext[$i].':</b> '.$fltStats;
+      $arrCurstats2[] = '<b>'.$player->oldstats[$arrSnames[$i]][0].':</b> '.$arrStat[2].$strNeedexp;
     }
     $i++;
 }
@@ -218,56 +221,49 @@ if ($player -> location == 'Ardulith')
     $strLocation = $city2;
 }
 
-$maxmana = floor($player -> inteli + $player -> wisdom);
+$maxmana = floor($player->stats['inteli'] + $player->stats['wisdom']);
 $maxmana += floor((($player->equip[8][2] / 100) * $maxmana));
 if ($player->mana < $maxmana) 
 {
-    $smarty -> assign ("Rest", "[<a href=\"rest.php\">".A_REST."</a>]<br />");
+    $smarty -> assign ("Rest", "[<a href=\"rest.php\">Odpocznij</a>]<br />");
 } 
     else 
 {
     $smarty -> assign ("Rest", "<br />");
 }
 
-$arrBskills = array("Kowalstwo" => $player->smith, 
-		    "Strzelectwo" => $player->shoot, 
-		    "Alchemia" => $player->alchemy, 
-		    "Uniki" => $player->miss, 
-		    "Stolarstwo" => $player->fletcher, 
-		    "Rzucanie czarów" => $player->magic, 
-		    "Walka bronią" => $player->attack, 
-		    "Dowodzenie" => $player->leadership, 
-		    "Hodowla" => $player->breeding, 
-		    "Górnictwo" => $player->mining, 
-		    "Drwalnictwo" => $player->lumberjack, 
-		    "Zielarstwo" => $player->herbalist, 
-		    "Jubilerstwo" => $player->jeweller, 
-		    "Hutnictwo" => $player->metallurgy, 
-		    "Złodziejstwo" => $player->thievery, 
-		    "Spostrzegawczość" => $player->perception);
-$arrSkills = array("smith", "shoot", "alchemy", "miss", "fletcher", "magic", "attack", "leadership", "breeding", "mining", "lumberjack", "herbalist", "jeweller", "metallurgy", "thievery", "perception");
-$player->curskills(array("smith", "alchemy", "fletcher", "breeding", "mining", "lumberjack", "herbalist", "jeweller", "metallurgy"), FALSE, TRUE);
-$player->curskills(array("shoot", "miss", "magic", "attack", "leadership", "perception"), FALSE, FALSE);
+$arrBskills = $player->skills;
+$arrSkills = array("smith", "shoot", "alchemy", "dodge", "carpentry", "magic", "attack", "leadership", "breeding", "mining", "lumberjack", "herbalism", "jewellry", "smelting", "thievery", "perception");
+$player->curskills(array("smith", "alchemy", "carpentry", "breeding", "mining", "lumberjack", "herbalism", "jewellry", "smelting"), FALSE, TRUE);
+$player->curskills(array("shoot", "dodge", "magic", "attack", "leadership", "perception"), FALSE, FALSE);
 $arrStable = array();
 $i = -1;
-foreach ($arrBskills as $strName => $fltValue)
+foreach ($arrBskills as $arrSkill)
 {
   $i ++;
-  if ($strName == "Złodziejstwo" && $player->clas != "Złodziej")
+  if ($arrSkill[1] < 100 && $arrSkill[1] > 0)
     {
-      continue;
-    }
-  if ($player->$arrSkills[$i] > $fltValue)
-    {
-      $arrStable[] = '<b>'.$strName.':</b> '.$player->$arrSkills[$i].' <span style="color: green;">(+'.($player->$arrSkills[$i] - $fltValue).')</span>';
-    }
-  elseif ($player->$arrSkills[$i] < $fltValue)
-    {
-      $arrStable[] = '<b>'.$strName.':</b> '.$player->$arrSkills[$i].' <span style="color: red;">(-'.($player->$arrSkills[$i] - $fltValue).')</span>';
+      $strNeedexp = ' ('.($arrSkill[2] / ($arrSkill[1] * 100)).'% dośw)';
     }
   else
     {
-      $arrStable[] = '<b>'.$strName.':</b> '.$fltValue;
+      $strNeedexp = '';
+    }
+  if ($arrSkill[0] == "Złodziejstwo" && $player->clas != "Złodziej")
+    {
+      continue;
+    }
+  if ($player->skills[$arrSkills[$i]][1] > $arrSkill[1])
+    {
+      $arrStable[] = '<b>'.$arrSkill[0].':</b> '.$player->skills[$arrSkills[$i]][1].' <span style="color: green;">(+'.($player->skills[$arrSkills[$i]][1] - $arrSkill[1]).')</span>'.$strNeedexp;
+    }
+  elseif ($player->skills[$arrSkills[$i]][1] < $arrSkill[1])
+    {
+      $arrStable[] = '<b>'.$arrSkill[0].':</b> '.$player->skills[$arrSkills[$i]][1].' <span style="color: red;">(-'.($player->skills[$arrSkills[$i]][1] - $arrSkill[1]).')</span>'.$strNeedexp;
+    }
+  else
+    {
+      $arrStable[] = '<b>'.$arrSkill[0].':</b> '.$arrSkill[1].$strNeedexp;
     }
 }
    
@@ -291,40 +287,40 @@ $smarty -> assign(array("Curstats" => $arrCurstats2,
 			"Newbie" => $player->newbie,
 			"Adisable" => "Wyłącz ochronę",
 			"Tmissions" => 'Wykonanych zadań',
-                        "Statsinfo" => STATS_INFO,
-                        "Tstats" => T_STATS,
-                        "Tinfo" => T_INFO,
-                        "Trank" => T_RANK,
-                        "Tloc" => T_LOC,
-                        "Tlogins" => T_LOGINS,
-                        "Tage" => T_AGE,
-                        "Tip" => T_IP,
-                        "Temail" => T_EMAIL,
-                        "Tclan" => T_CLAN,
-                        "Tability" => T_ABILITY,
-                        "Tap" => T_AP,
-                        "Trace" => T_RACE,
-                        "Tclass" => T_CLASS2,
-                        "Tdeity" => T_DEITY,
-                        "Tgender" => T_GENDER,
-                        "Tmana" => T_MANA,
-                        "Tpw" => T_PW,
-                        "Tfights" => T_FIGHTS,
-                        "Tlast" => T_LAST,
-                        "Tlast2" => T_LAST2,
+                        "Statsinfo" => "Witaj w swoich statystykach. Możesz tutaj zobaczyć informacje na temat swojej postaci w grze.",
+                        "Tstats" => "Statystyki w grze",
+                        "Tinfo" => "Informacje",
+                        "Trank" => "Ranga",
+                        "Tloc" => "Lokacja",
+                        "Tlogins" => "Logowań",
+                        "Tage" => "Wiek",
+                        "Tip" => "IP",
+                        "Temail" => "Email",
+                        "Tclan" => "Klan",
+                        "Tability" => "Umiejętności",
+                        "Tap" => "AP",
+                        "Trace" => "Rasa",
+                        "Tclass" => "Klasa",
+                        "Tdeity" => "Wyznanie",
+                        "Tgender" => "Płeć",
+                        "Tmana" => "Punkty Magii",
+                        "Tpw" => "Punkty Wiary",
+                        "Tfights" => "Wyniki walk",
+                        "Tlast" => "Ostatnio zabity",
+                        "Tlast2" => "Ostatnio zabity przez",
 			"Tenergy" => "Energia",
-			"Genderm" => GENDER_M,
-			"Genderf" => GENDER_F,
-			"Aselect" => A_SELECT));
+			"Genderm" => "Mężczyzna",
+			"Genderf" => "Kobieta",
+			"Aselect" => "Wybierz"));
 
 if ($player->clas == "Złodziej") 
   {
-    $smarty->assign("Crime", "<b>".CRIME_T."</b> ".$player->crime."<br />");
+    $smarty->assign("Crime", "<b>Ilość kradzieży:</b> ".$player->crime."<br />");
   }
 
 if (!empty($player-> gg)) 
 {
-    $smarty -> assign ("GG", "<b>".GG_NUM."</b> ".$player -> gg."<br />");
+    $smarty -> assign ("GG", "<b>Komunikator </b> ".$player -> gg."<br />");
 } 
     else 
 {
@@ -334,11 +330,11 @@ $tribe = $db -> Execute("SELECT `name` FROM `tribes` WHERE id=".$player -> tribe
 if ($tribe -> fields['name']) 
 {
     $smarty -> assign(array("Tribe" => "<a href=\"tribes.php?view=my\">".$tribe -> fields['name']."</a><br />",
-                            "Triberank" => "<b>".TRIBE_RANK."</b> ".$player -> tribe_rank."<br />"));
+                            "Triberank" => "<b>Ranga w klanie:</b> ".$player -> tribe_rank."<br />"));
 } 
     else 
 {
-    $smarty -> assign(array("Tribe" => NOTHING."<br />", 
+    $smarty -> assign(array("Tribe" => "brak<br />", 
                             "Triberank" => ""));
 }
 $tribe -> Close();
@@ -353,8 +349,8 @@ if (isset($_GET['action']) && $_GET['action'] == 'newbie')
 	error("Nie masz na sobie ochrony dla nowych graczy!");
       }
     $smarty->assign(array("Newbieinfo" => "Naprawdę chcesz wyłączyć ochronę? Możesz wtedy zostać zaatakowany przez innych graczy.",
-			  "Ayes" => YES,
-			  "Ano" => NO));
+			  "Ayes" => "Tak",
+			  "Ano" => "Nie"));
     if (isset($_GET['disable']))
       {
 	$db->Execute("UPDATE `players` SET `newbie`=0 WHERE `id`=".$player->id);
