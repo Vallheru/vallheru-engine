@@ -1,5 +1,7 @@
 2012-10-10  Bartek thindil Jasicki  <thindil@vallheru.net>
 
+	* UPDATE,templates/layout1/klasa.tpl, templates/klasa.tpl, klasa.php, languages/pl/klasa.php: 
+	updated class selection
 	* UPDATE,class/player_class.php: 
 	updated bonuses to skills
 	* BUG,rasa.php: 
