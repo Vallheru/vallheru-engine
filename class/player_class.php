@@ -7,7 +7,7 @@
  *   @copyright            : (C) 2004,2005,2006,2007,2011,2012 Vallheru Team based on Gamers-Fusion ver 2.5
  *   @author               : thindil <thindil@vallheru.net>
  *   @version              : 1.7
- *   @since                : 09.10.2012
+ *   @since                : 10.10.2012
  *
  */
 
@@ -321,19 +321,14 @@ class Player
        */
       if ($this->clas == 'Rzemieślnik' && $blnCraft)
 	{
-	  $intBonus = ($this->level / 10);
-	  if ($this->race == 'Gnom')
-	    {
-	      $intBonus += ($this->level / 5);
-	    }
 	  foreach ($arrNames as $strName)
 	    {
-	      $intMaxbonus = $this->skills[$strName] * 2;
-	      if ($intBonus > $intMaxbonus)
+	      $intBonus = ceil($this->skills[$strName] / 10);
+	      if ($this->race == 'Gnom')
 		{
-		  $intBonus = $intMaxbonus;
+		  $intBonus += ceil($this->skills[$strName] / 20);
 		}
-	      $this->skills[$strName] += floor($intBonus);
+	      $this->skills[$strName] += $intBonus;
 	    }
 	}
       if ($blnCraft)

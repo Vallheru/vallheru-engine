@@ -1,5 +1,7 @@
 2012-10-10  Bartek thindil Jasicki  <thindil@vallheru.net>
 
+	* UPDATE,class/player_class.php: 
+	updated bonuses to skills
 	* BUG,rasa.php: 
 	fixed typo
 	* BUG,stats.php: 
