@@ -8,7 +8,7 @@
  *   @author               : thindil <thindil@vallheru.net>
  *   @author               : mori <ziniquel@users.sourceforge.net>
  *   @version              : 1.7
- *   @since                : 09.10.2012
+ *   @since                : 10.10.2012
  *
  */
 
@@ -221,7 +221,7 @@ if ($player -> location == 'Ardulith')
     $strLocation = $city2;
 }
 
-$maxmana = floor($player->stats['inteli'] + $player->stats['wisdom']);
+$maxmana = floor($player->stats['inteli'][2] + $player->stats['wisdom'][2]);
 $maxmana += floor((($player->equip[8][2] / 100) * $maxmana));
 if ($player->mana < $maxmana) 
 {

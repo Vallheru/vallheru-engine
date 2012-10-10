@@ -1,5 +1,7 @@
 2012-10-10  Bartek thindil Jasicki  <thindil@vallheru.net>
 
+	* BUG,stats.php: 
+	fixed max mana info
 	* UPDATE,templates/layout1/rasa.tpl, templates/rasa.tpl, rasa.php, languages/pl/rasa.php: 
 	updated race selection
 	* UPDATE,install/db/update.sql:
