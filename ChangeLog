@@ -1,3 +1,8 @@
+2012-10-10  Bartek thindil Jasicki  <thindil@vallheru.net>
+
+	* UPDATE,install/db/update.sql:
+	update database
+
 2012-10-09  Bartek thindil Jasicki  <thindil@vallheru.net>
 
 	* FEATURE,class/player_class.php: 
