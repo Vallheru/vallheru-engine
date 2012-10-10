@@ -9,8 +9,13 @@
 {/if}
 
 {if $Race != ""}
-    {$Raceinfo}
-    <form method="post" action="rasa.php?rasa={$Race}&amp;step=wybierz">
+    {$Raceinfo}<br />
+    <ul>
+        {section name=info loop=$Stats}
+	    <li>+ {$Stats[info]} {$Tstats[info]} {$Maxstats[info]}</li>
+        {/section}
+    </ul>
+    <form method="post" action="rasa.php?rasa={$Race}&amp;step">
     <input type="submit" value="{$Aselect}" />
     </form><br />
     (<a href="rasa.php">{$Aback}</a>)
