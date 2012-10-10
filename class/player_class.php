@@ -253,7 +253,7 @@ class Player
 	{
 	  $this->stats['speed'][2] += $this->equip[1][7];
 	}
-      $arrStats = array('agility', 'strength', 'inteli', 'wisdom', 'speed', 'cond');
+      $arrStats = array('agility', 'strength', 'inteli', 'wisdom', 'speed', 'condition');
       //Add bonuses from rings
       if ($this->equip[9][2])
 	{
