@@ -111,14 +111,14 @@ if (isset($_GET['rasa']))
 	foreach ($player->stats as &$arrStat)
 	  {
 	    $arrStat[1] = $arrMaxstats[$i];
-	    $arrStat[2] = $arrStats[$i];
+	    $arrStat[2] += $arrStats[$i];
 	    $i++;
 	  }
 	$i = 0;
 	foreach ($player->oldstats as &$arrStat)
 	  {
 	    $arrStat[1] = $arrMaxstats[$i];
-	    $arrStat[2] = $arrStats[$i];
+	    $arrStat[2] += $arrStats[$i];
 	    $i++;
 	  }
 	$db -> Execute("UPDATE `players` SET `rasa`='".$player->race."' WHERE `id`=".$player->id);
