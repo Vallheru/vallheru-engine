@@ -34,11 +34,6 @@ $title = "Statystyki";
 require_once("includes/head.php");
 
 /**
-* Get the localization for game
-*/
-require_once("languages/".$lang."/stats.php");
-
-/**
 * Select gender
 */
 if (isset ($_GET['action']) && $_GET['action'] == 'gender') 

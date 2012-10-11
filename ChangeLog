@@ -1,3 +1,8 @@
+2012-10-11  Bartek thindil Jasicki  <thindil@vallheru.net>
+
+	* BUG,stats.php:
+	remove unused code
+
 2012-10-10  Bartek thindil Jasicki  <thindil@vallheru.net>
 
 	* BUG,class/player_class.php: 
