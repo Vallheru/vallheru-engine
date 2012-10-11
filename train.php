@@ -7,7 +7,7 @@
  *   @copyright            : (C) 2004,2005,2006,2007,2011,2012 Vallheru Team based on Gamers-Fusion ver 2.5
  *   @author               : thindil <thindil@vallheru.net>
  *   @version              : 1.6
- *   @since                : 17.07.2012
+ *   @since                : 11.10.2012
  *
  */
 
@@ -37,65 +37,63 @@ require_once("includes/head.php");
 */
 require_once("languages/".$lang."/train.php");
 
-if ($player -> location != 'Altara' && $player -> location != 'Ardulith') 
+if ($player->location != 'Altara' && $player->location != 'Ardulith') 
 {
-    error (ERROR);
+    error ("Nie znajdujesz się w mieście.");
 }
 
-if ($player -> hp == 0) 
+if ($player->hp == 0) 
 {
-    error (YOU_DEAD." <a href=\"city.php\">".BACK."</a>.");
+    error ("Nie możesz się szkolić kiedy jesteś martwy. <a href=\"city.php\">Wróć</a>.");
 }
 
-if (!$player -> race)
+if (!$player->race)
 {
-    error(NO_RACE." <a href=\"city.php\">".BACK."</a>.");
+    error("Nie wybrałeś jeszcze rasy. <a href=\"city.php\">Wróć</a>.");
 }
 
-if (!$player -> clas) 
+if (!$player->clas) 
 {
-    error(NO_CLASS." <a href=\"city.php\">".BACK."</a>.");
+    error("Nie wybrałeś jeszcze klasy. <a href=\"city.php\">Wróć</a>.");
 }
 
-$fltStat = (log10($player -> level) + 1);
-
-$intStrcost = ceil($player->oldstats[1] / $fltStat);
-$intAgicost = ceil($player->oldstats[0] / $fltStat);
-$intConcost = ceil($player->oldstats[5] / $fltStat);
-$intSpecost = ceil($player->oldstats[4] / $fltStat);
+$intStrcost = ceil($player->oldstats['strength'][2] * 5);
+$intAgicost = ceil($player->oldstats['agility'][2] * 5);
+$intConcost = ceil($player->oldstats['condition'][2] * 5);
+$intSpecost = ceil($player->oldstats['speed'][2] * 5);
 
 if ($player -> location == 'Altara')
 {
-    $intIntcost = ceil($player->oldstats[2] / $fltStat);
-    $intWiscost = ceil($player->oldstats[3] / $fltStat);
+    $intIntcost = ceil($player->oldstats['inteli'][2] * 5);
+    $intWiscost = ceil($player->oldstats['wisdom'][2] * 5);
     $intLess = 0;
 }
     else
 {
-    $intIntcost = ceil(($player->oldstats[2] / $fltStat) - (($player->oldstats[2] / $fltStat) / 10));
-    $intWiscost = ceil(($player->oldstats[3] / $fltStat) - (($player->oldstats[3] / $fltStat) / 10));
+    $intIntcost = ceil(($player->oldstats['inteli'][2] * 5) - (($player->oldstats['inteli'][2] * 5) / 10));
+    $intWiscost = ceil(($player->oldstats['wisdom'][2] * 5) - (($player->oldstats['wisdom'][2] * 5) / 10));
     $intLess = 1;
 }
 
 switch ($player->race)
   {
   case 'Człowiek':
-    $smarty -> assign ("Train", T_TRAIN.$intStrcost.T_TRAIN_2.$intAgicost.T_TRAIN_3.$intSpecost.T_TRAIN_4.$intConcost.T_TRAIN_5);
+    $smarty -> assign ("Train", "0,3 energii za trening Siły (".$intStrcost." sztuk złota)<br /> Zręczności (".$intAgicost." sztuk złota)<br /> Szybkości (".$intSpecost." sztuk złota)<br /> Wytrzymałości (".$intConcost." sztuk złota)<br />");
     break;
   case 'Elf':
-    $smarty -> assign ("Train", T_TRAIN2.$intStrcost.T_TRAIN2_2.$intConcost.T_TRAIN2_3.$intAgicost.T_TRAIN2_4.$intSpecost.T_TRAIN2_5);
+    $smarty -> assign ("Train", "0,4 energii za trening Siły (".$intStrcost." sztuk złota)<br />lub Wytrzymałości (".$intConcost." sztuk złota)<br /> 0,2 energii za trening Zręczności (".$intAgicost." sztuk złota)<br />lub Szybkości (".$intSpecost." sztuk złota)<br />");
     break;
   case 'Krasnolud':
-    $smarty -> assign ("Train", T_TRAIN3.$intStrcost.T_TRAIN3_2.$intConcost.T_TRAIN3_3.$intAgicost.T_TRAIN3_4.$intSpecost.T_TRAIN3_5);
+    $smarty -> assign ("Train", "0,2 energii za trening Siły (".$intStrcost." sztuk złota)<br /> lub Wytrzymałości (".$intConcost." sztuk złota)<br />0,4 energii za trening Zręczności (".$intAgicost." sztuk złota)<br /> lub Szybkości (".$intSpecost." sztuk złota)<br />");
     break;
   case 'Hobbit':
-    $smarty -> assign ("Train", T_TRAIN4.$intStrcost.T_TRAIN4_2.$intSpecost.T_TRAIN4_3.$intAgicost.T_TRAIN4_4.$intConcost.T_TRAIN4_5);
+    $smarty -> assign ("Train", "0,4 energii za trening Siły (".$intStrcost." sztuk złota)<br />lub Szybkość (".$intSpecost." sztuk złota)<br /> 0,2 energii za trening Zręczności (".$intAgicost." sztuk złota)<br />lub Wytrzymałości (".$intConcost." sztuk złota)<br />");
     break;
   case 'Jaszczuroczłek':
-    $smarty -> assign ("Train", T_TRAIN5.$intAgicost.T_TRAIN5_2.$intConcost.T_TRAIN5_3.$intStrcost.T_TRAIN5_4.$intSpecost.T_TRAIN5_5);
+    $smarty -> assign ("Train", "0,4 energii za trening Zręczność (".$intAgicost." sztuk złota)<br />lub Wytrzymałości (".$intConcost." sztuk złota)<br />0,2 energii za trening Siły (".$intStrcost." sztuk złota)<br />lub Szybkości (".$intSpecost." sztuk złota)<br />");
     break;
   case 'Gnom':
-    $smarty -> assign ("Train", T_TRAIN4.$intStrcost.T_TRAIN4_2.$intSpecost.T_TRAIN9.$intAgicost.T_TRAIN4_4.$intConcost.T_TRAIN4_5);
+    $smarty -> assign ("Train", "0,4 energii za trening Siły (".$intStrcost." sztuk złota)<br />lub Szybkość (".$intSpecost." sztuk złota)<br />0,3 energii za trening Zręczności (".$intAgicost." sztuk złota)<br />lub Wytrzymałość (".$intConcost." sztuk złota)<br />");
     break;
   default:
     break;
@@ -105,14 +103,14 @@ switch ($player->clas)
   {
   case 'Wojownik':
   case 'Barbarzyńca':
-    $smarty -> assign ("Train2", T_TRAIN6.$intWiscost.T_TRAIN6_2.$intIntcost.T_TRAIN6_3);
+    $smarty -> assign ("Train2", " oraz trening energii za 0,06 Siły Woli (".$intWiscost." sztuk złota)<br />lub Inteligencji (".$intIntcost." sztuk złota)");
     break;
   case 'Mag':
-    $smarty -> assign ("Train2", T_TRAIN7.$intWiscost.T_TRAIN7_2.$intIntcost.T_TRAIN7_3);
+    $smarty -> assign ("Train2", " oraz 0,2 energii za trening Siły Woli (".$intWiscost." sztuk złota)<br />lub Inteligencji (".$intIntcost." sztuk złota)");
     break;
   case 'Rzemieślnik':
   case 'Złodziej':
-    $smarty -> assign ("Train2", T_TRAIN8.$intWiscost.T_TRAIN8_2.$intIntcost.T_TRAIN8_3);
+    $smarty -> assign ("Train2", " oraz 0,3 energii za trening Siły Woli (".$intWiscost." sztuk złota)<br />lub Inteligencji (".$intIntcost." sztuk złota)");
     break;
   default:
     break;
@@ -120,75 +118,67 @@ switch ($player->clas)
 
 if ($player -> race == 'Gnom') 
 {
-    $smarty -> assign ("Train2", T_TRAIN9_1.$intWiscost.T_TRAIN9_2.$intIntcost.T_TRAIN9_3);
+    $smarty -> assign ("Train2", " oraz 0,4 energii za trening Siły Woli (".$intWiscost." sztuk złota)<br />lub 0,3 energii za trening Inteligencji (".$intIntcost." sztuk złota)");
 }
 
 if (isset ($_GET['action']) && $_GET['action'] == 'train') 
 {
     if (!isset($_POST['rep']))
     {
-        error(HOW_MANY);
+        error("Podaj ile razy chcesz ćwiczyć!");
     }
     checkvalue($_POST['rep']);
-    $arrStats = array('strength', 'agility', 'inteli', 'szyb', 'wytrz', 'wisdom');
+    $arrStats = array('strength', 'agility', 'inteli', 'speed', 'condition', 'wisdom');
     if (!in_array($_POST['train'], $arrStats)) 
     {
-        error (ERROR);
-    }
-    if ($player -> race == '') 
-    {
-        error (NO_RACE);
-    }
-    if ($player -> clas == '') 
-    {
-        error (NO_CLASS);
+        error ('Zapomnij o tym');
     }
     if ($player -> race == 'Człowiek') 
     {
         $repeat = ($_POST["rep"] * .3);
     }
-    elseif ($player -> race == 'Gnom' && ($_POST["train"] == 'agility' || $_POST['train'] == 'wytrz')) 
+    elseif ($player -> race == 'Gnom' && ($_POST["train"] == 'agility' || $_POST['train'] == 'condition')) 
     {
         $repeat = ($_POST["rep"] * .3);
     }
     elseif ($player->race == 'Elf')
       {
-	if ($_POST['train'] == 'strength' || $_POST['train'] == 'wytrz')
+	if ($_POST['train'] == 'strength' || $_POST['train'] == 'condition')
 	  {
 	    $repeat = ($_POST["rep"] * .4);
 	  }
-	elseif ($_POST['train'] == 'agility' || $_POST['train'] == 'szyb')
+	elseif ($_POST['train'] == 'agility' || $_POST['train'] == 'speed')
 	  {
 	    $repeat = ($_POST["rep"] * .2);
 	  }
       }
     elseif ($player->race == 'Krasnolud')
       {
-	if ($_POST['train'] == 'strength' || $_POST['train'] == 'wytrz')
+	if ($_POST['train'] == 'strength' || $_POST['train'] == 'condition')
 	  {
 	    $repeat = ($_POST["rep"] * .2);
 	  }
-	elseif ($_POST['train'] == 'agility' || $_POST['train'] == 'szyb')
+	elseif ($_POST['train'] == 'agility' || $_POST['train'] == 'speed')
 	  {
 	    $repeat = ($_POST["rep"] * .4);
 	  }
     }
     elseif ($player->race == 'Jaszczuroczłek')
       {
-	if ($_POST['train'] == 'szyb' || $_POST['train'] == 'strength')
+	if ($_POST['train'] == 'speed' || $_POST['train'] == 'strength')
 	  {
 	    $repeat = ($_POST["rep"] * .2);
 	  }
-	elseif ($_POST['train'] == 'wytrz' || $_POST['train'] == 'agility')
+	elseif ($_POST['train'] == 'condition' || $_POST['train'] == 'agility')
 	  {
 	    $repeat = ($_POST["rep"] * .4);
 	  }
       }
-    elseif ($player->race == 'Hobbit' && ($_POST['train'] == 'wytrz' || $_POST['train'] == 'agility'))
+    elseif ($player->race == 'Hobbit' && ($_POST['train'] == 'condition' || $_POST['train'] == 'agility'))
       {
 	$repeat = ($_POST["rep"] * .2);
       }
-    elseif (($player -> race == 'Hobbit' || $player -> race == 'Gnom') && ($_POST["train"] == 'szyb' || $_POST['train'] == 'strength')) 
+    elseif (($player -> race == 'Hobbit' || $player -> race == 'Gnom') && ($_POST["train"] == 'speed' || $_POST['train'] == 'strength')) 
     {
         $repeat = ($_POST["rep"] * .4);
     }
@@ -211,38 +201,32 @@ if (isset ($_GET['action']) && $_GET['action'] == 'train')
             $repeat = ($_POST["rep"] * .4);
         }
     }
-    $gain = ($_POST["rep"] * .060);
     $repeat = round($repeat, 1);
     $blnLess = FALSE;
+    $fltStat2 = $player->oldstats[$_POST['train']][2];
     switch ($_POST['train'])
       {
       case 'strength':
-	$cecha = T_STR;
-	$fltStat2 = $player->oldstats[1];
+	$cecha = "Siły";
 	break;
       case 'agility':
-	$cecha = T_AGI;
-	$fltStat2 = $player->oldstats[0];
+	$cecha = "Zręczności";
 	break;
       case 'inteli':
-	$cecha = T_INT;
-	$fltStat2 = $player->oldstats[2];
+	$cecha = "Inteligencji";
 	if ($player->location == 'Ardulith')
 	  {
 	    $blnLess = TRUE;
 	  }
 	break;
-      case 'szyb':
-	$cecha = T_SPEED;
-	$fltStat2 = $player->oldstats[4];
+      case 'speed':
+	$cecha = "Szybkości";
 	break;
-      case 'wytrz':
-	$cecha = T_CON;
-	$fltStat2 = $player->oldstats[5];
+      case 'condition':
+	$cecha = "Wytrzymałości";
 	break;
       case 'wisdom':
-	$cecha = T_WIS;
-	$fltStat2 = $player->oldstats[3];
+	$cecha = "Siły Woli";
 	if ($player->location == 'Ardulith')
 	  {
 	    $blnLess = TRUE;
@@ -252,39 +236,27 @@ if (isset ($_GET['action']) && $_GET['action'] == 'train')
 	break;
     }
     $intCost2 = 0;
-    for ($i = 0; $i < $_POST['rep']; $i++)
+    if ($blnLess)
       {
-	if ($blnLess)
-	  {
-	    $intCost2 += round(($fltStat2 / $fltStat) - (($fltStat2 / $fltStat) / 10), 0);
-	  }
-	else
-	  {
-	    $intCost2 += round($fltStat2 / $fltStat, 0);
-	  }
-	$fltStat2 += 0.06;
-      }
-    if ($repeat > $player -> energy) 
-      {
-        message('error', NO_ENERGY);
-      }
-    elseif ($player -> credits < $intCost2) 
-      {
-        message('error', NO_MONEY.$intCost2.GOLD_COINS);
+	$intCost2 += (round(($fltStat2 * 5) - (($fltStat2 * 5) / 10), 0)) * $_POST['rep'];
       }
     else
       {
-	if ($_POST['train'] == 'wytrz') 
-	  {
-	    $intCondition = floor($player->oldstats[5] + $gain);
-	    if ($intCondition > $player->oldstats[5])
-	      {
-		$intGain = $intCondition - floor($player->oldstats[5]);
-		$db -> Execute("UPDATE `players` SET `max_hp`=`max_hp`+".$intGain." WHERE `id`=".$player -> id);
-	      } 
-	  }
-	$db -> Execute("UPDATE `players` SET `energy`=`energy`-".$repeat.", ".$_POST['train']."=".$_POST['train']."+".$gain.", `credits`=`credits`-".$intCost2." WHERE `id`=".$player -> id);
-	message('success', YOU_GAIN.$gain." ".$cecha.YOU_PAY.$intCost2.GOLD_COINS);
+	$intCost2 += ($fltStat2 * 5) * $_POST['rep'];
+      }
+    if ($repeat > $player -> energy) 
+      {
+        message('error', "Nie masz wystarczającej ilości energii.");
+      }
+    elseif ($player -> credits < $intCost2) 
+      {
+        message('error', "Nie możesz tyle ćwiczyć, ponieważ nie stać ciebie na to! <br />Potrzebujesz ".$intCost2." sztuk złota.");
+      }
+    else
+      {
+	$player->checkexp(array($_POST['train'] => $_POST['rep']), $player->id, 'stats');
+	$db -> Execute("UPDATE `players` SET `energy`=`energy`-".$repeat.", `credits`=`credits`-".$intCost2." WHERE `id`=".$player -> id);
+	message('success', "Zyskujesz <b>".$_POST['rep']." doświadczenia do ".$cecha."</b>. Zapłaciłeś(aś) za to ".$intCost2." sztuk złota.");
       }
     $_GET['action'] = '';
 }
@@ -301,23 +273,32 @@ if (!isset($_POST['rep']))
     $_POST['rep'] = 0;
   }
 
+if ($player->location == 'Altara')
+  {
+    $strDesc =  "Ogromne filary podtrzymujące sklepienie budynku pamiętają wszystko, co działo się w Szkole Vallheryjskiej. Świadczą o tym ich odrapane wykończenia. Podchodzisz bliżej i widzisz pomieszczenie do złudzenia przypominające Arenę Walk. Na środku sali dwóch krasnoludów walczy ze sobą na ogromne topory obosieczne, które zdają się być większe od nich samych. Nieco dalej elficka para uczy się strzelać do ruchomego celu, którym jest maleńki gnom biegający po podwyższeniu stojącym w odległości 20 metrów od pary. W pewnym momencie słyszysz ruch za swoimi plecami, odwracasz się szybko a w ręku Twym już widać broń. Stoi przed Tobą starzec, który chrypliwym głosem mówi:<br /><br />- Witaj w Szkole Umięjętności w ".$city1a.". Jeżeli chciałbyś trenować swoją krzepę, szybkość czy nawet zgłębiać tajniki magii możesz to zrobić u nas. Za odpowiednią opłatą oczywiście. Starzec podniósł dłoń pokazując tablicę z Twoim imieniem. Zdziwiony skąd oni wiedzą jak się nazywasz podchodzisz blizej i czytasz ceny odpowiednie do Twojej postaci.<br /> ";
+  }
+else
+  {
+    $strDesc = "Uniwersytet imienia ".$city2."a ... Stoisz przed wierzbą, na konarach której mieści się uniwersytet założony przez ".$city2."a, a po jego śmierci nazwany tym imieniem. Możesz tu poświęcić swój czas w celu zdobycia większych umiejętności.";
+  }
+
 /**
 * Assign variables to template and display page
 */
-$smarty -> assign(array("Traininfo" => TRAIN_INFO,
-                        "Trstr" => TR_STR,
-                        "Tragi" => TR_AGI,
-                        "Trspeed" => TR_SPEED,
-                        "Trcon" => TR_CON,
-                        "Trint" => TR_INT,
-                        "Trwis" => TR_WIS,
-                        "Iwant" => I_WANT,
-                        "Tamount" => T_AMOUNT,
-                        "Atrain" => A_TRAIN,
+$smarty -> assign(array("Traininfo" => $strDesc,
+			"Toptions" => array("strength" => "Siłę",
+					   "agility" => "Zręczność",
+					   "speed" => "Szybkość",
+					   "condition" => "Wytrzymałość",
+					   "inteli" => "Inteligencję",
+					   "wisdom" => "Siłę Woli"),
+                        "Iwant" => "Chcę trenować moją",
+                        "Tamount" => "razy",
+                        "Atrain" => "Trenuj",
 			"Tinfo" => 'Podaj ile razy chcesz trenować daną cechę.',
 			"Plrace" => $player->race,
 			"Plclass" => $player->clas,
-			"Tcosts" => $player->oldstats[1].', '.$player->oldstats[0].', '.$player->oldstats[2].', '.$player->oldstats[4].', '.$player->oldstats[5].', '.$player->oldstats[3].', '.$fltStat.', '.$intLess,
+			"Tcosts" => $player->oldstats['strength'][2].', '.$player->oldstats['agility'][2].', '.$player->oldstats['inteli'][2].', '.$player->oldstats['speed'][2].', '.$player->oldstats['condition'][2].', '.$player->oldstats['wisdom'][2].', '.$intLess,
                         "Action" => $_GET['action'],
 			"Rep" => $_POST['rep']));
 $smarty -> display ('train.tpl');

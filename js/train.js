@@ -5,8 +5,8 @@
  *   @name                 : train.js                          
  *   @copyright            : (C) 2012 Vallheru Team based on Gamers-Fusion ver 2.5
  *   @author               : thindil <thindil@tuxfamily.org>
- *   @version              : 1.6
- *   @since                : 12.07.2012
+ *   @version              : 1.7
+ *   @since                : 11.10.2012
  *
  */
 
@@ -28,7 +28,7 @@
 //
 // $Id$
 
-function checkcost(strRace, strClass, Strength, Agility, intInt, Speed, Cond, Wisdom, fltStat, intLess)
+function checkcost(strRace, strClass, Strength, Agility, intInt, Speed, Cond, Wisdom, intLess)
 {
     var intValue = document.getElementById("rep").value;
     if((parseFloat(intValue) == parseInt(intValue)) && !isNaN(intValue) && (parseInt(intValue) > 0))
@@ -54,10 +54,10 @@ function checkcost(strRace, strClass, Strength, Agility, intInt, Speed, Cond, Wi
 		Less = 1;
 	    }
 	    break;
-	case 'szyb':
+	case 'speed':
 	    Cost = Speed;
 	    break;
-	case 'wytrz':
+	case 'condition':
 	    Cost = Cond;
 	    break;
 	case 'wisdom':
@@ -74,11 +74,11 @@ function checkcost(strRace, strClass, Strength, Agility, intInt, Speed, Cond, Wi
 	{
 	    fltRepeat = intValue * 0.3;
 	}
-	else if (strRace == 'Gnom' && (strStat == 'agility' || strStat == 'wytrz'))
+	else if (strRace == 'Gnom' && (strStat == 'agility' || strStat == 'condition'))
 	{
 	    fltRepeat = intValue * 0.3;
 	}
-	else if (strRace == 'Elf' && (strStat == 'strength' || strStat == 'wytrz'))
+	else if (strRace == 'Elf' && (strStat == 'strength' || strStat == 'condition'))
 	{
 	    fltRepeat = intValue * 0.4;
 	}
@@ -86,27 +86,27 @@ function checkcost(strRace, strClass, Strength, Agility, intInt, Speed, Cond, Wi
 	{
 	    fltRepeat = intValue * 0.2;
 	}
-	else if (strRace == 'Krasnolud' && (strStat == 'strength' || strStat == 'wytrz'))
+	else if (strRace == 'Krasnolud' && (strStat == 'strength' || strStat == 'condition'))
 	{
 	    fltRepeat = intValue * 0.2;
 	}
-	else if (strRace == 'Krasnolud' && (strStat == 'agility' || strStat == 'szyb'))
+	else if (strRace == 'Krasnolud' && (strStat == 'agility' || strStat == 'speed'))
 	{
 	    fltRepeat = intValue * 0.4;
 	}
-	else if (strRace == 'Jaszczuroczłek' && (strStat == 'szyb' || strStat == 'strength'))
+	else if (strRace == 'Jaszczuroczłek' && (strStat == 'speed' || strStat == 'strength'))
 	{
 	    fltRepeat = intValue * 0.2;
 	}
-	else if (strRace == 'Jaszczuroczłek' && (strStat == 'wytrz' || strStat == 'agility'))
+	else if (strRace == 'Jaszczuroczłek' && (strStat == 'condition' || strStat == 'agility'))
 	{
 	    fltRepeat = intValue * 0.4;
 	}
-	else if (strRace == 'Hobbit' && (strStat == 'wytrz' || strStat == 'agility'))
+	else if (strRace == 'Hobbit' && (strStat == 'condition' || strStat == 'agility'))
 	{
 	    fltRepeat = intValue * 0.2;
 	}
-	else if ((strRace == 'Hobbit' || strRace == 'Gnom') && (strStat == 'szyb' || strStat == 'strength'))
+	else if ((strRace == 'Hobbit' || strRace == 'Gnom') && (strStat == 'speed' || strStat == 'strength'))
 	{
 	    fltRepeat = intValue * 0.4;
 	}
@@ -133,13 +133,12 @@ function checkcost(strRace, strClass, Strength, Agility, intInt, Speed, Cond, Wi
 	{
 	    if (Less == 1)
 	    {
-		intCost = intCost + Math.round((Cost / fltStat) - ((Cost / fltStat) / 10));
+		intCost = intCost + Math.round((Cost * 5) - ((Cost * 5) / 10));
 	    }
 	    else
 	    {
-		intCost = intCost + Math.round(Cost / fltStat);
+		intCost = intCost + Math.round(Cost * 5);
 	    }
-	    Cost = Cost + 0.06;
 	}
 	document.getElementById("info").innerHTML = "Koszt szkolenia to " + fltRepeat.toFixed(1) + " energii oraz " + intCost + " sztuk złota.";
     }

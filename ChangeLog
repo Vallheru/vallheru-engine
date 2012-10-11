@@ -1,5 +1,7 @@
 2012-10-11  Bartek thindil Jasicki  <thindil@vallheru.net>
 
+	* UPDATE,templates/layout1/train.tpl, templates/train.tpl, train.php, js/train.js, languages/pl/train.php: 
+	update training stats
 	* BUG,class/player_class.php: 
 	fixed gaining experience
 	* BUG,stats.php:
