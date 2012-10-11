@@ -1,5 +1,7 @@
 2012-10-11  Bartek thindil Jasicki  <thindil@vallheru.net>
 
+	* BUG,class/player_class.php: 
+	fixed gaining experience
 	* BUG,stats.php:
 	remove unused code
 

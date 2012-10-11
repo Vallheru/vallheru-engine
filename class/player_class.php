@@ -7,7 +7,7 @@
  *   @copyright            : (C) 2004,2005,2006,2007,2011,2012 Vallheru Team based on Gamers-Fusion ver 2.5
  *   @author               : thindil <thindil@vallheru.net>
  *   @version              : 1.7
- *   @since                : 10.10.2012
+ *   @since                : 11.10.2012
  *
  */
 
@@ -452,22 +452,25 @@ class Player
 		{
 		  continue;
 		}
-	      $intNeeded = $this->stats[$stat][2] * 2000;
+	      $intNeeded = $this->oldstats[$stat][2] * 2000;
 	      $this->stats[$stat][3] += $value;
+	      $this->oldstats[$stat][3] += $value;
 	      while (TRUE)
 		{
-		  if ($this->stats[$stat][2] == $this->stats[$stat][1])
+		  if ($this->oldstats[$stat][2] == $this->oldstats[$stat][1])
 		    {
 		      break;
 		    }
-		  if ($this->stats[$stat][3] < $intNeeded)
+		  if ($this->oldstats[$stat][3] < $intNeeded)
 		    {
 		      break;
 		    }
 		  $this->ap ++;
 		  $this->stats[$stat][2] ++;
+		  $this->oldstats[$stat][2] ++;
 		  $this->stats[$stat][3] -= $intNeeded;
-		  $intNeeded = $this->stats[$stat][2] * 2000;
+		  $this->oldstats[$stat][3] -= $intNeeded;
+		  $intNeeded = $this->oldstats[$stat][2] * 2000;
 		  if ($stat == 'condition')
 		    {
 		      $this->hp ++;
@@ -481,25 +484,28 @@ class Player
 	    }
 	  else
 	    {
-	      if ($this->skills[$stat][1] == 100)
+	      if ($this->oldskills[$stat][1] == 100)
 		{
 		  continue;
 		}
-	      $intNeeded = $this->skills[$stat][1] * 100;
+	      $intNeeded = $this->oldskills[$stat][1] * 100;
 	      $this->skills[$stat][2] += $value;
+	      $this->oldskills[$stat][2] += $value;
 	      while (TRUE)
 		{
-		  if ($this->skills[$stat][1] == 100)
+		  if ($this->oldskills[$stat][1] == 100)
 		    {
 		      break;
 		    }
-		  if ($this->skills[$stat][2] < $intNeeded)
+		  if ($this->oldskills[$stat][2] < $intNeeded)
 		    {
 		      break;
 		    }
 		  $this->skills[$stat][1] ++;
+		  $this->oldskills[$stat][1] ++;
 		  $this->skills[$stat][2] -= $intNeeded;
-		  $intNeeded = $this->skills[$stat][1] * 100;
+		  $this->oldskills[$stat][2] -= $intNeeded;
+		  $intNeeded = $this->oldskills[$stat][1] * 100;
 		  if (!in_array($stat, $arrGained))
 		    {
 		      $arrGained[] = $stat;
