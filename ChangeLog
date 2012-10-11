@@ -1,5 +1,7 @@
 2012-10-11  Bartek thindil Jasicki  <thindil@vallheru.net>
 
+	* UPDATE,preset.php, languages/pl/preset.php: 
+	update player reset
 	* UPDATE,stats.php: 
 	better round experience
 	* BUG,install/db/update.sql: 

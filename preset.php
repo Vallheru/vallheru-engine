@@ -6,8 +6,8 @@
  *   @name                 : preset.php                            
  *   @copyright            : (C) 2004,2005,2006,2007,2011,2012 Vallheru Team based on Gamers-Fusion ver 2.5
  *   @author               : thindil <thindil@vallheru.net>
- *   @version              : 1.6
- *   @since                : 20.06.2012
+ *   @version              : 1.7
+ *   @since                : 11.10.2012
  *
  */
 
@@ -36,57 +36,32 @@ $smarty = new Smarty;
 
 $smarty -> compile_check = true;
 
-/**
-* Check avaible languages
-*/    
-$arrLanguage = scandir('languages/', 1);
-$arrLanguage = array_diff($arrLanguage, array(".", "..", "index.htm")); 
-
-/**
-* Get the localization for game
-*/
-$strLanguage = $_SERVER['HTTP_ACCEPT_LANGUAGE'];
-foreach ($arrLanguage as $strTrans)
-{
-    $strSearch = "^".$strTrans;
-    if (eregi($strSearch, $strLanguage))
-    {
-        $strTranslation = $strTrans;
-        break;
-    }
-}
-if (!isset($strTranslation))
-{
-    $strTranslation = 'pl';
-}
-require_once("languages/".$strTranslation."/preset.php");
-
 if (isset ($_GET['id'])) 
 {
     if (intval($_GET['id']) < 1) 
     {
-        $smarty -> assign ("Error", ERROR);
+        $smarty -> assign ("Error", 'Zapomnij o tym.');
         $smarty -> display ('error.tpl');
         exit;
     }
     if (!isset ($_GET['code'])) 
     {
         $db -> Execute("DELETE FROM `reset` WHERE `player`=".$_GET['id']);
-        $smarty -> assign ("Error", R_CANCEL);
+        $smarty -> assign ("Error", "Próba resetu została anulowana.");
         $smarty -> display ('error.tpl');
     } 
         else 
     {
         if (intval($_GET['code']) < 1) 
         {
-            $smarty -> assign ("Error", ERROR);
+            $smarty -> assign ("Error", 'Zapomnij o tym');
             $smarty -> display ('error.tpl');
             exit;
         }
         $reset = $db -> Execute("SELECT `id`, `type` FROM `reset` WHERE `player`=".$_GET['id']." AND `code`=".$_GET['code']);
         if (!$reset -> fields['id']) 
         {
-            $smarty -> assign ("Error", NO_RESET);
+            $smarty -> assign ("Error", "Nie ma takiego zgłoszenia.");
             $smarty -> display ('error.tpl');
             exit;
         }
@@ -97,7 +72,7 @@ if (isset ($_GET['id']))
 	    $db -> Execute("DELETE FROM `hmarket` WHERE `seller`=".$_GET['id']);
 	    $db -> Execute("DELETE FROM `potions` WHERE `owner`=".$_GET['id']);
 	    $db -> Execute("DELETE FROM `herbs` WHERE `gracz`=".$_GET['id']);
-	    $db -> Execute("UPDATE `players` SET `level`=1, `exp`=0, `credits`=0, `energy`=0, `max_energy`=70, `strength`=3, `agility`=3, `ap`=5, `platinum`=0, `hp`=15, `max_hp`=15, `bank`=0, `ability`=0.01, `corepass`='N', `trains`=5, `inteli`=3, `pw`=0, `atak`=0.01, `unik`=0.01, `magia`=0.01, `immu`='N', `pm`=6, `szyb`=3, `wytrz`=3, `alchemia`=0.01, `wisdom`=3, `shoot`=0.01, `fletcher`=0.01, `rasa`='', `klasa`='', `deity`='', `gender`='', `leadership`=0.01, `wins`=0, `losses`=0, `lastkilled`='...', `lastkilledby`='...', `breeding`=0.01, `mining`=0.01, `lumberjack`=0.01, `herbalist`=0.01, `crime`=1, `maps`=0, `jeweller`=0.01, `thievery`=0.01, `perception`=0.01, `craftmission`=7, `mpoints`=0, `metallurgy`=0.01 WHERE `id`=".$_GET['id']);
+	    $db -> Execute("UPDATE `players` SET `credits`=0, `energy`=0, `max_energy`=70, `ap`=5, `platinum`=0, `hp`=15, `max_hp`=15, `bank`=0, `corepass`='N', `trains`=5, `pw`=0, `immu`='N', `pm`=6, `rasa`='', `klasa`='', `deity`='', `gender`='', `wins`=0, `losses`=0, `lastkilled`='...', `lastkilledby`='...', `crime`=1, `maps`=0, `craftmission`=7, `mpoints`=0, `stats`='strength:Siła,0,0,0;agility:Zręczność,0,0,0;condition:Kondycja,0,0,0;speed:Szybkość,0,0,0;inteli:Inteligencja,0,0,0;wisdom:Siła Woli,0,0,0;', `skills`='smith:Kowalstwo,1,0;shoot:Strzelectwo,1,0;alchemy:Alchemia,1,0;dodge:Uniki,1,0;carpentry:Stolarstwo,1,0;magic:Rzucanie Czarów,1,0;attack:Walka Bronią,1,0;leadership:Dowodzenie,1,0;breeding:Hodowla,1,0;mining:Górnictwo,1,0;lumberjack:Drwalnictwo,1,0;herbalism:Zielarstwo,1,0;jewellry:Jubilerstwo,1,0;smelting:Hutnictwo,1,0;thievery:Złodziejstwo,1,0;perception:Spostrzegawczość,1,0;' WHERE `id`=".$_GET['id']);
 	    $objHouse = $db -> Execute("SELECT `locator` FROM `houses` WHERE `owner`=".$_GET['id']);
 	    if ($objHouse -> fields['locator'])
 	      {
@@ -112,7 +87,7 @@ if (isset ($_GET['id']))
 	  }
 	else
 	  {
-	    $db -> Execute("UPDATE `players` SET `level`=1, `exp`=0, `energy`=0, `max_energy`=70, `strength`=3, `agility`=3, `ap`=5, `hp`=15, `max_hp`=15, `ability`=0.01, `corepass`='N', `trains`=5, `inteli`=3, `pw`=0, `atak`=0.01, `unik`=0.01, `magia`=0.01, `immu`='N', `pm`=6, `szyb`=3, `wytrz`=3, `alchemia`=0.01, `wisdom`=3, `shoot`=0.01, `fletcher`=0.01, `rasa`='', `klasa`='', `deity`='', `gender`='', `leadership`=0.01, `wins`=0, `losses`=0, `lastkilled`='...', `lastkilledby`='...', `breeding`=0.01, `mining`=0.01, `lumberjack`=0.01, `herbalist`=0.01, `crime`=1, `maps`=0, `jeweller`=0.01, `thievery`=0.01, `perception`=0.01, `craftmission`=7, `mpoints`=0, `metallurgy`=0.01 WHERE `id`=".$_GET['id']);
+	    $db -> Execute("UPDATE `players` SET `energy`=0, `max_energy`=70, `ap`=5, `hp`=15, `max_hp`=15, `corepass`='N', `trains`=5, `pw`=0, `immu`='N', `pm`=6, `rasa`='', `klasa`='', `deity`='', `gender`='', `wins`=0, `losses`=0, `lastkilled`='...', `lastkilledby`='...', `crime`=1, `maps`=0, `craftmission`=7, `mpoints`=0, `stats`='strength:Siła,0,0,0;agility:Zręczność,0,0,0;condition:Kondycja,0,0,0;speed:Szybkość,0,0,0;inteli:Inteligencja,0,0,0;wisdom:Siła Woli,0,0,0;', `skills`='smith:Kowalstwo,1,0;shoot:Strzelectwo,1,0;alchemy:Alchemia,1,0;dodge:Uniki,1,0;carpentry:Stolarstwo,1,0;magic:Rzucanie Czarów,1,0;attack:Walka Bronią,1,0;leadership:Dowodzenie,1,0;breeding:Hodowla,1,0;mining:Górnictwo,1,0;lumberjack:Drwalnictwo,1,0;herbalism:Zielarstwo,1,0;jewellry:Jubilerstwo,1,0;smelting:Hutnictwo,1,0;thievery:Złodziejstwo,1,0;perception:Spostrzegawczość,1,0;' WHERE `id`=".$_GET['id']);
 	    $db->Execute("UPDATE `equipment` SET `status`='U', `cost`=1 WHERE `owner`=".$_GET['id']);
 	    $db->Execute("UPDATE `equipment` SET `amount`=1 WHERE `amount`=0 AND `owner`=".$_GET['id']);
 	  }
@@ -139,7 +114,7 @@ if (isset ($_GET['id']))
         $db -> Execute("DELETE FROM `astral_bank` WHERE `location`='V' AND `owner`=".$_GET['id']);
         $db -> Execute("DELETE FROM `astral_plans` WHERE `location`='V' AND `owner`=".$_GET['id']);
 	$reset->Close();
-        $smarty -> assign ("Error", R_MAKED);
+        $smarty -> assign ("Error", "Postać została zresetowana.");
         $smarty -> display ('error.tpl');
     }
 }
