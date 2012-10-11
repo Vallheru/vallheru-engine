@@ -8,7 +8,7 @@
  *   @author               : thindil <thindil@vallheru.net>
  *   @author               : mori <ziniquel@users.sourceforge.net>
  *   @version              : 1.7
- *   @since                : 10.10.2012
+ *   @since                : 11.10.2012
  *
  */
 
@@ -182,7 +182,7 @@ foreach ($player->stats as $arrStat)
 {
   if ($player->oldstats[$arrSnames[$i]][2] < $player->oldstats[$arrSnames[$i]][1])
   {
-    $strNeedexp = ' ('.($player->oldstats[$arrSnames[$i]][3] / ($player->oldstats[$arrSnames[$i]][2] * 2000)).'% dośw)';
+    $strNeedexp = ' ('.round($player->oldstats[$arrSnames[$i]][3] / ($player->oldstats[$arrSnames[$i]][2] * 2000), 3).'% dośw)';
   }
   else
     {
@@ -238,7 +238,7 @@ foreach ($arrBskills as $arrSkill)
   $i ++;
   if ($arrSkill[1] < 100 && $arrSkill[1] > 0)
     {
-      $strNeedexp = ' ('.($arrSkill[2] / ($arrSkill[1] * 100)).'% dośw)';
+      $strNeedexp = ' ('.round($arrSkill[2] / ($arrSkill[1] * 100), 3).'% dośw)';
     }
   else
     {

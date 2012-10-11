@@ -1,5 +1,7 @@
 2012-10-11  Bartek thindil Jasicki  <thindil@vallheru.net>
 
+	* UPDATE,stats.php: 
+	better round experience
 	* BUG,install/db/update.sql: 
 	fixed default skills
 	* UPDATE,templates/layout1/train.tpl, templates/train.tpl, train.php, js/train.js, languages/pl/train.php: 
