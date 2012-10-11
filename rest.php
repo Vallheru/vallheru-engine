@@ -6,8 +6,8 @@
  *   @name                 : rest.php                            
  *   @copyright            : (C) 2004,2005,2006,2011,2012 Vallheru Team based on Gamers-Fusion ver 2.5
  *   @author               : thindil <thindil@vallheru.net>
- *   @version              : 1.6
- *   @since                : 22.08.2012
+ *   @version              : 1.7
+ *   @since                : 11.10.2012
  *
  */
 
@@ -32,50 +32,45 @@
 $title = "Odpoczynek"; 
 require_once("includes/head.php");
 
-/**
-* Get the localization for game
-*/
-require_once("languages/".$lang."/rest.php");
-
-$maxmana = ($player -> inteli + $player -> wisdom);
+$maxmana = ($player->stats['inteli'][2] + $player->stats['wisdom'][2]);
 
 if (!isset ($_GET['akcja'])) 
 {
     $koszt = ceil(($maxmana - $player -> mana) / 10);
     $smarty -> assign(array("Energy" => $koszt,
-                            "Trest" => T_REST,
-                            "Restinfo" => REST_INFO,
-                            "Restinfo2" => REST_INFO2,
-                            "Iwant" => I_WANT,
-                            "Rmana" => R_MANA,
-                            "Arest" => A_REST,
-                            "Aback" => A_BACK));
+                            "Trest" => "Odpoczynek",
+                            "Restinfo" => "Tutaj możesz odpocząć regenerując swoje <b>punkty magii</b>. Całkowite odzyskanie <b>punktów magii</b> będzie ciebie kosztować",
+                            "Restinfo2" => "energii. Jeżeli nie masz tyle energii możesz również odzyskać częściowo <b>punkty magii</b> w stosunku 10 punktów magii za 1 punkt energii",
+                            "Iwant" => "Chcę odzyskać",
+                            "Rmana" => "punktów magii",
+                            "Arest" => "Odpoczywaj",
+                            "Aback" => "Powrót do statystyk"));
     $smarty -> display ('rest.tpl');
 }
 if (isset($_GET['akcja']) && $_GET['akcja'] == 'all') 
 {
     if (!isset($_POST['pm']))
     {
-        error(HOW_MANY);
+        error("Podaj ile punktów magii chcesz odzyskać");
     }
     checkvalue($_POST['pm']);
     $energia = $_POST['pm'] / 10;
     $energia = round($energia,"2");
     if ($player -> energy < $energia) 
     {
-        error (NO_ENERGY);
+        error ("Nie masz tyle energii!");
     }
     if ($player -> mana == $maxmana) 
     {
-        error (NO_REST);
+        error ("Nie musisz odpoczywać");
     }
     $zpm = ($_POST['pm'] + $player -> mana);
     if ($zpm > $maxmana) 
     {
-        error (TOO_MUCH);
+        error ("Nie możesz odzyskać więcej Punktów Magii niż masz maksymalnie!");
     }
     $db -> Execute("UPDATE `players` SET `pm`=".$zpm.", `energy`=`energy`-".$energia." WHERE `id`=".$player -> id);
-    error (YOU_REST.$_POST['pm'].YOU_REST2.$energia.YOU_REST3);
+    error ("Opocząłeś sobie przez jakiś czas i odzyskałeś ".$_POST['pm']." punkty magii w zamian za ".$energia." energii. <a href=stats.php>Powrót do statystyk</a>");
 }
 
 require_once("includes/foot.php");
