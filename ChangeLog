@@ -1,5 +1,7 @@
 2012-10-12  Bartek thindil Jasicki  <thindil@vallheru.net>
 
+	* UPDATE,landfill.php, languages/pl/landfill.php: 
+	update job
 	* UPDATE,js/train.js, train.php:
 	changed training cost
 

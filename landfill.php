@@ -6,8 +6,8 @@
  *   @name                 : landfill.php                            
  *   @copyright            : (C) 2004,2005,2007,2011,2012 Vallheru Team based on Gamers-Fusion ver 2.5
  *   @author               : thindil <thindil@vallheru.net>
- *   @version              : 1.6
- *   @since                : 24.05.2012
+ *   @version              : 1.7
+ *   @since                : 12.10.2012
  *
  */
 
@@ -32,58 +32,54 @@
 $title = "Oczyszczanie miasta";
 require_once("includes/head.php");
 
-/**
-* Get the localization for game
-*/
-require_once("languages/".$lang."/landfill.php");
-
-if ($player -> location != 'Altara' && $player -> location != 'Ardulith') 
+if ($player->location != 'Altara' && $player->location != 'Ardulith') 
 {
-    error (ERROR);
+    error ("Nie znajdujesz się w mieście.");
 }
 
 if ($player -> hp == 0) 
 {
-    error (YOU_DEAD);
+    error ("Nie możesz pracować, ponieważ jesteś martwy!");
 }
 
-if (!isset($_GET['action'])) 
-{
-    $_GET['action'] = '';
-    $gain = ($player -> level * 25);
-    $smarty -> assign(array("Gold" => $gain,
-                            "Landinfo" => LAND_INFO,
-                            "Landinfo2" => GOLD_COINS,
-			    "Energy" => floor($player->energy),
-                            "Awork" => A_WORK,
-                            "Times" => TIMES));
-} 
-    else 
+if (isset($_GET['action'])) 
 {
     if (!isset($_POST['amount'])) 
     {
-        error(NO_AMOUNT);
+        error("Podaj ile czasu chcesz spędzić pracując!");
     }
-    integercheck($_POST['amount']);
     checkvalue($_POST['amount']);
     if ($player -> energy < $_POST['amount']) 
-    {
-        error (NO_ENERGY);
-    }
-    $gain = (($player -> level * 25) * $_POST['amount']);
-    $db -> Execute("UPDATE players SET energy=energy-".$_POST['amount'].", credits=credits+".$gain." WHERE id=".$player -> id);
-    $smarty -> assign(array("Gain" => $gain, 
-                            "Amount" => $_POST['amount'],
-                            "Inwork" => IN_WORK,
-                            "Inwork2" => IN_WORK2,
-                            "Goldcoins" => GOLD_COINS,
-                            "Aback" => A_BACK));
+      {
+	message('error', "Nie masz tyle energii aby pracować.");
+      }
+    else
+      {
+	$gain = (($player->stats['condition'][2] * 25) * $_POST['amount']);
+	$db -> Execute("UPDATE players SET energy=energy-".$_POST['amount'].", credits=credits+".$gain." WHERE id=".$player -> id);
+	$player->energy -= $_POST['amount'];
+	message('success', "Podczas pracy zużyłeś ".$_POST['amount']."punkt(ów) energii i zarobiłeś ".$gain." sztuk złota.");
+      }
 }
+if ($player->location == 'Altara')
+  {
+    $strDesc = "Pragniesz zarobić nieco sztuk złota? W porządku. Za każdy worek śmieci jakie uprzątniesz, dam ci";
+  }
+ else
+   {
+     $strDesc = "Witaj na Polanie drwali. Możesz tutaj poświęcić nieco swojego czasu, aby zarobić złoto. Za każdy punkt energii jaki zużyjesz, dostaniesz";
+   }
+$gain = ($player->stats['condition'][2] * 25);
+$smarty -> assign(array("Gold" => $gain,
+			"Landinfo" => $strDesc,
+			"Landinfo2" => "sztuk złota.",
+			"Energy" => floor($player->energy),
+			"Awork" => "Pracuj",
+			"Times" => "razy."));
 
 /**
 * Assign variables to template and display page
 */
-$smarty -> assign ("Action", $_GET['action']);
 $smarty -> display ('landfill.tpl');
 
 require_once("includes/foot.php");
