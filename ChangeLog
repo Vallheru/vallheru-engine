@@ -1,3 +1,8 @@
+2012-10-12  Bartek thindil Jasicki  <thindil@vallheru.net>
+
+	* UPDATE,js/train.js, train.php:
+	changed training cost
+
 2012-10-11  Bartek thindil Jasicki  <thindil@vallheru.net>
 
 	* UPDATE,rest.php, languages/pl/rest.php: 

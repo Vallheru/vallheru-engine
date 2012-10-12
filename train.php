@@ -32,11 +32,6 @@
 $title = "Szkolenie";
 require_once("includes/head.php");
 
-/**
-* Get the localization for game
-*/
-require_once("languages/".$lang."/train.php");
-
 if ($player->location != 'Altara' && $player->location != 'Ardulith') 
 {
     error ("Nie znajdujesz się w mieście.");
@@ -57,21 +52,21 @@ if (!$player->clas)
     error("Nie wybrałeś jeszcze klasy. <a href=\"city.php\">Wróć</a>.");
 }
 
-$intStrcost = ceil($player->oldstats['strength'][2] * 5);
-$intAgicost = ceil($player->oldstats['agility'][2] * 5);
-$intConcost = ceil($player->oldstats['condition'][2] * 5);
-$intSpecost = ceil($player->oldstats['speed'][2] * 5);
+$intStrcost = ceil($player->oldstats['strength'][2] * 20);
+$intAgicost = ceil($player->oldstats['agility'][2] * 20);
+$intConcost = ceil($player->oldstats['condition'][2] * 20);
+$intSpecost = ceil($player->oldstats['speed'][2] * 20);
 
 if ($player -> location == 'Altara')
 {
-    $intIntcost = ceil($player->oldstats['inteli'][2] * 5);
-    $intWiscost = ceil($player->oldstats['wisdom'][2] * 5);
+    $intIntcost = ceil($player->oldstats['inteli'][2] * 20);
+    $intWiscost = ceil($player->oldstats['wisdom'][2] * 20);
     $intLess = 0;
 }
     else
 {
-    $intIntcost = ceil(($player->oldstats['inteli'][2] * 5) - (($player->oldstats['inteli'][2] * 5) / 10));
-    $intWiscost = ceil(($player->oldstats['wisdom'][2] * 5) - (($player->oldstats['wisdom'][2] * 5) / 10));
+    $intIntcost = ceil(($player->oldstats['inteli'][2] * 20) - (($player->oldstats['inteli'][2] * 20) / 10));
+    $intWiscost = ceil(($player->oldstats['wisdom'][2] * 20) - (($player->oldstats['wisdom'][2] * 20) / 10));
     $intLess = 1;
 }
 
@@ -238,11 +233,11 @@ if (isset ($_GET['action']) && $_GET['action'] == 'train')
     $intCost2 = 0;
     if ($blnLess)
       {
-	$intCost2 += (round(($fltStat2 * 5) - (($fltStat2 * 5) / 10), 0)) * $_POST['rep'];
+	$intCost2 += (round(($fltStat2 * 20) - (($fltStat2 * 20) / 10), 0)) * $_POST['rep'];
       }
     else
       {
-	$intCost2 += ($fltStat2 * 5) * $_POST['rep'];
+	$intCost2 += ($fltStat2 * 20) * $_POST['rep'];
       }
     if ($repeat > $player -> energy) 
       {
@@ -254,9 +249,9 @@ if (isset ($_GET['action']) && $_GET['action'] == 'train')
       }
     else
       {
-	$player->checkexp(array($_POST['train'] => $_POST['rep']), $player->id, 'stats');
+	$player->checkexp(array($_POST['train'] => ($_POST['rep'] * 5)), $player->id, 'stats');
 	$db -> Execute("UPDATE `players` SET `energy`=`energy`-".$repeat.", `credits`=`credits`-".$intCost2." WHERE `id`=".$player -> id);
-	message('success', "Zyskujesz <b>".$_POST['rep']." doświadczenia do ".$cecha."</b>. Zapłaciłeś(aś) za to ".$intCost2." sztuk złota.");
+	message('success', "Zyskujesz <b>".($_POST['rep'] * 5)." doświadczenia do ".$cecha."</b>. Zapłaciłeś(aś) za to ".$intCost2." sztuk złota.");
       }
     $_GET['action'] = '';
 }

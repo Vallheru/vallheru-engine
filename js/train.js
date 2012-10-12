@@ -6,7 +6,7 @@
  *   @copyright            : (C) 2012 Vallheru Team based on Gamers-Fusion ver 2.5
  *   @author               : thindil <thindil@tuxfamily.org>
  *   @version              : 1.7
- *   @since                : 11.10.2012
+ *   @since                : 12.10.2012
  *
  */
 
@@ -133,11 +133,11 @@ function checkcost(strRace, strClass, Strength, Agility, intInt, Speed, Cond, Wi
 	{
 	    if (Less == 1)
 	    {
-		intCost = intCost + Math.round((Cost * 5) - ((Cost * 5) / 10));
+		intCost = intCost + Math.round((Cost * 20) - ((Cost * 20) / 10));
 	    }
 	    else
 	    {
-		intCost = intCost + Math.round(Cost * 5);
+		intCost = intCost + Math.round(Cost * 20);
 	    }
 	}
 	document.getElementById("info").innerHTML = "Koszt szkolenia to " + fltRepeat.toFixed(1) + " energii oraz " + intCost + " sztuk złota.";
