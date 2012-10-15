@@ -141,7 +141,7 @@ else
 	    $arrSeeds = array('ilani_seeds', 'illanias_seeds', 'nutari_seeds', 'dynallca_seeds');
 	    $db -> Execute("UPDATE `herbs` SET `".$arrHerbs[$intKey]."`=`".$arrHerbs[$intKey]."`-".$intAmountherbs.", `".$arrSeeds[$intKey]."`=`".$arrSeeds[$intKey]."`+".$intAmountseeds." WHERE `gracz`=".$player -> id);
 	    $player->checkexp(array('herbalism' => ($intExp / 2)), $player->id, 'skills');
-	    $player->checkexp(array('inteli' => ($intExp / 2)), $player->id, 'stats');
+	    $player->checkexp(array('agility' => ($intExp / 2)), $player->id, 'stats');
 	    $db -> Execute("UPDATE `players` SET `energy`=`energy`-".$intAmountenergy." WHERE `id`=".$player -> id);
 	    if ($player->gender == 'F')
 	      {

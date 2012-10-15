@@ -1,5 +1,7 @@
 2012-10-15  Bartek thindil Jasicki  <thindil@vallheru.net>
 
+	* UPDATE,farm.php: 
+	changed stat
 	* BUG,stats.php: 
 	fixed info about experience
 	* UPDATE,farm.php: 
