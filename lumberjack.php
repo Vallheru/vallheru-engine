@@ -6,8 +6,8 @@
  *   @name                 : lumberjack.php                            
  *   @copyright            : (C) 2004,2005,2006,2011,2012 Vallheru Team based on Gamers-Fusion ver 2.5
  *   @author               : thindil <thindil@vallheru.net>
- *   @version              : 1.6
- *   @since                : 22.08.2012
+ *   @version              : 1.7
+ *   @since                : 15.10.2012
  *
  */
 
@@ -32,14 +32,9 @@
 $title = "Wyrąb";
 require_once("includes/head.php");
 
-/**
-* Get the localization for game
-*/
-require_once("languages/".$lang."/lumberjack.php");
-
 if ($player -> location != 'Las') 
 {
-    error (ERROR);
+    error ('Nie znajdujesz się w lesie.');
 }
 
 $objLumberjack = $db -> Execute("SELECT `level` FROM `lumberjack` WHERE `owner`=".$player -> id);
@@ -57,20 +52,20 @@ if (isset ($_GET['action']) && $_GET['action'] == 'chop')
 {
     if (!isset($_POST['amount']))
     {
-        error(ERROR);
+      error('Zapomnij o tym');
     }
     checkvalue($_POST['amount']);
     if ($player-> energy < $_POST['amount']) 
     {
-        error(NO_ENERGY);
+        error('Nie masz tyle energii.');
     }
     if ($player -> hp <= 0) 
     {
-        error(YOU_DEAD);
+        error("Nie możesz wyrąbywać drewna, ponieważ jesteś martwy!");
     }
     if (!array_key_exists($_POST['type'], $arrOptions))
       {
-	error(ERROR);
+	error('Zapomnij o tym.');
       }
     /**
      * Count bonus to ability
@@ -100,7 +95,7 @@ if (isset ($_GET['action']) && $_GET['action'] == 'chop')
 	      {
 		$intKey = $_POST['type'] - 1;
 	      }
-	    $intBonus = 1 + ($player->lumberjack / 20);
+	    $intBonus = 1 + (($player->skills['lumberjack'][1] + $player->stats['strength'][2]) / 20);
 	    if ($intBonus > 30)
 	      {
 		$intBonus = 30;
@@ -112,7 +107,7 @@ if (isset ($_GET['action']) && $_GET['action'] == 'chop')
             }
             $arrAmount[$intKey] = $arrAmount[$intKey] + $intAmount;
             $intAmountability = $intAmountability + 0.1;
-	    $intExp += ($arrKey[$intKey] * 2) * $intAmount;
+	    $intExp += ($arrKey[$intKey] * $intAmount);
 	    break;
 	  case 7:
             $intAmount = rand(1,100);
@@ -127,7 +122,7 @@ if (isset ($_GET['action']) && $_GET['action'] == 'chop')
 		  {
                     $intLosthp = $player -> hp;
 		  }
-                $strInfo = TREE_STOMP.YOU_UNLUCK.$intLosthp.T_HITS;
+                $strInfo = "Podczas wyrębu przewróciło się na ciebie drzewo. Niestety nie udało Ci się go uniknąć. Spadając zadało Tobie ".$intLosthp." obrażeń.";
                 $player -> hp = $player -> hp - $intLosthp;
 		if ($player->hp == 0 && $player->antidote == 'R')
 		  {
@@ -139,7 +134,7 @@ if (isset ($_GET['action']) && $_GET['action'] == 'chop')
 	      }
 	    else
 	      {
-                $strInfo = TREE_STOMP.YOU_LUCK;
+                $strInfo = "Podczas wyrębu przewróciło się na ciebie drzewo. Na szczęście zdążyłeś uniknąć przygniecenia, jednak przerwało to na moment twoją pracę.";
 	      }
 	    break;
 	  default:
@@ -152,35 +147,35 @@ if (isset ($_GET['action']) && $_GET['action'] == 'chop')
     }
     $objLumberjack -> Close();
     $i --;
-    $strMessage = YOU_GO.$i.T_ENERGY2;
+    $strMessage = "Przeznaczyłeś na wyrąb lasu ".$i." energii.<br />";
     $intTest = array_sum($arrAmount) + $intAmountgold + $intAmountability;
     if (!$intTest)
     {
-        $strMessage = $strMessage.NOTHING;
+        $strMessage = $strMessage."Niestety nic nie znalazłeś.<br />";
     }
         else
     {
-        $strMessage = $strMessage.YOU_FIND;
+        $strMessage = $strMessage."Zdobyłeś:<br />";
     }
     if ($arrAmount[0])
     {
-        $strMessage = $strMessage.$arrAmount[0].T_PINE;
+        $strMessage = $strMessage.$arrAmount[0]." sztuk drewna sosnowego<br />";
     }
     if ($arrAmount[1])
     {
-        $strMessage = $strMessage.$arrAmount[1].T_HAZEL;
+        $strMessage = $strMessage.$arrAmount[1]." sztuk drewna z leszczyny<br />";
     }
     if ($arrAmount[2])
     {
-        $strMessage = $strMessage.$arrAmount[2].T_YEW;
+        $strMessage = $strMessage.$arrAmount[2]." sztuk drewna cisowego<br />";
     }
     if ($arrAmount[3])
     {
-        $strMessage = $strMessage.$arrAmount[3].T_ELM;
+        $strMessage = $strMessage.$arrAmount[3]." sztuk drewna z wiązu<br />";
     }
     if ($intAmountgold)
     {
-        $strMessage = $strMessage.$intAmountgold.T_GOLD;
+        $strMessage = $strMessage.$intAmountgold." sztuk złota<br />";
     }
     if ($intAmountability)
       {
@@ -188,13 +183,13 @@ if (isset ($_GET['action']) && $_GET['action'] == 'chop')
 	  {
 	    $intExp = $intExp * 2;
 	  }
-        $strMessage = $strMessage.$intAmountability.T_ABILITY." oraz ".$intExp." PD.<br />";
+        $strMessage = $strMessage.$intExp." PD.<br />";
       }
     $strMessage = $strMessage.$strInfo;
     $smarty -> assign(array("Message" => $strMessage,
 			    "Lselected" => $_POST['type']));
-    require_once('includes/checkexp.php');
-    checkexp($player->exp, $intExp, $player->level, $player->race, $player->user, $player->id, 0, 0, $player->id, 'lumberjack', $intAmountability);
+    $player->checkexp(array('lumberjack' => ($intExp / 2)), $player->id, 'skills');
+    $player->checkexp(array('strength' => ($intExp / 2)), $player->id, 'stats');
     $db -> Execute("UPDATE `players` SET `energy`=`energy`-".$i.", `credits`=`credits`+".$intAmountgold.", `hp`=`hp`-".$intLosthp." WHERE `id`=".$player -> id);
     $objLumber = $db -> Execute("SELECT `owner` FROM `minerals` WHERE `owner`=".$player -> id);
     if (!$objLumber -> fields['owner'])
@@ -215,20 +210,20 @@ if (isset ($_GET['action']) && $_GET['action'] == 'chop')
 if (!isset($_GET['action'])) 
 {
     $_GET['action'] = '';
-    $smarty -> assign("Youwant", YOU_WANT);
+    $smarty -> assign("Youwant", "Czy chcesz wyruszyć na poszukiwanie drewna?");
 }
 
 /**
 * Assign variables to template and display page
 */
 $smarty -> assign (array("Action" => $_GET['action'],
-                         "Aback" => A_BACK,
+                         "Aback" => "Wróć",
                          "Health" => $player -> hp,
-			 "Achop" => A_CHOP,
-			 "Onchop" => ON_CHOP,
+			 "Achop" => "Przeznacz",
+			 "Onchop" => "na wyrąb drewna",
 			 "Curen" => $player->energy,
 			 "Loptions" => $arrOptions,
-			 "Tenergy" => T_ENERGY));
+			 "Tenergy" => "energii."));
 $smarty -> display ('lumberjack.tpl');
 
 require_once("includes/foot.php"); 

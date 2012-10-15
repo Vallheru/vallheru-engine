@@ -1,5 +1,7 @@
 2012-10-15  Bartek thindil Jasicki  <thindil@vallheru.net>
 
+	* UPDATE,languages/pl/lumberjack.php, lumberjack.php: 
+	updated lumberjack
 	* UPDATE,templates/layout1/alchemist.tpl, templates/alchemist.tpl, alchemik.php, languages/pl/alchemik.php: 
 	update alchemy lab
 	* UPDATE,landfill.php: 
