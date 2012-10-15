@@ -63,16 +63,16 @@
 					</tr>
 				</thead>
 				<tbody>
-					{section name=number loop=$Name}
+					{foreach $Plans as $plan}
 						<tr>
-							<td><a href="alchemik.php?alchemik=pracownia&amp;dalej={$Id[number]}">{$Name[number]}</a></td>
-							<td>{$Level[number]}</td>
-							<td>{$Illani[number]}</td>
-							<td>{$Illanias[number]}</td>
-							<td>{$Nutari[number]}</td>
-							<td>{$Dynallca[number]}</td>
+							<td><a href="alchemik.php?alchemik=pracownia&amp;dalej={$plan.id}">{$plan.name}</a></td>
+							<td>{$plan.level}</td>
+							<td>{$plan.illani}</td>
+							<td>{$plan.illanias}</td>
+							<td>{$plan.nutari}</td>
+							<td>{$plan.dynallca}</td>
 						</tr>
-					{/section}
+					{/foreach}
 				</tbody>
 			</table>
 		{/if}
@@ -82,7 +82,7 @@
 			</form>
 		{/if}
 		{if $Make != 0}
-			<p>{$Youmake} <b>{$Name}</b> <b>{$Amount}</b> {$Pgain} <b>{$Exp}</b> {$Exp_and} <b>{$Ability}</b> {$Alchemylevel}</p>
+			<p>{$Youmake} <b>{$Name}</b> <b>{$Amount}</b> {$Pgain} <b>{$Exp}</b> {$Exp_and}</p>
 			<p>{$Youmade}</p>
 			<p>{foreach $Imaked as $value}
 			    {$value@key} ({$Ipower}: {$value[0]}) {$Iamount}: {$value[1]}<br />
