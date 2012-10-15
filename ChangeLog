@@ -1,5 +1,7 @@
 2012-10-15  Bartek thindil Jasicki  <thindil@vallheru.net>
 
+	* BUG,class/player_class.php: 
+	fixed some bugs
 	* UPDATE,install/db/update.sql:
 	drop starting energy
 

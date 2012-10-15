@@ -7,7 +7,7 @@
  *   @copyright            : (C) 2004,2005,2006,2007,2011,2012 Vallheru Team based on Gamers-Fusion ver 2.5
  *   @author               : thindil <thindil@vallheru.net>
  *   @version              : 1.7
- *   @since                : 11.10.2012
+ *   @since                : 15.10.2012
  *
  */
 
@@ -323,12 +323,12 @@ class Player
 	{
 	  foreach ($arrNames as $strName)
 	    {
-	      $intBonus = ceil($this->skills[$strName] / 10);
+	      $intBonus = ceil($this->skills[$strName][1] / 10);
 	      if ($this->race == 'Gnom')
 		{
-		  $intBonus += ceil($this->skills[$strName] / 20);
+		  $intBonus += ceil($this->skills[$strName][1] / 20);
 		}
-	      $this->skills[$strName] += $intBonus;
+	      $this->skills[$strName][1] += $intBonus;
 	    }
 	}
       if ($blnCraft)
@@ -350,7 +350,7 @@ class Player
 		}
 	      if (stripos($this->equip[12][1], $arrTools[$strName]) !== FALSE)
 		{
-		  $this->skills[$strName] += floor(($this->equip[12][2] / 100) * $this->skills[$strName]);
+		  $this->skills[$strName][1] += floor(($this->equip[12][2] / 100) * $this->skills[$strName][1]);
 		  if ($blnClear)
 		    {
 		      $this->equip[12][6] --;
@@ -448,7 +448,7 @@ class Player
 	{
 	  if ($strType == 'stats')
 	    {
-	      if ($this->stats[$stat][2] == $this->stats[$stat][1])
+	      if ($this->oldstats[$stat][2] == $this->oldstats[$stat][1])
 		{
 		  continue;
 		}
