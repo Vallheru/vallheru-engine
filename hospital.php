@@ -6,8 +6,8 @@
  *   @name                 : hospital.php                            
  *   @copyright            : (C) 2004,2005,2006,2007,2011,2012 Vallheru Team based on Gamers-Fusion ver 2.5
  *   @author               : thindil <thindil@vallheru.net>
- *   @version              : 1.6
- *   @since                : 23.05.2012
+ *   @version              : 1.7
+ *   @since                : 15.10.2012
  *
  */
 
@@ -32,14 +32,9 @@
 $title = "Szpital";
 require_once("includes/head.php");
 
-/**
-* Get the localization for game
-*/
-require_once("languages/".$lang."/hospital.php");
-
 if ($player -> location != 'Altara' && $player -> location != 'Ardulith') 
 {
-    error (ERROR);
+    error ('Nie znajdujesz się w mieście.');
 }
 
 $mytribe = $db -> Execute("SELECT `hospass` FROM `tribes` WHERE `id`=".$player -> tribe);
@@ -47,46 +42,46 @@ if (!isset ($_GET['action']))
 {
     if ($player -> hp == $player -> max_hp) 
     {
-        error(STOP_WASTE." (<a href=\"city.php\">".BACK."</a>)");
+        error("Nie potrzebujesz leczenia (<a href=\"city.php\">Wróć do miasta</a>)");
     }
     if ($player -> tribe > 0) 
     {
         if ($mytribe -> fields['hospass'] == "Y" && $player -> hp > 0) 
 	  {
 	    $crneed = ($player -> max_hp - $player -> hp);
-	    error(COULD_YOU." <a href=hospital.php?action=heal>".A_HEAL."</a>?<br />".SURE_IT.$crneed.GOLD_COINS);
+	    error("Czy możesz mnie  <a href=hospital.php?action=heal>uzdrowić</a>?<br />"."Jasne, twój klan ma zniżkę na leczenie. Będzie cię to kosztowało <b>".$crneed."</b> sztuk złota.");
 	  }
     }
     if ($player -> hp > 0) 
     {
-        $crneed = ($player -> max_hp - $player -> hp) * $player->level;
+        $crneed = ($player -> max_hp - $player -> hp) * 2;
         if ($crneed < 0)
         {
             $crneed = 0;
         }
         if ($crneed > $player -> credits) 
         {
-            error(NO_MONEY2.$crneed.GOLD_COINS." (<a href=\"city.php\">".BACK."</a>)");
+            error("Nie możesz być wyleczony. Potrzebujesz <b>".$crneed."</b> sztuk złota. (<a href=\"city.php\">Wróć</a>)");
         }
         $smarty -> assign ("Need",$crneed);
     }
     if ($player -> hp <= 0) 
     {
-        $crneed = (50 * $player -> level);
+        $crneed = (50 * $player -> max_hp);
         if ($crneed > $player -> credits) 
         {
-            error(NO_MONEY.$crneed.GOLD_COINS." (<a href=\"city.php\">".BACK."</a>)");
+            error("Nie możesz zostać wskrzeszony. Potrzebujesz <b>".$crneed."</b> sztuk złota. (<a href=\"city.php\">Wróć</a>)");
         }
         $smarty -> assign ("Need",$crneed);
     }
     $_GET['action'] = '';
-    $smarty -> assign(array("Ayes" => YES,
-                            "Couldyou" => COULD_YOU,
-                            "Couldyou2" => COULD_YOU2,
-                            "Itcost" => IT_COST,
-                            "Itcost2" => IT_COST2,
-                            "Goldcoins" => GOLD_COINS2,
-                            "Aheal" => A_HEAL));
+    $smarty -> assign(array("Ayes" => 'Tak',
+                            "Couldyou" => "Czy możesz mnie ",
+                            "Couldyou2" => "Czy chcesz aby twa dusza wróciła do ciała?",
+                            "Itcost" => "Jasne, będzie cię to kosztowało",
+                            "Itcost2" => "Będzie kosztowało to",
+                            "Goldcoins" => "sztuk złota.",
+                            "Aheal" => "uzdrowić"));
 }
 else
   {
@@ -94,7 +89,7 @@ else
       {
 	if ($player -> hp <= 0) 
 	  {
-	    error(BAD_ACTION);
+	    error("Musisz być wskrzeszony nie uleczony");
 	  }
 	if ($mytribe -> fields['hospass'] == "Y") 
 	  {
@@ -102,7 +97,7 @@ else
 	  }
 	else
 	  {
-	    $crneed = ($player -> max_hp - $player -> hp) * $player->level;
+	    $crneed = ($player -> max_hp - $player -> hp) * 2;
 	  }
 	if ($crneed < 0)
 	  {
@@ -110,15 +105,15 @@ else
 	  }
 	if ($crneed > $player -> credits) 
 	  {
-	    error (NO_MONEY.$crneed.GOLD_COINS." (<a href=\"city.php\">".BACK."</a>)");
+	    error ("Nie możesz być wyleczony. Potrzebujesz <b>".$crneed."</b> sztuk złota. (<a href=\"city.php\">Wróć</a>)");
 	  }
 	$db -> Execute("UPDATE `players` SET `hp`=`max_hp`, `credits`=`credits`-".$crneed." WHERE `id`=".$player -> id);
-	error(YOU_HEALED." (<a href=\"city.php\">".BACK."</a>)");
+	error("<br />Jesteś kompletnie wyleczony. (<a href=\"city.php\">Wróć</a>)");
       }
     elseif ($_GET['action'] == 'ressurect') 
       {
 	require_once('includes/resurect.php');
-	error(YOU_RES.$pdpr.LOST_EXP." (<a href=\"city.php\">".BACK."</a>)");
+	error("<br>Zostałeś wskrzeszony, ale straciłeś ".$pdpr." Punktów Doświadczenia. (<a href=\"city.php\">Wróć</a>)");
       }
   }
 $mytribe -> Close();
