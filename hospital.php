@@ -113,7 +113,15 @@ else
     elseif ($_GET['action'] == 'ressurect') 
       {
 	require_once('includes/resurect.php');
-	error("<br>Zostałeś wskrzeszony, ale straciłeś ".$pdpr." Punktów Doświadczenia. (<a href=\"city.php\">Wróć</a>)");
+	if ($lostexp > 0)
+	  {
+	    $strLost = ', ale straciłeś '.$lostexp.' Punktów Doświadczenia do '.$strLoststat;
+	  }
+	else
+	  {
+	    $strLost = '';
+	  }
+	error("<br>Zostałeś wskrzeszony".$strLost.". (<a href=\"city.php\">Wróć</a>)");
       }
   }
 $mytribe -> Close();

@@ -5,9 +5,9 @@
  *
  *   @name                 : resurect.php                            
  *   @copyright            : (C) 2004,2005,2006,2011 Vallheru Team based on Gamers-Fusion ver 2.5
- *   @author               : thindil <thindil@tuxfamily.org>
- *   @version              : 1.4
- *   @since                : 24.11.2011
+ *   @author               : thindil <thindil@vallheru.net>
+ *   @version              : 1.7
+ *   @since                : 15.10.2012
  *
  */
 
@@ -37,23 +37,49 @@ if ($player -> hp > 0)
     error("Nie potrzebujesz wskrzeszenia.");
 }
 
-$crneed = (50 * $player -> level);
-
-$pdpr1 = ceil($player -> exp / 100);
-$pdpr = ($pdpr1 * 2);
-if ($pdpr < 0)
-{
-    $pdpr = $pdpr * -1;
-}
-$pd = ($player -> exp - $pdpr);
-if ($pd < 0 && $player -> exp > 0)
-{
-    $pd = 0;
-}
+$crneed = (50 * $player -> max_hp);
 
 if ($crneed > $player -> credits) 
 {
     error ("Nie masz przy sobie pieniędzy na wskrzeszenie. Potrzebujesz ".$crneed." sztuk złota.");
 }
-$db -> Execute("UPDATE `players` SET `exp`=".$pd.", `hp`=`max_hp`, `credits`=`credits`-".$crneed." WHERE `id`=".$player -> id);
+
+/**
+ * Count lost experience
+ */
+$rand = rand(1, 100);
+//Lost experience in stats
+if ($rand < 51)
+  {
+    $strKey = array_rand($player->stats);
+    if ($player->oldstats[$strKey][2] == $player->oldstats[$strKey][1])
+      {
+	$lostexp = $player->oldstats[$strKey][1] * 2000;
+      }
+    else
+      {
+	$lostexp = ceil($player->oldstats[$strKey][3] / 100);
+	$player->stats[$strKey][3] -= $lostexp;
+	$player->oldstats[$strKey][3] -= $lostexp;
+      }
+    $strLoststat = 'cechy '.$player->oldstats[$strKey][0];
+  }
+//Lost experience in skills
+else
+  {
+    $strKey = array_rand($player->skills);
+    if ($player->oldskills[$strKey][1] == 100)
+      {
+	$lostexp = 10000;
+      }
+    else
+      {
+	$lostexp = ceil($player->oldskills[$strKey][2] / 10);
+	$player->skills[$strKey][2] -= $lostexp;
+	$player->oldskills[$strKey][2] -= $lostexp;
+      }
+    $strLoststat = 'umiejętności '.$player->oldskills[$strKey][0];
+  }
+
+$db -> Execute("UPDATE `players` SET `hp`=`max_hp`, `credits`=`credits`-".$crneed." WHERE `id`=".$player -> id);
 ?>
