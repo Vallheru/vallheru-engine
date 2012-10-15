@@ -1,5 +1,7 @@
 2012-10-15  Bartek thindil Jasicki  <thindil@vallheru.net>
 
+	* BUG,stats.php: 
+	fixed info about experience
 	* UPDATE,farm.php: 
 	updated farm
 	* BUG,class/player_class.php: 
