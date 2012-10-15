@@ -6,8 +6,8 @@
  *   @name                 : farm.php                            
  *   @copyright            : (C) 2004,2005,2006,2011,2012 Vallheru Team based on Gamers-Fusion ver 2.5
  *   @author               : thindil <thindil@vallheru.net>
- *   @version              : 1.6
- *   @since                : 12.10.2012
+ *   @version              : 1.7
+ *   @since                : 15.10.2012
  *
  */
 
@@ -133,16 +133,15 @@ else
 		    $intAmountseeds++;
 		  }
 	      }
-	    $fltSkill = $intAmountseeds / 100;
-	    $intExp = $intAmountseeds * 10;
+	    $intExp = $intAmountseeds;
 	    if ($player->clas == 'Rzemieślnik') 
 	      {
-		$fltSkill = $fltSkill * 2;
 		$intExp = $intExp * 2;
 	      }
 	    $arrSeeds = array('ilani_seeds', 'illanias_seeds', 'nutari_seeds', 'dynallca_seeds');
 	    $db -> Execute("UPDATE `herbs` SET `".$arrHerbs[$intKey]."`=`".$arrHerbs[$intKey]."`-".$intAmountherbs.", `".$arrSeeds[$intKey]."`=`".$arrSeeds[$intKey]."`+".$intAmountseeds." WHERE `gracz`=".$player -> id);
-	    checkexp($player->exp, $intExp, $player->level, $player->race, $player->user, $player->id, 0, 0, $player->id, 'herbalist', $fltSkill);
+	    $player->checkexp(array('herbalism' => ($intExp / 2)), $player->id, 'skills');
+	    $player->checkexp(array('inteli' => ($intExp / 2)), $player->id, 'stats');
 	    $db -> Execute("UPDATE `players` SET `energy`=`energy`-".$intAmountenergy." WHERE `id`=".$player -> id);
 	    if ($player->gender == 'F')
 	      {
@@ -152,7 +151,7 @@ else
 	      {
 		$strLast = "eś";
 	      }
-	    message("success", "Wysuszyłeś <b>".$intAmountherbs."</b> sztuk ziół i otrzymaleś w zamian <b>".$intAmountseeds."</b> paczek nasion. Zdobył".$strLast." <b>".$fltSkill."</b> do umiejętności Zielarstwo oraz ".$intExp." PD.");
+	    message("success", "Wysuszyłeś <b>".$intAmountherbs."</b> sztuk ziół i otrzymaleś w zamian <b>".$intAmountseeds."</b> paczek nasion. Zdobył".$strLast." <b>".$intExp."</b> PD.");
 	  }
 	$smarty -> assign(array("Houseinfo" => "Witaj w chatce ogrodnika. Tutaj możesz suszyć zioła, aby otrzymać z nich nasiona potrzebne do zasiania plantacji. Za każde 10 ziół danego rodzaju otrzymujesz 1 paczkę nasion. Koszt suszenia ziół to 0.5 enegii za każdą paczkę ziół.",
 				"Adry" => "Wysusz",
@@ -423,18 +422,17 @@ else
 			  }
 		      }
 		  }
-		$fltAbility = $_POST['amount'] * 0.01;
 		$intExp = $_POST['amount'] * 5;
 		if ($player->clas == 'Rzemieślnik') 
 		  {
-		    $fltAbility = $fltAbility * 2;
 		    $intExp = $intExp * 2;
 		  }
 		$db -> Execute("UPDATE herbs SET ".$arrSeeds[$intKey]."=".$arrSeeds[$intKey]."-".$_POST['amount']." WHERE gracz=".$player -> id);
 		$db -> Execute("INSERT INTO `farm` (`farmid`, `owner`, `amount`, `name`, `age`) VALUES(".$objPlantation->fields['id'].", ".$player->id.", ".$_POST['amount'].", '".$arrHerbsname[$intKey]."', 0)") or die($db->ErrorMsg());
-		checkexp($player->exp, $intExp, $player->level, $player->race, $player->user, $player->id, 0, 0, $player->id, 'herbalist', $fltAbility);
+		$player->checkexp(array('herbalism' => ($intExp / 2)), $player->id, 'skills');
+		$player->checkexp(array('agility' => ($intExp / 2)), $player->id, 'stats');
 		$db -> Execute("UPDATE `players` SET `energy`=`energy`-".$intEnergy." WHERE `id`=".$player -> id);
-		message("success", "Zasiałeś <b>".$_POST['amount']."</b> obszarów farmy ziołem ".$arrHerbsname[$intKey].". Zdobyłeś <b> ".$fltAbility."</b> poziomów w umiejętności Zielarstwo oraz ".$intExp." PD.");
+		message("success", "Zasiałeś <b>".$_POST['amount']."</b> obszarów farmy ziołem ".$arrHerbsname[$intKey].". Zdobyłeś <b>".$intExp."</b> PD.");
 	      }
 	  }
 	
@@ -508,13 +506,9 @@ else
 		    /**
 		     * Add bonuses to ability
 		     */
-		    $player->curskills(array('herbalist'), TRUE, TRUE);
+		    $player->curskills(array('herbalism'), TRUE, TRUE);
 		    
-		    $intFactor = ceil($player->herbalist / 10);
-		    if ($intFactor > 50)
-		      {
-			$intFactor = 50;
-		      }
+		    $intFactor = ceil(($player->stats['agility'][2] + $player->skills['herbalism'][1]) / 10);
 		    $intAmount = floor((($arrAge[$intKey2] * $_POST['amount']) / $arrHerbmodif[$intKey]) * $intFactor);
 		    $intAmount = floor($intAmount + ($intAmount * $intRoll));
 		    if ($intAmount < 0)
@@ -523,17 +517,14 @@ else
 		      }
 		    if ($objHerb -> fields['age'] > 3)
 		      {
-			$fltAbility = $intAmount * 0.001;
 			$intExp = $intAmount * 2;
 		      }
 		    else
 		      {
-			$fltAbility = 0.001;
 			$intExp = 0;
 		      }
 		    if ($player->clas == 'Rzemieślnik') 
 		      {
-			$fltAbility = $fltAbility * 2;
 			$intExp = $intExp * 2;
 		      }
 		    if ($_POST['amount'] < $objHerb -> fields['amount'])
@@ -545,9 +536,10 @@ else
 			$db -> Execute("DELETE FROM `farm` WHERE `id`=".$_GET['id']);
 		      }
 		    $db -> Execute("UPDATE `herbs` SET `".$arrHerbname[$intKey]."`=`".$arrHerbname[$intKey]."`+".$intAmount." WHERE `gracz`=".$player -> id);
-		    checkexp($player->exp, $intExp, $player->level, $player->race, $player->user, $player->id, 0, 0, $player->id, 'herbalist', $fltAbility);
+		    $player->checkexp(array('herbalism' => ($intExp / 2)), $player->id, 'skills');
+		    $player->checkexp(array('agility' => ($intExp / 2)), $player->id, 'stats');
 		    $db -> Execute("UPDATE `players` SET `energy`=`energy`-".$intEnergy." WHERE `id`=".$player -> id);
-		    message("success", "Zebrałeś <b>".$intAmount."</b> sztuk ".$arrHerbname[$intKey]." z farmy. W zamian zdobyłeś ".$fltAbility." poziomów w umiejętności Zielarstwo oraz ".$intExp." PD");
+		    message("success", "Zebrałeś <b>".$intAmount."</b> sztuk ".$arrHerbname[$intKey]." z farmy. W zamian zdobyłeś <b>".$intExp."</b> PD");
 		  }
 		$objHerb -> Close();
 	      }
