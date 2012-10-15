@@ -1,3 +1,8 @@
+2012-10-15  Bartek thindil Jasicki  <thindil@vallheru.net>
+
+	* UPDATE,install/db/update.sql:
+	drop starting energy
+
 2012-10-12  Bartek thindil Jasicki  <thindil@vallheru.net>
 
 	* UPDATE,farm.php, languages/pl/farm.php: 
