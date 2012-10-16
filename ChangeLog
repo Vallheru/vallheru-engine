@@ -1,5 +1,7 @@
 2012-10-16  Bartek thindil Jasicki  <thindil@vallheru.net>
 
+	* UPDATE,templates/layout1/lumbermill.tpl, templates/lumbermill.tpl, languages/pl/lumbermill.php, lumbermill.php: 
+	updated lumbermill
 	* UPDATE,farm.php: 
 	clear blessing to stat
 	* UPDATE,las.php:

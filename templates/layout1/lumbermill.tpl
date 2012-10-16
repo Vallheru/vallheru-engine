@@ -24,12 +24,12 @@
 {if $Mill == "plany"}
     {$Plansinfo}<br />
     {$Hereis}:
-    <table class="dark">
-    <tr>
-    <td width="100"><b><u>{$Iname}</u></b></td>
-    <td width="50"><b><u>{$Icost}</u></b></td>
-    <td><b><u>{$Ilevel}</u></b></td>
-    <td><b><u>{$Ioption}</u></b></td>
+    <table width="95%" align="center">
+    <tr align="left">
+    <th>{$Iname}</th>
+    <th>{$Icost}</th>
+    <th>{$Ilevel}</th>
+    <th>{$Ioption}</th>
     </tr>
     {section name=mill loop=$Name}
         <tr>
@@ -50,12 +50,12 @@
         {$Millinfo}
         {if $Maked == ""}
              {$Info}:
-             <table class="dark">
-             <tr>
-             <td width="100"><b><u>{$Iname}</u></b></td>
-             <td width="50"><b><u>{$Ilevel}</u></b></td>
-	     <td width="50"><b><u>{$Ienergy}</u></b></td>
-             <td><b><u>{$Ilumber}</u></b></td>
+             <table width="95%" align="center">
+             <tr align="left">
+             <th>{$Iname}</th>
+             <th>{$Ilevel}</th>
+	     <th>{$Ienergy}</th>
+             <th>{$Ilumber}</th>
 	     {if $Mill == "elite"}
 	         <td><b><u>{$Tloot}</u><b></td>
              {/if}
@@ -75,11 +75,11 @@
         {/if}
         {if $Maked == "1"}
             {$Info2}:
-            <table class="dark">
+            <table width="95%" align="center">
             <tr>
-            <td width="100"><b><u>{$Iname}</u></b></td>
-            <td width="50"><b><u>{$Ipercent}</u></b></td>
-            <td width="50"><b><u>{$Ienergy}</u></b></td>
+            <th>{$Iname}</th>
+            <th>{$Ipercent}</th>
+            <th>{$Ienergy}</th>
             </tr>
             <tr>
             <td><a href="lumbermill.php?mill={$Mill}&amp;ko={$Planid}">{$Name}</a></td>
