@@ -7,7 +7,7 @@
  *   @copyright            : (C) 2004,2005,2006,2011,2012 Vallheru Team based on Gamers-Fusion ver 2.5
  *   @author               : thindil <thindil@vallheru.net>
  *   @version              : 1.7
- *   @since                : 15.10.2012
+ *   @since                : 16.10.2012
  *
  */
 
@@ -536,6 +536,7 @@ else
 			$db -> Execute("DELETE FROM `farm` WHERE `id`=".$_GET['id']);
 		      }
 		    $db -> Execute("UPDATE `herbs` SET `".$arrHerbname[$intKey]."`=`".$arrHerbname[$intKey]."`+".$intAmount." WHERE `gracz`=".$player -> id);
+		    $player->clearbless(array('agility'));
 		    $player->checkexp(array('herbalism' => ($intExp / 2)), $player->id, 'skills');
 		    $player->checkexp(array('agility' => ($intExp / 2)), $player->id, 'stats');
 		    $db -> Execute("UPDATE `players` SET `energy`=`energy`-".$intEnergy." WHERE `id`=".$player -> id);
