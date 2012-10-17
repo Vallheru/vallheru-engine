@@ -6,8 +6,8 @@
  *   @name                 : smelter.php                            
  *   @copyright            : (C) 2004,2005,2006,2011,2012 Vallheru Team based on Gamers-Fusion ver 2.5
  *   @author               : thindil <thindil@vallheru.net>
- *   @version              : 1.6
- *   @since                : 07.09.2012
+ *   @version              : 1.7
+ *   @since                : 17.10.2012
  *
  */
 
@@ -32,14 +32,9 @@
 $title = "Huta";
 require_once("includes/head.php");
 
-/**
-* Get the localization for game
-*/
-require_once("languages/".$lang."/smelter.php");
-
 if ($player -> location != 'Altara') 
 {
-    error (ERROR);
+    error ("Nie znajdujesz się w mieście.");
 }
 
 $objSmelter = $db -> Execute("SELECT `level` FROM `smelter` WHERE `owner`=".$player -> id);
@@ -71,12 +66,12 @@ if (isset($_GET['step']))
 	  {
 	    if ($objSmelter -> fields['level'] == 5)
 	      {
-		error(NO_UPGRADE);
+		error("Nie możesz więcej rozbudowywać huty!");
 	      }
 	    $arrCost = array(1000, 5000, 20000, 60000, 120000);
 	    if ($player -> credits < $arrCost[$intSmelterlevel])
 	      {
-		message('error', NO_MONEY);
+		message('error', "Nie masz tyle sztuk złota!");
 	      }
 	    else
 	      {
@@ -91,26 +86,26 @@ if (isset($_GET['step']))
 		$db -> Execute("UPDATE `players` SET `credits`=`credits`-".$arrCost[$intSmelterlevel]." WHERE `id`=".$player -> id);
 		$objSmelter = $db -> Execute("SELECT `level` FROM `smelter` WHERE `owner`=".$player -> id);
 		$intSmelterlevel ++;
-		message("success", YOU_UPGRADE);
+		message("success", "Rozbudowałeś swoją hutę.");
 	      }
 	  }
 
 	switch ($intSmelterlevel)
 	  {
 	  case 0:
-	    $strLevel = LEVEL1;
+	    $strLevel = "Poziom 1 - wytapianie miedzi (1000 sztuk złota)";
 	    break;
 	  case 1:
-	    $strLevel = LEVEL2;
+	    $strLevel = "Poziom 2 - wytapianie miedzi, brązu (5000 sztuk złota)";
 	    break;
 	  case 2:
-	    $strLevel = LEVEL3;
+	    $strLevel = "Poziom 3 - wytapianie miedzi, brązu, mosiądzu (20000 sztuk złota)";
 	    break;
 	  case 3:
-	    $strLevel = LEVEL4;
+	    $strLevel = "Poziom 4 - wytapianie miedzi, brązu, mosiadzu, żelaza (60000 sztuk złota)";
 	    break;
 	  case 4:
-	    $strLevel = LEVEL5;
+	    $strLevel = "Poziom 5 - wytapianie miedzi, brązu, mosiądzu, żelaza, stali (120000 sztuk złota)";
 	    break;
 	  case 5:
 	    $strLevel = '';
@@ -122,9 +117,9 @@ if (isset($_GET['step']))
 	/**
 	 * Upgrade menu
 	 */
-	$smarty -> assign(array("Upgradeinfo" => UPGRADE_INFO,
+	$smarty -> assign(array("Upgradeinfo" => "Tutaj możesz ulepszyć swoją hutę. Każdy nowy poziom huty pozwala ci wytapiać kolejne surowce",
 				"Levelinfo" => $strLevel,
-				"Aupgrade" => A_UPGRADE3));
+				"Aupgrade" => "Ulepsz"));
       }
 
     /**
@@ -225,12 +220,12 @@ if (isset($_GET['step']))
 		//Start melting
 		if ($blnValid)
 		  {
-		    $player->curskills(array('metallurgy'), TRUE, TRUE);
+		    $player->curskills(array('smelting'), TRUE, TRUE);
 		    $intDiff = 100 * $arrBillets[$intKey];
 		    $intAmount = 0;
 		    for ($i = 0; $i < $_POST['amount']; $i++)
 		      {
-			$intRoll = rand(1, $player->metallurgy * 100);
+			$intRoll = rand(1, ($player->skills['smelting'][1] + $player->stats['condition'][2]) * 100);
 			$intRoll2 = rand(1, $intDiff);
 			if ($intRoll > $intRoll2)
 			  {
@@ -242,15 +237,14 @@ if (isset($_GET['step']))
 			    $intAmount += floor($intMaxamount * $fltRand);
 			  }
 		      }
-		    $fltAbility = round(($intAmount / 100)  + ($_POST['amount'] * 0.01), 2);
 		    $intExp = $intAmount * ($arrBillets[$intKey] / 2);
 		    if ($player->clas == 'Rzemieślnik')
 		      {
-			$fltAbility = $fltAbility * 2;
 			$intExp = $intExp * 2;
 		      }
-		    require_once('includes/checkexp.php');
-		    checkexp($player->exp, $intExp, $player->level, $player->race, $player->user, $player->id, 0, 0, $player->id, 'metallurgy', $fltAbility);
+		    $player->clearbless(array('condition'));
+		    $player->checkexp(array('condition' => ($intExp / 2)), $player->id, "stats");
+		    $player->checkexp(array('smelting' => ($intExp / 2)), $player->id, "skills");
 		    $db -> Execute("UPDATE `players` SET `energy`=`energy`-".$intEnergy." WHERE `id`=".$player -> id);
 		    $player->energy -= $intEnergy;
 		    if ($_POST['amount'] == $objItem->fields['amount'])
@@ -263,7 +257,7 @@ if (isset($_GET['step']))
 		      }
 		    $arrAction = array('copper', 'bronze', 'brass', 'iron', 'steel');
 		    $db->Execute("UPDATE `minerals` SET `coal`=`coal`-".$intCoalneed.", `".$arrAction[$intKey]."`=`".$arrAction[$intKey]."`+".$intAmount." WHERE `owner`=".$player->id);
-		    message('success', 'Przetopiłeś '.$_POST['amount'].' sztuk '.$objItem->fields['name'].' i uzyskałeś '.$intAmount.' sztabek '.$arrMaterials[$intKey].', '.$fltAbility.' do umiejętności Hutnictwo oraz '.$intExp.' punktów doświadczenia. Zużyłeś na to '.$intEnergy.' energii oraz '.$intCoalneed.' sztuk węgla.');
+		    message('success', 'Przetopiłeś '.$_POST['amount'].' sztuk '.$objItem->fields['name'].' i uzyskałeś '.$intAmount.' sztabek '.$arrMaterials[$intKey].' oraz '.$intExp.' punktów doświadczenia. Zużyłeś na to '.$intEnergy.' energii oraz '.$intCoalneed.' sztuk węgla.');
 		  }
 	      }
 	  }
@@ -306,23 +300,23 @@ if (isset($_GET['step']))
       {
 	if (!$objSmelter -> fields['level'])
 	  {
-	    error(NO_SMELT);
+	    error("Nie możesz wytapiać rud surowców ponieważ nie masz odpowiednio rozbudowanej huty!");
 	  }
 	$arrAction = array('copper', 'bronze', 'brass', 'iron', 'steel');
 	$arrBillets = array(1, 2, 3, 5, 8);
-	$arrSmelt = array(SMELT1, SMELT2, SMELT3, SMELT4, SMELT5);
+	$arrSmelt = array("Wytapiaj miedź (2 rudy miedzi + 1 bryła węgla = 1 sztabka miedzi)", "Wytapiaj brąz (1 ruda miedzi + 1 ruda cyny + 2 bryły węgla = 1 sztabka brązu)", "Wytapiaj mosiądz (2 rudy miedzi + 1 ruda cynku + 2 bryły węgla = 1 sztabka mosiądzu)", "Wytapiaj żelazo (2 rudy żelaza + 3 bryły węgla = 1 sztabka żelaza)", "Wytapiaj stal (3 rudy żelaza + 7 brył węgla = 1 sztabka stali)");
 	$arrSmelt = array_slice($arrSmelt, 0, $objSmelter -> fields['level']);
 	$arrAction = array_slice($arrAction, 0, $objSmelter -> fields['level']);
 	if (isset($_GET['smelt']))
 	  {
 	    if (!in_array($_GET['smelt'], $arrAction))
 	      {
-		error(ERROR);
+		error("Zapomnij o tym.");
 	      }
 	    $blnValid = TRUE;
 	    if ($player -> hp < 1)
 	      {
-		message('error', YOU_DEAD);
+		message('error', "Nie możesz wytapiać sztabek ponieważ jesteś martwy");
 		$blnValid = FALSE;
 	      }
 	    else
@@ -336,14 +330,14 @@ if (isset($_GET['step']))
 		  {
 		    if (!$objTestore -> fields[$strOres])
 		      {
-			message('error', NO_MINERALS);
+			message('error', "Nie masz minerałów potrzebnych do wytapiania tego surowca!");
 			$blnValid = FALSE;
 			break;
 		      }
 		  }
 		if (!$player -> energy)
 		  {
-		    message('error', NO_ENERGY);
+		    message('error', "Nie masz energii aby wytapiać surowce");
 		    $blnValid = FALSE;
 		  }
 	      }
@@ -355,14 +349,14 @@ if (isset($_GET['step']))
 					array(2, 3),
 					array(3, 7));
 		$arrOresamount = $arrSmeltamount[$intKey];
-		$arrOresname = array('copperore' => MIN1,
-				     'tinore' => MIN2,
-				     'zincore' => MIN3,
-				     'ironore' => MIN4,
-				     'coal' => MIN5);
+		$arrOresname = array('copperore' => "</b> rud miedzi, <b>",
+				     'tinore' => "</b> rud cyny, <b>",
+				     'zincore' => "</b> rud cynku, <b>",
+				     'ironore' => "</b> rud żelaza, <b>",
+				     'coal' => "</b> brył węgla, <b>");
 		$arrAmount2 = array();
 		$arrOresname2 = array();
-		$arrSmeltmineral = array(SMELTM1, SMELTM2, SMELTM3, SMELTM4, SMELTM5);
+		$arrSmeltmineral = array("sztabek miedzi.", "sztabek brązu.", "sztabek mosiądzu.", "sztabek żelaza.", "sztabek stali.");
 		/**
 		 * Start smelting
 		 */
@@ -374,18 +368,18 @@ if (isset($_GET['step']))
 		    $intEnergy = round($intEnergy, 2);
 		    if ($intEnergy > $player -> energy)
 		      {
-			message('error', NO_ENERGY2);
+			message('error', "Nie masz tyle energii!");
 			$blnValid = FALSE;
 		      }
 		    $i = 0;
 		    $arrAmount = array();
-		    $player->curskills(array('metallurgy'), TRUE, TRUE);
+		    $player->curskills(array('smelting'), TRUE, TRUE);
 		    foreach ($arrOres as $strOres)
 		      {
 			$arrAmount[$i] = $_POST['amount'] * $arrOresamount[$i];
 			if ($objTestore -> fields[$strOres] < $arrAmount[$i])
 			  {
-			    message('error', NO_MINERALS2);
+			    message('error', "Nie masz tylu rud aby wytopić taką ilość sztabek");
 			    $blnValid = FALSE;
 			  }
 			$i++;
@@ -396,7 +390,7 @@ if (isset($_GET['step']))
 			$intDiff = 100 * $arrBillets[$intKey]; 
 			for ($i = 0; $i < $_POST['amount']; $i++)
 			  {
-			    $intRoll = rand(1, $player->metallurgy * 100);
+			    $intRoll = rand(1, ($player->skills['smelting'][1] + $player->stats['condition'][2]) * 100);
 			    $intRoll2 = rand(1, $intDiff);
 			    if ($intRoll > $intRoll2)
 			      {
@@ -414,22 +408,21 @@ if (isset($_GET['step']))
 			    $strSql = $strSql.", ".$arrOres[$i]."=".$arrOres[$i]."-".$arrAmount[$i];
 			    $objTestore->fields[$arrOres[$i]] -= $arrAmount[$i];
 			  }
-			$fltAbility = round(($intAmount / 100)  + (($_POST['amount'] - $intAmount) * 0.01), 2);
 			$intExp = $intAmount * ($arrBillets[$intKey] / 2);
 			if ($player->clas == 'Rzemieślnik')
 			  {
-			    $fltAbility = $fltAbility * 2;
 			    $intExp = $intExp * 2;
 			  }
 			$db -> Execute("UPDATE minerals SET ".$_GET['smelt']."=".$_GET['smelt']."+".$intAmount.$strSql." WHERE owner=".$player -> id);
-			require_once('includes/checkexp.php');
-			checkexp($player->exp, $intExp, $player->level, $player->race, $player->user, $player->id, 0, 0, $player->id, 'metallurgy', $fltAbility);
+			$player->clearbless(array('condition'));
+			$player->checkexp(array('condition' => ($intExp / 2)), $player->id, "stats");
+			$player->checkexp(array('smelting' => ($intExp / 2)), $player->id, "skills");
 			$db -> Execute("UPDATE `players` SET `energy`=`energy`-".$intEnergy." WHERE `id`=".$player -> id);
 			$player->energy -= $intEnergy;
-			message("success", YOU_SMELT." ".$intAmount." ".$arrSmeltmineral[$intKey]." Zdobywasz ".$fltAbility." w umiejętności Hutnictwo oraz ".$intExp." PD.");
+			message("success", "Uzyskałeś ".$intAmount." ".$arrSmeltmineral[$intKey]." Zdobywasz ".$intExp." punktów doświadczenia.");
 		      }
 		  }
-		$strOreshave = YOU_HAVE;
+		$strOreshave = "Posiadasz <b>";
 		foreach ($arrOres as $strKey)
 		  {
 		    $strOreshave = $strOreshave.$objTestore -> fields[$strKey].$arrOresname[$strKey];
@@ -451,7 +444,7 @@ if (isset($_GET['step']))
 		  {
 		    $intMaxamount = $intEnergy;
 		  }
-		$smarty -> assign(array("Asmelt2" => A_SMELT2,
+		$smarty -> assign(array("Asmelt2" => "Wytop",
 					"Smeltm" => $arrSmeltmineral[$intKey],
 					"Youhave" => $strOreshave,
 					"Maxamount" => floor($intMaxamount)));
@@ -468,7 +461,7 @@ if (isset($_GET['step']))
 	/**
 	 * Smelt menu
 	 */
-	$smarty -> assign(array("Smeltinfo" => SMELT_INFO,
+	$smarty -> assign(array("Smeltinfo" => "Tutaj możesz wytapiać rudy minerałów w celu zdobycia surowców potrzebnych do wytwarzania przedmiotów. Koszt wytopu zależy od rodzaju metalu, który chcesz wytworzyć.",
 				"Asmelt" => $arrSmelt,
 				"Smeltaction" => $arrAction,
 				"Smelt" => $_GET['smelt']));
@@ -482,17 +475,17 @@ if (!isset($_GET['step']))
   {
     if (!$objSmelter -> fields['level'])
       {
-        $smarty -> assign(array("Nosmelter" => NO_SMELTER,
-                                "Nosmelter2" => NO_SMELTER2,
-                                "Aupgrade" => A_UPGRADE,
+        $smarty -> assign(array("Nosmelter" => "Najpierw musisz nieco ",
+                                "Nosmelter2" => " hutę nim zaczniesz wytapiać w niej surowce.",
+                                "Aupgrade" => "rozbudować",
                                 "Smelterlevel" => 0));
       }
     else
       {
-        $smarty -> assign(array("Smelterinfo" => SMELTER_INFO,
+        $smarty -> assign(array("Smelterinfo" => "Witaj w hucie. Tutaj możesz wytapiać różne minerały oraz przetapiać przedmioty.",
                                 "Smelterlevel" => $objSmelter -> fields['level'],
-                                "Aupgrade" => A_UPGRADE2,
-                                "Asmelt" => A_SMELT,
+                                "Aupgrade" => "Ulepsz hutę",
+                                "Asmelt" => "Wytapiaj surowce",
 				"Asmelt2" => 'Przetop przedmiot'));
       }
     $_GET['step'] = '';
@@ -507,7 +500,7 @@ $objSmelter -> Close();
 * Assign variables to template and display page
 */
 $smarty -> assign(array("Step" => $_GET['step'],
-			"Aback" => A_BACK));
+			"Aback" => "Wróć"));
 $smarty -> display ('smelter.tpl');
 
 require_once("includes/foot.php");
