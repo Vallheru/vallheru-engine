@@ -1,5 +1,7 @@
 2012-10-17  Bartek thindil Jasicki  <thindil@vallheru.net>
 
+	* UPDATE,languages/pl/kowal.php, kowal.php: 
+	remove language file
 	* UPDATE,class/player_class.php: 
 	better info about gained levels
 	* UPDATE,languages/pl/smelter.php, smelter.php: 

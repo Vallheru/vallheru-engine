@@ -6,8 +6,8 @@
  *   @name                 : kowal.php                            
  *   @copyright            : (C) 2004,2005,2006,2011,2012 Vallheru Team based on Gamers-Fusion ver 2.5
  *   @author               : thindil <thindil@vallheru.net>
- *   @version              : 1.6
- *   @since                : 11.09.2012
+ *   @version              : 1.7
+ *   @since                : 17.10.2012
  *
  */
 
@@ -31,16 +31,10 @@
 
 $title="Kuźnia";
 require_once("includes/head.php");
-require_once("includes/checkexp.php");
-
-/**
-* Get the localization for game
-*/
-require_once("languages/".$lang."/kowal.php");
 
 if ($player -> location != 'Altara') 
 {
-    error (ERROR);
+    error ("Nie znajdujesz się w mieście.");
 }
 
 /**
@@ -88,12 +82,12 @@ function createitem()
                 {
                     if ($arrItem['type'] == 'A')
                     {
-                        $strName = DRAGON2.$arrItem['name'];
+                        $strName = "Smocza ".$arrItem['name'];
                         $intItembonus = $intItembonus * 2;
                     }
 		    else
                     {
-                        $strName = DRAGON3.$arrItem['name'];
+                        $strName = "Smocze ".$arrItem['name'];
                     }
                     $intPowerbonus = $intItembonus + ($player -> strength / 50);
                     $intMaxbonus = $arrMaxbonus[$intKey] * $arrItem['power'];
@@ -108,11 +102,11 @@ function createitem()
                 {
                     if ($arrItem['type'] == 'A') 
                     {
-                        $strName = DWARFS2.$arrItem['name'];
+                        $strName = "Krasnoludzka ".$arrItem['name'];
                     }
                         else 
                     {
-                        $strName = DWARFS3.$arrItem['name'];
+                        $strName = "Krasnoludzkie ".$arrItem['name'];
                     }
                     $intDurbonus = $intItembonus + ($player -> inteli / 50);
                     $intMaxbonus = $arrItem['wt'] * 10;
@@ -127,11 +121,11 @@ function createitem()
                 {
                     if ($arrItem['type'] == 'A') 
                     {
-                        $strName = ELFS2.$arrItem['name'];
+                        $strName = "Elfia ".$arrItem['name'];
                     }
                         else 
                     {
-                        $strName = ELFS3.$arrItem['name'];
+                        $strName = "Elfie ".$arrItem['name'];
                         $intItembonus = ceil($intItembonus / 2);
                     }
                     $intAbibonus = $intItembonus + ($player -> agility / 50);
@@ -151,13 +145,13 @@ function createitem()
                 {
                     if ($arrItem['type'] == 'A')
                     {
-                        $strName = DRAGON2.$arrItem['name'];
+                        $strName = "Smocza ".$arrItem['name'];
                         $intItembonus = $intItembonus * 2;
                         $intPowerbonus = ($intItembonus * 2) + ($player -> strength / 50);
                     }
                         else
                     {
-                        $strName = DRAGON3.$arrItem['name'];
+                        $strName = "Smocze ".$arrItem['name'];
                         $intPowerbonus = $intItembonus + ($player -> strength / 50);
                     }
                     $intMaxbonus = $arrMaxbonus[$intKey] * $arrItem['power'];
@@ -179,12 +173,12 @@ function createitem()
                 {
                     if ($arrItem['type'] == 'A') 
                     {
-                        $strName = ELFS2.$arrItem['name'];
+                        $strName = "Elfia ".$arrItem['name'];
                         $intAbibonus = $intItembonus + ($player -> agility / 50);
                     }
                     if ($arrItem['type'] == 'L') 
                     {
-                        $strName = ELFS3.$arrItem['name'];
+                        $strName = "Elfie ".$arrItem['name'];
                         $intAbibonus = ceil($intItembonus / 2) + ($player -> agility / 50);
                     }
                     $intMaxbonus = $arrMaxbonus[$intKey] * $arrItem['zr'];
@@ -213,17 +207,17 @@ function createitem()
                 {
                     if ($arrItem['type'] == 'W' || $arrItem['type'] == 'H') 
                     {
-                        $strName = DRAGON1.$arrItem['name'];
+                        $strName = "Smoczy ".$arrItem['name'];
                     }
                     elseif ($arrItem['type'] == 'S') 
 		      {
 			if (stripos($arrItem['name'], 'tarcza'))
 			  {
-			    $strName = DRAGON2.$arrItem['name'];
+			    $strName = "Smocza ".$arrItem['name'];
 			  }
 			else
 			  {
-			    $strName = DRAGON1.$arrItem['name'];
+			    $strName = "Smoczy ".$arrItem['name'];
 			  }
 		      }
 		    else
@@ -255,17 +249,17 @@ function createitem()
                 {
                     if ($arrItem['type'] == 'W' || $arrItem['type'] == 'H') 
                     {
-                        $strName = DRAGON1.$arrItem['name'];
+                        $strName = "Smoczy ".$arrItem['name'];
                     }
                     elseif ($arrItem['type'] == 'S') 
                     {
 			if (stripos($arrItem['name'], 'tarcza'))
 			  {
-			    $strName = DRAGON2.$arrItem['name'];
+			    $strName = "Smocza ".$arrItem['name'];
 			  }
 			else
 			  {
-			    $strName = DRAGON1.$arrItem['name'];
+			    $strName = "Smoczy ".$arrItem['name'];
 			  }
                     }
 		    else
@@ -304,17 +298,17 @@ function createitem()
                 {
                     if ($arrItem['type'] == 'H' || $arrItem['type'] == 'W') 
                     {
-                        $strName = DWARFS1.$arrItem['name'];
+                        $strName = "Krasnoludzki ".$arrItem['name'];
                     }
                     if ($arrItem['type'] == 'S') 
 		      {
 			if (stripos($arrItem['name'], 'tarcza'))
 			  {
-			    $strName = DWARFS2.$arrItem['name'];
+			    $strName = "Krasnoludzka ".$arrItem['name'];
 			  }
 			else
 			  {
-			    $strName = DWARFS1.$arrItem['name'];
+			    $strName = "Krasnoludzki ".$arrItem['name'];
 			  }
 		      }
                     $intDurbonus = $intItembonus + ($player -> inteli / 50);
@@ -383,25 +377,29 @@ if (isset ($_GET['kowal']) && $_GET['kowal'] == 'plany')
 	$objTest = $db -> Execute("SELECT `id` FROM `smith` WHERE `owner`=".$player -> id." AND `name`='".$objPlan -> fields['name']."' AND `elitetype`='".$objPlan->fields['elitetype']."'");
         if ($objTest -> fields['id']) 
 	  {
-	    message('error', YOU_HAVE);
+	    message('error', "Masz już taki plan!");
 	  }
 	elseif (!$objPlan -> fields['id']) 
 	  {
-            message('error', NO_PLAN);
+            message('error', "Nie ma takiego planu.");
         }
         elseif ($objPlan -> fields['cost'] > $player -> credits) 
 	  {
-            message('error', NO_MONEY);
+            message('error', "Nie stać cię!");
 	  }
 	elseif ($objPlan->fields['elite'] > 0 && $player->clas != 'Rzemieślnik')
 	  {
 	    message('error', "Tylko Rzemieślnik może kupować plany elitarnych przedmiotów.");
 	  }
+	elseif ($objPlan->fields['level'] > $player->skills['smith'][1])
+	  {
+	    message('error', 'Nie możesz jeszcze kupić tego planu.');
+	  }
 	else
 	  {
 	    $db -> Execute("INSERT INTO `smith` (`owner`, `name`, `type`, `cost`, `amount`, `level`, `twohand`, `elite`, `elitetype`) VALUES(".$player -> id.", '".$objPlan -> fields['name']."', '".$objPlan -> fields['type']."', ".$objPlan -> fields['cost'].", ".$objPlan -> fields['amount'].", ".$objPlan -> fields['level'].", '".$objPlan -> fields['twohand']."', ".$objPlan->fields['elite'].", '".$objPlan->fields['elitetype']."')");
 	    $db -> Execute("UPDATE `players` SET `credits`=`credits`-".$objPlan -> fields['cost']." WHERE `id`=".$player -> id);
-	    message('success', YOU_PAY." <b>".$objPlan->fields['cost']."</b> ".AND_BUY.": <b>".$objPlan->fields['name']."</b>.");
+	    message('success', "Zapłaciłeś <b>".$objPlan->fields['cost']."</b> sztuk złota, i kupiłeś za to nowy plan przedmiotu: <b>".$objPlan->fields['name']."</b>.");
 	  }
         $objTest -> Close();
         $objPlan -> Close();
@@ -428,7 +426,7 @@ if (isset ($_GET['kowal']) && $_GET['kowal'] == 'plany')
     $arrPlans = array(array(), array(), array(), array(), array());
     $arrTypes = array('W', 'A', 'S', 'H', 'L');
     $arrLinks = array('+ Plany broni', '+ Plany zbrój', '+ Plany tarcz', '+ Plany hełmów', '+ Plany nagolenników');
-    $objPlans = $db -> Execute("SELECT * FROM `smith` WHERE `owner`=0 ORDER BY `level` ASC");
+    $objPlans = $db -> Execute("SELECT * FROM `smith` WHERE `owner`=0 AND `level`<=".$player->skills['smith'][1]." ORDER BY `level` ASC");
     $i = 0;
     while (!$objPlans->EOF)
       {
@@ -471,7 +469,7 @@ if (isset ($_GET['kowal']) && $_GET['kowal'] == 'plany')
       {
 	$strChecked = "checked=checkded";
       }
-    $smarty -> assign(array("Plansinfo" => PLANS_INFO,
+    $smarty -> assign(array("Plansinfo" => "Witaj w sklepie dla kowali. Tutaj możesz kupić plany przedmiotów, które chcesz wykonywać. Aby kupić dany plan, musisz mieć przy sobie odpowiednią ilość sztuk złota.",
 			    "Plans" => $arrPlans,
 			    "Links" => $arrLinks,
 			    "Checked" => $strChecked,
@@ -492,24 +490,24 @@ if (isset($_GET['kowal']) && ($_GET['kowal'] == 'kuznia' || $_GET['kowal'] == 'e
 	if ($_GET['kowal'] == 'kuznia')
 	  {
 	    $arrType = array('W', 'A', 'H', 'L', 'S', 'E');
-	    $arrLinks = array(A_MAKE_W, A_MAKE_A, A_MAKE_H, A_MAKE_L, A_MAKE_S, 'Wykonuj narzędzia');
+	    $arrLinks = array("Wykonuj broń", "Wykonuj zbroje", "Wykonuj hełmy", "Wykonuj nagolenniki", "Wykonuj tarcze", 'Wykonuj narzędzia');
 	  }
 	else
 	  {
 	    $arrType = array('W', 'A', 'H', 'L', 'S');
-	    $arrLinks = array(A_MAKE_W, A_MAKE_A, A_MAKE_H, A_MAKE_L, A_MAKE_S);
+	    $arrLinks = array("Wykonuj broń", "Wykonuj zbroje", "Wykonuj hełmy", "Wykonuj nagolenniki", "Wykonuj tarcze");
 	  }
 	$smarty -> assign(array("Amake" => $arrLinks,
 				"Atype" => $arrType,
-                                "Info" => INFO,
-                                "Iname" => I_NAME,
-                                "Ilevel" => I_LEVEL,
-                                "Iamount" => I_AMOUNT));
+                                "Info" => "Oto lista przedmiotów, które możesz wykonywać. Jeżeli nie masz tyle energii aby wykonać ów przedmiot, możesz po prostu wykonywać go po kawałku",
+                                "Iname" => "Nazwa",
+                                "Ilevel" => "Poziom",
+                                "Iamount" => "Minerałów"));
 	if (isset($_GET['type'])) 
 	  {
 	    if (!in_array($_GET['type'], $arrType)) 
 	      {
-		error (ERROR);
+		error ("Zapomnij o tym.");
 	      }
 	  }
       }
@@ -525,22 +523,22 @@ if (isset($_GET['kowal']) && ($_GET['kowal'] == 'kuznia' || $_GET['kowal'] == 'e
     {
         if ($player -> hp == 0) 
 	  {
-            error (YOU_DEAD);
+            error ("Nie możesz kuć ponieważ jesteś martwy!");
 	  }
 	checkvalue($_GET['ko']);
         $objMaked = $db -> Execute("SELECT `name` FROM `smith_work` WHERE `id`=".$_GET['ko']);
         $smarty -> assign(array("Link" => "kowal.php?kowal=".$_GET['kowal']."&konty=".$_GET['ko'], 
                                 "Name" => $objMaked -> fields['name'],
-                                "Assignen" => ASSIGN_EN,
-                                "Senergy" => S_ENERGY,
-                                "Amake" => A_MAKE));
+                                "Assignen" => "Przeznacz na wykonanie",
+                                "Senergy" => " energii.",
+                                "Amake" => "Wykonaj"));
         $objMaked -> Close();
     }
     if (isset($_GET['dalej'])) 
       {
         if ($player -> hp == 0) 
 	  {
-            error (YOU_DEAD);
+            error ("Nie możesz kuć ponieważ jesteś martwy!");
 	  }
 	checkvalue($_GET['dalej']);
 	$objMinerals = $db->Execute("SELECT `owner`, `copper`, `bronze`, `brass`, `iron`, `steel` FROM `minerals` WHERE `owner`=".$player->id);
@@ -565,9 +563,9 @@ if (isset($_GET['kowal']) && ($_GET['kowal'] == 'kuznia' || $_GET['kowal'] == 'e
         $objSmith = $db -> Execute("SELECT `name` FROM `smith` WHERE `id`=".$_GET['dalej']);
         $smarty -> assign(array("Link" => "kowal.php?kowal=".$_GET['kowal']."&rob=".$_GET['dalej'], 
                                 "Name" => $objSmith -> fields['name'],
-                                "Assignen" => ASSIGN_EN,
-                                "Senergy" => S_ENERGY,
-                                "Amake" => A_MAKE,
+                                "Assignen" => "Przeznacz na wykonanie",
+                                "Senergy" => " energii.",
+                                "Amake" => "Wykonaj",
                                 "Moptions" => $arrOptions));
         $objSmith -> Close();
       }
@@ -579,16 +577,16 @@ if (isset($_GET['kowal']) && ($_GET['kowal'] == 'kuznia' || $_GET['kowal'] == 'e
         $objSmith = $db -> Execute("SELECT `name`, `type`, `cost`, `amount`, `level`, `twohand`, `elitetype` FROM `smith` WHERE `owner`=".$player -> id." AND `name`='".$objWork -> fields['name']."'");
         if ($player -> energy < $_POST['razy']) 
 	  {
-            error (NO_ENERGY);
+            error ("Nie masz tyle energii.");
 	  }
         $intNeed = ($objWork -> fields['n_energy'] - $objWork -> fields['u_energy']);
         if ($_POST['razy'] > $intNeed) 
 	  {
-            error (TOO_MUCH);
+            error ("Nie możesz przeznaczyć na przedmiot więcej energii niż trzeba!");
 	  }
         if ($objWork -> fields['owner'] != $player -> id) 
 	  {
-            error (NO_ITEM);
+            error ("Nie wykonujesz takiego przedmiotu!");
 	  }
       }
     if (isset($_GET['rob'])) 
@@ -596,18 +594,18 @@ if (isset($_GET['kowal']) && ($_GET['kowal'] == 'kuznia' || $_GET['kowal'] == 'e
 	checkvalue($_GET['rob']);
         if (!isset($_POST['razy']))
 	  {
-            error(HOW_MANY);
+            error("Podaj ile przedmiotów chcesz wykonać!");
 	  }
 	checkvalue($_POST['razy']);
         $arrMineral = array('copper', 'bronze', 'brass', 'iron', 'steel');
         if (!in_array($_POST['mineral'], $arrMineral))
 	  {
-            error(ERROR);
+            error("Zapomnij o tym.");
 	  }
         $objTest = $db -> Execute("SELECT `id` FROM `smith_work` WHERE `owner`=".$player -> id);
         if ($objTest -> fields['id'])
 	  {
-            error(YOU_MAKE2);
+            error("Nie możesz wykonywać nowego przedmiotu ponieważ pracujesz już nad jednym!");
 	  }
         $objTest -> Close();
 	$objSmith = $db -> Execute("SELECT * FROM `smith` WHERE `id`=".$_GET['rob']);
@@ -615,11 +613,11 @@ if (isset($_GET['kowal']) && ($_GET['kowal'] == 'kuznia' || $_GET['kowal'] == 'e
         $strMineral = $_POST['mineral'];
 	if ($player -> energy < $_POST['razy']) 
 	  {
-            error (NO_ENERGY);
+            error ("Nie masz tyle energii.");
 	  }
         if ($objSmith -> fields['owner'] != $player -> id) 
 	  {
-            error (NO_PLANS);
+            error ("Nie masz takiego planu");
 	  }
       }
   }
@@ -652,7 +650,7 @@ if (isset ($_GET['kowal']) && $_GET['kowal'] == 'kuznia')
     {
         $objMaked = $db -> Execute("SELECT * FROM `smith_work` WHERE `owner`=".$player->id." AND `elite`=0");
         $smarty -> assign(array("Maked" => $objMaked -> fields['id'],
-				"Smithinfo" => SMITH_INFO));
+				"Smithinfo" => "Tutaj możesz wykonywać przedmioty co do których masz plany. Aby wykonać przedmiot, musisz posiadać również odpowiednią ilość surowców. Każda próba kosztuje ciebie tyle energii jaki jest poziom przedmiotu."));
         if (!$objMaked -> fields['id']) 
         {
             if (isset($_GET['type'])) 
@@ -688,10 +686,10 @@ if (isset ($_GET['kowal']) && $_GET['kowal'] == 'kuznia')
                                     "Name" => $objMaked -> fields['name'], 
                                     "Percent" => $procent, 
                                     "Need" => $need,
-                                    "Info3" => INFO3,
-                                    "Ipercent" => I_PERCENT,
-                                    "Ienergy" => I_ENERGY,
-                                    "Iname" => I_NAME));
+                                    "Info3" => "Oto przedmiot jaki obecnie wykonujesz",
+                                    "Ipercent" => "Wykonany(w %)",
+                                    "Ienergy" => "Potrzebnej energii",
+                                    "Iname" => "Nazwa"));
         }
         $objMaked -> Close();
     }
@@ -709,7 +707,7 @@ if (isset ($_GET['kowal']) && $_GET['kowal'] == 'kuznia')
         $intGainexp = 0;
         $intAbility = 0;
         $intCost = ceil($objSmith -> fields['cost'] / 20);
-        $arrName = array(M_COPPER, M_BRONZE, M_BRASS, M_IRON, M_STEEL);
+        $arrName = array("z miedzi", "z brązu", "z mosiądzu", "z żelaza", "ze stali");
 	if ($objSmith->fields['type'] != 'E')
 	  {
 	    $arrMaxbonus = array(6, 10, 14, 17, 20);
@@ -794,7 +792,7 @@ if (isset ($_GET['kowal']) && $_GET['kowal'] == 'kuznia')
 		    $arrMaked['zr'] = 0 - $arrMaked['zr'];
 		  }
 		$arrMaked['zr'] = abs($arrMaked['zr']);
-                $smarty -> assign ("Message", YOU_MAKE.$arrMaked['name']."(+ ".$arrMaked['power'].") (".$arrMaked['zr']." zr) (".$arrMaked['wt']."/".$arrMaked['wt'].")".AND_GAIN2.$intGainexp.AND_EXP2.$intAbility.IN_SMITH);
+                $smarty -> assign ("Message", "Wykonałeś <b>".$arrMaked['name']."(+ ".$arrMaked['power'].") (".$arrMaked['zr']." zr) (".$arrMaked['wt']."/".$arrMaked['wt'].")"."</b>. Zdobywasz <b>".$intGainexp."</b> PD oraz <b>".$intAbility."</b> poziomu w umiejętności Kowalstwo.<br />");
 	      } 
 	    else 
 	      {
@@ -804,7 +802,7 @@ if (isset ($_GET['kowal']) && $_GET['kowal'] == 'kuznia')
                     $intAbility = 0.02;
                 }
                 $intGainexp = 0;
-                $smarty -> assign ("Message", YOU_TRY.$strName.BUT_FAIL.$intAbility.IN_SMITH);
+                $smarty -> assign ("Message", "Próbowałeś wykonać <b>".$strName."</b>, niestety nie udało się. Zdobywasz <b>".$intAbility."</b> poziomu w umiejętności Kowalstwo.<br />");
 	      }
             $db -> Execute("DELETE FROM `smith_work` WHERE `owner`=".$player -> id);
             checkexp($player -> exp, $intGainexp, $player -> level, $player -> race, $player -> user, $player -> id, 0, 0, $player -> id, 'ability', $intAbility);
@@ -824,7 +822,7 @@ if (isset ($_GET['kowal']) && $_GET['kowal'] == 'kuznia')
             $procent = round($procent, "0");
             $need = $objWork -> fields['n_energy'] - $uenergia;
             $db -> Execute("UPDATE `smith_work` SET `u_energy`=`u_energy`+".$_POST['razy']." WHERE `owner`=".$player -> id);
-            $smarty -> assign ("Message", YOU_WORK.$strName.NEXT_EN.$_POST['razy'].NOW_IS.$procent.YOU_NEED2.$need.S_ENERGY);
+            $smarty -> assign ("Message", "Pracowałeś nad ".$strName." kolejne ".$_POST['razy']." energii. Teraz jest on wykonany w ".$procent." procentach. Aby go ukonczyć potrzebujesz ".$need." energii.");
         }
         $db -> Execute("UPDATE `players` SET `energy`=`energy`-".$_POST['razy']." WHERE `id`=".$player -> id);
     }
@@ -869,7 +867,7 @@ if (isset ($_GET['kowal']) && $_GET['kowal'] == 'kuznia')
         }
         if ($intAmineral > $objMineral -> fields[$strMineral])
         {
-            error (NO_MAT);
+            error ("Nie masz tylu materiałów!");
         }
 	if ($objSmith->fields['elite'] > 0)
 	  {
@@ -880,7 +878,7 @@ if (isset ($_GET['kowal']) && $_GET['kowal'] == 'kuznia')
         $intGainexp = 0;
         $intAbility = 0;
         $intCost = ceil($objSmith -> fields['cost'] / 20);
-        $arrName = array(M_COPPER, M_BRONZE, M_BRASS, M_IRON, M_STEEL);
+	$arrName = array("z miedzi", "z brązu", "z mosiądzu", "z żelaza", "ze stali");
 	if ($objSmith->fields['type'] != 'E')
 	  {
 	    $arrMaxbonus = array(6, 10, 14, 17, 20);
@@ -982,7 +980,7 @@ if (isset ($_GET['kowal']) && $_GET['kowal'] == 'kuznia')
             {
                 $intAbility = $intAbility * 2;
             }
-            $smarty->assign(array("Message" => YOU_MAKE.$objSmith -> fields['name']."</b> <b>".$intItems.AND_GAIN2.$intGainexp.AND_EXP2.$intAbility.IN_SMITH,
+            $smarty->assign(array("Message" => "Wykonałeś <b>".$objSmith -> fields['name']."</b> <b>".$intItems."</b>. Zdobywasz <b>".$intGainexp."</b> PD oraz <b>".$intAbility."</b> poziomu w umiejętności Kowalstwo.<br />",
 				  "Youmade" => "Wykonane przedmioty:",
 				  "Iagi" => "zr",
 				  "Iamount" => "ilość",
@@ -998,7 +996,7 @@ if (isset ($_GET['kowal']) && $_GET['kowal'] == 'kuznia')
             $need = ($intEnergy - $_POST['razy']);
             $intEnergy2 = $_POST['razy'];
             $db -> Execute("INSERT INTO `smith_work` (`owner`, `name`, `u_energy`, `n_energy`, `mineral`) VALUES(".$player -> id.", '".$objSmith -> fields['name']."', ".$_POST['razy'].", ".$intEnergy.", '".$_POST['mineral']."')");
-            $smarty -> assign(array("Message" => YOU_WORK.$objSmith -> fields['name'].YOU_USE.$_POST['razy'].AND_MAKE.$procent.TO_END.$need.S_ENERGY,
+            $smarty -> assign(array("Message" => "Pracowałeś nad ".$objSmith -> fields['name'].", zużywając ".$_POST['razy']." energii i wykonałeś go w ".$procent." procentach. Aby ukończyć przedmiot potrzebujesz jeszcze ".$need." energii.",
 				    "Amt" => 0));
 	  }
         $db -> Execute("UPDATE `minerals` SET `".$_POST['mineral']."`=`".$_POST['mineral']."`-".$intAmineral." WHERE `owner`=".$player -> id);
@@ -1074,10 +1072,10 @@ if (isset ($_GET['kowal']) && $_GET['kowal'] == 'elite')
                                     "Name" => $objMaked -> fields['name'], 
                                     "Percent" => $procent, 
                                     "Need" => $need,
-                                    "Info3" => INFO3,
-                                    "Ipercent" => I_PERCENT,
-                                    "Ienergy" => I_ENERGY,
-                                    "Iname" => I_NAME));
+                                    "Info3" => "Oto przedmiot jaki obecnie wykonujesz",
+                                    "Ipercent" => "Wykonany(w %)",
+                                    "Ienergy" => "Potrzebnej energii",
+                                    "Iname" => "Nazwa"));
         }
         $objMaked -> Close();
     }
@@ -1095,7 +1093,7 @@ if (isset ($_GET['kowal']) && $_GET['kowal'] == 'elite')
         $intGainexp = 0;
         $intAbility = 0;
         $intCost = ceil($objSmith -> fields['cost'] / 200);
-        $arrName = array(M_COPPER, M_BRONZE, M_BRASS, M_IRON, M_STEEL);
+	$arrName = array("z miedzi", "z brązu", "z mosiądzu", "z żelaza", "ze stali");
         $arrMaxbonus = array(21, 25, 30, 35, 40);
         if ($objSmith -> fields['type'] == 'W' || $objSmith -> fields['type'] == 'A')
 	  {
@@ -1176,13 +1174,13 @@ if (isset ($_GET['kowal']) && $_GET['kowal'] == 'elite')
 		    $intRepaircost = $objSmith->fields['level'] * $arrRepair[$intKey] * 1;
 		  }
 		additem($objSmith->fields['type'], $strName, $intMaxdur, $intPower, $intAgility, $intCost, $player->id, $objSmith->fields['level'], $intRepaircost, $objSmith->fields['twohand']);
-                $smarty -> assign ("Message", YOU_MAKE.$strName."(+ ".$intPower.") (".($intAgility * -1)." zr) (".$intMaxdur."/".$intMaxdur.")".AND_GAIN2.$intGainexp.AND_EXP2.$intAbility.IN_SMITH);
+                $smarty -> assign ("Message", "Wykonałeś <b>".$strName."(+ ".$intPower.") (".($intAgility * -1)." zr) (".$intMaxdur."/".$intMaxdur.")"."</b>. Zdobywasz <b>".$intGainexp."</b> PD oraz <b>".$intAbility."</b> poziomu w umiejętności Kowalstwo.<br />");
 	      } 
 	    else 
 	      {
 		$intAbility = 0.02;
                 $intGainexp = 0;
-                $smarty -> assign ("Message", YOU_TRY.$strName.BUT_FAIL.$intAbility.IN_SMITH);
+                $smarty -> assign ("Message", "Próbowałeś wykonać <b>".$strName."</b>, niestety nie udało się. Zdobywasz <b>".$intAbility."</b> poziomu w umiejętności Kowalstwo.<br />");
 	      }
             $db -> Execute("DELETE FROM `smith_work` WHERE `id`=".$objWork->fields['id']);
             checkexp($player->exp, $intGainexp, $player->level, $player->race, $player->user, $player->id, 0, 0, $player->id, 'ability', $intAbility);
@@ -1202,7 +1200,7 @@ if (isset ($_GET['kowal']) && $_GET['kowal'] == 'elite')
             $procent = round($procent, "0");
             $need = $objWork -> fields['n_energy'] - $uenergia;
             $db -> Execute("UPDATE `smith_work` SET `u_energy`=`u_energy`+".$_POST['razy']." WHERE `id`=".$objWork->fields['id']);
-            $smarty -> assign ("Message", YOU_WORK.$strName.NEXT_EN.$_POST['razy'].NOW_IS.$procent.YOU_NEED2.$need.S_ENERGY);
+            $smarty -> assign ("Message", "Poświęciłeś na wykonanie ".$strName." kolejne ".$_POST['razy']." energii. Teraz jest on wykonany w ".$procent." procentach. Aby go ukonczyć potrzebujesz ".$need." energii.");
         }
         $db -> Execute("UPDATE `players` SET `energy`=`energy`-".$_POST['razy']." WHERE `id`=".$player -> id);
     }
@@ -1257,7 +1255,7 @@ if (isset ($_GET['kowal']) && $_GET['kowal'] == 'elite')
         }
         if ($intAmineral > $objMineral -> fields[$strMineral])
         {
-            error (NO_MAT);
+            error ("Nie masz tylu materiałów!");
         }
 	//Check if we have enough loots
 	$objLoot = $db->Execute("SELECT `lootnames` FROM `monsters` WHERE `id`=".$objSmith->fields['elite']);
@@ -1287,7 +1285,7 @@ if (isset ($_GET['kowal']) && $_GET['kowal'] == 'elite')
         $intGainexp = 0;
         $intAbility = 0;
         $intCost = ceil($objSmith -> fields['cost'] / 200);
-        $arrName = array(M_COPPER, M_BRONZE, M_BRASS, M_IRON, M_STEEL);
+	$arrName = array("z miedzi", "z brązu", "z mosiądzu", "z żelaza", "ze stali");
         $arrMaxbonus = array(21, 25, 30, 35, 40);
 	$intMaxbonus = $arrMaxbonus[$intKey] * $objSmith->fields['level'];
         if ($objSmith -> fields['type'] == 'W' || $objSmith -> fields['type'] == 'A')
@@ -1395,7 +1393,7 @@ if (isset ($_GET['kowal']) && $_GET['kowal'] == 'elite')
             $intGainexp = ceil($intGainexp);
 	    $intAbility = $intAbility * $intExp;
 	    $intGainexp = $intGainexp * $intExp;
-            $smarty->assign(array("Message" => YOU_MAKE.$objSmith -> fields['name']."</b> <b>".$intItems.AND_GAIN2.$intGainexp.AND_EXP2.$intAbility.IN_SMITH,
+            $smarty->assign(array("Message" => "Wykonałeś <b>".$objSmith -> fields['name']."</b> <b>".$intItems."</b> razy. Zdobywasz <b>".$intGainexp."</b> PD oraz <b>".$intAbility."</b> poziomu w umiejętności Kowalstwo.<br />",
 				  "Youmade" => "Wykonane przedmioty:",
 				  "Iagi" => "zr",
 				  "Iamount" => "ilość",
@@ -1411,7 +1409,7 @@ if (isset ($_GET['kowal']) && $_GET['kowal'] == 'elite')
             $need = ($intEnergy - $_POST['razy']);
 	    $intEnergy2 = $_POST['razy'];
             $db -> Execute("INSERT INTO `smith_work` (`owner`, `name`, `u_energy`, `n_energy`, `mineral`, `elite`) VALUES(".$player -> id.", '".$objSmith -> fields['name']."', ".$_POST['razy'].", ".$intEnergy.", '".$_POST['mineral']."', ".$objSmith->fields['elite'].")");
-            $smarty -> assign ("Message", YOU_WORK.$objSmith -> fields['name'].YOU_USE.$_POST['razy'].AND_MAKE.$procent.TO_END.$need.S_ENERGY);
+            $smarty -> assign ("Message", "Pracowałeś nad ".$objSmith -> fields['name'].", zużywając ".$_POST['razy']." energii i wykonałeś go w ".$procent." procentach. Aby ukończyć przedmiot potrzebujesz jeszcze ".$need." energii.");
 	  }
         $db -> Execute("UPDATE `minerals` SET `".$_POST['mineral']."`=`".$_POST['mineral']."`-".$intAmineral." WHERE `owner`=".$player -> id);
 	for ($i = 0; $i < 4; $i++)
@@ -1452,15 +1450,15 @@ if (isset($_GET['kowal']) && $_GET['kowal'] == 'astral')
     $objAstral = $db -> Execute("SELECT `name` FROM `astral_plans` WHERE `owner`=".$player -> id." AND `name` LIKE 'P%' AND `location`='V'") or die($db -> ErrorMsg());
     if (!$objAstral -> fields['name'])
     {
-        error(NO_PLAN);
+        error("Nie masz takiego planu");
     }
-    $arrMinerals = array(MIN1, MIN2, MIN3, MIN5, MIN4, MIN6, MIN7, MIN13, MIN8, MIN9, MIN10, MIN11, MIN12, MITHRIL, ENERGY_PTS);
+    $arrMinerals = array("Brył adamantium", "Kryształów", "Kawałków meteorytu", "Drewna sosnowego", "Drewna z leszczyny", "Drewna cisowego", "Drewna z wiązu", "Sztabek stali", "Rudy żelaza", "Rudy miedzi", "Rudy cyny", "Rudy cynku", "Brył węgla", "Mithrilu", "Energii");
     $arrAmount = array(array(2500, 1250, 250, 6000, 4000, 1500, 1000, 500, 750, 3000, 2000, 1000, 10000, 4000, 50),
                        array(4000, 2000, 300, 8000, 5500, 2500, 1500, 750, 1000, 5000, 3000, 2000, 15000, 5000, 75),
                        array(6500, 2500, 400, 12000, 7000, 4000, 2000, 1000, 1500, 7000, 4000, 3000, 20000, 6000, 100),
                        array(8000, 4000, 500, 17000, 8500, 5500, 2500, 1250, 2000, 9000, 5000, 4000, 25000, 7000, 125),
                        array(10000, 5000, 600, 20000, 10000, 7000, 3000, 1500, 2500, 11000, 6000, 5000, 30000, 8000, 150));
-    $arrNames = array(CONST1, CONST2, CONST3, CONST4, CONST5);
+    $arrNames = array("Astralny komponent", "Gwiezdny portal", "Świetlny obelisk", "Płomienny znicz", "Srebrzysta fontanna");
     $arrAviable = array();
     $arrAmount2 = array();
     $arrNumber = array();
@@ -1477,13 +1475,13 @@ if (isset($_GET['kowal']) && $_GET['kowal'] == 'astral')
     }
     $objAstral -> Close();
 
-    $smarty -> assign(array("Smithinfo" => SMITH_INFO,
+    $smarty -> assign(array("Smithinfo" => "Tutaj możesz wykonywać różne astralne konstrukcje. W danym momencie możesz wykonywać tylko te, których plany posiadasz.",
                             "Aviablecom" => $arrAviable,
                             "Mineralsname" => $arrMinerals,
                             "Minamount" => $arrAmount2,
                             "Compnumber" => $arrNumber,
-                            "Abuild" => A_BUILD,
-                            "Tname" => T_NAME,
+                            "Abuild" => "Buduj",
+                            "Tname" => "Nazwa",
                             "Message" => ''));
 
     /**
@@ -1494,13 +1492,13 @@ if (isset($_GET['kowal']) && $_GET['kowal'] == 'astral')
 	$_GET['component'] = intval($_GET['component']);
 	if (($_GET['component'] < 1) || ($_GET['component'] > 5))
 	  {
-	    error(ERROR);
+	    error("Zapomnij o tym.");
 	  }
         $strName = "P".$_GET['component'];
         $objAstral = $db -> Execute("SELECT `amount` FROM `astral_plans` WHERE `owner`=".$player -> id." AND `name`='".$strName."' AND `location`='V'");
         if (!$objAstral -> fields['amount'])
         {
-            error(NO_PLAN);
+            error("Nie masz takiego planu");
         }
         $objAstral -> Close();
         $intKey = $_GET['component'] - 1;
@@ -1511,16 +1509,16 @@ if (isset($_GET['kowal']) && $_GET['kowal'] == 'astral')
             $strSqlname = $arrSqlminerals[$i];
             if ($objMinerals -> fields[$strSqlname] < $arrAmount[$intKey][$i])
             {
-                error(NO_AMOUNT.$arrMinerals[$i]);
+                error("Nie masz takiej ilości ".$arrMinerals[$i]);
             }
         }
         if ($player -> platinum < $arrAmount[$intKey][13])
         {
-            error(NO_MITH);
+            error("Nie masz takiej ilości mithrilu");
         }
         if ($player -> energy < $arrAmount[$intKey][14])
         {
-            error(NO_ENERGY);
+            error("Nie masz takiej ilości energii");
         }
         $arrChance = array(0.25, 0.2, 0.15, 0.1, 0.05);
         $intChance = floor(($player -> smith * $arrChance[$intKey]) + ($player -> fletcher * $arrChance[$intKey]));
@@ -1547,7 +1545,7 @@ if (isset($_GET['kowal']) && $_GET['kowal'] == 'astral')
             $intGainexp = rand($arrExp1[$intKey], $arrExp2[$intKey]);
             $arrAbility = array(1, 1.5, 2, 2.5, 3);
             checkexp($player -> exp, $intGainexp, $player -> level, $player -> race, $player -> user, $player -> id, 0, 0, $player -> id, 'ability', $arrAbility[$intKey]);
-            $strMessage = YOU_MAKE.$arrNames[$intKey]."! ".YOU_GAIN11.$intGainexp.YOU_GAIN12.$arrAbility[$intKey].YOU_GAIN13.YOU_USE;
+            $strMessage = "Wykonałeś ".$arrNames[$intKey]."! Zdobywasz ".$intGainexp." punktów doświadczenia oraz ".$arrAbility[$intKey]." poziom(y) w umiejętności kowalstwo. Zużyłeś na to:<br />";
         }
             else
         {
@@ -1594,7 +1592,7 @@ if (isset($_GET['kowal']) && $_GET['kowal'] == 'astral')
             {
                 $arrAmount[$intKey][$i] = ceil($arrAmount[$intKey][$i] * $fltBonus);
             }
-            $strMessage = YOU_FAIL.$arrNames[$intKey].YOU_FAIL2.YOU_USE;
+            $strMessage = "Próbowałeś wykonać ".$arrNames[$intKey].", niestety nie udało się. Zużyłeś na to:<br />";
         }
         for ($i = 0; $i < 14; $i++)
         {
@@ -1620,10 +1618,10 @@ if (!isset($_GET['kowal']))
       {
 	$strElite = '';
       }
-    $smarty -> assign(array("Smithinfo" => SMITH_INFO,
-                            "Aplans" => A_PLANS,
-                            "Asmith" => A_SMITH,
-                            "Aastral" => A_ASTRAL,
+    $smarty -> assign(array("Smithinfo" => "Witaj w kuźni. Tutaj możesz wyrabiać różne przedmioty. Aby móc je wykonywać musisz najpierw posiadać plany odpowiedniej rzeczy oraz odpowiednią ilość surowców.",
+                            "Aplans" => "Kup plany przedmiotu",
+                            "Asmith" => "Idź do kuźni",
+                            "Aastral" => "Buduj astralną konstrukcję",
 			    "Aelite" => $strElite));
     $objAstral = $db -> SelectLimit("SELECT `amount` FROM `astral_plans` WHERE `owner`=".$player -> id." AND `name` LIKE 'P%' AND `location`='V'", 1);
     if ($objAstral -> fields['amount'])
@@ -1638,7 +1636,7 @@ if (!isset($_GET['kowal']))
 }
     else
 {
-    $smarty -> assign("Aback", A_BACK);
+    $smarty -> assign("Aback", "Wróć");
 }
 if (!isset($_GET['dalej'])) 
 {
