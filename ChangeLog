@@ -1,5 +1,7 @@
 2012-10-17  Bartek thindil Jasicki  <thindil@vallheru.net>
 
+	* UPDATE,class/player_class.php: 
+	better info about gained levels
 	* UPDATE,languages/pl/smelter.php, smelter.php: 
 	updated smelter
 	* UPDATE,languages/pl/gory.php, gory.php: 

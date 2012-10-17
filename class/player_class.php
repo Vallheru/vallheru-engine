@@ -7,7 +7,7 @@
  *   @copyright            : (C) 2004,2005,2006,2007,2011,2012 Vallheru Team based on Gamers-Fusion ver 2.5
  *   @author               : thindil <thindil@vallheru.net>
  *   @version              : 1.7
- *   @since                : 15.10.2012
+ *   @since                : 17.10.2012
  *
  */
 
@@ -439,7 +439,7 @@ class Player
     /**
      * Function check experience gained by player (TODO)
      */
-    function checkexp($arrExp, $intEid, $strType)
+    function checkexp($arrExp, $intEid, $strType, $blnFight = FALSE)
     {
       global $db;
       
@@ -550,7 +550,14 @@ class Player
 	    }
 	  if ($this->id == $intEid)
 	    {
-	      echo $strMessage.'<br />';
+	      if ($blnFight)
+		{
+		  echo $strMessage.'<br />';
+		}
+	      else
+		{
+		  message('info', $strMessage);
+		}
 	    }
 	  elseif ($intEid > 0)
 	    {
