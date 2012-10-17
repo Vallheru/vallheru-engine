@@ -6,8 +6,8 @@
  *   @name                 : gory.php                            
  *   @copyright            : (C) 2004,2005,2006,2012 Vallheru Team based on Gamers-Fusion ver 2.5
  *   @author               : thindil <thindil@vallheru.net>
- *   @version              : 1.6
- *   @since                : 23.05.2012
+ *   @version              : 1.7
+ *   @since                : 17.10.2012
  *
  */
 
@@ -32,24 +32,19 @@
 $title = "Góry Kazad-nar";
 require_once("includes/head.php");
 
-/**
-* Get the localization for game
-*/
-require_once("languages/".$lang."/gory.php");
-
 if($player -> location != 'Góry') 
 {
-    error (NOT_IN);
+    error ("Nie znajdujesz się w górach.");
 }
 
 $smarty -> assign("Message", '');
 
 if ($player -> hp > 0) 
 {
-    $smarty -> assign(array("Amine" => A_MINE,
-                            "Asearch" => A_SEARCH,
-                            "Atravel" => A_TRAVEL,
-                            "Mountinfo" => MOUNT_INFO,
+    $smarty -> assign(array("Amine" => "Idź do kopalni",
+                            "Asearch" => "Zwiedzaj góry",
+                            "Atravel" => "Stajnia",
+                            "Mountinfo" => "Witaj w Górach Kazad-nar, co chcesz robić?",
                             "Res1" => '',
                             "Res2" => '',
                             "Res3" => '',
@@ -65,40 +60,48 @@ if ($player -> hp > 0)
 } 
     else 
 {
-    $smarty -> assign(array("Youdead" => YOU_DEAD,
-                            "Backto" => BACK_TO,
-                            "Stayhere" => STAY_HERE));
+    $smarty -> assign(array("Youdead" => "Jesteś martwy",
+                            "Backto" => "Powrót do ".$city1b,
+                            "Stayhere" => "Pozostań na miejscu"));
     if (isset($_GET['action']) && $_GET['action'] == 'back')
     {
         $db -> Execute("UPDATE `players` SET `miejsce`='Altara' WHERE `id`=".$player -> id);
-        error (PL_DEAD."<a href=\"hospital.php\">".A_HERE."</a>.");
+        error ("Ponieważ jesteś martwy, twa dusza podąża z powrotem do szpitala w ".$city1a.". Kliknij <a href=\"hospital.php\">tutaj</a>.");
     }
     if (isset($_GET['action']) && $_GET['action'] == 'hermit')
     {
-        $crneed = (50 * $player -> level);
+        $crneed = (50 * $player -> max_hp);
         require_once('includes/counttime.php');
         $arrTime = counttime();
         $strTime = $arrTime[0].$arrTime[1];
         $smarty -> assign(array("Goldneed" => $crneed,
                                 "Waittime" => $strTime,
-                                "Aback" => A_BACK,
-                                "Hermit" => HERMIT,
-                                "Hermit2" => HERMIT2,
-                                "Aresurect" => A_RESURECT,
-                                "Await" => A_WAIT,
-                                "Tgold" => T_GOLD,
-                                "Goldcoins" => GOLD_COINS));
+                                "Aback" => "Wróć",
+                                "Hermit" => "Twoje ciało odnalazł mieszkający w pobliżu pustelnik. Ku twemu zdziwieniu, starzec ten posiadł zdolność kontaktowania się z duszami umarłych... Zauważasz to, gdy zaczynasz słyszeć słowa...",
+                                "Hermit2" => "Bardzo nieostrożnie z Twojej strony wybierać się samemu w tak daleką podróż. Wiele niebezpieczeństw czyha na samotników. Ale spróbuję Ci pomóc. Spróbuję przygotować odpowiedni czar, który Cię wskrzesi, jednak to trochę potrwa. Jest jeszcze możliwość skorzystania z pobliskiego źródełka z pobłogosławioną przez Illuminati wodą. Jej efekt jest natychmiastowy, jednak aby zadziałała muszę złożyć ofiarę w postaci złota. Jestem pustelnikiem więc nie mam żadnego złota przy sobie. O ile wyrazisz zgodę to wezmę złoto z Twojej sakwy. Przysięgam, że oprócz potrzebnej ilości nie wezmę ani sztuki złota więcej. Wybór należy do Ciebie...",
+                                "Aresurect" => "Skorzystaj z pobłogosławionej wody",
+                                "Await" =>"Zaczekaj aż pustelnik przygotuje czar",
+                                "Tgold" => "Ofiara:",
+                                "Goldcoins" => "sztuk złota"));
         if (isset($_GET['action2']) && $_GET['action2'] == 'resurect') 
         {
             require_once('includes/resurect.php');
-            $smarty -> assign(array("Message" => YOU_RES.$pdpr.LOST_EXP,
-                                    "Res1" => RES1,
-                                    "Res2" => RES2,
-                                    "Res3" => RES3));
+	    if ($lostexp > 0)
+	      {
+		$strLost = ', ale straciłeś '.$lostexp.' Punktów Doświadczenia do '.$strLoststat;
+	      }
+	    else
+	      {
+		$strLost = '';
+	      }
+            $smarty -> assign(array("Message" => "<br />Zostałeś wskrzeszony".$strLost.".",
+                                    "Res1" => "Otwierasz powoli oczy... Widzisz klęczącego nad tobą starca, a w ustach odczuwasz jeszcze słodkawy smak błogosławionej wody... Ku twemu zdziwieniu nie czujesz żadnego bólu. Po ranach, które odniosłeś nie ma śladu...",
+                                    "Res2" => "Tutaj są Twoje rzeczy. Ja niestety muszę iść, gdyż zapewne są inni potrzebujący pomocy. Na przyszłość postaraj się zachować nieco więcej ostrożności. Bywaj w zdrowiu...",
+                                    "Res3" => "Po wypowiedzeniu tych słów pustelnik oddala się. Po chwili odpoczynku podnosisz się, zbierasz swój ekwipunek i wyruszasz w drogę."));
         }
         if (isset($_GET['action2']) && $_GET['action2'] == 'wait')
         {
-            $smarty -> assign("Message", WAIT_INFO);
+            $smarty -> assign("Message", "Przed Twoimi oczami przebiegają wydarzenie z przeszłości... To wspomnienia. Czas dłuży się niesamowicie... Nagle słyszysz słowa:<br /><br /><i>Cierpliwości. Właśnie przygotowuję czar dla Ciebie. Na szczęście mam już potrzebne składniki, ale rzucenie wskrzeszającego czaru to nie taka prosta sprawa. Trzeba być ostrożnym, gdyż nie wiem jakie konsekwencje mogłaby mieć moja pomyłka.</i>");
         }
     }
 }
