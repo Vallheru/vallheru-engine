@@ -6,8 +6,8 @@
  *   @name                 : kopalnia.php                            
  *   @copyright            : (C) 2004,2005,2006,2011,2012 Vallheru Team based on Gamers-Fusion ver 2.5
  *   @author               : thindil <thindil@vallheru.net>
- *   @version              : 1.6
- *   @since                : 22.08.2012
+ *   @version              : 1.7
+ *   @since                : 17.10.2012
  *
  */
 
@@ -32,14 +32,9 @@
 $title = "Kopalnia";
 require_once("includes/head.php");
 
-/**
-* Get the localization for game
-*/
-require_once("languages/".$lang."/kopalnia.php");
-
 if ($player -> location != 'Góry') 
 {
-    error(ERROR);
+    error("Nie znajdujesz się w górach.");
 }
 
 /**
@@ -49,16 +44,16 @@ if (isset($_GET['action']) && $_GET['action'] == 'dig')
 {
     if (!isset($_POST['amount'])) 
     {
-        error(ERROR);
+        error("Zapomnij o tym.");
     }
     checkvalue($_POST['amount']);
     if ($player -> hp <= 0) 
     {
-        error(YOU_DEAD." (<a href=\"gory.php\">".BACK."</a>)");
+        error("Nie możesz pracować w kopalni, ponieważ jesteś martwy! (<a href=\"gory.php\">Wróć</a>)");
     }
     if ($player -> energy < $_POST['amount']) 
     {
-        error(NO_ENERGY." (<a href=\"gory.php\">".BACK."</a>)");
+        error("Nie masz tyle energii! (<a href=\"gory.php\">Wróć</a>)");
     }
 
     /**
@@ -75,17 +70,9 @@ if (isset($_GET['action']) && $_GET['action'] == 'dig')
     for ($i = 1; $i <= $_POST['amount']; $i++)
     {
         $intRoll = rand(1, 10);
-        if ($intRoll > 4 && $intRoll < 10)
-        {
-            $fltGainability = $fltGainability + 0.1;
-        }
 	if ($intRoll > 4 && $intRoll < 10)
 	  {
-	    $intBonus = 1 + (($player->mining + $fltGainability) / 20);
-	    if ($intBonus > 30)
-	      {
-		$intBonus = 30;
-	      }
+	    $intBonus = 1 + (($player->skills['mining'][1] + $player->stats['strength'][2]) / 20);
 	  }
         if ($intRoll == 5)
         {
@@ -95,7 +82,7 @@ if (isset($_GET['action']) && $_GET['action'] == 'dig')
                 $intAmount = 1;
             }
             $arrMinerals[0] = $arrMinerals[0] + $intAmount;
-	    $intExp += (5 * $intAmount);
+	    $intExp += (3 * $intAmount);
         }
         if ($intRoll == 6 || $intRoll == 7)
         {
@@ -105,7 +92,7 @@ if (isset($_GET['action']) && $_GET['action'] == 'dig')
                 $intAmount = 1;
             }
             $arrMinerals[1] = $arrMinerals[1] + $intAmount;
-	    $intExp += (6 * $intAmount);
+	    $intExp += (4 * $intAmount);
         }
         if ($intRoll == 8)
         {
@@ -128,9 +115,9 @@ if (isset($_GET['action']) && $_GET['action'] == 'dig')
         if ($intRoll == 10)
         {
             $intRoll2 = rand(1, 100);
-            if ($intRoll2 <= 50) 
+            if ($intRoll2 > $player->stats['speed'][2]) 
             {
-                $strInfo = M_DEAD;
+                $strInfo = "<br /><br />Nagle poczułeś, jak całe wyrobisko powoli zaczyna się rozpadać. Najszybciej jak potrafisz uciekasz w kierunku wyjścia. Niestety, tym razem żywioł okazał się szybszy od ciebie. Potężna lawina kamieni spadła na ciebie,";
 		if ($player->antidote == 'R')
 		  {
 		    $strInfo .= ' na szczęście w tym wypadku, udało ci się oszukać przeznaczenie.';
@@ -145,11 +132,13 @@ if (isset($_GET['action']) && $_GET['action'] == 'dig')
             } 
                 else
             {
-                $strInfo = M_LUCK;
+                $strInfo = "<br /><br />Nagle poczułeś, jak całe wyrobisko powoli zaczyna się rozpadać. Najszybciej jak potrafisz uciekasz w kierunku wyjścia. W ostatnim momencie udało ci się wybiec z rejonu zagrożenia, poczułeś jedynie na plecach podmuch walących się ton skał.";
             }
+	    $player->clearbless(array('speed'));
             break;
         }
     }
+    $player->clearbless(array('strength'));
 
     $intMinsum = array_sum($arrMinerals);
     $intGoldsum = array_sum($arrGold);
@@ -172,48 +161,50 @@ if (isset($_GET['action']) && $_GET['action'] == 'dig')
         }
         $objMinerals -> Close();
     }
-    $strFind = YOU_GO.$i.T_AMOUNT2;
+    $strFind = "Wybrałeś się na poszukiwanie minerałów ".$i." razy.";
     if ($intGoldsum || $intMinsum)
     {
-        $strFind = $strFind.YOU_FIND;
+        $strFind = $strFind."<br /><br />Zdobyłeś:<br /><br />";
         if ($arrMinerals[0])
         {
-            $strFind = $strFind.$arrMinerals[0].T_CRYSTALS;
+            $strFind = $strFind.$arrMinerals[0]." kryształów<br />";
         }
         if ($arrMinerals[1])
         {
-            $strFind = $strFind.$arrMinerals[1].T_ADAMANTIUM;
+            $strFind = $strFind.$arrMinerals[1]." brył adamantium<br />";
         }
         if ($arrGold[1])
         {
-            $strFind = $strFind.$arrGold[1].T_MITHRIL;
+            $strFind = $strFind.$arrGold[1]." sztuk mithrilu<br />";
         }
         if ($arrGold[0])
         {
-            $strFind = $strFind.T_GOLD.$arrGold[0].T_GOLD2;
+            $strFind = $strFind."nieco diamentów wartych ".$arrGold[0]." sztuk złota<br />";
         }
 	if ($player->clas = 'Rzemieślnik')
 	  {
 	    $intExp = $intExp * 2;
 	  }
-        $strFind = $strFind.$fltGainability.T_ABILITY." oraz ".$intExp." PD.<br />";
+        $strFind = $strFind." oraz ".$intExp." punktów doświadczenia.<br />";
     }
     if (!$intGoldsum && !$intMinsum && $strInfo == '')
     {
-        $strFind = $strFind.T_NOTHING;
+        $strFind = $strFind."<br /><br />Niestety nic nie znalazłeś.";
     }
     $strFind = $strFind.$strInfo;
-    require_once('includes/checkexp.php');
-    checkexp($player->exp, $intExp, $player->level, $player->race, $player->user, $player->id, 0, 0, $player->id, 'mining', $fltGainability);
+    $player->checkexp(array('strength' => ($intExp / 3),
+			    'speed' => ($intExp / 3)), $player->id, 'stats');
+    $player->checkexp(array('mining' => ($intExp / 3)), $player->id, 'skills');
     $db -> Execute("UPDATE `players` SET `credits`=`credits`+".$arrGold[0].", `platinum`=`platinum`+".$arrGold[1].", `hp`=".$player -> hp.", `energy`=`energy`-".$i."  WHERE `id`=".$player -> id);
     $smarty -> assign("Youfind", $strFind);
     $player->energy -= $i;
     if ($player->hp <= 0)
       {
-	$smarty -> assign(array("Youdead" => YOU_DEAD2,
-				"Backto" => BACK_TO,
-				"Stayhere" => STAY_HERE));
+	$smarty -> assign(array("Youdead" => "Jesteś martwy",
+				"Backto" => "Powrót do ".$city1b,
+				"Stayhere" => "Pozostań na miejscu"));
       }
+    $strMinesinfo = "Czy chcesz wyruszyć na poszukiwanie minerałów ponownie?";
 }
 
 /**
@@ -222,17 +213,18 @@ if (isset($_GET['action']) && $_GET['action'] == 'dig')
 if (!isset($_GET['action'])) 
 {
     $_GET['action'] = '';
+    $strMinesinfo = "Witaj w kopalniach w górach Kazad-nar, czy chcesz wyruszyć na poszukiwanie minerałów? Każde poszukiwanie zabiera 1 punkt energii.";
 }
 
 /**
 * Assign variables to template and display page
 */
 $smarty -> assign(array("Action" => $_GET['action'],
-                        "Ano" => NO,
-                        "Minesinfo" => MINES_INFO,
-                        "Asearch" => A_SEARCH,
-                        "Tminerals" => T_MINERALS,
-                        "Tamount" => T_AMOUNT,
+                        "Ano" => "Nie",
+                        "Minesinfo" => $strMinesinfo,
+                        "Asearch" => "Szukaj",
+                        "Tminerals" => "minerałów",
+                        "Tamount" => "razy.",
 			"Curen" => $player->energy,
                         "Health" => $player -> hp));
 $smarty -> display ('kopalnia.tpl');
