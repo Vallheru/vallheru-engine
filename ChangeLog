@@ -1,3 +1,8 @@
+2012-10-17  Bartek thindil Jasicki  <thindil@vallheru.net>
+
+	* UPDATE,languages/pl/mines.php, mines.php:
+	updated mines in city
+
 2012-10-16  Bartek thindil Jasicki  <thindil@vallheru.net>
 
 	* UPDATE,templates/layout1/lumbermill.tpl, templates/lumbermill.tpl, languages/pl/lumbermill.php, lumbermill.php: 
