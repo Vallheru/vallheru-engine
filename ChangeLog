@@ -1,3 +1,8 @@
+2012-10-18  Bartek thindil Jasicki  <thindil@vallheru.net>
+
+	* BUG,lumbermill.php:
+	fixed experience for elite items
+
 2012-10-17  Bartek thindil Jasicki  <thindil@vallheru.net>
 
 	* UPDATE,languages/pl/kowal.php, kowal.php: 
