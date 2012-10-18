@@ -96,10 +96,10 @@
         </form>
     {/if}
     {if $Continue != ""}
-        {$Message}
+        {$Message2}
     {/if}
     {if $Make != ""}
-        {$Message}
+        {$Message2}
 	{if $Amt > 0}
 	    <p>{$Youmade}</p>
 	    {section name=maked loop=$Items}
@@ -111,7 +111,7 @@
 
 {if $Smith == "astral"}
     {$Smithinfo}<br /><br />
-    {$Message}<br /><br />
+    {$Message2}<br /><br />
     {section name=astral loop=$Aviablecom}
         <b>{$Tname}:</b> {$Aviablecom[astral]}<br />
         {section name=astral2 loop=$Mineralsname}

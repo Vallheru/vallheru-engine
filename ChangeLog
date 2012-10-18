@@ -1,5 +1,7 @@
 2012-10-18  Bartek thindil Jasicki  <thindil@vallheru.net>
 
+	* UPDATE,templates/layout1/kowal.tpl, templates/kowal.tpl, kowal.php: 
+	updated smith
 	* BUG,lumbermill.php:
 	fixed experience for elite items
 

@@ -7,7 +7,7 @@
  *   @copyright            : (C) 2004,2005,2006,2011,2012 Vallheru Team based on Gamers-Fusion ver 2.5
  *   @author               : thindil <thindil@vallheru.net>
  *   @version              : 1.7
- *   @since                : 17.10.2012
+ *   @since                : 18.10.2012
  *
  */
 
@@ -52,6 +52,7 @@ function createitem()
     global $intExp;
     global $arrMaxbonus;
     global $intKey;
+    global $arrStats;
 
     $arrResult = array();
     $intRoll = rand(1,100);
@@ -64,10 +65,10 @@ function createitem()
         $intRoll2 = rand(1,100);
         if ($player -> clas == 'Rzemieślnik') 
         {
-            $intBonus = ($player -> smith / 100);
+            $intBonus = ($player->skills['smith'][1] / 100);
             if ($player -> race == 'Gnom')
             {
-                $intBonus = $intBonus + ($player -> smith / 100);
+                $intBonus = $intBonus + ($player->skills['smith'][1] / 100);
             }
             $intRoll2 = floor($intRoll2 - $intBonus);
         }
@@ -75,7 +76,7 @@ function createitem()
         if ($intRoll2 < 21)
         {
             $intRoll3 = rand(1, 101);
-            $intItembonus = rand(1, ceil($player -> smith));
+            $intItembonus = rand(1, ceil($player->skills['smith'][1]));
             if ($arrItem['type'] == 'A' || $arrItem['type'] == 'L')
             {
                 if ($intRoll3 < 34)
@@ -89,7 +90,7 @@ function createitem()
                     {
                         $strName = "Smocze ".$arrItem['name'];
                     }
-                    $intPowerbonus = $intItembonus + ($player -> strength / 50);
+                    $intPowerbonus = $intItembonus + ($player->stats['strength'][2] / 5);
                     $intMaxbonus = $arrMaxbonus[$intKey] * $arrItem['power'];
                     if ($intPowerbonus > $intMaxbonus)
                     {
@@ -97,6 +98,10 @@ function createitem()
                     }
                     $intPower = $arrItem['power'] + $intPowerbonus;
                     $blnSpecial = true;
+		    if (!in_array('strength', $arrStats))
+		      {
+			$arrStats[] = 'strength';
+		      }
                 }
                 if (($intRoll3 > 34 && $intRoll3 < 68) && $player -> clas == 'Rzemieślnik')
                 {
@@ -108,7 +113,7 @@ function createitem()
                     {
                         $strName = "Krasnoludzkie ".$arrItem['name'];
                     }
-                    $intDurbonus = $intItembonus + ($player -> inteli / 50);
+                    $intDurbonus = $intItembonus + ($player->stats['inteli'][2] / 5);
                     $intMaxbonus = $arrItem['wt'] * 10;
                     if ($intDurbonus > $intMaxbonus)
                     {
@@ -116,6 +121,10 @@ function createitem()
                     }
                     $intDur = $arrItem['wt'] + $intDurbonus;
                     $blnSpecial = true;
+		    if (!in_array('inteli', $arrStats))
+		      {
+			$arrStats[] = 'inteli';
+		      }
                 }
                 if ($intRoll3 > 68 && $player -> clas == 'Rzemieślnik')
                 {
@@ -128,7 +137,7 @@ function createitem()
                         $strName = "Elfie ".$arrItem['name'];
                         $intItembonus = ceil($intItembonus / 2);
                     }
-                    $intAbibonus = $intItembonus + ($player -> agility / 50);
+                    $intAbibonus = $intItembonus + ($player->stats['agility'][2] / 5);
                     $intMaxbonus = $arrMaxbonus[$intKey] * $arrItem['zr'];
                     if ($intAbibonus > $intMaxbonus)
                     {
@@ -140,6 +149,10 @@ function createitem()
 		      }
                     $intAgi = $arrItem['zr'] - $intAbibonus;
                     $blnSpecial = true;
+		    if (!in_array('agility', $arrStats))
+		      {
+			$arrStats[] = 'agility';
+		      }
                 }
                 if ($intRoll3 == 34 && $player -> clas == 'Rzemieślnik')
                 {
@@ -147,12 +160,12 @@ function createitem()
                     {
                         $strName = "Smocza ".$arrItem['name'];
                         $intItembonus = $intItembonus * 2;
-                        $intPowerbonus = ($intItembonus * 2) + ($player -> strength / 50);
+                        $intPowerbonus = ($intItembonus * 2) + ($player->stats['strength'][2] / 5);
                     }
                         else
                     {
                         $strName = "Smocze ".$arrItem['name'];
-                        $intPowerbonus = $intItembonus + ($player -> strength / 50);
+                        $intPowerbonus = $intItembonus + ($player->stats['strength'][2] / 5);
                     }
                     $intMaxbonus = $arrMaxbonus[$intKey] * $arrItem['power'];
                     if ($intPowerbonus > $intMaxbonus)
@@ -160,7 +173,7 @@ function createitem()
                         $intPowerbonus = $intMaxbonus;
                     }
                     $intPower = $arrItem['power'] + $intPowerbonus;
-                    $intDurbonus = $intItembonus + ($player -> inteli / 50);
+                    $intDurbonus = $intItembonus + ($player->stats['inteli'][2] / 5);
                     $intMaxbonus = $arrItem['wt'] * 10;
                     if ($intDurbonus > $intMaxbonus)
                     {
@@ -168,18 +181,22 @@ function createitem()
                     }
                     $intDur = $arrItem['wt'] + $intDurbonus;
                     $blnSpecial = true;
+		    if (!in_array('strength', $arrStats))
+		      {
+			$arrStats[] = 'strength';
+		      }
                 }
                 if ($intRoll3 == 68 && $player -> clas == 'Rzemieślnik')
                 {
                     if ($arrItem['type'] == 'A') 
                     {
                         $strName = "Elfia ".$arrItem['name'];
-                        $intAbibonus = $intItembonus + ($player -> agility / 50);
+                        $intAbibonus = $intItembonus + ($player->stats['agility'][2] / 5);
                     }
                     if ($arrItem['type'] == 'L') 
                     {
                         $strName = "Elfie ".$arrItem['name'];
-                        $intAbibonus = ceil($intItembonus / 2) + ($player -> agility / 50);
+                        $intAbibonus = ceil($intItembonus / 2) + ($player->stats['agility'][2] / 5);
                     }
                     $intMaxbonus = $arrMaxbonus[$intKey] * $arrItem['zr'];
                     if ($intAbibonus > $intMaxbonus)
@@ -191,7 +208,7 @@ function createitem()
 			$intAbibonus = 1;
 		      }
                     $intAgi = $arrItem['zr'] - $intAbibonus;
-                    $intDurbonus = $intItembonus + ($player -> inteli / 50);
+                    $intDurbonus = $intItembonus + ($player->stats['inteli'][2] / 5);
                     $intMaxbonus = $arrItem['wt'] * 10;
                     if ($intDurbonus > $intMaxbonus)
                     {
@@ -199,6 +216,10 @@ function createitem()
                     }
                     $intDur = $arrItem['wt'] + $intDurbonus;
                     $blnSpecial = true;
+		    if (!in_array('inteli', $arrStats))
+		      {
+			$arrStats[] = 'inteli';
+		      }
                 }
             }
 	    else
@@ -236,7 +257,7 @@ function createitem()
 			      }
 			  }
 		      }
-                    $intPowerbonus = $intItembonus + ($player -> strength / 50);
+                    $intPowerbonus = $intItembonus + ($player->stats['strength'][2] / 5);
                     $intMaxbonus = $arrMaxbonus[$intKey] * $arrItem['power'];
                     if ($intPowerbonus > $intMaxbonus)
                     {
@@ -244,6 +265,10 @@ function createitem()
                     }
                     $intPower = $arrItem['power'] + $intPowerbonus;
                     $blnSpecial = true;
+		    if (!in_array('strength', $arrStats))
+		      {
+			$arrStats[] = 'strength';
+		      }
                 }
                 if ($intRoll3 == 51 && $player -> clas == 'Rzemieślnik')
                 {
@@ -278,14 +303,14 @@ function createitem()
 			      }
 			  }
 		      }
-                    $intPowerbonus = $intItembonus + ($player -> strength / 50);
+                    $intPowerbonus = $intItembonus + ($player->stats['strength'][2] / 5);
                     $intMaxbonus = $arrMaxbonus[$intKey] * $arrItem['power'];
                     if ($intPowerbonus > $intMaxbonus)
                     {
                         $intPowerbonus = $intMaxbonus;
                     }
                     $intPower = $arrItem['power'] + $intPowerbonus;
-                    $intDurbonus = $intItembonus + ($player -> inteli / 50);
+                    $intDurbonus = $intItembonus + ($player->stats['inteli'][2] / 5);
                     $intMaxbonus = $arrItem['wt'] * 10;
                     if ($intDurbonus > $intMaxbonus)
                     {
@@ -293,6 +318,10 @@ function createitem()
                     }
                     $intDur = $arrItem['wt'] + $intDurbonus;
                     $blnSpecial = true;
+		    if (!in_array('strength', $arrStats))
+		      {
+			$arrStats[] = 'strength';
+		      }
                 }
                 if ($intRoll3 > 51 && $player -> clas == 'Rzemieślnik' && $arrItem['type'] != 'E')
                 {
@@ -311,7 +340,7 @@ function createitem()
 			    $strName = "Krasnoludzki ".$arrItem['name'];
 			  }
 		      }
-                    $intDurbonus = $intItembonus + ($player -> inteli / 50);
+                    $intDurbonus = $intItembonus + ($player->stats['inteli'][2] / 5);
                     $intMaxbonus = $arrItem['wt'] * 10;
                     if ($intDurbonus > $intMaxbonus)
                     {
@@ -319,23 +348,22 @@ function createitem()
                     }
                     $intDur = $arrItem['wt'] + $intDurbonus;
                     $blnSpecial = true;
+		    if (!in_array('inteli', $arrStats))
+		      {
+			$arrStats[] = 'inteli';
+		      }
                 }
             }
             if ($blnSpecial)
             {
-                $intGainexp = $intGainexp + (($arrItem['level'] * (100 + $player -> smith / 10)) * $intExp);
+                $intGainexp += ($arrItem['level'] * ($player->skills['smith'][1] * 10));
             }
         }
 	elseif ($intRoll2 > 20 || !$blnSpecial)
         {
-            $intGainexp = $intGainexp + ($arrItem['level'] * $intExp);
+	    $intGainexp += ($arrItem['level'] * 2);
         }
         $intItems ++;
-        $intAbility = ($intAbility + ($arrItem['level'] / 100));
-        if ($arrItem['type'] == 'A')
-        {
-            $intAbility = $intAbility + ($arrItem['level'] / 100);
-        }
         $arrRepair = array(1, 4, 16, 64, 256);
         if ($arrItem['type'] == 'W' || $arrItem['type'] == 'A')
         {
@@ -355,10 +383,6 @@ function createitem()
 			   "zr" => (int)$intAgi,
 			   "repaircost" => $intRepaircost);
     } 
-        else 
-    {
-        $intAbility = ($intAbility + 0.01);
-    }
     return $arrResult;
 }
 
@@ -642,6 +666,26 @@ function additem($strType, $strName, $intWt, $intPower, $intAgi, $intCost, $intP
 }
 
 /**
+ * Check gained experience
+ */
+function checkexp($arrStats, $intGainexp)
+{
+  global $player;
+
+  $intDivexp = count($arrStats) + 1;
+  $player->checkexp(array('smith' => floor($intGainexp / $intDivexp)), $player->id, 'skills');
+  if ($intDivexp > 1)
+    {
+      $arrStats2 = array();
+      foreach ($arrStats as $strStat)
+	{
+	  $arrStats2[$strStat] = floor($intGainexp / $intDivexp);
+	}
+      $player->checkexp($arrStats2, $player->id, 'stats');
+    }
+}
+
+/**
 * Making items
 */
 if (isset ($_GET['kowal']) && $_GET['kowal'] == 'kuznia') 
@@ -660,15 +704,13 @@ if (isset ($_GET['kowal']) && $_GET['kowal'] == 'kuznia')
                 $arrid = array();
                 $arrlevel = array();
                 $arrAmount = array();
-                $i = 0;
                 while (!$objSmith -> EOF) 
                 {
-                    $arrname[$i] = $objSmith -> fields['name'];
-                    $arrid[$i] = $objSmith -> fields['id'];
-                    $arrlevel[$i] = $objSmith -> fields['level'];
-                    $arrAmount[$i] = $objSmith -> fields['amount'];
+                    $arrname[] = $objSmith -> fields['name'];
+                    $arrid[] = $objSmith -> fields['id'];
+                    $arrlevel[] = $objSmith -> fields['level'];
+                    $arrAmount[] = $objSmith -> fields['amount'];
                     $objSmith -> MoveNext();
-                    $i = $i + 1;
                 }
                 $objSmith -> Close();
                 $smarty -> assign(array("Name" => $arrname, 
@@ -705,7 +747,6 @@ if (isset ($_GET['kowal']) && $_GET['kowal'] == 'kuznia')
 
         $intItems = 0;
         $intGainexp = 0;
-        $intAbility = 0;
         $intCost = ceil($objSmith -> fields['cost'] / 20);
         $arrName = array("z miedzi", "z brązu", "z mosiądzu", "z żelaza", "ze stali");
 	if ($objSmith->fields['type'] != 'E')
@@ -767,7 +808,8 @@ if (isset ($_GET['kowal']) && $_GET['kowal'] == 'kuznia')
         {
             $intExp = $intExp * 2;
         }
-        $intChance = (50 - $arrMaxbonus[$intKey]) * $player->smith / $objSmith -> fields['level'];
+	$arrStats = array();
+        $intChance = (50 - $arrMaxbonus[$intKey]) * $player->skills['smith'][1] / $objSmith -> fields['level'];
         if ($intChance > 95)
         {
             $intChance = 95;
@@ -775,10 +817,6 @@ if (isset ($_GET['kowal']) && $_GET['kowal'] == 'kuznia')
         if ($_POST['razy'] == $intNeed) 
         {
             $arrMaked = createitem();
-            if ($player -> clas == 'Rzemieślnik')
-            {
-                $intAbility = $intAbility * 2;
-            }
             $intGainexp = ceil($intGainexp);
             if ($intItems) 
 	      {
@@ -792,20 +830,15 @@ if (isset ($_GET['kowal']) && $_GET['kowal'] == 'kuznia')
 		    $arrMaked['zr'] = 0 - $arrMaked['zr'];
 		  }
 		$arrMaked['zr'] = abs($arrMaked['zr']);
-                $smarty -> assign ("Message", "Wykonałeś <b>".$arrMaked['name']."(+ ".$arrMaked['power'].") (".$arrMaked['zr']." zr) (".$arrMaked['wt']."/".$arrMaked['wt'].")"."</b>. Zdobywasz <b>".$intGainexp."</b> PD oraz <b>".$intAbility."</b> poziomu w umiejętności Kowalstwo.<br />");
+                $smarty -> assign ("Message2", "Wykonałeś <b>".$arrMaked['name']."(+ ".$arrMaked['power'].") (".$arrMaked['zr']." zr) (".$arrMaked['wt']."/".$arrMaked['wt'].")"."</b>. Zdobywasz <b>".$intGainexp."</b> punktów doświadczenia.<br />");
 	      } 
 	    else 
 	      {
-                $intAbility = 0.01;
-                if ($player -> clas == 'Rzemieślnik')
-                {
-                    $intAbility = 0.02;
-                }
-                $intGainexp = 0;
-                $smarty -> assign ("Message", "Próbowałeś wykonać <b>".$strName."</b>, niestety nie udało się. Zdobywasz <b>".$intAbility."</b> poziomu w umiejętności Kowalstwo.<br />");
+                $intGainexp = 1;
+                $smarty -> assign ("Message2", "Próbowałeś wykonać <b>".$strName."</b>, niestety nie udało się.<br />");
 	      }
             $db -> Execute("DELETE FROM `smith_work` WHERE `owner`=".$player -> id);
-            checkexp($player -> exp, $intGainexp, $player -> level, $player -> race, $player -> user, $player -> id, 0, 0, $player -> id, 'ability', $intAbility);
+	    checkexp($arrStats, $intGainexp);
         } 
             else 
         {
@@ -822,7 +855,7 @@ if (isset ($_GET['kowal']) && $_GET['kowal'] == 'kuznia')
             $procent = round($procent, "0");
             $need = $objWork -> fields['n_energy'] - $uenergia;
             $db -> Execute("UPDATE `smith_work` SET `u_energy`=`u_energy`+".$_POST['razy']." WHERE `owner`=".$player -> id);
-            $smarty -> assign ("Message", "Pracowałeś nad ".$strName." kolejne ".$_POST['razy']." energii. Teraz jest on wykonany w ".$procent." procentach. Aby go ukonczyć potrzebujesz ".$need." energii.");
+            $smarty -> assign ("Message2", "Pracowałeś nad ".$strName." kolejne ".$_POST['razy']." energii. Teraz jest on wykonany w ".$procent." procentach. Aby go ukonczyć potrzebujesz ".$need." energii.");
         }
         $db -> Execute("UPDATE `players` SET `energy`=`energy`-".$_POST['razy']." WHERE `id`=".$player -> id);
     }
@@ -876,7 +909,7 @@ if (isset ($_GET['kowal']) && $_GET['kowal'] == 'kuznia')
 
         $intItems = 0;
         $intGainexp = 0;
-        $intAbility = 0;
+	$arrStats = array();
         $intCost = ceil($objSmith -> fields['cost'] / 20);
 	$arrName = array("z miedzi", "z brązu", "z mosiądzu", "z żelaza", "ze stali");
 	if ($objSmith->fields['type'] != 'E')
@@ -937,7 +970,7 @@ if (isset ($_GET['kowal']) && $_GET['kowal'] == 'kuznia')
         {
             $intExp = $intExp * 2;
         }
-        $intChance = (50 - $arrMaxbonus[$intKey]) * $player->smith / $objSmith -> fields['level'];
+        $intChance = (50 - $arrMaxbonus[$intKey]) * $player->skills['smith'][1] / $objSmith -> fields['level'];
         if ($intChance > 95)
         {
             $intChance = 95;
@@ -976,18 +1009,14 @@ if (isset ($_GET['kowal']) && $_GET['kowal'] == 'kuznia')
 		  }
 	      }
             $intGainexp = ceil($intGainexp);
-            if ($player -> clas == 'Rzemieślnik')
-            {
-                $intAbility = $intAbility * 2;
-            }
-            $smarty->assign(array("Message" => "Wykonałeś <b>".$objSmith -> fields['name']."</b> <b>".$intItems."</b>. Zdobywasz <b>".$intGainexp."</b> PD oraz <b>".$intAbility."</b> poziomu w umiejętności Kowalstwo.<br />",
+            $smarty->assign(array("Message2" => "Wykonałeś <b>".$objSmith -> fields['name']."</b> <b>".$intItems."</b> razy. Zdobywasz <b>".$intGainexp."</b> punktów doświadczenia.<br />",
 				  "Youmade" => "Wykonane przedmioty:",
 				  "Iagi" => "zr",
 				  "Iamount" => "ilość",
 				  "Items" => $arrMaked,
 				  "Amount" => $arrAmount,
 				  "Amt" => $intItems));
-            checkexp($player -> exp, $intGainexp, $player -> level, $player -> race, $player -> user, $player -> id, 0, 0, $player -> id, 'ability', $intAbility); 
+	    checkexp($arrStats, $intGainexp);
 	  } 
 	else 
 	  {
@@ -996,7 +1025,7 @@ if (isset ($_GET['kowal']) && $_GET['kowal'] == 'kuznia')
             $need = ($intEnergy - $_POST['razy']);
             $intEnergy2 = $_POST['razy'];
             $db -> Execute("INSERT INTO `smith_work` (`owner`, `name`, `u_energy`, `n_energy`, `mineral`) VALUES(".$player -> id.", '".$objSmith -> fields['name']."', ".$_POST['razy'].", ".$intEnergy.", '".$_POST['mineral']."')");
-            $smarty -> assign(array("Message" => "Pracowałeś nad ".$objSmith -> fields['name'].", zużywając ".$_POST['razy']." energii i wykonałeś go w ".$procent." procentach. Aby ukończyć przedmiot potrzebujesz jeszcze ".$need." energii.",
+            $smarty -> assign(array("Message2" => "Pracowałeś nad ".$objSmith -> fields['name'].", zużywając ".$_POST['razy']." energii i wykonałeś go w ".$procent." procentach. Aby ukończyć przedmiot potrzebujesz jeszcze ".$need." energii.",
 				    "Amt" => 0));
 	  }
         $db -> Execute("UPDATE `minerals` SET `".$_POST['mineral']."`=`".$_POST['mineral']."`-".$intAmineral." WHERE `owner`=".$player -> id);
@@ -1126,7 +1155,7 @@ if (isset ($_GET['kowal']) && $_GET['kowal'] == 'elite')
 	$intMaxdur = $arrDur[$intKey];
 	$intMaxbonus = $arrMaxbonus[$intKey] * $objSmith->fields['level'];
         $strName = $objSmith -> fields['name']." ".$arrName[$intKey];
-        $intChance = $player->smith / $objSmith -> fields['level'];
+        $intChance = $player->skills['smith'][1] / $objSmith -> fields['level'];
         if ($intChance > 90)
         {
             $intChance = 90;
@@ -1138,11 +1167,13 @@ if (isset ($_GET['kowal']) && $_GET['kowal'] == 'elite')
 	      {
 		if ($objSmith->fields['elitetype'] == 'S')
 		  {
-		    $intBonus = floor(rand(1, $player->smith) + ($player->strength / 10));
+		    $intBonus = floor(rand(1, $player->skills['smith'][1]) + $player->stats['strength'][2]);
+		    $strStat = 'strength';
 		  }
 		else
 		  {
-		    $intBonus = floor(rand(1, $player->smith) + ($player->agility / 10));
+		    $intBonus = floor(rand(1, $player->skills['smith'][1]) + $player->stats['agility'][2]);
+		    $strStat = 'agility';
 		  }
 		if ($intBonus > $intMaxbonus)
 		  {
@@ -1156,14 +1187,12 @@ if (isset ($_GET['kowal']) && $_GET['kowal'] == 'elite')
 		  {
 		    $intPower = $intBonus;
 		  }
-		$intGainexp = ($objSmith->fields['level'] * (100 + $player->smith / 5));
-		$intAbility = ($objSmith->fields['level'] / 50);
+		$intGainexp = ($objSmith->fields['level'] * ($player->skills['smith'][1] * 20));
 		$intItems++;
 	      }
             if ($intItems) 
 	      {
 		$intGainexp = $intGainexp * $intExp;
-		$intAbility = $intAbility * $intExp;
 		$arrRepair = array(1, 4, 16, 64, 256);
 		if ($objSmith->fields['type'] == 'W' || $objSmith->fields['type'] == 'A')
 		  {
@@ -1174,16 +1203,16 @@ if (isset ($_GET['kowal']) && $_GET['kowal'] == 'elite')
 		    $intRepaircost = $objSmith->fields['level'] * $arrRepair[$intKey] * 1;
 		  }
 		additem($objSmith->fields['type'], $strName, $intMaxdur, $intPower, $intAgility, $intCost, $player->id, $objSmith->fields['level'], $intRepaircost, $objSmith->fields['twohand']);
-                $smarty -> assign ("Message", "Wykonałeś <b>".$strName."(+ ".$intPower.") (".($intAgility * -1)." zr) (".$intMaxdur."/".$intMaxdur.")"."</b>. Zdobywasz <b>".$intGainexp."</b> PD oraz <b>".$intAbility."</b> poziomu w umiejętności Kowalstwo.<br />");
+                $smarty -> assign ("Message2", "Wykonałeś <b>".$strName."(+ ".$intPower.") (".($intAgility * -1)." zr) (".$intMaxdur."/".$intMaxdur.")"."</b>. Zdobywasz <b>".$intGainexp."</b> punktów doświadczenia.<br />");
 	      } 
 	    else 
 	      {
-		$intAbility = 0.02;
-                $intGainexp = 0;
-                $smarty -> assign ("Message", "Próbowałeś wykonać <b>".$strName."</b>, niestety nie udało się. Zdobywasz <b>".$intAbility."</b> poziomu w umiejętności Kowalstwo.<br />");
+                $intGainexp = 1;
+                $smarty -> assign ("Message2", "Próbowałeś wykonać <b>".$strName."</b>, niestety nie udało się.<br />");
 	      }
             $db -> Execute("DELETE FROM `smith_work` WHERE `id`=".$objWork->fields['id']);
-            checkexp($player->exp, $intGainexp, $player->level, $player->race, $player->user, $player->id, 0, 0, $player->id, 'ability', $intAbility);
+	    $player->checkexp(array($strStat => ($intGainexp / 2)), $player->id, 'stats');
+	    $player->checkexp(array('smith' => ($intGainexp / 2)), $player->id, 'skills');
         } 
             else 
         {
@@ -1200,7 +1229,7 @@ if (isset ($_GET['kowal']) && $_GET['kowal'] == 'elite')
             $procent = round($procent, "0");
             $need = $objWork -> fields['n_energy'] - $uenergia;
             $db -> Execute("UPDATE `smith_work` SET `u_energy`=`u_energy`+".$_POST['razy']." WHERE `id`=".$objWork->fields['id']);
-            $smarty -> assign ("Message", "Poświęciłeś na wykonanie ".$strName." kolejne ".$_POST['razy']." energii. Teraz jest on wykonany w ".$procent." procentach. Aby go ukonczyć potrzebujesz ".$need." energii.");
+            $smarty -> assign ("Message2", "Poświęciłeś na wykonanie ".$strName." kolejne ".$_POST['razy']." energii. Teraz jest on wykonany w ".$procent." procentach. Aby go ukonczyć potrzebujesz ".$need." energii.");
         }
         $db -> Execute("UPDATE `players` SET `energy`=`energy`-".$_POST['razy']." WHERE `id`=".$player -> id);
     }
@@ -1283,7 +1312,6 @@ if (isset ($_GET['kowal']) && $_GET['kowal'] == 'elite')
 
         $intItems = 0;
         $intGainexp = 0;
-        $intAbility = 0;
         $intCost = ceil($objSmith -> fields['cost'] / 200);
 	$arrName = array("z miedzi", "z brązu", "z mosiądzu", "z żelaza", "ze stali");
         $arrMaxbonus = array(21, 25, 30, 35, 40);
@@ -1318,7 +1346,7 @@ if (isset ($_GET['kowal']) && $_GET['kowal'] == 'elite')
 	$intMaxdur = $arrDur[$intKey];
 	$intMaxbonus = $arrMaxbonus[$intKey] * $objSmith->fields['level'];
         $strName = $objSmith -> fields['name']." ".$arrName[$intKey];
-        $intChance = $player->smith / $objSmith -> fields['level'];
+        $intChance = $player->skills['smith'][1] / $objSmith -> fields['level'];
         if ($intChance > 90)
         {
             $intChance = 90;
@@ -1330,11 +1358,13 @@ if (isset ($_GET['kowal']) && $_GET['kowal'] == 'elite')
 	    $arrAmount = array();
 	    if ($objSmith->fields['elitetype'] == 'S')
 	      {
-		$intBonus = floor(rand(1, $player->smith) + ($player->strength / 10));
+		$intBonus = floor(rand(1, $player->skills['smith'][1]) + $player->stats['strength'][2]);
+		$strStat = 'strength';
 	      }
 	    else
 	      {
-		$intBonus = floor(rand(1, $player->smith) + ($player->agility / 10));
+		$intBonus = floor(rand(1, $player->skills['smith'][1]) + $player->stats['agility'][2]);
+		$strStat = 'agility';
 	      }
 	    if ($intBonus > $intMaxbonus)
 	      {
@@ -1373,13 +1403,12 @@ if (isset ($_GET['kowal']) && $_GET['kowal'] == 'elite')
 			    $arrAmount[$intIndex]++;
 			  }
 		      }
-		    $intGainexp += ($objSmith->fields['level'] * (100 + $player->smith / 5));
-		    $intAbility += ($objSmith->fields['level'] / 50);
+		    $intGainexp += ($objLumber->fields['level'] * ($player->skills['smith'][1] * 20));
 		    $intItems++;
 		  }
 		else
 		  {
-		    $intGainexp += 0.01;
+		    $intGainexp += 1;
 		  }
 	      }
 	    $arrMaked = array();
@@ -1391,16 +1420,16 @@ if (isset ($_GET['kowal']) && $_GET['kowal'] == 'elite')
 		$arrMaked[] = array("name" => $strName, "power" => $arrPower[$i], "zr" => ($arrAgility[$i] * -1), "wt" => $intMaxdur);
 	      }
             $intGainexp = ceil($intGainexp);
-	    $intAbility = $intAbility * $intExp;
 	    $intGainexp = $intGainexp * $intExp;
-            $smarty->assign(array("Message" => "Wykonałeś <b>".$objSmith -> fields['name']."</b> <b>".$intItems."</b> razy. Zdobywasz <b>".$intGainexp."</b> PD oraz <b>".$intAbility."</b> poziomu w umiejętności Kowalstwo.<br />",
+            $smarty->assign(array("Message2" => "Wykonałeś <b>".$objSmith -> fields['name']."</b> <b>".$intItems."</b> razy. Zdobywasz <b>".$intGainexp."</b> punktów doświadczenia.<br />",
 				  "Youmade" => "Wykonane przedmioty:",
 				  "Iagi" => "zr",
 				  "Iamount" => "ilość",
 				  "Items" => $arrMaked,
 				  "Amount" => $arrAmount,
 				  "Amt" => $intItems));
-            checkexp($player -> exp, $intGainexp, $player -> level, $player -> race, $player -> user, $player -> id, 0, 0, $player -> id, 'ability', $intAbility); 
+	    $player->checkexp(array($strStat => ($intGainexp / 2)), $player->id, 'stats');
+	    $player->checkexp(array('smith' => ($intGainexp / 2)), $player->id, 'skills');
 	  } 
 	else 
 	  {
@@ -1409,7 +1438,7 @@ if (isset ($_GET['kowal']) && $_GET['kowal'] == 'elite')
             $need = ($intEnergy - $_POST['razy']);
 	    $intEnergy2 = $_POST['razy'];
             $db -> Execute("INSERT INTO `smith_work` (`owner`, `name`, `u_energy`, `n_energy`, `mineral`, `elite`) VALUES(".$player -> id.", '".$objSmith -> fields['name']."', ".$_POST['razy'].", ".$intEnergy.", '".$_POST['mineral']."', ".$objSmith->fields['elite'].")");
-            $smarty -> assign ("Message", "Pracowałeś nad ".$objSmith -> fields['name'].", zużywając ".$_POST['razy']." energii i wykonałeś go w ".$procent." procentach. Aby ukończyć przedmiot potrzebujesz jeszcze ".$need." energii.");
+            $smarty -> assign ("Message2", "Pracowałeś nad ".$objSmith -> fields['name'].", zużywając ".$_POST['razy']." energii i wykonałeś go w ".$procent." procentach. Aby ukończyć przedmiot potrzebujesz jeszcze ".$need." energii.");
 	  }
         $db -> Execute("UPDATE `minerals` SET `".$_POST['mineral']."`=`".$_POST['mineral']."`-".$intAmineral." WHERE `owner`=".$player -> id);
 	for ($i = 0; $i < 4; $i++)
@@ -1482,7 +1511,7 @@ if (isset($_GET['kowal']) && $_GET['kowal'] == 'astral')
                             "Compnumber" => $arrNumber,
                             "Abuild" => "Buduj",
                             "Tname" => "Nazwa",
-                            "Message" => ''));
+                            "Message2" => ''));
 
     /**
      * Start make components
@@ -1520,8 +1549,8 @@ if (isset($_GET['kowal']) && $_GET['kowal'] == 'astral')
         {
             error("Nie masz takiej ilości energii");
         }
-        $arrChance = array(0.25, 0.2, 0.15, 0.1, 0.05);
-        $intChance = floor(($player -> smith * $arrChance[$intKey]) + ($player -> fletcher * $arrChance[$intKey]));
+        $arrChance = array(0.3, 0.25, 0.2, 0.15, 0.1);
+        $intChance = floor(($player->skills['smith'][1] * $arrChance[$intKey]) + ($player->skills['carpentry'][1] * $arrChance[$intKey]));
         if ($intChance > 95)
         {
             $intChance = 95;
@@ -1540,12 +1569,15 @@ if (isset($_GET['kowal']) && $_GET['kowal'] == 'astral')
                 $db -> Execute("UPDATE `astral` SET `amount`=`amount`+1 WHERE `owner`=".$player -> id." AND `type`='".$strCompname."' AND `number`=0 AND `location`='V'");
             }
             $objTest -> Close();
-            $arrExp1 = array(2000, 3000, 4000, 5000, 7000);
-            $arrExp2 = array(3000, 4000, 5000, 6000, 8000);
+            $arrExp1 = array(500, 1000, 1500, 2000, 2500);
+            $arrExp2 = array(1000, 1500, 2000, 2500, 3000);
             $intGainexp = rand($arrExp1[$intKey], $arrExp2[$intKey]);
-            $arrAbility = array(1, 1.5, 2, 2.5, 3);
-            checkexp($player -> exp, $intGainexp, $player -> level, $player -> race, $player -> user, $player -> id, 0, 0, $player -> id, 'ability', $arrAbility[$intKey]);
-            $strMessage = "Wykonałeś ".$arrNames[$intKey]."! Zdobywasz ".$intGainexp." punktów doświadczenia oraz ".$arrAbility[$intKey]." poziom(y) w umiejętności kowalstwo. Zużyłeś na to:<br />";
+	    $player->checkexp(array('smith' => ($intGainexp / 5),
+				    'carpentry' => ($intGainexp / 5)), $player->id, 'skills');
+	    $player->checkexp(array('strength' => ($intGainexp / 5),
+				    'agility' => ($intGainexp / 5),
+				    'inteli' => ($intGainexp / 5)), $player->id, 'stats');
+            $strMessage = "Wykonałeś ".$arrNames[$intKey]."! Zdobywasz ".$intGainexp." punktów doświadczenia. Zużyłeś na to:<br />";
         }
             else
         {
@@ -1598,7 +1630,7 @@ if (isset($_GET['kowal']) && $_GET['kowal'] == 'astral')
         {
             $strMessage = $strMessage.$arrMinerals[$i].": ".$arrAmount[$intKey][$i]."<br />";
         }
-        $smarty -> assign("Message", $strMessage);
+        $smarty -> assign("Message2", $strMessage);
         $db -> Execute("UPDATE `players` SET `platinum`=`platinum`-".$arrAmount[$intKey][13].", `energy`=`energy`-".$arrAmount[$intKey][14]." WHERE `id`=".$player -> id);
         $db -> Execute("UPDATE `minerals` SET `adamantium`=`adamantium`-".$arrAmount[$intKey][0].", `crystal`=`crystal`-".$arrAmount[$intKey][1].", `meteor`=`meteor`-".$arrAmount[$intKey][2].", `pine`=`pine`-".$arrAmount[$intKey][3].", `hazel`=`hazel`-".$arrAmount[$intKey][4].", `yew`=`yew`-".$arrAmount[$intKey][5].", `elm`=`elm`-".$arrAmount[$intKey][6].", `steel`=`steel`-".$arrAmount[$intKey][7].", `ironore`=`ironore`-".$arrAmount[$intKey][8].", `copperore`=`copperore`-".$arrAmount[$intKey][9].", `tinore`=`tinore`-".$arrAmount[$intKey][10].", `zincore`=`zincore`-".$arrAmount[$intKey][11].", `coal`=`coal`-".$arrAmount[$intKey][12]." WHERE `owner`=".$player -> id) or die("Błąd!");
     }
