@@ -1,5 +1,7 @@
 2012-10-18  Bartek thindil Jasicki  <thindil@vallheru.net>
 
+	* UPDATE,languages/pl/jeweller.php, jeweller.php: 
+	remove language file
 	* UPDATE,templates/layout1/kowal.tpl, templates/kowal.tpl, kowal.php: 
 	updated smith
 	* BUG,lumbermill.php:
