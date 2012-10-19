@@ -7,7 +7,7 @@
  *   @copyright            : (C) 2006,2011,2012 Vallheru Team based on Gamers-Fusion ver 2.5
  *   @author               : thindil <thindil@vallheru.net>
  *   @version              : 1.7
- *   @since                : 18.10.2012
+ *   @since                : 19.10.2012
  *
  */
 
@@ -142,7 +142,7 @@ if (isset($_GET['step']) && $_GET['step'] == 'plans')
  */
 if (isset($_GET['step']) && $_GET['step'] == 'make')
 {
-    $objPlan = $db -> Execute("SELECT `id` FROM `jeweller` WHERE `name`='".RING."' AND `owner`=".$player -> id);
+    $objPlan = $db -> Execute("SELECT `id` FROM `jeweller` WHERE `name`='pierścień' AND `owner`=".$player -> id);
     if (!$objPlan -> fields['id'])
     {
         error("Nie masz takiego planu!");
@@ -172,9 +172,9 @@ if (isset($_GET['step']) && $_GET['step'] == 'make')
         /**
          * Add bonuses to ability
          */
-	$player->curskills(array('jeweller'), TRUE, TRUE);
+	$player->curskills(array('jewellry'), TRUE, TRUE);
         
-        $intChance = $player->jeweller * 100;
+        $intChance = $player->skills['jewellry'][1] * 100;
         if ($intChance > 95)
         {
             $intChance = 95;
@@ -188,14 +188,12 @@ if (isset($_GET['step']) && $_GET['step'] == 'make')
                 $intAmount ++;
             }
         }
-        $intAbility = $_POST['amount'] * 0.01;
         $intGainexp = $intAmount;
         if ($player -> clas == 'Rzemieślnik')
         {
-            $intAbility = $intAbility * 2;
             $intGainexp = $intGainexp * 2;
         }
-        checkexp($player -> exp, $intGainexp, $player -> level, $player -> race, $player -> user, $player -> id, 0, 0, $player -> id, 'jeweller', $intAbility);
+	$player->checkexp(array('jewellry' => $intGainexp), $player->id, 'skills');
         if ($intAmount)
         {
             $objTest = $db -> Execute("SELECT `id` FROM `equipment` WHERE `owner`=".$player -> id." AND `name`='pierścień' AND `status`='U'");
@@ -211,7 +209,7 @@ if (isset($_GET['step']) && $_GET['step'] == 'make')
         }
         $db -> Execute("UPDATE `players` SET `energy`=`energy`-".$_POST['amount']." WHERE `id`=".$player -> id);
         $db -> Execute("UPDATE `minerals` SET `adamantium`=`adamantium`-".$_POST['amount']." WHERE `owner`=".$player -> id);
-        $smarty -> assign("Message", "Wykonałeś <b>".$intAmount."</b> pierścieni. Zdobywasz <b>".$intGainexp."</b> punktów doświadczenia oraz <b>".$intAbility."</b> poziomów umiejętności jubilerstwo.");
+        $smarty -> assign("Message2", "Wykonałeś <b>".$intAmount."</b> pierścieni. Zdobywasz <b>".$intGainexp."</b> punktów doświadczenia.");
     }
 }
 
@@ -233,7 +231,7 @@ if (isset($_GET['step']) && $_GET['step'] == 'make2')
         $objMaked = $db -> Execute("SELECT `id`, `name`, `n_energy`, `u_energy` FROM `jeweller_work` WHERE `owner`=".$player -> id." AND `type`='N'");
         if (!$objMaked -> fields['id'])
         {
-            $objPlans = $db -> Execute("SELECT `id`, `name`, `level`, `bonus` FROM `jeweller` WHERE `owner`=".$player -> id." AND `name`!='".RING."' ORDER BY `level`");
+            $objPlans = $db -> Execute("SELECT `id`, `name`, `level`, `bonus` FROM `jeweller` WHERE `owner`=".$player -> id." AND `name`!='pierścień' ORDER BY `level`");
             if (!$objPlans -> fields['name'])
             {
                 error("Nie masz jeszcze jakichkolwiek planów pierścieni.");
@@ -258,7 +256,7 @@ if (isset($_GET['step']) && $_GET['step'] == 'make2')
                 $arrBonus[] = $objPlans -> fields['bonus'];
                 $arrEnergy[] = $objPlans -> fields['level'] * 2;
                 $intChange = $objPlans -> fields['level'] * 4;
-                if ($player -> jeweller >= $intChange)
+                if ($player->skills['jewellry'][1] >= $intChange)
                 {
                     $arrChange[] = "Tak";
                 }
@@ -315,7 +313,7 @@ if (isset($_GET['step']) && $_GET['step'] == 'make2')
 		  {
 		    error('Nie posiadasz minerałów potrzebnych do tworzenia pierścieni.');
 		  }
-		$objRings = $db -> Execute("SELECT `id`, `amount` FROM `equipment` WHERE `owner`=".$player -> id." AND `name`='".RING."' AND `status`='U'");
+		$objRings = $db -> Execute("SELECT `id`, `amount` FROM `equipment` WHERE `owner`=".$player -> id." AND `name`='pierścień' AND `status`='U'");
 		if (!$objRings -> fields['id'])
 		  {
 		    error("Nie posiadasz zwykłych pierścieni.");
@@ -335,7 +333,7 @@ if (isset($_GET['step']) && $_GET['step'] == 'make2')
                 $smarty -> assign(array("Make" => $_GET['make'],
                                         "Rname2" => $arrName[$intKey],
                                         "Rbonus2" => $arrBonus,
-                                        "Pjeweller" => $player -> jeweller,
+                                        "Pjeweller" => $player->skills['jewellry'][1],
                                         "Change" => $strChange,
                                         "Youmake" => "Wykonaj",
                                         "Ramount" => "przeznaczając na to",
@@ -393,24 +391,24 @@ if (isset($_GET['step']) && $_GET['step'] == 'make2')
             /**
              * Add bonuses to ability
              */
-	    $player->curskills(array('jeweller'), TRUE, TRUE);
+	    $player->curskills(array('jewellry'), TRUE, TRUE);
 
             $objRing2 = $db -> Execute("SELECT `level`, `bonus`, `cost`, `type` FROM `jeweller` WHERE `owner`=".$player -> id." AND `name`='".$objRing -> fields['name']."'");
+           
+            $intGainexp = 0;
 
-            $intChance = ($player->jeweller / $objRing2 -> fields['level']) * 50;
+            $arrStats = array('zręczności', 'siły', 'inteligencji', 'siły woli', 'szybkości', 'wytrzymałości');
+            $arrStats2 = array('agility', 'strength', 'inteli', 'wisdom', 'speed', 'condition');
+            $intKey = array_search($objRing -> fields['bonus'], $arrStats);
+	    $strStat = $arrStats2[$intKey];
+            $intStat = $player->stats[$strStat][2];
+	    $player->clearbless(array($strStat));
+
+	    $intChance = (($player->skills['jewellry'][1] + $intStat) / $objRing2 -> fields['level']) * 50;
             if ($intChance > 95)
             {
                 $intChance = 95;
             }
-            
-            $intGainexp = 0;
-
-            $arrStats = array('zręczności', 'siły', 'inteligencji', 'siły woli', 'szybkości', 'wytrzymałości');
-            $arrStats2 = array('agility', 'strength', 'inteli', 'wisdom', 'speed', 'cond');
-	    $player->clearbless($arrStats2);
-            $intKey = array_search($objRing -> fields['bonus'], $arrStats);
-            $intStat = $player -> $arrStats2[$intKey];
-
             $intRoll = rand(1, 100);
 
             /**
@@ -418,7 +416,7 @@ if (isset($_GET['step']) && $_GET['step'] == 'make2')
              */
             if ($intRoll <= $intChance)
             {
-                $intRoll2 = rand(0, $player->jeweller);
+                $intRoll2 = rand(0, $player->skills['jewellry'][1]);
                 $intBonus = floor($intRoll2 + ($intStat / 50));
                 if ($intBonus < 1)
                 {
@@ -440,28 +438,23 @@ if (isset($_GET['step']) && $_GET['step'] == 'make2')
                     $db -> Execute("UPDATE `equipment` SET `amount`=`amount`+1 WHERE `id`=".$objTest -> fields['id']);
                 }
                 $objTest -> Close();
-                $intGainexp = $objRing2 -> fields['level'] * 200;
-                $intAbility = ($objRing -> fields['n_energy'] * 0.02);
-		if ($intAbility == 0)
-		  {
-		    $intAbility = 0.02;
-		  }
-                $smarty -> assign("Message", "Wykonałeś <b>".$strName." (+".$intBonus.")"."</b>. Zdobywasz <b>".$intGainexp."</b> PD oraz <b>".$intAbility."</b> poziomów umiejętności jubilerstwo.<br />");
+                $intGainexp = $objRing2 -> fields['level'] * 10;
+                $smarty -> assign("Message2", "Wykonałeś <b>".$strName." (+".$intBonus.")"."</b>. Zdobywasz <b>".$intGainexp."</b> punktów doświadczenia.<br />");
             }
                 else
             {
-                $intAbility = 0.02;
-                $intGainexp = 0;
-                $smarty -> assign("Message", "Próbowałeś wykonać <b>".$objRing -> fields['name']."</b> niestety nie udało się. Zdobywasz <b>".$intAbility."</b> poziomów umiejętności jubilerstwo.<br />");
+                $intGainexp = 2;
+                $smarty -> assign("Message2", "Próbowałeś wykonać <b>".$objRing -> fields['name']."</b> niestety nie udało się.<br />");
             }
             $objRing2 -> Close();
             $db -> Execute("DELETE FROM `jeweller_work` WHERE `id`=".$_POST['make']);
-            checkexp($player -> exp, $intGainexp, $player -> level, $player -> race, $player -> user, $player -> id, 0, 0, $player -> id, 'jeweller', $intAbility);
+	    $player->checkexp(array('jewellry' => ($intGainexp / 2)), $player->id, 'skills');
+	    $player->checkexp(array($strStat => ($intGainexp / 2)), $player->id, 'stats');
         }
             else
         {
             $db -> Execute("UPDATE `jeweller_work` SET `u_energy`=".$intEnergy." WHERE `id`=".$_POST['make']);
-            $smarty -> assign("Message", "Próbowałeś wykonać <b>".$objRing -> fields['name']."</b> jednak wykonałeś go tylko częściowo.");
+            $smarty -> assign("Message2", "Próbowałeś wykonać <b>".$objRing -> fields['name']."</b> jednak wykonałeś go tylko częściowo.");
         }
         $objRing -> Close();
         $db -> Execute("UPDATE `players` SET `energy`=`energy`-".$_POST['amount']." WHERE `id`=".$player -> id);
@@ -502,7 +495,7 @@ if (isset($_GET['step']) && $_GET['step'] == 'make2')
         {
             error("Nie masz tyle energii.");
         }
-        $objRings = $db -> Execute("SELECT `id`, `amount` FROM `equipment` WHERE `owner`=".$player -> id." AND `name`='".RING."' AND `status`='U'");
+        $objRings = $db -> Execute("SELECT `id`, `amount` FROM `equipment` WHERE `owner`=".$player -> id." AND `name`='pierścień' AND `status`='U'");
         if ($objRings -> fields['amount'] < $intMake)
         {
             error("Nie masz tylu pierścieni.");
@@ -511,13 +504,7 @@ if (isset($_GET['step']) && $_GET['step'] == 'make2')
         /**
          * Add bonuses to ability
          */
-	$player->curskills(array('jeweller'), TRUE, TRUE);
-
-        $intChance = ($player->jeweller / $objRing -> fields['level']) * 50;
-        if ($intChance > 95)
-        {
-            $intChance = 95;
-        }
+	$player->curskills(array('jewellry'), TRUE, TRUE);
 
         /**
          * Which stats have bonus
@@ -525,18 +512,26 @@ if (isset($_GET['step']) && $_GET['step'] == 'make2')
         $intChange = $objRing -> fields['level'] * 4;
 	$arrStats = array('zręczności', 'siły', 'inteligencji', 'siły woli', 'szybkości', 'wytrzymałości');
         $arrStats2 = array('agility', 'strength', 'inteli', 'wisdom', 'speed', 'cond');
-	$player->clearbless($arrStats2);
-        if (isset($_POST['bonus']) && $player -> jeweller >= $intChange)
-        {
-            $strStat = $_POST['bonus'];
+        if (isset($_POST['bonus']) && $player->skills['jewellry'][1] >= $intChange)
+	  {
+	    $strStat = $_POST['bonus'];
             $intKey = array_search($_POST['bonus'], $arrStats);
-            $intStat = $player -> $arrStats2[$intKey];
-        }
-            else
-        {
+	    $strStat2 = $arrStats2[$intKey];
+            $intStat = $player->stats[$strStat2][2];
+	  }
+	else
+	  {
             $intRoll = rand(0, 5);
             $strStat = $arrStats[$intRoll];
-            $intStat = $player -> $arrStats2[$intRoll];
+	    $strStat2 = $arrStats2[$intRoll];
+            $intStat = $player->stats[$strStat2][2];
+	  }
+	$player->clearbless(array($strStat2));
+
+	$intChance = (($player->skills['jewellry'][1] + $intStat) / $objRing -> fields['level']) * 50;
+        if ($intChance > 95)
+        {
+            $intChance = 95;
         }
         
         /**
@@ -551,8 +546,8 @@ if (isset($_GET['step']) && $_GET['step'] == 'make2')
             if ($intRoll <= $intChance)
             {
                 $intAmount2++;
-                $intRoll2 = rand(0, $player->jeweller);
-                $intBonus = floor($intRoll2 + ($intStat / 50));
+                $intRoll2 = rand(0, $player->skills['jewellry'][1]);
+                $intBonus = floor($intRoll2 + ($intStat / 5));
                 if ($intBonus < 1)
                 {
                     $intBonus = 1;
@@ -577,7 +572,6 @@ if (isset($_GET['step']) && $_GET['step'] == 'make2')
         /**
          * Write to database and show info
          */
-        $intAbility = 0;
         if ($intMake > 0)
         {
             $i = 0;
@@ -597,14 +591,9 @@ if (isset($_GET['step']) && $_GET['step'] == 'make2')
                 $objTest -> Close();
                 $i ++;
             }
-            $intGainexp = $objRing -> fields['level'] * 200;
+            $intGainexp = $objRing -> fields['level'] * 10;
             $intGainexp = floor($intGainexp * $intAmount2);
-            $intAbility = ($intAmount2 * 0.02) * ($objRing -> fields['level'] * 2);
-	    if ($intAbility == 0)
-	      {
-		$intAbility = 0.02;
-	      }
-            $smarty -> assign(array("Message" => "Wykonałeś <b>".$intAmount2."</b> </b> sztuk <b>".$strName."</b>. Zdobywasz <b>".$intGainexp."</b> PD oraz <b>".$intAbility."</b> poziomów umiejętności jubilerstwo.<br />",
+            $smarty -> assign(array("Message2" => "Wykonałeś <b>".$intAmount2."</b> </b> sztuk <b>".$strName."</b>. Zdobywasz <b>".$intGainexp."</b> punktów doświadczenia.<br />",
 				    "Tmaked" => "Wykonane pierścienie",
 				    "Tamount" => "ilość",
 				    "Iamount" => $arrAmount,
@@ -618,13 +607,13 @@ if (isset($_GET['step']) && $_GET['step'] == 'make2')
             $intMeteor = ceil($objRing -> fields['level'] / 4);
             $intGainexp = 0;
             $intEnergy2 = ($objRing -> fields['level'] * 2);
-            $intAbility = 0;
             $intEnergy = $_POST['amount'];
             $intMake = 1;
             $db -> Execute("INSERT INTO `jeweller_work` (`owner`, `name`, `n_energy`, `u_energy`, `bonus`, `type`) VALUES(".$player -> id.", '".$objRing -> fields['name']."', ".$intEnergy2.", ".$_POST['amount'].", '".$strStat."', 'N')");
             $smarty -> assign("Message", "Próbowałeś wykonać <b>".$objRing -> fields['name']."</b> jednak wykonałeś go tylko częściowo.");
         }
-        checkexp($player -> exp, $intGainexp, $player -> level, $player -> race, $player -> user, $player -> id, 0, 0, $player -> id, 'jeweller', $intAbility);
+	$player->checkexp(array('jewellry' => ($intGainexp / 2)), $player->id, 'skills');
+	$player->checkexp(array($strStat2 => ($intGainexp / 2)), $player->id, 'stats');
         $db -> Execute("UPDATE `minerals` SET `adamantium`=`adamantium`-".$intAdam.", `crystal`=`crystal`-".$intCryst.", `meteor`=`meteor`-".$intMeteor." WHERE `owner`=".$player -> id);
         $db -> Execute("UPDATE `players` SET `energy`=`energy`-".$_POST['amount']." WHERE `id`=".$player -> id);
         if ($objRings -> fields['amount'] == $intMake)
@@ -774,14 +763,16 @@ if (isset($_GET['step']) && $_GET['step'] == 'make3')
             /**
              * Add bonuses to ability
              */
-	    $player->curskills(array('jeweller'), TRUE, TRUE);
+	    $player->curskills(array('jewellry'), TRUE, TRUE);
 
             /**
              * Select ring name
              */
-            $arrRings = array('zręczności', 'szybkości', 'siły', 'wytrzymałości', 'inteligencji', 'siły woli');
-            $arrPrefix = array('Elfi ', 'Krasnoludzki ', 'Gnomi ');
+            $arrRings = array('inteligencji', 'siły woli', 'zręczności', 'szybkości', 'siły', 'wytrzymałości');
+	    $arrStats = array('inteli', 'wisdom', 'agility', 'speed', 'strength', 'condition');
+            $arrPrefix = array('Gnomi ', 'Elfi ', 'Krasnoludzki ');
             $strName = $objRing -> fields['name'];
+	    $intKey2 = 0;  
             $arrRingtype = explode(" ", $strName);
             $intAmount2 = count($arrRingtype) - 1;
             $intKey2 = array_search($arrRingtype[$intAmount2], $arrRings);
@@ -801,19 +792,21 @@ if (isset($_GET['step']) && $_GET['step'] == 'make3')
                   $strName2 = $strName2." ";
                 }
                 $strName2 = $strName2.$arrRingtype[$i];
-            }
+	    }
+	    $strStat = $arrStats[$intKey2];
             $intKey2 = floor($intKey2 / 2);
             $strPrefix = $arrPrefix[$intKey2];
             
             $objRing2 = $db -> Execute("SELECT `level`, `cost`, `type` FROM `jeweller` WHERE `owner`=".$player -> id." AND `name`='".$strName2."'");
 
-            $intChance = floor(($player->jeweller / 50) * 0.5) + 5;
+            $intChance = floor((($player->skills['jewellry'][1] + $player->stats[$strStat]) / 50) * 0.5) + 5;
+	    $player->clearbless(array($strStat));
             if ($intChance > 15)
             {
                 $intChance = 15;
             }
             
-            $intGainexp = 0;
+            $intGainexp = 2;
 
             $intRoll = rand(1, 100);
 
@@ -829,20 +822,17 @@ if (isset($_GET['step']) && $_GET['step'] == 'make3')
                     $intRoll2 = rand(1, 2);
                     if ($intRoll2 == 1)
                     {
-                        $intGainexp =  $objRing -> fields['n_energy'] * 500;
-                        $intAbility =  $objRing -> fields['n_energy'] * 0.28;
+                        $intGainexp =  $objRing -> fields['n_energy'] * 50;
                         $blnGod = true;
                     }
                 }
                 if ($intRoll <= $intChance && !$blnGod)
                 {
-                    $intGainexp = $objRing -> fields['n_energy'] * 250;
-                    $intAbility = $objRing -> fields['n_energy'] * 0.14;
+                    $intGainexp = $objRing -> fields['n_energy'] * 25;
                 }
                 
                 $intPower = (int)$objRing -> fields['bonus'];
                 $intCost = ceil($objRing2 -> fields['cost'] / 10);
-                $intAbility = $objRing -> fields['n_energy'] * 0.02;
                 if ($blnGod)
                 {
                     $strName2 = 'Boski '.$strName;
@@ -877,17 +867,17 @@ if (isset($_GET['step']) && $_GET['step'] == 'make3')
             }
                 else
             {
-                $intAbility = 0.02;
-                $smarty -> assign("Message", "<br />Próbowałeś wykonać <b>".$strName."</b> niestety nie udało się. Zdobywasz <b>".$intAbility."</b> poziomów umiejętności jubilerstwo.<br />");
+                $smarty -> assign("Message2", "<br />Próbowałeś wykonać <b>".$strName."</b> niestety nie udało się.<br />");
             }
-            checkexp($player -> exp, $intGainexp, $player -> level, $player -> race, $player -> user, $player -> id, 0, 0, $player -> id, 'jeweller', $intAbility);
+	    $player->checkexp(array('jewellry' => ($intGainexp / 2)), $player->id, 'skills');
+	    $player->checkexp(array($strStat => ($intGainexp / 2)), $player->id, 'stats');
             $objRing2 -> Close();
             $db -> Execute("DELETE FROM `jeweller_work` WHERE `id`=".$_POST['make']);
         }
             else
         {
             $db -> Execute("UPDATE `jeweller_work` SET `u_energy`=".$intEnergy." WHERE `id`=".$_POST['make']);
-            $smarty -> assign("Message", "<br />Próbowałeś wykonać <b>".$objRing -> fields['name']."</b> jednak wykonałeś go tylko częściowo.");
+            $smarty -> assign("Message2", "<br />Próbowałeś wykonać <b>".$objRing -> fields['name']."</b> jednak wykonałeś go tylko częściowo.");
         }
         $objRing -> Close();
         $db -> Execute("UPDATE `players` SET `energy`=`energy`-".$_POST['amount']." WHERE `id`=".$player -> id);
@@ -941,20 +931,23 @@ if (isset($_GET['step']) && $_GET['step'] == 'make3')
          * Select ring name
          */
 	$arrRings = array('zręczności', 'szybkości', 'siły', 'wytrzymałości', 'inteligencji', 'siły woli');
+	$arrStats = array('agility', 'speed', 'strength', 'condition', 'inteli', 'wisdom');
 	$arrPrefix = array('Elfi ', 'Krasnoludzki ', 'Gnomi ');
         $strName = $arrRname[$intKey];
         $arrRingtype = explode(" ", $strName);
         $intAmount2 = count($arrRingtype) - 1;
         $intKey2 = array_search($arrRingtype[$intAmount2], $arrRings);
+	$strStat = $arrStats[$intKey2];
         $intKey2 = floor($intKey2 / 2);
         $strPrefix = $arrPrefix[$intKey2];
         
         /**
          * Add bonuses to ability
          */
-	$player->curskills(array('jeweller'), TRUE, TRUE);
+	$player->curskills(array('jewellry'), TRUE, TRUE);
 
-        $intChance = floor(($player->jeweller / 50) * 0.5) + 5;
+        $intChance = floor((($player->skills['jewellry'][1] + $player->stats[$strStat][2]) / 50) * 0.5) + 5;
+	$player->clearbless(array($strStat));
         if ($intChance > 15)
         {
             $intChance = 15;
@@ -965,7 +958,7 @@ if (isset($_GET['step']) && $_GET['step'] == 'make3')
          */
         $intGod = 0;
         $intSpecial = 0;
-        $intGainexp = 0;
+        $intGainexp = 2;
         $intAbility = 0;
         for ($i = 0; $i < $intMake; $i++)
         {
@@ -976,20 +969,18 @@ if (isset($_GET['step']) && $_GET['step'] == 'make3')
                 if ($intRoll2 == 1)
                 {
                     $intGod ++;
-                    $intGainexp = $intGainexp + ($intEnergys * 500);
-                    $intAbility = $intAbility + ($intEnergys * 0.28);
+                    $intGainexp += ($intEnergys * 50);
                     continue;
                 }
             }
             if ($intRoll <= $intChance)
             {
                 $intSpecial ++;
-                $intGainexp = $intGainexp + ($intEnergys * 250);
-                $intAbility = $intAbility + ($intEnergys * 0.14);
+                $intGainexp += ($intEnergys * 25);
             }
                 else
             {
-                $intAbility = $intAbility + 0.02;
+		$intGainexp += 2;
             }
         }
 
@@ -1035,7 +1026,7 @@ if (isset($_GET['step']) && $_GET['step'] == 'make3')
                 $objTest -> Close();
             }
             $intRings = $intGod + $intSpecial;
-            $smarty -> assign(array("Message" => "<br /><br />Przekułeś <b>".$intRings."</b>  sztuk <b>".$strName."</b>. Zdobywasz <b>".$intGainexp."</b> PD oraz <b>".$intAbility."</b> poziomów umiejętności jubilerstwo.<br />",
+            $smarty -> assign(array("Message2" => "<br /><br />Przekułeś <b>".$intRings."</b>  sztuk <b>".$strName."</b>. Zdobywasz <b>".$intGainexp."</b> punktów doświadczenia.<br />",
 				    "Tmaked2" => 1,
 				    "Tamount" => "ilość",
 				    "Iamount" => array($intGod, $intSpecial),
@@ -1056,7 +1047,8 @@ if (isset($_GET['step']) && $_GET['step'] == 'make3')
         }
         $db -> Execute("UPDATE `minerals` SET `meteor`=`meteor`-".$intMeteor." WHERE `owner`=".$player -> id);
         $db -> Execute("UPDATE `players` SET `energy`=`energy`-".$intEnergy." WHERE `id`=".$player -> id);
-        checkexp($player -> exp, $intGainexp, $player -> level, $player -> race, $player -> user, $player -> id, 0, 0, $player -> id, 'jeweller', $intAbility);
+	$player->checkexp(array('jewellry' => ($intGainexp / 2)), $player->id, 'skills');
+	$player->checkexp(array($strStat => ($intGainexp / 2)), $player->id, 'stats');
         if ($intRamount == $intMake)
         {
             $db -> Execute("DELETE FROM `equipment` WHERE `id`=".$_POST['rings']);

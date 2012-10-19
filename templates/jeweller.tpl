@@ -148,7 +148,7 @@
 {/if}
 
 {if $Step != ""}
-    {$Message}
+    {$Message2}
     {if $Tmaked != ''}
         <br />{$Tmaked}:<br />
 	{section name=making loop=$Iamount}
