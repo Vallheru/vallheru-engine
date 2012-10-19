@@ -7,8 +7,8 @@
  *   @copyright            : (C) 2004,2005,2006,2011,2012 Vallheru Team based on Gamers-Fusion ver 2.5
  *   @author               : thindil <thindil@vallheru.net>
  *   @author               : eyescream <tduda@users.sourceforge.net>
- *   @version              : 1.6
- *   @since                : 22.09.2012
+ *   @version              : 1.7
+ *   @since                : 19.10.2012
  *
  */
  
@@ -41,16 +41,11 @@ $title = "Strażnica";
 require_once("includes/head.php");
 
 /**
-* Get the localization for game
-*/
-require_once("languages/".$lang."/outposts.php");
-
-/**
 * Check player location - if player not in city, block page
 */
 if($player -> location != 'Altara' && $player -> location != 'Ardulith') 
 {
-    error (NOT_IN_CITY);
+    error ('Nie znajdujesz się w mieście.');
 }
 
 /**
@@ -85,7 +80,7 @@ function equip($type)
 	$armor = $db->Execute("SELECT `id`, `name`, `power` FROM `equipment` WHERE `owner`=".$player->id." AND `type`='I' AND `status`='U' AND (`name` LIKE '%siły' OR `name` LIKE '%zręczności' OR `name` LIKE '%wytrzymałości' OR `name` LIKE '%szybkości')");
       }
     $arrid = array(0);
-    $arrname = array(NOTHING);
+    $arrname = array("brak");
     $arrpower = array(0);
     while (!$armor->EOF) 
       {
@@ -122,10 +117,10 @@ function wear($eid, $vid, $type, $powertype)
       }
     if (!$item1->fields['id'])
       {
-	error(ERROR);
+	error('Zapomnij o tym!');
       }
     $item = array($item1 -> fields['name'], ceil($item1 -> fields['power'] / 10));
-    $info = $item[0].I_POWER.$item[1].") ";
+    $info = $item[0]." (siła: ".$item[1].") ";
     if ($type != 'arrows')
       {
 	if ($item1 -> fields['amount']  == 1) 
@@ -266,15 +261,15 @@ function lostspecials($table, $user, $arrid, $arrname)
     $info = '';
     if ($table == 'monsters') 
     {
-        $type = MONSTER;
+        $type = "bestię";
     } 
         else 
     {
-        $type = VETERAN;
+        $type = "weterana";
     }
     if (!$user) 
     {
-        $lost = GC;
+        $lost = 'sz';
     } 
         else 
     {
@@ -286,7 +281,7 @@ function lostspecials($table, $user, $arrid, $arrname)
         if ($roll < 6) 
         {
             $db -> Execute("DELETE FROM outpost_".$table." WHERE id=".$arrid[$i]);
-            $info = $info.AND_LOST.$user.T_LOST.$lost." ".$type." ".$name."<br />";
+            $info = $info."Dodatkowo ".$user." traci".$lost." ".$type." ".$name."<br />";
         }
         $i = $i + 1;
     }
@@ -670,19 +665,19 @@ if (!$out -> fields['id'])
         $out = $db -> Execute("SELECT id FROM outposts WHERE owner=".$player -> id);
         if ($out -> fields['id']) 
         {
-            error (YOU_BUY);
+            error ("Kupiłeś nieco ziemi! Kliknij <a href=\"outposts.php\">tutaj</a> aby wrócić.");
         } 
             else 
         {
             if ($player -> credits < 500) 
             {
-                error (NO_MONEY);
+                error ("Nie masz wystarczająco dużo pieniędzy aby zakupić ziemię pod strażnicę.");
             }    
                 else 
             {
                 $db -> Execute("UPDATE players SET credits=credits-500 WHERE id=".$player -> id);
                 $db -> Execute("INSERT INTO outposts (owner) VALUES(".$player -> id.")");
-                error (GO_TO);
+                error ("Możesz już udać się to swojej strażnicy! Kliknij <a href=\"outposts.php\">tutaj</a> aby wrócić.");
             }
         }
     }
@@ -693,14 +688,14 @@ if (!$out -> fields['id'])
 */
 if (!isset($_GET['view']) && $out -> fields['id']) 
 {
-    $smarty -> assign(array("Outinfo" => OUT_INFO,
-        "Amy" => A_MY,
-        "Atax" => A_TAX,
-        "Ashop" => A_SHOP,
-        "Agold" => A_GOLD,
-        "Aattack" => A_ATTACK,
-        "Alist" => A_LIST,
-        "Aguide" => A_GUIDE));
+    $smarty -> assign(array("Outinfo" => "Witaj w strażnicy. Jeżeli pierwszy raz tu jesteś, powinieneś przeczytać instrukcję.",
+        "Amy" => "Moja Strażnica",
+        "Atax" => "Ściągnij daniny z wiosek",
+        "Ashop" => "Rozbudowa oraz zaciąg armii",
+        "Agold" => "Skarbiec",
+        "Aattack" => "Atakuj Strażnicę",
+        "Alist" => "Lista Strażnic",
+        "Aguide" => "Instrukcja Strażnicy"));
 }
 
 /**
@@ -710,12 +705,12 @@ if (isset ($_GET['view']) && $_GET['view'] == 'gold')
 {
     $smarty -> assign(array("Treasury" => $out -> fields['gold'],
                             "GoldInHand" => $player -> credits,
-                            "Goldinfo" => GOLD_INFO,
-                            "Goldcoins" => GOLD_COINS,
-                            "Atake" => A_TAKE,
-                            "Aadd" => A_ADD,
-                            "Fromout" => FROM_OUT,
-                            "Toout" => TO_OUT));
+                            "Goldinfo" => "Tutaj możesz przekazać złoto od siebie do strażnicy. Przelicznik w przypadku wybrania sztuk złota ze strażnicy jest 2:1 (czyli za 2 sztuki złota ze strażnicy dostajesz 1 sztukę złota do ręki), natomiast w przypadku dotowania strażnicy przelicznik wynosi 1:1. Obecnie w strażnicy posiadasz",
+                            "Goldcoins" => "sztuk złota",
+                            "Atake" => "Zabierz",
+                            "Aadd" => "Dodaj",
+                            "Fromout" => "sztuk złota ze strażnicy",
+                            "Toout" => "sztuk złota do strażnicy"));
     /**
     * Get gold from outpost
     */
@@ -723,19 +718,19 @@ if (isset ($_GET['view']) && $_GET['view'] == 'gold')
     {
         if (!isset($_POST['zeton']))
         {
-            error(HOW_MANY);
+            error("Podaj ile sztuk złota chcesz zamienić!");
         }
         integercheck($_POST['zeton']);
 	checkvalue($_POST['zeton']);
         if ($_POST['zeton'] > $out -> fields['gold']) 
         {
-            error(NO_MONEY);
+            error("Nie masz tyle sztuk złota w strażnicy!");
         }
         $zmiana = floor($_POST['zeton'] / 2);
         $zmiana = (int)$zmiana;
         $db -> Execute("UPDATE `players` SET `credits`=`credits`+".$zmiana." WHERE `id`=".$player -> id);
         $db -> Execute("UPDATE `outposts` SET `gold`=`gold`-".$_POST['zeton']." WHERE `owner`=".$player -> id);
-        $smarty -> assign ("Message", YOU_CHANGE.$_POST['zeton'].GOLD_ON.$zmiana.GOLD_ON2);
+        $smarty -> assign ("Message", "Zamieniłeś <b>".$_POST['zeton']."</b> sztuk złota ze strażnicy na <b>".$zmiana."</b> sztuk złota do ręki.");
     }
     /**
     * Add gold to outpost
@@ -744,17 +739,17 @@ if (isset ($_GET['view']) && $_GET['view'] == 'gold')
     {
         if (!isset($_POST['sztuki'])) 
         {
-            error(HOW_MANY);
+            error("Podaj ile sztuk złota chcesz dodać do strażnicy!");
         }
         integercheck($_POST['sztuki']);
 	checkvalue($_POST['sztuki']);
         if ($_POST['sztuki'] > $player -> credits) 
         {
-            error(NO_MONEY);
+            error("Nie masz tyle sztuk złota");
         }
         $db -> Execute("UPDATE `players` SET `credits`=`credits`-".$_POST['sztuki']." WHERE `id`=".$player -> id);
         $db -> Execute("UPDATE `outposts` SET `gold`=`gold`+".$_POST['sztuki']." WHERE `owner`=".$player -> id);
-        $smarty -> assign ("Message", YOU_ADD.$_POST['sztuki'].GOLD_TO);
+        $smarty -> assign ("Message", "Dodałeś <b>".$_POST['sztuki']."</b> sztuk złota do strażnicy.");
     }
 }
 
@@ -768,17 +763,17 @@ if (isset($_GET['view']) && $_GET['view'] == 'veterans')
     $query -> Close();
     if (!$numveterans) 
     {
-        error(NO_VETERANS);
+        error("Nie masz weteranów w strażnicy!");
     }
     if (!isset($_GET['id'])) 
     {
-        error(NO_VETERAN);
+        error("Nie wybrałeś weterana!");
     }
     checkvalue($_GET['id']);
     $veteran = $db -> Execute("SELECT * FROM `outpost_veterans` WHERE `id`=".$_GET['id']);
     if ($veteran -> fields['outpost'] != $out -> fields['id']) 
     {
-        error(NOT_YOUR);
+        error("To nie jest twój weteran!");
     }
     $power = $veteran -> fields['wpower'] + 1;
     if (strpos($veteran->fields['weapon'], 'Łuk') !== FALSE || strpos($veteran->fields['weapon'], 'łuk') !== FALSE)
@@ -796,7 +791,7 @@ if (isset($_GET['view']) && $_GET['view'] == 'veterans')
       }
     else
       {
-	$arrows = NOTHING;
+	$arrows = "brak";
       }
     equip('R');
     $arroid = $arrid;
@@ -808,7 +803,7 @@ if (isset($_GET['view']) && $_GET['view'] == 'veterans')
       }
     else
       {
-	$armor = NOTHING;
+	$armor = "brak";
       }
     equip('A');
     $arraid = $arrid;
@@ -820,7 +815,7 @@ if (isset($_GET['view']) && $_GET['view'] == 'veterans')
       } 
     else 
       {
-        $helm = NOTHING;
+        $helm = "brak";
       }
     equip('H');
     $arrhid = $arrid;
@@ -832,7 +827,7 @@ if (isset($_GET['view']) && $_GET['view'] == 'veterans')
       }
     else 
       {
-        $legs = NOTHING;
+        $legs = "brak";
       }
     equip('L');
     $arrlid = $arrid;
@@ -852,7 +847,7 @@ if (isset($_GET['view']) && $_GET['view'] == 'veterans')
       }
     else
       {
-	$ring1 = NOTHING;
+	$ring1 = "brak";
       }
     equip('I');
     $arrrid = $arrid;
@@ -872,7 +867,7 @@ if (isset($_GET['view']) && $_GET['view'] == 'veterans')
       }
     else
       {
-	$ring2 = NOTHING;
+	$ring2 = "brak";
       }
     equip('I');
     $arrrid2 = $arrid;
@@ -919,16 +914,16 @@ if (isset($_GET['view']) && $_GET['view'] == 'veterans')
         "Lname1" => $arrlname,
         "Lpower1" => $arrlpower,
         "Vid" => $_GET['id'],
-        "Vname2" => V_NAME,
-        "Vwep" => V_WEP,
-        "Varmor" => V_ARMOR,
-        "Vhelmet" => V_HELMET,
-        "Vlegs" => V_LEGS,
-        "Vattack" => V_ATTACK,
-        "Vdefense" => V_DEFENSE,
-        "Ipower" => I_POWER2,
-        "Amodify" => A_MODIFY,
-        "Nothing" => NOTHING));
+        "Vname2" => "Imię",
+        "Vwep" => "Broń",
+        "Varmor" => "Zbroja",
+        "Vhelmet" => "Hełm",
+        "Vlegs" => "Nagolenniki",
+        "Vattack" => "Atak",
+        "Vdefense" => "Obrona",
+        "Ipower" => "Siła",
+        "Amodify" => "Modyfikuj",
+        "Nothing" => "brak"));
     /**
     * Modify veterans equipment
     */
@@ -937,37 +932,37 @@ if (isset($_GET['view']) && $_GET['view'] == 'veterans')
         if (isset($_POST['armor']) && intval($_POST['armor']) > 0) 
         {
             $text1 = wear($_POST['armor'], $_GET['id'],'armor','apower');
-            $text = YOU_ADD.$text1;
+            $text = "Dodałeś weteranowi ekwipunek: ".$text1;
         }
         if (isset($_POST['helm']) && intval($_POST['helm']) > 0) 
         {
             $text1 = wear($_POST['helm'], $_GET['id'],'helm','hpower');
-            $text = YOU_ADD.$text1;
+            $text = "Dodałeś weteranowi ekwipunek: ".$text1;
         }
         if (isset($_POST['legs']) && intval($_POST['legs']) > 0) 
         {
             $text1 = wear($_POST['legs'], $_GET['id'],'legs','lpower');
-            $text = YOU_ADD.$text1;
+            $text = "Dodałeś weteranowi ekwipunek: ".$text1;
         }
 	if (isset($_POST['weapon']) && intval($_POST['weapon']) > 0)
 	  {
 	    $text1 = wear($_POST['weapon'], $_GET['id'], 'weapon', 'wpower');
-            $text = YOU_ADD.$text1;
+            $text = "Dodałeś weteranowi ekwipunek: ".$text1;
 	  }
 	if (isset($_POST['ring1']) && intval($_POST['ring1']) > 0)
 	  {
 	    $text1 = wear($_POST['ring1'], $_GET['id'], 'ring1', 'rpower1');
-            $text = YOU_ADD.$text1;
+            $text = "Dodałeś weteranowi ekwipunek: ".$text1;
 	  }
 	if (isset($_POST['ring2']) && intval($_POST['ring2']) > 0)
 	  {
 	    $text1 = wear($_POST['ring2'], $_GET['id'], 'ring2', 'rpower2');
-            $text = YOU_ADD.$text1;
+            $text = "Dodałeś weteranowi ekwipunek: ".$text1;
 	  }
 	if (isset($_POST['arrows']) && intval($_POST['arrows']) > 0)
 	  {
 	    $text1 = wear($_POST['arrows'], $_GET['id'], 'arrows', 'opower');
-            $text = YOU_ADD.$text1;
+            $text = "Dodałeś weteranowi ekwipunek: ".$text1;
 	  }
         if (isset($text1)) 
         {
@@ -1010,15 +1005,15 @@ if (isset ($_GET['view']) && $_GET['view'] == 'myoutpost')
     $fatigue = 100 - $out -> fields['fatigue'];
     if ($out -> fields['morale'] > -49 && $out -> fields['morale'] < 49)
     {
-        $strMorale = MORALE2;
+        $strMorale = "Neutralne";
     }
     if ($out -> fields['morale'] < -49)
     {
-        $strMorale = MORALE3;
+        $strMorale = "Bunt";
     }
     if ($out -> fields['morale'] > 49)
     {
-        $strMorale = MORALE1;
+        $strMorale = "Bojowe";
     }
     $smarty -> assign ( array("User" => $player -> user,
         "Size" => $out -> fields['size'],
@@ -1048,34 +1043,34 @@ if (isset ($_GET['view']) && $_GET['view'] == 'myoutpost')
         "Fatigue" => $fatigue,
         "Morale" => $out -> fields['morale'],
         "Moralename" => $strMorale,
-        "Welcome" => WELCOME,
-        "Outinfo" => OUT_INFO,
-        "Landa" => LAND_A,
-        "Ap" => AP,
-        "Tsoldiers" => T_SOLDIERS,
-        "Tarchers" => T_ARCHERS,
-        "Tcatapults" => T_CATAPULTS,
-        "Tforts" => T_FORTS,
-        "Tlairs" => T_LAIRS,
-        "Tmonsters" => T_MONSTERS,
-        "Tbarracks" => T_BARRACKS,
-        "Tveterans" => T_VETERANS,
-        "Tfatigue" => T_FATIGUE,
-        "Tcost" => T_COST,
-        "Tmorale" => T_MORALE,
-        "Tbonus" => T_BONUS,
-        "Tattack" => T_ATTACK,
-        "Tdefense" => T_DEFENSE,
-        "Ttax" => T_TAX,
-        "Tlosses" => T_LOSSES,
-        "Tcostb" => T_COST_B,
-        "Tfree" => T_FREE,
-        "Tpower" => T_POWER,
-        "Udefense" => U_DEFENSE,
-        "Tmax" => T_MAX,
-        "Tcostg" => T_COST_G,
-        "Aadd" => A_ADD,
-        "Tgoldcoins" => T_GOLD_COINS));
+        "Welcome" => "Witaj w swojej Strażnicy,",
+        "Outinfo" => "Informacje o Strażnicy",
+        "Landa" => "Liczba ziem",
+        "Ap" => "Punktów Ataku",
+        "Tsoldiers" => "Piechoty",
+        "Tarchers" => "Łuczników",
+        "Tcatapults" => "Machin",
+        "Tforts" => "Fortyfikacji",
+        "Tlairs" => "Legowiska bestii",
+        "Tmonsters" => "Bestie",
+        "Tbarracks" => "Kwater weteranów",
+        "Tveterans" => "Weteranów",
+        "Tfatigue" => "Zmęczenie Armii",
+        "Tcost" => "Koszt",
+        "Tmorale" => "Morale Armii",
+        "Tbonus" => "Premie dowódcy",
+        "Tattack" => "Siła ataku",
+        "Tdefense" => "Obrona",
+        "Ttax" => "Wpływy z danin",
+        "Tlosses" => "Straty w bitwie",
+        "Tcostb" => "Koszt utrzymania",
+        "Tfree" => "wolne",
+        "Tpower" => "siła",
+        "Udefense" => "obrona",
+        "Tmax" => "maksymalnie",
+        "Tcostg" => "sztuk złota na reset",
+        "Aadd" => "Dodaj premię",
+        "Tgoldcoins" => "Sztuk złota"));
     /**
     * Gaining ability leadership
     */
@@ -1083,21 +1078,21 @@ if (isset ($_GET['view']) && $_GET['view'] == 'myoutpost')
     {
         if ($_GET['ability'] != 'battack' && $_GET['ability'] != 'bdefense' && $_GET['ability'] != 'btax' && $_GET['ability'] != 'blost' && $_GET['ability'] != 'bcost') 
         {
-            error(ERROR);
+            error('Zapomnij o tym.');
         }
         $testability = $out -> fields['battack'] + $out -> fields['bdefense'] + $out -> fields['btax'] + $out -> fields['blost'] + $out -> fields['bcost'];
         $ability = floor($player -> leadership);
         if ($testability >= $ability) 
         {
-            error(NO_BONUS);
+            error("Nie możesz podnieść jakiejkolwiek premii");
         }
         $field = $_GET['ability'];
         if ($out -> fields[$field] > 14) 
         {
-            error(MAX_LEVEL);
+            error("Osiągnąłeś już maksymalny poziom tej premii");
         }
         $db -> Execute("UPDATE outposts SET ".$_GET['ability']."=".$_GET['ability']."+1 WHERE id=".$out -> fields['id']);
-        $smarty -> assign("Message", YOU_ADD);
+        $smarty -> assign("Message", "Premia dodana. <a href=\"outposts.php?view=myoutpost\">Odśwież</a>");
     }
 }
 
@@ -1108,12 +1103,12 @@ if (isset ($_GET['view']) && $_GET['view'] == 'taxes')
 {
     if ($out -> fields['turns'] < 1) 
     {
-        error(NO_EN_AP);
+        error("Nie masz tylu Punktów Ataku aby zbierać podatki");
     }
     $intArmy = $out -> fields['warriors'] + $out -> fields['archers'];
     if (!$intArmy) 
     {
-        error(NO_SOLDIERS);
+        error("Nie masz żołnierzy aby zbierali podatki!");
     }
     if (isset($_POST['amount']))
       {
@@ -1123,21 +1118,21 @@ if (isset ($_GET['view']) && $_GET['view'] == 'taxes')
       {
 	$intAmount = 0;
       }
-    $smarty -> assign(array("Taxinfo" => TAX_INFO." Obecnie posiadasz <b>".$out->fields['turns']."</b> Punktów Ataku.",
-			    "Asend" => A_SEND,
-			    "Soldiers" => SOLDIERS,
+    $smarty -> assign(array("Taxinfo" => "Tutaj możesz zbierać daninę z wiosek otaczających twoją strażnicę. Im więcej posiadasz piechoty oraz łuczników, tym większy obszar mogą oni zwiedzić i zebrać więcej sztuk złota. Każda taka wyprawa pochłania 1 Punkt Ataku. Obecnie posiadasz <b>".$out->fields['turns']."</b> Punktów Ataku.",
+			    "Asend" => "Wyślij",
+			    "Soldiers" => "żołnierzy",
 			    "Amount" => $intAmount,
-			    "Times" => TIMES));
+			    "Times" => "razy do wiosek"));
     if (isset($_GET['step']) && $_GET['step'] == 'gain') 
     {
         if (!isset($_POST['amount'])) 
         {
-            error(HOW_MANY);
+            error("Podaj ile razy chcesz wysłać żołnierzy!");
         }
 	checkvalue($_POST['amount']);
         if ($_POST['amount'] > $out -> fields['turns']) 
         {
-            error (NO_AP);
+            error ("Nie masz tyle Punktów Ataku!");
         }
         $intGaingold = 0;
         for ($i = 0; $i < $_POST['amount']; $i++) 
@@ -1159,7 +1154,7 @@ if (isset ($_GET['view']) && $_GET['view'] == 'taxes')
 	    $fltMorale = 10;
 	  }
         $db -> Execute("UPDATE `outposts` SET `fatigue`=".$intFatigue.", `gold`=`gold`+".$intGaingold.", `turns`=`turns`-".$_POST['amount'].", `morale`=".$fltMorale." WHERE `id`=".$out -> fields['id']);
-        $smarty -> assign ("Message", YOU_ARMY.$_POST['amount'].TIMES_FOR.$intGaingold.GOLD_COINS);
+        $smarty -> assign ("Message", "Twoi żołnierze wyruszyli ".$_POST['amount']." razy na zbieranie danin z wiosek i zebrali w ten sposób ".$intGaingold." sztuk złota.");
     }
 }
 
@@ -1169,21 +1164,21 @@ if (isset ($_GET['view']) && $_GET['view'] == 'taxes')
 if (isset ($_GET['view']) && $_GET['view'] == 'shop') 
 {
     $dbMinerals = $db -> Execute ("SELECT `owner`, `pine`, `crystal`, `adamantium`, `meteor` FROM `minerals` WHERE owner=".$player -> id);
-    $smarty -> assign (array("Shopinfo" => SHOP_INFO,
-                             "Shopinfo2" => SHOP_INFO2,
-                             "Shopinfo3" => SHOP_INFO3,
+    $smarty -> assign (array("Shopinfo" => "Witaj w sklepie w Strażnicy! Kupisz tutaj żołnierzy, fortyfikacje oraz machiny oblężnicze, możesz również zwiększyć rozmiar swojej Strażnicy. Obecnie możesz jeszcze dokupić",
+                             "Shopinfo2" => "oraz",
+                             "Shopinfo3" => ".<br/>Posiadasz: ",
                              "Gold" => $out -> fields['gold'],
                              "Platinum" => $player -> platinum,
                              "Pine" => $dbMinerals -> fields['pine'],
                              "Crystal" => $dbMinerals -> fields['crystal'],
                              "Adamantium" => $dbMinerals -> fields['adamantium'],
                              "Meteor" => $dbMinerals -> fields['meteor'],
-                             "Goldcoins" => GOLD_COINS,
-                             "Platinumpcs" => PLATINUM_PIECES,
-                             "Pinepcs" => PINE_PIECES,
-                             "Crystalpcs" => CRYSTAL_PIECES,
-                             "Adamantiumpcs" => ADAMANTIUM_PIECES,
-                             "Meteorpcs" => METEOR_PIECES));
+                             "Goldcoins" => " sztuk złota",
+                             "Platinumpcs" => " sztuk(i) mithrilu",
+                             "Pinepcs" => " sosny",
+                             "Crystalpcs" => " kryształów",
+                             "Adamantiumpcs" => " adamantium",
+                             "Meteorpcs" => " meteorytu"));
     $arrOutpostLevels = array();
     if ($intMaxLevel = checkresources ('size', $player -> platinum, $dbMinerals -> fields['pine']))
     {
@@ -1193,7 +1188,7 @@ if (isset ($_GET['view']) && $_GET['view'] == 'shop')
         {
             $intGoldSum += ($i + $out -> fields['size'] + 1) * 250;
             $intPineSum += $i + $out -> fields['size'] - 1;
-            $arrOutpostLevels[ $i ] = ($i + $out -> fields['size']).': '.$intGoldSum.GOLD_COINS.', '.($i * 10).PLATINUM_PIECES.', '.$intPineSum.PINE_PIECES;
+            $arrOutpostLevels[ $i ] = ($i + $out -> fields['size']).': '.$intGoldSum." sztuk złota".', '.($i * 10)." sztuk(i) mithrilu".', '.$intPineSum." sosny";
         }
     }
     $arrLairLevels = array();
@@ -1203,7 +1198,7 @@ if (isset ($_GET['view']) && $_GET['view'] == 'shop')
         for ($i = 1; $i <= $intMaxLair; $i++)
         {
             $intMeteorSum += $i + $out -> fields['fence'];
-            $arrLairLevels[ $i ] = ($i + $out -> fields['fence']).': '.(50 * $intMeteorSum).GOLD_COINS.', '.$intMeteorSum.METEOR_PIECES.', '.(5 * $intMeteorSum).CRYSTAL_PIECES;
+            $arrLairLevels[ $i ] = ($i + $out -> fields['fence']).': '.(50 * $intMeteorSum)." sztuk złota".', '.$intMeteorSum." meteorytu".', '.(5 * $intMeteorSum)." kryształów";
         }
     }
     $arrBarrackLevels = array();
@@ -1213,26 +1208,26 @@ if (isset ($_GET['view']) && $_GET['view'] == 'shop')
         for ($i = 1; $i <= $intMaxBarracks; $i++)
         {
             $intMeteorSum += $i + $out -> fields['barracks'];
-            $arrBarrackLevels[ $i ] = ($i + $out -> fields['barracks']).': '.(50 * $intMeteorSum).GOLD_COINS.', '.$intMeteorSum.METEOR_PIECES.', '.(5 * $intMeteorSum).ADAMANTIUM_PIECES;
+            $arrBarrackLevels[ $i ] = ($i + $out -> fields['barracks']).': '.(50 * $intMeteorSum)." sztuk złota".', '.$intMeteorSum." meteorytu".', '.(5 * $intMeteorSum)." adamantium";
         }
     }
-    $strNolevelinfo = NO_LEVEL_INFO." ".(($out->fields['size'] + 2) * 250)." złota, 10 mithrilu, ".$out->fields['size']." sosny.";
-    $strNolairinfo = NO_LAIR_INFO." ".(($out->fields['fence'] + 2) * 50)." złota, ".(($out->fields['fence'] + 1) * 5)." kryształów, ".($out->fields['fence'] + 1)." meteorytu.";
-    $strNobarrackinfo = NO_BARRACK_INFO." ".(($out->fields['barracks'] + 2) * 50)." złota, ".(($out->fields['barracks'] + 1) * 5)." adamantium, ".($out->fields['barracks'] + 1)." meteorytu.";
-    $smarty -> assign (array("OutpostDevelopment" => OUTPOST_DEVELOPMENT,
+    $strNolevelinfo = "Nie stać Cię na powiększenie rozmiaru Strażnicy. Potrzebujesz "." ".(($out->fields['size'] + 2) * 250)." złota, 10 mithrilu, ".$out->fields['size']." sosny.";
+    $strNolairinfo = "Nie stać Cię na dokupienie Legowisk Bestii lub nie ma na nie miejsca. Do budowy potrzebujesz "." ".(($out->fields['fence'] + 2) * 50)." złota, ".(($out->fields['fence'] + 1) * 5)." kryształów, ".($out->fields['fence'] + 1)." meteorytu.";
+    $strNobarrackinfo = "Nie stać Cię na dokupienie Kwater Weteranów (złoto, meteoryt, adamantium) lub nie ma na nie miejsca."." ".(($out->fields['barracks'] + 2) * 50)." złota, ".(($out->fields['barracks'] + 1) * 5)." adamantium, ".($out->fields['barracks'] + 1)." meteorytu.";
+    $smarty -> assign (array("OutpostDevelopment" => "Rozbudowa Strażnicy",
                              "MaxPossibleLevel" => $intMaxLevel,
-                             "Level" => LEVEL,
-                             "LevelInfo" => LEVEL_INFO,
+                             "Level" => "Rozmiar strażnicy",
+                             "LevelInfo" => "Powiększ rozmiar Strażnicy",
                              "NoLevelInfo" => $strNolevelinfo,
                              "OutpostLevels" => $arrOutpostLevels,
                              "MaxPossibleLair" => $intMaxLair,
-                             "Lair" => LAIR,
-                             "LairInfo" => LAIR_INFO,
+                             "Lair" => "Legowiska",
+                             "LairInfo" => "Dokup Legowiska Bestii",
                              "NoLairInfo" => $strNolairinfo,
                              "LairLevels" => $arrLairLevels,
                              "MaxPossibleBarrack" => $intMaxBarracks,
-                             "Barrack" => BARRACK,
-                             "BarrackInfo" => BARRACK_INFO,
+                             "Barrack" => "Kwatery",
+                             "BarrackInfo" => "Dokup Kwatery Weteranów",
                              "NoBarrackInfo" => $strNobarrackinfo,
                              "BarrackLevels" => $arrBarrackLevels));
     $dbMinerals -> Close();
@@ -1270,10 +1265,10 @@ if (isset ($_GET['view']) && $_GET['view'] == 'shop')
 				"Mname" => $arrname, 
 				"Power" => $arrpower, 
 				"Defense" => $arrdefense,
-				"Aadd" => A_ADD,
-				"Udefense" => U_DEFENSE,
-				"Uattack" => U_ATTACK,
-				"Fora" => FOR_A));
+				"Aadd" => "Dodaj",
+				"Udefense" => "Obrona",
+				"Uattack" => "Atak",
+				"Fora" => "do strażnicy (2000 sztuk złota jeden)"));
     } 
         else 
     {
@@ -1397,16 +1392,16 @@ if (isset ($_GET['view']) && $_GET['view'] == 'shop')
             "Lid" => $arrlid,
             "Lname" => $arrlname,
             "Lpower" => $arrlpower,
-            "Vname2" => V_NAME2,
-            "Aadd" => A_ADD,
-            "Uattack" => U_ATTACK,
-            "Udefense" => U_DEFENSE,
-            "Fora" => FOR_A,
-            "Ipower2" => I_POWER2,
-            "Varmor" => V_ARMOR,
-            "Vhelmet" => V_HELMET,
-            "Vlegs" => V_LEGS,
-            "Nothing" => NOTHING));
+            "Vname2" => "weterana o imieniu",
+            "Aadd" => "Dodaj",
+            "Uattack" => "Atak",
+            "Udefense" => "Obrona",
+            "Fora" => "do strażnicy (2000 sztuk złota jeden)",
+            "Ipower2" => "Siła",
+            "Varmor" => "Zbroja",
+            "Vhelmet" => "Hełm",
+            "Vlegs" => "Nagolenniki",
+            "Nothing" => "brak"));
     } 
         else 
     {
@@ -1443,26 +1438,26 @@ if (isset ($_GET['view']) && $_GET['view'] == 'shop')
       {
 	$strMaxequips = "machin lub fortyfikacji";
       }
-    $smarty -> assign (array("ArmyDevelopment" => ARMY_DEVELOPMENT,
+    $smarty -> assign (array("ArmyDevelopment" => "Rozbudowa armii",
                              "Maxtroops" => $maxtroops,
                              "Maxequips" => $maxequips,
 			     "Ttroops"=> $strMaxtroops,
 			     "Tequips" => $strMaxequips,
-                             "Abuy" => A_BUY,
-                             "Bsoldiers" => B_SOLDIERS,
-                             "Barchers" => B_ARCHERS,
-                             "Bmachines" => B_MACHINES,
-                             "Bforts" => B_FORTS,
+                             "Abuy" => "Kup",
+                             "Bsoldiers" => "piechurów (+3 atak, +1 obrona, 25 sztuk złota jeden). (Dostępnych",
+                             "Barchers" => "łuczników (+1 atak, +3 obrona, 25 sztuk złota jeden). (Dostępnych",
+                             "Bmachines" => "machin oblężniczych (+3 atak, 35 sztuk złota jedna).  (Dostępnych",
+                             "Bforts" => "fortyfikacji (+3 obrona, 35 sztuk złota jedna). (Dostępnych",
                              "Awarriors" => $arrReserves[0],
                              "Aarchers" => $arrReserves[1],
                              "Acatapults" => $arrReserves[2],
                              "Abarricades" => $arrReserves[3],
-                             "Buyall" => BUY_ALL,
-                             "Management" => MANAGEMENT,
+                             "Buyall" => "Kup wszystko",
+                             "Management" => "Zarządzaj weteranami i bestiami",
                              "Fence" => $freefence,
                              "Barracks" => $freebarracks,
-                             "NoLair" => NO_LAIR,
-                             "NoBarracks" => NO_BARRACKS));
+                             "NoLair" => "Nie masz wolnych legowisk na kolejne bestie.",
+                             "NoBarracks" => "Nie masz wolnych kwater dla kolejnych weteranów."));
     /**
     * Add veterans to outpost
     */
@@ -1470,26 +1465,26 @@ if (isset ($_GET['view']) && $_GET['view'] == 'shop')
     {
         if ($out -> fields['gold'] < 2000) 
         {
-            error(NO_MONEY);
+            error("Nie stać Cię na to.");
         }
         $query = $db -> Execute("SELECT count(`id`) FROM `outpost_veterans` WHERE `outpost`=".$out -> fields['id']);
         $numveterans = $query->fields['count(`id`)'];
         $query->Close();
         if ($numveterans >= $out -> fields['barracks']) 
         {
-            error(NO_BARRACKS);
+            error("Nie masz wolnych kwater dla kolejnych weteranów.");
         }
         $_POST['vname'] = htmlspecialchars($_POST['vname'], ENT_QUOTES);
         if (empty($_POST['vname'])) 
         {
-            error(NO_NAME);
+            error("Podaj imię weterana");
         }
         $objQuery = $db -> Execute("SELECT name FROM outpost_veterans WHERE outpost=".$out -> fields['id']);
         while (!$objQuery -> EOF)
         {
             if ($_POST['vname'] == $objQuery -> fields['name'])
             {
-                error(NAME_TAKEN);
+                error("Któryś z twoich weteranów posiada już takie imię!");
             }
             $objQuery -> MoveNext();
         }
@@ -1535,7 +1530,7 @@ if (isset ($_GET['view']) && $_GET['view'] == 'shop')
 	  }
         $vetid -> Close();
         $db -> Execute("UPDATE outposts SET `gold`=`gold`-2000 WHERE `id`=".$out -> fields['id']);
-        $smarty -> assign("Message", YOU_ADD.$_POST['vname'].FOR_A2.$text.'<a href=outposts.php?view=shop>'.A_REFRESH.'</a>');
+        $smarty -> assign("Message", "Dodałeś weterana: <b>".$_POST['vname']."</b> wydając 2000 sztuk złota. Posiada: ".$text.'<a href=outposts.php?view=shop>Odśwież</a>');
     }
     /**
     * Buy barracks to outpost
@@ -1544,21 +1539,21 @@ if (isset ($_GET['view']) && $_GET['view'] == 'shop')
     {
         if (!isset ($_POST['amount']) || !is_numeric($_POST['amount']) || $_POST['amount'] < 1)
         {
-            error(ERROR);
+            error('Zapomnij o tym.');
         }
         if (floor($out -> fields['size'] / 4) - $out -> fields['fence'] <= $out -> fields['barracks'])
         {
-            error(MAX_BAR);
+            error("Nie możesz dokupić nowej kwatery ponieważ masz już maksymalną ilość!");
         }
         $intNeededMeteor = $_POST['amount'] * ($out -> fields['barracks'] + ($_POST['amount'] + 1) / 2);
         if (($intNeededMeteor * 50 > $out -> fields['gold']) || ($intNeededMeteor * 5> $dbMinerals -> fields['adamantium']) ||
             ($intNeededMeteor > $dbMinerals -> fields['meteor']))
         {
-            error (NO_MONEY.' '.YOU_NEED.': '.($intNeededMeteor * 50).' '.GOLD_COINS.', '.$intNeededMeteor.' '.METEOR_PIECES. ', '.($intNeededMeteor * 5).' '.ADAMANTIUM_PIECES);
+            error ("Nie stać Cię na to.".' '."Potrzebujesz".': '.($intNeededMeteor * 50).' '." sztuk złota".', '.$intNeededMeteor.' '." meteorytu". ', '.($intNeededMeteor * 5).' '." adamantium");
         }
         $db -> Execute('UPDATE `outposts` SET `gold`=`gold`-'.($intNeededMeteor * 50).', `barracks`=`barracks`+'.$_POST['amount'].' WHERE `id`='.$out -> fields['id']);
         $db -> Execute('UPDATE `minerals` SET `meteor`=`meteor`-'.$intNeededMeteor.', `adamantium`=`adamantium`-'.($intNeededMeteor * 5).' WHERE `owner`='.$out -> fields['owner']);
-        $smarty -> assign ("Message", YOU_ADD.' <b>'.($_POST['amount'] + $out -> fields['barracks']).'</b> (+'.$_POST['amount'].') '.YOU_PAID.': '.($intNeededMeteor * 50).' '.GOLD_COINS.', '.$intNeededMeteor.                 ' '.METEOR_PIECES.', '.($intNeededMeteor * 5).' '.ADAMANTIUM_PIECES.'. <a href=outposts.php?view=shop>'.A_REFRESH.'</a>');
+        $smarty -> assign ("Message", "Masz teraz w Strażnicy".' <b>'.($_POST['amount'] + $out -> fields['barracks']).'</b> (+'.$_POST['amount'].') '."Kwater Weteranów. Zapłaciłeś".': '.($intNeededMeteor * 50).' '." sztuk złota".', '.$intNeededMeteor.' '." meteorytu".', '.($intNeededMeteor * 5).' '." adamantium".'. <a href=outposts.php?view=shop>Odśwież</a>');
     }
 
     /**
@@ -1568,7 +1563,7 @@ if (isset ($_GET['view']) && $_GET['view'] == 'shop')
     {
         if ($out -> fields['gold'] < 2000) 
         {
-            error(NO_MONEY);
+            error("Nie stać Cię na to.");
         }
 	checkvalue($_POST['army']);
         $query = $db -> Execute("SELECT count(`id`) FROM `outpost_monsters` WHERE `outpost`=".$out -> fields['id']);
@@ -1576,7 +1571,7 @@ if (isset ($_GET['view']) && $_GET['view'] == 'shop')
         $query -> Close();
         if ($nummonsters >= $out -> fields['fence']) 
         {
-            error(NO_LAIR);
+            error("Nie masz wolnych legowisk na kolejne bestie.");
         }
         $core = $db -> Execute("SELECT `name`, `power`, `defense`, `owner`, `corename` FROM `core` WHERE `id`=".$_POST['army']);
 	if ($core->fields['corename'] != '')
@@ -1585,14 +1580,14 @@ if (isset ($_GET['view']) && $_GET['view'] == 'shop')
 	  }
         if ($core -> fields['owner'] != $player -> id) 
         {
-            error(NOT_YOUR);
+            error("To nie twój chowaniec!");
         }
         $power = ceil($core -> fields['power'] / 10);
         $defense = ceil($core -> fields['defense'] / 10);
         $db -> Execute("INSERT INTO `outpost_monsters` (`outpost`, `name`, `power`, `defense`) VALUES(".$out -> fields['id'].",'".$core -> fields['name']."',".$power.",".$defense.")");
         $db -> Execute("DELETE FROM `core` WHERE `id`=".$_POST['army']);
         $db -> Execute("UPDATE `outposts` SET `gold`=`gold`-2000 WHERE `id`=".$out -> fields['id']);
-        $smarty -> assign("Message", YOU_ADD.$core -> fields['name'].WITH_P.$power.AND_D.$defense.IT_COST.' <a href=outposts.php?view=shop>'.A_REFRESH.'</a>');
+        $smarty -> assign("Message", "Dodałeś bestię: <b>".$core -> fields['name']."</b> o sile ".$power." i obronie ".$defense.". Wydałeś na to 2000 sztuk złota.".' <a href=outposts.php?view=shop>Odśwież</a>');
         $core -> Close();
     }
     /**
@@ -1602,7 +1597,7 @@ if (isset ($_GET['view']) && $_GET['view'] == 'shop')
     {
         if (!isset ($_POST['amount']) || !is_numeric($_POST['amount']) || $_POST['amount'] < 1)
         {
-            error(ERROR);
+            error('Zapomnij o tym.');
         }
         if (floor($out -> fields['size'] / 4) - $out -> fields['barracks'] <= $out -> fields['fence'])
         {
@@ -1612,11 +1607,11 @@ if (isset ($_GET['view']) && $_GET['view'] == 'shop')
         if (($intNeededMeteor * 50 > $out -> fields['gold']) || ($intNeededMeteor * 5> $dbMinerals -> fields['crystal']) ||
             ($intNeededMeteor > $dbMinerals -> fields['meteor']))
         {
-            error (NO_MONEY.' '.YOU_NEED.': '.($intNeededMeteor * 50).' '.GOLD_COINS.', '.$intNeededMeteor.' '.METEOR_PIECES.', '.($intNeededMeteor * 5).' '.CRYSTAL_PIECES);
+            error ("Nie stać Cię na to.".' '."Potrzebujesz".': '.($intNeededMeteor * 50).' '." sztuk złota".', '.$intNeededMeteor.' '." meteorytu".', '.($intNeededMeteor * 5).' '." kryształów");
         }
         $db -> Execute('UPDATE `outposts` SET `gold`=`gold`-'.($intNeededMeteor * 50).', `fence`=`fence`+'.$_POST['amount'].' WHERE `id`='.$out -> fields['id']);
         $db -> Execute('UPDATE `minerals` SET `meteor`=`meteor`-'.$intNeededMeteor.', `crystal`=`crystal`-'.($intNeededMeteor * 5).' WHERE `owner`='.$out -> fields['owner']);
-        $smarty -> assign ("Message", YOU_ADD.' <b>'.($_POST['amount'] + $out -> fields['fence']).'</b> (+'.$_POST['amount'].') '.YOU_PAID.': '.($intNeededMeteor * 50).' '.GOLD_COINS.', '.$intNeededMeteor.' '.METEOR_PIECES.', '.($intNeededMeteor * 5).' '.CRYSTAL_PIECES.'. <a href=outposts.php?view=shop>'.A_REFRESH.'</a>');
+        $smarty -> assign ("Message", "Masz teraz w Strażnicy".' <b>'.($_POST['amount'] + $out -> fields['fence']).'</b> (+'.$_POST['amount'].') '."Legowisk Bestii. Zapłaciłeś".': '.($intNeededMeteor * 50).' '." sztuk złota".', '.$intNeededMeteor.' '." meteorytu".', '.($intNeededMeteor * 5).' '." kryształów".'. <a href=outposts.php?view=shop>Odśwież</a>');
     }
     /**
     * Buy land for outpost
@@ -1625,19 +1620,19 @@ if (isset ($_GET['view']) && $_GET['view'] == 'shop')
     {
         if (!isset ($_POST['amount']))
         {
-            error(ERROR);
+	  error('Zapomnij o tym.');
         }
 	checkvalue($_POST['amount']);
         $intNeededGold = 125 * $_POST['amount'] * (2 * $out -> fields['size'] + $_POST['amount'] + 3);
         $intNeededPine = $_POST['amount'] * ($out -> fields['size'] + ($_POST['amount'] - 1) / 2);
         if (($intNeededGold > $out -> fields['gold']) || ($intNeededPine > $dbMinerals -> fields['pine']) || ($_POST['amount'] * 10 > $player -> platinum))
 	  {
-            error (NO_MONEY.' '.YOU_NEED.': '.$intNeededGold.' '.GOLD_COINS.', '.($_POST['amount'] * 10).' '.PLATINUM_PIECES.', '.$intNeededPine.' '.PINE_PIECES);
+            error ("Nie stać Cię na to.".' '."Potrzebujesz".': '.$intNeededGold.' '." sztuk złota".', '.($_POST['amount'] * 10).' '." sztuk(i) mithrilu".', '.$intNeededPine.' '." sosny");
 	  }
         $db -> Execute('UPDATE `outposts` SET `gold`=`gold`-'.$intNeededGold.', `size`=`size`+'.$_POST['amount'].' WHERE `id`='.$out -> fields['id']);
         $db -> Execute('UPDATE `players` SET `platinum`=`platinum`-'.($_POST['amount'] * 10).' WHERE `id`='.$out -> fields['owner']);
         $db -> Execute('UPDATE `minerals` SET `pine`=`pine`-'.$intNeededPine.' WHERE `owner`='.$out -> fields['owner']);
-        $smarty -> assign ("Message", YOU_ADD.' <b>'.($_POST['amount'] + $out -> fields['size']).'</b> (+'.$_POST['amount'].'). '.YOU_PAID.': '.$intNeededGold.' '.GOLD_COINS.', '.($_POST['amount'] * 10).                           ' '.PLATINUM_PIECES.', '.$intNeededPine.' '.PINE_PIECES.'. <a href=outposts.php?view=shop>'.A_REFRESH.'</a>');
+        $smarty -> assign ("Message", "Powiększyłeś rozmiar swojej Strażnicy do poziomu".' <b>'.($_POST['amount'] + $out -> fields['size']).'</b> (+'.$_POST['amount'].'). '."Zapłaciłeś".': '.$intNeededGold.' '." sztuk złota".', '.($_POST['amount'] * 10).' '." sztuk(i) mithrilu".', '.$intNeededPine.' '." sosny".'. <a href=outposts.php?view=shop>Odśwież</a>');
     }
     /**
     * Buy army and machines to outpost (single operation)
@@ -1663,14 +1658,14 @@ if (isset ($_GET['view']) && $_GET['view'] == 'shop')
         $strArmy = "army".$intKey;
         if (!isset($_POST[$strArmy])) 
         {
-            error(HOW_MANY);
+            error("Podaj ile wojska chcesz kupić!");
         }
 	checkvalue($_POST[$strArmy]);
         $arrCost = array(25, 25, 35, 35);
         $cost = ($_POST[$strArmy] * $arrCost[$intKey]);
         if ($cost > $out -> fields['gold']) 
         {
-            error(NO_MONEY);
+            error("Nie stać Cię na to.");
         }
         if ($intKey < 2)
         {
@@ -1681,24 +1676,24 @@ if (isset ($_GET['view']) && $_GET['view'] == 'shop')
             $max = ($out -> fields['size'] * 10) - $out -> fields['barricades'] - $out -> fields['catapults'];
         }
         $arrArmyname = array('warriors', 'archers', 'barricades', 'catapults');
-        $arrErrortext = array(NO_SOLDIERS, NO_ARCHERS, NO_FORTS, NO_MACHINES);
+        $arrErrortext = array("Nie ma tylu piechurów do kupienia!", "Nie ma tylu łuczników do kupienia!", "Nie ma tyle fortyfikacji do kupienia!", "Nie ma tyle machin oblężniczych do kupienia!");
         $objArmy = $db -> Execute("SELECT `value` FROM `settings` WHERE `setting`='".$arrArmyname[$intKey]."'");
         if ($objArmy -> fields['value'] < $_POST[$strArmy])
         {
             error($arrErrortext[$intKey]);
         }
         $objArmy -> Close();
-        $arrMessagetext = array(SOLDIERS, ARCHERS, FORTS, MACHINES);
+        $arrMessagetext = array("piechurów", "łuczników", "fortyfikacji", "machin oblężniczych");
         if ($_POST[$strArmy] > $max) 
         {
-            error(TOO_MUCH.$arrMessagetext[$intKey].ENLARGE.$arrMessagetext[$intKey].".");
+            error("Nie możesz kupić tak wielu ".$arrMessagetext[$intKey]." do Strażnicy. Zwiększ jej rozmiar, zanim zakupisz więcej ".$arrMessagetext[$intKey].".");
         }
         $db -> Execute("UPDATE `outposts` SET `gold`=`gold`-".$cost.", `".$arrArmyname[$intKey]."`=`".$arrArmyname[$intKey]."`+".$_POST[$strArmy]." WHERE `id`=".$out -> fields['id']);
         $objArmy = $db -> Execute("SELECT `value` FROM `settings` WHERE `setting`='".$arrArmyname[$intKey]."'");
         $intArmy = $objArmy -> fields['value'] - $_POST[$strArmy];
         $objArmy -> Close();
         $db -> Execute("UPDATE `settings` SET `value`='".$intArmy."' WHERE `setting`='".$arrArmyname[$intKey]."'");
-        $smarty -> assign ("Message", YOU_ADD.$_POST[$strArmy]."</b> ".$arrMessagetext[$intKey].TO_OUTPOST.$cost.'</b>'.GOLD_COINS.' <a href=outposts.php?view=shop>'.A_REFRESH.'</a>');
+        $smarty -> assign ("Message", "Dodałeś <b>".$_POST[$strArmy]."</b> ".$arrMessagetext[$intKey]." do Strażnicy za <b>".$cost.'</b>'." sztuk złota".' <a href=outposts.php?view=shop>Odśwież</a>');
     }
 
     /**
@@ -1721,7 +1716,7 @@ if (isset ($_GET['view']) && $_GET['view'] == 'shop')
 	    $_POST[$strArmy] = intval($_POST[$strArmy]);
             if ($_POST[$strArmy] < 0) 
             {
-                error(ERROR);
+                error('Zapomnij o tym.');
             }
             if ($i < 2)
             {
@@ -1752,7 +1747,7 @@ if (isset ($_GET['view']) && $_GET['view'] == 'shop')
             $intCost = $intCost + ($_POST[$strArmy] * $arrCost[$i]);
             if ($intCost > $out -> fields['gold']) 
             {
-                error(NO_MONEY);
+                error("Nie stać Cię na to.");
             }
         }
         $db -> Execute("UPDATE `outposts` SET `gold`=`gold`-".$intCost.", `warriors`=`warriors`+".$_POST['army0'].", `archers`=`archers`+".$_POST['army1'].", `barricades`=`barricades`+".$_POST['army2'].", `catapults`=`catapults`+".$_POST['army3']." WHERE `id`=".$out -> fields['id']);
@@ -1762,7 +1757,7 @@ if (isset ($_GET['view']) && $_GET['view'] == 'shop')
             $intArmy = $arrArmyamount[$i] - $_POST[$strArmy];
             $db -> Execute("UPDATE `settings` SET `value`='".$intArmy."' WHERE `setting`='".$arrArmyname[$i]."'");
         }
-        $strMessage = YOU_BUY.$_POST['army0']."</b> ".SOLDIERS."<br /><b>".$_POST['army1']."</b> ".ARCHERS."<br /><b>".$_POST['army2']."</b> ".FORTS."<br /><b>".$_POST['army3']."</b> ".MACHINES.YOU_SPEND.$intCost.'</b>'.GOLD_COINS.' <a href=outposts.php?view=shop>'.A_REFRESH.'</a>';
+        $strMessage = "Dokupiłeś do Strażnicy:<br /><b>".$_POST['army0']."</b> "."piechurów"."<br /><b>".$_POST['army1']."</b> "."łuczników"."<br /><b>".$_POST['army2']."</b> "."fortyfikacji"."<br /><b>".$_POST['army3']."</b> "."machin oblężniczych"."<br />Wydałeś na to <b> ".$intCost.'</b>'." sztuk złota".' <a href=outposts.php?view=shop>Odśwież</a>';
         $smarty -> assign("Message", $strMessage);
     }
 }
@@ -1772,27 +1767,27 @@ if (isset ($_GET['view']) && $_GET['view'] == 'shop')
 */
 if (isset ($_GET['view']) && $_GET['view'] == 'listing') 
   {
-    $smarty -> assign(array("Ashow" => A_SHOW,
-                            "Froml" => FROM_L,
-                            "Tol" => TO_L,
-                            "Outid" => OUT_ID,
-                            "Outsize" => OUT_SIZE,
-                            "Outowner" => OUT_OWNER,
-                            "Outattack" => OUT_ATTACK,
-                            "Aattack" => A_ATTACK,
+    $smarty -> assign(array("Ashow" => 'Pokaż',
+                            "Froml" => "strażnice od rozmiaru",
+                            "Tol" => "do",
+                            "Outid" => "ID Strażnicy",
+                            "Outsize" => "Rozmiar strażnicy",
+                            "Outowner" => "Właściciel",
+                            "Outattack" => "Atakować?",
+                            "Aattack" => "Atak",
 			    "Outmin" => ceil($out->fields['size'] / 2),
 			    "Outmax" => ($out->fields['size'] * 2)));
     if (isset ($_GET['step']) && $_GET['step'] == 'list') 
     {
         if (!isset($_POST['slevel']))
         {
-            error(NO_SLEVEL);
+            error("Podaj początkowy poziom!");
         }
 	checkvalue($_POST['slevel']);
 	checkvalue($_POST['elevel']);
         if ($_POST['slevel'] > $_POST['elevel']) 
         {
-            error (ERROR);
+            error ('Zapomnij o tym.');
         }
         $op = $db -> Execute("SELECT `id`, `size`, `owner` FROM `outposts` WHERE `size`>=".$_POST['slevel']." AND `size`<=".$_POST['elevel']." AND `id`!=".$out -> fields['id']." AND `attacks`<3 ORDER BY `size` DESC");
         $arrid = array();
