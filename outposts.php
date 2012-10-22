@@ -8,7 +8,7 @@
  *   @author               : thindil <thindil@vallheru.net>
  *   @author               : eyescream <tduda@users.sourceforge.net>
  *   @version              : 1.7
- *   @since                : 19.10.2012
+ *   @since                : 22.10.2012
  *
  */
  
@@ -552,54 +552,34 @@ function lostdefender($min,$max,$defender=0)
 /**
 * Function count gaining leadership by winning players
 */
-function gainexpwin($leadership,$playerid) 
+function gainexpwin() 
 {
     global $db;
     global $myout;
     global $enemy;
     global $arrlost;
     $gainexp = (($myout -> fields['warriors'] - $arrlost[0]) + ($myout -> fields['archers'] - $arrlost[1]) + ($enemy -> fields['warriors'] - $arrlost[3]) + ($enemy -> fields['archers'] - $arrlost[4]) + $enemy -> fields['size']);
-    if ($gainexp > 0)
+    if ($gainexp <= 0)
     {
-        $gainexp = ($gainexp / 200) / ceil($leadership);
-        $gainexp = round($gainexp,"2");
+        $gainexp = 1;
     }
-        else
-    {
-        $gainexp = 0;
-    }
-    if ($gainexp < 0.01) 
-    {
-        $gainexp = 0.01;
-    }
-    $db -> Execute("UPDATE players SET leadership=leadership+".$gainexp." WHERE id=".$playerid);
     return $gainexp;
 }
 
 /**
 * Function count gaining leadership by lost player
 */
-function gainexplost($leadership,$playerid) 
+function gainexplost() 
 {
     global $db;
     global $myout;
     global $enemy;
     global $arrlost;
     $gainexp = ($myout -> fields['warriors'] - $arrlost[0]) + ($myout -> fields['archers'] - $arrlost[1]) + ($enemy -> fields['warriors'] - $arrlost[3]) + ($enemy -> fields['archers'] - $arrlost[4]);
-    if ($gainexp > 0) 
+    if ($gainexp <= 0) 
     {
-        $gainexp = ($gainexp / 200) / ceil($leadership);
-    } 
-        else 
-    {
-        $gainexp = 0;
+        $gainexp = 1;
     }
-    $gainexp = round($gainexp,"2");
-    if ($gainexp < 0.01) 
-    {
-        $gainexp = 0.01;
-    }
-    $db -> Execute("UPDATE players SET leadership=leadership+".$gainexp." WHERE id=".$playerid);
     return $gainexp;
 }
 
@@ -980,7 +960,7 @@ if (isset ($_GET['view']) && $_GET['view'] == 'myoutpost')
     $maxequips = ($out -> fields['size'] * 10) - $out -> fields['catapults'] - $out -> fields['barricades'];
     $cost = (($out -> fields['warriors'] * 7) + ($out -> fields['archers'] * 7)) + ($out -> fields['catapults'] * 14);
     $testability = $out -> fields['battack'] + $out -> fields['bdefense'] + $out -> fields['btax'] + $out -> fields['blost'] + $out -> fields['bcost'];
-    $ability = floor($player -> leadership);
+    $ability = $player->skills['leadership'][1];
     if ($testability < $ability) 
     {
         $link = 'Y';
@@ -1081,7 +1061,7 @@ if (isset ($_GET['view']) && $_GET['view'] == 'myoutpost')
             error('Zapomnij o tym.');
         }
         $testability = $out -> fields['battack'] + $out -> fields['bdefense'] + $out -> fields['btax'] + $out -> fields['blost'] + $out -> fields['bcost'];
-        $ability = floor($player -> leadership);
+        $ability = $player->skills['leadership'][1];
         if ($testability >= $ability) 
         {
             error("Nie możesz podnieść jakiejkolwiek premii");
@@ -1817,12 +1797,12 @@ if (isset ($_GET['view']) && $_GET['view'] == 'listing')
 */
 if (isset ($_GET['view']) && $_GET['view'] == 'battle') 
 {
-    $smarty -> assign(array("Battleinfo" => BATTLE_INFO,
-			    "Outid" => OUT_ID,
+    $smarty -> assign(array("Battleinfo" => "Witaj w pokoju narad. Wpisz ID Strażnicy bądź ID jej właściciela oraz ile razy ma nastąpić atak.",
+			    "Outid" => "ID Strażnicy",
 			    "Pid" => "ID właściciela",
-			    "Amounta" => AMOUNT_A,
+			    "Amounta" => "Ilość ataków",
 			    "Tor" => "lub",
-			    "Aattack" => A_ATTACK));
+			    "Aattack" => "Atak"));
     /**
     * Assign id attacked outpost
     */
@@ -1853,20 +1833,20 @@ if (isset ($_GET['view']) && $_GET['view'] == 'battle')
         }
         if ($out -> fields['fatigue'] <= 25)
         {
-            error(TOO_FAT);
+            error("Twoja armia jest zbyt zmęczona by atakować!");
         }
 	checkvalue($_POST['amount']);
         if ($out -> fields['turns'] < $_POST['amount']) 
         {
-            error (NO_AP);
+            error ("Nie masz wystarczającej ilości punktów ataku.");
         }
         if ($out -> fields['warriors'] < 0 || $out -> fields['archers'] < 0) 
         {
-            error (ERROR);
+            error ("Nie masz wojsk aby atakować innego gracza!");
         }
         if (!$out -> fields['warriors'] && !$out -> fields['archers']) 
         {
-            error (NO_ARMY);
+            error ("Nie masz wojsk aby atakować innego gracza!");
         }
         if (isset($_GET['oid'])) 
         {
@@ -1884,13 +1864,13 @@ if (isset ($_GET['view']) && $_GET['view'] == 'battle')
 	  }
 	if ($player -> hp <= 0)
 	  {
-	    error(YOU_DEAD);
+	    error("Ponieważ jesteś martwy, nie możesz korzystać ze strażnicy.");
 	  }
 	if ($_POST['oid'] > 0)
 	  {
 	    if ($_POST['oid'] == $out->fields['id']) 
 	      {
-		error (ITS_YOUR);
+		error ("Nie możesz zaatakować własnej Strażnicy.");
 	      }
 	    $enemy = $db -> Execute("SELECT * FROM `outposts` WHERE `id`=".$_POST['oid']);
 	  }
@@ -1904,22 +1884,22 @@ if (isset ($_GET['view']) && $_GET['view'] == 'battle')
 	  }
 	if (!$enemy -> fields['id']) 
 	  {
-	    error (NO_OUT);
+	    error ("Nie ma takiej strażnicy.");
 	  }
         $myout = $db -> Execute("SELECT * FROM outposts WHERE id=".$out -> fields['id']);
         $mymonsters = $db -> Execute("SELECT id, name, power, defense FROM outpost_monsters WHERE outpost=".$out -> fields['id']);
         $emonsters = $db -> Execute("SELECT id, name, power, defense FROM outpost_monsters WHERE outpost=".$_POST['oid']);
         $myveterans = $db -> Execute("SELECT * FROM outpost_veterans WHERE outpost=".$out -> fields['id']);
         $eveterans = $db -> Execute("SELECT * FROM outpost_veterans WHERE outpost=".$_POST['oid']);
-        $defenduser = $db -> Execute("SELECT user, leadership FROM players WHERE id=".$enemy -> fields['owner']);
         if ($_POST['amount'] > 3 || $enemy -> fields['attacks'] > 2)
         {
-            error(TOO_MUCH_A);
+            error("Jedna strażnica może być zaatakowana tylko 3 razy na reset!");
         }
         if ($out -> fields['fatigue'] <= 25)
         {
-            error(TOO_FAT2);
+            error("Twoja armia jest zbyt zmęczona aby mogła atakować dalej!");
         }
+	$objEnemy = new Player($enemy->fields['owner']);
         /**
         * Make few attacks
         */
@@ -1986,23 +1966,25 @@ if (isset ($_GET['view']) && $_GET['view'] == 'battle')
                 /**
                 * Count exp gained by attacker
                 */
-                $gainexp1 = gainexpwin($player -> leadership, $player -> id);
+                $gainexp1 = gainexpwin();
+		$player->checkexp(array('leadership' => $gainexp1), $player->id, "skills");
                 /**
                 * Count exp gained by defender
                 */
-                $gainexp = gainexplost($defenduser -> fields['leadership'], $enemy -> fields['owner']);
+                $gainexp = gainexplost();
+		$objEnemy->checkexp(array('leadership' => $gainexp), $player->id, "skills");
                 /**
                 * Create info about fight
                 */
-                $arrname = array(SOLDIERS, ARCHERS, MACHINES, FORTS);
-                $arrmessage[$k] = YOU_ATTACK.$defenduser -> fields['user'].AND_WIN.$myattack.DEFENSE.$edefense.YOU_GAIN.$gaingold.GOLD_COINS.$gainexp1.IN_LEADER;
+                $arrname = array("piechurów", "łuczników", "machin", "fortyfikacji");
+                $arrmessage[$k] = "<br />Atakujesz strażnicę gracza ".$objEnemy->user." i wygrywasz!<br />(Siła ataku: ".$myattack." Siła obrony: ".$edefense.")<br />Zdobywasz ".$gaingold." sztuk złota oraz ".$gainexp1." poziomu w umiejętności Dowodzenie. Tracisz:<br />";
                 for ($i = 0; $i < 3; $i ++) 
                 {
                     $field = $arrarmy[$i];
                     $lost = $myout -> fields[$field] - $arrlost[$i];
                     $arrmessage[$k] = $arrmessage[$k]."- ".$lost." ".$arrname[$i]."<br />";
                 }
-                $arrmessage[$k] = $arrmessage[$k].ENEMY_LOST;
+                $arrmessage[$k] = $arrmessage[$k]."Przeciwnik traci:<br />";
                 $arrlog = array();
                 for ($i = 3; $i < 7; $i ++) 
                 {
@@ -2020,7 +2002,7 @@ if (isset ($_GET['view']) && $_GET['view'] == 'battle')
                 * Add event in log defender player
                 */
                 $strDate = $db -> DBDate($newdate);
-                $strMessage = HE_ATTACK.$lostgold.L_GOLD.$arrlog[0]." ".SOLDIERS.", ".$arrlog[1]." ".ARCHERS.", ".$arrlog[2]." ".MACHINES.L_AND.$arrlog[3]." ".FORTS.". Zdobywasz ".$gainexp." w umiejętności Dowodzenie.";
+                $strMessage = " zaatakował twoją strażnicę i wygrał. Tracisz ".$lostgold." sztuk złota, ".$arrlog[0]." "."piechurów".", ".$arrlog[1]." "."łuczników".", ".$arrlog[2]." "."machin"." oraz ".$arrlog[3]." "."fortyfikacji".". Zdobywasz ".$gainexp." w umiejętności Dowodzenie.";
             } 
                 else 
             {
@@ -2041,23 +2023,25 @@ if (isset ($_GET['view']) && $_GET['view'] == 'battle')
                 /**
                 * Count gaining exp by defender player
                 */
-                $gainexp1 = gainexpwin($defenduser -> fields['leadership'], $enemy -> fields['owner']);
+                $gainexp1 = gainexpwin();
+		$objEnemy->checkexp(array('leadership' => $gainexp1), $player->id, "skills");
                 /**
                 * Count gaining exp by attacker player
                 */
-                $gainexp = gainexplost($player -> leadership, $player -> id);
+                $gainexp = gainexplost();
+		$player->checkexp(array('leadership' => $gainexp), $player->id, 'skills');
                 /**
                 * Create info about fight
                 */
-                $arrname = array(SOLDIERS, ARCHERS, MACHINES, FORTS);
-                $arrmessage[$k] = YOU_ATTACK.$defenduser -> fields['user'].BUT_FAIL.$myattack.DEFENSE.$edefense.YOU_GAIN.$gainexp.IN_LEADER;
+		$arrname = array("piechurów", "łuczników", "machin", "fortyfikacji");
+                $arrmessage[$k] = "<br />Atakujesz strażnicę gracza ".$objEnemy->user." lecz niestety przegrywasz!<br />(Siła ataku: ".$myattack." Siła obrony: ".$edefense.")<br />Zdobywasz ".$gainexp." poziomu w umiejętności Dowodzenie. Tracisz:<br />";
                 for ($i = 0; $i < 3; $i ++) 
                 {
                     $field = $arrarmy[$i];
                     $lost = $myout -> fields[$field] - $arrlost[$i];
                     $arrmessage[$k] = $arrmessage[$k]."- ".$lost." ".$arrname[$i]."<br />";
                 }
-                $arrmessage[$k] = $arrmessage[$k].ENEMY_LOST;
+                $arrmessage[$k] = $arrmessage[$k]."Przeciwnik traci:<br />";
                 $arrlog = array();
                 for ($i = 3; $i < 7; $i ++) 
                 {
@@ -2071,7 +2055,7 @@ if (isset ($_GET['view']) && $_GET['view'] == 'battle')
                 */
                 $db -> Execute("UPDATE `outposts` SET `morale`=`morale`-10 WHERE `id`=".$myout -> fields['id']);
                 $db -> Execute("UPDATE `outposts` SET `morale`=`morale`+7.5 WHERE `id`=".$enemy -> fields['id']);
-                $strMessage = HE_ATTACK2.$arrlog[0]." ".SOLDIERS.", ".$arrlog[1]." ".ARCHERS.", ".$arrlog[2]." ".MACHINES.L_AND.$arrlog[3]." ".FORTS.". Zdobywasz ".$gainexp1." w umiejętności Dowodzenie.";
+                $strMessage = " zaatakował twoją strażnicę i przegrał. Tracisz ".$arrlog[0]." piechurów, ".$arrlog[1]." łuczników, ".$arrlog[2]." machin oraz ".$arrlog[3]." fortyfikacji. Zdobywasz ".$gainexp1." w umiejętności Dowodzenie.";
             }
             /**
             * Count losses in monsters of attacker
@@ -2080,7 +2064,7 @@ if (isset ($_GET['view']) && $_GET['view'] == 'battle')
             /**
             * Count losses in monsters of defender
             */
-	    $strLost = lostspecials('monsters', $defenduser -> fields['user'], $arremid, $arremname);
+	    $strLost = lostspecials('monsters', $objEnemy->user, $arremid, $arremname);
             /**
             * Count losses in veterans of attacker
             */
@@ -2088,10 +2072,10 @@ if (isset ($_GET['view']) && $_GET['view'] == 'battle')
             /**
             * Count losses in veterans of defender
             */
-	    $strLost .= lostspecials('veterans', $defenduser -> fields['user'], $arrevid, $arrevname);
+	    $strLost .= lostspecials('veterans', $objEnemy->user, $arrevid, $arrevname);
             $$arrmessage[$k] .= $strLost;
 	    $strDate = $db -> DBDate($newdate);
-	    $db -> Execute("INSERT INTO `log` (`owner`, `log`, `czas`, `type`) VALUES(".$enemy -> fields['owner'].",'".L_PLAYER." <b><a href=\"view.php?view=".$player -> id."\">".$player -> user."</a></b>".L_ID."<b>".$player -> id."</b>".$strMessage." ".str_replace("<br />", " ", $strLost)."', ".$strDate.", 'O')") or die($db->ErrorMsg());
+	    $db -> Execute("INSERT INTO `log` (`owner`, `log`, `czas`, `type`) VALUES(".$enemy -> fields['owner'].",'"."Gracz"." <b><a href=\"view.php?view=".$player -> id."\">".$player -> user."</a></b>".", ID "."<b>".$player -> id."</b>".$strMessage." ".str_replace("<br />", " ", $strLost)."', ".$strDate.", 'O')") or die($db->ErrorMsg());
             /**
             * Add attack to attacks limit
             */
@@ -2118,7 +2102,7 @@ if (isset ($_GET['view']) && $_GET['view'] == 'battle')
             */
             if ($myout -> fields['fatigue'] <= 25)
             {
-                $arrmessage[$k] = $arrmessage[$k]."<br />".TOO_FAT2."<br />";
+                $arrmessage[$k] = $arrmessage[$k]."<br />"."Twoja armia jest zbyt zmęczona aby mogła atakować dalej!"."<br />";
                 break;
             }
             /**
@@ -2126,14 +2110,14 @@ if (isset ($_GET['view']) && $_GET['view'] == 'battle')
             */
             if ($enemy -> fields['attacks'] > 2)
             {
-                $arrmessage[$k] = $arrmessage[$k].ATTACK_LIMIT;
+                $arrmessage[$k] = $arrmessage[$k]."<br />Nie możesz więcej atakować tej strażnicy! Musisz poczekać do kolejnego resetu.<br />";
                 break;
             }
         }
         $smarty -> assign("Result", $arrmessage);
         $myout -> Close();
         $enemy -> Close();
-        $defenduser -> Close();
+	$objEnemy->save();
     }
 }
 
@@ -2142,18 +2126,18 @@ if (isset ($_GET['view']) && $_GET['view'] == 'battle')
 */
 if (isset ($_GET['view']) && $_GET['view'] == 'guide') 
 {
-    $smarty -> assign(array("Info1" => INFO1,
-        "Info1a" => INFO1a,
-        "Info2" => INFO2,
-        "Info2a" => INFO2a,
-        "Info3" => INFO3,
-        "Info3a" => INFO3a,
-        "Info4" => INFO4,
-        "Info4a" => INFO4a,
-        "Info5" => INFO5,
-        "Info5a" => INFO5a,
-        "Info6" => INFO6,
-        "Info6a" => INFO6a));
+    $smarty -> assign(array("Info1" => "Podstawy",
+        "Info1a" => "Podstawowym zadaniem w grze jest posiadanie największej strażnicy i najsilniejszej armii. Podczas każdego resetu, dostajesz 2 punkty ataku, ale również codziennie musisz opłacać swoje wojska. Koszty mogą być znacznie niższe jeżeli inwestujesz odpowiednio w umiejętność Dowodzenie.",
+        "Info2" => "Moja strażnica",
+        "Info2a" => "To centrum zarządzania twoją strażnicą - tutaj znajdziesz wszystkie informacje na jej temat - liczbę posiadanych wojsk, machin oraz fortyfikacji i budynków specjalnych (tylko wtedy jeżeli twoja strażnica osiągnie odpowiedni rozmiar). Oprócz tego tutaj również znajdują się informacje na temat premii jakie posiadasz z umiejętności Dowodzenie. Każdy punkt w tej umiejętności pozwala podnieść jedną premię o 1 % do maksymalnego poziomu 15 % w danej premii. Kiedy będziesz miał możliwość podniesienia jakiejś premii, obok niej, pojawi się link informujący o tym.<br />Oprócz tego tutaj również możesz dozbrajać swoich weteranów (jeżeli takowych posiadasz). Aby to zrobić, wystarczy kliknąć na imię danego weterana.",
+        "Info3" =>"Zbieranie danin",
+        "Info3a" => "Daniny są bardzo dobrym sposobem na zarobienie pieniędzy. Wydobycie zabiera jeden Punkt Ataku. Za każdym razem, kiedy zbierasz daniny, dostajesz sztuki złota. Jego ilość zależy od liczby twoich piechurów oraz łuczników.",
+        "Info4" => "Rozbudowa oraz zaciąg armii",
+        "Info4a" => "To jest podstawowy sklep, gdzie możesz kupować żołnierzy, fortyfikacje, machiny, jednostki i budynki specjalne oraz rozbudowywać strażnicę. Wojsko dzieli się na 2 typy - bardziej ofensywne jednostki (piechurzy) oraz bardziej defensywne (łucznicy). Dodatkowo możesz kupować fortyfikacje które podniosą obronę twojej strażnicy oraz machiny oblężnicze które zwiększają twoje zdolności ataku na inne strażnice. Oprócz tego, jeżeli spełniasz odpowiednie warunki (masz odpowiedni rozmiar strażnicy) możesz dokupić specjalne budynki takie jak Legowisko Bestii czy Kwatera Weterana, które pozwolą ci rekrutować specjalne jednostki. Ale nie tylko budynki są potrzebne do tego celu. Potrzeba jeszcze sztuk złota do tego celu oraz: <br />- dla Bestii - musisz mieć przy najmniej jednego chowańca<br />- dla Weterana - musisz mieć przy najmniej jedną sztukę broni w plecaku<br />    Podczas wynajmowania Weteranów możesz wybrać ich uzbrojenie oraz opancerzenie - nie musisz wybierać wszystkiego na raz - w późniejszym okresie będziesz mógł go dozbroić.",
+        "Info5" => "Skarbiec",
+        "Info5a" => "W skarbcu strażnicy możesz wymienić sztuki złota jakie się w nim znajdują, na te które masz w ręku i na odwrót. W przypadku kiedy wpłacasz przelicznik wynosi 1:1 (czyli za 10 wpłaconych sztuk złota w strażnicy pojawia się 10 sztuk złota), natomiast w przypadku wypłaty przelicznik wynosi 2:1 (czyli za 10 wypłaconych ze strażnicy sztuk złota w ręku pojawia się 5 sztuk złota).",
+        "Info6" => "Atakowanie Strażnicy",
+        "Info6a" => "Atakowanie innych strażnic to również sposób na zdobywanie złota. Jednak podczas ataku musisz uważać - nawet jeżeli wygrasz, tracisz część ze swojego wojska (jest również mała szansa na stratę jednostek specjalnych). Ale ten który przegra zawsze gorzej na tym wychodzi. W nagrodę za udany atak dostajesz nie tylko złoto ale również podnosisz swój poziom w umiejętności Dowodzenie."));
 }
 
 /**
@@ -2165,7 +2149,7 @@ if (!isset($_GET['view']))
 }
     else
 {
-    $smarty -> assign("Aback", A_BACK);
+    $smarty -> assign("Aback", "Menu");
 }
 
 if (!isset($_GET['step'])) 
@@ -2179,9 +2163,9 @@ if (!isset($_GET['step']))
 $smarty -> assign(array("Outpost" => $out -> fields['id'], 
     "View" => $_GET['view'], 
     "Step" => $_GET['step'],
-    "Nooutpost" => NO_OUTPOST,
-    "Ayes" => YES,
-    "Ano" => NO));
+    "Nooutpost" => "Nie masz dostępu do strażnicy! Za 500 sztuk złota możesz wykupić kawałek ziemi pod nią. Więc jak, chcesz kupić?",
+    "Ayes" => "Tak",
+    "Ano" => "Nie"));
 $smarty -> display('outposts.tpl');
 
 /**
