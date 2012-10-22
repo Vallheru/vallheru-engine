@@ -7,8 +7,8 @@
  *   @copyright            : (C) 2004,2005,2006,2007,2012 Vallheru Team based on Gamers-Fusion ver 2.5
  *   @author               : thindil <thindil@vallheru.net>
  *   @author               : eyescream <tduda@users.sourceforge.net>
- *   @version              : 1.6
- *   @since                : 27.07.2012
+ *   @version              : 1.7
+ *   @since                : 22.10.2012
  *
  */
 
@@ -99,7 +99,7 @@ if (isset ($_GET['view']) && $_GET['view'] == 'breed')
     define("NO_MITH2", "Nie masz tyle mithrilu.");
     define("YOU_SUCC", "Udało ci się wyhodować ");
     define("YOU_GAIN3", "). Zdobyłeś za to ");
-    define("AND_GAIN", " punktów doświadczenia oraz ");
+    define("AND_GAIN", " punktów doświadczenia.");
     define("IN_BREEDING", " umiejętności Hodowla.");
     define("YOU_FAIL", "Próbowałeś wyhodować nowego chowańca, niestety nie udało się.");
     define("T_CORE2", " Chowańca (");

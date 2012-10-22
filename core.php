@@ -7,8 +7,8 @@
  *   @copyright            : (C) 2004,2005,2006,2007,2011,2012 Vallheru Team based on Gamers-Fusion ver 2.5
  *   @author               : thindil <thindil@vallheru.net>
  *   @author               : eyescream <tduda@users.sourceforge.net>
- *   @version              : 1.6
- *   @since                : 22.08.2012
+ *   @version              : 1.7
+ *   @since                : 22.10.2012
  *
  */
 
@@ -227,7 +227,7 @@ if (isset($_GET['view']))
                 else
 		  {
 		    $intChance = $objChance -> fields['ref_id'];
-		    $intExp = $intChance * 50;
+		    $intExp = $intChance * 10;
 		    $intAbility = $intChance / 100;
 		  }
 		$objChance -> Close();
@@ -238,7 +238,7 @@ if (isset($_GET['view']))
 		$player->curskills(array('breeding'), TRUE, TRUE);
 		
 		$fltRoll = rand(1,100) / 100;
-		$fltResult = $player -> breeding + $fltRoll;
+		$fltResult = $player -> skills['breeding'][1] + $fltRoll;
 		if ($fltResult >= $intChance)
 		  {
 		    if ($objCoremale -> fields['power'] < $objCorefemale -> fields['power'])
@@ -261,12 +261,12 @@ if (isset($_GET['view']))
 			$fltDefense = $objCorefemale -> fields['defense'];
 			$fltMaxdefense = $objCoremale -> fields['defense'];
 		      }
-		    $fltPower = $fltPower + $player -> breeding;
+		    $fltPower = $fltPower + $player -> skills['breeding'][1];
 		    if ($fltPower > $fltMaxpower)
 		      {
 			$fltPower = $fltMaxpower;
 		      }
-		    $fltDefense = $fltDefense + $player -> breeding;
+		    $fltDefense = $fltDefense + $player -> skills['breeding'][1];
 		    if ($fltDefense > $fltMaxdefense)
 		      {
 			$fltDefense = $fltMaxdefense;
@@ -283,15 +283,14 @@ if (isset($_GET['view']))
 			$strGen = 'F';
 		      }
 		    $db -> Execute("INSERT INTO core (`owner`, `name`, `type`, `ref_id`, `power`, `defense`, `gender`) VALUES(".$player -> id.", '".$objCoremale -> fields['name']."', '".$objCoremale -> fields['type']."',".$intChance.", ".$fltPower.", ".$fltDefense.", '".$strGen."')") or error("Could not add Core.");
-		    require_once("includes/checkexp.php");
-		    checkexp($player -> exp, $intExp, $player -> level, $player -> race, $player -> user, $player -> id, 0, 0, $player -> id, 'breeding', $intAbility);
-		    $smarty -> assign("Message", YOU_SUCC.$objCoremale -> fields['name'].T_CORE2.$strGender.YOU_GAIN3.$intExp.AND_GAIN.$intAbility.IN_BREEDING);
+		    $smarty -> assign("Message", YOU_SUCC.$objCoremale -> fields['name'].T_CORE2.$strGender.YOU_GAIN3.$intExp.AND_GAIN);
 		  }
                 else
 		  {
-		    $smarty -> assign("Message", YOU_FAIL.' Otrzymujesz 0.01 umiejętności Hodowla.');
-		    $db -> Execute("UPDATE `players` SET `breeding`=`breeding`+0.01 WHERE `id`=".$player -> id);
+		    $smarty -> assign("Message", YOU_FAIL.' Otrzymujesz 1 punkt doświadczenia.');
+		    $intExp = 1;
 		  }
+		$player->checkexp(array('breeding' => $intExp), $player->id, 'skills');
 		$db -> Execute("UPDATE `players` SET `platinum`=`platinum`-".$intCost.", `trains`=`trains`-15 WHERE `id`=".$player -> id);
 	      }
 	  }

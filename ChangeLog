@@ -1,5 +1,7 @@
 2012-10-22  Bartek thindil Jasicki  <thindil@vallheru.net>
 
+	* UPDATE,languages/pl/core.php, core.php: 
+	updated pets breeding
 	* FEATURE,templates/layout1/equip.tpl, templates/equip.tpl, equip.php: 
 	added option to release selected pets
 	* UPDATE,outposts.php, languages/pl/outposts.php:
