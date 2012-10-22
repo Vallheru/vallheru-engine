@@ -87,8 +87,14 @@
     <label for="pets" class="toggle">+{$Tpets}</label>
     <input id="pets" type="checkbox" class="toggle" {$Checked} />
     <div><br />
-        {section name=pets loop=$Pets}
-            <b>{$Pname}</b> {$Pets[pets].name} <b>{$Pgender}</b> {$Pets[pets].gender} <b>{$Ppower}</b> {$Pets[pets].power} <b>{$Pdefense}</b> {$Pets[pets].defense} [ <a href="equip.php?name={$Pets[pets].id}">{$Pchname}</a> | <a href="equip.php?release={$Pets[pets].id}">{$Prelease}</a> ]<br />
-        {/section}
+        <form method="POST" action="equip.php?releasefew" style="display: inline;" name="pets">
+	    {foreach $Pets as $pet}
+	        <input type="checkbox" name="{$pet.id}" id="list" /><b>{$Pname}</b> {$pet.name} <b>{$Pgender}</b> {$pet.gender} <b>{$Ppower}</b> {$pet.power} <b>{$Pdefense}</b> {$pet.defense} [ <a href="equip.php?name={$pet.id}">{$Pchname}</a> | <a href="equip.php?release={$pet.id}">{$Prelease}</a> ]<br />
+            {/foreach}
+	    <input type="button" value="{$Checkall}" onClick="checkall(document.pets.list);" />
+	    <input type="button" value="{$Uncheckall}" onClick="uncheckall(document.pets.list);" />
+	    <input type="button" value="{$Changeselected}" onClick="changeselected(document.pets.list);" /><br />
+	    <input type="submit" value="{$Petrelease}" />
+	</form>
     </div><br />
 {/if}

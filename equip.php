@@ -6,8 +6,8 @@
  *   @name                 : equip.php                            
  *   @copyright            : (C) 2004,2005,2006,2007,2011,2012 Vallheru Team based on Gamers-Fusion ver 2.5
  *   @author               : thindil <thindil@vallheru.net>
- *   @version              : 1.6
- *   @since                : 19.09.2012
+ *   @version              : 1.7
+ *   @since                : 22.10.2012
  *
  */
 
@@ -850,6 +850,29 @@ if (isset($_GET['name']))
   }
 
 /**
+ * Release selected pets
+ **/
+if (isset($_GET['releasefew']))
+  {
+    $objPets = $db->Execute("SELECT `id` FROM `core` WHERE `owner`=".$player->id);
+    $arrIds = array();
+    while (!$objPets->EOF)
+      {
+	if (isset($_POST[$objPets->fields['id']]))
+	  {
+	    $arrIds[] = $objPets->fields['id'];
+	  }
+	$objPets->MoveNext();
+      }
+    $objPets->Close();
+    if (count($arrIds))
+      {
+	$db->Execute("DELETE FROM `core` WHERE `id` IN (".implode(', ', $arrIds).")");
+	message('success', 'Uwolniłeś wybrane chowańce');
+      }
+  }
+
+/**
  * Release pet
  */
 if (isset($_GET['release']))
@@ -879,6 +902,10 @@ if (isset($_GET['learn']))
     if (!$objPlan->fields['id'])
       {
 	error('Nie ma takiego planu.');
+      }
+    if ($objPlan->fields['mionlev'] > $player->skills['smith'][1])
+      {
+	error('Nie możesz jeszcze nauczyć się tego planu.');
       }
     $objPlan2 = $db->Execute("SELECT `amount`, `type` FROM `plans` WHERE `name`='".$objPlan->fields['name']."' AND `level`=".$objPlan->fields['minlev']);
     $objTest = $db->Execute("SELECT `id` FROM `smith` WHERE `owner`=".$player->id." AND `name`='".$objPlan->fields['name']."' AND `level`=".$objPlan->fields['minlev']);
@@ -1548,6 +1575,7 @@ if ($arrPets)
 			  "Ppower" => 'Siła:',
 			  "Pdefense" => 'Obrona:',
 			  "Pchname" => 'zmień imię',
+			  "Petrelease" => "Uwolnij wybrane chowańce",
 			  "Prelease" => 'uwolnij'));
   }
 
