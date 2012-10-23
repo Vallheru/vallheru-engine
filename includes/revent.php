@@ -6,8 +6,8 @@
  *   @name                 : revent.php                            
  *   @copyright            : (C) 2011,2012 Vallheru Team based on Gamers-Fusion ver 2.5
  *   @author               : thindil <thindil@vallheru.net>
- *   @version              : 1.6
- *   @since                : 30.08.2012
+ *   @version              : 1.7
+ *   @since                : 23.10.2012
  *
  */
 
@@ -137,10 +137,11 @@ if ($player->revent == 0)
 	    $strSuffix = 'a';
 	  }
 	$strMessage = 'Twoją uwagę przykuł widok małej, skulonej postaci przemykającej zaułkami miasta. Czy to może być osławiony Staruszek? Bez trudu doganiasz tę postać i zastępujesz jej drogę. <br />- Czego chcessz '.$strRace.'? - pyta.';
-	if ($player->perception > rand(10, 300))
+	if ($player->skills['perception'][1] > rand(10, 300))
 	  {
 	    $strMessage .= 'Dzięki swojej wysokiej spostrzegawczości dostrzegasz końcówkę ogona, która na ułamek sekundy wysunęła się spod płaszcza.<br />- Czy ty masz ogon? - pytasz zdziwiony.<br />Postać odrzuca płaszcz i twoim oczom ukazuje się szczurołak!<br />- Zginiessz '.$strRace.'! - wysykuje. Rozpoczyna się walka.';
-	    $db->Execute("UPDATE `players` SET `fight`=4, `perception`=`perception`+0.1 WHERE `id`=".$player->id);
+	    $player->checkexp(array('perception' => 10), $player->id, 'skills');
+	    $db->Execute("UPDATE `players` SET `fight`=4 WHERE `id`=".$player->id);
 	    $player->fight = 4;
 	    $player->revent = 8;
 	    $intTime = rand(18, 36);
@@ -149,7 +150,7 @@ if ($player->revent == 0)
 	else
 	  {
 	    $strMessage .= '- Może w czymś pomóc? - pytasz.<br />Czujesz na sobie nieprzychylny wzrok istoty.<br />- Komnaty królewsskie. Którędy?<br />Nieco zdziwion'.$strSuffix.' pytaniem wskazujesz kierunek. Indywiduum czym prędzej znika w mroku, a tobie pozostaje tylko poczucie nie do końca dobrze spełnionego obowiązku.<br /><br /><a href="'.$_SERVER['PHP_SELF'].'">Wróć</a>';
-	    $db->Execute("UPDATE `players` SET `perception`=`perception`+0.01 WHERE `id`=".$player->id);
+	    $player->checkexp(array('perception' => 1), $player->id, 'skills');
 	    $intTime = rand(18, 36);
 	    $db->Execute("INSERT INTO `revent` (`pid`, `state`, `qtime`, `location`) VALUES(".$player->id.", 5, ".$intTime.", '')") or die($db->ErrorMsg());
 	  }

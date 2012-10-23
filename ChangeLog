@@ -1,5 +1,7 @@
 2012-10-23  Bartek thindil Jasicki  <thindil@vallheru.net>
 
+	* includes/revent.php: 
+	updated random events
 	* UPDATE,explore.php: 
 	updated escape from fight
 	* UPDATE,templates/layout1/view.tpl, templates/view.tpl, view.php: 
