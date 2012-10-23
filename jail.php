@@ -7,8 +7,8 @@
  *   @copyright            : (C) 2004,2005,2006,2011,2012 Vallheru Team based on Gamers-Fusion ver 2.5
  *   @author               : thindil <thindil@vallheru.net>
  *   @author               : eyescream <tduda@users.sourceforge.net>
- *   @version              : 1.6
- *   @since                : 03.09.2012
+ *   @version              : 1.7
+ *   @since                : 23.10.2012
  *
  */
 
@@ -71,15 +71,13 @@ if (isset($_GET['escape']))
       {
 	error('Nie możesz próbować ucieczki, ponieważ została nałożona na ciebie kara administracyjna.');
       }
-    require_once("includes/checkexp.php");
-    $intMax = ceil($prisoner->fields['cost'] / 50);
     $prisoner->Close();
-    $roll = rand (1, $intMax);
+    $roll = rand (1, 150);
     if ($roll == 1)
       {
 	$chance = 0;
       }
-    elseif ($roll == $intMax)
+    elseif ($roll >= 145)
       {
 	$chance = 1000000;
       }
@@ -91,7 +89,7 @@ if (isset($_GET['escape']))
 	$player->curskills(array('thievery'));
 	$player->clearbless(array('agility', 'inteli', 'speed'));
 	
-	$intStats = ($player->agility + $player->inteli + $player->thievery + $player->speed);
+	$intStats = ($player->stats['agility'] + $player->inteli + $player->thievery + $player->speed);
 	/**
 	 * Add bonus from tools
 	 */
@@ -112,10 +110,12 @@ if (isset($_GET['escape']))
       }
     if ($chance < 1) 
       {
-	$cost = 1000 * $player -> level;
-	$expgain = ceil($player -> level / 10);
-	checkexp($player -> exp, $expgain, $player -> level, $player -> race, $player -> user, $player -> id, 0, 0, $player -> id, 'thievery', 0.01);
+	$cost = 1000 * $player->skills['thievery'];
 	$db -> Execute("UPDATE `players` SET `crime`=`crime`-1 WHERE `id`=".$player -> id);
+	$player->checkexp(array('agility' => 1,
+				'inteli' => 1,
+				'speed' => 1), $player->id, 'stats');
+	$player->checkexp(array('thievery' => 1), $player->id, 'skills');
 	$strDate = $db -> DBDate($newdate);
 	$db->Execute("UPDATE `jail` SET `duration`=`duration`+7, `cost`=`cost`+".$cost." WHERE `prisoner`=".$player->id);
 	if (stripos($player->equip[12][1], 'wytrychy') !== FALSE)
@@ -136,16 +136,17 @@ if (isset($_GET['escape']))
       }
     else 
       { 
-	$expgain = ($player->level * 10);
-	$fltThief = ($player->level / 100.0);
+	$expgain = $roll * 20;
 	if ($chance == 1000000)
 	  {
 	    $expgain = 2 * $expgain;
-	    $fltThief = 2 * $fltThief;
 	  }
 	$db->Execute("DELETE FROM `jail` WHERE `prisoner`=".$player->id);
 	$db -> Execute("UPDATE `players` SET `crime`=`crime`-1, `miejsce`='Altara' WHERE `id`=".$player->id);
-	checkexp($player -> exp, $expgain, $player -> level, $player -> race, $player -> user, $player -> id, 0, 0, $player -> id, 'thievery', $fltThief);
+	$player->checkexp(array('agility' => ($expgain / 4),
+				'speed' => ($expgain / 4),
+				'inteli' => ($expgain / 4)), $player->id, 'stats');
+	$player->checkexp(array('thievery' => ($expgain / 4)), $player->id, 'stats');
 	if (stripos($player->equip[12][1], 'wytrychy') !== FALSE)
 	  {
 	    $player->equip[12][6] --;
@@ -160,7 +161,7 @@ if (isset($_GET['escape']))
 	      }
 	  }
 	$player->location = 'Altara';
-	message('success', "Wykorzystując nieuwagę straży, otworzył".$strSuffix." drzwi celi i niepostrzeżenie wydostał".$strSuffix." się z lochów do miasta. Zdobył".$strSuffix." ".$fltThief." w umiejętności Złodziejstwo.");
+	message('success', "Wykorzystując nieuwagę straży, otworzył".$strSuffix." drzwi celi i niepostrzeżenie wydostał".$strSuffix." się z lochów do miasta.");
       }
   }
 
