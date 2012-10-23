@@ -16,7 +16,6 @@
     {$Tclass2}: {$Clas}<br />
     {$Gender}
     {$Deity}
-    {$Tlevel}: {$Level}<br />
     {$Tstatus}: {$Status}
     {$Clan}
     {$Tmaxhp}: {$Maxhp}<br /><br />

@@ -1,5 +1,7 @@
 2012-10-23  Bartek thindil Jasicki  <thindil@vallheru.net>
 
+	* UPDATE,templates/layout1/view.tpl, templates/view.tpl, view.php: 
+	updated thieves actions
 	* UPDATE,templates/layout1/outposts.tpl, templates/outposts.tpl, outposts.php:
 	raised bonuses from leadership
 
