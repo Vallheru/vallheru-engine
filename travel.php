@@ -6,8 +6,8 @@
  *   @name                 : travel.php                            
  *   @copyright            : (C) 2004,2005,2006,2011,2012 Vallheru Team based on Gamers-Fusion ver 2.5
  *   @author               : thindil <thindil@vallheru.net>
- *   @version              : 1.6
- *   @since                : 22.08.2012
+ *   @version              : 1.7
+ *   @since                : 23.10.2012
  *
  */
  
@@ -403,20 +403,21 @@ if (isset($_GET['akcja']) && in_array($_GET['akcja'], array('gory', 'las', 'city
 		    $roll2 = rand (1,500);
 		    $arrbandit[$i] = $roll2;
 		  }
-		$chance = (rand(1, $player->level) + ($player->speed + $player->perception) - $arrbandit[0]);
+		$chance = (rand(1, 100) + $player->stats['speed'][2] + $player->skills['perception'][1]) - ($arrbandit[0] + rand(1, 100));
 		$player->clearbless(array('speed'));
 		if ($chance > 0) 
 		  {
-		    $expgain = rand($arrbandit[1], $arrbandit[2]);
-		    $expgain = ceil($expgain / 100);
-		    $smarty -> assign ("Message", "Udało Ci się uciec przed bandytami. Zdobywasz ".$expgain." doświadczenia oraz 0.1 do umiejętności Spostrzegawczość. Dalsza droga przebiega bez niespodzaniek.<br />");
+		    $expgain = ceil(($arrbandit[0] + $arrbandit[1] + $arrbandit[2] + $arrbandit[3]) / 100);
+		    $smarty -> assign ("Message", "Udało Ci się uciec przed bandytami. Zdobywasz ".$expgain." doświadczenia. Dalsza droga przebiega bez niespodzaniek.<br />");
 		    $smarty -> display ('error1.tpl');
-		    checkexp($player -> exp, $expgain, $player -> level, $player -> race, $player -> user, $player -> id, 0, 0, $player -> id, 'perception', 0.1);
+		    $player->checkexp(array('speed' => ($expgain / 2)), $player->id, 'stats');
+		    $player->checkexp(array('perception' => ($expgain / 2)), $player->id, 'skills');
 		    $db -> Execute("UPDATE `players` SET `fight`=0 WHERE `id`=".$player -> id);
 		  } 
 		else 
 		  {
-		    $db->Execute("UPDATE `players` SET `perception`=`perception`+0.01 WHERE `id`=".$player->id);
+		    $player->checkexp(array('speed' => 1), $player->id, 'stats');
+		    $player->checkexp(array('perception' => 1), $player->id, 'skills');
 		    $smarty -> assign ("Message", "Nie udało Ci się uciec przed bandytami. Rozpoczyna się walka!<br />");
 		    $smarty -> display ('error1.tpl');
 		    battle("travel.php?akcja=".$_GET['akcja']."&amp;step=".$_GET['step']);
