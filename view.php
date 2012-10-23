@@ -656,11 +656,7 @@ if (isset ($_GET['steal']))
     $chance = $intAttack - $intDefense;
     if ($chance < 1) 
     {
-        $cost = 1000 * $player -> level;
-        $expgain = ceil($view -> level / 10);
-        checkexp($player -> exp, $expgain, $player -> level, $player -> race, $player -> user, $player -> id, 0, 0, $player -> id, 'thievery', 0.01);
-	$fltPerception = ($player->level / 100);
-	$db->Execute("UPDATE `players` SET `perception`=`perception`+".$fltPerception." WHERE `id`=".$view->id);
+        $cost = 1000 * $player->skills['thievery'][1];
 	$player->checkexp(array('inteli' => 1,
 				'agility' => 1), $player->id, 'stats');
 	$player->checkexp(array('thievery' => 1), $player->id, 'skills');
@@ -709,6 +705,7 @@ if (isset ($_GET['steal']))
 	$view->save();
         if ( $view -> credits > 0) 
         {
+	    $lost = ceil($view -> credits / 10);
             $db -> Execute("UPDATE `players` SET `credits`=`credits`-".$lost." WHERE `id`=".$view->id);
             $db -> Execute("UPDATE `players` SET `credits`=`credits`+".$lost." WHERE `id`=".$player -> id);
             $db -> Execute("INSERT INTO `log` (`owner`, `log`, `czas`, `type`) VALUES(".$view -> id.",'".YOU_CATCH."<b><a href=view.php?view=".$player -> id.">".$player -> user.L_ID.$player -> id.NOT_CATCH.$lost.GOLD_COINS."', ".$strDate.", 'T')");
@@ -733,7 +730,6 @@ if (isset ($_GET['steal']))
         if ( $view -> credits > 0) 
         {
             $lost = ceil($view -> credits / 10);
-            $expgain = ceil($view -> level * 10);
             $db -> Execute("UPDATE `players` SET `credits`=`credits`-".$lost." WHERE `id`=".$view -> id);
             $db -> Execute("UPDATE `players` SET `credits`=`credits`+".$lost." WHERE `id`=".$player -> id);
             $db -> Execute("INSERT INTO `log` (`owner`, `log`, `czas`, `type`) VALUES(".$view -> id.",'".YOU_CRIME.$lost.YOU_CRIME2."', ".$strDate.", 'T')");

@@ -1,6 +1,8 @@
 2012-10-23  Bartek thindil Jasicki  <thindil@vallheru.net>
 
-	* includes/revent.php: 
+	* BUG,view.php: 
+	fixed stealing gold
+	* UPDATE,includes/revent.php: 
 	updated random events
 	* UPDATE,explore.php: 
 	updated escape from fight
