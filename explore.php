@@ -6,8 +6,8 @@
  *   @name                 : explore.php                            
  *   @copyright            : (C) 2004,2005,2006,2011,2012 Vallheru Team based on Gamers-Fusion ver 2.5
  *   @author               : thindil <thindil@vallheru.net>
- *   @version              : 1.6
- *   @since                : 22.08.2012
+ *   @version              : 1.7
+ *   @since                : 23.10.2012
  *
  */
  
@@ -174,25 +174,25 @@ if (isset($_GET['step']) && $_GET['step'] == 'run')
      */
     $player->curskills(array('perception'));
     $player->clearbless(array('speed'));
-    $chance = (rand(1, $player -> level * 100) + ($player->speed + $player->perception) - $enemy -> fields['speed']);
+    $chance = (($player->stats['speed'][2] + $player->skills['perception'][1] + rand(1, 100)) - ($enemy -> fields['speed'] + rand(1, 100));
     $smarty -> assign ("Chance", $chance);
     if ($chance > 0) 
-    {
-        $expgain = rand($enemy -> fields['exp1'],$enemy -> fields['exp2']);
-        $expgain = ceil($expgain / 100);
-	$fltPerception = ($enemy->fields['level'] / 100);
+      {
+	$expgain = ceil(($enemy->fields['speed'] + $enemy->fields['endurance'] + $enemy->fields['agility'] + $enemy->fields['strength']) / 100);
         $smarty -> assign(array("Ename" => $enemy -> fields['name'], 
                                 "Expgain" => $expgain,
                                 "Escapesucc" => ESCAPE_SUCC,
                                 "Escapesucc2" => ESCAPE_SUCC2,
-                                "Escapesucc3" => ESCAPE_SUCC3." oraz ".$fltPerception." do umiejętności Spostrzegawczość."));
-        checkexp($player -> exp, $expgain, $player -> level, $player -> race, $player -> user, $player -> id, 0, 0, $player -> id, 'perception', $fltPerception);
+                                "Escapesucc3" => ESCAPE_SUCC3."."));
+	$player->checkexp(array('speed' => ($expgain / 2)), $player->id, 'stats');
+	$player->checkexp(array('perception' => ($expgain / 2)), $player->id, 'skills');
         $db -> Execute("UPDATE `players` SET `fight`=0 WHERE `id`=".$player -> id);
     } 
         else 
     {
         $strMessage = ESCAPE_FAIL." ".$enemy -> fields['name']." ".ESCAPE_FAIL2.".<br />";
-	$db->Execute("UPDATE `players` SET `perception`=`perception`+0.01 WHERE `id`=".$player->id);
+	$player->checkexp(array('speed' => 1), $player->id, 'stats');
+	$player->checkexp(array('perception' => 1), $player->id, 'skills');
         $smarty -> assign ("Message", $strMessage);
         $smarty -> display ('error1.tpl');
         battle('T','explore.php?step=battle');
