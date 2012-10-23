@@ -1,5 +1,7 @@
 2012-10-23  Bartek thindil Jasicki  <thindil@vallheru.net>
 
+	* UPDATE,bank.php: 
+	updated bank robbery
 	* BUG,view.php: 
 	fixed stealing gold
 	* UPDATE,includes/revent.php: 

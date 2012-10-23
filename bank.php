@@ -8,8 +8,8 @@
  *   @author               : thindil <thindil@vallheru.net>
  *   @author               : yeskov <yeskov@users.sourceforge.net>
  *   @author               : eyescream <tduda@users.sourceforge.net>
- *   @version              : 1.6
- *   @since                : 20.09.2012
+ *   @version              : 1.7
+ *   @since                : 23.10.2012
  *
  */
 
@@ -762,8 +762,7 @@ if (isset($_GET['action']))
 	  }
 	if ($blnValid)
 	  {
-	    require_once("includes/checkexp.php");
-	    $intMax = (50 - ($_POST['tp'] * 2)) * $player->level;
+	    $intMax = (150 - ($_POST['tp'] * 2));
 	    $roll = rand (1, $intMax);
 	    if ($roll == 1)
 	      {
@@ -776,9 +775,9 @@ if (isset($_GET['action']))
 	    else
 	      {		
 		$player->curskills(array('thievery'));
-		$player->clearbless(array('agility', 'inteli', 'speed'));
 		
-		$intStats = ($player->agility + $player->inteli + $player->thievery + $player->speed);
+		$intStats = ($player->stats['agility'][2] + $player->stats['inteli'][2] + $player->skills['thievery'][1] + $player->stats['speed'][2]);
+		$player->clearbless(array('agility', 'inteli', 'speed'));
 		/**
 		 * Add bonus from tools
 		 */
@@ -791,9 +790,11 @@ if (isset($_GET['action']))
 	      }
 	    if ($chance < 1) 
 	      {
-		$cost = 1000 * $player -> level;
-		$expgain = ceil($player -> level / 10);
-		checkexp($player -> exp, $expgain, $player -> level, $player -> race, $player -> user, $player -> id, 0, 0, $player -> id, 'thievery', 0.01);
+		$cost = 1000 * $player->skills['thievery'][1];
+		$player->checkexp(array('agility' => 1,
+					'inteli' => 1,
+					'speed' => 1), $player->id, 'stats');
+		$player->checkexp(array('thievery' => 1), $player->id, 'skills');
 		$db -> Execute("UPDATE players SET miejsce='Lochy', crime=crime-".$_POST['tp']." WHERE id=".$player -> id);
 		$strDate = $db -> DBDate($newdate);
 		$db -> Execute("INSERT INTO `jail` (`prisoner`, `verdict`, `duration`, `cost`, `data`) VALUES(".$player -> id.", '".VERDICT."', 7, ".$cost.", ".$strDate.")") or error (E_DB4);
@@ -816,17 +817,17 @@ if (isset($_GET['action']))
 	      }
 	    else 
 	      { 
-		$gain = $player -> level * 1000;
-		$expgain = ($player -> level * 10);
-		$fltThief = ($player->level / 100);
+		$gain = $roll * 1000;
+		$expgain = $roll * 20;
 		if ($chance == 1000000)
 		  {
 		    $gain = 2 * $gain;
 		    $expgain = 2 * $expgain;
-		    $fltThief = 2 * $fltThief;
 		  }
-		$db -> Execute("UPDATE `players` SET `crime`=`crime`-".$_POST['tp'].", `credits`=`credits`+".$gain." WHERE `id`=".$player -> id);
-		checkexp($player -> exp, $expgain, $player -> level, $player -> race, $player -> user, $player -> id, 0, 0, $player -> id, 'thievery', $fltThief);
+		$player->checkexp(array('speed' => ($expgain / 4),
+					'inteli' => ($expgain / 4),
+					'agility' => ($expgain / 4)), $player->id, 'stats');
+		$player->checkexp(array('thievery' => ($expgain / 4)), $player->id, 'skills');
 		if (stripos($player->equip[12][1], 'wytrychy') !== FALSE)
 		  {
 		    $player->equip[12][6] --;
@@ -839,7 +840,7 @@ if (isset($_GET['action']))
 			$db->Execute("UPDATE `equipment` SET `wt`=`wt`-1 WHERE `id`=".$player->equip[12][0]);
 		      }
 		  }
-		message('success', C_SUCCES.$gain.C_SUCCES2.". Zdobyłeś ".$fltThief." w umiejętności Złodziejstwo.");
+		message('success', C_SUCCES.$gain.C_SUCCES2.".");
 	      }
 	  }
       }
