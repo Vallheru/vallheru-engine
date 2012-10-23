@@ -23,7 +23,7 @@
     <input type="submit" value="{$Atake}" /> <input type="text" name="zeton" value="{$Treasury}" /> {$Fromout}.</form>
     <form method="post" action="outposts.php?view=gold&amp;step=outpost">
     <input type="submit" value="{$Aadd}" /> <input type="text" name="sztuki" value="{$GoldInHand}" /> {$Toout}.</form>
-    {$Message}
+    {$Message2}
 {/if}
 
 {if $View == "veterans"}
@@ -56,7 +56,7 @@
     <tr><td colspan="2" align="center"><input type="submit" value="{$Amodify}" />
     </table>
     </form>
-    {$Message}
+    {$Message2}
 {/if}
 
 {if $View == "myoutpost"}
@@ -99,14 +99,14 @@
     <tr><td><b>{$Tlosses}</b>:</td><td>- {$Lost} % {if $Link == "Y" && $Lost < 15}<a href="outposts.php?view=myoutpost&amp;step=add&amp;ability=blost">{$Aadd}</a>{/if}</td></tr>
     <tr><td><b>{$Tcostb}</b>:</td><td>- {$Bcost} % {if $Link == "Y" && $Bcost < 15}<a href="outposts.php?view=myoutpost&amp;step=add&amp;ability=bcost">{$Aadd}</a>{/if}</td></tr>
     </table>
-    {$Message}
+    {$Message2}
 {/if}
 
 {if $View == "taxes"}
     {$Taxinfo}<br /><br />
     <form method="post" action="outposts.php?view=taxes&amp;step=gain">
     <input type="submit" value="{$Asend}" /> {$Soldiers} <input type="text" name="amount" value="{$Amount}" size="5" /> {$Times}</form>
-    {$Message}
+    {$Message2}
 {/if}
 
 {if $View == "shop"}
@@ -120,8 +120,8 @@
         <li>{$Adamantium}{$Adamantiumpcs}</li>
         <li>{$Meteor}{$Meteorpcs}</li>
     </ul>
-    {if $Message}
-        <br />{$Message}<br />
+    {if $Message2}
+        <br />{$Message2}<br />
     {/if}
 {* Part 2: Form to increase outpost's size, buy beasts' lair or veterans' barracks. *}
     <fieldset><legend>{$OutpostDevelopment}</legend> 

@@ -1,3 +1,8 @@
+2012-10-23  Bartek thindil Jasicki  <thindil@vallheru.net>
+
+	* UPDATE,templates/layout1/outposts.tpl, templates/outposts.tpl, outposts.php:
+	raised bonuses from leadership
+
 2012-10-22  Bartek thindil Jasicki  <thindil@vallheru.net>
 
 	* UPDATE,languages/pl/core.php, core.php: 
