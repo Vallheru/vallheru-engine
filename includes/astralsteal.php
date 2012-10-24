@@ -7,8 +7,8 @@
  *   @copyright            : (C) 2006,2011,2012 Vallheru Team based on Gamers-Fusion ver 2.5
  *   @author               : thindil <thindil@vallheru.net>
  *   @author               : eyescream <tduda@users.sourceforge.net>
- *   @version              : 1.6
- *   @since                : 22.08.2012
+ *   @version              : 1.7
+ *   @since                : 24.10.2012
  *
  */
 
@@ -51,7 +51,7 @@ function astralsteal($intVictim, $strLocation, $intOwner = 0, $intId = 0)
     $player->curskills(array('thievery'));
     $player->clearbless(array('agility', 'inteli'));
 
-    $intStats = ($player->agility + $player->inteli + $player->thievery);
+    $intStats = ($player->statsp['agility'][2] + $player->stats['inteli'][2] + $player->skills['thievery'][2]);
     /**
      * Add bonus from tools
      */
@@ -63,11 +63,11 @@ function astralsteal($intVictim, $strLocation, $intOwner = 0, $intId = 0)
     /**
      * Check for succesful steal
      */
-    $intRoll = rand(1, ($player -> level * 100));
+    $intRoll = rand(1, 150);
     $intChance = $intStats - $intRoll;
     if ($strLocation == 'R')
     {
-        $intChance =  $intStats - ($intStats * 0.7) - $intRoll;
+        $intChance =  $intStats - ($intStats * 0.5) - $intRoll;
     }
     if ($intChance < 1)
     {
@@ -78,7 +78,7 @@ function astralsteal($intVictim, $strLocation, $intOwner = 0, $intId = 0)
         $objVault = $db -> Execute("SELECT `level` FROM `astral_bank` WHERE `owner`=".$intVictim." AND `location`='".$strLocation."'");
         if (isset($objVault -> fields['level']) && $strLocation != 'R')
         {
-            $intRoll = rand(1, ($player -> level * 100));
+            $intRoll = rand(1, 150);
             $intKey = $objVault -> fields['level'] - 1;
             if ($strLocation == 'V')
             {
@@ -88,7 +88,7 @@ function astralsteal($intVictim, $strLocation, $intOwner = 0, $intId = 0)
             {
                 $arrBonus = array(0.3, 0.5, 0.8);
             }
-            $intChars = $player -> agility + $player -> inteli;
+            $intChars = $player->stats['agility'][2] + $player->stats['inteli'][2] + $player->skills['thievery'][1];
             $intChance2 = $intChars - ($intChars * $arrBonus[$intKey]) - $intRoll;
             if ($intChance2 < 1)
             {
@@ -106,8 +106,6 @@ function astralsteal($intVictim, $strLocation, $intOwner = 0, $intId = 0)
         $objVault -> Close();
     }
 
-    require_once('includes/checkexp.php');
-
     $strDate = $db -> DBDate($newdate);
 
     /**
@@ -117,16 +115,17 @@ function astralsteal($intVictim, $strLocation, $intOwner = 0, $intId = 0)
     {
         if ($strLocation == 'V')
         {
-            $intBail = 10000 * $player -> level;
+            $intBail = 10000 * $player->skills['thievery'][1];
             $intDays = 7;
         }
             else
         {
-            $intBail = 50000 * $player -> level;
+            $intBail = 50000 * $player->skills['thievery'][1];
             $intDays = 14;
         }
-        $intExpgain = ceil($player -> level / 10);
-        checkexp($player -> exp, $intExpgain, $player -> level, $player -> race, $player -> user, $player -> id, 0, 0, $player -> id, 'thievery', 0.01);
+	$player->checkexp(array('agility' => 1,
+				'inteli' => 1), $player->id, 'stats');
+	$player->checkexp(array('thievery' => 1), $player->id, 'skills');
         $db -> Execute("UPDATE `players` SET `miejsce`='Lochy', `astralcrime`='N' WHERE `id`=".$player -> id);
         $db -> Execute("INSERT INTO `jail` (`prisoner`, `verdict`, `duration`, `cost`, `data`) VALUES(".$player -> id.", '".VERDICT."', ".$intDays.", ".$intBail.", ".$strDate.")");
         $db -> Execute("INSERT INTO `log` (`owner`, `log`, `czas`, `type`) VALUES(".$player -> id.",'".L_REASON.": ".$intBail.".', ".$strDate.", 'T')");
@@ -154,14 +153,15 @@ function astralsteal($intVictim, $strLocation, $intOwner = 0, $intId = 0)
     {
         if ($strLocation == 'V')
         {
-            $intExpgain = $player -> level * 10;
+            $intExpgain = $player ->skills['thievery'][1] * 10;
         }
             else
         {
-            $intExpgain = $player -> level * 50;
+            $intExpgain = $player ->skills['thievery'][1] * 20;
         }
-	$fltThief = ($player->level / 100);
-        checkexp($player -> exp, $intExpgain, $player -> level, $player -> race, $player -> user, $player -> id, 0, 0, $player -> id, 'thievery', $fltThief);
+	$player->checkexp(array('agility' => $intExpgain,
+				'inteli' => $intExpgain), $player->id, 'stats');
+	$player->checkexp(array('thievery' => $intExpgain), $player->id, 'skills');
         $db -> Execute("UPDATE `players` SET `astralcrime`='N' WHERE `id`=".$player -> id);
         if ($strLocation != 'R')
         {
@@ -249,7 +249,7 @@ function astralsteal($intVictim, $strLocation, $intOwner = 0, $intId = 0)
 		$db->Execute("UPDATE `equipment` SET `wt`=`wt`-1 WHERE `id`=".$player->equip[12][0]);
 	      }
 	  }
-        error(SUCCESFULL.$strType.$strCompname."</b>. Zdobyłeś ".$fltThief." w umiejętności Złodziejstwo.");
+        error(SUCCESFULL.$strType.$strCompname."</b>. Zdobyłeś ".($intExpgain * 3)." punktów doświadczenia.");
     }
 }
 ?>
