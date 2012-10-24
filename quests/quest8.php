@@ -6,8 +6,8 @@
  *   @name                 : quest8.php                            
  *   @copyright            : (C) 2004,2005,2006,2011,2012 Vallheru Team based on Gamers-Fusion ver 2.5
  *   @author               : thindil <thindil@vallheru.net>
- *   @version              : 1.5
- *   @since                : 30.04.2012
+ *   @version              : 1.6
+ *   @since                : 24.10.2012
  *
  */
 
@@ -120,7 +120,7 @@ if ((isset($_POST['box4']) && $_POST['box4'] == 2) || $objAction -> fields['acti
 if ((isset($_POST['box5']) && $_POST['box5'] == 2) || $objAction -> fields['action'] == '2.2.2.2') 
 {
     $objQuest -> Show('2.2.2.2');
-    $objQuest -> Finish(10);
+    $objQuest -> Finish(10, array('condition'));
     $smarty -> assign('Box', '');
     if ($player->antidote != 'R')
       {
@@ -151,7 +151,7 @@ if ($objAction -> fields['action'] == '2.2.2.1')
         if ($objHealth -> fields['hp'] <= 0) 
         {
             $objQuest -> Show('lostfight1');
-            $objQuest -> Finish(10);
+            $objQuest -> Finish(10, array('condition'));
             $smarty -> assign(array("Box" => ''));
             $db -> Execute("DELETE FROM equipment WHERE name='".I_KEY."' AND owner=".$player -> id);
         } 
@@ -163,7 +163,7 @@ if ($objAction -> fields['action'] == '2.2.2.1')
             elseif ($_POST['action'] == 'escape') 
         {
             $objQuest -> Show('2.2.2.2');
-            $objQuest -> Finish(10);
+            $objQuest -> Finish(10, array('speed'));
             $smarty -> assign(array("Box" => ''));
 	    if ($player->antidote != 'R')
 	      {
@@ -206,12 +206,12 @@ if ($objAction -> fields['action'] == '2.2.2.1.2' || $objAction -> fields['actio
         $smarty -> assign(array("Link" => '', "Box" => '', "Answer" => ''));
         $db -> Execute("UPDATE players SET temp=0 WHERE id=".$player -> id);
         $objQuest -> Show('answer1');
-        $objQuest -> Finish(50);
+        $objQuest -> Finish(50, array('inteli'));
     }
         elseif (!$objTest -> fields['temp'])
     {
         $objQuest -> Show('answer3');
-        $objQuest -> Finish(10);
+        $objQuest -> Finish(10, array('inteli'));
     }
     $objTest -> Close();
 }
@@ -219,7 +219,7 @@ if ($objAction -> fields['action'] == '2.2.2.1.2' || $objAction -> fields['actio
 if ((isset($_POST['box6']) && $_POST['box6'] == 1) || $objAction -> fields['action'] == '2.2.2.1.1.1') 
 {
     $objQuest -> Show('2.2.2.1.1.1');
-    $objQuest -> Finish(50);
+    $objQuest -> Finish(50, array('condition'));
     $db -> Execute("DELETE FROM equipment WHERE name='".I_KEY."' AND owner=".$player -> id);
     $smarty -> assign("Box", '');
 }
@@ -227,7 +227,7 @@ if ((isset($_POST['box6']) && $_POST['box6'] == 1) || $objAction -> fields['acti
 if ((isset($_POST['box6']) && $_POST['box6'] == 2) || $objAction -> fields['action'] == '2.2.2.1.1.2') 
 {
     $objQuest -> Show('2.2.2.1.1.2');
-    $objQuest -> Finish(10);
+    $objQuest -> Finish(10, array('condition'));
     $db -> Execute("DELETE FROM equipment WHERE name='".I_KEY."' AND owner=".$player -> id);
     $smarty -> assign("Box", '');
 }

@@ -6,8 +6,8 @@
  *   @name                 : quest7.php                            
  *   @copyright            : (C) 2004,2005,2006,2011,2012 Vallheru Team based on Gamers-Fusion ver 2.5
  *   @author               : thindil <thindil@vallheru.net>
- *   @version              : 1.6
- *   @since                : 09.08.2012
+ *   @version              : 1.7
+ *   @since                : 24.10.2012
  *
  */
 
@@ -96,7 +96,7 @@ if ($objAction -> fields['action'] == '1.1')
         $smarty -> assign(array("Link" => "<br /><br />(<a href=\"grid.php?step=quest\">".A_NEXT2."</a>)", "Box" => '', "Answer" => ''));
         $db -> Execute("UPDATE players SET temp=0 WHERE id=".$player -> id);
         $objQuest -> Show('answer2');
-        $objQuest -> Gainexp(20);
+        $objQuest -> Gainexp(20, array('inteli'));
     }
         elseif (!$objTest -> fields['temp'])
     {
@@ -118,7 +118,7 @@ if ($objAction -> fields['action'] == 'answer1' || $objAction -> fields['action'
         if ($objHealth -> fields['hp'] <= 0) 
         {
             $objQuest -> Show('lostfight1');
-            $objQuest -> Finish(10);
+            $objQuest -> Finish(10, array('condition'));
             $smarty -> assign(array("Box" => ''));
         } 
             elseif ($_POST['action'] != 'escape') 
@@ -155,7 +155,7 @@ if ($objAction -> fields['action'] == 'answer1' || $objAction -> fields['action'
             elseif ($_POST['action'] == 'escape') 
         {
             $objQuest -> Show('escape1');
-            $objQuest -> Finish(10);
+            $objQuest -> Finish(10, array('speed'));
             $smarty -> assign(array("Box" => ''));
         }
         $objHealth -> Close();
@@ -172,7 +172,7 @@ if ($objAction -> fields['action'] == 'answer2' || $objAction -> fields['action'
 if ((isset($_POST['box3']) && $_POST['box3'] == 1) && $objAction -> fields['action'] != 'answer2next.1') 
 {   
     $objQuest -> Show('answer2next.1');
-    $objQuest -> Finish(20);
+    $objQuest -> Finish(20, array('inteli'));
     $smarty -> assign(array("Box" => ''));    
 }
 
@@ -213,7 +213,7 @@ if (((isset($_POST['box4']) && $_POST['box4'] == 3) || (isset($_POST['box20']) &
       {
 	$db->Execute("UPDATE `players` SET `hp`=1, `antidote`='' WHERE `id`=".$player->id);
       }
-    $objQuest -> Finish(20);
+    $objQuest -> Finish(20, array('condition'));
 }
 
 if ((isset($_POST['box4']) && $_POST['box4'] == 4) || (isset($_POST['box20']) && $_POST['box20'] == 3))
@@ -270,7 +270,7 @@ if ($objAction -> fields['action'] == '1.1.1.2.next.3.1' || $objAction -> fields
             {
                 $objQuest -> Show('lostfight2');
             }
-            $objQuest -> Finish(10);
+            $objQuest -> Finish(10, array('condition'));
             $smarty -> assign(array("Box" => ''));
         } 
             elseif ($_POST['action'] != 'escape') 
@@ -295,13 +295,13 @@ if ($objAction -> fields['action'] == '1.1.1.2.next.3.1' || $objAction -> fields
             {
                 $objQuest -> Show('winfight6');
                 $smarty -> assign(array("Link" => "", "Box" => ''));
-                $objQuest -> Finish(20);
+                $objQuest -> Finish(20, array('condition'));
             }
         } 
             elseif ($_POST['action'] == 'escape') 
         {
             $objQuest -> Show('escape2');
-            $objQuest -> Finish(10);
+            $objQuest -> Finish(10, array('speed'));
             $smarty -> assign(array("Box" => ''));
         }
         $objHealth -> Close();
@@ -313,7 +313,7 @@ if ($objAction -> fields['action'] == 'winfight2')
 {
     $smarty -> assign(array("Link" => ""));
     $objQuest -> Show('1.1.1.2.n.3.1.n');
-    $objQuest -> Finish(20);
+    $objQuest -> Finish(20, array('condition'));
 }
 
 if (isset($_POST['box5']) && $_POST['box5'] == 2)
@@ -333,7 +333,7 @@ if ((isset($_POST['box6']) && $_POST['box6'] == 1) && $objAction -> fields['acti
 {
     $smarty -> assign("Box", '');
     $objQuest -> Show('1.1.1.2.next.3.2.1');
-    $objQuest -> Finish(20);
+    $objQuest -> Finish(20, array('inteli'));
 }
 
 if ((isset($_POST['box6']) && $_POST['box6'] == 2) && $objAction -> fields['action'] != '1.1.1.2.next.3.2.2')
@@ -360,7 +360,7 @@ if ($objAction -> fields['action'] == '1.1.1.2.n.3.1.2.n' || $objAction -> field
         $db -> Execute("UPDATE players SET temp=0 WHERE id=".$player -> id);
         $objQuest -> Show('answer3');
         $objQuest -> Box(7);
-        $objQuest -> Gainexp(20);
+        $objQuest -> Gainexp(20, array('inteli'));
     }
         elseif (!$objTest -> fields['temp'])
     {
@@ -388,7 +388,7 @@ if ((isset($_POST['box7']) && $_POST['box7'] == 2) || ($objAction -> fields['act
     $objQuest -> Show('1.1.1.2.n.3.1.2.n.2');
     $smarty -> assign(array("Link" => "", "Box" => ''));
     $db -> Execute("INSERT INTO equipment (owner, name, power, type, cost, zr, wt, minlev, maxwt, amount, magic, poison, szyb, twohand) VALUES(".$player -> id.",'".ITEM."',1,'T',1,0,1,1,1,1,'N',0,0,'N')");
-    $objQuest -> Finish(30);
+    $objQuest -> Finish(30, array('condition'));
 }
 
 if ((isset($_POST['box2']) && $_POST['box2'] == 2) || ($objAction -> fields['action'] == '1.1.1.4'))
@@ -413,7 +413,7 @@ if (isset($_POST['box8']) && $_POST['box8'] == 1)
 if ($objAction -> fields['action'] == 'winfight4')
 {
     $objQuest -> Show('1.2.next.1');
-    $objQuest -> Finish(20);
+    $objQuest -> Finish(20, array('condition'));
 }
 
 if ((isset($_POST['box8']) && $_POST['box8'] == 2) || $objAction -> fields['action'] == '1.2.next.2')
@@ -472,7 +472,7 @@ if ((isset($_POST['box9']) && $_POST['box9'] == 2) && $objAction -> fields['acti
 	$db->Execute("UPDATE `players` SET `hp`=1, `antidote`='' WHERE `id`=".$player->id);
       }
     $smarty -> assign(array("Link" => "", "Box" => ''));
-    $objQuest -> Finish(20);
+    $objQuest -> Finish(20, array('condition'));
 }
 
 if ($objAction -> fields['action'] == 'winfight5' || $objAction -> fields['action'] == '1.2.n.3.n.n.n')
@@ -492,7 +492,7 @@ if ($objAction -> fields['action'] == '1.2.n.3.n.n.n.1')
 {
     $objQuest -> Show('1.2.n.3.n.n.n.1.n');
     $smarty -> assign(array("Link" => "", "Box" => ''));
-    $objQuest -> Finish(20);
+    $objQuest -> Finish(20, array('condition'));
 }
 
 if (isset($_POST['box11']) && $_POST['box11'] == 2)
@@ -516,7 +516,7 @@ if ($objAction -> fields['action'] == '1.2.n.3.n.n.n.2.n')
         $smarty -> assign(array("Link" => "<br /><br />(<a href=\"grid.php?step=quest\">".A_NEXT2."</a>)", "Box" => '', "Answer" => ''));
         $db -> Execute("UPDATE players SET temp=0 WHERE id=".$player -> id);
         $objQuest -> Show('answer6');
-        $objQuest -> Gainexp(20);
+        $objQuest -> Gainexp(20, array('inteli'));
     }
         else
     {
@@ -534,7 +534,7 @@ if ($objAction -> fields['action'] == 'answer4')
         $smarty -> assign(array("Link" => "<br /><br />(<a href=\"grid.php?step=quest\">".A_NEXT2."</a>)", "Box" => '', "Answer" => ''));
         $db -> Execute("UPDATE players SET temp=0 WHERE id=".$player -> id);
         $objQuest -> Show('answer6');
-        $objQuest -> Gainexp(20);
+        $objQuest -> Gainexp(20, array('inteli'));
     }
         else
     {
@@ -548,7 +548,7 @@ if ($objAction -> fields['action'] == 'answer4')
 	    $db->Execute("UPDATE `players` SET `hp`=1, `antidote`='' WHERE `id`=".$player->id);
 	  }
         $smarty -> assign(array("Link" => "", "Box" => '', "Answer" => ''));
-        $objQuest -> Finish(20);
+        $objQuest -> Finish(20, array('inteli'));
     }
 }
 
@@ -581,7 +581,7 @@ if ($objAction -> fields['action'] == '1.3.1')
       {
 	$db->Execute("UPDATE `players` SET `hp`=1, `antidote`='' WHERE `id`=".$player->id);
       }
-    $objQuest -> Finish(10);
+    $objQuest -> Finish(10, array('condition'));
 }
 
 if ((isset($_POST['box13']) && $_POST['box13'] == 2) || $objAction -> fields['action'] == '1.3.2')
@@ -594,7 +594,7 @@ if (((isset($_POST['box14']) && $_POST['box14'] == 1) || $objAction -> fields['a
 {
     $objQuest -> Show('1.3.2.1');
     $db -> Execute("UPDATE players SET credits=credits+1000 WHERE id=".$player -> id);
-    $objQuest -> Gainexp(10);
+    $objQuest -> Gainexp(10, array('condition'));
     $smarty -> assign(array("Link" => "<br /><br />(<a href=\"grid.php?step=quest\">".A_NEXT2."</a>)", "Box" => ''));
 }
 
@@ -621,7 +621,7 @@ if ((isset($_POST['box15']) && $_POST['box15'] == 2) && $objAction -> fields['ac
 {
     $objQuest -> Show('answer2.next.1');
     $smarty -> assign("Box", '');
-    $objQuest -> Finish(20);
+    $objQuest -> Finish(20, array('inteli'));
 }
 
 if ((isset($_POST['box15']) && $_POST['box15'] == 1) || $objAction -> fields['action'] == '1.3.2.1.1.n.1')
@@ -634,13 +634,13 @@ if (isset($_POST['box16']) && $_POST['box16'] != 4)
 {
     $objQuest -> Show('1.3.2.1.1.n.1.1');
     $smarty -> assign("Box", '');
-    $objQuest -> Finish(20);
+    $objQuest -> Finish(20, array('condition'));
 }
 
 if ((isset($_POST['box16']) && $_POST['box16'] == 4) && $objAction -> fields['action'] != '1.3.2.1.1.n.1.2')
 {
     $objQuest -> Show('1.3.2.1.1.n.1.2');
-    $objQuest -> Gainexp(10);
+    $objQuest -> Gainexp(10, array('condition'));
     $smarty -> assign(array("Link" => "<br /><br />(<a href=\"grid.php?step=quest\">".A_NEXT2."</a>)", "Box" => ''));
 }
 
@@ -665,7 +665,7 @@ if (isset($_POST['box17']) && $_POST['box17'] == 1)
 
 if ((isset($_POST['box17']) && $_POST['box17'] == 2) && $objAction -> fields['action'] != '17.2')
 {
-    $objQuest -> Gainexp(10);
+  $objQuest -> Gainexp(10, array('condition'));
 }
 
 if ((isset($_POST['box17']) && $_POST['box17'] == 2) || $objAction -> fields['action'] == '17.2')
@@ -689,7 +689,7 @@ if ((isset($_POST['box18']) && $_POST['box18'] == 2) || $objAction -> fields['ac
 {
     $objQuest -> Show('17.2.2');
     $smarty -> assign(array("Link" => "", "Box" => ''));
-    $objQuest -> Finish(20);
+    $objQuest -> Finish(20, array('condition'));
 }
 
 if (isset($_POST['box12']) && $_POST['box12'] == 1)
@@ -702,7 +702,7 @@ if ((isset($_POST['box12']) && $_POST['box12'] == 2) && $objAction -> fields['ac
 {
     $objQuest -> Show('12.2');
     $smarty -> assign(array("Link" => "", "Box" => ''));
-    $objQuest -> Finish(20);
+    $objQuest -> Finish(20, array('condition'));
 }
 
 if ($objAction -> fields['action'] == '12.1' || $objAction -> fields['action'] == '12.1.n')
@@ -716,7 +716,7 @@ if ((isset($_POST['box19']) && $_POST['box19'] == '2') && $objAction -> fields['
 {
     $objQuest -> Show('12.1.n.2');
     $smarty -> assign(array("Link" => "", "Box" => ''));
-    $objQuest -> Finish(20);
+    $objQuest -> Finish(20, array('condition'));
 }
 
 if (isset($_POST['box19']) && $_POST['box19'] == 1) 
@@ -735,7 +735,7 @@ if ($objAction -> fields['action'] == '12.1.n.1')
         $smarty -> assign(array("Link" => "<br /><br />(<a href=\"grid.php?step=quest\">".A_NEXT2."</a>)", "Box" => '', "Answer" => ''));
         $db -> Execute("UPDATE players SET temp=0 WHERE id=".$player -> id);
         $objQuest -> Show('answer7');
-        $objQuest -> Gainexp(20);
+        $objQuest -> Gainexp(20, array('inteli'));
     }
         elseif (!$objTest -> fields['temp'])
     {
@@ -757,7 +757,7 @@ if ($objAction -> fields['action'] == 'answer7')
 {
     $objQuest -> Show('answer7.next.n');
     $smarty -> assign("Link", '');
-    $objQuest -> Finish(20);
+    $objQuest -> Finish(20, array('condition'));
 }
 
 /**

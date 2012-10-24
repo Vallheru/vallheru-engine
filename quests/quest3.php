@@ -6,8 +6,8 @@
  *   @name                 : quest3.php                            
  *   @copyright            : (C) 2004,2005,2006,2012 Vallheru Team based on Gamers-Fusion ver 2.5
  *   @author               : thindil <thindil@vallheru.net>
- *   @version              : 1.6
- *   @since                : 24.09.2012
+ *   @version              : 1.7
+ *   @since                : 24.10.2012
  *
  */
 
@@ -78,7 +78,7 @@ if ((isset($_POST['box2']) && $_POST['box2'] == 3) || $test -> fields['action'] 
 {
     $smarty -> assign("Box", '');
     $quest -> Show('1.3');
-    $quest -> Finish(5);
+    $quest -> Finish(5, array('condition'));
 }
 
 if (isset($_POST['box2']) && $_POST['box2'] == 1) 
@@ -90,7 +90,7 @@ if (isset($_POST['box2']) && $_POST['box2'] == 1)
 
 if ($test -> fields['action'] === '1.1') 
 {
-    $chance = ($player->inteli + rand(1,100));
+    $chance = ($player->stats['inteli'][2] + rand(1,100));
     if ($chance < 30) 
     {
         $quest -> Show('int1');
@@ -99,7 +99,7 @@ if ($test -> fields['action'] === '1.1')
         else 
     {
         $quest -> Show('int2');
-        $quest -> Gainexp(10);
+        $quest -> Gainexp(10, array('inteli'));
     }
     $smarty -> assign(array("Link" => "<br /><br />(<a href=\"grid.php?step=quest\">".A_NEXT2."</a>)", 
         "Box" => ""));
@@ -144,7 +144,7 @@ if ((isset($_POST['box5']) && $_POST['box5'] == 3) || $test -> fields['action'] 
 {
     $smarty -> assign("Box", '');
     $quest -> Show('1.2.3');
-    $quest -> Finish(10);
+    $quest -> Finish(10, array('condition'));
 }
 
 if (isset($_POST['box5']) && $_POST['box5'] == 2) 
@@ -164,7 +164,7 @@ if (isset($_POST['box5']) && $_POST['box5'] == 1)
 
 if ($test -> fields['action'] === '1.2.1') 
 {
-    $chance = ($player->agility + rand(1,100));
+    $chance = ($player->stats['agility'][2] + rand(1,100));
     if ($chance < 200) 
     {
         $quest -> Show('agi1');
@@ -175,7 +175,7 @@ if ($test -> fields['action'] === '1.2.1')
         else 
     {
         $quest -> Show('agi2');
-        $quest -> Gainexp(20);
+        $quest -> Gainexp(20, array('agility'));
         $smarty -> assign(array("Link" => "<br /><br />(<a href=\"grid.php?step=quest\">".A_NEXT2."</a>)", 
             "Box" => ""));
     }
@@ -191,7 +191,7 @@ if ($test -> fields['action'] == '1.2.2' || $test -> fields['action'] == 'agi1')
         if ($health -> fields['hp'] <= 0) 
         {
             $quest -> Show('lostfight');
-            $quest -> Finish(10);
+            $quest -> Finish(10, array('condition'));
         } 
             elseif ($_POST['action'] != 'escape') 
         {
@@ -202,7 +202,7 @@ if ($test -> fields['action'] == '1.2.2' || $test -> fields['action'] == 'agi1')
             elseif ($_POST['action'] == 'escape') 
         {
             $quest -> Show('escape');
-            $quest -> Finish(10);
+            $quest -> Finish(10, array('speed'));
         }
         $health -> Close();
     } 
@@ -219,7 +219,7 @@ if ((isset($_POST['box6']) && $_POST['box6'] == 3) || (isset($_POST['box9']) && 
 {
     $smarty -> assign("Box", '');
     $quest -> Show('1.2.1.3');
-    $quest -> Finish(10);
+    $quest -> Finish(10, array('condition'));
 }
 
 if (isset($_POST['box6']) && $_POST['box6'] == 1) 
@@ -240,7 +240,7 @@ if ($test -> fields['action'] == '1.2.1.1')
         else 
     {
         $quest -> Show('int4');
-        $quest -> Gainexp(10);
+        $quest -> Gainexp(10, array('condition'));
         $smarty -> assign(array("Link" => "<br /><br />(<a href=\"grid.php?step=quest\">".A_NEXT2."</a>)", 
             "Box" => ""));
     }
@@ -286,7 +286,7 @@ if ($test -> fields['action'] == '1.2.1.2')
             "Box" => '', 
             "Answer" => ""));
         $quest ->Show('answer2');
-        $quest -> Finish(30);
+        $quest -> Finish(30, array('inteli'));
     }
     $amount -> Close();
     if ($chance == 1) 
@@ -309,7 +309,7 @@ if ((isset($_POST['box7']) && $_POST['box7'] == 3) || $test -> fields['action'] 
 {
     $smarty -> assign("Box", '');
     $quest -> Show('1.4.3');
-    $quest -> Finish(10);
+    $quest -> Finish(10, array('condition'));
 }
 
 if ((isset($_POST['box7']) && $_POST['box7'] == 2) || $test -> fields['action'] == '1.4.2') 
@@ -324,7 +324,7 @@ if ((isset($_POST['box8']) && $_POST['box8'] == 2 && $test -> fields['action'] =
         "Box" => '', 
         "Answer" => ""));
     $quest -> Show('1.4.2.2');
-    $quest -> Finish(20);
+    $quest -> Finish(20, array('condition'));
 }
 
 if ((isset($_POST['box8']) && $_POST['box8'] == 1 && $test -> fields['action'] == '1.4.2') || $test -> fields['action'] == '1.4.2.1') 
@@ -335,7 +335,7 @@ if ((isset($_POST['box8']) && $_POST['box8'] == 1 && $test -> fields['action'] =
     $quest -> Show('1.4.2.1');
     $db -> Execute("UPDATE players SET alchemia=alchemia+2 WHERE id=".$player -> id);
     $db -> Execute("UPDATE players SET energy=energy-2 WHERE id=".$player -> id);
-    $quest -> Finish(30);
+    $quest -> Finish(30, array('condition'));
 }
 
 if ((isset($_POST['box7']) && $_POST['box7'] == 1) || $test -> fields['action'] == '1.4.1') 
@@ -350,7 +350,7 @@ if ((isset($_POST['box8']) && $_POST['box8'] == 2 && $test -> fields['action'] =
         "Box" => '', 
         "Answer" => ""));
     $quest -> Show('1.4.2.2');
-    $quest -> Finish(20);
+    $quest -> Finish(20, array('condition'));
 }
 
 if (isset($_POST['box8']) && $_POST['box8'] == 1 && $test -> fields['action'] == '1.4.1') 
@@ -374,7 +374,7 @@ if ($test -> fields['action'] == '1.4.1.1')
             "Box" => '', 
             "Answer" => ""));
         $quest ->Show('answer5');
-        $quest -> Finish(30);
+        $quest -> Finish(30, array('inteli'));
     }
     $amount -> Close();
     if ($chance == 1) 
@@ -385,7 +385,7 @@ if ($test -> fields['action'] == '1.4.1.1')
         $db -> Execute("UPDATE players SET temp=0 WHERE id=".$player -> id);
         $db -> Execute("UPDATE players SET maps=maps+1 WHERE id=".$player -> id);
         $quest ->Show('answer6');
-        $quest -> Finish(50);
+        $quest -> Finish(50, array('inteli'));
     }
 }
 

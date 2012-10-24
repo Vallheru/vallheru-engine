@@ -6,8 +6,8 @@
  *   @name                 : quests_class.php                            
  *   @copyright            : (C) 2004,2005,2006,2011,2012 Vallheru Team based on Gamers-Fusion ver 2.5
  *   @author               : thindil <thindil@vallheru.net>
- *   @version              : 1.6
- *   @since                : 04.10.2012
+ *   @version              : 1.7
+ *   @since                : 24.10.2012
  *
  */
 
@@ -125,7 +125,7 @@ class Quests
     /**
     * Finish quest
     */
-    function Finish($exp) 
+    function Finish($exp, $arrStats, $arrSkills = array()) 
     {
         global $db;
         global $smarty;
@@ -142,12 +142,28 @@ class Quests
 	  }
 	$objPlquests->Close();
         $db -> Execute("UPDATE `players` SET `miejsce`='Altara' WHERE `id`=".$player -> id);
-        $gainexp = $exp * $player -> level;
         if ($exp > 0) 
         {
-            $text =  "Dostajesz ".$gainexp." Punktów Doświadczenia.";
-            require_once("includes/checkexp.php");
-            checkexp($player -> exp, $gainexp, $player -> level, $player -> race, $player -> user, $player -> id, 0, 0, $player -> id, '', 0);
+            $text =  "Dostajesz ".$exp." Punktów Doświadczenia.";
+	    $intDiv = count($arrStats) + count($arrSkills);
+	    if (count($arrStats))
+	      {
+		$arrStats2 = array();
+		foreach ($arrStats as $strStat)
+		  {
+		    $arrStats2[$strStat] = ceil($exp / $intDiv);
+		  }
+		$player->checkexp($arrStats2, $player->id, 'stats');
+	      }
+	    if (count($arrSkills))
+	      {
+		$arrSkills2 = array();
+		foreach ($arrSkills as $strSkill)
+		  {
+		    $arrSkills2[$strSkill] = ceil($exp / $intDiv);
+		  }
+		$player->checkexp($arrSkill2, $player->id, 'skills');
+	      }
         } 
             else 
         {
@@ -226,16 +242,33 @@ class Quests
    /**
    * Gain experience in quest
    */
-   function Gainexp($exp) 
+   function Gainexp($exp, $arrStats, $arrSkills = array()) 
    {
         global $db;
         global $smarty;
         global $player;
 	global $lang;
-        $gainexp = $exp * $player -> level;
-	$text =  "Dostajesz ".$gainexp." Punktów Doświadczenia.";
-        require_once("includes/checkexp.php");
-        checkexp($player -> exp,$gainexp,$player -> level,$player -> race,$player -> user,$player -> id,0,0,$player -> id,'',0);
+        
+	$text =  "Dostajesz ".$exp." Punktów Doświadczenia.";
+        $intDiv = count($arrStats) + count($arrSkills);
+	if (count($arrStats))
+	  {
+	    $arrTmp = array();
+	    foreach ($arrStats as $strStat)
+	      {
+		$arrTmp[$strStat] = ceil($exp / $intDiv);
+	      }
+	    $player->checkexp($arrTmp, $player->id, 'stats');
+	  }
+	if (count($arrSkills))
+	  {
+	    $arrTmp = array();
+	    foreach ($arrSkills as $strSkill)
+	      {
+		$arrTmp[$strSkill] = ceil($exp / $intDiv);
+	      }
+	    $player->checkexp($arrTmp, $player->id, 'skills');
+	  }
         $smarty -> assign("End", "<br /><br />".$text);        
     }
 

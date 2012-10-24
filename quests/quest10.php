@@ -85,7 +85,7 @@ if ((isset($_POST['box2']) && $_POST['box2'] == 1) && ($objAction -> fields['act
     }
     $objMinerals -> Close();
     $smarty -> assign("Box", "");
-    $objQuest -> Finish(10);
+    $objQuest -> Finish(10, array('condition'));
 }
 if ($player->strength < 30 && $objAction -> fields['action'] == '1.1.n.n.n' && (isset($_POST['box2']) && $_POST['box2'] == 2))
 {
@@ -101,7 +101,7 @@ if ($player->strength < 30 && $objAction -> fields['action'] == '1.1.n.n.n' && (
     }
     $objMinerals -> Close();
     $smarty -> assign("Box", "");
-    $objQuest -> Finish(5);
+    $objQuest -> Finish(5, array('strength'));
 }
 if ($player->strength >= 30 && $objAction -> fields['action'] == '1.1.n.n.n')
 {
@@ -127,7 +127,7 @@ if ($player->agility < 30 && $objAction -> fields['action'] == 'str2')
         $db -> Execute("INSERT INTO `minerals` (`owner`, `crystal`) VALUES(".$player -> id.", 1)");
     }
     $objMinerals -> Close();
-    $objQuest -> Finish(10);
+    $objQuest -> Finish(10, array('condition'));
 }
 if ($player->agility >= 30 && $objAction -> fields['action'] == 'str2')
 {
@@ -142,7 +142,7 @@ if ($player->agility >= 30 && $objAction -> fields['action'] == 'str2')
         $db -> Execute("INSERT INTO `minerals` (`owner`, `crystal`) VALUES(".$player -> id.", 8)");
     }
     $objMinerals -> Close();
-    $objQuest -> Finish(5);
+    $objQuest -> Finish(5, array('condition'));
 }
 $objAction -> Close();
 $smarty -> display('quest.tpl');

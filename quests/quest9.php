@@ -6,8 +6,8 @@
  *   @name                 : quest9.php                            
  *   @copyright            : (C) 2004,2005,2006,2011,2012 Vallheru Team based on Gamers-Fusion ver 2.5
  *   @author               : thindil <thindil@vallheru.net>
- *   @version              : 1.6
- *   @since                : 28.05.2012
+ *   @version              : 1.7
+ *   @since                : 24.10.2012
  *
  */
 
@@ -85,7 +85,7 @@ if ($objAction -> fields['action'] == 'next')
         if ($objHealth -> fields['hp'] <= 0) 
         {
             $objQuest -> Show('lostfight');
-            $objQuest -> Finish(10);
+            $objQuest -> Finish(10, array('condition'));
             $smarty -> assign(array("Box" => ''));
         } 
             elseif ($_POST['action'] != 'escape') 
@@ -97,7 +97,7 @@ if ($objAction -> fields['action'] == 'next')
             elseif ($_POST['action'] == 'escape') 
         {
             $objQuest -> Show('escape');
-            $objQuest -> Finish(10);
+            $objQuest -> Finish(10, array('speed'));
             $smarty -> assign(array("Box" => ''));
 	    if ($player->antidote != 'R')
 	      {
@@ -139,7 +139,7 @@ if ($objAction -> fields['action'] == '3')
             "Answer" => ''));
         $db -> Execute("INSERT INTO equipment (owner, name, cost, minlev, type, power, status) VALUES(".$player -> id.", '".I_CAPE."', 1, 30, 'C', 60, 'U')");
         $objQuest -> Show('answer1');
-        $objQuest -> Gainexp(20);
+        $objQuest -> Gainexp(20, array('inteli'));
     }
         else
     {
@@ -177,7 +177,7 @@ if ($objAction -> fields['action'] == '1')
         if ($objHealth -> fields['hp'] <= 0) 
         {
             $objQuest -> Show('lostfight2');
-            $objQuest -> Finish(10);
+            $objQuest -> Finish(10, array('condition'));
             $smarty -> assign(array("Box" => ''));
         } 
             elseif ($_POST['action'] != 'escape') 
@@ -191,7 +191,7 @@ if ($objAction -> fields['action'] == '1')
             elseif ($_POST['action'] == 'escape') 
         {
             $objQuest -> Show('escape2');
-            $objQuest -> Finish(10);
+            $objQuest -> Finish(10, array('speed'));
             $smarty -> assign(array("Box" => ''));
 	    if ($player->antidote != 'R')
 	      {
@@ -218,12 +218,12 @@ if ($objAction -> fields['action'] == 'winfight2')
             "Answer" => ''));
         $db -> Execute("INSERT INTO equipment (owner, name, power, type, cost, zr, wt, minlev, maxwt, amount, magic, poison, szyb, twohand) VALUES(".$player -> id.", '".I_WEAPON."', 200, 'W', 1, 0, 400, 40, 400, 1, 'N', 0, 40, 'Y')");
         $objQuest -> Show('answer3');
-        $objQuest -> Finish(50);
+        $objQuest -> Finish(50, array('inteli'));
     }
         else
     {
         $objQuest -> Show('answer4');
-        $objQuest -> Finish(20);
+        $objQuest -> Finish(20, array('inteli'));
     }
 }
 
@@ -231,9 +231,8 @@ if (((isset($_POST['box1']) && $_POST['box1'] == 2) || (isset($_POST['box2']) &&
 {
     $smarty -> assign(array("Link" => '', 
         "Box" => ''));
-    $db -> Execute("UPDATE players SET max_hp=max_hp+20 WHERE id=".$player -> id);
     $objQuest -> Show('2');
-    $objQuest -> Finish(30);
+    $objQuest -> Finish(30, array('condition'));
 }
 
 /**
