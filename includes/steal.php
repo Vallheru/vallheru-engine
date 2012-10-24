@@ -6,8 +6,8 @@
  *   @name                 : steal.php                            
  *   @copyright            : (C) 2004,2005,2006,2011,2012 Vallheru Team based on Gamers-Fusion ver 2.5
  *   @author               : thindil <thindil@vallheru.net>
- *   @version              : 1.6
- *   @since                : 22.08.2012
+ *   @version              : 1.7
+ *   @since                : 24.10.2012
  *
  */
 
@@ -66,12 +66,12 @@ function steal ($itemid)
       {
 	$arritem = $db -> Execute("SELECT * FROM `bows` WHERE `id`=".$itemid);
       }
-    $roll = rand (1, ($arritem->fields['minlev'] * 100));
+    $roll = rand (1, $arritem->fields['minlev']);
 
     $player->curskills(array('thievery'));
     $player->clearbless(array('agility', 'inteli'));
 
-    $intStats = ($player->agility + $player->inteli + $player->thievery);
+    $intStats = ($player->stats['agility'][2] + $player->stats['inteli'][2] + $player->skills['thievery'][1]);
     /**
      * Add bonus from tools
      */
@@ -84,9 +84,10 @@ function steal ($itemid)
     $strDate = $db -> DBDate($newdate);
     if ($chance < 1) 
     {
-        $cost = 1000 * $player -> level;
-        $expgain = ceil ($arritem->fields['minlev'] / 10);
-        checkexp($player -> exp, $expgain, $player -> level, $player -> race, $player -> user, $player -> id, 0, 0, $player -> id, 'thievery', 0.01);
+        $cost = 1000 * $player ->skills['thievery'][1];
+        $player->checkexp(array('agility' => 1,
+				'inteli' => 1), $player->id, 'stats');
+	$player->checkexp(array('thievery' => 1), $player->id, 'skills');
         $db -> Execute("UPDATE `players` SET `miejsce`='Lochy', `crime`=`crime`-1 WHERE `id`=".$player -> id);
         $db -> Execute("INSERT INTO `jail` (`prisoner`, `verdict`, `duration`, `cost`, `data`) VALUES(".$player -> id.", '".VERDICT."', 7, ".$cost.", ".$strDate.")") or die("Błąd!");
         $db -> Execute("INSERT INTO log (`owner`, `log`, `czas`, `type`) VALUES(".$player -> id.",'".S_LOG_INFO." ".$cost.".', ".$strDate.", 'T')");
@@ -109,9 +110,10 @@ function steal ($itemid)
         else 
     {       
         $db -> Execute("UPDATE `players` SET `crime`=`crime`-1 WHERE `id`=".$player -> id);
-        $expgain = ($arritem->fields['minlev'] * 5); 
-	$fltThief = ($arritem->fields['minlev'] / 100);
-        checkexp($player -> exp, $expgain, $player -> level, $player -> race, $player -> user, $player -> id, 0, 0, $player -> id, 'thievery', $fltThief);
+        $expgain = $arritem->fields['minlev'] * 5;
+	$player->checkexp(array('agility' => ($expgain / 3),
+				'inteli' => ($expgain / 3)), $player->id, 'stats');
+	$player->checkexp(array('thievery' => ($expgain / 3)), $player->id, 'skills');
         if ($arritem -> fields['type'] == 'R') 
         {
             $test = $db -> Execute("SELECT id FROM equipment WHERE name='".$arritem -> fields['name']."' AND owner=".$player -> id." AND status='U' AND cost=1");
@@ -155,7 +157,7 @@ function steal ($itemid)
 		$db->Execute("UPDATE `equipment` SET `wt`=`wt`-1 WHERE `id`=".$player->equip[12][0]);
 	      }
 	  }
-        error (CRIME_RESULT2." ".$arritem -> fields['name'].CRIME_RESULT3." Zdobyłeś ".$fltThief." w umiejętności Złodziejstwo.");
+        error (CRIME_RESULT2." ".$arritem -> fields['name'].CRIME_RESULT3." Zdobyłeś ".$expgain." punktów doświadczenia.");
     }
 }
 ?>
