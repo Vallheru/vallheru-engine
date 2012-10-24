@@ -8,8 +8,8 @@
  *   @author               : thindil <thindil@vallheru.net>
  *   @author               : mori <ziniquel@users.sourceforge.net>
  *   @author               : eyescream <tduda@users.sourceforge.net>
- *   @version              : 1.6
- *   @since                : 26.09.2012
+ *   @version              : 1.7
+ *   @since                : 24.10.2012
  *
  */
 
@@ -330,7 +330,7 @@ if (isset ($_GET['view']) && $_GET['view'] == 'view')
 		$db->Execute("UPDATE `players` SET `astralcrime`='N' WHERE `id`=".$player->id);
 		$player->curskills(array('thievery'));
 		$player->clearbless(array('inteli', 'agility'));
-		$intStats = ($player->agility + $player->inteli + $player->thievery);
+		$intStats = ($player->stats['agility'][2] + $player->stats['inteli'][2] + $player->skills['thievery'][1]);
 		/**
 		 * Add bonus from tools
 		 */
@@ -338,28 +338,29 @@ if (isset ($_GET['view']) && $_GET['view'] == 'view')
 		  {
 		    $intStats += (($player->equip[12][2] / 100) * $intStats);
 		  }
-		$objMembers = $db->Execute("SELECT `id`, `agility`, `inteli`, `perception`, `bless`, `blessval` FROM `players` WHERE `tribe`=".$_GET['id']);
+		$objMembers = $db->Execute("SELECT `id` FROM `players` WHERE `tribe`=".$_GET['id']);
 		$blnAction = TRUE;
 		$strDate = $db -> DBDate($newdate);
+		$intGainexp = 0;
+		$intAmount = 0;
 		while(!$objMembers->EOF)
 		  {
-		    if ($objMembers->fields['bless'] == 'inteli')
-		      {
-			$objMembers->fields['inteli'] += $objMembers->fields['blessval'];
-		      }
-		    if ($objMembers->fields['bless'] == 'agility')
-		      {
-			$objMembers->fields['agility'] += $objMembers->fields['blessval'];
-		      }
-		    $intChance = $intStats - ($objMembers->fields['agility'] + $objMembers->fields['inteli'] + $objMembers->fields['perception']);
+		    $objMember = new Player($objMembers->fields['id']);
+		    $objMember->curskills(array('perception'));
+		    $intChance = $intStats - ($objMember->stats['agility'][2] + $objMember->stats['inteli'][2] + $objMembers->skills['perception'][1]);
 		    if ($intChance < 1)
 		      {
-			$db->Execute("UPDATE `players` SET `perception`=`perception`+".($player->level / 100)." WHERE `id`=".$objMembers->fields['id']);
+			$objMember->checkexp(array('agility' => ($intStats / 3),
+						   'inteli' => ($intStats / 3)), $player->id, 'stats');
+			$objMember->checkexp(array('perception' => ($intStats / 3)), $player->id, 'skills');
+			$objMember->save();
 			$db->Execute("UPDATE `players` SET `miejsce`='Lochy' WHERE `id`=".$player->id);
 			$db -> Execute("INSERT INTO `log` (`owner`, `log`, `czas`, `type`) VALUES(".$objMembers->fields['id'].",'Przyłapałeś <b><a href=view.php?view=".$player->id.">".$player->user."</a></b> ID:".$player->id." jak myszkował po siedzibie twojego klanu i natychmiast przekazałeś go strażnikom.', ".$strDate.", 'T')");
 			$blnAction = FALSE;
 			break;
 		      }
+		    $intGainexp += ($objMember->stats['agility'][2] + $objMember->stats['inteli'][2] + $objMembers->skills['perception'][1]);
+		    $intAmount ++;
 		    $objMembers->MoveNext();
 		  }
 		$objMembers->Close();
@@ -378,16 +379,12 @@ if (isset ($_GET['view']) && $_GET['view'] == 'view')
 			$blnAction = FALSE;
 		      }
 		  }
-		$objLevels = $db->Execute("SELECT SUM(`level`) FROM `players` WHERE `tribe`=".$_GET['id']);
-		$intLevels = $objLevels->fields['SUM(`level`)'];
-		$objLevels->Close();
 		if ($blnAction)
 		  {
-		    $intExp = $intLevels * 5;
-		    $fltThievery = $intLevels / 50.0;
+		    $intGainexp = $intGainexp / 2;
 		    if (stripos($player->equip[12][1], 'wytrychy') !== FALSE)
 		      {
-			$player->equip[12][6] --;
+			$player->equip[12][6] -= $intAmount;
 			if ($player->equip[12][6] <= 0)
 			  {
 			    $db->Execute("DELETE FROM `equipment` WHERE `id`=".$player->equip[12][0]);
@@ -400,8 +397,7 @@ if (isset ($_GET['view']) && $_GET['view'] == 'view')
 		  }
 		else
 		  {
-		    $intExp = ceil($intLevels / 100);
-		    $fltThievery = $intLevels / 100.0;
+		    $intGainexp = $intAmount;
 		    if (stripos($player->equip[12][1], 'wytrychy') !== FALSE)
 		      {
 			$db->Execute("DELETE FROM `equipment` WHERE `id`=".$player->equip[12][0]);
@@ -417,8 +413,13 @@ if (isset ($_GET['view']) && $_GET['view'] == 'view')
 		      }
 		    $objTool->Close();
 		  }
-		require_once('includes/checkexp.php');
-		checkexp($player->exp, $intExp, $player->level, $player->race, $player->user, $player->id, 0, 0, $player->id, 'thievery', $fltThievery);
+		if ($intGainexp < 3)
+		  {
+		    $intGainexp = 3;
+		  }
+		$player->checkexp(array('agility' => ceil($intGainexp / 3),
+					'inteli' => ceil($intGainexp / 3)), $player->id, 'stats');
+		$player->checkexp(array('thievery' => ceil($intGainexp / 3)), $player->id, 'skills');
 	      }
 	  }
 
@@ -445,12 +446,12 @@ if (isset ($_GET['view']) && $_GET['view'] == 'view')
 	    if ($blnAction)
 	      {
 		$objResult = $db->Execute("SELECT `credits`, `platinum`, `zolnierze`, `forty` FROM `tribes` WHERE `id`=".$_GET['id']);
-		$strMessage = 'Oto wiadomości jakie udało ci się zebrać o klanie:<br />Złoto: '.$objResult->fields['credits'].'<br />Mithril: '.$objResult->fields['platinum'].'<br />Żołnierzy: '.$objResult->fields['zolnierze'].'<br />Fortyfikacji: '.$objResult->fields['forty']."<br />Zdobyłeś ".$fltThievery." poziomu w umiejętności Złodziejstwo.";
+		$strMessage = 'Oto wiadomości jakie udało ci się zebrać o klanie:<br />Złoto: '.$objResult->fields['credits'].'<br />Mithril: '.$objResult->fields['platinum'].'<br />Żołnierzy: '.$objResult->fields['zolnierze'].'<br />Fortyfikacji: '.$objResult->fields['forty']."<br />Zdobyłeś ".$intGainexp." punktów doświadczenia.";
 		$objResult->Close();
 	      }
 	    else
 	      {
-		$intCost = $player->level * 1000;
+		$intCost = $player->skills['thievery'][1] * 1000;
 		$db -> Execute("INSERT INTO `jail` (`prisoner`, `verdict`, `duration`, `cost`, `data`) VALUES(".$player -> id.",'Próba szpiegowania klanu', 7, ".$intCost.", '".$data."')");   
 		$db -> Execute("INSERT INTO `log` (`owner`, `log`, `czas`, `type`) VALUES(".$player -> id.",'Zostałeś wtrącony do więzienia na 1 dzień za próbę szpiegowania klanu. Kaucja wynosi: ".$intCost.".', ".$strDate.", 'T')");
 		$strMessage = "Próbowałeś dowiedzieć się czegoś o klanie, niestety zostałeś złapany! I tak oto znalazłeś się w lochach.";
@@ -477,12 +478,12 @@ if (isset ($_GET['view']) && $_GET['view'] == 'view')
 		  }
 		$objAstral->Close();
 		$db->Execute("UPDATE `astral_machine` SET `used`=".$intAmount.", `directed`=".$intAmount2." WHERE `owner`=".$objTribe->fields['id']);
-		$strMessage = "Udało ci się uszkodzić Astralną Machinę! Niezauważony szybko uciekasz w bezpieczne miejsce. Zdobyłeś ".$fltThievery." poziomu w umiejętności złodziejstwo.";
+		$strMessage = "Udało ci się uszkodzić Astralną Machinę! Niezauważony szybko uciekasz w bezpieczne miejsce. Zdobyłeś ".$intGainexp." punktów doświadczenia.";
 		$db -> Execute("INSERT INTO `log` (`owner`, `log`, `czas`, `type`) VALUES(".$objTribe->fields['owner'].",'Olbrzymi pióropusz ognia zakwitł nad Astralną Machiną twojego klanu. Ktoś dokonał sabotażu!', ".$strDate.", 'T')");
 	      }
 	    else
 	      {
-		$intCost = $player->level * 5000;
+		$intCost = $player->skills['thievery'][1] * 5000;
 		$db -> Execute("INSERT INTO `jail` (`prisoner`, `verdict`, `duration`, `cost`, `data`) VALUES(".$player->id.",'Próba zniszczenia Astralnej Machiny', 7, ".$intCost.", '".$data."')");   
 		$db -> Execute("INSERT INTO `log` (`owner`, `log`, `czas`, `type`) VALUES(".$player->id.",'Zostałeś wtrącony do więzienia na 1 dzień za próbę zniszczenia Astralnej Machiny. Kaucja wynosi: ".$intCost.".', ".$strDate.", 'T')");
 		$strMessage = "Próbowałeś uszkodzić Astralną Machinę, niestety zostałeś złapany! I tak oto znalazłeś się w lochach.";
