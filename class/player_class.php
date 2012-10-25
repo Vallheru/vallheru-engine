@@ -7,7 +7,7 @@
  *   @copyright            : (C) 2004,2005,2006,2007,2011,2012 Vallheru Team based on Gamers-Fusion ver 2.5
  *   @author               : thindil <thindil@vallheru.net>
  *   @version              : 1.7
- *   @since                : 17.10.2012
+ *   @since                : 15.10.2012
  *
  */
 
@@ -566,6 +566,60 @@ class Player
 	    }
 	}
     }
+
+    /**
+     * Function count lost experience in stats/skills
+     */
+    function lostexp()
+    {
+      $rand = rand(1, 100);
+      //Lost experience in stats
+      if ($rand < 51)
+	{
+	  $strKey = array_rand($this->stats);
+	  if ($this->oldstats[$strKey][2] == $this->oldstats[$strKey][1])
+	    {
+	      $lostexp = $this->oldstats[$strKey][1] * 2000;
+	      $this->oldstats[$strKey][2] --;
+	      $this->oldstats[$strKey][3] = 0;
+	      $this->stats[$strKey][2] --;
+	      $this->stats[$strKey][3] = 0;
+	      if ($strKey == 'condition')
+		{
+		  $this->max_hp --;
+		}
+	      $strMessage = 'Tracisz poziom cechy: '.$this->oldstats[$strKey][0];
+	    }
+	  else
+	    {
+	      $lostexp = ceil($this->oldstats[$strKey][3] / 100);
+	      $this->stats[$strKey][3] -= $lostexp;
+	      $this->oldstats[$strKey][3] -= $lostexp;
+	      $strMessage = 'Tracisz nieco doświadczenia do cechy: '.$this->oldstats[$strKey][0];
+	    }
+	}
+      //Lost experience in skills
+      else
+	{
+	  $strKey = array_rand($player->skills);
+	  if ($player->oldskills[$strKey][1] == 100)
+	    {
+	      $lostexp = 10000;
+	      $this->oldskills[$strKey][1] --;
+	      $this->oldskills[$strKey][2] = 0;
+	      $this->skills[$strKey][1] --;
+	      $this->skills[$strKey][2] = 0;
+	      $strMessage = 'Tracisz poziom umiejętności: '.$this->oldskills[$strKey][0];
+	    }
+	  else
+	    {
+	      $lostexp = ceil($player->oldskills[$strKey][2] / 10);
+	      $player->skills[$strKey][2] -= $lostexp;
+	      $player->oldskills[$strKey][2] -= $lostexp;
+	      $strMessage = 'Tracisz nieco doświadczenia w umiejętności: '.$this->oldskills[$strKey][0];
+	    }
+	}
+    }
     
     /**
      * Class destructor, save player to database
@@ -591,6 +645,6 @@ class Player
 	{
 	  $strChattimes = $this->chattimes;
 	}
-      $db->Execute("UPDATE `players` SET `ap`=".$this->ap.", `settings`='".$this->tostring($this->settings)."', `ip`='".$this->ip."', `chattimes`='".$strChattimes."', `stats`='".$this->tostring($this->oldstats, 'stats')."', skills='".$this->tostring($this->oldskills, 'stats')."' WHERE `id`=".$this->id) or die("nie mogę zapisać gracza");
+      $db->Execute("UPDATE `players` SET `max_hp`=".$this->max_hp.", `ap`=".$this->ap.", `settings`='".$this->tostring($this->settings)."', `ip`='".$this->ip."', `chattimes`='".$strChattimes."', `stats`='".$this->tostring($this->oldstats, 'stats')."', skills='".$this->tostring($this->oldskills, 'stats')."' WHERE `id`=".$this->id) or die("nie mogę zapisać gracza");
     }
 }

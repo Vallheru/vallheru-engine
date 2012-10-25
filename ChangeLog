@@ -1,5 +1,7 @@
 2012-10-25  Bartek thindil Jasicki  <thindil@vallheru.net>
 
+	* FEATURE,class/player_class.php: 
+	added function to count lost experience
 	* BUG,includes/resurect.php: 
 	clear experience
 	* UPDATE,includes/resurect.php: 
