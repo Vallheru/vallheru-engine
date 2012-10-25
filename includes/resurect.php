@@ -7,7 +7,7 @@
  *   @copyright            : (C) 2004,2005,2006,2011 Vallheru Team based on Gamers-Fusion ver 2.5
  *   @author               : thindil <thindil@vallheru.net>
  *   @version              : 1.7
- *   @since                : 15.10.2012
+ *   @since                : 25.10.2012
  *
  */
 
@@ -54,7 +54,13 @@ if ($rand < 51)
     $strKey = array_rand($player->stats);
     if ($player->oldstats[$strKey][2] == $player->oldstats[$strKey][1])
       {
-	$lostexp = $player->oldstats[$strKey][1] * 2000;
+	$lostexp = $player->oldstats[$strKey][2] * 2000;
+	$player->oldstats[$strKey][2] --;
+	$player->stats[$strKey][2] --;
+	if ($strKey == 'condition')
+	  {
+	    $player->max_hp --;
+	  }
       }
     else
       {
@@ -71,6 +77,8 @@ else
     if ($player->oldskills[$strKey][1] == 100)
       {
 	$lostexp = 10000;
+	$player->oldskills[$strKey][1] --;
+	$player->skills[$strKey][1] --;
       }
     else
       {
@@ -81,5 +89,5 @@ else
     $strLoststat = 'umiejętności '.$player->oldskills[$strKey][0];
   }
 
-$db -> Execute("UPDATE `players` SET `hp`=`max_hp`, `credits`=`credits`-".$crneed." WHERE `id`=".$player -> id);
+$db -> Execute("UPDATE `players` SET `hp`=`".$player->max_hp."`, `credits`=`credits`-".$crneed." WHERE `id`=".$player -> id);
 ?>
