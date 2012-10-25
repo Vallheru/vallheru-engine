@@ -56,7 +56,9 @@ if ($rand < 51)
       {
 	$lostexp = $player->oldstats[$strKey][2] * 2000;
 	$player->oldstats[$strKey][2] --;
+	$player->oldstats[$strKey][3] = 0;
 	$player->stats[$strKey][2] --;
+	$player->stats[$strKey][3] = 0;
 	if ($strKey == 'condition')
 	  {
 	    $player->max_hp --;
@@ -78,7 +80,9 @@ else
       {
 	$lostexp = 10000;
 	$player->oldskills[$strKey][1] --;
+	$player->oldskills[$strKey][2] = 0;
 	$player->skills[$strKey][1] --;
+	$player->skills[$strKey][2] = 0;
       }
     else
       {
