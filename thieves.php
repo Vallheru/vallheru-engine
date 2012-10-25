@@ -6,8 +6,8 @@
  *   @name                 : thieves.php                            
  *   @copyright            : (C) 2011,2012 Vallheru Team based on Gamers-Fusion ver 2.5
  *   @author               : thindil <thindil@vallheru.net>
- *   @version              : 1.6
- *   @since                : 16.07.2012
+ *   @version              : 1.7
+ *   @since                : 25.10.2012
  *
  */
 
@@ -71,10 +71,59 @@ else
      */
     if ($_GET['step'] == 'monuments')
       {
+	$arrMembers = $db->GetAll("SELECT `id`, `user`, `tribe`, `skills` FROM `players`");
+	foreach ($arrMembers as &$arrMember)
+	  {
+	    $arrMember['user'] = $arrTags[$arrMember['tribe']][0].' '.$arrMember['user'].' '.$arrTags[$arrMember['tribe']][1];
+	    $arrTmp = explode(';', $arrMember['skills']);
+	    $arrValues = array();
+	    foreach ($arrTmp as $strField)
+	      {
+		$arrTmp2 = explode(':', $strField);
+		if ($arrTmp2[0] == '')
+		  {
+		    continue;
+		  }
+		$arrValues[$arrTmp2[0]] = explode(',', $arrTmp2[1]);
+	      }
+	    foreach ($arrValues as $strKey => $arrValues)
+	      {
+		$arrMember[$strKey] = $arrValues[1];
+	      }
+	  }
+	
+	function topplayers($strSkill)
+	{
+	  global $arrMembers;
+	  
+	  $arrSkills = array();
+	  foreach ($arrMembers as $key => $value)
+	    {
+	      $arrSkills[$key] = $value[$strSkill];
+	    }
+	  array_multisort($arrSkills, SORT_DESC, $arrMembers);
+	  if (count($arrMembers) < 10)
+	    {
+	      $intMax = count($arrMembers);
+	    }
+	  else
+	    {
+	      $intMax = 10;
+	    }
+	  $arrTop = array();
+	  for ($i = 0; $i < $intMax; $i++)
+	    {
+	      $arrTop[] = array('user' => $arrMembers[$i]['user'],
+				'id' => $arrMembers[$i]['id'],
+				'value' => $arrMembers[$i][$strSkill]);
+	    }
+	  return $arrTop;
+	}
+
 	/**
 	 * Function to get data from database and return array of top 10 players' names, ID's and skill values. 
 	 */
-	function topplayers($strDbfield)
+	function topplayers2($strDbfield)
 	{
 	  global $db;
 	  global $arrTags;
@@ -92,6 +141,7 @@ else
 	      break;
 	    }
 
+	  $arrTop = array();
 	  while (!$objTop -> EOF) 
 	    {
 	      $objTop->fields['user'] = $arrTags[$objTop->fields['tribe']][0].' '.$objTop->fields['user'].' '.$arrTags[$objTop->fields['tribe']][1];
@@ -108,7 +158,7 @@ else
 
 	$arrayMonumentDescriptions = array("Złoto (w sakiewce)", "Złoto (w banku)", "Spostrzegawczość", "Złodziejstwo", 'Zadań');
         
-	$arrayMonuments = array(topplayers('credits'), topplayers('bank'), topplayers('perception'), topplayers('thievery'), topplayers('mpoints'));
+	$arrayMonuments = array(topplayers2('credits'), topplayers2('bank'), topplayers('perception'), topplayers('thievery'), topplayers2('mpoints'));
 	$smarty->assign(array('Titles' => $arrayMonumentTitles,
 			      'Descriptions' => $arrayMonumentDescriptions,
 			      'Monuments' => $arrayMonuments,

@@ -4,10 +4,10 @@
  *   Guilds - the best players in various crafts.
  *
  *   @name                 : guilds.php                            
- *   @copyright            : (C) 2011 Vallheru Team based on Gamers-Fusion ver 2.5
+ *   @copyright            : (C) 2011, 2012 Vallheru Team based on Gamers-Fusion ver 2.5
  *   @author               : thindil <thindil@vallheru.net>
- *   @version              : 1.5
- *   @since                : 17.12.2011
+ *   @version              : 1.7
+ *   @since                : 25.10.2012
  *
  */
 
@@ -32,22 +32,64 @@
 $title = 'Gildia Rzemieślników';
 require_once('includes/head.php');
 
+$arrMembers = $db->GetAll("SELECT `id`, `user`, `tribe`, `skills` FROM `players`");
+foreach ($arrMembers as &$arrMember)
+{
+  $arrMember['user'] = $arrTags[$arrMember['tribe']][0].' '.$arrMember['user'].' '.$arrTags[$arrMember['tribe']][1];
+  $arrTmp = explode(';', $arrMember['skills']);
+  $arrValues = array();
+  foreach ($arrTmp as $strField)
+    {
+      $arrTmp2 = explode(':', $strField);
+      if ($arrTmp2[0] == '')
+	{
+	  continue;
+	}
+      $arrValues[$arrTmp2[0]] = explode(',', $arrTmp2[1]);
+    }
+  foreach ($arrValues as $strKey => $arrValues)
+    {
+      $arrMember[$strKey] = $arrValues[1];
+    }
+}
+
+function topplayers($strSkill)
+{
+  global $arrMembers;
+
+  $arrSkills = array();
+  foreach ($arrMembers as $key => $value)
+    {
+      $arrSkills[$key] = $value[$strSkill];
+    }
+  array_multisort($arrSkills, SORT_DESC, $arrMembers);
+  if (count($arrMembers) < 10)
+    {
+      $intMax = count($arrMembers);
+    }
+  else
+    {
+      $intMax = 10;
+    }
+  $arrTop = array();
+  for ($i = 0; $i < $intMax; $i++)
+    {
+      $arrTop[] = array('user' => $arrMembers[$i]['user'],
+			'id' => $arrMembers[$i]['id'],
+			'value' => $arrMembers[$i][$strSkill]);
+    }
+  return $arrTop;
+}
+
 /**
  * Function to get data from database and return array of top 10 players' names, ID's and skill values. 
  */
-function topplayers($strDbfield)
+function topplayers2($strDbfield)
 {
     global $db;
     global $arrTags;
     
-    if ($strDbfield != 'mpoints')
-      {
-	$objTop = $db -> SelectLimit('SELECT `id`, `user`, `'.$strDbfield.'`, `tribe` FROM `players` ORDER BY `'.$strDbfield.'` DESC', 10);
-      }
-    else
-      {
-	$objTop = $db -> SelectLimit("SELECT `id`, `user`, `".$strDbfield."`, `tribe` FROM `players` WHERE `klasa`='Rzemieślnik' ORDER BY `".$strDbfield."` DESC", 10) or die($db->ErrorMsg());
-      }
+    $objTop = $db -> SelectLimit("SELECT `id`, `user`, `mpoints`, `tribe` FROM `players` WHERE `klasa`='Rzemieślnik' ORDER BY `".$strDbfield."` DESC", 10) or die($db->ErrorMsg());
 
     while (!$objTop -> EOF) 
       {
@@ -65,7 +107,7 @@ $arrayMonumentTitles = array("Najwyższe Kowalstwo", "Najwyższe Stolarstwo", "N
 
 $arrayMonumentDescriptions = array("Kowalstwo", "Stolarstwo", "Alchemia", "Zielarstwo", "Jubilerstwo", "Hodowla", "Górnictwo", "Drwalnictwo", 'Hutnictwo', 'Zadań');
         
-$arrayMonuments = array(topplayers('ability'), topplayers('fletcher'), topplayers('alchemia'), topplayers('herbalist'), topplayers('jeweller'), topplayers('breeding'), topplayers('mining'), topplayers('lumberjack'), topplayers('metallurgy'), topplayers('mpoints'));
+$arrayMonuments = array(topplayers('smith'), topplayers('carpentry'), topplayers('alchemy'), topplayers('herbalism'), topplayers('jewellry'), topplayers('breeding'), topplayers('mining'), topplayers('lumberjack'), topplayers('smelting'), topplayers2('mpoints'));
     
 $smarty -> assign(array('Titles' => $arrayMonumentTitles,
                         'Descriptions' => $arrayMonumentDescriptions,

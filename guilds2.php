@@ -6,8 +6,8 @@
  *   @name                 : guilds2.php                            
  *   @copyright            : (C) 2011,2012 Vallheru Team based on Gamers-Fusion ver 2.5
  *   @author               : thindil <thindil@vallheru.net>
- *   @version              : 1.5
- *   @since                : 13.03.2012
+ *   @version              : 1.7
+ *   @since                : 25.10.2012
  *
  */
 
@@ -32,10 +32,59 @@
 $title = 'Aula Gladiatorów';
 require_once('includes/head.php');
 
+$arrMembers = $db->GetAll("SELECT `id`, `user`, `tribe`, `skills` FROM `players`");
+foreach ($arrMembers as &$arrMember)
+{
+  $arrMember['user'] = $arrTags[$arrMember['tribe']][0].' '.$arrMember['user'].' '.$arrTags[$arrMember['tribe']][1];
+  $arrTmp = explode(';', $arrMember['skills']);
+  $arrValues = array();
+  foreach ($arrTmp as $strField)
+    {
+      $arrTmp2 = explode(':', $strField);
+      if ($arrTmp2[0] == '')
+	{
+	  continue;
+	}
+      $arrValues[$arrTmp2[0]] = explode(',', $arrTmp2[1]);
+    }
+  foreach ($arrValues as $strKey => $arrValues)
+    {
+      $arrMember[$strKey] = $arrValues[1];
+    }
+}
+
+function topplayers($strSkill)
+{
+  global $arrMembers;
+
+  $arrSkills = array();
+  foreach ($arrMembers as $key => $value)
+    {
+      $arrSkills[$key] = $value[$strSkill];
+    }
+  array_multisort($arrSkills, SORT_DESC, $arrMembers);
+  if (count($arrMembers) < 10)
+    {
+      $intMax = count($arrMembers);
+    }
+  else
+    {
+      $intMax = 10;
+    }
+  $arrTop = array();
+  for ($i = 0; $i < $intMax; $i++)
+    {
+      $arrTop[] = array('user' => $arrMembers[$i]['user'],
+			'id' => $arrMembers[$i]['id'],
+			'value' => $arrMembers[$i][$strSkill]);
+    }
+  return $arrTop;
+}
+
 /**
  * Function to get data from database and return array of top 10 players' names, ID's and skill values. 
  */
-function topplayers($strDbfield)
+function topplayers3($strDbfield)
 {
     global $db;
     global $arrTags;
@@ -72,6 +121,7 @@ function topplayers2()
   
   $objTop = $db->Execute("SELECT * FROM `brecords` ORDER BY `mlevel` DESC, `id` ASC") or die($db->ErrorMsg());
   $arrMonsters = array();
+  $arrTop = array();
   
   while (!$objTop->EOF)
     {
@@ -104,7 +154,7 @@ $arrayMonumentTitles = array("Najwyższa Walka bronią białą", "Najwyższe Str
 
 $arrayMonumentDescriptions = array("Walka bronią białą", "Strzelectwo", "Rzucanie czarów", "Uniki", "Dowodzenie", 'Zwycięstw', 'Zadań');
         
-$arrayMonuments = array(topplayers('atak'), topplayers('shoot'), topplayers('magia'), topplayers('unik'), topplayers('leadership'), topplayers('wins'), topplayers('mpoints'));
+$arrayMonuments = array(topplayers('attack'), topplayers('shoot'), topplayers('magic'), topplayers('dodge'), topplayers('leadership'), topplayers3('wins'), topplayers3('mpoints'));
     
 $smarty -> assign(array('Titles' => $arrayMonumentTitles,
                         'Descriptions' => $arrayMonumentDescriptions,
