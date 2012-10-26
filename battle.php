@@ -6,8 +6,8 @@
  *   @name                 : battle.php                            
  *   @copyright            : (C) 2004,2005,2006,2011,2012 Vallheru Team based on Gamers-Fusion ver 2.5
  *   @author               : thindil <thindil@vallheru.net>
- *   @version              : 1.6
- *   @since                : 04.10.2012
+ *   @version              : 1.7
+ *   @since                : 26.10.2012
  *
  */
 
@@ -52,8 +52,7 @@ if ($player->location == 'Lochy')
 if (!isset($_GET['action']) && !isset($_GET['battle']))
 {
     $smarty -> assign(array("Battleinfo" => BATTLE_INFO,
-                            "Ashowalive" => A_SHOW_ALIVE,
-                            "Ashowlevel" => A_SHOW_LEVEL,
+                            "Ashowalive" => "Chcę walczyć z innymi graczami...",
                             "Ashowmonster" => A_SHOW_MONSTER));
 }
 
@@ -67,39 +66,38 @@ if (isset($_GET['battle']))
     global $newdate;
     global $smarty;
     global $db;
+    global $strUsername;
 
     checkvalue($_GET['battle']);
-    $arrmenu = array('age','inteli','clas','immunited','strength','agility','attack','miss','magic','speed','cond','race','wisdom','shoot','id','user','level','exp','hp','credits','mana','maps', 'antidote', 'settings', 'newbie', 'oldstats');
-    $arrMyequip = $player->equipment();
     $player->curskills(array('weapon', 'shoot', 'dodge', 'cast'), FALSE);
-    $arrattacker = $player -> stats($arrmenu);
-    $arrattacker['user'] = $arrTags[$player->tribe][0].' '.$player->user.' '.$arrTags[$player->tribe][1];
+    $player->user = $strUsername;
     $enemy = new Player($_GET['battle']);
-    $arrplayer = array('id','user','level','tribe','credits','location','hp','mana','exp','age','inteli','clas','immunited','strength','agility','attack','miss','magic','speed','cond','race','wisdom','shoot','maps','rest','fight', 'antidote', 'settings', 'newbie', 'oldstats');
-    $arrEnequip = $enemy -> equipment();
+    $enemy->user = $arrTags[$enemy->tribe][0].' '.$enemy->user.' '.$arrTags[$enemy->tribe][1];
+    if (!$enemy->id)
+      {
+	error (NO_PLAYER);
+      }
     $enemy->curskills(array('weapon', 'shoot', 'dodge', 'cast'), FALSE);
-    $arrdefender = $enemy -> stats($arrplayer);
-    $arrdefender['user'] = $arrTags[$arrdefender['tribe']][0].' '.$arrdefender['user'].' '.$arrTags[$arrdefender['tribe']][1];
-    $myczar = $db -> Execute("SELECT * FROM czary WHERE gracz=".$player -> id." AND status='E' AND typ='B'");
-    $eczar = $db -> Execute("SELECT * FROM czary WHERE gracz=".$arrdefender['id']." AND status='E' AND typ='B'");
-    $myczaro = $db -> Execute("SELECT * FROM czary WHERE gracz=".$player -> id." AND status='E' AND typ='O'");
-    $eczaro = $db -> Execute("SELECT * FROM czary WHERE gracz=".$arrdefender['id']." AND status='E' AND typ='O'");
+    $myczar = $db -> Execute("SELECT * FROM `czary` WHERE `gracz`=".$player -> id." AND `status`='E' AND `typ`='B'");
+    $eczar = $db -> Execute("SELECT * FROM `czary` WHERE `gracz`=".$enemy->id." AND `status`='E' AND `typ`='B'");
+    $myczaro = $db -> Execute("SELECT * FROM `czary` WHERE `gracz`=".$player -> id." AND `status`='E' AND `typ`='O'");
+    $eczaro = $db -> Execute("SELECT * FROM `czary` WHERE `gracz`=".$enemy->id." AND `status`='E' AND `typ`='O'");
     //Count spell damage
     if ($myczar->fields['id'])
       {
-	$myczar->fields['dmg'] = $myczar->fields['obr'] * $player->inteli;
+	$myczar->fields['dmg'] = $myczar->fields['obr'] * $player->stats['inteli'][2];
       }
     if ($eczar->fields['id'])
       {
-	$eczar->fields['dmg'] = $eczar->fields['obr'] * $enemy->inteli;
+	$eczar->fields['dmg'] = $eczar->fields['obr'] * $enemy->stats['inteli'][2];
       }
     if ($myczaro->fields['id'])
       {
-	$myczaro->fields['def'] = $myczaro->fields['obr'] * $player->wisdom;
+	$myczaro->fields['def'] = $myczaro->fields['obr'] * $player->stats['wisdom'][2];
       }
     if ($eczaro->fields['id'])
       {
-	$eczaro->fields['def'] = $eczaro->fields['obr'] * $enemy->wisdom;
+	$eczaro->fields['def'] = $eczaro->fields['obr'] * $enemy->stats['wisdom'][2];
       }
     $arrElements = array('water' => 'fire',
 			 'fire' => 'wind',
@@ -124,98 +122,98 @@ if (isset($_GET['battle']))
 
     for ($i = 2; $i < 6; $i++)
       {
-	if ($arrEnequip[$i][10] != 'N')
+	if ($enemy->equip[$i][10] != 'N')
 	  {
 	    if ($myczar->fields['id'])
 	      {
-		if ($arrElements3[$myczar->fields['element']] == $arrEnequip[$i][10])
+		if ($arrElements3[$myczar->fields['element']] == $enemy->equip[$i][10])
 		  {
-		    $arrEnequip[$i][2] = $arrEnequip[$i][2] * 2;
+		    $enemy->equip[$i][2] = $enemy->equip[$i][2] * 2;
 		  }
-		elseif ($arrElements4[$myczar->fields['element']] == $arrEnequip[$i][10])
+		elseif ($arrElements4[$myczar->fields['element']] == $enemy->equip[$i][10])
 		  {
-		    $arrEnequip[$i][2] = ceil($arrEnequip[$i][2] / 2);
-		  }
-	      }
-	    elseif ($arrMyequip[0][10] != 'N')
-	      {
-		if ($arrMyequip[0][10] == $arrEnequip[$i][10])
-		  {
-		    $arrEnequip[$i][2] = $arrEnequip[$i][2] * 2;
-		  }
-		elseif ($arrElements5[$arrMyequip[0][10]] == $arrEnequip[$i][10])
-		  {
-		    $arrEnequip[$i][2] = ceil($arrEnequip[$i][2] / 2);
+		    $enemy->equip[$i][2] = ceil($enemy->equip[$i][2] / 2);
 		  }
 	      }
-	    elseif ($arrMyequip[6][10] != 'N')
+	    elseif ($player->equip[0][10] != 'N')
 	      {
-		if ($arrMyequip[6][10] == $arrEnequip[$i][10])
+		if ($player->equip[0][10] == $enemy->equip[$i][10])
 		  {
-		    $arrEnequip[$i][2] = $arrEnequip[$i][2] * 2;
+		    $enemy->equip[$i][2] = $enemy->equip[$i][2] * 2;
 		  }
-		elseif ($arrElements5[$arrMyequip[6][10]] == $arrEnequip[$i][10])
+		elseif ($arrElements5[$player->equip[0][10]] == $enemy->equip[$i][10])
 		  {
-		    $arrEnequip[$i][2] = ceil($arrEnequip[$i][2] / 2);
+		    $enemy->equip[$i][2] = ceil($enemy->equip[$i][2] / 2);
+		  }
+	      }
+	    elseif ($player->equip[6][10] != 'N')
+	      {
+		if ($player->equip[6][10] == $enemy->equip[$i][10])
+		  {
+		    $enemy->equip[$i][2] = $enemy->equip[$i][2] * 2;
+		  }
+		elseif ($arrElements5[$player->equip[6][10]] == $enemy->equip[$i][10])
+		  {
+		    $enemy->equip[$i][2] = ceil($enemy->equip[$i][2] / 2);
 		  }
 	      }
 	  }
-	elseif ($arrEnequip[$i][10] == 'N')
+	elseif ($enemy->equip[$i][10] == 'N')
 	  {
 	    if ($myczar->fields['id'])
 	      {
-		$arrEnequip[$i][2] = 0;
+		$enemy->equip[$i][2] = 0;
 	      }
-	    if ($arrMyequip[0][10] != 'N' || $arrMyequip[6][10] != 'N')
+	    if ($player->equip[0][10] != 'N' || $player->equip[6][10] != 'N')
 	      {
-		$arrEnequip[$i][2] = ceil($arrEnequip[$i][2] / 2);
+		$enemy->equip[$i][2] = ceil($enemy->equip[$i][2] / 2);
 	      }
 	  }
-	if ($arrMyequip[$i][10] != 'N')
+	if ($player->equip[$i][10] != 'N')
 	  {
 	    if ($eczar->fields['id'])
 	      {
-		if ($arrElements3[$eczar->fields['element']] == $arrMyequip[$i][10])
+		if ($arrElements3[$eczar->fields['element']] == $player->equip[$i][10])
 		  {
-		    $arrMyequip[$i][2] = $arrMyequip[$i][2] * 2;
+		    $player->equip[$i][2] = $player->equip[$i][2] * 2;
 		  }
-		elseif ($arrElements4[$eczar->fields['element']] == $arrMyequip[$i][10])
+		elseif ($arrElements4[$eczar->fields['element']] == $player->equip[$i][10])
 		  {
-		    $arrMyequip[$i][2] = ceil($arrMyequip[$i][2] / 2);
-		  }
-	      }
-	    elseif ($arrEnequip[0][10] != 'N')
-	      {
-		if ($arrEnequip[0][10] == $arrMyequip[$i][10])
-		  {
-		    $arrMyequip[$i][2] = $arrMyequip[$i][2] * 2;
-		  }
-		elseif ($arrElements5[$arrEnequip[0][10]] == $arrMyequip[$i][10])
-		  {
-		    $arrMyequip[$i][2] = ceil($arrMyequip[$i][2] / 2);
+		    $player->equip[$i][2] = ceil($player->equip[$i][2] / 2);
 		  }
 	      }
-	    elseif ($arrEnequip[6][10] != 'N')
+	    elseif ($enemy->equip[0][10] != 'N')
 	      {
-		if ($arrEnequip[6][10] == $arrMyequip[$i][10])
+		if ($enemy->equip[0][10] == $player->equip[$i][10])
 		  {
-		    $arrMyequip[$i][2] = $arrMyequip[$i][2] * 2;
+		    $player->equip[$i][2] = $player->equip[$i][2] * 2;
 		  }
-		elseif ($arrElements5[$arrEnequip[6][10]] == $arrMyequip[$i][10])
+		elseif ($arrElements5[$enemy->equip[0][10]] == $player->equip[$i][10])
 		  {
-		    $arrMyequip[$i][2] = ceil($arrMyequip[$i][2] / 2);
+		    $player->equip[$i][2] = ceil($player->equip[$i][2] / 2);
+		  }
+	      }
+	    elseif ($enemy->equip[6][10] != 'N')
+	      {
+		if ($enemy->equip[6][10] == $player->equip[$i][10])
+		  {
+		    $player->equip[$i][2] = $player->equip[$i][2] * 2;
+		  }
+		elseif ($arrElements5[$enemy->equip[6][10]] == $player->equip[$i][10])
+		  {
+		    $player->equip[$i][2] = ceil($player->equip[$i][2] / 2);
 		  }
 	      }
 	  }
-	elseif ($arrMyequip[$i][10] == 'N')
+	elseif ($player->equip[$i][10] == 'N')
 	  {
 	    if ($eczar->fields['id'])
 	      {
-		$arrMyequip[$i][2] = 0;
+		$player->equip[$i][2] = 0;
 	      }
-	    if ($arrEnequip[0][10] != 'N' || $arrEnequip[6][10] != 'N')
+	    if ($enemy->equip[0][10] != 'N' || $enemy->equip[6][10] != 'N')
 	      {
-		$arrMyequip[$i][2] = ceil($arrMyequip[$i][2] / 2);
+		$player->equip[$i][2] = ceil($player->equip[$i][2] / 2);
 	      }
 	  }
       }
@@ -232,24 +230,24 @@ if (isset($_GET['battle']))
 		$eczaro->fields['def'] = ($eczaro->fields['obr'] * $enemy->wisdom) / 2;
 	      }
 	  }
-	elseif ($arrMyequip[0][10] != 'N')
+	elseif ($player->equip[0][10] != 'N')
 	  {
-	    if ($arrMyequip[0][10] == $arrElements3[$eczaro->fields['element']])
+	    if ($player->equip[0][10] == $arrElements3[$eczaro->fields['element']])
 	      {
 		$eczaro->fields['def'] = ($eczaro->fields['obr'] * $enemy->wisdom) * 2;
 	      }
-	    elseif ($eczaro->fields['element'] == $arrElements2[$arrMyequip[0][10]])
+	    elseif ($eczaro->fields['element'] == $arrElements2[$player->equip[0][10]])
 	      {
 		$eczaro->fields['def'] = ($eczaro->fields['obr'] * $enemy->wisdom) / 2;
 	      }
 	  }
-	elseif ($arrMyequip[6][10] != 'N')
+	elseif ($player->equip[6][10] != 'N')
 	  {
-	    if ($arrMyequip[6][10] == $arrElements3[$eczaro->fields['element']])
+	    if ($player->equip[6][10] == $arrElements3[$eczaro->fields['element']])
 	      {
 		$eczaro->fields['def'] = ($eczaro->fields['obr'] * $enemy->wisdom) * 2;
 	      }
-	    elseif ($eczaro->fields['element'] == $arrElements2[$arrMyequip[6][10]])
+	    elseif ($eczaro->fields['element'] == $arrElements2[$player->equip[6][10]])
 	      {
 		$eczaro->fields['def'] = ($eczaro->fields['obr'] * $enemy->wisdom) / 2;
 	      }
@@ -265,24 +263,24 @@ if (isset($_GET['battle']))
 	  {
 	    $myczaro->fields['def'] = ($myczaro->fields['obr'] * $player->wisdom) * 2;
 	  }
-	elseif ($arrEnequip[0][10] != 'N')
+	elseif ($enemy->equip[0][10] != 'N')
 	  {
-	    if ($arrEnequip[0][10] == $arrElements3[$myczaro->fields['element']])
+	    if ($enemy->equip[0][10] == $arrElements3[$myczaro->fields['element']])
 	      {
 		$myczaro->fields['def'] = ($myczaro->fields['obr'] * $player->wisdom) * 2;
 	      }
-	    elseif ($myczaro->fields['element'] == $arrElements2[$arrEnequip[0][10]])
+	    elseif ($myczaro->fields['element'] == $arrElements2[$enemy->equip[0][10]])
 	      {
 		$myczaro->fields['def'] = ($myczaro->fields['obr'] * $player->wisdom) / 2;
 	      }
 	  }
-	elseif ($arrEnequip[6][10] != 'N')
+	elseif ($enemy->equip[6][10] != 'N')
 	  {
-	    if ($arrEnequip[6][10] == $arrElements3[$myczaro->fields['element']])
+	    if ($enemy->equip[6][10] == $arrElements3[$myczaro->fields['element']])
 	      {
 		$myczaro->fields['def'] = ($myczaro->fields['obr'] * $player->wisdom) * 2;
 	      }
-	    elseif ($myczaro->fields['element'] == $arrElements2[$arrEnequip[6][10]])
+	    elseif ($myczaro->fields['element'] == $arrElements2[$enemy->equip[6][10]])
 	      {
 		$myczaro->fields['def'] = ($myczaro->fields['obr'] * $player->wisdom) / 2;
 	      }
@@ -295,34 +293,22 @@ if (isset($_GET['battle']))
         error(ACCOUNT_FREEZED);
     }
     $objFreezed->Close();
-    $gmywt = array(0,0,0,0);
-    $gewt = array(0,0,0,0);
     $runda = 0;
-    if ($arrMyequip[0][3] != $arrdefender['antidote']) 
+    if ($player->equip[0][3] != $enemy->antidote && $player->equip[0][3] == 'D') 
+      {
+	$player->equip[0][2] = $player->equip[0][2] + $player->equip[0][8];
+      }
+    if ($enemy->equip[0][3] != $player -> antidote && $enemy->equip[0][3] == 'D') 
     {
-        if ($arrMyequip[0][3] == 'D')
-        {
-            $arrMyequip[0][2] = $arrMyequip[0][2] + $arrMyequip[0][8];
-        }
+      $enemy->equip[0][2] = $enemy->equip[0][2] + $enemy->equip[0][8];
     }
-    if ($arrEnequip[0][3] != $player -> antidote) 
-    {
-        if ($arrEnequip[0][3] == 'D')
-        {
-            $arrEnequip[0][2] = $arrEnequip[0][2] + $arrEnequip[0][8];
-        }
-    }
-    if (!$arrdefender['id']) 
-    {
-        error (NO_PLAYER);
-    }
-    if ($arrdefender['id'] == $player -> id) 
+    if ($enemy->id == $player -> id) 
     {
         error (SELF_ATTACK);
     }
-    if ($arrdefender['hp'] <= 0) 
+    if ($enemy->hp <= 0) 
     {
-        error ($arrdefender['user']." ".IS_DEAD);
+        error ($enemy->user." ".IS_DEAD);
     }
     if ($player -> hp <= 0) 
     {
@@ -332,83 +318,78 @@ if (isset($_GET['battle']))
     {
         error (NO_ENERGY);
     }
-    if ($arrdefender['tribe'] == $player -> tribe && $arrdefender['tribe'] > 0) 
+    if ($enemy->tribe == $player -> tribe && $enemy->tribe > 0) 
     {
         error (YOUR_CLAN);
     }
-    if ($arrattacker['newbie'] > 0)
+    if ($player->newbie > 0)
     {
         error (TOO_YOUNG);
     }
-    if ($arrdefender['newbie'] > 0)
+    if ($enemy->newbie > 0)
     {
         error (TOO_YOUNG2);
     }
-    if ($arrattacker['clas'] == '') 
+    if ($player->clas == '') 
     {
         error (NO_CLASS);
     }
-    if ($arrdefender['clas'] == '') 
+    if ($enemy->clas == '') 
     {
         error (NO_CLASS2);
     }
-    if (($arrMyequip[0][0] && $myczar -> fields['id']) || ($arrMyequip[1][0] && $myczar -> fields['id']) || ($arrMyequip[0][0] && $arrMyequip[1][0])) 
+    if (($player->equip[0][0] && $myczar -> fields['id']) || ($player->equip[1][0] && $myczar -> fields['id']) || ($player->equip[0][0] && $player->equip[1][0])) 
     {
         error (SELECT_WEP);
     }
-    if (!$arrMyequip[0][0] && !$myczar -> fields['id'] && !$arrMyequip[1][0]) 
+    if (!$player->equip[0][0] && !$myczar -> fields['id'] && !$player->equip[1][0]) 
     {
         error (NO_WEAPON);
     }
-    if ($arrMyequip[1][0] && !$arrMyequip[6][0]) 
+    if ($player->equip[1][0] && !$player->equip[6][0]) 
     {
         error (NO_ARROWS);
     }
-    if (($arrattacker['clas'] == 'Wojownik' || $arrattacker['clas'] == 'Rzemieślnik' || $arrattacker['clas'] == 'Barbarzyńca' || $arrattacker['clas'] == 'Złodziej') && $myczar -> fields['id']) 
+    if ($player->clas != 'Mag' && $myczar -> fields['id']) 
     {
         error (BAD_CLASS);
     }
-    $span =  ($player -> level - $arrdefender['level']);
-    if ($span > 0) 
-    {
-        error (TOO_LOW);
-    }
-    if ($arrattacker['immunited'] == 'Y') 
+    if ($player->immunited == 'Y') 
     {
         error (IMMUNITED);
     }
-    if ($arrdefender['immunited'] == 'Y') 
+    if ($enemy->immunited == 'Y') 
     {
         error (IMMUNITED2);
     }
-    if ($arrattacker['clas'] == 'Mag' && $player -> mana == 0 && $myczar -> fields['id']) 
+    if ($player->clas == 'Mag' && $player -> mana == 0 && $myczar -> fields['id']) 
     {
         error (NO_MANA);
     }
-    if ($player -> location != $arrdefender['location']) 
+    if ($player -> location != $enemy->location) 
     {
         error (BAD_LOCATION);
     }
-    if ($arrdefender['rest'] == 'Y') 
+    if ($enemy->rest == 'Y') 
     {
         error (PLAYER_R);
     }
-    if ($arrdefender['fight'] != 0) 
+    if ($enemy->fight != 0) 
     {
         error (PLAYER_F);
     }
-    $smarty -> assign (array("Enemyname" => $arrdefender['user'],
+    $smarty -> assign (array("Enemyname" => $enemy->user,
                              "Versus" => VERSUS));
     $db -> Execute("UPDATE `players` SET `energy`=`energy`-1 WHERE `id`=".$player -> id);
     $strMessage = '';
     require_once('includes/battle.php');
-    if ($arrattacker['speed'] >= $arrdefender['speed']) 
+    if ($player->speed >= $enemy->speed) 
     {
-        attack1($arrattacker, $arrdefender, $arrMyequip, $arrEnequip, $myczar, $eczar, $myczaro, $eczaro,0, 0, 0, 0, 0, 0, 0, 0, 0, 0, $gmywt, $gewt, $arrattacker['id'], $strMessage);
+        attack1($player, $enemy, $myczar, $eczar, $myczaro, $eczaro, 0, 0, 0, 0, 0, 0, 0, 0, $player->id, $strMessage);
     } 
         else 
     {
-        attack1($arrdefender, $arrattacker, $arrEnequip, $arrMyequip, $eczar, $myczar, $eczaro, $myczaro, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, $gmywt, $gewt, $arrattacker['id'], $strMessage);
+        attack1($enemy, $player, $eczar, $myczar, $eczaro, $myczaro, 0, 0, 0, 0, 0, 0, 0, 0, $player->id, $strMessage);
     }
 }
 else
@@ -423,7 +404,7 @@ if (isset($_GET['action']))
      */
     if ($_GET['action'] == 'showalive') 
       {
-	$elist = $db -> SelectLimit("SELECT id, user, rank, tribe FROM players WHERE level=".$player -> level." AND hp>0 AND miejsce='".$player -> location."' AND id!=".$player -> id." AND immu='N' AND rasa!='' AND klasa!='' AND rest='N' AND freeze=0", 50);
+	$elist = $db -> SelectLimit("SELECT id, user, rank, tribe FROM players WHERE hp>0 AND miejsce='".$player -> location."' AND id!=".$player -> id." AND immu='N' AND rasa!='' AND klasa!='' AND rest='N' AND freeze=0 ORDER BY RAND()", 50);
 	$arrid = array();
 	$arrname = array();
 	$arrrank = array();
@@ -479,106 +460,19 @@ if (isset($_GET['action']))
 		$strTribe = 'Brak';
 	      }
 	  }
-	$smarty -> assign ( array("Level" => $player -> level, 
-				  "Enemyid" => $arrid, 
+	$smarty -> assign ( array("Enemyid" => $arrid, 
 				  "Enemyname" => $arrname, 
 				  "Enemytribe" => $arrtribe, 
 				  "Enemyrank" => $arrrank,
 				  "Lid" => L_ID,
-				  "Showinfo" => SHOW_INFO,
+				  "Showinfo" => "Oto dostępni przeciwnicy w twojej okolicy.",
 				  "Lname" => L_NAME,
 				  "Lrank" => L_RANK,
 				  "Lclan" => L_CLAN,
 				  "Loption" => L_OPTION,
 				  "Aattack" => A_ATTACK,
-				  "Orback" => OR_BACK,
+				  "Orback" => "Możesz również",
 				  "Bback" => B_BACK));
-      }
-
-    if ($_GET['action'] == 'levellist') 
-      {
-	$smarty -> assign(array("Showall" => SHOW_ALL,
-				"Tolevel" => TO_LEVEL,
-				"Ago" => A_GO));
-	if (isset($_GET['step']) && $_GET['step'] == 'go') 
-	  {
-	    if (!isset($_POST['slevel'])) 
-	      {
-		error(S_LEVEL);
-	      }
-	    if (!isset($_POST['elevel'])) 
-	      {
-		error(E_LEVEL);
-	      }
-	    checkvalue($_POST['slevel']);
-	    checkvalue($_POST['elevel']);
-	    $elist = $db -> SelectLimit("SELECT `id`, `user`, `rank`, `tribe` FROM `players` WHERE `level`>=".$_POST['slevel']." AND `level`<=".$_POST['elevel']." AND `hp`>0 AND `miejsce`='".$player->location."' AND `id`!=".$player -> id." AND `immu`='N' AND `rasa`!='' AND `klasa`!='' AND `rest`='N' AND `freeze`=0", 50) or die($db->ErrorMsg());
-	    $arrid = array();
-	    $arrname = array();
-	    $arrrank = array();
-	    $arrtribe = array();
-	    while (!$elist -> EOF) 
-	      {
-		switch ($elist->fields['rank'])
-		  {
-		  case 'Admin':
-		    $arrrank[] = R_ADMIN;
-		    break;
-		  case 'Staff':
-		    $arrrank[] = R_STAFF;
-		    break;
-		  case 'Member':
-		    $arrrank[] = R_MEMBER;
-		    break;
-		  default:
-		    $arrrank[] = $elist -> fields['rank'];
-		    break;
-		  }
-		$arrid[] = $elist -> fields['id'];
-		$arrname[] = $elist -> fields['user'];
-		$arrtribe[] = $elist -> fields['tribe'];
-		$elist -> MoveNext();
-	      }	    
-	    $elist -> Close();
-	    $arrTribes = array_unique($arrtribe);
-	    if (in_array('0', $arrTribes))
-	      {
-		unset($arrTribes[array_search('0', $arrTribes)]);
-	      }
-	    if (count($arrTribes))
-	      {
-		$objTribes = $db->Execute("SELECT `id`, `name` FROM `tribes` WHERE `id` IN (".implode(',', $arrTribes).")");
-		while (!$objTribes->EOF)
-		  {
-		    foreach ($arrtribe as &$strTribe)
-		      {
-			if ($objTribes->fields['id'] == $strTribe)
-			  {
-			    $strTribe = $objTribes->fields['name'];
-			  }
-		      }
-		    $objTribes->MoveNext();
-		  }
-		$objTribes->Close();
-	      }
-	    foreach ($arrtribe as &$strTribe)
-	      {
-		if ($strTribe == '0')
-		  {
-		    $strTribe = 'Brak';
-		  }
-	      }
-	    $smarty -> assign (array("Enemyid" => $arrid, 
-				     "Enemyname" => $arrname, 
-				     "Enemytribe" => $arrtribe, 
-				     "Enemyrank" => $arrrank,
-				     "Lid" => L_ID,
-				     "Lname" => L_NAME,
-				     "Lrank" => L_RANK,
-				     "Lclan" => L_CLAN,
-				     "Loption" => L_OPTION,
-				     "Aattack" => A_ATTACK));
-	  }
       }
 
     /**

@@ -1,13 +1,14 @@
 {if $Action == "" && $Battle == ""}
     {$Battleinfo}
-    <br /><br />
-    - <a href="battle.php?action=levellist">{$Ashowlevel}</a><br />
-    - <a href="battle.php?action=showalive">{$Ashowalive}</a><br />
-    - <a href="battle.php?action=monster">{$Ashowmonster}</a><br />
+    <br />
+    <ul>
+    <li><a href="battle.php?action=showalive">{$Ashowalive}</a></li>
+    <li><a href="battle.php?action=monster">{$Ashowmonster}</a></li>
+    </ul>
 {/if}
 
 {if $Action == "showalive"}
-    {$Showinfo} {$Level}...<br /><br />
+    {$Showinfo}<br /><br />
     <table width="90%" align="center">
     <tr>
         <th>{$Lid}</th>
@@ -26,32 +27,6 @@
         </tr>
     {/section}
     </table><br />{$Orback} <a href="battle.php">{$Bback}</a>.
-{/if}
-
-{if $Action == "levellist"}
-    <form method="post" action="battle.php?action=levellist&amp;step=go">
-    {$Showall} <input type="text" name="slevel" size="5" /> {$Tolevel} <input type="text" name="elevel" size="5" />
-    <input type="submit" value="{$Ago}" /></form>
-    {if $Step == "go"}
-        <table width="90%" align="center">
-        <tr>
-        <th>{$Lid}</th>
-        <th>{$Lname}</th>
-        <th>{$Lrank}</th>
-        <th>{$Lclan}</th>
-        <th>{$Loption}</th>
-        </tr>
-        {section name=player loop=$Enemyid}
-            <tr>
-            <td>{$Enemyid[player]}</td>
-            <td><a href="view.php?view={$Enemyid[player]}">{$Enemyname[player]}</a></td>
-            <td>{$Enemyrank[player]}</td>
-            <td>{$Enemytribe[player]}</td>
-            <td>- <A href="battle.php?battle={$Enemyid[player]}">{$Aattack}</a></td>
-            </tr>
-        {/section}
-        </table>
-    {/if}
 {/if}
 
 {if $Battle > "0"}

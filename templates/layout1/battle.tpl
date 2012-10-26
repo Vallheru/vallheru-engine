@@ -1,14 +1,15 @@
 {if $Action == "" && $Battle == ""}
     {$Battleinfo}
-    <br /><br />
-    - <a href="battle.php?action=levellist">{$Ashowlevel}</a><br />
-    - <a href="battle.php?action=showalive">{$Ashowalive}</a><br />
-    - <a href="battle.php?action=monster">{$Ashowmonster}</a><br />
+    <br />
+    <ul>
+    <li><a href="battle.php?action=showalive">{$Ashowalive}</a></li>
+    <li><a href="battle.php?action=monster">{$Ashowmonster}</a></li>
+    </ul>
 {/if}
 
 {if $Action == "showalive"}
-    {$Showinfo} {$Level}...<br /><br />
-    <table class="dark">
+    {$Showinfo}<br /><br />
+    <table width="90%" align="center">
     <tr>
         <th>{$Lid}</th>
         <th>{$Lname}</th>
@@ -28,32 +29,6 @@
     </table><br />{$Orback} <a href="battle.php">{$Bback}</a>.
 {/if}
 
-{if $Action == "levellist"}
-    <form method="post" action="battle.php?action=levellist&amp;step=go">
-    {$Showall} <input type="text" name="slevel" size="5" /> {$Tolevel} <input type="text" name="elevel" size="5" />
-    <input type="submit" value="{$Ago}" /></form>
-    {if $Step == "go"}
-        <table class="dark">
-        <tr>
-	<th>{$Lid}</th>
-        <th>{$Lname}</th>
-        <th>{$Lrank}</th>
-        <th>{$Lclan}</th>
-        <th>{$Loption}</th>
-        </tr>
-        {section name=player loop=$Enemyid}
-            <tr>
-            <td>{$Enemyid[player]}</td>
-            <td><a href="view.php?view={$Enemyid[player]}">{$Enemyname[player]}</a></td>
-            <td>{$Enemyrank[player]}</td>
-            <td>{$Enemytribe[player]}</td>
-            <td>- <A href="battle.php?battle={$Enemyid[player]}">{$Aattack}</a></td>
-            </tr>
-        {/section}
-        </table>
-    {/if}
-{/if}
-
 {if $Battle > "0"}
     <b><u>{$Name} {$Versus} {$Enemyname}</u></b><br />
 {/if}
@@ -63,7 +38,7 @@
         <script src="js/battle.js"></script>
         {$Monsterinfo}
         <br /><br />
-        <table class="dark">
+        <table align="center" width="95%">
         <tr>
         <th>{$Mname}</th>
         <th>{$Mlevel}</th>
@@ -74,7 +49,7 @@
 	<th>{$Mamount}<br />{$Mtimes}</th>
 	<th>{$Menergy}<br />{$Menergy2}</th>
         </tr>
-        {foreach $Monsters as $monster}
+	{foreach $Monsters as $monster}
             <tr>
             <td>{$monster.name}</td>
             <td>{$monster.level}</td>

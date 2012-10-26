@@ -6,8 +6,8 @@
  *   @name                 : funkcje.php                            
  *   @copyright            : (C) 2004,2005,2006,2007,2011,2012 Vallheru Team based on Gamers-Fusion ver 2.5
  *   @author               : thindil <thindil@vallheru.net>
- *   @version              : 1.6
- *   @since                : 19.09.2012
+ *   @version              : 1.7
+ *   @since                : 26.10.2012
  *
  */
 
@@ -28,8 +28,6 @@
 //   Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 //
 // $Id$
-
-require_once ('includes/checkexp.php');
 
 /**
 * Get the localization for game
@@ -382,45 +380,6 @@ function lostitem($lostdur,$itemdur,$type,$player,$itemid,$player2,$lost, $intLe
 	  autofill($player, $itemid, $player2, $intLevel);
 	}
     }
-}
-
-/**
-* Function check what armor player have
-*/
-function checkarmor($torso,$head,$legs,$shield) 
-{
-    global $armor;
-    global $number;
-
-    $test = array($torso,$head,$legs,$shield);
-    $number = -1;
-    $j = 0;
-    $armor = array();
-    for ($i=0;$i<4;$i++) 
-    {
-        if ($test[$i] != 0) 
-        {
-            $number = ($number + 1);
-            if ($i == 0) 
-            {
-                $armor[$j] = 'torso';
-            }
-            if ($i == 1) 
-            {
-                $armor[$j] = 'head';
-            }
-            if ($i == 2) 
-            {
-                $armor[$j] = 'legs';
-            }
-            if ($i == 3) 
-            {
-                $armor[$j] = 'shield';
-            }
-            $j = ($j + 1);
-        }
-    }
-    return $armor;
 }
 
 /**
