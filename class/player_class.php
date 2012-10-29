@@ -7,7 +7,7 @@
  *   @copyright            : (C) 2004,2005,2006,2007,2011,2012 Vallheru Team based on Gamers-Fusion ver 2.5
  *   @author               : thindil <thindil@vallheru.net>
  *   @version              : 1.7
- *   @since                : 15.10.2012
+ *   @since                : 29.10.2012
  *
  */
 
@@ -619,6 +619,7 @@ class Player
 	      $strMessage = 'Tracisz nieco doświadczenia w umiejętności: '.$this->oldskills[$strKey][0];
 	    }
 	}
+      return $strMessage;
     }
     
     /**
