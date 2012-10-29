@@ -1,5 +1,7 @@
 2012-10-29  Bartek thindil Jasicki  <thindil@vallheru.net>
 
+	* UPDATE,includes/battle.php, includes/funkcje.php: 
+	continue work on PvP fights
 	* UPDATE,class/player_class.php: 
 	changed antidote info
 	* BUG,class/player_class.php:

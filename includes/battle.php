@@ -8,7 +8,7 @@
  *   @author               : thindil <thindil@vallheru.net>
  *   @author               : eyescream <tduda@users.sourceforge.net>
  *   @version              : 1.7
- *   @since                : 26.10.2012
+ *   @since                : 29.10.2012
  *
  */
 
@@ -132,6 +132,7 @@ function attack1($attacker, $defender, $attack_bspell, $def_bspell, $attack_dspe
     /**
     * Calculate dodge defender and power of attack, critical hit (spell)
     */
+    $pech = 100;
     if ($attack_bspell -> fields['id'] && (!$attacker->equip[1][0] && !$attacker->equip[0][0])) 
     {
         $unik -= $attacker->skills['magic'][1];
@@ -262,40 +263,55 @@ function attack1($attacker, $defender, $attack_bspell, $def_bspell, $attack_dspe
     */
     while ($round <= $attackstr && $defender->hp >= 0) 
     {
-        $rzut1 = (rand(1, $attacker[$strSkill]) * 10);
+        $rzut1 = (rand(1, $attacker->skills[$strSkill]) * 10);
         $mypower = ($mypower + $rzut1);
-        $rzut2 = (rand(1, $defender['dodge']) * 10);
+        $rzut2 = (rand(1, $defender->skills['dodge']) * 10);
 	$blnMiss = FALSE;
 	$intHit = rand(0, 3);
 	//Attacker too exhausted
-        if ($attack_stam > $attacker->stats['cond'][2]) 
+        if ($attack_stam > $attacker->stats['condition'][2]) 
         {
-            $mypower = 0;
+	    $strMessage .= "<b>".$attacker->user."</b> jest zbyt zmęczony(a) aby atakować.<br />";
+	    break;
         }
 	//Attacker dont have mana
 	if ($attack_bspell -> fields['id'] && $attacker->mana < $intMcost)
 	  {
-	    $mypower = 0;
+	    $strMessage .= "<b>".$attacker->user."</b> nie ma punktów magii aby atakować.<br />";
+	    break;
+	  }
+	//Attacker have bad luck with spell
+	$pechowy = 100;
+	if ($attack_bspell->fields['id'] && $pech < 6)
+	  {
+	    $pechowy = rand(1, 100);
+	  }
+	//Check attacker spell
+	if ($attack_bspell -> fields['id'] && $mypower > 0)
+	  {
+	    $attacker->mana -= $intMcost;
 	  }
 	//Defender too exhausted
-        if ($def_stam > $defender->stats['cond'][2]) 
+        if ($def_stam > $defender->stats['condition'][2]) 
         {
             $unik = 0;
         }
-	//Check attacker weapon
-        if ($attacker->equip[0][0] && $mypower > 0) 
+	//Check attacker weapon (melee)
+        if ($attacker->equip[0][0]) 
 	  {
 	    if ($attacker->equip[0][6] > 0)
 	      {
 		$attack_stam += ($attacker->equip[0][4] / 10);
 		$attacker->equip[0][6] --;
 	      }
-	    else
+	    if ($attacker->equip[0][6] <= 0)
 	      {
-		$mypower = 0;
+		$strMessage .= "<b>".$attacker->user."</b> nie ma broni aby atakować.<br />";
+		break;
 	      }
 	  } 
-	elseif ($attacker->equip[1][0] && $mypower > 0) 
+	//Check attacker weapon (range)
+	if ($attacker->equip[1][0]) 
         {
 	  if ($attacker->equip[1][6] > 0 && $attacker->equip[6][6] > 0)
 	    {
@@ -303,31 +319,28 @@ function attack1($attacker, $defender, $attack_bspell, $def_bspell, $attack_dspe
 	      $attacker->equip[1][6] --;
 	      $attacker->equip[6][6] --;
 	    }
-	  else
+	  if ($attacker->equip[1][6] <= 0 || $attacker->equip[6][6] <= 0)
 	    {
-	      $mypower = 0;
+	      $strMessage .= "<b>".$attacker->user."</b> nie ma broni aby atakować.<br />";
+	      break;
 	    }
         }
-	if ($attacker->equip[11][0] && $mypower > 0)
+	//Check second weapon
+	if ($attacker->equip[11][0])
 	  {
 	    if ($attacker->equip[11][6] > 0)
 	      {
 		$attack_stam += ($attacker->equip[11][4] / 10);
 		$attacker->equip[11][6] --;
 	      }
-	    else
+	    if ($attacker->equip[11][6] <= 0)
 	      {
-		$mypower = 0;
+		$mypower -= $attacker->equip[11][1];
 	      }
-	  }
-	//Check attacker spell
-	if ($attack_bspell -> fields['id'] && $mypower > 0)
-	  {
-	    $attacker->mana -= $intMcost;
 	  }
 	//Check defender armor
 	$defpower = 0;
-	if ($mypower > 0 && $defender->equip[$intHit + 2][0])
+	if ($defender->equip[$intHit + 2][0] && $pechowy > 55)
 	  {
 	    if ($defender->equip[$intHit + 2][6] > 0)
 	      {
@@ -342,70 +355,122 @@ function attack1($attacker, $defender, $attack_bspell, $def_bspell, $attack_dspe
             $attackdmg = 0;
         }
         $szansa = rand(1,100);
+	//Bad luck with attack spell
+	if ($pech < 6)
+	  {
+	    if ($pechowy <= 25) 
+	      {
+		$strMessage = $strMessage."<b>".$attacker->user."</b> ".YOU_MISS1." <b>".$intMcost."</b> ".MANA.".<br />";
+	      }
+	    elseif ($pechowy > 25 && $pechowy <= 45)
+	      {
+		$strMessage = $strMessage."<b>".$attacker->user."</b> zapatrzył się na szybko poruszającego się żółwia i stracił koncentrację.<br />";
+	      }
+	    elseif ($pechowy > 45 && $pechowy <= 50)
+	      {
+		$strMessage = $strMessage."<b>".$attacker->user."</b> ".YOU_MISS2.".<br />";
+		$attacker->mana = 0;
+	      }
+	    elseif ($pechowy > 50 && $pechowy <= 55)
+	      {
+		$strMessage = $strMessage."<b>".$attacker->user."</b> ".YOU_MISS3." ".$mypower." ".HP."!<br />";
+		$attacker->hp -= $mypower;			  
+	      }
+	    elseif ($pechowy > 55 && $pechowy <= 85)
+	      {
+		if ($pechowy < 65)
+		  {
+		    $intDamage = floor($attackdmg * 0.75);
+		  }
+		elseif ($pechowy < 75)
+		  {
+		    $intDamage = floor($attackdmg * 0.5);
+		  }
+		else
+		  {
+		    $intDamage = floor($attackdmg * 0.25);
+		  }
+		$defender->hp -= $intDamage;
+		$strMessage = $strMessage."<b>".$attacker->user."</b> nie do końca opanował zaklęcie, dlatego jego czar zadaje <b>".$intDamage."</b> obrażeń. (".$defender->hp." zostało)<br />";
+	      }
+	    else
+	      {
+		if ($pechowy < 90)
+		  {
+		    $intDamage = floor($attackdmg * 0.25);
+		  }
+		elseif ($pechowy < 95)
+		  {
+		    $intDamage = floor($attackdmg * 0.5);
+		  }
+		else
+		  {
+		    $intDamage = floor($attackdmg * 0.75);
+		  }
+		$defender->hp -= $intDamage;
+		$attacker->hp -= $intDamage;
+		$strMessage = $strMessage."<b>".$attacker->user."</b> próbował rzucić zaklęcie, ale eksplodowało ono w rękach, raniąc jego oraz wroga. Traci przez to ".$intDamage." punktów życia (".$attacker->hp." zostało), <b>".$defender->user."</b> otrzymuje ".$intDamage." obrażeń (".$defender->hp." zostało)<br />";
+	      }
+	    break;
+	  }
         /**
         * Player dodge
         */
         if ($unik >= $szansa && $szansa < 90 && $unik > 0) 
-        {
-	  if ($mypower > 0)
-            {
-                $strMessage = $strMessage."<b>".$defender->user."</b> ".P_DODGE." <b>".$attacker->user."</b><br />";
-                $def_miss ++;
-                $def_stam += ($defender->equip[3][4] / 10);
-            }
+	  {
+	    $strMessage = $strMessage."<b>".$defender->user."</b> ".P_DODGE." <b>".$attacker->user."</b><br />";
+	    $def_miss ++;
+	    $def_stam += ($defender->equip[3][4] / 10);
 	    $blnMiss = TRUE;
-        } 
+	  } 
 	//Player block attack with shield
 	$szansa = rand(1, 100);
-	if ($szansa <= $intBlock && !$blnMiss)
+	if ($szansa <= $intBlock && !$blnMiss && $defender->equip[5][6] > 0)
 	  {
-	    if ($mypower > 0)
+	    $strMessage = $strMessage."<b>".$defender['user']."</b> zablokował tarczą atak <b>".$attacker->user."</b><br />";
+	    $def_stam += ($defender->equip[5][4] / 10);
+	    if ($defender->equip[5][6] > 0)
 	      {
-                $strMessage = $strMessage."<b>".$defender['user']."</b> zablokował tarczą atak <b>".$attacker['user']."</b><br />";
-                $def_stam += ($defender->equip[5][4] / 10);
+		$defender->equip[5][6] --;
 	      }
-	    $def_durarm[3]++;
 	    $blnMiss = TRUE;
 	  }
+	//Count lost mana by defender
+	if (!$blnMiss && $def_dspell->fields['id'])
+	  {
+	    $lost_mana = ceil($def_dspell -> fields['poziom'] / 2.5);
+	    if ($defender->antidote != 'N')
+	      {
+		if ($attacker->equip[0][3] == 'N')
+		  {
+		    $lost_mana += $attacker->equip[0][8];
+		  }
+		if ($attacker->equip[6][3] == 'N')
+		  {
+		    $lost_mana += $attacker->equip[6][8];
+		  }
+		if ($attacker->equip[11][3] == 'N')
+		  {
+		    $lost_mana += $attacker->equip[11][8]; 
+		  }
+	      }
+	    $lost_mana -= (int)($defender->skills['magic'][1] / 25);
+	    if ($lost_mana < 1)
+	      {
+		$lost_mana = 1;
+	      }
+	    $defender->mana -= $lost_mana;
+	  }
 	//Attacker hit
-	if ($mypower > 0 && !$blnMiss) 
+	if (!$blnMiss) 
         {
             $rzut = rand(1, 1000) / 10;
             $intRoll = rand(1, 100);
-	    $def_durarm[$intHit] ++;
             /**
              * Kill with one blow
              */
             if ($krytyk >= $rzut && $intRoll <= $krytyk) 
             {
-                /**
-                 * Count lost mana by defender
-                 */
-                if ($def_dspell -> fields['id']) 
-                {
-		    $lost_mana = ceil($def_dspell -> fields['poziom'] / 2.5);
-		    if ($defender->antidote != 'N')
-		      {
-			if ($attacker->equip[0][3] == 'N')
-			  {
-			    $lost_mana += $attacker->equip[0][8];
-			  }
-			if ($attacker->equip[6][3] == 'N')
-			  {
-			    $lost_mana += $attacker->equip[6][8];
-			  }
-			if ($attacker->equip[11][3] == 'N')
-			  {
-			    $lost_mana += $attacker->equip[11][8]; 
-			  }
-		      }
-                    $lost_mana = $lost_mana - (int)($defender->skills['magic'][1] / 25);
-                    if ($lost_mana < 1)
-                    {
-                        $lost_mana = 1;
-                    }
-                    $defender->mana -= $lost_mana;
-                }
 		if ($strAtype == 'melee' || $strAtype == 'ranged')
 		  {
 		    $attack_attack ++;
@@ -414,70 +479,9 @@ function attack1($attacker, $defender, $attack_bspell, $def_bspell, $attack_dspe
 		  }
                 else
                 {
-                    if ($pech > 5) 
-                    {
-                        $attack_magic ++;
-                        $defender->hp = 0;
-			$strMessage = $strMessage.showcritical($arrLocations[$intHit], $strAtype, 'pvp', $defender->user, $attacker->user);
-                    } 
-                        else 
-                    {
-                        $pechowy = rand(1,100);
-			if ($pechowy <= 25) 
-			  {
-			    $strMessage = $strMessage."<b>".$attacker->user."</b> ".YOU_MISS1." <b>".$intMcost."</b> ".MANA.".<br />";
-			  }
-			elseif ($pechowy > 25 && $pechowy <= 45)
-			  {
-			    $strMessage = $strMessage."<b>".$attacker->user."</b> zapatrzył się na szybko poruszającego się żółwia i stracił koncentrację.<br />";
-			  }
-			elseif ($pechowy > 45 && $pechowy <= 50)
-			  {
-			    $strMessage = $strMessage."<b>".$attacker->user."</b> ".YOU_MISS2.".<br />";
-                            $attacker['mana'] = 0;
-			  }
-			elseif ($pechowy > 50 && $pechowy <= 55)
-			  {
-			     $strMessage = $strMessage."<b>".$attacker->user."</b> ".YOU_MISS3." ".$mypower." ".HP."!<br />";
-			     $attacker->hp -= $mypower;			  
-			  }
-			elseif ($pechowy > 55 && $pechowy <= 85)
-			  {
-			    if ($pechowy < 65)
-			      {
-				$intDamage = floor($attackdmg * 0.75);
-			      }
-			    elseif ($pechowy < 75)
-			      {
-				$intDamage = floor($attackdmg * 0.5);
-			      }
-			    else
-			      {
-				$intDamage = floor($attackdmg * 0.25);
-			      }
-			    $defender->hp -= $intDamage;
-			    $strMessage = $strMessage."<b>".$attacker->user."</b> nie do końca opanował zaklęcie, dlatego jego czar zadaje <b>".$intDamage."</b> obrażeń. (".$defender->hp." zostało)<br />";
-			  }
-			else
-			  {
-			    if ($pechowy < 90)
-			      {
-				$intDamage = floor($attackdmg * 0.25);
-			      }
-			    elseif ($pechowy < 95)
-			      {
-				$intDamage = floor($attackdmg * 0.5);
-			      }
-			    else
-			      {
-				$intDamage = floor($attackdmg * 0.75);
-			      }
-			    $defender->hp -= $intDamage;
-			    $attacker->hp -= $intDamage;
-			    $strMessage = $strMessage."<b>".$attacker->user."</b> próbował rzucić zaklęcie, ale eksplodowało ono w rękach, raniąc jego oraz wroga. Traci przez to ".$intDamage." punktów życia (".$attacker->hp." zostało), <b>".$defender->user."</b> otrzymuje ".$intDamage." obrażeń (".$defender->hp." zostało)<br />";
-			  }
-                        break;
-                    }
+		  $attack_magic ++;
+		  $defender->hp = 0;
+		  $strMessage = $strMessage.showcritical($arrLocations[$intHit], $strAtype, 'pvp', $defender->user, $attacker->user); 
                 }
                 break;
             }
@@ -512,579 +516,223 @@ function attack1($attacker, $defender, $attack_bspell, $def_bspell, $attack_dspe
 			    $intAttackdmg += $attacker->equip[6][8];
 			  }
 		      }
-                    $strMessage = $strMessage."<b>".$attacker['user']."</b> ".P_ATTACK." <b>".$defender['user']."</b> ".$arrLocations[$intHit]." ".B_DAMAGE." <b>".$intAttackdmg."</b> ".DAMAGE."! (".$defender['hp']." ".LEFT.")<br />";
+                    $strMessage = $strMessage."<b>".$attacker->user."</b> ".P_ATTACK." <b>".$defender->user."</b> ".$arrLocations[$intHit]." ".B_DAMAGE." <b>".$intAttackdmg."</b> ".DAMAGE."! (".$defender->hp." ".LEFT.")<br />";
                     if ($attackdmg > 0) 
                     {
-                        $attack_attack = ($attack_attack + 1);
-                    }
-                    /**
-                     * Count lost mana for defender
-                     */
-                    if ($def_dspell -> fields['id']) 
-                    {
-                        $lost_mana = ceil($def_dspell -> fields['poziom'] / 2.5);
-			if ($defender['antidote'] != 'N')
-			  {
-			    if ($attacker->equip[0][3] == 'N')
-			      {
-				$lost_mana = $lost_mana + $attacker->equip[0][8];
-			      }
-			    if ($attacker->equip[6][3] == 'N')
-			      {
-				$lost_mana = $lost_mana + $attacker->equip[6][8];
-			      }
-			  }
-                        $lost_mana = $lost_mana - (int)($defender['magic'] / 25);
-                        if ($lost_mana < 1)
-                        {
-                            $lost_mana = 1;
-                        }
-                        $defender['mana'] = ($defender['mana'] - $lost_mana);
+                        $attack_attack++;
                     }
                     if ($defender['hp'] <= 0) 
                     {
                         break;
                     }
                 }
-	      elseif ($attack_bspell -> fields['id'] && $attacker['mana'] > $attack_bspell -> fields['poziom'] && (!$attacker->equip[0][0] && !$attacker->equip[1][0])) 
+	      else
                 {
-                    if ($pech > 5) 
-                    {
-                        if ($krytyk >= $rzut)
-                        {
-                            if ($intRoll <= 10)
-                            {
-                                $attackdmg = $attackdmg + $epower;
-                            }
-                            if ($intRoll > 10 && $intRoll <= 40)
-                            {
-                                $attackdmg = $attackdmg + $mypower + $attacker['magic'];
-                            }
-                            if ($intRoll > 40)
-                            {
-                                $attackdmg = $attackdmg + $attacker['magic'];
-                            }
-                        }
-                        if ($def_dspell -> fields['id']) 
-                        {
-                            $lost_mana = ceil($def_dspell -> fields['poziom'] / 2.5);
-			    if ($defender['antidote'] != 'N')
-			      {
-				if ($attacker->equip[0][3] == 'N')
-				  {
-				    $lost_mana = $lost_mana + $attacker->equip[0][8];
-				  }
-				if ($attacker->equip[6][3] == 'N')
-				  {
-				    $lost_mana = $lost_mana + $attacker->equip[6][8];
-				  }
-			      }
-                            $lost_mana = $lost_mana - (int)($defender['magic'] / 25);
-                            if ($lost_mana < 1)
-                            {
-                                $lost_mana = 1;
-                            }
-                            $defender['mana'] = ($defender['mana'] - $lost_mana);
-                        }
-                        $lost_mana = ceil($attack_bspell -> fields['poziom'] / 2.5);
-                        $lost_mana = $lost_mana - (int)($attacker['magic'] / 25);
-                        if ($lost_mana < 1)
-                        {
-                            $lost_mana = 1;
-                        }
-                        $attacker['mana'] = ($attacker['mana'] - $lost_mana);
-                        if ($defender['clas'] == 'Barbarzyńca') 
-                        {
-                            $roll = rand(1,100);
-                            $chance = ceil($defender['level'] / 5);
-                            if ($chance > 20) 
-                            {
-                                $chance = 20;
-                            }
-                            if ($roll < $chance) 
-                            {
-                                $strMessage = $strMessage."<b>".$attacker['user']."</b> ".P_ATTACK." <b>".$defender['user']."</b> ".B_BAR."! (".$defender['hp']." ".LEFT.")<br />";
-                                break;
-                            }
-                        }
-                        $defender['hp'] = ($defender['hp'] - $attackdmg);
-			if ($defender->equip[3][0] || $defender->equip[2][0] || $defender->equip[4][0] || $defender->equip[5][0]) 
-			  {
-			    $efekt = rand(0,$number);
-			    switch ($earmor[$efekt])
-			      {
-			      case 'torso':
-				$intHit = 0;
-				break;
-			      case 'head':
-				$intHit = 1;
-				break;
-			      case 'legs':
-				$intHit = 2;
-				break;
-			      case 'shield':
-				$intHit = 3;
-				break;
-			      }
-			    $def_durarm[$intHit] ++;
-			  }
-			if (!isset($efekt))
-			  {
-			    $intHit = rand(0, 3);
-			  }
-                        $strMessage = $strMessage."<b>".$attacker['user']."</b> ".P_ATTACK." <b>".$arrLocations[$intHit]." ".$defender['user']."</b> ".B_DAMAGE." <b>".$attackdmg."</b> ".DAMAGE."! (".$defender['hp']." ".LEFT.")<br />";
-                        if ($attackdmg > 0) 
-                        {
-                            $attack_magic = ($attack_magic + 1);
-                        }
-                        if ($defender['hp'] <= 0) 
-                        {
-                            break;
-                        }
-                    } 
-                        else 
-                    {
-                        $pechowy = rand(1,100);
-			if ($pechowy <= 25) 
-			  {
-			    $strMessage = $strMessage."<b>".$attacker['user']."</b> ".YOU_MISS1." <b>".$attack_bspell -> fields['poziom']."</b> ".MANA.".<br />";
-                            $attacker['mana'] = ($attacker['mana'] - $attack_bspell -> fields['poziom']);
-			  }
-			elseif ($pechowy > 25 && $pechowy <= 45)
-			  {
-			    $strMessage = $strMessage."<b>".$attacker['user']."</b> zapatrzył się na szybko poruszającego się żółwia i stracił koncentrację.<br />";
-			  }
-			elseif ($pechowy > 45 && $pechowy <= 50)
-			  {
-			    $strMessage = $strMessage."<b>".$attacker['user']."</b> ".YOU_MISS2.".<br />";
-                            $attacker['mana'] = 0;
-			  }
-			elseif ($pechowy > 50 && $pechowy <= 55)
-			  {
-			     $strMessage = $strMessage."<b>".$attacker['user']."</b> ".YOU_MISS3." ".$mypower." ".HP."!<br />";
-			     $attacker['hp'] = ($attacker['hp'] - $mypower);			  
-			  }
-			elseif ($pechowy > 55 && $pechowy <= 85)
-			  {
-			    if ($pechowy < 65)
-			      {
-				$intDamage = floor($attackdmg * 0.75);
-			      }
-			    elseif ($pechowy < 75)
-			      {
-				$intDamage = floor($attackdmg * 0.5);
-			      }
-			    else
-			      {
-				$intDamage = floor($attackdmg * 0.25);
-			      }
-			    $defender['hp'] -= $intDamage;
-			    $attacker['mana'] -= $attack_bspell->fields['poziom'];
-			    $strMessage = $strMessage."<b>".$attacker['user']."</b> nie do końca opanował zaklęcie, dlatego jego czar zadaje <b>".$intDamage."</b> obrażeń. (".$defender['hp']." zostało)<br />";
-			  }
-			else
-			  {
-			    if ($pechowy < 90)
-			      {
-				$intDamage = floor($attackdmg * 0.25);
-			      }
-			    elseif ($pechowy < 95)
-			      {
-				$intDamage = floor($attackdmg * 0.5);
-			      }
-			    else
-			      {
-				$intDamage = floor($attackdmg * 0.75);
-			      }
-			    $defender['hp'] -= $intDamage;
-			    $attacker['mana'] -= $attack_bspell->fields['poziom'];
-			    $attacker['hp'] -= $intDamage;
-			    $strMessage = $strMessage."<b>".$attacker['user']."</b> próbował rzucić zaklęcie, ale eksplodowało ono w rękach, raniąc jego oraz wroga. Traci przez to ".$intDamage." punktów życia (".$attacker['hp']." zostało), <b>".$defender['user']."</b> otrzymuje ".$intDamage." obrażeń (".$defender['hp']." zostało)<br />";
-			  }
-                        break;
-                    }
+		  if ($krytyk >= $rzut)
+		    {
+		      if ($intRoll <= 40)
+			{
+			  $attackdmg += $mypower + $attacker->skills['magic'][1];
+			}
+		      if ($intRoll > 40)
+			{
+			  $attackdmg += $attacker->skills['magic'][1];
+			}
+		    }
+		  if ($defender->clas == 'Barbarzyńca') 
+		    {
+		      $roll = rand(1,100);
+		      $chance = ceil($defender->stats['wisdom'] / 2);
+		      if ($chance > 20) 
+			{
+			  $chance = 20;
+			}
+		      if ($roll < $chance) 
+			{
+			  $strMessage = $strMessage."<b>".$attacker->user."</b> ".P_ATTACK." <b>".$defender->user."</b> ".B_BAR."! (".$defender->hp." ".LEFT.")<br />";
+			  break;
+			}
+		    }
+		  $defender->hp -= $attackdmg;
+		  $strMessage = $strMessage."<b>".$attacker->user."</b> ".P_ATTACK." <b>".$arrLocations[$intHit]." ".$defender->user."</b> ".B_DAMAGE." <b>".$attackdmg."</b> ".DAMAGE."! (".$defender->hp." ".LEFT.")<br />";
+		  if ($attackdmg > 0) 
+		    {
+		      $attack_magic ++;
+		    }
+		  if ($defender->hp <= 0) 
+		    {
+		      break;
+		    }
                 }
             }
         }
-        $round = ($round + 1);
+        $round ++;
     }
 
-    if ((($attack_stam > $attacker['cond'] && $def_stam > $defender['cond']) || ($runda >= 25)) && ($attacker['hp'] > 0 && $defender['hp'] > 0)) 
+    //No win in fight
+    if ($runda >= 25 && ($attacker->hp > 0 && $defender->hp > 0)) 
       {
-	if ($attacker['hp'] < 1)
+	if ($attacker->hp < 1)
 	  {
-	    $attacker['hp'] = 1;
+	    $attacker->hp = 1;
 	  }
-	if ($defender['hp'] < 1)
+	if ($defender->hp < 1)
 	  {
-	    $defender['hp'] = 1;
+	    $defender->hp = 1;
 	  }
         $strMessage = $strMessage."<br />".B_NO_WIN."<br />";
         $smarty -> assign ("Message", $strMessage);
         $smarty -> display ('error1.tpl');
-        /**
-         * Count gained dodge skill (attacker)
-         */
-        $intDamount = 0;
-        $intNewfib = 1;
-        $intOldfib = 1;
-        $intTempfib = 1;
-        while ($intNewfib)
-        {
-            $attack_miss = $attack_miss - $intNewfib;
-            if ($attack_miss < 0)
-            {
-                break;
-            }
-                else
-            {
-                $intDamount ++;
-                if ($intNewfib == 1)
-                {
-                    $intNewfib = 3;
-                }
-                    else
-                {
-                    $intTempfib = $intNewfib;
-                    $intNewfib = $intNewfib + $intOldfib;
-                    $intOldfib = $intTempfib;
-                }
-            }
-        }
-        gainability($attacker['id'], $attacker['user'], $intDamount, 0, $attack_magic, $attacker['mana'], $starter,'');
-        /**
-         * Count gained dodge skill (defender)
-         */
-        $intDamount = 0;
-        $intNewfib = 1;
-        $intOldfib = 1;
-        $intTempfib = 1;
-        while ($intNewfib)
-        {
-            $def_miss = $def_miss - $intNewfib;
-            if ($def_miss < 0)
-            {
-                break;
-            }
-                else
-            {
-                $intDamount ++;
-                if ($intNewfib == 1)
-                {
-                    $intNewfib = 3;
-                }
-                    else
-                {
-                    $intTempfib = $intNewfib;
-                    $intNewfib = $intNewfib + $intOldfib;
-                    $intOldfib = $intTempfib;
-                }
-            }
-        }
-        gainability($defender['id'], $defender['user'], $intDamount, 0, $def_magic, $defender['mana'], $starter,'');
-        if ($attacker->equip[0][0]) 
-        {
-            gainability($attacker['id'], $attacker['user'], 0, $attack_attack, 0, $attacker['mana'], $starter, 'weapon');
-            lostitem($attack_durwep, $attacker->equip[0][6], YOU_WEAPON, $attacker['id'], $attacker->equip[0][0], $starter, HAS_BEEN1, $attacker['level']);
-        }
-        if ($attacker->equip[1][0]) 
-        {
-            gainability($attacker['id'], $attacker['user'], 0, $attack_attack, 0, $attacker['mana'], $starter, 'bow');
-            lostitem($attack_durwep, $attacker->equip[1][6], YOU_WEAPON, $attacker['id'], $attacker->equip[1][0], $starter, HAS_BEEN1, $attacker['level']);
-            lostitem($attack_durwep, $attacker->equip[6][6], YOU_QUIVER, $attacker['id'], $attacker->equip[6][0], $starter, HAS_BEEN1, $attacker['level']);
-        }
-	if ($attacker->equip[11][0])
+	//Count gained experience by attacker
+	$intExpsum = 0;
+	foreach (array('strength', 'agility', 'speed', 'condition', 'inteli', 'wisdom') as $strStat)
 	  {
-	    if (!$attacker->equip[0][0])
-	      {
-		gainability($attacker['id'], $attacker['user'], 0, $attack_attack, 0, $attacker['mana'], $starter, 'weapon');
-	      }
-	    lostitem($attack_durwep, $attacker->equip[11][6], YOU_WEAPON, $attacker['id'], $attacker->equip[11][0], $starter, HAS_BEEN1, $attacker['level']);
+	    $intExpsum += $defender->stats[$strStat][2];
 	  }
-        if ($defender->equip[0][0]) 
-        {
-            gainability($defender['id'], $defender['user'], 0, $def_attack, 0, $defender['mana'], $starter, 'weapon');
-            lostitem($def_durwep, $defender->equip[0][6], YOU_WEAPON, $defender['id'], $defender->equip[0][0], $starter, HAS_BEEN1, $defender['level']);
-        }
-        if ($defender->equip[1][0]) 
-        {
-            gainability($defender['id'], $defender['user'], 0, $def_attack, 0, $defender['mana'], $starter, 'bow');
-            lostitem($def_durwep, $defender->equip[1][6], YOU_WEAPON, $defender['id'], $defender->equip[1][0], $starter, HAS_BEEN1, $defender['level']);
-            lostitem($def_durwep, $defender->equip[6][6], YOU_QUIVER, $defender['id'], $defender->equip[6][0], $starter, HAS_BEEN1, $defender['level']);
-        }
-	if ($defender->equip[11][0])
+	foreach (array('attack', 'shoot', 'magic', 'dodge') as $strSkill2)
 	  {
-	    if (!$defender->equip[0][0])
-	      {
-		gainability($defender['id'], $defender['user'], 0, $def_attack, 0, $defender['mana'], $starter, 'weapon');
-	      }
-	    lostitem($def_durwep, $defender->equip[11][6], YOU_WEAPON, $defender['id'], $defender->equip[11][0], $starter, HAS_BEEN1, $defender['level']);
+	    $intExpsum += $defender->skills[$strSkill2][1];
 	  }
-        if ($defender->equip[3][0]) 
-        {
-            lostitem($def_durarm[0], $defender->equip[3][6], YOU_ARMOR, $defender['id'], $defender->equip[3][0], $starter, HAS_BEEN1, $defender['level']);
-        }
-        if ($defender->equip[2][0]) 
-        {
-            lostitem($def_durarm[1], $defender->equip[2][6], YOU_HELMET, $defender['id'], $defender->equip[2][0], $starter, HAS_BEEN1, $defender['level']);
-        }
-        if ($defender->equip[4][0]) 
-        {
-            lostitem($def_durarm[2], $defender->equip[4][6], YOU_LEGS, $defender['id'], $defender->equip[4][0], $starter, HAS_BEEN2, $defender['level']);
-        }
-        if ($defender->equip[5][0]) 
-        {
-            lostitem($def_durarm[3], $defender->equip[5][6], YOU_SHIELD, $defender['id'], $defender->equip[5][0], $starter, HAS_BEEN1, $defender['level']);
-        }
-        if ($attacker->equip[3][0]) 
-        {
-            lostitem($attack_durarm[0], $attacker->equip[3][6], YOU_ARMOR, $attacker['id'], $attacker->equip[3][0], $starter, HAS_BEEN1, $attacker['level']);
-        }
-        if ($attacker->equip[2][0]) 
-        {
-            lostitem($attack_durarm[1], $attacker->equip[2][6], YOU_HELMET, $attacker['id'], $attacker->equip[2][0], $starter, HAS_BEEN1, $attacker['level']);
-        }
-        if ($attacker->equip[4][0]) 
-        {
-            lostitem($attack_durarm[2], $attacker->equip[4][6], YOU_LEGS, $attacker['id'], $attacker->equip[4][0], $starter, HAS_BEEN2, $attacker['level']);
-        }
-        if ($attacker->equip[5][0]) 
-        {
-            lostitem($attack_durarm[3], $attacker->equip[5][6], YOU_SHIELD, $attacker['id'], $attacker->equip[5][0], $starter, HAS_BEEN1, $attacker['level']);
-        }
-        $db -> Execute("UPDATE `players` SET `hp`=".$attacker['hp'].", `bless`='', `blessval`=0 WHERE `id`=".$attacker['id']);
-        $db -> Execute("UPDATE `players` SET `hp`=".$defender['hp'].", `bless`='', `blessval`=0 WHERE `id`=".$defender['id']);
-        if ($attacker['id'] == $starter) 
+	$intExpsum = $intExpsum;
+	//Count gained experience by defender
+	$intExpsum2 = 0;
+	foreach (array('strength', 'agility', 'speed', 'condition', 'inteli', 'wisdom') as $strStat)
+	  {
+	    $intExpsum2 += $attacker->stats[$strStat][2];
+	  }
+	foreach (array('attack', 'shoot', 'magic', 'dodge') as $strSkill2)
+	  {
+	    $intExpsum2 += $attacker->skills[$strSkill2][1];
+	  }
+	$intExpsum2 = $intExpsum2;
+        if ($attacker->equip[0][0] || $attacker->equip[11][0]) 
+	  {
+	    $strType = 'melee';
+	  }
+	else
+	  {
+	    $strType = 'ranged';
+	  }
+	gainability($attacker, $intExpsum, $attack_miss, $attack_attack, $attack_magic, $starter, $strType);
+	lostitem($attacker->equip, $attacker->id, $starter, $attacker->skills['shoot'][1]);
+	gainability($defender, $intExpsum2, $def_miss, $def_attack, $def_magic, $starter, $strType);
+	lostitem($defender->equip, $defender->id, $starter, $defender->skills['shoot'][1]);
+        $db -> Execute("UPDATE `players` SET `hp`=".$attacker->hp.", `bless`='', `blessval`=0 WHERE `id`=".$attacker->id);
+        $db -> Execute("UPDATE `players` SET `hp`=".$defender->hp.", `bless`='', `blessval`=0 WHERE `id`=".$defender->id);
+        if ($attacker->id == $starter) 
         {
             $attacktext = YOU_ATTACK_BUT;
             $defendtext = YOU_ATTACKED_BUT;
-            $startuser = $attacker['user'];
-            $secuser = $defender['user'];
+            $startuser = $attacker->user;
+            $secuser = $defender->user;
         } 
             else 
         {
             $defendtext = YOU_ATTACK_BUT;
             $attacktext = YOU_ATTACKED_BUT;
-            $startuser = $defender['user'];
-            $secuser = $attacker['user'];
+            $startuser = $defender->user;
+            $secuser = $attacker->user;
         }
         $db -> Execute("INSERT INTO `events` (`text`) VALUES('".L_PLAYER." ".$startuser." ".L_ATTACK." ".$secuser." ".L_BATTLE."')");
         $strDate = $db -> DBDate($newdate);
         /**
          * Send battle logs
          */
-        if (($attacker['settings']['battlelog'] == 'Y') || ($attacker['id'] == $starter && $attacker['settings']['battlelog'] == 'A') || ($attacker['id'] != $starter && $attacker['settings']['battlelog'] == 'D'))
+        if (($attacker->settings['battlelog'] == 'Y') || ($attacker->id == $starter && $attacker->settings['battlelog'] == 'A') || ($attacker->id != $starter && $attacker->settings['battlelog'] == 'D'))
         {
-            $strSubject = T_SUBJECT.$defender['user'].T_SUB_ID.$defender['id'];
-            $db -> Execute("INSERT INTO `mail` (`sender`, `senderid`, `owner`, `subject`, `body`, `date`) VALUES('".T_SENDER."','0',".$attacker['id'].",'".$strSubject."','".$strMessage."', ".$strDate.")");
+            $strSubject = T_SUBJECT.$defender->user.T_SUB_ID.$defender->id;
+            $db -> Execute("INSERT INTO `mail` (`sender`, `senderid`, `owner`, `subject`, `body`, `date`) VALUES('".T_SENDER."','0',".$attacker->id.",'".$strSubject."','".$strMessage."', ".$strDate.")");
         }
-        if (($defender['settings']['battlelog'] == 'Y') || ($defender['id'] == $starter && $defender['settings']['battlelog'] == 'A') || ($defender['id'] != $starter && $defender['settings']['battlelog'] == 'D'))
+        if (($defender->settings['battlelog'] == 'Y') || ($defender->id == $starter && $defender->settings['battlelog'] == 'A') || ($defender->id != $starter && $defender->settings['battlelog'] == 'D'))
         {
              $strSubject = T_SUBJECT.$attacker['user'].T_SUB_ID.$attacker['id'];
-            $db -> Execute("INSERT INTO `mail` (`sender`, `senderid`, `owner`, `subject`, `body`, `date`) VALUES('".T_SENDER."','0',".$defender['id'].",'".$strSubject."','".$strMessage."', ".$strDate.")");
+            $db -> Execute("INSERT INTO `mail` (`sender`, `senderid`, `owner`, `subject`, `body`, `date`) VALUES('".T_SENDER."','0',".$defender->id.",'".$strSubject."','".$strMessage."', ".$strDate.")");
         }
-        $db -> Execute("INSERT INTO `log` (`owner`, `log`, `czas`, `type`) VALUES(".$attacker['id'].",'".$attacktext." ".L_BATTLE2."  <b><a href=view.php?view=".$defender['id'].">".$defender['user']."</a></b> (poziom: ".$defender['level'].') '.L_ID.'<b>'.$defender['id']."</b>.', ".$strDate.", 'B')");
-        $db -> Execute("INSERT INTO `log` (`owner`, `log`, `czas`, `type`) VALUES(".$defender['id'].",'".$defendtext." ".L_BATTLE2." <b><a href=view.php?view=".$attacker['id'].">".$attacker['user']."</a></b> (poziom: ".$attacker['level'].') '.L_ID.'<b>'.$attacker['id']."</b>.', ".$strDate.", 'B')");
+        $db -> Execute("INSERT INTO `log` (`owner`, `log`, `czas`, `type`) VALUES(".$attacker->id.",'".$attacktext." ".L_BATTLE2."  <b><a href=view.php?view=".$defender->id.">".$defender->user."</a></b> ".L_ID.'<b>'.$defender->id."</b>.', ".$strDate.", 'B')");
+        $db -> Execute("INSERT INTO `log` (`owner`, `log`, `czas`, `type`) VALUES(".$defender->id.",'".$defendtext." ".L_BATTLE2." <b><a href=view.php?view=".$attacker->id.">".$attacker->user."</a></b> ".L_ID.'<b>'.$attacker->id."</b>.', ".$strDate.", 'B')");
 	//Write battle info
 	$objDay = $db -> Execute("SELECT `value` FROM `settings` WHERE `setting`='day'");
-	$db->Execute("INSERT INTO `battlelogs` (`pid`, `did`, `wid`, `bdate`) VALUES(".$attacker['id'].", ".$defender['id'].", 0, ".$objDay->fields['value'].")");
-	$db->Execute("INSERT INTO `battlelogs` (`pid`, `did`, `wid`, `bdate`) VALUES(".$defender['id'].", ".$attacker['id'].", 0, ".$objDay->fields['value'].")");
+	$db->Execute("INSERT INTO `battlelogs` (`pid`, `did`, `wid`, `bdate`) VALUES(".$attacker->id.", ".$defender->id.", 0, ".$objDay->fields['value'].")");
+	$db->Execute("INSERT INTO `battlelogs` (`pid`, `did`, `wid`, `bdate`) VALUES(".$defender->id.", ".$attacker->id.", 0, ".$objDay->fields['value'].")");
 	$objDay->Close();
         require_once("includes/foot.php");
         exit;
     }
-    if ($defender['hp'] <= 0) 
+    //Attacker win fight
+    if ($defender->hp <= 0) 
     {
-        $defender['hp'] = 0;
-	if ($attacker['hp'] < 1)
+        $defender->hp = 0;
+	if ($attacker->hp < 1)
 	  {
-	    $attacker['hp'] = 1;
+	    $attacker->hp = 1;
 	  }
-        $strMessage = $strMessage."<br /><b>".$attacker['user']."</b> ".B_WIN."!<br />";
+        $strMessage = $strMessage."<br /><b>".$attacker->user."</b> ".B_WIN."!<br />";
         $roll = rand (1,20);
-        if ($roll == 20 && $defender['maps'] > 0) 
+        if ($roll == 20 && $defender->maps > 0) 
         {
-            $db -> Execute("UPDATE `players` SET `maps`=`maps`+1 WHERE id=".$attacker['id']);
-            $db -> Execute("UPDATE `players` SET `maps`=`maps`-1 WHERE id=".$defender['id']);
+            $db -> Execute("UPDATE `players` SET `maps`=`maps`+1 WHERE id=".$attacker->id);
+            $db -> Execute("UPDATE `players` SET `maps`=`maps`-1 WHERE id=".$defender->id);
             $text = AND_MAP;
         } 
             else 
         {
             $text = '';
         }
-        $expgain = (rand(5,10) * $defender['level']);
-        $creditgain = floor($defender['credits'] / 10);
+        $creditgain = floor($defender->credits / 10);
         if ($creditgain < 0)
         {
             $creditgain = 0;
         }
-        $strMessage = $strMessage."<b>".$attacker['user']."</b> ".HE_GET." <b>".$expgain."</b> ".EXPERIENCE." <b>".$creditgain."</b> ".GOLD_COINS." ".$text."<br />";
+	//Count gained experience by attacker
+	$intExpsum = 0;
+	foreach (array('strength', 'agility', 'speed', 'condition', 'inteli', 'wisdom') as $strStat)
+	  {
+	    $intExpsum += $defender->stats[$strStat][2];
+	  }
+	foreach (array('attack', 'shoot', 'magic', 'dodge') as $strSkill2)
+	  {
+	    $intExpsum += $defender->skills[$strSkill2][1];
+	  }
+	$intExpsum = $intExpsum;
+        $strMessage = $strMessage."<b>".$attacker['user']."</b> ".HE_GET." <b>".$intExpsum."</b> ".EXPERIENCE." <b>".$creditgain."</b> ".GOLD_COINS." ".$text."<br />";
         $smarty -> assign ("Message", $strMessage);
         $smarty -> display ('error1.tpl');
-        /**
-         * Count gained dodge skill (attacker)
-         */
-        $intDamount = 0;
-        $intNewfib = 1;
-        $intOldfib = 1;
-        $intTempfib = 1;
-        while ($intNewfib)
-        {
-            $attack_miss = $attack_miss - $intNewfib;
-            if ($attack_miss < 0)
-            {
-                break;
-            }
-                else
-            {
-                $intDamount ++;
-                if ($intNewfib == 1)
-                {
-                    $intNewfib = 3;
-                }
-                    else
-                {
-                    $intTempfib = $intNewfib;
-                    $intNewfib = $intNewfib + $intOldfib;
-                    $intOldfib = $intTempfib;
-                }
-            }
-        }
-        gainability($attacker['id'], $attacker['user'], $intDamount, 0, $attack_magic, $attacker['mana'], $starter,'');
-        /**
-         * Count gained dodge skill (defender)
-         */
-        $intDamount = 0;
-        $intNewfib = 1;
-        $intOldfib = 1;
-        $intTempfib = 1;
-        while ($intNewfib)
-        {
-            $def_miss = $def_miss - $intNewfib;
-            if ($def_miss < 0)
-            {
-                break;
-            }
-                else
-            {
-                $intDamount ++;
-                if ($intNewfib == 1)
-                {
-                    $intNewfib = 3;
-                }
-                    else
-                {
-                    $intTempfib = $intNewfib;
-                    $intNewfib = $intNewfib + $intOldfib;
-                    $intOldfib = $intTempfib;
-                }
-            }
-        }
-        gainability($defender['id'], $defender['user'], $intDamount, 0, $def_magic, $defender['mana'], $starter,'');
-        if ($attacker->equip[0][0]) 
-        {
-            gainability($attacker['id'], $attacker['user'], 0, $attack_attack, 0, $attacker['mana'], $starter, 'weapon');
-            lostitem($attack_durwep, $attacker->equip[0][6], YOU_WEAPON, $attacker['id'], $attacker->equip[0][0], $starter, HAS_BEEN1, $attacker['level']);
-        }
-        if ($attacker->equip[1][0]) 
-        {
-            gainability($attacker['id'], $attacker['user'], 0, $attack_attack, 0, $attacker['mana'], $starter, 'bow');
-            lostitem($attack_durwep, $attacker->equip[1][6], YOU_WEAPON, $attacker['id'], $attacker->equip[1][0], $starter, HAS_BEEN1, $attacker['level']);
-            lostitem($attack_durwep, $attacker->equip[6][6], YOU_QUIVER, $attacker['id'], $attacker->equip[6][0], $starter, HAS_BEEN1, $attacker['level']);
-        }
-	if ($attacker->equip[11][0])
-	  {
-	    if (!$attacker->equip[0][0])
-	      {
-		gainability($attacker['id'], $attacker['user'], 0, $attack_attack, 0, $attacker['mana'], $starter, 'weapon');
-	      }
-	    lostitem($attack_durwep, $attacker->equip[11][6], YOU_WEAPON, $attacker['id'], $attacker->equip[11][0], $starter, HAS_BEEN1, $attacker['level']);
-	  }
-        if ($defender->equip[0][0]) 
-        {
-            gainability($defender['id'], $defender['user'], 0, $def_attack, 0, $defender['mana'], $starter, 'weapon');
-            lostitem($def_durwep, $defender->equip[0][6], YOU_WEAPON, $defender['id'], $defender->equip[0][0], $starter, HAS_BEEN1, $defender['level']);
-        }
-        if ($defender->equip[1][0]) 
-        {
-            gainability($defender['id'], $defender['user'], 0, $def_attack, 0, $defender['mana'], $starter, 'bow');
-            lostitem($def_durwep, $defender->equip[1][6], YOU_WEAPON, $defender['id'], $defender->equip[1][0], $starter, HAS_BEEN1, $defender['level']);
-            lostitem($def_durwep, $defender->equip[6][6], YOU_QUIVER, $defender['id'], $defender->equip[6][0], $starter, HAS_BEEN1, $defender['level']);
-        }
-	if ($defender->equip[11][0])
-	  {
-	    if (!$defender->equip[0][0])
-	      {
-		gainability($defender['id'], $defender['user'], 0, $def_attack, 0, $defender['mana'], $starter, 'weapon');
-	      }
-	    lostitem($def_durwep, $defender->equip[11][6], YOU_WEAPON, $defender['id'], $defender->equip[11][0], $starter, HAS_BEEN1, $defender['level']);
-	  }
-        if ($defender->equip[3][0]) 
-        {
-            lostitem($def_durarm[0], $defender->equip[3][6], YOU_ARMOR, $defender['id'], $defender->equip[3][0], $starter, HAS_BEEN1, $defender['level']);
-        }
-        if ($defender->equip[2][0]) 
-        {
-            lostitem($def_durarm[1], $defender->equip[2][6], YOU_HELMET, $defender['id'], $defender->equip[2][0], $starter, HAS_BEEN1, $defender['level']);
-        }
-        if ($defender->equip[4][0]) 
-        {
-            lostitem($def_durarm[2], $defender->equip[4][6], YOU_LEGS, $defender['id'], $defender->equip[4][0], $starter, HAS_BEEN2, $defender['level']);
-        }
-        if ($defender->equip[5][0]) 
-        {
-            lostitem($def_durarm[3], $defender->equip[5][6], YOU_SHIELD, $defender['id'], $defender->equip[5][0], $starter, HAS_BEEN1, $defender['level']);
-        }
-        if ($attacker->equip[3][0]) 
-        {
-            lostitem($attack_durarm[0], $attacker->equip[3][6], YOU_ARMOR, $attacker['id'], $attacker->equip[3][0], $starter, HAS_BEEN1, $attacker['level']);
-        }
-        if ($attacker->equip[2][0]) 
-        {
-            lostitem($attack_durarm[1], $attacker->equip[2][6], YOU_HELMET, $attacker['id'], $attacker->equip[2][0], $starter, HAS_BEEN1, $attacker['level']);
-        }
-        if ($attacker->equip[4][0]) 
-        {
-            lostitem($attack_durarm[2], $attacker->equip[4][6], YOU_LEGS, $attacker['id'], $attacker->equip[4][0], $starter, HAS_BEEN2, $attacker['level']);
-        }
-        if ($attacker->equip[5][0]) 
-        {
-            lostitem($attack_durarm[3], $attacker->equip[5][6], YOU_SHIELD, $attacker['id'], $attacker->equip[5][0], $starter, HAS_BEEN1, $attacker['level']);
-        }
-        $db -> Execute("UPDATE `players` SET `hp`=".$attacker['hp'].", `credits`=`credits`+".$creditgain.", `wins`=`wins`+1, `lastkilled`='".'<a href="view.php?view='.$defender['id'].'">'.$defender['user']."</a>', `bless`='', `blessval`=0 WHERE `id`=".$attacker['id']);
-        $db -> Execute("UPDATE `players` SET `credits`=`credits`-".$creditgain.", `losses`=`losses`+1, `lastkilledby`='".'<a href="view.php?view='.$attacker['id'].'">'.$attacker['user']."</a>', `bless`='', `blessval`=0 WHERE `id`=".$defender['id']);
-        checkexp($attacker['exp'],$expgain,$attacker['level'],$attacker['race'],$attacker['user'],$attacker['id'],$defender['id'],$defender['user'],$attacker['id'],'',0);
-        if ($attacker['id'] == $starter) 
+	gainability($attacker, $intExpsum, $attack_miss, $attack_attack, $attack_magic, $starter, $strType);
+	lostitem($attacker->equip, $attacker->id, $starter, $attacker->skills['shoot'][1]);
+	lostitem($defender->equip, $defender->id, $starter, $defender->skills['shoot'][1]);
+        $db -> Execute("UPDATE `players` SET `hp`=".$attacker->hp.", `credits`=`credits`+".$creditgain.", `wins`=`wins`+1, `lastkilled`='".'<a href="view.php?view='.$defender->id.'">'.$defender->user."</a>', `bless`='', `blessval`=0 WHERE `id`=".$attacker->id);
+        $db -> Execute("UPDATE `players` SET `credits`=`credits`-".$creditgain.", `losses`=`losses`+1, `lastkilledby`='".'<a href="view.php?view='.$attacker->id.'">'.$attacker->user."</a>', `bless`='', `blessval`=0 WHERE `id`=".$defender->id);
+        if ($attacker->id == $starter) 
         {
             $attacktext = YOU_ATTACK_AND;
-            $startuser = $attacker['user'];
-            $secuser = $defender['user'];
+            $startuser = $attacker->user;
+            $secuser = $defender->user;
         } 
             else 
         {
             $attacktext = YOU_ATTACKED_AND;
-            $startuser = $defender['user'];
-            $secuser = $attacker['user'];
+            $startuser = $defender->user;
+            $secuser = $attacker->user;
         }
-        loststat($defender['id'], $defender['oldstats'], $attacker['id'], $attacker['user'], $starter, $defender['antidote'], $attacker['level']);
-        $db -> Execute("INSERT INTO `events` (`text`) VALUES('".L_PLAYER." ".$startuser." ".L_ATTACK." ".$secuser.". ".BATTLE_WIN." ".$attacker['user']."')");
+        $db -> Execute("INSERT INTO `events` (`text`) VALUES('".L_PLAYER." ".$startuser." ".L_ATTACK." ".$secuser.". ".BATTLE_WIN." ".$attacker->user."')");
         $strDate = $db -> DBDate($newdate);
-        if (($attacker['settings']['battlelog'] == 'Y')  || ($attacker['id'] == $starter && $attacker['settings']['battlelog'] == 'A') || ($attacker['id'] != $starter && $attacker['settings']['battlelog'] == 'D'))
+        if (($attacker->settings['battlelog'] == 'Y')  || ($attacker->id == $starter && $attacker->settings['battlelog'] == 'A') || ($attacker->id != $starter && $attacker->settings['battlelog'] == 'D'))
         {
-            $strSubject = T_SUBJECT.$defender['user'].T_SUB_ID.$defender['id'];
-            $db -> Execute("INSERT INTO `mail` (`sender`, `senderid`, `owner`, `subject`, `body`, `date`) VALUES('".T_SENDER."','0',".$attacker['id'].",'".$strSubject."','".$strMessage."', ".$strDate.")");
+            $strSubject = T_SUBJECT.$defender->user.T_SUB_ID.$defender->id;
+            $db -> Execute("INSERT INTO `mail` (`sender`, `senderid`, `owner`, `subject`, `body`, `date`) VALUES('".T_SENDER."','0',".$attacker->id.",'".$strSubject."','".$strMessage."', ".$strDate.")");
         }
-        if (($defender['settings']['battlelog'] == 'Y') || ($defender['id'] == $starter && $defender['settings']['battlelog'] == 'A') || ($defender['id'] != $starter && $defender['settings']['battlelog'] == 'D'))
+        if (($defender->settings['battlelog'] == 'Y') || ($defender->id == $starter && $defender->settings['battlelog'] == 'A') || ($defender->id != $starter && $defender->settings['battlelog'] == 'D'))
         {
-            $strSubject = T_SUBJECT.$attacker['user'].T_SUB_ID.$attacker['id'];
-            $db -> Execute("INSERT INTO `mail` (`sender`, `senderid`, `owner`, `subject`, `body`, `date`) VALUES('".T_SENDER."','0',".$defender['id'].",'".$strSubject."','".$strMessage."', ".$strDate.")");
+            $strSubject = T_SUBJECT.$attacker->user.T_SUB_ID.$attacker->id;
+            $db -> Execute("INSERT INTO `mail` (`sender`, `senderid`, `owner`, `subject`, `body`, `date`) VALUES('".T_SENDER."','0',".$defender->id.",'".$strSubject."','".$strMessage."', ".$strDate.")");
         }
-        $db -> Execute("INSERT INTO `log` (`owner`, `log`, `czas`, `type`) VALUES(".$attacker['id'].",'".$attacktext." ".YOU_DEFEAT." <b><a href=view.php?view=".$defender['id'].">".$defender['user']."</a></b> (poziom: ".$defender['level'].') '.L_ID.'<b>'.$defender['id']."</b>. ".YOU_REWARD." <b>$expgain</b> ".EXPERIENCE." <b>$creditgain</b> ".GOLD_COINS.".', ".$strDate.", 'B')");
+        $db -> Execute("INSERT INTO `log` (`owner`, `log`, `czas`, `type`) VALUES(".$attacker->id.",'".$attacktext." ".YOU_DEFEAT." <b><a href=view.php?view=".$defender->id.">".$defender->user."</a></b> ".L_ID.'<b>'.$defender->id."</b>. ".YOU_REWARD." <b>".$expgain."</b> ".EXPERIENCE." <b>".$creditgain."</b> ".GOLD_COINS.".', ".$strDate.", 'B')");
 	//Write battle info
 	$objDay = $db -> Execute("SELECT `value` FROM `settings` WHERE `setting`='day'");
-	$db->Execute("INSERT INTO `battlelogs` (`pid`, `did`, `wid`, `bdate`) VALUES(".$attacker['id'].", ".$defender['id'].", ".$attacker['id'].", ".$objDay->fields['value'].")");
-	$db->Execute("INSERT INTO `battlelogs` (`pid`, `did`, `wid`, `bdate`) VALUES(".$defender['id'].", ".$attacker['id'].", ".$attacker['id'].", ".$objDay->fields['value'].")");
+	$db->Execute("INSERT INTO `battlelogs` (`pid`, `did`, `wid`, `bdate`) VALUES(".$attacker->id.", ".$defender->id.", ".$attacker->id.", ".$objDay->fields['value'].")");
+	$db->Execute("INSERT INTO `battlelogs` (`pid`, `did`, `wid`, `bdate`) VALUES(".$defender->id.", ".$attacker->id.", ".$attacker->id.", ".$objDay->fields['value'].")");
 	$objDay->Close();
+	loststat($defender, $attacker->id, $attacker->user, $starter); //TODO
         require_once("includes/foot.php");
         exit;
     }

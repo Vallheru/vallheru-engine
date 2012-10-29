@@ -7,7 +7,7 @@
  *   @copyright            : (C) 2004,2005,2006,2007,2011,2012 Vallheru Team based on Gamers-Fusion ver 2.5
  *   @author               : thindil <thindil@vallheru.net>
  *   @version              : 1.7
- *   @since                : 26.10.2012
+ *   @since                : 29.10.2012
  *
  */
 
@@ -216,34 +216,23 @@ function autofill($intPlayerid, $intArrowId, $intPlayer2, $intPlevel)
 }
 
 /**
-* Function count lost stats in battle
+* Function count lost stats in battle (TODO)
 */
-function loststat($lostid, $values, $winid, $winuser, $starter, $antidote, $winlevel = 0) 
+function loststat($objPlayer, $winid, $winuser, $starter) 
 {
     global $db;
     global $newdate;
 
-    if ($antidote == 'R')
+    $blnCheat = FALSE;
+    if ($objPlayer->antidote[0] == 'R')
       {
-	$db->Execute("UPDATE `players` SET `antidote`='', `hp`=1 WHERE `id`=".$lostid);
+	$db->Execute("UPDATE `players` SET `antidote`='', `hp`=1 WHERE `id`=".$objPlayer->id);
+	
       }
     else
       {
-	$number = rand(0,5);
-	$stats = array('agility', 'strength', 'inteli', 'wisdom', 'szyb', 'wytrz');
-	$name = array(AGILITY, STRENGTH, INTELIGENCE, WISDOM, SPEED, CONDITION);
-	$lost = ($values[$number] / 200);
-	if ($values[$number] - $lost < 3)
-	  {
-	    $lost = 0;
-	    $values[$number] = 3;
-	  }
-	else
-	  {
-	    $values[$number] -= $lost;
-	  }
-	$db -> Execute("UPDATE `players` SET `".$stats[$number]."`=".$values[$number].", `hp`=0, `antidote`='' WHERE `id`=".$lostid);
-	$stat = $name[$number];
+	$strMessage =  $objPlayer->loststat();
+	$db -> Execute("UPDATE `players` SET `hp`=0, `antidote`='' WHERE `id`=".$objPlayer->id);
       }
     if ($lostid == $starter) 
       {
@@ -258,11 +247,6 @@ function loststat($lostid, $values, $winid, $winuser, $starter, $antidote, $winl
         $strDate = $db -> DBDate($newdate);
 	if ($antidote != 'R')
 	  {
-	    $strMessage = '';
-	    if ($lost > 0)
-	      {
-		$strMessage = " ".YOU_LOST." ".$lost." ".$stat;
-	      }
 	    $db -> Execute("INSERT INTO log (`owner`, `log`, `czas`, `type`) VALUES(".$lostid.",'".$attacktext." ".YOU_LOSE." <b><a href=view.php?view=".$winid.">".$winuser."</a> </b>(poziom: ".$winlevel.") <b>".ID.":".$winid."</b>.".$strMessage."', ".$strDate.", 'B')") or die(E_LOG);
 	  }
 	else
@@ -297,89 +281,101 @@ function loststat($lostid, $values, $winid, $winuser, $starter, $antidote, $winl
 /**
 * Function count gaining abilities in fight
 */
-function gainability ($gid,$user,$gunik,$gatak,$gmagia,$pm,$player2,$stats) 
+function gainability ($objPlayer, $intExp, $gunik, $gatak, $gmagia, $player2, $stats) 
 {
     global $db;
 
-    if (($gunik || $gatak || $gmagia) && ($player2 == $gid)) 
+    if (($gunik || $gatak || $gmagia) && ($player2 == $objPlayer->id)) 
     {
-        print "<br />".$user." ".GAIN.":<br />";
+        print "<br />".$objPlayer->user." ".GAIN.' '.$intExp.' punktów doświadczenia.';
     }
-    if ($gunik > 0) 
+    $arrStats = array('condition' => 0,
+		      'wisdom' => 0,
+		      'speed' => 0);
+    $arrSkills = array();
+    if ($gunik > 0)
+      {
+	$arrStats['agility'] = 0;
+	$arrSkills['dodge'] = 0;
+      }
+    if ($gatak > 0)
+      {
+	switch ($stats)
+	  {
+	  case 'ranged':
+	    $arrStats['agility'] = 0;
+	    $arrStats['strength'] = 0;
+	    $arrSkills['shoot'] = 0;
+	    break;
+	  case 'melee':
+	    $arrStats['strength'] = 0;
+	    $arrSkills['attack'] = 0;
+	    break;
+	  default:
+	    break;
+	  }
+	
+      }
+    if ($gmagia > 0)
+      {
+	$arrStats['inteli'] = 0;
+	$arrSkills['magic'] = 0;
+      }
+    $intDiv = count($arrStats) + count($arrSkills);
+    foreach ($arrStats as &$intStat)
+      {
+	$intStat = ceil($intExp / $intDiv);
+      }
+    foreach ($arrSkills as &$intSkill)
+      {
+	$intSkill = ceil($intExp / $intDiv);
+      }
+    $objPlayer->checkexp($arrStats, $player2, 'stats');
+    $objPlayer->checkexp($arrSkills, $player2, 'skills');
+    if ($objPlayer->mana <= 0) 
     {
-        $dunik = ($gunik / 100);
-        if ($player2 == $gid) 
-        {
-            print "<b>".$dunik."</b> ".ABILITY." ".DODGE."<br />";
-        }
-        $db -> Execute("UPDATE `players` SET `unik`=`unik`+".$dunik." WHERE `id`=".$gid);
+        $objPlayer->mana = 0;
     }
-    if ($gatak > 0 && $stats == 'weapon') 
-    {
-        $datak = ($gatak / 100);
-        if ($player2 == $gid) 
-        {
-            print "<b>".$datak."</b> ".ABILITY." ".A_FIGHT."<br />";
-        }
-        $db -> Execute("UPDATE `players` SET `atak`=`atak`+".$datak." WHERE `id`=".$gid);
-    }
-    if ($gatak > 0 && $stats == 'bow') 
-    {
-        $datak = ($gatak / 100);
-        if ($player2 == $gid) 
-        {
-            print "<b>".$datak."</b> ".ABILITY." ".SHOOTING."<br />";
-        }
-        $db -> Execute("UPDATE `players` SET `shoot`=`shoot`+".$datak." WHERE `id`=".$gid);
-    }
-    if ($gmagia > 0) 
-    {
-        $dmagia = ($gmagia / 100);
-        if ($player2 == $gid) 
-        {
-            print "<b>".$dmagia."</b> ".ABILITY." ".C_SPELL."<br />";
-        }
-        $db -> Execute("UPDATE `players` SET `magia`=`magia`+".$dmagia." WHERE `id`=".$gid);
-    }
-    if ($pm <= 0) 
-    {
-        $pm = 0;
-    }
-    $db -> Execute("UPDATE `players` SET `pm`=".$pm." WHERE `id`=".$gid);
+    $db -> Execute("UPDATE `players` SET `pm`=".$objPlayer->mana." WHERE `id`=".$objPlayer->id);
+    $objPlayer->save();
 }
 
 /**
 * Function count damage of weapons and armors in fight
 */
-function lostitem($lostdur,$itemdur,$type,$player,$itemid,$player2,$lost, $intLevel) 
+function lostitem($arrEquip, $pid, ,$player2, $intLevel) 
 {
     global $db;
 
-    $itemdur = ($itemdur - $lostdur);
-    if ($itemdur < 1) 
-    {
-        $db -> Execute("DELETE FROM `equipment` WHERE `id`=".$itemid);
-        if ($type == YOU_QUIVER)
+    $arrKeys = array(0, 1, 2, 3, 4, 5, 11);
+    $arrPrefix = array(YOU_WEAPON, YOU_WEAPON, YOU_HELMET, YOU_ARMOR, YOU_LEGS, YOU_SHIELD, YOU_WEAPON);
+    $arrSuffix = array(HAS_BEEN1, HAS_BEEN1, HAS_BEEN1, HAS_BEEN1, HAS_BEEN2, HAS_BEEN1, HAS_BEEN1);
+    $i = 0;
+    foreach ($arrKeys as $intKey)
+      {
+	if ($arrEquip[$intKey][0])
 	  {
-	    autofill($player, $itemid, $player2, $intLevel);
+	    if ($arrEquip[$intKey][6] == 0)
+	      {
+		$db->Execute("DELETE FROM `equipment` WHERE `id`=".$arrEquip[$intKey][0]);
+		print "<br />".$arrPrefix[$i]." ".$arrSuffix[$i]." ".IS_BROKEN."!<br />";
+	      }
+	    else
+	      {
+		$db->Execute("UPDATE `equipment` SET `wt`=".$arrEquip[$intKey][6]." WHERE `id`=".$arrEquip[$intKey][0]);
+		print "<br />".$arrPrefix[$i]." ".LOST1." nieco ".DURABILITY.".<br />";
+	      }
 	  }
-        if (($player == $player2) && ($type != YOU_QUIVER))
-        {
-	  print "<br />".$type." ".$lost." ".IS_BROKEN."!<br />";
-        }
-    } 
-        else 
-    {
-      if (($player == $player2) && ($type != YOU_QUIVER))
-        {
-	  print "<br />".$type." ".LOST1." ".$lostdur." ".DURABILITY.".<br />";
-        }
-      $db -> Execute("UPDATE `equipment` SET `wt`=".$itemdur." WHERE `id`=".$itemid);
-      if ($type == YOU_QUIVER)
-	{
-	  autofill($player, $itemid, $player2, $intLevel);
-	}
-    }
+      }
+    //Check quiver
+    if ($arrEquip[6][0])
+      {
+	if ($arrEquip[6][6] == 0)
+	  {
+	    $db->Execute("DELETE FROM `equipment` WHERE `id`=".$arrEquip[6][0]);
+	  }
+	 autofill($pid, $arrEquip[6][0], $player2, $intLevel);
+      }
 }
 
 /**
