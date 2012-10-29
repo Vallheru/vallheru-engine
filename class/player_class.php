@@ -146,7 +146,7 @@ class Player
         $this -> gender = $stats -> fields['gender'];
         if (!empty($stats -> fields['antidote']))
         {
-            $this -> antidote = $stats -> fields['antidote']{0};
+            $this -> antidote = $stats -> fields['antidote'];
         }
             else
         {
@@ -437,7 +437,7 @@ class Player
     }
 
     /**
-     * Function check experience gained by player (TODO)
+     * Function check experience gained by player
      */
     function checkexp($arrExp, $intEid, $strType, $blnFight = FALSE)
     {

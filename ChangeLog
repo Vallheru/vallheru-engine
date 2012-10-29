@@ -1,5 +1,7 @@
 2012-10-29  Bartek thindil Jasicki  <thindil@vallheru.net>
 
+	* UPDATE,class/player_class.php: 
+	changed antidote info
 	* BUG,class/player_class.php:
 	fixed info about lost stats
 
