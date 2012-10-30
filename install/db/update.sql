@@ -2,6 +2,7 @@ ALTER TABLE `players` CHANGE `energy` `energy` DOUBLE( 11, 2 ) NOT NULL DEFAULT 
 CHANGE `max_energy` `max_energy` DOUBLE( 11, 2 ) NOT NULL DEFAULT '100.00',
 CHANGE `hp` `hp` INT( 11 ) UNSIGNED NOT NULL DEFAULT '10',
 CHANGE `max_hp` `max_hp` INT( 11 ) NOT NULL DEFAULT '10',
+CHANGE `antidote` `antidote` CHAR( 4 ) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL,
 CHANGE `pm` `pm` INT( 11 ) NOT NULL DEFAULT '0';
 ALTER TABLE `players`
   DROP `level`,
