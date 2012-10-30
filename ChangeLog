@@ -1,3 +1,8 @@
+2012-10-30  Bartek thindil Jasicki  <thindil@vallheru.net>
+
+	* UPDATE,class/player_class.php:
+	updated dying and skill names
+
 2012-10-29  Bartek thindil Jasicki  <thindil@vallheru.net>
 
 	* UPDATE,includes/battle.php, includes/funkcje.php: 

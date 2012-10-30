@@ -7,7 +7,7 @@
  *   @copyright            : (C) 2004,2005,2006,2007,2011,2012 Vallheru Team based on Gamers-Fusion ver 2.5
  *   @author               : thindil <thindil@vallheru.net>
  *   @version              : 1.7
- *   @since                : 29.10.2012
+ *   @since                : 30.10.2012
  *
  */
 
@@ -333,11 +333,11 @@ class Player
 	}
       if ($blnCraft)
 	{
-	  $arrTools = array('metallurgy' => 'miechy',
+	  $arrTools = array('smelting' => 'miechy',
 			    'lumberjack' => 'piła',
 			    'mining' => 'kilof',
 			    'breeding' => 'uprząż',
-			    'jeweller' => 'nożyk',
+			    'jewellry' => 'nożyk',
 			    'herbalism' => 'sierp',
 			    'alchemy' => 'moździerz',
 			    'carpentry' => 'ciesak',
@@ -570,8 +570,27 @@ class Player
     /**
      * Function count lost experience in stats/skills
      */
-    function lostexp()
+    function dying($blnFight = FALSE)
     {
+      $this->hp = 0;
+      if ($this->antidote[0] == 'R')
+	{
+	  $this->antidote = '';
+	  $intPower = substr($this->antidote, 1);
+	  if (rand(1, 100) < $intPower)
+	    {
+	      $this->hp = 1;
+	      if ($blnFight)
+		{
+		  $_SESSION['ressurect'] = 'Y';
+		}
+	    }
+	}
+      $db->Execute("UPDATE `players` SET `hp`=".$this->hp.", `antidote`=".$this->antidote." WHERE `id`=".$this->id);
+      if ($this->hp == 1)
+	{
+	  return 'Na szczęście udało ci się tym razem oszukać śmierć.';
+	}
       $rand = rand(1, 100);
       //Lost experience in stats
       if ($rand < 51)
