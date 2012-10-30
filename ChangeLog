@@ -1,5 +1,7 @@
 2012-10-30  Bartek thindil Jasicki  <thindil@vallheru.net>
 
+	* UPDATE,wieza.php: 
+	updated buying spells
 	* BUG,class/player_class.php: 
 	fixed lost stats
 	* UPDATE,class/player_class.php, includes/functions.php, includes/funkcje.php, includes/battle.php, battle.php: 

@@ -6,8 +6,8 @@
  *   @name                 : wieza.php                            
  *   @copyright            : (C) 2004,2005,2006,2007,2011,2012 Vallheru Team based on Gamers-Fusion ver 2.5
  *   @author               : thindil <thindil@vallheru.net>
- *   @version              : 1.6
- *   @since                : 11.07.2012
+ *   @version              : 1.7
+ *   @since                : 30.10.2012
  *
  */
 
@@ -39,7 +39,7 @@ require_once("languages/".$lang."/wieza.php");
 
 if ($player -> location != 'Altara' && $player -> location != 'Ardulith') 
 {
-    error (ERROR);
+    error ('Nie znajdujesz się w mieście.');
 }
 
 if (isset($_GET['buy']))
@@ -57,7 +57,7 @@ if (isset($_GET['buy']))
 	  {
             message('error', NO_SPELL);
 	  }
-        elseif ($czary -> fields['poziom'] > $player -> level) 
+        elseif ($czary -> fields['poziom'] > $player->skills['magic'][1]) 
 	  {
             message('error', TOO_LOW);
 	  }
@@ -86,7 +86,7 @@ if (isset($_GET['buy']))
 	  {
 	    message('error', NO_ITEM);
 	  }
-        elseif ($items -> fields['minlev'] > $player -> level) 
+        elseif ($items -> fields['minlev'] > $player->skills['magic'][1]) 
 	  {
             message('error', TOO_LOW);
 	  }
@@ -144,7 +144,7 @@ if (isset ($_GET['dalej']))
 	  default:
 	    break;
 	  }
-	$objSpells = $db->Execute("SELECT * FROM `czary` WHERE `gracz`=0 AND `status`='S' AND `typ`='".$_GET['dalej']."' ORDER BY `poziom` ASC");
+	$objSpells = $db->Execute("SELECT * FROM `czary` WHERE `gracz`=0 AND `status`='S' AND `typ`='".$_GET['dalej']."' AND `poziom`<=".$player->skills['magic'][1]." ORDER BY `poziom` ASC");
 	$objOwned = $db->Execute("SELECT `nazwa`, `element` FROM `czary` WHERE `gracz`=".$player->id." AND `typ`='".$_GET['dalej']."'");
 	$arrOwned = array();
 	$arrOelement = array();
