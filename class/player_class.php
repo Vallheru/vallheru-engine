@@ -597,7 +597,7 @@ class Player
       //Lost experience in stats
       if ($rand < 51)
 	{
-	  $strKey = array_rand($this->stats);
+	  $strKey = array_rand(array_keys($this->stats));
 	  if ($this->oldstats[$strKey][2] == $this->oldstats[$strKey][1])
 	    {
 	      $lostexp = $this->oldstats[$strKey][1] * 2000;
@@ -622,8 +622,8 @@ class Player
       //Lost experience in skills
       else
 	{
-	  $strKey = array_rand($player->skills);
-	  if ($player->oldskills[$strKey][1] == 100)
+	  $strKey = array_rand($this->skills);
+	  if ($this->oldskills[$strKey][1] == 100)
 	    {
 	      $lostexp = 10000;
 	      $this->oldskills[$strKey][1] --;
@@ -635,8 +635,8 @@ class Player
 	  else
 	    {
 	      $lostexp = ceil($player->oldskills[$strKey][2] / 10);
-	      $player->skills[$strKey][2] -= $lostexp;
-	      $player->oldskills[$strKey][2] -= $lostexp;
+	      $this->skills[$strKey][2] -= $lostexp;
+	      $this->oldskills[$strKey][2] -= $lostexp;
 	      $strMessage = 'Tracisz nieco doświadczenia w umiejętności: '.$this->oldskills[$strKey][0];
 	    }
 	}
