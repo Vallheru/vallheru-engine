@@ -383,7 +383,7 @@ if (isset($_GET['battle']))
     $db -> Execute("UPDATE `players` SET `energy`=`energy`-1 WHERE `id`=".$player -> id);
     $strMessage = '';
     require_once('includes/battle.php');
-    if ($player->speed >= $enemy->speed) 
+    if ($player->stats['speed'][2] >= $enemy->stats['speed'][2]) 
     {
         attack1($player, $enemy, $myczar, $eczar, $myczaro, $eczaro, 0, 0, 0, 0, 0, 0, 0, 0, $player->id, $strMessage);
     } 

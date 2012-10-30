@@ -7,7 +7,7 @@
  *   @copyright            : (C) 2004,2005,2006,2007,2011,2012 Vallheru Team based on Gamers-Fusion ver 2.5
  *   @author               : thindil <thindil@vallheru.net>
  *   @version              : 1.7
- *   @since                : 29.10.2012
+ *   @since                : 30.10.2012
  *
  */
 
@@ -224,14 +224,19 @@ function loststat($objPlayer, $winid, $winuser, $starter)
     global $newdate;
 
     $blnCheat = FALSE;
+    $strMessage = '';
     if ($objPlayer->antidote[0] == 'R')
       {
 	$db->Execute("UPDATE `players` SET `antidote`='', `hp`=1 WHERE `id`=".$objPlayer->id);
-	
+	$intPower = substr($objPlayer->antidote, 1);
+	if (rand(1, 100) < $intPower)
+	  {
+	    $blnCheat = TRUE;
+	  }
       }
-    else
+    if (!$blnCheat)
       {
-	$strMessage =  $objPlayer->loststat();
+	$strMessage =  ' '.$objPlayer->loststat();
 	$db -> Execute("UPDATE `players` SET `hp`=0, `antidote`='' WHERE `id`=".$objPlayer->id);
       }
     if ($lostid == $starter) 
@@ -263,7 +268,6 @@ function loststat($objPlayer, $winid, $winuser, $starter)
 	  }
 	if ($antidote != 'R')
 	  {
-	    $strMessage = '';
 	    if ($lost > 0)
 	      {
 		$strMessage = " ".YOU_LOST." ".$lost." ".$stat;
@@ -285,10 +289,6 @@ function gainability ($objPlayer, $intExp, $gunik, $gatak, $gmagia, $player2, $s
 {
     global $db;
 
-    if (($gunik || $gatak || $gmagia) && ($player2 == $objPlayer->id)) 
-    {
-        print "<br />".$objPlayer->user." ".GAIN.' '.$intExp.' punktów doświadczenia.';
-    }
     $arrStats = array('condition' => 0,
 		      'wisdom' => 0,
 		      'speed' => 0);
@@ -343,7 +343,7 @@ function gainability ($objPlayer, $intExp, $gunik, $gatak, $gmagia, $player2, $s
 /**
 * Function count damage of weapons and armors in fight
 */
-function lostitem($arrEquip, $pid, ,$player2, $intLevel) 
+function lostitem($arrEquip, $pid, $player2, $intLevel) 
 {
     global $db;
 
@@ -358,12 +358,18 @@ function lostitem($arrEquip, $pid, ,$player2, $intLevel)
 	    if ($arrEquip[$intKey][6] == 0)
 	      {
 		$db->Execute("DELETE FROM `equipment` WHERE `id`=".$arrEquip[$intKey][0]);
-		print "<br />".$arrPrefix[$i]." ".$arrSuffix[$i]." ".IS_BROKEN."!<br />";
+		if ($pid == $player2)
+		  {
+		    print "<br />".$arrPrefix[$i]." ".$arrSuffix[$i]." ".IS_BROKEN."!<br />";
+		  }
 	      }
 	    else
 	      {
 		$db->Execute("UPDATE `equipment` SET `wt`=".$arrEquip[$intKey][6]." WHERE `id`=".$arrEquip[$intKey][0]);
-		print "<br />".$arrPrefix[$i]." ".LOST1." nieco ".DURABILITY.".<br />";
+		if ($pid == $player2)
+		  {
+		    print "<br />".$arrPrefix[$i]." ".LOST1." nieco ".DURABILITY.".<br />";
+		  }
 	      }
 	  }
       }

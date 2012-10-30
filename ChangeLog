@@ -1,5 +1,7 @@
 2012-10-30  Bartek thindil Jasicki  <thindil@vallheru.net>
 
+	* UPDATE,class/player_class.php, includes/functions.php, includes/funkcje.php, includes/battle.php, battle.php: 
+	finished work on PvP fights
 	* BUG,includes/resurect.php: 
 	fixed resurection
 	* UPDATE,install/db/update.sql: 

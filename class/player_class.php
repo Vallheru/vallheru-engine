@@ -572,8 +572,10 @@ class Player
      */
     function dying($blnFight = FALSE)
     {
+      global $db;
+
       $this->hp = 0;
-      if ($this->antidote[0] == 'R')
+      if ($this->antidote != '' && $this->antidote[0] == 'R')
 	{
 	  $this->antidote = '';
 	  $intPower = substr($this->antidote, 1);
@@ -586,7 +588,7 @@ class Player
 		}
 	    }
 	}
-      $db->Execute("UPDATE `players` SET `hp`=".$this->hp.", `antidote`=".$this->antidote." WHERE `id`=".$this->id);
+      $db->Execute("UPDATE `players` SET `hp`=".$this->hp.", `antidote`='".$this->antidote."' WHERE `id`=".$this->id);
       if ($this->hp == 1)
 	{
 	  return 'Na szczęście udało ci się tym razem oszukać śmierć.';

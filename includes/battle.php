@@ -8,7 +8,7 @@
  *   @author               : thindil <thindil@vallheru.net>
  *   @author               : eyescream <tduda@users.sourceforge.net>
  *   @version              : 1.7
- *   @since                : 29.10.2012
+ *   @since                : 30.10.2012
  *
  */
 
@@ -85,7 +85,7 @@ function attack1($attacker, $defender, $attack_bspell, $def_bspell, $attack_dspe
     /**
     * Calculate dodge defender and power of attack, critical shot (bow)
     */
-    if ($attacker->equip[1][0] && $attack_durwep <= $attacker->equip[1][6] && $attack_durwep <= $attacker->equip[6][6]) 
+    if ($attacker->equip[1][0] && $attacker->equip[6][6] > 0 && $attacker->equip[1][6] > 0) 
     {
         $unik -= $attacker->skills['shoot'][1];
         $bonus = (($attacker->stats['strength'][2] / 2) + ($attacker->stats['agility'][2] / 2));
@@ -106,13 +106,13 @@ function attack1($attacker, $defender, $attack_bspell, $def_bspell, $attack_dspe
     /**
     * Calculate dodge defender and power of attack, critical hit (weapon)
     */
-    if ($attacker->equip[0][0] && $attack_durwep <= $attacker->equip[0][6]) 
+    if ($attacker->equip[0][0] && $attacker->equip[0][6] > 0) 
     {
         $unik -= $attacker->skills['attack'][1];
-        if ($attacker['clas'] == 'Wojownik' || $attacker['clas'] == 'Barbarzyńca') 
+        if ($attacker->clas == 'Wojownik' || $attacker->clas == 'Barbarzyńca') 
 	  {
-	    $mypower = (($attacker->equip[0][2] + $attacker['strength']) + ceil($attacker->skills['attack'][1] / 10));
-	    $unik = ($unik - ceil($attacker->skills['attack'] / 10));
+	    $mypower = (($attacker->equip[0][2] + $attacker->stats['strength'][2]) + ceil($attacker->skills['attack'][1] / 10));
+	    $unik = ($unik - ceil($attacker->skills['attack'][1] / 10));
 	  } 
 	else 
 	  {
@@ -123,7 +123,7 @@ function attack1($attacker, $defender, $attack_bspell, $def_bspell, $attack_dspe
 	$strSkill = 'attack';
     }
     //Secondary weapon (Barbarian only)
-    if ($attacker->equip[11][0] && $attack_durwep <= $attacker->equip[11][6])
+    if ($attacker->equip[11][0] && $attacker->equip[11][6] > 0)
       {
 	$unik -= ($attacker->skills['attack'][1] / 5);
 	$mypower += (($attacker->equip[11][2] + $attacker->stats['strength'][2]) + ceil($attacker->skills['attack'][1] / 10));
@@ -191,9 +191,9 @@ function attack1($attacker, $defender, $attack_bspell, $def_bspell, $attack_dspe
       {
 	$unik = ($unik + ceil($defender->skills['dodge'][1] / 10));
       }
-    elseif ($defender['clas'] == 'Mag') 
+    elseif ($defender->clas == 'Mag') 
     {
-        if ($defender['mana'] > 0) 
+        if ($defender->mana > 0) 
 	  {
             $eczarobr = $def_dspell -> fields['def'];
 	    if ($defender->equip[3][0])
@@ -241,7 +241,7 @@ function attack1($attacker, $defender, $attack_bspell, $def_bspell, $attack_dspe
     {
         $attackstr = 5;
     }
-    if ($attacker['clas'] == 'Rzemieślnik')
+    if ($attacker->clas == 'Rzemieślnik')
     {
         $mypower -= ($mypower / 4);
     }
@@ -263,9 +263,9 @@ function attack1($attacker, $defender, $attack_bspell, $def_bspell, $attack_dspe
     */
     while ($round <= $attackstr && $defender->hp >= 0) 
     {
-        $rzut1 = (rand(1, $attacker->skills[$strSkill]) * 10);
+        $rzut1 = (rand(1, $attacker->skills[$strSkill][1]) * 10);
         $mypower = ($mypower + $rzut1);
-        $rzut2 = (rand(1, $defender->skills['dodge']) * 10);
+        $rzut2 = (rand(1, $defender->skills['dodge'][1]) * 10);
 	$blnMiss = FALSE;
 	$intHit = rand(0, 3);
 	//Attacker too exhausted
@@ -521,7 +521,7 @@ function attack1($attacker, $defender, $attack_bspell, $def_bspell, $attack_dspe
                     {
                         $attack_attack++;
                     }
-                    if ($defender['hp'] <= 0) 
+                    if ($defender->hp <= 0) 
                     {
                         break;
                     }
@@ -655,6 +655,7 @@ function attack1($attacker, $defender, $attack_bspell, $def_bspell, $attack_dspe
 	$db->Execute("INSERT INTO `battlelogs` (`pid`, `did`, `wid`, `bdate`) VALUES(".$attacker->id.", ".$defender->id.", 0, ".$objDay->fields['value'].")");
 	$db->Execute("INSERT INTO `battlelogs` (`pid`, `did`, `wid`, `bdate`) VALUES(".$defender->id.", ".$attacker->id.", 0, ".$objDay->fields['value'].")");
 	$objDay->Close();
+	$defender->save();
         require_once("includes/foot.php");
         exit;
     }
@@ -693,8 +694,16 @@ function attack1($attacker, $defender, $attack_bspell, $def_bspell, $attack_dspe
 	  {
 	    $intExpsum += $defender->skills[$strSkill2][1];
 	  }
-	$intExpsum = $intExpsum;
-        $strMessage = $strMessage."<b>".$attacker['user']."</b> ".HE_GET." <b>".$intExpsum."</b> ".EXPERIENCE." <b>".$creditgain."</b> ".GOLD_COINS." ".$text."<br />";
+	$intExpsum = $intExpsum * 2;
+	if ($attacker->equip[0][0] || $attacker->equip[11][0]) 
+	  {
+	    $strType = 'melee';
+	  }
+	else
+	  {
+	    $strType = 'ranged';
+	  }
+        $strMessage = $strMessage."<b>".$attacker->user."</b> ".HE_GET." <b>".$intExpsum."</b> ".EXPERIENCE." <b>".$creditgain."</b> ".GOLD_COINS." ".$text."<br />";
         $smarty -> assign ("Message", $strMessage);
         $smarty -> display ('error1.tpl');
 	gainability($attacker, $intExpsum, $attack_miss, $attack_attack, $attack_magic, $starter, $strType);
@@ -726,13 +735,23 @@ function attack1($attacker, $defender, $attack_bspell, $def_bspell, $attack_dspe
             $strSubject = T_SUBJECT.$attacker->user.T_SUB_ID.$attacker->id;
             $db -> Execute("INSERT INTO `mail` (`sender`, `senderid`, `owner`, `subject`, `body`, `date`) VALUES('".T_SENDER."','0',".$defender->id.",'".$strSubject."','".$strMessage."', ".$strDate.")");
         }
-        $db -> Execute("INSERT INTO `log` (`owner`, `log`, `czas`, `type`) VALUES(".$attacker->id.",'".$attacktext." ".YOU_DEFEAT." <b><a href=view.php?view=".$defender->id.">".$defender->user."</a></b> ".L_ID.'<b>'.$defender->id."</b>. ".YOU_REWARD." <b>".$expgain."</b> ".EXPERIENCE." <b>".$creditgain."</b> ".GOLD_COINS.".', ".$strDate.", 'B')");
+        $db -> Execute("INSERT INTO `log` (`owner`, `log`, `czas`, `type`) VALUES(".$attacker->id.",'".$attacktext." ".YOU_DEFEAT." <b><a href=view.php?view=".$defender->id.">".$defender->user."</a></b> ".L_ID.'<b>'.$defender->id."</b>. ".YOU_REWARD." <b>".$intExpsum."</b> ".EXPERIENCE." <b>".$creditgain."</b> ".GOLD_COINS.".', ".$strDate.", 'B')");
 	//Write battle info
 	$objDay = $db -> Execute("SELECT `value` FROM `settings` WHERE `setting`='day'");
 	$db->Execute("INSERT INTO `battlelogs` (`pid`, `did`, `wid`, `bdate`) VALUES(".$attacker->id.", ".$defender->id.", ".$attacker->id.", ".$objDay->fields['value'].")");
 	$db->Execute("INSERT INTO `battlelogs` (`pid`, `did`, `wid`, `bdate`) VALUES(".$defender->id.", ".$attacker->id.", ".$attacker->id.", ".$objDay->fields['value'].")");
 	$objDay->Close();
-	loststat($defender, $attacker->id, $attacker->user, $starter); //TODO
+	$strLog = $defender->dying();
+	if ($defender->id == $starter) 
+	  {
+	    $attacktext = YOU_ATTACK;
+	  } 
+	else 
+	  {
+	    $attacktext = YOU_ATTACKED;
+	  }
+	$db -> Execute("INSERT INTO log (`owner`, `log`, `czas`, `type`) VALUES(".$defender->id.",'".$attacktext." ".YOU_LOSE." <b><a href=view.php?view=".$attacker->id.">".$attacker->user."</a> ".ID.":".$attacker->id."</b>.', ".$strDate.", 'B')");
+	$defender->save();
         require_once("includes/foot.php");
         exit;
     }

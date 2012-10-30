@@ -6,8 +6,8 @@
  *   @name                 : functions.php                            
  *   @copyright            : (C) 2004,2005,2006,2011,2012 Vallheru Team based on Gamers-Fusion ver 2.5
  *   @author               : thindil <thindil@vallheru.net>
- *   @version              : 1.6
- *   @since                : 01.09.2012
+ *   @version              : 1.7
+ *   @since                : 30.10.2012
  *
  */
 
@@ -143,15 +143,8 @@ function drink($id)
 	}
       else
 	{
-	  if ($miks->fields['power'] >= $player->level)
-	    {
-	      $efekt = 'czasowo zabezpieczyłeś się przed śmiercią';
-	      $db -> Execute("UPDATE `players` SET `antidote`='R' WHERE `id`=".$player -> id);
-	    }
-	  else
-	    {
-	      $message = 'Ta mikstura jest za słaba dla ciebie.';
-	    }
+	  $efekt = 'czasowo zabezpieczyłeś się przed śmiercią';
+	  $db -> Execute("UPDATE `players` SET `antidote`='R".$miks->fields['power']."' WHERE `id`=".$player -> id);
 	}
     }
     if ($strType == 'H' && $intRoll > 50 && !isset($message)) 
@@ -252,19 +245,76 @@ function equip ($id)
     global $db;
 
     checkvalue($id);
-    $equip = $db -> Execute("SELECT * FROM equipment WHERE id=".$id." AND status='U'");
+    $equip = $db -> Execute("SELECT * FROM `equipment` WHERE `id`=".$id." AND `status`='U' AND `owner`=".$player->id);
     if (empty ($equip -> fields['id'])) 
     {
-        error (EMPTY_ID);
+        error ('Nie ma takiego przedmiotu.');
     }
     if ($player -> id != $equip -> fields['owner']) 
     {
         error (NOT_OWNER);
     }
-    if ($player -> level < $equip -> fields['minlev']) 
-    {
-        error (LEVEL_TOO_LOW);
-    }
+    switch ($equip->fields['type'])
+      {
+      case 'W':
+	$strSkill = 'attack';
+	break;
+      case 'B':
+      case 'R':
+	$strSkill = 'shoot';
+	break;
+      case 'C':
+      case 'T':
+	$strSkill = 'magic';
+	break;
+      case 'H':
+      case 'A':
+      case 'S':
+      case 'L':
+	$arrSkills = array($player->skills['attack'][1], $player->skills['shoot'][1], $player->skills['magic'][1]);
+	if ($arrSkills[0] > $arrSkills[1] && $arrSkills[0] > $arrSkills[2])
+	  {
+	    $strSkill = 'attack';
+	  }
+	elseif ($arrSkills[1] > $arrSkills[0] && $arrSkillls[1] > $arrSkills[2])
+	  {
+	    $strSkill = 'shoot';
+	  }
+	else
+	  {
+	    $strSkill = 'magic';
+	  }
+	break;
+      case 'E':
+	$arrTools = array('smelting' => 'miechy',
+			  'lumberjack' => 'piła',
+			  'mining' => 'kilof',
+			  'breeding' => 'uprząż',
+			  'jewellry' => 'nożyk',
+			  'herbalism' => 'sierp',
+			  'alchemy' => 'moździerz',
+			  'carpentry' => 'ciesak',
+			  'smith' => 'młot');
+	foreach ($arrTools as $Skill => $strName)
+	  {
+	    if (stripos($equip->fields['name'], $strName) !== FALSE)
+	      {
+		$strSkill = $Skill;
+		break;
+	      }
+	  }
+	break;
+      default:
+	$strSkill = '';
+      }
+    if ($strSkill != '')
+      {
+	if ($player->skills[$strSkill][1] < $equip->fields['minlev'])
+	  {
+	    message('error', 'Nie możesz jeszcze założyć tego przedmiotu.');
+	    return;
+	  }
+      }
     if ($player -> clas == 'Barbarzyńca' && ($equip -> fields['magic'] != 'N' || ($equip -> fields['type'] == 'I' && $equip -> fields['power']))) 
     {
         error (YOU_ARE_BARBARIAN);
