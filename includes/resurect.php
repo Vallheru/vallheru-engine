@@ -7,7 +7,7 @@
  *   @copyright            : (C) 2004,2005,2006,2011 Vallheru Team based on Gamers-Fusion ver 2.5
  *   @author               : thindil <thindil@vallheru.net>
  *   @version              : 1.7
- *   @since                : 25.10.2012
+ *   @since                : 30.10.2012
  *
  */
 
@@ -93,5 +93,5 @@ else
     $strLoststat = 'umiejętności '.$player->oldskills[$strKey][0];
   }
 
-$db -> Execute("UPDATE `players` SET `hp`=`".$player->max_hp."`, `credits`=`credits`-".$crneed." WHERE `id`=".$player -> id);
+$db -> Execute("UPDATE `players` SET `hp`=".$player->max_hp.", `credits`=`credits`-".$crneed." WHERE `id`=".$player -> id);
 ?>

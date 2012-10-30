@@ -1,5 +1,7 @@
 2012-10-30  Bartek thindil Jasicki  <thindil@vallheru.net>
 
+	* BUG,includes/resurect.php: 
+	fixed resurection
 	* UPDATE,install/db/update.sql: 
 	updated database
 	* UPDATE,class/player_class.php:
