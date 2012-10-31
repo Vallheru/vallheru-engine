@@ -704,8 +704,6 @@ function attack1($attacker, $defender, $attack_bspell, $def_bspell, $attack_dspe
 	    $strType = 'ranged';
 	  }
         $strMessage = $strMessage."<b>".$attacker->user."</b> ".HE_GET." <b>".$intExpsum."</b> ".EXPERIENCE." <b>".$creditgain."</b> ".GOLD_COINS." ".$text."<br />";
-        $smarty -> assign ("Message", $strMessage);
-        $smarty -> display ('error1.tpl');
 	gainability($attacker, $intExpsum, $attack_miss, $attack_attack, $attack_magic, $starter, $strType);
 	lostitem($attacker->equip, $attacker->id, $starter, $attacker->skills['shoot'][1]);
 	lostitem($defender->equip, $defender->id, $starter, $defender->skills['shoot'][1]);
@@ -741,16 +739,22 @@ function attack1($attacker, $defender, $attack_bspell, $def_bspell, $attack_dspe
 	$db->Execute("INSERT INTO `battlelogs` (`pid`, `did`, `wid`, `bdate`) VALUES(".$attacker->id.", ".$defender->id.", ".$attacker->id.", ".$objDay->fields['value'].")");
 	$db->Execute("INSERT INTO `battlelogs` (`pid`, `did`, `wid`, `bdate`) VALUES(".$defender->id.", ".$attacker->id.", ".$attacker->id.", ".$objDay->fields['value'].")");
 	$objDay->Close();
-	$strLog = $defender->dying();
+	$strLog = $defender->dying();	
 	if ($defender->id == $starter) 
 	  {
 	    $attacktext = YOU_ATTACK;
+	    $strMessage .= $strLog;
 	  } 
 	else 
 	  {
 	    $attacktext = YOU_ATTACKED;
 	  }
-	$db -> Execute("INSERT INTO log (`owner`, `log`, `czas`, `type`) VALUES(".$defender->id.",'".$attacktext." ".YOU_LOSE." <b><a href=view.php?view=".$attacker->id.">".$attacker->user."</a> ".ID.":".$attacker->id."</b>.', ".$strDate.", 'B')");
+	$smarty -> assign ("Message", $strMessage);
+        $smarty -> display ('error1.tpl');
+	gainability($attacker, $intExpsum, $attack_miss, $attack_attack, $attack_magic, $starter, $strType);
+	lostitem($attacker->equip, $attacker->id, $starter, $attacker->skills['shoot'][1]);
+	lostitem($defender->equip, $defender->id, $starter, $defender->skills['shoot'][1]);
+	$db -> Execute("INSERT INTO log (`owner`, `log`, `czas`, `type`) VALUES(".$defender->id.",'".$attacktext." ".YOU_LOSE." <b><a href=view.php?view=".$attacker->id.">".$attacker->user."</a> ".ID.":".$attacker->id."</b>. ".$strLog."', ".$strDate.", 'B')");
 	$defender->save();
         require_once("includes/foot.php");
         exit;
