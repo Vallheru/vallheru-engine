@@ -8,7 +8,7 @@
  *   @author               : thindil <thindil@vallheru.net>
  *   @author               : eyescream <tduda@users.sourceforge.net>
  *   @version              : 1.7
- *   @since                : 30.10.2012
+ *   @since                : 31.10.2012
  *
  */
 
@@ -137,7 +137,7 @@ function attack1($attacker, $defender, $attack_bspell, $def_bspell, $attack_dspe
     {
         $unik -= $attacker->skills['magic'][1];
         $mypower = $attack_bspell -> fields['dmg'];
-	$intMcost = $attack_bspell->fields['poziom'] - ceil($attacker->skills['magic'] / 10);
+	$intMcost = $attack_bspell->fields['poziom'] - ceil($attacker->skills['magic'][1] / 10);
 	if ($intMcost < 1)
 	  {
 	    $intMcost = 1;
