@@ -1,5 +1,7 @@
 2012-10-31  Bartek thindil Jasicki  <thindil@vallheru.net>
 
+	* BUG,class/player_class.php: 
+	fixed few bugs
 	* BUG,includes/battle.php: 
 	fixed few bugs
 	* BUG,class/player_class.php: 

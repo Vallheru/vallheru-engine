@@ -157,7 +157,6 @@ class Player
 	$this->newbie = $stats->fields['newbie'];
 	$this->forumtime = $stats->fields['forum_time'];
 	$this->tforumtime = $stats->fields['tforum_time'];
-        $stats -> Close();
 	$objRevent = $db->Execute("SELECT `state` FROM `revent` WHERE `pid`=".$pid);
 	if (!$objRevent->fields['state'])
 	  {
@@ -177,6 +176,7 @@ class Player
 	$this->oldstats = $this->stats;
 	$this->equip = $this->equipment();
 	$this->curstats();
+	$stats -> Close();
     }
 
     /**
@@ -442,6 +442,7 @@ class Player
     function checkexp($arrExp, $intEid, $strType, $blnFight = FALSE)
     {
       global $db;
+      global $newdate;
       
       $arrGained = array();
       foreach ($arrExp as $stat => $value)
@@ -513,6 +514,7 @@ class Player
 		}
 	    }
 	}
+      $strMessage = '';
       $intGained = count($arrGained);
       if ($intGained > 0)
 	{
@@ -548,7 +550,7 @@ class Player
 		  $strMessage .= ' rosną.';
 		}
 	    }
-	  if ($this->id == $intEid)
+	  if ($this->id == $intEid && $strMessage != '')
 	    {
 	      if ($blnFight)
 		{
@@ -559,7 +561,7 @@ class Player
 		  message('info', $strMessage);
 		}
 	    }
-	  elseif ($intEid > 0)
+	  elseif ($intEid > 0 && $strMessage != '')
 	    {
 	      $strDate = $db -> DBDate($newdate);
 	      $db -> Execute("INSERT INTO `log` (`owner`, `log`, `czas`, `type`) VALUES(".$intEid.",'Podczas walki z <b>".$this->user." ID:".$this->id."</b>, ".lcfirst($strMessage).".', ".$strDate.", 'B')");
@@ -588,7 +590,7 @@ class Player
 		}
 	    }
 	}
-      $db->Execute("UPDATE `players` SET `hp`=".$this->hp.", `antidote`='".$this->antidote."', `pm`=".$player->mana." WHERE `id`=".$this->id);
+      $db->Execute("UPDATE `players` SET `hp`=".$this->hp.", `antidote`='".$this->antidote."', `pm`=".$this->mana." WHERE `id`=".$this->id);
       if ($this->hp == 1)
 	{
 	  return 'Na szczęście udało ci się tym razem oszukać śmierć.';
@@ -597,7 +599,7 @@ class Player
       //Lost experience in stats
       if ($rand < 51)
 	{
-	  $strKey = array_rand(array_keys($this->stats));
+	  $strKey = array_rand($this->stats);
 	  if ($this->oldstats[$strKey][2] == $this->oldstats[$strKey][1])
 	    {
 	      $lostexp = $this->oldstats[$strKey][1] * 2000;
@@ -634,7 +636,7 @@ class Player
 	    }
 	  else
 	    {
-	      $lostexp = ceil($player->oldskills[$strKey][2] / 10);
+	      $lostexp = ceil($this->oldskills[$strKey][2] / 10);
 	      $this->skills[$strKey][2] -= $lostexp;
 	      $this->oldskills[$strKey][2] -= $lostexp;
 	      $strMessage = 'Tracisz nieco doświadczenia w umiejętności: '.$this->oldskills[$strKey][0];
