@@ -7,7 +7,7 @@
  *   @copyright            : (C) 2004,2005,2006,2007,2011,2012 Vallheru Team based on Gamers-Fusion ver 2.5
  *   @author               : thindil <thindil@vallheru.net>
  *   @version              : 1.7
- *   @since                : 30.10.2012
+ *   @since                : 31.10.2012
  *
  */
 
@@ -588,7 +588,7 @@ class Player
 		}
 	    }
 	}
-      $db->Execute("UPDATE `players` SET `hp`=".$this->hp.", `antidote`='".$this->antidote."' WHERE `id`=".$this->id);
+      $db->Execute("UPDATE `players` SET `hp`=".$this->hp.", `antidote`='".$this->antidote."', `pm`=".$player->mana." WHERE `id`=".$this->id);
       if ($this->hp == 1)
 	{
 	  return 'Na szczęście udało ci się tym razem oszukać śmierć.';

@@ -1,5 +1,7 @@
 2012-10-31  Bartek thindil Jasicki  <thindil@vallheru.net>
 
+	* BUG,class/player_class.php: 
+	fixed lost mana on dying
 	* UPDATE,czary.php:
 	updated spellbook
 
