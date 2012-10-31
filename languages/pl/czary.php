@@ -66,8 +66,7 @@ if (isset($_GET['cast']))
     define("YOU_RISE", "Zwiększyłeś siłę ");
     define("FOR_A", " o ");
     define("NOW_IS", "! Jest to teraz przedmiot magiczny! Zdobyłeś ");
-    define("S_EXP", " Punktów Doświadczenia oraz ");
-    define("S_CAST", " punktów w umiejętności rzucanie czarów<br />");
+    define("S_EXP", " Punktów Doświadczenia<br />");
     define("E_DB", "Nie mogę dodać");
     define("YOU_TRY", "Próbowałeś umagicznić ");
     define("BUT_FAIL", " ale niestety nie udało się. Na skutek nieudanego zaklęcia przedmiot niszczy się! Dostajesz 0.01 do umiejętności rzucania czarów.");
