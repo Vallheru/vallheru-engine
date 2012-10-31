@@ -6,8 +6,8 @@
  *   @name                 : czary.php                            
  *   @copyright            : (C) 2004,2005,2006,2011,2012 Vallheru Team based on Gamers-Fusion ver 2.5
  *   @author               : thindil <thindil@vallheru.net>
- *   @version              : 1.6
- *   @since                : 05.09.2012
+ *   @version              : 1.7
+ *   @since                : 31.10.2012
  *
  */
 
@@ -31,7 +31,6 @@
 
 $title = "Księga czarów"; 
 require_once("includes/head.php");
-require_once("includes/checkexp.php");
 
 /**
 * Get the localization for game
@@ -73,11 +72,6 @@ if (isset($_GET['cast']))
     if ($player -> id != $arrspell -> fields['gracz']) 
       {
         message('error', NOT_YOUR);
-	$blnValid = FALSE;
-      }
-    if ($player -> level < $arrspell -> fields['poziom']) 
-      {
-        message('error', TO_LOW_L);
 	$blnValid = FALSE;
       }
     if ($player -> mana < $arrspell -> fields['poziom']) 
@@ -225,11 +219,9 @@ if (isset($_GET['cast']))
 	     */
 	    $player->curskills(array('magic'));
 	    
-	    $chance = ($player -> magic - $arritem -> fields['minlev'] - $arrspell -> fields['poziom'] + rand(1,100));
-	    $bonus = ceil($player -> magic / $arrspell -> fields['poziom']);
+	    $chance = (($player->skills['magic'][1] + $player->stats['inteli'][2]) - $arritem -> fields['minlev'] - $arrspell -> fields['poziom'] + rand(1,100));
+	    $bonus = $player->skills['magic'][1] * rand(1, 5);
 	    
-	    $magic = ($arrspell -> fields['poziom'] / 100);
-
 	    $arrElement = array('earth' => 'E', 'water' => 'W', 'fire' => 'F', 'wind' => 'A');
 	    $blnValid2 = TRUE;
 	    if ($arrspell -> fields['nazwa'] == E_SPELL1) 
@@ -248,7 +240,7 @@ if (isset($_GET['cast']))
 			$bonus = $maxbonus;
 		      }
 		    $power = $arritem -> fields['power'] + $bonus;
-		    message('success', YOU_RISE.$arritem -> fields['name'].FOR_A.$bonus.NOW_IS.$bonus.S_EXP.$magic.S_CAST);
+		    message('success', YOU_RISE.$arritem -> fields['name'].FOR_A.$bonus.NOW_IS.$bonus.S_EXP);
 		    $test = $db -> Execute("SELECT id FROM equipment WHERE name='".$name."' AND wt=".$arritem -> fields['wt']." AND type='".$arritem -> fields['type']."' AND status='U' AND owner=".$player -> id." AND power=".$power." AND zr=".$arritem -> fields['zr']." AND szyb=".$arritem -> fields['szyb']." AND maxwt=".$arritem -> fields['maxwt']." AND poison=".$arritem -> fields['poison']." AND ptype='".$arritem -> fields['ptype']."' AND magic='".$arrElement[$arrspell->fields['element']]."' AND repair=".$arritem -> fields['repair']);
 		    if (!$test -> fields['id']) 
 		      {
@@ -266,11 +258,13 @@ if (isset($_GET['cast']))
 			  }
 		      }
 		    $test -> Close();
-		    checkexp($player -> exp,$bonus,$player -> level,$player -> race,$player -> user,$player -> id,0,0,$player -> id,'magia',$magic);
+		    $player->checkexp(array('inteli' => ($bonus / 2)), $player->id, 'stats');
+		    $player->checkexp(array('magic' => ($bonus / 2)), $player->id, 'skills');
 		  } 
                 else 
 		  {
-		    $db -> Execute("UPDATE players SET magia=magia+0.01 WHERE id=".$player -> id);
+		    $player->checkexp(array('inteli' => 1), $player->id, 'stats');
+		    $player->checkexp(array('magic' => 1), $player->id, 'skills');
 		    message('error', YOU_TRY.$arritem -> fields['name'].BUT_FAIL);
 		    $blnValid = FALSE;
 		  }
@@ -303,11 +297,13 @@ if (isset($_GET['cast']))
 			$db -> Execute("UPDATE equipment SET amount=amount+1 WHERE id=".$test -> fields['id']);
 		      }
 		    $test -> Close();
-		    checkexp($player -> exp,$bonus,$player -> level,$player -> race,$player -> user,$player -> id,0,0,$player -> id,'magia',$magic);
+		    $player->checkexp(array('inteli' => ($bonus / 2)), $player->id, 'stats');
+		    $player->checkexp(array('magic' => ($bonus / 2)), $player->id, 'skills');
 		  } 
                 else 
 		  {
-		    $db -> Execute("UPDATE players SET magia=magia+0.01 WHERE id=".$player -> id);
+		    $player->checkexp(array('inteli' => 1), $player->id, 'stats');
+		    $player->checkexp(array('magic' => 1), $player->id, 'skills');
 		    message('error', YOU_TRY.$arritem -> fields['name'].BUT_FAIL);
 		    $blnValid = FALSE;
 		  }
@@ -371,13 +367,15 @@ if (isset($_GET['cast']))
 			  {
 			    $db -> Execute("UPDATE equipment SET amount=amount+1 WHERE id=".$test -> fields['id']);
 			  }
-			checkexp($player -> exp,$bonus,$player -> level,$player -> race,$player -> user,$player -> id,0,0,$player -> id,'magia',$magic);
+			$player->checkexp(array('inteli' => ($bonus / 2)), $player->id, 'stats');
+			$player->checkexp(array('magic' => ($bonus / 2)), $player->id, 'skills');
 		      } 
 		  } 
                 else 
 		  {
 		    $blnValid = FALSE;
-		    $db -> Execute("UPDATE players SET magia=magia+0.01 WHERE id=".$player -> id);
+		    $player->checkexp(array('inteli' => 1), $player->id, 'stats');
+		    $player->checkexp(array('magic' => 1), $player->id, 'skills');
 		    message("error", YOU_TRY.$arritem -> fields['name'].BUT_FAIL);
 		  }
 	      }
@@ -430,9 +428,9 @@ if (isset($_GET['naucz']))
       {
         message('error', NOT_YOUR);
       }
-    elseif ($player -> level < $czary -> fields['poziom']) 
+    elseif ($player->skills['magic'][1] < $czary -> fields['poziom']) 
       {
-        message('error', TOO_LOW_L);
+        message('error', 'Nie możesz jeszcze używać tego czaru.');
       }
     elseif ($player -> clas != 'Mag') 
       {
