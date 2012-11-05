@@ -8,7 +8,7 @@
  *   @author               : thindil <thindil@vallheru.net>
  *   @author               : eyescream <tduda@users.sourceforge.net>
  *   @version              : 1.7
- *   @since                : 31.10.2012
+ *   @since                : 05.11.2012
  *
  */
 
@@ -429,10 +429,7 @@ function attack1($attacker, $defender, $attack_bspell, $def_bspell, $attack_dspe
 	  {
 	    $strMessage = $strMessage."<b>".$defender['user']."</b> zablokował tarczą atak <b>".$attacker->user."</b><br />";
 	    $def_stam += ($defender->equip[5][4] / 10);
-	    if ($defender->equip[5][6] > 0)
-	      {
-		$defender->equip[5][6] --;
-	      }
+	    $defender->equip[5][6] --;
 	    $blnMiss = TRUE;
 	  }
 	//Count lost mana by defender
