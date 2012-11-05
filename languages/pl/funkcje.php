@@ -6,8 +6,8 @@
  *   @name                 : funkcje.php                            
  *   @copyright            : (C) 2004,2005,2006,2011,2012 Vallheru Team based on Gamers-Fusion ver 2.5
  *   @author               : thindil <thindil@vallheru.net>
- *   @version              : 1.6
- *   @since                : 10.08.2012
+ *   @version              : 1.7
+ *   @since                : 05.11.2012
  *
  */
 
@@ -87,7 +87,7 @@ define("EVENT2", "lecz walka nie została rozstrzygnięta");
 define("B_RESULT2", "Wynik:</b> Pokonałeś");
 define("REWARD", "Nagroda</b><br /> Zdobyłeś");
 define("EXPERIENCE", "PD oraz");
-define("GOLD", "sztuk złota oraz");
+define("GOLD", "sztuk złota.");
 define("YOU_WEAPON", "Twoja broń");
 define("HAS_BEEN1", "ulega");
 define("POISONED", "Zatruty");

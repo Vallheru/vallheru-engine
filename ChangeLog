@@ -1,5 +1,7 @@
 2012-11-05  Bartek thindil Jasicki  <thindil@vallheru.net>
 
+	* UPDATE,languages/pl/funkcje.php, includes/funkcje.php: 
+	updated fast fight with monsters
 	* BUG,includes/battle.php: 
 	fixed spell mana cost
 	* UPDATE,includes/battle.php:
