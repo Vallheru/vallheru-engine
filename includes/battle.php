@@ -137,11 +137,6 @@ function attack1($attacker, $defender, $attack_bspell, $def_bspell, $attack_dspe
     {
         $unik -= $attacker->skills['magic'][1];
         $mypower = $attack_bspell -> fields['dmg'];
-	$intMcost = $attack_bspell->fields['poziom'] - ceil($attacker->skills['magic'][1] / 10);
-	if ($intMcost < 1)
-	  {
-	    $intMcost = 1;
-	  }
 	if ($attacker->equip[3][0])
 	  {
 	    $mypower -= ($attack_bspell -> fields['dmg'] * ($attacker->equip[3][4] / 100));
@@ -275,7 +270,7 @@ function attack1($attacker, $defender, $attack_bspell, $def_bspell, $attack_dspe
 	    break;
         }
 	//Attacker dont have mana
-	if ($attack_bspell -> fields['id'] && $attacker->mana < $intMcost)
+	if ($attack_bspell -> fields['id'] && $attacker->mana < 1)
 	  {
 	    $strMessage .= "<b>".$attacker->user."</b> nie ma punktów magii aby atakować.<br />";
 	    break;
@@ -289,7 +284,7 @@ function attack1($attacker, $defender, $attack_bspell, $def_bspell, $attack_dspe
 	//Check attacker spell
 	if ($attack_bspell -> fields['id'] && $mypower > 0)
 	  {
-	    $attacker->mana -= $intMcost;
+	    $attacker->mana --;
 	  }
 	//Defender too exhausted
         if ($def_stam > $defender->stats['condition'][2]) 
@@ -360,7 +355,7 @@ function attack1($attacker, $defender, $attack_bspell, $def_bspell, $attack_dspe
 	  {
 	    if ($pechowy <= 25) 
 	      {
-		$strMessage = $strMessage."<b>".$attacker->user."</b> ".YOU_MISS1." <b>".$intMcost."</b> ".MANA.".<br />";
+		$strMessage = $strMessage."<b>".$attacker->user."</b> ".YOU_MISS1." <b>1</b> ".MANA.".<br />";
 	      }
 	    elseif ($pechowy > 25 && $pechowy <= 45)
 	      {

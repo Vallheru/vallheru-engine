@@ -1,5 +1,7 @@
 2012-11-05  Bartek thindil Jasicki  <thindil@vallheru.net>
 
+	* BUG,includes/battle.php: 
+	fixed spell mana cost
 	* UPDATE,includes/battle.php:
 	small code update
 
