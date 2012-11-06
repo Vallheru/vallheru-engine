@@ -1,3 +1,8 @@
+2012-11-06  Bartek thindil Jasicki  <thindil@vallheru.net>
+
+	* BUG,includes/funkcje.php:
+	fixed cost in mana for offensive spells
+
 2012-11-05  Bartek thindil Jasicki  <thindil@vallheru.net>
 
 	* UPDATE,languages/pl/funkcje.php, includes/funkcje.php: 

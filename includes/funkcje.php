@@ -694,13 +694,7 @@ function playerattack($eunik, $mczar, &$zmeczenie, &$gatak, $stat, &$enemy, &$gm
 	      //Proper hit
 	      if ($pech > 5) 
 		{
-		  $lost_mana = ceil($mczar -> fields['poziom'] / 2.5);
-		  $lost_mana -= (int)($player ->skills['magic'][1] / 25);
-		  if ($lost_mana < 1)
-		    {
-		      $lost_mana = 1;
-		    }
-		  $player -> mana -= $lost_mana;
+		  $player -> mana --;
 		  $enemy['hp'] = ($enemy['hp'] - $stat['damage']);
 		  if ($times == 1) 
 		    {
@@ -723,7 +717,7 @@ function playerattack($eunik, $mczar, &$zmeczenie, &$gatak, $stat, &$enemy, &$gm
 			{
 			  $strMessage = "<b>".$player -> user."</b> ".YOU_MISS1." <b>".$mczar -> fields['poziom']."</b> ".MANA.".<br />";
 			}
-		      $player->mana -= $mczar -> fields['poziom'];
+		      $player->mana --;
 		    }
 		  elseif ($pechowy > 25 && $pechowy <= 45)
 		    {
@@ -763,7 +757,7 @@ function playerattack($eunik, $mczar, &$zmeczenie, &$gatak, $stat, &$enemy, &$gm
 			  $intDamage = floor($stat['damage'] * 0.25);
 			}
 		      $enemy['hp'] -= $intDamage;
-		      $player->mana -= $mczar -> fields['poziom'];
+		      $player->mana --;
 		      if ($times == 1)
 			{
 			  $strMessage = "<b>".$player -> user."</b> nie do końca opanował zaklęcie, dlatego jego czar zadaje <b>".$intDamage."</b> obrażeń. (".$enemy['hp']." zostało)<br />";
@@ -784,7 +778,7 @@ function playerattack($eunik, $mczar, &$zmeczenie, &$gatak, $stat, &$enemy, &$gm
 			  $intDamage = floor($stat['damage'] * 0.75);
 			}
 		      $enemy['hp'] -= $intDamage;
-		      $player->mana -= $mczar -> fields['poziom'];
+		      $player->mana --;
 		      $player->hp -= $intDamage;
 		      if ($times == 1)
 			{
