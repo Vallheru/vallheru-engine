@@ -6,8 +6,8 @@
  *   @name                 : turnfight.php                            
  *   @copyright            : (C) 2004,2005,2006,2007,2011,2012 Vallheru Team based on Gamers-Fusion ver 2.5
  *   @author               : thindil <thindil@vallheru.net>
- *   @version              : 1.6
- *   @since                : 22.08.2012
+ *   @version              : 1.7
+ *   @since                : 06.11.2012
  *
  */
  
@@ -79,17 +79,22 @@ function turnfight($expgain,$goldgain,$action,$addres)
 		$strLocation = 'Ardulith';
 	      }
 	    $intRoll2 = rand(1, 100);
+	    $intLevel = 0;
+	    foreach ($player->stats as $arrStat)
+	      {
+		$intLevel += $arrStat[2];
+	      }
 	    if ($intRoll2 < 25)
 	      {
-		$enemy1 = $db->SelectLimit("SELECT * FROM `monsters` WHERE `level`<=".$player->level." AND `location`='".$strLocation."' ORDER BY RAND()", 1);
+		$enemy1 = $db->SelectLimit("SELECT * FROM `monsters` WHERE `level`<=".$intLevel." AND `location`='".$strLocation."' ORDER BY RAND()", 1);
 	      }
 	    elseif ($intRoll2 > 24 && $intRoll2 < 90)
 	      {
-		$enemy1 = $db->SelectLimit("SELECT * FROM `monsters` WHERE `level`<=".$player->level." AND `location`='".$strLocation."' ORDER BY `level` DESC", 1);
+		$enemy1 = $db->SelectLimit("SELECT * FROM `monsters` WHERE `level`<=".$intLevel." AND `location`='".$strLocation."' ORDER BY `level` DESC", 1);
 	      }
 	    else
 	      {
-		$enemy1 = $db->SelectLimit("SELECT * FROM `monsters` WHERE `level`>=".$player->level." AND `location`='".$strLocation."' ORDER BY RAND()", 1);
+		$enemy1 = $db->SelectLimit("SELECT * FROM `monsters` WHERE `level`>=".$intLevel." AND `location`='".$strLocation."' ORDER BY RAND()", 1);
 	      }
             $enemy = array("strength" => $enemy1 -> fields['strength'], 
 			   "agility" => $enemy1 -> fields['agility'], 
@@ -109,8 +114,7 @@ function turnfight($expgain,$goldgain,$action,$addres)
     }
     if ($title == 'Arena Walk') 
     {
-        $arrClass = array('Wojownik','Rzemieślnik', 'Złodziej', 'Barbarzyńca');
-        if (in_array($player -> clas, $arrClass) && $myczaro -> fields['id']) 
+        if ($player -> clas != 'Mag' && $myczaro -> fields['id']) 
         {
             error (ONLY_MAGE);
         }
@@ -124,28 +128,10 @@ function turnfight($expgain,$goldgain,$action,$addres)
 			    'wind' => 'E',
 			    'earth' => 'W');
     $myobrona = 0;
-    for ($i = 2; $i < 6; $i++)
-      {
-	$myobrona += $player->equip[$i][2];
-	if ($enemy['dmgtype'] != 'none')
-	  {
-	    if ($player->equip[$i][10] != 'N')
-	      {
-		if ($arrElements3[$enemy['dmgtype']] == $player->equip[$i][10])
-		  {
-		    $myobrona += $player->equip[$i][2];
-		  }
-		elseif ($arrElements4[$enemy['dmgtype']] == $player->equip[$i][10])
-		  {
-		    $myobrona -= ceil($player->equip[$i][2] / 2);
-		  }
-	      }
-	  }
-      }
-    $enemy['damage'] = $enemy['strength'] - $player->cond;
+    $enemy['damage'] = $enemy['strength'] - $player->stats['condition'][2];
     if ($myczaro -> fields['id']) 
     {
-	$myczarobr = ($player -> wisdom * $myczaro -> fields['obr']);
+	$myczarobr = ($player -> stats['wisdom'][2] * $myczaro -> fields['obr']);
 	$fltBasedef = $myczarobr;
 	if ($enemy['dmgtype'] != 'none')
 	  {
@@ -181,7 +167,7 @@ function turnfight($expgain,$goldgain,$action,$addres)
         if ($player->equip[7][0]) 
         {
             $intN = 6 - (int)($player->equip[7][4] / 20);
-            $intBonus = (10 / $intN) * $player -> level * rand(1, $intN);
+            $intBonus = (10 / $intN) * $player -> skills['magic'][1] * rand(1, $intN);
             $myczarobr = ($myczarobr + $intBonus);
         }
         if ($myczarobr < 0) 
@@ -192,17 +178,28 @@ function turnfight($expgain,$goldgain,$action,$addres)
     }
     if ($player -> clas == 'Wojownik'  || $player -> clas == 'Barbarzyńca') 
     {
-        $enemy['damage'] -= ($player -> level + $myobrona);
+      $enemy['damage'] -= ($player -> skills['dodge'][1] + $myobrona);
     } 
         else 
     {
         $enemy['damage'] -= $myobrona;
     }
-    $gmagia = 0;
     if (!isset($_SESSION['round']))
     {
         $_SESSION['round'] = 1;
     }
+    if (!isset($_SESSION['gatak']))
+      {
+	$_SESSION['gatak'] = 1;
+      }
+    if (!isset($_SESSION['gmagia']))
+      {
+	$_SESSION['gmagia'] = 1;
+      }
+    if (!isset($_SESSION['gunik']))
+      {
+	$_SESSION['gunik'] = 1;
+      }
     $smarty -> assign ("Message", "<ul><li><b>".$player -> user."</b> ".VERSUS." <b>".$enemy['name']."</b><br />");
     $smarty -> display ('error1.tpl');
     /**
@@ -210,29 +207,44 @@ function turnfight($expgain,$goldgain,$action,$addres)
     */
     if (!isset($_SESSION['points']) || $_SESSION['points'] == 0)
     {
-        $_SESSION['points'] = ceil($player->speed / $enemy['speed']);
+        $_SESSION['points'] = ceil($player->stats['speed'][2] / $enemy['speed']);
     }
     /**
     * Count dodge - player and monster
     */
+    if (!isset($_POST['action'])) 
+    {
+        $_POST['action'] = '';
+    }
+    $strSkill = 'attack';
+    if (in_array($_POST['action'], array('nattack', 'battack', 'aattack', 'dattack')))
+      {
+	if ($player->equip[0][0] || $player->equip[11][0])
+	  {
+	    $strSkill = 'attack';
+	  }
+	elseif ($player->equip[1][0])
+	  {
+	    $strSkill = 'shoot';
+	  }
+      }
+    elseif (in_array($_POST['action'], array('cast', 'bspell')))
+      {
+	$strSkill = 'magic';
+      }
     if ($player -> clas == 'Wojownik' || $player -> clas == 'Barbarzyńca') 
     {
-        $myunik = (($player->agility - $enemy['agility']) + $player -> level + $player -> miss);
-        $eunik = (($enemy['agility'] - $player->agility) - ($player -> attack + $player -> level));
+        $myunik = (($player->stats['agility'][2] - $enemy['agility']) + $player -> skills['dodge'][1] + ($player -> skills['dodge'][1] / 10));
+        $eunik = (($enemy['agility'] - $player->stats['agility'][2]) - ($player -> skills[$strSkill][1] + ($player -> skills[$strSkill][1] / 10)));
 	if ($player->equip[11][0])
 	  {
-	    $eunik -= ($player->attack / 5);
+	    $eunik -= ($player->skills['attack'][1] / 5);
 	  }
     }
-    if ($player -> clas == 'Rzemieślnik' || $player -> clas == 'Złodziej' || $player -> clas == '') 
+    else
     {
-        $myunik = ($player->agility - $enemy['agility'] + $player -> miss);
-        $eunik = (($enemy['agility'] - $player->agility) - $player -> attack);
-    }
-    if ($player -> clas == 'Mag') 
-    {
-        $myunik = ($player->agility - $enemy['agility'] + $player -> miss);
-        $eunik = (($enemy['agility'] - $player->agility) - ($player -> magic + $player -> level));
+        $myunik = ($player->stats['agility'][2] - $enemy['agility'] + $player -> skills['dodge'][1]);
+        $eunik = (($enemy['agility'] - $player->stats['agility'][2]) - $player -> skills[$strSkill][1]);
     }
     if (!isset($myunik)) 
     {
@@ -329,14 +341,10 @@ function turnfight($expgain,$goldgain,$action,$addres)
     {
         $myunik = 1;
     }
-    $attacks = ceil($enemy['speed'] / $player->speed);
+    $attacks = ceil($enemy['speed'] / $player->stats['speed'][2]);
     if ($attacks > 5) 
     {
         $attacks = 5;
-    }
-    if (!isset($_POST['action'])) 
-    {
-        $_POST['action'] = '';
     }
     /**
      * If fight is longer than 24 rounds
@@ -344,7 +352,7 @@ function turnfight($expgain,$goldgain,$action,$addres)
     if (isset($_SESSION['round']) && $_SESSION['round'] > 24)
     {
         $db -> Execute("UPDATE `players` SET `fight`=0, `hp`=".$player -> hp.", `bless`='', `blessval`=0 WHERE `id`=".$player -> id);
-        unset($_SESSION['exhaust'], $_SESSION['round'], $_SESSION['points'], $_SESSION['dodge']);
+        unset($_SESSION['exhaust'], $_SESSION['round'], $_SESSION['points'], $_SESSION['gatak'], $_SESSION['gmagia'], $_SESSION['gunik']);
         for ($k = 0; $k < $amount; $k ++) 
         {
             $strIndex = "mon".$k;
@@ -369,46 +377,210 @@ function turnfight($expgain,$goldgain,$action,$addres)
         return;
     }
     $fight -> Close();
-    if ($_POST['action'] == 'drink' && $_SESSION['points'] > 0) 
-    {
-        $_SESSION['points'] = $_SESSION['points'] - 1;
-        drink ($_POST['potion2']);
-        $objMana = $db -> Execute("SELECT pm FROM players WHERE id=".$player -> id);
-        $player -> mana = $objMana -> fields['pm'];
-        $objMana -> Close();
-        if ($_SESSION['points'] >= $attacks && $player -> hp > 0) 
-        {
-            fightmenu($_SESSION['points'],$zmeczenie,$_SESSION['round'],$addres);
-        }
-    }
-    if ($_POST['action'] == 'use' && $_SESSION['points'] > 0) 
-    {
-        $_SESSION['points'] = $_SESSION['points'] - 1;
-        if (!isset($_POST['arrows']))
-        {
-            $_POST['arrows'] = 0;
-        }
-        equip ($_POST['arrows']);
-	$player->equip = $player->equipment();
-        if ($_SESSION['points'] >= $attacks) 
-        {
-            fightmenu($_SESSION['points'],$zmeczenie,$_SESSION['round'],$addres);
-        }
-    }
-    if ($_POST['action'] == 'weapons' && $_SESSION['points'] > 0) 
-    {
-        $_SESSION['points'] = $_SESSION['points'] - 2;
-        if (!isset($_POST['weapon']))
-        {
-            $_POST['weapon'] = 0;
-        }
-        equip ($_POST['weapon']);
-	$player->equip = $player->equipment();
-        if ($_SESSION['points'] >= $attacks) 
-        {
-            fightmenu($_SESSION['points'],$zmeczenie,$_SESSION['round'],$addres);
-        }
-    }
+    if ($_POST['action'] == 'dattack' && $player->clas != 'Wojownik')
+      {
+	$_POST['action'] = 'nattack';
+      }
+    if ($_POST['action'] == 'aattack' && ($player->clas != 'Wojownik' && $player->clas != 'Barbarzyńca'))
+      {
+	$_POST['action'] = 'nattack';
+      }
+    if ($_SESSION['points'] > 0)
+      {
+	//Drink potion
+	if ($_POST['action'] == 'drink')
+	  {
+	    $_SESSION['points'] --;
+	    drink ($_POST['potion2']);
+	    $objMana = $db -> Execute("SELECT pm FROM players WHERE id=".$player -> id);
+	    $player -> mana = $objMana -> fields['pm'];
+	    $objMana -> Close();
+	    if ($_SESSION['points'] >= $attacks && $player -> hp > 0) 
+	      {
+		fightmenu($_SESSION['points'],$zmeczenie,$_SESSION['round'],$addres);
+	      }
+	  }
+	//Equip arrows
+	elseif ($_POST['action'] == 'use')
+	  {
+	    $_SESSION['points'] --;
+	    if (!isset($_POST['arrows']))
+	      {
+		$_POST['arrows'] = 0;
+	      }
+	    equip ($_POST['arrows']);
+	    $player->equip = $player->equipment();
+	    if ($_SESSION['points'] >= $attacks) 
+	      {
+		fightmenu($_SESSION['points'],$zmeczenie,$_SESSION['round'],$addres);
+	      }
+	  }
+	//Equip weapon
+	elseif ($_POST['action'] == 'weapons')
+	  {
+	    $_SESSION['points'] -= 2;
+	    if (!isset($_POST['weapon']))
+	      {
+		$_POST['weapon'] = 0;
+	      }
+	    equip ($_POST['weapon']);
+	    $player->equip = $player->equipment();
+	    if ($_SESSION['points'] >= $attacks) 
+	      {
+		fightmenu($_SESSION['points'],$zmeczenie,$_SESSION['round'],$addres);
+	      }
+	  }
+	//Cast a spell
+	elseif ($_POST['action'] == 'cast')
+	  {
+	    $_SESSION['points'] --;
+	    if (!isset($_POST['castspell']))
+	      {
+		$_POST['castspell'] = 0;
+	      }
+	    castspell($_POST['castspell'],0,$eunik);
+	    $temp = 0;
+	    for ($k=0;$k<$amount;$k++) 
+	      {
+		$strIndex = "mon".$k;
+		if ($_SESSION[$strIndex] > 0) 
+		  {
+		    $temp = $temp + 1;
+		  }
+	      }
+	    if ($temp > 0 && $attacks <= $_SESSION['points']) 
+	      {
+		fightmenu($_SESSION['points'],$zmeczenie,$_SESSION['round'],$addres);
+	      }
+	  }
+	//Burst offensive spell
+	elseif ($_POST['action'] == 'bspell')
+	  {
+	    if (intval($_POST['power']) < 1) 
+	      {
+		$smarty -> assign ("Message", ERROR);
+		$smarty -> display ('error1.tpl');
+		$_POST['power'] = 0;
+	      }
+            else
+	      {
+		if ($_POST['power'] > $player->skills['magic'][1])
+		  {
+		    $_POST['power'] = $player->skills['magic'][1];
+		  }
+		checkvalue($_POST['bspellboost']);
+		$intSpelllevel = $db -> Execute("SELECT `gracz, `poziom` FROM `czary` WHERE `id`=".$_POST['bspellboost']);
+		if ($intSpelllevel->fields['gracz'] != $player->id)
+		  {
+		    $intMaxburst = 0;
+		  }
+		else
+		  {
+		    $intMaxburst = $player -> mana - ceil($intSpelllevel -> fields['poziom'] / 10);
+		  }
+		$intSpelllevel -> Close();
+		if ($_POST['power'] > $intMaxburst)
+		  {
+		    $_POST['power'] = $intMaxburst;
+		  }
+		$_SESSION['points'] -= 2;
+		castspell($_POST['bspellboost'],$_POST['power'],$eunik);
+	      }
+	    $temp = 0;
+	    for ($k=0;$k<$amount;$k++) 
+	      {
+		$strIndex = "mon".$k;
+		if ($_SESSION[$strIndex] > 0) 
+		  {
+		    $temp ++;
+		  }
+	      }
+	    if ($temp > 0 && $attacks <= $_SESSION['points']) 
+	      {
+		fightmenu($_SESSION['points'],$zmeczenie,$_SESSION['round'],$addres);
+	      }
+	  }
+	//Normal attack
+	elseif ($_POST['action'] == 'nattack')
+	  {
+	    attack($eunik,0);
+	    $temp = 0;
+	    for ($k=0;$k<$amount;$k++) 
+	      {
+		$strIndex = "mon".$k;
+		if ($_SESSION[$strIndex] > 0) 
+		  {
+		    $temp ++;
+		  }
+	      }
+	    $_SESSION['points'] --;
+	    if ($temp > 0 && $attacks <= $_SESSION['points']) 
+	      {
+		fightmenu($_SESSION['points'],$zmeczenie,$_SESSION['round'],$addres);
+	      }
+	  }
+	//Defensive attack
+	elseif ($_POST['action'] == 'dattack')
+	  {
+	    $_SESSION['points'] --;
+	    attack($eunik,3);
+	    $temp = 0;
+	    for ($k=0;$k<$amount;$k++) 
+	      {
+		$strIndex = "mon".$k;
+		if ($_SESSION[$strIndex] > 0) 
+		  {
+		    $temp ++;
+		  }
+	      }
+	    $myunik += ($myunik / 2);
+	    $enemy['damage'] -= ($myobrona / 2);
+	    if ($temp > 0 && $attacks <= $_SESSION['points']) 
+	      {
+		fightmenu($_SESSION['points'],$zmeczenie,$_SESSION['round'],$addres);
+	      }
+	  }
+	//Aggresive attack
+	elseif ($_POST['action'] == 'aattack')
+	  {
+	    $_SESSION['points'] --;
+	    attack($eunik,1);
+	    $temp = 0;
+	    for ($k=0;$k<$amount;$k++) 
+	      {
+		$strIndex = "mon".$k;
+		if ($_SESSION[$strIndex] > 0) 
+		  {
+		    $temp ++;
+		  }
+	      }
+	    $myunik = $myunik / 2;
+	    $enemy['damage'] += ($myobrona / 2);
+	    if ($temp > 0 && $attacks <= $_SESSION['points']) 
+	      {
+		fightmenu($_SESSION['points'],$zmeczenie,$_SESSION['round'],$addres);
+	      }
+	  }
+	elseif ($_POST['action'] == 'battack')
+	  {
+	    $_SESSION['points'] -= 2;
+	    attack($eunik,2);
+	    $temp = 0;
+	    for ($k=0;$k<$amount;$k++) 
+	      {
+		$strIndex = "mon".$k;
+		if ($_SESSION[$strIndex] > 0) 
+		  {
+		    $temp ++;
+		  }
+	      }
+	    $myunik = 0;
+	    if ($temp > 0 && $attacks <= $_SESSION['points']) 
+	      {
+		fightmenu($_SESSION['points'],$zmeczenie,$_SESSION['round'],$addres);
+	      }
+	  }
+      }
     if ($_POST['action'] == 'escape') 
     {
         $chance = (rand(1, $player -> level * 100) + $player -> speed - $enemy['agility']);
@@ -418,11 +590,19 @@ function turnfight($expgain,$goldgain,$action,$addres)
             $expgain = (ceil($expgain / 100));
             $smarty -> assign ("Message", ESCAPE_SUCC." ".$enemy['name'].YOU_GAIN1." ".$expgain." ".EXP_PTS."<br /></li></ul>");
             $smarty -> display ('error1.tpl');
-            checkexp($player -> exp,$expgain,$player -> level,$player -> race,$player -> user,$player -> id,0,0,$player -> id,'',0);
+	    if ($player->equip[0][0] || $player->equip[11][0]) 
+	      {
+		$strType = 'melee';
+	      }
+	    else
+	      {
+	    $strType = 'ranged';
+	      }
+	    gainability($player, $expgain, $_SESSION['gunik'], $_SESSION['gatak'], $_SESSION['gmagia'], $player->id, $strType);
             $db -> Execute("UPDATE players SET fight=0, bless='', blessval=0 WHERE id=".$player -> id);
             $points = $attacks * 2;
             $temp = 1;
-            unset($_SESSION['exhaust'], $_SESSION['round'], $_SESSION['points'], $_SESSION['dodge']);
+            unset($_SESSION['exhaust'], $_SESSION['round'], $_SESSION['points'], $_SESSION['gatak'], $_SESSION['gmagia'], $_SESSION['gunik']);
             for ($k = 0; $k < $amount; $k ++) 
             {
                 $strIndex = "mon".$k;
@@ -455,77 +635,6 @@ function turnfight($expgain,$goldgain,$action,$addres)
             }
         }
     }
-    if ($_POST['action'] == 'cast' && $_SESSION['points'] > 0) 
-    {
-        $_SESSION['points'] = $_SESSION['points'] - 1;
-        if (!isset($_POST['castspell']))
-        {
-            $_POST['castspell'] = 0;
-        }
-        castspell($_POST['castspell'],0,$eunik);
-        $temp = 0;
-        for ($k=0;$k<$amount;$k++) 
-        {
-            $strIndex = "mon".$k;
-            if ($_SESSION[$strIndex] > 0) 
-            {
-                $temp = $temp + 1;
-            }
-        }
-        if ($temp > 0 && $attacks <= $_SESSION['points']) 
-        {
-            fightmenu($_SESSION['points'],$zmeczenie,$_SESSION['round'],$addres);
-        }
-    }
-    /**
-     * Burst offensive spell
-     */
-    if ($_POST['action'] == 'bspell' && $_SESSION['points'] > 0) 
-    {
-        if (intval($_POST['power']) < 1) 
-        {
-            $smarty -> assign ("Message", ERROR);
-            $smarty -> display ('error1.tpl');
-            $_POST['power'] = 0;
-        }
-            else
-        {
-            if ($_POST['power'] > $player -> level)
-            {
-                $_POST['power'] = $player -> level;
-            }
-	    checkvalue($_POST['bspellboost']);
-            $intSpelllevel = $db -> Execute("SELECT `gracz, `poziom` FROM `czary` WHERE `id`=".$_POST['bspellboost']);
-	    if ($intSpelllevel->fields['gracz'] != $player->id)
-	      {
-		$intMaxburst = 0;
-	      }
-	    else
-	      {
-		$intMaxburst = $player -> mana - $intSpelllevel -> fields['poziom'];
-	      }
-            $intSpelllevel -> Close();
-            if ($_POST['power'] > $intMaxburst)
-            {
-                $_POST['power'] = $intMaxburst;
-            }
-            $_SESSION['points'] = $_SESSION['points'] - 2;
-            castspell($_POST['bspellboost'],$_POST['power'],$eunik);
-        }
-        $temp = 0;
-        for ($k=0;$k<$amount;$k++) 
-        {
-            $strIndex = "mon".$k;
-            if ($_SESSION[$strIndex] > 0) 
-            {
-                $temp = $temp + 1;
-            }
-        }
-        if ($temp > 0 && $attacks <= $_SESSION['points']) 
-        {
-            fightmenu($_SESSION['points'],$zmeczenie,$_SESSION['round'],$addres);
-        }
-    }
     /**
      * Burst defensive spell
      */
@@ -556,87 +665,6 @@ function turnfight($expgain,$goldgain,$action,$addres)
             fightmenu($_SESSION['points'],$zmeczenie,$_SESSION['round'],$addres);
         }
     }
-    if (in_array($_POST['action'], array('dattack', 'aattack')) && $player->clas == 'Rzemieślnik')
-      {
-	$_POST['action'] = 'nattack';
-      }
-    if ($_POST['action'] == 'nattack' && $_SESSION['points'] > 0) 
-    {
-        attack($eunik,0);
-        $temp = 0;
-        for ($k=0;$k<$amount;$k++) 
-        {
-            $strIndex = "mon".$k;
-            if ($_SESSION[$strIndex] > 0) 
-            {
-                $temp = $temp + 1;
-            }
-        }
-        $_SESSION['points'] = $_SESSION['points'] - 1;
-        if ($temp > 0 && $attacks <= $_SESSION['points']) 
-        {
-            fightmenu($_SESSION['points'],$zmeczenie,$_SESSION['round'],$addres);
-        }
-    }
-    if ($_POST['action'] == 'dattack' && $_SESSION['points'] > 0) 
-    {
-        $_SESSION['points'] = $_SESSION['points'] - 1;
-        attack($eunik,3);
-        $temp = 0;
-        for ($k=0;$k<$amount;$k++) 
-        {
-            $strIndex = "mon".$k;
-            if ($_SESSION[$strIndex] > 0) 
-            {
-                $temp = $temp + 1;
-            }
-        }
-        $myunik = $myunik + ($myunik / 2);
-	$enemy['damage'] += ($myobrona / 2);
-        if ($temp > 0 && $attacks <= $_SESSION['points']) 
-        {
-            fightmenu($_SESSION['points'],$zmeczenie,$_SESSION['round'],$addres);
-        }
-    }
-    if ($_POST['action'] == 'aattack' && $_SESSION['points'] > 0) 
-    {
-        $_SESSION['points'] = $_SESSION['points'] - 1;
-        attack($eunik,1);
-        $temp = 0;
-        for ($k=0;$k<$amount;$k++) 
-        {
-            $strIndex = "mon".$k;
-            if ($_SESSION[$strIndex] > 0) 
-            {
-                $temp = $temp + 1;
-            }
-        }
-        $myunik = $myunik / 2;
-	$enemy['damage'] -= ($myobrona / 2);
-        if ($temp > 0 && $attacks <= $_SESSION['points']) 
-        {
-            fightmenu($_SESSION['points'],$zmeczenie,$_SESSION['round'],$addres);
-        }
-    }
-    if ($_POST['action'] == 'battack' && $_SESSION['points'] > 0) 
-    {
-        $_SESSION['points'] = $_SESSION['points'] - 2;
-        attack($eunik,2);
-        $temp = 0;
-        for ($k=0;$k<$amount;$k++) 
-        {
-            $strIndex = "mon".$k;
-            if ($_SESSION[$strIndex] > 0) 
-            {
-                $temp = $temp + 1;
-            }
-        }
-        $myunik = 0;
-        if ($temp > 0 && $attacks <= $_SESSION['points']) 
-        {
-            fightmenu($_SESSION['points'],$zmeczenie,$_SESSION['round'],$addres);
-        }
-    }
     if (!isset($_SESSION['points']))
     {
         $_SESSION['points'] = 0;
@@ -647,7 +675,7 @@ function turnfight($expgain,$goldgain,$action,$addres)
         if ($player -> hp > 0) 
         {
             $_SESSION['round'] = $_SESSION['round'] + 1;
-            $_SESSION['points'] = ceil($player->speed / $enemy['speed']);
+            $_SESSION['points'] = ceil($player->stats['speed'][2] / $enemy['speed']);
             if ($_SESSION['points'] > 5) 
             {
                 $_SESSION['points'] = 5;
@@ -662,15 +690,14 @@ function turnfight($expgain,$goldgain,$action,$addres)
         {
             $smarty -> assign ("Message", "<br />".REST_SUCC);
             $smarty -> display ('error1.tpl');
-            $rest = ($player -> cond / 10);
-            $zmeczenie = $zmeczenie - $rest;
+            $zmeczenie -= ($player -> stats['condition'][2] / 10);
             if ($zmeczenie < 0) 
             {
                 $zmeczenie = 0;
             }
             $_SESSION['exhaust'] = $zmeczenie;
-            $_SESSION['round'] = $_SESSION['round'] + 1;
-            $_SESSION['points'] = ceil($player->speed / $enemy['speed']);
+            $_SESSION['round'] ++;
+            $_SESSION['points'] = ceil($player->stats['speed'][2] / $enemy['speed']);
             if ($_SESSION['points'] > 5) 
             {
                 $_SESSION['points'] = 5;
@@ -678,11 +705,12 @@ function turnfight($expgain,$goldgain,$action,$addres)
             fightmenu($_SESSION['points'],$zmeczenie,$_SESSION['round'],$addres);
         }
     }
+    //Lost fight
     if ($player -> hp <= 0) 
     {
         if ($title != 'Arena Walk') 
 	  {
-	    loststat($player -> id, $player->oldstats, 0, $enemy['name'], 0, $player->antidote);
+	    $player->dying();
 	  }
 	if ($player->antidote == 'R')
 	  {
@@ -702,7 +730,7 @@ function turnfight($expgain,$goldgain,$action,$addres)
 	  }
         $db -> Execute("INSERT INTO `events` (`text`) VALUES('Gracz ".$player -> user." ".DEFEATED_BY.$enemy['name']."')");
         $db -> Execute("UPDATE `players` SET `fight`=".$intFight.", `hp`=".$player -> hp.", `bless`='', `blessval`=0, `antidote`='' WHERE `id`=".$player -> id);
-        unset($_SESSION['exhaust'], $_SESSION['round'], $_SESSION['points'], $_SESSION['dodge']);
+        unset($_SESSION['exhaust'], $_SESSION['round'], $_SESSION['points'], $_SESSION['gatak'], $_SESSION['gmagia'], $_SESSION['gunik']);
         for ($k = 0; $k < $amount; $k ++) 
         {
             $strIndex = "mon".$k;
@@ -743,7 +771,15 @@ function turnfight($expgain,$goldgain,$action,$addres)
         $smarty -> display ('error1.tpl');
 	monsterloot($enemy['lootnames'], $enemy['lootchances'], $enemy['level'], $amount);
 	battlerecords($enemy['name'], $enemy['level'], $player->id);
-        checkexp($player -> exp,$expgain,$player -> level,$player -> race,$player -> user,$player -> id,0,0,$player -> id,'',0);
+	if ($player->equip[0][0] || $player->equip[11][0]) 
+	  {
+	    $strType = 'melee';
+	  }
+	else
+	  {
+	    $strType = 'ranged';
+	  }
+	gainability($player, $expgain, $_SESSION['gunik'], $_SESSION['gatak'], $_SESSION['gmagia'], $player->id, $strType);
         if ($player -> hp < 0) 
         {
             $player -> hp = 0;
@@ -770,7 +806,7 @@ function turnfight($expgain,$goldgain,$action,$addres)
 	  {
 	    unset($_SESSION['razy']);
 	  }
-        unset($_SESSION['exhaust'], $_SESSION['round'], $_SESSION['points'], $_SESSION['dodge']);
+        unset($_SESSION['exhaust'], $_SESSION['round'], $_SESSION['points'], $_SESSION['gatak'], $_SESSION['gmagia'], $_SESSION['gunik']);
         for ($k = 0; $k < $amount; $k ++) 
         {
             $strIndex = "mon".$k;
@@ -793,7 +829,6 @@ function attack($eunik,$bdamage)
     global $amount;
     $number1 = $_POST['monster'] - 1;
     $number = "mon".$number1;
-    $gwtbr = 0;
     $gatak = 0;
     if (isset ($_SESSION['exhaust'])) 
     {
@@ -829,32 +864,30 @@ function attack($eunik,$bdamage)
 	  }
         if ($player -> clas == 'Wojownik' || $player -> clas == 'Barbarzyńca') 
         {
-            $stat['damage'] = (($player -> strength + $player->equip[0][2]) + $player -> level);
+            $stat['damage'] = (($player -> stats['strength'][2] + $player->equip[0][2]) + $player -> skills['attack'][1]);
         } 
             else 
         {
-            $stat['damage'] = ($player -> strength + $player->equip[0][2]);
+            $stat['damage'] = ($player -> stats['strength'][2] + $player->equip[0][2]);
         }
-        if ($player -> attack < 1) 
+        if ($player -> skills['attack'][1] > 5) 
         {
-            $krytyk = 1;
-        }
-        if ($player -> attack > 5) 
-        {
-            $kr = ceil($player -> attack / 100);
+            $kr = ceil($player -> skills['attack'][1] / 100);
             $krytyk = (5 + $kr);
         } 
             else 
         {
-            $krytyk = $player -> attack;
+            $krytyk = $player -> skills['attack'][1];
         }
         $name = "bronią";
 	$strAtype = 'melee';
+	$strSkill = 'attack';
     }
     if ($player->equip[11][0])
       {
-	$stat['damage'] += (($player->equip[11][2] + $player->strength) + $player->level);
+	$stat['damage'] += (($player->equip[11][2] + $player->stats['strength'][2]) + $player->skills['attack'][1]);
 	$name = "obiema brońmi";
+	$strSkill = 'attack';
       }
     if ($player->equip[1][0]) 
     {
@@ -880,27 +913,23 @@ function attack($eunik,$bdamage)
 		break;
 	      }
 	  }
-        $bonus2 = (($player  -> strength / 2) + ($player->agility / 2));
+        $bonus2 = (($player  -> stats['strength'][2] / 2) + ($player->stats['agility'][2] / 2));
         if ($player -> clas == 'Wojownik'  || $player -> clas == 'Barbarzyńca') 
         {
-            $stat['damage'] = (($bonus2 + $bonus) + $player -> level);
+            $stat['damage'] = (($bonus2 + $bonus) + $player -> skills['shoot'][1]);
         } 
             else 
         {
             $stat['damage'] = ($bonus2 + $bonus);
         }
-        if ($player -> shoot < 1) 
+        if ($player -> skills['shoot'][1] > 5) 
         {
-            $krytyk = 1;
-        }
-        if ($player -> shoot > 5) 
-        {
-            $kr = ceil($player -> shoot / 100);
+            $kr = ceil($player -> skills['shoot'][1] / 100);
             $krytyk = (5 + $kr);
         } 
             else 
         {
-            $krytyk = $player -> shoot;
+            $krytyk = $player -> skills['shoot'][1];
         }
         if (!$player->equip[6][0]) 
         {
@@ -908,6 +937,7 @@ function attack($eunik,$bdamage)
         }
         $name = "strzałą";
 	$strAtype = 'ranged';
+	$strSkill = 'shoot';
     }
     if (!isset($stat['damage']))
     {
@@ -915,7 +945,7 @@ function attack($eunik,$bdamage)
     }
     if ($player -> clas == 'Rzemieślnik')
     {
-        $stat['damage'] = $stat['damage'] - ($stat['damage'] / 4);
+        $stat['damage'] -= ($stat['damage'] / 4);
     }
     if ($bdamage == 2) 
     {
@@ -931,32 +961,32 @@ function attack($eunik,$bdamage)
         $stat['damage'] = $stat['damage'] - ($stat['damage'] / 2);
         $eunik = $eunik + ($eunik / 10);
     }
-    $rzut2 = (rand(1,($player -> level * 10)));
+    $rzut2 = (rand(1,($player -> skills[$strSkill][1] * 10)));
     $stat['damage'] = ($stat['damage'] + $rzut2);
     $stat['damage'] = ($stat['damage'] - $enemy['endurance']);
     if ($stat['damage'] < 1) 
     {
         $stat['damage'] = 0;
     }
-    if ($player->equip[0][0] && $gwtbr > $player->equip[0][6]) 
+    if ($player->equip[0][0] && $player->equip[0][6] < 1) 
       {
 	$stat['damage'] = 0;
-	if ($player->equip[11][6] > $gwtbr)
+	if ($player->equip[11][6] > 0)
 	  {
-	    $stat['damage'] += (($player->equip[11][2] + $player->strength) + $player->level);
+	    $stat['damage'] += (($player->equip[11][2] + $player->strength) + $player->skills['attack'][1]);
 	  }
 	$krytyk = 1;
       }
-    if ($player->equip[11][0] && $gwtbr > $player->equip[11][6]) 
+    if ($player->equip[11][0] && $player->equip[11][6] < 1) 
       {
 	$stat['damage'] = 0;
-	if ($player->equip[0][6] > $gwtbr)
+	if ($player->equip[0][6] > 0)
 	  {
-	    $stat['damage'] += (($player->equip[0][2] + $player->strength) + $player->level);
+	    $stat['damage'] += (($player->equip[0][2] + $player->strength) + $player->skills['attack'][1]);
 	  }
 	$krytyk = 1;
       }
-    if ($player->equip[1][0] && ($gwtbr > $player->equip[1][6] || $gwtbr > $player->equip[6][6])) 
+    if ($player->equip[1][0] && ($player->equip[1][6] < 1 || $player->equip[6][6] < 1)) 
     {
         $stat['damage'] = 0;
         $krytyk = 1;
@@ -980,39 +1010,34 @@ function attack($eunik,$bdamage)
     if ($ehp > 0 && $player -> hp > 0) 
     {
         if ($player->equip[0][0]) 
-        {
-            $zmeczenie = $zmeczenie + $player->equip[0][4];
-        } 
+	  {
+	    $zmeczenie += ($player->equip[0][4] / 10);
+	  } 
 	elseif ($player->equip[1][0]) 
-        {
-            $zmeczenie = $zmeczenie + $player->equip[1][4];
-        }
+	  {
+            $zmeczenie += ($player->equip[1][4] / 10);
+	  }
 	if ($player->equip[11][0])
 	  {
-	    $zmeczenie += $player->equip[11][4];
+	    $zmeczenie += ($player->equip[11][4] / 10);
 	  }
         $szansa = rand(1, 100);
         if ($eunik >= $szansa && $szansa < 97) 
         {
             $smarty -> assign ("Message", "<b>".$enemy['name']."</b> ".ENEMY_DODGE."!<br />");
             $smarty -> display ('error1.tpl');
-            if ($player->equip[1][0]) 
-            {
-                $gwtbr = ($gwtbr + 1);
-            }
         } 
-	elseif ($zmeczenie <= $player -> cond) 
+	elseif ($zmeczenie <= $player -> stats['condition'][2]) 
         {
             if ($player->equip[0][0] || $player->equip[1][0] || $player->equip[11][0]) 
 	      {
-		$gwtbr++;
 		$rzut = rand(1, 1000) / 10;
 		$intRoll = rand(1, 100);
 		$arrLocations = array('w tułów', 'w głowę', 'w kończynę');
 		$intHit = rand(0, 2);
 		if ($krytyk >= $rzut && $intRoll <= $krytyk && $player->fight != 999) 
 		  {
-		    $gatak++;
+		    $_SESSION['gattack'] = 1;
 		    $ehp = 0;
 		    $smarty->assign("Message", showcritical($arrLocations[$intHit], $strAtype, 'pve', $enemy['name']));
 		  }
@@ -1022,7 +1047,7 @@ function attack($eunik,$bdamage)
 		    $smarty -> assign ("Message", YOU_ATTACK1." ".$name." <b>".$enemy['name']."</b> ".$arrLocations[$intHit]." ".INFLICT." <b>".$stat['damage']."</b> ".DAMAGE."! (".$ehp." ".LEFT.")</font><br />");
 		    if ($stat['damage'] > 0) 
 		      {
-			$gatak = ($gatak + 1);
+			$_SESSION['gattack'] = 1;
 		      }
 		  }
 		$smarty -> display ('error1.tpl');
@@ -1030,29 +1055,7 @@ function attack($eunik,$bdamage)
         }
     }
     $_SESSION[$number] = $ehp;
-    if ($player->page == 'Arena Walk')
-      {
-	$gatak = $gatak * floor(1 + ($enemy['level'] / 20));
-      }
-    if ($player->equip[0][0]) 
-    {
-        gainability($player -> id, $player -> user, 0, $gatak, 0, $player -> mana, $player -> id, 'weapon');
-        lostitem($gwtbr, $player->equip[0][6], YOU_WEAPON, $player -> id, $player->equip[0][0], $player -> id, HAS_BEEN1, $player->level);
-    }
-    if ($player->equip[11][0])
-      {
-	if (!$player->equip[0][0])
-	  {
-	     gainability($player -> id, $player -> user, 0, $gatak, 0, $player -> mana, $player -> id, 'weapon');
-	  }
-	lostitem($gwtbr, $player->equip[11][6], YOU_WEAPON, $player -> id, $player->equip[11][0], $player -> id, HAS_BEEN1, $player->level);
-      }
-    if ($player->equip[1][0]) 
-    {
-        gainability($player -> id, $player -> user, 0, $gatak, 0, $player -> mana, $player -> id, 'bow');
-        lostitem($gwtbr, $player->equip[1][6], YOU_WEAPON, $player -> id, $player->equip[1][0], $player -> id, HAS_BEEN1, $player->level);
-        lostitem($gwtbr, $player->equip[6][6], YOU_QUIVER, $player -> id, $player->equip[6][0], $player -> id, HAS_BEEN1, $player->level);
-    }
+    lostitem($player->equip, $player->id, $player->id, $player->skills['shoot'][1]);
     $_SESSION['exhaust'] = $zmeczenie;
 }
 
@@ -1072,7 +1075,7 @@ function castspell ($id,$boost,$eunik)
     $mczar = $db -> Execute("SELECT * FROM czary WHERE id=".$id);
     if ($mczar -> fields['id']) 
     {
-	$stat['damage'] = ($mczar -> fields['obr'] * $player -> inteli);
+	$stat['damage'] = ($mczar -> fields['obr'] * $player -> stats['inteli'][2]);
 	if ($enemy['resistance'][0] == $mczar->fields['element'])
 	  {
 	    switch ($enemy['resistance'][1])
@@ -1109,43 +1112,39 @@ function castspell ($id,$boost,$eunik)
         if ($player->equip[7][0]) 
         {
             $intN = 6 - (int)($player->equip[7][4] / 20);
-            $intBonus = (10 / $intN) * $player -> level * rand(1, $intN);
+            $intBonus = (10 / $intN) * $player -> skills['magic'][1] * rand(1, $intN);
             $stat['damage'] = $stat['damage'] + $intBonus;
         }
         if ($stat['damage'] < 0) 
         {
             $stat['damage'] = 0;
         }
-        if ($player -> magic < 1) 
+        if ($player -> skills['magic'][1] > 5) 
         {
-            $krytyk = 1;
-        }
-        if ($player -> magic > 5) 
-        {
-            $kr = ceil($player -> magic / 100);
+            $kr = ceil($player -> skills['magic'][1] / 100);
             $krytyk = (5 + $kr);
         } 
             else 
         {
-            $krytyk = $player -> magic;
+            $krytyk = $player -> skills['magic'][1];
         }
         if ($boost) 
         {
-            $stat['damage'] = $stat['damage'] + $boost;
+            $stat['damage'] += $boost;
         }
     }
     if (!isset($stat['damage']))
     {
         $stat['damage'] = 0;
     }
-    $rzut2 = (rand(1,($player -> level * 10)));
+    $rzut2 = (rand(1,($player -> skills['magic'][1] * 10)));
     $stat['damage'] = ($stat['damage'] + $rzut2);
     $stat['damage'] = ($stat['damage'] - $enemy['endurance']);
     if ($stat['damage'] < 1) 
     {
         $stat['damage'] = 0 ;
     }
-    if ($player -> mana < $mczar -> fields['poziom']) 
+    if ($player -> mana < 1) 
     {
          $stat['damage'] = 0;
     }
@@ -1154,13 +1153,8 @@ function castspell ($id,$boost,$eunik)
     {
         $smarty -> assign("Message", ERROR);
         $smarty -> display('error1.tpl');
-        $lost_mana = ceil($mczar -> fields['poziom'] / 2.5) + $boost;
-        $lost_mana = $lost_mana - (int)($player -> magic / 25);
-        if ($lost_mana < 1)
-        {
-            $lost_mana = 1;
-        }
-        $player -> mana = ($player -> mana - $lost_mana);
+        $lost_mana = 1 + $boost;
+        $player -> mana -= $lost_mana;
     }
     if ($ehp > 0) 
     {
@@ -1174,26 +1168,21 @@ function castspell ($id,$boost,$eunik)
         {
             if ($mczar -> fields['id'] && $player -> mana > $mczar -> fields['poziom']) 
             {
-                $pech = floor($player -> magic - $mczar -> fields['poziom']);
+                $pech = floor($player -> skills['magic'][1] - $mczar -> fields['poziom']);
                 if ($pech > 0) 
                 {
                     $pech = 0;
                 }
-                $pech = ($pech + rand(1,100));
+                $pech += rand(1,100);
                 if ($pech > 5) 
                 {
-                    $lost_mana = ceil($mczar -> fields['poziom'] / 2.5) + $boost;
-                    $lost_mana = $lost_mana - (int)($player -> magic / 25);
-                    if ($lost_mana < 1)
-                    {
-                        $lost_mana = 1;
-                    }
-                    $player -> mana = ($player -> mana - $lost_mana);
+                    $lost_mana = 1 + $boost;
+                    $player -> mana -= $lost_mana;
 		    $rzut = rand(1, 1000) / 10;
 		    $intRoll = rand(1, 100);
 		    if ($krytyk >= $rzut && $intRoll <= $krytyk && $player->fight != 999) 
 		      {
-			$gmagia++;
+			$_SESSION['gmagia'] = 1;
 			$ehp = 0;
 			$arrLocations = array('w tułów', 'w głowę', 'w kończynę');
 			$intHit = rand(0, 2);
@@ -1207,7 +1196,7 @@ function castspell ($id,$boost,$eunik)
 			$smarty -> assign ("Message", YOU_HIT." <b>".$enemy['name']."</b> ".$arrLocations[$intHit]." ".BY_SPELL." ".$mczar -> fields['nazwa']." ".INFLICT." <b>".$stat['damage']."</b> ".DAMAGE."! (".$ehp." ".LEFT.")</font><br />");
 			if ($stat['damage'] > 0) 
 			  {
-			    $gmagia++;
+			    $_SESSION['gmagia'] = 1;
 			  }
 		      }
 		    $smarty->display('error1.tpl');
@@ -1219,7 +1208,7 @@ function castspell ($id,$boost,$eunik)
 		      {
 			$smarty -> assign ("Message", "<b>".$player -> user."</b> ".YOU_FAIL1." ".$mczar -> fields['nazwa'].", ".YOU_FAIL2." <b>".$mczar -> fields['poziom']."</b> ".MANA.".<br />");
                         $smarty -> display ('error1.tpl');
-                        $player -> mana = ($player -> mana - $mczar -> fields['poziom']);
+                        $player -> mana --;
 		      }
 		    elseif ($pechowy > 25 && $pechowy <= 45)
 		      {
@@ -1236,7 +1225,7 @@ function castspell ($id,$boost,$eunik)
 		      {
 			$smarty -> assign ("Message", "<b>".$player -> user." ".YOU_FAIL4." ".$mczar -> fields['nazwa']."! ".YOU_FAIL5." ".$stat['damage']." ".HP."!</b><br />");
                         $smarty -> display ('error1.tpl');
-                        $player -> hp = ($player -> hp - $stat['damage']);
+                        $player -> hp -= $stat['damage'];
                         if ($player -> hp < 0)
                         {
                             $player -> hp = 0;
@@ -1258,7 +1247,7 @@ function castspell ($id,$boost,$eunik)
 			    $intDamage = floor($stat['damage'] * 0.25);
 			  }
 			$ehp -= $intDamage;
-			$player->mana -= $mczar -> fields['poziom'];
+			$player->mana --;
 			$smarty->assign("Message", "<b>".$player -> user."</b> nie do końca opanowałeś zaklęcie, dlatego twój czar zadaje <b>".$intDamage."</b> obrażeń. (".$ehp." zostało)<br />");
 			$smarty->display('error1.tpl');
 		      }
@@ -1277,7 +1266,7 @@ function castspell ($id,$boost,$eunik)
 			    $intDamage = floor($stat['damage'] * 0.75);
 			  }
 			$ehp -= $intDamage;
-			$player->mana -= $mczar -> fields['poziom'];
+			$player->mana --;
 			$player->hp -= $intDamage;
 			$smarty->assign("Message", "<b>".$player -> user."</b> próbował rzucić zaklęcie, ale eksplodowało ono w rękach, raniąc jego oraz wroga. Traci przez to ".$intDamage." punktów życia (".$player->hp." zostało), <b>".$enemy['name']."</b> otrzymuje ".$intDamage." obrażeń (".$ehp." zostało)<br />");
 			$smarty->display('error1.tpl');
@@ -1290,11 +1279,6 @@ function castspell ($id,$boost,$eunik)
                 }
             }
         }
-	if ($player->page == 'Arena Walk')
-	  {
-	    $gmagia = $gmagia * floor(1 + ($enemy['level'] / 20));
-	  }
-        gainability($player -> id,$player -> user,0,0,$gmagia,$player -> mana,$player -> id,'');
     }
     $_SESSION[$number] = $ehp;
     $mczar -> Close();
@@ -1317,18 +1301,16 @@ function monsterattack($attacks,$enemy,$myunik,$amount)
         $zmeczenie = $_SESSION['exhaust'];
     }
     $gunik = 0;
-    $gwt = array(0,0,0,0);
     $temp = 0;
     for ($k=0;$k<$amount;$k++) 
     {
         $strIndex = "mon".$k;
         if ($_SESSION[$strIndex] > 0) 
         {
-            $temp = $temp + 1;
+            $temp ++;
         }
     }
     $amount = $temp;
-    $armor = checkarmor($player->equip[3][0], $player->equip[2][0], $player->equip[4][0], $player->equip[5][0]);
     //Shield block chance
     $intBlock = 0;
     if ($player->equip[5][0])
@@ -1354,7 +1336,7 @@ function monsterattack($attacks,$enemy,$myunik,$amount)
             {
                 $intDamage = $enemy['strength'] + $rzut1;
             }
-            if ($zmeczenie > $player -> cond) 
+            if ($zmeczenie > $player -> stats['condition'][2]) 
             {
                 $intDamage = $enemy['strength'] + $rzut1;
             }
@@ -1362,58 +1344,51 @@ function monsterattack($attacks,$enemy,$myunik,$amount)
             if ($player -> hp > 0) 
             {
                 $szansa = rand(1, 100);
-                if ($myunik >= $szansa && $zmeczenie < $player -> cond && $szansa < 97) 
+                if ($myunik >= $szansa && $zmeczenie < $player -> stats['condition'][2] && $szansa < 97) 
                 {
                     $smarty -> assign ("Message", "<br>".YOU_DODGE." <b>".$ename."</b>!");
                     $smarty -> display ('error1.tpl');
-                    $gunik = ($gunik + 1);
-                    $zmeczenie = ($zmeczenie + $player->equip[3][4] + 1);
+                    $_SESSION['gunik'] = 1;
+                    $zmeczenie += ($player->equip[3][4] / 10);
 		    $blnMiss = TRUE;
                 } 
 		//Player block attack with shield
 		$szansa = rand(1, 100);
-		if ($szansa <= $intBlock && !$blnMiss)
+		if ($szansa <= $intBlock && !$blnMiss && $player->equip[5][6] > 0)
 		  {
 		    $smarty -> assign ("Message", "<br>Zablokowałeś tarczą atak <b>".$ename."</b>!");
                     $smarty -> display ('error1.tpl');
-		    $zmeczenie = ($zmeczenie + $player->equip[5][4] + 1);
-		    $gwt[3]++;
+		    $zmeczenie += ($player->equip[5][4] / 10);
+		    $player->equip[5][6] --;
 		    $blnMiss = TRUE;
 		  }
                 if (!$blnMiss)
                 {
-                    $player -> hp = ($player -> hp - $intDamage);
-                    $db -> Execute("UPDATE `players` SET `hp`=".$player -> hp." WHERE `id`=".$player -> id);
-		    $arrLocations = array('w tułów i zadaje(ą)', 'w głowę i zadaje(ą)', 'w nogę i zadaje(ą)', 'w rękę i zadaje(ą)');
-		    if ($player->equip[3][0] || $player->equip[2][0] || $player->equip[4][0] || $player->equip[5][0]) 
+		    $intHit = rand(0, 3);
+		    $myobrona = 0;
+		    if ($player->equip[$intHit][0])
 		      {
-			$efekt = rand(0, $number);
-			switch ($armor[$efekt])
+			$myobrona = $player->equip[$intHit][2];
+		      
+			if ($enemy['dmgtype'] != 'none')
 			  {
-			  case 'torso':
-			    $gwt[0]++;
-			    $intHit = 0;
-			    break;
-			  case 'head':
-			    $gwt[1]++;
-			    $intHit = 1;
-			    break;
-			  case 'legs':
-			    $gwt[2]++;
-			    $intHit = 2;
-			    break;
-			  case 'shield':
-			    $gwt[3]++;
-			    $intHit = 3;
-			    break;
-			  default:
-			    break;
+			    if ($player->equip[$intHit][10] != 'N')
+			      {
+				if ($arrElements3[$enemy['dmgtype']] == $player->equip[$intHit][10])
+				  {
+				    $myobrona += $player->equip[$intHit][2];
+				  }
+				elseif ($arrElements4[$enemy['dmgtype']] == $player->equip[$intHit][10])
+				  {
+				    $myobrona -= ceil($player->equip[$intHit][2] / 2);
+				  }
+			      }
 			  }
 		      }
-		    else
-		      {
-			$intHit = rand(0, 3);
-		      }
+		    $intDamage -= $myobrona;
+                    $player -> hp -= $intDamage;
+                    $db -> Execute("UPDATE `players` SET `hp`=".$player -> hp." WHERE `id`=".$player -> id);
+		    $arrLocations = array('w tułów i zadaje(ą)', 'w głowę i zadaje(ą)', 'w nogę i zadaje(ą)', 'w rękę i zadaje(ą)');
                     $smarty -> assign ("Message", "<br><b>".$ename."</b> ".ENEMY_HIT2.$arrLocations[$intHit]." <b>".$intDamage."</b> obrażeń! (".$player -> hp." zostało)");
                     $smarty -> display ('error1.tpl');
                     if ($myczaro -> fields['id'] && $player -> mana >= $myczaro -> fields['poziom']) 
@@ -1424,73 +1399,13 @@ function monsterattack($attacks,$enemy,$myunik,$amount)
                         {
                             $lost_mana = 1;
                         }
-                        $player -> mana = ($player -> mana - $lost_mana);
+                        $player -> mana -= $lost_mana;
                     }
                 }
             }
         }
     }
-    if ($player->equip[3][0]) 
-    {
-      lostitem($gwt[0], $player->equip[3][6], YOU_ARMOR, $player -> id, $player->equip[3][0], $player -> id, HAS_BEEN1, $player->level);
-    }
-    if ($player->equip[2][0]) 
-    {
-      lostitem($gwt[1], $player->equip[2][6], YOU_HELMET, $player -> id, $player->equip[2][0], $player -> id, HAS_BEEN1, $player->level);
-    }
-    if ($player->equip[4][0]) 
-    {
-      lostitem($gwt[2], $player->equip[4][6], YOU_LEGS, $player -> id, $player->equip[4][0], $player -> id, HAS_BEEN2, $player->level);
-    }
-    if ($player->equip[5][0]) 
-    {
-      lostitem($gwt[3], $player->equip[5][6], YOU_SHIELD, $player -> id, $player->equip[5][0], $player -> id, HAS_BEEN1, $player->level);
-    }
-    $intDamount = 0;
-    if ($gunik)
-    {
-        if (!isset($_SESSION['dodge']))
-        {
-            $_SESSION['dodge'] = $gunik;
-        }
-            else
-        {
-            $_SESSION['dodge'] = $_SESSION['dodge'] + $gunik;
-        }
-        /**
-         * Count gained dodge skill
-         */
-        $intNewfib = 1;
-        $intOldfib = 1;
-        $intTempfib = 1;
-        while ($intNewfib)
-        {
-            $_SESSION['dodge'] = $_SESSION['dodge'] - $intNewfib;
-            if ($_SESSION['dodge'] < 0)
-            {
-                break;
-            }
-                else
-            {
-                $intDamount ++;
-                if ($intNewfib == 1)
-                {
-                    $intNewfib = 3;
-                }
-                    else
-                {
-                    $intTempfib = $intNewfib;
-                    $intNewfib = $intNewfib + $intOldfib;
-                    $intOldfib = $intTempfib;
-                }
-            }
-        }
-    }
-    if ($player->page == 'Arena Walk')
-      {
-	$intDamount = $intDamount * floor(1 + ($enemy['level'] / 20));
-      }
-    gainability($player -> id, $player -> user, $intDamount, 0, 0, $player -> mana, $player -> id, '');
+    lostitem($player->equip, $player->id, $player->id, $player->skills['shoot'][1]);
     $_SESSION['exhaust'] = $zmeczenie;
 }
 
@@ -1510,7 +1425,7 @@ function fightmenu ($points,$exhaust,$round,$addres)
                             "Mana" => $player -> mana, 
                             "HP" => $player -> hp, 
                             "Exhaust" => $exhaust, 
-                            "Cond" => $player -> cond, 
+                            "Cond" => $player -> stats['condition'][2], 
                             "Adres" => $addres,
                             "Fround" => F_ROUND,
                             "Actionpts" => ACTION_PTS,
@@ -1520,19 +1435,23 @@ function fightmenu ($points,$exhaust,$round,$addres)
                             "Arramount" => ''));
     if ($player->equip[6][0])
     {
-        $objQuiver = $db -> Execute("SELECT `wt` FROM `equipment` WHERE `id`=".$player->equip[6][0]);
         $smarty -> assign(array("Quiver" => QUIVER,
-                                "Arramount" => $objQuiver -> fields['wt']));
-        $objQuiver -> Close();
+                                "Arramount" => $player->equip[6][6]));
     }
     if ($player->equip[0][0] || $player->equip[1][0]) 
     {
-        if ($player -> clas != 'Rzemieślnik')
+        if ($player -> clas == 'Wojownik')
         {
             $smarty -> assign(array("Dattack" => "<input type=\"radio\" name=\"action\" value=\"dattack\"> ".D_ATTACK."<br /><br />",
                                     "Nattack" => "<input type=\"radio\" name=\"action\" value=\"nattack\" checked> ".N_ATTACK."<br /><br />",
                                     "Aattack" => "<input type=\"radio\" name=\"action\" value=\"aattack\"> ".A_ATTACK."<br /><br />"));
         }
+	elseif ($player->clas == 'Barbarzyńca')
+	  {
+	    $smarty -> assign(array("Dattack" => "",
+                                    "Nattack" => "<input type=\"radio\" name=\"action\" value=\"nattack\" checked> ".N_ATTACK."<br /><br />",
+                                    "Aattack" => "<input type=\"radio\" name=\"action\" value=\"aattack\"> ".A_ATTACK."<br /><br />"));
+	  }
             else
         {
             $smarty -> assign(array("Dattack" => '',
@@ -1665,11 +1584,11 @@ function fightmenu ($points,$exhaust,$round,$addres)
                 $arrspell -> MoveNext();
 	      }
             $arrspell -> Close();
-            $smarty -> assign ("Message", $strHtml."</select> <input type=\"text\" name=\"power\" size=\"5\" value=\"0\"><br /><br /><input type=\"radio\" name=\"action\" value=\"dspell\"> ".SPELL_BURST2." ".$player -> level." ".POWER3.") <input type=\"text\" name=\"power1\" size=\"5\" value=\"0\"><br /><br />");
+            $smarty -> assign ("Message", $strHtml."</select> <input type=\"text\" name=\"power\" size=\"5\" value=\"0\"><br /><br /><input type=\"radio\" name=\"action\" value=\"dspell\"> ".SPELL_BURST2." ".$player -> skills['magic'][1]." ".POWER3.") <input type=\"text\" name=\"power1\" size=\"5\" value=\"0\"><br /><br />");
             $smarty -> display ('error1.tpl');
         }
     }
-    $rest = ($player -> cond / 10);
+    $rest = ($player -> stats['condition'][2] / 10);
     $smarty -> assign(array("Rest" => $rest, 
                             "Aescape" => A_ESCAPE,
                             "Arest" => A_REST,

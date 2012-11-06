@@ -1,5 +1,7 @@
 2012-11-06  Bartek thindil Jasicki  <thindil@vallheru.net>
 
+	* UPDATE,includes/turnfight.php: 
+	updated turn fight with monsters
 	* BUG,includes/funkcje.php:
 	fixed cost in mana for offensive spells
 
