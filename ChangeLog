@@ -1,5 +1,7 @@
 2012-11-07  Bartek thindil Jasicki  <thindil@vallheru.net>
 
+	* UPDATE,install/db/update.sql: 
+	update database
 	* BUG,includes/funkcje.php: 
 	fixed monster damage
 	* BUG,includes/funkcje.php:

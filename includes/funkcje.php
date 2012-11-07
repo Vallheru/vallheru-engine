@@ -1156,7 +1156,6 @@ function fightmonster($enemy, $expgain, $goldgain, $times)
     {
         $enemy['damage'] = ($enemy['strength'] - $player -> stats['condition'][2]);
     }
-    echo $enemy['damage'].' '.$rzut1.'<br />';
     $enemy['damage'] = ($enemy['damage'] + $rzut1);
     if ($enemy['damage'] < 1) 
     {
