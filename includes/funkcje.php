@@ -7,7 +7,7 @@
  *   @copyright            : (C) 2004,2005,2006,2007,2011,2012 Vallheru Team based on Gamers-Fusion ver 2.5
  *   @author               : thindil <thindil@vallheru.net>
  *   @version              : 1.7
- *   @since                : 05.11.2012
+ *   @since                : 07.11.2012
  *
  */
 
@@ -366,12 +366,13 @@ function lostitem($arrEquip, $pid, $player2, $intLevel)
 	    else
 	      {
 		$db->Execute("UPDATE `equipment` SET `wt`=".$arrEquip[$intKey][6]." WHERE `id`=".$arrEquip[$intKey][0]);
-		if ($pid == $player2)
+		if ($pid == $player2 && $arrEquip[$intKey][6] < 15)
 		  {
-		    print "<br />".$arrPrefix[$i]." ".LOST1." nieco ".DURABILITY.".<br />";
+		    print "<br />".$arrPrefix[$i]." niedługo się zniszczy.<br />";
 		  }
 	      }
 	  }
+	$i++;
       }
     //Check quiver
     if ($arrEquip[6][0])
@@ -1364,6 +1365,7 @@ function fightmonster($enemy, $expgain, $goldgain, $times)
 	gainability($player, $expgain, $gunik, $gatak, $gmagia, $player->id, $strType);
       }
     lostitem($player->equip, $player->id, $player->id, $player->skills['shoot'][1]);
+    echo "here<br />";
     if ($player -> hp < 0) 
     {
         $player -> hp = 0;
