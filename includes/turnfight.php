@@ -194,15 +194,15 @@ function turnfight($expgain,$goldgain,$action,$addres)
     }
     if (!isset($_SESSION['gatak']))
       {
-	$_SESSION['gatak'] = 1;
+	$_SESSION['gatak'] = 0;
       }
     if (!isset($_SESSION['gmagia']))
       {
-	$_SESSION['gmagia'] = 1;
+	$_SESSION['gmagia'] = 0;
       }
     if (!isset($_SESSION['gunik']))
       {
-	$_SESSION['gunik'] = 1;
+	$_SESSION['gunik'] = 0;
       }
     $smarty -> assign ("Message", "<ul><li><b>".$player -> user."</b> ".VERSUS." <b>".$enemy['name']."</b><br />");
     $smarty -> display ('error1.tpl');
@@ -1041,7 +1041,7 @@ function attack($eunik,$bdamage)
 		$intHit = rand(0, 2);
 		if ($krytyk >= $rzut && $intRoll <= $krytyk && $player->fight != 999) 
 		  {
-		    $_SESSION['gattack'] = 1;
+		    $_SESSION['gatak'] = 1;
 		    $ehp = 0;
 		    $smarty->assign("Message", showcritical($arrLocations[$intHit], $strAtype, 'pve', $enemy['name']));
 		  }
@@ -1051,7 +1051,7 @@ function attack($eunik,$bdamage)
 		    $smarty -> assign ("Message", YOU_ATTACK1." ".$name." <b>".$enemy['name']."</b> ".$arrLocations[$intHit]." ".INFLICT." <b>".$stat['damage']."</b> ".DAMAGE."! (".$ehp." ".LEFT.")</font><br />");
 		    if ($stat['damage'] > 0) 
 		      {
-			$_SESSION['gattack'] = 1;
+			$_SESSION['gatak'] = 1;
 		      }
 		  }
 		$smarty -> display ('error1.tpl');
