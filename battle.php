@@ -7,7 +7,7 @@
  *   @copyright            : (C) 2004,2005,2006,2011,2012 Vallheru Team based on Gamers-Fusion ver 2.5
  *   @author               : thindil <thindil@vallheru.net>
  *   @version              : 1.7
- *   @since                : 26.10.2012
+ *   @since                : 07.11.2012
  *
  */
 
@@ -484,17 +484,68 @@ if (isset($_GET['action']))
 	  {
 	    error(ERROR);
 	  }
+	$intPlevel = $player->stats['condition'][2] + $player->stats['speed'][2] + $player->stats['agility'][2] + $player->skills['dodge'][1];
+	if ($player->equip[0][0] || $player->equip[11][0] || $player->equip[1][0])
+	  {
+	    $intPlevel += $player->stats['strength'][2];
+	    if ($player->equip[0][0] || $player->equip[11][0])
+	      {
+		$intPlevel += $player->skills['attack'][1];
+	      }
+	    else
+	      {
+		$intPlevel += $player->skills['shoot'][1];
+	      }
+	  }
+	else
+	  {
+	    $intPlevel += $player->stats['wisdom'][2] + $player->stats['inteli'][2] + $player->skills['magic'][1];
+	  }
 	if (!isset($_POST['fight']) && !isset($_POST['fight1']) && !isset($_GET['fight1'])) 
 	  {
-	    $arrMonsters = $db->GetAll("SELECT `id`, `name`, `level`, `hp` FROM `monsters` WHERE `location`='".$player -> location."' ORDER BY `level` ASC");
+	    $arrMonsters = $db->GetAll("SELECT * FROM `monsters` WHERE `location`='".$player -> location."' ORDER BY `level` ASC");
 	    foreach ($arrMonsters as &$arrMonster)
 	      {
 		$arrMonster['energy'] = floor(1 + ($arrMonster['level'] / 20));
+		$intElevel = $arrMonster['strength'] + $arrMonster['agility'] + $arrMonster['speed'] + $arrMonster['endurance'] + $arrMonster['level'] + $arrMonster['hp'];
+		$intDiv = $intElevel / $intPlevel;
+		if ($intDiv <= 0.1)
+		  {
+		    $arrMonster['elevel'] = 'Brak zagrożenia';
+		  }
+		elseif ($intDiv > 0.1 && $intDiv <= 0.5)
+		  {
+		    $arrMonster['elevel'] = 'Niegroźny';
+		  }
+		elseif ($intDiv > 0.5 && $intDiv <= 0.9)
+		  {
+		    $arrMonster['elevel'] = 'Prawie wyzwanie';
+		  }
+		elseif ($intDiv > 0.9 && $intDiv <= 1.2)
+		  {
+		    $arrMonster['elevel'] = 'Adekwatny';
+		  }
+		elseif ($intDiv > 1.2 && $intDiv <= 1.3)
+		  {
+		    $arrMonster['elevel'] = 'Nieco niebezpieczny';
+		  }
+		elseif ($intDiv > 1.3 && $intDiv <= 1.5)
+		  {
+		    $arrMonster['elevel'] = 'Groźny';
+		  }
+		elseif ($intDiv > 1.5 && $intDiv <= 1.7)
+		  {
+		    $arrMonster['elevel'] = 'Niebezpieczny';
+		  }
+		elseif ($intDiv > 1.7)
+		  {
+		    $arrMonster['elevel'] = 'Samobójstwo';
+		  }
 	      }
 	    $smarty -> assign (array("Monsters" => $arrMonsters,
 				     "Monsterinfo" => MONSTER_INFO,
 				     "Mname" => M_NAME,
-				     "Mlevel" => M_LEVEL,
+				     "Mlevel" => "Poziom trudności",
 				     "Mhealth" => M_HEALTH,
 				     "Mfast" => M_FAST,
 				     "Mturn" => M_TURN,
@@ -559,7 +610,8 @@ if (isset($_GET['action']))
 	      {
 		error("Już z kimś walczysz!");
 	      }
-	    $span = ($enemy1 -> fields['level'] / $player -> level);
+	    $intElevel = $enemy1->fields['strength'] + $enemy1->fields['agility'] + $enemy1->fields['speed'] + $enemy1->fields['endurance'] + $enemy1->fields['level'] + $enemy1->fields['hp'];
+	    $span = ($intElevel / $intPlevel);
 	    if ($span > 2) 
 	      {
 		$span = 2;
@@ -581,7 +633,7 @@ if (isset($_GET['action']))
 	    /**
 	     * Count gained experience
 	     */
-	    $expgain1 = ceil(rand($enemy1 -> fields['exp1'],$enemy1 -> fields['exp2']) * $span);
+	    $expgain1 = ceil($intElevel * $span);
 	    $expgain = $expgain1;
 	    if (!isset($_SESSION['razy']))
 	      {
@@ -594,7 +646,7 @@ if (isset($_GET['action']))
 		    $expgain = $expgain + ceil($expgain1 / 5 * (sqrt($k) + 4.5));
 		  }
 	      }
-	    $goldgain = ceil((rand($enemy1 -> fields['credits1'],$enemy1 -> fields['credits2']) * $_SESSION['razy']) * $span);
+	    $goldgain = ceil(($intElevel * $_SESSION['razy']) * $span);
 	    $expgain = $expgain * $_SESSION['energy'];
 	    $goldgain = $goldgain * $_SESSION['energy'];
 	    $enemy = array("strength" => $enemy1 -> fields['strength'], 
@@ -603,8 +655,6 @@ if (isset($_GET['action']))
 			   "endurance" => $enemy1 -> fields['endurance'], 
 			   "hp" => $enemy1 -> fields['hp'], 
 			   "name" => $enemy1 -> fields['name'], 
-			   "exp1" => $enemy1 -> fields['exp1'], 
-			   "exp2" => $enemy1 -> fields['exp2'], 
 			   "level" => $enemy1 -> fields['level'],
 			   "lootnames" => explode(";", $enemy1->fields['lootnames']),
 			   "lootchances" => explode(";", $enemy1->fields['lootchances']),
@@ -685,20 +735,33 @@ if (isset($_GET['action']))
 			   "endurance" => $enemy1 -> fields['endurance'], 
 			   "hp" => $enemy1 -> fields['hp'], 
 			   "name" => $enemy1 -> fields['name'], 
-			   "exp1" => $enemy1 -> fields['exp1'], 
-			   "exp2" => $enemy1 -> fields['exp2'], 
 			   "level" => $enemy1 -> fields['level'],
 			   "lootnames" => explode(";", $enemy1->fields['lootnames']),
 			   "lootchances" => explode(";", $enemy1->fields['lootchances']),
 			   "resistance" => explode(";", $enemy1->fields['resistance']),
 			   "dmgtype" => $enemy1->fields['dmgtype']);
 	    $intAmount = 0;
+	    $intElevel = $enemy['strength'] + $enemy['agility'] + $enemy['speed'] + $enemy['endurance'] + $enemy['level'] + $enemy['hp'];
 	    for ($j=1; $j<=$_POST['times']; $j++) 
 	      {
-		$myexp = $db  -> Execute("SELECT `exp`, `level` FROM `players` WHERE `id`=".$player -> id);
-		$player -> exp = $myexp -> fields['exp'];
-		$player -> level = $myexp -> fields['level'];
-		$span = ($enemy1 -> fields['level'] / $player -> level);
+		$intPlevel = $player->stats['condition'][2] + $player->stats['speed'][2] + $player->stats['agility'][2] + $player->skills['dodge'][1];
+		if ($player->equip[0][0] || $player->equip[11][0] || $player->equip[1][0])
+		  {
+		    $intPlevel += $player->stats['strength'][2];
+		    if ($player->equip[0][0] || $player->equip[11][0])
+		      {
+			$intPlevel += $player->skills['attack'][1];
+		      }
+		    else
+		      {
+			$intPlevel += $player->skills['shoot'][1];
+		      }
+		  }
+		else
+		  {
+		    $intPlevel += $player->stats['wisdom'][2] + $player->stats['inteli'][2] + $player->skills['magic'][1];
+		  }
+		$span = ($intElevel / $intPlevel);
 		if ($span > 2) 
 		  {
 		    $span = 2;
@@ -706,7 +769,7 @@ if (isset($_GET['action']))
 		/**
 		 * Count gained experience
 		 */
-		$expgain1 = ceil(rand($enemy1 -> fields['exp1'],$enemy1 -> fields['exp2']) * $span);
+		$expgain1 = ceil($intElevel * $span);
 		$expgain = $expgain1;
 		if ($_POST['razy'] > 1)
 		  {
@@ -715,7 +778,7 @@ if (isset($_GET['action']))
 			$expgain = $expgain + ceil($expgain1 / 5 * (sqrt($k) + 4.5));
 		      }
 		  }
-		$goldgain = ceil((rand($enemy1 -> fields['credits1'],$enemy1 -> fields['credits2']) * $_POST['razy']) * $span);
+		$goldgain = ceil(($intElevel * $_POST['razy']) * $span);
 		$expgain = $expgain * floor(1 + ($enemy1->fields['level'] / 20));
 		$goldgain = $goldgain * floor(1 + ($enemy1->fields['level'] / 20));
 		if ($player->antidote == 'R')

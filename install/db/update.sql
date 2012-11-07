@@ -34,4 +34,6 @@ ALTER TABLE `players` ADD `skills` VARCHAR( 4096 ) NOT NULL DEFAULT 'smith:Kowal
 ALTER TABLE `monsters`
   DROP `exp1`,
   DROP `exp2`,
+  DROP `credits1`,
+  DROP `credits2`,
   DROP `lang`;
