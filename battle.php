@@ -484,7 +484,7 @@ if (isset($_GET['action']))
 	  {
 	    error(ERROR);
 	  }
-	$intPlevel = $player->stats['condition'][2] + $player->stats['speed'][2] + $player->stats['agility'][2] + $player->skills['dodge'][1];
+	$intPlevel = $player->stats['condition'][2] + $player->stats['speed'][2] + $player->stats['agility'][2] + $player->skills['dodge'][1] + $player->hp;
 	if ($player->equip[0][0] || $player->equip[11][0] || $player->equip[1][0])
 	  {
 	    $intPlevel += $player->stats['strength'][2];

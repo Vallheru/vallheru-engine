@@ -1,5 +1,7 @@
 2012-11-07  Bartek thindil Jasicki  <thindil@vallheru.net>
 
+	* UPDATE,battle.php: 
+	updated player level
 	* BUG,includes/funkcje.php, includes/turnfight.php: 
 	fixed few bugs
 	* BUG,includes/turnfight.php: 
