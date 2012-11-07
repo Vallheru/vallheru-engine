@@ -178,12 +178,16 @@ function turnfight($expgain,$goldgain,$action,$addres)
     }
     if ($player -> clas == 'Wojownik'  || $player -> clas == 'Barbarzyńca') 
     {
-      $enemy['damage'] -= ($player -> skills['dodge'][1] + $myobrona);
+      $enemy['damage'] -= (($player -> skills['dodge'][1] / 10) + $myobrona);
     } 
         else 
     {
         $enemy['damage'] -= $myobrona;
     }
+    if ($enemy['damage'] < 1)
+      {
+	$enemy['damage'] = 1;
+      }
     if (!isset($_SESSION['round']))
     {
         $_SESSION['round'] = 1;
@@ -1385,9 +1389,13 @@ function monsterattack($attacks,$enemy,$myunik,$amount)
 			  }
 		      }
 		    $intDamage -= $myobrona;
+		    if ($intDamage < 1)
+		      {
+			$intDamage = 1;
+		      }
                     $player -> hp -= $intDamage;
                     $db -> Execute("UPDATE `players` SET `hp`=".$player -> hp." WHERE `id`=".$player -> id);
-		    $arrLocations = array('w tułów i zadaje(ą)', 'w głowę i zadaje(ą)', 'w nogę i zadaje(ą)', 'w rękę i zadaje(ą)');
+		    $arrLocations = array('w głowę i zadaje(ą)', 'w tułów i zadaje(ą)', 'w nogę i zadaje(ą)', 'w rękę i zadaje(ą)');
                     $smarty -> assign ("Message", "<br><b>".$ename."</b> ".ENEMY_HIT2.$arrLocations[$intHit]." <b>".$intDamage."</b> obrażeń! (".$player -> hp." zostało)");
                     $smarty -> display ('error1.tpl');
                     if ($myczaro -> fields['id'] && $player -> mana >= $myczaro -> fields['poziom']) 

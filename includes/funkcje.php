@@ -518,7 +518,7 @@ function monsterattack2($intMydodge, &$zmeczenie, &$gunik, &$enemy, $times, $mcz
       return $strMessage;
     }
   //Monster hit
-  $arrLocations = array('w tułów i zadaje(ą)', 'w głowę i zadaje(ą)', 'w nogę i zadaje(ą)', 'w rękę i zadaje(ą)');
+  $arrLocations = array('w głowę i zadaje(ą)', 'w tułów i zadaje(ą)', 'w nogę i zadaje(ą)', 'w rękę i zadaje(ą)');
   $intHit = rand(0, 3);
   $defpower = 0;
   if ($player->equip[$intHit + 2][0] && $player->equip[$intHit + 2][6] > 0)
@@ -922,7 +922,6 @@ function fightmonster($enemy, $expgain, $goldgain, $times)
 		break;
 	      }
 	  }
-	$enemy['damage'] = $enemy['strength'];
         if ($player -> clas == 'Wojownik' || $player -> clas == 'Barbarzyńca') 
 	  {
 	    $stat['damage'] = (($player ->stats['strength'][2] + $player->equip[0][2]) + ceil($player->skills['attack'][1]));
