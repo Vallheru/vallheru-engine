@@ -42,7 +42,6 @@
         <tr>
         <th>{$Mname}</th>
         <th>{$Mlevel}</th>
-        <th>{$Mhealth}</th>
         <th>{$Mturn}</th>
         <th>{$Mfast}</th>
 	<th>{$Mamount}<br />{$Mmonsters}</th>
@@ -52,8 +51,7 @@
 	{foreach $Monsters as $monster}
             <tr>
             <td>{$monster.name}</td>
-            <td>{$monster.level}</td>
-            <td>{$monster.hp}</td>
+            <td>{$monster.elevel}</td>
 	    <form id="fight{$monster@index}" method="post" action="battle.php?action=monster">
                 <td><input type="submit" name="fight1" value="{$Mturn}" />
 		    <input type="hidden" value="{$monster.id}" name="mid" />
