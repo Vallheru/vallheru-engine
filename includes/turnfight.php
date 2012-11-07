@@ -7,7 +7,7 @@
  *   @copyright            : (C) 2004,2005,2006,2007,2011,2012 Vallheru Team based on Gamers-Fusion ver 2.5
  *   @author               : thindil <thindil@vallheru.net>
  *   @version              : 1.7
- *   @since                : 06.11.2012
+ *   @since                : 07.11.2012
  *
  */
  
@@ -829,7 +829,6 @@ function attack($eunik,$bdamage)
     global $amount;
     $number1 = $_POST['monster'] - 1;
     $number = "mon".$number1;
-    $gatak = 0;
     if (isset ($_SESSION['exhaust'])) 
     {
         $zmeczenie = $_SESSION['exhaust'];
@@ -872,8 +871,7 @@ function attack($eunik,$bdamage)
         }
         if ($player -> skills['attack'][1] > 5) 
         {
-            $kr = ceil($player -> skills['attack'][1] / 100);
-            $krytyk = (5 + $kr);
+            $krytyk = 6;
         } 
             else 
         {
@@ -924,8 +922,7 @@ function attack($eunik,$bdamage)
         }
         if ($player -> skills['shoot'][1] > 5) 
         {
-            $kr = ceil($player -> skills['shoot'][1] / 100);
-            $krytyk = (5 + $kr);
+            $krytyk = 6;
         } 
             else 
         {
@@ -1001,7 +998,6 @@ function attack($eunik,$bdamage)
     {
         $smarty -> assign("Message", ERROR);
         $smarty -> display('error1.tpl');
-        $gwtbr = $gwtbr + 1;
     }
     if ($player->equip[1][0]) 
     {
@@ -1009,17 +1005,21 @@ function attack($eunik,$bdamage)
     }
     if ($ehp > 0 && $player -> hp > 0) 
     {
-        if ($player->equip[0][0]) 
+        if ($player->equip[0][0] && $player->equip[0][6] > 0) 
 	  {
 	    $zmeczenie += ($player->equip[0][4] / 10);
+	    $player->equip[0][6] --;
 	  } 
-	elseif ($player->equip[1][0]) 
+	elseif ($player->equip[1][0] && $player->equip[1][6] > 0 && $player->equip[6][6] > 0) 
 	  {
             $zmeczenie += ($player->equip[1][4] / 10);
+	    $player->equip[1][6] --;
+	    $player->equip[6][6] --;
 	  }
-	if ($player->equip[11][0])
+	if ($player->equip[11][0] && $player->equip[11][6] > 0)
 	  {
 	    $zmeczenie += ($player->equip[11][4] / 10);
+	    $player->equip[11][6] --;
 	  }
         $szansa = rand(1, 100);
         if ($eunik >= $szansa && $szansa < 97) 
@@ -1121,8 +1121,7 @@ function castspell ($id,$boost,$eunik)
         }
         if ($player -> skills['magic'][1] > 5) 
         {
-            $kr = ceil($player -> skills['magic'][1] / 100);
-            $krytyk = (5 + $kr);
+            $krytyk = 6;
         } 
             else 
         {
@@ -1326,7 +1325,7 @@ function monsterattack($attacks,$enemy,$myunik,$amount)
         $ename = $enemy['name']." nr".$j;
         for ($i = 1;$i <= $attacks; ++$i) 
         {
-            $rzut1 = (rand(1,($enemy['level'] * 10)));
+            $rzut1 = rand(0,$enemy['level']);
             $intDamage = ($enemy['damage'] + $rzut1);
             if ($intDamage < 1) 
             {
@@ -1366,21 +1365,21 @@ function monsterattack($attacks,$enemy,$myunik,$amount)
                 {
 		    $intHit = rand(0, 3);
 		    $myobrona = 0;
-		    if ($player->equip[$intHit][0])
+		    if ($player->equip[$intHit + 2][0])
 		      {
-			$myobrona = $player->equip[$intHit][2];
-		      
+			$myobrona = $player->equip[$intHit + 2][2];
+		        $player->equip[$intHit + 2][6] --;
 			if ($enemy['dmgtype'] != 'none')
 			  {
-			    if ($player->equip[$intHit][10] != 'N')
+			    if ($player->equip[$intHit + 2][10] != 'N')
 			      {
-				if ($arrElements3[$enemy['dmgtype']] == $player->equip[$intHit][10])
+				if ($arrElements3[$enemy['dmgtype']] == $player->equip[$intHit + 2][10])
 				  {
-				    $myobrona += $player->equip[$intHit][2];
+				    $myobrona += $player->equip[$intHit + 2][2];
 				  }
-				elseif ($arrElements4[$enemy['dmgtype']] == $player->equip[$intHit][10])
+				elseif ($arrElements4[$enemy['dmgtype']] == $player->equip[$intHit + 2][10])
 				  {
-				    $myobrona -= ceil($player->equip[$intHit][2] / 2);
+				    $myobrona -= ceil($player->equip[$intHit + 2][2] / 2);
 				  }
 			      }
 			  }

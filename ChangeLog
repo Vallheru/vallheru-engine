@@ -1,5 +1,7 @@
 2012-11-07  Bartek thindil Jasicki  <thindil@vallheru.net>
 
+	* BUG,includes/turnfight.php: 
+	fixed few bugs
 	* UPDATE,templates/layout1/battle.tpl, templates/battle.tpl: 
 	updated to new monsters
 	* UPDATE,battle.php: 
