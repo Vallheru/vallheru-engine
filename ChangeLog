@@ -1,5 +1,7 @@
 2012-11-08  Bartek thindil Jasicki  <thindil@vallheru.net>
 
+	* UPDATE,includes/monsters.php, includes/turnfight.php, mission.php, travel.php: 
+	update random monster generator
 	* UPDATE,includes/monsters.php, includes/funkcje.php, includes/turnfight.php, explore.php, maze.php:
 	update monster encounter
 

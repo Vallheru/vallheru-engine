@@ -65,7 +65,7 @@ function turnfight($expgain,$goldgain,$action,$addres)
       }
     $premia = 0;
     $zmeczenie = 0;
-    if (empty ($enemy['id'])) 
+    if (empty ($enemy['name'])) 
     {
       require_once('includes/monsters.php');
       $enemy = encounter();

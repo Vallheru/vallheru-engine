@@ -7,7 +7,7 @@
  *   @copyright            : (C) 2004,2005,2006,2011,2012 Vallheru Team based on Gamers-Fusion ver 2.5
  *   @author               : thindil <thindil@vallheru.net>
  *   @version              : 1.7
- *   @since                : 23.10.2012
+ *   @since                : 08.11.2012
  *
  */
  
@@ -141,27 +141,9 @@ function battle($strAddress)
 
   if (!isset($_SESSION['enemy']))
     {
-      $arrbandit = array ();
-      for ($i=0; $i<8; $i++) 
-	{
-	  $roll2 = rand (1, 500);
-	  $arrbandit[$i] = $roll2;
-	}
-      $enemy = array('name' => 'Bandyta', 
-		     'strength' => $arrbandit[0], 
-		     'agility' => $arrbandit[1], 
-		     'hp' => $arrbandit[2], 
-		     'level' => $arrbandit[3], 
-		     'endurance' => $arrbandit[6], 
-		     'speed' => $arrbandit[7], 
-		     'exp1' => $arrbandit[4], 
-		     'exp2' => $arrbandit[4],
-		     "gold" => $arrbandit[5],
-		     "lootnames" => array(),
-		     "lootchances" => array(),
-		     "resistance" => array('none', 'none'),
-		     "dmgtype" => 'none');
-      $_SESSION['enemy'] = $enemy;
+      require_once('includes/monsters.php');
+      $_SESSION['enemy'] = randommonster('Bandyta');
+      $enemy = $_SESSION['enemy'];
     }
   else
     {
@@ -362,21 +344,22 @@ if (isset($_GET['akcja']) && in_array($_GET['akcja'], array('gory', 'las', 'city
 		    $intCost = 0;
 		  }
 		$intRoll = rand(1, 100);
+		$intLevel = $player->stats['strength'][2] + $player->stats['agility'][2] + $player->stats['speed'][2] + $player->stats['wisdom'][2] + $player->stats['inteli'][2] + $player->stats['condition'][2];
 		if ($intRoll < 6)
 		  {
-		    $intCost += 5 * $player->level;
+		    $intCost += 5 * $intLevel;
 		  }
 		elseif ($intRoll > 5 && $intRoll < 26)
 		  {
-		    $intCost += 15 * $player->level;
+		    $intCost += 15 * $intLevel;
 		  }
 		elseif ($intRoll > 25 && $intRoll < 76)
 		  {
-		    $intCost += 25 * $player->level;
+		    $intCost += 25 * $intLevel;
 		  }
 		elseif ($intRoll > 75 && $intRoll < 96)
 		  {
-		    $intCost += 50 * $player->level;
+		    $intCost += 50 * $intLevel;
 		  }
 		else
 		  {
@@ -400,7 +383,7 @@ if (isset($_GET['akcja']) && in_array($_GET['akcja'], array('gory', 'las', 'city
 		$arrbandit = array ();
 		for ($i = 0; $i < 4; $i++) 
 		  {
-		    $roll2 = rand (1,500);
+		    $roll2 = rand (1,75);
 		    $arrbandit[$i] = $roll2;
 		  }
 		$chance = (rand(1, 100) + $player->stats['speed'][2] + $player->skills['perception'][1]) - ($arrbandit[0] + rand(1, 100));
@@ -462,7 +445,7 @@ if (isset($_GET['akcja']) && in_array($_GET['akcja'], array('gory', 'las', 'city
 	switch ($_GET['step'])
 	  {
 	  case 'caravan':
-	    $intChance = 20;
+	    $intChance = 200;
 	    break;
 	  case 'walk':
 	    $intChance = 30;

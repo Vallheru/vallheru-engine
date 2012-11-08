@@ -6,8 +6,8 @@
  *   @name                 : mission.php                            
  *   @copyright            : (C) 2012 Vallheru Team based on Gamers-Fusion ver 2.5
  *   @author               : thindil <thindil@vallheru.net>
- *   @version              : 1.6
- *   @since                : 20.06.2012
+ *   @version              : 1.7
+ *   @since                : 08.11.2012
  *
  */
 
@@ -100,67 +100,9 @@ function battle()
   //Generate new monster
     if (!isset($_SESSION['enemy']))
     {
-      $arrStats = array(0, 0, $player->hp, $player->cond, $player->speed);
-      if ($player->strength > $player->inteli)
-	{
-	  $arrStats[0] = $player->strength;
-	}
-      else
-	{
-	  $arrStats[0] = $player->inteli;
-	}
-      if ($player->agility > $player->wisdom)
-	{
-	  $arrStats[1] = $player->agility;
-	}
-      else
-	{
-	  $arrStats[1] = $player->wisdom;
-	}
-      foreach ($arrStats as &$fltStat)
-	{
-	  $fltBonus = (rand(-15, 15) / 100) * $fltStat;
-	  $fltStat += $fltBonus;
-	}
-      $arrElements = array('water', 'fire', 'wind', 'earth');
-      $intChance = rand(1, 100);
-      if ($intChance < 75)
-	{
-	  $arrResistance = array('none', 'none');
-	  $strDmgtype = 'none';
-	}
-      else
-	{
-	  $intKey = rand(0, 3);
-	  $strDmgtype = $arrElements[$intKey];
-	}
-      if ($intChance > 74 && $intChance < 90)
-	{
-	  $arrResistance = array($arrElements[$intKey], 'weak');
-	}
-      elseif ($intChance < 97)
-	{
-	  $arrResistance = array($arrElements[$intKey], 'medium');
-	}
-      elseif ($intChance > 96)
-	{
-	  $arrResistance = array($arrElements[$intKey], 'strong');
-	}
-      $enemy = array('name' => $_SESSION['maction']['moreinfo'][1], 
-		     'strength' => $arrStats[0], 
-		     'agility' => $arrStats[1], 
-		     'hp' => $arrStats[2], 
-		     'level' => $player->level, 
-		     'endurance' => $arrStats[3], 
-		     'speed' => $arrStats[4], 
-		     'exp1' => $player->level * 5, 
-		     'exp2' => $player->level * 10,
-		     "gold" => $player->level * 10,
-		     "lootnames" => array(),
-		     "lootchances" => array(),
-		     "resistance" => $arrResistance,
-		     "dmgtype" => $strDmgtype);
-      $_SESSION['enemy'] = $enemy;
+      require_once('includes/monsters.php');
+      $_SESSION['enemy'] = randommonster($_SESSION['maction']['moreinfo'][1]);
+      $enemy = $_SESSION['enemy'];
     }
     else
       {
