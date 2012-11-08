@@ -6,8 +6,8 @@
  *   @name                 : maze.php                            
  *   @copyright            : (C) 2004,2005,2006,2011,2012 Vallheru Team based on Gamers-Fusion ver 2.5
  *   @author               : thindil <thindil@vallheru.net>
- *   @version              : 1.6
- *   @since                : 22.08.2012
+ *   @version              : 1.7
+ *   @since                : 08.11.2012
  *
  */
 
@@ -59,22 +59,38 @@ function battle($type,$adress)
         error (NO_LIFE);
     }
     $enemy1 = $db -> Execute("SELECT * FROM `monsters` WHERE `id`=".$player -> fight);
-    $span = ($enemy1 -> fields['level'] / $player -> level);
+    $intPlevel = $player->stats['condition'][2] + $player->stats['speed'][2] + $player->stats['agility'][2] + $player->skills['dodge'][1] + $player->hp;
+    if ($player->equip[0][0] || $player->equip[11][0] || $player->equip[1][0])
+      {
+	$intPlevel += $player->stats['strength'][2];
+	if ($player->equip[0][0] || $player->equip[11][0])
+	  {
+	    $intPlevel += $player->skills['attack'][1];
+	  }
+	else
+	  {
+	    $intPlevel += $player->skills['shoot'][1];
+	  }
+      }
+    else
+      {
+	$intPlevel += $player->stats['wisdom'][2] + $player->stats['inteli'][2] + $player->skills['magic'][1];
+      }
+    $intElevel = $enemy1->fields['strength'] + $enemy1->fields['agility'] + $enemy1->fields['speed'] + $enemy1->fields['endurance'] + $enemy1->fields['level'] + $enemy1->fields['hp'];
+    $span = ($intElevel / $intPlevel);
     if ($span > 2) 
     {
         $span = 2;
     }
-    $expgain = ceil(rand($enemy1 -> fields['exp1'],$enemy1 -> fields['exp2'])  * $span);
-    $goldgain = ceil(rand($enemy1 -> fields['credits1'],$enemy1 -> fields['credits2']) * $span);
+    $expgain = ceil($intElevel  * $span);
+    $goldgain = ceil($intElevel * $span);
     $enemy = array("strength" => $enemy1 -> fields['strength'], 
                    "agility" => $enemy1 -> fields['agility'], 
                    "speed" => $enemy1 -> fields['speed'], 
                    "endurance" => $enemy1 -> fields['endurance'], 
                    "hp" => $enemy1 -> fields['hp'], 
                    "name" => $enemy1 -> fields['name'], 
-                   "id" => $enemy1 -> fields['id'], 
-                   "exp1" => $enemy1 -> fields['exp1'], 
-                   "exp2" => $enemy1 -> fields['exp2'],  
+                   "id" => $enemy1 -> fields['id'],  
                    "level" => $enemy1 -> fields['level'],
 		   "lootnames" => explode(";", $enemy1->fields['lootnames']),
 		   "lootchances" => explode(";", $enemy1->fields['lootchances']),
@@ -162,7 +178,7 @@ if (isset($_GET['step']) && $_GET['step'] == 'battle')
 */
 if (isset($_GET['step']) && $_GET['step'] == 'run') 
 {
-    $enemy = $db -> Execute("SELECT `level`, `speed`, `name`, `exp1`, `exp2`, `id` FROM `monsters` WHERE `id`=".$player -> fight);
+    $enemy = $db -> Execute("SELECT `level`, `speed`, `name`, `id` FROM `monsters` WHERE `id`=".$player -> fight);
     if (!$enemy->fields['id'])
       {
 	error('Nie masz przed kim uciekać!');
@@ -172,19 +188,18 @@ if (isset($_GET['step']) && $_GET['step'] == 'run')
      */
     $player->curskills(array('perception'));
     $player->clearbless(array('speed'));
-    $chance = (rand(1, $player -> level * 100) + ($player->speed + $player->perception) - $enemy -> fields['speed']);
+    $chance = (($player->stats['speed'][2] + $player->skills['perception'][1] + rand(1, 100)) - ($enemy -> fields['speed'] + rand(1, 100));
     $smarty -> assign ("Chance", $chance);
     if ($chance > 0) 
     {
-        $expgain = rand($enemy -> fields['exp1'],$enemy -> fields['exp2']);
-        $expgain = ceil($expgain / 100);
-	$fltPerception = ($enemy->fields['level'] / 100);
+	$expgain = ceil(($enemy->fields['speed'] + $enemy->fields['endurance'] + $enemy->fields['agility'] + $enemy->fields['strength']) / 100);
         $smarty -> assign(array("Ename" => $enemy -> fields['name'], 
                                 "Expgain" => $expgain,
                                 "Escapesucc" => ESCAPE_SUCC,
                                 "Escapesucc2" => ESCAPE_SUCC2,
-                                "Escapesucc3" => ESCAPE_SUCC3." oraz ".$fltPerception." do umiejętności Spostrzegawczość."));
-        checkexp($player -> exp, $expgain, $player -> level, $player -> race, $player -> user, $player -> id, 0, 0, $player -> id, 'perception', $fltPerception);
+                                "Escapesucc3" => ESCAPE_SUCC3."."));
+	$player->checkexp(array('speed' => ($expgain / 2)), $player->id, 'stats');
+	$player->checkexp(array('perception' => ($expgain / 2)), $player->id, 'skills');
         $db -> Execute("UPDATE `players` SET `fight`=0 WHERE `id`=".$player -> id);
     } 
         else 

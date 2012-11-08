@@ -7,7 +7,7 @@
  *   @copyright            : (C) 2004,2005,2006,2007,2011,2012 Vallheru Team based on Gamers-Fusion ver 2.5
  *   @author               : thindil <thindil@vallheru.net>
  *   @version              : 1.7
- *   @since                : 07.11.2012
+ *   @since                : 08.11.2012
  *
  */
 
@@ -824,44 +824,9 @@ function fightmonster($enemy, $expgain, $goldgain, $times)
     }
     if (empty ($enemy)) 
       {
-	$intLevel = 0;
-	foreach ($player->stats as $arrStat)
-	  {
-	    $intLevel += $arrStat[2];
-	  }
-        if ($player -> location == 'Góry') 
-	  {
-	    $strLocation = 'Altara';
-	  }
-	elseif ($player->location == 'Las')
-	  {
-	    $strLocation = 'Ardulith';
-	  }
-	$intRoll2 = rand(1, 100);
-	if ($intRoll2 < 25)
-	  {
-	    $enemy1 = $db->SelectLimit("SELECT * FROM `monsters` WHERE `level`<=".$intLevel." AND `location`='".$strLocation."' ORDER BY RAND()", 1);
-	  }
-	elseif ($intRoll2 > 24 && $intRoll2 < 90)
-	  {
-	    $enemy1 = $db->SelectLimit("SELECT * FROM `monsters` WHERE `level`<=".$intLevel." AND `location`='".$strLocation."' ORDER BY `level` DESC", 1);
-	  }
-	else
-	  {
-	    $enemy1 = $db->SelectLimit("SELECT * FROM `monsters` WHERE `level`>=".$intLevel." AND `location`='".$strLocation."' ORDER BY RAND()", 1);
-        }
-        $enemy = array("strength" => $enemy1 -> fields['strength'], 
-                       "agility" => $enemy1 -> fields['agility'], 
-                       "speed" => $enemy1 -> fields['speed'], 
-                       "endurance" => $enemy1 -> fields['endurance'], 
-                       "hp" => $enemy1 -> fields['hp'], 
-                       "name" => $enemy1 -> fields['name'], 
-                       "id" => $enemy1 -> fields['id'], 
-                       "exp1" => $enemy1 -> fields['exp1'], 
-                       "exp2" => $enemy1 -> fields['exp2'], 
-                       "level" => $enemy1 -> fields['level']);
-        $enemy1 -> Close();
-    }
+        require_once('includes/monsters.php');
+	$enemy = encounter();
+      }
     if ($title == 'Arena Walk') 
     {
         if (!$player->equip[0][0] && !$mczar -> fields['id'] && !$player->equip[1][0]) 

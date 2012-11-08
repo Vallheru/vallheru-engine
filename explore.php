@@ -7,7 +7,7 @@
  *   @copyright            : (C) 2004,2005,2006,2011,2012 Vallheru Team based on Gamers-Fusion ver 2.5
  *   @author               : thindil <thindil@vallheru.net>
  *   @version              : 1.7
- *   @since                : 23.10.2012
+ *   @since                : 08.11.2012
  *
  */
  
@@ -68,13 +68,31 @@ function battle($type,$adress)
         error (NO_LIFE);
     }
     $enemy1 = $db -> Execute("SELECT * FROM `monsters` WHERE `id`=".$player -> fight);
-    $span = ($enemy1 -> fields['level'] / $player -> level);
+    $intPlevel = $player->stats['condition'][2] + $player->stats['speed'][2] + $player->stats['agility'][2] + $player->skills['dodge'][1] + $player->hp;
+    if ($player->equip[0][0] || $player->equip[11][0] || $player->equip[1][0])
+      {
+	$intPlevel += $player->stats['strength'][2];
+	if ($player->equip[0][0] || $player->equip[11][0])
+	  {
+	    $intPlevel += $player->skills['attack'][1];
+	  }
+	else
+	  {
+	    $intPlevel += $player->skills['shoot'][1];
+	  }
+      }
+    else
+      {
+	$intPlevel += $player->stats['wisdom'][2] + $player->stats['inteli'][2] + $player->skills['magic'][1];
+      }
+    $intElevel = $enemy1->fields['strength'] + $enemy1->fields['agility'] + $enemy1->fields['speed'] + $enemy1->fields['endurance'] + $enemy1->fields['level'] + $enemy1->fields['hp'];
+    $span = ($intElevel / $intPlevel);
     if ($span > 2) 
     {
         $span = 2;
     }
-    $expgain = ceil(rand($enemy1 -> fields['exp1'],$enemy1 -> fields['exp2'])  * $span);
-    $goldgain = ceil(rand($enemy1 -> fields['credits1'],$enemy1 -> fields['credits2']) * $span);
+    $expgain = ceil($intElevel  * $span);
+    $goldgain = ceil($intElevel * $span);
     $enemy = array("strength" => $enemy1 -> fields['strength'], 
                    "agility" => $enemy1 -> fields['agility'], 
                    "speed" => $enemy1 -> fields['speed'], 
@@ -82,8 +100,6 @@ function battle($type,$adress)
                    "hp" => $enemy1 -> fields['hp'], 
                    "name" => $enemy1 -> fields['name'], 
                    "id" => $enemy1 -> fields['id'], 
-                   "exp1" => $enemy1 -> fields['exp1'], 
-                   "exp2" => $enemy1 -> fields['exp2'], 
                    "level" => $enemy1 -> fields['level'],
 		   "lootnames" => explode(";", $enemy1->fields['lootnames']),
 		   "lootchances" => explode(";", $enemy1->fields['lootchances']),
@@ -164,7 +180,7 @@ if (isset($_GET['step']) && $_GET['step'] == 'battle')
 */
 if (isset($_GET['step']) && $_GET['step'] == 'run') 
 {
-    $enemy = $db -> Execute("SELECT `level`, `speed`, `name`, `exp1`, `exp2`, `id` FROM monsters WHERE id=".$player -> fight);
+    $enemy = $db -> Execute("SELECT `level`, `speed`, `name`, `id` FROM `monsters` WHERE `id`=".$player -> fight);
     if (!$enemy->fields['id'])
       {
 	error('Nie masz przed kim uciekać!');
@@ -325,25 +341,13 @@ if (isset($_GET['action']) && $_GET['action'] == 'moutains' && $player -> locati
         }
         elseif ($intRoll > 5 && $intRoll < 9) 
 	  {
-	    $intRoll2 = rand(1, 100);
-	    if ($intRoll2 < 25)
-	      {
-		$enemy = $db->SelectLimit("SELECT `name`, `id` FROM `monsters` WHERE `level`<=".$player->level." AND `location`='Altara' ORDER BY RAND()", 1);
-	      }
-	    elseif ($intRoll2 > 24 && $intRoll2 < 90)
-	      {
-		$enemy = $db->SelectLimit("SELECT `name`, `id` FROM `monsters` WHERE `level`<=".$player->level." AND `location`='Altara' ORDER BY `level` DESC", 1);
-	      }
-	    else
-	      {
-		$enemy = $db->SelectLimit("SELECT `name`, `id` FROM `monsters` WHERE `level`>=".$player->level." AND `location`='Altara' ORDER BY RAND()", 1);
-	      }
-            $db -> Execute("UPDATE `players` SET `fight`=".$enemy -> fields['id']." WHERE `id`=".$player -> id);
-            $strEnemy = YOU_MEET." ".$enemy -> fields['name'].FIGHT2."<br />
+	    require_once('includes/monsters.php');
+	    $enemy = encounter();
+            $db -> Execute("UPDATE `players` SET `fight`=".$enemy['id']." WHERE `id`=".$player -> id);
+            $strEnemy = YOU_MEET." ".$enemy['name'].FIGHT2."<br />
                <a href=\"explore.php?step=battle\">".YES."</a><br />
                <a href=\"explore.php?step=run\">".NO."</a><br />";
-            $player -> fight = $enemy -> fields['id'];
-            $enemy -> Close();
+            $player -> fight = $enemy['id'];
             break;
 	  }
         elseif ($intRoll == 17)
@@ -653,26 +657,14 @@ if (isset($_GET['action']) && $_GET['action'] == 'forest' && $player -> location
             }
         }
         elseif ($intRoll > 5 && $intRoll < 9) 
-        {
-	    $intRoll2 = rand(1, 100);
-	    if ($intRoll2 < 25)
-	      {
-		$enemy = $db->SelectLimit("SELECT `name`, `id` FROM `monsters` WHERE `level`<=".$player->level." AND `location`='Ardulith' ORDER BY RAND()", 1);
-	      }
-	    elseif ($intRoll2 > 24 && $intRoll2 < 90)
-	      {
-		$enemy = $db->SelectLimit("SELECT `name`, `id` FROM `monsters` WHERE `level`<=".$player->level." AND `location`='Ardulith' ORDER BY `level` DESC", 1);
-	      }
-	    else
-	      {
-		$enemy = $db->SelectLimit("SELECT `name`, `id` FROM `monsters` WHERE `level`>=".$player->level." AND `location`='Ardulith' ORDER BY RAND()", 1);
-	      }
-            $db -> Execute("UPDATE `players` SET `fight`=".$enemy -> fields['id']." WHERE `id`=".$player -> id);
-            $strEnemy = YOU_MEET." ".$enemy -> fields['name'].FIGHT2."<br />
+	  {
+	    require_once('includes/monsters.php');
+	    $enemy = encounter();
+            $db -> Execute("UPDATE `players` SET `fight`=".$enemy['id']." WHERE `id`=".$player -> id);
+            $strEnemy = YOU_MEET." ".$enemy['name'].FIGHT2."<br />
                <a href=\"explore.php?step=battle\">".YES."</a><br />
                <a href=\"explore.php?step=run\">".NO."</a><br />";
-            $player -> fight = $enemy -> fields['id'];
-            $enemy -> Close();
+            $player -> fight = $enemy['id'];
             break;
         }
     }

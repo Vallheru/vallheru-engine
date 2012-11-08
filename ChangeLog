@@ -1,5 +1,12 @@
+2012-11-08  Bartek thindil Jasicki  <thindil@vallheru.net>
+
+	* UPDATE,includes/monsters.php, includes/funkcje.php, includes/turnfight.php, explore.php, maze.php:
+	update monster encounter
+
 2012-11-07  Bartek thindil Jasicki  <thindil@vallheru.net>
 
+	* BUG,includes/turnfight.php: 
+	fixed gaining experience
 	* UPDATE,battle.php: 
 	updated player level
 	* BUG,includes/funkcje.php, includes/turnfight.php: 
