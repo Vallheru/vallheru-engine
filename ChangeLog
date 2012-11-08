@@ -1,5 +1,7 @@
 2012-11-08  Bartek thindil Jasicki  <thindil@vallheru.net>
 
+	* UPDATE,templates/layout1/memberlist.tpl, templates/memberlist.tpl, memberlist.php: 
+	updated member list
 	* BUG,travel.php: 
 	remove testing code
 	* BUG,includes/monsters.php: 

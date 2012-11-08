@@ -4,7 +4,6 @@
 <th><a href="memberlist.php?lista=user&amp;order={$Torder}">{$Plname}</a></th>
 <th><a href="memberlist.php?lista=rank&amp;order={$Torder}">{$Plrank}</a></th>
 <th><a href="memberlist.php?lista=rasa&amp;order={$Torder}">{$Plrace}</a></th>
-<th><a href="memberlist.php?lista=level&amp;order={$Torder}">{$Pllevel}</a></th>
 <th><a href="memberlist.php?lista=miejsce&amp;order={$Torder}">{$Pllocation}</a></th>
 <th><a href="memberlist.php?lista=shortrpg&amp;order={$Torder}">{$Plroleplay}</a></th>
 </tr>
@@ -14,7 +13,6 @@
 	<td><a href="view.php?view={$Playerl.id}">{$Playerl.user}</a></td>
 	<td>{$Playerl.rank}</td>
 	<td>{$Playerl.rasa}</td>
-	<td>{$Playerl.level}</td>
 	<td>{$Playerl.miejsce}</td>
 	<td>{$Playerl.shortrpg}</td>
     </tr>

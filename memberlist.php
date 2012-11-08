@@ -6,8 +6,8 @@
  *   @name                 : memberlist.php                            
  *   @copyright            : (C) 2004,2005,2006,2007,2011,2012 Vallheru Team based on Gamers-Fusion ver 2.5
  *   @author               : thindil <thindil@vallheru.net>
- *   @version              : 1.6
- *   @since                : 05.07.2012
+ *   @version              : 1.7
+ *   @since                : 08.11.2012
  *
  */
 
@@ -117,7 +117,7 @@ if (!isset ($_GET['lista']))
 {
     $_GET['lista'] = 'id';
 }
-if (!in_array($_GET['lista'], array('id', 'user', 'rank', 'rasa', 'level', 'miejsce', 'shortrpg'))) 
+if (!in_array($_GET['lista'], array('id', 'user', 'rank', 'rasa', 'miejsce', 'shortrpg'))) 
   {
     error(ERROR);
   }
@@ -147,19 +147,19 @@ else
   }
 if (empty($_POST['szukany']) && $_POST['id'] == 0 && empty($_POST['ip'])) 
   {
-    $mem = $db->GetAll("SELECT `id`, `user`, `rank`, `rasa`, `level`, `gender`, `shortrpg`, `tribe`, `miejsce` FROM `players` ORDER BY `".$_GET['lista']."` ".$_GET['order']." LIMIT ".(30 * ($page - 1)).", 30");
+    $mem = $db->GetAll("SELECT `id`, `user`, `rank`, `rasa`, `gender`, `shortrpg`, `tribe`, `miejsce` FROM `players` ORDER BY `".$_GET['lista']."` ".$_GET['order']." LIMIT ".(30 * ($page - 1)).", 30");
   } 
 elseif  (!empty($_POST['szukany']) && $_POST['id'] == 0) 
 {
-  $mem = $db->GetAll("SELECT `id`, `user`, `rank`, `rasa`, `level`, `gender`, `shortrpg`, `tribe`, `miejsce` FROM `players` WHERE `user` LIKE ".$strSearch." ORDER BY `".$_GET['lista']."` ".$_GET['order']." LIMIT ".(30 * ($page - 1)).", 30");
+  $mem = $db->GetAll("SELECT `id`, `user`, `rank`, `rasa`, `gender`, `shortrpg`, `tribe`, `miejsce` FROM `players` WHERE `user` LIKE ".$strSearch." ORDER BY `".$_GET['lista']."` ".$_GET['order']." LIMIT ".(30 * ($page - 1)).", 30");
 } 
 elseif (!empty($_POST['szukany']) && $_POST['id'] > 0) 
 {
-  $mem = $db->GetAll("SELECT `id`, `user`, `rank`, `rasa`, `level`, `gender`, `shortrpg`, `tribe`, `miejsce` FROM `players` WHERE `id`=".$_POST['id']." AND `user` LIKE ".$strSearch." ORDER BY `".$_GET['lista']."` ".$_GET['order']." LIMIT ".(30 * ($page - 1)).", 30");
+  $mem = $db->GetAll("SELECT `id`, `user`, `rank`, `rasa`, `gender`, `shortrpg`, `tribe`, `miejsce` FROM `players` WHERE `id`=".$_POST['id']." AND `user` LIKE ".$strSearch." ORDER BY `".$_GET['lista']."` ".$_GET['order']." LIMIT ".(30 * ($page - 1)).", 30");
 } 
 elseif (empty($_POST['szukany']) && $_POST['id'] > 0) 
 {
-  $mem = $db->GetAll("SELECT `id`, `user`, `rank`, `rasa`, `level`, `gender`, `shortrpg`, `tribe`, `miejsce` FROM `players` WHERE `id`=".$_POST['id']." ORDER BY `".$_GET['lista']."` ".$_GET['order']." LIMIT ".(30 * ($page - 1)).", 30");
+  $mem = $db->GetAll("SELECT `id`, `user`, `rank`, `rasa`, `gender`, `shortrpg`, `tribe`, `miejsce` FROM `players` WHERE `id`=".$_POST['id']." ORDER BY `".$_GET['lista']."` ".$_GET['order']." LIMIT ".(30 * ($page - 1)).", 30");
 }
 elseif(!empty($_POST['ip']))
 {
@@ -168,7 +168,7 @@ elseif(!empty($_POST['ip']))
       error(NO_PERM);
     }
   $_POST['ip'] = str_replace("*","%", $_POST['ip']);
-  $mem = $db->GetAll("SELECT `id`, `user`, `rank`, `rasa`, `level`, `gender`, `shortrpg`, `tribe`, `miejsce` FROM `players` WHERE `ip` LIKE '".$_POST['ip']."' ORDER BY `".$_GET['lista']."` ".$_GET['order']." LIMIT ".(30 * ($page - 1)).", 30");
+  $mem = $db->GetAll("SELECT `id`, `user`, `rank`, `rasa`, `gender`, `shortrpg`, `tribe`, `miejsce` FROM `players` WHERE `ip` LIKE '".$_POST['ip']."' ORDER BY `".$_GET['lista']."` ".$_GET['order']." LIMIT ".(30 * ($page - 1)).", 30");
 }
 
 require_once('includes/ranks.php');
@@ -199,7 +199,6 @@ $smarty -> assign(array("Plid" => PL_ID,
 			"Plname" => PL_NAME,
 			"Plrank" => PL_RANK,
 			"Plrace" => PL_RACE,
-			"Pllevel" => PL_LEVEL,
 			"Plroleplay" => "Profil fabularny",
 			"Pllocation" => "Lokacja",
 			"Search" => SEARCH,
