@@ -445,7 +445,7 @@ if (isset($_GET['akcja']) && in_array($_GET['akcja'], array('gory', 'las', 'city
 	switch ($_GET['step'])
 	  {
 	  case 'caravan':
-	    $intChance = 200;
+	    $intChance = 20;
 	    break;
 	  case 'walk':
 	    $intChance = 30;

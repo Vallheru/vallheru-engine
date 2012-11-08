@@ -1,5 +1,7 @@
 2012-11-08  Bartek thindil Jasicki  <thindil@vallheru.net>
 
+	* BUG,travel.php: 
+	remove testing code
 	* BUG,includes/monsters.php: 
 	fixed bug with monster resistances
 	* UPDATE,includes/monsters.php, includes/turnfight.php, mission.php, travel.php: 
