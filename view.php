@@ -8,7 +8,7 @@
  *   @author               : thindil <thindil@vallheru.net>
  *   @author               : eyescream <tduda@users.sourceforge.net>
  *   @version              : 1.7
- *   @since                : 23.10.2012
+ *   @since                : 08.11.2012
  *
  */
 
@@ -222,7 +222,7 @@ if ($player -> location == $view -> location && $view -> immunited == 'N' && $pl
 {
     if (!$objFreeze -> fields['freeze'])
     {
-        $smarty -> assign ("Attack", "<li><a href=battle.php?battle=".$view -> id.">".A_ATTACK."</a></li>");
+        $smarty -> assign ("Attack", "<li><a href=battle.php?battle=".$view -> id.">".A_ATTACK."</a></li><li><a href=view.php?view=".$view->id."&amp;consider>Oceń przeciwnika</a></li>");
     }
         else
     {
@@ -359,6 +359,101 @@ else
 $objViewtime->Close();
 $smarty->assign(array("Seen" => "Ostatnio aktywn".$strSuffix,
 		      "Lastseen" => $strSeen));
+
+/**
+ *
+ */
+if (isset($_GET['consider']))
+  {
+    if ($view->immunited == 'Y')
+      {
+	message('error', 'Nie możesz oceniać tej postaci.');
+      }
+    elseif ($player->energy < 1)
+      {
+	message('error', 'Nie masz energii aby oceniać tę postać.');
+      }
+    elseif ($player->id == $view->id)
+      {
+	message('error', 'Nie możesz oceniać samego siebie.');
+      }
+    else
+      {
+	$player->energy --;
+	$db->Execute("UPDATE `players` SET `energy`=`energy`-1 WHERE `id`=".$player->id);
+	//Player level
+	$intPlevel = $player->stats['condition'][2] + $player->stats['speed'][2] + $player->stats['agility'][2] + $player->skills['dodge'][1] + $player->hp;
+	if ($player->equip[0][0] || $player->equip[11][0] || $player->equip[1][0])
+	  {
+	    $intPlevel += $player->stats['strength'][2];
+	    if ($player->equip[0][0] || $player->equip[11][0])
+	      {
+		$intPlevel += $player->skills['attack'][1];
+	      }
+	    else
+	      {
+		$intPlevel += $player->skills['shoot'][1];
+	      }
+	  }
+	else
+	  {
+	    $intPlevel += $player->stats['wisdom'][2] + $player->stats['inteli'][2] + $player->skills['magic'][1];
+	  }
+	//Enemy level
+	$intElevel = $view->stats['condition'][2] + $view->stats['speed'][2] + $view->stats['agility'][2] + $view->skills['dodge'][1] + $player->hp;
+	if ($view->equip[0][0] || $view->equip[11][0] || $view->equip[1][0])
+	  {
+	    $intElevel += $view->stats['strength'][2];
+	    if ($view->equip[0][0] || $view->equip[11][0])
+	      {
+		$intElevel += $view->skills['attack'][1];
+	      }
+	    else
+	      {
+		$intElevel += $view->skills['shoot'][1];
+	      }
+	  }
+	else
+	  {
+	    $intElevel += $view->stats['wisdom'][2] + $view->stats['inteli'][2] + $view->skills['magic'][1];
+	  }
+	$intDiv = $intElevel / $intPlevel;
+	if ($intDiv <= 0.1)
+	  {
+	    $strInfo = 'nie stanowi zagrożenia dla ciebie.';
+	  }
+	elseif ($intDiv > 0.1 && $intDiv <= 0.5)
+	  {
+	    $strInfo = 'jest niegroźny dla ciebie.';
+	  }
+	elseif ($intDiv > 0.5 && $intDiv <= 0.9)
+	  {
+	    $strInfo = 'stanowi prawie wyzwanie dla ciebie.';
+	  }
+	elseif ($intDiv > 0.9 && $intDiv <= 1.2)
+	  {
+	    $strInfo = 'jest tak samo potężny jak ty.';
+	  }
+	elseif ($intDiv > 1.2 && $intDiv <= 1.3)
+	  {
+	    $strInfo = 'jest nieco niebezpieczny dla ciebie.';
+	  }
+	elseif ($intDiv > 1.3 && $intDiv <= 1.5)
+	  {
+	    $strInfo = 'jest groźny dla ciebie.';
+	  }
+	elseif ($intDiv > 1.5 && $intDiv <= 1.7)
+	  {
+	    $strInfo = 'jest niebezpieczny dla ciebie.';
+	  }
+	elseif ($intDiv > 1.7)
+	  {
+	    $strInfo = 'zabije ciebie jednym ciosem.';
+	  }
+	message('success', $view->user.' '.$strInfo);
+	$player->checkexp(array('perception' => ceil($intElevel / 10)), $player->id, 'skills');
+      }
+  }
 
 /**
  * Battle logs
