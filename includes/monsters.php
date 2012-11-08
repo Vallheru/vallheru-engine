@@ -157,7 +157,7 @@ function randommonster($strName)
     {
       $arrResistance = array($arrElements[$intKey], 'weak');
     }
-  elseif ($intChance < 97)
+  elseif ($intChance > 89 && $intChance < 97)
     {
       $arrResistance = array($arrElements[$intKey], 'medium');
     }
