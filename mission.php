@@ -7,7 +7,7 @@
  *   @copyright            : (C) 2012 Vallheru Team based on Gamers-Fusion ver 2.5
  *   @author               : thindil <thindil@vallheru.net>
  *   @version              : 1.7
- *   @since                : 08.11.2012
+ *   @since                : 09.11.2012
  *
  */
 
@@ -31,7 +31,6 @@
 
 $title = "Przygoda";
 require_once("includes/head.php");
-require_once("includes/checkexp.php");
 require_once('includes/funkcje.php');
 require_once('includes/turnfight.php');
 
@@ -251,7 +250,7 @@ if (isset($_POST['action']))
 		$blnQuest = TRUE;
 	      }
 	  }
-	$intDiff -= $player->level;
+	$intDiff -= $player->skills['thievery'][1];
 	if ($intDiff < 5)
 	  {
 	    $intDiff = 5;
@@ -282,8 +281,8 @@ if (isset($_POST['action']))
 	    if ($blnEnd)
 	      {
 		$strFinish = '(<a href="jail.php">Koniec</a>)';
-		$cost = 1000 * $player -> level;
-		checkexp($player->exp, $player->level, $player->level, $player->race, $player->user, $player->id, 0, 0, $player->id, 'thievery', 0.01);
+		$cost = 1000 * $player->skills['thievery'][1];
+		$player->checkexp(array('thievery' => $player->skills['thievery'][1]), $player->id, "skills");
 		$db -> Execute("UPDATE `players` SET `miejsce`='Lochy' WHERE `id`=".$player -> id);
 		$strDate = $db -> DBDate($newdate);
 		$db -> Execute("INSERT INTO `jail` (`prisoner`, `verdict`, `duration`, `cost`, `data`) VALUES(".$player->id.",'Nieudane zadanie', 7, ".$cost.", '".$data."')");                
@@ -291,7 +290,7 @@ if (isset($_POST['action']))
 	      }
 	    else
 	      {
-		checkexp($player->exp, $player->level, $player->level, $player->race, $player->user, $player->id, 0, 0, $player->id, 'thievery', 0.01);
+		$player->checkexp(array('thievery' => $player->skills['thievery'][1]), $player->id, "skills");
 	      }
 	  }
 	if (!$blnEnd)
@@ -503,8 +502,8 @@ if (isset($_POST['action']))
 		$_SESSION['maction']['moreinfo'] = explode(';', $objMission->fields['moreinfo']);
 		if ($_SESSION['maction']['moreinfo'][0] == 'skill')
 		  {
-		    $fltSkill = 0.01 * $player->level;
-		    checkexp($player->exp, $player->level, $player->level, $player->race, $player->user, $player->id, 0, 0, $player->id, $_SESSION['maction']['moreinfo'][1], $fltSkill);
+		    $strSkill = $_SESSION['maction']['moreinfo'][1];
+		    $player->checkexp(array($strSkill => $player->skills[$strSkill][1]), $player->id, "skills");
 		  }
 	      }
 	    $objMission->Close();
@@ -622,24 +621,23 @@ if ($strFinish != '' && $strFinish != 'combat')
 	  {
 	    if ($_SESSION['maction']['target'] == 'Y' && !$blnQuest)
 	      {
-		$intExpgain = ($player->level * $_SESSION['maction']['successes']);
-		$intGold = ($_SESSION['maction']['successes'] * 25 * $player->level);
+		$intExpgain = (5 * $_SESSION['maction']['successes']);
+		$intGold = ($_SESSION['maction']['successes'] * 50);
 		$intMpoint = 0;
 	      }
 	    else
 	      {
-		$intExpgain = ($player->level * $_SESSION['maction']['successes']) + ($player->level * $_SESSION['maction']['bonus']);
-		$intGold = ($_SESSION['maction']['successes'] * 25 * $player->level) + (5 * $player->level * $_SESSION['maction']['bonus']);
+		$intExpgain = (5 * $_SESSION['maction']['successes']) + (5 * $_SESSION['maction']['bonus']);
+		$intGold = (5 * $_SESSION['maction']['successes'] * 50) + (10 * $_SESSION['maction']['bonus']);
 		$intMpoint = 1;
 	      }
 	  }
 	else
 	  {
-	    $intExpgain = ceil($player->level / 2);
+	    $intExpgain = 1;
 	    $intGold = 0;
 	    $intMpoint = 0;
 	  }
-	$fltSkill = 0;
 	$strSkill = '';
 	$strText .= '<br /><br />Zdobywasz ';
 	if ($intGold > 0)
@@ -649,23 +647,6 @@ if ($strFinish != '' && $strFinish != 'combat')
 	$strText .= $intExpgain.' punktów doświadczenia';
 	if ($_SESSION['maction']['type'] == 'T')
 	  {
-	    if ($_SESSION['maction']['successes'] > 0)
-	      {
-		if ($_SESSION['maction']['target'] == 'Y' && !$blnQuest)
-		  {
-		    $fltSkill = ($_SESSION['maction']['successes'] / 50);
-		  }
-		else
-		  {
-		    $fltSkill = ($_SESSION['maction']['successes'] / 50) + (0.01 * $_SESSION['maction']['bonus']);
-		  }
-	      }
-	    else
-	      {
-		$fltSkill = 0.01;
-	      }
-	    $strSkill = 'thievery';
-	    $strText .= ' oraz '.$fltSkill.' do umiejętności Złodziejstwo';
 	    if ($_SESSION['maction']['loot'] != '' && $intMpoint)
 	      {
 		$strItemname = 'Wytrychy z miedzi';
@@ -713,7 +694,11 @@ if ($strFinish != '' && $strFinish != 'combat')
 		$strText .= 'Oprócz tego dostajesz '.$strPlantext;
 	      }
 	  }
-	checkexp($player->exp, $intExpgain, $player->level, $player->race, $player->user, $player->id, 0, 0, $player->id, $strSkill, $fltSkill);
+	if ($strSkill != '')
+	  {
+	    $player->checkexp(array($strSkill => $intExp), $player->id, "skills");
+	  }
+	$player->checkexp(array('condition' => $intExp), $player->id, "stats");
 	$db->Execute("UPDATE `players` SET `miejsce`='".$_SESSION['maction']['place']."', `credits`=`credits`+".$intGold.", `mpoints`=`mpoints`+".$intMpoint." WHERE `id`=".$player->id);
       }
     elseif ($_SESSION['maction']['type'] != 'T')
