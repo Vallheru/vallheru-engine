@@ -6,8 +6,8 @@
  *   @name                 : outpost.php                            
  *   @copyright            : (C) 2011,2012 Vallheru Team based on Gamers-Fusion ver 2.5
  *   @author               : thindil <thindil@vallheru.net>
- *   @version              : 1.6
- *   @since                : 12.06.2012
+ *   @version              : 1.7
+ *   @since                : 09.11.2012
  *
  */
 
@@ -63,37 +63,37 @@ function battle($intEnemy = 0)
 	}
       if (!$intEnemy)
 	{
-	  $arrbandit = array ();
-	  for ($i=0; $i<8; $i++) 
-	    {
-	      $roll2 = rand (1, 500);
-	      $arrbandit[$i] = $roll2;
-	    }
-	  $enemy = array('name' => 'Bandyta', 
-			 'strength' => $arrbandit[0], 
-			 'agility' => $arrbandit[1], 
-			 'hp' => $arrbandit[2], 
-			 'level' => $arrbandit[3], 
-			 'endurance' => $arrbandit[6], 
-			 'speed' => $arrbandit[7], 
-			 'exp1' => $arrbandit[4], 
-			 'exp2' => $arrbandit[4],
-			 "gold" => $arrbandit[5],
-			 "lootnames" => array(),
-			 "lootchances" => array(),
-			 "resistance" => array('none', 'none'),
-			 "dmgtype" => 'none');
+	  require_once('includes/monsters.php');
+	  $enemy = randommonster('Bandyta');
 	}
       else
 	{
 	  $objMonster = $db->Execute("SELECT * FROM `monsters` WHERE `id`=".$intEnemy);
-	  $span = ($objMonster->fields['level'] / $player->level);
+	  $intElevel = $objMonster->fields['strength'] + $objMonster->fields['agility'] + $objMonster->fields['speed'] + $objMonster->fields['endurance'] + $objMonster->fields['level'] + $objMonster->fields['hp'];
+	  $intPlevel = $player->stats['condition'][2] + $player->stats['speed'][2] + $player->stats['agility'][2] + $player->skills['dodge'][1] + $player->hp;
+	  if ($player->equip[0][0] || $player->equip[11][0] || $player->equip[1][0])
+	    {
+	      $intPlevel += $player->stats['strength'][2];
+	      if ($player->equip[0][0] || $player->equip[11][0])
+		{
+		  $intPlevel += $player->skills['attack'][1];
+		}
+	      else
+		{
+		  $intPlevel += $player->skills['shoot'][1];
+		}
+	    }
+	  else
+	    {
+	      $intPlevel += $player->stats['wisdom'][2] + $player->stats['inteli'][2] + $player->skills['magic'][1];
+	    }
+	  $span = ($intElevel / $intPlevel);
 	  if ($span > 2) 
 	    {
 	      $span = 2;
 	    }
-	  $goldgain = ceil(rand($objMonster->fields['credits1'], $objMonster->fields['credits2']) * $span); 
-	  $expgain = ceil(rand($objMonster->fields['exp1'], $objMonster->fields['exp2']) * $span);
+	  $goldgain = ceil($intElevel * $span); 
+	  $expgain = ceil($intElevel * $span);
 	  $enemy = array('name' => $objMonster->fields['name'],
 			 'strength' => $objMonster->fields['strength'],
 			 'agility' => $objMonster->fields['agility'],
@@ -102,7 +102,6 @@ function battle($intEnemy = 0)
 			 'endurance' => $objMonster->fields['endurance'],
 			 'speed' => $objMonster->fields['speed'],
 			 'exp1' => $expgain,
-			 'exp2' => $expgain,
 			 'gold' => $goldgain,
 			 "lootnames" => explode(";", $objMonster->fields['lootnames']),
 			 "lootchances" => explode(";", $objMonster->fields['lootchances']),
@@ -198,6 +197,23 @@ if (isset($_GET['step']))
 	  }
 	$_SESSION['craft'] = array();
 	$_SESSION['mdata'] = array();
+	$intPlevel = $player->stats['condition'][2] + $player->stats['speed'][2] + $player->stats['agility'][2] + $player->skills['dodge'][1] + $player->hp;
+	if ($player->equip[0][0] || $player->equip[11][0] || $player->equip[1][0])
+	  {
+	    $intPlevel += $player->stats['strength'][2];
+	    if ($player->equip[0][0] || $player->equip[11][0])
+	      {
+		$intPlevel += $player->skills['attack'][1];
+	      }
+	    else
+	      {
+		$intPlevel += $player->skills['shoot'][1];
+	      }
+	  }
+	else
+	  {
+	    $intPlevel += $player->stats['wisdom'][2] + $player->stats['inteli'][2] + $player->skills['magic'][1];
+	  }
 	$arrInfo = array();
 	for ($i = 0; $i < 3; $i++)
 	  {
@@ -255,7 +271,7 @@ if (isset($_GET['step']))
 		  {
 		    $strLoc = 'Altara';
 		  }
-		$objMonster = $db->Execute("SELECT `id`, `name` FROM `monsters` WHERE `location`='".$strLoc."' AND `level`<=".$player->level." ORDER BY RAND() LIMIT 1");
+		$objMonster = $db->Execute("SELECT `id`, `name` FROM `monsters` WHERE `location`='".$strLoc."' AND `level`<=".$intPlevel." ORDER BY RAND() LIMIT 1");
 		$_SESSION['mdata'][$i] = $objMonster->fields['id'];
 		$arrInfo[$i] = 'Namierzyliśmy gniazdo potworów: '.$objMonster->fields['name'].', które napadają na karawany w '.$arrLocations[$intLoc].' i organizujemy grupę aby je wytępić.';
 		$objMonster->Close();
@@ -279,7 +295,7 @@ if (isset($_GET['step']))
 		  {
 		    $strLoc = 'Altara';
 		  }
-		$objMonster = $db->Execute("SELECT `id`, `name` FROM `monsters` WHERE `location`='".$strLoc."' AND `level`<=".$player->level." ORDER BY RAND() LIMIT 1");
+		$objMonster = $db->Execute("SELECT `id`, `name` FROM `monsters` WHERE `location`='".$strLoc."' AND `level`<=".$intPlevel." ORDER BY RAND() LIMIT 1");
 		$_SESSION['mdata'][$i] = $objMonster->fields['id'];
 		$arrInfo[$i] = 'Potwory: '.$objMonster->fields['name'].' w '.$arrLocations[$intLoc].' rozzuchwaliły się do tego stopnia, że zaczęły atakować karawany. Dostaniesz paru ludzi i spróbujesz odnaleźć je.';
 		$objMonster->Close();
@@ -344,7 +360,27 @@ if (isset($_GET['step']))
 	  }
 	$db->Execute("UPDATE `players` SET `energy`=`energy`-5  WHERE `id`=".$player->id);
 	$intRoll = rand(1, 100);
-	$intGold = $player->level * 125;
+	$intPlevel = $player->stats['condition'][2] + $player->stats['speed'][2] + $player->stats['agility'][2] + $player->skills['dodge'][1] + $player->hp;
+	if ($player->equip[0][0] || $player->equip[11][0] || $player->equip[1][0])
+	  {
+	    $intPlevel += $player->stats['strength'][2];
+	    if ($player->equip[0][0] || $player->equip[11][0])
+	      {
+		$intPlevel += $player->skills['attack'][1];
+		$strSkill = 'attack';
+	      }
+	    else
+	      {
+		$intPlevel += $player->skills['shoot'][1];
+		$strSkill = 'shoot';
+	      }
+	  }
+	else
+	  {
+	    $intPlevel += $player->stats['wisdom'][2] + $player->stats['inteli'][2] + $player->skills['magic'][1];
+	    $strSkill = 'magic';
+	  }
+	$intGold = $intPlevel * 5;
 	if ($player->gender == 'M')
 	  {
 	    $strSuffix = 'eś';
@@ -361,22 +397,20 @@ if (isset($_GET['step']))
 	  case 4:
 	    if ($intRoll < 80)
 	      {
-		$intExp = rand(1, 5) * $player->level;
+		$intExp = $intPlevel;
 		$strResult = 'Patrol minął bez większych niespodzanek. Zwiedził'.$strSuffix.' sobie nieco okolicę, jednak nic ciekawego się nie wydarzyło. Po powrocie otrzymał'.$strSuffix.' '.$intGold.' sztuk złota oraz '.$intExp.' punktów doświadczenia.';
-		require_once("includes/checkexp.php");
-		checkexp($player->exp, $intExp, $player->level, $player->race, $player->user, $player->id, 0, 0, $player->id, "", 0);
+		$player->checkexp(array($strSkill => $intExp), $player->id, "skills");
 		$db->Execute("UPDATE `players` SET `credits`=`credits`+".$intGold.", `mpoints`=`mpoints`+1 WHERE `id`=".$player->id);
 	      }
-	    elseif ($intRoll < 91)
+	    elseif ($intRoll > 79 && $intRoll < 91)
 	      {
-		$intExp = rand(1, 20) * $player->level;
-		$intGold += $player->level * 50;
+		$intExp = 2 * $intPlevel;
+		$intGold += $intPlevel * 10;
 		$strResult = 'Patrol zakończył się pełnym powodzeniem! Udało wam się podejść i ująć tych, których szukaliście. Po odeskortowaniu więźniów do miasta, otrzymał'.$strSuffix.' '.$intGold.' sztuk złota oraz '.$intExp.' punktów doświadczenia.';
-		require_once("includes/checkexp.php");
-		checkexp($player->exp, $intExp, $player->level, $player->race, $player->user, $player->id, 0, 0, $player->id, "", 0);
+		$player->checkexp(array($strSkill => $intExp), $player->id, "skills");
 		$db->Execute("UPDATE `players` SET `credits`=`credits`+".$intGold.", `mpoints`=`mpoints`+1 WHERE `id`=".$player->id);
 	      }
-	    elseif ($intRoll < 95)
+	    elseif ($intRoll > 90 && $intRoll < 95)
 	      {
 		$smarty->assign("Message", 'Udało wam się odnaleźć tych, których szukaliście. Niestety, nie udało się ich zaskoczyć. Bandyci stanęli do walki!');
 		$smarty -> display ('error1.tpl');
@@ -399,19 +433,17 @@ if (isset($_GET['step']))
 	  case 10:
 	    if ($intRoll < 20)
 	      {
-		$intGold += $player->level * 50;
-		$intExp = rand(1, 20) * $player->level;
+		$intGold += $intPlevel * 5;
+		$intExp = $intPlevel;
 		$strResult = 'Szkolenie poszło nadspodziewanie dobrze. Nawet Ty nauczył'.$strSuffix.' się czegoś nowego. W nagrodę za swoją pracę dostajesz '.$intGold.' sztuk złota oraz '.$intExp.' punktów doświadczenia.';
-		require_once("includes/checkexp.php");
-		checkexp($player->exp, $intExp, $player->level, $player->race, $player->user, $player->id, 0, 0, $player->id, "", 0);
+		$player->checkexp(array($strSkill => $intExp), $player->id, "skills");
 		$db->Execute("UPDATE `players` SET `credits`=`credits`+".$intGold.", `mpoints`=`mpoints`+1 WHERE `id`=".$player->id);
 	      }
-	    elseif ($intRoll < 80)
+	    elseif ($intRoll > 19 && $intRoll < 80)
 	      {
-		$intExp = rand(1, 5) * $player->level;
+		$intExp = $intPlevel;
 		$strResult = 'Szkolenie poszło całkiem nieźle, Ty też czegoś się przy okazji nauczył'.$strSuffix.'. W nagrodę za swoją pracę dostajesz '.$intGold.' sztuk złota oraz '.$intExp.' punktów doświadczenia.';
-		require_once("includes/checkexp.php");
-		checkexp($player->exp, $intExp, $player->level, $player->race, $player->user, $player->id, 0, 0, $player->id, "", 0);
+		$player->checkexp(array($strSkill => $intExp), $player->id, "skills");
 		$db->Execute("UPDATE `players` SET `credits`=`credits`+".$intGold.", `mpoints`=`mpoints`+1 WHERE `id`=".$player->id);
 	      }
 	    else
@@ -423,13 +455,12 @@ if (isset($_GET['step']))
 	  case 2:
 	    if ($intRoll < 80)
 	      {
-		$intExp = rand(1, 5) * $player->level;
+		$intExp = $intPlevel;
 		$strResult = 'Udaliście się we wskazane na mapie miejsce. Po jakimś czasie zauważyliście z oddali obozowisko bandytów. Tym razem udało się ich przechytrzyć. Zaskoczeni w ogóle nie stawiali oporu. Związanych przestępców dostarczyliście do lochów w mieście. W nagrodę otrzymał'.$strSuffix.' '.$intGold.' sztuk złota oraz '.$intExp.' punktów doświadczenia.';
-		require_once("includes/checkexp.php");
-		checkexp($player->exp, $intExp, $player->level, $player->race, $player->user, $player->id, 0, 0, $player->id, "", 0);
+		$player->checkexp(array($strSkill => $intExp), $player->id, "skills");
 		$db->Execute("UPDATE `players` SET `credits`=`credits`+".$intGold.", `mpoints`=`mpoints`+1 WHERE `id`=".$player->id);
 	      }
-	    elseif ($intRoll < 95)
+	    elseif ($intRoll > 79 && $intRoll < 95)
 	      {
 		$smarty->assign("Message", 'Udało wam się odnaleźć tych, których szukaliście. Niestety, nie udało się ich zaskoczyć. Bandyci stanęli do walki!');
 		$smarty -> display ('error1.tpl');
@@ -444,20 +475,17 @@ if (isset($_GET['step']))
 	  case 5:
 	    if ($intRoll < 20)
 	      {
-		$intGold += $player->level * 50;
-		$intExp = rand(1, 20) * $player->level;
-		$fltSkill = rand(1, 10) / 100;
-		$strResult = 'Ten dzień zaliczysz do udanych. W pewnym momencie, udało ci się przyuważyć złodziejaszka, który próbował okraść mieszkańca. Dzięki Twojej szybkiej reakcji, przestępca trafił do lochów. W nagrodę za swoją pracę dostajesz '.$intGold.' sztuk złota, '.$intExp.' punktów doświadczenia oraz '.$fltSkill.' do umiejętności Spostrzegawczość.';
-		require_once("includes/checkexp.php");
-		checkexp($player->exp, $intExp, $player->level, $player->race, $player->user, $player->id, 0, 0, $player->id, "perception", $fltSkill);
+		$intGold += $intPlevel * 10;
+		$intExp = $intPlevel;
+		$strResult = 'Ten dzień zaliczysz do udanych. W pewnym momencie, udało ci się przyuważyć złodziejaszka, który próbował okraść mieszkańca. Dzięki Twojej szybkiej reakcji, przestępca trafił do lochów. W nagrodę za swoją pracę dostajesz '.$intGold.' sztuk złota, '.$intExp.' punktów doświadczenia do umiejętności Spostrzegawczość.';
+		$player->checkexp(array("perception" => $intExp), $player->id, "skills");
 		$db->Execute("UPDATE `players` SET `credits`=`credits`+".$intGold.", `mpoints`=`mpoints`+1 WHERE `id`=".$player->id);
 	      }
-	    elseif ($intRoll < 80)
+	    elseif ($intRoll > 19 && $intRoll < 80)
 	      {
-		$intExp = rand(1, 5) * $player->level;
-		$strResult = 'Nudny patrol ma się ku końcowi. Nic nie widział'.$strSuffix.', nic nie słyszał'.$strSuffix.'. Jednak mimo wszystko co nieco się nauczył'.$strSuffix.'. W nagrodę za swoją pracę dostajesz '.$intGold.' sztuk złota, '.$intExp.' punktów doświadczenia oraz 0.01 do umiejętności Spostrzegawczość.';
-		require_once("includes/checkexp.php");
-		checkexp($player->exp, $intExp, $player->level, $player->race, $player->user, $player->id, 0, 0, $player->id, "perception", 0.01);
+		$intExp = $intPlevel;
+		$strResult = 'Nudny patrol ma się ku końcowi. Nic nie widział'.$strSuffix.', nic nie słyszał'.$strSuffix.'. Jednak mimo wszystko co nieco się nauczył'.$strSuffix.'. W nagrodę za swoją pracę dostajesz '.$intGold.' sztuk złota, '.$intExp.' punktów doświadczenia do umiejętności Spostrzegawczość.';
+		$player->checkexp(array("perception" => $intExp), $player->id, "skills");
 		$db->Execute("UPDATE `players` SET `credits`=`credits`+".$intGold.", `mpoints`=`mpoints`+1 WHERE `id`=".$player->id);
 	      }
 	    else
@@ -482,20 +510,17 @@ if (isset($_GET['step']))
 	  case 7:
 	    if ($intRoll < 50)
 	      {
-		$intGold += $player->level * 50;
-		$intExp = rand(1, 20) * $player->level;
-		$fltSkill = rand(1, 10) / 100;
-		$strResult = 'Dotarłszy na miejsce, sprawnie dowodzisz swoim oddziałem. Posuwacie się ostrożnie przed siebie. Niezauważeni podchodzicie pod obóz bandytów. Na twój sygnał oddział rusza do akcji. Przestępcy kompletnie zaskoczeni, nie stawiają oporu. Związujecie ich wszystkich i wracacie do miasta. W nagrodę za doskonale przeprowadzoną akcję otrzymujesz '.$intGold.' sztuk złota, '.$intExp.' punktów doświadczenia oraz '.$fltSkill.' punktów do umiejętności Dowodzenie.';
-		require_once("includes/checkexp.php");
-		checkexp($player->exp, $intExp, $player->level, $player->race, $player->user, $player->id, 0, 0, $player->id, "leadership", $fltSkill);
+		$intGold += $intPlevel * 5;
+		$intExp = 2 * $intPlevel;
+		$strResult = 'Dotarłszy na miejsce, sprawnie dowodzisz swoim oddziałem. Posuwacie się ostrożnie przed siebie. Niezauważeni podchodzicie pod obóz bandytów. Na twój sygnał oddział rusza do akcji. Przestępcy kompletnie zaskoczeni, nie stawiają oporu. Związujecie ich wszystkich i wracacie do miasta. W nagrodę za doskonale przeprowadzoną akcję otrzymujesz '.$intGold.' sztuk złota, '.$intExp.' punktów doświadczenia do umiejętności Dowodzenie.';
+		$player->checkexp(array('leadership' => $intExp), $player->id, "skills");
 		$db->Execute("UPDATE `players` SET `credits`=`credits`+".$intGold.", `mpoints`=`mpoints`+1 WHERE `id`=".$player->id);
 	      }
-	    elseif ($intRoll < 95)
+	    elseif ($intRoll > 49 && $intRoll < 95)
 	      {
-		$intExp = rand(1, 5) * $player->level;
+		$intExp = $intPlevel;
 		$strResult = 'Mimo twoich najlepszych chęci, nie udało wam się podejść niezauważenie bandytów. Wywiązała się walka między nimi. Uważnie obserwujesz i wydajesz rozkazy swoim podwładnym. Na szczęście walka kończy się dobrze. Tych bandytów, którzy ocaleli, doprowadzacie do miasta. W nagrodę otrzymujesz '.$intGold.' sztuk złota oraz '.$intExp.' punktów doświadczenia.';
-		require_once("includes/checkexp.php");
-		checkexp($player->exp, $intExp, $player->level, $player->race, $player->user, $player->id, 0, 0, $player->id, "", 0);
+		$player->checkexp(array('leadership' => $intExp), $player->id, "skills");
 		$db->Execute("UPDATE `players` SET `credits`=`credits`+".$intGold.", `mpoints`=`mpoints`+1 WHERE `id`=".$player->id);
 	      }
 	    else
@@ -507,15 +532,13 @@ if (isset($_GET['step']))
 	  case 8:
 	    if ($intRoll < 50)
 	      {
-		$intGold += $player->level * 50;
-		$intExp = rand(1, 20) * $player->level;
-		$fltSkill = rand(1, 10) / 100;
-		$strResult = 'Bez problemu odnajdujecie kryjówkę bestii. Te nie zauważają waszej obecności. W odpowienim momencie z okrzykiem bojowym na ustach, prowadzisz swoich żołnierzy do ataku. Walka jest krótka ale zacięta. Udaje wam się zabić wszystkie potwory. Po powrocie do miasta w nagrodę otrzymujesz '.$intGold.' sztuk złota, '.$intExp.' punktów doświadczenia oraz '.$fltSkill.' punktów do umiejętności Dowodzenie.';
-		require_once("includes/checkexp.php");
-		checkexp($player->exp, $intExp, $player->level, $player->race, $player->user, $player->id, 0, 0, $player->id, "leadership", $fltSkill);
+		$intGold += $intPlevel * 10;
+		$intExp = $intPlevel;
+		$strResult = 'Bez problemu odnajdujecie kryjówkę bestii. Te nie zauważają waszej obecności. W odpowienim momencie z okrzykiem bojowym na ustach, prowadzisz swoich żołnierzy do ataku. Walka jest krótka ale zacięta. Udaje wam się zabić wszystkie potwory. Po powrocie do miasta w nagrodę otrzymujesz '.$intGold.' sztuk złota, '.$intExp.' punktów doświadczenia do umiejętności Dowodzenie.';
+		$player->checkexp(array('leadership' => $intExp), $player->id, "skills");
 		$db->Execute("UPDATE `players` SET `credits`=`credits`+".$intGold.", `mpoints`=`mpoints`+1 WHERE `id`=".$player->id);
 	      }
-	    elseif ($intRoll < 95)
+	    elseif ($intRoll > 49 && $intRoll < 95)
 	      {
 		$smarty->assign("Message", 'Docieracie na miejsce, jednak tym razem bestie nie dały się zaskoczyć. Na wasz atak odpowiedziały własnym atakiem. Przywódca stada rzuca się wprost na ciebie. Rozpoczyna się walka!');
 		$smarty -> display ('error1.tpl');
@@ -530,22 +553,20 @@ if (isset($_GET['step']))
 	  case 9:
 	    if ($intRoll < 80)
 	      {
-		$intExp = rand(1, 5) * $player->level;
+		$intExp = $intPlevel;
 		$strResult = 'Podróż minęła spokojnie, nie licząc kłótni, które od czasu do czasu wybuchały w karawanie. Zwiedził'.$strSuffix.' sobie nieco okolicę, jednak nic ciekawego się nie wydarzyło. Po powrocie otrzymał'.$strSuffix.' '.$intGold.' sztuk złota oraz '.$intExp.' punktów doświadczenia.';
-		require_once("includes/checkexp.php");
-		checkexp($player->exp, $intExp, $player->level, $player->race, $player->user, $player->id, 0, 0, $player->id, "", 0);
+		$player->checkexp(array($strSkill => $intExp), $player->id, "skills");
 		$db->Execute("UPDATE `players` SET `credits`=`credits`+".$intGold.", `mpoints`=`mpoints`+1 WHERE `id`=".$player->id);
 	      }
-	    elseif ($intRoll < 91)
+	    elseif ($intRoll > 79 && $intRoll < 91)
 	      {
-		$intExp = rand(1, 20) * $player->level;
-		$intGold += $player->level * 50;
+		$intExp = $intPlevel;
+		$intGold += $intPlevel * 5;
 		$strResult = 'Rzeczywiście, ostatnio bandyci się rozplenili w okolicy. Tym razem jednak nie przewidzieli, że karawana posiada zwiększoną obronę. Bez problemu wyłapaliście ich. Po odeskortowaniu więźniów do miasta, otrzymał'.$strSuffix.' '.$intGold.' sztuk złota oraz '.$intExp.' punktów doświadczenia.';
-		require_once("includes/checkexp.php");
-		checkexp($player->exp, $intExp, $player->level, $player->race, $player->user, $player->id, 0, 0, $player->id, "", 0);
+		$player->checkexp(array($strSkill => $intExp), $player->id, "skills");
 		$db->Execute("UPDATE `players` SET `credits`=`credits`+".$intGold.", `mpoints`=`mpoints`+1 WHERE `id`=".$player->id);
 	      }
-	    elseif ($intRoll < 95)
+	    elseif ($intRoll > 90 && $intRoll < 95)
 	      {
 		$smarty->assign("Message", 'Bandyci pojawili się nagle na drodze. Na moment zawachali się, widząc zwiększoną ochronę karawany, ale już po chwili ruszyli do ataku. Rozpoczyna się walka!');
 		$smarty -> display ('error1.tpl');
@@ -619,8 +640,25 @@ if (isset($_GET['step']))
 	  }
 	if ($_SESSION['result'] == 1)
 	  {
-	    $intExp = rand(1, 5) * $player->level;
-	    $intGold = $player->level * 125;
+	    $intPlevel = $player->stats['condition'][2] + $player->stats['speed'][2] + $player->stats['agility'][2] + $player->skills['dodge'][1] + $player->hp;
+	    if ($player->equip[0][0] || $player->equip[11][0] || $player->equip[1][0])
+	      {
+		$intPlevel += $player->stats['strength'][2];
+		if ($player->equip[0][0] || $player->equip[11][0])
+		  {
+		    $intPlevel += $player->skills['attack'][1];
+		  }
+		else
+		  {
+		    $intPlevel += $player->skills['shoot'][1];
+		  }
+	      }
+	    else
+	      {
+		$intPlevel += $player->stats['wisdom'][2] + $player->stats['inteli'][2] + $player->skills['magic'][1];
+	      }
+	    $intExp = $intPlevel;
+	    $intGold = $intPlevel * 5;
 	    if ($player->gender == 'M')
 	      {
 		$strSuffix = 'eś';
@@ -629,8 +667,7 @@ if (isset($_GET['step']))
 	      {
 		$strSuffix = 'aś';
 	      }
-	    require_once("includes/checkexp.php");
-	    checkexp($player->exp, $intExp, $player->level, $player->race, $player->user, $player->id, 0, 0, $player->id, "", 0);
+	    $player->checkexp(array($strSkill => $intExp), $player->id, "skills");
 	    $db->Execute("UPDATE `players` SET `credits`=`credits`+".$intGold.", `mpoints`=`mpoints`+1 WHERE `id`=".$player->id);
 	    if (in_array($_SESSION['craft'][$_SESSION['index']], array(0, 2, 3, 4, 9)))
 	      {
