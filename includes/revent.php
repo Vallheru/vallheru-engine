@@ -7,7 +7,7 @@
  *   @copyright            : (C) 2011,2012 Vallheru Team based on Gamers-Fusion ver 2.5
  *   @author               : thindil <thindil@vallheru.net>
  *   @version              : 1.7
- *   @since                : 23.10.2012
+ *   @since                : 12.11.2012
  *
  */
 
@@ -262,14 +262,32 @@ if ($player->revent == 8)
   require_once("includes/funkcje.php");
   global $enemy;
   global $arrehp;
+  $intPlevel = $player->stats['condition'][2] + $player->stats['speed'][2] + $player->stats['agility'][2] + $player->skills['dodge'][1] + $player->hp;
+  if ($player->equip[0][0] || $player->equip[11][0] || $player->equip[1][0])
+    {
+      $intPlevel += $player->stats['strength'][2];
+      if ($player->equip[0][0] || $player->equip[11][0])
+	{
+	  $intPlevel += $player->skills['attack'][1];
+	}
+      else
+	{
+	  $intPlevel += $player->skills['shoot'][1];
+	}
+    }
+  else
+    {
+      $intPlevel += $player->stats['wisdom'][2] + $player->stats['inteli'][2] + $player->skills['magic'][1];
+    }
   $enemy1 = $db -> Execute("SELECT * FROM monsters WHERE id=".$player->fight);
-  $span = ($enemy1 -> fields['level'] / $player->level);
+  $intElevel = $enemy1->fields['strength'] + $enemy1->fields['agility'] + $enemy1->fields['speed'] + $enemy1->fields['endurance'] + $enemy1->fields['level'] + $enemy1->fields['hp'];
+  $span = ($intElevel / $intPlevel);
   if ($span > 2) 
     {
       $span = 2;
     }
-  $expgain = ceil(rand($enemy1 -> fields['exp1'],$enemy1 -> fields['exp2']) * $span);
-  $goldgain = ceil(rand($enemy1 -> fields['credits1'],$enemy1 -> fields['credits2']) * $span);
+  $expgain = ceil($intElevel * $span);
+  $goldgain = ceil($intElevel * $span);
   if (!isset($_SESSION['enemy']))
     {
       $enemy = array("strength" => $enemy1 -> fields['strength'], 
@@ -278,8 +296,6 @@ if ($player->revent == 8)
 		     "endurance" => $enemy1 -> fields['endurance'], 
 		     "hp" => $enemy1 -> fields['hp'], 
 		     "name" => $enemy1 -> fields['name'], 
-		     "exp1" => $enemy1 -> fields['exp1'], 
-		     "exp2" => $enemy1 -> fields['exp2'], 
 		     "level" => $enemy1 -> fields['level'],
 		     "lootnames" => explode(";", $enemy1->fields['lootnames']),
 		     "lootchances" => explode(";", $enemy1->fields['lootchances']),
