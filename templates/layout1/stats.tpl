@@ -50,5 +50,5 @@
         <b>{$Tclan}:</b> {$Tribe}
         {$Triberank}
 </td></tr>
-</table>
-{html_table loop=$Stable cols=2 caption="<b><u>{$Tability}</u></b>" table_attr='border="0" align="center" width="80%"'}
+</table><br />
+{html_table loop=$Stable cols=1 caption="<b><u>{$Tability}</u></b>" table_attr='border="0" width="40%"'}

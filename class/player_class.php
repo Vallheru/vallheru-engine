@@ -7,7 +7,7 @@
  *   @copyright            : (C) 2004,2005,2006,2007,2011,2012 Vallheru Team based on Gamers-Fusion ver 2.5
  *   @author               : thindil <thindil@vallheru.net>
  *   @version              : 1.7
- *   @since                : 31.10.2012
+ *   @since                : 12.11.2012
  *
  */
 
@@ -94,6 +94,10 @@ class Player
      * Player skills
      */
     var $skills;
+    /**
+     * Player bonuses from AP
+     */
+    var $bonuses;
 /**
 * Class constructor - get data from database and write it to variables
 */
@@ -172,6 +176,11 @@ class Player
 	$this->settings = $this->toarray($stats->fields['settings']);
 	$this->stats = $this->toarray($stats->fields['stats'], 'stats');
 	$this->skills = $this->toarray($stats->fields['skills'], 'stats');
+	$this->bonuses = explode(';', $stats->fields['bonuses']);
+	foreach ($this->bonuses as $key => $strBonus)
+	  {
+	    $this->bonuses[$key] = explode(',', $strBonus);
+	  }
 	$this->oldskills = $this->skills;
 	$this->oldstats = $this->stats;
 	$this->equip = $this->equipment();

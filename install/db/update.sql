@@ -31,6 +31,7 @@ ALTER TABLE `players`
   DROP `metallurgy`;
 ALTER TABLE `players` ADD `stats` VARCHAR( 2048 ) NOT NULL DEFAULT 'strength:Siła,0,0,0;agility:Zręczność,0,0,0;condition:Kondycja,0,0,0;speed:Szybkość,0,0,0;inteli:Inteligencja,0,0,0;wisdom:Siła Woli,0,0,0;';
 ALTER TABLE `players` ADD `skills` VARCHAR( 4096 ) NOT NULL DEFAULT 'smith:Kowalstwo,1,0;shoot:Strzelectwo,1,0;alchemy:Alchemia,1,0;dodge:Uniki,1,0;carpentry:Stolarstwo,1,0;magic:Rzucanie Czarów,1,0;attack:Walka Bronią,1,0;leadership:Dowodzenie,1,0;breeding:Hodowla,1,0;mining:Górnictwo,1,0;lumberjack:Drwalnictwo,1,0;herbalism:Zielarstwo,1,0;jewellry:Jubilerstwo,1,0;smelting:Hutnictwo,1,0;thievery:Złodziejstwo,1,0;perception:Spostrzegawczość,1,0;';
+ALTER TABLE `players` ADD `bonuses` TEXT NOT NULL;
 ALTER TABLE `monsters`
   DROP `exp1`,
   DROP `exp2`,
@@ -149,3 +150,15 @@ INSERT INTO `monsters` (`id`, `name`, `level`, `hp`, `agility`, `strength`, `spe
 (108, 'Humkur', 72, 386, 357.00, 385.00, 472.00, 357.00, 'Altara', 'Noga Humkura;Skrzydła Humkura;Głowa Humkura;Dziób Humkura', '55;77;95;100', '', 'wind;weak', 'none'),
 (109, 'Masterczułka', 69, 332, 419.00, 413.00, 419.00, 337.00, 'Altara', 'Czułki Masterczułki;Głowa Masterczułki;Odwłok Masterczułki;Bijcie Masterczułki', '55;77;95;100', '', 'wind;weak', 'wind'),
 (110, 'Numur', 99, 560, 649.00, 590.00, 607.00, 607.00, 'Altara', 'Czaszka Numura;Kostka Numura;Żołądek Numura;Oko Numura', '55;77;95;100', '', 'water;medium', 'water');
+CREATE TABLE IF NOT EXISTS `bonuses` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `name` varchar(60) NOT NULL,
+  `desc` text NOT NULL,
+  `cost` int(11) NOT NULL,
+  `levels` tinyint(1) NOT NULL,
+  `trigger` varchar(255) NOT NULL,
+  `bonus` tinyint(2) NOT NULL,
+  `race` varchar(30) NOT NULL,
+  `clas` varchar(30) NOT NULL,
+  KEY `id` (`id`)
+) ENGINE=MyISAM DEFAULT CHARSET=utf8 AUTO_INCREMENT=1 ;
