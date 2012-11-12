@@ -7,8 +7,8 @@
  *   @copyright            : (C) 2006,2011,2012 Vallheru Team based on Gamers-Fusion ver 2.5
  *   @author               : thindil <thindil@vallheru.net>
  *   @author               : eyescream <tduda@users.sourceforge.net>
- *   @version              : 1.5
- *   @since                : 19.04.2012
+ *   @version              : 1.7
+ *   @since                : 12.11.2012
  *
  */
 
@@ -86,37 +86,34 @@ if (isset($_GET['atak']) && (isset($_GET['step3']) && $_GET['step3'] == 'confirm
     $matak = 0;
     $eobrona = 0;
     $db -> Execute("UPDATE `tribes` SET `atak`='Y' WHERE `id`=".$mytribe -> fields['id']);
-    $mcechy = $db -> Execute("SELECT `klasa`, `strength`, `inteli`, `agility` FROM `players` WHERE `tribe`=".$mytribe -> fields['id']);
-    while (!$mcechy -> EOF) 
-    {
-        if ($mcechy -> fields['klasa'] != 'Mag') 
-        {
-            $matak = ($matak + $mcechy -> fields['strength']);
-        }
-        if ($mcechy -> fields['klasa'] == 'Mag') 
-        {
-            $matak = ($matak + $mcechy -> fields['inteli']);
-        }
-        $mcechy -> MoveNext();
+    $objMembers = $db -> Execute("SELECT `id` FROM `players` WHERE `tribe`=".$mytribe -> fields['id']);
+    while (!$objMembers -> EOF) 
+      {
+	$objMember = new Player($objMembers->fields['id']);
+	if ($objMember->clas != 'Mag')
+	  {
+	    $matak += $objMember->stats['strength'][2];
+	  }
+	else
+	  {
+	    $matak += $objMember->stats['inteli'][2];
+	  }
+        $objMembers -> MoveNext();
+      }
+    $objMembers -> Close();
+    $matak += $mytribe -> fields['zolnierze'];
+    $objMembers = $db -> Execute("SELECT `id` FROM `players` WHERE `tribe`=".$_GET['atak']);
+    while (!$objMembers -> EOF) 
+      {
+	$objMember = new Player($objMembers->fields['id']);
+        $eobrona += $objMember->stats['agility'][2] + $objMember->stats['wisdom'][2];
+        $objMembers -> MoveNext();
     }
-    $mcechy -> Close();
-    $matak = $matak + $mytribe -> fields['zolnierze'];
-    $ecechy = $db -> Execute("SELECT `klasa`, `strength`, `inteli`, `agility` FROM `players` WHERE `tribe`=".$_GET['atak']);
-    while (!$ecechy -> EOF) 
-    {
-        $eobrona = ($eobrona + $ecechy -> fields['agility']);
-        $ecechy -> MoveNext();
-    }
-    $ecechy -> Close();
+    $objMembers -> Close();
     $klan = $db -> Execute("SELECT `id`, `name`, `owner`, `forty`, `credits`, `platinum` FROM `tribes` WHERE `id`=".$_GET['atak']);
-    $eobrona = $eobrona + $klan -> fields['forty'];
-    $arrRoll = array();
-    for ($i = 0; $i < 2; $i++)
-    {
-        $arrRoll[$i] = rand(1,1000);
-    }
-    $matak = ($matak + $arrRoll[0]);
-    $eobrona = ($eobrona + $arrRoll[1]);
+    $eobrona += $klan -> fields['forty'];
+    $matak += rand(1, 1000);
+    $eobrona += rand(1, 1000);
     $smarty -> assign("Victory", '');
     
     /**

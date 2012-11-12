@@ -1,5 +1,7 @@
 2012-11-12  Bartek thindil Jasicki  <thindil@vallheru.net>
 
+	* UPDATE,includes/tribefight.php (if): 
+	updated tribe fights
 	* UPDATE,includes/revent.php: 
 	updated fight
 	* BUG,includes/monsters.php:
