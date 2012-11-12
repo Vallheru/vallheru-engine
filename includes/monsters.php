@@ -7,7 +7,7 @@
  *   @copyright            : (C) 2012 Vallheru Team based on Gamers-Fusion ver 2.5
  *   @author               : thindil <thindil@vallheru.net>
  *   @version              : 1.7
- *   @since                : 08.11.2012
+ *   @since                : 12.11.2012
  *
  */
 
@@ -36,7 +36,6 @@ function encounter()
   global $player;
   global $db;
 
-  $intLevel = 0;
   $intPlevel = $player->stats['condition'][2] + $player->stats['speed'][2] + $player->stats['agility'][2] + $player->skills['dodge'][1] + $player->hp;
   if ($player->equip[0][0] || $player->equip[11][0] || $player->equip[1][0])
     {
