@@ -7,7 +7,7 @@
  *   @copyright            : (C) 2004,2005,2006,2007,2011,2012 Vallheru Team based on Gamers-Fusion ver 2.5
  *   @author               : thindil <thindil@vallheru.net>
  *   @version              : 1.7
- *   @since                : 12.11.2012
+ *   @since                : 13.11.2012
  *
  */
 
@@ -176,10 +176,22 @@ class Player
 	$this->settings = $this->toarray($stats->fields['settings']);
 	$this->stats = $this->toarray($stats->fields['stats'], 'stats');
 	$this->skills = $this->toarray($stats->fields['skills'], 'stats');
-	$this->bonuses = explode(';', $stats->fields['bonuses']);
-	foreach ($this->bonuses as $key => $strBonus)
+	$this->bonuses = array();
+	if ($stats->fields['bonuses'] != '')
 	  {
-	    $this->bonuses[$key] = explode(',', $strBonus);
+	    $arrBonuses = explode(';', $stats->fields['bonuses']);
+	    foreach ($arrBonuses as $key => $strBonus)
+	      {
+		if ($strBonus == '')
+		  {
+		    break;
+		  }
+		$this->bonuses[$key] = explode(',', $strBonus);
+	      }
+	  }
+	else
+	  {
+	    $this->bonuses = array();
 	  }
 	$this->oldskills = $this->skills;
 	$this->oldstats = $this->stats;

@@ -51,4 +51,7 @@
         {$Triberank}
 </td></tr>
 </table><br />
+<div align="center" width="70%">
+{html_table loop=$Btable cols=1 caption="<b><u>{$Tbonuses}</u></b>" table_attr='border="0" width="40%" style="float:right;"'}
 {html_table loop=$Stable cols=1 caption="<b><u>{$Tability}</u></b>" table_attr='border="0" width="40%"'}
+</div>

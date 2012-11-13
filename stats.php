@@ -8,7 +8,7 @@
  *   @author               : thindil <thindil@vallheru.net>
  *   @author               : mori <ziniquel@users.sourceforge.net>
  *   @version              : 1.7
- *   @since                : 15.10.2012
+ *   @since                : 13.11.2012
  *
  */
 
@@ -175,6 +175,7 @@ $smarty->assign(array('Mpoints' => $objBless->fields['mpoints'],
 		      'Antidote' => $strAntidote,
 		      'Effect' => $strEffect));
 
+//Stats info
 $arrCurstats2 = array();
 $i = 0;
 $arrSnames = array('strength', 'agility', 'condition', 'speed', 'inteli', 'wisdom');
@@ -227,6 +228,7 @@ if ($player->mana < $maxmana)
     $smarty -> assign ("Rest", "<br />");
 }
 
+//Skills info
 $arrBskills = $player->skills;
 $arrSkills = array("smith", "shoot", "alchemy", "dodge", "carpentry", "magic", "attack", "leadership", "breeding", "mining", "lumberjack", "herbalism", "jewellry", "smelting", "thievery", "perception");
 $player->curskills(array("smith", "alchemy", "carpentry", "breeding", "mining", "lumberjack", "herbalism", "jewellry", "smelting"), FALSE, TRUE);
@@ -261,9 +263,41 @@ foreach ($arrBskills as $arrSkill)
       $arrStable[] = '<b>'.$arrSkill[0].':</b> '.$arrSkill[1].$strNeedexp;
     }
 }
+
+//Bonuses info
+$arrBid = array();
+foreach ($player->bonuses as $arrBonus)
+{
+  $arrBid[] = $arrBonus[0];
+}
+if (count($arrBid) > 1)
+  {
+    $arrBonuses = $db->GetAll("SELECT `id`, `name` FROM `bonuses` WHERE `id` IN (".implode(', ', $arrBid).")");
+  }
+elseif (count($arrBid) == 1)
+   {
+     $arrBonuses = $db->GetAll("SELECT `id`, `name` FROM `bonuses` WHERE `id`=".$arrBid[0]);
+   }
+ else
+   {
+     $arrBonuses = array();
+   }
+$arrBtable = array();
+foreach ($arrBonuses as $arrBonus)
+{
+  foreach ($player->bonuses as $arrBonus2)
+    {
+      if ($arrBonus2[0] == $arrBonus['id'])
+	{
+	  $arrBtable[] = '<b>'.$arrBonus['name'].':</b> '.($arrBonus2[1] * $arrBonus2[3]).'%';
+	  break;
+	}
+    }
+}
    
 $smarty -> assign(array("Curstats" => $arrCurstats2,
 			"Stable" => $arrStable,
+			"Btable" => $arrBtable,
                         "Mana" =>  $player -> mana."/".$maxmana, 
                         "Location" => $strLocation."<br />", 
                         "Age" => $player -> age."<br />", 
@@ -293,6 +327,7 @@ $smarty -> assign(array("Curstats" => $arrCurstats2,
                         "Temail" => "Email",
                         "Tclan" => "Klan",
                         "Tability" => "Umiejętności",
+			"Tbonuses" => "Premie",
                         "Tap" => "AP",
                         "Trace" => "Rasa",
                         "Tclass" => "Klasa",
