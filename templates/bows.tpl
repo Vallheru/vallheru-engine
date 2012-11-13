@@ -3,7 +3,7 @@
 		<h1>{$Title}</h1>
 		    <p>
 			{if $Location == "Altara"}
-				{$Shopinfo} {$Archername} {$Shopinfo2}
+				{$Shopinfo}{$Shopinfo2}
 			{/if}
 			{if $Location == "Ardulith"}
 				{$Shopinfo}

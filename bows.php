@@ -6,8 +6,8 @@
  *   @name                 : bows.php                            
  *   @copyright            : (C) 2004,2005,2006,2011,2012 Vallheru Team based on Gamers-Fusion ver 2.5
  *   @author               : thindil <thindil@vallheru.net>
- *   @version              : 1.6
- *   @since                : 25.07.2012
+ *   @version              : 1.7
+ *   @since                : 13.11.2012
  *
  */
 
@@ -193,16 +193,6 @@ while (!$wep -> EOF)
     $wep -> MoveNext();
   }
 $wep -> Close();
-/**
- * Select name of the best archer
- */
-$objArcher = $db -> Execute("SELECT user FROM players ORDER BY shoot DESC");
-if ($objArcher -> fields['user'] == $player -> user)
-  {
-    $objArcher = $db -> Execute("SELECT user FROM players WHERE user!='".$player -> user."' ORDER BY shoot DESC");
-  }
-$strArcher = $objArcher -> fields['user'];
-$objArcher -> Close();
 if ($player->location == 'Altara')
   {
     $smarty -> assign(array("Shopinfo2" => SHOP_INFO2));
@@ -237,7 +227,6 @@ $smarty -> assign ( array("Name" => $arrname,
 			  "Itemid" => $arrid,
 			  "Tlink" => $arrLink,
 			  "Shopinfo" => SHOP_INFO,
-			  "Archername" => $strArcher,
 			  "Iname" => I_NAME,
 			  "Idur" => I_DUR,
 			  "Iefect" => I_EFECT,

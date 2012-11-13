@@ -1,5 +1,5 @@
     {if $Location == "Altara"}
-        {$Shopinfo} {$Archername} {$Shopinfo2}<br /><br />
+        {$Shopinfo}{$Shopinfo2}<br /><br />
     {/if}
     {if $Location == "Ardulith"}
         {$Shopinfo}<br /><br />
