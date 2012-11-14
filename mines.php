@@ -257,8 +257,8 @@ if (isset($_GET['step']) && $_GET['step'] == 'dig')
          * Add bonuses to ability
          */
 	$player->curskills(array('mining'), TRUE, TRUE);
-	$player->mining += $player->checkbonus('mining');
-	$player->mining += $player->checkbonus($arrMines[$intKey]);
+	$player->skills['mining'][1] += $player->checkbonus('mining');
+	$player->skills['mining'][1] += $player->checkbonus($arrMines[$intKey]);
 
         $intAmount = ceil(((rand(1, 20) * $_POST['amount'] / $arrMinerals2[$intKey]) * (($player->skills['mining'][1] + $player->stats['strength'][2]) / 20)) - $arrMinerals2[$intKey]);
 	$player->clearbless(array('strength'));
