@@ -7,7 +7,7 @@
  *   @copyright            : (C) 2004,2005,2006,2011,2012 Vallheru Team based on Gamers-Fusion ver 2.5
  *   @author               : thindil <thindil@vallheru.net>
  *   @version              : 1.7
- *   @since                : 15.10.2012
+ *   @since                : 14.11.2012
  *
  */
 
@@ -71,6 +71,7 @@ if (isset ($_GET['action']) && $_GET['action'] == 'chop')
      * Count bonus to ability
      */
     $player->curskills(array('lumberjack'), TRUE, TRUE);
+    $player->skills['lumberjack'][1] += $player->checkbonus('lumberjack');
     
     $intAmountgold = 0;
     $arrKey = array(1, 2, 3, 4);

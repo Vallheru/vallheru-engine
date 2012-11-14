@@ -7,7 +7,7 @@
  *   @copyright            : (C) 2006,2011,2012 Vallheru Team based on Gamers-Fusion ver 2.5
  *   @author               : thindil <thindil@vallheru.net>
  *   @version              : 1.7
- *   @since                : 19.10.2012
+ *   @since                : 14.11.2012
  *
  */
 
@@ -173,6 +173,7 @@ if (isset($_GET['step']) && $_GET['step'] == 'make')
          * Add bonuses to ability
          */
 	$player->curskills(array('jewellry'), TRUE, TRUE);
+	$player->skills['jewellry'][1] += $player->checkbonus('jewellry');
         
         $intChance = $player->skills['jewellry'][1] * 100;
         if ($intChance > 95)
@@ -392,6 +393,7 @@ if (isset($_GET['step']) && $_GET['step'] == 'make2')
              * Add bonuses to ability
              */
 	    $player->curskills(array('jewellry'), TRUE, TRUE);
+	    $player->skills['jewellry'][1] += $player->checkbonus('jewellry');
 
             $objRing2 = $db -> Execute("SELECT `level`, `bonus`, `cost`, `type` FROM `jeweller` WHERE `owner`=".$player -> id." AND `name`='".$objRing -> fields['name']."'");
            
@@ -505,6 +507,7 @@ if (isset($_GET['step']) && $_GET['step'] == 'make2')
          * Add bonuses to ability
          */
 	$player->curskills(array('jewellry'), TRUE, TRUE);
+	$player->skills['jewellry'][1] += $player->checkbonus('jewellry');
 
         /**
          * Which stats have bonus
@@ -764,6 +767,7 @@ if (isset($_GET['step']) && $_GET['step'] == 'make3')
              * Add bonuses to ability
              */
 	    $player->curskills(array('jewellry'), TRUE, TRUE);
+	    $player->skills['jewellry'][1] += $player->checkbonus('jewellry');
 
             /**
              * Select ring name
@@ -945,6 +949,7 @@ if (isset($_GET['step']) && $_GET['step'] == 'make3')
          * Add bonuses to ability
          */
 	$player->curskills(array('jewellry'), TRUE, TRUE);
+	$player->skills['jewellry'][1] += $player->checkbonus('jewellry');
 
         $intChance = floor((($player->skills['jewellry'][1] + $player->stats[$strStat][2]) / 50) * 0.5) + 5;
 	$player->clearbless(array($strStat));

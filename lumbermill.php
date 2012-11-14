@@ -7,7 +7,7 @@
  *   @copyright            : (C) 2004,2005,2006,2007,2011,2012 Vallheru Team based on Gamers-Fusion ver 2.5
  *   @author               : thindil <thindil@vallheru.net>
  *   @version              : 1.7
- *   @since                : 18.10.2012
+ *   @since                : 14.11.2012
  *
  */
 
@@ -608,6 +608,8 @@ if (isset ($_GET['mill']) && $_GET['mill'] == 'mill')
             $strName = $objLumber -> fields['name']." ".$arrBowname[$intKey];
             $arrMaxbonus = array(6, 10, 14, 17, 20);
             $intModif = $arrMaxbonus[$intKey];
+	    $intCost = ceil($objLumber -> fields['cost'] / 20);
+	    $strBonus = 'bowyer';
         }
         else
         {
@@ -616,15 +618,11 @@ if (isset ($_GET['mill']) && $_GET['mill'] == 'mill')
             $intMaxdur = 100;
             $strName = $objLumber -> fields['name'];
             $intModif = 0;
+	    $intCost = $objLumber -> fields['level'] * 5;
+	    $strBonus = 'arrowmaker';
         }
-        if ($objLumber -> fields['type'] == 'B')
-        {
-            $intCost = ceil($objLumber -> fields['cost'] / 20);
-        }
-        else
-        {
-            $intCost = $objLumber -> fields['level'] * 5;
-        }
+	$player->skills['carpentry'][1] += $player->checkbonus('carpentry');
+	$player->skills['carpentry'][1] += $player->checkbonus($strBonus);
         $arrItem = array('power' => $intPower,
                          'wt' => $intMaxdur,
                          'name' => $strName,
@@ -747,6 +745,7 @@ if (isset ($_GET['mill']) && $_GET['mill'] == 'mill')
             $arrMaxbonus = array(6, 10, 14, 17, 20);
             $intCost = ceil($objLumber -> fields['cost'] / 20);
             $intModif = $arrMaxbonus[$intKey];
+	    $strBonus = 'bowyer';
         }
             else
         {
@@ -756,7 +755,10 @@ if (isset ($_GET['mill']) && $_GET['mill'] == 'mill')
             $strName = $objLumber -> fields['name'];
             $intCost = $objLumber -> fields['level'] * 5;
             $intModif = 0;
+	    $strBonus = 'arrowmaker';
         }
+	$player->skills['carpentry'][1] += $player->checkbonus('carpentry');
+	$player->skills['carpentry'][1] += $player->checkbonus($strBonus);
         $arrItem = array('power' => $intPower,
                          'wt' => $intMaxdur,
                          'name' => $strName,
@@ -927,6 +929,8 @@ if (isset ($_GET['mill']) && $_GET['mill'] == 'elite')
 	$intMaxbonus = $arrMaxbonus[$intKey] * $objLumber->fields['level'];
         $intItems = 0;
         $intGainexp = 0;
+	$player->skills['carpentry'][1] += $player->checkbonus('carpentry');
+	$player->skills['carpentry'][1] += $player->checkbonus('bowyer');
 	$intChance = $player->skills['carpentry'][1] / $objLumber -> fields['level'];
         if ($intChance > 90)
         {
@@ -1072,6 +1076,8 @@ if (isset ($_GET['mill']) && $_GET['mill'] == 'elite')
 	$intMaxbonus = $arrMaxbonus[$intKey] * $objLumber->fields['level'];
         $intItems = 0;
         $intGainexp = 0;
+	$player->skills['carpentry'][1] += $player->checkbonus('carpentry');
+	$player->skills['carpentry'][1] += $player->checkbonus('bowyer');
         $intChance = $player->skills['carpentry'][1] / $objLumber -> fields['level'];
         if ($intChance > 90)
         {
@@ -1283,6 +1289,8 @@ if (isset($_GET['mill']) && $_GET['mill'] == 'astral')
         }
 	$player->curskills(array('carpentry', 'smith'), TRUE, TRUE);
         $arrChance = array(0.3, 0.25, 0.2, 0.15, 0.1);
+	$player->skills['smith'][1] += $player->checkbonus('smith');
+	$player->skills['carpentry'][1] += $player->checkbonus('carpentry');
         $intChance = floor(($player->skills['smith'][1] * $arrChance[$intKey]) + ($player->skills['carpentry'][1] * $arrChance[$intKey]));
         if ($intChance > 95)
         {

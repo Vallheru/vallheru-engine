@@ -7,7 +7,7 @@
  *   @copyright            : (C) 2004,2005,2006,2011,2012 Vallheru Team based on Gamers-Fusion ver 2.5
  *   @author               : thindil <thindil@vallheru.net>
  *   @version              : 1.7
- *   @since                : 18.10.2012
+ *   @since                : 14.11.2012
  *
  */
 
@@ -760,6 +760,7 @@ if (isset ($_GET['kowal']) && $_GET['kowal'] == 'kuznia')
         if ($objSmith -> fields['type'] == 'W' || $objSmith -> fields['type'] == 'A')
         {
             $arrDur = array(40, 80, 160, 320, 640);
+	    $strBonus = 'weaponsmith';
         }
 	elseif ($objSmith->fields['type'] != 'E')
         {
@@ -768,18 +769,21 @@ if (isset ($_GET['kowal']) && $_GET['kowal'] == 'kuznia')
 	else
 	  {
 	    $arrDur = array(10, 15, 20, 25, 30);
+	    $strBonus = 'toolsmith';
 	  }
         if ($objSmith -> fields['type'] == 'A')
         {
             $intPower = $objSmith -> fields['level'] * 3;
             $intAgility = floor($objSmith -> fields['level'] / 2);
             $intExp = 2;
+	    $strBonus = 'armorsmith';
         }
 	elseif ($objSmith -> fields['type'] == 'L')
 	  {
             $intPower = $objSmith -> fields['level'];
             $intAgility = floor($objSmith -> fields['level'] / 5);
             $intExp = 1;
+	    $strBonus = 'legsmith';
 	  }
 	elseif ($objSmith->fields['type'] != 'E')
 	  {
@@ -793,6 +797,12 @@ if (isset ($_GET['kowal']) && $_GET['kowal'] == 'kuznia')
 	    $intAgility = 0;
 	    $intExp = 1;
 	  }
+	if ($objSmith->fields['type'] == 'S')
+	  {
+	    $strBonus = 'shieldsmith';
+	  }
+	$player->skills['smith'][1] += $player->checkbonus('smith');
+	$player->skills['smith'][1] += $player->checkbonus($strBonus);
         $arrMineral = array('copper', 'bronze', 'brass', 'iron', 'steel');
         $intKey = array_search($objWork -> fields['mineral'], $arrMineral);
         $strName = $objSmith -> fields['name']." ".$arrName[$intKey];
@@ -923,6 +933,7 @@ if (isset ($_GET['kowal']) && $_GET['kowal'] == 'kuznia')
         if ($objSmith -> fields['type'] == 'W' || $objSmith -> fields['type'] == 'A')
         {
             $arrDur = array(40, 80, 160, 320, 640);
+	    $strBonus = 'weaponsmith';
         }
 	elseif ($objSmith->fields['type'] != 'E')
         {
@@ -931,18 +942,21 @@ if (isset ($_GET['kowal']) && $_GET['kowal'] == 'kuznia')
 	else
 	  {
 	    $arrDur = array(10, 15, 20, 25, 30);
+	    $strBonus = 'toolsmith';
 	  }
         if ($objSmith -> fields['type'] == 'A')
         {
             $intPower = $objSmith -> fields['level'] * 3;
             $intAgility = floor($objSmith -> fields['level'] / 2);
             $intExp = 2;
+	    $strBonus = 'armorsmith';
         }
 	elseif ($objSmith -> fields['type'] == 'L')
         {
             $intPower = $objSmith -> fields['level'];
             $intAgility = floor($objSmith -> fields['level'] / 5);
             $intExp = 1;
+	    $strBonus = 'legsmith';
         }
 	elseif ($objSmith->fields['type'] != 'E')
         {
@@ -956,6 +970,12 @@ if (isset ($_GET['kowal']) && $_GET['kowal'] == 'kuznia')
 	    $intAgility = 0;
 	    $intExp = 1;
 	  }
+	if ($objSmith->fields['type'] == 'S')
+	  {
+	    $strBonus = 'shieldsmith';
+	  }
+	$player->skills['smith'][1] += $player->checkbonus('smith');
+	$player->skills['smith'][1] += $player->checkbonus($strBonus);
         $intKey = array_search($_POST['mineral'], $arrMineral);
         $strName = $objSmith -> fields['name']." ".$arrName[$intKey];
         $arrItem = array('power' => $intPower,
@@ -1127,22 +1147,26 @@ if (isset ($_GET['kowal']) && $_GET['kowal'] == 'elite')
         if ($objSmith -> fields['type'] == 'W' || $objSmith -> fields['type'] == 'A')
 	  {
             $arrDur = array(50, 90, 170, 330, 650);
+	    $strBonus = 'weaponsmith';
 	  }
 	else
 	  {
             $arrDur = array(30, 50, 90, 170, 330);
+	    $strBonus = 'toolsmith';
 	  }
 	if ($objSmith -> fields['type'] == 'A')
 	  {
             $intAgility = floor($objSmith -> fields['level'] / 2);
 	    $intPower = $objSmith -> fields['level'] * 3;
             $intExp = 4;
+	    $strBonus = 'armorsmith';
 	  }
 	elseif ($objSmith -> fields['type'] == 'L')
 	  {
             $intAgility = floor($objSmith -> fields['level'] / 5);
 	    $intPower = $objSmith -> fields['level'];
             $intExp = 2;
+	    $strBonus = 'legsmith';
 	  }
 	else
 	  {
@@ -1150,6 +1174,12 @@ if (isset ($_GET['kowal']) && $_GET['kowal'] == 'elite')
 	    $intPower = $objSmith -> fields['level'];
             $intExp = 2;
 	  }
+	if ($objSmith->fields['type'] == 'S')
+	  {
+	    $strBonus = 'shieldsmith';
+	  }
+	$player->skills['smith'][1] += $player->checkbonus('smith');
+	$player->skills['smith'][1] += $player->checkbonus($strBonus);
         $arrMineral = array('copper', 'bronze', 'brass', 'iron', 'steel');
         $intKey = array_search($objWork -> fields['mineral'], $arrMineral);
 	$intMaxdur = $arrDur[$intKey];
@@ -1319,22 +1349,26 @@ if (isset ($_GET['kowal']) && $_GET['kowal'] == 'elite')
         if ($objSmith -> fields['type'] == 'W' || $objSmith -> fields['type'] == 'A')
         {
             $arrDur = array(50, 90, 170, 330, 650);
+	    $strBonus = 'weaponsmith';
         }
             else
         {
             $arrDur = array(30, 50, 90, 170, 330);
+	    $strBonus = 'toolsmith';
         }
 	if ($objSmith -> fields['type'] == 'A')
 	  {
             $intAgility = floor($objSmith -> fields['level'] / 2);
 	    $intPower = $objSmith -> fields['level'] * 3;
             $intExp = 4;
+	    $strBonus = 'armorsmith';
 	  }
 	elseif ($objSmith -> fields['type'] == 'L')
 	  {
             $intAgility = floor($objSmith -> fields['level'] / 5);
 	    $intPower = $objSmith -> fields['level'];
             $intExp = 2;
+	    $strBonus = 'legsmith';
 	  }
 	else
 	  {
@@ -1342,6 +1376,12 @@ if (isset ($_GET['kowal']) && $_GET['kowal'] == 'elite')
 	    $intPower = $objSmith -> fields['level'];
             $intExp = 2;
 	  }
+	if ($objSmith->fields['type'] == 'S')
+	  {
+	    $strBonus = 'shieldsmith';
+	  }
+	$player->skills['smith'][1] += $player->checkbonus('smith');
+	$player->skills['smith'][1] += $player->checkbonus($strBonus);
         $intKey = array_search($_POST['mineral'], $arrMineral);
 	$intMaxdur = $arrDur[$intKey];
 	$intMaxbonus = $arrMaxbonus[$intKey] * $objSmith->fields['level'];
@@ -1549,6 +1589,8 @@ if (isset($_GET['kowal']) && $_GET['kowal'] == 'astral')
         {
             error("Nie masz takiej ilości energii");
         }
+	$player->skills['smith'][1] += $player->checkbonus('smith');
+	$player->skills['carpentry'][1] += $player->checkbonus('carpentry');
         $arrChance = array(0.3, 0.25, 0.2, 0.15, 0.1);
         $intChance = floor(($player->skills['smith'][1] * $arrChance[$intKey]) + ($player->skills['carpentry'][1] * $arrChance[$intKey]));
         if ($intChance > 95)

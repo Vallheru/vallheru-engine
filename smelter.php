@@ -7,7 +7,7 @@
  *   @copyright            : (C) 2004,2005,2006,2011,2012 Vallheru Team based on Gamers-Fusion ver 2.5
  *   @author               : thindil <thindil@vallheru.net>
  *   @version              : 1.7
- *   @since                : 17.10.2012
+ *   @since                : 14.11.2012
  *
  */
 
@@ -221,6 +221,7 @@ if (isset($_GET['step']))
 		if ($blnValid)
 		  {
 		    $player->curskills(array('smelting'), TRUE, TRUE);
+		    $player->skills['smelting'][1] += $player->checkbonus('smelting');
 		    $intDiff = 100 * $arrBillets[$intKey];
 		    $intAmount = 0;
 		    for ($i = 0; $i < $_POST['amount']; $i++)
@@ -374,6 +375,7 @@ if (isset($_GET['step']))
 		    $i = 0;
 		    $arrAmount = array();
 		    $player->curskills(array('smelting'), TRUE, TRUE);
+		    $player->skills['smelting'][1] += $player->checkbonus('smelting');
 		    foreach ($arrOres as $strOres)
 		      {
 			$arrAmount[$i] = $_POST['amount'] * $arrOresamount[$i];

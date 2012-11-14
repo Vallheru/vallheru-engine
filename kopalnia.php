@@ -73,20 +73,21 @@ if (isset($_GET['action']) && $_GET['action'] == 'dig')
 	if ($intRoll > 4 && $intRoll < 10)
 	  {
 	    $intBonus = 1 + (($player->skills['mining'][1] + $player->stats['strength'][2]) / 20);
+	    $intBonus += $player->checkbonus('mining');
 	  }
-        if ($intRoll == 5)
-        {
-	    $intAmount = ceil((rand(1,20) * 1/8) * $intBonus);
+        elseif ($intRoll == 5)
+	  {
+	    $intAmount = ceil((rand(1,20) * 1/8) * ($intBonus + $player->checkbonus('crystal')));
             if ($intAmount < 1)
             {
                 $intAmount = 1;
             }
             $arrMinerals[0] = $arrMinerals[0] + $intAmount;
 	    $intExp += (3 * $intAmount);
-        }
-        if ($intRoll == 6 || $intRoll == 7)
+	  }
+        elseif ($intRoll == 6 || $intRoll == 7)
         {
-	    $intAmount = ceil((rand(1,20) * 1/5) * $intBonus);
+	  $intAmount = ceil((rand(1,20) * 1/5) * ($intBonus + $player->checkbonus('adamantium')));
             if ($intAmount < 1)
             {
                 $intAmount = 1;
@@ -94,7 +95,7 @@ if (isset($_GET['action']) && $_GET['action'] == 'dig')
             $arrMinerals[1] = $arrMinerals[1] + $intAmount;
 	    $intExp += (4 * $intAmount);
         }
-        if ($intRoll == 8)
+        elseif ($intRoll == 8)
         {
 	    $intAmount = ceil((rand(1,20) * 1/3) * $intBonus);
             if ($intAmount < 1)
@@ -103,7 +104,7 @@ if (isset($_GET['action']) && $_GET['action'] == 'dig')
             }
             $arrGold[1] = $arrGold[1] + $intAmount;
         }
-        if ($intRoll == 9)
+        elseif ($intRoll == 9)
         {
 	    $intAmount = ceil(rand(50,200) * $intBonus);
             if ($intAmount < 1)
@@ -112,22 +113,20 @@ if (isset($_GET['action']) && $_GET['action'] == 'dig')
             }
             $arrGold[0] = $arrGold[0] + $intAmount;
         }
-        if ($intRoll == 10)
+        elseif ($intRoll == 10)
         {
             $intRoll2 = rand(1, 100);
             if ($intRoll2 > $player->stats['speed'][2]) 
             {
                 $strInfo = "<br /><br />Nagle poczułeś, jak całe wyrobisko powoli zaczyna się rozpadać. Najszybciej jak potrafisz uciekasz w kierunku wyjścia. Niestety, tym razem żywioł okazał się szybszy od ciebie. Potężna lawina kamieni spadła na ciebie,";
-		if ($player->antidote == 'R')
+		$player->dying();
+		if ($player->hp == 1)
 		  {
 		    $strInfo .= ' na szczęście w tym wypadku, udało ci się oszukać przeznaczenie.';
-		    $player->hp = 1;
-		    $db->Execute("UPDATE `players` SET `antidote`='' WHERE `id`=".$player->id);
 		  }
 		else
 		  {
 		    $strInfo .= ' zabijając na miejscu.';
-		    $player -> hp = 0;
 		  }
             } 
                 else

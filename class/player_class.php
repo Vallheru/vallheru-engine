@@ -7,7 +7,7 @@
  *   @copyright            : (C) 2004,2005,2006,2007,2011,2012 Vallheru Team based on Gamers-Fusion ver 2.5
  *   @author               : thindil <thindil@vallheru.net>
  *   @version              : 1.7
- *   @since                : 13.11.2012
+ *   @since                : 14.11.2012
  *
  */
 
@@ -98,6 +98,10 @@ class Player
      * Player bonuses from AP
      */
     var $bonuses;
+    /**
+     * Player max mana
+     */
+    var $maxmana;
 /**
 * Class constructor - get data from database and write it to variables
 */
@@ -665,9 +669,80 @@ class Player
 	}
       return $strMessage;
     }
+
+    /**
+     * Check player bonuses
+     */
+    function checkbonus($strTrigger)
+    {
+      //Find proper bonus
+      $intKey = -1;
+      foreach ($this->bonuses as $key => $arrBonus)
+	{
+	  if ($arrBonus[2] == $strTrigger)
+	    {
+	      $intKey = $key;
+	      break;
+	    }
+	}
+      if ($intKey == -1)
+	{
+	  return 0;
+	}
+      switch ($strTrigger)
+	{
+	case 'mining':
+	case 'crystal':
+	case 'adamantium':
+	case 'copper':
+	case 'zinc':
+	case 'tin':
+	case 'iron':
+	case 'coal':
+	  $intBonus = ceil($this->skills['mining'][1] * (($arrBonus[1] * $arrBonus[3]) / 100));
+	  break;
+	case 'herbalism':
+	case 'illani':
+	case 'illanias':
+	case 'nutari':
+	case 'dynallca':
+	  $intBonus = ceil($this->skills['herbalism'][1] * (($arrBonus[1] * $arrBonus[3]) / 100));
+	  break;
+	case 'smith':
+	case 'weaponsmith':
+	case 'armorsmith':
+	case 'helmsmith':
+	case 'shieldsmith':
+	case 'legsmith':
+	case 'toolsmith':
+	  $intBonus = ceil($this->skills['smith'][1] * (($arrBonus[1] * $arrBonus[3]) / 100));
+	  break;
+	case 'carpentry':
+	case 'bowyer':
+	case 'arrowmaker':
+	  $intBonus = ceil($this->skills['carpentry'][1] * (($arrBonus[1] * $arrBonus[3]) / 100));
+	  break;
+	case 'jewellry':
+	  $intBonus = ceil($this->skills['jewellry'][1] * (($arrBonus[1] * $arrBonus[3]) / 100));
+	  break;
+	case 'smelting':
+	  $intBonus = ceil($this->skills['smelting'][1] * (($arrBonus[1] * $arrBonus[3]) / 100));
+	  break;
+	case 'breeding':
+	  $intBonus = ceil($this->skills['breeding'][1] * (($arrBonus[1] * $arrBonus[3]) / 100));
+	  break;
+	case 'lumberjack':
+	  $intBonus = ceil($this->skills['lumberjack'][1] * (($arrBonus[1] * $arrBonus[3]) / 100));
+	  break;
+	default:
+	  $intBonus = 0;
+	  break;
+	}
+      return $intBonus;
+    }
     
     /**
-     * Class destructor, save player to database
+     * Save player to database
      */
     function save()
     {

@@ -7,7 +7,7 @@
  *   @copyright            : (C) 2004,2005,2006,2011,2012 Vallheru Team based on Gamers-Fusion ver 2.5
  *   @author               : thindil <thindil@vallheru.net>
  *   @version              : 1.7
- *   @since                : 16.10.2012
+ *   @since                : 14.11.2012
  *
  */
 
@@ -507,6 +507,8 @@ else
 		     * Add bonuses to ability
 		     */
 		    $player->curskills(array('herbalism'), TRUE, TRUE);
+		    $player->skills['herbalism'][1] += $player->checkbonus('herbalism');
+		    $player->skills['herbalism'][1] += $player->checkbonus($objHerb->fields['name']);
 		    
 		    $intFactor = ceil(($player->stats['agility'][2] + $player->skills['herbalism'][1]) / 10);
 		    $intAmount = floor((($arrAge[$intKey2] * $_POST['amount']) / $arrHerbmodif[$intKey]) * $intFactor);

@@ -1,5 +1,8 @@
 2012-11-14  Bartek thindil Jasicki  <thindil@vallheru.net>
 
+	* FEATURE,class/player_class.php, farm.php, mines.php, kopalnia.php, kowal.php, lumbermill.php, jeweller.php, lumberjack.php,
+	smelter.php, core.php: 
+	continue work on bonuses from AP
 	* BUG,includes/head.php:
 	fixed mana bar
 
