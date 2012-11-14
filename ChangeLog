@@ -1,3 +1,8 @@
+2012-11-14  Bartek thindil Jasicki  <thindil@vallheru.net>
+
+	* BUG,includes/head.php:
+	fixed mana bar
+
 2012-11-13  Bartek thindil Jasicki  <thindil@vallheru.net>
 
 	* FEATURE,templates/layout1/stats.tpl, templates/layout1/ap.tpl, templates/stats.tpl, templates/ap.tpl, stats.php, ap.php,
