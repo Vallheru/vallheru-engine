@@ -8,7 +8,7 @@
  *   @author               : thindil <thindil@vallheru.net>
  *   @author               : eyescream <tduda@users.sourceforge.net>
  *   @version              : 1.7
- *   @since                : 05.11.2012
+ *   @since                : 15.11.2012
  *
  */
 
@@ -86,8 +86,8 @@ function attack1($attacker, $defender, $attack_bspell, $def_bspell, $attack_dspe
     * Calculate dodge defender and power of attack, critical shot (bow)
     */
     if ($attacker->equip[1][0] && $attacker->equip[6][6] > 0 && $attacker->equip[1][6] > 0) 
-    {
-        $unik -= $attacker->skills['shoot'][1];
+      {
+	$unik -= ($attacker->skills['shoot'][1] + $player->checkbonus('eagleeye'));
         $bonus = (($attacker->stats['strength'][2] / 2) + ($attacker->stats['agility'][2] / 2));
         if ($attacker->clas == 'Wojownik' || $attacker->clas == 'Barbarzyńca') 
 	  {
@@ -101,7 +101,7 @@ function attack1($attacker, $defender, $attack_bspell, $def_bspell, $attack_dspe
         $krytyk = critical($attacker->skills['shoot'][1]);
 	$strAtype = 'ranged';
 	$strSkill = 'shoot';
-    }
+      }
 
     /**
     * Calculate dodge defender and power of attack, critical hit (weapon)
@@ -334,12 +334,12 @@ function attack1($attacker, $defender, $attack_bspell, $def_bspell, $attack_dspe
 	      }
 	  }
 	//Check defender armor
-	$defpower = 0;
+	$defpower = $player->checkbonus('defender');
 	if ($defender->equip[$intHit + 2][0] && $pechowy > 55)
 	  {
 	    if ($defender->equip[$intHit + 2][6] > 0)
 	      {
-		$defpower = $defender->equip[$intHit + 2][2];
+		$defpower += $defender->equip[$intHit + 2][2];
 		$defender->equip[$intHit + 2][6] --;
 	      }
 	  }

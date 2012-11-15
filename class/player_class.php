@@ -699,14 +699,14 @@ class Player
 	case 'tin':
 	case 'iron':
 	case 'coal':
-	  $intBonus = ceil($this->skills['mining'][1] * (($arrBonus[1] * $arrBonus[3]) / 100));
+	  $intBonus = ceil($this->skills['mining'][1] * (($this->bonuses[$intKey][1] * $this->bonuses[$intKey][3]) / 100));
 	  break;
 	case 'herbalism':
 	case 'illani':
 	case 'illanias':
 	case 'nutari':
 	case 'dynallca':
-	  $intBonus = ceil($this->skills['herbalism'][1] * (($arrBonus[1] * $arrBonus[3]) / 100));
+	  $intBonus = ceil($this->skills['herbalism'][1] * (($this->bonuses[$intKey][1] * $this->bonuses[$intKey][3]) / 100));
 	  break;
 	case 'smith':
 	case 'weaponsmith':
@@ -715,38 +715,40 @@ class Player
 	case 'shieldsmith':
 	case 'legsmith':
 	case 'toolsmith':
-	  $intBonus = ceil($this->skills['smith'][1] * (($arrBonus[1] * $arrBonus[3]) / 100));
+	  $intBonus = ceil($this->skills['smith'][1] * (($this->bonuses[$intKey][1] * $this->bonuses[$intKey][3]) / 100));
 	  break;
 	case 'carpentry':
 	case 'bowyer':
 	case 'arrowmaker':
-	  $intBonus = ceil($this->skills['carpentry'][1] * (($arrBonus[1] * $arrBonus[3]) / 100));
+	  $intBonus = ceil($this->skills['carpentry'][1] * (($this->bonuses[$intKey][1] * $this->bonuses[$intKey][3]) / 100));
 	  break;
 	case 'jewellry':
-	  $intBonus = ceil($this->skills['jewellry'][1] * (($arrBonus[1] * $arrBonus[3]) / 100));
+	  $intBonus = ceil($this->skills['jewellry'][1] * (($this->bonuses[$intKey][1] * $this->bonuses[$intKey][3]) / 100));
 	  break;
 	case 'smelting':
-	  $intBonus = ceil($this->skills['smelting'][1] * (($arrBonus[1] * $arrBonus[3]) / 100));
+	  $intBonus = ceil($this->skills['smelting'][1] * (($this->bonuses[$intKey][1] * $this->bonuses[$intKey][3]) / 100));
 	  break;
 	case 'breeding':
-	  $intBonus = ceil($this->skills['breeding'][1] * (($arrBonus[1] * $arrBonus[3]) / 100));
+	  $intBonus = ceil($this->skills['breeding'][1] * (($this->bonuses[$intKey][1] * $this->bonuses[$intKey][3]) / 100));
 	  break;
 	case 'lumberjack':
-	  $intBonus = ceil($this->skills['lumberjack'][1] * (($arrBonus[1] * $arrBonus[3]) / 100));
+	  $intBonus = ceil($this->skills['lumberjack'][1] * (($this->bonuses[$intKey][1] * $this->bonuses[$intKey][3]) / 100));
 	  break;
 	case 'enchant':
-	  $intBonus = ceil($this->skills['magic'][1] * (($arrBonus[1] * $arrBonus[3]) / 100));
+	  $intBonus = ceil($this->skills['magic'][1] * (($this->bonuses[$intKey][1] * $this->bonuses[$intKey][3]) / 100));
 	  break;
-	case 'bspells':
-	case 'dspells':
-	case 'fire':
-	case 'water':
-	case 'air':
-	case 'earth':
-	  $intBonus = ($arrBonus[1] * $arrBonus[3]) / 100;
+	case 'tactic':
+	  $intBonus = ceil($this->stats['speed'][2] * (($this->bonuses[$intKey][1] * $this->bonuses[$intKey][3]) / 100));
+	  break;
+	case 'will':
+	case 'antimagic':
+	  $intBonus = ceil($this->stats['wisdom'][2] * (($this->bonuses[$intKey][1] * $this->bonuses[$intKey][3]) / 100));
+	  break;
+	case 'eagleeye':
+	  $intBonus = ceil($this->skills['shoot'][1] * (($this->bonuses[$intKey][1] * $this->bonuses[$intKey][3]) / 100));
 	  break;
 	default:
-	  $intBonus = 0;
+	  $intBonus = ($this->bonuses[$intKey][1] * $this->bonuses[$intKey][3]) / 100;
 	  break;
 	}
       return $intBonus;

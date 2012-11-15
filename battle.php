@@ -69,7 +69,12 @@ if (isset($_GET['battle']))
     global $strUsername;
 
     checkvalue($_GET['battle']);
-    $player->curskills(array('weapon', 'shoot', 'dodge', 'cast'), FALSE);
+    $player->curskills(array('attack', 'shoot', 'dodge', 'magic'), FALSE);
+    $player->stats['wisdom'][2] += $player->checkbonus('will');
+    $player->stats['wisdom'][2] += $player->checkbonus('antimagic');
+    $player->skills['attack'][1] += $player->checkbonus('weaponmaster');
+    $player->skills['shoot'][1] += $player->checkbonus('weaponmaster');
+    $player->stats['speed'][2] += $player->checkbonus('tactic');
     $player->user = $strUsername;
     $enemy = new Player($_GET['battle']);
     $enemy->user = $arrTags[$enemy->tribe][0].' '.$enemy->user.' '.$arrTags[$enemy->tribe][1];
@@ -77,7 +82,12 @@ if (isset($_GET['battle']))
       {
 	error (NO_PLAYER);
       }
-    $enemy->curskills(array('weapon', 'shoot', 'dodge', 'cast'), FALSE);
+    $enemy->curskills(array('attack', 'shoot', 'dodge', 'magic'), FALSE);
+    $enemy->stats['wisdom'][2] += $enemy->checkbonus('will');
+    $enemy->stats['wisdom'][2] += $enemy->checkbonus('antimagic');
+    $enemy->skills['attack'][1] += $enemy->checkbonus('weaponmaster');
+    $enemy->skills['shoot'][1] += $enemy->checkbonus('weaponmaster');
+    $enemy->stats['speed'][2] += $enemy->checkbonus('tactic');
     $myczar = $db -> Execute("SELECT * FROM `czary` WHERE `gracz`=".$player -> id." AND `status`='E' AND `typ`='B'");
     $eczar = $db -> Execute("SELECT * FROM `czary` WHERE `gracz`=".$enemy->id." AND `status`='E' AND `typ`='B'");
     $myczaro = $db -> Execute("SELECT * FROM `czary` WHERE `gracz`=".$player -> id." AND `status`='E' AND `typ`='O'");

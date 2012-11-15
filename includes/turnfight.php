@@ -804,6 +804,8 @@ function attack($eunik,$bdamage)
         $smarty -> assign("Message", NO_WEAPON);
         $smarty -> display('error1.tpl');
     }
+    $player->skills['attack'][1] += $player->checkbonus('weaponmaster');
+    $player->skills['shoot'][1] += $player->checkbonus('weaponmaster');
     if ($player->equip[0][0]) 
     {
         if ($player->equip[0][3] == 'D') 
@@ -966,9 +968,10 @@ function attack($eunik,$bdamage)
         $smarty -> display('error1.tpl');
     }
     if ($player->equip[1][0]) 
-    {
+      {
+	$eunik -= $player->checkbonus('eagleeye');
         $eunik = $eunik * 2;
-    }
+      }
     if ($ehp > 0 && $player -> hp > 0) 
     {
         if ($player->equip[0][0] && $player->equip[0][6] > 0) 
@@ -1334,10 +1337,10 @@ function monsterattack($attacks,$enemy,$myunik,$amount)
                 if (!$blnMiss)
                 {
 		    $intHit = rand(0, 3);
-		    $myobrona = 0;
+		    $myobrona += $player->checkbonus('defender');
 		    if ($player->equip[$intHit + 2][0])
 		      {
-			$myobrona = $player->equip[$intHit + 2][2];
+			$myobrona += $player->equip[$intHit + 2][2];
 		        $player->equip[$intHit + 2][6] --;
 			if ($enemy['dmgtype'] != 'none')
 			  {
