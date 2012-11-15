@@ -520,10 +520,10 @@ function monsterattack2($intMydodge, &$zmeczenie, &$gunik, &$enemy, $times, $mcz
   //Monster hit
   $arrLocations = array('w głowę i zadaje(ą)', 'w tułów i zadaje(ą)', 'w nogę i zadaje(ą)', 'w rękę i zadaje(ą)');
   $intHit = rand(0, 3);
-  $defpower = $player->checkbonus('defender');
+  $defpower = 0;
   if ($player->equip[$intHit + 2][0] && $player->equip[$intHit + 2][6] > 0)
     {
-      $defpower += $player->equip[$intHit + 2][2];
+      $defpower += ($player->equip[$intHit + 2][2] + ($player->equip[$intHit + 2][2] * $player->checkbonus('defender')));
       $player->equip[$intHit + 2][6] --;
       if ($player->equip[$intHit + 2][10] != 'N')
 	{
@@ -814,6 +814,7 @@ function fightmonster($enemy, $expgain, $goldgain, $times)
     $player->user = $arrTags[$player->tribe][0].' '.$player->user.' '.$arrTags[$player->tribe][1];
     $player->skills['attack'][1] += $player->checkbonus('weaponmaster');
     $player->skills['shoot'][1] += $player->checkbonus('weaponmaster');
+    $player->stats['speed'][2] += $player->checkbonus('tactic');
 
     if (isset ($_POST['razy']) && $_POST['razy'] > 1) 
     {
@@ -861,7 +862,7 @@ function fightmonster($enemy, $expgain, $goldgain, $times)
 			    'wind' => 'E',
 			    'earth' => 'W');
     $strAtype = 'none';
-    $enemy['damage'] = $enemy['strength'] - $player->stats['condition'][2];
+    $enemy['damage'] = $enemy['strength'] - ($player->stats['condition'][2] + ($player->stats['condition'][2] * $player->checkbonus('defender')));
     if ($player -> clas == 'Wojownik' || $player -> clas == 'Barbarzyńca') 
       {
 	$enemy['damage'] -= ceil($player->skills['dodge'][1] / 10);
@@ -1128,9 +1129,9 @@ function fightmonster($enemy, $expgain, $goldgain, $times)
     }
     $rzut1 = (rand(0, $enemy['level']));
     if (!isset($enemy['damage'])) 
-    {
-        $enemy['damage'] = ($enemy['strength'] - $player -> stats['condition'][2]);
-    }
+      {
+	$enemy['damage'] = $enemy['strength'] - ($player -> stats['condition'][2] + ($player->stats['condition'][2] * $player->checkbonus('defender')));
+      }
     $enemy['damage'] = ($enemy['damage'] + $rzut1);
     if ($enemy['damage'] < 1) 
     {

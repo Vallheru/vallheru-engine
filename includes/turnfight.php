@@ -58,6 +58,7 @@ function turnfight($expgain,$goldgain,$action,$addres)
     $fight = $db -> Execute("SELECT fight FROM players WHERE id=".$player -> id);
 
     $player->user = $arrTags[$player->tribe][0].' '.$player->user.' '.$arrTags[$player->tribe][1];
+    $player->stats['speed'][2] += $player->checkbonus('tactic');
 
     if ($fight -> fields['fight'] == 0 && $title == 'Arena Walk') 
       {
@@ -86,7 +87,7 @@ function turnfight($expgain,$goldgain,$action,$addres)
 			    'wind' => 'E',
 			    'earth' => 'W');
     $myobrona = 0;
-    $enemy['damage'] = $enemy['strength'] - $player->stats['condition'][2];
+    $enemy['damage'] = $enemy['strength'] - ($player->stats['condition'][2] + ($player->stats['condition'][2] * $player->checkbonus('defender')));
     if ($myczaro -> fields['id']) 
     {
 	$myczarobr = ($player -> stats['wisdom'][2] * $myczaro -> fields['obr']);

@@ -334,12 +334,12 @@ function attack1($attacker, $defender, $attack_bspell, $def_bspell, $attack_dspe
 	      }
 	  }
 	//Check defender armor
-	$defpower = $player->checkbonus('defender');
+	$defpower = ($player->stats['condition'][2] + ($player->stats['condition'][2] * $player->checkbonus('defender')));
 	if ($defender->equip[$intHit + 2][0] && $pechowy > 55)
 	  {
 	    if ($defender->equip[$intHit + 2][6] > 0)
 	      {
-		$defpower += $defender->equip[$intHit + 2][2];
+		$defpower += ($defender->equip[$intHit + 2][2] + ($defender->equip[$intHit + 2][2] * $player->checkbonus('defender')));
 		$defender->equip[$intHit + 2][6] --;
 	      }
 	  }

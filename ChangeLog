@@ -1,5 +1,7 @@
 2012-11-15  Bartek thindil Jasicki  <thindil@vallheru.net>
 
+	* BUG,includes/battle.php, includes/funkcje.php, includes/turnfight.php: 
+	fixed some bonuses
 	* FEATURE,class/player_class.php, includes/battle.php, includes/funkcje.php, includes/turnfight.php, battle.php: 
 	added bonuses for warriors and barbarians
 	* FEATURE,class/player_class.php, includes/funkcje.php, includes/turnfight.php, battle.php, czary.php:
