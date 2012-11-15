@@ -7,7 +7,7 @@
  *   @copyright            : (C) 2004,2005,2006,2007,2011,2012 Vallheru Team based on Gamers-Fusion ver 2.5
  *   @author               : thindil <thindil@vallheru.net>
  *   @version              : 1.7
- *   @since                : 08.11.2012
+ *   @since                : 15.11.2012
  *
  */
  
@@ -90,6 +90,10 @@ function turnfight($expgain,$goldgain,$action,$addres)
     if ($myczaro -> fields['id']) 
     {
 	$myczarobr = ($player -> stats['wisdom'][2] * $myczaro -> fields['obr']);
+	$intBonus = $player->checkbonus('dspells');
+	$myczarobr += ($myczarobr * $intBonus);
+	$intBonus = $player->checkbonus('element');
+	$myczarobr += ($myczarobr * $intBonus);
 	$fltBasedef = $myczarobr;
 	if ($enemy['dmgtype'] != 'none')
 	  {
@@ -1038,6 +1042,10 @@ function castspell ($id,$boost,$eunik)
     if ($mczar -> fields['id']) 
     {
 	$stat['damage'] = ($mczar -> fields['obr'] * $player -> stats['inteli'][2]);
+	$intBonus = $player->checkbonus('bspells');
+	$stat['damage'] += ($stat['damage'] * $intBonus);
+	$intBonus = $player->checkbonus($mczar->fields['element']);
+	$stat['damage'] += ($stat['damage'] * $intBonus);
 	if ($enemy['resistance'][0] == $mczar->fields['element'])
 	  {
 	    switch ($enemy['resistance'][1])

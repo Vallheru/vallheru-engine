@@ -1,3 +1,8 @@
+2012-11-15  Bartek thindil Jasicki  <thindil@vallheru.net>
+
+	* FEATURE,class/player_class.php, includes/funkcje.php, includes/turnfight.php, battle.php, czary.php:
+	added bonuses for mages
+
 2012-11-14  Bartek thindil Jasicki  <thindil@vallheru.net>
 
 	* BUG,mines.php: 

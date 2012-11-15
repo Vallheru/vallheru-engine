@@ -7,7 +7,7 @@
  *   @copyright            : (C) 2004,2005,2006,2011,2012 Vallheru Team based on Gamers-Fusion ver 2.5
  *   @author               : thindil <thindil@vallheru.net>
  *   @version              : 1.7
- *   @since                : 31.10.2012
+ *   @since                : 15.11.2012
  *
  */
 
@@ -218,6 +218,7 @@ if (isset($_GET['cast']))
 	     * Add bonuses to ability
 	     */
 	    $player->curskills(array('magic'));
+	    $player->skills['magic'][1] += $player->checkbonus('magic');
 	    
 	    $chance = (($player->skills['magic'][1] + $player->stats['inteli'][2]) - $arritem -> fields['minlev'] - $arrspell -> fields['poziom'] + rand(1,100));
 	    $bonus = $player->skills['magic'][1] * rand(1, 5);

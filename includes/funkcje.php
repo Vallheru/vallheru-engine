@@ -7,7 +7,7 @@
  *   @copyright            : (C) 2004,2005,2006,2007,2011,2012 Vallheru Team based on Gamers-Fusion ver 2.5
  *   @author               : thindil <thindil@vallheru.net>
  *   @version              : 1.7
- *   @since                : 08.11.2012
+ *   @since                : 15.11.2012
  *
  */
 
@@ -962,6 +962,10 @@ function fightmonster($enemy, $expgain, $goldgain, $times)
     if ($mczar -> fields['id']) 
     {
         $stat['damage'] = ($mczar -> fields['obr'] * $player ->stats['inteli'][2]);
+	$intBonus = $player->checkbonus('bspells');
+	$stat['damage'] += ($stat['damage'] * $intBonus);
+	$intBonus = $player->checkbonus($mczar->fields['element']);
+	$stat['damage'] += ($stat['damage'] * $intBonus);
 	if ($enemy['resistance'][0] == $mczar->fields['element'])
 	  {
 	    switch ($enemy['resistance'][1])
@@ -1020,6 +1024,10 @@ function fightmonster($enemy, $expgain, $goldgain, $times)
     if ($mczaro -> fields['id']) 
     {
         $myczarobr = ($player -> stats['wisdom'][2] * $mczaro -> fields['obr']);
+	$intBonus = $player->checkbonus('dspells');
+	$myczarobr += ($myczarobr * $intBonus);
+	$intBonus = $player->checkbonus($myczaro->fields['element']);
+	$myczarobr += ($myczarobr * $intBonus);
 	$fltBasedef = $myczarobr;
 	if ($enemy['dmgtype'] != 'none')
 	  {

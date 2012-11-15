@@ -7,7 +7,7 @@
  *   @copyright            : (C) 2004,2005,2006,2011,2012 Vallheru Team based on Gamers-Fusion ver 2.5
  *   @author               : thindil <thindil@vallheru.net>
  *   @version              : 1.7
- *   @since                : 07.11.2012
+ *   @since                : 15.11.2012
  *
  */
 
@@ -86,18 +86,34 @@ if (isset($_GET['battle']))
     if ($myczar->fields['id'])
       {
 	$myczar->fields['dmg'] = $myczar->fields['obr'] * $player->stats['inteli'][2];
+	$intBonus = $player->checkbonus('bspell');
+	$myczar->fields['dmg'] += ($myczar->fields['dmg'] * $intBonus);
+	$intBonus = $player->checkbonus($myczar->fields['element']);
+	$myczar->fields['dmg'] += ($myczar->fields['dmg'] * $intBonus);
       }
     if ($eczar->fields['id'])
       {
 	$eczar->fields['dmg'] = $eczar->fields['obr'] * $enemy->stats['inteli'][2];
+	$intBonus = $enemy->checkbonus('bspell');
+	$eczar->fields['dmg'] += ($eczar->fields['dmg'] * $intBonus);
+	$intBonus = $enemy->checkbonus($eczar->fields['element']);
+	$eczar->fields['dmg'] += ($eczar->fields['dmg'] * $intBonus);
       }
     if ($myczaro->fields['id'])
       {
 	$myczaro->fields['def'] = $myczaro->fields['obr'] * $player->stats['wisdom'][2];
+	$intBonus = $player->checkbonus('dspell');
+	$myczaro->fields['def'] += ($myczaro->fields['def'] * $intBonus);
+	$intBonus = $player->checkbonus($myczaro->fields['element']);
+	$myczar0->fields['def'] += ($myczaro->fields['def'] * $intBonus);
       }
     if ($eczaro->fields['id'])
       {
 	$eczaro->fields['def'] = $eczaro->fields['obr'] * $enemy->stats['wisdom'][2];
+	$intBonus = $enemy->checkbonus('bspell');
+	$eczaro->fields['def'] += ($eczaro->fields['def'] * $intBonus);
+	$intBonus = $enemy->checkbonus($eczaro->fields['element']);
+	$eczaro->fields['def'] += ($eczaro->fields['def'] * $intBonus);
       }
     $arrElements = array('water' => 'fire',
 			 'fire' => 'wind',

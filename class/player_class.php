@@ -7,7 +7,7 @@
  *   @copyright            : (C) 2004,2005,2006,2007,2011,2012 Vallheru Team based on Gamers-Fusion ver 2.5
  *   @author               : thindil <thindil@vallheru.net>
  *   @version              : 1.7
- *   @since                : 14.11.2012
+ *   @since                : 15.11.2012
  *
  */
 
@@ -733,6 +733,17 @@ class Player
 	  break;
 	case 'lumberjack':
 	  $intBonus = ceil($this->skills['lumberjack'][1] * (($arrBonus[1] * $arrBonus[3]) / 100));
+	  break;
+	case 'enchant':
+	  $intBonus = ceil($this->skills['magic'][1] * (($arrBonus[1] * $arrBonus[3]) / 100));
+	  break;
+	case 'bspells':
+	case 'dspells':
+	case 'fire':
+	case 'water':
+	case 'air':
+	case 'earth':
+	  $intBonus = ($arrBonus[1] * $arrBonus[3]) / 100;
 	  break;
 	default:
 	  $intBonus = 0;
