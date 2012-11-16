@@ -537,6 +537,7 @@ function monsterattack2($intMydodge, &$zmeczenie, &$gunik, &$enemy, $times, $mcz
 	    }
 	}
     }
+  $defpower -= ($defpower * $player->checkbonus('rage'));
   $enemy['damage'] -= $defpower;
   if ($enemy['damage'] < 1)
     {
@@ -634,13 +635,7 @@ function playerattack($eunik, $mczar, &$zmeczenie, &$gatak, $stat, &$enemy, &$gm
 	      //Hit with spell
 	      if ($mczar -> fields['id'] && $player -> mana > $mczar -> fields['poziom']) 
 		{
-		  $lost_mana = ceil($mczar -> fields['poziom'] / 2.5);
-		  $lost_mana -= (int)($player ->skills['magic'][1] / 25);
-		  if ($lost_mana < 1)
-		    {
-		      $lost_mana = 1;
-		    }
-		  $player -> mana -= $lost_mana;
+		  $player -> mana --;
 		  $gmagia++;
 		  $enemy['hp'] -= $enemyhp;
 		}
@@ -1114,6 +1109,7 @@ function fightmonster($enemy, $expgain, $goldgain, $times)
     {
         $stat['damage'] = $stat['damage'] - ($stat['damage'] / 4);
     }
+    $stat['damage'] += ($stat['damage'] * $player->checkbonus('rage'));
     $intPldamage = $stat['damage'];
     $stat['damage'] = ($stat['damage'] - $enemy['endurance']);
     $rzut2 = (rand(1,($player ->skills[$strSkill][1] * 10)));

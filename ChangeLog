@@ -1,3 +1,8 @@
+2012-11-16  Bartek thindil Jasicki  <thindil@vallheru.net>
+
+	* FEATURE,includes/battle.php, includes/funkcje.php, includes/turnfight.php:
+	added rage bonus
+
 2012-11-15  Bartek thindil Jasicki  <thindil@vallheru.net>
 
 	* BUG,includes/battle.php, includes/funkcje.php, includes/turnfight.php: 

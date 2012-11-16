@@ -7,7 +7,7 @@
  *   @copyright            : (C) 2004,2005,2006,2007,2011,2012 Vallheru Team based on Gamers-Fusion ver 2.5
  *   @author               : thindil <thindil@vallheru.net>
  *   @version              : 1.7
- *   @since                : 15.11.2012
+ *   @since                : 16.11.2012
  *
  */
  
@@ -929,6 +929,7 @@ function attack($eunik,$bdamage)
     }
     $rzut2 = (rand(1,($player -> skills[$strSkill][1] * 10)));
     $stat['damage'] = ($stat['damage'] + $rzut2);
+    $stat['damage'] += ($stat['damage'] * $player->checkbonus('rage'));
     $stat['damage'] = ($stat['damage'] - $enemy['endurance']);
     if ($stat['damage'] < 1) 
     {
@@ -1338,10 +1339,10 @@ function monsterattack($attacks,$enemy,$myunik,$amount)
                 if (!$blnMiss)
                 {
 		    $intHit = rand(0, 3);
-		    $myobrona += $player->checkbonus('defender');
+		    $myobrona = 0;
 		    if ($player->equip[$intHit + 2][0])
 		      {
-			$myobrona += $player->equip[$intHit + 2][2];
+			$myobrona = ($player->equip[$intHit + 2][2] + ($player->equip[$intHit + 2][2] * $player->checkbonus('defender')));
 		        $player->equip[$intHit + 2][6] --;
 			if ($enemy['dmgtype'] != 'none')
 			  {
@@ -1358,6 +1359,7 @@ function monsterattack($attacks,$enemy,$myunik,$amount)
 			      }
 			  }
 		      }
+		    $myobrona -= ($myobrona * $player->checkbonus('rage'));
 		    $intDamage -= $myobrona;
 		    if ($intDamage < 1)
 		      {

@@ -8,7 +8,7 @@
  *   @author               : thindil <thindil@vallheru.net>
  *   @author               : eyescream <tduda@users.sourceforge.net>
  *   @version              : 1.7
- *   @since                : 15.11.2012
+ *   @since                : 16.11.2012
  *
  */
 
@@ -41,8 +41,7 @@ function critical($fltAbility)
     }
     if ($fltAbility > 5) 
     {
-        $intCrit = $fltAbility / 100;
-        $intCritical = (5 + $intCrit);
+        $intCritical = 6;
     } 
         else 
     {
@@ -240,6 +239,7 @@ function attack1($attacker, $defender, $attack_bspell, $def_bspell, $attack_dspe
     {
         $mypower -= ($mypower / 4);
     }
+    $mypower += ($mypower * $player->checkbonus('rage'));
     //Shield block chance
     $intBlock = 0;
     if ($defender->equip[5][0])
@@ -343,6 +343,7 @@ function attack1($attacker, $defender, $attack_bspell, $def_bspell, $attack_dspe
 		$defender->equip[$intHit + 2][6] --;
 	      }
 	  }
+	$defpower -= ($defpower * $defender->checkbonus('rage'));
 	//Count damage
 	$attackdmg = $mypower - ($rzut2 + $defpower + $eczarobr);
         if ($attackdmg <= 0) 
