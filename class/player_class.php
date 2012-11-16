@@ -201,6 +201,7 @@ class Player
 	$this->oldstats = $this->stats;
 	$this->equip = $this->equipment();
 	$this->curstats();
+	$this->skills['perception'][1] += $this->checkbonus('seeker');
 	$stats -> Close();
     }
 
@@ -303,6 +304,11 @@ class Player
 	  $this->stats[$objBless->fields['bless']] += $objBless->fields['blessval'];
 	}
       $objBless->Close();
+      //Add bonuses
+      foreach ($arrStats as $strStat)
+	{
+	  $this->stats[$strStat][2] += $this->checkbonus($strStat);
+	}
     }
 
     /**
@@ -752,9 +758,19 @@ class Player
 	case 'spy':
 	  $intBonus = ceil($this->skills['thievery'][1] * (($this->bonuses[$intKey][1] * $this->bonuses[$intKey][3]) / 100));
 	  break;
-	  break;
 	case 'assasin':
 	  $intBonus = ($this->bonuses[$intKey][1] * $this->bonuses[$intKey][3]);
+	  break;
+	case 'seeker':
+	  $intBonus = ceil($this->skills['perception'][1] * (($this->bonuses[$intKey][1] * $this->bonuses[$intKey][3]) / 100));
+	  break;
+	case 'speed':
+	case 'strength':
+	case 'wisdom':
+	case 'inteli':
+	case 'agility':
+	case 'condtition':
+	  $intBonus = ceil($this->stats[$strTrigger][2] * (($this->bonuses[$intKey][1] * $this->bonuses[$intKey][3]) / 100));
 	  break;
 	default:
 	  $intBonus = ($this->bonuses[$intKey][1] * $this->bonuses[$intKey][3]) / 100;

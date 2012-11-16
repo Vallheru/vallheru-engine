@@ -1,5 +1,7 @@
 2012-11-16  Bartek thindil Jasicki  <thindil@vallheru.net>
 
+	* FEATURE,class/player_class.php: 
+	added general bonuses
 	* FEATURE,includes/battle.php, includes/funkcje.php, includes/turnfight.php, includes/steal.php, class/player_class.php,
 	bank.php, tribes.php, view.php: 
 	added thieves bonuses
