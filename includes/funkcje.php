@@ -901,6 +901,7 @@ function fightmonster($enemy, $expgain, $goldgain, $times)
         {
             $krytyk = $player->skills['attack'][1];
         }
+	$krytyk += $player->checkbonus('assasin');
 	$strAtype = 'melee';
 	$strSkill = 'attack';
     }
@@ -950,6 +951,7 @@ function fightmonster($enemy, $expgain, $goldgain, $times)
         {
             $krytyk = $player ->skills['shoot'][1];
         }
+	$krytyk += $player->checkbonus('assasin');
         if (!$player->equip[6][0]) 
         {
             $stat['damage'] = 0;

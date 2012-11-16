@@ -9,7 +9,7 @@
  *   @author               : yeskov <yeskov@users.sourceforge.net>
  *   @author               : eyescream <tduda@users.sourceforge.net>
  *   @version              : 1.7
- *   @since                : 23.10.2012
+ *   @since                : 16.11.2012
  *
  */
 
@@ -776,7 +776,7 @@ if (isset($_GET['action']))
 	      {		
 		$player->curskills(array('thievery'));
 		
-		$intStats = ($player->stats['agility'][2] + $player->stats['inteli'][2] + $player->skills['thievery'][1] + $player->stats['speed'][2]);
+		$intStats = ($player->stats['agility'][2] + $player->stats['inteli'][2] + $player->skills['thievery'][1] + $player->stats['speed'][2] + $player->checkbonus('steal'));
 		$player->clearbless(array('agility', 'inteli', 'speed'));
 		/**
 		 * Add bonus from tools

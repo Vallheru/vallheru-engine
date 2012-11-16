@@ -7,7 +7,7 @@
  *   @copyright            : (C) 2004,2005,2006,2011,2012 Vallheru Team based on Gamers-Fusion ver 2.5
  *   @author               : thindil <thindil@vallheru.net>
  *   @version              : 1.7
- *   @since                : 24.10.2012
+ *   @since                : 16.11.2012
  *
  */
 
@@ -71,7 +71,7 @@ function steal ($itemid)
     $player->curskills(array('thievery'));
     $player->clearbless(array('agility', 'inteli'));
 
-    $intStats = ($player->stats['agility'][2] + $player->stats['inteli'][2] + $player->skills['thievery'][1]);
+    $intStats = ($player->stats['agility'][2] + $player->stats['inteli'][2] + $player->skills['thievery'][1] + $player->checkbonus('steal'));
     /**
      * Add bonus from tools
      */

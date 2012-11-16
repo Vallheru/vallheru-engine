@@ -927,6 +927,7 @@ function attack($eunik,$bdamage)
         $stat['damage'] = $stat['damage'] - ($stat['damage'] / 2);
         $eunik = $eunik + ($eunik / 10);
     }
+    $krytyk += $player->checkbonus('assasin');
     $rzut2 = (rand(1,($player -> skills[$strSkill][1] * 10)));
     $stat['damage'] = ($stat['damage'] + $rzut2);
     $stat['damage'] += ($stat['damage'] * $player->checkbonus('rage'));

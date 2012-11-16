@@ -7,7 +7,7 @@
  *   @copyright            : (C) 2004,2005,2006,2007,2011,2012 Vallheru Team based on Gamers-Fusion ver 2.5
  *   @author               : thindil <thindil@vallheru.net>
  *   @version              : 1.7
- *   @since                : 15.11.2012
+ *   @since                : 16.11.2012
  *
  */
 
@@ -746,6 +746,15 @@ class Player
 	  break;
 	case 'eagleeye':
 	  $intBonus = ceil($this->skills['shoot'][1] * (($this->bonuses[$intKey][1] * $this->bonuses[$intKey][3]) / 100));
+	  break;
+	case 'pickpocket':
+	case 'steal':
+	case 'spy':
+	  $intBonus = ceil($this->skills['thievery'][1] * (($this->bonuses[$intKey][1] * $this->bonuses[$intKey][3]) / 100));
+	  break;
+	  break;
+	case 'assasin':
+	  $intBonus = ($this->bonuses[$intKey][1] * $this->bonuses[$intKey][3]);
 	  break;
 	default:
 	  $intBonus = ($this->bonuses[$intKey][1] * $this->bonuses[$intKey][3]) / 100;

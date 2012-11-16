@@ -33,12 +33,8 @@
 /**
  * Function count critical hit
  */
-function critical($fltAbility)
+function critical($fltAbility, $objPlayer)
 {
-    if ($fltAbility < 1) 
-    {
-        $intCritical = 1;
-    }
     if ($fltAbility > 5) 
     {
         $intCritical = 6;
@@ -47,6 +43,7 @@ function critical($fltAbility)
     {
         $intCritical = $fltAbility;
     }
+    $intCritical += $objPlayer->checkbonus('assasin');
     return $intCritical;
 }
 

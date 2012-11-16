@@ -8,7 +8,7 @@
  *   @author               : thindil <thindil@vallheru.net>
  *   @author               : eyescream <tduda@users.sourceforge.net>
  *   @version              : 1.7
- *   @since                : 08.11.2012
+ *   @since                : 16.11.2012
  *
  */
 
@@ -746,7 +746,7 @@ if (isset ($_GET['steal']))
         error(HE_IMMU." (<a href=\"view.php?view=".$_GET['view']."\">".BACK."</a>)");
     }
 
-    $intAttack = ($player->stats['agility'][2] + $player->stats['inteli'][2] + $player->skills['thievery'][2]);
+    $intAttack = ($player->stats['agility'][2] + $player->stats['inteli'][2] + $player->skills['thievery'][2] + $player->checkbonus('pickpocket'));
     $intDefense = ($player->stats['agility'][2] + $player->stats['inteli'][2] + $player->skills['perception'][2]);
     $chance = $intAttack - $intDefense;
     if ($chance < 1) 

@@ -9,7 +9,7 @@
  *   @author               : mori <ziniquel@users.sourceforge.net>
  *   @author               : eyescream <tduda@users.sourceforge.net>
  *   @version              : 1.7
- *   @since                : 24.10.2012
+ *   @since                : 16.11.2012
  *
  */
 
@@ -330,7 +330,7 @@ if (isset ($_GET['view']) && $_GET['view'] == 'view')
 		$db->Execute("UPDATE `players` SET `astralcrime`='N' WHERE `id`=".$player->id);
 		$player->curskills(array('thievery'));
 		$player->clearbless(array('inteli', 'agility'));
-		$intStats = ($player->stats['agility'][2] + $player->stats['inteli'][2] + $player->skills['thievery'][1]);
+		$intStats = ($player->stats['agility'][2] + $player->stats['inteli'][2] + $player->skills['thievery'][1] + $player->checkbonus('spy'));
 		/**
 		 * Add bonus from tools
 		 */
