@@ -6,8 +6,8 @@
  *   @name                 : resets.php                            
  *   @copyright            : (C) 2004,2005,2006,2007,2011,2012 Vallheru Team based on Gamers-Fusion ver 2.5
  *   @author               : thindil <thindil@vallheru.net>
- *   @version              : 1.6
- *   @since                : 02.10.2012
+ *   @version              : 1.7
+ *   @since                : 19.11.2012
  *
  */
 
@@ -860,6 +860,28 @@ function mainreset()
         $objAstral -> Close();
     }
     $objTest -> Close();
+    /**
+     * Agents payment
+     */
+    $objTribes = $db->Execute("SELECT `id`, `credits`, `agents` FROM `tribes` WHERE `agents`>0");
+    while (!$objTribes->EOF)
+      {
+	$intPayment = $objTribes->fields['agents'] * 1000;
+	//Everything ok, just pay to agents
+	if ($objTribes->fields['credits'] >= $intPayment)
+	  {
+	    $db->Execute("UPDATE `tribes` SET `credits`=`credits`-".$intPayment." WHERE `id`=".$objTribes->fields['id']);
+	  }
+	//Not enough moneys for payment, some agents retreats
+	else
+	  {
+	    $intPercent = $objTribes->fields['credits'] / $intPayment;
+	    $intAgents = floor($objTribes->fields['agents'] * $intPercent);
+	    $db->Execute("UPDATE `tribes` SET `credits`=0, `agents`=".$intAgents." WHERE `id`=".$objTribes->fields['id']);
+	  }
+	$objTribes->MoveNext();
+      }
+    $objTribes->Close();
     smallreset();
 }
  
