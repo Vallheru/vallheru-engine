@@ -9,7 +9,7 @@
  *   @author               : mori <ziniquel@users.sourceforge.net>
  *   @author               : eyescream <tduda@users.sourceforge.net>
  *   @version              : 1.7
- *   @since                : 16.11.2012
+ *   @since                : 19.11.2012
  *
  */
 
@@ -155,7 +155,7 @@ if (isset ($_GET['view']) && $_GET['view'] == 'view')
     if ($_GET['step'] == '') 
     {
 	checkvalue($_GET['id']);
-        $tribe = $db -> Execute("SELECT `id`, `name`, `owner`, `wygr`, `przeg`, `public_msg`, `www`, `logo`, `level` FROM `tribes` WHERE `id`=".$_GET['id']);
+        $tribe = $db -> Execute("SELECT `id`, `name`, `owner`, `wygr`, `przeg`, `public_msg`, `www`, `logo`, `level`, `traps`, `agents` FROM `tribes` WHERE `id`=".$_GET['id']);
         if (!$tribe -> fields['id']) 
         {
             error (NO_CLAN);
@@ -265,7 +265,30 @@ if (isset ($_GET['view']) && $_GET['view'] == 'view')
         }
 
         if ($player -> clas == 'Złodziej' && $player -> tribe != $tribe -> fields['id']) 
-        {
+	  {
+	    $arrTactions = array();
+	    $strTrapsinfo = '';
+	    if ($tribe->fields['traps'] > 0 || ($tribe->fields['agents'] - $tribe->fields['dagents']) > 0)
+	      {
+		$strTrapsinfo = 'Wprawnym okiem dostrzegasz ';
+		if ($tribe->fields['traps'] > 0)
+		  {
+		    $strTrapsinfo .= 'podejrzane miejsca na ziemi w około siedziby';
+		    $arrTactions['traps'] = 'Rozbrój pułapki (koszt: '.$tribe->fields['traps'].' energii)';
+		  }
+		if ($tribe->fields['traps'] > 0 && ($tribe->fields['agents'] - $tribe->fields['dagents']) > 0)
+		  {
+		    $strTrapsinfo .= ' oraz ';
+		  }
+		if (($tribe->fields['agents'] - $tribe->fields['dagents']) > 0)
+		  {
+		    $strTrapsinfo .= 'strażników patrolujących okolicę';
+		    $arrTactions['agents'] = 'Przekup strażników (koszt: '.(($tribe->fields['agents'] - $tribe->fields['dagents']) * 5000).' sztuk złota)';
+		  }
+		$strTrapsinfo .= '.';
+	      }
+	    $smarty->assign(array('Trapsinfo' => $strTrapsinfo,
+				  'Tactions' => $arrTactions));
             $objAstralcrime = $db -> Execute("SELECT `astralcrime` FROM `players` WHERE `id`=".$player -> id);
             if ($objAstralcrime -> fields['astralcrime'] == 'Y')
 	      {
@@ -278,11 +301,11 @@ if (isset ($_GET['view']) && $_GET['view'] == 'view')
                 $smarty -> assign("Asteal", '');
 	      }
             $objAstralcrime -> Close();
-        }
-            else
-        {
+	  }
+	else
+	  {
             $smarty -> assign("Asteal", '');
-        }
+	  }
 
         $tribe -> Close();
     }
@@ -290,10 +313,10 @@ if (isset ($_GET['view']) && $_GET['view'] == 'view')
       {
 
 	//Thief actions
-	if (in_array($_GET['step'], array('steal', 'sabotage', 'espionage')))
+	if (in_array($_GET['step'], array('steal', 'sabotage', 'espionage', 'traps', 'agents')))
 	  {
 	    checkvalue($_GET['id']);
-	    $objTribe = $db -> Execute("SELECT `id`, `owner`, `level`, `zolnierze` FROM `tribes` WHERE `id`=".$_GET['id']);
+	    $objTribe = $db -> Execute("SELECT `id`, `owner`, `level`, `traps`, `agents`, `dagents` FROM `tribes` WHERE `id`=".$_GET['id']);
 	    if (!$objTribe -> fields['id']) 
 	      {
 		error(NO_CLAN." (<a href=\"tribes.php?view=view&id=".$_GET['id']."\">Wróć</a>)");
@@ -302,12 +325,6 @@ if (isset ($_GET['view']) && $_GET['view'] == 'view')
 	      {
 		error(ERROR." (<a href=\"tribes.php?view=view&id=".$_GET['id']."\">Wróć</a>)");
 	      }
-	    $objAstralcrime = $db -> Execute("SELECT `astralcrime` FROM `players` WHERE `id`=".$player -> id);
-	    if ($objAstralcrime -> fields['astralcrime'] == 'N')
-	      {
-		error ("Możesz szpiegować klany tylko raz na reset. (<a href=\"tribes.php?view=view&id=".$_GET['id']."\">Wróć</a>)");
-	      }
-	    $objAstralcrime -> Close();
 	    if ($player -> hp <= 0) 
 	      {
 		error ("Nie możesz podejmować jakiejkolwiek akcji przeciwko klanom, ponieważ jesteś martwy (<a href=\"tribes.php?view=view&id=".$_GET['id']."\">".BACK."</a>)");
@@ -315,6 +332,23 @@ if (isset ($_GET['view']) && $_GET['view'] == 'view')
 	    if ($player -> tribe == $_GET['id'])
 	      {
 		error(SAME_CLAN." (<a href=\"tribes.php?view=view&id=".$_GET['id']."\">Wróć</a>)");
+	      }
+	    if ($_GET['step'] != 'traps' && $_GET['step'] != 'agents')
+	      {
+		$objAstralcrime = $db -> Execute("SELECT `astralcrime` FROM `players` WHERE `id`=".$player -> id);
+		if ($objAstralcrime -> fields['astralcrime'] == 'N')
+		  {
+		    error ("Możesz szpiegować klany tylko raz na reset. (<a href=\"tribes.php?view=view&id=".$_GET['id']."\">Wróć</a>)");
+		  }
+		$objAstralcrime -> Close();
+	      }
+	    if ($_GET['step'] == 'traps' && $objTribe->fields['traps'] == 0)
+	      {
+		error("Nie ma pułapek do rozbrojenia. (<a href=\"tribes.php?view=view&id=".$_GET['id']."\">Wróć</a>)");
+	      }
+	    if ($_GET['step'] == 'agents' && ($objTribe->fields['agents'] - $objTribe->fields['dagents']) == 0)
+	      {
+		error("Nie ma strażników do przekupienia. (<a href=\"tribes.php?view=view&id=".$_GET['id']."\">Wróć</a>)");
 	      }
 	    if ($_GET['step'] == 'espionage' || $_GET['step'] == 'sabotage')
 	      {
@@ -364,18 +398,27 @@ if (isset ($_GET['view']) && $_GET['view'] == 'view')
 		    $objMembers->MoveNext();
 		  }
 		$objMembers->Close();
-		//Check soldiers
-		if ($blnAction && $objTribe->fields['zolnierze'] > 0)
+		//Check agents
+		if ($blnAction && ($objTribe->fields['agents'] - $objTribe->fields['dagents']) > 0)
 		  {
-		    $intChance = $intStats - $objTribe->fields['zolnierze'];
-		    if ($intChance < 45)
-		      {
-			$intChance = 45;
-		      }
+		    $arrMax = array(0, 5, 10, 20, 40, 50);
+		    $intChance = (($objTribe->fields['agents'] - $objTribe->fields['dagents']) / $arrMax[$objTribe->fields['level']]) * 90;
 		    if ($intChance < rand(1, 100))
 		      {
 			$db->Execute("UPDATE `players` SET `miejsce`='Lochy' WHERE `id`=".$player->id);
 			$db -> Execute("INSERT INTO `log` (`owner`, `log`, `czas`, `type`) VALUES(".$objTribe->fields['owner'].",'Dowódca straży klanowej melduje, że przyłapano <b><a href=view.php?view=".$player->id.">".$player->user."</a></b> ID:".$player->id." jak myszkował po siedzibie twojego klanu i natychmiast przekazano go strażnikom miejskim.', ".$strDate.", 'T')");
+			$blnAction = FALSE;
+		      }
+		  }
+		//Check traps
+		if ($blnAction && $objTribe->fields['traps'])
+		  {
+		    $arrMax = array(0, 5, 10, 20, 40, 50);
+		    $intChance = ($objTribe->fields['traps'] / $arrMax[$objTribe->fields['level']]) * 90;
+		    if ($intChance < rand(1, 100))
+		      {
+			$db->Execute("UPDATE `players` SET `miejsce`='Lochy' WHERE `id`=".$player->id);
+			$db -> Execute("INSERT INTO `log` (`owner`, `log`, `czas`, `type`) VALUES(".$objTribe->fields['owner'].",'Dowódca straży klanowej melduje, że <b><a href=view.php?view=".$player->id.">".$player->user."</a></b> ID:".$player->id." dał się złapać w jedną z pułapek zabezpieczających siedzibę twojego klanu i natychmiast przekazano go strażnikom miejskim.', ".$strDate.", 'T')");
 			$blnAction = FALSE;
 		      }
 		  }
@@ -420,6 +463,7 @@ if (isset ($_GET['view']) && $_GET['view'] == 'view')
 		$player->checkexp(array('agility' => ceil($intGainexp / 3),
 					'inteli' => ceil($intGainexp / 3)), $player->id, 'stats');
 		$player->checkexp(array('thievery' => ceil($intGainexp / 3)), $player->id, 'skills');
+		$db->Execute("UPDATE `tribes` SET `dagents`=0 WHERE `id`=".$objTribe->fields['id']);
 	      }
 	  }
 

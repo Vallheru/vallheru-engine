@@ -20,8 +20,7 @@
 
 {if $View == "view"}
     {if $Step == ""}
-        <ul>
-        <li>{$Yousee}: {$Name}<br /><br />
+        <h4 align="center">{$Yousee}: {$Name}</h4>	
         {$Logo}
         {$Leader2} <a href="view.php?view={$Owner}">{$Ownername}</a><br /><br />
         {$Memamount}: {$Members}<br />
@@ -38,12 +37,22 @@
             <input type="submit" value="{$Ajoin}" />
 	{/if}
         </form>
+	{if $Trapsinfo != ""}
+	    <br /><br />{$Trapsinfo}
+	    <ul>
+	        {foreach $Tactions as $Action => $Link}
+		    <li><a href="tribes.php?view=view&amp;id={$Tribeid}&amp;step={$Action}">{$Link}</a></li>
+		{/foreach}
+	    </ul>
+	{/if}
 	{if $Asteal != ""}
-	    <br /><br /><a href="tribes.php?view=view&amp;id={$Tribeid}&amp;step=steal">{$Asteal}</a><br />
+	    <ul>
+	    <li><a href="tribes.php?view=view&amp;id={$Tribeid}&amp;step=steal">{$Asteal}</a></li>
 	    {if $Asabotage != ""}
-	        <a href="tribes.php?view=view&amp;id={$Tribeid}&amp;step=sabotage">{$Asabotage}</a><br />
+	        <li><a href="tribes.php?view=view&amp;id={$Tribeid}&amp;step=sabotage">{$Asabotage}</a></li>
 	    {/if}
-	    <a href="tribes.php?view=view&amp;id={$Tribeid}&amp;step=espionage">{$Aespionage}</a>
+	    <li><a href="tribes.php?view=view&amp;id={$Tribeid}&amp;step=espionage">{$Aespionage}</a></li>
+	    </ul>
         {/if}
 	<br /><br /><a href="tribes.php?view=all">{$Aback}</a>
     {/if}
