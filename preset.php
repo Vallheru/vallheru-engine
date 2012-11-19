@@ -7,7 +7,7 @@
  *   @copyright            : (C) 2004,2005,2006,2007,2011,2012 Vallheru Team based on Gamers-Fusion ver 2.5
  *   @author               : thindil <thindil@vallheru.net>
  *   @version              : 1.7
- *   @since                : 11.10.2012
+ *   @since                : 19.11.2012
  *
  */
 
@@ -72,7 +72,7 @@ if (isset ($_GET['id']))
 	    $db -> Execute("DELETE FROM `hmarket` WHERE `seller`=".$_GET['id']);
 	    $db -> Execute("DELETE FROM `potions` WHERE `owner`=".$_GET['id']);
 	    $db -> Execute("DELETE FROM `herbs` WHERE `gracz`=".$_GET['id']);
-	    $db -> Execute("UPDATE `players` SET `credits`=0, `energy`=0, `max_energy`=70, `ap`=5, `platinum`=0, `hp`=15, `max_hp`=15, `bank`=0, `corepass`='N', `trains`=5, `pw`=0, `immu`='N', `pm`=6, `rasa`='', `klasa`='', `deity`='', `gender`='', `wins`=0, `losses`=0, `lastkilled`='...', `lastkilledby`='...', `crime`=1, `maps`=0, `craftmission`=7, `mpoints`=0, `stats`='strength:Siła,0,0,0;agility:Zręczność,0,0,0;condition:Kondycja,0,0,0;speed:Szybkość,0,0,0;inteli:Inteligencja,0,0,0;wisdom:Siła Woli,0,0,0;', `skills`='smith:Kowalstwo,1,0;shoot:Strzelectwo,1,0;alchemy:Alchemia,1,0;dodge:Uniki,1,0;carpentry:Stolarstwo,1,0;magic:Rzucanie Czarów,1,0;attack:Walka Bronią,1,0;leadership:Dowodzenie,1,0;breeding:Hodowla,1,0;mining:Górnictwo,1,0;lumberjack:Drwalnictwo,1,0;herbalism:Zielarstwo,1,0;jewellry:Jubilerstwo,1,0;smelting:Hutnictwo,1,0;thievery:Złodziejstwo,1,0;perception:Spostrzegawczość,1,0;' WHERE `id`=".$_GET['id']);
+	    $db -> Execute("UPDATE `players` SET `credits`=0, `energy`=0, `max_energy`=70, `ap`=5, `platinum`=0, `hp`=15, `max_hp`=15, `bank`=0, `corepass`='N', `trains`=5, `pw`=0, `immu`='N', `pm`=6, `rasa`='', `klasa`='', `deity`='', `gender`='', `wins`=0, `losses`=0, `lastkilled`='...', `lastkilledby`='...', `crime`=1, `maps`=0, `craftmission`=7, `mpoints`=0, `stats`='strength:Siła,0,0,0;agility:Zręczność,0,0,0;condition:Kondycja,0,0,0;speed:Szybkość,0,0,0;inteli:Inteligencja,0,0,0;wisdom:Siła Woli,0,0,0;', `skills`='smith:Kowalstwo,1,0;shoot:Strzelectwo,1,0;alchemy:Alchemia,1,0;dodge:Uniki,1,0;carpentry:Stolarstwo,1,0;magic:Rzucanie Czarów,1,0;attack:Walka Bronią,1,0;leadership:Dowodzenie,1,0;breeding:Hodowla,1,0;mining:Górnictwo,1,0;lumberjack:Drwalnictwo,1,0;herbalism:Zielarstwo,1,0;jewellry:Jubilerstwo,1,0;smelting:Hutnictwo,1,0;thievery:Złodziejstwo,1,0;perception:Spostrzegawczość,1,0;', `bonuses`='' WHERE `id`=".$_GET['id']);
 	    $objHouse = $db -> Execute("SELECT `locator` FROM `houses` WHERE `owner`=".$_GET['id']);
 	    if ($objHouse -> fields['locator'])
 	      {
@@ -87,7 +87,7 @@ if (isset ($_GET['id']))
 	  }
 	else
 	  {
-	    $db -> Execute("UPDATE `players` SET `energy`=0, `max_energy`=70, `ap`=5, `hp`=15, `max_hp`=15, `corepass`='N', `trains`=5, `pw`=0, `immu`='N', `pm`=6, `rasa`='', `klasa`='', `deity`='', `gender`='', `wins`=0, `losses`=0, `lastkilled`='...', `lastkilledby`='...', `crime`=1, `maps`=0, `craftmission`=7, `mpoints`=0, `stats`='strength:Siła,0,0,0;agility:Zręczność,0,0,0;condition:Kondycja,0,0,0;speed:Szybkość,0,0,0;inteli:Inteligencja,0,0,0;wisdom:Siła Woli,0,0,0;', `skills`='smith:Kowalstwo,1,0;shoot:Strzelectwo,1,0;alchemy:Alchemia,1,0;dodge:Uniki,1,0;carpentry:Stolarstwo,1,0;magic:Rzucanie Czarów,1,0;attack:Walka Bronią,1,0;leadership:Dowodzenie,1,0;breeding:Hodowla,1,0;mining:Górnictwo,1,0;lumberjack:Drwalnictwo,1,0;herbalism:Zielarstwo,1,0;jewellry:Jubilerstwo,1,0;smelting:Hutnictwo,1,0;thievery:Złodziejstwo,1,0;perception:Spostrzegawczość,1,0;' WHERE `id`=".$_GET['id']);
+	    $db -> Execute("UPDATE `players` SET `energy`=0, `max_energy`=70, `ap`=5, `hp`=15, `max_hp`=15, `corepass`='N', `trains`=5, `pw`=0, `immu`='N', `pm`=6, `rasa`='', `klasa`='', `deity`='', `gender`='', `wins`=0, `losses`=0, `lastkilled`='...', `lastkilledby`='...', `crime`=1, `maps`=0, `craftmission`=7, `mpoints`=0, `stats`='strength:Siła,0,0,0;agility:Zręczność,0,0,0;condition:Kondycja,0,0,0;speed:Szybkość,0,0,0;inteli:Inteligencja,0,0,0;wisdom:Siła Woli,0,0,0;', `skills`='smith:Kowalstwo,1,0;shoot:Strzelectwo,1,0;alchemy:Alchemia,1,0;dodge:Uniki,1,0;carpentry:Stolarstwo,1,0;magic:Rzucanie Czarów,1,0;attack:Walka Bronią,1,0;leadership:Dowodzenie,1,0;breeding:Hodowla,1,0;mining:Górnictwo,1,0;lumberjack:Drwalnictwo,1,0;herbalism:Zielarstwo,1,0;jewellry:Jubilerstwo,1,0;smelting:Hutnictwo,1,0;thievery:Złodziejstwo,1,0;perception:Spostrzegawczość,1,0;', `bonuses`='' WHERE `id`=".$_GET['id']);
 	    $db->Execute("UPDATE `equipment` SET `status`='U', `cost`=1 WHERE `owner`=".$_GET['id']);
 	    $db->Execute("UPDATE `equipment` SET `amount`=1 WHERE `amount`=0 AND `owner`=".$_GET['id']);
 	  }
