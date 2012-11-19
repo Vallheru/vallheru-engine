@@ -1,3 +1,8 @@
+2012-11-19  Bartek thindil Jasicki  <thindil@vallheru.net>
+
+	* FEATURE,templates/layout1/tribeadmin.tpl, templates/tribeadmin.tpl, tribeadmin.php:
+	added option to buy traps and agents to clan
+
 2012-11-16  Bartek thindil Jasicki  <thindil@vallheru.net>
 
 	* UPDATE,install/db/update.sql: 

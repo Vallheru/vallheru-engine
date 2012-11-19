@@ -120,6 +120,12 @@
         </form>
     {/if}
 {/if}
+{if $Step2 == "traps"}
+    {$Trapsinfo}<br /><br/>
+    <form method="post" action="tribeadmin.php?step2=traps&amp;action=buy">
+        <input type="submit" value="{$Abuy}" /> <input type="text" name="traps" value="0" size="3" /> {$Ttraps} <input type="text" name="agents" value="0" size="3" /> {$Tagents}
+    </form>
+{/if}
 {if $Step2 == "wojsko"}
     {$Armyinfo}<br />
     <form method="post" action="tribeadmin.php?step2=wojsko&amp;action=kup">

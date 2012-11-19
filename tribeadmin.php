@@ -6,8 +6,8 @@
  *   @name                 : tribeadmin.php                            
  *   @copyright            : (C) 2012 Vallheru Team based on Gamers-Fusion ver 2.5
  *   @author               : thindil <thindil@vallheru.net>
- *   @version              : 1.6
- *   @since                : 21.09.2012
+ *   @version              : 1.7
+ *   @since                : 19.11.2012
  *
  */
 
@@ -63,7 +63,8 @@ if (!isset($_GET['step2']))
 		      'walka' => "Zaatakować inny klan",
 		      'loan' => "Pożycz pieniądze członkowi",
 		      'te' => "Dodatki klanu",
-		      'asks' => 'Sprawdź prośby o przedmioty z klanu');
+		      'asks' => 'Sprawdź prośby o przedmioty z klanu',
+		      'traps' => 'Dokupić pułapki lub strażników do klanu');
     if ($mytribe->fields['level'] < 5)
       {
 	unset($arrLinks['wojsko'], $arrLinks['walka']);
@@ -619,6 +620,91 @@ else
 	  }
       }
     /**
+     * Buying traps and agents to clan
+     */
+    elseif ($_GET['step2'] == 'traps')
+      {
+	if ($player -> id != $mytribe -> fields['owner'] && !$perm -> fields['army']) 
+	  {
+	    error ("Nie masz uprawnień aby tutaj przebywać.");
+	  }
+	$arrAmount = array(0, 5, 10, 20, 40, 50);
+	$intMax = $arrAmount[$mytribe->fields['level']];
+	//Buying traps and agents
+	if (isset($_GET['action']) && $_GET['action'] == 'buy')
+	  {
+	    if (!isset($_POST['traps']) || !isset($_POST['agents']))
+	      {
+		error('Zapomnij o tym.');
+	      }
+	    $_POST['traps'] = intval($_POST['traps']);
+	    $_POST['agents'] = intval($_POST['agents']);
+	    if ($_POST['traps'] < 0 || $_POST['agents'] < 0)
+	      {
+		error('Zapomnij o tym.');
+	      }
+	    if ($_POST['traps'] == 0 && $_POST['agents'] == 0)
+	      {
+		error('Podaj co chcesz kupić.');
+	      }
+	    $intTraps = $_POST['traps'] + $mytribe->fields['traps'];
+	    $intAgents = $_POST['agents'] + $mytribe->fields['agents'];
+	    if ($intTraps > $intMax)
+	      {
+		error('Nie możesz dokupić tak wiele pułapek.');
+	      }
+	    if ($intAgents > $intMax)
+	      {
+		error('Nie możesz dokupić tak wielu strażników.');
+	      }
+	    $intCost = ($_POST['traps'] * 1000) + ($_POST['agents'] * 10000);
+	    if ($intCost > $mytribe->fields['credits'])
+	      {
+		error('Klan nie posiada takiej ilości złota.');
+	      }
+	    $mytribe->fields['traps'] = $intTraps;
+	    $mytribe->fields['agents'] = $intAgents;
+	    $mytribe->fields['credits'] -= $intCost;
+	    $db->Execute("UPDATE `tribes` SET `credits`=`credits`-".$intCost.", `traps`=".$intTraps.", `agents`=".$intAgents." WHERE `id`=".$mytribe->fields['id']);
+	    $strMessage = 'Dokupiłeś do klanu ';
+	    $strLog = $player->user.' dokupił do klanu ';
+	    if ($_POST['traps'] > 0)
+	      {
+		$strMessage .= $_POST['traps'].' pułapek';
+		$strLog .= $_POST['traps'].' pułapek';
+	      }
+	    if ($_POST['traps'] > 0 && $_POST['agents'] > 0)
+	      {
+		$strMessage .= ' oraz ';
+		$strLog .= ' oraz ';
+	      }
+	    if ($_POST['agents'] > 0)
+	      {
+		$strMessage .= $_POST['agents'].' strażników';
+		$strLog .= $_POST['agents'].' strażników';
+	      }
+	    $strMessage .= ' za '.$intCost.' sztuk złota.';
+	    $strLog .= ' za '.$intCost.' sztuk złota';
+	    message('success', $strMessage);
+	    /**
+	     * Send informations about buy traps and agents
+	     */
+	    $strDate = $db -> DBDate($newdate);
+	    $db -> Execute("INSERT INTO `log` (`owner`,`log`, `czas`, `type`) VALUES(".$mytribe -> fields['owner'].", '".$strLog."', ".$strDate.", 'C')");
+	    $objPerm = $db -> Execute("SELECT `player` FROM `tribe_perm` WHERE `tribe`=".$mytribe -> fields['id']." AND `army`=1");
+	    while (!$objPerm -> EOF)
+	      {
+		$db -> Execute("INSERT INTO `log` (`owner`,`log`, `czas`, `type`) VALUES(".$objPerm -> fields['player'].", '".$strLog."', ".$strDate.", 'C')");
+		$objPerm -> MoveNext();
+	      }
+	    $objPerm -> Close();
+	  }
+	$smarty->assign(array("Trapsinfo" => 'Tutaj możesz dokupić pułapki bądź strażników, którzy będą chronić klan przed złodziejami. Pułapki to jednorazowy wydatek 1000 sztuk złota za jedną, jednak po rozbrojeniu przez złodzieja, trzeba je kupić ponownie. Każdy strażnik kosztuje 10000 sztuk złota i pobiera codziennie pensję w wysokości 1000 sztuk złota z tym, że strażnicy są już na stałe przy klanie. Im więcej klan posiada pułapek oraz strażników, tym trudniej złodziejom dostać się do niego. Obecnie klan posiada <b>'.$mytribe->fields['traps'].'</b> pułapek (maksymalnie '.$intMax.') oraz <b>'.$mytribe->fields['agents'].'</b> strażników (maksymalnie '.$intMax.').',
+			      "Abuy" => 'Dokup',
+			      "Ttraps" => 'pułapek oraz',
+			      "Tagents" => 'strażników.'));
+      }
+    /**
      * Buy army and barricades to clan
      */
     elseif ($_GET['step2'] == 'wojsko') 
@@ -1116,6 +1202,9 @@ else
 	      }
 	  }
       }
+    /**
+     * Upgrading clan
+     */
     elseif ($_GET['step2'] == 'upgrade')
       {
 	if ($player->id != $mytribe -> fields['owner'])
