@@ -216,4 +216,5 @@ INSERT INTO `bonuses` (`id`, `name`, `desc`, `cost`, `levels`, `trigger`, `bonus
 (50, 'Zwinne ciało', 'Premia +2% do cechy Zręczność.', 5, 5, 'agility', 2, 'Hobbit;Elf;Gnom;', 'All;'),
 (51, 'Żelazne zdrowie', 'Premia +2% do cechy Wytrzymałość.', 5, 5, 'condition', 2, 'Hobbit;Krasnolud;Jaszczuroczłek;Człowiek;', 'All;');
 ALTER TABLE `tribes` ADD `traps` TINYINT( 3 ) NOT NULL DEFAULT '0',
-ADD `agents` TINYINT( 3 ) NOT NULL DEFAULT '0';
+ADD `agents` TINYINT( 3 ) NOT NULL DEFAULT '0',
+ADD `dagents` TINYINT( 3 ) NOT NULL DEFAULT '0';
