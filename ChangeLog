@@ -1,3 +1,8 @@
+2012-11-20  Bartek thindil Jasicki  <thindil@vallheru.net>
+
+	* FEATURE,tribes.php:
+	finished work on new thief actions
+
 2012-11-19  Bartek thindil Jasicki  <thindil@vallheru.net>
 
 	* UPDATE,install/db/update.sql: 

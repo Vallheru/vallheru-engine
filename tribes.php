@@ -9,7 +9,7 @@
  *   @author               : mori <ziniquel@users.sourceforge.net>
  *   @author               : eyescream <tduda@users.sourceforge.net>
  *   @version              : 1.7
- *   @since                : 19.11.2012
+ *   @since                : 20.11.2012
  *
  */
 
@@ -155,7 +155,7 @@ if (isset ($_GET['view']) && $_GET['view'] == 'view')
     if ($_GET['step'] == '') 
     {
 	checkvalue($_GET['id']);
-        $tribe = $db -> Execute("SELECT `id`, `name`, `owner`, `wygr`, `przeg`, `public_msg`, `www`, `logo`, `level`, `traps`, `agents` FROM `tribes` WHERE `id`=".$_GET['id']);
+        $tribe = $db -> Execute("SELECT `id`, `name`, `owner`, `wygr`, `przeg`, `public_msg`, `www`, `logo`, `level`, `traps`, `agents`, `dagents` FROM `tribes` WHERE `id`=".$_GET['id']);
         if (!$tribe -> fields['id']) 
         {
             error (NO_CLAN);
@@ -342,13 +342,99 @@ if (isset ($_GET['view']) && $_GET['view'] == 'view')
 		  }
 		$objAstralcrime -> Close();
 	      }
-	    if ($_GET['step'] == 'traps' && $objTribe->fields['traps'] == 0)
+	    $player->curskills(array('thievery'));
+	    $intStats = ($player->stats['agility'][2] + $player->stats['inteli'][2] + $player->skills['thievery'][1] + $player->checkbonus('spy'));
+	    $player->clearbless(array('inteli', 'agility'));
+	    /**
+	     * Add bonus from tools
+	     */
+	    if (stripos($player->equip[12][1], 'wytrychy') !== FALSE)
 	      {
-		error("Nie ma pułapek do rozbrojenia. (<a href=\"tribes.php?view=view&id=".$_GET['id']."\">Wróć</a>)");
+		$intStats += (($player->equip[12][2] / 100) * $intStats);
 	      }
-	    if ($_GET['step'] == 'agents' && ($objTribe->fields['agents'] - $objTribe->fields['dagents']) == 0)
+	    $blnAction = TRUE;
+	    $strDate = $db -> DBDate($newdate);
+	    if ($_GET['step'] == 'traps')
 	      {
-		error("Nie ma strażników do przekupienia. (<a href=\"tribes.php?view=view&id=".$_GET['id']."\">Wróć</a>)");
+		if ($objTribe->fields['traps'] == 0)
+		  {
+		    error("Nie ma pułapek do rozbrojenia. (<a href=\"tribes.php?view=view&id=".$_GET['id']."\">Wróć</a>)");
+		  }
+		if ($objTribe->fields['traps'] > $player->energy)
+		  {
+		    error("Nie masz wystarczającej ilości energii. (<a href=\"tribes.php?view=view&id=".$_GET['id']."\">Wróć</a>)");
+		  }
+		$db->Execute("UPDATE `players` SET `energy`=`energy`-".$objTribe->fields['traps']."  WHERE `id`=".$player->id);
+		$intGainexp = $objTribe->fields['traps'] * 3;
+		if (rand(1, 100) <= 5 || $intStats < $objTribe->fields['traps'])
+		  {
+		    $db->Execute("UPDATE `players` SET `miejsce`='Lochy' WHERE `id`=".$player->id);
+		    $db -> Execute("INSERT INTO `log` (`owner`, `log`, `czas`, `type`) VALUES(".$objTribe->fields['owner'].",'Dowódca straży klanowej melduje, że przyłapano <b><a href=view.php?view=".$player->id.">".$player->user."</a></b> ID:".$player->id." jak próbował rozbroić pułapki w około siedziby klanu i natychmiast przekazano go strażnikom miejskim.', ".$strDate.", 'T')");
+		    $blnAction = FALSE;
+		    $intGainexp = $objTribe->fields['traps'];
+		  }
+	      }
+	    if ($_GET['step'] == 'agents')
+	      {
+		$intAmount = ($objTribe->fields['agents'] - $objTribe->fields['dagents']);
+		if ($intAmount == 0)
+		  {
+		    error("Nie ma strażników do przekupienia. (<a href=\"tribes.php?view=view&id=".$_GET['id']."\">Wróć</a>)");
+		  }
+		$intCost = ($intAmount * 5000);
+		if ($player->credits < $intCost)
+		  {
+		    error("Nie masz tylu sztuk złota przy sobie. (<a href=\"tribes.php?view=view&id=".$_GET['id']."\">Wróć</a>)");
+		  }
+		$intGainexp = 0;
+		$db->Execute("UPDATE `players` SET `credits`=`credits`-".$intCost." WHERE `id`=".$player->id);
+		if (rand(1, 100) <= 5 || $intStats < $intAmount)
+		  {
+		    $db->Execute("UPDATE `players` SET `miejsce`='Lochy' WHERE `id`=".$player->id);
+		    $db -> Execute("INSERT INTO `log` (`owner`, `log`, `czas`, `type`) VALUES(".$objTribe->fields['owner'].",'Dowódca straży klanowej melduje, że przyłapano <b><a href=view.php?view=".$player->id.">".$player->user."</a></b> ID:".$player->id." jak próbował przekupić strażników i natychmiast przekazano go strażnikom miejskim.', ".$strDate.", 'T')");
+		    $blnAction = FALSE;
+		  }
+	      }
+	    if ($_GET['step'] == 'traps' || $_GET['step'] == 'agents')
+	      {
+		if ($blnAction)
+		  {
+		    if (stripos($player->equip[12][1], 'wytrychy') !== FALSE)
+		      {
+			$player->equip[12][6] -= $intAmount;
+			if ($player->equip[12][6] <= 0)
+			  {
+			    $db->Execute("DELETE FROM `equipment` WHERE `id`=".$player->equip[12][0]);
+			  }
+			else
+			  {
+			    $db->Execute("UPDATE `equipment` SET `wt`=`wt`-1 WHERE `id`=".$player->equip[12][0]);
+			  }
+		      }
+		  }
+		else
+		  {
+		    if (stripos($player->equip[12][1], 'wytrychy') !== FALSE)
+		      {
+			$db->Execute("DELETE FROM `equipment` WHERE `id`=".$player->equip[12][0]);
+		      }
+		    $objTool = $db->Execute("SELECT `id` FROM `equipment` WHERE `owner`=".$player->id." AND `type`='E' AND `status`='U' AND `name` LIKE 'Wytrychy%'");
+		    if ($objTool->fields['id'])
+		      {
+			$intRoll = rand(1, 100);
+			if ($intRoll < 50)
+			  {
+			    $db->Execute("DELETE FROM `equipment` WHERE `owner`=".$player->id." AND `type`='E' AND `status`='U'");
+			  }
+		      }
+		    $objTool->Close();
+		  }
+		if ($intGainexp > 0)
+		  {
+		    $player->checkexp(array('agility' => ceil($intGainexp / 3),
+					    'inteli' => ceil($intGainexp / 3)), $player->id, 'stats');
+		    $player->checkexp(array('thievery' => ceil($intGainexp / 3)), $player->id, 'skills');
+		  }
 	      }
 	    if ($_GET['step'] == 'espionage' || $_GET['step'] == 'sabotage')
 	      {
@@ -362,19 +448,7 @@ if (isset ($_GET['view']) && $_GET['view'] == 'view')
 		    $objTest->Close();
 		  }
 		$db->Execute("UPDATE `players` SET `astralcrime`='N' WHERE `id`=".$player->id);
-		$player->curskills(array('thievery'));
-		$player->clearbless(array('inteli', 'agility'));
-		$intStats = ($player->stats['agility'][2] + $player->stats['inteli'][2] + $player->skills['thievery'][1] + $player->checkbonus('spy'));
-		/**
-		 * Add bonus from tools
-		 */
-		if (stripos($player->equip[12][1], 'wytrychy') !== FALSE)
-		  {
-		    $intStats += (($player->equip[12][2] / 100) * $intStats);
-		  }
 		$objMembers = $db->Execute("SELECT `id` FROM `players` WHERE `tribe`=".$_GET['id']);
-		$blnAction = TRUE;
-		$strDate = $db -> DBDate($newdate);
 		$intGainexp = 0;
 		$intAmount = 0;
 		while(!$objMembers->EOF)
@@ -482,6 +556,44 @@ if (isset ($_GET['view']) && $_GET['view'] == 'view')
 	      }
 	    
 	    $objTribe -> Close();
+	  }
+
+	//Removing traps
+	elseif ($_GET['step'] == 'traps')
+	  {
+	    if ($blnAction)
+	      {
+		$db->Execute("UPDATE `tribes` SET `traps`=0 WHERE `id`=".$objTribe->fields['id']);
+		$strMessage = 'Po cichu, nie wzbudzając niczyich podejrzeń, rozbroiłeś pułapki wokół siedziby klanu. Teraz powinno być nieco łatwiej dostać się do środka.<br />Zdobyłeś '.$intGainexp.' punktów doświadczenia.';
+	      }
+	    else
+	      {
+		$intCost = $player->skills['thievery'][1] * 1000;
+		$db -> Execute("INSERT INTO `jail` (`prisoner`, `verdict`, `duration`, `cost`, `data`) VALUES(".$player -> id.",'Próba rozbrojenia pułapek klanu', 7, ".$intCost.", '".$data."')");   
+		$db -> Execute("INSERT INTO `log` (`owner`, `log`, `czas`, `type`) VALUES(".$player -> id.",'Zostałeś wtrącony do więzienia na 1 dzień za próbę rozbrojenia pułapek klanu. Kaucja wynosi: ".$intCost.".', ".$strDate.", 'T')");
+		$strMessage = "Próbowałeś rozbroić pułapki, niestety jedna z nich zadziałała! I tak oto znalazłeś się w lochach.";
+	      }
+	    $objTribe -> Close();
+	    error($strMessage);
+	  }
+
+	//Bribe agents
+	elseif ($_GET['step'] == 'agents')
+	  {
+	    if ($blnAction)
+	      {
+		$db->Execute("UPDATE `tribes` SET `dagents`=".$objTribe->fields['agents']." WHERE `id`=".$objTribe->fields['id']);
+		$strMessage = 'Krążąc wśród strażników, przekonywałeś ich przez jakiś czas, przy pomocy złota, że nie powinni zwracać uwagi na podejrzane hałasy w najbliższej przyszłości. Wydaje się, że całkowicie zgodzili się z tobą.';
+	      }
+	    else
+	      {
+		$intCost = $player->skills['thievery'][1] * 1000;
+		$db -> Execute("INSERT INTO `jail` (`prisoner`, `verdict`, `duration`, `cost`, `data`) VALUES(".$player -> id.",'Próba przekupienia strażników klanu', 7, ".$intCost.", '".$data."')");   
+		$db -> Execute("INSERT INTO `log` (`owner`, `log`, `czas`, `type`) VALUES(".$player -> id.",'Zostałeś wtrącony do więzienia na 1 dzień za próbę przekupienia strażników klanu. Kaucja wynosi: ".$intCost.".', ".$strDate.", 'T')");
+		$strMessage = "Próbowałeś przekupić strażników, niestety jeden z nich okazał się odporny na twoje argumenty! I tak oto znalazłeś się w lochach.";
+	      }
+	    $objTribe -> Close();
+	    error($strMessage);
 	  }
 
 	//Espionage of clan
