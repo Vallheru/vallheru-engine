@@ -12,6 +12,10 @@
     <div class="forms2">{$Email}: <input type="text" name="email" /></div>
     <div class="forms2">{$Confemail} <input type="text" name="vemail" /></div>
     <div class="forms2">{$Password}: <input type="password" name="pass" /></div>
+    <div class="forms3">{$Gtype}:</div>
+    <div class="forms3"><input type="radio" name="gtype" value="T" checked="checked" />{$Gtext}</div>
+    <div class="forms3"><input type="radio" name="gtype" value="G" />{$Ggraphic}</div>
+    <div class="forms2"><em>{$Ginfo}</em></div>
     <div class="forms2">{$Referralid} <input type="text" name="ref" readonly="readonly" value="{$Referal}" /></div>
     <div class="forms2"><em>{$Ifnoid}</em></div>
     <div class="forms2"><input type="submit" value="{$Register2}" /></div>

@@ -151,6 +151,12 @@ div.forms2 {
   width: 30%;
 }
 
+div.forms3 {
+  margin-bottom: 5px;
+  margin-left: 30%;
+  width: 30%;
+}
+
 input:hover, select:hover {
   background: #7B1D1D;
 }

@@ -1,3 +1,8 @@
+2012-11-21  Bartek thindil Jasicki  <thindil@vallheru.net>
+
+	* FEATURE,languages/pl/register.php, templates/register.tpl, register.php, aktywacja.php, main.css:
+	added option to select game style
+
 2012-11-20  Bartek thindil Jasicki  <thindil@vallheru.net>
 
 	* FEATURE,tribes.php:

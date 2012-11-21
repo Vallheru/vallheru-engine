@@ -6,8 +6,8 @@
  *   @name                 : aktywacja.php                            
  *   @copyright            : (C) 2004,2005,2006,2011,2012 Vallheru Team based on Gamers-Fusion ver 2.5
  *   @author               : thindil <thindil@vallheru.net>
- *   @version              : 1.6
- *   @since                : 10.06.2012
+ *   @version              : 1.7
+ *   @since                : 21.11.2012
  *
  */
 
@@ -36,29 +36,7 @@ $smarty = new Smarty;
 
 $smarty->compile_check = true;
 
-/**
-* Check avaible languages
-*/    
-$arrLanguage = scandir('languages/', 1);
-$arrLanguage = array_diff($arrLanguage, array(".", "..", "index.htm"));
-
-/**
-* Get the localization for game
-*/
-$strLanguage = $_SERVER['HTTP_ACCEPT_LANGUAGE'];
-foreach ($arrLanguage as $strTrans)
-{
-    if (strpos($strLanguage, $strTrans) === 0)
-      {
-	$strTranlsation = $strTrans;
-	break;
-      }
-}
-if (!isset($strTranslation))
-{
-    $strTranslation = 'pl';
-}
-require_once("languages/".$strTranslation."/aktywacja.php");
+require_once("languages/".$lang."/aktywacja.php");
 
 $smarty -> assign(array("Gamename" => $gamename, 
                         "Meta" => '',
@@ -73,19 +51,19 @@ if (isset ($_GET['kod']))
         exit;
     }
     $aktiv = $db -> Execute("SELECT * FROM aktywacja WHERE aktyw=".$_GET['kod']);
-    if (!isset($aktiv -> fields['lang']))
-    {
-        require_once("languages/".$strTranslation."/aktywacja.php");
-    }
-        else
-    {
-        require_once("languages/".$aktiv -> fields['lang']."/aktywacja.php");
-    }
     while (!$aktiv -> EOF) 
     {
         if ($_GET['kod'] == $aktiv -> fields['aktyw']) 
-        {
-            $db -> Execute("INSERT INTO `players` (`user`, `email`, `pass`, `refs`, `ip`) VALUES('".$aktiv -> fields['user']."','".$aktiv -> fields['email']."','".$aktiv -> fields['pass']."',".$aktiv -> fields['refs'].", '".$aktiv -> fields['ip']."')");
+	  {
+	    if ($aktiv->fields['gtype'] == 'T')
+	      {
+		$strSettings = 'style:light.css;graphic:;graphbar:N;forumcats:All;autodrink:N;rinvites:Y;battlelog:N;';
+	      }
+	    else
+	      {
+		$strStettings = 'style:light.css;graphic:layout1;graphbar:N;forumcats:All;autodrink:N;rinvites:Y;battlelog:N;';
+	      }
+            $db -> Execute("INSERT INTO `players` (`user`, `email`, `pass`, `refs`, `ip`, `settings`) VALUES('".$aktiv -> fields['user']."','".$aktiv -> fields['email']."','".$aktiv -> fields['pass']."',".$aktiv -> fields['refs'].", '".$aktiv -> fields['ip']."', '".$strSettings."')");
             $db -> Execute("DELETE FROM `aktywacja` WHERE `aktyw`=".$_GET['kod']);
             
             $time = date("H:i:s");
