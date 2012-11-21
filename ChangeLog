@@ -1,5 +1,7 @@
 2012-11-21  Bartek thindil Jasicki  <thindil@vallheru.net>
 
+	* UPDATE,install/db/update.sql: 
+	updated database
 	* FEATURE,languages/pl/register.php, templates/register.tpl, register.php, aktywacja.php, main.css:
 	added option to select game style
 

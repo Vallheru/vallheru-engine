@@ -218,3 +218,5 @@ INSERT INTO `bonuses` (`id`, `name`, `desc`, `cost`, `levels`, `trigger`, `bonus
 ALTER TABLE `tribes` ADD `traps` TINYINT( 3 ) NOT NULL DEFAULT '0',
 ADD `agents` TINYINT( 3 ) NOT NULL DEFAULT '0',
 ADD `dagents` TINYINT( 3 ) NOT NULL DEFAULT '0';
+ALTER TABLE `aktywacja` DROP `lang`;
+ALTER TABLE `aktywacja` ADD `gtype` VARCHAR( 1 ) NOT NULL;
