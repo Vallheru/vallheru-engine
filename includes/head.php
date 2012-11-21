@@ -711,6 +711,17 @@ $smarty -> assign (array ("Time" => $time,
 			  "Links" => $arrLinks,
 			  "Ownlinks" => count($arrLinks['own'])));
 
+//Player avatar
+$plik = 'avatars/'.$player->avatar;
+if (is_file($plik)) 
+{
+    require_once('includes/avatars.php');
+    $arrImage = scaleavatar($plik);
+    $smarty->assign(array('Avatar' => $plik,
+			  'Awidth' => $arrImage[0],
+			  'Aheight' => $arrImage[1]));
+}
+
 $smarty -> display ('header.tpl');
 
 /**

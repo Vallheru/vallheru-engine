@@ -25,6 +25,13 @@
                         <b>{$Nstatistics}</b>
                     </td>
                 </tr>
+		{if $Avatar != ""}
+		<tr>
+		    <td align="center">
+		      <img src="{$Avatar}" width="{$Awidth}" height="{$Aheight}" />
+		    </td>
+		</tr>
+		{/if}
                 <tr>
                     <td>
                         <center><b><u>{$Name}</u></b> ({$Id})</center><br />

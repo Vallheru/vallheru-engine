@@ -1,5 +1,7 @@
 2012-11-21  Bartek thindil Jasicki  <thindil@vallheru.net>
 
+	* FEATURE,templates/header.tpl, includes/head.php: 
+	added player avatar to text style
 	* FEATURE,languages/pl/account.php, includes/head.php, templates/layout1/header.tpl, templates/header.tpl: 
 	added energy bar
 	* UPDATE,install/db/update.sql: 
