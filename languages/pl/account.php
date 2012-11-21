@@ -4,10 +4,10 @@
  *   Polish language for account.php
  *
  *   @name                 : account.php                            
- *   @copyright            : (C) 2004,2005,2006,2011 Vallheru Team based on Gamers-Fusion ver 2.5
- *   @author               : thindil <thindil@tuxfamily.org>
- *   @version              : 1.4
- *   @since                : 21.11.2011
+ *   @copyright            : (C) 2004,2005,2006,2011,2012 Vallheru Team based on Gamers-Fusion ver 2.5
+ *   @author               : thindil <thindil@vallheru.net>
+ *   @version              : 1.7
+ *   @since                : 21.11.2012
  *
  */
 
@@ -100,7 +100,7 @@ if (isset($_GET['view']))
       {
 	define("T_OPTIONS", "Tutaj możesz ustawić dodatkowe opcje twojego konta.");
 	define("T_BATTLELOG", "Wysyłanie przebiegu walki na pocztę");
-	define("T_GRAPHBAR", "Wyświetlanie graficznych pasków życia/zdrowia/doświadczenia (dotyczy tylko trybu tekstowego).");
+	define("T_GRAPHBAR", "Wyświetlanie graficznych pasków życia/zdrowia/energii (dotyczy tylko trybu tekstowego).");
 	define("A_NEXT", "Dalej");
 	define("A_SAVED", "Dodatkowe opcje zostały zapisane. <a href=\"account.php\">Odśwież</a>");
       }

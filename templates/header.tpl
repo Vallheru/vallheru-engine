@@ -40,7 +40,12 @@
 			      <div class="subvial" style="width: {$Vial3}%; background: blue;"></div>
 			    </div>
                         {/if}
-                        <b>{$Energypts}:</b> {$Energy}/{$Maxenergy}<br /><br />
+                        <b>{$Energypts}:</b> {$Energy}/{$Maxenergy}<br />
+			{if $Graphbar == "Y"}
+			    <div class="vial" title="{$Energypts}: {$Energy}/{$Maxenergy} ({$Energyper}%)">
+			      <div class="subvial" style="width: {$Vial4}%; background: green;"></div>
+			    </div>
+                        {/if}<br />
                         <b>{$Goldinhand}:</b> {$Gold}<br />
                         <b>{$Goldinbank}:</b> {$Bank}<br />
                         <b>{$Hmithril}:</b> {$Mithril}<br />

@@ -7,7 +7,7 @@
  *   @copyright            : (C) 2004,2005,2006,2007,2011,2012 Vallheru Team based on Gamers-Fusion ver 2.5
  *   @author               : thindil <thindil@vallheru.net>
  *   @version              : 1.7
- *   @since                : 14.11.2012
+ *   @since                : 21.11.2012
  *
  */
 
@@ -333,12 +333,22 @@ if ($player->settings['graphic'] != '' || $player->settings['graphbar'] == 'Y')
     {
         $intPermana = 100;
     }
+    $intPerenergy = (($player->energy / $player->max_energy) * 100);
+    $intPerenergy = round($intPerenergy, '0');
+    $strEnergy = $intPerenergy;
+    if ($intPerenergy > 100)
+      {
+	$intPerenergy = 100;
+      }
     $smarty -> assign(array("Barsize" => $intPerhealth,
                             "Healthper" => $strHealth,
                             "Barsize2" => $intPermana,
                             "Manaper" => $strMana,
+			    "Barsize3" => $intPerenergy,
+			    "Energyper" => $strEnergy,
                             "Vial2" => $intPerhealth,
-                            "Vial3" => $intPermana));
+                            "Vial3" => $intPermana,
+			    "Vial4" => $intPerenergy));
 }
 
 $arrFilename = explode("/", $_SERVER['PHP_SELF']);

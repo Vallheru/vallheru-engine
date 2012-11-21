@@ -21,14 +21,16 @@
 	{/if}<br />
       <b>{$Name} ({$Id})</b></a>
     </div>
-    <div style="max-width: 150px; float:left; margin-left:10px;">
+    <div style="width:150px; max-width: 150px; float:left; margin-left:10px; margin-top:10px;">
       <div class="vial" title="{$Healthpts}: {$Health}/{$Maxhealth} ({$Healthper}%)">
 	  <div class="subvial" style="width: {$Vial2}%; background: red;"></div>
       </div>
       <div class="vial" title="{$Manapts}: {$Mana} ({$Manaper}%)">
 	  <div class="subvial" style="width: {$Vial3}%; background: blue;"></div>
       </div>
-      <b>{$Energypts}:</b> {$Energy}/{$Maxenergy}
+      <div class="vial" title="{$Energypts}: {$Energy}/{$Maxenergy} ({$Energyper}%)">
+	  <div class="subvial" style="width: {$Vial4}%; background: green;"></div>
+      </div>
     </div>
     <div style="width: 12%; float: left; margin-left: 20px;">
        <div style="margin-top: 10px;"><img src="templates/layout1/images/coins.png" /> <b>{$Goldinhand}:</b> {$Gold}</div>
