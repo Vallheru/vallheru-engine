@@ -1,3 +1,8 @@
+2012-11-22  Bartek thindil Jasicki  <thindil@vallheru.net>
+
+	* UPDATE,includes/head.php, includes/avatars.php:
+	better scale avatars
+
 2012-11-21  Bartek thindil Jasicki  <thindil@vallheru.net>
 
 	* FEATURE,templates/header.tpl, includes/head.php: 

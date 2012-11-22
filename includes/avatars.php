@@ -4,10 +4,10 @@
  *   Function to scale avatars
  *
  *   @name                 : avatars.php                            
- *   @copyright            : (C) 2006,2011 Vallheru Team based on Gamers-Fusion ver 2.5
- *   @author               : thindil <thindil@tuxfamily.org>
- *   @version              : 1.4
- *   @since                : 14.09.2011
+ *   @copyright            : (C) 2006,2011,2012 Vallheru Team based on Gamers-Fusion ver 2.5
+ *   @author               : thindil <thindil@vallheru.net>
+ *   @version              : 1.7
+ *   @since                : 22.11.2011
  *
  */
 
@@ -33,14 +33,14 @@
 /**
  * Function to scale avatars
  */
-function scaleavatar($strFilename)
+function scaleavatar($strFilename, $intMaxWidth = 400, $intMaxHeight = 200)
 {
     $arrImageparams = getimagesize($strFilename);
     $intWidth = $arrImageparams[0];
     $intHeight = $arrImageparams[1];
-    if ($intWidth > 400 || $intHeight > 200)
+    if ($intWidth > $intMaxWidth || $intHeight > $intMaxHeight)
       {
-	if ($intWidth - 400 > $intHeight - 200)
+	if ($intWidth - $intMaxWidth > $intHeight - $intMaxHeight)
 	  {
 	    $fltPercent = $intWidth / 100;
 	  }
@@ -48,15 +48,15 @@ function scaleavatar($strFilename)
 	  {
 	    $fltPercent = $intHeight / 100;
 	  }
-	if ($arrImageparams[0] > 400)
+	if ($arrImageparams[0] > $intMaxWidth)
 	  {
-	    $intWidth = 400;
+	    $intWidth = $intMaxWidth;
 	    $fltPercent2 = ($arrImageparams[0] - $intWidth) / $fltPercent;
 	    $intHeight = ceil($intHeight - ($intHeight * ($fltPercent2 / 100)));
 	  }
-	if ($arrImageparams[1] > 200)
+	if ($arrImageparams[1] > $intMaxHeight)
 	  {
-	    $intHeight = 200;
+	    $intHeight = $intMaxHeight;
 	    $fltPercent2 = ($arrImageparams[1] - $intHeight) / $fltPercent;
 	    $intWidth = ceil($intWidth - ($intWidth * ($fltPercent2 / 100)));
 	  }
