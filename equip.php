@@ -696,7 +696,7 @@ if ($player->equip[2][0])
    {
      $smarty -> assign ("Helmet", "<b>".HELMET.":</b> ".EMPTY_SLOT."<br />\n");
    }
-
+//Cape
 if ($player->equip[3][0]) 
   {
     $agility = '';
@@ -720,7 +720,7 @@ elseif ($player->equip[8][0])
    {
      $smarty -> assign ("Armor", "<b>".ARMOR.":</b> ".EMPTY_SLOT."<br />\n");
    }
-
+//Shield
 if ($player->equip[5][0]) 
 {
     if ($player->equip[5][5] < 0) 
@@ -743,7 +743,7 @@ if ($player->equip[5][0])
 {
     $smarty -> assign ("Shield", "<b>".SHIELD.":</b> ".EMPTY_SLOT."<br />\n");
 }
-
+//Legs
 if ($player->equip[4][0]) 
 {
     if ($player->equip[4][5] < 0) 
@@ -818,6 +818,77 @@ else
     $smarty->assign("Tool", "<b>Narzędzie:</b> brak<br />");
   }
 
+/**
+ * Use pet in battles
+ */
+if (isset($_GET['usep']))
+  {
+    checkvalue($_GET['usep']);
+    $objPet = $db->Execute("SELECT `id`, `status`, `active` FROM `core` WHERE `owner`=".$player->id." AND `id`=".$_GET['usep']);
+    if (!$objPet->fields['id'])
+      {
+	error('Nie ma takiego chowańca.');
+      }
+    $blnValid = TRUE;
+    if ($objPet->fields['status'] == 'Dead')
+      {
+	message('error', 'Nie możesz użyć tego chowańca w walce, ponieważ jest martwy.');
+	$blnValid = FALSE;
+      }
+    if ($objPet->fields['active'] == 'Y')
+      {
+	message('error', 'Nie możesz użyć tego chowańca w walce, ponieważ walczy on na arenie chowańców.');
+	$blnValid = FALSE;
+      }
+    if ($blnValid)
+      {
+	if ($player->pet)
+	  {
+	    $db->Execute("UPDATE `core` SET `active`='N' WHERE `id`=".$player->pet);
+	  }
+	$db->Execute("UPDATE `core` SET `active`='B' WHERE `id`=".$_GET['usep']);
+	$player->pet = $_GET['usep'];
+	message('success', 'Wybrałeś chowańca do walki.');
+      }
+  }
+
+/**
+ * Remove pet from battles
+ */
+if (isset($_GET['release2']))
+  {
+    checkvalue($_GET['release2']);
+    $objPet = $db->Execute("SELECT `id` FROM `core` WHERE `owner`=".$player->id." AND `id`=".$_GET['release2']." AND `active`='B'");
+    if (!$objPet->fields['id'])
+      {
+	error('Nie ma takiego chowańca.');
+      }
+    $db->Execute("UPDATE `core` SET `active`='N' WHERE `id`=".$_GET['release2']);
+    $player->pet = 0;
+    message('success', 'Zwolniłeś chowańca z walk.');
+  }
+
+/**
+ * Used pet
+ */
+if ($player->pet)
+  {
+    $objPet = $db->Execute("SELECT `name`, `power`, `defense`, `corename` FROM `core` WHERE `id`=".$player->pet);
+    if ($objPet->fields['corename'] != '')
+      {
+	$strName = $objPet->fields['corename'];
+      }
+    else
+      {
+	$strName = $objPet->fields['name'];
+      }
+    $smarty->assign("Pet", "<b>Chowaniec:</b> ".$strName." (Siła: ".$objPet->fields['power'].") (Obrona: ".$objPet->fields['defense'].") [<a href=\"equip.php?release2=".$player->pet."\">zwolnij</a>]<br />");
+  }
+ else
+   {
+     $smarty->assign("Pet", "<b>Chowaniec:</b> brak<br />");
+   }
+
 if ($player->equip[3][0] || $player->equip[0][0] || $player->equip[4][0] || $player->equip[2][0] || $player->equip[5][0] || $player->equip[12][0]) 
 {
     $smarty -> assign ("Repairequip", "[<a href=\"equip.php?napraw_uzywane\">".A_REPAIR2."</a>] <br /><input type=\"submit\" value=\"Napraw wybrane\" /><br />\n");
@@ -886,6 +957,46 @@ if (isset($_GET['release']))
     $objPet->Close();
     $db->Execute("DELETE FROM `core` WHERE `id`=".$_GET['release']);
     message("success", "Uwolniłeś chowańca.");
+  }
+
+/**
+ * Heal pet
+ */
+if (isset($_GET['heal']))
+  {
+    checkvalue($_GET['heal']);
+    $objPet = $db->Execute("SELECT `id`, `status`, `power`, `defense` FROM `core` WHERE `owner`=".$player->id." AND `id`=".$_GET['heal']);
+    if (!$objPet->fields['id'])
+      {
+	error('Nie ma takiego chowańca.');
+      }
+    $blnValid = TRUE;
+    if ($objPet->fields['status'] != 'Dead')
+      {
+	message('error', 'Ten chowaniec nie potrzebuje leczenia');
+	$blnValid = FALSE;
+      }
+    $intCost = ($objPet->fields['power'] + $objPet->fields['defense']) * 5;
+    $intMith = floor($intCost / 200);
+    if ($player->credits < $intCost)
+      {
+	message('error', 'Nie masz tylu sztuk złota aby uleczyć tego chowańca.');
+	$blnValid = FALSE;
+      }
+    if ($player->platinum < $intMith)
+      {
+	message('error', 'Nie masz tylu sztuk mithrilu aby uleczyć tego chowańca.');
+	$blnValid = FALSE;
+      }
+    if ($blnValid)
+      {
+	$player->credits -= $intCost;
+	$player->platinum -= $intMith;
+	$db->Execute("UPDATE `players` SET `credits`=`credits`-".$intCost.", `platinum`=`platinum`-".$intMith." WHERE `id`=".$player->id);
+	$db->Execute("UPDATE `core` SET `status`='Alive' WHERE `id`=".$_GET['heal']);
+	message('success', 'Uleczyłeś wybranego chowańca.');
+      }
+    $objPet->Close();
   }
 
 /**
@@ -1549,7 +1660,7 @@ $mik -> Close();
 /**
  * Show pets
  */
-$arrPets = $db->GetAll("SELECT `id`, `name`, `power`, `defense`, `gender`, `corename` FROM `core` WHERE `owner`=".$player->id);
+$arrPets = $db->GetAll("SELECT `id`, `name`, `power`, `defense`, `gender`, `corename`, `status` FROM `core` WHERE `owner`=".$player->id." AND `active`='N'");
 if ($arrPets)
   {
     foreach ($arrPets as &$arrPet)
@@ -1566,10 +1677,22 @@ if ($arrPets)
 	  {
 	    $arrPet['name'] = $arrPet['corename'].' ('.$arrPet['name'].')';
 	  }
+	if ($arrPet['status'] != 'Alive')
+	  {
+	    $intGold = ($arrPet['power'] + $arrPet['defense']) * 5;
+	    $intMith = floor($intGold / 200);
+	    $arrPet['heal'] = 'za '.$intGold.' złota i '.$intMith.' mithrilu';
+	  }
+	else
+	  {
+	    $arrPet['heal'] = '';
+	  }
       }
     $smarty->assign(array("Pets1" => 1,
 			  "Pets" => $arrPets,
 			  "Tpets" => 'Posiadane chowańce',
+			  "Pheal" => 'ulecz',
+			  "Puse" => 'użyj',
 			  "Pname" => 'Imię:',
 			  "Pgender" => 'Płeć:',
 			  "Ppower" => 'Siła:',

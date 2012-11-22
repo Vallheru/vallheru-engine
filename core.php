@@ -8,7 +8,7 @@
  *   @author               : thindil <thindil@vallheru.net>
  *   @author               : eyescream <tduda@users.sourceforge.net>
  *   @version              : 1.7
- *   @since                : 14.11.2012
+ *   @since                : 22.11.2012
  *
  */
 
@@ -472,7 +472,7 @@ if (isset($_GET['view']))
 		  {
 		    $strCorename = $active -> fields['corename'];
 		  }
-		$db -> Execute("UPDATE `core` SET `active`='N' WHERE `owner`=".$player -> id);
+		$db -> Execute("UPDATE `core` SET `active`='N' WHERE `owner`=".$player -> id." AND `active`='Y'");
 		$db -> Execute("UPDATE `core` SET `active`='T' WHERE `id`=".$_GET['activate']);
 		error (YOU_ACTIV." <b>".$strCorename." </b> (<a href=\"core.php?view=mycores\">".A_REFRESH."</a>).");
 	      }

@@ -7,7 +7,7 @@
  *   @copyright            : (C) 2004,2005,2006,2007,2011,2012 Vallheru Team based on Gamers-Fusion ver 2.5
  *   @author               : thindil <thindil@vallheru.net>
  *   @version              : 1.7
- *   @since                : 16.11.2012
+ *   @since                : 22.11.2012
  *
  */
 
@@ -102,6 +102,10 @@ class Player
      * Player max mana
      */
     var $maxmana;
+    /**
+     * Player battle pet
+     */
+    var $pet;
 /**
 * Class constructor - get data from database and write it to variables
 */
@@ -203,6 +207,16 @@ class Player
 	$this->curstats();
 	$this->skills['perception'][1] += $this->checkbonus('seeker');
 	$stats -> Close();
+	$objPet = $db->Execute("SELECT `id` FROM `core` WHERE `owner`=".$this->id." AND `active`='B'");
+	if (!$objPet->fields['id'])
+	  {
+	    $this->pet = 0;
+	  }
+	else
+	  {
+	    $this->pet = $objPet->fields['id'];
+	  }
+	$objPet->Close();
     }
 
     /**

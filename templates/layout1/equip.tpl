@@ -12,6 +12,7 @@
 {$Ring1}
 {$Ring2}
 {$Tool}
+{$Pet}
 {$Repairequip}
 </form><br />
 
@@ -89,7 +90,7 @@
     <div><br />
         <form method="POST" action="equip.php?releasefew" style="display: inline;" name="pets">
 	    {foreach $Pets as $pet}
-	        <input type="checkbox" name="{$pet.id}" id="list" /><b>{$Pname}</b> {$pet.name} <b>{$Pgender}</b> {$pet.gender} <b>{$Ppower}</b> {$pet.power} <b>{$Pdefense}</b> {$pet.defense} [ <a href="equip.php?name={$pet.id}">{$Pchname}</a> | <a href="equip.php?release={$pet.id}">{$Prelease}</a> ]<br />
+	        <input type="checkbox" name="{$pet.id}" id="list" /><b>{$Pname}</b> {$pet.name} <b>{$Pgender}</b> {$pet.gender} <b>{$Ppower}</b> {$pet.power} <b>{$Pdefense}</b> {$pet.defense} [ <a href="equip.php?name={$pet.id}">{$Pchname}</a> | <a href="equip.php?release={$pet.id}">{$Prelease}</a>{if $pet.heal != ''} | <a href="equip.php?heal={$pet.id}">{$Pheal} {$pet.heal}</a>{else} | <a href="equip.php?usep={$pet.id}">{$Puse}</a>{/if} ]<br />
             {/foreach}
 	    <input type="button" value="{$Checkall}" onClick="checkall(document.pets.list);" />
 	    <input type="button" value="{$Uncheckall}" onClick="uncheckall(document.pets.list);" />
