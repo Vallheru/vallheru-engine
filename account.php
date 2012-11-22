@@ -6,8 +6,8 @@
  *   @name                 : account.php                            
  *   @copyright            : (C) 2004,2005,2006,2007,2011,2012 Vallheru Team based on Gamers-Fusion ver 2.5
  *   @author               : thindil <thindil@vallheru.net>
- *   @version              : 1.6
- *   @since                : 04.10.2012
+ *   @version              : 1.7
+ *   @since                : 22.11.2012
  *
  */
 
@@ -373,6 +373,15 @@ if (isset($_GET['view']))
 	  {
 	    $strChecked11 = 'checked="checked"';
 	  }
+	//Show avatar
+	if (!isset($player->settings['avatar']) || $player->settings['avatar'] == 'N')
+	  {
+	    $strChecked12 = '';
+	  }
+	else
+	  {
+	    $strChecked12 = 'checked="checked"';
+	  }
 	$smarty -> assign(array("Toptions" => T_OPTIONS,
 				"Tbattlelog" => T_BATTLELOG,
 				"Tgraphbar" => T_GRAPHBAR,
@@ -386,6 +395,7 @@ if (isset($_GET['view']))
 				"Tautoall" => "Do regeneracji punktów życia oraz magii",
 				"Trinvites" => "Zablokuj zaproszenia do karczmy",
 				"Toldchat" => "Stary układ karczmy",
+				"Tavatar" => "Wyświetlanie awatara postaci w trybie tekstowym",
 				"Checked" => $strChecked,
 				"Checked3" => $strChecked3,
 				"Checked4" => $strChecked4,
@@ -396,7 +406,8 @@ if (isset($_GET['view']))
 				"Checked9" => $strChecked9,
 				"Checked2" => $strChecked2,
 				"Checked10" => $strChecked10,
-				"Checked11" => $strChecked11));
+				"Checked11" => $strChecked11,
+				"Checked12" => $strChecked12));
 	if (isset($_GET['step']) && $_GET['step'] == 'options')
 	  {
 	    if (isset($_POST['battlelog']))
@@ -453,7 +464,15 @@ if (isset($_GET['view']))
 	      {
 		$player->settings['oldchat'] = 'N';
 	      }
-	    $smarty -> assign("Message", A_SAVED);
+	    if (isset($_POST['avatar']))
+	      {
+		$player->settings['avatar'] = 'Y';
+	      }
+	    else
+	      {
+		$player->settings['avatar'] = 'N';
+	      }
+	    message('success', A_SAVED);
 	  }
       }
 

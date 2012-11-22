@@ -687,7 +687,7 @@ $smarty -> assign (array ("Time" => $time,
                           "Graphbar" => $player->settings['graphbar'],
                           "Gamename" => $gamename,
 			  "Gameadress" => $gameadress,
-			  "Avatar" => $player->avatar,
+			  "Avatar" => '',
                           "Healthpts" => HEALTH_PTS,
                           "Manapts" => MANA_PTS,
                           "Energypts" => ENERGY_PTS,
@@ -712,15 +712,18 @@ $smarty -> assign (array ("Time" => $time,
 			  "Ownlinks" => count($arrLinks['own'])));
 
 //Player avatar
-$plik = 'avatars/'.$player->avatar;
-if (is_file($plik)) 
-{
-    require_once('includes/avatars.php');
-    $arrImage = scaleavatar($plik, 200, 100);
-    $smarty->assign(array('Avatar' => $plik,
-			  'Awidth' => $arrImage[0],
-			  'Aheight' => $arrImage[1]));
-}
+if ($player->settings['avatar'] == 'Y' && $player->settings['graphic'] == '')
+  {
+    $plik = 'avatars/'.$player->avatar;
+    if (is_file($plik)) 
+      {
+	require_once('includes/avatars.php');
+	$arrImage = scaleavatar($plik, 200, 100);
+	$smarty->assign(array('Avatar' => $plik,
+			      'Awidth' => $arrImage[0],
+			      'Aheight' => $arrImage[1]));
+      }
+  }
 
 $smarty -> display ('header.tpl');
 

@@ -1,5 +1,7 @@
 2012-11-22  Bartek thindil Jasicki  <thindil@vallheru.net>
 
+	* FEATURE,templates/account.tpl, includes/head.php, account.php: 
+	added option to enable/disable show avatar
 	* UPDATE,includes/head.php, includes/avatars.php:
 	better scale avatars
 

@@ -108,6 +108,7 @@
 	<input type="radio" name="battle" value="D" {$Checked5} /> {$Tonlyattacked}<br />
 	<input type="radio" name="battle" value="Y" {$Checked3} /> {$Talways}<br /><br />
         <input type="checkbox" name="graphbar" {$Checked2} /> {$Tgraphbar}<br />
+	<input type="checkbox" name="avatar" {$Checked12} /> {$Tavatar}<br />
 	<input type="checkbox" name="oldchat" {$Checked11} /> {$Toldchat}<br/ >
 	<input type="checkbox" name="rinvites" {$Checked10} /> {$Trinvites}<br /><br />
 	<input type="checkbox" name="autodrink" {$Checked6} /> {$Tautodrink}<br />
