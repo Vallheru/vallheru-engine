@@ -7,7 +7,7 @@
  *   @copyright            : (C) 2004,2005,2006,2007,2011,2012 Vallheru Team based on Gamers-Fusion ver 2.5
  *   @author               : thindil <thindil@vallheru.net>
  *   @version              : 1.7
- *   @since                : 15.11.2012
+ *   @since                : 23.11.2012
  *
  */
 
@@ -33,6 +33,37 @@
 * Get the localization for game
 */
 require_once("languages/".$lang."/funkcje.php");
+
+/**
+ * Function check did pet survive battle
+ */
+function checkpet($intPid, &$arrPet, $intEid, $blnLost = FALSE)
+{
+  global $db;
+
+  if ($arrPet[0] == 0)
+    {
+      return;
+    }
+
+  if (!$blnLost)
+    {
+      $intRoll = rand(1, 100);
+    }
+  else
+    {
+      $intRoll = 1;
+    }
+  if ($intRoll == 1)
+    {
+      $db->Execute("UPDATE `core` SET `status`='Dead', `active`='N' WHERE `id`=".$arrPet[0]);
+      $arrPet = array(0, 0, 0);
+      if ($intPid == $intEid)
+	{
+	  print "<br />Twój chowaniec nie przeżył tej walki.<br />";
+	}
+    }
+}
 
 /**
  * Function update battle records
@@ -521,6 +552,17 @@ function monsterattack2($intMydodge, &$zmeczenie, &$gunik, &$enemy, $times, $mcz
   $arrLocations = array('w głowę i zadaje(ą)', 'w tułów i zadaje(ą)', 'w nogę i zadaje(ą)', 'w rękę i zadaje(ą)');
   $intHit = rand(0, 3);
   $defpower = 0;
+  if ($player->pet[0])
+    {
+      if ($player->pet[2] > $player->skills['dodge'][1])
+	{
+	  $defpower = $player->skills['dodge'][1];
+	}
+      else
+	{
+	  $defpower = $player->pet[2];
+	}
+    }
   if ($player->equip[$intHit + 2][0] && $player->equip[$intHit + 2][6] > 0)
     {
       $defpower += ($player->equip[$intHit + 2][2] + ($player->equip[$intHit + 2][2] * $player->checkbonus('defender')));
@@ -1112,6 +1154,17 @@ function fightmonster($enemy, $expgain, $goldgain, $times)
         $stat['damage'] = $stat['damage'] - ($stat['damage'] / 4);
     }
     $stat['damage'] += ($stat['damage'] * $player->checkbonus('rage'));
+    if ($player->pet[0])
+      {
+	if ($player->pet[1] > $player->skills[$strSkill][1])
+	  {
+	    $stat['damage'] += $player->skills[$strSkill][1];
+	  }
+	else
+	  {
+	    $stat['damage'] += $player->pet[1];
+	  }
+      }
     $intPldamage = $stat['damage'];
     $stat['damage'] = ($stat['damage'] - $enemy['endurance']);
     $rzut2 = (rand(1,($player ->skills[$strSkill][1] * 10)));
@@ -1311,6 +1364,7 @@ function fightmonster($enemy, $expgain, $goldgain, $times)
             $smarty -> display ('error1.tpl');
 	  }
         $db -> Execute("INSERT INTO `events` (`text`) VALUES('Gracz ".$player -> user." ".EVENT3." ".$_POST['razy']." ".$enemy['name']."')");
+	checkpet($player->id, $player->pet, $player->id, TRUE);
       } 
     elseif ($runda > 24 && ($player -> hp > 0 && $enemy['hp'] > 0)) 
       {
@@ -1338,6 +1392,7 @@ function fightmonster($enemy, $expgain, $goldgain, $times)
 	gainability($player, $expgain, $gunik, $gatak, $gmagia, $player->id, $strType);
       }
     lostitem($player->equip, $player->id, $player->id, $player->skills['shoot'][1]);
+    checkpet($player->id, $player->pet, $player->id);
     if ($player -> hp < 0) 
     {
         $player -> hp = 0;

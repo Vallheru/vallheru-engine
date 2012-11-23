@@ -8,7 +8,7 @@
  *   @author               : thindil <thindil@vallheru.net>
  *   @author               : eyescream <tduda@users.sourceforge.net>
  *   @version              : 1.7
- *   @since                : 16.11.2012
+ *   @since                : 23.11.2012
  *
  */
 
@@ -83,7 +83,7 @@ function attack1($attacker, $defender, $attack_bspell, $def_bspell, $attack_dspe
     */
     if ($attacker->equip[1][0] && $attacker->equip[6][6] > 0 && $attacker->equip[1][6] > 0) 
       {
-	$unik -= ($attacker->skills['shoot'][1] + $player->checkbonus('eagleeye'));
+	$unik -= ($attacker->skills['shoot'][1] + $attacker->checkbonus('eagleeye'));
         $bonus = (($attacker->stats['strength'][2] / 2) + ($attacker->stats['agility'][2] / 2));
         if ($attacker->clas == 'Wojownik' || $attacker->clas == 'Barbarzyńca') 
 	  {
@@ -236,7 +236,18 @@ function attack1($attacker, $defender, $attack_bspell, $def_bspell, $attack_dspe
     {
         $mypower -= ($mypower / 4);
     }
-    $mypower += ($mypower * $player->checkbonus('rage'));
+    $mypower += ($mypower * $attacker->checkbonus('rage'));
+    if ($attacker->pet[0])
+      {
+	if ($attacker->pet[1] > $attacker->skills[$strSkill][1])
+	  {
+	    $mypower += $attacker->skills[$strSkill][1]
+	  }
+	else
+	  {
+	    $mypower += $attacker->pet[1];
+	  }
+      }
     //Shield block chance
     $intBlock = 0;
     if ($defender->equip[5][0])
@@ -330,13 +341,24 @@ function attack1($attacker, $defender, $attack_bspell, $def_bspell, $attack_dspe
 		$mypower -= $attacker->equip[11][1];
 	      }
 	  }
-	//Check defender armor
-	$defpower = ($player->stats['condition'][2] + ($player->stats['condition'][2] * $player->checkbonus('defender')));
+	//Check defender armor and pet
+	$defpower = ($player->stats['condition'][2] + ($player->stats['condition'][2] * $defender->checkbonus('defender')));
+	if ($defender->pet[0])
+	  {
+	    if ($defender->pet[2] > $defender->skills['dodge'][1])
+	      {
+		$defpower += $defender->skills['dodge'][1];
+	      }
+	    else
+	      {
+		$defpower += $defender->pet[2];
+	      }
+	  }
 	if ($defender->equip[$intHit + 2][0] && $pechowy > 55)
 	  {
 	    if ($defender->equip[$intHit + 2][6] > 0)
 	      {
-		$defpower += ($defender->equip[$intHit + 2][2] + ($defender->equip[$intHit + 2][2] * $player->checkbonus('defender')));
+		$defpower += ($defender->equip[$intHit + 2][2] + ($defender->equip[$intHit + 2][2] * $defender->checkbonus('defender')));
 		$defender->equip[$intHit + 2][6] --;
 	      }
 	  }
@@ -607,6 +629,8 @@ function attack1($attacker, $defender, $attack_bspell, $def_bspell, $attack_dspe
 	lostitem($attacker->equip, $attacker->id, $starter, $attacker->skills['shoot'][1]);
 	gainability($defender, $intExpsum2, $def_miss, $def_attack, $def_magic, $starter, $strType);
 	lostitem($defender->equip, $defender->id, $starter, $defender->skills['shoot'][1]);
+	checkpet($attacker->id, $attacker->pet, $starter);
+	checkpet($defender->id, $defender->pet, $starter);
         $db -> Execute("UPDATE `players` SET `hp`=".$attacker->hp.", `bless`='', `blessval`=0 WHERE `id`=".$attacker->id);
         $db -> Execute("UPDATE `players` SET `hp`=".$defender->hp.", `bless`='', `blessval`=0 WHERE `id`=".$defender->id);
         if ($attacker->id == $starter) 
@@ -697,6 +721,8 @@ function attack1($attacker, $defender, $attack_bspell, $def_bspell, $attack_dspe
 	gainability($attacker, $intExpsum, $attack_miss, $attack_attack, $attack_magic, $starter, $strType);
 	lostitem($attacker->equip, $attacker->id, $starter, $attacker->skills['shoot'][1]);
 	lostitem($defender->equip, $defender->id, $starter, $defender->skills['shoot'][1]);
+	checkpet($attacker->id, $attacker->pet, $starter);
+	checkpet($defender->id, $defender->pet, $starter, TRUE);
         $db -> Execute("UPDATE `players` SET `hp`=".$attacker->hp.", `credits`=`credits`+".$creditgain.", `wins`=`wins`+1, `lastkilled`='".'<a href="view.php?view='.$defender->id.'">'.$defender->user."</a>', `bless`='', `blessval`=0 WHERE `id`=".$attacker->id);
         $db -> Execute("UPDATE `players` SET `credits`=`credits`-".$creditgain.", `losses`=`losses`+1, `lastkilledby`='".'<a href="view.php?view='.$attacker->id.'">'.$attacker->user."</a>', `bless`='', `blessval`=0 WHERE `id`=".$defender->id);
         if ($attacker->id == $starter) 

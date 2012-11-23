@@ -1,3 +1,8 @@
+2012-11-23  Bartek thindil Jasicki  <thindil@vallheru.net>
+
+	* FEATURE,class/player_class.php, includes/battle.php, includes/funkcje.php, includes/turnfight.php, core.php, equip.php:
+	finished work on pets in battles
+
 2012-11-22  Bartek thindil Jasicki  <thindil@vallheru.net>
 
 	* FEATURE,class/player_class.php, equip.php, core.php, templates/layout1/equip.tpl, templates/equip.tpl: 

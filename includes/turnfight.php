@@ -7,7 +7,7 @@
  *   @copyright            : (C) 2004,2005,2006,2007,2011,2012 Vallheru Team based on Gamers-Fusion ver 2.5
  *   @author               : thindil <thindil@vallheru.net>
  *   @version              : 1.7
- *   @since                : 16.11.2012
+ *   @since                : 23.11.2012
  *
  */
  
@@ -715,6 +715,7 @@ function turnfight($expgain,$goldgain,$action,$addres)
             }
             $smarty -> display ('error1.tpl');
         }
+	checkpet($player->id, $player->pet, $player->id, TRUE);
     }
     if (isset($_SESSION['points']))
     {
@@ -747,6 +748,7 @@ function turnfight($expgain,$goldgain,$action,$addres)
 	    $strType = 'ranged';
 	  }
 	gainability($player, $expgain, $_SESSION['gunik'], $_SESSION['gatak'], $_SESSION['gmagia'], $player->id, $strType);
+	checkpet($player->id, $player->pet, $player->id);
         if ($player -> hp < 0) 
         {
             $player -> hp = 0;
@@ -931,6 +933,17 @@ function attack($eunik,$bdamage)
     $rzut2 = (rand(1,($player -> skills[$strSkill][1] * 10)));
     $stat['damage'] = ($stat['damage'] + $rzut2);
     $stat['damage'] += ($stat['damage'] * $player->checkbonus('rage'));
+    if ($player->pet[0])
+      {
+	if ($player->pet[1] > $player->skills[$strSkill][1])
+	  {
+	    $stat['damage'] += $player->skills[$strSkill][1];
+	  }
+	else
+	  {
+	    $stat['damage'] += $player->pet[1];
+	  }
+      }
     $stat['damage'] = ($stat['damage'] - $enemy['endurance']);
     if ($stat['damage'] < 1) 
     {
@@ -1112,6 +1125,17 @@ function castspell ($id,$boost,$eunik)
     {
         $stat['damage'] = 0;
     }
+    if ($player->pet[0])
+      {
+	if ($player->pet[1] > $player->skills['magic'][1])
+	  {
+	    $stat['damage'] += $player->skills['magic'][1];
+	  }
+	else
+	  {
+	    $stat['damage'] += $player->pet[1];
+	  }
+      }
     $rzut2 = (rand(1,($player -> skills['magic'][1] * 10)));
     $stat['damage'] = ($stat['damage'] + $rzut2);
     $stat['damage'] = ($stat['damage'] - $enemy['endurance']);
@@ -1341,6 +1365,17 @@ function monsterattack($attacks,$enemy,$myunik,$amount)
                 {
 		    $intHit = rand(0, 3);
 		    $myobrona = 0;
+		    if ($player->pet[0])
+		      {
+			if ($player->pet[2] > $player->skills['dodge'][1])
+			  {
+			    $myobrona += $player->skills['dodge'][1];
+			  }
+			else
+			  {
+			    $myobrona += $player->pet[2];
+			  }
+		      }
 		    if ($player->equip[$intHit + 2][0])
 		      {
 			$myobrona = ($player->equip[$intHit + 2][2] + ($player->equip[$intHit + 2][2] * $player->checkbonus('defender')));

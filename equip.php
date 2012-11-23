@@ -7,7 +7,7 @@
  *   @copyright            : (C) 2004,2005,2006,2007,2011,2012 Vallheru Team based on Gamers-Fusion ver 2.5
  *   @author               : thindil <thindil@vallheru.net>
  *   @version              : 1.7
- *   @since                : 22.10.2012
+ *   @since                : 23.10.2012
  *
  */
 
@@ -824,7 +824,7 @@ else
 if (isset($_GET['usep']))
   {
     checkvalue($_GET['usep']);
-    $objPet = $db->Execute("SELECT `id`, `status`, `active` FROM `core` WHERE `owner`=".$player->id." AND `id`=".$_GET['usep']);
+    $objPet = $db->Execute("SELECT `id`, `status`, `active`, `power`, `defense` FROM `core` WHERE `owner`=".$player->id." AND `id`=".$_GET['usep']);
     if (!$objPet->fields['id'])
       {
 	error('Nie ma takiego chowańca.');
@@ -842,14 +842,15 @@ if (isset($_GET['usep']))
       }
     if ($blnValid)
       {
-	if ($player->pet)
+	if ($player->pet[0])
 	  {
-	    $db->Execute("UPDATE `core` SET `active`='N' WHERE `id`=".$player->pet);
+	    $db->Execute("UPDATE `core` SET `active`='N' WHERE `id`=".$player->pet[0]);
 	  }
 	$db->Execute("UPDATE `core` SET `active`='B' WHERE `id`=".$_GET['usep']);
-	$player->pet = $_GET['usep'];
+	$player->pet = array($_GET['usep'], $objPet->fields['power'], $objPet->fields['defense']);
 	message('success', 'Wybrałeś chowańca do walki.');
       }
+    $objPet->Close();
   }
 
 /**
@@ -864,16 +865,16 @@ if (isset($_GET['release2']))
 	error('Nie ma takiego chowańca.');
       }
     $db->Execute("UPDATE `core` SET `active`='N' WHERE `id`=".$_GET['release2']);
-    $player->pet = 0;
+    $player->pet = array(0, 0, 0);
     message('success', 'Zwolniłeś chowańca z walk.');
   }
 
 /**
  * Used pet
  */
-if ($player->pet)
+if ($player->pet[0])
   {
-    $objPet = $db->Execute("SELECT `name`, `power`, `defense`, `corename` FROM `core` WHERE `id`=".$player->pet);
+    $objPet = $db->Execute("SELECT `name`, `corename` FROM `core` WHERE `id`=".$player->pet[0]);
     if ($objPet->fields['corename'] != '')
       {
 	$strName = $objPet->fields['corename'];
@@ -882,7 +883,7 @@ if ($player->pet)
       {
 	$strName = $objPet->fields['name'];
       }
-    $smarty->assign("Pet", "<b>Chowaniec:</b> ".$strName." (Siła: ".$objPet->fields['power'].") (Obrona: ".$objPet->fields['defense'].") [<a href=\"equip.php?release2=".$player->pet."\">zwolnij</a>]<br />");
+    $smarty->assign("Pet", "<b>Chowaniec:</b> ".$strName." (Siła: ".$player->pet[1].") (Obrona: ".$player->pet[2].") [<a href=\"equip.php?release2=".$player->pet[0]."\">zwolnij</a>]<br />");
   }
  else
    {
