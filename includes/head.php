@@ -709,6 +709,7 @@ $smarty -> assign (array ("Time" => $time,
 			  "Message" => '',
 			  "Reportbug" => 'Zgłoś błąd',
 			  "Links" => $arrLinks,
+			  "Nteam" => "Drużyna",
 			  "Ownlinks" => count($arrLinks['own'])));
 
 //Player avatar

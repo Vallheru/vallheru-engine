@@ -98,6 +98,8 @@ class Player
     var $rinvite;
     // Team invitation
     var $tinvite;
+    // Player team
+    var $team;
     
 /**
 * Class constructor - get data from database and write it to variables
@@ -176,6 +178,7 @@ class Player
 	$this->chattimes = $stats->fields['chattimes'];
 	$this->rinvite = $stats->fields['rinvite'];
 	$this->tinvite = $stats->fields['tinvite'];
+	$this->team = $stats->fields['team'];
 	$this->settings = $this->toarray($stats->fields['settings']);
 	$this->stats = $this->toarray($stats->fields['stats'], 'stats');
 	$this->skills = $this->toarray($stats->fields['skills'], 'stats');

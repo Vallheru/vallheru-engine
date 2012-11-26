@@ -6,8 +6,8 @@
  *   @name                 : head1.php                            
  *   @copyright            : (C) 2004,2005,2006,2011,2012 Vallheru Team based on Gamers-Fusion ver 2.5
  *   @author               : thindil <thindil@vallheru.net>
- *   @version              : 1.5
- *   @since                : 16.05.2012
+ *   @version              : 1.7
+ *   @since                : 26.11.2012
  *
  */
 
@@ -45,7 +45,7 @@ if (isset($title) && !isset($title1))
                       'Góry Kazad-nar', 'Las Avantiel', 'Wyrąb', 'Aleja zasłużonych', 'Astralny skarbiec', 'Astralny rynek', 
                       'Sala audiencyjna', 'Jubiler', 'Rynek jubilerski', 'Kopalnia', 'Kopalnie', 'Huta', 'Astralny plan', 'Warsztat jubilerski', 
 		      'Rynek z łupami', 'Galeria Machin', 'Propozycje', 'Gildia Łowców', 'Gildia Rzemieślników', 'Cześnik', 'Aula Gladiatorów', 
-		      'Prefektura Gwardii', 'Złodziejska Spelunka', 'Pokój w karczmie', 'Przygoda', 'Rynek chowańców', 'Kronika');
+		      'Prefektura Gwardii', 'Złodziejska Spelunka', 'Pokój w karczmie', 'Przygoda', 'Rynek chowańców', 'Kronika', 'Drużyna');
         if ($player -> location != 'Ardulith')
         {
             $arrTitle2 = $arrTitle;
@@ -145,12 +145,6 @@ define("GOLD_IN_HAND", "Złoto");
 define("GOLD_IN_BANK", "Bank");
 define("MITHRIL", "Mithril");
 define("VALLARS", "Vallary");
-define("NAVIGATION", "Nawigacja");
-define("N_STATISTICS", "Statystyki");
-define("N_ITEMS", "Bogactwa");
-define("N_EQUIPMENT", "Ekwipunek");
-define("N_LOG", "Dziennik");
-define("N_NOTES", "Notatnik");
 define("N_POST", "Poczta");
 define("N_FORUMS", "Forum");
 define("N_INN", "Karczma");

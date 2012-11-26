@@ -7,8 +7,8 @@
  *   @copyright            : (C) 2004,2005,2006,2011,2012 Vallheru Team based on Gamers-Fusion ver 2.5
  *   @author               : thindil <thindil@vallheru.net>
  *   @author               : eyescream <tduda@users.sourceforge.net>
- *   @version              : 1.6
- *   @since                : 20.06.2012
+ *   @version              : 1.7
+ *   @since                : 26.11.2012
  *
  */
 
@@ -78,7 +78,7 @@ $arrTitle = array('Opcje konta', 'Dodaj Plotkę', 'Dodaj Wieść', 'Alchemik', '
                   'Góry Kazad-nar', 'Las Avatiel', 'Wyrąb', 'Aleja zasłużonych', 'Astralny skarbiec', 'Astralny rynek', 'Spis książąt',
                   'Jubiler', 'Rynek jubilerski', 'Kopalnia', 'Kopalnie', 'Huta', 'Astralny plan', 'Warsztat jubilerski',
 		  'Rynek z łupami', 'Galeria Machin', 'Propozycje', 'Gildia Łowców', 'Gildia Rzemieślników', 'Cześnik', 'Aula Gladiatorów',
-		  'Prefektura Gwardii', 'Pokój w karczmie', 'Złodziejska Spelunka', 'Przygoda', 'Rynek chowańców', 'Kronika');
+		  'Prefektura Gwardii', 'Pokój w karczmie', 'Złodziejska Spelunka', 'Przygoda', 'Rynek chowańców', 'Kronika', 'Drużyna');
 if ($view -> location != 'Ardulith')
 {
     $arrTitle2 = $arrTitle;

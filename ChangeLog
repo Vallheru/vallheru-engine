@@ -1,5 +1,8 @@
 2012-11-26  Bartek thindil Jasicki  <thindil@vallheru.net>
 
+	* FEATURE,languages/pl/head1.php, languages/pl/view.php, includes/head.php, class/player_class.php, 
+	templates/layout1/header.tpl, templates/header.tpl, templates/team.tpl, team.php: 
+	start work on teams
 	* UPDATE,view.php: 
 	dont show link if player is invited
 	* BUG,includes/head.php: 
