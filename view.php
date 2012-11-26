@@ -256,7 +256,7 @@ if ($player -> id != $view -> id)
     if ($player->room != 0)
       {
 	$objRowner = $db->Execute("SELECT `owner` FROM `rooms` WHERE `id`=".$player->room);
-	if ($view->room == 0 && $view->settings['rinvites'] == 'Y')
+	if ($view->room == 0 && $view->settings['rinvites'] == 'Y' && $view->rinvite == 0)
 	  {
 	    $strLink .= '<li><a href="view.php?view='.$view->id.'&amp;room=add">Zaproś do pokoju w karczmie</a></li>';
 	  }

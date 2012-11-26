@@ -1,5 +1,7 @@
 2012-11-26  Bartek thindil Jasicki  <thindil@vallheru.net>
 
+	* UPDATE,view.php: 
+	dont show link if player is invited
 	* BUG,includes/head.php: 
 	fixed avatar settings
 	* UPDATE,install/db/update.sql: 
