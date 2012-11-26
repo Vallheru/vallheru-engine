@@ -7,7 +7,7 @@
  *   @copyright            : (C) 2004,2005,2006,2007,2011,2012 Vallheru Team based on Gamers-Fusion ver 2.5
  *   @author               : thindil <thindil@vallheru.net>
  *   @version              : 1.7
- *   @since                : 23.11.2012
+ *   @since                : 26.11.2012
  *
  */
 
@@ -82,30 +82,23 @@ class Player
     var $settings;
     var $chattimes;
     var $oldskills;
-    /**
-     * Player equipment
-     */
+    // Player equipment
     var $equip;
-    /**
-     * Player statistics
-     */
+    // Player statistics
     var $stats;
-    /**
-     * Player skills
-     */
+    // Player skills
     var $skills;
-    /**
-     * Player bonuses from AP
-     */
+    // Player bonuses from AP
     var $bonuses;
-    /**
-     * Player max mana
-     */
+    // Player max mana
     var $maxmana;
-    /**
-     * Player battle pet
-     */
+    // Player battle pet
     var $pet;
+    // Room invitation
+    var $rinvite;
+    // Team invitation
+    var $tinvite;
+    
 /**
 * Class constructor - get data from database and write it to variables
 */
@@ -181,6 +174,8 @@ class Player
 	$objRevent->Close();
 	$this->room = $stats->fields['room'];
 	$this->chattimes = $stats->fields['chattimes'];
+	$this->rinvite = $stats->fields['rinvite'];
+	$this->tinvite = $stats->fields['tinvite'];
 	$this->settings = $this->toarray($stats->fields['settings']);
 	$this->stats = $this->toarray($stats->fields['stats'], 'stats');
 	$this->skills = $this->toarray($stats->fields['skills'], 'stats');

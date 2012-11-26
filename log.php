@@ -6,8 +6,8 @@
  *   @name                 : log.php                            
  *   @copyright            : (C) 2004,2005,2006,2011,2012 Vallheru Team based on Gamers-Fusion ver 2.5
  *   @author               : thindil <thindil@vallheru.net>
- *   @version              : 1.6
- *   @since                : 08.08.2012
+ *   @version              : 1.7
+ *   @since                : 26.11.2012
  *
  */
 
@@ -191,6 +191,99 @@ if (isset($_GET['action']) && $_GET['action'] == 'selected')
 		$objMessages->Close();
 		message('success', "Wysłałeś wybrane wpisy do ".$arrtest->fields['user'].".");
 	      }
+	  }
+      }
+  }
+
+/**
+ * Accept invitation
+ */
+if (isset($_GET['accept']))
+  {
+    if ($_GET['accept'] != 'R' && $_GET['accept'] != 'T')
+      {
+	error('Zapomnij o tym.');
+      }
+    //Room invitation
+    if ($_GET['accept'] == 'R')
+      {
+	if ($player->room)
+	  {
+	    message('error', 'Jesteś już w jakimś pokoju. Najpierw musisz go opuścić aby dołączyć do kolejnego.');
+	  }
+	elseif ($player->rinvite == 0)
+	  {
+	    message('error', 'Nie masz zaproszeń do pokoju w karczmie.');
+	  }
+	else
+	  {
+	    $player->room = $player->rinvite;
+	    $db->Execute("UPDATE `players` SET `room`=".$player->rinvite.", `rinvite`=0 WHERE `id`=".$player->id);
+	    $player->rinvite = 0;
+	    $objRoom = $db->Execute("SELECT `owner`, `owners` FROM `rooms` WHERE `id`=".$player->room);
+	    if ($objRoom->fields['owners'] != '')
+	      {
+		$arrOwners = explode(';', $objRoom->fields['owners']);
+	      }
+	    else
+	      {
+		$arrOwners = array();
+	      }
+	    $arrOwners[] = $objRoom->fields['owner'];
+	    $objRoom->Close();
+	    $strDate = $db -> DBDate($newdate);
+	    $strSql = "INSERT INTO `log` (`owner`, `log`, `czas`, `type`) VALUES";
+	    foreach ($arrOwners as $intOwner)
+	      {
+		$strSql .= "(".$intOwner.", '<a href=view.php?view=".$player->id.">".$player->user."</a> zaakceptował zaproszenie do twojego pokoju.', ".$strDate.", 'E'),";
+	      }
+	    $strSql = rtrim($strSql, ",").';';
+	    $db->Execute($strSql);
+	    message('success', 'Dołączyłeś do pokoju w karczmie.');
+	  }
+      }
+  }
+
+/**
+ * Reject invitations
+ */
+if (isset($_GET['refuse']))
+  {
+    if ($_GET['refuse'] != 'R' && $_GET['refuse'] != 'T')
+      {
+	error('Zapomnij o tym.');
+      }
+    //Room invitation
+    if ($_GET['refuse'] == 'R')
+      {
+	if ($player->rinvite == 0)
+	  {
+	    message('error', 'Nie masz zaproszeń do pokoju w karczmie.');
+	  }
+	else
+	  {
+	    $objRoom = $db->Execute("SELECT `owner`, `owners` FROM `rooms` WHERE `id`=".$player->rinvite);
+	    if ($objRoom->fields['owners'] != '')
+	      {
+		$arrOwners = explode(';', $objRoom->fields['owners']);
+	      }
+	    else
+	      {
+		$arrOwners = array();
+	      }
+	    $arrOwners[] = $objRoom->fields['owner'];
+	    $objRoom->Close();
+	    $strDate = $db -> DBDate($newdate);
+	    $strSql = "INSERT INTO `log` (`owner`, `log`, `czas`, `type`) VALUES";
+	    foreach ($arrOwners as $intOwner)
+	      {
+		$strSql .= "(".$intOwner.", '<a href=view.php?view=".$player->id.">".$player->user."</a> odrzucił zaproszenie do twojego pokoju.', ".$strDate.", 'E'),";
+	      }
+	    $strSql = rtrim($strSql, ",").';';
+	    $db->Execute($strSql);
+	    $db->Execute("UPDATE `players` SET `rinvite`=0 WHERE `id`=".$player->id);
+	    $player->rivite = 0;
+	    message('success', 'Odrzuciłeś zaproszenie do pokoju w karczmie.');
 	  }
       }
   }

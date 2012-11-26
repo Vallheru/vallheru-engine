@@ -8,7 +8,7 @@
  *   @author               : thindil <thindil@vallheru.net>
  *   @author               : eyescream <tduda@users.sourceforge.net>
  *   @version              : 1.7
- *   @since                : 16.11.2012
+ *   @since                : 26.11.2012
  *
  */
 
@@ -361,7 +361,7 @@ $smarty->assign(array("Seen" => "Ostatnio aktywn".$strSuffix,
 		      "Lastseen" => $strSeen));
 
 /**
- *
+ * Consider enemy
  */
 if (isset($_GET['consider']))
   {
@@ -555,6 +555,11 @@ if (isset($_GET['room']))
 	    message('error', 'Ten gracz jest już w jakimś pokoju w karczmie.');
 	    $blnValid = FALSE;
 	  }
+	if ($view->rinvite > 0)
+	  {
+	    message('error', 'Ten gracz jest już zaproszony do jakiegoś pokoju w karczmie.');
+	    $blnValid = FALSE;
+	  }
 	$objTest = $db->Execute("SELECT `id` FROM `ignored` WHERE `owner`=".$view->id." AND `pid`=".$player->id." AND `inn`='Y'");
 	if ($objTest->fields['id'])
 	  {
@@ -569,9 +574,9 @@ if (isset($_GET['room']))
 	  }
 	if ($blnValid)
 	  {
-	    $db->Execute("UPDATE `players` SET `room`=".$player->room." WHERE `id`=".$view->id);
+	    $db->Execute("UPDATE `players` SET `rinvite`=".$player->room." WHERE `id`=".$view->id);
 	    $strDate = $db -> DBDate($newdate);
-	    $db->Execute("INSERT INTO `log` (`owner`, `log`, `czas`, `type`) VALUES(".$view->id.", '".$player->user." zaprosił(a) Ciebie do swojego pokoju w karczmie.', ".$strDate.", 'E')");
+	    $db->Execute("INSERT INTO `log` (`owner`, `log`, `czas`, `type`) VALUES(".$view->id.", '".$player->user." zaprosił(a) Ciebie do swojego pokoju w karczmie. [<a href=log.php?accept=R>Akceptuj</a>] [<a href=log.php?refuse=R>Odrzuć</a>]', ".$strDate.", 'E')");
 	    message('success', 'Zaprosiłeś(aś) '.$view->user.' do swojego pokoju w karczmie.', '(<a href="view.php?view='.$view->id.'">Odśwież</a>)');
 	  }
       }
