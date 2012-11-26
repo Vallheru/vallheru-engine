@@ -1,5 +1,7 @@
 2012-11-26  Bartek thindil Jasicki  <thindil@vallheru.net>
 
+	* UPDATE,install/db/update.sql: 
+	updated database
 	* UPDATE,class/player_class.php, view.php, log.php:
 	updated invitations system
 
