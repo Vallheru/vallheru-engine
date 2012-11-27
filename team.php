@@ -1,13 +1,13 @@
 <?php
 /**
  *   File functions:
- *   Game time
+ *   Team management
  *
  *   @name                 : team.php                            
  *   @copyright            : (C) 2012 Vallheru Team based on Gamers-Fusion ver 2.5
  *   @author               : thindil <thindil@vallheru.net>
  *   @version              : 1.7
- *   @since                : 26.11.2012
+ *   @since                : 27.11.2012
  *
  */
 
@@ -143,7 +143,7 @@ if ($player->team == 0)
 	   {
 	     $arrMember['status'] = 'Zdrowy';
 	   }
-	 if ($player->id == $objTeam->fields['leader'])
+	 if ($player->id == $objTeam->fields['leader'] && $arrMember['id'] != $player->id)
 	   {
 	     $arrMember['action'] = 'Wyrzuć';
 	   }

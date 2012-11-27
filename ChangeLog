@@ -1,3 +1,8 @@
+2012-11-27  Bartek thindil Jasicki  <thindil@vallheru.net>
+
+	* FEATURE,log.php, team.php, view.php:
+	added invitations to teams
+
 2012-11-26  Bartek thindil Jasicki  <thindil@vallheru.net>
 
 	* FEATURE,languages/pl/head1.php, languages/pl/view.php, includes/head.php, class/player_class.php, 

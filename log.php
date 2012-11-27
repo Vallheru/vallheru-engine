@@ -7,7 +7,7 @@
  *   @copyright            : (C) 2004,2005,2006,2011,2012 Vallheru Team based on Gamers-Fusion ver 2.5
  *   @author               : thindil <thindil@vallheru.net>
  *   @version              : 1.7
- *   @since                : 26.11.2012
+ *   @since                : 27.11.2012
  *
  */
 
@@ -242,6 +242,39 @@ if (isset($_GET['accept']))
 	    message('success', 'Dołączyłeś do pokoju w karczmie.');
 	  }
       }
+    //Team invitation
+    elseif ($_GET['accept'] == 'T')
+      {
+	if ($player->team)
+	  {
+	    message('error', 'Jesteś już w jakieś drużynie. Najpierw musisz ją opuścić aby dołączyć do kolejnej.');
+	  }
+	elseif ($player->tinvite == 0)
+	  {
+	    message('error', 'Nie masz zaproszeń do drużyny.');
+	  }
+	else
+	  {
+	    $player->team = $player->tinvite;
+	    $db->Execute("UPDATE `players` SET `team`=".$player->team.", `tinvite`=0 WHERE `id`=".$player->id);
+	    $player->tinvite = 0;
+	    $objTeam = $db->Execute("SELECT * FROM `teams` WHERE `id`=".$player->team);
+	    $strEmpty = '';
+	    foreach (array('slot1', 'slot2', 'slot3', 'slot4', 'slot5') as $strSlot)
+	      {
+		if ($objTeam->fields[$strSlot] == 0)
+		  {
+		    $strEmpty = $strSlot;
+		    break;
+		  }
+	      }
+	    $db->Execute("UPDATE `teams` SET `".$strEmpty."`=".$player->id." WHERE `id`=".$player->team);
+	    $strDate = $db -> DBDate($newdate);
+	    $db->Execute("INSERT INTO `log` (`owner`, `log`, `czas`, `type`) VALUES(".$objTeam->fields['leader'].", '<a href=view.php?view=".$player->id.">".$player->user."</a> dołączył do twojej drużyny.', ".$strDate.", 'D')");
+	    $objTeam->Close();
+	    message('success', 'Dołączyłeś do drużyny.');
+	  }
+      }
   }
 
 /**
@@ -286,6 +319,23 @@ if (isset($_GET['refuse']))
 	    message('success', 'Odrzuciłeś zaproszenie do pokoju w karczmie.');
 	  }
       }
+    elseif ($_GET['refuse'] == 'T')
+      {
+	if ($player->tinvite == 0)
+	  {
+	    message('error', 'Nie masz zaproszeń do drużyny.');
+	  }
+	else
+	  {
+	    $strDate = $db -> DBDate($newdate);
+	    $objTeam = $db->Execute("SELECT `leader` FROM `teams` WHERE `id`=".$player->tinvite);
+	    $db->Execute("INSERT INTO `log` (`owner`, `log`, `czas`, `type`) VALUES(".$objTeam->fields['leader'].", '<a href=view.php?view=".$player->id.">".$player->user."</a> odrzucił zaproszenie do twojej drużyny.', ".$strDate.", 'D')");
+	    $objTeam->Close();
+	    $db->Execute("UPDATE `players` SET `tinvite`=0 WHERE `id`=".$player->id);
+	    $player->tinvite = 0;
+	    message('success', 'Odrzuciłeś zaproszenie do drużyny.');
+	  }
+      }
   }
 
 $arrTypes = array('O' => 'Strażnica', 
@@ -303,7 +353,8 @@ $arrTypes = array('O' => 'Strażnica',
 		  'U' => 'Brak typu', 
 		  'E' => 'Różne', 
 		  'F' => 'Farma',
-		  'I' => 'Kopalnia');
+		  'I' => 'Kopalnia',
+		  'D' => 'Drużyna');
 
 /**
  * Get all available log types

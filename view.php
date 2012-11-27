@@ -8,7 +8,7 @@
  *   @author               : thindil <thindil@vallheru.net>
  *   @author               : eyescream <tduda@users.sourceforge.net>
  *   @version              : 1.7
- *   @since                : 26.11.2012
+ *   @since                : 27.11.2012
  *
  */
 
@@ -264,6 +264,28 @@ if ($player -> id != $view -> id)
 	  {
 	    $strLink .= '<li><a href="view.php?view='.$view->id.'&amp;room=remove">Wyrzuć z pokoju w karczmie</a></li>';
 	  }
+      }
+    if ($player->team != 0)
+      {
+	$objTeam = $db->Execute("SELECT * FROM `teams` WHERE `id`=".$player->team);
+	$blnFull = TRUE;
+	foreach (array('slot1', 'slot2', 'slot3', 'slot4', 'slot5') as $strSlot)
+	  {
+	    if ($objTeam->fields[$strSlot] == 0)
+	      {
+		$blnFull = FALSE;
+		break;
+	      }
+	  }
+	if ($view->team == 0 && $view->tinvite == 0 && !$blnFull && $objTeam->fields['leader'] == $player->id)
+	  {
+	    $strLink .= '<li><a href="view.php?view='.$view->id.'&amp;team=add">Zaproś do drużyny</a></li>';
+	  }
+	elseif ($view->team == $player->team && $objTeam->fields['leader'] == $player->id)
+	  {
+	    $strLink .= '<li><a href="view.php?view='.$view->id.'&amp;team=remove">Wyrzuć z drużyny</a></li>';
+	  }
+	$objTeam->Close();
       }
     $smarty -> assign ("Mail", $strLink);
   }
@@ -537,6 +559,98 @@ else
   }
 
 /**
+ * Team actions
+ */
+if (isset($_GET['team']))
+  {
+    //Invitation
+    if ($_GET['team'] == 'add')
+      {
+	$blnValid = TRUE;
+	if ($player->team == 0)
+	  {
+	    message('error', 'Nie masz drużyny, do której mógłbyś zaprosić tego gracza.');
+	    $blnValid = FALSE;
+	  }
+	if ($view->team > 0)
+	  {
+	    message('error', 'Ten gracz należy już do jakiejś drużyny.');
+	    $blnValid = FALSE;
+	  }
+	if ($view->tinvite > 0)
+	  {
+	    message('error', 'Ten gracz jest już zaproszony do jakiejś drużyny.');
+	    $blnValid = FALSE;
+	  }
+	$objTest = $db->Execute("SELECT `id` FROM `ignored` WHERE `owner`=".$view->id." AND `pid`=".$player->id." AND `inn`='Y'");
+	if ($objTest->fields['id'])
+	  {
+	    message('error', 'Ta osoba ignoruje twoje zaproszenia do drużyny.');
+	    $blnValid = FALSE;
+	  }
+	$objTest->Close();
+	if ($blnValid)
+	  {
+	    $objTeam = $db->Execute("SELECT * FROM `teams` WHERE `id`=".$player->team);
+	    $blnFull = TRUE;
+	    foreach (array('slot1', 'slot2', 'slot3', 'slot4', 'slot5') as $strSlot)
+	      {
+		if ($objTeam->fields[$strSlot] == 0)
+		  {
+		    $blnFull = FALSE;
+		    break;
+		  }
+	      }
+	    $objTeam->Close();
+	    if ($blnFull)
+	      {
+		message('error', 'Nie możesz zaprosić innych graczy do drużyny, ponieważ jest ona już pełna.');
+		$blnValid = FALSE;
+	      }
+	  }
+	if ($blnValid)
+	  {
+	    $db->Execute("UPDATE `players` SET `tinvite`=".$player->team." WHERE `id`=".$view->id);
+	    $strDate = $db -> DBDate($newdate);
+	    $db->Execute("INSERT INTO `log` (`owner`, `log`, `czas`, `type`) VALUES(".$view->id.", '".$player->user." zaprosił(a) Ciebie do swojej drużyny. [<a href=log.php?accept=T>Akceptuj</a>] [<a href=log.php?refuse=T>Odrzuć</a>]', ".$strDate.", 'E')");
+	    message('success', 'Zaprosiłeś(aś) '.$view->user.' do swojej drużyny.', '(<a href="view.php?view='.$view->id.'">Odśwież</a>)');
+	  }
+      }
+    //Remove from team
+    elseif ($_GET['team'] == 'remove')
+      {
+	$blnValid = TRUE;
+	if ($player->team == 0)
+	  {
+	    message('error', 'Nie masz drużyny, z której mógłbyś wyrzucić tego gracza.');
+	    $blnValid = FALSE;
+	  }
+	if ($player->team != $view->team)
+	  {
+	    message('error', 'Ten gracz nie należy do twojej drużyny.');
+	    $blnValid = FALSE;
+	  }
+	if ($blnValid)
+	  {
+	    $objLeader = $db->Execute("SELECT `leader` FROM `teams` WHERE `id`=".$player->team);
+	    if ($objLeader->fields['leader'] != $player->id)
+	      {
+		message('error', 'Tylko przywódca drużyny może wyrzucać jej członków.');
+		$blnValid = FALSE;
+	      }
+	    $objLeader->Close();
+	  }
+	if ($blnValid)
+	  {
+	    $strDate = $db -> DBDate($newdate);
+	    $db->Execute("INSERT INTO `log` (`owner`, `log`, `czas`, `type`) VALUES(".$view->id.", '".$player->user." wyrzucił(a) Ciebie z drużyny.', ".$strDate.", 'D')");
+	    $db->Execute("UPDATE `players` SET `team`=0 WHERE `id`=".$view->id);
+	    message('success', 'Wyrzuciłeś(aś) '.$view->user.' z drużyny.', '(<a href="view.php?view='.$view->id.'">Odśwież</a>)');
+	  }
+      }
+  }
+
+/**
  * Room actions
  */
 if (isset($_GET['room']))
@@ -581,7 +695,7 @@ if (isset($_GET['room']))
 	  }
       }
     //Remove from room
-    if ($_GET['room'] == 'remove')
+    elseif ($_GET['room'] == 'remove')
       {
 	$blnValid = TRUE;
 	$objRowner = $db->Execute("SELECT `owner` FROM `rooms` WHERE `id`=".$player->room);
