@@ -92,13 +92,62 @@ if (isset($_GET['left']))
 		    break;
 		  }
 	      }
-	    $db->Execute("INSERT INTO `log` (`owner`, `log`, `czas`, `type`) VALUES(".$view->id.", ''<a href=view.php?view=".$player->id.">".$player->user."</a> opuścił twoją drużynę.', ".$strDate.", 'D')");
+	    $strDate = $db -> DBDate($newdate);
+	    $objLeader = $db->Execute("SELECT `leader` FROM `teams` WHERE `id`=".$player->team);
+	    $db->Execute("INSERT INTO `log` (`owner`, `log`, `czas`, `type`) VALUES(".$objLeader->fields['leader'].", '<a href=view.php?view=".$player->id.">".$player->user."</a> opuścił twoją drużynę.', ".$strDate.", 'D')");
+	    $objLeader->Close();
 	    $player->team = 0;
 	    $db->Execute("UPDATE `players` SET `team`=0 WHERE `id`=".$player->id);
 	    message('success', 'Opuściłeś swoją drużynę.');
 	  }
 	$player->team = 0;
       }
+  }
+
+//Kick member from team
+if (isset($_GET['kick']))
+  {
+    checkvalue($_GET['kick']);
+    $blnValid = TRUE;
+    if ($player->team == 0)
+      {
+	message('error', 'Nie posiadasz drużyny aby móc wyrzucać graczy.');
+	$blnValid = FALSE;
+      }
+    if ($_GET['kick'] == $player->id)
+      {
+	message('error', 'Nie możesz wyrzucić sam siebie.');
+	$blnValid = FALSE;
+      }
+    $objMember = $db->Execute("SELECT `team` FROM `players` WHERE `id`=".$_GET['kick']);
+    if ($objMember->fields['team'] != 0 && $objMember->fields['team'] != $player->team)
+      {
+	message('error', 'Ten gracz nie należy do twojej drużyny');
+	$blnValid = FALSE;
+      }
+    $objMember->Close();
+    $objTeam = $db->Execute("SELECT * FROM `teams` WHERE `id`=".$player->team);
+    if ($objTeam->fields['leader'] != $player->id)
+      {
+	message('error', 'Tylko przywódca drużyny może wyrzucać jej członków.');
+	$blnValid = FALSE;
+      }
+    if ($blnValid)
+      {
+	$db->Execute("UPDATE `players` SET `team`=0 WHERE `id`=".$_GET['kick']);
+	foreach (array('slot1', 'slot2', 'slot3', 'slot4', 'slot5') as $strSlot)
+	  {
+	    if ($objTeam->fields[$strSlot] == $_GET['kick'])
+	      {
+		$db->Execute("UPDATE `teams` SET `".$strSlot."`=0 WHERE `id`=".$player->team);
+		break;
+	      }
+	  }
+	$strDate = $db -> DBDate($newdate);
+	$db->Execute("INSERT INTO `log` (`owner`, `log`, `czas`, `type`) VALUES(".$_GET['kick'].", '<a href=view.php?view=".$player->id.">".$player->user."</a> wyrzucił ciebie z drużyny.', ".$strDate.", 'D')");
+	message('success', 'Wyrzuciłeś gracza z drużyny.');
+      }
+    $objTeam->Close();
   }
 
 if ($player->team == 0)

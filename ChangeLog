@@ -1,5 +1,7 @@
 2012-11-27  Bartek thindil Jasicki  <thindil@vallheru.net>
 
+	* FEATURE,team.php: 
+	added option to kick member from team
 	* FEATURE,log.php, team.php, view.php:
 	added invitations to teams
 
