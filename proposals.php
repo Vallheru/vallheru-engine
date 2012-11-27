@@ -6,8 +6,8 @@
  *   @name                 : proposals.php                            
  *   @copyright            : (C) 2011,2012 Vallheru Team based on Gamers-Fusion ver 2.5
  *   @author               : thindil <thindil@vallheru.net>
- *   @version              : 1.5
- *   @since                : 31.05.2012
+ *   @version              : 1.7
+ *   @since                : 27.11.2012
  *
  */
 
@@ -164,19 +164,15 @@ elseif ($_GET['type'] == 'I')
  */
 elseif ($_GET['type'] == 'M')
 {
-  $arrValues = array('', '', '', '', '', '', 1, 1, 1, 1, 1, 1, 0, 0);
-  echo $arrValues[0];
+  $arrValues = array('', '', '', '', '', 1, 1, 1, 1, 0, 0);
   $smarty->assign(array("Pinfo" => "Punkty służą do zmiany statystyk oraz wysokości zdobyczy (złota i doświadczenia) danego potwora. Osłabienie statystyk czy zwiększenie zdobyczy z niego wymaga posiadania punktów. Podniesienie statystyki czy zmniejszenie zdobyczy dodaje punkty. Aby móc zgłosić propozycję, liczba punktów musi być większa lub równa zero.",
 			"Tpoints" => "Punkty:",
 			"Points" => 0,
 			"Tname" => "Nazwa:",
-			"Tlevel" => "Poziom:",
 			"Tstr" => "Siła:",
 			"Tagi" => "Zręczność:",
 			"Tcon" => "Wytrzymałość:",
 			"Tspeed" => "Szybkość:",
-			"Tgold" => "Złoto:",
-			"Texp" => "Doświadczenie:",
 			"Soptions" => array("Wysoka (+1 punkt)", "Normalna (0 punktów)", "Niska (-1 punkt)"),
 			"Loptions" => array("Dużo (-2 punkty)", "Normalnie (0 punktów)", "Mało (+2 punkty)"),
 			"Asend" => "Wyślij",
@@ -200,9 +196,8 @@ elseif ($_GET['type'] == 'M')
 	{
 	  error("Zapomnij o tym.");
 	}
-      $arrText = array('mname', 'level', 'loot1', 'loot2', 'loot3', 'loot4');
+      $arrText = array('mname', 'loot1', 'loot2', 'loot3', 'loot4');
       $arrStats = array('mstr', 'magi', 'mspeed', 'mcon');
-      $arrLoot = array('mgold', 'mexp');
       $arrValues = array();
       foreach ($arrText as $strText)
 	{
@@ -213,7 +208,6 @@ elseif ($_GET['type'] == 'M')
 	    }
 	  $arrValues[] = $_POST[$strText];
 	}
-      checkvalue($_POST['level']);
       $blnExists = FALSE;
       $objTest = $db->Execute("SELECT `id` FROM `monsters` WHERE `name`='".$_POST['mname']."'");
       if ($objTest->fields['id'])
@@ -240,25 +234,6 @@ elseif ($_GET['type'] == 'M')
 	      break;
 	    case 2:
 	      $intPoints --;
-	      break;
-	    default:
-	      error("Zapomnij o tym.");
-	      break;
-	    }
-	  $arrValues[] = $_POST[$strOption];
-	}
-      foreach ($arrLoot as $strOption)
-	{
-	  $_POST[$strOption] = intval($_POST[$strOption]);
-	  switch ($_POST[$strOption])
-	    {
-	    case 0:
-	      $intPoints -= 2;
-	      break;
-	    case 1:
-	      break;
-	    case 2:
-	      $intPoints += 2;
 	      break;
 	    default:
 	      error("Zapomnij o tym.");

@@ -7,8 +7,8 @@
  *   @copyright            : (C) 2004,2005,2006,2007,2011,2012 Vallheru Team based on Gamers-Fusion ver 2.5
  *   @author               : thindil <thindil@vallheru.net>
  *   @author               : eyescream <tduda@users.sourceforge.net>
- *   @version              : 1.6
- *   @since                : 03.10.2012
+ *   @version              : 1.7
+ *   @since                : 27.11.2012
  *
  */
  
@@ -1646,24 +1646,18 @@ if (isset($_GET['view']))
 				  "Speed" => $arrStats[$arrData[2]],
 				  "Tcon" => "Wytrzymałość:",
 				  "Con" => $arrStats[$arrData[3]],
-				  "Tgold" => "Złota:",
-				  "Mgold" => $arrLoots[$arrData[4]],
-				  "Texp" => "Doświadczenie:",
-				  "Mexp" => $arrLoots[$arrData[5]],
-				  "Tlevel" => "Poziom:",
-				  "Mlevel" => $arrData[6],
 				  "Tloot1" => "Łup 1:",
-				  "Loot1" => $arrData[7],
+				  "Loot1" => $arrData[4],
 				  "Tloot2" => "Łup 2:",
-				  "Loot2" => $arrData[8],
+				  "Loot2" => $arrData[5],
 				  "Tloot3" => "Łup 3:",
-				  "Loot3" => $arrData[9],
+				  "Loot3" => $arrData[6],
 				  "Tloot4" => "Łup 4:",
-				  "Loot4" => $arrData[10],
+				  "Loot4" => $arrData[7],
 				  "Tresistance" => "Odporność na żywioł:",
-				  "Mresistance" => $arrData[11],
+				  "Mresistance" => $arrData[8],
 				  "Tdmgtype" => "Typ obrażeń:",
-				  "Mdmgtype" => $arrData[12],
+				  "Mdmgtype" => $arrData[9],
 				  "Asend" => "Wyślij",
 				  "Accepted" => "Zaakceptowany",
 				  "Rejected" => "Odrzucony",
@@ -1681,8 +1675,9 @@ if (isset($_GET['view']))
 		    $db->Execute("INSERT INTO `vallars` (`owner`, `amount`, `reason`) VALUES(".$objProposal->fields['pid'].", 1, 'Nowy potwór na arenie.')");
 		    $strResult = "Zaakceptowałeś potwora";
 		    //Monster stats
-		    $objMinlev = $db->Execute("SELECT max(`level`) FROM `monsters` WHERE `level`<=".$arrData[6]." AND `location`='".$arrLocations[$objProposal->fields['info']]."'");
-		    $objMaxlev = $db->Execute("SELECT min(`level`) FROM `monsters` WHERE `level`>=".$arrData[6]." AND `location`='".$arrLocations[$objProposal->fields['info']]."'");
+		    $intLevel = (5, 100);
+		    $objMinlev = $db->Execute("SELECT max(`level`) FROM `monsters` WHERE `level`<=".$intLevel." AND `location`='".$arrLocations[$objProposal->fields['info']]."'");
+		    $objMaxlev = $db->Execute("SELECT min(`level`) FROM `monsters` WHERE `level`>=".$intLevel." AND `location`='".$arrLocations[$objProposal->fields['info']]."'");
 		    $objStats = $db->Execute("SELECT * FROM `monsters` WHERE `level`=".$objMaxlev->fields['min(`level`)']." AND `location`='".$arrLocations[$objProposal->fields['info']]."'");
 		    $objHp = $db->Execute("SELECT `hp` FROM `monsters` WHERE `level`=".$objMinlev->fields['max(`level`)']." AND `location`='".$arrLocations[$objProposal->fields['info']]."'");
 		    $arrMob = array("str" => 0,
@@ -1690,10 +1685,6 @@ if (isset($_GET['view']))
 				    "speed" => 0,
 				    "con" => 0,
 				    "hp" => 0,
-				    "gold1" => 0,
-				    "gold2" => 0,
-				    "exp1" => 0,
-				    "exp2" => 0,
 				    "res" => 'none;none',
 				    "dmg" => 'none');
 		    $fltFraction = ($objMinlev->fields['max(`level`)'] / $objMaxlev->fields['min(`level`)']);
@@ -1734,35 +1725,11 @@ if (isset($_GET['view']))
 			$arrMob['con'] -= ceil($arrMob['con'] / 10);
 		      }
 		    $arrMob['hp'] = $objHp->fields['hp'] + ceil($fltFraction * ($objStats->fields['hp'] - $objHp->fields['hp']));
-		    $arrMob['gold1'] = ceil($fltFraction * $objStats->fields['credits1']);
-		    $arrMob['gold2'] = ceil($fltFraction * $objStats->fields['credits2']);
-		    if ($arrData[1] == 0)
-		      {
-			$arrMob['gold1'] += ceil($arrMob['gold1'] / 10);
-			$arrMob['gold1'] += ceil($arrMob['gold1'] / 10);
-		      }
-		    elseif ($arrData[1] == 2)
-		      {
-			$arrMob['gold1'] -= ceil($arrMob['gold1'] / 10);
-			$arrMob['gold2'] -= ceil($arrMob['gold2'] / 10);
-		      }
-		    $arrMob['exp1'] = ceil($fltFraction * $objStats->fields['exp1']);
-		    $arrMob['exp2'] = ceil($fltFraction * $objStats->fields['exp2']);
-		    if ($arrData[1] == 0)
-		      {
-			$arrMob['exp1'] += ceil($arrMob['exp1'] / 10);
-			$arrMob['exp2'] += ceil($arrMob['exp2'] / 10);
-		      }
-		    elseif ($arrData[1] == 2)
-		      {
-			$arrMob['exp1'] -= ceil($arrMob['exp1'] / 10);
-			$arrMob['exp2'] += ceil($arrMob['exp2'] / 10);
-		      }
 		    $arrResistances = array('none;none', 'fire;weak', 'fire;medium', 'fire;strong', 'water;weak', 'water;medium', 'water;strong', 'wind;weak', 'wind;medium', 'wind;strong', 'earth;weak', 'earth;medium', 'earth;strong');
-		    $arrMob['res'] = $arrResistances[$arrData[11]];
+		    $arrMob['res'] = $arrResistances[$arrData[8]];
 		    $arrDmgtype = array('none', 'fire', 'water', 'wind', 'earth');
-		    $arrMob['dmg'] = $arrDmgtype[$arrData[12]];
-		    $db->Execute("INSERT INTO `monsters` (`name`, `level`, `hp`, `agility`, `strength`, `speed`, `endurance`, `credits1`, `credits2`, `exp1`, `exp2`, `location`, `lootnames`, `lootchances`, `resistance`, `dmgtype`) VALUES('".$objProposal->fields['name']."', ".$arrData[6].", ".$arrMob['hp'].", ".$arrMob['agi'].", ".$arrMob['str'].", ".$arrMob['speed'].", ".$arrMob['con'].", ".$arrMob['gold1'].", ".$arrMob['gold2'].", ".$arrMob['exp1'].", ".$arrMob['exp2'].", '".$arrLocations[$objProposal->fields['info']]."', '".$arrData[7].";".$arrData[8].";".$arrData[9].";".$arrData[10]."', '55;77;95;100', '".$arrMob['res']."', '".$arrMob['dmg']."')") or die($db->ErrorMsg());
+		    $arrMob['dmg'] = $arrDmgtype[$arrData[9]];
+		    $db->Execute("INSERT INTO `monsters` (`name`, `level`, `hp`, `agility`, `strength`, `speed`, `endurance`, `location`, `lootnames`, `lootchances`, `resistance`, `dmgtype`) VALUES('".$objProposal->fields['name']."', ".$intLevel.", ".$arrMob['hp'].", ".$arrMob['agi'].", ".$arrMob['str'].", ".$arrMob['speed'].", ".$arrMob['con'].", '".$arrLocations[$objProposal->fields['info']]."', '".$arrData[4].";".$arrData[5].";".$arrData[6].";".$arrData[7]."', '45;77;95;100', '".$arrMob['res']."', '".$arrMob['dmg']."')") or die($db->ErrorMsg());
 		  }
 		else
 		  {
