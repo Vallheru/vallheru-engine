@@ -1,5 +1,7 @@
 2012-11-27  Bartek thindil Jasicki  <thindil@vallheru.net>
 
+	* UPDATE,templates/layout1/team.tpl, templates/team.tpl, team.php: 
+	added short info about teams
 	* UPDATE,templates/layout1/proposals.tpl, templates/proposals.tpl, admin.php, proposals.php: 
 	updated monsters proposals
 	* FEATURE,team.php: 

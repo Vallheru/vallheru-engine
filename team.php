@@ -168,7 +168,7 @@ if ($player->team == 0)
 	     $arrIds[] = $objTeam->fields[$strSlot];
 	   }
        }
-     $arrMembers = $db->GetAll("SELECT `id`, `user`, `energy`, `hp`, `max_hp` FROM `players` WHERE `id` IN (".implode(', ', $arrIds).")");
+     $arrMembers = $db->GetAll("SELECT `id`, `user`, `energy`, `hp`, `max_hp`, `miejsce` FROM `players` WHERE `id` IN (".implode(', ', $arrIds).")");
      foreach ($arrMembers as &$arrMember)
        {
 	 if ($arrMember['id'] == $objTeam->fields['leader'])
@@ -187,6 +187,10 @@ if ($player->team == 0)
 	 elseif ($arrMember['hp'] == 0)
 	   {
 	     $arrMember['status'] = 'Martwy';
+	   }
+	 elseif ($arrMember['miejsce'] != $player->location)
+	   {
+	     $arrMember['status'] = 'Odłączył się';
 	   }
 	 else
 	   {
@@ -208,7 +212,8 @@ if ($player->team == 0)
 			   'Tactions' => 'Akcje',
 			   'Tleader2' => $strLeader,
 			   'Leaderid' => $objTeam->fields['leader'],
-			   'Tmembers2' => $arrMembers));
+			   'Tmembers2' => $arrMembers,
+			   "Tinfo" => 'Tutaj możesz sprawdzić status swojej drużyny, bądź, jeżeli jesteś jej przywódcą, zarządzać członkami drużyny. Członkowie martwi, zmęczeni bądź ci, którzy się odłączyli, nie są doliczani do statystyk drużyny. Uwaga: jeżeli opuszczasz drużynę bądź usuwasz z niej członka, nie będziesz pytany o potwierdzenie.'));
    }
 
 $smarty->assign('Pteam', $player->team);
