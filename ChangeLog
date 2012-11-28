@@ -1,3 +1,8 @@
+2012-11-28  Bartek thindil Jasicki  <thindil@vallheru.net>
+
+	* FEATURE,class/team_class.php:
+	continue work on teams
+
 2012-11-27  Bartek thindil Jasicki  <thindil@vallheru.net>
 
 	* UPDATE,templates/layout1/team.tpl, templates/team.tpl, team.php: 
