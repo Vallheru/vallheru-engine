@@ -32,6 +32,8 @@
 $title = "Drużyna";
 require_once("includes/head.php");
 
+error('Czasowo niedostępne.');
+
 //Create new team
 if (isset($_GET['create']))
   {

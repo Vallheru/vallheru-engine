@@ -50,7 +50,7 @@
 	{foreach $Links.location as $link}
 	    <li>{$link}</li>
 	{/foreach}
-	<li><a href="team.php">{$Nteam}</a></li>
+	<!--<li><a href="team.php">{$Nteam}</a></li>-->
       </ul>
     </div>
     <div style="width: 12%; float: left;">

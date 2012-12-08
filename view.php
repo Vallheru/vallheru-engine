@@ -8,7 +8,7 @@
  *   @author               : thindil <thindil@vallheru.net>
  *   @author               : eyescream <tduda@users.sourceforge.net>
  *   @version              : 1.7
- *   @since                : 27.11.2012
+ *   @since                : 09.12.2012
  *
  */
 
@@ -279,11 +279,11 @@ if ($player -> id != $view -> id)
 	  }
 	if ($view->team == 0 && $view->tinvite == 0 && !$blnFull && $objTeam->fields['leader'] == $player->id)
 	  {
-	    $strLink .= '<li><a href="view.php?view='.$view->id.'&amp;team=add">Zaproś do drużyny</a></li>';
+	    //$strLink .= '<li><a href="view.php?view='.$view->id.'&amp;team=add">Zaproś do drużyny</a></li>';
 	  }
 	elseif ($view->team == $player->team && $objTeam->fields['leader'] == $player->id)
 	  {
-	    $strLink .= '<li><a href="view.php?view='.$view->id.'&amp;team=remove">Wyrzuć z drużyny</a></li>';
+	    //$strLink .= '<li><a href="view.php?view='.$view->id.'&amp;team=remove">Wyrzuć z drużyny</a></li>';
 	  }
 	$objTeam->Close();
       }

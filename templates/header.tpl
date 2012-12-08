@@ -77,7 +77,7 @@
                             {foreach $Links.location as $link}
 			        <li>{$link}</li>
 			    {/foreach}
-			    <li><a href="team.php">{$Nteam}</a></li>
+			    <!--<li><a href="team.php">{$Nteam}</a></li>-->
 			    <br />
                             <li><a href="mail.php{$Mailadd}">{$Npost}</a> [{$Unread}]</li>
                             <li><a href="forums.php?view=categories">{$Nforums}</a> {$Funread}</li>
