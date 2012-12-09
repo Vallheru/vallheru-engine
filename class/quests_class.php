@@ -7,7 +7,7 @@
  *   @copyright            : (C) 2004,2005,2006,2011,2012 Vallheru Team based on Gamers-Fusion ver 2.5
  *   @author               : thindil <thindil@vallheru.net>
  *   @version              : 1.7
- *   @since                : 24.10.2012
+ *   @since                : 09.12.2012
  *
  */
 
@@ -196,8 +196,6 @@ class Quests
 		       "endurance" => $enemy1 -> fields['endurance'], 
 		       "hp" => $enemy1 -> fields['hp'], 
 		       "name" => $enemy1 -> fields['name'], 
-		       "exp1" => $enemy1 -> fields['exp1'], 
-		       "exp2" => $enemy1 -> fields['exp2'], 
 		       "level" => $enemy1 -> fields['level'],
 		       "lootnames" => $enemy1->fields['lootnames'],
 		       "lootchances" => $enemy1->fields['lootchances'],
@@ -211,8 +209,31 @@ class Quests
         /**
         * Count gained experience
         */
-        $expgain1 = ceil(rand($enemy1 -> fields['exp1'],$enemy1 -> fields['exp2']) * $span);
-        $expgain = $expgain1;
+	$intPlevel = $player->stats['condition'][2] + $player->stats['speed'][2] + $player->stats['agility'][2] + $player->skills['dodge'][1] + $player->hp;
+	if ($player->equip[0][0] || $player->equip[11][0] || $player->equip[1][0])
+	  {
+	    $intPlevel += $player->stats['strength'][2];
+	    if ($player->equip[0][0] || $player->equip[11][0])
+	      {
+		$intPlevel += $player->skills['attack'][1];
+	      }
+	    else
+	      {
+		$intPlevel += $player->skills['shoot'][1];
+	      }
+	  }
+	else
+	  {
+	    $intPlevel += $player->stats['wisdom'][2] + $player->stats['inteli'][2] + $player->skills['magic'][1];
+	  }
+	$intElevel = $enemy1->fields['strength'] + $enemy1->fields['agility'] + $enemy1->fields['speed'] + $enemy1->fields['endurance'] + $enemy1->fields['level'] + $enemy1->fields['hp'];
+	$span = ($intElevel / $intPlevel);
+	if ($span > 2) 
+	  {
+	    $span = 2;
+	  }
+	$expgain1 = ceil($intElevel * $span);
+	$expgain = $expgain1;
         if (isset($_POST['razy']) && $_POST['razy'] > 1)
         {
             for ($k = 2; $k <= $_POST['razy']; $k++)
