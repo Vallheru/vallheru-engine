@@ -1,5 +1,7 @@
 2012-12-09  Bartek thindil Jasicki  <thindil@vallheru.net>
 
+	* BUG,class/quests_class.php: 
+	fixed gaining experience and gold from fight
 	* BUG,view.php: 
 	fixed typo
 	* BUG,explore.php, includes/turnfight.php: 

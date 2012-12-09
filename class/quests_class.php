@@ -201,7 +201,25 @@ class Quests
 		       "lootchances" => $enemy1->fields['lootchances'],
 		       "resistance" => explode(";", $enemy1->fields['resistance']),
 		       "dmgtype" => $enemy1->fields['dmgtype']);
-        $span = ($enemy1 -> fields['level'] / $player -> level);
+	$intPlevel = $player->stats['condition'][2] + $player->stats['speed'][2] + $player->stats['agility'][2] + $player->skills['dodge'][1] + $player->hp;
+	if ($player->equip[0][0] || $player->equip[11][0] || $player->equip[1][0])
+	  {
+	    $intPlevel += $player->stats['strength'][2];
+	    if ($player->equip[0][0] || $player->equip[11][0])
+	      {
+		$intPlevel += $player->skills['attack'][1];
+	      }
+	    else
+	      {
+		$intPlevel += $player->skills['shoot'][1];
+	      }
+	  }
+	else
+	  {
+	    $intPlevel += $player->stats['wisdom'][2] + $player->stats['inteli'][2] + $player->skills['magic'][1];
+	  }
+	$intElevel = $enemy1->fields['strength'] + $enemy1->fields['agility'] + $enemy1->fields['speed'] + $enemy1->fields['endurance'] + $enemy1->fields['level'] + $enemy1->fields['hp'];
+	$span = ($intElevel / $intPlevel);
         if ($span > 2) 
         {
             $span = 2;
@@ -241,7 +259,7 @@ class Quests
                 $expgain = $expgain + ceil($expgain1 / 5 * (sqrt($k) + 4.5));
             }
         }
-        $goldgain = ceil(rand($enemy1 -> fields['credits1'],$enemy1 -> fields['credits2']) * $span);
+	$goldgain = ceil($intElevel * $span);
         $enemy1 -> Close();        
         $arrehp = array ();
         if (!isset ($_POST['action'])) 
