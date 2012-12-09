@@ -78,6 +78,12 @@ function encounter()
       $fltMax = 2.0;
     }
   $objMonster = $db->SelectLimit("SELECT * FROM `monsters` WHERE `location`='".$strLocation."' AND ((`strength`+`agility`+`speed`+`endurance`+`level`+`hp`)/".$intPlevel.")>=".$fltMin." AND ((`strength`+`agility`+`speed`+`endurance`+`level`+`hp`)/".$intPlevel.")<=".$fltMax." ORDER BY RAND()", 1);
+  if (!$objMonster->fields['id'])
+    {
+      $fltMin = 0.0;
+      $fltMax = 2.0;
+      $objMonster = $db->SelectLimit("SELECT * FROM `monsters` WHERE `location`='".$strLocation."' AND ((`strength`+`agility`+`speed`+`endurance`+`level`+`hp`)/".$intPlevel.")>=".$fltMin." AND ((`strength`+`agility`+`speed`+`endurance`+`level`+`hp`)/".$intPlevel.")<=".$fltMax." ORDER BY RAND()", 1);
+    }
   $enemy = array("strength" => $objMonster->fields['strength'], 
 		 "agility" => $objMonster->fields['agility'], 
 		 "speed" => $objMonster->fields['speed'], 

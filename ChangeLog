@@ -1,5 +1,7 @@
 2012-12-09  Bartek thindil Jasicki  <thindil@vallheru.net>
 
+	* BUG,includes/monsters.php: 
+	fixed generating random encounters
 	* BUG,jail.php: 
 	fixed escape from jail
 	* BUG,includes/funkcje.php: 
