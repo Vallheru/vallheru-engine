@@ -7,7 +7,7 @@
  *   @copyright            : (C) 2004,2005,2006,2011,2012 Vallheru Team based on Gamers-Fusion ver 2.5
  *   @author               : thindil <thindil@vallheru.net>
  *   @version              : 1.7
- *   @since                : 08.11.2012
+ *   @since                : 09.12.2012
  *
  */
  
@@ -190,7 +190,7 @@ if (isset($_GET['step']) && $_GET['step'] == 'run')
      */
     $player->curskills(array('perception'));
     $player->clearbless(array('speed'));
-    $chance = (($player->stats['speed'][2] + $player->skills['perception'][1] + rand(1, 100)) - ($enemy -> fields['speed'] + rand(1, 100));
+    $chance = (($player->stats['speed'][2] + $player->skills['perception'][1] + rand(1, 100)) - ($enemy -> fields['speed'] + rand(1, 100)));
     $smarty -> assign ("Chance", $chance);
     if ($chance > 0) 
       {
