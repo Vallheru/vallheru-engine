@@ -1675,7 +1675,7 @@ if (isset($_GET['view']))
 		    $db->Execute("INSERT INTO `vallars` (`owner`, `amount`, `reason`) VALUES(".$objProposal->fields['pid'].", 1, 'Nowy potwór na arenie.')");
 		    $strResult = "Zaakceptowałeś potwora";
 		    //Monster stats
-		    $intLevel = (5, 100);
+		    $intLevel = rand(5, 100);
 		    $objMinlev = $db->Execute("SELECT max(`level`) FROM `monsters` WHERE `level`<=".$intLevel." AND `location`='".$arrLocations[$objProposal->fields['info']]."'");
 		    $objMaxlev = $db->Execute("SELECT min(`level`) FROM `monsters` WHERE `level`>=".$intLevel." AND `location`='".$arrLocations[$objProposal->fields['info']]."'");
 		    $objStats = $db->Execute("SELECT * FROM `monsters` WHERE `level`=".$objMaxlev->fields['min(`level`)']." AND `location`='".$arrLocations[$objProposal->fields['info']]."'");
