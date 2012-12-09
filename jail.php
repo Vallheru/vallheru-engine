@@ -8,7 +8,7 @@
  *   @author               : thindil <thindil@vallheru.net>
  *   @author               : eyescream <tduda@users.sourceforge.net>
  *   @version              : 1.7
- *   @since                : 23.10.2012
+ *   @since                : 09.12.2012
  *
  */
 
@@ -89,7 +89,7 @@ if (isset($_GET['escape']))
 	$player->curskills(array('thievery'));
 	$player->clearbless(array('agility', 'inteli', 'speed'));
 	
-	$intStats = ($player->stats['agility'] + $player->inteli + $player->thievery + $player->speed);
+	$intStats = ($player->stats['agility'][2] + $player->stats['inteli'][2] + $player->skills['thievery'][1] + $player->stats['speed'][2]);
 	/**
 	 * Add bonus from tools
 	 */
