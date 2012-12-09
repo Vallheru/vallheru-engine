@@ -7,7 +7,7 @@
  *   @copyright            : (C) 2004,2005,2006,2007,2011,2012 Vallheru Team based on Gamers-Fusion ver 2.5
  *   @author               : thindil <thindil@vallheru.net>
  *   @version              : 1.7
- *   @since                : 23.11.2012
+ *   @since                : 09.12.2012
  *
  */
 
@@ -985,7 +985,7 @@ function fightmonster($enemy, $expgain, $goldgain, $times)
         {
             $stat['damage'] = ($bonus2 + $bonus);
         }
-        if ($player -> shoot > 5) 
+        if ($player ->skills['shoot'][1] > 5) 
         {
             $krytyk = 6;
         } 
