@@ -178,18 +178,17 @@ function monsterloot($arrNames, $arrChances, $intLevel, $intMonsters = 1)
 /**
  * Function auto reload quivers
  */
-function autofill($intPlayerid, $intArrowId, $intPlayer2, $intPlevel)
+function autofill($intPlayerid, &$arrArrows, $intPlayer2, $intPlevel)
 {
   global $db;
 
-  $objArrows = $db->Execute("SELECT * FROM `equipment` WHERE `id`=".$intArrowId);
-  if ($objArrows->fields['wt'] == 25)
+  if ($arrArrows[6] == 25)
     {
       return;
     }
-  if ($objArrows->fields['id'])
+  if ($arrArrows[0])
     {
-      $objNewArrows = $db->Execute("SELECT `wt`, `id` FROM `equipment` WHERE name='".$objArrows -> fields['name']."' AND `power`=".$objArrows -> fields['power']." AND `status`='U' AND `owner`=".$intPlayerid." AND `ptype`='".$objArrows->fields['ptype']."' AND `poison`=".$objArrows->fields['poison']);
+      $objNewArrows = $db->Execute("SELECT `wt`, `id` FROM `equipment` WHERE name='".$arrArrows[1]."' AND `power`=".$arrArrows[2]." AND `status`='U' AND `owner`=".$intPlayerid." AND `ptype`='".$arrArrows[3]."' AND `poison`=".$arrArrows[8]);
       if (!$objNewArrows->fields['id'])
 	{
 	  if ($intPlayerid == $intPlayer2)
@@ -198,13 +197,13 @@ function autofill($intPlayerid, $intArrowId, $intPlayer2, $intPlevel)
 	    }
 	  return;
 	}
-      $intAmount = 25 - $objArrows -> fields['wt'];
+      $intAmount = 25 - $arrArrows[6];
       if ($intAmount > $objNewArrows->fields['wt'])
 	{
 	  $intAmount = $objNewArrows->fields['wt'];
 	}
-      $db->Execute("UPDATE `equipment` SET `wt`=`wt`+".$intAmount." WHERE `id`=".$objArrows -> fields['id']);
-      $objArrows->Close();
+      $db->Execute("UPDATE `equipment` SET `wt`=".($intAmount + $arrArrows[6])." WHERE `id`=".$arrArrows[0]);
+      $arrArrows[6] += $intAmount;
       if ($intPlayerid == $intPlayer2)
 	{
 	  print "<br />Uzupełniłeś(aś) kołczan ".$intAmount." strzałami.<br />";
@@ -230,6 +229,18 @@ function autofill($intPlayerid, $intArrowId, $intPlayer2, $intPlevel)
 	  $intAmount = $objNewArrows->fields['wt'];
 	}
       $db -> Execute("INSERT INTO `equipment` (`name`, `wt`, `power`, `status`, `type`, `owner`, `ptype`, `poison`, `minlev`) VALUES('".$objNewArrows->fields['name']."',".$intAmount.",".$objNewArrows->fields['power'].",'E','R',".$intPlayerid.", '".$objNewArrows->fields['ptype']."', ".$objNewArrows->fields['poison'].", ".$objNewArrows->fields['minlev'].")");
+      $arrArrows[0] = $objNewArrows -> fields['id'];
+      $arrArrows[1] = $objNewArrows -> fields['name'];
+      $arrArrows[2] = $objNewArrows -> fields['power'];
+      $arrArrows[3] = $objNewArrows -> fields['ptype'];
+      $arrArrows[4] = $objNewArrows -> fields['minlev'];
+      $arrArrows[5] = $objNewArrows -> fields['zr'];
+      $arrArrows[6] = $objNewArrows -> fields['wt'];
+      $arrArrows[7] = $objNewArrows -> fields['szyb'];
+      $arrArrows[8] = $objNewArrows -> fields['poison'];
+      $arrArrows[9] = $objNewArrows -> fields['maxwt'];
+      $arrArrows[10] = $objNewArrows->fields['magic'];
+      $arrArrows[11] = $objNewArrows->fields['repair'];
       if ($intPlayerid == $intPlayer2)
 	{
 	  print "<br />Włożyłeś(aś) ".$objNewArrows->fields['name']." do kołczanu.<br />";
@@ -374,7 +385,7 @@ function gainability ($objPlayer, $intExp, $gunik, $gatak, $gmagia, $player2, $s
 /**
 * Function count damage of weapons and armors in fight
 */
-function lostitem($arrEquip, $pid, $player2, $intLevel) 
+function lostitem(&$arrEquip, $pid, $player2, $intLevel) 
 {
     global $db;
 
@@ -411,8 +422,9 @@ function lostitem($arrEquip, $pid, $player2, $intLevel)
 	if ($arrEquip[6][6] == 0)
 	  {
 	    $db->Execute("DELETE FROM `equipment` WHERE `id`=".$arrEquip[6][0]);
+	    $arrEquip[6][0] = 0;
 	  }
-	 autofill($pid, $arrEquip[6][0], $player2, $intLevel);
+	 autofill($pid, $arrEquip[6], $player2, $intLevel);
       }
 }
 
