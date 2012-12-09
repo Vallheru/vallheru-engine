@@ -94,7 +94,7 @@ function attack1($attacker, $defender, $attack_bspell, $def_bspell, $attack_dspe
 	  {
             $mypower = ($attacker->equip[1][2] + $bonus + $attacker->equip[6][2]);
 	  }
-        $krytyk = critical($attacker->skills['shoot'][1]);
+        $krytyk = critical($attacker->skills['shoot'][1], $attacker);
 	$strAtype = 'ranged';
 	$strSkill = 'shoot';
       }
@@ -114,7 +114,7 @@ function attack1($attacker, $defender, $attack_bspell, $def_bspell, $attack_dspe
 	  {
             $mypower = ($attacker->equip[0][2] + $attacker->stats['strength'][2]);
 	  }
-        $krytyk = critical($attacker->skills['attack'][1]);
+        $krytyk = critical($attacker->skills['attack'][1], $attacker);
 	$strAtype = 'melee';
 	$strSkill = 'attack';
     }
@@ -165,7 +165,7 @@ function attack1($attacker, $defender, $attack_bspell, $def_bspell, $attack_dspe
             $pech = 0;
         }
         $pech = ($pech + rand(1,100));
-        $krytyk = critical($attacker->skills['magic'][1]);
+        $krytyk = critical($attacker->skills['magic'][1], $attacker);
         if ($attacker->mana <= 0) 
         {
             $mypower = 0;
