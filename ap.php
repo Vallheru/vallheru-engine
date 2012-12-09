@@ -7,7 +7,7 @@
  *   @copyright            : (C) 2004,2005,2006,2011,2012 Vallheru Team based on Gamers-Fusion ver 2.5
  *   @author               : thindil <thindil@vallheru.net>
  *   @version              : 1.7
- *   @since                : 13.11.2012
+ *   @since                : 09.12.2012
  *
  */
 
@@ -31,6 +31,15 @@
 
 $title = "Dystrybucja AP";
 require_once("includes/head.php");
+
+if ($player->clas == '')
+  {
+    error('Musisz najpierw wybrać klasę.');
+  }
+if ($player->race == '')
+  {
+    error('Musisz najpierw wybrać rasę postaci.');
+  }
 
 //Get selected bonus
 if (isset($_GET['select']))
