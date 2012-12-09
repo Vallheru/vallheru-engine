@@ -33,7 +33,8 @@ ALTER TABLE `players` ADD `stats` VARCHAR( 2048 ) NOT NULL DEFAULT 'strength:Si�
 ADD `skills` VARCHAR( 4096 ) NOT NULL DEFAULT 'smith:Kowalstwo,1,0;shoot:Strzelectwo,1,0;alchemy:Alchemia,1,0;dodge:Uniki,1,0;carpentry:Stolarstwo,1,0;magic:Rzucanie Czarów,1,0;attack:Walka Bronią,1,0;leadership:Dowodzenie,1,0;breeding:Hodowla,1,0;mining:Górnictwo,1,0;lumberjack:Drwalnictwo,1,0;herbalism:Zielarstwo,1,0;jewellry:Jubilerstwo,1,0;smelting:Hutnictwo,1,0;thievery:Złodziejstwo,1,0;perception:Spostrzegawczość,1,0;',
 ADD `bonuses` TEXT NOT NULL,
 ADD `rinvite` INT( 11 ) NOT NULL DEFAULT '0',
-ADD `tinvite` INT( 11 ) NOT NULL DEFAULT '0';
+ADD `tinvite` INT( 11 ) NOT NULL DEFAULT '0',
+ADD `team` INT( 11 ) NOT NULL DEFAULT '0';
 ALTER TABLE `monsters`
   DROP `exp1`,
   DROP `exp2`,
@@ -186,7 +187,7 @@ INSERT INTO `bonuses` (`id`, `name`, `desc`, `cost`, `levels`, `trigger`, `bonus
 (19, 'Płatnerz nagolenników', 'Premia w wysokości +5% do umiejętności Kowalstwo podczas wykonywania nagolenników.', 5, 5, 'legsmith', 5, 'Gnom;Krasnolud;', 'Rzemieślnik;'),
 (20, 'Płatnerz tarcz', 'Premia w wysokości +5% do umiejętności Kowalstwo podczas wykonywania tarcz.', 5, 5, 'shieldsmith', 5, 'Gnom;Krasnolud;', 'Rzemieślnik;'),
 (21, 'Kowal', 'Premia w wysokości +5% do umiejętności Kowalstwo podczas wykonywania narzędzi.', 5, 5, 'armorsmith', 5, 'All;', 'Rzemieślnik;'),
-(21, 'Łucarz', 'Premia w wysokości +5% do umiejętności Stolarstwo podczas wykonywania łuków.', 5, 5, 'bowyer', 5, 'Hobbit;Gnom;', 'Rzemieślnik;'),
+(52, 'Łucarz', 'Premia w wysokości +5% do umiejętności Stolarstwo podczas wykonywania łuków.', 5, 5, 'bowyer', 5, 'Hobbit;Gnom;', 'Rzemieślnik;'),
 (22, 'Wytwórca strzał', 'Premia w wysokości +5% do umiejętności Stolarstwo podczas wykonywania strzał.', 5, 5, 'arrowmaker', 5, 'Hobbit;Gnom;', 'Rzemieślnik;'),
 (23, 'Mistrz jubilerstwa', 'Premia w wysokości +2% do umiejętności Jubilerstwo podczas wykonywania pierścieni.', 3, 5, 'jewellry', 2, 'All;', 'Rzemieślnik;'),
 (24, 'Mistrz drwalnictwa', 'Premia w wysokości +2% do umiejętności Drwalnictwo podczas wyrębu drewna.', 3, 5, 'lumberjack', 2, 'All;', 'Rzemieślnik;'),
@@ -222,3 +223,13 @@ ADD `agents` TINYINT( 3 ) NOT NULL DEFAULT '0',
 ADD `dagents` TINYINT( 3 ) NOT NULL DEFAULT '0';
 ALTER TABLE `aktywacja` DROP `lang`;
 ALTER TABLE `aktywacja` ADD `gtype` VARCHAR( 1 ) NOT NULL;
+CREATE TABLE IF NOT EXISTS `teams` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `leader` int(11) NOT NULL,
+  `slot1` int(11) NOT NULL,
+  `slot2` int(11) NOT NULL DEFAULT '0',
+  `slot3` int(11) NOT NULL DEFAULT '0',
+  `slot4` int(11) NOT NULL DEFAULT '0',
+  `slot5` int(11) NOT NULL DEFAULT '0',
+  KEY `id` (`id`)
+) ENGINE=MyISAM DEFAULT CHARSET=utf8 AUTO_INCREMENT=1;
