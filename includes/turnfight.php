@@ -7,7 +7,7 @@
  *   @copyright            : (C) 2004,2005,2006,2007,2011,2012 Vallheru Team based on Gamers-Fusion ver 2.5
  *   @author               : thindil <thindil@vallheru.net>
  *   @version              : 1.7
- *   @since                : 23.11.2012
+ *   @since                : 09.12.2012
  *
  */
  
@@ -550,11 +550,10 @@ function turnfight($expgain,$goldgain,$action,$addres)
       }
     if ($_POST['action'] == 'escape') 
     {
-        $chance = (rand(1, $player -> level * 100) + $player -> speed - $enemy['agility']);
+        $chance = (($player->stats['speed'][2] + $player->skills['perception'][1] + rand(1, 100)) - ($enemy -> fields['speed'] + rand(1, 100));
         if ($chance > 0) 
         {
-            $expgain = rand($enemy['exp1'],$enemy['exp2']);
-            $expgain = (ceil($expgain / 100));
+	    $expgain = ceil(($enemy->fields['speed'] + $enemy->fields['endurance'] + $enemy->fields['agility'] + $enemy->fields['strength']) / 100);
             $smarty -> assign ("Message", ESCAPE_SUCC." ".$enemy['name'].YOU_GAIN1." ".$expgain." ".EXP_PTS."<br /></li></ul>");
             $smarty -> display ('error1.tpl');
 	    if ($player->equip[0][0] || $player->equip[11][0]) 
@@ -597,7 +596,7 @@ function turnfight($expgain,$goldgain,$action,$addres)
             if ($player -> hp > 0) 
             {
                 $_SESSION['round'] = $_SESSION['round'] + 1;
-                $_SESSION['points'] = ceil($player->speed / $enemy['speed']);
+                $_SESSION['points'] = ceil($player->stats['speed'][2] / $enemy['speed']);
                 fightmenu($_SESSION['points'],$zmeczenie,$_SESSION['round'],$addres);
             }
         }
