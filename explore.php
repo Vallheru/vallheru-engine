@@ -511,7 +511,8 @@ if (isset($_GET['action']) && $_GET['action'] == 'moutains' && $player -> locati
         $panswer = htmlspecialchars($_POST['tanswer'], ENT_QUOTES);
         if ($panswer == $answer -> fields['answer']) 
         {
-	    $arritem = $db -> Execute("SELECT * FROM `equipment` WHERE `owner`=0 AND `minlev`<=".rand(1, 100)." ORDER BY RAND()");
+	    $intLevel = max($player->skills['attack'][1], $player->skills['shoot'][1]);
+	    $arritem = $db -> Execute("SELECT * FROM `equipment` WHERE `owner`=0 AND `minlev`<=".$intLevel." ORDER BY RAND()");
             $test = $db -> Execute("SELECT `id` FROM `equipment` WHERE `name`='".$arritem -> fields['name']."' AND `wt`=".$arritem -> fields['maxwt']." AND `type`='".$arritem -> fields['type']."' AND `status`='U' AND `owner`=".$player -> id." AND `power`=".$arritem -> fields['power']." AND `zr`=".$arritem -> fields['zr']." AND `szyb`=".$arritem -> fields['szyb']." AND `maxwt`=".$arritem -> fields['maxwt']." AND `cost`=1 AND `poison`=0");
             if (!$test -> fields['id']) 
             {

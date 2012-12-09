@@ -1,5 +1,7 @@
 2012-12-09  Bartek thindil Jasicki  <thindil@vallheru.net>
 
+	* BUG,explore.php: 
+	fixed bug with gaining item
 	* BUG,includes/monsters.php: 
 	fixed generating random encounters
 	* BUG,jail.php: 
