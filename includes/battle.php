@@ -8,7 +8,7 @@
  *   @author               : thindil <thindil@vallheru.net>
  *   @author               : eyescream <tduda@users.sourceforge.net>
  *   @version              : 1.7
- *   @since                : 23.11.2012
+ *   @since                : 09.12.2012
  *
  */
 
@@ -241,7 +241,7 @@ function attack1($attacker, $defender, $attack_bspell, $def_bspell, $attack_dspe
       {
 	if ($attacker->pet[1] > $attacker->skills[$strSkill][1])
 	  {
-	    $mypower += $attacker->skills[$strSkill][1]
+	    $mypower += $attacker->skills[$strSkill][1];
 	  }
 	else
 	  {

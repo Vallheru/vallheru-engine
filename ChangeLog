@@ -1,5 +1,7 @@
 2012-12-09  Bartek thindil Jasicki  <thindil@vallheru.net>
 
+	* BUG,includes/battle.php: 
+	fixed typo
 	* BUG,maze.php: 
 	fixed find magic item
 	* BUG,explore.php: 
