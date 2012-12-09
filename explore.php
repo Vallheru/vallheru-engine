@@ -180,7 +180,7 @@ if (isset($_GET['step']) && $_GET['step'] == 'battle')
 */
 if (isset($_GET['step']) && $_GET['step'] == 'run') 
 {
-    $enemy = $db -> Execute("SELECT `level`, `speed`, `name`, `id` FROM `monsters` WHERE `id`=".$player -> fight);
+    $enemy = $db -> Execute("SELECT * FROM `monsters` WHERE `id`=".$player -> fight);
     if (!$enemy->fields['id'])
       {
 	error('Nie masz przed kim uciekać!');

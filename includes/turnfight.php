@@ -550,10 +550,10 @@ function turnfight($expgain,$goldgain,$action,$addres)
       }
     if ($_POST['action'] == 'escape') 
     {
-      $chance = (($player->stats['speed'][2] + $player->skills['perception'][1] + rand(1, 100)) - ($enemy -> fields['speed'] + rand(1, 100)));
+      $chance = (($player->stats['speed'][2] + $player->skills['perception'][1] + rand(1, 100)) - ($enemy['speed'] + rand(1, 100)));
         if ($chance > 0) 
         {
-	    $expgain = ceil(($enemy->fields['speed'] + $enemy->fields['endurance'] + $enemy->fields['agility'] + $enemy->fields['strength']) / 100);
+	    $expgain = ceil(($enemy['speed'] + $enemy['endurance'] + $enemy['agility'] + $enemy['strength']) / 100);
             $smarty -> assign ("Message", ESCAPE_SUCC." ".$enemy['name'].YOU_GAIN1." ".$expgain." ".EXP_PTS."<br /></li></ul>");
             $smarty -> display ('error1.tpl');
 	    if ($player->equip[0][0] || $player->equip[11][0]) 
