@@ -7,7 +7,7 @@
  *   @copyright            : (C) 2004,2005,2006,2007,2011,2012 Vallheru Team based on Gamers-Fusion ver 2.5
  *   @author               : thindil <thindil@vallheru.net>
  *   @version              : 1.7
- *   @since                : 26.11.2012
+ *   @since                : 09.12.2012
  *
  */
 
@@ -711,7 +711,6 @@ $smarty -> assign (array ("Time" => $time,
 			  "Links" => $arrLinks,
 			  "Nteam" => "Drużyna",
 			  "Ownlinks" => count($arrLinks['own'])));
-
 //Player avatar
 if ((array_key_exists('avatar', $player->settings) && $player->settings['avatar'] == 'Y') && $player->settings['graphic'] == '')
   {
@@ -725,6 +724,10 @@ if ((array_key_exists('avatar', $player->settings) && $player->settings['avatar'
 			      'Aheight' => $arrImage[1]));
       }
   }
+if ($player->settings['graphic'] != '')
+{
+  $smarty->assign('Avatar', $player->avatar);
+}
 
 $smarty -> display ('header.tpl');
 
