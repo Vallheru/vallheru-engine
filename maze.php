@@ -430,13 +430,13 @@ if (isset($_GET['action']) && $_GET['action'] == 'explore')
 	  {
 	    if ($intRoll2 < 9)
 	      {
-		$objQuery = $db -> Execute("SELECT count(`id`) FROM `mage_items` WHERE `minlev`".$strSymbol."".$player -> level." AND `lang`='".$lang."' AND `type`='T'");
+		$objQuery = $db -> Execute("SELECT count(`id`) FROM `mage_items` WHERE `minlev`".$strSymbol."".$player->skills['magic'][1]." AND `type`='T'");
 		$intAmount = $objQuery->fields['count(`id`)'];
 		$objQuery -> Close();
 		if ($intAmount > 0)
 		  {
 		    $intRoll4 = rand(0, ($intAmount-1));
-		    $objStaff = $db -> SelectLimit("SELECT `id`, `name` FROM `mage_items` WHERE `minlev`".$strSymbol."".$player -> level." AND `lang`='".$lang."' AND `type`='T'", 1, $intRoll4);
+		    $objStaff = $db -> SelectLimit("SELECT `id`, `name` FROM `mage_items` WHERE `minlev`".$strSymbol."".$player->skills['magic'][1]." AND `type`='T'", 1, $intRoll4);
 		    $objTest = $db->Execute("SELECT `id` FROM `equipment` WHERE `owner`=".$player->id." AND `name`='".$objStaff->fields['name']."'");
 		    if ((!in_array($objStaff->fields['id'], $arrMagic)) && (!$objTest->fields['id']))
 		      {
