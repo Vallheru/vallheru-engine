@@ -205,7 +205,7 @@ if ($view->gender == 'M')
 else
   {
     $strAlive = 'Żywa';
-    $strDead = 'Alive';
+    $strDead = 'Martwa';
   }
 if ($view -> hp > 0) 
 {

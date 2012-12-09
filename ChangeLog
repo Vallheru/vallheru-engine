@@ -1,5 +1,7 @@
 2012-12-09  Bartek thindil Jasicki  <thindil@vallheru.net>
 
+	* BUG,view.php: 
+	fixed typo
 	* BUG,explore.php, includes/turnfight.php: 
 	fixed escape from fight
 	* BUG,install/db/update.sql: 
