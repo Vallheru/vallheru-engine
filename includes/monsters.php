@@ -7,7 +7,7 @@
  *   @copyright            : (C) 2012 Vallheru Team based on Gamers-Fusion ver 2.5
  *   @author               : thindil <thindil@vallheru.net>
  *   @version              : 1.7
- *   @since                : 12.11.2012
+ *   @since                : 09.12.2012
  *
  */
 
@@ -85,7 +85,7 @@ function encounter()
 		 "hp" => $objMonster->fields['hp'], 
 		 "name" => $objMonster->fields['name'], 
 		 "id" => $objMonster->fields['id'], 
-		 "level" => $enemy1 -> fields['level'],
+		 "level" => $objMonster->fields['level'],
 		 "lootnames" => explode(";", $objMonster->fields['lootnames']),
 		 "lootchances" => explode(";", $objMonster->fields['lootchances']),
 		 "resistance" => explode(";", $objMonster->fields['resistance']),
