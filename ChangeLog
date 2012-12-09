@@ -1,5 +1,7 @@
 2012-12-09  Bartek thindil Jasicki  <thindil@vallheru.net>
 
+	* BUG,includes/resets.php: 
+	fixed bug with count rings bonus
 	* BUG,preset.php: 
 	fixed amount of energy
 	* BUG,preset.php: 

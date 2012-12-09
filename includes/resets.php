@@ -7,7 +7,7 @@
  *   @copyright            : (C) 2004,2005,2006,2007,2011,2012 Vallheru Team based on Gamers-Fusion ver 2.5
  *   @author               : thindil <thindil@vallheru.net>
  *   @version              : 1.7
- *   @since                : 19.11.2012
+ *   @since                : 09.12.2012
  *
  */
 
@@ -128,10 +128,21 @@ function smallreset($blnSmall = FALSE)
     $intLangs = 0;
     $arrRings = array("inteligencji", "woli");
     $arrStat = array('inteli', 'wisdom');
-    $objStats = $db -> Execute("SELECT `id`, `inteli`, `wisdom` FROM `players`");
+    $objStats = $db -> Execute("SELECT `id`, `stats` FROM `players`");
     while (!$objStats -> EOF)
     {
         $objRings = $db -> Execute("SELECT `power`, `name` FROM `equipment` WHERE `type`='I' AND `status`='E' AND `owner`=".$objStats -> fields['id']);
+	$arrTmp = explode(';', $objStats->fields['stats']);
+	$arrValues = array();
+	foreach ($arrTmp as $strField)
+	  {
+	    $arrTmp2 = explode(':', $strField);
+	    if ($arrTmp2[0] == '')
+	      {
+		continue;
+	      }
+	      $arrValues[$arrTmp2[0]] = explode(',', $arrTmp2[1]);
+	}
         while (!$objRings -> EOF)
         {
             $arrRingtype = explode(" ", $objRings -> fields['name']);
@@ -140,13 +151,13 @@ function smallreset($blnSmall = FALSE)
             if ($intKey !== FALSE)
             {
                 $strStat = $arrStat[$intKey];
-                $objStats -> fields[$strStat] = $objStats -> fields[$strStat] + $objRings -> fields['power'];
+                $arrValues[$strStat][2] += $objRings -> fields['power'];
             }
             $objRings -> MoveNext();
         }
         $objRings -> Close();
         $objCape = $db -> Execute("SELECT `power` FROM `equipment` WHERE `type`='C' AND `status`='E' AND `owner`=".$objStats -> fields['id']);
-        $intMaxmana = floor($objStats -> fields['inteli'] + $objStats -> fields['wisdom']);
+        $intMaxmana = floor($arrValues['inteli'][2] + $arrValues['wisdom'][2]);
         $intMaxmana += floor(($objCape -> fields['power'] / 100) * $intMaxmana);
         $objCape -> Close();
         $db -> Execute("UPDATE `players` SET `pm`=".$intMaxmana.", `antidote`='' WHERE `id`=".$objStats -> fields['id']);
