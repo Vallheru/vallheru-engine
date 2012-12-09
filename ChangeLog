@@ -1,5 +1,7 @@
 2012-12-09  Bartek thindil Jasicki  <thindil@vallheru.net>
 
+	* BUG,install/db/update.sql: 
+	fixed typo
 	* BUG,class/quests_class.php: 
 	fixed count gained experience
 	* BUG,includes/funkcje.php: 

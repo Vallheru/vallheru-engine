@@ -192,7 +192,7 @@ INSERT INTO `bonuses` (`id`, `name`, `desc`, `cost`, `levels`, `trigger`, `bonus
 (23, 'Mistrz jubilerstwa', 'Premia w wysokości +2% do umiejętności Jubilerstwo podczas wykonywania pierścieni.', 3, 5, 'jewellry', 2, 'All;', 'Rzemieślnik;'),
 (24, 'Mistrz drwalnictwa', 'Premia w wysokości +2% do umiejętności Drwalnictwo podczas wyrębu drewna.', 3, 5, 'lumberjack', 2, 'All;', 'Rzemieślnik;'),
 (25, 'Mistrz hutnictwa', 'Premia w wysokości +2% do umiejętności Hutnictwo podczas wytapiania sztabek oraz przetapiania przedmiotów.', 3, 5, 'smelting', 2, 'All;', 'Rzemieślnik;'),
-(26, 'Mistrz hodowli', 'Premia w wysokości +2% do umiejętności Hodowla podczas rozmnarzania chowańców.', 3, 5, 'breeding', 2, 'All;', 'Rzemieślnik;'),
+(26, 'Mistrz hodowli', 'Premia w wysokości +2% do umiejętności Hodowla podczas rozmnażania chowańców.', 3, 5, 'breeding', 2, 'All;', 'Rzemieślnik;'),
 (27, 'Mag bojowy', 'Premia w wysokości +2% do siły czarów bojowych.', 3, 5, 'bspells', 2, 'All;', 'Mag;'),
 (28, 'Ochronna magia', 'Premia w wysokości +2% do siły czarów obronnych.', 3, 5, 'dspells', 2, 'All;', 'Mag;'),
 (29, 'Mag ognia', 'Premia +5% do siły czarów bojowych i obronnych z żywiołu ognia.', 5, 5, 'fire', 5, 'All;', 'Mag;'),
