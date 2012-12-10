@@ -195,6 +195,14 @@ function autofill($intPlayerid, &$arrArrows, $intPlayer2, $intPlevel)
 	    {
 	      print "<br />Nie masz strzał aby uzupełnić kołczan!<br />";
 	    }
+	  if ($arrArrows[6] <= 0)
+	    {
+	      $db->Execute("DELETE FROM `equipment` WHERE `id`=".$arrArrows[0]);
+	    }
+	  else
+	    {
+	      $db->Execute("UPDATE `equipment` SET `wt`=".$arrArrows[6]." WHERE `id`=".$arrArrows[0]);
+	    }
 	  return;
 	}
       $intAmount = 25 - $arrArrows[6];
