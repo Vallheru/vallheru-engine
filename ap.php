@@ -7,7 +7,7 @@
  *   @copyright            : (C) 2004,2005,2006,2011,2012 Vallheru Team based on Gamers-Fusion ver 2.5
  *   @author               : thindil <thindil@vallheru.net>
  *   @version              : 1.7
- *   @since                : 09.12.2012
+ *   @since                : 10.12.2012
  *
  */
 
@@ -34,11 +34,11 @@ require_once("includes/head.php");
 
 if ($player->clas == '')
   {
-    error('Musisz najpierw wybrać klasę.');
+    error('Musisz najpierw wybrać klasę. (<a href=stats.php>Wróć</a>)');
   }
 if ($player->race == '')
   {
-    error('Musisz najpierw wybrać rasę postaci.');
+    error('Musisz najpierw wybrać rasę postaci. (<a href=stats.php>Wróć</a>)');
   }
 
 //Get selected bonus
