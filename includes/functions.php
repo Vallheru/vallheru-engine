@@ -7,7 +7,7 @@
  *   @copyright            : (C) 2004,2005,2006,2011,2012 Vallheru Team based on Gamers-Fusion ver 2.5
  *   @author               : thindil <thindil@vallheru.net>
  *   @version              : 1.7
- *   @since                : 30.10.2012
+ *   @since                : 10.12.2012
  *
  */
 
@@ -254,6 +254,7 @@ function equip ($id)
     {
         error (NOT_OWNER);
     }
+    $strSkill = '';
     switch ($equip->fields['type'])
       {
       case 'W':
@@ -276,7 +277,7 @@ function equip ($id)
 	  {
 	    $strSkill = 'attack';
 	  }
-	elseif ($arrSkills[1] > $arrSkills[0] && $arrSkillls[1] > $arrSkills[2])
+	elseif ($arrSkills[1] > $arrSkills[0] && $arrSkills[1] > $arrSkills[2])
 	  {
 	    $strSkill = 'shoot';
 	  }
@@ -305,7 +306,7 @@ function equip ($id)
 	  }
 	break;
       default:
-	$strSkill = '';
+	break;
       }
     if ($strSkill != '')
       {
