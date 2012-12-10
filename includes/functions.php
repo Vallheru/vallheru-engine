@@ -88,7 +88,7 @@ function drink($id)
     }
     if ($strType == 'M' && $intRoll > 50 && !isset($message)) 
     {
-        $maxmana = floor($player -> inteli + $player -> wisdom);
+        $maxmana = floor($player->stats['inteli'][2] + $player->stats['wisdom'][2]);
 	$maxmana += floor(($player->equip[8][2] / 100) * $maxmana);
         if ($player -> mana == round($maxmana,0)) 
         {
@@ -104,7 +104,7 @@ function drink($id)
         }
         if (!isset($message))
         {
-	    $pm = (($miks->fields['power'] / 100) * $maxmana);
+	    $pm = ceil(($miks->fields['power'] / 100) * $maxmana);
             $pm1 = $player -> mana + $pm;
             if ($pm1 > $maxmana) 
             {
