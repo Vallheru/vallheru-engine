@@ -1,3 +1,8 @@
+2012-12-10  Bartek thindil Jasicki  <thindil@vallheru.net>
+
+	* BUG,jail.php:
+	fixed escape from jail
+
 2012-12-09  Bartek thindil Jasicki  <thindil@vallheru.net>
 
 	* BUG,explore.php: 

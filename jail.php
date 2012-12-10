@@ -8,7 +8,7 @@
  *   @author               : thindil <thindil@vallheru.net>
  *   @author               : eyescream <tduda@users.sourceforge.net>
  *   @version              : 1.7
- *   @since                : 09.12.2012
+ *   @since                : 10.12.2012
  *
  */
 
@@ -110,7 +110,7 @@ if (isset($_GET['escape']))
       }
     if ($chance < 1) 
       {
-	$cost = 1000 * $player->skills['thievery'];
+	$cost = 1000 * $player->skills['thievery'][1];
 	$db -> Execute("UPDATE `players` SET `crime`=`crime`-1 WHERE `id`=".$player -> id);
 	$player->checkexp(array('agility' => 1,
 				'inteli' => 1,
