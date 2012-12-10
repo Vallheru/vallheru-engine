@@ -8,7 +8,7 @@
  *   @author               : thindil <thindil@vallheru.net>
  *   @author               : mori <ziniquel@users.sourceforge.net>
  *   @version              : 1.7
- *   @since                : 13.11.2012
+ *   @since                : 10.12.2012
  *
  */
 
@@ -195,7 +195,7 @@ foreach ($player->stats as $arrStat)
     }
   elseif ($arrStat[2] < $player->oldstats[$arrSnames[$i]][2])
     {
-      $arrCurstats2[] = '<b>'.$player->oldstats[$arrSnames[$i]][0].':</b> '.$arrStat[2].' <span style="color: red;">(-'.($arrStat[2] - $player->oldstats[$arrSnames[$i]][2]).')</span>'.$strNeedexp;
+      $arrCurstats2[] = '<b>'.$player->oldstats[$arrSnames[$i]][0].':</b> '.$arrStat[2].' <span style="color: red;">('.($arrStat[2] - $player->oldstats[$arrSnames[$i]][2]).')</span>'.$strNeedexp;
     }
   else
     {
