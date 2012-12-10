@@ -1,5 +1,7 @@
 2012-12-10  Bartek thindil Jasicki  <thindil@vallheru.net>
 
+	* BUG,landfill.php: 
+	fixed back link
 	* BUG,jail.php:
 	fixed escape from jail
 

@@ -7,7 +7,7 @@
  *   @copyright            : (C) 2004,2005,2007,2011,2012 Vallheru Team based on Gamers-Fusion ver 2.5
  *   @author               : thindil <thindil@vallheru.net>
  *   @version              : 1.7
- *   @since                : 15.10.2012
+ *   @since                : 10.12.2012
  *
  */
 
@@ -39,7 +39,7 @@ if ($player->location != 'Altara' && $player->location != 'Ardulith')
 
 if ($player -> hp == 0) 
 {
-    error ("Nie możesz pracować, ponieważ jesteś martwy!");
+    error ("Nie możesz pracować, ponieważ jesteś martwy!. (<a href=city.php>Wróć</a>)");
 }
 
 if (isset($_GET['action'])) 
