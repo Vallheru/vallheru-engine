@@ -7,7 +7,7 @@
  *   @copyright            : (C) 2004,2005,2006,2007,2011,2012 Vallheru Team based on Gamers-Fusion ver 2.5
  *   @author               : thindil <thindil@vallheru.net>
  *   @version              : 1.7
- *   @since                : 09.12.2012
+ *   @since                : 10.12.2012
  *
  */
 
@@ -1080,7 +1080,7 @@ function fightmonster($enemy, $expgain, $goldgain, $times)
         $myczarobr = ($player -> stats['wisdom'][2] * $mczaro -> fields['obr']);
 	$intBonus = $player->checkbonus('dspells');
 	$myczarobr += ($myczarobr * $intBonus);
-	$intBonus = $player->checkbonus($myczaro->fields['element']);
+	$intBonus = $player->checkbonus($mczaro->fields['element']);
 	$myczarobr += ($myczarobr * $intBonus);
 	$fltBasedef = $myczarobr;
 	if ($enemy['dmgtype'] != 'none')
