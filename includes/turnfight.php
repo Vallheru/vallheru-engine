@@ -7,7 +7,7 @@
  *   @copyright            : (C) 2004,2005,2006,2007,2011,2012 Vallheru Team based on Gamers-Fusion ver 2.5
  *   @author               : thindil <thindil@vallheru.net>
  *   @version              : 1.7
- *   @since                : 09.12.2012
+ *   @since                : 10.12.2012
  *
  */
  
@@ -1408,7 +1408,7 @@ function monsterattack($attacks,$enemy,$myunik,$amount)
                     if ($myczaro -> fields['id'] && $player -> mana >= $myczaro -> fields['poziom']) 
                     {
                         $lost_mana = ceil($myczaro -> fields['poziom'] / 2.5);
-                        $lost_mana = $lost_mana - (int)($player -> magic / 25);
+                        $lost_mana = $lost_mana - (int)($player->skills['magic'][1] / 25);
                         if ($lost_mana < 1)
                         {
                             $lost_mana = 1;
