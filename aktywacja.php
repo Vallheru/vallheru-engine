@@ -7,7 +7,7 @@
  *   @copyright            : (C) 2004,2005,2006,2011,2012 Vallheru Team based on Gamers-Fusion ver 2.5
  *   @author               : thindil <thindil@vallheru.net>
  *   @version              : 1.7
- *   @since                : 21.11.2012
+ *   @since                : 10.12.2012
  *
  */
 
@@ -44,7 +44,8 @@ $smarty -> assign(array("Gamename" => $gamename,
 
 if (isset ($_GET['kod'])) 
   {
-    if (intval($_GET['kod']) < 1) 
+    $_GET['kod'] = intval($_GET['kod']);
+    if ($_GET['kod'] < 1) 
     {
         $smarty -> assign ("Error", ERROR);
         $smarty -> display ('error.tpl');
@@ -61,7 +62,7 @@ if (isset ($_GET['kod']))
 	      }
 	    else
 	      {
-		$strStettings = 'style:light.css;graphic:layout1;graphbar:N;forumcats:All;autodrink:N;rinvites:Y;battlelog:N;';
+		$strSettings = 'style:light.css;graphic:layout1;graphbar:N;forumcats:All;autodrink:N;rinvites:Y;battlelog:N;';
 	      }
             $db -> Execute("INSERT INTO `players` (`user`, `email`, `pass`, `refs`, `ip`, `settings`) VALUES('".$aktiv -> fields['user']."','".$aktiv -> fields['email']."','".$aktiv -> fields['pass']."',".$aktiv -> fields['refs'].", '".$aktiv -> fields['ip']."', '".$strSettings."')");
             $db -> Execute("DELETE FROM `aktywacja` WHERE `aktyw`=".$_GET['kod']);

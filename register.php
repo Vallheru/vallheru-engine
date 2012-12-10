@@ -7,7 +7,7 @@
  *   @copyright            : (C) 2005,2006,2011,2012 Vallheru Team based on Gamers-Fusion ver 2.5
  *   @author               : thindil <thindil@vallheru.net>
  *   @version              : 1.7
- *   @since                : 21.11.2012
+ *   @since                : 10.12.2012
  *
  */
 
@@ -202,7 +202,7 @@ if (isset ($_GET['action']) && $_GET['action'] == 'register')
     $data = date("y-m-d");
     $strDate = $db -> DBDate($data);
     $ip = $HTTP_SERVER_VARS['REMOTE_ADDR'];
-    $message = "Witaj w ".$gamename.". Twój link aktywacyjny to: ".$gameadress."/aktywacja.php?kod=".$aktw."<br /> Życzę miłej zabawy w ".$gamename.". ".$adminname;
+    $message = "Witaj w ".$gamename.". Twój link aktywacyjny to: ".$gameadress."/aktywacja.php?kod=".$aktw."  <br /> Życzę miłej zabawy w ".$gamename.". ".$adminname;
     $adress = $_POST['email'];
     $subject = "Rejestracja na ".$gamename;
     require_once('mailer/mailerconfig.php');
