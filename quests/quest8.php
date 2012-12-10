@@ -6,8 +6,8 @@
  *   @name                 : quest8.php                            
  *   @copyright            : (C) 2004,2005,2006,2011,2012 Vallheru Team based on Gamers-Fusion ver 2.5
  *   @author               : thindil <thindil@vallheru.net>
- *   @version              : 1.6
- *   @since                : 24.10.2012
+ *   @version              : 1.7
+ *   @since                : 10.12.2012
  *
  */
 
@@ -94,7 +94,7 @@ if ((isset($_POST['box2']) && $_POST['box2'] == 1) || $objAction -> fields['acti
 if ((isset($_POST['box3']) && $_POST['box3'] == 1) || $objAction -> fields['action'] == '2.1.1') 
 {
     $objQuest -> Show('2.1.1');
-    $objQuest -> Finish(5);
+    $objQuest -> Finish(5, array('condition'));
     $smarty -> assign('Box', '');
     $db -> Execute("DELETE FROM equipment WHERE name='".I_KEY."' AND owner=".$player -> id);
 }
