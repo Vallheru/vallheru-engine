@@ -7,7 +7,7 @@
  *   @copyright            : (C) 2004,2005,2006,2007,2011,2012 Vallheru Team based on Gamers-Fusion ver 2.5
  *   @author               : thindil <thindil@vallheru.net>
  *   @version              : 1.7
- *   @since                : 15.10.2012
+ *   @since                : 10.12.2012
  *
  */
 
@@ -256,6 +256,7 @@ else
 	     * Add bonuses to ability
 	     */
 	    $player->curskills(array('alchemy'), TRUE, TRUE);
+	    $player->skills['alchemy'][1] += $player->checkbonus('alchemy');
 	    
 	    $rprzedmiot = 0;
 	    $rpd = 0;
@@ -268,18 +269,22 @@ else
 	      case 'M':
 		$fltStat = $player->stats['wisdom'][2];
 		$arrStats = array('wisdom');
+		$player->skills['alchemy'][1] += $player->checkbonus('amana');
 		break;
 	      case 'H':
 		$fltStat = $player->stats['inteli'][2];
 		$arrStats = array('inteli');
+		$player->skills['alchemy'][1] += $player->checkbonus('ahealth');
 		break;
 	      case 'P':
 		$fltStat = (min($player->stats['wisdom'][2], $player->stats['inteli'][2]) + $player->stats['agility'][2]) / 2;
 		$arrStats = array('wisdom', 'inteli', 'agility');
+		$player->skills['alchemy'][1] += $player->checkbonus('apoison');
 		break;
 	      case 'A':
 		$fltStat = (min($player->stats['wisdom'][2], $player->stats['inteli'][2]) + $player->stats['speed'][2]) / 2;
 		$arrStats = array('wisdom', 'inteli', 'speed');
+		$player->skills['alchemy'][1] += $player->checkbonus('aantidote');
 		break;
 	      default:
 		break;

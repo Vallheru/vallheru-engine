@@ -7,7 +7,7 @@
  *   @copyright            : (C) 2004,2005,2006,2007,2011,2012 Vallheru Team based on Gamers-Fusion ver 2.5
  *   @author               : thindil <thindil@vallheru.net>
  *   @version              : 1.7
- *   @since                : 09.12.2012
+ *   @since                : 10.12.2012
  *
  */
 
@@ -740,17 +740,18 @@ class Player
 	case 'arrowmaker':
 	  $intBonus = ceil($this->skills['carpentry'][1] * (($this->bonuses[$intKey][1] * $this->bonuses[$intKey][3]) / 100));
 	  break;
+	case 'alchemy':
+	case 'amana':
+	case 'ahealth':
+	case 'apoison':
+	case 'aantidote':
+	  $intBonus = ceil($this->skills['alchemy'][1] * (($this->bonuses[$intKey][1] * $this->bonuses[$intKey][3]) / 100));
+	  break;
 	case 'jewellry':
-	  $intBonus = ceil($this->skills['jewellry'][1] * (($this->bonuses[$intKey][1] * $this->bonuses[$intKey][3]) / 100));
-	  break;
 	case 'smelting':
-	  $intBonus = ceil($this->skills['smelting'][1] * (($this->bonuses[$intKey][1] * $this->bonuses[$intKey][3]) / 100));
-	  break;
 	case 'breeding':
-	  $intBonus = ceil($this->skills['breeding'][1] * (($this->bonuses[$intKey][1] * $this->bonuses[$intKey][3]) / 100));
-	  break;
 	case 'lumberjack':
-	  $intBonus = ceil($this->skills['lumberjack'][1] * (($this->bonuses[$intKey][1] * $this->bonuses[$intKey][3]) / 100));
+	  $intBonus = ceil($this->skills[$strTrigger][1] * (($this->bonuses[$intKey][1] * $this->bonuses[$intKey][3]) / 100));
 	  break;
 	case 'enchant':
 	  $intBonus = ceil($this->skills['magic'][1] * (($this->bonuses[$intKey][1] * $this->bonuses[$intKey][3]) / 100));

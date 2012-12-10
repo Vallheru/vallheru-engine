@@ -1,5 +1,7 @@
 2012-12-10  Bartek thindil Jasicki  <thindil@vallheru.net>
 
+	* FEATURE,class/player_class.php, alchemik.php, install/db/update.sql: 
+	added bonuses to alchemy
 	* BUG,includes/funkcje.php: 
 	fixed bug with count bonuses
 	* BUG,includes/functions.php: 

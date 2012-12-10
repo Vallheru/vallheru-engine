@@ -217,7 +217,12 @@ INSERT INTO `bonuses` (`id`, `name`, `desc`, `cost`, `levels`, `trigger`, `bonus
 (48, 'Żelazna wola', 'Premia +2% do cechy Siła Woli.', 5, 5, 'wisdom', 2, 'All;', 'All;'),
 (49, 'Analityk', 'Premia +2% do cechy Inteligencja.', 5, 5, 'inteli', 2, 'All;', 'All;'),
 (50, 'Zwinne ciało', 'Premia +2% do cechy Zręczność.', 5, 5, 'agility', 2, 'Hobbit;Elf;Gnom;', 'All;'),
-(51, 'Żelazne zdrowie', 'Premia +2% do cechy Wytrzymałość.', 5, 5, 'condition', 2, 'Hobbit;Krasnolud;Jaszczuroczłek;Człowiek;', 'All;');
+(51, 'Żelazne zdrowie', 'Premia +2% do cechy Wytrzymałość.', 5, 5, 'condition', 2, 'Hobbit;Krasnolud;Jaszczuroczłek;Człowiek;', 'All;'),
+(53, 'Mistrz alchemii', 'Premia w wysokości +2% do umiejętności Alchemia podczas wykonywania mikstur', 3, 5, 'alchemy', 2, 'All;', 'Rzemieślnik;'),
+(54, 'Alchemik magii', 'Premia w wysokości +5% do Alchemi podczas wykonywania mikstur z Nutari.', 5, 5, 'amana', 5, 'Gnom;', 'Rzemieślnik;'),
+(55, 'Alchemik życia', 'Premia w wysokości +5% do Alchemi podczas wykonywania mikstur z Nutari.', 5, 5, 'ahealth', 5, 'Gnom;', 'Rzemieślnik;'),
+(56, 'Alchemik trucizn', 'Premia w wysokości +5% do Alchemi podczas wykonywania trucizn.', 5, 5, 'apoison', 5, 'Gnom;', 'Rzemieślnik;'),
+(57, 'Alchemik odtrutek', 'Premia w wysokości +5% do Alchemi podczas wykonywania odtrutek.', 5, 5, 'aantidote', 5, 'Gnom;', 'Rzemieślnik;');
 ALTER TABLE `tribes` ADD `traps` TINYINT( 3 ) NOT NULL DEFAULT '0',
 ADD `agents` TINYINT( 3 ) NOT NULL DEFAULT '0',
 ADD `dagents` TINYINT( 3 ) NOT NULL DEFAULT '0';
