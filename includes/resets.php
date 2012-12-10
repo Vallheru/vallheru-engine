@@ -7,7 +7,7 @@
  *   @copyright            : (C) 2004,2005,2006,2007,2011,2012 Vallheru Team based on Gamers-Fusion ver 2.5
  *   @author               : thindil <thindil@vallheru.net>
  *   @version              : 1.7
- *   @since                : 09.12.2012
+ *   @since                : 10.12.2012
  *
  */
 
@@ -345,8 +345,8 @@ function smallreset($blnSmall = FALSE)
 		//Go to prison
 		if ($intRoll == 0)
 		  {
-		    $objPlayer = $db->Execute("SELECT `miejsce`, `level` FROM `players` WHERE `id`=".$objRevent->fields['pid']);
-		    $intGold = $objPlayer->fields['level'] * 10000;
+		    $objPlayer = $db->Execute("SELECT `miejsce` FROM `players` WHERE `id`=".$objRevent->fields['pid']);
+		    $intGold = rand(1, 100) * 10000;
 		    if ($objPlayer->fields['miejsce'] != 'Lochy')
 		      {
 			$db -> Execute("INSERT INTO `jail` (`prisoner`, `verdict`, `duration`, `cost`, `data`) VALUES(".$objRevent->fields['pid'].",'Okradzenie poborcy podatkowego.', 18, ".$intGold.", ".$strDate.")");
