@@ -1,5 +1,7 @@
 2012-12-11  Bartek thindil Jasicki  <thindil@vallheru.net>
 
+	* BUG,house.php: 
+	fixed rest in house
 	* BUG,quests/quest4.php, quests/quest2.php: 
 	fixed finishing quest
 	* BUG,mission.php: 
