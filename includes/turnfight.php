@@ -7,7 +7,7 @@
  *   @copyright            : (C) 2004,2005,2006,2007,2011,2012 Vallheru Team based on Gamers-Fusion ver 2.5
  *   @author               : thindil <thindil@vallheru.net>
  *   @version              : 1.7
- *   @since                : 10.12.2012
+ *   @since                : 11.12.2012
  *
  */
  
@@ -902,6 +902,8 @@ function attack($eunik,$bdamage)
         {
             $stat['damage'] = 0;
         }
+	$eunik -= $player->checkbonus('eagleeye');
+        $eunik = $eunik * 2;
         $name = "strzałą";
 	$strAtype = 'ranged';
 	$strSkill = 'shoot';
@@ -1041,6 +1043,8 @@ function attack($eunik,$bdamage)
     $_SESSION[$number] = $ehp;
     lostitem($player->equip, $player->id, $player->id, $player->skills['shoot'][1]);
     $_SESSION['exhaust'] = $zmeczenie;
+    $player->skills['attack'][1] -= $player->checkbonus('weaponmaster');
+    $player->skills['shoot'][1] -= $player->checkbonus('weaponmaster');
 }
 
 /**
