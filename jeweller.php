@@ -7,7 +7,7 @@
  *   @copyright            : (C) 2006,2011,2012 Vallheru Team based on Gamers-Fusion ver 2.5
  *   @author               : thindil <thindil@vallheru.net>
  *   @version              : 1.7
- *   @since                : 14.11.2012
+ *   @since                : 11.12.2012
  *
  */
 
@@ -514,7 +514,7 @@ if (isset($_GET['step']) && $_GET['step'] == 'make2')
          */
         $intChange = $objRing -> fields['level'] * 4;
 	$arrStats = array('zręczności', 'siły', 'inteligencji', 'siły woli', 'szybkości', 'wytrzymałości');
-        $arrStats2 = array('agility', 'strength', 'inteli', 'wisdom', 'speed', 'cond');
+        $arrStats2 = array('agility', 'strength', 'inteli', 'wisdom', 'speed', 'condition');
         if (isset($_POST['bonus']) && $player->skills['jewellry'][1] >= $intChange)
 	  {
 	    $strStat = $_POST['bonus'];
