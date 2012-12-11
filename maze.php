@@ -7,7 +7,7 @@
  *   @copyright            : (C) 2004,2005,2006,2011,2012 Vallheru Team based on Gamers-Fusion ver 2.5
  *   @author               : thindil <thindil@vallheru.net>
  *   @version              : 1.7
- *   @since                : 09.12.2012
+ *   @since                : 11.12.2012
  *
  */
 
@@ -368,12 +368,12 @@ if (isset($_GET['action']) && $_GET['action'] == 'explore')
 	      }
 	    if ($intRoll2 < 9)
 	      {
-		$objQuery = $db -> Execute("SELECT count(`id`) FROM `czary` WHERE `gracz`=0 AND `poziom`".$strSymbol."".$player -> level." AND `typ`='".$strType."'");
+		$objQuery = $db -> Execute("SELECT count(`id`) FROM `czary` WHERE `gracz`=0 AND `poziom`".$strSymbol."".$player->skills['magic'][1]." AND `typ`='".$strType."'");
 		$intAmount = $objQuery->fields['count(`id`)'];
 		$objQuery -> Close();
 		if ($intAmount > 0)
 		  {
-		    $objSpell = $db->Execute("SELECT `id`, `nazwa`  FROM `czary` WHERE `gracz`=0 AND `poziom`".$strSymbol."".$player -> level." AND `typ`='".$strType."' ORDER BY RAND() LIMIT 1");
+		    $objSpell = $db->Execute("SELECT `id`, `nazwa`  FROM `czary` WHERE `gracz`=0 AND `poziom`".$strSymbol."".$player->skills['magic'][1]." AND `typ`='".$strType."' ORDER BY RAND() LIMIT 1");
 		    $objTest = $db->Execute("SELECT `id` FROM `czary` WHERE `gracz`=".$player->id." AND `nazwa`='".$objSpell->fields['nazwa']."'");
 		    if ((!in_array($objSpell->fields['id'], $arrSpells)) && (!$objTest->fields['id']))
 		      {
@@ -388,13 +388,13 @@ if (isset($_GET['action']) && $_GET['action'] == 'explore')
 	  {
 	    if ($intRoll2 < 9)
 	      {
-		$objQuery = $db -> Execute("SELECT count(`id`) FROM `mill` WHERE `owner`=0 AND `level`".$strSymbol."".$player -> level." AND `type`='B' AND `lang`='".$lang."'");
+		$objQuery = $db -> Execute("SELECT count(`id`) FROM `mill` WHERE `owner`=0 AND `level`".$strSymbol."".$player->skills['carpentry'][1]." AND `type`='B'");
 		$intAmount = $objQuery->fields['count(`id`)'] ;
 		$objQuery -> Close();
 		if ($intAmount > 0)
 		  {
 		    $intRoll4 = rand(0, ($intAmount-1));
-		    $objPlan = $db -> SelectLimit("SELECT `id`, `name` FROM `mill` WHERE `owner`=0 AND `level`".$strSymbol."".$player -> level." AND `type`='B' AND `lang`='".$lang."'", 1, $intRoll4);
+		    $objPlan = $db -> SelectLimit("SELECT `id`, `name` FROM `mill` WHERE `owner`=0 AND `level`".$strSymbol."".$player->skills['carpentry'][1]." AND `type`='B'", 1, $intRoll4);
 		    $objTest = $db->Execute("SELECT `id` FROM `mill` WHERE `owner`=".$player->id." AND `name`='".$objPlan->fields['name']."'");
 		    if ((!in_array($objPlan->fields['id'], $arrPlans)) && (!$objTest->fields['id']))
 		      {
@@ -409,13 +409,13 @@ if (isset($_GET['action']) && $_GET['action'] == 'explore')
 	  {
 	    if ($intRoll2 < 9)
 	      {
-		$objQuery = $db -> Execute("SELECT count(`id`) FROM `alchemy_mill` WHERE `owner`=0 AND `level`".$strSymbol."".$player -> level." AND `lang`='".$lang."'");
+		$objQuery = $db -> Execute("SELECT count(`id`) FROM `alchemy_mill` WHERE `owner`=0 AND `level`".$strSymbol."".$player->skills['alchemy'][1]);
 		$intAmount = $objQuery->fields['count(`id`)'];
 		$objQuery -> Close();
 		if ($intAmount > 0)
 		  {
 		    $intRoll4 = rand(0, ($intAmount-1));
-		    $objPlan = $db -> SelectLimit("SELECT `id`, `name` FROM `alchemy_mill` WHERE `owner`=0 AND `level`".$strSymbol."".$player -> level." AND `lang`='".$lang."'",1,$intRoll4);
+		    $objPlan = $db -> SelectLimit("SELECT `id`, `name` FROM `alchemy_mill` WHERE `owner`=0 AND `level`".$strSymbol."".$player->skills['alchemy'][1], 1, $intRoll4);
 		    $objTest = $db->Execute("SELECT `id` FROM `alchemy_mill` WHERE `owner`=".$player->id." AND `name`='".$objPlan->fields['name']."'");
 		    if ((!in_array($objPlan->fields['id'], $arrAplans)) && (!$objTest->fields['id']))
 		      {
@@ -451,13 +451,13 @@ if (isset($_GET['action']) && $_GET['action'] == 'explore')
 	  {
 	    if ($intRoll2 < 9)
 	      {
-		$objQuery = $db -> Execute("SELECT count(`id`) FROM `mage_items` WHERE `minlev`".$strSymbol."".$player -> level." AND `lang`='".$lang."' AND `type`='C'");
+		$objQuery = $db -> Execute("SELECT count(`id`) FROM `mage_items` WHERE `minlev`".$strSymbol."".$player->skills['magic'][1]." AND `type`='C'");
 		$intAmount = $objQuery->fields['count(`id`)'];
 		$objQuery -> Close();
 		if ($intAmount > 0)
 		  {
 		    $intRoll4 = rand(0, ($intAmount-1));
-		    $objCape = $db -> SelectLimit("SELECT `id`, `name` FROM `mage_items` WHERE `minlev`".$strSymbol."".$player -> level." AND `lang`='".$lang."' AND type='C'",1, $intRoll4);
+		    $objCape = $db -> SelectLimit("SELECT `id`, `name` FROM `mage_items` WHERE `minlev`".$strSymbol."".$player->skills['magic'][1]." AND type='C'",1, $intRoll4);
 		    $objTest = $db->Execute("SELECT `id` FROM `equipment` WHERE `owner`=".$player->id." AND `name`='".$objCape->fields['name']."'");
 		    if ((!in_array($objCape->fields['id'], $arrMagic)) && (!$objTest->fields['id']))
 		      {
@@ -472,13 +472,13 @@ if (isset($_GET['action']) && $_GET['action'] == 'explore')
 	  {
 	    if ($intRoll2 < 9)
 	      {
-		$objQuery = $db -> Execute("SELECT count(`id`) FROM `bows` WHERE `minlev`".$strSymbol."".$player -> level." AND `lang`='".$lang."' AND `type`='B'");
+		$objQuery = $db -> Execute("SELECT count(`id`) FROM `bows` WHERE `minlev`".$strSymbol."".$player->skills['shoot'][1]." AND `type`='B'");
 		$intAmount = $objQuery->fields['count(`id`)'];
 		$objQuery -> Close();
 		if ($intAmount > 0)
 		  {
 		    $intRoll4 = rand(0, ($intAmount-1));
-		    $objBow = $db -> SelectLimit("SELECT `id`, `name` FROM `bows` WHERE `minlev`".$strSymbol."".$player -> level." AND `lang`='".$lang."' AND `type`='B'",1,$intRoll4);
+		    $objBow = $db -> SelectLimit("SELECT `id`, `name` FROM `bows` WHERE `minlev`".$strSymbol."".$player->skills['shoot'][1]." AND `type`='B'",1,$intRoll4);
 		    $objTest = $db->Execute("SELECT `id` FROM `equipment` WHERE `owner`=".$player->id." AND `name`='".$objBow->fields['name']."'");
 		    if ((!in_array($objBow->fields['id'], $arrBows)) && (!$objTest->fields['id']))
 		      {
