@@ -1,5 +1,7 @@
 2012-12-11  Bartek thindil Jasicki  <thindil@vallheru.net>
 
+	* BUG,quests/quest3.php: 
+	fixed typo
 	* BUG,includes/functions.php: 
 	fixed drink few potions
 	* BUG,jail.php: 
