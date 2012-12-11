@@ -1,5 +1,7 @@
 2012-12-11  Bartek thindil Jasicki  <thindil@vallheru.net>
 
+	* UPDATE,stats.php: 
+	updated info about needed experience for stats
 	* UPDATE,class/player_class.php (Player): 
 	droped needed experience for stats
 	* BUG,install/resetall.php: 

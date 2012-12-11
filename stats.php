@@ -183,7 +183,7 @@ foreach ($player->stats as $arrStat)
 {
   if ($player->oldstats[$arrSnames[$i]][2] < $player->oldstats[$arrSnames[$i]][1])
   {
-    $strNeedexp = ' ('.round(($player->oldstats[$arrSnames[$i]][3] / ($player->oldstats[$arrSnames[$i]][2] * 2000) * 100), 3).'% dośw)';
+    $strNeedexp = ' ('.round(($player->oldstats[$arrSnames[$i]][3] / ($player->oldstats[$arrSnames[$i]][2] * 500) * 100), 3).'% dośw)';
   }
   else
     {
