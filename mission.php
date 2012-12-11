@@ -7,7 +7,7 @@
  *   @copyright            : (C) 2012 Vallheru Team based on Gamers-Fusion ver 2.5
  *   @author               : thindil <thindil@vallheru.net>
  *   @version              : 1.7
- *   @since                : 09.11.2012
+ *   @since                : 11.12.2012
  *
  */
 
@@ -696,9 +696,9 @@ if ($strFinish != '' && $strFinish != 'combat')
 	  }
 	if ($strSkill != '')
 	  {
-	    $player->checkexp(array($strSkill => $intExp), $player->id, "skills");
+	    $player->checkexp(array($strSkill => $intExpgain), $player->id, "skills");
 	  }
-	$player->checkexp(array('condition' => $intExp), $player->id, "stats");
+	$player->checkexp(array('condition' => $intExpgain), $player->id, "stats");
 	$db->Execute("UPDATE `players` SET `miejsce`='".$_SESSION['maction']['place']."', `credits`=`credits`+".$intGold.", `mpoints`=`mpoints`+".$intMpoint." WHERE `id`=".$player->id);
       }
     elseif ($_SESSION['maction']['type'] != 'T')
