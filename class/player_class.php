@@ -7,7 +7,7 @@
  *   @copyright            : (C) 2004,2005,2006,2007,2011,2012 Vallheru Team based on Gamers-Fusion ver 2.5
  *   @author               : thindil <thindil@vallheru.net>
  *   @version              : 1.7
- *   @since                : 10.12.2012
+ *   @since                : 11.12.2012
  *
  */
 
@@ -496,7 +496,7 @@ class Player
 		{
 		  continue;
 		}
-	      $intNeeded = $this->oldstats[$stat][2] * 2000;
+	      $intNeeded = $this->oldstats[$stat][2] * 500;
 	      $this->stats[$stat][3] += $value;
 	      $this->oldstats[$stat][3] += $value;
 	      while (TRUE)
@@ -514,7 +514,7 @@ class Player
 		  $this->oldstats[$stat][2] ++;
 		  $this->stats[$stat][3] -= $intNeeded;
 		  $this->oldstats[$stat][3] -= $intNeeded;
-		  $intNeeded = $this->oldstats[$stat][2] * 2000;
+		  $intNeeded = $this->oldstats[$stat][2] * 500;
 		  if ($stat == 'condition')
 		    {
 		      $this->hp ++;
@@ -645,7 +645,7 @@ class Player
 	  $strKey = array_rand($this->stats);
 	  if ($this->oldstats[$strKey][2] == $this->oldstats[$strKey][1])
 	    {
-	      $lostexp = $this->oldstats[$strKey][1] * 2000;
+	      $lostexp = $this->oldstats[$strKey][1] * 500;
 	      $this->oldstats[$strKey][2] --;
 	      $this->oldstats[$strKey][3] = 0;
 	      $this->stats[$strKey][2] --;

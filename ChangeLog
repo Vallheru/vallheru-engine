@@ -1,5 +1,7 @@
 2012-12-11  Bartek thindil Jasicki  <thindil@vallheru.net>
 
+	* UPDATE,class/player_class.php (Player): 
+	droped needed experience for stats
 	* BUG,install/resetall.php: 
 	fixed copy notes
 	* BUG,languages/pl/temple.php, train.php: 
