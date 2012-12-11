@@ -115,7 +115,7 @@ if (isset($_GET['battle']))
 	$intBonus = $player->checkbonus('dspell');
 	$myczaro->fields['def'] += ($myczaro->fields['def'] * $intBonus);
 	$intBonus = $player->checkbonus($myczaro->fields['element']);
-	$myczar0->fields['def'] += ($myczaro->fields['def'] * $intBonus);
+	$myczaro->fields['def'] += ($myczaro->fields['def'] * $intBonus);
       }
     if ($eczaro->fields['id'])
       {
@@ -249,33 +249,33 @@ if (isset($_GET['battle']))
 	  {
 	    if ($myczar->fields['element'] == $eczaro->fields['element'])
 	      {
-		$eczaro->fields['def'] = ($eczaro->fields['obr'] * $enemy->wisdom) * 2;
+		$eczaro->fields['def'] = ($eczaro->fields['obr'] * $enemy->stats['wisdom'][2]) * 2;
 	      }
 	    elseif ($eczaro->fields['element'] == $arrElements[$myczar->fields['element']])
 	      {
-		$eczaro->fields['def'] = ($eczaro->fields['obr'] * $enemy->wisdom) / 2;
+		$eczaro->fields['def'] = ($eczaro->fields['obr'] * $enemy->stats['wisdom'][2]) / 2;
 	      }
 	  }
 	elseif ($player->equip[0][10] != 'N')
 	  {
 	    if ($player->equip[0][10] == $arrElements3[$eczaro->fields['element']])
 	      {
-		$eczaro->fields['def'] = ($eczaro->fields['obr'] * $enemy->wisdom) * 2;
+		$eczaro->fields['def'] = ($eczaro->fields['obr'] * $enemy->stats['wisdom'][2]) * 2;
 	      }
 	    elseif ($eczaro->fields['element'] == $arrElements2[$player->equip[0][10]])
 	      {
-		$eczaro->fields['def'] = ($eczaro->fields['obr'] * $enemy->wisdom) / 2;
+		$eczaro->fields['def'] = ($eczaro->fields['obr'] * $enemy->stats['wisdom'][2]) / 2;
 	      }
 	  }
 	elseif ($player->equip[6][10] != 'N')
 	  {
 	    if ($player->equip[6][10] == $arrElements3[$eczaro->fields['element']])
 	      {
-		$eczaro->fields['def'] = ($eczaro->fields['obr'] * $enemy->wisdom) * 2;
+		$eczaro->fields['def'] = ($eczaro->fields['obr'] * $enemy->stats['wisdom'][2]) * 2;
 	      }
 	    elseif ($eczaro->fields['element'] == $arrElements2[$player->equip[6][10]])
 	      {
-		$eczaro->fields['def'] = ($eczaro->fields['obr'] * $enemy->wisdom) / 2;
+		$eczaro->fields['def'] = ($eczaro->fields['obr'] * $enemy->stats['wisdom'][2]) / 2;
 	      }
 	  }
       }
@@ -283,32 +283,32 @@ if (isset($_GET['battle']))
       {
 	if ($myczar->fields['element'] == $eczaro->fields['element'])
 	  {
-	    $myczaro->fields['def'] = ($myczaro->fields['obr'] * $player->wisdom) * 2;
+	    $myczaro->fields['def'] = ($myczaro->fields['obr'] * $player->stats['wisdom'][2]) * 2;
 	  }
 	elseif ($myczaro->fields['element'] == $arrElements[$eczar->fields['element']])
 	  {
-	    $myczaro->fields['def'] = ($myczaro->fields['obr'] * $player->wisdom) * 2;
+	    $myczaro->fields['def'] = ($myczaro->fields['obr'] * $player->stats['wisdom'][2]) * 2;
 	  }
 	elseif ($enemy->equip[0][10] != 'N')
 	  {
 	    if ($enemy->equip[0][10] == $arrElements3[$myczaro->fields['element']])
 	      {
-		$myczaro->fields['def'] = ($myczaro->fields['obr'] * $player->wisdom) * 2;
+		$myczaro->fields['def'] = ($myczaro->fields['obr'] * $player->stats['wisdom'][2]) * 2;
 	      }
 	    elseif ($myczaro->fields['element'] == $arrElements2[$enemy->equip[0][10]])
 	      {
-		$myczaro->fields['def'] = ($myczaro->fields['obr'] * $player->wisdom) / 2;
+		$myczaro->fields['def'] = ($myczaro->fields['obr'] * $player->stats['wisdom'][2]) / 2;
 	      }
 	  }
 	elseif ($enemy->equip[6][10] != 'N')
 	  {
 	    if ($enemy->equip[6][10] == $arrElements3[$myczaro->fields['element']])
 	      {
-		$myczaro->fields['def'] = ($myczaro->fields['obr'] * $player->wisdom) * 2;
+		$myczaro->fields['def'] = ($myczaro->fields['obr'] * $player->stats['wisdom'][2]) * 2;
 	      }
 	    elseif ($myczaro->fields['element'] == $arrElements2[$enemy->equip[6][10]])
 	      {
-		$myczaro->fields['def'] = ($myczaro->fields['obr'] * $player->wisdom) / 2;
+		$myczaro->fields['def'] = ($myczaro->fields['obr'] * $player->stats['wisdom'][2]) / 2;
 	      }
 	  }
       }

@@ -1,5 +1,7 @@
 2012-12-11  Bartek thindil Jasicki  <thindil@vallheru.net>
 
+	* BUG,battle.php: 
+	fixed read players stats
 	* BUG,class/player_class.php: 
 	fixed bonus from bless
 	* BUG,quests/quest3.php: 
