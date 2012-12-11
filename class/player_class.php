@@ -313,7 +313,7 @@ class Player
       $objBless = $db -> Execute("SELECT `bless`, `blessval` FROM `players` WHERE `id`=".$this->id);
       if (in_array($objBless->fields['bless'], $arrStats))
 	{
-	  $this->stats[$objBless->fields['bless']] += $objBless->fields['blessval'];
+	  $this->stats[$objBless->fields['bless']][2] += $objBless->fields['blessval'];
 	}
       $objBless->Close();
       //Add bonuses
