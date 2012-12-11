@@ -8,7 +8,7 @@
  *   @author               : thindil <thindil@vallheru.net>
  *   @author               : eyescream <tduda@users.sourceforge.net>
  *   @version              : 1.7
- *   @since                : 10.12.2012
+ *   @since                : 11.12.2012
  *
  */
 
@@ -146,7 +146,7 @@ if (isset($_GET['escape']))
 	$player->checkexp(array('agility' => ($expgain / 4),
 				'speed' => ($expgain / 4),
 				'inteli' => ($expgain / 4)), $player->id, 'stats');
-	$player->checkexp(array('thievery' => ($expgain / 4)), $player->id, 'stats');
+	$player->checkexp(array('thievery' => ($expgain / 4)), $player->id, 'skills');
 	if (stripos($player->equip[12][1], 'wytrychy') !== FALSE)
 	  {
 	    $player->equip[12][6] --;
