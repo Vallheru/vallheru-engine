@@ -1,5 +1,7 @@
 2012-12-11  Bartek thindil Jasicki  <thindil@vallheru.net>
 
+	* BUG,battle.php: 
+	fixed exprience for monster in speed fight
 	* BUG,maze.php:
 	fixed finding items
 

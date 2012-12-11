@@ -7,7 +7,7 @@
  *   @copyright            : (C) 2004,2005,2006,2011,2012 Vallheru Team based on Gamers-Fusion ver 2.5
  *   @author               : thindil <thindil@vallheru.net>
  *   @version              : 1.7
- *   @since                : 15.11.2012
+ *   @since                : 11.12.2012
  *
  */
 
@@ -770,7 +770,7 @@ if (isset($_GET['action']))
 	    $intElevel = $enemy['strength'] + $enemy['agility'] + $enemy['speed'] + $enemy['endurance'] + $enemy['level'] + $enemy['hp'];
 	    for ($j=1; $j<=$_POST['times']; $j++) 
 	      {
-		$intPlevel = $player->stats['condition'][2] + $player->stats['speed'][2] + $player->stats['agility'][2] + $player->skills['dodge'][1];
+		$intPlevel = $player->stats['condition'][2] + $player->stats['speed'][2] + $player->stats['agility'][2] + $player->skills['dodge'][1] + $player->hp;
 		if ($player->equip[0][0] || $player->equip[11][0] || $player->equip[1][0])
 		  {
 		    $intPlevel += $player->stats['strength'][2];
