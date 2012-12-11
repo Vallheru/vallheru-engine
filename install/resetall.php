@@ -4,10 +4,10 @@
  *   Additional file - make new era in game. Before start this script - copy table players to table zapas and table notatnik to table zapas1
  *
  *   @name                 : resetall.php                            
- *   @copyright            : (C) 2004,2005,2006,2007,2011 Vallheru Team based on Gamers-Fusion ver 2.5
+ *   @copyright            : (C) 2004,2005,2006,2007,2011,2012 Vallheru Team based on Gamers-Fusion ver 2.5
  *   @author               : thindil <thindil@vallheru.net>
- *   @version              : 1.6
- *   @since                : 11.06.2012
+ *   @version              : 1.7
+ *   @since                : 11.12.2012
  *
  */
 
@@ -103,7 +103,7 @@ print "Tables cleared<br />";
 /**
 * Copy players
 */
-$player = $db -> Execute("SELECT * FROM zapas");
+$player = $db -> Execute("SELECT * FROM zapas ORDER BY `id` ASC");
 while (!$player -> EOF) 
 {
     $player -> fields['profile'] = addslashes($player -> fields['profile']);
@@ -153,7 +153,7 @@ while (!$objAuthor->EOF)
     $objNotes = $db->Execute("SELECT * FROM `zapas1` WHERE `gracz`=".$objAuthor->fields['gracz']);
     while (!$objNotes->EOF)
       {
-	$db->Execute("INSERT INTO `notatnik` (`gracz`, `tekst`, `czas`) VALUES(".$objNewid->fields['id'].", '".$objNotes->fields['tekst']."', '".$objNotes->fields['czas']."')");
+	$db->Execute("INSERT INTO `notatnik` (`gracz`, `tekst`, `czas`, `title`) VALUES(".$objNewid->fields['id'].", '".$objNotes->fields['tekst']."', '".$objNotes->fields['czas']."', '".$objNotes->fields['title']."')");
 	$objNotes->MoveNext();
       }
     $objNotes->Close();
