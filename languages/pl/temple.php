@@ -6,8 +6,8 @@
  *   @name                 : temple.php                            
  *   @copyright            : (C) 2004,2005,2006,2011,2012 Vallheru Team based on Gamers-Fusion ver 2.5
  *   @author               : thindil <thindil@vallheru.net>
- *   @version              : 1.6
- *   @since                : 05.07.2012
+ *   @version              : 1.7
+ *   @since                : 11.12.2012
  *
  */
 
@@ -80,7 +80,7 @@ if (isset ($_GET['temp']) && $_GET['temp'] == 'modlitwa')
     define("INTELI", "Inteligencji");
     define("WIS", "Siły Woli");
     define("SPE", "Szybkości");
-    define("CON", "Wytrzymałości");
+    define("CON", "Kondycji");
     define("SMI", "Kowalstwa");
     define("ALC", "Alchemii");
     define("FLE", "Stolarstwa");

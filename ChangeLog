@@ -1,5 +1,7 @@
 2012-12-11  Bartek thindil Jasicki  <thindil@vallheru.net>
 
+	* BUG,languages/pl/temple.php, train.php: 
+	fixed stat name
 	* BUG,includes/turnfight.php, includes/funkcje.php: 
 	fixed damage in fights with monsters
 	* BUG,battle.php: 

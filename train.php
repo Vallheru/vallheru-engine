@@ -73,22 +73,22 @@ if ($player -> location == 'Altara')
 switch ($player->race)
   {
   case 'Człowiek':
-    $smarty -> assign ("Train", "0,3 energii za trening Siły (".$intStrcost." sztuk złota)<br /> Zręczności (".$intAgicost." sztuk złota)<br /> Szybkości (".$intSpecost." sztuk złota)<br /> Wytrzymałości (".$intConcost." sztuk złota)<br />");
+    $smarty -> assign ("Train", "0,3 energii za trening Siły (".$intStrcost." sztuk złota)<br /> Zręczności (".$intAgicost." sztuk złota)<br /> Szybkości (".$intSpecost." sztuk złota)<br /> Kondycji (".$intConcost." sztuk złota)<br />");
     break;
   case 'Elf':
-    $smarty -> assign ("Train", "0,4 energii za trening Siły (".$intStrcost." sztuk złota)<br />lub Wytrzymałości (".$intConcost." sztuk złota)<br /> 0,2 energii za trening Zręczności (".$intAgicost." sztuk złota)<br />lub Szybkości (".$intSpecost." sztuk złota)<br />");
+    $smarty -> assign ("Train", "0,4 energii za trening Siły (".$intStrcost." sztuk złota)<br />lub Kondycji (".$intConcost." sztuk złota)<br /> 0,2 energii za trening Zręczności (".$intAgicost." sztuk złota)<br />lub Szybkości (".$intSpecost." sztuk złota)<br />");
     break;
   case 'Krasnolud':
-    $smarty -> assign ("Train", "0,2 energii za trening Siły (".$intStrcost." sztuk złota)<br /> lub Wytrzymałości (".$intConcost." sztuk złota)<br />0,4 energii za trening Zręczności (".$intAgicost." sztuk złota)<br /> lub Szybkości (".$intSpecost." sztuk złota)<br />");
+    $smarty -> assign ("Train", "0,2 energii za trening Siły (".$intStrcost." sztuk złota)<br /> lub Kondycji (".$intConcost." sztuk złota)<br />0,4 energii za trening Zręczności (".$intAgicost." sztuk złota)<br /> lub Szybkości (".$intSpecost." sztuk złota)<br />");
     break;
   case 'Hobbit':
-    $smarty -> assign ("Train", "0,4 energii za trening Siły (".$intStrcost." sztuk złota)<br />lub Szybkość (".$intSpecost." sztuk złota)<br /> 0,2 energii za trening Zręczności (".$intAgicost." sztuk złota)<br />lub Wytrzymałości (".$intConcost." sztuk złota)<br />");
+    $smarty -> assign ("Train", "0,4 energii za trening Siły (".$intStrcost." sztuk złota)<br />lub Szybkość (".$intSpecost." sztuk złota)<br /> 0,2 energii za trening Zręczności (".$intAgicost." sztuk złota)<br />lub Kondycji (".$intConcost." sztuk złota)<br />");
     break;
   case 'Jaszczuroczłek':
-    $smarty -> assign ("Train", "0,4 energii za trening Zręczność (".$intAgicost." sztuk złota)<br />lub Wytrzymałości (".$intConcost." sztuk złota)<br />0,2 energii za trening Siły (".$intStrcost." sztuk złota)<br />lub Szybkości (".$intSpecost." sztuk złota)<br />");
+    $smarty -> assign ("Train", "0,4 energii za trening Zręczność (".$intAgicost." sztuk złota)<br />lub Kondycji (".$intConcost." sztuk złota)<br />0,2 energii za trening Siły (".$intStrcost." sztuk złota)<br />lub Szybkości (".$intSpecost." sztuk złota)<br />");
     break;
   case 'Gnom':
-    $smarty -> assign ("Train", "0,4 energii za trening Siły (".$intStrcost." sztuk złota)<br />lub Szybkość (".$intSpecost." sztuk złota)<br />0,3 energii za trening Zręczności (".$intAgicost." sztuk złota)<br />lub Wytrzymałość (".$intConcost." sztuk złota)<br />");
+    $smarty -> assign ("Train", "0,4 energii za trening Siły (".$intStrcost." sztuk złota)<br />lub Szybkość (".$intSpecost." sztuk złota)<br />0,3 energii za trening Zręczności (".$intAgicost." sztuk złota)<br />lub Kondycji (".$intConcost." sztuk złota)<br />");
     break;
   default:
     break;
@@ -218,7 +218,7 @@ if (isset ($_GET['action']) && $_GET['action'] == 'train')
 	$cecha = "Szybkości";
 	break;
       case 'condition':
-	$cecha = "Wytrzymałości";
+	$cecha = "Kondycji";
 	break;
       case 'wisdom':
 	$cecha = "Siły Woli";
