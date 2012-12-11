@@ -7,7 +7,7 @@
  *   @copyright            : (C) 2004,2005,2006,2012 Vallheru Team based on Gamers-Fusion ver 2.5
  *   @author               : thindil <thindil@vallheru.net>
  *   @version              : 1.7
- *   @since                : 24.10.2012
+ *   @since                : 11.12.2012
  *
  */
 
@@ -469,7 +469,7 @@ if ((isset($_POST['box9']) && $_POST['box9'] == 1 && $test -> fields['action'] !
     {
         $db -> Execute("UPDATE players SET pw=pw+10 WHERE id=".$player -> id);
     }
-    $quest -> Finish(40);
+    $quest -> Finish(40, array('condition'));
 }
 
 if ((isset($_POST['box9']) && $_POST['box9'] == 2 && $test -> fields['action'] != 'winfight2') || $test -> fields['action'] == 'oldman2') 

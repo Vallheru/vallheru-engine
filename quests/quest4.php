@@ -7,7 +7,7 @@
  *   @copyright            : (C) 2004,2005,2006,2011,2012 Vallheru Team based on Gamers-Fusion ver 2.5
  *   @author               : thindil <thindil@vallheru.net>
  *   @version              : 1.7
- *   @since                : 24.10.2012
+ *   @since                : 11.12.2012
  *
  */
 
@@ -594,7 +594,7 @@ if ($test -> fields['action'] == '1.3.3.1a' || $test -> fields['action'] == '1.3
     {
         $db -> Execute("UPDATE herbs SET nutari=nutari+100 WHERE gracz=".$player -> id);
     }
-    $quest -> Finish(30);
+    $quest -> Finish(30, array('condition'));
 }
 
 $test -> Close();
