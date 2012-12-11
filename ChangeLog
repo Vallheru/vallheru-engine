@@ -1,5 +1,7 @@
 2012-12-11  Bartek thindil Jasicki  <thindil@vallheru.net>
 
+	* BUG,includes/functions.php: 
+	fixed drink few potions
 	* BUG,jail.php: 
 	fixed gaining experience
 	* BUG,jeweller.php: 
