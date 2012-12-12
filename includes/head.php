@@ -7,7 +7,7 @@
  *   @copyright            : (C) 2004,2005,2006,2007,2011,2012 Vallheru Team based on Gamers-Fusion ver 2.5
  *   @author               : thindil <thindil@vallheru.net>
  *   @version              : 1.7
- *   @since                : 09.12.2012
+ *   @since                : 12.12.2012
  *
  */
 
@@ -718,7 +718,7 @@ if ((array_key_exists('avatar', $player->settings) && $player->settings['avatar'
     if (is_file($plik)) 
       {
 	require_once('includes/avatars.php');
-	$arrImage = scaleavatar($plik, 200, 100);
+	$arrImage = scaleavatar($plik);
 	$smarty->assign(array('Avatar' => $plik,
 			      'Awidth' => $arrImage[0],
 			      'Aheight' => $arrImage[1]));

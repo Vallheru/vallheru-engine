@@ -1,5 +1,7 @@
 2012-12-12  Bartek thindil Jasicki  <thindil@vallheru.net>
 
+	* BUG,includes/head.php: 
+	fixed scaling avatars
 	* BUG,kowal.php:
 	fixed bonus to making helmets
 	* BUG,class/player_class.php, temple.php:
