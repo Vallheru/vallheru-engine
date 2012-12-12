@@ -7,7 +7,7 @@
  *   @copyright            : (C) 2011,2012 Vallheru Team based on Gamers-Fusion ver 2.5
  *   @author               : thindil <thindil@vallheru.net>
  *   @version              : 1.7
- *   @since                : 09.11.2012
+ *   @since                : 12.12.2012
  *
  */
 
@@ -535,7 +535,7 @@ if (isset($_GET['step']))
 	    $objPotion = $db->Execute("SELECT * FROM `alchemy_mill` WHERE `id`=".$_SESSION['craftindex'][$intIndex]);
 	    $intAmount = rand(1, 20);
 	    $intExp = ($objPotion->fields['level'] * 6);
-	    $strSkill = 'alchemia';
+	    $strSkill = 'alchemy';
 	    $strSkill2 = 'alchemia';
 	    $intCost = ceil($objPotion->fields['cost'] / 200);
 	    $strInfo2 .= 'warzeniu mikstur. ';

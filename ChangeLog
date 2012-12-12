@@ -1,5 +1,7 @@
 2012-12-12  Bartek thindil Jasicki  <thindil@vallheru.net>
 
+	* BUG,crafts.php: 
+	fixed skill name
 	* BUG,outpost.php: 
 	fixed gain experience for fight
 	* BUG,includes/head.php: 
