@@ -7,7 +7,7 @@
  *   @copyright            : (C) 2011,2012 Vallheru Team based on Gamers-Fusion ver 2.5
  *   @author               : thindil <thindil@vallheru.net>
  *   @version              : 1.7
- *   @since                : 09.11.2012
+ *   @since                : 12.12.2012
  *
  */
 
@@ -647,15 +647,18 @@ if (isset($_GET['step']))
 		if ($player->equip[0][0] || $player->equip[11][0])
 		  {
 		    $intPlevel += $player->skills['attack'][1];
+		    $strSkill = 'attack';
 		  }
 		else
 		  {
 		    $intPlevel += $player->skills['shoot'][1];
+		    $strSkill = 'shoot';
 		  }
 	      }
 	    else
 	      {
 		$intPlevel += $player->stats['wisdom'][2] + $player->stats['inteli'][2] + $player->skills['magic'][1];
+		$strSkill = 'magic';
 	      }
 	    $intExp = $intPlevel;
 	    $intGold = $intPlevel * 5;

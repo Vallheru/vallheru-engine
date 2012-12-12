@@ -1,5 +1,7 @@
 2012-12-12  Bartek thindil Jasicki  <thindil@vallheru.net>
 
+	* BUG,outpost.php: 
+	fixed gain experience for fight
 	* BUG,includes/head.php: 
 	fixed scaling avatars
 	* BUG,kowal.php:
