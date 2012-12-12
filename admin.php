@@ -8,7 +8,7 @@
  *   @author               : thindil <thindil@vallheru.net>
  *   @author               : eyescream <tduda@users.sourceforge.net>
  *   @version              : 1.7
- *   @since                : 27.11.2012
+ *   @since                : 12.12.2012
  *
  */
  
@@ -123,7 +123,7 @@ if (isset($_GET['view']))
 		    $strInfo = $strInfo.HAS_FIXED;
 		    $strMessage = HAS_FIXED2;
 		    $strAuthor = '<b><a href="view.php?view='.$player -> id.'">'.$player -> user."</a></b>, ID <b>".$player -> id.'</b>';
-		    $strDesc = T_BUG.$strType."): ".$objBug -> fields['title']. REPORTED_BY.$objBug -> fields['sender'];
+		    $strDesc = T_BUG.": ".$objBug -> fields['title']. REPORTED_BY.$objBug -> fields['sender'];
 		    $db -> Execute("INSERT INTO `changelog` (`author`, `location`, `text`, `date`, `lang`) VALUES('".$strAuthor."', '".$objBug -> fields['location']."', '".$strDesc."', ".$strDate.", '".$lang."')");
 		    $db->Execute("UPDATE `players` SET `vallars`=`vallars`+".$_POST['vallars']." WHERE `id`=".$objBug->fields['sender']);
 		    if ($_POST['vallars'] != 0)

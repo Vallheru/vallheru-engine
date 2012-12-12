@@ -7,8 +7,8 @@
  *   @copyright            : (C) 2004,2005,2006,2011,2012 Vallheru Team based on Gamers-Fusion ver 2.5
  *   @author               : thindil <thindil@vallheru.net>
  *   @author               : eyescream <tduda@users.sourceforge.net>
- *   @version              : 1.6
- *   @since                : 13.06.2012
+ *   @version              : 1.7
+ *   @since                : 12.12.2012
  *
  */
 
@@ -149,7 +149,7 @@ if (isset($_GET['view']) && $_GET['view'] == 'bugreport')
     define("WORK_FOR_ME3", "Oznaczyłeś ten błąd jako pomyłkę (u mnie działa).");
     define("MORE_INFO3", "Oznaczyłeś ten błąd jako nienaprawialny (wymaga więcej informacji).");
     define("BUG_DOUBLE3", "Oznaczyłeś ten błąd jako duplikat innego błędu.");
-    define("T_BUG", "Naprawiony błąd (");
+    define("T_BUG", "Naprawiony błąd");
     define("REPORTED_BY", " zgłoszony przez ID: ");
     define("WORK_FOR_ME", "U mnie działa");
     define("T_COMMENT2", "Komentarz");
