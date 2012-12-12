@@ -1,5 +1,7 @@
 2012-12-12  Bartek thindil Jasicki  <thindil@vallheru.net>
 
+	* BUG,quests/quest3.php: 
+	fixed typo
 	* BUG,languages/pl/account.php: 
 	fixed typo
 	* BUG,includes/funkcje.php: 

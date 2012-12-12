@@ -7,7 +7,7 @@
  *   @copyright            : (C) 2004,2005,2006,2012 Vallheru Team based on Gamers-Fusion ver 2.5
  *   @author               : thindil <thindil@vallheru.net>
  *   @version              : 1.7
- *   @since                : 11.12.2012
+ *   @since                : 12.12.2012
  *
  */
 
@@ -131,7 +131,7 @@ if ((isset($_POST['box4']) && $_POST['box4'] == 1) || $test -> fields['action'] 
 {
     $quest -> Show('1.1.1.2');
     $smarty -> assign("Box", "");
-    $quest -> Finish(10, array('condition')));
+    $quest -> Finish(10, array('condition'));
 }
 
 if ((isset($_POST['box2']) && $_POST['box2'] == 2) || (isset($_POST['box4']) && $_POST['box4'] == 2) || $test -> fields['action'] == '1.2') 
