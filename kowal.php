@@ -7,7 +7,7 @@
  *   @copyright            : (C) 2004,2005,2006,2011,2012 Vallheru Team based on Gamers-Fusion ver 2.5
  *   @author               : thindil <thindil@vallheru.net>
  *   @version              : 1.7
- *   @since                : 14.11.2012
+ *   @since                : 12.12.2012
  *
  */
 
@@ -801,6 +801,10 @@ if (isset ($_GET['kowal']) && $_GET['kowal'] == 'kuznia')
 	  {
 	    $strBonus = 'shieldsmith';
 	  }
+	if ($objSmith->fields['type'] == 'H')
+	  {
+	    $strBonus = 'helmsmith';
+	  }
 	$player->skills['smith'][1] += $player->checkbonus('smith');
 	$player->skills['smith'][1] += $player->checkbonus($strBonus);
         $arrMineral = array('copper', 'bronze', 'brass', 'iron', 'steel');
@@ -973,6 +977,10 @@ if (isset ($_GET['kowal']) && $_GET['kowal'] == 'kuznia')
 	if ($objSmith->fields['type'] == 'S')
 	  {
 	    $strBonus = 'shieldsmith';
+	  }
+	if ($objSmith->fields['type'] == 'H')
+	  {
+	    $strBonus = 'helmsmith';
 	  }
 	$player->skills['smith'][1] += $player->checkbonus('smith');
 	$player->skills['smith'][1] += $player->checkbonus($strBonus);
@@ -1178,6 +1186,10 @@ if (isset ($_GET['kowal']) && $_GET['kowal'] == 'elite')
 	  {
 	    $strBonus = 'shieldsmith';
 	  }
+	if ($objSmith->fields['type'] == 'H')
+	  {
+	    $strBonus = 'helmsmith';
+	  }
 	$player->skills['smith'][1] += $player->checkbonus('smith');
 	$player->skills['smith'][1] += $player->checkbonus($strBonus);
         $arrMineral = array('copper', 'bronze', 'brass', 'iron', 'steel');
@@ -1379,6 +1391,10 @@ if (isset ($_GET['kowal']) && $_GET['kowal'] == 'elite')
 	if ($objSmith->fields['type'] == 'S')
 	  {
 	    $strBonus = 'shieldsmith';
+	  }
+	if ($objSmith->fields['type'] == 'H')
+	  {
+	    $strBonus = 'helmsmith';
 	  }
 	$player->skills['smith'][1] += $player->checkbonus('smith');
 	$player->skills['smith'][1] += $player->checkbonus($strBonus);
