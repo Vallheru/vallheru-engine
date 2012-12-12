@@ -7,7 +7,7 @@
  *   @copyright            : (C) 2004,2005,2006,2011,2012 Vallheru Team based on Gamers-Fusion ver 2.5
  *   @author               : thindil <thindil@vallheru.net>
  *   @version              : 1.7
- *   @since                : 21.11.2012
+ *   @since                : 12.12.2012
  *
  */
 
@@ -122,7 +122,7 @@ if (isset($_GET['view']))
 	define("YOU_NOT_CLASS", "Musisz najpierw wybrać klasę postaci");
 	define("IMMU_SELECT", "Od tej chwili posiadasz immunitet. Kliknij");
 	define("HERE", "tutaj");
-	define("IMMU_SELECT2", "aby wrócić od opcji konta.");
+	define("IMMU_SELECT2", "aby wrócić od opcji konta");
       }
 
     elseif ($_GET['view'] == "reset") 
