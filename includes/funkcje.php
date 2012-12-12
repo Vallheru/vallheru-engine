@@ -7,7 +7,7 @@
  *   @copyright            : (C) 2004,2005,2006,2007,2011,2012 Vallheru Team based on Gamers-Fusion ver 2.5
  *   @author               : thindil <thindil@vallheru.net>
  *   @version              : 1.7
- *   @since                : 11.12.2012
+ *   @since                : 12.12.2012
  *
  */
 
@@ -701,7 +701,7 @@ function playerattack($eunik, $mczar, &$zmeczenie, &$gatak, $stat, &$enemy, &$gm
 		  $gmagia++;
 		  $enemy['hp'] -= $enemyhp;
 		}
-	      if ($times == 1 && $blnHit)
+	      if ($times == 1)
 		{
 		  $arrLocations = array('w tułów', 'w głowę', 'w kończynę');
 		  $intHit = rand(0, 2);
