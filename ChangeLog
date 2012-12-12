@@ -1,3 +1,8 @@
+2012-12-12  Bartek thindil Jasicki  <thindil@vallheru.net>
+
+	* BUG,class/player_class.php, temple.php:
+	fixed bless
+
 2012-12-11  Bartek thindil Jasicki  <thindil@vallheru.net>
 
 	* BUG,battle.php: 

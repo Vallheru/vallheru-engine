@@ -6,8 +6,8 @@
  *   @name                 : temple.php                            
  *   @copyright            : (C) 2004,2005,2006,2011,2012 Vallheru Team based on Gamers-Fusion ver 2.5
  *   @author               : thindil <thindil@vallheru.net>
- *   @version              : 1.6
- *   @since                : 25.05.2012
+ *   @version              : 1.7
+ *   @since                : 12.12.2012
  *
  */
 
@@ -211,7 +211,15 @@ if (isset ($_GET['temp']) && $_GET['temp'] == 'modlitwa')
 	    $arrBless = array('agility', 'strength', 'inteli', 'wisdom', 'speed', 'cond', 'smith', 'alchemy', 'fletcher', 'weapon', 'shoot', 'dodge', 'cast', 'breeding', 'mining', 'lumberjack', 'herbalist', 'jeweller', 'perception', 'thievery', 'metallurgy');
             $arrPrays = array(AGI, STR, INTELI, WIS, SPE, CON, SMI, ALC, FLE, WEA, SHO, DOD, CAS, BRE, MINI, LUMBER, HERBS, JEWEL, "Spostrzegawczości", "Złodziejstwa", 'Hutnictwa');
             $strBless = $arrBless[$intNumber];
-            $intBonus = $_POST['praytype'] * $player -> level;
+	    if (array_key_exists($strBless, $player->stats))
+	      {
+		$intLevel = $player->stats[$strBless][2];
+	      }
+	    else
+	      {
+		$intLevel = $player->skills[$strBless][1];
+	      }
+            $intBonus = $_POST['praytype'] + $intLevel;
             if ($intNumber > 5)
             {
                 $intBonus = $intBonus / 10;
