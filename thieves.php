@@ -7,7 +7,7 @@
  *   @copyright            : (C) 2011,2012 Vallheru Team based on Gamers-Fusion ver 2.5
  *   @author               : thindil <thindil@vallheru.net>
  *   @version              : 1.7
- *   @since                : 25.10.2012
+ *   @since                : 13.12.2012
  *
  */
 
@@ -350,7 +350,7 @@ else
 	  {
 	    error('Zapomnij o tym!');
 	  }
-	if ($player->crime < 2)
+	if ($player->crime < 1)
 	  {
 	    error('Nie masz tylu punktów kradzieży.');
 	  }
@@ -611,7 +611,7 @@ else
 		  }
 	      }
 	  }
-	$db->Execute("UPDATE `players` SET `miejsce`='Przygoda', `crime`=`crime`-2 WHERE `id`=".$player->id);
+	$db->Execute("UPDATE `players` SET `miejsce`='Przygoda', `crime`=`crime`-1 WHERE `id`=".$player->id);
 	$smarty->assign(array("Text" => $strText,
 			      'Moptions' => $arrOptions,
 			      'Anext' => 'Dalej'));

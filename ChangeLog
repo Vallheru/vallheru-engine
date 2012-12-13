@@ -1,5 +1,7 @@
 2012-12-13  Bartek thindil Jasicki  <thindil@vallheru.net>
 
+	* UPDATE,thieves.php: 
+	reduced amount of crime points neede for missions
 	* UPDATE,jail.php: 
 	reduce experience from escape from jail
 	* BUG,includes/turnfight.php: 
