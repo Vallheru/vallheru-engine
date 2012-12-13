@@ -840,6 +840,8 @@ if (isset($_GET['action']))
 			$db->Execute("UPDATE `equipment` SET `wt`=`wt`-1 WHERE `id`=".$player->equip[12][0]);
 		      }
 		  }
+		$db->Execute("UPDATE `players` SET `credits`=`credits`+".$gain." WHERE `id`=".$player->id);
+		$player->credits += $gain;
 		message('success', C_SUCCES.$gain.C_SUCCES2.".");
 	      }
 	  }
