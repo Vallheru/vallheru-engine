@@ -8,7 +8,7 @@
  *   @author               : thindil <thindil@vallheru.net>
  *   @author               : eyescream <tduda@users.sourceforge.net>
  *   @version              : 1.7
- *   @since                : 11.12.2012
+ *   @since                : 13.12.2012
  *
  */
 
@@ -136,7 +136,7 @@ if (isset($_GET['escape']))
       }
     else 
       { 
-	$expgain = $roll * 20;
+	$expgain = $roll * 5;
 	if ($chance == 1000000)
 	  {
 	    $expgain = 2 * $expgain;
