@@ -1,5 +1,7 @@
 2012-12-13  Bartek thindil Jasicki  <thindil@vallheru.net>
 
+	* BUG,includes/battle.php (critical): 
+	fixed typo
 	* UPDATE,install/db/update.sql: 
 	updated database
 	* UPDATE,rasa.php, klasa.php: 

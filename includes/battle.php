@@ -8,7 +8,7 @@
  *   @author               : thindil <thindil@vallheru.net>
  *   @author               : eyescream <tduda@users.sourceforge.net>
  *   @version              : 1.7
- *   @since                : 10.12.2012
+ *   @since                : 13.12.2012
  *
  */
 
@@ -554,7 +554,7 @@ function attack1($attacker, $defender, $attack_bspell, $def_bspell, $attack_dspe
 		  if ($defender->clas == 'Barbarzyńca') 
 		    {
 		      $roll = rand(1,100);
-		      $chance = ceil($defender->stats['wisdom'] / 2);
+		      $chance = ceil($defender->stats['wisdom'][2] / 2);
 		      if ($chance > 20) 
 			{
 			  $chance = 20;
