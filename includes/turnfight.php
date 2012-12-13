@@ -587,6 +587,10 @@ function turnfight($expgain,$goldgain,$action,$addres)
 	      {
 		$db -> Execute("UPDATE `players` SET `fight`=-1 WHERE id=".$player -> id);
 	      }
+	    if ($player->hp < 1)
+	      {
+		$player->hp = 1;
+	      }
         } 
             else 
         {
