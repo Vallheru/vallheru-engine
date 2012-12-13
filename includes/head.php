@@ -7,7 +7,7 @@
  *   @copyright            : (C) 2004,2005,2006,2007,2011,2012 Vallheru Team based on Gamers-Fusion ver 2.5
  *   @author               : thindil <thindil@vallheru.net>
  *   @version              : 1.7
- *   @since                : 12.12.2012
+ *   @since                : 13.12.2012
  *
  */
 
@@ -420,7 +420,7 @@ switch($player->location)
       } 
     else 
       {
-        $healneed = (50 * $player -> max_hp);
+        $healneed = (50 * $player -> stats['condition'][2]);
       }
     if ($healneed <= 0)
       {

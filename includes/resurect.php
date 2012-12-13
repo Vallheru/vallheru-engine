@@ -7,7 +7,7 @@
  *   @copyright            : (C) 2004,2005,2006,2011 Vallheru Team based on Gamers-Fusion ver 2.5
  *   @author               : thindil <thindil@vallheru.net>
  *   @version              : 1.7
- *   @since                : 30.10.2012
+ *   @since                : 13.12.2012
  *
  */
 
@@ -37,7 +37,7 @@ if ($player -> hp > 0)
     error("Nie potrzebujesz wskrzeszenia.");
 }
 
-$crneed = (50 * $player -> max_hp);
+$crneed = (50 * $player->stats['condition'][2]);
 
 if ($crneed > $player -> credits) 
 {
@@ -61,7 +61,18 @@ if ($rand < 51)
 	$player->stats[$strKey][3] = 0;
 	if ($strKey == 'condition')
 	  {
-	    $player->max_hp --;
+	    $arrHp = array('Barbarzyńca' => 6,
+			   'Wojownik' => 5,
+			   'Złodziej' => 4,
+			   'Mag' => 3,
+			   'Rzemieślnik' => 2,
+			   'Człowiek' => 4,
+			   'Elf' => 3,
+			   'Krasnolud' => 5,
+			   'Jaszczuroczłek' => 5,
+			   'Hobbit' => 4,
+			   'Gnom' => 2);
+	    $player->max_hp -= ($arrHp[$player->race] + $arrHp[$player->clas]);
 	  }
       }
     else

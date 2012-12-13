@@ -7,7 +7,7 @@
  *   @copyright            : (C) 2004,2005,2006,2007,2011,2012 Vallheru Team based on Gamers-Fusion ver 2.5
  *   @author               : thindil <thindil@vallheru.net>
  *   @version              : 1.7
- *   @since                : 12.12.2012
+ *   @since                : 13.12.2012
  *
  */
 
@@ -517,8 +517,19 @@ class Player
 		  $intNeeded = $this->oldstats[$stat][2] * 500;
 		  if ($stat == 'condition')
 		    {
-		      $this->hp ++;
-		      $this->max_hp ++;
+		      $arrHp = array('Barbarzyńca' => 6,
+				     'Wojownik' => 5,
+				     'Złodziej' => 4,
+				     'Mag' => 3,
+				     'Rzemieślnik' => 2,
+				     'Człowiek' => 4,
+				     'Elf' => 3,
+				     'Krasnolud' => 5,
+				     'Jaszczuroczłek' => 5,
+				     'Hobbit' => 4,
+				     'Gnom' => 2);
+		      $this->hp += ($arrHp[$this->race] + $arrHp[$this->clas]);
+		      $this->max_hp += ($arrHp[$this->race] + $arrHp[$this->clas]);
 		    }
 		  if (!in_array($stat, $arrGained))
 		    {
@@ -652,7 +663,18 @@ class Player
 	      $this->stats[$strKey][3] = 0;
 	      if ($strKey == 'condition')
 		{
-		  $this->max_hp --;
+		  $arrHp = array('Barbarzyńca' => 6,
+				 'Wojownik' => 5,
+				 'Złodziej' => 4,
+				 'Mag' => 3,
+				 'Rzemieślnik' => 2,
+				 'Człowiek' => 4,
+				 'Elf' => 3,
+				 'Krasnolud' => 5,
+				 'Jaszczuroczłek' => 5,
+				 'Hobbit' => 4,
+				 'Gnom' => 2);
+		      $this->max_hp -= ($arrHp[$this->race] + $arrHp[$this->clas]);
 		}
 	      $strMessage = 'Tracisz poziom cechy: '.$this->oldstats[$strKey][0];
 	    }

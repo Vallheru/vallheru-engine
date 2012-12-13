@@ -7,7 +7,7 @@
  *   @copyright            : (C) 2004,2005,2006,2007,2011,2012 Vallheru Team based on Gamers-Fusion ver 2.5
  *   @author               : thindil <thindil@vallheru.net>
  *   @version              : 1.7
- *   @since                : 15.10.2012
+ *   @since                : 13.12.2012
  *
  */
 
@@ -67,7 +67,7 @@ if (!isset ($_GET['action']))
     }
     if ($player -> hp <= 0) 
     {
-        $crneed = (50 * $player -> max_hp);
+        $crneed = (50 * $player -> stats['condition'][2]);
         if ($crneed > $player -> credits) 
         {
             error("Nie możesz zostać wskrzeszony. Potrzebujesz <b>".$crneed."</b> sztuk złota. (<a href=\"city.php\">Wróć</a>)");

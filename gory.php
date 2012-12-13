@@ -7,7 +7,7 @@
  *   @copyright            : (C) 2004,2005,2006,2012 Vallheru Team based on Gamers-Fusion ver 2.5
  *   @author               : thindil <thindil@vallheru.net>
  *   @version              : 1.7
- *   @since                : 17.10.2012
+ *   @since                : 13.12.2012
  *
  */
 
@@ -70,7 +70,7 @@ if ($player -> hp > 0)
     }
     if (isset($_GET['action']) && $_GET['action'] == 'hermit')
     {
-        $crneed = (50 * $player -> max_hp);
+        $crneed = (50 * $player -> stats['condition'][2]);
         require_once('includes/counttime.php');
         $arrTime = counttime();
         $strTime = $arrTime[0].$arrTime[1];
