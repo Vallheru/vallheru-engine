@@ -7,7 +7,7 @@
  *   @copyright            : (C) 2004,2005,2006,2007,2011,2012 Vallheru Team based on Gamers-Fusion ver 2.5
  *   @author               : thindil <thindil@vallheru.net>
  *   @version              : 1.7
- *   @since                : 11.12.2012
+ *   @since                : 13.12.2012
  *
  */
  
@@ -1588,7 +1588,7 @@ function fightmenu ($points,$exhaust,$round,$addres)
         if ($player -> clas == 'Mag') 
         {
             $arrspell = $db -> Execute("SELECT * FROM czary WHERE gracz=".$player -> id." AND typ='B'");
-            $strHtml = "<input type=\"radio\" name=\"action\" value=\"bspell\"> ".SPELL_BURST." ".$player -> level." ".POWER3.")<select name=\"bspellboost\">";
+            $strHtml = "<input type=\"radio\" name=\"action\" value=\"bspell\"> ".SPELL_BURST." ".$player->skills['magic'][1]." ".POWER3.")<select name=\"bspellboost\">";
             while (!$arrspell -> EOF) 
 	      {
 		if ($arrspell->fields['status'] == 'U')
