@@ -1,5 +1,7 @@
 2012-12-13  Bartek thindil Jasicki  <thindil@vallheru.net>
 
+	* BUG,tribeadmin.php: 
+	block enter for people without tribe
 	* BUG,includes/astralsteal.php: 
 	fixed typo
 	* BUG,includes/turnfight.php, includes/funkcje.php:

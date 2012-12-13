@@ -7,7 +7,7 @@
  *   @copyright            : (C) 2012 Vallheru Team based on Gamers-Fusion ver 2.5
  *   @author               : thindil <thindil@vallheru.net>
  *   @version              : 1.7
- *   @since                : 19.11.2012
+ *   @since                : 13.12.2012
  *
  */
 
@@ -36,6 +36,10 @@ if ($player->location != 'Altara' && $player->location != 'Ardulith')
 {
     error('Zapomnij o tym.');
 }
+if ($player->tribe == 0)
+  {
+    error('Nie masz klanu aby móc nim zarządzać.');
+  }
 
 $mytribe = $db -> Execute("SELECT * FROM tribes WHERE id=".$player -> tribe);
 $perm = $db -> Execute("SELECT * FROM tribe_perm WHERE tribe=".$mytribe -> fields['id']." AND player=".$player->id);
