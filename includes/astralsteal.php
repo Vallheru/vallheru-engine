@@ -8,7 +8,7 @@
  *   @author               : thindil <thindil@vallheru.net>
  *   @author               : eyescream <tduda@users.sourceforge.net>
  *   @version              : 1.7
- *   @since                : 24.10.2012
+ *   @since                : 13.12.2012
  *
  */
 
@@ -51,7 +51,7 @@ function astralsteal($intVictim, $strLocation, $intOwner = 0, $intId = 0)
     $player->curskills(array('thievery'));
     $player->clearbless(array('agility', 'inteli'));
 
-    $intStats = ($player->statsp['agility'][2] + $player->stats['inteli'][2] + $player->skills['thievery'][2]);
+    $intStats = ($player->stats['agility'][2] + $player->stats['inteli'][2] + $player->skills['thievery'][2]);
     /**
      * Add bonus from tools
      */
