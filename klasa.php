@@ -7,7 +7,7 @@
  *   @copyright            : (C) 2004,2005,2006,2012 Vallheru Team based on Gamers-Fusion ver 2.5
  *   @author               : thindil <thindil@vallheru.net>
  *   @version              : 1.7
- *   @since                : 13.12.2012
+ *   @since                : 14.12.2012
  *
  */
 
@@ -47,7 +47,7 @@ if (isset($_GET['klasa']))
 	$arrStats = array(1, 1, 1, 0, -1, 0, 5);
 	break;
       case 'mag':
-	$strClass = "Magowie maja swój stereotyp którego skrupulatnie się trzymają. Elfy najczęściej akceptują tą klasę choć ludzie nie wydają się być ta profesją mniej zainteresowane, natomiast krasnoludy krzywo na nią patrzą. Magów nie obchodzą bronie czy zbroje. Nie uważają iż siła czy wytrzymałość są najważniejsze - w sumie uważają je za zbędne. Siła maga są jego czary. W Vallheru magowie tworzą ścisłą elitę i zazwyczaj trzymają się razem. Są mądrzy i charyzmatyczni, inteligentni i roztropni - lecz są tez szaleni i nierozważni czarodzieje którzy wymyślają nowe dziwne zaklęcia. Magami zostają przeważnie osoby które chcą poznać tajniki wiedzy i potęgi magicznej aby mogli stać się najpotężniejszymi magami swych czasów.<br />Krasnoludy nie wybierają tej klasy chyba że są to jakieś bękarty - tacy zostają najczęściej szalonymi wynalazcami. Jest to ulubiona klasa elfów które są mądre i roztropne. Ludzcy magowie są inteligentni i utalentowani lecz znajdują się też wśród nich dziwni ludzie których nie powinno się dopuszczać do magii.<br />Cechy charakterystyczne Magów:<ul><li>Jako jedyni mogą używać czarów bojowych oraz obronnych</li><li>Mogą używać broni (ale nie jednocześnie z czarem bojowym) oraz nosić pancerze (chociaż te ograniczają ich czary - każdy poziom pancerza obniża siłę czarów maga o 1%)</li>";
+	$strClass = "Magowie maja swój stereotyp którego skrupulatnie się trzymają. Elfy najczęściej akceptują tą klasę choć ludzie nie wydają się być ta profesją mniej zainteresowane, natomiast krasnoludy krzywo na nią patrzą. Magów nie obchodzą bronie czy zbroje. Nie uważają iż siła czy wytrzymałość są najważniejsze - w sumie uważają je za zbędne. Siła maga są jego czary. W Vallheru magowie tworzą ścisłą elitę i zazwyczaj trzymają się razem. Są mądrzy i charyzmatyczni, inteligentni i roztropni - lecz są tez szaleni i nierozważni czarodzieje którzy wymyślają nowe dziwne zaklęcia. Magami zostają przeważnie osoby które chcą poznać tajniki wiedzy i potęgi magicznej aby mogli stać się najpotężniejszymi magami swych czasów.<br />Krasnoludy nie wybierają tej klasy chyba że są to jakieś bękarty - tacy zostają najczęściej szalonymi wynalazcami. Jest to ulubiona klasa elfów które są mądre i roztropne. Ludzcy magowie są inteligentni i utalentowani lecz znajdują się też wśród nich dziwni ludzie których nie powinno się dopuszczać do magii.<br />Cechy charakterystyczne Magów:<ul><li>Jako jedyni mogą używać czarów bojowych oraz obronnych</li><li>Mogą używać broni (ale nie jednocześnie z czarem bojowym) oraz nosić pancerze (chociaż te ograniczają ich czary - każdy poziom pancerza obniża siłę czarów maga o 1%)</li><li>Ich liczba punktów magii w zależności od Inteligencji oraz Siły Woli, jest dwa razy większa niż u innych klas.</li>";
 	$arrStats = array(0, 0, 0, 0, 1, 1, 3);
 	break;
       case 'craftsman':
