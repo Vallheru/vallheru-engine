@@ -7,7 +7,7 @@
  *   @copyright            : (C) 2004,2005,2006,2007,2011,2012 Vallheru Team based on Gamers-Fusion ver 2.5
  *   @author               : thindil <thindil@vallheru.net>
  *   @version              : 1.7
- *   @since                : 13.12.2012
+ *   @since                : 14.12.2012
  *
  */
 
@@ -587,20 +587,22 @@ class Player
 	    {
 	      if ($strType == 'stats')
 		{
-		  $strMessage = 'Twoje cechy: ';
+		  $strMessage = 'Twoje cechy:';
 		  foreach ($arrGained as $strKey)
 		    {
-		      $strMessage .= ', '.$this->stats[$strKey][0];
+		      $strMessage .= ' '.$this->stats[$strKey][0].',';
 		    }
+		  $strMessage = rtrim($strMessage, ',');
 		  $strMessage .= ' rosną.';
 		}
 	      else
 		{
-		  $strMessage = 'Twoje umiejętności: ';
+		  $strMessage = 'Twoje umiejętności:';
 		  foreach ($arrGained as $strKey)
 		    {
-		      $strMessage .= ', '.$this->skills[$strKey][0];
+		      $strMessage .= ' '.$this->skills[$strKey][0].',';
 		    }
+		  $strMessage = rtrim($strMessage, ',');
 		  $strMessage .= ' rosną.';
 		}
 	    }
