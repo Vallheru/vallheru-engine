@@ -7,7 +7,7 @@
  *   @copyright            : (C) 2004,2005,2006,2007,2011,2012 Vallheru Team based on Gamers-Fusion ver 2.5
  *   @author               : thindil <thindil@vallheru.net>
  *   @version              : 1.7
- *   @since                : 13.12.2012
+ *   @since                : 14.12.2012
  *
  */
 
@@ -1392,6 +1392,10 @@ function fightmonster($enemy, $expgain, $goldgain, $times)
         $db -> Execute("INSERT INTO `events` (`text`) VALUES('Gracz ".$player -> user." ".EVENT1." ".$_POST['razy']." ".$enemy['name']." ".EVENT2."')");
         $smarty -> assign ("Message", "<br /><li><b>".B_RESULT1.": ");
         $smarty -> display ('error1.tpl');
+	if ($player->hp < 1)
+	  {
+	    $player->hp = 1;
+	  }
       } 
     else 
       {
@@ -1409,6 +1413,10 @@ function fightmonster($enemy, $expgain, $goldgain, $times)
 	else
 	  {
 	    $strType = 'ranged';
+	  }
+	if ($player->hp < 1)
+	  {
+	    $player->hp = 1;
 	  }
 	gainability($player, $expgain, $gunik, $gatak, $gmagia, $player->id, $strType);
       }

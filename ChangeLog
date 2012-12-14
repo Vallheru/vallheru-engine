@@ -1,3 +1,8 @@
+2012-12-14  Bartek thindil Jasicki  <thindil@vallheru.net>
+
+	* BUG,includes/turnfight.php, includes/funkcje.php:
+	fixed bug with death after win fight
+
 2012-12-13  Bartek thindil Jasicki  <thindil@vallheru.net>
 
 	* BUG,bank.php: 

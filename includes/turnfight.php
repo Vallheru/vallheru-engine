@@ -7,7 +7,7 @@
  *   @copyright            : (C) 2004,2005,2006,2007,2011,2012 Vallheru Team based on Gamers-Fusion ver 2.5
  *   @author               : thindil <thindil@vallheru.net>
  *   @version              : 1.7
- *   @since                : 13.12.2012
+ *   @since                : 14.12.2012
  *
  */
  
@@ -318,6 +318,10 @@ function turnfight($expgain,$goldgain,$action,$addres)
      */
     if (isset($_SESSION['round']) && $_SESSION['round'] > 24)
     {
+        if ($player->hp < 1)
+	  {
+	    $player->hp = 1;
+	  }
         $db -> Execute("UPDATE `players` SET `fight`=0, `hp`=".$player -> hp.", `bless`='', `blessval`=0 WHERE `id`=".$player -> id);
         unset($_SESSION['exhaust'], $_SESSION['round'], $_SESSION['points'], $_SESSION['gatak'], $_SESSION['gmagia'], $_SESSION['gunik']);
         for ($k = 0; $k < $amount; $k ++) 
@@ -773,6 +777,10 @@ function turnfight($expgain,$goldgain,$action,$addres)
             $smarty -> assign ("Message", "</ul><ul><li><b>".B_OPTIONS."</a><br /></li></ul>");
             $smarty -> display ('error1.tpl');
         }
+	if ($player->hp < 1)
+	  {
+	    $player->hp = 1;
+	  }
         $db -> Execute("UPDATE players SET hp=".$player -> hp.", fight=0, bless='', blessval=0 WHERE id=".$player -> id);
 	if (isset($_SESSION['razy']))
 	  {
