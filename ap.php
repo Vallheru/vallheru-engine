@@ -7,7 +7,7 @@
  *   @copyright            : (C) 2004,2005,2006,2011,2012 Vallheru Team based on Gamers-Fusion ver 2.5
  *   @author               : thindil <thindil@vallheru.net>
  *   @version              : 1.7
- *   @since                : 10.12.2012
+ *   @since                : 14.12.2012
  *
  */
 
@@ -126,10 +126,12 @@ while (!$objBonuses->EOF)
       }
     $blnValid = TRUE;
     $intCost = $objBonuses->fields['cost'];
+    $strCurlevel = 0;
     foreach ($player->bonuses as $arrBonus)
       {
 	if ($arrBonus[0] == $objBonuses->fields['id'])
 	  {
+	    $strCurlevel = $arrBonus[1];
 	    if ($arrBonus[1] == $objBonuses->fields['levels'])
 	      {
 		$blnValid = FALSE;
@@ -146,7 +148,12 @@ while (!$objBonuses->EOF)
 	$objBonuses->MoveNext();
 	continue;
       }
+    if ($strCurlevel == 0)
+      {
+	$strCurlevel = 'brak';
+      }
     $arrBonuses[] = array('name' => $objBonuses->fields['name'],
+			  'curlevel' => $strCurlevel,
 			  'desc' => $objBonuses->fields['desc'],
 			  'cost' => $intCost,
 			  'levels' => $objBonuses->fields['levels'],
@@ -160,6 +167,7 @@ $smarty->assign(array("Bonuses" => $arrBonuses,
 		      "Info" => 'Oto lista dostępnych premii dla twojej postaci. Obecnie posiadasz '.$player->ap.' Punktów Astralnych.',
 		      "Cost" => 'Koszt:',
 		      "AP" => 'AP',
+		      "Tlevel" => 'Obecny poziom:',
 		      "Tlevels" => 'Maksymalny poziom:',
 		      "Select" => 'Wybierz'));
 $smarty -> display ('ap.tpl');
