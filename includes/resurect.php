@@ -7,7 +7,7 @@
  *   @copyright            : (C) 2004,2005,2006,2011 Vallheru Team based on Gamers-Fusion ver 2.5
  *   @author               : thindil <thindil@vallheru.net>
  *   @version              : 1.7
- *   @since                : 13.12.2012
+ *   @since                : 14.12.2012
  *
  */
 
@@ -78,6 +78,10 @@ if ($rand < 51)
     else
       {
 	$lostexp = ceil($player->oldstats[$strKey][3] / 100);
+	if ($lostexp > $player->oldstats[$strKey][3])
+	  {
+	    $lostexp = $player->oldstats[$strKey][3];
+	  }
 	$player->stats[$strKey][3] -= $lostexp;
 	$player->oldstats[$strKey][3] -= $lostexp;
       }
@@ -98,6 +102,10 @@ else
     else
       {
 	$lostexp = ceil($player->oldskills[$strKey][2] / 10);
+	if ($lostexp > $player->oldskills[$strKey][2])
+	  {
+	    $lostexp = $player->oldskills[$strKey][2];
+	  }
 	$player->skills[$strKey][2] -= $lostexp;
 	$player->oldskills[$strKey][2] -= $lostexp;
       }

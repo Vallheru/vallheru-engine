@@ -683,6 +683,10 @@ class Player
 	  else
 	    {
 	      $lostexp = ceil($this->oldstats[$strKey][3] / 100);
+	      if ($lostexp > $this->oldstats[$strKey][3])
+		{
+		  $lostexp = $this->oldstats[$strKey][3];
+		}
 	      $this->stats[$strKey][3] -= $lostexp;
 	      $this->oldstats[$strKey][3] -= $lostexp;
 	      $strMessage = 'Tracisz nieco doświadczenia do cechy: '.$this->oldstats[$strKey][0];
@@ -704,6 +708,10 @@ class Player
 	  else
 	    {
 	      $lostexp = ceil($this->oldskills[$strKey][2] / 10);
+	      if ($lostexp > $this->oldskills[$strKey][2])
+		{
+		  $lostexp = $this->oldskills[$strKey][2];
+		}
 	      $this->skills[$strKey][2] -= $lostexp;
 	      $this->oldskills[$strKey][2] -= $lostexp;
 	      $strMessage = 'Tracisz nieco doświadczenia w umiejętności: '.$this->oldskills[$strKey][0];
