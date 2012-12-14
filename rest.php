@@ -7,7 +7,7 @@
  *   @copyright            : (C) 2004,2005,2006,2011,2012 Vallheru Team based on Gamers-Fusion ver 2.5
  *   @author               : thindil <thindil@vallheru.net>
  *   @version              : 1.7
- *   @since                : 11.10.2012
+ *   @since                : 14.12.2012
  *
  */
 
@@ -33,6 +33,11 @@ $title = "Odpoczynek";
 require_once("includes/head.php");
 
 $maxmana = ($player->stats['inteli'][2] + $player->stats['wisdom'][2]);
+if ($player->clas == 'Mag')
+  {
+    $maxmana = $maxmana * 2;
+  }
+$maxmana += floor(($player->equip[8][2] / 100) * $maxmana);
 
 if (!isset ($_GET['akcja'])) 
 {

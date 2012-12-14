@@ -7,7 +7,7 @@
  *   @copyright            : (C) 2004,2005,2006,2011,2012 Vallheru Team based on Gamers-Fusion ver 2.5
  *   @author               : thindil <thindil@vallheru.net>
  *   @version              : 1.7
- *   @since                : 11.12.2012
+ *   @since                : 14.12.2012
  *
  */
 
@@ -89,6 +89,10 @@ function drink($id)
     if ($strType == 'M' && $intRoll > 50 && !isset($message)) 
     {
         $maxmana = floor($player->stats['inteli'][2] + $player->stats['wisdom'][2]);
+	if ($player->clas == 'Mag')
+	  {
+	    $maxmana = $maxmana * 2;
+	  }
 	$maxmana += floor(($player->equip[8][2] / 100) * $maxmana);
         if ($player -> mana == round($maxmana,0)) 
         {
@@ -573,6 +577,10 @@ function drinkfew($intId, $intAmount, $strType = '')
   if ($objPotion->fields['type'] == 'M')
     {
       $maxmana = floor($player->stats['inteli'][2] + $player->stats['wisdom'][2]);
+      if ($player->clas == 'Mag')
+	{
+	  $maxmana = $maxmana * 2;
+	}
       $maxmana += floor(($player->equip[8][2] / 100) * $maxmana);
       if ($player->mana == round($maxmana, 0)) 
 	{

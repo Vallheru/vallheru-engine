@@ -7,7 +7,7 @@
  *   @copyright            : (C) 2004,2005,2006,2007,2011,2012 Vallheru Team based on Gamers-Fusion ver 2.5
  *   @author               : thindil <thindil@vallheru.net>
  *   @version              : 1.7
- *   @since                : 13.12.2012
+ *   @since                : 14.12.2012
  *
  */
 
@@ -318,6 +318,10 @@ if ($player->settings['graphic'] != '' || $player->settings['graphbar'] == 'Y')
         $intPerhealth = 100;
     }
     $maxmana = floor($player->stats['inteli'][2] + $player->stats['wisdom'][2]);
+    if ($player->clas == 'Mag')
+      {
+	$maxmana = $maxmana * 2;
+      }
     $maxmana += floor(($player->equip[8][2] / 100) * $maxmana);
     if ($maxmana > 0)
       {

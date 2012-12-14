@@ -1,5 +1,7 @@
 2012-12-14  Bartek thindil Jasicki  <thindil@vallheru.net>
 
+	* UPDATE,includes/head.php, includes/funkcje.php, rest.php, stats.php: 
+	raised amount of mana for mages
 	* BUG,class/player_class.php: 
 	fixed typo
 	* BUG,templates/layout1/lumbermill.tpl, templates/lumbermill.php, lumbermill.php: 
