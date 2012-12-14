@@ -218,7 +218,7 @@ if (isset($_GET['mill']) && $_GET['mill'] == 'licenses')
         }
         $db -> Execute("UPDATE players SET credits=credits-".$arrGold[$intLevel].", platinum=platinum-".$arrMithril[$intLevel]." WHERE id=".$player -> id);
         $arrLicenses = array("ucznia drwalskiego.", "starszego ucznia.", "eksperta.", "mistrza.");
-        $smarty -> assign("Message", "Kupiłeś licencję ".$arrLicenses[$intLevel]);
+        $smarty -> assign("Message2", "Kupiłeś licencję ".$arrLicenses[$intLevel]);
     }
     $smarty -> assign("Step", $_GET['step']);
 }
@@ -654,12 +654,12 @@ if (isset ($_GET['mill']) && $_GET['mill'] == 'mill')
                 }
                 $intGainexp = ceil($intGainexp);
 		additem($arrItem['type'], $arrMaked['name'], $arrMaked['wt'], $arrMaked['power'], $arrMaked['speed'], $intCost, $player->id, $arrItem['level'], $arrMaked['repaircost']);
-                $smarty -> assign ("Message", "kompozytowy".$arrMaked['name']."(+ ".$arrMaked['power'].") (+ ".$arrMaked['speed']." szyb) (".$arrMaked['wt']."/".$arrMaked['wt'].")"."</b>. Zdobywasz <b>".$intGainexp."</b> PD.<br />");
+                $smarty -> assign ("Message2", "kompozytowy".$arrMaked['name']."(+ ".$arrMaked['power'].") (+ ".$arrMaked['speed']." szyb) (".$arrMaked['wt']."/".$arrMaked['wt'].")"."</b>. Zdobywasz <b>".$intGainexp."</b> PD.<br />");
             } 
                 else 
             {
                 $intGainexp = 1;
-                $smarty -> assign ("Message", "Próbowałeś wykonać <b>".$arrItem['name']."</b>, niestety nie udało się.");
+                $smarty -> assign ("Message2", "Próbowałeś wykonać <b>".$arrItem['name']."</b>, niestety nie udało się.");
             }
             $db -> Execute("DELETE FROM `mill_work` WHERE `owner`=".$player -> id);
             checkexp($arrStats, $intGainexp);
@@ -670,7 +670,7 @@ if (isset ($_GET['mill']) && $_GET['mill'] == 'mill')
             $procent = (($uenergia / $objWork -> fields['n_energy']) * 100);
             $procent = round($procent,"0");
             $need = $objWork -> fields['n_energy'] - $uenergia;
-            $smarty -> assign ("Message", "Poświęciłeś na wykonanie ".$arrItem['name']." kolejne ".$_POST['razy']." energii. Teraz jest on wykonany w ".$procent." procentach. Aby go ukonczyć potrzebujesz ".$need." energii.");
+            $smarty -> assign ("Message2", "Poświęciłeś na wykonanie ".$arrItem['name']." kolejne ".$_POST['razy']." energii. Teraz jest on wykonany w ".$procent." procentach. Aby go ukonczyć potrzebujesz ".$need." energii.");
             $db -> Execute("UPDATE `mill_work` SET `u_energy`=`u_energy`+".$_POST['razy']." WHERE `owner`=".$player -> id);
         }
         $db -> Execute("UPDATE `players` SET `energy`=`energy`-".$_POST['razy'].", `bless`='', `blessval`=0 WHERE `id`=".$player -> id);
@@ -809,7 +809,7 @@ if (isset ($_GET['mill']) && $_GET['mill'] == 'mill')
                 $intGainexp = $intGainexp * 2;
             }
             $intGainexp = ceil($intGainexp);
-            $smarty->assign(array("Message" => "Wykonałeś <b>".$arrItem['name']."</b> <b>".$intItems."</b>. Zdobywasz <b>".$intGainexp."</b> PD.<br />",
+            $smarty->assign(array("Message2" => "Wykonałeś <b>".$arrItem['name']."</b> <b>".$intItems."</b>. Zdobywasz <b>".$intGainexp."</b> PD.<br />",
 				  "Youmade" => "Wykonane przedmioty:",
 				  "Ispeed" => "szyb",
 				  "Iamount" => "ilość",
@@ -830,7 +830,7 @@ if (isset ($_GET['mill']) && $_GET['mill'] == 'mill')
 	      {
 		$need = (ceil($objLumber -> fields['level'] / 4)- $_POST['razy']);
 	      }
-            $smarty -> assign ("Message", "Pracowałeś nad ".$arrItem['name'].", zużywając ".$_POST['razy']." energii i wykonałeś go w ".$procent." procentach. Aby ukończyć przedmiot potrzebujesz jeszcze ".$need." energii.");
+            $smarty -> assign ("Message2", "Pracowałeś nad ".$arrItem['name'].", zużywając ".$_POST['razy']." energii i wykonałeś go w ".$procent." procentach. Aby ukończyć przedmiot potrzebujesz jeszcze ".$need." energii.");
             if ($objLumber -> fields['type'] == 'R') 
             {
                 $db -> Execute("INSERT INTO `mill_work` (`owner`, `name`, `u_energy`, `n_energy`) VALUES(".$player -> id.", '".$objLumber -> fields['name']."', ".$_POST['razy'].", ".ceil($objLumber -> fields['level'] / 4).")");
@@ -976,12 +976,12 @@ if (isset ($_GET['mill']) && $_GET['mill'] == 'elite')
 		$arrRepair = array(1, 4, 16, 64, 256);
 		$intRepaircost = $objLumber->fields['level'] * $arrRepair[$intKey] * 2;
 		additem($objLumber->fields['type'], $strName, $intMaxdur, $intPower, $intSpeed, $intCost, $player->id, $objLumber->fields['level'], $intRepaircost);
-                $smarty -> assign ("Message", "Wykonałeś <b>".$strName."(+ ".$intPower.") (+".$intSpeed." szyb) (".$intMaxdur."/".$intMaxdur.")"."</b>. Zdobywasz <b>".$intGainexp."</b> PD.<br />");
+                $smarty -> assign ("Message2", "Wykonałeś <b>".$strName."(+ ".$intPower.") (+".$intSpeed." szyb) (".$intMaxdur."/".$intMaxdur.")"."</b>. Zdobywasz <b>".$intGainexp."</b> PD.<br />");
             } 
                 else 
             {
                 $intGainexp = 1;
-                $smarty -> assign ("Message", "Próbowałeś wykonać <b>".$strName."</b>, niestety nie udało się.<br />");
+                $smarty -> assign ("Message2", "Próbowałeś wykonać <b>".$strName."</b>, niestety nie udało się.<br />");
             }
             $db -> Execute("DELETE FROM `mill_work` WHERE `id`=".$objWork->fields['id']);
 	    $player->checkexp(array($strStat => ($intGainexp / 2)), $player->id, 'stats');
@@ -993,7 +993,7 @@ if (isset ($_GET['mill']) && $_GET['mill'] == 'elite')
             $procent = (($uenergia / $objWork -> fields['n_energy']) * 100);
             $procent = round($procent,"0");
             $need = $objWork -> fields['n_energy'] - $uenergia;
-            $smarty -> assign ("Message", "Poświęciłeś na wykonanie ".$strName." kolejne ".$_POST['razy']." energii. Teraz jest on wykonany w ".$procent." procentach. Aby go ukonczyć potrzebujesz ".$need." energii.");
+            $smarty -> assign ("Message2", "Poświęciłeś na wykonanie ".$strName." kolejne ".$_POST['razy']." energii. Teraz jest on wykonany w ".$procent." procentach. Aby go ukonczyć potrzebujesz ".$need." energii.");
             $db -> Execute("UPDATE `mill_work` SET `u_energy`=`u_energy`+".$_POST['razy']." WHERE `id`=".$objWork->fields['id']);
         }
         $db -> Execute("UPDATE `players` SET `energy`=`energy`-".$_POST['razy'].", `bless`='', `blessval`=0 WHERE `id`=".$player -> id);
@@ -1156,7 +1156,7 @@ if (isset ($_GET['mill']) && $_GET['mill'] == 'elite')
                 $intGainexp = $intGainexp * 2;
             }
             $intGainexp = ceil($intGainexp);
-            $smarty->assign(array("Message" => "Wykonałeś <b>".$strName."</b> <b>".$intItems."</b> razy. Zdobywasz <b>".$intGainexp."</b> PD.<br />",
+            $smarty->assign(array("Message2" => "Wykonałeś <b>".$strName."</b> <b>".$intItems."</b> razy. Zdobywasz <b>".$intGainexp."</b> PD.<br />",
 				  "Youmade" => "Wykonane przedmioty:",
 				  "Ispeed" => "szyb",
 				  "Iamount" => "ilość",
@@ -1171,7 +1171,7 @@ if (isset ($_GET['mill']) && $_GET['mill'] == 'elite')
 	    $procent = (($_POST['razy'] / ($objLumber->fields['level'] * 10)) * 100);
             $procent = round($procent,"0");
             $need = ($objLumber->fields['level'] * 10) - $_POST['razy'];
-            $smarty -> assign(array("Message" => "Pracowałeś nad ".$strName.", zużywając ".$_POST['razy']." energii i wykonałeś go w ".$procent." procentach. Aby ukończyć przedmiot potrzebujesz jeszcze ".$need." energii.",
+            $smarty -> assign(array("Message2" => "Pracowałeś nad ".$strName.", zużywając ".$_POST['razy']." energii i wykonałeś go w ".$procent." procentach. Aby ukończyć przedmiot potrzebujesz jeszcze ".$need." energii.",
 				    "Amt" => 0));
 	    $db -> Execute("INSERT INTO `mill_work` (`owner`, `name`, `u_energy`, `n_energy`, `mineral`, `elite`) VALUES(".$player->id.", '".$objLumber->fields['name']."', ".$_POST['razy'].", ".($objLumber->fields['level'] * 10).", '".$_POST['lumber']."', '".$objLumber->fields['elite']."')");
         }
@@ -1249,7 +1249,7 @@ if (isset($_GET['mill']) && $_GET['mill'] == 'astral')
                             "Compnumber" => $arrNumber,
                             "Abuild" => "Buduj",
                             "Tname" => "Nazwa",
-                            "Message" => ''));
+                            "Message2" => ''));
 
     /**
      * Start make components
@@ -1371,7 +1371,7 @@ if (isset($_GET['mill']) && $_GET['mill'] == 'astral')
         {
             $strMessage = $strMessage.$arrMinerals[$i].": ".$arrAmount[$intKey][$i]."<br />";
         }
-        $smarty -> assign("Message", $strMessage);
+        $smarty -> assign("Message2", $strMessage);
         $db -> Execute("UPDATE `players` SET `platinum`=`platinum`-".$arrAmount[$intKey][13].", `energy`=`energy`-".$arrAmount[$intKey][14]." WHERE `id`=".$player -> id);
         $db -> Execute("UPDATE `minerals` SET `adamantium`=`adamantium`-".$arrAmount[$intKey][0].", `crystal`=`crystal`-".$arrAmount[$intKey][1].", `meteor`=`meteor`-".$arrAmount[$intKey][2].", `pine`=`pine`-".$arrAmount[$intKey][3].", `hazel`=`hazel`-".$arrAmount[$intKey][4].", `yew`=`yew`-".$arrAmount[$intKey][5].", `elm`=`elm`-".$arrAmount[$intKey][6].", `steel`=`steel`-".$arrAmount[$intKey][7].", `ironore`=`ironore`-".$arrAmount[$intKey][8].", `copperore`=`copperore`-".$arrAmount[$intKey][9].", `tinore`=`tinore`-".$arrAmount[$intKey][10].", `zincore`=`zincore`-".$arrAmount[$intKey][11].", `coal`=`coal`-".$arrAmount[$intKey][12]." WHERE `owner`=".$player -> id);
     }
