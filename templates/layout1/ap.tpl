@@ -7,6 +7,7 @@
     <td><form method="post" action="ap.php?select={$bonus.id}"/>
         <u><b>{$bonus.name}</b></u><br />
     	{$bonus.desc}<br />
+	{$Tlevel} {$bonus.curlevel}<br />
     	{$Tlevels} {$bonus.levels}<br />
     	{$Cost} {$bonus.cost}<br />
 	<input type="submit" value="{$Select}" />
