@@ -1,5 +1,7 @@
 2012-12-14  Bartek thindil Jasicki  <thindil@vallheru.net>
 
+	* UPDATE,includes/resets.php: 
+	raised mana for mages
 	* BUG,class/player_class.php, includes/resurect.php: 
 	fixed lost experience
 	* UPDATE,klasa.php: 

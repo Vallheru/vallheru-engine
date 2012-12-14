@@ -7,7 +7,7 @@
  *   @copyright            : (C) 2004,2005,2006,2007,2011,2012 Vallheru Team based on Gamers-Fusion ver 2.5
  *   @author               : thindil <thindil@vallheru.net>
  *   @version              : 1.7
- *   @since                : 10.12.2012
+ *   @since                : 14.12.2012
  *
  */
 
@@ -128,7 +128,7 @@ function smallreset($blnSmall = FALSE)
     $intLangs = 0;
     $arrRings = array("inteligencji", "woli");
     $arrStat = array('inteli', 'wisdom');
-    $objStats = $db -> Execute("SELECT `id`, `stats` FROM `players`");
+    $objStats = $db -> Execute("SELECT `id`, `stats`, `klasa` FROM `players`");
     while (!$objStats -> EOF)
     {
         $objRings = $db -> Execute("SELECT `power`, `name` FROM `equipment` WHERE `type`='I' AND `status`='E' AND `owner`=".$objStats -> fields['id']);
@@ -158,6 +158,10 @@ function smallreset($blnSmall = FALSE)
         $objRings -> Close();
         $objCape = $db -> Execute("SELECT `power` FROM `equipment` WHERE `type`='C' AND `status`='E' AND `owner`=".$objStats -> fields['id']);
         $intMaxmana = floor($arrValues['inteli'][2] + $arrValues['wisdom'][2]);
+	if ($objStats->fields['klasa'] == 'Mag')
+	  {
+	    $intMaxmana = $intMaxmana * 2;
+	  }
         $intMaxmana += floor(($objCape -> fields['power'] / 100) * $intMaxmana);
         $objCape -> Close();
         $db -> Execute("UPDATE `players` SET `pm`=".$intMaxmana.", `antidote`='' WHERE `id`=".$objStats -> fields['id']);
