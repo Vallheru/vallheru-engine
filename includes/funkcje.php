@@ -7,7 +7,7 @@
  *   @copyright            : (C) 2004,2005,2006,2007,2011,2012 Vallheru Team based on Gamers-Fusion ver 2.5
  *   @author               : thindil <thindil@vallheru.net>
  *   @version              : 1.7
- *   @since                : 14.12.2012
+ *   @since                : 17.12.2012
  *
  */
 
@@ -418,7 +418,15 @@ function lostitem(&$arrEquip, $pid, $player2, $intLevel)
 		$db->Execute("UPDATE `equipment` SET `wt`=".$arrEquip[$intKey][6]." WHERE `id`=".$arrEquip[$intKey][0]);
 		if ($pid == $player2 && $arrEquip[$intKey][6] < 15)
 		  {
-		    print "<br />".$arrPrefix[$i]." niedługo się zniszczy.<br />";
+		    if ($i != 4)
+		      {
+			$strBroken = 'zniszczy';
+		      }
+		    else
+		      {
+			$strBroken = 'zniszczą';
+		      }
+		    print "<br />".$arrPrefix[$i]." niedługo się ".$strBroken.".<br />";
 		  }
 	      }
 	  }

@@ -1,5 +1,7 @@
 2012-12-17  Bartek thindil Jasicki  <thindil@vallheru.net>
 
+	* BUG,includes/funkcje.php: 
+	fixed typo
 	* BUG,train.php:
 	fixed typo
 
