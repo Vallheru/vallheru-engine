@@ -7,7 +7,7 @@
  *   @copyright            : (C) 2004,2005,2006,2007,2011,2012 Vallheru Team based on Gamers-Fusion ver 2.5
  *   @author               : thindil <thindil@vallheru.net>
  *   @version              : 1.7
- *   @since                : 23.10.2012
+ *   @since                : 17.12.2012
  *
  */
 
@@ -1015,7 +1015,7 @@ if (isset($_GET['learn']))
       {
 	error('Nie ma takiego planu.');
       }
-    if ($objPlan->fields['mionlev'] > $player->skills['smith'][1])
+    if ($objPlan->fields['minlev'] > $player->skills['smith'][1])
       {
 	error('Nie możesz jeszcze nauczyć się tego planu.');
       }

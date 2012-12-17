@@ -7,7 +7,7 @@
  *   @copyright            : (C) 2004,2005,2006,2011,2012 Vallheru Team based on Gamers-Fusion ver 2.5
  *   @author               : thindil <thindil@vallheru.net>
  *   @version              : 1.7
- *   @since                : 12.12.2012
+ *   @since                : 17.12.2012
  *
  */
 
@@ -208,7 +208,7 @@ if (isset ($_GET['temp']) && $_GET['temp'] == 'modlitwa')
         $intRoll = rand(1,10);
         if ($intRoll < 9) 
 	  {
-	    $arrBless = array('agility', 'strength', 'inteli', 'wisdom', 'speed', 'cond', 'smith', 'alchemy', 'fletcher', 'weapon', 'shoot', 'dodge', 'cast', 'breeding', 'mining', 'lumberjack', 'herbalist', 'jeweller', 'perception', 'thievery', 'metallurgy');
+	    $arrBless = array('agility', 'strength', 'inteli', 'wisdom', 'speed', 'condition', 'smith', 'alchemy', 'fletcher', 'weapon', 'shoot', 'dodge', 'cast', 'breeding', 'mining', 'lumberjack', 'herbalist', 'jeweller', 'perception', 'thievery', 'metallurgy');
             $arrPrays = array(AGI, STR, INTELI, WIS, SPE, CON, SMI, ALC, FLE, WEA, SHO, DOD, CAS, BRE, MINI, LUMBER, HERBS, JEWEL, "Spostrzegawczości", "Złodziejstwa", 'Hutnictwa');
             $strBless = $arrBless[$intNumber];
 	    if (array_key_exists($strBless, $player->stats))

@@ -7,7 +7,7 @@
  *   @copyright            : (C) 2004,2005,2006,2011,2012 Vallheru Team based on Gamers-Fusion ver 2.5
  *   @author               : thindil <thindil@vallheru.net>
  *   @version              : 1.7
- *   @since                : 14.11.2012
+ *   @since                : 17.12.2012
  *
  */
 
@@ -135,6 +135,10 @@ if (isset($_GET['step']))
 	//Melt item
 	if (isset($_GET['smelt']))
 	  {
+	    if (!isset($_POST['item']))
+	      {
+		error('Podaj jaki przedmiot chcesz przetopić.');
+	      }
 	    checkvalue($_POST['item']);
 	    $blnValid = TRUE;
 	    $objItem = $db->Execute("SELECT `id`, `name`, `wt`, `maxwt`, `amount`, `minlev` FROM `equipment` WHERE `id`=".$_POST['item']." AND `owner`=".$player->id." AND `status`='U' AND `type` IN ('W', 'A', 'H', 'L', 'S', 'E')");
