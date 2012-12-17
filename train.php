@@ -98,7 +98,7 @@ switch ($player->clas)
   {
   case 'Wojownik':
   case 'Barbarzyńca':
-    $smarty -> assign ("Train2", " oraz trening energii za 0,06 Siły Woli (".$intWiscost." sztuk złota)<br />lub Inteligencji (".$intIntcost." sztuk złota)");
+    $smarty -> assign ("Train2", " oraz 0,06 energii za trening Siły Woli (".$intWiscost." sztuk złota)<br />lub Inteligencji (".$intIntcost." sztuk złota)");
     break;
   case 'Mag':
     $smarty -> assign ("Train2", " oraz 0,2 energii za trening Siły Woli (".$intWiscost." sztuk złota)<br />lub Inteligencji (".$intIntcost." sztuk złota)");
