@@ -8,7 +8,7 @@
  *   @author               : thindil <thindil@vallheru.net>
  *   @author               : eyescream <tduda@users.sourceforge.net>
  *   @version              : 1.7
- *   @since                : 13.12.2012
+ *   @since                : 17.12.2012
  *
  */
 
@@ -256,6 +256,10 @@ function attack1($attacker, $defender, $attack_bspell, $def_bspell, $attack_dspe
 	if ($intBlock > 20)
 	  {
 	    $intBlock = 20;
+	  }
+	if ($strAtype == 'ranged')
+	  {
+	    $intBlock = $intBlock * 2;
 	  }
       }
 
