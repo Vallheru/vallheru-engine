@@ -7,7 +7,7 @@
  *   @copyright            : (C) 2004,2005,2006,2007,2011,2012 Vallheru Team based on Gamers-Fusion ver 2.5
  *   @author               : thindil <thindil@vallheru.net>
  *   @version              : 1.7
- *   @since                : 14.12.2012
+ *   @since                : 17.12.2012
  *
  */
 
@@ -814,7 +814,7 @@ class Player
 	case 'wisdom':
 	case 'inteli':
 	case 'agility':
-	case 'condtition':
+	case 'condition':
 	  $intBonus = ceil($this->stats[$strTrigger][2] * (($this->bonuses[$intKey][1] * $this->bonuses[$intKey][3]) / 100));
 	  break;
 	default:
