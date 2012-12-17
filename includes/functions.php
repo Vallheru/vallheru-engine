@@ -7,7 +7,7 @@
  *   @copyright            : (C) 2004,2005,2006,2011,2012 Vallheru Team based on Gamers-Fusion ver 2.5
  *   @author               : thindil <thindil@vallheru.net>
  *   @version              : 1.7
- *   @since                : 14.12.2012
+ *   @since                : 17.12.2012
  *
  */
 
@@ -354,18 +354,19 @@ function equip ($id)
 	      }
 	  }
     }
+    if ($type == 'W' && $player->clas == 'Barbarzyńca' && $player->equip[5][0])
+      {
+	error('Nie możesz założyć drugiej broni, ponieważ używasz obecnie tarczy.');
+      }
     if ($equip -> fields['twohand'] == 'Y') 
     {
-        $test = $db -> Execute("SELECT id FROM equipment WHERE status='E' AND type='S' AND owner=".$player -> id);
-        if (!empty ($test -> fields['id'])) 
+        if ($player->equip[5][0]) 
         {
             error (TWO_HAND_NOT_ALLOWED);
         }
-        $test -> Close();
 	if ($player->clas == 'Barbarzyńca')
 	  {
-	    $test = $db->Execute("SELECT `id` FROM `equipment` WHERE `status`='E' AND `type`='W' AND `owner`=".$player->id);
-	    if (!empty($test->fields['id']))
+	    if ($player->equip[0][0] || $player->equip[11][0])
 	      {
 		error("Nie możesz wziąć broni dwuręcznej, ponieważ masz już w użyciu jakąś broń!");
 	      }
@@ -373,12 +374,10 @@ function equip ($id)
     }
     if ($type == 'R') 
     {
-        $test = $db -> Execute("SELECT id FROM equipment WHERE type='B' AND status='E' AND owner=".$player -> id);
-        if (empty($test -> fields['id'])) 
+        if (!$player->equip[1][0]) 
         {
             error (DONT_HAVE_BOW);
         }
-        $test -> Close();
         if ($equip -> fields['wt'] > 25) 
         {
             $wt = 25;
@@ -419,10 +418,9 @@ function equip ($id)
     {
         if ($type == 'W' || $type == 'T') 
         {
-	    $arrows = $db -> Execute("SELECT id, name, wt FROM equipment WHERE type='R' AND owner=".$player -> id." AND status='E'");
-            if (isset($arrows -> fields['id'])) 
+            if ($player->equip[6][0]) 
             {
-                $test = $db -> Execute("SELECT id FROM equipment WHERE name='".$arrows -> fields['name']."' AND status='U' AND owner=".$player -> id);
+                $test = $db -> Execute("SELECT id FROM equipment WHERE name='".$player->equip[6][1]."' AND status='U' AND owner=".$player -> id);
             }
             if (!isset($test -> fields['id'])) 
             {
@@ -430,63 +428,66 @@ function equip ($id)
             } 
                 else 
             {
-                $db -> Execute("UPDATE equipment SET wt=wt+".$arrows -> fields['wt']." WHERE id=".$test -> fields['id']);
-                $db -> Execute("DELETE FROM equipment WHERE id=".$arrows -> fields['id']);
+                $db -> Execute("UPDATE equipment SET wt=wt+".$player->equip[6][6]." WHERE id=".$test -> fields['id']);
+                $db -> Execute("DELETE FROM equipment WHERE id=".$player->equip[6][0]);
                 $test -> Close();
             }
-	    $arrows->Close();
         }
-        $test = $db -> Execute("SELECT id FROM equipment WHERE status='E' AND type='".$type."' AND owner=".$player -> id);
-        if (empty($test -> fields['id'])) 
-        {
-            if ($type == 'W') 
-            {
-                $type = 'B';
-                $test1 = $db -> Execute("SELECT id FROM equipment WHERE status='E' AND type='".$type."' AND owner=".$player -> id);
-                if (empty ($test1 -> fields['id'])) 
-                {
-                    $type = 'T';
-                }
-                $test1 -> Close();
-            } 
-                elseif ($type == 'B') 
-            {
-                $type = 'W';
-                $test1 = $db -> Execute("SELECT id FROM equipment WHERE status='E' AND type='".$type."' AND owner=".$player -> id);
-                if (empty ($test1 -> fields['id'])) 
-                {
-                    $type = 'T';
-                }
-                $test1 -> Close();
-            } 
-                elseif ($type == 'T') 
-            {
-                $type = 'W';
-                $test1 = $db -> Execute("SELECT id FROM equipment WHERE status='E' AND type='".$type."' AND owner=".$player -> id);
-                if (empty ($test1 -> fields['id'])) 
-                {
-                    $type = 'B';
-                }
-                $test1 -> Close();
-            }
-        }
-        $test -> Close();
+	switch ($type)
+	  {
+	  case 'W':
+	    if (!$player->equip[0][0] || !$player->equip[11][0])
+	      {
+		if ($player->equip[1][0])
+		  {
+		    $type = 'B';
+		  }
+		else
+		  {
+		    $type = 'T';
+		  }
+	      }
+	    break;
+	  case 'B':
+	    if (!$player->equip[1][0])
+	      {
+		if ($player->equip[0][0] || $player->equip[11][0])
+		  {
+		    $type = 'W';
+		  }
+		else
+		  {
+		    $type = 'T';
+		  }
+	      }
+	    break;
+	  case 'T':
+	    if (!$player->equip[7][0])
+	      {
+		if ($player->equip[0][0] || $player->equip[11][0])
+		  {
+		    $type = 'W';
+		  }
+		else
+		  {
+		    $type = 'B';
+		  }
+	      }
+	    break;
+	  default:
+	    break;
+	  }
     }
     if ($type == 'C' || $type == 'A') 
     {
-        $test = $db -> Execute("SELECT id, power FROM equipment WHERE status='E' AND type='".$type."' AND owner=".$player -> id);
-        if (empty ($test -> fields['id'])) 
-        {
-            if ($type == 'C') 
-            {
-                $type = 'A';
-            } 
-                else 
-            {
-                $type = 'C';
-            }
-        }
-        $test -> Close();
+	if ($player->equip[3][0])
+	  {
+	    $type = 'A';
+	  }
+	else
+	  {
+	    $type = 'C';
+	  }
     }
     if ($equip -> fields['type'] != 'R') 
     {
@@ -502,16 +503,14 @@ function equip ($id)
         $blnTake = true;
         if ($equip -> fields['type'] == 'I')
         {
-            $objAmount = $db -> Execute("SELECT count(`id`) FROM `equipment` WHERE `status`='E' AND `owner`=".$player -> id." AND `type`='I'");
-            if ($objAmount -> fields['count(`id`)'] == 1)
+	    if (!$player->equip[9][0] || !$player->equip[10][0])
             {
                 $blnTake = false;
             }
         }
 	if ($equip->fields['type'] == 'W' && $player->clas == 'Barbarzyńca')
 	  {
-	    $objAmount = $db -> Execute("SELECT count(`id`) FROM `equipment` WHERE `status`='E' AND `owner`=".$player -> id." AND `type`='W'");
-            if ($objAmount -> fields['count(`id`)'] == 1)
+	    if (!$player->equip[0][0] || !$player->equip[11][0])
 	      {
                 $blnTake = false;
 	      }

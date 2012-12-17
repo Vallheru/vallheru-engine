@@ -1,5 +1,7 @@
 2012-12-17  Bartek thindil Jasicki  <thindil@vallheru.net>
 
+	* UPDATE,includes/functions.php: 
+	some code cleanup
 	* UPDATE,includes/battle.php, includes/funkcje.php, includes/turnfight.php: 
 	changed hit location count
 	* UPDATE,includes/battle.php: 
