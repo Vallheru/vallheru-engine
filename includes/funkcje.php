@@ -35,6 +35,30 @@
 require_once("languages/".$lang."/funkcje.php");
 
 /**
+ * Function return hit location
+ */
+function hitlocation()
+{
+  $intResult = rand(1, 100);
+  if ($intResult < 11)
+    {
+      return 0;
+    }
+  elseif ($intResult > 10 && $intResult < 71)
+    {
+      return 1;
+    }
+  elseif ($intResult > 71 && $intResult < 86)
+    {
+      return 2;
+    }
+  elseif ($intResult > 85)
+    {
+      return 3;
+    }
+}
+
+/**
  * Function check did pet survive battle
  */
 function checkpet($intPid, &$arrPet, $intEid, $blnLost = FALSE)
@@ -578,7 +602,7 @@ function monsterattack2($intMydodge, &$zmeczenie, &$gunik, &$enemy, $times, $mcz
     }
   //Monster hit
   $arrLocations = array('w głowę i zadaje(ą)', 'w tułów i zadaje(ą)', 'w nogę i zadaje(ą)', 'w rękę i zadaje(ą)');
-  $intHit = rand(0, 3);
+  $intHit = hitlocation();
   $defpower = 0;
   if ($player->pet[0])
     {

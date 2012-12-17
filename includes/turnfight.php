@@ -1378,7 +1378,7 @@ function monsterattack($attacks,$enemy,$myunik,$amount)
 		  }
                 if (!$blnMiss)
                 {
-		    $intHit = rand(0, 3);
+		    $intHit = hitlocation();
 		    $myobrona = 0;
 		    if ($player->pet[0])
 		      {

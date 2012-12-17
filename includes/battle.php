@@ -274,7 +274,7 @@ function attack1($attacker, $defender, $attack_bspell, $def_bspell, $attack_dspe
         $mypower = ($mypower + $rzut1);
         $rzut2 = (rand(1, $defender->skills['dodge'][1]) * 10);
 	$blnMiss = FALSE;
-	$intHit = rand(0, 3);
+	$intHit = hitlocation();
 	//Attacker too exhausted
         if ($attack_stam > $attacker->stats['condition'][2]) 
         {
