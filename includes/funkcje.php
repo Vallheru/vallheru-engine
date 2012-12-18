@@ -1119,8 +1119,8 @@ function fightmonster($enemy, $expgain, $goldgain, $times)
         }
         if ($player->equip[7][0]) 
         {
-            $intN = 6 - (int)($player->equip[7][4] / 20);
-            $intBonus = (10 / $intN) * $player->skills['magic'][1] * rand(1, $intN);
+            $intN = ceil($player->equip[7][4] / 20);
+            $intBonus = $player->skills['magic'][1] * rand(1, $intN);
             $stat['damage'] += $intBonus;
         }
         if ($stat['damage'] < 0) 

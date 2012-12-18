@@ -155,8 +155,8 @@ function attack1($attacker, $defender, $attack_bspell, $def_bspell, $attack_dspe
 	  }
         if ($attacker->equip[7][0]) 
         {
-            $intN = 6 - (int)($attacker->equip[7][4] / 20);
-            $intBonus = (10 / $intN) * ceil($attacker->skills['magic'][1]) * rand(1, $intN);
+            $intN = ceil($attacker->equip[7][4] / 20);
+            $intBonus = ceil($attacker->skills['magic'][1]) * rand(1, $intN);
             $mypower = $mypower + $intBonus;
         }
         $pech = floor($attacker->skills['magic'][1] - $attack_bspell -> fields['poziom']);

@@ -1,5 +1,7 @@
 2012-12-18  Bartek thindil Jasicki  <thindil@vallheru.net>
 
+	* UPDATE,includes/funkcje.php, includes/battle.php, includes/turnfight.php: 
+	changed bonus from staff
 	* UPDATE,includes/turnfight.php, includes/funkcje.php, includes/battle.php: 
 	changed check for dodge
 	* BUG,kowal.php: 
