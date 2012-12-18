@@ -7,7 +7,7 @@
  *   @copyright            : (C) 2004,2005,2006,2011,2012 Vallheru Team based on Gamers-Fusion ver 2.5
  *   @author               : thindil <thindil@vallheru.net>
  *   @version              : 1.7
- *   @since                : 12.12.2012
+ *   @since                : 18.12.2012
  *
  */
 
@@ -1074,7 +1074,7 @@ if (isset ($_GET['kowal']) && $_GET['kowal'] == 'elite')
     {
         $objMaked = $db -> Execute("SELECT * FROM `smith_work` WHERE `owner`=".$player->id." AND `elite`>0");
         $smarty -> assign(array("Maked" => $objMaked -> fields['id'],
-				"Smithinfo" => "Tutaj możesz wykonywać przedmioty co do których masz plany. Aby wykonać przedmiot, musisz posiadać również odpowiednią ilość surowców. Każda próba kosztuje ciebie 10 energii na poziom przedmiotu. Nawet za nieudaną próbę dostajesz 0,01 do umiejętności."));
+				"Smithinfo" => "Tutaj możesz wykonywać przedmioty co do których masz plany. Aby wykonać przedmiot, musisz posiadać również odpowiednią ilość surowców. Każda próba kosztuje ciebie 10 energii na poziom przedmiotu."));
         if (!$objMaked -> fields['id']) 
         {
             if (isset($_GET['type'])) 
@@ -1280,23 +1280,14 @@ if (isset ($_GET['kowal']) && $_GET['kowal'] == 'elite')
      */
     if (isset($_GET['rob'])) 
     {
-        if ($objSmith -> fields['type'] == 'A')
+        $intEnergy = $objSmith -> fields['level'] * 10;
+        if ($objSmith -> fields['type'] == 'A' || $objSmith->fields['type'] == 'W')
         {
             $intAmount = floor($_POST['razy'] / ($objSmith -> fields['level'] * 10));
-            $intEnergy = $objSmith -> fields['level'] * 10;
         }
             else
         {
-	    if ($objSmith->fields['type'] == 'W')
-	      {
-		$intAmount = floor($_POST['razy'] / ($objSmith -> fields['level'] * 10));
-		$intEnergy = $objSmith -> fields['level'] * 10;
-	      }
-	    else
-	      {
-		$intAmount = floor($_POST['razy'] / ($objSmith -> fields['level'] * 5));
-		$intEnergy = $objSmith -> fields['level'] * 5;
-	      }
+	  $intAmount = floor($_POST['razy'] / ($objSmith -> fields['level'] * 5));
         }
         if ($intAmount)
         {
