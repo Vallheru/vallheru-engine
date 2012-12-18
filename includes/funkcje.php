@@ -7,7 +7,7 @@
  *   @copyright            : (C) 2004,2005,2006,2007,2011,2012 Vallheru Team based on Gamers-Fusion ver 2.5
  *   @author               : thindil <thindil@vallheru.net>
  *   @version              : 1.7
- *   @since                : 17.12.2012
+ *   @since                : 18.12.2012
  *
  */
 
@@ -48,7 +48,7 @@ function hitlocation()
     {
       return 1;
     }
-  elseif ($intResult > 71 && $intResult < 86)
+  elseif ($intResult > 70 && $intResult < 86)
     {
       return 2;
     }
