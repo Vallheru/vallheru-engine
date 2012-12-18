@@ -680,6 +680,18 @@ function playerattack($eunik, $mczar, &$zmeczenie, &$gatak, $stat, &$enemy, &$gm
     {
       $intDodgemax = 100;
       $intDodgemax2 = 97;
+      if ($player->equip[0][0] || $player->equip[11][0])
+	{
+	  $strSkill = 'attack';
+	}
+      elseif ($player->equip[1][0])
+	{
+	  $strSkill = 'shoot';
+	}
+      else
+	{
+	  $strSkill = 'magic';
+	}
       if ($player->stats['agility'][2] + $player->skills[$strSkill][1] < 100)
 	{
 	  $intDodgemax = $player->stats['agility'][2] + $player->skills[$strSkill][1];
