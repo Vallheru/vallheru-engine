@@ -1492,7 +1492,7 @@ function fightmonster($enemy, $expgain, $goldgain, $times)
       {
 	$intLostenergy = 1;
       }
-    $db->Execute("UPDATE `players` SET `hp`=".$player->hp.", `fight`=0, `bless`='', `blessval`=0, `energy`=`energy`-".$intLostenergy." WHERE `id`=".$player->id);
+    $db->Execute("UPDATE `players` SET `hp`=".$player->hp.", `fight`=0, `bless`='', `blessval`=0, `energy`=`energy`-".$intLostenergy.", `pm`=".$player->mana." WHERE `id`=".$player->id);
     $player->user = $strName;
     $player->skills['attack'][1] -= $player->checkbonus('weaponmaster');
     $player->skills['shoot'][1] -= $player->checkbonus('weaponmaster');
