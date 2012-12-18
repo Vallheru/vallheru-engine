@@ -7,7 +7,7 @@
  *   @copyright            : (C) 2004,2005,2006,2007,2011,2012 Vallheru Team based on Gamers-Fusion ver 2.5
  *   @author               : thindil <thindil@vallheru.net>
  *   @version              : 1.7
- *   @since                : 14.12.2012
+ *   @since                : 18.12.2012
  *
  */
  
@@ -1019,8 +1019,19 @@ function attack($eunik,$bdamage)
 	    $zmeczenie += ($player->equip[11][4] / 10);
 	    $player->equip[11][6] --;
 	  }
-        $szansa = rand(1, 100);
-        if ($eunik >= $szansa && $szansa < 97) 
+	$intDodgemax = 100;
+	$intDodgemax2 = 97;
+	if ($player->stats['agility'][2] + $player->skills[$strSkill][1] < 100)
+	  {
+	    $intDodgemax = $player->stats['agility'][2] + $player->skills[$strSkill][1];
+	    if ($intDodgemax < 4)
+	      {
+		$intDodgemax = 4;
+	      }
+	  $intDodgemax2 = floor($intDodgemax * 0.97);
+	  }
+	$szansa = rand(1, $intDodgemax);
+        if ($eunik >= $szansa && $szansa < $intDodgemax2) 
         {
             $smarty -> assign ("Message", "<b>".$enemy['name']."</b> ".ENEMY_DODGE."!<br />");
             $smarty -> display ('error1.tpl');
@@ -1032,7 +1043,7 @@ function attack($eunik,$bdamage)
 		$rzut = rand(1, 1000) / 10;
 		$intRoll = rand(1, 100);
 		$arrLocations = array('w tułów', 'w głowę', 'w kończynę');
-		$intHit = rand(0, 2);
+		$intHit = hitlocation();
 		if ($krytyk >= $rzut && $intRoll <= $krytyk && $player->fight != 999) 
 		  {
 		    $_SESSION['gatak'] = 1;
@@ -1172,8 +1183,19 @@ function castspell ($id,$boost,$eunik)
     }
     if ($ehp > 0) 
     {
-        $szansa = rand(1, 100);
-        if ($eunik >= $szansa && $szansa < 97) 
+	$intDodgemax = 100;
+	$intDodgemax2 = 97;
+	if ($player->stats['agility'][2] + $player->skills['magic'][1] < 100)
+	  {
+	    $intDodgemax = $player->stats['agility'][2] + $player->skills['magic'][1];
+	    if ($intDodgemax < 4)
+	      {
+		$intDodgemax = 4;
+	      }
+	    $intDodgemax2 = floor($intDodgemax * 0.97);
+	}
+	$szansa = rand(1, $intDodgemax);
+        if ($eunik >= $szansa && $szansa < $intDodgemax2) 
         {
             $smarty -> assign ("Message", "<b>".$enemy['name']."</b> ".ENEMY_DODGE."<br />");
             $smarty -> display ('error1.tpl');
@@ -1199,7 +1221,7 @@ function castspell ($id,$boost,$eunik)
 			$_SESSION['gmagia'] = 1;
 			$ehp = 0;
 			$arrLocations = array('w tułów', 'w głowę', 'w kończynę');
-			$intHit = rand(0, 2);
+			$intHit = hitlocation();
 			$smarty->assign("Message", showcritical($arrLocations[$intHit], 'spell', 'pve', $enemy['name']));
 		      }
 		    else
@@ -1357,8 +1379,20 @@ function monsterattack($attacks,$enemy,$myunik,$amount)
 	    $blnMiss = FALSE;
             if ($player -> hp > 0) 
             {
-                $szansa = rand(1, 100);
-                if ($myunik >= $szansa && $zmeczenie < $player -> stats['condition'][2] && $szansa < 97) 
+		//Player dodge
+		$intDodgemax = 100;
+		$intDodgemax2 = 97;
+		if ($enemy['agility'] < 100)
+		  {
+		    $intDodgemax = $enemy['agility'];
+		    if ($intDodgemax < 4)
+		      {
+			$intDodgemax = 4;
+		      }
+		    $intDodgemax2 = floor($intDodgemax * 0.97);
+		  }
+		$szansa = rand(1, $intDodgemax);
+                if ($myunik >= $szansa && $zmeczenie < $player -> stats['condition'][2] && $szansa < $intDodgemax2) 
                 {
                     $smarty -> assign ("Message", "<br>".YOU_DODGE." <b>".$ename."</b>!");
                     $smarty -> display ('error1.tpl');

@@ -578,10 +578,22 @@ function monsterattack2($intMydodge, &$zmeczenie, &$gunik, &$enemy, $times, $mcz
   global $smarty;
   global $number;
 
-  $szansa = rand(1, 100);
   $strMessage = '';
   //Player dodge
-  if ($intMydodge >= $szansa && $zmeczenie <= $player->stats['condition'][2] && $szansa < 97) 
+  $intDodgemax = 100;
+  $intDodgemax2 = 97;
+  if ($enemy['agility'] < 100)
+    {
+      $intDodgemax = $enemy['agility'];
+      if ($intDodgemax < 4)
+	{
+	  $intDodgemax = 4;
+	}
+      $intDodgemax2 = floor($intDodgemax * 0.97);
+    }
+  $szansa = rand(1, $intDodgemax);
+  echo "Szansa: ".$szansa.", Dodgemax: ".$intDodgemax.", Dodgemax2: ".$intDodgemax2.", Mydodge: ".$intMydodge."<br />";
+  if ($intMydodge >= $szansa && $zmeczenie <= $player->stats['condition'][2] && $szansa < $intDodgemax2) 
     {
       if ($times == 1) 
 	{
@@ -667,9 +679,20 @@ function playerattack($eunik, $mczar, &$zmeczenie, &$gatak, $stat, &$enemy, &$gm
   $strMessage = '';
   if ($zmeczenie <= $player->stats['condition'][2]) 
     {
-      $szansa = rand(1, 100);
+      $intDodgemax = 100;
+      $intDodgemax2 = 97;
+      if ($player->stats['agility'][2] + $player->skills[$strSkill][1] < 100)
+	{
+	  $intDodgemax = $player->stats['agility'][2] + $player->skills[$strSkill][1];
+	  if ($intDodgemax < 4)
+	    {
+	      $intDodgemax = 4;
+	    }
+	  $intDodgemax2 = floor($intDodgemax * 0.97);
+	}
+      $szansa = rand(1, $intDodgemax);
       //Monster dodge
-      if ($eunik >= $szansa && $szansa < 97) 
+      if ($eunik >= $szansa && $szansa < $intDodgemax2) 
 	{
 	  if ($times == 1) 
 	    {

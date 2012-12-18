@@ -8,7 +8,7 @@
  *   @author               : thindil <thindil@vallheru.net>
  *   @author               : eyescream <tduda@users.sourceforge.net>
  *   @version              : 1.7
- *   @since                : 17.12.2012
+ *   @since                : 18.12.2012
  *
  */
 
@@ -373,7 +373,6 @@ function attack1($attacker, $defender, $attack_bspell, $def_bspell, $attack_dspe
         {
             $attackdmg = 0;
         }
-        $szansa = rand(1,100);
 	//Bad luck with attack spell
 	if ($pech < 6)
 	  {
@@ -435,7 +434,19 @@ function attack1($attacker, $defender, $attack_bspell, $def_bspell, $attack_dspe
         /**
         * Player dodge
         */
-        if ($unik >= $szansa && $szansa < 90 && $unik > 0) 
+	$intDodgemax = 100;
+	$intDodgemax2 = 90;
+	if ($attacker->stats['agility'][2] + $attacker->skills[$strSkill][1] < 100)
+	  {
+	    $intDodgemax = $attacker->stats['agility'][2] + $attacker->skills[$strSkill][1];
+	    if ($intDodgemax < 4)
+	      {
+		$intDodgemax = 4;
+	      }
+	    $intDodgemax2 = floor($intDodgemax * 0.9);
+	  }
+        $szansa = rand(1, $intDodgemax);
+        if ($unik >= $szansa && $szansa < $intDodgemax2 && $unik > 0) 
 	  {
 	    $strMessage = $strMessage."<b>".$defender->user."</b> ".P_DODGE." <b>".$attacker->user."</b><br />";
 	    $def_miss ++;
