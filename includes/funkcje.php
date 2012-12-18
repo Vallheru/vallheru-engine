@@ -592,7 +592,6 @@ function monsterattack2($intMydodge, &$zmeczenie, &$gunik, &$enemy, $times, $mcz
       $intDodgemax2 = floor($intDodgemax * 0.97);
     }
   $szansa = rand(1, $intDodgemax);
-  echo "Szansa: ".$szansa.", Dodgemax: ".$intDodgemax.", Dodgemax2: ".$intDodgemax2.", Mydodge: ".$intMydodge."<br />";
   if ($intMydodge >= $szansa && $zmeczenie <= $player->stats['condition'][2] && $szansa < $intDodgemax2) 
     {
       if ($times == 1) 
