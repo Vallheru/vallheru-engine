@@ -1,6 +1,8 @@
 2012-12-18  Bartek thindil Jasicki  <thindil@vallheru.net>
 
 	* BUG,kowal.php: 
+	fixed gaining experience
+	* BUG,kowal.php: 
 	fixed cost of make elite items
 	* BUG,includes/funkcje.php: 
 	fixed lost mana

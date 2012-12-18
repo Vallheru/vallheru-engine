@@ -1252,6 +1252,14 @@ if (isset ($_GET['kowal']) && $_GET['kowal'] == 'elite')
                 $intGainexp = 1;
                 $smarty -> assign ("Message2", "Próbowałeś wykonać <b>".$strName."</b>, niestety nie udało się.<br />");
 	      }
+	    if ($objSmith->fields['elitetype'] == 'S')
+	      {
+		$strStat = 'strength';
+	      }
+	    else
+	      {
+		$strStat = 'agility';
+	      }
             $db -> Execute("DELETE FROM `smith_work` WHERE `id`=".$objWork->fields['id']);
 	    $player->checkexp(array($strStat => ($intGainexp / 2)), $player->id, 'stats');
 	    $player->checkexp(array('smith' => ($intGainexp / 2)), $player->id, 'skills');
