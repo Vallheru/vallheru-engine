@@ -1043,7 +1043,7 @@ function attack($eunik,$bdamage)
 		$rzut = rand(1, 1000) / 10;
 		$intRoll = rand(1, 100);
 		$arrLocations = array('w tułów', 'w głowę', 'w kończynę');
-		$intHit = hitlocation();
+		$intHit = rand(0, 2);
 		if ($krytyk >= $rzut && $intRoll <= $krytyk && $player->fight != 999) 
 		  {
 		    $_SESSION['gatak'] = 1;
@@ -1221,7 +1221,7 @@ function castspell ($id,$boost,$eunik)
 			$_SESSION['gmagia'] = 1;
 			$ehp = 0;
 			$arrLocations = array('w tułów', 'w głowę', 'w kończynę');
-			$intHit = hitlocation();
+			$intHit = rand(0, 2);
 			$smarty->assign("Message", showcritical($arrLocations[$intHit], 'spell', 'pve', $enemy['name']));
 		      }
 		    else

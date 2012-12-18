@@ -1,5 +1,7 @@
 2012-12-18  Bartek thindil Jasicki  <thindil@vallheru.net>
 
+	* BUG,includes/turnfight.php: 
+	fixed hit location
 	* BUG,includes/funkcje.php: 
 	fixed notice
 	* BUG,includes/funkcje.php: 
