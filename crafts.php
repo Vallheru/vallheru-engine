@@ -7,7 +7,7 @@
  *   @copyright            : (C) 2011,2012 Vallheru Team based on Gamers-Fusion ver 2.5
  *   @author               : thindil <thindil@vallheru.net>
  *   @version              : 1.7
- *   @since                : 12.12.2012
+ *   @since                : 19.12.2012
  *
  */
 
@@ -131,7 +131,7 @@ if (isset($_GET['step']))
 		  }
 		$objSmelter->Close();
 		$arrBillets = array(1, 2, 3, 5, 8);
-		$_SESSION['craftenergy'][$i] = $arrBillets[$intLevel] * 2;
+		$_SESSION['craftenergy'][$i] = $arrBillets[$intLevel];
 		$_SESSION['craftindex'][$i] = $intLevel;
 		$arrInfo[$i] = 'Potrzebujemy hutnika, który wytopi nam nieco sztabek '.$arrOptions[$intLevel];
 		break;
@@ -149,7 +149,7 @@ if (isset($_GET['step']))
 		  }
 		$objLumber->Close();
 		$arrBillets = array(1, 2, 3, 5, 8);
-		$_SESSION['craftenergy'][$i] = $arrBillets[$intLevel] * 2;
+		$_SESSION['craftenergy'][$i] = $arrBillets[$intLevel];
 		$_SESSION['craftindex'][$i] = $intLevel;
 		$arrInfo[$i] = 'Potrzebujemy drwala, który zdobędzie dla nas nieco drewna '.$arrOptions[$intLevel];
 		break;
@@ -158,13 +158,13 @@ if (isset($_GET['step']))
 		$arrOptions = array('rudy miedzi', 'cynku', 'cyny', 'rudy żelaza', 'brył węgla', 'adamantium', 'kryształów', 'meteorytu');
 		$intLevel = rand(0, 7);
 		$arrBillets = array(1, 2, 3, 5, 8, 10, 12, 14);
-		$_SESSION['craftenergy'][$i] = $arrBillets[$intLevel] * 2;
+		$_SESSION['craftenergy'][$i] = $arrBillets[$intLevel];
 		$_SESSION['craftindex'][$i] = $intLevel;
 		$arrInfo[$i] = 'Potrzebujemy górnika, który zdobędzie dla nas nieco '.$arrOptions[$intLevel];
 		break;
 		//breeding
 	      case 3:
-		$_SESSION['craftenergy'][$i] = 20;
+		$_SESSION['craftenergy'][$i] = 5;
 		$_SESSION['craftindex'][$i] = rand(1, 6);
 		$strInfo = 'Potrzebujemy hodowcy, który zaopiekuje się naszymi chowańcami';
 		break;
@@ -178,7 +178,7 @@ if (isset($_GET['step']))
 		  }
 		$intLevel = $objRing->fields['level'];
 		$_SESSION['craftindex'][$i] = $objRing->fields['id'];
-		$_SESSION['craftenergy'][$i] = 5 * $intLevel;
+		$_SESSION['craftenergy'][$i] = 2.5 * $intLevel;
 		$arrInfo[$i] = 'Potrzebujemy jubilera, który wykona dla nas parę pierścieni typu: '.$objRing->fields['name'];
 		$objRing->Close();
 		break;
@@ -186,7 +186,7 @@ if (isset($_GET['step']))
 	      case 5:
 		$arrOptions = array('Illani', 'Illanias', 'Nutari', 'Dynallca', 'Nasiona Illani', 'Nasiona Illanias', 'Nasiona Nutari', 'Nasiona Dynallca');
 		$intLevel = rand(0, 7);
-		$_SESSION['craftenergy'][$i] = 20;
+		$_SESSION['craftenergy'][$i] = 5;
 		$_SESSION['craftindex'][$i] = $intLevel;
 		$arrInfo[$i] = 'Potrzebujemy zielarza, który ';
 		if ($intLevel < 4)
@@ -209,7 +209,7 @@ if (isset($_GET['step']))
 		  }
 		$intLevel = $objPotion->fields['level'];
 		$_SESSION['craftindex'][$i] = $objPotion->fields['id'];
-		$_SESSION['craftenergy'][$i] = 5 * $intLevel;
+		$_SESSION['craftenergy'][$i] = 2.5 * $intLevel;
 		$arrInfo[$i] = 'Potrzebujemy alchemika, który wykona dla nas parę mikstur typu: '.$objPotion->fields['name'];
 		$objPotion->Close();
 		break;
@@ -223,7 +223,7 @@ if (isset($_GET['step']))
 		  }
 		$intLevel = $objBows->fields['level'];
 		$_SESSION['craftindex'][$i] = $objBows->fields['id'];
-		$_SESSION['craftenergy'][$i] = 5 * $intLevel;
+		$_SESSION['craftenergy'][$i] = 2.5 * $intLevel;
 		$arrInfo[$i] = 'Potrzebujemy stolarza, który wykona dla nas parę ';
 		if ($objBows->fields['type'] == 'B')
 		  {
@@ -249,7 +249,7 @@ if (isset($_GET['step']))
 		$intLevel = $objSmith->fields['level'];
 		$_SESSION['craftindex'][$i] = $objSmith->fields['id'];
 		$intName = array_search($objSmith->fields['type'], $arrTypes);
-		$_SESSION['craftenergy'][$i] = 5 * $intLevel;
+		$_SESSION['craftenergy'][$i] = 2.5 * $intLevel;
 		$arrInfo[$i] = 'Potrzebujemy kowala, który wykona dla nas parę '.$arrNames[$intName];
 		$arrInfo[$i] .= ' typu: '.$objSmith->fields['name'];
 		$objSmith->Close();
@@ -330,9 +330,11 @@ if (isset($_GET['step']))
 	    $arrOptions = array('miedzi', 'brązu', 'mosiądzu', 'żelaza', 'stali');
 	    $arrBillets = array('copper', 'bronze', 'brass', 'iron', 'steel');
 	    $intAmount = rand(1, 100);
-	    $intExp = (($_SESSION['craftindex'][$intIndex] + 1) * 5);
+	    $intExp = (($_SESSION['craftindex'][$intIndex] + 1) * 10);
 	    $strSkill = 'smelting';
 	    $strSkill2 = 'hutnictwo';
+	    $strStat = 'condition';
+	    $strStat2 = 'Kondycja';
 	    $strInfo2 .= 'wytapianiu sztabek '.$arrOptions[$_SESSION['craftindex'][$intIndex]].'. ';
 	    if (!$blnCase)
 	      {
@@ -352,7 +354,7 @@ if (isset($_GET['step']))
 	      {
 		$strInfo2 .= 'W pewnym momencie, nie przypilnował'.$strSuffix.' temperatury pieca, który nagle wybuchł raniąc wszystkich dookoła.';
 	      }
-	    $intWarehouse = $intAmount * 5;
+	    $intWarehouse = $intAmount;
 	    $db->Execute("UPDATE `warehouse` SET `amount`=`amount`+'".$intWarehouse."' WHERE `mineral`='".$arrBillets[$_SESSION['craftindex'][$intIndex]]."'");
 	    break;
 	    //lumberjack
@@ -380,10 +382,12 @@ if (isset($_GET['step']))
 	      {
 		$strInfo2 .= 'Niestety przy jednym z drzew ustawiłeś się ze złej strony. Spadło ono prosto na Ciebie.';
 	      }
-	    $intExp = (($_SESSION['craftindex'][$intIndex] + 1) * 5);
+	    $intExp = (($_SESSION['craftindex'][$intIndex] + 1) * 10);
 	    $strSkill = 'lumberjack';
 	    $strSkill2 = 'drwalnictwo';
-	    $intWarehouse = $intAmount * 5;
+	    $strStat = 'strength';
+	    $strStat2 = 'Siła';
+	    $intWarehouse = $intAmount;
 	    $db->Execute("UPDATE `warehouse` SET `amount`=`amount`+'".$intWarehouse."' WHERE `mineral`='".$arrBillets[$_SESSION['craftindex'][$intIndex]]."'");
 	    break;
 	    //mining
@@ -411,18 +415,22 @@ if (isset($_GET['step']))
 	      {
 		$strInfo2 .= 'Niezbyt poprawnie podstęplował'.$strSuffix.' tunel w skutek czego, zawalił się na wszystkich w okolicy.';
 	      }
-	    $intExp = (($_SESSION['craftindex'][$intIndex] + 1) * 5);
+	    $intExp = (($_SESSION['craftindex'][$intIndex] + 1) * 10);
 	    $strSkill = 'mining';
 	    $strSkill2 = 'górnictwo';
-	    $intWarehouse = $intAmount * 5;
+	    $strStat = 'strength';
+	    $strStat2 = 'Siła';
+	    $intWarehouse = $intAmount;
 	    $db->Execute("UPDATE `warehouse` SET `amount`=`amount`+'".$intWarehouse."' WHERE `mineral`='".$arrBillets[$_SESSION['craftindex'][$intIndex]]."'");
 	    break;
-	    //breeding (TODO)
+	    //breeding
 	  case 3:
 	    $arrTool = array('nową uprząż', 'lepszą uprząż', 'uprzęży', 'lepszej uprzęży', 'B');
-	    $intExp = 10 * rand(1, 5);
+	    $intExp = 20 * rand(1, 5);
 	    $strSkill = 'breeding';
 	    $strSkill2 = 'hodowla';
+	    $strStat = 'condition';
+	    $strStat2 = 'Kondycja';
 	    $intGen = rand(0, 1);
 	    if ($intGen)
 	      {
@@ -454,6 +462,8 @@ if (isset($_GET['step']))
 		$intAmount = rand(1, 20);
 		$intCost = 3;
 		$intPower = 0;
+		$strStat = 'agility';
+		$strStat2 = 'Zręczność';
 	      }
 	    else
 	      {
@@ -463,8 +473,12 @@ if (isset($_GET['step']))
 		$objRing->fields['name'] .= $arrStats[$intStat];
 		$intCost = $objRing->fields['cost'] / 20;
 		$intPower = ceil($objRing->fields['bonus'] / 10);
+		$arrStats2 = array('strength', 'agility', 'inteli', 'speed', 'condition', 'wisdom');
+		$arrStats3 = array('Siła', 'Zręczność', 'Inteligencja', 'Szybkość', 'Kondycja', 'Siła Woli');
+		$strStat = $arrStats2[$intStat];
+		$strStat2 = $arrStats3[$intStat];
 	      }
-	    $intExp = ($objRing->fields['level'] * 10);
+	    $intExp = ($objRing->fields['level'] * 20);
 	    $strSkill = 'jewellry';
 	    $strSkill2 = 'jubilerstwo';
 	    $strInfo2 .= 'wykonywaniu pierścieni. ';
@@ -523,10 +537,12 @@ if (isset($_GET['step']))
 	      {
 		$strInfo2 .= 'Kiedy montował'.$strSuffix.' rusztowanie, to nagle pękło, przygniatając Ciebie.';
 	      }
-	    $intExp = (($_SESSION['craftindex'][$intIndex] + 1) * 4);
+	    $intExp = (($_SESSION['craftindex'][$intIndex] + 1) * 10);
 	    $strSkill = 'herbalism';
 	    $strSkill2 = 'zielarstwo';
-	    $intWarehouse = $intAmount * 7;
+	    $strStat = 'agility';
+	    $strStat2 = 'Zręczność';
+	    $intWarehouse = $intAmount;
 	    $db->Execute("UPDATE `warehouse` SET `amount`=`amount`+'".$intWarehouse."' WHERE `mineral`='".$arrBillets2[$_SESSION['craftindex'][$intIndex]]."'");
 	    break;
 	    //alchemy
@@ -534,9 +550,11 @@ if (isset($_GET['step']))
 	    $arrTool = array('nowy moździerz', 'lepszy moździerz', 'moździerza', 'lepszego moździerza', 'A');
 	    $objPotion = $db->Execute("SELECT * FROM `alchemy_mill` WHERE `id`=".$_SESSION['craftindex'][$intIndex]);
 	    $intAmount = rand(1, 20);
-	    $intExp = ($objPotion->fields['level'] * 6);
+	    $intExp = ($objPotion->fields['level'] * 12);
 	    $strSkill = 'alchemy';
 	    $strSkill2 = 'alchemia';
+	    $strStat = 'wisdom';
+	    $strStat2 = 'Siła Woli';
 	    $intCost = ceil($objPotion->fields['cost'] / 200);
 	    $strInfo2 .= 'warzeniu mikstur. ';
 	    if (!$blnCase)
@@ -566,9 +584,11 @@ if (isset($_GET['step']))
 	    $arrTool = array('nowy ciesak', 'lepszy ciesak', 'ciesaka', 'lepszego ciesaka', 'F');
 	    $objBow = $db->Execute("SELECT * FROM `mill` WHERE `id`=".$_SESSION['craftindex'][$intIndex]);
 	    $strInfo2 .= 'wykonywaniu ';
-	    $intExp = ($objBow->fields['level'] * 5);
+	    $intExp = ($objBow->fields['level'] * 10);
 	    $strSkill = 'carpentry';
 	    $strSkill2 = 'stolarstwo';
+	    $strStat = 'agility';
+	    $strStat2 = 'Zręczność';
 	    if ($objBow->fields['type'] == 'B')
 	      {
 		$intCost = $objBow->fields['cost'] / 20;
@@ -626,9 +646,11 @@ if (isset($_GET['step']))
 	    $arrTypes = array('A', 'S', 'H', 'L', 'W', 'E');
 	    $arrNames = array('zbrój', 'tarcz', 'hełmów', 'nagolenników', 'broni', 'narzędzi');
 	    $objItem->fields['name'] .= ' z miedzi';
-	    $intExp = ($objItem->fields['level'] * 5);
+	    $intExp = ($objItem->fields['level'] * 10);
 	    $strSkill = 'smith';
 	    $strSkill2 = 'kowalstwo';
+	    $strStat = 'strength';
+	    $strStat2 = 'Siła';
 	    $intWt = 20;
 	    $intRepair = $objItem->fields['level'];
 	    if ($objItem->fields['type'] == 'A' || $objItem->fields['type'] == 'W')
@@ -674,7 +696,7 @@ if (isset($_GET['step']))
 	if (!$blnCase)
 	  {
 	    $intGold = $_SESSION['craftenergy'][$intIndex] * $player->skills[$strSkill][1] * 10;
-	    $strInfo2 .= ', '.$intExp.' punktów doświadczenia w umiejętności '.$strSkill2.' oraz '.$intGold.' sztuk złota';
+	    $strInfo2 .= ', '.$intExp.' punktów doświadczenia w umiejętności '.$strSkill2.' oraz do cechy '.$strStat2.'. Dodatkowo dostał'.$strSuffix.' '.$intGold.' sztuk złota';
 	    $intRoll = rand(1, 1000);
 	    switch ($intRoll)
 	      {
@@ -729,7 +751,8 @@ if (isset($_GET['step']))
 		$objLoot->Close();
 	      }
 	    $strInfo2 .= '.';
-	    $player->checkexp(array($strSkill => $intExp), $player->id, "skills");
+	    $player->checkexp(array($strSkill => $intExp / 2), $player->id, "skills");
+	    $player->checkexp(array($strStat => $intExp / 2), $player->id, "stats");
 	    $db->Execute("UPDATE `players` SET `credits`=`credits`+".$intGold.", `mpoints`=`mpoints`+1 WHERE `id`=".$player->id);
 	  }
 	else
