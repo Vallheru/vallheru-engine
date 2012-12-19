@@ -7,7 +7,7 @@
  *   @copyright            : (C) 2004,2005,2006,2011,2012 Vallheru Team based on Gamers-Fusion ver 2.5
  *   @author               : thindil <thindil@vallheru.net>
  *   @version              : 1.7
- *   @since                : 14.11.2012
+ *   @since                : 19.12.2012
  *
  */
 
@@ -187,7 +187,7 @@ if (isset ($_GET['action']) && $_GET['action'] == 'chop')
         $strMessage = $strMessage.$intExp." PD.<br />";
       }
     $strMessage = $strMessage.$strInfo;
-    $smarty -> assign(array("Message" => $strMessage,
+    $smarty -> assign(array("Message2" => $strMessage,
 			    "Lselected" => $_POST['type']));
     $player->checkexp(array('lumberjack' => ($intExp / 2)), $player->id, 'skills');
     $player->checkexp(array('strength' => ($intExp / 2)), $player->id, 'stats');

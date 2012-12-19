@@ -9,7 +9,7 @@
 {/if}
 
 {if $Action == "chop"}
-    {$Message}<br /><br />
+    {$Message2}<br /><br />
     {if $Health > "0"}
         {if $Curen >= 0}
             <form method="post" action="lumberjack.php?action=chop">
