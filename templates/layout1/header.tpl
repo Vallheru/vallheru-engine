@@ -23,13 +23,13 @@
     </div>
     <div style="width:150px; max-width: 150px; float:left; margin-left:10px; margin-top:10px;">
       <div class="vial" title="{$Healthpts}: {$Health}/{$Maxhealth} ({$Healthper}%)">
-	  <div class="subvial" style="width: {$Vial2}%; background: red;"></div>
+	  <div class="subvial" style="width: {$Vial2}%; background-image:url('images/life.jpg');"></div>
       </div>
       <div class="vial" title="{$Manapts}: {$Mana} ({$Manaper}%)">
-	  <div class="subvial" style="width: {$Vial3}%; background: blue;"></div>
+	  <div class="subvial" style="width: {$Vial3}%; background-image:url('images/mana.jpg');"></div>
       </div>
       <div class="vial" title="{$Energypts}: {$Energy}/{$Maxenergy} ({$Energyper}%)">
-	  <div class="subvial" style="width: {$Vial4}%; background: green;"></div>
+	  <div class="subvial" style="width: {$Vial4}%; background-image:url('images/energy.jpg');"></div>
       </div>
     </div>
     <div style="width: 12%; float: left; margin-left: 20px;">

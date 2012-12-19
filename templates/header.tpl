@@ -38,19 +38,19 @@
                         <b>{$Healthpts}:</b> {$Health}/{$Maxhealth}<br />
                         {if $Graphbar == "Y"}
 			    <div class="vial" title="{$Healthpts}: {$Health}/{$Maxhealth} ({$Healthper}%)">
-			      <div class="subvial" style="width: {$Vial2}%; background: red;"></div>
+			      <div class="subvial" style="width: {$Vial2}%; background-image:url('images/life.jpg');"></div>
 			    </div>
                         {/if}
                         <b>{$Manapts}:</b> {$Mana} <br />
                         {if $Graphbar == "Y"}
 			    <div class="vial" title="{$Manapts}: {$Mana} ({$Manaper}%)">
-			      <div class="subvial" style="width: {$Vial3}%; background: blue;"></div>
+			      <div class="subvial" style="width: {$Vial3}%; background-image:url('images/mana.jpg');"></div>
 			    </div>
                         {/if}
                         <b>{$Energypts}:</b> {$Energy}/{$Maxenergy}<br />
 			{if $Graphbar == "Y"}
 			    <div class="vial" title="{$Energypts}: {$Energy}/{$Maxenergy} ({$Energyper}%)">
-			      <div class="subvial" style="width: {$Vial4}%; background: green;"></div>
+			      <div class="subvial" style="width: {$Vial4}%; background-image:url('images/energy.jpg');"></div>
 			    </div>
                         {/if}<br />
                         <b>{$Goldinhand}:</b> {$Gold}<br />

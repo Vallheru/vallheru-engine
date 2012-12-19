@@ -142,12 +142,12 @@ input.toggle:checked+span {
 }
 
 div.vial {
-    border-style: outset;
-    border-width: 3px;
+    border-style: ridge;
+    border-width: 1px;
     border-color: black;
-    margin-top: 3px;
-    margin-bottom: 3px;
-    height: 6px;
+    margin-top: 7px;
+    margin-bottom: 7px;
+    height: 8px;
     width: 95%;
     -webkit-border-radius: 10px;
     -moz-border-radius: 15px;
@@ -158,7 +158,7 @@ div.subvial {
     -webkit-border-radius: 10px;
     -moz-border-radius: 15px;
     border-radius: 15px;
-    height: 6px;
+    height: 8px;
 }
 
 img.avatar {

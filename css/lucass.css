@@ -58,9 +58,6 @@ input.toggle:checked+span {
   display: none; 
 }
 div.vial {
-    border-style: outset;
-    border-width: 2px;
-    border-color: black;
     margin-top: 3px;
     margin-bottom: 3px;
     height: 6px;
