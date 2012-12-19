@@ -7,7 +7,7 @@
  *   @copyright            : (C) 2004,2005,2006,2007,2011,2012 Vallheru Team based on Gamers-Fusion ver 2.5
  *   @author               : thindil <thindil@vallheru.net>
  *   @version              : 1.7
- *   @since                : 18.12.2012
+ *   @since                : 19.12.2012
  *
  */
  
@@ -441,7 +441,7 @@ function turnfight($expgain,$goldgain,$action,$addres)
 		  }
 		checkvalue($_POST['bspellboost']);
 		$intSpelllevel = $db -> Execute("SELECT `gracz, `poziom` FROM `czary` WHERE `id`=".$_POST['bspellboost']);
-		if ($intSpelllevel->fields['gracz'] != $player->id)
+		if (!$intSpelllevel->fields['gracz'] || $intSpelllevel->fields['gracz'] != $player->id)
 		  {
 		    $intMaxburst = 0;
 		  }
@@ -620,9 +620,9 @@ function turnfight($expgain,$goldgain,$action,$addres)
             $smarty -> display ('error1.tpl');
             $_POST['power1'] = 0;
         }
-        if ($_POST['power1'] > $player -> level)
+        if ($_POST['power1'] > $player -> skills['magic'][1])
         {
-            $_POST['power1'] = $player -> level;
+            $_POST['power1'] = $player -> skills['magic'][1];
         }
         $intMaxburst = $player -> mana - $myczaro -> fields['poziom'];
         if ($_POST['power1'] > $intMaxburst)
@@ -635,7 +635,7 @@ function turnfight($expgain,$goldgain,$action,$addres)
         if ($player -> hp > 0) 
         {
             $_SESSION['round'] = $_SESSION['round'] + 1;
-            $_SESSION['points'] = ceil($player->speed / $enemy['speed']);
+            $_SESSION['points'] = ceil($player->stats['speed'][2] / $enemy['speed']);
             fightmenu($_SESSION['points'],$zmeczenie,$_SESSION['round'],$addres);
         }
     }
