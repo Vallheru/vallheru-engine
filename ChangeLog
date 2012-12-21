@@ -1,5 +1,7 @@
 2012-12-21  Bartek thindil Jasicki  <thindil@vallheru.net>
 
+	* BUG,includes/funkcje.php, includes/battle.php: 
+	fixed mana lost
 	* UPDATE,pmarket.php:
 	better search on market
 

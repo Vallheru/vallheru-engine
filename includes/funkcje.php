@@ -7,7 +7,7 @@
  *   @copyright            : (C) 2004,2005,2006,2007,2011,2012 Vallheru Team based on Gamers-Fusion ver 2.5
  *   @author               : thindil <thindil@vallheru.net>
  *   @version              : 1.7
- *   @since                : 18.12.2012
+ *   @since                : 21.12.2012
  *
  */
 
@@ -661,7 +661,10 @@ function monsterattack2($intMydodge, &$zmeczenie, &$gunik, &$enemy, $times, $mcz
 	{
 	  $lost_mana = 1;
 	}
-      $player->mana -= $lost_mana;
+      if ($player->mana >= $lost_mana)
+	{
+	  $player->mana -= $lost_mana;
+	}
     }
   $enemy['damage'] += $defpower;
   return $strMessage;

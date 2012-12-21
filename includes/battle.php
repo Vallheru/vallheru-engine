@@ -8,7 +8,7 @@
  *   @author               : thindil <thindil@vallheru.net>
  *   @author               : eyescream <tduda@users.sourceforge.net>
  *   @version              : 1.7
- *   @since                : 18.12.2012
+ *   @since                : 21.12.2012
  *
  */
 
@@ -486,7 +486,10 @@ function attack1($attacker, $defender, $attack_bspell, $def_bspell, $attack_dspe
 	      {
 		$lost_mana = 1;
 	      }
-	    $defender->mana -= $lost_mana;
+	    if ($defender->mana >= $lost_mana)
+	      {
+		$defender->mana -= $lost_mana;
+	      }
 	  }
 	//Attacker hit
 	if (!$blnMiss) 
