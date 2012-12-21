@@ -7,8 +7,8 @@
  *   @copyright            : (C) 2004,2005,2006,2007,2011,2012 Vallheru Team based on Gamers-Fusion ver 2.5
  *   @author               : thindil <thindil@vallheru.net>
  *   @author               : eyescream <tduda@users.sourceforge.net>
- *   @version              : 1.6
- *   @since                : 24.05.2012
+ *   @version              : 1.7
+ *   @since                : 21.12.2012
  *
  */
 
@@ -87,16 +87,11 @@ if (isset ($_GET['view']) && $_GET['view'] == 'market')
 	  }
         $_POST['szukany'] = strip_tags($_POST['szukany']);
         $_POST['szukany'] = str_replace("*","%", $_POST['szukany']);
-        $strSearch = $db -> qstr($_POST['szukany'], get_magic_quotes_gpc());
-	for ($i = 0; $i < count($arrMinerals); $i++)
+	if (strpos($_POST['szukany'], '%') === FALSE)
 	  {
-	    if (stripos($arrMinerals[$i], $_POST['szukany']) !== FALSE)
-	      {
-		$strSearch = $arrMinerals[$i];
-		$strSearch = $db -> qstr($strSearch, get_magic_quotes_gpc());
-		break;
-	      }
+	    $_POST['szukany'] = '%'.$_POST['szukany'].'%';
 	  }
+        $strSearch = $db -> qstr($_POST['szukany'], get_magic_quotes_gpc());
         $msel = $db -> Execute("SELECT count(`id`) FROM `pmarket` WHERE `nazwa` LIKE ".$strSearch);
       }
     $oferty = $msel->fields['count(`id`)'];
