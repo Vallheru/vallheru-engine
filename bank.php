@@ -9,7 +9,7 @@
  *   @author               : yeskov <yeskov@users.sourceforge.net>
  *   @author               : eyescream <tduda@users.sourceforge.net>
  *   @version              : 1.7
- *   @since                : 16.11.2012
+ *   @since                : 26.12.2012
  *
  */
 
@@ -762,7 +762,7 @@ if (isset($_GET['action']))
 	  }
 	if ($blnValid)
 	  {
-	    $intMax = (150 - ($_POST['tp'] * 2));
+	    $intMax = (200 - ($_POST['tp'] * 2));
 	    $roll = rand (1, $intMax);
 	    if ($roll == 1)
 	      {
@@ -840,7 +840,7 @@ if (isset($_GET['action']))
 			$db->Execute("UPDATE `equipment` SET `wt`=`wt`-1 WHERE `id`=".$player->equip[12][0]);
 		      }
 		  }
-		$db->Execute("UPDATE `players` SET `credits`=`credits`+".$gain." WHERE `id`=".$player->id);
+		$db->Execute("UPDATE `players` SET `credits`=`credits`+".$gain.", `crime`=`crime`-".$_POST['tp']." WHERE `id`=".$player->id);
 		$player->credits += $gain;
 		message('success', C_SUCCES.$gain.C_SUCCES2.".");
 	      }
