@@ -1,3 +1,8 @@
+2012-12-27  Bartek thindil Jasicki  <thindil@vallheru.net>
+
+	* BUG,includes/functions.php:
+	fixed wearing items
+
 2012-12-26  Bartek thindil Jasicki  <thindil@vallheru.net>
 
 	* BUG,bank.php:

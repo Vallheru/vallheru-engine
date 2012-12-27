@@ -7,7 +7,7 @@
  *   @copyright            : (C) 2004,2005,2006,2011,2012 Vallheru Team based on Gamers-Fusion ver 2.5
  *   @author               : thindil <thindil@vallheru.net>
  *   @version              : 1.7
- *   @since                : 17.12.2012
+ *   @since                : 27.12.2012
  *
  */
 
@@ -436,7 +436,7 @@ function equip ($id)
 	switch ($type)
 	  {
 	  case 'W':
-	    if (!$player->equip[0][0] || !$player->equip[11][0])
+	    if (!$player->equip[0][0] && !$player->equip[11][0])
 	      {
 		if ($player->equip[1][0])
 		  {
