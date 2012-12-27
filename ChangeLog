@@ -1,5 +1,7 @@
 2012-12-27  Bartek thindil Jasicki  <thindil@vallheru.net>
 
+	* BUG,house.php: 
+	fixed restore mana
 	* BUG,outposts.php: 
 	fixed info about gained experience
 	* BUG,includes/functions.php:
