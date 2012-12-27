@@ -8,7 +8,7 @@
  *   @author               : thindil <thindil@vallheru.net>
  *   @author               : eyescream <tduda@users.sourceforge.net>
  *   @version              : 1.7
- *   @since                : 22.10.2012
+ *   @since                : 27.12.2012
  *
  */
  
@@ -1979,7 +1979,7 @@ if (isset ($_GET['view']) && $_GET['view'] == 'battle')
                 * Count exp gained by defender
                 */
                 $gainexp = gainexplost();
-		$objEnemy->checkexp(array('leadership' => $gainexp), $player->id, "skills");
+		$objEnemy->checkexp(array('leadership' => $gainexp), $objEnemy->id, "skills");
                 /**
                 * Create info about fight
                 */
@@ -2031,7 +2031,7 @@ if (isset ($_GET['view']) && $_GET['view'] == 'battle')
                 * Count gaining exp by defender player
                 */
                 $gainexp1 = gainexpwin();
-		$objEnemy->checkexp(array('leadership' => $gainexp1), $player->id, "skills");
+		$objEnemy->checkexp(array('leadership' => $gainexp1), $objEnemy->id, "skills");
                 /**
                 * Count gaining exp by attacker player
                 */
