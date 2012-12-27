@@ -9,7 +9,7 @@
  *   @author               : mori <ziniquel@users.sourceforge.net>
  *   @author               : eyescream <tduda@users.sourceforge.net>
  *   @version              : 1.7
- *   @since                : 20.11.2012
+ *   @since                : 27.12.2012
  *
  */
 
@@ -239,35 +239,14 @@ if (isset ($_GET['view']) && $_GET['view'] == 'view')
 	    $strOwner = $objOwner->fields['user'];
 	  }
 	$objOwner->Close();
-
-        $smarty -> assign(array("Name" => $tribe -> fields['name'], 
-                                "Owner" => $tribe -> fields['owner'], 
-				"Ownername" => $strOwner,
-                                "Members" => $memnum, 
-                                "Tribeid" => $tribe -> fields['id'], 
-                                "Wins"=> $strWins, 
-                                "Lost" => $strLoses, 
-                                "Pubmessage" => $tribe -> fields['public_msg'],
-                                "Astral" => $strAstral,
-				"Tlevel2" => $arrLevels[($tribe->fields['level'] - 1)],
-                                "Yousee" => YOU_SEE,
-                                "Leader2" => "Przywódca:",
-                                "Memamount" => MEM_AMOUNT,
-                                "Amembers" => A_MEMBERS,
-				"Tlevel" => "Rodzaj klanu:",
-				"Ptribe" => $player->tribe,
-				"Aback" => "Wróć do spisu klanów",
-                                "Jointo" => JOIN_TO,
-                                "Ajoin" => A_JOIN));
         if ($tribe -> fields['www']) 
         {
             $smarty -> assign ("WWW", CLAN_PAGE.': <a href="http://'.$tribe -> fields['www'].'" target="_blank">'.$tribe -> fields['www'].'</a><br />');
         }
-
+	$strTrapsinfo = '';
         if ($player -> clas == 'Złodziej' && $player -> tribe != $tribe -> fields['id']) 
 	  {
 	    $arrTactions = array();
-	    $strTrapsinfo = '';
 	    if ($tribe->fields['traps'] > 0 || ($tribe->fields['agents'] - $tribe->fields['dagents']) > 0)
 	      {
 		$strTrapsinfo = 'Wprawnym okiem dostrzegasz ';
@@ -287,8 +266,7 @@ if (isset ($_GET['view']) && $_GET['view'] == 'view')
 		  }
 		$strTrapsinfo .= '.';
 	      }
-	    $smarty->assign(array('Trapsinfo' => $strTrapsinfo,
-				  'Tactions' => $arrTactions));
+	    $smarty->assign('Tactions', $arrTactions);
             $objAstralcrime = $db -> Execute("SELECT `astralcrime` FROM `players` WHERE `id`=".$player -> id);
             if ($objAstralcrime -> fields['astralcrime'] == 'Y')
 	      {
@@ -306,7 +284,26 @@ if (isset ($_GET['view']) && $_GET['view'] == 'view')
 	  {
             $smarty -> assign("Asteal", '');
 	  }
-
+	$smarty -> assign(array("Name" => $tribe -> fields['name'], 
+                                "Owner" => $tribe -> fields['owner'], 
+				"Ownername" => $strOwner,
+                                "Members" => $memnum, 
+                                "Tribeid" => $tribe -> fields['id'], 
+                                "Wins"=> $strWins, 
+                                "Lost" => $strLoses, 
+                                "Pubmessage" => $tribe -> fields['public_msg'],
+                                "Astral" => $strAstral,
+				"Tlevel2" => $arrLevels[($tribe->fields['level'] - 1)],
+                                "Yousee" => YOU_SEE,
+                                "Leader2" => "Przywódca:",
+                                "Memamount" => MEM_AMOUNT,
+                                "Amembers" => A_MEMBERS,
+				"Tlevel" => "Rodzaj klanu:",
+				"Ptribe" => $player->tribe,
+				"Aback" => "Wróć do spisu klanów",
+                                "Jointo" => JOIN_TO,
+                                "Ajoin" => A_JOIN,
+				"Trapsinfo" => $strTrapsinfo));
         $tribe -> Close();
     }
    else
