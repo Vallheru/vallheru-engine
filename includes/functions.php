@@ -7,7 +7,7 @@
  *   @copyright            : (C) 2004,2005,2006,2011,2012 Vallheru Team based on Gamers-Fusion ver 2.5
  *   @author               : thindil <thindil@vallheru.net>
  *   @version              : 1.7
- *   @since                : 27.12.2012
+ *   @since                : 28.12.2012
  *
  */
 
@@ -167,7 +167,7 @@ function drink($id)
 	  }
         elseif ($player -> hp > 0) 
 	  {
-            $intRhp = $player -> hp + (($miks -> fields['power'] / 100) * $player->max_hp);
+            $intRhp = $player -> hp + ceil(($miks -> fields['power'] / 100) * $player->max_hp);
             if ($intRhp > $player -> max_hp)
 	      {
                 $intRhp = $player -> max_hp;
@@ -176,7 +176,7 @@ function drink($id)
             $db -> Execute("UPDATE players SET hp=".$intRhp." WHERE id=".$player -> id);
             if (!isset($efekt))
 	      {
-                $efekt = RESTORE." ".(($miks -> fields['power'] / 100) * $player->max_hp)." ".SOME_HP;
+                $efekt = RESTORE." ".ceil(($miks -> fields['power'] / 100) * $player->max_hp)." ".SOME_HP;
 	      }
             $player -> hp = $intRhp;
 	  } 
@@ -628,7 +628,7 @@ function drinkfew($intId, $intAmount, $strType = '')
 	}
       if ($objPotion->fields['type'] == 'M')
 	{
-	  $player->mana += (($objPotion->fields['power'] / 100) * $maxmana);
+	  $player->mana += ceil(($objPotion->fields['power'] / 100) * $maxmana);
 	  if ($player->mana >= $maxmana)
 	    {
 	      $player->mana = $maxmana;
@@ -639,7 +639,7 @@ function drinkfew($intId, $intAmount, $strType = '')
 	}
       else
 	{
-	  $player->hp += (($objPotion->fields['power'] / 100) * $player->max_hp);
+	  $player->hp += ceil(($objPotion->fields['power'] / 100) * $player->max_hp);
 	  if ($player->hp >= $player->max_hp)
 	    {
 	      $player->hp = $player->max_hp;
