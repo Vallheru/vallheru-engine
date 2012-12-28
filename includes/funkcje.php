@@ -7,7 +7,7 @@
  *   @copyright            : (C) 2004,2005,2006,2007,2011,2012 Vallheru Team based on Gamers-Fusion ver 2.5
  *   @author               : thindil <thindil@vallheru.net>
  *   @version              : 1.7
- *   @since                : 21.12.2012
+ *   @since                : 28.12.2012
  *
  */
 
@@ -513,6 +513,7 @@ function showcritical($strLocation, $strAtype, $strBtype, $strEnemy, $strAttacke
 	      break;
 	    default:
 	      $strMessage .= 'Jedyna pamiątka jaka pozostaje po przeciwniku to nieco dymu w okolicy.';
+	      break;
 	    }
 	  break;
 	default:
@@ -557,6 +558,7 @@ function showcritical($strLocation, $strAtype, $strBtype, $strEnemy, $strAttacke
 	      break;
 	    default:
 	      $strMessage .= 'Jedyna pamiątka jaka pozostaje po <b>'.$strEnemy.'</b> to nieco dymu w okolicy.';
+	      break;
 	    }
 	  break;
 	default:
@@ -1143,8 +1145,7 @@ function fightmonster($enemy, $expgain, $goldgain, $times)
         }
         if ($player ->skills['magic'][1] > 5) 
         {
-            $kr = ceil($player->skills['magic'][1] / 100);
-            $krytyk = (5 + $kr);
+            $krytyk = 6;
         } 
             else 
         {

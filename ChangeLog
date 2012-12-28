@@ -1,5 +1,7 @@
 2012-12-28  Bartek thindil Jasicki  <thindil@vallheru.net>
 
+	* BUG,includes/funkcje.php: 
+	fixed few bugs
 	* BUG,includes/functions.php: 
 	fixed drinking potions
 	* BUG,includes/turnfight.php:
