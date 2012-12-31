@@ -8,7 +8,7 @@
  *   @author               : thindil <thindil@vallheru.net>
  *   @author               : eyescream <tduda@users.sourceforge.net>
  *   @version              : 1.7
- *   @since                : 21.12.2012
+ *   @since                : 31.12.2012
  *
  */
 
@@ -77,6 +77,7 @@ function attack1($attacker, $defender, $attack_bspell, $def_bspell, $attack_dspe
     $mypower = 0;
     $krytyk = 0;
     $unik = ($defender->stats['agility'][2] - $attacker->stats['agility'][2] + ($defender->skills['dodge'][1]));
+    $strAtype = 'melee';
 
     /**
     * Calculate dodge defender and power of attack, critical shot (bow)

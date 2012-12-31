@@ -8,7 +8,7 @@
  *   @author               : thindil <thindil@vallheru.net>
  *   @author               : mori <ziniquel@users.sourceforge.net>
  *   @version              : 1.7
- *   @since                : 14.12.2012
+ *   @since                : 31.12.2012
  *
  */
 
@@ -242,6 +242,10 @@ $i = -1;
 foreach ($arrBskills as $arrSkill)
 {
   $i ++;
+  if ($i == count($arrBskills))
+    {
+      break;
+    }
   if ($arrSkill[1] < 100 && $arrSkill[1] > 0)
     {
       $strNeedexp = ' ('.round(($arrSkill[2] / ($arrSkill[1] * 100) * 100), 3).'% dośw)';
