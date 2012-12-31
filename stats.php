@@ -242,9 +242,13 @@ $i = -1;
 foreach ($arrBskills as $arrSkill)
 {
   $i ++;
-  if ($i == count($arrBskills))
+  if ($arrSkill[0] == "Złodziejstwo" && $player->clas != "Złodziej")
     {
-      break;
+      continue;
+    }
+  if ($arrSkill[0] == '')
+    {
+      continue;
     }
   if ($arrSkill[1] < 100 && $arrSkill[1] > 0)
     {
@@ -253,10 +257,6 @@ foreach ($arrBskills as $arrSkill)
   else
     {
       $strNeedexp = '';
-    }
-  if ($arrSkill[0] == "Złodziejstwo" && $player->clas != "Złodziej")
-    {
-      continue;
     }
   if ($player->skills[$arrSkills[$i]][1] > $arrSkill[1])
     {

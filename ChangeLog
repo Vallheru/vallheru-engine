@@ -1,5 +1,7 @@
 2012-12-31  Bartek thindil Jasicki  <thindil@vallheru.net>
 
+	* BUG,stats.php: 
+	fixed notice, second try
 	* BUG,battle.php: 
 	remove test code
 	* UPDATE,battle.php: 
