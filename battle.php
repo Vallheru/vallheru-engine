@@ -7,7 +7,7 @@
  *   @copyright            : (C) 2004,2005,2006,2011,2012 Vallheru Team based on Gamers-Fusion ver 2.5
  *   @author               : thindil <thindil@vallheru.net>
  *   @version              : 1.7
- *   @since                : 11.12.2012
+ *   @since                : 31.12.2012
  *
  */
 
@@ -660,18 +660,11 @@ if (isset($_GET['action']))
 	     * Count gained experience
 	     */
 	    $expgain1 = ceil($intElevel * $span);
-	    $expgain = $expgain1;
 	    if (!isset($_SESSION['razy']))
 	      {
 		$_SESSION['razy'] = 1;
 	      }
-	    if ($_SESSION['razy'] > 1)
-	      {
-		for ($k = 2; $k <= $_SESSION['razy']; $k++)
-		  {
-		    $expgain = $expgain + ceil($expgain1 / 5 * (sqrt($k) + 4.5));
-		  }
-	      }
+	    $expgain = $expgain1 * $_SESSION['razy'];
 	    $goldgain = ceil(($intElevel * $_SESSION['razy']) * $span);
 	    $expgain = $expgain * $_SESSION['energy'];
 	    $goldgain = $goldgain * $_SESSION['energy'];
@@ -796,14 +789,7 @@ if (isset($_GET['action']))
 		 * Count gained experience
 		 */
 		$expgain1 = ceil($intElevel * $span);
-		$expgain = $expgain1;
-		if ($_POST['razy'] > 1)
-		  {
-		    for ($k = 2; $k <= $_POST['razy']; $k++)
-		      {
-			$expgain = $expgain + ceil($expgain1 / 5 * (sqrt($k) + 4.5));
-		      }
-		  }
+		$expgain = $expgain1 * $_POST['razy'];
 		$goldgain = ceil(($intElevel * $_POST['razy']) * $span);
 		$expgain = $expgain * floor(1 + ($enemy1->fields['level'] / 20));
 		$goldgain = $goldgain * floor(1 + ($enemy1->fields['level'] / 20));
