@@ -747,6 +747,7 @@ if (isset($_GET['action']))
 	      {
 		error("Już z kimś walczysz!");
 	      }
+	    $intElevel = $enemy1->fields['strength'] + $enemy1->fields['agility'] + $enemy1->fields['speed'] + $enemy1->fields['endurance'] + $enemy1->fields['level'] + $enemy1->fields['hp'];
 	    $enemy1 -> fields['hp'] = ($enemy1 -> fields['hp'] * $_POST['razy']);
 	    $enemy = array("strength" => $enemy1 -> fields['strength'], 
 			   "agility" => $enemy1 -> fields['agility'], 
@@ -760,7 +761,6 @@ if (isset($_GET['action']))
 			   "resistance" => explode(";", $enemy1->fields['resistance']),
 			   "dmgtype" => $enemy1->fields['dmgtype']);
 	    $intAmount = 0;
-	    $intElevel = $enemy['strength'] + $enemy['agility'] + $enemy['speed'] + $enemy['endurance'] + $enemy['level'] + $enemy['hp'];
 	    for ($j=1; $j<=$_POST['times']; $j++) 
 	      {
 		$intPlevel = $player->stats['condition'][2] + $player->stats['speed'][2] + $player->stats['agility'][2] + $player->skills['dodge'][1] + $player->hp;
@@ -789,6 +789,7 @@ if (isset($_GET['action']))
 		 * Count gained experience
 		 */
 		$expgain1 = ceil($intElevel * $span);
+		echo $expgain1."<br />";
 		$expgain = $expgain1 * $_POST['razy'];
 		$goldgain = ceil(($intElevel * $_POST['razy']) * $span);
 		$expgain = $expgain * floor(1 + ($enemy1->fields['level'] / 20));

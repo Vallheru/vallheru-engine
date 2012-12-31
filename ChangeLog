@@ -1,6 +1,8 @@
 2012-12-31  Bartek thindil Jasicki  <thindil@vallheru.net>
 
 	* UPDATE,battle.php: 
+	more reduction of experience
+	* UPDATE,battle.php: 
 	reduced experience for fight with monsters
 	* BUG,stats.php, includes/battle.php:
 	fixed some notices
