@@ -789,7 +789,6 @@ if (isset($_GET['action']))
 		 * Count gained experience
 		 */
 		$expgain1 = ceil($intElevel * $span);
-		echo $expgain1."<br />";
 		$expgain = $expgain1 * $_POST['razy'];
 		$goldgain = ceil(($intElevel * $_POST['razy']) * $span);
 		$expgain = $expgain * floor(1 + ($enemy1->fields['level'] / 20));
