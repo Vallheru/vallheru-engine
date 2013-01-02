@@ -4,10 +4,10 @@
  *   Functions to fight in PvP and fast fight PvM
  *
  *   @name                 : funkcje.php                            
- *   @copyright            : (C) 2004,2005,2006,2007,2011,2012 Vallheru Team based on Gamers-Fusion ver 2.5
+ *   @copyright            : (C) 2004,2005,2006,2007,2011,2012,2013 Vallheru Team based on Gamers-Fusion ver 2.5
  *   @author               : thindil <thindil@vallheru.net>
  *   @version              : 1.7
- *   @since                : 28.12.2012
+ *   @since                : 02.01.2013
  *
  */
 
@@ -290,7 +290,7 @@ function autofill($intPlayerid, &$arrArrows, $intPlayer2, $intPlevel)
 }
 
 /**
-* Function count lost stats in battle (TODO)
+* Function count lost stats in battle
 */
 function loststat($objPlayer, $winid, $winuser, $starter) 
 {
@@ -764,6 +764,12 @@ function playerattack($eunik, $mczar, &$zmeczenie, &$gatak, $stat, &$enemy, &$gm
 		      $player->equip[1][6] --;
 		      $player->equip[6][6] --;
 		    }
+		  if ($times == 1)
+		    {
+		      $arrLocations = array('w tułów', 'w głowę', 'w kończynę');
+		      $intHit = rand(0, 2);
+		      $strMessage = showcritical($arrLocations[$intHit], $strAtype, 'pve', $enemy['name']);
+		    }
 		}
 	      //Hit with spell
 	      if ($mczar -> fields['id'] && $player -> mana > $mczar -> fields['poziom']) 
@@ -771,14 +777,14 @@ function playerattack($eunik, $mczar, &$zmeczenie, &$gatak, $stat, &$enemy, &$gm
 		  $player -> mana --;
 		  $gmagia++;
 		  $enemy['hp'] -= $enemyhp;
+		  if ($times == 1)
+		    {
+		      $arrLocations = array('w tułów', 'w głowę', 'w kończynę');
+		      $intHit = rand(0, 2);
+		      $strMessage = showcritical($arrLocations[$intHit], $strAtype, 'pve', $enemy['name']);
+		    }
 		}
-	      if ($times == 1)
-		{
-		  $arrLocations = array('w tułów', 'w głowę', 'w kończynę');
-		  $intHit = rand(0, 2);
-		  $strMessage = showcritical($arrLocations[$intHit], $strAtype, 'pve', $enemy['name']);
-		  return $strMessage;
-		}
+	      return $strMessage;
 	    }
 	  //Hit with weapon
 	  if ((($player->equip[0][6] > 0 || $player->equip[11][6] > 0) || ($player->equip[1][6] > 0 && $player->equip[6][6] > 0)) && ($player->equip[0][0] || $player->equip[1][0])) 
