@@ -4,11 +4,11 @@
  *   Function to fight PvP
  *
  *   @name                 : battle.php                            
- *   @copyright            : (C) 2006,2007,2011,2012 Vallheru Team based on Gamers-Fusion ver 2.5
+ *   @copyright            : (C) 2006,2007,2011,2012,2013 Vallheru Team based on Gamers-Fusion ver 2.5
  *   @author               : thindil <thindil@vallheru.net>
  *   @author               : eyescream <tduda@users.sourceforge.net>
  *   @version              : 1.7
- *   @since                : 31.12.2012
+ *   @since                : 02.01.2013
  *
  */
 
@@ -78,6 +78,7 @@ function attack1($attacker, $defender, $attack_bspell, $def_bspell, $attack_dspe
     $krytyk = 0;
     $unik = ($defender->stats['agility'][2] - $attacker->stats['agility'][2] + ($defender->skills['dodge'][1]));
     $strAtype = 'melee';
+    $strSkill = 'attack';
 
     /**
     * Calculate dodge defender and power of attack, critical shot (bow)
@@ -124,6 +125,8 @@ function attack1($attacker, $defender, $attack_bspell, $def_bspell, $attack_dspe
       {
 	$unik -= ($attacker->skills['attack'][1] / 5);
 	$mypower += (($attacker->equip[11][2] + $attacker->stats['strength'][2]) + ceil($attacker->skills['attack'][1] / 10));
+	$strAtype = 'melee';
+	$strSkill = 'attack';
       }
 
     /**
