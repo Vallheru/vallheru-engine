@@ -1,6 +1,8 @@
 2013-01-02  Bartek thindil Jasicki  <thindil@vallheru.net>
 
 	* BUG,includes/funkcje.php: 
+	fixed lost arrows
+	* BUG,includes/funkcje.php: 
 	fixed false info about critical hit
 	* BUG,includes/battle.php:
 	fixed notice

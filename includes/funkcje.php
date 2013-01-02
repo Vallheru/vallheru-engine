@@ -726,6 +726,8 @@ function playerattack($eunik, $mczar, &$zmeczenie, &$gatak, $stat, &$enemy, &$gm
 	      if ($player->equip[1][0]) 
 		{
 		  $zmeczenie += ($player->equip[1][4] / 10);
+		  $player->equip[1][6] --;
+		  $player->equip[6][6] --;
 		}
 	      if ($player->equip[0][0]) 
 		{
