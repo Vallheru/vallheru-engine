@@ -93,11 +93,11 @@
     </table>
     <br /><br /><b><u>{$Tbonus}</u></b><br />
     <table>
-    <tr><td><b>{$Tattack}</b>:</td><td>+ {$Attack} % {if $Link == "Y" && $Attack < 15}<a href="outposts.php?view=myoutpost&amp;step=add&amp;ability=battack">{$Aadd}</a>{/if}</td></tr>
-    <tr><td><b>{$Tdefense}</b>:</td><td>+ {$Defense} % {if $Link == "Y" && $Defense < 15}<a href="outposts.php?view=myoutpost&amp;step=add&amp;ability=bdefense">{$Aadd}</a>{/if}</td></tr>
-    <tr><td><b>{$Ttax}</b>:</td><td>+ {$Tax} % {if $Link == "Y" && $Tax < 15}<a href="outposts.php?view=myoutpost&amp;step=add&amp;ability=btax">{$Aadd}</a>{/if}</td></tr>
-    <tr><td><b>{$Tlosses}</b>:</td><td>- {$Lost} % {if $Link == "Y" && $Lost < 15}<a href="outposts.php?view=myoutpost&amp;step=add&amp;ability=blost">{$Aadd}</a>{/if}</td></tr>
-    <tr><td><b>{$Tcostb}</b>:</td><td>- {$Bcost} % {if $Link == "Y" && $Bcost < 15}<a href="outposts.php?view=myoutpost&amp;step=add&amp;ability=bcost">{$Aadd}</a>{/if}</td></tr>
+    <tr><td><b>{$Tattack}</b>:</td><td>+ {$Attack} % {if $Link == "Y" && $Attack < 30}<a href="outposts.php?view=myoutpost&amp;step=add&amp;ability=battack">{$Aadd}</a>{/if}</td></tr>
+    <tr><td><b>{$Tdefense}</b>:</td><td>+ {$Defense} % {if $Link == "Y" && $Defense < 30}<a href="outposts.php?view=myoutpost&amp;step=add&amp;ability=bdefense">{$Aadd}</a>{/if}</td></tr>
+    <tr><td><b>{$Ttax}</b>:</td><td>+ {$Tax} % {if $Link == "Y" && $Tax < 30}<a href="outposts.php?view=myoutpost&amp;step=add&amp;ability=btax">{$Aadd}</a>{/if}</td></tr>
+    <tr><td><b>{$Tlosses}</b>:</td><td>- {$Lost} % {if $Link == "Y" && $Lost < 30}<a href="outposts.php?view=myoutpost&amp;step=add&amp;ability=blost">{$Aadd}</a>{/if}</td></tr>
+    <tr><td><b>{$Tcostb}</b>:</td><td>- {$Bcost} % {if $Link == "Y" && $Bcost < 30}<a href="outposts.php?view=myoutpost&amp;step=add&amp;ability=bcost">{$Aadd}</a>{/if}</td></tr>
     </table>
     {$Message2}
 {/if}

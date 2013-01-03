@@ -8,7 +8,7 @@
  *   @author               : thindil <thindil@vallheru.net>
  *   @author               : eyescream <tduda@users.sourceforge.net>
  *   @version              : 1.7
- *   @since                : 27.12.2012
+ *   @since                : 03.01.2013
  *
  */
  
@@ -977,7 +977,7 @@ if (isset ($_GET['view']) && $_GET['view'] == 'myoutpost')
 	    $blnValid = FALSE;
 	  }
         $field = $_GET['ability'];
-        if ($out -> fields[$field] > 30) 
+        if ($out -> fields[$field] > 29) 
 	  {
 	    message('error', "Osiągnąłeś już maksymalny poziom tej premii");
 	    $blnValid = FALSE;
