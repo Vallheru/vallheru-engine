@@ -1,5 +1,7 @@
 2013-01-03  Bartek thindil Jasicki  <thindil@vallheru.net>
 
+	* BUG,thieves.php: 
+	fixed info
 	* BUG,templates/layout1/outposts.tpl, templates/outposts.tpl, outposts.php: 
 	fixed bonuses from skill
 	* BUG,tribes.php:
