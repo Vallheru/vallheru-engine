@@ -9,7 +9,7 @@
  *   @author               : mori <ziniquel@users.sourceforge.net>
  *   @author               : eyescream <tduda@users.sourceforge.net>
  *   @version              : 1.7
- *   @since                : 27.12.2012
+ *   @since                : 03.01.2013
  *
  */
 
@@ -452,7 +452,7 @@ if (isset ($_GET['view']) && $_GET['view'] == 'view')
 		  {
 		    $objMember = new Player($objMembers->fields['id']);
 		    $objMember->curskills(array('perception'));
-		    $intChance = $intStats - ($objMember->stats['agility'][2] + $objMember->stats['inteli'][2] + $objMembers->skills['perception'][1]);
+		    $intChance = $intStats - ($objMember->stats['agility'][2] + $objMember->stats['inteli'][2] + $objMember->skills['perception'][1]);
 		    if ($intChance < 1)
 		      {
 			$objMember->checkexp(array('agility' => ($intStats / 3),
