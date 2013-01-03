@@ -1,5 +1,7 @@
 2013-01-03  Bartek thindil Jasicki  <thindil@vallheru.net>
 
+	* BUG,languages/pl/admin.php: 
+	fixed typo
 	* BUG,preset.php: 
 	fixed bless reset
 	* BUG,thieves.php: 
