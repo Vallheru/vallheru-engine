@@ -7,7 +7,7 @@
  *   @copyright            : (C) 2004,2005,2006,2007,2011,2012,2013 Vallheru Team based on Gamers-Fusion ver 2.5
  *   @author               : thindil <thindil@vallheru.net>
  *   @version              : 1.7
- *   @since                : 02.01.2013
+ *   @since                : 03.01.2013
  *
  */
 
@@ -1203,8 +1203,8 @@ function fightmonster($enemy, $expgain, $goldgain, $times)
         }
         if ($player->equip[7][0]) 
         {
-            $intN = 6 - (int)($player->equip[7][4] / 20);
-            $intBonus = (10 / $intN) * $player ->skills['magic'][1] * rand(1, $intN);
+	    $intN = ceil($player->equip[7][4] / 20);
+            $intBonus = $player->skills['magic'][1] * rand(1, $intN);
             $myczarobr = ($myczarobr + $intBonus);
         }
         if ($myczarobr < 0) 
@@ -1266,7 +1266,7 @@ function fightmonster($enemy, $expgain, $goldgain, $times)
       }
     $intPldamage = $stat['damage'];
     $stat['damage'] = ($stat['damage'] - $enemy['endurance']);
-    $rzut2 = (rand(1,($player ->skills[$strSkill][1] * 10)));
+    $rzut2 = rand(1, $player ->skills[$strSkill][1]);
     $stat['damage'] += $rzut2;
     $intPldamage += $rzut2;
     if ($stat['damage'] < 1) 
@@ -1277,7 +1277,7 @@ function fightmonster($enemy, $expgain, $goldgain, $times)
     {
         $stat['damage'] = $enemyhp;
     }
-    $rzut1 = (rand(0, $enemy['level']));
+    $rzut1 = rand(0, $enemy['level']);
     if (!isset($enemy['damage'])) 
       {
 	$enemy['damage'] = $enemy['strength'] - ($player -> stats['condition'][2] + ($player->stats['condition'][2] * $player->checkbonus('defender')));

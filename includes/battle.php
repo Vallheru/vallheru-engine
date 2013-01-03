@@ -8,7 +8,7 @@
  *   @author               : thindil <thindil@vallheru.net>
  *   @author               : eyescream <tduda@users.sourceforge.net>
  *   @version              : 1.7
- *   @since                : 02.01.2013
+ *   @since                : 03.01.2013
  *
  */
 
@@ -274,9 +274,9 @@ function attack1($attacker, $defender, $attack_bspell, $def_bspell, $attack_dspe
     */
     while ($round <= $attackstr && $defender->hp >= 0) 
     {
-        $rzut1 = (rand(1, $attacker->skills[$strSkill][1]) * 10);
+        $rzut1 = (rand(1, $attacker->skills[$strSkill][1]));
         $mypower = ($mypower + $rzut1);
-        $rzut2 = (rand(1, $defender->skills['dodge'][1]) * 10);
+        $rzut2 = (rand(1, $defender->skills['dodge'][1]));
 	$blnMiss = FALSE;
 	$intHit = hitlocation();
 	//Attacker too exhausted

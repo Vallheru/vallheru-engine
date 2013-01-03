@@ -1,5 +1,7 @@
 2013-01-03  Bartek thindil Jasicki  <thindil@vallheru.net>
 
+	* UPDATE,includes/turnfight.php, includes/funkcje.php, includes/battle.php: 
+	dropped random in fight
 	* BUG,languages/pl/admin.php: 
 	fixed typo
 	* BUG,preset.php: 
