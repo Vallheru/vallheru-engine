@@ -1,5 +1,7 @@
 2013-01-07  Bartek thindil Jasicki  <thindil@vallheru.net>
 
+	* UPDATE,class/player_class.php: 
+	add lost astral points on lost stat
 	* BUG,tribeminerals.php: 
 	fixed giving minerals from tribe
 	* BUG,mission.php: 

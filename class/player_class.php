@@ -4,10 +4,10 @@
  *   Class with information about player and making some things with player (e.g. atributes in array)
  *
  *   @name                 : player_class.php                            
- *   @copyright            : (C) 2004,2005,2006,2007,2011,2012 Vallheru Team based on Gamers-Fusion ver 2.5
+ *   @copyright            : (C) 2004,2005,2006,2007,2011,2012,2013 Vallheru Team based on Gamers-Fusion ver 2.5
  *   @author               : thindil <thindil@vallheru.net>
  *   @version              : 1.7
- *   @since                : 17.12.2012
+ *   @since                : 07.01.2013
  *
  */
 
@@ -663,6 +663,7 @@ class Player
 	      $this->oldstats[$strKey][3] = 0;
 	      $this->stats[$strKey][2] --;
 	      $this->stats[$strKey][3] = 0;
+	      $this->ap --;
 	      if ($strKey == 'condition')
 		{
 		  $arrHp = array('Barbarzyńca' => 6,
