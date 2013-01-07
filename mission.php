@@ -4,10 +4,10 @@
  *   Random missions
  *
  *   @name                 : mission.php                            
- *   @copyright            : (C) 2012 Vallheru Team based on Gamers-Fusion ver 2.5
+ *   @copyright            : (C) 2012,2013 Vallheru Team based on Gamers-Fusion ver 2.5
  *   @author               : thindil <thindil@vallheru.net>
  *   @version              : 1.7
- *   @since                : 11.12.2012
+ *   @since                : 07.01.2013
  *
  */
 
@@ -329,7 +329,7 @@ if (isset($_POST['action']))
 		    break;
 		    //Other item
 		  case 'O':
-		    $intCost = $player->level * 10;
+		    $intCost = $player->stats['condition'][2] * 100;
 		    $objTest = $db->Execute("SELECT `id` FROM `equipment` WHERE `owner`=".$player->id." AND `name`='".$arrItem[0]."' AND `type`='Q' AND `cost`=".$intCost);
 		    if (!$objTest->fields['id'])
 		      {
