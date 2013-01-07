@@ -4,10 +4,10 @@
  *   Clans minerals
  *
  *   @name                 : tribeminerals.php                            
- *   @copyright            : (C) 2012 Vallheru Team based on Gamers-Fusion ver 2.5
+ *   @copyright            : (C) 2012,2013 Vallheru Team based on Gamers-Fusion ver 2.5
  *   @author               : thindil <thindil@vallheru.net>
- *   @version              : 1.6
- *   @since                : 27.09.2012
+ *   @version              : 1.7
+ *   @since                : 07.01.2013
  *
  */
 
@@ -210,9 +210,9 @@ if (isset ($_GET['daj']) && $_GET['daj'])
 	  }
 	$dtrib -> Close();
 	$give = $_GET['daj'];
-	if ($arrAmount[$intKey] < $_POST['ilosc']) 
+	if (($arrAmount[$intKey] - $arrReserved[$intKey]) < $_POST['ilosc']) 
 	  {
-	    error ("Klan nie ma takiej ilości ".$arrName[$intKey]."!");
+	    error ("Klan nie ma dostępnej takiej ilości ".$arrName[$intKey]."!");
 	  }
 	if (!isset($intReserved))
 	  {

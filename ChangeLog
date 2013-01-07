@@ -1,5 +1,7 @@
 2013-01-07  Bartek thindil Jasicki  <thindil@vallheru.net>
 
+	* BUG,tribeminerals.php: 
+	fixed giving minerals from tribe
 	* BUG,mission.php: 
 	fixed bug with item price
 	* BUG,kowal.php:
