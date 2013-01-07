@@ -4,10 +4,10 @@
  *   Blacksmith - making items - weapons, armors, shields, helmets, plate legs, arrowsheads
  *
  *   @name                 : kowal.php                            
- *   @copyright            : (C) 2004,2005,2006,2011,2012 Vallheru Team based on Gamers-Fusion ver 2.5
+ *   @copyright            : (C) 2004,2005,2006,2011,2012,2013 Vallheru Team based on Gamers-Fusion ver 2.5
  *   @author               : thindil <thindil@vallheru.net>
  *   @version              : 1.7
- *   @since                : 18.12.2012
+ *   @since                : 07.01.2013
  *
  */
 
@@ -1458,7 +1458,7 @@ if (isset ($_GET['kowal']) && $_GET['kowal'] == 'elite')
 			    $arrAmount[$intIndex]++;
 			  }
 		      }
-		    $intGainexp += ($objLumber->fields['level'] * ($player->skills['smith'][1] * 20));
+		    $intGainexp += ($objSmith->fields['level'] * ($player->skills['smith'][1] * 20));
 		    $intItems++;
 		  }
 		else
