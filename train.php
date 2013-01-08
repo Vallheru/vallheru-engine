@@ -4,10 +4,10 @@
  *   School - train stats
  *
  *   @name                 : train.php                            
- *   @copyright            : (C) 2004,2005,2006,2007,2011,2012 Vallheru Team based on Gamers-Fusion ver 2.5
+ *   @copyright            : (C) 2004,2005,2006,2007,2011,2012,2013 Vallheru Team based on Gamers-Fusion ver 2.5
  *   @author               : thindil <thindil@vallheru.net>
- *   @version              : 1.6
- *   @since                : 17.12.2012
+ *   @version              : 1.7
+ *   @since                : 08.01.2013
  *
  */
 
@@ -128,6 +128,10 @@ if (isset ($_GET['action']) && $_GET['action'] == 'train')
     {
         error ('Zapomnij o tym');
     }
+    if ($player->stats[$_POST['train']][2] == $player->stats[$_POST['train']][1])
+      {
+	error('Nie możesz ćwiczyć tej cechy, ponieważ osiągnęła już ona maksymalny poziom.');
+      }
     if ($player -> race == 'Człowiek') 
     {
         $repeat = ($_POST["rep"] * .3);
@@ -277,17 +281,21 @@ else
     $strDesc = "Uniwersytet imienia ".$city2."a ... Stoisz przed wierzbą, na konarach której mieści się uniwersytet założony przez ".$city2."a, a po jego śmierci nazwany tym imieniem. Możesz tu poświęcić swój czas w celu zdobycia większych umiejętności.";
   }
 
+$arrToptions = array();
+foreach ($player->stats as $name => $arrStats)
+{
+  if ($arrStats[2] < $arrStats[1])
+    {
+      $arrToptions[$name] = $arrStats[0];
+    }
+}
+
 /**
 * Assign variables to template and display page
 */
 $smarty -> assign(array("Traininfo" => $strDesc,
-			"Toptions" => array("strength" => "Siłę",
-					   "agility" => "Zręczność",
-					   "speed" => "Szybkość",
-					   "condition" => "Kondycję",
-					   "inteli" => "Inteligencję",
-					   "wisdom" => "Siłę Woli"),
-                        "Iwant" => "Chcę trenować moją",
+			"Toptions" => $arrToptions,
+                        "Iwant" => "Chcę trenować moją cechę",
                         "Tamount" => "razy",
                         "Atrain" => "Trenuj",
 			"Tinfo" => 'Podaj ile razy chcesz trenować daną cechę.',
