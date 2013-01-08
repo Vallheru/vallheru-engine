@@ -1,5 +1,7 @@
 2013-01-08  Bartek thindil Jasicki  <thindil@vallheru.net>
 
+	* UPDATE,templates/layout1/bank.tpl, templates/bank.tpl, bank.php: 
+	raised needed energy for bank robbery
 	* BUG,view.php: 
 	fixed steal money from players
 	* BUG,tribes.php: 

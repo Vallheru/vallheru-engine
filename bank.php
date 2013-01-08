@@ -749,6 +749,11 @@ if (isset($_GET['action']))
 		message('error', "Nie możesz przeznaczyć aż tyle energii (maksymalnie 100).");
 		$blnValid = FALSE;
 	      }
+	    if ($_POST['tp'] < 10)
+	      {
+		message('error', 'Musisz przeznaczyć co najmniej 10 energii.');
+		$blnValid = FALSE;
+	      }
 	    if ($_POST['tp'] > $player->energy)
 	      {
 		message('error', "Nie masz tyle energii!");
