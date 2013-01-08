@@ -4,11 +4,11 @@
  *   Astral market - add, buy astral components from other players
  *
  *   @name                 : amarket.php                            
- *   @copyright            : (C) 2006,2011,2012 Vallheru Team based on Gamers-Fusion ver 2.5
+ *   @copyright            : (C) 2006,2011,2012,2013 Vallheru Team based on Gamers-Fusion ver 2.5
  *   @author               : thindil <thindil@vallheru.net>
  *   @author               : eyescream <tduda@users.sourceforge.net>
- *   @version              : 1.6
- *   @since                : 10.09.2012
+ *   @version              : 1.7
+ *   @since                : 08.01.2013
  *
  */
 
@@ -611,6 +611,10 @@ if (isset($_GET['steal']))
     {
         error (NO_CRIME);
     }
+    if ($player->energy < 5)
+      {
+	error('Nie masz wystarczającej ilości energii.');
+      }
     if ($player -> hp <= 0) 
     {
         error (YOU_DEAD);

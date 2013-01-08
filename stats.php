@@ -4,11 +4,11 @@
  *   Player statistics and general informations about account
  *
  *   @name                 : stats.php                            
- *   @copyright            : (C) 2004,2005,2006,2011,2012 Vallheru Team based on Gamers-Fusion ver 2.5
+ *   @copyright            : (C) 2004,2005,2006,2011,2012,2013 Vallheru Team based on Gamers-Fusion ver 2.5
  *   @author               : thindil <thindil@vallheru.net>
  *   @author               : mori <ziniquel@users.sourceforge.net>
  *   @version              : 1.7
- *   @since                : 31.12.2012
+ *   @since                : 08.01.2013
  *
  */
 
@@ -57,8 +57,7 @@ if (isset ($_GET['action']) && $_GET['action'] == 'gender')
 /**
 * Assign variables to template
 */
-$smarty -> assign(array("Avatar" => '', 
-                        "Crime" => ''));
+$smarty -> assign("Avatar", '');
 
 $plik = 'avatars/'.$player -> avatar;
 if (is_file($plik)) 
@@ -350,11 +349,6 @@ $smarty -> assign(array("Curstats" => $arrCurstats2,
 			"Genderm" => "Mężczyzna",
 			"Genderf" => "Kobieta",
 			"Aselect" => "Wybierz"));
-
-if ($player->clas == "Złodziej") 
-  {
-    $smarty->assign("Crime", "<b>Ilość kradzieży:</b> ".$player->crime."<br />");
-  }
 
 if (!empty($player-> gg)) 
 {

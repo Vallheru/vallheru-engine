@@ -7,7 +7,7 @@
  *   @copyright            : (C) 2011,2012,2013 Vallheru Team based on Gamers-Fusion ver 2.5
  *   @author               : thindil <thindil@vallheru.net>
  *   @version              : 1.7
- *   @since                : 03.01.2013
+ *   @since                : 08.01.2013
  *
  */
 
@@ -337,7 +337,7 @@ else
 	$smarty->assign(array('Minfo' => 'Ruchem głowy, barman pokazuje tobie schody na górę. Udajesz się we wskazanym kierunku. Dochodzisz do dość ciemnego pokoju na górze. Na jego środku stoi niewielki stolik przy którym siedzi jakiś człowiek, ruchem dłoni wskazuje tobie miejsce przy stoliku. Bardziej wyczuwasz niż widzisz, że w pomieszczeniu znajdują się jeszcze inne osoby. Kiedy zajmujesz swoje miejsce siedzący mężczyzna odzywa się do ciebie.<i>'.$strTalk.' tak się składa, że chyba mamy parę zadań dla ciebie. Zainteresowan'.$strSuffix2.'?</i>',
 			      'Jobinfo2' => $strRefresh,
 			      "Jobs" => $arrJobs,
-			      "Ayes" => "Biorę tę robotę. (koszt: 1 punkt kradzieży)",));
+			      "Ayes" => "Biorę tę robotę. (koszt: 5 energii)",));
 	$objJob->Close();
 	$db->Execute("UPDATE `players` SET `craftmission`=`craftmission`-1 WHERE `id`=".$player->id);
       }
@@ -350,9 +350,9 @@ else
 	  {
 	    error('Zapomnij o tym!');
 	  }
-	if ($player->crime < 1)
+	if ($player->energy < 5)
 	  {
-	    error('Nie masz tylu punktów kradzieży.');
+	    error('Nie masz tyle energii.');
 	  }
 	$_GET['number'] = intval($_GET['number']);
 	if ($_GET['number'] < 0 || $_GET['number'] > 3)
@@ -611,7 +611,7 @@ else
 		  }
 	      }
 	  }
-	$db->Execute("UPDATE `players` SET `miejsce`='Przygoda', `crime`=`crime`-1 WHERE `id`=".$player->id);
+	$db->Execute("UPDATE `players` SET `miejsce`='Przygoda', `energy`=`energy`-5 WHERE `id`=".$player->id);
 	$smarty->assign(array("Text" => $strText,
 			      'Moptions' => $arrOptions,
 			      'Anext' => 'Dalej'));

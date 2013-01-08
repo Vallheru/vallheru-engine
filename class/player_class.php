@@ -7,7 +7,7 @@
  *   @copyright            : (C) 2004,2005,2006,2007,2011,2012,2013 Vallheru Team based on Gamers-Fusion ver 2.5
  *   @author               : thindil <thindil@vallheru.net>
  *   @version              : 1.7
- *   @since                : 07.01.2013
+ *   @since                : 08.01.2013
  *
  */
 
@@ -67,7 +67,6 @@ class Player
     var $rest;
     var $page;
     var $profile;
-    var $crime;
     var $gender;
     var $antidote;
     var $poll;
@@ -149,7 +148,6 @@ class Player
         $this -> rest = $stats -> fields['rest'];
         $this -> page = $stats -> fields['page'];
         $this -> profile = $stats -> fields['profile'];
-        $this -> crime = $stats -> fields['crime'];
         $this -> gender = $stats -> fields['gender'];
         if (!empty($stats -> fields['antidote']))
         {

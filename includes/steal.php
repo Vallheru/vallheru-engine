@@ -4,10 +4,10 @@
  *   Steal items from shops
  *
  *   @name                 : steal.php                            
- *   @copyright            : (C) 2004,2005,2006,2011,2012 Vallheru Team based on Gamers-Fusion ver 2.5
+ *   @copyright            : (C) 2004,2005,2006,2011,2012,2013 Vallheru Team based on Gamers-Fusion ver 2.5
  *   @author               : thindil <thindil@vallheru.net>
  *   @version              : 1.7
- *   @since                : 16.11.2012
+ *   @since                : 08.01.2013
  *
  */
 
@@ -54,9 +54,9 @@ function steal ($itemid)
     {
         error (E_DEAD);
     }
-    if ($player -> crime <= 0) 
+    if ($player->energy <= 2) 
     {
-        error (E_CRIME);
+        error ('Nie masz tylu energii.');
     }
     if ($title != 'Łucznik') 
       {
@@ -88,7 +88,8 @@ function steal ($itemid)
         $player->checkexp(array('agility' => 1,
 				'inteli' => 1), $player->id, 'stats');
 	$player->checkexp(array('thievery' => 1), $player->id, 'skills');
-        $db -> Execute("UPDATE `players` SET `miejsce`='Lochy', `crime`=`crime`-1 WHERE `id`=".$player -> id);
+	$player->energy -= 2;
+        $db -> Execute("UPDATE `players` SET `miejsce`='Lochy', `energy`=`energy`-2 WHERE `id`=".$player -> id);
         $db -> Execute("INSERT INTO `jail` (`prisoner`, `verdict`, `duration`, `cost`, `data`) VALUES(".$player -> id.", '".VERDICT."', 7, ".$cost.", ".$strDate.")") or die("Błąd!");
         $db -> Execute("INSERT INTO log (`owner`, `log`, `czas`, `type`) VALUES(".$player -> id.",'".S_LOG_INFO." ".$cost.".', ".$strDate.", 'T')");
 	if (stripos($player->equip[12][1], 'wytrychy') !== FALSE)
@@ -107,9 +108,10 @@ function steal ($itemid)
 	$objTool->Close();
         error (CRIME_RESULT1);
     } 
-        else 
-    {       
-        $db -> Execute("UPDATE `players` SET `crime`=`crime`-1 WHERE `id`=".$player -> id);
+    else 
+      {       
+        $player->energy -= 2;
+        $db -> Execute("UPDATE `players` SET `energy`=`energy`-2 WHERE `id`=".$player -> id);
         $expgain = $arritem->fields['minlev'] * 5;
 	$player->checkexp(array('agility' => ($expgain / 3),
 				'inteli' => ($expgain / 3)), $player->id, 'stats');

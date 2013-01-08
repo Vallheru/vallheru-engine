@@ -4,11 +4,11 @@
  *   Jail
  *
  *   @name                 : jail.php                            
- *   @copyright            : (C) 2004,2005,2006,2011,2012 Vallheru Team based on Gamers-Fusion ver 2.5
+ *   @copyright            : (C) 2004,2005,2006,2011,2012,2013 Vallheru Team based on Gamers-Fusion ver 2.5
  *   @author               : thindil <thindil@vallheru.net>
  *   @author               : eyescream <tduda@users.sourceforge.net>
  *   @version              : 1.7
- *   @since                : 13.12.2012
+ *   @since                : 08.01.2013
  *
  */
 
@@ -58,9 +58,9 @@ if (isset($_GET['escape']))
       {
 	error('Tylko złodziej może próbować uciekać z więzienia.');
       }
-    if ($player->crime < 1)
+    if ($player->energy < 2)
       {
-	error('Nie masz wystarczającej ilości punktów kradzieży.');
+	error('Nie masz wystarczającej ilości energii.');
       }
     $prisoner = $db->Execute("SELECT * FROM `jail` WHERE `prisoner`=".$player->id);
     if (!$prisoner->fields['prisoner'])
@@ -111,7 +111,7 @@ if (isset($_GET['escape']))
     if ($chance < 1) 
       {
 	$cost = 1000 * $player->skills['thievery'][1];
-	$db -> Execute("UPDATE `players` SET `crime`=`crime`-1 WHERE `id`=".$player -> id);
+	$db -> Execute("UPDATE `players` SET `energy`=`energy`-2 WHERE `id`=".$player -> id);
 	$player->checkexp(array('agility' => 1,
 				'inteli' => 1,
 				'speed' => 1), $player->id, 'stats');
@@ -142,7 +142,7 @@ if (isset($_GET['escape']))
 	    $expgain = 2 * $expgain;
 	  }
 	$db->Execute("DELETE FROM `jail` WHERE `prisoner`=".$player->id);
-	$db -> Execute("UPDATE `players` SET `crime`=`crime`-1, `miejsce`='Altara' WHERE `id`=".$player->id);
+	$db -> Execute("UPDATE `players` SET `energy`=`energy`-2, `miejsce`='Altara' WHERE `id`=".$player->id);
 	$player->checkexp(array('agility' => ($expgain / 4),
 				'speed' => ($expgain / 4),
 				'inteli' => ($expgain / 4)), $player->id, 'stats');
@@ -233,7 +233,7 @@ if ($player -> location == 'Lochy')
     $intTime = ceil($prisoner -> fields['duration'] / 7);
     if ($prisoner->fields['cost'] > 0)
       {
-	$strEscape = 'Spróbuj ucieczki (1 punkt kradzieży)';
+	$strEscape = 'Spróbuj ucieczki (koszt: 2 energii)';
       }
     else
       {

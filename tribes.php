@@ -4,12 +4,12 @@
  *   Clans - info, manage, herbs, minerals and battles
  *
  *   @name                 : tribes.php                            
- *   @copyright            : (C) 2004,2005,2006,2007,2011,2012 Vallheru Team based on Gamers-Fusion ver 2.5
+ *   @copyright            : (C) 2004,2005,2006,2007,2011,2012,2013 Vallheru Team based on Gamers-Fusion ver 2.5
  *   @author               : thindil <thindil@vallheru.net>
  *   @author               : mori <ziniquel@users.sourceforge.net>
  *   @author               : eyescream <tduda@users.sourceforge.net>
  *   @version              : 1.7
- *   @since                : 03.01.2013
+ *   @since                : 08.01.2013
  *
  */
 
@@ -180,7 +180,7 @@ if (isset ($_GET['view']) && $_GET['view'] == 'view')
 
         $objAstral = $db -> Execute("SELECT `used`, `directed` FROM `astral_machine` WHERE `owner`=".$tribe -> fields['id']);
 	$objTest = $db -> Execute("SELECT `value` FROM `settings` WHERE `setting`='tribe'");
-	if (($objAstral->fields['used'] || $objAstral->fields['directed']) && !$objTest->fields['value'])
+	if (($objAstral->fields['used'] || $objAstral->fields['directed']) && !$objTest->fields['value'] && $player->energy >= 5)
 	  {
 	    $strSabotage = 'Sabotuj astralną machinę';
 	  }
@@ -338,6 +338,10 @@ if (isset ($_GET['view']) && $_GET['view'] == 'view')
 		    error ("Możesz szpiegować klany tylko raz na reset. (<a href=\"tribes.php?view=view&id=".$_GET['id']."\">Wróć</a>)");
 		  }
 		$objAstralcrime -> Close();
+		if ($player->energy < 5)
+		  {
+		    error('Nie masz wystarczającej ilości energii.');
+		  }
 	      }
 	    $player->curskills(array('thievery'));
 	    $intStats = ($player->stats['agility'][2] + $player->stats['inteli'][2] + $player->skills['thievery'][1] + $player->checkbonus('spy'));

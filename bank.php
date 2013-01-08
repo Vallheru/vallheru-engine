@@ -4,12 +4,12 @@
  *   Bank - deposit gold and give item to another player
  *
  *   @name                 : bank.php                            
- *   @copyright            : (C) 2004,2005,2006,2007,2011,2012 Vallheru Team based on Gamers-Fusion ver 2.5
+ *   @copyright            : (C) 2004,2005,2006,2007,2011,2012,2013 Vallheru Team based on Gamers-Fusion ver 2.5
  *   @author               : thindil <thindil@vallheru.net>
  *   @author               : yeskov <yeskov@users.sourceforge.net>
  *   @author               : eyescream <tduda@users.sourceforge.net>
  *   @version              : 1.7
- *   @since                : 26.12.2012
+ *   @since                : 08.01.2013
  *
  */
 
@@ -744,14 +744,14 @@ if (isset($_GET['action']))
 	else
 	  {
 	    checkvalue($_POST['tp']);
-	    if ($_POST['tp'] > 12)
+	    if ($_POST['tp'] > 100)
 	      {
-		message('error', "Nie możesz przeznaczyć aż tylu punktów kradzieży (maksymalnie 12).");
+		message('error', "Nie możesz przeznaczyć aż tyle energii (maksymalnie 100).");
 		$blnValid = FALSE;
 	      }
-	    if ($_POST['tp'] > $player->crime)
+	    if ($_POST['tp'] > $player->energy)
 	      {
-		message('error', "Nie masz tylu punktów kradzieży!");
+		message('error', "Nie masz tyle energii!");
 		$blnValid = FALSE;
 	      }
 	  }
@@ -762,7 +762,7 @@ if (isset($_GET['action']))
 	  }
 	if ($blnValid)
 	  {
-	    $intMax = (200 - ($_POST['tp'] * 2));
+	    $intMax = (350 - $_POST['tp']);
 	    $roll = rand (1, $intMax);
 	    if ($roll == 1)
 	      {
@@ -795,7 +795,8 @@ if (isset($_GET['action']))
 					'inteli' => 1,
 					'speed' => 1), $player->id, 'stats');
 		$player->checkexp(array('thievery' => 1), $player->id, 'skills');
-		$db -> Execute("UPDATE players SET miejsce='Lochy', crime=crime-".$_POST['tp']." WHERE id=".$player -> id);
+		$db -> Execute("UPDATE `players` SET `miejsce`='Lochy', `energy`=`energy`-".$_POST['tp']." WHERE `id`=".$player -> id);
+		$player->energy -= $_POST['tp'];
 		$strDate = $db -> DBDate($newdate);
 		$db -> Execute("INSERT INTO `jail` (`prisoner`, `verdict`, `duration`, `cost`, `data`) VALUES(".$player -> id.", '".VERDICT."', 7, ".$cost.", ".$strDate.")") or error (E_DB4);
 		$db -> Execute("INSERT INTO `log` (`owner`, `log`, `czas`, `type`) VALUES(".$player -> id.",'".L_REASON.": ".$cost.".','".$newdate."', 'T')");
@@ -840,8 +841,9 @@ if (isset($_GET['action']))
 			$db->Execute("UPDATE `equipment` SET `wt`=`wt`-1 WHERE `id`=".$player->equip[12][0]);
 		      }
 		  }
-		$db->Execute("UPDATE `players` SET `credits`=`credits`+".$gain.", `crime`=`crime`-".$_POST['tp']." WHERE `id`=".$player->id);
+		$db->Execute("UPDATE `players` SET `credits`=`credits`+".$gain.", `energy`=`energy`-".$_POST['tp']." WHERE `id`=".$player->id);
 		$player->credits += $gain;
+		$player->energy -= $_POST['tp'];
 		message('success', C_SUCCES.$gain.C_SUCCES2.".");
 	      }
 	  }
@@ -1445,12 +1447,12 @@ if (!isset($_GET['action']) || (isset($_GET['action']) && $_GET['action'] != 'as
     /**
      * Steal action (only for thief)
      */
-    if ($player->clas == 'Złodziej' && $player->crime > 0) 
+    if ($player->clas == 'Złodziej' && $player->energy > 0) 
       {
 	$smarty->assign(array("Crime" => "Y",
 			      "Asteal" => "Okradnij",
 			      "Tcrime" => "bank przeznaczając na to",
-			      "Ttp" => "punktów kradzieży (maksymalnie 12 punktów)."));
+			      "Ttp" => "energii (maksymalnie 100 energii)."));
       }
 }
 

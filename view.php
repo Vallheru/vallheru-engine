@@ -4,11 +4,11 @@
  *   View other players, steal money, astral components from other players
  *
  *   @name                 : view.php                            
- *   @copyright            : (C) 2004,2005,2006,2011,2012 Vallheru Team based on Gamers-Fusion ver 2.5
+ *   @copyright            : (C) 2004,2005,2006,2011,2012,2013 Vallheru Team based on Gamers-Fusion ver 2.5
  *   @author               : thindil <thindil@vallheru.net>
  *   @author               : eyescream <tduda@users.sourceforge.net>
  *   @version              : 1.7
- *   @since                : 09.12.2012
+ *   @since                : 08.01.2013
  *
  */
 
@@ -324,7 +324,7 @@ $blnCrime = false;
 if ($player -> clas == 'Złodziej' && $player -> id != $view -> id) 
 {
     $objAstralcrime = $db -> Execute("SELECT `astralcrime` FROM `players` WHERE `id`=".$player -> id);
-    if (!$objFreeze -> fields['freeze'] && $objAstralcrime -> fields['astralcrime'] == 'Y')
+    if (!$objFreeze -> fields['freeze'] && $objAstralcrime -> fields['astralcrime'] == 'Y' && $player->energy < 5)
     {
         $smarty -> assign("Crime2", "<li><a href=\"view.php?view=".$view -> id."&amp;steal_astral=".$view -> id."\">".A_STEAL2."</a></li>");
         $blnCrime = true;
@@ -726,9 +726,9 @@ if (isset($_GET['spy']) || isset($_GET['steal']))
       {
         error(ERROR." (<a href=\"view.php?view=".$_GET['view']."\">".BACK."</a>)");
       }
-    if ($player -> crime <= 0) 
+    if ($player -> energy < 2) 
       {
-        error (NO_CRIME." (<a href=\"view.php?view=".$_GET['view']."\">".BACK."</a>)");
+        error ("Nie masz tyle energii. (<a href=\"view.php?view=".$_GET['view']."\">".BACK."</a>)");
       }
     if ($player -> location != $view -> location) 
       {
@@ -765,7 +765,7 @@ if (isset($_GET['spy']) || isset($_GET['steal']))
  */
 if (isset($_GET['spy']))
   {
-    $db -> Execute("UPDATE `players` SET `crime`=`crime`-1 WHERE `id`=".$player->id);
+    $db -> Execute("UPDATE `players` SET `energy`=`energy`-2 WHERE `id`=".$player->id);
     $intDefense =  ($view->stats['inteli'][2] + $view->skills['perception'][1]);
     $intAttack = ($player->stats['agility'][2] + $player->stats['inteli'][2] + $player->skills['thievery'][1]);
     $chance = $intAttack - $intDefense;
@@ -788,12 +788,13 @@ if (isset($_GET['spy']))
 	$view->checkexp(array('inteli' => ($intAttack / 4)), $player->id, 'stats');
 	$view->checkexp(array('perception' => ($intAttack / 4)), $player->id, 'skills');
 	$view->save();
-	$objEquipment = $db->Execute("SELECT `name` FROM `equipment` WHERE `owner`=".$view->id." AND `status`='E'");
 	$strEquipment = 'Założony ekwipunek:<ul>';
-	while (!$objEquipment->EOF)
+	foreach ($view->equip as $arrEquip)
 	  {
-	    $strEquipment .= '<li>'.$objEquipment->fields['name'].'</li>';
-	    $objEquipment->MoveNext();
+	    if ($arrEquip[0])
+	      {
+		$strEquipment .= '<li>'.$arrEquip[1].'</li>';
+	      }
 	  }
 	if ($strEquipment == 'Założony ekwipunek:<ul>')
 	  {
@@ -803,10 +804,7 @@ if (isset($_GET['spy']))
 	  {
 	    $strEquipment .= '</ul>';
 	  }
-	$objEquipment->Close();
-	$objGold = $db->Execute("SELECT `credits` FROM `players` WHERE `id`=".$view->id);
-	$strEquipment .= 'Złota w sakiewce: '.$objGold->fields['credits'];
-	$objGold->Close();
+	$strEquipment .= 'Złota w sakiewce: '.$view->credits;
 	$db -> Execute("INSERT INTO `log` (`owner`, `log`, `czas`, `type`) VALUES(".$view -> id.",'Nagle poczułeś, że ktoś się tobie bacznie przygląda. Rozglądając się wokoło zauważyłeś jak <b><a href=view.php?view=".$player -> id.">".$player -> user.L_ID.$player -> id."</b> gwałtownie ucieka od Ciebie. Ciekawe jak długo obserwował Ciebie.', ".$strDate.", 'T')");
 	error("<br />Przyglądałeś się przez chwilę ".$view->user." niestety, w pewnym momencie zauważył Ciebie. Szybko uciekłeś w cień. Zdobyte informacje:<br />".$strEquipment." (<a href=view.php?view=".$view->id.">Wróć</a>)");
       }
@@ -818,21 +816,22 @@ if (isset($_GET['spy']))
 	$view->checkexp(array('inteli' => 1), $player->id, 'stats');
 	$view->checkexp(array('perception' => 1), $player->id, 'skills');
 	$view->save();
-	$objEquipment = $db->Execute("SELECT `name`, `power`, `zr`, `szyb` FROM `equipment` WHERE `owner`=".$view->id." AND `status`='E'");
 	$strEquipment = 'Założony ekwipunek:<ul>';
-	while (!$objEquipment->EOF)
+	foreach ($view->equip as $arrEquip)
 	  {
-	    $strEquipment .= '<li>'.$objEquipment->fields['name'].' (+'.$objEquipment->fields['power'].') ';
-	    if ($objEquipment->fields['zr'] != 0)
+	    if ($arrEquip[0])
 	      {
-		$strEquipment .= '('.($objEquipment->fields['zr'] * -1).' zr) ';
+		$strEquipment .= '<li>'.$arrEquip[1].' (+'.$arrEquip[2].') ';
+		if ($arrEquip[5] != 0)
+		  {
+		    $strEquipment .= '('.($arrEquip[5] * -1).' zr) ';
+		  }
+		if ($arrEquip[7] != 0)
+		  {
+		    $strEquipment .= '('.$arrEquip[7].' szyb)';
+		  }
+		$strEquipment .= '</li>';
 	      }
-	    if ($objEquipment->fields['szyb'] != 0)
-	      {
-		$strEquipment .= '('.$objEquipment->fields['szyb'].' szyb)';
-	      }
-	    $strEquipment .= '</li>';
-	    $objEquipment->MoveNext();
 	  }
 	if ($strEquipment == 'Założony ekwipunek:<ul>')
 	  {
@@ -842,10 +841,7 @@ if (isset($_GET['spy']))
 	  {
 	    $strEquipment .= '</ul>';
 	  }
-	$objEquipment->Close();
-	$objGold = $db->Execute("SELECT `credits` FROM `players` WHERE `id`=".$view->id);
-	$strEquipment .= 'Złota w sakiewce: '.$objGold->fields['credits'].'<br />';
-	$objGold->Close();
+	$strEquipment .= 'Złota w sakiewce: '.$view->credits.'<br />';
 	$db -> Execute("INSERT INTO `log` (`owner`, `log`, `czas`, `type`) VALUES(".$view -> id.",'W pewnym momencie odniosłeś nieprzyjemne wrażenie, że ktoś przygląda się Tobie. Rozglądając się na wszystkie strony, niestety nie zauważyłeś źródła niepokoju.', ".$strDate.", 'T')");
 	error("<br />Przyglądałeś się przez dłuższą chwilę ".$view->user.". Na szczęście nie zauważył twojej obecności. Zdobyte informacje:<br />".$strEquipment." (<a href=view.php?view=".$view->id.">Wróć</a>)");
       }
@@ -880,7 +876,7 @@ if (isset ($_GET['steal']))
 	$view->save();
         if ($player -> location != 'Lochy') 
         {
-            $db -> Execute("UPDATE `players` SET `miejsce`='Lochy', `crime`=`crime`-1 WHERE `id`=".$player -> id);
+            $db -> Execute("UPDATE `players` SET `miejsce`='Lochy', `energy`=`energy`-2 WHERE `id`=".$player -> id);
             $db -> Execute("INSERT INTO `jail` (`prisoner`, `verdict`, `duration`, `cost`, `data`) VALUES(".$player -> id.",'".VERDICT."',7,".$cost.",'".$data."')");                
             $db -> Execute("INSERT INTO `log` (`owner`, `log`, `czas`, `type`) VALUES(".$player -> id.",'".YOU_IN_JAIL.$cost.".', ".$strDate.", 'T')");
             $db -> Execute("INSERT INTO `log` (`owner`, `log`, `czas`, `type`) VALUES(".$view -> id.",'".YOU_CATCH."<b><a href=view.php?view=".$player -> id.">".$player -> user.L_ID.$player -> id.YOU_CATCH2."', ".$strDate.", 'T')");
@@ -909,7 +905,7 @@ if (isset ($_GET['steal']))
     }
     if ($chance > 0 && $chance < 50) 
     {
-        $db -> Execute("UPDATE `players` SET `crime`=`crime`-1 WHERE `id`=".$player -> id);
+        $db -> Execute("UPDATE `players` SET `energy`=`energy`-2 WHERE `id`=".$player -> id);
 	$player->checkexp(array('inteli' => ($intDefense / 6),
 				'agility' => ($intDefense / 6)), $player->id, 'stats');
 	$player->checkexp(array('thievery' => ($intDefense / 6)), $player->id, 'skills');
@@ -933,7 +929,7 @@ if (isset ($_GET['steal']))
     }
     if ($chance > 49) 
     {
-        $db -> Execute("UPDATE `players` SET `crime`=`crime`-1 WHERE `id`=".$player -> id);
+        $db -> Execute("UPDATE `players` SET `energy`=`energy`-2 WHERE `id`=".$player -> id);
 	$player->checkexp(array('inteli' => ($intDefense / 3),
 				'agility' => ($intDefense / 3)), $player->id, 'stats');
 	$player->checkexp(array('thievery' => ($intDefense / 3)), $player->id, 'skills');
