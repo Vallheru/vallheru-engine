@@ -1,5 +1,7 @@
 2013-01-08  Bartek thindil Jasicki  <thindil@vallheru.net>
 
+	* UPDATE,install/db/update.sql: 
+	updated database
 	* BUG,train.php: 
 	fixed training stats in school
 	* BUG,includes/battle.php:

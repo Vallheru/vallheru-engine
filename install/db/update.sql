@@ -28,7 +28,8 @@ ALTER TABLE `players`
   DROP `jeweller`,
   DROP `thievery`,
   DROP `perception`,
-  DROP `metallurgy`;
+  DROP `metallurgy`,
+  DROP `crime`;
 ALTER TABLE `players` ADD `stats` VARCHAR( 2048 ) NOT NULL DEFAULT 'strength:Siła,0,0,0;agility:Zręczność,0,0,0;condition:Kondycja,0,0,0;speed:Szybkość,0,0,0;inteli:Inteligencja,0,0,0;wisdom:Siła Woli,0,0,0;',
 ADD `skills` VARCHAR( 4096 ) NOT NULL DEFAULT 'smith:Kowalstwo,1,0;shoot:Strzelectwo,1,0;alchemy:Alchemia,1,0;dodge:Uniki,1,0;carpentry:Stolarstwo,1,0;magic:Rzucanie Czarów,1,0;attack:Walka Bronią,1,0;leadership:Dowodzenie,1,0;breeding:Hodowla,1,0;mining:Górnictwo,1,0;lumberjack:Drwalnictwo,1,0;herbalism:Zielarstwo,1,0;jewellry:Jubilerstwo,1,0;smelting:Hutnictwo,1,0;thievery:Złodziejstwo,1,0;perception:Spostrzegawczość,1,0;',
 ADD `bonuses` TEXT NOT NULL,
