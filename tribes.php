@@ -448,7 +448,7 @@ if (isset ($_GET['view']) && $_GET['view'] == 'view')
 		      }
 		    $objTest->Close();
 		  }
-		$db->Execute("UPDATE `players` SET `astralcrime`='N' WHERE `id`=".$player->id);
+		$db->Execute("UPDATE `players` SET `astralcrime`='N', `energy`=`energy`-5 WHERE `id`=".$player->id);
 		$objMembers = $db->Execute("SELECT `id` FROM `players` WHERE `tribe`=".$_GET['id']);
 		$intGainexp = 0;
 		$intAmount = 0;
@@ -549,6 +549,7 @@ if (isset ($_GET['view']) && $_GET['view'] == 'view')
 	  {
 	    require_once('includes/astralsteal.php');
 	    astralsteal($_GET['id'], 'C', $objTribe -> fields['owner']);
+	    $db->Execute("UPDATE `players` SET `energy`=`energy`-5 WHERE `id`=".$player->id);
 	    
 	    if ($objTribe->fields['level'] == 5)
 	      {
