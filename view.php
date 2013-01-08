@@ -308,7 +308,7 @@ else
     $smarty->assign("Rprofile", '');
   }
 
-if ($player -> clas == 'Złodziej' && $player -> crime > 0 && $player -> location == $view -> location && $player -> id != $view -> id) 
+if ($player -> clas == 'Złodziej' && $player -> energy > 2 && $player -> location == $view -> location && $player -> id != $view -> id) 
 {
     if (!$objFreeze -> fields['freeze'])
     {

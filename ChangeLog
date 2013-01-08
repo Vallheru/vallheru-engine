@@ -1,5 +1,7 @@
 2013-01-08  Bartek thindil Jasicki  <thindil@vallheru.net>
 
+	* BUG,view.php: 
+	fixed steal money from players
 	* BUG,tribes.php: 
 	fixed not using energy
 	* FEATURE,class/player_class.php, stats.php, templates/layout1/stats.tpl, templates/stats.tpl, includes/steal.php,
