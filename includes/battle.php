@@ -8,7 +8,7 @@
  *   @author               : thindil <thindil@vallheru.net>
  *   @author               : eyescream <tduda@users.sourceforge.net>
  *   @version              : 1.7
- *   @since                : 03.01.2013
+ *   @since                : 08.01.2013
  *
  */
 
@@ -681,7 +681,7 @@ function attack1($attacker, $defender, $attack_bspell, $def_bspell, $attack_dspe
         }
         if (($defender->settings['battlelog'] == 'Y') || ($defender->id == $starter && $defender->settings['battlelog'] == 'A') || ($defender->id != $starter && $defender->settings['battlelog'] == 'D'))
         {
-             $strSubject = T_SUBJECT.$attacker['user'].T_SUB_ID.$attacker['id'];
+             $strSubject = T_SUBJECT.$attacker->user.T_SUB_ID.$attacker->id;
             $db -> Execute("INSERT INTO `mail` (`sender`, `senderid`, `owner`, `subject`, `body`, `date`) VALUES('".T_SENDER."','0',".$defender->id.",'".$strSubject."','".$strMessage."', ".$strDate.")");
         }
         $db -> Execute("INSERT INTO `log` (`owner`, `log`, `czas`, `type`) VALUES(".$attacker->id.",'".$attacktext." ".L_BATTLE2."  <b><a href=view.php?view=".$defender->id.">".$defender->user."</a></b> ".L_ID.'<b>'.$defender->id."</b>.', ".$strDate.", 'B')");
