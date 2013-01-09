@@ -1,3 +1,8 @@
+2013-01-09  Bartek thindil Jasicki  <thindil@vallheru.net>
+
+	* BUG,preset.php:
+	fixed player resets
+
 2013-01-08  Bartek thindil Jasicki  <thindil@vallheru.net>
 
 	* UPDATE,templates/layout1/bank.tpl, templates/bank.tpl, bank.php: 
