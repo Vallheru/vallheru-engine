@@ -1,5 +1,7 @@
 2013-01-09  Bartek thindil Jasicki  <thindil@vallheru.net>
 
+	* BUG,includes/turnfight.php: 
+	fixed lost mana during fight
 	* BUG,preset.php:
 	fixed player resets
 
