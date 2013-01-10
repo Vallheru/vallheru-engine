@@ -35,7 +35,8 @@ ADD `skills` VARCHAR( 4096 ) NOT NULL DEFAULT 'smith:Kowalstwo,1,0;shoot:Strzele
 ADD `bonuses` TEXT NOT NULL,
 ADD `rinvite` INT( 11 ) NOT NULL DEFAULT '0',
 ADD `tinvite` INT( 11 ) NOT NULL DEFAULT '0',
-ADD `team` INT( 11 ) NOT NULL DEFAULT '0';
+ADD `team` INT( 11 ) NOT NULL DEFAULT '0',
+ADD `reputation` INT( 11 ) NOT NULL DEFAULT '0';
 ALTER TABLE `monsters`
   DROP `exp1`,
   DROP `exp2`,
