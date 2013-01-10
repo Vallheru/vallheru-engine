@@ -1,5 +1,7 @@
 2013-01-10  Bartek thindil Jasicki  <thindil@vallheru.net>
 
+	* UPDATE,includes/battle.php: 
+	changed amount of gained experience for fight
 	* UPDATE,install/db/update.sql:
 	updated database
 

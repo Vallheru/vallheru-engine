@@ -8,7 +8,7 @@
  *   @author               : thindil <thindil@vallheru.net>
  *   @author               : eyescream <tduda@users.sourceforge.net>
  *   @version              : 1.7
- *   @since                : 08.01.2013
+ *   @since                : 10.01.2013
  *
  */
 
@@ -627,7 +627,6 @@ function attack1($attacker, $defender, $attack_bspell, $def_bspell, $attack_dspe
 	  {
 	    $intExpsum += $defender->skills[$strSkill2][1];
 	  }
-	$intExpsum = $intExpsum;
 	//Count gained experience by defender
 	$intExpsum2 = 0;
 	foreach (array('strength', 'agility', 'speed', 'condition', 'inteli', 'wisdom') as $strStat)
@@ -638,7 +637,18 @@ function attack1($attacker, $defender, $attack_bspell, $def_bspell, $attack_dspe
 	  {
 	    $intExpsum2 += $attacker->skills[$strSkill2][1];
 	  }
-	$intExpsum2 = $intExpsum2;
+	$fltExpdiv = $intExpsum / $intExpsum2;
+	if ($fltExpdiv > 2)
+	  {
+	    $fltExpdiv = 2;
+	  }
+	$intExpsum = $intExpsum * $fltExpdiv;
+	$fltExpdiv = $intExpsum2 / $intExpsum;
+	if ($fltExpdiv > 2)
+	  {
+	    $fltExpdiv = 2;
+	  }
+	$intExpsum2 = $intExpsum2 * $fltExpdiv;
         if ($attacker->equip[0][0] || $attacker->equip[11][0]) 
 	  {
 	    $strType = 'melee';
@@ -731,6 +741,21 @@ function attack1($attacker, $defender, $attack_bspell, $def_bspell, $attack_dspe
 	    $intExpsum += $defender->skills[$strSkill2][1];
 	  }
 	$intExpsum = $intExpsum * 2;
+	$intExpsum2 = 0;
+	foreach (array('strength', 'agility', 'speed', 'condition', 'inteli', 'wisdom') as $strStat)
+	  {
+	    $intExpsum2 += $attacker->stats[$strStat][2];
+	  }
+	foreach (array('attack', 'shoot', 'magic', 'dodge') as $strSkill2)
+	  {
+	    $intExpsum2 += $attacker->skills[$strSkill2][1];
+	  }
+	$fltExpdiv = $intExpsum / ($intExpsum2 * 2);
+	if ($fltExpdiv > 2)
+	  {
+	    $fltExpdiv = 2;
+	  }
+	$intExpsum = $intExpsum * $fltExpdiv;
 	if ($attacker->equip[0][0] || $attacker->equip[11][0]) 
 	  {
 	    $strType = 'melee';
