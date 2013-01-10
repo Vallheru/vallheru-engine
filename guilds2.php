@@ -4,10 +4,10 @@
  *   Guilds2 - the best players in various fight skills.
  *
  *   @name                 : guilds2.php                            
- *   @copyright            : (C) 2011,2012 Vallheru Team based on Gamers-Fusion ver 2.5
+ *   @copyright            : (C) 2011,2012,2013 Vallheru Team based on Gamers-Fusion ver 2.5
  *   @author               : thindil <thindil@vallheru.net>
  *   @version              : 1.7
- *   @since                : 25.10.2012
+ *   @since                : 10.01.2013
  *
  */
 
@@ -150,11 +150,11 @@ function topplayers2()
   return $arrTop;
 }
 
-$arrayMonumentTitles = array("Najwyższa Walka bronią białą", "Najwyższe Strzelectwo", "Najwyższe Rzucanie czarów", "Najwięcej Uników", "Najwyższe Dowodzenie", 'Najwięcej zwycięstw', 'Wykonanych Zadań');
+$arrayMonumentTitles = array("Najwyższa Walka bronią białą", "Najwyższe Strzelectwo", "Najwyższe Rzucanie czarów", "Najwięcej Uników", "Najwyższe Dowodzenie", 'Najwyższa Reputacja', 'Wykonanych Zadań');
 
-$arrayMonumentDescriptions = array("Walka bronią białą", "Strzelectwo", "Rzucanie czarów", "Uniki", "Dowodzenie", 'Zwycięstw', 'Zadań');
+$arrayMonumentDescriptions = array("Walka bronią białą", "Strzelectwo", "Rzucanie czarów", "Uniki", "Dowodzenie", 'Reputacja', 'Zadań');
         
-$arrayMonuments = array(topplayers('attack'), topplayers('shoot'), topplayers('magic'), topplayers('dodge'), topplayers('leadership'), topplayers3('wins'), topplayers3('mpoints'));
+$arrayMonuments = array(topplayers('attack'), topplayers('shoot'), topplayers('magic'), topplayers('dodge'), topplayers('leadership'), topplayers3('reputation'), topplayers3('mpoints'));
     
 $smarty -> assign(array('Titles' => $arrayMonumentTitles,
                         'Descriptions' => $arrayMonumentDescriptions,

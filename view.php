@@ -8,7 +8,7 @@
  *   @author               : thindil <thindil@vallheru.net>
  *   @author               : eyescream <tduda@users.sourceforge.net>
  *   @version              : 1.7
- *   @since                : 08.01.2013
+ *   @since                : 10.01.2013
  *
  */
 
@@ -111,6 +111,7 @@ $smarty -> assign (array("User" => $view -> user,
                          "Tfights" => T_FIGHTS,
                          "Tlastkill" => T_LAST_KILL,
                          "Tlastkilled" => 'Ostatnio zabit'.$strSuffix.' przez',
+			 "Treputation" => "Reputacja",
                          "Trefs" => T_REFS,
 			 "Anext" => 'Następny profil',
 			 "Aprevious" => 'Poprzedni profil',
@@ -168,7 +169,8 @@ $smarty -> assign(array("Page" => $strViewpage,
                         "Lastkilled" => $view -> lastkilled, 
                         "Lastkilledby" => $view -> lastkilledby, 
                         "Profile" => $view -> profile,
-			"Refs" => $view->vallars));
+			"Refs" => $view->vallars,
+			"Reputation" => $view->reputation));
 
 if ($view -> wins || $view -> losses)
 {

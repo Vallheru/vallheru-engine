@@ -17,7 +17,7 @@
                     <th style="border-bottom: solid gray 1px;" align="center" colspan="2">{$Titles[j]}</th>
                 </tr>
                 <tr>
-                    <td width="100" align="center"><b><u>{$Mname}</u></b></td>
+                    <td width="100"><b><u>{$Mname}</u></b></td>
                     <td width="100" align="center"><b><u>{$Descriptions[j]}</u></b></td>
                 </tr>
                 {section name=k loop=$Monuments[j]}
@@ -25,7 +25,7 @@
                         <td align="left">
                             <a href="view.php?view={$Monuments[j][k].id}">{$Monuments[j][k].user}</a>&nbsp;({$Monuments[j][k].id})
                         </td>
-                        <td align="right">{$Monuments[j][k].value}</td>
+                        <td align="center">{$Monuments[j][k].value}</td>
                     </tr>
                 {/section}
             </table>

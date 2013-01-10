@@ -1,5 +1,9 @@
 2013-01-10  Bartek thindil Jasicki  <thindil@vallheru.net>
 
+	* FEATURE,templates/layout1/battle.tpl, templates/battle.tpl, battle.php, includes/battle.php, templates/layout1/stats.tpl,
+	templates/stats.tpl, stats.php, view.php, templates/layout1/view.tpl, templates/view.tpl, class/player_class.php,
+	templates/layout1/guilds2.tpl, templates/guilds2.tpl, guilds2.php: 
+	added reputation to game
 	* UPDATE,includes/battle.php: 
 	changed amount of gained experience for fight
 	* UPDATE,install/db/update.sql:

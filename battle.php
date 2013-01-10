@@ -4,10 +4,10 @@
  *   Battle Arena - figth between players and player vs monsters
  *
  *   @name                 : battle.php                            
- *   @copyright            : (C) 2004,2005,2006,2011,2012 Vallheru Team based on Gamers-Fusion ver 2.5
+ *   @copyright            : (C) 2004,2005,2006,2011,2012,2013 Vallheru Team based on Gamers-Fusion ver 2.5
  *   @author               : thindil <thindil@vallheru.net>
  *   @version              : 1.7
- *   @since                : 31.12.2012
+ *   @since                : 10.01.2013
  *
  */
 
@@ -430,11 +430,12 @@ if (isset($_GET['action']))
      */
     if ($_GET['action'] == 'showalive') 
       {
-	$elist = $db -> SelectLimit("SELECT id, user, rank, tribe FROM players WHERE hp>0 AND miejsce='".$player -> location."' AND id!=".$player -> id." AND immu='N' AND rasa!='' AND klasa!='' AND rest='N' AND freeze=0 ORDER BY RAND()", 50);
+	$elist = $db -> SelectLimit("SELECT `id`, `user`, `rank`, `tribe`, `reputation` FROM `players` WHERE `hp`>0 AND `miejsce`='".$player -> location."' AND `id`!=".$player -> id." AND `immu`='N' AND `rasa`!='' AND `klasa`!='' AND `rest`='N' AND `freeze`=0 AND `reputation`>=".($player->reputation - 10)." ORDER BY RAND()", 50);
 	$arrid = array();
 	$arrname = array();
 	$arrrank = array();
 	$arrtribe = array();
+	$arrRep = array();
 	while (!$elist -> EOF) 
 	  {
 	    switch ($elist->fields['rank'])
@@ -455,6 +456,7 @@ if (isset($_GET['action']))
 	    $arrid[] = $elist -> fields['id'];
 	    $arrname[] = $elist -> fields['user'];
 	    $arrtribe[] = $elist -> fields['tribe'];
+	    $arrRep[] = $elist->fields['reputation'];
 	    $elist -> MoveNext();
 	  }
 	$elist -> Close();
@@ -490,11 +492,13 @@ if (isset($_GET['action']))
 				  "Enemyname" => $arrname, 
 				  "Enemytribe" => $arrtribe, 
 				  "Enemyrank" => $arrrank,
+				  "Enemyrep" => $arrRep,
 				  "Lid" => L_ID,
 				  "Showinfo" => "Oto dostępni przeciwnicy w twojej okolicy.",
 				  "Lname" => L_NAME,
 				  "Lrank" => L_RANK,
 				  "Lclan" => L_CLAN,
+				  "Lrep" => "Reputacja",
 				  "Loption" => L_OPTION,
 				  "Aattack" => A_ATTACK,
 				  "Orback" => "Możesz również",

@@ -15,6 +15,7 @@
         <th>{$Lname}</th>
         <th>{$Lrank}</th>
         <th>{$Lclan}</th>
+	<th>{$Lrep}</th>
         <th>{$Loption}</th>
     </tr>
     {section name=player loop=$Enemyid}
@@ -23,6 +24,7 @@
         <td><a href="view.php?view={$Enemyid[player]}">{$Enemyname[player]}</a></td>
         <td>{$Enemyrank[player]}</td>
         <td>{$Enemytribe[player]}</td>
+	<td>{$Enemyrep[player]}</td>
         <td>- <A href="battle.php?battle={$Enemyid[player]}">{$Aattack}</a></td>
         </tr>
     {/section}

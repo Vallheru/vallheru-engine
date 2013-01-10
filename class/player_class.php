@@ -7,7 +7,7 @@
  *   @copyright            : (C) 2004,2005,2006,2007,2011,2012,2013 Vallheru Team based on Gamers-Fusion ver 2.5
  *   @author               : thindil <thindil@vallheru.net>
  *   @version              : 1.7
- *   @since                : 08.01.2013
+ *   @since                : 10.01.2013
  *
  */
 
@@ -99,6 +99,8 @@ class Player
     var $tinvite;
     // Player team
     var $team;
+    // Player reputation
+    var $reputation;
     
 /**
 * Class constructor - get data from database and write it to variables
@@ -177,6 +179,7 @@ class Player
 	$this->rinvite = $stats->fields['rinvite'];
 	$this->tinvite = $stats->fields['tinvite'];
 	$this->team = $stats->fields['team'];
+	$this->reputation = $stats->fields['reputation'];
 	$this->settings = $this->toarray($stats->fields['settings']);
 	$this->stats = $this->toarray($stats->fields['stats'], 'stats');
 	$this->skills = $this->toarray($stats->fields['skills'], 'stats');

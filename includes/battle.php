@@ -642,13 +642,13 @@ function attack1($attacker, $defender, $attack_bspell, $def_bspell, $attack_dspe
 	  {
 	    $fltExpdiv = 2;
 	  }
-	$intExpsum = $intExpsum * $fltExpdiv;
-	$fltExpdiv = $intExpsum2 / $intExpsum;
-	if ($fltExpdiv > 2)
+	$fltExpdiv2 = $intExpsum2 / $intExpsum;
+	if ($fltExpdiv2 > 2)
 	  {
-	    $fltExpdiv = 2;
+	    $fltExpdiv2 = 2;
 	  }
-	$intExpsum2 = $intExpsum2 * $fltExpdiv;
+	$intExpsum = ceil($intExpsum * $fltExpdiv);
+	$intExpsum2 = ceil($intExpsum2 * $fltExpdiv2);
         if ($attacker->equip[0][0] || $attacker->equip[11][0]) 
 	  {
 	    $strType = 'melee';
@@ -730,6 +730,21 @@ function attack1($attacker, $defender, $attack_bspell, $def_bspell, $attack_dspe
         {
             $creditgain = 0;
         }
+	if (($attacker->reputation - 10) > $defender->reputation)
+	  {
+	    $intRepchange = 0;
+	    $fltDiv = 0.5;
+	  }
+	elseif (($attacker->reputation + 10) < $defender->reputation)
+	  {
+	    $intRepchange = 2;
+	    $fltDiv = 1.5;
+	  }
+	else
+	  {
+	    $intRepchange = 1;
+	    $fltDiv = 1;
+	  }
 	//Count gained experience by attacker
 	$intExpsum = 0;
 	foreach (array('strength', 'agility', 'speed', 'condition', 'inteli', 'wisdom') as $strStat)
@@ -755,7 +770,7 @@ function attack1($attacker, $defender, $attack_bspell, $def_bspell, $attack_dspe
 	  {
 	    $fltExpdiv = 2;
 	  }
-	$intExpsum = $intExpsum * $fltExpdiv;
+	$intExpsum = ceil(($intExpsum * $fltExpdiv) * $fltDiv);
 	if ($attacker->equip[0][0] || $attacker->equip[11][0]) 
 	  {
 	    $strType = 'melee';
@@ -764,14 +779,14 @@ function attack1($attacker, $defender, $attack_bspell, $def_bspell, $attack_dspe
 	  {
 	    $strType = 'ranged';
 	  }
-        $strMessage = $strMessage."<b>".$attacker->user."</b> ".HE_GET." <b>".$intExpsum."</b> ".EXPERIENCE." <b>".$creditgain."</b> ".GOLD_COINS." ".$text."<br />";
+        $strMessage = $strMessage."<b>".$attacker->user."</b> ".HE_GET." <b>".$intExpsum."</b> ".EXPERIENCE." <b>".$intRepchange."</b> reputacji, <b>".$creditgain."</b> ".GOLD_COINS." ".$text."<br />";
 	gainability($attacker, $intExpsum, $attack_miss, $attack_attack, $attack_magic, $starter, $strType);
 	lostitem($attacker->equip, $attacker->id, $starter, $attacker->skills['shoot'][1]);
 	lostitem($defender->equip, $defender->id, $starter, $defender->skills['shoot'][1]);
 	checkpet($attacker->id, $attacker->pet, $starter);
 	checkpet($defender->id, $defender->pet, $starter, TRUE);
-        $db -> Execute("UPDATE `players` SET `hp`=".$attacker->hp.", `credits`=`credits`+".$creditgain.", `wins`=`wins`+1, `lastkilled`='".'<a href="view.php?view='.$defender->id.'">'.$defender->user."</a>', `bless`='', `blessval`=0 WHERE `id`=".$attacker->id);
-        $db -> Execute("UPDATE `players` SET `credits`=`credits`-".$creditgain.", `losses`=`losses`+1, `lastkilledby`='".'<a href="view.php?view='.$attacker->id.'">'.$attacker->user."</a>', `bless`='', `blessval`=0 WHERE `id`=".$defender->id);
+        $db -> Execute("UPDATE `players` SET `hp`=".$attacker->hp.", `credits`=`credits`+".$creditgain.", `wins`=`wins`+1, `lastkilled`='".'<a href="view.php?view='.$defender->id.'">'.$defender->user."</a>', `bless`='', `blessval`=0, `reputation`=`reputation`+".$intRepchange." WHERE `id`=".$attacker->id);
+        $db -> Execute("UPDATE `players` SET `credits`=`credits`-".$creditgain.", `losses`=`losses`+1, `lastkilledby`='".'<a href="view.php?view='.$attacker->id.'">'.$attacker->user."</a>', `bless`='', `blessval`=0, `reputation`=`reputation`-".$intRepchange." WHERE `id`=".$defender->id);
         if ($attacker->id == $starter) 
         {
             $attacktext = YOU_ATTACK_AND;

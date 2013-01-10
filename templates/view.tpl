@@ -19,6 +19,7 @@
     {$Tstatus}: {$Status}
     {$Clan}
     {$Tmaxhp}: {$Maxhp}<br /><br />
+    {$Treputation}: {$Reputation}<br />
     <a href="view.php?view={$Id}&amp;logs">{$Tfights}</a>: {$Wins}/{$Losses} {$Fratio}<br />
     {$Tlastkill}: {$Lastkilled}<br />
     {$Tlastkilled}: {$Lastkilledby}<br />
