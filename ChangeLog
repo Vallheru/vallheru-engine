@@ -1,3 +1,8 @@
+2013-01-11  Bartek thindil Jasicki  <thindil@vallheru.net>
+
+	* UPDATE,templates/layout1/ap.tpl, templates/ap.tpl, ap.php:
+	added confirmation to select bonus
+
 2013-01-10  Bartek thindil Jasicki  <thindil@vallheru.net>
 
 	* FEATURE,templates/layout1/battle.tpl, templates/battle.tpl, battle.php, includes/battle.php, templates/layout1/stats.tpl,

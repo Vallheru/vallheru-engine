@@ -4,10 +4,10 @@
  *   Distribution of Astral Poinst
  *
  *   @name                 : ap.php                            
- *   @copyright            : (C) 2004,2005,2006,2011,2012 Vallheru Team based on Gamers-Fusion ver 2.5
+ *   @copyright            : (C) 2004,2005,2006,2011,2012,2013 Vallheru Team based on Gamers-Fusion ver 2.5
  *   @author               : thindil <thindil@vallheru.net>
  *   @version              : 1.7
- *   @since                : 14.12.2012
+ *   @since                : 11.01.2013
  *
  */
 
@@ -48,6 +48,11 @@ if (isset($_GET['select']))
     $objBonus = $db->Execute("SELECT * FROM `bonuses` WHERE `id`=".$_GET['select']);
     $blnValid = TRUE;
     $intKey = -1;
+    if (!isset($_POST[$_GET['select']]))
+      {
+	message('error', 'Zaznacz, którą premię wybierasz.');
+	$blnValid = FALSE;
+      }
     if (!$objBonus->fields['id'])
       {
 	message('error', 'Nie ma takiej premii.');
