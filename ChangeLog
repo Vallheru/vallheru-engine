@@ -1,3 +1,8 @@
+2013-01-14  Bartek thindil Jasicki  <thindil@vallheru.net>
+
+	* UPDATE,templates/layout1/account.tpl, templates/account.tpl, languages/pl/account.php, account.php:
+	redesigned info about bug reporting
+
 2013-01-11  Bartek thindil Jasicki  <thindil@vallheru.net>
 
 	* UPDATE,templates/layout1/ap.tpl, templates/ap.tpl, ap.php:

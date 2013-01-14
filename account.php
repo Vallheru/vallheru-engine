@@ -4,10 +4,10 @@
  *   Account options - change avatar, email, password and nick
  *
  *   @name                 : account.php                            
- *   @copyright            : (C) 2004,2005,2006,2007,2011,2012 Vallheru Team based on Gamers-Fusion ver 2.5
+ *   @copyright            : (C) 2004,2005,2006,2007,2011,2012,2013 Vallheru Team based on Gamers-Fusion ver 2.5
  *   @author               : thindil <thindil@vallheru.net>
  *   @version              : 1.7
- *   @since                : 22.11.2012
+ *   @since                : 14.01.2013
  *
  */
 
@@ -216,6 +216,8 @@ if (isset($_GET['view']))
 				"Areport" => A_REPORT,
 				"Bugname" => BUG_NAME,
 				"Buginfo" => BUG_INFO,
+				"Bugtitle" => "Krótkie, jedno zdanie podsumowujące błąd.",
+				"Bugdesc2" => "Co trzeba zrobić (krok po kroku) aby wywołać dany błąd?\n1.\n2.\n3.\n\nCo jest efektem wykonania owych kroków?\n\nCo Twoim zdaniem powinno się wydarzyć?\n\nJakiej przeglądarki używasz?\n\nWszelkie dodatkowe informacje jakie możesz przekazać na temat tego błędu proszę wpisać poniżej. Im więcej informacji jest dostarczonych, tym szybciej błąd będzie naprawiony.",
 				"Loc" => $strLoc));
 	/**
 	 * Report bug
@@ -231,11 +233,6 @@ if (isset($_GET['view']))
 		  {
 		    error(EMPTY_FIELDS);
 		  }
-	      }
-	    $intDesc = strlen($arrFields[2]);
-	    if ($intDesc < 20)
-	      {
-		error(TOO_SHORT);
 	      }
 	    $db -> Execute("INSERT INTO `bugreport` (`sender`, `title`, `location`, `desc`) VALUES(".$player -> id.", '".$arrFields[0]."', '".$arrFields[1]."', '".$arrFields[2]."')");
 	    $objStaff = $db -> Execute("SELECT `id` FROM `players` WHERE `rank`='Admin'");

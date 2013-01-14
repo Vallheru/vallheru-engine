@@ -4,10 +4,10 @@
  *   Polish language for account.php
  *
  *   @name                 : account.php                            
- *   @copyright            : (C) 2004,2005,2006,2011,2012 Vallheru Team based on Gamers-Fusion ver 2.5
+ *   @copyright            : (C) 2004,2005,2006,2011,2012,2013 Vallheru Team based on Gamers-Fusion ver 2.5
  *   @author               : thindil <thindil@vallheru.net>
  *   @version              : 1.7
- *   @since                : 12.12.2012
+ *   @since                : 14.01.2013
  *
  */
 
@@ -83,11 +83,10 @@ if (isset($_GET['view']))
 
     if ($_GET['view'] == 'bugreport')
       {
-	define("BUG_DESC", "Opis błędu (minimum 20 znaków)");
+	define("BUG_DESC", "Opis błędu");
 	define("A_REPORT", "Zgłoś");
-	define("TOO_SHORT", "Zgłoszenie jest zbyt krótkie!");
 	define("B_REPORTED", "Błąd zgłoszony.");
-	define("BUG_INFO", "Tutaj możesz zgłosić błąd w grze. Staraj się opisać dokładnie co się wydarzyło, co robiłeś zanim ten błąd wystąpił oraz jeżeli na ekranie pojawiły się jakieś informacje na ten temat, podaj je. Postaraj się nadać zgłoszeniu odpowiedni tytuł. Zgłoszenia typu \"Błąd\" bądź z niewiele mówiącym tytułem nie będą brane pod uwagę! Jeżeli nie wiesz co napisać skorzystaj z poradnika <a href=\"http://www.chiark.greenend.org.uk/~sgtatham/bugs-pl.html\">Jak efektywnie zgłaszać błędy</a>");
+	define("BUG_INFO", "Tutaj możesz zgłosić błąd w grze. Staraj się opisać dokładnie co się wydarzyło, co robiłeś zanim ten błąd wystąpił oraz jeżeli na ekranie pojawiły się jakieś informacje na ten temat, podaj je. Postaraj się nadać zgłoszeniu odpowiedni tytuł. Zgłoszenia typu \"Błąd\" bądź z niewiele mówiącym tytułem nie będą brane pod uwagę!");
       }
 
     elseif ($_GET['view'] == "changes") 

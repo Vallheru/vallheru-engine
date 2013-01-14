@@ -71,9 +71,9 @@
 {if $View == "bugreport"}
     {$Buginfo}<br /><br />
     <form method="post" action="account.php?view=bugreport&amp;step=report">
-        {$Bugname}: <input type="text" name="bugtitle" size="40" /><br /><br />
+        {$Bugname}: <input type="text" name="bugtitle" size="40" value="{$Bugtitle}" /><br /><br />
         {$Bugloc}: <input type="text" name="location" size="40" value="{$Loc}" /><br /><br />
-        {$Bugdesc}: <textarea name="desc" rows="13" cols="50"></textarea><br /><br />
+        {$Bugdesc}: <textarea name="desc" rows="13" cols="50">{$Bugdesc2}</textarea><br /><br />
         <input type="submit" value="{$Areport}" />
     </form>
 {/if}
