@@ -1,5 +1,9 @@
 2013-01-14  Bartek thindil Jasicki  <thindil@vallheru.net>
 
+	* UPDATE,install/db/update.sql: 
+	updated database
+	* UPDATE,admin.php: 
+	added new respone type to bugtrack
 	* UPDATE,templates/layout1/account.tpl, templates/account.tpl, languages/pl/account.php, account.php:
 	redesigned info about bug reporting
 

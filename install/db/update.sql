@@ -240,3 +240,11 @@ CREATE TABLE IF NOT EXISTS `teams` (
   `slot5` int(11) NOT NULL DEFAULT '0',
   KEY `id` (`id`)
 ) ENGINE=MyISAM DEFAULT CHARSET=utf8 AUTO_INCREMENT=1;
+CREATE TABLE `bug_comments` (
+`id` int( 11 ) NOT NULL AUTO_INCREMENT ,
+`bugid` int( 11 ) NOT NULL DEFAULT '0',
+`author` varchar( 40 ) NOT NULL DEFAULT '',
+`body` text NOT NULL ,
+`time` date DEFAULT NULL ,
+KEY `id` ( `id` )
+) ENGINE = MYISAM DEFAULT CHARSET = utf8;
