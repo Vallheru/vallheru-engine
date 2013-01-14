@@ -49,23 +49,51 @@
 {/if}
 
 {if $View == "bugtrack"}
-    {$Bugtrackinfo}<br /><br />
-    <table align="center">
-        <tr>
-            <th>{$Bugid}</td>
-            <th>{$Bugtype}</td>
-            <th>{$Bugloc}</td>
-            <th>{$Bugname}</td>
-        </tr>
-	{foreach $Bugs as $bug}
-	    <tr>
-	        <td align="center">{$bug.id}</td>
-	        <td align="center">{$bug.status}</td>
-	        <td align="center">{$bug.location}</td>
-	        <td align="center">{$bug.title}</td>
-	    </tr>
-	{/foreach}
-    </table>
+    {if $Bug == 0}
+        {$Bugtrackinfo}<br /><br />
+        <table align="center" width="95%">
+            <tr>
+                <th>{$Bugid}</td>
+            	<th>{$Bugtype}</td>
+            	<th>{$Bugloc}</td>
+            	<th>{$Bugname}</td>
+            </tr>
+	    {foreach $Bugs as $bug}
+	        <tr>
+		    <td>{$bug.id}</td>
+	            <td>{$bug.status}</td>
+	            <td>{$bug.location}</td>
+	            <td><a href="account.php?view=bugtrack&amp;bug={$bug.id}">{$bug.title}</a></td>
+	        </tr>
+	    {/foreach}
+        </table>
+    {else}
+        <b>{$Bugid}:</b> {$Bug2.id}<br />
+	<b>{$Bugtype}:</b> {$Bug2.status}<br />
+	<b>{$Bugloc}:</b> {$Bug2.location}<br />
+	<b>{$Bugname}:</b> {$Bug2.title}<br />
+	<b>{$Bugtext}:</b><br />{$Bug2.desc}<br /><br />
+        {if $Amount > "0"}
+            {section name=update loop=$Tauthor}
+                <b><a href="view.php?view={$Taid[update]}">{$Tauthor[update]}</a></b> {if $Tdate[update] != ""} ({$Tdate[update]}) {/if}{$Writed}: {if $Rank == "Admin"} (<a href="account.php?view=bugtrack&amp;bug={$Bug}&amp;action=delete&amp;cid={$Cid[update]}">{$Adelete}</a>) {/if}<br />
+                {$Tbody[update]}<br /><br />
+            {/section}
+        {/if}
+        {if $Tpages > 1}
+    	    <br />{$Fpage}
+    	    {for $page = 1 to $Tpages}
+	        {if $page == $Tpage}
+	            {$page}
+	        {else}
+                    <a href="account.php?view=bugtrack&amp;bug={$Bug}&page={$page}">{$page}</a>
+	        {/if}
+    	    {/for}
+        {/if}
+        <br /><br /><center>
+             {include file="comments.tpl"}
+        <br /><br />
+        <a href="account.php?view=bugtrack">{$Aback}</a></center>
+    {/if}
 {/if}
 
 {if $View == "bugreport"}

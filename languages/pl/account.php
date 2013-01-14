@@ -79,6 +79,9 @@ if (isset($_GET['view']))
       {
 	define("BUGTRACK_INFO", "Poniżej znajduje się lista zgłoszonych ale jeszcze nie naprawionych błędów.");
 	define("BUG_ID", "Numer");
+	define("C_ADDED", "Komentarz dodany!");
+	define("C_DELETED", "Komentarz skasowany!");
+	define("A_DELETE", "Skasuj");
       }
 
     if ($_GET['view'] == 'bugreport')

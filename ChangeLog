@@ -1,5 +1,8 @@
 2013-01-14  Bartek thindil Jasicki  <thindil@vallheru.net>
 
+	* FEATURE,templates/layout1/comments.tpl, templates/layout1/account.tpl, templates/comments.tpl, templates/account.tpl,
+	account.php, languages/pl/account.php: 
+	start work on new version of bugtrack
 	* UPDATE,install/db/update.sql: 
 	updated database
 	* UPDATE,admin.php: 

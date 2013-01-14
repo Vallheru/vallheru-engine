@@ -174,9 +174,40 @@ if (isset($_GET['view']))
      */
     elseif ($_GET['view'] == 'bugtrack')
       {
-	$arrBugs = $db->GetAll("SELECT `id`, `title`, `resolution`, `location` FROM `bugreport` ORDER BY `id` ASC");
-	foreach ($arrBugs as &$arrBug)
+	if (!isset($_GET['bug']))
 	  {
+	    $arrBugs = $db->GetAll("SELECT `id`, `title`, `resolution`, `location` FROM `bugreport` ORDER BY `id` ASC");
+	    foreach ($arrBugs as &$arrBug)
+	      {
+		switch ($arrBug['resolution'])
+		  {
+		  case 0:
+		    $arrBug['status'] = 'Oczekuje na sprawdzenie';
+		    break;
+		  case 2:
+		  case 3:
+		    $arrBug['status'] = 'Wymaga więcej informacji';
+		    break;
+		  default:
+		    break;
+		  }
+	      }
+	    $smarty -> assign(array("Bugtype" => "Status błędu",
+				    "Bugloc" => BUG_LOC,
+				    "Bugid" => BUG_ID,
+				    "Bugname" => BUG_NAME,
+				    "Bugtrackinfo" => BUGTRACK_INFO,
+				    "Bugs" => $arrBugs,
+				    "Bug" => 0));
+	  }
+	else
+	  {
+	    checkvalue($_GET['bug']);
+	    $arrBug = $db->GetRow("SELECT * FROM `bugreport` WHERE `id`=".$_GET['bug']);
+	    if (!$arrBug['id'])
+	      {
+		error('Nie ma takiego błędu.');
+	      }
 	    switch ($arrBug['resolution'])
 	      {
 	      case 0:
@@ -189,13 +220,64 @@ if (isset($_GET['view']))
 	      default:
 		break;
 	      }
+	    $smarty -> assign("Amount", '');
+    
+	    require_once('includes/comments.php');
+
+	    /**
+	     * Add comment
+	     */
+	    if (isset($_POST['body']))
+	      {
+		addcomments($_GET['bug'], 'bug_comments', 'bugid');
+	      }
+	    
+	    /**
+	     * Delete comment
+	     */
+	    if (isset($_GET['action']) && $_GET['action'] == 'delete')
+	      {
+		deletecomments('bug_comments');
+	      }
+	    
+	    /**
+	     * Display comments
+	     */
+	    if (!isset($_GET['page']))
+	      {
+		$intPage = -1;
+	      }
+	    else
+	      {
+		$intPage = $_GET['page'];
+	      }
+	    $amount = displaycomments($_GET['bug'], 'bugreport', 'bug_comments', 'bugid');
+	    $smarty -> assign(array("Tauthor" => $arrAuthor,
+				    "Taid" => $arrAuthorid,
+				    "Tbody" => $arrBody,
+				    "Amount" => $amount,
+				    "Cid" => $arrId,
+				    "Tdate" => $arrDate,
+				    "Nocomments" => "Brak komentarzy",
+				    "Addcomment" => "Dodaj komentarz",
+				    "Adelete" => "Skasuj",
+				    "Aadd" => "Dodaj",
+				    "Aback" => "Wróć",
+				    "Tpages" => $intPages,
+				    "Tpage" => $intPage,
+				    "Fpage" => "Idź do strony:",
+				    "Faction" => "account.php?view=bugtrack&amp;bug=".$_GET['bug'],
+				    "Bug" => $_GET['bug'],
+				    "Bugtype" => "Status błędu",
+				    "Bugtext" => "Treść",
+				    "Bugloc" => BUG_LOC,
+				    "Bugid" => BUG_ID,
+				    "Bugname" => BUG_NAME,
+				    "Bug2" => $arrBug,
+				    "Rank" => $player->rank,
+				    "Abold" => "",
+				    "Writed" => "napisał(a)"));
 	  }
-	$smarty -> assign(array("Bugtype" => "Status błędu",
-				"Bugloc" => BUG_LOC,
-				"Bugid" => BUG_ID,
-				"Bugname" => BUG_NAME,
-				"Bugtrackinfo" => BUGTRACK_INFO,
-				"Bugs" => $arrBugs));
       }
 
     /**
