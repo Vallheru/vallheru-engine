@@ -4,11 +4,11 @@
  *   Admin panel
  *
  *   @name                 : admin.php                            
- *   @copyright            : (C) 2004,2005,2006,2007,2011,2012 Vallheru Team based on Gamers-Fusion ver 2.5
+ *   @copyright            : (C) 2004,2005,2006,2007,2011,2012,2013 Vallheru Team based on Gamers-Fusion ver 2.5
  *   @author               : thindil <thindil@vallheru.net>
  *   @author               : eyescream <tduda@users.sourceforge.net>
  *   @version              : 1.7
- *   @since                : 12.12.2012
+ *   @since                : 21.01.2013
  *
  */
  
@@ -93,8 +93,8 @@ if (isset($_GET['view']))
 	      default:
 		break;
 	      }
-	    $arrOptions = array(BUG_FIXED, NOT_BUG, WORK_FOR_ME, MORE_INFO, BUG_DOUBLE);
-	    $arrActions = array('fixed', 'notbug', 'workforme', 'moreinfo', 'duplicate');
+	    $arrOptions = array(BUG_FIXED, NOT_BUG, WORK_FOR_ME, MORE_INFO, BUG_DOUBLE, "Nieprawidłowe zgłoszenie");
+	    $arrActions = array('fixed', 'notbug', 'workforme', 'moreinfo', 'duplicate', 'invalid');
 	    $smarty -> assign(array("Bugdesc" => BUG_DESC,
 				    "Bugactions" => BUG_ACTIONS,
 				    "Bugoptions" => $arrOptions,
@@ -147,6 +147,10 @@ if (isset($_GET['view']))
 		    $strInfo = $strInfo.BUG_DOUBLE2;
 		    $strMessage = BUG_DOUBLE3;
 		    break;
+		  case 5:
+		    $strInfo = $strInfo."</b> zostało odrzucone. <b>Przyczyna:</b> zgłoszenie nie zawierało niezbędnych informacji.";
+		    $strMessage = "Oznaczyłeś ten błąd jako nieprawidłowe zgłoszenie.";
+		    break;
 		  default:
 		    break;
 		  }
@@ -158,15 +162,12 @@ if (isset($_GET['view']))
 		  {
 		    $db->Execute("UPDATE `bugreport` SET `resolution`=".$intKey." WHERE `id`=".$_GET['step']);
 		  }
-		//Send comment as a message to player
+		//Add a comment to bug report
 		if (isset($_POST['bugcomment']) && !empty($_POST['bugcomment']))
 		  {
-		    $objTopic = $db->Execute("SELECT max(`topic`) FROM `mail`");
-		    $intTopic = $objTopic->fields['max(`topic`)'] + 1;
-		    $objTopic->Close();
-		    $rec = $db->Execute("SELECT `user` FROM `players` WHERE `id`=".$objBug->fields['sender']);
-		    $db -> Execute("INSERT INTO mail (`sender`, `senderid`, `owner`, `subject`, `body`, `date`, `topic`, `unread`, `to`, `toname`) VALUES('".$player->user."','".$player->id."',".$objBug->fields['sender'].", 'Komentarz do twojego zgłoszenia błedu: ".$objBug->fields['title']."' , '".$_POST['bugcomment']."', ".$strDate.", ".$intTopic.", 'F', ".$objBug->fields['sender'].", '".$rec->fields['user']."')");
-		    $rec->Close();
+		    require_once('includes/bbcode.php');
+		    $_POST['bugcomment'] = bbcodetohtml($_POST['bugcomment']);
+		    $db->Execute("INSERT INTO `bug_comments` (`bugid`, `author`, `body`, `time`) VALUES(".$_GET['step'].", '".$player->user." ID:".$player->id."', '".$_POST['bugcomment']."', '".$data."')");
 		  }
 		$db -> Execute("INSERT INTO `log` (`owner`, `log`, `czas`, `type`) VALUES(".$objBug -> fields['sender'].", '".$strInfo."', ".$strDate.", 'A')");
 	        message('success', $strMessage);

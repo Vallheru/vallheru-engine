@@ -8,7 +8,7 @@
  *   @author               : thindil <thindil@vallheru.net>
  *   @author               : eyescream <tduda@users.sourceforge.net>
  *   @version              : 1.7
- *   @since                : 03.01.2013
+ *   @since                : 21.01.2013
  *
  */
 
@@ -142,7 +142,7 @@ if (isset($_GET['view']) && $_GET['view'] == 'bugreport')
     define("NOT_BUG3", "</b> nie jest błędem.");
     define("HAS_FIXED", "</b> został naprawiony.");
     define("MORE_INFO2", "</b> wymaga więcej informacji aby mogło zostać naprawione.");
-    define("WORK_FOR_ME2", "</b> zostało odrzucone. <b>Przyczyna:</b> u mnie działa poprawnie.");
+    define("WORK_FOR_ME2", "</b> zostało zaktualizowane. <b>Przyczyna:</b> u mnie działa poprawnie, wymaga więcej informacji aby mogło zostać naprawione.");
     define("BUG_DOUBLE2", "</b> zostało odrzucone. <b>Przyczyna:</b> wcześniej ktoś zgłosił już ten błąd.");
     define("NOT_BUG2", "Oznaczyłeś ten błąd jako nieprawidłowy.");
     define("HAS_FIXED2", "Oznaczyłeś ten błąd jako naprawiony.");

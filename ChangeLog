@@ -1,5 +1,7 @@
 2013-01-21  Bartek thindil Jasicki  <thindil@vallheru.net>
 
+	* FEATURE,languages/pl/admin.php, admin.php: 
+	finished work on new version of bugtrack
 	* BUG,class/player_class.php:
 	fixed bonus from equipment
 
