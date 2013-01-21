@@ -1,3 +1,8 @@
+2013-01-21  Bartek thindil Jasicki  <thindil@vallheru.net>
+
+	* BUG,class/player_class.php:
+	fixed bonus from equipment
+
 2013-01-14  Bartek thindil Jasicki  <thindil@vallheru.net>
 
 	* FEATURE,templates/layout1/comments.tpl, templates/layout1/account.tpl, templates/comments.tpl, templates/account.tpl,

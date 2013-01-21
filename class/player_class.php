@@ -7,7 +7,7 @@
  *   @copyright            : (C) 2004,2005,2006,2007,2011,2012,2013 Vallheru Team based on Gamers-Fusion ver 2.5
  *   @author               : thindil <thindil@vallheru.net>
  *   @version              : 1.7
- *   @since                : 10.01.2013
+ *   @since                : 21.01.2013
  *
  */
 
@@ -272,20 +272,11 @@ class Player
       global $db;
 
       //Add bonuses from equipment
-      $arrIndex = array(0, 2, 3, 4, 5);
-      foreach ($arrIndex as $intIndex)
+      foreach ($this->equip as $arrEquip)
 	{
-	  if ($this->equip[$intIndex][0])
+	  if ($arrEquip[0])
 	    {
-	      if ($this->equip[$intIndex][5] < 0)
-		{
-		  $intAgibonus = str_replace("-","",$this->equip[$intIndex][5]);
-		}
-	      elseif ($this->equip[$intIndex][5] >= 0) 
-		{
-		  $intAgibonus = 0 - $this->equip[$intIndex][5];
-		}
-	      $this->stats['agility'][2] += $intAgibonus;
+	      $this->stats['agility'][2] += ($arrEquip[5] * -1);
 	    }
 	}
       if ($this->equip[1][0])
