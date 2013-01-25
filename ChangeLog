@@ -1,3 +1,8 @@
+2013-01-25  Bartek thindil Jasicki  <thindil@vallheru.net>
+
+	* BUG,tribeminerals.php:
+	fixed bug with giving minerals from tribe
+
 2013-01-21  Bartek thindil Jasicki  <thindil@vallheru.net>
 
 	* FEATURE,languages/pl/admin.php, admin.php: 

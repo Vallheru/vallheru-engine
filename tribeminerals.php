@@ -7,7 +7,7 @@
  *   @copyright            : (C) 2012,2013 Vallheru Team based on Gamers-Fusion ver 2.5
  *   @author               : thindil <thindil@vallheru.net>
  *   @version              : 1.7
- *   @since                : 07.01.2013
+ *   @since                : 25.01.2013
  *
  */
 
@@ -212,56 +212,59 @@ if (isset ($_GET['daj']) && $_GET['daj'])
 	$give = $_GET['daj'];
 	if (($arrAmount[$intKey] - $arrReserved[$intKey]) < $_POST['ilosc']) 
 	  {
-	    error ("Klan nie ma dostępnej takiej ilości ".$arrName[$intKey]."!");
-	  }
-	if (!isset($intReserved))
-	  {
-	    $intReserved = 0;
-	  }
-	if (!in_array($give, array('credits', 'platinum')))
-	  {
-	    $kop = $db -> Execute("SELECT `owner` FROM `minerals` WHERE `owner`=".$_POST['did']);
-	    if (!$kop -> fields['owner']) 
-	      {
-		$db -> Execute("INSERT INTO `minerals` (`owner`, `".$give."`) VALUES(".$_POST['did'].",".$_POST['ilosc'].")");
-	      } 
-	    else 
-	      {
-		$db -> Execute("UPDATE `minerals` SET `".$give."`=`".$give."`+".$_POST['ilosc']." WHERE `owner`=".$_POST['did']);
-	      }
-	    $kop -> Close();
-	    $db -> Execute("UPDATE `tribe_minerals` SET `".$give."`=`".$give."`-".$_POST['ilosc'].", `r".$_GET['daj']."`=`r".$_GET['daj']."`-".$intReserved." WHERE `id`=".$mytribe -> fields['id']);
+	    message('error', "Klan nie ma dostępnej takiej ilości ".$arrName[$intKey]."!");
 	  }
 	else
 	  {
-	    $db -> Execute("UPDATE `tribes` SET `".$give."`=`".$give."`-".$_POST['ilosc'].", `r".$_GET['daj']."`=`r".$_GET['daj']."`-".$intReserved." WHERE `id`=".$mytribe -> fields['id']);
-	    $db->Execute("UPDATE `players` SET `".$give."`=`".$give."`+".$_POST['ilosc']." WHERE `id`=".$_POST['did']);
-	  }
+	    if (!isset($intReserved))
+	      {
+		$intReserved = 0;
+	      }
+	    if (!in_array($give, array('credits', 'platinum')))
+	      {
+		$kop = $db -> Execute("SELECT `owner` FROM `minerals` WHERE `owner`=".$_POST['did']);
+		if (!$kop -> fields['owner']) 
+		  {
+		    $db -> Execute("INSERT INTO `minerals` (`owner`, `".$give."`) VALUES(".$_POST['did'].",".$_POST['ilosc'].")");
+		  } 
+		else 
+		  {
+		    $db -> Execute("UPDATE `minerals` SET `".$give."`=`".$give."`+".$_POST['ilosc']." WHERE `owner`=".$_POST['did']);
+		  }
+		$kop -> Close();
+		$db -> Execute("UPDATE `tribe_minerals` SET `".$give."`=`".$give."`-".$_POST['ilosc'].", `r".$_GET['daj']."`=`r".$_GET['daj']."`-".$intReserved." WHERE `id`=".$mytribe -> fields['id']);
+	      }
+	    else
+	      {
+		$db -> Execute("UPDATE `tribes` SET `".$give."`=`".$give."`-".$_POST['ilosc'].", `r".$_GET['daj']."`=`r".$_GET['daj']."`-".$intReserved." WHERE `id`=".$mytribe -> fields['id']);
+		$db->Execute("UPDATE `players` SET `".$give."`=`".$give."`+".$_POST['ilosc']." WHERE `id`=".$_POST['did']);
+	      }
+	    
+	    // Get name of the person which receives minerals.
+	    $objGetName = $db -> Execute("SELECT `user` FROM `players` WHERE `id`=".$_POST['did'].';');
+	    $strReceiversName = $objGetName -> fields['user'];
+	    $objGetName -> Close();
+	    unset( $objGetName );
         
-	// Get name of the person which receives minerals.
-	$objGetName = $db -> Execute("SELECT `user` FROM `players` WHERE `id`=".$_POST['did'].';');
-	$strReceiversName = $objGetName -> fields['user'];
-	$objGetName -> Close();
-	unset( $objGetName );
-        
-	message("success",  'Klan przekazał graczowi <b><a href="view.php?view='.$_POST['did'].'">'.$strReceiversName.'</a></b>, ID '.$_POST['did']." ".$_POST['ilosc']." ".$arrName[$intKey]);
-	$_GET['step4'] = '';
-	$_GET['daj'] = '';
-	$arrAmount[$intKey] -= $_POST['ilosc'];
-	/**
-	 * Send information about give minerals to player
-	 */
-	$strDate = $db -> DBDate($newdate);
-	$db -> Execute("INSERT INTO `log` (`owner`, `log`, `czas`, `type`) VALUES(".$mytribe -> fields['owner'].", '".'Klan przekazał graczowi <b><a href="view.php?view='.$_POST['did'].'">'.$strReceiversName.'</a></b>, ID <b>'.$_POST['did']."</b> ".$_POST['ilosc']." ".$arrName[$intKey].".', ".$strDate.", 'C')");
-	$db -> Execute("INSERT INTO `logs` (`owner`, `log`, `czas`) VALUES(".$mytribe -> fields['owner'].", '".'Klan przekazał graczowi <b><a href="view.php?view='.$_POST['did'].'">'.$strReceiversName.'</a></b>, ID <b>'.$_POST['did']."</b> ".$_POST['ilosc']." ".$arrName[$intKey].".', ".$strDate.")");
-	$objPerm = $db -> Execute("SELECT `player` FROM `tribe_perm` WHERE `tribe`=".$mytribe -> fields['id']." AND `bank`=1");
-	while (!$objPerm -> EOF)
-	  {
-	    $db -> Execute("INSERT INTO `log` (`owner`, `log`, `czas`, `type`) VALUES(".$objPerm -> fields['player'].", '".'Klan przekazał graczowi <b><a href="view.php?view='.$_POST['did'].'">'.$strReceiversName.'</a></b>, ID <b>'.$_POST['did']."</b> ".$_POST['ilosc']." ".$arrName[$intKey].".', ".$strDate.", 'C')");
-	    $objPerm -> MoveNext();
+	    message("success",  'Klan przekazał graczowi <b><a href="view.php?view='.$_POST['did'].'">'.$strReceiversName.'</a></b>, ID '.$_POST['did']." ".$_POST['ilosc']." ".$arrName[$intKey]);
+	    $_GET['step4'] = '';
+	    $_GET['daj'] = '';
+	    $arrAmount[$intKey] -= $_POST['ilosc'];
+	    /**
+	     * Send information about give minerals to player
+	     */
+	    $strDate = $db -> DBDate($newdate);
+	    $db -> Execute("INSERT INTO `log` (`owner`, `log`, `czas`, `type`) VALUES(".$mytribe -> fields['owner'].", '".'Klan przekazał graczowi <b><a href="view.php?view='.$_POST['did'].'">'.$strReceiversName.'</a></b>, ID <b>'.$_POST['did']."</b> ".$_POST['ilosc']." ".$arrName[$intKey].".', ".$strDate.", 'C')");
+	    $db -> Execute("INSERT INTO `logs` (`owner`, `log`, `czas`) VALUES(".$mytribe -> fields['owner'].", '".'Klan przekazał graczowi <b><a href="view.php?view='.$_POST['did'].'">'.$strReceiversName.'</a></b>, ID <b>'.$_POST['did']."</b> ".$_POST['ilosc']." ".$arrName[$intKey].".', ".$strDate.")");
+	    $objPerm = $db -> Execute("SELECT `player` FROM `tribe_perm` WHERE `tribe`=".$mytribe -> fields['id']." AND `bank`=1");
+	    while (!$objPerm -> EOF)
+	      {
+		$db -> Execute("INSERT INTO `log` (`owner`, `log`, `czas`, `type`) VALUES(".$objPerm -> fields['player'].", '".'Klan przekazał graczowi <b><a href="view.php?view='.$_POST['did'].'">'.$strReceiversName.'</a></b>, ID <b>'.$_POST['did']."</b> ".$_POST['ilosc']." ".$arrName[$intKey].".', ".$strDate.", 'C')");
+		$objPerm -> MoveNext();
+	      }
+	    $objPerm -> Close();
+	    $db -> Execute("INSERT INTO `log` (`owner`, `log`, `czas`, `type`) VALUES(".$_POST['did'].", 'Dostałeś od klanu ".$_POST['ilosc']." ".$arrName[$intKey].".', ".$strDate.", 'C')");
 	  }
-	$objPerm -> Close();
-	$db -> Execute("INSERT INTO `log` (`owner`, `log`, `czas`, `type`) VALUES(".$_POST['did'].", 'Dostałeś od klanu ".$_POST['ilosc']." ".$arrName[$intKey].".', ".$strDate.", 'C')");
       }
   }
 
