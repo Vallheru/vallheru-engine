@@ -4,10 +4,10 @@
  *   Armory shop - buying armors, legs, helmets and shields
  *
  *   @name                 : armor.php                            
- *   @copyright            : (C) 2004,2005,2006,2011,2012 Vallheru Team based on Gamers-Fusion ver 2.5
+ *   @copyright            : (C) 2004,2005,2006,2011,2012,2013 Vallheru Team based on Gamers-Fusion ver 2.5
  *   @author               : thindil <thindil@vallheru.net>
- *   @version              : 1.6
- *   @since                : 19.06.2012
+ *   @version              : 1.7
+ *   @since                : 28.01.2013
  *
  */
 
@@ -151,11 +151,20 @@ if (!isset($_GET['dalej']))
     $_GET['dalej'] = '';
 }
 
+if ($player->clas == 'Złodziej' && $player->energy > 2)
+  {
+    $intCrime = 1;
+  }
+ else
+   {
+     $intCrime = 0;
+   }
+
 /**
 * Assign variables and display page
 */
 $smarty -> assign(array("Next" => $_GET['dalej'], 
-			"Crime" => $player -> crime));
+			"Crime" => $intCrime));
 $smarty -> display ('armor.tpl');
 
 require_once("includes/foot.php");

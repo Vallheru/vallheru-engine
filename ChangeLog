@@ -1,5 +1,7 @@
 2013-01-28  Bartek thindil Jasicki  <thindil@vallheru.net>
 
+	* BUG,armor.php, bows.php, weapons.php: 
+	fixed link to steal items
 	* BUG,tribeadmin.php, tribearmor.php, tribeherbs.php, tribeminerals.php, tribeware.php: 
 	fixed giving items from tribes
 	* UPDATE,admin.php:

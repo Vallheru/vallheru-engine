@@ -4,10 +4,10 @@
  *   Fletcher shop - buy arrows and bows
  *
  *   @name                 : bows.php                            
- *   @copyright            : (C) 2004,2005,2006,2011,2012 Vallheru Team based on Gamers-Fusion ver 2.5
+ *   @copyright            : (C) 2004,2005,2006,2011,2012,2013 Vallheru Team based on Gamers-Fusion ver 2.5
  *   @author               : thindil <thindil@vallheru.net>
  *   @version              : 1.7
- *   @since                : 13.11.2012
+ *   @since                : 28.01.2013
  *
  */
 
@@ -210,10 +210,15 @@ if (isset ($_GET['steal']))
     require_once("includes/checkexp.php");
     steal($_GET['steal']);
 }
-if ($player -> clas != 'Złodziej') 
-{
-    $player -> crime = 0;
-}
+
+if ($player->clas == 'Złodziej' && $player->energy > 2)
+  {
+    $intCrime = 1;
+  }
+ else
+   {
+     $intCrime = 0;
+   }
 
 /**
 * Assign variables and display page
@@ -237,7 +242,7 @@ $smarty -> assign ( array("Name" => $arrname,
 			  "Abuy" => A_BUY,
 			  "Asteal" => A_STEAL,
 			  "Arrows" => $_GET['arrows'],
-			  "Crime" => $player -> crime,
+			  "Crime" => $intCrime,
 			  "Location" => $player -> location));
 $smarty -> display ('bows.tpl');
 
