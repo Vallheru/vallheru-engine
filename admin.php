@@ -8,7 +8,7 @@
  *   @author               : thindil <thindil@vallheru.net>
  *   @author               : eyescream <tduda@users.sourceforge.net>
  *   @version              : 1.7
- *   @since                : 21.01.2013
+ *   @since                : 28.01.2013
  *
  */
  
@@ -167,7 +167,14 @@ if (isset($_GET['view']))
 		  {
 		    require_once('includes/bbcode.php');
 		    $_POST['bugcomment'] = bbcodetohtml($_POST['bugcomment']);
-		    $db->Execute("INSERT INTO `bug_comments` (`bugid`, `author`, `body`, `time`) VALUES(".$_GET['step'].", '".$player->user." ID:".$player->id."', '".$_POST['bugcomment']."', '".$data."')");
+		    if (in_array($intKey, array(2, 3)))
+		      {
+			$db->Execute("INSERT INTO `bug_comments` (`bugid`, `author`, `body`, `time`) VALUES(".$_GET['step'].", '".$player->user." ID:".$player->id."', '".$_POST['bugcomment']."', '".$data."')");
+		      }
+		    else
+		      {
+			$strInfo .= ' Dodatkowe informacje: '.$_POST['bugcomment'];
+		      }
 		  }
 		$db -> Execute("INSERT INTO `log` (`owner`, `log`, `czas`, `type`) VALUES(".$objBug -> fields['sender'].", '".$strInfo."', ".$strDate.", 'A')");
 	        message('success', $strMessage);
