@@ -4,10 +4,10 @@
  *   Manage clans
  *
  *   @name                 : tribeadmin.php                            
- *   @copyright            : (C) 2012 Vallheru Team based on Gamers-Fusion ver 2.5
+ *   @copyright            : (C) 2012,2013 Vallheru Team based on Gamers-Fusion ver 2.5
  *   @author               : thindil <thindil@vallheru.net>
  *   @version              : 1.7
- *   @since                : 13.12.2012
+ *   @since                : 28.01.2013
  *
  */
 
@@ -155,35 +155,6 @@ else
 		if ($_POST[$objAsks->fields['id']] == 'Odrzuć')
 		  {
 		    $arrRejected[] = $objAsks->fields['pid'];
-		    switch ($objAsks->fields['type'])
-		      {
-			//Items
-		      case 'A':
-			$db->Execute("UPDATE `tribe_zbroj` SET `reserved`=`reserved`-".$objAsks->fields['amount']." WHERE `id`=".$objAsks->fields['iid']);
-			break;
-			//Potions
-		      case 'P':
-			$db->Execute("UPDATE `tribe_mag` SET `reserved`=`reserved`-".$objAsks->fields['amount']." WHERE `id`=".$objAsks->fields['iid']);
-			break;
-			//Herbs
-		      case 'H':
-			$db->Execute("UPDATE `tribe_herbs` SET `r".$arrSqlname[$objAsks->fields['iid']]."`=`r".$arrSqlname[$objAsks->fields['iid']]."`-".$objAsks->fields['amount']." WHERE `id`=".$player->tribe);
-			break;
-			//Minerals
-		      case 'M':
-			if (!in_array($arrSqlname2[$objAsks->fields['iid']], array('credits', 'platinum')))
-			  {
-			    $db->Execute("UPDATE `tribe_minerals` SET `r".$arrSqlname2[$objAsks->fields['iid']]."`=`r".$arrSqlname2[$objAsks->fields['iid']]."`-".$objAsks->fields['amount']." WHERE `id`=".$player->tribe);
-			  }
-			else
-			  {
-			    $db->Execute("UPDATE `tribes` SET `r".$arrSqlname2[$objAsks->fields['iid']]."`=`r".$arrSqlname2[$objAsks->fields['iid']]."`-".$objAsks->fields['amount']." WHERE `id`=".$player->tribe);
-			  }
-			break;
-		      default:
-			break;
-		      }
-		    
 		  }
 		else
 		  {
@@ -222,6 +193,34 @@ else
 			    require('tribeminerals.php');
 			  }
 		      }
+		  }
+		switch ($objAsks->fields['type'])
+		  {
+		    //Items
+		  case 'A':
+		    $db->Execute("UPDATE `tribe_zbroj` SET `reserved`=`reserved`-".$objAsks->fields['amount']." WHERE `id`=".$objAsks->fields['iid']);
+		    break;
+		    //Potions
+		  case 'P':
+		    $db->Execute("UPDATE `tribe_mag` SET `reserved`=`reserved`-".$objAsks->fields['amount']." WHERE `id`=".$objAsks->fields['iid']);
+		    break;
+		    //Herbs
+		  case 'H':
+		    $db->Execute("UPDATE `tribe_herbs` SET `r".$arrSqlname[$objAsks->fields['iid']]."`=`r".$arrSqlname[$objAsks->fields['iid']]."`-".$objAsks->fields['amount']." WHERE `id`=".$player->tribe);
+		    break;
+		    //Minerals
+		  case 'M':
+		    if (!in_array($arrSqlname2[$objAsks->fields['iid']], array('credits', 'platinum')))
+		      {
+			$db->Execute("UPDATE `tribe_minerals` SET `r".$arrSqlname2[$objAsks->fields['iid']]."`=`r".$arrSqlname2[$objAsks->fields['iid']]."`-".$objAsks->fields['amount']." WHERE `id`=".$player->tribe);
+		      }
+		    else
+		      {
+			$db->Execute("UPDATE `tribes` SET `r".$arrSqlname2[$objAsks->fields['iid']]."`=`r".$arrSqlname2[$objAsks->fields['iid']]."`-".$objAsks->fields['amount']." WHERE `id`=".$player->tribe);
+		      }
+		    break;
+		  default:
+		    break;
 		  }
 		$objAsks->MoveNext();
 	      }

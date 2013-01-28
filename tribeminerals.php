@@ -7,7 +7,7 @@
  *   @copyright            : (C) 2012,2013 Vallheru Team based on Gamers-Fusion ver 2.5
  *   @author               : thindil <thindil@vallheru.net>
  *   @version              : 1.7
- *   @since                : 25.01.2013
+ *   @since                : 28.01.2013
  *
  */
 
@@ -210,16 +210,16 @@ if (isset ($_GET['daj']) && $_GET['daj'])
 	  }
 	$dtrib -> Close();
 	$give = $_GET['daj'];
-	if (($arrAmount[$intKey] - $arrReserved[$intKey]) < $_POST['ilosc']) 
+	if (!isset($intReserved))
+	  {
+	    $intReserved = 0;
+	  }
+	if (($arrAmount[$intKey] - $arrReserved[$intKey]) < ($_POST['ilosc'] - $intReserved)) 
 	  {
 	    message('error', "Klan nie ma dostępnej takiej ilości ".$arrName[$intKey]."!");
 	  }
 	else
 	  {
-	    if (!isset($intReserved))
-	      {
-		$intReserved = 0;
-	      }
 	    if (!in_array($give, array('credits', 'platinum')))
 	      {
 		$kop = $db -> Execute("SELECT `owner` FROM `minerals` WHERE `owner`=".$_POST['did']);
@@ -232,11 +232,11 @@ if (isset ($_GET['daj']) && $_GET['daj'])
 		    $db -> Execute("UPDATE `minerals` SET `".$give."`=`".$give."`+".$_POST['ilosc']." WHERE `owner`=".$_POST['did']);
 		  }
 		$kop -> Close();
-		$db -> Execute("UPDATE `tribe_minerals` SET `".$give."`=`".$give."`-".$_POST['ilosc'].", `r".$_GET['daj']."`=`r".$_GET['daj']."`-".$intReserved." WHERE `id`=".$mytribe -> fields['id']);
+		$db -> Execute("UPDATE `tribe_minerals` SET `".$give."`=`".$give."`-".$_POST['ilosc']." WHERE `id`=".$mytribe -> fields['id']);
 	      }
 	    else
 	      {
-		$db -> Execute("UPDATE `tribes` SET `".$give."`=`".$give."`-".$_POST['ilosc'].", `r".$_GET['daj']."`=`r".$_GET['daj']."`-".$intReserved." WHERE `id`=".$mytribe -> fields['id']);
+		$db -> Execute("UPDATE `tribes` SET `".$give."`=`".$give."`-".$_POST['ilosc']." WHERE `id`=".$mytribe -> fields['id']);
 		$db->Execute("UPDATE `players` SET `".$give."`=`".$give."`+".$_POST['ilosc']." WHERE `id`=".$_POST['did']);
 	      }
 	    

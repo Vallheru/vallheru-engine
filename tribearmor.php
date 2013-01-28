@@ -4,11 +4,11 @@
  *   Tribe armor - weapons and armors
  *
  *   @name                 : tribearmor.php                            
- *   @copyright            : (C) 2004,2005,2006,2007,2011,2012 Vallheru Team based on Gamers-Fusion ver 2.5
+ *   @copyright            : (C) 2004,2005,2006,2007,2011,2012,2013 Vallheru Team based on Gamers-Fusion ver 2.5
  *   @author               : thindil <thindil@vallheru.net>
  *   @author               : eyescream <tduda@users.sourceforge.net>
- *   @version              : 1.6
- *   @since                : 20.08.2012
+ *   @version              : 1.7
+ *   @since                : 28.01.2013
  *
  */
 
@@ -460,7 +460,7 @@ if (isset ($_GET['daj']))
 	      }
 	    if ($_POST['amount'] < $zbroj -> fields['amount']) 
 	      {
-		$db -> Execute("UPDATE tribe_zbroj SET amount=amount-".$_POST['amount'].", `reserved`=`reserved`-".$intReserved." WHERE id=".$zbroj -> fields['id']);
+		$db -> Execute("UPDATE tribe_zbroj SET amount=amount-".$_POST['amount']." WHERE id=".$zbroj -> fields['id']);
 	      } 
             else 
 	      {
@@ -484,7 +484,7 @@ if (isset ($_GET['daj']))
 	      }
 	    if ($_POST['amount'] < $zbroj -> fields['wt']) 
 	      {
-		$db -> Execute("UPDATE tribe_zbroj SET `wt`=`wt-".$_POST['amount'].", `reserved`=`reserved`-".$intReserved." WHERE `id`=".$zbroj -> fields['id']);
+		$db -> Execute("UPDATE tribe_zbroj SET `wt`=`wt-".$_POST['amount']." WHERE `id`=".$zbroj -> fields['id']);
 	      } 
             else 
 	      {

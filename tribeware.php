@@ -258,7 +258,7 @@ if (isset ($_GET['daj']))
 	  }
         if ($_POST['amount'] < $zbroj -> fields['amount']) 
         {
-            $db -> Execute("UPDATE `tribe_mag` SET `amount`=`amount`-".$_POST['amount'].", `reserved`=`reserved`-".$intReserved." WHERE `id`=".$zbroj -> fields['id']);
+            $db -> Execute("UPDATE `tribe_mag` SET `amount`=`amount`-".$_POST['amount']." WHERE `id`=".$zbroj -> fields['id']);
         } 
             else 
         {
