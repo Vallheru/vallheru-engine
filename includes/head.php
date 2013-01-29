@@ -4,10 +4,10 @@
  *   Main file of game, compress site, get information about player from database and more
  *
  *   @name                 : head.php                            
- *   @copyright            : (C) 2004,2005,2006,2007,2011,2012 Vallheru Team based on Gamers-Fusion ver 2.5
+ *   @copyright            : (C) 2004,2005,2006,2007,2011,2012,2013 Vallheru Team based on Gamers-Fusion ver 2.5
  *   @author               : thindil <thindil@vallheru.net>
  *   @version              : 1.7
- *   @since                : 14.12.2012
+ *   @since                : 29.01.2013
  *
  */
 
@@ -663,6 +663,9 @@ switch ($player->rank)
     break;
   case 'Staff':
     $smarty -> assign ("Special", "<li><a href=\"staff.php\">".PRINCE."</a></li>");
+    break;
+  case 'Budowniczy':
+    $smarty -> assign ("Special", '<li><a href="staff.php">Budowniczy</a></li>');
     break;
   case 'Sędzia':
     $smarty -> assign ("Special", "<li><a href=\"sedzia.php\">".JUDGE."</a></li>");

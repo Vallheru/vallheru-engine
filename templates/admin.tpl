@@ -421,26 +421,7 @@
 
 {if $View == "add"}
     <form method="post" action="admin.php?view=add&amp;step=add">
-    {$Addid} <input type="text" name="aid" /> {$Newrank}
-    <select name="rank">
-    <option value="Member">{$Rmember}</option>
-    <option value="Admin">{$Rking}</option>
-    <option value="Staff">{$Rstaff}</option>
-    <option value="Sędzia">{$Rjudge}</option>
-    <option value="Ławnik">{$Rjudge2}</option>
-    <option value="Prawnik">{$Rlawyer}</option>
-    <option value="Żebrak">{$Rbeggar}</option>
-    <option value="Barbarzyńca">{$Rbarbarian}</option>
-    <option value="Bibliotekarz">{$Rscribe}</option>
-    <option value="Rycerz">{$Rknight}</option>
-    <option value="Dama">{$Rlady}</option>
-    <option value="Marszałek Rady">{$Rcount}</option>
-    <option value="Poseł">{$Rcount2}</option>
-    <option value="Kanclerz Sądu">{$Rjudge3}</option>
-    <option value="Redaktor">{$Rredactor}</option>
-    <option value="Karczmarka">{$Rinnkeeper}</option>
-    <option value="Prokurator">{$Rprocurator}</option>
-    </select>. <input type="submit" value="{$Aadd}" />
+    {$Addid} <input type="text" name="aid" size="5" /> {$Newrank} {html_options name=rank options=$Ranks}. <input type="submit" value="{$Aadd}" />
     </form>
 {/if}
 

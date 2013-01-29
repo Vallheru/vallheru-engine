@@ -8,7 +8,7 @@
  *   @author               : thindil <thindil@vallheru.net>
  *   @author               : eyescream <tduda@users.sourceforge.net>
  *   @version              : 1.7
- *   @since                : 28.01.2013
+ *   @since                : 29.01.2013
  *
  */
  
@@ -195,8 +195,8 @@ if (isset($_GET['view']))
 	    $objCatforum -> MoveNext();
 	  }
 	$objCatforum -> Close();
-	$arrOptions = array('All;', 'Staff;', 'Sędzia;', 'Kanclerz Sądu;', 'Marszałek Rady;', 'Poseł;', 'Prawnik;', 'Ławnik;', 'Prokurator;');
-	$arrOptionname = array(T_ALL, T_STAFF, T_JUDGE, T_JUDGE2, T_COUNT, T_COUNT2, T_LAWYER, T_JUDGE3, T_PROCURATOR);
+	$arrOptions = array('All;', 'Staff;', 'Sędzia;', 'Kanclerz Sądu;', 'Marszałek Rady;', 'Poseł;', 'Prawnik;', 'Ławnik;', 'Prokurator;', 'Budowniczy;');
+	$arrOptionname = array(T_ALL, T_STAFF, T_JUDGE, T_JUDGE2, T_COUNT, T_COUNT2, T_LAWYER, T_JUDGE3, T_PROCURATOR, 'Budowniczy');
 	$arrLangsel = array('', '');
 	$arrOptionwsel = array();
 	$arrOptionvsel = array();
@@ -893,25 +893,27 @@ if (isset($_GET['view']))
      */
     elseif ($_GET['view'] == 'add') 
       {
+	$arrRanks = array("Member" => "Mieszkaniec",
+			  "Admin" => "Władca",
+			  "Staff" => "Książę",
+			  "Sędzia" => "Sędzia",
+			  "Ławnik" => "Ławnik",
+			  "Prawnik" => "Prawnik",
+			  "Żebrak" => "Żebrak",
+			  "Barbarzyńca" => "Barbarzyńca",
+			  "Bibliotekarz" => "Bibliotekarz",
+			  "Rycerz" => "Rycerz",
+			  "Dama" => "Dama",
+			  "Marszałek Rady" => "Marszałek Rady",
+			  "Poseł" => "Poseł",
+			  "Kanclerz Sądu" => "Kanclerz Sądu",
+			  "Redaktor" => "Redaktor",
+			  "Karczmarka" => "Karczmarka",
+			  "Prokurator" => "Prokurator",
+			  "Budowniczy" => "Budowniczy");
 	$smarty -> assign(array("Addid" => ADD_ID,
 				"Newrank" => NEW_RANK,
-				"Rmember" => R_MEMBER,
-				"Rking" => R_KING,
-				"Rstaff" => R_STAFF,
-				"Rjudge" => R_JUDGE,
-				"Rjudge2" => R_JUDGE2,
-				"Rjudge3" => R_JUDGE3,
-				"Rlawyer" => R_LAWYER,
-				"Rbeggar" => R_BEGGAR,
-				"Rbarbarian" => R_BARBARIAN,
-				"Rscribe" => R_SCRIBE,
-				"Rknight" => R_KNIGHT,
-				"Rlady" => R_LADY,
-				"Rcount" => R_COUNT,
-				"Rcount2" => R_COUNT2,
-				"Rredactor" => R_REDACTOR,
-				"Rinnkeeper" => R_INNKEEPER,
-				"Rprocurator" => R_PROCURATOR,
+				"Ranks" => $arrRanks,
 				"Aadd" => A_ADD));
 	if (isset ($_GET['step']) && $_GET['step'] == 'add') 
 	  {
