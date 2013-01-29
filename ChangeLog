@@ -1,5 +1,7 @@
 2013-01-29  Bartek thindil Jasicki  <thindil@vallheru.net>
 
+	* UPDATE,templates/layout1/staff.tpl, templates/staff.tpl, staff.php: 
+	redesigned staff panel
 	* FEATURE,includes/admin/bugreport.php, admin.php, staff.php, languages/pl/staff.php, includes/ranks.php, bugtrack.php,
 	templates/layout1/staff.tpl, templates/staff.tpl:
 	added new rank, more options for staff

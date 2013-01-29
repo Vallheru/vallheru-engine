@@ -37,24 +37,32 @@ require_once("includes/head.php");
 */
 require_once("languages/".$lang."/staff.php");
 
-if ($player -> rank != 'Staff' && $player -> rank != 'Admin') 
-{
+if (!in_array($player -> rank, array('Staff', 'Admin', 'Budowniczy'))) 
+  {
     error (YOU_NOT);
-}
+  }
 
 if (isset($_GET['view']))
-{
-  $arrView = array('takeaway', 'clearc', 'czat', 'tags', 'jail', 'innarchive', 'banmail', 'addtext', 'logs', 'bugreport');
-    $intKey = array_search($_GET['view'], $arrView);
-    if ($_GET['view'] == 'bforum')
+  {
+    if ($player->rank != 'Budowniczy')
       {
-	$intKey = 2;
+	$arrView = array('takeaway', 'clearc', 'czat', 'tags', 'jail', 'innarchive', 'banmail', 'addtext', 'logs', 'bugreport');
+	$intKey = array_search($_GET['view'], $arrView);
+	if ($_GET['view'] == 'bforum')
+	  {
+	    $intKey = 2;
+	  }
+      }
+    else
+      {
+	$arrView = array('bugreport');
+	$intKey = array_search($_GET['view'], $arrView);
       }
     if ($intKey !== false)
-    {
+      {
         require_once("includes/admin/".$arrView[$intKey].".php");
-    }
-}
+      }
+  }
 
 /**
 * Initialization of variables
@@ -62,20 +70,29 @@ if (isset($_GET['view']))
 if (!isset($_GET['view'])) 
 {
     $_GET['view'] = '';
-    $smarty -> assign(array("Panelinfo" => PANEL_INFO,
-                            "Anews" => A_NEWS,
-                            "Atake" => A_TAKE,
-                            "Aclear" => A_CLEAR,
-                            "Achat" => A_CHAT,
-			    "Aforum" => 'Zablokuj/Odblokuj pisanie przez gracza na forum',
-                            "Aimmu" => A_IMMU,
-                            "Ajail" => A_JAIL,
-                            "Aaddnews" => A_ADD_NEWS,
-                            "Ainnarchive" => A_INNARCHIVE,
-			    "Alogs" => "Logi graczy",
-                            "Abanmail" => A_BAN_MAIL,
-			    "Abugs" => "Bugtrack",
-			    "Abugs2" => "Zgłoszone błędy"));
+    if ($player->rank != 'Budowniczy')
+      {
+	$arrLinks = array(array(A_NEWS, 'addnews.php'),
+			  array(A_TAKE, 'staff.php?view=takeaway'),
+			  array(A_CLEAR, 'staff.php?view=clearc'),
+			  array(A_CHAT, 'staff.php?view=chat'),
+			  array('Zablokuj/Odblokuj pisanie przez gracza na forum', 'staff.php?view=bforum'),
+			  array(A_IMMU, 'staff.php?view=tags'),
+			  array(A_JAIL, 'staff.php?view=jail'),
+			  array(A_ADD_NEWS, 'staff.php?view=addtext'),
+			  array(A_INNARCHIVE, 'staff.php?view=innarchive'),
+			  array('Logi graczy', 'staff.php?view=logs'),
+			  array(A_BAN_MAIL, 'staff.php?view=banmail'),
+			  array('Bugtrack', 'bugtrack.php'),
+			  array('Zgłoszone błędy', 'staff.php?view=bugreport'));
+      }
+    else
+      {
+	$arrLinks = array(array('Bugtrack', 'bugtrack.php'),
+			  array('Zgłoszone błędy', 'staff.php?view=bugreport'));
+      }
+    $smarty->assign(array("Links" => $arrLinks,
+			  "Panelinfo" => PANEL_INFO));
 }
 
 if (!isset($_GET['action']))

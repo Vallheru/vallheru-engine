@@ -1,19 +1,9 @@
 {if $View == ""}
     {$Panelinfo}
     <ul>
-    <li><A href="addnews.php">{$Anews}</a></li>
-    <li><a href="staff.php?view=takeaway">{$Atake}</a></li>
-    <li><a href="staff.php?view=clearc">{$Aclear}</a></li>
-    <li><a href="staff.php?view=czat">{$Achat}</a></li>
-    <li><a href="staff.php?view=bforum">{$Aforum}</a></li>
-    <li><a href="staff.php?view=tags">{$Aimmu}</a></li>
-    <li><a href="staff.php?view=jail">{$Ajail}</a></li>
-    <li><a href="staff.php?view=addtext">{$Aaddnews}</a></li>
-    <li><a href="staff.php?view=innarchive">{$Ainnarchive}</a></li>
-    <li><a href="staff.php?view=banmail">{$Abanmail}</a></li>
-    <li><a href="staff.php?view=logs">{$Alogs}</a></li>
-    <li><a href="staff.php?view=bugreport">{$Abugs2}</a></li>
-    <li><a href="bugtrack.php">{$Abugs}</a></li>
+    {foreach $Links as $link}
+        <li><a href="{$link.1}">{$link.0}</a></li>
+    {/foreach}
     </ul>
 {/if}
 
