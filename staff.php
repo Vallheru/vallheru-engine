@@ -4,10 +4,10 @@
  *   Staff panel - give immunited, send players to jailetc
  *
  *   @name                 : staff.php                            
- *   @copyright            : (C) 2004,2005,2006,2011,2012 Vallheru Team based on Gamers-Fusion ver 2.5
+ *   @copyright            : (C) 2004,2005,2006,2011,2012,2013 Vallheru Team based on Gamers-Fusion ver 2.5
  *   @author               : thindil <thindil@vallheru.net>
- *   @version              : 1.6
- *   @since                : 25.05.2012
+ *   @version              : 1.7
+ *   @since                : 29.01.2013
  *
  */
 
@@ -44,7 +44,7 @@ if ($player -> rank != 'Staff' && $player -> rank != 'Admin')
 
 if (isset($_GET['view']))
 {
-    $arrView = array('takeaway', 'clearc', 'czat', 'tags', 'jail', 'innarchive', 'banmail', 'addtext', 'logs');
+  $arrView = array('takeaway', 'clearc', 'czat', 'tags', 'jail', 'innarchive', 'banmail', 'addtext', 'logs', 'bugreport');
     $intKey = array_search($_GET['view'], $arrView);
     if ($_GET['view'] == 'bforum')
       {
@@ -73,7 +73,9 @@ if (!isset($_GET['view']))
                             "Aaddnews" => A_ADD_NEWS,
                             "Ainnarchive" => A_INNARCHIVE,
 			    "Alogs" => "Logi graczy",
-                            "Abanmail" => A_BAN_MAIL));
+                            "Abanmail" => A_BAN_MAIL,
+			    "Abugs" => "Bugtrack",
+			    "Abugs2" => "Zgłoszone błędy"));
 }
 
 if (!isset($_GET['action']))

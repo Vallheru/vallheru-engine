@@ -4,10 +4,10 @@
  *   Polish language for staff panel
  *
  *   @name                 : staff.php                            
- *   @copyright            : (C) 2004,2005,2006,2007,2011 Vallheru Team based on Gamers-Fusion ver 2.5
+ *   @copyright            : (C) 2004,2005,2006,2007,2011,2013 Vallheru Team based on Gamers-Fusion ver 2.5
  *   @author               : thindil <thindil@vallheru.net>
- *   @version              : 1.5
- *   @since                : 23.12.2011
+ *   @version              : 1.7
+ *   @since                : 29.01.2013
  *
  */
 
@@ -45,6 +45,39 @@ if (!isset($_GET['view']))
     define("A_ADD_NEWS", "Sprawdź oczekujące plotki");
     define("A_INNARCHIVE", "Archiwum karczmy");
     define("A_BAN_MAIL", "Zablokuj/Odblokuj wiadomości od gracza na poczcie");
+}
+
+if (isset($_GET['view']) && $_GET['view'] == 'bugreport')
+{
+    define("BUG_TYPE", "Rodzaj błędu");
+    define("BUG_TEXT", "Literówka");
+    define("BUG_CODE", "Błąd w grze");
+    define("BUG_LOC", "Lokacja");
+    define("BUG_NAME", "Tytuł zgłoszenia");
+    define("BUG_ID", "Numer");
+    define("BUG_REPORTER", "Zgłaszający");
+    define("BUG_DESC", "Opis");
+    define("BUG_ACTIONS", "Ustaw jako");
+    define("BUG_FIXED", "Naprawiony");
+    define("NOT_BUG", "To nie jest błąd");
+    define("BUG_DOUBLE", "Duplikat");
+    define("MORE_INFO", "Wymaga więcej informacji");
+    define("YOUR_BUG", "Zgłoszony przez ciebie błąd: <b>");
+    define("B_ID", "</b> ID: <b>");
+    define("NOT_BUG3", "</b> nie jest błędem.");
+    define("HAS_FIXED", "</b> został naprawiony.");
+    define("MORE_INFO2", "</b> wymaga więcej informacji aby mogło zostać naprawione.");
+    define("WORK_FOR_ME2", "</b> zostało zaktualizowane. <b>Przyczyna:</b> u mnie działa poprawnie, wymaga więcej informacji aby mogło zostać naprawione.");
+    define("BUG_DOUBLE2", "</b> zostało odrzucone. <b>Przyczyna:</b> wcześniej ktoś zgłosił już ten błąd.");
+    define("NOT_BUG2", "Oznaczyłeś ten błąd jako nieprawidłowy.");
+    define("HAS_FIXED2", "Oznaczyłeś ten błąd jako naprawiony.");
+    define("WORK_FOR_ME3", "Oznaczyłeś ten błąd jako pomyłkę (u mnie działa).");
+    define("MORE_INFO3", "Oznaczyłeś ten błąd jako nienaprawialny (wymaga więcej informacji).");
+    define("BUG_DOUBLE3", "Oznaczyłeś ten błąd jako duplikat innego błędu.");
+    define("T_BUG", "Naprawiony błąd");
+    define("REPORTED_BY", " zgłoszony przez ID: ");
+    define("WORK_FOR_ME", "U mnie działa");
+    define("T_COMMENT2", "Komentarz");
 }
 
 if (isset ($_GET['view']) && $_GET['view'] == 'banmail') 

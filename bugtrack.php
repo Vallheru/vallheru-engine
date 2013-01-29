@@ -4,10 +4,10 @@
  *   Bugtrack - automated errors and warnings
  *
  *   @name                 : bugtrack.php                            
- *   @copyright            : (C) 2004,2005,2012 Vallheru Team based on Gamers-Fusion ver 2.5
+ *   @copyright            : (C) 2004,2005,2012,2013 Vallheru Team based on Gamers-Fusion ver 2.5
  *   @author               : thindil <thindil@vallheru.net>
- *   @version              : 1.6
- *   @since                : 23.05.2012
+ *   @version              : 1.7
+ *   @since                : 29.01.2013
  *
  */
 
@@ -47,10 +47,10 @@ require_once("languages/".$lang."/bugtrack.php");
 /**
 * Check permission
 */
-if($player -> rank != 'Admin') 
-{
-	error (NO_PERM);
-}
+if(!in_array($player->rank, array('Admin', 'Staff', 'Budowniczy'))) 
+  {
+    error (NO_PERM);
+  }
 
 /**
 * Get data from database and assign to variables
@@ -63,17 +63,15 @@ $arramount = array();
 $arrfile = array();
 $arrline = array();
 $arrrefer = array();
-$i = 0;
 while (!$bugs -> EOF) 
 {
-    $arrid[$i] = $bugs -> fields['id'];
-    $arrtype[$i] = $bugs -> fields['type'];
-    $arrinfo[$i] = $bugs -> fields['info'];
-    $arramount[$i] = $bugs -> fields['amount'];
-    $arrfile[$i] = wordwrap($bugs -> fields['file'],20,"\n",1);
-    $arrline[$i] = $bugs -> fields['line'];
-    $arrrefer[$i] = wordwrap($bugs -> fields['referer'],20,"\n",1);
-    $i = $i + 1;
+    $arrid[] = $bugs -> fields['id'];
+    $arrtype[] = $bugs -> fields['type'];
+    $arrinfo[] = $bugs -> fields['info'];
+    $arramount[] = $bugs -> fields['amount'];
+    $arrfile[] = wordwrap($bugs -> fields['file'],20,"\n",1);
+    $arrline[] = $bugs -> fields['line'];
+    $arrrefer[] = wordwrap($bugs -> fields['referer'],20,"\n",1);
     $bugs -> MoveNext();
 }
 $bugs -> Close();

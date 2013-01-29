@@ -12,7 +12,47 @@
     <li><a href="staff.php?view=innarchive">{$Ainnarchive}</a></li>
     <li><a href="staff.php?view=banmail">{$Abanmail}</a></li>
     <li><a href="staff.php?view=logs">{$Alogs}</a></li>
+    <li><a href="staff.php?view=bugreport">{$Abugs2}</a></li>
+    <li><a href="bugtrack.php">{$Abugs}</a></li>
     </ul>
+{/if}
+
+{if $View == "bugreport"}
+    {if $Step != ""}
+        <b>{$Bugname}:</b> {$Bugname2}<br />
+        <b>{$Bugtype}:</b> {$Bugtype2}<br />
+        <b>{$Bugloc}:</b> {$Bugloc2}<br />
+        <b>{$Bugdesc}:</b> {$Bugdesc2}<br />
+        <form method="post" action="staff.php?view=bugreport&amp;step={$Step}">
+            <b>{$Bugactions}:</b> <select name="actions">
+                {section name=bugs loop=$Bugoptions}
+                    <option value="{$Bugactions2[bugs]}">{$Bugoptions[bugs]}</option>
+                {/section}
+            </select><br />
+	    <b>{$Vallars}:</b> <input type="text" size="5" name="vallars" value="0" /><br />
+            <b>{$Tcomment}:</b> <textarea name="bugcomment" rows="5" cols="30"></textarea><br /><br />
+            <input type="submit" value="{$Amake}" />
+        </form>
+    {else}
+        <table align="center">
+            <tr>
+                <td><b>{$Bugid}</b></td>
+                <td><b>{$Bugreporter}</b></td>
+                <td><b>{$Bugtype}</b></td>
+                <td><b>{$Bugloc}</b></td>
+                <td><b>{$Bugname}</b></td>
+            </tr>
+            {section name=bugtrack loop=$Bugsid}
+                <tr>
+                    <td align="center"><a href="staff.php?view=bugreport&amp;step={$Bugsid[bugtrack]}">{$Bugsid[bugtrack]}</td>
+                    <td align="center">{$Bugsreporter[bugtrack]}</td>
+                    <td align="center">{$Bugstype[bugtrack]}</td>
+                    <td align="center">{$Bugsloc[bugtrack]}</td>
+                    <td align="center">{$Bugsname[bugtrack]}</td>
+                </tr>
+            {/section}
+        </table>
+    {/if}
 {/if}
 
 {if $View == "banmail"}
