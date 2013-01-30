@@ -1,3 +1,8 @@
+2013-01-30  Bartek thindil Jasicki  <thindil@vallheru.net>
+
+	* BUG,languages/pl/czary.php, czary.php:
+	fixed enchanting items
+
 2013-01-29  Bartek thindil Jasicki  <thindil@vallheru.net>
 
 	* UPDATE,includes/head.php, templates/layout1/admin.tpl, templates/admin.tpl, admin.php: 

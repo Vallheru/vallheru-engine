@@ -4,10 +4,10 @@
  *   Spell book - activation and deactivafion of spells and echance items
  *
  *   @name                 : czary.php                            
- *   @copyright            : (C) 2004,2005,2006,2011,2012 Vallheru Team based on Gamers-Fusion ver 2.5
+ *   @copyright            : (C) 2004,2005,2006,2011,2012,2013 Vallheru Team based on Gamers-Fusion ver 2.5
  *   @author               : thindil <thindil@vallheru.net>
  *   @version              : 1.7
- *   @since                : 15.11.2012
+ *   @since                : 30.01.2013
  *
  */
 
@@ -97,6 +97,7 @@ if (isset($_GET['cast']))
 	    break;
 	  case E_SPELL3:
 	    $strTypes = "'I', 'Q', 'P', 'E', 'O', 'R', 'H', 'S', 'T', 'C'";
+	    break;
 	  default:
 	    error('Zapomnij o tym.');
 	    break;

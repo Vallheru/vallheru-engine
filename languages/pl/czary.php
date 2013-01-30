@@ -4,10 +4,10 @@
  *   Polish language czary.php
  *
  *   @name                 : czary.php                            
- *   @copyright            : (C) 2004,2005,2006,2012 Vallheru Team based on Gamers-Fusion ver 2.5
+ *   @copyright            : (C) 2004,2005,2006,2012,2013 Vallheru Team based on Gamers-Fusion ver 2.5
  *   @author               : thindil <thindil@vallheru.net>
- *   @version              : 1.5
- *   @since                : 24.03.2012
+ *   @version              : 1.7
+ *   @since                : 30.01.2013
  *
  */
 
@@ -69,7 +69,7 @@ if (isset($_GET['cast']))
     define("S_EXP", " Punktów Doświadczenia<br />");
     define("E_DB", "Nie mogę dodać");
     define("YOU_TRY", "Próbowałeś umagicznić ");
-    define("BUT_FAIL", " ale niestety nie udało się. Na skutek nieudanego zaklęcia przedmiot niszczy się! Dostajesz 0.01 do umiejętności rzucania czarów.");
+    define("BUT_FAIL", " ale niestety nie udało się. Na skutek nieudanego zaklęcia przedmiot niszczy się!");
     define("NOT_ABLE1", "Nie można zwiększyć siły łuków");
     define("NOT_ABLE2", "Nie można zwiększyć wytrzymałości strzał");
     define("YOU_RISE2", "Zwiększyłeś wytrzymałość ");
