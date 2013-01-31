@@ -248,3 +248,5 @@ CREATE TABLE `bug_comments` (
 `time` date DEFAULT NULL ,
 KEY `id` ( `id` )
 ) ENGINE = MYISAM DEFAULT CHARSET = utf8;
+ALTER TABLE `vallars` ADD `id` INT NOT NULL AUTO_INCREMENT FIRST ,
+ADD INDEX ( `id` );

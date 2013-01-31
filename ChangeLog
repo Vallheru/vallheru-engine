@@ -1,5 +1,7 @@
 2013-01-31  Bartek thindil Jasicki  <thindil@vallheru.net>
 
+	* UPDATE,install/db/update.sql: 
+	updated database
 	* BUG,install/resetall.php: 
 	fixed few bugs
 	* BUG,czary.php: 
