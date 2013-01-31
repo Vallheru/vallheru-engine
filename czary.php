@@ -7,7 +7,7 @@
  *   @copyright            : (C) 2004,2005,2006,2011,2012,2013 Vallheru Team based on Gamers-Fusion ver 2.5
  *   @author               : thindil <thindil@vallheru.net>
  *   @version              : 1.7
- *   @since                : 30.01.2013
+ *   @since                : 31.01.2013
  *
  */
 
@@ -286,7 +286,7 @@ if (isset($_GET['cast']))
 		      {
 			$bonus = $maxbonus;
 		      }       
-		    message('success', YOU_RISE2.$arritem -> fields['name'].FOR_A.$bonus.NOW_IS.$bonus.S_EXP.$magic.S_CAST);
+		    message('success', YOU_RISE2.$arritem -> fields['name'].FOR_A.$bonus.NOW_IS.$bonus.S_EXP);
 		    $maxdur = $arritem -> fields['maxwt'] + $bonus;
 		    $dur = $arritem -> fields['wt'] + $bonus;
 		    $test = $db -> Execute("SELECT id FROM equipment WHERE name='".$name."' AND wt=".$dur." AND type='".$arritem -> fields['type']."' AND status='U' AND owner=".$player -> id." AND power=".$arritem -> fields['power']." AND zr=".$arritem -> fields['zr']." AND szyb=".$arritem -> fields['szyb']." AND maxwt=".$maxdur." AND poison=".$arritem -> fields['poison']." AND magic='".$arrElement[$arrspell->fields['element']]."' AND ptype='".$arritem -> fields['ptype']."' AND repair=".$arritem -> fields['repair']);
@@ -333,7 +333,7 @@ if (isset($_GET['cast']))
 			  }
                         else
 			  {
-			    $intBonus = $objBonus -> fiedlds['zr'];
+			    $intBonus = $objBonus -> fields['zr'];
 			  }
 			$maxbonus = ($intBonus * 5);
 			if ($bonus > $maxbonus) 
@@ -359,7 +359,7 @@ if (isset($_GET['cast']))
 		      }
 		    if ($blnValid)
 		      {
-			message("success", $text." ".$arritem -> fields['name']." o ".$bonus.NOW_IS.$bonus.S_EXP.$magic.S_CAST);
+			message("success", $text." ".$arritem -> fields['name']." o ".$bonus.NOW_IS.$bonus.S_EXP);
 			$test = $db -> Execute("SELECT id FROM equipment WHERE name='".$name."' AND wt=".$arritem -> fields['wt']." AND type='".$arritem -> fields['type']."' AND status='U' AND owner=".$player -> id." AND power=".$arritem -> fields['power']." AND zr=".$agi." AND szyb=".$speed." AND maxwt=".$arritem -> fields['maxwt']." AND poison=".$arritem -> fields['poison']." AND magic='".$arrElement[$arrspell->fields['element']]."' AND ptype='".$arritem -> fields['ptype']."' AND repair=".$arritem -> fields['repair']);
 			if (!$test -> fields['id']) 
 			  {
