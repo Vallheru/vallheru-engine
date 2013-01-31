@@ -1,3 +1,8 @@
+2013-01-31  Bartek thindil Jasicki  <thindil@vallheru.net>
+
+	* BUG,includes/funkcje.php:
+	fixed monster damage
+
 2013-01-30  Bartek thindil Jasicki  <thindil@vallheru.net>
 
 	* BUG,languages/pl/czary.php, czary.php:
