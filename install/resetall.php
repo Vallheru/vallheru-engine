@@ -4,10 +4,10 @@
  *   Additional file - make new era in game. Before start this script - copy table players to table zapas and table notatnik to table zapas1
  *
  *   @name                 : resetall.php                            
- *   @copyright            : (C) 2004,2005,2006,2007,2011,2012 Vallheru Team based on Gamers-Fusion ver 2.5
+ *   @copyright            : (C) 2004,2005,2006,2007,2011,2012,2013 Vallheru Team based on Gamers-Fusion ver 2.5
  *   @author               : thindil <thindil@vallheru.net>
  *   @version              : 1.7
- *   @since                : 11.12.2012
+ *   @since                : 31.01.2013
  *
  */
 
@@ -71,6 +71,9 @@ $db -> Execute("TRUNCATE TABLE tribe_rank");
 $db -> Execute("TRUNCATE TABLE tribe_replies");
 $db -> Execute("TRUNCATE TABLE tribe_topics");
 $db -> Execute("TRUNCATE TABLE tribe_zbroj");
+$db -> Execute("TRUNCATE TABLE tribe_herbs");
+$db -> Execute("TRUNCATE TABLE tribe_minerals");
+$db -> Execute("TRUNCATE TABLE tribe_reserv");
 $db -> Execute("TRUNCATE TABLE tribes");
 $db -> Execute("TRUNCATE TABLE events");
 $db -> Execute("TRUNCATE TABLE questaction");
@@ -110,7 +113,7 @@ while (!$player -> EOF)
     $player -> fields['roleplay'] = addslashes($player -> fields['roleplay']);
     $player -> fields['shortrpg'] = addslashes($player -> fields['shortrpg']);
     $player -> fields['ooc'] = addslashes($player -> fields['ooc']);
-    $db -> Execute("INSERT INTO `players` (`user`, `email`, `pass`, `rank`, `age`, `logins`, `profile`, `avatar`, `vallars`, `roleplay`, `shortrpg`, `ooc`) VALUES('".$player -> fields['user']."','".$player -> fields['email']."','".$player -> fields['pass']."','".$player -> fields['rank']."',".$player -> fields['age'].",".$player -> fields['logins'].",'".$player -> fields['profile']."','".$player -> fields['avatar']."', ".$player->fields['vallars'].", '".$player->fields['roleplay']."', '".$player->fields['shortrpg']."', '".$player->fields['ooc']."')") or die($db -> ErrorMsg());
+    $db -> Execute("INSERT INTO `players` (`user`, `email`, `pass`, `rank`, `age`, `logins`, `profile`, `avatar`, `vallars`, `roleplay`, `shortrpg`, `ooc`, `settings`) VALUES('".$player -> fields['user']."','".$player -> fields['email']."','".$player -> fields['pass']."','".$player -> fields['rank']."',".$player -> fields['age'].",".$player -> fields['logins'].",'".$player -> fields['profile']."','".$player -> fields['avatar']."', ".$player->fields['vallars'].", '".$player->fields['roleplay']."', '".$player->fields['shortrpg']."', '".$player->fields['ooc']."', '".$player->fields['settings']."')") or die($db -> ErrorMsg());
     $player -> MoveNext();
 }
 $player -> Close();
@@ -183,13 +186,13 @@ print "Contacts OK<br />";
 /**
  * Update vallars informations
  */
-$objVallars = $db->Execute("SELECT `owner` FROM `vallars`");
+$objVallars = $db->Execute("SELECT `id`, `owner` FROM `vallars`");
 while (!$objVallars->EOF)
   {
     $objOwner = $db->Execute("SELECT `user` FROM `zapas` WHERE `id`=".$objVallars->fields['owner']);
     $objNewowner = $db->Execute("SELECT `id` FROM `players` WHERE `user`='".$objOwner->fields['user']."'");
     $objOwner->Close();
-    $db->Execute("UPDATE `vallars` SET `owner`=".$objNewowner->fields['id']." WHERE `owner`=".$objVallars->fields['id']);
+    $db->Execute("UPDATE `vallars` SET `owner`=".$objNewowner->fields['id']." WHERE `id`=".$objVallars->fields['id']);
     $objVallars->MoveNext();
   }
 $objVallars->Close();

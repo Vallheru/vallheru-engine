@@ -1,5 +1,7 @@
 2013-01-31  Bartek thindil Jasicki  <thindil@vallheru.net>
 
+	* BUG,install/resetall.php: 
+	fixed few bugs
 	* BUG,czary.php: 
 	fixed enchanting items
 	* BUG,includes/funkcje.php:
