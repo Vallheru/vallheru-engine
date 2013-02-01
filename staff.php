@@ -7,7 +7,7 @@
  *   @copyright            : (C) 2004,2005,2006,2011,2012,2013 Vallheru Team based on Gamers-Fusion ver 2.5
  *   @author               : thindil <thindil@vallheru.net>
  *   @version              : 1.7
- *   @since                : 29.01.2013
+ *   @since                : 01.02.2013
  *
  */
 
@@ -75,7 +75,7 @@ if (!isset($_GET['view']))
 	$arrLinks = array(array(A_NEWS, 'addnews.php'),
 			  array(A_TAKE, 'staff.php?view=takeaway'),
 			  array(A_CLEAR, 'staff.php?view=clearc'),
-			  array(A_CHAT, 'staff.php?view=chat'),
+			  array(A_CHAT, 'staff.php?view=czat'),
 			  array('Zablokuj/Odblokuj pisanie przez gracza na forum', 'staff.php?view=bforum'),
 			  array(A_IMMU, 'staff.php?view=tags'),
 			  array(A_JAIL, 'staff.php?view=jail'),
