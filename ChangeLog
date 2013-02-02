@@ -1,3 +1,8 @@
+2013-02-03  Bartek thindil Jasicki  <thindil@vallheru.net>
+
+	* BUG,kopalnia.php:
+	fixed digging for minerals
+
 2013-02-01  Bartek thindil Jasicki  <thindil@vallheru.net>
 
 	* BUG,staff.php:

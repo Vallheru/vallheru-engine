@@ -4,10 +4,10 @@
  *   Mines in moutains
  *
  *   @name                 : kopalnia.php                            
- *   @copyright            : (C) 2004,2005,2006,2011,2012 Vallheru Team based on Gamers-Fusion ver 2.5
+ *   @copyright            : (C) 2004,2005,2006,2011,2012,2013 Vallheru Team based on Gamers-Fusion ver 2.5
  *   @author               : thindil <thindil@vallheru.net>
  *   @version              : 1.7
- *   @since                : 17.10.2012
+ *   @since                : 03.02.2013
  *
  */
 
@@ -75,8 +75,9 @@ if (isset($_GET['action']) && $_GET['action'] == 'dig')
 	    $intBonus = 1 + (($player->skills['mining'][1] + $player->stats['strength'][2]) / 20);
 	    $intBonus += $player->checkbonus('mining');
 	  }
-        elseif ($intRoll == 5)
+	switch ($intRoll)
 	  {
+	  case 5:
 	    $intAmount = ceil((rand(1,20) * 1/8) * ($intBonus + $player->checkbonus('crystal')));
             if ($intAmount < 1)
             {
@@ -84,37 +85,38 @@ if (isset($_GET['action']) && $_GET['action'] == 'dig')
             }
             $arrMinerals[0] = $arrMinerals[0] + $intAmount;
 	    $intExp += (3 * $intAmount);
-	  }
-        elseif ($intRoll == 6 || $intRoll == 7)
-        {
-	  $intAmount = ceil((rand(1,20) * 1/5) * ($intBonus + $player->checkbonus('adamantium')));
+	    break;
+	  case 6:
+	  case 7:
+	    $intAmount = ceil((rand(1,20) * 1/5) * ($intBonus + $player->checkbonus('adamantium')));
             if ($intAmount < 1)
             {
                 $intAmount = 1;
             }
             $arrMinerals[1] = $arrMinerals[1] + $intAmount;
 	    $intExp += (4 * $intAmount);
-        }
-        elseif ($intRoll == 8)
-        {
+	    break;
+	  case 8:
 	    $intAmount = ceil((rand(1,20) * 1/3) * $intBonus);
             if ($intAmount < 1)
             {
                 $intAmount = 1;
             }
             $arrGold[1] = $arrGold[1] + $intAmount;
-        }
-        elseif ($intRoll == 9)
-        {
+	    break;
+	  case 9:
 	    $intAmount = ceil(rand(50,200) * $intBonus);
             if ($intAmount < 1)
             {
                 $intAmount = 1;
             }
             $arrGold[0] = $arrGold[0] + $intAmount;
-        }
-        elseif ($intRoll == 10)
-        {
+	    break;
+	  default:
+	    break;
+	  }
+	if ($intRoll == 10)
+	  {
             $intRoll2 = rand(1, 100);
             if ($intRoll2 > $player->stats['speed'][2]) 
             {
