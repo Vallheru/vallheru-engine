@@ -4,10 +4,10 @@
  *   Jeweller - make rings
  *
  *   @name                 : jeweller.php                            
- *   @copyright            : (C) 2006,2011,2012 Vallheru Team based on Gamers-Fusion ver 2.5
+ *   @copyright            : (C) 2006,2011,2012,2013 Vallheru Team based on Gamers-Fusion ver 2.5
  *   @author               : thindil <thindil@vallheru.net>
  *   @version              : 1.7
- *   @since                : 11.12.2012
+ *   @since                : 03.02.2013
  *
  */
 
@@ -255,7 +255,7 @@ if (isset($_GET['step']) && $_GET['step'] == 'make2')
                 $arrCryst[] = ceil($objPlans -> fields['level'] / 2);
                 $arrMeteor[] = ceil($objPlans -> fields['level'] / 4);
                 $arrBonus[] = $objPlans -> fields['bonus'];
-                $arrEnergy[] = $objPlans -> fields['level'] * 2;
+                $arrEnergy[] = $objPlans -> fields['level'];
                 $intChange = $objPlans -> fields['level'] * 4;
                 if ($player->skills['jewellry'][1] >= $intChange)
                 {
@@ -609,7 +609,7 @@ if (isset($_GET['step']) && $_GET['step'] == 'make2')
             $intCryst = ceil($objRing -> fields['level'] / 2);
             $intMeteor = ceil($objRing -> fields['level'] / 4);
             $intGainexp = 0;
-            $intEnergy2 = ($objRing -> fields['level'] * 2);
+            $intEnergy2 = $objRing -> fields['level'];
             $intEnergy = $_POST['amount'];
             $intMake = 1;
             $db -> Execute("INSERT INTO `jeweller_work` (`owner`, `name`, `n_energy`, `u_energy`, `bonus`, `type`) VALUES(".$player -> id.", '".$objRing -> fields['name']."', ".$intEnergy2.", ".$_POST['amount'].", '".$strStat."', 'N')");
