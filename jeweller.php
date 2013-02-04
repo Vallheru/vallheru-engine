@@ -7,7 +7,7 @@
  *   @copyright            : (C) 2006,2011,2012,2013 Vallheru Team based on Gamers-Fusion ver 2.5
  *   @author               : thindil <thindil@vallheru.net>
  *   @version              : 1.7
- *   @since                : 03.02.2013
+ *   @since                : 04.02.2013
  *
  */
 
@@ -475,7 +475,7 @@ if (isset($_GET['step']) && $_GET['step'] == 'make2')
         {
             error("Nie masz takiego planu!");
         }
-        $intMake = floor($_POST['amount'] / ($objRing -> fields['level'] * 2));
+        $intMake = floor($_POST['amount'] / $objRing -> fields['level']);
         if ($intMake < 1)
         {
             $intNeed = 1;
@@ -613,7 +613,7 @@ if (isset($_GET['step']) && $_GET['step'] == 'make2')
             $intEnergy = $_POST['amount'];
             $intMake = 1;
             $db -> Execute("INSERT INTO `jeweller_work` (`owner`, `name`, `n_energy`, `u_energy`, `bonus`, `type`) VALUES(".$player -> id.", '".$objRing -> fields['name']."', ".$intEnergy2.", ".$_POST['amount'].", '".$strStat."', 'N')");
-            $smarty -> assign("Message", "Próbowałeś wykonać <b>".$objRing -> fields['name']."</b> jednak wykonałeś go tylko częściowo.");
+            $smarty -> assign("Message2", "Próbowałeś wykonać <b>".$objRing -> fields['name']."</b> jednak wykonałeś go tylko częściowo.");
         }
 	$player->checkexp(array('jewellry' => ($intGainexp / 2)), $player->id, 'skills');
 	$player->checkexp(array($strStat2 => ($intGainexp / 2)), $player->id, 'stats');
