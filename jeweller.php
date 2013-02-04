@@ -399,7 +399,7 @@ if (isset($_GET['step']) && $_GET['step'] == 'make2')
            
             $intGainexp = 0;
 
-            $arrStats = array('zręczności', 'siły', 'inteligencji', 'siły woli', 'szybkości', 'wytrzymałości');
+            $arrStats = array('zręczności', 'siły', 'inteligencji', 'siły woli', 'szybkości', 'kondycji');
             $arrStats2 = array('agility', 'strength', 'inteli', 'wisdom', 'speed', 'condition');
             $intKey = array_search($objRing -> fields['bonus'], $arrStats);
 	    $strStat = $arrStats2[$intKey];
@@ -513,7 +513,7 @@ if (isset($_GET['step']) && $_GET['step'] == 'make2')
          * Which stats have bonus
          */
         $intChange = $objRing -> fields['level'] * 4;
-	$arrStats = array('zręczności', 'siły', 'inteligencji', 'siły woli', 'szybkości', 'wytrzymałości');
+	$arrStats = array('zręczności', 'siły', 'inteligencji', 'siły woli', 'szybkości', 'kondycji');
         $arrStats2 = array('agility', 'strength', 'inteli', 'wisdom', 'speed', 'condition');
         if (isset($_POST['bonus']) && $player->skills['jewellry'][1] >= $intChange)
 	  {
@@ -772,7 +772,7 @@ if (isset($_GET['step']) && $_GET['step'] == 'make3')
             /**
              * Select ring name
              */
-            $arrRings = array('inteligencji', 'siły woli', 'zręczności', 'szybkości', 'siły', 'wytrzymałości');
+            $arrRings = array('inteligencji', 'siły woli', 'zręczności', 'szybkości', 'siły', 'kondycji');
 	    $arrStats = array('inteli', 'wisdom', 'agility', 'speed', 'strength', 'condition');
             $arrPrefix = array('Gnomi ', 'Elfi ', 'Krasnoludzki ');
             $strName = $objRing -> fields['name'];
@@ -934,7 +934,7 @@ if (isset($_GET['step']) && $_GET['step'] == 'make3')
         /**
          * Select ring name
          */
-	$arrRings = array('zręczności', 'szybkości', 'siły', 'wytrzymałości', 'inteligencji', 'siły woli');
+	$arrRings = array('zręczności', 'szybkości', 'siły', 'kondycji', 'inteligencji', 'siły woli');
 	$arrStats = array('agility', 'speed', 'strength', 'condition', 'inteli', 'wisdom');
 	$arrPrefix = array('Elfi ', 'Krasnoludzki ', 'Gnomi ');
         $strName = $arrRname[$intKey];

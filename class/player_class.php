@@ -7,7 +7,7 @@
  *   @copyright            : (C) 2004,2005,2006,2007,2011,2012,2013 Vallheru Team based on Gamers-Fusion ver 2.5
  *   @author               : thindil <thindil@vallheru.net>
  *   @version              : 1.7
- *   @since                : 21.01.2013
+ *   @since                : 04.01.2013
  *
  */
 
@@ -287,7 +287,7 @@ class Player
       //Add bonuses from rings
       if ($this->equip[9][2])
 	{
-	  $arrRings = array("zręczności", "siły", "inteligencji", "woli", "szybkości", "wytrzymałości");
+	  $arrRings = array("zręczności", "siły", "inteligencji", "woli", "szybkości", "kondycji");
 	  $arrRingtype = explode(" ", $this->equip[9][1]);
 	  $intAmount = count($arrRingtype) - 1;
 	  $intKey = array_search($arrRingtype[$intAmount], $arrRings);
@@ -295,7 +295,7 @@ class Player
 	}
       if ($this->equip[10][2])
 	{
-	  $arrRings = array("zręczności", "siły", "inteligencji", "woli", "szybkości", "wytrzymałości");
+	  $arrRings = array("zręczności", "siły", "inteligencji", "woli", "szybkości", "kondycji");
 	  $arrRingtype = explode(" ", $this->equip[10][1]);
 	  $intAmount = count($arrRingtype) - 1;
 	  $intKey = array_search($arrRingtype[$intAmount], $arrRings);

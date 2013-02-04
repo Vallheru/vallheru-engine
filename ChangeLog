@@ -1,5 +1,7 @@
 2013-02-04  Bartek thindil Jasicki  <thindil@vallheru.net>
 
+	* BUG,class/player_class.php, jeweller.php: 
+	fixed rings names
 	* BUG,jeweller.php:
 	fixed making rings
 
