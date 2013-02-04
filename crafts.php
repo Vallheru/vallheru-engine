@@ -4,10 +4,10 @@
  *   Crafts guild - random missions for craftsmen
  *
  *   @name                 : crafts.php                            
- *   @copyright            : (C) 2011,2012 Vallheru Team based on Gamers-Fusion ver 2.5
+ *   @copyright            : (C) 2011,2012,2013 Vallheru Team based on Gamers-Fusion ver 2.5
  *   @author               : thindil <thindil@vallheru.net>
  *   @version              : 1.7
- *   @since                : 19.12.2012
+ *   @since                : 04.01.2013
  *
  */
 
@@ -467,7 +467,7 @@ if (isset($_GET['step']))
 	      }
 	    else
 	      {
-		$arrStats = array(' siły', ' zręczności', ' inteligencji', ' szybkości', ' wytrzymałości', ' siły woli');
+		$arrStats = array(' siły', ' zręczności', ' inteligencji', ' szybkości', ' kondycji', ' siły woli');
 		$intAmount = 1;
 		$intStat = rand(0, 5);
 		$objRing->fields['name'] .= $arrStats[$intStat];

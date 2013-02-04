@@ -1,5 +1,7 @@
 2013-02-04  Bartek thindil Jasicki  <thindil@vallheru.net>
 
+	* BUG,crafts.php, jeweller.php, outposts.php: 
+	fixed ring names
 	* BUG,class/player_class.php, jeweller.php: 
 	fixed rings names
 	* BUG,jeweller.php:

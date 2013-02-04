@@ -322,7 +322,7 @@ if (isset($_GET['step']) && $_GET['step'] == 'make2')
 		$strYouhave = 'Posiadasz <b>'.$objMinerals->fields['adamantium'].'</b> sztuk <b>adamantium</b>, <b>'.$objMinerals->fields['crystal'].' krzystałów</b>, <b>'.$objMinerals->fields['meteor'].'</b> sztuk <b>meteorytu</b> oraz <b>'.$objRings->fields['amount'].' pierścieni</b>.';
 		$objRings->Close();
 		$objMinerals->Close();
-                $arrBonus = array('zręczności', 'siły', 'inteligencji', 'siły woli', 'szybkości', 'wytrzymałości');
+                $arrBonus = array('zręczności', 'siły', 'inteligencji', 'siły woli', 'szybkości', 'kondycji');
                 if ($arrChange[$intKey] == 'Tak')
                 {
                     $strChange = 'Y';

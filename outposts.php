@@ -77,7 +77,7 @@ function equip($type)
       }
     else
       {
-	$armor = $db->Execute("SELECT `id`, `name`, `power` FROM `equipment` WHERE `owner`=".$player->id." AND `type`='I' AND `status`='U' AND (`name` LIKE '%siły' OR `name` LIKE '%zręczności' OR `name` LIKE '%wytrzymałości' OR `name` LIKE '%szybkości')");
+	$armor = $db->Execute("SELECT `id`, `name`, `power` FROM `equipment` WHERE `owner`=".$player->id." AND `type`='I' AND `status`='U' AND (`name` LIKE '%siły' OR `name` LIKE '%zręczności' OR `name` LIKE '%kondycji' OR `name` LIKE '%szybkości')");
       }
     $arrid = array(0);
     $arrname = array("brak");
@@ -113,7 +113,7 @@ function wear($eid, $vid, $type, $powertype)
       }
     else
       {
-	$item1 = $db -> Execute("SELECT `id`, `name`, `power`, `amount` FROM `equipment` WHERE `id`=".$eid." AND `owner`=".$player->id." AND `status`='U' AND (`name` LIKE '%siły' OR `name` LIKE '%zręczności' OR `name` LIKE '%wytrzymałości' OR `name` LIKE '%szybkości')");
+	$item1 = $db -> Execute("SELECT `id`, `name`, `power`, `amount` FROM `equipment` WHERE `id`=".$eid." AND `owner`=".$player->id." AND `status`='U' AND (`name` LIKE '%siły' OR `name` LIKE '%zręczności' OR `name` LIKE '%kondycji' OR `name` LIKE '%szybkości')");
       }
     if (!$item1->fields['id'])
       {
