@@ -8,7 +8,7 @@
  *   @author               : thindil <thindil@vallheru.net>
  *   @author               : eyescream <tduda@users.sourceforge.net>
  *   @version              : 1.7
- *   @since                : 29.01.2013
+ *   @since                : 05.01.2013
  *
  */
  
@@ -122,6 +122,7 @@ if (isset($_GET['step']))
 	if ($intKey != 2 && $intKey != 3)
 	  {
 	    $db -> Execute("DELETE FROM `bugreport` WHERE `id`=".$_GET['step']);
+	    $db->Execute("DELETE FROM `bug_comments` WHERE `bugid`=".$_GET['step']);
 	  }
 	else
 	  {

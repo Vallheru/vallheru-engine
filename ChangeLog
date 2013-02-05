@@ -1,5 +1,7 @@
 2013-02-05  Bartek thindil Jasicki  <thindil@vallheru.net>
 
+	* BUG,includes/admin/bugreport.php: 
+	delete comments too
 	* BUG,stats.php: 
 	fixed bless info
 	* BUG,languages/pl/temple.php:
