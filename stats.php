@@ -8,7 +8,7 @@
  *   @author               : thindil <thindil@vallheru.net>
  *   @author               : mori <ziniquel@users.sourceforge.net>
  *   @version              : 1.7
- *   @since                : 08.01.2013
+ *   @since                : 05.02.2013
  *
  */
 
@@ -131,20 +131,20 @@ $strRank = selectrank($player -> rank, $player -> gender);
  */
 $objBless = $db -> Execute("SELECT `bless`, `blessval`, `mpoints` FROM `players` WHERE `id`=".$player -> id);
 if (!empty($objBless -> fields['bless']))
-{
-  $arrBless = array('agility', 'strength', 'inteli', 'wisdom', 'speed', 'cond', 'smith', 'alchemy', 'carpentry', 'attack', 'shoot', 'dodge', 'magic', 'breeding', 'mining', 'lumberjack', 'herbalism', 'jewellry', 'perception', 'thievery', 'smelting');
+  {
+    $arrBless = array('agility', 'strength', 'inteli', 'wisdom', 'speed', 'condition', 'smith', 'alchemy', 'carpentry', 'attack', 'shoot', 'dodge', 'magic', 'breeding', 'mining', 'lumberjack', 'herbalism', 'jewellry', 'perception', 'thievery', 'smelting');
     $intKey = array_search($objBless -> fields['bless'], $arrBless);
     $arrPrays = array("Zręczności", "Siły", "Inteligencji", "Siły Woli", "Szybkości", "Kondycji", "Kowalstwa", "Alchemii", "Stolarstwa", "Walki Bronią", "Strzelectwa", "Uników", "Rzucania Czarów", "Hodowli", "Górnictwa", "Drwalnictwa", "Zielarstwa", "Jubilerstwa", "Spostrzegawczości", "Złodziejstwa", 'Hutnictwa');
     $smarty -> assign(array("Blessfor" => "Błogosławieństwo do ",
                             "Pray" => "<br />".$arrPrays[$intKey],
                             "Blessval" => "(".$objBless -> fields['blessval'].")<br />"));
-}
-    else
-{
-    $smarty -> assign(array("Blessfor" => "",
-                            "Pray" => "",
-                            "Blessval" => ""));
-}
+  }
+ else
+   {
+     $smarty -> assign(array("Blessfor" => "",
+			     "Pray" => "",
+			     "Blessval" => ""));
+   }
 $objBless -> Close();
 /**
  * Antidote info
