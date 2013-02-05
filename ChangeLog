@@ -1,3 +1,8 @@
+2013-02-05  Bartek thindil Jasicki  <thindil@vallheru.net>
+
+	* BUG,languages/pl/temple.php:
+	fixed typo
+
 2013-02-04  Bartek thindil Jasicki  <thindil@vallheru.net>
 
 	* BUG,crafts.php, jeweller.php, outposts.php: 

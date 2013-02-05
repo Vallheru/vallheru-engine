@@ -4,10 +4,10 @@
  *   Polish language for temple
  *
  *   @name                 : temple.php                            
- *   @copyright            : (C) 2004,2005,2006,2011,2012 Vallheru Team based on Gamers-Fusion ver 2.5
+ *   @copyright            : (C) 2004,2005,2006,2011,2012,2013 Vallheru Team based on Gamers-Fusion ver 2.5
  *   @author               : thindil <thindil@vallheru.net>
  *   @version              : 1.7
- *   @since                : 11.12.2012
+ *   @since                : 05.02.2013
  *
  */
 
@@ -110,7 +110,7 @@ if (isset ($_GET['temp']) && $_GET['temp'] == 'book')
         define("BOOK_INFO", "Podchodzisz bliżej do cokołu i uważnie przyglądasz się znalezisku. Zdziwiony jesteś iż dopiero teraz ją zauważyłeś. Księga wygląda na starą, jej okładka wykonana jest z brązowej skróry, na grzbiecie książki widzisz nie znany sobie symbol. Zaciekawiony ostrożnie otwierasz księgę...");
         define("BOOK_TEXT1", "Drzwi do świątyni otworzyły się  nagle i jedno z potężnych, okutych skrzydeł rozpadło się z niemiłosiernym hukiem i trzaskiem po uderzeniu w ścianę. Jasne światło dnia wdarło się do ciemnej komnaty tworząc coś na kształt drogi od wejścia aż do ołtarza, przy którym klęczał kapłan Neh.<br />
 W oka mgnieniu starzec podniósł się i próbował podbiec do drzwi, jednak równie szybko jak wstał, zatrzymał się w połowie drogi. W progu stała jakaś postać... Gdy jego oczy przywykły do światła, zaczął powoli rozróżniać jej kształty. Zbliżała się powoli i cicho roznosząc wokół siebie słodki, choć senny zapach jaśminu i bzu...<br />
-Była to wysoka, smukła elfka. Jej złota skóra i tejże barwy długie  włosy kontrastowały z lśniącymi czernią oczami. Trzymała w dłoni hełm pokryty runami i na modłę wojowników północy, odziana była w cienką bluzę, czarny, matowy napierśnik i nakolanniki, nałożone na lekkie, skórzane spodnie i wysokie do połowy ud buty. U pasa połyskiwały dumnie srebrne ostrogi, magiczna różdżka, sakiewka z mithrilem i krótka mizerykordia. Zza pleców elfki, niczym skrzydła, wystawały jelce półtorarocznego miecza.<br />
+Była to wysoka, smukła elfka. Jej złota skóra i tejże barwy długie  włosy kontrastowały z lśniącymi czernią oczami. Trzymała w dłoni hełm pokryty runami i na modłę wojowników północy, odziana była w cienką bluzę, czarny, matowy napierśnik i nakolanniki, nałożone na lekkie, skórzane spodnie i wysokie do połowy ud buty. U pasa połyskiwały dumnie srebrne ostrogi, magiczna różdżka, sakiewka z mithrilem i krótka mizerykordia. Zza pleców elfki, niczym skrzydła, wystawały jelce półtoraręcznych mieczy.<br />
 -Nie zabijaj na poświęconej ziemi...!-krzyknął kapłan. Uśmiechnęła się i wyciągnęła do niego dłoń, na której pysznił się najeżony górskimi kryształami Pierścień Żywiołów. Przerażone oczy kapłana zmieniły nagle swój wyraz i zaszkliły się tkliwymi łzami.- Nubia! Tyle lat! -szepnął klękając. -Czekaliśmy na ciebie, Pani!<br />
 -Wstań, Neh. Nie czas na oddawanie pokłonów -powiedziała twardo, choć nie bez drżenia wzruszenia w głosie. -Nie po hołdy wróciłam do ".$city1b."...<br />
 Starzec podniósł się z kolan i ruchem dłoni odprawił młodych kapłanów i zwabionych hałasem gapiów zebranych na schodach świątyni. Ukłonił się nisko elfce.<br />
@@ -124,7 +124,7 @@ To rzekłszy wyszła, zostawiając Neha pod ołtarzem Illuminati.<br />
 -Dawno nocne ceremonie nie były tak udane... -mówił Neh idąc z założonymi do tyłu rękami. Jego zgarbiona postać, zdawała się być bardziej pochylona niż zwykle. -Boję się odpowiedzi na pytania, które chcę ci zadać... Ale muszę to zrobić... -dodał po chwili. -Co się z tobą działo przez te wszystkie lata i dlaczego wróciłaś?<br />
 -Kiedy mój klasztor spłonął, wyruszyłam w świat i zarabiałam na chleb jako najemny mag i wojownik. Gdzie tylko można było ryzykować życiem, a zarobić wiele, tam się pojawiałam.<br />
 -Po co ci były pieniądze? -przerwał Nubii. -Przecież Thindil dałby ci ile zechcesz, gdybyś tylko o to poprosiła...<br />
--Widzisz... -westchnęła cieżko.- Pierwsza zasada magii mówi, że nie stworzysz czegoś z niczego, więc nie mogłam wyczarować złota, a od Thindila nie chciałam go brać. Potrzebowałam fortuny, by kupić magiczne księgi, które nauczyłyby mnie, jak cofnąć czas i uratować mój klasztor przed zagładą... Byłam wtedy bezsilna, a dziś... dziś już wiem, że nie cofnę wskazówek zegara, ale mogę zrobić coś innego, a do tego potrzebuję mocy kilku przedmiotów. Wiem, że są w ".$city1a."...<br />
+-Widzisz... -westchnęła ciężko.- Pierwsza zasada magii mówi, że nie stworzysz czegoś z niczego, więc nie mogłam wyczarować złota, a od Thindila nie chciałam go brać. Potrzebowałam fortuny, by kupić magiczne księgi, które nauczyłyby mnie, jak cofnąć czas i uratować mój klasztor przed zagładą... Byłam wtedy bezsilna, a dziś... dziś już wiem, że nie cofnę wskazówek zegara, ale mogę zrobić coś innego, a do tego potrzebuję mocy kilku przedmiotów. Wiem, że są w ".$city1a."...<br />
 -Król da ci je na pewno...<br /> 
 -Nie, on ich nie ma, bo są ukryte tak, że potrzeba wieków, żeby je odnalazł, ale w ".$city1a." mieszka wielu śmiałków, którzy będą potrafili je zdobyć... Oczywiście za odpowiednią nagrodę...<br />
 -Oczywiście... -powtórzył jak echo Neh.");
