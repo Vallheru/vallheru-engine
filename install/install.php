@@ -160,95 +160,68 @@ if (isset($_GET['step']) && $_GET['step'] == 'install1')
 Test uprawnień plików oraz katalogów<br />
 Zanim zaczniesz instalację upewnij się, że skrypt posiada uprawnienia do modyfikacji odpowiednich plików<br />
 <?php
+    $files_to_check = array('../includes/config.php', '../templates_c/test.php', '../avatars/test.php', '../images/tribes/test.php', '../templates_c/layout1/test.php', '../cache/test.php', '../mailer/mailerconfig.php');
     $result = array();
-    @$configfile = fopen('../includes/config.php', 'w');
-    if (!$configfile) 
+    $result_i = 0;
+    $message = array('<td><span style="color:green">OK</span></td></tr>','<td><span style="color:red">Problem</span></td></tr>');
+    foreach($files_to_check as $file)
     {
-        $result[0] = "Brak uprawnień!<br />";
-    } 
-        else 
-    {
-        $result[0] = "W porządku<br />";
-    }
-    print "Plik includes/config.php...".$result[0];
-    @$templatescat = fopen('../templates_c/test.php', 'w');
-    if (!$templatescat) 
-    {
-        $result[1] = "Brak uprawnień!<br />";
-    } 
-        else 
-    {
-        $result[1] = "W porządku<br />";
-        unlink('../templates_c/test.php');
-    }
-    print "Katalog templates_c...".$result[1];
-    @$avatarscat = fopen('../avatars/test.php', 'w');
-    if (!$avatarscat) 
-    {
-        $result[2] = "Brak uprawnień!<br />";
-    } 
-        else 
-    {
-        $result[2] = "W porządku<br />";
-        unlink('../avatars/test.php');
-    }
-    print "Katalog avatars...".$result[2];
-    @$tribelogoscat = fopen('../images/tribes/test.php', 'w');
-    if (!$tribelogoscat) 
-    {
-        $result[3] = "Brak uprawnień!<br />";
-    } 
-        else 
-    {
-        $result[3] = "W porządku<br />";
-        unlink('../images/tribes/test.php');
-    }
-    print "Katalog images/tribes...".$result[3];
-    @$layout1cat = fopen('../templates_c/layout1/test.php', 'w');
-    if (!$layout1cat) 
-    {
-        $result[4] = "Brak uprawnień!<br />";
-    } 
-        else 
-    {
-        $result[4] = "W porządku<br />";
-        unlink('../templates_c/layout1/test.php');
-    }
-    print "Katalog templates_c/layout1...".$result[4];
-    @$cachecat = fopen('../cache/test.php', 'w');
-    if (!$cachecat)
-    {
-        $result[5] = "Brak uprawnień!<br />";
-    }
+      if(substr($file, -8) == 'test.php')
+      {
+        $file = substr($file, 0, -8);
+      }
+      $result[$result_i] = '<tr><td>Uprawnienia do <strong>'.substr($file, 3).'</strong> : ';
+      $result_i++;
+      $result[$result_i] = '<em>'.substr(sprintf('%o', @fileperms($file)), -4).'</em></td>';
+      $result_i++;
+      if(is_dir($file))
+      {
+        @$file_handle = fopen($file.'test.php', 'w');
+      }
         else
-    {
-        $result[5] = "W porządku<br />";
-        unlink('../cache/test.php');
+      {
+        @$file_handle = fopen($file, 'w');
+      }
+      if ($file_handle) 
+      {
+        $result[$result_i] = $message[0];
+      } 
+        else 
+      {
+        $result[$result_i] = $message[1];
+        $result_i++;
+        $result[$result_i] = '<tr><td>Próba nadania pełnych uprawnień do <strong>'.substr($file, 3).'</strong> : </td>';
+        $result_i++;
+        if (@chmod($file, 0777))
+        {
+          $result[$result_i] = $message[0];
+        }
+          else
+        {
+          $result[$result_i] = $message[1];
+        }
+      }
+      $result_i++;
     }
-    print "Katalog cache...".$result[5];
-    @$mailerconf = fopen('../mailer/mailerconfig.php', 'w');
-    if (!$mailerconf)
-    {
-        $result[6] = "Brak uprawnień!<br />";
+    print '<table>';
+    foreach($result as $print_it) {
+      print $print_it;
     }
-        else
+    print '</table>';
+    
+    foreach($result as $this_result) 
     {
-        $result[6] = "W porządku<br />";
-    }
-    print "Plik mailer/mailerconfig.php...".$result[6];
-    $test = 0;
-    for ($i = 0; $i < 7; $i ++) 
-    {
-        if ($result[$i] == "Brak uprawnień!<br />") 
+        if ($this_result == $message[1]) 
         {
             print "Zanim rozpoczniesz instalację, nadaj odpowiednie uprawnienia a następnie ponownie odśwież stronę<br />
             <form method=\"post\" action=\"install.php?step=install1\">
             <input type=\"submit\" value=\"Odśwież\"></form>";
-            $test = 1;
+            $test = false;
             exit;
         }
+        $test = true;
     }
-    if (!$test) 
+    if ($test == true) 
     {
         print "<form method=\"post\" action=\"install.php?step=install2\">
             <input type=\"submit\" value=\"Dalej >>\"></form>";
