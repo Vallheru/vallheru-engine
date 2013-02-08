@@ -7,7 +7,7 @@
  *   @copyright            : (C) 2004,2005,2006,2007,2011,2012,2013 Vallheru Team based on Gamers-Fusion ver 2.5
  *   @author               : thindil <thindil@vallheru.net>
  *   @version              : 1.7
- *   @since                : 14.01.2013
+ *   @since                : 08.02.2013
  *
  */
 
@@ -317,7 +317,7 @@ if (isset($_GET['view']))
 		  }
 	      }
 	    $db -> Execute("INSERT INTO `bugreport` (`sender`, `title`, `location`, `desc`) VALUES(".$player -> id.", '".$arrFields[0]."', '".$arrFields[1]."', '".$arrFields[2]."')");
-	    $objStaff = $db -> Execute("SELECT `id` FROM `players` WHERE `rank`='Admin'");
+	    $objStaff = $db -> Execute("SELECT `id` FROM `players` WHERE `rank` IN ('Admin', 'Budowniczy')");
 	    $strDate = $db -> DBDate($newdate);
 	    while (!$objStaff->EOF) 
 	      {

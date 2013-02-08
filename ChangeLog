@@ -1,3 +1,8 @@
+2013-02-08  Bartek thindil Jasicki  <thindil@vallheru.net>
+
+	* UPDATE,account.php:
+	send log message to staff too
+
 2013-02-05  Bartek thindil Jasicki  <thindil@vallheru.net>
 
 	* BUG,includes/admin/bugreport.php: 
