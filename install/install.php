@@ -160,7 +160,7 @@ if (isset($_GET['step']) && $_GET['step'] == 'install1')
 Test uprawnień plików oraz katalogów<br />
 Zanim zaczniesz instalację upewnij się, że skrypt posiada uprawnienia do modyfikacji odpowiednich plików<br />
 <?php
-    $files_to_check = array('../includes/config.php', '../templates_c/test.php', '../templates_c/test.php', '../avatars/test.php', '../avatars/test.php', '../images/tribes/test.php', '../templates_c/layout1/test.php', '../cache/test.php', '../mailer/mailerconfig.php');
+    $files_to_check = array('../includes/config.php', '../templates_c/test.php', '../avatars/test.php', '../images/tribes/test.php', '../templates_c/layout1/test.php', '../cache/test.php', '../mailer/mailerconfig.php');
     $result = array();
     $result_i = 0;
     $message = array('<td><span style="color:green">OK</span></td></tr>','<td><span style="color:red">Problem</span></td></tr>');
@@ -174,7 +174,14 @@ Zanim zaczniesz instalację upewnij się, że skrypt posiada uprawnienia do mody
       $result_i++;
       $result[$result_i] = '<em>'.substr(sprintf('%o', @fileperms($file)), -4).'</em></td>';
       $result_i++;
-      @$file_handle = fopen($file, 'w');
+      if(is_dir($file))
+      {
+        @$file_handle = fopen($file.'test.php', 'w');
+      }
+        else
+      {
+        @$file_handle = fopen($file, 'w');
+      }
       if ($file_handle) 
       {
         $result[$result_i] = $message[0];
