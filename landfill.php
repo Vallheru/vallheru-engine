@@ -4,10 +4,10 @@
  *   Clean city and earn money
  *
  *   @name                 : landfill.php                            
- *   @copyright            : (C) 2004,2005,2007,2011,2012 Vallheru Team based on Gamers-Fusion ver 2.5
+ *   @copyright            : (C) 2004,2005,2007,2011,2012,2013 Vallheru Team based on Gamers-Fusion ver 2.5
  *   @author               : thindil <thindil@vallheru.net>
  *   @version              : 1.7
- *   @since                : 10.12.2012
+ *   @since                : 11.02.2013
  *
  */
 
@@ -59,7 +59,7 @@ if (isset($_GET['action']))
 	$db -> Execute("UPDATE players SET energy=energy-".$_POST['amount'].", credits=credits+".$gain." WHERE id=".$player -> id);
 	$player->energy -= $_POST['amount'];
 	$player->checkexp(array('condition' => $_POST['amount']), $player->id, 'stats');
-	message('success', "Podczas pracy zużyłeś ".$_POST['amount']."punkt(ów) energii i zarobiłeś ".$gain." sztuk złota oraz <b>".$_POST['amount']."</b> punktów doświadczenia.");
+	message('success', "Podczas pracy zużyłeś ".$_POST['amount']." punkt(ów) energii i zarobiłeś ".$gain." sztuk złota oraz <b>".$_POST['amount']."</b> punktów doświadczenia.");
       }
 }
 if ($player->location == 'Altara')
