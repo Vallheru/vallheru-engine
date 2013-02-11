@@ -1,5 +1,7 @@
 2013-02-11  Bartek thindil Jasicki  <thindil@vallheru.net>
 
+	* BUG,crafts.php: 
+	fixed typo
 	* BUG,landfill.php: 
 	fixed typo
 	* BUG,install/resetall.php:
