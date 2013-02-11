@@ -7,7 +7,7 @@
  *   @copyright            : (C) 2004,2005,2006,2007,2011,2012,2013 Vallheru Team based on Gamers-Fusion ver 2.5
  *   @author               : thindil <thindil@vallheru.net>
  *   @version              : 1.7
- *   @since                : 31.01.2013
+ *   @since                : 11.02.2013
  *
  */
 
@@ -101,6 +101,7 @@ $db -> Execute("TRUNCATE TABLE `astral_plans`");
 $db -> Execute("TRUNCATE TABLE `astral`");
 $db->Execute("TRUNCATE TABLE `revent`");
 $db->Execute("TRUNCATE TABLE `brecords`");
+$db->Execute("TRUNCATE TABLE `battlelogs`");
 print "Tables cleared<br />";
 
 /**

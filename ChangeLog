@@ -1,3 +1,8 @@
+2013-02-11  Bartek thindil Jasicki  <thindil@vallheru.net>
+
+	* BUG,install/resetall.php:
+	truncate table battlelogs too
+
 2013-02-08  Bartek thindil Jasicki  <thindil@vallheru.net>
 
 	* UPDATE,account.php:
