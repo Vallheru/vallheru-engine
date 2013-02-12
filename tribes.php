@@ -9,7 +9,7 @@
  *   @author               : mori <ziniquel@users.sourceforge.net>
  *   @author               : eyescream <tduda@users.sourceforge.net>
  *   @version              : 1.7
- *   @since                : 08.01.2013
+ *   @since                : 12.02.2013
  *
  */
 
@@ -87,9 +87,9 @@ $smarty -> assign(array("Logo" => '',
 * Main menu
 */
 if (!isset ($_GET['view']) && !isset($_GET['join'])) 
-{
-    $smarty -> assign(array("Claninfo" => "Witaj w Domu Klanów. Tutaj możesz zobaczyć, dołączyć lub nawet stworzyć nowy klan.<br /><br />Klany to dobrowolne zrzeszenia mieszkańców ".$gamename.". Posiadają odrębne zasady (lub brak zasad), cele, strukturę i organizację. Mogą prowadzić ze sobą wojny lub zabrać się za budową Astralnej Machiny. Dysponują również własnym forum. Każdy gracz może należeć do maksymalnie jednego klanu.<br /><br />Klany nazywane bywają \"państwami w państwie\" ze względu na swoją organizację wewnątrz-klanową. Postępują według własnych reguł, nierzadko stawiając je ponad vallheryjskim prawem. Są to zamożne instytucje, posiadające warowne siedziby we wszystkich miastach królestwa. Niepodzielnie panują na swoim terytorium przy pomocy najemnych wojsk. Krążą pogłoski o wspaniałych bogactwach jakie gromadzą w swych podziemnych skarbcach.",
-        "Ashow" => A_SHOW));
+  {
+    $smarty -> assign(array("Claninfo" => "<b>Witaj w Domu Klanów. </b><br /><br />Klany to dobrowolne zrzeszenia mieszkańców wszystkich miast ".$gamename.". Posiadają odrębne zasady (lub brak zasad), cele, strukturę i organizację. Mogą prowadzić ze sobą wojny lub zabrać się za budową Astralnej Machiny. Dysponują również własnym forum. Każdy gracz może należeć do maksymalnie jednego klanu.<br /><br />Ze względu na organizację wewnątrz-klanową, nazywane bywają \"państwami w państwie\". Postępują według własnych reguł, nierzadko stawiając je ponad vallheryjskim prawem. W większości są to zamożne instytucje, posiadające warowne siedziby obsadzone wojskiem. Spotykane są również niewielkie kryjówki zrzeszonych złodziejaszków czy też eleganckie dwory miejscowej arystokracji. <br /><br /><b>Tutaj możesz zobaczyć, dołączyć lub nawet jeśli posiadasz odpowiednią ilość złota, stworzyć swój własny klan. </b><br />",
+			    "Ashow" => A_SHOW));
     if ($player -> tribe) 
       {
         $mytribe = $db -> Execute("SELECT `name` FROM `tribes` WHERE `id`=".$player -> tribe);
@@ -101,7 +101,7 @@ if (!isset ($_GET['view']) && !isset($_GET['join']))
 	$smarty -> assign(array("Mytribe" => "",
 				"Make" => '<li><a href="tribes.php?view=make">Stwórz nowy klan</a></li>'));
       }
-}
+  }
 
 /**
 * List of clans
