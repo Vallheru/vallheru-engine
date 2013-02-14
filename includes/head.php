@@ -802,12 +802,17 @@ function integercheck($strField)
     } 
 }
 
+function isint( $mixed )
+{
+    return ( preg_match( '/^\d*$/'  , $mixed) == 1 );
+}
+
 /**
  * Function check if value is valid.
  */
 function checkvalue($value)
 {
-  if (!is_int($value))
+  if (!isint($value))
     {
       error('Zapomnij o tym.');
     }

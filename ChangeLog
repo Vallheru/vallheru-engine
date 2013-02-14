@@ -1,5 +1,7 @@
 2013-02-14  Bartek thindil Jasicki  <thindil@vallheru.net>
 
+	* BUG,includes/head.php: 
+	fixed check, second try
 	* BUG,includes/head.php:
 	fixed integer check
 
