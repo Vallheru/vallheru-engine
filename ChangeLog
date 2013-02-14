@@ -1,3 +1,8 @@
+2013-02-14  Bartek thindil Jasicki  <thindil@vallheru.net>
+
+	* BUG,includes/head.php:
+	fixed integer check
+
 2013-02-12  Bartek thindil Jasicki  <thindil@vallheru.net>
 
 	* UPDATE,tribes.php:
