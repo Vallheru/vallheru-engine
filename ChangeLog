@@ -1,3 +1,8 @@
+2013-02-18  Bartek thindil Jasicki  <thindil@vallheru.net>
+
+	* BUG,lumberjack.php:
+	fixed amount energy
+
 2013-02-14  Bartek thindil Jasicki  <thindil@vallheru.net>
 
 	* BUG,includes/head.php: 

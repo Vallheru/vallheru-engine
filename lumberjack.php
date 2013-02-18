@@ -4,10 +4,10 @@
  *   Chop trees
  *
  *   @name                 : lumberjack.php                            
- *   @copyright            : (C) 2004,2005,2006,2011,2012 Vallheru Team based on Gamers-Fusion ver 2.5
+ *   @copyright            : (C) 2004,2005,2006,2011,2012,2013 Vallheru Team based on Gamers-Fusion ver 2.5
  *   @author               : thindil <thindil@vallheru.net>
  *   @version              : 1.7
- *   @since                : 19.12.2012
+ *   @since                : 18.02.2013
  *
  */
 
@@ -222,7 +222,7 @@ $smarty -> assign (array("Action" => $_GET['action'],
                          "Health" => $player -> hp,
 			 "Achop" => "Przeznacz",
 			 "Onchop" => "na wyrąb drewna",
-			 "Curen" => $player->energy,
+			 "Curen" => floor($player->energy),
 			 "Loptions" => $arrOptions,
 			 "Tenergy" => "energii."));
 $smarty -> display ('lumberjack.tpl');
