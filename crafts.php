@@ -7,7 +7,7 @@
  *   @copyright            : (C) 2011,2012,2013 Vallheru Team based on Gamers-Fusion ver 2.5
  *   @author               : thindil <thindil@vallheru.net>
  *   @version              : 1.7
- *   @since                : 11.01.2013
+ *   @since                : 19.02.2013
  *
  */
 
@@ -380,7 +380,7 @@ if (isset($_GET['step']))
 	      }
 	    else
 	      {
-		$strInfo2 .= 'Niestety przy jednym z drzew ustawiłeś się ze złej strony. Spadło ono prosto na Ciebie.';
+		$strInfo2 .= 'Niestety przy jednym z drzew ustawił'.$strSuffix.' się ze złej strony. Spadło ono prosto na Ciebie.';
 	      }
 	    $intExp = (($_SESSION['craftindex'][$intIndex] + 1) * 10);
 	    $strSkill = 'lumberjack';
