@@ -7,7 +7,7 @@
  *   @copyright            : (C) 2006,2011,2012,2013 Vallheru Team based on Gamers-Fusion ver 2.5
  *   @author               : thindil <thindil@vallheru.net>
  *   @version              : 1.7
- *   @since                : 04.02.2013
+ *   @since                : 19.02.2013
  *
  */
 
@@ -319,7 +319,7 @@ if (isset($_GET['step']) && $_GET['step'] == 'make2')
 		  {
 		    error("Nie posiadasz zwykłych pierścieni.");
 		  }
-		$strYouhave = 'Posiadasz <b>'.$objMinerals->fields['adamantium'].'</b> sztuk <b>adamantium</b>, <b>'.$objMinerals->fields['crystal'].' krzystałów</b>, <b>'.$objMinerals->fields['meteor'].'</b> sztuk <b>meteorytu</b> oraz <b>'.$objRings->fields['amount'].' pierścieni</b>.';
+		$strYouhave = 'Posiadasz <b>'.$objMinerals->fields['adamantium'].'</b> sztuk <b>adamantium</b>, <b>'.$objMinerals->fields['crystal'].' kryształów</b>, <b>'.$objMinerals->fields['meteor'].'</b> sztuk <b>meteorytu</b> oraz <b>'.$objRings->fields['amount'].' pierścieni</b>.';
 		$objRings->Close();
 		$objMinerals->Close();
                 $arrBonus = array('zręczności', 'siły', 'inteligencji', 'siły woli', 'szybkości', 'kondycji');
