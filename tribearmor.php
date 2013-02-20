@@ -8,7 +8,7 @@
  *   @author               : thindil <thindil@vallheru.net>
  *   @author               : eyescream <tduda@users.sourceforge.net>
  *   @version              : 1.7
- *   @since                : 28.01.2013
+ *   @since                : 20.02.2013
  *
  */
 
@@ -180,6 +180,14 @@ if (isset($_GET['step']) && $_GET['step'] == 'zobacz')
     {
         error (ERROR);
     }
+    if (isset($_POST['min']))
+      {
+	checkvalue($_POST['min']);
+      }
+    if (isset($_POST['max']))
+      {
+	checkvalue($_POST['max']);
+      }
     if (isset($_GET['min']))
       {
 	checkvalue($_GET['min']);
