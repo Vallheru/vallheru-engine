@@ -7,7 +7,7 @@
  *   @copyright            : (C) 2004,2005,2006,2011,2012,2013 Vallheru Team based on Gamers-Fusion ver 2.5
  *   @author               : thindil <thindil@vallheru.net>
  *   @version              : 1.7
- *   @since                : 10.01.2013
+ *   @since                : 21.02.2013
  *
  */
 
@@ -404,11 +404,17 @@ if (isset($_GET['battle']))
     {
         error (PLAYER_F);
     }
+    $objAttack = $db->Execute("SELECT `id` FROM `attacks` WHERE `attacker`=".$player->id." AND `attacked`=".$enemy->id);
+    if ($objAttack->fields['id'])
+      {
+	error('Nie możesz atakować tego gracza więcej niż raz na reset.');
+      }
     $smarty -> assign (array("Enemyname" => $enemy->user,
                              "Versus" => VERSUS));
     $db -> Execute("UPDATE `players` SET `energy`=`energy`-1 WHERE `id`=".$player -> id);
     $strMessage = '';
     require_once('includes/battle.php');
+    $db->Execute("INSERT INTO `attacks` (`attacker`, `attacked`) VALUES(".$player->id.", ".$enemy->id.")");
     if ($player->stats['speed'][2] >= $enemy->stats['speed'][2]) 
     {
         attack1($player, $enemy, $myczar, $eczar, $myczaro, $eczaro, 0, 0, 0, 0, 0, 0, 0, 0, $player->id, $strMessage);

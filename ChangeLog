@@ -1,5 +1,7 @@
 2013-02-21  Bartek thindil Jasicki  <thindil@vallheru.net>
 
+	* FEATURE,includes/resets.php, battle.php: 
+	added block for multiattacks on one player
 	* UPDATE,install/db/update.sql:
 	updated database
 

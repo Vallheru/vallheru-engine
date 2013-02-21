@@ -4,10 +4,10 @@
  *   Resets in game - (mainreset) main reset and (smallreset) other resets
  *
  *   @name                 : resets.php                            
- *   @copyright            : (C) 2004,2005,2006,2007,2011,2012 Vallheru Team based on Gamers-Fusion ver 2.5
+ *   @copyright            : (C) 2004,2005,2006,2007,2011,2012,2013 Vallheru Team based on Gamers-Fusion ver 2.5
  *   @author               : thindil <thindil@vallheru.net>
  *   @version              : 1.7
- *   @since                : 14.12.2012
+ *   @since                : 21.02.2013
  *
  */
 
@@ -56,6 +56,7 @@ function smallreset($blnSmall = FALSE)
     $data = date("y-m-d");
     $strDate = $db -> DBDate($data);
     $db -> Execute("TRUNCATE TABLE events");
+    $db->Execute("TRUNCATE TABLE `attacks`");
     /**
      * Grow herbs
      */
