@@ -250,3 +250,9 @@ KEY `id` ( `id` )
 ) ENGINE = MYISAM DEFAULT CHARSET = utf8;
 ALTER TABLE `vallars` ADD `id` INT NOT NULL AUTO_INCREMENT FIRST ,
 ADD INDEX ( `id` );
+CREATE TABLE IF NOT EXISTS `attacks` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `attacker` int(11) NOT NULL,
+  `attacked` int(11) NOT NULL,
+  KEY `id` (`id`)
+) ENGINE=MyISAM DEFAULT CHARSET=utf8 AUTO_INCREMENT=1;
