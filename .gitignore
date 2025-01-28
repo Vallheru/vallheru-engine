@@ -1,0 +1,10 @@
+templates_c/**/*.tpl.php
+
+# Created by the install.php script
+templates_c/test.php
+avatars/test.php
+images/tribes/test.php
+templates_c/layout1/test.php
+cache/test.php
+mailer/mailerconfig.php
+includes/config.php
