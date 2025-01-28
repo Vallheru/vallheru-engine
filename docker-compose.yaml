@@ -5,21 +5,16 @@ services:
     image: nginx:latest
     ports:
       - '0.0.0.0:8080:80'
-    # entrypoint: 
-      # - /entrypoint.sh
-    # command: ["nginx", "-g", "daemon off;"]
     volumes:
-      # - ./docker/entrypoint.sh:/entrypoint.sh
       - ./:/var/www/html/
       - ./docker/nginx.conf:/etc/nginx/conf.d/default.conf
     networks:
       - vallheru
 
   php-fpm:
-    image: library/php:5.6.27-fpm
-    # command:
-    #   - "-b"
-    #   - "0.0.0.0:9000"
+    build:
+      dockerfile: ./docker/php.Dockerfile
+      context: .
     entrypoint: 
       - /entrypoint.sh
     command: ["php-fpm"]
@@ -30,10 +25,9 @@ services:
       - vallheru
 
   mysql:
-    image: mysql:5-debian
+    image: library/mysql:5.5
     volumes:
       - mysql_data:/var/lib/mysql
-      # - ./install/vallheru.sql:/docker-entrypoint-initdb.d/vallheru.sql
     environment:
       MYSQL_ROOT_PASSWORD: vallheru123
       MYSQL_DATABASE: vallheru
