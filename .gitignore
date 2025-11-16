@@ -8,3 +8,5 @@ templates_c/layout1/test.php
 cache/test.php
 mailer/mailerconfig.php
 includes/config.php
+# Rust build artifacts
+vallheru-rs/target/
