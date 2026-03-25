@@ -1,4 +1,5 @@
 pub mod config;
+pub mod errors;
 pub mod health;
 
 use config::AppConfig;
