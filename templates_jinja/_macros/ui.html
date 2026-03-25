@@ -1,0 +1,130 @@
+{#
+  Shared UI macros for Vallheru templates.
+
+  Import in any page template:
+    {% import "_macros/ui.html" as ui %}
+
+  Then call:
+    {{ ui.alert("success", "Item purchased.") }}
+    {{ ui.confirm_form("/bank?action=withdraw", "Withdraw gold", {"amount": "10"}) }}
+    {{ ui.pagination(current_page, total_pages, "/memberlist?lista=user&page=") }}
+#}
+
+{# ------------------------------------------------------------------ #}
+{# Alert / status message                                             #}
+{# kind: "success" | "info" | "warning" | "error"                     #}
+{# ------------------------------------------------------------------ #}
+{% macro alert(kind, message) %}
+<div class="alert alert-{{ kind }}">{{ message }}</div>
+{% endmacro %}
+
+{# ------------------------------------------------------------------ #}
+{# Error box — for displaying a single error message prominently.     #}
+{# ------------------------------------------------------------------ #}
+{% macro error_box(message) %}
+<div class="alert alert-error">{{ message }}</div>
+{% endmacro %}
+
+{# ------------------------------------------------------------------ #}
+{# Success box                                                        #}
+{# ------------------------------------------------------------------ #}
+{% macro success_box(message) %}
+<div class="alert alert-success">{{ message }}</div>
+{% endmacro %}
+
+{# ------------------------------------------------------------------ #}
+{# Confirmation form — a simple POST form with a submit button.       #}
+{# action: form action URL                                            #}
+{# label: submit button text                                          #}
+{# hidden: dict of hidden input name→value pairs (optional)           #}
+{# ------------------------------------------------------------------ #}
+{% macro confirm_form(action, label, hidden={}) %}
+<form method="post" action="{{ action }}" class="confirm-form">
+  {% for name, value in hidden.items() %}
+  <input type="hidden" name="{{ name }}" value="{{ value }}" />
+  {% endfor %}
+  <button type="submit">{{ label }}</button>
+</form>
+{% endmacro %}
+
+{# ------------------------------------------------------------------ #}
+{# Inline form — a single-row POST form with inputs.                  #}
+{# action: form action URL                                            #}
+{# submit_label: submit button text                                   #}
+{# ------------------------------------------------------------------ #}
+{% macro inline_form(action, submit_label) %}
+<form method="post" action="{{ action }}" class="inline-form">
+  {{ caller() }}
+  <button type="submit">{{ submit_label }}</button>
+</form>
+{% endmacro %}
+
+{# ------------------------------------------------------------------ #}
+{# Data table                                                         #}
+{# headers: list of column header strings                             #}
+{# The body rows are passed via caller().                             #}
+{# ------------------------------------------------------------------ #}
+{% macro data_table(headers) %}
+<table class="data-table" width="90%">
+  <thead>
+    <tr>
+      {% for h in headers %}
+      <th>{{ h }}</th>
+      {% endfor %}
+    </tr>
+  </thead>
+  <tbody>
+    {{ caller() }}
+  </tbody>
+</table>
+{% endmacro %}
+
+{# ------------------------------------------------------------------ #}
+{# Sortable table header cell                                         #}
+{# url: link for sorting                                              #}
+{# label: header text                                                 #}
+{# ------------------------------------------------------------------ #}
+{% macro sort_header(url, label) %}
+<th><a href="{{ url }}">{{ label }}</a></th>
+{% endmacro %}
+
+{# ------------------------------------------------------------------ #}
+{# Pagination — simple numbered pages.                                #}
+{# current: current 1-based page number                               #}
+{# total: total number of pages                                       #}
+{# base_url: URL prefix; page number is appended as query param       #}
+{# ------------------------------------------------------------------ #}
+{% macro pagination(current, total, base_url) %}
+{% if total > 1 %}
+<nav class="pagination">
+  {% for page in range(1, total + 1) %}
+    {% if page == current %}
+      <span class="page-current">{{ page }}</span>
+    {% else %}
+      <a href="{{ base_url }}{{ page }}" class="page-link">{{ page }}</a>
+    {% endif %}
+  {% endfor %}
+</nav>
+{% endif %}
+{% endmacro %}
+
+{# ------------------------------------------------------------------ #}
+{# Empty state — shown when a list/table has no content.              #}
+{# ------------------------------------------------------------------ #}
+{% macro empty_state(message) %}
+<div class="empty-state">
+  <p>{{ message }}</p>
+</div>
+{% endmacro %}
+
+{# ------------------------------------------------------------------ #}
+{# Section heading with optional link                                 #}
+{# ------------------------------------------------------------------ #}
+{% macro section(title, link_url="", link_label="") %}
+<div class="section-heading">
+  <h3>{{ title }}</h3>
+  {% if link_url %}
+  <a href="{{ link_url }}">{{ link_label }}</a>
+  {% endif %}
+</div>
+{% endmacro %}

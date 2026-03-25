@@ -343,4 +343,44 @@ mod tests {
         assert_eq!(ctx.theme_css, "layout1.css");
         assert_eq!(ctx.theme, "layout1");
     }
+
+    #[test]
+    fn ui_macros_are_loadable() {
+        // Verify the embedded _macros/ui.html can be parsed and imported.
+        let catalog = Catalog::empty("pl");
+        let engine = TemplateEngine::new(
+            &TemplateEngineConfig {
+                game_name: "TestGame".to_owned(),
+                base_url: "https://example.com".to_owned(),
+            },
+            &catalog,
+        );
+
+        // A template that imports and uses the UI macros.
+        let source = r#"
+{%- import "_macros/ui.html" as ui -%}
+{{ ui.alert("success", "It works!") }}
+{{ ui.error_box("Something failed.") }}
+{{ ui.pagination(2, 5, "/items?page=") }}
+{{ ui.empty_state("No items found.") }}
+"#;
+        let mut env = minijinja::Environment::new();
+        // Load the embedded ui.html macro file.
+        crate::assets::load_templates_into(&mut env);
+        env.add_template("test_page", source).unwrap();
+
+        let tmpl = env.get_template("test_page").unwrap();
+        let output = tmpl.render(minijinja::context!()).unwrap();
+
+        assert!(output.contains("alert-success"));
+        assert!(output.contains("It works!"));
+        assert!(output.contains("alert-error"));
+        assert!(output.contains("Something failed."));
+        assert!(output.contains("pagination"));
+        assert!(output.contains("page-current"));
+        assert!(output.contains("empty-state"));
+
+        // Verify the engine itself loaded the macros file.
+        drop(engine);
+    }
 }
