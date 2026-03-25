@@ -41,6 +41,9 @@ sqlx = { version = "0.8", features = ["runtime-tokio", "postgres", "mysql", "mac
 # CLI
 clap = { version = "4", features = ["derive"] }
 
+# Utilities
+uuid = { version = "1", features = ["v4"] }
+
 # Error handling
 thiserror = "2"
 anyhow = "1"

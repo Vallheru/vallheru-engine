@@ -80,7 +80,12 @@ async fn serve(config: AppConfig) -> anyhow::Result<()> {
         vallheru_data::pool::create_pool(&config.database.url, config.database.max_connections)
             .await?;
 
-    let state = vallheru_web::AppState { pool: pool.clone() };
+    let state = vallheru_web::AppState {
+        pool: pool.clone(),
+        context_defaults: vallheru_web::ContextDefaults {
+            locale: config.game.lang.clone(),
+        },
+    };
     let app = vallheru_web::build_router(state);
 
     tracing::info!(%bind, "starting HTTP server");

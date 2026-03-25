@@ -6,6 +6,7 @@
 
 use axum::Router;
 
+use crate::middleware::context;
 use crate::state::AppState;
 
 pub mod health;
@@ -15,6 +16,8 @@ pub mod health;
 /// Operational routes (healthz, readyz, buildinfo) are included directly.
 /// Game routes will be added here as modules are migrated.
 pub fn build_router(state: AppState) -> Router {
+    let ctx_defaults = state.context_defaults.clone();
+
     Router::new()
         // Operational routes (no auth, not module-owned).
         .merge(health::routes())
@@ -23,4 +26,9 @@ pub fn build_router(state: AppState) -> Router {
         // Future: .merge(world::routes())
         // ...
         .with_state(state)
+        // Request context middleware runs for every request.
+        .layer(axum::middleware::from_fn_with_state(
+            ctx_defaults,
+            context::inject_request_context,
+        ))
 }
