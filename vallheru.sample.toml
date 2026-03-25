@@ -1,0 +1,27 @@
+# Vallheru Engine — sample configuration
+#
+# Copy to `vallheru.toml` and fill in the values.
+# All settings can also be set via environment variables using the
+# VALLHERU_ prefix with __ as section separator, e.g.:
+#   VALLHERU_DATABASE__URL=postgres://...
+#   VALLHERU_SESSION__SECRET=<64+ byte string>
+
+[server]
+bind = "0.0.0.0:3000"
+
+[database]
+url = "postgres://vallheru:password@localhost:5432/vallheru"
+max_connections = 10
+
+[game]
+name = "Vallheru"
+email = "game@example.com"
+base_url = "http://localhost:3000"
+admin_name = "Admin"
+admin_email = "admin@example.com"
+player_limit = 0
+lang = "pl"
+
+[session]
+# Must be at least 64 characters.
+secret = "CHANGE_ME_CHANGE_ME_CHANGE_ME_CHANGE_ME_CHANGE_ME_CHANGE_ME_CHANGE_ME"
