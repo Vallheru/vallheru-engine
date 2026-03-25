@@ -165,6 +165,13 @@ These are the recommended Rust modules, mapped from the real PHP codebase:
 | 15 | [15-admin-moderation-and-runtime-operations.md](./15-admin-moderation-and-runtime-operations.md) | 12h | staff/admin, moderation, bugtrack, resets, installer, era tools |
 | 16 | [16-testing-parity-and-cutover.md](./16-testing-parity-and-cutover.md) | 18h | golden-master checks, rollout, rollback, final packaging |
 
+## Supporting Documents
+
+| File | Purpose |
+|---|---|
+| [table-ownership-map.md](./table-ownership-map.md) | Maps all 112 legacy MySQL tables to owning migration modules |
+| [problems-and-tech-debt.md](./problems-and-tech-debt.md) | Technical debt and problem register |
+
 ## Totals
 
 - Total task files: 16
