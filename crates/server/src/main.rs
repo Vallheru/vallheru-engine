@@ -39,8 +39,10 @@ fn main() -> anyhow::Result<()> {
             rt.block_on(vallheru_data::migrate::run_migrations(&config.database.url))
         }
         Command::Import => {
-            tracing::info!("import: not yet implemented");
-            Ok(())
+            let rt = tokio::runtime::Builder::new_current_thread()
+                .enable_all()
+                .build()?;
+            rt.block_on(vallheru_data::import::run_seeds(&config.database.url))
         }
         Command::ResetEra => {
             tracing::info!("reset-era: not yet implemented");
