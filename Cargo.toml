@@ -44,6 +44,8 @@ clap = { version = "4", features = ["derive"] }
 # Utilities
 uuid = { version = "1", features = ["v4"] }
 minijinja = { version = "2", features = ["loader"] }
+include_dir = "0.7"
+mime_guess = "2"
 
 # Error handling
 thiserror = "2"

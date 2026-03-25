@@ -73,9 +73,8 @@ pub struct FlashView {
 impl TemplateEngine {
     /// Create a new template engine with the given configuration.
     ///
-    /// Templates are registered as empty loaders initially; the actual
-    /// templates are added via [`add_template`](Self::add_template) or by
-    /// configuring a loader (see MP-04-02 / MP-04-03).
+    /// Embedded templates from `templates_jinja/` are loaded automatically.
+    /// Additional templates can be registered via [`add_template`](Self::add_template).
     pub fn new(config: &TemplateEngineConfig) -> Self {
         let mut env = Environment::new();
 
@@ -88,6 +87,9 @@ impl TemplateEngine {
 
         // Register shared helper functions.
         env.add_function("asset_url", asset_url);
+
+        // Load all embedded templates from the compiled-in directory.
+        crate::assets::load_templates_into(&mut env);
 
         Self {
             env: Arc::new(env),

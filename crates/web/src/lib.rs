@@ -1,3 +1,4 @@
+pub mod assets;
 pub mod middleware;
 pub mod page;
 pub mod render;

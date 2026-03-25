@@ -24,6 +24,8 @@ pub fn build_router(state: AppState) -> Router {
         .merge(health::routes())
         // Migration diagnostics.
         .merge(fallback::routes())
+        // Static assets (CSS, JS, images).
+        .merge(crate::assets::routes())
         // Future: .merge(auth::routes())
         // Future: .merge(player::routes())
         // Future: .merge(world::routes())

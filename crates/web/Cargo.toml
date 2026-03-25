@@ -12,6 +12,8 @@ vallheru-domain = { path = "../domain" }
 vallheru-data = { path = "../data" }
 
 axum.workspace = true
+include_dir.workspace = true
+mime_guess.workspace = true
 minijinja.workspace = true
 serde.workspace = true
 tower.workspace = true
