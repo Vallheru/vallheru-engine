@@ -43,6 +43,7 @@ clap = { version = "4", features = ["derive"] }
 
 # Utilities
 uuid = { version = "1", features = ["v4"] }
+minijinja = { version = "2", features = ["loader"] }
 
 # Error handling
 thiserror = "2"

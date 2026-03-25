@@ -80,11 +80,17 @@ async fn serve(config: AppConfig) -> anyhow::Result<()> {
         vallheru_data::pool::create_pool(&config.database.url, config.database.max_connections)
             .await?;
 
+    let templates = vallheru_web::TemplateEngine::new(&vallheru_web::TemplateEngineConfig {
+        game_name: config.game.name.clone(),
+        base_url: config.game.base_url.clone(),
+    });
+
     let state = vallheru_web::AppState {
         pool: pool.clone(),
         context_defaults: vallheru_web::ContextDefaults {
             locale: config.game.lang.clone(),
         },
+        templates,
     };
     let app = vallheru_web::build_router(state);
 
