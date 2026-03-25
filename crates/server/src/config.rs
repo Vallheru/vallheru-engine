@@ -26,6 +26,11 @@ pub struct DatabaseConfig {
     /// `postgres://user:pass@localhost:5432/vallheru`
     pub url: String,
 
+    /// Legacy database connection string for reconciliation, e.g.
+    /// `mysql://user:pass@localhost:3306/vallheru`
+    #[serde(default)]
+    pub legacy_url: Option<String>,
+
     /// Maximum connections in the pool.
     #[serde(default = "default_max_connections")]
     pub max_connections: u32,

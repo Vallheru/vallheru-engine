@@ -49,8 +49,13 @@ fn main() -> anyhow::Result<()> {
             Ok(())
         }
         Command::Reconcile => {
-            tracing::info!("reconcile: not yet implemented");
-            Ok(())
+            let rt = tokio::runtime::Builder::new_current_thread()
+                .enable_all()
+                .build()?;
+            rt.block_on(vallheru_data::reconcile::run_reconciliation(
+                &config.database.url,
+                config.database.legacy_url.as_deref(),
+            ))
         }
     }
 }
