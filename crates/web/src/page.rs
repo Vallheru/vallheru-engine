@@ -29,6 +29,12 @@ pub struct PageMeta {
 
     /// Flash messages to display at the top of the page.
     pub flashes: Vec<Flash>,
+
+    /// Page-specific CSS files to load (relative to `/static/css/`).
+    pub extra_css: Vec<String>,
+
+    /// Page-specific JS files to load (relative to `/static/js/`).
+    pub extra_js: Vec<String>,
 }
 
 impl PageMeta {
@@ -51,6 +57,20 @@ impl PageMeta {
     #[must_use]
     pub fn with_flash(mut self, flash: Flash) -> Self {
         self.flashes.push(flash);
+        self
+    }
+
+    /// Declare a page-specific CSS file (path relative to `/static/css/`).
+    #[must_use]
+    pub fn with_css(mut self, path: impl Into<String>) -> Self {
+        self.extra_css.push(path.into());
+        self
+    }
+
+    /// Declare a page-specific JS file (path relative to `/static/js/`).
+    #[must_use]
+    pub fn with_js(mut self, path: impl Into<String>) -> Self {
+        self.extra_js.push(path.into());
         self
     }
 }
@@ -152,6 +172,17 @@ mod tests {
         );
         assert_eq!(meta.flashes.len(), 1);
         assert_eq!(meta.flashes[0].kind, FlashKind::Success);
+    }
+
+    #[test]
+    fn page_meta_with_assets() {
+        let meta = PageMeta::titled("Bank")
+            .with_js("bank.js")
+            .with_css("bank-extra.css")
+            .with_js("editor.js");
+
+        assert_eq!(meta.extra_js, vec!["bank.js", "editor.js"]);
+        assert_eq!(meta.extra_css, vec!["bank-extra.css"]);
     }
 
     #[test]

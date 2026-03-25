@@ -4,6 +4,9 @@
   <meta charset="utf-8" />
   <title>{{ game_name }} :: {{ title }}</title>
   <link rel="stylesheet" href="{{ asset_url('css/' ~ theme_css) }}" />
+  {% for css in extra_css %}
+  <link rel="stylesheet" href="/static/css/{{ css }}" />
+  {% endfor %}
   {% block head_extra %}{% endblock %}
 </head>
 <body>
@@ -38,6 +41,9 @@
     </footer>
     {% endblock %}
   </div>
+  {% for js in extra_js %}
+  <script src="/static/js/{{ js }}"></script>
+  {% endfor %}
   {% block scripts %}{% endblock %}
 </body>
 </html>

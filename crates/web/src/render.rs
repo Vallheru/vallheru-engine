@@ -62,6 +62,12 @@ pub struct RenderContext {
     pub is_authenticated: bool,
     pub user_name: String,
     pub user_rank: String,
+
+    // Page-level asset declarations
+    /// Extra CSS files for this page (paths relative to `/static/css/`).
+    pub extra_css: Vec<String>,
+    /// Extra JS files for this page (paths relative to `/static/js/`).
+    pub extra_js: Vec<String>,
 }
 
 /// Serialisable flash message for template rendering.
@@ -178,6 +184,8 @@ impl TemplateEngine {
             is_authenticated,
             user_name,
             user_rank,
+            extra_css: meta.extra_css.clone(),
+            extra_js: meta.extra_js.clone(),
         }
     }
 }
@@ -382,5 +390,25 @@ mod tests {
 
         // Verify the engine itself loaded the macros file.
         drop(engine);
+    }
+
+    #[test]
+    fn build_context_carries_extra_assets() {
+        let catalog = Catalog::empty("pl");
+        let engine = TemplateEngine::new(
+            &TemplateEngineConfig {
+                game_name: "TestGame".to_owned(),
+                base_url: "https://example.com".to_owned(),
+            },
+            &catalog,
+        );
+        let req_ctx = make_request_context();
+        let meta = PageMeta::titled("Bank")
+            .with_js("bank.js")
+            .with_css("custom.css");
+
+        let ctx = engine.build_context(&req_ctx, &meta);
+        assert_eq!(ctx.extra_js, vec!["bank.js"]);
+        assert_eq!(ctx.extra_css, vec!["custom.css"]);
     }
 }
