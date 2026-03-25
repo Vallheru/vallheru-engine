@@ -1,4 +1,5 @@
 pub mod config;
+pub mod health;
 
 use config::AppConfig;
 
@@ -40,10 +41,10 @@ fn resolve_config_path() -> Option<std::path::PathBuf> {
 async fn run(config: AppConfig) -> anyhow::Result<()> {
     let bind = config.server.bind;
 
-    let app = axum::Router::new().route(
-        "/healthz",
-        axum::routing::get(|| async { axum::http::StatusCode::OK }),
-    );
+    let app = axum::Router::new()
+        .route("/healthz", axum::routing::get(health::healthz))
+        .route("/readyz", axum::routing::get(health::readyz))
+        .route("/buildinfo", axum::routing::get(health::build_info));
 
     tracing::info!(%bind, "starting HTTP server");
 
