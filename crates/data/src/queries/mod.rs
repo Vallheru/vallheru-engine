@@ -4,4 +4,5 @@
 //! to their queries, separate from the domain entities in `vallheru-domain`.
 
 pub mod auth;
+pub mod registration;
 pub mod settings;

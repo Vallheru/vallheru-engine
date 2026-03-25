@@ -81,6 +81,11 @@ pub fn migrated_routes() -> Vec<MigratedRoute> {
             module: "auth",
             status: RouteStatus::Staged,
         },
+        MigratedRoute {
+            path: "/register",
+            module: "auth",
+            status: RouteStatus::Staged,
+        },
     ]
 }
 

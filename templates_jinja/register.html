@@ -1,0 +1,31 @@
+{# Registration page — ported from register.tpl #}
+{% extends "base.html" %}
+
+{% block content %}
+{% if step == "success" %}
+  <div class="foot">
+    {% for flash in flashes %}
+    <div class="flash flash-{{ flash.kind }}">{{ flash.message }}</div>
+    {% endfor %}
+  </div>
+{% else %}
+  <div class="text2">
+    {{ t("register", "DESCRIPTION") }}
+    {{ t("register", "PLAYERS_COUNT") }} {{ player_count }} {{ t("register", "PLAYERS_REGISTERED") }}.
+  </div>
+
+  <form method="post" action="/register">
+    <div class="forms2">{{ t("register", "NICK") }} <input type="text" name="user" /></div>
+    <div class="forms2">{{ t("register", "EMAIL") }} <input type="text" name="email" /></div>
+    <div class="forms2">{{ t("register", "CONFIRM_EMAIL") }} <input type="text" name="vemail" /></div>
+    <div class="forms2">{{ t("register", "PASSWORD") }} <input type="password" name="pass" /></div>
+    <div class="forms3">{{ t("register", "GAME_TYPE") }}</div>
+    <div class="forms3"><input type="radio" name="gtype" value="T" checked="checked" />{{ t("register", "GAME_TYPE_TEXT") }}</div>
+    <div class="forms3"><input type="radio" name="gtype" value="G" />{{ t("register", "GAME_TYPE_GRAPHIC") }}</div>
+    <div class="forms2"><em>{{ t("register", "GAME_TYPE_INFO") }}</em></div>
+    <div class="forms2">{{ t("register", "REFERRAL_ID") }} <input type="text" name="ref" readonly="readonly" value="{{ prefilled_ref }}" /></div>
+    <div class="forms2"><em>{{ t("register", "REFERRAL_HINT") }}</em></div>
+    <div class="forms2"><input type="submit" value="{{ t('register', 'SUBMIT') }}" /></div>
+  </form>
+{% endif %}
+{% endblock %}

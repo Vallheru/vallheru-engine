@@ -125,6 +125,15 @@ impl TemplateEngine {
     /// Returns an HTML response on success or a 500 error with template
     /// error details logged.
     pub fn render(&self, template_name: &str, ctx: &RenderContext) -> Response {
+        self.render_value(template_name, ctx)
+    }
+
+    /// Render a template with an arbitrary serializable context.
+    ///
+    /// Use this when a page needs extra fields beyond [`RenderContext`].
+    /// The context type should `#[serde(flatten)]` a `RenderContext` so
+    /// all base variables remain available to the layout.
+    pub fn render_value<T: serde::Serialize>(&self, template_name: &str, ctx: &T) -> Response {
         let tmpl = match self.env.get_template(template_name) {
             Ok(t) => t,
             Err(e) => {
