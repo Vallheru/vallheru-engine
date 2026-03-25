@@ -1,0 +1,12 @@
+{# Error page — used for both in-page and full-page errors. #}
+{% extends "base.html" %}
+
+{% block content %}
+<div class="error-page">
+  <h2>{{ title }}</h2>
+  <div class="error-message">{{ message }}</div>
+  {% if back_link_url %}
+  <p><a href="{{ back_link_url }}">{{ back_link_label }}</a></p>
+  {% endif %}
+</div>
+{% endblock %}

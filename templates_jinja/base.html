@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html lang="{{ locale }}">
+<head>
+  <meta charset="utf-8" />
+  <title>{{ game_name }} :: {{ title }}</title>
+  <link rel="stylesheet" href="{{ asset_url('css/' ~ theme_css) }}" />
+  {% block head_extra %}{% endblock %}
+</head>
+<body>
+  <div id="page">
+    {% block header %}
+    <header>
+      <div class="game-time">{{ game_name }}</div>
+    </header>
+    {% endblock %}
+
+    {% if flashes %}
+    <div class="flashes">
+      {% for flash in flashes %}
+      <div class="flash flash-{{ flash.kind }}">{{ flash.message }}</div>
+      {% endfor %}
+    </div>
+    {% endif %}
+
+    <main>
+      {% block content %}{% endblock %}
+    </main>
+
+    {% if back_link_url %}
+    <nav class="back-link">
+      <a href="{{ back_link_url }}">{{ back_link_label }}</a>
+    </nav>
+    {% endif %}
+
+    {% block footer %}
+    <footer>
+      &copy; 2004-2025 <a href="https://launchpad.net/vallheru">Vallheru Team</a>
+    </footer>
+    {% endblock %}
+  </div>
+  {% block scripts %}{% endblock %}
+</body>
+</html>

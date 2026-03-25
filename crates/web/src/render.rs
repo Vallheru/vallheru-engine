@@ -47,6 +47,8 @@ pub struct RenderContext {
     // Per-request values
     pub locale: String,
     pub theme: String,
+    /// CSS file for the active theme (e.g. `"default.css"`, `"layout1.css"`).
+    pub theme_css: String,
     pub request_id: String,
 
     // Page-level values
@@ -161,6 +163,7 @@ impl TemplateEngine {
             game_name: self.game_name.clone(),
             base_url: self.base_url.clone(),
             locale: req_ctx.locale.clone(),
+            theme_css: resolve_theme_css(&req_ctx.theme),
             theme: req_ctx.theme.clone(),
             request_id: req_ctx.request_id.to_string(),
             title: meta.title.clone(),
@@ -185,6 +188,31 @@ impl TemplateEngine {
 fn asset_url(path: String) -> String {
     // TODO(MP-04-03): append content hash query parameter
     path
+}
+
+/// Map a theme key to the CSS filename templates should load.
+///
+/// The PHP codebase stores the CSS filename in `player.settings['style']`
+/// and `layout1` uses `layout1.css`. We normalise so an empty string
+/// falls back to `default.css`.
+fn resolve_theme_css(theme: &str) -> String {
+    match theme {
+        "" => "default.css".to_owned(),
+        "layout1" => "layout1.css".to_owned(),
+        other => format!("{other}.css"),
+    }
+}
+
+/// Return the base template name for a given theme.
+///
+/// Used by handlers that want to render a page extending the theme base.
+/// - `""` → `"themes/default/base.html"`
+/// - `"layout1"` → `"themes/layout1/base.html"`
+pub fn theme_base_template(theme: &str) -> &'static str {
+    match theme {
+        "layout1" => "themes/layout1/base.html",
+        _ => "themes/default/base.html",
+    }
 }
 
 // ---------------------------------------------------------------------------
@@ -275,5 +303,34 @@ mod tests {
     #[test]
     fn asset_url_passthrough() {
         assert_eq!(asset_url("css/main.css".to_owned()), "css/main.css");
+    }
+
+    #[test]
+    fn resolve_theme_css_defaults() {
+        assert_eq!(resolve_theme_css(""), "default.css");
+        assert_eq!(resolve_theme_css("layout1"), "layout1.css");
+        assert_eq!(resolve_theme_css("custom"), "custom.css");
+    }
+
+    #[test]
+    fn theme_base_template_routing() {
+        assert_eq!(theme_base_template(""), "themes/default/base.html");
+        assert_eq!(theme_base_template("layout1"), "themes/layout1/base.html");
+        assert_eq!(theme_base_template("unknown"), "themes/default/base.html");
+    }
+
+    #[test]
+    fn build_context_sets_theme_css() {
+        let engine = make_engine();
+        let req_ctx = RequestContext {
+            request_id: Uuid::nil(),
+            locale: "pl".to_owned(),
+            theme: "layout1".to_owned(),
+            session_user: None,
+        };
+        let meta = PageMeta::titled("Test");
+        let ctx = engine.build_context(&req_ctx, &meta);
+        assert_eq!(ctx.theme_css, "layout1.css");
+        assert_eq!(ctx.theme, "layout1");
     }
 }
