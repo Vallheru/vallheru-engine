@@ -80,10 +80,19 @@ async fn serve(config: AppConfig) -> anyhow::Result<()> {
         vallheru_data::pool::create_pool(&config.database.url, config.database.max_connections)
             .await?;
 
-    let templates = vallheru_web::TemplateEngine::new(&vallheru_web::TemplateEngineConfig {
-        game_name: config.game.name.clone(),
-        base_url: config.game.base_url.clone(),
-    });
+    let catalog = vallheru_web::Catalog::load_embedded(&config.game.lang)
+        .unwrap_or_else(|e| {
+            tracing::warn!(locale = %config.game.lang, error = %e, "failed to load locale catalog, using empty");
+            vallheru_web::Catalog::empty(&config.game.lang)
+        });
+
+    let templates = vallheru_web::TemplateEngine::new(
+        &vallheru_web::TemplateEngineConfig {
+            game_name: config.game.name.clone(),
+            base_url: config.game.base_url.clone(),
+        },
+        &catalog,
+    );
 
     let state = vallheru_web::AppState {
         pool: pool.clone(),
@@ -91,6 +100,7 @@ async fn serve(config: AppConfig) -> anyhow::Result<()> {
             locale: config.game.lang.clone(),
         },
         templates,
+        catalog,
     };
     let app = vallheru_web::build_router(state);
 

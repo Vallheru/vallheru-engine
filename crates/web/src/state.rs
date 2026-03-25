@@ -2,6 +2,7 @@
 
 use vallheru_data::pool::PgPool;
 
+use crate::i18n::Catalog;
 use crate::middleware::context::ContextDefaults;
 use crate::render::TemplateEngine;
 
@@ -13,4 +14,6 @@ pub struct AppState {
     pub context_defaults: ContextDefaults,
     /// Template rendering engine.
     pub templates: TemplateEngine,
+    /// Localization catalog for the active locale.
+    pub catalog: Catalog,
 }

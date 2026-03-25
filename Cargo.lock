@@ -2094,6 +2094,7 @@ dependencies = [
  "minijinja",
  "serde",
  "thiserror",
+ "toml",
  "tower",
  "tracing",
  "uuid",

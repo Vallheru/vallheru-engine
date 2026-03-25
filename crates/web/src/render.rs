@@ -12,6 +12,7 @@ use axum::{
 };
 use minijinja::Environment;
 
+use crate::i18n::{Catalog, make_translate_fn};
 use crate::middleware::context::RequestContext;
 use crate::page::PageMeta;
 
@@ -74,8 +75,9 @@ impl TemplateEngine {
     /// Create a new template engine with the given configuration.
     ///
     /// Embedded templates from `templates_jinja/` are loaded automatically.
+    /// The `catalog` is wired into a `t(module, key)` template function.
     /// Additional templates can be registered via [`add_template`](Self::add_template).
-    pub fn new(config: &TemplateEngineConfig) -> Self {
+    pub fn new(config: &TemplateEngineConfig, catalog: &Catalog) -> Self {
         let mut env = Environment::new();
 
         // Global values available in every template.
@@ -87,6 +89,7 @@ impl TemplateEngine {
 
         // Register shared helper functions.
         env.add_function("asset_url", asset_url);
+        env.add_function("t", make_translate_fn(catalog.clone()));
 
         // Load all embedded templates from the compiled-in directory.
         crate::assets::load_templates_into(&mut env);
@@ -224,15 +227,20 @@ pub fn theme_base_template(theme: &str) -> &'static str {
 #[cfg(test)]
 mod tests {
     use super::*;
+    use crate::i18n::Catalog;
     use crate::middleware::context::{RequestContext, SessionUser};
     use crate::page::{Flash, PageMeta};
     use uuid::Uuid;
 
     fn make_engine() -> TemplateEngine {
-        let mut engine = TemplateEngine::new(&TemplateEngineConfig {
-            game_name: "TestGame".to_owned(),
-            base_url: "https://example.com".to_owned(),
-        });
+        let catalog = Catalog::empty("pl");
+        let mut engine = TemplateEngine::new(
+            &TemplateEngineConfig {
+                game_name: "TestGame".to_owned(),
+                base_url: "https://example.com".to_owned(),
+            },
+            &catalog,
+        );
         engine.add_template("hello", "Hello {{ title }}!");
         engine
     }

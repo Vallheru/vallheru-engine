@@ -28,6 +28,9 @@ static JS_DIR: Dir<'static> = include_dir!("$CARGO_MANIFEST_DIR/../../js");
 /// Embedded image files (`images/` at repo root).
 static IMAGES_DIR: Dir<'static> = include_dir!("$CARGO_MANIFEST_DIR/../../images");
 
+/// Embedded localization files (`i18n/` at repo root).
+pub static I18N_DIR: Dir<'static> = include_dir!("$CARGO_MANIFEST_DIR/../../i18n");
+
 /// Register static asset serving routes.
 ///
 /// - `GET /static/css/:path` — serves embedded CSS

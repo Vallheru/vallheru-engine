@@ -1,0 +1,30 @@
+# Polish localization catalog for Vallheru.
+#
+# Modules map to PHP language files under languages/pl/.
+# Keys match the original PHP define() constant names.
+# Strings are migrated as-is from the PHP source.
+#
+# Modules are loaded on-demand per route; not every module
+# needs to be present here until its route is migrated.
+
+[head]
+CHARSET = "utf-8"
+E_ERRORS = "Nastąpił błąd krytyczny i gra nie zadziałała poprawnie. Informacja o tym błędzie już została wysłana do władców."
+EMPTY_LOGIN = "Proszę wypełnić wszystkie pola."
+BANNED = "Ponieważ zostałeś zbanowany, nie masz dostępu do gry."
+E_LOGIN = "Błąd przy logowaniu. Jeżeli nie jesteś zarejestrowany, zarejestruj się. W przeciwnym wypadku, sprawdź pisownię i spróbuj jeszcze raz."
+MAX_PLAYERS = "Przykro mi, ale ze względu na duże obciążenie serwera w grze może przebywać maksymalnie 70 graczy. Proszę spróbuj później"
+ACCOUNT_BLOCKED = "Nie możesz wejść do gry, ponieważ twoje konto jest nieaktywne jeszcze przez "
+ACCOUNT_DAYS = " dni."
+E_SESSIONS = "Sesja zakończona."
+E_PLAYER = "Nie ma takiego gracza."
+REASON = "Przyczyna wyłączenia gry:"
+
+[common]
+BACK = "Wróć"
+ERROR = "Zapomnij o tym!"
+EMPTY_FIELDS = "Wypełnij wszystkie pola!"
+NO_PERM = "Nie masz prawa przebywać tutaj!"
+ADD = "Dodaj"
+DELETE = "Skasuj"
+WRITE_BY = "napisana przez"
