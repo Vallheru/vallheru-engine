@@ -1,1 +1,1 @@
-pub fn lib_stub() {}
+pub mod migrate;

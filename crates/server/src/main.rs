@@ -26,8 +26,10 @@ fn main() -> anyhow::Result<()> {
             rt.block_on(serve(config))
         }
         Command::Migrate => {
-            tracing::info!("migrate: not yet implemented");
-            Ok(())
+            let rt = tokio::runtime::Builder::new_current_thread()
+                .enable_all()
+                .build()?;
+            rt.block_on(vallheru_data::migrate::run_migrations(&config.database.url))
         }
         Command::Import => {
             tracing::info!("import: not yet implemented");
