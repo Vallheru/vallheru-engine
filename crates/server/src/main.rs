@@ -6,6 +6,13 @@ pub mod health;
 use clap::Parser;
 use cli::{Cli, Command};
 use config::AppConfig;
+use vallheru_data::pool::PgPool;
+
+/// Shared application state available to all Axum handlers.
+#[derive(Clone)]
+pub struct AppState {
+    pub pool: PgPool,
+}
 
 fn main() -> anyhow::Result<()> {
     // Initialize tracing early so all startup messages are captured.
@@ -70,10 +77,17 @@ fn resolve_default_config_path() -> Option<std::path::PathBuf> {
 async fn serve(config: AppConfig) -> anyhow::Result<()> {
     let bind = config.server.bind;
 
+    let pool =
+        vallheru_data::pool::create_pool(&config.database.url, config.database.max_connections)
+            .await?;
+
+    let app_state = AppState { pool: pool.clone() };
+
     let app = axum::Router::new()
         .route("/healthz", axum::routing::get(health::healthz))
         .route("/readyz", axum::routing::get(health::readyz))
-        .route("/buildinfo", axum::routing::get(health::build_info));
+        .route("/buildinfo", axum::routing::get(health::build_info))
+        .with_state(app_state);
 
     tracing::info!(%bind, "starting HTTP server");
 
@@ -82,6 +96,7 @@ async fn serve(config: AppConfig) -> anyhow::Result<()> {
         .with_graceful_shutdown(shutdown_signal())
         .await?;
 
+    pool.close().await;
     tracing::info!("server shut down");
     Ok(())
 }

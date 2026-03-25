@@ -1,5 +1,8 @@
 use axum::Json;
+use axum::extract::State;
 use serde::Serialize;
+
+use crate::AppState;
 
 /// Process health — returns 200 if the server is running.
 pub async fn healthz() -> axum::http::StatusCode {
@@ -7,10 +10,14 @@ pub async fn healthz() -> axum::http::StatusCode {
 }
 
 /// Readiness probe — returns 200 when all dependencies are available.
-/// Currently a stub; will check the database pool once wired.
-pub async fn readyz() -> axum::http::StatusCode {
-    // TODO: check database connectivity once the pool is in app state.
-    axum::http::StatusCode::OK
+pub async fn readyz(State(state): State<AppState>) -> axum::http::StatusCode {
+    match vallheru_data::pool::check_health(&state.pool).await {
+        Ok(()) => axum::http::StatusCode::OK,
+        Err(e) => {
+            tracing::warn!(error = %e, "readiness check failed");
+            axum::http::StatusCode::SERVICE_UNAVAILABLE
+        }
+    }
 }
 
 #[derive(Serialize)]
