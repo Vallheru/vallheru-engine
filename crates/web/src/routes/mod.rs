@@ -9,6 +9,7 @@ use axum::Router;
 use crate::middleware::context;
 use crate::state::AppState;
 
+pub mod fallback;
 pub mod health;
 
 /// Assemble the full application router from per-module route groups.
@@ -21,10 +22,14 @@ pub fn build_router(state: AppState) -> Router {
     Router::new()
         // Operational routes (no auth, not module-owned).
         .merge(health::routes())
+        // Migration diagnostics.
+        .merge(fallback::routes())
         // Future: .merge(auth::routes())
         // Future: .merge(player::routes())
         // Future: .merge(world::routes())
         // ...
+        // Catch-all for unmigrated routes.
+        .fallback(fallback::legacy_fallback)
         .with_state(state)
         // Request context middleware runs for every request.
         .layer(axum::middleware::from_fn_with_state(
