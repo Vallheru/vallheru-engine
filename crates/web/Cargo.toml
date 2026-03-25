@@ -1,0 +1,17 @@
+[package]
+name = "vallheru-web"
+version.workspace = true
+edition.workspace = true
+rust-version.workspace = true
+
+[lints]
+workspace = true
+
+[dependencies]
+vallheru-domain = { path = "../domain" }
+vallheru-data = { path = "../data" }
+
+axum.workspace = true
+serde.workspace = true
+tracing.workspace = true
+thiserror.workspace = true

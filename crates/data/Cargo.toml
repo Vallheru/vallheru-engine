@@ -1,0 +1,16 @@
+[package]
+name = "vallheru-data"
+version.workspace = true
+edition.workspace = true
+rust-version.workspace = true
+
+[lints]
+workspace = true
+
+[dependencies]
+vallheru-domain = { path = "../domain" }
+
+sqlx.workspace = true
+serde.workspace = true
+tracing.workspace = true
+thiserror.workspace = true
