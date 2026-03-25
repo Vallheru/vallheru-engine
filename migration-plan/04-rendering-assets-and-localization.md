@@ -1,6 +1,6 @@
 # 04 Rendering, Assets, and Localization
 
-## Source Surface
+## Current State
 
 - `templates/`
 - `templates/layout1/`
@@ -12,18 +12,38 @@
 - `main.css`
 - `temporary.css`
 
-## Goal
+## Why This Module Exists
 
 Recreate the current server-rendered UI in MiniJinja with embedded assets and explicit localization loading.
+
+## Target Rust Shape
+
+- `crates/web/src/render.rs` — MiniJinja environment setup, shared globals, and helper functions.
+- `crates/web/src/assets.rs` — Embedded asset registry with content hashing and cache headers.
+- `crates/web/src/i18n.rs` — Localization catalog loader (Polish language files from `languages/pl/`).
+- `crates/web/src/components.rs` — Shared form, message, table, and pagination view partials.
+- `templates/` — MiniJinja equivalents of the ~120 Smarty `.tpl` files plus `layout1/` theme variants.
+
+## Module Dependencies
+
+- 01 Platform Foundations (workspace, binary).
+- 03 HTTP Routing and Middleware (router for asset serving and template-backed handlers).
+
+## Risks and Notes
+
+- There are ~120 Smarty templates in `templates/` and ~112 in `templates/layout1/`. MiniJinja syntax differs from Smarty; each template needs manual conversion.
+- The `languages/pl/` directory contains ~100 PHP constant files. These must be converted to a structured format (TOML, JSON, or Rust constants).
+- `css/` contains 7 theme stylesheets; `js/` contains 12 page-specific scripts. All must be embedded.
+- `main.css` and `temporary.css` live at the repo root and must not be overlooked.
 
 ## Tasks
 
 ### MP-04-01: Build the MiniJinja environment
 
 - Description: Set up MiniJinja with template loading, shared globals, shared partials, and helper functions equivalent to the current layout system.
-- Estimated time: 1.5h
-- Dependencies: MP-01-01, MP-03-02.
-- Acceptance criteria:
+- Estimate: 1.5h
+- Depends on: MP-01-01, MP-03-02.
+- Functional acceptance criteria:
   - The Rust app can render a basic HTML page using MiniJinja.
   - Shared layout, header, footer, and message partials are registered.
   - Template errors surface clearly in development.
@@ -34,9 +54,9 @@ Recreate the current server-rendered UI in MiniJinja with embedded assets and ex
 ### MP-04-02: Port the base layouts and theme selection
 
 - Description: Recreate the default and `layout1` theme structures so page migrations can attach to stable shared templates.
-- Estimated time: 1h
-- Dependencies: MP-04-01.
-- Acceptance criteria:
+- Estimate: 1h
+- Depends on: MP-04-01.
+- Functional acceptance criteria:
   - The default theme renders from MiniJinja.
   - Theme selection is request-driven rather than file-path-global state.
   - Layout-specific asset references are resolved through one helper path.
@@ -47,9 +67,9 @@ Recreate the current server-rendered UI in MiniJinja with embedded assets and ex
 ### MP-04-03: Embed shipped assets into the binary
 
 - Description: Embed templates, CSS, JS, and images at compile time and serve them from memory.
-- Estimated time: 1h
-- Dependencies: MP-01-01, MP-03-02.
-- Acceptance criteria:
+- Estimate: 1h
+- Depends on: MP-01-01, MP-03-02.
+- Functional acceptance criteria:
   - The app serves CSS, JS, and images without reading shipped files from disk.
   - Asset URLs include a version or content hash.
   - No writable template cache directory is required.
@@ -60,9 +80,9 @@ Recreate the current server-rendered UI in MiniJinja with embedded assets and ex
 ### MP-04-04: Define localization catalog loading
 
 - Description: Replace PHP constant files under `languages/` with structured Rust-loaded message catalogs.
-- Estimated time: 1h
-- Dependencies: MP-04-01.
-- Acceptance criteria:
+- Estimate: 1h
+- Depends on: MP-04-01.
+- Functional acceptance criteria:
   - Language strings can be loaded per route/module.
   - Missing translations fail visibly in development.
   - Current Polish content is preserved.
@@ -73,9 +93,9 @@ Recreate the current server-rendered UI in MiniJinja with embedded assets and ex
 ### MP-04-05: Rebuild common form and message components
 
 - Description: Port recurring UI fragments such as errors, status messages, confirmation forms, tables, and pagination stubs.
-- Estimated time: 1h
-- Dependencies: MP-04-01, MP-04-02.
-- Acceptance criteria:
+- Estimate: 1h
+- Depends on: MP-04-01, MP-04-02.
+- Functional acceptance criteria:
   - Shared components are reusable across multiple pages.
   - HTML pages can render success, warning, and error states consistently.
   - Table-heavy pages do not need bespoke markup for every migration.
@@ -86,9 +106,9 @@ Recreate the current server-rendered UI in MiniJinja with embedded assets and ex
 ### MP-04-06: Port page-level JS and CSS loading rules
 
 - Description: Define how legacy page-specific JS and CSS are associated with migrated handlers and templates.
-- Estimated time: 1.5h
-- Dependencies: MP-04-02, MP-04-03.
-- Acceptance criteria:
+- Estimate: 1.5h
+- Depends on: MP-04-02, MP-04-03.
+- Functional acceptance criteria:
   - A page can declare the exact JS and CSS assets it needs.
   - Existing scripts such as chat, market, bank, and battle JS can be served unchanged at first.
   - No template depends on writing compiled assets to disk.

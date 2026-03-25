@@ -1,32 +1,59 @@
 # 10 Economy, Markets, and Banking
 
-## Source Surface
+## Current State
 
 - `market.php`
-- `amarket.php`
-- `cmarket.php`
-- `hmarket.php`
-- `imarket.php`
-- `lmarket.php`
-- `mmarket.php`
-- `pmarket.php`
-- `rmarket.php`
+- `amarket.php` (astral market)
+- `cmarket.php` (core/pet market)
+- `hmarket.php` (herb market)
+- `imarket.php` (item market)
+- `lmarket.php` (lumber market)
+- `mmarket.php` (mineral market)
+- `pmarket.php` (potion market)
+- `rmarket.php` (ring market)
 - `bank.php`
-- `zloto.php`
-- `msklep.php`
+- `zloto.php` (gold/currency)
+- `msklep.php` (magic shop)
+- `includes/marketaddto.php` (add listing helper)
+- `includes/marketdel.php` (delete listing helper)
+- `includes/marketdelall.php` (delete all listings helper)
+- `includes/steal.php` (steal from shops)
 
-## Goal
+## Why This Module Exists
 
 Port the currency, banking, and market systems as reusable transactional services rather than per-page SQL scripts.
+
+## Target Rust Shape
+
+- `crates/domain/src/economy/currency.rs` — Money types, balance operations, transfer validation.
+- `crates/domain/src/economy/market.rs` — Shared market workflows: list, buy, cancel, deliver.
+- `crates/domain/src/economy/market_rules.rs` — Category-specific rules per market variant.
+- `crates/data/src/economy.rs` — Banking queries, market listing CRUD, shop stock queries.
+- `crates/web/src/handlers/bank.rs` — Bank deposit/withdrawal handlers.
+- `crates/web/src/handlers/market.rs` — Market browse/buy/sell handlers for all 9 market variants.
+- `crates/web/src/handlers/shop.rs` — Fixed-stock shop handlers (`msklep.php`, `zloto.php`).
+
+## Module Dependencies
+
+- 06 Player State and Progression (player balance, energy costs).
+- 09 Items, Inventory, and Equipment (item catalog for market listings).
+- 02 Database and PostgreSQL (market tables, banking tables).
+
+## Risks and Notes
+
+- There are 9 distinct market PHP files. Many share workflow patterns but have category-specific listing/purchase rules. Consolidation must preserve these differences.
+- Market helper includes (`marketaddto.php`, `marketdel.php`, `marketdelall.php`) contain shared SQL that is currently inlined. These become shared Rust service methods.
+- `includes/steal.php` (shoplifting mechanic) couples economy to the thieves system; keep the integration seam explicit.
+- Money mutations must be centralized to prevent silent economy corruption.
 
 ## Tasks
 
 ### MP-10-01: Map market variants to shared workflows
 
 - Description: Classify each market page by the workflow it implements: browse, list, buy, cancel, deliver, or catalog shop.
-- Estimated time: 1.5h
-- Dependencies: MP-02-01, MP-09-01.
-- Acceptance criteria:
+- Estimate: 1.5h
+- Depends on: MP-02-01, MP-09-01.
+- Functional acceptance criteria:
   - Every market page is mapped to a shared Rust service concept.
   - Unique rules for herbs, potions, astral goods, and player equipment are documented.
   - Duplicated PHP logic is identified for consolidation.
@@ -37,9 +64,9 @@ Port the currency, banking, and market systems as reusable transactional service
 ### MP-10-02: Port currencies, bank balances, and transfers
 
 - Description: Implement the core money services for credits, bank balance, platinum, and related currency movements.
-- Estimated time: 1.5h
-- Dependencies: MP-06-01, MP-02-04.
-- Acceptance criteria:
+- Estimate: 1.5h
+- Depends on: MP-06-01, MP-02-04.
+- Functional acceptance criteria:
   - Money movements are represented as explicit service operations.
   - Transfers are transaction-safe.
   - Validation prevents negative balances and double application.
@@ -50,9 +77,9 @@ Port the currency, banking, and market systems as reusable transactional service
 ### MP-10-03: Port shared market listing and purchase flows
 
 - Description: Rebuild shared listing, sorting, filtering, buy, and cancel operations used by multiple market pages.
-- Estimated time: 2h
-- Dependencies: MP-10-01, MP-10-02.
-- Acceptance criteria:
+- Estimate: 2h
+- Depends on: MP-10-01, MP-10-02.
+- Functional acceptance criteria:
   - The Rust app can browse and purchase at least one market category end to end.
   - Pagination and sorting behavior are preserved where currently supported.
   - Purchases update buyer inventory and seller proceeds in one transaction.
@@ -63,9 +90,9 @@ Port the currency, banking, and market systems as reusable transactional service
 ### MP-10-04: Port category-specific market rules
 
 - Description: Implement the category-specific behaviors for potions, herbs, player equipment, astral goods, rings, and other special inventory types.
-- Estimated time: 2h
-- Dependencies: MP-10-03, MP-09-04, MP-11-05.
-- Acceptance criteria:
+- Estimate: 2h
+- Depends on: MP-10-03, MP-09-04, MP-11-05.
+- Functional acceptance criteria:
   - Each migrated market type respects its quantity and item-shape rules.
   - Cross-table mutations are transaction-safe.
   - The route handlers reuse the shared market service skeleton.
@@ -76,9 +103,9 @@ Port the currency, banking, and market systems as reusable transactional service
 ### MP-10-05: Port bank, gold, and shop-style pages
 
 - Description: Rebuild bank interactions, gold-related pages, and stock-based shop pages such as `msklep.php`.
-- Estimated time: 1.5h
-- Dependencies: MP-10-02, MP-04-05.
-- Acceptance criteria:
+- Estimate: 1.5h
+- Depends on: MP-10-02, MP-04-05.
+- Functional acceptance criteria:
   - Deposit and withdrawal flows work.
   - Shop pages can render stock and process purchases.
   - Logs or audit events exist for money-changing operations.
@@ -89,9 +116,9 @@ Port the currency, banking, and market systems as reusable transactional service
 ### MP-10-06: Add market reconciliation tests
 
 - Description: Create tests that validate no money or quantity is lost across typical listing and buying sequences.
-- Estimated time: 1.5h
-- Dependencies: MP-10-03, MP-10-04, MP-10-05.
-- Acceptance criteria:
+- Estimate: 1.5h
+- Depends on: MP-10-03, MP-10-04, MP-10-05.
+- Functional acceptance criteria:
   - Tests cover list, buy, partial buy, cancel, and insufficient-funds cases.
   - Buyer inventory, seller proceeds, and listing counts reconcile after each scenario.
   - Failures identify the broken invariant clearly.

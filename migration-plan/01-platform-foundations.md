@@ -1,6 +1,6 @@
 # 01 Platform Foundations
 
-## Source Surface
+## Current State
 
 - `index.php`
 - `includes/config.php`
@@ -11,18 +11,35 @@
 - `docker/nginx.conf`
 - `docker/php.Dockerfile`
 
-## Goal
+## Why This Module Exists
 
 Create a Rust workspace and runtime shell that can host the migrated application without committing yet to risky gameplay behavior.
+
+## Target Rust Shape
+
+- `crates/server/src/main.rs` — Axum bootstrap, CLI dispatch via `clap`, graceful shutdown.
+- `crates/server/src/config.rs` — Typed config loaded from env + optional TOML.
+- `crates/server/src/errors.rs` — Shared error type and HTML error rendering.
+- `crates/server/src/health.rs` — `/healthz` and `/readyz` handlers.
+- `crates/server/src/cli.rs` — Subcommand registration for `serve`, `migrate`, `import`, `reset-era`, `reconcile`.
+
+## Module Dependencies
+
+None — this is the first module and has no prerequisites.
+
+## Risks and Notes
+
+- The current PHP bootstrap in `includes/head.php` does many things implicitly (session, locale, player loading, DB connection). The Rust equivalent must be explicit and layered so later modules can compose on top of it.
+- `includes/config.php` is empty in the repo, meaning config is generated outside version control today. The Rust config loader must fail fast on missing values.
 
 ## Tasks
 
 ### MP-01-01: Create the Rust workspace skeleton
 
 - Description: Create the Cargo workspace, define the `server`, `web`, `domain`, and `data` crates, and add a minimal compileable dependency graph.
-- Estimated time: 1.5h
-- Dependencies: None.
-- Acceptance criteria:
+- Estimate: 1.5h
+- Depends on: None.
+- Functional acceptance criteria:
   - `cargo check` passes for the new workspace.
   - The crate boundaries match the architecture in `README.md`.
   - The binary crate starts and exits cleanly.
@@ -33,9 +50,9 @@ Create a Rust workspace and runtime shell that can host the migrated application
 ### MP-01-02: Add typed configuration loading
 
 - Description: Replace the generated PHP config pattern with explicit Rust configuration loaded from environment variables and an optional local TOML file.
-- Estimated time: 1h
-- Dependencies: MP-01-01.
-- Acceptance criteria:
+- Estimate: 1h
+- Depends on: MP-01-01.
+- Functional acceptance criteria:
   - Config covers HTTP bind address, PostgreSQL DSN, session secrets, email settings, and cutover flags.
   - Missing required config fails fast with a readable startup error.
   - A sample config file is documented in comments or a template file.
@@ -46,9 +63,9 @@ Create a Rust workspace and runtime shell that can host the migrated application
 ### MP-01-03: Add application bootstrap and structured logging
 
 - Description: Implement server startup, graceful shutdown, request tracing, and startup logging.
-- Estimated time: 1h
-- Dependencies: MP-01-01, MP-01-02.
-- Acceptance criteria:
+- Estimate: 1h
+- Depends on: MP-01-01, MP-01-02.
+- Functional acceptance criteria:
   - The binary starts an Axum server and logs startup configuration without secrets.
   - Request logs include route, status, duration, and correlation data.
   - Graceful shutdown works on SIGINT/SIGTERM.
@@ -59,9 +76,9 @@ Create a Rust workspace and runtime shell that can host the migrated application
 ### MP-01-04: Add health, readiness, and build information endpoints
 
 - Description: Implement internal endpoints for process health, database readiness stub, and build metadata.
-- Estimated time: 1h
-- Dependencies: MP-01-03.
-- Acceptance criteria:
+- Estimate: 1h
+- Depends on: MP-01-03.
+- Functional acceptance criteria:
   - `/healthz` returns process health.
   - `/readyz` can be wired to dependency checks later.
   - Build version and git revision are exposed in a machine-readable response.
@@ -72,9 +89,9 @@ Create a Rust workspace and runtime shell that can host the migrated application
 ### MP-01-05: Add shared error and response infrastructure
 
 - Description: Define the common application error type and a consistent way to render user-facing errors, redirects, and flash messages.
-- Estimated time: 1h
-- Dependencies: MP-01-03.
-- Acceptance criteria:
+- Estimate: 1h
+- Depends on: MP-01-03.
+- Functional acceptance criteria:
   - Handlers can return typed errors.
   - HTML requests render a standard error page path.
   - Logging captures internal causes without exposing them to users.
@@ -85,9 +102,9 @@ Create a Rust workspace and runtime shell that can host the migrated application
 ### MP-01-06: Consolidate runtime commands into one binary
 
 - Description: Add CLI subcommands for future schema migration, import, reset, and parity jobs so operational tooling does not stay in shell/PHP scripts.
-- Estimated time: 1.5h
-- Dependencies: MP-01-02, MP-01-03.
-- Acceptance criteria:
+- Estimate: 1.5h
+- Depends on: MP-01-02, MP-01-03.
+- Functional acceptance criteria:
   - The binary exposes placeholder subcommands for `serve`, `migrate`, `import`, `reset-era`, and `reconcile`.
   - Command help output is clear enough for future engineers.
   - The design allows web and operational code to share config and logging.

@@ -1,6 +1,6 @@
 # 06 Player State and Progression
 
-## Source Surface
+## Current State
 
 - `class/player_class.php`
 - `stats.php`
@@ -13,18 +13,38 @@
 - `klasa.php`
 - `deity.php`
 
-## Goal
+## Why This Module Exists
 
 Define the central Rust player model and port all derived calculations and progression mechanics that other modules depend on.
+
+## Target Rust Shape
+
+- `crates/domain/src/player.rs` — Core player aggregate: persisted fields, derived stats, transient state.
+- `crates/domain/src/player/stats.rs` — Derived stat, mana, and bonus calculations.
+- `crates/domain/src/player/progression.rs` — AP spending, training, class/race/deity mutations.
+- `crates/domain/src/player/legacy.rs` — Import/parity logic for serialized legacy columns.
+- `crates/data/src/player.rs` — Player repository with explicit SQL queries.
+- `crates/web/src/handlers/player.rs` — Stats, view, HoF, AP, train, race, class, deity page handlers.
+
+## Module Dependencies
+
+- 02 Database and PostgreSQL (player table schema, normalized field strategy).
+- 04 Rendering, Assets, and Localization (stat page templates).
+
+## Risks and Notes
+
+- `class/player_class.php` is the most coupled file in the codebase. Many pages depend on its methods and derived values.
+- The serialized columns (`settings`, `stats`, `skills`, `bonuses`) require careful parsing. Round-trip compatibility may be needed during the migration window.
+- Derived stat calculations interact with equipment, blessings, race/class, and temporary buffs. All must be documented and tested.
 
 ## Tasks
 
 ### MP-06-01: Define the Rust player aggregate
 
 - Description: Design the core player domain types, separating persisted fields, derived fields, and transient request/session state.
-- Estimated time: 1.5h
-- Dependencies: MP-02-03.
-- Acceptance criteria:
+- Estimate: 1.5h
+- Depends on: MP-02-03.
+- Functional acceptance criteria:
   - The player aggregate has a stable Rust API for other modules.
   - Persisted and computed values are not mixed into one unstructured blob.
   - Session-only state is identified explicitly.
@@ -35,9 +55,9 @@ Define the central Rust player model and port all derived calculations and progr
 ### MP-06-02: Port legacy field parsing and serialization
 
 - Description: Implement import/parity logic for legacy settings, stats, skills, and bonuses while the new schema is phased in.
-- Estimated time: 1.5h
-- Dependencies: MP-06-01, MP-02-03.
-- Acceptance criteria:
+- Estimate: 1.5h
+- Depends on: MP-06-01, MP-02-03.
+- Functional acceptance criteria:
   - Imported legacy player rows can be turned into Rust player structs.
   - Round-trip conversion rules exist where temporary compatibility is needed.
   - Parsing failures are logged with enough context to fix bad data.
@@ -48,9 +68,9 @@ Define the central Rust player model and port all derived calculations and progr
 ### MP-06-03: Port derived stat, mana, and bonus calculations
 
 - Description: Recreate the calculations currently performed in `player_class.php`, including equipment, blessings, race/class, and temporary bonus effects.
-- Estimated time: 2h
-- Dependencies: MP-06-01, MP-06-02, MP-09-02.
-- Acceptance criteria:
+- Estimate: 2h
+- Depends on: MP-06-01, MP-06-02, MP-09-02.
+- Functional acceptance criteria:
   - Derived stats match legacy behavior for representative players.
   - Mana, health-related caps, and bonus application order are documented and tested.
   - The web layer can request a fully calculated player snapshot without mutating storage.
@@ -61,9 +81,9 @@ Define the central Rust player model and port all derived calculations and progr
 ### MP-06-04: Port AP, training, class, race, and deity mutations
 
 - Description: Migrate the routes and services that change player progression state through AP spending, training, and alignment/class selection.
-- Estimated time: 1.5h
-- Dependencies: MP-06-03.
-- Acceptance criteria:
+- Estimate: 1.5h
+- Depends on: MP-06-03.
+- Functional acceptance criteria:
   - AP spending and training enforce current prerequisites.
   - Race, class, and deity choices update the player model correctly.
   - Changes are persisted transactionally.
@@ -74,9 +94,9 @@ Define the central Rust player model and port all derived calculations and progr
 ### MP-06-05: Port player-facing read models
 
 - Description: Rebuild profile pages, player inspection, hall-of-fame views, and stats screens.
-- Estimated time: 1.5h
-- Dependencies: MP-04-05, MP-06-03.
-- Acceptance criteria:
+- Estimate: 1.5h
+- Depends on: MP-04-05, MP-06-03.
+- Functional acceptance criteria:
   - Public and authenticated profile/stat pages render from PostgreSQL-backed Rust view models.
   - Hall-of-fame ordering matches current rules.
   - Page-specific formatting is isolated from domain logic.
@@ -87,9 +107,9 @@ Define the central Rust player model and port all derived calculations and progr
 ### MP-06-06: Add parity fixtures for player calculations
 
 - Description: Capture representative player records and expected derived values from PHP, then codify them as Rust tests.
-- Estimated time: 2h
-- Dependencies: MP-06-03.
-- Acceptance criteria:
+- Estimate: 2h
+- Depends on: MP-06-03.
+- Functional acceptance criteria:
   - Fixtures cover at least class, race, blessing, and equipment bonus combinations.
   - Tests fail on calculation drift.
   - Fixture sources are documented so they can be updated safely.
