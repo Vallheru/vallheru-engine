@@ -1,21 +1,47 @@
+pub mod cli;
 pub mod config;
 pub mod errors;
 pub mod health;
 
+use clap::Parser;
+use cli::{Cli, Command};
 use config::AppConfig;
 
 fn main() -> anyhow::Result<()> {
     // Initialize tracing early so all startup messages are captured.
     init_tracing();
 
-    let config = AppConfig::load(resolve_config_path().as_deref())?;
+    let cli = Cli::parse();
+
+    let config_path = cli.config.or_else(resolve_default_config_path);
+
+    let config = AppConfig::load(config_path.as_deref())?;
     config.log_summary();
 
-    let rt = tokio::runtime::Builder::new_multi_thread()
-        .enable_all()
-        .build()?;
-
-    rt.block_on(run(config))
+    match cli.command {
+        Command::Serve => {
+            let rt = tokio::runtime::Builder::new_multi_thread()
+                .enable_all()
+                .build()?;
+            rt.block_on(serve(config))
+        }
+        Command::Migrate => {
+            tracing::info!("migrate: not yet implemented");
+            Ok(())
+        }
+        Command::Import => {
+            tracing::info!("import: not yet implemented");
+            Ok(())
+        }
+        Command::ResetEra => {
+            tracing::info!("reset-era: not yet implemented");
+            Ok(())
+        }
+        Command::Reconcile => {
+            tracing::info!("reconcile: not yet implemented");
+            Ok(())
+        }
+    }
 }
 
 fn init_tracing() {
@@ -26,8 +52,8 @@ fn init_tracing() {
     fmt().with_env_filter(filter).with_target(true).init();
 }
 
-/// Resolve the config file path: explicit env var, or default `vallheru.toml`.
-fn resolve_config_path() -> Option<std::path::PathBuf> {
+/// Resolve the config file path from env or default.
+fn resolve_default_config_path() -> Option<std::path::PathBuf> {
     if let Ok(p) = std::env::var("VALLHERU_CONFIG") {
         return Some(std::path::PathBuf::from(p));
     }
@@ -39,7 +65,7 @@ fn resolve_config_path() -> Option<std::path::PathBuf> {
     }
 }
 
-async fn run(config: AppConfig) -> anyhow::Result<()> {
+async fn serve(config: AppConfig) -> anyhow::Result<()> {
     let bind = config.server.bind;
 
     let app = axum::Router::new()
