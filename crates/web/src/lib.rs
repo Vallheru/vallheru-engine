@@ -1,4 +1,5 @@
 pub mod assets;
+pub mod handlers;
 pub mod i18n;
 pub mod middleware;
 pub mod page;

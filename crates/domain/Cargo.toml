@@ -10,3 +10,8 @@ workspace = true
 [dependencies]
 serde.workspace = true
 thiserror.workspace = true
+argon2.workspace = true
+md-5.workspace = true
+hex.workspace = true
+rand.workspace = true
+tracing.workspace = true

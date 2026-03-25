@@ -50,3 +50,9 @@ mime_guess = "2"
 # Error handling
 thiserror = "2"
 anyhow = "1"
+
+# Cryptography (auth)
+argon2 = "0.5"
+md-5 = "0.10"
+hex = "0.4"
+rand = "0.8"

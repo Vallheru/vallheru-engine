@@ -9,6 +9,7 @@ use axum::Router;
 use crate::middleware::context;
 use crate::state::AppState;
 
+pub mod auth;
 pub mod fallback;
 pub mod health;
 
@@ -26,7 +27,8 @@ pub fn build_router(state: AppState) -> Router {
         .merge(fallback::routes())
         // Static assets (CSS, JS, images).
         .merge(crate::assets::routes())
-        // Future: .merge(auth::routes())
+        // Authentication routes.
+        .merge(auth::routes())
         // Future: .merge(player::routes())
         // Future: .merge(world::routes())
         // ...
