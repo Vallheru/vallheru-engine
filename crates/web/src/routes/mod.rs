@@ -19,6 +19,7 @@ pub mod health;
 /// Game routes will be added here as modules are migrated.
 pub fn build_router(state: AppState) -> Router {
     let ctx_defaults = state.context_defaults.clone();
+    let pool = state.pool.clone();
 
     Router::new()
         // Operational routes (no auth, not module-owned).
@@ -35,7 +36,12 @@ pub fn build_router(state: AppState) -> Router {
         // Catch-all for unmigrated routes.
         .fallback(fallback::legacy_fallback)
         .with_state(state)
-        // Request context middleware runs for every request.
+        // Session resolution (runs after context injection, closer to handler).
+        .layer(axum::middleware::from_fn_with_state(
+            pool,
+            crate::middleware::session::resolve_session,
+        ))
+        // Request context middleware (outermost, runs first).
         .layer(axum::middleware::from_fn_with_state(
             ctx_defaults,
             context::inject_request_context,

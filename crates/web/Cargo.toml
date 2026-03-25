@@ -12,10 +12,13 @@ vallheru-domain = { path = "../domain" }
 vallheru-data = { path = "../data" }
 
 axum.workspace = true
+hex.workspace = true
 include_dir.workspace = true
 mime_guess.workspace = true
 minijinja.workspace = true
+rand.workspace = true
 serde.workspace = true
+sqlx.workspace = true
 toml.workspace = true
 tower.workspace = true
 tracing.workspace = true

@@ -2082,6 +2082,7 @@ version = "0.1.0"
 dependencies = [
  "anyhow",
  "serde",
+ "serde_json",
  "sqlx",
  "thiserror",
  "tracing",
@@ -2126,10 +2127,13 @@ name = "vallheru-web"
 version = "0.1.0"
 dependencies = [
  "axum",
+ "hex",
  "include_dir",
  "mime_guess",
  "minijinja",
+ "rand",
  "serde",
+ "sqlx",
  "thiserror",
  "toml",
  "tower",
