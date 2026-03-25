@@ -1,18 +1,10 @@
 pub mod cli;
 pub mod config;
 pub mod errors;
-pub mod health;
 
 use clap::Parser;
 use cli::{Cli, Command};
 use config::AppConfig;
-use vallheru_data::pool::PgPool;
-
-/// Shared application state available to all Axum handlers.
-#[derive(Clone)]
-pub struct AppState {
-    pub pool: PgPool,
-}
 
 fn main() -> anyhow::Result<()> {
     // Initialize tracing early so all startup messages are captured.
@@ -88,13 +80,8 @@ async fn serve(config: AppConfig) -> anyhow::Result<()> {
         vallheru_data::pool::create_pool(&config.database.url, config.database.max_connections)
             .await?;
 
-    let app_state = AppState { pool: pool.clone() };
-
-    let app = axum::Router::new()
-        .route("/healthz", axum::routing::get(health::healthz))
-        .route("/readyz", axum::routing::get(health::readyz))
-        .route("/buildinfo", axum::routing::get(health::build_info))
-        .with_state(app_state);
+    let state = vallheru_web::AppState { pool: pool.clone() };
+    let app = vallheru_web::build_router(state);
 
     tracing::info!(%bind, "starting HTTP server");
 
