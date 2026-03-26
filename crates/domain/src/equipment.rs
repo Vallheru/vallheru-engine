@@ -397,18 +397,14 @@ pub fn apply_skill_bless(skills: &mut [PlayerSkill], bless_stat: &str, bless_val
 }
 
 /// Apply craftsman class bonus: +10% to all specified skills.
-/// If race is Gnome, an additional +5% is applied.
+/// If race is Gnome, the bonus is doubled (Gnome craftsman gets +20%).
 #[allow(clippy::cast_possible_truncation)]
 pub fn apply_craftsman_bonus(skills: &mut [PlayerSkill], skill_keys: &[&str], is_gnome: bool) {
     for &key in skill_keys {
         if let Some(skill) = skills.iter_mut().find(|s| s.skill_key == key) {
             let base_bonus = (f64::from(skill.level) / 10.0).ceil() as i32;
-            let gnome_bonus = if is_gnome {
-                (f64::from(skill.level) / 20.0).ceil() as i32
-            } else {
-                0
-            };
-            skill.level += base_bonus + gnome_bonus;
+            let total_bonus = if is_gnome { base_bonus * 2 } else { base_bonus };
+            skill.level += total_bonus;
         }
     }
 }
@@ -777,8 +773,8 @@ mod tests {
         apply_craftsman_bonus(&mut skills, &["smith"], true);
 
         let smith = skills.iter().find(|s| s.skill_key == "smith").unwrap();
-        // ceil(100/10) + ceil(100/20) = 10 + 5 = 15, so 100 + 15 = 115
-        assert_eq!(smith.level, 115);
+        // Gnome doubles the base 1/10 bonus: ceil(100/10) * 2 = 20, so 100 + 20 = 120
+        assert_eq!(smith.level, 120);
     }
 
     #[test]

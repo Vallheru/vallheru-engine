@@ -100,9 +100,10 @@ Define the central Rust player model and port all derived calculations and progr
 - In scope: Read models and pages for player status.
 - Out of scope: Account settings edits.
 
-### MP-06-06: Add parity fixtures for player calculations
+### MP-06-06: Add parity fixtures for player calculations ✅
 
-- Description: Capture representative player records and expected derived values from PHP, then codify them as Rust tests.
+- **Status**: completed
+- Description: Capture representative player records and expected derived values from PHP, then codify them as Rust tests. Found and fixed a bug in Gnome craftsman bonus (was +15% instead of correct doubled +20%).
 - Estimate: 2h
 - Depends on: MP-06-03.
 - Functional acceptance criteria:

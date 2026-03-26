@@ -83,3 +83,15 @@ Each entry includes:
 - **Needs new task**: No
 - **Status**: resolved
 - **Related tasks**: MP-06-02, MP-06-03
+
+### TD-006: Gnome craftsman bonus was under-calculated
+
+- **Type**: bug
+- **Discovered in**: MP-06-06
+- **Description**: `apply_craftsman_bonus()` in `equipment.rs` computed Gnome bonus as `ceil(level/10) + ceil(level/20)` instead of `ceil(level/10) * 2`. PHP source (`rasa.php`) states "Gnomy mają podwojoną premię z profesji Rzemieślnik" — the base 1/10 bonus should be doubled, not supplemented by an additional 1/20.
+- **Impact**: Gnome craftsman skills got +15% instead of the intended +20% at all levels.
+- **Action**: Fixed formula to `base_bonus * 2` for Gnome. Updated unit test.
+- **Fixable in existing task**: Yes — fixed in MP-06-06
+- **Needs new task**: No
+- **Status**: resolved
+- **Related tasks**: MP-09-02, MP-06-06
