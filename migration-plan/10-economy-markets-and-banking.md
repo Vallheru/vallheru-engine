@@ -61,8 +61,9 @@ Port the currency, banking, and market systems as reusable transactional service
 - In scope: Market workflow matrix.
 - Out of scope: Handler implementation.
 
-### MP-10-02: Port currencies, bank balances, and transfers
+### MP-10-02: Port currencies, bank balances, and transfers ✅
 
+- Status: **Complete**
 - Description: Implement the core money services for credits, bank balance, platinum, and related currency movements.
 - Estimate: 1.5h
 - Depends on: MP-06-01, MP-02-04.

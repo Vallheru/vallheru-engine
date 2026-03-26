@@ -45,7 +45,7 @@ Port the world-navigation layer and stateful location pages that gate access to 
 
 ## Tasks
 
-### MP-07-01: Model locations and movement guards
+### MP-07-01: Model locations and movement guards ✅
 
 - Description: Define location identifiers, movement rules, and common access checks currently scattered across page scripts.
 - Estimate: 1.5h

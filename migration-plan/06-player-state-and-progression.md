@@ -59,7 +59,7 @@ Define the central Rust player model and port all derived calculations and progr
 - Description: Originally about legacy semicolon-delimited format parsers. These were implemented, then removed during remediation. Under the new architecture rules, no legacy compatibility parsing is needed. Data lives in normalized tables with clean Rust types.
 - **Reason obsolete**: No backward compatibility with legacy PHP data formats required.
 
-### MP-06-03: Port derived stat, mana, and bonus calculations
+### MP-06-03: Port derived stat, mana, and bonus calculations ✅
 
 - **Status**: not-started (partially covered by MP-09-02's equipment.rs)
 - Description: Create the unified player calculation snapshot. Equipment stat/skill bonus application already exists in `equipment.rs` (MP-09-02). Remaining: XP gain/level-up logic, HP-per-condition tables, max mana formula, seeker perception bonus, and an orchestrator function that produces a fully calculated player view.
