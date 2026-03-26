@@ -2098,6 +2098,7 @@ dependencies = [
  "md-5",
  "rand",
  "serde",
+ "serde_json",
  "thiserror",
  "tracing",
 ]
