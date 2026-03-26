@@ -196,6 +196,8 @@ pub struct Player {
     pub mpoints: i32,
     pub room: i32,
     pub chapter: i16,
+    pub craft_skill: String,
+    pub chat_times: String,
     pub ring_invite: i32,
     pub tribe_invite: i32,
     pub team_id: i32,

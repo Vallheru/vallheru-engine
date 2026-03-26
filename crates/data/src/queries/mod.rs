@@ -5,6 +5,7 @@
 
 pub mod account;
 pub mod auth;
+pub mod player;
 pub mod registration;
 pub mod session;
 pub mod settings;
