@@ -48,8 +48,9 @@ Port the currency, banking, and market systems as reusable transactional service
 
 ## Tasks
 
-### MP-10-01: Map market variants to shared workflows
+### MP-10-01: Map market variants to shared workflows ✅
 
+- Status: **Complete**
 - Description: Classify each market page by the workflow it implements: browse, list, buy, cancel, deliver, or catalog shop.
 - Estimate: 1.5h
 - Depends on: MP-02-01, MP-09-01.

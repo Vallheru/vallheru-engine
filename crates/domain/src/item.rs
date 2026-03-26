@@ -109,13 +109,15 @@ impl EquipmentType {
 // Equipment status — maps to `equipment.status` char column
 // ---------------------------------------------------------------------------
 
-/// Status of an equipment item: equipped, unequipped, or shop stock.
+/// Status of an equipment item: equipped, unequipped, listed on market, or shop stock.
 #[derive(Debug, Clone, Copy, PartialEq, Eq, Hash, Serialize, Deserialize)]
 pub enum EquipmentStatus {
     /// Equipped by the player.
     Equipped,
     /// In the player's backpack (unequipped).
     Unequipped,
+    /// Listed on the player-to-player marketplace.
+    MarketListed,
     /// Shop stock template (owner = 0).
     Shop,
 }
@@ -125,6 +127,7 @@ impl EquipmentStatus {
         match c {
             "E" => Some(Self::Equipped),
             "U" => Some(Self::Unequipped),
+            "R" => Some(Self::MarketListed),
             "S" => Some(Self::Shop),
             _ => None,
         }
@@ -134,6 +137,7 @@ impl EquipmentStatus {
         match self {
             Self::Equipped => "E",
             Self::Unequipped => "U",
+            Self::MarketListed => "R",
             Self::Shop => "S",
         }
     }

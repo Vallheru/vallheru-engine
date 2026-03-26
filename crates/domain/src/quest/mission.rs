@@ -541,18 +541,20 @@ mod tests {
 
     #[test]
     fn can_start_chronicle_ok() {
-        assert!(can_start_chronicle_mission(&StartMissionCheck {
-            player_chapter: 1,
-            mission_chapter: 0,
-            mission_type: MissionType::Story,
-            player_location: "Altara",
-            mission_location: "Altara",
-            player_hp: 100,
-            player_energy: 5.0,
-            craft_missions_remaining: 3,
-            has_active_mission: false,
-        })
-        .is_ok());
+        assert!(
+            can_start_chronicle_mission(&StartMissionCheck {
+                player_chapter: 1,
+                mission_chapter: 0,
+                mission_type: MissionType::Story,
+                player_location: "Altara",
+                mission_location: "Altara",
+                player_hp: 100,
+                player_energy: 5.0,
+                craft_missions_remaining: 3,
+                has_active_mission: false,
+            })
+            .is_ok()
+        );
     }
 
     #[test]
@@ -666,18 +668,20 @@ mod tests {
     #[test]
     fn can_start_non_quest_ignores_chapter() {
         // Story type ignores chapter gate
-        assert!(can_start_chronicle_mission(&StartMissionCheck {
-            player_chapter: 0,
-            mission_chapter: 5,
-            mission_type: MissionType::Story,
-            player_location: "Altara",
-            mission_location: "Altara",
-            player_hp: 100,
-            player_energy: 5.0,
-            craft_missions_remaining: 3,
-            has_active_mission: false,
-        })
-        .is_ok());
+        assert!(
+            can_start_chronicle_mission(&StartMissionCheck {
+                player_chapter: 0,
+                mission_chapter: 5,
+                mission_type: MissionType::Story,
+                player_location: "Altara",
+                mission_location: "Altara",
+                player_hp: 100,
+                player_energy: 5.0,
+                craft_missions_remaining: 3,
+                has_active_mission: false,
+            })
+            .is_ok()
+        );
     }
 
     #[test]
