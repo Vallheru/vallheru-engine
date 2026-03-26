@@ -1,0 +1,30 @@
+{% extends "base.html" %}
+
+{% block title %}Vallary{% endblock %}
+
+{% block content %}
+<p>
+    Za każdym razem, kiedy ktoś zapisze się przez ten link
+    (<i>{{ base_url }}/register?ref={{ player_id }}</i>)
+    oraz zdobędzie co najmniej 5 poziom,
+    {{ username }} zdobywa jednego Vallara.
+    Obecnie {{ username }} posiada <b>{{ vallars }}</b> Vallar(ów).
+</p>
+
+{% if history %}
+<table align="center" width="100%">
+    <tr>
+        <th width="20%">Data</th>
+        <th width="10%">Ilość</th>
+        <th>Uzasadnienie</th>
+    </tr>
+    {% for entry in history %}
+    <tr>
+        <td>{{ entry.created_date }}</td>
+        <td>{{ entry.amount }}</td>
+        <td>{{ entry.reason }}</td>
+    </tr>
+    {% endfor %}
+</table>
+{% endif %}
+{% endblock %}

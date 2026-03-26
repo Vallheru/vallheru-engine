@@ -2,6 +2,7 @@
 
 pub mod account;
 pub mod auth;
+pub mod preset;
 pub mod registration;
 
 use crate::middleware::context::RequestContext;

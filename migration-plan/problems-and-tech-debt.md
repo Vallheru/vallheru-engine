@@ -33,3 +33,15 @@ Each entry includes:
 - **Status**: reduced
 - **Related tasks**: MP-01-02 through MP-01-06, MP-02-xx onward
 - **Notes**: `data` crate populated in MP-02-04/05/06. `web` crate populated in MP-03-02. Only `domain` remains a stub.
+
+### TD-002: Character reset SQL references unmigrated gameplay tables
+
+- **Type**: runtime-risk
+- **Discovered in**: MP-05-05
+- **Description**: `execute_full_reset` and `execute_partial_reset` in `crates/data/src/queries/character_reset.rs` perform DELETE/UPDATE on ~20 legacy gameplay tables (equipment, potions, herbs, mines, farms, astral, etc.) that haven't been created in Postgres migrations yet.
+- **Impact**: Character reset will fail at runtime until those tables exist. The route itself is staged (not active in production).
+- **Action**: Add migration for gameplay tables as those modules are ported (MP-09 through MP-12), or create a migration with empty stub tables.
+- **Fixable in existing task**: No — depends on gameplay module migrations.
+- **Needs new task**: No — will be resolved naturally as modules MP-09 through MP-12 are migrated.
+- **Status**: open
+- **Related tasks**: MP-05-05, MP-09-01, MP-10-01, MP-11-01, MP-12-01

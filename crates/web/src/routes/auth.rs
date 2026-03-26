@@ -2,7 +2,7 @@
 
 use axum::{Router, routing};
 
-use crate::handlers::{account, auth, registration};
+use crate::handlers::{account, auth, preset, registration};
 use crate::state::AppState;
 
 /// Register authentication, registration, and account lifecycle routes.
@@ -19,4 +19,6 @@ pub fn routes() -> Router<AppState> {
             "/lost-password",
             routing::get(account::show_lost_password).post(account::submit_lost_password),
         )
+        .route("/preset", routing::get(preset::confirm_preset))
+        .route("/referrals", routing::get(preset::referrals))
 }
