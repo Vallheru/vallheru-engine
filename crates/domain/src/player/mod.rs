@@ -28,8 +28,8 @@ pub enum Race {
 }
 
 impl Race {
-    /// Parse from the legacy Polish string stored in the database.
-    pub fn from_legacy(s: &str) -> Option<Self> {
+    /// Parse from the Polish string stored in the database.
+    pub fn from_db(s: &str) -> Option<Self> {
         match s {
             "Człowiek" => Some(Self::Human),
             "Elf" => Some(Self::Elf),
@@ -41,8 +41,8 @@ impl Race {
         }
     }
 
-    /// Return the legacy Polish string for database storage.
-    pub fn as_legacy(&self) -> &'static str {
+    /// Return the Polish string for database storage.
+    pub fn to_db(&self) -> &'static str {
         match self {
             Self::Human => "Człowiek",
             Self::Elf => "Elf",
@@ -65,8 +65,8 @@ pub enum Class {
 }
 
 impl Class {
-    /// Parse from the legacy Polish string stored in the database.
-    pub fn from_legacy(s: &str) -> Option<Self> {
+    /// Parse from the Polish string stored in the database.
+    pub fn from_db(s: &str) -> Option<Self> {
         match s {
             "Barbarzyńca" => Some(Self::Barbarian),
             "Wojownik" => Some(Self::Warrior),
@@ -77,8 +77,8 @@ impl Class {
         }
     }
 
-    /// Return the legacy Polish string for database storage.
-    pub fn as_legacy(&self) -> &'static str {
+    /// Return the Polish string for database storage.
+    pub fn to_db(&self) -> &'static str {
         match self {
             Self::Barbarian => "Barbarzyńca",
             Self::Warrior => "Wojownik",
@@ -95,12 +95,12 @@ pub enum Rank {
     Member,
     Moderator,
     Admin,
-    /// Catch-all for unrecognised legacy values.
+    /// Catch-all for unrecognised database values.
     Other(String),
 }
 
 impl Rank {
-    pub fn from_legacy(s: &str) -> Self {
+    pub fn from_db(s: &str) -> Self {
         match s {
             "Member" => Self::Member,
             "Moderator" => Self::Moderator,
@@ -109,7 +109,7 @@ impl Rank {
         }
     }
 
-    pub fn as_legacy(&self) -> &str {
+    pub fn to_db(&self) -> &str {
         match self {
             Self::Member => "Member",
             Self::Moderator => "Moderator",
@@ -207,12 +207,12 @@ pub struct Player {
 impl Player {
     /// Parse the race field into a typed [`Race`], if known.
     pub fn parsed_race(&self) -> Option<Race> {
-        Race::from_legacy(&self.race)
+        Race::from_db(&self.race)
     }
 
     /// Parse the class field into a typed [`Class`], if known.
     pub fn parsed_class(&self) -> Option<Class> {
-        Class::from_legacy(&self.class)
+        Class::from_db(&self.class)
     }
 }
 
@@ -230,8 +230,8 @@ mod tests {
             Race::Hobbit,
             Race::Gnome,
         ] {
-            let legacy = race.as_legacy();
-            let parsed = Race::from_legacy(legacy).expect("should parse back");
+            let db_val = race.to_db();
+            let parsed = Race::from_db(db_val).expect("should parse back");
             assert_eq!(parsed, race);
         }
     }
@@ -245,29 +245,29 @@ mod tests {
             Class::Mage,
             Class::Craftsman,
         ] {
-            let legacy = class.as_legacy();
-            let parsed = Class::from_legacy(legacy).expect("should parse back");
+            let db_val = class.to_db();
+            let parsed = Class::from_db(db_val).expect("should parse back");
             assert_eq!(parsed, class);
         }
     }
 
     #[test]
     fn rank_roundtrip() {
-        assert_eq!(Rank::from_legacy("Member"), Rank::Member);
-        assert_eq!(Rank::from_legacy("Admin").as_legacy(), "Admin");
+        assert_eq!(Rank::from_db("Member"), Rank::Member);
+        assert_eq!(Rank::from_db("Admin").to_db(), "Admin");
         assert_eq!(
-            Rank::from_legacy("SeniorMod"),
+            Rank::from_db("SeniorMod"),
             Rank::Other("SeniorMod".to_owned())
         );
     }
 
     #[test]
     fn unknown_race_returns_none() {
-        assert!(Race::from_legacy("Troll").is_none());
+        assert!(Race::from_db("Troll").is_none());
     }
 
     #[test]
     fn unknown_class_returns_none() {
-        assert!(Class::from_legacy("Paladin").is_none());
+        assert!(Class::from_db("Paladin").is_none());
     }
 }

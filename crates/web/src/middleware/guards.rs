@@ -20,7 +20,7 @@ use crate::middleware::context::RequestContext;
 // Rank enum
 // ---------------------------------------------------------------------------
 
-/// Known player ranks, matching the legacy `rank` column values.
+/// Known player ranks, matching the `rank` column values.
 ///
 /// The ordering loosely reflects privilege level (higher = more privileged)
 /// but comparisons should use the helper methods, not numeric ordering.
@@ -47,8 +47,8 @@ pub enum Rank {
 }
 
 impl Rank {
-    /// Parse a rank from the legacy database string.
-    pub fn from_legacy(s: &str) -> Self {
+    /// Parse a rank from the database string.
+    pub fn from_db(s: &str) -> Self {
         match s {
             "Admin" => Self::Admin,
             "Staff" => Self::Staff,
@@ -157,7 +157,7 @@ fn extract_rank(req: &Request) -> Option<Rank> {
     req.extensions()
         .get::<RequestContext>()
         .and_then(|ctx| ctx.session_user.as_ref())
-        .map(|u| Rank::from_legacy(&u.rank))
+        .map(|u| Rank::from_db(&u.rank))
 }
 
 // ---------------------------------------------------------------------------
@@ -169,17 +169,17 @@ mod tests {
     use super::*;
 
     #[test]
-    fn rank_from_legacy_known_values() {
-        assert_eq!(Rank::from_legacy("Admin"), Rank::Admin);
-        assert_eq!(Rank::from_legacy("Staff"), Rank::Staff);
-        assert_eq!(Rank::from_legacy("Budowniczy"), Rank::Builder);
-        assert_eq!(Rank::from_legacy("Sędzia"), Rank::Judge);
-        assert_eq!(Rank::from_legacy("Kronikarz"), Rank::Chronicler);
-        assert_eq!(Rank::from_legacy("Królewski Błazen"), Rank::Jester);
-        assert_eq!(Rank::from_legacy("Prawnik"), Rank::Lawyer);
-        assert_eq!(Rank::from_legacy("Kanclerz Sądu"), Rank::Chancellor);
-        assert_eq!(Rank::from_legacy("Gracz"), Rank::Player);
-        assert_eq!(Rank::from_legacy("UnknownRank"), Rank::Player);
+    fn rank_from_db_known_values() {
+        assert_eq!(Rank::from_db("Admin"), Rank::Admin);
+        assert_eq!(Rank::from_db("Staff"), Rank::Staff);
+        assert_eq!(Rank::from_db("Budowniczy"), Rank::Builder);
+        assert_eq!(Rank::from_db("Sędzia"), Rank::Judge);
+        assert_eq!(Rank::from_db("Kronikarz"), Rank::Chronicler);
+        assert_eq!(Rank::from_db("Królewski Błazen"), Rank::Jester);
+        assert_eq!(Rank::from_db("Prawnik"), Rank::Lawyer);
+        assert_eq!(Rank::from_db("Kanclerz Sądu"), Rank::Chancellor);
+        assert_eq!(Rank::from_db("Gracz"), Rank::Player);
+        assert_eq!(Rank::from_db("UnknownRank"), Rank::Player);
     }
 
     #[test]

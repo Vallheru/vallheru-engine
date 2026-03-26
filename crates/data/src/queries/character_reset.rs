@@ -2,6 +2,8 @@
 
 use serde::Serialize;
 use sqlx::PgPool;
+use vallheru_domain::player::skills::default_skills;
+use vallheru_domain::player::stats::default_stats;
 
 /// An active character reset request.
 #[derive(Debug, sqlx::FromRow)]
@@ -78,13 +80,10 @@ pub async fn execute_partial_reset(pool: &PgPool, player_id: i32) -> Result<(), 
          race = '', class = '', deity = NULL, gender = NULL, \
          wins = 0, losses = 0, last_killed = '...', last_killed_by = '...', \
          maps = 0, craft_mission = 7, mpoints = 0, \
-         stats_raw = $2, skills_raw = $3, bonuses_raw = '', \
          bless = '', bless_value = 0 \
          WHERE id = $1",
     )
     .bind(player_id)
-    .bind(vallheru_domain::character_reset::RESET_STATS_RAW)
-    .bind(vallheru_domain::character_reset::RESET_SKILLS_RAW)
     .execute(&mut *tx)
     .await?;
 
@@ -98,19 +97,8 @@ pub async fn execute_partial_reset(pool: &PgPool, player_id: i32) -> Result<(), 
         .execute(&mut *tx)
         .await?;
 
-    // Clean up normalized sub-model tables.
-    sqlx::query("DELETE FROM player_stats WHERE player_id = $1")
-        .bind(player_id)
-        .execute(&mut *tx)
-        .await?;
-    sqlx::query("DELETE FROM player_skills WHERE player_id = $1")
-        .bind(player_id)
-        .execute(&mut *tx)
-        .await?;
-    sqlx::query("DELETE FROM player_bonuses WHERE player_id = $1")
-        .bind(player_id)
-        .execute(&mut *tx)
-        .await?;
+    // Reset normalized sub-model tables to defaults.
+    reset_sub_models(&mut tx, player_id).await?;
 
     // Move player to Altara unless in dungeon.
     sqlx::query("UPDATE players SET location = 'Altara' WHERE location != 'Lochy' AND id = $1")
@@ -169,13 +157,10 @@ pub async fn execute_full_reset(pool: &PgPool, player_id: i32) -> Result<(), sql
          deity = NULL, gender = NULL, wins = 0, losses = 0, \
          last_killed = '...', last_killed_by = '...', maps = 0, \
          craft_mission = 7, mpoints = 0, \
-         stats_raw = $2, skills_raw = $3, bonuses_raw = '', \
          bless = '', bless_value = 0 \
          WHERE id = $1",
     )
     .bind(player_id)
-    .bind(vallheru_domain::character_reset::RESET_STATS_RAW)
-    .bind(vallheru_domain::character_reset::RESET_SKILLS_RAW)
     .execute(&mut *tx)
     .await?;
 
@@ -201,19 +186,8 @@ pub async fn execute_full_reset(pool: &PgPool, player_id: i32) -> Result<(), sql
         }
     }
 
-    // Clean up normalized sub-model tables.
-    sqlx::query("DELETE FROM player_stats WHERE player_id = $1")
-        .bind(player_id)
-        .execute(&mut *tx)
-        .await?;
-    sqlx::query("DELETE FROM player_skills WHERE player_id = $1")
-        .bind(player_id)
-        .execute(&mut *tx)
-        .await?;
-    sqlx::query("DELETE FROM player_bonuses WHERE player_id = $1")
-        .bind(player_id)
-        .execute(&mut *tx)
-        .await?;
+    // Reset normalized sub-model tables to defaults.
+    reset_sub_models(&mut tx, player_id).await?;
 
     // Move player to Altara unless in dungeon.
     sqlx::query("UPDATE players SET location = 'Altara' WHERE location != 'Lochy' AND id = $1")
@@ -231,6 +205,56 @@ pub async fn execute_full_reset(pool: &PgPool, player_id: i32) -> Result<(), sql
         .await?;
 
     tx.commit().await
+}
+
+/// Delete and re-insert default stats/skills, and clear bonuses.
+async fn reset_sub_models(
+    tx: &mut sqlx::Transaction<'_, sqlx::Postgres>,
+    player_id: i32,
+) -> Result<(), sqlx::Error> {
+    sqlx::query("DELETE FROM player_stats WHERE player_id = $1")
+        .bind(player_id)
+        .execute(&mut **tx)
+        .await?;
+    sqlx::query("DELETE FROM player_skills WHERE player_id = $1")
+        .bind(player_id)
+        .execute(&mut **tx)
+        .await?;
+    sqlx::query("DELETE FROM player_bonuses WHERE player_id = $1")
+        .bind(player_id)
+        .execute(&mut **tx)
+        .await?;
+
+    for s in default_stats() {
+        sqlx::query(
+            "INSERT INTO player_stats (player_id, stat_key, label, base, trained, modified) \
+             VALUES ($1, $2, $3, $4, $5, $6)",
+        )
+        .bind(player_id)
+        .bind(&s.stat_key)
+        .bind(&s.label)
+        .bind(s.base)
+        .bind(s.trained)
+        .bind(s.modified)
+        .execute(&mut **tx)
+        .await?;
+    }
+
+    for s in default_skills() {
+        sqlx::query(
+            "INSERT INTO player_skills (player_id, skill_key, label, level, xp) \
+             VALUES ($1, $2, $3, $4, $5)",
+        )
+        .bind(player_id)
+        .bind(&s.skill_key)
+        .bind(&s.label)
+        .bind(s.level)
+        .bind(s.xp)
+        .execute(&mut **tx)
+        .await?;
+    }
+
+    Ok(())
 }
 
 /// Delete gameplay records shared between full and partial resets.

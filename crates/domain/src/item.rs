@@ -16,7 +16,7 @@ use serde::{Deserialize, Serialize};
 // Equipment type — maps to `equipment.type` char column
 // ---------------------------------------------------------------------------
 
-/// Equipment slot/category stored as a single char in the legacy `type` column.
+/// Equipment slot/category stored as a single char in the `type` column.
 #[derive(Debug, Clone, Copy, PartialEq, Eq, Hash, Serialize, Deserialize)]
 pub enum EquipmentType {
     /// Weapon (melee).
@@ -50,8 +50,8 @@ pub enum EquipmentType {
 }
 
 impl EquipmentType {
-    /// Parse from the legacy single-char value in the database.
-    pub fn from_legacy(c: &str) -> Option<Self> {
+    /// Parse from the single-char value in the database `type` column.
+    pub fn from_db(c: &str) -> Option<Self> {
         match c {
             "W" => Some(Self::Weapon),
             "A" => Some(Self::Armor),
@@ -71,8 +71,8 @@ impl EquipmentType {
         }
     }
 
-    /// Return the legacy single-char string for database storage.
-    pub fn as_legacy(&self) -> &'static str {
+    /// Return the single-char string for database storage.
+    pub fn to_db(&self) -> &'static str {
         match self {
             Self::Weapon => "W",
             Self::Armor => "A",
@@ -121,7 +121,7 @@ pub enum EquipmentStatus {
 }
 
 impl EquipmentStatus {
-    pub fn from_legacy(c: &str) -> Option<Self> {
+    pub fn from_db(c: &str) -> Option<Self> {
         match c {
             "E" => Some(Self::Equipped),
             "U" => Some(Self::Unequipped),
@@ -130,7 +130,7 @@ impl EquipmentStatus {
         }
     }
 
-    pub fn as_legacy(&self) -> &'static str {
+    pub fn to_db(&self) -> &'static str {
         match self {
             Self::Equipped => "E",
             Self::Unequipped => "U",
@@ -155,7 +155,7 @@ pub enum Element {
 
 impl Element {
     /// Parse from equipment `magic` column (single char: N/E/W/F/A).
-    pub fn from_equipment_legacy(c: &str) -> Self {
+    pub fn from_equipment_code(c: &str) -> Self {
         match c {
             "E" => Self::Earth,
             "W" => Self::Water,
@@ -165,8 +165,8 @@ impl Element {
         }
     }
 
-    /// Return the legacy equipment `magic` column char.
-    pub fn as_equipment_legacy(&self) -> &'static str {
+    /// Return the equipment `magic` column char.
+    pub fn to_equipment_code(&self) -> &'static str {
         match self {
             Self::None => "N",
             Self::Earth => "E",
@@ -177,7 +177,7 @@ impl Element {
     }
 
     /// Parse from spell `element` column (word: earth/water/fire/wind).
-    pub fn from_spell_legacy(s: &str) -> Self {
+    pub fn from_spell_code(s: &str) -> Self {
         match s {
             "earth" => Self::Earth,
             "water" => Self::Water,
@@ -187,8 +187,8 @@ impl Element {
         }
     }
 
-    /// Return the legacy spell element string.
-    pub fn as_spell_legacy(&self) -> &'static str {
+    /// Return the spell element string.
+    pub fn to_spell_code(&self) -> &'static str {
         match self {
             Self::None => "none",
             Self::Earth => "earth",
@@ -216,7 +216,7 @@ pub enum PoisonType {
 }
 
 impl PoisonType {
-    pub fn from_legacy(c: &str) -> Self {
+    pub fn from_db(c: &str) -> Self {
         match c {
             "D" => Self::Dynallca,
             "N" => Self::Nutari,
@@ -225,7 +225,7 @@ impl PoisonType {
         }
     }
 
-    pub fn as_legacy(&self) -> &'static str {
+    pub fn to_db(&self) -> &'static str {
         match self {
             Self::None => "",
             Self::Dynallca => "D",
@@ -288,8 +288,7 @@ impl OwnedEquipment {
         if !self.needs_repair() {
             return 0;
         }
-        let ratio =
-            1.0 - (f64::from(self.durability) / f64::from(self.max_durability));
+        let ratio = 1.0 - (f64::from(self.durability) / f64::from(self.max_durability));
         (f64::from(self.repair_cost) * ratio).ceil() as i64
     }
 
@@ -315,7 +314,7 @@ pub enum SpellType {
 }
 
 impl SpellType {
-    pub fn from_legacy(c: &str) -> Option<Self> {
+    pub fn from_db(c: &str) -> Option<Self> {
         match c {
             "B" => Some(Self::Battle),
             "O" => Some(Self::Defense),
@@ -324,7 +323,7 @@ impl SpellType {
         }
     }
 
-    pub fn as_legacy(&self) -> &'static str {
+    pub fn to_db(&self) -> &'static str {
         match self {
             Self::Battle => "B",
             Self::Defense => "O",
@@ -343,7 +342,7 @@ pub enum SpellStatus {
 }
 
 impl SpellStatus {
-    pub fn from_legacy(c: &str) -> Option<Self> {
+    pub fn from_db(c: &str) -> Option<Self> {
         match c {
             "S" => Some(Self::Shop),
             "A" => Some(Self::Active),
@@ -351,7 +350,7 @@ impl SpellStatus {
         }
     }
 
-    pub fn as_legacy(&self) -> &'static str {
+    pub fn to_db(&self) -> &'static str {
         match self {
             Self::Shop => "S",
             Self::Active => "A",
@@ -400,7 +399,7 @@ pub enum PotionType {
 }
 
 impl PotionType {
-    pub fn from_legacy(c: &str) -> Option<Self> {
+    pub fn from_db(c: &str) -> Option<Self> {
         match c {
             "M" => Some(Self::Mana),
             "H" => Some(Self::Health),
@@ -410,7 +409,7 @@ impl PotionType {
         }
     }
 
-    pub fn as_legacy(&self) -> &'static str {
+    pub fn to_db(&self) -> &'static str {
         match self {
             Self::Mana => "M",
             Self::Health => "H",
@@ -454,7 +453,7 @@ pub enum MageItemType {
 }
 
 impl MageItemType {
-    pub fn from_legacy(c: &str) -> Option<Self> {
+    pub fn from_db(c: &str) -> Option<Self> {
         match c {
             "T" => Some(Self::Wand),
             "C" => Some(Self::Clothing),
@@ -462,7 +461,7 @@ impl MageItemType {
         }
     }
 
-    pub fn as_legacy(&self) -> &'static str {
+    pub fn to_db(&self) -> &'static str {
         match self {
             Self::Wand => "T",
             Self::Clothing => "C",
@@ -498,7 +497,7 @@ pub enum BowType {
 }
 
 impl BowType {
-    pub fn from_legacy(c: &str) -> Option<Self> {
+    pub fn from_db(c: &str) -> Option<Self> {
         match c {
             "B" => Some(Self::Bow),
             "R" => Some(Self::Arrows),
@@ -506,7 +505,7 @@ impl BowType {
         }
     }
 
-    pub fn as_legacy(&self) -> &'static str {
+    pub fn to_db(&self) -> &'static str {
         match self {
             Self::Bow => "B",
             Self::Arrows => "R",
@@ -621,9 +620,9 @@ mod tests {
             EquipmentType::Plan,
         ];
         for t in types {
-            let legacy = t.as_legacy();
-            let parsed = EquipmentType::from_legacy(legacy).unwrap();
-            assert_eq!(parsed, t, "round-trip failed for {legacy}");
+            let db_val = t.to_db();
+            let parsed = EquipmentType::from_db(db_val).unwrap();
+            assert_eq!(parsed, t, "round-trip failed for {db_val}");
         }
     }
 
@@ -634,7 +633,7 @@ mod tests {
             EquipmentStatus::Unequipped,
             EquipmentStatus::Shop,
         ] {
-            assert_eq!(EquipmentStatus::from_legacy(s.as_legacy()).unwrap(), s,);
+            assert_eq!(EquipmentStatus::from_db(s.to_db()).unwrap(), s,);
         }
     }
 
@@ -647,14 +646,14 @@ mod tests {
             Element::Fire,
             Element::Wind,
         ] {
-            assert_eq!(Element::from_equipment_legacy(e.as_equipment_legacy()), e,);
+            assert_eq!(Element::from_equipment_code(e.to_equipment_code()), e,);
         }
     }
 
     #[test]
     fn element_spell_round_trip() {
         for e in [Element::Earth, Element::Water, Element::Fire, Element::Wind] {
-            assert_eq!(Element::from_spell_legacy(e.as_spell_legacy()), e,);
+            assert_eq!(Element::from_spell_code(e.to_spell_code()), e,);
         }
     }
 
@@ -666,14 +665,14 @@ mod tests {
             PoisonType::Nutari,
             PoisonType::Illani,
         ] {
-            assert_eq!(PoisonType::from_legacy(p.as_legacy()), p);
+            assert_eq!(PoisonType::from_db(p.to_db()), p);
         }
     }
 
     #[test]
     fn spell_type_round_trip() {
         for t in [SpellType::Battle, SpellType::Defense, SpellType::Utility] {
-            assert_eq!(SpellType::from_legacy(t.as_legacy()).unwrap(), t);
+            assert_eq!(SpellType::from_db(t.to_db()).unwrap(), t);
         }
     }
 
@@ -685,21 +684,21 @@ mod tests {
             PotionType::Poison,
             PotionType::Antidote,
         ] {
-            assert_eq!(PotionType::from_legacy(t.as_legacy()).unwrap(), t);
+            assert_eq!(PotionType::from_db(t.to_db()).unwrap(), t);
         }
     }
 
     #[test]
     fn mage_item_type_round_trip() {
         for t in [MageItemType::Wand, MageItemType::Clothing] {
-            assert_eq!(MageItemType::from_legacy(t.as_legacy()).unwrap(), t);
+            assert_eq!(MageItemType::from_db(t.to_db()).unwrap(), t);
         }
     }
 
     #[test]
     fn bow_type_round_trip() {
         for t in [BowType::Bow, BowType::Arrows] {
-            assert_eq!(BowType::from_legacy(t.as_legacy()).unwrap(), t);
+            assert_eq!(BowType::from_db(t.to_db()).unwrap(), t);
         }
     }
 

@@ -38,12 +38,13 @@ pub async fn find_activation_by_token(
 pub async fn activate_player(
     pool: &PgPool,
     activation: &ActivationRow,
-    settings_raw: &str,
+    settings: &vallheru_domain::player::settings::PlayerSettings,
 ) -> Result<(), sqlx::Error> {
     let mut tx = pool.begin().await?;
+    let settings_json = serde_json::to_value(settings).unwrap_or_default();
 
     sqlx::query(
-        "INSERT INTO players (username, email, pass_hash, referrals, ip, settings_raw) \
+        "INSERT INTO players (username, email, pass_hash, referrals, ip, settings) \
          VALUES ($1, $2, $3, $4, $5, $6)",
     )
     .bind(&activation.username)
@@ -51,7 +52,7 @@ pub async fn activate_player(
     .bind(&activation.pass_hash)
     .bind(activation.referrer)
     .bind(&activation.ip)
-    .bind(settings_raw)
+    .bind(settings_json)
     .execute(&mut *tx)
     .await?;
 

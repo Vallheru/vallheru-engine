@@ -58,3 +58,16 @@ Each entry includes:
 - **Needs new task**: Yes — consider grouping into 2-3 follow-up tasks.
 - **Status**: open
 - **Related tasks**: MP-05-04
+
+### TD-004: Legacy compatibility code pervasive across codebase — RESOLVED
+
+- **Type**: tech-debt
+- **Discovered in**: Remediation pass (post MP-09-01)
+- **Description**: Legacy semicolon-delimited format parsers (`parse_legacy_stats`, `parse_legacy_skills`, `parse_legacy_bonuses`, `PlayerSettings::from_legacy`/`to_legacy`), `_raw` column usage (`settings_raw`, `stats_raw`, `skills_raw`, `bonuses_raw`), fallback logic in data layer (`load_sub_models` with `_raw` fallback, `parse_legacy_sub_models`), and legacy naming convention (`from_legacy`/`as_legacy` on ~15 enum types) were spread throughout the codebase.
+- **Impact**: Made the Rust code mimic PHP storage formats rather than using clean domain models. Created maintenance burden and confusion about canonical data paths.
+- **Action**: Full remediation pass executed — removed all legacy parsers, removed `_raw` column reads/writes, renamed `from_legacy`/`as_legacy` to `from_db`/`to_db` (or `from_*_code`/`to_*_code`), rewrote character reset to use normalized tables, rewrote account activation to store JSONB settings. Added migration to drop `_raw` columns.
+- **Fixable in existing task**: N/A — standalone remediation commit.
+- **Needs new task**: No
+- **Status**: resolved
+- **Related tasks**: All prior tasks that created legacy artifacts, especially MP-02-04 through MP-05-06
+- **Resolution**: Committed as `refactor(domain,data,web): remove legacy compatibility code`

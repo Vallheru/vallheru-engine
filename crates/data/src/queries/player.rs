@@ -2,16 +2,12 @@
 //!
 //! Provides a flat `PlayerRow` struct (DB-coupled via `sqlx::FromRow`) and
 //! conversion to the domain `Player` type. Sub-models (settings, stats,
-//! skills, bonuses) are loaded from their normalized tables, with fallback
-//! parsing of legacy raw columns during the migration window.
+//! skills, bonuses) are loaded from their normalized tables.
 
 use sqlx::PgPool;
 use vallheru_domain::player::{
-    Player, Rank,
-    bonuses::{PlayerBonus, parse_legacy_bonuses},
-    settings::PlayerSettings,
-    skills::{PlayerSkill, parse_legacy_skills},
-    stats::{PlayerStat, parse_legacy_stats},
+    Player, Rank, bonuses::PlayerBonus, settings::PlayerSettings, skills::PlayerSkill,
+    stats::PlayerStat,
 };
 
 // ---------------------------------------------------------------------------
@@ -93,11 +89,6 @@ pub struct PlayerRow {
     pub tribe_invite: i32,
     pub team_id: i32,
     pub reputation: i32,
-    // Legacy serialized columns — non-empty only during migration window.
-    pub settings_raw: String,
-    pub stats_raw: String,
-    pub skills_raw: String,
-    pub bonuses_raw: String,
     // Normalized JSONB settings column.
     pub settings: serde_json::Value,
 }
@@ -125,6 +116,7 @@ pub struct SkillRow {
 #[derive(Debug, sqlx::FromRow)]
 pub struct BonusRow {
     pub id: i32,
+    pub catalog_id: i32,
     pub bonus_name: String,
     pub value: i32,
     pub duration: i32,
@@ -140,7 +132,7 @@ pub fn player_from_row(row: PlayerRow) -> Player {
         id: row.id,
         username: row.username,
         email: row.email,
-        rank: Rank::from_legacy(&row.rank),
+        rank: Rank::from_db(&row.rank),
         credits: row.credits,
         energy: row.energy,
         max_energy: row.max_energy,
@@ -208,9 +200,8 @@ pub fn player_from_row(row: PlayerRow) -> Player {
     }
 }
 
-/// Resolve player settings: prefer JSONB column, fall back to legacy raw.
+/// Resolve player settings from the JSONB column.
 pub fn settings_from_row(row: &PlayerRow) -> PlayerSettings {
-    // If the JSONB column has data, use it.
     if !row.settings.is_null()
         && row.settings != serde_json::Value::Object(serde_json::Map::default())
     {
@@ -220,14 +211,10 @@ pub fn settings_from_row(row: &PlayerRow) -> PlayerSettings {
                 tracing::warn!(
                     player_id = row.id,
                     error = %e,
-                    "failed to parse JSONB settings, falling back to legacy"
+                    "failed to parse JSONB settings, using defaults"
                 );
             }
         }
-    }
-    // Fall back to the legacy semicolon format.
-    if !row.settings_raw.is_empty() {
-        return PlayerSettings::from_legacy(&row.settings_raw);
     }
     PlayerSettings::default()
 }
@@ -259,6 +246,7 @@ fn bonuses_from_rows(rows: Vec<BonusRow>) -> Vec<PlayerBonus> {
     rows.into_iter()
         .map(|r| PlayerBonus {
             id: r.id,
+            catalog_id: r.catalog_id,
             bonus_name: r.bonus_name,
             value: r.value,
             duration: r.duration,
@@ -282,8 +270,7 @@ const PLAYER_COLUMNS: &str = r"
     poll, astral_crime, change_deity, vallars, newbie, roleplay,
     ooc, short_rpg, craft_mission, mpoints, room, chapter,
     craft_skill, chat_times, ring_invite, tribe_invite, team_id,
-    reputation, settings_raw, stats_raw, skills_raw, bonuses_raw,
-    settings
+    reputation, settings
 ";
 
 // ---------------------------------------------------------------------------
@@ -339,7 +326,7 @@ pub async fn load_skills(pool: &PgPool, player_id: i32) -> Result<Vec<PlayerSkil
 /// Load bonuses from the normalized `player_bonuses` table.
 pub async fn load_bonuses(pool: &PgPool, player_id: i32) -> Result<Vec<PlayerBonus>, sqlx::Error> {
     let rows = sqlx::query_as::<_, BonusRow>(
-        "SELECT id, bonus_name, value, duration FROM player_bonuses WHERE player_id = $1",
+        "SELECT id, catalog_id, bonus_name, value, duration FROM player_bonuses WHERE player_id = $1",
     )
     .bind(player_id)
     .fetch_all(pool)
@@ -347,8 +334,7 @@ pub async fn load_bonuses(pool: &PgPool, player_id: i32) -> Result<Vec<PlayerBon
     Ok(bonuses_from_rows(rows))
 }
 
-/// Resolved sub-models for a player, from either normalized tables or
-/// legacy raw columns.
+/// Resolved sub-models for a player.
 pub struct PlayerSubModels {
     pub settings: PlayerSettings,
     pub stats: Vec<PlayerStat>,
@@ -356,46 +342,15 @@ pub struct PlayerSubModels {
     pub bonuses: Vec<PlayerBonus>,
 }
 
-/// Load sub-models with fallback: if the normalized tables are empty,
-/// parse from the legacy raw columns.
-///
-/// This is the main entry point during the migration window where both
-/// old and new storage may coexist.
+/// Load all sub-models from normalized tables.
 pub async fn load_sub_models(
     pool: &PgPool,
     row: &PlayerRow,
 ) -> Result<PlayerSubModels, sqlx::Error> {
     let settings = settings_from_row(row);
-
-    // Load normalized stats; fall back to legacy raw if empty.
-    let mut stats = load_stats(pool, row.id).await?;
-    if stats.is_empty() && !row.stats_raw.is_empty() {
-        tracing::debug!(
-            player_id = row.id,
-            "no normalized stats found, parsing from legacy stats_raw"
-        );
-        stats = parse_legacy_stats(&row.stats_raw);
-    }
-
-    // Load normalized skills; fall back to legacy raw if empty.
-    let mut skills = load_skills(pool, row.id).await?;
-    if skills.is_empty() && !row.skills_raw.is_empty() {
-        tracing::debug!(
-            player_id = row.id,
-            "no normalized skills found, parsing from legacy skills_raw"
-        );
-        skills = parse_legacy_skills(&row.skills_raw);
-    }
-
-    // Load normalized bonuses; fall back to legacy raw if empty.
-    let mut bonuses = load_bonuses(pool, row.id).await?;
-    if bonuses.is_empty() && !row.bonuses_raw.is_empty() {
-        tracing::debug!(
-            player_id = row.id,
-            "no normalized bonuses found, parsing from legacy bonuses_raw"
-        );
-        bonuses = parse_legacy_bonuses(&row.bonuses_raw);
-    }
+    let stats = load_stats(pool, row.id).await?;
+    let skills = load_skills(pool, row.id).await?;
+    let bonuses = load_bonuses(pool, row.id).await?;
 
     Ok(PlayerSubModels {
         settings,
@@ -403,27 +358,6 @@ pub async fn load_sub_models(
         skills,
         bonuses,
     })
-}
-
-/// Parse all sub-models purely from legacy raw columns, without any DB
-/// queries. Used during data import when normalized tables are not yet
-/// populated.
-pub fn parse_legacy_sub_models(row: &PlayerRow) -> PlayerSubModels {
-    let settings = if row.settings_raw.is_empty() {
-        PlayerSettings::default()
-    } else {
-        PlayerSettings::from_legacy(&row.settings_raw)
-    };
-    let stats = parse_legacy_stats(&row.stats_raw);
-    let skills = parse_legacy_skills(&row.skills_raw);
-    let bonuses = parse_legacy_bonuses(&row.bonuses_raw);
-
-    PlayerSubModels {
-        settings,
-        stats,
-        skills,
-        bonuses,
-    }
 }
 
 /// Persist settings as JSONB in the `players.settings` column.
@@ -517,10 +451,11 @@ pub async fn save_bonuses(
 
     for b in bonuses {
         sqlx::query(
-            "INSERT INTO player_bonuses (player_id, bonus_name, value, duration) \
-             VALUES ($1, $2, $3, $4)",
+            "INSERT INTO player_bonuses (player_id, catalog_id, bonus_name, value, duration) \
+             VALUES ($1, $2, $3, $4, $5)",
         )
         .bind(player_id)
+        .bind(b.catalog_id)
         .bind(&b.bonus_name)
         .bind(b.value)
         .bind(b.duration)

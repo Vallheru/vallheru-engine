@@ -5,6 +5,7 @@
 //! from the domain types in `vallheru-domain::item`.
 
 use sqlx::PgPool;
+use vallheru_domain::item::{Element, EquipmentStatus, EquipmentType, OwnedEquipment, PoisonType};
 
 // ---------------------------------------------------------------------------
 // Row structs
@@ -98,6 +99,34 @@ pub struct RingRow {
     pub id: i32,
     pub name: String,
     pub amount: i32,
+}
+
+impl EquipmentRow {
+    /// Convert to the domain `OwnedEquipment` type.
+    pub fn into_domain(self) -> OwnedEquipment {
+        OwnedEquipment {
+            id: self.id,
+            owner_id: self.owner,
+            name: self.name,
+            power: self.power,
+            status: EquipmentStatus::from_db(&self.status).unwrap_or(EquipmentStatus::Unequipped),
+            equipment_type: EquipmentType::from_db(&self.equipment_type)
+                .unwrap_or(EquipmentType::Other),
+            cost: self.cost,
+            min_level: self.minlev,
+            agility_mod: self.zr,
+            durability: self.wt,
+            speed_mod: self.szyb,
+            max_durability: self.maxwt,
+            magic: Element::from_equipment_code(&self.magic),
+            poison: self.poison,
+            amount: self.amount,
+            two_handed: self.twohand == "Y",
+            poison_type: PoisonType::from_db(&self.ptype),
+            repair_cost: self.repair,
+            location: self.location,
+        }
+    }
 }
 
 // ---------------------------------------------------------------------------

@@ -2,8 +2,7 @@
 
 use serde::{Deserialize, Serialize};
 
-/// Typed player settings matching the known key set from the legacy
-/// semicolon-delimited format.
+/// Typed player settings.
 ///
 /// Stored as JSONB in the `players.settings` column.
 #[derive(Debug, Clone, Serialize, Deserialize, PartialEq, Eq)]
@@ -70,50 +69,15 @@ fn default_all() -> String {
 }
 
 impl PlayerSettings {
-    /// Parse settings from the legacy semicolon-delimited format.
+    /// Build settings for a newly created player.
     ///
-    /// Format: `key:value;key:value;...`
-    pub fn from_legacy(raw: &str) -> Self {
+    /// `game_type` is `"T"` for text mode, anything else for graphic mode.
+    pub fn for_new_player(game_type: &str) -> Self {
         let mut settings = Self::default();
-        for field in raw.split(';') {
-            let mut parts = field.splitn(2, ':');
-            let key = match parts.next() {
-                Some(k) if !k.is_empty() => k,
-                _ => continue,
-            };
-            let value = parts.next().unwrap_or("");
-            match key {
-                "style" => value.clone_into(&mut settings.style),
-                "graphic" => value.clone_into(&mut settings.graphic),
-                "graphbar" => value.clone_into(&mut settings.graphbar),
-                "forumcats" => value.clone_into(&mut settings.forumcats),
-                "autodrink" => value.clone_into(&mut settings.autodrink),
-                "rinvites" => value.clone_into(&mut settings.rinvites),
-                "battlelog" => value.clone_into(&mut settings.battlelog),
-                "oldchat" => value.clone_into(&mut settings.oldchat),
-                _ => {
-                    tracing::debug!(key, value, "unknown legacy settings key");
-                }
-            }
+        if game_type != "T" {
+            "layout1".clone_into(&mut settings.graphic);
         }
         settings
-    }
-
-    /// Serialize back to the legacy semicolon-delimited format.
-    ///
-    /// Used during the migration window when the PHP side may still read
-    /// the `settings_raw` column.
-    pub fn to_legacy(&self) -> String {
-        format!(
-            "style:{};graphic:{};graphbar:{};forumcats:{};autodrink:{};rinvites:{};battlelog:{};",
-            self.style,
-            self.graphic,
-            self.graphbar,
-            self.forumcats,
-            self.autodrink,
-            self.rinvites,
-            self.battlelog,
-        )
     }
 
     /// Whether the player uses graphic (layout) mode.
@@ -127,42 +91,27 @@ mod tests {
     use super::*;
 
     #[test]
-    fn parse_default_settings() {
-        let raw =
-            "style:light.css;graphic:;graphbar:N;forumcats:All;autodrink:N;rinvites:Y;battlelog:N;";
-        let s = PlayerSettings::from_legacy(raw);
+    fn default_settings_values() {
+        let s = PlayerSettings::default();
         assert_eq!(s.style, "light.css");
+        assert_eq!(s.graphic, "");
+        assert_eq!(s.graphbar, "N");
+        assert_eq!(s.forumcats, "All");
+        assert!(!s.is_graphic_mode());
+    }
+
+    #[test]
+    fn new_player_text_mode() {
+        let s = PlayerSettings::for_new_player("T");
         assert_eq!(s.graphic, "");
         assert!(!s.is_graphic_mode());
     }
 
     #[test]
-    fn parse_graphic_mode() {
-        let raw = "style:light.css;graphic:layout1;graphbar:N;forumcats:All;autodrink:N;rinvites:Y;battlelog:N;";
-        let s = PlayerSettings::from_legacy(raw);
+    fn new_player_graphic_mode() {
+        let s = PlayerSettings::for_new_player("G");
         assert_eq!(s.graphic, "layout1");
         assert!(s.is_graphic_mode());
-    }
-
-    #[test]
-    fn roundtrip_legacy() {
-        let raw =
-            "style:light.css;graphic:;graphbar:N;forumcats:All;autodrink:N;rinvites:Y;battlelog:N;";
-        let s = PlayerSettings::from_legacy(raw);
-        assert_eq!(s.to_legacy(), raw);
-    }
-
-    #[test]
-    fn unknown_keys_are_ignored() {
-        let raw = "style:dark.css;foo:bar;";
-        let s = PlayerSettings::from_legacy(raw);
-        assert_eq!(s.style, "dark.css");
-    }
-
-    #[test]
-    fn empty_string_gives_defaults() {
-        let s = PlayerSettings::from_legacy("");
-        assert_eq!(s, PlayerSettings::default());
     }
 
     #[test]
@@ -171,5 +120,14 @@ mod tests {
         let json = serde_json::to_string(&original).unwrap();
         let parsed: PlayerSettings = serde_json::from_str(&json).unwrap();
         assert_eq!(parsed, original);
+    }
+
+    #[test]
+    fn json_with_missing_fields_gets_defaults() {
+        let json = r#"{"style":"dark.css"}"#;
+        let parsed: PlayerSettings = serde_json::from_str(json).unwrap();
+        assert_eq!(parsed.style, "dark.css");
+        assert_eq!(parsed.graphbar, "N");
+        assert_eq!(parsed.rinvites, "Y");
     }
 }

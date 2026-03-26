@@ -68,51 +68,6 @@ fn skill(key: &str, label: &str) -> PlayerSkill {
     }
 }
 
-/// Parse skills from the legacy semicolon-delimited format.
-///
-/// Format: `key:Label,level,xp;...`
-pub fn parse_legacy_skills(raw: &str) -> Vec<PlayerSkill> {
-    let mut skills = Vec::new();
-    for field in raw.split(';') {
-        let mut kv = field.splitn(2, ':');
-        let key = match kv.next() {
-            Some(k) if !k.is_empty() => k,
-            _ => continue,
-        };
-        let Some(values_str) = kv.next() else {
-            continue;
-        };
-        let parts: Vec<&str> = values_str.split(',').collect();
-        if parts.len() < 3 {
-            tracing::debug!(key, raw = values_str, "malformed legacy skill entry");
-            continue;
-        }
-        skills.push(PlayerSkill {
-            skill_key: key.to_owned(),
-            label: parts[0].to_owned(),
-            level: parts[1].parse().unwrap_or(1),
-            xp: parts[2].parse().unwrap_or(0),
-        });
-    }
-    skills
-}
-
-/// Serialize skills back to the legacy format.
-pub fn to_legacy_skills(skills: &[PlayerSkill]) -> String {
-    let mut out = String::new();
-    for s in skills {
-        out.push_str(&s.skill_key);
-        out.push(':');
-        out.push_str(&s.label);
-        out.push(',');
-        out.push_str(&s.level.to_string());
-        out.push(',');
-        out.push_str(&s.xp.to_string());
-        out.push(';');
-    }
-    out
-}
-
 #[cfg(test)]
 mod tests {
     use super::*;
@@ -123,39 +78,18 @@ mod tests {
     }
 
     #[test]
-    fn parse_legacy_skills_default() {
-        let raw = "smith:Kowalstwo,1,0;shoot:Strzelectwo,1,0;alchemy:Alchemia,1,0;\
-                   dodge:Uniki,1,0;carpentry:Stolarstwo,1,0;magic:Rzucanie Czarów,1,0;\
-                   attack:Walka Bronią,1,0;leadership:Dowodzenie,1,0;breeding:Hodowla,1,0;\
-                   mining:Górnictwo,1,0;lumberjack:Drwalnictwo,1,0;herbalism:Zielarstwo,1,0;\
-                   jewellry:Jubilerstwo,1,0;smelting:Hutnictwo,1,0;thievery:Złodziejstwo,1,0;\
-                   perception:Spostrzegawczość,1,0;";
-        let skills = parse_legacy_skills(raw);
-        assert_eq!(skills.len(), 16);
-        assert_eq!(skills[0].skill_key, "smith");
-        assert_eq!(skills[0].level, 1);
+    fn default_skills_start_at_level_one() {
+        for s in default_skills() {
+            assert_eq!(s.level, 1);
+            assert_eq!(s.xp, 0);
+        }
     }
 
     #[test]
-    fn roundtrip_legacy() {
-        let original = default_skills();
-        let serialized = to_legacy_skills(&original);
-        let parsed = parse_legacy_skills(&serialized);
-        assert_eq!(parsed, original);
-    }
-
-    #[test]
-    fn parse_with_leveled_skill() {
-        let raw = "mining:Górnictwo,42,8500;";
-        let skills = parse_legacy_skills(raw);
-        assert_eq!(skills.len(), 1);
-        assert_eq!(skills[0].level, 42);
-        assert_eq!(skills[0].xp, 8500);
-    }
-
-    #[test]
-    fn empty_string_gives_no_skills() {
-        let skills = parse_legacy_skills("");
-        assert!(skills.is_empty());
+    fn skill_keys_match_defaults() {
+        let skills = default_skills();
+        for (i, key) in SKILL_KEYS.iter().enumerate() {
+            assert_eq!(&skills[i].skill_key, key);
+        }
     }
 }

@@ -3,16 +3,11 @@
 //! Pure functions for building default player settings and generating
 //! secure password-reset tokens.
 
-/// Build the default `settings_raw` string for a newly activated player.
-///
-/// Mirrors the PHP logic in `aktywacja.php` which builds a semicolon-
-/// delimited key:value string depending on game type.
-pub fn default_settings(game_type: &str) -> String {
-    let graphic = if game_type == "T" { "" } else { "layout1" };
-    format!(
-        "style:light.css;graphic:{graphic};graphbar:N;forumcats:All;\
-         autodrink:N;rinvites:Y;battlelog:N;"
-    )
+use crate::player::settings::PlayerSettings;
+
+/// Build the default settings for a newly activated player.
+pub fn default_settings(game_type: &str) -> PlayerSettings {
+    PlayerSettings::for_new_player(game_type)
 }
 
 /// Generate a secure random token string for password resets.
@@ -50,14 +45,16 @@ mod tests {
     #[test]
     fn default_settings_text_mode() {
         let s = default_settings("T");
-        assert!(s.contains("graphic:;"), "text mode has empty graphic");
-        assert!(s.contains("style:light.css;"));
+        assert_eq!(s.graphic, "");
+        assert!(!s.is_graphic_mode());
+        assert_eq!(s.style, "light.css");
     }
 
     #[test]
     fn default_settings_graphic_mode() {
         let s = default_settings("G");
-        assert!(s.contains("graphic:layout1;"), "graphic mode has layout1");
+        assert_eq!(s.graphic, "layout1");
+        assert!(s.is_graphic_mode());
     }
 
     #[test]
