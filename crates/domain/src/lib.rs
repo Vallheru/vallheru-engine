@@ -2,6 +2,7 @@ pub mod account;
 pub mod auth;
 pub mod character_reset;
 pub mod combat;
+pub mod crafting;
 pub mod economy;
 pub mod equipment;
 pub mod item;

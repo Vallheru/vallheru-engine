@@ -47,8 +47,9 @@ Port the profession systems and resource loops that create most player-owned ite
 
 ## Tasks
 
-### MP-11-01: Define a shared workshop action pattern
+### MP-11-01: Define a shared workshop action pattern ✅
 
+- Status: **Complete**
 - Description: Create a common Rust pattern for profession actions that consume resources, spend energy/training, and produce outputs.
 - Estimate: 1.5h
 - Depends on: MP-06-01, MP-10-02.
