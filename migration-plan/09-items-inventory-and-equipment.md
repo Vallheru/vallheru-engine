@@ -91,7 +91,7 @@ Port player-owned item management, equipment bonuses, and storage flows into exp
 - In scope: Bows, spells, and specialty item actions.
 - Out of scope: Profession-crafted item generation.
 
-### MP-09-05: Port warehouse and storage transfers
+### MP-09-05: Port warehouse and storage transfers ✅
 
 - Description: Rebuild item storage, retrieval, and transfer flows for warehouse-style pages.
 - Estimate: 1.5h
