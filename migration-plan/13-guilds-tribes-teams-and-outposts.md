@@ -77,7 +77,7 @@ Port group-oriented systems that share inventories, permissions, and combat-adja
 - Out of scope: Shared storage and permissions.
 - Status: **Complete**. Created `group/tribe.rs` with TribeLevel enum (5 tiers), creation/upgrade/join/accept/leave/dissolve/kick validation, defence/army purchases, hospital pass, loan validation. 57 tests.
 
-### MP-13-03: Port tribe permissions, ranks, and admin actions
+### MP-13-03: Port tribe permissions, ranks, and admin actions ✅
 
 - Description: Migrate tribe ranks, permission flags, and admin/owner actions from `tribeadmin.php` and related helpers.
 - Estimate: 1.5h
@@ -89,8 +89,9 @@ Port group-oriented systems that share inventories, permissions, and combat-adja
 - Technical notes: This is a good place to stop using raw integer or string flags in handler code.
 - In scope: Tribe permissions and administration.
 - Out of scope: Shared warehouse/resource moves.
+- Status: **Complete**. Created `group/tribe_admin.rs` with TribePermission enum (15 flags), PermissionSet bitfield, level-gated availability, admin access gates, rank/tag/mail/pending validation. 36 tests.
 
-### MP-13-04: Port tribe shared resources and crafting stores
+### MP-13-04: Port tribe shared resources and crafting stores ✅
 
 - Description: Rebuild tribe armor, herbs, minerals, ware, and astral shared storage plus grant/withdrawal flows.
 - Estimate: 2h
@@ -102,6 +103,7 @@ Port group-oriented systems that share inventories, permissions, and combat-adja
 - Technical notes: Shared resource mutation is one of the highest-risk corruption areas; test quantities carefully.
 - In scope: Tribe storage and specialty stores.
 - Out of scope: Public market listings.
+- Status: **Complete**. Created `group/tribe_storage.rs` with StorageArea enum (5 areas), access/permission/deposit/reserve/give validation, armory equipment eligibility, warehouse potion deposit, treasury currency keys, astral safe-box upgrade with 5-resource costs. 48 tests.
 
 ### MP-13-05: Port outpost ownership and warfare state
 
