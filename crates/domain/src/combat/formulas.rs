@@ -52,11 +52,21 @@ fn stat_modified(stats: &[PlayerStat], key: &str) -> i32 {
         .map_or(0, |s| s.modified)
 }
 
+/// Public accessor for stat lookup — used by sibling combat modules.
+pub fn stat_modified_pub(stats: &[PlayerStat], key: &str) -> i32 {
+    stat_modified(stats, key)
+}
+
 fn skill_level(skills: &[PlayerSkill], key: &str) -> i32 {
     skills
         .iter()
         .find(|s| s.skill_key == key)
         .map_or(0, |s| s.level)
+}
+
+/// Public accessor for skill lookup — used by sibling combat modules.
+pub fn skill_level_pub(skills: &[PlayerSkill], key: &str) -> i32 {
+    skill_level(skills, key)
 }
 
 /// Check bonus value for a named trigger.
@@ -69,6 +79,16 @@ fn bonus_value(
     bonuses: &[PlayerBonus],
 ) -> i32 {
     crate::equipment::check_bonus(trigger, stats, skills, bonuses)
+}
+
+/// Public accessor for bonus lookup — used by sibling combat modules.
+pub fn bonus_value_pub(
+    trigger: &str,
+    stats: &[PlayerStat],
+    skills: &[PlayerSkill],
+    bonuses: &[PlayerBonus],
+) -> i32 {
+    bonus_value(trigger, stats, skills, bonuses)
 }
 
 // ---------------------------------------------------------------------------
