@@ -101,6 +101,7 @@ pub struct StatRow {
     pub base: i32,
     pub trained: i32,
     pub modified: i32,
+    pub xp: i32,
 }
 
 /// Row from `player_skills`.
@@ -227,6 +228,7 @@ fn stats_from_rows(rows: Vec<StatRow>) -> Vec<PlayerStat> {
             base: r.base,
             trained: r.trained,
             modified: r.modified,
+            xp: r.xp,
         })
         .collect()
 }
@@ -304,7 +306,7 @@ pub async fn find_player_by_username(
 /// Load stats from the normalized `player_stats` table.
 pub async fn load_stats(pool: &PgPool, player_id: i32) -> Result<Vec<PlayerStat>, sqlx::Error> {
     let rows = sqlx::query_as::<_, StatRow>(
-        "SELECT stat_key, label, base, trained, modified FROM player_stats WHERE player_id = $1",
+        "SELECT stat_key, label, base, trained, modified, xp FROM player_stats WHERE player_id = $1",
     )
     .bind(player_id)
     .fetch_all(pool)
@@ -390,8 +392,8 @@ pub async fn save_stats(
 
     for s in stats {
         sqlx::query(
-            "INSERT INTO player_stats (player_id, stat_key, label, base, trained, modified) \
-             VALUES ($1, $2, $3, $4, $5, $6)",
+            "INSERT INTO player_stats (player_id, stat_key, label, base, trained, modified, xp) \
+             VALUES ($1, $2, $3, $4, $5, $6, $7)",
         )
         .bind(player_id)
         .bind(&s.stat_key)
@@ -399,6 +401,7 @@ pub async fn save_stats(
         .bind(s.base)
         .bind(s.trained)
         .bind(s.modified)
+        .bind(s.xp)
         .execute(&mut *tx)
         .await?;
     }

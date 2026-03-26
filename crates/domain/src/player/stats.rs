@@ -12,12 +12,14 @@ pub struct PlayerStat {
     pub stat_key: String,
     /// Display label (Polish).
     pub label: String,
-    /// Base (unmodified) value.
+    /// Base (max attainable level / cap).
     pub base: i32,
-    /// Trained value (including level-ups from XP).
+    /// Trained value (current level from XP gains).
     pub trained: i32,
-    /// Modified value (after equipment, blessings, bonuses).
+    /// Modified value (after equipment, blessings, bonuses). Derived, not persisted.
     pub modified: i32,
+    /// Accumulated XP towards the next level. Level-up occurs when `xp >= trained * 500`.
+    pub xp: i32,
 }
 
 /// The fixed set of stat keys used in the game.
@@ -39,6 +41,7 @@ pub fn default_stats() -> Vec<PlayerStat> {
             base: 0,
             trained: 0,
             modified: 0,
+            xp: 0,
         },
         PlayerStat {
             stat_key: "agility".to_owned(),
@@ -46,6 +49,7 @@ pub fn default_stats() -> Vec<PlayerStat> {
             base: 0,
             trained: 0,
             modified: 0,
+            xp: 0,
         },
         PlayerStat {
             stat_key: "condition".to_owned(),
@@ -53,6 +57,7 @@ pub fn default_stats() -> Vec<PlayerStat> {
             base: 0,
             trained: 0,
             modified: 0,
+            xp: 0,
         },
         PlayerStat {
             stat_key: "speed".to_owned(),
@@ -60,6 +65,7 @@ pub fn default_stats() -> Vec<PlayerStat> {
             base: 0,
             trained: 0,
             modified: 0,
+            xp: 0,
         },
         PlayerStat {
             stat_key: "inteli".to_owned(),
@@ -67,6 +73,7 @@ pub fn default_stats() -> Vec<PlayerStat> {
             base: 0,
             trained: 0,
             modified: 0,
+            xp: 0,
         },
         PlayerStat {
             stat_key: "wisdom".to_owned(),
@@ -74,6 +81,7 @@ pub fn default_stats() -> Vec<PlayerStat> {
             base: 0,
             trained: 0,
             modified: 0,
+            xp: 0,
         },
     ]
 }

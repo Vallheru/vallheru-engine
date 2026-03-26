@@ -227,8 +227,8 @@ async fn reset_sub_models(
 
     for s in default_stats() {
         sqlx::query(
-            "INSERT INTO player_stats (player_id, stat_key, label, base, trained, modified) \
-             VALUES ($1, $2, $3, $4, $5, $6)",
+            "INSERT INTO player_stats (player_id, stat_key, label, base, trained, modified, xp) \
+             VALUES ($1, $2, $3, $4, $5, $6, $7)",
         )
         .bind(player_id)
         .bind(&s.stat_key)
@@ -236,6 +236,7 @@ async fn reset_sub_models(
         .bind(s.base)
         .bind(s.trained)
         .bind(s.modified)
+        .bind(s.xp)
         .execute(&mut **tx)
         .await?;
     }
