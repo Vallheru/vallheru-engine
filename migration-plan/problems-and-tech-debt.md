@@ -45,6 +45,7 @@ Each entry includes:
 - **Needs new task**: No — will be resolved naturally as modules MP-09 through MP-12 are migrated.
 - **Status**: open
 - **Related tasks**: MP-05-05, MP-09-01, MP-10-01, MP-11-01, MP-12-01
+- **Notes**: equipment, spells, potions, mage_items tables now exist (MP-09-01). Remaining: herbs, minerals, mines, farms, astral, potions status resets, tribe storage, etc.
 
 ### TD-003: Unmigrated account.php views
 
