@@ -11,6 +11,7 @@ pub mod progression;
 pub mod settings;
 pub mod skills;
 pub mod stats;
+pub mod views;
 
 use serde::{Deserialize, Serialize};
 

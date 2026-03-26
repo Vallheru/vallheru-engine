@@ -87,8 +87,9 @@ Define the central Rust player model and port all derived calculations and progr
 - In scope: Progression mutations.
 - Out of scope: Item or combat side effects outside direct progression changes.
 
-### MP-06-05: Port player-facing read models
+### MP-06-05: Port player-facing read models ✅
 
+- **Status**: completed
 - Description: Rebuild profile pages, player inspection, hall-of-fame views, and stats screens.
 - Estimate: 1.5h
 - Depends on: MP-04-05, MP-06-03.
@@ -96,7 +97,7 @@ Define the central Rust player model and port all derived calculations and progr
   - Public and authenticated profile/stat pages render from PostgreSQL-backed Rust view models.
   - Hall-of-fame ordering matches current rules.
   - Page-specific formatting is isolated from domain logic.
-- Technical notes: These are good early read-only cutover candidates.
+- Technical notes: Implemented in `crates/domain/src/player/views.rs` — contains `ProfileView`, `StatsView`, `HofEntry`, `HofMachineEntry`, `MemberListEntry`, `Pagination`, `MemberSort`, `ThreatLevel`, `BattleLogEntry`, `StatDisplay`, `SkillDisplay`, `BonusDisplay` types plus pure functions for combat power, consider threat, rank/last-seen/battle-result formatting, XP progress, and blessing/antidote labels. 48 unit tests.
 - In scope: Read models and pages for player status.
 - Out of scope: Account settings edits.
 
