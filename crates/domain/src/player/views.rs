@@ -503,7 +503,9 @@ impl Pagination {
             1
         } else {
             #[allow(clippy::cast_precision_loss, clippy::cast_possible_truncation)]
-            { ((total_items as f64) / f64::from(per_page)).ceil() as i32 }
+            {
+                ((total_items as f64) / f64::from(per_page)).ceil() as i32
+            }
         };
         let current_page = current_page.clamp(1, total_pages);
         Self {

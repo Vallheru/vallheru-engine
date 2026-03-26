@@ -58,7 +58,7 @@ Port the scripted and semi-random narrative systems without flattening them into
 - Out of scope: Full runtime implementation.
 - Status: **Complete**. Created `quest/state.rs` (table ownership inventory), `quest/mission.rs` (mission graph + active state + thief missions + rewards), `quest/quest_action.rs` (quest progress + branching), `quest/maze.rs` (labyrinth exploration), `quest/events.rs` (random event state machine + hunter quests). 50 new tests.
 
-### MP-14-02: Port the generic mission graph loader
+### MP-14-02: Port the generic mission graph loader ✅
 
 - Description: Implement the reusable loader for mission room text, exits, items, mobs, and progression from the `missions` and `mactions` tables.
 - Estimate: 2h
@@ -70,6 +70,7 @@ Port the scripted and semi-random narrative systems without flattening them into
 - Technical notes: Keep the data shape close to how the authored content is stored.
 - In scope: Mission graph load and resume logic.
 - Out of scope: Fight resolution inside missions.
+- Status: **Complete**. Created `quest/mission_loader.rs` (room template parsing, class placeholder expansion, chance rolling, room generation, serialization roundtrips) and `data/queries/mission.rs` (mission room/active mission/chronicle SQL queries with `RoomAdvance` struct). 40 new tests.
 
 ### MP-14-03: Port quest action persistence and branching
 
