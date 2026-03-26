@@ -100,7 +100,7 @@ Port the profession systems and resource loops that create most player-owned ite
 - In scope: Gathering and refinement loops.
 - Out of scope: Outpost production.
 
-### MP-11-05: Port jeweller, crafts, and astral production
+### MP-11-05: Port jeweller, crafts, and astral production ✅
 
 - Description: Rebuild the jeweller and astral-oriented crafting flows, including plan access and component handling.
 - Estimate: 2h
