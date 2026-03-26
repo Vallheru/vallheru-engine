@@ -84,9 +84,9 @@ Extract and port the battle engine and the encounter flows that depend on it wit
 - In scope: PvE execution flow and persistence.
 - Out of scope: PvP and quest-specific branches.
 
-### MP-08-04: Port player-versus-player and arena-style flows
+### MP-08-04: Port player-versus-player and arena-style flows ✅
 
-- Description: Recreate PvP battle setup, resolution, logging, and player state changes.
+- Status: **Complete**
 - Estimate: 2h
 - Depends on: MP-08-03.
 - Functional acceptance criteria:
@@ -124,9 +124,9 @@ Extract and port the battle engine and the encounter flows that depend on it wit
 - In scope: Defeat, recovery, and resurrection aftermath.
 - Out of scope: Poison and antidote interactions.
 
-### MP-08-07: Port poison and antidote aftermath rules
+### MP-08-07: Port poison and antidote aftermath rules ✅
 
-- Description: Rebuild the status-effect mechanics that apply poison, clear antidote state, and connect battle aftermath to alchemy items.
+- Status: **Complete**
 - Estimate: 1h
 - Depends on: MP-08-03, MP-11-03.
 - Functional acceptance criteria:
