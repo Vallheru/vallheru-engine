@@ -43,8 +43,9 @@ Extract and port the battle engine and the encounter flows that depend on it wit
 
 ## Tasks
 
-### MP-08-01: Isolate combat formulas from PHP helpers
+### MP-08-01: Isolate combat formulas from PHP helpers ✅
 
+- Status: **Complete**
 - Description: Identify and port the pure damage, hit, defense, speed, and reward formulas from `includes/funkcje.php` and `includes/turnfight.php` into Rust domain functions.
 - Estimate: 2h
 - Depends on: MP-06-03.

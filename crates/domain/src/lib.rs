@@ -1,6 +1,7 @@
 pub mod account;
 pub mod auth;
 pub mod character_reset;
+pub mod combat;
 pub mod equipment;
 pub mod item;
 pub mod location;
