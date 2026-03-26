@@ -34,7 +34,7 @@ None — this is the first module and has no prerequisites.
 
 ## Tasks
 
-### MP-01-01: Create the Rust workspace skeleton
+### MP-01-01: Create the Rust workspace skeleton ✅
 
 - Description: Create the Cargo workspace, define the `server`, `web`, `domain`, and `data` crates, and add a minimal compileable dependency graph.
 - Estimate: 1.5h
@@ -47,7 +47,7 @@ None — this is the first module and has no prerequisites.
 - In scope: Workspace layout, crate manifests, shared lint settings.
 - Out of scope: Real routes, templates, or database access.
 
-### MP-01-02: Add typed configuration loading
+### MP-01-02: Add typed configuration loading ✅
 
 - Description: Replace the generated PHP config pattern with explicit Rust configuration loaded from environment variables and an optional local TOML file.
 - Estimate: 1h
@@ -60,7 +60,7 @@ None — this is the first module and has no prerequisites.
 - In scope: Server config model and loader.
 - Out of scope: Secrets management platform integration.
 
-### MP-01-03: Add application bootstrap and structured logging
+### MP-01-03: Add application bootstrap and structured logging ✅
 
 - Description: Implement server startup, graceful shutdown, request tracing, and startup logging.
 - Estimate: 1h
@@ -73,7 +73,7 @@ None — this is the first module and has no prerequisites.
 - In scope: Bootstrap path and logging.
 - Out of scope: Business-domain events.
 
-### MP-01-04: Add health, readiness, and build information endpoints
+### MP-01-04: Add health, readiness, and build information endpoints ✅
 
 - Description: Implement internal endpoints for process health, database readiness stub, and build metadata.
 - Estimate: 1h
@@ -86,7 +86,7 @@ None — this is the first module and has no prerequisites.
 - In scope: Operational endpoints.
 - Out of scope: Monitoring dashboards.
 
-### MP-01-05: Add shared error and response infrastructure
+### MP-01-05: Add shared error and response infrastructure ✅
 
 - Description: Define the common application error type and a consistent way to render user-facing errors, redirects, and flash messages.
 - Estimate: 1h
@@ -99,7 +99,7 @@ None — this is the first module and has no prerequisites.
 - In scope: Error plumbing for the web layer.
 - Out of scope: Domain-specific validation messages.
 
-### MP-01-06: Consolidate runtime commands into one binary
+### MP-01-06: Consolidate runtime commands into one binary ✅
 
 - Description: Add CLI subcommands for future schema migration, import, reset, and parity jobs so operational tooling does not stay in shell/PHP scripts.
 - Estimate: 1.5h

@@ -31,7 +31,7 @@ Replace file-per-page dispatch with an explicit Axum router and shared middlewar
 
 ## Tasks
 
-### MP-03-01: Build the canonical route manifest
+### MP-03-01: Build the canonical route manifest ✅
 
 - Description: Convert the 110 top-level PHP entry points into a structured route inventory with ownership, auth requirements, and migration order.
 - Estimate: 1h
@@ -44,7 +44,7 @@ Replace file-per-page dispatch with an explicit Axum router and shared middlewar
 - In scope: Route manifest and metadata.
 - Out of scope: Handler implementations.
 
-### MP-03-02: Implement router composition by module
+### MP-03-02: Implement router composition by module ✅
 
 - Description: Create Axum route groups per migration module rather than one flat file.
 - Estimate: 1h
@@ -57,7 +57,7 @@ Replace file-per-page dispatch with an explicit Axum router and shared middlewar
 - In scope: Router composition and nesting.
 - Out of scope: Business logic.
 
-### MP-03-03: Add request context middleware
+### MP-03-03: Add request context middleware ✅
 
 - Description: Implement middleware that resolves session user, locale, theme, request id, and page context once per request.
 - Estimate: 1h
@@ -70,7 +70,7 @@ Replace file-per-page dispatch with an explicit Axum router and shared middlewar
 - In scope: Request context middleware.
 - Out of scope: Account or session creation.
 
-### MP-03-04: Add authorization guards
+### MP-03-04: Add authorization guards ✅
 
 - Description: Centralize checks that are currently scattered across pages, such as staff rank, admin rank, tribe membership, and location preconditions.
 - Estimate: 1h
@@ -83,7 +83,7 @@ Replace file-per-page dispatch with an explicit Axum router and shared middlewar
 - In scope: Guard framework and first guard set.
 - Out of scope: Every feature-specific rule.
 
-### MP-03-05: Add legacy fallback strategy
+### MP-03-05: Add legacy fallback strategy ✅
 
 - Description: Define and implement the route-level fallback mechanism that lets Nginx or the Rust app pass unmigrated pages to PHP during the strangler phase.
 - Estimate: 1h
@@ -96,7 +96,7 @@ Replace file-per-page dispatch with an explicit Axum router and shared middlewar
 - In scope: Fallback design and activation model.
 - Out of scope: Final PHP removal.
 
-### MP-03-06: Standardize redirects, back-links, and page titles
+### MP-03-06: Standardize redirects, back-links, and page titles ✅
 
 - Description: Recreate the shared page metadata behavior that is currently hidden in per-page PHP scripts and template includes.
 - Estimate: 1h

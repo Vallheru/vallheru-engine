@@ -45,7 +45,7 @@ Port all identity and account lifecycle flows while preserving legacy behavior w
 
 ## Tasks
 
-### MP-05-01: Port login and logout with compatibility hashing
+### MP-05-01: Port login and logout with compatibility hashing ✅
 
 - Description: Implement the login and logout flow, including compatibility with legacy MD5 password hashes and a transparent upgrade path to Argon2.
 - Estimate: 2h
@@ -58,7 +58,7 @@ Port all identity and account lifecycle flows while preserving legacy behavior w
 - In scope: Authentication check, session start, logout.
 - Out of scope: Registration and account recovery.
 
-### MP-05-02: Port registration validation and account creation
+### MP-05-02: Port registration validation and account creation ✅
 
 - Description: Recreate the registration form, email validation, username uniqueness checks, and activation record creation.
 - Estimate: 1.5h
@@ -71,7 +71,7 @@ Port all identity and account lifecycle flows while preserving legacy behavior w
 - In scope: Registration inputs and persistence.
 - Out of scope: Activation email delivery.
 
-### MP-05-03: Port activation and lost-password flows
+### MP-05-03: Port activation and lost-password flows ✅
 
 - Description: Rebuild account activation, password reset request, reset token verification, and password replacement.
 - Estimate: 2h
@@ -84,7 +84,7 @@ Port all identity and account lifecycle flows while preserving legacy behavior w
 - In scope: Activation and password recovery flows.
 - Out of scope: Account profile editing.
 
-### MP-05-04: Port account settings and profile management
+### MP-05-04: Port account settings and profile management ✅
 
 - Description: Migrate the authenticated account page, profile edits, contact fields, preferences, and avatar-related metadata handling.
 - Estimate: 1.5h
@@ -97,7 +97,7 @@ Port all identity and account lifecycle flows while preserving legacy behavior w
 - In scope: Account and profile settings.
 - Out of scope: Public profile presentation.
 
-### MP-05-05: Port preset, reset, and referral screens
+### MP-05-05: Port preset, reset, and referral screens ✅
 
 - Description: Recreate the ancillary account routes for presets, character reset mechanics, and referral visibility.
 - Estimate: 1.5h
@@ -110,7 +110,7 @@ Port all identity and account lifecycle flows while preserving legacy behavior w
 - In scope: Preset/reset/referral web flows.
 - Out of scope: Era-wide reset tooling.
 
-### MP-05-06: Replace PHP session semantics with explicit Rust session handling
+### MP-05-06: Replace PHP session semantics with explicit Rust session handling ✅
 
 - Description: Implement server-side session storage that preserves the app's reliance on mutable session state for chat tabs, combat flags, and mission state.
 - Estimate: 1.5h

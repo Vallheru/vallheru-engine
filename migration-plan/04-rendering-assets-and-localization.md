@@ -38,7 +38,7 @@ Recreate the current server-rendered UI in MiniJinja with embedded assets and ex
 
 ## Tasks
 
-### MP-04-01: Build the MiniJinja environment
+### MP-04-01: Build the MiniJinja environment ✅
 
 - Description: Set up MiniJinja with template loading, shared globals, shared partials, and helper functions equivalent to the current layout system.
 - Estimate: 1.5h
@@ -51,7 +51,7 @@ Recreate the current server-rendered UI in MiniJinja with embedded assets and ex
 - In scope: Templating runtime and helper registration.
 - Out of scope: Full template conversion.
 
-### MP-04-02: Port the base layouts and theme selection
+### MP-04-02: Port the base layouts and theme selection ✅
 
 - Description: Recreate the default and `layout1` theme structures so page migrations can attach to stable shared templates.
 - Estimate: 1h
@@ -64,7 +64,7 @@ Recreate the current server-rendered UI in MiniJinja with embedded assets and ex
 - In scope: Base templates and theme switching.
 - Out of scope: CSS redesign.
 
-### MP-04-03: Embed shipped assets into the binary
+### MP-04-03: Embed shipped assets into the binary ✅
 
 - Description: Embed templates, CSS, JS, and images at compile time and serve them from memory.
 - Estimate: 1h
@@ -77,7 +77,7 @@ Recreate the current server-rendered UI in MiniJinja with embedded assets and ex
 - In scope: Embedded static asset pipeline.
 - Out of scope: CDN integration.
 
-### MP-04-04: Define localization catalog loading
+### MP-04-04: Define localization catalog loading ✅
 
 - Description: Replace PHP constant files under `languages/` with structured Rust-loaded message catalogs.
 - Estimate: 1h
@@ -90,7 +90,7 @@ Recreate the current server-rendered UI in MiniJinja with embedded assets and ex
 - In scope: Localization file format and loader.
 - Out of scope: Translation tooling.
 
-### MP-04-05: Rebuild common form and message components
+### MP-04-05: Rebuild common form and message components ✅
 
 - Description: Port recurring UI fragments such as errors, status messages, confirmation forms, tables, and pagination stubs.
 - Estimate: 1h
@@ -103,7 +103,7 @@ Recreate the current server-rendered UI in MiniJinja with embedded assets and ex
 - In scope: Common view components.
 - Out of scope: Feature-specific templates.
 
-### MP-04-06: Port page-level JS and CSS loading rules
+### MP-04-06: Port page-level JS and CSS loading rules ✅
 
 - Description: Define how legacy page-specific JS and CSS are associated with migrated handlers and templates.
 - Estimate: 1.5h

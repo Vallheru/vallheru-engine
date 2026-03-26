@@ -31,7 +31,7 @@ Translate the legacy MySQL schema and ad hoc data access into explicit PostgreSQ
 
 ## Tasks
 
-### MP-02-01: Produce a table ownership map
+### MP-02-01: Produce a table ownership map ✅
 
 - Description: Assign each legacy table to one migration module and record which routes read and write it.
 - Estimate: 1.5h
@@ -44,7 +44,7 @@ Translate the legacy MySQL schema and ad hoc data access into explicit PostgreSQ
 - In scope: Ownership matrix and coupling notes.
 - Out of scope: Final schema DDL.
 
-### MP-02-02: Create initial PostgreSQL migrations for core tables
+### MP-02-02: Create initial PostgreSQL migrations for core tables ✅
 
 - Description: Port the highest-leverage tables first: `players`, `settings`, auth-related tables, logs, and basic catalog tables needed for bootstrap.
 - Estimate: 1.5h
@@ -57,7 +57,7 @@ Translate the legacy MySQL schema and ad hoc data access into explicit PostgreSQ
 - In scope: Initial migration files and core schema.
 - Out of scope: Every gameplay table.
 
-### MP-02-03: Design the legacy player field normalization strategy
+### MP-02-03: Design the legacy player field normalization strategy ✅
 
 - Description: Define how `players.settings`, `players.stats`, `players.skills`, and `players.bonuses` move from delimited strings into PostgreSQL-friendly structures.
 - Estimate: 1h
@@ -70,7 +70,7 @@ Translate the legacy MySQL schema and ad hoc data access into explicit PostgreSQ
 - In scope: Target data model and import rules.
 - Out of scope: Full import implementation.
 
-### MP-02-04: Add PostgreSQL repository scaffolding with explicit SQL
+### MP-02-04: Add PostgreSQL repository scaffolding with explicit SQL ✅
 
 - Description: Create the `data` crate structure, connection pool, transaction helpers, and first query modules using `sqlx`.
 - Estimate: 1h
@@ -83,7 +83,7 @@ Translate the legacy MySQL schema and ad hoc data access into explicit PostgreSQ
 - In scope: Pooling and query module structure.
 - Out of scope: Full module repositories.
 
-### MP-02-05: Build a reference-data import command
+### MP-02-05: Build a reference-data import command ✅
 
 - Description: Implement the first import path for mostly static or catalog-like data from MySQL SQL dumps into PostgreSQL.
 - Estimate: 1.5h
@@ -96,7 +96,7 @@ Translate the legacy MySQL schema and ad hoc data access into explicit PostgreSQ
 - In scope: Reference-data import path.
 - Out of scope: Full production cutover import.
 
-### MP-02-06: Add data reconciliation reporting
+### MP-02-06: Add data reconciliation reporting ✅
 
 - Description: Create a CLI report that compares MySQL and PostgreSQL row counts and critical aggregates for migrated modules.
 - Estimate: 1.5h
