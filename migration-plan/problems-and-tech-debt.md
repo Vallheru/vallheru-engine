@@ -95,3 +95,15 @@ Each entry includes:
 - **Needs new task**: No
 - **Status**: resolved
 - **Related tasks**: MP-09-02, MP-06-06
+
+### TD-007: `_pub` wrapper functions in formulas.rs
+
+- **Type**: tech-debt
+- **Discovered in**: MP-08-03
+- **Description**: `stat_modified_pub()`, `skill_level_pub()`, and `bonus_value_pub()` are thin public wrappers around private helpers in `formulas.rs`, added so `battle.rs` can call them. The naming convention is awkward.
+- **Impact**: Minor API clutter. The helpers should simply be made `pub` or `pub(crate)` instead of keeping private originals with separate wrappers.
+- **Action**: Rename the private functions to `pub(crate)` and remove the `_pub` wrappers.
+- **Fixable in existing task**: Yes — can be done during any combat or formula task.
+- **Needs new task**: No
+- **Status**: open
+- **Related tasks**: MP-08-03

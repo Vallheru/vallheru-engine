@@ -70,8 +70,9 @@ Extract and port the battle engine and the encounter flows that depend on it wit
 - In scope: Encounter generation and monster loading.
 - Out of scope: Full fight resolution.
 
-### MP-08-03: Port player-versus-monster battle execution
+### MP-08-03: Port player-versus-monster battle execution ✅
 
+- Status: **Complete**
 - Description: Implement the request flow that starts, advances, and resolves PvE battles.
 - Estimate: 2h
 - Depends on: MP-08-01, MP-08-02, MP-05-06.
