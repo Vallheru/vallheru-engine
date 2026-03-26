@@ -74,7 +74,7 @@ Port the profession systems and resource loops that create most player-owned ite
 - In scope: Smithing/armorer production logic.
 - Out of scope: Market resale of produced goods.
 
-### MP-11-03: Port alchemy, herbs, potions, and antidotes
+### MP-11-03: Port alchemy, herbs, potions, and antidotes ✅
 
 - Description: Rebuild herb consumption, potion production, poison/antidote flows, and alchemy-specific skill effects.
 - Estimate: 2h
