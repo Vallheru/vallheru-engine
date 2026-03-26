@@ -113,7 +113,7 @@ Port the profession systems and resource loops that create most player-owned ite
 - In scope: Jeweller and astral production.
 - Out of scope: Tribe craft storage.
 
-### MP-11-06: Port core breeding rules
+### MP-11-06: Port core breeding rules ✅
 
 - Description: Migrate the `core.php` breeding inputs, costs, success chances, and offspring generation rules into Rust.
 - Estimate: 1.5h
