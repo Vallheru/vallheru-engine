@@ -97,8 +97,9 @@ Extract and port the battle engine and the encounter flows that depend on it wit
 - In scope: PvP execution and persistence.
 - Out of scope: Team or tribe warfare.
 
-### MP-08-05: Port route-specific combat entry points
+### MP-08-05: Port route-specific combat entry points ✅
 
+- Status: **Complete**. Created `combat/exploration.rs` (forest/mountain exploration loop with per-step random event tables, energy validation, loot accumulation, Bridge of Death) and `combat/hunter_quest.rs` (5 quest types with parsing/serialization, reward formulas, delivery validation, quest generation, bestiary split). 84 tests.
 - Description: Wire the battle engine into `explore.php`, `hunters.php`, `farm.php`, and other battle-triggering pages.
 - Estimate: 2h
 - Depends on: MP-08-03, MP-08-04.
