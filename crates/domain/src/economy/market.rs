@@ -498,6 +498,175 @@ pub fn potion_shop_price(potion_type: &str, power: i32) -> i64 {
     }
 }
 
+// ---------------------------------------------------------------------------
+// Browse / sort / pagination
+// ---------------------------------------------------------------------------
+
+/// Items per page for market listing pagination.
+pub const PAGE_SIZE: i32 = 30;
+
+/// Sort direction.
+#[derive(Debug, Clone, Copy, PartialEq, Eq, Default)]
+pub enum SortOrder {
+    #[default]
+    Desc,
+    Asc,
+}
+
+impl SortOrder {
+    /// Parse from query string value.
+    pub fn from_str_param(s: &str) -> Self {
+        if s.eq_ignore_ascii_case("asc") {
+            Self::Asc
+        } else {
+            Self::Desc
+        }
+    }
+
+    /// The SQL keyword.
+    pub fn sql(self) -> &'static str {
+        match self {
+            Self::Asc => "ASC",
+            Self::Desc => "DESC",
+        }
+    }
+
+    /// The toggle (for the "click column to reverse" UI pattern).
+    #[must_use]
+    pub fn toggle(self) -> Self {
+        match self {
+            Self::Asc => Self::Desc,
+            Self::Desc => Self::Asc,
+        }
+    }
+}
+
+/// A validated sort column for a market category.
+///
+/// Each category allows a different set of columns.
+/// The caller resolves the column name via [`MarketCategory::validate_sort_column`].
+#[derive(Debug, Clone, PartialEq, Eq)]
+pub struct SortColumn(String);
+
+impl SortColumn {
+    /// The validated column name.
+    pub fn as_str(&self) -> &str {
+        &self.0
+    }
+}
+
+impl MarketCategory {
+    /// Allowed sort column names for this category's browse view.
+    ///
+    /// Derived from `in_array($_GET['lista'], ...)` checks in each PHP page.
+    pub fn allowed_sort_columns(self) -> &'static [&'static str] {
+        match self {
+            Self::Minerals | Self::Herbs => &["id", "nazwa", "ilosc", "cost", "seller"],
+            Self::Equipment => &[
+                "id", "name", "power", "wt", "szyb", "zr", "minlev", "amount", "cost", "owner",
+            ],
+            Self::Potions => &["id", "name", "efect", "power", "amount", "cost", "owner"],
+            Self::Astral => &["id", "type", "number", "amount", "cost", "seller"],
+            Self::Jewellery => &["id", "name", "power", "amount", "cost", "owner"],
+            Self::Loot => &["id", "name", "cost", "amount", "minlev", "owner"],
+            Self::Pets => &["id", "name", "cost", "gender", "power", "defense", "seller"],
+        }
+    }
+
+    /// Validate and return a [`SortColumn`] for this category.
+    ///
+    /// Falls back to `"id"` if the requested column is not allowed.
+    pub fn validate_sort_column(self, requested: &str) -> SortColumn {
+        if self.allowed_sort_columns().contains(&requested) {
+            SortColumn(requested.to_string())
+        } else {
+            SortColumn("id".to_string())
+        }
+    }
+}
+
+/// Input for a paginated market browse request.
+#[derive(Debug, Clone)]
+pub struct BrowseRequest {
+    pub category: MarketCategory,
+    pub page: i32,
+    pub sort_column: SortColumn,
+    pub sort_order: SortOrder,
+    /// Optional name/keyword search filter (already sanitized).
+    pub search: Option<String>,
+}
+
+/// Computed pagination metadata for a market listing page.
+#[derive(Debug, Clone, Copy, PartialEq, Eq)]
+pub struct Pagination {
+    /// Current (1-based) page.
+    pub page: i32,
+    /// Total number of pages.
+    pub total_pages: i32,
+    /// SQL `OFFSET` value.
+    pub offset: i32,
+    /// SQL `LIMIT` value (always [`PAGE_SIZE`]).
+    pub limit: i32,
+}
+
+/// Compute pagination from total item count and requested page.
+pub fn paginate(total_items: i32, requested_page: i32) -> Pagination {
+    let total_pages = if total_items <= 0 {
+        1
+    } else {
+        (total_items + PAGE_SIZE - 1) / PAGE_SIZE
+    };
+    let page = requested_page.clamp(1, total_pages);
+    let offset = (page - 1) * PAGE_SIZE;
+    Pagination {
+        page,
+        total_pages,
+        offset,
+        limit: PAGE_SIZE,
+    }
+}
+
+/// Sanitize a user-provided search string for `LIKE` matching.
+///
+/// PHP converts `*` to `%`, then wraps the string in `%..%`
+/// if it doesn't already contain `%`.
+pub fn sanitize_search(raw: &str) -> String {
+    let trimmed = raw.trim();
+    if trimmed.is_empty() {
+        return String::new();
+    }
+    let replaced = trimmed.replace('*', "%");
+    if replaced.contains('%') {
+        replaced
+    } else {
+        format!("%{replaced}%")
+    }
+}
+
+// ---------------------------------------------------------------------------
+// Offer summary (for "my offers" view)
+// ---------------------------------------------------------------------------
+
+/// Per-category offer count for the "my offers" summary.
+#[derive(Debug, Clone, Copy, PartialEq, Eq)]
+pub struct OfferCount {
+    pub category: MarketCategory,
+    pub count: i32,
+}
+
+/// Summary of a player's offers across all markets.
+#[derive(Debug, Clone)]
+pub struct OfferSummary {
+    pub counts: Vec<OfferCount>,
+}
+
+impl OfferSummary {
+    /// Total offers across all categories.
+    pub fn total(&self) -> i32 {
+        self.counts.iter().map(|c| c.count).sum()
+    }
+}
+
 #[cfg(test)]
 mod tests {
     use super::*;
@@ -806,5 +975,151 @@ mod tests {
     #[test]
     fn potion_price_health() {
         assert_eq!(potion_shop_price("H", 10), 60);
+    }
+
+    // --- SortOrder ---
+
+    #[test]
+    fn sort_order_default_is_desc() {
+        assert_eq!(SortOrder::default(), SortOrder::Desc);
+    }
+
+    #[test]
+    fn sort_order_parse() {
+        assert_eq!(SortOrder::from_str_param("ASC"), SortOrder::Asc);
+        assert_eq!(SortOrder::from_str_param("asc"), SortOrder::Asc);
+        assert_eq!(SortOrder::from_str_param("DESC"), SortOrder::Desc);
+        assert_eq!(SortOrder::from_str_param("other"), SortOrder::Desc);
+    }
+
+    #[test]
+    fn sort_order_toggle() {
+        assert_eq!(SortOrder::Asc.toggle(), SortOrder::Desc);
+        assert_eq!(SortOrder::Desc.toggle(), SortOrder::Asc);
+    }
+
+    #[test]
+    fn sort_order_sql() {
+        assert_eq!(SortOrder::Asc.sql(), "ASC");
+        assert_eq!(SortOrder::Desc.sql(), "DESC");
+    }
+
+    // --- SortColumn validation ---
+
+    #[test]
+    fn sort_column_valid() {
+        let col = MarketCategory::Minerals.validate_sort_column("nazwa");
+        assert_eq!(col.as_str(), "nazwa");
+    }
+
+    #[test]
+    fn sort_column_invalid_falls_back() {
+        let col = MarketCategory::Minerals.validate_sort_column("hacked");
+        assert_eq!(col.as_str(), "id");
+    }
+
+    #[test]
+    fn equipment_sort_columns_include_power() {
+        let cols = MarketCategory::Equipment.allowed_sort_columns();
+        assert!(cols.contains(&"power"));
+        assert!(cols.contains(&"cost"));
+    }
+
+    // --- paginate ---
+
+    #[test]
+    fn paginate_page_one() {
+        let p = paginate(100, 1);
+        assert_eq!(p.page, 1);
+        assert_eq!(p.total_pages, 4); // ceil(100/30) = 4
+        assert_eq!(p.offset, 0);
+        assert_eq!(p.limit, 30);
+    }
+
+    #[test]
+    fn paginate_last_page() {
+        let p = paginate(100, 4);
+        assert_eq!(p.page, 4);
+        assert_eq!(p.offset, 90);
+    }
+
+    #[test]
+    fn paginate_clamps_high() {
+        let p = paginate(100, 99);
+        assert_eq!(p.page, 4);
+    }
+
+    #[test]
+    fn paginate_clamps_low() {
+        let p = paginate(100, 0);
+        assert_eq!(p.page, 1);
+    }
+
+    #[test]
+    fn paginate_zero_items() {
+        let p = paginate(0, 1);
+        assert_eq!(p.total_pages, 1);
+        assert_eq!(p.page, 1);
+    }
+
+    #[test]
+    fn paginate_exact_page_boundary() {
+        let p = paginate(60, 2);
+        assert_eq!(p.total_pages, 2);
+        assert_eq!(p.page, 2);
+        assert_eq!(p.offset, 30);
+    }
+
+    // --- sanitize_search ---
+
+    #[test]
+    fn search_empty() {
+        assert_eq!(sanitize_search(""), "");
+        assert_eq!(sanitize_search("  "), "");
+    }
+
+    #[test]
+    fn search_wraps_plain() {
+        assert_eq!(sanitize_search("iron"), "%iron%");
+    }
+
+    #[test]
+    fn search_preserves_wildcards() {
+        assert_eq!(sanitize_search("iron*"), "iron%");
+    }
+
+    #[test]
+    fn search_star_conversion() {
+        assert_eq!(sanitize_search("*steel*"), "%steel%");
+    }
+
+    #[test]
+    fn search_already_has_percent() {
+        assert_eq!(sanitize_search("%coal%"), "%coal%");
+    }
+
+    // --- OfferSummary ---
+
+    #[test]
+    fn offer_summary_total() {
+        let summary = OfferSummary {
+            counts: vec![
+                OfferCount {
+                    category: MarketCategory::Minerals,
+                    count: 5,
+                },
+                OfferCount {
+                    category: MarketCategory::Herbs,
+                    count: 3,
+                },
+            ],
+        };
+        assert_eq!(summary.total(), 8);
+    }
+
+    #[test]
+    fn offer_summary_empty() {
+        let summary = OfferSummary { counts: vec![] };
+        assert_eq!(summary.total(), 0);
     }
 }
