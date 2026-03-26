@@ -61,7 +61,7 @@ Port the profession systems and resource loops that create most player-owned ite
 - In scope: Shared workshop service design.
 - Out of scope: Specific profession rules.
 
-### MP-11-02: Port smithing, armorer, and weapon production
+### MP-11-02: Port smithing, armorer, and weapon production ✅
 
 - Description: Rebuild the blacksmith, armorer, and weapon-related production flows from `kowal.php`, `armor.php`, `weapons.php`, and related pages.
 - Estimate: 2h
