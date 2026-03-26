@@ -76,9 +76,9 @@ Port the currency, banking, and market systems as reusable transactional service
 - In scope: Currency domain and persistence.
 - Out of scope: Offer listings.
 
-### MP-10-03: Port shared market listing and purchase flows
+### MP-10-03: Port shared market listing and purchase flows ✅
 
-- Description: Rebuild shared listing, sorting, filtering, buy, and cancel operations used by multiple market pages.
+- Status: **Complete**
 - Estimate: 2h
 - Depends on: MP-10-01, MP-10-02.
 - Functional acceptance criteria:
