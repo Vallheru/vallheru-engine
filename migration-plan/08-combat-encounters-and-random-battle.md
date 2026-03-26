@@ -57,7 +57,7 @@ Extract and port the battle engine and the encounter flows that depend on it wit
 - In scope: Pure battle formulas.
 - Out of scope: Route orchestration.
 
-### MP-08-02: Port monster and encounter selection
+### MP-08-02: Port monster and encounter selection ✅
 
 - Description: Rebuild the logic that chooses monsters, encounter ranges, and loot tables for explore/farm/hunter style flows.
 - Estimate: 1.5h
