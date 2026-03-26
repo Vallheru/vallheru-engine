@@ -45,3 +45,15 @@ Each entry includes:
 - **Needs new task**: No — will be resolved naturally as modules MP-09 through MP-12 are migrated.
 - **Status**: open
 - **Related tasks**: MP-05-05, MP-09-01, MP-10-01, MP-11-01, MP-12-01
+
+### TD-003: Unmigrated account.php views
+
+- **Type**: migration-gap
+- **Discovered in**: MP-05-04
+- **Description**: The PHP `account.php` contains ~20 sub-views. MP-05-04 ports the core account management (settings, password, name, profile). Remaining views (links, bugtrack, bugreport, changes, freeze, immunity, avatar upload, email change, style picker, vallars history, forum subscriptions, roleplay profile, ignored list, contacts, proposals) are not yet migrated.
+- **Impact**: Low — these are secondary features. Players can still use the PHP versions during the migration window.
+- **Action**: Port remaining views as needed, likely in dedicated tasks within later modules.
+- **Fixable in existing task**: No — too many views for one task.
+- **Needs new task**: Yes — consider grouping into 2-3 follow-up tasks.
+- **Status**: open
+- **Related tasks**: MP-05-04

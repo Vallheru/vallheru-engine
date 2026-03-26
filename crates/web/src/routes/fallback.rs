@@ -106,6 +106,31 @@ pub fn migrated_routes() -> Vec<MigratedRoute> {
             module: "account",
             status: RouteStatus::Staged,
         },
+        MigratedRoute {
+            path: "/account",
+            module: "account",
+            status: RouteStatus::Staged,
+        },
+        MigratedRoute {
+            path: "/account/name",
+            module: "account",
+            status: RouteStatus::Staged,
+        },
+        MigratedRoute {
+            path: "/account/password",
+            module: "account",
+            status: RouteStatus::Staged,
+        },
+        MigratedRoute {
+            path: "/account/settings",
+            module: "account",
+            status: RouteStatus::Staged,
+        },
+        MigratedRoute {
+            path: "/account/profile",
+            module: "account",
+            status: RouteStatus::Staged,
+        },
     ]
 }
 

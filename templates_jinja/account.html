@@ -1,0 +1,118 @@
+{% extends "base.html" %}
+
+{% block content %}
+<h2>{{ title }}</h2>
+
+{% if account_view == "" %}
+{# --- Main account menu --- #}
+<table width="90%">
+  <tr>
+    <td valign="top">
+      <b>Konto</b>
+      <ul>
+        <li><a href="/account?view=name">Zmień imię</a></li>
+        <li><a href="/account?view=pass">Zmień hasło</a></li>
+      </ul>
+    </td>
+    <td valign="top">
+      <b>Profil</b>
+      <ul>
+        <li><a href="/account?view=profile">Edytuj profil</a></li>
+      </ul>
+    </td>
+  </tr>
+  <tr>
+    <td valign="top">
+      <b>Ustawienia</b>
+      <ul>
+        <li><a href="/account?view=options">Dodatkowe opcje</a></li>
+      </ul>
+    </td>
+    <td valign="top">
+      <b>Informacje</b>
+      <ul>
+        <li>Vallary: {{ player_vallars }}</li>
+      </ul>
+    </td>
+  </tr>
+</table>
+
+{% elif account_view == "name" %}
+{# --- Change name form --- #}
+<form method="post" action="/account/name">
+  <p>Nowe imię: <input type="text" name="name" size="20" /></p>
+  <input type="submit" value="Zmień" />
+</form>
+
+{% elif account_view == "pass" %}
+{# --- Change password form --- #}
+<form method="post" action="/account/password">
+  <p>Stare hasło: <input type="password" name="cp" size="20" /></p>
+  <p>Nowe hasło: <input type="password" name="np" size="20" /></p>
+  <input type="submit" value="Zmień" />
+</form>
+
+{% elif account_view == "options" %}
+{# --- Game settings form --- #}
+<form method="post" action="/account/settings">
+  <p>
+    <input type="checkbox" name="battlelog" value="1"
+      {% if battlelog != "N" %}checked="checked"{% endif %} />
+    Wyświetl szczegóły walki
+  </p>
+  <p style="margin-left:2em;">
+    <input type="radio" name="battle" value="Y"
+      {% if battlelog == "Y" %}checked="checked"{% endif %} />
+    Zawsze
+    <input type="radio" name="battle" value="A"
+      {% if battlelog == "A" %}checked="checked"{% endif %} />
+    Kiedy Ty atakowałeś(aś)
+    <input type="radio" name="battle" value="D"
+      {% if battlelog == "D" %}checked="checked"{% endif %} />
+    Kiedy zostałeś(aś) zaatakowany(a)
+  </p>
+  <p>
+    <input type="checkbox" name="graphbar" value="1"
+      {% if graphbar == "Y" %}checked="checked"{% endif %} />
+    Wyświetlanie pasków graficznych w trybie tekstowym
+  </p>
+  <p>
+    <input type="checkbox" name="autodrink" value="1"
+      {% if autodrink != "N" %}checked="checked"{% endif %} />
+    Automatycznie używaj mikstur po każdej walce
+  </p>
+  <p style="margin-left:2em;">
+    <input type="radio" name="drink" value="H"
+      {% if autodrink == "H" %}checked="checked"{% endif %} />
+    Do leczenia obrażeń
+    <input type="radio" name="drink" value="M"
+      {% if autodrink == "M" %}checked="checked"{% endif %} />
+    Do regeneracji punktów magii
+    <input type="radio" name="drink" value="A"
+      {% if autodrink == "A" %}checked="checked"{% endif %} />
+    Do regeneracji punktów życia oraz magii
+  </p>
+  <p>
+    <input type="checkbox" name="rinvites" value="1"
+      {% if rinvites == "N" %}checked="checked"{% endif %} />
+    Zablokuj zaproszenia do karczmy
+  </p>
+  <p>
+    <input type="checkbox" name="oldchat" value="1"
+      {% if oldchat == "Y" %}checked="checked"{% endif %} />
+    Stary układ karczmy
+  </p>
+  <input type="submit" value="Zapisz" />
+</form>
+
+{% elif account_view == "profile" %}
+{# --- Profile edit form --- #}
+<form method="post" action="/account/profile">
+  <p>Twój profil:</p>
+  <textarea name="profile" rows="10" cols="60">{{ player_profile }}</textarea>
+  <br />
+  <input type="submit" value="Zapisz" />
+</form>
+
+{% endif %}
+{% endblock %}

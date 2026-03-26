@@ -1,6 +1,7 @@
 //! Web request handlers, grouped by feature area.
 
 pub mod account;
+pub mod account_settings;
 pub mod auth;
 pub mod preset;
 pub mod registration;

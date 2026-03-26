@@ -4,6 +4,7 @@
 //! to their queries, separate from the domain entities in `vallheru-domain`.
 
 pub mod account;
+pub mod account_settings;
 pub mod auth;
 pub mod character_reset;
 pub mod player;

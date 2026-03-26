@@ -111,8 +111,8 @@ pub fn validate_registration(
     let referrer_id = referrer_raw.trim().parse::<i32>().ok().filter(|&id| id > 0);
 
     // Strip HTML tags from username and email (like PHP's strip_tags).
-    let clean_username = strip_tags(username);
-    let clean_email = strip_tags(email);
+    let clean_username = crate::text::strip_tags(username);
+    let clean_email = crate::text::strip_tags(email);
 
     Ok(ValidatedRegistration {
         username: clean_username,
@@ -142,22 +142,6 @@ fn is_basic_valid_email(email: &str) -> bool {
         }
         None => false,
     }
-}
-
-/// Remove HTML tags from a string (equivalent to PHP `strip_tags`).
-fn strip_tags(input: &str) -> String {
-    let mut result = String::with_capacity(input.len());
-    let mut in_tag = false;
-    for ch in input.chars() {
-        if ch == '<' {
-            in_tag = true;
-        } else if ch == '>' {
-            in_tag = false;
-        } else if !in_tag {
-            result.push(ch);
-        }
-    }
-    result
 }
 
 /// Generate a random activation token (matches PHP `rand(1,10000000)`).
@@ -265,6 +249,7 @@ mod tests {
 
     #[test]
     fn strip_tags_removes_html() {
+        use crate::text::strip_tags;
         assert_eq!(strip_tags("hello<b>world</b>"), "helloworld");
         assert_eq!(strip_tags("no tags here"), "no tags here");
         assert_eq!(strip_tags("<script>alert('xss')</script>"), "alert('xss')");
