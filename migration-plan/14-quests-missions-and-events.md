@@ -20,11 +20,11 @@ Port the scripted and semi-random narrative systems without flattening them into
 
 ## Target Rust Shape
 
-- `crates/domain/src/quest/state.rs` — Quest and mission state models, typed transitions.
-- `crates/domain/src/quest/mission.rs` — Mission graph loader: rooms, exits, items, mobs.
-- `crates/domain/src/quest/quest.rs` — Quest action persistence, branching decisions.
-- `crates/domain/src/quest/maze.rs` — Maze and labyrinth session-heavy temporary state.
-- `crates/domain/src/quest/events.rs` — Random event generation, hunter task creation.
+- `crates/domain/src/quest/state.rs` — Quest and mission state inventory, table ownership documentation.
+- `crates/domain/src/quest/mission.rs` — Mission graph models, active mission state, thief mission types, reward calculation.
+- `crates/domain/src/quest/quest_action.rs` — Quest action persistence, branching decisions, quest status.
+- `crates/domain/src/quest/maze.rs` — Maze and labyrinth exploration state, validation guards.
+- `crates/domain/src/quest/events.rs` — Random event state machine, hunter quest availability.
 - `crates/data/src/quest.rs` — Quest/mission/event queries and state persistence.
 - `crates/web/src/handlers/quest.rs` — Mission, maze, grid, thieves, hunters, chronicle handlers.
 
@@ -44,7 +44,7 @@ Port the scripted and semi-random narrative systems without flattening them into
 
 ## Tasks
 
-### MP-14-01: Inventory quest and mission state models
+### MP-14-01: Inventory quest and mission state models ✅
 
 - Description: Map all quest and mission tables, session state, and route entry points to a typed Rust state model.
 - Estimate: 1.5h
@@ -56,6 +56,7 @@ Port the scripted and semi-random narrative systems without flattening them into
 - Technical notes: Do not assume all quests can share one storage format.
 - In scope: State inventory and target model.
 - Out of scope: Full runtime implementation.
+- Status: **Complete**. Created `quest/state.rs` (table ownership inventory), `quest/mission.rs` (mission graph + active state + thief missions + rewards), `quest/quest_action.rs` (quest progress + branching), `quest/maze.rs` (labyrinth exploration), `quest/events.rs` (random event state machine + hunter quests). 50 new tests.
 
 ### MP-14-02: Port the generic mission graph loader
 

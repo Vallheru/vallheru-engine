@@ -9,5 +9,6 @@ pub mod group;
 pub mod item;
 pub mod location;
 pub mod player;
+pub mod quest;
 pub mod registration;
 pub mod text;
