@@ -63,7 +63,7 @@ Port group-oriented systems that share inventories, permissions, and combat-adja
 - In scope: Team membership workflows.
 - Out of scope: Team battle mechanics.
 
-### MP-13-02: Port guild and tribe membership flows
+### MP-13-02: Port guild and tribe membership flows ✅
 
 - Description: Rebuild tribe creation, joining, leaving, and member-list flows from the guild and tribe pages.
 - Estimate: 2h
@@ -75,6 +75,7 @@ Port group-oriented systems that share inventories, permissions, and combat-adja
 - Technical notes: Use clear transaction boundaries because tribe membership touches multiple tables.
 - In scope: Tribe lifecycle and roster behavior.
 - Out of scope: Shared storage and permissions.
+- Status: **Complete**. Created `group/tribe.rs` with TribeLevel enum (5 tiers), creation/upgrade/join/accept/leave/dissolve/kick validation, defence/army purchases, hospital pass, loan validation. 57 tests.
 
 ### MP-13-03: Port tribe permissions, ranks, and admin actions
 
