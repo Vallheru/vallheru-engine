@@ -3,6 +3,7 @@ pub mod auth;
 pub mod character_reset;
 pub mod equipment;
 pub mod item;
+pub mod location;
 pub mod player;
 pub mod registration;
 pub mod text;
