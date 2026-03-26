@@ -126,7 +126,7 @@ Port the profession systems and resource loops that create most player-owned ite
 - In scope: Core breeding domain logic.
 - Out of scope: Active pet combat integration and ranking UI.
 
-### MP-11-07: Port active pet state and core ranking views
+### MP-11-07: Port active pet state and core ranking views ✅
 
 - Description: Rebuild active core pet selection, derived player/combat integration, and core ranking displays.
 - Estimate: 1h
