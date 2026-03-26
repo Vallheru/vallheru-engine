@@ -1,0 +1,11 @@
+{# Account activation success — ported from activ.tpl #}
+{% extends "base.html" %}
+
+{% block content %}
+<div class="foot">
+  {% for flash in flashes %}
+  <div class="flash flash-{{ flash.kind }}">{{ flash.message }}</div>
+  {% endfor %}
+  <p>{{ t("activation", "YOUR_ACCOUNT") }} <a href="/">{{ t("activation", "HERE") }}</a> {{ t("activation", "TO_LOGIN") }}</p>
+</div>
+{% endblock %}

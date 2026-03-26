@@ -17,6 +17,8 @@ use crate::page::{Flash, PageMeta};
 use crate::render::RenderContext;
 use crate::state::AppState;
 
+use super::build_anon_context;
+
 /// Form data submitted by the registration form.
 #[derive(Debug, Deserialize)]
 pub struct RegisterForm {
@@ -163,8 +165,8 @@ pub async fn submit(State(state): State<AppState>, Form(form): Form<RegisterForm
         return (StatusCode::INTERNAL_SERVER_ERROR, "Internal error").into_response();
     }
 
-    // TODO(MP-05-03): Send activation email with the token link.
-    // For now, just log the token so testing is possible.
+    // TODO: Send activation email with the token link.
+    // Email delivery is not yet wired; log the token for manual testing.
     tracing::info!(
         username = %validated.username,
         email = %validated.email,
@@ -226,18 +228,4 @@ fn register_error(state: &AppState, message: &str) -> Response {
     let meta = PageMeta::titled("Error").with_flash(Flash::error(message));
     let ctx = build_anon_context(state, &meta);
     state.templates.render("error.html", &ctx)
-}
-
-/// Build a [`RenderContext`] for an unauthenticated visitor.
-fn build_anon_context(state: &AppState, meta: &PageMeta) -> RenderContext {
-    use crate::middleware::context::RequestContext;
-    use uuid::Uuid;
-
-    let req_ctx = RequestContext {
-        request_id: Uuid::new_v4(),
-        locale: state.context_defaults.locale.clone(),
-        theme: String::new(),
-        session_user: None,
-    };
-    state.templates.build_context(&req_ctx, meta)
 }

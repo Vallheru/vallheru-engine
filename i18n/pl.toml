@@ -53,3 +53,20 @@ SUCCESS = "Jesteś już zarejestrowany. Sprawdź swoją skrzynkę pocztową."
 DESCRIPTION = "Zarejestruj się w grze. To nic nie kosztuje. Po rejestracji na twoje konto email zostanie wysłany specjalny link aktywacyjny."
 PLAYERS_COUNT = "Mamy obecnie"
 PLAYERS_REGISTERED = "zarejestrowanych graczy"
+
+[activation]
+TITLE = "Aktywacja konta"
+SUCCESS = "Twoje konto jest już aktywne."
+YOUR_ACCOUNT = "Twoje konto jest już aktywne. Kliknij"
+HERE = "tutaj"
+TO_LOGIN = "aby się zalogować."
+
+[lost_password]
+TITLE = "Zapomniałem hasła"
+DESCRIPTION = "Jeżeli zapomniałeś hasła do swojej postaci, wpisz tutaj swój adres email. Jednak ze względu na to, że hasła w bazie danych są kodowane, niemożliwe jest odzyskanie twojego starego hasła. Dlatego dostaniesz nowe hasło. Jeżeli twoje konto istnieje, informacja o haśle zostanie wysłana pod podany mail. <b>Uwaga!</b> jeżeli masz na swoim koncie włączony filtr anty-spamowy, wyłącz go przed wysłaniem maila, inaczej informacja o haśle nie dojdzie do ciebie!"
+EMAIL = "Email"
+SEND = "Wyślij"
+SUCCESS = "Mail z hasłem oraz linkiem aktywującym został wysłany na podany adres e-mail. Musisz jeszcze aktywować nowe hasło"
+ERROR_MAIL = "Podaj adres email."
+ERROR_NOEMAIL = "Nie ma takiego maila w bazie danych."
+PASS_CHANGED = "Hasło do konta zostało zmienione."

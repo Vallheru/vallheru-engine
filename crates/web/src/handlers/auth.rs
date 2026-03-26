@@ -15,7 +15,6 @@ use serde::Deserialize;
 
 use crate::middleware::session;
 use crate::page::{Flash, PageMeta};
-use crate::render::RenderContext;
 use crate::state::AppState;
 
 /// Form data submitted by the login form.
@@ -168,20 +167,6 @@ fn extract_session_cookie(req: &axum::extract::Request) -> Option<String> {
 /// Build an error response for login failures.
 fn login_error(state: &AppState, message: &str) -> Response {
     let meta = PageMeta::titled("Error").with_flash(Flash::error(message));
-    let ctx = build_anon_context(state, &meta);
+    let ctx = super::build_anon_context(state, &meta);
     state.templates.render("error.html", &ctx)
-}
-
-/// Build a [`RenderContext`] for an unauthenticated visitor.
-fn build_anon_context(state: &AppState, meta: &PageMeta) -> RenderContext {
-    use crate::middleware::context::RequestContext;
-    use uuid::Uuid;
-
-    let req_ctx = RequestContext {
-        request_id: Uuid::new_v4(),
-        locale: state.context_defaults.locale.clone(),
-        theme: String::new(),
-        session_user: None,
-    };
-    state.templates.build_context(&req_ctx, meta)
 }
