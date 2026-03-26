@@ -104,7 +104,7 @@ Port player-owned item management, equipment bonuses, and storage flows into exp
 - In scope: Warehouse handlers, service methods, and templates.
 - Out of scope: Tribe shared storage.
 
-### MP-09-06: Add item parity tests and sample fixtures
+### MP-09-06: Add item parity tests and sample fixtures ✅
 
 - Description: Capture representative inventory states and use them to verify equipment effects and transfer behavior.
 - Estimate: 2h
