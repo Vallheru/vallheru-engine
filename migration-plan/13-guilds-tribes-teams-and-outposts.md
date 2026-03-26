@@ -50,7 +50,7 @@ Port group-oriented systems that share inventories, permissions, and combat-adja
 
 ## Tasks
 
-### MP-13-01: Port team invitations and membership state
+### MP-13-01: Port team invitations and membership state ✅
 
 - Description: Rebuild the team/party flows for invitations, membership slots, leader checks, and read models.
 - Estimate: 1.5h

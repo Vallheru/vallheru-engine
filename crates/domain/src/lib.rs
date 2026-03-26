@@ -5,6 +5,7 @@ pub mod combat;
 pub mod crafting;
 pub mod economy;
 pub mod equipment;
+pub mod group;
 pub mod item;
 pub mod location;
 pub mod player;
