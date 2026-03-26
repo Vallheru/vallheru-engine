@@ -1,8 +1,10 @@
 //! Defeat, hospital healing, and resurrection side effects.
 //!
-//! Ported from PHP `hospital.php` and `includes/resurect.php`.
+//! Ported from PHP `hospital.php`, `includes/resurect.php`, and
+//! `class/player_class.php` (`dying()` method).
 
 use crate::combat::formulas;
+use crate::item::PoisonType;
 use crate::player::skills::PlayerSkill;
 use crate::player::stats::PlayerStat;
 use crate::player::{Class, Race};
@@ -245,6 +247,114 @@ pub fn apply_resurrection_penalty(
             }
         }
     }
+}
+
+// ---------------------------------------------------------------------------
+// Poison / antidote aftermath
+// ---------------------------------------------------------------------------
+
+/// Check whether a player cheats death via resurrection antidote.
+///
+/// PHP `class/player_class.php` `dying()`:
+/// ```php
+/// if ($this->antidote != '' && $this->antidote[0] == 'R') {
+///     $intPower = substr($this->antidote, 1);
+///     if (rand(1, 100) < $intPower) { $this->hp = 1; }
+/// }
+/// ```
+///
+/// `roll` should be 1–100.  Returns `true` if the player survives.
+pub fn cheat_death_check(antidote_power: i32, roll: i32) -> bool {
+    roll < antidote_power
+}
+
+/// Outcome of the `dying()` flow when a player reaches 0 HP.
+#[derive(Debug, Clone, PartialEq, Eq)]
+pub struct DyingOutcome {
+    /// Whether the player survived via resurrection antidote.
+    pub survived: bool,
+    /// Player HP after the dying flow (0 or 1).
+    pub hp: i32,
+    /// Whether an antidote was consumed.
+    pub antidote_consumed: bool,
+    /// XP/level penalty applied (None if survived or no penalty).
+    pub penalty: Option<ResurrectionPenalty>,
+}
+
+/// Rolls injected into [`dying_aftermath`].
+pub struct DyingRolls {
+    /// 1–100, used for cheat death antidote check.
+    pub cheat_roll: i32,
+    /// 1–100, selects stat (≤50) vs skill (>50) penalty.
+    pub penalty_stat_or_skill_roll: i32,
+    /// Index into stat/skill slice to pick the penalty target.
+    pub penalty_target_index: usize,
+}
+
+/// Full dying aftermath: antidote check → optional cheat death → XP penalty.
+///
+/// `antidote_power`: power of the R-type antidote (0 if none).
+pub fn dying_aftermath(
+    antidote_power: i32,
+    rolls: &DyingRolls,
+    stats: &[PlayerStat],
+    skills: &[PlayerSkill],
+    race: &Race,
+    class: &Class,
+) -> DyingOutcome {
+    let has_antidote = antidote_power > 0;
+
+    if has_antidote && cheat_death_check(antidote_power, rolls.cheat_roll) {
+        return DyingOutcome {
+            survived: true,
+            hp: 1,
+            antidote_consumed: true,
+            penalty: None,
+        };
+    }
+
+    // Death: compute XP/level penalty.
+    let penalty = resurrection_penalty(
+        stats,
+        skills,
+        race,
+        class,
+        rolls.penalty_stat_or_skill_roll,
+        rolls.penalty_target_index,
+    );
+
+    DyingOutcome {
+        survived: false,
+        hp: 0,
+        antidote_consumed: has_antidote,
+        penalty: Some(penalty),
+    }
+}
+
+/// Weapon poison damage bonus when the defender lacks a matching antidote.
+///
+/// PHP `battle.php`:
+/// ```php
+/// if ($player->equip[0][3] != $enemy->antidote && $player->equip[0][3] == 'D') {
+///     $player->equip[0][2] = $player->equip[0][2] + $player->equip[0][8];
+/// }
+/// ```
+///
+/// Only Dynallca poison (`D`) adds bonus damage.  The bonus is the weapon's
+/// `poison` field value, but only when the defender does not carry an antidote
+/// of the same type.
+pub fn weapon_poison_bonus(
+    weapon_poison: i32,
+    weapon_poison_type: PoisonType,
+    defender_antidote_type: Option<PoisonType>,
+) -> i32 {
+    if weapon_poison_type != PoisonType::Dynallca {
+        return 0;
+    }
+    if defender_antidote_type == Some(PoisonType::Dynallca) {
+        return 0;
+    }
+    weapon_poison
 }
 
 // ---------------------------------------------------------------------------
@@ -512,5 +622,109 @@ mod tests {
 
         assert_eq!(skills[0].level, 50); // level unchanged
         assert_eq!(skills[0].xp, 270);
+    }
+
+    // --- Cheat death ---
+
+    #[test]
+    fn cheat_death_succeeds_when_roll_below_power() {
+        assert!(cheat_death_check(80, 50));
+    }
+
+    #[test]
+    fn cheat_death_fails_when_roll_at_power() {
+        assert!(!cheat_death_check(50, 50));
+    }
+
+    #[test]
+    fn cheat_death_fails_when_roll_above_power() {
+        assert!(!cheat_death_check(30, 90));
+    }
+
+    // --- Dying aftermath ---
+
+    #[test]
+    fn dying_with_antidote_survives() {
+        let stats = vec![make_stat("condition", 20, 15, 500)];
+        let skills = vec![make_skill("dodge", 50, 100)];
+        let rolls = DyingRolls {
+            cheat_roll: 10,
+            penalty_stat_or_skill_roll: 25,
+            penalty_target_index: 0,
+        };
+
+        let outcome = dying_aftermath(80, &rolls, &stats, &skills, &Race::Human, &Class::Warrior);
+
+        assert!(outcome.survived);
+        assert_eq!(outcome.hp, 1);
+        assert!(outcome.antidote_consumed);
+        assert!(outcome.penalty.is_none());
+    }
+
+    #[test]
+    fn dying_with_antidote_fails_cheat() {
+        let stats = vec![make_stat("condition", 20, 15, 500)];
+        let skills = vec![make_skill("dodge", 50, 100)];
+        let rolls = DyingRolls {
+            cheat_roll: 90,
+            penalty_stat_or_skill_roll: 25,
+            penalty_target_index: 0,
+        };
+
+        let outcome = dying_aftermath(30, &rolls, &stats, &skills, &Race::Human, &Class::Warrior);
+
+        assert!(!outcome.survived);
+        assert_eq!(outcome.hp, 0);
+        assert!(outcome.antidote_consumed);
+        assert!(outcome.penalty.is_some());
+    }
+
+    #[test]
+    fn dying_without_antidote() {
+        let stats = vec![make_stat("strength", 20, 10, 200)];
+        let skills = vec![make_skill("attack", 50, 300)];
+        let rolls = DyingRolls {
+            cheat_roll: 50,
+            penalty_stat_or_skill_roll: 80,
+            penalty_target_index: 0,
+        };
+
+        let outcome = dying_aftermath(0, &rolls, &stats, &skills, &Race::Elf, &Class::Mage);
+
+        assert!(!outcome.survived);
+        assert_eq!(outcome.hp, 0);
+        assert!(!outcome.antidote_consumed);
+        assert!(outcome.penalty.is_some());
+        // Skill penalty (roll=80 > 50)
+        assert_eq!(
+            outcome.penalty.as_ref().unwrap().target,
+            PenaltyTarget::Skill("attack".to_owned())
+        );
+    }
+
+    // --- Weapon poison bonus ---
+
+    #[test]
+    fn dynallca_poison_adds_bonus() {
+        assert_eq!(weapon_poison_bonus(15, PoisonType::Dynallca, None), 15);
+    }
+
+    #[test]
+    fn dynallca_poison_blocked_by_matching_antidote() {
+        assert_eq!(
+            weapon_poison_bonus(15, PoisonType::Dynallca, Some(PoisonType::Dynallca)),
+            0
+        );
+    }
+
+    #[test]
+    fn non_dynallca_poison_gives_no_bonus() {
+        assert_eq!(weapon_poison_bonus(15, PoisonType::Nutari, None), 0);
+        assert_eq!(weapon_poison_bonus(15, PoisonType::Illani, None), 0);
+    }
+
+    #[test]
+    fn no_poison_gives_no_bonus() {
+        assert_eq!(weapon_poison_bonus(0, PoisonType::Dynallca, None), 0);
     }
 }
