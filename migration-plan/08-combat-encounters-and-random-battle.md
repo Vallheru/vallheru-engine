@@ -110,8 +110,9 @@ Extract and port the battle engine and the encounter flows that depend on it wit
 - In scope: Entry-point integration.
 - Out of scope: Quest-specific battle scripts.
 
-### MP-08-06: Port defeat, hospital, and resurrection side effects
+### MP-08-06: Port defeat, hospital, and resurrection side effects ✅
 
+- Status: **Complete**
 - Description: Migrate the non-happy-path mechanics around defeat, hospital recovery, and resurrection-style outcomes.
 - Estimate: 1.5h
 - Depends on: MP-08-03.
