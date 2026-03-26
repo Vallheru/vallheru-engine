@@ -71,3 +71,15 @@ Each entry includes:
 - **Status**: resolved
 - **Related tasks**: All prior tasks that created legacy artifacts, especially MP-02-04 through MP-05-06
 - **Resolution**: Committed as `refactor(domain,data,web): remove legacy compatibility code`
+
+### TD-005: MP-06-02 made obsolete by architecture rule change
+
+- **Type**: migration-gap
+- **Discovered in**: State reconciliation audit
+- **Description**: MP-06-02 ("Port legacy field parsing and serialization") was originally about parsing semicolon-delimited PHP storage formats. The legacy parsers were implemented, then removed during remediation. Under the updated architecture rules, no legacy data compatibility is needed — data lives in normalized PostgreSQL tables.
+- **Impact**: None — the task's purpose no longer exists.
+- **Action**: Marked obsolete in plan. Dependency edges from MP-06-03 updated.
+- **Fixable in existing task**: N/A
+- **Needs new task**: No
+- **Status**: resolved
+- **Related tasks**: MP-06-02, MP-06-03

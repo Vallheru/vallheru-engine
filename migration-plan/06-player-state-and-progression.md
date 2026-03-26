@@ -39,8 +39,9 @@ Define the central Rust player model and port all derived calculations and progr
 
 ## Tasks
 
-### MP-06-01: Define the Rust player aggregate
+### MP-06-01: Define the Rust player aggregate ✅
 
+- **Status**: completed-correctly (commit `717e8a2`)
 - Description: Design the core player domain types, separating persisted fields, derived fields, and transient request/session state.
 - Estimate: 1.5h
 - Depends on: MP-02-03.
@@ -52,30 +53,24 @@ Define the central Rust player model and port all derived calculations and progr
 - In scope: Player domain model.
 - Out of scope: Full repository implementation.
 
-### MP-06-02: Port legacy field parsing and serialization
+### MP-06-02: ~~Port legacy field parsing and serialization~~ OBSOLETE
 
-- Description: Implement import/parity logic for legacy settings, stats, skills, and bonuses while the new schema is phased in.
-- Estimate: 1.5h
-- Depends on: MP-06-01, MP-02-03.
-- Functional acceptance criteria:
-  - Imported legacy player rows can be turned into Rust player structs.
-  - Round-trip conversion rules exist where temporary compatibility is needed.
-  - Parsing failures are logged with enough context to fix bad data.
-- Technical notes: Keep legacy parsing isolated so it can be deleted after full cutover.
-- In scope: Legacy compatibility parsing.
-- Out of scope: Final normalized persistence format.
+- **Status**: obsolete
+- Description: Originally about legacy semicolon-delimited format parsers. These were implemented, then removed during remediation. Under the new architecture rules, no legacy compatibility parsing is needed. Data lives in normalized tables with clean Rust types.
+- **Reason obsolete**: No backward compatibility with legacy PHP data formats required.
 
 ### MP-06-03: Port derived stat, mana, and bonus calculations
 
-- Description: Recreate the calculations currently performed in `player_class.php`, including equipment, blessings, race/class, and temporary bonus effects.
+- **Status**: not-started (partially covered by MP-09-02's equipment.rs)
+- Description: Create the unified player calculation snapshot. Equipment stat/skill bonus application already exists in `equipment.rs` (MP-09-02). Remaining: XP gain/level-up logic, HP-per-condition tables, max mana formula, seeker perception bonus, and an orchestrator function that produces a fully calculated player view.
 - Estimate: 2h
-- Depends on: MP-06-01, MP-06-02, MP-09-02.
+- Depends on: MP-06-01, MP-09-02.
 - Functional acceptance criteria:
   - Derived stats match legacy behavior for representative players.
   - Mana, health-related caps, and bonus application order are documented and tested.
   - The web layer can request a fully calculated player snapshot without mutating storage.
-- Technical notes: Separate pure calculations from repository reads so parity tests are straightforward.
-- In scope: Calculation engine.
+- Technical notes: Separate pure calculations from repository reads so parity tests are straightforward. `equipment.rs` already handles `curstats()`, `curskills()`, and `checkbonus()`. This task adds XP progression, mana caps, HP from condition, and the snapshot orchestrator.
+- In scope: Calculation engine, XP leveling, mana/HP formulas, snapshot function.
 - Out of scope: Battle resolution.
 
 ### MP-06-04: Port AP, training, class, race, and deity mutations

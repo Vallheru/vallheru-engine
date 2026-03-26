@@ -37,8 +37,9 @@ Port player-owned item management, equipment bonuses, and storage flows into exp
 
 ## Tasks
 
-### MP-09-01: Define item catalog and owned-item models
+### MP-09-01: Define item catalog and owned-item models ✅
 
+- **Status**: completed-correctly (commit `efdac90`)
 - Description: Separate immutable item definitions from player-owned inventory records, including weapons, armor, bows, spells, and special item variants.
 - Estimate: 1.5h
 - Depends on: MP-02-01, MP-02-05.
@@ -50,8 +51,9 @@ Port player-owned item management, equipment bonuses, and storage flows into exp
 - In scope: Item domain types.
 - Out of scope: Market listing behavior.
 
-### MP-09-02: Port equipment loadout and stat bonus logic
+### MP-09-02: Port equipment loadout and stat bonus logic ✅
 
+- **Status**: completed-correctly (commit `b790118`)
 - Description: Recreate how equipped items modify player stats, mana, speed, and special effects.
 - Estimate: 2h
 - Depends on: MP-06-01, MP-09-01.
