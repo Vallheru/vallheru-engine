@@ -6,6 +6,7 @@
 //! the Rust model keeps them apart for clarity and testability.
 
 pub mod bonuses;
+pub mod mutations;
 pub mod progression;
 pub mod settings;
 pub mod skills;

@@ -73,9 +73,10 @@ Define the central Rust player model and port all derived calculations and progr
 - In scope: Calculation engine, XP leveling, mana/HP formulas, snapshot function.
 - Out of scope: Battle resolution.
 
-### MP-06-04: Port AP, training, class, race, and deity mutations
+### MP-06-04: Port AP, training, class, race, and deity mutations ✅
 
-- Description: Migrate the routes and services that change player progression state through AP spending, training, and alignment/class selection.
+- **Status**: completed
+- Description: Migrate the domain logic for AP bonus purchasing, stat training, race/class/deity selection mutations. Pure domain functions with validation, cost calculations, and typed error handling.
 - Estimate: 1.5h
 - Depends on: MP-06-03.
 - Functional acceptance criteria:
