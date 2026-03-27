@@ -1,0 +1,38 @@
+{% extends "base.html" %}
+
+{% block title %}Komentarze{% endblock %}
+
+{% block content %}
+<h2>Komentarze</h2>
+
+{% for c in comments %}
+<div class="comment">
+  <p><b>{{ c.author_name }}</b> — {{ c.date }}</p>
+  <p>{{ c.body|safe }}</p>
+  {% if is_staff %}
+  <form method="post" action="/comments/{{ target_type }}/{{ target_id }}/delete/{{ c.id }}" style="display:inline;">
+    <input type="submit" value="Usuń" onclick="return confirm('Usunąć komentarz?');" />
+  </form>
+  {% endif %}
+  <hr/>
+</div>
+{% else %}
+<p>Brak komentarzy.</p>
+{% endfor %}
+
+{% if total_pages > 1 %}
+<p>
+  Strona {{ page }} z {{ total_pages }}
+  {% if page > 1 %}<a href="/comments/{{ target_type }}/{{ target_id }}?page={{ page - 1 }}">« Poprzednia</a>{% endif %}
+  {% if page < total_pages %}<a href="/comments/{{ target_type }}/{{ target_id }}?page={{ page + 1 }}">Następna »</a>{% endif %}
+</p>
+{% endif %}
+
+<h3>Dodaj komentarz</h3>
+<form method="post" action="/comments/{{ target_type }}/{{ target_id }}">
+  <textarea name="body" id="bbcode-editor" rows="6" cols="60"></textarea><br/>
+  <input type="submit" value="Wyślij" />
+</form>
+
+<p><a href="{{ back_url }}">Powrót</a></p>
+{% endblock %}

@@ -6,6 +6,7 @@ pub mod auth;
 pub mod bank;
 pub mod chat;
 pub mod city;
+pub mod content;
 pub mod equipment;
 pub mod forums;
 pub mod gathering;

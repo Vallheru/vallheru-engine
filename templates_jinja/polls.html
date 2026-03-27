@@ -1,0 +1,43 @@
+{% extends "base.html" %}
+
+{% block title %}Hala zgromadzeń{% endblock %}
+
+{% block content %}
+<h2>Hala zgromadzeń</h2>
+
+{% if poll %}
+<h3>{{ poll.question }}</h3>
+{% if poll.description %}<p>{{ poll.description }}</p>{% endif %}
+
+{% if can_vote %}
+<form method="post" action="/polls/vote">
+  {% for opt in poll.options %}
+  <p>
+    <label>
+      <input type="radio" name="answer" value="{{ opt.id }}" />
+      {{ opt.label }}
+    </label>
+  </p>
+  {% endfor %}
+  <p><input type="submit" value="Głosuj" /></p>
+</form>
+{% else %}
+<table width="100%">
+  {% for opt in poll.options %}
+  <tr>
+    <td>{{ opt.label }}</td>
+    <td>{{ opt.votes }} ({{ opt.percent }}%)</td>
+  </tr>
+  {% endfor %}
+</table>
+<p>Łączna liczba głosów: {{ poll.total_votes }} | Frekwencja: {{ poll.participation_pct }}%</p>
+{% endif %}
+
+<p>Pozostało dni: {{ poll.days_left }}</p>
+<p><a href="/comments/poll/{{ poll.id }}">Komentarze ({{ comment_count }})</a></p>
+{% else %}
+<p>Brak aktywnych ankiet.</p>
+{% endif %}
+
+<p><a href="/polls/history">Historia ankiet</a></p>
+{% endblock %}

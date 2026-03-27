@@ -151,6 +151,16 @@ impl TemplateEngine {
         }
     }
 
+    /// The game display name configured at startup.
+    pub fn game_name(&self) -> &str {
+        &self.game_name
+    }
+
+    /// The public base URL configured at startup.
+    pub fn base_url(&self) -> &str {
+        &self.base_url
+    }
+
     /// Build a [`RenderContext`] from per-request state and page metadata.
     pub fn build_context(&self, req_ctx: &RequestContext, meta: &PageMeta) -> RenderContext {
         let (back_link_url, back_link_label) = meta

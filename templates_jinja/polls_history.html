@@ -1,0 +1,28 @@
+{% extends "base.html" %}
+
+{% block title %}Historia ankiet{% endblock %}
+
+{% block content %}
+<h2>Historia ankiet</h2>
+
+{% for poll in polls %}
+<div class="poll-item">
+  <h3>{{ poll.question }}</h3>
+  {% if poll.description %}<p>{{ poll.description }}</p>{% endif %}
+  <table width="100%">
+    {% for opt in poll.options %}
+    <tr>
+      <td>{{ opt.label }}</td>
+      <td>{{ opt.votes }} ({{ opt.percent }}%)</td>
+    </tr>
+    {% endfor %}
+  </table>
+  <p>Łączna liczba głosów: {{ poll.total_votes }} | Frekwencja: {{ poll.participation_pct }}%</p>
+  <hr/>
+</div>
+{% else %}
+<p>Brak historii ankiet.</p>
+{% endfor %}
+
+<p><a href="/polls">Powrót do ankiet</a></p>
+{% endblock %}

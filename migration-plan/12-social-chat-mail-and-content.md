@@ -110,18 +110,20 @@ Port the communication and content subsystems while preserving the current polli
 - Out of scope: Tribe forums if they diverge materially.
 - Implementation: migration (forum_categories, forum_topics, forum_replies, forum_bans), domain (TopicSort, permissions, pagination), data queries (full CRUD, search, unread), 15 Axum handlers, 6 MiniJinja templates, html_to_bbcode for quoting.
 
-### MP-12-05: Port news, newspaper, proposals, polls, and RSS outputs
+### MP-12-05: Port news, newspaper, proposals, polls, and RSS outputs — **Done**
 
 - Description: Migrate the publishing and player-voting features that surface news and game content.
 - Estimate: 1.5h
 - Depends on: MP-12-04.
+- Status: **Done**.
 - Functional acceptance criteria:
-  - News and newspaper pages render from Rust data sources.
-  - Proposal and poll submission flows work.
-  - RSS output is preserved where it still has consumers.
+  - News and newspaper pages render from Rust data sources. ✅
+  - Proposal and poll submission flows work. ✅
+  - RSS output is preserved where it still has consumers. ✅
 - Technical notes: Keep staff-only publishing hooks minimal until admin tooling is ported.
 - In scope: Public content publishing and reading.
 - Out of scope: Staff moderation back office.
+- Implementation: Migration (game_updates, news, newspaper_articles, polls, poll_options, proposals, content_comments — unified comments), domain (ArticleType 11 variants, CommentTarget, ProposalType, permissions, vote_percentage), data queries (full CRUD for updates/news/newspaper/polls/proposals/comments + RSS), 20+ Axum handlers, 12 MiniJinja templates, RSS XML feed (public, no auth), TemplateEngine accessors (game_name, base_url).
 
 ### MP-12-06: Port notes, library, roleplay, and chronicle content pages
 

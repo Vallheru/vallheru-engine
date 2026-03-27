@@ -1,0 +1,21 @@
+{% extends "base.html" %}
+
+{% block title %}Dodaj plotkę{% endblock %}
+
+{% block content %}
+<h2>Dodaj plotkę</h2>
+
+<form method="post" action="/news/add">
+  <p>
+    <label>Tytuł:</label><br/>
+    <input type="text" name="ttitle" size="60" maxlength="255" />
+  </p>
+  <p>
+    <label>Treść (BBCode):</label><br/>
+    <textarea name="body" id="bbcode-editor" rows="12" cols="60"></textarea>
+  </p>
+  <p><input type="submit" value="Dodaj plotkę" /></p>
+</form>
+
+<p><a href="/news">Powrót do plotek</a></p>
+{% endblock %}

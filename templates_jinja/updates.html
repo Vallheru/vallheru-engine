@@ -1,0 +1,32 @@
+{% extends "base.html" %}
+
+{% block title %}Wieści{% endblock %}
+
+{% block content %}
+<h2>Wieści</h2>
+
+{% if is_admin %}
+<p><a href="/updates/add">Dodaj wieść</a></p>
+{% endif %}
+
+{% for item in updates %}
+<div class="news-item">
+  <h3>{{ item.title }}</h3>
+  <p>{{ item.body|safe }}</p>
+  <p class="meta">
+    {{ item.author_name }} — {{ item.date }}
+    | <a href="/comments/update/{{ item.id }}">Komentarze ({{ item.comment_count }})</a>
+    {% if is_admin %}
+    | <a href="/updates/add?modify={{ item.id }}">Edytuj</a>
+    {% endif %}
+  </p>
+  <hr/>
+</div>
+{% else %}
+<p>Brak wieści.</p>
+{% endfor %}
+
+{% if updates|length == 1 %}
+<p><a href="/updates?page=2">Pokaż ostatnie 10</a></p>
+{% endif %}
+{% endblock %}

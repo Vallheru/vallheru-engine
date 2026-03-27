@@ -1,0 +1,29 @@
+{% extends "base.html" %}
+
+{% block title %}Redakcja gazety{% endblock %}
+
+{% block content %}
+<h2>{% if article_id %}Edytuj artykuł{% else %}Napisz artykuł{% endif %}</h2>
+
+<form method="post" action="/newspaper/edit{% if article_id %}?modify={{ article_id }}{% endif %}">
+  <p>
+    <label>Tytuł (BBCode):</label><br/>
+    <input type="text" name="mtitle" value="{{ article_title }}" size="60" maxlength="255" />
+  </p>
+  <p>
+    <label>Dział:</label><br/>
+    <select name="mail">
+      {% for opt in type_options %}
+      <option value="{{ opt.code }}"{% if opt.code == article_type %} selected{% endif %}>{{ opt.label }}</option>
+      {% endfor %}
+    </select>
+  </p>
+  <p>
+    <label>Treść (BBCode):</label><br/>
+    <textarea name="mbody" id="bbcode-editor" rows="15" cols="60">{{ article_body }}</textarea>
+  </p>
+  <p><input type="submit" value="{% if article_id %}Zapisz{% else %}Dodaj{% endif %}" /></p>
+</form>
+
+<p><a href="/newspaper">Powrót do gazety</a></p>
+{% endblock %}

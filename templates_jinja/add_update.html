@@ -1,0 +1,21 @@
+{% extends "base.html" %}
+
+{% block title %}Dodaj wieść{% endblock %}
+
+{% block content %}
+<h2>{% if edit_id %}Edytuj wieść{% else %}Dodaj nową wieść{% endif %}</h2>
+
+<form method="post" action="/updates/add{% if edit_id %}?modify={{ edit_id }}{% endif %}">
+  <p>
+    <label>Tytuł:</label><br/>
+    <input type="text" name="addtitle" value="{{ edit_title }}" size="60" maxlength="255" />
+  </p>
+  <p>
+    <label>Treść:</label><br/>
+    <textarea name="addupdate" rows="12" cols="60">{{ edit_body }}</textarea>
+  </p>
+  <p><input type="submit" value="{% if edit_id %}Zapisz{% else %}Dodaj{% endif %}" /></p>
+</form>
+
+<p><a href="/updates">Powrót do wieści</a></p>
+{% endblock %}

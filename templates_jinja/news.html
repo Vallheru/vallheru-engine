@@ -1,0 +1,31 @@
+{% extends "base.html" %}
+
+{% block title %}Plotki{% endblock %}
+
+{% block content %}
+<h2>Plotki</h2>
+
+<p><a href="/news/add">Dodaj plotkę</a></p>
+
+{% if pending_count > 0 and can_add %}
+<p><i>Oczekujących plotek: {{ pending_count }}</i></p>
+{% endif %}
+
+{% for item in news_items %}
+<div class="news-item">
+  <h3>{{ item.title }}</h3>
+  <p>{{ item.body|safe }}</p>
+  <p class="meta">
+    {{ item.author_name }} — {{ item.date }}
+    | <a href="/comments/news/{{ item.id }}">Komentarze ({{ item.comment_count }})</a>
+  </p>
+  <hr/>
+</div>
+{% else %}
+<p>Brak plotek.</p>
+{% endfor %}
+
+{% if news_items|length == 1 %}
+<p><a href="/news?page=2">Pokaż ostatnie 10</a></p>
+{% endif %}
+{% endblock %}

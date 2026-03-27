@@ -1,0 +1,29 @@
+{% extends "base.html" %}
+
+{% block title %}Gazeta — Wydanie {{ issue_id }}{% endblock %}
+
+{% block content %}
+<h2>Gazeta — Wydanie {{ issue_id }}</h2>
+
+{% if is_editor %}
+<p>
+  <a href="/newspaper/edit">Napisz artykuł</a>
+  | <form method="post" action="/newspaper/release" style="display:inline;">
+      <input type="submit" value="Wydaj gazetę" onclick="return confirm('Opublikować oczekujące artykuły?');" />
+    </form>
+</p>
+{% endif %}
+
+{% for section in sections %}
+<h3>{{ section.type_label }}</h3>
+<ul>
+  {% for art in section.articles %}
+  <li><a href="/newspaper/article/{{ art.id }}">{{ art.title }}</a> — {{ art.author_name }}</li>
+  {% endfor %}
+</ul>
+{% else %}
+<p>Brak artykułów w tym wydaniu.</p>
+{% endfor %}
+
+<p><a href="/newspaper/archive">Archiwum</a></p>
+{% endblock %}

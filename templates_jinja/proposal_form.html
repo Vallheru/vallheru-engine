@@ -1,0 +1,40 @@
+{% extends "base.html" %}
+
+{% block title %}Propozycje{% endblock %}
+
+{% block content %}
+<h2>Propozycje — {% if proposal_type == "D" %}Opis{% elif proposal_type == "I" %}Przedmiot{% elif proposal_type == "M" %}Potwór{% endif %}</h2>
+
+<form method="post" action="/proposals/{{ proposal_type }}">
+  <p>
+    <label>Nazwa:</label><br/>
+    <input type="text" name="name" size="60" maxlength="255" />
+  </p>
+
+  {% if proposal_type == "D" %}
+  <p>
+    <label>Opis (BBCode):</label><br/>
+    <textarea name="data" id="bbcode-editor" rows="12" cols="60"></textarea>
+  </p>
+  {% elif proposal_type == "I" %}
+  <p>
+    <label>Dane przedmiotu:</label><br/>
+    <textarea name="data" rows="8" cols="60"></textarea>
+  </p>
+  {% elif proposal_type == "M" %}
+  <p>
+    <label>Statystyki potwora:</label><br/>
+    <textarea name="data" rows="8" cols="60"></textarea>
+  </p>
+  {% endif %}
+
+  <p>
+    <label>Dodatkowe informacje:</label><br/>
+    <textarea name="info" rows="4" cols="60"></textarea>
+  </p>
+
+  <p><input type="submit" value="Wyślij propozycję" /></p>
+</form>
+
+<p><a href="/city">Powrót do miasta</a></p>
+{% endblock %}

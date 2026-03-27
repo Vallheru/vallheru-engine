@@ -3,8 +3,8 @@
 use axum::{Router, middleware, routing};
 
 use crate::handlers::{
-    bank, chat, city, equipment, forums, gathering, locations, mail, map, market, shops, spells,
-    travel,
+    bank, chat, city, content, equipment, forums, gathering, locations, mail, map, market, shops,
+    spells, travel,
 };
 use crate::middleware::guards::require_authenticated;
 use crate::state::AppState;
@@ -12,11 +12,16 @@ use crate::state::AppState;
 /// Register city, travel, map, and secondary location routes.
 pub fn routes() -> Router<AppState> {
     Router::new()
-        .merge(location_routes())
-        .merge(economy_routes())
-        .merge(combat_routes())
-        .merge(social_routes())
-        .layer(middleware::from_fn(require_authenticated))
+        // RSS feed — public, no auth required.
+        .route("/rss", routing::get(content::rss_feed))
+        .merge(
+            Router::new()
+                .merge(location_routes())
+                .merge(economy_routes())
+                .merge(combat_routes())
+                .merge(social_routes())
+                .layer(middleware::from_fn(require_authenticated)),
+        )
 }
 
 fn location_routes() -> Router<AppState> {
@@ -186,5 +191,66 @@ fn social_routes() -> Router<AppState> {
         .route(
             "/forums/reply/{id}/delete",
             routing::post(forums::forum_delete_reply),
+        )
+        .merge(content_routes())
+}
+
+fn content_routes() -> Router<AppState> {
+    Router::new()
+        // Updates
+        .route("/updates", routing::get(content::updates_page))
+        .route(
+            "/updates/add",
+            routing::get(content::add_update_form).post(content::add_update_action),
+        )
+        // News
+        .route("/news", routing::get(content::news_page))
+        .route(
+            "/news/add",
+            routing::get(content::add_news_form).post(content::add_news_action),
+        )
+        // Comments (unified)
+        .route(
+            "/comments/{target_type}/{target_id}",
+            routing::get(content::comments_page).post(content::add_comment),
+        )
+        .route(
+            "/comments/{target_type}/{target_id}/delete/{comment_id}",
+            routing::post(content::delete_comment),
+        )
+        // Newspaper
+        .route("/newspaper", routing::get(content::newspaper_page))
+        .route(
+            "/newspaper/archive",
+            routing::get(content::newspaper_archive),
+        )
+        .route(
+            "/newspaper/issue/{id}",
+            routing::get(content::newspaper_issue),
+        )
+        .route(
+            "/newspaper/article/{id}",
+            routing::get(content::newspaper_article),
+        )
+        .route(
+            "/newspaper/edit",
+            routing::get(content::newspaper_edit_form).post(content::newspaper_edit_action),
+        )
+        .route(
+            "/newspaper/release",
+            routing::post(content::newspaper_release),
+        )
+        .route(
+            "/newspaper/article/{id}/delete",
+            routing::post(content::newspaper_delete_article),
+        )
+        // Polls
+        .route("/polls", routing::get(content::polls_page))
+        .route("/polls/vote", routing::post(content::polls_vote))
+        .route("/polls/history", routing::get(content::polls_history))
+        // Proposals
+        .route(
+            "/proposals/{ptype}",
+            routing::get(content::proposal_form).post(content::proposal_submit),
         )
 }

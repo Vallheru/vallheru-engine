@@ -1,0 +1,25 @@
+{% extends "base.html" %}
+
+{% block title %}{{ article.title }}{% endblock %}
+
+{% block content %}
+<h2>{{ article.title }}</h2>
+
+<div class="article-body">
+  {{ article.body|safe }}
+</div>
+
+<p class="meta">Autor: {{ article.author_name }}</p>
+
+<p>
+  <a href="/comments/newspaper/{{ article.id }}">Komentarze ({{ comment_count }})</a>
+  {% if is_editor %}
+  | <a href="/newspaper/edit?modify={{ article.id }}">Edytuj</a>
+  | <form method="post" action="/newspaper/article/{{ article.id }}/delete" style="display:inline;">
+      <input type="submit" value="Usuń" onclick="return confirm('Usunąć artykuł?');" />
+    </form>
+  {% endif %}
+</p>
+
+<p><a href="/newspaper">Powrót do gazety</a></p>
+{% endblock %}
