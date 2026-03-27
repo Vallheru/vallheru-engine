@@ -338,6 +338,29 @@ pub fn check_inn_action(message: &str, player_name: &str) -> Option<(String, Str
     None
 }
 
+/// Rough HTML-to-BBCode conversion for quoting forum posts.
+///
+/// This reverses the most common `BBCode` tags. It is not a full converter
+/// — just enough to produce a reasonable quote body.
+pub fn html_to_bbcode(html: &str) -> String {
+    let mut s = html.to_owned();
+    // Bold
+    s = s.replace("<b>", "[b]").replace("</b>", "[/b]");
+    s = s.replace("<strong>", "[b]").replace("</strong>", "[/b]");
+    // Italic
+    s = s.replace("<i>", "[i]").replace("</i>", "[/i]");
+    s = s.replace("<em>", "[i]").replace("</em>", "[/i]");
+    // Underline
+    s = s.replace("<u>", "[u]").replace("</u>", "[/u]");
+    // Linebreaks
+    s = s
+        .replace("<br>", "\n")
+        .replace("<br />", "\n")
+        .replace("<br/>", "\n");
+    // Strip remaining HTML tags.
+    strip_tags(&s)
+}
+
 #[cfg(test)]
 mod tests {
     use super::*;

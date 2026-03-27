@@ -96,18 +96,19 @@ Port the communication and content subsystems while preserving the current polli
 - In scope: Mail and contacts.
 - Out of scope: Staff moderation tooling.
 
-### MP-12-04: Port forums and discussion formatting
+### MP-12-04: Port forums and discussion formatting — **Done**
 
 - Description: Rebuild public forums and the BBCode formatting pipeline used in chat, mail, forums, and newspaper pages.
 - Estimate: 1.5h
 - Depends on: MP-04-04, MP-04-05.
 - Functional acceptance criteria:
-  - Forum threads and posts can be rendered and posted.
-  - BBCode or equivalent rendering is centralized.
-  - Pagination and posting restrictions are preserved.
+  - Forum threads and posts can be rendered and posted. ✅
+  - BBCode or equivalent rendering is centralized. ✅
+  - Pagination and posting restrictions are preserved. ✅
 - Technical notes: Implement only the BBCode subset actually used by the current repo.
 - In scope: Forum posting and formatting pipeline.
 - Out of scope: Tribe forums if they diverge materially.
+- Implementation: migration (forum_categories, forum_topics, forum_replies, forum_bans), domain (TopicSort, permissions, pagination), data queries (full CRUD, search, unread), 15 Axum handlers, 6 MiniJinja templates, html_to_bbcode for quoting.
 
 ### MP-12-05: Port news, newspaper, proposals, polls, and RSS outputs
 

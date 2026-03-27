@@ -1,0 +1,30 @@
+{% extends "base.html" %}
+
+{% block title %}Forum{% endblock %}
+
+{% block content %}
+<h2>Forum</h2>
+
+{% if unread_count > 0 %}
+<p><a href="/forums/new">Nowe posty ({{ unread_count }})</a></p>
+{% endif %}
+
+<table width="100%">
+  <tr>
+    <td width="75%"><b><u>Kategoria</u></b></td>
+    <td><b><u>Tematy</u></b></td>
+  </tr>
+  {% for cat in categories %}
+  <tr>
+    <td><a href="/forums/category/{{ cat.id }}"><u>{{ cat.name }}</u></a></td>
+    <td><a href="/forums/category/{{ cat.id }}">{{ cat.topic_count }}</a></td>
+  </tr>
+  <tr>
+    <td><a href="/forums/category/{{ cat.id }}"><i>{{ cat.description }}</i></a></td>
+  </tr>
+  <tr>
+    <td colspan="2"><hr/></td>
+  </tr>
+  {% endfor %}
+</table>
+{% endblock %}

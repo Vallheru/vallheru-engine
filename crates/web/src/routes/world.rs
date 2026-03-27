@@ -3,7 +3,8 @@
 use axum::{Router, middleware, routing};
 
 use crate::handlers::{
-    bank, chat, city, equipment, gathering, locations, mail, map, market, shops, spells, travel,
+    bank, chat, city, equipment, forums, gathering, locations, mail, map, market, shops, spells,
+    travel,
 };
 use crate::middleware::guards::require_authenticated;
 use crate::state::AppState;
@@ -143,5 +144,47 @@ fn social_routes() -> Router<AppState> {
         .route(
             "/mail/forward",
             routing::get(mail::mail_forward_show).post(mail::mail_forward_action),
+        )
+        // Forums
+        .route("/forums", routing::get(forums::forum_categories))
+        .route("/forums/new", routing::get(forums::forum_new_posts))
+        .route("/forums/search", routing::post(forums::forum_search))
+        .route(
+            "/forums/category/{id}",
+            routing::get(forums::forum_topic_list),
+        )
+        .route(
+            "/forums/category/{id}/delete-topics",
+            routing::post(forums::forum_bulk_delete_topics),
+        )
+        .route("/forums/topic/new", routing::post(forums::forum_add_topic))
+        .route("/forums/topic/{id}", routing::get(forums::forum_topic_read))
+        .route(
+            "/forums/topic/{id}/reply",
+            routing::post(forums::forum_add_reply),
+        )
+        .route(
+            "/forums/topic/{id}/delete",
+            routing::post(forums::forum_delete_topic),
+        )
+        .route(
+            "/forums/topic/{id}/delete-replies",
+            routing::post(forums::forum_bulk_delete_replies),
+        )
+        .route(
+            "/forums/topic/{id}/close",
+            routing::post(forums::forum_toggle_close),
+        )
+        .route(
+            "/forums/topic/{id}/sticky",
+            routing::post(forums::forum_toggle_sticky),
+        )
+        .route(
+            "/forums/topic/{id}/move",
+            routing::get(forums::forum_move_show).post(forums::forum_move_action),
+        )
+        .route(
+            "/forums/reply/{id}/delete",
+            routing::post(forums::forum_delete_reply),
         )
 }

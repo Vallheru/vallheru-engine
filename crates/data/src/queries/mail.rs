@@ -347,7 +347,10 @@ pub struct InsertMessageParams<'a> {
 }
 
 /// Insert a mail message.
-pub async fn insert_message(pool: &PgPool, p: &InsertMessageParams<'_>) -> Result<i64, sqlx::Error> {
+pub async fn insert_message(
+    pool: &PgPool,
+    p: &InsertMessageParams<'_>,
+) -> Result<i64, sqlx::Error> {
     sqlx::query_scalar::<_, i64>(
         "INSERT INTO mail_messages
             (sender_id, sender_name, owner_id, recipient_id, recipient_name,

@@ -1,0 +1,104 @@
+{% extends "base.html" %}
+
+{% block title %}Forum - Tematy{% endblock %}
+
+{% block content %}
+<a href="/forums">Powrót</a> do kategorii.<br/><br/>
+
+<form method="post" action="/forums/search">
+  <input type="submit" value="Szukaj"/> Szukaj:
+  <input type="text" name="search"/>
+  <input type="hidden" name="catid" value="{{ category_id }}"/>
+</form><br/>
+
+<form method="post" action="/forums/category/{{ category_id }}">
+  <input type="submit" value="Sortuj"/>
+  <select name="sort">
+    <option value="0" {% if sort == 0 %}selected{% endif %}>Najnowsze odpowiedzi</option>
+    <option value="1" {% if sort == 1 %}selected{% endif %}>Najstarsze odpowiedzi</option>
+    <option value="2" {% if sort == 2 %}selected{% endif %}>Najnowsze tematy</option>
+    <option value="3" {% if sort == 3 %}selected{% endif %}>Najstarsze tematy</option>
+    <option value="4" {% if sort == 4 %}selected{% endif %}>Najwięcej odpowiedzi</option>
+    <option value="5" {% if sort == 5 %}selected{% endif %}>Najmniej odpowiedzi</option>
+  </select>
+</form>
+
+{% if is_staff %}
+<form method="post" action="/forums/category/{{ category_id }}/delete-topics">
+{% endif %}
+
+<table width="100%">
+  <tr>
+    {% if is_staff %}<td width="20"></td>{% endif %}
+    <td><u><b>Temat</b></u></td>
+    <td width="20%"><u><b>Autor</b></u></td>
+    <td width="10%"><b><u>Odpowiedzi</u></b></td>
+  </tr>
+  {% for t in topics %}
+  <tr>
+    {% if is_staff %}
+    <td><input type="checkbox" name="{{ t.id }}"/></td>
+    {% endif %}
+    <td>
+      {% if t.is_new %}<b>N</b> {% endif %}
+      {% if t.is_closed %}[zamknięty] {% endif %}
+      {% if t.is_sticky %}[przyklejony] {% endif %}
+      <a href="/forums/topic/{{ t.id }}">{{ t.title }}</a>
+    </td>
+    <td><a href="/stats?id={{ t.author_id }}">{{ t.author_name }}</a></td>
+    <td>{{ t.reply_count }}</td>
+  </tr>
+  {% endfor %}
+  {% if topics | length == 0 %}
+  <tr><td colspan="4"><em>Brak tematów.</em></td></tr>
+  {% endif %}
+</table>
+
+{% if is_staff %}
+  <input type="hidden" name="catid" value="{{ category_id }}"/>
+  <input type="hidden" name="ids" id="topic-ids" value=""/>
+  <button type="button" onclick="
+    var ids = [];
+    document.querySelectorAll('input[type=checkbox]:checked').forEach(function(cb){ ids.push(cb.name); });
+    document.getElementById('topic-ids').value = ids.join(',');
+    this.form.submit();
+  ">Kasuj zaznaczone</button>
+</form>
+{% endif %}
+
+{% if total_pages > 1 %}
+<br/>Strona:
+{% for p in range(1, total_pages + 1) %}
+  {% if p == page %}
+    {{ p }}
+  {% else %}
+    <a href="/forums/category/{{ category_id }}?page={{ p }}&sort={{ sort }}">{{ p }}</a>
+  {% endif %}
+{% endfor %}
+<br/><br/>
+{% endif %}
+
+{% if can_create_topic %}
+<div align="center">
+  <form method="post" action="/forums/topic/new" name="newtopic">
+    <b>Nowy temat:</b><br/>
+    <input type="text" name="title2" value="" size="40" placeholder="Tytuł"/><br/><br/>
+    <button type="button" onclick="formatText('bold', 'newtopic', 'body')">Pogrubienie</button>
+    <button type="button" onclick="formatText('italic', 'newtopic', 'body')">Kursywa</button>
+    <button type="button" onclick="formatText('underline', 'newtopic', 'body')">Podkreślenie</button>
+    <button type="button" onclick="formatText('emote', 'newtopic', 'body')">Emocje</button>
+    <button type="button" onclick="formatText('center', 'newtopic', 'body')">Wyśrodkuj</button>
+    <button type="button" onclick="formatText('quote', 'newtopic', 'body')">Cytat</button><br/>
+    <textarea name="body" cols="40" rows="10"></textarea><br/>
+    <input type="hidden" name="catid" value="{{ category_id }}"/>
+    {% if is_staff %}
+      <input type="checkbox" name="sticky"/> Przyklejony<br/>
+    {% endif %}
+    <input type="submit" value="Dodaj temat"/>
+  </form>
+</div>
+{% endif %}
+
+<br/>
+<a href="/forums">Powrót</a> do kategorii.
+{% endblock %}

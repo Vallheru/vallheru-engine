@@ -1,0 +1,31 @@
+{% extends "base.html" %}
+
+{% block title %}Forum - Nowe posty{% endblock %}
+
+{% block content %}
+<h2>Nowe posty</h2>
+
+{% if topics | length == 0 %}
+<p>Brak nowych postów.</p>
+{% else %}
+<ul>
+  {% for t in topics %}
+  <li><b>{{ t.category_name }}:</b> <a href="/forums/topic/{{ t.id }}">{{ t.title }}</a></li>
+  {% endfor %}
+</ul>
+{% endif %}
+
+{% if total_pages > 1 %}
+<br/>Strona:
+{% for p in range(1, total_pages + 1) %}
+  {% if p == page %}
+    {{ p }}
+  {% else %}
+    <a href="/forums/new?page={{ p }}">{{ p }}</a>
+  {% endif %}
+{% endfor %}
+{% endif %}
+
+<br/><br/>
+<a href="/forums">Powrót</a> do forum.
+{% endblock %}

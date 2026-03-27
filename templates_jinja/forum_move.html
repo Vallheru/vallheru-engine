@@ -1,0 +1,19 @@
+{% extends "base.html" %}
+
+{% block title %}Forum - Przenieś temat{% endblock %}
+
+{% block content %}
+<h2>Przenieś temat</h2>
+
+<form method="post" action="/forums/topic/{{ topic_id }}/move">
+  <input type="submit" value="Przenieś"/> do:
+  <select name="category">
+    {% for cat in categories %}
+    <option value="{{ cat.id }}">{{ cat.name }}</option>
+    {% endfor %}
+  </select>
+</form>
+
+<br/>
+<a href="/forums/topic/{{ topic_id }}">Powrót</a> do tematu.
+{% endblock %}

@@ -1,0 +1,117 @@
+{% extends "base.html" %}
+
+{% block title %}Forum - {{ topic.title }}{% endblock %}
+
+{% block content %}
+<script src="/js/editor.js"></script>
+
+<br/>
+<table class="td" width="98%" cellpadding="0" cellspacing="0">
+  <tr>
+    <td>
+      <b>{{ topic.title }}</b> napisał(a)
+      <a href="/stats?id={{ topic.author_id }}">{{ topic.author_name }}</a>
+      ({{ topic.created_at }})
+      (<a href="/forums/category/{{ category_id }}">Powrót</a>)
+      {% if not is_closed %}
+        (<a href="/forums/topic/{{ topic.id }}?quotet=true">Cytuj</a>)
+      {% endif %}
+      {% if is_staff %}
+        | <a href="/forums/topic/{{ topic.id }}/delete" onclick="return confirm('Na pewno?');"
+             data-method="post">Usuń</a>
+        | <a href="/forums/topic/{{ topic.id }}/close?action={% if is_closed %}N{% else %}Y{% endif %}"
+             data-method="post">{% if is_closed %}Otwórz{% else %}Zamknij{% endif %}</a>
+        | <a href="/forums/topic/{{ topic.id }}/sticky?action={% if topic.is_sticky %}N{% else %}Y{% endif %}"
+             data-method="post">{% if topic.is_sticky %}Odepnij{% else %}Przypnij{% endif %}</a>
+        | <a href="/forums/topic/{{ topic.id }}/move">Przenieś</a>
+      {% endif %}
+    </td>
+  </tr>
+  <tr>
+    <td>{{ topic.body }}</td>
+  </tr>
+</table><br/>
+
+{% if is_staff %}
+<form method="post" action="/forums/topic/{{ topic.id }}/delete-replies">
+{% endif %}
+
+<center>
+{% for r in replies %}
+  <table class="td" width="98%" cellpadding="0" cellspacing="0">
+    <tr>
+      <td>
+        {% if is_staff %}<input type="checkbox" name="{{ r.id }}"/>{% endif %}
+        <b><a href="/stats?id={{ r.author_id }}">{{ r.author_name }}</a></b>
+        ({{ r.created_at }})
+        (<a href="/forums/category/{{ category_id }}">Powrót</a>)
+        {% if not is_closed %}
+          (<a href="/forums/topic/{{ topic.id }}?quote={{ r.id }}">Cytuj</a>)
+        {% endif %}
+        {% if is_staff %}
+          | <form method="post" action="/forums/reply/{{ r.id }}/delete?topic={{ topic.id }}" style="display:inline">
+              <button type="submit" onclick="return confirm('Na pewno?');" style="border:none;background:none;color:blue;text-decoration:underline;cursor:pointer;padding:0;">Usuń</button>
+            </form>
+        {% endif %}
+      </td>
+    </tr>
+    <tr>
+      <td>{{ r.body }}</td>
+    </tr>
+  </table><br/>
+{% endfor %}
+</center>
+
+{% if is_staff and replies | length > 0 %}
+  <input type="hidden" name="ids" id="reply-ids" value=""/>
+  <button type="button" onclick="
+    var ids = [];
+    document.querySelectorAll('input[type=checkbox]:checked').forEach(function(cb){ ids.push(cb.name); });
+    document.getElementById('reply-ids').value = ids.join(',');
+    this.form.submit();
+  ">Kasuj zaznaczone</button>
+</form>
+{% elif is_staff %}
+</form>
+{% endif %}
+
+{% if total_pages > 1 %}
+<br/>Strona:
+{% for p in range(1, total_pages + 1) %}
+  {% if p == page %}
+    {{ p }}
+  {% else %}
+    <a href="/forums/topic/{{ topic.id }}?page={{ p }}">{{ p }}</a>
+  {% endif %}
+{% endfor %}
+<br/><br/>
+{% endif %}
+
+{% if prev_topic_id or next_topic_id %}
+<div>
+  <br/><br/>
+  {% if prev_topic_id %}
+    <a href="/forums/topic/{{ prev_topic_id }}">« Poprzedni temat</a>
+  {% endif %}
+  {% if next_topic_id %}
+    <span style="float:right;"><a href="/forums/topic/{{ next_topic_id }}">Następny temat »</a></span>
+  {% endif %}
+</div>
+{% endif %}
+
+{% if not is_closed %}
+<div align="center">
+  <form method="post" action="/forums/topic/{{ topic.id }}/reply" name="newreply">
+    <b>Odpowiedz:</b><br/>
+    <button type="button" onclick="formatText('bold', 'newreply', 'rep')">Pogrubienie</button>
+    <button type="button" onclick="formatText('italic', 'newreply', 'rep')">Kursywa</button>
+    <button type="button" onclick="formatText('underline', 'newreply', 'rep')">Podkreślenie</button>
+    <button type="button" onclick="formatText('emote', 'newreply', 'rep')">Emocje</button>
+    <button type="button" onclick="formatText('center', 'newreply', 'rep')">Wyśrodkuj</button>
+    <button type="button" onclick="formatText('quote', 'newreply', 'rep')">Cytat</button><br/>
+    <textarea name="rep" cols="40" rows="10">{{ quote_text }}</textarea><br/>
+    <input type="submit" value="Odpowiedz"/>
+  </form>
+</div>
+{% endif %}
+{% endblock %}

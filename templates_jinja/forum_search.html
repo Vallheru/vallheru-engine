@@ -1,0 +1,21 @@
+{% extends "base.html" %}
+
+{% block title %}Forum - Wyniki wyszukiwania{% endblock %}
+
+{% block content %}
+<h2>Wyniki wyszukiwania</h2>
+
+{% if searched %}
+  {% if results | length == 0 %}
+    <p>Nie znaleziono żadnych wyników.</p>
+  {% else %}
+    <p>Znalezione tematy:</p>
+    {% for t in results %}
+      <a href="/forums/topic/{{ t.id }}">{{ t.title }}</a><br/>
+    {% endfor %}
+  {% endif %}
+{% endif %}
+
+<br/><br/>
+<a href="/forums/category/{{ category_id }}">Powrót</a> do kategorii.
+{% endblock %}
