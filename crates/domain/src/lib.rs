@@ -12,5 +12,6 @@ pub mod location;
 pub mod player;
 pub mod quest;
 pub mod registration;
+pub mod social;
 pub mod text;
 pub mod travel;

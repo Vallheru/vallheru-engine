@@ -8,6 +8,7 @@ pub mod account_settings;
 pub mod auth;
 pub mod bank;
 pub mod character_reset;
+pub mod chat;
 pub mod gathering;
 pub mod item;
 pub mod locations;

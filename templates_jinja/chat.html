@@ -1,0 +1,142 @@
+{% extends "base.html" %}
+
+{% block title %}Karczma{% endblock %}
+
+{% block content %}
+<h2>Karczma</h2>
+
+<div id="chatmsgs">
+  <p>Ładowanie wiadomości...</p>
+</div>
+
+<div style="text-align: center; margin-top: 10px;">
+  <form method="post" action="/chat/send" id="chatform">
+    <button type="button" id="btn-bold" onclick="formatText('bold')">Pogrubienie</button>
+    <button type="button" id="btn-italic" onclick="formatText('italic')">Kursywa</button>
+    <button type="button" id="btn-underline" onclick="formatText('underline')">Podkreślenie</button>
+    <button type="button" id="btn-emote" onclick="formatText('emote')">Emocje/czynność</button>
+    <br/>
+    <textarea name="msg" rows="2" cols="60" id="chatinput"></textarea>
+    <br/>
+    <input type="submit" value="Wyślij" />
+    <a href="/chat">odśwież</a>
+  </form>
+</div>
+
+{% if rank == "Admin" or rank == "Karczmarka" or rank == "Staff" %}
+<hr/>
+<details>
+  <summary>+ Kontrola karczmy</summary>
+
+  <div style="text-align: center; margin-top: 10px;">
+    <h4>Daj przedmiot</h4>
+    <form method="post" action="/chat/admin/give">
+      <label>graczowi o ID <input type="text" name="giveid" size="5" /></label>
+      <select name="item">
+        <option value="piwo">piwo</option>
+        <option value="miód">miód</option>
+        <option value="wino">wino</option>
+        <option value="mustak">mustak</option>
+        <option value="soczek">soczek</option>
+        <option value="ogórki">ogórki</option>
+        <option value="herbatka">herbatka</option>
+        <option value="szaszłyk">szaszłyk</option>
+        <option value="pieczeń">pieczeń</option>
+        <option value="schabowy">schabowy</option>
+        <option value="mielonka">mielonka</option>
+        <option value="pierogi">pierogi</option>
+        <option value="racuchy">racuchy</option>
+        <option value="pasztecik">pasztecik</option>
+        <option value="jajecznica">jajecznica</option>
+        <option value="jajko na twardo">jajko na twardo</option>
+        <option value="jajko na miękko">jajko na miękko</option>
+        <option value="mleko">mleko</option>
+        <option value="lody">lody</option>
+        <option value="kurczak">kurczak</option>
+        <option value="naleśniki">naleśniki</option>
+        <option value="kawa">kawa</option>
+        <option value="orzeszki">orzeszki</option>
+      </select>
+      lub <input type="text" name="item2" size="10" />
+      <br/>
+      z opcjonalnym komentarzem:<br/>
+      <input type="text" name="innkeeper" size="55" />
+      <input type="submit" value="Daj" />
+    </form>
+
+    <h4>Ban / Unban</h4>
+    <form method="post" action="/chat/admin/ban">
+      <select name="ban">
+        <option value="ban">Zablokuj</option>
+        <option value="unban">Odblokuj</option>
+      </select>
+      pisanie wiadomości w karczmie graczowi o ID
+      <input type="text" name="banid" size="5" />
+      na <input type="text" name="duration" size="5" value="1" /> dni z przyczyny:
+      <br/>
+      <textarea name="verdict"></textarea>
+      <br/>
+      <input type="submit" value="Wyślij" />
+    </form>
+
+    <h4>Inne</h4>
+    <form method="post" action="/chat/admin/prune">
+      <input type="submit" value="Wyczyść karczmę" onclick="return confirm('Na pewno?')" />
+    </form>
+  </div>
+</details>
+{% endif %}
+
+<script>
+var chatLength = {{ chat_length }};
+var activeTab = 0;
+
+function loadMessages() {
+  var xhr = new XMLHttpRequest();
+  xhr.open('GET', '/chat/messages?length=' + chatLength + '&tab=' + activeTab, true);
+  xhr.onreadystatechange = function() {
+    if (xhr.readyState == 4 && xhr.status == 200) {
+      document.getElementById('chatmsgs').innerHTML = xhr.responseText;
+    }
+  };
+  xhr.send();
+}
+
+function switchTab(tabId) {
+  activeTab = tabId;
+  loadMessages();
+}
+
+function formatText(type) {
+  var ta = document.getElementById('chatinput');
+  var start = ta.selectionStart;
+  var end = ta.selectionEnd;
+  var sel = ta.value.substring(start, end);
+  var before = ta.value.substring(0, start);
+  var after = ta.value.substring(end);
+  switch(type) {
+    case 'bold':
+      ta.value = before + '[b]' + sel + '[/b]' + after;
+      break;
+    case 'italic':
+      ta.value = before + '[i]' + sel + '[/i]' + after;
+      break;
+    case 'underline':
+      ta.value = before + '[u]' + sel + '[/u]' + after;
+      break;
+    case 'emote':
+      ta.value = before + '@me ' + sel + after;
+      break;
+    default:
+      if (typeof type === 'number') {
+        ta.value = type + '=' + ta.value;
+      }
+      break;
+  }
+  ta.focus();
+}
+
+loadMessages();
+setInterval(loadMessages, 5000);
+</script>
+{% endblock %}

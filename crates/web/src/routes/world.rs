@@ -3,7 +3,7 @@
 use axum::{Router, middleware, routing};
 
 use crate::handlers::{
-    bank, city, equipment, gathering, locations, map, market, shops, spells, travel,
+    bank, chat, city, equipment, gathering, locations, map, market, shops, spells, travel,
 };
 use crate::middleware::guards::require_authenticated;
 use crate::state::AppState;
@@ -97,5 +97,13 @@ pub fn routes() -> Router<AppState> {
             "/market/{slug}/cancel/{id}",
             routing::post(market::market_cancel),
         )
+        // Chat / tavern
+        .route("/chat", routing::get(chat::chat_page))
+        .route("/chat/messages", routing::get(chat::chat_messages))
+        .route("/chat/send", routing::post(chat::chat_send))
+        .route("/chat/admin/delete", routing::post(chat::chat_admin_delete))
+        .route("/chat/admin/ban", routing::post(chat::chat_admin_ban))
+        .route("/chat/admin/give", routing::post(chat::chat_admin_give))
+        .route("/chat/admin/prune", routing::post(chat::chat_admin_prune))
         .layer(middleware::from_fn(require_authenticated))
 }

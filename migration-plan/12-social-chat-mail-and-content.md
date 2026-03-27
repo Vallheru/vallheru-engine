@@ -55,11 +55,12 @@ Port the communication and content subsystems while preserving the current polli
 
 ## Tasks
 
-### MP-12-01: Port global chat, whispers, and inn bot integration
+### MP-12-01: Port global chat, whispers, and inn bot integration ✅
 
 - Description: Rebuild the tavern chat flow, private whispers, chat tabs, and the innkeeper bot behavior.
 - Estimate: 2h
 - Depends on: MP-05-06, MP-04-06.
+- Status: **Done**.
 - Functional acceptance criteria:
   - Public and private chat messages can be sent and fetched in Rust.
   - Session-backed chat tab behavior still works.

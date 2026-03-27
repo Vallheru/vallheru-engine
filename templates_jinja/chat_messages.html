@@ -1,0 +1,44 @@
+<div style="text-align: center;">
+  {% if tabs | length > 0 %}
+  <div id="chat-tabs" style="margin-bottom: 5px;">
+    <a href="javascript:switchTab(0)" {% if active_tab == 0 %}style="font-weight:bold"{% endif %}>Karczma</a>
+    {% for tab in tabs %}
+    | <a href="javascript:switchTab({{ tab.player_id }})" {% if active_tab == tab.player_id %}style="font-weight:bold"{% endif %}>{{ tab.name }}</a>
+    {% endfor %}
+  </div>
+  {% endif %}
+</div>
+
+<table width="100%" border="0" cellpadding="2" cellspacing="0">
+  <tr>
+    <td valign="top" width="80%">
+      <table width="100%" border="0" cellpadding="1" cellspacing="0">
+        {% for msg in messages %}
+        <tr>
+          <td>
+            {{ msg.author_html | safe }}
+            {{ msg.body | safe }}
+            <span style="color: #888; font-size: 0.8em;">[{{ msg.time_ago }}]</span>
+            {% if show_admin %}
+            <a href="javascript:void(0)" onclick="if(confirm('Usunąć?')){var f=document.createElement('form');f.method='POST';f.action='/chat/admin/delete?id={{ msg.id }}';document.body.appendChild(f);f.submit();}" style="color:red;font-size:0.7em;">[x]</a>
+            {% endif %}
+          </td>
+        </tr>
+        {% endfor %}
+        {% if messages | length == 0 %}
+        <tr><td><em>Brak wiadomości.</em></td></tr>
+        {% endif %}
+      </table>
+      <p style="font-size: 0.8em; color: #888;">Wiadomości: {{ total_messages }}</p>
+    </td>
+    <td valign="top" width="20%" style="border-left: 1px solid #ccc; padding-left: 5px;">
+      <strong>W karczmie ({{ online_count }}):</strong><br/>
+      {% for p in online_players %}
+      <a href="/stats?id={{ p.id }}">{{ p.name }}</a><br/>
+      {% endfor %}
+      {% if online_players | length == 0 %}
+      <em>Nikogo nie ma.</em>
+      {% endif %}
+    </td>
+  </tr>
+</table>
