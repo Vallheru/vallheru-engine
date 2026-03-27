@@ -65,8 +65,9 @@ Port player-owned item management, equipment bonuses, and storage flows into exp
 - In scope: Equipment effects and loadout state.
 - Out of scope: Combat damage formulas.
 
-### MP-09-03: Port inventory and equipment pages
+### MP-09-03: Port inventory and equipment pages ✅
 
+- **Status**: completed-correctly (commit `e772a43`)
 - Description: Rebuild the main equipment/inventory screens for browsing, equipping, unequipping, and discarding items.
 - Estimate: 1.5h
 - Depends on: MP-04-05, MP-09-02.
