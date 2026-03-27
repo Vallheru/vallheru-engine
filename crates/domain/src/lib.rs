@@ -1,4 +1,5 @@
 pub mod account;
+pub mod admin;
 pub mod auth;
 pub mod character_reset;
 pub mod combat;
