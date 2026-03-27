@@ -87,7 +87,7 @@ Port the profession systems and resource loops that create most player-owned ite
 - In scope: Alchemy and potion production.
 - Out of scope: Potion market handling.
 
-### MP-11-04: Port mining, lumber, smelting, and farm gathering loops
+### MP-11-04: Port mining, lumber, smelting, and farm gathering loops ✅
 
 - Description: Migrate the gather-and-refine loops for mines, lumber, farms, and smelter-style pages.
 - Estimate: 2h
