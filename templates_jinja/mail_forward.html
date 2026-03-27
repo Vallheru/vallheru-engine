@@ -1,0 +1,26 @@
+{% extends "base.html" %}
+
+{% block title %}Poczta - Przekaż{% endblock %}
+
+{% block content %}
+<h2>Przekaż wiadomość do administracji</h2>
+
+<form method="post" action="/mail/forward">
+  <input type="hidden" name="message_id" value="{{ message_id }}" />
+
+  <p>
+    <label>Wybierz członka administracji:</label>
+    <select name="staff_id">
+      {% for s in staff %}
+      <option value="{{ s.id }}">{{ s.name }}</option>
+      {% endfor %}
+    </select>
+  </p>
+
+  <input type="submit" value="Przekaż" />
+</form>
+
+<p>
+[<a href="/mail/inbox">Skrzynka</a>]
+</p>
+{% endblock %}

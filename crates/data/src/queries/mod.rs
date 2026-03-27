@@ -12,6 +12,7 @@ pub mod chat;
 pub mod gathering;
 pub mod item;
 pub mod locations;
+pub mod mail;
 pub mod market;
 pub mod mission;
 pub mod player;

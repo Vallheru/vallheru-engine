@@ -92,7 +92,7 @@ fn filter_bad_words(text: &str, bad_words: &[String]) -> String {
 }
 
 /// Escape HTML special characters.
-fn html_escape(input: &str) -> String {
+pub fn html_escape(input: &str) -> String {
     let mut out = String::with_capacity(input.len());
     for ch in input.chars() {
         match ch {

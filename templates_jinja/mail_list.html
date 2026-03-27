@@ -1,0 +1,87 @@
+{% extends "base.html" %}
+
+{% block title %}Poczta - {% if box_type == "inbox" %}Skrzynka{% else %}Zapisane{% endif %}{% endblock %}
+
+{% block content %}
+<h2>{% if box_type == "inbox" %}Skrzynka{% else %}Zapisane{% endif %}</h2>
+
+<form method="post" action="/mail/bulk?box={{ box_type }}">
+<table width="90%" align="center">
+  <tr>
+    <th width="20">Zaznacz</th>
+    <th>Od/Do</th>
+    <th width="60%">Temat</th>
+  </tr>
+  {% for t in threads %}
+  <tr>
+    <td><input type="checkbox" class="mail-check" value="{{ t.topic_id }}" /></td>
+    <td><a href="/stats?id={{ t.sender_id }}">{{ t.sender_name }}</a></td>
+    <td>
+      {% if box_type == "inbox" %}
+      <a href="/mail/read?topic={{ t.topic_id }}">{{ t.subject }}</a>
+      {% else %}
+      <a href="/mail/read?topic={{ t.topic_id }}&single=true">{{ t.subject }}</a>
+      {% endif %}
+      {% if t.is_unread %} <b>!!</b>{% endif %}
+    </td>
+  </tr>
+  {% endfor %}
+  {% if threads | length == 0 %}
+  <tr><td colspan="3"><em>Brak wiadomości.</em></td></tr>
+  {% endif %}
+</table>
+
+{% if total_pages > 1 %}
+<br/>Idź do strony:
+{% for p in range(1, total_pages + 1) %}
+  {% if p == page %}
+    {{ p }}
+  {% else %}
+    <a href="/mail/{{ box_type }}?page={{ p }}{{ extra_query }}">{{ p }}</a>
+  {% endif %}
+{% endfor %}
+{% endif %}
+
+<br/><br/>
+<input type="hidden" name="ids" id="mail-ids" value="" />
+<input type="hidden" name="action" id="mail-action" value="" />
+<button type="button" onclick="submitBulk('delete')">Kasuj zaznaczone</button>
+{% if box_type == "inbox" %}
+<button type="button" onclick="submitBulk('read')">Oznacz jako przeczytane</button>
+<button type="button" onclick="submitBulk('unread')">Oznacz jako nieprzeczytane</button>
+{% endif %}
+</form>
+
+<br/>
+<form method="post" action="/mail/delete-old?box={{ box_type }}">
+  Kasuj starsze niż
+  <select name="days">
+    <option value="7">tydzień</option>
+    <option value="14">2 tygodnie</option>
+    <option value="30">30 dni</option>
+  </select>
+  <input type="submit" value="Kasuj" />
+</form>
+
+<p>
+{% if box_type == "inbox" %}
+[<a href="/mail/saved">Oznaczone</a>]
+[<a href="/mail/clear?box=inbox" onclick="return confirm('Na pewno?')">Wyczyść Skrzynkę</a>]
+{% else %}
+[<a href="/mail/inbox">Skrzynka</a>]
+[<a href="/mail/clear?box=saved" onclick="return confirm('Na pewno?')">Wykasuj zapisane listy</a>]
+{% endif %}
+[<a href="/mail/compose">Napisz</a>]
+</p>
+
+<script>
+function submitBulk(action) {
+  var checks = document.querySelectorAll('.mail-check:checked');
+  var ids = [];
+  for (var i = 0; i < checks.length; i++) ids.push(checks[i].value);
+  document.getElementById('mail-ids').value = ids.join(',');
+  document.getElementById('mail-action').value = action;
+  checks[0].form.submit();
+}
+</script>
+{% endblock %}

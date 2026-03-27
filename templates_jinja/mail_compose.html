@@ -1,0 +1,68 @@
+{% extends "base.html" %}
+
+{% block title %}Poczta - Napisz{% endblock %}
+
+{% block content %}
+<h2>Napisz wiadomość</h2>
+
+<form method="post" action="/mail/send">
+  {% if contacts | length > 0 %}
+  <p>
+    <label>Kontakty:</label>
+    <select onchange="if(this.value){document.getElementById('to').value=this.value}">
+      <option value="">-- wybierz --</option>
+      {% for c in contacts %}
+      <option value="{{ c.id }}">{{ c.name }}</option>
+      {% endfor %}
+    </select>
+  </p>
+  {% endif %}
+
+  <p>
+    <label>ID Gracza:</label>
+    <input type="number" name="player" id="to" value="{% if to %}{{ to }}{% endif %}" />
+  </p>
+
+  <p>
+    <label>Temat:</label>
+    <input type="text" name="subject" value="{{ subject }}" maxlength="50" size="40" />
+  </p>
+
+  <p>
+    <button type="button" onclick="ins('[b]','[/b]')">B</button>
+    <button type="button" onclick="ins('[i]','[/i]')">I</button>
+    <button type="button" onclick="ins('[u]','[/u]')">U</button>
+    <button type="button" onclick="ins('[url=]','[/url]')">URL</button>
+    <button type="button" onclick="ins('[img]','[/img]')">IMG</button>
+    <button type="button" onclick="ins('[color=]','[/color]')">Kolor</button>
+  </p>
+
+  <textarea name="body" id="msgbody" rows="10" cols="60">{{ body }}</textarea>
+
+  <input type="hidden" name="topic" value="{{ topic_id }}" />
+  {% if to %}
+  <input type="hidden" name="to" value="{{ to }}" />
+  {% endif %}
+
+  <br/><br/>
+  <input type="submit" value="Wyślij" />
+</form>
+
+<p>
+[<a href="/mail/inbox">Skrzynka</a>]
+[<a href="/mail/saved">Oznaczone</a>]
+</p>
+
+<script>
+function ins(open, close) {
+  var ta = document.getElementById('msgbody');
+  var start = ta.selectionStart;
+  var end = ta.selectionEnd;
+  var sel = ta.value.substring(start, end);
+  ta.value = ta.value.substring(0, start) + open + sel + close + ta.value.substring(end);
+  ta.focus();
+  ta.selectionStart = start + open.length;
+  ta.selectionEnd = start + open.length + sel.length;
+}
+</script>
+{% endblock %}

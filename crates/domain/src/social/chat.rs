@@ -183,9 +183,7 @@ pub fn bot_response(
         }
         Some(idx) if idx < BOT_RESPONSES.len() => {
             // Generic pattern — extract subject after the matched keyword.
-            let pattern_text = BOT_PATTERNS[idx]
-                .replace(['.', '*'], "")
-                .to_lowercase();
+            let pattern_text = BOT_PATTERNS[idx].replace(['.', '*'], "").to_lowercase();
             let lower = message.replace(BOT_TRIGGER, "").to_lowercase();
             let subject = lower.replace(&pattern_text, "").trim().to_owned();
 

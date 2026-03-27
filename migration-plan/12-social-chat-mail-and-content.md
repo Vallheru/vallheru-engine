@@ -87,6 +87,7 @@ Port the communication and content subsystems while preserving the current polli
 - Description: Rebuild private mail, contact lists, and per-player unread message indicators.
 - Estimate: 1.5h
 - Depends on: MP-05-01, MP-04-05.
+- Status: **Done**.
 - Functional acceptance criteria:
   - Sending, reading, and listing mail works end to end.
   - Contact lookups and unread counters are accurate.

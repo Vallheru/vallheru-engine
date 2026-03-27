@@ -1,0 +1,49 @@
+{% extends "base.html" %}
+
+{% block title %}Poczta - Szukaj{% endblock %}
+
+{% block content %}
+<h2>Szukaj wiadomości</h2>
+
+<form method="get" action="/mail/search">
+  <input type="text" name="q" value="{{ query }}" size="40" />
+  <input type="submit" value="Szukaj" />
+</form>
+
+{% if searched %}
+  {% if has_results %}
+  <table width="90%" align="center">
+    <tr>
+      <th>Od</th>
+      <th width="60%">Temat</th>
+    </tr>
+    {% for r in results %}
+    <tr>
+      <td><a href="/stats?id={{ r.sender_id }}">{{ r.sender_name }}</a></td>
+      <td><a href="/mail/read?topic={{ r.topic_id }}">{{ r.subject }}</a></td>
+    </tr>
+    {% endfor %}
+  </table>
+
+  {% if total_pages > 1 %}
+  <br/>Strona:
+  {% for p in range(1, total_pages + 1) %}
+    {% if p == page %}
+      {{ p }}
+    {% else %}
+      <a href="/mail/search?q={{ query }}&page={{ p }}">{{ p }}</a>
+    {% endif %}
+  {% endfor %}
+  {% endif %}
+
+  {% else %}
+  <p><em>Nie znaleziono wiadomości.</em></p>
+  {% endif %}
+{% endif %}
+
+<p>
+[<a href="/mail/inbox">Skrzynka</a>]
+[<a href="/mail/saved">Oznaczone</a>]
+[<a href="/mail/compose">Napisz</a>]
+</p>
+{% endblock %}

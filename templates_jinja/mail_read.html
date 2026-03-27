@@ -1,0 +1,86 @@
+{% extends "base.html" %}
+
+{% block title %}Poczta - {{ subject }}{% endblock %}
+
+{% block content %}
+<h2>{{ subject }}</h2>
+
+{% for m in messages %}
+<div style="border:1px solid #888;padding:8px;margin-bottom:6px">
+  <p>
+    <b><a href="/stats?id={{ m.sender_id }}">{{ m.sender_name }}</a></b>
+    <small>{{ m.date }}</small>
+  </p>
+  <div>{{ m.body }}</div>
+  <p>
+    {% if m.is_saved %}
+      [Zapisano]
+    {% else %}
+      [<a href="/mail/save?id={{ m.id }}">Zapisz</a>]
+    {% endif %}
+    [<a href="/mail/delete?id={{ m.id }}" onclick="return confirm('Na pewno?')">Kasuj</a>]
+    [<a href="/mail/forward?id={{ m.id }}">Przekaż</a>]
+    [<a href="/mail/block?player_id={{ m.sender_id }}">Zablokuj</a>]
+  </p>
+</div>
+{% endfor %}
+
+{% if messages | length == 0 %}
+<p><em>Brak wiadomości w tym wątku.</em></p>
+{% endif %}
+
+{% if total_pages > 1 %}
+<br/>Strona:
+{% for p in range(1, total_pages + 1) %}
+  {% if p == page %}
+    {{ p }}
+  {% else %}
+    {% if single_message %}
+    <a href="/mail/read?topic={{ topic_id }}&page={{ p }}&single=true">{{ p }}</a>
+    {% else %}
+    <a href="/mail/read?topic={{ topic_id }}&page={{ p }}">{{ p }}</a>
+    {% endif %}
+  {% endif %}
+{% endfor %}
+{% endif %}
+
+{% if not single_message %}
+<hr/>
+<h3>Odpowiedz</h3>
+<form method="post" action="/mail/send">
+  <input type="hidden" name="player" value="{{ receiver_id }}" />
+  <input type="hidden" name="topic" value="{{ topic_id }}" />
+  <input type="hidden" name="subject" value="{{ subject }}" />
+  <p>
+    <button type="button" onclick="ins('[b]','[/b]')">B</button>
+    <button type="button" onclick="ins('[i]','[/i]')">I</button>
+    <button type="button" onclick="ins('[u]','[/u]')">U</button>
+    <button type="button" onclick="ins('[url=]','[/url]')">URL</button>
+    <button type="button" onclick="ins('[img]','[/img]')">IMG</button>
+    <button type="button" onclick="ins('[color=]','[/color]')">Kolor</button>
+  </p>
+  <textarea name="body" id="msgbody" rows="8" cols="60"></textarea>
+  <br/>
+  <input type="submit" value="Wyślij" />
+</form>
+{% endif %}
+
+<p>
+[<a href="/mail/inbox">Skrzynka</a>]
+[<a href="/mail/saved">Oznaczone</a>]
+[<a href="/mail/compose">Nowy list</a>]
+</p>
+
+<script>
+function ins(open, close) {
+  var ta = document.getElementById('msgbody');
+  var start = ta.selectionStart;
+  var end = ta.selectionEnd;
+  var sel = ta.value.substring(start, end);
+  ta.value = ta.value.substring(0, start) + open + sel + close + ta.value.substring(end);
+  ta.focus();
+  ta.selectionStart = start + open.length;
+  ta.selectionEnd = start + open.length + sel.length;
+}
+</script>
+{% endblock %}

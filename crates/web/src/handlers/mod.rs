@@ -9,6 +9,7 @@ pub mod city;
 pub mod equipment;
 pub mod gathering;
 pub mod locations;
+pub mod mail;
 pub mod map;
 pub mod market;
 pub mod preset;

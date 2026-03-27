@@ -3,13 +3,22 @@
 use axum::{Router, middleware, routing};
 
 use crate::handlers::{
-    bank, chat, city, equipment, gathering, locations, map, market, shops, spells, travel,
+    bank, chat, city, equipment, gathering, locations, mail, map, market, shops, spells, travel,
 };
 use crate::middleware::guards::require_authenticated;
 use crate::state::AppState;
 
 /// Register city, travel, map, and secondary location routes.
 pub fn routes() -> Router<AppState> {
+    Router::new()
+        .merge(location_routes())
+        .merge(economy_routes())
+        .merge(combat_routes())
+        .merge(social_routes())
+        .layer(middleware::from_fn(require_authenticated))
+}
+
+fn location_routes() -> Router<AppState> {
     Router::new()
         .route("/city", routing::get(city::show))
         .route("/travel", routing::get(travel::show))
@@ -43,7 +52,10 @@ pub fn routes() -> Router<AppState> {
             routing::post(gathering::smelter_upgrade),
         )
         .route("/farm", routing::get(gathering::farm_show))
-        // Economy routes
+}
+
+fn economy_routes() -> Router<AppState> {
+    Router::new()
         .route("/wealth", routing::get(bank::wealth_show))
         .route(
             "/bank",
@@ -97,6 +109,15 @@ pub fn routes() -> Router<AppState> {
             "/market/{slug}/cancel/{id}",
             routing::post(market::market_cancel),
         )
+}
+
+fn combat_routes() -> Router<AppState> {
+    // Placeholder — combat routes will be added by later tasks.
+    Router::new()
+}
+
+fn social_routes() -> Router<AppState> {
+    Router::new()
         // Chat / tavern
         .route("/chat", routing::get(chat::chat_page))
         .route("/chat/messages", routing::get(chat::chat_messages))
@@ -105,5 +126,22 @@ pub fn routes() -> Router<AppState> {
         .route("/chat/admin/ban", routing::post(chat::chat_admin_ban))
         .route("/chat/admin/give", routing::post(chat::chat_admin_give))
         .route("/chat/admin/prune", routing::post(chat::chat_admin_prune))
-        .layer(middleware::from_fn(require_authenticated))
+        // Mail
+        .route("/mail", routing::get(mail::mail_index))
+        .route("/mail/inbox", routing::get(mail::mail_inbox))
+        .route("/mail/saved", routing::get(mail::mail_saved))
+        .route("/mail/read", routing::get(mail::mail_read))
+        .route("/mail/compose", routing::get(mail::mail_compose))
+        .route("/mail/send", routing::post(mail::mail_send))
+        .route("/mail/bulk", routing::post(mail::mail_bulk))
+        .route("/mail/delete-old", routing::post(mail::mail_delete_old))
+        .route("/mail/clear", routing::post(mail::mail_clear))
+        .route("/mail/save", routing::post(mail::mail_save_msg))
+        .route("/mail/delete", routing::post(mail::mail_delete_msg))
+        .route("/mail/block", routing::post(mail::mail_block))
+        .route("/mail/search", routing::get(mail::mail_search))
+        .route(
+            "/mail/forward",
+            routing::get(mail::mail_forward_show).post(mail::mail_forward_action),
+        )
 }
