@@ -3,8 +3,8 @@
 use axum::{Router, middleware, routing};
 
 use crate::handlers::{
-    bank, chat, city, content, equipment, forums, gathering, locations, mail, map, market, pages,
-    shops, spells, travel,
+    bank, chat, city, content, deity, equipment, forums, gathering, house, locations, mail, map,
+    market, pages, shops, spells, temple, tower, travel,
 };
 use crate::middleware::guards::require_authenticated;
 use crate::state::AppState;
@@ -58,6 +58,39 @@ fn location_routes() -> Router<AppState> {
             routing::post(gathering::smelter_upgrade),
         )
         .route("/farm", routing::get(gathering::farm_show))
+        // Temple
+        .route("/temple", routing::get(temple::temple_show))
+        .route(
+            "/temple/work",
+            routing::get(temple::temple_work_show).post(temple::temple_work_action),
+        )
+        .route(
+            "/temple/prayer",
+            routing::get(temple::temple_prayer_show).post(temple::temple_prayer_action),
+        )
+        .route("/temple/book", routing::get(temple::temple_book))
+        .route("/temple/pantheon", routing::get(temple::temple_pantheon))
+        // Deity
+        .route("/deity", routing::get(deity::deity_show))
+        .route("/deity/select/{slug}", routing::post(deity::deity_select))
+        .route("/deity/change", routing::post(deity::deity_change))
+        // Tower
+        .route("/tower", routing::get(tower::tower_show))
+        // Housing
+        .route("/house", routing::get(house::house_show))
+        .route("/house/land", routing::post(house::house_buy_land))
+        .route("/house/build", routing::post(house::house_build_action))
+        .route("/house/bedroom", routing::post(house::house_build_bedroom))
+        .route(
+            "/house/wardrobe",
+            routing::post(house::house_build_wardrobe),
+        )
+        .route("/house/adorn", routing::post(house::house_adorn))
+        .route("/house/rest", routing::post(house::house_rest))
+        .route("/house/rename", routing::post(house::house_rename))
+        .route("/house/sell", routing::post(house::house_sell))
+        .route("/house/leave", routing::post(house::house_leave))
+        .route("/house/buy/{id}", routing::post(house::house_buy))
 }
 
 fn economy_routes() -> Router<AppState> {

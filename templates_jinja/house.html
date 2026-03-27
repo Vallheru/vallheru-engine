@@ -1,0 +1,169 @@
+{# House — housing system with sections. #}
+{% extends "base.html" %}
+
+{% block content %}
+<h2>Domy</h2>
+
+{% if section == "my" %}
+  {% if house %}
+  <h3>{{ house.name }}</h3>
+  <table>
+    <tr><td>Typ:</td><td><b>{{ house.house_type }}</b></td></tr>
+    <tr><td>Działka:</td><td>{{ house.size }}</td></tr>
+    <tr><td>Budowa:</td><td>{{ house.build }}</td></tr>
+    <tr><td>Wartość:</td><td>{{ house.value }}</td></tr>
+    <tr><td>Punkty budowy:</td><td>{{ house.points }}</td></tr>
+    <tr><td>Wolne pokoje:</td><td>{{ house.unused_rooms }}</td></tr>
+    <tr><td>Sypialnia:</td><td>{% if house.has_bedroom %}Tak{% else %}Nie{% endif %}</td></tr>
+    <tr><td>Szafy:</td><td>{{ house.wardrobe_count }}</td></tr>
+    <tr><td>Właściciel:</td><td>{{ house.owner_name }}</td></tr>
+    {% if house.locator_id > 0 %}
+    <tr><td>Lokator:</td><td>{{ house.locator_name }}</td></tr>
+    {% endif %}
+    <tr><td>Przedmioty w szafie:</td><td>{{ house.item_count }}</td></tr>
+  </table>
+
+  {% if house.is_owner %}
+  <h4>Akcje właściciela</h4>
+  <ul>
+    {% if house.has_bedroom %}
+    <li>
+      <form method="post" action="/house/rest" style="display:inline">
+        <input type="submit" value="Odpocznij w sypialni" />
+      </form>
+    </li>
+    {% endif %}
+    {% if house.points > 0 %}
+    <li>
+      <form method="post" action="/house/adorn" style="display:inline">
+        Punkty: <input type="number" name="points" min="1" max="{{ house.points }}" value="1" />
+        <input type="submit" value="Ozdób dom" />
+      </form>
+    </li>
+    {% endif %}
+    <li>
+      <form method="post" action="/house/rename" style="display:inline">
+        <input type="text" name="name" maxlength="100" placeholder="Nowa nazwa" />
+        <input type="submit" value="Zmień nazwę" />
+      </form>
+    </li>
+    <li>
+      <form method="post" action="/house/sell" style="display:inline">
+        Cena: <input type="number" name="cost" min="1" value="1000" />
+        <input type="submit" value="Sprzedaj dom" />
+      </form>
+    </li>
+    <li>
+      <form method="post" action="/house/leave" style="display:inline">
+        <input type="submit" value="Opuść dom" />
+      </form>
+    </li>
+  </ul>
+  {% endif %}
+  {% endif %}
+  <p><a href="/house">Wróć do menu domów</a></p>
+
+{% elif section == "land" %}
+  <h3>Zakup ziemi</h3>
+  <p>Koszt: <b>{{ land_cost }}</b></p>
+  <form method="post" action="/house/land">
+    <input type="submit" value="{% if has_house %}Powiększ działkę{% else %}Kup działkę{% endif %}" />
+  </form>
+  <p><a href="/house">Wróć do menu domów</a></p>
+
+{% elif section == "build" %}
+  <h3>Warsztat budowlany</h3>
+  {% if house %}
+    <p>Działka: {{ house.size }} | Budowa: {{ house.build }} | Punkty: {{ house.points }}</p>
+    {% if house.build == 0 %}
+      <p>Nie masz jeszcze domu. Koszt budowy: <b>1000 złota</b>.</p>
+      <form method="post" action="/house/build">
+        <p>
+          Nazwa domu: <input type="text" name="name" maxlength="100" value="Dom" /><br />
+          <input type="submit" value="Zbuduj dom" />
+        </p>
+      </form>
+    {% else %}
+      <p>Koszt rozbudowy: <b>{{ house.build * 1000 }} złota</b></p>
+      <form method="post" action="/house/build">
+        <input type="submit" value="Rozbuduj dom" />
+      </form>
+      {% if not house.has_bedroom and house.unused_rooms > 0 %}
+      <h4>Sypialnia</h4>
+      <p>Koszt: <b>10000 złota</b></p>
+      <form method="post" action="/house/bedroom">
+        <input type="submit" value="Zbuduj sypialnię" />
+      </form>
+      {% endif %}
+      {% if house.unused_rooms > 0 %}
+      <h4>Szafa</h4>
+      <p>Koszt: <b>{% if house.wardrobe_count == 0 %}1000{% else %}{{ house.wardrobe_count * 1000 }}{% endif %} złota</b></p>
+      <form method="post" action="/house/wardrobe">
+        <input type="submit" value="Zbuduj szafę" />
+      </form>
+      {% endif %}
+    {% endif %}
+  {% endif %}
+  <p><a href="/house">Wróć do menu domów</a></p>
+
+{% elif section == "list" %}
+  <h3>Lista domów</h3>
+  {% if houses_list %}
+  <table>
+    <tr><th>Nazwa</th><th>Typ</th><th>Rozmiar</th><th>Budowa</th><th>Właściciel</th></tr>
+    {% for h in houses_list %}
+    <tr>
+      <td>{{ h.name }}</td>
+      <td>{{ h.house_type }}</td>
+      <td>{{ h.size }}</td>
+      <td>{{ h.build }}</td>
+      <td>{{ h.owner_name }}</td>
+    </tr>
+    {% endfor %}
+  </table>
+  {% else %}
+  <p>Brak domów w tym mieście.</p>
+  {% endif %}
+  <p><a href="/house">Wróć do menu domów</a></p>
+
+{% elif section == "rent" %}
+  <h3>Domy na sprzedaż</h3>
+  {% if for_sale_list %}
+  <table>
+    <tr><th>Nazwa</th><th>Typ</th><th>Budowa</th><th>Cena</th><th>Sprzedawca</th><th></th></tr>
+    {% for h in for_sale_list %}
+    <tr>
+      <td>{{ h.name }}</td>
+      <td>{{ h.house_type }}</td>
+      <td>{{ h.build }}</td>
+      <td>{{ h.cost }}</td>
+      <td>{{ h.seller_name }}</td>
+      <td>
+        {% if not h.is_own and not has_house %}
+        <form method="post" action="/house/buy/{{ h.id }}" style="display:inline">
+          <input type="submit" value="Kup" />
+        </form>
+        {% endif %}
+      </td>
+    </tr>
+    {% endfor %}
+  </table>
+  {% else %}
+  <p>Brak domów na sprzedaż.</p>
+  {% endif %}
+  <p><a href="/house">Wróć do menu domów</a></p>
+
+{% else %}
+  <p>Witaj w systemie mieszkaniowym. Co chcesz robić?</p>
+  <ul>
+    {% if has_house %}
+    <li><a href="/house?action=my">Mój dom</a></li>
+    <li><a href="/house?action=build">Warsztat budowlany</a></li>
+    {% endif %}
+    <li><a href="/house?action=land">{% if has_house %}Powiększ działkę{% else %}Kup działkę{% endif %}</a></li>
+    <li><a href="/house?action=list">Lista domów</a></li>
+    <li><a href="/house?action=rent">Domy na sprzedaż</a></li>
+  </ul>
+  <p><a href="/city">Wróć do miasta</a></p>
+{% endif %}
+{% endblock %}

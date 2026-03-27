@@ -100,9 +100,9 @@ Port the world-navigation layer and stateful location pages that gate access to 
 - In scope: Secondary location handlers and views.
 - Out of scope: Deep feature logic owned by other modules.
 
-### MP-07-05: Port housing, library, temple, and tower-style pages
+### MP-07-05: Port housing, library, temple, and tower-style pages ✅
 
-- **Status**: not-started
+- **Status**: completed
 - Description: Rebuild the stateful but mostly local pages for house access, temple/deity interactions, library content, and tower screens.
 - Estimate: 1.5h
 - Depends on: MP-07-02, MP-12-06.

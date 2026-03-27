@@ -12,6 +12,7 @@ pub mod chat;
 pub mod content;
 pub mod forum;
 pub mod gathering;
+pub mod house;
 pub mod item;
 pub mod locations;
 pub mod mail;

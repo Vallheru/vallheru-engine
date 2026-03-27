@@ -1,0 +1,12 @@
+{# Tower — game clock display. #}
+{% extends "base.html" %}
+
+{% block content %}
+<h2>Wieża zegarowa</h2>
+
+<p>Wiek: <b>{{ age }}</b></p>
+<p>Dzień: <b>{{ day }}</b></p>
+<p>Do następnego dnia: <b>{{ hours_to_reset }}h {{ minutes_to_reset }}m</b></p>
+
+<p><a href="/city">Wróć do miasta</a></p>
+{% endblock %}

@@ -13,5 +13,6 @@ pub mod player;
 pub mod quest;
 pub mod registration;
 pub mod social;
+pub mod temple;
 pub mod text;
 pub mod travel;

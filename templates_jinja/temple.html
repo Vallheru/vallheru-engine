@@ -1,0 +1,65 @@
+{# Temple — work, prayer, pantheon, book. #}
+{% extends "base.html" %}
+
+{% block content %}
+<h2>Świątynia</h2>
+
+{% if section == "work" %}
+  <h3>Praca w Świątyni</h3>
+  <p>Energia: <b>{{ energy }}</b></p>
+  <form method="post" action="/temple/work">
+    <p>
+      Ilość energii: <input type="number" name="amount" min="1" max="{{ energy }}" value="1" />
+      <input type="submit" value="Pracuj" />
+    </p>
+  </form>
+  <p><a href="/temple">Wróć do świątyni</a></p>
+
+{% elif section == "prayer" %}
+  <h3>Modlitwa</h3>
+  <p>Pobożność: <b>{{ piety }}</b></p>
+  {% if blessings %}
+  <form method="post" action="/temple/prayer">
+    <p>
+      Błogosławieństwo:
+      <select name="index">
+        {% for b in blessings %}
+        <option value="{{ b.index }}">{{ b.name }} (koszt: {{ b.cost }})</option>
+        {% endfor %}
+      </select><br />
+      <input type="submit" value="Módl się" />
+    </p>
+  </form>
+  {% else %}
+  <p>Nie masz dostępnych błogosławieństw. Musisz wybrać bóstwo.</p>
+  {% endif %}
+  <p><a href="/temple">Wróć do świątyni</a></p>
+
+{% elif section == "book" %}
+  <h3>Księga Świątyni</h3>
+  <p>W księdze świątynnej znajdziesz opisy bóstw i ich błogosławieństw.</p>
+  {% for entry in book_entries %}
+  <h4>{{ entry.name }}</h4>
+  <p>{{ entry.description }}</p>
+  {% endfor %}
+  <p><a href="/temple">Wróć do świątyni</a></p>
+
+{% elif section == "pantheon" %}
+  <h3>Panteon</h3>
+  {% for d in deities %}
+  <h4>{{ d.name }}</h4>
+  <p>{{ d.description }}</p>
+  {% endfor %}
+  <p><a href="/temple">Wróć do świątyni</a></p>
+
+{% else %}
+  <p>Witaj w Świątyni. Co chcesz robić?</p>
+  <ul>
+    <li><a href="/temple/work">Praca w świątyni</a> — zdobywaj pobożność za energię</li>
+    <li><a href="/temple/prayer">Modlitwa</a> — módl się o błogosławieństwo</li>
+    <li><a href="/temple/book">Księga Świątyni</a></li>
+    <li><a href="/temple/pantheon">Panteon</a> — opisy bóstw</li>
+  </ul>
+  <p><a href="/city">Wróć do miasta</a></p>
+{% endif %}
+{% endblock %}

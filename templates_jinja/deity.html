@@ -1,0 +1,59 @@
+{# Deity — selection, info, change. #}
+{% extends "base.html" %}
+
+{% block content %}
+<h2>Bóstwa</h2>
+
+{% if section == "select" %}
+  <h3>Wybór bóstwa</h3>
+  <p>Wybierz swoje bóstwo patronackie:</p>
+  <ul>
+    {% for d in deities %}
+    <li>
+      <b>{{ d.name }}</b> — {{ d.description }}
+      <form method="post" action="/deity/select/{{ d.slug }}" style="display:inline">
+        <input type="submit" value="Wybierz" />
+      </form>
+    </li>
+    {% endfor %}
+  </ul>
+  <p><a href="/temple">Wróć do świątyni</a></p>
+
+{% elif section == "info" %}
+  <h3>{{ deity_name }}</h3>
+  <p>{{ deity_description }}</p>
+  <p>Twoje bóstwo: <b>{{ current_deity }}</b></p>
+  <p><a href="/deity">Wróć</a></p>
+
+{% elif section == "change" %}
+  <h3>Zmiana bóstwa</h3>
+  <p>Twoje obecne bóstwo: <b>{{ current_deity }}</b></p>
+  <p>Koszt zmiany: <b>{{ change_cost }} sztuk złota</b></p>
+  <form method="post" action="/deity/change">
+    <p>
+      Nowe bóstwo:
+      <select name="deity">
+        {% for d in available_deities %}
+        <option value="{{ d.slug }}">{{ d.name }}</option>
+        {% endfor %}
+      </select><br />
+      <input type="submit" value="Zmień bóstwo" />
+    </p>
+  </form>
+  <p><a href="/deity">Wróć</a></p>
+
+{% elif section == "confirm" %}
+  <h3>Zmiana bóstwa</h3>
+  <p>{{ confirm_message }}</p>
+  <p><a href="/deity">Wróć</a></p>
+
+{% else %}
+  <p>Twoje bóstwo: <b>{{ current_deity }}</b></p>
+  {% if current_deity == "Brak" %}
+    <p><a href="/deity?section=select">Wybierz bóstwo</a></p>
+  {% else %}
+    <p><a href="/deity?section=change">Zmień bóstwo</a></p>
+  {% endif %}
+  <p><a href="/temple">Wróć do świątyni</a></p>
+{% endif %}
+{% endblock %}
