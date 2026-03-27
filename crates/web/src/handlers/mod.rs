@@ -11,6 +11,8 @@ pub mod locations;
 pub mod map;
 pub mod preset;
 pub mod registration;
+pub mod shops;
+pub mod spells;
 pub mod travel;
 
 use crate::middleware::context::RequestContext;

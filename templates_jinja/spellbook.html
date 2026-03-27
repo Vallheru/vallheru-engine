@@ -1,0 +1,117 @@
+{# Spell book — view and manage spells. #}
+{% extends "base.html" %}
+
+{% block content %}
+<h2>Księga czarów</h2>
+
+{% if not has_spells %}
+<p>Obecnie nie posiadasz jakichkolwiek czarów w księdze. Możesz zakupić nowe czary w Magicznej Wieży w miastach.</p>
+{% else %}
+
+{# Active spells #}
+<h3>Aktywne czary</h3>
+<p>
+  <b>Czar bitewny:</b>
+  {% if active_battle %}
+    {{ active_battle.name }} (+{{ active_battle.multiplier }} x obrażenia) |
+    <form method="post" action="/spellbook/deactivate" style="display:inline">
+      <input type="hidden" name="spell_id" value="{{ active_battle.id }}" />
+      <button type="submit">Dezaktywuj</button>
+    </form>
+  {% else %}
+    brak
+  {% endif %}
+</p>
+<p>
+  <b>Czar obronny:</b>
+  {% if active_defense %}
+    {{ active_defense.name }} (+{{ active_defense.multiplier }} x obrona) |
+    <form method="post" action="/spellbook/deactivate" style="display:inline">
+      <input type="hidden" name="spell_id" value="{{ active_defense.id }}" />
+      <button type="submit">Dezaktywuj</button>
+    </form>
+  {% else %}
+    brak
+  {% endif %}
+</p>
+
+{# Battle spells #}
+{% if battle_spells %}
+<h3>Czary bitewne</h3>
+{% for group in battle_spells %}
+<h4>{{ group.element }}</h4>
+<table>
+  <tr>
+    <th>Nazwa</th>
+    <th>Obrażenia</th>
+    <th>Poziom</th>
+    <th></th>
+  </tr>
+  {% for spell in group.spells %}
+  <tr>
+    <td>{{ spell.name }}</td>
+    <td>x{{ spell.multiplier }}</td>
+    <td>{{ spell.level }}</td>
+    <td>
+      <form method="post" action="/spellbook/activate" style="display:inline">
+        <input type="hidden" name="spell_id" value="{{ spell.id }}" />
+        <button type="submit">Aktywuj</button>
+      </form>
+    </td>
+  </tr>
+  {% endfor %}
+</table>
+{% endfor %}
+{% endif %}
+
+{# Defense spells #}
+{% if defense_spells %}
+<h3>Czary obronne</h3>
+{% for group in defense_spells %}
+<h4>{{ group.element }}</h4>
+<table>
+  <tr>
+    <th>Nazwa</th>
+    <th>Obrona</th>
+    <th>Poziom</th>
+    <th></th>
+  </tr>
+  {% for spell in group.spells %}
+  <tr>
+    <td>{{ spell.name }}</td>
+    <td>x{{ spell.multiplier }}</td>
+    <td>{{ spell.level }}</td>
+    <td>
+      <form method="post" action="/spellbook/activate" style="display:inline">
+        <input type="hidden" name="spell_id" value="{{ spell.id }}" />
+        <button type="submit">Aktywuj</button>
+      </form>
+    </td>
+  </tr>
+  {% endfor %}
+</table>
+{% endfor %}
+{% endif %}
+
+{# Utility spells (enchantment) — listed but not yet actionable #}
+{% if utility_spells %}
+<h3>Czary ulepszające</h3>
+{% for group in utility_spells %}
+<h4>{{ group.element }}</h4>
+<table>
+  <tr>
+    <th>Nazwa</th>
+    <th>Poziom</th>
+  </tr>
+  {% for spell in group.spells %}
+  <tr>
+    <td>{{ spell.name }}</td>
+    <td>{{ spell.level }}</td>
+  </tr>
+  {% endfor %}
+</table>
+{% endfor %}
+{% endif %}
+
+{% endif %}
+{% endblock %}

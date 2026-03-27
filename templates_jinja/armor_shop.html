@@ -1,0 +1,47 @@
+{# Armor shop — browse/buy armor, helmets, legs, shields. #}
+{% extends "base.html" %}
+
+{% block content %}
+<h2>Płatnerz</h2>
+
+{% if not category %}
+<p>Witaj u płatnerza. Wybierz kategorię:</p>
+<ul>
+  <li><a href="/armor/A">Zbroje</a></li>
+  <li><a href="/armor/H">Hełmy</a></li>
+  <li><a href="/armor/L">Nogawice</a></li>
+  <li><a href="/armor/S">Tarcze</a></li>
+</ul>
+{% else %}
+  {% if items %}
+  <table>
+    <tr>
+      <th>Nazwa</th>
+      <th>Moc</th>
+      <th>Zręczność</th>
+      <th>Wytrzymałość</th>
+      <th>Poziom</th>
+      <th>Cena</th>
+      <th></th>
+    </tr>
+    {% for item in items %}
+    <tr>
+      <td>{{ item.name }}</td>
+      <td>+{{ item.power }}</td>
+      <td>{{ item.agility_mod }}</td>
+      <td>{{ item.durability }}</td>
+      <td>{{ item.min_level }}</td>
+      <td>{{ item.cost }}</td>
+      <td>
+        <form method="post" action="/armor/buy/{{ item.id }}" style="display:inline">
+          <button type="submit">Kup</button>
+        </form>
+      </td>
+    </tr>
+    {% endfor %}
+  </table>
+  {% else %}
+  <p>Brak przedmiotów w tej kategorii.</p>
+  {% endif %}
+{% endif %}
+{% endblock %}

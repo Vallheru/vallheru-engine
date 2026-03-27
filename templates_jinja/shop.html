@@ -1,0 +1,45 @@
+{# Generic item shop — weapons and fletcher. #}
+{% extends "base.html" %}
+
+{% block content %}
+<h2>{{ shop_name }}</h2>
+
+{% if items %}
+<table>
+  <tr>
+    <th>Nazwa</th>
+    <th>Moc</th>
+    <th>Szybkość</th>
+    <th>Wytrzymałość</th>
+    <th>Poziom</th>
+    <th>Cena</th>
+    <th></th>
+  </tr>
+  {% for item in items %}
+  <tr>
+    <td>{{ item.name }}</td>
+    <td>+{{ item.power }}</td>
+    <td>{{ item.speed_mod }}</td>
+    <td>{{ item.durability }}</td>
+    <td>{{ item.min_level }}</td>
+    <td>{{ item.cost }}</td>
+    <td>
+      {% if item.buy_action == "arrows" %}
+        <a href="/fletcher/arrows/{{ item.id }}">Kup</a>
+      {% elif item.buy_action == "buy" and shop_name == "Łucznik" %}
+        <form method="post" action="/fletcher/buy/{{ item.id }}" style="display:inline">
+          <button type="submit">Kup</button>
+        </form>
+      {% elif shop_name == "Zbrojmistrz" %}
+        <form method="post" action="/weapons/buy/{{ item.id }}" style="display:inline">
+          <button type="submit">Kup</button>
+        </form>
+      {% endif %}
+    </td>
+  </tr>
+  {% endfor %}
+</table>
+{% else %}
+<p>Brak przedmiotów w ofercie.</p>
+{% endif %}
+{% endblock %}

@@ -31,6 +31,7 @@ pub struct EquipmentRow {
     pub poison: i32,
     pub amount: i32,
     pub twohand: String,
+    pub lang: String,
     pub ptype: String,
     pub repair: i32,
     pub location: String,
@@ -142,7 +143,7 @@ pub async fn find_equipment_by_owner(
     sqlx::query_as::<_, EquipmentRow>(
         "SELECT id, owner, name, power, status, type, cost, minlev, \
                zr, wt, szyb, maxwt, magic, poison, amount, twohand, \
-               ptype, repair, location \
+               lang, ptype, repair, location \
          FROM equipment \
          WHERE owner = $1 \
          ORDER BY minlev ASC, name ASC",
@@ -160,7 +161,7 @@ pub async fn find_equipped_items(
     sqlx::query_as::<_, EquipmentRow>(
         "SELECT id, owner, name, power, status, type, cost, minlev, \
                zr, wt, szyb, maxwt, magic, poison, amount, twohand, \
-               ptype, repair, location \
+               lang, ptype, repair, location \
          FROM equipment \
          WHERE owner = $1 AND status = 'E' \
          ORDER BY type ASC",
@@ -179,7 +180,7 @@ pub async fn find_backpack_items_by_type(
     sqlx::query_as::<_, EquipmentRow>(
         "SELECT id, owner, name, power, status, type, cost, minlev, \
                zr, wt, szyb, maxwt, magic, poison, amount, twohand, \
-               ptype, repair, location \
+               lang, ptype, repair, location \
          FROM equipment \
          WHERE owner = $1 AND type = $2 AND status = 'U' \
          ORDER BY minlev ASC, name ASC",
@@ -198,7 +199,7 @@ pub async fn find_equipment_by_id(
     sqlx::query_as::<_, EquipmentRow>(
         "SELECT id, owner, name, power, status, type, cost, minlev, \
                zr, wt, szyb, maxwt, magic, poison, amount, twohand, \
-               ptype, repair, location \
+               lang, ptype, repair, location \
          FROM equipment \
          WHERE id = $1",
     )
@@ -215,7 +216,7 @@ pub async fn find_shop_items_by_type(
     sqlx::query_as::<_, EquipmentRow>(
         "SELECT id, owner, name, power, status, type, cost, minlev, \
                zr, wt, szyb, maxwt, magic, poison, amount, twohand, \
-               ptype, repair, location \
+               lang, ptype, repair, location \
          FROM equipment \
          WHERE owner = 0 AND type = $1 AND status = 'S' \
          ORDER BY minlev ASC, name ASC",
@@ -583,4 +584,274 @@ pub async fn repair_item(
         .await?;
 
     Ok(Some(repair_cost))
+}
+
+// ---------------------------------------------------------------------------
+// Shop purchase queries
+// ---------------------------------------------------------------------------
+
+/// Load shop equipment items filtered by type and lang.
+pub async fn find_shop_items_by_type_and_lang(
+    pool: &PgPool,
+    equipment_type: &str,
+    lang: &str,
+) -> Result<Vec<EquipmentRow>, sqlx::Error> {
+    sqlx::query_as::<_, EquipmentRow>(
+        "SELECT id, owner, name, power, status, type, cost, minlev, \
+               zr, wt, szyb, maxwt, magic, poison, amount, twohand, \
+               lang, ptype, repair, location \
+         FROM equipment \
+         WHERE owner = 0 AND type = $1 AND status = 'S' AND lang = $2 \
+         ORDER BY cost ASC",
+    )
+    .bind(equipment_type)
+    .bind(lang)
+    .fetch_all(pool)
+    .await
+}
+
+/// Find a specific bow catalog entry by ID.
+pub async fn find_bow_by_id(pool: &PgPool, bow_id: i32) -> Result<Option<BowRow>, sqlx::Error> {
+    sqlx::query_as::<_, BowRow>(
+        "SELECT id, name, power, type, cost, minlev, zr, szyb, maxwt, repair \
+         FROM bows \
+         WHERE id = $1",
+    )
+    .bind(bow_id)
+    .fetch_optional(pool)
+    .await
+}
+
+/// Buy a shop equipment item. Applies 75% resale price, stacks if identical exists.
+pub async fn buy_shop_equipment(
+    pool: &PgPool,
+    shop_item: &EquipmentRow,
+    owner_id: i32,
+) -> Result<(), sqlx::Error> {
+    let new_cost = (shop_item.cost * 3 + 3) / 4; // ceil(cost * 0.75)
+
+    let existing: Option<(i32,)> = sqlx::query_as(
+        "SELECT id FROM equipment \
+         WHERE name = $1 AND wt = $2 AND type = $3 AND status = 'U' \
+               AND owner = $4 AND power = $5 AND zr = $6 AND szyb = $7 \
+               AND maxwt = $8 AND poison = 0 AND cost = $9",
+    )
+    .bind(&shop_item.name)
+    .bind(shop_item.wt)
+    .bind(&shop_item.equipment_type)
+    .bind(owner_id)
+    .bind(shop_item.power)
+    .bind(shop_item.zr)
+    .bind(shop_item.szyb)
+    .bind(shop_item.maxwt)
+    .bind(new_cost)
+    .fetch_optional(pool)
+    .await?;
+
+    if let Some((existing_id,)) = existing {
+        sqlx::query("UPDATE equipment SET amount = amount + 1 WHERE id = $1")
+            .bind(existing_id)
+            .execute(pool)
+            .await?;
+    } else {
+        sqlx::query(
+            "INSERT INTO equipment (owner, name, power, type, cost, zr, wt, minlev, maxwt, \
+             amount, magic, szyb, lang, repair, status) \
+             VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, 1, $10, $11, $12, $13, 'U')",
+        )
+        .bind(owner_id)
+        .bind(&shop_item.name)
+        .bind(shop_item.power)
+        .bind(&shop_item.equipment_type)
+        .bind(new_cost)
+        .bind(shop_item.zr)
+        .bind(shop_item.wt)
+        .bind(shop_item.minlev)
+        .bind(shop_item.maxwt)
+        .bind(&shop_item.magic)
+        .bind(shop_item.szyb)
+        .bind(&shop_item.lang)
+        .bind(shop_item.repair)
+        .execute(pool)
+        .await?;
+    }
+
+    // Deduct gold
+    sqlx::query("UPDATE players SET credits = credits - $1 WHERE id = $2")
+        .bind(shop_item.cost)
+        .bind(owner_id)
+        .execute(pool)
+        .await?;
+
+    Ok(())
+}
+
+/// Buy a bow from the catalog. Applies 75% resale price, stacks if identical exists.
+pub async fn buy_bow(pool: &PgPool, bow: &BowRow, owner_id: i32) -> Result<(), sqlx::Error> {
+    let new_cost = (bow.cost * 3 + 3) / 4; // ceil(cost * 0.75)
+
+    let existing: Option<(i32,)> = sqlx::query_as(
+        "SELECT id FROM equipment \
+         WHERE name = $1 AND wt = $2 AND type = 'B' AND status = 'U' \
+               AND owner = $3 AND power = $4 AND zr = $5 AND szyb = $6 \
+               AND maxwt = $7 AND cost = $8",
+    )
+    .bind(&bow.name)
+    .bind(bow.maxwt)
+    .bind(owner_id)
+    .bind(bow.power)
+    .bind(bow.zr)
+    .bind(bow.szyb)
+    .bind(bow.maxwt)
+    .bind(new_cost)
+    .fetch_optional(pool)
+    .await?;
+
+    if let Some((existing_id,)) = existing {
+        sqlx::query("UPDATE equipment SET amount = amount + 1 WHERE id = $1")
+            .bind(existing_id)
+            .execute(pool)
+            .await?;
+    } else {
+        sqlx::query(
+            "INSERT INTO equipment (owner, name, power, type, cost, zr, wt, minlev, maxwt, \
+             amount, szyb, twohand, repair, status) \
+             VALUES ($1, $2, $3, 'B', $4, $5, $6, $7, $8, 1, $9, 'Y', $10, 'U')",
+        )
+        .bind(owner_id)
+        .bind(&bow.name)
+        .bind(bow.power)
+        .bind(new_cost)
+        .bind(bow.zr)
+        .bind(bow.maxwt)
+        .bind(bow.minlev)
+        .bind(bow.maxwt)
+        .bind(bow.szyb)
+        .bind(bow.repair)
+        .execute(pool)
+        .await?;
+    }
+
+    // Deduct gold
+    sqlx::query("UPDATE players SET credits = credits - $1 WHERE id = $2")
+        .bind(bow.cost)
+        .bind(owner_id)
+        .execute(pool)
+        .await?;
+
+    Ok(())
+}
+
+/// Buy arrows from the catalog. Arrow quantity is measured by wt/maxwt.
+pub async fn buy_arrows(
+    pool: &PgPool,
+    bow: &BowRow,
+    owner_id: i32,
+    arrow_count: i32,
+    total_cost: i64,
+) -> Result<(), sqlx::Error> {
+    let new_cost = (bow.cost * 3 + 3) / 4; // ceil(cost * 0.75)
+
+    let existing: Option<(i32,)> = sqlx::query_as(
+        "SELECT id FROM equipment \
+         WHERE name = $1 AND owner = $2 AND status = 'U' AND cost = $3",
+    )
+    .bind(&bow.name)
+    .bind(owner_id)
+    .bind(new_cost)
+    .fetch_optional(pool)
+    .await?;
+
+    if let Some((existing_id,)) = existing {
+        sqlx::query("UPDATE equipment SET wt = wt + $1, maxwt = maxwt + $1 WHERE id = $2")
+            .bind(arrow_count)
+            .bind(existing_id)
+            .execute(pool)
+            .await?;
+    } else {
+        sqlx::query(
+            "INSERT INTO equipment (owner, name, power, cost, wt, szyb, minlev, maxwt, type, status) \
+             VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, 'U')",
+        )
+        .bind(owner_id)
+        .bind(&bow.name)
+        .bind(bow.power)
+        .bind(new_cost)
+        .bind(arrow_count)
+        .bind(bow.szyb)
+        .bind(bow.minlev)
+        .bind(arrow_count)
+        .bind(&bow.bow_type)
+        .execute(pool)
+        .await?;
+    }
+
+    // Deduct gold
+    sqlx::query("UPDATE players SET credits = credits - $1 WHERE id = $2")
+        .bind(total_cost)
+        .bind(owner_id)
+        .execute(pool)
+        .await?;
+
+    Ok(())
+}
+
+// ---------------------------------------------------------------------------
+// Spell mutation queries
+// ---------------------------------------------------------------------------
+
+/// Activate a battle or defense spell (set status to 'E').
+/// First deactivates any other spell of the same type for this player.
+pub async fn activate_spell(
+    pool: &PgPool,
+    spell_id: i32,
+    owner_id: i32,
+) -> Result<bool, sqlx::Error> {
+    let spell = find_spell_by_id(pool, spell_id).await?;
+    let Some(spell) = spell else {
+        return Ok(false);
+    };
+    if spell.gracz != owner_id || spell.status != "U" {
+        return Ok(false);
+    }
+
+    // Deactivate currently active spell of the same type
+    sqlx::query(
+        "UPDATE spells SET status = 'U' \
+         WHERE gracz = $1 AND typ = $2 AND status = 'E'",
+    )
+    .bind(owner_id)
+    .bind(&spell.typ)
+    .execute(pool)
+    .await?;
+
+    // Activate the chosen spell
+    let result = sqlx::query(
+        "UPDATE spells SET status = 'E' \
+         WHERE id = $1 AND gracz = $2",
+    )
+    .bind(spell_id)
+    .bind(owner_id)
+    .execute(pool)
+    .await?;
+
+    Ok(result.rows_affected() > 0)
+}
+
+/// Deactivate a spell (set status from 'E' to 'U').
+pub async fn deactivate_spell(
+    pool: &PgPool,
+    spell_id: i32,
+    owner_id: i32,
+) -> Result<bool, sqlx::Error> {
+    let result = sqlx::query(
+        "UPDATE spells SET status = 'U' \
+         WHERE id = $1 AND gracz = $2 AND status = 'E'",
+    )
+    .bind(spell_id)
+    .bind(owner_id)
+    .execute(pool)
+    .await?;
+
+    Ok(result.rows_affected() > 0)
 }

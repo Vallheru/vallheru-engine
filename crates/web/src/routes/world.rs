@@ -2,7 +2,7 @@
 
 use axum::{Router, middleware, routing};
 
-use crate::handlers::{bank, city, equipment, gathering, locations, map, travel};
+use crate::handlers::{bank, city, equipment, gathering, locations, map, shops, spells, travel};
 use crate::middleware::guards::require_authenticated;
 use crate::state::AppState;
 
@@ -61,5 +61,27 @@ pub fn routes() -> Router<AppState> {
         )
         .route("/equipment/sell", routing::post(equipment::sell_action))
         .route("/equipment/repair", routing::post(equipment::repair_action))
+        // NPC shops
+        .route("/weapons", routing::get(shops::weapons_show))
+        .route("/weapons/buy/{id}", routing::post(shops::weapons_buy))
+        .route("/armor", routing::get(shops::armor_show))
+        .route(
+            "/armor/{category}",
+            routing::get(shops::armor_category_show),
+        )
+        .route("/armor/buy/{id}", routing::post(shops::armor_buy))
+        .route("/fletcher", routing::get(shops::fletcher_show))
+        .route("/fletcher/buy/{id}", routing::post(shops::fletcher_buy_bow))
+        .route(
+            "/fletcher/arrows/{id}",
+            routing::get(shops::fletcher_arrows_show).post(shops::fletcher_buy_arrows),
+        )
+        // Spell book
+        .route("/spellbook", routing::get(spells::spellbook_show))
+        .route("/spellbook/activate", routing::post(spells::spell_activate))
+        .route(
+            "/spellbook/deactivate",
+            routing::post(spells::spell_deactivate),
+        )
         .layer(middleware::from_fn(require_authenticated))
 }

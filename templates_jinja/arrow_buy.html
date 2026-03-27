@@ -1,0 +1,16 @@
+{# Arrow purchase form. #}
+{% extends "base.html" %}
+
+{% block content %}
+<h2>Kup strzały: {{ arrow_name }}</h2>
+
+<p>Cena za paczkę ({{ pack_size }} szt.): <b>{{ pack_cost }}</b> złota</p>
+<p>Cena za 1 strzałę: <b>{{ per_arrow_cost }}</b> złota</p>
+
+<form method="post" action="/fletcher/arrows/{{ arrow_id }}">
+  <label>Ilość paczek:
+    <input type="number" name="amount" min="1" value="1" />
+  </label>
+  <button type="submit">Kup</button>
+</form>
+{% endblock %}
