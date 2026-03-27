@@ -1,0 +1,27 @@
+{% extends "base.html" %}
+
+{% block title %}{{ text.title }}{% endblock %}
+
+{% block content %}
+<h2>{{ text.title }}</h2>
+<p class="text-meta">Autor: {{ text.author_name }}</p>
+
+<div class="library-text-body">
+  {{ text.body|safe }}
+</div>
+
+<p>
+  <a href="/comments/library/{{ text.id }}">Komentarze ({{ comment_count }})</a>
+</p>
+
+{% if can_manage %}
+<p>
+  <a href="/library/admin/edit/{{ text.id }}">Edytuj</a> |
+  <form method="post" action="/library/admin/delete/{{ text.id }}" style="display:inline;">
+    <input type="submit" value="Usuń" onclick="return confirm('Usunąć tekst?');" />
+  </form>
+</p>
+{% endif %}
+
+<p><a href="/library">Powrót do biblioteki</a></p>
+{% endblock %}

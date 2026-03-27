@@ -1,0 +1,34 @@
+{% extends "base.html" %}
+
+{% block title %}Notatnik{% endblock %}
+
+{% block content %}
+<h2>Notatnik</h2>
+
+<p><a href="/notes/add">Nowa notatka</a></p>
+
+{% for n in notes %}
+<div class="note-entry">
+  <h3>{{ n.title }}</h3>
+  <p class="note-meta">{{ n.created_at_formatted }}</p>
+  <div>{{ n.body|safe }}</div>
+  <p>
+    <a href="/notes/add?edit={{ n.id }}">Edytuj</a>
+    <form method="post" action="/notes/delete/{{ n.id }}" style="display:inline;">
+      <input type="submit" value="Usuń" onclick="return confirm('Usunąć notatkę?');" />
+    </form>
+  </p>
+  <hr/>
+</div>
+{% else %}
+<p>Nie masz żadnych notatek.</p>
+{% endfor %}
+
+{% if total_pages > 1 %}
+<p>
+  Strona {{ page }} z {{ total_pages }}
+  {% if page > 1 %}<a href="/notes?page={{ page - 1 }}">« Poprzednia</a>{% endif %}
+  {% if page < total_pages %}<a href="/notes?page={{ page + 1 }}">Następna »</a>{% endif %}
+</p>
+{% endif %}
+{% endblock %}

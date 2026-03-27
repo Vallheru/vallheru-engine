@@ -1,0 +1,22 @@
+{% extends "base.html" %}
+
+{% block title %}{% if edit_id %}Edytuj notatkę{% else %}Nowa notatka{% endif %}{% endblock %}
+
+{% block content %}
+<h2>{% if edit_id %}Edytuj notatkę{% else %}Nowa notatka{% endif %}</h2>
+
+<form method="post" action="/notes/add{% if edit_id %}?edit={{ edit_id }}{% endif %}">
+  <p>
+    <label for="title">Tytuł:</label><br/>
+    <input type="text" name="title" id="title" value="{{ edit_title }}" maxlength="255" size="60" />
+  </p>
+  <p>
+    <label for="body">Treść:</label><br/>
+    <textarea name="body" id="bbcode-editor" rows="12" cols="60">{{ edit_body }}</textarea>
+  </p>
+  <p>
+    <input type="submit" value="Zapisz" />
+    <a href="/notes">Anuluj</a>
+  </p>
+</form>
+{% endblock %}

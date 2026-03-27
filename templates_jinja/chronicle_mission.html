@@ -1,0 +1,13 @@
+{% extends "base.html" %}
+
+{% block title %}{{ mission.name }}{% endblock %}
+
+{% block content %}
+<h2>{{ mission.name }}</h2>
+
+<div class="chronicle-intro">
+  {{ mission.intro|safe }}
+</div>
+
+<p><a href="/chronicle">Powrót do kroniki</a></p>
+{% endblock %}

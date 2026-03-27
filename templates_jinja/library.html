@@ -1,0 +1,18 @@
+{% extends "base.html" %}
+
+{% block title %}Biblioteka{% endblock %}
+
+{% block content %}
+<h2>Biblioteka</h2>
+
+<ul>
+  <li><a href="/library/tale">Opowieści</a> ({{ tale_count }})</li>
+  <li><a href="/library/poetry">Poezja</a> ({{ poetry_count }})</li>
+</ul>
+
+<p><a href="/library/add">Dodaj tekst</a></p>
+
+{% if can_manage %}
+<p><a href="/library/admin">Panel moderacji</a> {% if pending_count > 0 %}({{ pending_count }} oczekujących){% endif %}</p>
+{% endif %}
+{% endblock %}

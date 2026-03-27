@@ -127,6 +127,7 @@ Port the communication and content subsystems while preserving the current polli
 
 ### MP-12-06: Port notes, library, roleplay, and chronicle content pages
 
+- **Status: Done** (commit pending)
 - Description: Rebuild the personal notebook, library content, roleplay text, and chronicle-style narrative pages.
 - Estimate: 2h
 - Depends on: MP-12-04, MP-06-05.
@@ -137,3 +138,12 @@ Port the communication and content subsystems while preserving the current polli
 - Technical notes: This also provides support pages used by later world and quest modules.
 - In scope: Content-centric pages and their storage.
 - Out of scope: Quest state transitions.
+- Implementation notes:
+  - Migration: `20250325000017_notes_library_chronicle.sql` — `notes`, `library_texts`, `chronicle_missions` tables.
+  - Domain: `crates/domain/src/social/pages.rs` — `LibraryTextType`, `MissionType`, `LibrarySort` enums, `can_manage_library()`.
+  - Data: `crates/data/src/queries/pages.rs` — full CRUD for notes, library texts, roleplay profiles, chronicle missions.
+  - Handlers: `crates/web/src/handlers/pages.rs` — 15 handlers: notes CRUD + pagination, library index/list/read/add/admin, roleplay view with prev/next, chronicle list/mission.
+  - Routes: `pages_routes()` merged into `social_routes()` in `world.rs`.
+  - Templates: 11 MiniJinja templates (notes, note_form, library, library_list, library_text, library_add, library_admin, library_admin_edit, roleplay, chronicle, chronicle_mission).
+  - Library comments reuse unified `content_comments` table with `target_type='library'`.
+  - 4 domain tests, 1377 total tests passing.

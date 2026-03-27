@@ -1,0 +1,40 @@
+{% extends "base.html" %}
+
+{% block title %}Moderacja biblioteki{% endblock %}
+
+{% block content %}
+<h2>Moderacja biblioteki</h2>
+
+{% if pending|length > 0 %}
+<table>
+  <thead>
+    <tr>
+      <th>Tytuł</th>
+      <th>Autor</th>
+      <th>Akcje</th>
+    </tr>
+  </thead>
+  <tbody>
+    {% for t in pending %}
+    <tr>
+      <td><a href="/library/text/{{ t.id }}">{{ t.title }}</a></td>
+      <td>{{ t.author_name }}</td>
+      <td>
+        <a href="/library/admin/edit/{{ t.id }}">Edytuj</a>
+        <form method="post" action="/library/admin/approve/{{ t.id }}" style="display:inline;">
+          <input type="submit" value="Zatwierdź" />
+        </form>
+        <form method="post" action="/library/admin/delete/{{ t.id }}" style="display:inline;">
+          <input type="submit" value="Usuń" onclick="return confirm('Usunąć tekst?');" />
+        </form>
+      </td>
+    </tr>
+    {% endfor %}
+  </tbody>
+</table>
+{% else %}
+<p>Brak oczekujących tekstów.</p>
+{% endif %}
+
+<p><a href="/library">Powrót do biblioteki</a></p>
+{% endblock %}

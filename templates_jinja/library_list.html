@@ -1,0 +1,46 @@
+{% extends "base.html" %}
+
+{% block title %}{{ type_label }}{% endblock %}
+
+{% block content %}
+<h2>{{ type_label }}</h2>
+
+<p>
+  Sortuj:
+  <a href="/library/{{ text_type }}?sort=title">wg tytułu</a> |
+  <a href="/library/{{ text_type }}?sort=date">wg daty</a> |
+  <a href="/library/{{ text_type }}?sort=author">wg autora</a>
+</p>
+
+{% if authors|length > 0 %}
+<h3>Autorzy</h3>
+<ul>
+  {% for a in authors %}
+  <li><a href="/library/{{ text_type }}?sort=author&amp;author_id={{ a.author_id }}">{{ a.author_name }}</a> ({{ a.text_count }})</li>
+  {% endfor %}
+</ul>
+{% endif %}
+
+{% if texts|length > 0 %}
+<table>
+  <thead>
+    <tr>
+      <th>Tytuł</th>
+      <th>Autor</th>
+    </tr>
+  </thead>
+  <tbody>
+    {% for t in texts %}
+    <tr>
+      <td><a href="/library/text/{{ t.id }}">{{ t.title }}</a></td>
+      <td>{{ t.author_name }}</td>
+    </tr>
+    {% endfor %}
+  </tbody>
+</table>
+{% elif authors|length == 0 %}
+<p>Brak tekstów w tej kategorii.</p>
+{% endif %}
+
+<p><a href="/library">Powrót do biblioteki</a></p>
+{% endblock %}

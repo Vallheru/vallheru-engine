@@ -491,7 +491,7 @@ pub async fn comments_page(
     // Validate target type.
     if !matches!(
         target_type.as_str(),
-        "news" | "update" | "newspaper" | "poll"
+        "news" | "update" | "newspaper" | "poll" | "library"
     ) {
         return Redirect::to("/city").into_response();
     }
@@ -527,6 +527,7 @@ pub async fn comments_page(
         "update" => "/updates".to_string(),
         "newspaper" => format!("/newspaper/article/{target_id}"),
         "poll" => "/polls".to_string(),
+        "library" => format!("/library/text/{target_id}"),
         _ => "/city".to_string(),
     };
 
@@ -558,7 +559,7 @@ pub async fn add_comment(
 
     if !matches!(
         target_type.as_str(),
-        "news" | "update" | "newspaper" | "poll"
+        "news" | "update" | "newspaper" | "poll" | "library"
     ) {
         return Redirect::to("/city").into_response();
     }

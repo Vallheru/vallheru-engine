@@ -1,0 +1,30 @@
+{% extends "base.html" %}
+
+{% block title %}Edytuj tekst{% endblock %}
+
+{% block content %}
+<h2>Edytuj tekst</h2>
+
+<form method="post" action="/library/admin/edit/{{ text_id }}">
+  <p>
+    <label for="title">Tytuł:</label><br/>
+    <input type="text" name="title" id="title" value="{{ text_title }}" maxlength="255" size="60" />
+  </p>
+  <p>
+    <label for="text_type">Rodzaj:</label><br/>
+    <select name="text_type" id="text_type">
+      {% for opt in type_options %}
+      <option value="{{ opt.code }}" {% if opt.code == text_type %}selected{% endif %}>{{ opt.label }}</option>
+      {% endfor %}
+    </select>
+  </p>
+  <p>
+    <label for="body">Treść:</label><br/>
+    <textarea name="body" id="bbcode-editor" rows="20" cols="60">{{ text_body }}</textarea>
+  </p>
+  <p>
+    <input type="submit" value="Zapisz" />
+    <a href="/library/admin">Anuluj</a>
+  </p>
+</form>
+{% endblock %}

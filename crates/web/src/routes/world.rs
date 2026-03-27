@@ -3,8 +3,8 @@
 use axum::{Router, middleware, routing};
 
 use crate::handlers::{
-    bank, chat, city, content, equipment, forums, gathering, locations, mail, map, market, shops,
-    spells, travel,
+    bank, chat, city, content, equipment, forums, gathering, locations, mail, map, market, pages,
+    shops, spells, travel,
 };
 use crate::middleware::guards::require_authenticated;
 use crate::state::AppState;
@@ -193,6 +193,7 @@ fn social_routes() -> Router<AppState> {
             routing::post(forums::forum_delete_reply),
         )
         .merge(content_routes())
+        .merge(pages_routes())
 }
 
 fn content_routes() -> Router<AppState> {
@@ -253,4 +254,41 @@ fn content_routes() -> Router<AppState> {
             "/proposals/{ptype}",
             routing::get(content::proposal_form).post(content::proposal_submit),
         )
+}
+
+fn pages_routes() -> Router<AppState> {
+    Router::new()
+        // Notes (personal notebook)
+        .route("/notes", routing::get(pages::notes_page))
+        .route(
+            "/notes/add",
+            routing::get(pages::note_form).post(pages::note_save),
+        )
+        .route("/notes/delete/{id}", routing::post(pages::note_delete))
+        // Library
+        .route("/library", routing::get(pages::library_index))
+        .route(
+            "/library/add",
+            routing::get(pages::library_add_form).post(pages::library_add_action),
+        )
+        .route("/library/admin", routing::get(pages::library_admin))
+        .route(
+            "/library/admin/edit/{id}",
+            routing::get(pages::library_admin_edit).post(pages::library_admin_edit_action),
+        )
+        .route(
+            "/library/admin/approve/{id}",
+            routing::post(pages::library_admin_approve),
+        )
+        .route(
+            "/library/admin/delete/{id}",
+            routing::post(pages::library_admin_delete),
+        )
+        .route("/library/text/{id}", routing::get(pages::library_text))
+        .route("/library/{text_type}", routing::get(pages::library_list))
+        // Roleplay profiles
+        .route("/roleplay/{id}", routing::get(pages::roleplay_view))
+        // Chronicle
+        .route("/chronicle", routing::get(pages::chronicle_page))
+        .route("/chronicle/{id}", routing::get(pages::chronicle_mission))
 }

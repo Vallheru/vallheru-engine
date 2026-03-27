@@ -1,0 +1,28 @@
+{% extends "base.html" %}
+
+{% block title %}Roleplay — {{ player_name }}{% endblock %}
+
+{% block content %}
+<h2>{{ player_name }} — Roleplay</h2>
+
+{% if roleplay %}
+<div class="roleplay-body">
+  {{ roleplay|safe }}
+</div>
+{% else %}
+<p>Ten gracz nie posiada opisu postaci.</p>
+{% endif %}
+
+{% if ooc %}
+<h3>OOC</h3>
+<div class="roleplay-ooc">
+  {{ ooc|safe }}
+</div>
+{% endif %}
+
+<p>
+  {% if prev_id %}<a href="/roleplay/{{ prev_id }}">« Poprzedni</a>{% endif %}
+  {% if prev_id and next_id %} | {% endif %}
+  {% if next_id %}<a href="/roleplay/{{ next_id }}">Następny »</a>{% endif %}
+</p>
+{% endblock %}

@@ -17,6 +17,7 @@ pub mod locations;
 pub mod mail;
 pub mod market;
 pub mod mission;
+pub mod pages;
 pub mod player;
 pub mod registration;
 pub mod session;

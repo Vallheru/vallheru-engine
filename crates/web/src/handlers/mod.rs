@@ -14,6 +14,7 @@ pub mod locations;
 pub mod mail;
 pub mod map;
 pub mod market;
+pub mod pages;
 pub mod preset;
 pub mod registration;
 pub mod shops;
