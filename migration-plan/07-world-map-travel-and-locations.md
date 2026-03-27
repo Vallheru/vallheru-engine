@@ -114,9 +114,9 @@ Port the world-navigation layer and stateful location pages that gate access to 
 - In scope: Page shell and primary behavior.
 - Out of scope: Staff editing of associated content.
 
-### MP-07-06: Add navigation parity checks
+### MP-07-06: Add navigation parity checks ✅
 
-- **Status**: not-started
+- **Status**: completed
 - Description: Create route and view-model tests that confirm common location transitions and denial cases.
 - Estimate: 2h
 - Depends on: MP-07-02, MP-07-03, MP-07-04.

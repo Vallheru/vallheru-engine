@@ -320,4 +320,135 @@ mod tests {
             assert_eq!(Destination::from_param(dest.param()), Some(dest));
         }
     }
+
+    // -----------------------------------------------------------------------
+    // Table-driven navigation parity tests (MP-07-06)
+    // -----------------------------------------------------------------------
+
+    /// Every starting location should have a consistent set of available
+    /// destinations. This guards against accidentally adding or removing
+    /// travel routes.
+    #[test]
+    fn destination_availability_table() {
+        use Location::*;
+        let cases: &[(Location, usize)] = &[
+            (Altara, 3),    // Mountains, Forest, Ardulith
+            (Ardulith, 2),  // Mountains, Altara
+            (Mountains, 2), // Forest, Altara
+            (Forest, 1),    // Altara
+            (Travelling, 0),
+            (Dungeon, 0),
+            (Portal, 0),
+            (AstralPlane, 0),
+            (Adventure, 0),
+        ];
+        for &(from, count) in cases {
+            assert_eq!(
+                available_destinations(from).len(),
+                count,
+                "available_destinations({from:?}).len()"
+            );
+        }
+    }
+
+    /// Caravan and walk costs should follow the indirect-route rule.
+    #[test]
+    fn cost_matrix_table() {
+        use Location::*;
+        // (from, dest, caravan, walk)
+        let cases: &[(Location, Destination, i32, i32)] = &[
+            (Altara, Destination::Mountains, 1000, 5),
+            (Altara, Destination::Forest, 1000, 5),
+            (Altara, Destination::Ardulith, 1000, 5),
+            (Ardulith, Destination::Mountains, 1200, 6),
+            (Ardulith, Destination::Altara, 1000, 5),
+            (Mountains, Destination::Forest, 1200, 6),
+            (Mountains, Destination::Altara, 1000, 5),
+            (Forest, Destination::Altara, 1000, 5),
+        ];
+        for &(from, dest, expected_caravan, expected_walk) in cases {
+            assert_eq!(
+                caravan_cost(from, dest),
+                expected_caravan,
+                "caravan_cost({from:?}, {dest:?})"
+            );
+            assert_eq!(
+                walk_cost(from, dest),
+                expected_walk,
+                "walk_cost({from:?}, {dest:?})"
+            );
+        }
+    }
+
+    /// Magic portal cost is constant regardless of route.
+    #[test]
+    fn magic_portal_cost_is_constant() {
+        assert_eq!(MAGIC_PORTAL_COST, 4000);
+        assert_eq!(
+            travel_cost(
+                TravelMethod::MagicPortal,
+                Location::Altara,
+                Destination::Mountains
+            ),
+            4000
+        );
+        assert_eq!(
+            travel_cost(
+                TravelMethod::MagicPortal,
+                Location::Ardulith,
+                Destination::Altara
+            ),
+            4000
+        );
+    }
+
+    /// `validate_travel` with all three methods for a well-funded player
+    /// should succeed and return the correct cost.
+    #[test]
+    fn validate_travel_all_methods_funded() {
+        for method in [
+            TravelMethod::Caravan,
+            TravelMethod::Walk,
+            TravelMethod::MagicPortal,
+        ] {
+            let a = TravelAttempt {
+                from: Location::Altara,
+                dest: Destination::Mountains,
+                method,
+                hp: 100,
+                fight_id: 0,
+                is_immune: false,
+                credits: 10_000,
+                energy: 100.0,
+            };
+            let result = validate_travel(&a);
+            assert!(
+                result.is_ok(),
+                "validate_travel failed for {method:?}: {result:?}"
+            );
+            let cost = result.unwrap();
+            assert_eq!(
+                cost,
+                travel_cost(method, Location::Altara, Destination::Mountains)
+            );
+        }
+    }
+
+    /// Portal denial: magic portal to non-Portal location should still work
+    /// (the portal is just a travel method, not a location check at this level).
+    /// Portal *location* entry is guarded by `can_travel`.
+    #[test]
+    fn magic_portal_method_between_cities() {
+        let a = TravelAttempt {
+            from: Location::Altara,
+            dest: Destination::Ardulith,
+            method: TravelMethod::MagicPortal,
+            hp: 100,
+            fight_id: 0,
+            is_immune: false,
+            credits: 10_000,
+            energy: 100.0,
+        };
+        assert_eq!(validate_travel(&a), Ok(4000));
+    }
 }

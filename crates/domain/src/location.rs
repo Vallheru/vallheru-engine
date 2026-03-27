@@ -309,4 +309,151 @@ mod tests {
             Err(MovementDenied::InvalidRoute)
         );
     }
+
+    // -----------------------------------------------------------------------
+    // Exhaustive table-driven navigation parity tests (MP-07-06)
+    // -----------------------------------------------------------------------
+
+    /// Every (from, to) pair with expected outcome for a healthy, non-combat,
+    /// non-immune player. This catches any regression in the route matrix.
+    #[test]
+    fn exhaustive_route_matrix() {
+        use Location::*;
+
+        // (from, to, expected_ok)
+        let cases: &[(Location, Location, bool)] = &[
+            // From Altara
+            (Altara, Ardulith, true),
+            (Altara, Mountains, true),
+            (Altara, Forest, true),
+            (Altara, Portal, true),
+            (Altara, Travelling, true),
+            (Altara, Dungeon, false),
+            (Altara, Adventure, false),
+            (Altara, AstralPlane, true),
+            // From Ardulith
+            (Ardulith, Altara, true),
+            (Ardulith, Mountains, true),
+            (Ardulith, Forest, true),
+            (Ardulith, Portal, true),
+            (Ardulith, Travelling, true),
+            (Ardulith, Dungeon, false),
+            (Ardulith, Adventure, false),
+            (Ardulith, AstralPlane, true),
+            // From Mountains
+            (Mountains, Altara, true),
+            (Mountains, Ardulith, true),
+            (Mountains, Forest, false),
+            (Mountains, Portal, false),
+            (Mountains, Dungeon, false),
+            (Mountains, Adventure, false),
+            (Mountains, AstralPlane, false),
+            (Mountains, Travelling, true),
+            // From Forest
+            (Forest, Altara, true),
+            (Forest, Ardulith, true),
+            (Forest, Mountains, false),
+            (Forest, Portal, false),
+            (Forest, Dungeon, false),
+            (Forest, Adventure, false),
+            (Forest, AstralPlane, false),
+            (Forest, Travelling, true),
+            // From Travelling
+            (Travelling, Altara, true),
+            (Travelling, Ardulith, true),
+            (Travelling, Mountains, true),
+            (Travelling, Forest, true),
+            (Travelling, Portal, false),
+            (Travelling, Dungeon, false),
+            (Travelling, Adventure, false),
+            (Travelling, AstralPlane, false),
+            // From Dungeon — always denied
+            (Dungeon, Altara, false),
+            (Dungeon, Mountains, false),
+            // From Adventure — always denied
+            (Adventure, Altara, false),
+            (Adventure, Mountains, false),
+            // From Portal
+            (Portal, Altara, true),
+            (Portal, Ardulith, true),
+            (Portal, AstralPlane, true),
+            (Portal, Mountains, false),
+            (Portal, Dungeon, false),
+            // From AstralPlane
+            (AstralPlane, Altara, true),
+            (AstralPlane, Ardulith, true),
+            (AstralPlane, Mountains, false),
+            (AstralPlane, Portal, false),
+        ];
+
+        for &(from, to, expected_ok) in cases {
+            let result = can_travel(from, to, 100, 0, false);
+            assert_eq!(
+                result.is_ok(),
+                expected_ok,
+                "can_travel({from:?}, {to:?}) = {result:?}, expected ok={expected_ok}"
+            );
+        }
+    }
+
+    /// All denial reasons for a player at the same location, covering the
+    /// `AlreadyThere` guard across every variant.
+    #[test]
+    fn already_there_for_all_locations() {
+        let locations = [
+            Location::Altara,
+            Location::Ardulith,
+            Location::Mountains,
+            Location::Forest,
+        ];
+        for loc in locations {
+            assert_eq!(
+                can_travel(loc, loc, 100, 0, false),
+                Err(MovementDenied::AlreadyThere),
+                "AlreadyThere not raised for {loc:?}"
+            );
+        }
+    }
+
+    /// Immune player can travel between cities but nowhere else.
+    #[test]
+    fn immune_restricts_to_cities_only() {
+        use Location::*;
+        // City-to-city is allowed
+        assert!(can_travel(Altara, Ardulith, 100, 0, true).is_ok());
+        assert!(can_travel(Ardulith, Altara, 100, 0, true).is_ok());
+
+        // City-to-non-city is denied
+        for dest in [Mountains, Forest, Portal, AstralPlane] {
+            assert_eq!(
+                can_travel(Altara, dest, 100, 0, true),
+                Err(MovementDenied::Immune),
+                "Immune player allowed to travel to {dest:?}"
+            );
+        }
+    }
+
+    /// Location classification correctness.
+    #[test]
+    fn location_classification_table() {
+        use Location::*;
+        let cases: &[(Location, bool, bool, bool, bool)] = &[
+            // (loc, is_city, is_exploration, has_city_services, allows_combat)
+            (Altara, true, false, true, false),
+            (Ardulith, true, false, true, false),
+            (Mountains, false, true, false, true),
+            (Forest, false, true, false, true),
+            (AstralPlane, false, false, false, true),
+            (Portal, false, false, false, false),
+            (Dungeon, false, false, false, false),
+            (Travelling, false, false, false, false),
+            (Adventure, false, false, false, false),
+        ];
+        for &(loc, city, explore, svc, combat) in cases {
+            assert_eq!(loc.is_city(), city, "{loc:?}.is_city()");
+            assert_eq!(loc.is_exploration(), explore, "{loc:?}.is_exploration()");
+            assert_eq!(loc.has_city_services(), svc, "{loc:?}.has_city_services()");
+            assert_eq!(loc.allows_combat(), combat, "{loc:?}.allows_combat()");
+        }
+    }
 }
