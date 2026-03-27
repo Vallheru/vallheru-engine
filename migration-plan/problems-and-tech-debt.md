@@ -191,3 +191,15 @@ Each entry includes:
 - **Needs new task**: Yes
 - **Status**: open
 - **Related tasks**: MP-10-05
+
+### TD-015: Spell enchantment system not yet migrated
+
+- **Type**: migration-gap
+- **Discovered in**: MP-09-04
+- **Description**: The PHP `czary.php` utility spell enchantment system (enhancing items with element-based bonuses using magic skill + intelligence checks) is not yet implemented. Utility spells are displayed in the spell book but enchantment actions are not available.
+- **Impact**: Players cannot enchant items. Medium priority — requires combat skill/stat interaction.
+- **Action**: Implement enchantment as a separate feature once combat skill checks are available.
+- **Fixable in existing task**: No — depends on skill/stat progression integration.
+- **Needs new task**: Yes
+- **Status**: open
+- **Related tasks**: MP-09-04, MP-08

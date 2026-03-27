@@ -79,8 +79,9 @@ Port player-owned item management, equipment bonuses, and storage flows into exp
 - In scope: Inventory/equipment handlers and templates.
 - Out of scope: Market-facing item transfers.
 
-### MP-09-04: Port spell, bow, and specialty item handling
+### MP-09-04: Port spell, bow, and specialty item handling ✅
 
+- **Status**: completed-correctly (commit `2914c8f`)
 - Description: Port category-specific routes and rules that differ from generic equipment, especially bows and spells.
 - Estimate: 1.5h
 - Depends on: MP-09-03.
