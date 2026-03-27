@@ -69,25 +69,27 @@ Port the communication and content subsystems while preserving the current polli
 - In scope: Chat handlers, message fetch API, bot hook.
 - Out of scope: Forum or mail behavior.
 
-### MP-12-02: Port room chat and tavern room state
+### MP-12-02: Port room chat and tavern room state ✅
 
+- **Status**: completed
 - Description: Rebuild room entry, room message polling, room ownership checks, and room-specific chat behavior.
 - Estimate: 1.5h
 - Depends on: MP-12-01, MP-07-05.
 - Functional acceptance criteria:
-  - Players can enter rooms and fetch/send room messages.
-  - Room access checks and owner checks match current rules.
-  - Pagination or message-window size rules are preserved.
+  - Players can enter rooms and fetch/send room messages. ✅
+  - Room access checks and owner checks match current rules. ✅
+  - Pagination or message-window size rules are preserved. ✅
 - Technical notes: Keep room state out of ad hoc raw session arrays where possible.
 - In scope: Room chat and room page flows.
 - Out of scope: Team or tribe-only messaging.
+- Implementation: migration `20250325000019_rooms.sql` (rooms + room_messages tables with PostgreSQL arrays + JSONB), `domain/social/room.rs` (constants, validation, RoomPersona, permissions, 8 tests), `data/queries/room.rs` (room CRUD, message CRUD, player assignment, online detection, invite checks), `web/handlers/room.rs` (14 Axum handlers: page, messages, send, quit, admin panel operations), `templates_jinja/room.html` + `room_messages.html` (JS polling, admin panel, BBCode, NPC personas).
 
-### MP-12-03: Port mail, contacts, and unread counters
+### MP-12-03: Port mail, contacts, and unread counters ✅
 
 - Description: Rebuild private mail, contact lists, and per-player unread message indicators.
 - Estimate: 1.5h
 - Depends on: MP-05-01, MP-04-05.
-- Status: **Done**.
+- **Status**: completed
 - Functional acceptance criteria:
   - Sending, reading, and listing mail works end to end.
   - Contact lookups and unread counters are accurate.
@@ -96,8 +98,9 @@ Port the communication and content subsystems while preserving the current polli
 - In scope: Mail and contacts.
 - Out of scope: Staff moderation tooling.
 
-### MP-12-04: Port forums and discussion formatting — **Done**
+### MP-12-04: Port forums and discussion formatting ✅
 
+- **Status**: completed
 - Description: Rebuild public forums and the BBCode formatting pipeline used in chat, mail, forums, and newspaper pages.
 - Estimate: 1.5h
 - Depends on: MP-04-04, MP-04-05.
@@ -110,12 +113,12 @@ Port the communication and content subsystems while preserving the current polli
 - Out of scope: Tribe forums if they diverge materially.
 - Implementation: migration (forum_categories, forum_topics, forum_replies, forum_bans), domain (TopicSort, permissions, pagination), data queries (full CRUD, search, unread), 15 Axum handlers, 6 MiniJinja templates, html_to_bbcode for quoting.
 
-### MP-12-05: Port news, newspaper, proposals, polls, and RSS outputs — **Done**
+### MP-12-05: Port news, newspaper, proposals, polls, and RSS outputs ✅
 
 - Description: Migrate the publishing and player-voting features that surface news and game content.
 - Estimate: 1.5h
 - Depends on: MP-12-04.
-- Status: **Done**.
+- **Status**: completed
 - Functional acceptance criteria:
   - News and newspaper pages render from Rust data sources. ✅
   - Proposal and poll submission flows work. ✅
@@ -125,9 +128,9 @@ Port the communication and content subsystems while preserving the current polli
 - Out of scope: Staff moderation back office.
 - Implementation: Migration (game_updates, news, newspaper_articles, polls, poll_options, proposals, content_comments — unified comments), domain (ArticleType 11 variants, CommentTarget, ProposalType, permissions, vote_percentage), data queries (full CRUD for updates/news/newspaper/polls/proposals/comments + RSS), 20+ Axum handlers, 12 MiniJinja templates, RSS XML feed (public, no auth), TemplateEngine accessors (game_name, base_url).
 
-### MP-12-06: Port notes, library, roleplay, and chronicle content pages
+### MP-12-06: Port notes, library, roleplay, and chronicle content pages ✅
 
-- **Status: Done** (commit pending)
+- **Status**: completed (82c2aa1)
 - Description: Rebuild the personal notebook, library content, roleplay text, and chronicle-style narrative pages.
 - Estimate: 2h
 - Depends on: MP-12-04, MP-06-05.

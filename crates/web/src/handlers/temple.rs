@@ -439,9 +439,7 @@ async fn persist_prayer_outcome(
                 server_error()
             })?;
             Ok((
-                format!(
-                    "Modliłeś się do {deity_display}, ale bóg się rozgniewał i zabił cię!"
-                ),
+                format!("Modliłeś się do {deity_display}, ale bóg się rozgniewał i zabił cię!"),
                 FlashKind::Error,
             ))
         }

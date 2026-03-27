@@ -19,6 +19,7 @@ pub mod market;
 pub mod pages;
 pub mod preset;
 pub mod registration;
+pub mod room;
 pub mod shops;
 pub mod spells;
 pub mod temple;

@@ -1,0 +1,177 @@
+{% extends "base.html" %}
+
+{% block title %}{{ room_name }}{% endblock %}
+
+{% block content %}
+<h2>{{ room_name }}</h2>
+
+<div id="roommsgs">
+  <p>Ładowanie wiadomości...</p>
+</div>
+
+<div style="text-align: center; margin-top: 10px;">
+  <form method="post" action="/room/send" id="roomform">
+    <button type="button" onclick="formatText('bold')">Pogrubienie</button>
+    <button type="button" onclick="formatText('italic')">Kursywa</button>
+    <button type="button" onclick="formatText('underline')">Podkreślenie</button>
+    <button type="button" onclick="formatText('emote')">Emocje/czynność</button>
+    <br/>
+    {% if is_admin %}
+    <label>Mów jako:
+      <select name="person">
+        <option value="0">Ty</option>
+        <option value="1">Opis</option>
+        {% for npc in npcs %}
+        <option value="{{ loop.index0 + 2 }}">{{ npc }}</option>
+        {% endfor %}
+      </select>
+    </label>
+    {% endif %}
+    <br/>
+    <textarea name="msg" rows="2" cols="60" id="roominput"></textarea>
+    <br/>
+    <input type="submit" value="Wyślij" />
+    <a href="/room">Odśwież</a>
+    <a href="/room?more=1">Więcej</a>
+    <a href="/room?less=1">Mniej</a>
+  </form>
+</div>
+
+<hr/>
+<details>
+  <summary>+ Opis</summary>
+  <div style="margin: 10px;">{{ description }}</div>
+</details>
+
+<details>
+  <summary>+ Osoby w pokoju</summary>
+  <ul>
+    {% for m in members %}
+    <li><a href="/view/{{ m.id }}">{{ m.name }}</a> ({{ m.id }})</li>
+    {% endfor %}
+  </ul>
+</details>
+
+<p>Pokój będzie istniał jeszcze przez {{ days_remaining }} dni.</p>
+
+<form method="post" action="/room/quit">
+  <input type="submit" value="Opuść pokój" onclick="return confirm('Na pewno chcesz opuścić pokój?');" />
+</form>
+
+{% if is_admin %}
+<hr/>
+<details>
+  <summary>+ Panel administracyjny</summary>
+
+  <div style="margin: 10px;">
+    <h4>Wyrzuć gracza</h4>
+    <form method="post" action="/room/admin/remove">
+      <label>gracza o ID: <input type="text" name="pid" size="5" /></label>
+      <input type="submit" value="Wyrzuć" />
+    </form>
+
+    <h4>Zaproś gracza</h4>
+    <form method="post" action="/room/admin/invite">
+      <label>gracza o ID: <input type="text" name="pid" size="5" /></label>
+      <input type="submit" value="Zaproś" />
+    </form>
+
+    <h4>Zmień opis pokoju</h4>
+    <form method="post" action="/room/admin/desc">
+      <textarea name="desc" rows="4" cols="60">{{ description_bbcode }}</textarea>
+      <br/>
+      <input type="submit" value="Zmień" />
+    </form>
+
+    <h4>Zmień nazwę pokoju</h4>
+    <form method="post" action="/room/admin/name">
+      <input type="text" name="rname" value="{{ room_name }}" size="30" />
+      <input type="submit" value="Zmień" />
+    </form>
+
+    <h4>Dodaj NPC</h4>
+    <form method="post" action="/room/admin/npc-add">
+      <label>imię NPC: <input type="text" name="npc" size="20" /></label>
+      <input type="submit" value="Dodaj" />
+    </form>
+
+    {% if has_npcs %}
+    <h4>Usuń NPC</h4>
+    <form method="post" action="/room/admin/npc-remove">
+      <select name="npc">
+        {% for npc in npcs %}
+        <option value="{{ npc }}">{{ npc }}</option>
+        {% endfor %}
+      </select>
+      <input type="submit" value="Usuń" />
+    </form>
+    {% endif %}
+
+    {% if is_owner %}
+    <h4>Współwłaściciel</h4>
+    <form method="post" action="/room/admin/co-owner">
+      <label>gracza o ID: <input type="text" name="pid" size="5" /></label>
+      <select name="action">
+        <option value="0">Dodaj</option>
+        <option value="1">Usuń</option>
+      </select>
+      <input type="submit" value="Ustaw" />
+    </form>
+    {% endif %}
+
+    <h4>Kolor nicka</h4>
+    <form method="post" action="/room/admin/color">
+      <label>graczowi: <input type="text" name="pid" size="5" /></label>
+      <select name="color">
+        {% for c in color_options %}
+        <option value="{{ c.value }}">{{ c.label }}</option>
+        {% endfor %}
+      </select>
+      <input type="submit" value="Zmień" />
+    </form>
+
+    <h4>Przedłuż wynajem</h4>
+    <form method="post" action="/room/admin/rent">
+      <select name="rent">
+        {% for r in rent_options %}
+        <option value="{{ r.days }}">{{ r.label }}</option>
+        {% endfor %}
+      </select>
+      <input type="submit" value="Przedłuż" />
+    </form>
+  </div>
+</details>
+{% endif %}
+
+<script>
+(function() {
+  var area = document.getElementById("roommsgs");
+  var length = {{ message_length }};
+  function refresh() {
+    var xhr = new XMLHttpRequest();
+    xhr.open("GET", "/room/messages?length=" + length, true);
+    xhr.onload = function() {
+      if (xhr.status === 200) {
+        area.innerHTML = xhr.responseText;
+      }
+    };
+    xhr.send();
+  }
+  refresh();
+  setInterval(refresh, 5000);
+
+  function formatText(style) {
+    var ta = document.getElementById("roominput");
+    var s = ta.selectionStart, e = ta.selectionEnd;
+    var sel = ta.value.substring(s, e);
+    var tag = "";
+    if (style === "bold") tag = "b";
+    else if (style === "italic") tag = "i";
+    else if (style === "underline") tag = "u";
+    else if (style === "emote") { ta.value = ta.value.substring(0, s) + "@me " + sel + ta.value.substring(e); return; }
+    ta.value = ta.value.substring(0, s) + "[" + tag + "]" + sel + "[/" + tag + "]" + ta.value.substring(e);
+  }
+  window.formatText = formatText;
+})();
+</script>
+{% endblock %}

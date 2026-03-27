@@ -21,6 +21,7 @@ pub mod mission;
 pub mod pages;
 pub mod player;
 pub mod registration;
+pub mod room;
 pub mod session;
 pub mod settings;
 pub mod travel;

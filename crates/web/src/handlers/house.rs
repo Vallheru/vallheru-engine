@@ -576,8 +576,9 @@ pub async fn house_rest(
     let value = house.value;
 
     #[allow(clippy::cast_possible_truncation, clippy::cast_precision_loss)]
-    let energy_gain =
-        ((player_row.max_energy / 100.0) * f64::from(value)).ceil().min(player_row.max_energy * 0.75);
+    let energy_gain = ((player_row.max_energy / 100.0) * f64::from(value))
+        .ceil()
+        .min(player_row.max_energy * 0.75);
 
     #[allow(clippy::cast_possible_truncation)]
     let hp_gain = ((f64::from(player_row.max_hp) / 100.0) * f64::from(value)).ceil() as i32;

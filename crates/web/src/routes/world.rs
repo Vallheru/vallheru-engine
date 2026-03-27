@@ -4,7 +4,7 @@ use axum::{Router, middleware, routing};
 
 use crate::handlers::{
     bank, chat, city, content, deity, equipment, forums, gathering, house, locations, mail, map,
-    market, pages, shops, spells, temple, tower, travel,
+    market, pages, room, shops, spells, temple, tower, travel,
 };
 use crate::middleware::guards::require_authenticated;
 use crate::state::AppState;
@@ -165,6 +165,33 @@ fn social_routes() -> Router<AppState> {
         .route("/chat/admin/ban", routing::post(chat::chat_admin_ban))
         .route("/chat/admin/give", routing::post(chat::chat_admin_give))
         .route("/chat/admin/prune", routing::post(chat::chat_admin_prune))
+        // Room chat
+        .route("/room", routing::get(room::room_page))
+        .route("/room/messages", routing::get(room::room_messages))
+        .route("/room/send", routing::post(room::room_send))
+        .route("/room/quit", routing::post(room::room_quit))
+        .route(
+            "/room/admin/delete-msg",
+            routing::post(room::room_admin_delete_msg),
+        )
+        .route("/room/admin/remove", routing::post(room::room_admin_remove))
+        .route("/room/admin/invite", routing::post(room::room_admin_invite))
+        .route("/room/admin/desc", routing::post(room::room_admin_desc))
+        .route("/room/admin/name", routing::post(room::room_admin_name))
+        .route(
+            "/room/admin/npc-add",
+            routing::post(room::room_admin_npc_add),
+        )
+        .route(
+            "/room/admin/npc-remove",
+            routing::post(room::room_admin_npc_remove),
+        )
+        .route(
+            "/room/admin/co-owner",
+            routing::post(room::room_admin_co_owner),
+        )
+        .route("/room/admin/color", routing::post(room::room_admin_color))
+        .route("/room/admin/rent", routing::post(room::room_admin_rent))
         // Mail
         .route("/mail", routing::get(mail::mail_index))
         .route("/mail/inbox", routing::get(mail::mail_inbox))

@@ -117,12 +117,12 @@ Port the currency, banking, and market systems as reusable transactional service
 - In scope: Bank and shop handlers.
 - Out of scope: Crafting production, bank transfers/donations (deferred).
 
-### MP-10-06: Add market reconciliation tests
+### MP-10-06: Add market reconciliation tests ✅
 
 - Description: Create tests that validate no money or quantity is lost across typical listing and buying sequences.
 - Estimate: 1.5h
 - Depends on: MP-10-03, MP-10-04, MP-10-05.
-- Status: **done**
+- **Status**: completed
 - Functional acceptance criteria:
   - Tests cover list, buy, partial buy, cancel, and insufficient-funds cases.
   - Buyer inventory, seller proceeds, and listing counts reconcile after each scenario.
