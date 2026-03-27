@@ -2,7 +2,7 @@
 
 use axum::{Router, middleware, routing};
 
-use crate::handlers::{bank, city, gathering, locations, map, travel};
+use crate::handlers::{bank, city, equipment, gathering, locations, map, travel};
 use crate::middleware::guards::require_authenticated;
 use crate::state::AppState;
 
@@ -52,5 +52,14 @@ pub fn routes() -> Router<AppState> {
             "/magic-shop/buy/{id}",
             routing::get(bank::magic_shop_buy_show).post(bank::magic_shop_buy_action),
         )
+        // Equipment routes
+        .route("/equipment", routing::get(equipment::equipment_show))
+        .route("/equipment/equip", routing::post(equipment::equip_action))
+        .route(
+            "/equipment/unequip",
+            routing::post(equipment::unequip_action),
+        )
+        .route("/equipment/sell", routing::post(equipment::sell_action))
+        .route("/equipment/repair", routing::post(equipment::repair_action))
         .layer(middleware::from_fn(require_authenticated))
 }

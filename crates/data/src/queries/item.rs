@@ -451,3 +451,136 @@ pub async fn find_ring_catalog(pool: &PgPool) -> Result<Vec<RingRow>, sqlx::Erro
     .fetch_all(pool)
     .await
 }
+
+// ---------------------------------------------------------------------------
+// Equipment mutation queries
+// ---------------------------------------------------------------------------
+
+/// Set an item's status to 'E' (equipped). Only works on items owned by the player
+/// that are currently in status 'U' (backpack).
+pub async fn equip_item(pool: &PgPool, item_id: i32, owner_id: i32) -> Result<bool, sqlx::Error> {
+    let result = sqlx::query(
+        "UPDATE equipment SET status = 'E' \
+         WHERE id = $1 AND owner = $2 AND status = 'U'",
+    )
+    .bind(item_id)
+    .bind(owner_id)
+    .execute(pool)
+    .await?;
+    Ok(result.rows_affected() > 0)
+}
+
+/// Set an item's status to 'U' (backpack). Only works on items owned by the player
+/// that are currently in status 'E' (equipped).
+pub async fn unequip_item(pool: &PgPool, item_id: i32, owner_id: i32) -> Result<bool, sqlx::Error> {
+    let result = sqlx::query(
+        "UPDATE equipment SET status = 'U' \
+         WHERE id = $1 AND owner = $2 AND status = 'E'",
+    )
+    .bind(item_id)
+    .bind(owner_id)
+    .execute(pool)
+    .await?;
+    Ok(result.rows_affected() > 0)
+}
+
+/// Sell one unit of an item. If the item has amount > 1, decrement; otherwise delete.
+/// Returns the sale price on success.
+pub async fn sell_one_item(
+    pool: &PgPool,
+    item_id: i32,
+    owner_id: i32,
+) -> Result<Option<i64>, sqlx::Error> {
+    // Load the item first to validate ownership and get cost.
+    let item = find_equipment_by_id(pool, item_id).await?;
+    let Some(item) = item else {
+        return Ok(None);
+    };
+    if item.owner != owner_id || item.status != "U" {
+        return Ok(None);
+    }
+
+    // Arrows: sale price is per-shot × remaining shots
+    let sale_price = if item.equipment_type == "R" {
+        let per_shot = item.cost / 100;
+        (per_shot * i64::from(item.wt)).max(1)
+    } else {
+        item.cost
+    };
+
+    if item.amount > 1 {
+        sqlx::query("UPDATE equipment SET amount = amount - 1 WHERE id = $1")
+            .bind(item_id)
+            .execute(pool)
+            .await?;
+    } else {
+        sqlx::query("DELETE FROM equipment WHERE id = $1 AND owner = $2")
+            .bind(item_id)
+            .bind(owner_id)
+            .execute(pool)
+            .await?;
+    }
+
+    // Credit the player
+    sqlx::query("UPDATE players SET credits = credits + $1 WHERE id = $2")
+        .bind(sale_price)
+        .bind(owner_id)
+        .execute(pool)
+        .await?;
+
+    Ok(Some(sale_price))
+}
+
+/// Repair an item to full durability in exchange for gold. Returns the repair cost,
+/// or `None` if the item doesn't exist, isn't owned by the player, or doesn't need repair.
+pub async fn repair_item(
+    pool: &PgPool,
+    item_id: i32,
+    owner_id: i32,
+) -> Result<Option<i64>, sqlx::Error> {
+    let item = find_equipment_by_id(pool, item_id).await?;
+    let Some(item) = item else {
+        return Ok(None);
+    };
+    if item.owner != owner_id || item.status != "U" {
+        return Ok(None);
+    }
+    // Types without durability don't need repair
+    if item.equipment_type == "R"
+        || item.equipment_type == "I"
+        || item.equipment_type == "O"
+        || item.equipment_type == "Q"
+        || item.equipment_type == "P"
+    {
+        return Ok(None);
+    }
+    if item.wt >= item.maxwt {
+        return Ok(None); // already at full durability
+    }
+
+    let ratio = 1.0 - (f64::from(item.wt) / f64::from(item.maxwt));
+    #[allow(clippy::cast_possible_truncation)]
+    let repair_cost = (f64::from(item.repair) * ratio).ceil() as i64;
+
+    // Check player has enough gold
+    let credits: (i32,) = sqlx::query_as("SELECT credits FROM players WHERE id = $1")
+        .bind(owner_id)
+        .fetch_one(pool)
+        .await?;
+    if i64::from(credits.0) < repair_cost {
+        return Ok(None);
+    }
+
+    // Repair the item and deduct gold
+    sqlx::query("UPDATE equipment SET wt = maxwt WHERE id = $1")
+        .bind(item_id)
+        .execute(pool)
+        .await?;
+    sqlx::query("UPDATE players SET credits = credits - $1 WHERE id = $2")
+        .bind(repair_cost)
+        .bind(owner_id)
+        .execute(pool)
+        .await?;
+
+    Ok(Some(repair_cost))
+}

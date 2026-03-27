@@ -5,6 +5,7 @@ pub mod account_settings;
 pub mod auth;
 pub mod bank;
 pub mod city;
+pub mod equipment;
 pub mod gathering;
 pub mod locations;
 pub mod map;

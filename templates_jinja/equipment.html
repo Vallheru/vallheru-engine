@@ -1,0 +1,88 @@
+{# Equipment and inventory page. #}
+{% extends "base.html" %}
+
+{% block content %}
+<h2>Ekwipunek</h2>
+
+<h3>Założone przedmioty</h3>
+<table>
+  <tr><th>Slot</th><th>Przedmiot</th><th>Akcje</th></tr>
+  {% for slot in equipped %}
+  <tr>
+    <td><b>{{ slot.slot_label }}</b></td>
+    {% if slot.item %}
+    <td>
+      {{ slot.item.name }}
+      {% if slot.item.power %} (+{{ slot.item.power }}){% endif %}
+      {% if slot.item.agility_mod %} {{ slot.item.agility_mod }}{% endif %}
+      {% if slot.item.speed_mod %} {{ slot.item.speed_mod }}{% endif %}
+      {% if slot.item.durability %} ({{ slot.item.durability }}){% endif %}
+    </td>
+    <td>
+      <form method="post" action="/equipment/unequip" style="display:inline">
+        <input type="hidden" name="item_id" value="{{ slot.item.id }}" />
+        <input type="submit" value="Zdejmij" />
+      </form>
+    </td>
+    {% else %}
+    <td><i>Pusty slot</i></td>
+    <td></td>
+    {% endif %}
+  </tr>
+  {% endfor %}
+</table>
+
+{% if backpack %}
+<h3>Plecak</h3>
+{% for section in backpack %}
+<h4>{{ section.category }}</h4>
+<table>
+  <tr><th>Nazwa</th><th>Moc</th><th>Ilość</th><th>Wytrzymałość</th><th>Cena</th><th>Akcje</th></tr>
+  {% for item in section.items %}
+  <tr>
+    <td>{{ item.name }}</td>
+    <td>{{ item.power }}</td>
+    <td>{{ item.amount }}</td>
+    <td>{{ item.durability }}</td>
+    <td>{{ item.cost }}</td>
+    <td>
+      {% if item.can_equip %}
+      <form method="post" action="/equipment/equip" style="display:inline">
+        <input type="hidden" name="item_id" value="{{ item.id }}" />
+        <input type="submit" value="Załóż" />
+      </form>
+      {% endif %}
+      {% if item.can_sell %}
+      <form method="post" action="/equipment/sell" style="display:inline">
+        <input type="hidden" name="item_id" value="{{ item.id }}" />
+        <input type="submit" value="Sprzedaj" />
+      </form>
+      {% endif %}
+      {% if item.needs_repair %}
+      <form method="post" action="/equipment/repair" style="display:inline">
+        <input type="hidden" name="item_id" value="{{ item.id }}" />
+        <input type="submit" value="Napraw ({{ item.repair_cost }} zł)" />
+      </form>
+      {% endif %}
+    </td>
+  </tr>
+  {% endfor %}
+</table>
+{% endfor %}
+{% endif %}
+
+{% if potions %}
+<h3>Mikstury</h3>
+<table>
+  <tr><th>Nazwa</th><th>Moc</th><th>Efekt</th><th>Ilość</th></tr>
+  {% for p in potions %}
+  <tr>
+    <td>{{ p.name }}</td>
+    <td>{{ p.power }}</td>
+    <td>{{ p.efect }}</td>
+    <td>{{ p.amount }}</td>
+  </tr>
+  {% endfor %}
+</table>
+{% endif %}
+{% endblock %}
