@@ -102,8 +102,9 @@ Port the currency, banking, and market systems as reusable transactional service
 - In scope: Category rule adapters and handlers.
 - Out of scope: Shop-stock generation.
 
-### MP-10-05: Port bank, gold, and shop-style pages
+### MP-10-05: Port bank, gold, and shop-style pages ✅
 
+- Status: **done**
 - Description: Rebuild bank interactions, gold-related pages, and stock-based shop pages such as `msklep.php`.
 - Estimate: 1.5h
 - Depends on: MP-10-02, MP-04-05.
@@ -113,7 +114,7 @@ Port the currency, banking, and market systems as reusable transactional service
   - Logs or audit events exist for money-changing operations.
 - Technical notes: Treat fixed shops separately from player-to-player markets.
 - In scope: Bank and shop handlers.
-- Out of scope: Crafting production.
+- Out of scope: Crafting production, bank transfers/donations (deferred).
 
 ### MP-10-06: Add market reconciliation tests
 

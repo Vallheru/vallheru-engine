@@ -1,0 +1,31 @@
+{# Wealth overview — shows all currencies, minerals, and herbs. #}
+{% extends "base.html" %}
+
+{% block content %}
+<h2>Bogactwa</h2>
+
+<p>Tutaj jest lista posiadanych przez ciebie pieniędzy oraz różnych minerałów.</p>
+
+<h3>Finanse</h3>
+<table>
+  <tr><td>Sztuk złota przy sobie</td><td><b>{{ credits }}</b></td></tr>
+  <tr><td>Sztuk złota w banku</td><td><b>{{ bank }}</b></td></tr>
+  <tr><td>Sztuk Mithrilu</td><td><b>{{ platinum }}</b></td></tr>
+  <tr><td>Vallary</td><td><b>{{ vallars }}</b></td></tr>
+  <tr><td>Mapy</td><td><b>{{ maps }}</b></td></tr>
+</table>
+
+<h3>Minerały</h3>
+<table>
+  {% for item in minerals %}
+  <tr><td>{{ item.label }}</td><td><b>{{ item.amount }}</b></td></tr>
+  {% endfor %}
+</table>
+
+<h3>Zioła</h3>
+<table>
+  {% for item in herbs %}
+  <tr><td>{{ item.label }}</td><td><b>{{ item.amount }}</b></td></tr>
+  {% endfor %}
+</table>
+{% endblock %}

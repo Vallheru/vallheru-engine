@@ -1,0 +1,25 @@
+{# Bank page — deposit and withdraw gold. #}
+{% extends "base.html" %}
+
+{% block content %}
+<h2>Bank</h2>
+
+<p>
+  Złoto przy sobie: <b>{{ credits }}</b><br />
+  Złoto w banku: <b>{{ bank }}</b>
+</p>
+
+<h3>Wpłata</h3>
+<form method="post" action="/bank">
+  <input type="hidden" name="action" value="deposit" />
+  <input type="number" name="amount" min="1" max="{{ credits }}" value="1" />
+  <input type="submit" value="Wpłać" />
+</form>
+
+<h3>Wypłata</h3>
+<form method="post" action="/bank">
+  <input type="hidden" name="action" value="withdraw" />
+  <input type="number" name="amount" min="1" max="{{ bank }}" value="1" />
+  <input type="submit" value="Wypłać" />
+</form>
+{% endblock %}

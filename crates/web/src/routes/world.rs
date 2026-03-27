@@ -2,7 +2,7 @@
 
 use axum::{Router, middleware, routing};
 
-use crate::handlers::{city, gathering, locations, map, travel};
+use crate::handlers::{bank, city, gathering, locations, map, travel};
 use crate::middleware::guards::require_authenticated;
 use crate::state::AppState;
 
@@ -41,5 +41,16 @@ pub fn routes() -> Router<AppState> {
             routing::post(gathering::smelter_upgrade),
         )
         .route("/farm", routing::get(gathering::farm_show))
+        // Economy routes
+        .route("/wealth", routing::get(bank::wealth_show))
+        .route(
+            "/bank",
+            routing::get(bank::bank_show).post(bank::bank_action),
+        )
+        .route("/magic-shop", routing::get(bank::magic_shop_show))
+        .route(
+            "/magic-shop/buy/{id}",
+            routing::get(bank::magic_shop_buy_show).post(bank::magic_shop_buy_action),
+        )
         .layer(middleware::from_fn(require_authenticated))
 }

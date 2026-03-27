@@ -1,0 +1,15 @@
+{# Magic shop — buy confirmation page. #}
+{% extends "base.html" %}
+
+{% block content %}
+<h2>Kup miksturę: {{ potion_name }}</h2>
+
+<form method="post" action="/magic-shop/buy/{{ potion_id }}">
+  <p>
+    Ilość: <input type="number" name="amount" min="1" value="1" />
+    <input type="submit" value="Kup" />
+  </p>
+</form>
+
+<p><a href="/magic-shop">Wróć do alchemika</a></p>
+{% endblock %}

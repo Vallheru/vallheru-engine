@@ -1,0 +1,33 @@
+{# Magic shop — browse potions for sale. #}
+{% extends "base.html" %}
+
+{% block content %}
+<h2>Alchemik</h2>
+
+{% if potions %}
+<p>Witaj w sklepie z miksturami. Wybierz co chcesz kupić.</p>
+
+<table>
+  <tr>
+    <th>Nazwa</th>
+    <th>Moc</th>
+    <th>Efekt</th>
+    <th>Ilość</th>
+    <th>Cena</th>
+    <th></th>
+  </tr>
+  {% for p in potions %}
+  <tr>
+    <td>{{ p.name }}</td>
+    <td>{{ p.power }}</td>
+    <td>{{ p.efect }}</td>
+    <td>{{ p.amount }}</td>
+    <td>{{ p.cost }}</td>
+    <td><a href="/magic-shop/buy/{{ p.id }}">Kup</a></td>
+  </tr>
+  {% endfor %}
+</table>
+{% else %}
+<p>Obecnie brak mikstur w ofercie.</p>
+{% endif %}
+{% endblock %}

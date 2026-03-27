@@ -6,6 +6,7 @@
 pub mod account;
 pub mod account_settings;
 pub mod auth;
+pub mod bank;
 pub mod character_reset;
 pub mod gathering;
 pub mod item;

@@ -62,6 +62,7 @@ pub struct PotionRow {
     pub status: String,
     pub power: i32,
     pub amount: i32,
+    pub lang: String,
     pub cost: i64,
 }
 
@@ -281,7 +282,7 @@ pub async fn find_potions_by_owner(
     owner_id: i32,
 ) -> Result<Vec<PotionRow>, sqlx::Error> {
     sqlx::query_as::<_, PotionRow>(
-        "SELECT id, owner, name, type, efect, status, power, amount, cost \
+        "SELECT id, owner, name, type, efect, status, power, amount, lang, cost \
          FROM potions \
          WHERE owner = $1 \
          ORDER BY type ASC, power ASC",
@@ -294,13 +295,116 @@ pub async fn find_potions_by_owner(
 /// Load potion catalog (owner = 0).
 pub async fn find_potion_catalog(pool: &PgPool) -> Result<Vec<PotionRow>, sqlx::Error> {
     sqlx::query_as::<_, PotionRow>(
-        "SELECT id, owner, name, type, efect, status, power, amount, cost \
+        "SELECT id, owner, name, type, efect, status, power, amount, lang, cost \
          FROM potions \
          WHERE owner = 0 \
          ORDER BY type ASC, power ASC",
     )
     .fetch_all(pool)
     .await
+}
+
+/// Load shop potions available for purchase (owner = 0, status = 'S').
+pub async fn find_shop_potions(pool: &PgPool, lang: &str) -> Result<Vec<PotionRow>, sqlx::Error> {
+    sqlx::query_as::<_, PotionRow>(
+        "SELECT id, owner, name, type, efect, status, power, amount, lang, cost \
+         FROM potions \
+         WHERE owner = 0 AND status = 'S' AND lang = $1 \
+         ORDER BY power ASC",
+    )
+    .bind(lang)
+    .fetch_all(pool)
+    .await
+}
+
+/// Find a specific potion by ID.
+pub async fn find_potion_by_id(
+    pool: &PgPool,
+    potion_id: i32,
+) -> Result<Option<PotionRow>, sqlx::Error> {
+    sqlx::query_as::<_, PotionRow>(
+        "SELECT id, owner, name, type, efect, status, power, amount, lang, cost \
+         FROM potions \
+         WHERE id = $1",
+    )
+    .bind(potion_id)
+    .fetch_optional(pool)
+    .await
+}
+
+/// Find a player's existing potion stack matching name, power, and status 'K'.
+pub async fn find_player_potion_stack(
+    pool: &PgPool,
+    owner_id: i32,
+    name: &str,
+    power: i32,
+) -> Result<Option<PotionRow>, sqlx::Error> {
+    sqlx::query_as::<_, PotionRow>(
+        "SELECT id, owner, name, type, efect, status, power, amount, lang, cost \
+         FROM potions \
+         WHERE owner = $1 AND name = $2 AND power = $3 AND status = 'K'",
+    )
+    .bind(owner_id)
+    .bind(name)
+    .bind(power)
+    .fetch_optional(pool)
+    .await
+}
+
+/// Add amount to an existing potion stack.
+pub async fn add_to_potion_stack(
+    pool: &PgPool,
+    potion_id: i32,
+    amount: i32,
+) -> Result<(), sqlx::Error> {
+    sqlx::query("UPDATE potions SET amount = amount + $1 WHERE id = $2")
+        .bind(amount)
+        .bind(potion_id)
+        .execute(pool)
+        .await?;
+    Ok(())
+}
+
+/// Create a new potion entry for a player (purchase from shop).
+#[allow(clippy::too_many_arguments)]
+pub async fn create_player_potion(
+    pool: &PgPool,
+    owner_id: i32,
+    name: &str,
+    efect: &str,
+    potion_type: &str,
+    power: i32,
+    amount: i32,
+    resale_cost: i64,
+) -> Result<(), sqlx::Error> {
+    sqlx::query(
+        "INSERT INTO potions (name, owner, efect, type, power, status, amount, cost) \
+         VALUES ($1, $2, $3, $4, $5, 'K', $6, $7)",
+    )
+    .bind(name)
+    .bind(owner_id)
+    .bind(efect)
+    .bind(potion_type)
+    .bind(power)
+    .bind(amount)
+    .bind(resale_cost)
+    .execute(pool)
+    .await?;
+    Ok(())
+}
+
+/// Decrease shop potion stock after a purchase.
+pub async fn decrease_potion_stock(
+    pool: &PgPool,
+    potion_id: i32,
+    amount: i32,
+) -> Result<(), sqlx::Error> {
+    sqlx::query("UPDATE potions SET amount = amount - $1 WHERE id = $2")
+        .bind(amount)
+        .bind(potion_id)
+        .execute(pool)
+        .await?;
+    Ok(())
 }
 
 // ---------------------------------------------------------------------------

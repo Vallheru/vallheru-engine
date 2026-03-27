@@ -179,3 +179,15 @@ Each entry includes:
 - **Needs new task**: No — part of stat progression module.
 - **Status**: open
 - **Related tasks**: MP-07-04, MP-06 (player progression)
+
+### TD-014: Bank transfers and donations not yet migrated
+
+- **Type**: migration-gap
+- **Discovered in**: MP-10-05
+- **Description**: The PHP `bank.php` is a complex transfer hub (1474 lines) supporting gold transfers, mithril transfers, mineral/herb/potion/item/equipment donations between players. MP-10-05 only migrated deposit/withdraw and the potion shop. The full transfer/donation system needs a dedicated task.
+- **Impact**: Players cannot transfer gold/mithril/items to other players through the bank. Medium priority.
+- **Action**: Create a dedicated task for bank transfers/donations covering gold, mithril, minerals, herbs, potions, items, and equipment.
+- **Fixable in existing task**: No — too large and complex.
+- **Needs new task**: Yes
+- **Status**: open
+- **Related tasks**: MP-10-05

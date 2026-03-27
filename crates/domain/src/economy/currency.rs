@@ -206,6 +206,30 @@ pub fn earn_platinum(platinum: i32, amount: i32) -> Result<i32, CurrencyError> {
     Ok(platinum + amount)
 }
 
+// ---------------------------------------------------------------------------
+// Potion shop pricing
+// ---------------------------------------------------------------------------
+
+/// Compute the shop price for a single potion.
+///
+/// Formula from `msklep.php`:
+/// - Type `M` (mana potions): `power * 3`
+/// - All others: `2 * power * 3`
+pub fn potion_shop_price(potion_type: &str, power: i32) -> i32 {
+    if potion_type == "M" {
+        power * 3
+    } else {
+        2 * power * 3
+    }
+}
+
+/// Compute the resale cost stored on purchased potions.
+///
+/// Formula from `msklep.php`: `unit_price / 20`.
+pub fn potion_resale_cost(unit_price: i32) -> i64 {
+    i64::from(unit_price) / 20
+}
+
 #[cfg(test)]
 mod tests {
     use super::*;
@@ -414,5 +438,26 @@ mod tests {
     #[test]
     fn earn_platinum_zero() {
         assert_eq!(earn_platinum(10, 0), Err(CurrencyError::InvalidAmount));
+    }
+
+    // --- potion pricing ---
+
+    #[test]
+    fn potion_price_mana_type() {
+        // Type M: power * 3
+        assert_eq!(potion_shop_price("M", 100), 300);
+    }
+
+    #[test]
+    fn potion_price_other_type() {
+        // Other: 2 * power * 3
+        assert_eq!(potion_shop_price("H", 100), 600);
+        assert_eq!(potion_shop_price("P", 50), 300);
+    }
+
+    #[test]
+    fn potion_resale_cost_normal() {
+        assert_eq!(potion_resale_cost(300), 15);
+        assert_eq!(potion_resale_cost(600), 30);
     }
 }
