@@ -1,0 +1,571 @@
+//! Secondary location page handlers.
+//!
+//! Ported from `gory.php`, `las.php`, `alley.php`, `landfill.php`, and
+//! `rest.php`. These are navigation hubs for exploration areas and simple
+//! city services (energy→gold work, energy→mana rest).
+
+use axum::{Extension, Form, extract::State, response::Response};
+
+use crate::middleware::context::RequestContext;
+use crate::page::{Flash, FlashKind, PageMeta};
+use crate::state::AppState;
+use vallheru_domain::location::Location;
+
+// ---------------------------------------------------------------------------
+// View models
+// ---------------------------------------------------------------------------
+
+/// Mountains / forest hub — shows available actions for the location.
+#[derive(serde::Serialize)]
+pub struct LocationHubView {
+    #[serde(flatten)]
+    pub base: crate::render::RenderContext,
+    pub location_name: &'static str,
+    pub info_text: &'static str,
+    pub links: Vec<LocationNavLink>,
+    pub is_dead: bool,
+    pub return_city: &'static str,
+}
+
+#[derive(serde::Serialize)]
+pub struct LocationNavLink {
+    pub href: &'static str,
+    pub label: &'static str,
+}
+
+/// Alley of the Deserving — vallars leaderboard.
+#[derive(serde::Serialize)]
+pub struct AlleyView {
+    #[serde(flatten)]
+    pub base: crate::render::RenderContext,
+    pub leaderboard: Vec<VallarsEntry>,
+}
+
+#[derive(serde::Serialize)]
+pub struct VallarsEntry {
+    pub player_id: i32,
+    pub username: String,
+    pub vallars: i32,
+}
+
+/// Landfill / city cleanup — earn gold by spending energy.
+#[derive(serde::Serialize)]
+pub struct LandfillView {
+    #[serde(flatten)]
+    pub base: crate::render::RenderContext,
+    pub gold_per_energy: i32,
+    pub energy: i32,
+    pub description: &'static str,
+}
+
+/// Rest — recover mana by spending energy.
+#[derive(serde::Serialize)]
+pub struct RestView {
+    #[serde(flatten)]
+    pub base: crate::render::RenderContext,
+    pub energy_to_full: i32,
+    pub current_mana: i32,
+    pub max_mana: i32,
+}
+
+// ---------------------------------------------------------------------------
+// Form inputs
+// ---------------------------------------------------------------------------
+
+#[derive(serde::Deserialize)]
+pub struct LandfillForm {
+    pub amount: Option<i32>,
+}
+
+#[derive(serde::Deserialize)]
+pub struct RestForm {
+    pub pm: Option<i32>,
+}
+
+// ---------------------------------------------------------------------------
+// Mountains hub
+// ---------------------------------------------------------------------------
+
+/// GET /mountains — mountains area hub.
+pub async fn mountains(
+    State(state): State<AppState>,
+    Extension(ctx): Extension<RequestContext>,
+) -> Response {
+    let Some(ref user) = ctx.session_user else {
+        return crate::page::redirect("/login");
+    };
+
+    #[allow(clippy::cast_possible_truncation)]
+    let player_id = user.id as i32;
+
+    let player_row = match load_player(&state, player_id).await {
+        Ok(row) => row,
+        Err(resp) => return resp,
+    };
+
+    let Some(location) = Location::from_db(&player_row.location) else {
+        return crate::page::redirect("/login");
+    };
+
+    if location != Location::Mountains {
+        return error_page(&state, &ctx, "Nie znajdujesz się w górach.");
+    }
+
+    let is_dead = player_row.hp <= 0;
+    let links = if is_dead {
+        vec![]
+    } else {
+        vec![
+            LocationNavLink {
+                href: "/mines",
+                label: "Idź do kopalni",
+            },
+            LocationNavLink {
+                href: "/explore",
+                label: "Zwiedzaj góry",
+            },
+            LocationNavLink {
+                href: "/travel",
+                label: "Stajnia",
+            },
+        ]
+    };
+
+    let meta = PageMeta::titled("Góry Kazad-nar");
+    let base = state.templates.build_context(&ctx, &meta);
+
+    let view = LocationHubView {
+        base,
+        location_name: "Góry Kazad-nar",
+        info_text: "Witaj w Górach Kazad-nar, co chcesz robić?",
+        links,
+        is_dead,
+        return_city: "Altara",
+    };
+
+    state.templates.render_value("location_hub.html", &view)
+}
+
+// ---------------------------------------------------------------------------
+// Forest hub
+// ---------------------------------------------------------------------------
+
+/// GET /forest — forest area hub.
+pub async fn forest(
+    State(state): State<AppState>,
+    Extension(ctx): Extension<RequestContext>,
+) -> Response {
+    let Some(ref user) = ctx.session_user else {
+        return crate::page::redirect("/login");
+    };
+
+    #[allow(clippy::cast_possible_truncation)]
+    let player_id = user.id as i32;
+
+    let player_row = match load_player(&state, player_id).await {
+        Ok(row) => row,
+        Err(resp) => return resp,
+    };
+
+    let Some(location) = Location::from_db(&player_row.location) else {
+        return crate::page::redirect("/login");
+    };
+
+    if location != Location::Forest {
+        return error_page(&state, &ctx, "Nie znajdujesz się w lesie.");
+    }
+
+    let is_dead = player_row.hp <= 0;
+    let links = if is_dead {
+        vec![]
+    } else {
+        vec![
+            LocationNavLink {
+                href: "/lumberjack",
+                label: "Idź rąbać drewno",
+            },
+            LocationNavLink {
+                href: "/explore",
+                label: "Zwiedzaj las",
+            },
+            LocationNavLink {
+                href: "/travel",
+                label: "Stajnia",
+            },
+        ]
+    };
+
+    let meta = PageMeta::titled("Las Avantiel");
+    let base = state.templates.build_context(&ctx, &meta);
+
+    let view = LocationHubView {
+        base,
+        location_name: "Las Avantiel",
+        info_text: "Witaj w Lesie Avantiel, co chcesz robić?",
+        links,
+        is_dead,
+        return_city: "Ardulith",
+    };
+
+    state.templates.render_value("location_hub.html", &view)
+}
+
+// ---------------------------------------------------------------------------
+// Alley of the Deserving
+// ---------------------------------------------------------------------------
+
+/// GET /alley — vallars leaderboard page.
+pub async fn alley(
+    State(state): State<AppState>,
+    Extension(ctx): Extension<RequestContext>,
+) -> Response {
+    let leaderboard = vallheru_data::queries::locations::vallars_leaderboard(&state.pool, 10)
+        .await
+        .unwrap_or_default();
+
+    let entries: Vec<VallarsEntry> = leaderboard
+        .into_iter()
+        .map(|row| VallarsEntry {
+            player_id: row.id,
+            username: row.username,
+            vallars: row.vallars,
+        })
+        .collect();
+
+    let meta = PageMeta::titled("Aleja Zasłużonych");
+    let base = state.templates.build_context(&ctx, &meta);
+    let view = AlleyView {
+        base,
+        leaderboard: entries,
+    };
+    state.templates.render_value("alley.html", &view)
+}
+
+// ---------------------------------------------------------------------------
+// Landfill (city cleanup work)
+// ---------------------------------------------------------------------------
+
+/// GET /landfill — show work-for-gold form.
+pub async fn landfill_show(
+    State(state): State<AppState>,
+    Extension(ctx): Extension<RequestContext>,
+) -> Response {
+    let Some(ref user) = ctx.session_user else {
+        return crate::page::redirect("/login");
+    };
+
+    #[allow(clippy::cast_possible_truncation)]
+    let player_id = user.id as i32;
+
+    let player_row = match load_player(&state, player_id).await {
+        Ok(row) => row,
+        Err(resp) => return resp,
+    };
+
+    let Some(location) = Location::from_db(&player_row.location) else {
+        return crate::page::redirect("/login");
+    };
+
+    if !location.is_city() {
+        return error_page(&state, &ctx, "Nie znajdujesz się w mieście.");
+    }
+
+    if player_row.hp <= 0 {
+        return error_page(&state, &ctx, "Nie możesz pracować, ponieważ jesteś martwy!");
+    }
+
+    let condition = load_condition_stat(&state, player_id).await;
+    let gold_per_energy = condition * 25;
+
+    let description = if location == Location::Altara {
+        "Pragniesz zarobić nieco sztuk złota? W porządku. Za każdy worek śmieci jakie uprzątniesz, dam ci"
+    } else {
+        "Witaj na Polanie drwali. Możesz tutaj poświęcić nieco swojego czasu, aby zarobić złoto. Za każdy punkt energii jaki zużyjesz, dostaniesz"
+    };
+
+    #[allow(clippy::cast_possible_truncation)]
+    let energy = player_row.energy as i32;
+
+    let meta = PageMeta::titled("Oczyszczanie miasta");
+    let base = state.templates.build_context(&ctx, &meta);
+
+    let view = LandfillView {
+        base,
+        gold_per_energy,
+        energy,
+        description,
+    };
+
+    state.templates.render_value("landfill.html", &view)
+}
+
+/// POST /landfill — execute city cleanup work.
+pub async fn landfill_work(
+    State(state): State<AppState>,
+    Extension(ctx): Extension<RequestContext>,
+    Form(form): Form<LandfillForm>,
+) -> Response {
+    let Some(ref user) = ctx.session_user else {
+        return crate::page::redirect("/login");
+    };
+
+    #[allow(clippy::cast_possible_truncation)]
+    let player_id = user.id as i32;
+
+    let player_row = match load_player(&state, player_id).await {
+        Ok(row) => row,
+        Err(resp) => return resp,
+    };
+
+    let Some(location) = Location::from_db(&player_row.location) else {
+        return crate::page::redirect("/login");
+    };
+
+    if !location.is_city() {
+        return error_page(&state, &ctx, "Nie znajdujesz się w mieście.");
+    }
+
+    if player_row.hp <= 0 {
+        return error_page(&state, &ctx, "Nie możesz pracować, ponieważ jesteś martwy!");
+    }
+
+    let amount = match form.amount {
+        Some(a) if a > 0 => a,
+        _ => return error_page(&state, &ctx, "Podaj ile czasu chcesz spędzić pracując!"),
+    };
+
+    #[allow(clippy::cast_possible_truncation)]
+    let available_energy = player_row.energy as i32;
+    if amount > available_energy {
+        return error_page(&state, &ctx, "Nie masz tyle energii aby pracować.");
+    }
+
+    let condition = load_condition_stat(&state, player_id).await;
+    let gold_gained = condition * 25 * amount;
+
+    if let Err(e) = vallheru_data::queries::locations::landfill_work(
+        &state.pool,
+        player_id,
+        amount,
+        gold_gained,
+    )
+    .await
+    {
+        tracing::error!(error = %e, "landfill_work: DB update failed");
+        return server_error();
+    }
+
+    let msg = format!(
+        "Podczas pracy zużyłeś {amount} punkt(ów) energii i zarobiłeś {gold_gained} sztuk złota \
+         oraz {amount} punktów doświadczenia."
+    );
+
+    let meta = PageMeta::titled("Oczyszczanie miasta").with_flash(Flash::success(msg));
+    let base = state.templates.build_context(&ctx, &meta);
+
+    let new_energy = available_energy - amount;
+    let view = LandfillView {
+        base,
+        gold_per_energy: condition * 25,
+        energy: new_energy,
+        description: if location == Location::Altara {
+            "Pragniesz zarobić nieco sztuk złota? W porządku. Za każdy worek śmieci jakie uprzątniesz, dam ci"
+        } else {
+            "Witaj na Polanie drwali. Możesz tutaj poświęcić nieco swojego czasu, aby zarobić złoto. Za każdy punkt energii jaki zużyjesz, dostaniesz"
+        },
+    };
+
+    state.templates.render_value("landfill.html", &view)
+}
+
+// ---------------------------------------------------------------------------
+// Rest (mana recovery)
+// ---------------------------------------------------------------------------
+
+/// GET /rest — show mana recovery form.
+pub async fn rest_show(
+    State(state): State<AppState>,
+    Extension(ctx): Extension<RequestContext>,
+) -> Response {
+    let Some(ref user) = ctx.session_user else {
+        return crate::page::redirect("/login");
+    };
+
+    #[allow(clippy::cast_possible_truncation)]
+    let player_id = user.id as i32;
+
+    let player_row = match load_player(&state, player_id).await {
+        Ok(row) => row,
+        Err(resp) => return resp,
+    };
+
+    let max_mana = compute_max_mana(&state, player_id, &player_row).await;
+    #[allow(clippy::cast_possible_truncation)]
+    let energy_to_full = (f64::from(max_mana - player_row.pm) / 10.0).ceil() as i32;
+
+    let meta = PageMeta::titled("Odpoczynek");
+    let base = state.templates.build_context(&ctx, &meta);
+
+    let view = RestView {
+        base,
+        energy_to_full,
+        current_mana: player_row.pm,
+        max_mana,
+    };
+
+    state.templates.render_value("rest.html", &view)
+}
+
+/// POST /rest — execute mana recovery.
+pub async fn rest_recover(
+    State(state): State<AppState>,
+    Extension(ctx): Extension<RequestContext>,
+    Form(form): Form<RestForm>,
+) -> Response {
+    let Some(ref user) = ctx.session_user else {
+        return crate::page::redirect("/login");
+    };
+
+    #[allow(clippy::cast_possible_truncation)]
+    let player_id = user.id as i32;
+
+    let player_row = match load_player(&state, player_id).await {
+        Ok(row) => row,
+        Err(resp) => return resp,
+    };
+
+    let requested_mana = match form.pm {
+        Some(m) if m > 0 => m,
+        _ => return error_page(&state, &ctx, "Podaj ile punktów magii chcesz odzyskać."),
+    };
+
+    let max_mana = compute_max_mana(&state, player_id, &player_row).await;
+
+    if player_row.pm >= max_mana {
+        return error_page(&state, &ctx, "Nie musisz odpoczywać.");
+    }
+
+    let new_mana = player_row.pm + requested_mana;
+    if new_mana > max_mana {
+        return error_page(
+            &state,
+            &ctx,
+            "Nie możesz odzyskać więcej Punktów Magii niż masz maksymalnie!",
+        );
+    }
+
+    // 10 mana per 1 energy, rounded to 2 decimal places (as in PHP).
+    let energy_cost = (f64::from(requested_mana) / 10.0 * 100.0).round() / 100.0;
+
+    if player_row.energy < energy_cost {
+        return error_page(&state, &ctx, "Nie masz tyle energii!");
+    }
+
+    if let Err(e) = vallheru_data::queries::locations::rest_recover(
+        &state.pool,
+        player_id,
+        new_mana,
+        energy_cost,
+    )
+    .await
+    {
+        tracing::error!(error = %e, "rest_recover: DB update failed");
+        return server_error();
+    }
+
+    #[allow(clippy::cast_possible_truncation)]
+    let energy_display = energy_cost as i32;
+    let msg = format!(
+        "Odpocząłeś sobie przez jakiś czas i odzyskałeś {requested_mana} punkty magii w zamian za {energy_display} energii."
+    );
+
+    let meta = PageMeta::titled("Odpoczynek").with_flash(Flash::success(msg));
+    let base = state.templates.build_context(&ctx, &meta);
+
+    let view = RestView {
+        base,
+        #[allow(clippy::cast_possible_truncation)]
+        energy_to_full: (f64::from(max_mana - new_mana) / 10.0).ceil() as i32,
+        current_mana: new_mana,
+        max_mana,
+    };
+
+    state.templates.render_value("rest.html", &view)
+}
+
+// ---------------------------------------------------------------------------
+// Helpers
+// ---------------------------------------------------------------------------
+
+/// Load a player row or return an error response.
+async fn load_player(
+    state: &AppState,
+    player_id: i32,
+) -> Result<vallheru_data::queries::player::PlayerRow, Response> {
+    match vallheru_data::queries::player::find_player_by_id(&state.pool, player_id).await {
+        Ok(Some(row)) => Ok(row),
+        Ok(None) => Err(crate::page::redirect("/login")),
+        Err(e) => {
+            tracing::error!(error = %e, "load_player failed");
+            Err(server_error())
+        }
+    }
+}
+
+/// Load the condition stat value for a player (defaults to 1 on error).
+async fn load_condition_stat(app: &AppState, player_id: i32) -> i32 {
+    let player_stats = vallheru_data::queries::player::load_stats(&app.pool, player_id)
+        .await
+        .unwrap_or_default();
+    player_stats
+        .iter()
+        .find(|s| s.stat_key == "condition")
+        .map_or(1, |s| s.trained.max(1))
+}
+
+/// Compute maximum mana: `(inteli + wisdom)` times class multiplier.
+///
+/// Equipment bonus is not yet available (equipment module not migrated).
+async fn compute_max_mana(
+    app: &AppState,
+    player_id: i32,
+    player_row: &vallheru_data::queries::player::PlayerRow,
+) -> i32 {
+    let player_stats = vallheru_data::queries::player::load_stats(&app.pool, player_id)
+        .await
+        .unwrap_or_default();
+
+    let intelligence = player_stats
+        .iter()
+        .find(|s| s.stat_key == "inteli")
+        .map_or(0, |s| s.trained);
+    let wisdom = player_stats
+        .iter()
+        .find(|s| s.stat_key == "wisdom")
+        .map_or(0, |s| s.trained);
+
+    let mut max_mana = intelligence + wisdom;
+    if player_row.class == "Mag" {
+        max_mana *= 2;
+    }
+    // Equipment bonus (equip[8] / rod slot) is not yet available.
+    max_mana
+}
+
+fn error_page(state: &AppState, ctx: &RequestContext, message: &str) -> Response {
+    let meta = PageMeta::titled("Błąd").with_flash(Flash {
+        kind: FlashKind::Error,
+        message: message.to_owned(),
+    });
+    let base = state.templates.build_context(ctx, &meta);
+    state.templates.render("error.html", &base)
+}
+
+fn server_error() -> Response {
+    use axum::response::IntoResponse;
+    (
+        axum::http::StatusCode::INTERNAL_SERVER_ERROR,
+        "Internal error",
+    )
+        .into_response()
+}

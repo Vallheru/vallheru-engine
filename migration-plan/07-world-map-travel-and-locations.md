@@ -86,9 +86,9 @@ Port the world-navigation layer and stateful location pages that gate access to 
 - In scope: Map/travel/portal pages and services.
 - Out of scope: Combat encountered during travel.
 
-### MP-07-04: Port secondary location pages
+### MP-07-04: Port secondary location pages ✅
 
-- **Status**: not-started
+- **Status**: completed
 - Description: Migrate alley, mountains, forest, landfill, rest, and similar non-market/non-combat location screens.
 - Estimate: 2h
 - Depends on: MP-07-02, MP-07-03.

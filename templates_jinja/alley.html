@@ -1,0 +1,29 @@
+{# Alley of the Deserving — Vallars leaderboard. #}
+{% extends "base.html" %}
+
+{% block content %}
+<h2>Aleja Zasłużonych</h2>
+
+<p>
+  Możesz wspierać grę poprzez zgłaszanie propozycji, błędów oraz zachęcanie
+  innych do gry. Za taką pomoc otrzymujesz specjalne punkty zwane Vallarami.
+  Poniżej znajduje się lista osób, które zdobyły najwięcej Vallarów.
+</p>
+
+{% if leaderboard %}
+<table>
+  <tr>
+    <th>Imię (ID)</th>
+    <th>Vallarów</th>
+  </tr>
+  {% for entry in leaderboard %}
+  <tr>
+    <td><a href="/view?view={{ entry.player_id }}">{{ entry.username }}</a> ({{ entry.player_id }})</td>
+    <td>{{ entry.vallars }}</td>
+  </tr>
+  {% endfor %}
+</table>
+{% else %}
+<p>Brak danych.</p>
+{% endif %}
+{% endblock %}

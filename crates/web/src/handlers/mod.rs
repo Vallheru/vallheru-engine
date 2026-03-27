@@ -4,6 +4,7 @@ pub mod account;
 pub mod account_settings;
 pub mod auth;
 pub mod city;
+pub mod locations;
 pub mod map;
 pub mod preset;
 pub mod registration;

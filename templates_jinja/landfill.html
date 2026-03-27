@@ -1,0 +1,18 @@
+{# Landfill — city cleanup work for gold. #}
+{% extends "base.html" %}
+
+{% block content %}
+<h2>Oczyszczanie miasta</h2>
+
+<p>{{ description }} <b>{{ gold_per_energy }}</b> sztuk złota.</p>
+
+<form method="post" action="/landfill">
+  <p>
+    Energia: <b>{{ energy }}</b><br />
+    <input type="number" name="amount" min="1" max="{{ energy }}" value="1" /> razy.
+    <input type="submit" value="Pracuj" />
+  </p>
+</form>
+
+<p><a href="/city">Wróć</a></p>
+{% endblock %}

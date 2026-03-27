@@ -1,0 +1,25 @@
+{# Rest — mana recovery. #}
+{% extends "base.html" %}
+
+{% block content %}
+<h2>Odpoczynek</h2>
+
+<p>
+  Tutaj możesz odpocząć regenerując swoje <b>punkty magii</b>.
+  Całkowite odzyskanie <b>punktów magii</b> będzie ciebie kosztować
+  <b>{{ energy_to_full }}</b> energii.
+  Jeżeli nie masz tyle energii możesz również odzyskać częściowo
+  <b>punkty magii</b> w stosunku 10 punktów magii za 1 punkt energii.
+</p>
+
+<p>Mana: {{ current_mana }} / {{ max_mana }}</p>
+
+<form method="post" action="/rest">
+  <p>
+    Chcę odzyskać <input type="number" name="pm" min="1" value="10" /> punktów magii
+    <input type="submit" value="Odpoczywaj" />
+  </p>
+</form>
+
+<p><a href="/stats">Powrót do statystyk</a></p>
+{% endblock %}

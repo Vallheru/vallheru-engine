@@ -131,3 +131,51 @@ Each entry includes:
 - **Needs new task**: Yes — travel encounter system.
 - **Status**: open
 - **Related tasks**: MP-07-03, MP-08 (combat system)
+
+### TD-010: Donators table not in migrations
+
+- **Type**: migration-gap
+- **Discovered in**: MP-07-04
+- **Description**: PHP `alley.php` reads from a `donators` table to show a donator list. No migration in `migrations/` creates this table. The Rust alley page skips donator display entirely.
+- **Impact**: Minor — donator recognition list is empty until the table is created and seeded.
+- **Action**: Add a migration for the `donators` table if this feature is desired.
+- **Fixable in existing task**: No
+- **Needs new task**: Yes — donators table migration.
+- **Status**: open
+- **Related tasks**: MP-07-04
+
+### TD-011: Hermit resurrection system not yet migrated
+
+- **Type**: migration-gap
+- **Discovered in**: MP-07-04
+- **Description**: PHP `gory.php` and `las.php` have a hermit resurrection system for dead players in mountains/forest (gold cost = 50 × condition stat, or wait timer). The Rust location hubs show dead state but don't implement resurrection.
+- **Impact**: Dead players in mountains/forest can use the return-to-city link but cannot resurrect via the hermit. This is a secondary resurrection path — the hospital is the primary one.
+- **Action**: Implement hermit resurrection when the resurrection/death system is fully scoped.
+- **Fixable in existing task**: No — needs death/resurrection domain logic.
+- **Needs new task**: Yes
+- **Status**: open
+- **Related tasks**: MP-07-04
+
+### TD-012: Rest max-mana calculation missing equipment bonus
+
+- **Type**: migration-gap
+- **Discovered in**: MP-07-04
+- **Description**: PHP `rest.php` includes an equipment bonus from the rod slot (`equip[8][2] / 100 * maxmana`). The Rust rest handler only uses the stat-based formula since the equipment module is not yet migrated.
+- **Impact**: Mana cap may be lower than in PHP for players with rod equipment bonuses.
+- **Action**: Wire in equipment bonus once the equipment/inventory module is available.
+- **Fixable in existing task**: No — depends on equipment module.
+- **Needs new task**: No — can be added when equipment is migrated.
+- **Status**: open
+- **Related tasks**: MP-07-04
+
+### TD-013: Landfill work missing condition XP award
+
+- **Type**: migration-gap
+- **Discovered in**: MP-07-04
+- **Description**: PHP `landfill.php` calls `$player->checkexp(array('condition' => amount))` to award condition stat XP equal to the energy spent. The Rust handler does not yet award stat XP because the stat XP progression system is not migrated.
+- **Impact**: Players don't gain condition XP from landfill work. Low priority since XP system needs separate implementation.
+- **Action**: Add stat XP awards once the stat progression system is migrated.
+- **Fixable in existing task**: No
+- **Needs new task**: No — part of stat progression module.
+- **Status**: open
+- **Related tasks**: MP-07-04, MP-06 (player progression)

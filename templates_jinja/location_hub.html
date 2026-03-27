@@ -1,0 +1,21 @@
+{# Location hub page — mountains / forest area navigation. #}
+{% extends "base.html" %}
+
+{% block content %}
+<h2>{{ location_name }}</h2>
+
+{% if is_dead %}
+<p><b>Jesteś martwy.</b></p>
+<p>
+  <a href="/travel?action=back">Powrót do {{ return_city }}</a> |
+  <a href="/{{ location_name | lower }}">Pozostań na miejscu</a>
+</p>
+{% else %}
+<p>{{ info_text }}</p>
+<ul>
+{% for link in links %}
+  <li><a href="{{ link.href }}">{{ link.label }}</a></li>
+{% endfor %}
+</ul>
+{% endif %}
+{% endblock %}
