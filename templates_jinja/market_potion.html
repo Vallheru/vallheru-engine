@@ -1,0 +1,63 @@
+{# Potion market browse. #}
+{% extends "base.html" %}
+
+{% block content %}
+<h2>{{ market_name }}</h2>
+
+<form method="get" action="/market/{{ market_slug }}">
+  <input type="text" name="search" value="{{ search }}" placeholder="Szukaj...">
+  <button type="submit">Szukaj</button>
+</form>
+
+{% if listings %}
+<table>
+  <tr>
+    <th><a href="/market/{{ market_slug }}?sort=name&order={{ 'ASC' if sort == 'name' and order == 'DESC' else 'DESC' }}&search={{ search }}">Nazwa</a></th>
+    <th><a href="/market/{{ market_slug }}?sort=efect&order={{ 'ASC' if sort == 'efect' and order == 'DESC' else 'DESC' }}&search={{ search }}">Efekt</a></th>
+    <th><a href="/market/{{ market_slug }}?sort=power&order={{ 'ASC' if sort == 'power' and order == 'DESC' else 'DESC' }}&search={{ search }}">Moc</a></th>
+    <th><a href="/market/{{ market_slug }}?sort=amount&order={{ 'ASC' if sort == 'amount' and order == 'DESC' else 'DESC' }}&search={{ search }}">Ilość</a></th>
+    <th><a href="/market/{{ market_slug }}?sort=cost&order={{ 'ASC' if sort == 'cost' and order == 'DESC' else 'DESC' }}&search={{ search }}">Cena/szt</a></th>
+    <th>Razem</th>
+    <th>Właściciel</th>
+    <th></th>
+  </tr>
+  {% for item in listings %}
+  <tr>
+    <td>{{ item.name }}</td>
+    <td>{{ item.effect }}</td>
+    <td>{{ item.power }}</td>
+    <td>{{ item.amount }}</td>
+    <td>{{ item.unit_cost }}</td>
+    <td>{{ item.total_cost }}</td>
+    <td>{{ item.owner_name }}</td>
+    <td>
+      {% if item.owner_id != player_id %}
+        <a href="/market/{{ market_slug }}/buy/{{ item.id }}">Kup</a>
+      {% else %}
+        <form method="post" action="/market/{{ market_slug }}/cancel/{{ item.id }}" style="display:inline">
+          <button type="submit">Anuluj</button>
+        </form>
+      {% endif %}
+    </td>
+  </tr>
+  {% endfor %}
+</table>
+
+{% if total_pages > 1 %}
+<div class="pagination">
+  {% for p in range(1, total_pages + 1) %}
+    {% if p == page %}
+      <strong>{{ p }}</strong>
+    {% else %}
+      <a href="/market/{{ market_slug }}?page={{ p }}&sort={{ sort }}&order={{ order }}&search={{ search }}">{{ p }}</a>
+    {% endif %}
+  {% endfor %}
+</div>
+{% endif %}
+
+{% else %}
+<p>Brak ofert na tym rynku.</p>
+{% endif %}
+
+<p><a href="/market">Powrót do rynku</a></p>
+{% endblock %}

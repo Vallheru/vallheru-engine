@@ -9,6 +9,7 @@ pub mod equipment;
 pub mod gathering;
 pub mod locations;
 pub mod map;
+pub mod market;
 pub mod preset;
 pub mod registration;
 pub mod shops;

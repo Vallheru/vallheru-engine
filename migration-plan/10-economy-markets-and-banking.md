@@ -89,8 +89,9 @@ Port the currency, banking, and market systems as reusable transactional service
 - In scope: Shared market service and first handler implementations.
 - Out of scope: Category-specific stock rules.
 
-### MP-10-04: Port category-specific market rules
+### MP-10-04: Port category-specific market rules ✅
 
+- Status: **done**
 - Description: Implement the category-specific behaviors for potions, herbs, player equipment, astral goods, rings, and other special inventory types.
 - Estimate: 2h
 - Depends on: MP-10-03, MP-09-04, MP-11-05.

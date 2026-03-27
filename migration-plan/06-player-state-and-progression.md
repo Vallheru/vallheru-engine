@@ -61,7 +61,7 @@ Define the central Rust player model and port all derived calculations and progr
 
 ### MP-06-03: Port derived stat, mana, and bonus calculations ✅
 
-- **Status**: not-started (partially covered by MP-09-02's equipment.rs)
+- **Status**: completed (implemented across MP-08 and MP-09 work; progression.rs has all functions)
 - Description: Create the unified player calculation snapshot. Equipment stat/skill bonus application already exists in `equipment.rs` (MP-09-02). Remaining: XP gain/level-up logic, HP-per-condition tables, max mana formula, seeker perception bonus, and an orchestrator function that produces a fully calculated player view.
 - Estimate: 2h
 - Depends on: MP-06-01, MP-09-02.

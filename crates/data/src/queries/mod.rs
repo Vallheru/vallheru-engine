@@ -11,6 +11,7 @@ pub mod character_reset;
 pub mod gathering;
 pub mod item;
 pub mod locations;
+pub mod market;
 pub mod mission;
 pub mod player;
 pub mod registration;

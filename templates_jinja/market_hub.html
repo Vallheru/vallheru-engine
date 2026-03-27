@@ -1,0 +1,16 @@
+{# Market hub — links to all 8 market categories. #}
+{% extends "base.html" %}
+
+{% block content %}
+<h2>Rynek</h2>
+
+<p>Witaj na rynku w {{ location }}! Wybierz kategorię:</p>
+
+<ul>
+  {% for cat in categories %}
+  <li><a href="/market/{{ cat.slug }}">{{ cat.label }}</a></li>
+  {% endfor %}
+</ul>
+
+<p><a href="/market/myoffers">Moje oferty</a></p>
+{% endblock %}

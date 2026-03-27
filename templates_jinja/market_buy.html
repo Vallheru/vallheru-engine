@@ -1,0 +1,23 @@
+{# Market buy confirmation page. #}
+{% extends "base.html" %}
+
+{% block content %}
+<h2>Kupno na rynku</h2>
+
+<p>Przedmiot: <strong>{{ item_name }}</strong></p>
+<p>Sprzedawca: {{ seller_name }}</p>
+<p>Cena za sztukę: {{ unit_cost }} złota</p>
+<p>Dostępna ilość: {{ quantity }}</p>
+<p>Łączna cena: <strong>{{ total_cost }} złota</strong></p>
+
+<form method="post" action="/market/{{ market_slug }}/buy/{{ listing_id }}">
+  {% if supports_partial and quantity > 1 %}
+  <label>Ilość do kupienia:
+    <input type="number" name="amount" value="{{ quantity }}" min="1" max="{{ quantity }}">
+  </label>
+  <br>
+  {% endif %}
+  <button type="submit">Kup</button>
+  <a href="/market/{{ market_slug }}">Anuluj</a>
+</form>
+{% endblock %}

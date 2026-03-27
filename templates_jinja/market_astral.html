@@ -1,0 +1,56 @@
+{# Astral market browse. #}
+{% extends "base.html" %}
+
+{% block content %}
+<h2>{{ market_name }}</h2>
+
+{% if listings %}
+<table>
+  <tr>
+    <th><a href="/market/{{ market_slug }}?sort=type&order={{ 'ASC' if sort == 'type' and order == 'DESC' else 'DESC' }}">Typ</a></th>
+    <th><a href="/market/{{ market_slug }}?sort=number&order={{ 'ASC' if sort == 'number' and order == 'DESC' else 'DESC' }}">Numer</a></th>
+    <th><a href="/market/{{ market_slug }}?sort=amount&order={{ 'ASC' if sort == 'amount' and order == 'DESC' else 'DESC' }}">Ilość</a></th>
+    <th><a href="/market/{{ market_slug }}?sort=cost&order={{ 'ASC' if sort == 'cost' and order == 'DESC' else 'DESC' }}">Cena/szt</a></th>
+    <th>Razem</th>
+    <th>Sprzedawca</th>
+    <th></th>
+  </tr>
+  {% for item in listings %}
+  <tr>
+    <td>{{ item.item_type }}</td>
+    <td>{{ item.number }}</td>
+    <td>{{ item.amount }}</td>
+    <td>{{ item.unit_cost }}</td>
+    <td>{{ item.total_cost }}</td>
+    <td>{{ item.seller_name }}</td>
+    <td>
+      {% if item.seller_id != player_id %}
+        <a href="/market/{{ market_slug }}/buy/{{ item.id }}">Kup</a>
+      {% else %}
+        <form method="post" action="/market/{{ market_slug }}/cancel/{{ item.id }}" style="display:inline">
+          <button type="submit">Anuluj</button>
+        </form>
+      {% endif %}
+    </td>
+  </tr>
+  {% endfor %}
+</table>
+
+{% if total_pages > 1 %}
+<div class="pagination">
+  {% for p in range(1, total_pages + 1) %}
+    {% if p == page %}
+      <strong>{{ p }}</strong>
+    {% else %}
+      <a href="/market/{{ market_slug }}?page={{ p }}&sort={{ sort }}&order={{ order }}">{{ p }}</a>
+    {% endif %}
+  {% endfor %}
+</div>
+{% endif %}
+
+{% else %}
+<p>Brak ofert na tym rynku.</p>
+{% endif %}
+
+<p><a href="/market">Powrót do rynku</a></p>
+{% endblock %}

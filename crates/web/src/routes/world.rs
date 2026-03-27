@@ -2,7 +2,9 @@
 
 use axum::{Router, middleware, routing};
 
-use crate::handlers::{bank, city, equipment, gathering, locations, map, shops, spells, travel};
+use crate::handlers::{
+    bank, city, equipment, gathering, locations, map, market, shops, spells, travel,
+};
 use crate::middleware::guards::require_authenticated;
 use crate::state::AppState;
 
@@ -82,6 +84,18 @@ pub fn routes() -> Router<AppState> {
         .route(
             "/spellbook/deactivate",
             routing::post(spells::spell_deactivate),
+        )
+        // Player-to-player markets
+        .route("/market", routing::get(market::market_hub))
+        .route("/market/myoffers", routing::get(market::market_my_offers))
+        .route("/market/{slug}", routing::get(market::market_browse))
+        .route(
+            "/market/{slug}/buy/{id}",
+            routing::get(market::market_buy_show).post(market::market_buy_execute),
+        )
+        .route(
+            "/market/{slug}/cancel/{id}",
+            routing::post(market::market_cancel),
         )
         .layer(middleware::from_fn(require_authenticated))
 }

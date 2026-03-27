@@ -1,0 +1,28 @@
+{# My market offers summary. #}
+{% extends "base.html" %}
+
+{% block content %}
+<h2>Moje oferty</h2>
+
+{% if total > 0 %}
+<p>Łączna liczba ofert: <strong>{{ total }}</strong></p>
+<table>
+  <tr>
+    <th>Rynek</th>
+    <th>Oferty</th>
+  </tr>
+  {% for entry in offer_counts %}
+  {% if entry.count > 0 %}
+  <tr>
+    <td><a href="/market/{{ entry.slug }}">{{ entry.label }}</a></td>
+    <td>{{ entry.count }}</td>
+  </tr>
+  {% endif %}
+  {% endfor %}
+</table>
+{% else %}
+<p>Nie masz żadnych aktywnych ofert.</p>
+{% endif %}
+
+<p><a href="/market">Powrót do rynku</a></p>
+{% endblock %}
