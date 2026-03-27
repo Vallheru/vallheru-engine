@@ -58,8 +58,9 @@ Port the world-navigation layer and stateful location pages that gate access to 
 - In scope: Location model and guard service.
 - Out of scope: Map rendering.
 
-### MP-07-02: Port the city dashboard and global navigation hub
+### MP-07-02: Port the city dashboard and global navigation hub ✅
 
+- **Status**: completed
 - Description: Recreate `city.php` as the authenticated landing hub that links to available actions based on player state.
 - Estimate: 2h
 - Depends on: MP-07-01, MP-04-02.
@@ -73,6 +74,7 @@ Port the world-navigation layer and stateful location pages that gate access to 
 
 ### MP-07-03: Port travel, map, and portal flows
 
+- **Status**: not-started
 - Description: Migrate world movement between cities and special travel pages including portal usage.
 - Estimate: 2h
 - Depends on: MP-07-01, MP-10-02.
@@ -86,6 +88,7 @@ Port the world-navigation layer and stateful location pages that gate access to 
 
 ### MP-07-04: Port secondary location pages
 
+- **Status**: not-started
 - Description: Migrate alley, mountains, forest, landfill, rest, and similar non-market/non-combat location screens.
 - Estimate: 2h
 - Depends on: MP-07-02, MP-07-03.
@@ -99,6 +102,7 @@ Port the world-navigation layer and stateful location pages that gate access to 
 
 ### MP-07-05: Port housing, library, temple, and tower-style pages
 
+- **Status**: not-started
 - Description: Rebuild the stateful but mostly local pages for house access, temple/deity interactions, library content, and tower screens.
 - Estimate: 1.5h
 - Depends on: MP-07-02, MP-12-06.
@@ -112,6 +116,7 @@ Port the world-navigation layer and stateful location pages that gate access to 
 
 ### MP-07-06: Add navigation parity checks
 
+- **Status**: not-started
 - Description: Create route and view-model tests that confirm common location transitions and denial cases.
 - Estimate: 2h
 - Depends on: MP-07-02, MP-07-03, MP-07-04.

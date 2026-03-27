@@ -12,6 +12,7 @@ use crate::state::AppState;
 pub mod auth;
 pub mod fallback;
 pub mod health;
+pub mod world;
 
 /// Assemble the full application router from per-module route groups.
 ///
@@ -30,6 +31,8 @@ pub fn build_router(state: AppState) -> Router {
         .merge(crate::assets::routes())
         // Authentication routes.
         .merge(auth::routes())
+        // World navigation (city, travel, locations).
+        .merge(world::routes())
         // Future: .merge(player::routes())
         // Future: .merge(world::routes())
         // ...

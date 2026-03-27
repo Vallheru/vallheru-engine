@@ -1,0 +1,25 @@
+{% extends "base.html" %}
+
+{% block content %}
+<h2>{{ city_name }}</h2>
+
+<p>{{ city_description }}</p>
+
+<table align="center" width="90%">
+{% for district in districts %}
+  {% if loop.index0 % 3 == 0 %}
+  <tr>
+  {% endif %}
+    <td width="35%" valign="top">
+      <b><u>{{ district.title }}</u></b><br />
+      {% for link in district.links %}
+        <a href="{{ link.href }}">{{ link.label }}</a><br />
+      {% endfor %}
+      <br />
+    </td>
+  {% if loop.index0 % 3 == 2 or loop.last %}
+  </tr>
+  {% endif %}
+{% endfor %}
+</table>
+{% endblock %}
