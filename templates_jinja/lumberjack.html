@@ -1,0 +1,24 @@
+{# Lumberjack — wood harvesting in the forest. #}
+{% extends "base.html" %}
+
+{% block content %}
+<h2>Drwal</h2>
+
+<p>Licencja drwalska: poziom <b>{{ license_level }}</b></p>
+
+<form method="post" action="/lumberjack">
+  <p>
+    Energia: <b>{{ energy }}</b><br />
+    Rodzaj drewna:
+    <select name="wood_type">
+      {% for wood in available_wood %}
+      <option value="{{ wood.key }}">{{ wood.label }}</option>
+      {% endfor %}
+    </select><br />
+    <input type="number" name="amount" min="1" max="{{ energy }}" value="1" />
+    <input type="submit" value="Rąb" />
+  </p>
+</form>
+
+<p><a href="/forest">Wróć do lasu</a></p>
+{% endblock %}

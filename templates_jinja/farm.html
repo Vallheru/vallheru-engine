@@ -1,0 +1,32 @@
+{# Farm — herb plantation overview. #}
+{% extends "base.html" %}
+
+{% block content %}
+<h2>Farma</h2>
+
+{% if not has_plantation %}
+<p>Nie posiadasz jeszcze plantacji. Aby rozpocząć, kup ziemię.</p>
+{% else %}
+<p>Ziemia: <b>{{ lands }}</b> (wolna: {{ free_lands }})</p>
+<p>Wyposażenie: Szklarnia {{ glasshouse }}, Nawadnianie {{ irrigation }}, Wsporniki {{ creeper }}</p>
+
+{% if plots %}
+<h3>Uprawy</h3>
+<table>
+  <tr><th>Roślina</th><th>Ilość</th><th>Wiek</th><th>Stan</th></tr>
+  {% for plot in plots %}
+  <tr>
+    <td>{{ plot.name }}</td>
+    <td>{{ plot.amount }}</td>
+    <td>{{ plot.age }}</td>
+    <td>{{ plot.stage }}</td>
+  </tr>
+  {% endfor %}
+</table>
+{% else %}
+<p>Brak upraw na plantacji.</p>
+{% endif %}
+{% endif %}
+
+<p><a href="/city">Wróć do miasta</a></p>
+{% endblock %}

@@ -1,0 +1,31 @@
+{# Smelter — ore smelting and upgrades. #}
+{% extends "base.html" %}
+
+{% block content %}
+<h2>Huta</h2>
+
+<p>Poziom huty: <b>{{ smelter_level }}</b></p>
+
+{% if available_actions %}
+<h3>Wytapianie</h3>
+<form method="post" action="/smelter/smelt">
+  <p>
+    Surowiec:
+    <select name="bar_type">
+      {% for action in available_actions %}
+      <option value="{{ action.key }}">{{ action.label }}</option>
+      {% endfor %}
+    </select><br />
+    Ilość sztabek: <input type="number" name="amount" min="1" value="1" /><br />
+    <input type="submit" value="Wytapiaj" />
+  </p>
+</form>
+{% endif %}
+
+<h3>Rozbudowa</h3>
+<form method="post" action="/smelter/upgrade">
+  <input type="submit" value="Rozbuduj hutę" />
+</form>
+
+<p><a href="/city">Wróć do miasta</a></p>
+{% endblock %}

@@ -1,0 +1,18 @@
+{# Mountain mining page — kopalnie górskie. #}
+{% extends "base.html" %}
+
+{% block content %}
+<h2>Kopalnie górskie</h2>
+
+<p>Wykopuj cenne minerały z gór. Za każdą jednostkę energii losowany jest wynik.</p>
+
+<form method="post" action="/mining">
+  <p>
+    Energia: <b>{{ energy }}</b><br />
+    <input type="number" name="amount" min="1" max="{{ energy }}" value="1" />
+    <input type="submit" value="Kopaj" />
+  </p>
+</form>
+
+<p><a href="/mountains">Wróć do gór</a></p>
+{% endblock %}

@@ -2,7 +2,7 @@
 
 use axum::{Router, middleware, routing};
 
-use crate::handlers::{city, locations, map, travel};
+use crate::handlers::{city, gathering, locations, map, travel};
 use crate::middleware::guards::require_authenticated;
 use crate::state::AppState;
 
@@ -23,5 +23,23 @@ pub fn routes() -> Router<AppState> {
             "/rest",
             routing::get(locations::rest_show).post(locations::rest_recover),
         )
+        // Gathering routes
+        .route(
+            "/mining",
+            routing::get(gathering::mining_show).post(gathering::mining_work),
+        )
+        .route("/mines", routing::get(gathering::mines_show))
+        .route("/mines/dig", routing::post(gathering::mines_dig))
+        .route(
+            "/lumberjack",
+            routing::get(gathering::lumberjack_show).post(gathering::lumberjack_work),
+        )
+        .route("/smelter", routing::get(gathering::smelter_show))
+        .route("/smelter/smelt", routing::post(gathering::smelter_smelt))
+        .route(
+            "/smelter/upgrade",
+            routing::post(gathering::smelter_upgrade),
+        )
+        .route("/farm", routing::get(gathering::farm_show))
         .layer(middleware::from_fn(require_authenticated))
 }

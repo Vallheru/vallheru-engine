@@ -1,0 +1,34 @@
+{# Mine deposits and ore digging. #}
+{% extends "base.html" %}
+
+{% block content %}
+<h2>Kopalnie</h2>
+
+{% if search_status %}
+<p>{{ search_status }}</p>
+{% endif %}
+
+<h3>Twoje złoża</h3>
+<table>
+  <tr><th>Surowiec</th><th>Ilość</th><th>Akcja</th></tr>
+  {% for ore in [("copper", "Miedź"), ("zinc", "Cynk"), ("tin", "Cyna"), ("iron", "Żelazo"), ("coal", "Węgiel")] %}
+  <tr>
+    <td>{{ ore.1 }}</td>
+    <td>{{ deposits[ore.0] }}</td>
+    <td>
+      {% if deposits[ore.0] > 0 %}
+      <form method="post" action="/mines/dig" style="display:inline">
+        <input type="hidden" name="mine" value="{{ ore.0 }}" />
+        <input type="number" name="amount" min="1" value="1" />
+        <input type="submit" value="Kopaj" />
+      </form>
+      {% else %}
+      —
+      {% endif %}
+    </td>
+  </tr>
+  {% endfor %}
+</table>
+
+<p><a href="/city">Wróć do miasta</a></p>
+{% endblock %}

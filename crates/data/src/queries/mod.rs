@@ -7,6 +7,7 @@ pub mod account;
 pub mod account_settings;
 pub mod auth;
 pub mod character_reset;
+pub mod gathering;
 pub mod item;
 pub mod locations;
 pub mod mission;
