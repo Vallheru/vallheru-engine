@@ -13,3 +13,4 @@ pub mod player;
 pub mod quest;
 pub mod registration;
 pub mod text;
+pub mod travel;

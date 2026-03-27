@@ -4,8 +4,10 @@ pub mod account;
 pub mod account_settings;
 pub mod auth;
 pub mod city;
+pub mod map;
 pub mod preset;
 pub mod registration;
+pub mod travel;
 
 use crate::middleware::context::RequestContext;
 use crate::page::PageMeta;

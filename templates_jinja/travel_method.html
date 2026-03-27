@@ -1,0 +1,13 @@
+{% extends "base.html" %}
+
+{% block title %}Podróż do {{ destination_name }}{% endblock %}
+
+{% block content %}
+<h2>Podróż do {{ destination_name }}</h2>
+<ul>
+  <li><a href="/travel?action={{ dest_param }}&amp;step=caravan">Podróżuj z karawaną ({{ caravan_cost }} sztuk złota)</a></li>
+  <li><a href="/travel?action={{ dest_param }}&amp;step=walk">Idź na piechotę ({{ walk_cost }} punktów energii)</a></li>
+  <li><a href="/travel?action={{ dest_param }}&amp;step=magic">Użyj magicznego portalu ({{ magic_cost }} sztuk złota)</a></li>
+  <li><a href="/travel">Wróć</a></li>
+</ul>
+{% endblock %}

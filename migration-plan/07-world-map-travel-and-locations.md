@@ -72,9 +72,9 @@ Port the world-navigation layer and stateful location pages that gate access to 
 - In scope: City page and its view model.
 - Out of scope: Every linked feature.
 
-### MP-07-03: Port travel, map, and portal flows
+### MP-07-03: Port travel, map, and portal flows ✅
 
-- **Status**: not-started
+- **Status**: completed
 - Description: Migrate world movement between cities and special travel pages including portal usage.
 - Estimate: 2h
 - Depends on: MP-07-01, MP-10-02.

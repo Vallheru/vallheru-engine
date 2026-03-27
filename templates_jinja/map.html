@@ -1,0 +1,14 @@
+{% extends "base.html" %}
+
+{% block title %}Mapa{% endblock %}
+
+{% block content %}
+<h2>Mapa świata Vallheru</h2>
+<map name="vallheru">
+  <area shape="rect" coords="57,57,464,230" href="/map" title="Góry Kazad-nar" />
+  <area shape="rect" coords="70,255,270,493" href="/map" title="Las Avantiel" />
+  <area shape="rect" coords="142,503,165,523" href="/map" title="Ardulith" />
+  <area shape="rect" coords="323,382,343,402" href="/map" title="Altara" />
+</map>
+<p><img src="/images/mapa.gif" usemap="#vallheru" alt="Mapa świata Vallheru" /></p>
+{% endblock %}

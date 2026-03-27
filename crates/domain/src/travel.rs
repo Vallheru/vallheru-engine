@@ -1,0 +1,323 @@
+//! Travel service: costs, methods, and destination logic.
+//!
+//! Implements the travel rules from `travel.php`. Players can move between
+//! locations using three methods: caravan (gold), walking (energy), or
+//! magic portal (gold). Each method has different costs depending on the
+//! route.
+
+use crate::location::{Location, MovementDenied, can_travel};
+
+/// How the player travels between locations.
+#[derive(Debug, Clone, Copy, PartialEq, Eq)]
+pub enum TravelMethod {
+    /// Travel by caravan — costs gold, low bandit encounter chance.
+    Caravan,
+    /// Walk on foot — costs energy, higher bandit encounter chance.
+    Walk,
+    /// Use a magic portal — costs 4000 gold, instant (no encounter).
+    MagicPortal,
+}
+
+impl TravelMethod {
+    /// Parse from a query-string value.
+    pub fn from_param(s: &str) -> Option<Self> {
+        match s {
+            "caravan" => Some(Self::Caravan),
+            "walk" => Some(Self::Walk),
+            "magic" => Some(Self::MagicPortal),
+            _ => None,
+        }
+    }
+}
+
+/// A named travel destination the player can reach from their current location.
+#[derive(Debug, Clone, Copy, PartialEq, Eq)]
+pub enum Destination {
+    /// Góry Kazad-nar.
+    Mountains,
+    /// Las Avantiel.
+    Forest,
+    /// Ardulith (elf city).
+    Ardulith,
+    /// Altara (return to main city).
+    Altara,
+}
+
+impl Destination {
+    /// Parse from a query-string value (matching legacy `akcja` parameter).
+    pub fn from_param(s: &str) -> Option<Self> {
+        match s {
+            "gory" => Some(Self::Mountains),
+            "las" => Some(Self::Forest),
+            "city2" => Some(Self::Ardulith),
+            "powrot" => Some(Self::Altara),
+            _ => None,
+        }
+    }
+
+    /// The URL param value used in links.
+    pub fn param(self) -> &'static str {
+        match self {
+            Self::Mountains => "gory",
+            Self::Forest => "las",
+            Self::Ardulith => "city2",
+            Self::Altara => "powrot",
+        }
+    }
+
+    /// The target `Location` for this destination.
+    pub fn target_location(self) -> Location {
+        match self {
+            Self::Mountains => Location::Mountains,
+            Self::Forest => Location::Forest,
+            Self::Ardulith => Location::Ardulith,
+            Self::Altara => Location::Altara,
+        }
+    }
+
+    /// Human-readable Polish label for the arrival message.
+    pub fn arrival_label(self) -> &'static str {
+        match self {
+            Self::Mountains => "Gór Kazad-nar",
+            Self::Forest => "Lasu Avantiel",
+            Self::Ardulith => "Ardulith",
+            Self::Altara => "Altary",
+        }
+    }
+
+    /// Display name shown in links.
+    pub fn display_name(self) -> &'static str {
+        match self {
+            Self::Mountains => "Góry Kazad-nar",
+            Self::Forest => "Las Avantiel",
+            Self::Ardulith => "Ardulith",
+            Self::Altara => "Altara",
+        }
+    }
+}
+
+/// Error when a travel attempt is refused.
+#[derive(Debug, Clone, PartialEq, Eq)]
+pub enum TravelError {
+    /// Movement guard denied the trip.
+    MovementDenied(MovementDenied),
+    /// Not enough gold for caravan or magic portal.
+    InsufficientGold { need: i32, have: i32 },
+    /// Not enough energy for walking.
+    InsufficientEnergy { need: i32, have: i32 },
+}
+
+/// Available destinations from a given location, matching PHP travel.php logic.
+pub fn available_destinations(from: Location) -> &'static [Destination] {
+    match from {
+        Location::Altara => &[
+            Destination::Mountains,
+            Destination::Forest,
+            Destination::Ardulith,
+        ],
+        Location::Ardulith => &[Destination::Mountains, Destination::Altara],
+        Location::Forest => &[Destination::Altara],
+        Location::Mountains => &[Destination::Forest, Destination::Altara],
+        _ => &[],
+    }
+}
+
+/// Compute the gold cost for caravan travel from `from` to `dest`.
+///
+/// Ardulith↔Mountains and Mountains↔Forest cost 1200, all others 1000.
+pub fn caravan_cost(from: Location, dest: Destination) -> i32 {
+    let is_indirect = matches!(
+        (from, dest),
+        (Location::Ardulith, Destination::Mountains) | (Location::Mountains, Destination::Forest)
+    );
+    if is_indirect { 1200 } else { 1000 }
+}
+
+/// Compute the energy cost for walking from `from` to `dest`.
+///
+/// Ardulith↔Mountains and Mountains↔Forest cost 6, all others 5.
+pub fn walk_cost(from: Location, dest: Destination) -> i32 {
+    let is_indirect = matches!(
+        (from, dest),
+        (Location::Ardulith, Destination::Mountains) | (Location::Mountains, Destination::Forest)
+    );
+    if is_indirect { 6 } else { 5 }
+}
+
+/// Magic portal always costs 4000 gold.
+pub const MAGIC_PORTAL_COST: i32 = 4000;
+
+/// Compute the cost for a travel method+route combo.
+pub fn travel_cost(method: TravelMethod, from: Location, dest: Destination) -> i32 {
+    match method {
+        TravelMethod::Caravan => caravan_cost(from, dest),
+        TravelMethod::Walk => walk_cost(from, dest),
+        TravelMethod::MagicPortal => MAGIC_PORTAL_COST,
+    }
+}
+
+/// Input for travel validation.
+pub struct TravelAttempt {
+    pub from: Location,
+    pub dest: Destination,
+    pub method: TravelMethod,
+    pub hp: i32,
+    pub fight_id: i32,
+    pub is_immune: bool,
+    pub credits: i32,
+    pub energy: f64,
+}
+
+/// Validate and compute a travel attempt. Returns `Ok(cost)` if the
+/// trip is allowed, or an appropriate error.
+pub fn validate_travel(attempt: &TravelAttempt) -> Result<i32, TravelError> {
+    let to = attempt.dest.target_location();
+    can_travel(
+        attempt.from,
+        to,
+        attempt.hp,
+        attempt.fight_id,
+        attempt.is_immune,
+    )
+    .map_err(TravelError::MovementDenied)?;
+
+    let cost = travel_cost(attempt.method, attempt.from, attempt.dest);
+
+    match attempt.method {
+        TravelMethod::Caravan | TravelMethod::MagicPortal => {
+            if attempt.credits < cost {
+                return Err(TravelError::InsufficientGold {
+                    need: cost,
+                    have: attempt.credits,
+                });
+            }
+        }
+        TravelMethod::Walk => {
+            #[allow(clippy::cast_possible_truncation)]
+            let energy_int = attempt.energy as i32;
+            if energy_int < cost {
+                return Err(TravelError::InsufficientEnergy {
+                    need: cost,
+                    have: energy_int,
+                });
+            }
+        }
+    }
+
+    Ok(cost)
+}
+
+// ---------------------------------------------------------------------------
+// Tests
+// ---------------------------------------------------------------------------
+
+#[cfg(test)]
+mod tests {
+    use super::*;
+
+    #[test]
+    fn destinations_from_altara() {
+        let dests = available_destinations(Location::Altara);
+        assert_eq!(dests.len(), 3);
+        assert!(dests.contains(&Destination::Mountains));
+        assert!(dests.contains(&Destination::Forest));
+        assert!(dests.contains(&Destination::Ardulith));
+    }
+
+    #[test]
+    fn destinations_from_ardulith() {
+        let dests = available_destinations(Location::Ardulith);
+        assert_eq!(dests.len(), 2);
+        assert!(dests.contains(&Destination::Mountains));
+        assert!(dests.contains(&Destination::Altara));
+    }
+
+    #[test]
+    fn destinations_from_forest() {
+        let dests = available_destinations(Location::Forest);
+        assert_eq!(dests, &[Destination::Altara]);
+    }
+
+    #[test]
+    fn destinations_from_mountains() {
+        let dests = available_destinations(Location::Mountains);
+        assert_eq!(dests.len(), 2);
+    }
+
+    #[test]
+    fn caravan_cost_normal_route() {
+        assert_eq!(caravan_cost(Location::Altara, Destination::Mountains), 1000);
+        assert_eq!(caravan_cost(Location::Altara, Destination::Forest), 1000);
+        assert_eq!(caravan_cost(Location::Altara, Destination::Ardulith), 1000);
+    }
+
+    #[test]
+    fn caravan_cost_indirect_route() {
+        assert_eq!(
+            caravan_cost(Location::Ardulith, Destination::Mountains),
+            1200
+        );
+        assert_eq!(caravan_cost(Location::Mountains, Destination::Forest), 1200);
+    }
+
+    #[test]
+    fn walk_cost_values() {
+        assert_eq!(walk_cost(Location::Altara, Destination::Mountains), 5);
+        assert_eq!(walk_cost(Location::Ardulith, Destination::Mountains), 6);
+    }
+
+    fn attempt(method: TravelMethod, credits: i32, energy: f64, hp: i32) -> TravelAttempt {
+        TravelAttempt {
+            from: Location::Altara,
+            dest: Destination::Mountains,
+            method,
+            hp,
+            fight_id: 0,
+            is_immune: false,
+            credits,
+            energy,
+        }
+    }
+
+    #[test]
+    fn validate_travel_success() {
+        let result = validate_travel(&attempt(TravelMethod::Caravan, 5000, 10.0, 100));
+        assert_eq!(result, Ok(1000));
+    }
+
+    #[test]
+    fn validate_travel_insufficient_gold() {
+        let result = validate_travel(&attempt(TravelMethod::Caravan, 500, 10.0, 100));
+        assert!(matches!(result, Err(TravelError::InsufficientGold { .. })));
+    }
+
+    #[test]
+    fn validate_travel_insufficient_energy() {
+        let result = validate_travel(&attempt(TravelMethod::Walk, 5000, 2.0, 100));
+        assert!(matches!(
+            result,
+            Err(TravelError::InsufficientEnergy { .. })
+        ));
+    }
+
+    #[test]
+    fn validate_travel_dead() {
+        let result = validate_travel(&attempt(TravelMethod::Walk, 5000, 10.0, 0));
+        assert!(matches!(
+            result,
+            Err(TravelError::MovementDenied(MovementDenied::Dead))
+        ));
+    }
+
+    #[test]
+    fn destination_roundtrip() {
+        for dest in [
+            Destination::Mountains,
+            Destination::Forest,
+            Destination::Ardulith,
+            Destination::Altara,
+        ] {
+            assert_eq!(Destination::from_param(dest.param()), Some(dest));
+        }
+    }
+}

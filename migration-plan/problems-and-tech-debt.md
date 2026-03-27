@@ -107,3 +107,27 @@ Each entry includes:
 - **Needs new task**: No
 - **Status**: open
 - **Related tasks**: MP-08-03
+
+### TD-008: Astral planes and portal combat not yet migrated
+
+- **Type**: migration-gap
+- **Discovered in**: MP-07-03
+- **Description**: The `portal.php` (magic portal boss fight) and `portals.php` (astral plane monsters) pages depend on `astral_plans` and `astral` tables that don't exist in PostgreSQL migrations yet. These features involve full combat encounters which are out of scope for MP-07-03. The travel handler shows a "disabled" notice for the portal entry.
+- **Impact**: Players cannot access the magic portal or astral plane features until the tables and combat integration are implemented.
+- **Action**: Create `astral_plans` and `astral` tables in a migration (likely part of MP-12 or a new task). Implement portal/astral combat integration once the combat system is connected.
+- **Fixable in existing task**: No — requires dedicated table migration and combat wiring.
+- **Needs new task**: Yes — portal combat + astral plane handlers.
+- **Status**: open
+- **Related tasks**: MP-07-03, MP-08 (combat system)
+
+### TD-009: Bandit encounters during travel not yet implemented
+
+- **Type**: migration-gap
+- **Discovered in**: MP-07-03
+- **Description**: PHP `travel.php` has a random bandit encounter system during overland travel (20% chance for caravan, 30% for walking). This includes fight/pay/escape options with stat-based outcomes. The Rust travel handler currently skips encounters and always completes travel successfully.
+- **Impact**: Travel is easier than in PHP — no risk of bandit encounters or gold loss during transit. This simplifies gameplay but is explicitly out of scope per the plan.
+- **Action**: Wire up bandit encounters once the combat system is available for integration (post MP-08).
+- **Fixable in existing task**: No — depends on combat integration.
+- **Needs new task**: Yes — travel encounter system.
+- **Status**: open
+- **Related tasks**: MP-07-03, MP-08 (combat system)
