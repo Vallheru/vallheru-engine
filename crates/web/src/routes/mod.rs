@@ -9,6 +9,7 @@ use axum::Router;
 use crate::middleware::context;
 use crate::state::AppState;
 
+pub mod admin;
 pub mod auth;
 pub mod fallback;
 pub mod health;
@@ -33,6 +34,8 @@ pub fn build_router(state: AppState) -> Router {
         .merge(auth::routes())
         // World navigation (city, travel, locations).
         .merge(world::routes())
+        // Admin and staff routes.
+        .merge(admin::routes())
         // Future: .merge(player::routes())
         // Future: .merge(world::routes())
         // ...

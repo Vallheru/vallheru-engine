@@ -1,0 +1,14 @@
+{% extends "base.html" %}
+
+{% block content %}
+<h2>Panel Administracyjny</h2>
+
+{% for section in sections %}
+<h3>{{ section.title }}</h3>
+<ul>
+  {% for link in section.links %}
+  <li><a href="{{ link.href }}">{{ link.label }}</a></li>
+  {% endfor %}
+</ul>
+{% endfor %}
+{% endblock %}

@@ -1,0 +1,11 @@
+{% extends "base.html" %}
+
+{% block content %}
+<h2>Panel Administracyjny</h2>
+
+<ul>
+  {% for link in links %}
+  <li><a href="{{ link.href }}">{{ link.label }}</a></li>
+  {% endfor %}
+</ul>
+{% endblock %}

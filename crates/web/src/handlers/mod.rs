@@ -2,6 +2,7 @@
 
 pub mod account;
 pub mod account_settings;
+pub mod admin;
 pub mod auth;
 pub mod bank;
 pub mod chat;
@@ -23,6 +24,7 @@ pub mod registration;
 pub mod room;
 pub mod shops;
 pub mod spells;
+pub mod staff;
 pub mod temple;
 pub mod tower;
 pub mod travel;

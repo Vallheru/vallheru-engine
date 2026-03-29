@@ -1,0 +1,24 @@
+{% extends "base.html" %}
+
+{% block content %}
+<h2>Sala audiencyjna</h2>
+
+<p>{{ info }}</p>
+
+{% for section in sections %}
+<h3>{{ section.title }}</h3>
+<table width="100%">
+  <tr>
+    {% for group in section.groups %}
+    <td width="{{ (100 / section.groups | length) | int }}%" valign="top">
+      <b>{{ group.rank_label }}</b><br />
+      {% for member in group.members %}
+      <a href="/view?view={{ member.id }}">{{ member.name }}</a> ID: {{ member.id }}<br />
+      {% endfor %}
+    </td>
+    {% endfor %}
+  </tr>
+</table>
+<br />
+{% endfor %}
+{% endblock %}

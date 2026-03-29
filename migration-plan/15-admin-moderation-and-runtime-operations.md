@@ -56,18 +56,25 @@ Port the staff-facing tools and replace legacy runtime scripts and page-triggere
 
 ## Tasks
 
-### MP-15-01: Port staff and admin route trees with shared guards
+### MP-15-01: Port staff and admin route trees with shared guards ✅
 
 - Description: Rebuild the admin and staff panels, including route dispatch and rank-based access control.
 - Estimate: 1.5h
 - Depends on: MP-03-04, MP-05-01.
 - Functional acceptance criteria:
-  - Staff-only and admin-only pages are routed in Rust.
-  - Shared rank guards replace duplicated per-page checks.
-  - Navigation links render based on the operator's role.
+  - ✅ Staff-only and admin-only pages are routed in Rust.
+  - ✅ Shared rank guards replace duplicated per-page checks.
+  - ✅ Navigation links render based on the operator's role.
 - Technical notes: Mirror the current role names first; cleanups can wait until after cutover.
 - In scope: Staff/admin shells and route organization.
 - Out of scope: Every admin action implementation.
+- Implementation notes:
+  - `crates/web/src/handlers/admin.rs`: Admin panel shell with sectioned menu links.
+  - `crates/web/src/handlers/staff.rs`: Staff panel (role-filtered links) + staff list (audience hall).
+  - `crates/web/src/routes/admin.rs`: Route groups with `require_admin`, `require_any_rank`, `require_authenticated` guards.
+  - `crates/data/src/queries/admin.rs`: `list_staff_members()` query using `ANY($1)` for rank filtering.
+  - Templates: `admin.html`, `staff.html`, `stafflist.html`.
+  - Builder rank sees only bug report links; Staff/Admin see full moderation menu.
 
 ### MP-15-02: Port moderation actions for jail, court, judge panel, and communication restrictions
 
