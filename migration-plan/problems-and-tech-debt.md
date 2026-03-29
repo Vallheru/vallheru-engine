@@ -203,3 +203,27 @@ Each entry includes:
 - **Needs new task**: Yes
 - **Status**: open
 - **Related tasks**: MP-09-04, MP-08
+
+### TD-016: Tribe forum post rate limiting not implemented
+
+- **Type**: tech-debt
+- **Discovered in**: MP-13-06
+- **Description**: The PHP tribe forum enforced a 10-second cooldown between posts using `$_SESSION['posttime']`. The Rust session system does not yet support arbitrary session data storage, so rate limiting is deferred with a TODO comment.
+- **Impact**: Low — users could spam posts. No data integrity risk.
+- **Action**: Implement server-side rate limiting when session data store or middleware rate limiter is available.
+- **Fixable in existing task**: No — requires session data infrastructure.
+- **Needs new task**: Yes (or fold into session middleware enhancement)
+- **Status**: open
+- **Related tasks**: MP-13-06, MP-05
+
+### TD-017: game_log column name inconsistency between handlers
+
+- **Type**: tech-debt
+- **Discovered in**: MP-12-02
+- **Description**: `market.rs` queries use legacy column names (`owner, log, czas, type`) while `room.rs` uses correct migration column names (`owner_id, message, log_type`). The migration schema confirms room.rs is correct.
+- **Impact**: Low — market queries may fail against the migrated schema.
+- **Action**: Align `market.rs` game_log queries to use migration column names.
+- **Fixable in existing task**: No — needs targeted fix in market handler.
+- **Needs new task**: No — can be fixed as part of any market-touching task.
+- **Status**: open
+- **Related tasks**: MP-12-02

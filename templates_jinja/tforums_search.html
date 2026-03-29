@@ -1,0 +1,16 @@
+{% extends "base.html" %}
+
+{% block title %}Forum klanu - Wyniki wyszukiwania{% endblock %}
+
+{% block content %}
+{% if count == 0 %}
+<br/><br/><center>Nie znaleziono żadnych wyników.</center><br/>
+{% else %}
+Znaleziono {{ count }} wyników:<br/><br/>
+{% for r in results %}
+  <a href="/tforums/topic/{{ r.id }}">{{ r.title }}</a><br/>
+{% endfor %}
+{% endif %}
+
+<br/><br/><a href="/tforums">Powrót</a>
+{% endblock %}

@@ -1,0 +1,107 @@
+{% extends "base.html" %}
+
+{% block title %}Forum klanu{% endblock %}
+
+{% block content %}
+<script src="/js/editor.js"></script>
+
+<a href="/tforums/new">Nowe wpisy</a><br/><br/>
+
+<form method="post" action="/tforums/search">
+  <input type="submit" value="Szukaj"/> Szukaj:
+  <input type="text" name="search"/>
+</form><br/>
+
+{% if can_admin %}
+<form method="post" action="/tforums/delete-topics">
+{% endif %}
+
+<table width="100%">
+  <tr>
+    {% if can_admin %}<td width="20"></td>{% endif %}
+    <td><u><b>Temat</b></u></td>
+    <td width="20%"><u><b>Autor</b></u></td>
+    <td width="10%"><b><u>Odpowiedzi</u></b></td>
+  </tr>
+  {% for t in topics %}
+  <tr>
+    {% if can_admin %}
+    <td><input type="checkbox" name="{{ t.id }}"/></td>
+    {% endif %}
+    <td>
+      {% if t.is_new %}<b>N</b> {% endif %}
+      {% if t.is_sticky %}[przyklejony] {% endif %}
+      <a href="/tforums/topic/{{ t.id }}">{{ t.title }}</a>
+    </td>
+    <td><a href="/view/{{ t.author_id }}">{{ t.author }}</a></td>
+    <td>{{ t.reply_count }}</td>
+  </tr>
+  {% endfor %}
+  {% if topics | length == 0 %}
+  <tr><td colspan="4"><em>Brak tematów.</em></td></tr>
+  {% endif %}
+</table>
+
+{% if can_admin %}
+  <input type="hidden" name="ids" id="topic-ids" value=""/>
+  <button type="button" onclick="
+    var ids = [];
+    document.querySelectorAll('input[type=checkbox]:checked').forEach(function(cb){ ids.push(cb.name); });
+    document.getElementById('topic-ids').value = ids.join(',');
+    this.form.submit();
+  ">Skasuj wybrane tematy</button>
+</form>
+{% endif %}
+
+{% if total_pages > 1 %}
+<br/>Idź do strony:
+{% for p in range(1, total_pages + 1) %}
+  {% if p == page %}{{ p }}{% else %}<a href="/tforums?page={{ p }}">{{ p }}</a>{% endif %}
+{% endfor %}
+<br/><br/>
+{% endif %}
+
+<form method="post" action="/tforums/topic/new" name="addtopic">
+  Dodaj temat:<br/>
+  <input type="text" name="title2" value="" size="40"/><br/>
+  <input id="bold" type="button" value="Pogrubienie" onclick="formatText(this.id, 'addtopic', 'body')"/>
+  <input id="italic" type="button" value="Kursywa" onclick="formatText(this.id, 'addtopic', 'body')"/>
+  <input id="underline" type="button" value="Podkreślenie" onclick="formatText(this.id, 'addtopic', 'body')"/>
+  <input id="emote" type="button" value="Emocje/Czynność" onclick="formatText(this.id, 'addtopic', 'body')"/>
+  <input id="center" type="button" value="Wycentrowanie" onclick="formatText(this.id, 'addtopic', 'body')"/>
+  <input id="quote" type="button" value="Cytat" onclick="formatText(this.id, 'addtopic', 'body')"/>
+  <input id="color" type="button" value="Kolor" onclick="formatText(this.id, 'addtopic', 'body')"/>
+  <select name="colors">
+    <option value="red">czerwony</option>
+    <option value="green">zielony</option>
+    <option value="white">biały</option>
+    <option value="yellow">żółty</option>
+    <option value="blue">niebieski</option>
+    <option value="aqua">cyjan</option>
+    <option value="fuchsia">fuksja</option>
+    <option value="grey">szary</option>
+    <option value="lime">limonka</option>
+    <option value="maroon">wiśniowy</option>
+    <option value="navy">granatowy</option>
+    <option value="olive">oliwkowy</option>
+    <option value="purple">purpurowy</option>
+    <option value="silver">srebrny</option>
+    <option value="teal">morski</option>
+  </select><br/>
+  <textarea name="body" cols="40" rows="10"></textarea><br/>
+  {% if can_admin %}
+  <input type="checkbox" name="sticky"/> Przyklejony<br/>
+  {% endif %}
+  <input type="submit" value="Dodaj temat"/>
+</form><br/>
+
+<small>Linki automatycznie zamieniane są na klikalne. Możesz używać następujących znaczników BBCode:<br/>
+<ul>
+  <li>[b]<b>Pogrubienie</b>[/b]</li>
+  <li>[i]<i>Kursywa</i>[/i]</li>
+  <li>[u]<u>Podkreślenie</u>[/u]</li>
+  <li>[color (angielska nazwa koloru lub kod HTML)]pokolorowanie tekstu[/color]</li>
+  <li>[center]wycentrowanie tekstu[/center]</li>
+  <li>[quote]cytat[/quote]</li>
+</ul></small>
+{% endblock %}

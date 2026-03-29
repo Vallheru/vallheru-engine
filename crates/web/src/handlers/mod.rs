@@ -25,6 +25,7 @@ pub mod spells;
 pub mod temple;
 pub mod tower;
 pub mod travel;
+pub mod tribe_forum;
 
 use crate::middleware::context::RequestContext;
 use crate::page::PageMeta;

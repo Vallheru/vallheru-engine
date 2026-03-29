@@ -4,7 +4,7 @@ use axum::{Router, middleware, routing};
 
 use crate::handlers::{
     bank, chat, city, content, deity, equipment, forums, gathering, house, locations, mail, map,
-    market, pages, room, shops, spells, temple, tower, travel,
+    market, pages, room, shops, spells, temple, tower, travel, tribe_forum,
 };
 use crate::middleware::guards::require_authenticated;
 use crate::state::AppState;
@@ -210,7 +210,14 @@ fn social_routes() -> Router<AppState> {
             "/mail/forward",
             routing::get(mail::mail_forward_show).post(mail::mail_forward_action),
         )
-        // Forums
+        .merge(forum_routes())
+        .merge(tribe_forum_routes())
+        .merge(content_routes())
+        .merge(pages_routes())
+}
+
+fn forum_routes() -> Router<AppState> {
+    Router::new()
         .route("/forums", routing::get(forums::forum_categories))
         .route("/forums/new", routing::get(forums::forum_new_posts))
         .route("/forums/search", routing::post(forums::forum_search))
@@ -252,8 +259,44 @@ fn social_routes() -> Router<AppState> {
             "/forums/reply/{id}/delete",
             routing::post(forums::forum_delete_reply),
         )
-        .merge(content_routes())
-        .merge(pages_routes())
+}
+
+fn tribe_forum_routes() -> Router<AppState> {
+    Router::new()
+        .route("/tforums", routing::get(tribe_forum::tforums_topics))
+        .route("/tforums/new", routing::get(tribe_forum::tforums_new_posts))
+        .route(
+            "/tforums/search",
+            routing::post(tribe_forum::tforums_search),
+        )
+        .route(
+            "/tforums/topic/new",
+            routing::post(tribe_forum::tforums_add_topic),
+        )
+        .route(
+            "/tforums/topic/{id}",
+            routing::get(tribe_forum::tforums_topic_read),
+        )
+        .route(
+            "/tforums/topic/{id}/reply",
+            routing::post(tribe_forum::tforums_add_reply),
+        )
+        .route(
+            "/tforums/topic/{id}/delete",
+            routing::post(tribe_forum::tforums_delete_topic),
+        )
+        .route(
+            "/tforums/topic/{id}/sticky",
+            routing::post(tribe_forum::tforums_toggle_sticky),
+        )
+        .route(
+            "/tforums/delete-topics",
+            routing::post(tribe_forum::tforums_bulk_delete),
+        )
+        .route(
+            "/tforums/reply/{id}/delete",
+            routing::post(tribe_forum::tforums_delete_reply),
+        )
 }
 
 fn content_routes() -> Router<AppState> {

@@ -118,11 +118,12 @@ Port group-oriented systems that share inventories, permissions, and combat-adja
 - In scope: Outpost state and pages.
 - Out of scope: Full tribe-vs-tribe combat engine rewrite.
 
-### MP-13-06: Port tribe forums and navigation surfaces
+### MP-13-06: Port tribe forums and navigation surfaces ✅
 
 - Description: Rebuild tribe forum and menu/navigation pages that depend on tribe membership and permissions.
 - Estimate: 2h
 - Depends on: MP-13-03, MP-12-04.
+- Status: **Completed**
 - Functional acceptance criteria:
   - Tribe-specific discussions render behind tribe access checks.
   - Shared tribe navigation is available as reusable template components.
@@ -130,3 +131,10 @@ Port group-oriented systems that share inventories, permissions, and combat-adja
 - Technical notes: Keep tribe forum logic aligned with the public forum abstractions where they overlap.
 - In scope: Tribe UI/navigation and tribe discussions.
 - Out of scope: Staff moderation of tribe content.
+- Implementation notes:
+  - Migration `20250325000020` creates tribes, tribe_perm, tribe_rank, tribe_topics, tribe_replies tables.
+  - Data layer: `crates/data/src/queries/tribe_forum.rs` — permission checks, topic/reply CRUD, search, `NewTopic` struct.
+  - Handler: `crates/web/src/handlers/tribe_forum.rs` — 10 handlers with `require_player` helper, `tribe_author` helper, `format_datetime` for epoch-to-date formatting.
+  - Templates: `tforums_topics.html`, `tforums_topic.html`, `tforums_new.html`, `tforums_search.html`.
+  - Routes split into `tribe_forum_routes()` and `forum_routes()` sub-functions in `world.rs`.
+  - Rate limiting deferred (session_data not yet available) — recorded as tech debt.

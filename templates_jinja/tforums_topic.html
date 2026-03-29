@@ -1,0 +1,106 @@
+{% extends "base.html" %}
+
+{% block title %}Forum klanu - {{ topic_title }}{% endblock %}
+
+{% block content %}
+<script src="/js/editor.js"></script>
+
+<br/>
+<table class="td" width="98%" cellpadding="0" cellspacing="0">
+  <tr>
+    <td>
+      <b>{{ topic_title }}</b> napisał(a)
+      <a href="/view/{{ topic_author_id }}">{{ topic_author }}</a>
+      {% if topic_author_id > 0 %} ID: {{ topic_author_id }}{% endif %}
+      (<a href="/tforums">Powrót</a>)
+      (<a href="/tforums/topic/{{ topic_id }}?quotet=true">Cytuj</a>)
+      {% if can_admin %}
+        | <form method="post" action="/tforums/topic/{{ topic_id }}/delete" style="display:inline">
+            <button type="submit" onclick="return confirm('Na pewno?');" style="border:none;background:none;color:blue;text-decoration:underline;cursor:pointer;padding:0;">Usuń</button>
+          </form>
+        | <form method="post" action="/tforums/topic/{{ topic_id }}/sticky?id={{ topic_id }}&action={% if is_sticky %}N{% else %}Y{% endif %}" style="display:inline">
+            <button type="submit" style="border:none;background:none;color:blue;text-decoration:underline;cursor:pointer;padding:0;">
+              {% if is_sticky %}Odepnij{% else %}Przypnij{% endif %}
+            </button>
+          </form>
+      {% endif %}
+    </td>
+  </tr>
+  <tr>
+    <td>{{ topic_body }}</td>
+  </tr>
+</table><br/>
+
+<center>
+{% for r in replies %}
+  <table class="td" width="98%" cellpadding="0" cellspacing="0">
+    <tr>
+      <td>
+        <b><a href="/view/{{ r.author_id }}">{{ r.author }}</a></b>
+        {% if r.author_id > 0 %} ID: {{ r.author_id }}{% endif %}
+        napisał(a)...
+        (<a href="/tforums">Powrót</a>)
+        (<a href="/tforums/topic/{{ topic_id }}?quote={{ r.id }}">Cytuj</a>)
+        {% if can_admin %}
+          | <form method="post" action="/tforums/reply/{{ r.id }}/delete?id={{ r.id }}&topic={{ topic_id }}" style="display:inline">
+              <button type="submit" onclick="return confirm('Na pewno?');" style="border:none;background:none;color:blue;text-decoration:underline;cursor:pointer;padding:0;">Usuń</button>
+            </form>
+        {% endif %}
+      </td>
+    </tr>
+    <tr>
+      <td>{{ r.body }}</td>
+    </tr>
+  </table><br/>
+{% endfor %}
+</center>
+
+{% if total_pages > 1 %}
+<br/>Idź do strony:
+{% for p in range(1, total_pages + 1) %}
+  {% if p == page %}{{ p }}{% else %}<a href="/tforums/topic/{{ topic_id }}?page={{ p }}">{{ p }}</a>{% endif %}
+{% endfor %}
+<br/><br/>
+{% endif %}
+
+<form method="post" action="/tforums/topic/{{ topic_id }}/reply" name="addreply">
+  <input type="hidden" name="topic_id" value="{{ topic_id }}"/>
+  Odpowiedz:<br/>
+  <input id="bold" type="button" value="Pogrubienie" onclick="formatText(this.id, 'addreply', 'rep')"/>
+  <input id="italic" type="button" value="Kursywa" onclick="formatText(this.id, 'addreply', 'rep')"/>
+  <input id="underline" type="button" value="Podkreślenie" onclick="formatText(this.id, 'addreply', 'rep')"/>
+  <input id="emote" type="button" value="Emocje/Czynność" onclick="formatText(this.id, 'addreply', 'rep')"/>
+  <input id="center" type="button" value="Wycentrowanie" onclick="formatText(this.id, 'addreply', 'rep')"/>
+  <input id="quote" type="button" value="Cytat" onclick="formatText(this.id, 'addreply', 'rep')"/>
+  <input id="color" type="button" value="Kolor" onclick="formatText(this.id, 'addreply', 'rep')"/>
+  <select name="colors">
+    <option value="red">czerwony</option>
+    <option value="green">zielony</option>
+    <option value="white">biały</option>
+    <option value="yellow">żółty</option>
+    <option value="blue">niebieski</option>
+    <option value="aqua">cyjan</option>
+    <option value="fuchsia">fuksja</option>
+    <option value="grey">szary</option>
+    <option value="lime">limonka</option>
+    <option value="maroon">wiśniowy</option>
+    <option value="navy">granatowy</option>
+    <option value="olive">oliwkowy</option>
+    <option value="purple">purpurowy</option>
+    <option value="silver">srebrny</option>
+    <option value="teal">morski</option>
+  </select><br/>
+  <textarea name="rep" cols="40" rows="10">{{ quote_text }}</textarea><br/>
+  <input type="submit" value="Odpowiedz"/>
+</form><br/>
+
+<small>Linki automatycznie zamieniane są na klikalne. Możesz używać następujących znaczników BBCode:<br/>
+<ul>
+  <li>[b]<b>Pogrubienie</b>[/b]</li>
+  <li>[i]<i>Kursywa</i>[/i]</li>
+  <li>[u]<u>Podkreślenie</u>[/u]</li>
+  <li>[color (angielska nazwa koloru lub kod HTML)]pokolorowanie tekstu[/color]</li>
+  <li>[center]wycentrowanie tekstu[/center]</li>
+  <li>[quote]cytat[/quote]</li>
+</ul></small>
+{% endblock %}

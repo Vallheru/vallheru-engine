@@ -1,0 +1,23 @@
+{% extends "base.html" %}
+
+{% block title %}Forum klanu - Nowe wpisy{% endblock %}
+
+{% block content %}
+<ul>
+  {% for t in topics %}
+  <li><a href="/tforums/topic/{{ t.id }}">{{ t.title }}</a></li>
+  {% endfor %}
+  {% if topics | length == 0 %}
+  <li><em>Brak nowych wpisów.</em></li>
+  {% endif %}
+</ul>
+
+{% if total_pages > 1 %}
+<br/>Idź do strony:
+{% for p in range(1, total_pages + 1) %}
+  {% if p == page %}{{ p }}{% else %}<a href="/tforums/new?page={{ p }}">{{ p }}</a>{% endif %}
+{% endfor %}
+{% endif %}
+
+<br/><br/><a href="/tforums">Powrót</a>
+{% endblock %}
