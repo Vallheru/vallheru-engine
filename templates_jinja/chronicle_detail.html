@@ -1,0 +1,22 @@
+{% extends "base.html" %}
+
+{% block title %}{{ name }}{% endblock %}
+
+{% block content %}
+<h2>{{ name }}</h2>
+
+<div class="chronicle-intro">
+  {{ intro|safe }}
+</div>
+
+{% if can_start %}
+<form method="post" action="/chronicle/start">
+  <input type="hidden" name="qid" value="{{ mission_id }}" />
+  <input type="submit" value="Rozpocznij przygodę" />
+</form>
+{% else %}
+<p>Nie możesz teraz rozpocząć tej przygody.</p>
+{% endif %}
+
+<p><a href="/chronicle">Powrót do kroniki</a></p>
+{% endblock %}

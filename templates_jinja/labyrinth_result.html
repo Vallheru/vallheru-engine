@@ -1,0 +1,16 @@
+{% extends "base.html" %}
+
+{% block title %}Labirynt — wyniki{% endblock %}
+
+{% block content %}
+<h2>Labirynt</h2>
+
+<p>{{ result_text|safe }}</p>
+
+{% if quest_triggered %}
+<p><a href="/quest?id={{ quest_id }}">Idź na przygodę!</a></p>
+{% endif %}
+
+<p><a href="/labyrinth">Eksploruj dalej</a></p>
+<p><a href="/city">Wróć do miasta</a></p>
+{% endblock %}

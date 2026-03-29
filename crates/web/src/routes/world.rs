@@ -4,7 +4,7 @@ use axum::{Router, middleware, routing};
 
 use crate::handlers::{
     bank, chat, city, content, deity, equipment, forums, gathering, house, locations, mail, map,
-    market, pages, room, shops, spells, temple, tower, travel, tribe_forum,
+    market, pages, quest, room, shops, spells, temple, tower, travel, tribe_forum,
 };
 use crate::middleware::guards::require_authenticated;
 use crate::state::AppState;
@@ -20,6 +20,7 @@ pub fn routes() -> Router<AppState> {
                 .merge(economy_routes())
                 .merge(combat_routes())
                 .merge(social_routes())
+                .merge(quest_routes())
                 .layer(middleware::from_fn(require_authenticated)),
         )
 }
@@ -153,6 +154,25 @@ fn economy_routes() -> Router<AppState> {
 fn combat_routes() -> Router<AppState> {
     // Placeholder — combat routes will be added by later tasks.
     Router::new()
+}
+
+fn quest_routes() -> Router<AppState> {
+    Router::new()
+        // Labyrinth (grid.php)
+        .route("/labyrinth", routing::get(quest::labyrinth_show))
+        .route(
+            "/labyrinth/explore",
+            routing::post(quest::labyrinth_explore),
+        )
+        // Chronicle missions (chronicle.php)
+        .route("/chronicle", routing::get(quest::chronicle_show))
+        .route("/chronicle/{id}", routing::get(quest::chronicle_detail))
+        .route("/chronicle/start", routing::post(quest::chronicle_start))
+        // Active mission navigation (mission.php)
+        .route("/mission", routing::post(quest::mission_advance))
+        // Maze (maze.php)
+        .route("/maze", routing::get(quest::maze_show))
+        .route("/maze/explore", routing::post(quest::maze_explore))
 }
 
 fn social_routes() -> Router<AppState> {

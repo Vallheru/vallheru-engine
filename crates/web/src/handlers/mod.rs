@@ -18,6 +18,7 @@ pub mod map;
 pub mod market;
 pub mod pages;
 pub mod preset;
+pub mod quest;
 pub mod registration;
 pub mod room;
 pub mod shops;

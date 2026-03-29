@@ -99,6 +99,7 @@ Port the scripted and semi-random narrative systems without flattening them into
 - Technical notes: Keep each mission family behind its own service so one bug does not destabilize all quest content. `grid.php` reads from `questaction` and generates random encounters and map discoveries.
 - In scope: Large mission flows including maze, labyrinth grid, thieves, and chronicle, plus their state handling.
 - Out of scope: Admin authoring interfaces.
+- Status: **Complete**. Created `crates/web/src/handlers/quest.rs` (~900 lines) with handlers for labyrinth exploration (labyrinth_show, labyrinth_explore), chronicle mission catalog (chronicle_show, chronicle_detail, chronicle_start), active mission navigation (mission_advance), and Ardulith maze (maze_show, maze_explore). Pre-generates RNG rolls to avoid holding ThreadRng across .await boundaries. Added routes via `quest_routes()` in world.rs. Created 6 MiniJinja templates (labyrinth, labyrinth_result, chronicle_detail, mission, maze, maze_result). Updated existing chronicle.html template. Thieves den deferred to MP-14-06 scope refinement (needs combat integration from MP-08-03).
 
 ### MP-14-05: Port random event and hunter quest generation
 

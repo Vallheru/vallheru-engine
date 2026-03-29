@@ -1,28 +1,38 @@
 {% extends "base.html" %}
 
-{% block title %}Kronika przygód{% endblock %}
+{% block title %}Kronika{% endblock %}
 
 {% block content %}
-<h2>Kronika przygód — {{ location }}</h2>
+<h2>Kronika</h2>
 
-{% if missions|length > 0 %}
-<table>
-  <thead>
-    <tr>
-      <th>Misja</th>
-      <th>Opis</th>
-    </tr>
-  </thead>
-  <tbody>
-    {% for m in missions %}
-    <tr>
-      <td><a href="/chronicle/{{ m.id }}">{{ m.name }}</a></td>
-      <td>{{ m.short_desc }}</td>
-    </tr>
-    {% endfor %}
-  </tbody>
-</table>
-{% else %}
-<p>Brak dostępnych misji w tej lokalizacji.</p>
+<p>{{ info }}</p>
+
+{% if stories|length > 0 %}
+<h3>Główne historie</h3>
+<ul>
+  {% for s in stories %}
+  <li><a href="/chronicle/{{ s.id }}">{{ s.title }}</a></li>
+  {% endfor %}
+</ul>
 {% endif %}
+
+{% if old_stories|length > 0 %}
+<h3>Dawne opowieści</h3>
+<ul>
+  {% for s in old_stories %}
+  <li><a href="/chronicle/{{ s.id }}">{{ s.title }}</a></li>
+  {% endfor %}
+</ul>
+{% endif %}
+
+{% if other_stories|length > 0 %}
+<h3>Inne przygody</h3>
+<ul>
+  {% for s in other_stories %}
+  <li><a href="/chronicle/{{ s.id }}">{{ s.title }}</a></li>
+  {% endfor %}
+</ul>
+{% endif %}
+
+<p><a href="/city">Wróć do miasta</a></p>
 {% endblock %}

@@ -1,0 +1,12 @@
+{% extends "base.html" %}
+
+{% block title %}Labirynt Ardulith — wyniki{% endblock %}
+
+{% block content %}
+<h2>Labirynt Ardulith</h2>
+
+<p>{{ result_text|safe }}</p>
+
+<p><a href="/maze">Eksploruj dalej</a></p>
+<p><a href="/city">Wróć do miasta</a></p>
+{% endblock %}

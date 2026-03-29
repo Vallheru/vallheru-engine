@@ -1,0 +1,29 @@
+{% extends "base.html" %}
+
+{% block title %}Przygoda{% endblock %}
+
+{% block content %}
+<h2>Przygoda</h2>
+
+<div class="mission-text">
+  {{ text|safe }}
+</div>
+
+{% if finished %}
+<p><a href="{{ finish_link }}">Wróć</a></p>
+{% else %}
+  {% if options|length > 0 %}
+  <form method="post" action="/mission">
+    {% for opt in options %}
+    <div>
+      <label>
+        <input type="radio" name="action" value="{{ opt.target }}" {% if loop.first %}checked{% endif %} />
+        {{ opt.label }}
+      </label>
+    </div>
+    {% endfor %}
+    <input type="submit" value="Idź" />
+  </form>
+  {% endif %}
+{% endif %}
+{% endblock %}

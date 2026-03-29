@@ -1,0 +1,23 @@
+{% extends "base.html" %}
+
+{% block title %}Labirynt Ardulith{% endblock %}
+
+{% block content %}
+<h2>Labirynt Ardulith</h2>
+
+<p>{{ maze_info }}</p>
+
+{% if max_amount > 0 %}
+<form method="post" action="/maze/explore">
+  <p>
+    <label>Ile razy chcesz eksplorować (maks. {{ max_amount }}):</label><br />
+    <input type="number" name="amount" min="1" max="{{ max_amount }}" value="1" />
+    <input type="submit" value="Eksploruj" />
+  </p>
+</form>
+{% else %}
+<p>Nie masz wystarczająco energii aby eksplorować labirynt.</p>
+{% endif %}
+
+<p><a href="/city">Wróć do miasta</a></p>
+{% endblock %}
