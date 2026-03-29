@@ -72,7 +72,7 @@ Port the scripted and semi-random narrative systems without flattening them into
 - Out of scope: Fight resolution inside missions.
 - Status: **Complete**. Created `quest/mission_loader.rs` (room template parsing, class placeholder expansion, chance rolling, room generation, serialization roundtrips) and `data/queries/mission.rs` (mission room/active mission/chronicle SQL queries with `RoomAdvance` struct). 40 new tests.
 
-### MP-14-03: Port quest action persistence and branching
+### MP-14-03: Port quest action persistence and branching ✅
 
 - Description: Rebuild the storage and branching logic for quest progression currently handled in PHP scripts and `quests_class.php`.
 - Estimate: 1.5h
@@ -84,6 +84,7 @@ Port the scripted and semi-random narrative systems without flattening them into
 - Technical notes: Keep PHP-script-specific quirks documented so they can be revalidated after porting.
 - In scope: Quest progression and branching.
 - Out of scope: Content authoring tools.
+- Status: **Complete**. Created `migrations/20250325000021_quest_tables.sql` (questaction + quests tables with indexes), `crates/data/src/queries/quest.rs` (full CRUD: find/insert/update/delete quest actions, quest content queries, answer checking), extended `crates/domain/src/quest/quest_action.rs` with: typed `QuestTransition` enum (BoxChoice/Answer/Advance/Resign), `QuestReward` + `XpAllotment` for XP distribution with ceiling division, `resolve_box_choice()` for box-style branching, `check_answer()` for case-insensitive text answers, `validate_advance()` guard, `has_active_quest()` predicate, `substitute_city_names()` for narrative text placeholders. 25 tests covering all new logic.
 
 ### MP-14-04: Port maze, labyrinth, thieves, and chronicle-style mission flows
 

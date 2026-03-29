@@ -20,6 +20,7 @@ pub mod market;
 pub mod mission;
 pub mod pages;
 pub mod player;
+pub mod quest;
 pub mod registration;
 pub mod room;
 pub mod session;
