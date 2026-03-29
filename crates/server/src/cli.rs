@@ -23,6 +23,12 @@ pub enum Command {
     /// Import data from a legacy database or dump.
     Import,
 
+    /// Run a scheduled job (energy-tick, daily-reset).
+    Job {
+        /// The job to run (energy-tick | daily-reset).
+        name: String,
+    },
+
     /// Reset the game era (wipe player progress, keep accounts).
     ResetEra,
 

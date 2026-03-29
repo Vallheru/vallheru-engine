@@ -36,6 +36,14 @@ fn main() -> anyhow::Result<()> {
                 .build()?;
             rt.block_on(vallheru_data::import::run_seeds(&config.database.url))
         }
+        Command::Job { name } => {
+            let job = vallheru_domain::admin::reset::Job::from_cli(&name)
+                .ok_or_else(|| anyhow::anyhow!("unknown job: {name}"))?;
+            let rt = tokio::runtime::Builder::new_current_thread()
+                .enable_all()
+                .build()?;
+            rt.block_on(run_job(&config.database.url, job))
+        }
         Command::ResetEra => {
             tracing::info!("reset-era: not yet implemented");
             Ok(())
@@ -71,6 +79,18 @@ fn resolve_default_config_path() -> Option<std::path::PathBuf> {
     } else {
         None
     }
+}
+
+async fn run_job(
+    database_url: &str,
+    job: vallheru_domain::admin::reset::Job,
+) -> anyhow::Result<()> {
+    let pool = vallheru_data::pool::create_pool(database_url, 2).await?;
+    let ran = vallheru_data::jobs::run_job(&pool, job).await?;
+    if !ran {
+        tracing::warn!(job = %job, "job skipped (lock held)");
+    }
+    Ok(())
 }
 
 async fn serve(config: AppConfig) -> anyhow::Result<()> {

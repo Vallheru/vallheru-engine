@@ -109,18 +109,23 @@ Port the staff-facing tools and replace legacy runtime scripts and page-triggere
 - In scope: Staff publishing UI and persistence.
 - Out of scope: Rich text editor replacement work.
 
-### MP-15-05: Replace page-triggered resets with explicit scheduled jobs
+### MP-15-05: Replace page-triggered resets with explicit scheduled jobs ✅
 
 - Description: Move energy resets, daily resets, hunter quest generation, jail expiration, and similar behaviors out of page loads and into explicit jobs.
 - Estimate: 2h
 - Depends on: MP-01-06, MP-02-04.
 - Functional acceptance criteria:
-  - Reset logic exists as callable Rust job functions.
-  - A scheduler or cron-invoked subcommand can run the jobs safely.
-  - Job runs are idempotent or protected against duplicate execution.
+  - ✅ Reset logic exists as callable Rust job functions.
+  - ✅ A scheduler or cron-invoked subcommand can run the jobs safely.
+  - ✅ Job runs are idempotent or protected against duplicate execution.
 - Technical notes: Keep the first version simple: one binary, scheduled subcommands, PostgreSQL locks where needed.
 - In scope: Reset job extraction and execution path.
 - Out of scope: Distributed job orchestration.
+- Implementation notes:
+  - `crates/data/src/jobs.rs`: `run_job()` with advisory lock protection, `energy_tick()`, `daily_reset()`, `process_random_events()`.
+  - CLI: `vallheru job energy-tick` and `vallheru job daily-reset`.
+  - Advisory lock keys from `Job::advisory_lock_key()` in `crates/domain/src/admin/reset.rs`.
+  - `daily_reset` covers: event/attack cleanup, farm aging, potion restock, jail expiration, chat/forum ban countdown, poison removal, outpost turns, tribe flags, house points, energy tick, map reset, ring restock, player daily reset, newbie/freeze decrements, core pass bonus, thief crime, room rental, random event processing, game reopen.
 
 ### MP-15-06: Port installer and bootstrap operational commands
 
