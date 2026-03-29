@@ -1,0 +1,41 @@
+{% extends "base.html" %}
+
+{% block content %}
+<h2>Lista mieszkańców</h2>
+
+<form method="get" action="/memberlist">
+  <label>Szukaj: <input type="text" name="search" value="{{ search }}" /></label>
+  <input type="submit" value="Szukaj" />
+</form>
+<br />
+
+{% if members %}
+<table align="center" width="90%">
+  <tr>
+    <td><b>ID</b></td>
+    <td><b>Imię</b></td>
+    <td><b>Ranga</b></td>
+  </tr>
+  {% for m in members %}
+  <tr>
+    <td align="center">{{ m.id }}</td>
+    <td><a href="/view?view={{ m.id }}">{{ m.username }}</a></td>
+    <td>{{ m.rank }}</td>
+  </tr>
+  {% endfor %}
+</table>
+
+<br />
+<p>
+  {% if page > 1 %}
+  <a href="/memberlist?page={{ page - 1 }}{% if search %}&amp;search={{ search }}{% endif %}">&laquo; Poprzednia</a>
+  {% endif %}
+  Strona {{ page }} / {{ total_pages }}
+  {% if page < total_pages %}
+  <a href="/memberlist?page={{ page + 1 }}{% if search %}&amp;search={{ search }}{% endif %}">Następna &raquo;</a>
+  {% endif %}
+</p>
+{% else %}
+<p>Brak wyników.</p>
+{% endif %}
+{% endblock %}

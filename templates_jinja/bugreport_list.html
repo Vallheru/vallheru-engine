@@ -1,0 +1,28 @@
+{% extends "base.html" %}
+
+{% block content %}
+<h2>Zgłoszone błędy</h2>
+
+{% if bugs %}
+<table align="center" width="90%">
+  <tr>
+    <td><b>ID</b></td>
+    <td><b>Nadawca</b></td>
+    <td><b>Status</b></td>
+    <td><b>Lokalizacja</b></td>
+    <td><b>Nazwa</b></td>
+  </tr>
+  {% for bug in bugs %}
+  <tr>
+    <td align="center"><a href="/staff/bugreport/{{ bug.id }}">{{ bug.id }}</a></td>
+    <td align="center">{{ bug.sender }}</td>
+    <td align="center">{{ bug.status }}</td>
+    <td align="center">{{ bug.location }}</td>
+    <td align="center">{{ bug.title }}</td>
+  </tr>
+  {% endfor %}
+</table>
+{% else %}
+<p>Brak zgłoszonych błędów.</p>
+{% endif %}
+{% endblock %}

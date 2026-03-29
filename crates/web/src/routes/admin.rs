@@ -1,12 +1,12 @@
 //! Admin and staff route trees.
 //!
 //! Provides route groups for the admin panel (admin-only), staff panel
-//! (staff/admin/builder), and the staff list (any authenticated user).
-//! Individual action routes will be added by MP-15-02 through MP-15-04.
+//! (staff/admin/builder), staff list, bug reports, admin logs, and
+//! member list.
 
 use axum::{Router, middleware, routing};
 
-use crate::handlers::{admin, staff};
+use crate::handlers::{admin, admin_logs, bugreport, memberlist, staff};
 use crate::middleware::guards::{Rank, require_admin, require_any_rank, require_authenticated};
 use crate::state::AppState;
 
@@ -15,19 +15,29 @@ use crate::state::AppState;
 /// Structure:
 /// - `/admin` — admin-only panel and sub-routes
 /// - `/staff` — staff panel (Staff, Admin, Builder)
+/// - `/staff/bugreport` — bug reports (Staff, Admin, Builder)
+/// - `/staff/logs` — admin logs (Staff, Admin)
 /// - `/stafflist` — audience hall (any authenticated user)
+/// - `/memberlist` — player list (any authenticated user)
 pub fn routes() -> Router<AppState> {
     Router::new()
-        // Staff list is visible to all authenticated users.
+        // Public authenticated routes.
         .merge(
             Router::new()
                 .route("/stafflist", routing::get(staff::staff_list))
+                .route("/memberlist", routing::get(memberlist::member_list))
                 .layer(middleware::from_fn(require_authenticated)),
         )
-        // Staff panel — accessible to Staff, Admin, and Builder.
+        // Staff panel and tools — accessible to Staff, Admin, and Builder.
         .merge(
             Router::new()
                 .route("/staff", routing::get(staff::staff_panel))
+                .route("/staff/bugreport", routing::get(bugreport::bugreport_list))
+                .route(
+                    "/staff/bugreport/{id}",
+                    routing::get(bugreport::bugreport_detail).post(bugreport::bugreport_resolve),
+                )
+                .route("/staff/logs", routing::get(admin_logs::admin_logs))
                 .layer(middleware::from_fn(require_any_rank(&[
                     Rank::Staff,
                     Rank::Admin,

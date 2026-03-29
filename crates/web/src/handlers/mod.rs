@@ -3,8 +3,10 @@
 pub mod account;
 pub mod account_settings;
 pub mod admin;
+pub mod admin_logs;
 pub mod auth;
 pub mod bank;
+pub mod bugreport;
 pub mod chat;
 pub mod city;
 pub mod content;
@@ -17,6 +19,7 @@ pub mod locations;
 pub mod mail;
 pub mod map;
 pub mod market;
+pub mod memberlist;
 pub mod pages;
 pub mod preset;
 pub mod quest;

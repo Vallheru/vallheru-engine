@@ -1,0 +1,43 @@
+{% extends "base.html" %}
+
+{% block content %}
+<h2>Logi graczy</h2>
+
+<p>Tutaj możesz przeglądać logi z niektórych akcji graczy.</p>
+
+<form method="get" action="/staff/logs">
+  <label>Logi gracza o ID: <input type="text" name="lid" size="5" value="{{ player_filter | default('') }}" /></label>
+  <input type="submit" value="Szukaj" />
+</form>
+<br />
+
+{% if logs %}
+<table align="center" width="90%">
+  <tr>
+    <td><b>Właściciel (ID)</b></td>
+    <td><b>Data</b></td>
+    <td><b>Treść</b></td>
+  </tr>
+  {% for entry in logs %}
+  <tr>
+    <td align="center">{{ entry.owner_id }}</td>
+    <td align="center">{{ entry.date }}</td>
+    <td>{{ entry.message }}</td>
+  </tr>
+  {% endfor %}
+</table>
+
+<br />
+<p>
+  {% if page > 1 %}
+  <a href="/staff/logs?page={{ page - 1 }}{% if player_filter %}&amp;lid={{ player_filter }}{% endif %}">&laquo; Poprzednia</a>
+  {% endif %}
+  Strona {{ page }} / {{ total_pages }}
+  {% if page < total_pages %}
+  <a href="/staff/logs?page={{ page + 1 }}{% if player_filter %}&amp;lid={{ player_filter }}{% endif %}">Następna &raquo;</a>
+  {% endif %}
+</p>
+{% else %}
+<p>Brak logów.</p>
+{% endif %}
+{% endblock %}

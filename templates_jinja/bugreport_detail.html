@@ -1,0 +1,36 @@
+{% extends "base.html" %}
+
+{% block content %}
+<h2>Błąd #{{ bug.id }}: {{ bug.title }}</h2>
+
+<p><b>Status:</b> {{ bug.status }}</p>
+<p><b>Lokalizacja:</b> {{ bug.location }}</p>
+<p><b>Opis:</b> {{ bug.body }}</p>
+
+{% if comments %}
+<h3>Komentarze</h3>
+{% for c in comments %}
+<div>
+  <b>{{ c.author }}</b> ({{ c.created }}):<br />
+  {{ c.body }}
+</div>
+<br />
+{% endfor %}
+{% endif %}
+
+<h3>Rozwiąż</h3>
+<form method="post" action="/staff/bugreport/{{ bug.id }}">
+  <b>Akcja:</b>
+  <select name="action">
+    <option value="fixed">Naprawiono</option>
+    <option value="notbug">To nie jest błąd</option>
+    <option value="workforme">U mnie działa</option>
+    <option value="moreinfo">Wymagam więcej informacji</option>
+    <option value="duplicate">Duplikat</option>
+    <option value="invalid">Nieprawidłowe zgłoszenie</option>
+  </select><br /><br />
+  <b>Komentarz:</b><br />
+  <textarea name="comment" rows="5" cols="40"></textarea><br /><br />
+  <input type="submit" value="Zastosuj" />
+</form>
+{% endblock %}
