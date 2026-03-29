@@ -101,18 +101,25 @@ Port the scripted and semi-random narrative systems without flattening them into
 - Out of scope: Admin authoring interfaces.
 - Status: **Complete**. Created `crates/web/src/handlers/quest.rs` (~900 lines) with handlers for labyrinth exploration (labyrinth_show, labyrinth_explore), chronicle mission catalog (chronicle_show, chronicle_detail, chronicle_start), active mission navigation (mission_advance), and Ardulith maze (maze_show, maze_explore). Pre-generates RNG rolls to avoid holding ThreadRng across .await boundaries. Added routes via `quest_routes()` in world.rs. Created 6 MiniJinja templates (labyrinth, labyrinth_result, chronicle_detail, mission, maze, maze_result). Updated existing chronicle.html template. Thieves den deferred to MP-14-06 scope refinement (needs combat integration from MP-08-03).
 
-### MP-14-05: Port random event and hunter quest generation
+### MP-14-05: Port random event and hunter quest generation ✅
 
 - Description: Rebuild random events, daily/periodic hunter tasks, and related state mutation logic.
 - Estimate: 1.5h
 - Depends on: MP-14-01, MP-15-05.
 - Functional acceptance criteria:
-  - Random events can be generated and resumed from Rust-managed data.
-  - Hunter quest state is created using the scheduler/reset infrastructure, not page-load side effects.
-  - Event outcomes integrate with combat and rewards.
+  - ✅ Random events can be generated and resumed from Rust-managed data.
+  - ✅ Hunter quest state is created using the scheduler/reset infrastructure, not page-load side effects.
+  - ✅ Event outcomes integrate with combat and rewards.
 - Technical notes: Separate event generation from event rendering so future scheduling changes stay local.
 - In scope: Event generation and persistence.
 - Out of scope: Full scheduling framework.
+- Implementation notes:
+  - Added `ItemDisposed` (state 4) to `EventPhase` enum — covers quest item sold/disposed punishment.
+  - Added domain functions: `generate_event()`, `event_gen_db_state()`, `process_delivery_response()`, `process_beggar_response()`, `beggar_outcome_db_state()`, `reset_resolution()`, `PunishmentKind`.
+  - Created `crates/data/src/queries/event.rs` with revent CRUD + hunter quest catalog queries.
+  - Extended `crates/data/src/jobs.rs`: `generate_hunter_quests()` runs during daily reset, generates random F/I/L/B/P quests for both cities; `process_random_events()` now handles states 2/3/4/7 (delivery expired, delivery reward, item sold punishment, beggar reward/veteran recruitment).
+  - Created migration `20250325000022_revent_table.sql`.
+  - 14 new domain tests for event generation, interaction, and reset resolution.
 
 ### MP-14-06: Add quest and mission parity fixtures ✅
 

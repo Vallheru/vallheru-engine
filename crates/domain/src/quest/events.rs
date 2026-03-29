@@ -68,6 +68,8 @@ pub enum EventPhase {
     DeliveryInProgress,
     /// Delivery completed, reward given (state 3).
     DeliveryComplete,
+    /// Quest item sold/disposed — leads to punishment at reset (state 4).
+    ItemDisposed,
     /// Cooling down after event completion (state 5).
     CooldownNormal,
     /// Beggar/suspicious figure initial encounter (state 6).
@@ -84,6 +86,7 @@ impl EventPhase {
             1 => Self::DeliveryOffered,
             2 => Self::DeliveryInProgress,
             3 => Self::DeliveryComplete,
+            4 => Self::ItemDisposed,
             5 => Self::CooldownNormal,
             6 => Self::EncounterOffered,
             7 => Self::CooldownReward,
@@ -98,6 +101,7 @@ impl EventPhase {
             Self::DeliveryOffered => 1,
             Self::DeliveryInProgress => 2,
             Self::DeliveryComplete => 3,
+            Self::ItemDisposed => 4,
             Self::CooldownNormal => 5,
             Self::EncounterOffered => 6,
             Self::CooldownReward => 7,
@@ -187,6 +191,233 @@ pub struct HunterQuestAvailability {
 }
 
 // ---------------------------------------------------------------------------
+// Event generation
+// ---------------------------------------------------------------------------
+
+/// Pre-rolled dice for event generation, enabling deterministic testing.
+#[derive(Debug, Clone)]
+pub struct EventGenRolls {
+    /// Which event type (0–2).
+    pub type_roll: i32,
+    /// Roll for beggar encounter: < 51 means beggar not interested (out of 100).
+    pub beggar_roll: i32,
+    /// Perception skill of the player (for suspicious figure).
+    pub perception: i32,
+    /// Perception threshold roll (10–300 range).
+    pub perception_threshold: i32,
+    /// Location index for delivery quest (`0..DELIVERY_LOCATIONS.len()`).
+    pub location_index: usize,
+    /// Cooldown ticks when needed (18–36 range).
+    pub cooldown_ticks: i16,
+}
+
+/// The outcome of generating a new event for a player who has no active event.
+#[derive(Debug, Clone, PartialEq, Eq)]
+pub enum EventGenOutcome {
+    /// Delivery quest: old man asks to deliver something.
+    DeliveryOffered,
+    /// Beggar approaches but leaves (not interested in the player).
+    BeggarDismissed { cooldown: i16 },
+    /// Beggar asks for money.
+    BeggarAsks,
+    /// Suspicious figure turns out to be a ratman (perception check passed).
+    RatmanFight { cooldown: i16 },
+    /// Suspicious figure leaves (perception check failed).
+    FigureDismissed { cooldown: i16 },
+}
+
+/// Determine the outcome of triggering a new random event.
+///
+/// Returns `None` if the player already has an event (non-None phase).
+pub fn generate_event(rolls: &EventGenRolls) -> EventGenOutcome {
+    let kind = RandomEventKind::from_roll(rolls.type_roll);
+    match kind {
+        RandomEventKind::Delivery => EventGenOutcome::DeliveryOffered,
+        RandomEventKind::Beggar => {
+            if rolls.beggar_roll < 51 {
+                EventGenOutcome::BeggarDismissed {
+                    cooldown: rolls.cooldown_ticks,
+                }
+            } else {
+                EventGenOutcome::BeggarAsks
+            }
+        }
+        RandomEventKind::SuspiciousFigure => {
+            if rolls.perception > rolls.perception_threshold {
+                EventGenOutcome::RatmanFight {
+                    cooldown: rolls.cooldown_ticks,
+                }
+            } else {
+                EventGenOutcome::FigureDismissed {
+                    cooldown: rolls.cooldown_ticks,
+                }
+            }
+        }
+    }
+}
+
+/// Compute the initial DB state for a generated event.
+pub fn event_gen_db_state(outcome: &EventGenOutcome) -> (i16, i16) {
+    match outcome {
+        EventGenOutcome::DeliveryOffered => (EventPhase::DeliveryOffered.to_db(), 0),
+        EventGenOutcome::BeggarDismissed { cooldown }
+        | EventGenOutcome::FigureDismissed { cooldown } => {
+            (EventPhase::CooldownNormal.to_db(), *cooldown)
+        }
+        EventGenOutcome::BeggarAsks => (EventPhase::EncounterOffered.to_db(), 0),
+        EventGenOutcome::RatmanFight { cooldown } => (EventPhase::InCombat.to_db(), *cooldown),
+    }
+}
+
+// ---------------------------------------------------------------------------
+// Event interaction outcomes
+// ---------------------------------------------------------------------------
+
+/// Response choices for the delivery offer (state 1).
+#[derive(Debug, Clone, Copy, PartialEq, Eq)]
+pub enum DeliveryResponse {
+    Accept,
+    Refuse,
+}
+
+/// Outcome of accepting a delivery quest.
+#[derive(Debug, Clone, PartialEq, Eq)]
+pub struct DeliveryAccepted {
+    /// Target city+location, e.g. `"Ardulith;Biblioteka"`.
+    pub location_data: String,
+    /// Cooldown until delivery expires.
+    pub qtime: i16,
+}
+
+/// Process the delivery response.
+///
+/// Returns `Some(accepted)` on accept, `None` on refuse (row should be
+/// deleted).
+pub fn process_delivery_response(
+    response: DeliveryResponse,
+    current_city: &str,
+    location_roll: usize,
+    cooldown: i16,
+) -> Option<DeliveryAccepted> {
+    match response {
+        DeliveryResponse::Refuse => None,
+        DeliveryResponse::Accept => {
+            let target = delivery_target_city(current_city);
+            let idx = location_roll % DELIVERY_LOCATIONS.len();
+            let loc = DELIVERY_LOCATIONS[idx];
+            Some(DeliveryAccepted {
+                location_data: format!("{target};{loc}"),
+                qtime: cooldown,
+            })
+        }
+    }
+}
+
+/// Response choices for the beggar encounter (state 6 from beggar type).
+#[derive(Debug, Clone, Copy, PartialEq, Eq)]
+pub enum BeggarResponse {
+    GiveMoney,
+    Refuse,
+}
+
+/// Range for the beggar's gold demand.
+pub const BEGGAR_GOLD_MIN: i32 = 10;
+pub const BEGGAR_GOLD_MAX: i32 = 100;
+
+/// Outcome of responding to the beggar.
+#[derive(Debug, Clone, PartialEq, Eq)]
+pub enum BeggarOutcome {
+    /// Player gave money.
+    Gave { gold_cost: i32, cooldown: i16 },
+    /// Player couldn't afford it.
+    CantAfford { cooldown: i16 },
+    /// Player refused.
+    Refused { cooldown: i16 },
+}
+
+/// Process the beggar response.
+pub fn process_beggar_response(
+    response: BeggarResponse,
+    player_gold: i64,
+    gold_demand: i32,
+    cooldown: i16,
+) -> BeggarOutcome {
+    match response {
+        BeggarResponse::Refuse => BeggarOutcome::Refused { cooldown },
+        BeggarResponse::GiveMoney => {
+            if player_gold < i64::from(gold_demand) {
+                BeggarOutcome::CantAfford { cooldown }
+            } else {
+                BeggarOutcome::Gave {
+                    gold_cost: gold_demand,
+                    cooldown,
+                }
+            }
+        }
+    }
+}
+
+/// DB state after beggar interaction.
+pub fn beggar_outcome_db_state(outcome: &BeggarOutcome) -> (i16, i16) {
+    match outcome {
+        BeggarOutcome::Gave { cooldown, .. } => (EventPhase::CooldownReward.to_db(), *cooldown),
+        BeggarOutcome::CantAfford { cooldown } | BeggarOutcome::Refused { cooldown } => {
+            (EventPhase::CooldownNormal.to_db(), *cooldown)
+        }
+    }
+}
+
+// ---------------------------------------------------------------------------
+// Reset-time event resolution
+// ---------------------------------------------------------------------------
+
+/// Outcome of resolving an expired event at reset time.
+#[derive(Debug, Clone, PartialEq, Eq)]
+pub enum ResetResolution {
+    /// State 2: delivery not completed in time — remove quest item.
+    DeliveryExpired,
+    /// State 3: delivery completed — award gold to bank.
+    DeliveryReward,
+    /// State 4: player sold the quest item — punishment.
+    ItemSoldPunishment,
+    /// State 7: gave money to beggar — possible veteran recruitment.
+    BeggarReward,
+    /// Other cooldown expired — just clean up.
+    CooldownExpired,
+}
+
+/// Determine the resolution action for an expired event.
+pub fn reset_resolution(state: i16) -> ResetResolution {
+    match EventPhase::from_db(state) {
+        EventPhase::DeliveryInProgress => ResetResolution::DeliveryExpired,
+        EventPhase::DeliveryComplete => ResetResolution::DeliveryReward,
+        EventPhase::ItemDisposed => ResetResolution::ItemSoldPunishment,
+        EventPhase::CooldownReward => ResetResolution::BeggarReward,
+        _ => ResetResolution::CooldownExpired,
+    }
+}
+
+/// Item-sold punishment outcome (state 4 at reset).
+/// 50/50 chance: jail or bandit attack.
+#[derive(Debug, Clone, Copy, PartialEq, Eq)]
+pub enum PunishmentKind {
+    /// Jailed for stealing from the tax collector.
+    Jail,
+    /// Bandits attack: hp=0, credits=0, bank halved.
+    BanditAttack,
+}
+
+impl PunishmentKind {
+    pub fn from_roll(roll: i32) -> Self {
+        if roll == 0 {
+            Self::Jail
+        } else {
+            Self::BanditAttack
+        }
+    }
+}
+
+// ---------------------------------------------------------------------------
 // Tests
 // ---------------------------------------------------------------------------
 
@@ -196,7 +427,7 @@ mod tests {
 
     #[test]
     fn event_phase_roundtrip() {
-        for state in [0, 1, 2, 3, 5, 6, 7, 8] {
+        for state in [0, 1, 2, 3, 4, 5, 6, 7, 8] {
             let phase = EventPhase::from_db(state);
             assert_eq!(phase.to_db(), state);
         }
@@ -204,7 +435,6 @@ mod tests {
 
     #[test]
     fn event_phase_unknown_maps_to_none() {
-        assert_eq!(EventPhase::from_db(4), EventPhase::None);
         assert_eq!(EventPhase::from_db(99), EventPhase::None);
     }
 
@@ -214,6 +444,7 @@ mod tests {
         assert!(EventPhase::DeliveryOffered.is_active());
         assert!(EventPhase::DeliveryInProgress.is_active());
         assert!(EventPhase::DeliveryComplete.is_active());
+        assert!(EventPhase::ItemDisposed.is_active());
         assert!(!EventPhase::CooldownNormal.is_active());
         assert!(EventPhase::EncounterOffered.is_active());
         assert!(!EventPhase::CooldownReward.is_active());
@@ -226,6 +457,7 @@ mod tests {
         assert!(EventPhase::CooldownReward.is_cooldown());
         assert!(!EventPhase::None.is_cooldown());
         assert!(!EventPhase::DeliveryOffered.is_cooldown());
+        assert!(!EventPhase::ItemDisposed.is_cooldown());
     }
 
     #[test]
@@ -247,5 +479,179 @@ mod tests {
     #[test]
     fn delivery_locations_count() {
         assert_eq!(DELIVERY_LOCATIONS.len(), 7);
+    }
+
+    // --- Event generation ---
+
+    #[test]
+    fn generate_delivery_event() {
+        let rolls = EventGenRolls {
+            type_roll: 0,
+            beggar_roll: 0,
+            perception: 0,
+            perception_threshold: 0,
+            location_index: 0,
+            cooldown_ticks: 20,
+        };
+        assert_eq!(generate_event(&rolls), EventGenOutcome::DeliveryOffered);
+    }
+
+    #[test]
+    fn generate_beggar_dismissed() {
+        let rolls = EventGenRolls {
+            type_roll: 1,
+            beggar_roll: 30,
+            perception: 0,
+            perception_threshold: 0,
+            location_index: 0,
+            cooldown_ticks: 25,
+        };
+        assert_eq!(
+            generate_event(&rolls),
+            EventGenOutcome::BeggarDismissed { cooldown: 25 }
+        );
+    }
+
+    #[test]
+    fn generate_beggar_asks() {
+        let rolls = EventGenRolls {
+            type_roll: 1,
+            beggar_roll: 80,
+            perception: 0,
+            perception_threshold: 0,
+            location_index: 0,
+            cooldown_ticks: 20,
+        };
+        assert_eq!(generate_event(&rolls), EventGenOutcome::BeggarAsks);
+    }
+
+    #[test]
+    fn generate_ratman_fight() {
+        let rolls = EventGenRolls {
+            type_roll: 2,
+            beggar_roll: 0,
+            perception: 200,
+            perception_threshold: 100,
+            location_index: 0,
+            cooldown_ticks: 30,
+        };
+        assert_eq!(
+            generate_event(&rolls),
+            EventGenOutcome::RatmanFight { cooldown: 30 }
+        );
+    }
+
+    #[test]
+    fn generate_figure_dismissed() {
+        let rolls = EventGenRolls {
+            type_roll: 2,
+            beggar_roll: 0,
+            perception: 50,
+            perception_threshold: 200,
+            location_index: 0,
+            cooldown_ticks: 22,
+        };
+        assert_eq!(
+            generate_event(&rolls),
+            EventGenOutcome::FigureDismissed { cooldown: 22 }
+        );
+    }
+
+    #[test]
+    fn event_gen_db_state_values() {
+        let (s, t) = event_gen_db_state(&EventGenOutcome::DeliveryOffered);
+        assert_eq!(s, 1);
+        assert_eq!(t, 0);
+
+        let (s, t) = event_gen_db_state(&EventGenOutcome::BeggarDismissed { cooldown: 25 });
+        assert_eq!(s, 5);
+        assert_eq!(t, 25);
+
+        let (s, t) = event_gen_db_state(&EventGenOutcome::BeggarAsks);
+        assert_eq!(s, 6);
+        assert_eq!(t, 0);
+
+        let (s, t) = event_gen_db_state(&EventGenOutcome::RatmanFight { cooldown: 30 });
+        assert_eq!(s, 8);
+        assert_eq!(t, 30);
+
+        let (s, t) = event_gen_db_state(&EventGenOutcome::FigureDismissed { cooldown: 22 });
+        assert_eq!(s, 5);
+        assert_eq!(t, 22);
+    }
+
+    // --- Event interaction ---
+
+    #[test]
+    fn delivery_accept() {
+        let result = process_delivery_response(DeliveryResponse::Accept, "Altara", 3, 4);
+        let accepted = result.unwrap();
+        assert_eq!(accepted.location_data, "Ardulith;Magiczna wieża");
+        assert_eq!(accepted.qtime, 4);
+    }
+
+    #[test]
+    fn delivery_refuse() {
+        assert!(process_delivery_response(DeliveryResponse::Refuse, "Altara", 0, 4).is_none());
+    }
+
+    #[test]
+    fn beggar_give_money() {
+        let outcome = process_beggar_response(BeggarResponse::GiveMoney, 500, 50, 6);
+        assert_eq!(
+            outcome,
+            BeggarOutcome::Gave {
+                gold_cost: 50,
+                cooldown: 6
+            }
+        );
+    }
+
+    #[test]
+    fn beggar_cant_afford() {
+        let outcome = process_beggar_response(BeggarResponse::GiveMoney, 10, 50, 6);
+        assert_eq!(outcome, BeggarOutcome::CantAfford { cooldown: 6 });
+    }
+
+    #[test]
+    fn beggar_refuse() {
+        let outcome = process_beggar_response(BeggarResponse::Refuse, 500, 50, 6);
+        assert_eq!(outcome, BeggarOutcome::Refused { cooldown: 6 });
+    }
+
+    #[test]
+    fn beggar_outcome_db_states() {
+        let (s, t) = beggar_outcome_db_state(&BeggarOutcome::Gave {
+            gold_cost: 50,
+            cooldown: 6,
+        });
+        assert_eq!(s, 7);
+        assert_eq!(t, 6);
+
+        let (s, t) = beggar_outcome_db_state(&BeggarOutcome::CantAfford { cooldown: 20 });
+        assert_eq!(s, 5);
+        assert_eq!(t, 20);
+
+        let (s, t) = beggar_outcome_db_state(&BeggarOutcome::Refused { cooldown: 20 });
+        assert_eq!(s, 5);
+        assert_eq!(t, 20);
+    }
+
+    // --- Reset resolution ---
+
+    #[test]
+    fn reset_resolution_states() {
+        assert_eq!(reset_resolution(2), ResetResolution::DeliveryExpired);
+        assert_eq!(reset_resolution(3), ResetResolution::DeliveryReward);
+        assert_eq!(reset_resolution(4), ResetResolution::ItemSoldPunishment);
+        assert_eq!(reset_resolution(7), ResetResolution::BeggarReward);
+        assert_eq!(reset_resolution(5), ResetResolution::CooldownExpired);
+        assert_eq!(reset_resolution(8), ResetResolution::CooldownExpired);
+    }
+
+    #[test]
+    fn punishment_kind_from_roll() {
+        assert_eq!(PunishmentKind::from_roll(0), PunishmentKind::Jail);
+        assert_eq!(PunishmentKind::from_roll(1), PunishmentKind::BanditAttack);
     }
 }

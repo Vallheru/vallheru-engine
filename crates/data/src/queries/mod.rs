@@ -10,6 +10,7 @@ pub mod bank;
 pub mod character_reset;
 pub mod chat;
 pub mod content;
+pub mod event;
 pub mod forum;
 pub mod gathering;
 pub mod house;
