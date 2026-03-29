@@ -85,6 +85,68 @@ impl LabyrinthStepOutcome {
 /// Energy cost per labyrinth exploration step in `grid.php`.
 pub const LABYRINTH_ENERGY_COST: f64 = 0.3;
 
+/// Pre-rolled dice for a single labyrinth step, used to decouple RNG from
+/// processing so the accumulation loop is pure and testable.
+#[derive(Debug, Clone, PartialEq, Eq)]
+pub struct LabyrinthRoll {
+    /// The main outcome roll (1–11).
+    pub outcome_roll: i32,
+    /// Gold amount roll (1–100), used when outcome == Gold.
+    pub gold_roll: i32,
+    /// Mithril amount roll (1–3), used when outcome == Mithril.
+    pub mithril_roll: i32,
+    /// Quest trigger sub-roll (1–5), used when outcome == `QuestChance`.
+    /// A value of 5 means the quest fires.
+    pub quest_roll: i32,
+    /// Map fragment sub-roll (1–50), used for map discovery fallback.
+    pub map_roll: i32,
+}
+
+/// Process a batch of pre-rolled labyrinth steps into an accumulated result.
+///
+/// The `has_quest_available` callback is invoked (at most once) when a quest
+/// trigger fires. It should return `Some(quest_id)` if a quest is available
+/// for the player, or `None` if no quest is available (in which case a map
+/// fragment may be found instead).
+///
+/// The `map_eligible` callback checks whether a map fragment roll should
+/// succeed (e.g. based on the player's current map count and the roll value).
+pub fn process_labyrinth_steps<QF, MF>(
+    rolls: &[LabyrinthRoll],
+    mut has_quest_available: QF,
+    mut map_eligible: MF,
+) -> LabyrinthExploreResult
+where
+    QF: FnMut() -> Option<i32>,
+    MF: FnMut(i32) -> bool,
+{
+    let mut result = LabyrinthExploreResult::default();
+
+    for roll in rolls {
+        let outcome = LabyrinthStepOutcome::from_roll(roll.outcome_roll);
+        match outcome {
+            LabyrinthStepOutcome::Gold => result.gold += roll.gold_roll,
+            LabyrinthStepOutcome::Mithril => result.mithril += roll.mithril_roll,
+            LabyrinthStepOutcome::EnergyLoss => result.energy_lost += 1,
+            LabyrinthStepOutcome::QuestChance => {
+                if roll.quest_roll == 5 && result.quest_triggered.is_none() {
+                    result.quest_triggered = has_quest_available();
+                }
+                if result.quest_triggered.is_none() && map_eligible(roll.map_roll) {
+                    result.maps_found += 1;
+                }
+            }
+            LabyrinthStepOutcome::Nothing => {}
+        }
+        result.steps_completed += 1;
+        if result.quest_triggered.is_some() {
+            break;
+        }
+    }
+
+    result
+}
+
 /// Validate that a player can explore the labyrinth.
 pub fn can_explore_labyrinth(
     location: &str,

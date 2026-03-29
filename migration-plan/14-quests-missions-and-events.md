@@ -114,7 +114,7 @@ Port the scripted and semi-random narrative systems without flattening them into
 - In scope: Event generation and persistence.
 - Out of scope: Full scheduling framework.
 
-### MP-14-06: Add quest and mission parity fixtures
+### MP-14-06: Add quest and mission parity fixtures ✅
 
 - Description: Capture representative quest states and mission transitions from the PHP version and codify them as tests.
 - Estimate: 1.5h
@@ -126,3 +126,8 @@ Port the scripted and semi-random narrative systems without flattening them into
 - Technical notes: Focus first on the most stateful quest paths.
 - In scope: Quest/mission fixtures and tests.
 - Out of scope: Full storyline coverage.
+- Implementation notes:
+  - 55 new tests across 9 documented sections in `parity_fixtures.rs`.
+  - Extracted `process_labyrinth_steps` and `LabyrinthRoll` to `maze.rs` for deterministic testing.
+  - Sections: quest1 lifecycle (7 tests), mission traversal (5 tests), thief missions (5 tests), labyrinth exploration (9 tests), maze entry (1 test), events (3 tests), roll_options (3 tests), room prefixes (3 tests), end-to-end simulations (3 tests).
+  - Type-filter lossiness in exit serialization documented (by design — filter applied before storage).

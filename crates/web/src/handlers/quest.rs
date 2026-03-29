@@ -266,7 +266,10 @@ pub async fn labyrinth_explore(
 
     let mut text = String::new();
     if gold > 0 || mithril > 0 || energy_bonus > 0 || maps_found > 0 {
-        let _ = write!(text, "Podczas swojej wędrówki znalazł{gender_suffix}:<br />");
+        let _ = write!(
+            text,
+            "Podczas swojej wędrówki znalazł{gender_suffix}:<br />"
+        );
         if gold > 0 {
             let _ = write!(text, "{gold} sztuk złota<br />");
         }
@@ -774,7 +777,10 @@ pub async fn maze_explore(
     };
     let mut text = String::new();
     if gold > 0 || mithril > 0 || energy_bonus > 0 {
-        let _ = write!(text, "Podczas swojej wędrówki znalazł{gender_suffix}:<br />");
+        let _ = write!(
+            text,
+            "Podczas swojej wędrówki znalazł{gender_suffix}:<br />"
+        );
         if gold > 0 {
             let _ = write!(text, "{gold} sztuk złota<br />");
         }
