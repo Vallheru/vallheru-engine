@@ -29,6 +29,19 @@ pub enum Command {
         name: String,
     },
 
+    /// Bootstrap a new game: run migrations, import seeds, create admin.
+    Bootstrap {
+        /// Admin username.
+        #[arg(long)]
+        admin_user: String,
+        /// Admin email.
+        #[arg(long)]
+        admin_email: String,
+        /// Admin password.
+        #[arg(long)]
+        admin_password: String,
+    },
+
     /// Reset the game era (wipe player progress, keep accounts).
     ResetEra,
 

@@ -1,3 +1,4 @@
+pub mod bootstrap;
 pub mod import;
 pub mod jobs;
 pub mod migrate;

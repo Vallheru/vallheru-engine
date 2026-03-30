@@ -103,18 +103,24 @@ Port the staff-facing tools and replace legacy runtime scripts and page-triggere
 - In scope: Support dashboards and read models.
 - Out of scope: External issue tracker integration.
 
-### MP-15-04: Port court, update, and staff publishing tools
+### MP-15-04: Port court, update, and staff publishing tools ✅
 
 - Description: Rebuild content-management pages used by staff for rules, updates, and front-page/news publication.
 - Estimate: 1.5h
 - Depends on: MP-12-05, MP-15-01.
 - Functional acceptance criteria:
-  - Staff can publish or edit rules/news/update content in Rust.
-  - Public pages consume the same PostgreSQL-backed content.
-  - Edit actions are protected and logged.
+  - ✅ Staff can publish or edit rules/news/update content in Rust.
+  - ✅ Public pages consume the same PostgreSQL-backed content.
+  - ✅ Edit actions are protected and logged.
 - Technical notes: Keep editing flows simple and server-rendered.
 - In scope: Staff publishing UI and persistence.
 - Out of scope: Rich text editor replacement work.
+- Implementation notes:
+  - Added queries: `list_pending_news`, `find_news_by_id`, `approve_news`, `delete_news`, `edit_news`, `find_update_by_id`, `list_staff_ids`.
+  - Added `author_id` to `NewsRow` for log notifications.
+  - Staff approval handlers under `/staff/news/*` (list, edit, approve, delete).
+  - Game log notifications to author and other staff on approve/reject/edit.
+  - Fixed update edit to use `find_update_by_id` instead of `get_latest_update`.
 
 ### MP-15-05: Replace page-triggered resets with explicit scheduled jobs ✅
 

@@ -44,6 +44,21 @@ fn main() -> anyhow::Result<()> {
                 .build()?;
             rt.block_on(run_job(&config.database.url, job))
         }
+        Command::Bootstrap {
+            admin_user,
+            admin_email,
+            admin_password,
+        } => {
+            let rt = tokio::runtime::Builder::new_current_thread()
+                .enable_all()
+                .build()?;
+            rt.block_on(bootstrap(
+                &config.database.url,
+                &admin_user,
+                &admin_email,
+                &admin_password,
+            ))
+        }
         Command::ResetEra => {
             tracing::info!("reset-era: not yet implemented");
             Ok(())
@@ -90,6 +105,36 @@ async fn run_job(
     if !ran {
         tracing::warn!(job = %job, "job skipped (lock held)");
     }
+    Ok(())
+}
+
+async fn bootstrap(
+    database_url: &str,
+    admin_user: &str,
+    admin_email: &str,
+    admin_password: &str,
+) -> anyhow::Result<()> {
+    tracing::info!("bootstrap: running migrations");
+    vallheru_data::migrate::run_migrations(database_url).await?;
+
+    tracing::info!("bootstrap: importing seed data");
+    vallheru_data::import::run_seeds(database_url).await?;
+
+    tracing::info!("bootstrap: creating admin account");
+    let pool = vallheru_data::pool::create_pool(database_url, 1).await?;
+    let pass_hash = vallheru_domain::auth::hash_password(admin_password);
+    let created =
+        vallheru_data::bootstrap::create_admin_account(&pool, admin_user, admin_email, &pass_hash)
+            .await?;
+
+    if created {
+        tracing::info!(username = admin_user, "admin account created");
+    } else {
+        tracing::info!("admin account already exists, skipping");
+    }
+
+    pool.close().await;
+    tracing::info!("bootstrap complete");
     Ok(())
 }
 
