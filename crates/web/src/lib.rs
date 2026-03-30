@@ -15,4 +15,4 @@ pub use middleware::guards::{
 pub use page::{Flash, FlashKind, PageMeta, redirect, redirect_after_post, safe_back_or};
 pub use render::{RenderContext, TemplateEngine, TemplateEngineConfig, theme_base_template};
 pub use routes::build_router;
-pub use state::AppState;
+pub use state::{AppState, PostRateLimiter};

@@ -533,9 +533,11 @@ pub async fn tforums_add_topic(
     }
     let tribe_id = player_row.tribe_id;
 
-    // Rate limit.
+    // Rate limit: one post per 10 seconds.
+    if !app.post_rate_limiter.check_and_record(user.id) {
+        return error_page(&app, &ctx, "Musisz odczekać 10 sekund między postami.");
+    }
     let now = current_epoch();
-    // TODO: implement proper server-side rate limiting (session_data not yet available).
 
     let title = text::strip_tags(&form.title2);
     let body_raw = form.body.clone();
@@ -605,9 +607,11 @@ pub async fn tforums_add_reply(
     }
     let tribe_id = player_row.tribe_id;
 
-    // Rate limit.
+    // Rate limit: one post per 10 seconds.
+    if !app.post_rate_limiter.check_and_record(user.id) {
+        return error_page(&app, &ctx, "Musisz odczekać 10 sekund między postami.");
+    }
     let now = current_epoch();
-    // TODO: implement proper server-side rate limiting (session_data not yet available).
 
     // Check topic exists and belongs to tribe.
     if tfq::find_topic(&app.pool, topic_id, tribe_id)

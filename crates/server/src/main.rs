@@ -183,6 +183,7 @@ async fn serve(config: AppConfig) -> anyhow::Result<()> {
         },
         templates,
         catalog,
+        post_rate_limiter: vallheru_web::PostRateLimiter::default(),
     };
     let app = vallheru_web::build_router(state);
 

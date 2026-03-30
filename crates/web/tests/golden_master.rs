@@ -34,6 +34,7 @@ fn test_app() -> axum::Router {
         },
         templates,
         catalog,
+        post_rate_limiter: vallheru_web::PostRateLimiter::default(),
     };
 
     vallheru_web::build_router(state)

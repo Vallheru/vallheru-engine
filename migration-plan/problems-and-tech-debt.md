@@ -212,7 +212,7 @@ Each entry includes:
 - **Action**: Implement server-side rate limiting when session data store or middleware rate limiter is available.
 - **Fixable in existing task**: No — requires session data infrastructure.
 - **Needs new task**: Yes (or fold into session middleware enhancement)
-- **Status**: open
+- **Status**: resolved — `PostRateLimiter` added to `AppState` with 10-second cooldown, wired into both tribe forum topic and reply handlers. Unit tests added.
 - **Related tasks**: MP-13-06, MP-05
 
 ### TD-017: game_log column name inconsistency between handlers
