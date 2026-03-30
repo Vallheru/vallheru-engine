@@ -1476,9 +1476,7 @@ pub async fn battle_execute(
             let _ = oq::adjust_morale(&app.pool, current_attacker.id, -10.0).await;
             let _ = oq::adjust_morale(&app.pool, current_defender.id, 7.5).await;
 
-            format!(
-                "Atakujesz strażnicę gracza {enemy_name} lecz niestety przegrywasz!"
-            )
+            format!("Atakujesz strażnicę gracza {enemy_name} lecz niestety przegrywasz!")
         };
 
         // 5% chance to lose monsters/veterans

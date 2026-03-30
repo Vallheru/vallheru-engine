@@ -246,33 +246,30 @@ pub fn attacker_losses(input: &AttackerLossInput) -> AttackerLosses {
 
     for (i, &count) in troops.iter().enumerate() {
         if count > 0 {
-            let survive_roll =
-                (f64::from(count) * f64::from(input.rolls[i]) / 100.0).ceil() as i32;
+            let survive_roll = (f64::from(count) * f64::from(input.rolls[i]) / 100.0).ceil() as i32;
             let mut lost = count - survive_roll;
             if input.attacker_stronger {
                 let extra = (f64::from(count) * 0.03).ceil() as i32;
                 lost += extra;
             }
-            let bonus =
-                (f64::from(survive_roll) * f64::from(input.blost) / 100.0).ceil() as i32;
+            let bonus = (f64::from(survive_roll) * f64::from(input.blost) / 100.0).ceil() as i32;
             let bonus = bonus.min(survive_roll);
             lost -= bonus;
-            remaining[i] = (count - lost).max(0);
+            remaining[i] = (count - lost).clamp(0, count);
         }
     }
 
-    let new_fatigue =
-        if input.attacker_size < input.defender_size && input.fatigue > 40 {
-            input.fatigue - 20
-        } else if input.fatigue <= 40 && input.fatigue > 30 {
-            30
-        } else if input.fatigue <= 30 {
-            25
-        } else if input.attacker_size >= input.defender_size && input.fatigue > 40 {
-            input.fatigue - 15
-        } else {
-            input.fatigue
-        };
+    let new_fatigue = if input.attacker_size < input.defender_size && input.fatigue > 40 {
+        input.fatigue - 20
+    } else if input.fatigue <= 40 && input.fatigue > 30 {
+        30
+    } else if input.fatigue <= 30 {
+        25
+    } else if input.attacker_size >= input.defender_size && input.fatigue > 40 {
+        input.fatigue - 15
+    } else {
+        input.fatigue
+    };
 
     AttackerLosses {
         warriors: remaining[0],
@@ -305,20 +302,23 @@ pub struct DefenderLossInput {
 /// Calculate defender troop losses.
 #[allow(clippy::cast_possible_truncation)]
 pub fn defender_losses(input: &DefenderLossInput) -> DefenderLosses {
-    let troops = [input.warriors, input.archers, input.catapults, input.barricades];
+    let troops = [
+        input.warriors,
+        input.archers,
+        input.catapults,
+        input.barricades,
+    ];
     let mut remaining = [0i32; 4];
     let mut total_def_losses = 0;
 
     for (i, &count) in troops.iter().enumerate() {
         if count > 0 {
-            let survive_roll =
-                (f64::from(count) * f64::from(input.rolls[i]) / 100.0).ceil() as i32;
+            let survive_roll = (f64::from(count) * f64::from(input.rolls[i]) / 100.0).ceil() as i32;
             let mut lost = count - survive_roll;
-            let bonus =
-                (f64::from(survive_roll) * f64::from(input.blost) / 100.0).ceil() as i32;
+            let bonus = (f64::from(survive_roll) * f64::from(input.blost) / 100.0).ceil() as i32;
             let bonus = bonus.min(survive_roll);
             lost -= bonus;
-            remaining[i] = (count - lost).max(0);
+            remaining[i] = (count - lost).clamp(0, count);
             total_def_losses += count - remaining[i];
         }
     }
@@ -444,11 +444,8 @@ pub fn maintenance_cost(
     veteran_count: i32,
     bcost: i16,
 ) -> i32 {
-    let base = warriors * 7
-        + archers * 7
-        + catapults * 14
-        + monster_count * 70
-        + veteran_count * 70;
+    let base =
+        warriors * 7 + archers * 7 + catapults * 14 + monster_count * 70 + veteran_count * 70;
     let bonus = (f64::from(base) * f64::from(bcost) / 100.0).round() as i32;
     base - bonus
 }
