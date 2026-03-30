@@ -63,8 +63,9 @@ Move from a growing Rust shadow implementation to a safe production cutover with
 - In scope: Cross-module integration tests.
 - Out of scope: Browser automation.
 
-### MP-16-03: Add invariant tests for combat, economy, and inventory
+### MP-16-03: Add invariant tests for combat, economy, and inventory ✅
 
+- Status: **DONE** (commit 414af28)
 - Description: Codify the most expensive-to-break gameplay invariants in tests.
 - Estimate: 2h
 - Depends on: MP-08-06, MP-09-06, MP-10-06.
@@ -75,6 +76,11 @@ Move from a growing Rust shadow implementation to a safe production cutover with
 - Technical notes: Prefer a few strong invariants over many weak assertions.
 - In scope: Domain invariant testing.
 - Out of scope: Performance benchmarking.
+- Implementation notes:
+  - Created `crates/domain/tests/invariants.rs` with 19 property-style tests.
+  - Currency tests: deposit/withdraw conservation, transfer conservation, spend never negative, zero/negative rejection.
+  - Outpost combat tests: attacker/defender remaining bounded, tax gold non-negative, morale labels valid, maintenance cost non-negative, size/structure upgrades non-negative, costs non-negative, battle experience positive, veteran stats positive, attack gold gain non-negative.
+  - Found and fixed 2 real bugs: `attacker_losses` and `defender_losses` could produce remaining > starting when blost bonus made losses negative. Fixed with `.clamp(0, count)`.
 
 ### MP-16-04: Define route-by-route cutover and fallback rules
 
