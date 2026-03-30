@@ -454,6 +454,14 @@ pub async fn count_unread(
     .await
 }
 
+/// A topic row enriched with its category name, for the "new posts" view.
+#[derive(sqlx::FromRow, Debug)]
+pub struct UnreadTopicRow {
+    pub id: i64,
+    pub title: String,
+    pub category_name: String,
+}
+
 /// List new (unread) topics since a given epoch, paginated.
 pub async fn list_unread_topics(
     pool: &PgPool,
@@ -461,17 +469,17 @@ pub async fn list_unread_topics(
     category_ids: &[i64],
     limit: i64,
     offset: i64,
-) -> Result<Vec<TopicListRow>, sqlx::Error> {
+) -> Result<Vec<UnreadTopicRow>, sqlx::Error> {
     if category_ids.is_empty() {
         return Ok(vec![]);
     }
-    sqlx::query_as::<_, TopicListRow>(
-        "SELECT id, title, author_name, author_id, is_sticky, is_closed,
-                reply_count, extract(epoch from last_post_at)::bigint AS last_post_at_epoch
-         FROM forum_topics
-         WHERE category_id = ANY($1)
-           AND extract(epoch from last_post_at)::bigint > $2
-         ORDER BY last_post_at DESC
+    sqlx::query_as::<_, UnreadTopicRow>(
+        "SELECT t.id, t.title, c.name AS category_name
+         FROM forum_topics t
+         JOIN forum_categories c ON c.id = t.category_id
+         WHERE t.category_id = ANY($1)
+           AND extract(epoch from t.last_post_at)::bigint > $2
+         ORDER BY t.last_post_at DESC
          LIMIT $3 OFFSET $4",
     )
     .bind(category_ids)

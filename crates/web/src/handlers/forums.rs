@@ -309,19 +309,14 @@ pub async fn forum_new_posts(
     .await
     .unwrap_or_default();
 
-    // Build category name lookup.
-    let cat_names: std::collections::HashMap<i64, String> =
-        all_cats.into_iter().map(|c| (c.id, c.name)).collect();
-
     let topics: Vec<NewPostItem> = rows
         .into_iter()
         .map(|t| NewPostItem {
             id: t.id,
             title: t.title,
-            category_name: String::new(), // We'd need category_id on TopicListRow for lookup
+            category_name: t.category_name,
         })
         .collect();
-    let _ = cat_names; // TODO: enrich with category join if needed
 
     let meta = PageMeta::titled("Forum - Nowe wiadomości");
     let base = app.templates.build_context(&ctx, &meta);
