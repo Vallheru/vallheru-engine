@@ -149,8 +149,9 @@ Move from a growing Rust shadow implementation to a safe production cutover with
 - In scope: Primary runtime packaging.
 - Out of scope: PHP removal sequencing.
 
-### MP-16-07: Remove PHP-only runtime dependencies from deployment
+### MP-16-07: Remove PHP-only runtime dependencies from deployment ✅
 
+- Status: **DONE**
 - Description: Eliminate PHP-FPM, generated config scripts, and writable Smarty/template cache assumptions from the deployment path.
 - Estimate: 2h
 - Depends on: MP-16-06.
@@ -161,6 +162,15 @@ Move from a growing Rust shadow implementation to a safe production cutover with
 - Technical notes: Keep user-uploaded asset storage separate from shipped assets.
 - In scope: PHP runtime dependency removal.
 - Out of scope: Route rollback rules.
+- Implementation notes:
+  - Created `docker/nginx-rust.conf`: production Nginx config that proxies all traffic to Rust,
+    blocks `.php` requests, serves user uploads from a volume, no PHP-FPM upstream.
+  - Updated `compose.prod.yaml`: added Nginx reverse proxy service, separated user uploads
+    into a named volume, app no longer exposes port directly (Nginx is the entry point).
+  - No writable template caches (`templates_c/`, `cache/`) — all assets compiled into binary.
+  - User-uploaded content (avatars, tribe images) served from `/var/www/uploads/` volume.
+  - Security headers: X-Content-Type-Options, X-Frame-Options, Referrer-Policy.
+  - Config file access denied (`.toml`, `.yaml`, `.env`, `.sql`, `.md`).
 
 ### MP-16-08: Write the final production startup and job runbook
 
