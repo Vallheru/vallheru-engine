@@ -105,11 +105,12 @@ Port group-oriented systems that share inventories, permissions, and combat-adja
 - Out of scope: Public market listings.
 - Status: **Complete**. Created `group/tribe_storage.rs` with StorageArea enum (5 areas), access/permission/deposit/reserve/give validation, armory equipment eligibility, warehouse potion deposit, treasury currency keys, astral safe-box upgrade with 5-resource costs. 48 tests.
 
-### MP-13-05: Port outpost ownership and warfare state
+### MP-13-05: Port outpost ownership and warfare state ✅
 
 - Description: Migrate outpost ownership, troop state, attacks, and supporting view models.
 - Estimate: 2h
 - Depends on: MP-13-02, MP-15-05.
+- Status: **Complete**
 - Functional acceptance criteria:
   - Outpost pages render current ownership and troop data.
   - Attack-related mutable state is persisted in PostgreSQL.
@@ -117,6 +118,14 @@ Port group-oriented systems that share inventories, permissions, and combat-adja
 - Technical notes: Outposts are tightly coupled to reset logic, so keep the scheduler seam visible.
 - In scope: Outpost state and pages.
 - Out of scope: Full tribe-vs-tribe combat engine rewrite.
+- Implementation notes:
+  - Migration `20250325000025_outpost_tables.sql` creates outposts, outpost_monsters, outpost_veterans, core tables.
+  - Data layer: `crates/data/src/queries/outpost.rs` (~800 lines, 40 query functions).
+  - Domain: `crates/domain/src/group/outpost.rs` (~500 lines) — resource calculations, veteran stats, combat resolution, tax collection, garrison missions, morale/fatigue, maintenance cost. Uses input structs (`VeteranEquipment`, `AttackerLossInput`, `DefenderLossInput`, `GarrisonPlayerStats`, `BattleAftermath`) to avoid clippy too_many_arguments. 6 tests.
+  - Handler: `crates/web/src/handlers/outpost.rs` (~2100 lines) — 23 handler functions covering outpost menu, purchase, management, treasury, shop (army/upgrades/structures), taxes, veterans, battle, garrison missions.
+  - 11 MiniJinja templates for all outpost/garrison views.
+  - Routes wired in `crates/web/src/routes/world.rs` via `outpost_routes()`.
+  - ThreadRng scoped in blocks before `.await` boundaries (Axum Send requirement).
 
 ### MP-13-06: Port tribe forums and navigation surfaces ✅
 
