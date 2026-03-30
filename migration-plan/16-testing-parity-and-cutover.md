@@ -123,8 +123,9 @@ Move from a growing Rust shadow implementation to a safe production cutover with
 - In scope: Reconciliation and rollback runbooks.
 - Out of scope: Automated rollback orchestration.
 
-### MP-16-06: Package the Axum server as the primary runtime
+### MP-16-06: Package the Axum server as the primary runtime ✅
 
+- Status: **DONE** (commit pending)
 - Description: Build the production artifact shape around one Rust binary plus PostgreSQL.
 - Estimate: 2h
 - Depends on: MP-15-06, MP-16-04.

@@ -1,0 +1,60 @@
+# Production-like compose for the Rust Vallheru engine.
+#
+# Usage:
+#   docker compose -f compose.prod.yaml up -d
+#
+# First-time setup:
+#   docker compose -f compose.prod.yaml run --rm app bootstrap \
+#     --admin-user Admin --admin-email admin@example.com --admin-password changeme
+#
+# Scheduled jobs (run via cron or systemd timer):
+#   docker compose -f compose.prod.yaml run --rm app job energy-tick
+#   docker compose -f compose.prod.yaml run --rm app job daily-reset
+
+services:
+  app:
+    build:
+      context: .
+      dockerfile: docker/rust.Dockerfile
+      args:
+        GIT_HASH: "${GIT_HASH:-dev}"
+    ports:
+      - "3000:3000"
+    environment:
+      VALLHERU_DATABASE__URL: "postgres://vallheru:${POSTGRES_PASSWORD:-password}@postgres:5432/vallheru"
+      VALLHERU_SESSION__SECRET: "${SESSION_SECRET:?SESSION_SECRET must be set (at least 64 chars)}"
+      VALLHERU_GAME__NAME: "${GAME_NAME:-Vallheru}"
+      VALLHERU_GAME__EMAIL: "${GAME_EMAIL:-game@example.com}"
+      VALLHERU_GAME__BASE_URL: "${GAME_BASE_URL:-http://localhost:3000}"
+      VALLHERU_GAME__ADMIN_NAME: "${GAME_ADMIN_NAME:-Admin}"
+      VALLHERU_GAME__ADMIN_EMAIL: "${GAME_ADMIN_EMAIL:-admin@example.com}"
+      VALLHERU_GAME__LANG: "${GAME_LANG:-pl}"
+      VALLHERU_SERVER__BIND: "0.0.0.0:3000"
+    depends_on:
+      postgres:
+        condition: service_healthy
+    restart: unless-stopped
+    healthcheck:
+      test: ["CMD-SHELL", "wget -qO- http://localhost:3000/healthz || exit 1"]
+      interval: 30s
+      timeout: 5s
+      start_period: 10s
+      retries: 3
+
+  postgres:
+    image: postgres:16-alpine
+    environment:
+      POSTGRES_USER: vallheru
+      POSTGRES_PASSWORD: "${POSTGRES_PASSWORD:-password}"
+      POSTGRES_DB: vallheru
+    volumes:
+      - pg_data:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U vallheru"]
+      interval: 5s
+      timeout: 3s
+      retries: 5
+    restart: unless-stopped
+
+volumes:
+  pg_data:
