@@ -105,7 +105,7 @@ Each entry includes:
 - **Action**: Rename the private functions to `pub(crate)` and remove the `_pub` wrappers.
 - **Fixable in existing task**: Yes — can be done during any combat or formula task.
 - **Needs new task**: No
-- **Status**: open
+- **Status**: resolved — private functions made `pub(crate)` and `_pub` wrappers removed.
 - **Related tasks**: MP-08-03
 
 ### TD-008: Astral planes and portal combat not yet migrated
@@ -225,7 +225,7 @@ Each entry includes:
 - **Action**: Align `market.rs` game_log queries to use migration column names.
 - **Fixable in existing task**: No — needs targeted fix in market handler.
 - **Needs new task**: No — can be fixed as part of any market-touching task.
-- **Status**: open
+- **Status**: resolved — `insert_market_log` now uses `owner_id, message, log_type` matching the migration schema.
 - **Related tasks**: MP-12-02
 
 ### TD-018: Exit type_filter lost in serialize_exits roundtrip

@@ -1478,13 +1478,10 @@ pub async fn insert_market_log(
     owner_id: i32,
     message: &str,
 ) -> Result<(), sqlx::Error> {
-    sqlx::query(
-        "INSERT INTO game_log (owner, log, czas, type) \
-         VALUES ($1, $2, EXTRACT(EPOCH FROM NOW())::BIGINT, 'M')",
-    )
-    .bind(owner_id)
-    .bind(message)
-    .execute(pool)
-    .await?;
+    sqlx::query("INSERT INTO game_log (owner_id, message, log_type) VALUES ($1, $2, 'M')")
+        .bind(owner_id)
+        .bind(message)
+        .execute(pool)
+        .await?;
     Ok(())
 }

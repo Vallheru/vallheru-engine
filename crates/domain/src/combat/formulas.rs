@@ -45,50 +45,28 @@ use crate::player::{Class, Race};
 // Lookup helpers
 // ---------------------------------------------------------------------------
 
-fn stat_modified(stats: &[PlayerStat], key: &str) -> i32 {
+pub(crate) fn stat_modified(stats: &[PlayerStat], key: &str) -> i32 {
     stats
         .iter()
         .find(|s| s.stat_key == key)
         .map_or(0, |s| s.modified)
 }
 
-/// Public accessor for stat lookup — used by sibling combat modules.
-pub fn stat_modified_pub(stats: &[PlayerStat], key: &str) -> i32 {
-    stat_modified(stats, key)
-}
-
-fn skill_level(skills: &[PlayerSkill], key: &str) -> i32 {
+pub(crate) fn skill_level(skills: &[PlayerSkill], key: &str) -> i32 {
     skills
         .iter()
         .find(|s| s.skill_key == key)
         .map_or(0, |s| s.level)
 }
 
-/// Public accessor for skill lookup — used by sibling combat modules.
-pub fn skill_level_pub(skills: &[PlayerSkill], key: &str) -> i32 {
-    skill_level(skills, key)
-}
-
-/// Check bonus value for a named trigger.
-///
-/// Re-uses the existing `crate::equipment::check_bonus` function.
-fn bonus_value(
+/// Check bonus value for a named trigger via `crate::equipment::check_bonus`.
+pub(crate) fn bonus_value(
     trigger: &str,
     stats: &[PlayerStat],
     skills: &[PlayerSkill],
     bonuses: &[PlayerBonus],
 ) -> i32 {
     crate::equipment::check_bonus(trigger, stats, skills, bonuses)
-}
-
-/// Public accessor for bonus lookup — used by sibling combat modules.
-pub fn bonus_value_pub(
-    trigger: &str,
-    stats: &[PlayerStat],
-    skills: &[PlayerSkill],
-    bonuses: &[PlayerBonus],
-) -> i32 {
-    bonus_value(trigger, stats, skills, bonuses)
 }
 
 // ---------------------------------------------------------------------------

@@ -451,10 +451,10 @@ pub fn resolve_attack(
     let monster = &state.monsters[target];
 
     // Compute enemy dodge
-    let player_agility = formulas::stat_modified_pub(ctx.stats, "agility");
-    let combat_skill = formulas::skill_level_pub(ctx.skills, base.skill_key);
+    let player_agility = formulas::stat_modified(ctx.stats, "agility");
+    let combat_skill = formulas::skill_level(ctx.skills, base.skill_key);
     let is_ranged = base.attack_type == AttackType::Ranged;
-    let eagle_eye = formulas::bonus_value_pub("eagleeye", ctx.stats, ctx.skills, ctx.bonuses);
+    let eagle_eye = formulas::bonus_value("eagleeye", ctx.stats, ctx.skills, ctx.bonuses);
 
     let monster_dodge_val = formulas::monster_dodge(
         ctx.class,
@@ -462,14 +462,14 @@ pub fn resolve_attack(
         monster.agility,
         combat_skill,
         ctx.second_weapon.is_some(),
-        formulas::skill_level_pub(ctx.skills, "attack"),
+        formulas::skill_level(ctx.skills, "attack"),
         is_ranged,
         eagle_eye,
     );
     let monster_dodge_val = formulas::stance_monster_dodge_modifier(monster_dodge_val, stance);
 
     let dodge_max = formulas::monster_dodge_max(player_agility, combat_skill);
-    let condition = formulas::stat_modified_pub(ctx.stats, "condition");
+    let condition = formulas::stat_modified(ctx.stats, "condition");
     let exhaustion_ok = !formulas::is_exhausted(state.exhaustion, condition);
 
     let dodged = formulas::dodge_check(
@@ -718,7 +718,7 @@ pub fn resolve_monster_turn(
     let adjusted_dodge = formulas::stance_player_dodge_modifier(adjusted_dodge, ctx.stance);
 
     let block_chance = formulas::shield_block_chance(ctx.shield);
-    let condition = formulas::stat_modified_pub(ctx.stats, "condition");
+    let condition = formulas::stat_modified(ctx.stats, "condition");
 
     let mut hits = Vec::new();
     let mut total_damage = 0;
@@ -849,7 +849,7 @@ fn resolve_single_monster_attack(
     let armor_def = formulas::armor_defense_at_location(
         ctx.armor_pieces[slot_idx],
         0, // pet defense handled separately
-        formulas::skill_level_pub(ctx.skills, "dodge"),
+        formulas::skill_level(ctx.skills, "dodge"),
         ctx.stats,
         ctx.skills,
         ctx.bonuses,
@@ -865,7 +865,7 @@ fn resolve_single_monster_attack(
         if state.player_mana >= def_spell.level {
             let lost = formulas::mana_loss_on_hit(
                 def_spell.level,
-                formulas::skill_level_pub(ctx.skills, "magic"),
+                formulas::skill_level(ctx.skills, "magic"),
             );
             state.player_mana = (state.player_mana - lost).max(0);
             lost
