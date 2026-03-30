@@ -43,9 +43,9 @@ Each entry includes:
 - **Action**: Add migration for gameplay tables as those modules are ported (MP-09 through MP-12), or create a migration with empty stub tables.
 - **Fixable in existing task**: No — depends on gameplay module migrations.
 - **Needs new task**: No — will be resolved naturally as modules MP-09 through MP-12 are migrated.
-- **Status**: open
+- **Status**: resolved — migration 000026 adds smith, smith_work, jeweller, jeweller_work, astral_bank, astral_plans, tribe_oczek. Fixed `czary` → `spells` reference. Added tables to era_reset and reconcile.
 - **Related tasks**: MP-05-05, MP-09-01, MP-10-01, MP-11-01, MP-12-01
-- **Notes**: equipment, spells, potions, mage_items tables now exist (MP-09-01). Remaining: herbs, minerals, mines, farms, astral, potions status resets, tribe storage, etc.
+- **Notes**: All tables referenced by character_reset.rs now exist in PostgreSQL migrations.
 
 ### TD-003: Unmigrated account.php views
 

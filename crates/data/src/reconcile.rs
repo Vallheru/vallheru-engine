@@ -82,6 +82,12 @@ const TABLES: &[TableSpec] = &[
     t("smelter", "smelter", 0),
     t("lumberjack", "lumberjack", 0),
     t("farms", "farms", 0),
+    t("smith", "smith", 0),
+    t("smith_work", "smith_work", 0),
+    t("jeweller", "jeweller", 0),
+    t("jeweller_work", "jeweller_work", 0),
+    t("astral_bank", "astral_bank", 0),
+    t("astral_plans", "astral_plans", 0),
     // ── Social ──────────────────────────────────────────────────
     t("chat_messages", "chat_messages", 0),
     t("rooms", "rooms", 0),
@@ -102,6 +108,7 @@ const TABLES: &[TableSpec] = &[
     t("houses", "houses", 0),
     // ── Tribes ──────────────────────────────────────────────────
     t("tribes", "tribes", 0),
+    t("tribe_oczek", "tribe_oczek", 0),
     t("tribe_topics", "tribe_topics", 0),
     t("tribe_replies", "tribe_replies", 0),
     // ── Quests ──────────────────────────────────────────────────

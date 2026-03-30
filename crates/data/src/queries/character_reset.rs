@@ -265,7 +265,7 @@ async fn cleanup_gameplay_records(
 ) -> Result<(), sqlx::Error> {
     // Delete spells, cores, logs, outposts, quest actions, etc.
     for table_clause in [
-        "DELETE FROM czary WHERE gracz = $1",
+        "DELETE FROM spells WHERE gracz = $1",
         "DELETE FROM core WHERE owner = $1",
         "DELETE FROM core_market WHERE seller = $1",
         "DELETE FROM game_log WHERE owner_id = $1",
