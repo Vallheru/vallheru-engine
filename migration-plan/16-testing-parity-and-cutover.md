@@ -172,8 +172,9 @@ Move from a growing Rust shadow implementation to a safe production cutover with
   - Security headers: X-Content-Type-Options, X-Frame-Options, Referrer-Policy.
   - Config file access denied (`.toml`, `.yaml`, `.env`, `.sql`, `.md`).
 
-### MP-16-08: Write the final production startup and job runbook
+### MP-16-08: Write the final production startup and job runbook ✅
 
+- Status: **DONE**
 - Description: Document the final startup path, scheduled job invocation, health checks, and operator commands for production.
 - Estimate: 2h
 - Depends on: MP-16-06, MP-16-07.
@@ -184,6 +185,17 @@ Move from a growing Rust shadow implementation to a safe production cutover with
 - Technical notes: This runbook replaces current tribal knowledge in Docker entrypoints and web installers.
 - In scope: Production runbook.
 - Out of scope: Staging rollback rehearsal.
+- Implementation notes:
+  - Created `migration-plan/production-runbook.md` covering:
+    - Docker Compose and bare-metal deployment (with systemd unit)
+    - Full configuration reference (env vars + TOML)
+    - CLI command reference (serve, migrate, import, bootstrap, job, reset-era, reconcile)
+    - Scheduled jobs setup (cron + systemd timer examples)
+    - Health check endpoints (/healthz, /readyz, /buildinfo, /migration-status)
+    - Logging configuration (RUST_LOG levels)
+    - Database backup/restore procedures
+    - Upgrade procedure (build → migrate → import → restart → verify)
+    - Troubleshooting matrix
 
 ### MP-16-09: Finalize PHP retirement and rollback references
 
