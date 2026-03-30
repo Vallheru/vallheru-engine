@@ -140,7 +140,7 @@ Each entry includes:
 - **Action**: Add a migration for the `donators` table if this feature is desired.
 - **Fixable in existing task**: No
 - **Needs new task**: Yes — donators table migration.
-- **Status**: open
+- **Status**: resolved — migration 000027 creates the donators table. Alley handler loads and displays donators. Template updated.
 - **Related tasks**: MP-07-04
 
 ### TD-011: Hermit resurrection system not yet migrated

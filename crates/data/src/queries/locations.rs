@@ -27,6 +27,13 @@ pub async fn vallars_leaderboard(
     .await
 }
 
+/// Load all donator names, alphabetically.
+pub async fn list_donators(pool: &PgPool) -> Result<Vec<String>, sqlx::Error> {
+    sqlx::query_scalar::<_, String>("SELECT name FROM donators ORDER BY name")
+        .fetch_all(pool)
+        .await
+}
+
 // ---------------------------------------------------------------------------
 // Landfill — energy→gold work
 // ---------------------------------------------------------------------------

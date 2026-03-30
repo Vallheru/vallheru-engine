@@ -104,6 +104,7 @@ const TABLES: &[TableSpec] = &[
     t("notes", "notes", 0),
     t("library_texts", "library_texts", 0),
     t("chronicle_missions", "chronicle_missions", 0),
+    t("donators", "donators", 0),
     // ── Housing ─────────────────────────────────────────────────
     t("houses", "houses", 0),
     // ── Tribes ──────────────────────────────────────────────────

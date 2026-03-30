@@ -4,6 +4,18 @@
 {% block content %}
 <h2>Aleja Zasłużonych</h2>
 
+{% if donators %}
+<h3>Lista zasłużonych</h3>
+<p>
+  Poniżej znajdują się osoby, które wsparły grę swoim wkładem.
+</p>
+<ul>
+  {% for name in donators %}
+  <li>{{ name }}</li>
+  {% endfor %}
+</ul>
+{% endif %}
+
 <p>
   Możesz wspierać grę poprzez zgłaszanie propozycji, błędów oraz zachęcanie
   innych do gry. Za taką pomoc otrzymujesz specjalne punkty zwane Vallarami.

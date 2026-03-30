@@ -39,6 +39,7 @@ pub struct AlleyView {
     #[serde(flatten)]
     pub base: crate::render::RenderContext,
     pub leaderboard: Vec<VallarsEntry>,
+    pub donators: Vec<String>,
 }
 
 #[derive(serde::Serialize)]
@@ -223,6 +224,10 @@ pub async fn alley(
         .await
         .unwrap_or_default();
 
+    let donators = vallheru_data::queries::locations::list_donators(&state.pool)
+        .await
+        .unwrap_or_default();
+
     let entries: Vec<VallarsEntry> = leaderboard
         .into_iter()
         .map(|row| VallarsEntry {
@@ -237,6 +242,7 @@ pub async fn alley(
     let view = AlleyView {
         base,
         leaderboard: entries,
+        donators,
     };
     state.templates.render_value("alley.html", &view)
 }
