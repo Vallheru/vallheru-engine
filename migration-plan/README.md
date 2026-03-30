@@ -173,6 +173,7 @@ These are the recommended Rust modules, mapped from the real PHP codebase:
 | [player-field-normalization.md](./player-field-normalization.md) | Normalization strategy for serialized player columns |
 | [route-manifest.md](./route-manifest.md) | Maps all 110 PHP entry points to planned Axum routes |
 | [cutover-rules.md](./cutover-rules.md) | Route-by-route cutover groups, activation rules, and rollback procedures |
+| [reconciliation-procedures.md](./reconciliation-procedures.md) | Data reconciliation checklists, rollback steps, and ownership transitions |
 | [problems-and-tech-debt.md](./problems-and-tech-debt.md) | Technical debt and problem register |
 
 ## Totals

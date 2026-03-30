@@ -110,8 +110,9 @@ Move from a growing Rust shadow implementation to a safe production cutover with
   - Added `Copy` derive to `MigratedRoute` and `RouteStatus` for const constructor.
   - Simplified registry with `const fn r()` shorthand.
 
-### MP-16-05: Build data reconciliation and rollback procedures
+### MP-16-05: Build data reconciliation and rollback procedures ✅
 
+- Status: **DONE**
 - Description: Define the operational steps for validating migrated data and rolling back safely if a route or module misbehaves.
 - Estimate: 2h
 - Depends on: MP-02-06, MP-16-04.
@@ -122,10 +123,21 @@ Move from a growing Rust shadow implementation to a safe production cutover with
 - Technical notes: Rollback should prefer routing traffic back to PHP first, then data repair if needed.
 - In scope: Reconciliation and rollback runbooks.
 - Out of scope: Automated rollback orchestration.
+- Implementation notes:
+  - Created `migration-plan/reconciliation-procedures.md` with full operational runbook.
+  - Expanded reconciliation tool (`crates/data/src/reconcile.rs`) from 7 tables to ~60 tables
+    covering all migration-created tables: catalog, player, economy, gathering, social, content,
+    housing, tribes, quests, outposts, and moderation.
+  - Fixed `classify()` to handle user-generated tables (min_expected=0) correctly.
+  - Widened report column to accommodate longer table names.
+  - Per-group reconciliation SQL checks documented for all 17 cutover groups.
+  - Rollback procedures: general (any group), Group A special case, emergency data repair.
+  - Data ownership transition matrix for mixed-mode and full-cutover phases.
+  - Reconciliation schedule: pre-cutover, first-hour monitoring, daily, 7-day soak.
 
 ### MP-16-06: Package the Axum server as the primary runtime ✅
 
-- Status: **DONE** (commit pending)
+- Status: **DONE**
 - Description: Build the production artifact shape around one Rust binary plus PostgreSQL.
 - Estimate: 2h
 - Depends on: MP-15-06, MP-16-04.
