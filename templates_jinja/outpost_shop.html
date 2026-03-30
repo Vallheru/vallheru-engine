@@ -1,0 +1,70 @@
+{# Outpost shop — buy army, upgrade size, build structures. #}
+{% extends "base.html" %}
+
+{% block content %}
+<h2>Rozbudowa i zaciąg armii</h2>
+
+{% if message %}
+<p class="flash-success">{{ message }}</p>
+{% endif %}
+
+<table>
+  <tr><td>Rozmiar strażnicy:</td><td><b>{{ out.size }}</b></td></tr>
+  <tr><td>Złoto w strażnicy:</td><td>{{ out.gold }}</td></tr>
+  <tr><td>Wojownicy:</td><td>{{ out.warriors }}</td></tr>
+  <tr><td>Łucznicy:</td><td>{{ out.archers }}</td></tr>
+  <tr><td>Katapulty:</td><td>{{ out.catapults }}</td></tr>
+  <tr><td>Barykady:</td><td>{{ out.barricades }}</td></tr>
+</table>
+
+<h3>Zaciąg armii</h3>
+<p>Koszt: 25 złota / żołnierz, 35 złota / machina.</p>
+<p>Dostępni w rezerwie: Wojownicy: {{ reserves[0] }}, Łucznicy: {{ reserves[1] }}, Katapulty: {{ reserves[2] }}, Barykady: {{ reserves[3] }}</p>
+<form method="post" action="/outposts/shop/army">
+  <table>
+    <tr><td>Wojownicy (max {{ max_troops }}):</td><td><input type="number" name="army0" min="0" max="{{ max_troops }}" value="0" /></td></tr>
+    <tr><td>Łucznicy (max {{ max_troops }}):</td><td><input type="number" name="army1" min="0" max="{{ max_troops }}" value="0" /></td></tr>
+    <tr><td>Katapulty (max {{ max_equip }}):</td><td><input type="number" name="army2" min="0" max="{{ max_equip }}" value="0" /></td></tr>
+    <tr><td>Barykady (max {{ max_equip }}):</td><td><input type="number" name="army3" min="0" max="{{ max_equip }}" value="0" /></td></tr>
+  </table>
+  <input type="submit" value="Kup" />
+</form>
+
+<h3>Powiększ strażnicę</h3>
+<p>Koszt za poziom: 500 złota + 5 platyny + 10 sosny. Max upgrade: {{ max_level }}</p>
+{% if max_level > 0 %}
+<form method="post" action="/outposts/shop/upgrade">
+  <input type="number" name="amount" min="1" max="{{ max_level }}" value="1" />
+  <input type="submit" value="Powiększ" />
+</form>
+{% else %}
+<p>Nie stać Cię na powiększenie.</p>
+{% endif %}
+
+<h3>Buduj Legowiska Bestii</h3>
+<p>Aktualnie: {{ out.fence }} legowisk. Max budowa: {{ max_lair }}</p>
+{% if max_lair > 0 %}
+<form method="post" action="/outposts/shop/lair">
+  <input type="number" name="amount" min="1" max="{{ max_lair }}" value="1" />
+  <input type="submit" value="Buduj legowiska" />
+</form>
+{% else %}
+<p>Nie stać Cię na budowę.</p>
+{% endif %}
+
+<h3>Buduj Kwatery Weteranów</h3>
+<p>Aktualnie: {{ out.barracks }} kwater. Max budowa: {{ max_barrack }}</p>
+{% if max_barrack > 0 %}
+<form method="post" action="/outposts/shop/barracks">
+  <input type="number" name="amount" min="1" max="{{ max_barrack }}" value="1" />
+  <input type="submit" value="Buduj kwatery" />
+</form>
+{% else %}
+<p>Nie stać Cię na budowę.</p>
+{% endif %}
+
+<p>Twoje minerały: Sosna: {{ minerals.pine }}, Kryształ: {{ minerals.crystal }}, Adamantium: {{ minerals.adamantium }}, Meteor: {{ minerals.meteor }}</p>
+<p>Platyna: {{ platinum }}</p>
+
+<p><a href="/outposts">Wróć do menu Strażnicy</a></p>
+{% endblock %}

@@ -4,7 +4,8 @@ use axum::{Router, middleware, routing};
 
 use crate::handlers::{
     bank, chat, city, content, court, deity, equipment, forums, gathering, house, jail, locations,
-    mail, map, market, pages, quest, room, shops, spells, temple, tower, travel, tribe_forum,
+    mail, map, market, outpost, pages, quest, room, shops, spells, temple, tower, travel,
+    tribe_forum,
 };
 use crate::middleware::guards::require_authenticated;
 use crate::state::AppState;
@@ -19,6 +20,7 @@ pub fn routes() -> Router<AppState> {
                 .merge(location_routes())
                 .merge(economy_routes())
                 .merge(combat_routes())
+                .merge(outpost_routes())
                 .merge(social_routes())
                 .merge(quest_routes())
                 .layer(middleware::from_fn(require_authenticated)),
@@ -154,6 +156,68 @@ fn economy_routes() -> Router<AppState> {
 fn combat_routes() -> Router<AppState> {
     // Placeholder — combat routes will be added by later tasks.
     Router::new()
+}
+
+fn outpost_routes() -> Router<AppState> {
+    Router::new()
+        // Outpost management (outposts.php)
+        .route("/outposts", routing::get(outpost::outpost_menu))
+        .route("/outposts/buy", routing::post(outpost::buy_outpost))
+        .route("/outposts/my", routing::get(outpost::my_outpost))
+        .route("/outposts/bonus/{field}", routing::post(outpost::add_bonus))
+        .route("/outposts/treasury", routing::get(outpost::treasury_show))
+        .route(
+            "/outposts/treasury/deposit",
+            routing::post(outpost::treasury_deposit),
+        )
+        .route(
+            "/outposts/treasury/withdraw",
+            routing::post(outpost::treasury_withdraw),
+        )
+        .route("/outposts/shop", routing::get(outpost::shop_show))
+        .route("/outposts/shop/army", routing::post(outpost::shop_buy_army))
+        .route(
+            "/outposts/shop/upgrade",
+            routing::post(outpost::shop_upgrade),
+        )
+        .route(
+            "/outposts/shop/lair",
+            routing::post(outpost::shop_build_lair),
+        )
+        .route(
+            "/outposts/shop/barracks",
+            routing::post(outpost::shop_build_barracks),
+        )
+        .route(
+            "/outposts/veterans/{id}",
+            routing::get(outpost::veteran_detail),
+        )
+        .route(
+            "/outposts/veterans/{id}/equip",
+            routing::post(outpost::veteran_equip),
+        )
+        .route("/outposts/taxes", routing::get(outpost::taxes_show))
+        .route(
+            "/outposts/taxes/collect",
+            routing::post(outpost::taxes_collect),
+        )
+        .route("/outposts/list", routing::get(outpost::list_outposts))
+        .route("/outposts/battle", routing::get(outpost::battle_show))
+        .route(
+            "/outposts/battle/execute",
+            routing::post(outpost::battle_execute),
+        )
+        .route("/outposts/guide", routing::get(outpost::guide))
+        // Garrison missions (outpost.php)
+        .route("/garrison", routing::get(outpost::garrison_show))
+        .route(
+            "/garrison/generate",
+            routing::post(outpost::garrison_generate),
+        )
+        .route(
+            "/garrison/execute/{index}",
+            routing::post(outpost::garrison_execute),
+        )
 }
 
 fn quest_routes() -> Router<AppState> {

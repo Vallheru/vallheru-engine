@@ -1,0 +1,26 @@
+{# Outpost taxes — collect from villages. #}
+{% extends "base.html" %}
+
+{% block content %}
+<h2>Ściągnij daniny z wiosek</h2>
+
+{% if message %}
+<p class="flash-success">{{ message }}</p>
+{% endif %}
+
+<p>Pozostałe Punkty Ataku: <b>{{ turns }}</b></p>
+
+{% if turns > 0 %}
+<form method="post" action="/outposts/taxes/collect">
+  <p>
+    Ile razy wysłać żołnierzy:
+    <input type="number" name="amount" min="1" max="{{ turns }}" value="1" />
+    <input type="submit" value="Zbieraj podatki" />
+  </p>
+</form>
+{% else %}
+<p>Nie masz Punktów Ataku.</p>
+{% endif %}
+
+<p><a href="/outposts">Wróć do menu Strażnicy</a></p>
+{% endblock %}

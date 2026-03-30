@@ -1,0 +1,35 @@
+{# Outpost guide — static help page. #}
+{% extends "base.html" %}
+
+{% block content %}
+<h2>Instrukcja Strażnicy</h2>
+
+<h3>Zakup</h3>
+<p>Strażnicę kupujesz za 500 sztuk złota. Każdy gracz może posiadać jedną strażnicę.</p>
+
+<h3>Rozmiar</h3>
+<p>Rozmiar strażnicy wpływa na maksymalną liczbę żołnierzy (rozmiar × 20 wojowników/łuczników) i machin (rozmiar × 10 katapult/barykad).</p>
+
+<h3>Armia</h3>
+<p>Żołnierze kosztują 25 złota, machiny 35 złota. Kupujesz ze wspólnych rezerw, które odnawiają się co reset.</p>
+
+<h3>Premie dowódcy</h3>
+<p>Za każdy punkt umiejętności Przywództwo możesz dodać 1% premii do jednej z kategorii: atak, obrona, podatki, redukcja strat, redukcja kosztów utrzymania.</p>
+
+<h3>Skarbiec</h3>
+<p>Możesz wpłacać złoto do strażnicy. Wypłata jest w stosunku 2:1 (za 2 złota strażnicy dostajesz 1 do ręki).</p>
+
+<h3>Podatki</h3>
+<p>Wysyłaj żołnierzy na zbieranie danin z wiosek. Każda wysyłka kosztuje 1 Punkt Ataku i zwiększa zmęczenie armii.</p>
+
+<h3>Bitwa</h3>
+<p>Atakujesz inną strażnicę wydając Punkty Ataku. Wynik zależy od siły armii, morale, premii dowódcy i losowego modyfikatora.</p>
+
+<h3>Weterani</h3>
+<p>Weterani to najemnicy, których wyposażasz w ekwipunek z plecaka. Wzmacniają atak i obronę strażnicy.</p>
+
+<h3>Bestie</h3>
+<p>Bestie z hodowli możesz przypisać do strażnicy. Wzmacniają walki.</p>
+
+<p><a href="/outposts">Wróć do menu Strażnicy</a></p>
+{% endblock %}

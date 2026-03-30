@@ -1,0 +1,31 @@
+{# Outpost main menu — buy or enter outpost. #}
+{% extends "base.html" %}
+
+{% block content %}
+<h2>Strażnica</h2>
+
+{% if has_outpost %}
+<p>Twoja Strażnica czeka na Ciebie.</p>
+<ul>
+  <li><a href="/outposts/my">Moja Strażnica</a></li>
+  <li><a href="/outposts/treasury">Skarbiec</a></li>
+  <li><a href="/outposts/shop">Rozbudowa i zaciąg armii</a></li>
+  <li><a href="/outposts/taxes">Ściągnij daniny z wiosek</a></li>
+  <li><a href="/outposts/list">Lista Strażnic</a></li>
+  <li><a href="/outposts/battle">Atakuj inną Strażnicę</a></li>
+  <li><a href="/outposts/guide">Instrukcja</a></li>
+</ul>
+{% else %}
+<p>Nie posiadasz jeszcze Strażnicy. Koszt zakupu ziemi pod budowę: <b>500 sztuk złota</b>.</p>
+<p>Posiadasz: <b>{{ player_gold }}</b> sztuk złota.</p>
+{% if player_gold >= 500 %}
+<form method="post" action="/outposts/buy">
+  <input type="submit" value="Kup ziemię pod Strażnicę" />
+</form>
+{% else %}
+<p>Nie masz wystarczająco złota.</p>
+{% endif %}
+{% endif %}
+
+<p><a href="/city">Wróć do miasta</a></p>
+{% endblock %}

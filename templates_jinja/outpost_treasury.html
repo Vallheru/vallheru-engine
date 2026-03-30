@@ -1,0 +1,28 @@
+{# Outpost treasury — deposit/withdraw gold. #}
+{% extends "base.html" %}
+
+{% block content %}
+<h2>Skarbiec Strażnicy</h2>
+
+{% if message %}
+<p class="flash-success">{{ message }}</p>
+{% endif %}
+
+<p>Złoto w strażnicy: <b>{{ outpost_gold }}</b></p>
+<p>Złoto przy sobie: <b>{{ player_gold }}</b></p>
+
+<h3>Wpłać złoto do strażnicy</h3>
+<form method="post" action="/outposts/treasury/deposit">
+  <input type="number" name="amount" min="1" max="{{ player_gold }}" value="1" />
+  <input type="submit" value="Wpłać" />
+</form>
+
+<h3>Wypłać złoto ze strażnicy</h3>
+<p><small>Zamiana: 2 złota strażnicy = 1 złoto do ręki.</small></p>
+<form method="post" action="/outposts/treasury/withdraw">
+  <input type="number" name="amount" min="2" max="{{ outpost_gold }}" value="2" />
+  <input type="submit" value="Wypłać" />
+</form>
+
+<p><a href="/outposts">Wróć do menu Strażnicy</a></p>
+{% endblock %}

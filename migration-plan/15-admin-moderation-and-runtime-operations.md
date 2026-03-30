@@ -76,7 +76,7 @@ Port the staff-facing tools and replace legacy runtime scripts and page-triggere
   - Templates: `admin.html`, `staff.html`, `stafflist.html`.
   - Builder rank sees only bug report links; Staff/Admin see full moderation menu.
 
-### MP-15-02: Port moderation actions for jail, court, judge panel, and communication restrictions
+### MP-15-02: Port moderation actions for jail, court, judge panel, and communication restrictions ✅
 
 - Description: Rebuild the moderation flows that jail players (`jail.php`), manage court proceedings (`court.php`), handle judge rank/member management (`sedzia.php`), ban chat/forum writing, and restrict mail interactions.
 - Estimate: 2h
@@ -157,15 +157,21 @@ Port the staff-facing tools and replace legacy runtime scripts and page-triggere
   - `crates/data/src/bootstrap.rs`: `create_admin_account()`, `admin_account_exists()`.
   - Idempotent: skips admin creation if an admin already exists.
 
-### MP-15-07: Port era-reset operational commands
+### MP-15-07: Port era-reset operational commands ✅
 
 - Description: Replace `install/resetall.php` with auditable Rust CLI steps for season reset, archival, and confirmation-gated destructive actions.
 - Estimate: 2h
 - Depends on: MP-01-06, MP-15-05, MP-15-06.
 - Functional acceptance criteria:
-  - Era reset logic is implemented as auditable CLI steps, not a web script.
-  - Destructive commands require explicit confirmation flags.
-  - Reset-side data moves or archival steps are documented and testable.
+  - ✅ Era reset logic is implemented as auditable CLI steps, not a web script.
+  - ✅ Destructive commands require explicit confirmation flags.
+  - ✅ Reset-side data moves or archival steps are documented and testable.
 - Technical notes: Keep the final ops model compatible with both local development and a single production binary/container.
 - In scope: Era reset and archival tooling.
 - Out of scope: Full self-service admin automation.
+- Implementation notes:
+  - `vallheru reset-era --confirm-reset` runs the full era reset.
+  - `crates/data/src/era_reset.rs`: single-transaction reset covering ~55 gameplay tables.
+  - Player accounts preserved with age incremented.
+  - Catalog items (spells, potions with owner=0) preserved.
+  - Game settings reset to defaults.

@@ -1,0 +1,68 @@
+{# My outpost details — status, bonuses, army, veterans, monsters. #}
+{% extends "base.html" %}
+
+{% block content %}
+<h2>Moja Strażnica</h2>
+
+<table>
+  <tr><td>Rozmiar:</td><td><b>{{ out.size }}</b></td></tr>
+  <tr><td>Wojownicy:</td><td>{{ out.warriors }}</td></tr>
+  <tr><td>Łucznicy:</td><td>{{ out.archers }}</td></tr>
+  <tr><td>Katapulty:</td><td>{{ out.catapults }}</td></tr>
+  <tr><td>Barykady:</td><td>{{ out.barricades }}</td></tr>
+  <tr><td>Złoto:</td><td>{{ out.gold }}</td></tr>
+  <tr><td>Punkty Ataku:</td><td>{{ out.turns }}</td></tr>
+  <tr><td>Morale:</td><td>{{ morale_label }} ({{ out.morale | round(1) }})</td></tr>
+  <tr><td>Zmęczenie armii:</td><td>{{ fatigue_display }}%</td></tr>
+  <tr><td>Legowiska Bestii:</td><td>{{ out.fence }}</td></tr>
+  <tr><td>Kwatery Weteranów:</td><td>{{ out.barracks }}</td></tr>
+  <tr><td>Koszt utrzymania:</td><td>{{ cost }} złota / reset</td></tr>
+</table>
+
+<h3>Premie dowódcy</h3>
+<table>
+  <tr><td>Atak:</td><td>{{ out.battack }}%</td>
+    <td>{% if can_add_bonus %}<form method="post" action="/outposts/bonus/battack" style="display:inline"><input type="submit" value="+" /></form>{% endif %}</td></tr>
+  <tr><td>Obrona:</td><td>{{ out.bdefense }}%</td>
+    <td>{% if can_add_bonus %}<form method="post" action="/outposts/bonus/bdefense" style="display:inline"><input type="submit" value="+" /></form>{% endif %}</td></tr>
+  <tr><td>Podatki:</td><td>{{ out.btax }}%</td>
+    <td>{% if can_add_bonus %}<form method="post" action="/outposts/bonus/btax" style="display:inline"><input type="submit" value="+" /></form>{% endif %}</td></tr>
+  <tr><td>Straty:</td><td>{{ out.blost }}%</td>
+    <td>{% if can_add_bonus %}<form method="post" action="/outposts/bonus/blost" style="display:inline"><input type="submit" value="+" /></form>{% endif %}</td></tr>
+  <tr><td>Koszty utrzymania:</td><td>{{ out.bcost }}%</td>
+    <td>{% if can_add_bonus %}<form method="post" action="/outposts/bonus/bcost" style="display:inline"><input type="submit" value="+" /></form>{% endif %}</td></tr>
+</table>
+
+{% if veterans %}
+<h3>Weterani</h3>
+<table>
+  <tr><th>Imię</th><th>Atak</th><th>Obrona</th><th></th></tr>
+  {% for v in veterans %}
+  <tr>
+    <td>{{ v.name }}</td>
+    <td>{{ v.attack }}</td>
+    <td>{{ v.defense }}</td>
+    <td><a href="/outposts/veterans/{{ v.id }}">Szczegóły</a></td>
+  </tr>
+  {% endfor %}
+</table>
+{% endif %}
+
+{% if monsters %}
+<h3>Bestie</h3>
+<table>
+  <tr><th>Nazwa</th><th>Atak</th><th>Obrona</th></tr>
+  {% for m in monsters %}
+  <tr>
+    <td>{{ m.name }}</td>
+    <td>{{ m.power }}</td>
+    <td>{{ m.defense }}</td>
+  </tr>
+  {% endfor %}
+</table>
+{% endif %}
+
+<p>Maksymalna liczba żołnierzy: {{ max_troops }} | Machin wojennych: {{ max_equip }}</p>
+
+<p><a href="/outposts">Wróć do menu Strażnicy</a></p>
+{% endblock %}

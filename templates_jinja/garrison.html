@@ -1,0 +1,30 @@
+{# Garrison guard post — mission selection. #}
+{% extends "base.html" %}
+
+{% block content %}
+<h2>Prefektura Gwardii</h2>
+
+<p>Dostępne zlecenia: <b>{{ craft_mission }}</b></p>
+
+{% if has_missions %}
+<p>Wybierz zlecenie:</p>
+<ul>
+  {% for m in missions %}
+  <li>
+    {{ m.description }}
+    <form method="post" action="/garrison/execute/{{ m.index }}" style="display:inline">
+      <input type="submit" value="Przyjmij" />
+    </form>
+  </li>
+  {% endfor %}
+</ul>
+{% elif craft_mission > 0 %}
+<form method="post" action="/garrison/generate">
+  <input type="submit" value="Pokaż dostępne zlecenia" />
+</form>
+{% else %}
+<p>Nie mamy dla ciebie jakiegokolwiek rozkazu. Wróć za jakiś czas.</p>
+{% endif %}
+
+<p><a href="/city">Wróć do miasta</a></p>
+{% endblock %}

@@ -1,0 +1,14 @@
+{# Garrison mission result. #}
+{% extends "base.html" %}
+
+{% block content %}
+<h2>Prefektura Gwardii — wynik</h2>
+
+<p>{{ result }}</p>
+
+{% if can_refresh %}
+<p><a href="/garrison">Wykonaj kolejne zlecenie</a></p>
+{% endif %}
+
+<p><a href="/city">Wróć do miasta</a></p>
+{% endblock %}

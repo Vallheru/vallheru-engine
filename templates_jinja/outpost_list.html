@@ -1,0 +1,40 @@
+{# Outpost listing — search other outposts. #}
+{% extends "base.html" %}
+
+{% block content %}
+<h2>Lista Strażnic</h2>
+
+<p>Twój rozmiar: <b>{{ own_size }}</b></p>
+
+<form method="get" action="/outposts/list">
+  <p>
+    Rozmiar od: <input type="number" name="slevel" min="1" value="{{ min_size }}" />
+    do: <input type="number" name="elevel" min="1" value="{{ max_size }}" />
+    <input type="submit" value="Szukaj" />
+  </p>
+</form>
+
+{% if outposts %}
+<table>
+  <tr><th>ID</th><th>Rozmiar</th><th>Właściciel</th><th></th></tr>
+  {% for o in outposts %}
+  <tr>
+    <td>{{ o.id }}</td>
+    <td>{{ o.size }}</td>
+    <td>{{ o.owner_name }}</td>
+    <td>
+      <form method="post" action="/outposts/battle/execute" style="display:inline">
+        <input type="hidden" name="oid" value="{{ o.id }}" />
+        <input type="hidden" name="amount" value="1" />
+        <input type="submit" value="Atakuj" />
+      </form>
+    </td>
+  </tr>
+  {% endfor %}
+</table>
+{% else %}
+<p>Brak wyników. Spróbuj zmienić zakres rozmiarów.</p>
+{% endif %}
+
+<p><a href="/outposts">Wróć do menu Strażnicy</a></p>
+{% endblock %}

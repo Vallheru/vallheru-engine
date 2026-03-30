@@ -23,6 +23,7 @@ pub mod map;
 pub mod market;
 pub mod memberlist;
 pub mod moderation;
+pub mod outpost;
 pub mod pages;
 pub mod preset;
 pub mod quest;

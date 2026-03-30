@@ -1,0 +1,120 @@
+{# Outpost veteran detail and equipment. #}
+{% extends "base.html" %}
+
+{% block content %}
+<h2>Weteran: {{ veteran.name }}</h2>
+
+{% if message %}
+<p class="flash-success">{{ message }}</p>
+{% endif %}
+
+<table>
+  <tr><td>Broń:</td><td>{{ veteran.weapon }} ({{ veteran.wpower }})</td></tr>
+  <tr><td>Zbroja:</td><td>{{ veteran.armor }} ({{ veteran.apower }})</td></tr>
+  <tr><td>Hełm:</td><td>{{ veteran.helm }} ({{ veteran.hpower }})</td></tr>
+  <tr><td>Nogawice:</td><td>{{ veteran.legs }} ({{ veteran.lpower }})</td></tr>
+  <tr><td>Pierścień 1:</td><td>{{ veteran.ring1 }} ({{ veteran.rpower1 }})</td></tr>
+  <tr><td>Pierścień 2:</td><td>{{ veteran.ring2 }} ({{ veteran.rpower2 }})</td></tr>
+  <tr><td>Strzały:</td><td>{{ veteran.arrows }} ({{ veteran.opower }})</td></tr>
+  <tr><td><b>Atak:</b></td><td><b>{{ veteran.attack }}</b></td></tr>
+  <tr><td><b>Obrona:</b></td><td><b>{{ veteran.defense }}</b></td></tr>
+</table>
+
+<h3>Wyposażenie weterana</h3>
+<form method="post" action="/outposts/veterans/{{ veteran.id }}/equip">
+  <table>
+    {% if equip_weapons %}
+    <tr>
+      <td>Broń:</td>
+      <td>
+        <select name="weapon">
+          <option value="0">-- nie zmieniaj --</option>
+          {% for e in equip_weapons %}
+          <option value="{{ e.id }}">{{ e.name }} ({{ e.power }})</option>
+          {% endfor %}
+        </select>
+      </td>
+    </tr>
+    {% endif %}
+    {% if equip_armor %}
+    <tr>
+      <td>Zbroja:</td>
+      <td>
+        <select name="armor">
+          <option value="0">-- nie zmieniaj --</option>
+          {% for e in equip_armor %}
+          <option value="{{ e.id }}">{{ e.name }} ({{ e.power }})</option>
+          {% endfor %}
+        </select>
+      </td>
+    </tr>
+    {% endif %}
+    {% if equip_helm %}
+    <tr>
+      <td>Hełm:</td>
+      <td>
+        <select name="helm">
+          <option value="0">-- nie zmieniaj --</option>
+          {% for e in equip_helm %}
+          <option value="{{ e.id }}">{{ e.name }} ({{ e.power }})</option>
+          {% endfor %}
+        </select>
+      </td>
+    </tr>
+    {% endif %}
+    {% if equip_legs %}
+    <tr>
+      <td>Nogawice:</td>
+      <td>
+        <select name="legs">
+          <option value="0">-- nie zmieniaj --</option>
+          {% for e in equip_legs %}
+          <option value="{{ e.id }}">{{ e.name }} ({{ e.power }})</option>
+          {% endfor %}
+        </select>
+      </td>
+    </tr>
+    {% endif %}
+    {% if equip_ring %}
+    <tr>
+      <td>Pierścień 1:</td>
+      <td>
+        <select name="ring1">
+          <option value="0">-- nie zmieniaj --</option>
+          {% for e in equip_ring %}
+          <option value="{{ e.id }}">{{ e.name }} ({{ e.power }})</option>
+          {% endfor %}
+        </select>
+      </td>
+    </tr>
+    <tr>
+      <td>Pierścień 2:</td>
+      <td>
+        <select name="ring2">
+          <option value="0">-- nie zmieniaj --</option>
+          {% for e in equip_ring %}
+          <option value="{{ e.id }}">{{ e.name }} ({{ e.power }})</option>
+          {% endfor %}
+        </select>
+      </td>
+    </tr>
+    {% endif %}
+    {% if equip_arrows %}
+    <tr>
+      <td>Strzały:</td>
+      <td>
+        <select name="arrows">
+          <option value="0">-- nie zmieniaj --</option>
+          {% for e in equip_arrows %}
+          <option value="{{ e.id }}">{{ e.name }} ({{ e.power }})</option>
+          {% endfor %}
+        </select>
+      </td>
+    </tr>
+    {% endif %}
+  </table>
+  <input type="submit" value="Wyposażenie" />
+</form>
+
+<p><a href="/outposts/my">Wróć do mojej Strażnicy</a></p>
+{% endblock %}
