@@ -197,8 +197,9 @@ Move from a growing Rust shadow implementation to a safe production cutover with
     - Upgrade procedure (build → migrate → import → restart → verify)
     - Troubleshooting matrix
 
-### MP-16-09: Finalize PHP retirement and rollback references
+### MP-16-09: Finalize PHP retirement and rollback references ✅
 
+- Status: **DONE**
 - Description: Produce the final checklist for disabling PHP traffic, retaining rollback hooks, and declaring Rust the system of record.
 - Estimate: 2h
 - Depends on: MP-16-04, MP-16-05, MP-16-07, MP-16-08.
@@ -209,3 +210,12 @@ Move from a growing Rust shadow implementation to a safe production cutover with
 - Technical notes: Treat retirement as an operations event, not just a code merge.
 - In scope: PHP retirement checklist and rollback references.
 - Out of scope: Post-launch feature redesign.
+- Implementation notes:
+  - Created `migration-plan/php-retirement-checklist.md` with 6 phased approach:
+    R-1 (preparation) → R-2 (route cutover) → R-3 (7-day soak) →
+    R-4 (14-day cold standby) → R-5 (point of no return) → R-6 (cleanup).
+  - Rollback free until R-5; after R-5 requires backup restore.
+  - Detailed artifact removal list: 110 PHP entry points, 16 PHP directories,
+    5 Docker artifacts.
+  - Data authority timeline showing PostgreSQL ownership transition.
+  - Operator sign-off template.
