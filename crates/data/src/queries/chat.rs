@@ -278,6 +278,15 @@ pub async fn player_names_by_ids(
         .await
 }
 
+/// Look up a player's `tribe_id` (0 if no tribe).
+pub async fn player_tribe_id(pool: &PgPool, player_id: i64) -> Result<i32, sqlx::Error> {
+    sqlx::query_scalar::<_, i32>("SELECT tribe_id FROM players WHERE id = $1")
+        .bind(player_id)
+        .fetch_optional(pool)
+        .await
+        .map(|opt| opt.unwrap_or(0))
+}
+
 /// Check if the innkeeper role player is actively on chat (within 180s).
 pub async fn innkeeper_on_chat(pool: &PgPool) -> Result<Option<String>, sqlx::Error> {
     sqlx::query_scalar::<_, String>(

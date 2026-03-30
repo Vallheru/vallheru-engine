@@ -412,7 +412,11 @@ pub async fn chronicle_detail(
         player_hp: player.hp,
         player_energy: player.energy,
         craft_missions_remaining: player.craft_mission,
-        has_active_mission: false, // TODO: check mactions
+        has_active_mission: mq::find_active_mission(&app.pool, player.id)
+            .await
+            .ok()
+            .flatten()
+            .is_some(),
     })
     .is_ok();
 

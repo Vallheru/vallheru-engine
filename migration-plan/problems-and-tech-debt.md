@@ -30,9 +30,8 @@ Each entry includes:
 - **Action**: Remove stubs as real public API is added in each crate.
 - **Fixable in existing task**: Yes — each subsequent task touching these crates should remove/replace stubs.
 - **Needs new task**: No
-- **Status**: reduced
+- **Status**: resolved — all three crates are fully populated with real modules.
 - **Related tasks**: MP-01-02 through MP-01-06, MP-02-xx onward
-- **Notes**: `data` crate populated in MP-02-04/05/06. `web` crate populated in MP-03-02. Only `domain` remains a stub.
 
 ### TD-002: Character reset SQL references unmigrated gameplay tables
 

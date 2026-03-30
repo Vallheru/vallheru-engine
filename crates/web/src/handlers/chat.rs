@@ -13,6 +13,7 @@ use axum::response::{IntoResponse, Response};
 use axum::{Extension, Form};
 
 use vallheru_data::queries::chat as q;
+use vallheru_data::queries::tribe_forum as tfq;
 use vallheru_domain::social::chat::{
     self as chat_domain, DEFAULT_CHAT_LENGTH, MAX_CHAT_LENGTH, MessageTarget,
 };
@@ -272,9 +273,17 @@ pub async fn chat_send(
         return crate::page::redirect_after_post("/chat");
     }
 
-    // Build author label.
-    // TODO: load tribe prefix/suffix when tribe module is available.
-    let author_label = text::chat_author_label(user.id, &user.name, &user.rank, "", "");
+    // Build author label with tribe prefix/suffix.
+    let tribe_id = q::player_tribe_id(&app.pool, user.id).await.unwrap_or(0);
+    let tags = if tribe_id > 0 {
+        tfq::tribe_tags(&app.pool, tribe_id).await.ok().flatten()
+    } else {
+        None
+    };
+    let (prefix, suffix) = tags
+        .as_ref()
+        .map_or(("", ""), |t| (t.prefix.as_str(), t.suffix.as_str()));
+    let author_label = text::chat_author_label(user.id, &user.name, &user.rank, prefix, suffix);
 
     // Check for @me emote.
     let (message_body, is_emote) = text::apply_emote(&processed, user.id, &user.name);

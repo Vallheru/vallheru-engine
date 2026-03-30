@@ -215,11 +215,13 @@ impl TemplateEngine {
 
 /// Template function: `asset_url(path)` — returns a versioned asset URL.
 ///
-/// For now returns the path unchanged. Once content hashing is wired
-/// (MP-04-03) this will append a cache-busting query parameter.
+/// Appends a cache-busting query parameter derived from the package version
+/// so browsers refetch assets after a new deploy.
+#[allow(clippy::needless_pass_by_value)] // MiniJinja Function trait requires owned String
 fn asset_url(path: String) -> String {
-    // TODO(MP-04-03): append content hash query parameter
-    path
+    // Use package version as a lightweight cache-buster. All assets are
+    // embedded at compile time so the version uniquely identifies content.
+    format!("{path}?v={}", env!("CARGO_PKG_VERSION"))
 }
 
 /// Map a theme key to the CSS filename templates should load.
@@ -338,8 +340,9 @@ mod tests {
     }
 
     #[test]
-    fn asset_url_passthrough() {
-        assert_eq!(asset_url("css/main.css".to_owned()), "css/main.css");
+    fn asset_url_appends_version() {
+        let result = asset_url("css/main.css".to_owned());
+        assert!(result.starts_with("css/main.css?v="));
     }
 
     #[test]
