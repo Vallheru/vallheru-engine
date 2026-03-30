@@ -176,6 +176,20 @@ async fn serve(config: AppConfig) -> anyhow::Result<()> {
         &catalog,
     );
 
+    let email = if let Some(ref smtp) = config.smtp {
+        vallheru_web::EmailService::from_config(&vallheru_web::EmailConfig {
+            host: smtp.host.clone(),
+            port: smtp.port,
+            username: smtp.username.clone(),
+            password: smtp.password.clone(),
+            from: smtp.from.clone(),
+        })
+        .expect("failed to build SMTP transport")
+    } else {
+        tracing::warn!("SMTP not configured — emails will be logged only");
+        vallheru_web::EmailService::log_only()
+    };
+
     let state = vallheru_web::AppState {
         pool: pool.clone(),
         context_defaults: vallheru_web::ContextDefaults {
@@ -184,6 +198,7 @@ async fn serve(config: AppConfig) -> anyhow::Result<()> {
         templates,
         catalog,
         post_rate_limiter: vallheru_web::PostRateLimiter::default(),
+        email,
     };
     let app = vallheru_web::build_router(state);
 

@@ -27,3 +27,12 @@ lang = "pl"
 [session]
 # Must be at least 64 characters.
 secret = "CHANGE_ME_CHANGE_ME_CHANGE_ME_CHANGE_ME_CHANGE_ME_CHANGE_ME_CHANGE_ME"
+
+# Optional: SMTP configuration for outbound email.
+# If omitted, emails are logged instead of sent.
+# [smtp]
+# host = "smtp.example.com"
+# port = 587
+# username = "noreply@example.com"
+# password = "secret"
+# from = "noreply@example.com"

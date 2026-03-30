@@ -165,14 +165,8 @@ pub async fn submit(State(state): State<AppState>, Form(form): Form<RegisterForm
         return (StatusCode::INTERNAL_SERVER_ERROR, "Internal error").into_response();
     }
 
-    // TODO: Send activation email with the token link.
-    // Email delivery is not yet wired; log the token for manual testing.
-    tracing::info!(
-        username = %validated.username,
-        email = %validated.email,
-        token = token,
-        "registration pending activation"
-    );
+    // Send activation email.
+    send_activation_email(&state, &validated.username, &validated.email, token).await;
 
     // Show success page.
     let meta = PageMeta::titled(state.catalog.get_or_key("register", "TITLE")).with_flash(
@@ -186,6 +180,27 @@ pub async fn submit(State(state): State<AppState>, Form(form): Form<RegisterForm
         step: "success".to_owned(),
     };
     state.templates.render_value("register.html", &ctx)
+}
+
+/// Send the activation email (best-effort — errors are logged, not propagated).
+async fn send_activation_email(state: &AppState, username: &str, email: &str, token: i32) {
+    let activation_url = format!(
+        "{}/activate?token={token}&email={email}",
+        state.templates.base_url(),
+    );
+    let subject = format!(
+        "{} — Aktywacja konta",
+        state.catalog.get_or_key("register", "TITLE")
+    );
+    let body = format!(
+        "Witaj {username}!\n\n\
+         Aby aktywować swoje konto, kliknij poniższy link:\n\
+         {activation_url}\n\n\
+         Jeśli nie rejestrowałeś się w grze, zignoruj tę wiadomość.",
+    );
+    if let Err(e) = state.email.send(email, &subject, &body).await {
+        tracing::error!(error = %e, "register: failed to send activation email");
+    }
 }
 
 /// Map domain validation errors to localized user-facing messages.

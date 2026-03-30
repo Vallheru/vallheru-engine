@@ -11,6 +11,9 @@ pub struct AppConfig {
     pub database: DatabaseConfig,
     pub game: GameConfig,
     pub session: SessionConfig,
+    /// Optional SMTP configuration for outbound email.
+    #[serde(default)]
+    pub smtp: Option<SmtpConfig>,
 }
 
 #[derive(Debug, Deserialize)]
@@ -68,6 +71,24 @@ pub struct SessionConfig {
     pub secret: String,
 }
 
+/// SMTP configuration for outbound email.
+#[derive(Debug, Clone, Deserialize)]
+pub struct SmtpConfig {
+    /// SMTP server host, e.g. `smtp.example.com`.
+    pub host: String,
+    /// SMTP server port (default: 587 for STARTTLS).
+    #[serde(default = "default_smtp_port")]
+    pub port: u16,
+    /// SMTP username (optional for unauthenticated relays).
+    #[serde(default)]
+    pub username: Option<String>,
+    /// SMTP password.
+    #[serde(default)]
+    pub password: Option<String>,
+    /// "From" address for outgoing emails, e.g. `noreply@vallheru.net`.
+    pub from: String,
+}
+
 fn default_bind() -> SocketAddr {
     ([0, 0, 0, 0], 3000).into()
 }
@@ -78,6 +99,10 @@ fn default_max_connections() -> u32 {
 
 fn default_lang() -> String {
     "pl".to_owned()
+}
+
+fn default_smtp_port() -> u16 {
+    587
 }
 
 impl AppConfig {

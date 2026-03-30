@@ -56,6 +56,8 @@ pub struct AppState {
     pub catalog: Catalog,
     /// Server-side rate limiter for forum/tribe-forum posts.
     pub post_rate_limiter: PostRateLimiter,
+    /// Outbound email service.
+    pub email: crate::email::EmailService,
 }
 
 #[cfg(test)]

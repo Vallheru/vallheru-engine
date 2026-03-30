@@ -1,4 +1,5 @@
 pub mod assets;
+pub mod email;
 pub mod handlers;
 pub mod i18n;
 pub mod middleware;
@@ -7,6 +8,7 @@ pub mod render;
 pub mod routes;
 pub mod state;
 
+pub use email::{EmailConfig, EmailService};
 pub use i18n::{Catalog, CatalogError};
 pub use middleware::context::{ContextDefaults, RequestContext, SessionUser};
 pub use middleware::guards::{

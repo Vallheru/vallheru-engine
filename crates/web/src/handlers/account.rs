@@ -168,15 +168,26 @@ pub async fn submit_lost_password(
         return (StatusCode::INTERNAL_SERVER_ERROR, "Internal error").into_response();
     }
 
-    // TODO: Send email with the reset link and temporary password.
-    // For now, log the token so testing is possible during migration.
-    tracing::info!(
-        player_id = player_id,
-        email = %form.email,
-        token = %token,
-        temp_password = %temp_password,
-        "password reset requested (email not yet wired)"
+    // Send password reset email.
+    let reset_url = format!(
+        "{}/reset?code={token}&email={}",
+        state.templates.base_url(),
+        form.email
     );
+    let subject = format!(
+        "{} — Reset hasła",
+        state.catalog.get_or_key("lost_password", "TITLE")
+    );
+    let body = format!(
+        "Ktoś poprosił o zresetowanie hasła do Twojego konta.\n\n\
+         Twoje tymczasowe hasło: {temp_password}\n\n\
+         Kliknij poniższy link, aby potwierdzić reset:\n\
+         {reset_url}\n\n\
+         Jeśli to nie Ty, zignoruj tę wiadomość.",
+    );
+    if let Err(e) = state.email.send(&form.email, &subject, &body).await {
+        tracing::error!(error = %e, "lost-password: failed to send reset email");
+    }
 
     // Show success message.
     let meta = PageMeta::titled(state.catalog.get_or_key("lost_password", "TITLE"));
