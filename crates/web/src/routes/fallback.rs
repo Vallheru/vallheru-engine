@@ -28,7 +28,7 @@ use serde::Serialize;
 use crate::state::AppState;
 
 /// A route entry in the migration registry.
-#[derive(Debug, Clone, Serialize)]
+#[derive(Debug, Clone, Copy, Serialize)]
 pub struct MigratedRoute {
     /// The URL path pattern (e.g. `/healthz`, `/city`).
     pub path: &'static str,
@@ -39,7 +39,7 @@ pub struct MigratedRoute {
 }
 
 /// Status of a route in the migration.
-#[derive(Debug, Clone, Serialize)]
+#[derive(Debug, Clone, Copy, Serialize)]
 #[serde(rename_all = "snake_case")]
 pub enum RouteStatus {
     /// Fully handled by the Rust app.
@@ -56,82 +56,129 @@ pub enum RouteStatus {
 /// Routes NOT in this list are assumed to still be served by PHP.
 pub fn migrated_routes() -> Vec<MigratedRoute> {
     vec![
-        MigratedRoute {
-            path: "/healthz",
-            module: "ops",
-            status: RouteStatus::Migrated,
-        },
-        MigratedRoute {
-            path: "/readyz",
-            module: "ops",
-            status: RouteStatus::Migrated,
-        },
-        MigratedRoute {
-            path: "/buildinfo",
-            module: "ops",
-            status: RouteStatus::Migrated,
-        },
-        MigratedRoute {
-            path: "/login",
-            module: "auth",
-            status: RouteStatus::Staged,
-        },
-        MigratedRoute {
-            path: "/logout",
-            module: "auth",
-            status: RouteStatus::Staged,
-        },
-        MigratedRoute {
-            path: "/register",
-            module: "auth",
-            status: RouteStatus::Staged,
-        },
-        MigratedRoute {
-            path: "/activate",
-            module: "auth",
-            status: RouteStatus::Staged,
-        },
-        MigratedRoute {
-            path: "/lost-password",
-            module: "auth",
-            status: RouteStatus::Staged,
-        },
-        MigratedRoute {
-            path: "/preset",
-            module: "account",
-            status: RouteStatus::Staged,
-        },
-        MigratedRoute {
-            path: "/referrals",
-            module: "account",
-            status: RouteStatus::Staged,
-        },
-        MigratedRoute {
-            path: "/account",
-            module: "account",
-            status: RouteStatus::Staged,
-        },
-        MigratedRoute {
-            path: "/account/name",
-            module: "account",
-            status: RouteStatus::Staged,
-        },
-        MigratedRoute {
-            path: "/account/password",
-            module: "account",
-            status: RouteStatus::Staged,
-        },
-        MigratedRoute {
-            path: "/account/settings",
-            module: "account",
-            status: RouteStatus::Staged,
-        },
-        MigratedRoute {
-            path: "/account/profile",
-            module: "account",
-            status: RouteStatus::Staged,
-        },
+        // --- Group 0: Operational (always Rust) ---
+        r("/healthz", "ops", RouteStatus::Migrated),
+        r("/readyz", "ops", RouteStatus::Migrated),
+        r("/buildinfo", "ops", RouteStatus::Migrated),
+        r("/rss", "content", RouteStatus::Staged),
+        // --- Group A: Auth & Account ---
+        r("/login", "auth", RouteStatus::Staged),
+        r("/logout", "auth", RouteStatus::Staged),
+        r("/register", "auth", RouteStatus::Staged),
+        r("/activate", "auth", RouteStatus::Staged),
+        r("/lost-password", "auth", RouteStatus::Staged),
+        r("/preset", "account", RouteStatus::Staged),
+        r("/referrals", "account", RouteStatus::Staged),
+        r("/account", "account", RouteStatus::Staged),
+        r("/account/*", "account", RouteStatus::Staged),
+        // --- Group B: City & Navigation ---
+        r("/city", "world", RouteStatus::Staged),
+        r("/map", "world", RouteStatus::Staged),
+        r("/travel", "world", RouteStatus::Staged),
+        r("/forest", "world", RouteStatus::Staged),
+        r("/mountains", "world", RouteStatus::Staged),
+        r("/alley", "world", RouteStatus::Staged),
+        r("/rest", "world", RouteStatus::Staged),
+        r("/landfill", "world", RouteStatus::Staged),
+        // --- Group D: Deity, Temple & Tower ---
+        r("/deity", "deity", RouteStatus::Staged),
+        r("/deity/*", "deity", RouteStatus::Staged),
+        r("/temple", "temple", RouteStatus::Staged),
+        r("/temple/*", "temple", RouteStatus::Staged),
+        r("/tower", "tower", RouteStatus::Staged),
+        // --- Group E: Equipment & Shops ---
+        r("/equipment", "equipment", RouteStatus::Staged),
+        r("/equipment/*", "equipment", RouteStatus::Staged),
+        r("/weapons", "shops", RouteStatus::Staged),
+        r("/weapons/*", "shops", RouteStatus::Staged),
+        r("/armor", "shops", RouteStatus::Staged),
+        r("/armor/*", "shops", RouteStatus::Staged),
+        r("/fletcher", "shops", RouteStatus::Staged),
+        r("/fletcher/*", "shops", RouteStatus::Staged),
+        r("/spellbook", "spells", RouteStatus::Staged),
+        r("/spellbook/*", "spells", RouteStatus::Staged),
+        r("/magic-shop", "shops", RouteStatus::Staged),
+        r("/magic-shop/*", "shops", RouteStatus::Staged),
+        // --- Group F: Economy & Banking ---
+        r("/wealth", "bank", RouteStatus::Staged),
+        r("/bank", "bank", RouteStatus::Staged),
+        // --- Group G: Player Markets ---
+        r("/market", "market", RouteStatus::Staged),
+        r("/market/*", "market", RouteStatus::Staged),
+        // --- Group H: Gathering & Crafting ---
+        r("/mining", "gathering", RouteStatus::Staged),
+        r("/mines", "gathering", RouteStatus::Staged),
+        r("/mines/*", "gathering", RouteStatus::Staged),
+        r("/smelter", "gathering", RouteStatus::Staged),
+        r("/smelter/*", "gathering", RouteStatus::Staged),
+        r("/lumberjack", "gathering", RouteStatus::Staged),
+        r("/farm", "gathering", RouteStatus::Staged),
+        // --- Group J: Social ---
+        r("/chat", "chat", RouteStatus::Staged),
+        r("/chat/*", "chat", RouteStatus::Staged),
+        r("/room", "room", RouteStatus::Staged),
+        r("/room/*", "room", RouteStatus::Staged),
+        r("/mail", "mail", RouteStatus::Staged),
+        r("/mail/*", "mail", RouteStatus::Staged),
+        r("/forums", "forums", RouteStatus::Staged),
+        r("/forums/*", "forums", RouteStatus::Staged),
+        r("/tforums", "tribe_forum", RouteStatus::Staged),
+        r("/tforums/*", "tribe_forum", RouteStatus::Staged),
+        // --- Group K: Content ---
+        r("/news", "content", RouteStatus::Staged),
+        r("/news/*", "content", RouteStatus::Staged),
+        r("/updates", "content", RouteStatus::Staged),
+        r("/updates/*", "content", RouteStatus::Staged),
+        r("/newspaper", "content", RouteStatus::Staged),
+        r("/newspaper/*", "content", RouteStatus::Staged),
+        r("/polls", "content", RouteStatus::Staged),
+        r("/polls/*", "content", RouteStatus::Staged),
+        r("/proposals/*", "content", RouteStatus::Staged),
+        r("/comments/*", "content", RouteStatus::Staged),
+        r("/notes", "pages", RouteStatus::Staged),
+        r("/notes/*", "pages", RouteStatus::Staged),
+        r("/library", "pages", RouteStatus::Staged),
+        r("/library/*", "pages", RouteStatus::Staged),
+        r("/roleplay/*", "pages", RouteStatus::Staged),
+        r("/chronicle", "pages", RouteStatus::Staged),
+        r("/chronicle/*", "pages", RouteStatus::Staged),
+        // --- Group M: Outposts & Garrison ---
+        r("/outposts", "outpost", RouteStatus::Staged),
+        r("/outposts/*", "outpost", RouteStatus::Staged),
+        r("/garrison", "outpost", RouteStatus::Staged),
+        r("/garrison/*", "outpost", RouteStatus::Staged),
+        // --- Group N: Quests & Missions ---
+        r("/labyrinth", "quest", RouteStatus::Staged),
+        r("/labyrinth/*", "quest", RouteStatus::Staged),
+        r("/mission", "quest", RouteStatus::Staged),
+        r("/maze", "quest", RouteStatus::Staged),
+        r("/maze/*", "quest", RouteStatus::Staged),
+        // --- Group O: Staff & Moderation ---
+        r("/staff", "staff", RouteStatus::Staged),
+        r("/staff/*", "staff", RouteStatus::Staged),
+        r("/stafflist", "staff", RouteStatus::Staged),
+        r("/judge", "moderation", RouteStatus::Staged),
+        r("/court", "court", RouteStatus::Staged),
+        r("/court/*", "court", RouteStatus::Staged),
+        r("/jail", "jail", RouteStatus::Staged),
+        r("/jail/*", "jail", RouteStatus::Staged),
+        // --- Group P: Admin ---
+        r("/admin", "admin", RouteStatus::Staged),
+        // --- Group Q: Member Directory ---
+        r("/memberlist", "memberlist", RouteStatus::Staged),
+        // --- Group Z: House ---
+        r("/house", "house", RouteStatus::Staged),
+        r("/house/*", "house", RouteStatus::Staged),
     ]
+}
+
+/// Shorthand constructor.
+const fn r(path: &'static str, module: &'static str, status: RouteStatus) -> MigratedRoute {
+    MigratedRoute {
+        path,
+        module,
+        status,
+    }
 }
 
 /// Fallback handler for requests that reach Rust but don't match any route.

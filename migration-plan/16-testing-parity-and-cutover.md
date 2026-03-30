@@ -82,8 +82,9 @@ Move from a growing Rust shadow implementation to a safe production cutover with
   - Outpost combat tests: attacker/defender remaining bounded, tax gold non-negative, morale labels valid, maintenance cost non-negative, size/structure upgrades non-negative, costs non-negative, battle experience positive, veteran stats positive, attack gold gain non-negative.
   - Found and fixed 2 real bugs: `attacker_losses` and `defender_losses` could produce remaining > starting when blost bonus made losses negative. Fixed with `.clamp(0, count)`.
 
-### MP-16-04: Define route-by-route cutover and fallback rules
+### MP-16-04: Define route-by-route cutover and fallback rules ✅
 
+- Status: **DONE** (commit pending)
 - Description: Produce the exact sequence for enabling Rust routes, keeping PHP fallbacks, and deciding when a route is safe to switch permanently.
 - Estimate: 2h
 - Depends on: MP-03-05, MP-03-01.
@@ -94,6 +95,13 @@ Move from a growing Rust shadow implementation to a safe production cutover with
 - Technical notes: Do not allow partial cutovers inside a workflow that must stay transactionally coherent.
 - In scope: Cutover matrix and activation rules.
 - Out of scope: Final PHP removal.
+- Implementation notes:
+  - Created `migration-plan/cutover-rules.md` with full cutover matrix.
+  - Defined 17 cutover groups (0, A–Q, Z) with dependency chains.
+  - Each group has pre-cutover checklist, rollback rules, and known gaps.
+  - Updated `fallback.rs` migration registry to track all 100+ implemented routes.
+  - Added `Copy` derive to `MigratedRoute` and `RouteStatus` for const constructor.
+  - Simplified registry with `const fn r()` shorthand.
 
 ### MP-16-05: Build data reconciliation and rollback procedures
 

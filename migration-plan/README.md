@@ -172,6 +172,7 @@ These are the recommended Rust modules, mapped from the real PHP codebase:
 | [table-ownership-map.md](./table-ownership-map.md) | Maps all 112 legacy MySQL tables to owning migration modules |
 | [player-field-normalization.md](./player-field-normalization.md) | Normalization strategy for serialized player columns |
 | [route-manifest.md](./route-manifest.md) | Maps all 110 PHP entry points to planned Axum routes |
+| [cutover-rules.md](./cutover-rules.md) | Route-by-route cutover groups, activation rules, and rollback procedures |
 | [problems-and-tech-debt.md](./problems-and-tech-debt.md) | Technical debt and problem register |
 
 ## Totals
