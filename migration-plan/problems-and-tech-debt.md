@@ -251,3 +251,15 @@ Each entry includes:
 - **Needs new task**: No — acceptable as-is.
 - **Status**: open
 - **Related tasks**: MP-14-04, MP-14-06
+
+### TD-020: Duplicate chronicle routes caused router panic
+
+- **Type**: bug
+- **Discovered in**: MP-16-02
+- **Description**: `/chronicle` and `/chronicle/{id}` were registered in both `quest_routes()` and `pages_routes()`. Axum 0.8 panics at startup on overlapping method routes. The `pages::chronicle_page` and `pages::chronicle_mission` handlers are content-browsing views while the quest versions are gameplay-aware (check location, chapter).
+- **Impact**: **Critical** — the application could not start: router construction panicked. Discovery was accidental — only found by integration tests. Production was unaffected because the app was never started with both route groups active.
+- **Action**: Removed the duplicate routes from `pages_routes()`. The quest module handlers remain as the authoritative versions. The pages module functions are still exported but unused.
+- **Fixable in existing task**: Yes — fixed in MP-16-02.
+- **Needs new task**: No
+- **Status**: resolved
+- **Related tasks**: MP-16-02, MP-14-04, MP-12-06

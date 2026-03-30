@@ -482,9 +482,7 @@ fn pages_routes() -> Router<AppState> {
         .route("/library/{text_type}", routing::get(pages::library_list))
         // Roleplay profiles
         .route("/roleplay/{id}", routing::get(pages::roleplay_view))
-        // Chronicle
-        .route("/chronicle", routing::get(pages::chronicle_page))
-        .route("/chronicle/{id}", routing::get(pages::chronicle_mission))
+    // Chronicle routes are in quest_routes() — not duplicated here.
 }
 
 fn court_routes() -> Router<AppState> {

@@ -24,3 +24,9 @@ tower.workspace = true
 tracing.workspace = true
 thiserror.workspace = true
 uuid.workspace = true
+
+[dev-dependencies]
+tokio = { workspace = true, features = ["full"] }
+tower = { workspace = true, features = ["util"] }
+serde_json.workspace = true
+sqlx.workspace = true

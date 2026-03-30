@@ -50,8 +50,9 @@ Move from a growing Rust shadow implementation to a safe production cutover with
 - In scope: Capture harness and fixtures.
 - Out of scope: Full-site visual regression tooling.
 
-### MP-16-02: Add integration tests for core user journeys
+### MP-16-02: Add integration tests for core user journeys ✅
 
+- Status: **DONE** (commit pending)
 - Description: Build end-to-end integration tests for login, navigation, account flows, and at least one route in each major module.
 - Estimate: 2h
 - Depends on: MP-05-01, MP-07-02, MP-10-03, MP-12-01.
@@ -62,6 +63,12 @@ Move from a growing Rust shadow implementation to a safe production cutover with
 - Technical notes: Keep the first suite small but representative.
 - In scope: Cross-module integration tests.
 - Out of scope: Browser automation.
+- Implementation notes:
+  - Created `crates/web/tests/integration.rs` with 17 HTTP-layer integration tests.
+  - Tests use `tower::ServiceExt::oneshot` against the full Axum router (lazy pool, no live DB needed).
+  - Coverage: healthz, buildinfo, migration-status (operational); auth guards on city/bank/equipment/mail/forums/admin/staff/outposts/market; fallback 404; static asset serving; RSS public access; login form validation.
+  - **Found and fixed TD-020**: duplicate `/chronicle` routes in `quest_routes()` and `pages_routes()` caused router panic. Removed duplicate from `pages_routes()`.
+  - Added dev-dependencies: tokio, tower (util), serde_json, sqlx.
 
 ### MP-16-03: Add invariant tests for combat, economy, and inventory ✅
 
