@@ -1,0 +1,10 @@
+{% extends "base.html" %}
+{% block content %}
+<h3>Nowy dokument — {{ kind_label }}</h3>
+
+<form method="post" action="/court/create/{{ kind }}">
+  <p>Tytuł: <input type="text" name="ttitle" /></p>
+  <p>Treść:<br/><textarea name="body" rows="20" cols="60"></textarea></p>
+  <input type="submit" value="Dodaj" />
+</form>
+{% endblock %}

@@ -1,0 +1,24 @@
+{% extends "base.html" %}
+{% block content %}
+<table width="100%">
+<tr>
+  <td valign="top">
+    <u><b>Listy</b></u><br/>
+    <a href="/court/list/judges">Sędziowie</a><br/>
+    <a href="/court/list/aldermen">Ławnicy</a><br/>
+    <a href="/court/list/lawyers">Prawnicy</a><br/>
+    {% if can_admin %}
+    <a href="/court/create/rule">Dodaj przepis</a><br/>
+    <a href="/court/create/case">Dodaj sprawę</a><br/>
+    <a href="/court/create/verdict">Dodaj wyrok</a><br/>
+    {% endif %}
+  </td>
+  <td valign="top">
+    <u><b>Informacje</b></u><br/>
+    <a href="/court/docs/rule">Przepisy</a><br/>
+    <a href="/court/docs/case">Sprawy</a><br/>
+    <a href="/court/docs/verdict">Wyroki</a><br/>
+  </td>
+</tr>
+</table>
+{% endblock %}

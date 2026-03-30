@@ -3,8 +3,8 @@
 use axum::{Router, middleware, routing};
 
 use crate::handlers::{
-    bank, chat, city, content, deity, equipment, forums, gathering, house, locations, mail, map,
-    market, pages, quest, room, shops, spells, temple, tower, travel, tribe_forum,
+    bank, chat, city, content, court, deity, equipment, forums, gathering, house, jail, locations,
+    mail, map, market, pages, quest, room, shops, spells, temple, tower, travel, tribe_forum,
 };
 use crate::middleware::guards::require_authenticated;
 use crate::state::AppState;
@@ -234,6 +234,13 @@ fn social_routes() -> Router<AppState> {
         .merge(tribe_forum_routes())
         .merge(content_routes())
         .merge(pages_routes())
+        .merge(court_routes())
+        // Jail
+        .route("/jail", routing::get(jail::jail_view))
+        .route(
+            "/jail/bail/{id}",
+            routing::get(jail::jail_bail_confirm).post(jail::jail_bail_pay),
+        )
 }
 
 fn forum_routes() -> Router<AppState> {
@@ -414,4 +421,25 @@ fn pages_routes() -> Router<AppState> {
         // Chronicle
         .route("/chronicle", routing::get(pages::chronicle_page))
         .route("/chronicle/{id}", routing::get(pages::chronicle_mission))
+}
+
+fn court_routes() -> Router<AppState> {
+    Router::new()
+        .route("/court", routing::get(court::court_menu))
+        .route("/court/list/{role}", routing::get(court::court_staff_list))
+        .route("/court/docs/{kind}", routing::get(court::court_doc_list))
+        .route("/court/doc/{id}", routing::get(court::court_doc_detail))
+        .route(
+            "/court/create/{kind}",
+            routing::get(court::court_doc_create_form).post(court::court_doc_create),
+        )
+        .route(
+            "/court/edit/{id}",
+            routing::get(court::court_doc_edit_form).post(court::court_doc_edit),
+        )
+        .route("/court/comment", routing::post(court::court_add_comment))
+        .route(
+            "/court/comment/delete/{id}",
+            routing::post(court::court_delete_comment),
+        )
 }

@@ -1,0 +1,14 @@
+{% extends "base.html" %}
+{% block content %}
+<h3>{{ kind_label }}</h3>
+
+{% if docs | length > 0 %}
+<ul>
+  {% for d in docs %}
+  <li><a href="/court/doc/{{ d.id }}">{{ d.title }}</a></li>
+  {% endfor %}
+</ul>
+{% else %}
+<p>Brak dokumentów w tej kategorii.</p>
+{% endif %}
+{% endblock %}

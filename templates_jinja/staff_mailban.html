@@ -1,0 +1,27 @@
+{% extends "base.html" %}
+{% block content %}
+<h3>Blokada poczty</h3>
+
+<p><strong>Zablokowani:</strong></p>
+{% if banned | length > 0 %}
+<ul>
+  {% for id in banned %}
+  <li>ID {{ id }}</li>
+  {% endfor %}
+</ul>
+{% else %}
+<p>Brak zablokowanych graczy.</p>
+{% endif %}
+
+<hr/>
+<form method="post" action="/staff/mailban">
+  <p>ID gracza: <input type="text" name="mail_id" /></p>
+  <p>
+    <select name="mail">
+      <option value="blok">Zablokuj</option>
+      <option value="odblok">Odblokuj</option>
+    </select>
+  </p>
+  <input type="submit" value="Wykonaj" />
+</form>
+{% endblock %}

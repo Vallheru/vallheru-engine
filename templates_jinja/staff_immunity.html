@@ -1,0 +1,9 @@
+{% extends "base.html" %}
+{% block content %}
+<h3>Nadaj immunitet</h3>
+
+<form method="post" action="/staff/immunity">
+  <p>ID gracza: <input type="text" name="tag_id" /></p>
+  <input type="submit" value="Nadaj" />
+</form>
+{% endblock %}

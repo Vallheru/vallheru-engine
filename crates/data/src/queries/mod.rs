@@ -20,6 +20,7 @@ pub mod locations;
 pub mod mail;
 pub mod market;
 pub mod mission;
+pub mod moderation;
 pub mod pages;
 pub mod player;
 pub mod quest;

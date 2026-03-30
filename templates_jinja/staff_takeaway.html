@@ -1,0 +1,13 @@
+{% extends "base.html" %}
+{% block content %}
+<h3>Konfiskata złota</h3>
+
+<form method="post" action="/staff/takeaway">
+  <p>ID karanego gracza: <input type="text" name="id" /></p>
+  <p>ID poszkodowanego gracza: <input type="text" name="id2" /></p>
+  <p>Kwota: <input type="text" name="taken" /></p>
+  <p>Powód: <input type="text" name="verdict" size="60" /></p>
+  <p><em>Połowa kwoty trafi do poszkodowanego, reszta do skarbca królestwa.</em></p>
+  <input type="submit" value="Skonfiskuj" />
+</form>
+{% endblock %}

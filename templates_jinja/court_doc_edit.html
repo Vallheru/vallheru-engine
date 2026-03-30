@@ -1,0 +1,10 @@
+{% extends "base.html" %}
+{% block content %}
+<h3>Edytuj dokument</h3>
+
+<form method="post" action="/court/edit/{{ doc_id }}">
+  <p>Tytuł: <input type="text" name="ttitle" value="{{ title }}" /></p>
+  <p>Treść:<br/><textarea name="body" rows="20" cols="60">{{ body }}</textarea></p>
+  <input type="submit" value="Zapisz" />
+</form>
+{% endblock %}

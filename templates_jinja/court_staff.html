@@ -1,0 +1,14 @@
+{% extends "base.html" %}
+{% block content %}
+<h3>{{ role_label }}</h3>
+
+{% if members | length > 0 %}
+<ul>
+  {% for m in members %}
+  <li><a href="/view/{{ m.id }}">{{ m.username }}</a></li>
+  {% endfor %}
+</ul>
+{% else %}
+<p>Brak osób na tej liście.</p>
+{% endif %}
+{% endblock %}

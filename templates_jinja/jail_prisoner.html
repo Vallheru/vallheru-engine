@@ -1,0 +1,18 @@
+{% extends "base.html" %}
+{% block content %}
+<p>Odsiedzisz tu swój wyrok.</p>
+
+<p><strong>Data wyroku:</strong> {{ sentenced }}</p>
+<p><strong>Czas:</strong> {{ duration_weeks }} tyg. ({{ duration_raw }} resetów)</p>
+<p><strong>Powód:</strong> {{ verdict }}</p>
+{% if cost > 0 %}
+<p><strong>Kaucja:</strong> {{ cost }} złotych</p>
+{% else %}
+<p><strong>Brak możliwości wpłacenia kaucji</strong></p>
+{% endif %}
+
+{% if can_escape %}
+<br/>
+<a href="/jail/escape">Spróbuj ucieczki (koszt: 2 energii)</a>
+{% endif %}
+{% endblock %}

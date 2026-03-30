@@ -1,0 +1,41 @@
+{% extends "base.html" %}
+{% block content %}
+<p>{{ description }}</p>
+
+{% if prisoners | length > 0 %}
+<table class="table">
+  <thead>
+    <tr>
+      <th>Gracz</th>
+      <th>ID</th>
+      <th>Data</th>
+      <th>Powód</th>
+      <th>Czas</th>
+      <th>Kaucja</th>
+    </tr>
+  </thead>
+  <tbody>
+    {% for p in prisoners %}
+    <tr>
+      <td><a href="/view/{{ p.player_id }}">{{ p.name }}</a></td>
+      <td>{{ p.player_id }}</td>
+      <td>{{ p.sentenced }}</td>
+      <td>{{ p.verdict }}</td>
+      <td>{{ p.duration_weeks }} tyg. ({{ p.duration_raw }} resetów)</td>
+      <td>
+        {% if p.can_bail %}
+          <a href="/jail/bail/{{ p.jail_id }}">{{ p.cost }} złotych</a>
+        {% elif p.cost > 0 %}
+          {{ p.cost }} złotych
+        {% else %}
+          Brak możliwości wpłacenia kaucji
+        {% endif %}
+      </td>
+    </tr>
+    {% endfor %}
+  </tbody>
+</table>
+{% else %}
+<p>Lochy są puste. Żadnych więźniów.</p>
+{% endif %}
+{% endblock %}

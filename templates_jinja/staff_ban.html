@@ -1,0 +1,29 @@
+{% extends "base.html" %}
+{% block content %}
+<h3>Blokada {{ "czatu" if target == "chat" else "forum" }}</h3>
+
+<p><strong>Zablokowani:</strong></p>
+{% if bans | length > 0 %}
+<ul>
+  {% for b in bans %}
+  <li>ID {{ b.player }} — {{ b.resets }} resetów</li>
+  {% endfor %}
+</ul>
+{% else %}
+<p>Brak zablokowanych graczy.</p>
+{% endif %}
+
+<hr/>
+<form method="post" action="/staff/{{ target }}ban">
+  <p>ID gracza: <input type="text" name="czat_id" /></p>
+  <p>
+    <select name="czat">
+      <option value="blok">Zablokuj</option>
+      <option value="odblok">Odblokuj</option>
+    </select>
+  </p>
+  <p>Czas (tygodnie, tylko blokada): <input type="text" name="duration" value="1" /></p>
+  <p>Powód: <input type="text" name="verdict" size="60" /></p>
+  <input type="submit" value="Wykonaj" />
+</form>
+{% endblock %}

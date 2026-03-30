@@ -1,0 +1,11 @@
+{% extends "base.html" %}
+{% block content %}
+<h3>Wtrącenie do lochów</h3>
+
+<form method="post" action="/staff/jail">
+  <p>ID gracza: <input type="text" name="prisoner" /></p>
+  <p>Powód: <input type="text" name="verdict" size="60" /></p>
+  <p>Czas (tygodnie): <input type="text" name="time" /></p>
+  <input type="submit" value="Wtrąć" />
+</form>
+{% endblock %}

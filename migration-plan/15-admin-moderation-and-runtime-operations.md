@@ -90,7 +90,7 @@ Port the staff-facing tools and replace legacy runtime scripts and page-triggere
 - In scope: Moderation mutations and enforcement hooks, including jail, court, and judge panel.
 - Out of scope: Out-of-band alerting.
 
-### MP-15-03: Port bug reporting, logs, and support views
+### MP-15-03: Port bug reporting, logs, and support views ✅
 
 - Description: Rebuild bugtrack-style reporting, player/staff lists, and activity/log viewing pages.
 - Estimate: 1.5h

@@ -6,7 +6,7 @@
 
 use axum::{Router, middleware, routing};
 
-use crate::handlers::{admin, admin_logs, bugreport, memberlist, staff};
+use crate::handlers::{admin, admin_logs, bugreport, memberlist, moderation, staff};
 use crate::middleware::guards::{Rank, require_admin, require_any_rank, require_authenticated};
 use crate::state::AppState;
 
@@ -17,6 +17,13 @@ use crate::state::AppState;
 /// - `/staff` — staff panel (Staff, Admin, Builder)
 /// - `/staff/bugreport` — bug reports (Staff, Admin, Builder)
 /// - `/staff/logs` — admin logs (Staff, Admin)
+/// - `/staff/jail` — jail management (Staff, Admin)
+/// - `/staff/chatban` — chat ban (Staff, Admin)
+/// - `/staff/forumban` — forum ban (Staff, Admin)
+/// - `/staff/mailban` — mail ban (Staff, Admin)
+/// - `/staff/takeaway` — confiscate gold (Staff, Admin)
+/// - `/staff/immunity` — immunity grant (Staff, Admin)
+/// - `/judge` — judge panel (Judge rank only)
 /// - `/stafflist` — audience hall (any authenticated user)
 /// - `/memberlist` — player list (any authenticated user)
 pub fn routes() -> Router<AppState> {
@@ -38,11 +45,49 @@ pub fn routes() -> Router<AppState> {
                     routing::get(bugreport::bugreport_detail).post(bugreport::bugreport_resolve),
                 )
                 .route("/staff/logs", routing::get(admin_logs::admin_logs))
+                .route(
+                    "/staff/jail",
+                    routing::get(moderation::staff_jail_form).post(moderation::staff_jail_action),
+                )
+                .route(
+                    "/staff/chatban",
+                    routing::get(moderation::staff_chat_ban)
+                        .post(moderation::staff_chat_ban_action),
+                )
+                .route(
+                    "/staff/forumban",
+                    routing::get(moderation::staff_forum_ban)
+                        .post(moderation::staff_forum_ban_action),
+                )
+                .route(
+                    "/staff/mailban",
+                    routing::get(moderation::staff_mail_ban)
+                        .post(moderation::staff_mail_ban_action),
+                )
+                .route(
+                    "/staff/takeaway",
+                    routing::get(moderation::staff_takeaway_form)
+                        .post(moderation::staff_takeaway_action),
+                )
+                .route(
+                    "/staff/immunity",
+                    routing::get(moderation::staff_immunity_form)
+                        .post(moderation::staff_immunity_action),
+                )
                 .layer(middleware::from_fn(require_any_rank(&[
                     Rank::Staff,
                     Rank::Admin,
                     Rank::Builder,
                 ]))),
+        )
+        // Judge panel — Judge rank only.
+        .merge(
+            Router::new()
+                .route(
+                    "/judge",
+                    routing::get(moderation::judge_panel).post(moderation::judge_assign_rank),
+                )
+                .layer(middleware::from_fn(require_any_rank(&[Rank::Judge]))),
         )
         // Admin panel — admin only.
         .merge(

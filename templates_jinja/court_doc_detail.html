@@ -1,0 +1,38 @@
+{% extends "base.html" %}
+{% block content %}
+<h3>{{ doc.title }}</h3>
+<p><em>Data: {{ doc.dated }}</em>
+{% if can_edit %}
+  <a href="/court/edit/{{ doc.id }}">Edytuj</a>
+{% endif %}
+</p>
+
+<div>{{ doc.body }}</div>
+
+{% if is_case %}
+<hr/>
+<h4>Komentarze</h4>
+{% if comments | length > 0 %}
+  {% for c in comments %}
+  <p>
+    <strong>{{ c.author }}</strong> napisał(a):
+    {% if can_delete_comments %}
+      (<a href="/court/comment/delete/{{ c.id }}?doc_id={{ doc.id }}">Usuń</a>)
+    {% endif %}
+  </p>
+  <p>{{ c.body }}</p>
+  {% endfor %}
+{% else %}
+  <p>Brak komentarzy.</p>
+{% endif %}
+
+{% if can_comment %}
+<form method="post" action="/court/comment">
+  <p>Dodaj komentarz:</p>
+  <textarea name="body" rows="10" cols="50"></textarea><br/>
+  <input type="hidden" name="tid" value="{{ doc.id }}" />
+  <input type="submit" value="Dodaj" />
+</form>
+{% endif %}
+{% endif %}
+{% endblock %}

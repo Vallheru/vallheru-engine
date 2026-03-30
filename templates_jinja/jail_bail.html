@@ -1,0 +1,10 @@
+{% extends "base.html" %}
+{% block content %}
+<p>Czy chcesz wpłacić kaucję <strong>{{ cost }}</strong> złotych za <strong>{{ prisoner_name }}</strong>?</p>
+
+<form method="post" action="/jail/bail/{{ jail_id }}">
+  <input type="submit" value="Tak, wpłać kaucję" />
+</form>
+<br/>
+<a href="/jail">Powrót</a>
+{% endblock %}

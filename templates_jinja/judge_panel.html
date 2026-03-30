@@ -1,0 +1,16 @@
+{% extends "base.html" %}
+{% block content %}
+<h3>Panel Sędziego</h3>
+
+<form method="post" action="/judge">
+  <p>
+    Zmień rangę graczowi o ID <input type="text" name="aid" size="8" /> na
+    <select name="rank">
+      <option value="Member">Member</option>
+      <option value="Prawnik">Prawnik</option>
+      <option value="Ławnik">Ławnik</option>
+    </select>.
+    <input type="submit" value="Zmień" />
+  </p>
+</form>
+{% endblock %}
