@@ -59,9 +59,19 @@ fn main() -> anyhow::Result<()> {
                 &admin_password,
             ))
         }
-        Command::ResetEra => {
-            tracing::info!("reset-era: not yet implemented");
-            Ok(())
+        Command::ResetEra { confirm_reset } => {
+            if !confirm_reset {
+                eprintln!(
+                    "ERROR: Era reset is a destructive operation.\n\
+                     Pass --confirm-reset to proceed.\n\
+                     This will wipe all gameplay data while preserving player accounts."
+                );
+                std::process::exit(1);
+            }
+            let rt = tokio::runtime::Builder::new_current_thread()
+                .enable_all()
+                .build()?;
+            rt.block_on(era_reset(&config.database.url))
         }
         Command::Reconcile => {
             let rt = tokio::runtime::Builder::new_current_thread()
@@ -105,6 +115,13 @@ async fn run_job(
     if !ran {
         tracing::warn!(job = %job, "job skipped (lock held)");
     }
+    Ok(())
+}
+
+async fn era_reset(database_url: &str) -> anyhow::Result<()> {
+    let pool = vallheru_data::pool::create_pool(database_url, 2).await?;
+    vallheru_data::era_reset::run_era_reset(&pool).await?;
+    pool.close().await;
     Ok(())
 }
 

@@ -43,7 +43,11 @@ pub enum Command {
     },
 
     /// Reset the game era (wipe player progress, keep accounts).
-    ResetEra,
+    ResetEra {
+        /// Required confirmation flag to prevent accidental resets.
+        #[arg(long)]
+        confirm_reset: bool,
+    },
 
     /// Run data reconciliation checks between legacy and new schema.
     Reconcile,

@@ -140,18 +140,22 @@ Port the staff-facing tools and replace legacy runtime scripts and page-triggere
   - Advisory lock keys from `Job::advisory_lock_key()` in `crates/domain/src/admin/reset.rs`.
   - `daily_reset` covers: event/attack cleanup, farm aging, potion restock, jail expiration, chat/forum ban countdown, poison removal, outpost turns, tribe flags, house points, energy tick, map reset, ring restock, player daily reset, newbie/freeze decrements, core pass bonus, thief crime, room rental, random event processing, game reopen.
 
-### MP-15-06: Port installer and bootstrap operational commands
+### MP-15-06: Port installer and bootstrap operational commands ✅
 
 - Description: Replace `install/install.php` with explicit Rust commands for schema setup, seed loading, and initial bootstrap tasks.
 - Estimate: 1.5h
 - Depends on: MP-01-06, MP-02-05.
 - Functional acceptance criteria:
-  - A new environment can initialize PostgreSQL from Rust commands.
-  - Seed and bootstrap steps are explicit and repeatable.
-  - Command output is usable in local development and CI.
+  - ✅ A new environment can initialize PostgreSQL from Rust commands.
+  - ✅ Seed and bootstrap steps are explicit and repeatable.
+  - ✅ Command output is usable in local development and CI.
 - Technical notes: Keep the setup flow obvious; avoid hidden side effects.
 - In scope: Install/bootstrap command path.
 - Out of scope: Era reset logic.
+- Implementation notes:
+  - `vallheru bootstrap --admin-user X --admin-email Y --admin-password Z` runs migrate + seeds + admin creation.
+  - `crates/data/src/bootstrap.rs`: `create_admin_account()`, `admin_account_exists()`.
+  - Idempotent: skips admin creation if an admin already exists.
 
 ### MP-15-07: Port era-reset operational commands
 
