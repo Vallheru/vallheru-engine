@@ -6,7 +6,7 @@
 
 use axum::{Router, middleware, routing};
 
-use crate::handlers::{admin, admin_logs, bugreport, memberlist, moderation, staff};
+use crate::handlers::{admin, admin_logs, bugreport, content, memberlist, moderation, staff};
 use crate::middleware::guards::{Rank, require_admin, require_any_rank, require_authenticated};
 use crate::state::AppState;
 
@@ -73,6 +73,20 @@ pub fn routes() -> Router<AppState> {
                     "/staff/immunity",
                     routing::get(moderation::staff_immunity_form)
                         .post(moderation::staff_immunity_action),
+                )
+                .route("/staff/news", routing::get(content::pending_news_list))
+                .route(
+                    "/staff/news/{id}/edit",
+                    routing::get(content::edit_pending_news_form)
+                        .post(content::edit_pending_news_action),
+                )
+                .route(
+                    "/staff/news/{id}/approve",
+                    routing::post(content::approve_news_action),
+                )
+                .route(
+                    "/staff/news/{id}/delete",
+                    routing::post(content::delete_news_action),
                 )
                 .layer(middleware::from_fn(require_any_rank(&[
                     Rank::Staff,

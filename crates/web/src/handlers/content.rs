@@ -180,6 +180,29 @@ pub struct AddNewsView {
 }
 
 #[derive(serde::Serialize)]
+pub struct PendingNewsView {
+    #[serde(flatten)]
+    pub base: crate::render::RenderContext,
+    pub items: Vec<PendingNewsItem>,
+}
+
+#[derive(serde::Serialize)]
+pub struct PendingNewsItem {
+    pub id: i64,
+    pub title: String,
+    pub author_name: String,
+}
+
+#[derive(serde::Serialize)]
+pub struct EditPendingNewsView {
+    #[serde(flatten)]
+    pub base: crate::render::RenderContext,
+    pub news_id: i64,
+    pub title: String,
+    pub body: String,
+}
+
+#[derive(serde::Serialize)]
 pub struct NewspaperEditView {
     #[serde(flatten)]
     pub base: crate::render::RenderContext,
@@ -253,6 +276,14 @@ pub struct UpdateEditQuery {
 
 #[derive(serde::Deserialize)]
 pub struct AddNewsForm {
+    #[serde(default)]
+    pub ttitle: String,
+    #[serde(default)]
+    pub body: String,
+}
+
+#[derive(serde::Deserialize)]
+pub struct EditNewsForm {
     #[serde(default)]
     pub ttitle: String,
     #[serde(default)]
@@ -334,8 +365,8 @@ pub async fn add_update_form(
     }
 
     let (edit_id, edit_title, edit_body) = if let Some(mid) = q.modify {
-        match cq::get_latest_update(&app.pool).await {
-            Ok(Some(u)) if u.id == mid => (Some(u.id), u.title, text::html_to_bbcode(&u.body)),
+        match cq::find_update_by_id(&app.pool, mid).await {
+            Ok(Some(u)) => (Some(u.id), u.title, text::html_to_bbcode(&u.body)),
             _ => (None, String::new(), String::new()),
         }
     } else {
@@ -471,6 +502,154 @@ pub async fn add_news_action(
     let _ = cq::insert_news(&app.pool, title, &body, &author, user.id).await;
 
     Redirect::to("/news").into_response()
+}
+
+// =========================================================================
+// Handlers — Staff news management (approve/reject/edit pending)
+// =========================================================================
+
+/// GET /staff/news — list pending news for staff approval.
+pub async fn pending_news_list(
+    State(app): State<AppState>,
+    Extension(ctx): Extension<RequestContext>,
+) -> Response {
+    let meta = PageMeta::titled("Oczekujące plotki").with_back_link("/staff", "Panel");
+    let base = app.templates.build_context(&ctx, &meta);
+
+    let rows = cq::list_pending_news(&app.pool).await.unwrap_or_default();
+    let items: Vec<PendingNewsItem> = rows
+        .into_iter()
+        .map(|r| PendingNewsItem {
+            id: r.id,
+            title: r.title,
+            author_name: r.author_name,
+        })
+        .collect();
+
+    let view = PendingNewsView { base, items };
+    app.templates.render_value("pending_news.html", &view)
+}
+
+/// GET /staff/news/{id}/edit — show edit form for a pending news item.
+pub async fn edit_pending_news_form(
+    State(app): State<AppState>,
+    Extension(ctx): Extension<RequestContext>,
+    Path(news_id): Path<i64>,
+) -> Response {
+    let Ok(Some(row)) = cq::find_news_by_id(&app.pool, news_id).await else {
+        return crate::page::redirect("/staff/news");
+    };
+
+    let meta = PageMeta::titled("Edytuj plotkę").with_back_link("/staff/news", "Oczekujące");
+    let base = app.templates.build_context(&ctx, &meta);
+
+    let view = EditPendingNewsView {
+        base,
+        news_id: row.id,
+        title: row.title,
+        body: text::html_to_bbcode(&row.body),
+    };
+    app.templates.render_value("edit_pending_news.html", &view)
+}
+
+/// POST /staff/news/{id}/edit — save edited pending news.
+pub async fn edit_pending_news_action(
+    State(app): State<AppState>,
+    Extension(ctx): Extension<RequestContext>,
+    Path(news_id): Path<i64>,
+    Form(form): Form<EditNewsForm>,
+) -> Response {
+    let Some(ref user) = ctx.session_user else {
+        return Redirect::to("/").into_response();
+    };
+
+    let title = form.ttitle.trim();
+    let body_raw = form.body.trim();
+    if title.is_empty() || body_raw.is_empty() {
+        return crate::page::redirect_after_post(&format!("/staff/news/{news_id}/edit"));
+    }
+
+    let bad_words = vec![];
+    let body = text::bbcode_to_html(body_raw, &bad_words, false);
+    let _ = cq::edit_news(&app.pool, news_id, title, &body).await;
+
+    log_news_action(&app.pool, news_id, "zmodyfikowana", user.id, &user.name).await;
+
+    crate::page::redirect_after_post("/staff/news")
+}
+
+/// POST /staff/news/{id}/approve — approve a pending news item.
+pub async fn approve_news_action(
+    State(app): State<AppState>,
+    Extension(ctx): Extension<RequestContext>,
+    Path(news_id): Path<i64>,
+) -> Response {
+    let Some(ref user) = ctx.session_user else {
+        return Redirect::to("/").into_response();
+    };
+
+    let _ = cq::approve_news(&app.pool, news_id).await;
+
+    log_news_action(&app.pool, news_id, "zatwierdzona", user.id, &user.name).await;
+
+    crate::page::redirect_after_post("/staff/news")
+}
+
+/// POST /staff/news/{id}/delete — reject (delete) a pending news item.
+pub async fn delete_news_action(
+    State(app): State<AppState>,
+    Extension(ctx): Extension<RequestContext>,
+    Path(news_id): Path<i64>,
+) -> Response {
+    let Some(ref user) = ctx.session_user else {
+        return Redirect::to("/").into_response();
+    };
+
+    log_news_action(&app.pool, news_id, "odrzucona", user.id, &user.name).await;
+
+    let _ = cq::delete_news(&app.pool, news_id).await;
+
+    crate::page::redirect_after_post("/staff/news")
+}
+
+/// Log a news-approval action to the author and all staff.
+async fn log_news_action(
+    pool: &sqlx::PgPool,
+    news_id: i64,
+    action: &str,
+    staff_id: i64,
+    staff_name: &str,
+) {
+    let Ok(Some(row)) = cq::find_news_by_id(pool, news_id).await else {
+        return;
+    };
+
+    #[allow(clippy::cast_possible_truncation)]
+    let author_id = row.author_id as i32;
+
+    let msg = format!(
+        "Twoja plotka \"{}\" została {} przez {}.",
+        row.title, action, staff_name,
+    );
+    let _ = vallheru_data::queries::moderation::insert_game_log(pool, author_id, &msg, 'S').await;
+
+    // Notify other staff members.
+    let staff_ids = vallheru_data::queries::moderation::list_staff_ids(pool)
+        .await
+        .unwrap_or_default();
+
+    #[allow(clippy::cast_possible_truncation)]
+    let current_staff = staff_id as i32;
+    let staff_msg = format!(
+        "Plotka \"{}\" (autor ID: {}) {} przez {}.",
+        row.title, row.author_id, action, staff_name,
+    );
+    for sid in staff_ids {
+        if sid != current_staff {
+            let _ = vallheru_data::queries::moderation::insert_game_log(pool, sid, &staff_msg, 'S')
+                .await;
+        }
+    }
 }
 
 // =========================================================================

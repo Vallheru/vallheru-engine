@@ -153,6 +153,12 @@ pub fn can_manage_updates(rank: &str) -> bool {
     rank == "Admin"
 }
 
+/// Returns `true` if the rank can approve/reject/edit pending news.
+#[must_use]
+pub fn can_manage_news(rank: &str) -> bool {
+    matches!(rank, "Admin" | "Staff")
+}
+
 /// Returns `true` if the rank can add news (gossip).
 #[must_use]
 pub fn can_add_news(rank: &str) -> bool {

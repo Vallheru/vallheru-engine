@@ -21,6 +21,7 @@ pub struct NewsRow {
     pub title: String,
     pub body: String,
     pub author_name: String,
+    pub author_id: i64,
     pub status: String,
     pub published_at_formatted: String,
 }
@@ -147,7 +148,7 @@ pub async fn edit_update(
 /// Get the latest approved/visible news item.
 pub async fn get_latest_news(pool: &PgPool) -> Result<Option<NewsRow>, sqlx::Error> {
     sqlx::query_as::<_, NewsRow>(
-        "SELECT id, title, body, author_name, status,
+        "SELECT id, title, body, author_name, author_id, status,
                 to_char(published_at, 'YYYY-MM-DD') AS published_at_formatted
          FROM news WHERE status = 'approved' ORDER BY id DESC LIMIT 1",
     )
@@ -158,7 +159,7 @@ pub async fn get_latest_news(pool: &PgPool) -> Result<Option<NewsRow>, sqlx::Err
 /// List recent approved news.
 pub async fn list_news(pool: &PgPool, limit: i64) -> Result<Vec<NewsRow>, sqlx::Error> {
     sqlx::query_as::<_, NewsRow>(
-        "SELECT id, title, body, author_name, status,
+        "SELECT id, title, body, author_name, author_id, status,
                 to_char(published_at, 'YYYY-MM-DD') AS published_at_formatted
          FROM news WHERE status = 'approved' ORDER BY id DESC LIMIT $1",
     )
@@ -172,6 +173,70 @@ pub async fn count_pending_news(pool: &PgPool) -> Result<i64, sqlx::Error> {
     sqlx::query_scalar::<_, i64>("SELECT count(*) FROM news WHERE status = 'pending'")
         .fetch_one(pool)
         .await
+}
+
+/// List pending news items (for staff approval).
+pub async fn list_pending_news(pool: &PgPool) -> Result<Vec<NewsRow>, sqlx::Error> {
+    sqlx::query_as::<_, NewsRow>(
+        "SELECT id, title, body, author_name, author_id, status,
+                to_char(published_at, 'YYYY-MM-DD') AS published_at_formatted
+         FROM news WHERE status = 'pending' ORDER BY id ASC",
+    )
+    .fetch_all(pool)
+    .await
+}
+
+/// Get a single news item by ID.
+pub async fn find_news_by_id(pool: &PgPool, id: i64) -> Result<Option<NewsRow>, sqlx::Error> {
+    sqlx::query_as::<_, NewsRow>(
+        "SELECT id, title, body, author_name, author_id, status,
+                to_char(published_at, 'YYYY-MM-DD') AS published_at_formatted
+         FROM news WHERE id = $1",
+    )
+    .bind(id)
+    .fetch_optional(pool)
+    .await
+}
+
+/// Approve a pending news item.
+pub async fn approve_news(pool: &PgPool, id: i64) -> Result<(), sqlx::Error> {
+    sqlx::query("UPDATE news SET status = 'approved' WHERE id = $1")
+        .bind(id)
+        .execute(pool)
+        .await?;
+    Ok(())
+}
+
+/// Delete a news item.
+pub async fn delete_news(pool: &PgPool, id: i64) -> Result<(), sqlx::Error> {
+    sqlx::query("DELETE FROM news WHERE id = $1")
+        .bind(id)
+        .execute(pool)
+        .await?;
+    Ok(())
+}
+
+/// Update a news item's title and body.
+pub async fn edit_news(pool: &PgPool, id: i64, title: &str, body: &str) -> Result<(), sqlx::Error> {
+    sqlx::query("UPDATE news SET title = $2, body = $3 WHERE id = $1")
+        .bind(id)
+        .bind(title)
+        .bind(body)
+        .execute(pool)
+        .await?;
+    Ok(())
+}
+
+/// Get a single update by ID.
+pub async fn find_update_by_id(pool: &PgPool, id: i64) -> Result<Option<UpdateRow>, sqlx::Error> {
+    sqlx::query_as::<_, UpdateRow>(
+        "SELECT id, title, body, author_name,
+                to_char(published_at, 'YYYY-MM-DD') AS published_at_formatted
+         FROM game_updates WHERE id = $1",
+    )
+    .bind(id)
+    .fetch_optional(pool)
+    .await
 }
 
 /// Insert a news submission (pending by default).

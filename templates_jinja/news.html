@@ -8,7 +8,7 @@
 <p><a href="/news/add">Dodaj plotkę</a></p>
 
 {% if pending_count > 0 and can_add %}
-<p><i>Oczekujących plotek: {{ pending_count }}</i></p>
+<p><i>Oczekujących plotek: {{ pending_count }}</i> — <a href="/staff/news">Zarządzaj</a></p>
 {% endif %}
 
 {% for item in news_items %}

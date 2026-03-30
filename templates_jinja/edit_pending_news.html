@@ -1,0 +1,21 @@
+{% extends "base.html" %}
+
+{% block title %}Edytuj plotkę{% endblock %}
+
+{% block content %}
+<h2>Edytuj plotkę</h2>
+
+<form method="post" action="/staff/news/{{ news_id }}/edit">
+  <p>
+    <label>Tytuł:</label><br/>
+    <input type="text" name="ttitle" size="60" maxlength="255" value="{{ title }}" />
+  </p>
+  <p>
+    <label>Treść (BBCode):</label><br/>
+    <textarea name="body" id="bbcode-editor" rows="12" cols="60">{{ body }}</textarea>
+  </p>
+  <p><input type="submit" value="Zapisz zmiany" /></p>
+</form>
+
+<p><a href="/staff/news">Powrót do oczekujących</a></p>
+{% endblock %}

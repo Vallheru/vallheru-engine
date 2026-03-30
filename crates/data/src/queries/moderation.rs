@@ -492,3 +492,10 @@ pub async fn insert_game_log(
         .await?;
     Ok(())
 }
+
+/// List player IDs that have Admin or Staff rank.
+pub async fn list_staff_ids(pool: &PgPool) -> Result<Vec<i32>, sqlx::Error> {
+    sqlx::query_scalar::<_, i32>("SELECT id FROM players WHERE rank IN ('Admin', 'Staff')")
+        .fetch_all(pool)
+        .await
+}

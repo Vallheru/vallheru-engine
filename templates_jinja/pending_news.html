@@ -1,0 +1,30 @@
+{% extends "base.html" %}
+
+{% block title %}Oczekujące plotki{% endblock %}
+
+{% block content %}
+<h2>Oczekujące plotki</h2>
+
+{% if items %}
+<table>
+  <tr><th>Tytuł</th><th>Autor</th><th>Akcje</th></tr>
+  {% for item in items %}
+  <tr>
+    <td>{{ item.title }}</td>
+    <td>{{ item.author_name }}</td>
+    <td>
+      <a href="/staff/news/{{ item.id }}/edit">Edytuj</a>
+      | <form method="post" action="/staff/news/{{ item.id }}/approve" style="display:inline">
+          <button type="submit">Zatwierdź</button>
+        </form>
+      | <form method="post" action="/staff/news/{{ item.id }}/delete" style="display:inline">
+          <button type="submit">Usuń</button>
+        </form>
+    </td>
+  </tr>
+  {% endfor %}
+</table>
+{% else %}
+<p>Brak oczekujących plotek.</p>
+{% endif %}
+{% endblock %}
