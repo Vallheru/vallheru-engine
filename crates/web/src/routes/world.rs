@@ -3,9 +3,9 @@
 use axum::{Router, middleware, routing};
 
 use crate::handlers::{
-    bank, chat, city, content, court, deity, equipment, forums, gathering, house, jail, locations,
-    mail, map, market, outpost, pages, quest, room, shops, spells, temple, tower, travel,
-    tribe_forum,
+    bank, chat, city, content, court, deity, equipment, forums, gathering, hospital, house, jail,
+    locations, mail, map, market, outpost, pages, quest, room, shops, spells, temple, tower,
+    travel, tribe_forum,
 };
 use crate::middleware::guards::require_authenticated;
 use crate::state::AppState;
@@ -35,6 +35,7 @@ fn location_routes() -> Router<AppState> {
         .route("/mountains", routing::get(locations::mountains))
         .route("/forest", routing::get(locations::forest))
         .route("/alley", routing::get(locations::alley))
+        .route("/hospital", routing::get(hospital::hospital_page))
         .route(
             "/landfill",
             routing::get(locations::landfill_show).post(locations::landfill_work),

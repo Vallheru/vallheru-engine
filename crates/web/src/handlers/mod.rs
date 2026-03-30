@@ -15,6 +15,7 @@ pub mod deity;
 pub mod equipment;
 pub mod forums;
 pub mod gathering;
+pub mod hospital;
 pub mod house;
 pub mod jail;
 pub mod locations;

@@ -178,6 +178,7 @@ static ALTARA_DISTRICTS: &[DistrictSpec] = &[
             ("/grid", "Labirynt"),
             ("/tower", "Magiczna Wieża"),
             ("/temple", "Świątynia"),
+            ("/hospital", "Szpital"),
             ("/magic-shop", "Alchemik"),
             ("/jeweller-shop", "Jubiler"),
         ],
@@ -231,6 +232,7 @@ static ARDULITH_DISTRICTS: &[DistrictSpec] = &[
         "Święty kasztanowiec",
         &[
             ("/temple", "Świątynia"),
+            ("/hospital", "Szpital"),
             ("/library", "Biblioteka"),
             ("/chronicle", "Kronika"),
             ("/jeweller", "Jubiler"),

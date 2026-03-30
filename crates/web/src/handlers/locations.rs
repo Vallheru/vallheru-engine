@@ -4,7 +4,11 @@
 //! `rest.php`. These are navigation hubs for exploration areas and simple
 //! city services (energy→gold work, energy→mana rest).
 
-use axum::{Extension, Form, extract::State, response::Response};
+use axum::{
+    Extension, Form,
+    extract::{Query, State},
+    response::Response,
+};
 
 use crate::middleware::context::RequestContext;
 use crate::page::{Flash, FlashKind, PageMeta};
@@ -25,6 +29,17 @@ pub struct LocationHubView {
     pub links: Vec<LocationNavLink>,
     pub is_dead: bool,
     pub return_city: &'static str,
+    /// Hermit section: "none", "offer", or "wait".
+    pub hermit: &'static str,
+    /// Gold cost for hermit resurrection (only when hermit == "offer").
+    pub hermit_cost: i32,
+}
+
+/// Query parameters for location hub pages.
+#[derive(serde::Deserialize)]
+pub struct HubQuery {
+    #[serde(default)]
+    pub action: Option<String>,
 }
 
 #[derive(serde::Serialize)]
@@ -91,6 +106,7 @@ pub struct RestForm {
 pub async fn mountains(
     State(state): State<AppState>,
     Extension(ctx): Extension<RequestContext>,
+    Query(query): Query<HubQuery>,
 ) -> Response {
     let Some(ref user) = ctx.session_user else {
         return crate::page::redirect("/login");
@@ -113,24 +129,35 @@ pub async fn mountains(
     }
 
     let is_dead = player_row.hp <= 0;
-    let links = if is_dead {
-        vec![]
-    } else {
-        vec![
-            LocationNavLink {
-                href: "/mines",
-                label: "Idź do kopalni",
-            },
-            LocationNavLink {
-                href: "/explore",
-                label: "Zwiedzaj góry",
-            },
-            LocationNavLink {
-                href: "/travel",
-                label: "Stajnia",
-            },
-        ]
-    };
+
+    // Handle dead-player actions: return to city, hermit encounter, resurrection.
+    if is_dead {
+        return handle_dead_hub(
+            &state,
+            &ctx,
+            query.action.as_deref(),
+            player_id,
+            &player_row,
+            "Góry Kazad-nar",
+            "Altara",
+        )
+        .await;
+    }
+
+    let links = vec![
+        LocationNavLink {
+            href: "/mines",
+            label: "Idź do kopalni",
+        },
+        LocationNavLink {
+            href: "/explore",
+            label: "Zwiedzaj góry",
+        },
+        LocationNavLink {
+            href: "/travel",
+            label: "Stajnia",
+        },
+    ];
 
     let meta = PageMeta::titled("Góry Kazad-nar");
     let base = state.templates.build_context(&ctx, &meta);
@@ -140,8 +167,10 @@ pub async fn mountains(
         location_name: "Góry Kazad-nar",
         info_text: "Witaj w Górach Kazad-nar, co chcesz robić?",
         links,
-        is_dead,
+        is_dead: false,
         return_city: "Altara",
+        hermit: "none",
+        hermit_cost: 0,
     };
 
     state.templates.render_value("location_hub.html", &view)
@@ -155,6 +184,7 @@ pub async fn mountains(
 pub async fn forest(
     State(state): State<AppState>,
     Extension(ctx): Extension<RequestContext>,
+    Query(query): Query<HubQuery>,
 ) -> Response {
     let Some(ref user) = ctx.session_user else {
         return crate::page::redirect("/login");
@@ -177,24 +207,34 @@ pub async fn forest(
     }
 
     let is_dead = player_row.hp <= 0;
-    let links = if is_dead {
-        vec![]
-    } else {
-        vec![
-            LocationNavLink {
-                href: "/lumberjack",
-                label: "Idź rąbać drewno",
-            },
-            LocationNavLink {
-                href: "/explore",
-                label: "Zwiedzaj las",
-            },
-            LocationNavLink {
-                href: "/travel",
-                label: "Stajnia",
-            },
-        ]
-    };
+
+    if is_dead {
+        return handle_dead_hub(
+            &state,
+            &ctx,
+            query.action.as_deref(),
+            player_id,
+            &player_row,
+            "Las Avantiel",
+            "Ardulith",
+        )
+        .await;
+    }
+
+    let links = vec![
+        LocationNavLink {
+            href: "/lumberjack",
+            label: "Idź rąbać drewno",
+        },
+        LocationNavLink {
+            href: "/explore",
+            label: "Zwiedzaj las",
+        },
+        LocationNavLink {
+            href: "/travel",
+            label: "Stajnia",
+        },
+    ];
 
     let meta = PageMeta::titled("Las Avantiel");
     let base = state.templates.build_context(&ctx, &meta);
@@ -204,8 +244,10 @@ pub async fn forest(
         location_name: "Las Avantiel",
         info_text: "Witaj w Lesie Avantiel, co chcesz robić?",
         links,
-        is_dead,
+        is_dead: false,
         return_city: "Ardulith",
+        hermit: "none",
+        hermit_cost: 0,
     };
 
     state.templates.render_value("location_hub.html", &view)
@@ -497,6 +539,115 @@ pub async fn rest_recover(
     };
 
     state.templates.render_value("rest.html", &view)
+}
+
+// ---------------------------------------------------------------------------
+// Dead player hub — hermit resurrection (mountains / forest)
+// ---------------------------------------------------------------------------
+
+/// Handle a dead player at a location hub with hermit encounter.
+///
+/// Actions:
+/// - `None` → show dead state with hermit link
+/// - `"back"` → return player to city, redirect to hospital
+/// - `"hermit"` → show hermit dialog with gold cost and wait option
+/// - `"resurrect"` → perform resurrection via `do_resurrect`
+/// - `"wait"` → show flavor text (no real timer, like PHP)
+#[allow(clippy::too_many_arguments)]
+async fn handle_dead_hub(
+    app: &AppState,
+    ctx: &RequestContext,
+    action: Option<&str>,
+    player_id: i32,
+    player_row: &vallheru_data::queries::player::PlayerRow,
+    location_name: &'static str,
+    return_city: &'static str,
+) -> Response {
+    match action {
+        Some("back") => {
+            // Move player back to city so they can use the hospital.
+            let city_location = if return_city == "Altara" {
+                "Altara"
+            } else {
+                "Ardulith"
+            };
+            if let Err(e) = vallheru_data::queries::locations::move_player_to(
+                &app.pool,
+                player_id,
+                city_location,
+            )
+            .await
+            {
+                tracing::error!(error = %e, "handle_dead_hub: move to city failed");
+                return server_error();
+            }
+            crate::page::redirect("/hospital")
+        }
+
+        Some("hermit") => {
+            let condition = load_condition_stat(app, player_id).await;
+            let cost = vallheru_domain::hospital::resurrection_cost(condition);
+
+            let meta = PageMeta::titled(location_name);
+            let base = app.templates.build_context(ctx, &meta);
+            let view = LocationHubView {
+                base,
+                location_name,
+                info_text: "",
+                links: vec![],
+                is_dead: true,
+                return_city,
+                hermit: "offer",
+                hermit_cost: cost,
+            };
+            app.templates.render_value("location_hub.html", &view)
+        }
+
+        Some("resurrect") => {
+            crate::handlers::hospital::do_resurrect(app, ctx, player_id, player_row).await
+        }
+
+        Some("wait") => {
+            let meta = PageMeta::titled(location_name).with_flash(Flash {
+                kind: FlashKind::Info,
+                message: "Przed Twoimi oczami przebiegają wydarzenia z przeszłości... \
+                          To wspomnienia. Czas dłuży się niesamowicie... Nagle słyszysz słowa:\n\n\
+                          Cierpliwości. Właśnie przygotowuję czar dla Ciebie. Na szczęście mam już \
+                          potrzebne składniki, ale rzucenie wskrzeszającego czaru to nie taka prosta \
+                          sprawa. Trzeba być ostrożnym."
+                    .to_owned(),
+            });
+            let base = app.templates.build_context(ctx, &meta);
+            let view = LocationHubView {
+                base,
+                location_name,
+                info_text: "",
+                links: vec![],
+                is_dead: true,
+                return_city,
+                hermit: "none",
+                hermit_cost: 0,
+            };
+            app.templates.render_value("location_hub.html", &view)
+        }
+
+        _ => {
+            // Default dead state: show return + stay + hermit links.
+            let meta = PageMeta::titled(location_name);
+            let base = app.templates.build_context(ctx, &meta);
+            let view = LocationHubView {
+                base,
+                location_name,
+                info_text: "",
+                links: vec![],
+                is_dead: true,
+                return_city,
+                hermit: "none",
+                hermit_cost: 0,
+            };
+            app.templates.render_value("location_hub.html", &view)
+        }
+    }
 }
 
 // ---------------------------------------------------------------------------

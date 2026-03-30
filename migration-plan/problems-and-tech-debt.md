@@ -152,7 +152,7 @@ Each entry includes:
 - **Action**: Implement hermit resurrection when the resurrection/death system is fully scoped.
 - **Fixable in existing task**: No — needs death/resurrection domain logic.
 - **Needs new task**: Yes
-- **Status**: open
+- **Status**: resolved — implemented hospital handler (`/hospital` with `?action=heal|resurrect`), hermit resurrection in mountains/forest location hubs (`?action=hermit|resurrect|back|wait`), domain module `vallheru_domain::hospital` with healing/resurrection cost calculations and death penalty logic, data layer queries for healing/resurrection/movement, and shared `do_resurrect` function used by both hospital and hermit paths. Templates updated for both flows. Hospital added to city navigation.
 - **Related tasks**: MP-07-04
 
 ### TD-012: Rest max-mana calculation missing equipment bonus

@@ -5,11 +5,25 @@
 <h2>{{ location_name }}</h2>
 
 {% if is_dead %}
-<p><b>Jesteś martwy.</b></p>
-<p>
-  <a href="/travel?action=back">Powrót do {{ return_city }}</a> |
-  <a href="/{{ location_name | lower }}">Pozostań na miejscu</a>
-</p>
+
+  {% if hermit == "offer" %}
+  <p>Widzisz przed sobą staruszka... To pustelnik, który tu zamieszkuje.</p>
+  <p>Pustelnik mówi: <i>Ach, jeszcze jeden martwy wojownik... Mogę Cię wskrzesić,
+  ale będzie Cię to kosztowało <b>{{ hermit_cost }}</b> sztuk złota.</i></p>
+  <p>
+    <a href="?action=resurrect">Wskrześ mnie!</a> |
+    <a href="?action=wait">Poczekaj...</a> |
+    <a href="?action=back">Wróć do {{ return_city }}</a>
+  </p>
+
+  {% else %}
+  <p><b>Jesteś martwy.</b></p>
+  <p>
+    <a href="?action=back">Powrót do {{ return_city }}</a> |
+    <a href="?action=hermit">Poszukaj pustelnika</a>
+  </p>
+  {% endif %}
+
 {% else %}
 <p>{{ info_text }}</p>
 <ul>

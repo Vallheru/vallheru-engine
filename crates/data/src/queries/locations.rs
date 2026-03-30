@@ -205,3 +205,62 @@ pub async fn load_game_clock(pool: &PgPool) -> Result<(i32, i32), sqlx::Error> {
 
     Ok((age, day))
 }
+
+// ---------------------------------------------------------------------------
+// Hospital — healing and resurrection
+// ---------------------------------------------------------------------------
+
+/// Check whether a tribe has the hospital pass (50% healing discount).
+pub async fn has_hospital_pass(pool: &PgPool, tribe_id: i32) -> Result<bool, sqlx::Error> {
+    if tribe_id <= 0 {
+        return Ok(false);
+    }
+    let result = sqlx::query_scalar::<_, String>("SELECT hospass FROM tribes WHERE id = $1")
+        .bind(tribe_id)
+        .fetch_optional(pool)
+        .await?;
+    Ok(result.as_deref() == Some("Y"))
+}
+
+/// Heal a living player: set hp = `max_hp` and deduct gold cost.
+pub async fn heal_player(pool: &PgPool, player_id: i32, gold_cost: i32) -> Result<(), sqlx::Error> {
+    sqlx::query("UPDATE players SET hp = max_hp, credits = credits - $1 WHERE id = $2")
+        .bind(gold_cost)
+        .bind(player_id)
+        .execute(pool)
+        .await?;
+    Ok(())
+}
+
+/// Resurrect a dead player: set hp and `max_hp`, deduct gold.
+/// Stats and skills must be saved separately via `save_stats` / `save_skills`.
+pub async fn resurrect_player(
+    pool: &PgPool,
+    player_id: i32,
+    new_hp: i32,
+    new_max_hp: i32,
+    gold_cost: i32,
+) -> Result<(), sqlx::Error> {
+    sqlx::query("UPDATE players SET hp = $1, max_hp = $2, credits = credits - $3 WHERE id = $4")
+        .bind(new_hp)
+        .bind(new_max_hp)
+        .bind(gold_cost)
+        .bind(player_id)
+        .execute(pool)
+        .await?;
+    Ok(())
+}
+
+/// Move a player to a different location.
+pub async fn move_player_to(
+    pool: &PgPool,
+    player_id: i32,
+    location: &str,
+) -> Result<(), sqlx::Error> {
+    sqlx::query("UPDATE players SET location = $1 WHERE id = $2")
+        .bind(location)
+        .bind(player_id)
+        .execute(pool)
+        .await?;
+    Ok(())
+}
