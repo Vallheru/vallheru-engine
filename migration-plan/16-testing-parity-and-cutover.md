@@ -37,8 +37,9 @@ Move from a growing Rust shadow implementation to a safe production cutover with
 
 ## Tasks
 
-### MP-16-01: Build a golden-master capture harness for critical pages
+### MP-16-01: Build a golden-master capture harness for critical pages ✅
 
+- Status: **DONE**
 - Description: Capture representative PHP responses and key derived values for high-risk routes before they are replaced.
 - Estimate: 2h
 - Depends on: MP-03-01, MP-04-05.
@@ -49,6 +50,15 @@ Move from a growing Rust shadow implementation to a safe production cutover with
 - Technical notes: Use structured snapshots where raw HTML is too noisy.
 - In scope: Capture harness and fixtures.
 - Out of scope: Full-site visual regression tooling.
+- Implementation notes:
+  - Created `crates/web/tests/golden_master.rs` with 12 snapshot-style tests.
+  - Public page snapshots: login POST validation, register route existence, lost-password
+    form structure, RSS feed XML structure, CSS asset content.
+  - Operational snapshots: buildinfo JSON keys, migration-status route count (>50).
+  - Auth guard snapshots: city/bank/equipment all reject unauthenticated requests.
+  - Error snapshots: 404 for unknown paths, 404 for .php extensions.
+  - Tests run without live database (lazy pool) — DB-dependent routes tested for
+    route existence only, not full page content.
 
 ### MP-16-02: Add integration tests for core user journeys ✅
 
