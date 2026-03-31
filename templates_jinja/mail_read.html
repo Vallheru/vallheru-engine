@@ -8,7 +8,7 @@
 {% for m in messages %}
 <div style="border:1px solid #888;padding:8px;margin-bottom:6px">
   <p>
-    <b><a href="/stats?id={{ m.sender_id }}">{{ m.sender_name }}</a></b>
+    <b><a href="/player/{{ m.sender_id }}">{{ m.sender_name }}</a></b>
     <small>{{ m.date }}</small>
   </p>
   <div>{{ m.body }}</div>

@@ -15,7 +15,7 @@
   {% for t in threads %}
   <tr>
     <td><input type="checkbox" class="mail-check" value="{{ t.topic_id }}" /></td>
-    <td><a href="/stats?id={{ t.sender_id }}">{{ t.sender_name }}</a></td>
+    <td><a href="/player/{{ t.sender_id }}">{{ t.sender_name }}</a></td>
     <td>
       {% if box_type == "inbox" %}
       <a href="/mail/read?topic={{ t.topic_id }}">{{ t.subject }}</a>

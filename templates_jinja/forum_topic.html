@@ -10,7 +10,7 @@
   <tr>
     <td>
       <b>{{ topic.title }}</b> napisał(a)
-      <a href="/stats?id={{ topic.author_id }}">{{ topic.author_name }}</a>
+      <a href="/player/{{ topic.author_id }}">{{ topic.author_name }}</a>
       ({{ topic.created_at }})
       (<a href="/forums/category/{{ category_id }}">Powrót</a>)
       {% if not is_closed %}
@@ -42,7 +42,7 @@
     <tr>
       <td>
         {% if is_staff %}<input type="checkbox" name="{{ r.id }}"/>{% endif %}
-        <b><a href="/stats?id={{ r.author_id }}">{{ r.author_name }}</a></b>
+        <b><a href="/player/{{ r.author_id }}">{{ r.author_name }}</a></b>
         ({{ r.created_at }})
         (<a href="/forums/category/{{ category_id }}">Powrót</a>)
         {% if not is_closed %}

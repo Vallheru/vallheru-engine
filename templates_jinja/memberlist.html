@@ -19,7 +19,7 @@
   {% for m in members %}
   <tr>
     <td align="center">{{ m.id }}</td>
-    <td><a href="/view?view={{ m.id }}">{{ m.username }}</a></td>
+    <td><a href="/player/{{ m.id }}">{{ m.username }}</a></td>
     <td>{{ m.rank }}</td>
   </tr>
   {% endfor %}

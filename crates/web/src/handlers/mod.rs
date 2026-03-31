@@ -26,6 +26,7 @@ pub mod memberlist;
 pub mod moderation;
 pub mod outpost;
 pub mod pages;
+pub mod player_profile;
 pub mod preset;
 pub mod quest;
 pub mod registration;

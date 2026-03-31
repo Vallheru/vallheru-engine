@@ -4,8 +4,8 @@ use axum::{Router, middleware, routing};
 
 use crate::handlers::{
     bank, chat, city, content, court, deity, equipment, forums, gathering, hospital, house, jail,
-    locations, mail, map, market, outpost, pages, quest, room, shops, spells, temple, tower,
-    travel, tribe_forum,
+    locations, mail, map, market, outpost, pages, player_profile, quest, room, shops, spells,
+    temple, tower, travel, tribe_forum,
 };
 use crate::middleware::guards::require_authenticated;
 use crate::state::AppState;
@@ -305,6 +305,14 @@ fn social_routes() -> Router<AppState> {
         .route(
             "/jail/bail/{id}",
             routing::get(jail::jail_bail_confirm).post(jail::jail_bail_pay),
+        )
+        // Player profiles
+        .route("/player/{id}", routing::get(player_profile::player_profile))
+        .route("/view", routing::get(player_profile::legacy_view_redirect))
+        .route("/view/{id}", routing::get(player_profile::player_profile))
+        .route(
+            "/stats",
+            routing::get(player_profile::legacy_stats_redirect),
         )
 }
 

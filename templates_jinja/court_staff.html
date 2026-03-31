@@ -5,7 +5,7 @@
 {% if members | length > 0 %}
 <ul>
   {% for m in members %}
-  <li><a href="/view/{{ m.id }}">{{ m.username }}</a></li>
+  <li><a href="/player/{{ m.id }}">{{ m.username }}</a></li>
   {% endfor %}
 </ul>
 {% else %}

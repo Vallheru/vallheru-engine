@@ -13,7 +13,7 @@
     <td width="{{ (100 / section.groups | length) | int }}%" valign="top">
       <b>{{ group.rank_label }}</b><br />
       {% for member in group.members %}
-      <a href="/view?view={{ member.id }}">{{ member.name }}</a> ID: {{ member.id }}<br />
+      <a href="/player/{{ member.id }}">{{ member.name }}</a> ID: {{ member.id }}<br />
       {% endfor %}
     </td>
     {% endfor %}

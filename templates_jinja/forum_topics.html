@@ -45,7 +45,7 @@
       {% if t.is_sticky %}[przyklejony] {% endif %}
       <a href="/forums/topic/{{ t.id }}">{{ t.title }}</a>
     </td>
-    <td><a href="/stats?id={{ t.author_id }}">{{ t.author_name }}</a></td>
+    <td><a href="/player/{{ t.author_id }}">{{ t.author_name }}</a></td>
     <td>{{ t.reply_count }}</td>
   </tr>
   {% endfor %}

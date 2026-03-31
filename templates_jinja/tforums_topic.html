@@ -10,7 +10,7 @@
   <tr>
     <td>
       <b>{{ topic_title }}</b> napisał(a)
-      <a href="/view/{{ topic_author_id }}">{{ topic_author }}</a>
+      <a href="/player/{{ topic_author_id }}">{{ topic_author }}</a>
       {% if topic_author_id > 0 %} ID: {{ topic_author_id }}{% endif %}
       (<a href="/tforums">Powrót</a>)
       (<a href="/tforums/topic/{{ topic_id }}?quotet=true">Cytuj</a>)
@@ -36,7 +36,7 @@
   <table class="td" width="98%" cellpadding="0" cellspacing="0">
     <tr>
       <td>
-        <b><a href="/view/{{ r.author_id }}">{{ r.author }}</a></b>
+        <b><a href="/player/{{ r.author_id }}">{{ r.author }}</a></b>
         {% if r.author_id > 0 %} ID: {{ r.author_id }}{% endif %}
         napisał(a)...
         (<a href="/tforums">Powrót</a>)

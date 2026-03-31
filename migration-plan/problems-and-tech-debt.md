@@ -485,10 +485,10 @@ Each entry includes:
 - **Discovered in**: TD-028 follow-up audit
 - **Description**: 10+ templates link to `/stats?id=N` or `/view?view=N` for player profiles, but no route or handler exists. Every player name link in mail, forums, chat, stafflist, memberlist, jail, court, and alley is broken.
 - **Impact**: **High** — all player profile links are dead.
-- **Action**: Implement player profile handler and register route. Decide on canonical URL pattern.
+- **Action**: Implemented `/player/{id}` as canonical URL. Created handler with legacy redirects from `/view?view=N`, `/view/{id}`, `/stats?id=N`. Updated 17 links across 16 templates to use new canonical URL.
 - **Fixable in existing task**: No — needs new task.
 - **Needs new task**: Yes
-- **Status**: open
+- **Status**: resolved
 - **Related tasks**: None
 
 ### TD-040: Missing /jail/escape route and handler

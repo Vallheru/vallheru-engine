@@ -30,7 +30,7 @@
   </tr>
   {% for entry in leaderboard %}
   <tr>
-    <td><a href="/view?view={{ entry.player_id }}">{{ entry.username }}</a> ({{ entry.player_id }})</td>
+    <td><a href="/player/{{ entry.player_id }}">{{ entry.username }}</a> ({{ entry.player_id }})</td>
     <td>{{ entry.vallars }}</td>
   </tr>
   {% endfor %}

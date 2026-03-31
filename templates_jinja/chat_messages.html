@@ -34,7 +34,7 @@
     <td valign="top" width="20%" style="border-left: 1px solid #ccc; padding-left: 5px;">
       <strong>W karczmie ({{ online_count }}):</strong><br/>
       {% for p in online_players %}
-      <a href="/stats?id={{ p.id }}">{{ p.name }}</a><br/>
+      <a href="/player/{{ p.id }}">{{ p.name }}</a><br/>
       {% endfor %}
       {% if online_players | length == 0 %}
       <em>Nikogo nie ma.</em>

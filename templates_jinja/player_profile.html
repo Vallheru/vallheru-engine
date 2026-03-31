@@ -1,0 +1,41 @@
+{% extends "layout.html" %}
+
+{% block content %}
+<h2>{{ player_name }} ({{ player_id }})</h2>
+
+{% if avatar %}
+<p><img src="/avatars/{{ avatar }}" alt="Avatar" style="max-width:200px;max-height:200px;" /></p>
+{% endif %}
+
+<table>
+  <tr><td><b>Tytuł</b></td><td>{{ rank }}</td></tr>
+  <tr><td><b>Lokalizacja</b></td><td>{{ location }}</td></tr>
+  <tr><td><b>Wiek</b></td><td>{{ age }}</td></tr>
+  <tr><td><b>Rasa</b></td><td>{{ race }}</td></tr>
+  <tr><td><b>Klasa</b></td><td>{{ class }}</td></tr>
+  {% if gender %}<tr><td><b>Płeć</b></td><td>{{ gender }}</td></tr>{% endif %}
+  {% if deity %}<tr><td><b>Bóstwo</b></td><td>{{ deity }}</td></tr>{% endif %}
+  <tr><td><b>Max HP</b></td><td>{{ max_hp }}</td></tr>
+  <tr><td><b>Reputacja</b></td><td>{{ reputation }}</td></tr>
+  <tr><td><b>Walki (W/P)</b></td><td>{{ wins }}/{{ losses }}{% if ratio %} ({{ ratio }}%){% endif %}</td></tr>
+  <tr><td><b>Ostatnio zabiła</b></td><td>{{ last_killed }}</td></tr>
+  <tr><td><b>Ostatnio zabita przez</b></td><td>{{ last_killed_by }}</td></tr>
+</table>
+
+{% if profile %}
+<h3>Profil</h3>
+<p>{{ profile }}</p>
+{% endif %}
+
+<p>
+  <a href="/mail/compose?to={{ player_name }}">Napisz wiadomość</a>
+  | <a href="/roleplay/{{ player_id }}">Roleplay</a>
+</p>
+
+<table width="100%">
+  <tr>
+    {% if prev_id %}<td align="left"><a href="/player/{{ prev_id }}">← Poprzedni</a></td>{% endif %}
+    {% if next_id %}<td align="right"><a href="/player/{{ next_id }}">Następny →</a></td>{% endif %}
+  </tr>
+</table>
+{% endblock %}
