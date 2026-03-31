@@ -3,6 +3,326 @@
 use sqlx::PgPool;
 
 // ---------------------------------------------------------------------------
+// Transactional multi-step operations (TD-046)
+// ---------------------------------------------------------------------------
+
+/// Purchase army units and deduct from global reserves in a single transaction.
+pub async fn purchase_army_tx(
+    pool: &PgPool,
+    outpost_id: i32,
+    warriors: i32,
+    archers: i32,
+    catapults: i32,
+    barricades: i32,
+    cost: i32,
+) -> sqlx::Result<()> {
+    let mut tx = pool.begin().await?;
+
+    sqlx::query(
+        "UPDATE outposts
+         SET gold = gold - $1,
+             warriors = warriors + $2,
+             archers = archers + $3,
+             catapults = catapults + $4,
+             barricades = barricades + $5
+         WHERE id = $6",
+    )
+    .bind(cost)
+    .bind(warriors)
+    .bind(archers)
+    .bind(catapults)
+    .bind(barricades)
+    .bind(outpost_id)
+    .execute(&mut *tx)
+    .await?;
+
+    let units: &[(&str, i32)] = &[
+        ("warriors", warriors),
+        ("archers", archers),
+        ("catapults", catapults),
+        ("barricades", barricades),
+    ];
+    for &(setting, amount) in units {
+        if amount > 0 {
+            sqlx::query(
+                "UPDATE settings SET value = (CAST(value AS INTEGER) - $1)::TEXT
+                 WHERE setting = $2",
+            )
+            .bind(amount)
+            .bind(setting)
+            .execute(&mut *tx)
+            .await?;
+        }
+    }
+
+    tx.commit().await?;
+    Ok(())
+}
+
+/// Upgrade outpost size, deduct platinum and pine in a single transaction.
+pub async fn upgrade_size_tx(
+    pool: &PgPool,
+    outpost_id: i32,
+    player_id: i32,
+    levels: i32,
+    gold_cost: i32,
+    plat_cost: i32,
+    pine_cost: i32,
+) -> sqlx::Result<()> {
+    let mut tx = pool.begin().await?;
+
+    sqlx::query("UPDATE outposts SET size = size + $1, gold = gold - $2 WHERE id = $3")
+        .bind(levels)
+        .bind(gold_cost)
+        .bind(outpost_id)
+        .execute(&mut *tx)
+        .await?;
+
+    sqlx::query("UPDATE players SET platinum = platinum - $1 WHERE id = $2")
+        .bind(plat_cost)
+        .bind(player_id)
+        .execute(&mut *tx)
+        .await?;
+
+    sqlx::query("UPDATE minerals SET pine = pine - $1 WHERE owner = $2")
+        .bind(pine_cost)
+        .bind(player_id)
+        .execute(&mut *tx)
+        .await?;
+
+    tx.commit().await?;
+    Ok(())
+}
+
+/// Parameters for building a structure (lair or barracks) with mineral cost.
+pub struct BuildStructureParams<'a> {
+    pub outpost_id: i32,
+    pub player_id: i32,
+    pub structure: &'a str,
+    pub amount: i32,
+    pub gold_cost: i32,
+    pub meteor_cost: i32,
+    pub other_mineral: &'a str,
+    pub other_cost: i32,
+}
+
+/// Build a structure and deduct mineral costs in a single transaction.
+pub async fn build_structure_tx(pool: &PgPool, p: &BuildStructureParams<'_>) -> sqlx::Result<()> {
+    let structure_sql = match p.structure {
+        "fence" => "UPDATE outposts SET fence = fence + $1, gold = gold - $2 WHERE id = $3",
+        "barracks" => {
+            "UPDATE outposts SET barracks = barracks + $1, gold = gold - $2 WHERE id = $3"
+        }
+        _ => return Ok(()),
+    };
+    let mineral_sql = match p.other_mineral {
+        "crystal" => {
+            "UPDATE minerals SET meteor = meteor - $1, crystal = crystal - $2 WHERE owner = $3"
+        }
+        "adamantium" => {
+            "UPDATE minerals SET meteor = meteor - $1, adamantium = adamantium - $2 WHERE owner = $3"
+        }
+        _ => return Ok(()),
+    };
+
+    let mut tx = pool.begin().await?;
+
+    sqlx::query(structure_sql)
+        .bind(p.amount)
+        .bind(p.gold_cost)
+        .bind(p.outpost_id)
+        .execute(&mut *tx)
+        .await?;
+
+    sqlx::query(mineral_sql)
+        .bind(p.meteor_cost)
+        .bind(p.other_cost)
+        .bind(p.player_id)
+        .execute(&mut *tx)
+        .await?;
+
+    tx.commit().await?;
+    Ok(())
+}
+
+/// All mutations from a single combat round, applied atomically.
+pub struct CombatRoundMutations {
+    pub attacker_id: i32,
+    pub att_warriors: i32,
+    pub att_archers: i32,
+    pub att_catapults: i32,
+    pub att_barricades: i32,
+    pub att_fatigue: i32,
+    pub defender_id: i32,
+    pub def_warriors: i32,
+    pub def_archers: i32,
+    pub def_catapults: i32,
+    pub def_barricades: i32,
+    pub attacker_gold_delta: i32,
+    pub defender_gold_delta: i32,
+    pub attacker_morale_delta: f64,
+    pub defender_morale_delta: f64,
+    pub delete_monster_ids: Vec<i32>,
+    pub delete_veteran_ids: Vec<i32>,
+}
+
+/// Apply all combat round mutations in a single transaction.
+pub async fn apply_combat_round(pool: &PgPool, m: &CombatRoundMutations) -> sqlx::Result<()> {
+    let mut tx = pool.begin().await?;
+
+    // Attacker army + fatigue
+    sqlx::query(
+        "UPDATE outposts
+         SET warriors = $1, archers = $2, catapults = $3, barricades = $4, fatigue = $5
+         WHERE id = $6",
+    )
+    .bind(m.att_warriors)
+    .bind(m.att_archers)
+    .bind(m.att_catapults)
+    .bind(m.att_barricades)
+    .bind(m.att_fatigue)
+    .bind(m.attacker_id)
+    .execute(&mut *tx)
+    .await?;
+
+    // Defender army
+    sqlx::query(
+        "UPDATE outposts SET warriors = $1, archers = $2, catapults = $3, barricades = $4
+         WHERE id = $5",
+    )
+    .bind(m.def_warriors)
+    .bind(m.def_archers)
+    .bind(m.def_catapults)
+    .bind(m.def_barricades)
+    .bind(m.defender_id)
+    .execute(&mut *tx)
+    .await?;
+
+    // Gold transfers
+    if m.defender_gold_delta != 0 {
+        sqlx::query("UPDATE outposts SET gold = gold + $1 WHERE id = $2")
+            .bind(m.defender_gold_delta)
+            .bind(m.defender_id)
+            .execute(&mut *tx)
+            .await?;
+    }
+    if m.attacker_gold_delta != 0 {
+        sqlx::query("UPDATE outposts SET gold = gold + $1 WHERE id = $2")
+            .bind(m.attacker_gold_delta)
+            .bind(m.attacker_id)
+            .execute(&mut *tx)
+            .await?;
+    }
+
+    // Morale
+    sqlx::query("UPDATE outposts SET morale = morale + $1 WHERE id = $2")
+        .bind(m.attacker_morale_delta)
+        .bind(m.attacker_id)
+        .execute(&mut *tx)
+        .await?;
+    sqlx::query("UPDATE outposts SET morale = morale + $1 WHERE id = $2")
+        .bind(m.defender_morale_delta)
+        .bind(m.defender_id)
+        .execute(&mut *tx)
+        .await?;
+
+    // Monster/veteran deaths
+    for &id in &m.delete_monster_ids {
+        sqlx::query("DELETE FROM outpost_monsters WHERE id = $1")
+            .bind(id)
+            .execute(&mut *tx)
+            .await?;
+    }
+    for &id in &m.delete_veteran_ids {
+        sqlx::query("DELETE FROM outpost_veterans WHERE id = $1")
+            .bind(id)
+            .execute(&mut *tx)
+            .await?;
+    }
+
+    // Record attack and spend turn
+    sqlx::query("UPDATE outposts SET attacks = attacks + 1 WHERE id = $1")
+        .bind(m.defender_id)
+        .execute(&mut *tx)
+        .await?;
+    sqlx::query("UPDATE outposts SET turns = turns - 1 WHERE id = $1")
+        .bind(m.attacker_id)
+        .execute(&mut *tx)
+        .await?;
+
+    tx.commit().await?;
+    Ok(())
+}
+
+/// Item equip parameters for a single veteran slot.
+pub struct VeteranEquipItem<'a> {
+    pub veteran_id: i32,
+    pub owner_id: i32,
+    pub item_id: i32,
+    pub slot: &'a str,
+    pub power_col: &'a str,
+    pub item_name: &'a str,
+    pub item_power: i32,
+    pub is_arrows: bool,
+}
+
+/// Consume an equipment item and assign it to a veteran slot in one transaction.
+pub async fn equip_veteran_item_tx(pool: &PgPool, p: &VeteranEquipItem<'_>) -> sqlx::Result<()> {
+    let (sc, pc) = match (p.slot, p.power_col) {
+        ("weapon", "wpower") => ("weapon", "wpower"),
+        ("armor", "apower") => ("armor", "apower"),
+        ("helm", "hpower") => ("helm", "hpower"),
+        ("legs", "lpower") => ("legs", "lpower"),
+        ("ring1", "rpower1") => ("ring1", "rpower1"),
+        ("ring2", "rpower2") => ("ring2", "rpower2"),
+        ("arrows", "opower") => ("arrows", "opower"),
+        _ => return Ok(()),
+    };
+
+    let mut tx = pool.begin().await?;
+
+    // Consume the item from inventory
+    if p.is_arrows {
+        sqlx::query("UPDATE equipment SET wt = wt - 20 WHERE id = $1 AND owner = $2 AND wt > 20")
+            .bind(p.item_id)
+            .bind(p.owner_id)
+            .execute(&mut *tx)
+            .await?;
+        sqlx::query("DELETE FROM equipment WHERE id = $1 AND owner = $2 AND wt <= 20")
+            .bind(p.item_id)
+            .bind(p.owner_id)
+            .execute(&mut *tx)
+            .await?;
+    } else {
+        sqlx::query(
+            "UPDATE equipment SET amount = amount - 1
+             WHERE id = $1 AND owner = $2 AND amount > 1",
+        )
+        .bind(p.item_id)
+        .bind(p.owner_id)
+        .execute(&mut *tx)
+        .await?;
+        sqlx::query("DELETE FROM equipment WHERE id = $1 AND owner = $2 AND amount <= 1")
+            .bind(p.item_id)
+            .bind(p.owner_id)
+            .execute(&mut *tx)
+            .await?;
+    }
+
+    // Assign to veteran
+    let sql = format!("UPDATE outpost_veterans SET {sc} = $1, {pc} = $2 WHERE id = $3");
+    sqlx::query(&sql)
+        .bind(p.item_name)
+        .bind(p.item_power)
+        .bind(p.veteran_id)
+        .execute(&mut *tx)
+        .await?;
+
+    tx.commit().await?;
+    Ok(())
+}
+
+// ---------------------------------------------------------------------------
 // Row types
 // ---------------------------------------------------------------------------
 

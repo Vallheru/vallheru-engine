@@ -7,6 +7,7 @@ use axum::extract::{Path, Query, State};
 use axum::response::Response;
 use axum::{Extension, Form};
 use rand::Rng;
+use tracing::error;
 
 use crate::middleware::context::RequestContext;
 use crate::page::{Flash, FlashKind, PageMeta};
@@ -902,8 +903,14 @@ pub async fn shop_buy_army(
         return error_page(&app, &ctx, "Nie stać Cię na to.");
     }
 
-    let _ = oq::buy_army(&app.pool, out.id, w, a, c, b, cost).await;
-    let _ = oq::deduct_army_reserves(&app.pool, w, a, c, b).await;
+    if let Err(e) = oq::purchase_army_tx(&app.pool, out.id, w, a, c, b, cost).await {
+        error!("Army purchase failed: {e}");
+        return error_page(
+            &app,
+            &ctx,
+            "Wystąpił błąd podczas zakupu. Spróbuj ponownie.",
+        );
+    }
 
     crate::page::redirect("/outposts/shop")
 }
@@ -955,9 +962,18 @@ pub async fn shop_upgrade(
 
     let (gold_cost, plat_cost, pine_cost) = domain::size_upgrade_cost(out.size, levels);
 
-    let _ = oq::upgrade_size(&app.pool, out.id, levels, gold_cost).await;
-    let _ = oq::deduct_platinum(&app.pool, player_id, plat_cost).await;
-    let _ = oq::deduct_pine(&app.pool, player_id, pine_cost).await;
+    if let Err(e) = oq::upgrade_size_tx(
+        &app.pool, out.id, player_id, levels, gold_cost, plat_cost, pine_cost,
+    )
+    .await
+    {
+        error!("Outpost upgrade failed: {e}");
+        return error_page(
+            &app,
+            &ctx,
+            "Wystąpił błąd podczas rozbudowy. Spróbuj ponownie.",
+        );
+    }
 
     crate::page::redirect("/outposts/shop")
 }
@@ -1010,8 +1026,28 @@ pub async fn shop_build_lair(
 
     let (gold_cost, meteor_cost, crystal_cost) = domain::structure_build_cost(out.fence, amount);
 
-    let _ = oq::build_structure(&app.pool, out.id, "fence", amount, gold_cost).await;
-    let _ = oq::deduct_minerals(&app.pool, player_id, meteor_cost, "crystal", crystal_cost).await;
+    if let Err(e) = oq::build_structure_tx(
+        &app.pool,
+        &oq::BuildStructureParams {
+            outpost_id: out.id,
+            player_id,
+            structure: "fence",
+            amount,
+            gold_cost,
+            meteor_cost,
+            other_mineral: "crystal",
+            other_cost: crystal_cost,
+        },
+    )
+    .await
+    {
+        error!("Build lair failed: {e}");
+        return error_page(
+            &app,
+            &ctx,
+            "Wystąpił błąd podczas budowy. Spróbuj ponownie.",
+        );
+    }
 
     crate::page::redirect("/outposts/shop")
 }
@@ -1064,8 +1100,28 @@ pub async fn shop_build_barracks(
 
     let (gold_cost, meteor_cost, adam_cost) = domain::structure_build_cost(out.barracks, amount);
 
-    let _ = oq::build_structure(&app.pool, out.id, "barracks", amount, gold_cost).await;
-    let _ = oq::deduct_minerals(&app.pool, player_id, meteor_cost, "adamantium", adam_cost).await;
+    if let Err(e) = oq::build_structure_tx(
+        &app.pool,
+        &oq::BuildStructureParams {
+            outpost_id: out.id,
+            player_id,
+            structure: "barracks",
+            amount,
+            gold_cost,
+            meteor_cost,
+            other_mineral: "adamantium",
+            other_cost: adam_cost,
+        },
+    )
+    .await
+    {
+        error!("Build barracks failed: {e}");
+        return error_page(
+            &app,
+            &ctx,
+            "Wystąpił błąd podczas budowy. Spróbuj ponownie.",
+        );
+    }
 
     crate::page::redirect("/outposts/shop")
 }
@@ -1148,20 +1204,29 @@ pub async fn veteran_equip(
         let item_power = item.power / 10;
         let item_name = item.name.clone();
 
-        // Consume the item
-        if is_arrows {
-            if item.wt < 20 {
-                continue;
-            }
-            let _ = oq::consume_arrows(&app.pool, item_id, player_id).await;
-        } else {
-            let _ = oq::consume_equipment(&app.pool, item_id, player_id).await;
+        // Consume the item and equip the veteran atomically
+        if is_arrows && item.wt < 20 {
+            continue;
         }
 
-        let _ = oq::equip_veteran(
-            &app.pool, veteran_id, slot, power_col, &item_name, item_power,
+        if let Err(e) = oq::equip_veteran_item_tx(
+            &app.pool,
+            &oq::VeteranEquipItem {
+                veteran_id,
+                owner_id: player_id,
+                item_id,
+                slot,
+                power_col,
+                item_name: &item_name,
+                item_power,
+                is_arrows,
+            },
         )
-        .await;
+        .await
+        {
+            error!("Equip veteran failed for slot {slot}: {e}");
+            continue;
+        }
         equipped.push(item_name);
     }
 
@@ -1481,88 +1546,91 @@ pub async fn battle_execute(
         });
 
         // Apply losses
-        let _ = oq::set_army(
-            &app.pool,
-            current_attacker.id,
-            att_losses.warriors,
-            att_losses.archers,
-            att_losses.catapults,
-            current_attacker.barricades,
-        )
-        .await;
-        let _ = oq::set_fatigue(&app.pool, current_attacker.id, att_losses.new_fatigue).await;
-
-        let _ = oq::set_army(
-            &app.pool,
-            current_defender.id,
-            def_losses.warriors,
-            def_losses.archers,
-            def_losses.catapults,
-            def_losses.barricades,
-        )
-        .await;
-
-        // Gold transfer and experience
-        let msg = if attacker_wins {
-            let looted = current_defender.gold / 10;
-            if looted > 0 {
-                let _ = oq::update_gold(&app.pool, current_defender.id, -looted).await;
-            }
-            let gained = domain::attack_gold_gain(
-                att_losses.warriors,
-                att_losses.archers,
-                def_losses.warriors,
-                def_losses.archers,
-                looted,
-                gold_bonus,
-            );
-            let _ = oq::update_gold(&app.pool, current_attacker.id, gained).await;
-
-            // Morale
-            let _ = oq::adjust_morale(&app.pool, current_attacker.id, 7.5).await;
-            let _ = oq::adjust_morale(&app.pool, current_defender.id, -10.0).await;
-
-            format!(
-                "Atakujesz strażnicę gracza {enemy_name} i wygrywasz! Zdobywasz {gained} sztuk złota."
-            )
-        } else {
-            // Morale
-            let _ = oq::adjust_morale(&app.pool, current_attacker.id, -10.0).await;
-            let _ = oq::adjust_morale(&app.pool, current_defender.id, 7.5).await;
-
-            format!("Atakujesz strażnicę gracza {enemy_name} lecz niestety przegrywasz!")
-        };
+        let (msg, attacker_gold_delta, defender_gold_delta, att_morale, def_morale) =
+            if attacker_wins {
+                let looted = current_defender.gold / 10;
+                let gained = domain::attack_gold_gain(
+                    att_losses.warriors,
+                    att_losses.archers,
+                    def_losses.warriors,
+                    def_losses.archers,
+                    looted,
+                    gold_bonus,
+                );
+                let def_delta = if looted > 0 { -looted } else { 0 };
+                (
+                    format!(
+                        "Atakujesz strażnicę gracza {enemy_name} i wygrywasz! Zdobywasz {gained} sztuk złota."
+                    ),
+                    gained,
+                    def_delta,
+                    7.5_f64,
+                    -10.0_f64,
+                )
+            } else {
+                (
+                    format!("Atakujesz strażnicę gracza {enemy_name} lecz niestety przegrywasz!"),
+                    0,
+                    0,
+                    -10.0_f64,
+                    7.5_f64,
+                )
+            };
 
         // 5% chance to lose monsters/veterans
+        let mut delete_monster_ids = Vec::new();
+        let mut delete_veteran_ids = Vec::new();
         let mut kill_idx = 0_usize;
         for m in &my_monsters {
             if kill_chances.get(kill_idx).copied().unwrap_or(100) < 6 {
-                let _ = oq::delete_monster(&app.pool, m.id).await;
+                delete_monster_ids.push(m.id);
             }
             kill_idx += 1;
         }
         for m in &e_monsters {
             if kill_chances.get(kill_idx).copied().unwrap_or(100) < 6 {
-                let _ = oq::delete_monster(&app.pool, m.id).await;
+                delete_monster_ids.push(m.id);
             }
             kill_idx += 1;
         }
         for v in &my_veterans {
             if kill_chances.get(kill_idx).copied().unwrap_or(100) < 6 {
-                let _ = oq::delete_veteran(&app.pool, v.id).await;
+                delete_veteran_ids.push(v.id);
             }
             kill_idx += 1;
         }
         for v in &e_veterans {
             if kill_chances.get(kill_idx).copied().unwrap_or(100) < 6 {
-                let _ = oq::delete_veteran(&app.pool, v.id).await;
+                delete_veteran_ids.push(v.id);
             }
             kill_idx += 1;
         }
 
-        // Record attack
-        let _ = oq::increment_attacks(&app.pool, current_defender.id).await;
-        let _ = oq::spend_turns(&app.pool, current_attacker.id, 1).await;
+        let mutations = oq::CombatRoundMutations {
+            attacker_id: current_attacker.id,
+            att_warriors: att_losses.warriors,
+            att_archers: att_losses.archers,
+            att_catapults: att_losses.catapults,
+            att_barricades: current_attacker.barricades,
+            att_fatigue: att_losses.new_fatigue,
+            defender_id: current_defender.id,
+            def_warriors: def_losses.warriors,
+            def_archers: def_losses.archers,
+            def_catapults: def_losses.catapults,
+            def_barricades: def_losses.barricades,
+            attacker_gold_delta,
+            defender_gold_delta,
+            attacker_morale_delta: att_morale,
+            defender_morale_delta: def_morale,
+            delete_monster_ids,
+            delete_veteran_ids,
+        };
+
+        if let Err(e) = oq::apply_combat_round(&app.pool, &mutations).await {
+            error!("Combat round failed: {e}");
+            messages.push("Błąd bitwy!".to_owned());
+            break;
+        }
 
         messages.push(msg);
 
