@@ -3,6 +3,8 @@
 //! Ported from `kopalnia.php`, `mines.php`, `lumberjack.php`, `smelter.php`,
 //! and `farm.php`.
 
+use std::fmt::Write;
+
 use axum::{Extension, Form, extract::State, response::Response};
 use rand::Rng;
 
@@ -304,13 +306,24 @@ pub async fn mining_work(
     }
 
     let total_xp = result.xp_strength + result.xp_speed + result.xp_mining;
+
+    // Apply stat/skill XP: strength, speed, mining.
+    let xp_extra = apply_gathering_xp(
+        &app,
+        player_id,
+        &player_row,
+        &[("strength", result.xp_strength), ("speed", result.xp_speed)],
+        &[("mining", result.xp_mining)],
+    )
+    .await;
+
     let msg = if result.player_died {
         format!(
-            "Nastąpiło zawalenie się kopalni! Nie udało ci się uciec. Przed śmiercią zdobyłeś: {total_xp} PD."
+            "Nastąpiło zawalenie się kopalni! Nie udało ci się uciec. Przed śmiercią zdobyłeś: {total_xp} PD.{xp_extra}"
         )
     } else {
         format!(
-            "Zużyłeś {amount} energii. Zdobyłeś: {} kryształów, {} adamantium, {} mithrilu, {} złota. Łącznie {total_xp} PD.",
+            "Zużyłeś {amount} energii. Zdobyłeś: {} kryształów, {} adamantium, {} mithrilu, {} złota. Łącznie {total_xp} PD.{xp_extra}",
             result.crystals, result.adamantium, result.mithril, result.gold
         )
     };
@@ -514,6 +527,23 @@ pub async fn mines_dig(
         "Przeznaczyłeś na wydobycie {} energii. Zdobyłeś w zamian {} sztuk rudy oraz {} PD.",
         amount, dig_result.ore_gained, dig_result.xp
     );
+
+    // Apply XP: strength (1/3), speed (1/3), mining (1/3).
+    let third = dig_result.xp / 3;
+    let xp_extra = apply_gathering_xp(
+        &app,
+        player_id,
+        &player_row,
+        &[("strength", third), ("speed", third)],
+        &[("mining", third)],
+    )
+    .await;
+
+    let msg = if xp_extra.is_empty() {
+        msg
+    } else {
+        format!("{msg}{xp_extra}")
+    };
 
     let meta = PageMeta::titled("Kopalnie").with_flash(Flash::success(msg));
     let base = app.templates.build_context(&ctx, &meta);
@@ -754,11 +784,22 @@ pub async fn lumberjack_work(
     }
 
     let total_xp = result.xp_lumberjack + result.xp_strength;
+
+    // Apply stat/skill XP: strength, lumberjack.
+    let xp_extra = apply_gathering_xp(
+        &app,
+        player_id,
+        &player_row,
+        &[("strength", result.xp_strength)],
+        &[("lumberjack", result.xp_lumberjack)],
+    )
+    .await;
+
     let msg = if result.player_died {
-        format!("Spadło na ciebie drzewo! Nie przeżyłeś. Zdobyłeś {total_xp} PD.")
+        format!("Spadło na ciebie drzewo! Nie przeżyłeś. Zdobyłeś {total_xp} PD.{xp_extra}")
     } else {
         format!(
-            "Zużyłeś {amount} energii. Zdobyłeś: {} drewna, {} złota. Łącznie {total_xp} PD.",
+            "Zużyłeś {amount} energii. Zdobyłeś: {} drewna, {} złota. Łącznie {total_xp} PD.{xp_extra}",
             result.wood, result.gold
         )
     };
@@ -936,8 +977,19 @@ pub async fn smelter_smelt(
         return server_error();
     }
 
+    // Apply stat/skill XP: condition (half), smelting (half).
+    let half_xp = smelt_result.xp / 2;
+    let xp_extra = apply_gathering_xp(
+        &app,
+        player_id,
+        &player_row,
+        &[("condition", half_xp)],
+        &[("smelting", half_xp)],
+    )
+    .await;
+
     let msg = format!(
-        "Uzyskałeś {} sztabek {}. Zdobywasz {} PD.",
+        "Uzyskałeś {} sztabek {}. Zdobywasz {} PD.{xp_extra}",
         smelt_result.bars_produced, bar_key, smelt_result.xp
     );
 
@@ -1118,6 +1170,102 @@ fn find_skill(skills: &[vallheru_domain::player::skills::PlayerSkill], key: &str
         .iter()
         .find(|s| s.skill_key == key)
         .map_or(1, |s| s.level.max(1))
+}
+
+/// Apply stat and skill XP awards from gathering activities.
+///
+/// `stat_xp` is a list of `(stat_key, xp_amount)` pairs.
+/// `skill_xp` is a list of `(skill_key, xp_amount)` pairs.
+///
+/// Returns extra flash text about any level-ups (empty if none).
+async fn apply_gathering_xp(
+    app: &AppState,
+    player_id: i32,
+    player_row: &vallheru_data::queries::player::PlayerRow,
+    stat_xp: &[(&str, i32)],
+    skill_xp: &[(&str, i32)],
+) -> String {
+    use vallheru_domain::player::progression;
+
+    let Some(race) = vallheru_domain::player::Race::from_db(&player_row.race) else {
+        return String::new();
+    };
+    let Some(class) = vallheru_domain::player::Class::from_db(&player_row.class) else {
+        return String::new();
+    };
+
+    let mut extra = String::new();
+    let mut hp_change = 0;
+
+    // Apply stat XP.
+    if !stat_xp.is_empty() {
+        let mut stats = vallheru_data::queries::player::load_stats(&app.pool, player_id)
+            .await
+            .unwrap_or_default();
+
+        for &(key, xp) in stat_xp {
+            if xp <= 0 {
+                continue;
+            }
+            if let Some(stat) = stats.iter_mut().find(|s| s.stat_key == key) {
+                let result = progression::apply_stat_xp(stat, xp, &race, &class);
+                if result.levels_gained > 0 {
+                    let _ = write!(
+                        extra,
+                        " Twój stat {} wzrósł o {} poziom(ów)!",
+                        key, result.levels_gained
+                    );
+                }
+                hp_change += result.hp_change;
+            }
+        }
+
+        if let Err(e) =
+            vallheru_data::queries::player::save_stats(&app.pool, player_id, &stats).await
+        {
+            tracing::error!(error = %e, "apply_gathering_xp: save_stats failed");
+        }
+    }
+
+    // Apply skill XP.
+    if !skill_xp.is_empty() {
+        let mut skills = vallheru_data::queries::player::load_skills(&app.pool, player_id)
+            .await
+            .unwrap_or_default();
+
+        for &(key, xp) in skill_xp {
+            if xp <= 0 {
+                continue;
+            }
+            if let Some(skill) = skills.iter_mut().find(|s| s.skill_key == key) {
+                let result = progression::apply_skill_xp(skill, xp);
+                if result.levels_gained > 0 {
+                    let _ = write!(
+                        extra,
+                        " Twoja umiejętność {} wzrosła o {} poziom(ów)!",
+                        key, result.levels_gained
+                    );
+                }
+            }
+        }
+
+        if let Err(e) =
+            vallheru_data::queries::player::save_skills(&app.pool, player_id, &skills).await
+        {
+            tracing::error!(error = %e, "apply_gathering_xp: save_skills failed");
+        }
+    }
+
+    // Apply HP change from condition level-ups.
+    if hp_change > 0 {
+        if let Err(e) =
+            vallheru_data::queries::locations::add_player_hp(&app.pool, player_id, hp_change).await
+        {
+            tracing::error!(error = %e, "apply_gathering_xp: add_player_hp failed");
+        }
+    }
+
+    extra
 }
 
 fn error_page(state: &AppState, ctx: &RequestContext, message: &str) -> Response {

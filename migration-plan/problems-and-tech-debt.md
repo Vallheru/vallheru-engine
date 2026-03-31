@@ -262,3 +262,15 @@ Each entry includes:
 - **Needs new task**: No
 - **Status**: resolved
 - **Related tasks**: MP-16-02, MP-14-04, MP-12-06
+
+### TD-021: Gathering handlers calculate XP but never persist it
+
+- **Type**: migration-gap
+- **Discovered in**: TD-013 follow-up
+- **Description**: Mountain mining, city mines, lumberjack, and smelter handlers all computed XP values and displayed them in flash messages, but never called `apply_stat_xp` / `apply_skill_xp` to save the XP to the database. Players would see "Zdobyłeś X PD" but their stats/skills never actually gained experience.
+- **Impact**: **High** — all gathering XP silently discarded; stat/skill progression from gathering completely broken.
+- **Action**: Created shared `apply_gathering_xp` helper in gathering.rs. Wired into all four handlers with correct stat/skill splits per PHP originals: mountain mining (strength + speed stats, mining skill), city mines (strength + speed stats, mining skill, each 1/3), lumberjack (strength stat, lumberjack skill), smelter (condition stat half, smelting skill half).
+- **Fixable in existing task**: No — standalone fix.
+- **Needs new task**: No
+- **Status**: resolved
+- **Related tasks**: TD-013
