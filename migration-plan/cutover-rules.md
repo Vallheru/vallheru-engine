@@ -286,15 +286,23 @@ These routes are in the route manifest but have no Rust handlers. They remain on
 
 ### Group I: Combat & Encounters
 
-| PHP File | Rust Path | Status |
+| PHP File | Rust Path | State |
 |---|---|---|
-| `battle.php` | `/battle` | **not implemented** |
-| `hunters.php` | `/hunters` | **not implemented** |
+| `battle.php` | `/battle/pve` | **staged** |
+| `hunters.php` | `/hunters`, `/hunters/*` | **staged** |
+| `explore.php` | `/explore`, `/explore/*` | **staged** |
+| `hospital.php` | `/hospital` | **staged** |
 | `wieza.php` | `/tower/combat` | **not implemented** |
-| `explore.php` | `/explore` | **not implemented** |
-| `hospital.php` | `/hospital` | **not implemented** |
 
-**Status**: Combat handlers are not yet created. The `combat_routes()` function in world.rs is an empty placeholder. These remain on PHP.
+**Status**: Combat handlers are implemented. Explore (PvE random encounters), battle (PvE combat), arena (PvP), and hunters guild are fully wired. Hospital is in `location_routes()`. Only `wieza.php` tower combat is not yet migrated.
+
+**Pre-cutover checklist**:
+1. Groups A + B must be active.
+2. Test: explore → encounter → fight → win/lose → hospital flow.
+3. Test: arena challenge → PvP fight → result.
+4. Test: hunters guild → bestiary → quest accept → quest fight.
+
+**Rollback**: Comment out Group I. Combat state is in database.
 
 ---
 
@@ -495,7 +503,9 @@ Recommended activation order, from lowest to highest risk:
 | 15 | **O: Staff & Moderation** | Low | Staff-only, low traffic. |
 | 16 | **P: Admin** | Low | Admin-only, single page. |
 
-Groups C (Player Profile), I (Combat), and L (Tribes) are blocked until their handlers are implemented.
+Group L (Tribes) and Group H crafting workshops are blocked until their handlers are implemented.
+
+Groups C (Player Profile) and I (Combat) are now **staged** and ready for cutover.
 
 ---
 

@@ -1,0 +1,47 @@
+{# Tartak — katalog planów #}
+{% extends "base.html" %}
+{% block content %}
+<h2>Plany stolarskie</h2>
+
+<h3>Dostępne plany</h3>
+{% if plans %}
+<table>
+  <tr>
+    <th>Nazwa</th>
+    <th>Typ</th>
+    <th>Koszt</th>
+    <th>Poziom</th>
+    <th>Akcja</th>
+  </tr>
+  {% for plan in plans %}
+  {% if not plan.owned %}
+  <tr>
+    <td>{{ plan.name }}</td>
+    <td>{{ plan.item_type }}</td>
+    <td>{{ plan.cost }}</td>
+    <td>{{ plan.level }}</td>
+    <td>
+      <form method="post" action="/lumbermill/plan/buy">
+        <input type="hidden" name="plan_id" value="{{ plan.id }}">
+        <button type="submit">Kup</button>
+      </form>
+    </td>
+  </tr>
+  {% endif %}
+  {% endfor %}
+</table>
+{% else %}
+<p>Brak dostępnych planów.</p>
+{% endif %}
+
+<h3>Posiadane plany</h3>
+{% if owned %}
+<ul>
+  {% for plan in owned %}
+  <li>{{ plan.name }} ({{ plan.item_type }}, poziom {{ plan.level }})</li>
+  {% endfor %}
+</ul>
+{% else %}
+<p>Nie posiadasz żadnych planów.</p>
+{% endif %}
+{% endblock %}

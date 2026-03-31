@@ -1,0 +1,59 @@
+{# Tartak — warsztat #}
+{% extends "base.html" %}
+{% block content %}
+<h2>Warsztat stolarski</h2>
+
+<p>Energia: {{ energy }}</p>
+<p>Drewno: Sosna {{ wood.pine }}, Leszczyna {{ wood.hazel }}, Cis {{ wood.yew }}, Wiąz {{ wood.elm }}</p>
+
+<h3>Nowy wyrób</h3>
+{% if plans %}
+<form method="post" action="/lumbermill/craft">
+  <label for="plan_id">Plan:</label>
+  <select name="plan_id" id="plan_id">
+    {% for plan in plans %}
+    {% if plan.owned %}
+    <option value="{{ plan.id }}">{{ plan.name }} (poziom {{ plan.level }})</option>
+    {% endif %}
+    {% endfor %}
+  </select>
+
+  <label for="wood_type">Drewno:</label>
+  <select name="wood_type" id="wood_type">
+    <option value="pine">Sosna</option>
+    <option value="hazel">Leszczyna</option>
+    <option value="yew">Cis</option>
+    <option value="elm">Wiąz</option>
+  </select>
+
+  <button type="submit">Wykonaj</button>
+</form>
+{% else %}
+<p>Nie posiadasz żadnych planów.</p>
+{% endif %}
+
+<h3>Prace w toku</h3>
+{% if works %}
+<table>
+  <tr>
+    <th>Nazwa</th>
+    <th>Energia (wydana/potrzebna)</th>
+    <th>Akcja</th>
+  </tr>
+  {% for work in works %}
+  <tr>
+    <td>{{ work.name }}</td>
+    <td>{{ work.energy_spent }} / {{ work.energy_needed }}</td>
+    <td>
+      <form method="post" action="/lumbermill/continue">
+        <input type="hidden" name="work_id" value="{{ work.id }}">
+        <button type="submit">Kontynuuj</button>
+      </form>
+    </td>
+  </tr>
+  {% endfor %}
+</table>
+{% else %}
+<p>Brak prac w toku.</p>
+{% endif %}
+{% endblock %}

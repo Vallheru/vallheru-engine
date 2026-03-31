@@ -1,0 +1,15 @@
+{# Gildia złodziei — sklep z wytrychami #}
+{% extends "base.html" %}
+{% block content %}
+<h2>Sklep złodziejski</h2>
+
+<p>Złoto: {{ gold }}</p>
+<p>Posiadane wytrychy: {{ lockpicks }}</p>
+<p>Cena wytrycha: {{ lockpick_cost }} złota</p>
+
+<form method="post" action="/thieves/shop/buy">
+  <label for="amount">Ilość:</label>
+  <input type="number" name="amount" id="amount" value="1" min="1">
+  <button type="submit">Kup</button>
+</form>
+{% endblock %}

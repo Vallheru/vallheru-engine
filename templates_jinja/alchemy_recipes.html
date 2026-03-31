@@ -1,0 +1,53 @@
+{# Alchemia — katalog receptur #}
+{% extends "base.html" %}
+{% block content %}
+<h2>Receptury alchemiczne</h2>
+
+<h3>Dostępne receptury</h3>
+{% if recipes %}
+<table>
+  <tr>
+    <th>Nazwa</th>
+    <th>Koszt</th>
+    <th>Poziom</th>
+    <th>Illani</th>
+    <th>Illanias</th>
+    <th>Nutari</th>
+    <th>Dynallca</th>
+    <th>Akcja</th>
+  </tr>
+  {% for recipe in recipes %}
+  {% if not recipe.owned %}
+  <tr>
+    <td>{{ recipe.name }}</td>
+    <td>{{ recipe.cost }}</td>
+    <td>{{ recipe.level }}</td>
+    <td>{{ recipe.illani }}</td>
+    <td>{{ recipe.illanias }}</td>
+    <td>{{ recipe.nutari }}</td>
+    <td>{{ recipe.dynallca }}</td>
+    <td>
+      <form method="post" action="/alchemy/recipe/buy">
+        <input type="hidden" name="recipe_id" value="{{ recipe.id }}">
+        <button type="submit">Kup</button>
+      </form>
+    </td>
+  </tr>
+  {% endif %}
+  {% endfor %}
+</table>
+{% else %}
+<p>Brak dostępnych receptur.</p>
+{% endif %}
+
+<h3>Posiadane receptury</h3>
+{% if owned %}
+<ul>
+  {% for recipe in owned %}
+  <li>{{ recipe.name }} (poziom {{ recipe.level }})</li>
+  {% endfor %}
+</ul>
+{% else %}
+<p>Nie posiadasz żadnych receptur.</p>
+{% endif %}
+{% endblock %}

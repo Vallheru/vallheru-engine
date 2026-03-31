@@ -1,0 +1,26 @@
+{# Hodowla stworzeń — eksploracja #}
+{% extends "base.html" %}
+{% block content %}
+<h2>Eksploracja</h2>
+
+<p>Energia: {{ energy }}</p>
+<p>Platyna: {{ platinum }}</p>
+
+{% if regions %}
+<form method="post" action="/core/explore">
+  <label for="region">Region:</label>
+  <select name="region" id="region">
+    {% for region in regions %}
+    <option value="{{ region.key }}">{{ region.name }} (koszt: {{ region.platinum_cost }} platyny)</option>
+    {% endfor %}
+  </select>
+
+  <label for="attempts">Liczba prób:</label>
+  <input type="number" name="attempts" id="attempts" value="1" min="1">
+
+  <button type="submit">Eksploruj</button>
+</form>
+{% else %}
+<p>Brak dostępnych regionów.</p>
+{% endif %}
+{% endblock %}

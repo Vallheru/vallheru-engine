@@ -1,0 +1,13 @@
+{# Gildia rzemieślników — strona główna #}
+{% extends "base.html" %}
+{% block content %}
+<h2>Gildia rzemieślników</h2>
+
+{% if is_craftsman %}
+<ul>
+  <li><a href="/crafts/missions">Misje</a></li>
+</ul>
+{% else %}
+<p>Nie jesteś członkiem gildii rzemieślników.</p>
+{% endif %}
+{% endblock %}

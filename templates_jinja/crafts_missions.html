@@ -1,0 +1,33 @@
+{# Gildia rzemieślników — misje #}
+{% extends "base.html" %}
+{% block content %}
+<h2>Misje rzemieślnicze</h2>
+
+<p>Energia: {{ energy }}</p>
+
+{% if missions %}
+<table>
+  <tr>
+    <th>Profesja</th>
+    <th>Umiejętność</th>
+    <th>Koszt energii</th>
+    <th>Akcja</th>
+  </tr>
+  {% for mission in missions %}
+  <tr>
+    <td>{{ mission.profession }}</td>
+    <td>{{ mission.skill_name }}</td>
+    <td>{{ mission.energy_cost }}</td>
+    <td>
+      <form method="post" action="/crafts/execute">
+        <input type="hidden" name="mission_index" value="{{ mission.index }}">
+        <button type="submit">Wykonaj</button>
+      </form>
+    </td>
+  </tr>
+  {% endfor %}
+</table>
+{% else %}
+<p>Brak dostępnych misji.</p>
+{% endif %}
+{% endblock %}

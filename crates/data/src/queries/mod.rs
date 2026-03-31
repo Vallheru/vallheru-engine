@@ -12,6 +12,7 @@ pub mod character_reset;
 pub mod chat;
 pub mod combat;
 pub mod content;
+pub mod crafting;
 pub mod event;
 pub mod forum;
 pub mod gathering;

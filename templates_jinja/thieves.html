@@ -1,0 +1,15 @@
+{# Gildia złodziei — strona główna #}
+{% extends "base.html" %}
+{% block content %}
+<h2>Gildia złodziei</h2>
+
+{% if is_thief %}
+<p>Punkty mistrzowskie: {{ mpoints }}</p>
+<ul>
+  <li><a href="/thieves/missions">Misje</a></li>
+  <li><a href="/thieves/shop">Sklep</a></li>
+</ul>
+{% else %}
+<p>Nie jesteś członkiem gildii złodziei.</p>
+{% endif %}
+{% endblock %}

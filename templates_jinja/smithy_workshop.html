@@ -1,0 +1,67 @@
+{# Kuźnia — warsztat #}
+{% extends "base.html" %}
+{% block content %}
+<h2>Warsztat kowalski</h2>
+
+<p>Energia: {{ energy }}</p>
+<p>Minerały: miedź {{ minerals.copper }}, brąz {{ minerals.bronze }}, mosiądz {{ minerals.brass }}, żelazo {{ minerals.iron }}, stal {{ minerals.steel }}</p>
+
+<h3>Nowy wyrób</h3>
+{% if plans %}
+<form method="post" action="/smithy/craft">
+  <label for="plan_id">Plan:</label>
+  <select name="plan_id" id="plan_id">
+    {% for plan in plans %}
+    {% if plan.owned %}
+    <option value="{{ plan.id }}">{{ plan.name }} (poziom {{ plan.level }})</option>
+    {% endif %}
+    {% endfor %}
+  </select>
+
+  <label for="mineral">Minerał:</label>
+  <select name="mineral" id="mineral">
+    <option value="copper">Miedź</option>
+    <option value="bronze">Brąz</option>
+    <option value="brass">Mosiądz</option>
+    <option value="iron">Żelazo</option>
+    <option value="steel">Stal</option>
+  </select>
+
+  <label for="amount">Ilość:</label>
+  <input type="number" name="amount" id="amount" value="1" min="1">
+
+  <button type="submit">Wykuj</button>
+</form>
+{% else %}
+<p>Nie posiadasz żadnych planów.</p>
+{% endif %}
+
+<h3>Prace w toku</h3>
+{% if works %}
+<table>
+  <tr>
+    <th>Nazwa</th>
+    <th>Energia (wydana/potrzebna)</th>
+    <th>Minerał</th>
+    <th>Pozostało</th>
+    <th>Akcja</th>
+  </tr>
+  {% for work in works %}
+  <tr>
+    <td>{{ work.name }}</td>
+    <td>{{ work.u_energy }} / {{ work.n_energy }}</td>
+    <td>{{ work.mineral }}</td>
+    <td>{{ work.remaining }}</td>
+    <td>
+      <form method="post" action="/smithy/continue">
+        <input type="hidden" name="work_id" value="{{ work.id }}">
+        <button type="submit">Kontynuuj</button>
+      </form>
+    </td>
+  </tr>
+  {% endfor %}
+</table>
+{% else %}
+<p>Brak prac w toku.</p>
+{% endif %}
+{% endblock %}

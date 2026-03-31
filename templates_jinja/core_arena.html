@@ -1,0 +1,42 @@
+{# Hodowla stworzeń — arena #}
+{% extends "base.html" %}
+{% block content %}
+<h2>Arena stworzeń</h2>
+
+{% if active_creature %}
+<p>Twoje aktywne stworzenie: <strong>{{ active_creature.name }}</strong> (Siła: {{ active_creature.power }}, Obrona: {{ active_creature.defense }})</p>
+
+<h3>Przeciwnicy</h3>
+{% if opponents %}
+<table>
+  <tr>
+    <th>Nazwa</th>
+    <th>Typ</th>
+    <th>Siła</th>
+    <th>Obrona</th>
+    <th>Właściciel</th>
+    <th>Akcja</th>
+  </tr>
+  {% for opp in opponents %}
+  <tr>
+    <td>{{ opp.name }}</td>
+    <td>{{ opp.creature_type }}</td>
+    <td>{{ opp.power }}</td>
+    <td>{{ opp.defense }}</td>
+    <td>{{ opp.owner_name }}</td>
+    <td>
+      <form method="post" action="/core/arena/fight">
+        <input type="hidden" name="opponent_id" value="{{ opp.id }}">
+        <button type="submit">Walcz</button>
+      </form>
+    </td>
+  </tr>
+  {% endfor %}
+</table>
+{% else %}
+<p>Brak dostępnych przeciwników.</p>
+{% endif %}
+{% else %}
+<p>Nie masz aktywnego stworzenia. Aktywuj jedno w <a href="/core/library">bibliotece</a>.</p>
+{% endif %}
+{% endblock %}

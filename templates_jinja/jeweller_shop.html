@@ -1,0 +1,33 @@
+{# Jubiler — sklep z pierścieniami #}
+{% extends "base.html" %}
+{% block content %}
+<h2>Sklep jubilerski</h2>
+
+<p>Złoto: {{ gold }}</p>
+
+{% if rings %}
+<table>
+  <tr>
+    <th>Nazwa</th>
+    <th>Dostępne</th>
+    <th>Cena</th>
+    <th>Akcja</th>
+  </tr>
+  {% for ring in rings %}
+  <tr>
+    <td>{{ ring.name }}</td>
+    <td>{{ ring.amount }}</td>
+    <td>{{ ring.cost }}</td>
+    <td>
+      <form method="post" action="/jeweller/shop/buy">
+        <input type="hidden" name="ring_id" value="{{ ring.id }}">
+        <button type="submit">Kup</button>
+      </form>
+    </td>
+  </tr>
+  {% endfor %}
+</table>
+{% else %}
+<p>Brak pierścieni w sprzedaży.</p>
+{% endif %}
+{% endblock %}

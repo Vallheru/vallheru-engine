@@ -3,9 +3,10 @@
 use axum::{Router, middleware, routing};
 
 use crate::handlers::{
-    bank, character, chat, city, content, court, deity, equipment, forums, gathering, hospital,
-    house, jail, locations, mail, map, market, outpost, pages, player_profile, quest, room, shops,
-    spells, temple, tower, travel, tribe_forum,
+    alchemy, bank, character, chat, city, content, core, court, crafts, deity, equipment, forums,
+    gathering, hospital, house, jail, jeweller, locations, lumbermill, mail, map, market, outpost,
+    pages, player_profile, quest, room, shops, smithy, spells, temple, thieves, tower, travel,
+    tribe_forum,
 };
 use crate::middleware::guards::require_authenticated;
 use crate::state::AppState;
@@ -20,6 +21,7 @@ pub fn routes() -> Router<AppState> {
                 .merge(location_routes())
                 .merge(economy_routes())
                 .merge(combat_routes())
+                .merge(crafting_routes())
                 .merge(outpost_routes())
                 .merge(social_routes())
                 .merge(quest_routes())
@@ -192,6 +194,121 @@ fn combat_routes() -> Router<AppState> {
         .route(
             "/hunters/quest",
             routing::get(combat::hunters_quest_show).post(combat::hunters_quest_do),
+        )
+}
+
+#[allow(clippy::too_many_lines)]
+fn crafting_routes() -> Router<AppState> {
+    Router::new()
+        // Smithy (kowal.php)
+        .route("/smithy", routing::get(smithy::smithy_show))
+        .route("/smithy/plans", routing::get(smithy::smithy_plans_show))
+        .route(
+            "/smithy/plans/buy/{id}",
+            routing::post(smithy::smithy_plan_buy),
+        )
+        .route(
+            "/smithy/workshop",
+            routing::get(smithy::smithy_workshop_show),
+        )
+        .route("/smithy/craft", routing::post(smithy::smithy_craft))
+        .route("/smithy/continue", routing::post(smithy::smithy_continue))
+        // Alchemy (alchemik.php)
+        .route("/alchemy", routing::get(alchemy::alchemy_show))
+        .route(
+            "/alchemy/recipes",
+            routing::get(alchemy::alchemy_recipes_show),
+        )
+        .route(
+            "/alchemy/recipes/buy/{id}",
+            routing::post(alchemy::alchemy_recipe_buy),
+        )
+        .route("/alchemy/lab", routing::get(alchemy::alchemy_lab_show))
+        .route("/alchemy/brew", routing::post(alchemy::alchemy_brew))
+        // Jeweller (jeweller.php + jewellershop.php)
+        .route("/jeweller", routing::get(jeweller::jeweller_show))
+        .route(
+            "/jeweller/plans",
+            routing::get(jeweller::jeweller_plans_show),
+        )
+        .route(
+            "/jeweller/plans/buy/{id}",
+            routing::post(jeweller::jeweller_plan_buy),
+        )
+        .route(
+            "/jeweller/workshop",
+            routing::get(jeweller::jeweller_workshop_show),
+        )
+        .route("/jeweller/craft", routing::post(jeweller::jeweller_craft))
+        .route(
+            "/jeweller/continue",
+            routing::post(jeweller::jeweller_continue),
+        )
+        .route("/jeweller/shop", routing::get(jeweller::jeweller_shop_show))
+        .route(
+            "/jeweller/shop/buy/{id}",
+            routing::post(jeweller::jeweller_shop_buy),
+        )
+        // Lumbermill (lumbermill.php)
+        .route("/lumbermill", routing::get(lumbermill::lumbermill_show))
+        .route(
+            "/lumbermill/plans",
+            routing::get(lumbermill::lumbermill_plans_show),
+        )
+        .route(
+            "/lumbermill/plans/buy/{id}",
+            routing::post(lumbermill::lumbermill_plan_buy),
+        )
+        .route(
+            "/lumbermill/workshop",
+            routing::get(lumbermill::lumbermill_workshop_show),
+        )
+        .route(
+            "/lumbermill/craft",
+            routing::post(lumbermill::lumbermill_craft),
+        )
+        .route(
+            "/lumbermill/continue",
+            routing::post(lumbermill::lumbermill_continue),
+        )
+        // Core creatures (core.php)
+        .route("/core", routing::get(core::core_show))
+        .route("/core/license", routing::post(core::core_license_buy))
+        .route("/core/library", routing::get(core::core_library_show))
+        .route(
+            "/core/explore",
+            routing::get(core::core_explore_show).post(core::core_explore),
+        )
+        .route("/core/train", routing::post(core::core_train))
+        .route(
+            "/core/activate/{id}/{mode}",
+            routing::post(core::core_activate),
+        )
+        .route("/core/arena", routing::get(core::core_arena_show))
+        .route(
+            "/core/arena/fight/{id}",
+            routing::post(core::core_arena_fight),
+        )
+        .route("/core/heal", routing::post(core::core_heal))
+        .route("/core/release/{id}", routing::post(core::core_release))
+        // Crafts guild (crafts.php)
+        .route("/crafts", routing::get(crafts::crafts_show))
+        .route(
+            "/crafts/missions",
+            routing::get(crafts::crafts_missions_show),
+        )
+        .route("/crafts/execute", routing::post(crafts::crafts_execute))
+        // Thieves guild (thieves.php)
+        .route("/thieves", routing::get(thieves::thieves_show))
+        .route(
+            "/thieves/missions",
+            routing::get(thieves::thieves_missions_show),
+        )
+        .route("/thieves/execute", routing::post(thieves::thieves_execute))
+        .route("/thieves/shop", routing::get(thieves::thieves_shop_show))
+        .route(
+            "/thieves/shop/buy",
+            routing::post(thieves::thieves_shop_buy),
         )
 }
 

@@ -1,0 +1,34 @@
+{# Gildia złodziei — misje #}
+{% extends "base.html" %}
+{% block content %}
+<h2>Misje złodziejskie</h2>
+
+<p>Energia: {{ energy }}</p>
+<p>Wytrychy: {{ lockpicks }}</p>
+
+{% if missions %}
+<table>
+  <tr>
+    <th>Nazwa</th>
+    <th>Koszt energii</th>
+    <th>Wymagane punkty</th>
+    <th>Akcja</th>
+  </tr>
+  {% for mission in missions %}
+  <tr>
+    <td>{{ mission.name }}</td>
+    <td>{{ mission.energy_cost }}</td>
+    <td>{{ mission.min_mpoints }}</td>
+    <td>
+      <form method="post" action="/thieves/execute">
+        <input type="hidden" name="mission_key" value="{{ mission.key }}">
+        <button type="submit">Wykonaj</button>
+      </form>
+    </td>
+  </tr>
+  {% endfor %}
+</table>
+{% else %}
+<p>Brak dostępnych misji.</p>
+{% endif %}
+{% endblock %}

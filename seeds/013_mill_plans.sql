@@ -1,0 +1,45 @@
+-- Bow and arrow plan catalog (owner = 0). Ported from PHP mill seed data.
+-- type: B = bow, R = arrows
+INSERT INTO mill (owner, name, type, cost, amount, level, lang, twohand, elite, elitetype) VALUES
+-- Normal bows (two-handed)
+(0, 'Łuk ćwiczebny', 'B', 500, 2, 1, 'pl', 'Y', 0, 'S'),
+(0, 'Łuk giermka', 'B', 2000, 8, 3, 'pl', 'Y', 0, 'S'),
+(0, 'Łuk krótki', 'B', 4000, 16, 5, 'pl', 'Y', 0, 'S'),
+(0, 'Łuk myśliwski', 'B', 8000, 40, 10, 'pl', 'Y', 0, 'S'),
+(0, 'Łuk łowiecki', 'B', 16000, 72, 15, 'pl', 'Y', 0, 'S'),
+(0, 'Łuk zwiadowcy', 'B', 32000, 120, 20, 'pl', 'Y', 0, 'S'),
+(0, 'Łuk wojskowy', 'B', 64000, 172, 25, 'pl', 'Y', 0, 'S'),
+(0, 'Łuk bitewny', 'B', 128000, 240, 30, 'pl', 'Y', 0, 'S'),
+(0, 'Łuk angularny', 'B', 256000, 400, 40, 'pl', 'Y', 0, 'S'),
+(0, 'Łuk wojenny', 'B', 512000, 600, 50, 'pl', 'Y', 0, 'S'),
+(0, 'Łuk podwójny', 'B', 1024000, 840, 60, 'pl', 'Y', 0, 'S'),
+(0, 'Łuk długi', 'B', 2048000, 1120, 70, 'pl', 'Y', 0, 'S'),
+(0, 'Łuk bojowy', 'B', 4096000, 1440, 80, 'pl', 'Y', 0, 'S'),
+(0, 'Łuk refleksyjny', 'B', 8192000, 1800, 90, 'pl', 'Y', 0, 'S'),
+(0, 'Łuk retrorefleksyjny', 'B', 16384000, 2200, 100, 'pl', 'Y', 0, 'S'),
+-- Normal arrows
+(0, 'Strzały ćwiczebne', 'R', 250, 1, 1, 'pl', 'N', 0, 'S'),
+(0, 'Strzały turniejowe', 'R', 1000, 2, 3, 'pl', 'N', 0, 'S'),
+(0, 'Strzały krótkie', 'R', 2000, 4, 5, 'pl', 'N', 0, 'S'),
+(0, 'Strzały myśliwskie', 'R', 4000, 10, 10, 'pl', 'N', 0, 'S'),
+(0, 'Strzały łowieckie', 'R', 8000, 18, 15, 'pl', 'N', 0, 'S'),
+(0, 'Strzały zwiadowcy', 'R', 16000, 30, 20, 'pl', 'N', 0, 'S'),
+(0, 'Strzały wojskowe', 'R', 32000, 43, 25, 'pl', 'N', 0, 'S'),
+(0, 'Strzały bitewne', 'R', 64000, 60, 30, 'pl', 'N', 0, 'S'),
+(0, 'Strzały liściaste', 'R', 128000, 100, 40, 'pl', 'N', 0, 'S'),
+(0, 'Strzały wojenne', 'R', 256000, 150, 50, 'pl', 'N', 0, 'S'),
+(0, 'Strzały haczykowe', 'R', 512000, 210, 60, 'pl', 'N', 0, 'S'),
+(0, 'Strzały długie', 'R', 1024000, 280, 70, 'pl', 'N', 0, 'S'),
+(0, 'Strzały bojowe', 'R', 2048000, 360, 80, 'pl', 'N', 0, 'S'),
+(0, 'Strzały wężowe', 'R', 4096000, 450, 90, 'pl', 'N', 0, 'S'),
+(0, 'Strzały ząbkowane', 'R', 8192000, 550, 100, 'pl', 'N', 0, 'S'),
+-- Elite bows (S = normal elite source, E = monster elite source)
+(0, 'Elitarny łuk ćwiczebny', 'B', 5000, 5, 1, 'pl', 'Y', 2, 'S'),
+(0, 'Elitarny łuk krótki', 'B', 40000, 160, 5, 'pl', 'Y', 6, 'S'),
+(0, 'Elitarny łuk myśliwski', 'B', 80000, 400, 10, 'pl', 'Y', 9, 'S'),
+(0, 'Elitarny łuk łowiecki', 'B', 160000, 720, 15, 'pl', 'Y', 14, 'S'),
+(0, 'Elitarny łuk ćwiczebny', 'B', 5000, 5, 1, 'pl', 'Y', 57, 'E'),
+(0, 'Elitarny łuk krótki', 'B', 40000, 160, 5, 'pl', 'Y', 61, 'E'),
+(0, 'Elitarny łuk myśliwski', 'B', 80000, 400, 10, 'pl', 'Y', 64, 'E'),
+(0, 'Elitarny łuk łowiecki', 'B', 160000, 720, 15, 'pl', 'Y', 67, 'E')
+ON CONFLICT DO NOTHING;

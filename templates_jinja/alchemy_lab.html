@@ -1,0 +1,29 @@
+{# Alchemia — laboratorium #}
+{% extends "base.html" %}
+{% block content %}
+<h2>Laboratorium</h2>
+
+<p>Energia: {{ energy }}</p>
+<p>Zioła: Illani {{ herbs.illani }}, Illanias {{ herbs.illanias }}, Nutari {{ herbs.nutari }}, Dynallca {{ herbs.dynallca }}</p>
+
+<h3>Warzyć miksturę</h3>
+{% if recipes %}
+<form method="post" action="/alchemy/brew">
+  <label for="recipe_id">Receptura:</label>
+  <select name="recipe_id" id="recipe_id">
+    {% for recipe in recipes %}
+    {% if recipe.owned %}
+    <option value="{{ recipe.id }}">{{ recipe.name }} (poziom {{ recipe.level }})</option>
+    {% endif %}
+    {% endfor %}
+  </select>
+
+  <label for="amount">Ilość:</label>
+  <input type="number" name="amount" id="amount" value="1" min="1">
+
+  <button type="submit">Uwarz</button>
+</form>
+{% else %}
+<p>Nie posiadasz żadnych receptur.</p>
+{% endif %}
+{% endblock %}

@@ -1,0 +1,18 @@
+{# Hodowla stworzeń — strona główna #}
+{% extends "base.html" %}
+{% block content %}
+<h2>Hodowla stworzeń</h2>
+
+{% if not has_license %}
+<p>Nie posiadasz licencji hodowcy. Koszt licencji: {{ license_cost }} złota.</p>
+<form method="post" action="/core/license">
+  <button type="submit">Kup licencję</button>
+</form>
+{% else %}
+<ul>
+  <li><a href="/core/library">Biblioteka stworzeń</a></li>
+  <li><a href="/core/explore">Eksploracja</a></li>
+  <li><a href="/core/arena">Arena</a></li>
+</ul>
+{% endif %}
+{% endblock %}

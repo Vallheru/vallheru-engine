@@ -1,0 +1,55 @@
+{# Hodowla stworzeń — biblioteka #}
+{% extends "base.html" %}
+{% block content %}
+<h2>Twoje stworzenia</h2>
+
+{% if creatures %}
+<table>
+  <tr>
+    <th>Nazwa</th>
+    <th>Typ</th>
+    <th>Siła</th>
+    <th>Obrona</th>
+    <th>Status</th>
+    <th>Aktywny</th>
+    <th>Płeć</th>
+    <th>Wygrane</th>
+    <th>Przegrane</th>
+    <th>Akcje</th>
+  </tr>
+  {% for creature in creatures %}
+  <tr>
+    <td>{{ creature.name }}</td>
+    <td>{{ creature.core_type }}</td>
+    <td>{{ creature.power }}</td>
+    <td>{{ creature.defense }}</td>
+    <td>{{ creature.status }}</td>
+    <td>{% if creature.active %}Tak{% else %}Nie{% endif %}</td>
+    <td>{{ creature.gender }}</td>
+    <td>{{ creature.wins }}</td>
+    <td>{{ creature.losses }}</td>
+    <td>
+      <form method="post" action="/core/train" style="display:inline">
+        <input type="hidden" name="creature_id" value="{{ creature.id }}">
+        <button type="submit">Trenuj</button>
+      </form>
+      <form method="post" action="/core/activate" style="display:inline">
+        <input type="hidden" name="creature_id" value="{{ creature.id }}">
+        <button type="submit">Aktywuj</button>
+      </form>
+      <form method="post" action="/core/heal" style="display:inline">
+        <input type="hidden" name="creature_id" value="{{ creature.id }}">
+        <button type="submit">Lecz</button>
+      </form>
+      <form method="post" action="/core/release" style="display:inline">
+        <input type="hidden" name="creature_id" value="{{ creature.id }}">
+        <button type="submit">Uwolnij</button>
+      </form>
+    </td>
+  </tr>
+  {% endfor %}
+</table>
+{% else %}
+<p>Nie posiadasz żadnych stworzeń.</p>
+{% endif %}
+{% endblock %}
