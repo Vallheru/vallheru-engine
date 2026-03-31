@@ -269,7 +269,7 @@ pub async fn jail_bail_pay(
     }
 }
 
-/// GET /jail/escape — Thief attempts to break out of jail.
+/// POST /jail/escape — Thief attempts to break out of jail.
 pub async fn jail_escape(
     State(state): State<AppState>,
     Extension(ctx): Extension<RequestContext>,

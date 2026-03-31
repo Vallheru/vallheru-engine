@@ -11,15 +11,15 @@
   <p>Pustelnik mówi: <i>Ach, jeszcze jeden martwy wojownik... Mogę Cię wskrzesić,
   ale będzie Cię to kosztowało <b>{{ hermit_cost }}</b> sztuk złota.</i></p>
   <p>
-    <a href="?action=resurrect">Wskrześ mnie!</a> |
+    <form method="post" action="?action=resurrect" style="display:inline"><button type="submit" class="link-btn">Wskrześ mnie!</button></form> |
     <a href="?action=wait">Poczekaj...</a> |
-    <a href="?action=back">Wróć do {{ return_city }}</a>
+    <form method="post" action="?action=back" style="display:inline"><button type="submit" class="link-btn">Wróć do {{ return_city }}</button></form>
   </p>
 
   {% else %}
   <p><b>Jesteś martwy.</b></p>
   <p>
-    <a href="?action=back">Powrót do {{ return_city }}</a> |
+    <form method="post" action="?action=back" style="display:inline"><button type="submit" class="link-btn">Powrót do {{ return_city }}</button></form> |
     <a href="?action=hermit">Poszukaj pustelnika</a>
   </p>
   {% endif %}

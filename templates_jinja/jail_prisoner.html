@@ -13,6 +13,8 @@
 
 {% if can_escape %}
 <br/>
-<a href="/jail/escape">Spróbuj ucieczki (koszt: 2 energii)</a>
+<form method="post" action="/jail/escape" style="display:inline">
+  <button type="submit" class="link-btn">Spróbuj ucieczki (koszt: 2 energii)</button>
+</form>
 {% endif %}
 {% endblock %}

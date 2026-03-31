@@ -5,15 +5,19 @@
 <h2>Szpital</h2>
 
 {% if state == "offer_heal" %}
-<p>Czy możesz mnie <a href="/hospital?action=heal">uzdrowić</a>?</p>
 {% if tribe_discount %}
 <p>Jasne, twój klan ma zniżkę na leczenie. Będzie cię to kosztowało <b>{{ cost }}</b> sztuk złota.</p>
 {% else %}
 <p>Jasne, będzie cię to kosztowało <b>{{ cost }}</b> sztuk złota.</p>
 {% endif %}
+<form method="post" action="/hospital?action=heal" style="display:inline">
+  <button type="submit" class="link-btn">Ulecz mnie</button>
+</form>
 {% elif state == "offer_resurrect" %}
 <p>Czy chcesz aby twa dusza wróciła do ciała?</p>
 <p>Będzie kosztowało to <b>{{ cost }}</b> sztuk złota.</p>
-<p><a href="/hospital?action=resurrect">Tak</a></p>
+<form method="post" action="/hospital?action=resurrect" style="display:inline">
+  <button type="submit" class="link-btn">Tak</button>
+</form>
 {% endif %}
 {% endblock %}

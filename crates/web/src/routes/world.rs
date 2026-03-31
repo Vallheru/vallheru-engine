@@ -32,10 +32,19 @@ fn location_routes() -> Router<AppState> {
         .route("/city", routing::get(city::show))
         .route("/travel", routing::get(travel::show))
         .route("/map", routing::get(map::show))
-        .route("/mountains", routing::get(locations::mountains))
-        .route("/forest", routing::get(locations::forest))
+        .route(
+            "/mountains",
+            routing::get(locations::mountains).post(locations::mountains),
+        )
+        .route(
+            "/forest",
+            routing::get(locations::forest).post(locations::forest),
+        )
         .route("/alley", routing::get(locations::alley))
-        .route("/hospital", routing::get(hospital::hospital_page))
+        .route(
+            "/hospital",
+            routing::get(hospital::hospital_page).post(hospital::hospital_action),
+        )
         .route(
             "/landfill",
             routing::get(locations::landfill_show).post(locations::landfill_work),
@@ -302,7 +311,7 @@ fn social_routes() -> Router<AppState> {
         .merge(court_routes())
         // Jail
         .route("/jail", routing::get(jail::jail_view))
-        .route("/jail/escape", routing::get(jail::jail_escape))
+        .route("/jail/escape", routing::post(jail::jail_escape))
         .route(
             "/jail/bail/{id}",
             routing::get(jail::jail_bail_confirm).post(jail::jail_bail_pay),

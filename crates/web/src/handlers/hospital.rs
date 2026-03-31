@@ -41,8 +41,36 @@ pub struct HospitalQuery {
 // Handlers
 // ---------------------------------------------------------------------------
 
-/// GET /hospital — dispatches based on `?action=` query parameter.
+/// GET /hospital — shows the healing/resurrection offer.
 pub async fn hospital_page(
+    State(app): State<AppState>,
+    Extension(ctx): Extension<RequestContext>,
+) -> Response {
+    let Some(ref user) = ctx.session_user else {
+        return crate::page::redirect("/login");
+    };
+
+    #[allow(clippy::cast_possible_truncation)]
+    let player_id = user.id as i32;
+
+    let player_row = match load_player(&app, player_id).await {
+        Ok(row) => row,
+        Err(resp) => return resp,
+    };
+
+    let Some(location) = Location::from_db(&player_row.location) else {
+        return crate::page::redirect("/login");
+    };
+
+    if !location.is_city() {
+        return error_page(&app, &ctx, "Nie znajdujesz się w mieście.");
+    }
+
+    hospital_show(&app, &ctx, player_id, &player_row).await
+}
+
+/// POST /hospital — performs the healing or resurrection action.
+pub async fn hospital_action(
     State(app): State<AppState>,
     Extension(ctx): Extension<RequestContext>,
     Query(query): Query<HospitalQuery>,
@@ -70,7 +98,7 @@ pub async fn hospital_page(
     match query.action.as_deref() {
         Some("heal") => hospital_heal(&app, &ctx, player_id, &player_row).await,
         Some("resurrect") => hospital_resurrect(&app, &ctx, player_id, &player_row).await,
-        _ => hospital_show(&app, &ctx, player_id, &player_row).await,
+        _ => crate::page::redirect("/hospital"),
     }
 }
 
