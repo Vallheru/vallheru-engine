@@ -598,3 +598,15 @@ Each entry includes:
 - **Needs new task**: No
 - **Status**: resolved
 - **Related tasks**: None
+
+### TD-049: Silent error suppression in all remaining handlers
+
+- **Type**: bug
+- **Discovered in**: Handler audit
+- **Description**: 85 `let _ =` patterns across 9 handler files (mail, room, outpost, content, quest, moderation, jail, tribe_forum, pages) silently discarded database operation errors. Covered deletions, bans, state updates, rewards, logs, and admin actions.
+- **Impact**: **High** — silent data loss and silent state corruption across all major subsystems.
+- **Action**: Replaced all DB-related `let _ =` with `if let Err(e)` + appropriate tracing level (error for mutations, warn for non-critical side-effects). Zero DB `let _ =` patterns remain in handler layer.
+- **Fixable in existing task**: Yes
+- **Needs new task**: No
+- **Status**: resolved
+- **Related tasks**: TD-048
