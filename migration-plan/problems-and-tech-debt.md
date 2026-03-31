@@ -358,3 +358,147 @@ Each entry includes:
 - **Needs new task**: No
 - **Status**: resolved
 - **Related tasks**: None
+
+### TD-029: Stored XSS via library texts rendered with |safe
+
+- **Type**: bug
+- **Discovered in**: TD-028 follow-up audit
+- **Description**: `library_add_action` and `library_admin_edit_action` stored user-submitted body text raw (no HTML escaping, no BBCode processing). The template rendered it with `{{ text.body|safe }}`, bypassing MiniJinja auto-escaping. Additionally, `get_library_text` did not filter by `is_approved`, allowing any user to access unapproved texts via `/library/text/{id}`.
+- **Impact**: **Critical** — any user could submit a library text with `<script>` tags, then share the URL to execute arbitrary JavaScript in other users' browsers.
+- **Action**: (a) Process body through `text::bbcode_to_html` (which html-escapes first) before storing in both `library_add_action` and `library_admin_edit_action`. (b) Added `is_approved` field to `LibraryTextRow` and the query. (c) Handler now blocks non-admin access to unapproved texts.
+- **Fixable in existing task**: No — standalone fix.
+- **Needs new task**: No
+- **Status**: resolved
+- **Related tasks**: None
+
+### TD-030: Stored XSS via updates body rendered with |safe
+
+- **Type**: bug
+- **Discovered in**: TD-028 follow-up audit
+- **Description**: `add_update_action` only replaced `\n` with `<br/>` — no HTML escaping. The template rendered with `{{ item.body|safe }}`. Staff/admin users could inject arbitrary HTML/JS.
+- **Impact**: **High** — staff could inject scripts visible to all players via the updates page.
+- **Action**: Replaced `body_raw.replace('\n', "<br/>")` with `text::bbcode_to_html(body_raw, &[], false)`, consistent with news.
+- **Fixable in existing task**: No — standalone fix.
+- **Needs new task**: No
+- **Status**: resolved
+- **Related tasks**: TD-029
+
+### TD-031: Stored XSS via notes body rendered with |safe
+
+- **Type**: bug
+- **Discovered in**: TD-028 follow-up audit
+- **Description**: `note_save` stored note body raw. Template rendered with `{{ n.body|safe }}`. Self-XSS only (notes visible to owning player), but inconsistent with other content processing.
+- **Impact**: **Low** — self-XSS only, but should be sanitized for consistency.
+- **Action**: Process body through `text::bbcode_to_html` before storing in `note_save`.
+- **Fixable in existing task**: No — standalone fix.
+- **Needs new task**: No
+- **Status**: resolved
+- **Related tasks**: TD-029
+
+### TD-032: Roleplay/OOC fields rendered raw with |safe
+
+- **Type**: bug
+- **Discovered in**: TD-028 follow-up audit
+- **Description**: `roleplay_view` passed `profile.roleplay` and `profile.ooc` directly to the template, which rendered with `|safe`. Legacy PHP-era data may contain unsanitized HTML.
+- **Impact**: **Medium** — depends on PHP-era storage format. If raw HTML was stored, it would execute.
+- **Action**: Process both fields through `text::bbcode_to_html` on read in `roleplay_view`.
+- **Fixable in existing task**: No — standalone fix.
+- **Needs new task**: No
+- **Status**: resolved
+- **Related tasks**: TD-029
+
+### TD-033: Username uniqueness not enforced at DB level
+
+- **Type**: design-risk
+- **Discovered in**: TD-028 follow-up audit
+- **Description**: `idx_players_username` was a regular INDEX, not UNIQUE. The `change_name` handler checks `is_username_taken` then updates, but concurrent rename requests to the same name could both pass the check (TOCTOU).
+- **Impact**: **Medium** — race condition could create duplicate usernames.
+- **Action**: Added migration 000029 that drops the old index and creates `CREATE UNIQUE INDEX idx_players_username ON players (LOWER(username))`.
+- **Fixable in existing task**: No — standalone migration.
+- **Needs new task**: No
+- **Status**: resolved
+- **Related tasks**: TD-027
+
+### TD-034: /tower-clock dead link in city navigation
+
+- **Type**: bug
+- **Discovered in**: TD-028 follow-up audit
+- **Description**: City navigation linked to `/tower-clock` which doesn't exist (PHP only had `tower.php`, mapped to `/tower` in Rust).
+- **Impact**: **Low** — tower clock link 404'd.
+- **Action**: Changed `/tower-clock` to `/tower` in both ALTARA_DISTRICTS and ARDULITH_DISTRICTS.
+- **Fixable in existing task**: Yes — extends TD-022 city nav fixes.
+- **Needs new task**: No
+- **Status**: resolved
+- **Related tasks**: TD-022
+
+### TD-035: Market purchases lack transaction wrapping
+
+- **Type**: design-risk
+- **Discovered in**: TD-028 follow-up audit
+- **Description**: All market purchase flows execute 3+ independent SQL statements (debit buyer, credit seller, transfer listing) without a transaction. Concurrent buyers can double-purchase the same listing or cause partial failures leaving inconsistent state.
+- **Impact**: **Critical** — gold duplication/loss possible via concurrent market purchases.
+- **Action**: Needs transaction wrapping with `pool.begin()` … `tx.commit()` and `SELECT … FOR UPDATE`.
+- **Fixable in existing task**: No — requires dedicated task.
+- **Needs new task**: Yes
+- **Status**: open
+- **Related tasks**: TD-027
+
+### TD-036: Outpost gold operations silently discard errors
+
+- **Type**: bug
+- **Discovered in**: TD-028 follow-up audit
+- **Description**: Multiple outpost handlers use `let _ =` on gold-modifying SQL queries. If deduction succeeds but creation fails (or vice versa), state becomes inconsistent.
+- **Impact**: **High** — gold loss or free outpost creation.
+- **Action**: Replace `let _ =` with proper error handling, ideally with transactions.
+- **Fixable in existing task**: No — needs focused fix.
+- **Needs new task**: No
+- **Status**: open
+- **Related tasks**: TD-035
+
+### TD-037: NPC shop buy creates item before deducting gold
+
+- **Type**: design-risk
+- **Discovered in**: TD-028 follow-up audit
+- **Description**: `buy_shop_equipment` INSERTs/UPDATEs the item then UPDATEs credits as separate queries. If credit deduction fails (CHECK constraint), item already exists — player gets free item.
+- **Impact**: **Medium** — exploitable with credit CHECK constraint race.
+- **Action**: Wrap in transaction or reverse order (deduct first, then grant).
+- **Fixable in existing task**: No — needs dedicated fix.
+- **Needs new task**: No
+- **Status**: open
+- **Related tasks**: TD-027, TD-035
+
+### TD-038: Bank deposit/withdraw TOCTOU race condition
+
+- **Type**: design-risk
+- **Discovered in**: TD-028 follow-up audit
+- **Description**: Bank handler reads credits+bank, computes in Rust, writes absolute values back. Concurrent deposits can overwrite each other.
+- **Impact**: **Medium** — deposit/withdrawal can be lost under concurrent requests.
+- **Action**: Use atomic relative UPDATE or SELECT … FOR UPDATE.
+- **Fixable in existing task**: No — needs dedicated fix.
+- **Needs new task**: No
+- **Status**: open
+- **Related tasks**: TD-027, TD-035
+
+### TD-039: Missing /stats and /view player profile routes
+
+- **Type**: migration-gap
+- **Discovered in**: TD-028 follow-up audit
+- **Description**: 10+ templates link to `/stats?id=N` or `/view?view=N` for player profiles, but no route or handler exists. Every player name link in mail, forums, chat, stafflist, memberlist, jail, court, and alley is broken.
+- **Impact**: **High** — all player profile links are dead.
+- **Action**: Implement player profile handler and register route. Decide on canonical URL pattern.
+- **Fixable in existing task**: No — needs new task.
+- **Needs new task**: Yes
+- **Status**: open
+- **Related tasks**: None
+
+### TD-040: Missing /jail/escape route and handler
+
+- **Type**: migration-gap
+- **Discovered in**: TD-028 follow-up audit
+- **Description**: Template renders escape link for thief-class prisoners but no handler or route exists. Half-implemented feature.
+- **Impact**: **Medium** — jail escape link 404s for thief players.
+- **Action**: Port jail escape logic from jail.php.
+- **Fixable in existing task**: No — needs new task.
+- **Needs new task**: Yes
+- **Status**: open
+- **Related tasks**: None

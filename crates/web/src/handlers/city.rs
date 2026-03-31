@@ -197,7 +197,7 @@ static ALTARA_DISTRICTS: &[DistrictSpec] = &[
         "Zamek",
         &[
             ("/updates", "Wieści"),
-            ("/tower-clock", "Zegar miejski"),
+            ("/tower", "Zegar miejski"),
             ("/jail", "Lochy"),
             ("/court", "Gmach Sądu"),
             ("/polls", "Hala zgromadzeń"),
@@ -285,7 +285,7 @@ static ARDULITH_DISTRICTS: &[DistrictSpec] = &[
         "Królewski Dąb",
         &[
             ("/updates", "Wieści"),
-            ("/tower-clock", "Zegar miejski"),
+            ("/tower", "Zegar miejski"),
             ("/news", "Plotki"),
             ("/newspaper", "Redakcja gazety"),
             ("/alley", "Aleja Zasłużonych"),

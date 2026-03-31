@@ -403,7 +403,7 @@ pub async fn add_update_action(
         return Redirect::to("/updates/add").into_response();
     }
 
-    let body = body_raw.replace('\n', "<br/>");
+    let body = text::bbcode_to_html(body_raw, &[], false);
 
     let author = format!("({})", user.name);
     let _ = cq::insert_update(&app.pool, title, &body, &author).await;

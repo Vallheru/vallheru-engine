@@ -29,6 +29,7 @@ pub struct LibraryTextRow {
     pub author_name: String,
     pub author_id: i64,
     pub text_type: String,
+    pub is_approved: bool,
 }
 
 #[derive(Debug, sqlx::FromRow, serde::Serialize)]
@@ -263,7 +264,7 @@ pub async fn get_library_text(
     text_id: i64,
 ) -> Result<Option<LibraryTextRow>, sqlx::Error> {
     sqlx::query_as::<_, LibraryTextRow>(
-        "SELECT id, title, body, author_name, author_id, text_type
+        "SELECT id, title, body, author_name, author_id, text_type, is_approved
          FROM library_texts WHERE id = $1",
     )
     .bind(text_id)

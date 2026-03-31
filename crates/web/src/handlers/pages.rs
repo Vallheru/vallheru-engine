@@ -6,6 +6,7 @@ use axum::{Extension, Form};
 
 use vallheru_data::queries::pages as pq;
 use vallheru_domain::social::pages as pages_domain;
+use vallheru_domain::text;
 
 use crate::middleware::context::RequestContext;
 use crate::page::PageMeta;
@@ -280,13 +281,14 @@ pub async fn note_save(
     };
 
     let title = form.title.trim();
-    let body = form.body.trim();
+    let body_raw = form.body.trim();
 
-    if !title.is_empty() && !body.is_empty() {
+    if !title.is_empty() && !body_raw.is_empty() {
+        let body = text::bbcode_to_html(body_raw, &[], false);
         if let Some(id) = q.edit {
-            let _ = pq::update_note(&app.pool, id, user.id, title, body).await;
+            let _ = pq::update_note(&app.pool, id, user.id, title, &body).await;
         } else {
-            let _ = pq::insert_note(&app.pool, user.id, title, body).await;
+            let _ = pq::insert_note(&app.pool, user.id, title, &body).await;
         }
     }
 
@@ -433,10 +435,16 @@ pub async fn library_text(
         return Redirect::to("/library").into_response();
     };
 
+    let can_manage = pages_domain::can_manage_library(&user.rank);
+
+    // Non-admins may only view approved texts.
+    if !row.is_approved && !can_manage {
+        return Redirect::to("/library").into_response();
+    }
+
     let comment_count = vallheru_data::queries::content::count_comments(&app.pool, "library", id)
         .await
         .unwrap_or(0);
-    let can_manage = pages_domain::can_manage_library(&user.rank);
 
     let meta = PageMeta::titled(&row.title);
     let base = app.templates.build_context(&ctx, &meta);
@@ -484,14 +492,15 @@ pub async fn library_add_action(
     };
 
     let title = form.title.trim();
-    let body = form.body.trim();
+    let body_raw = form.body.trim();
     let tt = pages_domain::LibraryTextType::parse(&form.text_type);
 
-    if !title.is_empty() && !body.is_empty() {
+    if !title.is_empty() && !body_raw.is_empty() {
+        let body = text::bbcode_to_html(body_raw, &[], false);
         let _ = pq::insert_library_text(
             &app.pool,
             title,
-            body,
+            &body,
             &user.name,
             user.id,
             tt.as_str(),
@@ -573,11 +582,12 @@ pub async fn library_admin_edit_action(
     }
 
     let title = form.title.trim();
-    let body = form.body.trim();
+    let body_raw = form.body.trim();
     let tt = pages_domain::LibraryTextType::parse(&form.text_type);
 
-    if !title.is_empty() && !body.is_empty() {
-        let _ = pq::update_library_text(&app.pool, id, title, body, tt.as_str()).await;
+    if !title.is_empty() && !body_raw.is_empty() {
+        let body = text::bbcode_to_html(body_raw, &[], false);
+        let _ = pq::update_library_text(&app.pool, id, title, &body, tt.as_str()).await;
     }
 
     Redirect::to("/library/admin").into_response()
@@ -646,8 +656,8 @@ pub async fn roleplay_view(
     let view = RoleplayView {
         base,
         player_name: profile.user,
-        roleplay: profile.roleplay,
-        ooc: profile.ooc,
+        roleplay: text::bbcode_to_html(&profile.roleplay, &[], false),
+        ooc: text::bbcode_to_html(&profile.ooc, &[], false),
         prev_id,
         next_id,
     };
