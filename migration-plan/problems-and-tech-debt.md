@@ -334,3 +334,15 @@ Each entry includes:
 - **Needs new task**: No
 - **Status**: resolved
 - **Related tasks**: TD-021, TD-025
+
+### TD-027: No DB-level guard against negative currency balances
+
+- **Type**: design-risk
+- **Discovered in**: TD-025 follow-up audit
+- **Description**: All 20+ SQL queries that deduct credits/platinum/bank do `credits = credits - $N` without an `AND credits >= $N` guard or a CHECK constraint. While every handler checks the balance in Rust before the deduction, a concurrent request can slip through the TOCTOU window and drive balances negative.
+- **Impact**: **Medium** — race condition could allow gold/platinum/bank duplication via concurrent requests. Unlikely in normal play but exploitable.
+- **Action**: Added migration 000028 with CHECK constraints: `credits >= 0`, `platinum >= 0`, `bank >= 0`. These make the DB the last line of defense. Handler-level checks remain for good UX messages.
+- **Fixable in existing task**: No — standalone migration.
+- **Needs new task**: No
+- **Status**: resolved
+- **Related tasks**: None
