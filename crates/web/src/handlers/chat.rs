@@ -123,7 +123,9 @@ pub async fn chat_page(
     };
 
     // Mark player as on the Chat page.
-    let _ = q::set_page_chat(&app.pool, user.id).await;
+    if let Err(e) = q::set_page_chat(&app.pool, user.id).await {
+        tracing::warn!("Failed to set chat page marker: {e}");
+    }
 
     // Session-like state: we store chat_length as a query param round-trip.
     // For simplicity, default to 25 and use query params to adjust.
@@ -319,13 +321,20 @@ pub async fn chat_send(
     };
 
     // Insert message.
-    let _ = q::insert_message(&app.pool, &author, &body_to_store, user.id, recipient_id).await;
+    if let Err(e) =
+        q::insert_message(&app.pool, &author, &body_to_store, user.id, recipient_id).await
+    {
+        tracing::error!("Failed to insert chat message: {e}");
+        return error_redirect("Wystąpił błąd podczas wysyłania wiadomości.");
+    }
 
     // Innkeeper bot response (public messages only).
     if recipient_id == 0 {
         // Check for throw/shoot inn actions.
         if let Some((npc_target, npc_response)) = text::check_inn_action(&raw_msg, &user.name) {
-            let _ = q::insert_message(&app.pool, &npc_target, &npc_response, 0, 0).await;
+            if let Err(e) = q::insert_message(&app.pool, &npc_target, &npc_response, 0, 0).await {
+                tracing::warn!("Failed to insert NPC action: {e}");
+            }
         }
 
         // Check for bot trigger.
@@ -338,12 +347,20 @@ pub async fn chat_send(
                     "Karczmarza nie ma, teraz {} tu rządzi!",
                     text::strip_tags(&innkeeper_name),
                 );
-                let _ = q::insert_message(&app.pool, "<i>Barnaba</i>", &barnaba_msg, 0, 0).await;
+                if let Err(e) =
+                    q::insert_message(&app.pool, "<i>Barnaba</i>", &barnaba_msg, 0, 0).await
+                {
+                    tracing::warn!("Failed to insert Barnaba response: {e}");
+                }
             } else {
                 // Bot responds.
                 let bot_answer = chat_domain::bot_response(&raw_msg, &user.name, None, None);
                 if let Some(answer) = bot_answer {
-                    let _ = q::insert_message(&app.pool, "<i>Karczmarz</i>", &answer, 0, 0).await;
+                    if let Err(e) =
+                        q::insert_message(&app.pool, "<i>Karczmarz</i>", &answer, 0, 0).await
+                    {
+                        tracing::warn!("Failed to insert bot response: {e}");
+                    }
                 }
             }
         }
@@ -368,7 +385,9 @@ pub async fn chat_admin_delete(
         return error_redirect("Zapomnij o tym!");
     }
     if let Some(tid) = query.tid {
-        let _ = q::delete_message(&app.pool, tid).await;
+        if let Err(e) = q::delete_message(&app.pool, tid).await {
+            tracing::error!(message_id = tid, error = %e, "Failed to delete chat message");
+        }
     }
     crate::page::redirect_after_post("/chat")
 }
@@ -400,7 +419,9 @@ pub async fn chat_admin_ban(
     match action {
         "ban" => {
             let resets = duration * 7;
-            let _ = q::ban_player(&app.pool, ban_id, resets).await;
+            if let Err(e) = q::ban_player(&app.pool, ban_id, resets).await {
+                tracing::error!(player_id = ban_id, error = %e, "Failed to ban player from chat");
+            }
             // Log the ban.
             let verdict = form.verdict.as_deref().unwrap_or("");
             tracing::info!(
@@ -412,7 +433,9 @@ pub async fn chat_admin_ban(
             );
         }
         "unban" => {
-            let _ = q::unban_player(&app.pool, ban_id).await;
+            if let Err(e) = q::unban_player(&app.pool, ban_id).await {
+                tracing::error!(player_id = ban_id, error = %e, "Failed to unban player from chat");
+            }
             tracing::info!(player_id = ban_id, admin_id = user.id, "Chat ban removed");
         }
         _ => {}
@@ -454,10 +477,14 @@ pub async fn chat_admin_give(
             .flatten()
             .unwrap_or_default();
         let body = format!("Proszę {target_name} oto {item} {comment}");
-        let _ = q::insert_message(&app.pool, &author, &body, 0, 0).await;
+        if let Err(e) = q::insert_message(&app.pool, &author, &body, 0, 0).await {
+            tracing::warn!(error = %e, "Failed to insert admin give message (targeted)");
+        }
     } else {
         let body = format!("Uwaga! Oto {item} dla wszystkich {comment}");
-        let _ = q::insert_message(&app.pool, &author, &body, 0, 0).await;
+        if let Err(e) = q::insert_message(&app.pool, &author, &body, 0, 0).await {
+            tracing::warn!(error = %e, "Failed to insert admin give message (broadcast)");
+        }
     }
 
     crate::page::redirect_after_post("/chat")
@@ -478,7 +505,9 @@ pub async fn chat_admin_prune(
         return error_redirect("Zapomnij o tym!");
     }
 
-    let _ = q::prune_public_messages(&app.pool).await;
+    if let Err(e) = q::prune_public_messages(&app.pool).await {
+        tracing::error!(error = %e, "Failed to prune chat messages");
+    }
     tracing::info!(admin_id = user.id, "Chat pruned");
     crate::page::redirect_after_post("/chat")
 }

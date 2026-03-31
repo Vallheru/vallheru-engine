@@ -290,7 +290,9 @@ pub async fn forum_new_posts(
     let forum_time = player_row.as_ref().map_or(0, |p| p.forum_time);
 
     // Update forum_time for this player.
-    let _ = fq::update_forum_time(&app.pool, user.id).await;
+    if let Err(e) = fq::update_forum_time(&app.pool, user.id).await {
+        tracing::warn!("Failed to update forum_time: {e}");
+    }
 
     let total_unread = fq::count_unread(&app.pool, forum_time, &accessible_ids)
         .await
@@ -639,7 +641,12 @@ pub async fn forum_add_reply(
     let bad_words = vec![];
     let processed_body = text::bbcode_to_html(body, &bad_words, false);
 
-    let _ = fq::insert_reply(&app.pool, topic_id, &user.name, user.id, &processed_body).await;
+    if let Err(e) =
+        fq::insert_reply(&app.pool, topic_id, &user.name, user.id, &processed_body).await
+    {
+        tracing::error!("Failed to insert forum reply: {e}");
+        return Redirect::to("/forums").into_response();
+    }
 
     Redirect::to(&format!("/forums/topic/{topic_id}")).into_response()
 }
@@ -664,7 +671,10 @@ pub async fn forum_delete_topic(
         .flatten()
         .map_or(0, |t| t.category_id);
 
-    let _ = fq::delete_topic(&app.pool, topic_id).await;
+    if let Err(e) = fq::delete_topic(&app.pool, topic_id).await {
+        tracing::error!("Failed to delete topic {topic_id}: {e}");
+        return Redirect::to("/forums").into_response();
+    }
 
     if category_id > 0 {
         Redirect::to(&format!("/forums/category/{category_id}")).into_response()
@@ -694,7 +704,10 @@ pub async fn forum_bulk_delete_topics(
         .collect();
 
     if !ids.is_empty() {
-        let _ = fq::delete_topics(&app.pool, category_id, &ids).await;
+        if let Err(e) = fq::delete_topics(&app.pool, category_id, &ids).await {
+            tracing::error!("Failed to bulk-delete topics: {e}");
+            return Redirect::to("/forums").into_response();
+        }
     }
 
     Redirect::to(&format!("/forums/category/{category_id}")).into_response()
@@ -714,7 +727,10 @@ pub async fn forum_delete_reply(
         return Redirect::to("/forums").into_response();
     }
 
-    let _ = fq::delete_reply(&app.pool, reply_id).await;
+    if let Err(e) = fq::delete_reply(&app.pool, reply_id).await {
+        tracing::error!("Failed to delete reply {reply_id}: {e}");
+        return Redirect::to("/forums").into_response();
+    }
 
     Redirect::to(&format!("/forums/topic/{}", q.topic)).into_response()
 }
@@ -745,7 +761,10 @@ pub async fn forum_bulk_delete_replies(
         .collect();
 
     if !ids.is_empty() {
-        let _ = fq::delete_replies(&app.pool, topic_id, &ids).await;
+        if let Err(e) = fq::delete_replies(&app.pool, topic_id, &ids).await {
+            tracing::error!("Failed to bulk-delete replies: {e}");
+            return Redirect::to("/forums").into_response();
+        }
     }
 
     Redirect::to(&format!("/forums/topic/{topic_id}")).into_response()
@@ -766,7 +785,9 @@ pub async fn forum_toggle_close(
     }
 
     let close = q.action == "Y";
-    let _ = fq::set_topic_closed(&app.pool, topic_id, close).await;
+    if let Err(e) = fq::set_topic_closed(&app.pool, topic_id, close).await {
+        tracing::error!("Failed to toggle topic close: {e}");
+    }
 
     Redirect::to(&format!("/forums/topic/{topic_id}")).into_response()
 }
@@ -786,7 +807,9 @@ pub async fn forum_toggle_sticky(
     }
 
     let sticky = q.action == "Y";
-    let _ = fq::set_topic_sticky(&app.pool, topic_id, sticky).await;
+    if let Err(e) = fq::set_topic_sticky(&app.pool, topic_id, sticky).await {
+        tracing::error!("Failed to toggle topic sticky: {e}");
+    }
 
     Redirect::to(&format!("/forums/topic/{topic_id}")).into_response()
 }
@@ -839,7 +862,10 @@ pub async fn forum_move_action(
         return Redirect::to("/forums").into_response();
     }
 
-    let _ = fq::move_topic(&app.pool, topic_id, form.category).await;
+    if let Err(e) = fq::move_topic(&app.pool, topic_id, form.category).await {
+        tracing::error!("Failed to move topic {topic_id}: {e}");
+        return Redirect::to("/forums").into_response();
+    }
 
     Redirect::to(&format!("/forums/topic/{topic_id}")).into_response()
 }

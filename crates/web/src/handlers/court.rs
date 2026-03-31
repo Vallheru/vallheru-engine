@@ -347,13 +347,17 @@ pub async fn court_doc_create(
         return crate::page::redirect(&format!("/court/create/{kind}"));
     }
 
-    let _ = vallheru_data::queries::moderation::create_court_doc(
+    if let Err(e) = vallheru_data::queries::moderation::create_court_doc(
         &state.pool,
         &form.ttitle,
         &form.body,
         &kind,
     )
-    .await;
+    .await
+    {
+        tracing::error!("Failed to create court doc: {e}");
+        return Redirect::to("/court").into_response();
+    }
 
     crate::page::redirect_after_post(&format!("/court/docs/{kind}"))
 }
@@ -405,13 +409,17 @@ pub async fn court_doc_edit(
         return crate::page::redirect(&format!("/court/edit/{doc_id}"));
     }
 
-    let _ = vallheru_data::queries::moderation::update_court_doc(
+    if let Err(e) = vallheru_data::queries::moderation::update_court_doc(
         &state.pool,
         doc_id,
         &form.ttitle,
         &form.body,
     )
-    .await;
+    .await
+    {
+        tracing::error!("Failed to update court doc {doc_id}: {e}");
+        return Redirect::to("/court").into_response();
+    }
 
     crate::page::redirect_after_post(&format!("/court/doc/{doc_id}"))
 }
@@ -436,13 +444,17 @@ pub async fn court_add_comment(
     };
     let author = format!("{} ID: {}", user.name, user.id);
 
-    let _ = vallheru_data::queries::moderation::add_court_comment(
+    if let Err(e) = vallheru_data::queries::moderation::add_court_comment(
         &state.pool,
         form.tid,
         &author,
         &form.body,
     )
-    .await;
+    .await
+    {
+        tracing::error!("Failed to add court comment: {e}");
+        return Redirect::to("/court").into_response();
+    }
 
     crate::page::redirect_after_post(&format!("/court/doc/{}", form.tid))
 }
@@ -464,7 +476,12 @@ pub async fn court_delete_comment(
         return Redirect::to("/court").into_response();
     }
 
-    let _ = vallheru_data::queries::moderation::delete_court_comment(&state.pool, comment_id).await;
+    if let Err(e) =
+        vallheru_data::queries::moderation::delete_court_comment(&state.pool, comment_id).await
+    {
+        tracing::error!("Failed to delete court comment {comment_id}: {e}");
+        return Redirect::to("/court").into_response();
+    }
 
     crate::page::redirect_after_post(&format!("/court/doc/{}", q.doc_id))
 }
