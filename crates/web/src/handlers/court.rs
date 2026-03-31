@@ -431,7 +431,9 @@ pub async fn court_add_comment(
         return crate::page::redirect(&format!("/court/doc/{}", form.tid));
     }
 
-    let user = ctx.session_user.as_ref().unwrap();
+    let Some(ref user) = ctx.session_user else {
+        return Redirect::to("/court").into_response();
+    };
     let author = format!("{} ID: {}", user.name, user.id);
 
     let _ = vallheru_data::queries::moderation::add_court_comment(

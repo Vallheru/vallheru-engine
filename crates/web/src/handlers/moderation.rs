@@ -134,7 +134,9 @@ pub async fn staff_jail_action(
     Extension(ctx): Extension<RequestContext>,
     Form(form): Form<JailForm>,
 ) -> Response {
-    let user = ctx.session_user.as_ref().unwrap();
+    let Some(ref user) = ctx.session_user else {
+        return crate::page::redirect("/staff/jail");
+    };
 
     if form.prisoner == 1 {
         return crate::page::redirect("/staff/jail");
@@ -239,7 +241,9 @@ pub async fn staff_chat_ban_action(
     Extension(ctx): Extension<RequestContext>,
     Form(form): Form<BanForm>,
 ) -> Response {
-    let user = ctx.session_user.as_ref().unwrap();
+    let Some(ref user) = ctx.session_user else {
+        return crate::page::redirect("/staff/chatban");
+    };
 
     if form.czat == "blok" {
         let weeks = form.duration.unwrap_or(1);
@@ -276,7 +280,9 @@ pub async fn staff_forum_ban_action(
     Extension(ctx): Extension<RequestContext>,
     Form(form): Form<BanForm>,
 ) -> Response {
-    let user = ctx.session_user.as_ref().unwrap();
+    let Some(ref user) = ctx.session_user else {
+        return crate::page::redirect("/staff/forumban");
+    };
 
     if form.czat == "blok" {
         let weeks = form.duration.unwrap_or(1);
@@ -365,7 +371,9 @@ pub async fn staff_takeaway_action(
     Extension(ctx): Extension<RequestContext>,
     Form(form): Form<TakeawayForm>,
 ) -> Response {
-    let user = ctx.session_user.as_ref().unwrap();
+    let Some(ref user) = ctx.session_user else {
+        return crate::page::redirect("/staff/takeaway");
+    };
 
     if form.verdict.is_empty() {
         return crate::page::redirect("/staff/takeaway");

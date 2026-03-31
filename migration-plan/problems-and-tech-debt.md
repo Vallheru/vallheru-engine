@@ -274,3 +274,39 @@ Each entry includes:
 - **Needs new task**: No
 - **Status**: resolved
 - **Related tasks**: TD-013
+
+### TD-022: City navigation links point to wrong route paths
+
+- **Type**: bug
+- **Discovered in**: TD-021 follow-up audit
+- **Description**: City navigation arrays in `city.rs` used `/outpost` (PHP name) instead of `/garrison` (Rust route) for the garrison missions link, and `/grid` instead of `/labyrinth` for the labyrinth link. Players clicking these in Altara or Ardulith would get 404s or fall through to PHP.
+- **Impact**: **Medium** — two city navigation links broken in both cities.
+- **Action**: Fixed hrefs to `/garrison` and `/labyrinth` matching the actual Rust route registrations in `world.rs`.
+- **Fixable in existing task**: No — standalone fix.
+- **Needs new task**: No
+- **Status**: resolved
+- **Related tasks**: TD-020
+
+### TD-023: Unsafe `unwrap()` on `session_user` in staff handlers
+
+- **Type**: tech-debt
+- **Discovered in**: TD-021 follow-up audit
+- **Description**: `court_add_comment`, `staff_jail_action`, `staff_chat_ban_action`, `staff_forum_ban_action`, and `staff_takeaway_action` used `ctx.session_user.as_ref().unwrap()`. Although protected by `require_any_rank` middleware, a misconfigured route could cause a runtime panic.
+- **Impact**: **Low** — middleware guarantees safety, but pattern is fragile and inconsistent with the `let Some(ref user) = ... else { return redirect(...) }` convention used everywhere else.
+- **Action**: Replaced all five `unwrap()` calls with `let Some(ref user) = ctx.session_user else { return redirect(...) }` pattern.
+- **Fixable in existing task**: No — standalone fix.
+- **Needs new task**: No
+- **Status**: resolved
+- **Related tasks**: None
+
+### TD-024: Hospital route missing from fallback migration registry
+
+- **Type**: bug
+- **Discovered in**: TD-021 follow-up audit
+- **Description**: The `/hospital` route was registered in `world.rs` but not listed in `fallback.rs::migrated_routes()`. Nginx reverse proxy uses this list to decide which routes go to Rust vs PHP — missing the entry means `/hospital` requests would be forwarded to PHP instead of Rust.
+- **Impact**: **Medium** — hospital page would not work when behind the nginx proxy.
+- **Action**: Added `r("/hospital", "world", RouteStatus::Staged)` to the migration registry.
+- **Fixable in existing task**: No — standalone fix.
+- **Needs new task**: No
+- **Status**: resolved
+- **Related tasks**: TD-011

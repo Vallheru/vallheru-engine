@@ -149,7 +149,7 @@ static ALTARA_DISTRICTS: &[DistrictSpec] = &[
             ("/outposts", "Strażnica"),
             ("/hunters", "Gildia Łowców"),
             ("/guilds2", "Aula Gladiatorów"),
-            ("/outpost", "Prefektura Gwardii"),
+            ("/garrison", "Prefektura Gwardii"),
         ],
     ),
     (
@@ -175,7 +175,7 @@ static ALTARA_DISTRICTS: &[DistrictSpec] = &[
     (
         "Zachodnia Strona",
         &[
-            ("/grid", "Labirynt"),
+            ("/labyrinth", "Labirynt"),
             ("/tower", "Magiczna Wieża"),
             ("/temple", "Świątynia"),
             ("/hospital", "Szpital"),
@@ -278,7 +278,7 @@ static ARDULITH_DISTRICTS: &[DistrictSpec] = &[
             ("/core", "Polana Chowańców"),
             ("/polls", "Hala zgromadzeń"),
             ("/guilds2", "Aula Gladiatorów"),
-            ("/outpost", "Prefektura Gwardii"),
+            ("/garrison", "Prefektura Gwardii"),
         ],
     ),
     (

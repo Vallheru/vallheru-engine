@@ -80,6 +80,7 @@ pub fn migrated_routes() -> Vec<MigratedRoute> {
         r("/alley", "world", RouteStatus::Staged),
         r("/rest", "world", RouteStatus::Staged),
         r("/landfill", "world", RouteStatus::Staged),
+        r("/hospital", "world", RouteStatus::Staged),
         // --- Group D: Deity, Temple & Tower ---
         r("/deity", "deity", RouteStatus::Staged),
         r("/deity/*", "deity", RouteStatus::Staged),
