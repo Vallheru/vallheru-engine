@@ -502,10 +502,13 @@ pub async fn chronicle_start(
     }
 
     // Set player location to travelling.
-    let _ = sqlx::query("UPDATE players SET location = 'Podróż' WHERE id = $1")
+    if let Err(e) = sqlx::query("UPDATE players SET location = 'Podróż' WHERE id = $1")
         .bind(player.id)
         .execute(&app.pool)
-        .await;
+        .await
+    {
+        tracing::error!(error = %e, "Failed to set player location for mission");
+    }
 
     // Render the first room.
     let actions = mission_loader::collect_room_actions(&exits, &mobs, &items);
@@ -558,12 +561,17 @@ pub async fn mission_advance(
 
     if player.hp <= 0 {
         // Dead — abort mission and return.
-        let _ = mq::delete_active_mission(&app.pool, player.id).await;
-        let _ = sqlx::query("UPDATE players SET location = $1 WHERE id = $2")
+        if let Err(e) = mq::delete_active_mission(&app.pool, player.id).await {
+            tracing::error!(error = %e, "Failed to delete active mission (player dead)");
+        }
+        if let Err(e) = sqlx::query("UPDATE players SET location = $1 WHERE id = $2")
             .bind(&active.return_location)
             .bind(player.id)
             .execute(&app.pool)
-            .await;
+            .await
+        {
+            tracing::error!(error = %e, "Failed to restore player location (player dead)");
+        }
         return err(
             &app,
             &ctx,
@@ -612,12 +620,17 @@ pub async fn mission_advance(
 
     if mission_complete {
         // Mission is done — clean up.
-        let _ = mq::delete_active_mission(&app.pool, player.id).await;
-        let _ = sqlx::query("UPDATE players SET location = $1 WHERE id = $2")
+        if let Err(e) = mq::delete_active_mission(&app.pool, player.id).await {
+            tracing::error!(error = %e, "Failed to delete active mission on completion");
+        }
+        if let Err(e) = sqlx::query("UPDATE players SET location = $1 WHERE id = $2")
             .bind(&active.return_location)
             .bind(player.id)
             .execute(&app.pool)
-            .await;
+            .await
+        {
+            tracing::error!(error = %e, "Failed to restore player location on mission complete");
+        }
 
         // Award rewards if applicable.
         let reward = mission::calculate_mission_reward(
@@ -627,14 +640,17 @@ pub async fn mission_advance(
             active.reached_quest_target(),
         );
         if reward.gold > 0 || reward.mission_points > 0 {
-            let _ = sqlx::query(
+            if let Err(e) = sqlx::query(
                 "UPDATE players SET credits = credits + $1, mpoints = mpoints + $2 WHERE id = $3",
             )
             .bind(reward.gold)
             .bind(reward.mission_points)
             .bind(player.id)
             .execute(&app.pool)
-            .await;
+            .await
+            {
+                tracing::error!(error = %e, "Failed to grant mission rewards");
+            }
         }
 
         let meta = PageMeta::titled("Przygoda");
@@ -805,7 +821,7 @@ pub async fn maze_explore(
         "Zużył{gender_suffix} na to {energy_cost:.1} energii.<br />"
     );
 
-    let _ = sqlx::query(
+    if let Err(e) = sqlx::query(
         "UPDATE players SET credits = credits + $1, platinum = platinum + $2, \
          energy = energy + $3 WHERE id = $4",
     )
@@ -814,7 +830,10 @@ pub async fn maze_explore(
     .bind(energy_delta)
     .bind(player.id)
     .execute(&app.pool)
-    .await;
+    .await
+    {
+        tracing::error!(error = %e, "Failed to grant maze rewards");
+    }
 
     let meta = PageMeta::titled("Labirynt Ardulith");
     let base = app.templates.build_context(&ctx, &meta);
@@ -916,10 +935,13 @@ async fn try_find_map(app: &AppState, player: &PlayerRow, roll: i32) -> i32 {
         Some((val,)) => {
             let count: i32 = val.parse().unwrap_or(0);
             if count > 0 {
-                let _ = sqlx::query("UPDATE settings SET value = $1 WHERE setting = 'maps'")
+                if let Err(e) = sqlx::query("UPDATE settings SET value = $1 WHERE setting = 'maps'")
                     .bind((count - 1).to_string())
                     .execute(&app.pool)
-                    .await;
+                    .await
+                {
+                    tracing::error!(error = %e, "Failed to decrement map count");
+                }
                 1
             } else {
                 0

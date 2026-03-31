@@ -259,9 +259,12 @@ pub async fn jail_bail_pay(
                 "Kaucję za ciebie wpłacił gracz ID {payer_id}. \
                  Zostałeś zwolniony z lochów."
             );
-            let _ =
+            if let Err(e) =
                 vallheru_data::queries::moderation::insert_game_log(&state.pool, pid, &msg, 'J')
-                    .await;
+                    .await
+            {
+                tracing::warn!(error = %e, "Failed to log bail payment");
+            }
 
             crate::page::redirect("/jail")
         }
@@ -400,18 +403,23 @@ async fn escape_failure(
         1000 * thievery_level
     };
 
-    let _ = sqlx::query("UPDATE players SET energy = energy - 2 WHERE id = $1")
+    if let Err(e) = sqlx::query("UPDATE players SET energy = energy - 2 WHERE id = $1")
         .bind(player_id)
         .execute(&state.pool)
-        .await;
+        .await
+    {
+        tracing::error!(error = %e, "Failed to deduct escape energy");
+    }
 
-    let _ = sqlx::query(
-        "UPDATE jail SET duration = duration + 7, cost = cost + $1 WHERE prisoner = $2",
-    )
-    .bind(bail_increase)
-    .bind(player_id)
-    .execute(&state.pool)
-    .await;
+    if let Err(e) =
+        sqlx::query("UPDATE jail SET duration = duration + 7, cost = cost + $1 WHERE prisoner = $2")
+            .bind(bail_increase)
+            .bind(player_id)
+            .execute(&state.pool)
+            .await
+    {
+        tracing::error!(error = %e, "Failed to increase jail penalty");
+    }
 
     let xp_msg = apply_escape_xp(
         state,
@@ -457,15 +465,21 @@ async fn escape_success(
     let xp_split = xp_amount / 4;
 
     // Delete jail record + move to Altara + deduct energy.
-    let _ = sqlx::query("DELETE FROM jail WHERE prisoner = $1")
+    if let Err(e) = sqlx::query("DELETE FROM jail WHERE prisoner = $1")
         .bind(player_id)
         .execute(&state.pool)
-        .await;
-    let _ =
+        .await
+    {
+        tracing::error!(error = %e, "Failed to delete jail record");
+    }
+    if let Err(e) =
         sqlx::query("UPDATE players SET energy = energy - 2, location = 'Altara' WHERE id = $1")
             .bind(player_id)
             .execute(&state.pool)
-            .await;
+            .await
+    {
+        tracing::error!(error = %e, "Failed to release prisoner");
+    }
 
     // Award XP split 4 ways.
     let xp_msg = apply_escape_xp(
@@ -577,8 +591,12 @@ async fn apply_escape_xp(
     }
 
     if hp_change != 0 {
-        let _ = vallheru_data::queries::locations::add_player_hp(&state.pool, player_id, hp_change)
-            .await;
+        if let Err(e) =
+            vallheru_data::queries::locations::add_player_hp(&state.pool, player_id, hp_change)
+                .await
+        {
+            tracing::warn!(error = %e, "Failed to apply HP change from escape");
+        }
     }
 
     extra

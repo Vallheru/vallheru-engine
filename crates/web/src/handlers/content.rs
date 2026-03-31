@@ -406,7 +406,9 @@ pub async fn add_update_action(
     let body = text::bbcode_to_html(body_raw, &[], false);
 
     let author = format!("({})", user.name);
-    let _ = cq::insert_update(&app.pool, title, &body, &author).await;
+    if let Err(e) = cq::insert_update(&app.pool, title, &body, &author).await {
+        tracing::error!(error = %e, "Failed to insert update");
+    }
 
     Redirect::to("/updates").into_response()
 }
@@ -499,7 +501,9 @@ pub async fn add_news_action(
     let body = text::bbcode_to_html(body_raw, &bad_words, false);
     let author = format!("{} ({})", user.name, user.id);
 
-    let _ = cq::insert_news(&app.pool, title, &body, &author, user.id).await;
+    if let Err(e) = cq::insert_news(&app.pool, title, &body, &author, user.id).await {
+        tracing::error!(error = %e, "Failed to insert news");
+    }
 
     Redirect::to("/news").into_response()
 }
@@ -571,7 +575,9 @@ pub async fn edit_pending_news_action(
 
     let bad_words = vec![];
     let body = text::bbcode_to_html(body_raw, &bad_words, false);
-    let _ = cq::edit_news(&app.pool, news_id, title, &body).await;
+    if let Err(e) = cq::edit_news(&app.pool, news_id, title, &body).await {
+        tracing::error!(error = %e, "Failed to edit news");
+    }
 
     log_news_action(&app.pool, news_id, "zmodyfikowana", user.id, &user.name).await;
 
@@ -588,7 +594,9 @@ pub async fn approve_news_action(
         return Redirect::to("/").into_response();
     };
 
-    let _ = cq::approve_news(&app.pool, news_id).await;
+    if let Err(e) = cq::approve_news(&app.pool, news_id).await {
+        tracing::error!(error = %e, "Failed to approve news");
+    }
 
     log_news_action(&app.pool, news_id, "zatwierdzona", user.id, &user.name).await;
 
@@ -607,7 +615,9 @@ pub async fn delete_news_action(
 
     log_news_action(&app.pool, news_id, "odrzucona", user.id, &user.name).await;
 
-    let _ = cq::delete_news(&app.pool, news_id).await;
+    if let Err(e) = cq::delete_news(&app.pool, news_id).await {
+        tracing::error!(error = %e, "Failed to delete news");
+    }
 
     crate::page::redirect_after_post("/staff/news")
 }
@@ -631,7 +641,11 @@ async fn log_news_action(
         "Twoja plotka \"{}\" została {} przez {}.",
         row.title, action, staff_name,
     );
-    let _ = vallheru_data::queries::moderation::insert_game_log(pool, author_id, &msg, 'S').await;
+    if let Err(e) =
+        vallheru_data::queries::moderation::insert_game_log(pool, author_id, &msg, 'S').await
+    {
+        tracing::warn!(error = %e, "Failed to log news action to author");
+    }
 
     // Notify other staff members.
     let staff_ids = vallheru_data::queries::moderation::list_staff_ids(pool)
@@ -646,8 +660,12 @@ async fn log_news_action(
     );
     for sid in staff_ids {
         if sid != current_staff {
-            let _ = vallheru_data::queries::moderation::insert_game_log(pool, sid, &staff_msg, 'S')
-                .await;
+            if let Err(e) =
+                vallheru_data::queries::moderation::insert_game_log(pool, sid, &staff_msg, 'S')
+                    .await
+            {
+                tracing::warn!(error = %e, "Failed to log news action to staff");
+            }
         }
     }
 }
@@ -747,7 +765,7 @@ pub async fn add_comment(
     if !body_raw.is_empty() {
         let bad_words = vec![];
         let body = text::bbcode_to_html(body_raw, &bad_words, false);
-        let _ = cq::insert_comment(
+        if let Err(e) = cq::insert_comment(
             &app.pool,
             &target_type,
             target_id,
@@ -755,7 +773,10 @@ pub async fn add_comment(
             user.id,
             &body,
         )
-        .await;
+        .await
+        {
+            tracing::error!(error = %e, "Failed to insert comment");
+        }
     }
 
     Redirect::to(&format!("/comments/{target_type}/{target_id}")).into_response()
@@ -775,7 +796,9 @@ pub async fn delete_comment(
         return Redirect::to(&format!("/comments/{target_type}/{target_id}")).into_response();
     }
 
-    let _ = cq::delete_comment(&app.pool, comment_id).await;
+    if let Err(e) = cq::delete_comment(&app.pool, comment_id).await {
+        tracing::error!(error = %e, "Failed to delete comment");
+    }
 
     Redirect::to(&format!("/comments/{target_type}/{target_id}")).into_response()
 }
@@ -986,14 +1009,19 @@ pub async fn newspaper_edit_action(
     let body_html = text::bbcode_to_html(body_raw, &bad_words, false);
 
     if let Some(aid) = q.modify {
-        let _ = cq::edit_article(&app.pool, aid, &title_html, &body_html, atype).await;
+        if let Err(e) = cq::edit_article(&app.pool, aid, &title_html, &body_html, atype).await {
+            tracing::error!(error = %e, "Failed to edit article");
+        }
     } else {
         // New article — assign to next unpublished issue.
         let latest = cq::get_latest_issue_id(&app.pool).await.unwrap_or(None);
         let issue_id = latest.map_or(1, |id| id + 1);
         let author = format!("{} ID: {}", user.name, user.id);
-        let _ =
-            cq::insert_article(&app.pool, issue_id, &title_html, &body_html, &author, atype).await;
+        if let Err(e) =
+            cq::insert_article(&app.pool, issue_id, &title_html, &body_html, &author, atype).await
+        {
+            tracing::error!(error = %e, "Failed to insert article");
+        }
     }
 
     Redirect::to("/newspaper").into_response()
@@ -1011,7 +1039,9 @@ pub async fn newspaper_release(
         return Redirect::to("/newspaper").into_response();
     }
 
-    let _ = cq::publish_pending_articles(&app.pool).await;
+    if let Err(e) = cq::publish_pending_articles(&app.pool).await {
+        tracing::error!(error = %e, "Failed to publish pending articles");
+    }
 
     Redirect::to("/newspaper").into_response()
 }
@@ -1029,7 +1059,9 @@ pub async fn newspaper_delete_article(
         return Redirect::to("/newspaper").into_response();
     }
 
-    let _ = cq::delete_article(&app.pool, article_id).await;
+    if let Err(e) = cq::delete_article(&app.pool, article_id).await {
+        tracing::error!(error = %e, "Failed to delete article");
+    }
 
     Redirect::to("/newspaper").into_response()
 }
@@ -1112,7 +1144,9 @@ pub async fn polls_vote(
         return Redirect::to("/").into_response();
     };
 
-    let _ = cq::vote_poll(&app.pool, form.answer).await;
+    if let Err(e) = cq::vote_poll(&app.pool, form.answer).await {
+        tracing::error!(error = %e, "Failed to record poll vote");
+    }
 
     Redirect::to("/polls").into_response()
 }
@@ -1224,7 +1258,11 @@ pub async fn proposal_submit(
         data.to_string()
     };
 
-    let _ = cq::insert_proposal(&app.pool, user.id, &ptype, name, &processed_data, info).await;
+    if let Err(e) =
+        cq::insert_proposal(&app.pool, user.id, &ptype, name, &processed_data, info).await
+    {
+        tracing::error!(error = %e, "Failed to insert proposal");
+    }
 
     Redirect::to("/city").into_response()
 }

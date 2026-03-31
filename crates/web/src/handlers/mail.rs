@@ -330,7 +330,9 @@ pub async fn mail_read(
     let player_id = user.id;
 
     // Mark thread as read.
-    let _ = mq::mark_thread_read(&app.pool, player_id, rq.topic).await;
+    if let Err(e) = mq::mark_thread_read(&app.pool, player_id, rq.topic).await {
+        tracing::warn!(topic = rq.topic, error = %e, "Failed to mark thread as read");
+    }
 
     let count = mq::count_thread_messages(&app.pool, player_id, rq.topic)
         .await
@@ -529,13 +531,19 @@ pub async fn mail_bulk(
     if !ids.is_empty() {
         match form.action.as_str() {
             "delete" => {
-                let _ = mq::delete_by_topics(&app.pool, player_id, &ids).await;
+                if let Err(e) = mq::delete_by_topics(&app.pool, player_id, &ids).await {
+                    tracing::error!(error = %e, "Failed to delete mail topics");
+                }
             }
             "read" => {
-                let _ = mq::mark_messages_read(&app.pool, player_id, &ids).await;
+                if let Err(e) = mq::mark_messages_read(&app.pool, player_id, &ids).await {
+                    tracing::error!(error = %e, "Failed to mark messages as read");
+                }
             }
             "unread" => {
-                let _ = mq::mark_messages_unread(&app.pool, player_id, &ids).await;
+                if let Err(e) = mq::mark_messages_unread(&app.pool, player_id, &ids).await {
+                    tracing::error!(error = %e, "Failed to mark messages as unread");
+                }
             }
             _ => {}
         }
@@ -564,9 +572,11 @@ pub async fn mail_delete_old(
 
     if mail_domain::validate_delete_days(form.days) {
         if box_type == "saved" {
-            let _ = mq::delete_old_saved(&app.pool, player_id, form.days).await;
-        } else {
-            let _ = mq::delete_old_inbox(&app.pool, player_id, form.days).await;
+            if let Err(e) = mq::delete_old_saved(&app.pool, player_id, form.days).await {
+                tracing::error!(error = %e, "Failed to delete old saved messages");
+            }
+        } else if let Err(e) = mq::delete_old_inbox(&app.pool, player_id, form.days).await {
+            tracing::error!(error = %e, "Failed to delete old inbox messages");
         }
     }
 
@@ -591,9 +601,11 @@ pub async fn mail_clear(
     let box_type = &bq.box_type;
 
     if box_type == "saved" {
-        let _ = mq::clear_saved(&app.pool, player_id).await;
-    } else {
-        let _ = mq::clear_inbox(&app.pool, player_id).await;
+        if let Err(e) = mq::clear_saved(&app.pool, player_id).await {
+            tracing::error!(error = %e, "Failed to clear saved mailbox");
+        }
+    } else if let Err(e) = mq::clear_inbox(&app.pool, player_id).await {
+        tracing::error!(error = %e, "Failed to clear inbox");
     }
 
     let redirect = if box_type == "saved" {
@@ -613,7 +625,9 @@ pub async fn mail_save_msg(
     let Some(ref user) = ctx.session_user else {
         return Redirect::to("/").into_response();
     };
-    let _ = mq::save_message(&app.pool, user.id, sq.id).await;
+    if let Err(e) = mq::save_message(&app.pool, user.id, sq.id).await {
+        tracing::error!(message_id = sq.id, error = %e, "Failed to save message");
+    }
     Redirect::to("/mail/inbox").into_response()
 }
 
@@ -626,7 +640,9 @@ pub async fn mail_delete_msg(
     let Some(ref user) = ctx.session_user else {
         return Redirect::to("/").into_response();
     };
-    let _ = mq::delete_message(&app.pool, user.id, dq.id).await;
+    if let Err(e) = mq::delete_message(&app.pool, user.id, dq.id).await {
+        tracing::error!(message_id = dq.id, error = %e, "Failed to delete message");
+    }
     Redirect::to("/mail/inbox").into_response()
 }
 
@@ -639,7 +655,9 @@ pub async fn mail_block(
     let Some(ref user) = ctx.session_user else {
         return Redirect::to("/").into_response();
     };
-    let _ = mq::toggle_mail_block(&app.pool, user.id, bq.player_id).await;
+    if let Err(e) = mq::toggle_mail_block(&app.pool, user.id, bq.player_id).await {
+        tracing::error!(player_id = bq.player_id, error = %e, "Failed to toggle mail block");
+    }
     Redirect::to("/mail/inbox").into_response()
 }
 
@@ -769,7 +787,7 @@ pub async fn mail_forward_action(
     let subject = format!("List gracza {player_name} o ID:{player_id}");
     let topic_id = mq::next_topic_id(&app.pool).await.unwrap_or(1);
 
-    let _ = mq::insert_message(
+    if let Err(e) = mq::insert_message(
         &app.pool,
         &mq::InsertMessageParams {
             sender_id: player_id,
@@ -783,7 +801,10 @@ pub async fn mail_forward_action(
             is_read: false,
         },
     )
-    .await;
+    .await
+    {
+        tracing::error!(error = %e, "Failed to send contact staff message");
+    }
 
     Redirect::to(&format!("/mail/read?topic={}", msg.topic_id)).into_response()
 }

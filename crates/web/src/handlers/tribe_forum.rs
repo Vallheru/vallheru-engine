@@ -310,7 +310,9 @@ pub async fn tforums_topics(
     let tribe_id = player_row.tribe_id;
 
     // Mark forum as read.
-    let _ = tfq::update_tforum_time(&app.pool, user.id, current_epoch()).await;
+    if let Err(e) = tfq::update_tforum_time(&app.pool, user.id, current_epoch()).await {
+        tracing::warn!(error = %e, "Failed to update tribe forum time");
+    }
     let forum_time = player_row.tforum_time;
 
     let can_admin = tfq::has_forum_permission(&app.pool, user.id, tribe_id)
@@ -391,7 +393,9 @@ pub async fn tforums_new_posts(
     let forum_time = player_row.tforum_time;
 
     // Update tforum_time.
-    let _ = tfq::update_tforum_time(&app.pool, user.id, current_epoch()).await;
+    if let Err(e) = tfq::update_tforum_time(&app.pool, user.id, current_epoch()).await {
+        tracing::warn!(error = %e, "Failed to update tribe forum time");
+    }
 
     let new_count = tfq::count_new_topics(&app.pool, tribe_id, forum_time)
         .await
@@ -641,7 +645,7 @@ pub async fn tforums_add_reply(
     let dt = format_datetime(now);
     let full_body = format!("<b>{dt}</b><br />{body_html}");
 
-    let _ = tfq::insert_reply(
+    if let Err(e) = tfq::insert_reply(
         &app.pool,
         topic_id,
         &author,
@@ -649,7 +653,10 @@ pub async fn tforums_add_reply(
         user.id as i32,
         now,
     )
-    .await;
+    .await
+    {
+        tracing::error!(error = %e, "Failed to insert tribe forum reply");
+    }
 
     Redirect::to(&format!("/tforums/topic/{topic_id}")).into_response()
 }
@@ -687,7 +694,9 @@ pub async fn tforums_delete_topic(
         return error_page(&app, &ctx, "Nie ma takiego tematu.");
     }
 
-    let _ = tfq::delete_topic(&app.pool, topic_id).await;
+    if let Err(e) = tfq::delete_topic(&app.pool, topic_id).await {
+        tracing::error!(error = %e, "Failed to delete tribe forum topic");
+    }
     Redirect::to("/tforums").into_response()
 }
 
@@ -720,7 +729,9 @@ pub async fn tforums_bulk_delete(
         .filter_map(|s| s.trim().parse().ok())
         .collect();
     if !ids.is_empty() {
-        let _ = tfq::delete_topics_bulk(&app.pool, player_row.tribe_id, &ids).await;
+        if let Err(e) = tfq::delete_topics_bulk(&app.pool, player_row.tribe_id, &ids).await {
+            tracing::error!(error = %e, "Failed to bulk delete tribe forum topics");
+        }
     }
 
     Redirect::to("/tforums").into_response()
@@ -764,7 +775,9 @@ pub async fn tforums_toggle_sticky(
         return error_page(&app, &ctx, "Nie ma takiego tematu.");
     }
 
-    let _ = tfq::set_sticky(&app.pool, topic_id, &q.action).await;
+    if let Err(e) = tfq::set_sticky(&app.pool, topic_id, &q.action).await {
+        tracing::error!(error = %e, "Failed to toggle sticky on tribe forum topic");
+    }
     Redirect::to(&format!("/tforums/topic/{topic_id}")).into_response()
 }
 
@@ -792,7 +805,9 @@ pub async fn tforums_delete_reply(
         return error_page(&app, &ctx, "Nie posiadasz odpowiednich uprawnień.");
     }
 
-    let _ = tfq::delete_reply(&app.pool, reply_id, player_row.tribe_id).await;
+    if let Err(e) = tfq::delete_reply(&app.pool, reply_id, player_row.tribe_id).await {
+        tracing::error!(error = %e, "Failed to delete tribe forum reply");
+    }
     Redirect::to(&format!("/tforums/topic/{}", q.topic)).into_response()
 }
 

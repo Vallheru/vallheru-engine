@@ -286,9 +286,11 @@ pub async fn note_save(
     if !title.is_empty() && !body_raw.is_empty() {
         let body = text::bbcode_to_html(body_raw, &[], false);
         if let Some(id) = q.edit {
-            let _ = pq::update_note(&app.pool, id, user.id, title, &body).await;
-        } else {
-            let _ = pq::insert_note(&app.pool, user.id, title, &body).await;
+            if let Err(e) = pq::update_note(&app.pool, id, user.id, title, &body).await {
+                tracing::error!(error = %e, "Failed to update note");
+            }
+        } else if let Err(e) = pq::insert_note(&app.pool, user.id, title, &body).await {
+            tracing::error!(error = %e, "Failed to insert note");
         }
     }
 
@@ -305,7 +307,9 @@ pub async fn note_delete(
         return Redirect::to("/").into_response();
     };
 
-    let _ = pq::delete_note(&app.pool, id, user.id).await;
+    if let Err(e) = pq::delete_note(&app.pool, id, user.id).await {
+        tracing::error!(error = %e, "Failed to delete note");
+    }
     Redirect::to("/notes").into_response()
 }
 
@@ -497,7 +501,7 @@ pub async fn library_add_action(
 
     if !title.is_empty() && !body_raw.is_empty() {
         let body = text::bbcode_to_html(body_raw, &[], false);
-        let _ = pq::insert_library_text(
+        if let Err(e) = pq::insert_library_text(
             &app.pool,
             title,
             &body,
@@ -506,7 +510,10 @@ pub async fn library_add_action(
             tt.as_str(),
             "pl",
         )
-        .await;
+        .await
+        {
+            tracing::error!(error = %e, "Failed to insert library text");
+        }
     }
 
     Redirect::to("/library").into_response()
@@ -587,7 +594,9 @@ pub async fn library_admin_edit_action(
 
     if !title.is_empty() && !body_raw.is_empty() {
         let body = text::bbcode_to_html(body_raw, &[], false);
-        let _ = pq::update_library_text(&app.pool, id, title, &body, tt.as_str()).await;
+        if let Err(e) = pq::update_library_text(&app.pool, id, title, &body, tt.as_str()).await {
+            tracing::error!(error = %e, "Failed to update library text");
+        }
     }
 
     Redirect::to("/library/admin").into_response()
@@ -607,7 +616,9 @@ pub async fn library_admin_approve(
         return Redirect::to("/library").into_response();
     }
 
-    let _ = pq::approve_library_text(&app.pool, id).await;
+    if let Err(e) = pq::approve_library_text(&app.pool, id).await {
+        tracing::error!(error = %e, "Failed to approve library text");
+    }
     Redirect::to("/library/admin").into_response()
 }
 
@@ -625,7 +636,9 @@ pub async fn library_admin_delete(
         return Redirect::to("/library").into_response();
     }
 
-    let _ = pq::delete_library_text(&app.pool, id).await;
+    if let Err(e) = pq::delete_library_text(&app.pool, id).await {
+        tracing::error!(error = %e, "Failed to delete library text");
+    }
     Redirect::to("/library/admin").into_response()
 }
 

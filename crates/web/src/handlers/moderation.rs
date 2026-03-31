@@ -164,17 +164,23 @@ pub async fn staff_jail_action(
         "Wtrącono cię do lochów na {} tyg. Powód: {}. Przez: {} ID: {}",
         form.time, form.verdict, user.name, user.id
     );
-    let _ =
+    if let Err(e) =
         vallheru_data::queries::moderation::insert_game_log(&state.pool, form.prisoner, &msg, 'U')
-            .await;
+            .await
+    {
+        tracing::warn!(error = %e, "Failed to log jail action for prisoner");
+    }
 
     // Log for admins (owner_id=1).
     let admin_msg = format!(
         "{} - wtrącony do lochów na {} tyg. {}, przez {} ID: {}",
         form.prisoner, form.time, form.verdict, user.name, user.id
     );
-    let _ =
-        vallheru_data::queries::moderation::insert_game_log(&state.pool, 1, &admin_msg, 'U').await;
+    if let Err(e) =
+        vallheru_data::queries::moderation::insert_game_log(&state.pool, 1, &admin_msg, 'U').await
+    {
+        tracing::warn!(error = %e, "Failed to log jail action for admin");
+    }
 
     crate::page::redirect_after_post("/staff/jail")
 }
@@ -248,9 +254,12 @@ pub async fn staff_chat_ban_action(
     if form.czat == "blok" {
         let weeks = form.duration.unwrap_or(1);
         let resets = weeks * 7;
-        let _ =
+        if let Err(e) =
             vallheru_data::queries::moderation::ban_from_chat(&state.pool, form.czat_id, resets)
-                .await;
+                .await
+        {
+            tracing::error!(error = %e, "Failed to ban from chat");
+        }
 
         let verdict = form.verdict.as_deref().unwrap_or("");
         let msg = format!(
@@ -258,18 +267,24 @@ pub async fn staff_chat_ban_action(
              Przez: {} ID: {}",
             user.name, user.id
         );
-        let _ = vallheru_data::queries::moderation::insert_game_log(
+        if let Err(e) = vallheru_data::queries::moderation::insert_game_log(
             &state.pool,
             form.czat_id,
             &msg,
             'U',
         )
-        .await;
+        .await
+        {
+            tracing::warn!(error = %e, "Failed to log chat ban");
+        }
 
         crate::page::redirect_after_post("/staff/chatban")
     } else {
-        let _ =
-            vallheru_data::queries::moderation::unban_from_chat(&state.pool, form.czat_id).await;
+        if let Err(e) =
+            vallheru_data::queries::moderation::unban_from_chat(&state.pool, form.czat_id).await
+        {
+            tracing::error!(error = %e, "Failed to unban from chat");
+        }
         crate::page::redirect_after_post("/staff/chatban")
     }
 }
@@ -287,9 +302,12 @@ pub async fn staff_forum_ban_action(
     if form.czat == "blok" {
         let weeks = form.duration.unwrap_or(1);
         let resets = weeks * 7;
-        let _ =
+        if let Err(e) =
             vallheru_data::queries::moderation::ban_from_forum(&state.pool, form.czat_id, resets)
-                .await;
+                .await
+        {
+            tracing::error!(error = %e, "Failed to ban from forum");
+        }
 
         let verdict = form.verdict.as_deref().unwrap_or("");
         let msg = format!(
@@ -297,18 +315,24 @@ pub async fn staff_forum_ban_action(
              Przez: {} ID: {}",
             user.name, user.id
         );
-        let _ = vallheru_data::queries::moderation::insert_game_log(
+        if let Err(e) = vallheru_data::queries::moderation::insert_game_log(
             &state.pool,
             form.czat_id,
             &msg,
             'U',
         )
-        .await;
+        .await
+        {
+            tracing::warn!(error = %e, "Failed to log forum ban");
+        }
 
         crate::page::redirect_after_post("/staff/forumban")
     } else {
-        let _ =
-            vallheru_data::queries::moderation::unban_from_forum(&state.pool, form.czat_id).await;
+        if let Err(e) =
+            vallheru_data::queries::moderation::unban_from_forum(&state.pool, form.czat_id).await
+        {
+            tracing::error!(error = %e, "Failed to unban from forum");
+        }
         crate::page::redirect_after_post("/staff/forumban")
     }
 }
@@ -341,10 +365,18 @@ pub async fn staff_mail_ban_action(
     Form(form): Form<MailBanForm>,
 ) -> Response {
     if form.mail == "blok" {
-        let _ = vallheru_data::queries::moderation::ban_mail(&state.pool, form.mail_id).await;
+        if let Err(e) =
+            vallheru_data::queries::moderation::ban_mail(&state.pool, form.mail_id).await
+        {
+            tracing::error!(error = %e, "Failed to ban mail");
+        }
         crate::page::redirect_after_post("/staff/mailban")
     } else {
-        let _ = vallheru_data::queries::moderation::unban_mail(&state.pool, form.mail_id).await;
+        if let Err(e) =
+            vallheru_data::queries::moderation::unban_mail(&state.pool, form.mail_id).await
+        {
+            tracing::error!(error = %e, "Failed to unban mail");
+        }
         crate::page::redirect_after_post("/staff/mailban")
     }
 }
@@ -419,8 +451,11 @@ pub async fn staff_takeaway_action(
         "Skonfiskowano ci {} złotych monet. Powód: {}. Przez: {} ID: {}",
         form.taken, form.verdict, user.name, user.id
     );
-    let _ =
-        vallheru_data::queries::moderation::insert_game_log(&state.pool, form.id, &msg, 'U').await;
+    if let Err(e) =
+        vallheru_data::queries::moderation::insert_game_log(&state.pool, form.id, &msg, 'U').await
+    {
+        tracing::warn!(error = %e, "Failed to log confiscation for offender");
+    }
 
     // Log for injured.
     let msg2 = format!(
@@ -430,8 +465,11 @@ pub async fn staff_takeaway_action(
         user.name,
         user.id
     );
-    let _ = vallheru_data::queries::moderation::insert_game_log(&state.pool, form.id2, &msg2, 'U')
-        .await;
+    if let Err(e) =
+        vallheru_data::queries::moderation::insert_game_log(&state.pool, form.id2, &msg2, 'U').await
+    {
+        tracing::warn!(error = %e, "Failed to log confiscation for injured");
+    }
 
     crate::page::redirect_after_post("/staff/takeaway")
 }
@@ -458,7 +496,11 @@ pub async fn staff_immunity_action(
     Extension(_ctx): Extension<RequestContext>,
     Form(form): Form<ImmunityForm>,
 ) -> Response {
-    let _ = vallheru_data::queries::moderation::grant_immunity(&state.pool, form.tag_id).await;
+    if let Err(e) =
+        vallheru_data::queries::moderation::grant_immunity(&state.pool, form.tag_id).await
+    {
+        tracing::error!(error = %e, "Failed to grant immunity");
+    }
 
     crate::page::redirect_after_post("/staff/immunity")
 }
@@ -502,8 +544,11 @@ pub async fn judge_assign_rank(
         }
     }
 
-    let _ = vallheru_data::queries::moderation::set_player_rank(&state.pool, form.aid, &form.rank)
-        .await;
+    if let Err(e) =
+        vallheru_data::queries::moderation::set_player_rank(&state.pool, form.aid, &form.rank).await
+    {
+        tracing::error!(error = %e, "Failed to set player rank");
+    }
 
     crate::page::redirect_after_post("/judge")
 }

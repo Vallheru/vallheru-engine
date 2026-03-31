@@ -171,7 +171,9 @@ pub async fn room_page(
         return error_page(&app, &ctx, "Pokój nie istnieje.");
     };
 
-    let _ = rq::set_page_room(&app.pool, user.id).await;
+    if let Err(e) = rq::set_page_room(&app.pool, user.id).await {
+        tracing::warn!(error = %e, "Failed to set page to room");
+    }
 
     let is_admin = room_domain::is_admin(room.owner_id, &room.co_owners, user.id);
     let is_owner = room_domain::is_owner(room.owner_id, user.id);
@@ -406,7 +408,7 @@ pub async fn room_send(
     // Detect whisper: "ID=text" pattern.
     let (body_to_store, recipient_id) = detect_whisper(&body);
 
-    let _ = rq::insert_room_message(
+    if let Err(e) = rq::insert_room_message(
         &app.pool,
         room_id,
         &author,
@@ -414,7 +416,10 @@ pub async fn room_send(
         user.id,
         recipient_id,
     )
-    .await;
+    .await
+    {
+        tracing::error!(error = %e, "Failed to insert room message");
+    }
 
     crate::page::redirect_after_post("/room")
 }
@@ -446,7 +451,9 @@ pub async fn room_admin_delete_msg(
     }
 
     if let Some(tid) = query.tid {
-        let _ = rq::delete_room_message(&app.pool, tid, room_id).await;
+        if let Err(e) = rq::delete_room_message(&app.pool, tid, room_id).await {
+            tracing::error!(message_id = tid, error = %e, "Failed to delete room message");
+        }
     }
 
     crate::page::redirect_after_post("/room")
@@ -678,7 +685,9 @@ pub async fn room_admin_desc(
     let bad_words = chatq::list_bad_words(&app.pool).await.unwrap_or_default();
     let processed = text::bbcode_to_html(&raw_desc, &bad_words, false);
 
-    let _ = rq::update_description(&app.pool, room_id, &processed).await;
+    if let Err(e) = rq::update_description(&app.pool, room_id, &processed).await {
+        tracing::error!(error = %e, "Failed to update room description");
+    }
 
     success_redirect("Zmieniłeś(aś) opis pokoju.")
 }
@@ -702,7 +711,9 @@ pub async fn room_admin_name(
     };
 
     let name = room_domain::sanitise_name(&form.rname.unwrap_or_default());
-    let _ = rq::update_name(&app.pool, room_id, &name).await;
+    if let Err(e) = rq::update_name(&app.pool, room_id, &name).await {
+        tracing::error!(error = %e, "Failed to update room name");
+    }
 
     success_redirect("Zmieniłeś(aś) nazwę pokoju.")
 }
@@ -742,7 +753,9 @@ pub async fn room_admin_npc_add(
 
     let mut npcs = room.npcs;
     npcs.push(npc_name);
-    let _ = rq::set_npcs(&app.pool, room_id, &npcs).await;
+    if let Err(e) = rq::set_npcs(&app.pool, room_id, &npcs).await {
+        tracing::error!(error = %e, "Failed to add NPC to room");
+    }
 
     success_redirect("Dodałeś(aś) NPC do pokoju.")
 }
@@ -772,7 +785,9 @@ pub async fn room_admin_npc_remove(
 
     let mut npcs = room.npcs;
     npcs.remove(idx);
-    let _ = rq::set_npcs(&app.pool, room_id, &npcs).await;
+    if let Err(e) = rq::set_npcs(&app.pool, room_id, &npcs).await {
+        tracing::error!(error = %e, "Failed to remove NPC from room");
+    }
 
     success_redirect("Usunąłeś(aś) NPC z pokoju.")
 }
@@ -834,12 +849,16 @@ pub async fn room_admin_co_owner(
         }
         0 => {
             co_owners.push(pid);
-            let _ = rq::set_co_owners(&app.pool, room_id, &co_owners).await;
+            if let Err(e) = rq::set_co_owners(&app.pool, room_id, &co_owners).await {
+                tracing::error!(error = %e, "Failed to add co-owner");
+            }
             let log_msg = format!(
                 "{} dodał(a) Ciebie jako współwłaściciela pokoju w karczmie.",
                 user.name
             );
-            let _ = rq::insert_event_log(&app.pool, pid, &log_msg).await;
+            if let Err(e) = rq::insert_event_log(&app.pool, pid, &log_msg).await {
+                tracing::warn!(error = %e, "Failed to insert co-owner event log");
+            }
             return success_redirect(&format!(
                 "Dodałeś gracza o ID: {pid} jako współwłaściciela do pokoju."
             ));
@@ -853,12 +872,16 @@ pub async fn room_admin_co_owner(
         }
         1 => {
             co_owners.retain(|&id| id != pid);
-            let _ = rq::set_co_owners(&app.pool, room_id, &co_owners).await;
+            if let Err(e) = rq::set_co_owners(&app.pool, room_id, &co_owners).await {
+                tracing::error!(error = %e, "Failed to remove co-owner");
+            }
             let log_msg = format!(
                 "{} usunął Ciebie jako współwłaściciela pokoju w karczmie.",
                 user.name
             );
-            let _ = rq::insert_event_log(&app.pool, pid, &log_msg).await;
+            if let Err(e) = rq::insert_event_log(&app.pool, pid, &log_msg).await {
+                tracing::warn!(error = %e, "Failed to insert co-owner removal log");
+            }
             return success_redirect(&format!(
                 "Usunąłeś gracza o ID: {pid} jako współwłaściciela z pokoju."
             ));
@@ -907,7 +930,9 @@ pub async fn room_admin_color(
     let mut color_map = room.color_map();
     color_map.insert(pid, color);
     let new_colors = rq::color_map_to_json(&color_map);
-    let _ = rq::set_colors(&app.pool, room_id, &new_colors).await;
+    if let Err(e) = rq::set_colors(&app.pool, room_id, &new_colors).await {
+        tracing::error!(error = %e, "Failed to set room colors");
+    }
 
     success_redirect(&format!("Ustawiłeś(aś) graczowi o ID: {pid} kolor nicka."))
 }
@@ -958,7 +983,10 @@ pub async fn room_admin_rent(
         );
     }
 
-    let _ = rq::extend_rent(&app.pool, room.id, days, user.id, cost).await;
+    if let Err(e) = rq::extend_rent(&app.pool, room.id, days, user.id, cost).await {
+        tracing::error!(error = %e, "Failed to extend room rent");
+        return error_page(&app, &ctx, "Wystąpił błąd podczas przedłużania wynajmu.");
+    }
 
     success_redirect(&format!("Przedłużyłeś(aś) wynajem pokoju o {days} dni."))
 }

@@ -502,7 +502,9 @@ pub async fn add_bonus(
         return error_page(&app, &ctx, "Osiągnąłeś już maksymalny poziom tej premii.");
     }
 
-    let _ = oq::increment_bonus(&app.pool, out.id, &field).await;
+    if let Err(e) = oq::increment_bonus(&app.pool, out.id, &field).await {
+        tracing::error!(field = %field, error = %e, "Failed to increment outpost bonus");
+    }
     crate::page::redirect("/outposts/my")
 }
 
@@ -763,7 +765,12 @@ pub async fn taxes_collect(
     let new_fatigue = domain::tax_fatigue(out.fatigue, times);
     let new_morale = domain::tax_morale(out.morale, times);
 
-    let _ = oq::collect_taxes(&app.pool, out.id, gold_gain, times, new_fatigue, new_morale).await;
+    if let Err(e) =
+        oq::collect_taxes(&app.pool, out.id, gold_gain, times, new_fatigue, new_morale).await
+    {
+        tracing::error!(error = %e, "Failed to collect outpost taxes");
+        return error_page(&app, &ctx, "Wystąpił błąd podczas ściągania danin.");
+    }
 
     let msg = format!(
         "Twoi żołnierze wyruszyli {times} razy na zbieranie danin z wiosek i zebrali w ten sposób {gold_gain} sztuk złota."
@@ -1777,10 +1784,14 @@ pub async fn garrison_generate(
     };
 
     // Decrement craft_mission
-    let _ = sqlx::query("UPDATE players SET craft_mission = craft_mission - 1 WHERE id = $1")
-        .bind(player_id)
-        .execute(&app.pool)
-        .await;
+    if let Err(e) =
+        sqlx::query("UPDATE players SET craft_mission = craft_mission - 1 WHERE id = $1")
+            .bind(player_id)
+            .execute(&app.pool)
+            .await
+    {
+        tracing::error!(error = %e, "Failed to decrement craft_mission");
+    }
 
     let meta = PageMeta::titled("Prefektura Gwardii");
     let base = app.templates.build_context(&ctx, &meta);
@@ -1825,10 +1836,14 @@ pub async fn garrison_execute(
     }
 
     // Deduct energy
-    let _ = sqlx::query("UPDATE players SET energy = energy - 5 WHERE id = $1")
+    if let Err(e) = sqlx::query("UPDATE players SET energy = energy - 5 WHERE id = $1")
         .bind(player_id)
         .execute(&app.pool)
-        .await;
+        .await
+    {
+        tracing::error!(error = %e, "Failed to deduct garrison energy");
+        return error_page(&app, &ctx, "Wystąpił błąd.");
+    }
 
     let (roll, damage_roll) = {
         let mut rng = rand::thread_rng();
@@ -1862,13 +1877,16 @@ pub async fn garrison_execute(
     // Simple patrol outcome based on roll
     let result = if roll < 80 {
         // Success — gold and exp
-        let _ = sqlx::query(
+        if let Err(e) = sqlx::query(
             "UPDATE players SET credits = credits + $1, mpoints = mpoints + 1 WHERE id = $2",
         )
         .bind(i64::from(gold))
         .bind(player_id)
         .execute(&app.pool)
-        .await;
+        .await
+        {
+            tracing::error!(error = %e, "Failed to grant garrison gold/exp");
+        }
         let xp_extra = grant_skill_exp(&app, player_id, skill_name, plevel).await;
         format!(
             "Zadanie zakończone. Otrzymał{gender_suffix} {gold} sztuk złota oraz {plevel} punktów doświadczenia.{xp_extra}"
@@ -1877,13 +1895,16 @@ pub async fn garrison_execute(
         // Good success — double reward
         let bonus_gold = gold + plevel * 5;
         let exp = plevel * 2;
-        let _ = sqlx::query(
+        if let Err(e) = sqlx::query(
             "UPDATE players SET credits = credits + $1, mpoints = mpoints + 1 WHERE id = $2",
         )
         .bind(i64::from(bonus_gold))
         .bind(player_id)
         .execute(&app.pool)
-        .await;
+        .await
+        {
+            tracing::error!(error = %e, "Failed to grant garrison bonus gold/exp");
+        }
         let xp_extra = grant_skill_exp(&app, player_id, skill_name, exp).await;
         format!(
             "Doskonale wykonane zadanie! Otrzymał{gender_suffix} {bonus_gold} sztuk złota oraz {exp} punktów doświadczenia.{xp_extra}"
@@ -1893,11 +1914,14 @@ pub async fn garrison_execute(
         #[allow(clippy::cast_possible_truncation)]
         let damage = ((f64::from(player.max_hp) / 100.0) * f64::from(damage_roll)).ceil() as i32;
         let new_hp = (player.hp - damage).max(0);
-        let _ = sqlx::query("UPDATE players SET hp = $1 WHERE id = $2")
+        if let Err(e) = sqlx::query("UPDATE players SET hp = $1 WHERE id = $2")
             .bind(new_hp)
             .bind(player_id)
             .execute(&app.pool)
-            .await;
+            .await
+        {
+            tracing::error!(error = %e, "Failed to apply garrison damage");
+        }
         format!(
             "To nie był twój szczęśliwy dzień. Odniosł{gender_suffix} {damage} obrażeń. Nie otrzymał{gender_suffix} zapłaty."
         )
