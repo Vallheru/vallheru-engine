@@ -305,6 +305,14 @@ pub async fn mining_work(
         }
     }
 
+    // If the player died, persist HP = 0 (penalty applied at resurrection).
+    if result.player_died {
+        if let Err(e) = vallheru_data::queries::player::kill_player(&app.pool, player_id).await {
+            tracing::error!(error = %e, "kill_player after cave-in failed");
+            return server_error();
+        }
+    }
+
     let total_xp = result.xp_strength + result.xp_speed + result.xp_mining;
 
     // Apply stat/skill XP: strength, speed, mining.
@@ -779,6 +787,14 @@ pub async fn lumberjack_work(
         .await
         {
             tracing::error!(error = %e, "add gold failed");
+            return server_error();
+        }
+    }
+
+    // If the player died, persist HP = 0 (penalty applied at resurrection).
+    if result.player_died {
+        if let Err(e) = vallheru_data::queries::player::kill_player(&app.pool, player_id).await {
+            tracing::error!(error = %e, "kill_player after tree fall failed");
             return server_error();
         }
     }

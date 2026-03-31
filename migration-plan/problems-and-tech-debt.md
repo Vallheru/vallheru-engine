@@ -310,3 +310,15 @@ Each entry includes:
 - **Needs new task**: No
 - **Status**: resolved
 - **Related tasks**: TD-011
+
+### TD-025: Mining and lumberjack death does not persist HP = 0
+
+- **Type**: bug
+- **Discovered in**: TD-021 follow-up audit
+- **Description**: When a player dies from a cave-in (mountain mining) or falling tree (lumberjack), `result.player_died` was set to `true` and a death message shown, but the player's HP was never set to 0 in the database. The player would see "you died" but remain alive on the next page load, bypassing the resurrection flow entirely.
+- **Impact**: **Critical** — death in mining/lumberjack had no real consequence. Players never needed resurrection and never paid the death penalty (stat/skill loss).
+- **Action**: Added `kill_player` query (`UPDATE players SET hp = 0`) in `crates/data/src/queries/player.rs`. Called from both `mining_work` and `lumberjack_work` handlers when `result.player_died` is true.
+- **Fixable in existing task**: No — standalone fix.
+- **Needs new task**: No
+- **Status**: resolved
+- **Related tasks**: TD-021

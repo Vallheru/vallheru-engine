@@ -468,3 +468,12 @@ pub async fn save_bonuses(
 
     tx.commit().await
 }
+
+/// Set a player's HP to 0 (kill them). Penalty is applied at resurrection.
+pub async fn kill_player(pool: &PgPool, player_id: i32) -> Result<(), sqlx::Error> {
+    sqlx::query("UPDATE players SET hp = 0 WHERE id = $1")
+        .bind(player_id)
+        .execute(pool)
+        .await?;
+    Ok(())
+}
