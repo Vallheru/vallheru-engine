@@ -859,6 +859,15 @@ pub async fn forum_search(
         return Redirect::to(&format!("/forums/category/{}", form.catid)).into_response();
     }
 
+    // Check visit permission on target category.
+    let perms = fq::get_category_perms(&app.pool, form.catid).await;
+    match perms {
+        Ok(Some(ref p)) if forum_domain::has_permission(&p.perm_visit, rank) => {}
+        _ => {
+            return Redirect::to("/forums").into_response();
+        }
+    }
+
     let search_term = text::html_escape(form.search.trim());
 
     let rows = fq::search_topics(&app.pool, form.catid, &search_term)
@@ -879,7 +888,6 @@ pub async fn forum_search(
             is_new: false,
         })
         .collect();
-    let _ = rank; // already verified via category perms in search scope
 
     let meta = PageMeta::titled("Forum - Szukaj");
     let base = app.templates.build_context(&ctx, &meta);
