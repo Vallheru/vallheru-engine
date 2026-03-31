@@ -497,8 +497,8 @@ Each entry includes:
 - **Discovered in**: TD-028 follow-up audit
 - **Description**: Template renders escape link for thief-class prisoners but no handler or route exists. Half-implemented feature.
 - **Impact**: **Medium** — jail escape link 404s for thief players.
-- **Action**: Port jail escape logic from jail.php.
+- **Action**: Implemented `jail_escape` handler with escape chance calculation, success/failure branches, XP awards, and bail/sentence adjustments. Lockpick equipment bonus omitted (equipment system not yet migrated).
 - **Fixable in existing task**: No — needs new task.
 - **Needs new task**: Yes
-- **Status**: open
+- **Status**: resolved
 - **Related tasks**: None

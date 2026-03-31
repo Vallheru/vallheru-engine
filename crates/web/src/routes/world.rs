@@ -302,6 +302,7 @@ fn social_routes() -> Router<AppState> {
         .merge(court_routes())
         // Jail
         .route("/jail", routing::get(jail::jail_view))
+        .route("/jail/escape", routing::get(jail::jail_escape))
         .route(
             "/jail/bail/{id}",
             routing::get(jail::jail_bail_confirm).post(jail::jail_bail_pay),
