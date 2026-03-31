@@ -473,10 +473,10 @@ Each entry includes:
 - **Discovered in**: TD-028 follow-up audit
 - **Description**: Bank handler reads credits+bank, computes in Rust, writes absolute values back. Concurrent deposits can overwrite each other.
 - **Impact**: **Medium** — deposit/withdrawal can be lost under concurrent requests.
-- **Action**: Use atomic relative UPDATE or SELECT … FOR UPDATE.
+- **Action**: Replaced `set_player_balance` (absolute value write) with `deposit_to_bank` and `withdraw_from_bank` functions using atomic relative SQL: `credits = credits - $1, bank = bank + $1 WHERE credits >= $1`. Combined with CHECK constraints from TD-027.
 - **Fixable in existing task**: No — needs dedicated fix.
 - **Needs new task**: No
-- **Status**: open
+- **Status**: resolved
 - **Related tasks**: TD-027, TD-035
 
 ### TD-039: Missing /stats and /view player profile routes

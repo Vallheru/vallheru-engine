@@ -215,13 +215,9 @@ pub async fn bank_action(
                 return error_page(&app, &ctx, "Nie masz wystarczająco złota.");
             };
 
-            if let Err(e) = vallheru_data::queries::bank::set_player_balance(
-                &app.pool,
-                player_id,
-                change.new_source,
-                change.new_dest,
-            )
-            .await
+            if let Err(e) =
+                vallheru_data::queries::bank::deposit_to_bank(&app.pool, player_id, change.amount)
+                    .await
             {
                 tracing::error!(error = %e, "bank deposit failed");
                 return server_error();
@@ -246,11 +242,10 @@ pub async fn bank_action(
                 return error_page(&app, &ctx, "Nie masz wystarczająco złota w banku.");
             };
 
-            if let Err(e) = vallheru_data::queries::bank::set_player_balance(
+            if let Err(e) = vallheru_data::queries::bank::withdraw_from_bank(
                 &app.pool,
                 player_id,
-                change.new_dest,
-                change.new_source,
+                change.amount,
             )
             .await
             {
