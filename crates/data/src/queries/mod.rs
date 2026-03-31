@@ -10,6 +10,7 @@ pub mod auth;
 pub mod bank;
 pub mod character_reset;
 pub mod chat;
+pub mod combat;
 pub mod content;
 pub mod event;
 pub mod forum;

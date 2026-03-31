@@ -218,6 +218,17 @@ impl MonsterResistance {
             strength: ResistanceStrength::None,
         }
     }
+
+    /// Parse from DB `resistance` column, e.g. `"fire;weak"` or `"none;none"`.
+    pub fn parse(s: &str) -> Self {
+        let parts: Vec<&str> = s.split(';').collect();
+        if parts.len() < 2 {
+            return Self::none();
+        }
+        let element = Element::from_spell_code(parts[0]);
+        let strength = ResistanceStrength::parse(parts[1]);
+        Self { element, strength }
+    }
 }
 
 // ---------------------------------------------------------------------------

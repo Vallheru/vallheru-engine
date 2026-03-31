@@ -1,0 +1,28 @@
+{# PvP battle result. #}
+{% extends "base.html" %}
+
+{% block content %}
+<h2>Arena Walk — Wynik</h2>
+
+{% if battle_log %}
+<div class="battle-log">
+  {% for entry in battle_log %}
+  <p>{{ entry }}</p>
+  {% endfor %}
+</div>
+{% endif %}
+
+{% if outcome == "attacker_wins" %}
+  <h3>Zwycięstwo!</h3>
+  <p>Pokonałeś gracza <b>{{ opponent_name }}</b>.</p>
+  <p>Zdobywasz {{ gold_gain }} sztuk złota.</p>
+{% elif outcome == "defender_wins" %}
+  <h3>Porażka!</h3>
+  <p>Gracz <b>{{ opponent_name }}</b> pokonał Cię.</p>
+{% elif outcome == "draw" %}
+  <h3>Remis!</h3>
+  <p>Walka z graczem <b>{{ opponent_name }}</b> zakończyła się remisem.</p>
+{% endif %}
+
+<p><a href="/arena">Wróć do areny</a></p>
+{% endblock %}

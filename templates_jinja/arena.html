@@ -1,0 +1,31 @@
+{# PvP arena — opponent selection. #}
+{% extends "base.html" %}
+
+{% block content %}
+<h2>Arena Walk</h2>
+
+<p>Tutaj możesz walczyć z innymi graczami. Wybierz przeciwnika z listy:</p>
+
+{% if opponents %}
+<table>
+  <tr>
+    <th>Gracz</th>
+    <th>Ranga</th>
+    <th>HP</th>
+    <th>Akcja</th>
+  </tr>
+  {% for opp in opponents %}
+  <tr>
+    <td>{{ opp.username }}</td>
+    <td>{{ opp.rank }}</td>
+    <td>{{ opp.hp }}/{{ opp.max_hp }}</td>
+    <td><a href="/arena/fight/{{ opp.id }}">Walcz</a></td>
+  </tr>
+  {% endfor %}
+</table>
+{% else %}
+<p>Nie ma dostępnych przeciwników.</p>
+{% endif %}
+
+<p><a href="/city">Wróć do miasta</a></p>
+{% endblock %}

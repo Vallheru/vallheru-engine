@@ -1,0 +1,63 @@
+{# Hunter guild — menu, bestiary, quests, monster description. #}
+{% extends "base.html" %}
+
+{% block content %}
+<h2>Gildia Łowców</h2>
+
+{% if state == "menu" %}
+  <p>Niewielki, drewniany budynek stoi wśród drzew. Wokół niego kręcą się postacie okryte ciemnozielonymi płaszczami. Nad drzwiami budynku widać symbol łowców królestwa.</p>
+  <ul>
+    <li><a href="/hunters/bestiary">Bestiariusz znanych ziem</a></li>
+    {% if has_quest %}
+    <li><a href="/hunters/quest">Tablica ogłoszeń</a></li>
+    {% endif %}
+  </ul>
+
+{% elif state == "bestiary" %}
+  <p>Tutaj znajdują się opisy wszystkich potworów jakie można spotkać na terenie królestwa.</p>
+
+  {% if monsters_city1 or monsters_city2 %}
+  <table>
+    <tr>
+      <th>W okolicach Altary</th>
+      <th>W okolicach Ardulith</th>
+    </tr>
+    {% for i in range(max_rows) %}
+    <tr>
+      <td>
+        {% if i < monsters_city1|length and monsters_city1[i].id > 0 %}
+          <a href="/hunters/monster/{{ monsters_city1[i].id }}">{{ monsters_city1[i].name }}</a>
+        {% endif %}
+      </td>
+      <td>
+        {% if i < monsters_city2|length and monsters_city2[i].id > 0 %}
+          <a href="/hunters/monster/{{ monsters_city2[i].id }}">{{ monsters_city2[i].name }}</a>
+        {% endif %}
+      </td>
+    </tr>
+    {% endfor %}
+  </table>
+  {% else %}
+  <p>Nie ma jeszcze opisów bestii w księdze.</p>
+  {% endif %}
+
+  <p><a href="/hunters">Wróć do gildii</a></p>
+
+{% elif state == "monster" %}
+  <h3>{{ monster_name }}</h3>
+  <p>{{ monster_description }}</p>
+  <p><a href="/hunters/bestiary">Wróć do spisu potworów</a></p>
+
+{% elif state == "quest_board" %}
+  <p>{{ quest_description }}</p>
+  <form method="post" action="/hunters/quest">
+    <button type="submit">Wykonaj zlecenie</button>
+  </form>
+  <p><a href="/hunters">Wróć</a></p>
+
+{% elif state == "quest_result" %}
+  <p>{{ quest_message }}</p>
+  <p><a href="/hunters">Wróć do gildii</a></p>
+
+{% endif %}
+{% endblock %}

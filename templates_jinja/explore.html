@@ -1,0 +1,78 @@
+{# Exploration page — forest and mountains. #}
+{% extends "base.html" %}
+
+{% block content %}
+<h2>Poszukiwania</h2>
+
+{% if state == "encounter" %}
+  <p>Spotykasz potwora: <b>{{ monster_name }}</b>!</p>
+  <p>
+    <a href="/battle/pve">Walcz</a> |
+    <a href="/explore/escape">Uciekaj</a>
+  </p>
+
+{% elif state == "results" %}
+  <p>Przeszedłeś {{ steps_taken }} kroków.</p>
+  {% if found_items %}
+  <p>Znalazłeś:
+    {% for item in found_items %}
+      {{ item }}{% if not loop.last %}, {% endif %}
+    {% endfor %}
+  </p>
+  {% else %}
+  <p>Nic nie znalazłeś.</p>
+  {% endif %}
+
+  {% if bridge_event %}
+  <p>{{ bridge_event }}</p>
+  {% endif %}
+
+  {% if encounter_name %}
+  <p>Spotykasz potwora: <b>{{ encounter_name }}</b>!</p>
+  <p>
+    <a href="/battle/pve">Walcz</a> |
+    <a href="/explore/escape">Uciekaj</a>
+  </p>
+  {% endif %}
+
+  <form method="post" action="/explore">
+    <p>
+      Energia: <b>{{ energy }}</b><br />
+      Ile energii chcesz przeznaczyć?
+      <input type="number" name="amount" min="1" step="0.5" max="{{ energy }}" value="1" />
+      <input type="submit" value="Idź" />
+    </p>
+  </form>
+
+{% elif state == "escape_success" %}
+  <p>Udało Ci się uciec od <b>{{ monster_name }}</b>.</p>
+  <p>Zdobywasz {{ xp_gain }} punktów doświadczenia.</p>
+  <p>
+    <a href="/explore">Idź dalej</a> |
+    <a href="{{ back_url }}">Wróć</a>
+  </p>
+
+{% elif state == "escape_fail" %}
+  <p>Nie udało Ci się uciec od <b>{{ monster_name }}</b>!</p>
+
+{% else %}
+  {# Menu — default state #}
+  {% if has_fight %}
+    <p>Zanim będziesz mógł kontynuować musisz pokonać <b>{{ fight_monster_name }}</b>!</p>
+    <p>
+      <a href="/battle/pve">Walcz</a> |
+      <a href="/explore/escape">Uciekaj</a>
+    </p>
+  {% else %}
+    <p>{{ region_description }}</p>
+    <form method="post" action="/explore">
+      <p>
+        Energia: <b>{{ energy }}</b><br />
+        Ile energii chcesz przeznaczyć?
+        <input type="number" name="amount" min="1" step="0.5" max="{{ energy }}" value="1" />
+        <input type="submit" value="Idź" />
+      </p>
+    </form>
+  {% endif %}
+{% endif %}
+{% endblock %}

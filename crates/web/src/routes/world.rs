@@ -165,8 +165,34 @@ fn economy_routes() -> Router<AppState> {
 }
 
 fn combat_routes() -> Router<AppState> {
-    // Placeholder — combat routes will be added by later tasks.
+    use crate::handlers::combat;
+
     Router::new()
+        // Exploration (explore.php)
+        .route(
+            "/explore",
+            routing::get(combat::explore_show).post(combat::explore_walk),
+        )
+        .route("/explore/escape", routing::get(combat::explore_escape))
+        // PvE battle (battle with monsters)
+        .route(
+            "/battle/pve",
+            routing::get(combat::pve_show).post(combat::pve_action),
+        )
+        // PvP arena (battle.php)
+        .route("/arena", routing::get(combat::arena_show))
+        .route("/arena/fight/{id}", routing::get(combat::arena_fight))
+        // Hunter guild (hunters.php)
+        .route("/hunters", routing::get(combat::hunters_show))
+        .route("/hunters/bestiary", routing::get(combat::hunters_bestiary))
+        .route(
+            "/hunters/monster/{id}",
+            routing::get(combat::hunters_monster),
+        )
+        .route(
+            "/hunters/quest",
+            routing::get(combat::hunters_quest_show).post(combat::hunters_quest_do),
+        )
 }
 
 fn outpost_routes() -> Router<AppState> {

@@ -10,6 +10,7 @@ pub mod bugreport;
 pub mod character;
 pub mod chat;
 pub mod city;
+pub mod combat;
 pub mod content;
 pub mod court;
 pub mod deity;

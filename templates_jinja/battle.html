@@ -1,0 +1,72 @@
+{# PvE battle page — turn-based combat. #}
+{% extends "base.html" %}
+
+{% block content %}
+<h2>Walka — {{ monster_name }}</h2>
+
+<p>
+  Twoje HP: <b>{{ player_hp }}/{{ player_max_hp }}</b> |
+  Mana: <b>{{ player_mana }}</b> |
+  Runda: <b>{{ round }}/24</b> |
+  AP: <b>{{ action_points }}</b>
+</p>
+
+<p>
+  Potwór: <b>{{ monster_name }}</b> — HP: <b>{{ monster_hp }}/{{ monster_max_hp }}</b>
+</p>
+
+{% if battle_log %}
+<div class="battle-log">
+  {% for entry in battle_log %}
+  <p>{{ entry }}</p>
+  {% endfor %}
+</div>
+{% endif %}
+
+{% if outcome == "in_progress" %}
+<form method="post" action="/battle/pve">
+  <p>Wybierz akcję:</p>
+  <p>
+    {% if has_weapon %}
+    <button type="submit" name="action" value="attack_normal">Atak normalny (1 AP)</button>
+    <button type="submit" name="action" value="attack_power">Atak silny (2 AP)</button>
+    <button type="submit" name="action" value="attack_precise">Atak precyzyjny (2 AP)</button>
+    {% endif %}
+    {% if has_bow %}
+    <button type="submit" name="action" value="attack_ranged">Strzał (1 AP)</button>
+    {% endif %}
+    {% if has_spell %}
+    <button type="submit" name="action" value="cast_spell">Czar (1 AP)</button>
+    <button type="submit" name="action" value="burst_spell">Czar wzmocniony (2 AP)</button>
+    {% endif %}
+    {% if has_def_spell %}
+    <button type="submit" name="action" value="def_burst_spell">Czar defensywny (2 AP)</button>
+    {% endif %}
+    {% if has_potion %}
+    <button type="submit" name="action" value="drink_potion">Wypij miksturę (1 AP)</button>
+    {% endif %}
+    <button type="submit" name="action" value="escape">Ucieczka</button>
+    <button type="submit" name="action" value="rest">Odpoczynek</button>
+  </p>
+</form>
+{% elif outcome == "victory" %}
+  <h3>Zwycięstwo!</h3>
+  <p>Zdobywasz {{ xp_gain }} doświadczenia i {{ gold_gain }} sztuk złota.</p>
+  {% if loot_name %}
+  <p>Zdobywasz łup: <b>{{ loot_name }}</b>!</p>
+  {% endif %}
+  <p><a href="{{ continue_url }}">Kontynuuj</a></p>
+{% elif outcome == "defeat" %}
+  <h3>Porażka</h3>
+  <p>Zostałeś pokonany przez {{ monster_name }}.</p>
+  <p><a href="/hospital">Szpital</a></p>
+{% elif outcome == "draw" %}
+  <h3>Remis</h3>
+  <p>Walka zakończyła się remisem po 24 rundach.</p>
+  <p><a href="{{ continue_url }}">Kontynuuj</a></p>
+{% elif outcome == "escaped" %}
+  <h3>Ucieczka</h3>
+  <p>Udało Ci się uciec od {{ monster_name }}.</p>
+  <p><a href="{{ continue_url }}">Kontynuuj</a></p>
+{% endif %}
+{% endblock %}
