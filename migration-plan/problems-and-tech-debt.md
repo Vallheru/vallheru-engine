@@ -176,7 +176,7 @@ Each entry includes:
 - **Action**: Add stat XP awards once the stat progression system is migrated.
 - **Fixable in existing task**: No
 - **Needs new task**: No — part of stat progression module.
-- **Status**: open
+- **Status**: resolved — landfill handler now calls `award_condition_xp` which uses `apply_stat_xp` to award condition XP equal to energy spent, with level-up handling and HP increase on condition level-up. Added `add_player_hp` data query.
 - **Related tasks**: MP-07-04, MP-06 (player progression)
 
 ### TD-014: Bank transfers and donations not yet migrated

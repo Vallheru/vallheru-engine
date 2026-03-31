@@ -264,3 +264,17 @@ pub async fn move_player_to(
         .await?;
     Ok(())
 }
+
+/// Add HP and max HP for a player (used when condition stat levels up).
+pub async fn add_player_hp(
+    pool: &PgPool,
+    player_id: i32,
+    hp_change: i32,
+) -> Result<(), sqlx::Error> {
+    sqlx::query("UPDATE players SET hp = hp + $1, max_hp = max_hp + $1 WHERE id = $2")
+        .bind(hp_change)
+        .bind(player_id)
+        .execute(pool)
+        .await?;
+    Ok(())
+}

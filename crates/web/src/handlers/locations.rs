@@ -403,9 +403,12 @@ pub async fn landfill_work(
         return server_error();
     }
 
+    // Award condition XP equal to energy spent.
+    let xp_msg = award_condition_xp(&state, player_id, &player_row, amount).await;
+
     let msg = format!(
         "Podczas pracy zużyłeś {amount} punkt(ów) energii i zarobiłeś {gold_gained} sztuk złota \
-         oraz {amount} punktów doświadczenia."
+         oraz {amount} punktów doświadczenia.{xp_msg}"
     );
 
     let meta = PageMeta::titled("Oczyszczanie miasta").with_flash(Flash::success(msg));
@@ -707,6 +710,69 @@ async fn compute_max_mana(
     }
     // Equipment bonus (equip[8] / rod slot) is not yet available.
     max_mana
+}
+
+/// Award condition stat XP after work (landfill, etc.).
+///
+/// Returns a suffix string for the flash message (empty if no level-up,
+/// or a description of the level-up if one occurred).
+async fn award_condition_xp(
+    app: &AppState,
+    player_id: i32,
+    player_row: &vallheru_data::queries::player::PlayerRow,
+    xp_amount: i32,
+) -> String {
+    let Some(race) = vallheru_domain::player::Race::from_db(&player_row.race) else {
+        return String::new();
+    };
+    let Some(class) = vallheru_domain::player::Class::from_db(&player_row.class) else {
+        return String::new();
+    };
+
+    let mut stats = vallheru_data::queries::player::load_stats(&app.pool, player_id)
+        .await
+        .unwrap_or_default();
+
+    let Some(condition) = stats.iter_mut().find(|s| s.stat_key == "condition") else {
+        return String::new();
+    };
+
+    let result =
+        vallheru_domain::player::progression::apply_stat_xp(condition, xp_amount, &race, &class);
+
+    if result.levels_gained > 0 || result.hp_change > 0 {
+        if let Err(e) =
+            vallheru_data::queries::player::save_stats(&app.pool, player_id, &stats).await
+        {
+            tracing::error!(error = %e, "award_condition_xp: save_stats failed");
+            return String::new();
+        }
+
+        if result.hp_change > 0 {
+            if let Err(e) = vallheru_data::queries::locations::add_player_hp(
+                &app.pool,
+                player_id,
+                result.hp_change,
+            )
+            .await
+            {
+                tracing::error!(error = %e, "award_condition_xp: add_player_hp failed");
+            }
+        }
+
+        format!(
+            " Twoja kondycja wzrosła o {} poziom(ów)!",
+            result.levels_gained
+        )
+    } else {
+        // XP gained but no level-up — still save updated XP.
+        if let Err(e) =
+            vallheru_data::queries::player::save_stats(&app.pool, player_id, &stats).await
+        {
+            tracing::error!(error = %e, "award_condition_xp: save_stats failed");
+        }
+        String::new()
+    }
 }
 
 fn error_page(state: &AppState, ctx: &RequestContext, message: &str) -> Response {
