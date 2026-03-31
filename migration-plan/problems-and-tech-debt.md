@@ -437,10 +437,10 @@ Each entry includes:
 - **Discovered in**: TD-028 follow-up audit
 - **Description**: All market purchase flows execute 3+ independent SQL statements (debit buyer, credit seller, transfer listing) without a transaction. Concurrent buyers can double-purchase the same listing or cause partial failures leaving inconsistent state.
 - **Impact**: **Critical** — gold duplication/loss possible via concurrent market purchases.
-- **Action**: Needs transaction wrapping with `pool.begin()` … `tx.commit()` and `SELECT … FOR UPDATE`.
+- **Action**: Created `QuantityPurchase` struct and 6 transactional `purchase_*` functions in `queries/market.rs`. Each wraps debit buyer → credit seller → mutate listing → log in a single `pool.begin()` … `tx.commit()` transaction. Updated all 6 handler `execute_*_buy` functions to use the new transactional functions.
 - **Fixable in existing task**: No — requires dedicated task.
 - **Needs new task**: Yes
-- **Status**: open
+- **Status**: resolved
 - **Related tasks**: TD-027
 
 ### TD-036: Outpost gold operations silently discard errors

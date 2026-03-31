@@ -1288,46 +1288,24 @@ async fn execute_mineral_buy(
         Err(e) => return error_page(app, ctx, &e.to_string()),
     };
 
-    // Execute: debit buyer, credit seller, reduce listing
-    if let Err(e) = vallheru_data::queries::market::debit_buyer_credits(
-        &app.pool,
-        player_id,
-        result.total_price,
-    )
-    .await
-    {
-        tracing::error!(error = %e, "debit_buyer_credits failed");
-        return server_error();
-    }
-    if let Err(e) = vallheru_data::queries::market::credit_seller_bank(
-        &app.pool,
-        listing.seller,
-        result.total_price,
-    )
-    .await
-    {
-        tracing::error!(error = %e, "credit_seller_bank failed");
-        return server_error();
-    }
-    if let Err(e) = vallheru_data::queries::market::reduce_mineral_listing(
-        &app.pool,
-        listing_id,
-        buy_quantity,
-        result.listing_remaining,
-    )
-    .await
-    {
-        tracing::error!(error = %e, "reduce_mineral_listing failed");
-        return server_error();
-    }
-
-    // Log sale notification
+    // Execute purchase in a single transaction
     let log_msg = format!(
         "{} kupił(a) {} × {} za {} sztuk złota na rynku minerałów.",
         player.username, buy_quantity, listing.nazwa, result.total_price
     );
-    let _ = vallheru_data::queries::market::insert_market_log(&app.pool, listing.seller, &log_msg)
-        .await;
+    let purchase = vallheru_data::queries::market::QuantityPurchase {
+        buyer_id: player_id,
+        seller_id: listing.seller,
+        listing_id,
+        buy_quantity,
+        remaining: result.listing_remaining,
+        total_price: result.total_price,
+        log_msg: &log_msg,
+    };
+    if let Err(e) = vallheru_data::queries::market::purchase_mineral(&app.pool, &purchase).await {
+        tracing::error!(error = %e, "purchase_mineral failed");
+        return server_error();
+    }
 
     flash_and_redirect(
         app,
@@ -1371,44 +1349,23 @@ async fn execute_herb_buy(
         Err(e) => return error_page(app, ctx, &e.to_string()),
     };
 
-    if let Err(e) = vallheru_data::queries::market::debit_buyer_credits(
-        &app.pool,
-        player_id,
-        result.total_price,
-    )
-    .await
-    {
-        tracing::error!(error = %e, "debit_buyer_credits failed");
-        return server_error();
-    }
-    if let Err(e) = vallheru_data::queries::market::credit_seller_bank(
-        &app.pool,
-        listing.seller,
-        result.total_price,
-    )
-    .await
-    {
-        tracing::error!(error = %e, "credit_seller_bank failed");
-        return server_error();
-    }
-    if let Err(e) = vallheru_data::queries::market::reduce_herb_listing(
-        &app.pool,
-        listing_id,
-        buy_quantity,
-        result.listing_remaining,
-    )
-    .await
-    {
-        tracing::error!(error = %e, "reduce_herb_listing failed");
-        return server_error();
-    }
-
     let log_msg = format!(
         "{} kupił(a) {} × {} za {} sztuk złota na rynku ziół.",
         player.username, buy_quantity, listing.nazwa, result.total_price
     );
-    let _ = vallheru_data::queries::market::insert_market_log(&app.pool, listing.seller, &log_msg)
-        .await;
+    let purchase = vallheru_data::queries::market::QuantityPurchase {
+        buyer_id: player_id,
+        seller_id: listing.seller,
+        listing_id,
+        buy_quantity,
+        remaining: result.listing_remaining,
+        total_price: result.total_price,
+        log_msg: &log_msg,
+    };
+    if let Err(e) = vallheru_data::queries::market::purchase_herb(&app.pool, &purchase).await {
+        tracing::error!(error = %e, "purchase_herb failed");
+        return server_error();
+    }
 
     flash_and_redirect(
         app,
@@ -1454,43 +1411,23 @@ async fn execute_equipment_buy(
         Err(e) => return error_page(app, ctx, &e.to_string()),
     };
 
-    if let Err(e) = vallheru_data::queries::market::debit_buyer_credits(
-        &app.pool,
-        player_id,
-        result.total_price,
-    )
-    .await
-    {
-        tracing::error!(error = %e, "debit_buyer_credits failed");
-        return server_error();
-    }
-    if let Err(e) = vallheru_data::queries::market::credit_seller_bank(
-        &app.pool,
-        listing.owner,
-        result.total_price,
-    )
-    .await
-    {
-        tracing::error!(error = %e, "credit_seller_bank failed");
-        return server_error();
-    }
-
-    // For equipment: transfer ownership
-    if let Err(e) = vallheru_data::queries::market::transfer_equipment_ownership(
-        &app.pool, listing_id, player_id,
-    )
-    .await
-    {
-        tracing::error!(error = %e, "transfer_equipment_ownership failed");
-        return server_error();
-    }
-
     let log_msg = format!(
         "{} kupił(a) {} za {} sztuk złota na rynku.",
         player.username, listing.name, result.total_price
     );
-    let _ =
-        vallheru_data::queries::market::insert_market_log(&app.pool, listing.owner, &log_msg).await;
+    if let Err(e) = vallheru_data::queries::market::purchase_equipment(
+        &app.pool,
+        player_id,
+        listing.owner,
+        listing_id,
+        result.total_price,
+        &log_msg,
+    )
+    .await
+    {
+        tracing::error!(error = %e, "purchase_equipment failed");
+        return server_error();
+    }
 
     flash_and_redirect(
         app,
@@ -1534,41 +1471,23 @@ async fn execute_potion_buy(
         Err(e) => return error_page(app, ctx, &e.to_string()),
     };
 
-    if let Err(e) = vallheru_data::queries::market::debit_buyer_credits(
-        &app.pool,
-        player_id,
-        result.total_price,
-    )
-    .await
-    {
-        tracing::error!(error = %e, "debit_buyer_credits failed");
-        return server_error();
-    }
-    if let Err(e) = vallheru_data::queries::market::credit_seller_bank(
-        &app.pool,
-        listing.owner,
-        result.total_price,
-    )
-    .await
-    {
-        tracing::error!(error = %e, "credit_seller_bank failed");
-        return server_error();
-    }
-
-    if let Err(e) =
-        vallheru_data::queries::market::transfer_potion_ownership(&app.pool, listing_id, player_id)
-            .await
-    {
-        tracing::error!(error = %e, "transfer_potion_ownership failed");
-        return server_error();
-    }
-
     let log_msg = format!(
         "{} kupił(a) {} za {} sztuk złota na rynku mikstur.",
         player.username, listing.name, result.total_price
     );
-    let _ =
-        vallheru_data::queries::market::insert_market_log(&app.pool, listing.owner, &log_msg).await;
+    if let Err(e) = vallheru_data::queries::market::purchase_potion(
+        &app.pool,
+        player_id,
+        listing.owner,
+        listing_id,
+        result.total_price,
+        &log_msg,
+    )
+    .await
+    {
+        tracing::error!(error = %e, "purchase_potion failed");
+        return server_error();
+    }
 
     flash_and_redirect(
         app,
@@ -1612,45 +1531,24 @@ async fn execute_astral_buy(
         Err(e) => return error_page(app, ctx, &e.to_string()),
     };
 
-    if let Err(e) = vallheru_data::queries::market::debit_buyer_credits(
-        &app.pool,
-        player_id,
-        result.total_price,
-    )
-    .await
-    {
-        tracing::error!(error = %e, "debit_buyer_credits failed");
-        return server_error();
-    }
-    if let Err(e) = vallheru_data::queries::market::credit_seller_bank(
-        &app.pool,
-        listing.seller,
-        result.total_price,
-    )
-    .await
-    {
-        tracing::error!(error = %e, "credit_seller_bank failed");
-        return server_error();
-    }
-    if let Err(e) = vallheru_data::queries::market::reduce_astral_listing(
-        &app.pool,
-        listing_id,
-        buy_quantity,
-        result.listing_remaining,
-    )
-    .await
-    {
-        tracing::error!(error = %e, "reduce_astral_listing failed");
-        return server_error();
-    }
-
     let item_desc = format!("{}{}", listing.r#type, listing.number);
     let log_msg = format!(
         "{} kupił(a) {} × {} za {} sztuk złota na rynku astralnym.",
         player.username, buy_quantity, item_desc, result.total_price
     );
-    let _ = vallheru_data::queries::market::insert_market_log(&app.pool, listing.seller, &log_msg)
-        .await;
+    let purchase = vallheru_data::queries::market::QuantityPurchase {
+        buyer_id: player_id,
+        seller_id: listing.seller,
+        listing_id,
+        buy_quantity,
+        remaining: result.listing_remaining,
+        total_price: result.total_price,
+        log_msg: &log_msg,
+    };
+    if let Err(e) = vallheru_data::queries::market::purchase_astral(&app.pool, &purchase).await {
+        tracing::error!(error = %e, "purchase_astral failed");
+        return server_error();
+    }
 
     flash_and_redirect(
         app,
@@ -1693,40 +1591,23 @@ async fn execute_pet_buy(
         Err(e) => return error_page(app, ctx, &e.to_string()),
     };
 
-    if let Err(e) = vallheru_data::queries::market::debit_buyer_credits(
-        &app.pool,
-        player_id,
-        result.total_price,
-    )
-    .await
-    {
-        tracing::error!(error = %e, "debit_buyer_credits failed");
-        return server_error();
-    }
-    if let Err(e) = vallheru_data::queries::market::credit_seller_bank(
-        &app.pool,
-        listing.seller,
-        result.total_price,
-    )
-    .await
-    {
-        tracing::error!(error = %e, "credit_seller_bank failed");
-        return server_error();
-    }
-
-    // Remove from market
-    if let Err(e) = vallheru_data::queries::market::delete_pet_listing(&app.pool, listing_id).await
-    {
-        tracing::error!(error = %e, "delete_pet_listing failed");
-        return server_error();
-    }
-
     let log_msg = format!(
         "{} kupił(a) {} za {} sztuk złota na rynku zwierzaków.",
         player.username, listing.name, result.total_price
     );
-    let _ = vallheru_data::queries::market::insert_market_log(&app.pool, listing.seller, &log_msg)
-        .await;
+    if let Err(e) = vallheru_data::queries::market::purchase_pet(
+        &app.pool,
+        player_id,
+        listing.seller,
+        listing_id,
+        result.total_price,
+        &log_msg,
+    )
+    .await
+    {
+        tracing::error!(error = %e, "purchase_pet failed");
+        return server_error();
+    }
 
     flash_and_redirect(
         app,

@@ -1485,3 +1485,254 @@ pub async fn insert_market_log(
         .await?;
     Ok(())
 }
+
+// =========================================================================
+// Transactional purchase helpers (TD-035)
+//
+// Each function wraps the full purchase flow in a single DB transaction:
+// debit buyer → credit seller → mutate listing → log notification.
+// =========================================================================
+
+/// Parameters for a quantity-based market purchase (minerals, herbs, astral).
+pub struct QuantityPurchase<'a> {
+    pub buyer_id: i32,
+    pub seller_id: i32,
+    pub listing_id: i32,
+    pub buy_quantity: i32,
+    pub remaining: i32,
+    pub total_price: i64,
+    pub log_msg: &'a str,
+}
+
+/// Execute a mineral market purchase inside a transaction.
+pub async fn purchase_mineral(pool: &PgPool, p: &QuantityPurchase<'_>) -> Result<(), sqlx::Error> {
+    let mut tx = pool.begin().await?;
+
+    sqlx::query("UPDATE players SET credits = credits - $1 WHERE id = $2")
+        .bind(p.total_price)
+        .bind(p.buyer_id)
+        .execute(&mut *tx)
+        .await?;
+
+    sqlx::query("UPDATE players SET bank = bank + $1 WHERE id = $2")
+        .bind(p.total_price)
+        .bind(p.seller_id)
+        .execute(&mut *tx)
+        .await?;
+
+    if p.remaining <= 0 {
+        sqlx::query("DELETE FROM pmarket WHERE id = $1")
+            .bind(p.listing_id)
+            .execute(&mut *tx)
+            .await?;
+    } else {
+        sqlx::query("UPDATE pmarket SET ilosc = ilosc - $1 WHERE id = $2")
+            .bind(p.buy_quantity)
+            .bind(p.listing_id)
+            .execute(&mut *tx)
+            .await?;
+    }
+
+    sqlx::query("INSERT INTO game_log (owner_id, message, log_type) VALUES ($1, $2, 'M')")
+        .bind(p.seller_id)
+        .bind(p.log_msg)
+        .execute(&mut *tx)
+        .await?;
+
+    tx.commit().await?;
+    Ok(())
+}
+
+/// Execute a herb market purchase inside a transaction.
+pub async fn purchase_herb(pool: &PgPool, p: &QuantityPurchase<'_>) -> Result<(), sqlx::Error> {
+    let mut tx = pool.begin().await?;
+
+    sqlx::query("UPDATE players SET credits = credits - $1 WHERE id = $2")
+        .bind(p.total_price)
+        .bind(p.buyer_id)
+        .execute(&mut *tx)
+        .await?;
+
+    sqlx::query("UPDATE players SET bank = bank + $1 WHERE id = $2")
+        .bind(p.total_price)
+        .bind(p.seller_id)
+        .execute(&mut *tx)
+        .await?;
+
+    if p.remaining <= 0 {
+        sqlx::query("DELETE FROM hmarket WHERE id = $1")
+            .bind(p.listing_id)
+            .execute(&mut *tx)
+            .await?;
+    } else {
+        sqlx::query("UPDATE hmarket SET ilosc = ilosc - $1 WHERE id = $2")
+            .bind(p.buy_quantity)
+            .bind(p.listing_id)
+            .execute(&mut *tx)
+            .await?;
+    }
+
+    sqlx::query("INSERT INTO game_log (owner_id, message, log_type) VALUES ($1, $2, 'M')")
+        .bind(p.seller_id)
+        .bind(p.log_msg)
+        .execute(&mut *tx)
+        .await?;
+
+    tx.commit().await?;
+    Ok(())
+}
+
+/// Execute an equipment/jewellery/loot market purchase inside a transaction.
+pub async fn purchase_equipment(
+    pool: &PgPool,
+    buyer_id: i32,
+    seller_id: i32,
+    item_id: i32,
+    total_price: i64,
+    log_msg: &str,
+) -> Result<(), sqlx::Error> {
+    let mut tx = pool.begin().await?;
+
+    sqlx::query("UPDATE players SET credits = credits - $1 WHERE id = $2")
+        .bind(total_price)
+        .bind(buyer_id)
+        .execute(&mut *tx)
+        .await?;
+
+    sqlx::query("UPDATE players SET bank = bank + $1 WHERE id = $2")
+        .bind(total_price)
+        .bind(seller_id)
+        .execute(&mut *tx)
+        .await?;
+
+    sqlx::query("UPDATE equipment SET owner = $1, status = 'U', cost = 1 WHERE id = $2")
+        .bind(buyer_id)
+        .bind(item_id)
+        .execute(&mut *tx)
+        .await?;
+
+    sqlx::query("INSERT INTO game_log (owner_id, message, log_type) VALUES ($1, $2, 'M')")
+        .bind(seller_id)
+        .bind(log_msg)
+        .execute(&mut *tx)
+        .await?;
+
+    tx.commit().await?;
+    Ok(())
+}
+
+/// Execute a potion market purchase inside a transaction.
+pub async fn purchase_potion(
+    pool: &PgPool,
+    buyer_id: i32,
+    seller_id: i32,
+    potion_id: i32,
+    total_price: i64,
+    log_msg: &str,
+) -> Result<(), sqlx::Error> {
+    let mut tx = pool.begin().await?;
+
+    sqlx::query("UPDATE players SET credits = credits - $1 WHERE id = $2")
+        .bind(total_price)
+        .bind(buyer_id)
+        .execute(&mut *tx)
+        .await?;
+
+    sqlx::query("UPDATE players SET bank = bank + $1 WHERE id = $2")
+        .bind(total_price)
+        .bind(seller_id)
+        .execute(&mut *tx)
+        .await?;
+
+    sqlx::query("UPDATE potions SET owner = $1, status = 'A', cost = 0 WHERE id = $2")
+        .bind(buyer_id)
+        .bind(potion_id)
+        .execute(&mut *tx)
+        .await?;
+
+    sqlx::query("INSERT INTO game_log (owner_id, message, log_type) VALUES ($1, $2, 'M')")
+        .bind(seller_id)
+        .bind(log_msg)
+        .execute(&mut *tx)
+        .await?;
+
+    tx.commit().await?;
+    Ok(())
+}
+
+/// Execute an astral market purchase inside a transaction.
+pub async fn purchase_astral(pool: &PgPool, p: &QuantityPurchase<'_>) -> Result<(), sqlx::Error> {
+    let mut tx = pool.begin().await?;
+
+    sqlx::query("UPDATE players SET credits = credits - $1 WHERE id = $2")
+        .bind(p.total_price)
+        .bind(p.buyer_id)
+        .execute(&mut *tx)
+        .await?;
+
+    sqlx::query("UPDATE players SET bank = bank + $1 WHERE id = $2")
+        .bind(p.total_price)
+        .bind(p.seller_id)
+        .execute(&mut *tx)
+        .await?;
+
+    if p.remaining <= 0 {
+        sqlx::query("DELETE FROM amarket WHERE id = $1")
+            .bind(p.listing_id)
+            .execute(&mut *tx)
+            .await?;
+    } else {
+        sqlx::query("UPDATE amarket SET amount = amount - $1 WHERE id = $2")
+            .bind(p.buy_quantity)
+            .bind(p.listing_id)
+            .execute(&mut *tx)
+            .await?;
+    }
+
+    sqlx::query("INSERT INTO game_log (owner_id, message, log_type) VALUES ($1, $2, 'M')")
+        .bind(p.seller_id)
+        .bind(p.log_msg)
+        .execute(&mut *tx)
+        .await?;
+
+    tx.commit().await?;
+    Ok(())
+}
+
+/// Execute a pet market purchase inside a transaction.
+pub async fn purchase_pet(
+    pool: &PgPool,
+    buyer_id: i32,
+    seller_id: i32,
+    listing_id: i32,
+    total_price: i64,
+    log_msg: &str,
+) -> Result<(), sqlx::Error> {
+    let mut tx = pool.begin().await?;
+
+    sqlx::query("UPDATE players SET credits = credits - $1 WHERE id = $2")
+        .bind(total_price)
+        .bind(buyer_id)
+        .execute(&mut *tx)
+        .await?;
+
+    sqlx::query("UPDATE players SET bank = bank + $1 WHERE id = $2")
+        .bind(total_price)
+        .bind(seller_id)
+        .execute(&mut *tx)
+        .await?;
+
+    sqlx::query("DELETE FROM core_market WHERE id = $1")
+        .bind(listing_id)
+        .execute(&mut *tx)
+        .await?;
+
+    sqlx::query("INSERT INTO game_log (owner_id, message, log_type) VALUES ($1, $2, 'M')")
+        .bind(seller_id)
+        .bind(log_msg)
+        .execute(&mut *tx)
+        .await?;
+
+    tx.commit().await?;
+    Ok(())
+}
