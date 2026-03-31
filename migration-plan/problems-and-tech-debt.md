@@ -322,3 +322,15 @@ Each entry includes:
 - **Needs new task**: No
 - **Status**: resolved
 - **Related tasks**: TD-021
+
+### TD-026: Outpost patrol XP bypasses skill level-up detection
+
+- **Type**: bug
+- **Discovered in**: TD-025 follow-up audit
+- **Description**: The `grant_skill_exp` helper in outpost.rs did a raw SQL `UPDATE player_skills SET xp = xp + $1` without calling `progression::apply_skill_xp`. XP accumulated in the database but level-ups never fired — the skill level column was never incremented when XP thresholds were crossed.
+- **Impact**: **High** — garrison patrol skill XP never caused level-ups. Players gained XP numbers but the skill level never actually increased.
+- **Action**: Rewrote `grant_skill_exp` to load skills, apply `progression::apply_skill_xp` for proper level-up detection, save skills back, and return a message about any level-ups gained. Updated call sites to include level-up messages in flash text.
+- **Fixable in existing task**: No — standalone fix.
+- **Needs new task**: No
+- **Status**: resolved
+- **Related tasks**: TD-021, TD-025

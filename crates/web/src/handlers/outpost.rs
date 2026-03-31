@@ -13,6 +13,7 @@ use crate::page::{Flash, FlashKind, PageMeta};
 use crate::state::AppState;
 use vallheru_data::queries::{outpost as oq, player as pq};
 use vallheru_domain::group::outpost as domain;
+use vallheru_domain::player::progression;
 
 // =========================================================================
 // View models
@@ -1747,9 +1748,9 @@ pub async fn garrison_execute(
         .bind(player_id)
         .execute(&app.pool)
         .await;
-        let _ = grant_skill_exp(&app, player_id, skill_name, plevel).await;
+        let xp_extra = grant_skill_exp(&app, player_id, skill_name, plevel).await;
         format!(
-            "Zadanie zakończone. Otrzymał{gender_suffix} {gold} sztuk złota oraz {plevel} punktów doświadczenia."
+            "Zadanie zakończone. Otrzymał{gender_suffix} {gold} sztuk złota oraz {plevel} punktów doświadczenia.{xp_extra}"
         )
     } else if roll < 95 {
         // Good success — double reward
@@ -1762,9 +1763,9 @@ pub async fn garrison_execute(
         .bind(player_id)
         .execute(&app.pool)
         .await;
-        let _ = grant_skill_exp(&app, player_id, skill_name, exp).await;
+        let xp_extra = grant_skill_exp(&app, player_id, skill_name, exp).await;
         format!(
-            "Doskonale wykonane zadanie! Otrzymał{gender_suffix} {bonus_gold} sztuk złota oraz {exp} punktów doświadczenia."
+            "Doskonale wykonane zadanie! Otrzymał{gender_suffix} {bonus_gold} sztuk złota oraz {exp} punktów doświadczenia.{xp_extra}"
         )
     } else {
         // Failure — damage
@@ -2118,17 +2119,34 @@ async fn load_player_stats_for_garrison(state: &AppState, player_id: i32) -> Gar
     }
 }
 
-async fn grant_skill_exp(
-    state: &AppState,
-    player_id: i32,
-    skill: &str,
-    amount: i32,
-) -> Result<(), sqlx::Error> {
-    sqlx::query("UPDATE player_skills SET xp = xp + $1 WHERE player_id = $2 AND skill_key = $3")
-        .bind(amount)
-        .bind(player_id)
-        .bind(skill)
-        .execute(&state.pool)
-        .await?;
-    Ok(())
+/// Grant skill XP with proper level-up detection via `apply_skill_xp`.
+///
+/// Returns a message fragment about level-ups (empty if none).
+async fn grant_skill_exp(state: &AppState, player_id: i32, skill: &str, amount: i32) -> String {
+    if amount <= 0 {
+        return String::new();
+    }
+
+    let mut skills = pq::load_skills(&state.pool, player_id)
+        .await
+        .unwrap_or_default();
+
+    let mut extra = String::new();
+    if let Some(sk) = skills.iter_mut().find(|s| s.skill_key == skill) {
+        let result = progression::apply_skill_xp(sk, amount);
+        if result.levels_gained > 0 {
+            use std::fmt::Write;
+            let _ = write!(
+                extra,
+                " Twoja umiejętność {} wzrosła o {} poziom(ów)!",
+                skill, result.levels_gained
+            );
+        }
+    }
+
+    if let Err(e) = pq::save_skills(&state.pool, player_id, &skills).await {
+        tracing::error!(error = %e, "grant_skill_exp: save_skills failed");
+    }
+
+    extra
 }
