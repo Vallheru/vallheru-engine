@@ -514,3 +514,51 @@ Each entry includes:
 - **Needs new task**: No
 - **Status**: resolved
 - **Related tasks**: None
+
+### TD-042: player_profile.html extends nonexistent layout.html
+
+- **Type**: bug
+- **Discovered in**: Template audit
+- **Description**: `player_profile.html` extended `layout.html` which does not exist. Every other template extends `base.html`. This caused a runtime template-not-found crash on every profile page view.
+- **Impact**: **Critical** — `/player/{id}` route was completely broken.
+- **Action**: Changed `{% extends "layout.html" %}` to `{% extends "base.html" %}`.
+- **Fixable in existing task**: Yes
+- **Needs new task**: No
+- **Status**: resolved
+- **Related tasks**: TD-039
+
+### TD-043: Forum search bypasses category visit permissions (IDOR)
+
+- **Type**: bug
+- **Discovered in**: Handler audit
+- **Description**: `forum_search` accepted any `catid` from user input without checking `perm_visit`. Users could search restricted/staff-only forum categories by crafting a POST with any `catid`. The `rank` variable was loaded but explicitly discarded with `let _ = rank;`.
+- **Impact**: **High** — information disclosure of staff-only forum content.
+- **Action**: Added `get_category_perms` + `has_permission` check before search query. Removed dead `let _ = rank;`.
+- **Fixable in existing task**: Yes
+- **Needs new task**: No
+- **Status**: resolved
+- **Related tasks**: None
+
+### TD-044: State-changing actions on GET routes (CSRF vulnerability)
+
+- **Type**: bug
+- **Discovered in**: Handler audit
+- **Description**: Several state-changing operations were registered as GET routes: `/jail/escape` (deletes jail record, deducts energy, awards XP), `/hospital?action=heal|resurrect` (deducts gold, modifies HP/stats), `/mountains?action=back|resurrect` and `/forest?action=back|resurrect` (moves player, performs resurrection). GET routes for mutations are vulnerable to CSRF via image tags and link prefetching.
+- **Impact**: **High** — attackers could trigger jail escape, healing, or resurrections via crafted links.
+- **Action**: Converted `/jail/escape` to POST-only route. Split `/hospital` into GET (view) + POST (action). Added POST handler for `/mountains` and `/forest`. Updated templates to use `<form method="post">` for all state-changing actions.
+- **Fixable in existing task**: Yes
+- **Needs new task**: No
+- **Status**: resolved
+- **Related tasks**: TD-040
+
+### TD-045: Market flash_and_redirect ignores redirect path
+
+- **Type**: bug
+- **Discovered in**: Handler audit
+- **Description**: `flash_and_redirect()` in market.rs accepted a `_path` parameter but never used it — it rendered an inline `error.html` page instead. After market purchases, users saw a success page with no navigation instead of being redirected back to the market listing.
+- **Impact**: **Medium** — poor post-purchase UX, no POST-Redirect-GET pattern.
+- **Action**: Changed `flash_and_redirect` to use `redirect_after_post(path)` (303 See Other), implementing proper PRG pattern.
+- **Fixable in existing task**: Yes
+- **Needs new task**: No
+- **Status**: resolved
+- **Related tasks**: None
