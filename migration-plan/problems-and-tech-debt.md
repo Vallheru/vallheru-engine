@@ -562,3 +562,39 @@ Each entry includes:
 - **Needs new task**: No
 - **Status**: resolved
 - **Related tasks**: None
+
+### TD-046: Outpost multi-step writes not transactional
+
+- **Type**: bug
+- **Discovered in**: Handler audit
+- **Description**: Outpost handlers for army purchase, size upgrade, structure building, combat rounds, and veteran equipment performed multiple sequential DB writes without transactions. Partial failures could leave the game state inconsistent — e.g. gold deducted but army not added, or combat damage applied to one side but not the other.
+- **Impact**: **Critical** — economic exploits and data corruption possible under concurrent load or transient DB errors.
+- **Action**: Created 5 transactional wrapper functions (`purchase_army_tx`, `upgrade_size_tx`, `build_structure_tx`, `apply_combat_round`, `equip_veteran_item_tx`) and rewired all handlers to use them with proper error propagation.
+- **Fixable in existing task**: Yes
+- **Needs new task**: No
+- **Status**: resolved
+- **Related tasks**: None
+
+### TD-047: Mail/room multi-step writes not transactional
+
+- **Type**: bug
+- **Discovered in**: Handler audit
+- **Description**: Mail send inserted two messages (recipient + sender copy) without a transaction; room operations (destroy, leave, remove, invite) performed 2-4 writes non-atomically. Partial failures could leave orphaned messages, ghost room members, or inconsistent co-owner lists.
+- **Impact**: **High** — data consistency issues, potential for ghost state.
+- **Action**: Created transactional functions (`send_message_pair_tx`, `destroy_room_tx`, `remove_from_room_tx`, `invite_to_room_tx`, `leave_room_tx`) and rewired handlers with error propagation.
+- **Fixable in existing task**: Yes
+- **Needs new task**: No
+- **Status**: resolved
+- **Related tasks**: None
+
+### TD-048: Silent error suppression in forum/court/chat handlers
+
+- **Type**: bug
+- **Discovered in**: Handler audit
+- **Description**: 24 `let _ =` patterns across forum (9), court (4), and chat (11) handlers silently discarded database errors. Failed writes (topic creation, reply posting, message deletion, bans, etc.) would succeed from the user's perspective while data was lost.
+- **Impact**: **High** — silent data loss, no operational visibility into failures.
+- **Action**: Replaced all patterns with `if let Err(e)` — critical mutations use `tracing::error!` + redirect, non-critical side-effects use `tracing::warn!`.
+- **Fixable in existing task**: Yes
+- **Needs new task**: No
+- **Status**: resolved
+- **Related tasks**: None
