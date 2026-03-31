@@ -1742,14 +1742,12 @@ fn error_page(state: &AppState, ctx: &RequestContext, message: &str) -> Response
 }
 
 fn flash_and_redirect(
-    state: &AppState,
-    ctx: &RequestContext,
-    message: &str,
-    _path: &str,
+    _state: &AppState,
+    _ctx: &RequestContext,
+    _message: &str,
+    path: &str,
 ) -> Response {
-    let meta = PageMeta::titled("Sukces").with_flash(Flash::success(message.to_owned()));
-    let base = state.templates.build_context(ctx, &meta);
-    state.templates.render("error.html", &base)
+    crate::page::redirect_after_post(path)
 }
 
 fn server_error() -> Response {
