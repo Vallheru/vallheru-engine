@@ -145,7 +145,7 @@ static ALTARA_DISTRICTS: &[DistrictSpec] = &[
             ("/battle", "Arena Walk"),
             ("/armor", "Płatnerz"),
             ("/weapons", "Zbrojmistrz"),
-            ("/bows", "Łucznik"),
+            ("/fletcher", "Łucznik"),
             ("/outposts", "Strażnica"),
             ("/hunters", "Gildia Łowców"),
             ("/guilds2", "Aula Gladiatorów"),
@@ -241,7 +241,7 @@ static ARDULITH_DISTRICTS: &[DistrictSpec] = &[
     (
         "Północny sad",
         &[
-            ("/bows", "Łucznik"),
+            ("/fletcher", "Łucznik"),
             ("/magic-shop", "Alchemik"),
             ("/tower", "Magiczna Wieża"),
             ("/forums?view=categories", "Forum"),

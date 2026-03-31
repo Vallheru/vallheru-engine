@@ -279,9 +279,9 @@ Each entry includes:
 
 - **Type**: bug
 - **Discovered in**: TD-021 follow-up audit
-- **Description**: City navigation arrays in `city.rs` used `/outpost` (PHP name) instead of `/garrison` (Rust route) for the garrison missions link, and `/grid` instead of `/labyrinth` for the labyrinth link. Players clicking these in Altara or Ardulith would get 404s or fall through to PHP.
+- **Description**: City navigation arrays in `city.rs` used `/outpost` (PHP name) instead of `/garrison` (Rust route) for the garrison missions link, `/grid` instead of `/labyrinth` for the labyrinth link, and `/bows` instead of `/fletcher` for the fletcher shop link. Players clicking these in Altara or Ardulith would get 404s or fall through to PHP.
 - **Impact**: **Medium** — two city navigation links broken in both cities.
-- **Action**: Fixed hrefs to `/garrison` and `/labyrinth` matching the actual Rust route registrations in `world.rs`.
+- **Action**: Fixed hrefs to `/garrison`, `/labyrinth`, and `/fletcher` matching the actual Rust route registrations in `world.rs`.
 - **Fixable in existing task**: No — standalone fix.
 - **Needs new task**: No
 - **Status**: resolved
