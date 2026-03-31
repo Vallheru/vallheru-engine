@@ -449,10 +449,10 @@ Each entry includes:
 - **Discovered in**: TD-028 follow-up audit
 - **Description**: Multiple outpost handlers use `let _ =` on gold-modifying SQL queries. If deduction succeeds but creation fails (or vice versa), state becomes inconsistent.
 - **Impact**: **High** — gold loss or free outpost creation.
-- **Action**: Replace `let _ =` with proper error handling, ideally with transactions.
+- **Action**: Wrapped outpost buy, treasury deposit, and treasury withdraw in `pool.begin()` … `tx.commit()` transactions with proper error handling. Remaining `let _ =` on non-financial operations are lower risk.
 - **Fixable in existing task**: No — needs focused fix.
 - **Needs new task**: No
-- **Status**: open
+- **Status**: resolved
 - **Related tasks**: TD-035
 
 ### TD-037: NPC shop buy creates item before deducting gold

@@ -346,11 +346,28 @@ pub async fn buy_outpost(
         );
     }
 
-    let _ = sqlx::query("UPDATE players SET credits = credits - 500 WHERE id = $1")
+    let Ok(mut tx) = app.pool.begin().await else {
+        return error_page(&app, &ctx, "Błąd bazy danych.");
+    };
+    if sqlx::query("UPDATE players SET credits = credits - 500 WHERE id = $1")
         .bind(player_id)
-        .execute(&app.pool)
-        .await;
-    let _ = oq::create_outpost(&app.pool, player_id).await;
+        .execute(&mut *tx)
+        .await
+        .is_err()
+    {
+        return error_page(&app, &ctx, "Nie udało się pobrać złota.");
+    }
+    if sqlx::query("INSERT INTO outposts (owner) VALUES ($1)")
+        .bind(player_id)
+        .execute(&mut *tx)
+        .await
+        .is_err()
+    {
+        return error_page(&app, &ctx, "Nie udało się utworzyć strażnicy.");
+    }
+    if tx.commit().await.is_err() {
+        return error_page(&app, &ctx, "Błąd bazy danych.");
+    }
 
     crate::page::redirect("/outposts")
 }
@@ -557,12 +574,30 @@ pub async fn treasury_deposit(
         return error_page(&app, &ctx, "Nie masz tyle sztuk złota.");
     }
 
-    let _ = sqlx::query("UPDATE players SET credits = credits - $1 WHERE id = $2")
+    let Ok(mut tx) = app.pool.begin().await else {
+        return error_page(&app, &ctx, "Błąd bazy danych.");
+    };
+    if sqlx::query("UPDATE players SET credits = credits - $1 WHERE id = $2")
         .bind(amount)
         .bind(player_id)
-        .execute(&app.pool)
-        .await;
-    let _ = oq::update_gold(&app.pool, out.id, amount).await;
+        .execute(&mut *tx)
+        .await
+        .is_err()
+    {
+        return error_page(&app, &ctx, "Nie udało się pobrać złota.");
+    }
+    if sqlx::query("UPDATE outposts SET gold = gold + $1 WHERE id = $2")
+        .bind(amount)
+        .bind(out.id)
+        .execute(&mut *tx)
+        .await
+        .is_err()
+    {
+        return error_page(&app, &ctx, "Nie udało się dodać złota do strażnicy.");
+    }
+    if tx.commit().await.is_err() {
+        return error_page(&app, &ctx, "Błąd bazy danych.");
+    }
 
     let meta = PageMeta::titled("Skarbiec Strażnicy").with_flash(Flash {
         kind: FlashKind::Success,
@@ -606,12 +641,30 @@ pub async fn treasury_withdraw(
     }
 
     let received = amount / 2;
-    let _ = sqlx::query("UPDATE players SET credits = credits + $1 WHERE id = $2")
+    let Ok(mut tx) = app.pool.begin().await else {
+        return error_page(&app, &ctx, "Błąd bazy danych.");
+    };
+    if sqlx::query("UPDATE players SET credits = credits + $1 WHERE id = $2")
         .bind(received)
         .bind(player_id)
-        .execute(&app.pool)
-        .await;
-    let _ = oq::update_gold(&app.pool, out.id, -amount).await;
+        .execute(&mut *tx)
+        .await
+        .is_err()
+    {
+        return error_page(&app, &ctx, "Nie udało się dodać złota.");
+    }
+    if sqlx::query("UPDATE outposts SET gold = gold - $1 WHERE id = $2")
+        .bind(amount)
+        .bind(out.id)
+        .execute(&mut *tx)
+        .await
+        .is_err()
+    {
+        return error_page(&app, &ctx, "Nie udało się pobrać złota ze strażnicy.");
+    }
+    if tx.commit().await.is_err() {
+        return error_page(&app, &ctx, "Błąd bazy danych.");
+    }
 
     let player = match load_player(&app, player_id).await {
         Ok(p) => p,
