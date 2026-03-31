@@ -413,3 +413,137 @@ pub async fn insert_event_log(
         .await?;
     Ok(())
 }
+
+// =========================================================================
+// Transactional multi-step room operations (TD-047)
+// =========================================================================
+
+/// Destroy a room: notify members, clear room assignments, delete room — all atomic.
+pub async fn destroy_room_tx(
+    pool: &PgPool,
+    room_id: i32,
+    member_ids: &[i64],
+    owner_id: i64,
+    log_msg: &str,
+) -> Result<(), sqlx::Error> {
+    let mut tx = pool.begin().await?;
+
+    for &mid in member_ids {
+        if mid != owner_id {
+            sqlx::query("INSERT INTO game_log (owner_id, message, log_type) VALUES ($1, $2, 'E')")
+                .bind(mid)
+                .bind(log_msg)
+                .execute(&mut *tx)
+                .await?;
+        }
+    }
+
+    sqlx::query("UPDATE players SET room = 0 WHERE room = $1")
+        .bind(room_id)
+        .execute(&mut *tx)
+        .await?;
+
+    sqlx::query("DELETE FROM rooms WHERE id = $1")
+        .bind(room_id)
+        .execute(&mut *tx)
+        .await?;
+
+    tx.commit().await?;
+    Ok(())
+}
+
+/// Remove a player from a room: send notification, clear assignment,
+/// update co-owners list — all atomic.
+pub async fn remove_from_room_tx(
+    pool: &PgPool,
+    player_id: i64,
+    room_id: i32,
+    co_owners: &[i64],
+    log_msg: &str,
+) -> Result<(), sqlx::Error> {
+    let mut tx = pool.begin().await?;
+
+    sqlx::query("INSERT INTO game_log (owner_id, message, log_type) VALUES ($1, $2, 'E')")
+        .bind(player_id)
+        .bind(log_msg)
+        .execute(&mut *tx)
+        .await?;
+
+    sqlx::query("UPDATE players SET room = 0 WHERE id = $1")
+        .bind(player_id)
+        .execute(&mut *tx)
+        .await?;
+
+    sqlx::query("UPDATE rooms SET co_owners = $1 WHERE id = $2")
+        .bind(co_owners)
+        .bind(room_id)
+        .execute(&mut *tx)
+        .await?;
+
+    tx.commit().await?;
+    Ok(())
+}
+
+/// Invite a player to a room: assign room + send notification — atomic.
+pub async fn invite_to_room_tx(
+    pool: &PgPool,
+    player_id: i64,
+    room_id: i32,
+    log_msg: &str,
+) -> Result<(), sqlx::Error> {
+    let mut tx = pool.begin().await?;
+
+    sqlx::query("UPDATE players SET room = $1 WHERE id = $2")
+        .bind(room_id)
+        .bind(player_id)
+        .execute(&mut *tx)
+        .await?;
+
+    sqlx::query("INSERT INTO game_log (owner_id, message, log_type) VALUES ($1, $2, 'E')")
+        .bind(player_id)
+        .bind(log_msg)
+        .execute(&mut *tx)
+        .await?;
+
+    tx.commit().await?;
+    Ok(())
+}
+
+/// Leave a room (non-owner): post system message, clear assignment,
+/// optionally update co-owners — all atomic.
+pub async fn leave_room_tx(
+    pool: &PgPool,
+    player_id: i64,
+    room_id: i32,
+    leave_msg: &str,
+    sender_id: i64,
+    co_owners: Option<&[i64]>,
+) -> Result<(), sqlx::Error> {
+    let mut tx = pool.begin().await?;
+
+    if let Some(co) = co_owners {
+        sqlx::query("UPDATE rooms SET co_owners = $1 WHERE id = $2")
+            .bind(co)
+            .bind(room_id)
+            .execute(&mut *tx)
+            .await?;
+    }
+
+    sqlx::query(
+        "INSERT INTO room_messages (room_id, author_html, body, sender_id, recipient_id)
+         VALUES ($1, '', $2, $3, 0)",
+    )
+    .bind(room_id)
+    .bind(leave_msg)
+    .bind(sender_id)
+    .execute(&mut *tx)
+    .await?;
+
+    sqlx::query("UPDATE players SET room = 0 WHERE id = $1")
+        .bind(player_id)
+        .execute(&mut *tx)
+        .await?;
+
+    tx.commit().await?;
+    Ok(())
+}

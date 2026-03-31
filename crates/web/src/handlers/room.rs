@@ -478,14 +478,15 @@ pub async fn room_quit(
         let members = rq::list_room_members(&app.pool, room_id)
             .await
             .unwrap_or_default();
+        let member_ids: Vec<i64> = members.iter().map(|m| m.id).collect();
         let log_msg = format!("{} zlikwidował(a) pokój w karczmie.", user.name);
-        for m in &members {
-            if m.id != user.id {
-                let _ = rq::insert_event_log(&app.pool, m.id, &log_msg).await;
-            }
+
+        if let Err(e) =
+            rq::destroy_room_tx(&app.pool, room_id, &member_ids, user.id, &log_msg).await
+        {
+            tracing::error!("Room destruction failed: {e}");
+            return error_page(&app, &ctx, "Wystąpił błąd. Spróbuj ponownie.");
         }
-        let _ = rq::clear_all_players_in_room(&app.pool, room_id).await;
-        let _ = rq::delete_room(&app.pool, room_id).await;
 
         return error_page(
             &app,
@@ -499,17 +500,31 @@ pub async fn room_quit(
     let mut co_owners = room.co_owners.clone();
     if let Some(pos) = co_owners.iter().position(|&id| id == user.id) {
         co_owners.remove(pos);
-        let _ = rq::set_co_owners(&app.pool, room_id, &co_owners).await;
     }
 
-    // Post a system message.
     let leave_msg = format!(
         "<a href=\"/view/{}\">{}</a> opuścił(a) pokój.",
         user.id, user.name
     );
-    let _ = rq::insert_room_message(&app.pool, room_id, "", &leave_msg, user.id, 0).await;
+    let updated_co_owners = if co_owners.len() == room.co_owners.len() {
+        None
+    } else {
+        Some(co_owners.as_slice())
+    };
 
-    let _ = rq::clear_player_room(&app.pool, user.id).await;
+    if let Err(e) = rq::leave_room_tx(
+        &app.pool,
+        user.id,
+        room_id,
+        &leave_msg,
+        user.id,
+        updated_co_owners,
+    )
+    .await
+    {
+        tracing::error!("Room leave failed: {e}");
+        return error_page(&app, &ctx, "Wystąpił błąd. Spróbuj ponownie.");
+    }
 
     error_page(
         &app,
@@ -556,14 +571,16 @@ pub async fn room_admin_remove(
     }
 
     let log_msg = format!("{} wyrzucił(a) Ciebie z pokoju w karczmie.", user.name);
-    let _ = rq::insert_event_log(&app.pool, pid, &log_msg).await;
-    let _ = rq::clear_player_room(&app.pool, pid).await;
 
     // Remove from co-owners if they were one.
     let mut co_owners = room.co_owners.clone();
     if let Some(pos) = co_owners.iter().position(|&id| id == pid) {
         co_owners.remove(pos);
-        let _ = rq::set_co_owners(&app.pool, room_id, &co_owners).await;
+    }
+
+    if let Err(e) = rq::remove_from_room_tx(&app.pool, pid, room_id, &co_owners, &log_msg).await {
+        tracing::error!("Room admin remove failed: {e}");
+        return error_page(&app, &ctx, "Wystąpił błąd. Spróbuj ponownie.");
     }
 
     success_redirect(&format!("Wyrzuciłeś(aś) gracza o ID: {pid} z pokoju."))
@@ -624,13 +641,15 @@ pub async fn room_admin_invite(
         );
     }
 
-    let _ = rq::assign_player_room(&app.pool, target_id, room_id).await;
-
     let log_msg = format!(
         "{} zaprosił(a) Ciebie do swojego pokoju w karczmie.",
         user.name
     );
-    let _ = rq::insert_event_log(&app.pool, target_id, &log_msg).await;
+
+    if let Err(e) = rq::invite_to_room_tx(&app.pool, target_id, room_id, &log_msg).await {
+        tracing::error!("Room invite failed: {e}");
+        return error_page(&app, &ctx, "Wystąpił błąd. Spróbuj ponownie.");
+    }
 
     success_redirect(&format!(
         "Zaprosiłeś(aś) gracza o ID: {pid} do swojego pokoju."

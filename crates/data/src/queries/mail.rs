@@ -371,6 +371,54 @@ pub async fn insert_message(
     .await
 }
 
+/// Insert both recipient and sender copies of a mail message in one transaction.
+pub async fn send_message_pair_tx(
+    pool: &PgPool,
+    recipient: &InsertMessageParams<'_>,
+    sender_copy: &InsertMessageParams<'_>,
+) -> Result<(), sqlx::Error> {
+    let mut tx = pool.begin().await?;
+
+    sqlx::query(
+        "INSERT INTO mail_messages
+            (sender_id, sender_name, owner_id, recipient_id, recipient_name,
+             topic_id, subject, body, is_read)
+         VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9)",
+    )
+    .bind(recipient.sender_id)
+    .bind(recipient.sender_name)
+    .bind(recipient.owner_id)
+    .bind(recipient.recipient_id)
+    .bind(recipient.recipient_name)
+    .bind(recipient.topic_id)
+    .bind(recipient.subject)
+    .bind(recipient.body)
+    .bind(recipient.is_read)
+    .execute(&mut *tx)
+    .await?;
+
+    sqlx::query(
+        "INSERT INTO mail_messages
+            (sender_id, sender_name, owner_id, recipient_id, recipient_name,
+             topic_id, subject, body, is_read)
+         VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9)",
+    )
+    .bind(sender_copy.sender_id)
+    .bind(sender_copy.sender_name)
+    .bind(sender_copy.owner_id)
+    .bind(sender_copy.recipient_id)
+    .bind(sender_copy.recipient_name)
+    .bind(sender_copy.topic_id)
+    .bind(sender_copy.subject)
+    .bind(sender_copy.body)
+    .bind(sender_copy.is_read)
+    .execute(&mut *tx)
+    .await?;
+
+    tx.commit().await?;
+    Ok(())
+}
+
 // =========================================================================
 // Unread counters
 // =========================================================================

@@ -470,8 +470,8 @@ pub async fn mail_send(
         mq::next_topic_id(&app.pool).await.unwrap_or(1)
     };
 
-    // Insert message for recipient — unread.
-    let _ = mq::insert_message(
+    // Insert both copies atomically.
+    if let Err(e) = mq::send_message_pair_tx(
         &app.pool,
         &mq::InsertMessageParams {
             sender_id: player_id,
@@ -484,12 +484,6 @@ pub async fn mail_send(
             body: &processed_body,
             is_read: false,
         },
-    )
-    .await;
-
-    // Insert copy for sender — read.
-    let _ = mq::insert_message(
-        &app.pool,
         &mq::InsertMessageParams {
             sender_id: player_id,
             sender_name: player_name,
@@ -502,7 +496,11 @@ pub async fn mail_send(
             is_read: true,
         },
     )
-    .await;
+    .await
+    {
+        tracing::error!("Failed to send mail: {e}");
+        return error_redirect("Wystąpił błąd podczas wysyłania wiadomości.");
+    }
 
     let redirect_url = format!("/mail/read?topic={topic_id}");
     Redirect::to(&redirect_url).into_response()
