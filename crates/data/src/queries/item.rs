@@ -630,6 +630,15 @@ pub async fn buy_shop_equipment(
 ) -> Result<(), sqlx::Error> {
     let new_cost = (shop_item.cost * 3 + 3) / 4; // ceil(cost * 0.75)
 
+    let mut tx = pool.begin().await?;
+
+    // Deduct gold first to prevent free-item-on-CHECK-failure.
+    sqlx::query("UPDATE players SET credits = credits - $1 WHERE id = $2")
+        .bind(shop_item.cost)
+        .bind(owner_id)
+        .execute(&mut *tx)
+        .await?;
+
     let existing: Option<(i32,)> = sqlx::query_as(
         "SELECT id FROM equipment \
          WHERE name = $1 AND wt = $2 AND type = $3 AND status = 'U' \
@@ -645,13 +654,13 @@ pub async fn buy_shop_equipment(
     .bind(shop_item.szyb)
     .bind(shop_item.maxwt)
     .bind(new_cost)
-    .fetch_optional(pool)
+    .fetch_optional(&mut *tx)
     .await?;
 
     if let Some((existing_id,)) = existing {
         sqlx::query("UPDATE equipment SET amount = amount + 1 WHERE id = $1")
             .bind(existing_id)
-            .execute(pool)
+            .execute(&mut *tx)
             .await?;
     } else {
         sqlx::query(
@@ -672,23 +681,26 @@ pub async fn buy_shop_equipment(
         .bind(shop_item.szyb)
         .bind(&shop_item.lang)
         .bind(shop_item.repair)
-        .execute(pool)
+        .execute(&mut *tx)
         .await?;
     }
 
-    // Deduct gold
-    sqlx::query("UPDATE players SET credits = credits - $1 WHERE id = $2")
-        .bind(shop_item.cost)
-        .bind(owner_id)
-        .execute(pool)
-        .await?;
-
+    tx.commit().await?;
     Ok(())
 }
 
 /// Buy a bow from the catalog. Applies 75% resale price, stacks if identical exists.
 pub async fn buy_bow(pool: &PgPool, bow: &BowRow, owner_id: i32) -> Result<(), sqlx::Error> {
     let new_cost = (bow.cost * 3 + 3) / 4; // ceil(cost * 0.75)
+
+    let mut tx = pool.begin().await?;
+
+    // Deduct gold first.
+    sqlx::query("UPDATE players SET credits = credits - $1 WHERE id = $2")
+        .bind(bow.cost)
+        .bind(owner_id)
+        .execute(&mut *tx)
+        .await?;
 
     let existing: Option<(i32,)> = sqlx::query_as(
         "SELECT id FROM equipment \
@@ -704,13 +716,13 @@ pub async fn buy_bow(pool: &PgPool, bow: &BowRow, owner_id: i32) -> Result<(), s
     .bind(bow.szyb)
     .bind(bow.maxwt)
     .bind(new_cost)
-    .fetch_optional(pool)
+    .fetch_optional(&mut *tx)
     .await?;
 
     if let Some((existing_id,)) = existing {
         sqlx::query("UPDATE equipment SET amount = amount + 1 WHERE id = $1")
             .bind(existing_id)
-            .execute(pool)
+            .execute(&mut *tx)
             .await?;
     } else {
         sqlx::query(
@@ -728,17 +740,11 @@ pub async fn buy_bow(pool: &PgPool, bow: &BowRow, owner_id: i32) -> Result<(), s
         .bind(bow.maxwt)
         .bind(bow.szyb)
         .bind(bow.repair)
-        .execute(pool)
+        .execute(&mut *tx)
         .await?;
     }
 
-    // Deduct gold
-    sqlx::query("UPDATE players SET credits = credits - $1 WHERE id = $2")
-        .bind(bow.cost)
-        .bind(owner_id)
-        .execute(pool)
-        .await?;
-
+    tx.commit().await?;
     Ok(())
 }
 
@@ -752,6 +758,15 @@ pub async fn buy_arrows(
 ) -> Result<(), sqlx::Error> {
     let new_cost = (bow.cost * 3 + 3) / 4; // ceil(cost * 0.75)
 
+    let mut tx = pool.begin().await?;
+
+    // Deduct gold first.
+    sqlx::query("UPDATE players SET credits = credits - $1 WHERE id = $2")
+        .bind(total_cost)
+        .bind(owner_id)
+        .execute(&mut *tx)
+        .await?;
+
     let existing: Option<(i32,)> = sqlx::query_as(
         "SELECT id FROM equipment \
          WHERE name = $1 AND owner = $2 AND status = 'U' AND cost = $3",
@@ -759,14 +774,14 @@ pub async fn buy_arrows(
     .bind(&bow.name)
     .bind(owner_id)
     .bind(new_cost)
-    .fetch_optional(pool)
+    .fetch_optional(&mut *tx)
     .await?;
 
     if let Some((existing_id,)) = existing {
         sqlx::query("UPDATE equipment SET wt = wt + $1, maxwt = maxwt + $1 WHERE id = $2")
             .bind(arrow_count)
             .bind(existing_id)
-            .execute(pool)
+            .execute(&mut *tx)
             .await?;
     } else {
         sqlx::query(
@@ -782,17 +797,11 @@ pub async fn buy_arrows(
         .bind(bow.minlev)
         .bind(arrow_count)
         .bind(&bow.bow_type)
-        .execute(pool)
+        .execute(&mut *tx)
         .await?;
     }
 
-    // Deduct gold
-    sqlx::query("UPDATE players SET credits = credits - $1 WHERE id = $2")
-        .bind(total_cost)
-        .bind(owner_id)
-        .execute(pool)
-        .await?;
-
+    tx.commit().await?;
     Ok(())
 }
 

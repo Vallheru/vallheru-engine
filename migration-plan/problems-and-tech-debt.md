@@ -461,10 +461,10 @@ Each entry includes:
 - **Discovered in**: TD-028 follow-up audit
 - **Description**: `buy_shop_equipment` INSERTs/UPDATEs the item then UPDATEs credits as separate queries. If credit deduction fails (CHECK constraint), item already exists — player gets free item.
 - **Impact**: **Medium** — exploitable with credit CHECK constraint race.
-- **Action**: Wrap in transaction or reverse order (deduct first, then grant).
+- **Action**: Wrapped all three buy functions (`buy_shop_equipment`, `buy_bow`, `buy_arrows`) in `pool.begin()` … `tx.commit()` transactions with gold deducted first.
 - **Fixable in existing task**: No — needs dedicated fix.
 - **Needs new task**: No
-- **Status**: open
+- **Status**: resolved
 - **Related tasks**: TD-027, TD-035
 
 ### TD-038: Bank deposit/withdraw TOCTOU race condition
