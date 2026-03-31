@@ -1,0 +1,27 @@
+{% extends "base.html" %}
+{% block content %}
+{% if section == "list" %}
+  <p>Tutaj możesz wybrać rasę swojej postaci. Każda rasa ma swoje plusy i minusy
+  (ich opis znajdziesz po kliknięciu w link). Zastanów się dobrze, ponieważ
+  później nie będziesz już mógł zmienić swojej rasy.</p><br />
+
+  - <a href="/character/race?race=human">Człowiek</a><br />
+  - <a href="/character/race?race=elf">Elf</a><br />
+  - <a href="/character/race?race=dwarf">Krasnolud</a><br />
+  - <a href="/character/race?race=hobbit">Hobbit</a><br />
+  - <a href="/character/race?race=lizardman">Jaszczuroczłek</a><br />
+  - <a href="/character/race?race=gnome">Gnom</a><br />
+{% elif section == "info" %}
+  <p>{{ race_description }}</p>
+  <ul>
+    {% for bonus in stat_bonuses %}
+    <li>+ {{ bonus.value }} {{ bonus.label }} {{ bonus.max_label }}</li>
+    {% endfor %}
+  </ul>
+  <form method="post" action="/character/race">
+    <input type="hidden" name="race" value="{{ race_slug }}" />
+    <button type="submit">Wybierz</button>
+  </form><br />
+  (<a href="/character/race">Wróć</a>)
+{% endif %}
+{% endblock %}

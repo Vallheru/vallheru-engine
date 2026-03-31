@@ -7,6 +7,7 @@ pub mod admin_logs;
 pub mod auth;
 pub mod bank;
 pub mod bugreport;
+pub mod character;
 pub mod chat;
 pub mod city;
 pub mod content;

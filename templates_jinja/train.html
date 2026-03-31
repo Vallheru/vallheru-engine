@@ -1,0 +1,20 @@
+{% extends "base.html" %}
+{% block content %}
+<p>{{ description }}</p>
+<p>{{ train_info }}{{ train_info2 }}</p>
+<br />
+
+<form method="post" action="/train">
+  <label>Chcę trenować moją cechę</label>
+  <select name="stat_key" id="train">
+    {% for key, label in trainable_stats %}
+    <option value="{{ key }}">{{ label }}</option>
+    {% endfor %}
+  </select>
+  <input type="text" size="3" value="1" name="rep" id="rep" />
+  razy.
+  <button type="submit">Trenuj</button>
+  <br /><br />
+  <p id="info">Podaj ile razy chcesz trenować daną cechę.</p>
+</form>
+{% endblock %}

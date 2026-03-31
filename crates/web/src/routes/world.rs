@@ -3,9 +3,9 @@
 use axum::{Router, middleware, routing};
 
 use crate::handlers::{
-    bank, chat, city, content, court, deity, equipment, forums, gathering, hospital, house, jail,
-    locations, mail, map, market, outpost, pages, player_profile, quest, room, shops, spells,
-    temple, tower, travel, tribe_forum,
+    bank, character, chat, city, content, court, deity, equipment, forums, gathering, hospital,
+    house, jail, locations, mail, map, market, outpost, pages, player_profile, quest, room, shops,
+    spells, temple, tower, travel, tribe_forum,
 };
 use crate::middleware::guards::require_authenticated;
 use crate::state::AppState;
@@ -23,6 +23,7 @@ pub fn routes() -> Router<AppState> {
                 .merge(outpost_routes())
                 .merge(social_routes())
                 .merge(quest_routes())
+                .merge(character_routes())
                 .layer(middleware::from_fn(require_authenticated)),
         )
 }
@@ -320,9 +321,34 @@ fn social_routes() -> Router<AppState> {
         .route("/player/{id}", routing::get(player_profile::player_profile))
         .route("/view", routing::get(player_profile::legacy_view_redirect))
         .route("/view/{id}", routing::get(player_profile::player_profile))
+        .route("/stats", routing::get(character::stats_show))
+}
+
+fn character_routes() -> Router<AppState> {
+    Router::new()
+        .route("/stats/gender", routing::post(character::stats_gender))
         .route(
-            "/stats",
-            routing::get(player_profile::legacy_stats_redirect),
+            "/stats/newbie-off",
+            routing::post(character::stats_newbie_off),
+        )
+        .route(
+            "/train",
+            routing::get(character::train_show).post(character::train_action),
+        )
+        .route("/hall-of-fame", routing::get(character::hof_show))
+        .route(
+            "/hall-of-fame/machines",
+            routing::get(character::hof_machines_show),
+        )
+        .route("/action-points", routing::get(character::ap_show))
+        .route("/action-points/buy", routing::post(character::ap_buy))
+        .route(
+            "/character/race",
+            routing::get(character::race_show).post(character::race_select),
+        )
+        .route(
+            "/character/class",
+            routing::get(character::class_show).post(character::class_select),
         )
 }
 

@@ -121,7 +121,7 @@ pub async fn legacy_view_redirect(Query(q): Query<LegacyViewQuery>) -> Response 
 }
 
 /// GET /stats — legacy redirect: /stats?id=N → /player/N
-pub async fn legacy_stats_redirect(Query(q): Query<LegacyStatsQuery>) -> Response {
+pub fn legacy_stats_redirect(Query(q): Query<LegacyStatsQuery>) -> Response {
     match q.id {
         Some(id) => Redirect::to(&format!("/player/{id}")).into_response(),
         None => Redirect::to("/city").into_response(),

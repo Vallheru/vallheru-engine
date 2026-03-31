@@ -1,0 +1,25 @@
+{% extends "base.html" %}
+{% block content %}
+{% if section == "list" %}
+  <p>Tutaj możesz wybrać klasę swojej postaci. Każda klasa ma swoje plusy i minusy.
+  Zastanów się dobrze, ponieważ później nie będziesz już mógł zmienić swojej klasy.</p><br />
+
+  - <a href="/character/class?class=warrior">Wojownik</a><br />
+  - <a href="/character/class?class=mage">Mag</a><br />
+  - <a href="/character/class?class=craftsman">Rzemieślnik</a><br />
+  - <a href="/character/class?class=barbarian">Barbarzyńca</a><br />
+  - <a href="/character/class?class=thief">Złodziej</a><br />
+{% elif section == "info" %}
+  <p>{{ class_description }}</p>
+  <ul>
+    {% for bonus in stat_bonuses %}
+    <li>{{ bonus.value }} {{ bonus.label }}</li>
+    {% endfor %}
+  </ul>
+  <form method="post" action="/character/class">
+    <input type="hidden" name="class" value="{{ class_slug }}" />
+    <button type="submit">Wybierz</button>
+  </form><br />
+  (<a href="/character/class">Wróć</a>)
+{% endif %}
+{% endblock %}

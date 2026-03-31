@@ -1,0 +1,18 @@
+{% extends "base.html" %}
+{% block content %}
+<p>Stoisz w potężnym, granitowym budynku. Jest to Galeria Machin — miejsce gdzie
+znaleźć możesz historię najlepszych klanów w historii świata. Na ścianach wiszą
+niewielkie, złote tabliczki, na których zapisano informacje o zwycięzcach.</p><br />
+
+{% if machines %}
+{% for m in machines %}
+<p>Klan <b>{{ m.tribe_name }}</b> dowodzony przez <b>{{ m.leader_name }}</b>,
+wybudował Astralną Machinę dnia {{ m.build_date }} ery.</p>
+{% endfor %}
+{% else %}
+<p>Nie wybudowano jeszcze machin na tym świecie.</p>
+{% endif %}
+
+<br />
+<p>Pamiętaj, iż pewnego dnia i twój klan może znaleźć się w tym panteonie. Tak więc — do pracy!</p>
+{% endblock %}

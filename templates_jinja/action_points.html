@@ -1,0 +1,35 @@
+{% extends "base.html" %}
+{% block content %}
+<p>Oto lista dostępnych premii dla twojej postaci. Obecnie posiadasz <b>{{ ap }}</b> Punktów Astralnych.</p>
+<br />
+
+{% if available_bonuses %}
+<table>
+{% for bonus in available_bonuses %}
+  {% if loop.index is odd %}
+  <tr>
+  {% endif %}
+  <td style="padding: 3%;">
+    <form method="post" action="/action-points/buy">
+      <input type="hidden" name="bonus_id" value="{{ bonus.id }}" />
+      <input type="checkbox" name="confirm" value="Y" />
+      <u><b>{{ bonus.name }}</b></u><br />
+      {{ bonus.description }}<br />
+      Obecny poziom: {% if bonus.current_level > 0 %}{{ bonus.current_level }}{% else %}brak{% endif %}<br />
+      Maksymalny poziom: {{ bonus.max_levels }}<br />
+      Koszt: {{ bonus.cost }} AP<br />
+      <button type="submit">Wybierz</button>
+    </form>
+  </td>
+  {% if loop.index is even %}
+  </tr>
+  {% endif %}
+{% endfor %}
+{% if available_bonuses | length is odd %}
+  <td></td></tr>
+{% endif %}
+</table>
+{% else %}
+<p>Brak dostępnych premii dla twojej postaci lub wszystkie masz na maksymalnym poziomie.</p>
+{% endif %}
+{% endblock %}

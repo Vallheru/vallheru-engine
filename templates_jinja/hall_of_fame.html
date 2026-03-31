@@ -1,0 +1,18 @@
+{% extends "base.html" %}
+{% block content %}
+<p>Stoisz w granitowym budynku. Jest to Galeria Bohaterów — miejsce, gdzie znaleźć
+możesz historię najwspanialszych bohaterów w dziejach tego świata.</p><br />
+
+{% if heroes %}
+{% for h in heroes %}
+  <b>Imię bohatera:</b> {{ h.hero_name }}<br />
+  <b>Dawne ID:</b> {{ h.hero_id }}<br />
+  <b>Obecne ID:</b> {% if h.current_player_id %}<a href="/player/{{ h.current_player_id }}">{{ h.current_player_id }}</a>{% else %}Opuścił ten świat{% endif %}<br />
+  <b>Rasa:</b> {{ h.race }}<br /><br />
+{% endfor %}
+{% else %}
+<p>Na tym świecie nie pojawił się jeszcze żaden bohater.</p><br />
+{% endif %}
+
+<p>Pamiętaj, iż pewnego dnia i twój pomnik może znaleźć się w tym gmachu. A więc przyszli bohaterowie — do dzieła!</p>
+{% endblock %}

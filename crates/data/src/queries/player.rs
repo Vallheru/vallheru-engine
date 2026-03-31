@@ -477,3 +477,161 @@ pub async fn kill_player(pool: &PgPool, player_id: i32) -> Result<(), sqlx::Erro
         .await?;
     Ok(())
 }
+
+/// Apply training: deduct energy and gold from the player.
+pub async fn apply_training(
+    pool: &PgPool,
+    player_id: i32,
+    energy_cost: f64,
+    gold_cost: i32,
+) -> Result<(), sqlx::Error> {
+    sqlx::query("UPDATE players SET energy = energy - $1, credits = credits - $2 WHERE id = $3")
+        .bind(energy_cost)
+        .bind(gold_cost)
+        .bind(player_id)
+        .execute(pool)
+        .await?;
+    Ok(())
+}
+
+/// Set gender on a player who hasn't selected one yet.
+pub async fn set_gender(pool: &PgPool, player_id: i32, gender: &str) -> Result<(), sqlx::Error> {
+    sqlx::query("UPDATE players SET gender = $1 WHERE id = $2 AND gender IS NULL")
+        .bind(gender)
+        .bind(player_id)
+        .execute(pool)
+        .await?;
+    Ok(())
+}
+
+/// Disable newbie protection.
+pub async fn disable_newbie(pool: &PgPool, player_id: i32) -> Result<(), sqlx::Error> {
+    sqlx::query("UPDATE players SET newbie = 0 WHERE id = $1")
+        .bind(player_id)
+        .execute(pool)
+        .await?;
+    Ok(())
+}
+
+/// Set race on a player (one-time).
+pub async fn set_race(pool: &PgPool, player_id: i32, race: &str) -> Result<(), sqlx::Error> {
+    sqlx::query("UPDATE players SET race = $1 WHERE id = $2")
+        .bind(race)
+        .bind(player_id)
+        .execute(pool)
+        .await?;
+    Ok(())
+}
+
+/// Set class on a player (one-time).
+pub async fn set_class(pool: &PgPool, player_id: i32, class: &str) -> Result<(), sqlx::Error> {
+    sqlx::query("UPDATE players SET class = $1 WHERE id = $2")
+        .bind(class)
+        .bind(player_id)
+        .execute(pool)
+        .await?;
+    Ok(())
+}
+
+/// Deduct AP from a player.
+pub async fn deduct_ap(pool: &PgPool, player_id: i32, cost: i32) -> Result<(), sqlx::Error> {
+    sqlx::query("UPDATE players SET ap = ap - $1 WHERE id = $2")
+        .bind(cost)
+        .bind(player_id)
+        .execute(pool)
+        .await?;
+    Ok(())
+}
+
+/// Get tribe name for a player's `tribe_id`.
+pub async fn tribe_name_for_player(
+    pool: &PgPool,
+    tribe_id: i32,
+) -> Result<Option<String>, sqlx::Error> {
+    if tribe_id == 0 {
+        return Ok(None);
+    }
+    let row: Option<(String,)> = sqlx::query_as("SELECT name FROM tribes WHERE id = $1")
+        .bind(tribe_id)
+        .fetch_optional(pool)
+        .await?;
+    Ok(row.map(|r| r.0))
+}
+
+// ---------------------------------------------------------------------------
+// Bonus catalog
+// ---------------------------------------------------------------------------
+
+/// A row from the `bonuses` catalog table.
+#[derive(Debug, sqlx::FromRow)]
+pub struct BonusCatalogRow {
+    pub id: i32,
+    pub name: String,
+    #[sqlx(rename = "desc")]
+    pub description: String,
+    pub cost: i32,
+    pub levels: i16,
+    #[sqlx(rename = "trigger")]
+    pub trigger_key: String,
+    pub bonus: i16,
+    pub race: String,
+    #[sqlx(rename = "clas")]
+    pub class_restriction: String,
+}
+
+/// Load all entries from the bonus catalog.
+pub async fn load_bonus_catalog(pool: &PgPool) -> Result<Vec<BonusCatalogRow>, sqlx::Error> {
+    sqlx::query_as::<_, BonusCatalogRow>(
+        r#"SELECT id, name, "desc", cost, levels, "trigger", bonus, race, clas FROM bonuses ORDER BY id"#,
+    )
+    .fetch_all(pool)
+    .await
+}
+
+// ---------------------------------------------------------------------------
+// Hall of Fame
+// ---------------------------------------------------------------------------
+
+/// A row from the `halloffame` table (heroes).
+#[derive(Debug, sqlx::FromRow)]
+pub struct HofRow {
+    pub oldname: String,
+    pub heroid: i32,
+    pub newid: i32,
+    pub herorace: String,
+}
+
+/// Load all Hall of Fame heroes.
+pub async fn load_hall_of_fame(pool: &PgPool) -> Result<Vec<HofRow>, sqlx::Error> {
+    sqlx::query_as::<_, HofRow>(
+        "SELECT oldname, heroid, newid, herorace FROM halloffame ORDER BY id",
+    )
+    .fetch_all(pool)
+    .await
+}
+
+/// A row from the `halloffame2` table (astral machines).
+#[derive(Debug, sqlx::FromRow)]
+pub struct HofMachineRow {
+    pub tribe: String,
+    pub leader: String,
+    pub bdate: String,
+}
+
+/// Load all Hall of Machines entries.
+pub async fn load_hall_of_machines(pool: &PgPool) -> Result<Vec<HofMachineRow>, sqlx::Error> {
+    sqlx::query_as::<_, HofMachineRow>(
+        "SELECT tribe, leader, bdate FROM halloffame2 ORDER BY id ASC",
+    )
+    .fetch_all(pool)
+    .await
+}
+
+/// Check whether a player ID currently exists.
+pub async fn player_exists(pool: &PgPool, player_id: i32) -> Result<bool, sqlx::Error> {
+    let row: Option<(i32,)> = sqlx::query_as("SELECT id FROM players WHERE id = $1")
+        .bind(player_id)
+        .fetch_optional(pool)
+        .await?;
+    Ok(row.is_some())
+}

@@ -1,0 +1,110 @@
+{% extends "base.html" %}
+{% block content %}
+<p>Witaj w swoich statystykach. Możesz tutaj zobaczyć informacje na temat swojej postaci w grze.</p>
+<br />
+
+{% if avatar %}
+<div style="text-align:center;"><img src="/static/avatars/{{ avatar }}" style="max-width:150px;max-height:150px;" alt="Avatar" /></div>
+{% endif %}
+
+{% if section == "newbie_confirm" %}
+<p>Naprawdę chcesz wyłączyć ochronę? Możesz wtedy zostać zaatakowany przez innych graczy.</p>
+<form method="post" action="/stats/newbie-off">
+  <button type="submit">Tak</button>
+</form>
+<p><a href="/stats">Nie</a></p>
+{% endif %}
+
+<table width="100%">
+<tr>
+<td width="50%" style="vertical-align:top;">
+  <div style="text-align:center;"><b><u>Statystyki w grze</u></b></div><br />
+
+  <b>AP:</b> {{ ap }}{% if ap > 0 %} (<a href="/action-points">Użyj</a>){% endif %}<br />
+  <b>Rasa:</b> {% if race %}{{ race }}{% else %}(<a href="/character/race">Wybierz</a>){% endif %}<br />
+  <b>Klasa:</b> {% if class %}{{ class }}{% else %}(<a href="/character/class">Wybierz</a>){% endif %}<br />
+  <b>Wyznanie:</b> {% if deity %}{{ deity }} (<a href="/deity?step=change">Zmień</a>){% else %}(<a href="/deity">Wybierz</a>){% endif %}<br />
+
+  <b>Płeć:</b>
+  {% if gender_display %}
+    {{ gender_display }}<br />
+  {% else %}
+    <form method="post" action="/stats/gender" style="display:inline;">
+      <select name="gender">
+        <option value="M">Mężczyzna</option>
+        <option value="F">Kobieta</option>
+      </select>
+      <button type="submit">Wybierz</button>
+    </form><br />
+  {% endif %}
+
+  {% for s in stats %}
+  <b>{{ s.label }}:</b> {{ s.current }}
+  {% if s.delta > 0 %}<span style="color:green;">(+{{ s.delta }})</span>{% elif s.delta < 0 %}<span style="color:red;">({{ s.delta }})</span>{% endif %}
+  {% if s.xp_progress is defined and s.xp_progress %}({{ "%.3f"|format(s.xp_progress) }}% dośw){% endif %}
+  <br />
+  {% endfor %}
+
+  <b>Punkty Magii:</b> {{ mana }}/{{ max_mana }}
+  {% if mana < max_mana %} [<a href="/rest">Odpocznij</a>]{% endif %}<br />
+  <b>Punkty Wiary:</b> {{ pw }}<br />
+  <b>Energia:</b> {{ energy_display }}<br />
+
+  {% if bless_label %}
+  <b>Błogosławieństwo do </b><br />{{ bless_label }} <b>({{ bless_value }})</b><br />
+  {% endif %}
+  {% if antidote_label %}
+  <b>{% if antidote_code == "R" %}Wpływ:{% else %}Antidotum:{% endif %}</b> {{ antidote_label }}<br />
+  {% endif %}
+  <br />
+  <b>Reputacja:</b> {{ reputation }}<br />
+  <b>Wyniki walk:</b> {{ wins }}/{{ losses }}/{{ wins + losses }}<br />
+  <b>Ostatnio zabity:</b> {{ last_killed }}<br />
+  <b>Ostatnio zabity przez:</b> {{ last_killed_by }}<br /><br />
+  <b>Wykonanych zadań:</b> {{ mpoints }}<br />
+</td>
+
+<td width="50%" style="vertical-align:top;">
+  <div style="text-align:center;"><b><u>Informacje</u></b></div><br />
+
+  <b>Ranga:</b> {{ rank_label }}<br />
+  <b>Lokacja:</b> {{ location }}<br />
+  <b>Wiek:</b> {{ age }}<br />
+  <b>Logowań:</b> {{ logins }}<br />
+  <b>IP:</b> {{ ip }}<br />
+  <b>Email:</b> {{ email }}<br />
+  {% if messenger %}<b>Komunikator:</b> {{ messenger }}<br />{% endif %}
+  {% if newbie > 0 %}
+  <b>Ochrona młodego gracza:</b> {{ newbie }} {% if newbie > 1 %}dni{% else %}dzień{% endif %} (<a href="/stats?action=newbie">Wyłącz ochronę</a>)<br />
+  {% endif %}
+  <b>Klan:</b> {% if tribe_name %}<a href="/tforums">{{ tribe_name }}</a>{% else %}brak{% endif %}<br />
+  {% if tribe_name %}<b>Ranga w klanie:</b> {{ tribe_rank }}<br />{% endif %}
+</td>
+</tr>
+</table>
+
+<br />
+<div style="text-align:center; width:70%;">
+  {% if skills %}
+  <table border="0" width="40%" style="display:inline-block; vertical-align:top;">
+    <caption><b><u>Umiejętności</u></b></caption>
+    {% for sk in skills %}
+    <tr><td>
+      <b>{{ sk.label }}:</b> {{ sk.current }}
+      {% if sk.delta > 0 %}<span style="color:green;">(+{{ sk.delta }})</span>{% elif sk.delta < 0 %}<span style="color:red;">({{ sk.delta }})</span>{% endif %}
+      {% if sk.xp_progress is defined and sk.xp_progress %}({{ "%.3f"|format(sk.xp_progress) }}% dośw){% endif %}
+    </td></tr>
+    {% endfor %}
+  </table>
+  {% endif %}
+
+  {% if bonuses %}
+  <table border="0" width="40%" style="display:inline-block; vertical-align:top; float:right;">
+    <caption><b><u>Premie</u></b></caption>
+    {% for b in bonuses %}
+    <tr><td><b>{{ b.name }}:</b> {{ b.effective_pct }}%</td></tr>
+    {% endfor %}
+  </table>
+  {% endif %}
+</div>
+{% endblock %}
