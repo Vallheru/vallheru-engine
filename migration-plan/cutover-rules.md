@@ -143,20 +143,20 @@ Player stats, training, and character display pages.
 
 | PHP File | Rust Path | State | Notes |
 |---|---|---|---|
-| `stats.php` | `/stats` | **not implemented** | |
-| `train.php` | `/train` | **not implemented** | |
-| `hof.php` | `/hall-of-fame` | **not implemented** | |
-| `hof2.php` | `/hall-of-fame/secondary` | **not implemented** | |
-| `ap.php` | `/action-points` | **not implemented** | |
-| `klasa.php` | `/character/class` | **not implemented** | |
-| `rasa.php` | `/character/race` | **not implemented** | |
-| `view.php` | `/player/:id` | **not implemented** | |
+| `stats.php` | `/stats` | **staged** | Handler: `character::stats_show` |
+| `train.php` | `/train` | **staged** | Handler: `character::train_show` / `train_action` |
+| `hof.php` | `/hall-of-fame` | **staged** | Handler: `character::hof_show` |
+| `hof2.php` | `/hall-of-fame/machines` | **staged** | Handler: `character::hof_machines_show` |
+| `ap.php` | `/action-points` | **staged** | Handler: `character::ap_show` / `ap_buy` |
+| `klasa.php` | `/character/class` | **staged** | Handler: `character::class_show` / `class_select` |
+| `rasa.php` | `/character/race` | **staged** | Handler: `character::race_show` / `race_select` |
+| `view.php` | `/player/:id` | **active** | Already implemented: `player_profile::player_profile` |
 
 **Pre-cutover checklist**:
 1. Group A must be active.
 2. These routes must be implemented before cutover.
 
-**Status**: Routes not yet implemented in Rust handlers. These are Phase 2 (Module 06) routes that have domain logic in place but no web handlers.
+**Status**: All routes implemented. Domain logic, handlers, templates, and routing in place. Ready for integration testing.
 
 ---
 
