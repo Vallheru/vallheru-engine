@@ -66,10 +66,10 @@
 <p>
 {% if box_type == "inbox" %}
 [<a href="/mail/saved">Oznaczone</a>]
-[<a href="/mail/clear?box=inbox" onclick="return confirm('Na pewno?')">Wyczyść Skrzynkę</a>]
+[<form method="post" action="/mail/clear?box=inbox" style="display:inline" onsubmit="return confirm('Na pewno?')"><button type="submit" class="link-btn">Wyczyść Skrzynkę</button></form>]
 {% else %}
 [<a href="/mail/inbox">Skrzynka</a>]
-[<a href="/mail/clear?box=saved" onclick="return confirm('Na pewno?')">Wykasuj zapisane listy</a>]
+[<form method="post" action="/mail/clear?box=saved" style="display:inline" onsubmit="return confirm('Na pewno?')"><button type="submit" class="link-btn">Wykasuj zapisane listy</button></form>]
 {% endif %}
 [<a href="/mail/compose">Napisz</a>]
 </p>

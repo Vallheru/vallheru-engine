@@ -16,11 +16,11 @@
     {% if m.is_saved %}
       [Zapisano]
     {% else %}
-      [<a href="/mail/save?id={{ m.id }}">Zapisz</a>]
+      [<form method="post" action="/mail/save?id={{ m.id }}" style="display:inline"><button type="submit" class="link-btn">Zapisz</button></form>]
     {% endif %}
-    [<a href="/mail/delete?id={{ m.id }}" onclick="return confirm('Na pewno?')">Kasuj</a>]
+    [<form method="post" action="/mail/delete?id={{ m.id }}" style="display:inline" onsubmit="return confirm('Na pewno?')"><button type="submit" class="link-btn">Kasuj</button></form>]
     [<a href="/mail/forward?id={{ m.id }}">Przekaż</a>]
-    [<a href="/mail/block?player_id={{ m.sender_id }}">Zablokuj</a>]
+    [<form method="post" action="/mail/block?player_id={{ m.sender_id }}" style="display:inline"><button type="submit" class="link-btn">Zablokuj</button></form>]
   </p>
 </div>
 {% endfor %}

@@ -502,3 +502,15 @@ Each entry includes:
 - **Needs new task**: Yes
 - **Status**: resolved
 - **Related tasks**: None
+
+### TD-041: POST-only routes linked via GET `<a>` tags — 405 errors
+
+- **Type**: bug
+- **Discovered in**: Template audit
+- **Description**: 8 template links used `<a href>` (HTTP GET) to reach POST-only routes: mail save/delete/block/clear, court comment delete, forum topic delete/close/sticky. All returned 405 Method Not Allowed.
+- **Impact**: **High** — mail management, court moderation, and forum staff actions were completely broken.
+- **Action**: Converted all affected links to inline `<form method="post">` with `.link-btn` styled submit buttons. Added `.link-btn` utility class to `base.html`. Removed dead `data-method="post"` attributes.
+- **Fixable in existing task**: No
+- **Needs new task**: No
+- **Status**: resolved
+- **Related tasks**: None

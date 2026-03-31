@@ -17,12 +17,9 @@
         (<a href="/forums/topic/{{ topic.id }}?quotet=true">Cytuj</a>)
       {% endif %}
       {% if is_staff %}
-        | <a href="/forums/topic/{{ topic.id }}/delete" onclick="return confirm('Na pewno?');"
-             data-method="post">Usuń</a>
-        | <a href="/forums/topic/{{ topic.id }}/close?action={% if is_closed %}N{% else %}Y{% endif %}"
-             data-method="post">{% if is_closed %}Otwórz{% else %}Zamknij{% endif %}</a>
-        | <a href="/forums/topic/{{ topic.id }}/sticky?action={% if topic.is_sticky %}N{% else %}Y{% endif %}"
-             data-method="post">{% if topic.is_sticky %}Odepnij{% else %}Przypnij{% endif %}</a>
+        | <form method="post" action="/forums/topic/{{ topic.id }}/delete" style="display:inline" onsubmit="return confirm('Na pewno?');"><button type="submit" class="link-btn">Usuń</button></form>
+        | <form method="post" action="/forums/topic/{{ topic.id }}/close?action={% if is_closed %}N{% else %}Y{% endif %}" style="display:inline"><button type="submit" class="link-btn">{% if is_closed %}Otwórz{% else %}Zamknij{% endif %}</button></form>
+        | <form method="post" action="/forums/topic/{{ topic.id }}/sticky?action={% if topic.is_sticky %}N{% else %}Y{% endif %}" style="display:inline"><button type="submit" class="link-btn">{% if topic.is_sticky %}Odepnij{% else %}Przypnij{% endif %}</button></form>
         | <a href="/forums/topic/{{ topic.id }}/move">Przenieś</a>
       {% endif %}
     </td>

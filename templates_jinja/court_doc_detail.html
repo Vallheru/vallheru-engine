@@ -17,7 +17,7 @@
   <p>
     <strong>{{ c.author }}</strong> napisał(a):
     {% if can_delete_comments %}
-      (<a href="/court/comment/delete/{{ c.id }}?doc_id={{ doc.id }}">Usuń</a>)
+      (<form method="post" action="/court/comment/delete/{{ c.id }}?doc_id={{ doc.id }}" style="display:inline"><button type="submit" class="link-btn">Usuń</button></form>)
     {% endif %}
   </p>
   <p>{{ c.body }}</p>
