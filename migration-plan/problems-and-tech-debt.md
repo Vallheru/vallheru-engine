@@ -346,3 +346,15 @@ Each entry includes:
 - **Needs new task**: No
 - **Status**: resolved
 - **Related tasks**: None
+
+### TD-028: Broken /quest link in labyrinth result template
+
+- **Type**: bug
+- **Discovered in**: TD-027 follow-up audit
+- **Description**: `labyrinth_result.html` had `href="/quest?id={{ quest_id }}"` but no `/quest` route exists in the Rust app. The correct route is `/chronicle/{{ quest_id }}`.
+- **Impact**: **Medium** — clicking the "view quest" link after completing a labyrinth quest would 404.
+- **Action**: Changed link to `href="/chronicle/{{ quest_id }}"` in `templates_jinja/labyrinth_result.html`.
+- **Fixable in existing task**: No — standalone fix.
+- **Needs new task**: No
+- **Status**: resolved
+- **Related tasks**: None
