@@ -423,6 +423,118 @@ pub async fn find_mage_item_catalog(pool: &PgPool) -> Result<Vec<MageItemRow>, s
     .await
 }
 
+/// Load mage items filtered by type code (T=wand, C=clothing).
+pub async fn find_mage_items_by_type(
+    pool: &PgPool,
+    item_type: &str,
+) -> Result<Vec<MageItemRow>, sqlx::Error> {
+    sqlx::query_as::<_, MageItemRow>(
+        "SELECT id, name, power, type, cost, minlev \
+         FROM mage_items \
+         WHERE type = $1 \
+         ORDER BY cost ASC",
+    )
+    .bind(item_type)
+    .fetch_all(pool)
+    .await
+}
+
+/// Find a single mage item by ID.
+pub async fn find_mage_item_by_id(
+    pool: &PgPool,
+    item_id: i32,
+) -> Result<Option<MageItemRow>, sqlx::Error> {
+    sqlx::query_as::<_, MageItemRow>(
+        "SELECT id, name, power, type, cost, minlev \
+         FROM mage_items \
+         WHERE id = $1",
+    )
+    .bind(item_id)
+    .fetch_optional(pool)
+    .await
+}
+
+/// Load shop spell catalog filtered by type (B/O/U) and player magic level.
+pub async fn find_spell_shop_by_type(
+    pool: &PgPool,
+    spell_type: &str,
+    max_level: i32,
+) -> Result<Vec<SpellRow>, sqlx::Error> {
+    sqlx::query_as::<_, SpellRow>(
+        "SELECT id, nazwa, gracz, cena, poziom, typ, obr, status, element \
+         FROM spells \
+         WHERE gracz = 0 AND status = 'S' AND typ = $1 AND poziom <= $2 \
+         ORDER BY poziom ASC",
+    )
+    .bind(spell_type)
+    .bind(max_level)
+    .fetch_all(pool)
+    .await
+}
+
+/// Buy a spell: deduct gold from player and insert a spell copy.
+pub async fn buy_spell(
+    pool: &PgPool,
+    player_id: i32,
+    catalog_spell: &SpellRow,
+) -> Result<(), sqlx::Error> {
+    let mut tx = pool.begin().await?;
+
+    sqlx::query("UPDATE players SET credits = credits - $1 WHERE id = $2")
+        .bind(catalog_spell.cena)
+        .bind(player_id)
+        .execute(&mut *tx)
+        .await?;
+
+    sqlx::query(
+        "INSERT INTO spells (gracz, nazwa, cena, poziom, typ, obr, status, element) \
+         VALUES ($1, $2, $3, $4, $5, $6, 'U', $7)",
+    )
+    .bind(player_id)
+    .bind(&catalog_spell.nazwa)
+    .bind(catalog_spell.cena)
+    .bind(catalog_spell.poziom)
+    .bind(&catalog_spell.typ)
+    .bind(catalog_spell.obr)
+    .bind(&catalog_spell.element)
+    .execute(&mut *tx)
+    .await?;
+
+    tx.commit().await
+}
+
+/// Buy a mage item: deduct gold and insert into equipment table for player.
+pub async fn buy_mage_item(
+    pool: &PgPool,
+    player_id: i32,
+    item: &MageItemRow,
+) -> Result<(), sqlx::Error> {
+    let resale_cost = (item.cost * 3 + 3) / 4; // ceil(cost * 0.75)
+
+    let mut tx = pool.begin().await?;
+
+    sqlx::query("UPDATE players SET credits = credits - $1 WHERE id = $2")
+        .bind(item.cost)
+        .bind(player_id)
+        .execute(&mut *tx)
+        .await?;
+
+    sqlx::query(
+        "INSERT INTO equipment (owner, name, cost, minlev, type, power, status) \
+         VALUES ($1, $2, $3, $4, $5, $6, 'U')",
+    )
+    .bind(player_id)
+    .bind(&item.name)
+    .bind(resale_cost)
+    .bind(item.minlev)
+    .bind(&item.item_type)
+    .bind(item.power)
+    .execute(&mut *tx)
+    .await?;
+
+    tx.commit().await
+}
+
 // ---------------------------------------------------------------------------
 // Bow queries
 // ---------------------------------------------------------------------------

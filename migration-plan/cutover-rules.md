@@ -286,11 +286,11 @@ Resource collection and crafting systems.
 | `hunters.php` | `/hunters`, `/hunters/*` | **staged** |
 | `explore.php` | `/explore`, `/explore/*` | **staged** |
 | `hospital.php` | `/hospital` | **staged** |
-| `wieza.php` | `/tower/magic` | **not implemented** |
+| `wieza.php` | `/tower/magic` | **staged** |
 | `portal.php` | `/portal` | **staged** |
 | `portals.php` | `/portals/:step` | **staged** |
 
-**Status**: Combat handlers are implemented. Explore, battle, arena, hunters, hospital, portal, and portals are fully wired. Only `wieza.php` (magic tower spell/item shop) is not yet migrated.
+**Status**: All combat-related handlers are implemented and staged. Explore, battle, arena, hunters, hospital, portal, portals, and magic tower are fully wired.
 
 **Pre-cutover checklist**:
 1. Groups A + B must be active.

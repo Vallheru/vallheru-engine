@@ -1,0 +1,97 @@
+{% extends "themes/" ~ theme ~ "/base.html" %}
+
+{% block title %}Magiczna wieża{% endblock %}
+
+{% block content %}
+<article class="nine wieza">
+  <header>
+    <h1>Magiczna wieża</h1>
+    <p>{{ info_text }}</p>
+  </header>
+
+  {% if flash_message %}
+    <div class="flash {{ flash_kind }}">{{ flash_message }}</div>
+  {% endif %}
+
+  <ul>
+    <li><a href="/tower/magic/T">Kup różdżki</a></li>
+    <li><a href="/tower/magic/C">Kup szaty</a></li>
+    <li><a href="/tower/magic/B">Kup czary bojowe</a></li>
+    <li><a href="/tower/magic/O">Kup czary obronne</a></li>
+    <li><a href="/tower/magic/U">Kup czary użytkowe</a></li>
+  </ul>
+
+  {% if category %}
+    {% if is_spell_listing %}
+      {# Spells grouped by element #}
+      {% for group in spell_groups %}
+        <b>Żywioł: {{ group.element_name }}</b><br />
+        <table>
+          <thead>
+            <tr>
+              <th>Nazwa</th>
+              <th>{{ power_label }}</th>
+              <th>Cena</th>
+              <th>Wymagany poziom</th>
+              <th>Opcje</th>
+            </tr>
+          </thead>
+          <tbody>
+            {% for spell in group.spells %}
+            <tr>
+              <td>{{ spell.name }}</td>
+              <td>{{ spell.effect }}</td>
+              <td>{{ spell.price }}</td>
+              <td>{{ spell.level }}</td>
+              <td>
+                <form method="post" action="/tower/magic/buy/spell/{{ spell.id }}">
+                  <button type="submit">Kup</button>
+                </form>
+              </td>
+            </tr>
+            {% endfor %}
+          </tbody>
+        </table>
+        <br />
+      {% endfor %}
+
+      {% if spell_groups | length == 0 %}
+        <p>Brak dostępnych czarów na twoim poziomie magii.</p>
+      {% endif %}
+
+    {% else %}
+      {# Mage items (wands/clothing) #}
+      <table>
+        <thead>
+          <tr>
+            <th>Nazwa</th>
+            <th>{{ power_label }}</th>
+            <th>Cena</th>
+            <th>Wymagany poziom</th>
+            <th>Opcje</th>
+          </tr>
+        </thead>
+        <tbody>
+          {% for item in items %}
+          <tr>
+            <td>{{ item.name }}</td>
+            <td>{{ item.power_text }}</td>
+            <td>{{ item.cost }}</td>
+            <td>{{ item.min_level }}</td>
+            <td>
+              <form method="post" action="/tower/magic/buy/item/{{ item.id }}">
+                <button type="submit">Kup</button>
+              </form>
+            </td>
+          </tr>
+          {% endfor %}
+        </tbody>
+      </table>
+
+      {% if items | length == 0 %}
+        <p>Brak dostępnych przedmiotów.</p>
+      {% endif %}
+    {% endif %}
+  {% endif %}
+</article>
+{% endblock %}

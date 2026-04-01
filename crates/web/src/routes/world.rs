@@ -4,9 +4,9 @@ use axum::{Router, middleware, routing};
 
 use crate::handlers::{
     alchemy, bank, character, chat, city, content, core, court, crafts, deity, equipment, forums,
-    gathering, guilds, hospital, house, jail, jeweller, locations, lumbermill, mail, map, market,
-    outpost, pages, player_profile, portal, quest, room, shops, smithy, spells, team, temple,
-    thieves, tower, travel, tribe, tribe_admin, tribe_astral, tribe_forum, tribe_storage,
+    gathering, guilds, hospital, house, jail, jeweller, locations, lumbermill, magic_tower, mail,
+    map, market, outpost, pages, player_profile, portal, quest, room, shops, smithy, spells, team,
+    temple, thieves, tower, travel, tribe, tribe_admin, tribe_astral, tribe_forum, tribe_storage,
     warehouse,
 };
 use crate::middleware::guards::require_authenticated;
@@ -94,6 +94,20 @@ fn location_routes() -> Router<AppState> {
         .route("/deity/change", routing::post(deity::deity_change))
         // Tower
         .route("/tower", routing::get(tower::tower_show))
+        // Magic Tower (spell & mage item shop)
+        .route("/tower/magic", routing::get(magic_tower::magic_tower_show))
+        .route(
+            "/tower/magic/{category}",
+            routing::get(magic_tower::magic_tower_category),
+        )
+        .route(
+            "/tower/magic/buy/spell/{id}",
+            routing::post(magic_tower::buy_spell),
+        )
+        .route(
+            "/tower/magic/buy/item/{id}",
+            routing::post(magic_tower::buy_mage_item),
+        )
         // Housing
         .route("/house", routing::get(house::house_show))
         .route("/house/land", routing::post(house::house_buy_land))

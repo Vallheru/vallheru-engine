@@ -27,6 +27,7 @@ pub mod jail;
 pub mod jeweller;
 pub mod locations;
 pub mod lumbermill;
+pub mod magic_tower;
 pub mod mail;
 pub mod map;
 pub mod market;
