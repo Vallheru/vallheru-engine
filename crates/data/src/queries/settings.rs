@@ -29,3 +29,25 @@ pub async fn upsert_setting(pool: &PgPool, name: &str, value: &str) -> sqlx::Res
     .await?;
     Ok(())
 }
+
+/// Fetch multiple settings by name in one query.
+pub async fn get_settings_batch(pool: &PgPool, names: &[&str]) -> sqlx::Result<Vec<SettingRow>> {
+    let owned: Vec<String> = names.iter().map(|s| (*s).to_owned()).collect();
+    sqlx::query_as::<_, SettingRow>("SELECT setting, value FROM settings WHERE setting = ANY($1)")
+        .bind(&owned)
+        .fetch_all(pool)
+        .await
+}
+
+/// Atomically subtract from the kingdom gold setting. Returns `Err` if
+/// the setting doesn't exist or can't be parsed.
+pub async fn adjust_kingdom_gold(pool: &PgPool, delta: i64) -> sqlx::Result<()> {
+    sqlx::query(
+        "UPDATE settings SET value = (CAST(value AS BIGINT) + $1)::TEXT \
+         WHERE setting = 'gold'",
+    )
+    .bind(delta)
+    .execute(pool)
+    .await?;
+    Ok(())
+}

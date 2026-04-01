@@ -6,7 +6,7 @@ use crate::handlers::{
     alchemy, bank, character, chat, city, content, core, court, crafts, deity, equipment, forums,
     gathering, guilds, hospital, house, jail, jeweller, locations, lumbermill, mail, map, market,
     outpost, pages, player_profile, quest, room, shops, smithy, spells, team, temple, thieves,
-    tower, travel, tribe, tribe_admin, tribe_astral, tribe_forum, tribe_storage,
+    tower, travel, tribe, tribe_admin, tribe_astral, tribe_forum, tribe_storage, warehouse,
 };
 use crate::middleware::guards::require_authenticated;
 use crate::state::AppState;
@@ -163,6 +163,16 @@ fn economy_routes() -> Router<AppState> {
         .route(
             "/market/{slug}/cancel/{id}",
             routing::post(market::market_cancel),
+        )
+        // Royal Warehouse (warehouse.php)
+        .route("/warehouse", routing::get(warehouse::warehouse_show))
+        .route(
+            "/warehouse/sell",
+            routing::get(warehouse::sell_form).post(warehouse::sell_action),
+        )
+        .route(
+            "/warehouse/buy",
+            routing::get(warehouse::buy_form).post(warehouse::buy_action),
         )
 }
 

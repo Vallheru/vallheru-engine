@@ -360,3 +360,109 @@ pub async fn deduct_currency(
     .await?;
     Ok(())
 }
+
+// =========================================================================
+// Royal Warehouse (warehouse table)
+// =========================================================================
+
+/// A row from the warehouse table.
+#[derive(Debug, Clone, sqlx::FromRow)]
+pub struct WarehouseRow {
+    pub id: i32,
+    pub reset: i16,
+    pub mineral: String,
+    pub sell: i64,
+    pub buy: i64,
+    pub cost: f64,
+    pub amount: i64,
+}
+
+/// Load all current-reset warehouse rows for the given commodities.
+pub async fn load_warehouse_stock(
+    pool: &PgPool,
+    minerals: &[&str],
+) -> Result<Vec<WarehouseRow>, sqlx::Error> {
+    // Use ANY($1) with a text array parameter.
+    let names: Vec<String> = minerals.iter().map(|s| (*s).to_owned()).collect();
+    sqlx::query_as::<_, WarehouseRow>(
+        "SELECT * FROM warehouse WHERE reset = 1 AND mineral = ANY($1)",
+    )
+    .bind(&names)
+    .fetch_all(pool)
+    .await
+}
+
+/// Get the current-reset warehouse row for a single commodity.
+pub async fn get_warehouse_item(
+    pool: &PgPool,
+    mineral: &str,
+) -> Result<Option<WarehouseRow>, sqlx::Error> {
+    sqlx::query_as::<_, WarehouseRow>("SELECT * FROM warehouse WHERE reset = 1 AND mineral = $1")
+        .bind(mineral)
+        .fetch_optional(pool)
+        .await
+}
+
+/// Record a player selling to the warehouse: increase stock and sell count.
+pub async fn warehouse_record_sell(
+    pool: &PgPool,
+    mineral: &str,
+    amount: i64,
+) -> Result<(), sqlx::Error> {
+    sqlx::query(
+        "UPDATE warehouse SET sell = sell + $1, amount = amount + $1 \
+         WHERE reset = 1 AND mineral = $2",
+    )
+    .bind(amount)
+    .bind(mineral)
+    .execute(pool)
+    .await?;
+    Ok(())
+}
+
+/// Record a player buying from the warehouse: increase buy count, decrease stock.
+pub async fn warehouse_record_buy(
+    pool: &PgPool,
+    mineral: &str,
+    amount: i64,
+) -> Result<(), sqlx::Error> {
+    sqlx::query(
+        "UPDATE warehouse SET buy = buy + $1, amount = amount - $1 \
+         WHERE reset = 1 AND mineral = $2",
+    )
+    .bind(amount)
+    .bind(mineral)
+    .execute(pool)
+    .await?;
+    Ok(())
+}
+
+/// Add herbs to a player's inventory (increment column by amount).
+/// Uses an allowlist for column safety.
+pub async fn add_herbs(
+    pool: &PgPool,
+    player_id: i32,
+    herb_column: &str,
+    amount: i32,
+) -> Result<(), sqlx::Error> {
+    const ALLOWED: &[&str] = &[
+        "illani",
+        "illanias",
+        "nutari",
+        "dynallca",
+        "ilani_seeds",
+        "illanias_seeds",
+        "nutari_seeds",
+        "dynallca_seeds",
+    ];
+    if !ALLOWED.contains(&herb_column) {
+        return Ok(());
+    }
+    let sql = format!("UPDATE herbs SET {herb_column} = {herb_column} + $1 WHERE gracz = $2");
+    sqlx::query(&sql)
+        .bind(amount)
+        .bind(player_id)
+        .execute(pool)
+        .await?;
+    Ok(())
+}

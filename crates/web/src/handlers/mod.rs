@@ -53,6 +53,7 @@ pub mod tribe_admin;
 pub mod tribe_astral;
 pub mod tribe_forum;
 pub mod tribe_storage;
+pub mod warehouse;
 
 use crate::middleware::context::RequestContext;
 use crate::page::PageMeta;

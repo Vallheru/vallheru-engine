@@ -1,0 +1,93 @@
+{% extends "layout.html" %}
+{% block content %}
+
+{% if action is defined %}
+  {# Sell or buy form #}
+  {% if action == "sell" %}
+    <p>Co możesz nam zaoferować?</p>
+    <p>Złota w królestwie: {{ kingdom_gold }}</p>
+    <br/>
+    <form method="post" id="warehouse" action="/warehouse/sell?item={{ item_idx }}">
+      <input type="submit" value="Sprzedaj" />
+      <input type="text" name="amount" size="5"
+             onchange="countPrice({{ price }}, this.value, {{ available }});"/>
+      sztuk {{ item_name }}
+      <span id="acost"></span>
+      spośród posiadanych
+      <a href="#" onclick="buyAll({{ available }}, {{ price }}); return false;">{{ available }}</a>
+      sztuk {{ item_name }}.
+    </form>
+  {% elif action == "buy" %}
+    <p>Co chcesz kupić?</p>
+    <br/>
+    <form method="post" id="warehouse" action="/warehouse/buy?item={{ item_idx }}">
+      <input type="submit" value="Kup" />
+      <input type="text" name="amount" size="5"
+             onchange="countPrice({{ price }}, this.value, {{ available }});"/>
+      sztuk {{ item_name }}
+      <span id="acost"></span>
+      — w magazynie znajduje się
+      <a href="#" onclick="buyAll({{ available }}, {{ price }}); return false;">{{ available }}</a>
+      sztuk {{ item_name }}.
+    </form>
+  {% endif %}
+  <br/><br/>
+  <a href="/warehouse">Wróć</a>
+
+{% else %}
+  {# Main listing #}
+  <p>{{ warehouse_info }}</p>
+
+  {% if caravan %}
+    <br/>
+    <p>Dzisiaj odwiedziła magazyn karawana z dalekich krain wykupując co nieco minerałów.</p>
+  {% endif %}
+
+  <br/>
+  <h3>Minerały</h3>
+  <table class="table" width="95%">
+    <tr>
+      <th>Minerał</th>
+      <th class="text-center">Skup / Sprzedaż</th>
+      <th class="text-center">Ilość</th>
+      <th>Akcje</th>
+    </tr>
+    {% for m in minerals %}
+    <tr>
+      <td>{{ m.label }}</td>
+      <td class="text-center">{{ m.buy_price }} / {{ m.sell_price }}</td>
+      <td class="text-center">{{ m.stock }}</td>
+      <td>
+        <a href="/warehouse/sell?item={{ m.idx }}">Sprzedaj</a>
+        <br/>
+        <a href="/warehouse/buy?item={{ m.idx }}">Kup</a>
+      </td>
+    </tr>
+    {% endfor %}
+  </table>
+
+  <br/>
+  <h3>Zioła</h3>
+  <table class="table" width="95%">
+    <tr>
+      <th>Zioło</th>
+      <th class="text-center">Skup / Sprzedaż</th>
+      <th class="text-center">Ilość</th>
+      <th>Akcje</th>
+    </tr>
+    {% for h in herbs %}
+    <tr>
+      <td>{{ h.label }}</td>
+      <td class="text-center">{{ h.buy_price }} / {{ h.sell_price }}</td>
+      <td class="text-center">{{ h.stock }}</td>
+      <td>
+        <a href="/warehouse/sell?item={{ h.idx }}">Sprzedaj</a>
+        <br/>
+        <a href="/warehouse/buy?item={{ h.idx }}">Kup</a>
+      </td>
+    </tr>
+    {% endfor %}
+  </table>
+{% endif %}
+
+{% endblock %}
