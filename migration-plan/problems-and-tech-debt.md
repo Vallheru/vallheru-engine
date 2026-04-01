@@ -230,10 +230,10 @@ Each entry includes:
 - **Discovered in**: MP-14-06
 - **Description**: `serialize_exits` does not write back the `[T]`/`[E]` type-filter prefix. This is by design since filtering happens before DB storage, but it means a raw `→ parse → serialize → parse` roundtrip loses type_filter information.
 - **Impact**: Low — filter is applied at mission start before storing active mission state; no runtime issue.
-- **Action**: Consider adding filter prefix to `serialize_exits` if two-way parity is ever needed. Currently not a problem.
+- **Action**: By design — filter is consumed before storage. No runtime issue and no parity need.
 - **Fixable in existing task**: No
 - **Needs new task**: No
-- **Status**: open
+- **Status**: wont-fix
 - **Related tasks**: MP-14-06, MP-14-02
 
 ### TD-019: Labyrinth accumulation logic partially in web handler
@@ -242,10 +242,10 @@ Each entry includes:
 - **Discovered in**: MP-14-06
 - **Description**: The labyrinth step accumulation loop in `quest.rs` handler duplicates logic now available as domain's `process_labyrinth_steps`. The handler still has its own `StepRoll` struct and async accumulation due to `find_available_quest` and `try_find_map` async callbacks.
 - **Impact**: Low — domain function exists and is tested; handler works correctly. Slight duplication.
-- **Action**: Refactor handler to use domain `process_labyrinth_steps` with pre-resolved quest/map data, or accept the duplication as necessary for async boundary.
-- **Fixable in existing task**: No — would need handler refactor.
-- **Needs new task**: No — acceptable as-is.
-- **Status**: open
+- **Action**: Accept duplication as necessary for async boundary. Domain function exists and is tested; handler is correct.
+- **Fixable in existing task**: No — would need handler refactor with no behavioral gain.
+- **Needs new task**: No
+- **Status**: wont-fix
 - **Related tasks**: MP-14-04, MP-14-06
 
 ### TD-020: Duplicate chronicle routes caused router panic
