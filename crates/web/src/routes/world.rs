@@ -6,7 +6,7 @@ use crate::handlers::{
     alchemy, bank, character, chat, city, content, core, court, crafts, deity, equipment, forums,
     gathering, guilds, hospital, house, jail, jeweller, locations, lumbermill, mail, map, market,
     outpost, pages, player_profile, quest, room, shops, smithy, spells, team, temple, thieves,
-    tower, travel, tribe, tribe_admin, tribe_forum, tribe_storage,
+    tower, travel, tribe, tribe_admin, tribe_astral, tribe_forum, tribe_storage,
 };
 use crate::middleware::guards::require_authenticated;
 use crate::state::AppState;
@@ -453,6 +453,7 @@ fn social_routes() -> Router<AppState> {
         .merge(tribe_routes())
         .merge(tribe_admin_routes())
         .merge(tribe_storage_routes())
+        .merge(tribe_astral_routes())
         .merge(guilds_routes())
         .route("/team", routing::get(team::team_show))
         .merge(content_routes())
@@ -738,6 +739,27 @@ fn guilds_routes() -> Router<AppState> {
     Router::new()
         .route("/guilds", routing::get(guilds::guilds_crafts))
         .route("/guilds/gladiator", routing::get(guilds::guilds_gladiator))
+}
+
+fn tribe_astral_routes() -> Router<AppState> {
+    Router::new()
+        .route("/tribe/astral", routing::get(tribe_astral::astral_show))
+        .route(
+            "/tribe/astral/deposit",
+            routing::post(tribe_astral::astral_deposit),
+        )
+        .route(
+            "/tribe/astral/deposit-all",
+            routing::post(tribe_astral::astral_deposit_all),
+        )
+        .route(
+            "/tribe/astral/give",
+            routing::post(tribe_astral::astral_give),
+        )
+        .route(
+            "/tribe/astral/safebox",
+            routing::post(tribe_astral::astral_safebox),
+        )
 }
 
 fn content_routes() -> Router<AppState> {

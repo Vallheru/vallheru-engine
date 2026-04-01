@@ -1935,3 +1935,340 @@ pub async fn update_tribe_logo(
         .await?;
     Ok(())
 }
+
+// =========================================================================
+// Astral vault queries
+// =========================================================================
+
+/// One row of astral inventory (pieces or components).
+#[derive(Debug, Clone, sqlx::FromRow)]
+pub struct AstralItemRow {
+    pub owner: i32,
+    #[sqlx(rename = "type")]
+    pub r#type: String,
+    pub number: i16,
+    pub amount: i32,
+    pub location: String,
+}
+
+/// Fetch all astral items belonging to a tribe (location = 'C').
+pub async fn astral_items_for_tribe(
+    pool: &PgPool,
+    tribe_id: i32,
+) -> Result<Vec<AstralItemRow>, sqlx::Error> {
+    sqlx::query_as::<_, AstralItemRow>(
+        "SELECT owner, type, number, amount, location \
+         FROM astral WHERE owner = $1 AND location = 'C' \
+         ORDER BY type, number",
+    )
+    .bind(tribe_id)
+    .fetch_all(pool)
+    .await
+}
+
+/// Fetch all astral items belonging to a player (location = 'V').
+pub async fn astral_items_for_player(
+    pool: &PgPool,
+    player_id: i32,
+) -> Result<Vec<AstralItemRow>, sqlx::Error> {
+    sqlx::query_as::<_, AstralItemRow>(
+        "SELECT owner, type, number, amount, location \
+         FROM astral WHERE owner = $1 AND location = 'V' \
+         ORDER BY type, number",
+    )
+    .bind(player_id)
+    .fetch_all(pool)
+    .await
+}
+
+/// Fetch all astral plans belonging to a tribe (location = 'C').
+pub async fn astral_plans_for_tribe(
+    pool: &PgPool,
+    tribe_id: i32,
+) -> Result<Vec<(String, i32)>, sqlx::Error> {
+    sqlx::query_as::<_, (String, i32)>(
+        "SELECT name, amount FROM astral_plans WHERE owner = $1 AND location = 'C' ORDER BY name",
+    )
+    .bind(tribe_id)
+    .fetch_all(pool)
+    .await
+}
+
+/// Deposit astral items from player's vault to tribe's vault.
+/// Moves `amount` of type/number from player (V) to tribe (C).
+pub async fn astral_deposit(
+    pool: &PgPool,
+    player_id: i32,
+    tribe_id: i32,
+    item_type: &str,
+    number: i16,
+    amount: i32,
+) -> Result<(), sqlx::Error> {
+    let mut tx = pool.begin().await?;
+
+    // Check player has enough
+    let player_amount: Option<i32> = sqlx::query_scalar(
+        "SELECT amount FROM astral WHERE owner = $1 AND type = $2 AND number = $3 AND location = 'V'",
+    )
+    .bind(player_id)
+    .bind(item_type)
+    .bind(number)
+    .fetch_optional(&mut *tx)
+    .await?;
+
+    let have = player_amount.unwrap_or(0);
+    if have < amount {
+        return Err(sqlx::Error::Protocol(
+            "Insufficient astral items".to_owned(),
+        ));
+    }
+
+    // Add to tribe
+    let merged = sqlx::query(
+        "UPDATE astral SET amount = amount + $1 \
+         WHERE owner = $2 AND type = $3 AND number = $4 AND location = 'C'",
+    )
+    .bind(amount)
+    .bind(tribe_id)
+    .bind(item_type)
+    .bind(number)
+    .execute(&mut *tx)
+    .await?;
+
+    if merged.rows_affected() == 0 {
+        sqlx::query(
+            "INSERT INTO astral (owner, type, number, amount, location) \
+             VALUES ($1, $2, $3, $4, 'C')",
+        )
+        .bind(tribe_id)
+        .bind(item_type)
+        .bind(number)
+        .bind(amount)
+        .execute(&mut *tx)
+        .await?;
+    }
+
+    // Remove from player
+    if have == amount {
+        sqlx::query(
+            "DELETE FROM astral WHERE owner = $1 AND type = $2 AND number = $3 AND location = 'V'",
+        )
+        .bind(player_id)
+        .bind(item_type)
+        .bind(number)
+        .execute(&mut *tx)
+        .await?;
+    } else {
+        sqlx::query(
+            "UPDATE astral SET amount = amount - $1 \
+             WHERE owner = $2 AND type = $3 AND number = $4 AND location = 'V'",
+        )
+        .bind(amount)
+        .bind(player_id)
+        .bind(item_type)
+        .bind(number)
+        .execute(&mut *tx)
+        .await?;
+    }
+
+    tx.commit().await?;
+    Ok(())
+}
+
+/// Deposit ALL astral pieces (M/P/R types) from player to tribe.
+pub async fn astral_deposit_all_pieces(
+    pool: &PgPool,
+    player_id: i32,
+    tribe_id: i32,
+) -> Result<u64, sqlx::Error> {
+    let mut tx = pool.begin().await?;
+
+    let items = sqlx::query_as::<_, (String, i16, i32)>(
+        "SELECT type, number, amount FROM astral \
+         WHERE owner = $1 AND location = 'V' \
+         AND (type LIKE 'M%' OR type LIKE 'P%' OR type LIKE 'R%')",
+    )
+    .bind(player_id)
+    .fetch_all(&mut *tx)
+    .await?;
+
+    let count = items.len() as u64;
+    for (item_type, number, amount) in &items {
+        let merged = sqlx::query(
+            "UPDATE astral SET amount = amount + $1 \
+             WHERE owner = $2 AND type = $3 AND number = $4 AND location = 'C'",
+        )
+        .bind(amount)
+        .bind(tribe_id)
+        .bind(item_type)
+        .bind(number)
+        .execute(&mut *tx)
+        .await?;
+
+        if merged.rows_affected() == 0 {
+            sqlx::query(
+                "INSERT INTO astral (owner, type, number, amount, location) \
+                 VALUES ($1, $2, $3, $4, 'C')",
+            )
+            .bind(tribe_id)
+            .bind(item_type)
+            .bind(number)
+            .bind(amount)
+            .execute(&mut *tx)
+            .await?;
+        }
+    }
+
+    // Remove all from player
+    sqlx::query(
+        "DELETE FROM astral WHERE owner = $1 AND location = 'V' \
+         AND (type LIKE 'M%' OR type LIKE 'P%' OR type LIKE 'R%')",
+    )
+    .bind(player_id)
+    .execute(&mut *tx)
+    .await?;
+
+    tx.commit().await?;
+    Ok(count)
+}
+
+/// Give astral items from tribe vault to a player.
+pub async fn astral_give(
+    pool: &PgPool,
+    tribe_id: i32,
+    recipient_id: i32,
+    item_type: &str,
+    number: i16,
+    amount: i32,
+) -> Result<(), sqlx::Error> {
+    let mut tx = pool.begin().await?;
+
+    // Check tribe has enough
+    let tribe_amount: Option<i32> = sqlx::query_scalar(
+        "SELECT amount FROM astral WHERE owner = $1 AND type = $2 AND number = $3 AND location = 'C'",
+    )
+    .bind(tribe_id)
+    .bind(item_type)
+    .bind(number)
+    .fetch_optional(&mut *tx)
+    .await?;
+
+    let have = tribe_amount.unwrap_or(0);
+    if have < amount {
+        return Err(sqlx::Error::Protocol(
+            "Insufficient astral items in tribe".to_owned(),
+        ));
+    }
+
+    // Add to recipient
+    let merged = sqlx::query(
+        "UPDATE astral SET amount = amount + $1 \
+         WHERE owner = $2 AND type = $3 AND number = $4 AND location = 'V'",
+    )
+    .bind(amount)
+    .bind(recipient_id)
+    .bind(item_type)
+    .bind(number)
+    .execute(&mut *tx)
+    .await?;
+
+    if merged.rows_affected() == 0 {
+        sqlx::query(
+            "INSERT INTO astral (owner, type, number, amount, location) \
+             VALUES ($1, $2, $3, $4, 'V')",
+        )
+        .bind(recipient_id)
+        .bind(item_type)
+        .bind(number)
+        .bind(amount)
+        .execute(&mut *tx)
+        .await?;
+    }
+
+    // Remove from tribe
+    if have == amount {
+        sqlx::query(
+            "DELETE FROM astral WHERE owner = $1 AND type = $2 AND number = $3 AND location = 'C'",
+        )
+        .bind(tribe_id)
+        .bind(item_type)
+        .bind(number)
+        .execute(&mut *tx)
+        .await?;
+    } else {
+        sqlx::query(
+            "UPDATE astral SET amount = amount - $1 \
+             WHERE owner = $2 AND type = $3 AND number = $4 AND location = 'C'",
+        )
+        .bind(amount)
+        .bind(tribe_id)
+        .bind(item_type)
+        .bind(number)
+        .execute(&mut *tx)
+        .await?;
+    }
+
+    tx.commit().await?;
+    Ok(())
+}
+
+/// Get the current astral safe-box level for a tribe (location = 'C').
+pub async fn astral_safebox_level(pool: &PgPool, tribe_id: i32) -> Result<i16, sqlx::Error> {
+    let level: Option<i16> =
+        sqlx::query_scalar("SELECT level FROM astral_bank WHERE owner = $1 AND location = 'C'")
+            .bind(tribe_id)
+            .fetch_optional(pool)
+            .await?;
+    Ok(level.unwrap_or(0))
+}
+
+/// Upgrade the astral safe-box for a tribe.
+/// `costs` is [gold, mithril, adamantium, crystal, meteor].
+pub async fn astral_safebox_upgrade(
+    pool: &PgPool,
+    tribe_id: i32,
+    current_level: i16,
+    costs: [i64; 5],
+) -> Result<(), sqlx::Error> {
+    let mut tx = pool.begin().await?;
+
+    // Do we have a row already?
+    if current_level == 0 {
+        sqlx::query("INSERT INTO astral_bank (owner, level, location) VALUES ($1, 1, 'C')")
+            .bind(tribe_id)
+            .execute(&mut *tx)
+            .await?;
+    } else {
+        sqlx::query("UPDATE astral_bank SET level = level + 1 WHERE owner = $1 AND location = 'C'")
+            .bind(tribe_id)
+            .execute(&mut *tx)
+            .await?;
+    }
+
+    // Deduct gold and mithril from tribe
+    #[allow(clippy::cast_possible_truncation)] // costs validated by domain layer, fit in i32
+    let (gold, mithril) = (costs[0] as i32, costs[1] as i32);
+    sqlx::query("UPDATE tribes SET credits = credits - $1, platinum = platinum - $2 WHERE id = $3")
+        .bind(gold)
+        .bind(mithril)
+        .bind(tribe_id)
+        .execute(&mut *tx)
+        .await?;
+
+    // Deduct minerals
+    #[allow(clippy::cast_possible_truncation)]
+    let (adam, crys, met) = (costs[2] as i32, costs[3] as i32, costs[4] as i32);
+    sqlx::query(
+        "UPDATE tribe_minerals SET adamantium = adamantium - $1, crystal = crystal - $2, \
+         meteor = meteor - $3 WHERE id = $4",
+    )
+    .bind(adam)
+    .bind(crys)
+    .bind(met)
+    .bind(tribe_id)
+    .execute(&mut *tx)
+    .await?;
+
+    tx.commit().await?;
+    Ok(())
+}

@@ -1,0 +1,188 @@
+{% extends "base.html" %}
+
+{% block title %}Astralny skarbiec{% endblock %}
+
+{% block content %}
+<h3>Astralny skarbiec</h3>
+
+<p>Witaj w astralnym skarbcu klanu. Tutaj są składowane mapy, plany, przepisy
+oraz komponenty astralne należące do klanu.</p>
+
+{# ── Pieces (maps, plans, recipes) ─────────────────────────────────── #}
+<h4>Kawałki (mapy, plany, przepisy)</h4>
+{% if pieces %}
+<table width="100%">
+  <tr>
+    <td><b>Kategoria</b></td>
+    <td><b>Nazwa</b></td>
+    <td><b>Kawałek #</b></td>
+    <td><b>Ilość</b></td>
+    <td></td>
+  </tr>
+  {% for item in pieces %}
+  <tr>
+    <td>{{ item.category }}</td>
+    <td>{{ item.label }}</td>
+    <td>{{ item.number }}</td>
+    <td>{{ item.amount }}</td>
+    <td>
+      {% if can_give %}
+      <form method="post" action="/tribe/astral/give" style="display:inline">
+        <input type="hidden" name="item_type" value="{{ item.type_code }}"/>
+        <input type="hidden" name="number" value="{{ item.number }}"/>
+        <input type="text" name="amount" value="1" size="3"/>
+        <select name="recipient_id">
+          {% for m in members %}
+          <option value="{{ m.id }}">{{ m.name }}</option>
+          {% endfor %}
+        </select>
+        <input type="submit" value="Wydaj"/>
+      </form>
+      {% endif %}
+    </td>
+  </tr>
+  {% endfor %}
+</table>
+{% else %}
+<p><em>Brak kawałków w skarbcu.</em></p>
+{% endif %}
+
+{# ── Components (components, constructions, potions) ───────────────── #}
+<h4>Komponenty (składniki, konstrukcje, mikstury)</h4>
+{% if components %}
+<table width="100%">
+  <tr>
+    <td><b>Kategoria</b></td>
+    <td><b>Nazwa</b></td>
+    <td><b>Nr</b></td>
+    <td><b>Ilość</b></td>
+    <td></td>
+  </tr>
+  {% for item in components %}
+  <tr>
+    <td>{{ item.category }}</td>
+    <td>{{ item.label }}</td>
+    <td>{{ item.number }}</td>
+    <td>{{ item.amount }}</td>
+    <td>
+      {% if can_give %}
+      <form method="post" action="/tribe/astral/give" style="display:inline">
+        <input type="hidden" name="item_type" value="{{ item.type_code }}"/>
+        <input type="hidden" name="number" value="{{ item.number }}"/>
+        <input type="text" name="amount" value="1" size="3"/>
+        <select name="recipient_id">
+          {% for m in members %}
+          <option value="{{ m.id }}">{{ m.name }}</option>
+          {% endfor %}
+        </select>
+        <input type="submit" value="Wydaj"/>
+      </form>
+      {% endif %}
+    </td>
+  </tr>
+  {% endfor %}
+</table>
+{% else %}
+<p><em>Brak komponentów w skarbcu.</em></p>
+{% endif %}
+
+{# ── Completed plans ──────────────────────────────────────────────── #}
+{% if plans %}
+<h4>Ukończone plany</h4>
+<table width="100%">
+  <tr>
+    <td><b>Nazwa</b></td>
+    <td><b>Ilość</b></td>
+  </tr>
+  {% for p in plans %}
+  <tr>
+    <td>{{ p.label }}</td>
+    <td>{{ p.amount }}</td>
+  </tr>
+  {% endfor %}
+</table>
+{% endif %}
+
+{# ── Deposit forms ─────────────────────────────────────────────────── #}
+<h4>Złóż przedmioty</h4>
+
+<p><b>Złóż kawałek lub komponent:</b></p>
+<form method="post" action="/tribe/astral/deposit">
+  <select name="item_type">
+    <optgroup label="Mapy">
+      <option value="M0">Plan demoniczny</option>
+      <option value="M1">Plan ognisty</option>
+      <option value="M2">Plan piekielny</option>
+      <option value="M3">Plan pustynny</option>
+      <option value="M4">Plan wodny</option>
+      <option value="M5">Plan niebiański</option>
+      <option value="M6">Plan śmiertelny</option>
+    </optgroup>
+    <optgroup label="Plany">
+      <option value="P0">Astralny komponent</option>
+      <option value="P1">Gwiezdny portal</option>
+      <option value="P2">Świetlisty obelisk</option>
+      <option value="P3">Płomienny znicz</option>
+      <option value="P4">Srebrzysta fontanna</option>
+    </optgroup>
+    <optgroup label="Przepisy">
+      <option value="R0">Magiczna esensja</option>
+      <option value="R1">Gwiezdna maść</option>
+      <option value="R2">Eliksir Illuminati</option>
+      <option value="R3">Astralne medium</option>
+      <option value="R4">Magiczny absynt</option>
+    </optgroup>
+    <optgroup label="Komponenty">
+      <option value="C0">Ząb Glabrezu</option>
+      <option value="C1">Ognisty pył</option>
+      <option value="C2">Pazur Zgłębiczarta</option>
+      <option value="C3">Łuska Skorpendry</option>
+      <option value="C4">Macka Krakena</option>
+      <option value="C5">Piorun Tytana</option>
+      <option value="C6">Żebro Licha</option>
+    </optgroup>
+    <optgroup label="Konstrukcje">
+      <option value="O0">Astralny komponent</option>
+      <option value="O1">Gwiezdny portal</option>
+      <option value="O2">Świetlny obelisk</option>
+      <option value="O3">Płomienny znicz</option>
+      <option value="O4">Srebrzysta fontanna</option>
+    </optgroup>
+    <optgroup label="Mikstury">
+      <option value="T0">Magiczna esensja</option>
+      <option value="T1">Gwiezdna maść</option>
+      <option value="T2">Eliksir Illuminati</option>
+      <option value="T3">Astralne medium</option>
+      <option value="T4">Magiczny absynt</option>
+    </optgroup>
+  </select>
+  Kawałek #: <input type="text" name="number" value="0" size="3"/>
+  Ilość: <input type="text" name="amount" value="1" size="3"/>
+  <input type="submit" value="Złóż"/>
+</form>
+
+<p>
+  <form method="post" action="/tribe/astral/deposit-all" style="display:inline">
+    <input type="submit" value="Złóż wszystkie kawałki (mapy, plany, przepisy)"/>
+  </form>
+</p>
+
+{# ── Safe-box upgrade ─────────────────────────────────────────────── #}
+{% if can_give %}
+<h4>Sejf na astralne komponenty</h4>
+<p>Aktualny poziom sejfu: <b>{{ safebox_level }}</b></p>
+{% if safebox_next_cost %}
+<form method="post" action="/tribe/astral/safebox">
+  <input type="submit" value="Rozbuduj sejf na poziom {{ safebox_next_cost.target_level }}"/>
+  (Koszt: {{ safebox_next_cost.gold }} złota, {{ safebox_next_cost.mithril }} mithrilu,
+  {{ safebox_next_cost.adamantium }} adamantium, {{ safebox_next_cost.crystal }} kryształów,
+  {{ safebox_next_cost.meteor }} meteorytu)
+</form>
+{% elif safebox_max %}
+<p><em>Sejf jest na maksymalnym poziomie.</em></p>
+{% endif %}
+{% endif %}
+
+<br/>
+<a href="/tribe">Wróć do klanu</a>
+{% endblock %}

@@ -111,7 +111,7 @@ pub struct MineralEntry {
     pub available: i32,
 }
 
-#[derive(serde::Serialize)]
+#[derive(serde::Serialize, Clone)]
 pub struct MemberEntry {
     pub id: i32,
     pub name: String,
@@ -189,11 +189,11 @@ fn default_amount() -> i32 {
 
 #[derive(Debug, Clone, sqlx::FromRow)]
 #[allow(dead_code)]
-struct PlayerRow {
+pub(crate) struct PlayerRow {
     pub tribe: i32,
 }
 
-async fn load_player(app: &AppState, player_id: i32) -> Result<PlayerRow, Response> {
+pub(crate) async fn load_player(app: &AppState, player_id: i32) -> Result<PlayerRow, Response> {
     sqlx::query_as::<_, PlayerRow>("SELECT tribe FROM players WHERE id = $1")
         .bind(player_id)
         .fetch_optional(&app.pool)
@@ -202,8 +202,13 @@ async fn load_player(app: &AppState, player_id: i32) -> Result<PlayerRow, Respon
         .ok_or_else(server_error)
 }
 
-fn error_page(state: &AppState, ctx: &RequestContext, message: &str) -> Response {
-    let meta = PageMeta::titled("Magazyn klanu").with_flash(Flash {
+pub(crate) fn storage_error_page(
+    state: &AppState,
+    ctx: &RequestContext,
+    title: &str,
+    message: &str,
+) -> Response {
+    let meta = PageMeta::titled(title).with_flash(Flash {
         kind: FlashKind::Error,
         message: message.to_owned(),
     });
@@ -211,7 +216,11 @@ fn error_page(state: &AppState, ctx: &RequestContext, message: &str) -> Response
     state.templates.render("error.html", &base)
 }
 
-fn server_error() -> Response {
+fn error_page(state: &AppState, ctx: &RequestContext, message: &str) -> Response {
+    storage_error_page(state, ctx, "Magazyn klanu", message)
+}
+
+pub(crate) fn server_error() -> Response {
     use axum::response::IntoResponse;
     (
         axum::http::StatusCode::INTERNAL_SERVER_ERROR,
@@ -220,7 +229,7 @@ fn server_error() -> Response {
         .into_response()
 }
 
-fn perms_from_row(row: &tq::TribePermRow) -> PermissionSet {
+pub(crate) fn perms_from_row(row: &tq::TribePermRow) -> PermissionSet {
     PermissionSet::from_flags([
         row.messages != 0,
         row.wait != 0,
@@ -241,7 +250,7 @@ fn perms_from_row(row: &tq::TribePermRow) -> PermissionSet {
 }
 
 /// Load tribe, check storage area access, return tribe + perms.
-async fn load_tribe_and_storage_access(
+pub(crate) async fn load_tribe_and_storage_access(
     app: &AppState,
     ctx: &RequestContext,
     player_id: i32,
@@ -271,11 +280,19 @@ async fn load_tribe_and_storage_access(
     Ok((tribe, perms))
 }
 
-fn can_give(player_id: i32, owner_id: i32, perms: PermissionSet, perm: TribePermission) -> bool {
+pub(crate) fn can_give(
+    player_id: i32,
+    owner_id: i32,
+    perms: PermissionSet,
+    perm: TribePermission,
+) -> bool {
     validate_give_permission(player_id, owner_id, perms.has(perm)).is_ok()
 }
 
-async fn load_members(app: &AppState, tribe_id: i32) -> Result<Vec<MemberEntry>, Response> {
+pub(crate) async fn load_members(
+    app: &AppState,
+    tribe_id: i32,
+) -> Result<Vec<MemberEntry>, Response> {
     let rows = tq::tribe_members(&app.pool, tribe_id)
         .await
         .map_err(|_| server_error())?;
@@ -289,7 +306,7 @@ async fn load_members(app: &AppState, tribe_id: i32) -> Result<Vec<MemberEntry>,
 }
 
 /// Common guard: check session, load player, verify tribe membership.
-async fn require_tribe_member(
+pub(crate) async fn require_tribe_member(
     app: &AppState,
     ctx: &RequestContext,
 ) -> Result<(i32, PlayerRow), Response> {

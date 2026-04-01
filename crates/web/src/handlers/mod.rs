@@ -50,6 +50,7 @@ pub mod tower;
 pub mod travel;
 pub mod tribe;
 pub mod tribe_admin;
+pub mod tribe_astral;
 pub mod tribe_forum;
 pub mod tribe_storage;
 
