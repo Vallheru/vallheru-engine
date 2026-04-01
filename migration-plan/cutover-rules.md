@@ -286,9 +286,11 @@ Resource collection and crafting systems.
 | `hunters.php` | `/hunters`, `/hunters/*` | **staged** |
 | `explore.php` | `/explore`, `/explore/*` | **staged** |
 | `hospital.php` | `/hospital` | **staged** |
-| `wieza.php` | `/tower/combat` | **not implemented** |
+| `wieza.php` | `/tower/magic` | **not implemented** |
+| `portal.php` | `/portal` | **staged** |
+| `portals.php` | `/portals/:step` | **staged** |
 
-**Status**: Combat handlers are implemented. Explore (PvE random encounters), battle (PvE combat), arena (PvP), and hunters guild are fully wired. Hospital is in `location_routes()`. Only `wieza.php` tower combat is not yet migrated.
+**Status**: Combat handlers are implemented. Explore, battle, arena, hunters, hospital, portal, and portals are fully wired. Only `wieza.php` (magic tower spell/item shop) is not yet migrated.
 
 **Pre-cutover checklist**:
 1. Groups A + B must be active.
@@ -468,9 +470,6 @@ Resource collection and crafting systems.
 | PHP File | Reason |
 |---|---|
 | `source.php` | Source code viewer — will not be migrated. |
-| `portal.php` | Astral portal boss fight — depends on astral tables + combat (TD-008). |
-| `portals.php` | Astral plane monsters — depends on astral tables + combat (TD-008). |
-| `warehouse.php` | `/warehouse` — Royal warehouse for buying/selling minerals and herbs. Staged. |
 
 ---
 

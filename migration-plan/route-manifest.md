@@ -93,7 +93,7 @@ route, with auth requirements and module ownership.
 |---|---|---|---|---|
 | `battle.php` | `/battle` | GET/POST | 08-combat | Combat page. |
 | `hunters.php` | `/hunters` | GET/POST | 08-combat | Hunter encounters. |
-| `wieza.php` | `/tower/combat` | GET/POST | 08-combat | Tower combat. |
+| `wieza.php` | `/tower/magic` | GET/POST | 09-items | Magic tower — spell and mage item shop. |
 | `tower.php` | `/tower` | GET/POST | 08-combat | Tower area. |
 | `outpost.php` | `/outpost` | GET/POST | 08-combat | Single outpost. |
 | `outposts.php` | `/outposts` | GET | 08-combat | Outpost listing. |
