@@ -864,3 +864,229 @@ pub async fn deactivate_spell(
 
     Ok(result.rows_affected() > 0)
 }
+
+// ---------------------------------------------------------------------------
+// Enchantment queries
+// ---------------------------------------------------------------------------
+
+/// Lightweight row for enchantable item selection.
+#[derive(Debug, Clone, sqlx::FromRow)]
+pub struct EnchantableItem {
+    pub id: i32,
+    pub name: String,
+    pub power: i32,
+    #[sqlx(rename = "type")]
+    pub equipment_type: String,
+    pub amount: i32,
+    pub wt: i32,
+    pub maxwt: i32,
+    pub szyb: i32,
+    pub zr: i32,
+}
+
+/// Load player's items that can be enchanted.
+///
+/// Criteria: `status='U'`, `magic='N'`, and `type NOT IN (excluded)`.
+/// The `excluded_types` slice must come from
+/// `EnchantKind::excluded_type_codes()`.
+pub async fn find_enchantable_items(
+    pool: &PgPool,
+    owner_id: i32,
+    excluded_types: &[&str],
+) -> Result<Vec<EnchantableItem>, sqlx::Error> {
+    // Build a dynamic NOT IN clause. The set is small and constant (≤10
+    // single-char values from a compile-time allowlist), so building the
+    // SQL string is safe.
+    let placeholders: String = excluded_types
+        .iter()
+        .map(|t| format!("'{t}'"))
+        .collect::<Vec<_>>()
+        .join(", ");
+    let sql = format!(
+        "SELECT id, name, power, type, amount, wt, maxwt, szyb, zr \
+         FROM equipment \
+         WHERE owner = $1 AND status = 'U' AND magic = 'N' \
+           AND type NOT IN ({placeholders}) \
+         ORDER BY name ASC"
+    );
+    sqlx::query_as::<_, EnchantableItem>(&sql)
+        .bind(owner_id)
+        .fetch_all(pool)
+        .await
+}
+
+/// Base stats row for computing enchantment bonus caps.
+#[derive(Debug, Clone, sqlx::FromRow)]
+pub struct BaseStatRow {
+    pub power: i32,
+    pub maxwt: i32,
+    pub szyb: i32,
+    pub zr: i32,
+}
+
+/// Look up base stats for a non-bow item from the equipment catalog (owner=0).
+pub async fn find_base_equipment_stats(
+    pool: &PgPool,
+    name: &str,
+) -> Result<Option<BaseStatRow>, sqlx::Error> {
+    sqlx::query_as::<_, BaseStatRow>(
+        "SELECT power, maxwt, szyb, zr FROM equipment \
+         WHERE owner = 0 AND name = $1 LIMIT 1",
+    )
+    .bind(name)
+    .fetch_optional(pool)
+    .await
+}
+
+/// Look up base stats for a bow from the bows catalog.
+pub async fn find_base_bow_stats(
+    pool: &PgPool,
+    name: &str,
+) -> Result<Option<BaseStatRow>, sqlx::Error> {
+    sqlx::query_as::<_, BaseStatRow>(
+        "SELECT power, maxwt, szyb, zr FROM bows WHERE name = $1 LIMIT 1",
+    )
+    .bind(name)
+    .fetch_optional(pool)
+    .await
+}
+
+/// Deduct one unit from an item stack. Deletes the row if amount reaches 0.
+/// For arrows (type='R'), deducts from `wt` instead of `amount`.
+pub async fn deduct_item_unit(
+    pool: &PgPool,
+    item_id: i32,
+    is_arrows: bool,
+) -> Result<(), sqlx::Error> {
+    if is_arrows {
+        sqlx::query(
+            "UPDATE equipment SET wt = wt - 1 \
+             WHERE id = $1 AND wt > 1",
+        )
+        .bind(item_id)
+        .execute(pool)
+        .await?;
+        sqlx::query("DELETE FROM equipment WHERE id = $1 AND wt <= 0")
+            .bind(item_id)
+            .execute(pool)
+            .await?;
+    } else {
+        sqlx::query(
+            "UPDATE equipment SET amount = amount - 1 \
+             WHERE id = $1 AND amount > 1",
+        )
+        .bind(item_id)
+        .execute(pool)
+        .await?;
+        sqlx::query("DELETE FROM equipment WHERE id = $1 AND amount <= 0")
+            .bind(item_id)
+            .execute(pool)
+            .await?;
+    }
+    Ok(())
+}
+
+/// Create or merge an enchanted item.
+///
+/// Tries to find an existing identical enchanted item to stack onto; if none
+/// exists, inserts a new row. Returns the ID of the resulting row.
+#[allow(clippy::too_many_arguments)]
+pub async fn create_or_merge_enchanted_item(
+    pool: &PgPool,
+    owner_id: i32,
+    name: &str,
+    power: i32,
+    equipment_type: &str,
+    cost: i64,
+    zr: i32,
+    wt: i32,
+    minlev: i32,
+    maxwt: i32,
+    magic: &str,
+    poison: i32,
+    szyb: i32,
+    ptype: &str,
+    twohand: &str,
+    repair: i32,
+) -> Result<i32, sqlx::Error> {
+    let existing: Option<(i32, String)> = sqlx::query_as(
+        "SELECT id, type FROM equipment \
+         WHERE owner = $1 AND name = $2 AND type = $3 \
+           AND status = 'U' AND power = $4 AND zr = $5 \
+           AND szyb = $6 AND maxwt = $7 AND poison = $8 \
+           AND ptype = $9 AND magic = $10 AND repair = $11 \
+         LIMIT 1",
+    )
+    .bind(owner_id)
+    .bind(name)
+    .bind(equipment_type)
+    .bind(power)
+    .bind(zr)
+    .bind(szyb)
+    .bind(maxwt)
+    .bind(poison)
+    .bind(ptype)
+    .bind(magic)
+    .bind(repair)
+    .fetch_optional(pool)
+    .await?;
+
+    if let Some((existing_id, etype)) = existing {
+        if etype == "R" {
+            sqlx::query("UPDATE equipment SET wt = wt + $1 WHERE id = $2")
+                .bind(wt)
+                .bind(existing_id)
+                .execute(pool)
+                .await?;
+        } else {
+            sqlx::query("UPDATE equipment SET amount = amount + 1 WHERE id = $1")
+                .bind(existing_id)
+                .execute(pool)
+                .await?;
+        }
+        Ok(existing_id)
+    } else {
+        let row: (i32,) = sqlx::query_as(
+            "INSERT INTO equipment \
+                (owner, name, power, type, cost, zr, wt, minlev, maxwt, amount, \
+                 magic, poison, szyb, ptype, twohand, repair) \
+             VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, 1, $10, $11, $12, $13, $14, $15) \
+             RETURNING id",
+        )
+        .bind(owner_id)
+        .bind(name)
+        .bind(power)
+        .bind(equipment_type)
+        .bind(cost)
+        .bind(zr)
+        .bind(wt)
+        .bind(minlev)
+        .bind(maxwt)
+        .bind(magic)
+        .bind(poison)
+        .bind(szyb)
+        .bind(ptype)
+        .bind(twohand)
+        .bind(repair)
+        .fetch_one(pool)
+        .await?;
+        Ok(row.0)
+    }
+}
+
+/// Deduct mana and energy from a player.
+pub async fn deduct_mana_and_energy(
+    pool: &PgPool,
+    player_id: i32,
+    amount: i32,
+) -> Result<(), sqlx::Error> {
+    sqlx::query(
+        "UPDATE players SET pm = pm - $1, energy = energy - $1 \
+         WHERE id = $2 AND pm >= $1 AND energy >= $1",
+    )
+    .bind(amount)
+    .bind(player_id)
+    .execute(pool)
+    .await?;
+    Ok(())
+}

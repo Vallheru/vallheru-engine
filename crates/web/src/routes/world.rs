@@ -157,6 +157,11 @@ fn economy_routes() -> Router<AppState> {
             "/spellbook/deactivate",
             routing::post(spells::spell_deactivate),
         )
+        .route(
+            "/spellbook/enchant/{spell_id}",
+            routing::get(spells::enchant_show),
+        )
+        .route("/spellbook/enchant", routing::post(spells::enchant_action))
         // Player-to-player markets
         .route("/market", routing::get(market::market_hub))
         .route("/market/myoffers", routing::get(market::market_my_offers))

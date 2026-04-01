@@ -5,6 +5,7 @@ pub mod character_reset;
 pub mod combat;
 pub mod crafting;
 pub mod economy;
+pub mod enchantment;
 pub mod equipment;
 pub mod group;
 pub mod hospital;

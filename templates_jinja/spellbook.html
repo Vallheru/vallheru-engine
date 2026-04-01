@@ -93,7 +93,7 @@
 {% endfor %}
 {% endif %}
 
-{# Utility spells (enchantment) — listed but not yet actionable #}
+{# Utility spells (enchantment) #}
 {% if utility_spells %}
 <h3>Czary ulepszające</h3>
 {% for group in utility_spells %}
@@ -102,11 +102,13 @@
   <tr>
     <th>Nazwa</th>
     <th>Poziom</th>
+    <th></th>
   </tr>
   {% for spell in group.spells %}
   <tr>
     <td>{{ spell.name }}</td>
     <td>{{ spell.level }}</td>
+    <td><a href="/spellbook/enchant/{{ spell.id }}">Rzuć czar</a></td>
   </tr>
   {% endfor %}
 </table>

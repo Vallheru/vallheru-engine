@@ -1,0 +1,34 @@
+{# Enchantment item selection page #}
+{% extends "base.html" %}
+
+{% block content %}
+<h2>Rzuć czar: {{ spell_name }}</h2>
+
+{% if items %}
+<p>Wybierz przedmiot do umagicznienia:</p>
+<form method="post" action="/spellbook/enchant">
+  <input type="hidden" name="spell_id" value="{{ spell_id }}" />
+  <table>
+    <tr>
+      <th></th>
+      <th>Nazwa</th>
+      <th>Ilość</th>
+      <th>Statystyki</th>
+    </tr>
+    {% for item in items %}
+    <tr>
+      <td><input type="radio" name="item_id" value="{{ item.id }}" {% if loop.first %}checked{% endif %} /></td>
+      <td>{{ item.name }}</td>
+      <td>{{ item.amount }}</td>
+      <td>{{ item.stats_display }}</td>
+    </tr>
+    {% endfor %}
+  </table>
+  <p><button type="submit">Rzuć czar</button></p>
+</form>
+{% else %}
+<p>Nie posiadasz przedmiotów, które można umagicznić tym czarem.</p>
+{% endif %}
+
+<p><a href="/spellbook">Wróć do księgi czarów</a></p>
+{% endblock %}
