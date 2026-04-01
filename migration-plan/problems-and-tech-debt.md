@@ -628,10 +628,10 @@ Each entry includes:
 
 - **Type**: migration-gap
 - **Discovered in**: Group L tribe implementation
-- **Description**: The astral machine page (`tribeastral.php` → `/tribe/astral`) and guild detail page (`guilds2.php` → `/guilds/detail`) were not implemented in the Group L commit. The astral machine involves complex multi-resource crafting flows, and guilds detail requires guild-specific skill display logic.
-- **Impact**: **Medium** — two PHP pages remain unported, blocking full Group L cutover.
-- **Action**: Implement handlers and templates for both pages.
-- **Fixable in existing task**: No
-- **Needs new task**: Yes
-- **Status**: open
+- **Description**: The astral vault page (`tribeastral.php` → `/tribe/astral`) and guild detail page (`guilds2.php` → `/guilds/gladiator`) were not implemented in the Group L commit. `guilds2.php` was later found to be already implemented as `guilds_gladiator()`. The astral vault was implemented with full deposit/give/safebox flows.
+- **Impact**: Resolved.
+- **Action**: Implemented in commit `90986b0`.
+- **Fixable in existing task**: N/A
+- **Needs new task**: No
+- **Status**: resolved
 - **Related tasks**: Group L tribe system

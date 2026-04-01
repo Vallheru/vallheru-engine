@@ -351,13 +351,13 @@ Resource collection and crafting systems.
 | `tribes.php` | `/tribe` | **staged** |
 | `tribeadmin.php` | `/tribe/admin` | **staged** |
 | `tribearmor.php` | `/tribe/armory` | **staged** |
-| `tribeastral.php` | `/tribe/astral` | **not implemented** |
+| `tribeastral.php` | `/tribe/astral` | staged |
 | `tribeherbs.php` | `/tribe/herbs` | **staged** |
 | `tribeminerals.php` | `/tribe/minerals` | **staged** |
 | `tribeware.php` | `/tribe/warehouse` | **staged** |
 | `team.php` | `/team` | **staged** |
 | `guilds.php` | `/guilds` | **staged** |
-| `guilds2.php` | `/guilds/detail` | **not implemented** |
+| `guilds2.php` | `/guilds/gladiator` | staged |
 | `tforums.php` | `/tforums`, `/tforums/*` | **staged** |
 
 **Status**: Tribe management, storage (armory/warehouse/herbs/minerals), admin, guilds, and team handlers implemented. Tribe astral machine and guilds detail page remain. Tribe forums previously staged.
