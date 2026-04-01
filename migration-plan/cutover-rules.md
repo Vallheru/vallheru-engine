@@ -348,19 +348,19 @@ Resource collection and crafting systems.
 
 | PHP File | Rust Path | State |
 |---|---|---|
-| `tribes.php` | `/tribe` | **not implemented** |
-| `tribeadmin.php` | `/tribe/admin` | **not implemented** |
-| `tribearmor.php` | `/tribe/armory` | **not implemented** |
+| `tribes.php` | `/tribe` | **staged** |
+| `tribeadmin.php` | `/tribe/admin` | **staged** |
+| `tribearmor.php` | `/tribe/armory` | **staged** |
 | `tribeastral.php` | `/tribe/astral` | **not implemented** |
-| `tribeherbs.php` | `/tribe/herbs` | **not implemented** |
-| `tribeminerals.php` | `/tribe/minerals` | **not implemented** |
-| `tribeware.php` | `/tribe/warehouse` | **not implemented** |
-| `team.php` | `/team` | **not implemented** |
-| `guilds.php` | `/guilds` | **not implemented** |
+| `tribeherbs.php` | `/tribe/herbs` | **staged** |
+| `tribeminerals.php` | `/tribe/minerals` | **staged** |
+| `tribeware.php` | `/tribe/warehouse` | **staged** |
+| `team.php` | `/team` | **staged** |
+| `guilds.php` | `/guilds` | **staged** |
 | `guilds2.php` | `/guilds/detail` | **not implemented** |
 | `tforums.php` | `/tforums`, `/tforums/*` | **staged** |
 
-**Status**: Only tribe forums are implemented. Tribe management, warehouses, and guild pages remain on PHP. Tribe forums can cut over with Group J or independently.
+**Status**: Tribe management, storage (armory/warehouse/herbs/minerals), admin, guilds, and team handlers implemented. Tribe astral machine and guilds detail page remain. Tribe forums previously staged.
 
 ---
 

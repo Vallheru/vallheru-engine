@@ -610,3 +610,27 @@ Each entry includes:
 - **Needs new task**: No
 - **Status**: resolved
 - **Related tasks**: TD-048
+
+### TD-050: herb_deposit query does not deduct herbs from player
+
+- **Type**: bug
+- **Discovered in**: Group L tribe storage implementation
+- **Description**: `queries/tribe.rs::herb_deposit()` builds a `player_sql` UPDATE query to deduct herbs from the depositing player, but the query is discarded with `let _ = player_sql;` and never executed. This means herbs are added to the tribe storage without being removed from the player inventory.
+- **Impact**: **High** — herb duplication exploit: players can deposit herbs without losing them.
+- **Action**: Execute the player deduction query within the same transaction as the tribe deposit.
+- **Fixable in existing task**: No (requires careful review of player herb column names)
+- **Needs new task**: Yes
+- **Status**: open
+- **Related tasks**: Group L tribe storage
+
+### TD-051: tribeastral.php and guilds2.php not yet implemented
+
+- **Type**: migration-gap
+- **Discovered in**: Group L tribe implementation
+- **Description**: The astral machine page (`tribeastral.php` → `/tribe/astral`) and guild detail page (`guilds2.php` → `/guilds/detail`) were not implemented in the Group L commit. The astral machine involves complex multi-resource crafting flows, and guilds detail requires guild-specific skill display logic.
+- **Impact**: **Medium** — two PHP pages remain unported, blocking full Group L cutover.
+- **Action**: Implement handlers and templates for both pages.
+- **Fixable in existing task**: No
+- **Needs new task**: Yes
+- **Status**: open
+- **Related tasks**: Group L tribe system
