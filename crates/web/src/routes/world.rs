@@ -117,6 +117,10 @@ fn economy_routes() -> Router<AppState> {
             "/bank",
             routing::get(bank::bank_show).post(bank::bank_action),
         )
+        .route(
+            "/bank/transfer",
+            routing::get(bank::transfer_show).post(bank::transfer_action),
+        )
         .route("/magic-shop", routing::get(bank::magic_shop_show))
         .route(
             "/magic-shop/buy/{id}",

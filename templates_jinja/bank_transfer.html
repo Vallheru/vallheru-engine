@@ -1,0 +1,173 @@
+{# Bank transfer page — player-to-player resource transfers. #}
+{% extends "base.html" %}
+
+{% block content %}
+<h2>Bank — Przekazy</h2>
+
+{% if bank > 0 %}
+<h3>Przekaż złoto</h3>
+<form method="post" action="/bank/transfer">
+  <input type="hidden" name="transfer_type" value="gold" />
+  Gracz:
+  {% if contacts %}
+    <select name="contact_id">
+      <option value="0">— wpisz ID —</option>
+      {% for c in contacts %}
+        <option value="{{ c.id }}">{{ c.name }}</option>
+      {% endfor %}
+    </select>
+  {% endif %}
+  <input type="number" name="recipient_id" min="1" size="5" placeholder="ID gracza" />
+  <input type="number" name="amount" min="1" max="{{ bank }}" value="1" />
+  sztuk złota
+  <input type="text" name="title" maxlength="50" placeholder="Tytuł (opcjonalnie)" size="30" />
+  <input type="submit" value="Przekaż" />
+</form>
+{% endif %}
+
+{% if platinum > 0 %}
+<h3>Przekaż mithril</h3>
+<form method="post" action="/bank/transfer">
+  <input type="hidden" name="transfer_type" value="mithril" />
+  Gracz:
+  {% if contacts %}
+    <select name="contact_id">
+      <option value="0">— wpisz ID —</option>
+      {% for c in contacts %}
+        <option value="{{ c.id }}">{{ c.name }}</option>
+      {% endfor %}
+    </select>
+  {% endif %}
+  <input type="number" name="recipient_id" min="1" size="5" placeholder="ID gracza" />
+  <input type="number" name="amount" min="1" max="{{ platinum }}" value="1" />
+  sztuk mithrilu
+  <input type="text" name="title" maxlength="50" placeholder="Tytuł (opcjonalnie)" size="30" />
+  <input type="submit" value="Przekaż" />
+</form>
+{% endif %}
+
+{% if items %}
+<h3>Przekaż przedmiot</h3>
+<form method="post" action="/bank/transfer">
+  <input type="hidden" name="transfer_type" value="item" />
+  Gracz:
+  {% if contacts %}
+    <select name="contact_id">
+      <option value="0">— wpisz ID —</option>
+      {% for c in contacts %}
+        <option value="{{ c.id }}">{{ c.name }}</option>
+      {% endfor %}
+    </select>
+  {% endif %}
+  <input type="number" name="recipient_id" min="1" size="5" placeholder="ID gracza" />
+  <input type="number" name="amount" min="1" value="1" size="3" />
+  <select name="item_id">
+    {% for i in items %}
+      <option value="{{ i.id }}">{{ i.name }} ({{ i.amount }})</option>
+    {% endfor %}
+  </select>
+  <input type="text" name="title" maxlength="50" placeholder="Tytuł (opcjonalnie)" size="30" />
+  <input type="submit" value="Przekaż" />
+</form>
+{% endif %}
+
+{% if potions %}
+<h3>Przekaż mikstury</h3>
+<form method="post" action="/bank/transfer">
+  <input type="hidden" name="transfer_type" value="potion" />
+  Gracz:
+  {% if contacts %}
+    <select name="contact_id">
+      <option value="0">— wpisz ID —</option>
+      {% for c in contacts %}
+        <option value="{{ c.id }}">{{ c.name }}</option>
+      {% endfor %}
+    </select>
+  {% endif %}
+  <input type="number" name="recipient_id" min="1" size="5" placeholder="ID gracza" />
+  <input type="number" name="amount" min="1" value="1" size="3" />
+  <select name="item_id">
+    {% for p in potions %}
+      <option value="{{ p.id }}">{{ p.name }} (+{{ p.power }}) [{{ p.amount }}]</option>
+    {% endfor %}
+  </select>
+  <input type="text" name="title" maxlength="50" placeholder="Tytuł (opcjonalnie)" size="30" />
+  <input type="submit" value="Przekaż" />
+</form>
+{% endif %}
+
+{% if minerals %}
+<h3>Przekaż minerały</h3>
+<form method="post" action="/bank/transfer">
+  <input type="hidden" name="transfer_type" value="mineral" />
+  Gracz:
+  {% if contacts %}
+    <select name="contact_id">
+      <option value="0">— wpisz ID —</option>
+      {% for c in contacts %}
+        <option value="{{ c.id }}">{{ c.name }}</option>
+      {% endfor %}
+    </select>
+  {% endif %}
+  <input type="number" name="recipient_id" min="1" size="5" placeholder="ID gracza" />
+  <select name="resource_key">
+    {% for m in minerals %}
+      <option value="{{ m.key }}">{{ m.label }} ({{ m.amount }})</option>
+    {% endfor %}
+  </select>
+  <input type="number" name="amount" min="1" value="1" size="5" />
+  <input type="text" name="title" maxlength="50" placeholder="Tytuł (opcjonalnie)" size="30" />
+  <input type="submit" value="Przekaż" />
+</form>
+{% endif %}
+
+{% if herbs %}
+<h3>Przekaż zioła</h3>
+<form method="post" action="/bank/transfer">
+  <input type="hidden" name="transfer_type" value="herb" />
+  Gracz:
+  {% if contacts %}
+    <select name="contact_id">
+      <option value="0">— wpisz ID —</option>
+      {% for c in contacts %}
+        <option value="{{ c.id }}">{{ c.name }}</option>
+      {% endfor %}
+    </select>
+  {% endif %}
+  <input type="number" name="recipient_id" min="1" size="5" placeholder="ID gracza" />
+  <select name="resource_key">
+    {% for h in herbs %}
+      <option value="{{ h.key }}">{{ h.label }} ({{ h.amount }})</option>
+    {% endfor %}
+  </select>
+  <input type="number" name="amount" min="1" value="1" size="5" />
+  <input type="text" name="title" maxlength="50" placeholder="Tytuł (opcjonalnie)" size="30" />
+  <input type="submit" value="Przekaż" />
+</form>
+{% endif %}
+
+{% if pets %}
+<h3>Przekaż chowańca</h3>
+<form method="post" action="/bank/transfer">
+  <input type="hidden" name="transfer_type" value="pet" />
+  Gracz:
+  {% if contacts %}
+    <select name="contact_id">
+      <option value="0">— wpisz ID —</option>
+      {% for c in contacts %}
+        <option value="{{ c.id }}">{{ c.name }}</option>
+      {% endfor %}
+    </select>
+  {% endif %}
+  <input type="number" name="recipient_id" min="1" size="5" placeholder="ID gracza" />
+  <select name="item_id">
+    {% for p in pets %}
+      <option value="{{ p.id }}">{{ p.display_name }}</option>
+    {% endfor %}
+  </select>
+  <input type="text" name="title" maxlength="50" placeholder="Tytuł (opcjonalnie)" size="30" />
+  <input type="submit" value="Przekaż" />
+</form>
+{% endif %}
+
+{% endblock %}
