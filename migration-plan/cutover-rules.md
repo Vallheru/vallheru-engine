@@ -130,11 +130,6 @@ The core game loop entry point.
 
 **Rollback**: Comment out Group B. Players fall back to PHP city/travel.
 
-**Known gaps** (documented in tech-debt register):
-- TD-009: Bandit encounters during travel not implemented.
-- TD-011: Hermit resurrection in mountains/forest not implemented.
-- TD-013: Landfill condition XP not awarded.
-
 ---
 
 ### Group C: Player Profile & Progression

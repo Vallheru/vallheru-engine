@@ -177,6 +177,7 @@ These are the recommended Rust modules, mapped from the real PHP codebase:
 | [production-runbook.md](./production-runbook.md) | Production startup, scheduled jobs, health checks, and operator commands |
 | [php-retirement-checklist.md](./php-retirement-checklist.md) | Phased PHP retirement: cutover → soak → cold standby → removal |
 | [problems-and-tech-debt.md](./problems-and-tech-debt.md) | Technical debt and problem register |
+| [task-status.md](./task-status.md) | Per-task completion status for all 102 tasks |
 
 ## Totals
 
