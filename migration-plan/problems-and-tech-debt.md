@@ -116,7 +116,7 @@ Each entry includes:
 - **Action**: Implement `/portal` and `/portals` handlers with combat encounters using the existing combat system and astral tables.
 - **Fixable in existing task**: No — requires dedicated handler implementation.
 - **Needs new task**: Yes — portal combat + astral plane handlers.
-- **Status**: open
+- **Status**: resolved — Portal of Truth (`/portal`) and 7 Astral Planes (`/portals/:step`) handlers implemented with full combat integration. Query module `portal.rs` (8 functions), handler module `portal.rs` (4 public handlers + battle loop), two MiniJinja templates. Routes registered in `combat_routes`. All quality gates pass.
 - **Related tasks**: MP-07-03, MP-08 (combat system)
 
 ### TD-009: Bandit encounters during travel not yet implemented

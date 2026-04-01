@@ -1,0 +1,99 @@
+{# Astral Planes — boss encounters with component rewards. #}
+{% extends "base.html" %}
+
+{% block content %}
+{% if state == "menu" %}
+  <h2>Astralny plan — {{ plan_name }}</h2>
+  <p>{{ description }}</p>
+  <form method="post" action="/portals/{{ step }}">
+    <p>
+      <button type="submit" name="action" value="attack_normal">Walcz</button>
+    </p>
+  </form>
+
+{% elif state == "battle" %}
+  <h2>Walka — {{ monster_name }}</h2>
+  <p>
+    Twoje HP: <b>{{ player_hp }}/{{ player_max_hp }}</b> |
+    Mana: <b>{{ player_mana }}</b> |
+    AP: <b>{{ action_points }}</b>
+  </p>
+  <p>
+    Potwór: <b>{{ monster_name }}</b> — HP: <b>{{ monster_hp }}/{{ monster_max_hp }}</b>
+  </p>
+
+  {% if battle_log %}
+  <div class="battle-log">
+    {% for entry in battle_log %}
+    <p>{{ entry }}</p>
+    {% endfor %}
+  </div>
+  {% endif %}
+
+  <form method="post" action="/portals/{{ step }}">
+    <p>Wybierz akcję:</p>
+    <p>
+      {% if has_weapon %}
+      <button type="submit" name="action" value="attack_normal">Atak normalny</button>
+      <button type="submit" name="action" value="attack_aggressive">Atak agresywny</button>
+      <button type="submit" name="action" value="attack_defensive">Atak defensywny</button>
+      {% endif %}
+      {% if has_bow %}
+      <button type="submit" name="action" value="attack_ranged">Strzał</button>
+      {% endif %}
+      {% if has_spell %}
+      <button type="submit" name="action" value="cast_spell">Czar</button>
+      <button type="submit" name="action" value="burst_spell">Czar wzmocniony</button>
+      {% endif %}
+      {% if has_def_spell %}
+      <button type="submit" name="action" value="def_burst_spell">Czar defensywny</button>
+      {% endif %}
+      {% if has_potion %}
+      <button type="submit" name="action" value="drink_potion">Wypij miksturę</button>
+      {% endif %}
+      <button type="submit" name="action" value="escape">Ucieczka</button>
+      <button type="submit" name="action" value="rest">Odpoczynek</button>
+    </p>
+  </form>
+
+{% elif state == "victory" %}
+  <h2>Astralny plan — Zwycięstwo!</h2>
+  {% if battle_log %}
+  <div class="battle-log">
+    {% for entry in battle_log %}
+    <p>{{ entry }}</p>
+    {% endfor %}
+  </div>
+  {% endif %}
+  {% if xp_gain > 0 %}
+  <p>Zdobywasz {{ xp_gain }} doświadczenia.</p>
+  {% endif %}
+  <p>{{ result_text }}</p>
+  <p><a href="/city">Dalej</a></p>
+
+{% elif state == "defeat" %}
+  <h2>Astralny plan — Porażka</h2>
+  {% if battle_log %}
+  <div class="battle-log">
+    {% for entry in battle_log %}
+    <p>{{ entry }}</p>
+    {% endfor %}
+  </div>
+  {% endif %}
+  <p>{{ result_text }}</p>
+  <p><a href="/hospital">Szpital</a></p>
+
+{% elif state == "escaped" %}
+  <h2>Astralny plan — Ucieczka</h2>
+  {% if battle_log %}
+  <div class="battle-log">
+    {% for entry in battle_log %}
+    <p>{{ entry }}</p>
+    {% endfor %}
+  </div>
+  {% endif %}
+  <p>{{ result_text }}</p>
+  <p><a href="/city">Wróć do miasta</a></p>
+
+{% endif %}
+{% endblock %}

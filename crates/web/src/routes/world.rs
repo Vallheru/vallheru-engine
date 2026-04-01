@@ -5,8 +5,9 @@ use axum::{Router, middleware, routing};
 use crate::handlers::{
     alchemy, bank, character, chat, city, content, core, court, crafts, deity, equipment, forums,
     gathering, guilds, hospital, house, jail, jeweller, locations, lumbermill, mail, map, market,
-    outpost, pages, player_profile, quest, room, shops, smithy, spells, team, temple, thieves,
-    tower, travel, tribe, tribe_admin, tribe_astral, tribe_forum, tribe_storage, warehouse,
+    outpost, pages, player_profile, portal, quest, room, shops, smithy, spells, team, temple,
+    thieves, tower, travel, tribe, tribe_admin, tribe_astral, tribe_forum, tribe_storage,
+    warehouse,
 };
 use crate::middleware::guards::require_authenticated;
 use crate::state::AppState;
@@ -214,6 +215,16 @@ fn combat_routes() -> Router<AppState> {
         .route(
             "/hunters/quest",
             routing::get(combat::hunters_quest_show).post(combat::hunters_quest_do),
+        )
+        // Portal of Truth (portal.php)
+        .route(
+            "/portal",
+            routing::get(portal::portal_show).post(portal::portal_action),
+        )
+        // Astral Planes (portals.php)
+        .route(
+            "/portals/{step}",
+            routing::get(portal::portals_show).post(portal::portals_action),
         )
 }
 

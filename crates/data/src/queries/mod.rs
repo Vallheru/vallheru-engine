@@ -26,6 +26,7 @@ pub mod moderation;
 pub mod outpost;
 pub mod pages;
 pub mod player;
+pub mod portal;
 pub mod quest;
 pub mod registration;
 pub mod room;
