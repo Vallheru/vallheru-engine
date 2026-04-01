@@ -128,7 +128,7 @@ Each entry includes:
 - **Action**: Wire up bandit encounters once the combat system is available for integration (post MP-08).
 - **Fixable in existing task**: No — depends on combat integration.
 - **Needs new task**: Yes — travel encounter system.
-- **Status**: open
+- **Status**: resolved — Bandit encounters fully implemented. Travel handler rolls for encounters (20% caravan, 30% walk, 0% portal). Generated bandit inserted as temp monster in DB. Player chooses fight (PvE combat), pay ransom (stat-based formula with 5 brackets), or escape (speed/perception check with XP reward). New `travel_encounters` table persists encounter state. 11 domain unit tests cover all formula branches. Commit `7e28d41`.
 - **Related tasks**: MP-07-03, MP-08 (combat system)
 
 ### TD-010: Donators table not in migrations
