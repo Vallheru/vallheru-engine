@@ -1698,6 +1698,7 @@ fn back_url_for_location(location: &str) -> String {
     match location {
         "Las" => "/forest".to_owned(),
         "Góry" => "/mountains".to_owned(),
+        "Podróż" => "/travel".to_owned(),
         _ => "/city".to_owned(),
     }
 }

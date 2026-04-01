@@ -1,0 +1,16 @@
+{% extends "base.html" %}
+
+{% block title %}Podróż — Bandyci{% endblock %}
+
+{% block content %}
+<h2>Bandyci!</h2>
+<p>{{ message }}</p>
+
+<form method="post" action="/travel/encounter">
+  <ul>
+    <li><button type="submit" name="action" value="fight">Walczyć</button></li>
+    <li><button type="submit" name="action" value="pay">Zapłacić okup</button></li>
+    <li><button type="submit" name="action" value="escape">Uciekać</button></li>
+  </ul>
+</form>
+{% endblock %}

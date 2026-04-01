@@ -34,6 +34,7 @@ fn location_routes() -> Router<AppState> {
     Router::new()
         .route("/city", routing::get(city::show))
         .route("/travel", routing::get(travel::show))
+        .route("/travel/encounter", routing::post(travel::encounter_action))
         .route("/map", routing::get(map::show))
         .route(
             "/mountains",

@@ -543,6 +543,38 @@ pub async fn deduct_ap(pool: &PgPool, player_id: i32, cost: i32) -> Result<(), s
     Ok(())
 }
 
+/// Add XP to a specific stat for a player.
+pub async fn add_stat_xp(
+    pool: &PgPool,
+    player_id: i32,
+    stat_key: &str,
+    xp: i32,
+) -> Result<(), sqlx::Error> {
+    sqlx::query("UPDATE player_stats SET xp = xp + $1 WHERE player_id = $2 AND stat_key = $3")
+        .bind(xp)
+        .bind(player_id)
+        .bind(stat_key)
+        .execute(pool)
+        .await?;
+    Ok(())
+}
+
+/// Add XP to a specific skill for a player.
+pub async fn add_skill_xp(
+    pool: &PgPool,
+    player_id: i32,
+    skill_key: &str,
+    xp: i32,
+) -> Result<(), sqlx::Error> {
+    sqlx::query("UPDATE player_skills SET xp = xp + $1 WHERE player_id = $2 AND skill_key = $3")
+        .bind(xp)
+        .bind(player_id)
+        .bind(skill_key)
+        .execute(pool)
+        .await?;
+    Ok(())
+}
+
 /// Get tribe name for a player's `tribe_id`.
 pub async fn tribe_name_for_player(
     pool: &PgPool,

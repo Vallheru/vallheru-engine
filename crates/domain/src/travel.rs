@@ -208,6 +208,123 @@ pub fn validate_travel(attempt: &TravelAttempt) -> Result<i32, TravelError> {
 }
 
 // ---------------------------------------------------------------------------
+// Bandit encounter formulas
+// ---------------------------------------------------------------------------
+
+/// The encounter chance (out of 100) for each travel method.
+/// Magic portal is immune to encounters.
+pub fn bandit_encounter_chance(method: TravelMethod) -> i32 {
+    match method {
+        TravelMethod::Caravan => 20,
+        TravelMethod::Walk => 30,
+        TravelMethod::MagicPortal => 0,
+    }
+}
+
+/// Whether a bandit encounter triggers given a roll in 1..=100.
+pub fn bandit_encounter_triggers(method: TravelMethod, roll_1_to_100: i32) -> bool {
+    let chance = bandit_encounter_chance(method);
+    chance > 0 && roll_1_to_100 <= chance
+}
+
+/// Result of a ransom attempt.
+#[derive(Debug, PartialEq, Eq)]
+pub enum RansomResult {
+    /// Player pays the given amount of gold.
+    Pay(i32),
+    /// Player can't pay (not enough gold or the roll forces a fight).
+    ForceFight,
+}
+
+/// Calculate the ransom a player must pay to avoid a bandit fight.
+///
+/// PHP logic:
+/// - base cost = travel gold cost (caravan) or 0 (walk)
+/// - roll 1..=100 determines multiplier bracket
+/// - roll < 6  → 5 × `stat_level_sum`
+/// - roll < 26 → 15 × `stat_level_sum`
+/// - roll < 76 → 25 × `stat_level_sum`
+/// - roll < 96 → 50 × `stat_level_sum`
+/// - roll >= 96 → cost set to 0 (supposed to be free but triggers fight in PHP)
+///
+/// If the final cost exceeds `player_gold` or is 0, the player must fight.
+/// Otherwise `cost - base_travel_cost` is deducted.
+pub fn calculate_ransom(
+    method: TravelMethod,
+    travel_gold_cost: i32,
+    stat_level_sum: i32,
+    player_gold: i32,
+    roll_1_to_100: i32,
+) -> RansomResult {
+    let base = match method {
+        TravelMethod::Caravan => travel_gold_cost,
+        _ => 0,
+    };
+
+    let cost = if roll_1_to_100 < 6 {
+        base + 5 * stat_level_sum
+    } else if roll_1_to_100 < 26 {
+        base + 15 * stat_level_sum
+    } else if roll_1_to_100 < 76 {
+        base + 25 * stat_level_sum
+    } else if roll_1_to_100 < 96 {
+        base + 50 * stat_level_sum
+    } else {
+        // PHP: sets cost to 0 which triggers fight. We preserve this behavior.
+        0
+    };
+
+    if cost == 0 || cost > player_gold {
+        RansomResult::ForceFight
+    } else {
+        // Deduct only the ransom portion (base travel cost not charged again).
+        RansomResult::Pay(cost - base)
+    }
+}
+
+/// Bandit escape check result.
+#[derive(Debug)]
+pub struct EscapeResult {
+    /// Whether the escape succeeded.
+    pub escaped: bool,
+    /// XP gained (both for speed stat and perception skill).
+    pub xp: i64,
+}
+
+/// Resolve a bandit escape attempt.
+///
+/// PHP logic:
+/// - 4 bandit rolls (1..=75 each)
+/// - chance = (`player_roll` + `speed_mod` + perception) - (`bandit_roll[0]` + `bandit_extra_roll`)
+/// - If chance > 0: escape, XP = ceil(sum of 4 rolls / 100)
+/// - If chance <= 0: fail, XP = 1
+pub fn resolve_bandit_escape(
+    player_speed: i32,
+    perception: i32,
+    player_roll_1_to_100: i32,
+    bandit_rolls: &[i32; 4],
+    bandit_extra_roll_1_to_100: i32,
+) -> EscapeResult {
+    let chance = (player_roll_1_to_100 + player_speed + perception)
+        - (bandit_rolls[0] + bandit_extra_roll_1_to_100);
+
+    if chance > 0 {
+        let sum: i32 = bandit_rolls.iter().copied().sum();
+        #[allow(clippy::cast_possible_truncation)]
+        let xp = (f64::from(sum) / 100.0).ceil() as i64;
+        EscapeResult {
+            escaped: true,
+            xp: xp.max(1),
+        }
+    } else {
+        EscapeResult {
+            escaped: false,
+            xp: 1,
+        }
+    }
+}
+
+// ---------------------------------------------------------------------------
 // Tests
 // ---------------------------------------------------------------------------
 
@@ -450,5 +567,110 @@ mod tests {
             energy: 100.0,
         };
         assert_eq!(validate_travel(&a), Ok(4000));
+    }
+
+    // -----------------------------------------------------------------------
+    // Bandit encounter tests
+    // -----------------------------------------------------------------------
+
+    #[test]
+    fn bandit_encounter_chance_values() {
+        assert_eq!(bandit_encounter_chance(TravelMethod::Caravan), 20);
+        assert_eq!(bandit_encounter_chance(TravelMethod::Walk), 30);
+        assert_eq!(bandit_encounter_chance(TravelMethod::MagicPortal), 0);
+    }
+
+    #[test]
+    fn bandit_encounter_trigger_table() {
+        // Caravan: 20% chance → rolls 1..=20 trigger, 21..=100 don't.
+        assert!(bandit_encounter_triggers(TravelMethod::Caravan, 1));
+        assert!(bandit_encounter_triggers(TravelMethod::Caravan, 20));
+        assert!(!bandit_encounter_triggers(TravelMethod::Caravan, 21));
+        assert!(!bandit_encounter_triggers(TravelMethod::Caravan, 100));
+
+        // Walk: 30% chance.
+        assert!(bandit_encounter_triggers(TravelMethod::Walk, 30));
+        assert!(!bandit_encounter_triggers(TravelMethod::Walk, 31));
+
+        // Magic portal: never triggers.
+        assert!(!bandit_encounter_triggers(TravelMethod::MagicPortal, 1));
+    }
+
+    #[test]
+    fn ransom_low_roll_bracket() {
+        // roll < 6 → 5 × stat_level_sum
+        let result = calculate_ransom(TravelMethod::Walk, 0, 100, 10_000, 3);
+        assert_eq!(result, RansomResult::Pay(500)); // 0 + 5*100 = 500, base=0
+    }
+
+    #[test]
+    fn ransom_medium_roll_bracket() {
+        // roll 6..25 → 15 × stat_level_sum
+        let result = calculate_ransom(TravelMethod::Walk, 0, 100, 10_000, 10);
+        assert_eq!(result, RansomResult::Pay(1500));
+    }
+
+    #[test]
+    fn ransom_high_roll_bracket() {
+        // roll 26..75 → 25 × stat_level_sum
+        let result = calculate_ransom(TravelMethod::Walk, 0, 100, 10_000, 50);
+        assert_eq!(result, RansomResult::Pay(2500));
+    }
+
+    #[test]
+    fn ransom_very_high_roll_bracket() {
+        // roll 76..95 → 50 × stat_level_sum
+        let result = calculate_ransom(TravelMethod::Walk, 0, 100, 10_000, 80);
+        assert_eq!(result, RansomResult::Pay(5000));
+    }
+
+    #[test]
+    fn ransom_free_roll_forces_fight() {
+        // roll >= 96 → cost = 0 → fight (PHP bug preserved)
+        let result = calculate_ransom(TravelMethod::Walk, 0, 100, 10_000, 96);
+        assert_eq!(result, RansomResult::ForceFight);
+    }
+
+    #[test]
+    fn ransom_caravan_includes_base() {
+        // Caravan base = 1000 gold, roll < 6 → cost = 1000 + 5*10 = 1050
+        // Deduction = 1050 - 1000 = 50
+        let result = calculate_ransom(TravelMethod::Caravan, 1000, 10, 5000, 3);
+        assert_eq!(result, RansomResult::Pay(50));
+    }
+
+    #[test]
+    fn ransom_too_expensive_forces_fight() {
+        let result = calculate_ransom(TravelMethod::Walk, 0, 1000, 100, 50);
+        // 25 * 1000 = 25000 > 100 gold
+        assert_eq!(result, RansomResult::ForceFight);
+    }
+
+    #[test]
+    fn escape_success_gives_xp() {
+        // High player stats + good roll → escape
+        let result = resolve_bandit_escape(50, 30, 80, &[10, 20, 30, 40], 50);
+        // chance = (80 + 50 + 30) - (10 + 50) = 100 > 0 → escape
+        // xp = ceil((10+20+30+40)/100) = ceil(1.0) = 1
+        assert!(result.escaped);
+        assert_eq!(result.xp, 1);
+    }
+
+    #[test]
+    fn escape_failure() {
+        // Low player stats → fail
+        let result = resolve_bandit_escape(5, 5, 10, &[70, 70, 70, 70], 90);
+        // chance = (10 + 5 + 5) - (70 + 90) = -140 ≤ 0 → fail
+        assert!(!result.escaped);
+        assert_eq!(result.xp, 1);
+    }
+
+    #[test]
+    fn escape_xp_ceiling() {
+        let result = resolve_bandit_escape(50, 30, 80, &[75, 75, 75, 75], 10);
+        // chance = (80+50+30) - (75+10) = 75 > 0 → escape
+        // xp = ceil(300/100) = 3
+        assert!(result.escaped);
+        assert_eq!(result.xp, 3);
     }
 }
