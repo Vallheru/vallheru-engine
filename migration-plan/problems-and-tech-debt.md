@@ -111,10 +111,10 @@ Each entry includes:
 
 - **Type**: migration-gap
 - **Discovered in**: MP-07-03
-- **Description**: The `portal.php` (magic portal boss fight) and `portals.php` (astral plane monsters) pages depend on `astral_plans` and `astral` tables that don't exist in PostgreSQL migrations yet. These features involve full combat encounters which are out of scope for MP-07-03. The travel handler shows a "disabled" notice for the portal entry.
-- **Impact**: Players cannot access the magic portal or astral plane features until the tables and combat integration are implemented.
-- **Action**: Create `astral_plans` and `astral` tables in a migration (likely part of MP-12 or a new task). Implement portal/astral combat integration once the combat system is connected.
-- **Fixable in existing task**: No — requires dedicated table migration and combat wiring.
+- **Description**: The `portal.php` (magic portal boss fight) and `portals.php` (astral plane monsters) pages need Rust handlers. All required tables exist (`astral` in migration 000012, `astral_bank`/`astral_plans` in 000026, `astral_machine` in 000033). The combat system is complete (Group C/I). The remaining gap is implementing the portal and portals handlers with combat integration.
+- **Impact**: Players cannot access the magic portal or astral plane features until the handlers are implemented.
+- **Action**: Implement `/portal` and `/portals` handlers with combat encounters using the existing combat system and astral tables.
+- **Fixable in existing task**: No — requires dedicated handler implementation.
 - **Needs new task**: Yes — portal combat + astral plane handlers.
 - **Status**: open
 - **Related tasks**: MP-07-03, MP-08 (combat system)
