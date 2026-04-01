@@ -184,7 +184,8 @@ Each entry includes:
 - **Action**: Create a dedicated task for bank transfers/donations covering gold, mithril, minerals, herbs, potions, items, and equipment.
 - **Fixable in existing task**: No — too large and complex.
 - **Needs new task**: Yes
-- **Status**: open
+- **Status**: resolved
+- **Resolution**: Implemented in commit 5903f69 — full transfer system (gold, mithril, minerals, herbs, potions, items, pets) with /bank/transfer route, 7 transfer query functions, dispatcher handler pattern.
 - **Related tasks**: MP-10-05
 
 ### TD-015: Spell enchantment system not yet migrated
