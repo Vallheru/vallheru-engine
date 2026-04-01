@@ -683,9 +683,8 @@ async fn load_condition_stat(app: &AppState, player_id: i32) -> i32 {
         .map_or(1, |s| s.trained.max(1))
 }
 
-/// Compute maximum mana: `(inteli + wisdom)` times class multiplier.
-///
-/// Equipment bonus is not yet available (equipment module not migrated).
+/// Compute maximum mana: `(inteli + wisdom)` times class multiplier,
+/// plus mage clothing (slot 8) equipment bonus.
 async fn compute_max_mana(
     app: &AppState,
     player_id: i32,
@@ -708,7 +707,19 @@ async fn compute_max_mana(
     if player_row.class == "Mag" {
         max_mana *= 2;
     }
-    // Equipment bonus (equip[8] / rod slot) is not yet available.
+
+    // Equipment bonus: mage clothing (PHP slot 8, DB type 'C') power / 100 * max_mana.
+    if let Ok(equipped) =
+        vallheru_data::queries::item::find_equipped_items(&app.pool, player_id).await
+    {
+        if let Some(clothing) = equipped.iter().find(|e| e.equipment_type == "C") {
+            #[allow(clippy::cast_possible_truncation)]
+            {
+                max_mana += (i64::from(clothing.power) * i64::from(max_mana) / 100) as i32;
+            }
+        }
+    }
+
     max_mana
 }
 
