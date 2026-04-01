@@ -194,10 +194,10 @@ Each entry includes:
 - **Discovered in**: MP-09-04
 - **Description**: The PHP `czary.php` utility spell enchantment system (enhancing items with element-based bonuses using magic skill + intelligence checks) is not yet implemented. Utility spells are displayed in the spell book but enchantment actions are not available.
 - **Impact**: Players cannot enchant items. Medium priority — requires combat skill/stat interaction.
-- **Action**: Implement enchantment as a separate feature once combat skill checks are available.
+- **Action**: Implemented in commit 4f93f42. Domain module `enchantment.rs` with 18 unit tests, data queries for enchantable items + base stat lookups, handler with validation/resolution/persistence, and 3 templates.
 - **Fixable in existing task**: No — depends on skill/stat progression integration.
-- **Needs new task**: Yes
-- **Status**: open
+- **Needs new task**: No
+- **Status**: resolved
 - **Related tasks**: MP-09-04, MP-08
 
 ### TD-016: Tribe forum post rate limiting not implemented
