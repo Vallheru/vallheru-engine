@@ -968,7 +968,15 @@ pub async fn herbs_deposit(
         return error_page(&app, &ctx, "Ilość musi być większa od zera.");
     }
 
-    if let Err(e) = tq::herb_deposit(&app.pool, player.tribe, &form.herb_key, form.amount).await {
+    if let Err(e) = tq::herb_deposit(
+        &app.pool,
+        player.tribe,
+        player_id,
+        &form.herb_key,
+        form.amount,
+    )
+    .await
+    {
         tracing::warn!("herb_deposit failed: {e}");
         return error_page(&app, &ctx, "Nie udało się złożyć ziół.");
     }

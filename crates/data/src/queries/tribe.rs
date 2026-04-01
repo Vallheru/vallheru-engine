@@ -884,13 +884,15 @@ pub async fn armory_deposit(
     equipment_id: i32,
     amount: i32,
 ) -> Result<(), sqlx::Error> {
+    let mut tx = pool.begin().await?;
+
     // Read source item
     let row = sqlx::query_as::<_, (String, i32, i32, i32, i32, i32, i32, String, String, i32, String, String, i32)>(
         "SELECT name, power, wt, maxwt, zr, szyb, minlev, type, magic, poison, twohand, ptype, repair \
          FROM equipment WHERE id = $1",
     )
     .bind(equipment_id)
-    .fetch_one(pool)
+    .fetch_one(&mut *tx)
     .await?;
 
     let (
@@ -920,7 +922,7 @@ pub async fn armory_deposit(
     .bind(&item_type)
     .bind(power)
     .bind(&magic)
-    .execute(pool)
+    .execute(&mut *tx)
     .await?;
 
     if merged.rows_affected() == 0 {
@@ -945,7 +947,7 @@ pub async fn armory_deposit(
         .bind(&twohand)
         .bind(&ptype)
         .bind(repair)
-        .execute(pool)
+        .execute(&mut *tx)
         .await?;
     }
 
@@ -953,14 +955,16 @@ pub async fn armory_deposit(
     sqlx::query("UPDATE equipment SET amount = amount - $1 WHERE id = $2")
         .bind(amount)
         .bind(equipment_id)
-        .execute(pool)
+        .execute(&mut *tx)
         .await?;
 
     // Remove empty rows
     sqlx::query("DELETE FROM equipment WHERE id = $1 AND amount <= 0")
         .bind(equipment_id)
-        .execute(pool)
+        .execute(&mut *tx)
         .await?;
+
+    tx.commit().await?;
     Ok(())
 }
 
@@ -971,12 +975,14 @@ pub async fn armory_give(
     recipient_id: i32,
     amount: i32,
 ) -> Result<(), sqlx::Error> {
+    let mut tx = pool.begin().await?;
+
     let row = sqlx::query_as::<_, (String, i32, i32, i32, i32, i32, i32, String, String, i32, String, String, i32)>(
         "SELECT name, power, wt, maxwt, zr, szyb, minlev, type, magic, poison, twohand, ptype, repair \
          FROM tribe_zbroj WHERE id = $1",
     )
     .bind(item_id)
-    .fetch_one(pool)
+    .fetch_one(&mut *tx)
     .await?;
 
     let (
@@ -1018,20 +1024,22 @@ pub async fn armory_give(
     .bind(&twohand)
     .bind(&ptype)
     .bind(repair)
-    .execute(pool)
+    .execute(&mut *tx)
     .await?;
 
     // Deduct from armory
     sqlx::query("UPDATE tribe_zbroj SET amount = amount - $1 WHERE id = $2")
         .bind(amount)
         .bind(item_id)
-        .execute(pool)
+        .execute(&mut *tx)
         .await?;
 
     sqlx::query("DELETE FROM tribe_zbroj WHERE id = $1 AND amount <= 0")
         .bind(item_id)
-        .execute(pool)
+        .execute(&mut *tx)
         .await?;
+
+    tx.commit().await?;
     Ok(())
 }
 
@@ -1043,6 +1051,8 @@ pub async fn armory_reserve(
     tribe_id: i32,
     amount: i32,
 ) -> Result<(), sqlx::Error> {
+    let mut tx = pool.begin().await?;
+
     sqlx::query(
         "INSERT INTO tribe_reserv (iid, pid, amount, tribe, type) \
          VALUES ($1, $2, $3, $4, 'armory')",
@@ -1051,14 +1061,16 @@ pub async fn armory_reserve(
     .bind(player_id)
     .bind(amount)
     .bind(tribe_id)
-    .execute(pool)
+    .execute(&mut *tx)
     .await?;
 
     sqlx::query("UPDATE tribe_zbroj SET reserved = reserved + $1 WHERE id = $2")
         .bind(amount)
         .bind(item_id)
-        .execute(pool)
+        .execute(&mut *tx)
         .await?;
+
+    tx.commit().await?;
     Ok(())
 }
 
@@ -1103,11 +1115,13 @@ pub async fn warehouse_deposit(
     potion_id: i32,
     amount: i32,
 ) -> Result<(), sqlx::Error> {
+    let mut tx = pool.begin().await?;
+
     let row = sqlx::query_as::<_, (String, String, i32, String)>(
         "SELECT name, efect, power, type FROM potions WHERE id = $1",
     )
     .bind(potion_id)
-    .fetch_one(pool)
+    .fetch_one(&mut *tx)
     .await?;
 
     let (name, efect, power, potion_type) = row;
@@ -1122,7 +1136,7 @@ pub async fn warehouse_deposit(
     .bind(&name)
     .bind(&potion_type)
     .bind(power)
-    .execute(pool)
+    .execute(&mut *tx)
     .await?;
 
     if merged.rows_affected() == 0 {
@@ -1136,7 +1150,7 @@ pub async fn warehouse_deposit(
         .bind(power)
         .bind(amount)
         .bind(&potion_type)
-        .execute(pool)
+        .execute(&mut *tx)
         .await?;
     }
 
@@ -1144,13 +1158,15 @@ pub async fn warehouse_deposit(
     sqlx::query("UPDATE potions SET amount = amount - $1 WHERE id = $2")
         .bind(amount)
         .bind(potion_id)
-        .execute(pool)
+        .execute(&mut *tx)
         .await?;
 
     sqlx::query("DELETE FROM potions WHERE id = $1 AND amount <= 0")
         .bind(potion_id)
-        .execute(pool)
+        .execute(&mut *tx)
         .await?;
+
+    tx.commit().await?;
     Ok(())
 }
 
@@ -1161,11 +1177,13 @@ pub async fn warehouse_give(
     recipient_id: i32,
     amount: i32,
 ) -> Result<(), sqlx::Error> {
+    let mut tx = pool.begin().await?;
+
     let row = sqlx::query_as::<_, (String, String, i32, String)>(
         "SELECT name, efect, power, type FROM tribe_mag WHERE id = $1",
     )
     .bind(potion_id)
-    .fetch_one(pool)
+    .fetch_one(&mut *tx)
     .await?;
 
     let (name, efect, power, potion_type) = row;
@@ -1180,19 +1198,21 @@ pub async fn warehouse_give(
     .bind(power)
     .bind(amount)
     .bind(&potion_type)
-    .execute(pool)
+    .execute(&mut *tx)
     .await?;
 
     sqlx::query("UPDATE tribe_mag SET amount = amount - $1 WHERE id = $2")
         .bind(amount)
         .bind(potion_id)
-        .execute(pool)
+        .execute(&mut *tx)
         .await?;
 
     sqlx::query("DELETE FROM tribe_mag WHERE id = $1 AND amount <= 0")
         .bind(potion_id)
-        .execute(pool)
+        .execute(&mut *tx)
         .await?;
+
+    tx.commit().await?;
     Ok(())
 }
 
@@ -1204,6 +1224,8 @@ pub async fn warehouse_reserve(
     tribe_id: i32,
     amount: i32,
 ) -> Result<(), sqlx::Error> {
+    let mut tx = pool.begin().await?;
+
     sqlx::query(
         "INSERT INTO tribe_reserv (iid, pid, amount, tribe, type) \
          VALUES ($1, $2, $3, $4, 'warehouse')",
@@ -1212,14 +1234,16 @@ pub async fn warehouse_reserve(
     .bind(player_id)
     .bind(amount)
     .bind(tribe_id)
-    .execute(pool)
+    .execute(&mut *tx)
     .await?;
 
     sqlx::query("UPDATE tribe_mag SET reserved = reserved + $1 WHERE id = $2")
         .bind(amount)
         .bind(potion_id)
-        .execute(pool)
+        .execute(&mut *tx)
         .await?;
+
+    tx.commit().await?;
     Ok(())
 }
 
@@ -1248,6 +1272,7 @@ pub async fn tribe_herbs(
 pub async fn herb_deposit(
     pool: &PgPool,
     tribe_id: i32,
+    player_id: i32,
     herb_key: &str,
     amount: i32,
 ) -> Result<(), sqlx::Error> {
@@ -1283,15 +1308,21 @@ pub async fn herb_deposit(
         _ => unreachable!(),
     };
 
+    let mut tx = pool.begin().await?;
+
     sqlx::query(tribe_sql)
         .bind(amount)
         .bind(tribe_id)
-        .execute(pool)
+        .execute(&mut *tx)
         .await?;
 
-    // Player-side herb deduction is the handler's responsibility since
-    // this function does not take a player_id parameter.
-    let _ = player_sql;
+    sqlx::query(player_sql)
+        .bind(amount)
+        .bind(player_id)
+        .execute(&mut *tx)
+        .await?;
+
+    tx.commit().await?;
     Ok(())
 }
 
@@ -1336,17 +1367,21 @@ pub async fn herb_give(
         _ => unreachable!(),
     };
 
+    let mut tx = pool.begin().await?;
+
     sqlx::query(tribe_sql)
         .bind(amount)
         .bind(tribe_id)
-        .execute(pool)
+        .execute(&mut *tx)
         .await?;
 
     sqlx::query(player_sql)
         .bind(amount)
         .bind(player_id)
-        .execute(pool)
+        .execute(&mut *tx)
         .await?;
+
+    tx.commit().await?;
     Ok(())
 }
 
@@ -1388,6 +1423,8 @@ pub async fn herb_reserve(
         _ => unreachable!(),
     };
 
+    let mut tx = pool.begin().await?;
+
     sqlx::query(
         "INSERT INTO tribe_reserv (iid, pid, amount, tribe, type) \
          VALUES (0, $1, $2, $3, $4)",
@@ -1396,14 +1433,16 @@ pub async fn herb_reserve(
     .bind(amount)
     .bind(tribe_id)
     .bind(format!("herb:{herb_key}"))
-    .execute(pool)
+    .execute(&mut *tx)
     .await?;
 
     sqlx::query(update_sql)
         .bind(amount)
         .bind(tribe_id)
-        .execute(pool)
+        .execute(&mut *tx)
         .await?;
+
+    tx.commit().await?;
     Ok(())
 }
 
@@ -1480,17 +1519,21 @@ pub async fn mineral_deposit(
         _ => unreachable!(),
     };
 
+    let mut tx = pool.begin().await?;
+
     sqlx::query(tribe_sql)
         .bind(amount)
         .bind(tribe_id)
-        .execute(pool)
+        .execute(&mut *tx)
         .await?;
 
     sqlx::query(player_sql)
         .bind(amount)
         .bind(player_id)
-        .execute(pool)
+        .execute(&mut *tx)
         .await?;
+
+    tx.commit().await?;
     Ok(())
 }
 
@@ -1544,17 +1587,21 @@ pub async fn mineral_give(
         _ => unreachable!(),
     };
 
+    let mut tx = pool.begin().await?;
+
     sqlx::query(tribe_sql)
         .bind(amount)
         .bind(tribe_id)
-        .execute(pool)
+        .execute(&mut *tx)
         .await?;
 
     sqlx::query(player_sql)
         .bind(amount)
         .bind(player_id)
-        .execute(pool)
+        .execute(&mut *tx)
         .await?;
+
+    tx.commit().await?;
     Ok(())
 }
 
@@ -1608,6 +1655,8 @@ pub async fn mineral_reserve(
         _ => unreachable!(),
     };
 
+    let mut tx = pool.begin().await?;
+
     sqlx::query(
         "INSERT INTO tribe_reserv (iid, pid, amount, tribe, type) \
          VALUES (0, $1, $2, $3, $4)",
@@ -1616,14 +1665,16 @@ pub async fn mineral_reserve(
     .bind(amount)
     .bind(tribe_id)
     .bind(format!("mineral:{mineral_key}"))
-    .execute(pool)
+    .execute(&mut *tx)
     .await?;
 
     sqlx::query(update_sql)
         .bind(amount)
         .bind(tribe_id)
-        .execute(pool)
+        .execute(&mut *tx)
         .await?;
+
+    tx.commit().await?;
     Ok(())
 }
 
@@ -1652,12 +1703,14 @@ pub async fn reservations_for_tribe(
 /// Delete reservations by IDs and update the reserved counts on source items.
 /// The caller must ensure all IDs belong to the same tribe.
 pub async fn delete_reservations(pool: &PgPool, ids: &[i32]) -> Result<(), sqlx::Error> {
+    let mut tx = pool.begin().await?;
+
     // Fetch reservations before deleting so we can reverse the reserved counts
     let rows = sqlx::query_as::<_, (i32, i32, i32, String)>(
         "SELECT id, iid, amount, type FROM tribe_reserv WHERE id = ANY($1)",
     )
     .bind(ids)
-    .fetch_all(pool)
+    .fetch_all(&mut *tx)
     .await?;
 
     for (_, iid, amt, rtype) in &rows {
@@ -1666,14 +1719,14 @@ pub async fn delete_reservations(pool: &PgPool, ids: &[i32]) -> Result<(), sqlx:
                 sqlx::query("UPDATE tribe_zbroj SET reserved = reserved - $1 WHERE id = $2")
                     .bind(amt)
                     .bind(iid)
-                    .execute(pool)
+                    .execute(&mut *tx)
                     .await?;
             }
             "warehouse" => {
                 sqlx::query("UPDATE tribe_mag SET reserved = reserved - $1 WHERE id = $2")
                     .bind(amt)
                     .bind(iid)
-                    .execute(pool)
+                    .execute(&mut *tx)
                     .await?;
             }
             _ => {
@@ -1688,8 +1741,10 @@ pub async fn delete_reservations(pool: &PgPool, ids: &[i32]) -> Result<(), sqlx:
 
     sqlx::query("DELETE FROM tribe_reserv WHERE id = ANY($1)")
         .bind(ids)
-        .execute(pool)
+        .execute(&mut *tx)
         .await?;
+
+    tx.commit().await?;
     Ok(())
 }
 
