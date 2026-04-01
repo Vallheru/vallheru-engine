@@ -470,7 +470,7 @@ Resource collection and crafting systems.
 | `source.php` | Source code viewer — will not be migrated. |
 | `portal.php` | Astral portal boss fight — depends on astral tables + combat (TD-008). |
 | `portals.php` | Astral plane monsters — depends on astral tables + combat (TD-008). |
-| `warehouse.php` | Item warehouse — not yet implemented. |
+| `warehouse.php` | `/warehouse` — Royal warehouse for buying/selling minerals and herbs. Staged. |
 
 ---
 
