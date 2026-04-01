@@ -620,8 +620,9 @@ Each entry includes:
 - **Action**: Execute the player deduction query within the same transaction as the tribe deposit.
 - **Fixable in existing task**: No (requires careful review of player herb column names)
 - **Needs new task**: Yes
-- **Status**: open
+- **Status**: resolved
 - **Related tasks**: Group L tribe storage
+- **Resolution**: Fixed in commit 0e16ca2 — added player_id param to herb_deposit, execute both queries in transaction. Also wrapped all tribe storage operations (deposit/give/reserve for armory, warehouse, herbs, minerals, and delete_reservations) in database transactions.
 
 ### TD-051: tribeastral.php and guilds2.php not yet implemented
 
