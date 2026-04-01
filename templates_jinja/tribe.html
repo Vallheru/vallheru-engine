@@ -1,0 +1,58 @@
+{% extends "base.html" %}
+
+{% block title %}Klan{% endblock %}
+
+{% block content %}
+{% if not has_tribe %}
+  <p>Nie należysz do żadnego klanu.</p>
+  <a href="/tribe/list">Lista klanów</a> |
+  <a href="/tribe/create">Załóż klan</a>
+{% else %}
+  <h3>{{ tribe.name }}</h3>
+  <p><b>Poziom:</b> {{ tribe.level_name }} ({{ tribe.level }})</p>
+  {% if tribe.prefix or tribe.suffix %}
+  <p><b>Tag:</b> {{ tribe.prefix }} ... {{ tribe.suffix }}</p>
+  {% endif %}
+  {% if tribe.public_msg %}
+  <p>{{ tribe.public_msg }}</p>
+  {% endif %}
+  <p><b>Członków:</b> {{ tribe.member_count }}</p>
+
+  <h4>Członkowie</h4>
+  <table width="100%">
+    <tr>
+      <td><b>Imię</b></td>
+      <td><b>Poziom</b></td>
+      <td><b>Rasa</b></td>
+      <td><b>Klasa</b></td>
+      <td><b>Ranga</b></td>
+    </tr>
+    {% for m in members %}
+    <tr>
+      <td><a href="/player/{{ m.id }}">{{ m.name }}</a></td>
+      <td>{{ m.level }}</td>
+      <td>{{ m.race }}</td>
+      <td>{{ m.class }}</td>
+      <td>{{ m.rank }}</td>
+    </tr>
+    {% endfor %}
+  </table>
+
+  <br/>
+  {% if can_admin %}
+  <a href="/tribe/admin">Administracja</a> |
+  {% endif %}
+  <a href="/tforums">Forum klanu</a> |
+  <a href="/tribe/armory">Zbrojownia</a> |
+  <a href="/tribe/warehouse">Magazyn mikstur</a> |
+  <a href="/tribe/herbs">Zielnik</a> |
+  <a href="/tribe/minerals">Skarbiec</a>
+
+  {% if not is_owner %}
+  <br/><br/>
+  <form method="post" action="/tribe/leave">
+    <input type="submit" value="Opuść klan" onclick="return confirm('Czy na pewno chcesz opuścić klan?')"/>
+  </form>
+  {% endif %}
+{% endif %}
+{% endblock %}

@@ -1,0 +1,60 @@
+{% extends "base.html" %}
+
+{% block title %}Skarbiec klanu{% endblock %}
+
+{% block content %}
+<h3>Skarbiec klanu</h3>
+
+<p><b>Złoto klanowe:</b> {{ gold }} | <b>Mithril klanowy:</b> {{ mithril }}</p>
+
+<table width="100%">
+  <tr>
+    <td><b>Surowiec</b></td>
+    <td><b>Ilość</b></td>
+    <td><b>Zarezerwowane</b></td>
+    <td><b>Dostępne</b></td>
+    <td></td>
+  </tr>
+  {% for m in minerals %}
+  <tr>
+    <td>{{ m.label }}</td>
+    <td>{{ m.amount }}</td>
+    <td>{{ m.reserved }}</td>
+    <td>{{ m.available }}</td>
+    <td>
+      <form method="post" action="/tribe/minerals/reserve" style="display:inline">
+        <input type="hidden" name="mineral_key" value="{{ m.key }}"/>
+        <input type="text" name="amount" value="1" size="3"/>
+        <input type="submit" value="Rezerwuj"/>
+      </form>
+      {% if can_give %}
+      <form method="post" action="/tribe/minerals/give" style="display:inline">
+        <input type="hidden" name="mineral_key" value="{{ m.key }}"/>
+        <input type="text" name="amount" value="1" size="3"/>
+        <select name="recipient_id">
+          {% for mem in members %}
+          <option value="{{ mem.id }}">{{ mem.name }}</option>
+          {% endfor %}
+        </select>
+        <input type="submit" value="Wydaj"/>
+      </form>
+      {% endif %}
+    </td>
+  </tr>
+  {% endfor %}
+</table>
+
+<h4>Złóż surowce</h4>
+<form method="post" action="/tribe/minerals/deposit">
+  <select name="mineral_key">
+    {% for m in minerals %}
+    <option value="{{ m.key }}">{{ m.label }}</option>
+    {% endfor %}
+  </select>
+  Ilość: <input type="text" name="amount" value="1" size="3"/>
+  <input type="submit" value="Złóż"/>
+</form>
+
+<br/>
+<a href="/tribe">Wróć do klanu</a>
+{% endblock %}

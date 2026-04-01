@@ -32,4 +32,5 @@ pub mod room;
 pub mod session;
 pub mod settings;
 pub mod travel;
+pub mod tribe;
 pub mod tribe_forum;

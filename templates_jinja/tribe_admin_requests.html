@@ -1,0 +1,35 @@
+{% extends "base.html" %}
+
+{% block title %}Rezerwacje{% endblock %}
+
+{% block content %}
+<h3>Rezerwacje</h3>
+
+{% if reservations|length == 0 %}
+  <p>Brak aktywnych rezerwacji.</p>
+{% else %}
+<form method="post" action="/tribe/admin/requests/delete">
+<table width="100%">
+  <tr>
+    <td width="20"></td>
+    <td><b>Gracz</b></td>
+    <td><b>Typ</b></td>
+    <td><b>Ilość</b></td>
+  </tr>
+  {% for r in reservations %}
+  <tr>
+    <td><input type="checkbox" name="ids" value="{{ r.id }}"/></td>
+    <td>{{ r.player_name }}</td>
+    <td>{{ r.res_type }}</td>
+    <td>{{ r.amount }}</td>
+  </tr>
+  {% endfor %}
+</table>
+<br/>
+<input type="submit" value="Usuń zaznaczone"/>
+</form>
+{% endif %}
+
+<br/>
+<a href="/tribe/admin">Wróć</a>
+{% endblock %}

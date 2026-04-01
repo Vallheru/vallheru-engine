@@ -267,20 +267,14 @@ Resource collection and crafting systems.
 
 **Rollback**: Comment out Group H. Resource state is in database.
 
-**Not yet implemented** (separate group or deferred):
-
-| PHP File | Rust Path | Status |
-|---|---|---|
-| `kowal.php` | `/smithy` | **not implemented** |
-| `crafts.php` | `/crafts` | **not implemented** |
-| `jeweller.php` | `/jeweller` | **not implemented** |
-| `jewellershop.php` | `/jeweller/shop` | **not implemented** |
-| `alchemik.php` | `/alchemy` | **not implemented** |
-| `lumbermill.php` | `/lumbermill` | **not implemented** |
-| `core.php` | `/core` | **not implemented** |
-| `thieves.php` | `/thieves` | **not implemented** |
-
-These routes are in the route manifest but have no Rust handlers. They remain on PHP until implemented.
+| `kowal.php` | `/smithy`, `/smithy/*` | **staged** |
+| `crafts.php` | `/crafts`, `/crafts/*` | **staged** |
+| `jeweller.php` | `/jeweller`, `/jeweller/*` | **staged** |
+| `jewellershop.php` | `/jeweller/shop`, `/jeweller/shop/*` | **staged** |
+| `alchemik.php` | `/alchemy`, `/alchemy/*` | **staged** |
+| `lumbermill.php` | `/lumbermill`, `/lumbermill/*` | **staged** |
+| `core.php` | `/core`, `/core/*` | **staged** |
+| `thieves.php` | `/thieves`, `/thieves/*` | **staged** |
 
 ---
 
@@ -503,9 +497,9 @@ Recommended activation order, from lowest to highest risk:
 | 15 | **O: Staff & Moderation** | Low | Staff-only, low traffic. |
 | 16 | **P: Admin** | Low | Admin-only, single page. |
 
-Group L (Tribes) and Group H crafting workshops are blocked until their handlers are implemented.
+Group L (Tribes) is blocked until its handlers are implemented.
 
-Groups C (Player Profile) and I (Combat) are now **staged** and ready for cutover.
+Groups C (Player Profile), H (Gathering & Crafting), and I (Combat) are now **staged** and ready for cutover.
 
 ---
 

@@ -1,0 +1,41 @@
+{% extends "base.html" %}
+
+{% block title %}Gildie — Gladiatorzy{% endblock %}
+
+{% block content %}
+<h3>Gildie — Najlepsi Gladiatorzy</h3>
+
+<a href="/guilds">Rzemieślnicy</a>
+
+<h4>Rekordy walk</h4>
+<table width="100%">
+  <tr>
+    <td><b>Potwór</b></td>
+    <td><b>Zabójca</b></td>
+    <td><b>Data</b></td>
+  </tr>
+  {% for r in records %}
+  <tr>
+    <td>{{ r.monster }}</td>
+    <td>{{ r.killer }}</td>
+    <td>{{ r.date }}</td>
+  </tr>
+  {% endfor %}
+</table>
+
+<h4>Top Rzemieślnicy (wg punktów)</h4>
+<table width="100%">
+  <tr>
+    <td width="5%"><b>#</b></td>
+    <td><b>Imię</b></td>
+    <td><b>Punkty</b></td>
+  </tr>
+  {% for entry in top_crafters %}
+  <tr>
+    <td>{{ loop.index }}</td>
+    <td>{{ entry.decorated_name }}</td>
+    <td>{{ entry.mpoints }}</td>
+  </tr>
+  {% endfor %}
+</table>
+{% endblock %}

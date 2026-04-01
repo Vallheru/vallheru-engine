@@ -1,0 +1,81 @@
+{% extends "base.html" %}
+
+{% block title %}Zbrojownia klanu{% endblock %}
+
+{% block content %}
+<h3>Zbrojownia klanu</h3>
+
+<form method="get" action="/tribe/armory">
+  Typ: <input type="text" name="type_filter" value="{{ type_filter }}" size="3"/>
+  Min. poz.: <input type="text" name="min_level" value="{{ min_level }}" size="4"/>
+  Max. poz.: <input type="text" name="max_level" value="{{ max_level }}" size="4"/>
+  <input type="submit" value="Filtruj"/>
+</form>
+<br/>
+
+{% if items|length == 0 %}
+  <p>Zbrojownia jest pusta.</p>
+{% else %}
+<table width="100%">
+  <tr>
+    <td><b>Nazwa</b></td>
+    <td><b>Typ</b></td>
+    <td><b>Siła</b></td>
+    <td><b>Poz.</b></td>
+    <td><b>Ilość</b></td>
+    <td><b>Dost.</b></td>
+    <td></td>
+  </tr>
+  {% for item in items %}
+  <tr>
+    <td>{{ item.name }}{% if item.magic %} <i>({{ item.magic }})</i>{% endif %}</td>
+    <td>{{ item.item_type }}</td>
+    <td>{{ item.power }}</td>
+    <td>{{ item.minlev }}</td>
+    <td>{{ item.amount }}</td>
+    <td>{{ item.available }}</td>
+    <td>
+      <form method="post" action="/tribe/armory/reserve" style="display:inline">
+        <input type="hidden" name="item_id" value="{{ item.id }}"/>
+        <input type="text" name="amount" value="1" size="3"/>
+        <input type="submit" value="Rezerwuj"/>
+      </form>
+      {% if can_give %}
+      <form method="post" action="/tribe/armory/give" style="display:inline">
+        <input type="hidden" name="item_id" value="{{ item.id }}"/>
+        <input type="text" name="amount" value="1" size="3"/>
+        <select name="recipient_id">
+          {% for m in members %}
+          <option value="{{ m.id }}">{{ m.name }}</option>
+          {% endfor %}
+        </select>
+        <input type="submit" value="Wydaj"/>
+      </form>
+      {% endif %}
+    </td>
+  </tr>
+  {% endfor %}
+</table>
+
+{% if total_pages > 1 %}
+<br/>
+{% for p in range(1, total_pages + 1) %}
+  {% if p == page %}
+    <b>{{ p }}</b>
+  {% else %}
+    <a href="/tribe/armory?page={{ p }}&type_filter={{ type_filter }}&min_level={{ min_level }}&max_level={{ max_level }}">{{ p }}</a>
+  {% endif %}
+{% endfor %}
+{% endif %}
+{% endif %}
+
+<h4>Złóż przedmiot</h4>
+<form method="post" action="/tribe/armory/deposit">
+  ID ekwipunku: <input type="text" name="item_id" size="6"/>
+  Ilość: <input type="text" name="amount" value="1" size="3"/>
+  <input type="submit" value="Złóż"/>
+</form>
+
+<br/>
+<a href="/tribe">Wróć do klanu</a>
+{% endblock %}

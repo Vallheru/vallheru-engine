@@ -1,0 +1,38 @@
+{% extends "base.html" %}
+
+{% block title %}Administracja klanu{% endblock %}
+
+{% block content %}
+<h3>Administracja klanu — {{ tribe_name }}</h3>
+
+<ul>
+{% for action in actions %}
+  {% if action == "permissions" %}
+    <li><a href="/tribe/admin/permissions">Uprawnienia</a></li>
+  {% elif action == "ranks" %}
+    <li><a href="/tribe/admin/ranks">Rangi</a></li>
+  {% elif action == "messages" %}
+    <li><a href="/tribe/admin/messages">Wiadomości</a></li>
+  {% elif action == "pending" %}
+    <li><a href="/tribe/admin/pending">Oczekujący</a></li>
+  {% elif action == "requests" %}
+    <li><a href="/tribe/admin/requests">Rezerwacje</a></li>
+  {% elif action == "kick" %}
+    <li>Wyrzuć członka (formularz poniżej)</li>
+  {% elif action == "defences" %}
+    <li>Obrona (formularz poniżej)</li>
+  {% elif action == "army" %}
+    <li>Armia (formularz poniżej)</li>
+  {% elif action == "hospital_pass" %}
+    <li>Przepustka do szpitala (formularz poniżej)</li>
+  {% elif action == "loan" %}
+    <li>Pożyczka (formularz poniżej)</li>
+  {% elif action == "upgrade" %}
+    <li>Awansuj klan (formularz poniżej)</li>
+  {% endif %}
+{% endfor %}
+</ul>
+
+<br/>
+<a href="/tribe">Wróć do klanu</a>
+{% endblock %}

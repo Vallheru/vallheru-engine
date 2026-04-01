@@ -1,0 +1,27 @@
+{% extends "base.html" %}
+
+{% block title %}Gildie — Rzemieślnicy{% endblock %}
+
+{% block content %}
+<h3>Gildie — Najlepsi Rzemieślnicy</h3>
+
+<a href="/guilds/gladiator">Gladiatorzy</a>
+
+{% for guild in guilds %}
+<h4>{{ guild.name }}</h4>
+<table width="100%">
+  <tr>
+    <td width="5%"><b>#</b></td>
+    <td><b>Imię</b></td>
+    <td><b>Wartość</b></td>
+  </tr>
+  {% for entry in guild.entries %}
+  <tr>
+    <td>{{ loop.index }}</td>
+    <td>{{ entry.decorated_name }}</td>
+    <td>{{ entry.value }}</td>
+  </tr>
+  {% endfor %}
+</table>
+{% endfor %}
+{% endblock %}

@@ -1,0 +1,39 @@
+{% extends "base.html" %}
+
+{% block title %}{{ tribe.name }}{% endblock %}
+
+{% block content %}
+<h3>{{ tribe.name }}</h3>
+<p><b>Szef:</b> {{ tribe.owner_name }}</p>
+<p><b>Poziom:</b> {{ tribe.level_name }} ({{ tribe.level }})</p>
+{% if tribe.prefix or tribe.suffix %}
+<p><b>Tag:</b> {{ tribe.prefix }} ... {{ tribe.suffix }}</p>
+{% endif %}
+{% if tribe.public_msg %}
+<p>{{ tribe.public_msg }}</p>
+{% endif %}
+<p><b>Członków:</b> {{ tribe.member_count }}</p>
+
+<h4>Członkowie</h4>
+<table width="100%">
+  <tr>
+    <td><b>Imię</b></td>
+    <td><b>Poziom</b></td>
+    <td><b>Rasa</b></td>
+    <td><b>Klasa</b></td>
+    <td><b>Ranga</b></td>
+  </tr>
+  {% for m in members %}
+  <tr>
+    <td><a href="/player/{{ m.id }}">{{ m.name }}</a></td>
+    <td>{{ m.level }}</td>
+    <td>{{ m.race }}</td>
+    <td>{{ m.class }}</td>
+    <td>{{ m.rank }}</td>
+  </tr>
+  {% endfor %}
+</table>
+
+<br/>
+<a href="/tribe/list">Wróć do listy</a>
+{% endblock %}

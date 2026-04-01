@@ -1,0 +1,28 @@
+{% extends "base.html" %}
+
+{% block title %}Wiadomości klanu{% endblock %}
+
+{% block content %}
+<h3>Wiadomości klanu</h3>
+
+<form method="post" action="/tribe/admin/messages">
+  <p><b>Wiadomość publiczna:</b></p>
+  <textarea name="public_msg" rows="5" cols="60">{{ public_msg }}</textarea>
+
+  <p><b>Wiadomość prywatna:</b></p>
+  <textarea name="private_msg" rows="5" cols="60">{{ private_msg }}</textarea>
+
+  <br/><br/>
+  <input type="submit" value="Zapisz"/>
+</form>
+
+<h4>Tagi klanu</h4>
+<form method="post" action="/tribe/admin/tags">
+  <p>Prefix: <input type="text" name="prefix" value="{{ prefix }}" maxlength="10"/></p>
+  <p>Suffix: <input type="text" name="suffix" value="{{ suffix }}" maxlength="10"/></p>
+  <input type="submit" value="Zapisz tagi"/>
+</form>
+
+<br/>
+<a href="/tribe/admin">Wróć</a>
+{% endblock %}

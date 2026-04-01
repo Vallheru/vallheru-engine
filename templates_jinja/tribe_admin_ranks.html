@@ -1,0 +1,38 @@
+{% extends "base.html" %}
+
+{% block title %}Rangi klanu{% endblock %}
+
+{% block content %}
+<h3>Rangi klanu</h3>
+
+<form method="post" action="/tribe/admin/ranks">
+  <table>
+    {% for label in labels %}
+    <tr>
+      <td>Ranga {{ loop.index }}:</td>
+      <td><input type="text" name="rank{{ loop.index }}" value="{{ label }}" maxlength="30"/></td>
+    </tr>
+    {% endfor %}
+  </table>
+  <br/>
+  <input type="submit" value="Zapisz rangi"/>
+</form>
+
+<h4>Przypisz rangę</h4>
+<form method="post" action="/tribe/admin/rank/assign">
+  <select name="player_id">
+    {% for m in members %}
+    <option value="{{ m.id }}">{{ m.name }} ({{ m.rank }})</option>
+    {% endfor %}
+  </select>
+  <select name="rank_index">
+    {% for label in labels %}
+    <option value="{{ loop.index }}">{{ label }}</option>
+    {% endfor %}
+  </select>
+  <input type="submit" value="Przypisz"/>
+</form>
+
+<br/>
+<a href="/tribe/admin">Wróć</a>
+{% endblock %}

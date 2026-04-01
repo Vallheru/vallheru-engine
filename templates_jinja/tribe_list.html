@@ -1,0 +1,46 @@
+{% extends "base.html" %}
+
+{% block title %}Lista klanów{% endblock %}
+
+{% block content %}
+<h3>Lista klanów</h3>
+
+<table width="100%">
+  <tr>
+    <td><b>Nazwa</b></td>
+    <td><b>Szef</b></td>
+    <td><b>Poziom</b></td>
+    <td><b>Członków</b></td>
+    <td></td>
+  </tr>
+  {% for t in tribes %}
+  <tr>
+    <td><a href="/tribe/view/{{ t.id }}">{{ t.name }}</a></td>
+    <td>{{ t.owner_name }}</td>
+    <td>{{ t.level }}</td>
+    <td>{{ t.member_count }}</td>
+    <td>
+      {% if can_join %}
+      <form method="post" action="/tribe/join/{{ t.id }}" style="display:inline">
+        <input type="submit" value="Dołącz"/>
+      </form>
+      {% endif %}
+    </td>
+  </tr>
+  {% endfor %}
+</table>
+
+{% if total_pages > 1 %}
+<br/>
+{% for p in range(1, total_pages + 1) %}
+  {% if p == page %}
+    <b>{{ p }}</b>
+  {% else %}
+    <a href="/tribe/list?page={{ p }}">{{ p }}</a>
+  {% endif %}
+{% endfor %}
+{% endif %}
+
+<br/><br/>
+<a href="/tribe">Wróć</a>
+{% endblock %}

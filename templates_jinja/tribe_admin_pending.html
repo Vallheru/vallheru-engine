@@ -1,0 +1,34 @@
+{% extends "base.html" %}
+
+{% block title %}Oczekujący{% endblock %}
+
+{% block content %}
+<h3>Oczekujący na przyjęcie</h3>
+
+{% if requests|length == 0 %}
+  <p>Brak oczekujących próśb.</p>
+{% else %}
+<table width="100%">
+  <tr>
+    <td><b>Gracz</b></td>
+    <td></td>
+  </tr>
+  {% for r in requests %}
+  <tr>
+    <td><a href="/player/{{ r.player_id }}">{{ r.player_name }}</a></td>
+    <td>
+      <form method="post" action="/tribe/admin/pending/{{ r.id }}/accept" style="display:inline">
+        <input type="submit" value="Przyjmij"/>
+      </form>
+      <form method="post" action="/tribe/admin/pending/{{ r.id }}/reject" style="display:inline">
+        <input type="submit" value="Odrzuć"/>
+      </form>
+    </td>
+  </tr>
+  {% endfor %}
+</table>
+{% endif %}
+
+<br/>
+<a href="/tribe/admin">Wróć</a>
+{% endblock %}

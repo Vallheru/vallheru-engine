@@ -4,9 +4,9 @@ use axum::{Router, middleware, routing};
 
 use crate::handlers::{
     alchemy, bank, character, chat, city, content, core, court, crafts, deity, equipment, forums,
-    gathering, hospital, house, jail, jeweller, locations, lumbermill, mail, map, market, outpost,
-    pages, player_profile, quest, room, shops, smithy, spells, temple, thieves, tower, travel,
-    tribe_forum,
+    gathering, guilds, hospital, house, jail, jeweller, locations, lumbermill, mail, map, market,
+    outpost, pages, player_profile, quest, room, shops, smithy, spells, team, temple, thieves,
+    tower, travel, tribe, tribe_admin, tribe_forum, tribe_storage,
 };
 use crate::middleware::guards::require_authenticated;
 use crate::state::AppState;
@@ -450,6 +450,11 @@ fn social_routes() -> Router<AppState> {
         )
         .merge(forum_routes())
         .merge(tribe_forum_routes())
+        .merge(tribe_routes())
+        .merge(tribe_admin_routes())
+        .merge(tribe_storage_routes())
+        .merge(guilds_routes())
+        .route("/team", routing::get(team::team_show))
         .merge(content_routes())
         .merge(pages_routes())
         .merge(court_routes())
@@ -576,6 +581,163 @@ fn tribe_forum_routes() -> Router<AppState> {
             "/tforums/reply/{id}/delete",
             routing::post(tribe_forum::tforums_delete_reply),
         )
+}
+
+fn tribe_routes() -> Router<AppState> {
+    Router::new()
+        .route("/tribe", routing::get(tribe::tribe_hub))
+        .route("/tribe/list", routing::get(tribe::tribe_list))
+        .route("/tribe/view/{id}", routing::get(tribe::tribe_view))
+        .route(
+            "/tribe/create",
+            routing::get(tribe::tribe_create_show).post(tribe::tribe_create),
+        )
+        .route("/tribe/join/{id}", routing::post(tribe::tribe_join))
+        .route("/tribe/leave", routing::post(tribe::tribe_leave))
+}
+
+fn tribe_admin_routes() -> Router<AppState> {
+    Router::new()
+        .route("/tribe/admin", routing::get(tribe_admin::tribe_admin_show))
+        .route(
+            "/tribe/admin/permissions",
+            routing::get(tribe_admin::tribe_admin_permissions_show)
+                .post(tribe_admin::tribe_admin_permissions_save),
+        )
+        .route(
+            "/tribe/admin/ranks",
+            routing::get(tribe_admin::tribe_admin_ranks_show)
+                .post(tribe_admin::tribe_admin_ranks_save),
+        )
+        .route(
+            "/tribe/admin/rank/assign",
+            routing::post(tribe_admin::tribe_admin_rank_assign),
+        )
+        .route(
+            "/tribe/admin/messages",
+            routing::get(tribe_admin::tribe_admin_messages_show)
+                .post(tribe_admin::tribe_admin_messages_save),
+        )
+        .route(
+            "/tribe/admin/tags",
+            routing::post(tribe_admin::tribe_admin_tags_save),
+        )
+        .route(
+            "/tribe/admin/pending",
+            routing::get(tribe_admin::tribe_admin_pending_show),
+        )
+        .route(
+            "/tribe/admin/pending/{id}/accept",
+            routing::post(tribe_admin::tribe_admin_pending_accept),
+        )
+        .route(
+            "/tribe/admin/pending/{id}/reject",
+            routing::post(tribe_admin::tribe_admin_pending_reject),
+        )
+        .route(
+            "/tribe/admin/kick",
+            routing::post(tribe_admin::tribe_admin_kick),
+        )
+        .route(
+            "/tribe/admin/defences",
+            routing::post(tribe_admin::tribe_admin_defences),
+        )
+        .route(
+            "/tribe/admin/army",
+            routing::post(tribe_admin::tribe_admin_army),
+        )
+        .route(
+            "/tribe/admin/hospital-pass",
+            routing::post(tribe_admin::tribe_admin_hospital_pass),
+        )
+        .route(
+            "/tribe/admin/loan",
+            routing::post(tribe_admin::tribe_admin_loan),
+        )
+        .route(
+            "/tribe/admin/upgrade",
+            routing::post(tribe_admin::tribe_admin_upgrade),
+        )
+        .route(
+            "/tribe/admin/requests",
+            routing::get(tribe_admin::tribe_admin_requests_show),
+        )
+        .route(
+            "/tribe/admin/requests/delete",
+            routing::post(tribe_admin::tribe_admin_requests_delete),
+        )
+}
+
+fn tribe_storage_routes() -> Router<AppState> {
+    Router::new()
+        // Armory
+        .route("/tribe/armory", routing::get(tribe_storage::armory_show))
+        .route(
+            "/tribe/armory/deposit",
+            routing::post(tribe_storage::armory_deposit),
+        )
+        .route(
+            "/tribe/armory/give",
+            routing::post(tribe_storage::armory_give),
+        )
+        .route(
+            "/tribe/armory/reserve",
+            routing::post(tribe_storage::armory_reserve),
+        )
+        // Warehouse
+        .route(
+            "/tribe/warehouse",
+            routing::get(tribe_storage::warehouse_show),
+        )
+        .route(
+            "/tribe/warehouse/deposit",
+            routing::post(tribe_storage::warehouse_deposit),
+        )
+        .route(
+            "/tribe/warehouse/give",
+            routing::post(tribe_storage::warehouse_give),
+        )
+        .route(
+            "/tribe/warehouse/reserve",
+            routing::post(tribe_storage::warehouse_reserve),
+        )
+        // Herbs
+        .route("/tribe/herbs", routing::get(tribe_storage::herbs_show))
+        .route(
+            "/tribe/herbs/deposit",
+            routing::post(tribe_storage::herbs_deposit),
+        )
+        .route(
+            "/tribe/herbs/give",
+            routing::post(tribe_storage::herbs_give),
+        )
+        .route(
+            "/tribe/herbs/reserve",
+            routing::post(tribe_storage::herbs_reserve),
+        )
+        // Minerals
+        .route(
+            "/tribe/minerals",
+            routing::get(tribe_storage::minerals_show),
+        )
+        .route(
+            "/tribe/minerals/deposit",
+            routing::post(tribe_storage::minerals_deposit),
+        )
+        .route(
+            "/tribe/minerals/give",
+            routing::post(tribe_storage::minerals_give),
+        )
+        .route(
+            "/tribe/minerals/reserve",
+            routing::post(tribe_storage::minerals_reserve),
+        )
+}
+
+fn guilds_routes() -> Router<AppState> {
+    Router::new()
+        .route("/guilds", routing::get(guilds::guilds_crafts))
+        .route("/guilds/gladiator", routing::get(guilds::guilds_gladiator))
 }
 
 fn content_routes() -> Router<AppState> {

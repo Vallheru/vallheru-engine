@@ -1,0 +1,60 @@
+{% extends "base.html" %}
+
+{% block title %}Magazyn mikstur{% endblock %}
+
+{% block content %}
+<h3>Magazyn mikstur</h3>
+
+{% if potions|length == 0 %}
+  <p>Magazyn mikstur jest pusty.</p>
+{% else %}
+<table width="100%">
+  <tr>
+    <td><b>Nazwa</b></td>
+    <td><b>Efekt</b></td>
+    <td><b>Siła</b></td>
+    <td><b>Ilość</b></td>
+    <td><b>Dost.</b></td>
+    <td></td>
+  </tr>
+  {% for p in potions %}
+  <tr>
+    <td>{{ p.name }}</td>
+    <td>{{ p.efect }}</td>
+    <td>{{ p.power }}</td>
+    <td>{{ p.amount }}</td>
+    <td>{{ p.available }}</td>
+    <td>
+      <form method="post" action="/tribe/warehouse/reserve" style="display:inline">
+        <input type="hidden" name="item_id" value="{{ p.id }}"/>
+        <input type="text" name="amount" value="1" size="3"/>
+        <input type="submit" value="Rezerwuj"/>
+      </form>
+      {% if can_give %}
+      <form method="post" action="/tribe/warehouse/give" style="display:inline">
+        <input type="hidden" name="item_id" value="{{ p.id }}"/>
+        <input type="text" name="amount" value="1" size="3"/>
+        <select name="recipient_id">
+          {% for m in members %}
+          <option value="{{ m.id }}">{{ m.name }}</option>
+          {% endfor %}
+        </select>
+        <input type="submit" value="Wydaj"/>
+      </form>
+      {% endif %}
+    </td>
+  </tr>
+  {% endfor %}
+</table>
+{% endif %}
+
+<h4>Złóż miksturę</h4>
+<form method="post" action="/tribe/warehouse/deposit">
+  ID mikstury: <input type="text" name="item_id" size="6"/>
+  Ilość: <input type="text" name="amount" value="1" size="3"/>
+  <input type="submit" value="Złóż"/>
+</form>
+
+<br/>
+<a href="/tribe">Wróć do klanu</a>
+{% endblock %}

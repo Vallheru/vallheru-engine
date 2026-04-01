@@ -1,0 +1,58 @@
+{% extends "base.html" %}
+
+{% block title %}Zielnik klanu{% endblock %}
+
+{% block content %}
+<h3>Zielnik klanu</h3>
+
+<table width="100%">
+  <tr>
+    <td><b>Zioło</b></td>
+    <td><b>Ilość</b></td>
+    <td><b>Zarezerwowane</b></td>
+    <td><b>Dostępne</b></td>
+    <td></td>
+  </tr>
+  {% for h in herbs %}
+  <tr>
+    <td>{{ h.label }}</td>
+    <td>{{ h.amount }}</td>
+    <td>{{ h.reserved }}</td>
+    <td>{{ h.available }}</td>
+    <td>
+      <form method="post" action="/tribe/herbs/reserve" style="display:inline">
+        <input type="hidden" name="herb_key" value="{{ h.key }}"/>
+        <input type="text" name="amount" value="1" size="3"/>
+        <input type="submit" value="Rezerwuj"/>
+      </form>
+      {% if can_give %}
+      <form method="post" action="/tribe/herbs/give" style="display:inline">
+        <input type="hidden" name="herb_key" value="{{ h.key }}"/>
+        <input type="text" name="amount" value="1" size="3"/>
+        <select name="recipient_id">
+          {% for m in members %}
+          <option value="{{ m.id }}">{{ m.name }}</option>
+          {% endfor %}
+        </select>
+        <input type="submit" value="Wydaj"/>
+      </form>
+      {% endif %}
+    </td>
+  </tr>
+  {% endfor %}
+</table>
+
+<h4>Złóż zioła</h4>
+<form method="post" action="/tribe/herbs/deposit">
+  <select name="herb_key">
+    {% for h in herbs %}
+    <option value="{{ h.key }}">{{ h.label }}</option>
+    {% endfor %}
+  </select>
+  Ilość: <input type="text" name="amount" value="1" size="3"/>
+  <input type="submit" value="Złóż"/>
+</form>
+
+<br/>
+<a href="/tribe">Wróć do klanu</a>
+{% endblock %}

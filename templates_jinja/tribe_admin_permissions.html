@@ -1,0 +1,31 @@
+{% extends "base.html" %}
+
+{% block title %}Uprawnienia klanu{% endblock %}
+
+{% block content %}
+<h3>Uprawnienia członków</h3>
+
+<form method="post" action="/tribe/admin/permissions">
+<table>
+  <tr>
+    <td><b>Gracz</b></td>
+    {% for label in permission_labels %}
+    <td><b>{{ label }}</b></td>
+    {% endfor %}
+  </tr>
+  {% for m in members %}
+  <tr>
+    <td>{{ m.name }}</td>
+    {% for flag in m.flags %}
+    <td><input type="checkbox" name="perm_{{ m.id }}_{{ loop.index0 }}" {% if flag %}checked{% endif %}/></td>
+    {% endfor %}
+  </tr>
+  {% endfor %}
+</table>
+<br/>
+<input type="submit" value="Zapisz"/>
+</form>
+
+<br/>
+<a href="/tribe/admin">Wróć</a>
+{% endblock %}
