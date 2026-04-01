@@ -50,9 +50,9 @@ Each entry includes:
 
 - **Type**: migration-gap
 - **Discovered in**: MP-05-04
-- **Description**: The PHP `account.php` contains ~20 sub-views. MP-05-04 ports the core account management (settings, password, name, profile). Remaining views (links, bugtrack, bugreport, changes, freeze, immunity, avatar upload, email change, style picker, vallars history, forum subscriptions, roleplay profile, ignored list, contacts, proposals) are not yet migrated.
-- **Impact**: Low — these are secondary features. Players can still use the PHP versions during the migration window.
-- **Action**: Port remaining views as needed, likely in dedicated tasks within later modules.
+- **Description**: The PHP `account.php` contains ~20 sub-views. MP-05-04 ports the core account management (settings, password, name, profile). Many secondary views are now served by dedicated routes: proposals (`/proposals`), roleplay profiles (`/roleplay`), contacts (`/mail`), bugtrack/bugreport (`/bugtrack`, `/staff/bugreport`), vallars display (`/bank`). Remaining unported account-specific sub-views: quick-links settings, avatar upload, style picker, freeze-self, ignored-users list, and roleplay profile *editing* (viewing is ported).
+- **Impact**: Low — these are secondary features. Core account management is fully functional.
+- **Action**: Port remaining views as needed. Avatar upload and style picker are the most visible gaps.
 - **Fixable in existing task**: No — too many views for one task.
 - **Needs new task**: Yes — consider grouping into 2-3 follow-up tasks.
 - **Status**: open
