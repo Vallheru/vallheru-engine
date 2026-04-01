@@ -164,14 +164,10 @@ Each entry includes:
 - **Action**: Wire in equipment bonus once the equipment/inventory module is available.
 - **Fixable in existing task**: No — depends on equipment module.
 - **Needs new task**: No — can be added when equipment is migrated.
-- **Status**: open
+- **Status**: resolved — mage clothing (DB type 'C', PHP slot 8) power bonus now applied in compute_max_mana(). Commit `36153d6`.
 - **Related tasks**: MP-07-04
 
 ### TD-013: Landfill work missing condition XP award
-
-- **Type**: migration-gap
-- **Discovered in**: MP-07-04
-- **Description**: PHP `landfill.php` calls `$player->checkexp(array('condition' => amount))` to award condition stat XP equal to the energy spent. The Rust handler does not yet award stat XP because the stat XP progression system is not migrated.
 - **Impact**: Players don't gain condition XP from landfill work. Low priority since XP system needs separate implementation.
 - **Action**: Add stat XP awards once the stat progression system is migrated.
 - **Fixable in existing task**: No
