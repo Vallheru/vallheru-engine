@@ -632,3 +632,15 @@ Each entry includes:
 - **Needs new task**: No
 - **Status**: resolved
 - **Related tasks**: Group L tribe system
+
+### TD-052: `freeze` column name is a PostgreSQL reserved keyword
+
+- **Type**: bug
+- **Discovered in**: Docker Compose integration smoke test
+- **Description**: The `freeze` column in the `players` table uses a PostgreSQL `TYPE_FUNC_NAME_KEYWORD` that cannot appear unquoted as a column name. The initial migration (`20250325000001`) fails with `syntax error at or near "freeze"` on a fresh PostgreSQL 16 instance.
+- **Impact**: **Critical** — fresh deployments cannot run migrations.
+- **Action**: Quote the column as `"freeze"` in the CREATE TABLE DDL. Unquoted references in DML queries still work because PostgreSQL lowercases unquoted identifiers before comparison.
+- **Fixable in existing task**: Yes (inline fix)
+- **Needs new task**: No
+- **Status**: resolved
+- **Related tasks**: MP-02-02

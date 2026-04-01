@@ -101,7 +101,7 @@ CREATE TABLE IF NOT EXISTS players (
     bless         VARCHAR(30)  NOT NULL DEFAULT '',
     bless_value   INTEGER      NOT NULL DEFAULT 0,
     antidote      VARCHAR(4),
-    freeze        SMALLINT     NOT NULL DEFAULT 0,
+    "freeze"      SMALLINT     NOT NULL DEFAULT 0,
     house_rest    BOOLEAN      NOT NULL DEFAULT FALSE,
     poll          BOOLEAN      NOT NULL DEFAULT FALSE,
     astral_crime  BOOLEAN      NOT NULL DEFAULT TRUE,
