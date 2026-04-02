@@ -66,6 +66,7 @@ pub fn routes() -> Router<AppState> {
         .layer(middleware::from_fn(require_authenticated));
 
     Router::new()
+        .route("/", routing::get(auth::index))
         .route("/login", routing::post(auth::login))
         .route("/logout", routing::get(auth::logout))
         .route(

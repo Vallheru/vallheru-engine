@@ -7,6 +7,14 @@
 # Modules are loaded on-demand per route; not every module
 # needs to be present here until its route is migrated.
 
+[index]
+WELCOME = "Witaj w świecie Vallheru! Zaloguj się lub zarejestruj nowe konto."
+EMAIL = "Email:"
+PASSWORD = "Hasło:"
+LOGIN = "Zaloguj"
+REGISTER = "Rejestracja"
+LOST_PASSWORD = "Zapomniałem hasła"
+
 [head]
 CHARSET = "utf-8"
 E_ERRORS = "Nastąpił błąd krytyczny i gra nie zadziałała poprawnie. Informacja o tym błędzie już została wysłana do władców."

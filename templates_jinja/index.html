@@ -1,0 +1,17 @@
+{# Landing / login page — replaces index.php #}
+{% extends "base.html" %}
+
+{% block content %}
+<div class="text2">{{ t("index", "WELCOME") }}</div>
+
+<form method="post" action="/login">
+  <div class="forms2">{{ t("index", "EMAIL") }} <input type="text" name="email" /></div>
+  <div class="forms2">{{ t("index", "PASSWORD") }} <input type="password" name="password" /></div>
+  <div class="forms2"><input type="submit" value="{{ t('index', 'LOGIN') }}" /></div>
+</form>
+
+<div class="foot">
+  <a href="/register">{{ t("index", "REGISTER") }}</a> |
+  <a href="/lost-password">{{ t("index", "LOST_PASSWORD") }}</a>
+</div>
+{% endblock %}

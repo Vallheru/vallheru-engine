@@ -6,13 +6,14 @@
 //! functions, and producing responses.
 
 use axum::{
-    Form,
+    Extension, Form,
     extract::State,
     http::{StatusCode, header},
     response::{IntoResponse, Response},
 };
 use serde::Deserialize;
 
+use crate::middleware::context::RequestContext;
 use crate::middleware::session;
 use crate::page::{Flash, PageMeta};
 use crate::state::AppState;
@@ -22,6 +23,21 @@ use crate::state::AppState;
 pub struct LoginForm {
     pub email: String,
     pub password: String,
+}
+
+/// GET / — landing page. Shows login form for anonymous visitors,
+/// redirects authenticated users to /city.
+pub async fn index(
+    State(state): State<AppState>,
+    Extension(ctx): Extension<RequestContext>,
+) -> Response {
+    if ctx.session_user.is_some() {
+        return (StatusCode::SEE_OTHER, [(header::LOCATION, "/city")]).into_response();
+    }
+
+    let meta = PageMeta::titled("Vallheru");
+    let render_ctx = super::build_anon_context(&state, &meta);
+    state.templates.render("index.html", &render_ctx)
 }
 
 /// POST /login — authenticate and start a session.
