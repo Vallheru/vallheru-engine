@@ -36,7 +36,7 @@ tracing = "0.1"
 tracing-subscriber = { version = "0.3", features = ["env-filter", "json"] }
 
 # Database
-sqlx = { version = "0.8", features = ["runtime-tokio", "postgres", "mysql", "macros", "migrate"] }
+sqlx = { version = "0.8", features = ["runtime-tokio", "postgres", "macros", "migrate"] }
 
 # CLI
 clap = { version = "4", features = ["derive"] }

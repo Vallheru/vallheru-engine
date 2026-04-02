@@ -20,7 +20,7 @@ pub enum Command {
     /// Run pending database migrations.
     Migrate,
 
-    /// Import data from a legacy database or dump.
+    /// Import reference data from embedded seed files.
     Import,
 
     /// Run a scheduled job (energy-tick, daily-reset).
@@ -48,7 +48,4 @@ pub enum Command {
         #[arg(long)]
         confirm_reset: bool,
     },
-
-    /// Run data reconciliation checks between legacy and new schema.
-    Reconcile,
 }

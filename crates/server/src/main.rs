@@ -73,15 +73,6 @@ fn main() -> anyhow::Result<()> {
                 .build()?;
             rt.block_on(era_reset(&config.database.url))
         }
-        Command::Reconcile => {
-            let rt = tokio::runtime::Builder::new_current_thread()
-                .enable_all()
-                .build()?;
-            rt.block_on(vallheru_data::reconcile::run_reconciliation(
-                &config.database.url,
-                config.database.legacy_url.as_deref(),
-            ))
-        }
     }
 }
 

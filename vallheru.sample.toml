@@ -12,8 +12,6 @@ bind = "0.0.0.0:3000"
 [database]
 url = "postgres://vallheru:password@localhost:5432/vallheru"
 max_connections = 10
-# Optional: legacy MySQL connection for reconciliation
-# legacy_url = "mysql://vallheru:password@localhost:3306/vallheru"
 
 [game]
 name = "Vallheru"
