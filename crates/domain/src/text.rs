@@ -238,7 +238,7 @@ fn apply_emoticons(text: &str) -> String {
         (":~", "sliniak-1.gif", ":~ - ślini się"),
     ];
     for &(token, file, title) in pairs {
-        let replacement = format!(r#"<img src="/images/{file}" title="{title}" />"#);
+        let replacement = format!(r#"<img src="/static/images/{file}" title="{title}" />"#);
         s = s.replace(token, &replacement);
     }
     s

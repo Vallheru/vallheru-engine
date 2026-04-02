@@ -58,6 +58,18 @@ const SEEDS: &[Seed] = &[
         name: "potions",
         sql: include_str!("../../../seeds/011_potions.sql"),
     },
+    Seed {
+        name: "alchemy_mill",
+        sql: include_str!("../../../seeds/012_alchemy_recipes.sql"),
+    },
+    Seed {
+        name: "mill",
+        sql: include_str!("../../../seeds/013_mill_plans.sql"),
+    },
+    Seed {
+        name: "cores",
+        sql: include_str!("../../../seeds/014_cores.sql"),
+    },
 ];
 
 /// Run all embedded seed files against the database.
