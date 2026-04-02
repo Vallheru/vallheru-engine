@@ -28,20 +28,6 @@ pub async fn find_by_email(
     .await
 }
 
-/// Update the stored password hash for a player (used after Argon2 rehash).
-pub async fn update_password_hash(
-    pool: &PgPool,
-    player_id: i32,
-    new_hash: &str,
-) -> Result<(), sqlx::Error> {
-    sqlx::query("UPDATE players SET pass_hash = $1 WHERE id = $2")
-        .bind(new_hash)
-        .bind(player_id)
-        .execute(pool)
-        .await?;
-    Ok(())
-}
-
 /// Increment the login counter and clear resting flag.
 pub async fn record_login(pool: &PgPool, player_id: i32) -> Result<(), sqlx::Error> {
     sqlx::query("UPDATE players SET logins = logins + 1, resting = FALSE WHERE id = $1")

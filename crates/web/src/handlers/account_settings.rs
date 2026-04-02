@@ -469,7 +469,7 @@ pub async fn change_password(
         };
 
     let verify = vallheru_domain::auth::verify_password(&form.cp, &stored_hash);
-    if matches!(verify, vallheru_domain::auth::VerifyResult::Invalid) {
+    if !verify {
         return account_flash(
             &state,
             &req_ctx,

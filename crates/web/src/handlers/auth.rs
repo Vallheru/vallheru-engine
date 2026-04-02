@@ -43,27 +43,9 @@ pub async fn login(State(state): State<AppState>, Form(form): Form<LoginForm>) -
         }
     };
 
-    // Verify password (supports legacy MD5 and Argon2).
-    let verify_result = vallheru_domain::auth::verify_password(&form.password, &player.pass_hash);
-
-    match verify_result {
-        vallheru_domain::auth::VerifyResult::Invalid => {
-            return login_error(&state, state.catalog.get_or_key("head", "E_LOGIN"));
-        }
-        vallheru_domain::auth::VerifyResult::OkNeedsRehash(new_hash) => {
-            // Transparently upgrade to Argon2.
-            if let Err(e) = vallheru_data::queries::auth::update_password_hash(
-                &state.pool,
-                player.id,
-                &new_hash,
-            )
-            .await
-            {
-                tracing::warn!(player_id = player.id, error = %e, "failed to rehash password");
-                // Non-fatal: login still succeeds.
-            }
-        }
-        vallheru_domain::auth::VerifyResult::Ok => {}
+    // Verify password (Argon2 only).
+    if !vallheru_domain::auth::verify_password(&form.password, &player.pass_hash) {
+        return login_error(&state, state.catalog.get_or_key("head", "E_LOGIN"));
     }
 
     // Check ban status.

@@ -138,10 +138,8 @@ pub async fn submit(State(state): State<AppState>, Form(form): Form<RegisterForm
         Ok(false) => {}
     }
 
-    // Hash the password with legacy MD5 for compatibility with the
-    // activation flow that still runs in PHP during the transition.
-    // New passwords will get Argon2 once the activation path is also migrated.
-    let pass_hash = vallheru_domain::auth::legacy_md5_hash(&validated.password);
+    // Hash the password with Argon2id.
+    let pass_hash = vallheru_domain::auth::hash_password(&validated.password);
 
     // Generate activation token.
     let token = vallheru_domain::registration::generate_activation_token();
