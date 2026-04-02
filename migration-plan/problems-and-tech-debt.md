@@ -733,3 +733,28 @@ Each entry includes:
 - **Status**: resolved
 - **Related tasks**: None
 - **Resolution**: Committed as `0bedc13`
+
+### TD-060: Wrong SQL column names from PHP migration
+
+- **Type**: bug
+- **Discovered in**: Post-migration runtime testing
+- **Description**: Many SQL queries across handlers and data queries referenced nonexistent PHP-era column names on the `players` table: `clas` (→ `class`), `level` (doesn't exist, derived from `player_stats`), `p.name` (→ `p.username`), `p.tribe` (→ `p.tribe_id`), `"user"` (→ `username`), `user_name` (→ `username`), `page` (→ `current_page`), `lpv` (→ `last_page_visit`). Also `rank` used where `tribe_rank` was intended in tribe leave/kick/dissolve.
+- **Impact**: **Critical** — every affected page returned 500 Internal Server Error. Affected: crafts, thieves, guilds, smithy, alchemy, jeweller, lumbermill, chat, room, mail, tribe list/view, tribe admin, tribe storage, tribe astral, pages (roleplay).
+- **Action**: Fixed all 20 files. Added `load_level()` helpers for crafts/thieves. Used SQL aliases to minimize struct changes.
+- **Fixable in existing task**: Yes (inline fix)
+- **Needs new task**: No
+- **Status**: resolved
+- **Related tasks**: None
+- **Resolution**: Committed as `343ca4f`
+
+### TD-061: tribe_rank vs rank display in tribe member list
+
+- **Type**: tech-debt
+- **Discovered in**: TD-060 fix
+- **Description**: The `tribe_members` query was fixed to use `tribe_rank AS rank` but other places where `rank` is used in tribe context may still show global rank (Admin/Staff) instead of tribe role (Wódz/Kapitan). Needs audit.
+- **Impact**: Low — cosmetic. Wrong role label shown in edge cases (e.g. admin who is also a tribe member).
+- **Action**: Audit all `rank` references in tribe context and decide if they should be `tribe_rank`.
+- **Fixable in existing task**: No
+- **Needs new task**: No (small standalone fix)
+- **Status**: open
+- **Related tasks**: TD-060
