@@ -3,6 +3,7 @@
 <head>
   <meta charset="utf-8" />
   <title>{{ game_name }} :: {{ title }}</title>
+  <link rel="stylesheet" href="{{ asset_url('css/layout.css') }}" />
   <link rel="stylesheet" href="{{ asset_url('css/' ~ theme_css) }}" />
   {% for css in extra_css %}
   <link rel="stylesheet" href="/static/css/{{ css }}" />
