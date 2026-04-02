@@ -227,11 +227,11 @@ fn asset_url(path: String) -> String {
 /// Map a theme key to the CSS filename templates should load.
 ///
 /// The PHP codebase stores the CSS filename in `player.settings['style']`
-/// and `layout1` uses `layout1.css`. We normalise so an empty string
-/// falls back to `default.css`.
+/// and `layout1` uses `layout1.css`. An empty string falls back to
+/// `light.css` (the default style defined in `PlayerSettings`).
 fn resolve_theme_css(theme: &str) -> String {
     match theme {
-        "" => "default.css".to_owned(),
+        "" => "light.css".to_owned(),
         "layout1" => "layout1.css".to_owned(),
         other => format!("{other}.css"),
     }
@@ -347,7 +347,7 @@ mod tests {
 
     #[test]
     fn resolve_theme_css_defaults() {
-        assert_eq!(resolve_theme_css(""), "default.css");
+        assert_eq!(resolve_theme_css(""), "light.css");
         assert_eq!(resolve_theme_css("layout1"), "layout1.css");
         assert_eq!(resolve_theme_css("custom"), "custom.css");
     }
