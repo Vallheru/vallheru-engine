@@ -6,6 +6,7 @@
 use axum::{Extension, Form, extract::State, response::Response};
 use rand::Rng;
 
+use crate::log_err;
 use crate::middleware::context::RequestContext;
 use crate::page::{Flash, FlashKind, PageMeta};
 use crate::state::AppState;
@@ -262,11 +263,14 @@ pub async fn crafts_execute(
     if jdomain::mission_is_accident(accident_roll) {
         let damage = jdomain::mission_accident_damage(player_row.max_hp, damage_roll);
 
-        let _ = sqlx::query("UPDATE players SET hp = GREATEST(hp - $1, 0) WHERE id = $2")
-            .bind(damage)
-            .bind(player_id)
-            .execute(&app.pool)
-            .await;
+        log_err!(
+            sqlx::query("UPDATE players SET hp = GREATEST(hp - $1, 0) WHERE id = $2")
+                .bind(damage)
+                .bind(player_id)
+                .execute(&app.pool)
+                .await,
+            "query"
+        );
 
         let msg = format!("Wypadek! Straciłeś {damage} HP.");
         let meta = PageMeta::titled("Gildia - Misje")
@@ -286,11 +290,14 @@ pub async fn crafts_execute(
     let gold_reward = jdomain::mission_gold_reward(f64::from(energy_cost), skill_int.max(1));
 
     // Add gold
-    let _ = sqlx::query("UPDATE players SET credits = credits + $1 WHERE id = $2")
-        .bind(i64::from(gold_reward))
-        .bind(player_id)
-        .execute(&app.pool)
-        .await;
+    log_err!(
+        sqlx::query("UPDATE players SET credits = credits + $1 WHERE id = $2")
+            .bind(i64::from(gold_reward))
+            .bind(player_id)
+            .execute(&app.pool)
+            .await,
+        "query"
+    );
 
     // XP
     let base_xp = jdomain::mission_base_xp(profession, skill_int);

@@ -9,6 +9,7 @@ use axum::{
 };
 use rand::Rng;
 
+use crate::log_err;
 use crate::middleware::context::RequestContext;
 use crate::page::{Flash, FlashKind, PageMeta};
 use crate::state::AppState;
@@ -406,35 +407,56 @@ pub async fn explore_walk(
     let energy_cost = energy_cost.max(0.0);
 
     if found_gold > 0 {
-        let _ = combat::add_gold(&app.pool, player_id, found_gold).await;
+        log_err!(
+            combat::add_gold(&app.pool, player_id, found_gold).await,
+            "add gold"
+        );
     }
-    let _ = combat::deduct_energy(&app.pool, player_id, energy_cost).await;
+    log_err!(
+        combat::deduct_energy(&app.pool, player_id, energy_cost).await,
+        "deduct energy"
+    );
 
     if found_herbs.iter().any(|h| *h > 0) {
-        let _ = combat::add_herbs(
-            &app.pool,
-            player_id,
-            found_herbs[0],
-            found_herbs[1],
-            found_herbs[2],
-            found_herbs[3],
-        )
-        .await;
+        log_err!(
+            combat::add_herbs(
+                &app.pool,
+                player_id,
+                found_herbs[0],
+                found_herbs[1],
+                found_herbs[2],
+                found_herbs[3],
+            )
+            .await,
+            "add herbs"
+        );
     }
 
     if found_meteor > 0 {
-        let _ = combat::add_meteors(&app.pool, player_id, found_meteor).await;
+        log_err!(
+            combat::add_meteors(&app.pool, player_id, found_meteor).await,
+            "add meteors"
+        );
     }
 
     if found_maps > 0 {
         #[allow(clippy::cast_possible_truncation)]
         let new_maps = player_row.maps + found_maps as i16;
-        let _ = combat::set_player_maps(&app.pool, player_id, new_maps).await;
-        let _ = settings_q::upsert_setting(&app.pool, "maps", &remaining_maps.to_string()).await;
+        log_err!(
+            combat::set_player_maps(&app.pool, player_id, new_maps).await,
+            "set player maps"
+        );
+        log_err!(
+            settings_q::upsert_setting(&app.pool, "maps", &remaining_maps.to_string()).await,
+            "upsert setting"
+        );
     }
 
     let encounter_name = if let Some(mid) = encounter_monster_id {
-        let _ = combat::set_player_fight(&app.pool, player_id, mid).await;
+        log_err!(
+            combat::set_player_fight(&app.pool, player_id, mid).await,
+            "set player fight"
+        );
         combat::load_monster(&app.pool, mid)
             .await
             .ok()
@@ -549,7 +571,10 @@ pub async fn explore_escape(
 
     let (state_str, xp_gain) = if escaped {
         let xp = encounter::escape_xp(&monster);
-        let _ = combat::clear_player_fight(&app.pool, player_id).await;
+        log_err!(
+            combat::clear_player_fight(&app.pool, player_id).await,
+            "clear player fight"
+        );
         ("escape_success".to_owned(), xp)
     } else {
         ("escape_fail".to_owned(), 0)
@@ -1031,37 +1056,58 @@ pub async fn pve_action(
 
             let hp_delta = state.player_hp - player_row.hp;
             let mana_delta = state.player_mana - player_row.pm;
-            let _ =
+            log_err!(
                 combat::apply_combat_results(&app.pool, player_id, hp_delta, gold_gain, mana_delta)
-                    .await;
-            let _ = combat::clear_player_fight(&app.pool, player_id).await;
+                    .await,
+                "apply combat results"
+            );
+            log_err!(
+                combat::clear_player_fight(&app.pool, player_id).await,
+                "clear player fight"
+            );
         }
         BattleOutcome::Defeat => {
             outcome_str = "defeat";
-            let _ = sqlx::query("UPDATE players SET hp = 0, fight = 0 WHERE id = $1")
-                .bind(player_id)
-                .execute(&app.pool)
-                .await;
+            log_err!(
+                sqlx::query("UPDATE players SET hp = 0, fight = 0 WHERE id = $1")
+                    .bind(player_id)
+                    .execute(&app.pool)
+                    .await,
+                "query"
+            );
         }
         BattleOutcome::Escaped => {
             outcome_str = "escaped";
             let hp_delta = state.player_hp - player_row.hp;
             let mana_delta = state.player_mana - player_row.pm;
-            let _ =
-                combat::apply_combat_results(&app.pool, player_id, hp_delta, 0, mana_delta).await;
-            let _ = combat::clear_player_fight(&app.pool, player_id).await;
+            log_err!(
+                combat::apply_combat_results(&app.pool, player_id, hp_delta, 0, mana_delta).await,
+                "apply combat results"
+            );
+            log_err!(
+                combat::clear_player_fight(&app.pool, player_id).await,
+                "clear player fight"
+            );
         }
         BattleOutcome::Draw | BattleOutcome::InProgress => {
             outcome_str = "draw";
             let hp_delta = state.player_hp - player_row.hp;
             let mana_delta = state.player_mana - player_row.pm;
-            let _ =
-                combat::apply_combat_results(&app.pool, player_id, hp_delta, 0, mana_delta).await;
-            let _ = combat::clear_player_fight(&app.pool, player_id).await;
+            log_err!(
+                combat::apply_combat_results(&app.pool, player_id, hp_delta, 0, mana_delta).await,
+                "apply combat results"
+            );
+            log_err!(
+                combat::clear_player_fight(&app.pool, player_id).await,
+                "clear player fight"
+            );
         }
     }
 
-    let _ = combat::deduct_energy(&app.pool, player_id, 1.0).await;
+    log_err!(
+        combat::deduct_energy(&app.pool, player_id, 1.0).await,
+        "deduct energy"
+    );
 
     let continue_url = back_url_for_location(&player_row.location);
     let meta = PageMeta::titled("Walka — Wynik");
@@ -1242,23 +1288,31 @@ pub async fn arena_fight(
                 formulas::AttackType::Melee,
                 map_steal_roll,
             );
-            let _ = combat::apply_pvp_winner(
-                &app.pool,
-                player_id,
-                &opponent_row.username,
-                i64::from(rewards.gold_stolen),
-            )
-            .await;
-            let _ = combat::apply_pvp_loser(
-                &app.pool,
-                opponent_id,
-                &player_row.username,
-                result.defender_hp,
-            )
-            .await;
-            let _ =
+            log_err!(
+                combat::apply_pvp_winner(
+                    &app.pool,
+                    player_id,
+                    &opponent_row.username,
+                    i64::from(rewards.gold_stolen),
+                )
+                .await,
+                "apply pvp winner"
+            );
+            log_err!(
+                combat::apply_pvp_loser(
+                    &app.pool,
+                    opponent_id,
+                    &player_row.username,
+                    result.defender_hp,
+                )
+                .await,
+                "apply pvp loser"
+            );
+            log_err!(
                 combat::insert_battle_log(&app.pool, player_id, opponent_id, player_id, timestamp)
-                    .await;
+                    .await,
+                "insert battle log"
+            );
             battle_log.push(format!(
                 "Wygrywasz! Zdobywasz {} złota.",
                 rewards.gold_stolen,
@@ -1279,34 +1333,45 @@ pub async fn arena_fight(
                 formulas::AttackType::Melee,
                 map_steal_roll,
             );
-            let _ = combat::apply_pvp_winner(
-                &app.pool,
-                opponent_id,
-                &player_row.username,
-                i64::from(rewards.gold_stolen),
-            )
-            .await;
-            let _ = combat::apply_pvp_loser(
-                &app.pool,
-                player_id,
-                &opponent_row.username,
-                result.attacker_hp,
-            )
-            .await;
-            let _ = combat::insert_battle_log(
-                &app.pool,
-                player_id,
-                opponent_id,
-                opponent_id,
-                timestamp,
-            )
-            .await;
+            log_err!(
+                combat::apply_pvp_winner(
+                    &app.pool,
+                    opponent_id,
+                    &player_row.username,
+                    i64::from(rewards.gold_stolen),
+                )
+                .await,
+                "apply pvp winner"
+            );
+            log_err!(
+                combat::apply_pvp_loser(
+                    &app.pool,
+                    player_id,
+                    &opponent_row.username,
+                    result.attacker_hp,
+                )
+                .await,
+                "apply pvp loser"
+            );
+            log_err!(
+                combat::insert_battle_log(
+                    &app.pool,
+                    player_id,
+                    opponent_id,
+                    opponent_id,
+                    timestamp,
+                )
+                .await,
+                "insert battle log"
+            );
             battle_log.push("Przegrywasz walkę!".to_owned());
             ("defender_wins", 0)
         }
         PvpOutcome::Draw => {
-            let _ =
-                combat::insert_battle_log(&app.pool, player_id, opponent_id, 0, timestamp).await;
+            log_err!(
+                combat::insert_battle_log(&app.pool, player_id, opponent_id, 0, timestamp).await,
+                "insert battle log"
+            );
             battle_log.push("Remis!".to_owned());
             ("draw", 0)
         }
@@ -1617,11 +1682,20 @@ pub async fn hunters_quest_do(
         _ => ("Zlecenie wykonane.".to_owned(), 0),
     };
 
-    let _ = combat::deduct_energy(&app.pool, player_id, 1.0).await;
+    log_err!(
+        combat::deduct_energy(&app.pool, player_id, 1.0).await,
+        "deduct energy"
+    );
     if gold_reward > 0 {
-        let _ = combat::add_gold(&app.pool, player_id, gold_reward).await;
+        log_err!(
+            combat::add_gold(&app.pool, player_id, gold_reward).await,
+            "add gold"
+        );
     }
-    let _ = settings_q::upsert_setting(&app.pool, quest_key, "").await;
+    log_err!(
+        settings_q::upsert_setting(&app.pool, quest_key, "").await,
+        "upsert setting"
+    );
 
     let final_message = if gold_reward > 0 {
         format!("{message} Dostajesz {gold_reward} sztuk złota.")

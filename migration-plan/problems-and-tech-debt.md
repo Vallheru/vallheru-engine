@@ -645,3 +645,15 @@ Each entry includes:
 - **Needs new task**: No
 - **Status**: resolved
 - **Related tasks**: MP-02-02
+
+### TD-053: Silent error suppression in game-loop handlers
+
+- **Type**: bug
+- **Discovered in**: Post-migration gap audit
+- **Description**: ~80 `let _ =` patterns across 9 handler files (combat, portal, travel, core, crafts, thieves, smithy, lumbermill, jeweller) silently discarded DB operation errors including combat result application, gold/herb awards, energy deductions, battle log insertion, travel encounter cleanup, portal state transitions, and skill XP grants.
+- **Impact**: **High** — silent state corruption in the core game loop (combat, travel, crafting). Failed writes invisible to operators.
+- **Action**: Introduced `log_err!` macro in `crates/web/src/lib.rs` and replaced all DB-related `let _ =` patterns with `log_err!(expr.await, "label")` for observability. Two non-async `let _ =` on `progression::apply_stat_xp/apply_skill_xp` in spells.rs intentionally left — pure domain functions, no DB IO.
+- **Fixable in existing task**: Yes (inline fix)
+- **Needs new task**: No
+- **Status**: resolved
+- **Related tasks**: TD-048, TD-049

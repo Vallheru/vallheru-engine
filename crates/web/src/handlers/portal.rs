@@ -10,6 +10,7 @@ use axum::{
 };
 use rand::Rng;
 
+use crate::log_err;
 use crate::middleware::context::RequestContext;
 use crate::page::{Flash, FlashKind, PageMeta};
 use crate::state::AppState;
@@ -326,7 +327,10 @@ pub async fn portal_show(
 
     // Handle conclusion page (after victory, player clicks "Continue")
     if query.step.as_deref() == Some("1") {
-        let _ = portal_q::set_player_location(&app.pool, player_id, "Altara").await;
+        log_err!(
+            portal_q::set_player_location(&app.pool, player_id, "Altara").await,
+            "set player location"
+        );
         let meta = PageMeta::titled("Portal Prawdy");
         let base = app.templates.build_context(&ctx, &meta);
         let mut view = PortalView::empty(base, "conclusion");
@@ -354,7 +358,10 @@ pub async fn portal_show(
     }
 
     if player.hp <= 0 {
-        let _ = portal_q::set_player_location(&app.pool, player_id, "Altara").await;
+        log_err!(
+            portal_q::set_player_location(&app.pool, player_id, "Altara").await,
+            "set player location"
+        );
         return error_page(
             &app,
             &ctx,
@@ -463,8 +470,14 @@ pub async fn portal_action(
 
     // --- Retreat ---
     if action == "retreat" {
-        let _ = portal_q::exhaust_and_move(&app.pool, player_id, "Altara").await;
-        let _ = combat::clear_player_fight(&app.pool, player_id).await;
+        log_err!(
+            portal_q::exhaust_and_move(&app.pool, player_id, "Altara").await,
+            "exhaust and move"
+        );
+        log_err!(
+            combat::clear_player_fight(&app.pool, player_id).await,
+            "clear player fight"
+        );
         let meta = PageMeta::titled("Portal Prawdy — Odwrót");
         let base = app.templates.build_context(&ctx, &meta);
         let mut view = PortalView::empty(base, "retreat");
@@ -484,7 +497,10 @@ pub async fn portal_action(
                 "Nie masz wystarczająco dużo energii aby walczyć.",
             );
         }
-        let _ = combat::set_player_fight(&app.pool, player_id, PORTAL_FIGHT_ID).await;
+        log_err!(
+            combat::set_player_fight(&app.pool, player_id, PORTAL_FIGHT_ID).await,
+            "set player fight"
+        );
         return crate::page::redirect("/portal");
     }
 
@@ -520,17 +536,26 @@ pub async fn portal_action(
         BattleOutcome::Victory => {
             let hp_delta = battle_state.player_hp - player.hp;
             let mana_delta = battle_state.player_mana - player.pm;
-            let _ = combat::apply_combat_results(
-                &app.pool,
-                player_id,
-                hp_delta,
-                PORTAL_GOLD_REWARD,
-                mana_delta,
-            )
-            .await;
-            let _ = combat::clear_player_fight(&app.pool, player_id).await;
+            log_err!(
+                combat::apply_combat_results(
+                    &app.pool,
+                    player_id,
+                    hp_delta,
+                    PORTAL_GOLD_REWARD,
+                    mana_delta,
+                )
+                .await,
+                "apply combat results"
+            );
+            log_err!(
+                combat::clear_player_fight(&app.pool, player_id).await,
+                "clear player fight"
+            );
             // energy=0 but stay at Portal for conclusion
-            let _ = portal_q::exhaust_and_move(&app.pool, player_id, "Portal").await;
+            log_err!(
+                portal_q::exhaust_and_move(&app.pool, player_id, "Portal").await,
+                "exhaust and move"
+            );
 
             let mut view = PortalView::empty(base, "victory");
             view.monster_name = PORTAL_GUARDIAN_NAME.to_owned();
@@ -541,7 +566,10 @@ pub async fn portal_action(
             app.templates.render_value("portal.html", &view)
         }
         BattleOutcome::Defeat => {
-            let _ = portal_q::apply_portal_defeat(&app.pool, player_id, "Altara").await;
+            log_err!(
+                portal_q::apply_portal_defeat(&app.pool, player_id, "Altara").await,
+                "apply portal defeat"
+            );
             let mut view = PortalView::empty(base, "defeat");
             view.monster_name = PORTAL_GUARDIAN_NAME.to_owned();
             view.battle_log = log;
@@ -551,10 +579,18 @@ pub async fn portal_action(
         BattleOutcome::Escaped | BattleOutcome::Draw | BattleOutcome::InProgress => {
             let hp_delta = battle_state.player_hp - player.hp;
             let mana_delta = battle_state.player_mana - player.pm;
-            let _ =
-                combat::apply_combat_results(&app.pool, player_id, hp_delta, 0, mana_delta).await;
-            let _ = combat::clear_player_fight(&app.pool, player_id).await;
-            let _ = portal_q::exhaust_and_move(&app.pool, player_id, "Altara").await;
+            log_err!(
+                combat::apply_combat_results(&app.pool, player_id, hp_delta, 0, mana_delta).await,
+                "apply combat results"
+            );
+            log_err!(
+                combat::clear_player_fight(&app.pool, player_id).await,
+                "clear player fight"
+            );
+            log_err!(
+                portal_q::exhaust_and_move(&app.pool, player_id, "Altara").await,
+                "exhaust and move"
+            );
 
             let mut view = PortalView::empty(base, "escaped");
             view.monster_name = PORTAL_GUARDIAN_NAME.to_owned();
@@ -600,7 +636,10 @@ pub async fn portals_show(
     }
 
     if player.hp <= 0 {
-        let _ = portal_q::set_player_location(&app.pool, player_id, "Altara").await;
+        log_err!(
+            portal_q::set_player_location(&app.pool, player_id, "Altara").await,
+            "set player location"
+        );
         return error_page(&app, &ctx, "Zapomnij o tym!");
     }
 
@@ -616,8 +655,10 @@ pub async fn portals_show(
     let fight_value = i32::try_from(step).unwrap_or(0) + 1;
 
     // Set fight state and location for astral plane
-    let _ =
-        portal_q::set_fight_and_location(&app.pool, player_id, fight_value, "Astralny plan").await;
+    log_err!(
+        portal_q::set_fight_and_location(&app.pool, player_id, fight_value, "Astralny plan").await,
+        "set fight and location"
+    );
 
     let meta = PageMeta::titled("Astralny plan");
     let base = app.templates.build_context(&ctx, &meta);
@@ -703,9 +744,14 @@ pub async fn portals_action(
             // Apply HP/mana changes
             let hp_delta = battle_state.player_hp - player.hp;
             let mana_delta = battle_state.player_mana - player.pm;
-            let _ =
-                combat::apply_combat_results(&app.pool, player_id, hp_delta, 0, mana_delta).await;
-            let _ = combat::clear_player_fight(&app.pool, player_id).await;
+            log_err!(
+                combat::apply_combat_results(&app.pool, player_id, hp_delta, 0, mana_delta).await,
+                "apply combat results"
+            );
+            log_err!(
+                combat::clear_player_fight(&app.pool, player_id).await,
+                "clear player fight"
+            );
 
             // Component drop roll
             let component_found = {
@@ -715,8 +761,10 @@ pub async fn portals_action(
 
             if component_found {
                 let component_type = format!("C{step}");
-                let _ =
-                    portal_q::award_astral_component(&app.pool, player_id, &component_type).await;
+                log_err!(
+                    portal_q::award_astral_component(&app.pool, player_id, &component_type).await,
+                    "award astral component"
+                );
             }
 
             // Determine combat skill based on equipped weapon
@@ -738,8 +786,10 @@ pub async fn portals_action(
             } else {
                 "magic"
             };
-            let _ =
-                portal_q::add_skill_level(&app.pool, player_id, skill_key, boss.skill_bonus).await;
+            log_err!(
+                portal_q::add_skill_level(&app.pool, player_id, skill_key, boss.skill_bonus).await,
+                "add skill level"
+            );
 
             // Calculate XP reward
             #[allow(clippy::cast_possible_truncation)]
@@ -750,9 +800,18 @@ pub async fn portals_action(
             };
 
             // Deduct energy, move to Altara, consume map
-            let _ = combat::deduct_energy(&app.pool, player_id, 1.0).await;
-            let _ = portal_q::set_player_location(&app.pool, player_id, "Altara").await;
-            let _ = portal_q::consume_astral_map(&app.pool, player_id, &map_name).await;
+            log_err!(
+                combat::deduct_energy(&app.pool, player_id, 1.0).await,
+                "deduct energy"
+            );
+            log_err!(
+                portal_q::set_player_location(&app.pool, player_id, "Altara").await,
+                "set player location"
+            );
+            log_err!(
+                portal_q::consume_astral_map(&app.pool, player_id, &map_name).await,
+                "consume astral map"
+            );
 
             let result_text = if component_found {
                 "Jeszcze tylko jeden cios i bestia pada martwa przed tobą. Krzywiąc się lekko z powodu nieprzyjemnego zapachu martwej bestii, przeszukujesz jej zwłoki. Okazuje się że twoje poświęcenie nie poszło na marne. Z cielska wyciągasz astralny komponent!".to_owned()
@@ -769,9 +828,18 @@ pub async fn portals_action(
             app.templates.render_value("portals.html", &view)
         }
         BattleOutcome::Defeat => {
-            let _ = portal_q::apply_portal_defeat(&app.pool, player_id, "Altara").await;
-            let _ = combat::deduct_energy(&app.pool, player_id, 1.0).await;
-            let _ = portal_q::consume_astral_map(&app.pool, player_id, &map_name).await;
+            log_err!(
+                portal_q::apply_portal_defeat(&app.pool, player_id, "Altara").await,
+                "apply portal defeat"
+            );
+            log_err!(
+                combat::deduct_energy(&app.pool, player_id, 1.0).await,
+                "deduct energy"
+            );
+            log_err!(
+                portal_q::consume_astral_map(&app.pool, player_id, &map_name).await,
+                "consume astral map"
+            );
 
             let mut view = PortalsView::empty(base, "defeat", step);
             view.monster_name = boss.name.to_owned();
@@ -782,12 +850,26 @@ pub async fn portals_action(
         BattleOutcome::Escaped | BattleOutcome::Draw | BattleOutcome::InProgress => {
             let hp_delta = battle_state.player_hp - player.hp;
             let mana_delta = battle_state.player_mana - player.pm;
-            let _ =
-                combat::apply_combat_results(&app.pool, player_id, hp_delta, 0, mana_delta).await;
-            let _ = combat::clear_player_fight(&app.pool, player_id).await;
-            let _ = combat::deduct_energy(&app.pool, player_id, 1.0).await;
-            let _ = portal_q::set_player_location(&app.pool, player_id, "Altara").await;
-            let _ = portal_q::consume_astral_map(&app.pool, player_id, &map_name).await;
+            log_err!(
+                combat::apply_combat_results(&app.pool, player_id, hp_delta, 0, mana_delta).await,
+                "apply combat results"
+            );
+            log_err!(
+                combat::clear_player_fight(&app.pool, player_id).await,
+                "clear player fight"
+            );
+            log_err!(
+                combat::deduct_energy(&app.pool, player_id, 1.0).await,
+                "deduct energy"
+            );
+            log_err!(
+                portal_q::set_player_location(&app.pool, player_id, "Altara").await,
+                "set player location"
+            );
+            log_err!(
+                portal_q::consume_astral_map(&app.pool, player_id, &map_name).await,
+                "consume astral map"
+            );
 
             let mut view = PortalsView::empty(base, "escaped", step);
             view.monster_name = boss.name.to_owned();

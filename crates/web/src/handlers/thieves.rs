@@ -6,6 +6,7 @@
 use axum::{Extension, Form, extract::State, response::Response};
 use rand::Rng;
 
+use crate::log_err;
 use crate::middleware::context::RequestContext;
 use crate::page::{Flash, FlashKind, PageMeta};
 use crate::state::AppState;
@@ -322,13 +323,16 @@ pub async fn thieves_execute(
         let skill_int = thieving_skill as i32;
         let gold_reward = energy_cost * skill_int.max(1) * 15;
 
-        let _ = sqlx::query(
-            "UPDATE players SET credits = credits + $1, mpoints = mpoints + 1 WHERE id = $2",
-        )
-        .bind(i64::from(gold_reward))
-        .bind(player_id)
-        .execute(&app.pool)
-        .await;
+        log_err!(
+            sqlx::query(
+                "UPDATE players SET credits = credits + $1, mpoints = mpoints + 1 WHERE id = $2",
+            )
+            .bind(i64::from(gold_reward))
+            .bind(player_id)
+            .execute(&app.pool)
+            .await,
+            "query"
+        );
 
         let total_xp = energy_cost * 5;
         let mut result = format!("Misja udana! Nagroda: {gold_reward} złota.");
@@ -350,11 +354,14 @@ pub async fn thieves_execute(
     } else {
         // Failure — may take damage
         let damage = damage_roll;
-        let _ = sqlx::query("UPDATE players SET hp = GREATEST(hp - $1, 0) WHERE id = $2")
-            .bind(damage)
-            .bind(player_id)
-            .execute(&app.pool)
-            .await;
+        log_err!(
+            sqlx::query("UPDATE players SET hp = GREATEST(hp - $1, 0) WHERE id = $2")
+                .bind(damage)
+                .bind(player_id)
+                .execute(&app.pool)
+                .await,
+            "query"
+        );
 
         format!("Misja nie powiodła się! Straciłeś {damage} HP.")
     };

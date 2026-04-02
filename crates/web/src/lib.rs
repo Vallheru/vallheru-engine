@@ -10,6 +10,26 @@ pub mod state;
 
 pub use email::{EmailConfig, EmailService};
 pub use i18n::{Catalog, CatalogError};
+
+/// Log-and-discard helper for "fire-and-forget" async DB operations.
+///
+/// Usage: `log_err!(expr, "context message")`
+///
+/// If `expr` evaluates to `Err(e)`, logs an error with the message and error.
+/// Does not halt execution — same semantics as `let _ =` but observable.
+#[macro_export]
+macro_rules! log_err {
+    ($expr:expr, $msg:literal) => {
+        if let Err(__e) = $expr {
+            tracing::error!(error = %__e, $msg);
+        }
+    };
+    ($expr:expr, $($arg:tt)+) => {
+        if let Err(__e) = $expr {
+            tracing::error!(error = %__e, $($arg)+);
+        }
+    };
+}
 pub use middleware::context::{ContextDefaults, RequestContext, SessionUser};
 pub use middleware::guards::{
     Rank, require_admin, require_any_rank, require_authenticated, require_staff,

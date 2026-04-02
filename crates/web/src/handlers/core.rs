@@ -6,6 +6,7 @@
 use axum::{Extension, Form, extract::Path, extract::State, response::Response};
 use rand::Rng;
 
+use crate::log_err;
 use crate::middleware::context::RequestContext;
 use crate::page::{Flash, FlashKind, PageMeta};
 use crate::state::AppState;
@@ -246,18 +247,21 @@ pub async fn core_license_buy(
         } else {
             "F"
         };
-        let _ = vallheru_data::queries::crafting::core_create_creature(
-            &app.pool,
-            player_id,
-            &def.name,
-            &def.core_type,
-            def.id,
-            def.power,
-            def.defense,
-            &def.name,
-            gender,
-        )
-        .await;
+        log_err!(
+            vallheru_data::queries::crafting::core_create_creature(
+                &app.pool,
+                player_id,
+                &def.name,
+                &def.core_type,
+                def.id,
+                def.power,
+                def.defense,
+                &def.name,
+                gender,
+            )
+            .await,
+            "core create creature"
+        );
     }
 
     let meta = PageMeta::titled("Stwory")
@@ -492,18 +496,21 @@ pub async fn core_explore(
 
     let mut found_names: Vec<String> = Vec::new();
     for creature in &found {
-        let _ = vallheru_data::queries::crafting::core_create_creature(
-            &app.pool,
-            player_id,
-            &creature.name,
-            &creature.core_type,
-            creature.ref_id,
-            creature.power,
-            creature.defense,
-            &creature.name,
-            creature.gender,
-        )
-        .await;
+        log_err!(
+            vallheru_data::queries::crafting::core_create_creature(
+                &app.pool,
+                player_id,
+                &creature.name,
+                &creature.core_type,
+                creature.ref_id,
+                creature.power,
+                creature.defense,
+                &creature.name,
+                creature.gender,
+            )
+            .await,
+            "core create creature"
+        );
         found_names.push(creature.name.clone());
     }
 
@@ -622,7 +629,10 @@ pub async fn core_activate(
 
     // Deactivate all first if activating
     if activate {
-        let _ = vallheru_data::queries::crafting::core_deactivate_all(&app.pool, player_id).await;
+        log_err!(
+            vallheru_data::queries::crafting::core_deactivate_all(&app.pool, player_id).await,
+            "core deactivate all"
+        );
     }
 
     if let Err(e) =
@@ -774,22 +784,28 @@ pub async fn core_arena_fight(
                 )
             };
 
-            let _ = vallheru_data::queries::crafting::core_arena_result(
-                &app.pool,
-                my_creature.id,
-                true,
-            )
-            .await;
+            log_err!(
+                vallheru_data::queries::crafting::core_arena_result(
+                    &app.pool,
+                    my_creature.id,
+                    true,
+                )
+                .await,
+                "core arena result"
+            );
 
             // Add rewards
-            let _ = sqlx::query(
+            log_err!(
+                sqlx::query(
                 "UPDATE players SET credits = credits + $1, platinum = platinum + $2 WHERE id = $3",
-            )
-            .bind(i64::from(gold_reward))
-            .bind(plat_reward)
-            .bind(player_id)
-            .execute(&app.pool)
-            .await;
+                )
+                .bind(i64::from(gold_reward))
+                .bind(plat_reward)
+                .bind(player_id)
+                .execute(&app.pool)
+                    .await,
+                "query"
+            );
 
             format!(
                 "{} wygrywa z {}! Nagroda: {} złota, {} platyny.",
@@ -798,12 +814,15 @@ pub async fn core_arena_fight(
         }
         std::cmp::Ordering::Less => {
             // Lose
-            let _ = vallheru_data::queries::crafting::core_arena_result(
-                &app.pool,
-                my_creature.id,
-                false,
-            )
-            .await;
+            log_err!(
+                vallheru_data::queries::crafting::core_arena_result(
+                    &app.pool,
+                    my_creature.id,
+                    false,
+                )
+                .await,
+                "core arena result"
+            );
             format!("{} przegrywa z {}.", my_creature.name, opponent.name)
         }
         std::cmp::Ordering::Equal => {

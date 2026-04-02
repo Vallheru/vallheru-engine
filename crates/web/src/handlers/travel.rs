@@ -13,6 +13,7 @@ use axum::{
 use rand::Rng;
 use serde::Deserialize;
 
+use crate::log_err;
 use crate::middleware::context::RequestContext;
 use crate::page::{Flash, FlashKind, PageMeta};
 use crate::state::AppState;
@@ -444,23 +445,25 @@ async fn handle_encounter_state(
     let player_id = player_row.id;
 
     // Load encounter record.
-    let enc = match vallheru_data::queries::travel::load_travel_encounter(&state.pool, player_id)
-        .await
-    {
-        Ok(Some(e)) => e,
-        Ok(None) => {
-            // No encounter record but location is Podróż — clean up and send home.
-            let _ = sqlx::query("UPDATE players SET miejsce = 'Altara', fight = 0 WHERE id = $1")
-                .bind(player_id)
-                .execute(&state.pool)
-                .await;
-            return crate::page::redirect("/city");
-        }
-        Err(e) => {
-            tracing::error!(error = %e, "travel: failed to load encounter");
-            return server_error();
-        }
-    };
+    let enc =
+        match vallheru_data::queries::travel::load_travel_encounter(&state.pool, player_id).await {
+            Ok(Some(e)) => e,
+            Ok(None) => {
+                // No encounter record but location is Podróż — clean up and send home.
+                log_err!(
+                    sqlx::query("UPDATE players SET miejsce = 'Altara', fight = 0 WHERE id = $1")
+                        .bind(player_id)
+                        .execute(&state.pool)
+                        .await,
+                    "query"
+                );
+                return crate::page::redirect("/city");
+            }
+            Err(e) => {
+                tracing::error!(error = %e, "travel: failed to load encounter");
+                return server_error();
+            }
+        };
 
     // If still in combat, show encounter choices (they came back without fighting).
     if player_row.fight > 0 {
@@ -470,12 +473,17 @@ async fn handle_encounter_state(
     // Fight resolved (fight == 0). Complete the travel or handle death.
     if player_row.hp <= 0 {
         // Player died in combat — cleanup and move to Altara.
-        let _ =
-            vallheru_data::queries::travel::delete_travel_encounter(&state.pool, player_id).await;
-        let _ = sqlx::query("UPDATE players SET miejsce = 'Altara' WHERE id = $1")
-            .bind(player_id)
-            .execute(&state.pool)
-            .await;
+        log_err!(
+            vallheru_data::queries::travel::delete_travel_encounter(&state.pool, player_id).await,
+            "delete travel encounter"
+        );
+        log_err!(
+            sqlx::query("UPDATE players SET miejsce = 'Altara' WHERE id = $1")
+                .bind(player_id)
+                .execute(&state.pool)
+                .await,
+            "query"
+        );
         return error_page(
             state,
             ctx,
@@ -489,17 +497,25 @@ async fn handle_encounter_state(
 
     let (Some(dest), Some(method)) = (dest, method) else {
         // Corrupt encounter record — cleanup.
-        let _ =
-            vallheru_data::queries::travel::delete_travel_encounter(&state.pool, player_id).await;
-        let _ = sqlx::query("UPDATE players SET miejsce = 'Altara', fight = 0 WHERE id = $1")
-            .bind(player_id)
-            .execute(&state.pool)
-            .await;
+        log_err!(
+            vallheru_data::queries::travel::delete_travel_encounter(&state.pool, player_id).await,
+            "delete travel encounter"
+        );
+        log_err!(
+            sqlx::query("UPDATE players SET miejsce = 'Altara', fight = 0 WHERE id = $1")
+                .bind(player_id)
+                .execute(&state.pool)
+                .await,
+            "query"
+        );
         return crate::page::redirect("/city");
     };
 
     // Cleanup encounter before completing travel.
-    let _ = vallheru_data::queries::travel::delete_travel_encounter(&state.pool, player_id).await;
+    log_err!(
+        vallheru_data::queries::travel::delete_travel_encounter(&state.pool, player_id).await,
+        "delete travel encounter"
+    );
 
     complete_travel(state, ctx, player_row, dest, method, enc.travel_cost).await
 }
@@ -542,17 +558,22 @@ async fn handle_pay_ransom(
     match result {
         vallheru_domain::travel::RansomResult::Pay(ransom) => {
             // Deduct ransom, clear fight, and complete travel.
-            let _ =
+            log_err!(
                 sqlx::query("UPDATE players SET credits = credits - $1, fight = 0 WHERE id = $2")
                     .bind(ransom)
                     .bind(player_id)
                     .execute(&state.pool)
-                    .await;
+                    .await,
+                "deduct ransom"
+            );
 
             let dest = Destination::from_param(&enc.destination);
             let method_parsed = TravelMethod::from_param(&enc.method);
-            let _ = vallheru_data::queries::travel::delete_travel_encounter(&state.pool, player_id)
-                .await;
+            log_err!(
+                vallheru_data::queries::travel::delete_travel_encounter(&state.pool, player_id)
+                    .await,
+                "delete travel encounter"
+            );
 
             let (Some(dest), Some(method_p)) = (dest, method_parsed) else {
                 return crate::page::redirect("/city");
@@ -636,23 +657,32 @@ async fn handle_escape(
     let xp = escape.xp;
     #[allow(clippy::cast_possible_truncation)]
     let half_xp = (xp.max(1) / 2) as i32;
-    let _ =
-        vallheru_data::queries::player::add_stat_xp(&state.pool, player_id, "speed", half_xp).await;
-    let _ =
+    log_err!(
+        vallheru_data::queries::player::add_stat_xp(&state.pool, player_id, "speed", half_xp).await,
+        "add speed stat xp"
+    );
+    log_err!(
         vallheru_data::queries::player::add_skill_xp(&state.pool, player_id, "perception", half_xp)
-            .await;
+            .await,
+        "add perception skill xp"
+    );
 
     if escape.escaped {
         // Clear fight, complete travel.
-        let _ = sqlx::query("UPDATE players SET fight = 0 WHERE id = $1")
-            .bind(player_id)
-            .execute(&state.pool)
-            .await;
+        log_err!(
+            sqlx::query("UPDATE players SET fight = 0 WHERE id = $1")
+                .bind(player_id)
+                .execute(&state.pool)
+                .await,
+            "query"
+        );
 
         let dest = Destination::from_param(&enc.destination);
         let method = TravelMethod::from_param(&enc.method);
-        let _ =
-            vallheru_data::queries::travel::delete_travel_encounter(&state.pool, player_id).await;
+        log_err!(
+            vallheru_data::queries::travel::delete_travel_encounter(&state.pool, player_id).await,
+            "delete travel encounter"
+        );
 
         let (Some(dest), Some(method)) = (dest, method) else {
             return crate::page::redirect("/city");

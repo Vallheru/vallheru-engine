@@ -6,6 +6,7 @@
 use axum::{Extension, Form, extract::Path, extract::State, response::Response};
 use rand::Rng;
 
+use crate::log_err;
 use crate::middleware::context::RequestContext;
 use crate::page::{Flash, FlashKind, PageMeta};
 use crate::state::AppState;
@@ -830,12 +831,15 @@ pub(crate) async fn apply_craft_xp(
                 );
             }
             if result.hp_change > 0 {
-                let _ = vallheru_data::queries::locations::add_player_hp(
-                    &app.pool,
-                    player_id,
-                    result.hp_change,
-                )
-                .await;
+                log_err!(
+                    vallheru_data::queries::locations::add_player_hp(
+                        &app.pool,
+                        player_id,
+                        result.hp_change,
+                    )
+                    .await,
+                    "add player hp"
+                );
             }
         }
 

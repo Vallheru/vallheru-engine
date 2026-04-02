@@ -6,6 +6,7 @@
 use axum::{Extension, Form, extract::Path, extract::State, response::Response};
 use rand::Rng;
 
+use crate::log_err;
 use crate::middleware::context::RequestContext;
 use crate::page::{Flash, FlashKind, PageMeta};
 use crate::state::AppState;
@@ -730,7 +731,10 @@ pub async fn jeweller_continue(
         results_text = text;
 
         // Delete work
-        let _ = vallheru_data::queries::crafting::jeweller_delete_work(&app.pool, work_id).await;
+        log_err!(
+            vallheru_data::queries::crafting::jeweller_delete_work(&app.pool, work_id).await,
+            "jeweller delete work"
+        );
     } else {
         // Still in progress
         if let Err(e) = vallheru_data::queries::crafting::jeweller_add_work_energy(

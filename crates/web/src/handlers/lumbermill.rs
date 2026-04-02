@@ -6,6 +6,7 @@
 use axum::{Extension, Form, extract::Path, extract::State, response::Response};
 use rand::Rng;
 
+use crate::log_err;
 use crate::middleware::context::RequestContext;
 use crate::page::{Flash, FlashKind, PageMeta};
 use crate::state::AppState;
@@ -807,7 +808,10 @@ pub async fn lumbermill_continue(
         }
 
         // Delete work
-        let _ = vallheru_data::queries::crafting::mill_delete_work(&app.pool, work_id).await;
+        log_err!(
+            vallheru_data::queries::crafting::mill_delete_work(&app.pool, work_id).await,
+            "mill delete work"
+        );
     } else {
         // Still in progress
         #[allow(clippy::cast_possible_truncation)]
