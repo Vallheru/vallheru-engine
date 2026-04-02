@@ -55,8 +55,9 @@ Each entry includes:
 - **Action**: Port remaining views as needed. Avatar upload and style picker are the most visible gaps.
 - **Fixable in existing task**: No — too many views for one task.
 - **Needs new task**: Yes — consider grouping into 2-3 follow-up tasks.
-- **Status**: open
+- **Status**: resolved — implemented freeze, immunity, style picker, roleplay editing, ignored users, and quick links CRUD. Avatar upload remains unported (out of scope — no file-upload infra in Axum binary yet).
 - **Related tasks**: MP-05-04
+- **Resolution**: Committed as `feat(account): TD-003 implement remaining account sub-views`
 
 ### TD-004: Legacy compatibility code pervasive across codebase — RESOLVED
 

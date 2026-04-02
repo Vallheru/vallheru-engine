@@ -12,12 +12,15 @@
       <ul>
         <li><a href="/account?view=name">Zmień imię</a></li>
         <li><a href="/account?view=pass">Zmień hasło</a></li>
+        <li><a href="/account?view=freeze">Zamroź konto</a></li>
+        <li><a href="/account?view=immu">Immunicja</a></li>
       </ul>
     </td>
     <td valign="top">
       <b>Profil</b>
       <ul>
         <li><a href="/account?view=profile">Edytuj profil</a></li>
+        <li><a href="/account?view=roleplay">Profil fabularny</a></li>
       </ul>
     </td>
   </tr>
@@ -26,6 +29,9 @@
       <b>Ustawienia</b>
       <ul>
         <li><a href="/account?view=options">Dodatkowe opcje</a></li>
+        <li><a href="/account?view=style">Wybierz styl</a></li>
+        <li><a href="/account?view=ignored">Ignorowani</a></li>
+        <li><a href="/account?view=links">Szybkie linki</a></li>
       </ul>
     </td>
     <td valign="top">
@@ -113,6 +119,140 @@
   <br />
   <input type="submit" value="Zapisz" />
 </form>
+
+{% elif account_view == "freeze" %}
+{# --- Account freeze --- #}
+<p>Zamrażanie konta oznacza, że Twoje konto zostanie zablokowane na wybraną liczbę dni.
+Nikt w tym czasie nie będzie mógł Cię zaatakować, ale Ty też nie będziesz mógł(a) grać.</p>
+{% if player_freeze > 0 %}
+<p>Twoje konto jest obecnie zamrożone na <b>{{ player_freeze }}</b> dni.</p>
+{% else %}
+<form method="post" action="/account/freeze">
+  <p>Na ile dni zamrozić konto (maks. 21)?
+    <input type="number" name="days" min="1" max="21" value="7" size="4" />
+  </p>
+  <input type="submit" value="Zamroź" onclick="return confirm('Czy na pewno chcesz zamrozić konto?');" />
+</form>
+{% endif %}
+
+{% elif account_view == "immu" %}
+{# --- Immunity toggle --- #}
+<p>Immunicja chroni Cię przed atakami innych graczy.</p>
+{% if player_immune %}
+<p>Posiadasz już immunicję.</p>
+{% elif player_class == "" %}
+<p>Musisz posiadać klasę, by uzyskać immunicję.</p>
+{% else %}
+<form method="post" action="/account/immunity">
+  <input type="submit" value="Przydziel immunicję" />
+</form>
+{% endif %}
+
+{% elif account_view == "style" %}
+{# --- CSS theme picker --- #}
+<form method="post" action="/account/style">
+  <p>Wybierz styl graficzny:</p>
+  {% for s in available_styles %}
+  <p>
+    <input type="radio" name="style" value="{{ s }}"
+      {% if s == current_style %}checked="checked"{% endif %} />
+    {{ s }}
+  </p>
+  {% endfor %}
+  <input type="submit" value="Zapisz" />
+</form>
+
+{% elif account_view == "roleplay" %}
+{# --- Roleplay profile editing --- #}
+<p>Tutaj możesz ustawić swój profil fabularny.</p>
+<form method="post" action="/account/roleplay">
+  <p><b>Profil fabularny (IC):</b></p>
+  <textarea name="roleplay" rows="8" cols="60">{{ player_roleplay }}</textarea>
+  <p><b>Informacje pozafabularne (OOC):</b></p>
+  <textarea name="ooc" rows="6" cols="60">{{ player_ooc }}</textarea>
+  <p><b>Krótki opis postaci:</b></p>
+  <input type="text" name="shortrp" value="{{ player_short_rpg }}" size="40" />
+  <br /><br />
+  <input type="submit" value="Zapisz" />
+</form>
+
+{% elif account_view == "ignored" %}
+{# --- Ignored/blocked users --- #}
+<p>Tutaj możesz zarządzać osobami ignorowanymi w grze (maks. 30).</p>
+{% if blocked_users %}
+<table border="1" cellpadding="4">
+  <tr><th>Imię</th><th>Blokada poczty</th><th>Blokada pokoju</th><th>Opcje</th></tr>
+  {% for b in blocked_users %}
+  <tr>
+    <td>{{ b.name }}</td>
+    <td>
+      <form method="post" action="/account/blocked/{{ b.id }}/edit" style="display:inline;">
+        <input type="checkbox" name="block_mail" value="1" {% if b.block_mail %}checked="checked"{% endif %} />
+        <input type="checkbox" name="block_chat" value="1" {% if b.block_chat %}checked="checked"{% endif %} />
+        <input type="submit" value="Edytuj" />
+      </form>
+    </td>
+    <td>
+      <form method="post" action="/account/blocked/{{ b.id }}/delete" style="display:inline;">
+        <input type="submit" value="Skasuj" onclick="return confirm('Na pewno?');" />
+      </form>
+    </td>
+  </tr>
+  {% endfor %}
+</table>
+{% else %}
+<p>Nikogo jeszcze nie ignorujesz.</p>
+{% endif %}
+<hr />
+<form method="post" action="/account/blocked">
+  <p>Dodaj gracza o ID:
+    <input type="number" name="pid" size="6" />
+    <input type="submit" value="Dodaj" />
+  </p>
+</form>
+
+{% elif account_view == "links" %}
+{# --- Quick links management --- #}
+<p>Twoje szybkie linki:</p>
+{% if links %}
+<table border="1" cellpadding="4">
+  <tr><th>Etykieta</th><th>URL</th><th>Kolejność</th><th>Opcje</th></tr>
+  {% for l in links %}
+  <tr>
+    <td>{{ l.label }}</td>
+    <td>{{ l.url }}</td>
+    <td>{{ l.sort_order }}</td>
+    <td>
+      <a href="/account?view=links&amp;edit={{ l.id }}">Edytuj</a>
+      <form method="post" action="/account/links/{{ l.id }}/delete" style="display:inline;">
+        <input type="submit" value="Skasuj" onclick="return confirm('Na pewno?');" />
+      </form>
+    </td>
+  </tr>
+  {% endfor %}
+</table>
+{% else %}
+<p>Nie masz jeszcze żadnych szybkich linków.</p>
+{% endif %}
+<hr />
+{% if editing_link %}
+<h3>Edytuj link</h3>
+<form method="post" action="/account/links/{{ editing_link.id }}/edit">
+  <p>Etykieta: <input type="text" name="label" value="{{ editing_link.label }}" size="30" /></p>
+  <p>URL: <input type="text" name="url" value="{{ editing_link.url }}" size="50" /></p>
+  <p>Kolejność: <input type="number" name="sort_order" value="{{ editing_link.sort_order }}" size="4" /></p>
+  <input type="submit" value="Zapisz" />
+  <a href="/account?view=links">Anuluj</a>
+</form>
+{% else %}
+<h3>Dodaj nowy link</h3>
+<form method="post" action="/account/links">
+  <p>Etykieta: <input type="text" name="label" size="30" /></p>
+  <p>URL: <input type="text" name="url" size="50" /></p>
+  <p>Kolejność: <input type="number" name="sort_order" value="0" size="4" /></p>
+  <input type="submit" value="Dodaj" />
+</form>
+{% endif %}
 
 {% endif %}
 {% endblock %}

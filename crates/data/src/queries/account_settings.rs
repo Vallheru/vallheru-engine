@@ -82,18 +82,244 @@ pub struct AccountInfo {
     pub profile: String,
     pub messenger: String,
     pub vallars: i32,
+    pub immune: bool,
+    pub class: String,
+    pub freeze: i16,
+    pub roleplay: String,
+    pub ooc: String,
+    pub short_rpg: String,
 }
 
-/// Load minimal account info for the settings page.
+/// Load account info for the settings page.
 pub async fn load_account_info(
     pool: &PgPool,
     player_id: i32,
 ) -> Result<Option<AccountInfo>, sqlx::Error> {
     sqlx::query_as::<_, AccountInfo>(
-        "SELECT id, username, email, avatar, profile, messenger, vallars \
+        "SELECT id, username, email, avatar, profile, messenger, vallars, \
+                immune, class, \"freeze\", roleplay, ooc, short_rpg \
          FROM players WHERE id = $1",
     )
     .bind(player_id)
     .fetch_optional(pool)
     .await
+}
+
+// =========================================================================
+// Account freeze
+// =========================================================================
+
+/// Set the freeze counter and delete all sessions for the player.
+pub async fn freeze_account(pool: &PgPool, player_id: i32, days: i16) -> Result<(), sqlx::Error> {
+    let mut tx = pool.begin().await?;
+    sqlx::query("UPDATE players SET \"freeze\" = $1 WHERE id = $2")
+        .bind(days)
+        .bind(player_id)
+        .execute(&mut *tx)
+        .await?;
+    sqlx::query("DELETE FROM sessions WHERE player_id = $1")
+        .bind(player_id)
+        .execute(&mut *tx)
+        .await?;
+    tx.commit().await?;
+    Ok(())
+}
+
+// =========================================================================
+// Immunity
+// =========================================================================
+
+/// Set the player's immunity flag.
+pub async fn set_immunity(pool: &PgPool, player_id: i32, immune: bool) -> Result<(), sqlx::Error> {
+    sqlx::query("UPDATE players SET immune = $1 WHERE id = $2")
+        .bind(immune)
+        .bind(player_id)
+        .execute(pool)
+        .await?;
+    Ok(())
+}
+
+// =========================================================================
+// Roleplay profile
+// =========================================================================
+
+/// Update the player's roleplay profile fields.
+pub async fn update_roleplay(
+    pool: &PgPool,
+    player_id: i32,
+    roleplay: &str,
+    ooc: &str,
+    short_rpg: &str,
+) -> Result<(), sqlx::Error> {
+    sqlx::query("UPDATE players SET roleplay = $1, ooc = $2, short_rpg = $3 WHERE id = $4")
+        .bind(roleplay)
+        .bind(ooc)
+        .bind(short_rpg)
+        .bind(player_id)
+        .execute(pool)
+        .await?;
+    Ok(())
+}
+
+// =========================================================================
+// Blocked users (ignored list)
+// =========================================================================
+
+/// One row from the block list with the target player's display name.
+#[derive(Debug, sqlx::FromRow)]
+pub struct BlockEntry {
+    pub id: i64,
+    pub blocked_id: i64,
+    pub blocked_name: String,
+    pub block_mail: bool,
+    pub block_chat: bool,
+}
+
+/// List all blocked users for a player.
+pub async fn list_blocked(pool: &PgPool, owner_id: i64) -> Result<Vec<BlockEntry>, sqlx::Error> {
+    sqlx::query_as::<_, BlockEntry>(
+        "SELECT b.id, b.blocked_id, p.username AS blocked_name, \
+                b.block_mail, b.block_chat \
+         FROM mail_blocks b \
+         JOIN players p ON p.id = b.blocked_id \
+         WHERE b.owner_id = $1 \
+         ORDER BY p.username",
+    )
+    .bind(owner_id)
+    .fetch_all(pool)
+    .await
+}
+
+/// Add a player to the block list (blocks both mail and chat by default).
+/// Returns `true` if a new row was inserted, `false` if already blocked.
+pub async fn add_blocked(
+    pool: &PgPool,
+    owner_id: i64,
+    blocked_id: i64,
+) -> Result<bool, sqlx::Error> {
+    let result = sqlx::query(
+        "INSERT INTO mail_blocks (owner_id, blocked_id, block_mail, block_chat) \
+         VALUES ($1, $2, TRUE, TRUE) \
+         ON CONFLICT (owner_id, blocked_id) DO NOTHING",
+    )
+    .bind(owner_id)
+    .bind(blocked_id)
+    .execute(pool)
+    .await?;
+    Ok(result.rows_affected() > 0)
+}
+
+/// Remove a block entry by its row ID (only if owned by `owner_id`).
+pub async fn remove_blocked(
+    pool: &PgPool,
+    owner_id: i64,
+    block_id: i64,
+) -> Result<(), sqlx::Error> {
+    sqlx::query("DELETE FROM mail_blocks WHERE id = $1 AND owner_id = $2")
+        .bind(block_id)
+        .bind(owner_id)
+        .execute(pool)
+        .await?;
+    Ok(())
+}
+
+/// Update block flags for a specific entry.
+pub async fn update_block_flags(
+    pool: &PgPool,
+    owner_id: i64,
+    block_id: i64,
+    block_mail: bool,
+    block_chat: bool,
+) -> Result<(), sqlx::Error> {
+    sqlx::query(
+        "UPDATE mail_blocks SET block_mail = $1, block_chat = $2 \
+         WHERE id = $3 AND owner_id = $4",
+    )
+    .bind(block_mail)
+    .bind(block_chat)
+    .bind(block_id)
+    .bind(owner_id)
+    .execute(pool)
+    .await?;
+    Ok(())
+}
+
+// =========================================================================
+// Quick links
+// =========================================================================
+
+/// A player's custom navigation link.
+#[derive(Debug, sqlx::FromRow)]
+pub struct QuickLink {
+    pub id: i64,
+    pub label: String,
+    pub url: String,
+    pub sort_order: i32,
+}
+
+/// List all quick links for a player.
+pub async fn list_links(pool: &PgPool, owner_id: i32) -> Result<Vec<QuickLink>, sqlx::Error> {
+    sqlx::query_as::<_, QuickLink>(
+        "SELECT id, label, url, sort_order \
+         FROM player_links \
+         WHERE owner_id = $1 \
+         ORDER BY sort_order, id",
+    )
+    .bind(owner_id)
+    .fetch_all(pool)
+    .await
+}
+
+/// Insert a new quick link. Returns the new link ID.
+pub async fn add_link(
+    pool: &PgPool,
+    owner_id: i32,
+    label: &str,
+    url: &str,
+    sort_order: i32,
+) -> Result<i64, sqlx::Error> {
+    let row: (i64,) = sqlx::query_as(
+        "INSERT INTO player_links (owner_id, label, url, sort_order) \
+         VALUES ($1, $2, $3, $4) RETURNING id",
+    )
+    .bind(owner_id)
+    .bind(label)
+    .bind(url)
+    .bind(sort_order)
+    .fetch_one(pool)
+    .await?;
+    Ok(row.0)
+}
+
+/// Update an existing quick link (only if owned by `owner_id`).
+pub async fn update_link(
+    pool: &PgPool,
+    owner_id: i32,
+    link_id: i64,
+    label: &str,
+    url: &str,
+    sort_order: i32,
+) -> Result<(), sqlx::Error> {
+    sqlx::query(
+        "UPDATE player_links SET label = $1, url = $2, sort_order = $3 \
+         WHERE id = $4 AND owner_id = $5",
+    )
+    .bind(label)
+    .bind(url)
+    .bind(sort_order)
+    .bind(link_id)
+    .bind(owner_id)
+    .execute(pool)
+    .await?;
+    Ok(())
+}
+
+/// Delete a quick link (only if owned by `owner_id`).
+pub async fn delete_link(pool: &PgPool, owner_id: i32, link_id: i64) -> Result<(), sqlx::Error> {
+    sqlx::query("DELETE FROM player_links WHERE id = $1 AND owner_id = $2")
+        .bind(link_id)
+        .bind(owner_id)
+        .execute(pool)
+        .await?;
+    Ok(())
 }

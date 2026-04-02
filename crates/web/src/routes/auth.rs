@@ -26,6 +26,43 @@ pub fn routes() -> Router<AppState> {
             "/account/profile",
             routing::post(account_settings::save_profile),
         )
+        .route(
+            "/account/freeze",
+            routing::post(account_settings::freeze_account),
+        )
+        .route(
+            "/account/immunity",
+            routing::post(account_settings::set_immunity),
+        )
+        .route(
+            "/account/style",
+            routing::post(account_settings::save_style),
+        )
+        .route(
+            "/account/roleplay",
+            routing::post(account_settings::save_roleplay),
+        )
+        .route(
+            "/account/blocked",
+            routing::post(account_settings::add_blocked),
+        )
+        .route(
+            "/account/blocked/{id}/edit",
+            routing::post(account_settings::edit_blocked),
+        )
+        .route(
+            "/account/blocked/{id}/delete",
+            routing::post(account_settings::remove_blocked),
+        )
+        .route("/account/links", routing::post(account_settings::add_link))
+        .route(
+            "/account/links/{id}/edit",
+            routing::post(account_settings::edit_link),
+        )
+        .route(
+            "/account/links/{id}/delete",
+            routing::post(account_settings::delete_link),
+        )
         .layer(middleware::from_fn(require_authenticated));
 
     Router::new()

@@ -219,4 +219,4 @@ Beyond the original 102 tasks, additional implementation was done via tech debt 
 | TD-015 | Spell enchantment system | resolved |
 | TD-016 | Tribe forum post rate limiting | resolved |
 | wieza.php | Magic tower spell/item shop | completed |
-| TD-003 | Unmigrated account.php views | open (low priority) |
+| TD-003 | Unmigrated account.php views | resolved |

@@ -22,6 +22,26 @@ pub static TEMPLATES_DIR: Dir<'static> = include_dir!("$CARGO_MANIFEST_DIR/../..
 /// Embedded CSS files (`css/` at repo root).
 static CSS_DIR: Dir<'static> = include_dir!("$CARGO_MANIFEST_DIR/../../css");
 
+/// List available CSS theme filenames from the embedded CSS directory.
+pub fn available_css_themes() -> Vec<&'static str> {
+    let mut names: Vec<&str> = CSS_DIR
+        .files()
+        .filter_map(|f| {
+            let name = f.path().file_name()?.to_str()?;
+            if std::path::Path::new(name)
+                .extension()
+                .is_some_and(|ext| ext.eq_ignore_ascii_case("css"))
+            {
+                Some(name)
+            } else {
+                None
+            }
+        })
+        .collect();
+    names.sort_unstable();
+    names
+}
+
 /// Embedded JS files (`js/` at repo root).
 static JS_DIR: Dir<'static> = include_dir!("$CARGO_MANIFEST_DIR/../../js");
 
