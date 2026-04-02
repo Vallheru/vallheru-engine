@@ -681,3 +681,55 @@ Each entry includes:
 - **Needs new task**: No
 - **Status**: resolved
 - **Related tasks**: None
+
+### TD-056: PHP source files and PHP-only directories still in repository
+
+- **Type**: tech-debt
+- **Discovered in**: Post-migration cleanup audit
+- **Description**: After all 102 migration tasks were completed, 706 files (151,656 lines) of PHP source code and PHP-only infrastructure remained in the repository: 110 root *.php files, adodb/, class/, includes/, install/, languages/, mailer/, templates/ (Smarty), templates_c/, libs/, cache/, quests/*.php, avatars/, main.css, temporary.css.
+- **Impact**: Repository bloat, confusing for contributors, risk of accidentally running or referencing dead PHP code.
+- **Action**: Removed all PHP files and PHP-only directories via `git rm -r`.
+- **Fixable in existing task**: Yes (inline fix)
+- **Needs new task**: No
+- **Status**: resolved
+- **Related tasks**: None
+- **Resolution**: Committed as `e7f90a1`
+
+### TD-057: Legacy MD5 password support still active
+
+- **Type**: bug
+- **Discovered in**: Post-migration security audit
+- **Description**: Three security issues in the auth system: (1) `registration.rs` created new accounts with MD5 hashes via `legacy_md5_hash()` instead of Argon2id; (2) login flow contained a `VerifyResult::OkNeedsRehash` path that verified MD5 and auto-upgraded to Argon2; (3) `md-5` crate was a direct dependency. With PHP removed, there is no requirement to preserve MD5 compatibility.
+- **Impact**: **Critical** — new accounts were being created with weak MD5 hashes. Legacy auth path added unnecessary code complexity and attack surface.
+- **Action**: Rewrote auth to Argon2id only. Removed `VerifyResult` enum, `legacy_md5_hash()`, `verify_legacy_md5()`, `constant_time_eq()`, `update_password_hash()`. Simplified `verify_password()` to return `bool`. Changed registration to use `hash_password()`. Removed `md-5` crate dependency.
+- **Fixable in existing task**: Yes (inline fix)
+- **Needs new task**: No
+- **Status**: resolved
+- **Related tasks**: None
+- **Resolution**: Committed as `77fc8c2`
+
+### TD-058: Reconciliation module and MySQL support no longer needed
+
+- **Type**: tech-debt
+- **Discovered in**: Post-migration cleanup audit
+- **Description**: `crates/data/src/reconcile.rs` (275 lines) connected to a MySQL database to compare row counts — only useful during incremental migration. The `mysql` sqlx feature, `legacy_url` config field, and `Reconcile` CLI subcommand were all dead code after PHP removal.
+- **Impact**: Low — dead code and unnecessary compile-time dependency on MySQL client libraries.
+- **Action**: Deleted `reconcile.rs`, removed `Reconcile` CLI subcommand, removed `legacy_url` from config and sample config, removed `mysql` sqlx feature. Updated Import command description to reflect current usage.
+- **Fixable in existing task**: Yes (inline fix)
+- **Needs new task**: No
+- **Status**: resolved
+- **Related tasks**: None
+- **Resolution**: Committed as `f4b556d`
+
+### TD-059: Broken asset URLs and missing seed imports
+
+- **Type**: bug
+- **Discovered in**: Post-migration asset audit
+- **Description**: Multiple issues: (1) emoticon URLs in `text.rs` used `/images/` instead of `/static/images/`; (2) `map.html` referenced `/images/mapa.gif` instead of `/static/images/mapa.gif`; (3) layout1 theme template referenced a deleted Smarty template path for `pergamin.jpg`; (4) `player_profile.html` used inconsistent avatar path `/avatars/` instead of `/static/avatars/`; (5) three seed files (012_alchemy_recipes, 013_mill_plans, 014_cores) existed on disk but were not included in the import list.
+- **Impact**: **Medium** — broken images on emoticons, map, layout1 theme; missing seed data for alchemy, mill, and cores tables.
+- **Action**: Fixed all URLs to use `/static/` prefix. Restored `pergamin.jpg` from git history to `images/`. Added 3 missing seeds to import with correct table names.
+- **Fixable in existing task**: Yes (inline fix)
+- **Needs new task**: No
+- **Status**: resolved
+- **Related tasks**: None
+- **Resolution**: Committed as `0bedc13`

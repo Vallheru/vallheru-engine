@@ -1,48 +1,38 @@
-# Vallheru PHP to Rust Migration Plan
+# Vallheru PHP → Rust Migration Plan — COMPLETE
 
-## Current Application Summary
+> **Status**: All 102 migration tasks and 59 tech debt items have been completed.
+> PHP source files have been removed from the repository. The application is now
+> a Rust-only system.
 
-This repository is a legacy browser RPG implemented as a classic multi-page PHP application.
+## Application Summary
 
-- Top-level web surface: 110 PHP entry points in the repository root.
-- Shared bootstrap: `includes/head.php` loads config, session handling, Smarty, language files, and the `Player` object for almost every authenticated page.
-- Templates: 228 Smarty templates across `templates/` and `templates/layout1/`.
-- Data layer: inline ADOdb SQL spread across controllers, includes, and classes.
-- Schema: 112 MySQL tables in `install/db/mysql.sql`, using MyISAM-era conventions and almost no enforced relational constraints.
-- Runtime model: synchronous request/response PHP, file-based sessions, page-triggered resets instead of a true scheduler, and writable filesystem directories for cache, avatars, and compiled templates.
-- Domain shape: player/account systems, combat, map/travel, inventory/equipment, markets, professions, tribes/teams/outposts, quests/missions/random events, chat/forums/mail, publishing/news, moderation/admin, and reset-era operations.
+Vallheru Engine is a browser RPG implemented as a server-rendered Rust web application.
 
-The most important architectural findings from the code are:
+- **Runtime**: Single Axum binary serving all routes, with PostgreSQL as the only external dependency.
+- **Templates**: ~192 MiniJinja templates in `templates_jinja/` (including theme variants), compiled into the binary.
+- **Data layer**: Explicit SQL via `sqlx` in `crates/data/`, with PostgreSQL migrations in `migrations/`.
+- **Schema**: PostgreSQL with enforced foreign keys, normalized player fields, and proper indexes.
+- **Auth**: Argon2id password hashing. No legacy MD5 support.
+- **Assets**: CSS, JS, images, i18n catalogs, and seed data embedded into the binary at compile time.
+- **Domain shape**: player/account systems, combat, map/travel, inventory/equipment, markets, professions, tribes/teams/outposts, quests/missions/random events, chat/forums/mail, publishing/news, moderation/admin, and reset-era operations.
+- **CLI**: Subcommands for `serve`, `migrate`, `import`, `job`, `bootstrap`, and `reset-era`.
 
-- Request routing is file-per-page, not centrally declared.
-- Business rules live in page scripts, `includes/*.php`, `class/player_class.php`, and even template assumptions.
-- Player state is partly relational and partly serialized into string columns such as `players.settings`, `players.stats`, `players.skills`, and `players.bonuses`.
-- Security-sensitive behavior is legacy: MD5 passwords, direct SQL string interpolation, ad hoc authorization checks, and writable runtime directories.
-- Some subsystems are tightly coupled through session state, especially chat, battle loops, and mission/quest progress.
+## Migration Scope (Completed)
 
-## Scope of Migration
+All items below have been implemented.
 
-This plan covers a full rewrite of the PHP application into Rust, preserving current gameplay and route behavior before any redesign.
-
-**In scope:**
-- All 110 PHP entry points and their associated business logic.
+- All 110 PHP entry points rewritten as Axum handlers.
 - All 228 Smarty templates converted to MiniJinja.
 - The full MySQL schema (112 tables) translated to PostgreSQL.
-- The 5 PHP classes, ~30 include files, and ~100 language files.
-- 12 page-specific JS files and 7 CSS theme files, embedded into the binary.
-- Operational tooling: installer, era reset, data import, reconciliation.
+- The 5 PHP classes, ~30 include files, and ~100 language files replaced by Rust domain/data crates.
+- 12 page-specific JS files and 7 CSS theme files embedded into the binary.
+- Operational tooling: era reset, data import, bootstrap, scheduled jobs.
 - Docker-based deployment adapted for the Rust binary.
+- PHP source files, legacy Docker configs, and backward-compatibility code removed.
 
-**Out of scope (deferred to post-migration):**
-- UI redesign or frontend framework migration.
-- Additional language/locale support beyond current Polish content.
-- Performance optimization beyond parity.
-- New gameplay features.
-- CDN integration or external service dependencies.
+## Rust Architecture
 
-## Target Rust Architecture
-
-The recommended target is one Rust workspace that still produces a simple final deployment unit.
+The application is one Rust workspace producing a single deployable binary.
 
 ### Workspace Layout
 
@@ -53,21 +43,21 @@ The recommended target is one Rust workspace that still produces a simple final 
 - `crates/domain`
   - Pure game rules and state transitions for player progression, combat, inventory, economy, quests, tribe systems, and reset logic.
 - `crates/data`
-  - PostgreSQL access using explicit SQL, row mapping, transaction boundaries, import/reconciliation jobs, and repository modules.
+  - PostgreSQL access using explicit SQL, row mapping, transaction boundaries, import jobs, and repository modules.
 
-This is intentionally not a microservice split. The application is currently monolithic and should remain one deployable service until the behavior is stable in Rust.
+This is intentionally not a microservice split. The application is monolithic and deploys as one service.
 
 ### Runtime Shape
 
 - One Axum binary for web serving and operational subcommands.
-- PostgreSQL as the only required external service after cutover.
+- PostgreSQL as the only external service.
 - MiniJinja for server-rendered pages and reusable partials.
 - Static files, templates, and language/catalog content embedded into the binary.
-- Optional Nginx only during strangler-style migration; not required after final cutover.
+- User-generated uploads (avatars) served from external storage.
 
 ### Module Boundaries
 
-These are the recommended Rust modules, mapped from the real PHP codebase:
+The Rust modules are organized as follows:
 
 1. Platform foundations
 2. Database and PostgreSQL migration
@@ -86,84 +76,76 @@ These are the recommended Rust modules, mapped from the real PHP codebase:
 15. Admin, moderation, and runtime operations
 16. Testing, parity, and cutover
 
-## Migration Principles
+## Design Principles
 
-1. **Parity before polish.** The first milestone is behavioral equivalence with the PHP version, not improvement. Preserve current gameplay, routes, and user-visible behavior.
-2. **Incremental strangler migration.** Individual routes move to Rust behind Nginx while PHP serves unmigrated pages. No big-bang cutover.
-3. **Explicit SQL, no ORM.** All database access uses `sqlx` with hand-written SQL. Row structs stay separate from domain types.
-4. **Embedded everything.** Templates, CSS, JS, images, and language catalogs are compiled into the binary. No writable asset directories at runtime.
-5. **One binary, one dependency.** The final deployment is one Rust binary plus PostgreSQL. No Redis, no background workers, no separate CLI tools.
-6. **Small, testable tasks.** Every task in this plan is scoped to roughly 2 hours or less and has functional acceptance criteria.
-7. **Domain logic in domain crates.** Business rules live in `crates/domain`, not in handlers or templates. Handlers are thin.
-8. **Boring tools only.** Prefer well-maintained, widely-used Rust crates. Avoid niche or experimental dependencies.
+1. **Explicit SQL, no ORM.** All database access uses `sqlx` with hand-written SQL. Row structs stay separate from domain types.
+2. **Embedded everything.** Templates, CSS, JS, images, and language catalogs are compiled into the binary. No writable asset directories at runtime (except avatar uploads).
+3. **One binary, one dependency.** The deployment is one Rust binary plus PostgreSQL. No Redis, no background workers, no separate CLI tools.
+4. **Domain logic in domain crates.** Business rules live in `crates/domain`, not in handlers or templates. Handlers are thin.
+5. **Boring tools only.** Well-maintained, widely-used Rust crates. No niche or experimental dependencies.
 
-## Recommended Tools and When to Introduce Them
+## Key Dependencies
 
-| Stage | Tool | Why it fits this repo |
-|---|---|---|
-| Phase 1 | `axum` | Required target stack, small surface area, easy route composition, and good middleware support for a monolithic web app. |
-| Phase 1 | `tracing` + `tracing-subscriber` | Replace ad hoc debug output and bugtrack-style runtime visibility with structured logs without adding infrastructure. |
-| Phase 1 | `clap` | Keep installer/import/reset jobs in the same binary instead of introducing separate scripts or supervisors. |
-| Phase 1 | `serde` + `toml` + environment variables | Typed config without a heavy framework; explicit, boring, and easy for both local and production startup. |
-| Phase 1 | `include_dir` | Simple compile-time embedding for templates, CSS, JS, images, and language catalogs; avoids runtime writable asset directories. |
-| Phase 2 | `sqlx` | Explicit SQL, compile-time query checking, PostgreSQL-first, and no ORM behavior leakage. |
-| Phase 2 | `sqlx migrate` | Keeps schema evolution near the SQL layer and avoids adding a second migration tool. |
-| Phase 2 | `argon2` | Safe password hashing with a straightforward compatibility bridge from legacy MD5-on-login. |
-| Phase 2 | `tower-sessions` with PostgreSQL store | Preserves server-side session semantics without adding Redis, matching the current app's reliance on mutable session state. |
-| Phase 4 | `lettre` | Needed only when registration, activation, and password reset email flows are ported. |
+| Crate | Purpose |
+|---|---|
+| `axum` | HTTP framework, routing, middleware, extractors |
+| `tracing` + `tracing-subscriber` | Structured logging |
+| `clap` | CLI subcommands (serve, migrate, import, job, bootstrap, reset-era) |
+| `serde` + `toml` | Typed configuration |
+| `include_dir` | Compile-time asset embedding |
+| `sqlx` | PostgreSQL access with compile-time query checking |
+| `argon2` | Password hashing (Argon2id) |
+| `tower-sessions` | Server-side sessions with PostgreSQL store |
+| `minijinja` | Template rendering |
+| `lettre` | Email (registration, activation, password reset) |
 
-## Migration Phases
+## Migration Phases (All Complete)
 
-### Phase 1: Foundations and Data Shape
+### Phase 1: Foundations and Data Shape (Complete)
 
 - Files: 01-04
-- Estimated effort: 28 hours
-- Goal: establish the Rust workspace, HTTP skeleton, PostgreSQL schema strategy, and embedded rendering stack without yet porting risky game behavior.
+- Goal: Rust workspace, HTTP skeleton, PostgreSQL schema, and embedded rendering stack.
 
-### Phase 2: Identity and Core Player State
+### Phase 2: Identity and Core Player State (Complete)
 
 - Files: 05-06
-- Estimated effort: 20 hours
-- Goal: move login/session/account behavior and player state calculations into reliable Rust services.
+- Goal: Login/session/account behavior and player state calculations.
 
-### Phase 3: Core Gameplay Vertical Slices
+### Phase 3: Core Gameplay Vertical Slices (Complete)
 
 - Files: 07-11
-- Estimated effort: 55 hours
-- Goal: port the game loops that players touch most often: movement, combat, items, markets, and professions.
+- Goal: Movement, combat, items, markets, and professions.
 
-### Phase 4: Community, Clan, and Operations Features
+### Phase 4: Community, Clan, and Operations Features (Complete)
 
 - Files: 12-15
-- Estimated effort: 43 hours
-- Goal: port social systems, multiplayer coordination, quests/events, admin tools, and scheduled/reset behavior.
+- Goal: Social systems, multiplayer coordination, quests/events, admin tools, and scheduled/reset behavior.
 
-### Phase 5: Verification and Cutover
+### Phase 5: Verification and Cutover (Complete)
 
 - Files: 16
-- Estimated effort: 18 hours
-- Goal: prove behavior parity, complete route-by-route switch-over, and remove PHP dependencies.
+- Goal: Behavior parity verification, route switch-over, PHP removal.
 
-## Ordered Module Index
+## Module Index
 
-| Order | File | Effort | Coverage |
-|---|---|---:|---|
-| 01 | [01-platform-foundations.md](./01-platform-foundations.md) | 7h | workspace, config, startup, errors, logging, CLI shell |
-| 02 | [02-database-and-postgresql.md](./02-database-and-postgresql.md) | 8h | schema translation, imports, repositories, legacy field normalization |
-| 03 | [03-http-routing-and-middleware.md](./03-http-routing-and-middleware.md) | 6h | route map, middleware, guards, fallback strategy |
-| 04 | [04-rendering-assets-and-localization.md](./04-rendering-assets-and-localization.md) | 7h | MiniJinja, themes, asset embedding, i18n |
-| 05 | [05-auth-accounts-and-sessions.md](./05-auth-accounts-and-sessions.md) | 10h | login, logout, registration, activation, password reset, account pages |
-| 06 | [06-player-state-and-progression.md](./06-player-state-and-progression.md) | 10h | player aggregate, stats, skills, AP, class/race/deity, hall of fame |
-| 07 | [07-world-map-travel-and-locations.md](./07-world-map-travel-and-locations.md) | 11h | city, map, travel, portals, exploration-adjacent locations |
-| 08 | [08-combat-encounters-and-random-battle.md](./08-combat-encounters-and-random-battle.md) | 12h | battle loops, monsters, PvE/PvP, reward side effects |
-| 09 | [09-items-inventory-and-equipment.md](./09-items-inventory-and-equipment.md) | 10h | inventory, equipment, bonuses, warehouse, spells/items |
-| 10 | [10-economy-markets-and-banking.md](./10-economy-markets-and-banking.md) | 10h | banking, currencies, all market variants, offer lifecycle |
-| 11 | [11-crafting-gathering-and-workshops.md](./11-crafting-gathering-and-workshops.md) | 12h | smithing, alchemy, mining, lumber, smelting, jeweller, core pets |
-| 12 | [12-social-chat-mail-and-content.md](./12-social-chat-mail-and-content.md) | 10h | chat, rooms, mail, forums, news, publishing, notes, library |
-| 13 | [13-guilds-tribes-teams-and-outposts.md](./13-guilds-tribes-teams-and-outposts.md) | 11h | teams, tribes, permissions, storages, outposts, tribe forums |
-| 14 | [14-quests-missions-and-events.md](./14-quests-missions-and-events.md) | 10h | quest scripts, missions, random events, save/resume state |
-| 15 | [15-admin-moderation-and-runtime-operations.md](./15-admin-moderation-and-runtime-operations.md) | 12h | staff/admin, moderation, bugtrack, resets, installer, era tools |
-| 16 | [16-testing-parity-and-cutover.md](./16-testing-parity-and-cutover.md) | 18h | golden-master checks, rollout, rollback, final packaging |
+| Order | File | Coverage |
+|---|---|---|
+| 01 | [01-platform-foundations.md](./01-platform-foundations.md) | workspace, config, startup, errors, logging, CLI shell |
+| 02 | [02-database-and-postgresql.md](./02-database-and-postgresql.md) | schema translation, imports, repositories, legacy field normalization |
+| 03 | [03-http-routing-and-middleware.md](./03-http-routing-and-middleware.md) | route map, middleware, guards, fallback strategy |
+| 04 | [04-rendering-assets-and-localization.md](./04-rendering-assets-and-localization.md) | MiniJinja, themes, asset embedding, i18n |
+| 05 | [05-auth-accounts-and-sessions.md](./05-auth-accounts-and-sessions.md) | login, logout, registration, activation, password reset, account pages |
+| 06 | [06-player-state-and-progression.md](./06-player-state-and-progression.md) | player aggregate, stats, skills, AP, class/race/deity, hall of fame |
+| 07 | [07-world-map-travel-and-locations.md](./07-world-map-travel-and-locations.md) | city, map, travel, portals, exploration-adjacent locations |
+| 08 | [08-combat-encounters-and-random-battle.md](./08-combat-encounters-and-random-battle.md) | battle loops, monsters, PvE/PvP, reward side effects |
+| 09 | [09-items-inventory-and-equipment.md](./09-items-inventory-and-equipment.md) | inventory, equipment, bonuses, warehouse, spells/items |
+| 10 | [10-economy-markets-and-banking.md](./10-economy-markets-and-banking.md) | banking, currencies, all market variants, offer lifecycle |
+| 11 | [11-crafting-gathering-and-workshops.md](./11-crafting-gathering-and-workshops.md) | smithing, alchemy, mining, lumber, smelting, jeweller, core pets |
+| 12 | [12-social-chat-mail-and-content.md](./12-social-chat-mail-and-content.md) | chat, rooms, mail, forums, news, publishing, notes, library |
+| 13 | [13-guilds-tribes-teams-and-outposts.md](./13-guilds-tribes-teams-and-outposts.md) | teams, tribes, permissions, storages, outposts, tribe forums |
+| 14 | [14-quests-missions-and-events.md](./14-quests-missions-and-events.md) | quest scripts, missions, random events, save/resume state |
+| 15 | [15-admin-moderation-and-runtime-operations.md](./15-admin-moderation-and-runtime-operations.md) | staff/admin, moderation, bugtrack, resets, installer, era tools |
+| 16 | [16-testing-parity-and-cutover.md](./16-testing-parity-and-cutover.md) | golden-master checks, rollout, rollback, final packaging |
 
 ## Supporting Documents
 
@@ -171,50 +153,31 @@ These are the recommended Rust modules, mapped from the real PHP codebase:
 |---|---|
 | [table-ownership-map.md](./table-ownership-map.md) | Maps all 112 legacy MySQL tables to owning migration modules |
 | [player-field-normalization.md](./player-field-normalization.md) | Normalization strategy for serialized player columns |
-| [route-manifest.md](./route-manifest.md) | Maps all 110 PHP entry points to planned Axum routes |
-| [cutover-rules.md](./cutover-rules.md) | Route-by-route cutover groups, activation rules, and rollback procedures |
-| [reconciliation-procedures.md](./reconciliation-procedures.md) | Data reconciliation checklists, rollback steps, and ownership transitions |
+| [route-manifest.md](./route-manifest.md) | Maps all 110 PHP entry points to Axum routes |
 | [production-runbook.md](./production-runbook.md) | Production startup, scheduled jobs, health checks, and operator commands |
-| [php-retirement-checklist.md](./php-retirement-checklist.md) | Phased PHP retirement: cutover → soak → cold standby → removal |
 | [problems-and-tech-debt.md](./problems-and-tech-debt.md) | Technical debt and problem register |
 | [task-status.md](./task-status.md) | Per-task completion status for all 102 tasks |
 
 ## Totals
 
 - Total task files: 16
-- Total tasks: 102
-- Total estimated effort: 164 hours
+- Total tasks: 102 (all complete)
+- Total tech debt items: 59 (all resolved)
 
-**Effort per phase:**
+## Architecture Notes
+- The rewrite preserves current gameplay and route behavior.
+- PostgreSQL is the only database; MySQL/MyISAM origins are historical.
+- Polish strings and current theme assets are the minimum preserved content; additional localization cleanup can happen later.
+- File uploads are limited to avatars and similar user assets; all shipped static assets are embedded into the binary.
+- Configuration is loaded from `vallheru.toml` with environment variable overrides.
 
-| Phase | Files | Effort |
-|---|---|---:|
-| Phase 1: Foundations and Data Shape | 01–04 | 28h |
-| Phase 2: Identity and Core Player State | 05–06 | 20h |
-| Phase 3: Core Gameplay Vertical Slices | 07–11 | 55h |
-| Phase 4: Community, Clan, and Operations | 12–15 | 43h |
-| Phase 5: Verification and Cutover | 16 | 18h |
-| **Total** | **01–16** | **164h** |
+## Known Remaining Gaps
 
-## Assumptions
-
-- The rewrite preserves current gameplay and route behavior before any redesign.
-- The first Rust milestone prioritizes parity over UI modernization.
-- PostgreSQL becomes the target schema early, but PHP may remain live behind a reverse proxy while individual routes move.
-- During the incremental phase, read-only features can use synchronized PostgreSQL data before write-heavy features fully cut over.
-- Existing Polish strings and current theme assets are the minimum content to preserve; additional localization cleanup can happen later.
-- File uploads are limited to avatars and similar user assets; all shipped static assets should move into the binary.
-- The empty checked-in `includes/config.php` means environment-specific config is generated outside version control today and should be replaced with explicit Rust config loading.
-
-## Risks and Blockers
-
-- Hidden rules in controllers and includes: many formulas and guards are embedded directly in page scripts.
-- Serialized player columns: stats, skills, settings, and bonuses are not relational and need careful mapping.
-- Session-coupled flows: chat tabs, battle state, and mission progress depend on PHP session behavior.
-- MyISAM-era schema: missing foreign keys means data cleanup rules must be discovered empirically.
-- Page-triggered resets: current behavior depends on a player visiting the game, not on an actual scheduler.
-- Security debt: MD5 passwords and interpolated SQL complicate compatibility and require staged hardening.
-- Operational side effects: writable template caches and avatar directories need a different runtime model in Rust.
+- Avatar upload handler is not yet implemented (no file-upload infrastructure in the Axum binary).
+- Avatar serving route is missing — templates reference `/static/avatars/` but no route serves filesystem avatars.
+- UI modernization and frontend framework migration deferred to post-migration.
+- Additional language/locale support beyond current Polish content deferred.
+- No browser automation or visual/UI testing yet.
 
 ## Implementation Notes
 
@@ -222,45 +185,34 @@ These are the recommended Rust modules, mapped from the real PHP codebase:
 
 All shipped assets are embedded at compile time.
 
-- Embed MiniJinja templates, CSS themes, JS files, images, and language catalogs with `include_dir`.
-- Build a small in-memory asset registry at startup with content type, cache headers, and a content hash.
-- Serve assets directly from the Rust process during the final state.
-- Keep only user-generated uploads (avatars) in external storage; do not treat shipped assets as files on disk.
+- MiniJinja templates, CSS themes, JS files, images, and language catalogs embedded with `include_dir`.
+- In-memory asset registry at startup with content type, cache headers, and content hash.
+- Assets served directly from the Rust process.
+- Only user-generated uploads (avatars) require external storage.
 
-### PostgreSQL Access Without an ORM
+### PostgreSQL Access
 
-The data access strategy stays explicit.
+The data access strategy is explicit SQL throughout.
 
-- Put SQL in the `data` crate, grouped by module, not by generic repository abstractions.
-- Use `sqlx::query!` and `sqlx::query_as!` for compile-time checked SQL wherever practical.
-- Keep row structs separate from domain structs so legacy schema compromises do not leak into business logic.
-- Use explicit transactions in service methods for workflows such as purchases, combat reward application, and tribe storage changes.
-- Normalize obviously harmful structures during migration, especially serialized player fields, while retaining compatibility views or import helpers as needed.
+- SQL lives in `crates/data/`, grouped by module.
+- `sqlx::query!` and `sqlx::query_as!` for compile-time checked SQL.
+- Row structs are separate from domain structs so schema details do not leak into business logic.
+- Explicit transactions for workflows such as purchases, combat rewards, and tribe storage changes.
 
-### Keeping Startup and Deployment Simple
+### Deployment
 
-The final application is operationally simpler than the PHP stack.
+The application is operationally simple.
 
-- Produce one binary that serves HTTP and also exposes subcommands for migration, import, reset, reconciliation, and smoke checks.
-- Require only PostgreSQL as an external dependency after cutover.
-- During migration, place Axum behind Nginx and fall back to PHP-FPM for unmigrated routes.
-- After cutover, remove PHP-FPM and serve the Rust binary directly behind systemd or a single container.
-- Avoid writable template caches and avoid runtime-generated config files.
+- One binary with subcommands for `serve`, `migrate`, `import`, `job`, `bootstrap`, and `reset-era`.
+- PostgreSQL is the only external dependency.
+- Docker Compose configs for development (`compose.yaml`) and production (`compose.prod.yaml`).
+- No writable template caches or runtime-generated config files.
 
-### Testing Strategy During Migration
+### Testing
 
-- **Unit tests** for pure domain functions: combat formulas, stat calculations, economic invariants. Written alongside each module during porting.
-- **Parity fixtures** captured from the PHP version: representative player records, quest states, and market transactions. Used to verify calculation equivalence.
-- **Integration tests** per module: test Axum handlers against a real PostgreSQL database with seeded data.
-- **Golden-master tests** for high-risk pages: capture PHP HTML output, compare key data points against Rust output.
-- **Reconciliation checks** before each cutover batch: compare row counts and aggregates between MySQL and PostgreSQL.
-- No browser automation during the migration phase. Visual/UI testing is deferred to post-cutover.
+- **Unit tests** for pure domain functions: combat formulas, stat calculations, economic invariants.
+- **Integration tests** per module: Axum handlers against a real PostgreSQL database with seeded data.
+- No browser automation yet. Visual/UI testing deferred.
 
-### Incremental Rollout and Compatibility Strategy
 
-- During migration, Nginx routes requests to either Rust or PHP based on a per-route configuration flag.
-- Read-only pages can cut over first with minimal risk (stats, hall of fame, library, news).
-- Write-heavy pages (markets, combat, crafting) require both data migration and write-path verification before cutover.
-- Workflows that span multiple routes (registration → activation → login) must be cut over as a group.
-- PHP sessions and Rust sessions may coexist during the transition. Session data does not need to be shared; players re-authenticate when switching between stacks.
 - Rollback plan: flip the route flag back to PHP. No data rollback is needed for read-only routes. For write routes, reconciliation checks must pass before the flag is flipped permanently.
