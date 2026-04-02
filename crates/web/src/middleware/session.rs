@@ -15,7 +15,7 @@ use axum::{
 };
 use rand::Rng;
 
-use super::context::{RequestContext, SessionUser};
+use super::context::{OnlinePlayerView, RequestContext, SessionUser, SidebarData};
 
 /// Cookie name used for session tracking.
 pub const SESSION_COOKIE: &str = "sid";
@@ -51,6 +51,47 @@ pub async fn resolve_session(
                 if let Ok(Some(player)) =
                     vallheru_data::queries::session::load_session_player(&pool, player_id).await
                 {
+                    // Load sidebar data and online players in parallel.
+                    let sidebar_fut =
+                        vallheru_data::queries::session::load_sidebar_player(&pool, player_id);
+                    let online_fut = vallheru_data::queries::session::load_online_players(&pool);
+                    let (sidebar_res, online_res) = tokio::join!(sidebar_fut, online_fut);
+
+                    let sidebar = sidebar_res.ok().flatten().map(|s| {
+                        #[allow(clippy::cast_possible_truncation)]
+                        SidebarData {
+                            hp: s.hp,
+                            max_hp: s.max_hp,
+                            energy: s.energy as i32,
+                            max_energy: s.max_energy,
+                            credits: s.credits,
+                            bank: s.bank,
+                            platinum: s.platinum,
+                            vallars: s.vallars,
+                            location: s.location,
+                            class: s.class,
+                            tribe_id: s.tribe_id,
+                            tribe_rank: s.tribe_rank,
+                            room: s.room,
+                        }
+                    });
+
+                    let online_players: Vec<OnlinePlayerView> = online_res
+                        .unwrap_or_default()
+                        .into_iter()
+                        .map(|p| {
+                            let display =
+                                format!("{} {} {}", p.tribe_prefix, p.username, p.tribe_suffix)
+                                    .trim()
+                                    .to_owned();
+                            OnlinePlayerView {
+                                id: p.id,
+                                name: display,
+                                rank: p.rank,
+                            }
+                        })
+                        .collect();
+
                     // Update the existing RequestContext with session data.
                     if let Some(ctx) = req.extensions_mut().get_mut::<RequestContext>() {
                         ctx.session_user = Some(SessionUser {
@@ -58,6 +99,8 @@ pub async fn resolve_session(
                             name: player.username,
                             rank: player.rank,
                         });
+                        ctx.sidebar = sidebar;
+                        ctx.online_players = online_players;
                     }
                 }
             }

@@ -27,9 +27,19 @@
     </div>
     {% endif %}
 
-    <main>
-      {% block content %}{% endblock %}
-    </main>
+    <div class="{% if is_authenticated and sidebar %}layout-3col{% else %}layout-single{% endif %}">
+      {% if is_authenticated and sidebar %}
+      {% include "_partials/left_sidebar.html" %}
+      {% endif %}
+
+      <main>
+        {% block content %}{% endblock %}
+      </main>
+
+      {% if is_authenticated and sidebar %}
+      {% include "_partials/right_sidebar.html" %}
+      {% endif %}
+    </div>
 
     {% if back_link_url %}
     <nav class="back-link">

@@ -27,6 +27,12 @@ pub struct RequestContext {
     /// Authenticated session user, if any.
     /// Populated by the session middleware (module 05). `None` means anonymous.
     pub session_user: Option<SessionUser>,
+
+    /// Sidebar player data (stats, gold, location). Populated for authenticated requests.
+    pub sidebar: Option<SidebarData>,
+
+    /// Online players for the right sidebar. Populated for authenticated requests.
+    pub online_players: Vec<OnlinePlayerView>,
 }
 
 /// Minimal session user identity extracted from a session cookie.
@@ -40,6 +46,32 @@ pub struct SessionUser {
     /// Display name.
     pub name: String,
     /// Role / rank string (e.g. `"Admin"`, `"Staff"`, `"Gracz"`).
+    pub rank: String,
+}
+
+/// Player stats and info for the left sidebar.
+#[derive(Debug, Clone, serde::Serialize)]
+pub struct SidebarData {
+    pub hp: i32,
+    pub max_hp: i32,
+    pub energy: i32,
+    pub max_energy: i32,
+    pub credits: i64,
+    pub bank: i64,
+    pub platinum: i64,
+    pub vallars: i32,
+    pub location: String,
+    pub class: String,
+    pub tribe_id: i32,
+    pub tribe_rank: String,
+    pub room: i32,
+}
+
+/// A single online player for the right sidebar.
+#[derive(Debug, Clone, serde::Serialize)]
+pub struct OnlinePlayerView {
+    pub id: i32,
+    pub name: String,
     pub rank: String,
 }
 
@@ -69,6 +101,8 @@ pub async fn inject_request_context(
         locale: defaults.locale.clone(),
         theme: String::new(),
         session_user: None,
+        sidebar: None,
+        online_players: Vec::new(),
     };
 
     // Make the request id available as a tracing span field.
@@ -91,10 +125,14 @@ mod tests {
             locale: "pl".to_owned(),
             theme: String::new(),
             session_user: None,
+            sidebar: None,
+            online_players: Vec::new(),
         };
         assert!(ctx.session_user.is_none());
         assert_eq!(ctx.locale, "pl");
         assert!(ctx.theme.is_empty());
+        assert!(ctx.sidebar.is_none());
+        assert!(ctx.online_players.is_empty());
     }
 
     #[test]

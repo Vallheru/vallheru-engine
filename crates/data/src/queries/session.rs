@@ -130,6 +130,34 @@ pub struct SessionPlayer {
     pub rank: String,
 }
 
+/// Extended player data for the sidebar (loaded once per authenticated request).
+#[derive(Debug, sqlx::FromRow)]
+pub struct SidebarPlayer {
+    pub hp: i32,
+    pub max_hp: i32,
+    pub energy: f64,
+    pub max_energy: i32,
+    pub credits: i64,
+    pub bank: i64,
+    pub platinum: i64,
+    pub vallars: i32,
+    pub location: String,
+    pub class: String,
+    pub tribe_id: i32,
+    pub tribe_rank: String,
+    pub room: i32,
+}
+
+/// An online player entry for the right sidebar.
+#[derive(Debug, sqlx::FromRow)]
+pub struct OnlinePlayer {
+    pub id: i32,
+    pub username: String,
+    pub rank: String,
+    pub tribe_prefix: String,
+    pub tribe_suffix: String,
+}
+
 /// Load minimal player data for populating session context.
 pub async fn load_session_player(
     pool: &PgPool,
@@ -139,4 +167,34 @@ pub async fn load_session_player(
         .bind(player_id)
         .fetch_optional(pool)
         .await
+}
+
+/// Load sidebar player data (stats, gold, location) for authenticated requests.
+pub async fn load_sidebar_player(
+    pool: &PgPool,
+    player_id: i32,
+) -> Result<Option<SidebarPlayer>, sqlx::Error> {
+    sqlx::query_as::<_, SidebarPlayer>(
+        "SELECT hp, max_hp, energy, max_energy, credits, bank, platinum, vallars, \
+         location, class, tribe_id, tribe_rank, room \
+         FROM players WHERE id = $1",
+    )
+    .bind(player_id)
+    .fetch_optional(pool)
+    .await
+}
+
+/// Load all players active within the last 180 seconds for the right sidebar.
+pub async fn load_online_players(pool: &PgPool) -> Result<Vec<OnlinePlayer>, sqlx::Error> {
+    sqlx::query_as::<_, OnlinePlayer>(
+        "SELECT p.id, p.username, p.rank, \
+         COALESCE(t.prefix, '') AS tribe_prefix, \
+         COALESCE(t.suffix, '') AS tribe_suffix \
+         FROM players p \
+         LEFT JOIN tribes t ON t.id = p.tribe_id \
+         WHERE p.last_page_visit >= (extract(epoch from now()) - 180)::bigint \
+         ORDER BY p.id ASC",
+    )
+    .fetch_all(pool)
+    .await
 }

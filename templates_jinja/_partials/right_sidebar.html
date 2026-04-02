@@ -1,0 +1,15 @@
+{# Right sidebar: online players list #}
+<aside class="sidebar sidebar-right">
+  <div class="sidebar-section">
+    <div class="sidebar-heading">Online ({{ online_count }})</div>
+    {% if online_players %}
+    <ul class="online-list">
+      {% for player in online_players %}
+      <li><a href="/player/{{ player.id }}">{{ player.name }}</a></li>
+      {% endfor %}
+    </ul>
+    {% else %}
+    <p class="empty-state">Nikogo nie ma.</p>
+    {% endif %}
+  </div>
+</aside>

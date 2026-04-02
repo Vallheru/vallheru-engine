@@ -72,6 +72,8 @@ pub(crate) fn build_anon_context(state: &AppState, meta: &PageMeta) -> RenderCon
         locale: state.context_defaults.locale.clone(),
         theme: String::new(),
         session_user: None,
+        sidebar: None,
+        online_players: Vec::new(),
     };
     state.templates.build_context(&req_ctx, meta)
 }

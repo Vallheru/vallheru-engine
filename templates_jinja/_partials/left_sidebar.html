@@ -1,0 +1,74 @@
+{# Left sidebar: player stats and navigation links #}
+<aside class="sidebar sidebar-left">
+  <div class="sidebar-section player-info">
+    <div class="player-name">{{ user_name }}</div>
+    <div class="player-rank">{{ user_rank }}</div>
+  </div>
+
+  <div class="sidebar-section player-stats">
+    <div class="stat-row">
+      <span class="stat-label">HP:</span>
+      <span class="stat-value">{{ sidebar.hp }} / {{ sidebar.max_hp }}</span>
+    </div>
+    <div class="stat-bar">
+      <div class="stat-bar-fill hp-bar" style="width: {% if sidebar.max_hp > 0 %}{{ (sidebar.hp * 100 / sidebar.max_hp) | int }}{% else %}0{% endif %}%"></div>
+    </div>
+
+    <div class="stat-row">
+      <span class="stat-label">Energia:</span>
+      <span class="stat-value">{{ sidebar.energy }} / {{ sidebar.max_energy }}</span>
+    </div>
+    <div class="stat-bar">
+      <div class="stat-bar-fill energy-bar" style="width: {% if sidebar.max_energy > 0 %}{{ (sidebar.energy * 100 / sidebar.max_energy) | int }}{% else %}0{% endif %}%"></div>
+    </div>
+  </div>
+
+  <div class="sidebar-section player-resources">
+    <div class="stat-row">
+      <span class="stat-label">Złoto:</span>
+      <span class="stat-value">{{ sidebar.credits }}</span>
+    </div>
+    <div class="stat-row">
+      <span class="stat-label">Bank:</span>
+      <span class="stat-value">{{ sidebar.bank }}</span>
+    </div>
+    <div class="stat-row">
+      <span class="stat-label">Platyna:</span>
+      <span class="stat-value">{{ sidebar.platinum }}</span>
+    </div>
+    <div class="stat-row">
+      <span class="stat-label">Vallary:</span>
+      <span class="stat-value">{{ sidebar.vallars }}</span>
+    </div>
+  </div>
+
+  <div class="sidebar-section player-location">
+    <div class="stat-row">
+      <span class="stat-label">Klasa:</span>
+      <span class="stat-value">{{ sidebar.class }}</span>
+    </div>
+    <div class="stat-row">
+      <span class="stat-label">Lokacja:</span>
+      <span class="stat-value">{{ sidebar.location }}</span>
+    </div>
+  </div>
+
+  <nav class="sidebar-section sidebar-nav">
+    <a href="/city">Miasto</a>
+    <a href="/account">Konto</a>
+    <a href="/equipment">Ekwipunek</a>
+    <a href="/spellbook">Księga zaklęć</a>
+    <a href="/stats">Statystyki</a>
+    {% if sidebar.tribe_id > 0 %}
+    <a href="/tribe">Drużyna</a>
+    {% endif %}
+    <a href="/mail">Poczta</a>
+    <a href="/forums">Forum</a>
+    <a href="/chat">Karczma</a>
+    <a href="/arena">Arena</a>
+    <a href="/market">Rynek</a>
+    <a href="/map">Mapa</a>
+    <a href="/news">Wiadomości</a>
+    <a href="/logout">Wyloguj</a>
+  </nav>
+</aside>

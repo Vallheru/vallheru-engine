@@ -13,7 +13,7 @@ use axum::{
 use minijinja::Environment;
 
 use crate::i18n::{Catalog, make_translate_fn};
-use crate::middleware::context::RequestContext;
+use crate::middleware::context::{OnlinePlayerView, RequestContext, SidebarData};
 use crate::page::PageMeta;
 
 /// Immutable, thread-safe wrapper around the minijinja [`Environment`].
@@ -62,6 +62,11 @@ pub struct RenderContext {
     pub is_authenticated: bool,
     pub user_name: String,
     pub user_rank: String,
+
+    // Sidebar data (populated for authenticated users)
+    pub sidebar: Option<SidebarData>,
+    pub online_players: Vec<OnlinePlayerView>,
+    pub online_count: usize,
 
     // Page-level asset declarations
     /// Extra CSS files for this page (paths relative to `/static/css/`).
@@ -189,6 +194,8 @@ impl TemplateEngine {
             (false, String::new(), String::new())
         };
 
+        let online_count = req_ctx.online_players.len();
+
         RenderContext {
             game_name: self.game_name.clone(),
             base_url: self.base_url.clone(),
@@ -203,6 +210,9 @@ impl TemplateEngine {
             is_authenticated,
             user_name,
             user_rank,
+            sidebar: req_ctx.sidebar.clone(),
+            online_players: req_ctx.online_players.clone(),
+            online_count,
             extra_css: meta.extra_css.clone(),
             extra_js: meta.extra_js.clone(),
         }
@@ -280,6 +290,8 @@ mod tests {
             locale: "pl".to_owned(),
             theme: String::new(),
             session_user: None,
+            sidebar: None,
+            online_players: Vec::new(),
         }
     }
 
@@ -315,6 +327,8 @@ mod tests {
                 name: "Tester".to_owned(),
                 rank: "Admin".to_owned(),
             }),
+            sidebar: None,
+            online_players: Vec::new(),
         };
         let meta = PageMeta::titled("Admin Panel")
             .with_back_link("/city", "Back")
@@ -367,6 +381,8 @@ mod tests {
             locale: "pl".to_owned(),
             theme: "layout1".to_owned(),
             session_user: None,
+            sidebar: None,
+            online_players: Vec::new(),
         };
         let meta = PageMeta::titled("Test");
         let ctx = engine.build_context(&req_ctx, &meta);
