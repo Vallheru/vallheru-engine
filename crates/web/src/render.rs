@@ -221,7 +221,7 @@ impl TemplateEngine {
 fn asset_url(path: String) -> String {
     // Use package version as a lightweight cache-buster. All assets are
     // embedded at compile time so the version uniquely identifies content.
-    format!("{path}?v={}", env!("CARGO_PKG_VERSION"))
+    format!("/static/{path}?v={}", env!("CARGO_PKG_VERSION"))
 }
 
 /// Map a theme key to the CSS filename templates should load.
@@ -342,7 +342,7 @@ mod tests {
     #[test]
     fn asset_url_appends_version() {
         let result = asset_url("css/main.css".to_owned());
-        assert!(result.starts_with("css/main.css?v="));
+        assert!(result.starts_with("/static/css/main.css?v="));
     }
 
     #[test]
