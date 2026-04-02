@@ -513,8 +513,6 @@ fn social_routes() -> Router<AppState> {
         )
         // Player profiles
         .route("/player/{id}", routing::get(player_profile::player_profile))
-        .route("/view", routing::get(player_profile::legacy_view_redirect))
-        .route("/view/{id}", routing::get(player_profile::player_profile))
         .route("/stats", routing::get(character::stats_show))
 }
 

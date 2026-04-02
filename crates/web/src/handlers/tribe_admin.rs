@@ -1277,7 +1277,7 @@ pub async fn tribe_admin_loan(
 
     let has_loan_perm = has_admin_permission(player_id, tribe.owner, perms, TribePermission::Loan);
 
-    let Some(currency) = LoanCurrency::from_php(&form.currency) else {
+    let Some(currency) = LoanCurrency::from_form_value(&form.currency) else {
         return error_page(&app, &ctx, "Nieprawidłowy typ waluty.");
     };
 

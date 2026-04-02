@@ -66,7 +66,7 @@ pub async fn member_list(
     let search_pattern = if params.search.is_empty() {
         None
     } else {
-        // Replace * with % for wildcard support (PHP compat).
+        // Replace * with % for SQL ILIKE wildcard support.
         let pattern = params.search.replace('*', "%");
         Some(pattern)
     };

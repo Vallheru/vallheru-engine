@@ -36,11 +36,7 @@ pub fn build_router(state: AppState) -> Router {
         .merge(world::routes())
         // Admin and staff routes.
         .merge(admin::routes())
-        // Future: .merge(player::routes())
-        // Future: .merge(world::routes())
-        // ...
-        // Catch-all for unmigrated routes.
-        .fallback(fallback::legacy_fallback)
+        .fallback(fallback::not_found_fallback)
         .with_state(state)
         // Session resolution (runs after context injection, closer to handler).
         .layer(axum::middleware::from_fn_with_state(

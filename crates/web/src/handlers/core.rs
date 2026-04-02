@@ -119,18 +119,6 @@ async fn load_player(app: &AppState, player_id: i32) -> Result<PlayerRow, Respon
     .ok_or_else(server_error)
 }
 
-#[allow(dead_code)]
-async fn load_skill(app: &AppState, player_id: i32, key: &str) -> f64 {
-    let row: Option<(f64,)> =
-        sqlx::query_as("SELECT level FROM player_skills WHERE player_id = $1 AND skill_key = $2")
-            .bind(player_id)
-            .bind(key)
-            .fetch_optional(&app.pool)
-            .await
-            .unwrap_or(None);
-    row.map_or(0.0, |r| r.0)
-}
-
 fn error_page(state: &AppState, ctx: &RequestContext, message: &str) -> Response {
     let meta = PageMeta::titled("Błąd").with_flash(Flash {
         kind: FlashKind::Error,

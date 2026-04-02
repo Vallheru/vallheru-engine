@@ -1,7 +1,7 @@
 //! Player profile handler — view another player's public info.
 
 use axum::Extension;
-use axum::extract::{Path, Query, State};
+use axum::extract::{Path, State};
 use axum::response::{IntoResponse, Redirect, Response};
 
 use vallheru_data::queries::player as pq;
@@ -9,16 +9,6 @@ use vallheru_data::queries::player as pq;
 use crate::middleware::context::RequestContext;
 use crate::page::PageMeta;
 use crate::state::AppState;
-
-#[derive(serde::Deserialize)]
-pub struct LegacyViewQuery {
-    pub view: Option<i32>,
-}
-
-#[derive(serde::Deserialize)]
-pub struct LegacyStatsQuery {
-    pub id: Option<i32>,
-}
 
 #[derive(serde::Serialize)]
 struct ProfileView {
@@ -110,22 +100,6 @@ pub async fn player_profile(
     };
 
     app.templates.render_value("player_profile.html", &view)
-}
-
-/// GET /view — legacy redirect: /view?view=N → /player/N
-pub async fn legacy_view_redirect(Query(q): Query<LegacyViewQuery>) -> Response {
-    match q.view {
-        Some(id) => Redirect::to(&format!("/player/{id}")).into_response(),
-        None => Redirect::to("/city").into_response(),
-    }
-}
-
-/// GET /stats — legacy redirect: /stats?id=N → /player/N
-pub fn legacy_stats_redirect(Query(q): Query<LegacyStatsQuery>) -> Response {
-    match q.id {
-        Some(id) => Redirect::to(&format!("/player/{id}")).into_response(),
-        None => Redirect::to("/city").into_response(),
-    }
 }
 
 async fn adjacent_player_ids(app: &AppState, player_id: i32) -> (Option<i32>, Option<i32>) {

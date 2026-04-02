@@ -584,8 +584,8 @@ pub enum LoanCurrency {
 }
 
 impl LoanCurrency {
-    /// Parse from the PHP form value (`"credits"` or `"platinum"`).
-    pub fn from_php(s: &str) -> Option<Self> {
+    /// Parse from form field value (`"credits"` or `"platinum"`).
+    pub fn from_form_value(s: &str) -> Option<Self> {
         match s {
             "credits" => Some(Self::Gold),
             "platinum" => Some(Self::Mithril),

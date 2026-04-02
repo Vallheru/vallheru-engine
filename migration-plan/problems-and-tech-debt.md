@@ -657,3 +657,15 @@ Each entry includes:
 - **Needs new task**: No
 - **Status**: resolved
 - **Related tasks**: TD-048, TD-049
+
+### TD-054: Migration-era legacy compatibility artifacts
+
+- **Type**: tech-debt
+- **Discovered in**: Post-migration architectural audit
+- **Description**: Several migration-era artifacts lingered after all 102 tasks were completed: (1) `legacy_view_redirect` and `legacy_stats_redirect` URL compatibility handlers in player_profile.rs with `LegacyViewQuery`/`LegacyStatsQuery` structs; (2) dead `load_skill` function in core.rs; (3) `from_php()` method name on `LoanCurrency`; (4) strangler-fig comments and `Staged` route status enum in fallback.rs; (5) obsolete `docker-compose.yaml` for the PHP+MySQL stack; (6) legacy Docker files (`php.Dockerfile`, `nginx.conf`, `custom.php.ini`, `entrypoint.sh`).
+- **Impact**: Low — no runtime bugs, but confusing for future contributors and causes Docker Compose warnings.
+- **Action**: Removed legacy URL redirect handlers and routes, renamed `from_php` to `from_form_value`, simplified fallback module (removed `RouteStatus` enum), deleted dead `load_skill` function, removed obsolete Docker files.
+- **Fixable in existing task**: Yes (inline fix)
+- **Needs new task**: No
+- **Status**: resolved
+- **Related tasks**: None
