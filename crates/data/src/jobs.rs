@@ -59,7 +59,7 @@ async fn energy_tick(pool: &PgPool) -> anyhow::Result<()> {
     let rows = sqlx::query(
         "UPDATE players SET energy = energy + (max_energy::float8 / 72.0) \
          WHERE location != 'Lochy' \
-           AND freeze = 0 \
+           AND \"freeze\" = 0 \
            AND race IS NOT NULL AND race != '' \
            AND class IS NOT NULL AND class != '' \
            AND energy < (21.0 * max_energy::float8)",
@@ -209,15 +209,15 @@ async fn daily_reset(pool: &PgPool) -> anyhow::Result<()> {
     // Core pass training bonus
     sqlx::query(
         "UPDATE players SET trains = trains + 15 \
-         WHERE core_pass = true AND freeze = 0",
+         WHERE core_pass = true AND \"freeze\" = 0",
     )
     .execute(pool)
     .await?;
 
     // Decrement freeze counters
     sqlx::query(
-        "UPDATE players SET freeze = freeze - 1 \
-         WHERE freeze > 0",
+        "UPDATE players SET \"freeze\" = \"freeze\" - 1 \
+         WHERE \"freeze\" > 0",
     )
     .execute(pool)
     .await?;
@@ -225,7 +225,7 @@ async fn daily_reset(pool: &PgPool) -> anyhow::Result<()> {
     // Thief crime increment
     sqlx::query(
         "UPDATE players SET crime = crime + 1, astral_crime = true \
-         WHERE class = 'Złodziej' AND freeze = 0",
+         WHERE class = 'Złodziej' AND \"freeze\" = 0",
     )
     .execute(pool)
     .await?;

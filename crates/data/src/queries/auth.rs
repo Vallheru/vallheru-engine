@@ -21,7 +21,7 @@ pub async fn find_by_email(
     email: &str,
 ) -> Result<Option<PlayerCredentials>, sqlx::Error> {
     sqlx::query_as::<_, PlayerCredentials>(
-        "SELECT id, username, email, pass_hash, rank, freeze FROM players WHERE email = $1",
+        "SELECT id, username, email, pass_hash, rank, \"freeze\" FROM players WHERE email = $1",
     )
     .bind(email)
     .fetch_optional(pool)

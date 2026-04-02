@@ -261,19 +261,19 @@ fn bonuses_from_rows(rows: Vec<BonusRow>) -> Vec<PlayerBonus> {
 // ---------------------------------------------------------------------------
 
 /// All columns from the players table in a deterministic order for SELECT.
-const PLAYER_COLUMNS: &str = r"
+const PLAYER_COLUMNS: &str = r#"
     id, username, email, rank, credits, energy, max_energy, ap,
     wins, losses, last_killed, last_killed_by, platinum, age, logins,
     hp, max_hp, bank, pm, last_page_visit, current_page, ip,
     tribe_id, profile, referrals, core_pass, fight, trains, race,
     class, pw, immune, location, messenger, avatar, tribe_rank,
     deity, maps, resting, crime, gender, bridge, temp, forum_time,
-    tforum_time, bless, bless_value, antidote, freeze, house_rest,
+    tforum_time, bless, bless_value, antidote, "freeze", house_rest,
     poll, astral_crime, change_deity, vallars, newbie, roleplay,
     ooc, short_rpg, craft_mission, mpoints, room, chapter,
     craft_skill, chat_times, ring_invite, tribe_invite, team_id,
     reputation, settings
-";
+"#;
 
 // ---------------------------------------------------------------------------
 // Queries
