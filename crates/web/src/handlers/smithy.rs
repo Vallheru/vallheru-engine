@@ -87,20 +87,17 @@ pub struct ContinueForm {
 // =========================================================================
 
 #[derive(Debug, Clone, sqlx::FromRow)]
-#[allow(dead_code)]
 struct PlayerRow {
     pub location: String,
-    pub hp: i32,
     pub energy: f64,
     pub credits: i64,
-    pub platinum: i32,
     pub clas: String,
     pub race: String,
 }
 
 async fn load_player(app: &AppState, player_id: i32) -> Result<PlayerRow, Response> {
     sqlx::query_as::<_, PlayerRow>(
-        "SELECT location, hp, energy, credits, platinum, clas, race FROM players WHERE id = $1",
+        "SELECT location, energy, credits, clas, race FROM players WHERE id = $1",
     )
     .bind(player_id)
     .fetch_optional(&app.pool)

@@ -669,3 +669,15 @@ Each entry includes:
 - **Needs new task**: No
 - **Status**: resolved
 - **Related tasks**: None
+
+### TD-055: Unused PlayerRow fields and dead_code annotations
+
+- **Type**: tech-debt
+- **Discovered in**: Post-migration dead-code audit
+- **Description**: Ten handler-local `PlayerRow` structs selected more columns from `players` than the handler logic actually read. Each carried `#[allow(dead_code)]` to silence warnings, masking the over-fetching.
+- **Impact**: Low — minor unnecessary I/O and suppressed compiler feedback.
+- **Action**: Removed unused struct fields and corresponding SQL columns from smithy, alchemy, jeweller, lumbermill, core, crafts, thieves, tribe, tribe_admin, and tribe_storage. Removed all 10 `#[allow(dead_code)]` annotations.
+- **Fixable in existing task**: Yes (inline fix)
+- **Needs new task**: No
+- **Status**: resolved
+- **Related tasks**: None

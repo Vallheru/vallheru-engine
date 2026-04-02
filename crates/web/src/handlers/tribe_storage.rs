@@ -188,7 +188,6 @@ fn default_amount() -> i32 {
 // =========================================================================
 
 #[derive(Debug, Clone, sqlx::FromRow)]
-#[allow(dead_code)]
 pub(crate) struct PlayerRow {
     pub tribe: i32,
 }

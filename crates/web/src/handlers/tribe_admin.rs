@@ -237,15 +237,12 @@ pub struct DeleteReservationsForm {
 // =========================================================================
 
 #[derive(Debug, Clone, sqlx::FromRow)]
-#[allow(dead_code)]
 struct PlayerRow {
     pub tribe: i32,
-    pub clas: String,
-    pub credits: i64,
 }
 
 async fn load_player(app: &AppState, player_id: i32) -> Result<PlayerRow, Response> {
-    sqlx::query_as::<_, PlayerRow>("SELECT tribe, clas, credits FROM players WHERE id = $1")
+    sqlx::query_as::<_, PlayerRow>("SELECT tribe FROM players WHERE id = $1")
         .bind(player_id)
         .fetch_optional(&app.pool)
         .await

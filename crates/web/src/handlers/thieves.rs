@@ -70,10 +70,8 @@ const LOCKPICK_COST: i32 = 200;
 // =========================================================================
 
 #[derive(Debug, Clone, sqlx::FromRow)]
-#[allow(dead_code)]
 struct PlayerRow {
     pub location: String,
-    pub hp: i32,
     pub max_hp: i32,
     pub energy: f64,
     pub credits: i64,
@@ -85,7 +83,7 @@ struct PlayerRow {
 
 async fn load_player(app: &AppState, player_id: i32) -> Result<PlayerRow, Response> {
     sqlx::query_as::<_, PlayerRow>(
-        "SELECT location, hp, max_hp, energy, credits, clas, race, level, mpoints FROM players WHERE id = $1",
+        "SELECT location, max_hp, energy, credits, clas, race, level, mpoints FROM players WHERE id = $1",
     )
     .bind(player_id)
     .fetch_optional(&app.pool)
