@@ -53,14 +53,13 @@ struct PlayerRow {
     pub location: String,
     pub max_hp: i32,
     pub energy: f64,
-    pub clas: String,
+    pub class: String,
     pub race: String,
-    pub level: i32,
 }
 
 async fn load_player(app: &AppState, player_id: i32) -> Result<PlayerRow, Response> {
     sqlx::query_as::<_, PlayerRow>(
-        "SELECT location, max_hp, energy, clas, race, level FROM players WHERE id = $1",
+        "SELECT location, max_hp, energy, class, race FROM players WHERE id = $1",
     )
     .bind(player_id)
     .fetch_optional(&app.pool)
@@ -78,6 +77,19 @@ async fn load_skill(app: &AppState, player_id: i32, key: &str) -> f64 {
             .await
             .unwrap_or(None);
     row.map_or(0.0, |r| r.0)
+}
+
+/// Approximate player level from sum of trained stats.
+async fn load_level(app: &AppState, player_id: i32) -> i32 {
+    let row: Option<(i64,)> = sqlx::query_as(
+        "SELECT COALESCE(SUM(base + trained), 0) FROM player_stats WHERE player_id = $1",
+    )
+    .bind(player_id)
+    .fetch_optional(&app.pool)
+    .await
+    .unwrap_or(None);
+    #[allow(clippy::cast_possible_truncation)]
+    row.map_or(1, |r| (r.0).max(1) as i32)
 }
 
 fn error_page(state: &AppState, ctx: &RequestContext, message: &str) -> Response {
@@ -136,7 +148,7 @@ pub async fn crafts_show(
         return error_page(&app, &ctx, "Musisz znajdować się w mieście.");
     }
 
-    let is_craftsman = player_row.clas == "Rzemieślnik";
+    let is_craftsman = player_row.class == "Rzemieślnik";
 
     let meta = PageMeta::titled("Gildia Rzemieślników").with_back_link("/city", "Wróć do miasta");
     let base = app.templates.build_context(&ctx, &meta);
@@ -161,12 +173,13 @@ pub async fn crafts_missions_show(
         Err(resp) => return resp,
     };
 
-    if player_row.clas != "Rzemieślnik" {
+    if player_row.class != "Rzemieślnik" {
         return error_page(&app, &ctx, "Tylko rzemieślnicy mogą wykonywać misje.");
     }
 
+    let level = load_level(&app, player_id).await;
     let mut rng = rand::thread_rng();
-    let generated = generate_missions(player_row.level, &mut rng);
+    let generated = generate_missions(level, &mut rng);
 
     let missions: Vec<MissionEntry> = generated
         .iter()
@@ -211,7 +224,7 @@ pub async fn crafts_execute(
         Err(resp) => return resp,
     };
 
-    if player_row.clas != "Rzemieślnik" {
+    if player_row.class != "Rzemieślnik" {
         return error_page(&app, &ctx, "Tylko rzemieślnicy mogą wykonywać misje.");
     }
 
@@ -222,9 +235,10 @@ pub async fn crafts_execute(
     // Regenerate missions (deterministic per session isn't possible without
     // session storage, so we pick a random one based on index)
     // Generate missions and pre-roll random values (rng is !Send, must not cross .await)
+    let level = load_level(&app, player_id).await;
     let (missions, accident_roll, damage_roll, loot_roll) = {
         let mut rng = rand::thread_rng();
-        let missions = generate_missions(player_row.level, &mut rng);
+        let missions = generate_missions(level, &mut rng);
         let accident = rng.gen_range(1..=100);
         let damage = rng.gen_range(1..=25);
         let loot = rng.gen_range(1..=1000);
@@ -308,7 +322,7 @@ pub async fn crafts_execute(
             &app,
             player_id,
             &player_row.race,
-            &player_row.clas,
+            &player_row.class,
             total_xp,
             profession.skill_key(),
         )

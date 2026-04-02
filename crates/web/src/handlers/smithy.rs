@@ -91,13 +91,13 @@ struct PlayerRow {
     pub location: String,
     pub energy: f64,
     pub credits: i64,
-    pub clas: String,
+    pub class: String,
     pub race: String,
 }
 
 async fn load_player(app: &AppState, player_id: i32) -> Result<PlayerRow, Response> {
     sqlx::query_as::<_, PlayerRow>(
-        "SELECT location, energy, credits, clas, race FROM players WHERE id = $1",
+        "SELECT location, energy, credits, class, race FROM players WHERE id = $1",
     )
     .bind(player_id)
     .fetch_optional(&app.pool)
@@ -502,7 +502,7 @@ pub async fn smithy_craft(
     let intelligence = load_stat(&app, player_id, "inteli").await;
     let agility_stat = load_stat(&app, player_id, "agility").await;
 
-    let is_craftsman = player_row.clas == "Rzemieślnik";
+    let is_craftsman = player_row.class == "Rzemieślnik";
 
     let chance = if item_type == smithing::SmithItemType::Tool {
         smithing::normal_tool_success_chance(smith_skill, i32::from(plan.level), mineral)
@@ -653,7 +653,7 @@ pub async fn smithy_craft(
             &app,
             player_id,
             &player_row.race,
-            &player_row.clas,
+            &player_row.class,
             total_xp,
             "smith",
         )
@@ -773,7 +773,7 @@ pub(crate) async fn apply_craft_xp(
     app: &AppState,
     player_id: i32,
     race: &str,
-    clas: &str,
+    class: &str,
     xp_amount: i32,
     skill_key: &str,
 ) -> String {
@@ -781,7 +781,7 @@ pub(crate) async fn apply_craft_xp(
     use vallheru_domain::player::progression;
 
     let race = race.to_owned();
-    let class = clas.to_owned();
+    let class = class.to_owned();
     let mut extra = String::new();
 
     // Apply skill XP

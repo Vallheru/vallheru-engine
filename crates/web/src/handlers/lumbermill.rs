@@ -157,13 +157,13 @@ struct PlayerRow {
     pub location: String,
     pub energy: f64,
     pub credits: i64,
-    pub clas: String,
+    pub class: String,
     pub race: String,
 }
 
 async fn load_player(app: &AppState, player_id: i32) -> Result<PlayerRow, Response> {
     sqlx::query_as::<_, PlayerRow>(
-        "SELECT location, energy, credits, clas, race FROM players WHERE id = $1",
+        "SELECT location, energy, credits, class, race FROM players WHERE id = $1",
     )
     .bind(player_id)
     .fetch_optional(&app.pool)
@@ -543,7 +543,7 @@ pub async fn lumbermill_craft(
 
     let carpentry_skill = load_skill(&app, player_id, "carpentry").await;
     let strength = load_stat(&app, player_id, "strength").await;
-    let is_craftsman = player_row.clas == "Rzemieślnik";
+    let is_craftsman = player_row.class == "Rzemieślnik";
     let is_bow = plan.item_type == BOW_TYPE;
 
     // Deduct energy
@@ -693,7 +693,7 @@ pub async fn lumbermill_craft(
             &app,
             player_id,
             &player_row.race,
-            &player_row.clas,
+            &player_row.class,
             total_xp,
             "carpentry",
         )
@@ -767,7 +767,7 @@ pub async fn lumbermill_continue(
     let plan_level = i32::from(work.n_energy);
     let carpentry_skill = load_skill(&app, player_id, "carpentry").await;
     let strength = load_stat(&app, player_id, "strength").await;
-    let is_craftsman = player_row.clas == "Rzemieślnik";
+    let is_craftsman = player_row.class == "Rzemieślnik";
 
     let mut results_text;
     let mut total_xp;
@@ -836,7 +836,7 @@ pub async fn lumbermill_continue(
             &app,
             player_id,
             &player_row.race,
-            &player_row.clas,
+            &player_row.class,
             total_xp,
             "carpentry",
         )

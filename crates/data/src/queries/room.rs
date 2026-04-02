@@ -64,7 +64,7 @@ pub struct RoomMessageRow {
 #[derive(Debug, sqlx::FromRow)]
 pub struct RoomMemberRow {
     pub id: i64,
-    pub user: String,
+    pub username: String,
 }
 
 // =========================================================================
@@ -228,7 +228,7 @@ pub async fn list_room_members(
     room_id: i32,
 ) -> Result<Vec<RoomMemberRow>, sqlx::Error> {
     sqlx::query_as::<_, RoomMemberRow>(
-        "SELECT id, \"user\" FROM players WHERE room = $1 ORDER BY \"user\"",
+        "SELECT id, username FROM players WHERE room = $1 ORDER BY username",
     )
     .bind(room_id)
     .fetch_all(pool)
@@ -284,7 +284,7 @@ pub async fn is_inn_blocked(
 
 /// Look up a player name by ID.
 pub async fn player_name(pool: &PgPool, player_id: i64) -> Result<Option<String>, sqlx::Error> {
-    sqlx::query_scalar::<_, String>("SELECT \"user\" FROM players WHERE id = $1")
+    sqlx::query_scalar::<_, String>("SELECT username FROM players WHERE id = $1")
         .bind(player_id)
         .fetch_optional(pool)
         .await
@@ -295,7 +295,7 @@ pub async fn player_name_by_username(
     pool: &PgPool,
     username: &str,
 ) -> Result<Option<i64>, sqlx::Error> {
-    sqlx::query_scalar::<_, i64>("SELECT id FROM players WHERE \"user\" = $1")
+    sqlx::query_scalar::<_, i64>("SELECT id FROM players WHERE username = $1")
         .bind(username)
         .fetch_optional(pool)
         .await
@@ -376,11 +376,11 @@ pub async fn online_in_room(
     room_id: i32,
 ) -> Result<Vec<RoomMemberRow>, sqlx::Error> {
     sqlx::query_as::<_, RoomMemberRow>(
-        "SELECT id, \"user\" FROM players
+        "SELECT id, username FROM players
          WHERE room = $1
-           AND page = 'Pokój w karczmie'
-           AND lpv >= (extract(epoch from now()) - 180)::bigint
-         ORDER BY \"user\"",
+           AND current_page = 'Pokój w karczmie'
+           AND last_page_visit >= (extract(epoch from now()) - 180)::bigint
+         ORDER BY username",
     )
     .bind(room_id)
     .fetch_all(pool)
@@ -389,7 +389,7 @@ pub async fn online_in_room(
 
 /// Update a player's current page to 'Pokój w karczmie'.
 pub async fn set_page_room(pool: &PgPool, player_id: i64) -> Result<(), sqlx::Error> {
-    sqlx::query("UPDATE players SET page = 'Pokój w karczmie' WHERE id = $1")
+    sqlx::query("UPDATE players SET current_page = 'Pokój w karczmie' WHERE id = $1")
         .bind(player_id)
         .execute(pool)
         .await?;

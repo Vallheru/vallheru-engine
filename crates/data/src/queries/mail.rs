@@ -44,7 +44,7 @@ pub struct ContactRow {
 #[derive(sqlx::FromRow, Debug)]
 pub struct PlayerNameRow {
     pub id: i64,
-    pub user_name: String,
+    pub username: String,
 }
 
 // =========================================================================
@@ -440,7 +440,7 @@ pub async fn count_unread(pool: &PgPool, owner_id: i64) -> Result<i64, sqlx::Err
 /// List contacts for a player, ordered by `sort_order`.
 pub async fn list_contacts(pool: &PgPool, owner_id: i64) -> Result<Vec<ContactRow>, sqlx::Error> {
     sqlx::query_as::<_, ContactRow>(
-        "SELECT mc.player_id, p.user_name AS player_name
+        "SELECT mc.player_id, p.username AS player_name
          FROM mail_contacts mc
          JOIN players p ON mc.player_id = p.id
          WHERE mc.owner_id = $1
@@ -553,7 +553,7 @@ pub async fn toggle_mail_block(
 
 /// Check if a player exists and return their name.
 pub async fn player_exists(pool: &PgPool, player_id: i64) -> Result<Option<String>, sqlx::Error> {
-    sqlx::query_scalar::<_, String>("SELECT user_name FROM players WHERE id = $1")
+    sqlx::query_scalar::<_, String>("SELECT username FROM players WHERE id = $1")
         .bind(player_id)
         .fetch_optional(pool)
         .await
@@ -605,7 +605,7 @@ pub async fn count_search_results(
 /// List staff/admin players for the "forward to staff" feature.
 pub async fn list_staff(pool: &PgPool) -> Result<Vec<PlayerNameRow>, sqlx::Error> {
     sqlx::query_as::<_, PlayerNameRow>(
-        "SELECT id, user_name FROM players WHERE rank IN ('Admin', 'Staff') ORDER BY id ASC",
+        "SELECT id, username FROM players WHERE rank IN ('Admin', 'Staff') ORDER BY id ASC",
     )
     .fetch_all(pool)
     .await

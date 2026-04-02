@@ -193,7 +193,7 @@ pub(crate) struct PlayerRow {
 }
 
 pub(crate) async fn load_player(app: &AppState, player_id: i32) -> Result<PlayerRow, Response> {
-    sqlx::query_as::<_, PlayerRow>("SELECT tribe FROM players WHERE id = $1")
+    sqlx::query_as::<_, PlayerRow>("SELECT tribe_id AS tribe FROM players WHERE id = $1")
         .bind(player_id)
         .fetch_optional(&app.pool)
         .await
@@ -579,7 +579,7 @@ pub async fn armory_give(
 
     // Check recipient tribe membership
     let recipient_tribe: Option<i32> =
-        sqlx::query_scalar("SELECT tribe FROM players WHERE id = $1")
+        sqlx::query_scalar("SELECT tribe_id FROM players WHERE id = $1")
             .bind(form.recipient_id)
             .fetch_optional(&app.pool)
             .await
@@ -803,7 +803,7 @@ pub async fn warehouse_give(
     };
 
     let recipient_tribe: Option<i32> =
-        sqlx::query_scalar("SELECT tribe FROM players WHERE id = $1")
+        sqlx::query_scalar("SELECT tribe_id FROM players WHERE id = $1")
             .bind(form.recipient_id)
             .fetch_optional(&app.pool)
             .await

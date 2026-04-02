@@ -50,7 +50,7 @@ pub struct LibraryAuthorRow {
 #[derive(Debug, sqlx::FromRow, serde::Serialize)]
 pub struct RoleplayRow {
     pub id: i64,
-    pub user: String,
+    pub username: String,
     pub roleplay: String,
     pub ooc: String,
 }
@@ -353,7 +353,7 @@ pub async fn get_roleplay_profile(
     player_id: i64,
 ) -> Result<Option<RoleplayRow>, sqlx::Error> {
     sqlx::query_as::<_, RoleplayRow>(
-        "SELECT id, \"user\", roleplay, ooc FROM players WHERE id = $1",
+        "SELECT id, username, roleplay, ooc FROM players WHERE id = $1",
     )
     .bind(player_id)
     .fetch_optional(pool)

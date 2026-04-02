@@ -22,7 +22,7 @@ pub struct ChatMessageRow {
 #[derive(Debug, sqlx::FromRow, serde::Serialize)]
 pub struct ChatOnlineRow {
     pub id: i64,
-    pub user: String,
+    pub username: String,
 }
 
 // =========================================================================
@@ -220,10 +220,10 @@ pub async fn unban_player(pool: &PgPool, player_id: i64) -> Result<(), sqlx::Err
 /// 180 seconds.
 pub async fn online_in_tavern(pool: &PgPool) -> Result<Vec<ChatOnlineRow>, sqlx::Error> {
     sqlx::query_as::<_, ChatOnlineRow>(
-        "SELECT id, \"user\" FROM players
-         WHERE page = 'Chat'
-           AND lpv >= (extract(epoch from now()) - 180)::bigint
-         ORDER BY \"user\"",
+        "SELECT id, username FROM players
+         WHERE current_page = 'Chat'
+           AND last_page_visit >= (extract(epoch from now()) - 180)::bigint
+         ORDER BY username",
     )
     .fetch_all(pool)
     .await
@@ -231,7 +231,7 @@ pub async fn online_in_tavern(pool: &PgPool) -> Result<Vec<ChatOnlineRow>, sqlx:
 
 /// Update a player's current page to 'Chat'.
 pub async fn set_page_chat(pool: &PgPool, player_id: i64) -> Result<(), sqlx::Error> {
-    sqlx::query("UPDATE players SET page = 'Chat' WHERE id = $1")
+    sqlx::query("UPDATE players SET current_page = 'Chat' WHERE id = $1")
         .bind(player_id)
         .execute(pool)
         .await?;
@@ -290,10 +290,10 @@ pub async fn player_tribe_id(pool: &PgPool, player_id: i64) -> Result<i32, sqlx:
 /// Check if the innkeeper role player is actively on chat (within 180s).
 pub async fn innkeeper_on_chat(pool: &PgPool) -> Result<Option<String>, sqlx::Error> {
     sqlx::query_scalar::<_, String>(
-        "SELECT \"user\" FROM players
+        "SELECT username FROM players
          WHERE rank = 'Karczmarka'
-           AND page = 'Chat'
-           AND lpv >= (extract(epoch from now()) - 180)::bigint
+           AND current_page = 'Chat'
+           AND last_page_visit >= (extract(epoch from now()) - 180)::bigint
          LIMIT 1",
     )
     .fetch_optional(pool)

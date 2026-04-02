@@ -198,7 +198,7 @@ pub async fn room_page(
         .into_iter()
         .map(|m| MemberView {
             id: m.id,
-            name: m.user,
+            name: m.username,
         })
         .collect();
 
@@ -302,7 +302,7 @@ pub async fn room_messages(
         .into_iter()
         .map(|p| MemberView {
             id: p.id,
-            name: p.user,
+            name: p.username,
         })
         .collect();
 

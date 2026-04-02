@@ -242,7 +242,7 @@ struct PlayerRow {
 }
 
 async fn load_player(app: &AppState, player_id: i32) -> Result<PlayerRow, Response> {
-    sqlx::query_as::<_, PlayerRow>("SELECT tribe FROM players WHERE id = $1")
+    sqlx::query_as::<_, PlayerRow>("SELECT tribe_id AS tribe FROM players WHERE id = $1")
         .bind(player_id)
         .fetch_optional(&app.pool)
         .await
@@ -1492,7 +1492,7 @@ pub async fn tribe_admin_requests_delete(
 
 /// Load a target player's tribe ID for validation.
 async fn load_target_tribe(app: &AppState, target_id: i32) -> Result<i32, ()> {
-    let row: Option<(i32,)> = sqlx::query_as("SELECT tribe FROM players WHERE id = $1")
+    let row: Option<(i32,)> = sqlx::query_as("SELECT tribe_id FROM players WHERE id = $1")
         .bind(target_id)
         .fetch_optional(&app.pool)
         .await

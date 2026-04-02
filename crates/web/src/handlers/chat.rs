@@ -214,7 +214,7 @@ pub async fn chat_messages(
         .into_iter()
         .map(|p| OnlinePlayerView {
             id: p.id,
-            name: p.user,
+            name: p.username,
         })
         .collect();
 

@@ -740,7 +740,7 @@ pub async fn mail_forward_show(
         .into_iter()
         .map(|r| ContactView {
             id: r.id,
-            name: r.user_name,
+            name: r.username,
         })
         .collect();
 

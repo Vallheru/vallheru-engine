@@ -664,11 +664,11 @@ pub async fn roleplay_view(
         .await
         .unwrap_or((None, None));
 
-    let meta = PageMeta::titled(format!("Roleplay — {}", profile.user));
+    let meta = PageMeta::titled(format!("Roleplay — {}", profile.username));
     let base = app.templates.build_context(&ctx, &meta);
     let view = RoleplayView {
         base,
-        player_name: profile.user,
+        player_name: profile.username,
         roleplay: text::bbcode_to_html(&profile.roleplay, &[], false),
         ooc: text::bbcode_to_html(&profile.ooc, &[], false),
         prev_id,

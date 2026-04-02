@@ -75,15 +75,14 @@ struct PlayerRow {
     pub max_hp: i32,
     pub energy: f64,
     pub credits: i64,
-    pub clas: String,
+    pub class: String,
     pub race: String,
-    pub level: i32,
     pub mpoints: i32,
 }
 
 async fn load_player(app: &AppState, player_id: i32) -> Result<PlayerRow, Response> {
     sqlx::query_as::<_, PlayerRow>(
-        "SELECT location, max_hp, energy, credits, clas, race, level, mpoints FROM players WHERE id = $1",
+        "SELECT location, max_hp, energy, credits, class, race, mpoints FROM players WHERE id = $1",
     )
     .bind(player_id)
     .fetch_optional(&app.pool)
@@ -101,6 +100,18 @@ async fn load_skill(app: &AppState, player_id: i32, key: &str) -> f64 {
             .await
             .unwrap_or(None);
     row.map_or(0.0, |r| r.0)
+}
+
+async fn load_level(app: &AppState, player_id: i32) -> i32 {
+    let row: Option<(i64,)> = sqlx::query_as(
+        "SELECT COALESCE(SUM(base + trained), 0) FROM player_stats WHERE player_id = $1",
+    )
+    .bind(player_id)
+    .fetch_optional(&app.pool)
+    .await
+    .unwrap_or(None);
+    #[allow(clippy::cast_possible_truncation)]
+    row.map_or(1, |r| (r.0).max(1) as i32)
 }
 
 async fn load_lockpicks(app: &AppState, player_id: i32) -> i32 {
@@ -159,7 +170,7 @@ pub async fn thieves_show(
         return error_page(&app, &ctx, "Musisz znajdować się w mieście.");
     }
 
-    let is_thief = player_row.clas == "Złodziej";
+    let is_thief = player_row.class == "Złodziej";
 
     let meta = PageMeta::titled("Gildia Złodziei").with_back_link("/city", "Wróć do miasta");
     let base = app.templates.build_context(&ctx, &meta);
@@ -188,35 +199,36 @@ pub async fn thieves_missions_show(
         Err(resp) => return resp,
     };
 
-    if player_row.clas != "Złodziej" {
+    if player_row.class != "Złodziej" {
         return error_page(&app, &ctx, "Tylko złodzieje mogą wykonywać misje.");
     }
 
     let lockpicks = load_lockpicks(&app, player_id).await;
+    let level = load_level(&app, player_id).await;
 
     let missions = vec![
         MissionEntry {
             key: "pickpocket".to_string(),
             name: "Kradzież kieszonkowa".to_string(),
-            energy_cost: player_row.level,
+            energy_cost: level,
             min_mpoints: 0,
         },
         MissionEntry {
             key: "tracking".to_string(),
             name: "Śledzenie".to_string(),
-            energy_cost: player_row.level + 2,
+            energy_cost: level + 2,
             min_mpoints: 0,
         },
         MissionEntry {
             key: "guard".to_string(),
             name: "Służba wartownicza".to_string(),
-            energy_cost: player_row.level + 3,
+            energy_cost: level + 3,
             min_mpoints: 5,
         },
         MissionEntry {
             key: "robbery".to_string(),
             name: "Włamanie do domu".to_string(),
-            energy_cost: player_row.level + 5,
+            energy_cost: level + 5,
             min_mpoints: 10,
         },
     ];
@@ -254,7 +266,7 @@ pub async fn thieves_execute(
         Err(resp) => return resp,
     };
 
-    if player_row.clas != "Złodziej" {
+    if player_row.class != "Złodziej" {
         return error_page(&app, &ctx, "Tylko złodzieje mogą wykonywać misje.");
     }
 
@@ -263,11 +275,12 @@ pub async fn thieves_execute(
         _ => return error_page(&app, &ctx, "Wybierz misję."),
     };
 
+    let level = load_level(&app, player_id).await;
     let (energy_cost, min_mpoints) = match mission_key {
-        "pickpocket" => (player_row.level, 0),
-        "tracking" => (player_row.level + 2, 0),
-        "guard" => (player_row.level + 3, 5),
-        "robbery" => (player_row.level + 5, 10),
+        "pickpocket" => (level, 0),
+        "tracking" => (level + 2, 0),
+        "guard" => (level + 3, 5),
+        "robbery" => (level + 5, 10),
         _ => return error_page(&app, &ctx, "Nieznana misja."),
     };
 
@@ -340,7 +353,7 @@ pub async fn thieves_execute(
                 &app,
                 player_id,
                 &player_row.race,
-                &player_row.clas,
+                &player_row.class,
                 total_xp,
                 "thieving",
             )

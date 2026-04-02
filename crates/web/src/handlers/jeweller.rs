@@ -97,13 +97,13 @@ struct PlayerRow {
     pub location: String,
     pub energy: f64,
     pub credits: i64,
-    pub clas: String,
+    pub class: String,
     pub race: String,
 }
 
 async fn load_player(app: &AppState, player_id: i32) -> Result<PlayerRow, Response> {
     sqlx::query_as::<_, PlayerRow>(
-        "SELECT location, energy, credits, clas, race FROM players WHERE id = $1",
+        "SELECT location, energy, credits, class, race FROM players WHERE id = $1",
     )
     .bind(player_id)
     .fetch_optional(&app.pool)
@@ -289,7 +289,7 @@ pub async fn jeweller_plan_buy(
     .await
     .unwrap_or(false);
 
-    let is_craftsman = player_row.clas == "Rzemieślnik";
+    let is_craftsman = player_row.class == "Rzemieślnik";
 
     if let Err(e) = jdomain::can_buy_plan(
         plan_id,
@@ -454,7 +454,7 @@ pub async fn jeweller_craft(
     let plan_level = i32::from(plan.level);
     let jewellery_skill = load_skill(&app, player_id, "jewellry").await;
     let agility = load_stat(&app, player_id, "agility").await;
-    let is_craftsman = player_row.clas == "Rzemieślnik";
+    let is_craftsman = player_row.class == "Rzemieślnik";
 
     // Check mineral costs
     let minerals = vallheru_data::queries::gathering::load_minerals(&app.pool, player_id)
@@ -601,7 +601,7 @@ pub async fn jeweller_craft(
             &app,
             player_id,
             &player_row.race,
-            &player_row.clas,
+            &player_row.class,
             total_xp,
             "jewellry",
         )
@@ -678,7 +678,7 @@ pub async fn jeweller_continue(
     let plan_level = work.n_energy as i32;
     let jewellery_skill = load_skill(&app, player_id, "jewellry").await;
     let agility = load_stat(&app, player_id, "agility").await;
-    let is_craftsman = player_row.clas == "Rzemieślnik";
+    let is_craftsman = player_row.class == "Rzemieślnik";
 
     let mut results_text;
     let mut total_xp;
@@ -758,7 +758,7 @@ pub async fn jeweller_continue(
             &app,
             player_id,
             &player_row.race,
-            &player_row.clas,
+            &player_row.class,
             total_xp,
             "jewellry",
         )

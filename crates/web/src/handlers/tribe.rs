@@ -121,12 +121,14 @@ struct PlayerRow {
 }
 
 async fn load_player(app: &AppState, player_id: i32) -> Result<PlayerRow, Response> {
-    sqlx::query_as::<_, PlayerRow>("SELECT location, tribe, credits FROM players WHERE id = $1")
-        .bind(player_id)
-        .fetch_optional(&app.pool)
-        .await
-        .map_err(|_| server_error())?
-        .ok_or_else(server_error)
+    sqlx::query_as::<_, PlayerRow>(
+        "SELECT location, tribe_id AS tribe, credits FROM players WHERE id = $1",
+    )
+    .bind(player_id)
+    .fetch_optional(&app.pool)
+    .await
+    .map_err(|_| server_error())?
+    .ok_or_else(server_error)
 }
 
 fn error_page(state: &AppState, ctx: &RequestContext, message: &str) -> Response {

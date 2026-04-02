@@ -259,8 +259,8 @@ pub async fn tribe_list(
 ) -> Result<Vec<TribeListRow>, sqlx::Error> {
     let offset = (page - 1) * per_page;
     sqlx::query_as::<_, TribeListRow>(
-        "SELECT t.id, t.name, p.name AS owner_name, t.level, \
-         (SELECT COUNT(*) FROM players WHERE tribe = t.id) AS member_count \
+        "SELECT t.id, t.name, p.username AS owner_name, t.level, \
+         (SELECT COUNT(*) FROM players WHERE tribe_id = t.id) AS member_count \
          FROM tribes t \
          JOIN players p ON p.id = t.owner \
          ORDER BY t.name ASC \
@@ -285,8 +285,10 @@ pub async fn tribe_members(
     tribe_id: i32,
 ) -> Result<Vec<TribeMemberRow>, sqlx::Error> {
     sqlx::query_as::<_, TribeMemberRow>(
-        "SELECT id, name, level, race, class, rank \
-         FROM players WHERE tribe = $1 ORDER BY level DESC, name ASC",
+        "SELECT id, username AS name, \
+         COALESCE((SELECT SUM(base + trained) FROM player_stats WHERE player_id = players.id), 0)::smallint AS level, \
+         race, class, tribe_rank AS rank \
+         FROM players WHERE tribe_id = $1 ORDER BY level DESC, username ASC",
     )
     .bind(tribe_id)
     .fetch_all(pool)
@@ -295,7 +297,7 @@ pub async fn tribe_members(
 
 /// Count members of a tribe.
 pub async fn tribe_member_count(pool: &PgPool, tribe_id: i32) -> Result<i64, sqlx::Error> {
-    sqlx::query_scalar::<_, i64>("SELECT COUNT(*) FROM players WHERE tribe = $1")
+    sqlx::query_scalar::<_, i64>("SELECT COUNT(*) FROM players WHERE tribe_id = $1")
         .bind(tribe_id)
         .fetch_one(pool)
         .await
@@ -320,7 +322,7 @@ pub async fn create_tribe(
     .fetch_one(pool)
     .await?;
 
-    sqlx::query("UPDATE players SET tribe = $1, credits = credits - $2 WHERE id = $3")
+    sqlx::query("UPDATE players SET tribe_id = $1, credits = credits - $2 WHERE id = $3")
         .bind(tribe_id)
         .bind(gold_cost)
         .bind(owner_id)
@@ -398,7 +400,7 @@ pub async fn pending_requests(
     tribe_id: i32,
 ) -> Result<Vec<PendingRequestRow>, sqlx::Error> {
     sqlx::query_as::<_, PendingRequestRow>(
-        "SELECT o.id, o.gracz, o.klan, p.name AS player_name \
+        "SELECT o.id, o.gracz, o.klan, p.username AS player_name \
          FROM tribe_oczek o \
          JOIN players p ON p.id = o.gracz \
          WHERE o.klan = $1 ORDER BY o.id ASC",
@@ -420,7 +422,7 @@ pub async fn accept_member(
         .execute(pool)
         .await?;
 
-    sqlx::query("UPDATE players SET tribe = $1 WHERE id = $2")
+    sqlx::query("UPDATE players SET tribe_id = $1 WHERE id = $2")
         .bind(tribe_id)
         .bind(player_id)
         .execute(pool)
@@ -445,7 +447,7 @@ pub async fn reject_request(pool: &PgPool, request_id: i32) -> Result<(), sqlx::
 
 /// Player leaves their tribe: clear tribe field and delete permissions.
 pub async fn leave_tribe(pool: &PgPool, player_id: i32) -> Result<(), sqlx::Error> {
-    sqlx::query("UPDATE players SET tribe = 0, rank = '' WHERE id = $1")
+    sqlx::query("UPDATE players SET tribe_id = 0, tribe_rank = '' WHERE id = $1")
         .bind(player_id)
         .execute(pool)
         .await?;
@@ -465,7 +467,7 @@ pub async fn dissolve_tribe(
     member_ids: &[i32],
 ) -> Result<(), sqlx::Error> {
     // Clear tribe + rank for all members
-    sqlx::query("UPDATE players SET tribe = 0, rank = '' WHERE id = ANY($1)")
+    sqlx::query("UPDATE players SET tribe_id = 0, tribe_rank = '' WHERE id = ANY($1)")
         .bind(member_ids)
         .execute(pool)
         .await?;
@@ -514,7 +516,7 @@ pub async fn dissolve_tribe(
 
 /// Kick a member from the tribe (admin action). Same effect as leave.
 pub async fn kick_member(pool: &PgPool, player_id: i32, tribe_id: i32) -> Result<(), sqlx::Error> {
-    sqlx::query("UPDATE players SET tribe = 0, rank = '' WHERE id = $1 AND tribe = $2")
+    sqlx::query("UPDATE players SET tribe_id = 0, tribe_rank = '' WHERE id = $1 AND tribe_id = $2")
         .bind(player_id)
         .bind(tribe_id)
         .execute(pool)
@@ -1690,7 +1692,7 @@ pub async fn reservations_for_tribe(
 ) -> Result<Vec<ReservationRow>, sqlx::Error> {
     sqlx::query_as::<_, ReservationRow>(
         "SELECT r.id, r.iid, r.pid, r.amount, r.tribe, r.type, \
-         p.name AS player_name, '' AS item_name \
+         p.username AS player_name, '' AS item_name \
          FROM tribe_reserv r \
          JOIN players p ON p.id = r.pid \
          WHERE r.tribe = $1 ORDER BY r.id ASC",
@@ -1803,9 +1805,9 @@ pub async fn top_players_by_mpoints(
     limit: i64,
 ) -> Result<Vec<(String, i64, String, String)>, sqlx::Error> {
     sqlx::query_as::<_, (String, i64, String, String)>(
-        "SELECT p.name, p.mpoints, COALESCE(t.prefix, ''), COALESCE(t.suffix, '') \
+        "SELECT p.username, p.mpoints, COALESCE(t.prefix, ''), COALESCE(t.suffix, '') \
          FROM players p \
-         LEFT JOIN tribes t ON t.id = p.tribe \
+         LEFT JOIN tribes t ON t.id = p.tribe_id \
          ORDER BY p.mpoints DESC \
          LIMIT $1",
     )

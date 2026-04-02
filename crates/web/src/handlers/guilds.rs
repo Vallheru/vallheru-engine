@@ -65,11 +65,11 @@ async fn top_by_skill(
     limit: i64,
 ) -> Result<Vec<GuildEntry>, sqlx::Error> {
     let rows: Vec<(i32, String, i64, String, String)> = sqlx::query_as(
-        "SELECT p.id, p.name, COALESCE(ps.level, 0)::BIGINT,
+        "SELECT p.id, p.username, COALESCE(ps.level, 0)::BIGINT,
                 COALESCE(t.prefix, ''), COALESCE(t.suffix, '')
          FROM players p
          LEFT JOIN player_skills ps ON ps.player_id = p.id AND ps.skill_key = $1
-         LEFT JOIN tribes t ON t.id = p.tribe
+         LEFT JOIN tribes t ON t.id = p.tribe_id
          ORDER BY COALESCE(ps.level, 0) DESC
          LIMIT $2",
     )
@@ -96,11 +96,11 @@ async fn top_by_skill(
 /// Fetch top-N crafters by `mpoints`.
 async fn top_by_mpoints(app: &AppState, limit: i64) -> Result<Vec<GuildEntry>, sqlx::Error> {
     let rows: Vec<(i32, String, i64, String, String)> = sqlx::query_as(
-        "SELECT p.id, p.name, p.mpoints::BIGINT,
+        "SELECT p.id, p.username, p.mpoints::BIGINT,
                 COALESCE(t.prefix, ''), COALESCE(t.suffix, '')
          FROM players p
-         LEFT JOIN tribes t ON t.id = p.tribe
-         WHERE p.clas = 'Rzemieślnik'
+         LEFT JOIN tribes t ON t.id = p.tribe_id
+         WHERE p.class = 'Rzemieślnik'
          ORDER BY p.mpoints DESC
          LIMIT $1",
     )
