@@ -139,7 +139,10 @@ async fn has_license(app: &AppState, player_id: i32) -> bool {
         .bind(player_id)
         .fetch_optional(&app.pool)
         .await
-        .unwrap_or(None);
+        .unwrap_or_else(|e| {
+            tracing::error!(error = %e, player_id, "has_license query failed");
+            None
+        });
     // If they have any creatures, they have a license.
     // Also check a flag column if it exists.
     row.is_some_and(|r| r.0 > 0)
@@ -221,9 +224,15 @@ pub async fn core_license_buy(
     }
 
     // Create a starter creature (common plant type)
-    let defs = vallheru_data::queries::crafting::core_definitions_by_type(&app.pool, "Plant")
+    let defs = match vallheru_data::queries::crafting::core_definitions_by_type(&app.pool, "Plant")
         .await
-        .unwrap_or_default();
+    {
+        Ok(v) => v,
+        Err(e) => {
+            tracing::error!(error = %e, player_id, "core_definitions_by_type failed");
+            Vec::new()
+        }
+    };
 
     if let Some(def) = defs.first() {
         let gender = if rand::thread_rng().gen_bool(0.5) {
@@ -268,9 +277,13 @@ pub async fn core_library_show(
     let player_id = user.id as i32;
 
     let creatures_rows =
-        vallheru_data::queries::crafting::core_player_creatures(&app.pool, player_id)
-            .await
-            .unwrap_or_default();
+        match vallheru_data::queries::crafting::core_player_creatures(&app.pool, player_id).await {
+            Ok(v) => v,
+            Err(e) => {
+                tracing::error!(error = %e, player_id, "core_player_creatures failed");
+                Vec::new()
+            }
+        };
 
     let creatures: Vec<CreatureEntry> = creatures_rows
         .iter()
@@ -434,10 +447,18 @@ pub async fn core_explore(
     }
 
     // Get definitions for this region
-    let defs =
-        vallheru_data::queries::crafting::core_definitions_by_type(&app.pool, core_type.as_db())
-            .await
-            .unwrap_or_default();
+    let defs = match vallheru_data::queries::crafting::core_definitions_by_type(
+        &app.pool,
+        core_type.as_db(),
+    )
+    .await
+    {
+        Ok(v) => v,
+        Err(e) => {
+            tracing::error!(error = %e, player_id, "core_definitions_by_type failed");
+            Vec::new()
+        }
+    };
 
     // Explore — collect found creatures first (rng is !Send, must not cross .await)
 
@@ -648,9 +669,14 @@ pub async fn core_arena_show(
     let player_id = user.id as i32;
 
     // Find active training creature
-    let creatures = vallheru_data::queries::crafting::core_player_creatures(&app.pool, player_id)
-        .await
-        .unwrap_or_default();
+    let creatures =
+        match vallheru_data::queries::crafting::core_player_creatures(&app.pool, player_id).await {
+            Ok(v) => v,
+            Err(e) => {
+                tracing::error!(error = %e, player_id, "core_player_creatures failed");
+                Vec::new()
+            }
+        };
 
     let active = creatures
         .iter()
@@ -671,9 +697,19 @@ pub async fn core_arena_show(
 
     // Get possible opponents (same creature type)
     let opponents_rows = if let Some(ac) = active {
-        vallheru_data::queries::crafting::core_arena_opponents(&app.pool, &ac.core_type, player_id)
-            .await
-            .unwrap_or_default()
+        match vallheru_data::queries::crafting::core_arena_opponents(
+            &app.pool,
+            &ac.core_type,
+            player_id,
+        )
+        .await
+        {
+            Ok(v) => v,
+            Err(e) => {
+                tracing::error!(error = %e, player_id, "core_arena_opponents failed");
+                Vec::new()
+            }
+        }
     } else {
         Vec::new()
     };
@@ -701,6 +737,7 @@ pub async fn core_arena_show(
 }
 
 /// POST `/core/arena/fight/:opponent_id` — fight in arena.
+#[allow(clippy::too_many_lines)]
 pub async fn core_arena_fight(
     State(app): State<AppState>,
     Extension(ctx): Extension<RequestContext>,
@@ -724,9 +761,14 @@ pub async fn core_arena_fight(
     }
 
     // Find active training creature
-    let creatures = vallheru_data::queries::crafting::core_player_creatures(&app.pool, player_id)
-        .await
-        .unwrap_or_default();
+    let creatures =
+        match vallheru_data::queries::crafting::core_player_creatures(&app.pool, player_id).await {
+            Ok(v) => v,
+            Err(e) => {
+                tracing::error!(error = %e, player_id, "core_player_creatures failed");
+                Vec::new()
+            }
+        };
 
     let my_creature = match creatures
         .iter()
@@ -839,9 +881,14 @@ pub async fn core_heal(
         Err(resp) => return resp,
     };
 
-    let creatures = vallheru_data::queries::crafting::core_player_creatures(&app.pool, player_id)
-        .await
-        .unwrap_or_default();
+    let creatures =
+        match vallheru_data::queries::crafting::core_player_creatures(&app.pool, player_id).await {
+            Ok(v) => v,
+            Err(e) => {
+                tracing::error!(error = %e, player_id, "core_player_creatures failed");
+                Vec::new()
+            }
+        };
 
     let dead_stats: Vec<(f64, f64)> = creatures
         .iter()

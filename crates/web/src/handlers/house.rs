@@ -288,13 +288,15 @@ pub async fn house_build_action(
         Err(resp) => return resp,
     };
 
-    let Some(house) = (match hq::find_player_house(&state.pool, player_id, &player_row.location).await {
-        Ok(v) => v,
-        Err(e) => {
-            tracing::error!(player_id, error = ?e, "failed to find house for build");
-            None
-        }
-    }) else {
+    let Some(house) =
+        (match hq::find_player_house(&state.pool, player_id, &player_row.location).await {
+            Ok(v) => v,
+            Err(e) => {
+                tracing::error!(player_id, error = ?e, "failed to find house for build");
+                None
+            }
+        })
+    else {
         return error_page(&state, &ctx, "Nie posiadasz ziemi.");
     };
 
@@ -389,13 +391,15 @@ pub async fn house_build_bedroom(
         Err(resp) => return resp,
     };
 
-    let Some(house) = (match hq::find_player_house(&state.pool, player_id, &player_row.location).await {
-        Ok(v) => v,
-        Err(e) => {
-            tracing::error!(player_id, error = ?e, "failed to find house for wardrobe");
-            None
-        }
-    }) else {
+    let Some(house) =
+        (match hq::find_player_house(&state.pool, player_id, &player_row.location).await {
+            Ok(v) => v,
+            Err(e) => {
+                tracing::error!(player_id, error = ?e, "failed to find house for wardrobe");
+                None
+            }
+        })
+    else {
         return error_page(&state, &ctx, "Nie posiadasz domu.");
     };
 
@@ -442,13 +446,15 @@ pub async fn house_build_wardrobe(
         Err(resp) => return resp,
     };
 
-    let Some(house) = (match hq::find_player_house(&state.pool, player_id, &player_row.location).await {
-        Ok(v) => v,
-        Err(e) => {
-            tracing::error!(player_id, error = ?e, "failed to find house for bedroom build");
-            None
-        }
-    }) else {
+    let Some(house) =
+        (match hq::find_player_house(&state.pool, player_id, &player_row.location).await {
+            Ok(v) => v,
+            Err(e) => {
+                tracing::error!(player_id, error = ?e, "failed to find house for bedroom build");
+                None
+            }
+        })
+    else {
         return error_page(&state, &ctx, "Nie posiadasz domu.");
     };
 
@@ -497,13 +503,15 @@ pub async fn house_adorn(
         Err(resp) => return resp,
     };
 
-    let Some(house) = (match hq::find_player_house(&state.pool, player_id, &player_row.location).await {
-        Ok(v) => v,
-        Err(e) => {
-            tracing::error!(player_id, error = ?e, "failed to find house for allocate points");
-            None
-        }
-    }) else {
+    let Some(house) =
+        (match hq::find_player_house(&state.pool, player_id, &player_row.location).await {
+            Ok(v) => v,
+            Err(e) => {
+                tracing::error!(player_id, error = ?e, "failed to find house for allocate points");
+                None
+            }
+        })
+    else {
         return error_page(&state, &ctx, "Nie posiadasz domu.");
     };
 
@@ -549,13 +557,15 @@ pub async fn house_rest(
         Err(resp) => return resp,
     };
 
-    let Some(house) = (match hq::find_player_house(&state.pool, player_id, &player_row.location).await {
-        Ok(v) => v,
-        Err(e) => {
-            tracing::error!(player_id, error = ?e, "failed to find house for rest");
-            None
-        }
-    }) else {
+    let Some(house) =
+        (match hq::find_player_house(&state.pool, player_id, &player_row.location).await {
+            Ok(v) => v,
+            Err(e) => {
+                tracing::error!(player_id, error = ?e, "failed to find house for rest");
+                None
+            }
+        })
+    else {
         return error_page(&state, &ctx, "Nie posiadasz domu.");
     };
 
@@ -601,13 +611,14 @@ pub async fn house_rest(
     let new_hp = (player_row.hp + 4 * hp_gain).min(player_row.max_hp);
 
     // Max mana calculation (simplified — same as locations.rs compute_max_mana).
-    let player_stats = match vallheru_data::queries::player::load_stats(&state.pool, player_id).await {
-        Ok(v) => v,
-        Err(e) => {
-            tracing::error!(player_id, error = ?e, "failed to load stats for house rest");
-            Vec::new()
-        }
-    };
+    let player_stats =
+        match vallheru_data::queries::player::load_stats(&state.pool, player_id).await {
+            Ok(v) => v,
+            Err(e) => {
+                tracing::error!(player_id, error = ?e, "failed to load stats for house rest");
+                Vec::new()
+            }
+        };
     let intelligence = player_stats
         .iter()
         .find(|s| s.stat_key == "inteli")
@@ -665,13 +676,15 @@ pub async fn house_rename(
         Err(resp) => return resp,
     };
 
-    let Some(house) = (match hq::find_player_house(&state.pool, player_id, &player_row.location).await {
-        Ok(v) => v,
-        Err(e) => {
-            tracing::error!(player_id, error = ?e, "failed to find house for rename");
-            None
-        }
-    }) else {
+    let Some(house) =
+        (match hq::find_player_house(&state.pool, player_id, &player_row.location).await {
+            Ok(v) => v,
+            Err(e) => {
+                tracing::error!(player_id, error = ?e, "failed to find house for rename");
+                None
+            }
+        })
+    else {
         return error_page(&state, &ctx, "Nie posiadasz domu.");
     };
 
@@ -717,13 +730,15 @@ pub async fn house_sell(
         Err(resp) => return resp,
     };
 
-    let Some(house) = (match hq::find_player_house(&state.pool, player_id, &player_row.location).await {
-        Ok(v) => v,
-        Err(e) => {
-            tracing::error!(player_id, error = ?e, "failed to find house for sell");
-            None
-        }
-    }) else {
+    let Some(house) =
+        (match hq::find_player_house(&state.pool, player_id, &player_row.location).await {
+            Ok(v) => v,
+            Err(e) => {
+                tracing::error!(player_id, error = ?e, "failed to find house for sell");
+                None
+            }
+        })
+    else {
         return error_page(&state, &ctx, "Nie posiadasz domu.");
     };
 
@@ -780,13 +795,15 @@ pub async fn house_leave(
         Err(resp) => return resp,
     };
 
-    let Some(house) = (match hq::find_player_house(&state.pool, player_id, &player_row.location).await {
-        Ok(v) => v,
-        Err(e) => {
-            tracing::error!(player_id, error = ?e, "failed to find house for leave");
-            None
-        }
-    }) else {
+    let Some(house) =
+        (match hq::find_player_house(&state.pool, player_id, &player_row.location).await {
+            Ok(v) => v,
+            Err(e) => {
+                tracing::error!(player_id, error = ?e, "failed to find house for leave");
+                None
+            }
+        })
+    else {
         return error_page(&state, &ctx, "Nie posiadasz domu.");
     };
 

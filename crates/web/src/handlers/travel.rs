@@ -315,15 +315,29 @@ async fn trigger_encounter(
     let player_id = player_row.id;
 
     // Load player stats and equipment for random monster generation.
-    let player_stats = vallheru_data::queries::player::load_stats(&state.pool, player_id)
-        .await
-        .unwrap_or_default();
-    let player_skills = vallheru_data::queries::player::load_skills(&state.pool, player_id)
-        .await
-        .unwrap_or_default();
-    let equipped = vallheru_data::queries::item::find_equipped_items(&state.pool, player_id)
-        .await
-        .unwrap_or_default();
+    let player_stats =
+        match vallheru_data::queries::player::load_stats(&state.pool, player_id).await {
+            Ok(v) => v,
+            Err(e) => {
+                tracing::error!(error = %e, player_id, "Failed to load player stats for travel");
+                Vec::new()
+            }
+        };
+    let player_skills =
+        match vallheru_data::queries::player::load_skills(&state.pool, player_id).await {
+            Ok(v) => v,
+            Err(e) => {
+                tracing::error!(error = %e, player_id, "Failed to load player skills for travel");
+                Vec::new()
+            }
+        };
+    let equipped = match vallheru_data::queries::item::find_equipped_items(&state.pool, player_id).await {
+        Ok(v) => v,
+        Err(e) => {
+            tracing::error!(error = %e, player_id, "Failed to load equipped items for travel");
+            Vec::new()
+        }
+    };
 
     let equipped_domain: Vec<_> = equipped.iter().map(|e| e.clone().into_domain()).collect();
 
@@ -537,9 +551,14 @@ async fn handle_pay_ransom(
     let method = TravelMethod::from_param(&enc.method).unwrap_or(TravelMethod::Walk);
 
     // Sum of all six stat trained values.
-    let player_stats = vallheru_data::queries::player::load_stats(&state.pool, player_id)
-        .await
-        .unwrap_or_default();
+    let player_stats =
+        match vallheru_data::queries::player::load_stats(&state.pool, player_id).await {
+            Ok(v) => v,
+            Err(e) => {
+                tracing::error!(error = %e, player_id, "Failed to load player stats for ransom");
+                Vec::new()
+            }
+        };
     let stat_sum = [
         "strength",
         "agility",
@@ -627,12 +646,22 @@ async fn handle_escape(
         return error_page(state, ctx, "Nie jesteś w trakcie podróży.");
     };
 
-    let player_stats = vallheru_data::queries::player::load_stats(&state.pool, player_id)
-        .await
-        .unwrap_or_default();
-    let player_skills = vallheru_data::queries::player::load_skills(&state.pool, player_id)
-        .await
-        .unwrap_or_default();
+    let player_stats =
+        match vallheru_data::queries::player::load_stats(&state.pool, player_id).await {
+            Ok(v) => v,
+            Err(e) => {
+                tracing::error!(error = %e, player_id, "Failed to load player stats for escape");
+                Vec::new()
+            }
+        };
+    let player_skills =
+        match vallheru_data::queries::player::load_skills(&state.pool, player_id).await {
+            Ok(v) => v,
+            Err(e) => {
+                tracing::error!(error = %e, player_id, "Failed to load player skills for escape");
+                Vec::new()
+            }
+        };
 
     let player_speed = find_stat(&player_stats, "speed");
     let perception = find_skill(&player_skills, "perception");

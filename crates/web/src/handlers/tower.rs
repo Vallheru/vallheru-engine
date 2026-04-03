@@ -34,7 +34,10 @@ pub async fn tower_show(
 ) -> Response {
     let (age, day) = vallheru_data::queries::locations::load_game_clock(&state.pool)
         .await
-        .unwrap_or((1, 1));
+        .unwrap_or_else(|e| {
+            tracing::error!(error = %e, "load_game_clock failed");
+            (1, 1)
+        });
 
     // Calculate time to next midnight UTC.
     let now_secs = std::time::SystemTime::now()

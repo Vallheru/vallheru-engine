@@ -224,9 +224,13 @@ pub async fn notes_page(
     let page = q.page.clamp(1, total_pages.max(1));
     let offset = (page - 1) * per_page;
 
-    let notes = pq::list_notes(&app.pool, user.id, per_page, offset)
-        .await
-        .unwrap_or_default();
+    let notes = match pq::list_notes(&app.pool, user.id, per_page, offset).await {
+        Ok(v) => v,
+        Err(e) => {
+            tracing::error!(error = %e, user_id = user.id, "list_notes failed");
+            Vec::new()
+        }
+    };
 
     let meta = PageMeta::titled("Notatnik");
     let base = app.templates.build_context(&ctx, &meta);
@@ -402,27 +406,45 @@ pub async fn library_list(
     let sort = pages_domain::LibrarySort::parse(&q.sort);
 
     let texts = if let Some(author_id) = q.author_id {
-        pq::list_library_by_author(&app.pool, type_code, author_id, lang)
-            .await
-            .unwrap_or_default()
+        match pq::list_library_by_author(&app.pool, type_code, author_id, lang).await {
+            Ok(v) => v,
+            Err(e) => {
+                tracing::error!(error = %e, author_id, "list_library_by_author failed");
+                Vec::new()
+            }
+        }
     } else {
         match sort {
             pages_domain::LibrarySort::Author => Vec::new(), // show authors list instead
             pages_domain::LibrarySort::Title => {
-                pq::list_library_by_title(&app.pool, type_code, lang)
-                    .await
-                    .unwrap_or_default()
+                match pq::list_library_by_title(&app.pool, type_code, lang).await {
+                    Ok(v) => v,
+                    Err(e) => {
+                        tracing::error!(error = %e, "list_library_by_title failed");
+                        Vec::new()
+                    }
+                }
             }
-            pages_domain::LibrarySort::Date => pq::list_library_by_date(&app.pool, type_code, lang)
-                .await
-                .unwrap_or_default(),
+            pages_domain::LibrarySort::Date => {
+                match pq::list_library_by_date(&app.pool, type_code, lang).await {
+                    Ok(v) => v,
+                    Err(e) => {
+                        tracing::error!(error = %e, "list_library_by_date failed");
+                        Vec::new()
+                    }
+                }
+            }
         }
     };
 
     let authors = if matches!(sort, pages_domain::LibrarySort::Author) && q.author_id.is_none() {
-        pq::list_library_authors(&app.pool, type_code, lang)
-            .await
-            .unwrap_or_default()
+        match pq::list_library_authors(&app.pool, type_code, lang).await {
+            Ok(v) => v,
+            Err(e) => {
+                tracing::error!(error = %e, "list_library_authors failed");
+                Vec::new()
+            }
+        }
     } else {
         Vec::new()
     };
@@ -472,7 +494,10 @@ pub async fn library_text(
 
     let comment_count = vallheru_data::queries::content::count_comments(&app.pool, "library", id)
         .await
-        .unwrap_or(0);
+        .unwrap_or_else(|e| {
+            tracing::error!(error = %e, id, "count_comments failed");
+            0
+        });
 
     let meta = PageMeta::titled(&row.title);
     let base = app.templates.build_context(&ctx, &meta);
@@ -556,9 +581,13 @@ pub async fn library_admin(
         return Redirect::to("/library").into_response();
     }
 
-    let pending = pq::list_pending_library(&app.pool, "pl")
-        .await
-        .unwrap_or_default();
+    let pending = match pq::list_pending_library(&app.pool, "pl").await {
+        Ok(v) => v,
+        Err(e) => {
+            tracing::error!(error = %e, "list_pending_library failed");
+            Vec::new()
+        }
+    };
 
     let meta = PageMeta::titled("Moderacja biblioteki");
     let base = app.templates.build_context(&ctx, &meta);
@@ -733,12 +762,19 @@ pub async fn chronicle_page(
 
     let player_chapter = pq::get_player_chapter(&app.pool, user.id)
         .await
-        .unwrap_or(0);
+        .unwrap_or_else(|e| {
+            tracing::error!(error = %e, user_id = user.id, "get_player_chapter failed");
+            0
+        });
     let location = q.location.trim().to_string();
 
-    let rows = pq::list_chronicle_missions(&app.pool, &location, player_chapter)
-        .await
-        .unwrap_or_default();
+    let rows = match pq::list_chronicle_missions(&app.pool, &location, player_chapter).await {
+        Ok(v) => v,
+        Err(e) => {
+            tracing::error!(error = %e, location, "list_chronicle_missions failed");
+            Vec::new()
+        }
+    };
 
     let missions: Vec<ChronicleItem> = rows
         .into_iter()

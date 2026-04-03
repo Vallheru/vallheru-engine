@@ -113,7 +113,10 @@ async fn load_skill(app: &AppState, player_id: i32, key: &str) -> f64 {
             .bind(key)
             .fetch_optional(&app.pool)
             .await
-            .unwrap_or(None);
+            .unwrap_or_else(|e| {
+                tracing::error!(error = %e, player_id, skill = key, "load_skill query failed");
+                None
+            });
     row.map_or(0.0, |r| r.0)
 }
 
@@ -124,7 +127,10 @@ async fn load_stat(app: &AppState, player_id: i32, key: &str) -> f64 {
             .bind(key)
             .fetch_optional(&app.pool)
             .await
-            .unwrap_or(None);
+            .unwrap_or_else(|e| {
+                tracing::error!(error = %e, player_id, stat = key, "load_stat query failed");
+                None
+            });
     row.map_or(0.0, |r| r.0)
 }
 
@@ -200,13 +206,23 @@ pub async fn smithy_plans_show(
 
     let smith_skill = load_skill(&app, player_id, "smith").await;
 
-    let catalog = vallheru_data::queries::crafting::smith_catalog(&app.pool, None)
-        .await
-        .unwrap_or_default();
+    let catalog = match vallheru_data::queries::crafting::smith_catalog(&app.pool, None).await {
+        Ok(v) => v,
+        Err(e) => {
+            tracing::error!(error = %e, "smith_catalog query failed");
+            Vec::new()
+        }
+    };
 
-    let owned = vallheru_data::queries::crafting::smith_player_plans(&app.pool, player_id)
+    let owned = match vallheru_data::queries::crafting::smith_player_plans(&app.pool, player_id)
         .await
-        .unwrap_or_default();
+    {
+        Ok(v) => v,
+        Err(e) => {
+            tracing::error!(error = %e, player_id, "smith_player_plans query failed");
+            Vec::new()
+        }
+    };
 
     let owned_names: Vec<&str> = owned.iter().map(|p| p.name.as_str()).collect();
 
@@ -285,7 +301,10 @@ pub async fn smithy_plan_buy(
     let already_owned =
         vallheru_data::queries::crafting::smith_player_has_plan(&app.pool, player_id, &plan.name)
             .await
-            .unwrap_or(false);
+            .unwrap_or_else(|e| {
+                tracing::error!(error = %e, player_id, "smith_player_has_plan query failed");
+                false
+            });
     if already_owned {
         return error_page(&app, &ctx, "Już posiadasz ten plan.");
     }
@@ -335,30 +354,33 @@ pub async fn smithy_workshop_show(
         return error_page(&app, &ctx, "Musisz znajdować się w mieście.");
     }
 
-    let owned = match vallheru_data::queries::crafting::smith_player_plans(&app.pool, player_id).await {
-        Ok(v) => v,
-        Err(e) => {
-            tracing::error!(player_id, error = ?e, "failed to load smith plans");
-            Vec::new()
-        }
-    };
+    let owned =
+        match vallheru_data::queries::crafting::smith_player_plans(&app.pool, player_id).await {
+            Ok(v) => v,
+            Err(e) => {
+                tracing::error!(player_id, error = ?e, "failed to load smith plans");
+                Vec::new()
+            }
+        };
 
-    let works = match vallheru_data::queries::crafting::smith_active_works(&app.pool, player_id).await {
-        Ok(v) => v,
-        Err(e) => {
-            tracing::error!(player_id, error = ?e, "failed to load smith active works");
-            Vec::new()
-        }
-    };
+    let works =
+        match vallheru_data::queries::crafting::smith_active_works(&app.pool, player_id).await {
+            Ok(v) => v,
+            Err(e) => {
+                tracing::error!(player_id, error = ?e, "failed to load smith active works");
+                Vec::new()
+            }
+        };
 
-    let minerals = match vallheru_data::queries::gathering::load_minerals(&app.pool, player_id).await {
-        Ok(Some(m)) => m,
-        Ok(None) => vallheru_data::queries::gathering::MineralsRow::default(),
-        Err(e) => {
-            tracing::error!(player_id, error = ?e, "failed to load minerals for smithy");
-            vallheru_data::queries::gathering::MineralsRow::default()
-        }
-    };
+    let minerals =
+        match vallheru_data::queries::gathering::load_minerals(&app.pool, player_id).await {
+            Ok(Some(m)) => m,
+            Ok(None) => vallheru_data::queries::gathering::MineralsRow::default(),
+            Err(e) => {
+                tracing::error!(player_id, error = ?e, "failed to load minerals for smithy");
+                vallheru_data::queries::gathering::MineralsRow::default()
+            }
+        };
 
     let plan_entries: Vec<PlanEntry> = owned
         .iter()
@@ -480,14 +502,15 @@ pub async fn smithy_craft(
     }
 
     // Check minerals
-    let minerals = match vallheru_data::queries::gathering::load_minerals(&app.pool, player_id).await {
-        Ok(Some(m)) => m,
-        Ok(None) => vallheru_data::queries::gathering::MineralsRow::default(),
-        Err(e) => {
-            tracing::error!(player_id, error = ?e, "failed to load minerals for smithy craft");
-            vallheru_data::queries::gathering::MineralsRow::default()
-        }
-    };
+    let minerals =
+        match vallheru_data::queries::gathering::load_minerals(&app.pool, player_id).await {
+            Ok(Some(m)) => m,
+            Ok(None) => vallheru_data::queries::gathering::MineralsRow::default(),
+            Err(e) => {
+                tracing::error!(player_id, error = ?e, "failed to load minerals for smithy craft");
+                vallheru_data::queries::gathering::MineralsRow::default()
+            }
+        };
 
     let mineral_stock = match mineral {
         smithing::Mineral::Copper => minerals.copper,
@@ -799,9 +822,15 @@ pub(crate) async fn apply_craft_xp(
     let mut extra = String::new();
 
     // Apply skill XP
-    let mut skills = vallheru_data::queries::player::load_skills(&app.pool, player_id)
+    let mut skills = match vallheru_data::queries::player::load_skills(&app.pool, player_id)
         .await
-        .unwrap_or_default();
+    {
+        Ok(v) => v,
+        Err(e) => {
+            tracing::error!(error = %e, player_id, "apply_craft_xp: load_skills failed");
+            Vec::new()
+        }
+    };
 
     let skill_xp = xp_amount / 2;
     let stat_xp = xp_amount - skill_xp;
@@ -824,9 +853,15 @@ pub(crate) async fn apply_craft_xp(
 
     // Apply stat XP to strength
     if stat_xp > 0 {
-        let mut stats = vallheru_data::queries::player::load_stats(&app.pool, player_id)
+        let mut stats = match vallheru_data::queries::player::load_stats(&app.pool, player_id)
             .await
-            .unwrap_or_default();
+        {
+            Ok(v) => v,
+            Err(e) => {
+                tracing::error!(error = %e, player_id, "apply_craft_xp: load_stats failed");
+                Vec::new()
+            }
+        };
 
         if let Some(stat) = stats.iter_mut().find(|s| s.stat_key == "strength") {
             let parsed_race = vallheru_domain::player::Race::from_db(&race)

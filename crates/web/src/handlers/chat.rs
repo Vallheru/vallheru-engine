@@ -182,13 +182,21 @@ pub async fn chat_messages(
 
     // Fetch messages based on active tab.
     let raw_messages = if active_tab == 0 {
-        q::list_public_messages(&app.pool, chat_length)
-            .await
-            .unwrap_or_default()
+        match q::list_public_messages(&app.pool, chat_length).await {
+            Ok(v) => v,
+            Err(e) => {
+                tracing::error!(error = %e, "Failed to load public chat messages");
+                Vec::new()
+            }
+        }
     } else {
-        q::list_whisper_messages(&app.pool, user.id, active_tab, 0, chat_length)
-            .await
-            .unwrap_or_default()
+        match q::list_whisper_messages(&app.pool, user.id, active_tab, 0, chat_length).await {
+            Ok(v) => v,
+            Err(e) => {
+                tracing::error!(error = %e, player_id = user.id, "Failed to load whisper messages");
+                Vec::new()
+            }
+        }
     };
 
     let now_epoch = current_epoch();
@@ -620,9 +628,13 @@ async fn build_whisper_tabs(app: &AppState, player_id: i64, active_tab: i64) -> 
     }
 
     // Look up names.
-    let names = q::player_names_by_ids(&app.pool, &partner_ids)
-        .await
-        .unwrap_or_default();
+    let names = match q::player_names_by_ids(&app.pool, &partner_ids).await {
+        Ok(v) => v,
+        Err(e) => {
+            tracing::error!(error = %e, "Failed to load whisper partner names");
+            Vec::new()
+        }
+    };
     let name_map: HashMap<i64, String> = names.into_iter().collect();
 
     // Build tabs: first the "Karczma" public tab, then each whisper partner.

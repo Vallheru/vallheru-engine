@@ -956,10 +956,20 @@ pub async fn shop_upgrade(
 
     let minerals = match oq::get_minerals(&app.pool, player_id).await {
         Ok(Some(m)) => m,
-        Ok(None) => oq::MineralsRow { pine: 0, crystal: 0, adamantium: 0, meteor: 0 },
+        Ok(None) => oq::MineralsRow {
+            pine: 0,
+            crystal: 0,
+            adamantium: 0,
+            meteor: 0,
+        },
         Err(e) => {
             tracing::error!(player_id, error = ?e, "failed to load outpost minerals for size upgrade");
-            oq::MineralsRow { pine: 0, crystal: 0, adamantium: 0, meteor: 0 }
+            oq::MineralsRow {
+                pine: 0,
+                crystal: 0,
+                adamantium: 0,
+                meteor: 0,
+            }
         }
     };
     let platinum = match oq::get_platinum(&app.pool, player_id).await {
@@ -1023,10 +1033,20 @@ pub async fn shop_build_lair(
 
     let minerals = match oq::get_minerals(&app.pool, player_id).await {
         Ok(Some(m)) => m,
-        Ok(None) => oq::MineralsRow { pine: 0, crystal: 0, adamantium: 0, meteor: 0 },
+        Ok(None) => oq::MineralsRow {
+            pine: 0,
+            crystal: 0,
+            adamantium: 0,
+            meteor: 0,
+        },
         Err(e) => {
             tracing::error!(player_id, error = ?e, "failed to load minerals for fence build");
-            oq::MineralsRow { pine: 0, crystal: 0, adamantium: 0, meteor: 0 }
+            oq::MineralsRow {
+                pine: 0,
+                crystal: 0,
+                adamantium: 0,
+                meteor: 0,
+            }
         }
     };
 
@@ -1095,10 +1115,20 @@ pub async fn shop_build_barracks(
 
     let minerals = match oq::get_minerals(&app.pool, player_id).await {
         Ok(Some(m)) => m,
-        Ok(None) => oq::MineralsRow { pine: 0, crystal: 0, adamantium: 0, meteor: 0 },
+        Ok(None) => oq::MineralsRow {
+            pine: 0,
+            crystal: 0,
+            adamantium: 0,
+            meteor: 0,
+        },
         Err(e) => {
             tracing::error!(player_id, error = ?e, "failed to load minerals for barracks build");
-            oq::MineralsRow { pine: 0, crystal: 0, adamantium: 0, meteor: 0 }
+            oq::MineralsRow {
+                pine: 0,
+                crystal: 0,
+                adamantium: 0,
+                meteor: 0,
+            }
         }
     };
 
@@ -1209,7 +1239,8 @@ pub async fn veteran_equip(
         }
 
         // Validate the item exists and belongs to player
-        let items = match oq::list_equip_for_veteran(&app.pool, player_id, slot_to_type(slot)).await {
+        let items = match oq::list_equip_for_veteran(&app.pool, player_id, slot_to_type(slot)).await
+        {
             Ok(v) => v,
             Err(e) => {
                 tracing::error!(player_id, slot, error = ?e, "failed to list equip for veteran");
@@ -1294,14 +1325,14 @@ pub async fn list_outposts(
                 Vec::new()
             }
         }
-            .into_iter()
-            .map(|o| OutpostListItem {
-                id: o.id,
-                size: o.size,
-                owner_id: o.owner,
-                owner_name: o.owner_name,
-            })
-            .collect()
+        .into_iter()
+        .map(|o| OutpostListItem {
+            id: o.id,
+            size: o.size,
+            owner_id: o.owner,
+            owner_name: o.owner_name,
+        })
+        .collect()
     } else {
         Vec::new()
     };
@@ -2239,13 +2270,13 @@ async fn load_equip_options(state: &AppState, player_id: i32, eq_type: &str) -> 
             Vec::new()
         }
     }
-        .into_iter()
-        .map(|e| EquipOption {
-            id: e.id,
-            name: e.name,
-            power: e.power / 10,
-        })
-        .collect()
+    .into_iter()
+    .map(|e| EquipOption {
+        id: e.id,
+        name: e.name,
+        power: e.power / 10,
+    })
+    .collect()
 }
 
 fn garrison_mission_description(mission_type: i32, location: &str) -> String {
@@ -2320,7 +2351,9 @@ async fn load_player_stats_for_garrison(state: &AppState, player_id: i32) -> Gar
     };
 
     // Check equipped weapons
-    let equipped = match vallheru_data::queries::item::find_equipped_items(&state.pool, player_id).await {
+    let equipped = match vallheru_data::queries::item::find_equipped_items(&state.pool, player_id)
+        .await
+    {
         Ok(v) => v,
         Err(e) => {
             tracing::error!(player_id, error = ?e, "failed to load equipped items for garrison");

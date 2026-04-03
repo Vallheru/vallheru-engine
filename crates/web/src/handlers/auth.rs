@@ -73,7 +73,10 @@ pub async fn login(State(state): State<AppState>, Form(form): Form<LoginForm>) -
         &player.email,
     )
     .await
-    .unwrap_or(false);
+    .unwrap_or_else(|e| {
+        tracing::error!(error = %e, player_id = player.id, "is_banned check failed");
+        false
+    });
 
     if banned {
         return login_error(&state, state.catalog.get_or_key("head", "BANNED"));

@@ -235,14 +235,24 @@ pub async fn mail_inbox(
     let player_id = user.id;
     let count = mq::count_inbox_topics(&app.pool, player_id)
         .await
-        .unwrap_or(0);
+        .unwrap_or_else(|e| {
+            tracing::error!(error = %e, player_id, "count_inbox_topics failed");
+            0
+        });
     let total = mail_domain::total_pages(count, mail_domain::MESSAGES_PER_PAGE);
     let page = mail_domain::clamp_page(pq.page, total);
     let offset = (page - 1) * mail_domain::MESSAGES_PER_PAGE;
 
-    let rows = mq::list_inbox_threads(&app.pool, player_id, mail_domain::MESSAGES_PER_PAGE, offset)
-        .await
-        .unwrap_or_default();
+    let rows =
+        match mq::list_inbox_threads(&app.pool, player_id, mail_domain::MESSAGES_PER_PAGE, offset)
+            .await
+        {
+            Ok(v) => v,
+            Err(e) => {
+                tracing::error!(error = %e, player_id, "list_inbox_threads failed");
+                Vec::new()
+            }
+        };
 
     let threads = rows
         .into_iter()
@@ -284,14 +294,24 @@ pub async fn mail_saved(
     let player_id = user.id;
     let count = mq::count_saved_topics(&app.pool, player_id)
         .await
-        .unwrap_or(0);
+        .unwrap_or_else(|e| {
+            tracing::error!(error = %e, player_id, "count_saved_topics failed");
+            0
+        });
     let total = mail_domain::total_pages(count, mail_domain::MESSAGES_PER_PAGE);
     let page = mail_domain::clamp_page(pq.page, total);
     let offset = (page - 1) * mail_domain::MESSAGES_PER_PAGE;
 
-    let rows = mq::list_saved_threads(&app.pool, player_id, mail_domain::MESSAGES_PER_PAGE, offset)
-        .await
-        .unwrap_or_default();
+    let rows =
+        match mq::list_saved_threads(&app.pool, player_id, mail_domain::MESSAGES_PER_PAGE, offset)
+            .await
+        {
+            Ok(v) => v,
+            Err(e) => {
+                tracing::error!(error = %e, player_id, "list_saved_threads failed");
+                Vec::new()
+            }
+        };
 
     let threads = rows
         .into_iter()
@@ -336,7 +356,7 @@ pub async fn mail_read(
 
     let count = mq::count_thread_messages(&app.pool, player_id, rq.topic)
         .await
-        .unwrap_or(0);
+        .unwrap_or_else(|e| { tracing::error!(error = %e, player_id, topic_id = rq.topic, "count_thread_messages failed"); 0 });
     let total = mail_domain::total_pages(count, mail_domain::THREAD_PAGE_SIZE);
     // Default to last page (newest messages).
     let page = if rq.page == 0 {
@@ -353,8 +373,14 @@ pub async fn mail_read(
         mail_domain::THREAD_PAGE_SIZE,
         offset,
     )
-    .await
-    .unwrap_or_default();
+    .await;
+    let rows = match rows {
+        Ok(v) => v,
+        Err(e) => {
+            tracing::error!(error = %e, player_id, topic_id = rq.topic, "list_thread_messages failed");
+            Vec::new()
+        }
+    };
 
     if rows.is_empty() {
         return Redirect::to("/mail/inbox").into_response();
@@ -455,7 +481,10 @@ pub async fn mail_send(
     // Check if blocked by recipient.
     if mq::is_mail_blocked(&app.pool, recipient_id, player_id)
         .await
-        .unwrap_or(false)
+        .unwrap_or_else(|e| {
+            tracing::error!(error = %e, player_id, recipient_id, "is_mail_blocked failed");
+            false
+        })
     {
         return error_redirect("Nie możesz wysyłać listów, ponieważ zostałeś zablokowany!");
     }
@@ -469,7 +498,10 @@ pub async fn mail_send(
     let topic_id = if form.topic > 0 {
         form.topic
     } else {
-        mq::next_topic_id(&app.pool).await.unwrap_or(1)
+        mq::next_topic_id(&app.pool).await.unwrap_or_else(|e| {
+            tracing::error!(error = %e, "next_topic_id failed");
+            1
+        })
     };
 
     // Insert both copies atomically.
@@ -690,7 +722,10 @@ pub async fn mail_search(
     let sanitised: String = sq.q.chars().take(100).collect();
     let count = mq::count_search_results(&app.pool, player_id, &sanitised)
         .await
-        .unwrap_or(0);
+        .unwrap_or_else(|e| {
+            tracing::error!(error = %e, player_id, "count_search_results failed");
+            0
+        });
     let total = mail_domain::total_pages(count, mail_domain::MESSAGES_PER_PAGE);
     let page = mail_domain::clamp_page(sq.page, total);
     let offset = (page - 1) * mail_domain::MESSAGES_PER_PAGE;
@@ -702,8 +737,14 @@ pub async fn mail_search(
         mail_domain::MESSAGES_PER_PAGE,
         offset,
     )
-    .await
-    .unwrap_or_default();
+    .await;
+    let rows = match rows {
+        Ok(v) => v,
+        Err(e) => {
+            tracing::error!(error = %e, player_id, "search_messages failed");
+            Vec::new()
+        }
+    };
 
     let results = rows
         .into_iter()
@@ -735,7 +776,13 @@ pub async fn mail_forward_show(
     Extension(ctx): Extension<RequestContext>,
     Query(q): Query<SingleReadQuery>,
 ) -> Response {
-    let staff_rows = mq::list_staff(&app.pool).await.unwrap_or_default();
+    let staff_rows = match mq::list_staff(&app.pool).await {
+        Ok(v) => v,
+        Err(e) => {
+            tracing::error!(error = %e, "list_staff failed");
+            Vec::new()
+        }
+    };
     let staff = staff_rows
         .into_iter()
         .map(|r| ContactView {
@@ -785,7 +832,10 @@ pub async fn mail_forward_action(
         msg.body,
     );
     let subject = format!("List gracza {player_name} o ID:{player_id}");
-    let topic_id = mq::next_topic_id(&app.pool).await.unwrap_or(1);
+    let topic_id = mq::next_topic_id(&app.pool).await.unwrap_or_else(|e| {
+        tracing::error!(error = %e, player_id, "next_topic_id failed");
+        1
+    });
 
     if let Err(e) = mq::insert_message(
         &app.pool,
@@ -829,15 +879,19 @@ fn error_redirect(msg: &str) -> Response {
 }
 
 async fn load_contacts(app: &AppState, player_id: i64) -> Vec<ContactView> {
-    mq::list_contacts(&app.pool, player_id)
-        .await
-        .unwrap_or_default()
-        .into_iter()
-        .map(|c| ContactView {
-            id: c.player_id,
-            name: c.player_name,
-        })
-        .collect()
+    match mq::list_contacts(&app.pool, player_id).await {
+        Ok(v) => v,
+        Err(e) => {
+            tracing::error!(error = %e, player_id, "list_contacts failed");
+            Vec::new()
+        }
+    }
+    .into_iter()
+    .map(|c| ContactView {
+        id: c.player_id,
+        name: c.player_name,
+    })
+    .collect()
 }
 
 /// For inbox display: show the "other party" name/id.

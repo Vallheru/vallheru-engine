@@ -427,11 +427,18 @@ pub async fn market_buy_show(
     // Fetch listing details based on category
     let (item_name, quantity, unit_cost, seller_name, seller_id) = match category {
         MarketCategory::Minerals => {
-            let Some(row) =
-                vallheru_data::queries::market::find_mineral_listing(&app.pool, listing_id)
-                    .await
-                    .unwrap_or(None)
-            else {
+            let listing_opt = match vallheru_data::queries::market::find_mineral_listing(
+                &app.pool, listing_id,
+            )
+            .await
+            {
+                Ok(v) => v,
+                Err(e) => {
+                    tracing::error!(error = %e, listing_id, player_id, "find_mineral_listing failed");
+                    None
+                }
+            };
+            let Some(row) = listing_opt else {
                 return error_page(&app, &ctx, "Oferta nie istnieje.");
             };
             (
@@ -443,11 +450,18 @@ pub async fn market_buy_show(
             )
         }
         MarketCategory::Herbs => {
-            let Some(row) =
-                vallheru_data::queries::market::find_herb_listing(&app.pool, listing_id)
-                    .await
-                    .unwrap_or(None)
-            else {
+            let listing_opt = match vallheru_data::queries::market::find_herb_listing(
+                &app.pool, listing_id,
+            )
+            .await
+            {
+                Ok(v) => v,
+                Err(e) => {
+                    tracing::error!(error = %e, listing_id, player_id, "find_herb_listing failed");
+                    None
+                }
+            };
+            let Some(row) = listing_opt else {
                 return error_page(&app, &ctx, "Oferta nie istnieje.");
             };
             (
@@ -459,11 +473,18 @@ pub async fn market_buy_show(
             )
         }
         MarketCategory::Equipment | MarketCategory::Jewellery | MarketCategory::Loot => {
-            let Some(row) =
-                vallheru_data::queries::market::find_equipment_listing(&app.pool, listing_id)
-                    .await
-                    .unwrap_or(None)
-            else {
+            let listing_opt = match vallheru_data::queries::market::find_equipment_listing(
+                &app.pool, listing_id,
+            )
+            .await
+            {
+                Ok(v) => v,
+                Err(e) => {
+                    tracing::error!(error = %e, listing_id, player_id, "find_equipment_listing failed");
+                    None
+                }
+            };
+            let Some(row) = listing_opt else {
                 return error_page(&app, &ctx, "Oferta nie istnieje.");
             };
             (
@@ -475,11 +496,18 @@ pub async fn market_buy_show(
             )
         }
         MarketCategory::Potions => {
-            let Some(row) =
-                vallheru_data::queries::market::find_potion_listing(&app.pool, listing_id)
-                    .await
-                    .unwrap_or(None)
-            else {
+            let listing_opt = match vallheru_data::queries::market::find_potion_listing(
+                &app.pool, listing_id,
+            )
+            .await
+            {
+                Ok(v) => v,
+                Err(e) => {
+                    tracing::error!(error = %e, listing_id, player_id, "find_potion_listing failed");
+                    None
+                }
+            };
+            let Some(row) = listing_opt else {
                 return error_page(&app, &ctx, "Oferta nie istnieje.");
             };
             (
@@ -491,11 +519,18 @@ pub async fn market_buy_show(
             )
         }
         MarketCategory::Astral => {
-            let Some(row) =
-                vallheru_data::queries::market::find_astral_listing(&app.pool, listing_id)
-                    .await
-                    .unwrap_or(None)
-            else {
+            let listing_opt = match vallheru_data::queries::market::find_astral_listing(
+                &app.pool, listing_id,
+            )
+            .await
+            {
+                Ok(v) => v,
+                Err(e) => {
+                    tracing::error!(error = %e, listing_id, player_id, "find_astral_listing failed");
+                    None
+                }
+            };
+            let Some(row) = listing_opt else {
                 return error_page(&app, &ctx, "Oferta nie istnieje.");
             };
             (
@@ -507,10 +542,18 @@ pub async fn market_buy_show(
             )
         }
         MarketCategory::Pets => {
-            let Some(row) = vallheru_data::queries::market::find_pet_listing(&app.pool, listing_id)
-                .await
-                .unwrap_or(None)
-            else {
+            let listing_opt = match vallheru_data::queries::market::find_pet_listing(
+                &app.pool, listing_id,
+            )
+            .await
+            {
+                Ok(v) => v,
+                Err(e) => {
+                    tracing::error!(error = %e, listing_id, player_id, "find_pet_listing failed");
+                    None
+                }
+            };
+            let Some(row) = listing_opt else {
                 return error_page(&app, &ctx, "Oferta nie istnieje.");
             };
             (
@@ -1265,10 +1308,15 @@ async fn execute_mineral_buy(
     listing_id: i32,
     buy_quantity: i32,
 ) -> Response {
-    let Some(listing) = vallheru_data::queries::market::find_mineral_listing(&app.pool, listing_id)
-        .await
-        .unwrap_or(None)
-    else {
+    let listing_opt =
+        match vallheru_data::queries::market::find_mineral_listing(&app.pool, listing_id).await {
+            Ok(v) => v,
+            Err(e) => {
+                tracing::error!(error = %e, listing_id, player_id, "find_mineral_listing failed");
+                None
+            }
+        };
+    let Some(listing) = listing_opt else {
         return error_page(app, ctx, "Oferta nie istnieje.");
     };
 
@@ -1326,10 +1374,15 @@ async fn execute_herb_buy(
     listing_id: i32,
     buy_quantity: i32,
 ) -> Response {
-    let Some(listing) = vallheru_data::queries::market::find_herb_listing(&app.pool, listing_id)
-        .await
-        .unwrap_or(None)
-    else {
+    let listing_opt =
+        match vallheru_data::queries::market::find_herb_listing(&app.pool, listing_id).await {
+            Ok(v) => v,
+            Err(e) => {
+                tracing::error!(error = %e, listing_id, player_id, "find_herb_listing failed");
+                None
+            }
+        };
+    let Some(listing) = listing_opt else {
         return error_page(app, ctx, "Oferta nie istnieje.");
     };
 
@@ -1387,11 +1440,15 @@ async fn execute_equipment_buy(
     buy_quantity: i32,
     slug: &str,
 ) -> Response {
-    let Some(listing) =
-        vallheru_data::queries::market::find_equipment_listing(&app.pool, listing_id)
-            .await
-            .unwrap_or(None)
-    else {
+    let listing_opt =
+        match vallheru_data::queries::market::find_equipment_listing(&app.pool, listing_id).await {
+            Ok(v) => v,
+            Err(e) => {
+                tracing::error!(error = %e, listing_id, player_id, "find_equipment_listing failed");
+                None
+            }
+        };
+    let Some(listing) = listing_opt else {
         return error_page(app, ctx, "Oferta nie istnieje.");
     };
 
@@ -1448,10 +1505,15 @@ async fn execute_potion_buy(
     listing_id: i32,
     buy_quantity: i32,
 ) -> Response {
-    let Some(listing) = vallheru_data::queries::market::find_potion_listing(&app.pool, listing_id)
-        .await
-        .unwrap_or(None)
-    else {
+    let listing_opt =
+        match vallheru_data::queries::market::find_potion_listing(&app.pool, listing_id).await {
+            Ok(v) => v,
+            Err(e) => {
+                tracing::error!(error = %e, listing_id, player_id, "find_potion_listing failed");
+                None
+            }
+        };
+    let Some(listing) = listing_opt else {
         return error_page(app, ctx, "Oferta nie istnieje.");
     };
 
@@ -1508,10 +1570,15 @@ async fn execute_astral_buy(
     listing_id: i32,
     buy_quantity: i32,
 ) -> Response {
-    let Some(listing) = vallheru_data::queries::market::find_astral_listing(&app.pool, listing_id)
-        .await
-        .unwrap_or(None)
-    else {
+    let listing_opt =
+        match vallheru_data::queries::market::find_astral_listing(&app.pool, listing_id).await {
+            Ok(v) => v,
+            Err(e) => {
+                tracing::error!(error = %e, listing_id, player_id, "find_astral_listing failed");
+                None
+            }
+        };
+    let Some(listing) = listing_opt else {
         return error_page(app, ctx, "Oferta nie istnieje.");
     };
 
@@ -1568,10 +1635,15 @@ async fn execute_pet_buy(
     player_id: i32,
     listing_id: i32,
 ) -> Response {
-    let Some(listing) = vallheru_data::queries::market::find_pet_listing(&app.pool, listing_id)
-        .await
-        .unwrap_or(None)
-    else {
+    let listing_opt =
+        match vallheru_data::queries::market::find_pet_listing(&app.pool, listing_id).await {
+            Ok(v) => v,
+            Err(e) => {
+                tracing::error!(error = %e, listing_id, player_id, "find_pet_listing failed");
+                None
+            }
+        };
+    let Some(listing) = listing_opt else {
         return error_page(app, ctx, "Oferta nie istnieje.");
     };
 

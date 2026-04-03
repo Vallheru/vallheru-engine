@@ -374,21 +374,45 @@ pub async fn portal_show(
 
     if player.fight == PORTAL_FIGHT_ID {
         // Show battle controls — guardian fight already initiated
-        let equipped = vallheru_data::queries::item::find_equipped_items(&app.pool, player.id)
+        let equipped = match vallheru_data::queries::item::find_equipped_items(&app.pool, player.id)
             .await
-            .unwrap_or_default();
+        {
+            Ok(v) => v,
+            Err(e) => {
+                tracing::error!(error = %e, player_id = player.id, "find_equipped_items failed");
+                Vec::new()
+            }
+        };
         let equipped_domain: Vec<OwnedEquipment> =
             equipped.iter().map(|e| e.clone().into_domain()).collect();
 
-        let spells = vallheru_data::queries::item::find_spells_by_owner(&app.pool, player.id)
+        let spells = match vallheru_data::queries::item::find_spells_by_owner(&app.pool, player.id)
             .await
-            .unwrap_or_default();
-        let potions = vallheru_data::queries::item::find_potions_by_owner(&app.pool, player.id)
-            .await
-            .unwrap_or_default();
-        let stats = player_q::load_stats(&app.pool, player.id)
-            .await
-            .unwrap_or_default();
+        {
+            Ok(v) => v,
+            Err(e) => {
+                tracing::error!(error = %e, player_id = player.id, "find_spells_by_owner failed");
+                Vec::new()
+            }
+        };
+        let potions = match vallheru_data::queries::item::find_potions_by_owner(
+            &app.pool, player.id,
+        )
+        .await
+        {
+            Ok(v) => v,
+            Err(e) => {
+                tracing::error!(error = %e, player_id = player.id, "find_potions_by_owner failed");
+                Vec::new()
+            }
+        };
+        let stats = match player_q::load_stats(&app.pool, player.id).await {
+            Ok(v) => v,
+            Err(e) => {
+                tracing::error!(error = %e, player_id = player.id, "load_stats failed");
+                Vec::new()
+            }
+        };
 
         let speed = find_stat(&stats, "speed");
         #[allow(clippy::cast_possible_truncation)]
@@ -646,7 +670,10 @@ pub async fn portals_show(
     let map_name = format!("M{}", step + 1);
     let has_map = portal_q::has_astral_map(&app.pool, player_id, &map_name)
         .await
-        .unwrap_or(false);
+        .unwrap_or_else(|e| {
+            tracing::error!(error = %e, player_id, map_name, "has_astral_map failed");
+            false
+        });
     if !has_map {
         return error_page(&app, &ctx, "Nie masz mapy do tego planu!");
     }
@@ -768,9 +795,15 @@ pub async fn portals_action(
             }
 
             // Determine combat skill based on equipped weapon
-            let equipped = vallheru_data::queries::item::find_equipped_items(&app.pool, player_id)
-                .await
-                .unwrap_or_default();
+            let equipped =
+                match vallheru_data::queries::item::find_equipped_items(&app.pool, player_id).await
+                {
+                    Ok(v) => v,
+                    Err(e) => {
+                        tracing::error!(error = %e, player_id, "find_equipped_items failed");
+                        Vec::new()
+                    }
+                };
             let equipped_domain: Vec<OwnedEquipment> =
                 equipped.iter().map(|e| e.clone().into_domain()).collect();
             let skill_key = if equipped_domain
@@ -908,23 +941,45 @@ async fn resolve_boss_battle(
 ) -> (BattleOutcome, BattleState, Vec<String>) {
     let player_id = player.id;
 
-    let stats = player_q::load_stats(&app.pool, player_id)
-        .await
-        .unwrap_or_default();
-    let skills = player_q::load_skills(&app.pool, player_id)
-        .await
-        .unwrap_or_default();
-    let bonuses = player_q::load_bonuses(&app.pool, player_id)
-        .await
-        .unwrap_or_default();
-    let equipped = vallheru_data::queries::item::find_equipped_items(&app.pool, player_id)
-        .await
-        .unwrap_or_default();
+    let stats = match player_q::load_stats(&app.pool, player_id).await {
+        Ok(v) => v,
+        Err(e) => {
+            tracing::error!(error = %e, player_id, "load_stats failed");
+            Vec::new()
+        }
+    };
+    let skills = match player_q::load_skills(&app.pool, player_id).await {
+        Ok(v) => v,
+        Err(e) => {
+            tracing::error!(error = %e, player_id, "load_skills failed");
+            Vec::new()
+        }
+    };
+    let bonuses = match player_q::load_bonuses(&app.pool, player_id).await {
+        Ok(v) => v,
+        Err(e) => {
+            tracing::error!(error = %e, player_id, "load_bonuses failed");
+            Vec::new()
+        }
+    };
+    let equipped =
+        match vallheru_data::queries::item::find_equipped_items(&app.pool, player_id).await {
+            Ok(v) => v,
+            Err(e) => {
+                tracing::error!(error = %e, player_id, "find_equipped_items failed");
+                Vec::new()
+            }
+        };
     let equipped_domain: Vec<OwnedEquipment> =
         equipped.iter().map(|e| e.clone().into_domain()).collect();
-    let spells = vallheru_data::queries::item::find_spells_by_owner(&app.pool, player_id)
-        .await
-        .unwrap_or_default();
+    let spells =
+        match vallheru_data::queries::item::find_spells_by_owner(&app.pool, player_id).await {
+            Ok(v) => v,
+            Err(e) => {
+                tracing::error!(error = %e, player_id, "find_spells_by_owner failed");
+                Vec::new()
+            }
+        };
 
     let weapon_ref = equipped_domain
         .iter()

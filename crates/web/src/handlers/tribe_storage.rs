@@ -410,6 +410,7 @@ fn mineral_amount_from_row(row: &tq::TribeMineralsRow, key: &str) -> (i32, i32) 
 // =========================================================================
 
 /// GET /tribe/armory
+#[allow(clippy::too_many_lines)]
 pub async fn armory_show(
     State(app): State<AppState>,
     Extension(ctx): Extension<RequestContext>,
@@ -445,7 +446,10 @@ pub async fn armory_show(
         params.max_level,
     )
     .await
-    .unwrap_or(0);
+    .unwrap_or_else(|e| {
+        tracing::error!(error = %e, tribe_id = tribe.id, "Failed to count armory items");
+        0
+    });
     let total_pages = ((total + per_page - 1) / per_page).max(1);
     let page = page.min(total_pages);
 
@@ -459,7 +463,10 @@ pub async fn armory_show(
         per_page,
     )
     .await
-    .unwrap_or_default();
+    .unwrap_or_else(|e| {
+        tracing::error!(error = %e, tribe_id = tribe.id, "Failed to list armory items");
+        Vec::new()
+    });
 
     let items: Vec<ArmoryEntry> = rows
         .into_iter()
@@ -491,7 +498,15 @@ pub async fn armory_show(
         perms,
         StorageArea::Armory.give_permission(),
     );
-    let members = load_members(&app, tribe.id).await.unwrap_or_default();
+    let members = if let Ok(v) = load_members(&app, tribe.id).await {
+        v
+    } else {
+        tracing::error!(
+            tribe_id = tribe.id,
+            "Failed to load tribe members for armory"
+        );
+        Vec::new()
+    };
 
     let meta = PageMeta::titled("Zbrojownia klanu").with_back_link("/tribe", "Wróć do klanu");
     let base = app.templates.build_context(&ctx, &meta);
@@ -578,18 +593,19 @@ pub async fn armory_give(
     };
 
     // Check recipient tribe membership
-    let recipient_tribe: Option<i32> =
-        match sqlx::query_scalar("SELECT tribe_id FROM players WHERE id = $1")
-            .bind(form.recipient_id)
-            .fetch_optional(&app.pool)
-            .await
-        {
-            Ok(v) => v,
-            Err(e) => {
-                tracing::error!(error = %e, recipient_id = form.recipient_id, "Failed to fetch recipient tribe for armory give");
-                None
-            }
-        };
+    let recipient_tribe: Option<i32> = match sqlx::query_scalar(
+        "SELECT tribe_id FROM players WHERE id = $1",
+    )
+    .bind(form.recipient_id)
+    .fetch_optional(&app.pool)
+    .await
+    {
+        Ok(v) => v,
+        Err(e) => {
+            tracing::error!(error = %e, recipient_id = form.recipient_id, "Failed to fetch recipient tribe for armory give");
+            None
+        }
+    };
 
     let check = GiveCheck {
         total: i64::from(item.amount),
@@ -696,9 +712,13 @@ pub async fn warehouse_show(
         Err(r) => return r,
     };
 
-    let rows = tq::warehouse_potions(&app.pool, tribe.id)
-        .await
-        .unwrap_or_default();
+    let rows = match tq::warehouse_potions(&app.pool, tribe.id).await {
+        Ok(v) => v,
+        Err(e) => {
+            tracing::error!(error = %e, tribe_id = tribe.id, "Failed to list warehouse potions");
+            Vec::new()
+        }
+    };
 
     let potions: Vec<PotionEntry> = rows
         .into_iter()
@@ -724,7 +744,15 @@ pub async fn warehouse_show(
         perms,
         StorageArea::Warehouse.give_permission(),
     );
-    let members = load_members(&app, tribe.id).await.unwrap_or_default();
+    let members = if let Ok(v) = load_members(&app, tribe.id).await {
+        v
+    } else {
+        tracing::error!(
+            tribe_id = tribe.id,
+            "Failed to load tribe members for warehouse"
+        );
+        Vec::new()
+    };
 
     let meta = PageMeta::titled("Magazyn mikstur").with_back_link("/tribe", "Wróć do klanu");
     let base = app.templates.build_context(&ctx, &meta);
@@ -807,18 +835,19 @@ pub async fn warehouse_give(
         return error_page(&app, &ctx, "Mikstura nie istnieje.");
     };
 
-    let recipient_tribe: Option<i32> =
-        match sqlx::query_scalar("SELECT tribe_id FROM players WHERE id = $1")
-            .bind(form.recipient_id)
-            .fetch_optional(&app.pool)
-            .await
-        {
-            Ok(v) => v,
-            Err(e) => {
-                tracing::error!(error = %e, recipient_id = form.recipient_id, "Failed to fetch recipient tribe for potion give");
-                None
-            }
-        };
+    let recipient_tribe: Option<i32> = match sqlx::query_scalar(
+        "SELECT tribe_id FROM players WHERE id = $1",
+    )
+    .bind(form.recipient_id)
+    .fetch_optional(&app.pool)
+    .await
+    {
+        Ok(v) => v,
+        Err(e) => {
+            tracing::error!(error = %e, recipient_id = form.recipient_id, "Failed to fetch recipient tribe for potion give");
+            None
+        }
+    };
 
     let check = GiveCheck {
         total: i64::from(potion.amount),
@@ -954,7 +983,15 @@ pub async fn herbs_show(
         perms,
         StorageArea::Herbs.give_permission(),
     );
-    let members = load_members(&app, tribe.id).await.unwrap_or_default();
+    let members = if let Ok(v) = load_members(&app, tribe.id).await {
+        v
+    } else {
+        tracing::error!(
+            tribe_id = tribe.id,
+            "Failed to load tribe members for herbs"
+        );
+        Vec::new()
+    };
 
     let meta = PageMeta::titled("Zielnik klanu").with_back_link("/tribe", "Wróć do klanu");
     let base = app.templates.build_context(&ctx, &meta);
@@ -1182,7 +1219,15 @@ pub async fn minerals_show(
         perms,
         StorageArea::Treasury.give_permission(),
     );
-    let members = load_members(&app, tribe.id).await.unwrap_or_default();
+    let members = if let Ok(v) = load_members(&app, tribe.id).await {
+        v
+    } else {
+        tracing::error!(
+            tribe_id = tribe.id,
+            "Failed to load tribe members for treasury"
+        );
+        Vec::new()
+    };
 
     let meta = PageMeta::titled("Skarbiec klanu").with_back_link("/tribe", "Wróć do klanu");
     let base = app.templates.build_context(&ctx, &meta);

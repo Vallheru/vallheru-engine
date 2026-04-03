@@ -120,7 +120,10 @@ async fn hospital_show(
     let tribe_discount =
         vallheru_data::queries::locations::has_hospital_pass(&app.pool, player_row.tribe_id)
             .await
-            .unwrap_or(false);
+            .unwrap_or_else(|e| {
+                tracing::error!(error = %e, player_id, tribe_id = player_row.tribe_id, "has_hospital_pass failed");
+                false
+            });
 
     if player_row.hp <= 0 {
         let condition = load_condition_trained(app, player_id).await;
@@ -191,7 +194,10 @@ async fn hospital_heal(
     let tribe_discount =
         vallheru_data::queries::locations::has_hospital_pass(&app.pool, player_row.tribe_id)
             .await
-            .unwrap_or(false);
+            .unwrap_or_else(|e| {
+                tracing::error!(error = %e, player_id, tribe_id = player_row.tribe_id, "has_hospital_pass failed");
+                false
+            });
 
     let cost = hospital::healing_cost(player_row.hp, player_row.max_hp, tribe_discount);
 
@@ -261,12 +267,20 @@ pub async fn do_resurrect(
         return error_page(app, ctx, "Nieprawidłowa klasa.");
     };
 
-    let mut stats = vallheru_data::queries::player::load_stats(&app.pool, player_id)
-        .await
-        .unwrap_or_default();
-    let mut skills = vallheru_data::queries::player::load_skills(&app.pool, player_id)
-        .await
-        .unwrap_or_default();
+    let mut stats = match vallheru_data::queries::player::load_stats(&app.pool, player_id).await {
+        Ok(v) => v,
+        Err(e) => {
+            tracing::error!(error = %e, player_id, "resurrect: load_stats failed");
+            Vec::new()
+        }
+    };
+    let mut skills = match vallheru_data::queries::player::load_skills(&app.pool, player_id).await {
+        Ok(v) => v,
+        Err(e) => {
+            tracing::error!(error = %e, player_id, "resurrect: load_skills failed");
+            Vec::new()
+        }
+    };
 
     // Scope the RNG so `ThreadRng` (!Send) is dropped before any `.await`.
     let (roll, stat_idx, skill_idx) = {
@@ -364,9 +378,13 @@ async fn load_player(
 }
 
 async fn load_condition_trained(app: &AppState, player_id: i32) -> i32 {
-    let stats = vallheru_data::queries::player::load_stats(&app.pool, player_id)
-        .await
-        .unwrap_or_default();
+    let stats = match vallheru_data::queries::player::load_stats(&app.pool, player_id).await {
+        Ok(v) => v,
+        Err(e) => {
+            tracing::error!(error = %e, player_id, "load_condition_trained: load_stats failed");
+            Vec::new()
+        }
+    };
     stats
         .iter()
         .find(|s| s.stat_key == "condition")

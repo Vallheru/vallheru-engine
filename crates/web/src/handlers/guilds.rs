@@ -146,7 +146,13 @@ pub async fn guilds_crafts(
 
     let mut categories = Vec::with_capacity(skill_keys.len() + 1);
     for (key, title, desc) in skill_keys {
-        let entries = top_by_skill(&app, key, 10).await.unwrap_or_default();
+        let entries = match top_by_skill(&app, key, 10).await {
+            Ok(v) => v,
+            Err(e) => {
+                tracing::error!(error = %e, skill = key, "Failed to load skill leaderboard");
+                Vec::new()
+            }
+        };
         categories.push(GuildCategory {
             title: title.to_owned(),
             description: desc.to_owned(),
@@ -155,7 +161,13 @@ pub async fn guilds_crafts(
     }
 
     // Mission points (mpoints) — crafters only
-    let mp_entries = top_by_mpoints(&app, 10).await.unwrap_or_default();
+    let mp_entries = match top_by_mpoints(&app, 10).await {
+        Ok(v) => v,
+        Err(e) => {
+            tracing::error!(error = %e, "Failed to load mpoints leaderboard");
+            Vec::new()
+        }
+    };
     categories.push(GuildCategory {
         title: "Wykonanych Zadań".to_owned(),
         description: "Zadań".to_owned(),
@@ -182,7 +194,13 @@ pub async fn guilds_gladiator(
 
     let mut combat_categories = Vec::with_capacity(combat_keys.len());
     for (key, title, desc) in combat_keys {
-        let entries = top_by_skill(&app, key, 10).await.unwrap_or_default();
+        let entries = match top_by_skill(&app, key, 10).await {
+            Ok(v) => v,
+            Err(e) => {
+                tracing::error!(error = %e, skill = key, "Failed to load combat leaderboard");
+                Vec::new()
+            }
+        };
         combat_categories.push(GuildCategory {
             title: title.to_owned(),
             description: desc.to_owned(),
@@ -190,7 +208,13 @@ pub async fn guilds_gladiator(
         });
     }
 
-    let mission_top = top_by_mpoints(&app, 10).await.unwrap_or_default();
+    let mission_top = match top_by_mpoints(&app, 10).await {
+        Ok(v) => v,
+        Err(e) => {
+            tracing::error!(error = %e, "Failed to load gladiator mpoints leaderboard");
+            Vec::new()
+        }
+    };
 
     // Battle records (first kills)
     let record_rows: Vec<(String, String, String)> = sqlx::query_as(
@@ -199,7 +223,10 @@ pub async fn guilds_gladiator(
     )
     .fetch_all(&app.pool)
     .await
-    .unwrap_or_default();
+    .unwrap_or_else(|e| {
+        tracing::error!(error = %e, "Failed to load battle records");
+        Vec::new()
+    });
 
     let records: Vec<BattleRecord> = record_rows
         .into_iter()

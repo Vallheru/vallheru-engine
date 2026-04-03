@@ -331,7 +331,7 @@ pub async fn forum_new_posts(
     let page = forum_domain::clamp_page(pq.page, total);
     let offset = (page - 1) * forum_domain::TOPICS_PER_PAGE;
 
-    let rows = fq::list_unread_topics(
+    let rows = match fq::list_unread_topics(
         &app.pool,
         forum_time,
         &accessible_ids,
@@ -339,7 +339,13 @@ pub async fn forum_new_posts(
         offset,
     )
     .await
-    .unwrap_or_default();
+    {
+        Ok(v) => v,
+        Err(e) => {
+            tracing::error!(error = %e, user_id = user.id, "list_unread_topics failed");
+            Vec::new()
+        }
+    };
 
     let topics: Vec<NewPostItem> = rows
         .into_iter()
@@ -424,7 +430,7 @@ pub async fn forum_topic_list(
     let page = forum_domain::clamp_page(q.page, total);
     let offset = (page - 1) * forum_domain::TOPICS_PER_PAGE;
 
-    let normal_rows = fq::list_topics(
+    let normal_rows = match fq::list_topics(
         &app.pool,
         category_id,
         sort.order_clause(),
@@ -432,7 +438,13 @@ pub async fn forum_topic_list(
         offset,
     )
     .await
-    .unwrap_or_default();
+    {
+        Ok(v) => v,
+        Err(e) => {
+            tracing::error!(error = %e, category_id, "list_topics failed");
+            Vec::new()
+        }
+    };
 
     let mut topics: Vec<TopicItem> = Vec::with_capacity(sticky_rows.len() + normal_rows.len());
 
@@ -525,9 +537,14 @@ pub async fn forum_topic_read(
     };
     let offset = (page - 1) * forum_domain::REPLIES_PER_PAGE;
 
-    let reply_rows = fq::list_replies(&app.pool, topic_id, forum_domain::REPLIES_PER_PAGE, offset)
-        .await
-        .unwrap_or_default();
+    let reply_rows =
+        match fq::list_replies(&app.pool, topic_id, forum_domain::REPLIES_PER_PAGE, offset).await {
+            Ok(v) => v,
+            Err(e) => {
+                tracing::error!(error = %e, topic_id, "list_replies failed");
+                Vec::new()
+            }
+        };
 
     let replies: Vec<ReplyItem> = reply_rows
         .into_iter()
@@ -542,10 +559,16 @@ pub async fn forum_topic_read(
 
     let prev = fq::prev_topic_id(&app.pool, topic_id, topic.category_id)
         .await
-        .unwrap_or(None);
+        .unwrap_or_else(|e| {
+            tracing::error!(error = %e, topic_id, "prev_topic_id failed");
+            None
+        });
     let next = fq::next_topic_id(&app.pool, topic_id, topic.category_id)
         .await
-        .unwrap_or(None);
+        .unwrap_or_else(|e| {
+            tracing::error!(error = %e, topic_id, "next_topic_id failed");
+            None
+        });
 
     // Handle quoting.
     let quote_text = if q.quotet {
@@ -612,7 +635,10 @@ pub async fn forum_add_topic(
     // Ban check.
     if fq::is_forum_banned(&app.pool, user.id)
         .await
-        .unwrap_or(false)
+        .unwrap_or_else(|e| {
+            tracing::error!(error = %e, user_id = user.id, "is_forum_banned check failed");
+            false
+        })
     {
         return Redirect::to(&format!("/forums/category/{}", form.catid)).into_response();
     }
@@ -680,7 +706,10 @@ pub async fn forum_add_reply(
     // Ban check.
     if fq::is_forum_banned(&app.pool, user.id)
         .await
-        .unwrap_or(false)
+        .unwrap_or_else(|e| {
+            tracing::error!(error = %e, user_id = user.id, "is_forum_banned check failed");
+            false
+        })
     {
         return Redirect::to(&format!("/forums/topic/{topic_id}")).into_response();
     }
@@ -957,9 +986,13 @@ pub async fn forum_search(
 
     let search_term = text::html_escape(form.search.trim());
 
-    let rows = fq::search_topics(&app.pool, form.catid, &search_term)
-        .await
-        .unwrap_or_default();
+    let rows = match fq::search_topics(&app.pool, form.catid, &search_term).await {
+        Ok(v) => v,
+        Err(e) => {
+            tracing::error!(error = %e, category_id = form.catid, "search_topics failed");
+            Vec::new()
+        }
+    };
 
     // Filter results by visit permission.
     let results: Vec<TopicItem> = rows

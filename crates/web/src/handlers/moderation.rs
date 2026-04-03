@@ -194,9 +194,13 @@ pub async fn staff_chat_ban(
     State(state): State<AppState>,
     Extension(ctx): Extension<RequestContext>,
 ) -> Response {
-    let rows = vallheru_data::queries::moderation::list_chat_bans(&state.pool)
-        .await
-        .unwrap_or_default();
+    let rows = match vallheru_data::queries::moderation::list_chat_bans(&state.pool).await {
+        Ok(v) => v,
+        Err(e) => {
+            tracing::error!(error = %e, "list_chat_bans failed");
+            Vec::new()
+        }
+    };
 
     let bans: Vec<BanEntry> = rows
         .into_iter()
@@ -220,9 +224,13 @@ pub async fn staff_forum_ban(
     State(state): State<AppState>,
     Extension(ctx): Extension<RequestContext>,
 ) -> Response {
-    let rows = vallheru_data::queries::moderation::list_forum_bans(&state.pool)
-        .await
-        .unwrap_or_default();
+    let rows = match vallheru_data::queries::moderation::list_forum_bans(&state.pool).await {
+        Ok(v) => v,
+        Err(e) => {
+            tracing::error!(error = %e, "list_forum_bans failed");
+            Vec::new()
+        }
+    };
 
     let bans: Vec<BanEntry> = rows
         .into_iter()
@@ -346,9 +354,13 @@ pub async fn staff_mail_ban(
     State(state): State<AppState>,
     Extension(ctx): Extension<RequestContext>,
 ) -> Response {
-    let banned = vallheru_data::queries::moderation::list_mail_bans(&state.pool)
-        .await
-        .unwrap_or_default();
+    let banned = match vallheru_data::queries::moderation::list_mail_bans(&state.pool).await {
+        Ok(v) => v,
+        Err(e) => {
+            tracing::error!(error = %e, "list_mail_bans failed");
+            Vec::new()
+        }
+    };
 
     let meta = PageMeta::titled("Blokada poczty").with_back_link("/staff", "Staff");
     let view = MailBanView {
@@ -416,16 +428,32 @@ pub async fn staff_takeaway_action(
     }
 
     // Verify both players exist.
-    let offender_exists: Option<i32> = sqlx::query_scalar("SELECT id FROM players WHERE id = $1")
-        .bind(form.id)
-        .fetch_optional(&state.pool)
-        .await
-        .unwrap_or(None);
-    let injured_exists: Option<i32> = sqlx::query_scalar("SELECT id FROM players WHERE id = $1")
-        .bind(form.id2)
-        .fetch_optional(&state.pool)
-        .await
-        .unwrap_or(None);
+    let offender_exists: Option<i32> = match sqlx::query_scalar(
+        "SELECT id FROM players WHERE id = $1",
+    )
+    .bind(form.id)
+    .fetch_optional(&state.pool)
+    .await
+    {
+        Ok(v) => v,
+        Err(e) => {
+            tracing::error!(error = %e, player_id = form.id, "takeaway: offender lookup failed");
+            None
+        }
+    };
+    let injured_exists: Option<i32> = match sqlx::query_scalar(
+        "SELECT id FROM players WHERE id = $1",
+    )
+    .bind(form.id2)
+    .fetch_optional(&state.pool)
+    .await
+    {
+        Ok(v) => v,
+        Err(e) => {
+            tracing::error!(error = %e, player_id = form.id2, "takeaway: injured lookup failed");
+            None
+        }
+    };
 
     if offender_exists.is_none() {
         return crate::page::redirect("/staff/takeaway");

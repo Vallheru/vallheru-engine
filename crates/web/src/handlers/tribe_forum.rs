@@ -329,27 +329,47 @@ pub async fn tforums_topics(
 
     let can_admin = tfq::has_forum_permission(&app.pool, user.id, tribe_id)
         .await
-        .unwrap_or(false);
+        .unwrap_or_else(|e| {
+            tracing::error!(error = %e, tribe_id, "Failed to check forum permission");
+            false
+        });
 
     // Sticky topics first.
-    let sticky_topics = tfq::list_sticky_topics(&app.pool, tribe_id)
-        .await
-        .unwrap_or_default();
+    let sticky_topics = match tfq::list_sticky_topics(&app.pool, tribe_id).await {
+        Ok(v) => v,
+        Err(e) => {
+            tracing::error!(error = %e, tribe_id, "Failed to list sticky topics");
+            Vec::new()
+        }
+    };
 
     // Count non-sticky topics.
-    let non_sticky_count = tfq::count_topics(&app.pool, tribe_id).await.unwrap_or(0);
+    let non_sticky_count = match tfq::count_topics(&app.pool, tribe_id).await {
+        Ok(v) => v,
+        Err(e) => {
+            tracing::error!(error = %e, tribe_id, "Failed to count tribe forum topics");
+            0
+        }
+    };
     let pages = total_pages(non_sticky_count);
     let page = clamp_page(pq_query.page, pages);
     let offset = (page - 1) * PER_PAGE;
 
-    let regular_topics = tfq::list_topics(&app.pool, tribe_id, PER_PAGE, offset)
-        .await
-        .unwrap_or_default();
+    let regular_topics = match tfq::list_topics(&app.pool, tribe_id, PER_PAGE, offset).await {
+        Ok(v) => v,
+        Err(e) => {
+            tracing::error!(error = %e, tribe_id, "Failed to list tribe forum topics");
+            Vec::new()
+        }
+    };
 
     // Build view items — stickies first, then regular.
     let mut topics = Vec::with_capacity(sticky_topics.len() + regular_topics.len());
     for t in &sticky_topics {
-        let replies = tfq::reply_count(&app.pool, t.id).await.unwrap_or(0);
+        let replies = tfq::reply_count(&app.pool, t.id).await.unwrap_or_else(|e| {
+            tracing::error!(error = %e, topic_id = t.id, "Failed to count topic replies");
+            0
+        });
         topics.push(TopicListItem {
             id: t.id,
             title: format!("<b>{}</b>", t.topic),
@@ -361,7 +381,10 @@ pub async fn tforums_topics(
         });
     }
     for t in &regular_topics {
-        let replies = tfq::reply_count(&app.pool, t.id).await.unwrap_or(0);
+        let replies = tfq::reply_count(&app.pool, t.id).await.unwrap_or_else(|e| {
+            tracing::error!(error = %e, topic_id = t.id, "Failed to count topic replies");
+            0
+        });
         topics.push(TopicListItem {
             id: t.id,
             title: t.topic.clone(),
@@ -409,9 +432,13 @@ pub async fn tforums_new_posts(
         tracing::warn!(error = %e, "Failed to update tribe forum time");
     }
 
-    let new_count = tfq::count_new_topics(&app.pool, tribe_id, forum_time)
-        .await
-        .unwrap_or(0);
+    let new_count = match tfq::count_new_topics(&app.pool, tribe_id, forum_time).await {
+        Ok(v) => v,
+        Err(e) => {
+            tracing::error!(error = %e, tribe_id, "Failed to count new tribe forum topics");
+            0
+        }
+    };
     if new_count == 0 {
         return error_page(
             &app,
@@ -424,9 +451,13 @@ pub async fn tforums_new_posts(
     let page = clamp_page(pq_query.page, pages);
     let offset = (page - 1) * PER_PAGE;
 
-    let rows = tfq::list_new_topics(&app.pool, tribe_id, forum_time, PER_PAGE, offset)
-        .await
-        .unwrap_or_default();
+    let rows = match tfq::list_new_topics(&app.pool, tribe_id, forum_time, PER_PAGE, offset).await {
+        Ok(v) => v,
+        Err(e) => {
+            tracing::error!(error = %e, tribe_id, "Failed to list new tribe forum topics");
+            Vec::new()
+        }
+    };
 
     let topics: Vec<NewPostItem> = rows
         .into_iter()
@@ -467,12 +498,18 @@ pub async fn tforums_topic_read(
 
     let can_admin = tfq::has_forum_permission(&app.pool, user.id, tribe_id)
         .await
-        .unwrap_or(false);
+        .unwrap_or_else(|e| {
+            tracing::error!(error = %e, tribe_id, "Failed to check forum permission");
+            false
+        });
 
-    let Some(topic) = tfq::find_topic(&app.pool, topic_id, tribe_id)
-        .await
-        .unwrap_or(None)
-    else {
+    let Some(topic) = (match tfq::find_topic(&app.pool, topic_id, tribe_id).await {
+        Ok(v) => v,
+        Err(e) => {
+            tracing::error!(error = %e, topic_id, tribe_id, "Failed to find tribe forum topic");
+            None
+        }
+    }) else {
         return error_page(&app, &ctx, "Nie ma takiego tematu.");
     };
 
@@ -489,7 +526,12 @@ pub async fn tforums_topic_read(
     }
 
     // Replies pagination.
-    let total_replies = tfq::reply_count(&app.pool, topic_id).await.unwrap_or(0);
+    let total_replies = tfq::reply_count(&app.pool, topic_id)
+        .await
+        .unwrap_or_else(|e| {
+            tracing::error!(error = %e, topic_id, "Failed to count topic replies");
+            0
+        });
     let pages = total_pages(total_replies);
     let page = if q.page <= 0 {
         pages
@@ -498,9 +540,13 @@ pub async fn tforums_topic_read(
     };
     let offset = (page - 1) * PER_PAGE;
 
-    let reply_rows = tfq::list_replies(&app.pool, topic_id, PER_PAGE, offset)
-        .await
-        .unwrap_or_default();
+    let reply_rows = match tfq::list_replies(&app.pool, topic_id, PER_PAGE, offset).await {
+        Ok(v) => v,
+        Err(e) => {
+            tracing::error!(error = %e, topic_id, "Failed to list topic replies");
+            Vec::new()
+        }
+    };
 
     let replies: Vec<ReplyItem> = reply_rows
         .into_iter()
@@ -564,7 +610,10 @@ pub async fn tforums_add_topic(
     // Determine sticky.
     let can_admin = tfq::has_forum_permission(&app.pool, user.id, tribe_id)
         .await
-        .unwrap_or(false);
+        .unwrap_or_else(|e| {
+            tracing::error!(error = %e, tribe_id, "Failed to check forum permission");
+            false
+        });
     let sticky = if form.sticky.is_some() && can_admin {
         "Y"
     } else {
@@ -577,7 +626,10 @@ pub async fn tforums_add_topic(
     // Process BBCode.
     let bad_words = vallheru_data::queries::chat::list_bad_words(&app.pool)
         .await
-        .unwrap_or_default();
+        .unwrap_or_else(|e| {
+            tracing::error!(error = %e, "Failed to load bad words");
+            Vec::new()
+        });
     let body_html = text::bbcode_to_html(&body_raw, &bad_words, false);
 
     // Prepend date/time to title (matching PHP behavior).
@@ -651,7 +703,10 @@ pub async fn tforums_add_reply(
     // Process BBCode.
     let bad_words = vallheru_data::queries::chat::list_bad_words(&app.pool)
         .await
-        .unwrap_or_default();
+        .unwrap_or_else(|e| {
+            tracing::error!(error = %e, "Failed to load bad words");
+            Vec::new()
+        });
     let body_html = text::bbcode_to_html(&body_raw, &bad_words, false);
 
     // Prepend date/time to body.
@@ -692,7 +747,10 @@ pub async fn tforums_delete_topic(
 
     let can_admin = tfq::has_forum_permission(&app.pool, user.id, player_row.tribe_id)
         .await
-        .unwrap_or(false);
+        .unwrap_or_else(|e| {
+            tracing::error!(error = %e, tribe_id = player_row.tribe_id, "Failed to check forum permission");
+            false
+        });
     if !can_admin {
         return error_page(&app, &ctx, "Nie posiadasz odpowiednich uprawnień.");
     }
@@ -732,7 +790,10 @@ pub async fn tforums_bulk_delete(
 
     let can_admin = tfq::has_forum_permission(&app.pool, user.id, player_row.tribe_id)
         .await
-        .unwrap_or(false);
+        .unwrap_or_else(|e| {
+            tracing::error!(error = %e, tribe_id = player_row.tribe_id, "Failed to check forum permission");
+            false
+        });
     if !can_admin {
         return error_page(&app, &ctx, "Nie posiadasz odpowiednich uprawnień.");
     }
@@ -770,7 +831,10 @@ pub async fn tforums_toggle_sticky(
 
     let can_admin = tfq::has_forum_permission(&app.pool, user.id, player_row.tribe_id)
         .await
-        .unwrap_or(false);
+        .unwrap_or_else(|e| {
+            tracing::error!(error = %e, tribe_id = player_row.tribe_id, "Failed to check forum permission");
+            false
+        });
     if !can_admin {
         return error_page(&app, &ctx, "Nie posiadasz odpowiednich uprawnień.");
     }
@@ -815,7 +879,10 @@ pub async fn tforums_delete_reply(
 
     let can_admin = tfq::has_forum_permission(&app.pool, user.id, player_row.tribe_id)
         .await
-        .unwrap_or(false);
+        .unwrap_or_else(|e| {
+            tracing::error!(error = %e, tribe_id = player_row.tribe_id, "Failed to check forum permission");
+            false
+        });
     if !can_admin {
         return error_page(&app, &ctx, "Nie posiadasz odpowiednich uprawnień.");
     }
@@ -844,9 +911,13 @@ pub async fn tforums_search(
         return error_page(&app, &ctx, "Wypełnij wszystkie pola.");
     }
 
-    let results = tfq::search_topics(&app.pool, player_row.tribe_id, &query)
-        .await
-        .unwrap_or_default();
+    let results = match tfq::search_topics(&app.pool, player_row.tribe_id, &query).await {
+        Ok(v) => v,
+        Err(e) => {
+            tracing::error!(error = %e, tribe_id = player_row.tribe_id, "Failed to search tribe forum topics");
+            Vec::new()
+        }
+    };
 
     let count = results.len();
     let items: Vec<SearchItem> = results

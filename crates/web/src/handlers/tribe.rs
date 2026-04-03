@@ -165,7 +165,10 @@ async fn owner_name(app: &AppState, owner_id: i32) -> String {
         .bind(owner_id)
         .fetch_optional(&app.pool)
         .await
-        .unwrap_or(None);
+        .unwrap_or_else(|e| {
+            tracing::error!(error = %e, owner_id, "owner_name: fetch_optional failed");
+            None
+        });
     row.map_or_else(|| "Nieznany".to_owned(), |r| r.0)
 }
 
@@ -224,9 +227,13 @@ pub async fn tribe_hub(
         Err(_) => return server_error(),
     };
 
-    let members_rows = tq::tribe_members(&app.pool, player.tribe)
-        .await
-        .unwrap_or_default();
+    let members_rows = match tq::tribe_members(&app.pool, player.tribe).await {
+        Ok(v) => v,
+        Err(e) => {
+            tracing::error!(error = %e, tribe_id = player.tribe, "Failed to load tribe members");
+            Vec::new()
+        }
+    };
     #[allow(clippy::cast_possible_wrap)]
     let member_count = members_rows.len() as i64;
     let is_owner = tribe_row.owner == player_id;
@@ -326,9 +333,13 @@ pub async fn tribe_view(
         Err(_) => return server_error(),
     };
 
-    let members_rows = tq::tribe_members(&app.pool, tribe_id)
-        .await
-        .unwrap_or_default();
+    let members_rows = match tq::tribe_members(&app.pool, tribe_id).await {
+        Ok(v) => v,
+        Err(e) => {
+            tracing::error!(error = %e, tribe_id, "Failed to load tribe members for view");
+            Vec::new()
+        }
+    };
     #[allow(clippy::cast_possible_wrap)]
     let member_count = members_rows.len() as i64;
 

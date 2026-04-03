@@ -1160,17 +1160,25 @@ async fn finish_transfer(
     )
 }
 
-async fn build_transfer_page(
-    app: &AppState,
-    ctx: &RequestContext,
+async fn load_transfer_data(
+    pool: &sqlx::PgPool,
     player_id: i32,
-    player: &vallheru_data::queries::player::PlayerRow,
-    flash: Option<Flash>,
-) -> Response {
-    // Load contacts.
-    let contacts = vallheru_data::queries::mail::list_contacts(&app.pool, i64::from(player_id))
-        .await
-        .unwrap_or_default()
+) -> (
+    Vec<ContactEntry>,
+    Vec<TransferItemEntry>,
+    Vec<TransferPotionEntry>,
+    Vec<TransferResourceEntry>,
+    Vec<TransferResourceEntry>,
+    Vec<TransferPetEntry>,
+) {
+    let contacts =
+        match vallheru_data::queries::mail::list_contacts(pool, i64::from(player_id)).await {
+            Ok(v) => v,
+            Err(e) => {
+                tracing::error!(player_id, error = %e, "failed to load contacts for bank transfer");
+                Vec::new()
+            }
+        }
         .into_iter()
         .map(|c| ContactEntry {
             id: c.player_id,
@@ -1178,10 +1186,14 @@ async fn build_transfer_page(
         })
         .collect::<Vec<_>>();
 
-    // Load backpack items (status = 'U' = unequipped).
-    let items = vallheru_data::queries::item::find_equipment_by_owner(&app.pool, player_id)
-        .await
-        .unwrap_or_default()
+    let items =
+        match vallheru_data::queries::item::find_equipment_by_owner(pool, player_id).await {
+            Ok(v) => v,
+            Err(e) => {
+                tracing::error!(player_id, error = %e, "failed to load equipment for bank transfer");
+                Vec::new()
+            }
+        }
         .into_iter()
         .filter(|i| i.status == "U" && i.equipment_type != "Q")
         .map(|i| {
@@ -1199,10 +1211,14 @@ async fn build_transfer_page(
         })
         .collect::<Vec<_>>();
 
-    // Load potions (status = 'K' = in backpack).
-    let potions = vallheru_data::queries::item::find_potions_by_owner(&app.pool, player_id)
-        .await
-        .unwrap_or_default()
+    let potions =
+        match vallheru_data::queries::item::find_potions_by_owner(pool, player_id).await {
+            Ok(v) => v,
+            Err(e) => {
+                tracing::error!(player_id, error = %e, "failed to load potions for bank transfer");
+                Vec::new()
+            }
+        }
         .into_iter()
         .filter(|p| p.status == "K")
         .map(|p| TransferPotionEntry {
@@ -1213,36 +1229,49 @@ async fn build_transfer_page(
         })
         .collect::<Vec<_>>();
 
-    // Load minerals with amounts > 0.
-    let minerals =
-        match vallheru_data::queries::gathering::load_minerals(&app.pool, player_id).await {
-            Ok(Some(m)) => build_transfer_minerals(&m),
-            _ => vec![],
-        };
+    let minerals = match vallheru_data::queries::gathering::load_minerals(pool, player_id).await {
+        Ok(Some(m)) => build_transfer_minerals(&m),
+        _ => vec![],
+    };
 
-    // Load herbs with amounts > 0.
-    let herbs = match vallheru_data::queries::gathering::load_herbs(&app.pool, player_id).await {
+    let herbs = match vallheru_data::queries::gathering::load_herbs(pool, player_id).await {
         Ok(Some(h)) => build_transfer_herbs(&h),
         _ => vec![],
     };
 
-    // Load pets.
-    let pets = vallheru_data::queries::bank::list_player_pets(&app.pool, player_id)
-        .await
-        .unwrap_or_default()
-        .into_iter()
-        .map(|p| {
-            let display = if p.corename.is_empty() {
-                p.name
-            } else {
-                format!("{} ({})", p.corename, p.name)
-            };
-            TransferPetEntry {
-                id: p.id,
-                display_name: display,
-            }
-        })
-        .collect::<Vec<_>>();
+    let pets = match vallheru_data::queries::bank::list_player_pets(pool, player_id).await {
+        Ok(v) => v,
+        Err(e) => {
+            tracing::error!(player_id, error = %e, "failed to load pets for bank transfer");
+            Vec::new()
+        }
+    }
+    .into_iter()
+    .map(|p| {
+        let display = if p.corename.is_empty() {
+            p.name
+        } else {
+            format!("{} ({})", p.corename, p.name)
+        };
+        TransferPetEntry {
+            id: p.id,
+            display_name: display,
+        }
+    })
+    .collect::<Vec<_>>();
+
+    (contacts, items, potions, minerals, herbs, pets)
+}
+
+async fn build_transfer_page(
+    app: &AppState,
+    ctx: &RequestContext,
+    player_id: i32,
+    player: &vallheru_data::queries::player::PlayerRow,
+    flash: Option<Flash>,
+) -> Response {
+    let (contacts, items, potions, minerals, herbs, pets) =
+        load_transfer_data(&app.pool, player_id).await;
 
     let mut meta = PageMeta::titled("Bank — Przekazy").with_back_link("/bank", "Wróć do banku");
     if let Some(f) = flash {

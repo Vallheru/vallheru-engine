@@ -520,16 +520,25 @@ async fn load_player(
 
 async fn load_stat_or_skill(app: &AppState, player_id: i32, key: &str) -> i32 {
     // Try stats first, then skills.
-    let player_stats = vallheru_data::queries::player::load_stats(&app.pool, player_id)
-        .await
-        .unwrap_or_default();
+    let player_stats = match vallheru_data::queries::player::load_stats(&app.pool, player_id).await
+    {
+        Ok(v) => v,
+        Err(e) => {
+            tracing::error!(error = %e, player_id, key, "load_stat_or_skill: load_stats failed");
+            Vec::new()
+        }
+    };
     if let Some(stat) = player_stats.iter().find(|st| st.stat_key == key) {
         return stat.trained;
     }
 
-    let skills = vallheru_data::queries::player::load_skills(&app.pool, player_id)
-        .await
-        .unwrap_or_default();
+    let skills = match vallheru_data::queries::player::load_skills(&app.pool, player_id).await {
+        Ok(v) => v,
+        Err(e) => {
+            tracing::error!(error = %e, player_id, key, "load_stat_or_skill: load_skills failed");
+            Vec::new()
+        }
+    };
     skills
         .iter()
         .find(|sk| sk.skill_key == key)

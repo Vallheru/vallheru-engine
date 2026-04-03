@@ -291,9 +291,13 @@ pub async fn room_messages(
 
     let is_admin = room_domain::is_admin(room.owner_id, &room.co_owners, user.id);
 
-    let raw_messages = rq::list_room_messages(&app.pool, room_id, user.id, msg_length)
-        .await
-        .unwrap_or_default();
+    let raw_messages = match rq::list_room_messages(&app.pool, room_id, user.id, msg_length).await {
+        Ok(v) => v,
+        Err(e) => {
+            tracing::error!(error = %e, room_id, player_id = user.id, "failed to list room messages");
+            Vec::new()
+        }
+    };
 
     let now_epoch = current_epoch();
     let messages: Vec<RoomMessageView> = raw_messages
@@ -310,9 +314,13 @@ pub async fn room_messages(
         })
         .collect();
 
-    let online = rq::online_in_room(&app.pool, room_id)
-        .await
-        .unwrap_or_default();
+    let online = match rq::online_in_room(&app.pool, room_id).await {
+        Ok(v) => v,
+        Err(e) => {
+            tracing::error!(error = %e, room_id, "failed to list online players in room");
+            Vec::new()
+        }
+    };
     let online_count = online.len();
     let online_players: Vec<MemberView> = online
         .into_iter()
@@ -612,7 +620,10 @@ pub async fn room_admin_remove(
     }
 
     // Verify target is in this room.
-    let target_room = rq::player_room(&app.pool, pid).await.unwrap_or(0);
+    let target_room = rq::player_room(&app.pool, pid).await.unwrap_or_else(|e| {
+        tracing::error!(error = %e, pid, room_id, "failed to query player room for kick");
+        0
+    });
     if target_room != room_id {
         return error_page(
             &app,
@@ -891,7 +902,10 @@ pub async fn room_admin_co_owner(
     }
 
     // Verify target exists and is in this room.
-    let target_room = rq::player_room(&app.pool, pid).await.unwrap_or(0);
+    let target_room = rq::player_room(&app.pool, pid).await.unwrap_or_else(|e| {
+        tracing::error!(error = %e, pid, room_id, "failed to query player room for action");
+        0
+    });
     if target_room != room_id {
         return error_page(
             &app,
@@ -982,7 +996,10 @@ pub async fn room_admin_color(
     }
 
     // Verify target is in this room.
-    let target_room = rq::player_room(&app.pool, pid).await.unwrap_or(0);
+    let target_room = rq::player_room(&app.pool, pid).await.unwrap_or_else(|e| {
+        tracing::error!(error = %e, pid, room_id, "failed to query player room for color change");
+        0
+    });
     if target_room != room_id {
         return error_page(
             &app,

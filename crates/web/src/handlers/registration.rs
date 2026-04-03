@@ -64,7 +64,10 @@ pub async fn show_form(State(state): State<AppState>) -> Response {
     // Count players for the description text.
     let player_count = vallheru_data::queries::registration::count_players(&state.pool)
         .await
-        .unwrap_or(0);
+        .unwrap_or_else(|e| {
+            tracing::error!(error = %e, "count_players failed");
+            0
+        });
 
     let meta = PageMeta::titled(state.catalog.get_or_key("register", "TITLE"));
     let base = build_anon_context(&state, &meta);

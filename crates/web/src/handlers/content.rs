@@ -318,7 +318,13 @@ pub async fn updates_page(
     let show_all = q.page > 1; // page=2+ means "show all"
 
     let updates_rows = if show_all {
-        cq::list_updates(&app.pool, 10).await.unwrap_or_default()
+        match cq::list_updates(&app.pool, 10).await {
+            Ok(v) => v,
+            Err(e) => {
+                tracing::error!(error = %e, "Failed to list updates");
+                Vec::new()
+            }
+        }
     } else {
         match cq::get_latest_update(&app.pool).await {
             Ok(Some(u)) => vec![u],
@@ -330,7 +336,10 @@ pub async fn updates_page(
     for u in updates_rows {
         let cc = cq::count_comments(&app.pool, "update", u.id)
             .await
-            .unwrap_or(0);
+            .unwrap_or_else(|e| {
+                tracing::error!(error = %e, update_id = u.id, "Failed to count comments for update");
+                0
+            });
         items.push(UpdateItem {
             id: u.id,
             title: u.title,
@@ -430,7 +439,13 @@ pub async fn news_page(
 
     let show_all = q.page > 1;
     let news_rows = if show_all {
-        cq::list_news(&app.pool, 10).await.unwrap_or_default()
+        match cq::list_news(&app.pool, 10).await {
+            Ok(v) => v,
+            Err(e) => {
+                tracing::error!(error = %e, "Failed to list news");
+                Vec::new()
+            }
+        }
     } else {
         match cq::get_latest_news(&app.pool).await {
             Ok(Some(n)) => vec![n],
@@ -438,13 +453,19 @@ pub async fn news_page(
         }
     };
 
-    let pending_count = cq::count_pending_news(&app.pool).await.unwrap_or(0);
+    let pending_count = cq::count_pending_news(&app.pool).await.unwrap_or_else(|e| {
+        tracing::error!(error = %e, "Failed to count pending news");
+        0
+    });
 
     let mut items = Vec::new();
     for n in news_rows {
         let cc = cq::count_comments(&app.pool, "news", n.id)
             .await
-            .unwrap_or(0);
+            .unwrap_or_else(|e| {
+                tracing::error!(error = %e, news_id = n.id, "Failed to count comments for news");
+                0
+            });
         items.push(NewsItem {
             id: n.id,
             title: n.title,
@@ -520,7 +541,13 @@ pub async fn pending_news_list(
     let meta = PageMeta::titled("Oczekujące plotki").with_back_link("/staff", "Panel");
     let base = app.templates.build_context(&ctx, &meta);
 
-    let rows = cq::list_pending_news(&app.pool).await.unwrap_or_default();
+    let rows = match cq::list_pending_news(&app.pool).await {
+        Ok(v) => v,
+        Err(e) => {
+            tracing::error!(error = %e, "Failed to list pending news");
+            Vec::new()
+        }
+    };
     let items: Vec<PendingNewsItem> = rows
         .into_iter()
         .map(|r| PendingNewsItem {
@@ -648,9 +675,13 @@ async fn log_news_action(
     }
 
     // Notify other staff members.
-    let staff_ids = vallheru_data::queries::moderation::list_staff_ids(pool)
-        .await
-        .unwrap_or_default();
+    let staff_ids = match vallheru_data::queries::moderation::list_staff_ids(pool).await {
+        Ok(v) => v,
+        Err(e) => {
+            tracing::error!(error = %e, "Failed to list staff ids");
+            Vec::new()
+        }
+    };
 
     #[allow(clippy::cast_possible_truncation)]
     let current_staff = staff_id as i32;
@@ -695,16 +726,23 @@ pub async fn comments_page(
 
     let total = cq::count_comments(&app.pool, &target_type, target_id)
         .await
-        .unwrap_or(0);
+        .unwrap_or_else(|e| {
+            tracing::error!(error = %e, %target_type, target_id, "Failed to count comments");
+            0
+        });
     let per_page = content_domain::COMMENTS_PER_PAGE;
     #[allow(clippy::cast_possible_truncation, clippy::cast_precision_loss)]
     let total_pages = (total as f64 / per_page as f64).ceil() as i64;
     let page = q.page.clamp(1, total_pages.max(1));
     let offset = (page - 1) * per_page;
 
-    let rows = cq::list_comments(&app.pool, &target_type, target_id, per_page, offset)
-        .await
-        .unwrap_or_default();
+    let rows = match cq::list_comments(&app.pool, &target_type, target_id, per_page, offset).await {
+        Ok(v) => v,
+        Err(e) => {
+            tracing::error!(error = %e, %target_type, target_id, "Failed to list comments");
+            Vec::new()
+        }
+    };
 
     let comments: Vec<CommentItem> = rows
         .into_iter()
@@ -817,13 +855,23 @@ pub async fn newspaper_page(
     };
     let is_editor = content_domain::can_edit_newspaper(&user.rank);
 
-    let issue_id = cq::get_latest_issue_id(&app.pool).await.unwrap_or(None);
+    let issue_id = match cq::get_latest_issue_id(&app.pool).await {
+        Ok(v) => v,
+        Err(e) => {
+            tracing::error!(error = %e, "Failed to get latest issue id");
+            None
+        }
+    };
     let issue_id = issue_id.unwrap_or(0);
 
     let articles = if issue_id > 0 {
-        cq::list_articles_by_issue(&app.pool, issue_id)
-            .await
-            .unwrap_or_default()
+        match cq::list_articles_by_issue(&app.pool, issue_id).await {
+            Ok(v) => v,
+            Err(e) => {
+                tracing::error!(error = %e, issue_id, "Failed to list articles by issue");
+                Vec::new()
+            }
+        }
     } else {
         vec![]
     };
@@ -850,9 +898,13 @@ pub async fn newspaper_archive(
         return Redirect::to("/").into_response();
     };
 
-    let ids = cq::list_archive_issue_ids(&app.pool)
-        .await
-        .unwrap_or_default();
+    let ids = match cq::list_archive_issue_ids(&app.pool).await {
+        Ok(v) => v,
+        Err(e) => {
+            tracing::error!(error = %e, "Failed to list archive issue ids");
+            Vec::new()
+        }
+    };
 
     let meta = PageMeta::titled("Archiwum gazety");
     let base = app.templates.build_context(&ctx, &meta);
@@ -874,9 +926,13 @@ pub async fn newspaper_issue(
     };
     let is_editor = content_domain::can_edit_newspaper(&user.rank);
 
-    let articles = cq::list_articles_by_issue(&app.pool, issue_id)
-        .await
-        .unwrap_or_default();
+    let articles = match cq::list_articles_by_issue(&app.pool, issue_id).await {
+        Ok(v) => v,
+        Err(e) => {
+            tracing::error!(error = %e, issue_id, "Failed to list articles by issue");
+            Vec::new()
+        }
+    };
     let sections = build_sections(&articles);
 
     let meta = PageMeta::titled("Gazeta");
@@ -910,7 +966,10 @@ pub async fn newspaper_article(
 
     let cc = cq::count_comments(&app.pool, "newspaper", article_id)
         .await
-        .unwrap_or(0);
+        .unwrap_or_else(|e| {
+            tracing::error!(error = %e, article_id, "Failed to count comments for article");
+            0
+        });
 
     let is_editor = content_domain::can_edit_newspaper(&user.rank);
 
@@ -1014,7 +1073,13 @@ pub async fn newspaper_edit_action(
         }
     } else {
         // New article — assign to next unpublished issue.
-        let latest = cq::get_latest_issue_id(&app.pool).await.unwrap_or(None);
+        let latest = match cq::get_latest_issue_id(&app.pool).await {
+            Ok(v) => v,
+            Err(e) => {
+                tracing::error!(error = %e, "Failed to get latest issue id");
+                None
+            }
+        };
         let issue_id = latest.map_or(1, |id| id + 1);
         let author = format!("{} ID: {}", user.name, user.id);
         if let Err(e) =
@@ -1081,9 +1146,13 @@ pub async fn polls_page(
 
     let poll_detail = match cq::get_active_poll(&app.pool).await {
         Ok(Some(p)) => {
-            let options = cq::get_poll_options(&app.pool, p.id)
-                .await
-                .unwrap_or_default();
+            let options = match cq::get_poll_options(&app.pool, p.id).await {
+                Ok(v) => v,
+                Err(e) => {
+                    tracing::error!(error = %e, poll_id = p.id, "Failed to get poll options");
+                    Vec::new()
+                }
+            };
             let total_votes: i64 = options.iter().map(|o| i64::from(o.votes)).sum();
             let items: Vec<PollOptionItem> = options
                 .into_iter()
@@ -1115,7 +1184,10 @@ pub async fn polls_page(
     let cc = if let Some(ref pd) = poll_detail {
         cq::count_comments(&app.pool, "poll", pd.id)
             .await
-            .unwrap_or(0)
+            .unwrap_or_else(|e| {
+                tracing::error!(error = %e, poll_id = pd.id, "Failed to count comments for poll");
+                0
+            })
     } else {
         0
     };
@@ -1160,14 +1232,22 @@ pub async fn polls_history(
         return Redirect::to("/").into_response();
     };
 
-    let poll_rows = cq::list_recent_polls(&app.pool, 10)
-        .await
-        .unwrap_or_default();
+    let poll_rows = match cq::list_recent_polls(&app.pool, 10).await {
+        Ok(v) => v,
+        Err(e) => {
+            tracing::error!(error = %e, "Failed to list recent polls");
+            Vec::new()
+        }
+    };
     let mut polls = Vec::new();
     for p in poll_rows {
-        let options = cq::get_poll_options(&app.pool, p.id)
-            .await
-            .unwrap_or_default();
+        let options = match cq::get_poll_options(&app.pool, p.id).await {
+            Ok(v) => v,
+            Err(e) => {
+                tracing::error!(error = %e, poll_id = p.id, "Failed to get poll options");
+                Vec::new()
+            }
+        };
         let total_votes: i64 = options.iter().map(|o| i64::from(o.votes)).sum();
         let items: Vec<PollOptionItem> = options
             .into_iter()
@@ -1275,9 +1355,13 @@ pub async fn proposal_submit(
 pub async fn rss_feed(State(app): State<AppState>) -> Response {
     use std::fmt::Write;
 
-    let items = cq::list_updates_for_rss(&app.pool, 5)
-        .await
-        .unwrap_or_default();
+    let items = match cq::list_updates_for_rss(&app.pool, 5).await {
+        Ok(v) => v,
+        Err(e) => {
+            tracing::error!(error = %e, "Failed to list updates for RSS");
+            Vec::new()
+        }
+    };
 
     let game_name = app.templates.game_name();
     let game_url = app.templates.base_url();

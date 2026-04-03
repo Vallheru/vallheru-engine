@@ -262,13 +262,22 @@ pub async fn alley(
     State(state): State<AppState>,
     Extension(ctx): Extension<RequestContext>,
 ) -> Response {
-    let leaderboard = vallheru_data::queries::locations::vallars_leaderboard(&state.pool, 10)
-        .await
-        .unwrap_or_default();
+    let leaderboard =
+        match vallheru_data::queries::locations::vallars_leaderboard(&state.pool, 10).await {
+            Ok(v) => v,
+            Err(e) => {
+                tracing::error!(error = %e, "vallars_leaderboard failed");
+                Vec::new()
+            }
+        };
 
-    let donators = vallheru_data::queries::locations::list_donators(&state.pool)
-        .await
-        .unwrap_or_default();
+    let donators = match vallheru_data::queries::locations::list_donators(&state.pool).await {
+        Ok(v) => v,
+        Err(e) => {
+            tracing::error!(error = %e, "list_donators failed");
+            Vec::new()
+        }
+    };
 
     let entries: Vec<VallarsEntry> = leaderboard
         .into_iter()
@@ -674,9 +683,14 @@ async fn load_player(
 
 /// Load the condition stat value for a player (defaults to 1 on error).
 async fn load_condition_stat(app: &AppState, player_id: i32) -> i32 {
-    let player_stats = vallheru_data::queries::player::load_stats(&app.pool, player_id)
-        .await
-        .unwrap_or_default();
+    let player_stats = match vallheru_data::queries::player::load_stats(&app.pool, player_id).await
+    {
+        Ok(v) => v,
+        Err(e) => {
+            tracing::error!(error = %e, player_id, "load_condition_stat: load_stats failed");
+            Vec::new()
+        }
+    };
     player_stats
         .iter()
         .find(|s| s.stat_key == "condition")
@@ -690,9 +704,14 @@ async fn compute_max_mana(
     player_id: i32,
     player_row: &vallheru_data::queries::player::PlayerRow,
 ) -> i32 {
-    let player_stats = vallheru_data::queries::player::load_stats(&app.pool, player_id)
-        .await
-        .unwrap_or_default();
+    let player_stats = match vallheru_data::queries::player::load_stats(&app.pool, player_id).await
+    {
+        Ok(v) => v,
+        Err(e) => {
+            tracing::error!(error = %e, player_id, "compute_max_mana: load_stats failed");
+            Vec::new()
+        }
+    };
 
     let intelligence = player_stats
         .iter()
@@ -740,9 +759,13 @@ async fn award_condition_xp(
         return String::new();
     };
 
-    let mut stats = vallheru_data::queries::player::load_stats(&app.pool, player_id)
-        .await
-        .unwrap_or_default();
+    let mut stats = match vallheru_data::queries::player::load_stats(&app.pool, player_id).await {
+        Ok(v) => v,
+        Err(e) => {
+            tracing::error!(error = %e, player_id, "award_condition_xp: load_stats failed");
+            Vec::new()
+        }
+    };
 
     let Some(condition) = stats.iter_mut().find(|s| s.stat_key == "condition") else {
         return String::new();

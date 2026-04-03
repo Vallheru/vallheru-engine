@@ -399,9 +399,13 @@ pub async fn tribe_admin_permissions_show(
         );
     }
 
-    let members = tq::tribe_members(&app.pool, player.tribe)
-        .await
-        .unwrap_or_default();
+    let members = match tq::tribe_members(&app.pool, player.tribe).await {
+        Ok(v) => v,
+        Err(e) => {
+            tracing::error!(error = %e, tribe_id = player.tribe, "Failed to load tribe members for permissions");
+            Vec::new()
+        }
+    };
 
     let mut member_entries = Vec::new();
     for m in &members {
@@ -569,9 +573,13 @@ pub async fn tribe_admin_ranks_show(
         None => vec![String::new(); 10],
     };
 
-    let members = tq::tribe_members(&app.pool, player.tribe)
-        .await
-        .unwrap_or_default();
+    let members = match tq::tribe_members(&app.pool, player.tribe).await {
+        Ok(v) => v,
+        Err(e) => {
+            tracing::error!(error = %e, tribe_id = player.tribe, "Failed to load tribe members for ranks");
+            Vec::new()
+        }
+    };
 
     let member_entries: Vec<RankMemberEntry> = members
         .into_iter()
@@ -875,9 +883,13 @@ pub async fn tribe_admin_pending_show(
         );
     }
 
-    let requests = tq::pending_requests(&app.pool, player.tribe)
-        .await
-        .unwrap_or_default();
+    let requests = match tq::pending_requests(&app.pool, player.tribe).await {
+        Ok(v) => v,
+        Err(e) => {
+            tracing::error!(error = %e, tribe_id = player.tribe, "Failed to load pending requests");
+            Vec::new()
+        }
+    };
 
     let entries: Vec<PendingEntry> = requests
         .into_iter()
@@ -930,9 +942,13 @@ pub async fn tribe_admin_pending_accept(
     }
 
     // Find the request to get the player_id from it
-    let requests = tq::pending_requests(&app.pool, player.tribe)
-        .await
-        .unwrap_or_default();
+    let requests = match tq::pending_requests(&app.pool, player.tribe).await {
+        Ok(v) => v,
+        Err(e) => {
+            tracing::error!(error = %e, tribe_id = player.tribe, "Failed to load pending requests for accept");
+            Vec::new()
+        }
+    };
 
     let Some(req) = requests.iter().find(|r| r.id == request_id) else {
         return error_page(&app, &ctx, "Nie znaleziono prośby o dołączenie.");
@@ -1431,9 +1447,13 @@ pub async fn tribe_admin_requests_show(
         Err(resp) => return resp,
     };
 
-    let reservations = tq::reservations_for_tribe(&app.pool, player.tribe)
-        .await
-        .unwrap_or_default();
+    let reservations = match tq::reservations_for_tribe(&app.pool, player.tribe).await {
+        Ok(v) => v,
+        Err(e) => {
+            tracing::error!(error = %e, tribe_id = player.tribe, "Failed to load reservations");
+            Vec::new()
+        }
+    };
 
     let entries: Vec<ReservationEntry> = reservations
         .into_iter()

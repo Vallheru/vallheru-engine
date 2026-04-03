@@ -75,7 +75,10 @@ async fn load_skill(app: &AppState, player_id: i32, key: &str) -> f64 {
             .bind(key)
             .fetch_optional(&app.pool)
             .await
-            .unwrap_or(None);
+            .unwrap_or_else(|e| {
+                tracing::error!(error = %e, player_id, skill = key, "load_skill query failed");
+                None
+            });
     row.map_or(0.0, |r| r.0)
 }
 
@@ -87,7 +90,10 @@ async fn load_level(app: &AppState, player_id: i32) -> i32 {
     .bind(player_id)
     .fetch_optional(&app.pool)
     .await
-    .unwrap_or(None);
+    .unwrap_or_else(|e| {
+        tracing::error!(error = %e, player_id, "load_level query failed");
+        None
+    });
     #[allow(clippy::cast_possible_truncation)]
     row.map_or(1, |r| (r.0).max(1) as i32)
 }

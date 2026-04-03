@@ -190,9 +190,15 @@ pub async fn court_staff_list(
     }
 
     let db_rank = rank_label(&role);
-    let rows = vallheru_data::queries::moderation::list_players_by_rank(&state.pool, db_rank)
+    let rows = match vallheru_data::queries::moderation::list_players_by_rank(&state.pool, db_rank)
         .await
-        .unwrap_or_default();
+    {
+        Ok(v) => v,
+        Err(e) => {
+            tracing::error!(error = %e, role = %role, "Failed to list players by rank");
+            Vec::new()
+        }
+    };
 
     let members: Vec<CourtMember> = rows
         .into_iter()
@@ -229,9 +235,13 @@ pub async fn court_doc_list(
         return Redirect::to("/court").into_response();
     }
 
-    let rows = vallheru_data::queries::moderation::list_court_docs(&state.pool, &kind)
-        .await
-        .unwrap_or_default();
+    let rows = match vallheru_data::queries::moderation::list_court_docs(&state.pool, &kind).await {
+        Ok(v) => v,
+        Err(e) => {
+            tracing::error!(error = %e, kind = %kind, "Failed to list court docs");
+            Vec::new()
+        }
+    };
 
     let docs: Vec<CourtDocEntry> = rows
         .into_iter()
@@ -259,13 +269,15 @@ pub async fn court_doc_detail(
     Extension(ctx): Extension<RequestContext>,
     Path(doc_id): Path<i32>,
 ) -> Response {
-    let Some(row) = (match vallheru_data::queries::moderation::find_court_doc(&state.pool, doc_id).await {
-        Ok(v) => v,
-        Err(e) => {
-            tracing::error!(error = %e, doc_id, "Failed to find court doc");
-            None
-        }
-    }) else {
+    let Some(row) =
+        (match vallheru_data::queries::moderation::find_court_doc(&state.pool, doc_id).await {
+            Ok(v) => v,
+            Err(e) => {
+                tracing::error!(error = %e, doc_id, "Failed to find court doc");
+                None
+            }
+        })
+    else {
         return Redirect::to("/court").into_response();
     };
 
@@ -273,16 +285,20 @@ pub async fn court_doc_detail(
     let is_case = row.kind == "case";
 
     let comments = if is_case {
-        vallheru_data::queries::moderation::list_court_comments(&state.pool, doc_id)
-            .await
-            .unwrap_or_default()
-            .into_iter()
-            .map(|c| CourtCommentData {
-                id: c.id,
-                author: c.author,
-                body: c.body,
-            })
-            .collect()
+        match vallheru_data::queries::moderation::list_court_comments(&state.pool, doc_id).await {
+            Ok(rows) => rows
+                .into_iter()
+                .map(|c| CourtCommentData {
+                    id: c.id,
+                    author: c.author,
+                    body: c.body,
+                })
+                .collect(),
+            Err(e) => {
+                tracing::error!(error = %e, doc_id, "Failed to list court comments");
+                Vec::new()
+            }
+        }
     } else {
         Vec::new()
     };
@@ -374,13 +390,15 @@ pub async fn court_doc_edit_form(
         return Redirect::to("/court").into_response();
     }
 
-    let Some(row) = (match vallheru_data::queries::moderation::find_court_doc(&state.pool, doc_id).await {
-        Ok(v) => v,
-        Err(e) => {
-            tracing::error!(error = %e, doc_id, "Failed to find court doc for edit");
-            None
-        }
-    }) else {
+    let Some(row) =
+        (match vallheru_data::queries::moderation::find_court_doc(&state.pool, doc_id).await {
+            Ok(v) => v,
+            Err(e) => {
+                tracing::error!(error = %e, doc_id, "Failed to find court doc for edit");
+                None
+            }
+        })
+    else {
         return Redirect::to("/court").into_response();
     };
 

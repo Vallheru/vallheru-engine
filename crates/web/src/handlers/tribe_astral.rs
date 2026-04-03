@@ -193,6 +193,7 @@ fn error_page(state: &AppState, ctx: &RequestContext, message: &str) -> Response
 // =========================================================================
 
 /// GET /tribe/astral — show the full astral vault.
+#[allow(clippy::too_many_lines)]
 pub async fn astral_show(
     State(app): State<AppState>,
     Extension(ctx): Extension<RequestContext>,
@@ -216,9 +217,13 @@ pub async fn astral_show(
     };
 
     // Fetch tribe astral items
-    let items = tq::astral_items_for_tribe(&app.pool, tribe.id)
-        .await
-        .unwrap_or_default();
+    let items = match tq::astral_items_for_tribe(&app.pool, tribe.id).await {
+        Ok(v) => v,
+        Err(e) => {
+            tracing::error!(error = %e, tribe_id = tribe.id, "Failed to load astral items");
+            Vec::new()
+        }
+    };
 
     let mut pieces = Vec::new();
     let mut components = Vec::new();
@@ -238,9 +243,13 @@ pub async fn astral_show(
     }
 
     // Fetch completed plans
-    let plan_rows = tq::astral_plans_for_tribe(&app.pool, tribe.id)
-        .await
-        .unwrap_or_default();
+    let plan_rows = match tq::astral_plans_for_tribe(&app.pool, tribe.id).await {
+        Ok(v) => v,
+        Err(e) => {
+            tracing::error!(error = %e, tribe_id = tribe.id, "Failed to load astral plans");
+            Vec::new()
+        }
+    };
 
     let plans: Vec<AstralPlanView> = plan_rows
         .into_iter()
@@ -254,7 +263,10 @@ pub async fn astral_show(
     // Safe-box info
     let safebox_level = tq::astral_safebox_level(&app.pool, tribe.id)
         .await
-        .unwrap_or(0);
+        .unwrap_or_else(|e| {
+            tracing::error!(error = %e, tribe_id = tribe.id, "Failed to load astral safebox level");
+            0
+        });
     let safebox_max = safebox_level >= SAFE_BOX_MAX_LEVEL;
     let safebox_next_cost = if safebox_max {
         None
@@ -277,7 +289,15 @@ pub async fn astral_show(
         perms,
         StorageArea::Astral.give_permission(),
     );
-    let members = load_members(&app, tribe.id).await.unwrap_or_default();
+    let members = if let Ok(v) = load_members(&app, tribe.id).await {
+        v
+    } else {
+        tracing::error!(
+            tribe_id = tribe.id,
+            "Failed to load tribe members for astral"
+        );
+        Vec::new()
+    };
 
     let meta = PageMeta::titled("Astralny skarbiec").with_back_link("/tribe", "Wróć do klanu");
     let base = app.templates.build_context(&ctx, &meta);
@@ -408,18 +428,19 @@ pub async fn astral_give(
     }
 
     // Verify recipient is in the same tribe
-    let recipient_tribe: Option<i32> =
-        match sqlx::query_scalar("SELECT tribe_id FROM players WHERE id = $1")
-            .bind(form.recipient_id)
-            .fetch_optional(&app.pool)
-            .await
-        {
-            Ok(v) => v,
-            Err(e) => {
-                tracing::error!(error = %e, recipient_id = form.recipient_id, "Failed to fetch recipient tribe for astral give");
-                None
-            }
-        };
+    let recipient_tribe: Option<i32> = match sqlx::query_scalar(
+        "SELECT tribe_id FROM players WHERE id = $1",
+    )
+    .bind(form.recipient_id)
+    .fetch_optional(&app.pool)
+    .await
+    {
+        Ok(v) => v,
+        Err(e) => {
+            tracing::error!(error = %e, recipient_id = form.recipient_id, "Failed to fetch recipient tribe for astral give");
+            None
+        }
+    };
 
     if recipient_tribe != Some(tribe.id) {
         return error_page(&app, &ctx, "Gracz nie należy do tego klanu.");

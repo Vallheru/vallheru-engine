@@ -201,12 +201,20 @@ pub async fn mining_work(
     }
 
     // Load stats + skills for bonus calculation
-    let stats = vallheru_data::queries::player::load_stats(&app.pool, player_id)
-        .await
-        .unwrap_or_default();
-    let skills = vallheru_data::queries::player::load_skills(&app.pool, player_id)
-        .await
-        .unwrap_or_default();
+    let stats = match vallheru_data::queries::player::load_stats(&app.pool, player_id).await {
+        Ok(v) => v,
+        Err(e) => {
+            tracing::error!(error = %e, player_id, "load_stats failed");
+            Vec::new()
+        }
+    };
+    let skills = match vallheru_data::queries::player::load_skills(&app.pool, player_id).await {
+        Ok(v) => v,
+        Err(e) => {
+            tracing::error!(error = %e, player_id, "load_skills failed");
+            Vec::new()
+        }
+    };
     let mining_skill = find_skill(&skills, "mining");
     let strength = find_stat(&stats, "strength");
     let speed = find_stat(&stats, "speed");
@@ -375,7 +383,10 @@ pub async fn mines_show(
 
     let deposits = vallheru_data::queries::gathering::load_mines(&app.pool, player_id)
         .await
-        .unwrap_or(None);
+        .unwrap_or_else(|e| {
+            tracing::error!(error = %e, player_id, "load_mines failed");
+            None
+        });
 
     let dep = deposits.map_or(MineDeposits::default(), |d| MineDeposits {
         copper: d.copper,
@@ -387,7 +398,10 @@ pub async fn mines_show(
 
     let search = vallheru_data::queries::gathering::load_mines_search(&app.pool, player_id)
         .await
-        .unwrap_or(None);
+        .unwrap_or_else(|e| {
+            tracing::error!(error = %e, player_id, "load_mines_search failed");
+            None
+        });
 
     let search_status = search.map_or(String::new(), |s| {
         format!(
@@ -455,7 +469,10 @@ pub async fn mines_dig(
     // Check deposit availability
     let deposits = vallheru_data::queries::gathering::load_mines(&app.pool, player_id)
         .await
-        .unwrap_or(None);
+        .unwrap_or_else(|e| {
+            tracing::error!(error = %e, player_id, "load_mines failed");
+            None
+        });
 
     let deposit_amount = deposits.map_or(0, |d| match ore_type {
         gathering::OreType::Copper => d.copper,
@@ -469,12 +486,20 @@ pub async fn mines_dig(
         return error_page(&app, &ctx, "Nie ma złóż w tej kopalni!");
     }
 
-    let stats = vallheru_data::queries::player::load_stats(&app.pool, player_id)
-        .await
-        .unwrap_or_default();
-    let skills = vallheru_data::queries::player::load_skills(&app.pool, player_id)
-        .await
-        .unwrap_or_default();
+    let stats = match vallheru_data::queries::player::load_stats(&app.pool, player_id).await {
+        Ok(v) => v,
+        Err(e) => {
+            tracing::error!(error = %e, player_id, "load_stats failed");
+            Vec::new()
+        }
+    };
+    let skills = match vallheru_data::queries::player::load_skills(&app.pool, player_id).await {
+        Ok(v) => v,
+        Err(e) => {
+            tracing::error!(error = %e, player_id, "load_skills failed");
+            Vec::new()
+        }
+    };
     let mining_skill = find_skill(&skills, "mining");
     let strength = find_stat(&stats, "strength");
     let is_craftsman = player_row.class == "Rzemieślnik";
@@ -559,7 +584,10 @@ pub async fn mines_dig(
     // Reload deposits for the view
     let deposits = vallheru_data::queries::gathering::load_mines(&app.pool, player_id)
         .await
-        .unwrap_or(None);
+        .unwrap_or_else(|e| {
+            tracing::error!(error = %e, player_id, "load_mines failed");
+            None
+        });
     let dep = deposits.map_or(MineDeposits::default(), |d| MineDeposits {
         copper: d.copper,
         zinc: d.zinc,
@@ -612,7 +640,10 @@ pub async fn lumberjack_show(
     let license_level =
         vallheru_data::queries::gathering::load_lumberjack_level(&app.pool, player_id)
             .await
-            .unwrap_or(0);
+            .unwrap_or_else(|e| {
+                tracing::error!(error = %e, player_id, "load_lumberjack_level failed");
+                0
+            });
 
     if license_level < 1 {
         return error_page(
@@ -672,7 +703,10 @@ pub async fn lumberjack_work(
     let license_level =
         vallheru_data::queries::gathering::load_lumberjack_level(&app.pool, player_id)
             .await
-            .unwrap_or(0);
+            .unwrap_or_else(|e| {
+                tracing::error!(error = %e, player_id, "load_lumberjack_level failed");
+                0
+            });
 
     let Some(wood_key) = form.wood_type.as_deref() else {
         return error_page(&app, &ctx, "Wybierz rodzaj drewna.");
@@ -701,12 +735,20 @@ pub async fn lumberjack_work(
         return error_page(&app, &ctx, "Nie masz tyle energii!");
     }
 
-    let stats = vallheru_data::queries::player::load_stats(&app.pool, player_id)
-        .await
-        .unwrap_or_default();
-    let skills = vallheru_data::queries::player::load_skills(&app.pool, player_id)
-        .await
-        .unwrap_or_default();
+    let stats = match vallheru_data::queries::player::load_stats(&app.pool, player_id).await {
+        Ok(v) => v,
+        Err(e) => {
+            tracing::error!(error = %e, player_id, "load_stats failed");
+            Vec::new()
+        }
+    };
+    let skills = match vallheru_data::queries::player::load_skills(&app.pool, player_id).await {
+        Ok(v) => v,
+        Err(e) => {
+            tracing::error!(error = %e, player_id, "load_skills failed");
+            Vec::new()
+        }
+    };
     let lumberjack_skill = find_skill(&skills, "lumberjack");
     let strength = find_stat(&stats, "strength");
     let is_craftsman = player_row.class == "Rzemieślnik";
@@ -861,7 +903,10 @@ pub async fn smelter_show(
 
     let smelter_level = vallheru_data::queries::gathering::load_smelter_level(&app.pool, player_id)
         .await
-        .unwrap_or(0);
+        .unwrap_or_else(|e| {
+            tracing::error!(error = %e, player_id, "load_smelter_level failed");
+            0
+        });
 
     let available_actions = build_smelt_actions(smelter_level);
 
@@ -904,7 +949,10 @@ pub async fn smelter_smelt(
 
     let smelter_level = vallheru_data::queries::gathering::load_smelter_level(&app.pool, player_id)
         .await
-        .unwrap_or(0);
+        .unwrap_or_else(|e| {
+            tracing::error!(error = %e, player_id, "load_smelter_level failed");
+            0
+        });
 
     let Some(bar_key) = form.bar_type.as_deref() else {
         return error_page(&app, &ctx, "Wybierz surowiec do wytopienia.");
@@ -929,10 +977,15 @@ pub async fn smelter_smelt(
     }
 
     // Check ore availability
-    let minerals = vallheru_data::queries::gathering::load_minerals(&app.pool, player_id)
+    let minerals = match vallheru_data::queries::gathering::load_minerals(&app.pool, player_id)
         .await
-        .unwrap_or(None)
-        .unwrap_or_default();
+    {
+        Ok(opt) => opt.unwrap_or_default(),
+        Err(e) => {
+            tracing::error!(error = %e, player_id, "load_minerals failed");
+            vallheru_data::queries::gathering::MineralsRow::default()
+        }
+    };
 
     let recipe = gathering::smelt_recipe(bar);
     for &(col, per_bar) in &recipe {
@@ -948,12 +1001,20 @@ pub async fn smelter_smelt(
     }
 
     // Load stats + skills
-    let stats = vallheru_data::queries::player::load_stats(&app.pool, player_id)
-        .await
-        .unwrap_or_default();
-    let skills = vallheru_data::queries::player::load_skills(&app.pool, player_id)
-        .await
-        .unwrap_or_default();
+    let stats = match vallheru_data::queries::player::load_stats(&app.pool, player_id).await {
+        Ok(v) => v,
+        Err(e) => {
+            tracing::error!(error = %e, player_id, "load_stats failed");
+            Vec::new()
+        }
+    };
+    let skills = match vallheru_data::queries::player::load_skills(&app.pool, player_id).await {
+        Ok(v) => v,
+        Err(e) => {
+            tracing::error!(error = %e, player_id, "load_skills failed");
+            Vec::new()
+        }
+    };
     let smelting_skill = find_skill(&skills, "smelting");
     let condition = find_stat(&stats, "condition");
     let is_craftsman = player_row.class == "Rzemieślnik";
@@ -1042,7 +1103,10 @@ pub async fn smelter_upgrade(
 
     let smelter_level = vallheru_data::queries::gathering::load_smelter_level(&app.pool, player_id)
         .await
-        .unwrap_or(0);
+        .unwrap_or_else(|e| {
+            tracing::error!(error = %e, player_id, "load_smelter_level failed");
+            0
+        });
 
     let Some(cost) = gathering::smelter_upgrade_cost(smelter_level) else {
         return error_page(&app, &ctx, "Nie możesz więcej rozbudowywać huty!");
@@ -1103,13 +1167,22 @@ pub async fn farm_show(
     let plantation =
         vallheru_data::queries::gathering::load_farm(&app.pool, player_id, &player_row.location)
             .await
-            .unwrap_or(None);
+            .unwrap_or_else(|e| {
+                tracing::error!(error = %e, player_id, "load_farm failed");
+                None
+            });
 
     let (has_plantation, lands, glasshouse, irrigation, creeper, free_lands, plots) =
         if let Some(ref farm) = plantation {
-            let all_plots = vallheru_data::queries::gathering::load_farm_plots(&app.pool, farm.id)
+            let all_plots = match vallheru_data::queries::gathering::load_farm_plots(&app.pool, farm.id)
                 .await
-                .unwrap_or_default();
+            {
+                Ok(v) => v,
+                Err(e) => {
+                    tracing::error!(error = %e, farm_id = farm.id, "load_farm_plots failed");
+                    Vec::new()
+                }
+            };
 
             let occupied: i32 = all_plots.iter().map(|p| p.amount).sum();
             let free = farm.lands - occupied;
@@ -1215,9 +1288,15 @@ async fn apply_gathering_xp(
 
     // Apply stat XP.
     if !stat_xp.is_empty() {
-        let mut stats = vallheru_data::queries::player::load_stats(&app.pool, player_id)
+        let mut stats = match vallheru_data::queries::player::load_stats(&app.pool, player_id)
             .await
-            .unwrap_or_default();
+        {
+            Ok(v) => v,
+            Err(e) => {
+                tracing::error!(error = %e, player_id, "apply_gathering_xp: load_stats failed");
+                Vec::new()
+            }
+        };
 
         for &(key, xp) in stat_xp {
             if xp <= 0 {
@@ -1245,9 +1324,15 @@ async fn apply_gathering_xp(
 
     // Apply skill XP.
     if !skill_xp.is_empty() {
-        let mut skills = vallheru_data::queries::player::load_skills(&app.pool, player_id)
+        let mut skills = match vallheru_data::queries::player::load_skills(&app.pool, player_id)
             .await
-            .unwrap_or_default();
+        {
+            Ok(v) => v,
+            Err(e) => {
+                tracing::error!(error = %e, player_id, "apply_gathering_xp: load_skills failed");
+                Vec::new()
+            }
+        };
 
         for &(key, xp) in skill_xp {
             if xp <= 0 {

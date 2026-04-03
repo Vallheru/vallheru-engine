@@ -94,7 +94,10 @@ async fn load_skill(app: &AppState, player_id: i32, key: &str) -> f64 {
             .bind(key)
             .fetch_optional(&app.pool)
             .await
-            .unwrap_or(None);
+            .unwrap_or_else(|e| {
+                tracing::error!(error = %e, player_id, skill = key, "load_skill query failed");
+                None
+            });
     row.map_or(0.0, |r| r.0)
 }
 
@@ -105,7 +108,10 @@ async fn load_stat(app: &AppState, player_id: i32, key: &str) -> f64 {
             .bind(key)
             .fetch_optional(&app.pool)
             .await
-            .unwrap_or(None);
+            .unwrap_or_else(|e| {
+                tracing::error!(error = %e, player_id, stat = key, "load_stat query failed");
+                None
+            });
     row.map_or(0.0, |r| r.0)
 }
 
@@ -181,13 +187,23 @@ pub async fn alchemy_recipes_show(
 
     let alchemy_skill = load_skill(&app, player_id, "alchemy").await;
 
-    let catalog = vallheru_data::queries::crafting::alchemy_catalog(&app.pool)
-        .await
-        .unwrap_or_default();
+    let catalog = match vallheru_data::queries::crafting::alchemy_catalog(&app.pool).await {
+        Ok(v) => v,
+        Err(e) => {
+            tracing::error!(error = %e, "alchemy_catalog query failed");
+            Vec::new()
+        }
+    };
 
-    let owned = vallheru_data::queries::crafting::alchemy_player_recipes(&app.pool, player_id)
+    let owned = match vallheru_data::queries::crafting::alchemy_player_recipes(&app.pool, player_id)
         .await
-        .unwrap_or_default();
+    {
+        Ok(v) => v,
+        Err(e) => {
+            tracing::error!(error = %e, player_id, "alchemy_player_recipes query failed");
+            Vec::new()
+        }
+    };
 
     let owned_names: Vec<&str> = owned.iter().map(|r| r.name.as_str()).collect();
 
@@ -276,7 +292,10 @@ pub async fn alchemy_recipe_buy(
         &recipe.name,
     )
     .await
-    .unwrap_or(false);
+    .unwrap_or_else(|e| {
+        tracing::error!(error = %e, player_id, "alchemy_player_has_recipe query failed");
+        false
+    });
     if already_owned {
         return error_page(&app, &ctx, "Już posiadasz ten przepis.");
     }
@@ -327,7 +346,9 @@ pub async fn alchemy_lab_show(
         return error_page(&app, &ctx, "Musisz znajdować się w mieście.");
     }
 
-    let owned = match vallheru_data::queries::crafting::alchemy_player_recipes(&app.pool, player_id).await {
+    let owned = match vallheru_data::queries::crafting::alchemy_player_recipes(&app.pool, player_id)
+        .await
+    {
         Ok(v) => v,
         Err(e) => {
             tracing::error!(player_id, error = ?e, "failed to load alchemy recipes");

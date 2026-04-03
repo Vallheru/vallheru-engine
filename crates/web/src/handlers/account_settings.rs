@@ -288,9 +288,13 @@ async fn show_ignored(state: &AppState, req_ctx: &RequestContext, player_id: i32
         }
     };
 
-    let blocked = aq::list_blocked(&state.pool, i64::from(player_id))
-        .await
-        .unwrap_or_default();
+    let blocked = match aq::list_blocked(&state.pool, i64::from(player_id)).await {
+        Ok(v) => v,
+        Err(e) => {
+            tracing::error!(error = %e, player_id, "Failed to load blocked users list");
+            Vec::new()
+        }
+    };
 
     let meta = PageMeta::titled("Opcje konta");
     let base = state.templates.build_context(req_ctx, &meta);
@@ -324,9 +328,13 @@ async fn show_links(
         }
     };
 
-    let links = aq::list_links(&state.pool, player_id)
-        .await
-        .unwrap_or_default();
+    let links = match aq::list_links(&state.pool, player_id).await {
+        Ok(v) => v,
+        Err(e) => {
+            tracing::error!(error = %e, player_id, "Failed to load account links");
+            Vec::new()
+        }
+    };
     let editing_link = editing.and_then(|eid| {
         links.iter().find(|l| l.id == eid).map(|l| LinkView {
             id: l.id,
@@ -770,9 +778,13 @@ pub async fn add_blocked(
     let owner_id = i64::from(player_id);
 
     // Check count limit (30).
-    let current = aq::list_blocked(&state.pool, owner_id)
-        .await
-        .unwrap_or_default();
+    let current = match aq::list_blocked(&state.pool, owner_id).await {
+        Ok(v) => v,
+        Err(e) => {
+            tracing::error!(error = %e, player_id, "Failed to load blocked list for count check");
+            Vec::new()
+        }
+    };
     if current.len() >= 30 {
         return account_flash(
             &state,

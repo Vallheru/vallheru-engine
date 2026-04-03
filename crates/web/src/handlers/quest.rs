@@ -341,9 +341,13 @@ pub async fn chronicle_show(
         return err(&app, &ctx, "Nie znajdujesz się w mieście.");
     }
 
-    let missions = mq::list_chronicle_missions_at(&app.pool, &player.location)
-        .await
-        .unwrap_or_default();
+    let missions = match mq::list_chronicle_missions_at(&app.pool, &player.location).await {
+        Ok(v) => v,
+        Err(e) => {
+            tracing::error!(error = %e, location = %player.location, "Failed to load chronicle missions");
+            Vec::new()
+        }
+    };
 
     let mut stories = Vec::new();
     let mut old_stories = Vec::new();
