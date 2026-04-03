@@ -1765,21 +1765,25 @@ pub async fn approve_reservation(pool: &PgPool, reservation_id: i32) -> Result<(
     match rtype.as_str() {
         "armory" => {
             armory_give(pool, iid, pid, amount).await?;
-            sqlx::query("UPDATE tribe_zbroj SET reserved = reserved - $1 WHERE id = $2")
+            if let Err(e) = sqlx::query("UPDATE tribe_zbroj SET reserved = reserved - $1 WHERE id = $2")
                 .bind(amount)
                 .bind(iid)
                 .execute(pool)
                 .await
-                .ok(); // item may have been fully given and deleted
+            {
+                tracing::error!(error = %e, item_id = iid, "Failed to decrement armory reservation (item may have been deleted)");
+            }
         }
         "warehouse" => {
             warehouse_give(pool, iid, pid, amount).await?;
-            sqlx::query("UPDATE tribe_mag SET reserved = reserved - $1 WHERE id = $2")
+            if let Err(e) = sqlx::query("UPDATE tribe_mag SET reserved = reserved - $1 WHERE id = $2")
                 .bind(amount)
                 .bind(iid)
                 .execute(pool)
                 .await
-                .ok();
+            {
+                tracing::error!(error = %e, item_id = iid, "Failed to decrement warehouse reservation (item may have been deleted)");
+            }
         }
         _ => {
             // herb/mineral reservations — the handler should use herb_give / mineral_give

@@ -630,12 +630,13 @@ pub async fn tforums_add_reply(
     let now = current_epoch();
 
     // Check topic exists and belongs to tribe.
-    if tfq::find_topic(&app.pool, topic_id, tribe_id)
-        .await
-        .ok()
-        .flatten()
-        .is_none()
-    {
+    if match tfq::find_topic(&app.pool, topic_id, tribe_id).await {
+        Ok(v) => v.is_none(),
+        Err(e) => {
+            tracing::error!(error = %e, topic_id, tribe_id, "Failed to find tribe forum topic");
+            true
+        }
+    } {
         return error_page(&app, &ctx, "Nie ma takiego tematu.");
     }
 
@@ -697,12 +698,13 @@ pub async fn tforums_delete_topic(
     }
 
     // Verify topic belongs to tribe.
-    if tfq::find_topic(&app.pool, topic_id, player_row.tribe_id)
-        .await
-        .ok()
-        .flatten()
-        .is_none()
-    {
+    if match tfq::find_topic(&app.pool, topic_id, player_row.tribe_id).await {
+        Ok(v) => v.is_none(),
+        Err(e) => {
+            tracing::error!(error = %e, topic_id, tribe_id = player_row.tribe_id, "Failed to find tribe forum topic");
+            true
+        }
+    } {
         return error_page(&app, &ctx, "Nie ma takiego tematu.");
     }
 
@@ -778,12 +780,13 @@ pub async fn tforums_toggle_sticky(
     }
 
     // Verify topic belongs to tribe.
-    if tfq::find_topic(&app.pool, topic_id, player_row.tribe_id)
-        .await
-        .ok()
-        .flatten()
-        .is_none()
-    {
+    if match tfq::find_topic(&app.pool, topic_id, player_row.tribe_id).await {
+        Ok(v) => v.is_none(),
+        Err(e) => {
+            tracing::error!(error = %e, topic_id, tribe_id = player_row.tribe_id, "Failed to find tribe forum topic");
+            true
+        }
+    } {
         return error_page(&app, &ctx, "Nie ma takiego tematu.");
     }
 

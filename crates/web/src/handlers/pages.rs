@@ -770,11 +770,13 @@ pub async fn chronicle_mission(
         return Redirect::to("/").into_response();
     };
 
-    let Some(row) = pq::get_chronicle_mission(&app.pool, id)
-        .await
-        .ok()
-        .flatten()
-    else {
+    let Some(row) = (match pq::get_chronicle_mission(&app.pool, id).await {
+        Ok(v) => v,
+        Err(e) => {
+            tracing::error!(error = %e, id, "Failed to get chronicle mission");
+            None
+        }
+    }) else {
         return Redirect::to("/chronicle").into_response();
     };
 

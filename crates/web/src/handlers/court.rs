@@ -259,12 +259,13 @@ pub async fn court_doc_detail(
     Extension(ctx): Extension<RequestContext>,
     Path(doc_id): Path<i32>,
 ) -> Response {
-    let row = vallheru_data::queries::moderation::find_court_doc(&state.pool, doc_id)
-        .await
-        .ok()
-        .flatten();
-
-    let Some(row) = row else {
+    let Some(row) = (match vallheru_data::queries::moderation::find_court_doc(&state.pool, doc_id).await {
+        Ok(v) => v,
+        Err(e) => {
+            tracing::error!(error = %e, doc_id, "Failed to find court doc");
+            None
+        }
+    }) else {
         return Redirect::to("/court").into_response();
     };
 
@@ -373,12 +374,13 @@ pub async fn court_doc_edit_form(
         return Redirect::to("/court").into_response();
     }
 
-    let row = vallheru_data::queries::moderation::find_court_doc(&state.pool, doc_id)
-        .await
-        .ok()
-        .flatten();
-
-    let Some(row) = row else {
+    let Some(row) = (match vallheru_data::queries::moderation::find_court_doc(&state.pool, doc_id).await {
+        Ok(v) => v,
+        Err(e) => {
+            tracing::error!(error = %e, doc_id, "Failed to find court doc for edit");
+            None
+        }
+    }) else {
         return Redirect::to("/court").into_response();
     };
 

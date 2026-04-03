@@ -338,12 +338,13 @@ pub async fn chat_send(
                 return error_redirect("Nie możesz szeptać do siebie.");
             }
             // Verify recipient exists.
-            if q::player_name_by_id(&app.pool, *recipient_id)
-                .await
-                .ok()
-                .flatten()
-                .is_none()
-            {
+            if match q::player_name_by_id(&app.pool, *recipient_id).await {
+                Ok(v) => v.is_none(),
+                Err(e) => {
+                    tracing::error!(error = %e, recipient_id, "Failed to verify whisper recipient");
+                    true
+                }
+            } {
                 return error_redirect("Nie znaleziono gracza o podanym ID.");
             }
             // Process the whisper body through BBCode.
@@ -503,11 +504,13 @@ pub async fn chat_admin_give(
     let author = format!("<i>{}</i>", text::strip_tags(&user.name));
 
     if give_id > 0 {
-        let target_name = q::player_name_by_id(&app.pool, give_id)
-            .await
-            .ok()
-            .flatten()
-            .unwrap_or_default();
+        let target_name = match q::player_name_by_id(&app.pool, give_id).await {
+            Ok(v) => v.unwrap_or_default(),
+            Err(e) => {
+                tracing::error!(error = %e, give_id, "Failed to load player name for admin give");
+                String::new()
+            }
+        };
         let body = format!("Proszę {target_name} oto {item} {comment}");
         if let Err(e) = q::insert_message(&app.pool, &author, &body, 0, 0).await {
             tracing::warn!(error = %e, "Failed to insert admin give message (targeted)");

@@ -579,12 +579,17 @@ pub async fn armory_give(
 
     // Check recipient tribe membership
     let recipient_tribe: Option<i32> =
-        sqlx::query_scalar("SELECT tribe_id FROM players WHERE id = $1")
+        match sqlx::query_scalar("SELECT tribe_id FROM players WHERE id = $1")
             .bind(form.recipient_id)
             .fetch_optional(&app.pool)
             .await
-            .ok()
-            .flatten();
+        {
+            Ok(v) => v,
+            Err(e) => {
+                tracing::error!(error = %e, recipient_id = form.recipient_id, "Failed to fetch recipient tribe for armory give");
+                None
+            }
+        };
 
     let check = GiveCheck {
         total: i64::from(item.amount),
@@ -803,12 +808,17 @@ pub async fn warehouse_give(
     };
 
     let recipient_tribe: Option<i32> =
-        sqlx::query_scalar("SELECT tribe_id FROM players WHERE id = $1")
+        match sqlx::query_scalar("SELECT tribe_id FROM players WHERE id = $1")
             .bind(form.recipient_id)
             .fetch_optional(&app.pool)
             .await
-            .ok()
-            .flatten();
+        {
+            Ok(v) => v,
+            Err(e) => {
+                tracing::error!(error = %e, recipient_id = form.recipient_id, "Failed to fetch recipient tribe for potion give");
+                None
+            }
+        };
 
     let check = GiveCheck {
         total: i64::from(potion.amount),

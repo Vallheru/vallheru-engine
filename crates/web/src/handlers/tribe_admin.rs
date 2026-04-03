@@ -408,10 +408,13 @@ pub async fn tribe_admin_permissions_show(
         if m.id == player_id {
             continue; // Skip owner
         }
-        let perm_row = tq::tribe_perm_for_player(&app.pool, player.tribe, m.id)
-            .await
-            .ok()
-            .flatten();
+        let perm_row = match tq::tribe_perm_for_player(&app.pool, player.tribe, m.id).await {
+            Ok(v) => v,
+            Err(e) => {
+                tracing::error!(error = %e, tribe_id = player.tribe, member_id = m.id, "Failed to load tribe permissions for member");
+                None
+            }
+        };
         let flags = match perm_row {
             Some(ref row) => perms_from_row(row).to_flags().to_vec(),
             None => vec![false; 15],
@@ -542,10 +545,13 @@ pub async fn tribe_admin_ranks_show(
         return error_page(&app, &ctx, "Nie masz uprawnień do zarządzania rangami.");
     }
 
-    let rank_row = tq::tribe_ranks(&app.pool, player.tribe)
-        .await
-        .ok()
-        .flatten();
+    let rank_row = match tq::tribe_ranks(&app.pool, player.tribe).await {
+        Ok(v) => v,
+        Err(e) => {
+            tracing::error!(error = %e, tribe_id = player.tribe, "Failed to load tribe ranks");
+            None
+        }
+    };
 
     let labels = match rank_row {
         Some(ref r) => vec![
@@ -669,11 +675,13 @@ pub async fn tribe_admin_rank_assign(
         Err(resp) => return resp,
     };
 
-    let ranks_exist = tq::tribe_ranks(&app.pool, player.tribe)
-        .await
-        .ok()
-        .flatten()
-        .is_some();
+    let ranks_exist = match tq::tribe_ranks(&app.pool, player.tribe).await {
+        Ok(v) => v.is_some(),
+        Err(e) => {
+            tracing::error!(error = %e, tribe_id = player.tribe, "Failed to check tribe ranks existence");
+            false
+        }
+    };
 
     let Ok(target_tribe) = load_target_tribe(&app, form.player_id).await else {
         return server_error();

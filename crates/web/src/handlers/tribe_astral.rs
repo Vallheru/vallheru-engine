@@ -409,12 +409,17 @@ pub async fn astral_give(
 
     // Verify recipient is in the same tribe
     let recipient_tribe: Option<i32> =
-        sqlx::query_scalar("SELECT tribe_id FROM players WHERE id = $1")
+        match sqlx::query_scalar("SELECT tribe_id FROM players WHERE id = $1")
             .bind(form.recipient_id)
             .fetch_optional(&app.pool)
             .await
-            .ok()
-            .flatten();
+        {
+            Ok(v) => v,
+            Err(e) => {
+                tracing::error!(error = %e, recipient_id = form.recipient_id, "Failed to fetch recipient tribe for astral give");
+                None
+            }
+        };
 
     if recipient_tribe != Some(tribe.id) {
         return error_page(&app, &ctx, "Gracz nie należy do tego klanu.");

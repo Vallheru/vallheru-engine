@@ -257,10 +257,13 @@ pub async fn player_invite_check(
     .await?;
 
     Ok(row.map(|(id, room, settings_json)| {
-        let accepts_invites: bool = serde_json::from_str::<serde_json::Value>(&settings_json)
-            .ok()
-            .and_then(|v| v.get("rinvites").and_then(|r| r.as_str()).map(|s| s != "N"))
-            .unwrap_or(true);
+        let accepts_invites: bool = match serde_json::from_str::<serde_json::Value>(&settings_json) {
+            Ok(v) => v.get("rinvites").and_then(|r| r.as_str()) != Some("N"),
+            Err(e) => {
+                tracing::error!(error = %e, player_id, "Failed to parse room settings JSON");
+                true
+            }
+        };
         (id, room, accepts_invites)
     }))
 }

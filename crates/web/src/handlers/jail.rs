@@ -342,13 +342,13 @@ pub async fn jail_escape(
         return error_page("Nie masz wystarczającej ilości energii.");
     }
 
-    let jail_record =
-        vallheru_data::queries::moderation::find_jail_by_prisoner(&state.pool, player_id)
-            .await
-            .ok()
-            .flatten();
-
-    let Some(record) = jail_record else {
+    let Some(record) = (match vallheru_data::queries::moderation::find_jail_by_prisoner(&state.pool, player_id).await {
+        Ok(v) => v,
+        Err(e) => {
+            tracing::error!(error = %e, player_id, "Failed to find jail record for escape attempt");
+            None
+        }
+    }) else {
         return error_page("Zapomnij o tym.");
     };
 

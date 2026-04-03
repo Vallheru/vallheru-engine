@@ -260,13 +260,14 @@ pub async fn explore_walk(
         _ => ExploreRegion::Mountains,
     };
 
-    let maps_setting = settings_q::get_setting(&app.pool, "maps")
-        .await
-        .ok()
-        .flatten()
-        .and_then(|r| r.value)
-        .and_then(|v| v.parse::<i32>().ok())
-        .unwrap_or(0);
+    let maps_setting = match settings_q::get_setting(&app.pool, "maps").await {
+        Ok(Some(r)) => r.value.and_then(|v| v.parse::<i32>().ok()).unwrap_or(0),
+        Ok(None) => 0,
+        Err(e) => {
+            tracing::error!(error = ?e, "failed to load maps setting");
+            0
+        }
+    };
 
     #[allow(clippy::cast_possible_truncation)]
     let step_count = (amount * 2.0).floor() as i32;
@@ -282,24 +283,40 @@ pub async fn explore_walk(
     let mut remaining_maps = maps_setting;
 
     let monsters =
-        combat::load_monsters_by_location(&app.pool, encounter_region(&player_row.location))
-            .await
-            .unwrap_or_default();
+        match combat::load_monsters_by_location(&app.pool, encounter_region(&player_row.location)).await {
+            Ok(v) => v,
+            Err(e) => {
+                tracing::error!(error = ?e, "failed to load monsters for exploration");
+                Vec::new()
+            }
+        };
 
     let monster_domains: Vec<Monster> = monsters
         .into_iter()
         .map(vallheru_data::queries::combat::MonsterRow::into_domain)
         .collect();
 
-    let stats = player_q::load_stats(&app.pool, player_id)
-        .await
-        .unwrap_or_default();
-    let skills = player_q::load_skills(&app.pool, player_id)
-        .await
-        .unwrap_or_default();
-    let equipped = vallheru_data::queries::item::find_equipped_items(&app.pool, player_id)
-        .await
-        .unwrap_or_default();
+    let stats = match player_q::load_stats(&app.pool, player_id).await {
+        Ok(v) => v,
+        Err(e) => {
+            tracing::error!(player_id, error = ?e, "failed to load stats for explore");
+            Vec::new()
+        }
+    };
+    let skills = match player_q::load_skills(&app.pool, player_id).await {
+        Ok(v) => v,
+        Err(e) => {
+            tracing::error!(player_id, error = ?e, "failed to load skills for explore");
+            Vec::new()
+        }
+    };
+    let equipped = match vallheru_data::queries::item::find_equipped_items(&app.pool, player_id).await {
+        Ok(v) => v,
+        Err(e) => {
+            tracing::error!(player_id, error = ?e, "failed to load equipped items for explore");
+            Vec::new()
+        }
+    };
 
     let equipped_domain: Vec<OwnedEquipment> =
         equipped.iter().map(|e| e.clone().into_domain()).collect();
@@ -457,12 +474,14 @@ pub async fn explore_walk(
             combat::set_player_fight(&app.pool, player_id, mid).await,
             "set player fight"
         );
-        combat::load_monster(&app.pool, mid)
-            .await
-            .ok()
-            .flatten()
-            .map(|m| m.name)
-            .unwrap_or_default()
+        match combat::load_monster(&app.pool, mid).await {
+            Ok(Some(m)) => m.name,
+            Ok(None) => String::new(),
+            Err(e) => {
+                tracing::error!(monster_id = mid, error = ?e, "failed to load encounter monster name");
+                String::new()
+            }
+        }
     } else {
         String::new()
     };
@@ -545,12 +564,20 @@ pub async fn explore_escape(
         _ => return error_page(&app, &ctx, "Nie znaleziono potwora."),
     };
 
-    let stats = player_q::load_stats(&app.pool, player_id)
-        .await
-        .unwrap_or_default();
-    let skills = player_q::load_skills(&app.pool, player_id)
-        .await
-        .unwrap_or_default();
+    let stats = match player_q::load_stats(&app.pool, player_id).await {
+        Ok(v) => v,
+        Err(e) => {
+            tracing::error!(player_id, error = ?e, "failed to load stats for escape");
+            Vec::new()
+        }
+    };
+    let skills = match player_q::load_skills(&app.pool, player_id).await {
+        Ok(v) => v,
+        Err(e) => {
+            tracing::error!(player_id, error = ?e, "failed to load skills for escape");
+            Vec::new()
+        }
+    };
 
     let player_speed = find_stat(&stats, "speed");
     let perception = find_skill(&skills, "perception");
@@ -640,9 +667,13 @@ pub async fn pve_show(
         _ => return error_page(&app, &ctx, "Nie znaleziono potwora."),
     };
 
-    let equipped = vallheru_data::queries::item::find_equipped_items(&app.pool, player_id)
-        .await
-        .unwrap_or_default();
+    let equipped = match vallheru_data::queries::item::find_equipped_items(&app.pool, player_id).await {
+        Ok(v) => v,
+        Err(e) => {
+            tracing::error!(player_id, error = ?e, "failed to load equipped items for pve show");
+            Vec::new()
+        }
+    };
     let equipped_domain: Vec<OwnedEquipment> =
         equipped.iter().map(|e| e.clone().into_domain()).collect();
     let has_weapon = equipped_domain.iter().any(|e| {
@@ -655,22 +686,34 @@ pub async fn pve_show(
         .iter()
         .any(|e| e.equipment_type == EquipmentType::Bow);
 
-    let spells = vallheru_data::queries::item::find_spells_by_owner(&app.pool, player_id)
-        .await
-        .unwrap_or_default();
+    let spells = match vallheru_data::queries::item::find_spells_by_owner(&app.pool, player_id).await {
+        Ok(v) => v,
+        Err(e) => {
+            tracing::error!(player_id, error = ?e, "failed to load spells for pve show");
+            Vec::new()
+        }
+    };
     let has_spell = spells.iter().any(|s| s.status == "E" && s.typ == "B");
     let has_def_spell = spells.iter().any(|s| s.status == "E" && s.typ == "O");
 
-    let potions = vallheru_data::queries::item::find_potions_by_owner(&app.pool, player_id)
-        .await
-        .unwrap_or_default();
+    let potions = match vallheru_data::queries::item::find_potions_by_owner(&app.pool, player_id).await {
+        Ok(v) => v,
+        Err(e) => {
+            tracing::error!(player_id, error = ?e, "failed to load potions for pve show");
+            Vec::new()
+        }
+    };
     let has_potion = potions
         .iter()
         .any(|p| p.status == "K" && p.potion_type == "H");
 
-    let stats = player_q::load_stats(&app.pool, player_id)
-        .await
-        .unwrap_or_default();
+    let stats = match player_q::load_stats(&app.pool, player_id).await {
+        Ok(v) => v,
+        Err(e) => {
+            tracing::error!(player_id, error = ?e, "failed to load stats for pve show");
+            Vec::new()
+        }
+    };
     let speed = find_stat(&stats, "speed");
 
     #[allow(clippy::cast_possible_truncation)]
@@ -740,26 +783,50 @@ pub async fn pve_action(
         _ => return error_page(&app, &ctx, "Nie znaleziono potwora."),
     };
 
-    let stats = player_q::load_stats(&app.pool, player_id)
-        .await
-        .unwrap_or_default();
-    let skills = player_q::load_skills(&app.pool, player_id)
-        .await
-        .unwrap_or_default();
-    let bonuses = player_q::load_bonuses(&app.pool, player_id)
-        .await
-        .unwrap_or_default();
-    let equipped = vallheru_data::queries::item::find_equipped_items(&app.pool, player_id)
-        .await
-        .unwrap_or_default();
+    let stats = match player_q::load_stats(&app.pool, player_id).await {
+        Ok(v) => v,
+        Err(e) => {
+            tracing::error!(player_id, error = ?e, "failed to load stats for pve action");
+            Vec::new()
+        }
+    };
+    let skills = match player_q::load_skills(&app.pool, player_id).await {
+        Ok(v) => v,
+        Err(e) => {
+            tracing::error!(player_id, error = ?e, "failed to load skills for pve action");
+            Vec::new()
+        }
+    };
+    let bonuses = match player_q::load_bonuses(&app.pool, player_id).await {
+        Ok(v) => v,
+        Err(e) => {
+            tracing::error!(player_id, error = ?e, "failed to load bonuses for pve action");
+            Vec::new()
+        }
+    };
+    let equipped = match vallheru_data::queries::item::find_equipped_items(&app.pool, player_id).await {
+        Ok(v) => v,
+        Err(e) => {
+            tracing::error!(player_id, error = ?e, "failed to load equipped items for pve action");
+            Vec::new()
+        }
+    };
     let equipped_domain: Vec<OwnedEquipment> =
         equipped.iter().map(|e| e.clone().into_domain()).collect();
-    let spells = vallheru_data::queries::item::find_spells_by_owner(&app.pool, player_id)
-        .await
-        .unwrap_or_default();
-    let potions = vallheru_data::queries::item::find_potions_by_owner(&app.pool, player_id)
-        .await
-        .unwrap_or_default();
+    let spells = match vallheru_data::queries::item::find_spells_by_owner(&app.pool, player_id).await {
+        Ok(v) => v,
+        Err(e) => {
+            tracing::error!(player_id, error = ?e, "failed to load spells for pve action");
+            Vec::new()
+        }
+    };
+    let potions = match vallheru_data::queries::item::find_potions_by_owner(&app.pool, player_id).await {
+        Ok(v) => v,
+        Err(e) => {
+            tracing::error!(player_id, error = ?e, "failed to load potions for pve action");
+            Vec::new()
+        }
+    };
 
     let weapon_ref = equipped_domain
         .iter()
@@ -1175,9 +1242,13 @@ pub async fn arena_show(
         );
     }
 
-    let opponents = combat::load_arena_opponents(&app.pool, player_id, &player_row.location)
-        .await
-        .unwrap_or_default();
+    let opponents = match combat::load_arena_opponents(&app.pool, player_id, &player_row.location).await {
+        Ok(v) => v,
+        Err(e) => {
+            tracing::error!(player_id, error = ?e, "failed to load arena opponents");
+            Vec::new()
+        }
+    };
 
     let meta = PageMeta::titled("Arena Walk").with_back_link("/city", "Wróć do miasta");
     let base = app.templates.build_context(&ctx, &meta);
@@ -1419,12 +1490,14 @@ pub async fn hunters_show(
         "Altara" => "hunteraltara",
         _ => "hunterardulith",
     };
-    let has_quest = settings_q::get_setting(&app.pool, quest_key)
-        .await
-        .ok()
-        .flatten()
-        .and_then(|r| r.value)
-        .is_some_and(|v| !v.is_empty());
+    let has_quest = match settings_q::get_setting(&app.pool, quest_key).await {
+        Ok(Some(r)) => r.value.is_some_and(|v| !v.is_empty()),
+        Ok(None) => false,
+        Err(e) => {
+            tracing::error!(error = ?e, "failed to load hunters quest setting");
+            false
+        }
+    };
 
     let meta = PageMeta::titled("Gildia Łowców").with_back_link("/city", "Wróć do miasta");
     let base = app.templates.build_context(&ctx, &meta);
@@ -1453,7 +1526,13 @@ pub async fn hunters_bestiary(
         return crate::page::redirect("/login");
     };
 
-    let entries = combat::load_bestiary(&app.pool).await.unwrap_or_default();
+    let entries = match combat::load_bestiary(&app.pool).await {
+        Ok(v) => v,
+        Err(e) => {
+            tracing::error!(error = ?e, "failed to load bestiary");
+            Vec::new()
+        }
+    };
 
     let mut city1: Vec<combat::BestiaryEntry> = entries
         .iter()
@@ -1557,12 +1636,14 @@ pub async fn hunters_quest_show(
         _ => "hunterardulith",
     };
 
-    let quest_value = settings_q::get_setting(&app.pool, quest_key)
-        .await
-        .ok()
-        .flatten()
-        .and_then(|r| r.value)
-        .unwrap_or_default();
+    let quest_value = match settings_q::get_setting(&app.pool, quest_key).await {
+        Ok(Some(r)) => r.value.unwrap_or_default(),
+        Ok(None) => String::new(),
+        Err(e) => {
+            tracing::error!(error = ?e, "failed to load quest setting for show");
+            String::new()
+        }
+    };
 
     if quest_value.is_empty() {
         return error_page(&app, &ctx, "Nie ma zleceń w gildii.");
@@ -1623,12 +1704,14 @@ pub async fn hunters_quest_do(
         _ => "hunterardulith",
     };
 
-    let quest_value = settings_q::get_setting(&app.pool, quest_key)
-        .await
-        .ok()
-        .flatten()
-        .and_then(|r| r.value)
-        .unwrap_or_default();
+    let quest_value = match settings_q::get_setting(&app.pool, quest_key).await {
+        Ok(Some(r)) => r.value.unwrap_or_default(),
+        Ok(None) => String::new(),
+        Err(e) => {
+            tracing::error!(error = ?e, "failed to load quest setting for do");
+            String::new()
+        }
+    };
 
     if quest_value.is_empty() {
         return error_page(&app, &ctx, "Nie ma zleceń w gildii.");
@@ -1654,10 +1737,13 @@ pub async fn hunters_quest_do(
         }
         "L" => {
             let monster_id: i32 = parts.get(1).and_then(|s| s.parse().ok()).unwrap_or(0);
-            let monster = combat::load_monster(&app.pool, monster_id)
-                .await
-                .ok()
-                .flatten();
+            let monster = match combat::load_monster(&app.pool, monster_id).await {
+                Ok(v) => v,
+                Err(e) => {
+                    tracing::error!(monster_id, error = ?e, "failed to load monster for quest L");
+                    None
+                }
+            };
             let gold = monster.as_ref().map_or(100, |m| i64::from(m.level) * 100);
             (
                 "Dziękujemy za dostarczenie potrzebnych rzeczy do badań.".to_owned(),
@@ -1667,10 +1753,13 @@ pub async fn hunters_quest_do(
         "F" => {
             let monster_id: i32 = parts.get(1).and_then(|s| s.parse().ok()).unwrap_or(0);
             let qty: i32 = parts.get(2).and_then(|s| s.parse().ok()).unwrap_or(1);
-            let monster = combat::load_monster(&app.pool, monster_id)
-                .await
-                .ok()
-                .flatten();
+            let monster = match combat::load_monster(&app.pool, monster_id).await {
+                Ok(v) => v,
+                Err(e) => {
+                    tracing::error!(monster_id, error = ?e, "failed to load monster for quest F");
+                    None
+                }
+            };
             let gold = monster
                 .as_ref()
                 .map_or(100, |m| i64::from(m.level) * 10 * i64::from(qty));
@@ -1800,16 +1889,36 @@ async fn build_pvp_combatant(
     use vallheru_domain::combat::pvp::{PvpCombatant, PvpSpell};
 
     let id = row.id;
-    let stats = player_q::load_stats(pool, id).await.unwrap_or_default();
-    let skills = player_q::load_skills(pool, id).await.unwrap_or_default();
-    let equipped = vallheru_data::queries::item::find_equipped_items(pool, id)
-        .await
-        .unwrap_or_default();
+    let stats = match player_q::load_stats(pool, id).await {
+        Ok(v) => v,
+        Err(e) => {
+            tracing::error!(player_id = id, error = ?e, "failed to load stats for pvp combatant");
+            Vec::new()
+        }
+    };
+    let skills = match player_q::load_skills(pool, id).await {
+        Ok(v) => v,
+        Err(e) => {
+            tracing::error!(player_id = id, error = ?e, "failed to load skills for pvp combatant");
+            Vec::new()
+        }
+    };
+    let equipped = match vallheru_data::queries::item::find_equipped_items(pool, id).await {
+        Ok(v) => v,
+        Err(e) => {
+            tracing::error!(player_id = id, error = ?e, "failed to load equipped for pvp combatant");
+            Vec::new()
+        }
+    };
     let equipped_domain: Vec<OwnedEquipment> =
         equipped.iter().map(|e| e.clone().into_domain()).collect();
-    let spell_rows = vallheru_data::queries::item::find_spells_by_owner(pool, id)
-        .await
-        .unwrap_or_default();
+    let spell_rows = match vallheru_data::queries::item::find_spells_by_owner(pool, id).await {
+        Ok(v) => v,
+        Err(e) => {
+            tracing::error!(player_id = id, error = ?e, "failed to load spells for pvp combatant");
+            Vec::new()
+        }
+    };
 
     let find_equip = |et: EquipmentType| -> Option<OwnedEquipment> {
         equipped_domain

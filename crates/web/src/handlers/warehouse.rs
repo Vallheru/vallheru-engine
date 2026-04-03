@@ -835,17 +835,25 @@ async fn add_player_inventory(
 // =========================================================================
 
 fn parse_gold_setting(res: Result<Option<sq::SettingRow>, sqlx::Error>) -> i64 {
-    res.ok()
-        .flatten()
-        .and_then(|r| r.value.as_deref().and_then(|v| v.parse::<i64>().ok()))
-        .unwrap_or(0)
+    match res {
+        Ok(opt) => opt
+            .and_then(|r| r.value.as_deref().and_then(|v| v.parse::<i64>().ok()))
+            .unwrap_or(0),
+        Err(e) => {
+            tracing::error!(error = %e, "Failed to parse gold setting");
+            0
+        }
+    }
 }
 
 fn parse_caravan_setting(res: Result<Option<sq::SettingRow>, sqlx::Error>) -> bool {
-    res.ok()
-        .flatten()
-        .and_then(|r| r.value)
-        .is_some_and(|v| v == "Y")
+    match res {
+        Ok(opt) => opt.and_then(|r| r.value).is_some_and(|v| v == "Y"),
+        Err(e) => {
+            tracing::error!(error = %e, "Failed to parse caravan setting");
+            false
+        }
+    }
 }
 
 fn build_price_map(prices: &[sq::SettingRow]) -> std::collections::HashMap<&str, i64> {
@@ -879,41 +887,51 @@ async fn player_owned_amount(app: &AppState, player_id: i32, idx: usize, platinu
     }
 
     if idx < 17 {
-        let minerals = gq::load_minerals(&app.pool, player_id)
-            .await
-            .ok()
-            .flatten()
-            .unwrap_or_default();
+        let minerals = match gq::load_minerals(&app.pool, player_id).await {
+            Ok(v) => v.unwrap_or_default(),
+            Err(e) => {
+                tracing::error!(error = %e, player_id, "Failed to load minerals for warehouse");
+                gq::MineralsRow::default()
+            }
+        };
         return i64::from(player_amount_mineral(&minerals, idx));
     }
 
     // Herbs (idx 18..26)
-    let herbs = gq::load_herbs(&app.pool, player_id)
-        .await
-        .ok()
-        .flatten()
-        .unwrap_or_default();
+    let herbs = match gq::load_herbs(&app.pool, player_id).await {
+        Ok(v) => v.unwrap_or_default(),
+        Err(e) => {
+            tracing::error!(error = %e, player_id, "Failed to load herbs for warehouse");
+            gq::HerbsRow::default()
+        }
+    };
     i64::from(player_amount_herb(&herbs, idx))
 }
 
 /// Load the base price for an item from settings.
 async fn load_item_price(app: &AppState, idx: usize) -> i64 {
-    sq::get_setting(&app.pool, ITEMS[idx])
-        .await
-        .ok()
-        .flatten()
-        .and_then(|r| r.value.as_deref().and_then(|v| v.parse::<i64>().ok()))
-        .unwrap_or(0)
+    match sq::get_setting(&app.pool, ITEMS[idx]).await {
+        Ok(opt) => opt
+            .and_then(|r| r.value.as_deref().and_then(|v| v.parse::<i64>().ok()))
+            .unwrap_or(0),
+        Err(e) => {
+            tracing::error!(error = %e, item = ITEMS[idx], "Failed to load item price");
+            0
+        }
+    }
 }
 
 /// Load kingdom gold from settings.
 async fn load_kingdom_gold(app: &AppState) -> i64 {
-    sq::get_setting(&app.pool, "gold")
-        .await
-        .ok()
-        .flatten()
-        .and_then(|r| r.value.as_deref().and_then(|v| v.parse::<i64>().ok()))
-        .unwrap_or(0)
+    match sq::get_setting(&app.pool, "gold").await {
+        Ok(opt) => opt
+            .and_then(|r| r.value.as_deref().and_then(|v| v.parse::<i64>().ok()))
+            .unwrap_or(0),
+        Err(e) => {
+            tracing::error!(error = %e, "Failed to load kingdom gold");
+            0
+        }
+    }
 }
 
 async fn load_player(
