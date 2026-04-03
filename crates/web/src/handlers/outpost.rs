@@ -293,11 +293,13 @@ pub async fn outpost_menu(
         return error_page(&app, &ctx, "Nie znajdujesz się w mieście.");
     }
 
-    let has_outpost = oq::find_by_owner(&app.pool, player_id)
-        .await
-        .ok()
-        .flatten()
-        .is_some();
+    let has_outpost = match oq::find_by_owner(&app.pool, player_id).await {
+        Ok(v) => v.is_some(),
+        Err(e) => {
+            tracing::error!(player_id, error = ?e, "failed to check outpost ownership");
+            false
+        }
+    };
 
     let meta = PageMeta::titled("Strażnica");
     let base = app.templates.build_context(&ctx, &meta);
@@ -330,12 +332,13 @@ pub async fn buy_outpost(
         return error_page(&app, &ctx, "Nie znajdujesz się w mieście.");
     }
 
-    if oq::find_by_owner(&app.pool, player_id)
-        .await
-        .ok()
-        .flatten()
-        .is_some()
-    {
+    if match oq::find_by_owner(&app.pool, player_id).await {
+        Ok(v) => v.is_some(),
+        Err(e) => {
+            tracing::error!(player_id, error = ?e, "failed to check outpost for create");
+            false
+        }
+    } {
         return error_page(&app, &ctx, "Już posiadasz strażnicę!");
     }
 
@@ -875,7 +878,13 @@ pub async fn shop_buy_army(
         Err(r) => return r,
     };
 
-    let reserves = oq::army_reserves(&app.pool).await.unwrap_or([0; 4]);
+    let reserves = match oq::army_reserves(&app.pool).await {
+        Ok(v) => v,
+        Err(e) => {
+            tracing::error!(error = ?e, "failed to load army reserves");
+            [0; 4]
+        }
+    };
 
     let w = form.army0.unwrap_or(0).max(0);
     let a = form.army1.unwrap_or(0).max(0);
@@ -945,17 +954,21 @@ pub async fn shop_upgrade(
         return error_page(&app, &ctx, "Podaj ile poziomów chcesz rozbudować.");
     }
 
-    let minerals = oq::get_minerals(&app.pool, player_id)
-        .await
-        .ok()
-        .flatten()
-        .unwrap_or(oq::MineralsRow {
-            pine: 0,
-            crystal: 0,
-            adamantium: 0,
-            meteor: 0,
-        });
-    let platinum = oq::get_platinum(&app.pool, player_id).await.unwrap_or(0);
+    let minerals = match oq::get_minerals(&app.pool, player_id).await {
+        Ok(Some(m)) => m,
+        Ok(None) => oq::MineralsRow { pine: 0, crystal: 0, adamantium: 0, meteor: 0 },
+        Err(e) => {
+            tracing::error!(player_id, error = ?e, "failed to load outpost minerals for size upgrade");
+            oq::MineralsRow { pine: 0, crystal: 0, adamantium: 0, meteor: 0 }
+        }
+    };
+    let platinum = match oq::get_platinum(&app.pool, player_id).await {
+        Ok(v) => v,
+        Err(e) => {
+            tracing::error!(player_id, error = ?e, "failed to load platinum for size upgrade");
+            0
+        }
+    };
 
     #[allow(clippy::cast_possible_truncation)]
     let max = domain::max_size_upgrades(out.size, out.gold, platinum as i32, minerals.pine);
@@ -1008,16 +1021,14 @@ pub async fn shop_build_lair(
         return error_page(&app, &ctx, "Podaj liczbę legowisk.");
     }
 
-    let minerals = oq::get_minerals(&app.pool, player_id)
-        .await
-        .ok()
-        .flatten()
-        .unwrap_or(oq::MineralsRow {
-            pine: 0,
-            crystal: 0,
-            adamantium: 0,
-            meteor: 0,
-        });
+    let minerals = match oq::get_minerals(&app.pool, player_id).await {
+        Ok(Some(m)) => m,
+        Ok(None) => oq::MineralsRow { pine: 0, crystal: 0, adamantium: 0, meteor: 0 },
+        Err(e) => {
+            tracing::error!(player_id, error = ?e, "failed to load minerals for fence build");
+            oq::MineralsRow { pine: 0, crystal: 0, adamantium: 0, meteor: 0 }
+        }
+    };
 
     let max = domain::max_structure_upgrades(
         out.fence,
@@ -1082,16 +1093,14 @@ pub async fn shop_build_barracks(
         return error_page(&app, &ctx, "Podaj liczbę kwater.");
     }
 
-    let minerals = oq::get_minerals(&app.pool, player_id)
-        .await
-        .ok()
-        .flatten()
-        .unwrap_or(oq::MineralsRow {
-            pine: 0,
-            crystal: 0,
-            adamantium: 0,
-            meteor: 0,
-        });
+    let minerals = match oq::get_minerals(&app.pool, player_id).await {
+        Ok(Some(m)) => m,
+        Ok(None) => oq::MineralsRow { pine: 0, crystal: 0, adamantium: 0, meteor: 0 },
+        Err(e) => {
+            tracing::error!(player_id, error = ?e, "failed to load minerals for barracks build");
+            oq::MineralsRow { pine: 0, crystal: 0, adamantium: 0, meteor: 0 }
+        }
+    };
 
     let max = domain::max_structure_upgrades(
         out.barracks,
@@ -1200,9 +1209,13 @@ pub async fn veteran_equip(
         }
 
         // Validate the item exists and belongs to player
-        let items = oq::list_equip_for_veteran(&app.pool, player_id, slot_to_type(slot))
-            .await
-            .unwrap_or_default();
+        let items = match oq::list_equip_for_veteran(&app.pool, player_id, slot_to_type(slot)).await {
+            Ok(v) => v,
+            Err(e) => {
+                tracing::error!(player_id, slot, error = ?e, "failed to list equip for veteran");
+                Vec::new()
+            }
+        };
 
         let Some(item) = items.iter().find(|i| i.id == item_id) else {
             continue;
@@ -1274,9 +1287,13 @@ pub async fn list_outposts(
     let max_size = params.elevel.unwrap_or(max_default).max(min_size);
 
     let outposts = if params.slevel.is_some() || params.elevel.is_some() {
-        oq::list_by_size_range(&app.pool, min_size, max_size, out.id)
-            .await
-            .unwrap_or_default()
+        match oq::list_by_size_range(&app.pool, min_size, max_size, out.id).await {
+            Ok(v) => v,
+            Err(e) => {
+                tracing::error!(error = ?e, "failed to list outposts by size range");
+                Vec::new()
+            }
+        }
             .into_iter()
             .map(|o| OutpostListItem {
                 id: o.id,
@@ -1396,11 +1413,14 @@ pub async fn battle_execute(
     }
 
     // Get enemy owner name for messages
-    let enemy_name = pq::find_player_by_id(&app.pool, enemy.owner)
-        .await
-        .ok()
-        .flatten()
-        .map_or_else(|| "Nieznany".to_owned(), |p| p.username);
+    let enemy_name = match pq::find_player_by_id(&app.pool, enemy.owner).await {
+        Ok(Some(p)) => p.username,
+        Ok(None) => "Nieznany".to_owned(),
+        Err(e) => {
+            tracing::error!(owner_id = enemy.owner, error = ?e, "failed to load enemy owner name");
+            "Nieznany".to_owned()
+        }
+    };
 
     let mut messages = Vec::new();
     let mut current_attacker = out.clone();
@@ -1466,18 +1486,34 @@ pub async fn battle_execute(
         ) = *rr;
 
         // Load current monsters/veterans for both sides
-        let my_monsters = oq::list_monsters(&app.pool, current_attacker.id)
-            .await
-            .unwrap_or_default();
-        let my_veterans = oq::list_veterans(&app.pool, current_attacker.id)
-            .await
-            .unwrap_or_default();
-        let e_monsters = oq::list_monsters(&app.pool, current_defender.id)
-            .await
-            .unwrap_or_default();
-        let e_veterans = oq::list_veterans(&app.pool, current_defender.id)
-            .await
-            .unwrap_or_default();
+        let my_monsters = match oq::list_monsters(&app.pool, current_attacker.id).await {
+            Ok(v) => v,
+            Err(e) => {
+                tracing::error!(outpost_id = current_attacker.id, error = ?e, "failed to load attacker monsters");
+                Vec::new()
+            }
+        };
+        let my_veterans = match oq::list_veterans(&app.pool, current_attacker.id).await {
+            Ok(v) => v,
+            Err(e) => {
+                tracing::error!(outpost_id = current_attacker.id, error = ?e, "failed to load attacker veterans");
+                Vec::new()
+            }
+        };
+        let e_monsters = match oq::list_monsters(&app.pool, current_defender.id).await {
+            Ok(v) => v,
+            Err(e) => {
+                tracing::error!(outpost_id = current_defender.id, error = ?e, "failed to load defender monsters");
+                Vec::new()
+            }
+        };
+        let e_veterans = match oq::list_veterans(&app.pool, current_defender.id).await {
+            Ok(v) => v,
+            Err(e) => {
+                tracing::error!(outpost_id = current_defender.id, error = ?e, "failed to load defender veterans");
+                Vec::new()
+            }
+        };
 
         let (my_matt, my_mdef) = sum_special_stats(&my_monsters, &my_veterans);
         let (e_matt, e_mdef) = sum_special_stats(&e_monsters, &e_veterans);
@@ -1642,16 +1678,22 @@ pub async fn battle_execute(
         messages.push(msg);
 
         // Reload for next round
-        current_attacker = oq::find_by_id(&app.pool, current_attacker.id)
-            .await
-            .ok()
-            .flatten()
-            .unwrap_or(current_attacker);
-        current_defender = oq::find_by_id(&app.pool, current_defender.id)
-            .await
-            .ok()
-            .flatten()
-            .unwrap_or(current_defender);
+        current_attacker = match oq::find_by_id(&app.pool, current_attacker.id).await {
+            Ok(Some(o)) => o,
+            Ok(None) => current_attacker,
+            Err(e) => {
+                tracing::error!(outpost_id = current_attacker.id, error = ?e, "failed to reload attacker outpost");
+                current_attacker
+            }
+        };
+        current_defender = match oq::find_by_id(&app.pool, current_defender.id).await {
+            Ok(Some(o)) => o,
+            Ok(None) => current_defender,
+            Err(e) => {
+                tracing::error!(outpost_id = current_defender.id, error = ?e, "failed to reload defender outpost");
+                current_defender
+            }
+        };
 
         if current_attacker.fatigue <= 25 {
             messages.push("Twoja armia jest zbyt zmęczona aby mogła atakować dalej!".to_owned());
@@ -2032,12 +2074,20 @@ async fn load_outpost_context(
     pq::PlayerRow,
     i32,
 ) {
-    let monsters = oq::list_monsters(&state.pool, out.id)
-        .await
-        .unwrap_or_default();
-    let veterans = oq::list_veterans(&state.pool, out.id)
-        .await
-        .unwrap_or_default();
+    let monsters = match oq::list_monsters(&state.pool, out.id).await {
+        Ok(v) => v,
+        Err(e) => {
+            tracing::error!(outpost_id = out.id, error = ?e, "failed to load outpost monsters");
+            Vec::new()
+        }
+    };
+    let veterans = match oq::list_veterans(&state.pool, out.id).await {
+        Ok(v) => v,
+        Err(e) => {
+            tracing::error!(outpost_id = out.id, error = ?e, "failed to load outpost veterans");
+            Vec::new()
+        }
+    };
     let player = load_player(state, player_id).await.unwrap_or_else(|_| {
         panic!("player must exist");
     });
@@ -2046,9 +2096,13 @@ async fn load_outpost_context(
 }
 
 async fn load_leadership(state: &AppState, player_id: i32) -> i32 {
-    let skills = vallheru_data::queries::player::load_skills(&state.pool, player_id)
-        .await
-        .unwrap_or_default();
+    let skills = match vallheru_data::queries::player::load_skills(&state.pool, player_id).await {
+        Ok(v) => v,
+        Err(e) => {
+            tracing::error!(player_id, error = ?e, "failed to load skills for leadership");
+            Vec::new()
+        }
+    };
     skills
         .iter()
         .find(|s| s.skill_key == "leadership")
@@ -2056,18 +2110,33 @@ async fn load_leadership(state: &AppState, player_id: i32) -> i32 {
 }
 
 async fn load_shop_context(state: &AppState, player_id: i32) -> (MineralInfo, i64, [i32; 4]) {
-    let minerals = oq::get_minerals(&state.pool, player_id)
-        .await
-        .ok()
-        .flatten()
-        .map_or_else(MineralInfo::default, |m| MineralInfo {
+    let minerals = match oq::get_minerals(&state.pool, player_id).await {
+        Ok(Some(m)) => MineralInfo {
             pine: m.pine,
             crystal: m.crystal,
             adamantium: m.adamantium,
             meteor: m.meteor,
-        });
-    let platinum = oq::get_platinum(&state.pool, player_id).await.unwrap_or(0);
-    let reserves = oq::army_reserves(&state.pool).await.unwrap_or([0; 4]);
+        },
+        Ok(None) => MineralInfo::default(),
+        Err(e) => {
+            tracing::error!(player_id, error = ?e, "failed to load minerals for shop");
+            MineralInfo::default()
+        }
+    };
+    let platinum = match oq::get_platinum(&state.pool, player_id).await {
+        Ok(v) => v,
+        Err(e) => {
+            tracing::error!(player_id, error = ?e, "failed to load platinum for shop");
+            0
+        }
+    };
+    let reserves = match oq::army_reserves(&state.pool).await {
+        Ok(v) => v,
+        Err(e) => {
+            tracing::error!(error = ?e, "failed to load army reserves for shop");
+            [0; 4]
+        }
+    };
     (minerals, platinum, reserves)
 }
 
@@ -2163,9 +2232,13 @@ async fn render_veteran_detail(
 }
 
 async fn load_equip_options(state: &AppState, player_id: i32, eq_type: &str) -> Vec<EquipOption> {
-    oq::list_equip_for_veteran(&state.pool, player_id, eq_type)
-        .await
-        .unwrap_or_default()
+    match oq::list_equip_for_veteran(&state.pool, player_id, eq_type).await {
+        Ok(v) => v,
+        Err(e) => {
+            tracing::error!(player_id, eq_type, error = ?e, "failed to list equip options");
+            Vec::new()
+        }
+    }
         .into_iter()
         .map(|e| EquipOption {
             id: e.id,
@@ -2218,12 +2291,20 @@ struct GarrisonStats {
 }
 
 async fn load_player_stats_for_garrison(state: &AppState, player_id: i32) -> GarrisonStats {
-    let raw_stats = vallheru_data::queries::player::load_stats(&state.pool, player_id)
-        .await
-        .unwrap_or_default();
-    let skills = vallheru_data::queries::player::load_skills(&state.pool, player_id)
-        .await
-        .unwrap_or_default();
+    let raw_stats = match vallheru_data::queries::player::load_stats(&state.pool, player_id).await {
+        Ok(v) => v,
+        Err(e) => {
+            tracing::error!(player_id, error = ?e, "failed to load stats for garrison");
+            Vec::new()
+        }
+    };
+    let skills = match vallheru_data::queries::player::load_skills(&state.pool, player_id).await {
+        Ok(v) => v,
+        Err(e) => {
+            tracing::error!(player_id, error = ?e, "failed to load skills for garrison");
+            Vec::new()
+        }
+    };
 
     let find_stat = |key: &str| -> i32 {
         raw_stats
@@ -2239,9 +2320,13 @@ async fn load_player_stats_for_garrison(state: &AppState, player_id: i32) -> Gar
     };
 
     // Check equipped weapons
-    let equipped = vallheru_data::queries::item::find_equipped_items(&state.pool, player_id)
-        .await
-        .unwrap_or_default();
+    let equipped = match vallheru_data::queries::item::find_equipped_items(&state.pool, player_id).await {
+        Ok(v) => v,
+        Err(e) => {
+            tracing::error!(player_id, error = ?e, "failed to load equipped items for garrison");
+            Vec::new()
+        }
+    };
 
     let has_melee_weapon = equipped
         .iter()
@@ -2272,9 +2357,13 @@ async fn grant_skill_exp(state: &AppState, player_id: i32, skill: &str, amount: 
         return String::new();
     }
 
-    let mut skills = pq::load_skills(&state.pool, player_id)
-        .await
-        .unwrap_or_default();
+    let mut skills = match pq::load_skills(&state.pool, player_id).await {
+        Ok(v) => v,
+        Err(e) => {
+            tracing::error!(player_id, skill, error = ?e, "failed to load skills for grant_skill_exp");
+            return String::new();
+        }
+    };
 
     let mut extra = String::new();
     if let Some(sk) = skills.iter_mut().find(|s| s.skill_key == skill) {
