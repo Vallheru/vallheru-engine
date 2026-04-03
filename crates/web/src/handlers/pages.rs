@@ -211,7 +211,13 @@ pub async fn notes_page(
         return Redirect::to("/").into_response();
     };
 
-    let total = pq::count_notes(&app.pool, user.id).await.unwrap_or(0);
+    let total = match pq::count_notes(&app.pool, user.id).await {
+        Ok(v) => v,
+        Err(e) => {
+            tracing::error!(user_id = user.id, error = ?e, "failed to count notes");
+            0
+        }
+    };
     let per_page = pages_domain::NOTES_PER_PAGE;
     #[allow(clippy::cast_possible_truncation, clippy::cast_precision_loss)]
     let total_pages = (total as f64 / per_page as f64).ceil() as i64;
@@ -340,17 +346,29 @@ pub async fn library_index(
     };
 
     let lang = "pl";
-    let tale_count = pq::count_library_texts(&app.pool, "tale", true, lang)
-        .await
-        .unwrap_or(0);
-    let poetry_count = pq::count_library_texts(&app.pool, "poetry", true, lang)
-        .await
-        .unwrap_or(0);
+    let tale_count = match pq::count_library_texts(&app.pool, "tale", true, lang).await {
+        Ok(v) => v,
+        Err(e) => {
+            tracing::error!(error = ?e, "failed to count tales");
+            0
+        }
+    };
+    let poetry_count = match pq::count_library_texts(&app.pool, "poetry", true, lang).await {
+        Ok(v) => v,
+        Err(e) => {
+            tracing::error!(error = ?e, "failed to count poetry");
+            0
+        }
+    };
     let can_manage = pages_domain::can_manage_library(&user.rank);
     let pending_count = if can_manage {
-        pq::count_pending_library(&app.pool, lang)
-            .await
-            .unwrap_or(0)
+        match pq::count_pending_library(&app.pool, lang).await {
+            Ok(v) => v,
+            Err(e) => {
+                tracing::error!(error = ?e, "failed to count pending library texts");
+                0
+            }
+        }
     } else {
         0
     };
@@ -435,7 +453,13 @@ pub async fn library_text(
         return Redirect::to("/").into_response();
     };
 
-    let Some(row) = pq::get_library_text(&app.pool, id).await.ok().flatten() else {
+    let Some(row) = (match pq::get_library_text(&app.pool, id).await {
+        Ok(v) => v,
+        Err(e) => {
+            tracing::error!(text_id = id, error = ?e, "failed to load library text");
+            None
+        }
+    }) else {
         return Redirect::to("/library").into_response();
     };
 
@@ -556,7 +580,13 @@ pub async fn library_admin_edit(
         return Redirect::to("/library").into_response();
     }
 
-    let Some(row) = pq::get_library_text(&app.pool, id).await.ok().flatten() else {
+    let Some(row) = (match pq::get_library_text(&app.pool, id).await {
+        Ok(v) => v,
+        Err(e) => {
+            tracing::error!(text_id = id, error = ?e, "failed to load library text for edit");
+            None
+        }
+    }) else {
         return Redirect::to("/library/admin").into_response();
     };
 
@@ -656,13 +686,23 @@ pub async fn roleplay_view(
         return Redirect::to("/").into_response();
     };
 
-    let Some(profile) = pq::get_roleplay_profile(&app.pool, id).await.ok().flatten() else {
+    let Some(profile) = (match pq::get_roleplay_profile(&app.pool, id).await {
+        Ok(v) => v,
+        Err(e) => {
+            tracing::error!(player_id = id, error = ?e, "failed to load roleplay profile");
+            None
+        }
+    }) else {
         return Redirect::to("/city").into_response();
     };
 
-    let (prev_id, next_id) = pq::get_adjacent_roleplay_ids(&app.pool, id)
-        .await
-        .unwrap_or((None, None));
+    let (prev_id, next_id) = match pq::get_adjacent_roleplay_ids(&app.pool, id).await {
+        Ok(v) => v,
+        Err(e) => {
+            tracing::error!(player_id = id, error = ?e, "failed to get adjacent roleplay ids");
+            (None, None)
+        }
+    };
 
     let meta = PageMeta::titled(format!("Roleplay — {}", profile.username));
     let base = app.templates.build_context(&ctx, &meta);

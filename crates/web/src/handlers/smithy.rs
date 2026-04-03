@@ -335,19 +335,30 @@ pub async fn smithy_workshop_show(
         return error_page(&app, &ctx, "Musisz znajdować się w mieście.");
     }
 
-    let owned = vallheru_data::queries::crafting::smith_player_plans(&app.pool, player_id)
-        .await
-        .unwrap_or_default();
+    let owned = match vallheru_data::queries::crafting::smith_player_plans(&app.pool, player_id).await {
+        Ok(v) => v,
+        Err(e) => {
+            tracing::error!(player_id, error = ?e, "failed to load smith plans");
+            Vec::new()
+        }
+    };
 
-    let works = vallheru_data::queries::crafting::smith_active_works(&app.pool, player_id)
-        .await
-        .unwrap_or_default();
+    let works = match vallheru_data::queries::crafting::smith_active_works(&app.pool, player_id).await {
+        Ok(v) => v,
+        Err(e) => {
+            tracing::error!(player_id, error = ?e, "failed to load smith active works");
+            Vec::new()
+        }
+    };
 
-    let minerals = vallheru_data::queries::gathering::load_minerals(&app.pool, player_id)
-        .await
-        .ok()
-        .flatten()
-        .unwrap_or_default();
+    let minerals = match vallheru_data::queries::gathering::load_minerals(&app.pool, player_id).await {
+        Ok(Some(m)) => m,
+        Ok(None) => vallheru_data::queries::gathering::MineralsRow::default(),
+        Err(e) => {
+            tracing::error!(player_id, error = ?e, "failed to load minerals for smithy");
+            vallheru_data::queries::gathering::MineralsRow::default()
+        }
+    };
 
     let plan_entries: Vec<PlanEntry> = owned
         .iter()
@@ -469,11 +480,14 @@ pub async fn smithy_craft(
     }
 
     // Check minerals
-    let minerals = vallheru_data::queries::gathering::load_minerals(&app.pool, player_id)
-        .await
-        .ok()
-        .flatten()
-        .unwrap_or_default();
+    let minerals = match vallheru_data::queries::gathering::load_minerals(&app.pool, player_id).await {
+        Ok(Some(m)) => m,
+        Ok(None) => vallheru_data::queries::gathering::MineralsRow::default(),
+        Err(e) => {
+            tracing::error!(player_id, error = ?e, "failed to load minerals for smithy craft");
+            vallheru_data::queries::gathering::MineralsRow::default()
+        }
+    };
 
     let mineral_stock = match mineral {
         smithing::Mineral::Copper => minerals.copper,

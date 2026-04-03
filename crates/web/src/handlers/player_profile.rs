@@ -46,7 +46,13 @@ pub async fn player_profile(
         return Redirect::to("/").into_response();
     };
 
-    let Some(target) = pq::find_player_by_id(&app.pool, id).await.ok().flatten() else {
+    let Some(target) = (match pq::find_player_by_id(&app.pool, id).await {
+        Ok(v) => v,
+        Err(e) => {
+            tracing::error!(player_id = id, error = ?e, "failed to load player profile");
+            None
+        }
+    }) else {
         return Redirect::to("/city").into_response();
     };
 
@@ -104,20 +110,30 @@ pub async fn player_profile(
 
 async fn adjacent_player_ids(app: &AppState, player_id: i32) -> (Option<i32>, Option<i32>) {
     let prev: Option<(i32,)> =
-        sqlx::query_as("SELECT id FROM players WHERE id < $1 ORDER BY id DESC LIMIT 1")
+        match sqlx::query_as("SELECT id FROM players WHERE id < $1 ORDER BY id DESC LIMIT 1")
             .bind(player_id)
             .fetch_optional(&app.pool)
             .await
-            .ok()
-            .flatten();
+        {
+            Ok(v) => v,
+            Err(e) => {
+                tracing::error!(player_id, error = ?e, "failed to find prev player id");
+                None
+            }
+        };
 
     let next: Option<(i32,)> =
-        sqlx::query_as("SELECT id FROM players WHERE id > $1 ORDER BY id ASC LIMIT 1")
+        match sqlx::query_as("SELECT id FROM players WHERE id > $1 ORDER BY id ASC LIMIT 1")
             .bind(player_id)
             .fetch_optional(&app.pool)
             .await
-            .ok()
-            .flatten();
+        {
+            Ok(v) => v,
+            Err(e) => {
+                tracing::error!(player_id, error = ?e, "failed to find next player id");
+                None
+            }
+        };
 
     (prev.map(|r| r.0), next.map(|r| r.0))
 }

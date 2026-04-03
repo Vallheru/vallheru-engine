@@ -327,15 +327,22 @@ pub async fn alchemy_lab_show(
         return error_page(&app, &ctx, "Musisz znajdować się w mieście.");
     }
 
-    let owned = vallheru_data::queries::crafting::alchemy_player_recipes(&app.pool, player_id)
-        .await
-        .unwrap_or_default();
+    let owned = match vallheru_data::queries::crafting::alchemy_player_recipes(&app.pool, player_id).await {
+        Ok(v) => v,
+        Err(e) => {
+            tracing::error!(player_id, error = ?e, "failed to load alchemy recipes");
+            Vec::new()
+        }
+    };
 
-    let herbs = vallheru_data::queries::gathering::load_herbs(&app.pool, player_id)
-        .await
-        .ok()
-        .flatten()
-        .unwrap_or_default();
+    let herbs = match vallheru_data::queries::gathering::load_herbs(&app.pool, player_id).await {
+        Ok(Some(h)) => h,
+        Ok(None) => vallheru_data::queries::gathering::HerbsRow::default(),
+        Err(e) => {
+            tracing::error!(player_id, error = ?e, "failed to load herbs for alchemy");
+            vallheru_data::queries::gathering::HerbsRow::default()
+        }
+    };
 
     let recipes: Vec<RecipeEntry> = owned
         .iter()
@@ -432,11 +439,14 @@ pub async fn alchemy_brew(
     }
 
     // Check herb costs
-    let herbs = vallheru_data::queries::gathering::load_herbs(&app.pool, player_id)
-        .await
-        .ok()
-        .flatten()
-        .unwrap_or_default();
+    let herbs = match vallheru_data::queries::gathering::load_herbs(&app.pool, player_id).await {
+        Ok(Some(h)) => h,
+        Ok(None) => vallheru_data::queries::gathering::HerbsRow::default(),
+        Err(e) => {
+            tracing::error!(player_id, error = ?e, "failed to load herbs for alchemy craft");
+            vallheru_data::queries::gathering::HerbsRow::default()
+        }
+    };
 
     let illani_cost = recipe.illani * amount;
     let illanias_cost = recipe.illanias * amount;

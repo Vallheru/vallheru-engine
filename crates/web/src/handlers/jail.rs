@@ -83,13 +83,18 @@ pub async fn jail_view(
     let player_id = user.id as i32;
 
     // Get player location.
-    let location: Option<String> = sqlx::query_scalar("SELECT location FROM players WHERE id = $1")
+    let location: String = match sqlx::query_scalar::<_, Option<String>>("SELECT location FROM players WHERE id = $1")
         .bind(player_id)
         .fetch_optional(&state.pool)
         .await
-        .unwrap_or(None);
-
-    let location = location.unwrap_or_default();
+    {
+        Ok(Some(Some(loc))) => loc,
+        Ok(_) => String::new(),
+        Err(e) => {
+            tracing::error!(player_id, error = ?e, "failed to fetch player location for jail");
+            String::new()
+        }
+    };
 
     if location == "Lochy" {
         return jail_prisoner_view(&state, &ctx, player_id).await;
@@ -105,9 +110,13 @@ pub async fn jail_view(
     }
 
     // City view — list prisoners.
-    let rows = vallheru_data::queries::moderation::list_prisoners(&state.pool)
-        .await
-        .unwrap_or_default();
+    let rows = match vallheru_data::queries::moderation::list_prisoners(&state.pool).await {
+        Ok(v) => v,
+        Err(e) => {
+            tracing::error!(error = ?e, "failed to list prisoners");
+            Vec::new()
+        }
+    };
 
     let prisoners: Vec<PrisonerEntry> = rows
         .into_iter()
@@ -139,10 +148,13 @@ pub async fn jail_view(
 
 /// Render the prisoner's own jail view.
 async fn jail_prisoner_view(state: &AppState, ctx: &RequestContext, player_id: i32) -> Response {
-    let record = vallheru_data::queries::moderation::find_jail_by_prisoner(&state.pool, player_id)
-        .await
-        .ok()
-        .flatten();
+    let record = match vallheru_data::queries::moderation::find_jail_by_prisoner(&state.pool, player_id).await {
+        Ok(v) => v,
+        Err(e) => {
+            tracing::error!(player_id, error = ?e, "failed to find jail record for prisoner");
+            None
+        }
+    };
 
     let (sentenced, verdict, duration, cost) = match record {
         Some(r) => (r.sentenced, r.verdict, r.duration, r.cost),
@@ -153,11 +165,18 @@ async fn jail_prisoner_view(state: &AppState, ctx: &RequestContext, player_id: i
 
     // Only thieves can attempt escape, and only if not admin-sentenced (cost > 0).
     let player_class: Option<String> =
-        sqlx::query_scalar("SELECT class FROM players WHERE id = $1")
+        match sqlx::query_scalar::<_, Option<String>>("SELECT class FROM players WHERE id = $1")
             .bind(player_id)
             .fetch_optional(&state.pool)
             .await
-            .unwrap_or(None);
+        {
+            Ok(Some(v)) => v,
+            Ok(None) => None,
+            Err(e) => {
+                tracing::error!(player_id, error = ?e, "failed to fetch player class for jail escape");
+                None
+            }
+        };
 
     let can_escape = cost > 0 && player_class.as_deref() == Some("Złodziej");
 
@@ -185,10 +204,13 @@ pub async fn jail_bail_confirm(
         return Redirect::to("/login").into_response();
     };
 
-    let record = vallheru_data::queries::moderation::find_jail_record(&state.pool, jail_id)
-        .await
-        .ok()
-        .flatten();
+    let record = match vallheru_data::queries::moderation::find_jail_record(&state.pool, jail_id).await {
+        Ok(v) => v,
+        Err(e) => {
+            tracing::error!(jail_id, error = ?e, "failed to find jail record for bail confirm");
+            None
+        }
+    };
 
     let Some(record) = record else {
         return Redirect::to("/jail").into_response();
@@ -228,10 +250,13 @@ pub async fn jail_bail_pay(
     #[allow(clippy::cast_possible_truncation)]
     let payer_id = user.id as i32;
 
-    let record = vallheru_data::queries::moderation::find_jail_record(&state.pool, jail_id)
-        .await
-        .ok()
-        .flatten();
+    let record = match vallheru_data::queries::moderation::find_jail_record(&state.pool, jail_id).await {
+        Ok(v) => v,
+        Err(e) => {
+            tracing::error!(jail_id, error = ?e, "failed to find jail record for bail payment");
+            None
+        }
+    };
 
     let record = match record {
         Some(r) if r.cost > 0 && r.prisoner != payer_id => r,
@@ -239,13 +264,20 @@ pub async fn jail_bail_pay(
     };
 
     // Check payer has enough gold.
-    let payer_gold: Option<i32> = sqlx::query_scalar("SELECT credits FROM players WHERE id = $1")
+    let payer_gold: i32 = match sqlx::query_scalar::<_, Option<i32>>("SELECT credits FROM players WHERE id = $1")
         .bind(payer_id)
         .fetch_optional(&state.pool)
         .await
-        .unwrap_or(None);
+    {
+        Ok(Some(Some(g))) => g,
+        Ok(_) => 0,
+        Err(e) => {
+            tracing::error!(payer_id, error = ?e, "failed to fetch payer gold for bail");
+            0
+        }
+    };
 
-    if payer_gold.unwrap_or(0) < record.cost {
+    if payer_gold < record.cost {
         return crate::page::redirect("/jail");
     }
 

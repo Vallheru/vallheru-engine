@@ -422,9 +422,13 @@ pub async fn lumbermill_workshop_show(
         })
         .collect();
 
-    let active_works = vallheru_data::queries::crafting::mill_active_works(&app.pool, player_id)
-        .await
-        .unwrap_or_default();
+    let active_works = match vallheru_data::queries::crafting::mill_active_works(&app.pool, player_id).await {
+        Ok(v) => v,
+        Err(e) => {
+            tracing::error!(player_id, error = ?e, "failed to load mill active works");
+            Vec::new()
+        }
+    };
 
     let works: Vec<WorkEntry> = active_works
         .iter()
@@ -436,11 +440,14 @@ pub async fn lumbermill_workshop_show(
         })
         .collect();
 
-    let minerals = vallheru_data::queries::gathering::load_minerals(&app.pool, player_id)
-        .await
-        .ok()
-        .flatten()
-        .unwrap_or_default();
+    let minerals = match vallheru_data::queries::gathering::load_minerals(&app.pool, player_id).await {
+        Ok(Some(m)) => m,
+        Ok(None) => vallheru_data::queries::gathering::MineralsRow::default(),
+        Err(e) => {
+            tracing::error!(player_id, error = ?e, "failed to load minerals for lumbermill");
+            vallheru_data::queries::gathering::MineralsRow::default()
+        }
+    };
 
     #[allow(clippy::cast_possible_truncation)]
     let energy = player_row.energy as i32;
@@ -521,11 +528,14 @@ pub async fn lumbermill_craft(
         return error_page(&app, &ctx, "Nie masz wystarczająco energii.");
     }
 
-    let minerals = vallheru_data::queries::gathering::load_minerals(&app.pool, player_id)
-        .await
-        .ok()
-        .flatten()
-        .unwrap_or_default();
+    let minerals = match vallheru_data::queries::gathering::load_minerals(&app.pool, player_id).await {
+        Ok(Some(m)) => m,
+        Ok(None) => vallheru_data::queries::gathering::MineralsRow::default(),
+        Err(e) => {
+            tracing::error!(player_id, error = ?e, "failed to load minerals for lumbermill craft");
+            vallheru_data::queries::gathering::MineralsRow::default()
+        }
+    };
 
     // Wood cost = energy spent (1 wood per 1 energy)
     let wood_cost = energy_spend;

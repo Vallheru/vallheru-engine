@@ -364,9 +364,13 @@ pub async fn jeweller_workshop_show(
         .collect();
 
     let active_works =
-        vallheru_data::queries::crafting::jeweller_active_works(&app.pool, player_id)
-            .await
-            .unwrap_or_default();
+        match vallheru_data::queries::crafting::jeweller_active_works(&app.pool, player_id).await {
+            Ok(v) => v,
+            Err(e) => {
+                tracing::error!(player_id, error = ?e, "failed to load jeweller active works");
+                Vec::new()
+            }
+        };
 
     #[allow(clippy::cast_possible_truncation)]
     let works: Vec<WorkEntry> = active_works
@@ -379,11 +383,14 @@ pub async fn jeweller_workshop_show(
         })
         .collect();
 
-    let minerals = vallheru_data::queries::gathering::load_minerals(&app.pool, player_id)
-        .await
-        .ok()
-        .flatten()
-        .unwrap_or_default();
+    let minerals = match vallheru_data::queries::gathering::load_minerals(&app.pool, player_id).await {
+        Ok(Some(m)) => m,
+        Ok(None) => vallheru_data::queries::gathering::MineralsRow::default(),
+        Err(e) => {
+            tracing::error!(player_id, error = ?e, "failed to load minerals for jeweller");
+            vallheru_data::queries::gathering::MineralsRow::default()
+        }
+    };
 
     #[allow(clippy::cast_possible_truncation)]
     let energy = player_row.energy as i32;
@@ -457,11 +464,14 @@ pub async fn jeweller_craft(
     let is_craftsman = player_row.class == "Rzemieślnik";
 
     // Check mineral costs
-    let minerals = vallheru_data::queries::gathering::load_minerals(&app.pool, player_id)
-        .await
-        .ok()
-        .flatten()
-        .unwrap_or_default();
+    let minerals = match vallheru_data::queries::gathering::load_minerals(&app.pool, player_id).await {
+        Ok(Some(m)) => m,
+        Ok(None) => vallheru_data::queries::gathering::MineralsRow::default(),
+        Err(e) => {
+            tracing::error!(player_id, error = ?e, "failed to load minerals for jeweller craft");
+            vallheru_data::queries::gathering::MineralsRow::default()
+        }
+    };
 
     let (adam_per, cryst_per, meteor_per) = jdomain::stat_ring_mineral_cost(plan_level);
     let batch = jdomain::stat_ring_batch_size(energy_spend, plan_level);
