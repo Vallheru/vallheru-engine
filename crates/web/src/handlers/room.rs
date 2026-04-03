@@ -167,7 +167,13 @@ pub async fn room_page(
         }
     };
 
-    let Some(room) = rq::find_room(&app.pool, room_id).await.ok().flatten() else {
+    let Some(room) = (match rq::find_room(&app.pool, room_id).await {
+        Ok(v) => v,
+        Err(e) => {
+            tracing::error!(room_id, error = ?e, "failed to load room");
+            None
+        }
+    }) else {
         return error_page(&app, &ctx, "Pokój nie istnieje.");
     };
 
@@ -191,9 +197,13 @@ pub async fn room_page(
         room_domain::MAX_MESSAGE_LENGTH,
     );
 
-    let members_rows = rq::list_room_members(&app.pool, room_id)
-        .await
-        .unwrap_or_default();
+    let members_rows = match rq::list_room_members(&app.pool, room_id).await {
+        Ok(v) => v,
+        Err(e) => {
+            tracing::error!(room_id, error = ?e, "failed to list room members");
+            Vec::new()
+        }
+    };
     let members: Vec<MemberView> = members_rows
         .into_iter()
         .map(|m| MemberView {
@@ -261,7 +271,13 @@ pub async fn room_messages(
         _ => return (axum::http::StatusCode::FORBIDDEN, "").into_response(),
     };
 
-    let Some(room) = rq::find_room(&app.pool, room_id).await.ok().flatten() else {
+    let Some(room) = (match rq::find_room(&app.pool, room_id).await {
+        Ok(v) => v,
+        Err(e) => {
+            tracing::error!(room_id, error = ?e, "failed to load room");
+            None
+        }
+    }) else {
         return (axum::http::StatusCode::NOT_FOUND, "").into_response();
     };
 
@@ -341,14 +357,26 @@ pub async fn room_send(
         _ => return crate::page::redirect_after_post("/room"),
     };
 
-    let Some(room) = rq::find_room(&app.pool, room_id).await.ok().flatten() else {
+    let Some(room) = (match rq::find_room(&app.pool, room_id).await {
+        Ok(v) => v,
+        Err(e) => {
+            tracing::error!(room_id, error = ?e, "failed to load room");
+            None
+        }
+    }) else {
         return crate::page::redirect_after_post("/room");
     };
 
     let is_admin = room_domain::is_admin(room.owner_id, &room.co_owners, user.id);
 
     // Load bad words for BBCode filter.
-    let bad_words = chatq::list_bad_words(&app.pool).await.unwrap_or_default();
+    let bad_words = match chatq::list_bad_words(&app.pool).await {
+        Ok(v) => v,
+        Err(e) => {
+            tracing::error!(error = ?e, "failed to load bad words for room chat");
+            Vec::new()
+        }
+    };
 
     // Determine persona (only admins can speak as NPC or narration).
     let persona_idx = form.person.unwrap_or(0);
@@ -442,7 +470,13 @@ pub async fn room_admin_delete_msg(
         _ => return crate::page::redirect_after_post("/room"),
     };
 
-    let Some(room) = rq::find_room(&app.pool, room_id).await.ok().flatten() else {
+    let Some(room) = (match rq::find_room(&app.pool, room_id).await {
+        Ok(v) => v,
+        Err(e) => {
+            tracing::error!(room_id, error = ?e, "failed to load room");
+            None
+        }
+    }) else {
         return crate::page::redirect_after_post("/room");
     };
 
@@ -476,15 +510,25 @@ pub async fn room_quit(
         _ => return crate::page::redirect("/chat"),
     };
 
-    let Some(room) = rq::find_room(&app.pool, room_id).await.ok().flatten() else {
+    let Some(room) = (match rq::find_room(&app.pool, room_id).await {
+        Ok(v) => v,
+        Err(e) => {
+            tracing::error!(room_id, error = ?e, "failed to load room");
+            None
+        }
+    }) else {
         return crate::page::redirect("/chat");
     };
 
     if room_domain::is_owner(room.owner_id, user.id) {
         // Owner destroys the room: notify all members, clear assignments, delete.
-        let members = rq::list_room_members(&app.pool, room_id)
-            .await
-            .unwrap_or_default();
+        let members = match rq::list_room_members(&app.pool, room_id).await {
+            Ok(v) => v,
+            Err(e) => {
+                tracing::error!(room_id, error = ?e, "failed to list room members");
+                Vec::new()
+            }
+        };
         let member_ids: Vec<i64> = members.iter().map(|m| m.id).collect();
         let log_msg = format!("{} zlikwidował(a) pokój w karczmie.", user.name);
 
@@ -617,9 +661,17 @@ pub async fn room_admin_invite(
     }
 
     // Validate target player.
-    let Some((target_id, target_room, accepts_invites)) =
-        rq::player_invite_check(&app.pool, pid).await.ok().flatten()
-    else {
+    let Some((target_id, target_room, accepts_invites)) = (match rq::player_invite_check(
+        &app.pool, pid,
+    )
+    .await
+    {
+        Ok(v) => v,
+        Err(e) => {
+            tracing::error!(player_id = pid, error = ?e, "failed to check player invite status");
+            None
+        }
+    }) else {
         return error_page(&app, &ctx, "Nie ma takiego gracza.");
     };
 
@@ -632,11 +684,15 @@ pub async fn room_admin_invite(
     }
 
     // Check per-player inn block.
-    if rq::is_inn_blocked(&app.pool, target_id, user.id)
-        .await
-        .unwrap_or(false)
-    {
-        return error_page(&app, &ctx, "Ten gracz ignoruje zaproszenia od ciebie.");
+    match rq::is_inn_blocked(&app.pool, target_id, user.id).await {
+        Ok(true) => {
+            return error_page(&app, &ctx, "Ten gracz ignoruje zaproszenia od ciebie.");
+        }
+        Err(e) => {
+            tracing::error!(target_id, error = ?e, "failed to check inn block status");
+            return error_page(&app, &ctx, "Błąd systemu.");
+        }
+        Ok(false) => {}
     }
 
     // Check global room-invite setting.
@@ -682,7 +738,13 @@ pub async fn room_admin_desc(
     };
 
     let raw_desc = form.desc.unwrap_or_default();
-    let bad_words = chatq::list_bad_words(&app.pool).await.unwrap_or_default();
+    let bad_words = match chatq::list_bad_words(&app.pool).await {
+        Ok(v) => v,
+        Err(e) => {
+            tracing::error!(error = ?e, "failed to load bad words for room desc");
+            Vec::new()
+        }
+    };
     let processed = text::bbcode_to_html(&raw_desc, &bad_words, false);
 
     if let Err(e) = rq::update_description(&app.pool, room_id, &processed).await {
@@ -742,11 +804,13 @@ pub async fn room_admin_npc_add(
     }
 
     // NPC name must not match an existing player or existing NPC.
-    let player_exists = rq::player_name_by_username(&app.pool, &npc_name)
-        .await
-        .ok()
-        .flatten()
-        .is_some();
+    let player_exists = match rq::player_name_by_username(&app.pool, &npc_name).await {
+        Ok(v) => v.is_some(),
+        Err(e) => {
+            tracing::error!(npc_name = %npc_name, error = ?e, "failed to check NPC name uniqueness");
+            false
+        }
+    };
     if player_exists || room.npcs.contains(&npc_name) {
         return error_page(&app, &ctx, "Nie możesz dodać NPC o takim imieniu.");
     }
@@ -1047,16 +1111,25 @@ fn success_redirect(msg: &str) -> Response {
 
 /// Load room and verify admin access, returning `(room_id, RoomRow)`.
 async fn load_admin_room(app: &AppState, player_id: i64) -> Result<(i32, rq::RoomRow), Response> {
-    let room_id = rq::player_room(&app.pool, player_id).await.unwrap_or(0);
+    let room_id = match rq::player_room(&app.pool, player_id).await {
+        Ok(v) => v,
+        Err(e) => {
+            tracing::error!(player_id, error = ?e, "failed to load player room");
+            0
+        }
+    };
     if room_id <= 0 {
         return Err(crate::page::redirect_after_post("/room"));
     }
 
-    let room = rq::find_room(&app.pool, room_id)
-        .await
-        .ok()
-        .flatten()
-        .ok_or_else(|| crate::page::redirect_after_post("/room"))?;
+    let room = match rq::find_room(&app.pool, room_id).await {
+        Ok(Some(r)) => r,
+        Ok(None) => return Err(crate::page::redirect_after_post("/room")),
+        Err(e) => {
+            tracing::error!(room_id, error = ?e, "failed to load room for admin check");
+            return Err(crate::page::redirect_after_post("/room"));
+        }
+    };
 
     if !room_domain::is_admin(room.owner_id, &room.co_owners, player_id) {
         return Err(crate::page::redirect_after_post("/room"));

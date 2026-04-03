@@ -222,7 +222,13 @@ pub async fn forum_categories(
     };
     let rank = &user.rank;
 
-    let all_cats = fq::list_categories(&app.pool).await.unwrap_or_default();
+    let all_cats = match fq::list_categories(&app.pool).await {
+        Ok(v) => v,
+        Err(e) => {
+            tracing::error!(error = ?e, "failed to list forum categories");
+            Vec::new()
+        }
+    };
 
     // Filter by visit permission.
     let categories: Vec<CategoryItem> = all_cats
@@ -238,18 +244,27 @@ pub async fn forum_categories(
 
     // Count unread topics.
     let accessible_ids: Vec<i64> = categories.iter().map(|c| c.id).collect();
-    let player_row = vallheru_data::queries::player::find_player_by_id(
+    let player_row = match vallheru_data::queries::player::find_player_by_id(
         &app.pool,
         #[allow(clippy::cast_possible_truncation)]
         (user.id as i32),
     )
     .await
-    .ok()
-    .flatten();
+    {
+        Ok(v) => v,
+        Err(e) => {
+            tracing::error!(user_id = user.id, error = ?e, "failed to load player for forum time");
+            None
+        }
+    };
     let forum_time = player_row.as_ref().map_or(0, |p| p.forum_time);
-    let unread_count = fq::count_unread(&app.pool, forum_time, &accessible_ids)
-        .await
-        .unwrap_or(0);
+    let unread_count = match fq::count_unread(&app.pool, forum_time, &accessible_ids).await {
+        Ok(v) => v,
+        Err(e) => {
+            tracing::error!(error = ?e, "failed to count unread forum topics");
+            0
+        }
+    };
 
     let meta = PageMeta::titled("Forum");
     let base = app.templates.build_context(&ctx, &meta);
@@ -272,31 +287,46 @@ pub async fn forum_new_posts(
     };
     let rank = &user.rank;
 
-    let all_cats = fq::list_categories(&app.pool).await.unwrap_or_default();
+    let all_cats = match fq::list_categories(&app.pool).await {
+        Ok(v) => v,
+        Err(e) => {
+            tracing::error!(error = ?e, "failed to list forum categories for unread");
+            Vec::new()
+        }
+    };
     let accessible_ids: Vec<i64> = all_cats
         .iter()
         .filter(|c| forum_domain::has_permission(&c.perm_visit, rank))
         .map(|c| c.id)
         .collect();
 
-    let player_row = vallheru_data::queries::player::find_player_by_id(
+    let player_row = match vallheru_data::queries::player::find_player_by_id(
         &app.pool,
         #[allow(clippy::cast_possible_truncation)]
         (user.id as i32),
     )
     .await
-    .ok()
-    .flatten();
+    {
+        Ok(v) => v,
+        Err(e) => {
+            tracing::error!(user_id = user.id, error = ?e, "failed to load player for forum time");
+            None
+        }
+    };
     let forum_time = player_row.as_ref().map_or(0, |p| p.forum_time);
 
     // Update forum_time for this player.
     if let Err(e) = fq::update_forum_time(&app.pool, user.id).await {
-        tracing::warn!("Failed to update forum_time: {e}");
+        tracing::warn!(error = ?e, "failed to update forum_time");
     }
 
-    let total_unread = fq::count_unread(&app.pool, forum_time, &accessible_ids)
-        .await
-        .unwrap_or(0);
+    let total_unread = match fq::count_unread(&app.pool, forum_time, &accessible_ids).await {
+        Ok(v) => v,
+        Err(e) => {
+            tracing::error!(error = ?e, "failed to count unread topics");
+            0
+        }
+    };
     let total = forum_domain::total_pages(total_unread, forum_domain::TOPICS_PER_PAGE);
     let page = forum_domain::clamp_page(pq.page, total);
     let offset = (page - 1) * forum_domain::TOPICS_PER_PAGE;
@@ -332,6 +362,7 @@ pub async fn forum_new_posts(
 }
 
 /// GET /forums/category/{id} — topic list for a category.
+#[allow(clippy::too_many_lines)]
 pub async fn forum_topic_list(
     State(app): State<AppState>,
     Extension(ctx): Extension<RequestContext>,
@@ -356,24 +387,39 @@ pub async fn forum_topic_list(
     let staff = forum_domain::is_staff(rank);
 
     // Get forum_time for unread checking.
-    let player_row = vallheru_data::queries::player::find_player_by_id(
+    let player_row = match vallheru_data::queries::player::find_player_by_id(
         &app.pool,
         #[allow(clippy::cast_possible_truncation)]
         (user.id as i32),
     )
     .await
-    .ok()
-    .flatten();
+    {
+        Ok(v) => v,
+        Err(e) => {
+            tracing::error!(user_id = user.id, error = ?e, "failed to load player for forum");
+            None
+        }
+    };
     let forum_time = player_row.as_ref().map_or(0, |p| p.forum_time);
 
     // Sticky topics first.
-    let sticky_rows = fq::list_sticky_topics(&app.pool, category_id)
-        .await
-        .unwrap_or_default();
+    let sticky_rows = match fq::list_sticky_topics(&app.pool, category_id).await {
+        Ok(v) => v,
+        Err(e) => {
+            tracing::error!(category_id, error = ?e, "failed to list sticky topics");
+            Vec::new()
+        }
+    };
 
     // Non-sticky topics with sorting and pagination.
     let sort = forum_domain::TopicSort::from_i32(q.sort);
-    let count = fq::count_topics(&app.pool, category_id).await.unwrap_or(0);
+    let count = match fq::count_topics(&app.pool, category_id).await {
+        Ok(v) => v,
+        Err(e) => {
+            tracing::error!(category_id, error = ?e, "failed to count forum topics");
+            0
+        }
+    };
     let total = forum_domain::total_pages(count, forum_domain::TOPICS_PER_PAGE);
     let page = forum_domain::clamp_page(q.page, total);
     let offset = (page - 1) * forum_domain::TOPICS_PER_PAGE;
@@ -464,7 +510,13 @@ pub async fn forum_topic_read(
     let staff = forum_domain::is_staff(rank);
 
     // Pagination.
-    let reply_count = fq::count_replies(&app.pool, topic_id).await.unwrap_or(0);
+    let reply_count = match fq::count_replies(&app.pool, topic_id).await {
+        Ok(v) => v,
+        Err(e) => {
+            tracing::error!(topic_id, error = ?e, "failed to count replies");
+            0
+        }
+    };
     let total = forum_domain::total_pages(reply_count, forum_domain::REPLIES_PER_PAGE);
     let page = if q.page <= 0 {
         total
@@ -665,11 +717,14 @@ pub async fn forum_delete_topic(
     }
 
     // Get category for redirect.
-    let category_id = fq::get_topic(&app.pool, topic_id)
-        .await
-        .ok()
-        .flatten()
-        .map_or(0, |t| t.category_id);
+    let category_id = match fq::get_topic(&app.pool, topic_id).await {
+        Ok(Some(t)) => t.category_id,
+        Ok(None) => 0,
+        Err(e) => {
+            tracing::error!(topic_id, error = ?e, "failed to load topic for delete redirect");
+            0
+        }
+    };
 
     if let Err(e) = fq::delete_topic(&app.pool, topic_id).await {
         tracing::error!("Failed to delete topic {topic_id}: {e}");
@@ -827,7 +882,13 @@ pub async fn forum_move_show(
         return Redirect::to("/forums").into_response();
     }
 
-    let cats = fq::list_category_names(&app.pool).await.unwrap_or_default();
+    let cats = match fq::list_category_names(&app.pool).await {
+        Ok(v) => v,
+        Err(e) => {
+            tracing::error!(error = ?e, "failed to list category names for move");
+            Vec::new()
+        }
+    };
     let categories: Vec<CategoryItem> = cats
         .into_iter()
         .map(|c| CategoryItem {
