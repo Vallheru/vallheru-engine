@@ -391,17 +391,27 @@ pub async fn chronicle_detail(
         Err(r) => return r,
     };
 
-    let Some(m) = mq::find_chronicle_mission_by_id(&app.pool, mission_id)
-        .await
-        .ok()
-        .flatten()
-    else {
+    let Some(m) = (match mq::find_chronicle_mission_by_id(&app.pool, mission_id).await {
+        Ok(v) => v,
+        Err(e) => {
+            tracing::error!(mission_id, error = ?e, "failed to load chronicle mission");
+            return err(&app, &ctx, "Błąd bazy danych.");
+        }
+    }) else {
         return err(&app, &ctx, "Nie ma takiej przygody.");
     };
 
     if m.location != player.location {
         return err(&app, &ctx, "Ta przygoda rozpoczyna się w innym mieście.");
     }
+
+    let has_active = match mq::find_active_mission(&app.pool, player.id).await {
+        Ok(v) => v.is_some(),
+        Err(e) => {
+            tracing::error!(player_id = player.id, error = ?e, "failed to check active mission");
+            return err(&app, &ctx, "Błąd bazy danych.");
+        }
+    };
 
     let can_start = mission::can_start_chronicle_mission(&mission::StartMissionCheck {
         player_chapter: player.chapter,
@@ -412,11 +422,7 @@ pub async fn chronicle_detail(
         player_hp: player.hp,
         player_energy: player.energy,
         craft_missions_remaining: player.craft_mission,
-        has_active_mission: mq::find_active_mission(&app.pool, player.id)
-            .await
-            .ok()
-            .flatten()
-            .is_some(),
+        has_active_mission: has_active,
     })
     .is_ok();
 
@@ -443,12 +449,22 @@ pub async fn chronicle_start(
         Err(r) => return r,
     };
 
-    let Some(m) = mq::find_chronicle_mission_by_id(&app.pool, form.qid)
-        .await
-        .ok()
-        .flatten()
-    else {
+    let Some(m) = (match mq::find_chronicle_mission_by_id(&app.pool, form.qid).await {
+        Ok(v) => v,
+        Err(e) => {
+            tracing::error!(mission_id = form.qid, error = ?e, "failed to load chronicle mission");
+            return err(&app, &ctx, "Błąd bazy danych.");
+        }
+    }) else {
         return err(&app, &ctx, "Nie ma takiej przygody.");
+    };
+
+    let has_active = match mq::find_active_mission(&app.pool, player.id).await {
+        Ok(v) => v.is_some(),
+        Err(e) => {
+            tracing::error!(player_id = player.id, error = ?e, "failed to check active mission");
+            return err(&app, &ctx, "Błąd bazy danych.");
+        }
     };
 
     if let Err(_e) = mission::can_start_chronicle_mission(&mission::StartMissionCheck {
@@ -460,17 +476,19 @@ pub async fn chronicle_start(
         player_hp: player.hp,
         player_energy: player.energy,
         craft_missions_remaining: player.craft_mission,
-        has_active_mission: mq::find_active_mission(&app.pool, player.id)
-            .await
-            .ok()
-            .flatten()
-            .is_some(),
+        has_active_mission: has_active,
     }) {
         return err(&app, &ctx, "Nie możesz rozpocząć tej przygody.");
     }
 
     // Find the starting room.
-    let Some(start_room) = mq::find_start_room(&app.pool, &m.name).await.ok().flatten() else {
+    let Some(start_room) = (match mq::find_start_room(&app.pool, &m.name).await {
+        Ok(v) => v,
+        Err(e) => {
+            tracing::error!(mission = %m.name, error = ?e, "failed to find start room");
+            return err(&app, &ctx, "Błąd bazy danych.");
+        }
+    }) else {
         return err(&app, &ctx, "Nie można znaleźć pokoju startowego przygody.");
     };
 
@@ -551,11 +569,13 @@ pub async fn mission_advance(
         Err(r) => return r,
     };
 
-    let Some(active) = mq::find_active_mission(&app.pool, player.id)
-        .await
-        .ok()
-        .flatten()
-    else {
+    let Some(active) = (match mq::find_active_mission(&app.pool, player.id).await {
+        Ok(v) => v,
+        Err(e) => {
+            tracing::error!(player_id = player.id, error = ?e, "failed to load active mission");
+            return err(&app, &ctx, "Błąd bazy danych.");
+        }
+    }) else {
         return err(&app, &ctx, "Nie znajdujesz się w przygodzie.");
     };
 
@@ -596,12 +616,13 @@ pub async fn mission_advance(
     }
 
     // Look up the target room.
-    let next_room = mq::find_random_room_by_name(&app.pool, &action_target)
-        .await
-        .ok()
-        .flatten();
-
-    let Some(next_room) = next_room else {
+    let Some(next_room) = (match mq::find_random_room_by_name(&app.pool, &action_target).await {
+        Ok(v) => v,
+        Err(e) => {
+            tracing::error!(target = %action_target, error = ?e, "failed to find next room");
+            return err(&app, &ctx, "Błąd bazy danych.");
+        }
+    }) else {
         return err(&app, &ctx, "Nie można znaleźć następnego pokoju.");
     };
 
@@ -891,14 +912,22 @@ fn server_error() -> Response {
 /// Find an available quest for the player that hasn't been started yet.
 async fn find_available_quest(app: &AppState, player_id: i32) -> Option<i32> {
     // Load all quest starts available at grid.php.
-    let steps = qq::find_quest_steps_by_name(&app.pool, 0, "grid.php", "start", "pl")
-        .await
-        .ok()?;
+    let steps = match qq::find_quest_steps_by_name(&app.pool, 0, "grid.php", "start", "pl").await {
+        Ok(v) => v,
+        Err(e) => {
+            tracing::error!(error = ?e, "failed to load quest steps for labyrinth");
+            return None;
+        }
+    };
 
     // Get all quests this player already has.
-    let actions = qq::find_all_quest_actions(&app.pool, player_id)
-        .await
-        .unwrap_or_default();
+    let actions = match qq::find_all_quest_actions(&app.pool, player_id).await {
+        Ok(v) => v,
+        Err(e) => {
+            tracing::error!(player_id, error = ?e, "failed to load quest actions for labyrinth");
+            return None;
+        }
+    };
     let taken: Vec<i32> = actions.iter().map(|a| a.quest).collect();
 
     // Find quest IDs that are available and not yet started.
@@ -925,11 +954,16 @@ async fn try_find_map(app: &AppState, player: &PlayerRow, roll: i32) -> i32 {
 
     // Check global maps availability.
     let maps_available: Option<(String,)> =
-        sqlx::query_as("SELECT value FROM settings WHERE setting = 'maps'")
+        match sqlx::query_as("SELECT value FROM settings WHERE setting = 'maps'")
             .fetch_optional(&app.pool)
             .await
-            .ok()
-            .flatten();
+        {
+            Ok(v) => v,
+            Err(e) => {
+                tracing::error!(error = ?e, "failed to check maps availability");
+                None
+            }
+        };
 
     match maps_available {
         Some((val,)) => {

@@ -208,7 +208,13 @@ pub async fn chat_messages(
         .collect();
 
     // Online players.
-    let online = q::online_in_tavern(&app.pool).await.unwrap_or_default();
+    let online = match q::online_in_tavern(&app.pool).await {
+        Ok(v) => v,
+        Err(e) => {
+            tracing::error!(error = ?e, "failed to load online tavern players");
+            Vec::new()
+        }
+    };
     let online_count = online.len();
     let online_players: Vec<OnlinePlayerView> = online
         .into_iter()
@@ -219,7 +225,13 @@ pub async fn chat_messages(
         .collect();
 
     // Total public message count.
-    let total_messages = q::count_public_messages(&app.pool).await.unwrap_or(0);
+    let total_messages = match q::count_public_messages(&app.pool).await {
+        Ok(v) => v,
+        Err(e) => {
+            tracing::error!(error = ?e, "failed to count public chat messages");
+            0
+        }
+    };
 
     // Build whisper tabs.
     let tabs = build_whisper_tabs(&app, user.id, active_tab).await;
@@ -244,6 +256,7 @@ pub async fn chat_messages(
 // POST /chat/send — send a message
 // =========================================================================
 
+#[allow(clippy::too_many_lines)]
 pub async fn chat_send(
     State(app): State<AppState>,
     Extension(ctx): Extension<RequestContext>,
@@ -258,13 +271,26 @@ pub async fn chat_send(
         return crate::page::redirect_after_post("/chat");
     }
 
-    // Check ban.
-    if q::is_banned(&app.pool, user.id).await.unwrap_or(false) {
-        return error_redirect("Nie możesz pisać wiadomości na czacie.");
+    // Check ban — fail-closed: if DB is down, deny posting.
+    match q::is_banned(&app.pool, user.id).await {
+        Ok(true) => {
+            return error_redirect("Nie możesz pisać wiadomości na czacie.");
+        }
+        Err(e) => {
+            tracing::error!(user_id = user.id, error = ?e, "failed to check chat ban status");
+            return error_redirect("Błąd systemu. Spróbuj ponownie.");
+        }
+        Ok(false) => {}
     }
 
     // Load bad words for BBCode filter.
-    let bad_words = q::list_bad_words(&app.pool).await.unwrap_or_default();
+    let bad_words = match q::list_bad_words(&app.pool).await {
+        Ok(v) => v,
+        Err(e) => {
+            tracing::error!(error = ?e, "failed to load bad words list");
+            Vec::new()
+        }
+    };
 
     // Process BBCode.
     let processed = text::bbcode_to_html(&raw_msg, &bad_words, true);
@@ -276,7 +302,13 @@ pub async fn chat_send(
     }
 
     // Build author label with tribe prefix/suffix.
-    let tribe_id = q::player_tribe_id(&app.pool, user.id).await.unwrap_or(0);
+    let tribe_id = match q::player_tribe_id(&app.pool, user.id).await {
+        Ok(v) => v,
+        Err(e) => {
+            tracing::error!(user_id = user.id, error = ?e, "failed to load player tribe_id for chat");
+            0
+        }
+    };
     let tags = if tribe_id > 0 {
         tfq::tribe_tags(&app.pool, tribe_id).await.ok().flatten()
     } else {

@@ -276,12 +276,24 @@ async fn require_player(pool: &sqlx::PgPool, ctx: &RequestContext) -> Option<Pla
     let user = ctx.session_user.as_ref()?;
     #[allow(clippy::cast_possible_truncation)]
     let id = user.id as i32;
-    pq::find_player_by_id(pool, id).await.ok().flatten()
+    match pq::find_player_by_id(pool, id).await {
+        Ok(v) => v,
+        Err(e) => {
+            tracing::error!(player_id = id, error = ?e, "failed to load player for tribe forum");
+            None
+        }
+    }
 }
 
 /// Build author string with tribe prefix/suffix tags.
 async fn tribe_author(pool: &sqlx::PgPool, name: &str, tribe_id: i32) -> String {
-    let tags = tfq::tribe_tags(pool, tribe_id).await.ok().flatten();
+    let tags = match tfq::tribe_tags(pool, tribe_id).await {
+        Ok(v) => v,
+        Err(e) => {
+            tracing::error!(tribe_id, error = ?e, "failed to load tribe tags");
+            None
+        }
+    };
     let (prefix, suffix) = tags
         .as_ref()
         .map_or(("", ""), |t| (t.prefix.as_str(), t.suffix.as_str()));

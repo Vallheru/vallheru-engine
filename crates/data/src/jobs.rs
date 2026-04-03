@@ -37,10 +37,13 @@ pub async fn run_job(pool: &PgPool, job: Job) -> anyhow::Result<bool> {
     };
 
     // Release the advisory lock regardless of success/failure.
-    let _ = sqlx::query("SELECT pg_advisory_unlock($1)")
+    if let Err(e) = sqlx::query("SELECT pg_advisory_unlock($1)")
         .bind(lock_key)
         .execute(pool)
-        .await;
+        .await
+    {
+        tracing::error!(job = %job, error = ?e, "failed to release advisory lock");
+    }
 
     result?;
     info!(job = %job, "completed");
@@ -411,12 +414,19 @@ async fn resolve_item_sold_punishments(pool: &PgPool) -> anyhow::Result<()> {
 
         if roll == 0 {
             // Jail: check if already in jail, extend or create sentence
-            let in_jail: bool =
-                sqlx::query_scalar("SELECT location = 'Lochy' FROM players WHERE id = $1")
-                    .bind(pid)
-                    .fetch_one(pool)
-                    .await
-                    .unwrap_or(false);
+            let in_jail: bool = match sqlx::query_scalar(
+                "SELECT location = 'Lochy' FROM players WHERE id = $1",
+            )
+            .bind(pid)
+            .fetch_one(pool)
+            .await
+            {
+                Ok(v) => v,
+                Err(e) => {
+                    tracing::error!(player_id = pid, error = ?e, "failed to check jail status during event resolution");
+                    continue;
+                }
+            };
 
             let jail_cost: i32 = {
                 let mut rng = rand::thread_rng();
@@ -475,12 +485,19 @@ async fn resolve_beggar_rewards(pool: &PgPool) -> anyhow::Result<()> {
                 .await?;
 
         if let Some((outpost_id, barracks_cap)) = outpost {
-            let current: i64 =
-                sqlx::query_scalar("SELECT count(id) FROM outpost_veterans WHERE outpost = $1")
-                    .bind(outpost_id)
-                    .fetch_one(pool)
-                    .await
-                    .unwrap_or(0);
+            let current: i64 = match sqlx::query_scalar(
+                "SELECT count(id) FROM outpost_veterans WHERE outpost = $1",
+            )
+            .bind(outpost_id)
+            .fetch_one(pool)
+            .await
+            {
+                Ok(v) => v,
+                Err(e) => {
+                    tracing::error!(outpost_id, error = ?e, "failed to count veterans for beggar reward");
+                    continue;
+                }
+            };
 
             if current < i64::from(barracks_cap) {
                 let name = format!("Weteran nr {current}");

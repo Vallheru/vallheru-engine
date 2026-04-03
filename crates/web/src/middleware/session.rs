@@ -57,13 +57,17 @@ pub async fn resolve_session(
                     let online_fut = vallheru_data::queries::session::load_online_players(&pool);
                     let (sidebar_res, online_res) = tokio::join!(sidebar_fut, online_fut);
 
+                    if let Err(ref e) = sidebar_res {
+                        tracing::error!(error = %e, "sidebar query failed");
+                    }
+
                     let sidebar = sidebar_res.ok().flatten().map(|s| {
                         #[allow(clippy::cast_possible_truncation)]
                         SidebarData {
                             hp: s.hp,
                             max_hp: s.max_hp,
                             energy: s.energy as i32,
-                            max_energy: s.max_energy,
+                            max_energy: s.max_energy as i32,
                             credits: s.credits,
                             bank: s.bank,
                             platinum: s.platinum,
@@ -76,24 +80,35 @@ pub async fn resolve_session(
                         }
                     });
 
-                    let online_players: Vec<OnlinePlayerView> = online_res
-                        .unwrap_or_default()
-                        .into_iter()
-                        .map(|p| {
-                            let display =
-                                format!("{} {} {}", p.tribe_prefix, p.username, p.tribe_suffix)
-                                    .trim()
-                                    .to_owned();
-                            OnlinePlayerView {
-                                id: p.id,
-                                name: display,
-                                rank: p.rank,
-                            }
-                        })
-                        .collect();
+                    let online_players: Vec<OnlinePlayerView> = match online_res {
+                        Ok(players) => players
+                            .into_iter()
+                            .map(|p| {
+                                let display =
+                                    format!("{} {} {}", p.tribe_prefix, p.username, p.tribe_suffix)
+                                        .trim()
+                                        .to_owned();
+                                OnlinePlayerView {
+                                    id: p.id,
+                                    name: display,
+                                    rank: p.rank,
+                                }
+                            })
+                            .collect(),
+                        Err(e) => {
+                            tracing::error!(error = ?e, "failed to load online players");
+                            Vec::new()
+                        }
+                    };
 
                     // Update the existing RequestContext with session data.
                     if let Some(ctx) = req.extensions_mut().get_mut::<RequestContext>() {
+                        tracing::info!(
+                            sidebar_present = sidebar.is_some(),
+                            online_count = online_players.len(),
+                            "session resolved for player {}",
+                            player.id
+                        );
                         ctx.session_user = Some(SessionUser {
                             id: i64::from(player.id),
                             name: player.username,
