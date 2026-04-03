@@ -758,3 +758,16 @@ Each entry includes:
 - **Needs new task**: No (small standalone fix)
 - **Status**: open
 - **Related tasks**: TD-060
+
+### TD-062: Hidden error remediation — silent `.ok()` / `.unwrap_or` on DB Results
+
+- **Type**: tech-debt
+- **Discovered in**: Post-completion audit
+- **Description**: ~200+ call sites across 40 handler files and 2 data-layer files silently swallowed database errors using `.ok()`, `.ok().flatten()`, `.unwrap_or_default()`, `.unwrap_or(VALUE)` on Result types from `.await` DB queries. When the database returned an error, the code treated it as "not found" or used a default value — no log line was emitted and the error was invisible in production.
+- **Impact**: **High** — database connectivity issues, query timeouts, or schema problems would be completely invisible. Operators would see incorrect behaviour (empty pages, missing data, wrong counts) with no error trail.
+- **Action**: Replaced every pattern with `match` or `unwrap_or_else` that logs at `tracing::error!` level before falling back. Used `Vec::new()` for collection defaults (clippy `default_trait_access`), explicit type names for struct defaults, and included context fields (player_id, tribe_id, etc.) in tracing spans.
+- **Fixable in existing task**: Yes (inline fix across all handlers)
+- **Needs new task**: No
+- **Status**: resolved
+- **Related tasks**: None
+- **Resolution**: Committed across 4 batches: `9e0e4bf` (jobs/session/chat/quest/tribe_forum/room/forums), `4d578b6` (player_profile), `e8572f1` (pages/jail/crafting), `cd4883d` (outpost/house), `9b715e7` (combat/remaining .ok()), `4e39729` (all .unwrap_or on DB Results)
