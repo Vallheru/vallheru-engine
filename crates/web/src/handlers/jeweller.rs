@@ -218,15 +218,14 @@ pub async fn jeweller_plans_show(
         }
     };
 
-    let owned = match vallheru_data::queries::crafting::jeweller_player_plans(&app.pool, player_id)
-        .await
-    {
-        Ok(v) => v,
-        Err(e) => {
-            tracing::error!(error = %e, player_id, "jeweller_player_plans query failed");
-            Vec::new()
-        }
-    };
+    let owned =
+        match vallheru_data::queries::crafting::jeweller_player_plans(&app.pool, player_id).await {
+            Ok(v) => v,
+            Err(e) => {
+                tracing::error!(error = %e, player_id, "jeweller_player_plans query failed");
+                Vec::new()
+            }
+        };
 
     let owned_names: Vec<&str> = owned.iter().map(|p| p.name.as_str()).collect();
     let jewellery_skill = load_skill(&app, player_id, "jewellry").await;
@@ -367,15 +366,14 @@ pub async fn jeweller_workshop_show(
         return error_page(&app, &ctx, "Musisz znajdować się w mieście.");
     }
 
-    let owned = match vallheru_data::queries::crafting::jeweller_player_plans(&app.pool, player_id)
-        .await
-    {
-        Ok(v) => v,
-        Err(e) => {
-            tracing::error!(error = %e, player_id, "jeweller_player_plans query failed");
-            Vec::new()
-        }
-    };
+    let owned =
+        match vallheru_data::queries::crafting::jeweller_player_plans(&app.pool, player_id).await {
+            Ok(v) => v,
+            Err(e) => {
+                tracing::error!(error = %e, player_id, "jeweller_player_plans query failed");
+                Vec::new()
+            }
+        };
 
     let plans: Vec<PlanEntry> = owned
         .iter()

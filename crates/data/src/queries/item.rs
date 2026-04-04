@@ -87,7 +87,7 @@ pub struct BowRow {
     pub power: i32,
     #[sqlx(rename = "type")]
     pub bow_type: String,
-    pub cost: i64,
+    pub cost: i32,
     pub minlev: i32,
     pub zr: i32,
     pub szyb: i32,

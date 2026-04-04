@@ -398,15 +398,14 @@ async fn compute_escape_chance(state: &AppState, player_id: i32) -> (i32, i32) {
     } else if roll >= 145 {
         1_000_000
     } else {
-        let player_stats = match vallheru_data::queries::player::load_stats(&state.pool, player_id)
-            .await
-        {
-            Ok(v) => v,
-            Err(e) => {
-                tracing::error!(error = %e, player_id, "escape_chance: load_stats failed");
-                Vec::new()
-            }
-        };
+        let player_stats =
+            match vallheru_data::queries::player::load_stats(&state.pool, player_id).await {
+                Ok(v) => v,
+                Err(e) => {
+                    tracing::error!(error = %e, player_id, "escape_chance: load_stats failed");
+                    Vec::new()
+                }
+            };
 
         let agility = player_stats
             .iter()
@@ -421,15 +420,14 @@ async fn compute_escape_chance(state: &AppState, player_id: i32) -> (i32, i32) {
             .find(|s| s.stat_key == "speed")
             .map_or(0, |s| s.trained);
 
-        let player_skills = match vallheru_data::queries::player::load_skills(&state.pool, player_id)
-            .await
-        {
-            Ok(v) => v,
-            Err(e) => {
-                tracing::error!(error = %e, player_id, "escape_chance: load_skills failed");
-                Vec::new()
-            }
-        };
+        let player_skills =
+            match vallheru_data::queries::player::load_skills(&state.pool, player_id).await {
+                Ok(v) => v,
+                Err(e) => {
+                    tracing::error!(error = %e, player_id, "escape_chance: load_skills failed");
+                    Vec::new()
+                }
+            };
         let thievery = player_skills
             .iter()
             .find(|s| s.skill_key == "thievery")
@@ -450,15 +448,14 @@ async fn escape_failure(
     suffix: &str,
 ) -> Response {
     let bail_increase = {
-        let player_skills = match vallheru_data::queries::player::load_skills(&state.pool, player_id)
-            .await
-        {
-            Ok(v) => v,
-            Err(e) => {
-                tracing::error!(error = %e, player_id, "escape_failure: load_skills failed");
-                Vec::new()
-            }
-        };
+        let player_skills =
+            match vallheru_data::queries::player::load_skills(&state.pool, player_id).await {
+                Ok(v) => v,
+                Err(e) => {
+                    tracing::error!(error = %e, player_id, "escape_failure: load_skills failed");
+                    Vec::new()
+                }
+            };
         let thievery_level = player_skills
             .iter()
             .find(|s| s.skill_key == "thievery")
@@ -596,15 +593,14 @@ async fn apply_escape_xp(
     let mut hp_change = 0;
 
     if !stat_xp.is_empty() {
-        let mut player_stats = match vallheru_data::queries::player::load_stats(&state.pool, player_id)
-            .await
-        {
-            Ok(v) => v,
-            Err(e) => {
-                tracing::error!(error = %e, player_id, "apply_escape_xp: load_stats failed");
-                Vec::new()
-            }
-        };
+        let mut player_stats =
+            match vallheru_data::queries::player::load_stats(&state.pool, player_id).await {
+                Ok(v) => v,
+                Err(e) => {
+                    tracing::error!(error = %e, player_id, "apply_escape_xp: load_stats failed");
+                    Vec::new()
+                }
+            };
 
         for &(key, xp) in stat_xp {
             if xp <= 0 {
@@ -631,15 +627,14 @@ async fn apply_escape_xp(
     }
 
     if !skill_xp.is_empty() {
-        let mut player_skills = match vallheru_data::queries::player::load_skills(&state.pool, player_id)
-            .await
-        {
-            Ok(v) => v,
-            Err(e) => {
-                tracing::error!(error = %e, player_id, "apply_escape_xp: load_skills failed");
-                Vec::new()
-            }
-        };
+        let mut player_skills =
+            match vallheru_data::queries::player::load_skills(&state.pool, player_id).await {
+                Ok(v) => v,
+                Err(e) => {
+                    tracing::error!(error = %e, player_id, "apply_escape_xp: load_skills failed");
+                    Vec::new()
+                }
+            };
 
         for &(key, xp) in skill_xp {
             if xp <= 0 {

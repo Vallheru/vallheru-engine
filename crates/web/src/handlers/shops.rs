@@ -438,7 +438,7 @@ pub async fn fletcher_buy_bow(
         }
     };
 
-    if bow.cost > i64::from(player.credits) {
+    if bow.cost > player.credits {
         return error_page(&app, &ctx, "Nie masz wystarczająco złota.");
     }
 
@@ -497,9 +497,9 @@ pub async fn fletcher_arrows_show(
         base,
         arrow_id: bow.id,
         arrow_name: bow.name,
-        pack_cost: bow.cost,
+        pack_cost: i64::from(bow.cost),
         pack_size: bow.maxwt,
-        per_arrow_cost: per_arrow,
+        per_arrow_cost: i64::from(per_arrow),
     };
     app.templates.render_value("arrow_buy.html", &view)
 }
@@ -545,7 +545,7 @@ pub async fn fletcher_buy_arrows(
     }
 
     let arrow_count = bow.maxwt * packs;
-    let total_cost = bow.cost * i64::from(packs);
+    let total_cost = i64::from(bow.cost) * i64::from(packs);
 
     if total_cost > i64::from(player.credits) {
         return error_page(&app, &ctx, "Nie masz wystarczająco złota.");

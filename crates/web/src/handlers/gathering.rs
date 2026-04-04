@@ -977,15 +977,14 @@ pub async fn smelter_smelt(
     }
 
     // Check ore availability
-    let minerals = match vallheru_data::queries::gathering::load_minerals(&app.pool, player_id)
-        .await
-    {
-        Ok(opt) => opt.unwrap_or_default(),
-        Err(e) => {
-            tracing::error!(error = %e, player_id, "load_minerals failed");
-            vallheru_data::queries::gathering::MineralsRow::default()
-        }
-    };
+    let minerals =
+        match vallheru_data::queries::gathering::load_minerals(&app.pool, player_id).await {
+            Ok(opt) => opt.unwrap_or_default(),
+            Err(e) => {
+                tracing::error!(error = %e, player_id, "load_minerals failed");
+                vallheru_data::queries::gathering::MineralsRow::default()
+            }
+        };
 
     let recipe = gathering::smelt_recipe(bar);
     for &(col, per_bar) in &recipe {
@@ -1174,8 +1173,10 @@ pub async fn farm_show(
 
     let (has_plantation, lands, glasshouse, irrigation, creeper, free_lands, plots) =
         if let Some(ref farm) = plantation {
-            let all_plots = match vallheru_data::queries::gathering::load_farm_plots(&app.pool, farm.id)
-                .await
+            let all_plots = match vallheru_data::queries::gathering::load_farm_plots(
+                &app.pool, farm.id,
+            )
+            .await
             {
                 Ok(v) => v,
                 Err(e) => {
@@ -1288,8 +1289,7 @@ async fn apply_gathering_xp(
 
     // Apply stat XP.
     if !stat_xp.is_empty() {
-        let mut stats = match vallheru_data::queries::player::load_stats(&app.pool, player_id)
-            .await
+        let mut stats = match vallheru_data::queries::player::load_stats(&app.pool, player_id).await
         {
             Ok(v) => v,
             Err(e) => {

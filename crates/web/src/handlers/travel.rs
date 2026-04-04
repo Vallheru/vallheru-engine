@@ -331,13 +331,14 @@ async fn trigger_encounter(
                 Vec::new()
             }
         };
-    let equipped = match vallheru_data::queries::item::find_equipped_items(&state.pool, player_id).await {
-        Ok(v) => v,
-        Err(e) => {
-            tracing::error!(error = %e, player_id, "Failed to load equipped items for travel");
-            Vec::new()
-        }
-    };
+    let equipped =
+        match vallheru_data::queries::item::find_equipped_items(&state.pool, player_id).await {
+            Ok(v) => v,
+            Err(e) => {
+                tracing::error!(error = %e, player_id, "Failed to load equipped items for travel");
+                Vec::new()
+            }
+        };
 
     let equipped_domain: Vec<_> = equipped.iter().map(|e| e.clone().into_domain()).collect();
 
