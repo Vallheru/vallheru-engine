@@ -90,7 +90,7 @@ pub struct ContinueForm {
 struct PlayerRow {
     pub location: String,
     pub energy: f64,
-    pub credits: i64,
+    pub credits: i32,
     pub class: String,
     pub race: String,
 }
@@ -293,7 +293,7 @@ pub async fn smithy_plan_buy(
         return error_page(&app, &ctx, "Twoja umiejętność kowalstwa jest zbyt niska.");
     }
 
-    if player_row.credits < i64::from(plan.cost) {
+    if player_row.credits < plan.cost {
         return error_page(&app, &ctx, "Nie masz wystarczająco złota.");
     }
 

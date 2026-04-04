@@ -117,7 +117,7 @@ fn default_page() -> i64 {
 struct PlayerRow {
     pub location: String,
     pub tribe: i32,
-    pub credits: i64,
+    pub credits: i32,
 }
 
 async fn load_player(app: &AppState, player_id: i32) -> Result<PlayerRow, Response> {
@@ -428,26 +428,30 @@ pub async fn tribe_create(
     let name = form.name.as_deref().unwrap_or("").trim();
     let _level = form.level.unwrap_or(1);
 
-    let cost =
-        match tribe::validate_create_tribe(player.tribe, player.credits, name, &player.location) {
-            Ok(cost) => cost,
-            Err(CreateTribeError::AlreadyInTribe) => {
-                return error_page(&app, &ctx, "Już należysz do klanu.");
-            }
-            Err(CreateTribeError::InsufficientGold) => {
-                return error_page(&app, &ctx, "Nie masz wystarczającej ilości złota.");
-            }
-            Err(CreateTribeError::InvalidName) => {
-                return error_page(&app, &ctx, "Nieprawidłowa nazwa klanu.");
-            }
-            Err(CreateTribeError::WrongLocation) => {
-                return error_page(
-                    &app,
-                    &ctx,
-                    "Musisz znajdować się w mieście z biurem klanów.",
-                );
-            }
-        };
+    let cost = match tribe::validate_create_tribe(
+        player.tribe,
+        i64::from(player.credits),
+        name,
+        &player.location,
+    ) {
+        Ok(cost) => cost,
+        Err(CreateTribeError::AlreadyInTribe) => {
+            return error_page(&app, &ctx, "Już należysz do klanu.");
+        }
+        Err(CreateTribeError::InsufficientGold) => {
+            return error_page(&app, &ctx, "Nie masz wystarczającej ilości złota.");
+        }
+        Err(CreateTribeError::InvalidName) => {
+            return error_page(&app, &ctx, "Nieprawidłowa nazwa klanu.");
+        }
+        Err(CreateTribeError::WrongLocation) => {
+            return error_page(
+                &app,
+                &ctx,
+                "Musisz znajdować się w mieście z biurem klanów.",
+            );
+        }
+    };
 
     match tq::create_tribe(&app.pool, name, player_id, 1, cost).await {
         Ok(_tribe_id) => crate::page::redirect_after_post("/tribe"),

@@ -64,7 +64,7 @@ pub struct JewellerShopView {
     #[serde(flatten)]
     pub base: crate::render::RenderContext,
     pub rings: Vec<ShopRingEntry>,
-    pub gold: i64,
+    pub gold: i32,
 }
 
 #[derive(serde::Serialize)]
@@ -96,7 +96,7 @@ pub struct ContinueForm {
 struct PlayerRow {
     pub location: String,
     pub energy: f64,
-    pub credits: i64,
+    pub credits: i32,
     pub class: String,
     pub race: String,
 }
@@ -885,7 +885,7 @@ pub async fn jeweller_shop_buy(
     }
 
     let cost = jdomain::SHOP_RING_COST;
-    if player_row.credits < i64::from(cost) {
+    if player_row.credits < cost {
         return error_page(&app, &ctx, "Nie masz wystarczająco złota.");
     }
 

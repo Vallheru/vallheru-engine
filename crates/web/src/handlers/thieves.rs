@@ -45,7 +45,7 @@ pub struct ThievesShopView {
     #[serde(flatten)]
     pub base: crate::render::RenderContext,
     pub lockpick_cost: i32,
-    pub gold: i64,
+    pub gold: i32,
     pub lockpicks: i32,
 }
 
@@ -74,7 +74,7 @@ struct PlayerRow {
     pub location: String,
     pub max_hp: i32,
     pub energy: f64,
-    pub credits: i64,
+    pub credits: i32,
     pub class: String,
     pub race: String,
     pub mpoints: i32,
@@ -466,7 +466,7 @@ pub async fn thieves_shop_buy(
     #[allow(clippy::cast_possible_truncation)]
     let total_cost_i32 = (i64::from(LOCKPICK_COST) * i64::from(amount)) as i32;
     let total_cost = i64::from(total_cost_i32);
-    if player_row.credits < total_cost {
+    if i64::from(player_row.credits) < total_cost {
         return error_page(&app, &ctx, "Nie masz wystarczająco złota.");
     }
 

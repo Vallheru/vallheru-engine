@@ -71,7 +71,7 @@ pub struct BrewForm {
 struct PlayerRow {
     pub location: String,
     pub energy: f64,
-    pub credits: i64,
+    pub credits: i32,
     pub class: String,
     pub race: String,
 }
@@ -282,7 +282,7 @@ pub async fn alchemy_recipe_buy(
         return error_page(&app, &ctx, "Twoja umiejętność alchemii jest zbyt niska.");
     }
 
-    if player_row.credits < i64::from(recipe.cost) {
+    if player_row.credits < recipe.cost {
         return error_page(&app, &ctx, "Nie masz wystarczająco złota.");
     }
 

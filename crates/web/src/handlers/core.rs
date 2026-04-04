@@ -100,7 +100,7 @@ pub struct TrainForm {
 struct PlayerRow {
     pub location: String,
     pub energy: f64,
-    pub credits: i64,
+    pub credits: i32,
     pub platinum: i32,
 }
 
@@ -206,7 +206,7 @@ pub async fn core_license_buy(
         return error_page(&app, &ctx, "Musisz znajdować się w mieście.");
     }
 
-    if player_row.credits < i64::from(breeding::LICENSE_GOLD_COST) {
+    if player_row.credits < breeding::LICENSE_GOLD_COST {
         return error_page(&app, &ctx, "Nie masz wystarczająco złota.");
     }
 
@@ -903,7 +903,7 @@ pub async fn core_heal(
     let gold_cost = breeding::heal_all_gold_cost(&dead_stats);
     let plat_cost = breeding::heal_all_platinum_cost(gold_cost);
 
-    if player_row.credits < i64::from(gold_cost) {
+    if player_row.credits < gold_cost {
         return error_page(&app, &ctx, "Nie masz wystarczająco złota.");
     }
     if player_row.platinum < plat_cost {
